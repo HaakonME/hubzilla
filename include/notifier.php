@@ -497,11 +497,8 @@ function notifier_run($argv, $argc){
 			where hubloc_hash in (" . implode(',',$recipients) . ") order by hubloc_connected desc limit 1");
 	} 
 	else {
-		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
-			intval(HUBLOC_FLAGS_DELETED),
-			intval(HUBLOC_OFFLINE)
-		);		
+		$r = q("select * from hubloc where hubloc_hash in (" . implode(',',$recipients) . ") 
+			and hubloc_error = 0 and hubloc_deleted = 0");		
 	} 
 
 	if(! $r) {

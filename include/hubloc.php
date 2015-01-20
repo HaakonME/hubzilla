@@ -96,8 +96,7 @@ function remove_obsolete_hublocs() {
 			? intval(get_config('system','delivery_interval')) : 2 );
 
 	foreach($r as $rr) {
-		q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_id = %d",
-			intval(HUBLOC_FLAGS_DELETED),
+		q("update hubloc set hubloc_deleted = 1 where hubloc_id = %d",
 			intval($rr['hubloc_id'])
 		);
 

@@ -50,8 +50,7 @@ function locs_post(&$a) {
 				notice( t('Primary location cannot be removed.') . EOL);
 				return;
 			}
-			$r = q("update hubloc set hubloc_flags = (hubloc_flags & %d) where hubloc_id = %d and hubloc_hash = '%s'",
-				intval(HUBLOC_FLAGS_DELETED),
+			$r = q("update hubloc set hubloc_deleted = 1 where hubloc_id = %d and hubloc_hash = '%s'",
 				intval($hubloc_id),
 				dbesc($channel['channel_hash'])
 			);
@@ -64,7 +63,6 @@ function locs_post(&$a) {
 
 
 function locs_content(&$a) {
-
 
 
 	if(! local_user()) {
@@ -86,7 +84,7 @@ function locs_content(&$a) {
 
 	for($x = 0; $x < count($r); $x ++) {
 		$r[$x]['primary'] = (($r[$x]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false);
-		$r[$x]['deleted'] = (($r[$x]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false);
+		$r[$x]['deleted'] = (intval($r[$x]['hubloc_deleted']) ? true : false);
 	}
 
 

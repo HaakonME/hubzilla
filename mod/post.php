@@ -666,14 +666,12 @@ function post_post(&$a) {
 
 	// a dead hub came back to life - reset any tombstones we might have
 
-	if($hub['hubloc_status'] & HUBLOC_OFFLINE) {
-		q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
-			intval(HUBLOC_OFFLINE),
+	if(intval($hub['hubloc_error'])) {
+		q("update hubloc set hubloc_error = 0 where hubloc_id = %d",
 			intval($hub['hubloc_id'])		
 		);
-		if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-			q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
-				intval(HUBLOC_FLAGS_ORPHANCHECK),
+		if(intval($r[0]['hubloc_orphancheck'])) {
+			q("update hubloc set hubloc_orhpancheck = 0 where hubloc_id = %d",
 				intval($hub['hubloc_id'])
 			);
 		}
@@ -693,8 +691,7 @@ function post_post(&$a) {
 	 *
 	 */
 
-	q("update hubloc set hubloc_flags = ( hubloc_flags | %d ) where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
-		intval(HUBLOC_FLAGS_DELETED),
+	q("update hubloc set hubloc_deleted = 1 where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
 		dbesc($hub['hubloc_url']),
 		dbesc($hub['hubloc_sitekey'])
 	);

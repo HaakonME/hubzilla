@@ -79,9 +79,8 @@ function zot_get_hublocs($hash) {
 
 	/** Only search for active hublocs - e.g. those that haven't been marked deleted */
 
-	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d )>0 order by hubloc_url ",
-		dbesc($hash),
-		intval(HUBLOC_FLAGS_DELETED)
+	$ret = q("select * from hubloc where hubloc_hash = '%s' and hubloc_deleted != 0 order by hubloc_url ",
+		dbesc($hash)
 	);
 	return $ret;
 }
@@ -1884,9 +1883,8 @@ function sync_locations($sender,$arr,$absolute = false) {
 				// Should we do this? It's basically saying that the channel knows better than
 				// the directory server if the site is alive.
 
-				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
-					q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
-						intval(HUBLOC_OFFLINE),
+				if($r[0]['hubloc_error']) {
+					q("update hubloc set hubloc_error = 0 where hubloc_id = %d",
 						intval($r[0]['hubloc_id'])
 					);
 					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
@@ -1934,10 +1932,10 @@ function sync_locations($sender,$arr,$absolute = false) {
 						$changed = true;
 					}
 				}
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted']))) {
-					$n = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_DELETED),
+				if((intval($r[0]['hubloc_deleted']) && (! $location['deleted']))
+					|| ((! (intval($r[0]['hubloc_deleted']))) && ($location['deleted']))) {
+					$n = q("update hubloc set hubloc_deleted = %d, hubloc_updated = '%s' where hubloc_id = %d",
+						intval($location['deleted']),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
@@ -1994,8 +1992,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
 					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_url']);
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_DELETED),
+					$r = q("update hubloc set hubloc_deleted = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($x['hubloc_id'])
 					);
@@ -2029,7 +2026,7 @@ function zot_encode_locations($channel) {
 					'url_sig'  => $hub['hubloc_url_sig'],
 					'callback' => $hub['hubloc_callback'],
 					'sitekey'  => $hub['hubloc_sitekey'],
-					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
+					'deleted'  => (intval($hub['hubloc_deleted']) ? true : false)
 				);
 			}
 		}
@@ -2917,12 +2914,9 @@ function zot_process_message_request($data) {
 	if($messages) {
 		$env_recips = null;
 
-		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host 
-			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)>0
-			and not (hubloc_status & %d)>0 group by hubloc_sitekey",
-			dbesc($sender_hash),
-			intval(HUBLOC_FLAGS_DELETED),
-			intval(HUBLOC_OFFLINE)
+		$r = q("select * from hubloc where hubloc_hash = '%s' and not hubloc_error and not hubloc_deleted 
+			group by hubloc_sitekey",
+			dbesc($sender_hash)
 		);
 		if(! $r) {
 			logger('no hubs');

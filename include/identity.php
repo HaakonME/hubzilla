@@ -291,14 +291,14 @@ function create_identity($arr) {
 
 	// Create a verified hub location pointing to this site.
 
-	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 
+	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_primary, 
 		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
 		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($guid),
 		dbesc($sig),
 		dbesc($hash),
 		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
-		intval(($primary) ? HUBLOC_FLAGS_PRIMARY : 0),
+		intval($primary),
 		dbesc(z_root()),
 		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
 		dbesc(get_app()->get_hostname()),

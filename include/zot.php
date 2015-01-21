@@ -201,9 +201,8 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
-			where xchan_addr = '%s' and (hubloc_flags & %d) > 0 limit 1",
-		dbesc($xchan_addr),
-		intval(HUBLOC_FLAGS_PRIMARY)
+			where xchan_addr = '%s' and hubloc_primary = 1 limit 1",
+		dbesc($xchan_addr)
 	);
 
 	if($r) {
@@ -300,9 +299,8 @@ function zot_refresh($them,$channel = null, $force = false) {
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
-		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) > 0 limit 1",
-			dbesc($them['xchan_hash']),
-			intval(HUBLOC_FLAGS_PRIMARY)
+		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and hubloc_primary = 1 limit 1",
+			dbesc($them['xchan_hash'])
 		);
 		if($r)
 			$url = $r[0]['hubloc_url'];
@@ -1887,9 +1885,8 @@ function sync_locations($sender,$arr,$absolute = false) {
 					q("update hubloc set hubloc_error = 0 where hubloc_id = %d",
 						intval($r[0]['hubloc_id'])
 					);
-					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-						q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
-							intval(HUBLOC_FLAGS_ORPHANCHECK),
+					if(intval($r[0]['hubloc_orphancheck'])) {
+						q("update hubloc set hubloc_orphancheck = 0 where hubloc_id = %d",
 							intval($r[0]['hubloc_id'])
 						);
 					}
@@ -1911,15 +1908,15 @@ function sync_locations($sender,$arr,$absolute = false) {
 					}
 				}
 
-				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
-					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
-					$m = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_PRIMARY),
+				if((intval($r[0]['hubloc_primary']) && (! $location['primary']))
+					|| ((! intval($r[0]['hubloc_primary'])) && ($location['primary']))) {
+					$m = q("update hubloc set hubloc_primary = %d, hubloc_updated = '%s' where hubloc_id = %d",
+						intval($location['primary']),
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
 					// make sure hubloc_change_primary() has current data
-					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
+					$r[0]['hubloc_primary'] = intval($location['primary']);
 					hubloc_change_primary($r[0]);
 					$what .= 'primary_hub ';
 					$changed = true;
@@ -1949,22 +1946,20 @@ function sync_locations($sender,$arr,$absolute = false) {
 			// New hub claiming to be primary. Make it so by removing any existing primaries.
 
 			if(intval($location['primary'])) {
-				$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )>0",
-					intval(HUBLOC_FLAGS_PRIMARY),
+				$r = q("update hubloc set hubloc_primary = 0, hubloc_updated = '%s' where hubloc_hash = '%s' and hubloc_primary = 1",
 					dbesc(datetime_convert()),
-					dbesc($sender['hash']),
-					intval(HUBLOC_FLAGS_PRIMARY)
+					dbesc($sender['hash'])
 				);
 			}
 			logger('sync_locations: new hub: ' . $location['url']);
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_primary, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
 					values ( '%s','%s','%s','%s', '%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
 				dbesc($sender['guid']),
 				dbesc($sender['guid_sig']),
 				dbesc($sender['hash']),
 				dbesc($location['address']),
 				dbesc('zot'),
-				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
+				intval($location['primary']),
 				dbesc($location['url']),
 				dbesc($location['url_sig']),
 				dbesc($location['host']),
@@ -2017,18 +2012,16 @@ function zot_encode_locations($channel) {
 	$x = zot_get_hublocs($channel['channel_hash']);
 	if($x && count($x)) {
 		foreach($x as $hub) {
-			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
-				$ret[] = array(
-					'host'     => $hub['hubloc_host'],
-					'address'  => $hub['hubloc_addr'],
-					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
-					'url'      => $hub['hubloc_url'],
-					'url_sig'  => $hub['hubloc_url_sig'],
-					'callback' => $hub['hubloc_callback'],
-					'sitekey'  => $hub['hubloc_sitekey'],
-					'deleted'  => (intval($hub['hubloc_deleted']) ? true : false)
-				);
-			}
+			$ret[] = array(
+				'host'     => $hub['hubloc_host'],
+				'address'  => $hub['hubloc_addr'],
+				'primary'  => (intval($hub['hubloc_primary']) ? true : false),
+				'url'      => $hub['hubloc_url'],
+				'url_sig'  => $hub['hubloc_url_sig'],
+				'callback' => $hub['hubloc_callback'],
+				'sitekey'  => $hub['hubloc_sitekey'],
+				'deleted'  => (intval($hub['hubloc_deleted']) ? true : false)
+			);
 		}
 	}
 	return $ret;
@@ -2843,10 +2836,9 @@ function get_rpost_path($observer) {
 
 function import_author_zot($x) {
 	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d)>0 limit 1",
+	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_primary = 1 limit 1",
 		dbesc($x['guid']),
-		dbesc($x['guid_sig']),
-		intval(HUBLOC_FLAGS_PRIMARY)
+		dbesc($x['guid_sig'])
 	);
 
 	if($r) {

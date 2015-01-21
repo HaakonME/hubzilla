@@ -120,7 +120,7 @@ function hubloc_change_primary($hubloc) {
 		logger('no hubloc');
 		return false;
 	}
-	if(! ($hubloc['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) {
+	if(! (intval($hubloc['hubloc_primary']))) {
 		logger('not primary: ' . $hubloc['hubloc_url']);
 		return false;
 	}

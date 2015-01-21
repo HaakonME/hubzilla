@@ -493,7 +493,7 @@ function notifier_run($argv, $argc){
 		// aren't the owner or author.  
 
 
-		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+		$r = q("select * from hubloc 
 			where hubloc_hash in (" . implode(',',$recipients) . ") order by hubloc_connected desc limit 1");
 	} 
 	else {

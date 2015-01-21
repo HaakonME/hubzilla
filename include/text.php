@@ -1890,13 +1890,13 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 	if(count($arr)) {
 		if($abook) {
 			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash and abook_channel = %d
-				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0",
+				where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1",
 				intval($item['uid'])
 			);
 		}
 		else {
 			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0");
+				where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1");
 		}
 		$xchans = q("select * from xchan where xchan_hash in (" . implode(',',$arr) . ") and xchan_network in ('rss','unknown')");
 		if(! $chans)
@@ -1924,7 +1924,7 @@ function xchan_mail_query(&$item) {
 
 	if(count($arr)) {
 		$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-			where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0");
+			where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1");
 	}
 	if($chans) {
 		$item['from'] = find_xchan_in_array($item['from_xchan'],$chans);

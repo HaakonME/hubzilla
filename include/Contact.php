@@ -22,9 +22,8 @@ function rconnect_url($channel_id,$xchan) {
 	if(($r) && ($r[0]['xchan_follow']))
 		return $r[0]['xchan_follow'];
 
-	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d )>0 limit 1",
-		dbesc($xchan),
-		intval(HUBLOC_FLAGS_PRIMARY)
+	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and hubloc_primary = 1 limit 1",
+		dbesc($xchan)
 	);
 
 	if($r)
@@ -389,8 +388,7 @@ function mark_orphan_hubsxchans() {
 //	}
 
 
-	$r = q("select hubloc_id, hubloc_hash from hubloc where hubloc_error = 0 and hubloc_orphancheck = 0",
-	);
+	$r = q("select hubloc_id, hubloc_hash from hubloc where hubloc_error = 0 and hubloc_orphancheck = 0");
 
 	if($r) {
 		foreach($r as $rr) {
@@ -398,7 +396,7 @@ function mark_orphan_hubsxchans() {
 			// see if any other hublocs are still alive for this channel
 
 			$x = q("select * from hubloc where hubloc_hash = '%s' and hubloc_error = 0",
-				dbesc($rr['hubloc_hash']),
+				dbesc($rr['hubloc_hash'])
 			);
 			if($x) {
 

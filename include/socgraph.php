@@ -340,14 +340,12 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
 		and not xlink_link in ( select xchan from xign where uid = %d )
 		and xlink_xchan != ''
-		and not ( xchan_flags & %d )>0
-		and not ( xchan_flags & %d )>0
+		and xchan_hidden = 0
+		and xchan_deleted = 0
 		group by xchan_hash order by total desc limit %d offset %d ",
 		intval($uid),
 		intval($uid),
 		intval($uid),
-		intval(XCHAN_FLAGS_HIDDEN),
-		intval(XCHAN_FLAGS_DELETED),
 		intval($limit),
 		intval($start)
 	);
@@ -360,13 +358,11 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		where xlink_xchan = ''
 		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
 		and not xlink_link in ( select xchan from xign where uid = %d )
-		and not ( xchan_flags & %d )>0
-		and not ( xchan_flags & %d )>0
+		and xchan_hidden = 0
+		and xchan_deleted = 0
 		group by xchan_hash order by total desc limit %d offset %d ",
 		intval($uid),
 		intval($uid),
-		intval(XCHAN_FLAGS_HIDDEN),
-		intval(XCHAN_FLAGS_DELETED),
 		intval($limit),
 		intval($start)
 	);

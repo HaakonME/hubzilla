@@ -193,7 +193,7 @@ function xchan_store($arr) {
 	if(! $arr['photo'])
 		$arr['photo'] = get_default_profile_photo();
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_instance_url, xchan_flags, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s','%s',%d,'%s') ",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_instance_url, xchan_hidden, xchan_orphan, xchan_censored, xchan_selfcensored, xchan_system, xchan_pubforum, xchan_deleted, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s','%s',%d, %d, %d, %d, %d, %d, %d, '%s') ",
 		dbesc($arr['hash']),
 		dbesc($arr['guid']),
 		dbesc($arr['guid_sig']),
@@ -206,7 +206,13 @@ function xchan_store($arr) {
 		dbesc($arr['name']),
 		dbesc($arr['network']),
 		dbesc($arr['instance_url']),
-		intval($arr['flags']),
+		intval($arr['hidden']),
+		intval($arr['orphan']),
+		intval($arr['censored']),
+		intval($arr['selfcensored']),
+		intval($arr['system']),
+		intval($arr['pubforum']),
+		intval($arr['deleted']),
 		dbesc(datetime_convert())
 	);
 	if(! $r)

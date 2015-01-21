@@ -295,23 +295,15 @@ function local_dir_update($uid,$force) {
 
 		logger('hidden: ' . $hidden);
 
-		$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
+		$r = q("select xchan_hidden from xchan where xchan_hash = '%s' limit 1",
 			dbesc($p[0]['channel_hash'])
 		);
 
-		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
-		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $hidden)
-			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
-		else
-			$new_flags = $r[0]['xchan_flags'];
-		
-		if($new_flags != $r[0]['xchan_flags']) {			
-
-			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s'",
-				intval($new_flags),
+		if(intval($r[0]['xchan_hidden']) != $hidden) {
+			$r = q("update xchan set xchan_hidden = %d where xchan_hash = '%s'",
+				intval($hidden),
 				dbesc($p[0]['channel_hash'])
 			);
-
 		}
 
 		$address = $p[0]['channel_address'] . '@' . get_app()->get_hostname();

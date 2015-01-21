@@ -99,7 +99,7 @@ function admin_content(&$a) {
 		'channels'	 =>	Array($a->get_baseurl(true)."/admin/channels/", t("Channels") , "channels"),
 		'plugins'    =>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes'     =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
-		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
+//		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
 		'profs'      => array(z_root() . '/admin/profs', t('Profile Config'), 'profs'),
 		'dbsync'     => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
@@ -152,9 +152,9 @@ function admin_content(&$a) {
 			case 'themes':
 				$o = admin_page_themes($a);
 				break;
-			case 'hubloc':
-				$o = admin_page_hubloc($a);
-				break;
+//			case 'hubloc':
+//				$o = admin_page_hubloc($a);
+//				break;
 			case 'logs':
 				$o = admin_page_logs($a);
 				break;

@@ -200,11 +200,10 @@ function group_get_members($gid) {
 	if(intval($gid)) {
 		$r = q("SELECT * FROM `group_member` 
 			LEFT JOIN abook ON abook_xchan = `group_member`.`xchan` left join xchan on xchan_hash = abook_xchan
-			WHERE `gid` = %d AND abook_channel = %d and `group_member`.`uid` = %d and not ( xchan_flags & %d )>0 and not ( abook_flags & %d )>0 and not ( abook_flags & %d )>0 ORDER BY xchan_name ASC ",
+			WHERE `gid` = %d AND abook_channel = %d and `group_member`.`uid` = %d and xchan_deleted = 0 and not ( abook_flags & %d )>0 and not ( abook_flags & %d )>0 ORDER BY xchan_name ASC ",
 			intval($gid),
 			intval(local_user()),
 			intval(local_user()),
-			intval(XCHAN_FLAGS_DELETED),
 			intval(ABOOK_FLAG_BLOCKED),
 			intval(ABOOK_FLAG_PENDING)
 		);

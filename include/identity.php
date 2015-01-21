@@ -99,7 +99,7 @@ function create_sys_channel() {
 		'name' => 'System',
 		'pageflags' => PAGE_SYSTEM,
 		'publish' => 0,
-		'xchanflags' => XCHAN_FLAGS_SYSTEM
+		'system' => 1
 	));
 }
 
@@ -185,7 +185,7 @@ function create_identity($arr) {
 
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
-	$xchanflags = ((x($arr,'xchanflags')) ? intval($arr['xchanflags']) : XCHAN_FLAGS_NORMAL);
+	$system = ((x($arr,'system')) ? intval($arr['system']) : 0);
 	$name_error = validate_channelname($arr['name']);
 	if($name_error) {
 		$ret['message'] = $name_error;
@@ -312,7 +312,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_system ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
 		dbesc($hash),
 		dbesc($guid),
 		dbesc($sig),
@@ -328,7 +328,7 @@ function create_identity($arr) {
 		dbesc('zot'),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
-		intval($xchanflags)
+		intval($system)
 	);
 
 	// Not checking return value. 

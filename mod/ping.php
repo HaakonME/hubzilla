@@ -300,11 +300,10 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0) ORDER BY abook_created DESC",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or xchan_deleted = 1 or xchan_orphan = 1) ORDER BY abook_created DESC",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
-			intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED)
 		);
 
 		if($r) {
@@ -413,11 +412,10 @@ function ping_init(&$a) {
 	$t2 = dba_timer();
 
 	if($vnotify & VNOTIFY_INTRO) {
-		$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0)",
+		$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or xchan_deleted = 1 or xchan_orphan = 1)",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
-			intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED)
 		);
 
 		$t3 = dba_timer();

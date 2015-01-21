@@ -94,18 +94,17 @@ function acl_init(&$a){
 
 			$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE (abook_channel = %d $extra_channels_sql) AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
+				WHERE (abook_channel = %d $extra_channels_sql) AND not ( abook_flags & %d )>0 and xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
 				intval(local_user()),
-				intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
-				intval(XCHAN_FLAGS_DELETED)
+				intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
 		}
 		else { // Visitors
 			$r = q("SELECT xchan_hash as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags
 				FROM xchan left join xlink on xlink_link = xchan_hash
-				WHERE xlink_xchan  = '%s' AND NOT (xchan_flags & %d) > 0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
-				dbesc(get_observer_hash()),
-				intval(XCHAN_FLAGS_DELETED));
+				WHERE xlink_xchan  = '%s' AND xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
+				dbesc(get_observer_hash())
+			);
 
 			// Find contacts of extra channels
 			// This is probably more complicated than it needs to be
@@ -119,9 +118,8 @@ function acl_init(&$a){
 
 				$r2 = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 					FROM abook left join xchan on abook_xchan = xchan_hash 
-					WHERE abook_channel IN ($extra_channels_sql) $known_hashes_sql AND not ( abook_flags & %d )>0 and not (xchan_flags & %d )>0 $sql_extra2 order by  $order_extra2 xchan_name asc" ,
-					intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_HIDDEN),
-					intval(XCHAN_FLAGS_DELETED)
+					WHERE abook_channel IN ($extra_channels_sql) $known_hashes_sql AND not ( abook_flags & %d )>0 and xchan_deleted = 0 $sql_extra2 order by  $order_extra2 xchan_name asc" ,
+					intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_HIDDEN)
 				);
 				if($r2)
 					$r = array_merge($r,$r2);
@@ -151,8 +149,7 @@ function acl_init(&$a){
 			if((! $r) && $type == 'c') {
 				$r = q("SELECT substr(xchan_hash,1,18) as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags 
 					FROM xchan 
-					WHERE not (xchan_flags & %d )>0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
-					intval(XCHAN_FLAGS_DELETED)
+					WHERE xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" 
 				);
 			}
 		}
@@ -162,23 +159,20 @@ function acl_init(&$a){
 		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d )>0)
-			and not (xchan_flags & %d)>0
+			and xchan_deleted = 0
 			$sql_extra3
 			ORDER BY `xchan_name` ASC ",
 			intval(local_user()),
-			intval(PERMS_W_MAIL),
-			intval(XCHAN_FLAGS_DELETED)
+			intval(PERMS_W_MAIL)
 		);
 	}
 	elseif(($type == 'a') || ($type == 'p')) {
 		$r = q("SELECT abook_id as id, xchan_name as name, xchan_hash as hash, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag , abook_their_perms FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d
-			and not (xchan_flags & %d)>0
+			and xchan_deleted = 0
 			$sql_extra3
 			ORDER BY xchan_name ASC ",
-			intval(local_user()),
-			intval(XCHAN_FLAGS_DELETED)
-
+			intval(local_user())
 		);
 	}
 	elseif($type == 'x') {

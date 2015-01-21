@@ -276,8 +276,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		);
 
 
-		$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-			intval(XCHAN_FLAGS_DELETED),
+		$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
 			dbesc($channel['channel_hash'])
 		);
 
@@ -326,8 +325,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		$hublocs = count($r);
 
 	if(! $hublocs) {
-		$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' ",
-			intval(XCHAN_FLAGS_DELETED),
+		$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s' ",
 			dbesc($channel['channel_hash'])
 		);
 	}
@@ -402,9 +400,7 @@ function mark_orphan_hubsxchans() {
 
 				// yes - if the xchan was marked as an orphan, undo it
 
-				$y = q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
-					intval(XCHAN_FLAGS_ORPHAN),
-					intval(XCHAN_FLAGS_ORPHAN),
+				$y = q("update xchan set xchan_orphan = 0 where xchan_orphan = 1 and xchan_hash = '%s'",
 					dbesc($rr['hubloc_hash'])
 				);
 
@@ -413,8 +409,7 @@ function mark_orphan_hubsxchans() {
 
 				// nope - mark the xchan as an orphan
 
-				$y = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-					intval(XCHAN_FLAGS_ORPHAN),
+				$y = q("update xchan set xchan_orphan = 1 where xchan_hash = '%s'",
 					dbesc($rr['hubloc_hash'])
 				);
 			}
@@ -494,8 +489,7 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
         	    dbesc($xchan)
         	);
 
-        	$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-            	intval(XCHAN_FLAGS_DELETED),
+        	$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
             	dbesc($xchan)
         	);
 		}

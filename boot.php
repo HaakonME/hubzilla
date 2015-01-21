@@ -401,36 +401,6 @@ define ( 'VNOTIFY_INTRO',      0x0200 );
 define ( 'VNOTIFY_REGISTER',   0x0400 );
 
 
-// We need a flag to designate that a site is a
-// global directory mirror, but probably doesn't
-// belong in hubloc.
-// This indicates a need for an 'xsite' table
-// which contains only sites and not people.
-// Then we might have to revisit hubloc as a
-// linked structure between xchan and xsite
-
-define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
-define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
-define ( 'HUBLOC_FLAGS_ORPHANCHECK',  0x0004); 
-define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
-
-define ( 'XCHAN_FLAGS_NORMAL',		  0x0000);
-define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
-define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
-define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
-define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
-define ( 'XCHAN_FLAGS_SYSTEM',        0x0010);
-define ( 'XCHAN_FLAGS_PUBFORUM',      0x0020);
-define ( 'XCHAN_FLAGS_DELETED',       0x1000);
-/*
- * Traficlights for Administration of HubLoc
- * to detect problems in inter server communication
- */
-define ('HUBLOC_NOTUSED',             0x0000);
-define ('HUBLOC_SEND_ERROR',          0x0001);
-define ('HUBLOC_RECEIVE_ERROR',       0x0002);
-define ('HUBLOC_WORKS',               0x0004);
-define ('HUBLOC_OFFLINE',             0x0008);
 
 /**
  * Tag/term types

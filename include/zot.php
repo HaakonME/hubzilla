@@ -705,43 +705,36 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 		$hidden = (1 - intval($arr['searchable']));
 
-		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
-		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $hidden)
-			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
-		else
-			$new_flags = $r[0]['xchan_flags'];
+		$hidden_changed = $adult_changed = $deleted_changed = $pubforum_changed = 0;
 
-		$adult = (($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED) ? true : false);
-		$adult_changed =  ((intval($adult) != intval($arr['adult_content'])) ? true : false);
-		if($adult_changed)
-			$new_flags = $new_flags ^ XCHAN_FLAGS_SELFCENSORED;
-
-		$deleted = (($r[0]['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
-		$deleted_changed =  ((intval($deleted) != intval($arr['deleted'])) ? true : false);
-		if($deleted_changed)
-			$new_flags = $new_flags ^ XCHAN_FLAGS_DELETED;
-
-		$public_forum = (($r[0]['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
-		$pubforum_changed = ((intval($public_forum) != intval($arr['public_forum'])) ? true : false);
-		if($pubforum_changed)
-			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_PUBFORUM;
+		if(intval($r[0]['xchan_hidden']) != (1 - intval($arr['searchable'])))
+			$hidden_changed = 1;
+		if(intval($r[0]['xchan_selfcensored']) != intval($arr['adult_content']))
+			$adult_changed = 1;
+		if(intval($r[0]['xchan_deleted']) != intval($arr['deleted']))
+			$deleted_changed = 1;
+		if(intval($r[0]['xchan_pubforum']) != intval($arr['public_forum']))
+			$pubforum_changed = 1;
 
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
-			|| ($r[0]['xchan_flags'] != $new_flags)
 			|| ($r[0]['xchan_addr'] != $arr['address'])
 			|| ($r[0]['xchan_follow'] != $arr['follow_url'])
 			|| ($r[0]['xchan_connpage'] != $arr['connect_url']) 
-			|| ($r[0]['xchan_url'] != $arr['url'])) {
+			|| ($r[0]['xchan_url'] != $arr['url'])
+			|| $hidden_changed || adult_changed || deleted_changed || $pubforum_changed ) {
 			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s', 
-				xchan_connpage = '%s', xchan_flags = %d,
+				xchan_connpage = '%s', xchan_hidden = %d, xchan_selfcensored = %d, xchan_deleted = %d, xchan_pubforum = %d, 
 				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s'",
 				dbesc(($arr['name']) ? $arr['name'] : '-'),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
 				dbesc($arr['follow_url']),
 				dbesc($arr['connect_url']),
-				intval($new_flags),
+				intval(1 - intval($arr['searchable'])),
+				intval($arr['adult_content']),
+				intval($arr['deleted']),
+				intval($arr['public_forum']),
 				dbesc($arr['address']),
 				dbesc($arr['url']),
 				dbesc($xchan_hash)
@@ -761,20 +754,9 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 && ($arr['site']['url'] != z_root()))
 			$arr['searchable'] = false;
 
-		$hidden = (1 - intval($arr['searchable']));
-
-		if($hidden)
-			$new_flags = XCHAN_FLAGS_HIDDEN;
-		else
-			$new_flags = 0;
-		if($arr['adult_content'])
-			$new_flags |= XCHAN_FLAGS_SELFCENSORED;
-		if(array_key_exists('deleted',$arr) && $arr['deleted'])
-			$new_flags |= XCHAN_FLAGS_DELETED;
-		
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
+				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_selfcensored, xchan_deleted, xchan_pubforum, )
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d) ",
 			dbesc($xchan_hash),
 			dbesc($arr['guid']),
 			dbesc($arr['guid_sig']),
@@ -790,7 +772,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			dbesc('zot'),
 			dbescdate($arr['photo_updated']),
 			dbescdate($arr['name_updated']),
-			intval($new_flags)
+			intval(1 - intval($arr['searchable'])),
+			intval($arr['adult_content']),
+			intval($arr['deleted']),
+			intval($arr['public_forum'])
 		);
 
 		$what .= 'new_xchan';
@@ -1433,11 +1418,11 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private'])) {
 			$local_public = true;
 
-			$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
+			$r = q("select xchan_selfcensored from xchan where xchan_hash = '%s' limit 1",
 				dbesc($sender['hash'])
 			);
 			// don't import sys channel posts from selfcensored authors
-			if($r && ($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED)) {
+			if($r && (intval($r[0]['xchan_selfcensored']))) {
 				$local_public = false;
 				continue;
 			}
@@ -1890,9 +1875,7 @@ function sync_locations($sender,$arr,$absolute = false) {
 							intval($r[0]['hubloc_id'])
 						);
 					}
-					q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
-						intval(XCHAN_FLAGS_ORPHAN),
-						intval(XCHAN_FLAGS_ORPHAN),
+					q("update xchan set xchan_orphan = 0 where xchan_orphan = 1 and xchan_hash = '%s'",
 						dbesc($sender['hash'])
 					);
 				} 
@@ -2078,8 +2061,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 
 
 	if(in_arrayi('nsfw',$clean) || in_arrayi('adult',$clean)) {
-		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-			intval(XCHAN_FLAGS_SELFCENSORED),
+		q("update xchan set xchan_selfcensored = 1 where xchan_hash = '%s'",
 			dbesc($hash)
 		);
 	}

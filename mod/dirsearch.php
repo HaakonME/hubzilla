@@ -112,7 +112,7 @@ function dirsearch_content(&$a) {
 		$sql_extra .= dir_query_build($joiner,'xprof_keywords',$keywords);
 
 	if($forums)
-		$sql_extra .= dir_flag_build($joiner,'xprof_flags',XCHAN_FLAGS_PUBFORUM, $forums);
+		$sql_extra .= dir_flag_build($joiner,'xchan_pubforum',$forums);
 
 
 	// we only support an age range currently. You must set both agege 
@@ -158,20 +158,16 @@ function dirsearch_content(&$a) {
 	}
 
 
-	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 " : '');
+	$safesql = (($safe > 0) ? " and xchan_censored = 0 and xchan_selfcensored = 0 " : '');
 	if($safe < 0)
-		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " )>0 ";
+		$safesql = " and ( xchan_censored = 1 OR xchan_selfcensored = 1 ) ";
 
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
 	else {
 		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
 		if($return_total) {
-			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and xchan_network = 'zot' and not ( xchan_flags & %d)>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql ",
-				intval(XCHAN_FLAGS_HIDDEN),
-				intval(XCHAN_FLAGS_ORPHAN),
-				intval(XCHAN_FLAGS_DELETED)
-			);
+			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and xchan_network = 'zot' and xchan_hidden = 0 and xchan_orphan = 0 and xchan_deleted = 0 $safesql ");
 			if($r) {
 				$ret['total_items'] = $r[0]['total'];
 			}
@@ -213,11 +209,7 @@ function dirsearch_content(&$a) {
 		json_return_and_die($spkt);
 	}
 	else {
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql $order $qlimit ",
-			intval(XCHAN_FLAGS_HIDDEN),
-			intval(XCHAN_FLAGS_ORPHAN),
-			intval(XCHAN_FLAGS_DELETED)
-		);
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and xchan_hidden = 0 and xchan_orphan = 0 and xchan_deleted = 0 $safesql $order $qlimit ");
 	}
 
 	$ret['page'] = $page + 1;
@@ -234,7 +226,7 @@ function dirsearch_content(&$a) {
 			$entry['name']        = $rr['xchan_name'];
 			$entry['hash']        = $rr['xchan_hash'];
 
-			$entry['public_forum'] = (($rr['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
+			$entry['public_forum'] = (intval($rr['xchan_pubforum']) ? true : false);
 
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo_l']     = $rr['xchan_photo_l'];
@@ -282,7 +274,7 @@ function dir_query_build($joiner,$field,$s) {
 }
 
 function dir_flag_build($joiner,$field,$bit,$s) {
-	return dbesc($joiner) . " ( " . dbesc('xchan_flags') . " & " . intval($bit) . " ) " . ((intval($s)) ? '>' : '=' ) . " 0 ";
+	return dbesc($joiner) . " ( " . dbesc($field) . " = " . intval($bit) . " ) ";
 }
 
 

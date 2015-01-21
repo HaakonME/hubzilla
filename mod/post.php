@@ -260,23 +260,15 @@ function post_init(&$a) {
 			$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 			info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 			logger('mod_zot: auth success from ' . $x[0]['xchan_addr']); 
-			 q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_id = %d ",
-                                intval(HUBLOC_WORKS),
-                                intval($x[0]['hubloc_id'])
-                        );
 
-
-		} else {
+		}
+		else {
 			if($test) {
 				$ret['message'] .= 'auth failure. ' . print_r($_REQUEST,true) . print_r($j,true) . EOL;
 				json_return_and_die($ret);
 			}
 
 			logger('mod_zot: magic-auth failure - not authenticated: ' . $x[0]['xchan_addr']);
-			q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_id = %d ",
-				intval(HUBLOC_RECEIVE_ERROR),
-				intval($x[0]['hubloc_id'])
-			);
 		}
 
 		// FIXME - we really want to save the return_url in the session before we visit rmagic.
@@ -675,9 +667,7 @@ function post_post(&$a) {
 				intval($hub['hubloc_id'])
 			);
 		}
-		q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
-			intval(XCHAN_FLAGS_ORPHAN),
-			intval(XCHAN_FLAGS_ORPHAN),
+		q("update xchan set xchan_orphan = 0 where xchan_orphan = 1 and xchan_hash = '%s'",
 			dbesc($hub['hubloc_hash'])
 		);
 	} 

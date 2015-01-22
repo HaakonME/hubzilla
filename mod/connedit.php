@@ -186,7 +186,9 @@ function connedit_post(&$a) {
 			&& (intval(get_pconfig($channel['channel_id'],'system','post_newfriend')))) {
 			$xarr = array();
 			$xarr['verb'] = ACTIVITY_FRIEND;
-			$xarr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+			$xarr['item_wall'] = 1;
+			$xarr['item_origin'] = 1;
+			$xarr['item_thread_top'] = 1;
 			$xarr['owner_xchan'] = $xarr['author_xchan'] = $channel['channel_hash'];
 			$xarr['allow_cid'] = $channel['channel_allow_cid'];
 			$xarr['allow_gid'] = $channel['channel_allow_gid'];

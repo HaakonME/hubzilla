@@ -1549,7 +1549,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 				// We need this line to ensure wall-to-wall comments are relayed (by falling through to the relay bit), 
 				// and at the same time not relay any other relayable posts more than once, because to do so is very wasteful. 
-				if(! ($r[0]['item_flags'] & ITEM_ORIGIN))
+				if(! intval($r[0]['item_origin']))
 					continue;
 			}
 		}

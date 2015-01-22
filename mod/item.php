@@ -281,7 +281,7 @@ function item_post(&$a) {
 		// For comments, We need to additionally look at the parent and see if it's a wall post that originated locally.
 
 		if($observer['xchan_name'] != $owner_xchan['xchan_name'])  {
-			if($parent_item && ($parent_item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) {
+			if(($parent_item) && ($parent_item['item_wall'] && $parent_item['item_origin'])) {
 				$walltowall_comment = true;
 				$walltowall = true;
 			}
@@ -640,14 +640,10 @@ function item_post(&$a) {
 		}
 	}
 
-	if(local_user() != $profile_uid)
-		$item_flags |= ITEM_UNSEEN;
-	
-	if($post_type === 'wall' || $post_type === 'wall-comment')
-		$item_flags = $item_flags | ITEM_WALL;
+	$item_unseen = ((local_user() != $profile_uid) ? 1 : 0);
+	$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);
+	$item_origin = (($origin) ? 1 : 0);
 
-	if($origin)
-		$item_flags = $item_flags | ITEM_ORIGIN;
 
 	if($moderated)
 		$item_restrict = $item_restrict | ITEM_MODERATED;
@@ -678,11 +674,9 @@ function item_post(&$a) {
 
 	$datarray = array();
 
-	if(! $parent) {
-		$item_flags = $item_flags | ITEM_THREAD_TOP;
-	}
+	$item_thead_top = ((! $parent) ? 1 : 0);
 
-	if ((! $plink) && ($item_flags & ITEM_THREAD_TOP)) {
+	if ((! $plink) && ($item_thread_top)) {
 		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
 	}
 	
@@ -717,6 +711,10 @@ function item_post(&$a) {
 	$datarray['postopts']       = $postopts;
 	$datarray['item_restrict']  = $item_restrict;
 	$datarray['item_flags']     = $item_flags;
+	$datarray['item_unseen']    = $item_unseen;
+	$datarray['item_wall']      = $item_wall;
+	$datarray['item_origin']    = $item_origin;
+	$datarray['item_thread_top'] = $item_thread_top;
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['public_policy']  = $public_policy;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 

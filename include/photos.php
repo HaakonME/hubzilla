@@ -225,30 +225,31 @@ function photo_upload($channel, $observer, $args) {
 
 	// Create item container
 
-	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
 	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);			
 	$title = '';
 	$mid = item_message_id();
 			
 	$arr = array();
 
-	$arr['aid']           = $account_id;
-	$arr['uid']           = $channel_id;
-	$arr['mid']           = $mid;
-	$arr['parent_mid']    = $mid; 
-	$arr['item_flags']    = $item_flags;
-	$arr['item_restrict'] = $item_restrict;
-	$arr['resource_type'] = 'photo';
-	$arr['resource_id']   = $photo_hash;
-	$arr['owner_xchan']   = $channel['channel_hash'];
-	$arr['author_xchan']  = $observer['xchan_hash'];
-	$arr['title']         = $title;
-	$arr['allow_cid']     = $str_contact_allow;
-	$arr['allow_gid']     = $str_group_allow;
-	$arr['deny_cid']      = $str_contact_deny;
-	$arr['deny_gid']      = $str_group_deny;
-	$arr['verb']          = ACTIVITY_POST;
-
+	$arr['aid']            = $account_id;
+	$arr['uid']            = $channel_id;
+	$arr['mid']            = $mid;
+	$arr['parent_mid']     = $mid; 
+	$arr['item_flags']     = $item_flags;
+	$arr['item_restrict']  = $item_restrict;
+	$arr['resource_type']  = 'photo';
+	$arr['resource_id']    = $photo_hash;
+	$arr['owner_xchan']    = $channel['channel_hash'];
+	$arr['author_xchan']   = $observer['xchan_hash'];
+	$arr['title']          = $title;
+	$arr['allow_cid']      = $str_contact_allow;
+	$arr['allow_gid']      = $str_group_allow;
+	$arr['deny_cid']       = $str_contact_deny;
+	$arr['deny_gid']       = $str_group_deny;
+	$arr['verb']           = ACTIVITY_POST;
+	$arr['item_wall']      = 1;
+	$arr['item_origin']    = 1;
+	$arr['item_thread_top'] = 1;
 	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 
 	if ($width_x_height)
@@ -431,7 +432,6 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 
 	// Create item container
 
-	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
 	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);			
 
 	$title = '';
@@ -439,25 +439,27 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 			
 	$arr = array();
 
-	$arr['aid']           = $channel['channel_account_id'];
-	$arr['uid']           = $channel['channel_id'];
-	$arr['mid']           = $mid;
-	$arr['parent_mid']    = $mid; 
-	$arr['item_flags']    = $item_flags;
-	$arr['item_restrict'] = $item_restrict;
-	$arr['resource_type'] = 'photo';
-	$arr['resource_id']   = $photo['resource_id'];
-	$arr['owner_xchan']   = $channel['channel_hash'];
-	$arr['author_xchan']  = $creator_hash;
+	$arr['aid']             = $channel['channel_account_id'];
+	$arr['uid']             = $channel['channel_id'];
+	$arr['mid']             = $mid;
+	$arr['parent_mid']      = $mid; 
+	$arr['item_wall']       = 1;
+	$arr['item_origin']     = 1;
+	$arr['item_thread_top'] = 1;
+	$arr['item_restrict']  = $item_restrict;
+	$arr['resource_type']  = 'photo';
+	$arr['resource_id']    = $photo['resource_id'];
+	$arr['owner_xchan']    = $channel['channel_hash'];
+	$arr['author_xchan']   = $creator_hash;
 
-	$arr['allow_cid']     = $photo['allow_cid'];
-	$arr['allow_gid']     = $photo['allow_gid'];
-	$arr['deny_cid']      = $photo['deny_cid'];
-	$arr['deny_gid']      = $photo['deny_gid'];
+	$arr['allow_cid']      = $photo['allow_cid'];
+	$arr['allow_gid']      = $photo['allow_gid'];
+	$arr['deny_cid']       = $photo['deny_cid'];
+	$arr['deny_gid']       = $photo['deny_gid'];
 
-	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+	$arr['plink']          = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 			
-	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
+	$arr['body']           = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
 		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 
 		. '[/zrl]';
 		

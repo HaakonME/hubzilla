@@ -954,7 +954,9 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 
 	$mid = item_message_id();
 
-	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
+	$arr['item_wall'] = 1; 
+	$arr['item_origin'] = 1;
+	$arr['item_unseen'] = 1;
 
 	if($action == 'post') {
 		//check if activity item exists
@@ -975,7 +977,6 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 			$arr['uid']           = $channel_id;
 			$arr['mid']           = $dmid;
 			$arr['parent_mid']    = $dmid;
-			$arr['item_flags']    = $item_flags;
 			$arr['author_xchan']  = $poster['xchan_hash'];
 			$arr['owner_xchan']   = $poster['xchan_hash'];
 			$arr['title']         = '';
@@ -1016,7 +1017,9 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 	$arr['uid']           = $channel_id;
 	$arr['mid']           = $mid;
 	$arr['parent_mid']    = $mid;
-	$arr['item_flags']    = $item_flags;
+	$arr['item_wall']     = 1; 
+	$arr['item_origin']   = 1;
+	$arr['item_unseen']   = 1;
 	$arr['author_xchan']  = $poster['xchan_hash'];
 	$arr['owner_xchan']   = $poster['xchan_hash'];
 	$arr['title']         = '';

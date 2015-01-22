@@ -362,7 +362,7 @@ function notifier_run($argv, $argc){
 
 		$encoded_item = encode_item($target_item);
 		
-		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
+		$relay_to_owner = (((! $top_level_post) && (intval($target_item['item_origin']))) ? true : false);
 
 		$uplink = false;
 
@@ -371,7 +371,6 @@ function notifier_run($argv, $argc){
 
 		logger('notifier: relay_to_owner: ' . (($relay_to_owner) ? 'true' : 'false'), LOGGER_DATA);
 		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'), LOGGER_DATA);
-		logger('notifier: target_item_flags: ' . $target_item['item_flags'] . ' ' . (($target_item['item_flags'] & ITEM_ORIGIN ) ? 'true' : 'false'), LOGGER_DATA);
 
 		// tag_deliver'd post which needs to be sent back to the original author
 

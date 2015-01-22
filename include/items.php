@@ -364,13 +364,12 @@ function post_activity_item($arr) {
 	if((($arr['parent']) && $arr['parent'] != $arr['id']) || (($arr['parent_mid']) && $arr['parent_mid'] != $arr['mid']))
 		$is_comment = true;
 
-	if(! x($arr,'item_flags')) {
-		if($is_comment)
-			$arr['item_flags'] = ITEM_ORIGIN;
-		else
-			$arr['item_flags'] = ITEM_ORIGIN | ITEM_WALL | ITEM_THREAD_TOP;
-	}	
-
+	if(! array_key_exists('item_origin',$arr))
+		$arr['item_origin'] = 1;
+	if(! array_key_exists('item_wall',$arr) && (! $is_comment))
+		$arr['item_wall'] = 1;
+	if(! array_key_exists('item_thread_top',$arr) && (! $is_comment))
+		$arr['item_thread_top'] = 1;
 
 	$channel  = get_app()->get_channel();
 	$observer = get_app()->get_observer();
@@ -2917,10 +2916,7 @@ function tag_deliver($uid,$item_id) {
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
-	if(($item['item_flags'] & ITEM_WALL) 
-		|| ($item['item_flags'] & ITEM_ORIGIN) 
-		|| (!($item['item_flags'] & ITEM_THREAD_TOP)) 
-		|| ($item['id'] != $item['parent'])) {
+	if(intval($item['item_wall']) || intval($item['item_origin']) || (! intval($item['item_thread_top'])) || ($item['id'] != $item['parent'])) {
 		logger('tag_deliver: item was local or a comment. rejected.');
 		return;
 	}
@@ -3039,7 +3035,10 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	if((! $private) && $new_public_policy)
 		$private = 1;
 
-	$flag_bits = $item['item_flags'] | ITEM_WALL|ITEM_ORIGIN;
+	$item_wall = 1;
+	$item_origin = 1;
+
+	$flag_bits = $item['item_flags'];
 
 	// unset the nocomment bit if it's there. 
 
@@ -3087,7 +3086,7 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	}
 
 	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d",
+		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = %d, item_origin = %d  where id = %d",
 		intval($flag_bits),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_allow_cid']),
@@ -3099,6 +3098,8 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 		dbesc(map_scope($channel['channel_w_comment'])),
 		dbesc($title),
 		dbesc($body),
+		intval($item_wall),
+		$intval($item_origin),
 		intval($item_id)
 	);
 

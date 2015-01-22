@@ -87,9 +87,6 @@ function poke_init(&$a) {
 
 
 	$arr = array();
-	$arr['item_flags']    = ITEM_WALL | ITEM_ORIGIN;
-	if($parent_item)
-		$arr['item_flags'] |= ITEM_THREAD_TOP;
 
 	$arr['owner_xchan']   = (($parent_item) ? $parent_item['owner_xchan'] : $channel['channel_hash']);
 	$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
@@ -114,6 +111,13 @@ function poke_init(&$a) {
 	);
 
 	$arr['object'] = json_encode($obj);
+
+	$arr['item_origin']   = 1;
+	$arr['item_wall']     = 1;
+	$arr['item_unseen']   = 1;
+	if(! $parent_item)
+		$item['item_thread_top'] = 1;
+
 
 	post_activity_item($arr);
 

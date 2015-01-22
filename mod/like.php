@@ -293,10 +293,12 @@ function like_content(&$a) {
 	}
 
 	$mid = item_message_id();
+	$arr = array();
 
 	if($extended_like) {
-		$item_flags = ITEM_THREAD_TOP|ITEM_ORIGIN|ITEM_WALL;
-
+		$arr['item_thread_top'] = 1;
+		$arr['item_origin'] = 1;
+		$arr['item_wall'] = 1;
 	}
 	else {
 		$post_type = (($item['resource_type'] === 'photo') ? t('photo') : t('status'));
@@ -329,7 +331,9 @@ function like_content(&$a) {
 		if(! ($item['item_flags'] & ITEM_THREAD_TOP))
 			$post_type = 'comment';		
 
-		$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
+		$arr['item_origin'] = 1;
+		$arr['item_notshown'] = 1;
+
 		if($item['item_flags'] & ITEM_WALL)
 			$item_flags |= ITEM_WALL;
 
@@ -361,7 +365,6 @@ function like_content(&$a) {
 			killme(); 
 
 	
-	$arr = array();
 
 	if($extended_like) {
 		$ulink = '[zrl=' . $ch[0]['xchan_url'] . ']' . $ch[0]['xchan_name'] . '[/zrl]';

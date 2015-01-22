@@ -536,7 +536,7 @@ define ( 'ITEM_PENDING_REMOVE',  0x0800);   // deleted, notification period has 
  * Item Flags
  */
 
-define ( 'ITEM_ORIGIN',          0x0001);
+//define ( 'ITEM_ORIGIN',          0x0001);
 define ( 'ITEM_UNSEEN',          0x0002);
 define ( 'ITEM_STARRED',         0x0004);
 define ( 'ITEM_UPLINK',          0x0008);

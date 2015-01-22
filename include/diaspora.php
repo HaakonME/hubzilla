@@ -1414,7 +1414,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	if($result && $result['success'])
 		$message_id = $result['item_id'];
 
-	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
+	if(intval($parent_item['item_origin']) && (! $parent_author_signature)) {
 		// if the message isn't already being relayed, notify others
 		// the existence of parent_author_signature means the parent_author or owner
 		// is already relaying.
@@ -1996,7 +1996,7 @@ function diaspora_like($importer,$xml,$msg) {
 	// the existence of parent_author_signature means the parent_author or owner
 	// is already relaying. The parent_item['origin'] indicates the message was created on our system
 
-	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature))
+	if(intval($parent_item['item_origin']) && (! $parent_author_signature))
 		proc_run('php','include/notifier.php','comment-import',$message_id);
 
 	return;
@@ -2105,19 +2105,12 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 					$r[0]['parent']
 				);
 				if($p) {
-					if(($p[0]['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
-// FIXME so we can relay this
-//						q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-//							$r[0]['id'],
-//							dbesc($signed_data),
-//							dbesc($sig),
-//							dbesc($diaspora_handle)
-//						);
+					if(intval($p[0]['item_origin']) && (! $parent_author_signature)) {
 
 						// the existence of parent_author_signature would have meant the parent_author or owner
 						// is already relaying.
-						logger('diaspora_signed_retraction: relaying relayable_retraction');
 
+						logger('diaspora_signed_retraction: relaying relayable_retraction');
 						proc_run('php','include/notifier.php','drop',$r[0]['id']);
 					}
 				}

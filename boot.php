@@ -531,27 +531,6 @@ define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody co
 define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
 define ( 'ITEM_PENDING_REMOVE',  0x0800);   // deleted, notification period has lapsed
-
-/**
- * Item Flags
- */
-
-//define ( 'ITEM_ORIGIN',          0x0001);
-//define ( 'ITEM_UNSEEN',          0x0002);
-//define ( 'ITEM_STARRED',         0x0004);
-//define ( 'ITEM_UPLINK',          0x0008);
-//define ( 'ITEM_CONSENSUS',       0x0010);  // an item which may present agree/disagree/abstain options
-//define ( 'ITEM_WALL',            0x0020);
-//define ( 'ITEM_THREAD_TOP',      0x0040);
-//define ( 'ITEM_NOTSHOWN',        0x0080);  // technically visible but not normally shown (e.g. like/dislike)
-//define ( 'ITEM_NSFW',            0x0100);
-//define ( 'ITEM_RELAY',           0x0200);  // used only in the communication layers, not stored
-//define ( 'ITEM_MENTIONSME',      0x0400);
-//define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
-define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
-define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
-define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
-define ( 'ITEM_RSS',             0x8000);  // Item comes from a feed. Use this to decide whether to link the title
 										   // Don't make us evaluate this same item again.
 
 define ( 'DBTYPE_MYSQL',    0 );

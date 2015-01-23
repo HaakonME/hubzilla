@@ -396,13 +396,13 @@ function post_activity_item($arr) {
 		if($channel) {
 			if($channel['channel_hash'] === $arr['author_xchan']) {
 				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-				$arr['item_flags'] = $arr['item_flags'] | ITEM_VERIFIED;
+				$arr['item_verified'] = 1;
 			}
 		}
 
 		logger('Encrypting local storage');
 		$key = get_config('system','pubkey');
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		$arr['item_obscured'] = 1;
 		if($arr['title'])
 			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
@@ -870,7 +870,7 @@ function get_item_elements($x) {
 			dbesc($arr['author_xchan'])
 		);
 		if($r && rsa_verify($x['body'],base64url_decode($arr['sig']),$r[0]['xchan_pubkey']))
-			$arr['item_flags'] |= ITEM_VERIFIED;
+			$arr['item_verified'] = 1;
 		else
 			logger('get_item_elements: message verification failed.');
 	}
@@ -883,7 +883,7 @@ function get_item_elements($x) {
 
 
 	if(intval($arr['item_private'])) {
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		$arr['item_obscured'] = 1;
 		if($arr['title'])
 			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
@@ -1066,7 +1066,7 @@ function encode_item($item,$mirror = false) {
 
 	$key = get_config('system','prvkey');
 
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		if($item['title'])
 			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
@@ -1475,7 +1475,7 @@ function get_atom_elements($feed,$item,&$author) {
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
-	$res['item_flags'] = ITEM_RSS;
+	$res['item_rss'] = 1;
 
 
 	// removing the content of the title if its identically to the body
@@ -1956,7 +1956,7 @@ function item_store($arr,$allow_exec = false) {
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
 
-	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+	if((! array_key_exists('item_obscured',$arr)) || $arr['item_obscured'] == 0) {
 
 		$arr['lang'] = detect_language($arr['body']);
 		// apply the input filter here - if it is obscured it has been filtered already
@@ -1967,7 +1967,7 @@ function item_store($arr,$allow_exec = false) {
 			$channel = get_app()->get_channel();
 			if($channel['channel_hash'] === $arr['author_xchan']) {
 				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-				$arr['item_flags'] |= ITEM_VERIFIED;
+				$arr['item_verified'] = 1;
 			}
 		}
 
@@ -1985,7 +1985,7 @@ function item_store($arr,$allow_exec = false) {
 		}
 		if($arr['item_private']) {
 			$key = get_config('system','pubkey');
-			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+			$arr['item_obscured'] = 1;
 			if($arr['title'])
 				$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 			if($arr['body'])
@@ -2349,7 +2349,7 @@ function item_store_update($arr,$allow_exec = false) {
 		return $ret;
 	}
 
-    if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+    if((! array_key_exists('item_obscured', $arr)) || $arr['item_obscured'] == 0) {
 
 		$arr['lang'] = detect_language($arr['body']);
         // apply the input filter here - if it is obscured it has been filtered already
@@ -2377,7 +2377,7 @@ function item_store_update($arr,$allow_exec = false) {
 		}
 		if($arr['item_private']) {
             $key = get_config('system','pubkey');
-            $arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+            $arr['item_obscured'] = 1;
             if($arr['title'])
                 $arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
             if($arr['body'])
@@ -2834,7 +2834,7 @@ function tag_deliver($uid,$item_id) {
 
 		$body = '';
 
-		if($item['item_flags'] & ITEM_OBSCURED) {
+		if(intval($item['item_obscured'])) {
 			$key = get_config('system','prvkey');
 			if($item['body'])
 				$body = crypto_unencapsulate(json_decode_plus($item['body']),$key);
@@ -2981,7 +2981,7 @@ function tgroup_check($uid,$item) {
 
 	$body = $item['body'];
 
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED) && $body) {
+	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured']) && $body) {
 		$key = get_config('system','prvkey');
 		$body = crypto_unencapsulate(json_decode($body,true),$key);
 	}
@@ -3025,6 +3025,7 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	$item_origin = 1;
 	$item_uplink = 0;
 	$item_nocomment = 0;
+	$item_obscured = 0;
 
 	$flag_bits = $item['item_flags'];
 
@@ -3048,30 +3049,31 @@ function start_delivery_chain($channel,$item,$item_id,$parent) {
 	$body  = $item['body'];
 
 	if($private) {
-		if(!($flag_bits & ITEM_OBSCURED)) {
+		if(! intval($item['item_obscured'])) {
 			$key = get_config('system','pubkey');
-			$flag_bits = $flag_bits|ITEM_OBSCURED;
 			if($title)
 				$title = json_encode(crypto_encapsulate($title,$key));
 			if($body)
 				$body  = json_encode(crypto_encapsulate($body,$key));
+			$item_obscured = 1;
 		}
 	}
 	else {
-		if($flag_bits & ITEM_OBSCURED) {
+		if(intval($item['item_obscured'])) {
 			$key = get_config('system','prvkey');
-			$flag_bits = $flag_bits ^ ITEM_OBSCURED;
 			if($title)
 				$title = crypto_unencapsulate(json_decode($title,true),$key);
 			if($body)
 				$body = crypto_unencapsulate(json_decode($body,true),$key);
+			$item_obscured = 0;
 		}
 	}
 
-	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_obscured = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
 		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = %d, item_origin = %d  where id = %d",
 		intval($item_uplink),
 		intval($item_nocomment),
+		intval($item_obscured),
 		intval($flag_bits),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_allow_cid']),
@@ -3860,11 +3862,10 @@ function item_expire($uid,$days) {
 		AND `created` < %s - INTERVAL %s 
 		AND `id` = `parent` 
 		$sql_extra
-		AND NOT ( item_flags & %d )>0
+		AND item_retained = 0
 		AND (item_restrict = 0 ) ",
 		intval($uid),
-		db_utcnow(), db_quoteinterval(intval($days).' DAY'),
-		intval(ITEM_RETAINED)
+		db_utcnow(), db_quoteinterval(intval($days).' DAY')
 	);
 
 	if(! $r)
@@ -3901,8 +3902,7 @@ function item_expire($uid,$days) {
 }
 
 function retain_item($id) {
-	$r = q("update item set item_flags = (item_flags | %d ) where id = %d",
-		intval(ITEM_RETAINED),
+	$r = q("update item set item_retained = 1 where id = %d",
 		intval($id)
 	);
 }

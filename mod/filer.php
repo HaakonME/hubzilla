@@ -27,8 +27,7 @@ function filer_content(&$a) {
 			intval(local_user())
 		);
 		if($r) {
-			$x = q("update item set item_flags = ( item_flags | %d ) where id = %d and uid = %d",
-				intval(ITEM_RETAINED),
+			$x = q("update item set item_retained = 1 where id = %d and uid = %d",
 				intval($r[0]['parent']),
 				intval(local_user())
 			);

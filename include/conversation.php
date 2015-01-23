@@ -357,21 +357,12 @@ function localize_item(&$item){
 		}
 	}
 */
-	// add sparkle links to appropriate permalinks
-
-//	$x = stristr($item['plink'],'/display/');
-//	if($x) {
-//		$sparkle = false;
-//		$y = best_link_url($item,$sparkle,true);
-	//	if($sparkle)
-//			$item['plink'] = $y . '?f=&url=' . $item['plink'];
-//	} 
 
 	// if item body was obscured and we changed it, re-obscure it
 	// FIXME - we need a better filter than just the string 'data'; try and
 	// match the fact that it's json encoded
 
-	if(($item['item_flags'] & ITEM_OBSCURED) 
+	if(intval($item['item_obscured'])
 		&& strlen($item['body']) && (! strpos($item['body'],'data'))) {
 		$item['body']  = json_encode(crypto_encapsulate($item['body'],get_config('system','pubkey')));
 	}
@@ -655,8 +646,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$likebuttons = false;
 				$shareable = false;
 
-				$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message signature validated') : '');
-				$forged = ((($item['sig']) && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message signature incorrect') : '');
+				$verified = (intval($item['item_verified']) ? t('Message signature validated') : '');
+				$forged = ((($item['sig']) && (! intval($item['item_verified']))) ? t('Message signature incorrect') : '');
 
 
 				$unverified = '';

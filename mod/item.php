@@ -330,11 +330,6 @@ function item_post(&$a) {
 		$body              = $_REQUEST['body'];
 		$item_flags        = $orig_post['item_flags'];
 
-		// force us to recalculate if we need to obscure this post
-
-		if($item_flags & ITEM_OBSCURED)
-			$item_flags = ($item_flags ^ ITEM_OBSCURED);
-
 		$item_restrict     = $orig_post['item_restrict'];
 		$postopts          = $orig_post['postopts'];
 		$created           = $orig_post['created'];
@@ -765,13 +760,13 @@ function item_post(&$a) {
 		if($uid) {
 			if($channel['channel_hash'] === $datarray['author_xchan']) {
 				$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
-				$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
+				$datarray['item_verified'] = 1;
 			}
 		}
 
 		logger('Encrypting local storage');
 		$key = get_config('system','pubkey');
-		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
+		$datarray['item_obscured'] = 1;
 		if($datarray['title'])
 			$datarray['title'] = json_encode(crypto_encapsulate($datarray['title'],$key));
 		if($datarray['body'])

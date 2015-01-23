@@ -157,7 +157,7 @@ function diaspora_process_outbound($arr) {
 
 	$target_item = $arr['target_item'];
 
-	if($target_item && array_key_exists('item_flags',$target_item) && ($target_item['item_flags'] & ITEM_OBSCURED)) {
+	if($target_item && array_key_exists('item_obscured',$target_item) && intval($target_item['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($target_item['title'])
 			$target_item['title'] = crypto_unencapsulate(json_decode($target_item['title'],true),$key);

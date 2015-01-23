@@ -1152,7 +1152,7 @@ function link_compare($a,$b) {
 
 
 function unobscure(&$item) {
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
 			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);

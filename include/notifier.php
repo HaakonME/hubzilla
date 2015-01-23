@@ -207,9 +207,8 @@ function notifier_run($argv, $argc){
 		$normal_mode = false;
 		$expire = true;
 		$items = q("SELECT * FROM item WHERE uid = %d AND item_wall = 1
-			AND ( item_restrict & %d )>0 AND `changed` > %s - INTERVAL %s",
+			AND item_deleted = 1 AND `changed` > %s - INTERVAL %s",
 			intval($item_id),
-			intval(ITEM_DELETED),
 			db_utcnow(), db_quoteinterval('10 MINUTE')
 		);
 		$uid = $item_id;
@@ -314,7 +313,7 @@ function notifier_run($argv, $argc){
 		
 		$target_item = $r[0];
 
-		if($target_item['item_restrict'] & ITEM_DELETED)
+		if(intval($target_item['item_deleted']))
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
 
 		$unforwardable = ITEM_UNPUBLISHED|ITEM_DELAYED_PUBLISH|ITEM_WEBPAGE|ITEM_BUILDBLOCK|ITEM_PDL;
@@ -407,7 +406,7 @@ function notifier_run($argv, $argc){
 			// don't send deletions onward for other people's stuff
 			// TODO verify this is needed - copied logic from same place in old code
 
-			if(($target_item['item_restrict'] & ITEM_DELETED) && (! intval($target_item['item_wall']))) {
+			if(intval($target_item['item_deleted']) && (! intval($target_item['item_wall']))) {
 				logger('notifier: ignoring delete notification for non-wall item');
 				return;
 			}

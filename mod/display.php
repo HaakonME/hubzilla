@@ -250,7 +250,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			dbesc($item_hash)
 		);
 		if($r) {
-			if($r[0]['item_flags'] & ITEM_DELETED) {
+			if(intval($r[0]['item_deleted'])) {
 				notice( t('Item has been removed.') . EOL );
 			}
 			else {	

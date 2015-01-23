@@ -180,19 +180,8 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET item_restrict = (item_restrict | %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
-					intval(ITEM_DELETED),
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					dbesc($i[0]['mid']),
-					intval($page_owner_uid)
-				);
-
+				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
 				$url = $a->get_baseurl();
-				$drop_id = intval($i[0]['id']);
-
-				if($i[0]['visible'])
-					proc_run('php',"include/notifier.php","drop","$drop_id");
 			}
 		}
 

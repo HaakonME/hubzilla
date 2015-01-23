@@ -589,8 +589,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 	// warning: this may run into memory limits on smaller systems
 
-	$r = q("select * from item where item_wall = 1 and not (item_restrict & %d)>0 and uid = %d",
-		intval(ITEM_DELETED),
+	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d",
 		intval($channel_id)
 	);
 	if($r) {

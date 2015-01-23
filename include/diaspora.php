@@ -206,7 +206,7 @@ function diaspora_process_outbound($arr) {
 			if(! $contact['xchan_pubkey'])
 				continue;
 
-			if(($target_item['item_restrict'] & ITEM_DELETED) 
+			if(intval($target_item['item_deleted']) 
 				&& (($target_item['mid'] === $target_item['parent_mid']) || $arr['followup'])) {
 				// send both top-level retractions and relayable retractions for owner to relay
 				diaspora_send_retraction($target_item,$arr['channel'],$contact);
@@ -235,8 +235,8 @@ function diaspora_process_outbound($arr) {
 
 		$contact = $arr['hub'];
 
-		if(($target_item['deleted']) 
-			&& ($target_item['mid'] === $target_item['parent_mod'])) {
+		if(intval($target_item['item_deleted']) 
+			&& ($target_item['mid'] === $target_item['parent_mid'])) {
 			// top-level retraction
 			logger('delivery: diaspora retract: ' . $loc);
 			diaspora_send_retraction($target_item,$arr['channel'],$contact,true);
@@ -2453,7 +2453,7 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 		$target_type = 'Post';
 		$positive = 'true';
 
-		if(($item_['item_restrict'] & ITEM_DELETED))
+		if(intval($item['item_deleted']))
 			logger('diaspora_send_followup: received deleted "like". Those should go to diaspora_send_retraction');
 	}
 	else {
@@ -2549,7 +2549,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	$relay_retract = false;
 	$sql_sign_id = 'iid';
 
-	if( $item['item_restrict'] & ITEM_DELETED) {
+	if( intval($item['item_deleted']) {
 		$relay_retract = true;
 
 		$target_type = ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
@@ -2561,7 +2561,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		$like = true;
 
 		$target_type = ( $parent['mid'] === $parent['parent_mid']  ? 'Post' : 'Comment');
-//		$positive = (($item['item_restrict'] & ITEM_DELETED) ? 'false' : 'true');
+//		$positive = (intval($item['item_deleted']) ? 'false' : 'true');
 		$positive = 'true';
 
 		$tpl = get_markup_template('diaspora_like_relay.tpl');

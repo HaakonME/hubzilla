@@ -839,7 +839,7 @@ function get_item_elements($x) {
 		$arr['item_consensus'] = 1;
 
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
-		$arr['item_restrict'] = ITEM_DELETED;
+		$arr['item_deleted'] = 1;
 	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
 		$arr['item_restrict'] = ITEM_HIDDEN;
 
@@ -1310,7 +1310,7 @@ function encode_item_flags($item) {
 
 	$ret = array();
 
-	if($item['item_restrict'] & ITEM_DELETED)
+	if(intval($item['item_deleted']))
 		$ret[] = 'deleted';
 	if($item['item_restrict'] & ITEM_HIDDEN)
 		$ret[] = 'hidden';
@@ -2109,7 +2109,7 @@ function item_store($arr,$allow_exec = false) {
 			}
 
 			$parent_id       = $r[0]['id'];
-			$parent_deleted  = $r[0]['item_restrict'] & ITEM_DELETED;
+			$parent_deleted  = $r[0]['item_deleted'];
 			$allow_cid       = $r[0]['allow_cid'];
 			$allow_gid       = $r[0]['allow_gid'];
 			$deny_cid        = $r[0]['deny_cid'];
@@ -2149,7 +2149,7 @@ function item_store($arr,$allow_exec = false) {
 	}
 
 	if($parent_deleted)
-		$arr['item_restrict'] = $arr['item_restrict'] | ITEM_DELETED;
+		$arr['item_deleted'] = 1;
 	
 	
 	$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
@@ -3347,7 +3347,7 @@ function consume_feed($xml,$importer,&$contact,$pass = 0) {
 				if($r) {
 					$item = $r[0];
 
-					if(! ($item['item_restrict'] & ITEM_DELETED)) {
+					if(! intval($item['item_deleted'])) {
 						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . base64url_decode($item['mid']), LOGGER_DEBUG);
 						drop_item($item['id'],false);
 					}
@@ -3948,7 +3948,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		intval($id)
 	);
 
-	if((! $r) || (($r[0]['item_restrict'] & ITEM_DELETED) && ($stage === DROPITEM_NORMAL))) {
+	if((! $r) || (intval($r[0]['item_deleted']) && ($stage === DROPITEM_NORMAL))) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
@@ -3979,11 +3979,17 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		// set the deleted flag immediately on this item just in case the 
 		// hook calls a remote process which loops. We'll delete it properly in a second.
 
-		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d",
-			intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
-			intval($item['id'])
-		);
-
+		if($linked_item) && ! $force) {
+			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d",
+				intval(ITEM_HIDDEN),
+				intval($item['id'])
+			);
+		}
+		else {
+			$r = q("UPDATE item SET item_deleted = 1 WHERE id = %d",
+				intval($item['id'])
+			);
+		}
 
 		$arr = array('item' => $item, 'interactive' => $interactive, 'stage' => $stage);
 		call_hooks('drop_item', $arr );
@@ -4047,13 +4053,23 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL,$force = false) {
 			break;
 
 		case DROPITEM_PHASE1:
-			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
-				changed = '%s', edited = '%s'  WHERE id = %d",
-				intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				intval($item['id'])
-			);
+			if($linked_item && ! $force) {
+				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
+					changed = '%s', edited = '%s'  WHERE id = %d",
+					intval(ITEM_HIDDEN),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($item['id'])
+				);
+			}
+			else {
+				$r = q("UPDATE item set item_deleted = 1, changed = '%s', edited = '%s' where if = %d",
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($item['id'])
+				);
+			}
+
 			break;
 
 		case DROPITEM_NORMAL:
@@ -4068,9 +4084,8 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL,$force = false) {
 				);
 			}
 			else {
-				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+				$r = q("UPDATE item SET item_deleted = 1, body = '', title = '',
 					changed = '%s', edited = '%s'  WHERE id = %d",
-					intval(ITEM_DELETED),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					intval($item['id'])

@@ -53,10 +53,9 @@ function poller_run($argv, $argc){
 	// expire any expired items
 
 	$r = q("select id from item where expires != '%s' and expires < %s 
-		and ( item_restrict & %d ) = 0 ",
+		and item_deleted = 0 ",
 		dbesc(NULL_DATE),
-		db_utcnow(),
-		intval(ITEM_DELETED)
+		db_utcnow()
 	);
 	if($r) {
 		require_once('include/items.php');

@@ -1047,11 +1047,10 @@ function item_check_service_class($channel_id,$iswebpage) {
 	if ($iswebpage) {
 		$r = q("select count(i.id)  as total from item i 
 			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
-			and i.parent=i.id and (i.item_restrict & %d)>0 and not (i.item_restrict & %d)>0 and i.uid= %d ",
+			and i.parent=i.id and (i.item_restrict & %d)>0 and i.item_deleted = 0 and i.uid= %d ",
 			intval(ITEM_WEBPAGE),
-			intval(ITEM_DELETED),
-		intval($channel_id)
-	);
+			intval($channel_id)
+		);
 	}
 	else {
 		$r = q("select count(i.id)  as total from item i 

@@ -392,7 +392,7 @@ function events_content(&$a) {
 					
 				$last_date = $d;
 // FIXME
-				$edit = (($rr['item_flags'] & ITEM_WALL) ? array($a->get_baseurl().'/events/event/'.$rr['event_hash'],t('Edit event'),'','') : null);
+				$edit = (intval($rr['item_wall']) ? array($a->get_baseurl().'/events/event/'.$rr['event_hash'],t('Edit event'),'','') : null);
 				$title = strip_tags(html_entity_decode(bbcode($rr['summary']),ENT_QUOTES,'UTF-8'));
 				if(! $title) {
 					list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);

@@ -877,11 +877,9 @@ function photos_content(&$a) {
 			}
 
 			if((local_user()) && (local_user() == $link_item['uid'])) {
-				q("UPDATE `item` SET item_flags = (item_flags & ~%d) WHERE parent = %d and uid = %d and (item_flags & %d)>0",
-					intval(ITEM_UNSEEN),
+				q("UPDATE `item` SET item_unseen = 0 WHERE parent = %d and uid = %d and item_unseen = 1",
 					intval($link_item['parent']),
-					intval(local_user()),
-					intval(ITEM_UNSEEN)
+					intval(local_user())
 				);
 			}
 		}

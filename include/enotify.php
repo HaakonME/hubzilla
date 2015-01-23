@@ -157,7 +157,7 @@ function notification($params) {
 				$item_post_type);
 		
 		// "your post"
-		if($p[0]['owner']['xchan_name'] == $p[0]['author']['xchan_name'] && ($p[0]['item_flags'] & ITEM_WALL))
+		if($p[0]['owner']['xchan_name'] == $p[0]['author']['xchan_name'] && intval($p[0]['item_wall']))
 			$dest_str = sprintf(t('%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]'),
 				$recip['channel_name'],
 				'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',

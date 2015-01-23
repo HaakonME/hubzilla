@@ -809,7 +809,7 @@ function item_post(&$a) {
 			// only send comment notification if this is a wall-to-wall comment,
 			// otherwise it will happen during delivery
 
-			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && ($parent_item['item_flags'] & ITEM_WALL)) {
+			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && (intval($parent_item['item_wall']))) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
 					'from_xchan'   => $datarray['author_xchan'],

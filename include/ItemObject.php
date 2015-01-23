@@ -179,9 +179,9 @@ class Item extends BaseObject {
 					'do' => t("Add Star"),
 					'undo' => t("Remove Star"),
 					'toggle' => t("Toggle Star Status"),
-					'classdo' => (($item['item_flags'] & ITEM_STARRED) ? "hidden" : ""),
-					'classundo' => (($item['item_flags'] & ITEM_STARRED) ? "" : "hidden"),
-					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred icon-star" : "unstarred icon-star-empty"),
+					'classdo' => (intval($item['item_starred']) ? "hidden" : ""),
+					'classundo' => (intval($item['item_starred']) ? "" : "hidden"),
+					'isstarred' => (intval($item['item_starred']) ? "starred icon-star" : "unstarred icon-star-empty"),
 					'starred' =>  t('starred'),
 				);
 
@@ -191,9 +191,9 @@ class Item extends BaseObject {
 		}
 
 
-		$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message signature validated') : '');
-		$forged = ((($item['sig']) && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message signature incorrect') : '');
-		$unverified = '' ; // (($this->is_wall_to_wall() && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message cannot be verified') : '');
+		$verified = (intval($item['item_verified']) ? t('Message signature validated') : '');
+		$forged = ((($item['sig']) && (! intval($item['item_verified']))) ? t('Message signature incorrect') : '');
+		$unverified = '' ; // (($this->is_wall_to_wall() && (! intval($item['item_verified']))) ? t('Message cannot be verified') : '');
 
 
 
@@ -569,7 +569,7 @@ class Item extends BaseObject {
 				if((! visible_activity($child->data)) || array_key_exists('author_blocked',$child->data)) {
 					continue;
 				}
-				if($child->data['item_flags'] & ITEM_UNSEEN)
+				if($child->data['item_unseen'])
 					$total ++;
 			}
 		}

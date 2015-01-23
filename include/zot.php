@@ -1436,13 +1436,10 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false,$reque
 		// This is our own post, possibly coming from a channel clone
 
 		if($arr['owner_xchan'] == $d['hash']) {
-			$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL;
+			$arr['item_wall'] = 1;
 		}
 		else {
-			// clear the wall flag if it is set
-			if($arr['item_flags'] & ITEM_WALL) {
-				$arr['item_flags'] = ($arr['item_flags'] ^ ITEM_WALL);
-			}
+			$arr['item_wall'] = 0;
 		}
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $local_public)) {

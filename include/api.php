@@ -336,10 +336,9 @@ require_once('include/items.php');
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE `uid` = %d
-					AND ( item_flags & %d )>0 and item_restrict = 0 
+					AND item_wall = 1 and item_restrict = 0 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-					intval($usr[0]['channel_id']),
-					intval(ITEM_WALL)
+					intval($usr[0]['channel_id'])
 			);
 			$countitms = $r[0]['count'];
 		}
@@ -363,9 +362,8 @@ require_once('include/items.php');
 			$countfollowers = $r[0]['count'];
 		}
 
-		$r = q("SELECT count(`id`) as `count` FROM item where ( item_flags & %d )>0 and uid = %d and item_restrict = 0",
-			intval($uinfo[0]['channel_id']),
-			intval(ITEM_STARRED)
+		$r = q("SELECT count(`id`) as `count` FROM item where item_starred = 1 and uid = %d and item_restrict = 0",
+			intval($uinfo[0]['channel_id'])
 		);
 		$starred = $r[0]['count'];
 	
@@ -1004,10 +1002,7 @@ require_once('include/items.php');
 		// at the network timeline just mark everything seen. 
 	
 		if (api_user() == $user_info['uid']) {
-			$r = q("UPDATE `item` SET item_flags = ( item_flags & ~%d )
-				WHERE (item_flags & %d)>0 and uid = %d",
-				intval(ITEM_UNSEEN),
-				intval(ITEM_UNSEEN),
+			$r = q("UPDATE item SET item_unseen = 0 WHERE item_unseen = 1 and uid = %d",
 				intval($user_info['uid'])
 			);
 		}
@@ -1615,7 +1610,7 @@ require_once('include/items.php');
 				'in_reply_to_user_id'       => $in_reply_to_user_id,
 				'in_reply_to_screen_name'   => $in_reply_to_screen_name,
 				'geo'                       => '',
-				'favorited'                 => (($item['item_flags'] & ITEM_STARRED) ? true : false),
+				'favorited'                 => (intval($item['item_starred']) ? true : false),
 				'user'                      =>  $status_user ,
 				'statusnet_html'		    => trim(prepare_text($item['body'],$item['mimetype'])),
 

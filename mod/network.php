@@ -154,12 +154,12 @@ function network_content(&$a, $update = 0, $load = false) {
 
 
 	$sql_options  = (($star)
-		? " and (item_flags & " . intval(ITEM_STARRED) . ") > 0"
+		? " and item_starred = 1 "
 		: '');
 
 	$sql_nets = '';
 
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ")>0 $sql_options ) ";
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE item_thread_top = 1 $sql_options ) ";
 
 	if($group) {
 		$contact_str = '';
@@ -291,9 +291,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($conv) {
-		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d ) > 0)) ",
-			dbesc(protect_sprintf($channel['channel_hash'])),
-			intval(ITEM_MENTIONSME)
+		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or item_mentionsme = 1 )) ",
+			dbesc(protect_sprintf($channel['channel_hash']))
 		);
 	}
 
@@ -346,7 +345,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	else
 		$page_mode = 'client';
 
-	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) > 0 " : '');
+	$simple_update = (($update) ? " and item.item_unseen = 1 " : '');
 
 	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
 	// or three and look at your matrix page - after opening up your browser. The first page loads just as it
@@ -465,10 +464,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if(($update_unseen) && (! $firehose))
-		$r = q("UPDATE item SET item_flags = ( item_flags & ~%d)
-			WHERE (item_flags & %d) > 0 AND uid = %d $update_unseen ",
-			intval(ITEM_UNSEEN),
-			intval(ITEM_UNSEEN),
+		$r = q("UPDATE item SET item_unseen = 0 WHERE item_unseen = 1 AND uid = %d $update_unseen ",
 			intval(local_user())
 		);
 

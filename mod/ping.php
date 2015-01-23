@@ -151,17 +151,12 @@ function ping_init(&$a) {
 	if(x($_REQUEST, 'markRead') && local_user()) {
 		switch($_REQUEST['markRead']) {
 			case 'network':
-				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d) > 0 and uid = %d", 
-					intval(ITEM_UNSEEN),
-					intval(ITEM_UNSEEN),
+				$r = q("update item set item_unseen = 0 where item_unseen = 1 and uid = %d", 
 					intval(local_user())
 				);
 				break;
 			case 'home':
-				$r = q("update item set item_flags = ( item_flags & ~%d ) where (item_flags & %d) > 0 and (item_flags & %d) > 0  and uid = %d", 
-					intval(ITEM_UNSEEN),
-					intval(ITEM_UNSEEN),
-					intval(ITEM_WALL),
+				$r = q("update item set item_unseen = 0 where item_unseen = 1 and item_wall = 1  and uid = %d", 
 					intval(local_user())
 				);
 				break;
@@ -188,8 +183,7 @@ function ping_init(&$a) {
 	}
 
 	if(x($_REQUEST, 'markItemRead') && local_user()) {
-		$r = q("update item set item_flags = ( item_flags & ~%d ) where parent = %d and uid = %d", 
-			intval(ITEM_UNSEEN),
+		$r = q("update item set item_unseen = 0 where parent = %d and uid = %d", 
 			intval($_REQUEST['markItemRead']),
 			intval(local_user())
 		);
@@ -276,10 +270,9 @@ function ping_init(&$a) {
 		$result = array();
 
 		$r = q("SELECT * FROM item
-			WHERE item_restrict = %d and ( item_flags & %d ) > 0 and uid = %d
+			WHERE item_restrict = %d and item_unseen = 1 and uid = %d
 			and author_xchan != '%s' ORDER BY created DESC",
 			intval(ITEM_VISIBLE),
-			intval(ITEM_UNSEEN),
 			intval(local_user()),
 			dbesc($ob_hash)
 		);
@@ -287,7 +280,7 @@ function ping_init(&$a) {
 		if($r) {
 			xchan_query($r);
 			foreach($r as $item) {
-				if((argv(1) === 'home') && (! ($item['item_flags'] & ITEM_WALL)))
+				if((argv(1) === 'home') && (! intval($item['item_wall'])))
 					continue;
 				$result[] = format_notification($item);
 			}
@@ -383,10 +376,9 @@ function ping_init(&$a) {
 
 	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
 		$r = q("SELECT id, item_restrict, item_flags FROM item
-			WHERE (item_restrict = %d) and ( item_flags & %d ) > 0 and uid = %d
+			WHERE (item_restrict = %d) and item_unseen = 1 and uid = %d
 			and author_xchan != '%s'",
 			intval(ITEM_VISIBLE),
-			intval(ITEM_UNSEEN),
 			intval(local_user()),
 			dbesc($ob_hash)
 		);
@@ -396,7 +388,7 @@ function ping_init(&$a) {
 			call_hooks('network_ping', $arr);
 	
 			foreach ($r as $it) {
-				if($it['item_flags'] & ITEM_WALL)
+				if(intval($it['item_wall']))
 					$result['home'] ++;
 				else
 					$result['network'] ++;

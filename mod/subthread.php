@@ -96,9 +96,8 @@ function subthread_content(&$a) {
 			),
 	));
 
-	if(! ($item['item_flags'] & ITEM_THREAD_TOP))
+	if(! intval($item['item_thread_top']))
 		$post_type = 'comment';		
-
 
 	$bodyverb = t('%1$s is following %2$s\'s %3$s');
 

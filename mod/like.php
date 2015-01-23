@@ -328,14 +328,14 @@ function like_content(&$a) {
 				),
 		));
 
-		if(! ($item['item_flags'] & ITEM_THREAD_TOP))
+		if(! intval($item['item_thread_top']))
 			$post_type = 'comment';		
 
 		$arr['item_origin'] = 1;
 		$arr['item_notshown'] = 1;
 
-		if($item['item_flags'] & ITEM_WALL)
-			$item_flags |= ITEM_WALL;
+		if(intval($item['item_wall']))
+			$arr['item_wall'] = 1;
 
 		// if this was a linked photo and was hidden, unhide it.
 

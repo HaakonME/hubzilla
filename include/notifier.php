@@ -206,10 +206,9 @@ function notifier_run($argv, $argc){
 
 		$normal_mode = false;
 		$expire = true;
-		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )>0
+		$items = q("SELECT * FROM item WHERE uid = %d AND item_wall = 1
 			AND ( item_restrict & %d )>0 AND `changed` > %s - INTERVAL %s",
 			intval($item_id),
-			intval(ITEM_WALL),
 			intval(ITEM_DELETED),
 			db_utcnow(), db_quoteinterval('10 MINUTE')
 		);
@@ -374,7 +373,7 @@ function notifier_run($argv, $argc){
 
 		// tag_deliver'd post which needs to be sent back to the original author
 
-		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post)) {
+		if(($cmd === 'uplink') && intval($parent_item['item_uplink']) && (! $top_level_post)) {
 			logger('notifier: uplink');			
 			$uplink = true;
 		} 
@@ -395,7 +394,7 @@ function notifier_run($argv, $argc){
 			// if our parent is a tag_delivery recipient, uplink to the original author causing
 			// a delivery fork. 
 
-			if(($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && ($cmd !== 'uplink')) {
+			if(intval($parent_item['item_uplink']) && (! $top_level_post) && ($cmd !== 'uplink')) {
 				logger('notifier: uplinking this item');
 				proc_run('php','include/notifier.php','uplink',$item_id);
 			}
@@ -408,7 +407,7 @@ function notifier_run($argv, $argc){
 			// don't send deletions onward for other people's stuff
 			// TODO verify this is needed - copied logic from same place in old code
 
-			if(($target_item['item_restrict'] & ITEM_DELETED) && (!($target_item['item_flags'] & ITEM_WALL))) {
+			if(($target_item['item_restrict'] & ITEM_DELETED) && (! intval($target_item['item_wall']))) {
 				logger('notifier: ignoring delete notification for non-wall item');
 				return;
 			}

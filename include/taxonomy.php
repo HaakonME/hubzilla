@@ -101,8 +101,10 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 	$sql_options = '';
 	$count = intval($count);
 
-	if($flags)
-		$sql_options .= " and ((item_flags & " . intval($flags) . ") = " . intval($flags) . ") ";
+	if($flags) {
+		if($flags === 'wall')
+			$sql_options .= " and item_wall = 1 ";
+	}
 
 	if($authors) {
 		if(! is_array($authors))

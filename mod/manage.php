@@ -56,16 +56,15 @@ function manage_content(&$a) {
 				$channels[$x]['default_links'] = '1';
 
 
-				$c = q("SELECT id, item_restrict, item_flags FROM item
-					WHERE (item_restrict = %d) and ( item_flags & %d )>0 and uid = %d",
+				$c = q("SELECT id, item_restrict, item_wall FROM item
+					WHERE (item_restrict = %d) and item_unseen = 1 and uid = %d",
 					intval(ITEM_VISIBLE),
-					intval(ITEM_UNSEEN),
 					intval($channels[$x]['channel_id'])
 				);
 
 				if($c) {	
 					foreach ($c as $it) {
-						if($it['item_flags'] & ITEM_WALL)
+						if(intval($it['item_wall']))
 							$channels[$x]['home'] ++;
 						else
 							$channels[$x]['network'] ++;

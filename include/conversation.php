@@ -96,7 +96,7 @@ function localize_item(&$item){
 		if(! $item['object'])
 			return;
 
-		if($item['item_flags'] & ITEM_THREAD_TOP)
+		if(intval($item['item_thread_top']))
 			return;	
 
 		$obj = json_decode_plus($item['object']);

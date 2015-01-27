@@ -30,11 +30,17 @@
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 </div>
 
-
-
 {{if $last_update}}
 {{$lastupdtext}} {{$last_update}}
 {{/if}}
+
+
+{{if $is_pending}}
+<div class="abook-pending-contact">
+{{include file="field_checkbox.tpl" field=$unapproved}}
+</div>
+{{/if}}
+
 
 {{if $notself}}
 {{if $slide}}
@@ -55,7 +61,6 @@
 {{/if}}
 
 
-
 {{if $self}}
 <div class="abook-autotext">
 <div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
@@ -63,18 +68,10 @@
 </div>
 {{/if}}
 
-
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 <input id="contact-rating-mirror" type="hidden" name="rating" value="{{$rating_val}}" />
 
-
-
-{{if $is_pending}}
-<div class="abook-pending-contact">
-{{include file="field_checkbox.tpl" field=$unapproved}}
-</div>
-{{/if}}
 
 {{if $rating}}
 {{if $notself}}
@@ -83,6 +80,7 @@
 {{/if}}
 {{/if}}
 
+{{if $notself}}
 {{if $multiprofs }}
 <div>
 <h3>{{$lbl_vis1}}</h3>
@@ -91,8 +89,15 @@
 {{$profile_select}}
 </div>
 {{/if}}
+{{/if}}
 
 <h3>{{$permlbl}}</h3>
+
+{{if $notself}}
+<div id="connedit-perms-wrap" class="fakelink" onclick="openClose('connedit-perms');">{{$clickme}}</div>
+<div id="connedit-perms" style="display: none;" >
+{{/if}}
+ 
 <div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
 <table>
 <tr><td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td><td></td></tr>
@@ -105,6 +110,9 @@
 
 </div>
 
+{{if $notself}}
+</div>
+{{/if}}
 
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 

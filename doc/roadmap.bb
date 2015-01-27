@@ -2,6 +2,9 @@
 
 Roadmap for Redmatrix V3
 
+Crypto
+	Convert E2EE to dynamic loading (on demand) using jQuery.getScript() [or other methods] to only load encryption libs when you require them. This should also support multiple encryption libraries (e.g. SJCL, others) triggered from the choice of algorithm and remain pluggable.
+ 
 
 Subscriptions and business models
 	Build enough into core(/addons) to generate income (or at least try and cover costs) out of the box
@@ -43,6 +46,10 @@ Zot
 
 API extensions
 	More, more, more.
+
+Evangelism
+	More documentation. More, more, more.
+	Libzot
 
 DNS abstraction for V3
 	Allow a channel to live in an arbitrary "DNS" namespace, for instance "mike@core.redmatrix". Use our directories and zot to find the actual DNS location via redirection. This could potentially allow hubs to be hidden behind tor or alt-roots and accessible only via the matrix.

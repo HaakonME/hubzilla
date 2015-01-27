@@ -148,10 +148,10 @@ function dirsearch_content(&$a) {
 	// If &return_total=1, we count matching entries and return that as 'total_items' for use in pagination.
 	// By default we return one page (default 80 items maximum) and do not count total entries
 
-	$logic = ((strlen($sql_extra)) ? 0 : 1);
+	$logic = ((strlen($sql_extra)) ? 'false' : 'true');
 
 	if($hash)
-		$logic = 1;
+		$logic = 'true';
 
 	if($dirmode == DIRECTORY_MODE_STANDALONE) {
 		$sql_extra .= " and xchan_addr like '%%" . get_app()->get_hostname() . "' ";
@@ -165,7 +165,7 @@ function dirsearch_content(&$a) {
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
 	else {
-		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
+		$qlimit = " LIMIT " . intval($perpage) . " OFFSET " . intval($startrec);
 		if($return_total) {
 			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and xchan_network = 'zot' and xchan_hidden = 0 and xchan_orphan = 0 and xchan_deleted = 0 $safesql ");
 			if($r) {
@@ -347,14 +347,15 @@ function dir_parse_query($s) {
 
 function list_public_sites() {
 
+	$rand = db_getfunc('rand');
 	$realm = get_directory_realm();
 	if($realm == DIRECTORY_REALM) {
-		$r = q("select * from site where site_access != 0 and site_register !=0 and ( site_realm = '%s' or site_realm = '') order by rand()",
+		$r = q("select * from site where site_access != 0 and site_register !=0 and ( site_realm = '%s' or site_realm = '') order by $rand",
 			dbesc($realm)
 		);
 	}
 	else {
-		$r = q("select * from site where site_access != 0 and site_register !=0 and site_realm = '%s' order by rand()",
+		$r = q("select * from site where site_access != 0 and site_register !=0 and site_realm = '%s' order by $rand",
 			dbesc($realm)
 		);
 	}

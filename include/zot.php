@@ -175,7 +175,7 @@ function zot_zot($url,$data) {
  */
 
 
-function zot_finger($webbie,$channel,$autofallback = true) {
+function zot_finger($webbie,$channel = null,$autofallback = true) {
 
 
 	if(strpos($webbie,'@') === false) {

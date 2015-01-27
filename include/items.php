@@ -3979,7 +3979,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		// set the deleted flag immediately on this item just in case the 
 		// hook calls a remote process which loops. We'll delete it properly in a second.
 
-		if($linked_item) && ! $force) {
+		if(($linked_item) && (! $force)) {
 			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d",
 				intval(ITEM_HIDDEN),
 				intval($item['id'])

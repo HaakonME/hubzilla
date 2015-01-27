@@ -64,6 +64,11 @@ function z_mime_content_type($filename) {
 	'qt' => 'video/quicktime',
 	'mov' => 'video/quicktime',
 	'ogg' => 'application/ogg',
+	'opus' => 'audio/ogg',
+	'webm' => 'audio/webm',
+	'webm' => 'video/webm',
+	'mp4' => 'audio/mp4',
+	'mp4' => 'video/mp4',
 
 	// adobe
 	'pdf' => 'application/pdf',
@@ -81,6 +86,22 @@ function z_mime_content_type($filename) {
 	// open office
 	'odt' => 'application/vnd.oasis.opendocument.text',
 	'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+	'odp' => 'application/vnd.oasis.opendocument.presentation',
+	'odg' => 'application/vnd.oasis.opendocument.graphics',
+	'odc' => 'application/vnd.oasis.opendocument.chart',
+	'odf' => 'application/vnd.oasis.opendocument.formula',
+	'odi' => 'application/vnd.oasis.opendocument.image',
+	'odm' => 'application/vnd.oasis.opendocument.text-master',
+	'odb' => 'application/vnd.oasis.opendocument.base',
+	'odb' => 'application/vnd.oasis.opendocument.database',
+	'ott' => 'application/vnd.oasis.opendocument.text-template',
+	'ots' => 'application/vnd.oasis.opendocument.spreadsheet-template',
+	'otp' => 'application/vnd.oasis.opendocument.presentation-template',
+	'otg' => 'application/vnd.oasis.opendocument.graphics-template',
+	'otc' => 'application/vnd.oasis.opendocument.chart-template',
+	'otf' => 'application/vnd.oasis.opendocument.formula-template',
+	'oti' => 'application/vnd.oasis.opendocument.image-template',
+	'oth' => 'application/vnd.oasis.opendocument.text-web'
 	);
 
 	$dot = strpos($filename, '.');
@@ -753,16 +774,16 @@ function attach_delete($channel_id, $resource) {
 
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 
-	$r = q("SELECT hash, filename, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
+	$r = q("SELECT hash, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
 
-
 	if(! $r)
 		return;
 
-	$url = get_parent_cloudpath($channel_id, $channel_address, $resource) . $r[0]['filename'];
+	$cloudpath = get_parent_cloudpath($channel_id, $channel_address, $resource);
+	$object = get_file_activity_object($channel_id, $resource, $cloudpath);
 
 	// If resource is a directory delete everything in the directory recursive
 	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
@@ -806,7 +827,8 @@ function attach_delete($channel_id, $resource) {
 		intval($channel_id)
 	);
 
-	file_activity($channel_id, $resource, $allow_cid='', $allow_gid='', $deny_cid='', $deny_gid='', $url, 'drop', $no_activity=false);
+	file_activity($channel_id, $object, $allow_cid='', $allow_gid='', $deny_cid='', $deny_gid='', 'update', $no_activity=false);
+
 }
 
 /**
@@ -942,69 +964,87 @@ function pipe_streams($in, $out) {
 	return $size;
 }
 
-function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $url, $action, $no_activity) {
+function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $no_activity) {
 
 	require_once('include/items.php');
 
-	$url = rawurlencode($url);
-
 	$poster = get_app()->get_observer();
 
-	$verb = ACTIVITY_FILE . '/' . $action . '/' . $hash;
-
 	$mid = item_message_id();
+
+	$arr = array();
 
 	$arr['item_wall'] = 1; 
 	$arr['item_origin'] = 1;
 	$arr['item_unseen'] = 1;
 
-	if($action == 'post') {
-		//check if activity item exists
-		//if yes send drop activity and create a new one
+	$objtype = ACTIVITY_OBJ_FILE;
 
-		$r = q("SELECT * FROM item WHERE verb = '%s'",
-			dbesc($verb)
+
+	$private = (($allow_cid || $allow_gid || $deny_cid || $deny_gid) ? 1 : 0);
+
+	$jsonobject = json_encode($object);
+
+	//check if item for this object exists
+	$y = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND resource_id = '%s' AND uid = %d LIMIT 1",
+		dbesc(ACTIVITY_POST),
+		dbesc($objtype),
+		dbesc($object['hash']),
+		intval(local_user())
+	);
+
+	if($y) {
+		$update = true;
+		$object['d_mid'] = $y[0]['mid']; //attach mid of the old object
+		$u_jsonobject = json_encode($object);
+
+		//we have got the relevant info - delete the old item before we create the new one
+		$z = q("DELETE FROM item WHERE obj_type = '%s' AND verb = '%s' AND mid = '%s'",
+			dbesc(ACTIVITY_OBJ_FILE),
+			dbesc(ACTIVITY_POST),
+			dbesc($y[0]['mid'])
 		);
 
-		if($r) {
+	}
 
-			$dmid = item_message_id();
-			$updateverb = ACTIVITY_FILE . '/drop/' . $hash . '#' . $mid;
+	if($update && $verb == 'post' ) {
+		//send update activity and create a new one
 
-			$arr = array();
+		$u_mid = item_message_id();
 
-			$arr['aid']           = get_account_id();
-			$arr['uid']           = $channel_id;
-			$arr['mid']           = $dmid;
-			$arr['parent_mid']    = $dmid;
-			$arr['author_xchan']  = $poster['xchan_hash'];
-			$arr['owner_xchan']   = $poster['xchan_hash'];
-			$arr['title']         = '';
-			$arr['allow_cid']     = $allow_cid;
-			$arr['allow_gid']     = $allow_gid;
-			$arr['deny_cid']      = $deny_cid;
-			$arr['deny_gid']      = $deny_gid;
-			$arr['item_restrict']  = ITEM_HIDDEN;
-			$arr['item_private']  = 0;
-			$arr['verb']          = $updateverb;
-			$arr['body']          = $url;
+		$arr['aid']           = get_account_id();
+		$arr['uid']           = $channel_id;
+		$arr['mid']           = $u_mid;
+		$arr['parent_mid']    = $u_mid;
+		$arr['author_xchan']  = $poster['xchan_hash'];
+		$arr['owner_xchan']   = $poster['xchan_hash'];
+		$arr['title']         = '';
+		//updates should be visible to everybody -> perms may have changed
+		$arr['allow_cid']     = '';
+		$arr['allow_gid']     = '';
+		$arr['deny_cid']      = '';
+		$arr['deny_gid']      = '';
+		$arr['item_hidden']   = 1;
+		$arr['item_private']  = 0;
+		$arr['verb']          = ACTIVITY_UPDATE;
+		$arr['obj_type']      = $objtype;
+		$arr['object']        = $u_jsonobject;
+		$arr['resource_id']   = $object['hash'];
+		$arr['resource_type'] = 'attach';
+		$arr['body']          = '';
 
-			$post = item_store($arr);
-			$item_id = $post['item_id'];
-
-			if($item_id) {
-				proc_run('php',"include/notifier.php","activity",$item_id);
-			}
-
-			//call_hooks('post_local_end', $arr);
-
-			//notice( t('File activity updated') . EOL);
-
-			if($no_activity) {
-				return;
-			}
-
+		$post = item_store($arr);
+		$item_id = $post['item_id'];
+		if($item_id) {
+			proc_run('php',"include/notifier.php","activity",$item_id);
 		}
+
+		call_hooks('post_local_end', $arr);
+
+		$update = false;
+
+		//notice( t('File activity updated') . EOL);
+
 	}
 
 	if($no_activity) {
@@ -1027,10 +1067,14 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 	$arr['allow_gid']     = $allow_gid;
 	$arr['deny_cid']      = $deny_cid;
 	$arr['deny_gid']      = $deny_gid;
-	$arr['item_restrict']  = ITEM_HIDDEN;
-	$arr['item_private']  = 0;
-	$arr['verb']          = $verb;
-	$arr['body']          = $url;
+	$arr['item_hidden']   = 1;
+	$arr['item_private']  = $private;
+	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
+	$arr['obj_type']      = $objtype;
+	$arr['resource_id']   = $object['hash'];
+	$arr['resource_type'] = 'attach';
+	$arr['object']        = (($update) ? $u_jsonobject : $jsonobject);
+	$arr['body']          = '';
 
 	$post = item_store($arr);
 	$item_id = $post['item_id'];
@@ -1039,10 +1083,48 @@ function file_activity($channel_id, $hash, $allow_cid, $allow_gid, $deny_cid, $d
 		proc_run('php',"include/notifier.php","activity",$item_id);
 	}
 
-	//call_hooks('post_local_end', $arr);
+	call_hooks('post_local_end', $arr);
 
-	//(($action === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
+	//(($verb === 'post') ?  notice( t('File activity posted') . EOL) : notice( t('File activity dropped') . EOL));
 
 	return;
+
+}
+
+function get_file_activity_object($channel_id, $hash, $cloudpath) {
+
+	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, flags, created, edited FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
+		intval($channel_id),
+		dbesc($hash)
+	);
+
+	$url = rawurlencode($cloudpath . $x[0]['filename']);
+
+	$links   = array();
+	$links[] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url
+	);
+
+	$object = array(
+		'type'  => ACTIVITY_OBJ_FILE,
+		'title' => $x[0]['filename'],
+		'id'    => $url,
+		'link'  => $links,
+
+		'hash'		=> $hash,
+		'creator'	=> $x[0]['creator'],
+		'filename'	=> $x[0]['filename'],
+		'filetype'	=> $x[0]['filetype'],
+		'filesize'	=> $x[0]['filesize'],
+		'revision'	=> $x[0]['revision'],
+		'folder'	=> $x[0]['folder'],
+		'flags'		=> $x[0]['flags'],
+		'created'	=> $x[0]['created'],
+		'edited'	=> $x[0]['edited']
+	);
+
+	return $object;
 
 }

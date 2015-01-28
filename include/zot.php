@@ -755,7 +755,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			$arr['searchable'] = false;
 
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_selfcensored, xchan_deleted, xchan_pubforum, )
+				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_selfcensored, xchan_deleted, xchan_pubforum )
 				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d) ",
 			dbesc($xchan_hash),
 			dbesc($arr['guid']),

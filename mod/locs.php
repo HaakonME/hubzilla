@@ -3,7 +3,7 @@
 
 function locs_post(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$channel = $a->get_channel();
@@ -69,7 +69,7 @@ function locs_post(&$a) {
 function locs_content(&$a) {
 
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}

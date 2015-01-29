@@ -1963,7 +1963,7 @@ function item_store($arr,$allow_exec = false) {
 		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
 
 
-		if(local_user() && (! $arr['sig'])) {
+		if(local_channel() && (! $arr['sig'])) {
 			$channel = get_app()->get_channel();
 			if($channel['channel_hash'] === $arr['author_xchan']) {
 				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
@@ -2342,7 +2342,7 @@ function item_store_update($arr,$allow_exec = false) {
         // apply the input filter here - if it is obscured it has been filtered already
         $arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
 
-        if(local_user() && (! $arr['sig'])) {
+        if(local_channel() && (! $arr['sig'])) {
             $channel = get_app()->get_channel();
             if($channel['channel_hash'] === $arr['author_xchan']) {
                 $arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
@@ -2838,12 +2838,27 @@ function tag_deliver($uid,$item_id) {
 		if(preg_match($pattern,$body,$matches)) 
 			$tagged = true;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
-		if(preg_match($pattern,$body,$matches)) 
-			$plustagged = true;
+		$pattern = '/@\!?\[zrl\=(.*?)\](.*?)\+\[\/zrl\]/';
+
+		if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
+			$max_forums = get_config('system','max_tagged_forums');
+			if(! $max_forums)
+				$max_forums = 2;
+			$matched_forums = 0;
+			foreach($matches as $match) {
+				$matched_forums ++;
+				if($term['url'] === $match[1] && $term['term'] === $match[2]) {
+					if($matched_forums <= $max_forums) {
+						$plustagged = true;
+						break;
+					}
+					logger('forum ' . $term['term'] . ' exceeded max_tagged_forums - ignoring');
+				}
+			}
+		}
 
 		if(! ($tagged || $plustagged)) {
-			logger('tag_deliver: mention was in a reshare - ignoring');
+			logger('tag_deliver: mention was in a reshare or exceeded max_tagged_forums - ignoring');
 			return;
 		}
 
@@ -2956,6 +2971,7 @@ function tgroup_check($uid,$item) {
 		}
 	}				
 
+
 	if($mention) {
 		logger('tgroup_check: mention found for ' . $u[0]['channel_name']);
 	}
@@ -2964,6 +2980,7 @@ function tgroup_check($uid,$item) {
 
 	// At this point we've determined that the person receiving this post was mentioned in it.
 	// Now let's check if this mention was inside a reshare so we don't spam a forum
+	// note: $term has been set to the matching term
 
 
 	$body = $item['body'];
@@ -2975,13 +2992,34 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
-	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
+	
+//	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
-	if(! preg_match($pattern,$body,$matches)) {
-		logger('tgroup_check: mention was in a reshare - ignoring');
-		return false;
+	$pattern = '/@\!?\[zrl\=(.*?)\](.*?)\+\[\/zrl\]/';
+
+	$found = false;
+
+	if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
+		$max_forums = get_config('system','max_tagged_forums');
+		if(! $max_forums)
+			$max_forums = 2;
+		$matched_forums = 0;
+		foreach($matches as $match) {
+			$matched_forums ++;
+			if($term['url'] === $match[1] && $term['term'] === $match[2]) {
+				if($matched_forums <= $max_forums) {
+					$found = true;
+					break;
+				}
+				logger('forum ' . $term['term'] . ' exceeded max_tagged_forums - ignoring');
+			}
+		}
 	}
 
+	if(! $found) {
+		logger('tgroup_check: mention was in a reshare or exceeded max_tagged_forums - ignoring');
+		return false;
+	}
 
 	return true;
 
@@ -3897,7 +3935,7 @@ function retain_item($id) {
 function drop_items($items) {
 	$uid = 0;
 
-	if(! local_user() && ! remote_user())
+	if(! local_channel() && ! remote_channel())
 		return;
 
 	if(count($items)) {
@@ -3953,7 +3991,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		$ok_to_delete = true;
 
 	// owner deletion
-	if(local_user() && local_user() == $item['uid'])
+	if(local_channel() && local_channel() == $item['uid'])
 		$ok_to_delete = true;
 
 	// author deletion
@@ -4430,7 +4468,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
         $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ")>0 limit 1",
 			intval($arr['cid']),
-			intval(local_user())
+			intval(local_channel())
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";

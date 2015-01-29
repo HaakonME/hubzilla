@@ -15,8 +15,14 @@ function diaspora_dispatch_public($msg) {
 		return;
 	}
 
-	// find everybody following or allowing this author
+	$sys_disabled = true;
 
+	if(! get_config('system','disable_discover_tab')) {
+		$sys_disabled = get_config('system','disable_diaspora_discover_tab');
+	}
+	$sys = (($sys_disabled) ? null : get_sys_channel());
+
+	// find everybody following or allowing this author
 
 	$r = q("SELECT * from channel where channel_id in ( SELECT abook_channel from abook left join xchan on abook_xchan = xchan_hash WHERE xchan_network like '%%diaspora%%' and xchan_addr = '%s' )",
 		dbesc($msg['author'])
@@ -29,6 +35,8 @@ function diaspora_dispatch_public($msg) {
 			logger('diaspora_public: delivering to: ' . $rr['channel_name'] . ' (' . $rr['channel_address'] . ') ');
 			diaspora_dispatch($rr,$msg);
 		}
+		if($sys)
+			diaspora_dispatch($sys,$msg);
 	}
 	else
 		logger('diaspora_public: no subscribers');
@@ -2153,8 +2161,7 @@ function diaspora_profile($importer,$xml,$msg) {
 	if($name === '') {
 		$name = $handle_parts[0];
 	}
-	
-	 
+		 
 	if( preg_match("|^https?://|", $image_url) === 0) {
 		$image_url = "http://" . $handle_parts[1] . $image_url;
 	}
@@ -2175,32 +2182,16 @@ function diaspora_profile($importer,$xml,$msg) {
 	if(substr($birthday,5) === substr($contact['bd'],5))
 		$birthday = $contact['bd'];
 
-	// TODO: update name on item['author-name'] if the name changed. See consume_feed()
-	// Not doing this currently because D* protocol is scheduled for revision soon. 
-
-/*	$r = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s', `avatar-date` = '%s' , `bd` = '%s' WHERE `id` = %d AND `uid` = %d",
+	$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' ",
 		dbesc($name),
 		dbesc(datetime_convert()),
 		dbesc($images[0]),
 		dbesc($images[1]),
 		dbesc($images[2]),
+		dbesc($images[3]),
 		dbesc(datetime_convert()),
-		dbesc($birthday),
-		intval($contact['id']),
-		intval($importer['channel_id'])
+		intval($contact['xchan_hash'])
 	); 
-*/
-/*	if($r) {
-		if($oldphotos) {
-			foreach($oldphotos as $ph) {
-				q("DELETE FROM `photo` WHERE `uid` = %d AND `contact-id` = %d AND `album` = 'Contact Photos' AND `resource-id` = '%s' ",
-					intval($importer['channel_id']),
-					intval($contact['id']),
-					dbesc($ph['resource-id'])
-				);
-			}
-		}
-	}	*/
 
 	return;
 

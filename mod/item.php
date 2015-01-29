@@ -26,12 +26,12 @@ function item_post(&$a) {
 	// This will change. Figure out who the observer is and whether or not
 	// they have permission to post here. Else ignore the post.
 
-	if((! local_user()) && (! remote_user()) && (! x($_REQUEST,'commenter')))
+	if((! local_channel()) && (! remote_channel()) && (! x($_REQUEST,'commenter')))
 		return;
 
 	require_once('include/security.php');
 
-	$uid = local_user();
+	$uid = local_channel();
 	$channel = null;
 	$observer = null;
 
@@ -635,10 +635,9 @@ function item_post(&$a) {
 		}
 	}
 
-	$item_unseen = ((local_user() != $profile_uid) ? 1 : 0);
+	$item_unseen = ((local_channel() != $profile_uid) ? 1 : 0);
 	$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);
 	$item_origin = (($origin) ? 1 : 0);
-
 
 	if($moderated)
 		$item_restrict = $item_restrict | ITEM_MODERATED;
@@ -897,7 +896,7 @@ function item_post(&$a) {
 
 function item_content(&$a) {
 
-	if((! local_user()) && (! remote_user()))
+	if((! local_channel()) && (! remote_channel()))
 		return;
 
 	require_once('include/security.php');
@@ -912,7 +911,7 @@ function item_content(&$a) {
 		if($i) {
 			$can_delete = false;
 			$local_delete = false;
-			if(local_user() && local_user() == $i[0]['uid'])
+			if(local_channel() && local_channel() == $i[0]['uid'])
 				$local_delete = true;
 
 			$ob_hash = get_observer_hash();

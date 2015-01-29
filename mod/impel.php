@@ -28,17 +28,17 @@ function impel_init(&$a) {
 
 	switch($j['type']) {
 		case 'webpage':
-			$arr['item_restrict'] = ITEM_WEBPAGE;
+			$arr['item_type'] = ITEM_TYPE_WEBPAGE;
 			$namespace = 'WEBPAGE';
 			$installed_type = t('webpage');
 			break;
 		case 'block':
-			$arr['item_restrict'] = ITEM_BUILDBLOCK;
+			$arr['item_type'] = ITEM_TYPE_BLOCK;
 			$namespace = 'BUILDBLOCK';
 			$installed_type = t('block');
 			break;
 		case 'layout':
-			$arr['item_restrict'] = ITEM_PDL;
+			$arr['item_type'] = ITEM_TYPE_PDL;
 			$namespace = 'PDL';
 			$installed_type = t('layout');
 			break;

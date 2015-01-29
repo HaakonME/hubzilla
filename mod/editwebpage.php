@@ -166,7 +166,7 @@ function editwebpage_content(&$a) {
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $rp,
-		'$webpage' => ITEM_WEBPAGE,
+		'$webpage' => ITEM_TYPE_WEBPAGE,
 		'$placeholdpagetitle' => t('Page link title'),
 		'$pagetitle' => $page_title,
 

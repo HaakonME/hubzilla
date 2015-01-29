@@ -29,7 +29,7 @@ function widget_tagcloud($args) {
 	$type = TERM_CATEGORY;
 
 	// FIXME there exists no $authors variable
-	$r = tagadelic($uid, $count, $authors, $flags, ITEM_WEBPAGE, $type);
+	$r = tagadelic($uid, $count, $authors, $flags, ITEM_TYPE_WEBPAGE, $type);
 
 	if($r) {
 		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
@@ -688,7 +688,7 @@ function widget_item($arr) {
 	require_once('include/security.php');
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select * from item where mid = '%s' and uid = %d and item_restrict = " . intval(ITEM_WEBPAGE) . " $sql_extra limit 1",
+	$r = q("select * from item where mid = '%s' and uid = %d and item_type = " . intval(ITEM_TYPE_WEBPAGE) . " $sql_extra limit 1",
 		dbesc($arr['mid']),
 		intval($uid)
 	);

@@ -839,9 +839,8 @@ function item_post(&$a) {
 		// This way we don't see every picture in your new photo album posted to your wall at once.
 		// They will show up as people comment on them.
 
-		if($parent_item['item_restrict'] & ITEM_HIDDEN) {
-			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d",
-				intval($parent_item['item_restrict'] - ITEM_HIDDEN),
+		if(intval($parent_item['item_hidden'])) {
+			$r = q("UPDATE item SET item_hidden = 0 WHERE id = %d",
 				intval($parent_item['id'])
 			);
 		}
@@ -1047,8 +1046,8 @@ function item_check_service_class($channel_id,$iswebpage) {
 	if ($iswebpage) {
 		$r = q("select count(i.id)  as total from item i 
 			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
-			and i.parent=i.id and (i.item_restrict & %d)>0 and i.item_deleted = 0 and i.uid= %d ",
-			intval(ITEM_WEBPAGE),
+			and i.parent=i.id and i.item_type = %d and i.item_deleted = 0 and i.uid= %d ",
+			intval(ITEM_TYPE_WEBPAGE),
 			intval($channel_id)
 		);
 	}

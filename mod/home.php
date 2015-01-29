@@ -74,10 +74,10 @@ function home_content(&$a, $update = 0, $load = false) {
 
 		$r = q("select item.* from item left join item_id on item.id = item_id.iid
 			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-			item_restrict = %d limit 1",
+			item_type = %d limit 1",
 			intval($u[0]['channel_id']),
 			dbesc($page_id),
-			intval(ITEM_WEBPAGE)
+			intval(ITEM_TYPE_WEBPAGE)
 		);
 
 		if($r) {

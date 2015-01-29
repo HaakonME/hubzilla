@@ -520,19 +520,24 @@ define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
  */
 
 define ( 'ITEM_VISIBLE',         0x0000);
-define ( 'ITEM_HIDDEN',          0x0001);
+//define ( 'ITEM_HIDDEN',          0x0001);
 define ( 'ITEM_BLOCKED',         0x0002);
 define ( 'ITEM_MODERATED',       0x0004);
 define ( 'ITEM_SPAM',            0x0008);
-define ( 'ITEM_DELETED',         0x0010);
+//define ( 'ITEM_DELETED',         0x0010);
 define ( 'ITEM_UNPUBLISHED',     0x0020);
-define ( 'ITEM_WEBPAGE',         0x0040);	// is a static web page, not a conversational item
+//define ( 'ITEM_WEBPAGE',         0x0040);	// is a static web page, not a conversational item
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080);
 define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
-define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
+//define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
 define ( 'ITEM_PENDING_REMOVE',  0x0800);   // deleted, notification period has lapsed
 										   // Don't make us evaluate this same item again.
+
+define ( 'ITEM_TYPE_POST',       0 );
+define ( 'ITEM_TYPE_BLOCK',      1 );
+define ( 'ITEM_TYPE_PDL',        2 );
+define ( 'ITEM_TYPE_WEBPAGE',    3 );
 
 define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );

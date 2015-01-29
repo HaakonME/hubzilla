@@ -77,7 +77,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$target_item = null;
 
-	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid like '%s' limit 1",
+	$r = q("select id, uid, mid, parent_mid, item_type, item_deleted from item where mid like '%s' limit 1",
 		dbesc($item_hash . '%')
 	);
 
@@ -87,7 +87,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$r = null;
 
-	if($target_item['item_restrict'] & ITEM_WEBPAGE) {
+	if($target_item['item_type']  == ITEM_TYPE_WEBPAGE) {
 		$x = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
 		);

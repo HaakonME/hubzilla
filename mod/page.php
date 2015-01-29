@@ -56,10 +56,10 @@ function page_init(&$a) {
 
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-		item_restrict = %d $sql_options $revision limit 1",
+		item_type = %d $sql_options $revision limit 1",
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
-		intval(ITEM_WEBPAGE)
+		intval(ITEM_TYPE_WEBPAGE)
 	);
 
 	if(! $r) {
@@ -68,10 +68,10 @@ function page_init(&$a) {
 
 		$x = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-		item_restrict = %d $revision limit 1",
+		item_type = %d $revision limit 1",
 			intval($u[0]['channel_id']),
 			dbesc($page_id),
-			intval(ITEM_WEBPAGE)
+			intval(ITEM_TYPE_WEBPAGE)
 		);
 		if($x) {
 			// Yes, it's there. You just aren't allowed to see it.

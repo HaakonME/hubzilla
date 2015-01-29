@@ -841,7 +841,7 @@ function get_item_elements($x) {
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
 		$arr['item_deleted'] = 1;
 	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
-		$arr['item_restrict'] = ITEM_HIDDEN;
+		$arr['item_hidden'] = 1;
 
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
@@ -1312,7 +1312,7 @@ function encode_item_flags($item) {
 
 	if(intval($item['item_deleted']))
 		$ret[] = 'deleted';
-	if($item['item_restrict'] & ITEM_HIDDEN)
+	if(intval($item['item_hidden']))
 		$ret[] = 'hidden';
 	if(intval($item['item_thread_top']))
 		$ret[] = 'thread_parent';
@@ -1916,11 +1916,11 @@ function item_store($arr,$allow_exec = false) {
 	// If a page layout is provided, ensure it exists and belongs to us. 
 
 	if(array_key_exists('layout_mid',$arr) && $arr['layout_mid']) {
-		$l = q("select item_restrict from item where mid = '%s' and uid = %d limit 1",
+		$l = q("select item_type from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['layout_mid']),
 			intval($arr['uid'])
 		);
-		if((! $l) || (! ($l[0]['item_restrict'] & ITEM_PDL)))
+		if((! $l) || (! ($l[0]['item_type'] != ITEM_TYPE_PDL)))
 			unset($arr['layout_mid']);
 	}
 
@@ -3967,8 +3967,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		// hook calls a remote process which loops. We'll delete it properly in a second.
 
 		if(($linked_item) && (! $force)) {
-			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d",
-				intval(ITEM_HIDDEN),
+			$r = q("UPDATE item SET item_hidden = 1 WHERE id = %d",
 				intval($item['id'])
 			);
 		}
@@ -4041,9 +4040,8 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL,$force = false) {
 
 		case DROPITEM_PHASE1:
 			if($linked_item && ! $force) {
-				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
+				$r = q("UPDATE item SET item_hidden = 1,
 					changed = '%s', edited = '%s'  WHERE id = %d",
-					intval(ITEM_HIDDEN),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					intval($item['id'])
@@ -4062,9 +4060,8 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL,$force = false) {
 		case DROPITEM_NORMAL:
 		default:
 			if($linked_item && ! $force) {
-				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), 
+				$r = q("UPDATE item SET item_hidden = 1,
 					changed = '%s', edited = '%s'  WHERE id = %d",
-					intval(ITEM_HIDDEN),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					intval($item['id'])
@@ -4522,9 +4519,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	$sql_extra .= item_permissions_sql($channel['channel_id']);
 
 	if($arr['pages'])
-		$item_restrict = " AND (item_restrict & " . ITEM_WEBPAGE . ") ";
+		$item_restrict = " AND item_type = " . ITEM_TYPE_WEBPAGE . " ";
 	else
-		$item_restrict = " AND item_restrict = 0 ";
+		$item_restrict = " AND item_type = 0 ";
 
 
     if($arr['nouveau'] && ($client_mode & CLIENT_MODE_LOAD) && $channel) {
@@ -4629,11 +4626,11 @@ function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remo
 
 	$page_type = '';
 
-	if($webpage & ITEM_WEBPAGE)
+	if($webpage  == ITEM_TYPE_WEBPAGE)
 		$page_type = 'WEBPAGE';
-	elseif($webpage & ITEM_BUILDBLOCK)
+	elseif($webpage == ITEM_TYPE_BLOCK)
 		$page_type = 'BUILDBLOCK';
-	elseif($webpage & ITEM_PDL)
+	elseif($webpage == ITEM_TYPE_PDL)
 		$page_type = 'PDL';
 	elseif($namespace && $remote_id) {
 		$page_type = $namespace;

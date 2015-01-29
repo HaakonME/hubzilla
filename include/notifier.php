@@ -316,9 +316,12 @@ function notifier_run($argv, $argc){
 		if(intval($target_item['item_deleted']))
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
 
-		$unforwardable = ITEM_UNPUBLISHED|ITEM_DELAYED_PUBLISH|ITEM_WEBPAGE|ITEM_BUILDBLOCK|ITEM_PDL;
-		if($target_item['item_restrict'] & $unforwardable) {
-			logger('notifier: target item not forwardable: flags ' . $target_item['item_restrict'], LOGGER_DEBUG);
+		if(intval($target_item['item_type']) != ITEM_TYPE_POST) {
+			logger('notifier: target item not forwardable: type ' . $target_item['item_type'], LOGGER_DEBUG);
+			return;
+		}
+		if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed_publish'])) {
+			logger('notifier: target item not published, so not forwardable', LOGGER_DEBUG);
 			return;
 		}
 

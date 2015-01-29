@@ -1549,9 +1549,9 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and (item_restrict & %d)>0",
+	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and item_type = %d ",
 		intval($channel_id),
-		intval(ITEM_PDL)
+		intval(ITEM_TYPE_PDL)
 	);
 	if($r) {
 		$o = t('Select a page layout: ');

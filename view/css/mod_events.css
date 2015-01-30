@@ -2,8 +2,14 @@
 	width: 400px;
 }
 
-#event-summary {
-	width: 400px;
+#event-summary-text, #event-start-text, #event-finish-text {
+	width: 200px;
+	float: left;
+}
+
+#event-summary, #start_text, #finish_text {
+	width: 300px;
+	float: left;
 }
 
 .event-cats {
@@ -12,6 +18,12 @@
 }
 
 .required {
-	color: #ff0000;
-	font-size: 1.2rem;
+	float: left;
+}
+
+#event-datetime-break {
+	clear: both;
+}
+#event-nofinish-break {
+	margin-bottom: 10px;
 }

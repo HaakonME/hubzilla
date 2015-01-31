@@ -296,14 +296,24 @@ function zot_refresh($them,$channel = null, $force = false) {
 	if($channel)
 		logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA);
 
+	$url = null;
+
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
-		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and hubloc_primary = 1 limit 1",
+		$r = q("select hubloc_url, hubloc_flags from hubloc where hubloc_hash = '%s'",
 			dbesc($them['xchan_hash'])
 		);
-		if($r)
-			$url = $r[0]['hubloc_url'];
+		if($r) {
+			foreach($r as $rr) {
+				if($rr['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) {
+					$url = $rr['hubloc_url'];
+					break;
+				}
+			}
+			if(! $url)			
+				$url = $r[0]['hubloc_url'];
+		}
 	}
 	if(! $url) {
 		logger('zot_refresh: no url');
@@ -1954,10 +1964,18 @@ function sync_locations($sender,$arr,$absolute = false) {
 					}
 				}
 
-				if((intval($r[0]['hubloc_primary']) && (! $location['primary']))
-					|| ((! intval($r[0]['hubloc_primary'])) && ($location['primary']))) {
-					$m = q("update hubloc set hubloc_primary = %d, hubloc_updated = '%s' where hubloc_id = %d",
-						intval($location['primary']),
+				if(intval($r[0]['hubloc_primary']) && (! $location['primary'])) {
+					$m = q("update hubloc set hubloc_primary = 0, hubloc_updated = '%s' where hubloc_id = %d",
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
+					hubloc_change_primary($r[0]);
+					$what .= 'primary_hub ';
+					$changed = true;
+				}
+				elseif((! intval($r[0]['hubloc_primary'])) && ($location['primary'])) {
+					$m = q("update hubloc set hubloc_primary = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
@@ -1977,8 +1995,15 @@ function sync_locations($sender,$arr,$absolute = false) {
 				}
 				if((intval($r[0]['hubloc_deleted']) && (! $location['deleted']))
 					|| ((! (intval($r[0]['hubloc_deleted']))) && ($location['deleted']))) {
-					$n = q("update hubloc set hubloc_deleted = %d, hubloc_updated = '%s' where hubloc_id = %d",
-						intval($location['deleted']),
+					$n = q("update hubloc set hubloc_deleted = 0, hubloc_updated = '%s' where hubloc_id = %d",
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+					$what .= 'delete_hub ';
+					$changed = true;
+				}
+				elseif((! intval($r[0]['hubloc_deleted'])) && ($location['deleted'])) {
+					$n = q("update hubloc set hubloc_deleted = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);

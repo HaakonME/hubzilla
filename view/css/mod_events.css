@@ -12,10 +12,15 @@
 	float: left;
 }
 
+#event-category-wrap {
+	margin-top: 15px;
+}
+
 .event-cats {
 	margin-top: 15px;
 	width: 400px;
 }
+
 
 .required {
 	float: left;
@@ -27,3 +32,4 @@
 #event-nofinish-break {
 	margin-bottom: 10px;
 }
+

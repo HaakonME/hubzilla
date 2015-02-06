@@ -1945,9 +1945,9 @@ function find_xchan_in_array($xchan,$arr) {
 }
 
 function get_rel_link($j,$rel) {
-	if(count($j))
+	if(is_array($j) && ($j))
 		foreach($j as $l)
-			if($l['rel'] === $rel)
+			if(array_key_exists('rel',$j) && $l['rel'] === $rel && array_key_exists('href',$l))
 				return $l['href'];
 
 	return '';
@@ -2296,6 +2296,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 		else {
+
 			// check for a group/collection exclusion tag			
 
 			// note that we aren't setting $replaced even though we're replacing text.
@@ -2356,6 +2357,8 @@ function linkify_tags($a, &$body, $uid) {
 	$tags = get_tags($body);
 	if(count($tags)) {
 		foreach($tags as $tag) {
+			$access_tag = '';
+
 			// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
 			// Robert Johnson should be first in the $tags array
 

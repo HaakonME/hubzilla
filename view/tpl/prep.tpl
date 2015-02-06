@@ -10,11 +10,12 @@
 <a href="{{$r.xchan_url}}" class="directory-profile-link" id="directory-profile-link-{{$r.xchan_hash}}" ><img class="directory-photo-img" src="{{$r.xchan_photo_m}}" alt="{{$r.xchan_addr}}" title="{{$r.xchan_addr}}" /></a>
 </div>
 </div>
-<div class="prep-details">
+<div class="prep-details contact-info">
 <a href="{{$r.xchan_url}}" class="directory-profile-link" id="directory-profile-link-{{$r.xchan_hash}}" ><div class="contact-name">{{$r.xchan_name}}</div></a>
-{{$rating_lbl}} {{$r.xlink_rating}}
+<div class="rating-value">{{$rating_lbl}} <span class="prep-rating-value">{{$r.xlink_rating}}</span></div>
 {{if $r.xlink_rating_text}}
-{{$rating_text_label}} {{$r.xlink_rating_text}}
+<div class="rating-text">{{$rating_text_label}} {{$r.xlink_rating_text}}
+</div>
 {{/if}}
 </div>
 <div class="clear"></div>

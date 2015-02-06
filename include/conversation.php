@@ -610,10 +610,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					$profile_link = zid($profile_link);
 
 				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-				if(x($a->contacts,$normalised))
-					$profile_avatar = $a->contacts[$normalised]['thumb'];
-				else
-					$profile_avatar = ((strlen($item['author-avatar'])) ? $a->get_cached_avatar_image($item['author-avatar']) : $item['thumb']);
 
 				$profile_name = $item['author']['xchan_name'];
 				$profile_link = $item['author']['xchan_url'];
@@ -1129,6 +1125,9 @@ function status_editor($a,$x,$popup=false) {
 	if(x($x,'nopreview'))
 		$preview = '';
 
+	$defexpire = ((($z = get_pconfig($x['profile_uid'],'system','default_post_expire')) && (! $webpage)) ? $z : '');
+
+
 	$cipher = get_pconfig($x['profile_uid'],'system','default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
@@ -1186,7 +1185,7 @@ function status_editor($a,$x,$popup=false) {
 		'$preview' => $preview,
 		'$source' => ((x($x,'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
-		'$defexpire' => '',
+		'$defexpire' => $defexpire,
 		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? true : false),
 		'$expires' => t('Set expiration date'),
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? true : false),

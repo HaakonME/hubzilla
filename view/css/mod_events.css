@@ -1,15 +1,16 @@
+
 #event-desc-textarea, #event-location-textarea {
-	width: 400px;
+    width: 400px;
 }
 
 #event-summary-text, #event-start-text, #event-finish-text {
-	width: 200px;
-	float: left;
+    width: 200px;
+    float: left;
 }
 
 #event-summary, #start_text, #finish_text {
-	width: 300px;
-	float: left;
+    width: 300px;
+    float: left;
 }
 
 #event-category-wrap {
@@ -18,18 +19,23 @@
 
 .event-cats {
 	margin-top: 15px;
-	width: 400px;
+    width: 400px;
 }
 
 
 .required {
-	float: left;
+    float: left;
 }
 
 #event-datetime-break {
-	clear: both;
+    clear: both;
 }
+
 #event-nofinish-break {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+#event-desc-text, #event-location-text, .event-form-location-end {
+	margin-top: 15px;
 }
 

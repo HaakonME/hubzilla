@@ -239,10 +239,10 @@ Cleanup: Remove the directory www/ (Git will not create files and folders in dir
 Remove directory[code]pi@pi /var $ sudo rm -rf www/[/code]
 
 Download the sources of RED from GIT
-[code]pi@pi /var $ sudo git clone https://github.com/friendica/red.git www[/code]
+[code]pi@pi /var $ sudo git clone https://github.com/redmatrix/redmatrix.git www[/code]
 
 Download the sources of the addons from GIT
-[code]pi@pi /var/www $ sudo git clone https://github.com/friendica/red-addons.git addon[/code]
+[code]pi@pi /var/www $ sudo git clone https://github.com/redmatrix/redmatrix-addons.git addon[/code]
 
 Make user www-data the owner of the whole red directory (including subdirectories and files)
 (TODO: This step has to be proofed by the next installation.)

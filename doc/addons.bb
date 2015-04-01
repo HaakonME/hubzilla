@@ -61,7 +61,7 @@
 
 [h3]Addon Repositories[/h3]
 
-[url=https://github.com/friendica/red-addons]https://github.com/friendica/red-addons[/url] Main project addon repository
+[url=https://github.com/redmatrix/redmatrix-addons]https://github.com/redmatrix/redmatrix-addons[/url] Main project addon repository
 
 [url=https://github.com/23n/red-addons]https://github.com/23n/red-addons[/url] Oliver's repository (mayan_places and flip)
 

@@ -163,7 +163,7 @@ function siteinfo_content(&$a) {
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
 		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about the Red Matrix.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
-		'$bug_link_url' => 'https://github.com/friendica/red/issues',
+		'$bug_link_url' => 'https://github.com/redmatrix/redmatrix/issues',
 		'$bug_link_text' => 'redmatrix issues',
 		'$contact' => t('Suggestions, praise, etc. - please email "redmatrix" at librelist - dot com'),
 		'$donate' => $donate,

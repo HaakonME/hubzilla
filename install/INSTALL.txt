@@ -96,7 +96,7 @@ use SSL, your webserver must not listen on port 443 at all.
     software much easier to update. The Linux command to clone the repository 
     into a directory "mywebsite" would be
 
-        git clone https://github.com/friendica/red.git mywebsite
+        git clone https://github.com/redmatrix/redmatrix.git mywebsite
 
     - and then you can pick up the latest changes at any time with
 
@@ -127,7 +127,7 @@ use SSL, your webserver must not listen on port 443 at all.
          a nickname of 'matrix'. You can pull in other redmatrix addon repositories by 
          giving them different nicknames.
 
-            util/add_addon_repo https://github.com/friendica/red-addons.git matrix
+            util/add_addon_repo https://github.com/redmatrix/redmatrix-addons.git matrix
 
     - For keeping the addon tree updated, you should be on your top level website 
 		directory and issue an update command for that repository.

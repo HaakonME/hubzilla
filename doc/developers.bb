@@ -9,7 +9,7 @@ doing development.
 
 Create your own github account.
 
-You may fork/clone the Red repository from [url=https://github.com/friendica/red.git]https://github.com/friendica/red.git[/url]
+You may fork/clone the Red repository from [url=https://github.com/redmatrix/redmatrix.git]https://github.com/redmatrix/redmatrix.git[/url]
 
 Follow the instructions provided here: [url=http://help.github.com/fork-a-repo/]http://help.github.com/fork-a-repo/[/url]
 to create and use your own tracking fork on github

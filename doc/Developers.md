@@ -8,7 +8,7 @@ doing development.
 
 Create your own github account.
 
-You may fork/clone the Red repository from [https://github.com/friendica/red.git](https://github.com/friendica/red.git).
+You may fork/clone the Red repository from [https://github.com/redmatrix/redmatrix.git](https://github.com/redmatrix/redmatrix.git).
 
 Follow the instructions provided here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
 to create and use your own tracking fork on github
@@ -28,7 +28,6 @@ Please pull in any changes from the project repository and merge them with your 
 
 Also - **test your changes**. Don't assume that a simple fix won't break something else. If possible get an experienced Red developer to review the code. 
 
-Further documentation can be found at the Github wiki pages at: [https://github.com/friendica/red/wiki](https://github.com/friendica/red/wiki).
 
 **Licensing**
 

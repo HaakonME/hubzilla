@@ -72,16 +72,20 @@ function home_content(&$a, $update = 0, $load = false) {
 	if($channel_address) {
 
 		$page_id = 'home';
+		$randpage_id = 'home-%';
 
 		$u = q("select channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($channel_address)
 		);
 
+		$randfunc = db_getfunc('RAND');
+
 		$r = q("select item.* from item left join item_id on item.id = item_id.iid
-			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-			item_restrict = %d limit 1",
+			where item.uid = %d and ( sid = '%s' or sid like '%s' ) and service = 'WEBPAGE' and 
+			item_restrict = %d ORDER BY $randfunc limit 1",
 			intval($u[0]['channel_id']),
 			dbesc($page_id),
+			dbesc($randpage_id),
 			intval(ITEM_WEBPAGE)
 		);
 

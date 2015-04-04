@@ -309,7 +309,7 @@ class Item extends BaseObject {
 			'title_tosource' => get_pconfig($conv->get_profile_owner(),'system','title_tosource'),
 			'ago' => relative_date($item['created']),
 			'app' => $item['app'],
-			'str_app' => sprintf( t(' from %s'), $item['app']),
+			'str_app' => sprintf( t('from %s'), $item['app']),
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),

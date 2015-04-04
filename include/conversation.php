@@ -713,7 +713,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'text' => strip_tags($body),
 					'ago' => relative_date($item['created']),
 					'app' => $item['app'],
-					'str_app' => sprintf( t(' from %s'), $item['app']),
+					'str_app' => sprintf( t('from %s'), $item['app']),
 					'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 					'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 					'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),

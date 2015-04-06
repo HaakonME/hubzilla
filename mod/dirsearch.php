@@ -100,7 +100,7 @@ function dirsearch_content(&$a) {
 	if($name)
 		$sql_extra .= dir_query_build($joiner,'xchan_name',$name);
 	if($hub)
-		$sql_extra .= " $joiner xchan_hash in (select hubloc_hash from hubloc where hubloc_host =  '" . protect_sprintf(dbesc($hub)) . "') ";
+		$sql_extra .= " and xchan_hash in (select hubloc_hash from hubloc where hubloc_host =  '" . protect_sprintf(dbesc($hub)) . "') ";
 	if($address)
 		$sql_extra .= dir_query_build($joiner,'xchan_addr',$address);
 	if($city)

@@ -1258,15 +1258,19 @@ function format_categories(&$item,$writeable) {
 	return $s;
 }
 
-// Add any hashtags which weren't mentioned in the message body, e.g. community tags
-
+/**
+ * @brief Add any hashtags which weren't mentioned in the message body, e.g. community tags
+ *
+ * @param[in] array &$item
+ * @return string HTML link of hashtag
+ */
 function format_hashtags(&$item) {
-
 	$s = '';
-	$terms = get_terms_oftype($item['term'],TERM_HASHTAG);
+
+	$terms = get_terms_oftype($item['term'], TERM_HASHTAG);
 	if($terms) {
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
+			$term = htmlspecialchars($t['term'], ENT_COMPAT, 'UTF-8', false) ;
 			if(! trim($term))
 				continue;
 			if(strpos($item['body'], $t['url']))
@@ -1278,6 +1282,7 @@ function format_hashtags(&$item) {
 			$s .= '#<a href="' . zid($t['url']) . '" >' . $term . '</a>';
 		}
 	}
+
 	return $s;
 }
 
@@ -1301,6 +1306,7 @@ function format_mentions(&$item) {
 			$s .= '@<a href="' . zid($t['url']) . '" >' . $term . '</a>';
 		}
 	}
+
 	return $s;
 }
 
@@ -2065,7 +2071,11 @@ function json_decode_plus($s) {
 	return $x;
 }
 
-
+/**
+ * @brief Creates navigation menu for webpage, layout, blocks, menu sites.
+ *
+ * @return string
+ */
 function design_tools() {
 
 	$channel  = get_app()->get_channel();

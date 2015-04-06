@@ -51,6 +51,10 @@ function directory_content(&$a) {
 	$observer = get_observer_hash();
 
 	$globaldir = get_globaldir_setting($observer);
+	// override your personal global search pref if we're doing a navbar search of the directory
+	if(intval($_REQUEST['navsearch']))
+		$globaldir = 1;
+
 	$safe_mode = get_safemode_setting($observer);
 
 	$pubforums = null;

@@ -98,7 +98,6 @@ function layouts_content(&$a) {
 			header('Content-disposition: attachment; filename="' . $r[0]['sid'] . '.pdl"');
 			echo json_encode($r);
 			killme();
-
 		}
 	}
 
@@ -156,7 +155,7 @@ function layouts_content(&$a) {
 				'title' => $rr['sid'], 
 				'mid' => $rr['mid']
 			);
-		} 
+		}
 	}
 
 	//Build the base URL for edit links
@@ -172,7 +171,6 @@ function layouts_content(&$a) {
 		'$preview' => '1',
 	
 	));
-    
-	return $o;
 
+	return $o;
 }

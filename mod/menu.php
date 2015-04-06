@@ -3,11 +3,20 @@
 require_once('include/menu.php');
 require_once('include/identity.php');
 
+function menu_init(&$a) {
+	if (array_key_exists('sys', $_REQUEST) && $_REQUEST['sys'] && is_site_admin()) {
+		$sys = get_sys_channel();
+		if ($sys && intval($sys['channel_id'])) {
+			$a->is_sys = true;
+		}
+	}
+}
+
 function menu_post(&$a) {
 
 	$uid = local_channel();
 
-	if(array_key_exists('sys',$_REQUEST) && $_REQUEST['sys'] && is_site_admin()) {
+	if(array_key_exists('sys', $_REQUEST) && $_REQUEST['sys'] && is_site_admin()) {
 		$sys = get_sys_channel();
 		$uid = intval($sys['channel_id']);
 		$a->is_sys = true;
@@ -17,7 +26,7 @@ function menu_post(&$a) {
 		return;
 
 	$_REQUEST['menu_channel_id'] = $uid;
-	
+
 	if($_REQUEST['menu_bookmark'])
 		$_REQUEST['menu_flags'] |= MENU_BOOKMARK;
 	if($_REQUEST['menu_system'])
@@ -44,7 +53,6 @@ function menu_post(&$a) {
 			notice( t('Unable to create menu.'). EOL);
 
 	}
-
 }
 
 
@@ -52,7 +60,7 @@ function menu_content(&$a) {
 
 	$uid = local_channel();
 
-	if($a->is_sys && is_site_admin()) {
+	if ($a->is_sys && is_site_admin()) {
 		$sys = get_sys_channel();
 		$uid = intval($sys['channel_id']);
 	}
@@ -82,7 +90,8 @@ function menu_content(&$a) {
 			'$hintnew' => t('Create a new menu'),
 			'$hintdrop' => t('Delete this menu'),
 			'$hintcontent' => t('Edit menu contents'),
-			'$hintedit' => t('Edit this menu')
+			'$hintedit' => t('Edit this menu'),
+			'$sys' => $a->is_sys
 		));
 
 		return $o;
@@ -91,18 +100,20 @@ function menu_content(&$a) {
 
 
 	if(argc() > 1) {
-		if(argv(1) === 'new') {			
+		if(argv(1) === 'new') {
 			$o = replace_macros(get_markup_template('menuedit.tpl'), array(
 				'$header' => t('New Menu'),
 				'$menu_name' => array('menu_name', t('Menu name'), '', t('Must be unique, only seen by you'), '*'),
 				'$menu_desc' => array('menu_desc', t('Menu title'), '', t('Menu title as seen by others'), ''),
 				'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), 0 , t('Menu may be used to store saved bookmarks'), ''),
-				'$submit' => t('Create')
+				'$submit' => t('Create'),
+				'$sys' => $a->is_sys
 			));
+
 			return $o;
 		}
 
- 		elseif(intval(argv(1))) {
+		elseif(intval(argv(1))) {
 			$m = menu_fetch_id(intval(argv(1)),$uid);
 			if(! $m) {
 				notice( t('Menu not found.') . EOL);

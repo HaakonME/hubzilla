@@ -71,7 +71,7 @@ function webpages_content(&$a) {
 	if(feature_enabled($owner,'expert')) {
 		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
 		if(! $mimetype)
-			$mimetype = 'choose';	
+			$mimetype = 'choose';
 	}
 	else {
 		$mimetype = 'text/bbcode';
@@ -129,7 +129,7 @@ function webpages_content(&$a) {
 
 	// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, 
 	// so just list titles and an edit link.
-	//TODO - this should be replaced with pagelist_widget
+	/** @TODO - this should be replaced with pagelist_widget */
 
 	$r = q("select * from item_id left join item on item_id.iid = item.id 
 		where item_id.uid = %d and service = 'WEBPAGE' order by item.created desc",
@@ -157,7 +157,7 @@ function webpages_content(&$a) {
 	$url = z_root() . '/editwebpage/' . $which;
 	
 	$o .= replace_macros(get_markup_template('webpagelist.tpl'), array(
-    	'$listtitle'    => t('Webpages'),
+		'$listtitle'    => t('Webpages'),
 		'$baseurl'      => $url,
 		'$edit'         => t('Edit'),
 		'$pages'        => $pages,
@@ -169,9 +169,7 @@ function webpages_content(&$a) {
 		'$title_txt'    => t('Title'),
 		'$created_txt'  => t('Created'),
 		'$edited_txt'   => t('Edited')
-
 	));
 
 	return $o;
-
 }

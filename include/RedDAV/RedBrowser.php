@@ -271,8 +271,9 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$nick' => $this->auth->getCurrentUser()
 			));
 
-		get_app()->page['content'] = $html;
-		load_pdl(get_app());
+		$a = get_app();
+		$a->page['content'] = $html;
+		load_pdl($a);
 
 		$theme_info_file = "view/theme/" . current_theme() . "/php/theme.php";
 		if (file_exists($theme_info_file)){
@@ -282,7 +283,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 				$func(get_app());
 			}
 		}
-		construct_page(get_app());
+		construct_page($a);
 	}
 
 	/**

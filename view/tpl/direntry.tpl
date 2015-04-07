@@ -20,6 +20,9 @@
 {{if $entry.canrate}}<button class="btn btn-default" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="icon-pencil"></i></button><span class="required" id="edited-{{$entry.hash}}" style="display: none;" >*</span>{{/if}}
 </div>
 {{/if}}
+{{if $entry.common_friends}}
+<div id="dir-common">{{$entry.common_txt}}</div>
+{{/if}}
 {{if $entry.public_forum}}
 <div class="contact-forum">
 {{$entry.forum_label}} @{{$entry.nickname}}+

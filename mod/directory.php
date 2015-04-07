@@ -82,12 +82,15 @@ function directory_content(&$a) {
 	$suggest = (local_channel() && x($_REQUEST,'suggest')) ? $_REQUEST['suggest'] : '';
 
 	if($suggest) {
+
 		$r = suggestion_query(local_channel(),get_observer_hash());
 
 		// Remember in which order the suggestions were
 		$addresses = array();
+		$common = array();
 		$index = 0;
 		foreach($r as $rr) {
+//			$common[$rr['xchan_addr']] = $rr['total'];
 			$addresses[$rr['xchan_addr']] = $index++;
 		}
 
@@ -300,6 +303,8 @@ function directory_content(&$a) {
 							'keywords' => $out,
 							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
 							'ignore_label' => "Don't suggest",
+							'common_friends' => (($common[$rr['address']]) ? intval($common[$rr['address']]) : ''),
+							'common_txt' => sprintf( t('Common connections: %s'), intval($common[$rr['address']]) ),
 							'safe' => $safe_mode
 						);
 

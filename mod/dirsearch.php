@@ -91,6 +91,12 @@ function dirsearch_content(&$a) {
 	else
 		$sync = false;
 
+
+	if($hub)
+		$hub_query = " and xchan_hash in (select hubloc_hash from hubloc where hubloc_host =  '" . protect_sprintf(dbesc($hub)) . "') ";
+	else
+		$hub_query = '';
+
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 
 	$joiner = ' OR ';
@@ -99,8 +105,6 @@ function dirsearch_content(&$a) {
 
 	if($name)
 		$sql_extra .= dir_query_build($joiner,'xchan_name',$name);
-	if($hub)
-		$sql_extra .= " and xchan_hash in (select hubloc_hash from hubloc where hubloc_host =  '" . protect_sprintf(dbesc($hub)) . "') ";
 	if($address)
 		$sql_extra .= dir_query_build($joiner,'xchan_addr',$address);
 	if($city)
@@ -248,12 +252,11 @@ function dirsearch_content(&$a) {
 	}
 	else {
 
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql $order $qlimit ",
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) $hub_query and xchan_network = 'zot' and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 and not ( xchan_flags & %d )>0 $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN),
 			intval(XCHAN_FLAGS_DELETED)
 		);
-
 
 		$ret['page'] = $page + 1;
 		$ret['records'] = count($r);		

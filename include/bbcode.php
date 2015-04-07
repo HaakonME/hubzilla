@@ -291,6 +291,12 @@ function bb_map_location($match) {
 	return str_replace($match[0],'<div class="map"  >' . generate_named_map($match[1]) . '</div>', $match[0]);
 }
 
+function bbopentag($match) {
+		$rnd = mt_rand();
+		return "<br /><div onclick=\"openClose('opendiv-" . $rnd  . "');return false;\" class=\"fakelink\">" . $match[1] . "</div><div id=\"opendiv-" . $rnd . "\" style=\"display: none;\">" . $match[2] . "</div>";
+}
+
+
 
 function bb_sanitize_style($input) {
 	//whitelist	property			limits (0 = no limitation)
@@ -672,9 +678,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$endlessloop = 0;
 	while ((strpos($Text, "[/open]")!== false)  and (strpos($Text, "[open=") !== false) and (++$endlessloop < 20)) {
 		$rnd = mt_rand();
-		$Text = preg_replace("/\[open=(.*?)\](.*?)\[\/open\]/ism",
-			"<br /><div onclick=\"openClose('opendiv-" . $rnd . "');return false;\" class=\"fakelink\">$1</div><div id=\"opendiv-" . $rnd . "\" style=\"display: none;\">$2</div>",
-			$Text);
+		$Text = preg_replace_callback("/\[open=(.*?)\](.*?)\[\/open\]/ism",'bbopentag',$Text);
 	}
 
 

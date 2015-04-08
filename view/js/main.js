@@ -620,13 +620,14 @@ function collapseHeight() {
 		if(orgHeight > divmore_height + 10) {
 			if(! $(this).hasClass('divmore')) {
 				$(this).readmore({
+					speed: 0,
 					collapsedHeight: divmore_height, 
 					moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
 					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',
 					beforeToggle: function(trigger, element, expanded) {
 						if(expanded) {
 							if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
-								$('html, body').animate( { scrollTop: $(window).scrollTop() - (orgHeight - divmore_height) }, {duration: 100 } );
+								$('html, body').animate( { scrollTop: $(window).scrollTop() - (orgHeight - divmore_height) }, {duration: 0 } );
 							}
 						}
 					}

@@ -818,6 +818,21 @@ function doprofilelike(ident, verb) {
 	$.get('like/' + ident + '?verb=' + verb, function() { window.location.href=window.location.href; });
 }
 
+
+function dropItem(ident) {
+	var object = '#thread-wrapper-' + ident;
+	var confirm = confirmDelete();
+	if(confirm) {
+		$('body').css('cursor', 'wait');
+		$(object).fadeTo('fast', 0.33, function () {
+			$.get('item/drop/' + ident).done(function() {
+				$(object).remove();
+				$('body').css('cursor', 'auto');
+			});
+		});
+	}
+}
+
 function dosubthread(ident) {
 	unpause();
 	$('#like-rotator-' + ident.toString()).spin('tiny');

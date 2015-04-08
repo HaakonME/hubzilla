@@ -90,7 +90,7 @@ function directory_content(&$a) {
 		$common = array();
 		$index = 0;
 		foreach($r as $rr) {
-//			$common[$rr['xchan_addr']] = $rr['total'];
+			$common[$rr['xchan_addr']] = $rr['total'];
 			$addresses[$rr['xchan_addr']] = $index++;
 		}
 

@@ -431,7 +431,7 @@ function widget_affinity($arr) {
 			'$coworkers' => t('Co-workers'),
 			'$oldfriends' => t('Former Friends'),
 			'$acquaintances' => t('Acquaintances'),
-			'$world' => t('Everybody')
+			'$world' => t('All')
 		));
 		$arr = array('html' => $x);
 		call_hooks('main_slider',$arr);

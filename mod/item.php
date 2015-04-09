@@ -950,6 +950,10 @@ function item_content(&$a) {
 			if(local_channel() && local_channel() == $i[0]['uid'])
 				$local_delete = true;
 
+			$sys = get_sys_channel();
+			if(is_site_admin() && $sys['channel_id'] == $i[0]['uid'])
+				$can_delete = true;
+
 			$ob_hash = get_observer_hash();
 			if($ob_hash && ($ob_hash === $i[0]['author_xchan'] || $ob_hash === $i[0]['owner_xchan'] || $ob_hash === $i[0]['source_xchan']))
 				$can_delete = true;

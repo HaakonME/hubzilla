@@ -1,31 +1,29 @@
 [b]Features[/b]
 
-[b][size=24]Red Matrix Features[/size][/b]
+[b][size=24]Redmatrix Features[/size][/b]
 
 
-The Red Matrix is a general-purpose communication network, with several unique features.  It is designed to be used by the widest range of users on the web, from non-technical bloggers, to expert PHP programmers and seasoned systems administrators.
+The Redmatrix is a general-purpose web publishing and communication network, with several unique features.  It is designed to be used by the widest range of people on the web, from non-technical bloggers, to expert PHP programmers and seasoned systems administrators.
 
-This page lists some of the core features of Red that are bundled with the official release.  As with most free and open source software, there may be many other extensions, additions, plugins, themes and configurations that are limited only by the needs and imagination of Red's users.
+This page lists some of the core features of Redmatrix that are bundled with the official release.  As with most free and open source software, there may be many other extensions, additions, plugins, themes and configurations that are limited only by the needs and imagination of the members.
 
 [b][size=20]Built for Privacy and Freedom[/size][/b]
 
-One of the design goals of Red is to enable easy communication on the web, while preserving privacy, if so desired by users.  To achieve this goal, Red includes a number of features allowing arbitrary levels of privacy:
+One of the design goals of Redmatrix is to enable easy communication on the web, while preserving privacy, if so desired by members. To achieve this goal, Redmatrix includes a number of features allowing arbitrary levels of privacy:
 
 [b]Affinity Slider[/b]
 
-When adding contacts in the Red Matrix, users have the option of assigning affinity levels to the new member in their contact list.  For example, when adding someone who happens to be a person who's blog you follow, you could assign their channel an affinity level of &quot;Acquaintances&quot;. 
-
-[img]https://friendicared.net/photo/b07b0262e3146325508b81a9d1ae4a1e-0.png[/img]
+When adding connnections in Redmatrix, members have the option of assigning "affinity" levels (how close your friendship is) to the new connection.  For example, when adding someone who happens to be a person whose blog you follow, you could assign their channel an affinity level of &quot;Acquaintances&quot;. 
 
 On the other hand, when adding a friend's channel, they could be placed under the affinity level of &quot;Friends&quot;.
 
-At this point, Red's [i]Affinity Slider[/i] tool, which usually appears at the top of your &quot;Matrix&quot; page, allows content on your Red account to be displayed by desired affinity levels. By moving the slider to cover all contacts with affinity levels of &quot;Me&quot; to &quot;Friends&quot;, only contacts (or channels) that are marked as &quot;Me&quot;, &quot;Best Friends&quot;, and &quot;Friends&quot; will be displayed on your page.  All other channels and contacts, such as the contact added under affinity level &quot;Acquaintances&quot;, will not be displayed.
+At this point, the Redmatrix [i]Affinity Slider[/i] tool, which usually appears at the top of your &quot;Matrix&quot; page, adjusts the content on the page to include those within the desired affinity range. Channels outside that range will not be displayed, unless you adjust the slider to include them.
 
 The Affinity Slider allows instantaneous filtering of large amounts of content, grouped by levels of closeness.
 
 [b]Access Control Lists[/b]
 
-When sharing content with someone in their contact list, users have the option of restricting who sees the content.  By clicking on the padlock underneath the sharing box, one may choose desired recipients of the post, by clicking on their names.
+When sharing content, members have the option of restricting who sees the content.  By clicking on the padlock underneath the sharing box, one may choose desired recipients of the post, by clicking on their names.
 
 Once sent, the message will be viewable only by the sender and the selected recipients.  In other words, the message will not appear on any public walls.
 
@@ -42,7 +40,7 @@ Files may be uploaded to your personal storage area using your operating system 
 
 [b]Photo Albums[/b]
 
-Store photos in albums. These may be protected by Access Control Lists.
+Store photos in albums. All your photos may be protected by Access Control Lists.
 
 [b]Events Calendar[/b]
 
@@ -96,7 +94,7 @@ Channels may have permissions to become "derivative channels" where two or more 
 
 [b]Collections[/b]
 
-"Collections" is our implementation of privacy groups, which is similar to Google "Circles" and Diaspora "Aspects". This allows you to filter your incoming stream by collections or groups, and automatically set the outbound Access Control List to only those in the Collection when you post. You may over-ride this at any time. 
+"Collections" is our implementation of privacy groups, which is similar to Google "Circles" and Diaspora "Aspects". This allows you to filter your incoming stream by collections or groups, and automatically set the outbound Access Control List to only those in the Collection when you post. You may over-ride this at any time (prior to sending the post).  
 
 
 [b]Directory Services[/b]
@@ -106,15 +104,13 @@ We provide easy access to a directory of members and provide decentralised tools
 
 [b]TLS/SSL[/b]
 
-For Red hubs that use TLS/SSL, client to server communications are encrypted via TLS/SSL.  Given recent disclosures in the media regarding widespread, global surveillance and encryption circumvention by the NSA and GCHQ, it is reasonable to assume that HTTPS-protected communications may be compromised in various ways.
+For Redmatrix hubs that use TLS/SSL, client to server communications are encrypted via TLS/SSL.  Given recent disclosures in the media regarding widespread, global surveillance and encryption circumvention by the NSA and GCHQ, it is reasonable to assume that HTTPS-protected communications may be compromised in various ways. Private communications are consequently encrypted at a higher level before sending offsite.
 
 [b]Channel Settings[/b]
 
 When a channel is created, a role is chosen which applies a number of pre-configured security and privacy settings. These are chosen for best practives to maintain privacy at the requested levels.  
 
 If you choose a "custom" privacy role, each channel allows fine-grained permissions to be set for various aspects of communication.  For example, under the &quot;Security and Privacy Settings&quot; heading, each aspect on the left side of the page, has six (6) possible viewing/access options, that can be selected by clicking on the dropdown menu. There are also a number of other privacy settings you may edit.  
-
-[img]https://friendicared.net/photo/0f5be8da282858edd645b0a1a6626491.png[/img]
 
 The options are:
 
@@ -175,13 +171,17 @@ Red supports a number of different ways of adding rich-text content. The default
 When creating &quot;Websites&quot;, content may be entered in HTML, Markdown, BBcode, and/or plain text.
 
 [b]Deletion of content[/b]
-Any content created in the Red Matrix remains under the control of the member (or channel) that originally created it.  At any time, a member can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot.
+Any content created in the Red Matrix remains under the control of the member (or channel) that originally created it.  At any time, a member can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot (the Redmatrix communication and authentication protocol).
 
 [b]Media[/b]
 Similar to any other modern blogging system, social network, or a micro-blogging service, Red supports the uploading of files, embedding of videos, linking web pages.
 
 [b]Previewing/Editing[/b] 
 Post can be previewed prior to sending and edited after sending.
+
+[b]Voting/Concensus[/b]
+Posts can be turned into "concensus" items which allows readers to offer feedback, which is collated into "agree", "disagree", and "abstain" counters. This lets you gauge interest for ideas and create informal surveys. 
+
 
 [b]Extending Redmatrix[/b]
 

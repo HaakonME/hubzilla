@@ -88,7 +88,7 @@ Posts and messages may be created with an expiration date, at which time they wi
 
 In addition to addon "cross-post connectors" to a variety of alternate networks, there is native support for importation of content from RSS/Atom feeds and using this to create special channels. Also, an experimental but working implementation of the Diaspora protocol allows communication with people on the Friendica and Diaspora decentralised social networks. This is currently marked experimental because these networks do not have the same level of privacy and encryption features and abilities as Redmatrix and may present privacy risks.
 
-There is also experimental support for OpenID authentication which may be used in Access Control Lists. This is a work in progress. 
+There is also experimental support for OpenID authentication which may be used in Access Control Lists. This is a work in progress. Your Redmatrix hub may be used as an OpenID provider to authenticate you to external services which use this technology. 
 
 Channels may have permissions to become "derivative channels" where two or more existing channels combine to create a new topical channel. 
 

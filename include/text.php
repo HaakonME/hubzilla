@@ -98,6 +98,13 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return escape_tags($s);
 	if($type == 'text/plain')
 		return escape_tags($s);
+
+	$a = get_app();
+	if($a->is_sys) {
+		$sys = get_sys_channel();
+		$channel_id = $sys['channel_id'];
+	}
+
 	$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 		intval($channel_id)
 	);
@@ -1610,6 +1617,12 @@ function layout_select($channel_id, $current = '') {
 
 
 function mimetype_select($channel_id, $current = 'text/bbcode') {
+
+	$a = get_app();
+	if($a->is_sys) {
+		$sys = get_sys_channel();
+		$channel_id = $sys['channel_id'];
+	}
 
 	$x = array(
 		'text/bbcode',

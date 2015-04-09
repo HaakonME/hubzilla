@@ -101,12 +101,18 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 	$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 		intval($channel_id)
 	);
-	if($r && (($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-		if(local_channel() && (get_account_id() == $r[0]['account_id'])) {
+	if($r) {
+		if($r[0]['channel_pageflags'] & PAGE_SYSTEM) {
 			return $s;
 		}
+		else {
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
+				if(local_channel() && (get_account_id() == $r[0]['account_id'])) {
+					return $s;
+				}
+			}
+		}
 	}
-
 	if($type === 'text/html')
 		return purify_html($s);
 
@@ -1618,10 +1624,17 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 	);
 
 	if($r) {
-		if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
-			if(local_channel() && get_account_id() == $r[0]['account_id'])
-				$x[] = 'application/x-php';
+		if($r[0]['channel_pageflags'] & PAGE_SYSTEM) {
+			$x[] = 'application/x-php';
 		}
+		else {
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) { 
+				if(local_channel() && get_account_id() == $r[0]['account_id']) {
+					$x[] = 'application/x-php';
+				}
+			}
+		}
+		
 	}
 
 	$o = t('Page content type: ');

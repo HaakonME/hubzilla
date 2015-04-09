@@ -68,7 +68,7 @@ function webpages_content(&$a) {
 		return;
 	}
 
-	if(feature_enabled($owner,'expert')) {
+	if(feature_enabled($owner,'expert') || $a->is_sys) {
 		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
 		if(! $mimetype)
 			$mimetype = 'choose';

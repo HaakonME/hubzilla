@@ -33,6 +33,8 @@ function layouts_content(&$a) {
 
 	$which = argv(1);
 
+	$_SESSION['return_url'] = $a->query_string;
+
 	$uid = local_channel();
 	$owner = 0;
 	$channel = null;

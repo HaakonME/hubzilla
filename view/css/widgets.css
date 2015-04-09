@@ -50,8 +50,10 @@
 }
 
 
-/* fileas */
-
+/*  affinity slider */
+#main-slider {
+	margin: 10px 7px 45px 7px;
+}
 
 /* posted date */
 
@@ -83,21 +85,6 @@ a.group-edit-tool {
 li:hover .group-edit-icon {
 	opacity: 1;
 }
-/* affinity - slider */
-
-#main-slider {
-	position: relative; 
-	left: 5px; 
-	width: 90%;
-}
-
-.slider {
-	margin-top: 10px;
-	margin-bottom: 45px;
-}
-
-/* photo albums */
-
 
 /* Chatrooms */
 
@@ -110,10 +97,6 @@ li:hover .group-edit-icon {
 .directory-rating {
 	float: right;
 	margin-right: 5px;
-}
-
-.slider-container {
-	padding: 15px;
 }
 
 .rating-text-label {

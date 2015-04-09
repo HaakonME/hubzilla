@@ -71,7 +71,7 @@
 				console.log('jRange : no width found, returning');
 				return;
 			} else {
-				this.domNode.css('width', this.options.width || this.inputNode.width());
+				this.domNode.width(this.options.width || this.inputNode.width());
 				this.inputNode.hide();
 			}
 

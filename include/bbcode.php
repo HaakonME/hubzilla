@@ -490,7 +490,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
 		$Text = str_replace('[observer.name]',$s1 . $observer['xchan_name'] . $s2, $Text);
 		$Text = str_replace('[observer.address]',$s1 . $observer['xchan_addr'] . $s2, $Text);
-		$Text = str_replace('[observer.webname]',$s1 . substr($observer['xchan_addr'],0,strpos($observer['xchan_addr'],'@')) . $s2, $Text);
+		$Text = str_replace('[observer.webname]', substr($observer['xchan_addr'],0,strpos($observer['xchan_addr'],'@')), $Text);
 		$Text = str_replace('[observer.photo]',$s1 . '[zmg]'.$observer['xchan_photo_l'].'[/zmg]' . $s2, $Text);
 	} else {
 		$Text = str_replace('[observer.baseurl]', '', $Text);

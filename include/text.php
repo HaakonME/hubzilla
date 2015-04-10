@@ -1042,9 +1042,9 @@ function list_smilies() {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><strong>red<img class="smiley" style="height:1.3em; width:auto; margin-top:-3px" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley" style="height:1.3em; width:auto; margin-top:-3px" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley" style="height:1.3em; width:auto; margin-top:-3px" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
 
 	);
 

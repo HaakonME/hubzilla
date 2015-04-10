@@ -2211,6 +2211,12 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	border: 3px solid red !important;
 }
 
+.bb_rm-logo {
+	height: 1.3em;
+	width: auto;
+	margin-top:-3px;
+}
+
 .bootstrap-tagsinput .tag:before {
 	/* Copied from icon-asterisk, is there a better way to do it? */
 	font-family: FontAwesome;

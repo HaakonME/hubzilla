@@ -558,16 +558,32 @@ function connedit_content(&$a) {
 
 		if(feature_enabled(local_channel(),'affinity')) {
 
+			$labels = array(
+				t('Me'),
+				t('Family'),
+				t('Friends'),
+				t('Acquaintances'),
+				t('All')
+			);
+			call_hooks('affinity_labels',$labels);
+			$label_str = '';
+
+			if($labels) {
+				foreach($labels as $l) {
+					if($label_str) {
+						$label_str .= ", '|'";
+						$label_str .= ", '" . $l . "'";
+					}
+					else
+						$label_str .= "'" . $l . "'";
+				}
+			}
+
 			$slider_tpl = get_markup_template('contact_slider.tpl');
 			$slide = replace_macros($slider_tpl,array(
-				'$me' => t('Me'),
 				'$min' => 1,
 				'$val' => (($contact['abook_closeness']) ? $contact['abook_closeness'] : 99),
-				'$intimate' => t('Best Friends'),
-				'$friends' => t('Friends'),
-				'$oldfriends' => t('Former Friends'),
-				'$acquaintances' => t('Acquaintances'),
-				'$world' => t('Unknown')
+				'$labels' => $label_str,
 			));
 		}
 

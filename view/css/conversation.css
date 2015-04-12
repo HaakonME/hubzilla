@@ -19,7 +19,8 @@ code {
 	display:none;
 }
 
-#jot-title-wrap input {
+#jot-title-wrap input,
+#jot-pagetitle-wrap input {
 	padding: 8px;
 	margin-bottom: 5px;
 }

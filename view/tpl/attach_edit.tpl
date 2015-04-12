@@ -3,7 +3,8 @@
 	<input type="hidden" name="filehash" value="{{$file.hash}}" />
 	<input type="hidden" name="uid" value="{{$uid}}" />
 	<input type="hidden" name="fileid" value="{{$file.id}}" />
-
+	{{if !$isadir}}{{include file="field_checkbox.tpl" field=$notify}}{{/if}}
+	{{if $isadir}}{{include file="field_checkbox.tpl" field=$recurse}}{{/if}}
 	<div id="attach-edit-tools-share" class="btn-group form-group">
 		{{if !$isadir}}
 		<a href="/rpost?body=[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" id="attach-btn" class="btn btn-default btn-xs" title="{{$attach_btn_title}}">
@@ -14,31 +15,14 @@
 			<i class="icon-share jot-icons"></i>
 		</button>
 	</div>
-	<div id="attach-edit-tools-perms" class="form-group pull-right btn-group">
-		{{if $isadir}}
-		<div id="attach-edit-perms-recurse" class="btn-group" data-toggle="buttons">
-			<label class="btn btn-default btn-xs" title="{{$recurse}}">
-				<input type="checkbox" autocomplete="off" name="recurse" value="1"><i class="icon-level-down jot-icons"></i>
-			</label>
-		</div>
-		{{/if}}
-		{{if !$isadir}}
-		<div id="attach-edit-activity" class="btn-group" data-toggle="buttons">
-			<label class="btn btn-default btn-xs" title="{{$activity_btn_title}}">
-				<input type="checkbox" autocomplete="off" name="no_activity" value="1"><i class="icon-ban-circle jot-icons"></i>
-			</label>
-		</div>
-		{{/if}}
-		<div id="attach-edit-perms" class="btn-group">
-			<button id="dbtn-acl" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
-				<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>
-			</button>
-			<button id="dbtn-submit" class="btn btn-primary btn-xs" type="submit" name="submit">
-				{{$submit}}
-			</button>
-		</div>
+	<div id="attach-edit-perms" class="btn-group pull-right">
+		<button id="dbtn-acl" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
+			<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>
+		</button>
+		<button id="dbtn-submit" class="btn btn-primary btn-xs" type="submit" name="submit">
+			{{$submit}}
+		</button>
 	</div>
-
 	{{$aclselect}}
 
 	<div id="link-code" class="form-group">

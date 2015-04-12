@@ -21,7 +21,7 @@ function filestorage_post(&$a) {
 
 	$recurse = ((x($_POST, 'recurse')) ? intval($_POST['recurse']) : 0);
 	$resource = ((x($_POST, 'filehash')) ? notags($_POST['filehash']) : '');
-	$no_activity = ((x($_POST, 'no_activity')) ? intval($_POST['no_activity']) : 0);
+	$notify = ((x($_POST, 'notify')) ? intval($_POST['notify']) : 0);
 
 	if(! $resource) {
 		notice(t('Item not found.') . EOL);
@@ -41,7 +41,7 @@ function filestorage_post(&$a) {
 
 	attach_change_permissions($channel_id, $resource, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, $recurse);
 
-	file_activity($channel_id, $object, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, 'post', $no_activity);
+	file_activity($channel_id, $object, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny, 'post', $notify);
 
 	goaway($cloudPath);
 }
@@ -148,7 +148,7 @@ function filestorage_content(&$a) {
 			'$aclselect' => $aclselect_e,
 			'$lockstate' => $lockstate,
 			'$permset' => t('Set/edit permissions'),
-			'$recurse' => t('Include all files and sub folders'),
+			'$recurse' => array('recurse', t('Include all files and sub folders'), 0, '', array(t('No'), t('Yes'))),
 			'$backlink' => t('Return to file list'),
 			'$isadir' => $is_a_dir,
 			'$cpdesc' => t('Copy/paste this code to attach file to a post'),
@@ -156,7 +156,7 @@ function filestorage_content(&$a) {
 			'$submit' => t('Submit'),
 			'$attach_btn_title' => t('Attach this file to a new post'),
 			'$link_btn_title' => t('Show URL to this file'),
-			'$activity_btn_title' => t('Do not show in shared with me folder of your connections')
+			'$notify' => array('notify', t('Notify your contacts about this file'), 0, '', array(t('No'), t('Yes')))
 		));
 
 		echo $o;

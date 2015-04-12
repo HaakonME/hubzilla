@@ -985,7 +985,7 @@ function pipe_streams($in, $out) {
  * @param string $verb
  * @param boolean $no_activity
  */
-function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $no_activity) {
+function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $notify) {
 
 	require_once('include/items.php');
 
@@ -1107,7 +1107,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		//notice( t('File activity updated') . EOL);
 	}
 
-	if($no_activity) {
+	if(! $notify) {
 		return;
 	}
 

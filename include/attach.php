@@ -812,8 +812,8 @@ function attach_delete($channel_id, $resource) {
 
 		if($y) {
 			$f = 'store/' . $channel_address . '/' . $y[0]['data'];
-			if(is_dir($f))
-				@rmdir($f);
+			if(is_dir($y[0]['data']))
+				@rmdir($y[0]['data']);
 			elseif(file_exists($f))
 				unlink($f);
 		}

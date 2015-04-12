@@ -26,7 +26,7 @@
 			<td class="cloud-index-tool">{{$item.attachIcon}}</td>
 			<td id="file-edit-{{$item.attachId}}" class="cloud-index-tool"></td>
 			<td class="cloud-index-tool"><i class="fakelink icon-pencil" onclick="filestorage(event, '{{$nick}}', {{$item.attachId}});"></i></td>
-			<td class="cloud-index-tool"><a href="{{$item.fileStorageUrl}}/{{$item.attachId}}/delete" title="{{$delete}}" onclick="return confirmDelete();"><i class="icon-trash drop-icons"></i></a></td>
+			<td class="cloud-index-tool"><a href="#" title="{{$delete}}" onclick="dropItem('{{$item.fileStorageUrl}}/{{$item.attachId}}/delete', '#cloud-index-{{$item.attachId}},#cloud-tools-{{$item.attachId}}'); return false;"><i class="icon-trash drop-icons"></i></a></td>
 
 	{{else}}
 			<td></td><td></td><td></td><td></td>
@@ -35,7 +35,7 @@
 			<td class="hidden-xs">{{$item.sizeFormatted}}</td>
 			<td class="hidden-xs">{{$item.lastmodified}}</td>
 		</tr>
-		<tr>
+		<tr id="cloud-tools-{{$item.attachId}}">
 			<td id="perms-panel-{{$item.attachId}}" colspan="9"></td>
 		</tr>
 	{{/foreach}}

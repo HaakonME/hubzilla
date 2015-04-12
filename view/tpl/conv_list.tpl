@@ -118,14 +118,14 @@
 							{{if $item.star}}
 							<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
 							{{/if}}
+							{{if $item.drop.dropping}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="icon-trash"></i> {{$item.drop.delete}}</a></li>
+							{{/if}}
 							{{if $item.item_photo_menu}}
 							<li role="presentation" class="divider"></li>
 							{{$item.item_photo_menu}}
 							{{/if}}
-							{{if $item.drop.dropping}}
-							<li role="presentation" class="divider"></li>
-							<li role="presentation"><a role="menuitem" href="#" onclick="dropItem({{$item.id}}); return false;" title="{{$item.drop.delete}}" ><i class="icon-trash"></i> {{$item.drop.delete}}</a></li>
-							{{/if}}
+
 						</ul>
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>

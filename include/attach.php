@@ -832,7 +832,7 @@ function attach_delete($channel_id, $resource) {
 		intval($channel_id)
 	);
 
-	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $no_activity=false);
+	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=0);
 }
 
 /**

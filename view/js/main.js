@@ -819,13 +819,12 @@ function doprofilelike(ident, verb) {
 }
 
 
-function dropItem(ident) {
-	var object = '#thread-wrapper-' + ident;
+function dropItem(url, object) {
 	var confirm = confirmDelete();
 	if(confirm) {
 		$('body').css('cursor', 'wait');
 		$(object).fadeTo('fast', 0.33, function () {
-			$.get('item/drop/' + ident).done(function() {
+			$.get(url).done(function() {
 				$(object).remove();
 				$('body').css('cursor', 'auto');
 			});

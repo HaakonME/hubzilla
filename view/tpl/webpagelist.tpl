@@ -1,36 +1,57 @@
-{{$listtitle}}
+<div class="section-title-wrapper">
+	{{if $editor}}
+	<div class="pull-right">
+		<button id="webpage-create-btn" class="btn btn-xs btn-success" onclick="openClose('webpage-editor');"><i class="icon-edit"></i>&nbsp;{{$create}}</button>
+	</div>
+	{{/if}}
+	<h2>{{$listtitle}}</h2>
+	<div class="clear"></div>
+</div>
+{{if $editor}}
+<div id="webpage-editor" class="section-content-tools-wrapper form-group">
+	{{$editor}}
+</div>
+{{/if}}
 {{if $pages}}
-
-	   <div id="pagelist-content-wrapper" class="generic-content-wrapper-styled">
-		<table class="webpage-list-table">
-		<tr><td>{{$actions_txt}}</td><td>{{$pagelink_txt}}</td><td>{{$title_txt}}</td><td>{{$created_txt}}</td><td>{{$edited_txt}}</td></tr>
+<div id="pagelist-content-wrapper" class="generic-content-wrapper-styled">
+	<table id="webpage-list-table">
+		<tr>
+			<th width="1%">{{$pagelink_txt}}</th>
+			<th width="95%">{{$title_txt}}</th>
+			<th width="1%"></th>
+			<th width="1%"></th>
+			<th width="1%" class="hidden-xs">{{$created_txt}}</th>
+			<th width="1%" class="hidden-xs">{{$edited_txt}}</th>
+		</tr>
 		{{foreach $pages as $key => $items}} 
-				{{foreach $items as $item}}
-					<tr>
-					<td>
-					{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}" class="btn btn-default"><i class="icon-pencil"></i></a> {{/if}}
-					</td>
-					<td>
-					{{if $view}}<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}">{{$item.pagetitle}}</a>
-					{{else}}{{$item.pagetitle}}
-					{{/if}}
-					</td>
-					<td>
-					{{$item.title}}
-					</td>
-					<td>
-					{{$item.created}}
-					</td>
-					<td>
-					{{$item.edited}}
-					</td>
-					</tr>
-				{{/foreach}}
+		{{foreach $items as $item}}
+		<tr id="webpage-list-item-{{$item.url}}">
+			<td>
+			{{if $view}}
+				<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}">{{$item.pagetitle}}</a>
+			{{else}}
+				{{$item.pagetitle}}
+			{{/if}}
+			</td>
+			<td>
+			{{$item.title}}
+			</td>
+			<td class="webpage-list-tool">
+			{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil"></i></a>{{/if}}
+			</td>
+			<td class="webpage-list-tool">
+			{{if $edit}}<a href="#" title="{{$delete}}" onclick="dropItem('item/drop/{{$item.url}}', '#webpage-list-item-{{$item.url}}'); return false;"><i class="icon-trash drop-icons"></i></a>{{/if}}
+			</td>
+			<td class="hidden-xs">
+			{{$item.created}}
+			</td>
+			<td class="hidden-xs">
+			{{$item.edited}}
+			</td>
+		</tr>
 		{{/foreach}}
-
-		</table>
-	   </div>
-	
-	   <div class="clear"></div>
-
+		{{/foreach}}
+	</table>
+</div>
+<div class="clear"></div>
 {{/if}}

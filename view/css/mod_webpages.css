@@ -1,6 +1,40 @@
-.webpage-list-table tr {
-	height: 20px;
+#webpage-editor {
+	display: none;
 }
-.webpage-list-table td {
-	padding: 5px;
+
+#webpage-list-table {
+	width: 100%;
+}
+
+#webpage-list-table th:nth-child(1){
+	white-space: nowrap;
+}
+
+#webpage-list-table td:nth-child(1){
+	padding: 7px 3px 7px 10px;
+	white-space: nowrap;
+}
+#webpage-list-table th:nth-child(5),
+#webpage-list-table td:nth-child(5){
+	padding: 7px 3px;
+	white-space: nowrap;
+}
+
+#webpage-list-table th:nth-child(6),
+#webpage-list-table td:nth-child(6){
+	padding: 7px 10px 7px 7px;
+	white-space: nowrap;
+}
+
+.webpage-list-tool {
+	padding: 7px 10px;
+}
+
+/* this forces collapsed jot to appear expanded */
+.jothidden {
+	display: block !important;
+}
+
+#profile-jot-text {
+	height: 200px;
 }

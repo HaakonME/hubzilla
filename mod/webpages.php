@@ -127,7 +127,7 @@ function webpages_content(&$a) {
 	if($_REQUEST['pagetitle'])
 		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
-	$o .= status_editor($a,$x);
+	$editor .= status_editor($a,$x);
 
 	// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, 
 	// so just list titles and an edit link.
@@ -161,14 +161,17 @@ function webpages_content(&$a) {
 	$o .= replace_macros(get_markup_template('webpagelist.tpl'), array(
 		'$listtitle'    => t('Webpages'),
 		'$baseurl'      => $url,
+		'$create'         => t('Create'),
 		'$edit'         => t('Edit'),
+		'$delete'	=> t('Delete'),
 		'$pages'        => $pages,
 		'$channel'      => $which,
+		'$editor'	=> $editor,
 		'$view'         => t('View'),
 		'$preview'      => t('Preview'),
 		'$actions_txt'  => t('Actions'),
 		'$pagelink_txt' => t('Page Link'),
-		'$title_txt'    => t('Title'),
+		'$title_txt'    => t('Page Title'),
 		'$created_txt'  => t('Created'),
 		'$edited_txt'   => t('Edited')
 	));

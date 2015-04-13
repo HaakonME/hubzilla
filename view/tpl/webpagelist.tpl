@@ -8,7 +8,7 @@
 				{{foreach $items as $item}}
 					<tr>
 					<td>
-					{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil design-icons design-edit-icon btn btn-default"></i></a> {{/if}}
+					{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}" class="btn btn-default"><i class="icon-pencil"></i></a> {{/if}}
 					</td>
 					<td>
 					{{if $view}}<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}">{{$item.pagetitle}}</a>

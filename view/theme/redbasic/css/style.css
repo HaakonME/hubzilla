@@ -623,16 +623,6 @@ footer {
 }
 
 
-.pmenu {
-	border-bottom: 1px solid #eec;
-	padding: 8px;
-	margin-top: 5px;
-	-moz-border-radius: $radiuspx;
-	-webkit-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-
-}
-
 .pmenu.horizontal {
 	padding: 0 0 0 0;
 	border-bottom: none;
@@ -1550,18 +1540,6 @@ a .drop-icons:hover {
 .attach-clip {
 	margin-right: 3px;
 	font-size: 1.8em;
-}
-
-.design-tools ul {
-	list-style-type: none;
-}
-
-.design-icons {
-	margin-right: 10px;
-}
-
-.design-icons:hover { 
-text-decoration: none; 
 }
 
 #menulist {

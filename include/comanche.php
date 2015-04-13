@@ -143,7 +143,7 @@ function comanche_block($name) {
 			dbesc($name)
 		);
 		if($r) {
-			$o = '<div class="widget bblock">';
+			$o = '<div class="bblock">';
 			if($r[0]['title'])
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 

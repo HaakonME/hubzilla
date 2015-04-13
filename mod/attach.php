@@ -36,7 +36,8 @@ function attach_init(&$a) {
 
 	header('Content-disposition: attachment; filename="' . $r['data']['filename'] . '"');
 	if($r['data']['flags'] & ATTACH_FLAG_OS ) {
-		$istream = fopen('store/' . $c[0]['channel_address'] . '/' . $r['data']['data'],'rb');
+		$fname = dbunescbin($r['data']['data']);
+		$istream = fopen('store/' . $c[0]['channel_address'] . '/' . $fname,'rb');
 		$ostream = fopen('php://output','wb');
 		if($istream && $ostream) {
 			pipe_streams($istream,$ostream);
@@ -45,7 +46,7 @@ function attach_init(&$a) {
 		}
 	}
 	else
-		echo $r['data']['data'];
+		echo dbunescbin($r['data']['data']);
 	killme();
 
 }

@@ -116,7 +116,7 @@ function item_post(&$a) {
 	 * Check service class limits
 	 */
 	if ($uid && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
-		$ret = item_check_service_class($uid,x($_REQUEST,'webpage'));
+		$ret = item_check_service_class($uid,(($_REQUEST['webpage'] == ITEM_WEBPAGE) ? true : false));
 		if (!$ret['success']) { 
 			notice( t($ret['message']) . EOL) ;
 			if(x($_REQUEST,'return')) 
@@ -1084,6 +1084,7 @@ function item_check_service_class($channel_id,$iswebpage) {
 	$ret = array('success' => false, $message => '');
 
 	if ($iswebpage) {
+		// note: we aren't counting comanche templates and blocks, only webpages
 		$r = q("select count(id) as total from item where parent = id 
 			and ( item_restrict & %d ) > 0 and ( item_restrict & %d ) = 0 and uid = %d ",
 			intval(ITEM_WEBPAGE),
@@ -1092,7 +1093,8 @@ function item_check_service_class($channel_id,$iswebpage) {
 		);
 	}
 	else {
-		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and uid = %d ",
+		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and (item_flags & %d) > 0 and uid = %d ",
+			intval(ITEM_WALL),
 			intval($channel_id)
 		);
 	}
@@ -1103,14 +1105,16 @@ function item_check_service_class($channel_id,$iswebpage) {
 	} 
 
 	if (!$iswebpage) {
+		$max = service_class_fetch($channel_id,'total_items');
 		if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
-			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f top level posts.'),$r[0]['total']);
+			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f top level posts.'),$max);
 			return $result;
 		}
 	}
 	else {
+		$max = service_class_fetch($channel_id,'total_pages');
 		if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
-			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f webpages.'),$r[0]['total']);
+			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f webpages.'),$max);
 			return $result;
 		}	
 	}

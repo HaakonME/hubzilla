@@ -1647,7 +1647,7 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 	}
 
 	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(
-		'$field'	=> array('mimetype', t('Page content type'), $selected, t('If unsure select text/bbcode'), $options)
+		'$field'	=> array('mimetype', t('Page content type'), $selected, '', $options)
 	));
 
 	return $o;

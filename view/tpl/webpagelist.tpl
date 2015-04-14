@@ -13,7 +13,7 @@
 </div>
 {{/if}}
 {{if $pages}}
-<div id="pagelist-content-wrapper" class="generic-content-wrapper-styled">
+<div id="pagelist-content-wrapper" class="section-content-wrapper-np">
 	<table id="webpage-list-table">
 		<tr>
 			<th width="1%">{{$pagelink_txt}}</th>

@@ -70,10 +70,10 @@ function webpages_content(&$a) {
 		return;
 	}
 
-	if(feature_enabled($owner,'expert') || $a->is_sys) {
-		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
-		if(! $mimetype)
-			$mimetype = 'choose';
+	$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
+
+	if(! $mimetype) {
+		$mimetype = 'choose';
 	}
 	else {
 		$mimetype = 'text/bbcode';

@@ -1595,17 +1595,19 @@ function layout_select($channel_id, $current = '') {
 		intval($channel_id),
 		intval(ITEM_PDL)
 	);
+
 	if($r) {
-		$o = t('Select a page layout: ');
-		$o .= '<select name="layout_mid" id="select-layout_mid" >';
-		$empty_selected = (($current === '') ? ' selected="selected" ' : '');
-		$o .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
+		$empty_selected = (($current === false) ? ' selected="selected" ' : '');
+		$options .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
 		foreach($r as $rr) {
 			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
-			$o .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
 		}
-		$o .= '</select>';
 	}
+
+	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(
+		'$field'	=> array('layout_mid', t('Page layout'), $selected, t('You can create your own with the layouts tool'), $options)
+	));
 
 	return $o;
 }
@@ -1639,13 +1641,14 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		}		
 	}
 
-	$o = t('Page content type: ');
-	$o .= '<select name="mimetype" id="mimetype-select">';
 	foreach($x as $y) {
-		$select = (($y == $current)	? ' selected="selected" ' : '');
-		$o .= '<option name="' . $y . '"' . $select . '>' . $y . '</option>';
+		$selected = (($y == $current) ? ' selected="selected" ' : '');
+		$options .= '<option name="' . $y . '"' . $selected . '>' . $y . '</option>';
 	}
-	$o .= '</select>';
+
+	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(
+		'$field'	=> array('mimetype', t('Page content type'), $selected, t('If unsure select text/bbcode'), $options)
+	));
 
 	return $o;
 }
@@ -2105,7 +2108,7 @@ function design_tools() {
 	$who = $channel['channel_address'];
 
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
-		'$title' => t('Design'),
+		'$title' => t('Design Tools'),
 		'$who' => $who,
 		'$sys' => $sys,
 		'$blocks' => t('Blocks'),

@@ -75,9 +75,6 @@ function webpages_content(&$a) {
 	if(! $mimetype) {
 		$mimetype = 'choose';
 	}
-	else {
-		$mimetype = 'text/bbcode';
-	}
 
 	$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_pconfig($owner,'system','page_layout'));
 	if(! $layout)

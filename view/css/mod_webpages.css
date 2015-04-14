@@ -7,12 +7,12 @@
 }
 
 #webpage-list-table th:nth-child(1){
+	padding: 7px 3px 7px 10px;
 	white-space: nowrap;
 }
 
 #webpage-list-table td:nth-child(1){
 	padding: 7px 3px 7px 10px;
-	word-wrap: break-word;
 }
 
 #webpage-list-table th:nth-child(5),

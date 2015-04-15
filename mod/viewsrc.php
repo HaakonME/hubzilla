@@ -21,7 +21,7 @@ function viewsrc_content(&$a) {
 	}
 
 	if(local_channel() && $item_id) {
-		$r = q("select item_flags, body from item where item_restrict = 0 and uid in (%d , %d) and id = %d limit 1",
+		$r = q("select item_flags, body, id from item where item_restrict = 0 and uid in (%d , %d) and id = %d limit 1",
 			intval(local_channel()),
 			intval($sys['channel_id']),
 			intval($item_id)
@@ -35,6 +35,7 @@ function viewsrc_content(&$a) {
 	}
 
 	if(is_ajax()) {
+		print '<div><i class="icon-pencil"> ' . t('Source of Item') . ' ' . $r[0]['id'] . '</i></div>';
 		echo $o;
 		killme();
 	} 

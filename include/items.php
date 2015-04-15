@@ -436,7 +436,7 @@ function post_activity_item($arr) {
 
 	$arr['verb']         = ((x($arr,'verb')) ? $arr['verb'] : ACTIVITY_POST);
 	$arr['obj_type']     = ((x($arr,'obj_type')) ? $arr['obj_type'] : ACTIVITY_OBJ_NOTE);
-	if($is_comment)
+	if($is_comment && $arr['obj_type'] === ACTIVITY_OBJ_NOTE))
 		$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
 	$arr['allow_cid']    = ((x($arr,'allow_cid')) ? $arr['allow_cid'] : $channel['channel_allow_cid']);

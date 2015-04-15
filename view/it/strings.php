@@ -2127,3 +2127,4 @@ $a->strings["Website SSL certificate is not valid. Please correct."] = "Il certi
 $a->strings["[red] Website SSL error for %s"] = "[red] Errore SSL %s ";
 $a->strings["Cron/Scheduled tasks not running."] = "Processi/cron non avviati.";
 $a->strings["[red] Cron tasks not running on %s"] = "[red] Processi non avviati su %s";
+$a->strings["Source of Item"] = "Sorgente dell'Elemento";

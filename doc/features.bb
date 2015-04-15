@@ -1,4 +1,16 @@
-[b]Features[/b]
+[b][size=20]Features[/size][/b]
+
+[b][size=24]Redmatrix in a Nutshell[/size][/b]
+
+TL;DR 
+
+Redmatrix provides distributed web publishing with [b]decentralised permissions[/b].
+
+So what exactly are "decentralised permissions"? They give me the ability to share something on my website (photos, media, files, webpages, etc.) with specific people on completely different websites - but not necessarily [i]everybody[/i] on those websites; and they do not need a password and do not need to login to my website to view the things I've shared with them. They have one password on their own website and "magic authentication" between affiliated websites in the network. Also, as it is decentralised, there is no third party which has the ability to bypass permissions and see everything in the network.
+
+Redmatrix is an open source webserver application written originally in PHP/MySQL and is compatible with many shared hosting as well as dedicated VPS environments; and is easily installable by those with basic website administration skills. It is also easily extended via plugins and themes and other third-party tools. 
+
+Redmatrix can be used as a social networking application (indeed many people use it primarily for this purpose), and it has a blend of features and abilities which make it far more suited for that task than many other server based "social networks", especially amongst those classified as "decentralised"; (most of which aren't much more than "chat with pictures and persistence"). It is however, [i]primarily[/i] a web publishing platform with permissions. The ability to perform social networking is just another feature which helps to make it interesting and generally useful amongst content publishers and their audiences alike. 
 
 [b][size=24]Redmatrix Features[/size][/b]
 
@@ -44,7 +56,7 @@ Store photos in albums. All your photos may be protected by Access Control Lists
 
 [b]Events Calendar[/b]
 
-Create and manage events, which may also be protected with Access Control Lists. Events can be exported to other software using the industry standard vcalendar/iCal format and shared in posts with others. Birthday events are automatically added from your friends and converted to your correct timezone so that you will know precisely when the birthday occurs - no matter where you are located in the world in relation to the birthday person. 
+Create and manage events, which may also be protected with Access Control Lists. Events can be exported to other software using the industry standard vcalendar/iCal format and shared in posts with others. Birthday events are automatically added from your friends and converted to your correct timezone so that you will know precisely when the birthday occurs - no matter where you are located in the world in relation to the birthday person. Events are normally created with attendance counters so your friends and connections can RSVP instantly. 
 
 [b]Chatrooms[/b]
 
@@ -130,7 +142,7 @@ Forums are typically channels which may be open to participation from multiple a
 
 [b]Account Cloning[/b]
 
-Accounts in the Red Matrix are referred to as [i]nomadic identities[/i], because a user's identity is not bound to the hub where the identity was originally created (see What is Zot? for the full explanation).  For example, when you create a Facebook or Gmail account, it is tied to those services.  They cannot function without Facebook.com or Gmail.com.  
+Accounts in the Red Matrix are referred to as [i]nomadic identities[/i], because a member's identity is not bound to the hub where the identity was originally created.  For example, when you create a Facebook or Gmail account, it is tied to those services.  They cannot function without Facebook.com or Gmail.com.  
 
 By contrast, say you've created a Red identity called [b]tina@redhub.com[/b].  You can clone it to another Red hub by choosing the same, or a different name: [b]liveForever@SomeRedMatrixHub.info[/b]
 
@@ -138,11 +150,11 @@ Both channels are now synchronized, which means all your contacts and preference
 
 This is a rather revolutionary feature, if we consider some scenarios:
 
- - What happens if the hub where an identity is based suddenly goes offline?  Without cloning, a user will not be able to communicate until that hub comes back online.  With cloning, you just log into your cloned account, and life goes on happily ever after.
+ - What happens if the hub where an identity is based suddenly goes offline?  Without cloning, a member will not be able to communicate until that hub comes back online (no doubt many of you have seen and cursed the Twitter "Fail Whale").  With cloning, you just log into your cloned account, and life goes on happily ever after. 
 
  - The administrator of your hub can no longer afford to pay for his free and public Red Matrix hub. He announces that the hub will be shutting down in two weeks.  This gives you ample time to clone your identity(ies) and preserve your Red relationships, friends and content.
 
- - What if your identity is subject to government censorship?  Your hub provider is compelled to delete your account, along with any identities and associated data.  With cloning, the Red Matrix offers [b]censorship resistance[/b].  You can have hundreds of clones, if you wanted to, all named different, and existing on many different hubs, strewn around the internet.  
+ - What if your identity is subject to government censorship?  Your hub provider may be compelled to delete your account, along with any identities and associated data.  With cloning, the Red Matrix offers [b]censorship resistance[/b].  You can have hundreds of clones, if you wanted to, all named different, and existing on many different hubs, strewn around the internet.  
 
 Red offers interesting new possibilities for privacy. You can read more at the &lt;&lt;Private Communications Best Practices&gt;&gt; page.
 
@@ -150,7 +162,7 @@ Some caveats apply. For a full explanation of identity cloning, read the &lt;HOW
 
 [b]Multiple Profiles[/b]
 
-Any number of profiles may be created containing different information and these may be made visible to certain of your connections/friends. A "default" profile can be seen by anybody and may contain limited information, with more information available to select groups or people. 
+Any number of profiles may be created containing different information and these may be made visible to certain of your connections/friends. A "default" profile can be seen by anybody and may contain limited information, with more information available to select groups or people. This means that the profile (and site content) your beer-drinking buddies see may be different than what your co-workers see, and also completely different from what is visible to the general public. 
 
 [b]Account Backup[/b]
 

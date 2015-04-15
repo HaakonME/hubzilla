@@ -126,7 +126,7 @@ function editwebpage_content(&$a) {
 		$plaintext = true;
 
 	if(get_config('system','page_mimetype'))
-	    $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
+		$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
 	else
 		$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 

@@ -177,7 +177,17 @@ function connedit_post(&$a) {
 	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
 		$new_friend = true;
+		if(! $abook_my_perms) {
 
+			$abook_my_perms = get_channel_default_perms(local_channel());
+
+			$role = get_pconfig(local_channel(),'system','permissions_role');
+			if($role) {
+				$x = get_role_perms($role);
+				if($x['perms_accept'])
+					$abook_my_perms = $x['perms_accept'];
+			}
+		}
 	}
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d

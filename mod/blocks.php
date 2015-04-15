@@ -78,16 +78,11 @@ function blocks_content(&$a) {
 		return;
 	}
 
+	$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
 
-	if(feature_enabled($owner,'expert')) {
-		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
-		if(! $mimetype)
-			$mimetype = 'choose';	
+	if(! $mimetype) {
+		$mimetype = 'choose';
 	}
-	else {
-		$mimetype = 'text/bbcode';
-	}
-
 
 	$x = array(
 		'webpage' => ITEM_BUILDBLOCK,

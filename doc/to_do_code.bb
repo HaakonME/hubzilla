@@ -17,6 +17,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Write more webpage widgets[/li]
 [li]restricted access OAuth clients[/li]
 [li](Advanced) create a UI for building Comanche pages[/li]
+[li](less advanced) create a way to preview Comanche results on a preview page while editing on another page[/li]
 [li]Extend WebDAV to provide desktop access to photo albums[/li]
 [li]External post connectors - create standard interface[/li]
 [li]External post connectors, add popular services[/li]

@@ -19,17 +19,17 @@
 			<span class="channel-id-select-desc">{{$id_seltext}}</span> {{$id_select}}
 		</div>
 		{{/if}}
+		{{if $webpage}}
+		<div id="jot-pagetitle-wrap" class="jothidden" style="display:none">
+			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}">
+		</div>
+		{{/if}}
 		<div id="jot-title-wrap" class="jothidden" style="display:none">
 			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex=1 value="{{$title}}">
 		</div>
 		{{if $catsenabled}}
 		<div id="jot-category-wrap" class="jothidden" style="display:none">
 			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="cat-tagsinput">
-		</div>
-		{{/if}}
-		{{if $webpage}}
-		<div id="jot-pagetitle-wrap" class="jothidden" style="display:none">
-			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}">
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">

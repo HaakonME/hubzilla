@@ -10,7 +10,8 @@
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
-		<input type="hidden" name="preview" id="jot-preview" value="0" />		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
+		<input type="hidden" name="preview" id="jot-preview" value="0" />
+		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
 		{{if $showacl}}{{$acl}}{{/if}}
 		{{$mimeselect}}
 		{{$layoutselect}}
@@ -20,21 +21,26 @@
 		</div>
 		{{/if}}
 		{{if $webpage}}
-		<div id="jot-pagetitle-wrap" class="jothidden" style="display:none">
+		<div id="jot-pagetitle-wrap" class="jothidden">
 			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}">
 		</div>
 		{{/if}}
-		<div id="jot-title-wrap" class="jothidden" style="display:none">
+		<div id="jot-title-wrap" class="jothidden">
 			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex=1 value="{{$title}}">
 		</div>
 		{{if $catsenabled}}
-		<div id="jot-category-wrap" class="jothidden" style="display:none">
+		<div id="jot-category-wrap" class="jothidden">
 			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="cat-tagsinput">
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
 			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex=2 placeholder="{{$share}}">{{$content}}</textarea>
 		</div>
+		{{if $attachment}}
+		<div id="jot-attachment-wrap">
+			<input class="jot-attachment" name="attachment" id="jot-attachment" type="text" value="{{$attachment}}" readonly="readonly" onclick="this.select();">
+		</div>
+		{{/if}}
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
 				<div class="btn-group">

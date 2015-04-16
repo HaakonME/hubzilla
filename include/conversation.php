@@ -1208,6 +1208,7 @@ function status_editor($a, $x, $popup = false) {
 		'$shortpermset' => t('permissions'),
 		'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
 		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8') : ''),
+		'$attachment' => ((x($x, 'attachment')) ? $x['attachment'] : ''),
 		'$post_id' => '',
 		'$baseurl' => $a->get_baseurl(true),
 		'$defloc' => $x['default_location'],

@@ -124,7 +124,7 @@ function webpages_content(&$a) {
 	if($_REQUEST['pagetitle'])
 		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
-	$editor .= status_editor($a,$x);
+	$editor = status_editor($a,$x);
 
 	// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, 
 	// so just list titles and an edit link.
@@ -141,12 +141,24 @@ function webpages_content(&$a) {
 		$pages = array();
 		foreach($r as $rr) {
 			unobscure($rr);
+			$element_arr = array(
+				'type'		=> 'webpage',
+				'title'		=> $rr['title'],
+				'body'		=> $rr['body'],
+				'term'		=> $rr['term'],
+				'created'	=> $rr['created'],
+				'edited'	=> $rr['edited'],
+				'mimetype'	=> $rr['mimetype'],
+				'pagetitle'	=> $rr['sid'],
+				'mid'		=> $rr['mid']
+			);
 			$pages[$rr['iid']][] = array(
-				'url'       => $rr['iid'],
-				'pagetitle' => $rr['sid'],
-				'title'     => $rr['title'],
-				'created'   => datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
-				'edited'    => datetime_convert('UTC',date_default_timezone_get(),$rr['edited'])
+				'url'		=> $rr['iid'],
+				'pagetitle'	=> $rr['sid'],
+				'title'		=> $rr['title'],
+				'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
+				'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),
+				'bb_element'	=> '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
 			);
 		}
 	}
@@ -158,8 +170,9 @@ function webpages_content(&$a) {
 	$o .= replace_macros(get_markup_template('webpagelist.tpl'), array(
 		'$listtitle'    => t('Webpages'),
 		'$baseurl'      => $url,
-		'$create'         => t('Create'),
+		'$create'       => t('Create'),
 		'$edit'         => t('Edit'),
+		'$share'	=> t('Share'),
 		'$delete'	=> t('Delete'),
 		'$pages'        => $pages,
 		'$channel'      => $which,

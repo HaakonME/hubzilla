@@ -154,7 +154,7 @@ function filestorage_content(&$a) {
 			'$cpdesc' => t('Copy/paste this code to attach file to a post'),
 			'$cpldesc' => t('Copy/paste this URL to link file from a web page'),
 			'$submit' => t('Submit'),
-			'$attach_btn_title' => t('Attach this file to a new post'),
+			'$attach_btn_title' => t('Share this file'),
 			'$link_btn_title' => t('Show URL to this file'),
 			'$notify' => array('notify', t('Notify your contacts about this file'), 0, '', array(t('No'), t('Yes')))
 		));

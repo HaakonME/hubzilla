@@ -4,7 +4,7 @@
 
 TL;DR 
 
-Redmatrix provides distributed web publishing with [b]decentralised permissions[/b].
+Redmatrix provides distributed web publishing and social communications with [b]decentralised permissions[/b].
 
 So what exactly are "decentralised permissions"? They give me the ability to share something on my website (photos, media, files, webpages, etc.) with specific people on completely different websites - but not necessarily [i]everybody[/i] on those websites; and they do not need a password on my website and do not need to login to my website to view the things I've shared with them. They have one password on their own website and "magic authentication" between affiliated websites in the network. Also, as it is decentralised, there is no third party which has the ability to bypass permissions and see everything in the network.
 

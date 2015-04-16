@@ -6,7 +6,7 @@ TL;DR
 
 Redmatrix provides distributed web publishing with [b]decentralised permissions[/b].
 
-So what exactly are "decentralised permissions"? They give me the ability to share something on my website (photos, media, files, webpages, etc.) with specific people on completely different websites - but not necessarily [i]everybody[/i] on those websites; and they do not need a password and do not need to login to my website to view the things I've shared with them. They have one password on their own website and "magic authentication" between affiliated websites in the network. Also, as it is decentralised, there is no third party which has the ability to bypass permissions and see everything in the network.
+So what exactly are "decentralised permissions"? They give me the ability to share something on my website (photos, media, files, webpages, etc.) with specific people on completely different websites - but not necessarily [i]everybody[/i] on those websites; and they do not need a password on my website and do not need to login to my website to view the things I've shared with them. They have one password on their own website and "magic authentication" between affiliated websites in the network. Also, as it is decentralised, there is no third party which has the ability to bypass permissions and see everything in the network.
 
 Redmatrix is an open source webserver application written originally in PHP/MySQL and is compatible with many shared hosting as well as dedicated VPS environments; and is easily installable by those with basic website administration skills. It is also easily extended via plugins and themes and other third-party tools. 
 

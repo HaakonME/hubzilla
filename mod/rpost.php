@@ -94,6 +94,13 @@ function rpost_content(&$a) {
 
 	$channel = $a->get_channel();
 
+	$channel_acl = array(
+		'allow_cid' => $channel['channel_allow_cid'],
+		'allow_gid' => $channel['channel_allow_gid'],
+		'deny_cid'  => $channel['channel_deny_cid'],
+		'deny_gid'  => $channel['channel_deny_gid']
+	);
+
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit post')
 	));
@@ -111,7 +118,7 @@ function rpost_content(&$a) {
 		'nickname' => $channel['channel_address'],
 		'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] 
 			|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-		'acl' => populate_acl($channel),
+		'acl' => populate_acl($channel_acl),
 		'bang' => '',
 		'visitor' => true,
 		'profile_uid' => local_channel(),

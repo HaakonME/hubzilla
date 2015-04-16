@@ -15,14 +15,14 @@
 	padding: 7px 3px 7px 10px;
 }
 
-#webpage-list-table th:nth-child(5),
-#webpage-list-table td:nth-child(5){
+#webpage-list-table th:nth-child(6),
+#webpage-list-table td:nth-child(6){
 	padding: 7px 3px;
 	white-space: nowrap;
 }
 
-#webpage-list-table th:nth-child(6),
-#webpage-list-table td:nth-child(6){
+#webpage-list-table th:nth-child(7),
+#webpage-list-table td:nth-child(7){
 	padding: 7px 10px 7px 7px;
 	white-space: nowrap;
 }

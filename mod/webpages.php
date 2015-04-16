@@ -142,23 +142,23 @@ function webpages_content(&$a) {
 		foreach($r as $rr) {
 			unobscure($rr);
 			$element_arr = array(
-				'type' => 'webpage',
-				'title' => $rr['title'],
-				'body' => $rr['body'],
-				'term' => $rr['term'],
-				'created' => $rr['created'],
-				'edited' => $rr['edited'],
-				'mimetype' => $rr['mimetype'],
-				'pagetitle' => $rr['sid'],
-				'mid' => $rr['mid']
+				'type'		=> 'webpage',
+				'title'		=> $rr['title'],
+				'body'		=> $rr['body'],
+				'term'		=> $rr['term'],
+				'created'	=> $rr['created'],
+				'edited'	=> $rr['edited'],
+				'mimetype'	=> $rr['mimetype'],
+				'pagetitle'	=> $rr['sid'],
+				'mid'		=> $rr['mid']
 			);
 			$pages[$rr['iid']][] = array(
-				'url'       => $rr['iid'],
-				'pagetitle' => $rr['sid'],
-				'title'     => $rr['title'],
-				'created'   => datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
-				'edited'    => datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),
-				'bb_element'   => '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
+				'url'		=> $rr['iid'],
+				'pagetitle'	=> $rr['sid'],
+				'title'		=> $rr['title'],
+				'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
+				'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),
+				'bb_element'	=> '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
 			);
 		}
 	}

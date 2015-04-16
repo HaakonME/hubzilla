@@ -7,12 +7,12 @@
 	{{if $isadir}}{{include file="field_checkbox.tpl" field=$recurse}}{{/if}}
 	<div id="attach-edit-tools-share" class="btn-group form-group">
 		{{if !$isadir}}
-		<a href="/rpost?body=[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" id="attach-btn" class="btn btn-default btn-xs" title="{{$attach_btn_title}}">
-			<i class="icon-paperclip jot-icons"></i>
+		<a href="/rpost?attachment=[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" id="attach-btn" class="btn btn-default btn-xs" title="{{$attach_btn_title}}">
+			<i class="icon-share jot-icons"></i>
 		</a>
 		{{/if}}
 		<button id="link-btn" class="btn btn-default btn-xs" type="button" onclick="openClose('link-code');" title="{{$link_btn_title}}">
-			<i class="icon-share jot-icons"></i>
+			<i class="icon-link jot-icons"></i>
 		</button>
 	</div>
 	<div id="attach-edit-perms" class="btn-group pull-right">

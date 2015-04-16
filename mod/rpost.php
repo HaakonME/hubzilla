@@ -124,6 +124,7 @@ function rpost_content(&$a) {
 		'profile_uid' => local_channel(),
 		'title' => $_REQUEST['title'],
 		'body' => $_REQUEST['body'],
+		'attachment' => $_REQUEST['attachment'],
 		'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
 		'return_path' => 'rpost/return'
 	);

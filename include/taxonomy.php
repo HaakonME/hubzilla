@@ -275,6 +275,11 @@ function catblock($uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type =
 function dir_tagblock($link,$r) {
 	$o = '';
 
+	$observer = get_observer_hash();
+	if(! get_globaldir_setting($observer))
+		return $o;
+
+
 	if(! $r)
 		$r = get_app()->data['directory_keywords'];
 

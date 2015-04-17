@@ -135,12 +135,7 @@ function editwebpage_content(&$a) {
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />'; 			
 	else
 		$layoutselect = layout_select($itm[0]['uid'],$itm[0]['layout_mid']);
-		
-	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit Webpage')
-	));
 
-	
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl' => $a->get_baseurl(),
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
@@ -150,7 +145,6 @@ function editwebpage_content(&$a) {
 		'$confirmdelete' => t('Delete webpage?')
 	));
 
-	
 	$tpl = get_markup_template("jot.tpl");
 		
 	$jotplugins = '';
@@ -164,8 +158,9 @@ function editwebpage_content(&$a) {
 
 	$rp = 'webpages/' . $which;
 
-logger('canwrite: ' . (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')));
-	$o .= replace_macros($tpl,array(
+	logger('canwrite: ' . (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')));
+
+	$editor = replace_macros($tpl,array(
 		'$return_path' => $rp,
 		'$webpage' => ITEM_WEBPAGE,
 		'$placeholdpagetitle' => t('Page link title'),
@@ -218,8 +213,12 @@ logger('canwrite: ' . (perm_is_allowed($owner, get_observer_hash(), 'post_photos
 
 	));
 
-	if(($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash))
-		$o .= '<br /><br /><a class="page-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit Webpage'),
+		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
+		'$editor' => $editor,
+		'$id' => $itm[0]['id']
+	));
 
 	return $o;
 

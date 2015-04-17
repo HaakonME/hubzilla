@@ -1233,7 +1233,8 @@ function status_editor($a, $x, $popup = false) {
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,
 		'$expiryModalOK' => t('OK'),
-		'$expiryModalCANCEL' => t('Cancel')
+		'$expiryModalCANCEL' => t('Cancel'),
+		'$expanded' => ((x($x, 'expanded')) ? $x['expanded'] : false),
 	));
 
 	if ($popup === true) {

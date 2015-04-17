@@ -101,10 +101,6 @@ function rpost_content(&$a) {
 		'deny_gid'  => $channel['channel_deny_gid']
 	);
 
-	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit post')
-	));
-
 	if($_REQUEST['url']) {
 		$x = z_fetch_url(z_root() . '/parse_url?f=&url=' . urlencode($_REQUEST['url']));
 		if($x['success'])
@@ -129,8 +125,12 @@ function rpost_content(&$a) {
 		'return_path' => 'rpost/return'
 	);
 
+	$editor = status_editor($a,$x);
 
-	$o .= status_editor($a,$x);
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit post'),
+		'$editor' => $editor
+	));
 
 	return $o;
 

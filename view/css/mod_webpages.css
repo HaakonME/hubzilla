@@ -30,12 +30,3 @@
 .webpage-list-tool {
 	padding: 7px 10px;
 }
-
-/* this forces collapsed jot to appear expanded */
-.jothidden {
-	display: block !important;
-}
-
-#profile-jot-text {
-	height: 200px;
-}

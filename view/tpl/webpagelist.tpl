@@ -8,7 +8,7 @@
 	<div class="clear"></div>
 </div>
 {{if $editor}}
-<div id="webpage-editor" class="section-content-tools-wrapper form-group">
+<div id="webpage-editor" class="section-content-tools-wrapper">
 	{{$editor}}
 </div>
 {{/if}}

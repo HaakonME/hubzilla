@@ -1726,7 +1726,8 @@ img.mail-list-sender-photo {
 	font-size: 0.833em;
 }
 
-.wall-item-content {
+.wall-item-content,
+.page-body {
 	font-size: $font_size;
 	clear: both;
 }

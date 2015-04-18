@@ -929,8 +929,6 @@ require_once('include/items.php');
 			);
 			$status_info['user'] = $user_info;
 		}
-		if($u)
-			return $status_info;
 
 		return  api_apply_template("status", $type, array('$status' => $status_info));
 		

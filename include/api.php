@@ -412,7 +412,7 @@ require_once('include/items.php');
 			'notifications' => false,
 			'following' => '', #XXX: fix me
 			'verified' => true, #XXX: fix me
-			'status' => array()
+			'status' => api_get_status($uinfo[0]['xchan_hash'])
 		);
 	
 		return $ret;
@@ -473,7 +473,7 @@ require_once('include/items.php');
 			'profile_use_background_image' => false,
 			'verified' => true, #XXX: fix me
 			'followers' => '', #XXX: fix me
-			'status' => array()
+			'status' => api_get_status($item['author_xchan'])
 		);
 
 		return $ret; 
@@ -807,13 +807,66 @@ require_once('include/items.php');
 	api_register_func('api/red/item/new','red_item_new', true);
 
 
+	function api_get_status($xchan_hash) {
+		require_once('include/security.php');
 
+		$lastwall = q("SELECT * from item where
+			item_private = 0 and item_restrict = 0
+			and author_xchan = '%s'
+			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
+			and verb = '%s'
+			and uid in ( " . stream_perms_api_uids() . " )
+			order by created desc limit 1",
+			dbesc($xchan_hash),
+			dbesc(ACTIVITY_POST)
+		);
 
+		if($lastwall){
+			$lastwall = $lastwall[0];
+			
+			$in_reply_to_status_id = '';
+			$in_reply_to_user_id = '';
+			$in_reply_to_screen_name = '';
 
+			if($lastwall['author_xchan'] != $lastwall['owner_xchan']) {
+				$w = q("select * from abook left join xchan on abook_xchan = xchan_hash where
+					xchan_hash = '%s' limit 1",
+					dbesc($lastwall['owner_xchan'])
+				);
+				if($w) {
+					$in_reply_to_user_id = $w[0]['abook_id'];
+					$in_reply_to_screen_name = substr($w[0]['xchan_addr'],0,strpos($w[0]['xchan_addr'],'@'));
+				}
+			}
+			
+			if ($lastwall['parent']!=$lastwall['id']) {
+				$in_reply_to_status_id=$lastwall['thr_parent'];
+				if(! $in_reply_to_user_id) {
+					$in_reply_to_user_id = $user_info['id'];
+					$in_reply_to_screen_name = $user_info['screen_name'];
+				}
+			}
+			unobscure($lastwall);  
+			$status_info = array(
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
+				'truncated' => false,
+				'created_at' => api_date($lastwall['created']),
+				'in_reply_to_status_id' => $in_reply_to_status_id,
+				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
+				'id' => ($lastwall['id']),
+				'in_reply_to_user_id' => $in_reply_to_user_id,
+				'in_reply_to_screen_name' => $in_reply_to_screen_name,
+				'geo' => '',
+				'favorited' => false,
+				'coordinates' => $lastwall['coord'],
+				'place' => $lastwall['location'],
+				'contributors' => ''					
+			);
 
-
-
-
+		}
+	
+		return $status_info;
+	}
 
 	function api_status_show(&$a, $type){
 		$user_info = api_get_user($a);
@@ -876,6 +929,8 @@ require_once('include/items.php');
 			);
 			$status_info['user'] = $user_info;
 		}
+		if($u)
+			return $status_info;
 
 		return  api_apply_template("status", $type, array('$status' => $status_info));
 		

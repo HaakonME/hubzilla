@@ -152,8 +152,10 @@
 
 
 <br />
+
 <div class="clear event-form-location-end"></div>
 
+{{if ! $eid}}
 
    <div class='field checkbox'>
    <label class="mainlabel" for='id_share'>{{$sh_text}}</label>
@@ -169,6 +171,8 @@
 
 <button id="event-permissions-button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
 {{$acl}}
+
+{{/if}}
 
 <div class="clear"></div>
 

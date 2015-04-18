@@ -1859,6 +1859,10 @@ nav .dropdown-menu {
 	color: $nav_active_icon_colour;
 }
 
+.page-title {
+	margin: 10px 0px;
+}
+
 .section-title-wrapper {
 	padding: 7px 10px;
 	background-color: $item_colour;

@@ -176,20 +176,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<script type="text/javascript">
-	$(function() {
-		$('#datetimepicker1').datetimepicker({
-			language: 'us',
-			icons: {
-				time: "icon-time",
-				date: "icon-calendar",
-				up: "icon-arrow-up",
-				down: "icon-arrow-down"
-			}
-		});
-	});
-</script>
 
-{{if $content}}
+{{if $content || $attachment || $expanded}}
 <script>initEditor();</script>
 {{/if}}

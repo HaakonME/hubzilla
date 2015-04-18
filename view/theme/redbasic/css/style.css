@@ -1586,11 +1586,14 @@ img.mail-list-sender-photo {
 	font-weight: bold;
 }
 
-.jothidden >input, .jothidden >input {
-	border: 1px solid #fff;
+.jothidden > input {
+	border: 1px solid $bgcolour;
+	background-color: $bgcolour;
 }
-.jothidden >input:hover, .jothidden >input:focus {
+.jothidden > input:hover,
+.jothidden > input:focus {
 	border: 1px solid #cccccc;
+	background-color: #fff;
 }
 
 #profile-jot-text {
@@ -1723,7 +1726,8 @@ img.mail-list-sender-photo {
 	font-size: 0.833em;
 }
 
-.wall-item-content {
+.wall-item-content,
+.page-body {
 	font-size: $font_size;
 	clear: both;
 }
@@ -2210,8 +2214,8 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 /* Modified original CSS to match input in Redbasic */
 .jothidden .bootstrap-tagsinput {
-	border-color:#fff;
-	background-color: #fff;
+	border-color: $bgcolour;
+	background-color: $bgcolour;
 	box-shadow: none;
 	display: inline-block;
 	border-radius: $radiuspx;
@@ -2225,7 +2229,8 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 }
 
 .jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
-	border: 1px solid #cccccc;
+	border: 1px solid #ccc;
+	background-color: #fff;
 }
 
 /* Abusing theme-green is less work than makeing a new new one */

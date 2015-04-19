@@ -667,6 +667,7 @@ require_once('include/items.php');
         $a->argv[1] = $user_info['screen_name'];
 		
 		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
+		$_FILES['userfile'] = $_FILES['media'];
 		require_once('mod/wall_attach.php');
 		$posted = wall_attach_post($a);
                 
@@ -755,8 +756,8 @@ require_once('include/items.php');
 				$_FILES['userfile'] = $_FILES['media'];
 				// upload the image if we have one
 				$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-				require_once('mod/wall_upload.php');
-				$media = wall_upload_post($a);
+				require_once('mod/wall_attach.php');
+				$media = wall_attach_post($a);
 				if(strlen($media)>0)
 					$_REQUEST['body'] .= "\n\n".$media;
 			}

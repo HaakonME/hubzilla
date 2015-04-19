@@ -133,7 +133,19 @@ function comanche_get_channel_id() {
 	return $channel_id;
 }
 
-function comanche_block($name) {
+function comanche_block($s) {
+	$var = array();
+	$matches = array();
+	$name = $s;
+
+	$cnt = preg_match_all("/\[var=(.*?)\](.*?)\[\/var\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$var[$mtch[1]] = $mtch[2];
+			$name = str_replace($mtch[0], '', $name);
+		}
+	}
+
 	$o = '';
 	$channel_id = comanche_get_channel_id();
 
@@ -143,12 +155,12 @@ function comanche_block($name) {
 			dbesc($name)
 		);
 		if($r) {
-			$o = '<div class="bblock">';
+			$o .= (($var['wrap'] == 'none') ? '' : '<div class="bblock">');
 			if($r[0]['title'])
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 
 			$o .= prepare_text($r[0]['body'], $r[0]['mimetype']);
-			$o .= '</div>';
+			$o .= (($var['wrap'] == 'none') ? '' : '</div>');
 		}
 	}
 

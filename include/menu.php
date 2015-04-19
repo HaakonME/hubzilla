@@ -25,6 +25,7 @@ function menu_fetch($name,$uid,$observer_xchan) {
 }
 	
 function menu_render($menu, $class='', $edit = false) {
+
 	if(! $menu)
 		return '';
 
@@ -40,6 +41,7 @@ function menu_render($menu, $class='', $edit = false) {
 		'$menu' => $menu['menu'],
 		'$class' => $class,
 		'$edit' => (($edit) ? t("Edit") : ''),
+		'$id' => $menu['menu']['menu_id'],
 		'$items' => $menu['items']
 	));
 }
@@ -60,14 +62,13 @@ function menu_fetch_id($menu_id,$channel_id) {
 
 function menu_create($arr) {
 
-
 	$menu_name = trim(escape_tags($arr['menu_name']));
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
 	$menu_flags = intval($arr['menu_flags']);
 
-
-	if(! $menu_desc)
-		$menu_desc = $menu_name;
+	//allow menu_desc (title) to be empty
+	//if(! $menu_desc)
+	//	$menu_desc = $menu_name;
 
 	if(! $menu_name)
 		return false;
@@ -144,8 +145,9 @@ function menu_edit($arr) {
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
 	$menu_flags = intval($arr['menu_flags']);
 
-	if(! $menu_desc)
-		$menu_desc = $menu_name;
+	//allow menu_desc (title) to be empty
+	//if(! $menu_desc)
+	//	$menu_desc = $menu_name;
 
 	if(! $menu_name)
 		return false;

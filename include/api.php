@@ -1588,7 +1588,7 @@ require_once('include/items.php');
 		return($as);
 	}
 
-	function api_format_messages($item, $recipient, $sender) {
+	function api_format_message($item, $recipient, $sender) {
 		// standard meta information
 		$ret = array(
 				'id'                    => $item['id'],
@@ -1600,7 +1600,7 @@ require_once('include/items.php');
 				'recipient_screen_name' => $recipient['screen_name'],
 				'recipient'             => $recipient,
 		);
-		unobscure($item);
+		unobscure_mail($item);
 		//don't send title to regular StatusNET requests to avoid confusing these apps
 		if (x($_GET, 'getText')) {
 			$ret['title'] = $item['title'] ;
@@ -1963,7 +1963,7 @@ require_once('include/items.php');
 
 		if ($id>-1) {
 			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));
-			$ret = api_format_messages($r[0], $recipient, $sender);
+			$ret = api_format_message($r[0], $recipient, $sender);
 		
 		} else {
 			$ret = array("error"=>$id);	
@@ -2028,7 +2028,7 @@ require_once('include/items.php');
 					$sender = $user_info;
 				}
 	
-				$ret[]=api_format_messages($item, $recipient, $sender);
+				$ret[]=api_format_message($item, $recipient, $sender);
 			}
 		}
 		

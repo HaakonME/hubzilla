@@ -1188,6 +1188,17 @@ function unobscure(&$item) {
 	}
 }
 
+function unobscure_mail(&$item) {
+	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+		if($item['body'])
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+}
+
+
 function theme_attachments(&$item) {
 
 	$arr = json_decode_plus($item['attach']);

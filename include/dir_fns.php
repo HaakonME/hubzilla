@@ -116,7 +116,13 @@ function dir_sort_links() {
 	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
 
-	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : 'date');
+
+	$directory_sort_order = get_config('system','directory_sort_order');
+	if(! $directory_sort_order)
+		$directory_sort_order = 'date';
+
+
+	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : $directory_sort_order);
 	$url = 'directory?f=';
 
 	$tmp = array_merge($_GET,$_POST);

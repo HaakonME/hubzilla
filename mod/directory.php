@@ -158,7 +158,11 @@ function directory_content(&$a) {
 		if(! is_null($pubforums))
 			$query .= '&pubforums=' . intval($pubforums);
 
-		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : 'date');
+		$directory_sort_order = get_config('system','directory_sort_order');
+		if(! $directory_sort_order)
+			$directory_sort_order = 'date';
+
+		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : $directory_sort_order);
 
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);

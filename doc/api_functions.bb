@@ -28,26 +28,26 @@ Twitter API compatible functions:
     api/statuses/mentions T,S,F,(R)
     api/statuses/replies T,S,F,(R)
     api/statuses/user_timeline T,S,F,(R)
-    api/favorites T,S,F,(R)
+    api/favorites T,S,F,R
     api/account/rate_limit_status T,S,F,R
     api/help/test T,S,F,R
     api/statuses/friends T,S,F,R
     api/statuses/followers T,S,F,R
     api/friends/ids T,S,F,R
     api/followers/ids T,S,F,R
-    api/direct_messages/new T,S,F,(R)
-    api/direct_messages/conversation T,S,F,(R)
-    api/direct_messages/all T,S,F,(R)
-    api/direct_messages/sent T,S,F,(R)
-    api/direct_messages T,S,F,(R)
+    api/direct_messages/new T,S,F,R
+    api/direct_messages/conversation T,S,F,R
+    api/direct_messages/all T,S,F,R
+    api/direct_messages/sent T,S,F,R
+    api/direct_messages T,S,F,R
     api/oauth/request_token T,S,F,R
     api/oauth/access_token T,S,F,R
+    api/favorites T,S,R
+    api/favorites/create T,S,R
+    api/favorites/destroy T,S,R
 
 Twitter API functions supported by StatusNet but not currently by Friendica or Red
 
-    api/favorites T,S
-    api/favorites/create T,S
-    api/favorites/destroy T,S
     api/statuses/retweets_of_me T,S
     api/friendships/create T,S
     api/friendships/destroy T,S

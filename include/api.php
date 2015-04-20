@@ -2200,9 +2200,6 @@ logger('Req: ' . var_export($req,true));
 
 /*
 Not implemented by now:
-favorites
-favorites/create
-favorites/destroy
 statuses/retweets_of_me
 friendships/create
 friendships/destroy

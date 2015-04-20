@@ -26,6 +26,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Events module - fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV[/li]
 [li]Uploads - integrate #^[url=https://github.com/blueimp/jQuery-File-Upload]https://github.com/blueimp/jQuery-File-Upload[/url][/li]
 [li]Import/export - include events, things, etc.[/li]
+[li]API extensions, for Twitter API - search, friending, threading. For Red API, lots of stuff[/li]
+[li]OAuth permission extensions[/li]
 [li]Import channel from Diaspora/Friendica[/li]
 [li]MediaGoblin photo "crosspost" connector[/li]
 [li]Create management page/UI for extensible profile fields[/li]

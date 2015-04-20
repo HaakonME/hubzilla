@@ -267,7 +267,7 @@ require_once('include/items.php');
 	 * Returns user info array.
 	 */
 
-	function api_get_user(&$a, $contact_id = Null){
+	function api_get_user(&$a, $contact_id = null){
 		global $called_api;
 		$user = null;
 		$extra_query = "";
@@ -394,7 +394,7 @@ require_once('include/items.php');
 			'utc_offset' => "+00:00",
 			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
-			'statuses_count' => intval($countitms), #XXX: fix me 
+			'statuses_count' => intval($countitms), //#XXX: fix me 
 			'lang' => get_app()->language,
 			'description' => (($profile) ? $profile[0]['pdesc'] : ''),
 			'followers_count' => intval($countfollowers),
@@ -410,10 +410,13 @@ require_once('include/items.php');
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
 			'notifications' => false,
-			'following' => '', #XXX: fix me
-			'verified' => true, #XXX: fix me
-			'status' => api_get_status($uinfo[0]['xchan_hash'])
+			'following' => '', // #XXX: fix me
+			'verified' => true // #XXX: fix me
 		);
+
+		$x = api_get_status($uinfo[0]['xchan_hash']);
+		if($x)
+			$ret['status'] = $x;
 	
 		return $ret;
 		
@@ -446,12 +449,12 @@ require_once('include/items.php');
 			'description' => '',
 			'profile_image_url' => $item['author']['xchan_photo_m'],
 			'url' => $item['author']['xchan_url'],
-			'protected' => false,	#
+			'protected' => false,
 			'followers_count' => 0,
 			'friends_count' => 0,
 			'created_at' => '',
 			'favourites_count' => 0,
-			'utc_offset' => 0, #XXX: fix me
+			'utc_offset' => 0, // #XXX: fix me
 			'time_zone' => '', //$uinfo[0]['timezone'],
 			'statuses_count' => 0,
 			'following' => 1,
@@ -460,7 +463,7 @@ require_once('include/items.php');
 			'uid' => 0,
 			'contact_url' => 0,
 			'geo_enabled' => false,
-			'lang' => 'en', #XXX: fix me
+			'lang' => 'en', // #XXX: fix me
 			'contributors_enabled' => false,
 			'follow_request_sent' => false,
 			'profile_background_color' => 'cfe8f6',
@@ -471,9 +474,8 @@ require_once('include/items.php');
 			'profile_background_image_url' => '',
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
-			'verified' => true, #XXX: fix me
-			'followers' => '', #XXX: fix me
-			'status' => api_get_status($item['author_xchan'])
+			'verified' => true, // #XXX: fix me
+			'followers' => '' // #XXX: fix me
 		);
 
 		return $ret; 
@@ -1638,6 +1640,8 @@ require_once('include/items.php');
 			localize_item($item);
 
 			$status_user = (($item['author_xchan']==$user_info['guid'])?$user_info: api_item_get_user($a,$item));
+			if(array_key_exists('status',$status_user))
+				unset($status_user['status']);
 
 			if($item['parent'] != $item['id']) {
 				$r = q("select id from item where parent= %d and id < %d order by id desc limit 1",

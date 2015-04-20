@@ -824,7 +824,6 @@ require_once('include/items.php');
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
-			and uid in ( " . stream_perms_api_uids() . " )
 			order by created desc limit 1",
 			dbesc($xchan_hash),
 			dbesc(ACTIVITY_POST)
@@ -889,7 +888,6 @@ require_once('include/items.php');
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
-			and uid in ( " . stream_perms_api_uids() . " )
 			order by created desc limit 1",
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
@@ -963,7 +961,6 @@ require_once('include/items.php');
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
-			and uid in ( " . stream_perms_api_uids() . " )
 			order by created desc limit 1",
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
@@ -1109,8 +1106,8 @@ require_once('include/items.php');
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
-		// get last newtork messages
 
+		$sys = get_sys_channel();
 
 		// params
 		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
@@ -1132,7 +1129,7 @@ require_once('include/items.php');
 			and allow_cid = ''  and allow_gid = ''
 			and deny_cid  = ''  and deny_gid  = ''
             and item_private = 0
-			and uid in ( " . stream_perms_api_uids() . " )
+			and uid = " . $sys['channel_id'] . "
 			$sql_extra
 			AND id > %d group by mid
             order by received desc LIMIT %d OFFSET %d ",

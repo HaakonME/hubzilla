@@ -294,14 +294,14 @@ require_once('include/items.php');
 					$extra_query .= " AND abook_channel = ".intval(api_user());
 			}
 		
-			if (is_null($user) && argc() > (count($called_api)-1)){
+			if (is_null($user) && argc() > (count($called_api)-1) && (strstr($a->cmd,'/users'))){
 				$argid = count($called_api);
-				list($user, $null) = explode(".",argv($argid));
-				if(is_numeric($user)){
-					$user = intval($user);
+				list($xx, $null) = explode(".",argv($argid));
+				if(is_numeric($xx)){
+					$user = intval($xx);
 					$extra_query = " AND abook_id = %d ";
 				} else {
-					$user = dbesc($user);
+					$user = dbesc($xx);
 					$extra_query = " AND xchan_addr like '%s@%%' ";
 					if (api_user() !== false)
 						$extra_query .= " AND abook_channel = ".intval(api_user());
@@ -322,11 +322,13 @@ require_once('include/items.php');
 		
 		logger('api_user: ' . $extra_query . ', user: ' . $user);
 		// user info		
+
 		$uinfo = q("SELECT * from abook left join xchan on abook_xchan = xchan_hash 
 				WHERE 1
 				$extra_query",
 				$user
 		);
+
 		if (count($uinfo)==0) {
 			return False;
 		}
@@ -423,7 +425,9 @@ require_once('include/items.php');
 		$x = api_get_status($uinfo[0]['xchan_hash']);
 		if($x)
 			$ret['status'] = $x;
-	
+
+//		logger('api_get_user: ' . print_r($ret,true));
+
 		return $ret;
 		
 	}
@@ -1476,57 +1480,154 @@ require_once('include/items.php');
 	api_register_func('api/statuses/user_timeline','api_statuses_user_timeline', true);
 
 
+
+    /**
+     * Star/unstar an item
+     * param: id : id of the item
+     *
+     * api v1 : https://web.archive.org/web/20131019055350/https://dev.twitter.com/docs/api/1/post/favorites/create/%3Aid
+     */
+    function api_favorites_create_destroy(&$a, $type){
+
+		logger('favorites_create_destroy');
+
+        if (api_user()===false) 
+			return false;
+
+        $action = str_replace(".".$type,"",argv(2));
+        if (argc() > 3) {
+            $itemid = intval(argv(3));
+        } else {
+            $itemid = intval($_REQUEST['id']);
+        }
+
+        $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
+               intval($itemid), 
+				intval(api_user())
+		);
+
+        if (! $item)
+			return false;
+
+        switch($action){
+            case "create":
+
+                $flags = $item[0]['item_flags'] | ITEM_STARRED;
+
+                break;
+            case "destroy":
+
+                $flags = $item[0]['item_flags'] | (~ ITEM_STARRED);
+                break;
+            default:
+                return false;
+        }
+
+        $r = q("UPDATE item SET item_flags = %d where id = %d and uid = %d",
+                intval($flags),
+				intval($itemid),
+				intval(api_user())
+		);
+		if(! $r)
+			return false;
+
+        $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
+               intval($itemid), 
+				intval(api_user())
+		);
+
+		xchan_query($item,true);
+
+
+        $user_info = api_get_user($a);
+        $rets = api_format_items($item,$user_info);
+        $ret = $rets[0];
+
+        $data = array('$status' => $ret);
+        switch($type){
+            case "atom":
+            case "rss":
+                $data = api_rss_extra($a, $data, $user_info);
+        }
+
+        return api_apply_template("status", $type, $data);
+    }
+
+    api_register_func('api/favorites/create', 'api_favorites_create_destroy', true);
+    api_register_func('api/favorites/destroy', 'api_favorites_create_destroy', true);
+
+
+
 	function api_favorites(&$a, $type){
-		if (api_user()===false) return false;
+		if (api_user()===false) 
+			return false;
 
 		$user_info = api_get_user($a);
-		// in friendica starred item are private
-		// return favorites only for self
-		logger('api_favorites: self:' . $user_info['self']);
 
-		if ($user_info['self']==0) {
-			$ret = array();
-		} else {
+		// params
+		$count           = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page            = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if($page < 0) 
+			$page = 0;
+		$since_id        = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$max_id          = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
+		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
 
+		$start = $page*$count;
 
-			// params
-			$count = (x($_GET,'count')?$_GET['count']:20);
-			$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-			if ($page<0) $page=0;
+		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
-			$start = $page*$count;
+		$sql_extra = '';
+		if ($max_id > 0)
+			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
+		if ($exclude_replies > 0)
+			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
-			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-				FROM `item`, `contact`
-				WHERE `item`.`uid` = %d
-				AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-				AND `item`.`starred` = 1
-				AND `contact`.`id` = `item`.`contact-id`
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				$sql_extra
-				ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-				intval($user_info['uid']),
-				intval($start),	intval($count)
-			);
-
-			$ret = api_format_items($r,$user_info);
-
+		if (api_user() != $user_info['uid']) {
+			$observer = get_app()->get_observer();
+			require_once('include/permissions.php');
+			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
+				return '';
+			$sql_extra .= " and item_private = 0 ";
 		}
+
+		$r = q("SELECT * from item WHERE uid = %d and item_restrict = 0
+			and ( item_flags & %d ) > 0 $sql_extra
+			AND id > %d
+			ORDER BY received DESC LIMIT %d ,%d ",
+			intval($user_info['uid']),
+			intval(ITEM_STARRED),
+			intval($since_id),
+			intval($start),	
+			intval($count)
+		);
+
+		xchan_query($r,true);
+
+		$ret = api_format_items($r,$user_info);
 
 		$data = array('$statuses' => $ret);
 		switch($type){
 			case "atom":
 			case "rss":
 				$data = api_rss_extra($a, $data, $user_info);
+				break;
+			case "as":
+				$as = api_format_as($a, $ret, $user_info);
+				$as['title'] = $a->config['sitename']." Home Timeline";
+				$as['link']['url'] = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
+				return($as);
+				break;
 		}
 
 		return  api_apply_template("timeline", $type, $data);
+
 	}
 
 	api_register_func('api/favorites','api_favorites', true);
+
+
+
 
 	function api_format_as($a, $ret, $user_info) {
 

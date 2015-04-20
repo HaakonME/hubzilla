@@ -267,39 +267,45 @@ require_once('include/items.php');
 	 * Returns user info array.
 	 */
 
-	function api_get_user(&$a, $contact_id = null){
+	function api_get_user(&$a, $contact_id = null, $contact_xchan = null){
 		global $called_api;
 		$user = null;
 		$extra_query = "";
 
 
-		if(!is_null($contact_id)){
-			$user=$contact_id;
-			$extra_query = " AND abook_id = %d ";
+		if(! is_null($contact_xchan)) {
+			$user = local_channel();
+			$extra_query = " and abook_xchan = '" . dbesc($contact_xchan) . "' ";
 		}
-		
-		if(is_null($user) && x($_GET, 'user_id')) {
-			$user = intval($_GET['user_id']);	
-			$extra_query = " AND abook_id = %d ";
-		}
-		if(is_null($user) && x($_GET, 'screen_name')) {
-			$user = dbesc($_GET['screen_name']);	
-			$extra_query = " AND xchan_addr like '%s@%%' ";
-			if (api_user()!==false)
-				$extra_query .= " AND abook_channel = ".intval(api_user());
-		}
-		
-		if (is_null($user) && argc() > (count($called_api)-1)){
-			$argid = count($called_api);
-			list($user, $null) = explode(".",argv($argid));
-			if(is_numeric($user)){
-				$user = intval($user);
+		else {
+			if(!is_null($contact_id)){
+				$user=$contact_id;
 				$extra_query = " AND abook_id = %d ";
-			} else {
-				$user = dbesc($user);
+			}
+		
+			if(is_null($user) && x($_GET, 'user_id')) {
+				$user = intval($_GET['user_id']);	
+				$extra_query = " AND abook_id = %d ";
+			}
+			if(is_null($user) && x($_GET, 'screen_name')) {
+				$user = dbesc($_GET['screen_name']);	
 				$extra_query = " AND xchan_addr like '%s@%%' ";
-				if (api_user() !== false)
+				if (api_user()!==false)
 					$extra_query .= " AND abook_channel = ".intval(api_user());
+			}
+		
+			if (is_null($user) && argc() > (count($called_api)-1)){
+				$argid = count($called_api);
+				list($user, $null) = explode(".",argv($argid));
+				if(is_numeric($user)){
+					$user = intval($user);
+					$extra_query = " AND abook_id = %d ";
+				} else {
+					$user = dbesc($user);
+					$extra_query = " AND xchan_addr like '%s@%%' ";
+					if (api_user() !== false)
+						$extra_query .= " AND abook_channel = ".intval(api_user());
+				}
 			}
 		}
 		
@@ -2021,15 +2027,13 @@ require_once('include/items.php');
 		$ret = Array();
 		if($r) {
 			foreach($r as $item) {
-				if ($box == "inbox" || $item['from-url'] != $profile_url){
-					$recipient = $user_info;
-					// fixme to lookup recipient
-					$sender = api_get_user($a);
-				}
-				elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-					// fixme to lookup recipient
-					$recipient = api_get_user($a);
+				if ($item['from_xchan'] == $channel['channel_hash']) {
 					$sender = $user_info;
+					$recipient = api_get_user($a, null, $item['to_xchan']);
+				}
+				else {
+					$sender = api_get_user($a, null, $item['from_xchan']);
+					$recipient = $user_info;
 				}
 	
 				$ret[]=api_format_message($item, $recipient, $sender);

@@ -38,7 +38,7 @@
 			<td>
 			{{$item.title}}
 			</td>
-			<td class="webpage-list-tool">
+			<td class="webpage-list-tool dropdown">
 			{{if $item.lockstate=='lock'}}<i class="icon-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('item',{{$item.url}});" ></i><ul id="panel-{{$item.url}}" class="lockview-panel dropdown-menu"></ul>{{/if}}
 			<td class="webpage-list-tool">
 			{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil"></i></a>{{/if}}

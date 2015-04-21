@@ -602,7 +602,7 @@ function item_post(&$a) {
 		if($results) {
 
 			// Set permissions based on tag replacements
-			set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item);
+			set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item, $private);
 
 			$post_tags = array();
 			foreach($results as $result) {

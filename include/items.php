@@ -4813,7 +4813,7 @@ function item_remove_cid($xchan_hash,$mid,$uid) {
 }
 
 // Set item permissions based on results obtained from linkify_tags()
-function set_linkified_perms($linkified, &$str_contact_allow, &$str_group_allow, $profile_uid, $parent_item = false) {
+function set_linkified_perms($linkified, &$str_contact_allow, &$str_group_allow, $profile_uid, $parent_item = false, &$private) {
 	$first_access_tag = true;
 
 	foreach($linkified as $x) {
@@ -4835,10 +4835,12 @@ function set_linkified_perms($linkified, &$str_contact_allow, &$str_group_allow,
 			if(strpos($access_tag,'cid:') === 0) {
 				$str_contact_allow .= '<' . substr($access_tag,4) . '>';
 				$access_tag = '';
+				$private = 1;
 			}
 			elseif(strpos($access_tag,'gid:') === 0) {
 				$str_group_allow .= '<' . substr($access_tag,4) . '>';
 				$access_tag = '';
+				$private = 1;
 			}
 		}
 	}

@@ -13,14 +13,16 @@
 	<table id="mitem-list-table">
 		<tr>
 			<th width="1%">{{$nametitle}}</th>
-			<th width="97%">{{$targettitle}}</th>
+			<th width="96%">{{$targettitle}}</th>
+			<th width="1%"></th>
 			<th width="1%"></th>
 			<th width="1%"></th>
 		</tr>
 		{{foreach $mlist as $m }}
 		<tr id="mitem-list-item-{{$m.mitem_id}}">
 			<td width="1%">{{$m.mitem_desc}}</td>
-			<td width="97%"><a href="{{$m.mitem_link}}">{{$m.mitem_link}}</a></td>
+			<td width="96%"><a href="{{$m.mitem_link}}">{{$m.mitem_link}}</a></td>
+			<td width="1%" class="dropdown">{{if $m.allow_cid || $m.allow_gid || $m.deny_cid || $m.deny_gid}}<i class="icon-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('menu_item',{{$m.mitem_id}});" ></i><ul id="panel-{{$m.mitem_id}}" class="lockview-panel dropdown-menu"></ul>{{/if}}</td>
 			<td width="1%" class="mitem-list-tool"><a href="mitem/{{$menu_id}}/{{$m.mitem_id}}" title="{{$hintedit}}"><i class="icon-pencil"></i></a></td>
 			<td width="1%" class="mitem-list-tool"><a href="#" title="{{$hintdrop}}"  onclick="dropItem('mitem/{{$menu_id}}/{{$m.mitem_id}}/drop', '#mitem-list-item-{{$m.mitem_id}}, #pmenu-item-{{$m.mitem_id}}'); return false;"><i class="icon-trash drop-icons"></i></a></td>
 		</tr>

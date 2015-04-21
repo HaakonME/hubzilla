@@ -5,29 +5,26 @@
 {{/if}}
 <div id="menu-element-creator" class="section-content-tools-wrapper" style="display: {{$display}};">
 	<form id="mitemedit" action="mitem/{{$menu_id}}{{if $mitem_id}}/{{$mitem_id}}{{/if}}" method="post" >
-
 		<input type="hidden" name="menu_id" value="{{$menu_id}}" />
-
 		{{if $mitem_id}}
 		<input type="hidden" name="mitem_id" value="{{$mitem_id}}" />
 		{{/if}}
-
 		{{include file="field_input.tpl" field=$mitem_desc}}
 		{{include file="field_input.tpl" field=$mitem_link}}
 		{{include file="field_input.tpl" field=$mitem_order}}
 		{{include file="field_checkbox.tpl" field=$usezid}}
 		{{include file="field_checkbox.tpl" field=$newwin}}
-
-		<div id="settings-default-perms" class="settings-default-perms form-group">
-			<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+		<div class="pull-right btn-group form-group">
+			<div class="btn-group">
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
+					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
+				</button>
+				{{if $submit_more}}
+				<button class="btn btn-primary btn-sm" type="submit" name="submit-more" value="{{$submit_more}}">{{$submit_more}}&nbsp;<i id="jot-perms-icon" class="icon-caret-right"></i></button>
+				{{/if}}
+				<button class="btn btn-primary btn-sm" type="submit" name="submit" value="{{$submit}}">{{$submit}}</button>
+			</div>
 			{{$aclselect}}
 		</div>
-		<div class="mitemedit-submit-wrapper" >
-			{{if $submit_more}}
-			<input type="submit" name="submit-more" class="mitemedit-submit" value="{{$submit_more}}" />
-			{{/if}}
-			<input type="submit" name="submit" class="mitemedit-submit" value="{{$submit}}" />
-		</div>
-
 	</form>
 </div>

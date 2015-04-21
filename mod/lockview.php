@@ -14,10 +14,13 @@ function lockview_content(&$a) {
 	if(! $item_id)
 		killme();
 
-	if (!in_array($type, array('item','photo','event')))
+	if (!in_array($type, array('item','photo','event', 'menu_item')))
 		killme();
 
-	$r = q("SELECT * FROM %s WHERE id = %d LIMIT 1",
+	//we have different naming in in menu_item table
+	$id = (($type == 'menu_item') ? 'mitem_id' : 'id');
+
+	$r = q("SELECT * FROM %s WHERE $id = %d LIMIT 1",
 		dbesc($type),
 		intval($item_id)
 	);
@@ -27,7 +30,10 @@ function lockview_content(&$a) {
 
 	$item = $r[0];
 
-	if($item['uid'] != local_channel()) {
+	//we have different naming in in menu_item table
+	$uid = (($type == 'menu_item') ? $item['mitem_channel_id'] : $item['uid']);
+
+	if($uid != local_channel()) {
 		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
 	}

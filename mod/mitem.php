@@ -124,17 +124,19 @@ function mitem_content(&$a) {
 	$m = menu_fetch($a->data['menu']['menu_name'],$uid,$ob_hash);
 	$a->data['menu_item'] = $m;
 
+	$perm_defaults = array(
+		'allow_cid' => $channel['channel_allow_cid'],
+		'allow_gid' => $channel['channel_allow_gid'],
+		'deny_cid'  => $channel['channel_deny_cid'],
+		'deny_gid'  => $channel['channel_deny_gid']
+	);
+
+	$lockstate = (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock');
+
 	if(argc() == 2) {
 		$r = q("select * from menu_item where mitem_menu_id = %d and mitem_channel_id = %d order by mitem_order asc, mitem_desc asc",
 			intval($a->data['menu']['menu_id']),
 			intval($uid)
-		);
-
-		$perm_defaults = array(
-			'allow_cid' => $channel['channel_allow_cid'],
-			'allow_gid' => $channel['channel_allow_gid'],
-			'deny_cid'  => $channel['channel_deny_cid'],
-			'deny_gid'  => $channel['channel_deny_gid']
 		);
 
 		if($_GET['display']) {
@@ -156,7 +158,8 @@ function mitem_content(&$a) {
 			'$mitem_order' => array('mitem_order', t('Order in list'),'0',t('Higher numbers will sink to bottom of listing')),
 			'$submit'      => t('Submit and finish'),
 			'$submit_more' => t('Submit and continue'),
-			'$display'     => $display
+			'$display'     => $display,
+			'$lockstate'     => $lockstate
 		));
 
 		$o .= replace_macros(get_markup_template('mitemlist.tpl'),array(
@@ -175,9 +178,9 @@ function mitem_content(&$a) {
 			'$hintmenu'    => t('Edit this menu container'),
 			'$hintnew'     => t('Add menu element'),
 			'$hintdrop'    => t('Delete this menu item'),
-			'$hintedit'    => t('Edit this menu item')
+			'$hintedit'    => t('Edit this menu item'),
 		));
-	
+
 		return $o;
 	}
 
@@ -197,6 +200,8 @@ function mitem_content(&$a) {
 			}
 
 			$mitem = $m[0];
+
+			$lockstate = (($mitem['allow_cid'] || $mitem['allow_gid'] || $mitem['deny_cid'] || $mitem['deny_gid']) ? 'lock' : 'unlock');
 
 			if(argc() == 4 && argv(3) == 'drop') {
 				$r = menu_del_item($mitem['mitem_menu_id'], $uid, intval(argv(2)));
@@ -221,7 +226,8 @@ function mitem_content(&$a) {
 				'$usezid' => array('usezid', t('Use RedMatrix magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
 				'$newwin' => array('newwin', t('Open link in new window'), (($mitem['mitem_flags'] & MENU_ITEM_NEWWIN) ? 1 : 0),''),
 				'$mitem_order' => array('mitem_order', t('Order in list'),$mitem['mitem_order'],t('Higher numbers will sink to bottom of listing')),
-				'$submit' => t('Submit')
+				'$submit' => t('Submit'),
+				'$lockstate'     => $lockstate
 			));
 
 			return $o;

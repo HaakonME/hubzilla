@@ -884,8 +884,8 @@ function getPosition(e) {
 	return cursor;
 }
 
-function lockview(event, id) {
-	$.get('lockview/' + id, function(data) {
+function lockview(type, id) {
+	$.get('lockview/' + type + '/' + id, function(data) {
 		$('#panel-' + id).html(data);
 	});
 }

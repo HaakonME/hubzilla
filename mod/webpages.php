@@ -142,6 +142,9 @@ function webpages_content(&$a) {
 		$pages = array();
 		foreach($r as $rr) {
 			unobscure($rr);
+
+			$lockstate = (($rr['allow_cid'] || $rr['allow_gid'] || $rr['deny_cid'] || $rr['deny_gid']) ? 'lock' : 'unlock');
+
 			$element_arr = array(
 				'type'		=> 'webpage',
 				'title'		=> $rr['title'],
@@ -159,7 +162,8 @@ function webpages_content(&$a) {
 				'title'		=> $rr['title'],
 				'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
 				'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),
-				'bb_element'	=> '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
+				'bb_element'	=> '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]',
+				'lockstate'     => $lockstate
 			);
 		}
 	}

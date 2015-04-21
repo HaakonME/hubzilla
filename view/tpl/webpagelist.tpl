@@ -21,6 +21,7 @@
 			<th width="1%"></th>
 			<th width="1%"></th>
 			<th width="1%"></th>
+			<th width="1%"></th>
 			<th width="1%" class="hidden-xs">{{$created_txt}}</th>
 			<th width="1%" class="hidden-xs">{{$edited_txt}}</th>
 		</tr>
@@ -37,6 +38,8 @@
 			<td>
 			{{$item.title}}
 			</td>
+			<td class="webpage-list-tool">
+			{{if $item.lockstate=='lock'}}<i class="icon-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('item',{{$item.url}});" ></i><ul id="panel-{{$item.url}}" class="lockview-panel dropdown-menu"></ul>{{/if}}
 			<td class="webpage-list-tool">
 			{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil"></i></a>{{/if}}
 			</td>

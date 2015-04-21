@@ -1102,8 +1102,6 @@ nav .acpopup {
 
 .required {
 	color: #ff0000;
-	font-size: 1.8rem;
-	margin-left: 5px;
 }
 
 
@@ -1934,7 +1932,9 @@ nav .dropdown-menu {
 	background-color: $item_colour;
 }
 
-[id^="webpage-list-item-"]:hover td {
+[id^="webpage-list-item-"]:hover td,
+[id^="menu-list-item-"]:hover td,
+[id^="mitem-list-item-"]:hover td {
 	background-color: $item_colour;
 }
 

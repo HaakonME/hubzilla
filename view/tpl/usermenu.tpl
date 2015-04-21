@@ -5,7 +5,7 @@
 	{{if $items }}
 	<ul class="pmenu-body{{if !$class}} nav nav-pills nav-stacked{{/if}}">
 		{{foreach $items as $mitem }}
-		<li class="pmenu-item"><a href="{{$mitem.mitem_link}}" {{if $mitem.newwin}}target="_blank"{{/if}}>{{$mitem.mitem_desc}}</a></li>
+		<li id="pmenu-item-{{$mitem.mitem_id}}" class="pmenu-item"><a href="{{$mitem.mitem_link}}" {{if $mitem.newwin}}target="_blank"{{/if}}>{{$mitem.mitem_desc}}</a></li>
 		{{/foreach }}
 	</ul>
 	{{/if}}

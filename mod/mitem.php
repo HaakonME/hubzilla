@@ -41,13 +41,16 @@ function mitem_post(&$a) {
 		return;
 	}
 
-
-
 	if(! $a->data['menu'])
 		return;
 
 
 	$channel = $a->get_channel();
+
+	if(!$_REQUEST['mitem_desc'] || !$_REQUEST['mitem_link']) {
+		notice( t('Unable to create element.') . EOL);
+		return;
+	}
 
 	$_REQUEST['mitem_channel_id'] = $uid;
 	$_REQUEST['menu_id'] = $a->data['menu']['menu_id'];
@@ -64,7 +67,7 @@ function mitem_post(&$a) {
 		$_REQUEST['mitem_id'] = $mitem_id;
 		$r = menu_edit_item($_REQUEST['menu_id'],$uid,$_REQUEST);	
 		if($r) {
-			info( t('Menu element updated.') . EOL);
+			//info( t('Menu element updated.') . EOL);
 			goaway(z_root() . '/mitem/' . $_REQUEST['menu_id'] . (($a->is_sys) ? '?f=&sys=1' : ''));
 		}
 		else
@@ -74,13 +77,19 @@ function mitem_post(&$a) {
 	else {
 		$r = menu_add_item($_REQUEST['menu_id'],$uid,$_REQUEST);	
 		if($r) {
-			info( t('Menu element added.') . EOL);
-			goaway(z_root() . '/mitem/' . $_REQUEST['menu_id'] . (($a->is_sys) ? '?f=&sys=1' : ''));
+			//info( t('Menu element added.') . EOL);
+			if($_REQUEST['submit']) {
+				goaway(z_root() . '/menu' . (($a->is_sys) ? '?f=&sys=1' : ''));
+			}
+			if($_REQUEST['submit-more']) {
+				goaway(z_root() . '/mitem/' . $_REQUEST['menu_id'] . '?f=&display=block' . (($a->is_sys) ? '&sys=1' : '') );
+			}
 		}
 		else
 			notice( t('Unable to add menu element.') . EOL);
 
 	}
+
 
 
 
@@ -115,28 +124,58 @@ function mitem_content(&$a) {
 	$m = menu_fetch($a->data['menu']['menu_name'],$uid,$ob_hash);
 	$a->data['menu_item'] = $m;
 
-
 	if(argc() == 2) {
 		$r = q("select * from menu_item where mitem_menu_id = %d and mitem_channel_id = %d order by mitem_order asc, mitem_desc asc",
 			intval($a->data['menu']['menu_id']),
 			intval($uid)
 		);
 
+		$perm_defaults = array(
+			'allow_cid' => $channel['channel_allow_cid'],
+			'allow_gid' => $channel['channel_allow_gid'],
+			'deny_cid'  => $channel['channel_deny_cid'],
+			'deny_gid'  => $channel['channel_deny_gid']
+		);
+
+		if($_GET['display']) {
+			$display = $_GET['display'];
+		}
+		else {
+			$display = (($r) ? 'none' : 'block');
+		}
+
+		$create = replace_macros(get_markup_template('mitemedit.tpl'), array(
+			'$menu_id'     => $a->data['menu']['menu_id'],
+			'$permissions' => t('Menu Item Permissions'),
+			'$permdesc'    => t("\x28click to open/close\x29"),
+			'$aclselect'   => populate_acl($perm_defaults,false),
+			'$mitem_desc'  => array('mitem_desc', t('Link Name'), '', 'Visible name of the link','*'),
+			'$mitem_link'  => array('mitem_link', t('Link Target'), '', 'URL of the link', '*'),
+			'$usezid'      => array('usezid', t('Use RedMatrix magic-auth if available'), true, ''),
+			'$newwin'      => array('newwin', t('Open link in new window'), false,''),
+			'$mitem_order' => array('mitem_order', t('Order in list'),'0',t('Higher numbers will sink to bottom of listing')),
+			'$submit'      => t('Submit and finish'),
+			'$submit_more' => t('Submit and continue'),
+			'$display'     => $display
+		));
 
 		$o .= replace_macros(get_markup_template('mitemlist.tpl'),array(
-			'$title'    => t('Manage Menu Elements'),
-			'$menuname' => $a->data['menu']['menu_name'],
-			'$menudesc' => $a->data['menu']['menu_desc'],
-			'$edmenu'   => t('Edit menu'),
-			'$menu_id'  => $a->data['menu']['menu_id'],
-			'$mlist'    => $r,
-			'$edit'     => t('Edit element'),
-			'$drop'     => t('Drop element'),
-			'$new'      => t('New element'),
-			'$hintmenu' => t('Edit this menu container'),
-			'$hintnew'  => t('Add menu element'),
-			'$hintdrop' => t('Delete this menu item'),
-			'$hintedit' => t('Edit this menu item')
+			'$title'       => t('Menu:'),
+			'$create'      => $create,
+			'$nametitle'   => t('Link Name'),
+			'$targettitle' => t('Link Target'),
+			'$menuname'    => $a->data['menu']['menu_name'],
+			'$menudesc'    => $a->data['menu']['menu_desc'],
+			'$edmenu'      => t('Edit menu'),
+			'$menu_id'     => $a->data['menu']['menu_id'],
+			'$mlist'       => $r,
+			'$edit'        => t('Edit element'),
+			'$drop'        => t('Drop element'),
+			'$new'         => t('New element'),
+			'$hintmenu'    => t('Edit this menu container'),
+			'$hintnew'     => t('Add menu element'),
+			'$hintdrop'    => t('Delete this menu item'),
+			'$hintedit'    => t('Edit this menu item')
 		));
 	
 		return $o;
@@ -145,38 +184,13 @@ function mitem_content(&$a) {
 
 	if(argc() > 2) {
 
-		if(argv(2) === 'new') {
+		if(intval(argv(2))) {
 
-			$perm_defaults = array(
-				'allow_cid' => $channel['channel_allow_cid'], 
-				'allow_gid' => $channel['channel_allow_gid'], 
-				'deny_cid'  => $channel['channel_deny_cid'], 
-				'deny_gid'  => $channel['channel_deny_gid']
-			); 
-
-			$o = replace_macros(get_markup_template('mitemedit.tpl'), array(
-				'$header'      => t('New Menu Element'),
-				'$menu_id'     => $a->data['menu']['menu_id'],
-				'$permissions' => t('Menu Item Permissions'),
-				'$permdesc'    => t("\x28click to open/close\x29"),
-				'$aclselect'   => populate_acl($perm_defaults,false),
-				'$mitem_desc'  => array('mitem_desc', t('Link text'), '', '','*'),
-				'$mitem_link'  => array('mitem_link', t('URL of link'), '', '', '*'),
-				'$usezid'      => array('usezid', t('Use RedMatrix magic-auth if available'), true, ''),
-				'$newwin'      => array('newwin', t('Open link in new window'), false,''),
-// permissions go here
-				'$mitem_order' => array('mitem_order', t('Order in list'),'0',t('Higher numbers will sink to bottom of listing')),
-				'$submit'      => t('Create')
-			));
-			return $o;
-		}
-
-
- 		elseif(intval(argv(2))) {
 			$m = q("select * from menu_item where mitem_id = %d and mitem_channel_id = %d limit 1",
 				intval(argv(2)),
 				intval($uid)
 			);
+
 			if(! $m) {
 				notice( t('Menu item not found.') . EOL);
 				goaway(z_root() . '/menu'. (($a->is_sys) ? '?f=&sys=1' : ''));
@@ -193,27 +207,24 @@ function mitem_content(&$a) {
 
 				goaway(z_root() . '/mitem/' . $mitem['mitem_menu_id'] . (($a->is_sys) ? '?f=&sys=1' : ''));
 			}
-			else {
 
-				// edit menu item
+			// edit menu item
+			$o = replace_macros(get_markup_template('mitemedit.tpl'), array(
+				'$header' => t('Edit Menu Element'),
+				'$menu_id' => $a->data['menu']['menu_id'],
+				'$permissions' => t('Menu Item Permissions'),
+				'$permdesc' => t("\x28click to open/close\x29"),
+				'$aclselect' => populate_acl($mitem,false),
+				'$mitem_id' => intval(argv(2)),
+				'$mitem_desc' => array('mitem_desc', t('Link text'), $mitem['mitem_desc'], '','*'),
+				'$mitem_link' => array('mitem_link', t('URL of link'), $mitem['mitem_link'], '', '*'),
+				'$usezid' => array('usezid', t('Use RedMatrix magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
+				'$newwin' => array('newwin', t('Open link in new window'), (($mitem['mitem_flags'] & MENU_ITEM_NEWWIN) ? 1 : 0),''),
+				'$mitem_order' => array('mitem_order', t('Order in list'),$mitem['mitem_order'],t('Higher numbers will sink to bottom of listing')),
+				'$submit' => t('Submit')
+			));
 
-				$o = replace_macros(get_markup_template('mitemedit.tpl'), array(
-					'$header' => t('Edit Menu Element'),
-					'$menu_id' => $a->data['menu']['menu_id'],
-					'$permissions' => t('Menu Item Permissions'),
-					'$permdesc' => t("\x28click to open/close\x29"),
-					'$aclselect' => populate_acl($mitem,false),
-					'$mitem_id' => intval(argv(2)),
-					'$mitem_desc' => array('mitem_desc', t('Link text'), $mitem['mitem_desc'], '','*'),
-					'$mitem_link' => array('mitem_link', t('URL of link'), $mitem['mitem_link'], '', '*'),
-					'$usezid' => array('usezid', t('Use RedMatrix magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
-					'$newwin' => array('newwin', t('Open link in new window'), (($mitem['mitem_flags'] & MENU_ITEM_NEWWIN) ? 1 : 0),''),
-// permissions go here
-					'$mitem_order' => array('mitem_order', t('Order in list'),$mitem['mitem_order'],t('Higher numbers will sink to bottom of listing')),
-					'$submit' => t('Modify')
-				));
-				return $o;
-			}
+			return $o;
 		}
 	}
 }

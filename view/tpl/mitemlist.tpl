@@ -1,18 +1,32 @@
-<h1>{{$title}}</h1>
-<h2>{{$menudesc}} ({{$menuname}})</h2>
+<div class="section-title-wrapper">
+	<div class="pull-right">
+		<button id="webpage-create-btn" class="btn btn-xs btn-success" onclick="openClose('menu-element-creator');"><i class="icon-edit"></i>&nbsp;{{$hintnew}}</button>
+	</div>
+	<h2>{{$title}} {{if $menudesc}}{{$menudesc}}{{else}}{{$menuname}}{{/if}}</h2>
+	<div class="clear"></div>
+</div>
 
-<a href="menu/{{$menu_id}}" title="{{$hintmenu}}">{{$edmenu}}</a><br />
-<a href="mitem/{{$menu_id}}/new" title="{{$hintnew}}">{{$hintnew}}</a>
-
-<br />
-<br />
+{{$create}}
 
 {{if $mlist }}
-<ul id="mitemlist" class="menu-item-list">
-{{foreach $mlist as $m }}
-<li><a href="mitem/{{$menu_id}}/{{$m.mitem_id}}" title="{{$hintedit}}"><i class="icon-pencil mitem-edit btn btn-default"></i></a><a href="mitem/{{$menu_id}}/{{$m.mitem_id}}/drop" title={{$hintdrop}}><i class="icon-trash btn btn-default"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="mitem/{{$menu_id}}/{{$m.mitem_id}}" title="{{$hintcontent}}">{{$m.mitem_desc}}</a> ({{$m.mitem_link}})</li>
-{{/foreach}}
-</ul>
+<div id="mitemlist-content-wrapper" class="section-content-wrapper-np">
+	<table id="mitem-list-table">
+		<tr>
+			<th width="1%">{{$nametitle}}</th>
+			<th width="97%">{{$targettitle}}</th>
+			<th width="1%"></th>
+			<th width="1%"></th>
+		</tr>
+		{{foreach $mlist as $m }}
+		<tr id="mitem-list-item-{{$m.mitem_id}}">
+			<td width="1%">{{$m.mitem_desc}}</td>
+			<td width="97%"><a href="{{$m.mitem_link}}">{{$m.mitem_link}}</a></td>
+			<td width="1%" class="mitem-list-tool"><a href="mitem/{{$menu_id}}/{{$m.mitem_id}}" title="{{$hintedit}}"><i class="icon-pencil"></i></a></td>
+			<td width="1%" class="mitem-list-tool"><a href="#" title="{{$hintdrop}}"  onclick="dropItem('mitem/{{$menu_id}}/{{$m.mitem_id}}/drop', '#mitem-list-item-{{$m.mitem_id}}, #pmenu-item-{{$m.mitem_id}}'); return false;"><i class="icon-trash drop-icons"></i></a></td>
+		</tr>
+		{{/foreach}}
+	</table>
+</div>
 {{/if}}
 
  

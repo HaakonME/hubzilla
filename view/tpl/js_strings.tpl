@@ -21,6 +21,7 @@
 		'rating_text' : "{{$rating_text}}",
 		'submit'      : "{{$submit}}",
 		'linkurl'     : "{{$linkurl}}",
+		'leavethispage' : "{{$leavethispage}}",
 
 		't01' : "{{$t01}}",
 		't02' : "{{$t02}}",

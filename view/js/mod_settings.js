@@ -6,7 +6,7 @@
 var ispublic = aStr.everybody;
 
 $(document).ready(function() {
-	$('form').areYouSure({'addRemoveFieldsMarksDirty':true}); // Warn user about unsaved settings
+	$('form').areYouSure({'addRemoveFieldsMarksDirty':true, 'message': aStr['leavethispage'] }); // Warn user about unsaved settings
 
 	$("#id_permissions_role").change(function() {
 		var role = $("#id_permissions_role").val();

@@ -1509,13 +1509,17 @@ margin-right: 50px;
 }
 
 a .drop-icons {
-	color: $toolicon_colour;;
+	color: $toolicon_colour;
 	font-size: 1.2em;
 	text-decoration: none;
 }
  
 a .drop-icons:hover {
 	color: #FF0000;
+}
+
+.lockview {
+	cursor: pointer;
 }
 
 .permission-inherited {

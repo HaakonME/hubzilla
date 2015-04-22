@@ -5,6 +5,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 [li]Include TOS link in registration/verification email[/li]
 [li]Create bug tracker module[/li]
+[li]translation plugins - moses or apertium[/li]
 [li]Infinite scroll improvements (i.e. embedded page links) see http://scrollsample.appspot.com/items 
 [li]Finish the anti-spam bayesian engine[/li]
 [li]implement an email permission denied bounce message from the sys channel[/li]

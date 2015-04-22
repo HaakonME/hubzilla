@@ -1,3 +1,17 @@
+<div class="section-title-wrapper">
+	{{if $editor}}
+	<div class="pull-right">
+		<button id="webpage-create-btn" class="btn btn-xs btn-success" onclick="openClose('block-editor');"><i class="icon-edit"></i>&nbsp;{{$create}}</button>
+	</div>
+	{{/if}}
+	<h2>{{$title}}</h2>
+	<div class="clear"></div>
+</div>
+{{if $editor}}
+<div id="block-editor" class="section-content-tools-wrapper">
+	{{$editor}}
+</div>
+{{/if}}
 {{if $pages}}
 
 	   <div id="pagelist-content-wrapper" class="generic-content-wrapper">

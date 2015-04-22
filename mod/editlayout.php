@@ -114,7 +114,7 @@ function editlayout_content(&$a) {
 		'$ispublic'      => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag'        => $geotag,
 		'$nickname'      => $channel['channel_address'],
-	    '$confirmdelete' => t('Delete layout?')
+		'$confirmdelete' => t('Delete layout?')
 	));
 
 
@@ -170,7 +170,6 @@ function editlayout_content(&$a) {
 		'$acl'                 => '', 
 		'$bang'                => '',
 		'$profile_uid'         => (intval($owner)),
-		'$preview'             => t('Preview'),
 		'$jotplugins'          => $jotplugins,
 		'$sourceapp'           => t($a->sourcename),
 		'$defexpire'           => '',

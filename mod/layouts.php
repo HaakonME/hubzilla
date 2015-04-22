@@ -112,7 +112,7 @@ function layouts_content(&$a) {
 		'id'    => 'layout-help-tab',
 	));
 
-	$o .= replace_macros(get_markup_template('common_tabs.tpl'),array('$tabs' => $tabs));
+	//$o .= replace_macros(get_markup_template('common_tabs.tpl'),array('$tabs' => $tabs));
 
 
 	// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
@@ -123,13 +123,15 @@ function layouts_content(&$a) {
 		'webpage'     => ITEM_PDL,
 		'is_owner'    => true,
 		'nickname'    => $a->profile['channel_address'],
-		'lockstate'   => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+		//do we need that at this place?
+		//'lockstate'   => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'bang'        => '',
 		'showacl'     => false,
 		'visitor'     => false,
 		'nopreview'   => 1,
 		'ptlabel'     => t('Layout Name'),
 		'profile_uid' => intval($owner),
+		'expanded'    => true
 	);
 
 	if($_REQUEST['title'])
@@ -140,7 +142,7 @@ function layouts_content(&$a) {
 		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
 
-	$o .= status_editor($a,$x);
+	$editor = status_editor($a,$x);
 
 	$r = q("select iid, sid, mid from item_id left join item on item.id = item_id.iid 
 		where item_id.uid = %d and service = 'PDL' order by sid asc",
@@ -164,14 +166,16 @@ function layouts_content(&$a) {
 	$url = z_root() . '/editlayout/' . $which; 
 
 	$o .= replace_macros(get_markup_template('layoutlist.tpl'), array(
+		'$title'   => t('Layouts'),
+		'$create'  => t('Create'),
+		'$help'    => array('text' => t('Help'), 'url' => 'help/Comanche', 'title' => t('Comanche page description language help')),
+		'$editor'  => $editor,
 		'$baseurl' => $url,
 		'$edit'    => t('Edit'),
 		'$share'   => t('Share'),
 		'$pages'   => $pages,
 		'$channel' => $which,
 		'$view'    => t('View'),
-		'$preview' => '1',
-	
 	));
 
 	return $o;

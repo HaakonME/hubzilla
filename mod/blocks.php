@@ -95,6 +95,7 @@ function blocks_content(&$a) {
 		'mimetype' => $mimetype,
 		'ptlabel' => t('Block Name'),
 		'profile_uid' => intval($owner),
+		'expanded' => true,
 	);
 
 	if($_REQUEST['title'])
@@ -106,7 +107,7 @@ function blocks_content(&$a) {
 
 
 
-	$o .= status_editor($a,$x);
+	$editor = status_editor($a,$x);
 
 	$r = q("select * from item_id where uid = %d and service = 'BUILDBLOCK' order by sid asc",
 		intval($owner)
@@ -126,7 +127,10 @@ function blocks_content(&$a) {
 
 	$o .= replace_macros(get_markup_template('blocklist.tpl'), array(
 		'$baseurl' => $url,
+		'$title' => t('Blocks'),
+		'$create' => t('Create'),
 		'$edit' => t('Edit'),
+		'$editor' => $editor,
 		'$pages' => $pages,
 		'$channel' => $which,
 		'$view' => t('View'),

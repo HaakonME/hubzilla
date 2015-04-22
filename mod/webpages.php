@@ -131,8 +131,10 @@ function webpages_content(&$a) {
 	// so just list titles and an edit link.
 	/** @TODO - this should be replaced with pagelist_widget */
 
+	$sql_extra = item_permissions_sql($owner);
+
 	$r = q("select * from item_id left join item on item_id.iid = item.id 
-		where item_id.uid = %d and service = 'WEBPAGE' order by item.created desc",
+		where item_id.uid = %d and service = 'WEBPAGE' $sql_extra order by item.created desc",
 		intval($owner)
 	);
 

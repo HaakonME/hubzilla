@@ -90,10 +90,17 @@ function editwebpage_content(&$a) {
 	// We've already figured out which item we want and whose copy we need, 
 	// so we don't need anything fancy here
 
-	$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
+	$sql_extra = item_permissions_sql($owner);
+
+	$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s $sql_extra LIMIT 1",
 		intval($post_id),
 		intval($owner)
 	);
+
+	if(! $itm) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
 
 	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
 		$key = get_config('system','prvkey');

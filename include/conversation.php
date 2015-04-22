@@ -1637,7 +1637,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	}
 
-	if ($is_owner && feature_enabled($uid,'webpages')) {
+	if ($p['write_pages'] && feature_enabled($uid,'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
 			'url'   => $a->get_baseurl() . '/webpages/' . $nickname,

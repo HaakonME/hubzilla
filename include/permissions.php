@@ -422,12 +422,12 @@ function site_default_perms() {
 		'post_wall'     => PERMS_SPECIFIC,
 		'post_comments' => PERMS_SPECIFIC,
 		'post_mail'     => PERMS_SPECIFIC,
-		'post_photos'   => 0,
+		'post_photos'   => PERMS_SPECIFIC,
 		'tag_deliver'   => PERMS_SPECIFIC,
 		'chat'          => PERMS_SPECIFIC,
-		'write_storage' => 0,
-		'write_pages'   => 0,
-		'delegate'      => 0,
+		'write_storage' => PERMS_SPECIFIC,
+		'write_pages'   => PERMS_SPECIFIC,
+		'delegate'      => PERMS_SPECIFIC,
 		'post_like'     => PERMS_NETWORK
 	);
 
@@ -487,13 +487,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 
@@ -519,13 +519,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_SPECIFIC;
 
@@ -551,13 +551,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_SPECIFIC;
 
@@ -679,13 +679,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_NETWORK;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 
@@ -711,13 +711,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 

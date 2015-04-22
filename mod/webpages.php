@@ -80,12 +80,9 @@ function webpages_content(&$a) {
 	if(! $layout)
 		$layout = 'choose';
 
-
 	// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 	// Nickname is set to the observers xchan, and profile_uid to the owner's.  
 	// This lets you post pages at other people's channels.
-
-
 
 	if((! $channel) && ($uid) && ($uid == $a->profile_uid)) {
 		$channel = $a->get_channel();
@@ -101,8 +98,8 @@ function webpages_content(&$a) {
 	else
 		$channel_acl = array();
 
-
-	$o = profile_tabs($a,true);
+	$_is_owner = (local_channel() && (local_channel() == $owner));
+	$o = profile_tabs($a,$_is_owner, $a->profile['channel_address']);
 
 	$x = array(
 		'webpage'     => ITEM_WEBPAGE,

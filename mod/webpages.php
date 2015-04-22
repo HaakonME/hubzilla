@@ -98,8 +98,8 @@ function webpages_content(&$a) {
 	else
 		$channel_acl = array();
 
-	$_is_owner = (local_channel() && (local_channel() == $owner));
-	$o = profile_tabs($a,$_is_owner, $a->profile['channel_address']);
+	$is_owner = ($uid && $uid == $owner);
+	$o = profile_tabs($a, $is_owner, $a->profile['channel_address']);
 
 	$x = array(
 		'webpage'     => ITEM_WEBPAGE,
@@ -107,7 +107,8 @@ function webpages_content(&$a) {
 		'nickname'    => $a->profile['channel_address'],
 		'lockstate'   => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'bang'        => '',
-		'acl'         => (($uid && $uid == $owner) ? populate_acl($channel_acl,false) : ''),
+		'acl'         => (($is_owner) ? populate_acl($channel_acl,false) : ''),
+		'showacl'     => (($is_owner) ? true : false),
 		'visitor'     => true,
 		'profile_uid' => intval($owner),
 		'mimetype'    => $mimetype,

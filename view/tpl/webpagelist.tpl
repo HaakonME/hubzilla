@@ -29,31 +29,41 @@
 		{{foreach $items as $item}}
 		<tr id="webpage-list-item-{{$item.url}}">
 			<td>
-			{{if $view}}
+				{{if $view}}
 				<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}">{{$item.pagetitle}}</a>
-			{{else}}
+				{{else}}
 				{{$item.pagetitle}}
-			{{/if}}
+				{{/if}}
 			</td>
 			<td>
-			{{$item.title}}
+				{{$item.title}}
 			</td>
 			<td class="webpage-list-tool dropdown">
-			{{if $item.lockstate=='lock'}}<i class="icon-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('item',{{$item.url}});" ></i><ul id="panel-{{$item.url}}" class="lockview-panel dropdown-menu"></ul>{{/if}}
-			<td class="webpage-list-tool">
-			{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil"></i></a>{{/if}}
+				{{if $item.lockstate=='lock'}}
+				<i class="icon-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('item',{{$item.url}});" ></i>
+				<ul id="panel-{{$item.url}}" class="lockview-panel dropdown-menu"></ul>
+				{{/if}}
 			</td>
 			<td class="webpage-list-tool">
-			{{if $item.bb_element}}<a href="rpost?attachment={{$item.bb_element}}" title="{{$share}}"><i class="icon-share"></i></a>{{/if}}
+				{{if $edit}}
+				<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil"></i></a>
+				{{/if}}
 			</td>
 			<td class="webpage-list-tool">
-			{{if $edit}}<a href="#" title="{{$delete}}" onclick="dropItem('item/drop/{{$item.url}}', '#webpage-list-item-{{$item.url}}'); return false;"><i class="icon-trash drop-icons"></i></a>{{/if}}
+				{{if $item.bb_element}}
+				<a href="rpost?attachment={{$item.bb_element}}" title="{{$share}}"><i class="icon-share"></i></a>
+				{{/if}}
+			</td>
+			<td class="webpage-list-tool">
+				{{if $edit}}
+				<a href="#" title="{{$delete}}" onclick="dropItem('item/drop/{{$item.url}}', '#webpage-list-item-{{$item.url}}'); return false;"><i class="icon-trash drop-icons"></i></a>
+				{{/if}}
 			</td>
 			<td class="hidden-xs">
-			{{$item.created}}
+				{{$item.created}}
 			</td>
 			<td class="hidden-xs">
-			{{$item.edited}}
+				{{$item.edited}}
 			</td>
 		</tr>
 		{{/foreach}}

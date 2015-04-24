@@ -15,19 +15,51 @@
 {{/if}}
 
 {{if $pages}}
-	   <div id="pagelist-content-wrapper" class="generic-content-wrapper">
+<div id="pagelist-content-wrapper" class="section-content-wrapper-np">
+	<table id="layout-list-table">
+		<tr>
+			<th width="97%">{{$name}}</th>
+			<th width="1%"></th>
+			<th width="1%"></th>
+			<th width="1%"></th>
+			<th width="1%" class="hidden-xs">{{$created}}</th>
+			<th width="1%" class="hidden-xs">{{$edited}}</th>
+		</tr>
 		{{foreach $pages as $key => $items}} 
-				{{foreach $items as $item}}
-					<div class="page-list-item">
-					{{if $edit}}<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil design-icons design-edit-icon btn btn-default"></i></a> {{/if}}
-					{{if $view}}<a href="page/{{$channel}}/{{$item.title}}" title="{{$view}}"><i class="icon-external-link design-icons design-view-icon btn btn-default"></i></a> {{/if}}
-					{{if $share}}<a href="layouts/{{$channel}}/share/{{$item.mid}}" title="{{$share}}"><i class="icon-share design-icons btn btn-default"></i></a> {{/if}}
-					{{*if $preview}}<a href="page/{{$channel}}/{{$item.title}}?iframe=true&width=80%&height=80%" title="{{$preview}}" class="webpage-preview" ><i class="icon-eye-open design-icons design-preview-icon"></i></a> {{/if*}}
-					{{$item.title}}
-					</div>
-				{{/foreach}}
+		{{foreach $items as $item}}
+		<tr id="layout-list-item-{{$item.url}}">
+			<td>
+				{{if $view}}
+				<a href="page/{{$channel}}/{{$item.title}}" title="{{$view}}">{{$item.title}}</a>
+				{{else}}
+				{{$item.title}}
+				{{/if}}
+			</td>
+			<td class="webpage-list-tool">
+				{{if $edit}}
+				<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="icon-pencil"></i></a>
+				{{/if}}
+			</td>
+			<td class="webpage-list-tool">
+				{{if $item.bb_element}}
+				<a href="rpost?attachment={{$item.bb_element}}" title="{{$share}}"><i class="icon-share"></i></a>
+				{{/if}}
+			</td>
+			<td class="webpage-list-tool">
+				{{if $edit}}
+				<a href="#" title="{{$delete}}" onclick="dropItem('item/drop/{{$item.url}}', '#layout-list-item-{{$item.url}}'); return false;"><i class="icon-trash drop-icons"></i></a>
+				{{/if}}
+			</td>
+			<td class="hidden-xs">
+				{{$item.created}}
+			</td>
+			<td class="hidden-xs">
+				{{$item.edited}}
+			</td>
+		</tr>
 		{{/foreach}}
-	   </div>
-	
-	   <div class="clear"></div>
+		{{/foreach}}
+	</table>
+</div>
+<div class="clear"></div>
 {{/if}}

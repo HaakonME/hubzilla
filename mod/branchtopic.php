@@ -33,7 +33,7 @@ function branchtopic_init(&$a) {
 		intval(local_channel())
 	);
 
-	$x = q("update item set parent = id, item_flags = (item_flags | %d) where id = %d",
+	$x = q("update item set parent = id, route = '', item_flags = (item_flags | %d) where id = %d",
 		intval(ITEM_THREAD_TOP),
 		intval($item_id)
 	);

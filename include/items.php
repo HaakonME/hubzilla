@@ -4446,6 +4446,12 @@ function zot_feed($uid,$observer_xchan,$arr) {
 	}
 
 	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			if(strpos($r[$x]['postopts'],'nodeliver') !== false) {
+				unset($r[$x]);
+			}
+		}
+	
 		$parents_str = ids_to_querystr($r,'parent');
 		$sys_query = ((is_sys_channel($uid)) ? $sql_extra : '');
 

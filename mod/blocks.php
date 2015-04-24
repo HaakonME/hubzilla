@@ -128,7 +128,8 @@ function blocks_content(&$a) {
 			);
 			$pages[$rr['iid']][] = array(
 				'url' => $rr['iid'],
-				'title' => $rr['sid'],
+				'name' => $rr['sid'],
+				'title' => $rr['title'],
 				'created' => $rr['created'],
 				'edited' => $rr['edited'],
 				'bb_element' => '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
@@ -143,6 +144,7 @@ function blocks_content(&$a) {
 		'$baseurl' => $url,
 		'$title' => t('Blocks'),
 		'$name' => t('Block Name'),
+		'$blocktitle' => t('Block Title'),
 		'$created' => t('Created'),
 		'$edited' => t('Edited'),
 		'$create' => t('Create'),

@@ -16,7 +16,8 @@
 <div id="pagelist-content-wrapper" class="section-content-wrapper-np">
 	<table id="block-list-table">
 		<tr>
-			<th width="97%">{{$name}}</th>
+			<th width="1%">{{$name}}</th>
+			<th width="94%">{{$blocktitle}}</th>
 			<th width="1%"></th>
 			<th width="1%"></th>
 			<th width="1%"></th>
@@ -28,10 +29,13 @@
 		<tr id="block-list-item-{{$item.url}}">
 			<td>
 				{{if $view}}
-				<a href="block/{{$channel}}/{{$item.title}}" title="{{$view}}">{{$item.title}}</a>
+				<a href="block/{{$channel}}/{{$item.title}}" title="{{$view}}">{{$item.name}}</a>
 				{{else}}
-				{{$item.title}}
+				{{$item.name}}
 				{{/if}}
+			</td>
+			<td>
+				{{$item.title}}
 			</td>
 			<td class="webpage-list-tool">
 				{{if $edit}}

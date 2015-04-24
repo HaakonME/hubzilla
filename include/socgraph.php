@@ -470,7 +470,7 @@ function poco($a,$extended = false) {
 		$sql_extra = " and abook_flags = 0 ";
 
 	if($cid)
-		$sql_extra = sprintf(" and abook_id = %d ",intval($cid));
+		$sql_extra = sprintf(" and abook_id = %d  and ( abook_flags & " . ABOOK_FLAG_HIDDEN . " ) = 0 ",intval($cid));
 
 	if($system_mode) {
 		$r = q("SELECT count(*) as `total` from abook where ( abook_flags & " . ABOOK_FLAG_SELF . 

@@ -132,7 +132,7 @@ function layouts_content(&$a) {
 
 	$editor = status_editor($a,$x);
 
-	$r = q("select iid, sid, mid, body, created, edited from item_id left join item on item_id.iid = item.id
+	$r = q("select iid, sid, mid, title, body, mimetype, created, edited from item_id left join item on item_id.iid = item.id
 		where item_id.uid = %d and service = 'PDL' order by item.created desc",
 		intval($owner)
 	);
@@ -144,6 +144,7 @@ function layouts_content(&$a) {
 		foreach($r as $rr) {
 			$element_arr = array(
 				'type'      => 'layout',
+				'title'     => $rr['title'],
 				'body'      => $rr['body'],
 				'created'   => $rr['created'],
 				'edited'    => $rr['edited'],

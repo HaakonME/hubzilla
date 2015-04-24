@@ -17,6 +17,7 @@ require_once('include/zot.php');
  * f= placeholder, often required
  * title= Title of post
  * body= Body of post
+ * url= URL which will be parsed and the results appended to the body
  * source= Source application
  * remote_return= absolute URL to return after posting is finished
  * type= choices are 'html' or 'bbcode', default is 'bbcode'
@@ -93,20 +94,18 @@ function rpost_content(&$a) {
 
 	$channel = $a->get_channel();
 
-	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit post')
-	));
+	$channel_acl = array(
+		'allow_cid' => $channel['channel_allow_cid'],
+		'allow_gid' => $channel['channel_allow_gid'],
+		'deny_cid'  => $channel['channel_deny_cid'],
+		'deny_gid'  => $channel['channel_deny_gid']
+	);
 
-	
-//	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
-//		'$baseurl' => $a->get_baseurl(),
-//		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-//		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
-//		'$geotag' => $geotag,
-//		'$nickname' => $channel['channel_address']
-//	));
-
-
+	if($_REQUEST['url']) {
+		$x = z_fetch_url(z_root() . '/parse_url?f=&url=' . urlencode($_REQUEST['url']));
+		if($x['success'])
+			$_REQUEST['body'] = $_REQUEST['body'] . $x['body'];
+	}
 
 	$x = array(
 		'is_owner' => true,
@@ -115,19 +114,23 @@ function rpost_content(&$a) {
 		'nickname' => $channel['channel_address'],
 		'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] 
 			|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-		'acl' => populate_acl($channel),
+		'acl' => populate_acl($channel_acl),
 		'bang' => '',
-//		'channel_select' => true,
 		'visitor' => true,
 		'profile_uid' => local_channel(),
 		'title' => $_REQUEST['title'],
 		'body' => $_REQUEST['body'],
+		'attachment' => $_REQUEST['attachment'],
 		'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
 		'return_path' => 'rpost/return'
 	);
 
+	$editor = status_editor($a,$x);
 
-	$o .= status_editor($a,$x);
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit post'),
+		'$editor' => $editor
+	));
 
 	return $o;
 

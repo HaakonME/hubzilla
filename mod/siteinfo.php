@@ -50,6 +50,21 @@ function siteinfo_init(&$a) {
 
 		$site_info = get_config('system','info');
 		$site_name = get_config('system','sitename');
+		if(! get_config('system','hidden_version_siteinfo')) {
+			$version = RED_VERSION;
+			if(@is_dir('.git') && function_exists('shell_exec')) {
+				$commit = trim( @shell_exec('git log -1 --format="%h"'));
+				if(! get_config('system','hidden_tag_siteinfo'))
+					$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
+				else 
+					$tag = '';
+			}
+			if(! isset($commit) || strlen($commit) > 16)
+				$commit = '';
+		}
+		else {
+				$version = $commit = '';
+		}
 		
 		//Statistics
 		$channels_total_stat = intval(get_config('system','channels_total_stat'));
@@ -57,9 +72,12 @@ function siteinfo_init(&$a) {
 		$channels_active_monthly_stat = intval(get_config('system','channels_active_monthly_stat'));
 		$local_posts_stat = intval(get_config('system','local_posts_stat'));
 		$hide_in_statistics = intval(get_config('system','hide_in_statistics'));
+		$site_expire = intval(get_config('system', 'default_expire_days'));
+
 		
 		$data = Array(
-			'version' => RED_VERSION,
+			'version' => $version,
+			'version_tag' => $tag,
 			'commit' => $commit,
 			'url' => z_root(),
 			'plugins' => $visible_plugins,
@@ -68,6 +86,7 @@ function siteinfo_init(&$a) {
 			'language' => get_config('system','language'),
 			'diaspora_emulation' => get_config('system','diaspora_enabled'),
 			'rss_connections' => get_config('system','feed_contacts'),
+			'expiration' => $site_expire,
 			'default_service_restrictions' => $service_class,
 			'admin' => $admin,
 			'site_name' => (($site_name) ? $site_name : ''),
@@ -134,7 +153,7 @@ function siteinfo_content(&$a) {
 
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
                 '$title' => t('Red'),
-		'$description' => t('This is a hub of the Red Matrix - a global cooperative network of decentralized privacy enhanced websites.'),
+		'$description' => t('This is a hub of redmatrix - a global cooperative network of decentralized privacy enhanced websites.'),
 		'$version' => $version,
 		'$tag_txt' => t('Tag: '),
 		'$tag' => $tag,
@@ -142,9 +161,9 @@ function siteinfo_content(&$a) {
 		'$lastpoll' => get_poller_runtime(),
 		'$commit' => $commit,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
-		'$visit' => t('Please visit <a href="https://redmatrix.me">RedMatrix.me</a> to learn more about the Red Matrix.'),
+		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about the Red Matrix.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
-		'$bug_link_url' => 'https://github.com/friendica/red/issues',
+		'$bug_link_url' => 'https://github.com/redmatrix/redmatrix/issues',
 		'$bug_link_text' => 'redmatrix issues',
 		'$contact' => t('Suggestions, praise, etc. - please email "redmatrix" at librelist - dot com'),
 		'$donate' => $donate,

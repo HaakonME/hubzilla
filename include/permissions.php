@@ -1,6 +1,6 @@
 <?php
 /**
- * @file incldue/permissions.php
+ * @file include/permissions.php
  *
  * This file conntains functions to check and work with permissions.
  */
@@ -422,12 +422,12 @@ function site_default_perms() {
 		'post_wall'     => PERMS_SPECIFIC,
 		'post_comments' => PERMS_SPECIFIC,
 		'post_mail'     => PERMS_SPECIFIC,
-		'post_photos'   => 0,
+		'post_photos'   => PERMS_SPECIFIC,
 		'tag_deliver'   => PERMS_SPECIFIC,
 		'chat'          => PERMS_SPECIFIC,
-		'write_storage' => 0,
-		'write_pages'   => 0,
-		'delegate'      => 0,
+		'write_storage' => PERMS_SPECIFIC,
+		'write_pages'   => PERMS_SPECIFIC,
+		'delegate'      => PERMS_SPECIFIC,
 		'post_like'     => PERMS_NETWORK
 	);
 
@@ -445,21 +445,21 @@ function site_default_perms() {
 
 
 /**
- * @function get_role_perms($role)
- * @param string $role
- * 
- *   Given a string for the channel role ('social','forum', etc)
+ * @brief Return an array of all permissions for this role.
+ *
+ * Given a string for the channel role ('social','forum', etc)
  * return an array of all permission fields pre-filled for this role.
  * This includes the channel permission scope indicators (anything beginning with 'channel_') as well as
- *    perms_auto:   true or false to create auto-permissions for this channel
- *    perms_follow: The permissions to apply when initiating a connection request to another channel
- *    perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
- *    default_collection: true or false to make the default ACL include the channel's default collection 
- *    directory_publish: true or false to publish this channel in the directory
+ *  * perms_auto:   true or false to create auto-permissions for this channel
+ *  * perms_follow: The permissions to apply when initiating a connection request to another channel
+ *  * perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
+ *  * default_collection: true or false to make the default ACL include the channel's default collection 
+ *  * directory_publish: true or false to publish this channel in the directory
  * Any attributes may be extended (new roles defined) and modified (specific permissions altered) by plugins
  *
+ * @param string $role
+ * @return array
  */
-
 function get_role_perms($role) {
 
 	$ret = array();
@@ -487,13 +487,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 
@@ -519,13 +519,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_SPECIFIC;
 
@@ -551,13 +551,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_SPECIFIC;
 
@@ -578,18 +578,18 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
 			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
-			$ret['channel_w_stream']    = 0;
+			$ret['channel_w_stream']    = PERMS_SPECIFIC;
 			$ret['channel_w_wall']      = PERMS_SPECIFIC;
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 
@@ -610,18 +610,18 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
 			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
-			$ret['channel_w_stream']    = 0;
+			$ret['channel_w_stream']    = PERMS_SPECIFIC;
 			$ret['channel_w_wall']      = PERMS_SPECIFIC;
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_SPECIFIC;
 
@@ -642,18 +642,18 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_SPECIFIC;
 			$ret['channel_r_photos']    = PERMS_SPECIFIC;
 			$ret['channel_r_abook']     = PERMS_SPECIFIC;
-			$ret['channel_w_stream']    = 0;
+			$ret['channel_w_stream']    = PERMS_SPECIFIC;
 			$ret['channel_w_wall']      = PERMS_SPECIFIC;
-			$ret['channel_w_tagwall']   = 0;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_SPECIFIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_SPECIFIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_SPECIFIC;
 
@@ -679,13 +679,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_NETWORK;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 
@@ -711,13 +711,13 @@ function get_role_perms($role) {
 			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
 			$ret['channel_w_comment']   = PERMS_SPECIFIC;
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
-			$ret['channel_w_photos']    = 0;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 
@@ -736,18 +736,18 @@ function get_role_perms($role) {
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
 			$ret['channel_r_photos']    = PERMS_PUBLIC;
 			$ret['channel_r_abook']     = PERMS_PUBLIC;
-			$ret['channel_w_stream']    = 0;
-			$ret['channel_w_wall']      = 0;
-			$ret['channel_w_tagwall']   = 0;
-			$ret['channel_w_comment']   = 0;
-			$ret['channel_w_mail']      = 0;
-			$ret['channel_w_photos']    = 0;
-			$ret['channel_w_chat']      = 0;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_w_stream']    = PERMS_SPECIFIC;
+			$ret['channel_w_wall']      = PERMS_SPECIFIC;
+			$ret['channel_w_tagwall']   = PERMS_SPECIFIC;
+			$ret['channel_w_comment']   = PERMS_SPECIFIC;
+			$ret['channel_w_mail']      = PERMS_SPECIFIC;
+			$ret['channel_w_photos']    = PERMS_SPECIFIC;
+			$ret['channel_w_chat']      = PERMS_SPECIFIC;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
-			$ret['channel_w_storage']   = 0;
+			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
-			$ret['channel_w_pages']     = 0;
+			$ret['channel_w_pages']     = PERMS_SPECIFIC;
 			$ret['channel_a_republish'] = PERMS_SPECIFIC;
 			$ret['channel_w_like']      = PERMS_NETWORK;
 
@@ -775,7 +775,7 @@ function get_role_perms($role) {
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
 			$ret['channel_w_photos']    = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
-			$ret['channel_a_delegate']  = 0;
+			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
 			$ret['channel_r_storage']   = PERMS_PUBLIC;
 			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
@@ -800,9 +800,8 @@ function get_role_perms($role) {
 }
 
 /**
- * @brief Returns a list or roles, grouped by type
+ * @brief Returns a list or roles, grouped by type.
  *
- * @param string $current The current role
  * @return string Returns an array of roles, grouped by type
  */
 function get_roles() {
@@ -811,7 +810,8 @@ function get_roles() {
 		t('Community Forum') => array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private')),
 		t('Feed Republish') => array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted')),
 		t('Special Purpose') => array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository')),
-		t('Other') => array('custom' => t('Custom/Expert Mode')));
+		t('Other') => array('custom' => t('Custom/Expert Mode'))
+	);
 
 	return $roles;
 }

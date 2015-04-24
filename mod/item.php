@@ -22,7 +22,6 @@ require_once('include/attach.php');
 
 function item_post(&$a) {
 
-
 	// This will change. Figure out who the observer is and whether or not
 	// they have permission to post here. Else ignore the post.
 
@@ -34,6 +33,23 @@ function item_post(&$a) {
 	$uid = local_channel();
 	$channel = null;
 	$observer = null;
+
+
+	/**
+	 * Is this a reply to something?
+	 */
+
+	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
+	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
+
+	$remote_xchan = ((x($_REQUEST,'remote_xchan')) ? trim($_REQUEST['remote_xchan']) : false);
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($remote_xchan)
+	);
+	if($r)
+		$remote_observer = $r[0];
+	else 
+		$remote_xchan = $remote_observer = false;
 
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
 	require_once('include/identity.php');
@@ -58,6 +74,8 @@ function item_post(&$a) {
 //	 logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
+
+	$consensus = intval($_REQUEST['consensus']);
 
 	// 'origin' (if non-zero) indicates that this network is where the message originated,
 	// for the purpose of relaying comments to other conversation members. 
@@ -97,7 +115,7 @@ function item_post(&$a) {
 	 * Check service class limits
 	 */
 	if ($uid && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
-		$ret = item_check_service_class($uid,x($_REQUEST,'webpage'));
+		$ret = item_check_service_class($uid,(($_REQUEST['webpage'] == ITEM_WEBPAGE) ? true : false));
 		if (!$ret['success']) { 
 			notice( t($ret['message']) . EOL) ;
 			if(x($_REQUEST,'return')) 
@@ -113,13 +131,6 @@ function item_post(&$a) {
 
 
 	$item_flags = $item_restrict = 0;
-
-	/**
-	 * Is this a reply to something?
-	 */
-
-	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
-	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
 
 	$route = '';
 	$parent_item = null;
@@ -273,6 +284,9 @@ function item_post(&$a) {
 	$walltowall = false;
 	$walltowall_comment = false;
 
+	if($remote_xchan)
+		$observer = $remote_observer;
+
 	if($observer) {
 		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
 
@@ -378,7 +392,8 @@ function item_post(&$a) {
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
 		$title             = escape_tags(trim($_REQUEST['title']));
-		$body              = $_REQUEST['body'];
+		$body              = trim($_REQUEST['body']);
+		$body              .= trim($_REQUEST['attachment']);
 		$postopts          = '';
 
 		$private = ( 
@@ -516,11 +531,12 @@ function item_post(&$a) {
 		$body = preg_replace_callback('/\[url(.*?)\[\/(url)\]/ism','red_escape_codeblock',$body);
 		$body = preg_replace_callback('/\[zrl(.*?)\[\/(zrl)\]/ism','red_escape_codeblock',$body);
 
-		$body = preg_replace_callback("/([^\]\='".'"'."]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
+		$body = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
 
 		$body = preg_replace_callback('/\[\$b64zrl(.*?)\[\/(zrl)\]/ism','red_unescape_codeblock',$body);
 		$body = preg_replace_callback('/\[\$b64url(.*?)\[\/(url)\]/ism','red_unescape_codeblock',$body);
 		$body = preg_replace_callback('/\[\$b64code(.*?)\[\/(code)\]/ism','red_unescape_codeblock',$body);
+
 
 		// fix any img tags that should be zmg
 
@@ -581,7 +597,7 @@ function item_post(&$a) {
 		if($results) {
 
 			// Set permissions based on tag replacements
-			set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item);
+			set_linkified_perms($results, $str_contact_allow, $str_group_allow, $profile_uid, $parent_item, $private);
 
 			$post_tags = array();
 			foreach($results as $result) {
@@ -671,13 +687,20 @@ function item_post(&$a) {
 
 	$item_thead_top = ((! $parent) ? 1 : 0);
 
+<<<<<<< HEAD
 	if ((! $plink) && ($item_thread_top)) {
+=======
+	if($consensus)
+		$item_flags |= ITEM_CONSENSUS;
+
+	if ((! $plink) && ($item_flags & ITEM_THREAD_TOP)) {
+>>>>>>> master
 		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
 	}
 	
 	$datarray['aid']            = $channel['channel_account_id'];
 	$datarray['uid']            = $profile_uid;
-
+	
 	$datarray['owner_xchan']    = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
 	$datarray['author_xchan']   = $observer['xchan_hash'];
 	$datarray['created']        = $created;
@@ -716,6 +739,7 @@ function item_post(&$a) {
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
 	$datarray['route']          = $route;
+	$datarray['item_unseen']    = $item_unseen;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -726,7 +750,7 @@ function item_post(&$a) {
 		$datarray['author'] = $observer;
 		$datarray['attach'] = json_encode($datarray['attach']);
 		$o = conversation($a,array($datarray),'search',false,'preview');
-		logger('preview: ' . $o, LOGGER_DEBUG);
+//		logger('preview: ' . $o, LOGGER_DEBUG);
 		echo json_encode(array('preview' => $o));
 		killme();
 	}
@@ -833,6 +857,13 @@ function item_post(&$a) {
 					'otype'        => 'item'
 				));
 			}
+
+			if($uid && $uid == $profile_uid && (! $datarray['item_restrict'])) {
+				q("update channel set channel_lastpost = '%s' where channel_id = %d",
+					dbesc(datetime_convert()),
+					intval($uid)
+				);
+			}
 		}
 
 		// photo comments turn the corresponding item visible to the profile wall
@@ -914,6 +945,10 @@ function item_content(&$a) {
 			$local_delete = false;
 			if(local_channel() && local_channel() == $i[0]['uid'])
 				$local_delete = true;
+
+			$sys = get_sys_channel();
+			if(is_site_admin() && $sys['channel_id'] == $i[0]['uid'])
+				$can_delete = true;
 
 			$ob_hash = get_observer_hash();
 			if($ob_hash && ($ob_hash === $i[0]['author_xchan'] || $ob_hash === $i[0]['owner_xchan'] || $ob_hash === $i[0]['source_xchan']))
@@ -1043,36 +1078,48 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 
 function item_check_service_class($channel_id,$iswebpage) {
 	$ret = array('success' => false, $message => '');
+
 	if ($iswebpage) {
+<<<<<<< HEAD
 		$r = q("select count(i.id)  as total from item i 
 			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
 			and i.parent=i.id and i.item_type = %d and i.item_deleted = 0 and i.uid= %d ",
 			intval(ITEM_TYPE_WEBPAGE),
+=======
+		// note: we aren't counting comanche templates and blocks, only webpages
+		$r = q("select count(id) as total from item where parent = id 
+			and ( item_restrict & %d ) > 0 and ( item_restrict & %d ) = 0 and uid = %d ",
+			intval(ITEM_WEBPAGE),
+			intval(ITEM_DELETED),
+>>>>>>> master
 			intval($channel_id)
 		);
 	}
 	else {
-		$r = q("select count(i.id)  as total from item i 
-			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
-			and i.parent=i.id and (i.item_restrict=0) and i.uid= %d ",
-		intval($channel_id)
-	);
+		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and (item_flags & %d) > 0 and uid = %d ",
+			intval(ITEM_WALL),
+			intval($channel_id)
+		);
 	}
-	if(! ($r && count($r))) {
-		$ret['message'] = t('Unable to obtain identity information from database');
+
+	if(! $r) {
+		$ret['message'] = t('Unable to obtain post information from database.');
 		return $ret;
 	} 
+
 	if (!$iswebpage) {
-	if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
-		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f top level posts."),$r[0]['total']);
-		return $result;
-	}
+		$max = service_class_fetch($channel_id,'total_items');
+		if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
+			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f top level posts.'),$max);
+			return $result;
+		}
 	}
 	else {
-	if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
-		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f webpages."),$r[0]['total']);
-		return $result;
-	}	
+		$max = service_class_fetch($channel_id,'total_pages');
+		if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
+			$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f webpages.'),$max);
+			return $result;
+		}	
 	}
 
 	$ret['success'] = true;

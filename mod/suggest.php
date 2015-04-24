@@ -44,6 +44,7 @@ function suggest_content(&$a) {
 
 		$arr[] = array(
 			'url' => chanlink_url($rr['xchan_url']),
+			'common' => $rr['total'],
 			'profile' => $rr['xchan_url'],
 			'name' => $rr['xchan_name'],
 			'photo' => $rr['xchan_photo_m'],

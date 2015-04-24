@@ -24,7 +24,7 @@
 					$.post(url, data, function(data) {
 						if(timer) clearTimeout(timer);
 						NavUpdate();
-						$.fancybox.close();
+						$.colorbox.close();
 					})
 					
 					return false;
@@ -80,6 +80,7 @@
 	{{include file="field_input.tpl" field=$poll_interval}}
 	{{include file="field_input.tpl" field=$maxloadavg}}
 	{{include file="field_input.tpl" field=$abandon_days}}
+	{{include file="field_input.tpl" field=$default_expire_days}}
 	
 	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
 	

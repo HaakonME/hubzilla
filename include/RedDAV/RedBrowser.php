@@ -95,6 +95,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			'{DAV:}getlastmodified',
 			), 1);
 
+
 		$parent = $this->server->tree->getNodeForPath($path);
 
 		$parentpath = array();
@@ -166,6 +167,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$lastmodified = ((isset($file[200]['{DAV:}getlastmodified'])) ? $file[200]['{DAV:}getlastmodified']->getTime()->format('Y-m-d H:i:s') : '');
 
 			$fullPath = DAV\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path ? $path . '/' : '') . $name, '/'));
+
 
 			$displayName = isset($file[200]['{DAV:}displayname']) ? $file[200]['{DAV:}displayname'] : $name;
 
@@ -269,18 +271,19 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$nick' => $this->auth->getCurrentUser()
 			));
 
-		get_app()->page['content'] = $html;
-		load_pdl(get_app());
+		$a = get_app();
+		$a->page['content'] = $html;
+		load_pdl($a);
 
 		$theme_info_file = "view/theme/" . current_theme() . "/php/theme.php";
 		if (file_exists($theme_info_file)){
 			require_once($theme_info_file);
 			if (function_exists(str_replace('-', '_', current_theme()) . '_init')) {
 				$func = str_replace('-', '_', current_theme()) . '_init';
-				$func(get_app());
+				$func($a);
 			}
 		}
-		construct_page(get_app());
+		construct_page($a);
 	}
 
 	/**

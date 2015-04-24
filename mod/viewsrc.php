@@ -36,6 +36,7 @@ function viewsrc_content(&$a) {
 	}
 
 	if(is_ajax()) {
+		print '<div><i class="icon-pencil"> ' . t('Source of Item') . ' ' . $r[0]['id'] . '</i></div>';
 		echo $o;
 		killme();
 	} 

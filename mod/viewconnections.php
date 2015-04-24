@@ -28,6 +28,10 @@ function viewconnections_content(&$a) {
 		return;
 	} 
 
+	if(! $_REQUEST['aj'])
+		$_SESSION['return_url'] = $a->query_string;
+
+
 	$is_owner = ((local_channel() && local_channel() == $a->profile['uid']) ? true : false);
 
 	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
@@ -53,7 +57,7 @@ function viewconnections_content(&$a) {
 		intval($a->pager['start'])
 	);
 
-	if(! $r) {
+	if((! $r) && (! $_REQUEST['aj'])) {
 		info( t('No connections.') . EOL );
 		return $o;
 	}
@@ -80,13 +84,30 @@ function viewconnections_content(&$a) {
 	}
 
 
-	$tpl = get_markup_template("viewcontact_template.tpl");
-	$o .= replace_macros($tpl, array(
-		'$title' => t('View Connections'),
-		'$contacts' => $contacts,
-		'$paginate' => paginate($a),
-	));
+	if($_REQUEST['aj']) {
+		if($contacts) {
+			$o = replace_macros(get_markup_template('viewcontactsajax.tpl'),array(
+				'$contacts' => $contacts
+			));
+		}
+		else {
+			$o = '<div id="content-complete"></div>';
+		}
+		echo $o;
+		killme();
+	}
+	else {
+		$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
+		$tpl = get_markup_template("viewcontact_template.tpl");
+		$o .= replace_macros($tpl, array(
+			'$title' => t('View Connections'),
+			'$contacts' => $contacts,
+//			'$paginate' => paginate($a),
+		));
+	}
 
+    if(! $contacts)
+        $o .= '<div id="content-complete"></div>';
 
 	return $o;
 }

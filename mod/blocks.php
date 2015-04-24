@@ -33,6 +33,8 @@ function blocks_content(&$a) {
 
 	$which = argv(1);
 
+	$_SESSION['return_url'] = $a->query_string;
+
 	$uid = local_channel();
 	$owner = 0;
 	$channel = null;
@@ -68,7 +70,6 @@ function blocks_content(&$a) {
 		return;
 	}
 
-
 	// Block design features from visitors 
 
 	if((! $uid) || ($uid != $owner)) {
@@ -76,16 +77,11 @@ function blocks_content(&$a) {
 		return;
 	}
 
+	$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
 
-	if(feature_enabled($owner,'expert')) {
-		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
-		if(! $mimetype)
-			$mimetype = 'choose';	
+	if(! $mimetype) {
+		$mimetype = 'choose';
 	}
-	else {
-		$mimetype = 'text/bbcode';
-	}
-
 
 	$x = array(
 		'webpage' => ITEM_BUILDBLOCK,
@@ -98,6 +94,7 @@ function blocks_content(&$a) {
 		'mimetype' => $mimetype,
 		'ptlabel' => t('Block Name'),
 		'profile_uid' => intval($owner),
+		'expanded' => true,
 	);
 
 	if($_REQUEST['title'])
@@ -107,11 +104,10 @@ function blocks_content(&$a) {
 	if($_REQUEST['pagetitle'])
 		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
+	$editor = status_editor($a,$x);
 
-
-	$o .= status_editor($a,$x);
-
-	$r = q("select * from item_id where uid = %d and service = 'BUILDBLOCK' order by sid asc",
+	$r = q("select * from item_id left join item on item_id.iid = item.id
+		where item_id.uid = %d and service = 'BUILDBLOCK' order by item.created desc",
 		intval($owner)
 	);
 
@@ -120,7 +116,22 @@ function blocks_content(&$a) {
 	if($r) {
 		$pages = array();
 		foreach($r as $rr) {
-			$pages[$rr['iid']][] = array('url' => $rr['iid'],'title' => $rr['sid']);
+			$element_arr = array(
+				'type'      => 'block',
+				'body'      => $rr['body'],
+				'created'   => $rr['created'],
+				'edited'    => $rr['edited'],
+				'mimetype'  => $rr['mimetype'],
+				'pagetitle' => $rr['sid'],
+				'mid'       => $rr['mid']
+			);
+			$pages[$rr['iid']][] = array(
+				'url' => $rr['iid'],
+				'title' => $rr['sid'],
+				'created' => $rr['created'],
+				'edited' => $rr['edited'],
+				'bb_element' => '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
+			);
 		} 
 	}
 
@@ -129,7 +140,15 @@ function blocks_content(&$a) {
 
 	$o .= replace_macros(get_markup_template('blocklist.tpl'), array(
 		'$baseurl' => $url,
+		'$title' => t('Blocks'),
+		'$name' => t('Block Name'),
+		'$created' => t('Created'),
+		'$edited' => t('Edited'),
+		'$create' => t('Create'),
 		'$edit' => t('Edit'),
+		'$share' => t('Share'),
+		'$delete' => t('Delete'),
+		'$editor' => $editor,
 		'$pages' => $pages,
 		'$channel' => $which,
 		'$view' => t('View'),

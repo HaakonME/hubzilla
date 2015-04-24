@@ -2,7 +2,7 @@
 <script>
 	var old_cmin = 0;
 	var old_cmax = 99;
-	$("#main-range").jRange({ isRange: true, from: 0, to: 99, step: 1, scale: ['{{$me}}', '|', '{{$intimate}}', '|', '{{$friends}}', '|', '{{$oldfriends}}', '|', '{{$acquaintances}}', '|', '{{$world}}' ], width:'100%', showLabels: false,  onstatechange: function(v) { 
+	$("#main-range").jRange({ isRange: true, from: 0, to: 99, step: 1, scale: [{{$labels}}], width:'100%', showLabels: false,  onstatechange: function(v) { 
 		var carr = v.split(",");
 		if(carr[0] != bParam_cmin) {
 			old_cmin = bParam_cmin;
@@ -17,6 +17,8 @@
 
 	var slideTimer = null;
 	function networkRefresh() {
+		$("#profile-jot-text-loading").show();
+
 		if((document.readyState !== "complete") || (slideTimer !== null))
 			return;
 		if((bParam_cmin == old_cmin) && (bParam_cmax == old_cmax))

@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_profile` (`abook_profile`),
   KEY `abook_dob` (`abook_dob`),
   KEY `abook_connected` (`abook_connected`),
-  KEY `abook_rating` (`abook_rating`)
+  KEY `abook_rating` (`abook_rating`),
+  KEY `abook_channel_closeness` (`abook_channel`,`abook_closeness`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -218,6 +219,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
   `channel_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_dirdate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `channel_lastpost` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `channel_deleted` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `channel_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
@@ -281,6 +283,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_deleted` (`channel_deleted`),
   KEY `channel_a_republish` (`channel_a_republish`),
   KEY `channel_dirdate` (`channel_dirdate`),
+  KEY `channel_lastpost` (`channel_lastpost`),
   KEY `channel_w_like` (`channel_w_like`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -688,6 +691,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `item_restrict` int(11) NOT NULL DEFAULT '0',
   `item_flags` int(11) NOT NULL DEFAULT '0',
   `item_private` tinyint(4) NOT NULL DEFAULT '0',
+  `item_unseen` smallint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `parent` (`parent`),
@@ -717,6 +721,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `public_policy` (`public_policy`),
   KEY `comments_closed` (`comments_closed`),
   KEY `changed` (`changed`),
+  KEY `item_unseen` (`item_unseen`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
@@ -938,6 +943,7 @@ CREATE TABLE IF NOT EXISTS `outq` (
   `outq_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `outq_notify` mediumtext NOT NULL,
   `outq_msg` mediumtext NOT NULL,
+  `outq_priority` smallint NOT NULL DEFAULT '0',
   PRIMARY KEY (`outq_hash`),
   KEY `outq_account` (`outq_account`),
   KEY `outq_channel` (`outq_channel`),
@@ -945,7 +951,8 @@ CREATE TABLE IF NOT EXISTS `outq` (
   KEY `outq_created` (`outq_created`),
   KEY `outq_updated` (`outq_updated`),
   KEY `outq_async` (`outq_async`),
-  KEY `outq_delivered` (`outq_delivered`)
+  KEY `outq_delivered` (`outq_delivered`),
+  KEY `outq_priority` (`outq_priority`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1254,6 +1261,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_sellpage` char(255) NOT NULL DEFAULT '',
   `site_location` char(255) NOT NULL DEFAULT '',
   `site_realm` char(255) NOT NULL DEFAULT '',
+  `site_valid` smallint NOT NULL DEFAULT '0',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
@@ -1262,7 +1270,8 @@ CREATE TABLE IF NOT EXISTS `site` (
   KEY `site_access` (`site_access`),
   KEY `site_sellpage` (`site_sellpage`),
   KEY `site_pull` (`site_pull`),
-  KEY `site_realm` (`site_realm`)
+  KEY `site_realm` (`site_realm`),
+  KEY `site_valid` (`site_valid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

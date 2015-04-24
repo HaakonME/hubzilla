@@ -698,6 +698,57 @@ function diaspora_request($importer,$xml) {
 		return;
 	}
 
+
+//FIXME
+/*
+	if(feature_enabled($channel['channel_id'],'premium_channel')) {
+		$myaddr = $importer['channel_address'] . '@' .  get_app()->get_hostname();
+		$cnv = random_string();
+		$mid = random_string();
+
+		$msg = t('You have started sharing with a Redmatrix premium channel.');
+		$msg .= t('Redmatrix premium channels are not available for sharing with Diaspora members. This sharing request has been blocked.') . "\r";
+		$msg .= t('Please do not reply to this message, as this channel is not sharing with you and any reply will not be seen by the recipient.') . "\r";
+
+		$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
+		$signed_text =  $mid . ';' . $cnv . ';' . $msg .  ';'
+        . $created . ';' . $myaddr . ';' . $cnv;
+
+		$sig = base64_encode(rsa_sign($signed_text,$importer['channel_prvkey'],'sha256'));
+
+		$conv = array(
+			'guid' => xmlify($cnv),
+			'subject' => xmlify(t('Sharing request failed.')),
+			'created_at' => xmlify($created),
+			'diaspora_handle' => xmlify($myaddr),
+			'participant_handles' => xmlify($myaddr . ';' . $sender_handle)
+		);
+
+		$msg = array(
+			'guid' => xmlify($mid),
+			'parent_guid' => xmlify($cnv),
+			'parent_author_signature' => xmlify($sig),
+			'author_signature' => xmlify($sig),
+			'text' => xmlify($msg),
+			'created_at' => xmlify($created),
+			'diaspora_handle' => xmlify($myaddr),
+			'conversation_guid' => xmlify($cnv)
+		);
+
+		$conv['messages'] = array($msg);
+		$tpl = get_markup_template('diaspora_conversation.tpl');
+		$xmsg = replace_macros($tpl, array('$conv' => $conv));
+
+		$slap = 'xml=' . urlencode(urlencode(diaspora_msg_build($xmsg,$importer,$ret,$importer['channel_prvkey'],$ret['xchan_pubkey'],false)));
+
+		diaspora_transmit($importer,$ret,$slap,false);
+		return;
+	}
+
+*/
+// End FIXME
+
+
 	$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 	if($role) {
 		$x = get_role_perms($role);
@@ -709,13 +760,19 @@ function diaspora_request($importer,$xml) {
 				
 	$their_perms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK|PERMS_W_STREAM|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT|PERMS_R_STORAGE|PERMS_R_PAGES;
 
+
+	$closeness = get_pconfig($importer['channel_id'],'system','new_abook_closeness');
+	if($closeness === false)
+		$closeness = 80;
+
+
 	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_rating, abook_created, abook_updated, abook_connected, abook_dob, abook_flags) values ( %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
 		intval($importer['channel_account_id']),
 		intval($importer['channel_id']),
 		dbesc($ret['xchan_hash']),
 		intval($default_perms),
 		intval($their_perms),
-		intval(99),
+		intval($closeness),
 		intval(0),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
@@ -799,11 +856,6 @@ function diaspora_post($importer,$xml,$msg) {
 	}
 
 
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
-		logger('diaspora_post: Ignoring this author.');
-		return 202;
-	}
-
 	$search_guid = ((strlen($guid) == 64) ? $guid . '%' : $guid);
 
 	$r = q("SELECT id FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
@@ -827,6 +879,12 @@ function diaspora_post($importer,$xml,$msg) {
 		$body = scale_external_images($body);
 	}
 
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
 
 //WTF? FIXME
 	// Add OEmbed and other information to the body
@@ -835,34 +893,21 @@ function diaspora_post($importer,$xml,$msg) {
 	$datarray = array();
 
 	
-	$tags = get_tags($body);
+	// Look for tags and linkify them
+	$results = linkify_tags(get_app(), $body, $importer['channel_id'], true);
 
+	$datarray['term'] = array();
 
-	if(count($tags)) {
-
-		$datarray['term'] = array();
-
-		foreach($tags as $tag) {
-			if(strpos($tag,'#') === 0) {
-				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
-					continue;
-
-				// don't link tags that are already embedded in links
-
-				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
-					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
-					continue;
-
-				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-
+	if($results) {
+		foreach($results as $result) {
+			$success = $result['success'];
+			if($success['replaced']) {
 				$datarray['term'][] = array(
 					'uid'   => $importer['channel_id'],
-					'type'  => TERM_HASHTAG,
+					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term'  => $basetag,
-					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+					'term'  => $success['term'],
+					'url'   => $success['url']
 				);
 			}
 		}
@@ -897,6 +942,8 @@ function diaspora_post($importer,$xml,$msg) {
 	}
 
 
+
+
 	$plink = service_plink($contact,$guid);
 
 
@@ -919,6 +966,13 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$datarray['item_unseen'] = 1;
 	$datarray['item_thread_top'] = 1;
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $tgroup)) {
+		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
 
 	$result = item_store($datarray);
 	return;
@@ -986,11 +1040,6 @@ function diaspora_reshare($importer,$xml,$msg) {
 	if(! $contact)
 		return;
 
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream'))) {
-		logger('diaspora_reshare: Ignoring this author: ' . $diaspora_handle . ' ' . print_r($xml,true));
-		return 202;
-	}
-
 	$search_guid = ((strlen($guid) == 64) ? $guid . '%' : $guid);
 	$r = q("SELECT id FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
 		intval($importer['channel_id']),
@@ -1040,10 +1089,12 @@ function diaspora_reshare($importer,$xml,$msg) {
 		//return;
 	}
 
-	//if(! $body) {
-	//	logger('diaspora_reshare: empty body: source= ' . $x);
-	//	return;
-	//}
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
 
 	$person = find_diaspora_person_by_handle($orig_author);
 
@@ -1053,56 +1104,33 @@ function diaspora_reshare($importer,$xml,$msg) {
 		$orig_author_photo = $person['xchan_photo_m'];
 	}
 
-	$newbody = "[share author='" . urlencode($orig_author_name) 
-		. "' profile='" . $orig_author_link 
-		. "' avatar='" . $orig_author_photo 
-		. "' link='" . $orig_url
-		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($source_xml->post->status_message->created_at))
-		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
- 		. "']" . $body . "[/share]";
-
 
 	$created = unxmlify($xml->created_at);
 	$private = ((unxmlify($xml->public) == 'false') ? 1 : 0);
 
 	$datarray = array();
 
-	$str_tags = '';
+	// Look for tags and linkify them
+	$results = linkify_tags(get_app(), $body, $importer['channel_id'], true);
 
-	$tags = get_tags($newbody);
+	$datarray['term'] = array();
 
-
-	if(count($tags)) {
-
-		$datarray['term'] = array();
-
-		foreach($tags as $tag) {
-			if(strpos($tag,'#') === 0) {
-				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
-					continue;
-
-				// don't link tags that are already embedded in links
-
-				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$newbody))
-					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$newbody))
-					continue;
-
-				$basetag = str_replace('_',' ',substr($tag,1));
-				$newbody = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$newbody);
-
+	if($results) {
+		foreach($results as $result) {
+			$success = $result['success'];
+			if($success['replaced']) {
 				$datarray['term'][] = array(
 					'uid'   => $importer['channel_id'],
-					'type'  => TERM_HASHTAG,
+					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term'  => $basetag,
-					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+					'term'  => $success['term'],
+					'url'   => $success['url']
 				);
 			}
 		}
 	}
 
-	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$newbody,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/@\[url=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$datarray['term'][] = array(
@@ -1114,6 +1142,34 @@ function diaspora_reshare($importer,$xml,$msg) {
 			);
 		}
 	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+
+
+
+
+	$newbody = "[share author='" . urlencode($orig_author_name) 
+		. "' profile='" . $orig_author_link 
+		. "' avatar='" . $orig_author_photo 
+		. "' link='" . $orig_url
+		. "' posted='" . datetime_convert('UTC','UTC',unxmlify($source_xml->post->status_message->created_at))
+		. "' message_id='" . unxmlify($source_xml->post->status_message->guid)
+ 		. "']" . $body . "[/share]";
+
 
 	$plink = service_plink($contact,$guid);
 
@@ -1127,6 +1183,15 @@ function diaspora_reshare($importer,$xml,$msg) {
 
 	$datarray['body'] = $newbody;
 	$datarray['app']  = 'Diaspora';
+
+
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $tgroup)) {
+		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
 
 
 	$result = item_store($datarray);
@@ -1257,16 +1322,39 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments'))) {
-		logger('diaspora_comment: Ignoring this author.');
-		return 202;
-	}
+
+	
+	$pubcomment = get_pconfig($importer['channel_id'],'system','diaspora_public_comments');
+
+	// by default comments on public posts are allowed from anybody on Diaspora. That is their policy.
+	// Once this setting is set to something we'll track your preference and it will over-ride the default. 
+
+	if($pubcomment === false)
+		$pubcomment = 1;
 
 	// Friendica is currently truncating guids at 64 chars
+	$search_guid = $parent_guid;
+	if(strlen($parent_guid) == 64)
+		$search_guid = $parent_guid . '%';
+
+	$r = q("SELECT * FROM item WHERE uid = %d AND mid LIKE '%s' LIMIT 1",
+		intval($importer['channel_id']),
+		dbesc($search_guid)
+	);
+	if(! $r) {
+		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
+		return;
+	}
+
+	$parent_item = $r[0];
+
+	if(intval($parent_item['item_private']))
+		$pubcomment = 0;	
 
 	$search_guid = $guid;
 	if(strlen($guid) == 64)
 		$search_guid = $guid . '%';
+
 
 	$r = q("SELECT * FROM item WHERE uid = %d AND mid like '%s' LIMIT 1",
 		intval($importer['channel_id']),
@@ -1277,20 +1365,6 @@ function diaspora_comment($importer,$xml,$msg) {
 		return;
 	}
 
-	$search_guid = $parent_guid;
-	if(strlen($parent_guid) == 64)
-		$search_guid = $parent_guid . '%';
-
-
-	$r = q("SELECT * FROM item WHERE uid = %d AND mid LIKE '%s' LIMIT 1",
-		intval($importer['channel_id']),
-		dbesc($search_guid)
-	);
-	if(! $r) {
-		logger('diaspora_comment: parent item not found: parent: ' . $parent_guid . ' item: ' . $guid);
-		return;
-	}
-	$parent_item = $r[0];
 
 
 	/* How Diaspora performs comment signature checking:
@@ -1326,6 +1400,12 @@ function diaspora_comment($importer,$xml,$msg) {
 		// our post, so he/she must be a contact of ours and his/her public key
 		// should be in $msg['key']
 
+		if($importer['system']) {
+			// don't relay to the sys channel
+			logger('diaspora_comment: relay to sys channel blocked.');
+			return;
+		}
+
 		$author_signature = base64_decode($author_signature);
 
 		if(! rsa_verify($signed_data,$author_signature,$key,'sha256')) {
@@ -1354,35 +1434,32 @@ function diaspora_comment($importer,$xml,$msg) {
 
 	$body = diaspora2bb($text);
 
+
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
+
+
 	$datarray = array();
 
-	$tags = get_tags($body);
+	// Look for tags and linkify them
+	$results = linkify_tags(get_app(), $body, $importer['channel_id'], true);
 
-	if(count($tags)) {
+	$datarray['term'] = array();
 
-		$datarray['term'] = array();
-
-		foreach($tags as $tag) {
-			if(strpos($tag,'#') === 0) {
-				if((strpos($tag,'[url=')) || (strpos($tag,'[zrl')))
-					continue;
-
-				// don't link tags that are already embedded in links
-
-				if(preg_match('/\[(.*?)' . preg_quote($tag,'/') . '(.*?)\]/',$body))
-					continue;
-				if(preg_match('/\[(.*?)\]\((.*?)' . preg_quote($tag,'/') . '(.*?)\)/',$body))
-					continue;
-
-				$basetag = str_replace('_',' ',substr($tag,1));
-				$body = str_replace($tag,'#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]',$body);
-
+	if($results) {
+		foreach($results as $result) {
+			$success = $result['success'];
+			if($success['replaced']) {
 				$datarray['term'][] = array(
 					'uid'   => $importer['channel_id'],
-					'type'  => TERM_HASHTAG,
+					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term'  => $basetag,
-					'url'   => z_root() . '/search?tag=' . rawurlencode($basetag)
+					'term'  => $success['term'],
+					'url'   => $success['url']
 				);
 			}
 		}
@@ -1396,6 +1473,21 @@ function diaspora_comment($importer,$xml,$msg) {
 				'type'  => TERM_MENTION,
 				'otype' => TERM_OBJ_POST,
 				'term'  => $mtch[2],
+				'url'   => $mtch[1]
+			);
+		}
+	}
+
+	$cnt = preg_match_all('/@\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			// don't include plustags in the term
+			$term = ((substr($mtch[2],-1,1) === '+') ? substr($mtch[2],0,-1) : $mtch[2]);
+			$datarray['term'][] = array(
+				'uid'   => $importer['channel_id'],
+				'type'  => TERM_MENTION,
+				'otype' => TERM_OBJ_POST,
+				'term'  => $term,
 				'url'   => $mtch[1]
 			);
 		}
@@ -1431,6 +1523,22 @@ function diaspora_comment($importer,$xml,$msg) {
 			'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
 		$datarray['diaspora_meta'] = json_encode(crypto_encapsulate(json_encode($x),$key));
 	}
+
+
+
+	// So basically if something arrives at the sys channel it's by definition public and we allow it.
+	// If $pubcomment and the parent was public, we allow it.
+	// In all other cases, honour the permissions for this Diaspora connection
+
+	$tgroup = tgroup_check($importer['channel_id'],$datarray);
+
+	if((! $importer['system']) && (! $pubcomment) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments')) && (! $tgroup)) {
+		logger('diaspora_comment: Ignoring this author.');
+		return 202;
+	}
+
+
+
 
 	$result = item_store($datarray);
 
@@ -1539,6 +1647,15 @@ function diaspora_conversation($importer,$xml,$msg) {
 		}
 
 		$body = diaspora2bb($msg_text);
+
+
+		$maxlen = get_max_import_size();
+
+		if($maxlen && mb_strlen($body) > $maxlen) {
+			$body = mb_substr($body,0,$maxlen,'UTF-8');
+			logger('message length exceeds max_import_size: truncated');
+		}
+
 
 		$author_signed_data = $msg_guid . ';' . $msg_parent_guid . ';' . $msg_text . ';' . unxmlify($mesg->created_at) . ';' . $msg_diaspora_handle . ';' . $msg_conversation_guid;
 
@@ -1677,6 +1794,17 @@ function diaspora_message($importer,$xml,$msg) {
 
 	$subject = $conversation['subject']; 
 	$body = diaspora2bb($msg_text);
+
+
+	$maxlen = get_max_import_size();
+
+	if($maxlen && mb_strlen($body) > $maxlen) {
+		$body = mb_substr($body,0,$maxlen,'UTF-8');
+		logger('message length exceeds max_import_size: truncated');
+	}
+
+
+
 	$message_id = $msg_diaspora_handle . ':' . $msg_guid;
 
 	$author_signed_data = $msg_guid . ';' . $msg_parent_guid . ';' . $msg_text . ';' . unxmlify($xml->created_at) . ';' . $msg_diaspora_handle . ';' . $msg_conversation_guid;

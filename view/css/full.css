@@ -6,12 +6,8 @@ header #banner {
 	margin-right: auto;
 }
 
-nav {
-	height: 24px;
-	display: block;
-}
-
 section {
 	display: block;
 	min-height: 112px;	
+	margin: 50px 10px;
 }

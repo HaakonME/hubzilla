@@ -267,39 +267,45 @@ require_once('include/items.php');
 	 * Returns user info array.
 	 */
 
-	function api_get_user(&$a, $contact_id = Null){
+	function api_get_user(&$a, $contact_id = null, $contact_xchan = null){
 		global $called_api;
 		$user = null;
 		$extra_query = "";
 
 
-		if(!is_null($contact_id)){
-			$user=$contact_id;
-			$extra_query = " AND abook_id = %d ";
+		if(! is_null($contact_xchan)) {
+			$user = local_channel();
+			$extra_query = " and abook_xchan = '" . dbesc($contact_xchan) . "' ";
 		}
-		
-		if(is_null($user) && x($_GET, 'user_id')) {
-			$user = intval($_GET['user_id']);	
-			$extra_query = " AND abook_id = %d ";
-		}
-		if(is_null($user) && x($_GET, 'screen_name')) {
-			$user = dbesc($_GET['screen_name']);	
-			$extra_query = " AND xchan_addr like '%s@%%' ";
-			if (api_user()!==false)
-				$extra_query .= " AND abook_channel = ".intval(api_user());
-		}
-		
-		if (is_null($user) && argc() > (count($called_api)-1)){
-			$argid = count($called_api);
-			list($user, $null) = explode(".",argv($argid));
-			if(is_numeric($user)){
-				$user = intval($user);
+		else {
+			if(!is_null($contact_id)){
+				$user=$contact_id;
 				$extra_query = " AND abook_id = %d ";
-			} else {
-				$user = dbesc($user);
+			}
+		
+			if(is_null($user) && x($_GET, 'user_id')) {
+				$user = intval($_GET['user_id']);	
+				$extra_query = " AND abook_id = %d ";
+			}
+			if(is_null($user) && x($_GET, 'screen_name')) {
+				$user = dbesc($_GET['screen_name']);	
 				$extra_query = " AND xchan_addr like '%s@%%' ";
-				if (api_user() !== false)
+				if (api_user()!==false)
 					$extra_query .= " AND abook_channel = ".intval(api_user());
+			}
+		
+			if (is_null($user) && argc() > (count($called_api)-1) && (strstr($a->cmd,'/users'))){
+				$argid = count($called_api);
+				list($xx, $null) = explode(".",argv($argid));
+				if(is_numeric($xx)){
+					$user = intval($xx);
+					$extra_query = " AND abook_id = %d ";
+				} else {
+					$user = dbesc($xx);
+					$extra_query = " AND xchan_addr like '%s@%%' ";
+					if (api_user() !== false)
+						$extra_query .= " AND abook_channel = ".intval(api_user());
+				}
 			}
 		}
 		
@@ -316,11 +322,13 @@ require_once('include/items.php');
 		
 		logger('api_user: ' . $extra_query . ', user: ' . $user);
 		// user info		
+
 		$uinfo = q("SELECT * from abook left join xchan on abook_xchan = xchan_hash 
 				WHERE 1
 				$extra_query",
 				$user
 		);
+
 		if (count($uinfo)==0) {
 			return False;
 		}
@@ -392,7 +400,7 @@ require_once('include/items.php');
 			'utc_offset' => "+00:00",
 			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
-			'statuses_count' => intval($countitms), #XXX: fix me 
+			'statuses_count' => intval($countitms), //#XXX: fix me 
 			'lang' => get_app()->language,
 			'description' => (($profile) ? $profile[0]['pdesc'] : ''),
 			'followers_count' => intval($countfollowers),
@@ -408,11 +416,16 @@ require_once('include/items.php');
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
 			'notifications' => false,
-			'following' => '', #XXX: fix me
-			'verified' => true, #XXX: fix me
-			'status' => array()
+			'following' => '', // #XXX: fix me
+			'verified' => true // #XXX: fix me
 		);
-	
+
+		$x = api_get_status($uinfo[0]['xchan_hash']);
+		if($x)
+			$ret['status'] = $x;
+
+//		logger('api_get_user: ' . print_r($ret,true));
+
 		return $ret;
 		
 	}
@@ -444,12 +457,12 @@ require_once('include/items.php');
 			'description' => '',
 			'profile_image_url' => $item['author']['xchan_photo_m'],
 			'url' => $item['author']['xchan_url'],
-			'protected' => false,	#
+			'protected' => false,
 			'followers_count' => 0,
 			'friends_count' => 0,
 			'created_at' => '',
 			'favourites_count' => 0,
-			'utc_offset' => 0, #XXX: fix me
+			'utc_offset' => 0, // #XXX: fix me
 			'time_zone' => '', //$uinfo[0]['timezone'],
 			'statuses_count' => 0,
 			'following' => 1,
@@ -458,7 +471,7 @@ require_once('include/items.php');
 			'uid' => 0,
 			'contact_url' => 0,
 			'geo_enabled' => false,
-			'lang' => 'en', #XXX: fix me
+			'lang' => 'en', // #XXX: fix me
 			'contributors_enabled' => false,
 			'follow_request_sent' => false,
 			'profile_background_color' => 'cfe8f6',
@@ -469,9 +482,8 @@ require_once('include/items.php');
 			'profile_background_image_url' => '',
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
-			'verified' => true, #XXX: fix me
-			'followers' => '', #XXX: fix me
-			'status' => array()
+			'verified' => true, // #XXX: fix me
+			'followers' => '' // #XXX: fix me
 		);
 
 		return $ret; 
@@ -620,10 +632,14 @@ require_once('include/items.php');
 
 
 	function api_red_xchan(&$a,$type) {
+		logger('api_xchan');
+
 		if(api_user() === false)
 			return false;
+		logger('api_xchan');
 		require_once('include/hubloc.php');
-		if($_SERVER['request_method'] === 'POST') {
+
+		if($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$r = xchan_store($_REQUEST);
 		}
 		$r = xchan_fetch($_REQUEST);
@@ -661,8 +677,9 @@ require_once('include/items.php');
         $a->argv[1] = $user_info['screen_name'];
 		
 		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-		require_once('mod/wall_upload.php');
-		$posted = wall_upload_post($a);
+		$_FILES['userfile'] = $_FILES['media'];
+		require_once('mod/wall_attach.php');
+		$posted = wall_attach_post($a);
                 
 		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
 		$_REQUEST['body']=$txt."\n\n".$posted;
@@ -725,6 +742,16 @@ require_once('include/items.php');
 		else
 			$_REQUEST['parent_mid'] = $parent;
 
+		if($_REQUEST['namespace'] && $parent) {
+			$x = q("select iid from item_id where service = '%s' and sid = '%s' limit 1",
+				dbesc($_REQUEST['namespace']),
+				dbesc($parent)
+			);
+			if($x) {
+				$_REQUEST['parent'] = $x[0]['iid'];
+			}
+		}
+
 		if(requestdata('lat') && requestdata('long'))
 			$_REQUEST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
 
@@ -739,8 +766,8 @@ require_once('include/items.php');
 				$_FILES['userfile'] = $_FILES['media'];
 				// upload the image if we have one
 				$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-				require_once('mod/wall_upload.php');
-				$media = wall_upload_post($a);
+				require_once('mod/wall_attach.php');
+				$media = wall_attach_post($a);
 				if(strlen($media)>0)
 					$_REQUEST['body'] .= "\n\n".$media;
 			}
@@ -791,13 +818,65 @@ require_once('include/items.php');
 	api_register_func('api/red/item/new','red_item_new', true);
 
 
+	function api_get_status($xchan_hash) {
+		require_once('include/security.php');
 
+		$lastwall = q("SELECT * from item where
+			item_private = 0 and item_restrict = 0
+			and author_xchan = '%s'
+			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
+			and verb = '%s'
+			order by created desc limit 1",
+			dbesc($xchan_hash),
+			dbesc(ACTIVITY_POST)
+		);
 
+		if($lastwall){
+			$lastwall = $lastwall[0];
+			
+			$in_reply_to_status_id = '';
+			$in_reply_to_user_id = '';
+			$in_reply_to_screen_name = '';
 
+			if($lastwall['author_xchan'] != $lastwall['owner_xchan']) {
+				$w = q("select * from abook left join xchan on abook_xchan = xchan_hash where
+					xchan_hash = '%s' limit 1",
+					dbesc($lastwall['owner_xchan'])
+				);
+				if($w) {
+					$in_reply_to_user_id = $w[0]['abook_id'];
+					$in_reply_to_screen_name = substr($w[0]['xchan_addr'],0,strpos($w[0]['xchan_addr'],'@'));
+				}
+			}
+			
+			if ($lastwall['parent']!=$lastwall['id']) {
+				$in_reply_to_status_id=$lastwall['thr_parent'];
+				if(! $in_reply_to_user_id) {
+					$in_reply_to_user_id = $user_info['id'];
+					$in_reply_to_screen_name = $user_info['screen_name'];
+				}
+			}
+			unobscure($lastwall);  
+			$status_info = array(
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
+				'truncated' => false,
+				'created_at' => api_date($lastwall['created']),
+				'in_reply_to_status_id' => $in_reply_to_status_id,
+				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
+				'id' => ($lastwall['id']),
+				'in_reply_to_user_id' => $in_reply_to_user_id,
+				'in_reply_to_screen_name' => $in_reply_to_screen_name,
+				'geo' => '',
+				'favorited' => false,
+				'coordinates' => $lastwall['coord'],
+				'place' => $lastwall['location'],
+				'contributors' => ''					
+			);
 
-
-
-
+		}
+	
+		return $status_info;
+	}
 
 	function api_status_show(&$a, $type){
 		$user_info = api_get_user($a);
@@ -806,12 +885,11 @@ require_once('include/items.php');
 
 		require_once('include/security.php');
 
-		$lastwall = q("SELECT * from item where 1
-			and item_private = 0 and item_restrict = 0
+		$lastwall = q("SELECT * from item where
+			item_private = 0 and item_restrict = 0
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
-			and uid in ( " . stream_perms_api_uids() . " )
 			order by created desc limit 1",
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
@@ -885,7 +963,6 @@ require_once('include/items.php');
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
-			and uid in ( " . stream_perms_api_uids() . " )
 			order by created desc limit 1",
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
@@ -1031,8 +1108,8 @@ require_once('include/items.php');
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
-		// get last newtork messages
 
+		$sys = get_sys_channel();
 
 		// params
 		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
@@ -1054,7 +1131,7 @@ require_once('include/items.php');
 			and allow_cid = ''  and allow_gid = ''
 			and deny_cid  = ''  and deny_gid  = ''
             and item_private = 0
-			and uid in ( " . stream_perms_api_uids() . " )
+			and uid = " . $sys['channel_id'] . "
 			$sql_extra
 			AND id > %d group by mid
             order by received desc LIMIT %d OFFSET %d ",
@@ -1401,57 +1478,154 @@ require_once('include/items.php');
 	api_register_func('api/statuses/user_timeline','api_statuses_user_timeline', true);
 
 
+
+    /**
+     * Star/unstar an item
+     * param: id : id of the item
+     *
+     * api v1 : https://web.archive.org/web/20131019055350/https://dev.twitter.com/docs/api/1/post/favorites/create/%3Aid
+     */
+    function api_favorites_create_destroy(&$a, $type){
+
+		logger('favorites_create_destroy');
+
+        if (api_user()===false) 
+			return false;
+
+        $action = str_replace(".".$type,"",argv(2));
+        if (argc() > 3) {
+            $itemid = intval(argv(3));
+        } else {
+            $itemid = intval($_REQUEST['id']);
+        }
+
+        $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
+               intval($itemid), 
+				intval(api_user())
+		);
+
+        if (! $item)
+			return false;
+
+        switch($action){
+            case "create":
+
+                $flags = $item[0]['item_flags'] | ITEM_STARRED;
+
+                break;
+            case "destroy":
+
+                $flags = $item[0]['item_flags'] | (~ ITEM_STARRED);
+                break;
+            default:
+                return false;
+        }
+
+        $r = q("UPDATE item SET item_flags = %d where id = %d and uid = %d",
+                intval($flags),
+				intval($itemid),
+				intval(api_user())
+		);
+		if(! $r)
+			return false;
+
+        $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
+               intval($itemid), 
+				intval(api_user())
+		);
+
+		xchan_query($item,true);
+
+
+        $user_info = api_get_user($a);
+        $rets = api_format_items($item,$user_info);
+        $ret = $rets[0];
+
+        $data = array('$status' => $ret);
+        switch($type){
+            case "atom":
+            case "rss":
+                $data = api_rss_extra($a, $data, $user_info);
+        }
+
+        return api_apply_template("status", $type, $data);
+    }
+
+    api_register_func('api/favorites/create', 'api_favorites_create_destroy', true);
+    api_register_func('api/favorites/destroy', 'api_favorites_create_destroy', true);
+
+
+
 	function api_favorites(&$a, $type){
-		if (api_user()===false) return false;
+		if (api_user()===false) 
+			return false;
 
 		$user_info = api_get_user($a);
-		// in friendica starred item are private
-		// return favorites only for self
-		logger('api_favorites: self:' . $user_info['self']);
 
-		if ($user_info['self']==0) {
-			$ret = array();
-		} else {
+		// params
+		$count           = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page            = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if($page < 0) 
+			$page = 0;
+		$since_id        = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$max_id          = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
+		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
 
+		$start = $page*$count;
 
-			// params
-			$count = (x($_GET,'count')?$_GET['count']:20);
-			$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-			if ($page<0) $page=0;
+		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
-			$start = $page*$count;
+		$sql_extra = '';
+		if ($max_id > 0)
+			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
+		if ($exclude_replies > 0)
+			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
-			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-				FROM `item`, `contact`
-				WHERE `item`.`uid` = %d
-				AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-				AND `item`.`starred` = 1
-				AND `contact`.`id` = `item`.`contact-id`
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				$sql_extra
-				ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-				intval($user_info['uid']),
-				intval($start),	intval($count)
-			);
-
-			$ret = api_format_items($r,$user_info);
-
+		if (api_user() != $user_info['uid']) {
+			$observer = get_app()->get_observer();
+			require_once('include/permissions.php');
+			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
+				return '';
+			$sql_extra .= " and item_private = 0 ";
 		}
+
+		$r = q("SELECT * from item WHERE uid = %d and item_restrict = 0
+			and ( item_flags & %d ) > 0 $sql_extra
+			AND id > %d
+			ORDER BY received DESC LIMIT %d ,%d ",
+			intval($user_info['uid']),
+			intval(ITEM_STARRED),
+			intval($since_id),
+			intval($start),	
+			intval($count)
+		);
+
+		xchan_query($r,true);
+
+		$ret = api_format_items($r,$user_info);
 
 		$data = array('$statuses' => $ret);
 		switch($type){
 			case "atom":
 			case "rss":
 				$data = api_rss_extra($a, $data, $user_info);
+				break;
+			case "as":
+				$as = api_format_as($a, $ret, $user_info);
+				$as['title'] = $a->config['sitename']." Home Timeline";
+				$as['link']['url'] = $a->get_baseurl()."/".$user_info["screen_name"]."/all";
+				return($as);
+				break;
 		}
 
 		return  api_apply_template("timeline", $type, $data);
+
 	}
 
 	api_register_func('api/favorites','api_favorites', true);
+
+
+
 
 	function api_format_as($a, $ret, $user_info) {
 
@@ -1518,7 +1692,7 @@ require_once('include/items.php');
 		return($as);
 	}
 
-	function api_format_messages($item, $recipient, $sender) {
+	function api_format_message($item, $recipient, $sender) {
 		// standard meta information
 		$ret = array(
 				'id'                    => $item['id'],
@@ -1530,7 +1704,7 @@ require_once('include/items.php');
 				'recipient_screen_name' => $recipient['screen_name'],
 				'recipient'             => $recipient,
 		);
-		unobscure($item);
+		unobscure_mail($item);
 		//don't send title to regular StatusNET requests to avoid confusing these apps
 		if (x($_GET, 'getText')) {
 			$ret['title'] = $item['title'] ;
@@ -1568,6 +1742,8 @@ require_once('include/items.php');
 			localize_item($item);
 
 			$status_user = (($item['author_xchan']==$user_info['guid'])?$user_info: api_item_get_user($a,$item));
+			if(array_key_exists('status',$status_user))
+				unset($status_user['status']);
 
 			if($item['parent'] != $item['id']) {
 				$r = q("select id from item where parent= %d and id < %d order by id desc limit 1",
@@ -1893,7 +2069,7 @@ require_once('include/items.php');
 
 		if ($id>-1) {
 			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));
-			$ret = api_format_messages($r[0], $recipient, $sender);
+			$ret = api_format_message($r[0], $recipient, $sender);
 		
 		} else {
 			$ret = array("error"=>$id);	
@@ -1947,18 +2123,16 @@ require_once('include/items.php');
 		$ret = Array();
 		if($r) {
 			foreach($r as $item) {
-				if ($box == "inbox" || $item['from-url'] != $profile_url){
-					$recipient = $user_info;
-					// fixme to lookup recipient
-					$sender = api_get_user($a);
-				}
-				elseif ($box == "sentbox" || $item['from-url'] != $profile_url){
-					// fixme to lookup recipient
-					$recipient = api_get_user($a);
+				if ($item['from_xchan'] == $channel['channel_hash']) {
 					$sender = $user_info;
+					$recipient = api_get_user($a, null, $item['to_xchan']);
+				}
+				else {
+					$sender = api_get_user($a, null, $item['from_xchan']);
+					$recipient = $user_info;
 				}
 	
-				$ret[]=api_format_messages($item, $recipient, $sender);
+				$ret[]=api_format_message($item, $recipient, $sender);
 			}
 		}
 		
@@ -2024,9 +2198,6 @@ logger('Req: ' . var_export($req,true));
 
 /*
 Not implemented by now:
-favorites
-favorites/create
-favorites/destroy
 statuses/retweets_of_me
 friendships/create
 friendships/destroy

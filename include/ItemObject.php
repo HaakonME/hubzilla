@@ -134,6 +134,39 @@ class Item extends BaseObject {
 		$profile_name   = $item['author']['xchan_name'];
 
 		$location = format_location($item);
+		$isevent = false;
+		$attend = null;
+		$canvote = false;
+
+		// process action responses - e.g. like/dislike/attend/agree/whatever
+		$response_verbs = array('like');
+		if(feature_enabled($conv->get_profile_owner(),'dislike'))
+			$response_verbs[] = 'dislike';
+		if($item['obj_type'] === ACTIVITY_OBJ_EVENT) {
+			$response_verbs[] = 'attendyes';
+			$response_verbs[] = 'attendno';
+			$response_verbs[] = 'attendmaybe';
+			if($this->is_commentable()) {
+				$isevent = true;
+				$attend = array( t('I will attend'), t('I will not attend'), t('I might attend'));
+			}
+		}
+
+		$consensus = (($item['item_flags'] & ITEM_CONSENSUS) ? true : false);
+		if($consensus) {
+			$response_verbs[] = 'agree';
+			$response_verbs[] = 'disagree';
+			$response_verbs[] = 'abstain';
+			if($this->is_commentable()) {
+				$conlabels = array( t('I agree'), t('I disagree'), t('I abstain'));
+				$canvote = true;
+			}
+		}
+
+		if(! feature_enabled($conv->get_profile_owner(),'dislike'))
+			unset($conv_responses['dislike']);
+  
+		$responses = get_responses($conv_responses,$response_verbs,$this,$item);
 
 		$like_count = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid']] : '');
 		$like_list = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid'] . '-l'] : '');
@@ -253,6 +286,11 @@ class Item extends BaseObject {
 			'body' => $body,
 			'text' => strip_tags($body),
 			'id' => $this->get_id(),
+			'isevent' => $isevent,
+			'attend' => $attend,
+			'consensus' => $consensus,
+			'conlabels' => $conlabels,
+			'canvote' => $canvote,
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'llink' => $item['llink'],
@@ -271,7 +309,7 @@ class Item extends BaseObject {
 			'title_tosource' => get_pconfig($conv->get_profile_owner(),'system','title_tosource'),
 			'ago' => relative_date($item['created']),
 			'app' => $item['app'],
-			'str_app' => sprintf( t(' from %s'), $item['app']),
+			'str_app' => sprintf( t('from %s'), $item['app']),
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
@@ -307,6 +345,7 @@ class Item extends BaseObject {
 			'comment_count_txt' => $comment_count_txt,
 			'list_unseen_txt' => $list_unseen_txt,
 			'markseen' => t('Mark all seen'),
+			'responses' => $responses,
 			'like_count' => $like_count,
 			'like_list' => $like_list,
 			'like_list_part' => $like_list_part,
@@ -569,7 +608,7 @@ class Item extends BaseObject {
 				if((! visible_activity($child->data)) || array_key_exists('author_blocked',$child->data)) {
 					continue;
 				}
-				if($child->data['item_unseen'])
+				if(intval($child->data['item_unseen']))
 					$total ++;
 			}
 		}
@@ -633,7 +672,7 @@ class Item extends BaseObject {
 			'$edquote' => t('Quote'),
 			'$edcode' => t('Code'),
 			'$edimg' => t('Image'),
-			'$edurl' => t('Link'),
+			'$edurl' => t('Insert Link'),
 			'$edvideo' => t('Video'),
 			'$preview' => t('Preview'), // ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 			'$indent' => $indent,

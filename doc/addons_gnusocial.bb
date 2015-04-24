@@ -10,7 +10,7 @@ Next, click the link to Register a new application. That brings up the new appli
 
 Icon. I uploaded the RedMatrix icon located at this link, after saving it to my computer:
 
-https://github.com/friendica/red/blob/master/images/rm-32.png
+https://github.com/redmatrix/redmatrix/blob/master/images/rm-32.png
 
 Name. Give the application an appropriate name. I called mine redmatrix. You might prefer r2g.
 

@@ -233,9 +233,9 @@ function setup_content(&$a) {
 
 			check_htconfig($checks);
 
-			check_smarty3($checks);
-
 			check_store($checks);
+
+			check_smarty3($checks);
 
 			check_keys($checks);
 			
@@ -535,7 +535,7 @@ function check_store(&$checks) {
 	$status = true;
 	$help = "";
 
-	@os_mkdir('store',STORAGE_DEFAULT_PERMISSIONS);
+	@os_mkdir(TEMPLATE_BUILD_PATH,STORAGE_DEFAULT_PERMISSIONS,true);
 
 	if(	!is_writable('store') ) {
 	

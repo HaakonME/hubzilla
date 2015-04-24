@@ -7,6 +7,7 @@ require_once('include/conversation.php');
 function home_init(&$a) {
 
 	$ret = array();
+
 	call_hooks('home_init',$ret);
 
 	$splash = ((argc() > 1 && argv(1) === 'splash') ? true : false);
@@ -34,6 +35,10 @@ function home_init(&$a) {
 function home_content(&$a, $update = 0, $load = false) {
 
 	$o = '';
+
+
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
 
 	if(x($_SESSION,'theme'))
 		unset($_SESSION['theme']);
@@ -67,22 +72,40 @@ function home_content(&$a, $update = 0, $load = false) {
 	if($channel_address) {
 
 		$page_id = 'home';
+		$randpage_id = 'home-%';
 
 		$u = q("select channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($channel_address)
 		);
 
+		$randfunc = db_getfunc('RAND');
+
 		$r = q("select item.* from item left join item_id on item.id = item_id.iid
-			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-			item_type = %d limit 1",
+			where item.uid = %d and ( sid = '%s' or sid like '%s' ) and service = 'WEBPAGE' and 
+			item_type = %d ORDER BY $randfunc limit 1",
 			intval($u[0]['channel_id']),
 			dbesc($page_id),
-			intval(ITEM_TYPE_WEBPAGE)
+			dbesc($randpage_id),
+			intval(ITEM_WEBPAGE)
 		);
 
 		if($r) {
 			xchan_query($r);
 			$r = fetch_post_tags($r,true);
+
+			if($r[0]['layout_mid']) {
+				$l = q("select body from item where mid = '%s' and uid = %d limit 1",
+					dbesc($r[0]['layout_mid']),
+					intval($u[0]['channel_id'])
+				);
+
+				if($l) {
+					require_once('include/comanche.php');
+					comanche_parser($a,$l[0]['body']);
+					$a->pdl = $l[0]['body'];
+				}
+			}
+
 			$a->profile = array('profile_uid' => $u[0]['channel_id']);
 			$a->profile_uid = $u[0]['channel_id'];
 			$o .= prepare_page($r[0]);
@@ -164,16 +187,23 @@ function home_content(&$a, $update = 0, $load = false) {
 			}
 
 			require_once('include/identity.php');
-			$sys = get_sys_channel();
-			$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
-			$a->data['firehose'] = intval($sys['channel_id']);
+
+			if(get_config('system','site_firehose')) {
+				require_once('include/security.php');
+				$uids = " and item.uid in ( " . stream_perms_api_uids(PERMS_PUBLIC) . " ) and item_private = 0  and (item_flags & " . intval(ITEM_WALL) . " ) > 0 ";
+			}
+			else {
+				$sys = get_sys_channel();
+				$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
+				$a->data['firehose'] = intval($sys['channel_id']);
+			}
 
 			$page_mode = 'list';
 
 			$simple_update = (($update) ? " and item.item_unseen = 1 " : '');
 
 			if($update && $_SESSION['loadtime'])
-				$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+				$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 			if($load)
 				$simple_update = '';
 
@@ -184,8 +214,6 @@ function home_content(&$a, $update = 0, $load = false) {
 				$ordering = "commented";
 
 				if($load) {
-
-					$_SESSION['loadtime'] = datetime_convert();
 
 					// Fetch a page full of parent items for this page
 
@@ -199,8 +227,20 @@ function home_content(&$a, $update = 0, $load = false) {
 						intval(ABOOK_FLAG_BLOCKED)
 					);
 
-				}
 
+				}
+				elseif($update) {
+
+					$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
+						left join abook on item.author_xchan = abook.abook_xchan
+						WHERE true $uids AND item.item_restrict = 0
+						AND item.parent = item.id $simple_update
+						and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+						$sql_extra3 $sql_extra $sql_nets",
+						intval(ABOOK_FLAG_BLOCKED)
+					);
+					$_SESSION['loadtime'] = datetime_convert();
+				}
 				// Then fetch all the children of the parents that are on this page
 				$parents_str = '';
 				$update_unseen = '';

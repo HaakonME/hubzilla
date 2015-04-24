@@ -90,10 +90,17 @@ function editwebpage_content(&$a) {
 	// We've already figured out which item we want and whose copy we need, 
 	// so we don't need anything fancy here
 
-	$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
+	$sql_extra = item_permissions_sql($owner);
+
+	$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s $sql_extra LIMIT 1",
 		intval($post_id),
 		intval($owner)
 	);
+
+	if(! $itm) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
 
 	if(intval($itm[0]['item_obscured'])) {
 		$key = get_config('system','prvkey');
@@ -126,7 +133,7 @@ function editwebpage_content(&$a) {
 		$plaintext = true;
 
 	if(get_config('system','page_mimetype'))
-	    $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
+		$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
 	else
 		$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 
@@ -135,12 +142,7 @@ function editwebpage_content(&$a) {
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />'; 			
 	else
 		$layoutselect = layout_select($itm[0]['uid'],$itm[0]['layout_mid']);
-		
-	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit Webpage')
-	));
 
-	
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl' => $a->get_baseurl(),
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
@@ -150,7 +152,6 @@ function editwebpage_content(&$a) {
 		'$confirmdelete' => t('Delete webpage?')
 	));
 
-	
 	$tpl = get_markup_template("jot.tpl");
 		
 	$jotplugins = '';
@@ -164,14 +165,22 @@ function editwebpage_content(&$a) {
 
 	$rp = 'webpages/' . $which;
 
-	$o .= replace_macros($tpl,array(
+	logger('canwrite: ' . (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')));
+
+	$editor = replace_macros($tpl,array(
 		'$return_path' => $rp,
 		'$webpage' => ITEM_TYPE_WEBPAGE,
 		'$placeholdpagetitle' => t('Page link title'),
 		'$pagetitle' => $page_title,
+		'$writefiles' => (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')),
 
 		'$action' => 'item',
 		'$share' => t('Edit'),
+		'$bold' => t('Bold'),
+		'$italic' => t('Italic'),
+		'$underline' => t('Underline'),
+		'$quote' => t('Quote'),
+		'$code' => t('Code'),
 		'$upload' => t('Upload photo'),
 		'$attach' => t('Attach file'),
 		'$weblink' => t('Insert web link'),
@@ -202,7 +211,7 @@ function editwebpage_content(&$a) {
 		'lockstate' => (((strlen($itm[0]['allow_cid'])) || (strlen($itm[0]['allow_gid'])) || (strlen($itm[0]['deny_cid'])) || (strlen($itm[0]['deny_gid']))) ? 'lock' : 'unlock'),
 		'$bang' => '',
 		'$profile_uid' => (intval($owner)),
-		'$preview' => true, // ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
+		'$preview' => t('Preview'),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => $a->sourcename,
 		'$defexpire' => '',
@@ -211,23 +220,12 @@ function editwebpage_content(&$a) {
 
 	));
 
-	if(($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash))
-		$o .= '<br /><br /><a class="page-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
-
-
-	$x = array(
-		'type' => 'webpage',
-		'title' => $itm[0]['title'],
-		'body' => $itm[0]['body'],
-		'term' => $itm[0]['term'],
-		'created' => $itm[0]['created'],
-		'edited' => $itm[0]['edited'],
-		'mimetype' => $itm[0]['mimetype'],
-		'pagetitle' => $page_title,
-		'mid' => $itm[0]['mid']
-	);
-
-	$o .= EOL . EOL . t('Share') . EOL . '<textarea onclick="this.select();" class="shareable_element_text" >[element]' . base64url_encode(json_encode($x)) . '[/element]</textarea>' . EOL . EOL; 
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit Webpage'),
+		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
+		'$editor' => $editor,
+		'$id' => $itm[0]['id']
+	));
 
 	return $o;
 

@@ -14,6 +14,10 @@ function search_content(&$a,$update = 0, $load = false) {
 		return;
 		}
 	}
+
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
+
 	nav_set_selected('search');
 
 	require_once("include/bbcode.php");
@@ -53,12 +57,12 @@ function search_content(&$a,$update = 0, $load = false) {
 	}
 	if(strpos($search,'@') === 0) {
 		$search = substr($search,1);
-		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
+		goaway(z_root() . '/directory' . '?f=1&navsearch=1&search=' . $search);
 	}
 
 	// look for a naked webbie
 	if(strpos($search,'@') !== false) {
-		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
+		goaway(z_root() . '/directory' . '?f=1&navsearch=1&search=' . $search);
 	}
 
 	if(! $search)
@@ -149,24 +153,26 @@ function search_content(&$a,$update = 0, $load = false) {
 			}
 			if(local_channel()) {
 				$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
-					WHERE item_restrict = 0
+					WHERE item_restrict = 0 AND ( item_flags & %d ) = 0
 					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					OR ( `item`.`uid` = %d )) OR item.owner_xchan = '%s' )
 					$sql_extra
 					$suffix $pager_sql ",
+					intval(ITEM_OBSCURED),
 					intval(local_channel()),
 					dbesc($sys['xchan_hash'])
 				);
 			}
 			if($r === null) {
 				$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
-					WHERE item_restrict = 0
+					WHERE item_restrict = 0 AND ( item_flags & %d ) = 0
 					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
 					AND `item`.`deny_gid`  = '' AND item_private = 0 )
 					and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 						$pub_sql ) OR owner_xchan = '%s')
 					$sql_extra 
 					$suffix $pager_sql",
+					intval(ITEM_OBSCURED),
 					dbesc($sys['xchan_hash'])
 				);
 			}

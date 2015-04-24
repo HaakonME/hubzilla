@@ -174,8 +174,8 @@ It is a good idea to read the whole manual! Git is different to other version co
 Now you should
 [list]
 [*] create an account at github.com
-[*] fork https://github.com/friendica/red
-[*] fork https://github.com/friendica/red-addons
+[*] fork https://github.com/redmatrix/redmatrix
+[*] fork https://github.com/redmatrix/redmatrix-addons
 [/list]
 
 If you not want to use GIT from the command line - there is a usefull Eclipse plugin named ""Eclipse Mylyn to GitHub connector".
@@ -188,8 +188,7 @@ If you not want to use GIT from the command line - there is a usefull Eclipse pl
 You should have created an account on github and forked the projects befor you procceed.
 
 Delete the directory www
-[code]root@debian /var/www/html $ cd ..
-rm -R www/
+[code]root@debian:/var# rm -R www/
 [/code]
 
 Install git (and optionally git-gui a client gui)
@@ -211,7 +210,7 @@ root@debian:/var/www# mkdir -p "store/[data]/smarty3"
 
 Create .htconfig.php and make it writable by the webserver
 [code]
-root@debian:/var# cd www/
+root@debian:/var/www# touch .htconfig.php
 root@debian:/var/www# chmod ou+w .htconfig.php
 [/code]
 
@@ -224,6 +223,7 @@ root@debian:/var# chown -R www-data:www-data www/
 Add yourself ("surfer" in this example) to the group www-data. Why? Later you want to modify files in eclipse or in another editor.
 Then make all files writable by the group www-date you are now a member of.
 [code]
+root@debian:/var# cd www/
 root@debian:/var/www# usermod -G www-data surfer
 root@debian:/var# chmod -R  g+w www/
 [/code]
@@ -362,7 +362,7 @@ surfer@debian:/var/www$ git checkout -b dev_beginning
 Make sure your local repository is up-to-date with the main project.
 Add the original repository as a remote named “upstream” if not done yet
 [code]
-surfer@debian:/var/www$ git remote add upstream https://github.com/friendica/red
+surfer@debian:/var/www$ git remote add upstream https://github.com/redmatrix/redmatrix
 [/code]
 
 Fetch the newest work from that remote

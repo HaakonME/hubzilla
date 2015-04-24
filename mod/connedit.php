@@ -177,7 +177,17 @@ function connedit_post(&$a) {
 	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
 		$new_friend = true;
+		if(! $abook_my_perms) {
 
+			$abook_my_perms = get_channel_default_perms(local_channel());
+
+			$role = get_pconfig(local_channel(),'system','permissions_role');
+			if($role) {
+				$x = get_role_perms($role);
+				if($x['perms_accept'])
+					$abook_my_perms = $x['perms_accept'];
+			}
+		}
 	}
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
@@ -560,16 +570,32 @@ function connedit_content(&$a) {
 
 		if(feature_enabled(local_channel(),'affinity')) {
 
+			$labels = array(
+				t('Me'),
+				t('Family'),
+				t('Friends'),
+				t('Acquaintances'),
+				t('All')
+			);
+			call_hooks('affinity_labels',$labels);
+			$label_str = '';
+
+			if($labels) {
+				foreach($labels as $l) {
+					if($label_str) {
+						$label_str .= ", '|'";
+						$label_str .= ", '" . $l . "'";
+					}
+					else
+						$label_str .= "'" . $l . "'";
+				}
+			}
+
 			$slider_tpl = get_markup_template('contact_slider.tpl');
 			$slide = replace_macros($slider_tpl,array(
-				'$me' => t('Me'),
 				'$min' => 1,
 				'$val' => (($contact['abook_closeness']) ? $contact['abook_closeness'] : 99),
-				'$intimate' => t('Best Friends'),
-				'$friends' => t('Friends'),
-				'$oldfriends' => t('Former Friends'),
-				'$acquaintances' => t('Acquaintances'),
-				'$world' => t('Unknown')
+				'$labels' => $label_str,
 			));
 		}
 

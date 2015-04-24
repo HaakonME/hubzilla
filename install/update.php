@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1136 );
+define( 'UPDATE_VERSION' , 1140 );
 
 /**
  *
@@ -26,10 +26,14 @@ define( 'UPDATE_VERSION' , 1136 );
  * The DB_UPDATE_VERSION will always be one greater than the last numbered script in this file. 
  *
  * If you change the database schema, the following are required:
- *    1. Update the file database.sql to match the new schema.
+ *    1. Update the files schema_mysql.sql and schema_postgres.sql to match the new schema.
+ *       Be sure to read doc/sql_conventions.bb ($yoururl/help/sql_conventions) use only standard
+ *		 SQL data types where possible to keep differences in the files to a minimum
  *    2. Update this file by adding a new function at the end with the number of the current DB_UPDATE_VERSION.
  *       This function should modify the current database schema and perform any other steps necessary
- *       to ensure that upgrade is silent and free from requiring interaction.
+ *       to ensure that upgrade is silent and free from requiring interaction. Review to ensure that it
+ *		 will run correctly on both postgres and MySQL/Mariadb. It is very difficult and messy to fix DB update
+ *		 errors. Once pushed, it requires a new update which undoes any damage and performs the corrected updated.
  *    3. Increment the DB_UPDATE_VERSION in boot.php *AND* the UPDATE_VERSION in this file to match it
  *    4. TEST the upgrade prior to checkin and filing a pull request.
  *
@@ -1518,7 +1522,7 @@ function update_r1133() {
 			PRIMARY KEY (xp_id) )");
 		$r2 = 0;
 		foreach(array('xp_client', 'xp_channel', 'xp_perm') as $fld)
-			$r2 += (empty(q("create index $fld on xperm ($fld)")) ? 0 : 1);
+			$r2 += ((q("create index $fld on xperm ($fld)") == false) ? 0 : 1);
 			
 		$r = (($r1 && $r2) ? true : false);
 	}
@@ -1557,4 +1561,45 @@ function update_r1135() {
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+function update_r1136() {
+	$r1 = q("alter table item add item_unseen smallint not null default '0' ");
+	$r2 = q("create index item_unseen on item ( item_unseen ) ");
+	$r3 = q("update item set item_unseen = 1 where ( item_flags & 2 ) > 0 ");
+
+	if($r1 && $r2 && $r3)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1137() {
+	$r1 = q("alter table site add site_valid smallint not null default '0' ");
+	$r2 = q("create index site_valid on site ( site_valid ) ");
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1138() {
+	$r1 = q("alter table outq add outq_priority smallint not null default '0' ");
+	$r2 = q("create index outq_priority on outq ( outq_priority ) ");
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1139() {
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) { 
+		$r1 = q("ALTER TABLE channel ADD channel_lastpost timestamp NOT NULL DEFAULT '0001-01-01 00:00:00'");
+		$r2 = q("create index channel_lastpost on channel ( channel_lastpost ) ");
+		$r = $r1 && $r2;
+	}
+	else
+		$r = q("ALTER TABLE `channel` ADD `channel_lastpost` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `channel_dirdate` , ADD INDEX ( `channel_lastpost` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
 }

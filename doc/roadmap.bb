@@ -21,9 +21,6 @@ Migration tools
 	Friendica importer
 	Diaspora importer
 
-Poco reputation
-	Make it happen
-	
 Webpage design UI improvements
 	If practical, separate "conversation" sub-themes from overall themes so one can choose different conversation and content layouts within a base theme. 
 	Make webpage building easy, with point-n-click selectors to build PDLs
@@ -39,7 +36,7 @@ Lists
 	Create a list object to contain arbitrary things for personal use
 
 Events
-	Recurring events and participation (RSVP)
+	Recurring events
 
 Zot
 	Provide a way to sync web resources. This could be built on DAV except for preserving resource naming (guids) instead of filenames. 

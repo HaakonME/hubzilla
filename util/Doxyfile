@@ -1,8 +1,8 @@
-INPUT = boot.php mod include setup util view
+INPUT = README.md index.php boot.php mod/ include/ util/ view/ version.inc
 RECURSIVE = YES
-PROJECT_NAME = "The Red Matrix"
+PROJECT_NAME = "The RedMatrix"
 PROJECT_LOGO = images/rm-64.png
-EXCLUDE = .htconfig.php library doc .git
+EXCLUDE = .htconfig.php library/ doc/ vendor/ .git/ util/zotsh/easywebdav/
 EXCLUDE_PATTERNS = *smarty3* *strings.php *.out *test*
 OUTPUT_DIRECTORY = doc
 GENERATE_HTML = YES
@@ -12,10 +12,12 @@ GENERATE_LATEX = NO
 EXTRACT_ALL = YES
 EXTRACT_PRIVATE = YES
 GENERATE_TODOLIST = YES
-USE_MDFILE_AS_MAINPAGE = README
+USE_MDFILE_AS_MAINPAGE = README.md
 REFERENCED_BY_RELATION = YES
 GENERATE_TREEVIEW = YES
 HTML_FOOTER = util/Doxygen.footer
-
-
-
+ALIASES += "license=@par License:\n"
+ALIASES += "fixme=\xrefitem fixme \"Fixme\" \"Fixme List\""
+ALIASES += "FIXME=\fixme"
+ALIASES += "TODO=\todo"
+ALIASES += "BUG=\bug"

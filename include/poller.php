@@ -41,6 +41,12 @@ function poller_run($argv, $argc){
 	// run queue delivery process in the background
 
 	proc_run('php',"include/queue.php");
+
+
+	// maintenance for mod sharedwithme - check for updated items and remove them
+
+	require_once('include/sharedwithme.php');
+	apply_updates();
 	
 
 	// expire any expired mail
@@ -81,11 +87,13 @@ function poller_run($argv, $argc){
 	}
 
 	// publish any applicable items that were set to be published in the future
-	// (time travel posts)
+	// (time travel posts). Restrict to items that have come of age in the last
+	// couple of days to limit the query to something reasonable. 
 
-	$r = q("select id from item where ( item_restrict & %d ) > 0 and created <= %s ",
+	$r = q("select id from item where ( item_restrict & %d ) > 0 and created <= %s  and created > '%s' ",
 		intval(ITEM_DELAYED_PUBLISH),
-		db_utcnow()
+		db_utcnow(),
+		dbesc(datetime_convert('UTC','UTC','now - 2 days'))
 	);
 	if($r) {
 		foreach($r as $rr) {
@@ -149,6 +157,7 @@ function poller_run($argv, $argc){
 			call_hooks('cron_weekly',datetime_convert());
 
 
+			z_check_cert();
 
 			require_once('include/hubloc.php');
 			prune_hub_reinstalls();
@@ -164,8 +173,8 @@ function poller_run($argv, $argc){
 			);
 
 			$dirmode = intval(get_config('system','directory_mode'));
-			if($dirmode == DIRECTORY_MODE_SECONDARY) {
-				logger('regdir: ' . print_r(z_fetch_url(get_directory_primary() . '/regdir?f=&url=' . z_root() . '&realm=' . get_directory_realm()),true));
+			if($dirmode === DIRECTORY_MODE_SECONDARY || $dirmode === DIRECTORY_MODE_PRIMARY) {
+				logger('regdir: ' . print_r(z_fetch_url(get_directory_primary() . '/regdir?f=&url=' . urlencode(z_root()) . '&realm=' . urlencode(get_directory_realm())),true));
 			}
 
 			/**

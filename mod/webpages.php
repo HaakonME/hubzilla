@@ -32,6 +32,8 @@ function webpages_content(&$a) {
 	}
 
 	$which = argv(1);
+	
+	$_SESSION['return_url'] = $a->query_string;
 
 	$uid = local_channel();
 	$owner = 0;
@@ -68,25 +70,19 @@ function webpages_content(&$a) {
 		return;
 	}
 
-	if(feature_enabled($owner,'expert')) {
-		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
-		if(! $mimetype)
-			$mimetype = 'choose';	
-	}
-	else {
-		$mimetype = 'text/bbcode';
+	$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
+
+	if(! $mimetype) {
+		$mimetype = 'choose';
 	}
 
 	$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_pconfig($owner,'system','page_layout'));
 	if(! $layout)
 		$layout = 'choose';
 
-
 	// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 	// Nickname is set to the observers xchan, and profile_uid to the owner's.  
 	// This lets you post pages at other people's channels.
-
-
 
 	if((! $channel) && ($uid) && ($uid == $a->profile_uid)) {
 		$channel = $a->get_channel();
@@ -102,8 +98,8 @@ function webpages_content(&$a) {
 	else
 		$channel_acl = array();
 
-
-	$o = profile_tabs($a,true);
+	$is_owner = ($uid && $uid == $owner);
+	$o = profile_tabs($a, $is_owner, $a->profile['channel_address']);
 
 	$x = array(
 		'webpage'     => ITEM_TYPE_WEBPAGE,
@@ -111,11 +107,13 @@ function webpages_content(&$a) {
 		'nickname'    => $a->profile['channel_address'],
 		'lockstate'   => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'bang'        => '',
-		'acl'         => (($uid && $uid == $owner) ? populate_acl($channel_acl,false) : ''),
+		'acl'         => (($is_owner) ? populate_acl($channel_acl,false) : ''),
+		'showacl'     => (($is_owner) ? true : false),
 		'visitor'     => true,
 		'profile_uid' => intval($owner),
 		'mimetype'    => $mimetype,
 		'layout'      => $layout,
+		'expanded'    => true
 	);
 	
 	if($_REQUEST['title'])
@@ -125,14 +123,16 @@ function webpages_content(&$a) {
 	if($_REQUEST['pagetitle'])
 		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
-	$o .= status_editor($a,$x);
+	$editor = status_editor($a,$x);
 
 	// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, 
 	// so just list titles and an edit link.
-	//TODO - this should be replaced with pagelist_widget
+	/** @TODO - this should be replaced with pagelist_widget */
+
+	$sql_extra = item_permissions_sql($owner);
 
 	$r = q("select * from item_id left join item on item_id.iid = item.id 
-		where item_id.uid = %d and service = 'WEBPAGE' order by item.created desc",
+		where item_id.uid = %d and service = 'WEBPAGE' $sql_extra order by item.created desc",
 		intval($owner)
 	);
 
@@ -142,12 +142,28 @@ function webpages_content(&$a) {
 		$pages = array();
 		foreach($r as $rr) {
 			unobscure($rr);
+
+			$lockstate = (($rr['allow_cid'] || $rr['allow_gid'] || $rr['deny_cid'] || $rr['deny_gid']) ? 'lock' : 'unlock');
+
+			$element_arr = array(
+				'type'		=> 'webpage',
+				'title'		=> $rr['title'],
+				'body'		=> $rr['body'],
+				'term'		=> $rr['term'],
+				'created'	=> $rr['created'],
+				'edited'	=> $rr['edited'],
+				'mimetype'	=> $rr['mimetype'],
+				'pagetitle'	=> $rr['sid'],
+				'mid'		=> $rr['mid']
+			);
 			$pages[$rr['iid']][] = array(
-				'url'       => $rr['iid'],
-				'pagetitle' => $rr['sid'],
-				'title'     => $rr['title'],
-				'created'   => datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
-				'edited'    => datetime_convert('UTC',date_default_timezone_get(),$rr['edited'])
+				'url'		=> $rr['iid'],
+				'pagetitle'	=> $rr['sid'],
+				'title'		=> $rr['title'],
+				'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
+				'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),
+				'bb_element'	=> '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]',
+				'lockstate'     => $lockstate
 			);
 		}
 	}
@@ -157,21 +173,23 @@ function webpages_content(&$a) {
 	$url = z_root() . '/editwebpage/' . $which;
 	
 	$o .= replace_macros(get_markup_template('webpagelist.tpl'), array(
-    	'$listtitle'    => t('Webpages'),
+		'$listtitle'    => t('Webpages'),
 		'$baseurl'      => $url,
+		'$create'       => t('Create'),
 		'$edit'         => t('Edit'),
+		'$share'	=> t('Share'),
+		'$delete'	=> t('Delete'),
 		'$pages'        => $pages,
 		'$channel'      => $which,
+		'$editor'	=> $editor,
 		'$view'         => t('View'),
 		'$preview'      => t('Preview'),
 		'$actions_txt'  => t('Actions'),
 		'$pagelink_txt' => t('Page Link'),
-		'$title_txt'    => t('Title'),
+		'$title_txt'    => t('Page Title'),
 		'$created_txt'  => t('Created'),
 		'$edited_txt'   => t('Edited')
-
 	));
 
 	return $o;
-
 }

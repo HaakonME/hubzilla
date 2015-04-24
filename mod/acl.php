@@ -98,6 +98,7 @@ function acl_init(&$a){
 				intval(local_channel()),
 				intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
+
 		}
 		else { // Visitors
 			$r = q("SELECT xchan_hash as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags
@@ -146,11 +147,13 @@ function acl_init(&$a){
 			}
 		}
 		if(intval(get_config('system','taganyone')) || intval(get_pconfig(local_channel(),'system','taganyone'))) {
-			if((! $r) && $type == 'c') {
-				$r = q("SELECT substr(xchan_hash,1,18) as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags 
+			if((count($r) < 100) && $type == 'c') {
+				$r2 = q("SELECT substr(xchan_hash,1,18) as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags 
 					FROM xchan 
 					WHERE xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" 
 				);
+				if($r2)
+					$r = array_merge($r,$r2);
 			}
 		}
 	}

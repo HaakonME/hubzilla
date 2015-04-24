@@ -70,7 +70,6 @@ function editblock_content(&$a) {
 			
 	$o = '';
 
-
 	// Figure out which post we're editing
 	$post_id = ((argc() > 2) ? intval(argv(2)) : 0);
 
@@ -96,7 +95,6 @@ function editblock_content(&$a) {
 		return;
 	}
 
-
 	$plaintext = true;
 
 	$mimeselect = '';
@@ -110,21 +108,20 @@ function editblock_content(&$a) {
 	else
 		$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 
-
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit Block')
+		'$title' => t('Edit Block'),
+		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
+		'$id' => $itm[0]['id']
 	));
 
-	
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl'       => $a->get_baseurl(),
 		'$editselect'    => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic'      => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag'        => '',
 		'$nickname'      => $channel['channel_address'],
-	    '$confirmdelete' => t('Delete block?')
+		'$confirmdelete' => t('Delete block?')
 	));
-
 
 	$tpl = get_markup_template("jot.tpl");
 		
@@ -141,6 +138,12 @@ function editblock_content(&$a) {
 		'$action'              => 'item',
 		'$webpage'             => ITEM_BUILDBLOCK,
 		'$share'               => t('Edit'),
+		'$bold' => t('Bold'),
+		'$italic' => t('Italic'),
+		'$underline' => t('Underline'),
+		'$quote' => t('Quote'),
+		'$code' => t('Code'),
+		'$writefiles' => (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')),
 		'$upload'              => t('Upload photo'),
 		'$attach'              => t('Attach file'),
 		'$weblink'             => t('Insert web link'),
@@ -170,33 +173,13 @@ function editblock_content(&$a) {
 		'$acl'                 => '', 
 		'$bang'                => '',
 		'$profile_uid'         => (intval($channel['channel_id'])),
-		'$preview'             => true, // ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
+		'$preview'             => t('Preview'),
 		'$jotplugins'          => $jotplugins,
 		'$sourceapp'           => $itm[0]['app'],
 		'$defexpire'           => '',
 		'$feature_expire'      => false,
 		'$expires'             => t('Set expiration date'),
 	));
-
-
-	if(($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash))
-		$o .= '<br /><br /><a class="block-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Block') . '</a><br />';
-
-
-	$x = array(
-		'type'      => 'block',
-		'title'     => $itm[0]['title'],
-		'body'      => $itm[0]['body'],
-		'term'      => $itm[0]['term'],
-		'created'   => $itm[0]['created'],
-		'edited'    => $itm[0]['edited'],
-		'mimetype'  => $itm[0]['mimetype'],
-		'pagetitle' => $page_title,
-		'mid'       => $itm[0]['mid']
-	);
-
-	$o .= EOL . EOL . t('Share') . EOL . '<textarea onclick="this.select();" class="shareable_element_text" >[element]' . base64url_encode(json_encode($x)) . '[/element]</textarea>' . EOL . EOL; 
-
 
 	return $o;
 

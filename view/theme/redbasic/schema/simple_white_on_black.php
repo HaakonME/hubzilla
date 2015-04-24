@@ -16,10 +16,6 @@
 		$nav_icon_colour = "#eee";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#fff";
-	if (! $navmenu_bgchover)
-		$navmenu_bgchover = "#030303";
-	if (! $navmenu_bgimage)
-		$navmenu_bgimage = "background-image: none;";
 	if (! $navtabs_borderc)
 		$navtabs_borderc = "#fff";
 	if (! $navtabs_fontcolour)
@@ -64,8 +60,6 @@
 		$toolicon_activecolour = '#fff';
 	if (! $font_colour)
 		$font_colour = "#fff";
-	if (! $widget_brdrcolour)
-		$widget_brdrcolour = "#000";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#eee";
 	if (! $blockquote_bgcolour)
@@ -98,14 +92,6 @@
 		$acpopup_tgbl_bgcolour = "#000";
 	if (! $acpopup_hovercolour)
 		$acpopup_hovercolour = "#fff";
-	if (! $editbuttons_bgcolour)
-		$editbuttons_bgcolour = "#000";
-	if (! $editbuttons_bordercolour)
-		$editbuttons_bordercolour = "#fff";
-	if (! $editbuttons_colour)
-		$editbuttons_colour = "#eee";
-	if (! $editbuttons_bghover)
-		$editbuttons_bghover = "#000";
 	if (! $dropdown_bgcolour)
 		$dropdown_bgcolour = "#000";
 	if (! $dropdown_textcolour)
@@ -124,67 +110,3 @@
 		$dropdown_bordercol = "#000";
 	if (! $preview_backgroundimg)
 		$preview_backgroundimg = "gray_and_black_diagonal_stripes_background_seamless.gif";
-	if (! $notify_bgcolour)
-		$notify_bgcolour = "#000";
-	if (! $notify_linkcolour)
-		$notify_linkcolour = "#fff";	
-	if (! $notify_bghover)
-		$notify_bghover = "#000";
-	if (! $notify_topmargin)
-		$notify_topmargin = "-1px";
-	if (! $notifyseen_bgcolour)
-		$notifyseen_bgcolour = "#000";
-	if (! $notifyseen_linkcolour)
-		$notifyseen_linkcolour = "#000";
-	if (! $notifyseen_bghover)
-		$notifyseen_bghover = "#000";
-	if (! $notifyseen_linkhover)
-		$notifyseen_linkhover = "#fff";
-	if (! $input_bgsubmit)
-		$input_bgsubmit = "#000";
-	if (! $input_linksubmit)
-		$input_linksubmit = "#fff";
-	if (! $input_border)
-		$input_border = "#fff";
-	if (! $input_colourhover)
-		$input_colourhover = "#fff";
-	if (! $input_decohover)
-		$input_decohover = "underline";
-	if (! $acl_bgcolour)
-		$acl_bgcolour = "#000";
-	if (! $acl_bordercolour)
-		$acl_bordercolour = "#000";
-	if (! $aclbutton_linkcolour)
-		$aclbutton_linkcolour = "color: #fff;";
-	if (! $abookself_bgcolour)
-		$abookself_bgcolour = "#000";
-	if(! $infomess_bgcolour)
-		$infomess_bgcolour = "#000";
-	if(! $alert_txtcolour)
-      $alert_txtcolour = "#fff";	
-	if(! $alert_bgcolour)
-      $alert_bgcolour = "#000";
-   if(! $alert_bordercol)
-      $alert_bordercol = "#fff";
-   if(! $alert_gradientcol)
-      $alert_gradientcol = "#000";		
-   if(! $advperm_bgcolour)
-      $advperm_bgcolour = "#000";
-   if(! $advperm_bordercol)
-      $advperm_bordercol = "#fff";
-   if(! $advperm_gradientcol)
-      $advperm_gradientcol = "#000";
-   if(! $cal_bgcolour)
-      $cal_bgcolour = "#000";
-   if(! $chat_txtbgcol)
-      $chat_txtbgcol = "#000";
-   if(! $fancybox_bgcolour)
-      $fancybox_bgcolour = "#000";
-	if (!$admintable_hoverbgcol)
-		$admintable_hoverbgcol="#000";
-	if (!$dirpopup_txtcol)
-		$dirpopup_txtcol="#000";
-	if (!$dirpopup_linkcol)
-		$dirpopup_linkcol="#000";
-	if (!$abook_changebg)
-		$abook_changebg="#000";

@@ -13,6 +13,12 @@ function network_init(&$a) {
 		return;
 	}
 
+	if((count($_GET) < 2) || (count($_GET) < 3 && $_GET['JS'])) {
+		$network_options = get_pconfig(local_channel(),'system','network_page_default');
+		if($network_options)
+			goaway('network' . '?f=&' . $network_options);
+	}
+
 	$channel = $a->get_channel();
 	$a->profile_uid = local_channel();
 	head_set_icon($channel['xchan_photo_s']);
@@ -21,12 +27,13 @@ function network_init(&$a) {
 
 function network_content(&$a, $update = 0, $load = false) {
 
-
 	if(! local_channel()) {
 		$_SESSION['return_url'] = $a->query_string;
 		return login(false);
 	}
 
+	if($load)
+		$_SESSION['loadtime'] = datetime_convert();
 
 	$arr = array('query' => $a->query_string);
 
@@ -110,16 +117,32 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if(x($_GET,'search') || x($_GET,'file'))
 		$nouveau = true;
-	if($cid)
-		$def_acl = array('allow_cid' => '<' . intval($cid) . '>');
-
+	if($cid) {
+		$r = q("SELECT abook_xchan FROM abook WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+			intval($cid),
+			intval(local_channel())
+		);
+		if(! $r) {
+			if($update) {
+				killme();
+			}
+			notice( t('No such channel') . EOL );
+			goaway($a->get_baseurl(true) . '/network');
+			// NOTREACHED
+		}
+		$def_acl = array('allow_cid' => '<' . $r[0]['abook_xchan'] . '>');
+	}
 
 	if(! $update) {
-		$o .= network_tabs();
+		$tabs = network_tabs();
+		$o .= $tabs;
 
 		// search terms header
-		if($search)
-			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search, ENT_COMPAT,'UTF-8') . '</h2>';
+		if($search) {
+			$o .= replace_macros(get_markup_template("section_title.tpl"),array(
+				'$title' => t('Search Results For:') . ' ' . htmlspecialchars($search, ENT_COMPAT,'UTF-8')
+			));
+		}
 
 		nav_set_selected('network');
 
@@ -129,7 +152,6 @@ function network_content(&$a, $update = 0, $load = false) {
 			'deny_cid'  => $channel['channel_deny_cid'], 
 			'deny_gid'  => $channel['channel_deny_gid']
 		); 
-
 
 		$x = array(
 			'is_owner'         => true,
@@ -143,8 +165,8 @@ function network_content(&$a, $update = 0, $load = false) {
 			'profile_uid'      => local_channel()
 		);
 
-		$o .= status_editor($a,$x);
-
+		$status_editor = status_editor($a,$x);
+		$o .= $status_editor;
 	}
 
 
@@ -180,9 +202,15 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$x = group_rec_byhash(local_channel(), $group_hash);
 
-		if($x)
-			$o = '<h2>' . t('Collection: ') . $x['name'] . '</h2>' . $o;
+		if($x) {
+			$title = replace_macros(get_markup_template("section_title.tpl"),array(
+				'$title' => t('Collection: ') . $x['name']
+			));
+		}
 
+		$o = $tabs;
+		$o .= $title;
+		$o .= $status_editor;
 
 	}
 
@@ -194,7 +222,12 @@ function network_content(&$a, $update = 0, $load = false) {
 		);
 		if($r) {
 			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_channel()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
-			$o = '<h2>' . t('Connection: ') . $r[0]['xchan_name'] . '</h2>' . $o;
+			$title = replace_macros(get_markup_template("section_title.tpl"),array(
+				'$title' => t('Connection: ') . $r[0]['xchan_name']
+			));
+			$o = $tabs;
+			$o .= $title;
+			$o .= $status_editor;
 		}
 		else {
 			notice( t('Invalid connection.') . EOL);
@@ -330,6 +363,8 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	}
 
+	$abook_uids = " and abook.abook_channel = " . local_channel() . " ";
+
 	if($firehose && (! get_config('system','disable_discover_tab'))) {
 		require_once('include/identity.php');
 		$sys = get_sys_channel();
@@ -345,7 +380,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	else
 		$page_mode = 'client';
 
-	$simple_update = (($update) ? " and item.item_unseen = 1 " : '');
+	$simple_update = (($update) ? " and item_unseen = 1 " : '');
 
 	// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
 	// or three and look at your matrix page - after opening up your browser. The first page loads just as it
@@ -360,7 +395,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	// which are both ITEM_UNSEEN and have "changed" since that time. Cross fingers...
 
 	if($update && $_SESSION['loadtime'])
-		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+		$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 	if($load)
 		$simple_update = '';
 
@@ -368,10 +403,13 @@ function network_content(&$a, $update = 0, $load = false) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
 		$items = q("SELECT item.*, item.id AS item_id, received FROM item
+			left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 			WHERE true $uids AND item_restrict = 0
+			and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$simple_update
 			$sql_extra $sql_nets
-			ORDER BY item.received DESC $pager_sql "
+			ORDER BY item.received DESC $pager_sql ",
+			intval(ABOOK_FLAG_BLOCKED)
 		);
 
 		require_once('include/items.php');
@@ -391,12 +429,10 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		if($load) {
 
-			$_SESSION['loadtime'] = datetime_convert();
-
 			// Fetch a page full of parent items for this page
 
 			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
-				left join abook on item.author_xchan = abook.abook_xchan
+				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 				WHERE true $uids AND item.item_restrict = 0
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
@@ -407,16 +443,15 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		}
 		else {
-			if(! $firehose) {
-				// update
-				$r = q("SELECT item.parent AS item_id FROM item
-					left join abook on item.author_xchan = abook.abook_xchan
-					WHERE true $uids AND item.item_restrict = 0 $simple_update
-					and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-					$sql_extra3 $sql_extra $sql_nets ",
-					intval(ABOOK_FLAG_BLOCKED)
-				);
-			}
+			// this is an update
+			$r = q("SELECT item.parent AS item_id FROM item
+				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
+				WHERE true $uids AND item.item_restrict = 0 $simple_update
+				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+				$sql_extra3 $sql_extra $sql_nets ",
+				intval(ABOOK_FLAG_BLOCKED)
+			);
+			$_SESSION['loadtime'] = datetime_convert();
 		}
 
 		// Then fetch all the children of the parents that are on this page

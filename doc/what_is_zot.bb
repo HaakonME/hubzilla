@@ -55,7 +55,7 @@ For more detailed, technical information about Zot, check out the following link
 
  - [url=https://github.com/friendica/red/wiki/zot]Zot development specification[/url]
 
- - [url=https://github.com/friendica/red/blob/master/include/zot.php]Zot reference implementation in PHP[/url]
+ - [url=https://github.com/redmatrix/redmatrix/blob/master/include/zot.php]Zot reference implementation in PHP[/url]
 
 
 #include doc/macros/main_footer.bb;

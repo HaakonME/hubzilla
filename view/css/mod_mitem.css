@@ -1,11 +1,13 @@
-.menu-item-list {
-	list-style-type: none;
+#mitem-list-table {
+	width: 100%;
 }
 
-.mitem-edit {
-	margin-right: 15px;
+#mitem-list-table th:nth-child(1),
+#mitem-list-table td:nth-child(1){
+	padding: 7px 3px 7px 10px;
+	white-space: nowrap;
 }
 
-.menu-item-list li {
-	margin-bottom: 15px;
+.mitem-list-tool {
+	padding: 7px 10px;
 }

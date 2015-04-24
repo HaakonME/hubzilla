@@ -12,33 +12,9 @@ function sharedwithme_content(&$a) {
 
 	$is_owner = (local_channel() && (local_channel() == $channel['channel_id']));
 
-	//maintenance - see if a file got dropped and remove it systemwide - this should possibly go to include/poller
-	$x = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d",
-		dbesc(ACTIVITY_UPDATE),
-		dbesc(ACTIVITY_OBJ_FILE),
-		intval(local_channel())
-	);
-
-	if($x) {
-
-		foreach($x as $xx) {
-
-			$object = json_decode($xx['object'],true);
-
-			$d_mid = $object['d_mid'];
-			$u_mid = $xx['mid'];
-
-			$y = q("DELETE FROM item WHERE obj_type = '%s' AND (verb = '%s' AND mid = '%s') OR (verb = '%s' AND mid = '%s')",
-				dbesc(ACTIVITY_OBJ_FILE),
-				dbesc(ACTIVITY_POST),
-				dbesc($d_mid),
-				dbesc(ACTIVITY_UPDATE),
-				dbesc($u_mid)
-			);
-
-		}
-
-	}
+	//check for updated items and remove them
+	require_once('include/sharedwithme.php');
+	apply_updates();
 
 	//drop single file - localuser
 	if((argc() > 2) && (argv(2) === 'drop')) {
@@ -66,7 +42,7 @@ function sharedwithme_content(&$a) {
 	}
 
 	//list files
-	$r = q("SELECT * FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d AND owner_xchan != '%s'",
+	$r = q("SELECT id, uid, object, item_unseen FROM item WHERE verb = '%s' AND obj_type = '%s' AND uid = %d AND owner_xchan != '%s'",
 		dbesc(ACTIVITY_POST),
 		dbesc(ACTIVITY_OBJ_FILE),
 		intval(local_channel()),
@@ -74,8 +50,10 @@ function sharedwithme_content(&$a) {
 	);
 
 	$items =array();
+	$ids = '';
 
 	if($r) {
+
 		foreach($r as $rr) {
 			$object = json_decode($rr['object'],true);
 
@@ -87,10 +65,27 @@ function sharedwithme_content(&$a) {
 			$item['objfilename'] = $object['filename'];
 			$item['objfilesize'] = userReadableSize($object['filesize']);
 			$item['objedited'] = $object['edited'];
+			$item['unseen'] = $rr['item_unseen'];
 
 			$items[] = $item;
 
+			if($item['unseen'] > 0) {
+				$ids .= " '" . $rr['id'] . "',";
+			}
+
 		}
+
+	}
+
+	if($ids) {
+
+		//remove trailing ,
+		$ids = rtrim($ids, ",");
+
+		q("UPDATE item SET item_unseen = 0 WHERE id IN ( $ids ) AND uid = %d",
+			intval(local_channel())
+		);
+
 	}
 
 	$o = profile_tabs($a, $is_owner, $channel['channel_address']);
@@ -98,6 +93,7 @@ function sharedwithme_content(&$a) {
 	$o .= replace_macros(get_markup_template('sharedwithme.tpl'), array(
 		'$header' => t('Files: shared with me'),
 		'$name' => t('Name'),
+		'$label_new' => t('NEW'),
 		'$size' => t('Size'),
 		'$lastmod' => t('Last Modified'),
 		'$dropall' => t('Remove all files'),

@@ -233,7 +233,6 @@ function widget_savedsearch($arr) {
 	$srchurl =  rtrim(preg_replace('/searchsave\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
 	$srchurl =  rtrim(preg_replace('/searchremove\=[^\&].*?(\&|$)/is','',$srchurl),'&');
-	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
 
 	$srchurl =  rtrim(preg_replace('/search\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$srchurl =  rtrim(preg_replace('/submit\=[^\&].*?(\&|$)/is','',$srchurl),'&');
@@ -241,7 +240,10 @@ function widget_savedsearch($arr) {
 
 
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
+	$hasamp = ((strpos($srchurl,'&') !== false) ? true : false);
 
+	if(($hasamp) && (! $hasq))
+		$srchurl = substr($srchurl,0,strpos($srchurl,'&')) . '?f=&' . substr($srchurl,strpos($srchurl,'&')+1);		
 
 	$o = '';
 
@@ -257,8 +259,8 @@ function widget_savedsearch($arr) {
 			$saved[] = array(
 				'id'            => $rr['tid'],
 				'term'          => $rr['term'],
-				'dellink'       => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;searchremove=1&amp;search=' . urlencode($rr['term']),
-				'srchlink'      => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;search=' . urlencode($rr['term']),
+				'dellink'       => z_root() . '/' . $srchurl . (($hasq || $hasamp) ? '' : '?f=') . '&amp;searchremove=1&amp;search=' . urlencode($rr['term']),
+				'srchlink'      => z_root() . '/' . $srchurl . (($hasq || $hasamp) ? '' : '?f=') . '&amp;search=' . urlencode($rr['term']),
 				'displayterm'   => htmlspecialchars($rr['term'], ENT_COMPAT,'UTF-8'),
 				'encodedterm'   => urlencode($rr['term']),
 				'delete'        => t('Remove term'),
@@ -418,18 +420,35 @@ function widget_affinity($arr) {
 	$cmin = ((x($_REQUEST,'cmin')) ? intval($_REQUEST['cmin']) : 0);
 	$cmax = ((x($_REQUEST,'cmax')) ? intval($_REQUEST['cmax']) : 99);
 
+
 	if(feature_enabled(local_channel(),'affinity')) {
+
+		$labels = array(
+			t('Me'),
+			t('Family'),
+			t('Friends'),
+			t('Acquaintances'),
+			t('All')
+		);
+		call_hooks('affinity_labels',$labels);
+		$label_str = '';
+
+		if($labels) {
+			foreach($labels as $l) {
+				if($label_str) {
+					$label_str .= ", '|'";
+					$label_str .= ", '" . $l . "'";
+				}
+				else
+					$label_str .= "'" . $l . "'";
+			}
+		}
+
 		$tpl = get_markup_template('main_slider.tpl');
 		$x = replace_macros($tpl,array(
 			'$val' => $cmin . ',' . $cmax,
 			'$refresh' => t('Refresh'),
-			'$me' => t('Me'),
-			'$intimate' => t('Best Friends'),
-			'$friends' => t('Friends'),
-			'$coworkers' => t('Co-workers'),
-			'$oldfriends' => t('Former Friends'),
-			'$acquaintances' => t('Acquaintances'),
-			'$world' => t('Everybody')
+			'$labels' => $label_str,
 		));
 		$arr = array('html' => $x);
 		call_hooks('main_slider',$arr);
@@ -605,9 +624,6 @@ function widget_vcard($arr) {
  * The following directory widgets are only useful on the directory page
  */
 
-function widget_dirsafemode($arr) {
-	return dir_safe_mode();
-}
 
 function widget_dirsort($arr) {
 	return dir_sort_links();
@@ -963,3 +979,12 @@ function widget_rating($arr) {
 	return $o;
 
 }
+
+// used by site ratings pages to provide a return link
+function widget_pubsites() {
+	if(get_app()->poi)
+		return;
+	return '<div class="widget"><ul class="nav nav-pills"><li><a href="pubsites">' . t('Public Hubs') . '</a></li></ul></div>';
+}
+
+

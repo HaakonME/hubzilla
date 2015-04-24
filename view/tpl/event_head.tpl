@@ -7,11 +7,20 @@
 		$.get(
 			'{{$baseurl}}/events/?id='+eventid,
 			function(data){
-				$.colorbox({ html: data });
+				$.colorbox({ scrolling: false, html: data, onComplete: function() { $.colorbox.resize(); }});
 			}
 		);			
 	}
 	
+	function doEventPreview() {
+		$('#event-edit-preview').val(1);
+		$.post('events',$('#event-edit-form').serialize(), function(data) {
+			$.colorbox({ html: data });
+		});
+		$('#event-edit-preview').val(0);
+	}
+
+
 	$(document).ready(function() {
 		$('#events-calendar').fullCalendar({
 			events: '{{$baseurl}}/events/json/',

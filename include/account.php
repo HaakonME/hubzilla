@@ -1,4 +1,8 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/account.php
+ * @brief Somme account related functions.
+ */
 
 require_once('include/config.php');
 require_once('include/network.php');
@@ -43,15 +47,14 @@ function check_account_email($email) {
 function check_account_password($password) {
 	$result = array('error' => false, 'message' => '');
 
-	// The only validation we perform by default is pure Javascript to 
+	// The only validation we perform by default is pure Javascript to
 	// check minimum length and that both entered passwords match.
-	// Use hooked functions to perform complexity requirement checks. 
+	// Use hooked functions to perform complexity requirement checks.
 
 	$arr = array('password' => $password, 'result' => $result);
 	call_hooks('check_account_password', $arr);
 
 	return $arr['result'];
-
 }
 
 function check_account_invite($invite_code) {
@@ -75,7 +78,6 @@ function check_account_invite($invite_code) {
 	call_hooks('check_account_invite', $arr);
 
 	return $arr['result'];
-
 }
 
 function check_account_admin($arr) {
@@ -109,7 +111,7 @@ function create_account($arr) {
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
 	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : NULL_DATE);
-	
+
 	$default_service_class = get_config('system','default_service_class');
 
 	if($default_service_class === false)
@@ -132,16 +134,16 @@ function create_account($arr) {
 	// allow the admin_email account to be admin, but only if it's the first account.
 
 	$c = account_total();
-	if(($c === 0) && (check_account_admin($arr)))
+	if (($c === 0) && (check_account_admin($arr)))
 		$roles |= ACCOUNT_ROLE_ADMIN;
 
-    // Ensure that there is a host keypair.
+	// Ensure that there is a host keypair.
 
-    if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
-        $hostkey = new_keypair(4096);
-        set_config('system','pubkey',$hostkey['pubkey']);
-        set_config('system','prvkey',$hostkey['prvkey']);
-    }
+	if ((! get_config('system', 'pubkey')) && (! get_config('system', 'prvkey'))) {
+		$hostkey = new_keypair(4096);
+		set_config('system', 'pubkey', $hostkey['pubkey']);
+		set_config('system', 'prvkey', $hostkey['prvkey']);
+	}
 
 	$invite_result = check_account_invite($invite_code);
 	if($invite_result['error']) {
@@ -180,7 +182,6 @@ function create_account($arr) {
 		dbesc($roles),
 		dbesc($expires),
 		dbesc($default_service_class)
-
 	);
 	if(! $r) {
 		logger('create_account: DB INSERT failed.');
@@ -195,7 +196,7 @@ function create_account($arr) {
 	if($r && count($r)) {
 		$result['account'] = $r[0];
 	}
-	else {	
+	else {
 		logger('create_account: could not retrieve newly created account');
 	}
 
@@ -215,8 +216,8 @@ function create_account($arr) {
 	$result['success']  = true;
 	$result['email']    = $email;
 	$result['password'] = $password;
-	return $result;
 
+	return $result;
 }
 
 
@@ -255,7 +256,6 @@ function verify_email_address($arr) {
 		logger('send_reg_approval_email: failed to ' . $admin['email'] . 'account_id: ' . $arr['account']['account_id']);
 
 	return $res;
-
 }
 
 
@@ -291,7 +291,6 @@ function send_reg_approval_email($arr) {
 	$ip = $_SERVER['REMOTE_ADDR'];
 
 	$details = (($ip) ? $ip . ' [' . gethostbyaddr($ip) . ']' : '[unknown or stealth IP]');
-
 
 	$delivered = 0;
 
@@ -346,10 +345,13 @@ function send_verification_email($email,$password) {
 	return($res ? true : false);
 }
 
-
+/**
+ * @brief Allows a user registration.
+ *
+ * @param string $hash
+ * @return array|boolean
+ */
 function user_allow($hash) {
-
-	$a = get_app();
 
 	$ret = array('success' => false);
 
@@ -363,7 +365,7 @@ function user_allow($hash) {
 	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
-	
+
 	if(! $account)
 		return $ret;
 
@@ -381,7 +383,7 @@ function user_allow($hash) {
 		intval(ACCOUNT_PENDING),
 		intval($register[0]['uid'])
 	);
-	
+
 	push_lang($register[0]['language']);
 
 	$email_tpl = get_intltext_template("register_open_eml.tpl");
@@ -402,18 +404,23 @@ function user_allow($hash) {
 
 	pop_lang();
 
-	if($res) {
+	if ($res) {
 		info( t('Account approved.') . EOL );
 		return true;
-	}	
-
+	}
 }
 
 
-// This does not have to go through user_remove() and save the nickname
-// permanently against re-registration, as the person was not yet
-// allowed to have friends on this system
-
+/**
+ * @brief Denies a user registration.
+ *
+ * This does not have to go through user_remove() and save the nickname
+ * permanently against re-registration, as the person was not yet
+ * allowed to have friends on this system
+ *
+ * @param string $hash
+ * @return boolean
+ */
 function user_deny($hash) {
 
 	$register = q("SELECT * FROM register WHERE hash = '%s' LIMIT 1",
@@ -426,7 +433,7 @@ function user_deny($hash) {
 	$account = q("SELECT account_id, account_email FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
-	
+
 	if(! $account)
 		return false;
 
@@ -438,14 +445,13 @@ function user_deny($hash) {
 		dbesc($register[0]['id'])
 	);
 	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
+
 	return true;
-	
+
 }
 
 
 function user_approve($hash) {
-
-	$a = get_app();
 
 	$ret = array('success' => false);
 
@@ -459,7 +465,7 @@ function user_approve($hash) {
 	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
-	
+
 	if(! $account)
 		return $ret;
 
@@ -482,21 +488,16 @@ function user_approve($hash) {
 		intval(ACCOUNT_UNVERIFIED),
 		intval($register[0]['uid'])
 	);
-	
+
 	info( t('Account verified. Please login.') . EOL );
 
 	return true;
-
 }
 
 
-
-
-
-
 /**
- * @function downgrade_accounts()
- *    Checks for accounts that have past their expiration date.
+ * @brief Checks for accounts that have past their expiration date.
+ *
  * If the account has a service class which is not the site default, 
  * the service class is reset to the site default and expiration reset to never.
  * If the account has no service class it is expired and subsequently disabled.
@@ -506,8 +507,6 @@ function user_approve($hash) {
  * not the job of this function, but this can be implemented by plugin if desired. 
  * Default behaviour is to stop allowing additional resources to be consumed. 
  */
- 
-
 function downgrade_accounts() {
 
 	$r = q("select * from account where not ( account_flags & %d )>0 
@@ -523,9 +522,7 @@ function downgrade_accounts() {
 
 	$basic = get_config('system','default_service_class');
 
-
 	foreach($r as $rr) {
-
 		if(($basic) && ($rr['account_service_class']) && ($rr['account_service_class'] != $basic)) {
 			$x = q("UPDATE account set account_service_class = '%s', account_expires = '%s'
 				where account_id = %d",
@@ -550,74 +547,98 @@ function downgrade_accounts() {
 }
 
 
+/**
+ * @brief Check service_class restrictions.
+ *
+ * If there are no service_classes defined, everything is allowed.
+ * If $usage is supplied, we check against a maximum count and return true if
+ * the current usage is less than the subscriber plan allows. Otherwise we
+ * return boolean true or false if the property is allowed (or not) in this
+ * subscriber plan. An unset property for this service plan means the property
+ * is allowed, so it is only necessary to provide negative properties for each
+ * plan, or what the subscriber is not allowed to do.
+ *
+ * Like account_service_class_allows() but queries directly by account rather
+ * than channel. Service classes are set for accounts, so we look up the
+ * account for the channel and fetch the service class restrictions of the
+ * account.
+ *
+ * @see account_service_class_allows() if you have a channel_id already
+ * @see service_class_fetch()
+ *
+ * @param int $uid The channel_id to check
+ * @param string $property The service class property to check for
+ * @param string|boolean $usage (optional) The value to check against
+ * @return boolean
+ */
+function service_class_allows($uid, $property, $usage = false) {
+	$limit = service_class_fetch($uid, $property);
 
-// check service_class restrictions. If there are no service_classes defined, everything is allowed.
-// if $usage is supplied, we check against a maximum count and return true if the current usage is 
-// less than the subscriber plan allows. Otherwise we return boolean true or false if the property
-// is allowed (or not) in this subscriber plan. An unset property for this service plan means 
-// the property is allowed, so it is only necessary to provide negative properties for each plan, 
-// or what the subscriber is not allowed to do. 
+	if($limit === false)
+		return true; // No service class set => everything is allowed
 
-
-function service_class_allows($uid,$property,$usage = false) {
-	$a = get_app();
-	if($uid == local_channel()) {
-		$service_class = $a->account['account_service_class'];
-	}
-	else {
-		$r = q("select account_service_class as service_class 
-				from channel c, account a 
-				where c.channel_account_id=a.account_id and c.channel_id= %d limit 1",
-			intval($uid)
-		);
-		if($r !== false and count($r)) {
-			$service_class = $r[0]['service_class'];
-		}
-	}
-	if(! x($service_class))
-		return true; // everything is allowed
-
-	$arr = get_config('service_class',$service_class);
-	if(! is_array($arr) || (! count($arr)))
-		return true;
-
-	if($usage === false)
-		return ((x($arr[$property])) ? (bool) $arr[$property] : true);
-	else {
-		if(! array_key_exists($property,$arr))
-			return true;
-		return (((intval($usage)) < intval($arr[$property])) ? true : false);
+	if($usage === false) {
+		// We use negative values for not allowed properties in a subscriber plan
+		return ((x($limit)) ? (bool) $limit : true);
+	} else {
+		return (((intval($usage)) < intval($limit)) ? true : false);
 	}
 }
 
-// like service_class_allows but queries by account rather than channel
-function account_service_class_allows($aid,$property,$usage = false) {
-	$a = get_app();
-	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
-		intval($aid)
-	);
-	if($r !== false and count($r)) {
-		$service_class = $r[0]['service_class'];
-	}
+/**
+ * @brief Check service class restrictions by account.
+ *
+ * If there are no service_classes defined, everything is allowed.
+ * If $usage is supplied, we check against a maximum count and return true if
+ * the current usage is less than the subscriber plan allows. Otherwise we
+ * return boolean true or false if the property is allowed (or not) in this
+ * subscriber plan. An unset property for this service plan means the property
+ * is allowed, so it is only necessary to provide negative properties for each
+ * plan, or what the subscriber is not allowed to do.
+ *
+ * Like service_class_allows() but queries directly by account rather than channel.
+ *
+ * @see service_class_allows() if you have a channel_id instead of an account_id
+ * @see account_service_class_fetch()
+ *
+ * @param int $aid The account_id to check
+ * @param string $property The service class property to check for
+ * @param int|boolean $usage (optional) The value to check against
+ * @return boolean
+ */
+function account_service_class_allows($aid, $property, $usage = false) {
 
-	if(! x($service_class))
-		return true; // everything is allowed
+	$limit = account_service_class_fetch($aid, $property);
 
-	$arr = get_config('service_class',$service_class);
-	if(! is_array($arr) || (! count($arr)))
-		return true;
+	if($limit === false)
+		return true; // No service class is set => everything is allowed
 
-	if($usage === false)
-		return ((x($arr[$property])) ? (bool) $arr[$property] : true);
-	else {
-		if(! array_key_exists($property,$arr))
-			return true;
-		return (((intval($usage)) < intval($arr[$property])) ? true : false);
+	if($usage === false) {
+		// We use negative values for not allowed properties in a subscriber plan
+		return ((x($limit)) ? (bool) $limit : true);
+	} else {
+		return (((intval($usage)) < intval($limit)) ? true : false);
 	}
 }
 
-
-function service_class_fetch($uid,$property) {
+/**
+ * @brief Queries a service class value for a channel and property.
+ *
+ * Service classes are set for accounts, so look up the account for this channel
+ * and fetch the service classe of the account.
+ *
+ * If no service class is available it returns false and everything should be
+ * allowed.
+ *
+ * @see account_service_class_fetch()
+ *
+ * @param int $uid The channel_id to query
+ * @param string $property The service property name to check for
+ * @return boolean|int
+ *
+ * @todo Should we merge this with account_service_class_fetch()?
+ */
+function service_class_fetch($uid, $property) {
 	$a = get_app();
 	if($uid == local_channel()) {
 		$service_class = $a->account['account_service_class'];
@@ -635,17 +656,27 @@ function service_class_fetch($uid,$property) {
 	if(! x($service_class))
 		return false; // everything is allowed
 
-	$arr = get_config('service_class',$service_class);
+	$arr = get_config('service_class', $service_class);
 
 	if(! is_array($arr) || (! count($arr)))
 		return false;
 
-	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+	return((array_key_exists($property, $arr)) ? $arr[$property] : false);
 }
 
-// like service_class_fetch but queries by account rather than channel
-
-function account_service_class_fetch($aid,$property) {
+/**
+ * @brief Queries a service class value for an account and property.
+ *
+ * Like service_class_fetch() but queries by account rather than channel.
+ *
+ * @see service_class_fetch() if you have channel_id.
+ * @see account_service_class_allows()
+ *
+ * @param int $aid The account_id to query
+ * @param string $property The service property name to check for
+ * @return boolean|int
+ */
+function account_service_class_fetch($aid, $property) {
 
 	$r = q("select account_service_class as service_class from account where account_id = %d limit 1",
 		intval($aid)
@@ -657,17 +688,17 @@ function account_service_class_fetch($aid,$property) {
 	if(! x($service_class))
 		return false; // everything is allowed
 
-	$arr = get_config('service_class',$service_class);
+	$arr = get_config('service_class', $service_class);
 
 	if(! is_array($arr) || (! count($arr)))
 		return false;
 
-	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
+	return((array_key_exists($property, $arr)) ? $arr[$property] : false);
 }
 
 
 function upgrade_link($bbcode = false) {
-	$l = get_config('service_class','upgrade_link');
+	$l = get_config('service_class', 'upgrade_link');
 	if(! $l)
 		return '';
 	if($bbcode)

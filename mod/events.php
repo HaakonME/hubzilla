@@ -8,6 +8,8 @@ require_once('include/items.php');
 
 function events_post(&$a) {
 
+	logger('post: ' . print_r($_REQUEST,true));
+
 	if(! local_channel())
 		return;
 
@@ -83,11 +85,19 @@ function events_post(&$a) {
 	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish";
 	if(strcmp($finish,$start) < 0 && !$nofinish) {
 		notice( t('Event can not end before it has started.') . EOL);
+		if(intval($_REQUEST['preview'])) {
+			echo( t('Unable to generate preview.'));
+			killme();
+		}
 		goaway($onerror_url);
 	}
 
 	if((! $summary) || (! $start)) {
 		notice( t('Event title and start time are required.') . EOL);
+		if(intval($_REQUEST['preview'])) {
+			echo( t('Unable to generate preview.'));
+			killme();
+		}
 		goaway($onerror_url);
 	}
 
@@ -102,6 +112,10 @@ function events_post(&$a) {
 		);
 		if(! $x) {
 			notice( t('Event not found.') . EOL);
+			if(intval($_REQUEST['preview'])) {
+				echo( t('Unable to generate preview.'));
+				killme();
+			}
 			return;
 		}
 		if($x[0]['allow_cid'] === '<' . $channel['channel_hash'] . '>' 
@@ -178,6 +192,12 @@ function events_post(&$a) {
 	$datarray['created'] = $created;
 	$datarray['edited'] = $edited;
 
+	if(intval($_REQUEST['preview'])) {
+		$html = format_event_html($datarray);
+		echo $html;
+		killme();
+	}
+
 	$event = event_store_event($datarray);
 
 
@@ -252,6 +272,10 @@ function events_content(&$a) {
 		if(argc() > 2 && argv(1) === 'add') {
 			$mode = 'add';
 			$item_id = intval(argv(2));
+		}
+		if(argc() > 2 && argv(1) === 'drop') {
+			$mode = 'drop';
+			$event_id = argv(2);
 		}
 		if(argv(1) === 'new') {
 			$mode = 'new';
@@ -392,6 +416,9 @@ function events_content(&$a) {
 				$last_date = $d;
 // FIXME
 				$edit = (intval($rr['item_wall']) ? array($a->get_baseurl().'/events/event/'.$rr['event_hash'],t('Edit event'),'','') : null);
+
+				$drop = array($a->get_baseurl().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');
+
 				$title = strip_tags(html_entity_decode(bbcode($rr['summary']),ENT_QUOTES,'UTF-8'));
 				if(! $title) {
 					list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);
@@ -405,6 +432,7 @@ function events_content(&$a) {
 					'hash' => $rr['event_hash'],
 					'start'=> $start,
 					'end' => $end,
+					'drop' => $drop,
 					'allDay' => false,
 					'title' => $title,
 					
@@ -459,6 +487,30 @@ function events_content(&$a) {
 		
 	}
 
+	if($mode === 'drop' && $event_id) {
+		$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($event_id),
+			intval(local_channel())
+		);
+		if($r) {
+			$r = q("delete from event where event_hash = '%s' and uid = %d limit 1",
+				dbesc($event_id),
+				intval(local_channel())
+			);
+			if($r) {
+				$r = q("update item set resource_type = '', resource_id = '' where resource_type = 'event' and resource_id = '%s' and uid = %d",
+					dbesc($event_id),
+					intval(local_channel())
+				);
+				info( t('Event removed') . EOL);
+			}
+			else {
+				notice( t('Failed to remove event' ) . EOL);
+			}
+			goaway(z_root() . '/events');
+		}
+	}
+
 	if($mode === 'edit' && $event_id) {
 		$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($event_id),
@@ -497,10 +549,12 @@ function events_content(&$a) {
 		if(! x($orig_event))
 			$sh_checked = '';
 		else
-			$sh_checked = (($orig_event['allow_cid'] === '<' . $channel['channel_hash'] . '>' && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
+			$sh_checked = ((($orig_event['allow_cid'] === '<' . $channel['channel_hash'] . '>' || (! $orig_event['allow_cid'])) && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
 
 		if($orig_event['event_xchan'])
 			$sh_checked .= ' disabled="disabled" ';
+
+
 
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
@@ -587,7 +641,7 @@ function events_content(&$a) {
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
 			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"),'finish_text',true,true,'start_text'),
-			'$adjust' => array('adjust', t('Adjust for viewer timezone'), $a_checked),
+			'$adjust' => array('adjust', t('Adjust for viewer timezone'), $a_checked, t('Important for events that happen in a particular place. Not practical for global holidays.'),),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$d_text' => t('Description:'), 
 			'$d_orig' => $d_orig,
@@ -597,6 +651,7 @@ function events_content(&$a) {
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
+			'$preview' => t('Preview'),
 			'$permissions' => t('Permissions'),
 			'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults),false)),
 			'$submit' => t('Submit')

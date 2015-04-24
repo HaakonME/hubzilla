@@ -114,7 +114,7 @@ function editlayout_content(&$a) {
 		'$ispublic'      => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag'        => $geotag,
 		'$nickname'      => $channel['channel_address'],
-	    '$confirmdelete' => t('Delete layout?')
+		'$confirmdelete' => t('Delete layout?')
 	));
 
 
@@ -137,6 +137,11 @@ function editlayout_content(&$a) {
 		'$action'              => 'item',
 		'$webpage'             => ITEM_TYPE_PDL,
 		'$share'               => t('Edit'),
+		'$bold' => t('Bold'),
+		'$italic' => t('Italic'),
+		'$underline' => t('Underline'),
+		'$quote' => t('Quote'),
+		'$code' => t('Code'),
 		'$upload'              => t('Upload photo'),
 		'$attach'              => t('Attach file'),
 		'$weblink'             => t('Insert web link'),
@@ -165,7 +170,6 @@ function editlayout_content(&$a) {
 		'$acl'                 => '', 
 		'$bang'                => '',
 		'$profile_uid'         => (intval($owner)),
-		'$preview'             => true, // ((feature_enabled($uid,'preview')) ? t('Preview') : ''),
 		'$jotplugins'          => $jotplugins,
 		'$sourceapp'           => t($a->sourcename),
 		'$defexpire'           => '',

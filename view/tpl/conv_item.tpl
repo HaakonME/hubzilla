@@ -21,14 +21,14 @@
 				{{/if}}
 				{{if $item.lock}}
 				<div class="wall-item-lock dropdown">
-					<i class="icon-lock lockview dropdown-toggle" data-toggle="dropdown" title="{{$item.lock}}" onclick="lockview(event,{{$item.id}});" ></i><ul id="panel-{{$item.id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
+					<i class="icon-lock lockview dropdown-toggle" data-toggle="dropdown" title="{{$item.lock}}" onclick="lockview('item',{{$item.id}});" ></i><ul id="panel-{{$item.id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
 				</div>
 				{{/if}}
 				<div class="wall-item-author">
 					<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.sparkle}}" id="wall-item-name-{{$item.id}}" >{{$item.name}}</span></a>{{if $item.owner_url}}&nbsp;{{$item.via}}&nbsp;<a href="{{$item.owner_url}}" title="{{$item.olinktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.osparkle}}" id="wall-item-ownername-{{$item.id}}">{{$item.owner_name}}</span></a>{{/if}}
 				</div>
 				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}">
-					{{if $item.verified}}<i class="icon-ok item-verified" title="{{$item.verified}}"></i>&nbsp;{{elseif $item.forged}}<i class="icon-remove item-forged" title="{{$item.forged}}"></i>&nbsp;{{/if}}{{if $item.location}}<span class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}},&nbsp;</span>{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}}&nbsp;{{$item.editedtime}}{{/if}}{{if $item.expiretime}}&nbsp;{{$item.expiretime}}{{/if}}</span>{{if $item.editedtime}}&nbsp;<i class="icon-pencil"></i>{{/if}}&nbsp;{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}
+					{{if $item.verified}}<i class="icon-ok item-verified" title="{{$item.verified}}"></i>&nbsp;{{elseif $item.forged}}<i class="icon-exclamation item-forged" title="{{$item.forged}}"></i>&nbsp;{{/if}}{{if $item.location}}<span class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}},&nbsp;</span>{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}}&nbsp;{{$item.editedtime}}{{/if}}{{if $item.expiretime}}&nbsp;{{$item.expiretime}}{{/if}}</span>{{if $item.editedtime}}&nbsp;<i class="icon-pencil"></i>{{/if}}&nbsp;{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}
 				</div>
 				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-title-end"></div>
@@ -56,15 +56,39 @@
 				<div class="wall-item-tools">
 					<div class="wall-item-tools-right btn-group pull-right">
 						{{if $item.like}}
-						<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false">
-							<i class="icon-thumbs-up-alt" title="{{$item.like.0}}"></i>
+						<button type="button" title="{{$item.like.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false;">
+							<i class="icon-thumbs-up-alt" ></i>
 						</button>
 						{{/if}}
 						{{if $item.dislike}}
-						<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false">
-							<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}"></i>
+						<button type="button" title="{{$item.dislike.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false;">
+							<i class="icon-thumbs-down-alt" ></i>
 						</button>
 						{{/if}}
+						{{if $item.isevent}}
+						<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
+							<i class="icon-ok" ></i>
+						</button>
+						<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
+							<i class="icon-remove" ></i>
+						</button>
+						<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
+							<i class="icon-question" ></i>
+						</button>
+						{{/if}}
+
+						{{if $item.canvote}}
+						<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
+							<i class="icon-ok" ></i>
+						</button>
+						<button type="button" title="{{$item.conlabels.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'disagree'); return false;">
+							<i class="icon-remove" ></i>
+						</button>
+						<button type="button" title="{{$item.conlabels.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'abstain'); return false;">
+							<i class="icon-question" ></i>
+						</button>
+						{{/if}}
+
 						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
 							<i class="icon-caret-down"></i>
 						</button>
@@ -93,81 +117,52 @@
 							{{if $item.star}}
 							<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
 							{{/if}}
+							{{if $item.drop.dropping}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="icon-trash"></i> {{$item.drop.delete}}</a></li>
+							{{/if}}
 							{{if $item.item_photo_menu}}
 							<li role="presentation" class="divider"></li>
 							{{$item.item_photo_menu}}
 							{{/if}}
-							{{if $item.drop.dropping}}
-							<li role="presentation" class="divider"></li>
-							<li role="presentation"><a role="menuitem" href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove"></i> {{$item.drop.delete}}</a></li>
-							{{/if}}
 						</ul>
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
-					<div class="wall-item-tools-left{{if $item.like_count &&  $item.dislike_count}} btn-group{{/if}}">
-						{{if $item.like_count}}
+
+					{{if $item.responses }}
+					<div class="wall-item-tools-left{{if $item.responses.count > 1}} btn-group{{/if}}">
+					{{foreach $item.responses as $verb=>$response}}
+						{{if $response.count}}
 						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-like-{{$item.id}}">{{$item.like_count}} {{$item.like_button_label}}</button>
-							{{if $item.like_list_part}}
-							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $item.like_list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-{{$verb}}-{{$item.id}}">{{$response.count}} {{$response.button}}</button>
+							{{if $response.list_part}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-{{$verb}}-{{$item.id}}">{{foreach $response.list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 							{{else}}
-							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $item.like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-{{$verb}}-{{$item.id}}">{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							{{/if}}
+							{{if $response.list_part}}
+							<div class="modal" id="{{$verb}}Modal-{{$item.id}}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">{{$response.title}}</h4>
+										</div>
+										<div class="modal-body">
+										<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+										</div>
+										<div class="modal-footer clear">
+											<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+										</div>
+									</div><!-- /.modal-content -->
+								</div><!-- /.modal-dialog -->
+							</div><!-- /.modal -->
 							{{/if}}
 						</div>
 						{{/if}}
-						{{if $item.dislike_count}}
-						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-sm wall-item-dislike dropdown-toggle" data-toggle="dropdown" id="wall-item-dislike-{{$item.id}}">{{$item.dislike_count}} {{$item.dislike_button_label}}</button>
-							{{if $item.dislike_list_part}}
-							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$item.id}}">{{foreach $item.dislike_list_part as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
-							{{else}}
-							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$item.id}}">{{foreach $item.dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
-							{{/if}}
-						</div>
-						{{/if}}
+					{{/foreach}}
 					</div>
-					{{if $item.like_list_part}}
-					<div class="modal" id="likeModal-{{$item.id}}">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-									<h4 class="modal-title">{{$item.like_modal_title}}</h4>
-								</div>
-								<div class="modal-body">
-									<ul>{{foreach $item.like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
-								</div>
-								<div class="modal-footer clear">
-									<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
-								</div>
-							</div><!-- /.modal-content -->
-						</div><!-- /.modal-dialog -->
-					</div><!-- /.modal -->
-					{{/if}}
-					{{if $item.dislike_list_part}}
-					<div class="modal" id="dislikeModal-{{$item.id}}">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-									<h4 class="modal-title">{{$item.dislike_modal_title}}</h4>
-								</div>
-								<div class="modal-body">
-									<ul>{{foreach $item.dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
-								</div>
-								<div class="modal-footer clear">
-									<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
-								</div>
-							</div><!-- /.modal-content -->
-						</div><!-- /.modal-dialog -->
-					</div><!-- /.modal -->
 					{{/if}}
 				</div>
-				{{* we dont' use this do we?
-				{{if $item.drop.pagedrop}}
-				<input type="checkbox" onclick="checkboxhighlight(this);" title="{{$item.drop.select}}" class="item-select" name="itemselected[]" value="{{$item.id}}" />
-				{{/if}}
-				*}}
 				<div class="clear"></div>
 			</div>
 			<div class="wall-item-wrapper-end"></div>

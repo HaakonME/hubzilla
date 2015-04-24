@@ -1,18 +1,26 @@
-<?php /** @file */
-
+<?php
+/**
+ * @file include/text.php
+ */
 
 require_once("include/template_processor.php");
 require_once("include/smarty.php");
 
+// random string, there are 86 characters max in text mode, 128 for hex
+// output is urlsafe
+
+define('RANDOM_STRING_HEX',  0x00 );
+define('RANDOM_STRING_TEXT', 0x01 );
+
 /**
- * This is our template processor
+ * @brief This is our template processor.
  *
  * @param string|FriendicaSmarty $s the string requiring macro substitution,
- *									or an instance of FriendicaSmarty
+ *   or an instance of FriendicaSmarty
  * @param array $r key value pairs (search => replace)
  * @return string substituted string
  */
-function replace_macros($s,$r) {
+function replace_macros($s, $r) {
 	$a = get_app();
 
 	$arr = array('template' => $s, 'params' => $r);
@@ -24,40 +32,38 @@ function replace_macros($s,$r) {
 	return $output;
 }
 
-
-// random string, there are 86 characters max in text mode, 128 for hex
-// output is urlsafe
-
-define('RANDOM_STRING_HEX',  0x00 );
-define('RANDOM_STRING_TEXT', 0x01 );
-
-
-function random_string($size = 64,$type = RANDOM_STRING_HEX) {
+/**
+ * @brief Generates a random string.
+ *
+ * @param number $size
+ * @param int $type
+ * @return string
+ */
+function random_string($size = 64, $type = RANDOM_STRING_HEX) {
 	// generate a bit of entropy and run it through the whirlpool
 	$s = hash('whirlpool', (string) rand() . uniqid(rand(),true) . (string) rand(),(($type == RANDOM_STRING_TEXT) ? true : false));
 	$s = (($type == RANDOM_STRING_TEXT) ? str_replace("\n","",base64url_encode($s,true)) : $s);
-	return(substr($s,0,$size));
+
+	return(substr($s, 0, $size));
 }
 
 /**
- * This is our primary input filter.
+ * @brief This is our primary input filter.
  *
  * The high bit hack only involved some old IE browser, forget which (IE5/Mac?)
  * that had an XSS attack vector due to stripping the high-bit on an 8-bit character
  * after cleansing, and angle chars with the high bit set could get through as markup.
- * 
+ *
  * This is now disabled because it was interfering with some legitimate unicode sequences 
  * and hopefully there aren't a lot of those browsers left. 
  *
  * Use this on any text input where angle chars are not valid or permitted
  * They will be replaced with safer brackets. This may be filtered further
- * if these are not allowed either.   
+ * if these are not allowed either.
  *
  * @param string $string Input string
  * @return string Filtered string
  */
-
-
 function notags($string) {
 
 	return(str_replace(array("<",">"), array('[',']'), $string));
@@ -92,12 +98,20 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return escape_tags($s);
 	if($type == 'text/plain')
 		return escape_tags($s);
+
+	$a = get_app();
+	if($a->is_sys) {
+		return $s;
+	}
+
 	$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 		intval($channel_id)
 	);
-	if($r && (($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-		if(local_channel() && (get_account_id() == $r[0]['account_id'])) {
-			return $s;
+	if($r) {
+		if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
+			if(local_channel() && (get_account_id() == $r[0]['account_id'])) {
+				return $s;
+			}
 		}
 	}
 
@@ -105,10 +119,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return purify_html($s);
 
 	return escape_tags($s);
-
 }
-
-
 
 
 
@@ -116,39 +127,38 @@ function purify_html($s) {
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
 
-// FIXME this function has html output, not bbcode - so safely purify these
-//	$s = html2bb_video($s);
-//	$s = oembed_html2bbcode($s);
+/**
+ * @FIXME this function has html output, not bbcode - so safely purify these
+ * $s = html2bb_video($s);
+ * $s = oembed_html2bbcode($s);
+ */
 
 	$config = HTMLPurifier_Config::createDefault();
 	$config->set('Cache.DefinitionImpl', null);
 	$config->set('Attr.EnableID', true);
 
 	$purifier = new HTMLPurifier($config);
+
 	return $purifier->purify($s);
 }
 
 
 
-
-
-// generate a string that's random, but usually pronounceable. 
-// used to generate initial passwords
-
-
 /**
- * generate a string that's random, but usually pronounceable. 
- * used to generate initial passwords
+ * @brief generate a string that's random, but usually pronounceable.
+ *
+ * Used to generate initial passwords.
+ *
  * @param int $len
  * @return string
  */
 function autoname($len) {
 
-	if($len <= 0)
+	if ($len <= 0)
 		return '';
 
 	$vowels = array('a','a','ai','au','e','e','e','ee','ea','i','ie','o','ou','u'); 
-	if(mt_rand(0,5) == 4)
+	if (mt_rand(0, 5) == 4)
 		$vowels[] = 'y';
 
 	$cons = array(
@@ -180,8 +190,8 @@ function autoname($len) {
 	$noend = array('bl', 'br', 'cl','cr','dr','fl','fr','gl','gr',
 				'kh', 'kl','kr','mn','pl','pr','rh','tr','qu','wh');
 
-	$start = mt_rand(0,2);
-	if($start == 0)
+	$start = mt_rand(0, 2);
+	if ($start == 0)
 		$table = $vowels;
 	else
 		$table = $cons;
@@ -192,33 +202,30 @@ function autoname($len) {
 		$r = mt_rand(0,count($table) - 1);
 		$word .= $table[$r];
 
-		if($table == $vowels)
-			$table = array_merge($cons,$midcons);
+		if ($table == $vowels)
+			$table = array_merge($cons, $midcons);
 		else
 			$table = $vowels;
-
 	}
 
 	$word = substr($word,0,$len);
 
-	foreach($noend as $noe) {
-		if((strlen($word) > 2) && (substr($word,-2) == $noe)) {
+	foreach ($noend as $noe) {
+		if ((strlen($word) > 2) && (substr($word,-2) == $noe)) {
 			$word = substr($word,0,-1);
 			break;
 		}
 	}
-	if(substr($word,-1) == 'q')
-		$word = substr($word,0,-1);
+	if (substr($word, -1) == 'q')
+		$word = substr($word, 0, -1);
+
 	return $word;
 }
 
 
-// escape text ($str) for XML transport
-// returns escaped text.
-
-
 /**
- * escape text ($str) for XML transport
+ * @brief escape text ($str) for XML transport
+ *
  * @param string $str
  * @return string Escaped text.
  */
@@ -230,7 +237,6 @@ function xmlify($str) {
 		$char = mb_substr($str,$x,1);
 
 		switch( $char ) {
-
 			case "\r" :
 				break;
 			case "&" :
@@ -254,9 +260,10 @@ function xmlify($str) {
 			default :
 				$buffer .= $char;
 				break;
-		}	
+		}
 	}
 	$buffer = trim($buffer);
+
 	return($buffer);
 }
 
@@ -270,10 +277,12 @@ function unxmlify($s) {
 	return $ret;
 }
 
-// convenience wrapper, reverse the operation "bin2hex"
-
-// This is a built-in function in php >= 5.4
-
+/**
+ * Convenience wrapper, reverse the operation "bin2hex"
+ * This is a built-in function in php >= 5.4
+ *
+ * @FIXME We already have php >= 5.4 requirements, so can we remove this?
+ */
 if(! function_exists('hex2bin')) {
 function hex2bin($s) {
 	if(! (is_string($s) && strlen($s)))
@@ -360,8 +369,6 @@ function paginate(&$a) {
 
 function alt_pager(&$a, $i, $more = '', $less = '') {
 
-	$o = '';
-
 	if(! $more)
 		$more = t('older');
 	if(! $less)
@@ -370,10 +377,10 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
-	$pagenum = $a->pager['page'];
+	//$pagenum = $a->pager['page'];
 	$url = $a->get_baseurl() . '/' . $stripped;
 
-	return replace_macros(get_markup_template('alt_pager.tpl'),array(
+	return replace_macros(get_markup_template('alt_pager.tpl'), array(
 		'$has_less' => (($a->pager['page'] > 1) ? true : false),
 		'$has_more' => (($i > 0 && $i >= $a->pager['itemspage']) ? true : false),
 		'$less' => $less,
@@ -385,14 +392,16 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 
 }
 
-// Turn user/group ACLs stored as angle bracketed text into arrays
-
-
+/**
+ * @brief Turn user/group ACLs stored as angle bracketed text into arrays.
+ *
+ * turn string array of angle-bracketed elements into string array
+ * e.g. "<123xyz><246qyo><sxo33e>" => array(123xyz,246qyo,sxo33e);
+ *
+ * @param string $s
+ * @return array
+ */
 function expand_acl($s) {
-
-	// turn string array of angle-bracketed elements into string array
-	// e.g. "<123xyz><246qyo><sxo33e>" => array(123xyz,246qyo,sxo33e);
-
 	$ret = array();
 
 	if(strlen($s)) {
@@ -403,34 +412,41 @@ function expand_acl($s) {
 				$ret[] = $aa;
 		}
 	}
+
 	return $ret;
 }
 
-// Used to wrap ACL elements in angle brackets for storage 
-
-
+/**
+ * @brief Used to wrap ACL elements in angle brackets for storage.
+ *
+ * @param[in,out] array &$item
+ */
 function sanitise_acl(&$item) {
-	if(strlen($item))
+	if (strlen($item))
 		$item = '<' . notags(trim($item)) . '>';
 	else
 		unset($item);
 }
 
-
-// Convert an ACL array to a storable string
-
+/**
+ * @brief Convert an ACL array to a storable string.
+ *
+ * @param array $p
+ * @return array
+ */
 function perms2str($p) {
 	$ret = '';
 
-	if(is_array($p))
+	if (is_array($p))
 		$tmp = $p;
 	else
-		$tmp = explode(',',$p);
+		$tmp = explode(',', $p);
 
-	if(is_array($tmp)) {
-		array_walk($tmp,'sanitise_acl');
-		$ret = implode('',$tmp);
+	if (is_array($tmp)) {
+		array_walk($tmp, 'sanitise_acl');
+		$ret = implode('', $tmp);
 	}
+
 	return $ret;
 }
 
@@ -600,6 +616,7 @@ function activity_match($haystack,$needle) {
 
 function get_tags($s) {
 	$ret = array();
+	$match = array();
 
 	// ignore anything in a code block
 
@@ -625,7 +642,8 @@ function get_tags($s) {
 	// The lookbehind is used to prevent a match in the middle of a word
 	// '=' needs to be avoided because when the replacement is made (in handle_tag()) it has to be ignored there
 	// Feel free to allow '=' if the issue with '=' is solved in handle_tag()
-	if(preg_match_all('/(?<![a-zA-Z0-9=])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
+	// added / ? and [ to avoid issues with hashchars in url paths
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$ret[] = substr($mtch,0,-1);
@@ -637,7 +655,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
@@ -739,6 +757,7 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
+
 	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and not ( abook_flags & %d )>0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra",
 			intval($a->profile['uid']),
 			intval($abook_flags)
@@ -750,15 +769,13 @@ function contact_block() {
 		$contacts = t('No connections');
 		$micropro = null;
 	} else {
-		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
-			$randfunc = 'RANDOM()';
-		} else {
-			$randfunc = 'RAND()';
-		}
+		
+		$randfunc = db_getfunc('RAND');
+	
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d)>0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra ORDER BY $randfunc LIMIT %d",
-				intval($a->profile['uid']),
-				intval($abook_flags|ABOOK_FLAG_ARCHIVED),
-				intval($shown)
+			intval($a->profile['uid']),
+			intval($abook_flags|ABOOK_FLAG_ARCHIVED),
+			intval($shown)
 		);
 
 		if(count($r)) {
@@ -861,49 +878,46 @@ function valid_email($x){
 	return false;
 }
 
-
 /**
+ * @brief Replace naked text hyperlink with HTML formatted hyperlink.
  *
- * Function: linkify
- *
- * Replace naked text hyperlink with HTML formatted hyperlink
- *
+ * @param string $s
+ * @param boolean $me (optional) default false
+ * @return string
  */
-
-
-function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\@\~\#\'\%\$\!\+]*)/", ' <a href="$1" >$1</a>', $s);
+function linkify($s, $me = false) {
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\@\~\#\'\%\$\!\+\,\@]*)/", (($me) ? ' <a href="$1" rel="me" >$1</a>' : ' <a href="$1" >$1</a>'), $s);
 	$s = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$s);
+
 	return($s);
 }
 
-
 /**
- * @function sslify($s)
- *    Replace media element using http url with https to a local redirector if using https locally
- * @param string $s
+ * @brief Replace media element using http url with https to a local redirector
+ *  if using https locally.
  *
  * Looks for HTML tags containing src elements that are http when we're viewing an https page
  * Typically this throws an insecure content violation in the browser. So we redirect them
  * to a local redirector which uses https and which redirects to the selected content
  *
+ * @param string $s
  * @returns string
  */
 function sslify($s) {
-	if(strpos(z_root(),'https:') === false)
+	if (strpos(z_root(),'https:') === false)
 		return $s;
 
 	$matches = null;
 	$cnt = preg_match_all("/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/",$s,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $match) {
-			$filename = basename( parse_url($match[2],PHP_URL_PATH) );
+	if ($cnt) {
+		foreach ($matches as $match) {
+			$filename = basename( parse_url($match[2], PHP_URL_PATH) );
 			$s = str_replace($match[2],z_root() . '/sslify/' . $filename . '?f=&url=' . urlencode($match[2]),$s);
 		}
 	}
+
 	return $s;
 }
-
 
 
 function get_poke_verbs() {
@@ -1028,56 +1042,50 @@ function list_smilies() {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="r#" />matrix</strong></a>'
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
 
 	);
 
 	$params = array('texts' => $texts, 'icons' => $icons);
 	call_hooks('smilie', $params);
+
 	return $params;
 }
 /**
- * 
- * Function: smilies
- *
- * Description:
- * Replaces text emoticons with graphical images
- *
- * @Parameter: string $s
- *
- * Returns string
+ * @brief Replaces text emoticons with graphical images.
  *
  * It is expected that this function will be called using HTML text.
  * We will escape text between HTML pre and code blocks, and HTML attributes
  * (such as urls) from being processed.
- * 
+ *
  * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
  * function from being executed by the prepare_text() routine when preparing
- * bbcode source for HTML display
+ * bbcode source for HTML display.
  *
+ * @param string $s
+ * @param boolean $sample (optional) default false
+ * @return string
  */
 function smilies($s, $sample = false) {
-	$a = get_app();
 
-	if(intval(get_config('system','no_smilies')) 
-		|| (local_channel() && intval(get_pconfig(local_channel(),'system','no_smilies'))))
+	if(intval(get_config('system', 'no_smilies')) 
+		|| (local_channel() && intval(get_pconfig(local_channel(), 'system', 'no_smilies'))))
 		return $s;
 
-	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism','smile_shield',$s);
-	$s = preg_replace_callback('/<[a-z]+ .*?>/ism','smile_shield',$s);
+	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism', 'smile_shield', $s);
+	$s = preg_replace_callback('/<[a-z]+ .*?>/ism', 'smile_shield', $s);
 
 	$params = list_smilies();
 	$params['string'] = $s;
 
-	if($sample) {
+	if ($sample) {
 		$s = '<div class="smiley-sample">';
-		for($x = 0; $x < count($params['texts']); $x ++) {
+		for ($x = 0; $x < count($params['texts']); $x ++) {
 			$s .= '<dl><dt>' . $params['texts'][$x] . '</dt><dd>' . $params['icons'][$x] . '</dd></dl>';
 		}
-	}
-	else {
+	} else {
 		$params['string'] = preg_replace_callback('/&lt;(3+)/','preg_heart',$params['string']);
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
@@ -1087,6 +1095,12 @@ function smilies($s, $sample = false) {
 	return $s;
 }
 
+/**
+ * @brief
+ *
+ * @param array $m
+ * @return string
+ */
 function smile_shield($m) {
 	return '<!--base64:' . base64url_encode($m[0]) . '-->';
 }
@@ -1095,16 +1109,22 @@ function smile_unshield($m) {
 	return base64url_decode($m[1]); 
 }
 
-// expand <3333 to the correct number of hearts
-
+/**
+ * @brief Expand <3333 to the correct number of hearts.
+ *
+ * @param array $x
+ */
 function preg_heart($x) {
 	$a = get_app();
-	if(strlen($x[1]) == 1)
+	if (strlen($x[1]) == 1)
 		return $x[0];
+
 	$t = '';
 	for($cnt = 0; $cnt < strlen($x[1]); $cnt ++)
 		$t .= '<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="<3" />';
+
 	$r =  str_replace($x[0],$t,$x[0]);
+
 	return $r;
 }
 
@@ -1122,27 +1142,33 @@ function day_translate($s) {
 	return $ret;
 }
 
-
-
+/**
+ * @brief normalises a string.
+ *
+ * @param string $url
+ * @return string
+ */
 function normalise_link($url) {
-	$ret = str_replace(array('https:','//www.'), array('http:','//'), $url);
-	return(rtrim($ret,'/'));
+	$ret = str_replace(array('https:', '//www.'), array('http:', '//'), $url);
+
+	return(rtrim($ret, '/'));
 }
 
 /**
+ * @brief Compare two URLs to see if they are the same.
  *
- * Compare two URLs to see if they are the same, but ignore
- * slight but hopefully insignificant differences such as if one 
- * is https and the other isn't, or if one is www.something and 
- * the other isn't - and also ignore case differences.
+ * But ignore slight but hopefully insignificant differences such as if one
+ * is https and the other isn't, or if one is www.something and the other
+ * isn't - and also ignore case differences.
  *
- * Return true if the URLs match, otherwise false.
+ * @see normalis_link()
  *
+ * @param string $a
+ * @param string $b
+ * @return true if the URLs match, otherwise false
  */
-
-
-function link_compare($a,$b) {
-	if(strcasecmp(normalise_link($a),normalise_link($b)) === 0)
+function link_compare($a, $b) {
+	if (strcasecmp(normalise_link($a), normalise_link($b)) === 0)
 		return true;
 
 	return false;
@@ -1162,6 +1188,17 @@ function unobscure(&$item) {
 	}
 }
 
+function unobscure_mail(&$item) {
+	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+		if($item['body'])
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+}
+
+
 function theme_attachments(&$item) {
 
 	$arr = json_decode_plus($item['attach']);
@@ -1171,8 +1208,10 @@ function theme_attachments(&$item) {
 			$icon = '';
 			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
 
-			// FIXME This should probably be a giant "if" statement in the template so that we don't have icon names
-			// embedded in php code
+			/**
+			 * @FIXME This should probably be a giant "if" statement in the
+			 * template so that we don't have icon names embedded in php code.
+			 */
 
 			switch($icontype) {
 				case 'video':
@@ -1238,15 +1277,19 @@ function format_categories(&$item,$writeable) {
 	return $s;
 }
 
-// Add any hashtags which weren't mentioned in the message body, e.g. community tags
-
+/**
+ * @brief Add any hashtags which weren't mentioned in the message body, e.g. community tags
+ *
+ * @param[in] array &$item
+ * @return string HTML link of hashtag
+ */
 function format_hashtags(&$item) {
-
 	$s = '';
-	$terms = get_terms_oftype($item['term'],TERM_HASHTAG);
+
+	$terms = get_terms_oftype($item['term'], TERM_HASHTAG);
 	if($terms) {
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
+			$term = htmlspecialchars($t['term'], ENT_COMPAT, 'UTF-8', false) ;
 			if(! trim($term))
 				continue;
 			if(strpos($item['body'], $t['url']))
@@ -1258,6 +1301,7 @@ function format_hashtags(&$item) {
 			$s .= '#<a href="' . zid($t['url']) . '" >' . $term . '</a>';
 		}
 	}
+
 	return $s;
 }
 
@@ -1281,6 +1325,7 @@ function format_mentions(&$item) {
 			$s .= '@<a href="' . zid($t['url']) . '" >' . $term . '</a>';
 		}
 	}
+
 	return $s;
 }
 
@@ -1313,13 +1358,13 @@ function generate_map($coord) {
 	$coord = str_replace(array(',','/','  '),array(' ',' ',' '),$coord);
 	$arr = array('lat' => trim(substr($coord,0,strpos($coord,' '))), 'lon' => trim(substr($coord,strpos($coord,' ')+1)), 'html' => '');
 	call_hooks('generate_map',$arr);
-	return $arr['html'];
+	return (($arr['html']) ? $arr['html'] : $coord);
 }
 
 function generate_named_map($location) {
 	$arr = array('location' => $location, 'html' => '');
 	call_hooks('generate_named_map',$arr);
-	return $arr['html'];
+	return (($arr['html']) ? $arr['html'] : $location);
 }
 
 
@@ -1398,11 +1443,14 @@ function prepare_body(&$item,$attach = false) {
 	return $prep_arr['html'];
 }
 
-
-// Given a text string, convert from bbcode to html and add smilie icons.
-
-
-function prepare_text($text,$content_type = 'text/bbcode') {
+/**
+ * @brief Given a text string, convert from bbcode to html and add smilie icons.
+ *
+ * @param string $text
+ * @param sting $content_type
+ * @return string
+ */
+function prepare_text($text, $content_type = 'text/bbcode') {
 
 	switch($content_type) {
 		case 'text/plain':
@@ -1455,19 +1503,21 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 
 /**
  * zidify_callback() and zidify_links() work together to turn any HTML a tags with class="zrl" into zid links
- * These will typically be generated by a bbcode '[zrl]' tag. This is done inside prepare_text() rather than bbcode() 
+ * These will typically be generated by a bbcode '[zrl]' tag. This is done inside prepare_text() rather than bbcode()
  * because the latter is used for general purpose conversions and the former is used only when preparing text for
  * immediate display.
- * 
+ *
  * Issues: Currently the order of HTML parameters in the text is somewhat rigid and inflexible.
- *    We assume it looks like <a class="zrl" href="xxxxxxxxxx"> and will not work if zrl and href appear in a different order. 
+ *    We assume it looks like \<a class="zrl" href="xxxxxxxxxx"\> and will not work if zrl and href appear in a different order.
+ *
+ * @param array $match
+ * @return string
  */
-
-
 function zidify_callback($match) {
 	$is_zid = ((feature_enabled(local_channel(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
 	$replace = '<a' . $match[1] . ' href="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';			
 	$x = str_replace($match[0],$replace,$match[0]);
+
 	return $x;
 }
 
@@ -1476,6 +1526,7 @@ function zidify_img_callback($match) {
 	$replace = '<img' . $match[1] . ' src="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';
 
 	$x = str_replace($match[0],$replace,$match[0]);
+
 	return $x;
 }
 
@@ -1483,16 +1534,17 @@ function zidify_img_callback($match) {
 function zidify_links($s) {
 	$s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
 	$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
+
 	return $s;
 }
 
-
 /**
- * return atom link elements for all of our hubs
+ * @brief Return atom link elements for all of our hubs.
+ *
+ * @return string
  */
-
 function feed_hublinks() {
-	$hub = get_config('system','huburl');
+	$hub = get_config('system', 'huburl');
 
 	$hubxml = '';
 	if(strlen($hub)) {
@@ -1502,6 +1554,7 @@ function feed_hublinks() {
 				$h = trim($h);
 				if(! strlen($h))
 					continue;
+
 				$hubxml .= '<link rel="hub" href="' . xmlify($h) . '" />' . "\n" ;
 			}
 		}
@@ -1553,17 +1606,19 @@ function layout_select($channel_id, $current = '') {
 		intval($channel_id),
 		intval(ITEM_TYPE_PDL)
 	);
+
 	if($r) {
-		$o = t('Select a page layout: ');
-		$o .= '<select name="layout_mid" id="select-layout_mid" >';
-		$empty_selected = (($current === '') ? ' selected="selected" ' : '');
-		$o .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
+		$empty_selected = (($current === false) ? ' selected="selected" ' : '');
+		$options .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
 		foreach($r as $rr) {
 			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
-			$o .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
 		}
-		$o .= '</select>';
 	}
+
+	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(
+		'$field'	=> array('layout_mid', t('Page layout'), $selected, t('You can create your own with the layouts tool'), $options)
+	));
 
 	return $o;
 }
@@ -1578,25 +1633,33 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'text/plain'
 	);
 
-	$r = q("select account_id, account_roles, channel_pageflags from account left join channel on account_id = channel_account_id where
-		channel_id = %d limit 1",
-		intval($channel_id)
-	);
+	$a = get_app();
+	if($a->is_sys) {
+		$x[] = 'application/x-php';
+	}
+	else {
+		$r = q("select account_id, account_roles, channel_pageflags from account left join channel on account_id = channel_account_id where
+			channel_id = %d limit 1",
+			intval($channel_id)
+		);
 
-	if($r) {
-		if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
-			if(local_channel() && get_account_id() == $r[0]['account_id'])
-				$x[] = 'application/x-php';
-		}
+		if($r) {
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) { 
+				if(local_channel() && get_account_id() == $r[0]['account_id']) {
+					$x[] = 'application/x-php';
+				}
+			}
+		}		
 	}
 
-	$o = t('Page content type: ');
-	$o .= '<select name="mimetype" id="mimetype-select">';
 	foreach($x as $y) {
-		$select = (($y == $current)	? ' selected="selected" ' : '');
-		$o .= '<option name="' . $y . '"' . $select . '>' . $y . '</option>';
+		$selected = (($y == $current) ? ' selected="selected" ' : '');
+		$options .= '<option name="' . $y . '"' . $selected . '>' . $y . '</option>';
 	}
-	$o .= '</select>';
+
+	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(
+		'$field'	=> array('mimetype', t('Page content type'), $selected, '', $options)
+	));
 
 	return $o;
 }
@@ -1859,9 +1922,13 @@ function check_webbie($arr) {
 
 function ids_to_querystr($arr,$idx = 'id') {
 	$t = array();
-	foreach($arr as $x)
-		$t[] = $x[$idx];
-
+	if($arr) {
+		foreach($arr as $x) {
+			if(! in_array($x[$idx],$t)) {
+				$t[] = $x[$idx];
+			}
+		}
+	}
 	return(implode(',', $t));
 }
 
@@ -2033,7 +2100,11 @@ function json_decode_plus($s) {
 	return $x;
 }
 
-
+/**
+ * @brief Creates navigation menu for webpage, layout, blocks, menu sites.
+ *
+ * @return string
+ */
 function design_tools() {
 
 	$channel  = get_app()->get_channel();
@@ -2048,7 +2119,7 @@ function design_tools() {
 	$who = $channel['channel_address'];
 
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
-		'$title' => t('Design'),
+		'$title' => t('Design Tools'),
 		'$who' => $who,
 		'$sys' => $sys,
 		'$blocks' => t('Blocks'),
@@ -2094,21 +2165,23 @@ function extra_query_args() {
 }
 
 /**
- * This function removes the tag $tag from the text $body and replaces it with 
- * the appropiate link. 
- * 
- * @param unknown_type $body the text to replace the tag in
- * @param unknown_type $access_tag  - used to return tag ACL exclusions e.g. @!foo
- * @param unknown_type $str_tags string to add the tag to
- * @param unknown_type $profile_uid
- * @param unknown_type $tag the tag to replace
+ * @brief This function removes the tag $tag from the text $body and replaces it
+ * with the appropiate link.
  *
+ * @param App $a
+ * @param[in,out] string &$body the text to replace the tag in
+ * @param[in,out] string &$access_tag used to return tag ACL exclusions e.g. @!foo
+ * @param[in,out] string &$str_tags string to add the tag to
+ * @param int $profile_uid
+ * @param string $tag the tag to replace
+ * @param boolean $diaspora default false
  * @return boolean true if replaced, false if not replaced
  */
-function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
+function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $diaspora = false) {
 
 	$replaced = false;
 	$r = null;
+	$match = array();
 
 	$termtype = ((strpos($tag,'#') === 0)   ? TERM_HASHTAG : TERM_UNKNOWN);
 	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION : $termtype);
@@ -2172,7 +2245,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 	if(strpos($tag,'@') === 0) {
 
 		// The @! tag will alter permissions
-		$exclusive = ((strpos($tag,'!') === 1) ? true : false);
+		$exclusive = ((strpos($tag,'!') === 1 && (! $diaspora)) ? true : false);
 
 		//is it already replaced?
 		if(strpos($tag,'[zrl='))
@@ -2201,10 +2274,19 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 		// Here we're looking for an address book entry as provided by the auto-completer
 		// of the form something+nnn where nnn is an abook_id or the first chars of xchan_hash
 
-		if(strrpos($newname,'+')) {
+
+		// If there's a +nnn in the string make sure there isn't a space preceding it
+
+		$t1 = strpos($newname,' ');
+		$t2 = strrpos($newname,'+');
+
+		if($t1 && $t2 && $t1 < $t2)
+			$t2 = 0;
+
+		if(($t2) && (! $diaspora)) {
 			//get the id
 
-			$tagcid = substr($newname,strrpos($newname,'+') + 1);
+			$tagcid = substr($newname,$t2 + 1);
 
 			if(strrpos($tagcid,' '))
 				$tagcid = substr($tagcid,0,strrpos($tagcid,' '));
@@ -2349,12 +2431,13 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
 }
 
-function linkify_tags($a, &$body, $uid) {
+function linkify_tags($a, &$body, $uid, $diaspora = false) {
 	$str_tags = '';
 	$tagged = array();
-	$result = array();
+	$results = array();
 
 	$tags = get_tags($body);
+
 	if(count($tags)) {
 		foreach($tags as $tag) {
 			$access_tag = '';
@@ -2372,18 +2455,22 @@ function linkify_tags($a, &$body, $uid) {
 			if($fullnametagged)
 				continue;
 
-			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $profile_uid , $tag); 
+			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $a->profile_uid , $tag, $diaspora); 
 			$results[] = array('success' => $success, 'access_tag' => $access_tag);
 			if($success['replaced']) $tagged[] = $tag;
 		}
 	}
+
 	return $results;
 }
 
 /**
- * @brief returns icon name for use with e.g. font-awesome based on mime-type
+ * @brief returns icon name for use with e.g. font-awesome based on mime-type.
  *
- * @param string $type
+ * These are the the font-awesome names of version 3.2.1. The newer font-awesome
+ * 4 has different names.
+ *
+ * @param string $type mime type
  * @return string
  */
 function getIconFromType($type) {
@@ -2436,10 +2523,10 @@ function getIconFromType($type) {
  * @brief Returns a human readable formatted string for filesizes.
  *
  * @param int $size filesize in bytes
- * @return string
+ * @return string human readable formatted filesize
  */
 function userReadableSize($size) {
-	$ret = "";
+	$ret = '';
 	if (is_numeric($size)) {
 		$incr = 0;
 		$k = 1024;
@@ -2448,7 +2535,8 @@ function userReadableSize($size) {
 			$incr++;
 			$size = round($size / $k, 2);
 		}
-		$ret = $size . " " . $unit[$incr];
+		$ret = $size . ' ' . $unit[$incr];
 	}
+
 	return $ret;
 }

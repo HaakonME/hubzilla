@@ -55,11 +55,12 @@ function page_init(&$a) {
 	$sql_options = item_permissions_sql($u[0]['channel_id']);
 
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
-		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-		item_type = %d $sql_options $revision limit 1",
+		where item.uid = %d and sid = '%s' and (( service = 'WEBPAGE' and item_type = %d ) 
+		OR ( service = 'PDL' AND item_type = %d )) $sql_options $revision limit 1",
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
-		intval(ITEM_TYPE_WEBPAGE)
+		intval(ITEM_TYPE_WEBPAGE),
+		intval(ITEM_PDL)
 	);
 
 	if(! $r) {
@@ -83,7 +84,12 @@ function page_init(&$a) {
 		return;
 	}
 
-	if($r[0]['layout_mid']) {
+	if($r[0]['item_restrict'] == ITEM_PDL) {
+		require_once('include/comanche.php');
+		comanche_parser(get_app(),$r[0]['body']);
+			get_app()->pdl = $r[0]['body'];
+	}
+	elseif($r[0]['layout_mid']) {
 		$l = q("select body from item where mid = '%s' and uid = %d limit 1",
 			dbesc($r[0]['layout_mid']),
 			intval($u[0]['channel_id'])
@@ -92,12 +98,11 @@ function page_init(&$a) {
 		if($l) {
 			require_once('include/comanche.php');
 			comanche_parser(get_app(),$l[0]['body']);
+			get_app()->pdl = $l[0]['body'];
 		}
 	}
 
 	$a->data['webpage'] = $r;
-
-
 
 }
 
@@ -110,17 +115,11 @@ function page_content(&$a) {
 	if(! $r)
 		return;
 
-	// logger('layout: ' . print_r($a->layout,true));
-
-	// Use of widgets should be determined by Comanche, but we don't have it on system pages yet, so...
-
-	// I recommend we now get rid of this bit - it's quite a hack to work around... - mike
-
-	if ($perms['write_pages']) {
-		$chan = $a->channel['channel_id'];
-		$who = $channel_address;
-		$which = $r[0]['id'];
-		$o .= writepages_widget($who,$which);
+	if($r[0]['item_restrict'] == ITEM_PDL) {
+		$r[0]['body'] = t('Ipsum Lorem');
+		$r[0]['mimetype'] = 'text/plain';
+		$r[0]['title'] = '';
+		
 	}
 
 	xchan_query($r);

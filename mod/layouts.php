@@ -143,7 +143,7 @@ function layouts_content(&$a) {
 		$pages = array();
 		foreach($r as $rr) {
 			$element_arr = array(
-				'type'      => 'block',
+				'type'      => 'layout',
 				'body'      => $rr['body'],
 				'created'   => $rr['created'],
 				'edited'    => $rr['edited'],

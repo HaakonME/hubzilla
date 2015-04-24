@@ -15,6 +15,10 @@
 	padding: 7px 3px 7px 10px;
 }
 
+#block-list-table th:nth-child(2){
+	white-space: nowrap;
+}
+
 #block-list-table th:nth-child(6),
 #block-list-table td:nth-child(6){
 	padding: 7px 3px;

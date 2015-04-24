@@ -149,7 +149,6 @@ function webpages_content(&$a) {
 				'type'		=> 'webpage',
 				'title'		=> $rr['title'],
 				'body'		=> $rr['body'],
-				'term'		=> $rr['term'],
 				'created'	=> $rr['created'],
 				'edited'	=> $rr['edited'],
 				'mimetype'	=> $rr['mimetype'],

@@ -106,7 +106,7 @@ function blocks_content(&$a) {
 
 	$editor = status_editor($a,$x);
 
-	$r = q("select * from item_id left join item on item_id.iid = item.id
+	$r = q("select iid, sid, mid, title, body, mimetype, created, edited from item_id left join item on item_id.iid = item.id
 		where item_id.uid = %d and service = 'BUILDBLOCK' order by item.created desc",
 		intval($owner)
 	);
@@ -118,6 +118,7 @@ function blocks_content(&$a) {
 		foreach($r as $rr) {
 			$element_arr = array(
 				'type'      => 'block',
+				'title'	    => $rr['title'],
 				'body'      => $rr['body'],
 				'created'   => $rr['created'],
 				'edited'    => $rr['edited'],
@@ -127,7 +128,8 @@ function blocks_content(&$a) {
 			);
 			$pages[$rr['iid']][] = array(
 				'url' => $rr['iid'],
-				'title' => $rr['sid'],
+				'name' => $rr['sid'],
+				'title' => $rr['title'],
 				'created' => $rr['created'],
 				'edited' => $rr['edited'],
 				'bb_element' => '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
@@ -142,6 +144,7 @@ function blocks_content(&$a) {
 		'$baseurl' => $url,
 		'$title' => t('Blocks'),
 		'$name' => t('Block Name'),
+		'$blocktitle' => t('Block Title'),
 		'$created' => t('Created'),
 		'$edited' => t('Edited'),
 		'$create' => t('Create'),

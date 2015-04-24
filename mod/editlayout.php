@@ -23,7 +23,6 @@ function editlayout_init(&$a) {
 
 function editlayout_content(&$a) {
 
-
 	if(! $a->profile) {
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
@@ -69,7 +68,6 @@ function editlayout_content(&$a) {
 
 	$o = '';
 
-
 	// Figure out which post we're editing
 	$post_id = ((argc() > 2) ? intval(argv(2)) : 0);
 
@@ -105,7 +103,9 @@ function editlayout_content(&$a) {
 	$plaintext = true;
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit Layout')
+		'$title' => t('Edit Layout'),
+		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
+		'$id' => $itm[0]['id']
 	));
 	
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
@@ -176,27 +176,6 @@ function editlayout_content(&$a) {
 		'$feature_expire'      => false,
 		'$expires'             => t('Set expiration date'),
 	));
-	
-
-	if(($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash))
-		$o .= '<br /><br /><a class="layout-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Layout') . '</a><br />';
-
-
-	$x = array(
-		'type'      => 'layout',
-		'title'     => $itm[0]['title'],
-		'body'      => $itm[0]['body'],
-		'term'      => $itm[0]['term'],
-		'created'   => $itm[0]['created'],
-		'edited'    => $itm[0]['edited'],
-		'mimetype'  => $itm[0]['mimetype'],
-		'pagetitle' => $page_title,
-		'mid'       => $itm[0]['mid']
-	);
-
-	$o .= EOL . EOL . t('Share') . EOL . '<textarea onclick="this.select();" class="shareable_element_text" >[element]' . base64url_encode(json_encode($x)) . '[/element]</textarea>' . EOL . EOL; 
-
-
 
 	return $o;
 

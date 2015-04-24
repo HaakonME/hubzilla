@@ -1200,6 +1200,7 @@ function status_editor($a, $x, $popup = false) {
 		'$shortnoloc' => t('clear location'),
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => t('Title (optional)'),
+		'$hidetitle' => ((x($x, 'hidetitle')) ? $x['hidetitle'] : false),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),

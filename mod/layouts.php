@@ -120,7 +120,8 @@ function layouts_content(&$a) {
 		'nopreview'   => 1,
 		'ptlabel'     => t('Layout Name'),
 		'profile_uid' => intval($owner),
-		'expanded'    => true
+		'expanded'    => true,
+		'placeholdertitle' => t('Layout Description')
 	);
 
 	if($_REQUEST['title'])
@@ -154,7 +155,8 @@ function layouts_content(&$a) {
 			);
 			$pages[$rr['iid']][] = array(
 				'url' => $rr['iid'],
-				'title' => $rr['sid'], 
+				'title' => $rr['sid'],
+				'descr' => $rr['title'],
 				'mid' => $rr['mid'],
 				'created' => $rr['created'],
 				'edited' => $rr['edited'],
@@ -173,6 +175,7 @@ function layouts_content(&$a) {
 		'$editor'  => $editor,
 		'$baseurl' => $url,
 		'$name' => t('Layout Name'),
+		'$descr' => t('Layout Description'),
 		'$created' => t('Created'),
 		'$edited' => t('Edited'),
 		'$edit'    => t('Edit'),

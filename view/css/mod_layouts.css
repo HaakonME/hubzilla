@@ -15,14 +15,18 @@
 	padding: 7px 3px 7px 10px;
 }
 
-#layout-list-table th:nth-child(5),
-#layout-list-table td:nth-child(5){
-	padding: 7px 3px;
+#layout-list-table th:nth-child(2){
 	white-space: nowrap;
 }
 
 #layout-list-table th:nth-child(6),
 #layout-list-table td:nth-child(6){
+	padding: 7px 3px;
+	white-space: nowrap;
+}
+
+#layout-list-table th:nth-child(7),
+#layout-list-table td:nth-child(7){
 	padding: 7px 10px 7px 7px;
 	white-space: nowrap;
 }

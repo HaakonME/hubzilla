@@ -18,7 +18,8 @@
 <div id="pagelist-content-wrapper" class="section-content-wrapper-np">
 	<table id="layout-list-table">
 		<tr>
-			<th width="97%">{{$name}}</th>
+			<th width="1%">{{$name}}</th>
+			<th width="94%">{{$descr}}</th>
 			<th width="1%"></th>
 			<th width="1%"></th>
 			<th width="1%"></th>
@@ -34,6 +35,9 @@
 				{{else}}
 				{{$item.title}}
 				{{/if}}
+			</td>
+			<td>
+				{{$item.descr}}
 			</td>
 			<td class="webpage-list-tool">
 				{{if $edit}}

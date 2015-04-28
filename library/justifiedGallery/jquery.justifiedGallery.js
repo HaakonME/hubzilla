@@ -45,8 +45,7 @@
       target : null, // rewrite the target of all links
       extension : /\.[^.\\/]+$/,
       refreshTime : 100,
-      randomize : false,
-      ignoreElement: null // a comma seperated list of div element selectors to be ignored e.g.: '.someClass, #someId'
+      randomize : false
     };
 
     function getSuffix(width, height, context) {
@@ -572,8 +571,6 @@
 
         var border = extendedSettings.border >= 0 ? extendedSettings.border : extendedSettings.margins;
 
-	var ignoreElement = extendedSettings.ignoreElement;
-	
         //Context init
         context = {
           settings : extendedSettings,
@@ -622,7 +619,7 @@
       
       checkSettings(context);
 
-      context.entries = $gallery.find('> a, > div:not(.spinner, ' + ignoreElement + ')').toArray();
+      context.entries = $gallery.find('> a, > div:not(.spinner, #page-end)').toArray();
       if (context.entries.length === 0) return;
 
       // Randomize

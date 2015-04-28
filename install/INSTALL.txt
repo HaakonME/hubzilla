@@ -17,7 +17,7 @@ with your hosting provider prior to installation. (And preferably before
 entering into a long-term contract.)
 
 If you encounter installation issues, please let us know via the Github issue 
-tracker (https://github.com/friendica/red/issues). Please be as clear as you 
+tracker (https://github.com/redmatrix/redmatrix/issues). Please be as clear as you 
 can about your operating environment and provide as much detail as possible
 about any error messages you may see, so that we can prevent it from happening 
 in the future. Due to the large variety of operating systems and PHP platforms 

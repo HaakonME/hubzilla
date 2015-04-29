@@ -113,7 +113,8 @@ function webpages_content(&$a) {
 		'profile_uid' => intval($owner),
 		'mimetype'    => $mimetype,
 		'layout'      => $layout,
-		'expanded'    => true
+		'expanded'    => true,
+		'novoting' => true
 	);
 	
 	if($_REQUEST['title'])

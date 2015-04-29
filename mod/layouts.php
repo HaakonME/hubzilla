@@ -121,7 +121,7 @@ function layouts_content(&$a) {
 		'ptlabel'     => t('Layout Name'),
 		'profile_uid' => intval($owner),
 		'expanded'    => true,
-		'placeholdertitle' => t('Layout Description')
+		'placeholdertitle' => t('Layout Description (Optional)')
 	);
 
 	if($_REQUEST['title'])

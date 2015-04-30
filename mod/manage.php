@@ -148,13 +148,15 @@ function manage_content(&$a) {
 		intval(local_channel()),
 		intval(PERMS_A_DELEGATE)
 	);
-	if(! $delegates)
-		$delegates = null;
 
 	if($delegates) {
 		for($x = 0; $x < count($delegates); $x ++) {
-				$delegates[$x]['link'] = 'magic?f=&dest=' . urlencode($delegates[$x]['xchan_url']) . '&delegate=' . urlencode($delegates[$x]['xchan_addr']);
+			$delegates[$x]['link'] = 'magic?f=&dest=' . urlencode($delegates[$x]['xchan_url']) 
+			. '&delegate=' . urlencode($delegates[$x]['xchan_addr']);
 		}
+	}
+	else {
+		$delegates = null;
 	}
 
 

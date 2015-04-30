@@ -1938,6 +1938,7 @@ nav .dropdown-menu {
 
 [id^="webpage-list-item-"]:hover td,
 [id^="block-list-item-"]:hover td,
+[id^="layout-list-item-"]:hover td,
 [id^="menu-list-item-"]:hover td,
 [id^="mitem-list-item-"]:hover td {
 	background-color: $item_colour;

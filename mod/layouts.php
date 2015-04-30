@@ -88,6 +88,9 @@ function layouts_content(&$a) {
 		return;
 	}
 
+	//This feature is not exposed in redbasic ui since it is not clear why one would want to
+	//download a json encoded pdl file - we dont have a possibility to import it.
+	//Use the buildin share/install feature instead.
 	if((argc() > 3) && (argv(2) === 'share') && (argv(3))) {
 		$r = q("select sid, service, mimetype, title, body  from item_id 
 			left join item on item.id = item_id.iid 
@@ -103,18 +106,6 @@ function layouts_content(&$a) {
 		}
 	}
 
-	$tabs = array(
-		array(
-		'label' => t('Layout Help'),
-		'url'   => 'help/Comanche',
-		'sel'   => '',
-		'title' => t('Help with this feature'),
-		'id'    => 'layout-help-tab',
-	));
-
-	//$o .= replace_macros(get_markup_template('common_tabs.tpl'),array('$tabs' => $tabs));
-
-
 	// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 	// Nickname is set to the observers xchan, and profile_uid to the owners.  
 	// This lets you post pages at other people's channels.
@@ -123,15 +114,15 @@ function layouts_content(&$a) {
 		'webpage'     => ITEM_TYPE_PDL,
 		'is_owner'    => true,
 		'nickname'    => $a->profile['channel_address'],
-		//do we need that at this place?
-		//'lockstate'   => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'bang'        => '',
 		'showacl'     => false,
 		'visitor'     => false,
 		'nopreview'   => 1,
 		'ptlabel'     => t('Layout Name'),
 		'profile_uid' => intval($owner),
-		'expanded'    => true
+		'expanded'    => true,
+		'placeholdertitle' => t('Layout Description (Optional)'),
+		'novoting' => true
 	);
 
 	if($_REQUEST['title'])
@@ -141,11 +132,10 @@ function layouts_content(&$a) {
 	if($_REQUEST['pagetitle'])
 		$x['pagetitle'] = $_REQUEST['pagetitle'];
 
-
 	$editor = status_editor($a,$x);
 
-	$r = q("select iid, sid, mid from item_id left join item on item.id = item_id.iid 
-		where item_id.uid = %d and service = 'PDL' order by sid asc",
+	$r = q("select iid, sid, mid, title, body, mimetype, created, edited from item_id left join item on item_id.iid = item.id
+		where item_id.uid = %d and service = 'PDL' order by item.created desc",
 		intval($owner)
 	);
 
@@ -154,10 +144,24 @@ function layouts_content(&$a) {
 	if($r) {
 		$pages = array();
 		foreach($r as $rr) {
+			$element_arr = array(
+				'type'      => 'layout',
+				'title'     => $rr['title'],
+				'body'      => $rr['body'],
+				'created'   => $rr['created'],
+				'edited'    => $rr['edited'],
+				'mimetype'  => $rr['mimetype'],
+				'pagetitle' => $rr['sid'],
+				'mid'       => $rr['mid']
+			);
 			$pages[$rr['iid']][] = array(
 				'url' => $rr['iid'],
-				'title' => $rr['sid'], 
-				'mid' => $rr['mid']
+				'title' => $rr['sid'],
+				'descr' => $rr['title'],
+				'mid' => $rr['mid'],
+				'created' => $rr['created'],
+				'edited' => $rr['edited'],
+				'bb_element' => '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]'
 			);
 		}
 	}
@@ -171,8 +175,13 @@ function layouts_content(&$a) {
 		'$help'    => array('text' => t('Help'), 'url' => 'help/Comanche', 'title' => t('Comanche page description language help')),
 		'$editor'  => $editor,
 		'$baseurl' => $url,
+		'$name' => t('Layout Name'),
+		'$descr' => t('Layout Description'),
+		'$created' => t('Created'),
+		'$edited' => t('Edited'),
 		'$edit'    => t('Edit'),
 		'$share'   => t('Share'),
+		'$download'   => t('Download PDL file'),
 		'$pages'   => $pages,
 		'$channel' => $which,
 		'$view'    => t('View'),

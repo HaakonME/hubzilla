@@ -1086,6 +1086,8 @@ function status_editor($a, $x, $popup = false) {
 //		$plaintext = false;
 
 	$voting = feature_enabled(local_channel(), 'consensus_tools');
+	if(x($x, 'novoting'))
+		$voting = false;
 
 	$mimeselect = '';
 	if(array_key_exists('mimetype', $x) && $x['mimetype']) {
@@ -1190,7 +1192,8 @@ function status_editor($a, $x, $popup = false) {
 		'$noloc' => ((get_pconfig($x['profile_uid'], 'system', 'use_browser_location')) ? t('Clear browser location') : ''),
 		'$shortnoloc' => t('clear location'),
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
-		'$placeholdertitle' => t('Title (optional)'),
+		'$placeholdertitle' => ((x($x, 'placeholdertitle')) ? $x['placeholdertitle'] : t('Title (optional)')),
+		'$hidetitle' => ((x($x, 'hidetitle')) ? $x['hidetitle'] : false),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),

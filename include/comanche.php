@@ -155,7 +155,7 @@ function comanche_block($s) {
 			dbesc($name)
 		);
 		if($r) {
-			$o .= (($var['wrap'] == 'none') ? '' : '<div class="bblock">');
+			$o .= (($var['wrap'] == 'none') ? '' : '<div class="bblock widget">');
 			if($r[0]['title'])
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 

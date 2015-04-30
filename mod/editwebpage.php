@@ -188,7 +188,7 @@ function editwebpage_content(&$a) {
 		'$video' => t('Insert Vorbis [.ogg] video'),
 		'$audio' => t('Insert Vorbis [.ogg] audio'),
 		'$setloc' => t('Set your location'),
-		'$noloc' => t('Clear browser location'),
+		'$noloc' => ((get_pconfig($uid, 'system', 'use_browser_location')) ? t('Clear browser location') : ''),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$ptyp' => $itm[0]['type'],

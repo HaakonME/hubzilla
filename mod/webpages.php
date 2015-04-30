@@ -113,7 +113,8 @@ function webpages_content(&$a) {
 		'profile_uid' => intval($owner),
 		'mimetype'    => $mimetype,
 		'layout'      => $layout,
-		'expanded'    => true
+		'expanded'    => true,
+		'novoting' => true
 	);
 	
 	if($_REQUEST['title'])
@@ -149,7 +150,6 @@ function webpages_content(&$a) {
 				'type'		=> 'webpage',
 				'title'		=> $rr['title'],
 				'body'		=> $rr['body'],
-				'term'		=> $rr['term'],
 				'created'	=> $rr['created'],
 				'edited'	=> $rr['edited'],
 				'mimetype'	=> $rr['mimetype'],

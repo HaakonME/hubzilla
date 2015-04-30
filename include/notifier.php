@@ -350,6 +350,11 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
+		if(strpos($target_item['postopts'],'nodeliver') !== false) {
+			logger('notifier: target item is undeliverable', LOGGER_DEBUG);
+			return;
+		}
+
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
 		);
@@ -374,6 +379,12 @@ function notifier_run($argv, $argc){
 
 			if(! $r)
 				return;
+
+			if(strpos($r[0]['postopts'],'nodeliver') !== false) {
+				logger('notifier: target item is undeliverable', LOGGER_DEBUG);
+				return;
+			}
+
 			xchan_query($r);
 			$r = fetch_post_tags($r);
 		
@@ -585,16 +596,13 @@ function notifier_run($argv, $argc){
 
 	foreach($dhubs as $hub) {
 
-		if(defined('DIASPORA_RELIABILITY_EMULATION')) {
-			$cointoss = mt_rand(0,2);
-			if($cointoss == 2) {
-				continue;
-			}
-		}
-
-
 		if($hub['hubloc_network'] === 'diaspora' || $hub['hubloc_network'] === 'friendica-over-diaspora') {
 			if(! get_config('system','diaspora_enabled'))
+				continue;
+
+			// allow this to be set per message
+
+			if(strpos($target_item['postopts'],'nodspr') !== false)
 				continue;
 
 			require_once('include/diaspora.php');

@@ -743,7 +743,6 @@ function justifyPhotos() {
 	$('#photo-album-contents').justifiedGallery({
 		margins: 3,
 		border: 0,
-		ignoreElement: '#page-end',
 		sizeRangeSuffixes: {
 			'lt100': '-2',
 			'lt240': '-2',

@@ -420,7 +420,11 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
 
-	$observer = $a->get_observer();
+	if(get_config('system','item_cache'))
+		$observer = false;
+	else
+		$observer = $a->get_observer();
+
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
 			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
@@ -433,7 +437,11 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 		}
 	}
 
-	$channel = $a->get_channel();
+	if(get_config('system','item_cache'))
+		$channel = false;
+	else
+		$channel = $a->get_channel();
+
 	if (strpos($Text,'[/channel]') !== false) {
 		if ($channel) {
 			$Text = preg_replace("/\[channel\=1\](.*?)\[\/channel\]/ism", '$1', $Text);

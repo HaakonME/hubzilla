@@ -1185,6 +1185,14 @@ function unobscure(&$item) {
 			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
 			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+		if(get_config('system','item_cache')) {
+			q("update item set title = '%s', body = '%s', item_flags = %d where id = %d",
+				dbesc($item['title']),
+				dbesc($item['body']),
+				intval($item['item_flags'] - ITEM_OBSCURED),
+				intval($item['id'])
+			);
+		}
 	}
 }
 
@@ -1371,7 +1379,11 @@ function generate_named_map($location) {
 
 function prepare_body(&$item,$attach = false) {
 
+	if(get_config('system','item_cache') && $item['html'])
+		return $item['html'];
+
 	call_hooks('prepare_body_init', $item); 
+
 
 	unobscure($item);
 
@@ -1439,6 +1451,12 @@ function prepare_body(&$item,$attach = false) {
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
+
+	if(get_config('system','item_cache'))
+		q("update item set html = '%s' where id = %d",
+			dbesc($prep_arr['html']),
+			intval($item['id'])
+		);
 
 	return $prep_arr['html'];
 }

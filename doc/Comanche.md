@@ -88,6 +88,10 @@ This places the menu called "mymenu" at this location on the page, which must be
 
 This places a block named "contributors" in this region.
 
+	[block][var=wrap]none[/var]contributors[/block]
+
+The variable [var=wrap]none[/var] in a block removes the wrapping div element from the block.
+
 
 **Widgets**
 

@@ -1095,6 +1095,8 @@ function status_editor($a, $x, $popup = false) {
 //		$plaintext = false;
 
 	$voting = feature_enabled(local_channel(), 'consensus_tools');
+	if(x($x, 'novoting'))
+		$voting = false;
 
 	$mimeselect = '';
 	if(array_key_exists('mimetype', $x) && $x['mimetype']) {

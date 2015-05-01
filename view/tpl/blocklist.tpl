@@ -29,7 +29,7 @@
 		<tr id="block-list-item-{{$item.url}}">
 			<td>
 				{{if $view}}
-				<a href="block/{{$channel}}/{{$item.title}}" title="{{$view}}">{{$item.name}}</a>
+				<a href="block/{{$channel}}/{{$item.name}}" title="{{$view}}">{{$item.name}}</a>
 				{{else}}
 				{{$item.name}}
 				{{/if}}

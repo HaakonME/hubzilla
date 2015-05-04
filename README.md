@@ -11,9 +11,11 @@ Hubmaker is a webserver application which allows you to quickly create and deplo
 
 Possible applications include
 
-* decentralised social network
+* decentralised social networking
 * personal cloud storage
 * business websites
+* public and private media/file management and access
 * blogs
 * managing organisational communications and activities
-
+* feed aggregation and republishing
+* forums

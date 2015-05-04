@@ -2,7 +2,7 @@
  
 ![Hubmaker](images/ghash-32.png)
 
-Hubmaker is a webserver application which allows you to quickly create and deploy interactive and social-enabled websites (hubs). By default these hubs and their sub-accounts are
+Hubmaker is a webserver application which allows you to quickly create and deploy interactive and social-enabled community websites (hubs) which functionally connect and link together to create an independant super network. By default these hubs and their sub-accounts are
 
 * decentralised
 * social

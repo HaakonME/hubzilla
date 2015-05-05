@@ -2,7 +2,7 @@
 
 [b]Registration[/b]
 
-Not all Red Matrix sites allow open registration. If registration is allowed, you will see a &quot;Register&quot; link immediately below the login prompts on the site home page. Following this link will take you to the site Registration page. On some sites it may redirect you to another site which allow registrations. As all Red Matrix sites are linked, it does not matter where your account resides.
+Not all Hubzilla sites allow open registration. If registration is allowed, you will see a &quot;Register&quot; link immediately below the login prompts on the site home page. Following this link will take you to the site Registration page. On some sites it may redirect you to another site which allow registrations. As all Hubzilla sites are linked, it does not matter where your account resides.
 
 [b]Your Email Address[/b]
 
@@ -10,7 +10,7 @@ Please provide a valid email address. Your email address is never published. Thi
 
 [b]Password[/b]
 
-Enter a password of your choice, and repeat it in the second box to ensure it was typed correctly. As the Red Matrix offers a decentralised identity, your account can log you in to many other websites.
+Enter a password of your choice, and repeat it in the second box to ensure it was typed correctly. As the Hubzilla offers a decentralised identity, your account can log you in to many other websites.
 
 [b]Terms Of Service[/b]
 

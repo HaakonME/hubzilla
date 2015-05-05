@@ -1,5 +1,5 @@
-# Red Matrix Project
-# Copyright (C) 2012-2014 the Red Matrix Project
+# Hubzilla Project
+# Copyright (C) 2012-2014 the Hubzilla Project
 # This file is distributed under the same license as the Red package.
 # Mike Macgirvin, 2012
 #
@@ -1107,7 +1107,7 @@ msgid "Public Hubs"
 msgstr ""
 
 #: ../../include/enotify.php:58
-msgid "Red Matrix Notification"
+msgid "Hubzilla Notification"
 msgstr ""
 
 #: ../../include/enotify.php:59
@@ -4643,7 +4643,7 @@ msgid "Fetching URL returns error: %1$s"
 msgstr ""
 
 #: ../../mod/home.php:53
-msgid "Red Matrix - &quot;The Network&quot;"
+msgid "Hubzilla - &quot;The Network&quot;"
 msgstr ""
 
 #: ../../mod/home.php:124
@@ -4913,7 +4913,7 @@ msgstr ""
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in "
+"The listed sites allow public registration into the Hubzilla. All sites in "
 "the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
@@ -5046,7 +5046,7 @@ msgstr ""
 #: ../../mod/siteinfo.php:164
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">redmatrix.me</a> to learn more "
-"about the Red Matrix."
+"about the Hubzilla."
 msgstr ""
 
 #: ../../mod/siteinfo.php:165
@@ -5071,7 +5071,7 @@ msgid "Not Found"
 msgstr ""
 
 #: ../../mod/setup.php:166
-msgid "Red Matrix Server - Setup"
+msgid "Hubzilla Server - Setup"
 msgstr ""
 
 #: ../../mod/setup.php:172
@@ -5116,7 +5116,7 @@ msgstr ""
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install Hubzilla we need to know how to connect to your "
 "database."
 msgstr ""
 
@@ -8745,7 +8745,7 @@ msgid "Right offset of the aside element"
 msgstr ""
 
 #: ../../view/theme/redbasic/php/config.php:82
-msgid "Light (Red Matrix default)"
+msgid "Light (Hubzilla default)"
 msgstr ""
 
 #: ../../view/theme/redbasic/php/config.php:101
@@ -8884,7 +8884,7 @@ msgstr ""
 
 #: ../../boot.php:1515
 msgid ""
-"Create an account to access services and applications within the Red Matrix"
+"Create an account to access services and applications within the Hubzilla"
 msgstr ""
 
 #: ../../boot.php:1543

@@ -1,4 +1,4 @@
-[b]How to install the Red Matrix on a Raspberry Pi[/b]
+[b]How to install the Hubzilla on a Raspberry Pi[/b]
 
 You just bought a Raspberry Pi and want to run the RED Matrix with your own domain name?
 

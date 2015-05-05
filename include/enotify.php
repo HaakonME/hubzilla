@@ -55,7 +55,7 @@ function notification($params) {
 
 	push_lang($recip['account_language']); // should probably have a channel language
 
-	$banner     = t('Red Matrix Notification');
+	$banner     = t('Hubzilla Notification');
 	$product    = t('hubzilla'); // RED_PLATFORM;
 	$siteurl    = $a->get_baseurl(true);
 	$thanks     = t('Thank You,');

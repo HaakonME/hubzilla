@@ -1,6 +1,6 @@
 [b]Permissions[/b]
 
-Permissions in the Red Matrix are more complete than you may be used to. This allows us to define more fine graded relationships than the black and white &quot;this person is my friend, so they can do everything&quot; or &quot;this person is not my friend, so they can't do anything&quot; permissions you may find elsewhere.
+Permissions in the Hubzilla are more complete than you may be used to. This allows us to define more fine graded relationships than the black and white &quot;this person is my friend, so they can do everything&quot; or &quot;this person is not my friend, so they can't do anything&quot; permissions you may find elsewhere.
 
 [b]Default Permissions[/b]
 
@@ -24,7 +24,7 @@ The scopes of permissions are:
 
 [li]Anybody On This Hub. Anybody using the same hub as you will have permission approved. Anybody who registered at a different hub will have this permission denied.[/li]
 
-[li]Anybody in this network. Anybody in the Red Matrix will have this permission approved. Even complete strangers. However, anybody not logged in/authenticated will have this permission denied.[/li]
+[li]Anybody in this network. Anybody in the Hubzilla will have this permission approved. Even complete strangers. However, anybody not logged in/authenticated will have this permission denied.[/li]
 
 [li]Anybody authenticated. This is similar to "anybody in this network" except that it can include anybody who can authenticate by any means - and therefore may include visitors from other networks.[/li]
 

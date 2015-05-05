@@ -127,7 +127,7 @@ function dav_init(&$a) {
 	}
 
 	require_once('include/RedDAV/RedBrowser.php');
-	// provide a directory view for the cloud in Red Matrix
+	// provide a directory view for the cloud in Hubzilla
 	$browser = new RedDAV\RedBrowser($auth);
 	$auth->setBrowserPlugin($browser);
 

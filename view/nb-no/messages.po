@@ -1,12 +1,12 @@
-# Red Matrix Project
-# Copyright (C) 2012-2014 the Red Matrix Project
+# Hubzilla Project
+# Copyright (C) 2012-2014 the Hubzilla Project
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
 # Haakon Meland Eriksen <haakon.eriksen@far.no>, 2013-2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Red Matrix\n"
+"Project-Id-Version: Hubzilla\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-20 00:03-0700\n"
 "PO-Revision-Date: 2015-03-25 13:13+0000\n"
@@ -2805,8 +2805,8 @@ msgid "Login failed."
 msgstr "Innlogging mislyktes."
 
 #: ../../include/enotify.php:41
-msgid "Red Matrix Notification"
-msgstr "Red Matrix-varsling"
+msgid "Hubzilla Notification"
+msgstr "Hubzilla-varsling"
 
 #: ../../include/enotify.php:42
 msgid "hubzilla"
@@ -4615,8 +4615,8 @@ msgid "Fetching URL returns error: %1$s"
 msgstr "Henting av URL gir følgende feil: %1$s"
 
 #: ../../mod/home.php:48
-msgid "Red Matrix - &quot;The Network&quot;"
-msgstr "Red Matrix - &quot;Nettverket&quot;"
+msgid "Hubzilla - &quot;The Network&quot;"
+msgstr "Hubzilla - &quot;Nettverket&quot;"
 
 #: ../../mod/home.php:101
 #, php-format
@@ -4885,12 +4885,12 @@ msgstr "Offentlige nettsteder"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in"
+"The listed sites allow public registration into the Hubzilla. All sites in"
 " the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
 "additional details."
-msgstr "Nettstedene på listen tillater offentlig registrering i Red Matrix. Alle nettsteder i matrix er forbundet så medlemskap på enhver av dem formidler medlemskap i hele matrix. Noen nettsteder kan kreve abonnement eller tilby lagdelte tjenesteavtaler. Tilbyderlenkene <strong>kan</strong> gi tilleggsopplysninger."
+msgstr "Nettstedene på listen tillater offentlig registrering i Hubzilla. Alle nettsteder i matrix er forbundet så medlemskap på enhver av dem formidler medlemskap i hele matrix. Noen nettsteder kan kreve abonnement eller tilby lagdelte tjenesteavtaler. Tilbyderlenkene <strong>kan</strong> gi tilleggsopplysninger."
 
 #: ../../mod/pubsites.php:25
 msgid "Rate this hub"
@@ -5338,9 +5338,9 @@ msgstr "Red"
 
 #: ../../mod/siteinfo.php:150
 msgid ""
-"This is a hub of the Red Matrix - a global cooperative network of "
+"This is a hub of the Hubzilla - a global cooperative network of "
 "decentralized privacy enhanced websites."
-msgstr "Dette er en hub i Red Matrix - et globalt kooperativt nettverk av desentraliserte personvernforsterkede nettsteder."
+msgstr "Dette er en hub i Hubzilla - et globalt kooperativt nettverk av desentraliserte personvernforsterkede nettsteder."
 
 #: ../../mod/siteinfo.php:152
 msgid "Tag: "
@@ -5357,7 +5357,7 @@ msgstr "Kjører på webplasseringen"
 #: ../../mod/siteinfo.php:158
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">Redmatrix.me</a> to learn more"
-" about the Red Matrix."
+" about the Hubzilla."
 msgstr "Vennligst besøk <a href=\"https://redmatrix.me\">Redmatrix.me</a> for å lære mer om Hubzilla."
 
 #: ../../mod/siteinfo.php:159
@@ -5383,8 +5383,8 @@ msgid "Not Found"
 msgstr "Ikke funnet"
 
 #: ../../mod/setup.php:166
-msgid "Red Matrix Server - Setup"
-msgstr "Red Matrix tjener - oppsett"
+msgid "Hubzilla Server - Setup"
+msgstr "Hubzilla tjener - oppsett"
 
 #: ../../mod/setup.php:172
 msgid "Could not connect to database."
@@ -5428,9 +5428,9 @@ msgstr "Databaseforbindelse"
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install Hubzilla we need to know how to connect to your "
 "database."
-msgstr "For å installere Red Matrix må du oppgi hvordan din database kan kontaktes."
+msgstr "For å installere Hubzilla må du oppgi hvordan din database kan kontaktes."
 
 #: ../../mod/setup.php:291
 msgid ""
@@ -8716,8 +8716,8 @@ msgid "Right offset of the aside element"
 msgstr "Til høyre for sidestolpen"
 
 #: ../../view/theme/redbasic/php/config.php:82
-msgid "Light (Red Matrix default)"
-msgstr "Lys (Red Matrix standard)"
+msgid "Light (Hubzilla default)"
+msgstr "Lys (Hubzilla standard)"
 
 #: ../../view/theme/redbasic/php/config.php:101
 msgid "Select scheme"
@@ -8855,8 +8855,8 @@ msgstr "Oppdateringsfeil ved %s"
 
 #: ../../boot.php:1527
 msgid ""
-"Create an account to access services and applications within the Red Matrix"
-msgstr "Lag en konto for å få tilgang til tjenester og programmer i Red Matrix"
+"Create an account to access services and applications within the Hubzilla"
+msgstr "Lag en konto for å få tilgang til tjenester og programmer i Hubzilla"
 
 #: ../../boot.php:1555
 msgid "Password"

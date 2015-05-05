@@ -1371,7 +1371,7 @@ function get_default_profile_photo($size = 175) {
 }
 
 /**
- * @brief Test whether a given identity is NOT a member of the Red Matrix.
+ * @brief Test whether a given identity is NOT a member of the Hubzilla.
  *
  * @param string $s;
  *    xchan_hash of the identity in question
@@ -1382,7 +1382,7 @@ function is_foreigner($s) {
 }
 
 /**
- * @brief Test whether a given identity is a member of the Red Matrix.
+ * @brief Test whether a given identity is a member of the Hubzilla.
  *
  * @param string $s;
  *    xchan_hash of the identity in question

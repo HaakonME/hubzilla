@@ -1,5 +1,5 @@
-# Red Matrix Project
-# Copyright (C) 2012-2014 the Red Matrix Project
+# Hubzilla Project
+# Copyright (C) 2012-2014 the Hubzilla Project
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
@@ -7,7 +7,7 @@
 # pafcu <pafcu@iki.fi>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Red Matrix\n"
+"Project-Id-Version: Hubzilla\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-06 00:04-0800\n"
 "PO-Revision-Date: 2015-02-07 12:46+0000\n"
@@ -2250,8 +2250,8 @@ msgid "database storage failed."
 msgstr "databaslagring misslyckades."
 
 #: ../../include/enotify.php:41
-msgid "Red Matrix Notification"
-msgstr "Red Matrix-meddelande"
+msgid "Hubzilla Notification"
+msgstr "Hubzilla-meddelande"
 
 #: ../../include/enotify.php:42
 msgid "hubzilla"
@@ -3712,8 +3712,8 @@ msgid "Unable to verify site signature for %s"
 msgstr "Kunde inte bekräfta signatur för servern %s"
 
 #: ../../mod/setup.php:166
-msgid "Red Matrix Server - Setup"
-msgstr "Red Matrix-server - inställningar"
+msgid "Hubzilla Server - Setup"
+msgstr "Hubzilla-server - inställningar"
 
 #: ../../mod/setup.php:172
 msgid "Could not connect to database."
@@ -3761,9 +3761,9 @@ msgstr "Databasanslutning"
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install Hubzilla we need to know how to connect to your "
 "database."
-msgstr "För att kunna installera Red Matrix behöver vi veta hur databasen ska anslutas."
+msgstr "För att kunna installera Hubzilla behöver vi veta hur databasen ska anslutas."
 
 #: ../../mod/setup.php:291
 msgid ""
@@ -4208,8 +4208,8 @@ msgid "Some blurb about what to do when you're new here"
 msgstr "Lite text om vad man kan göra som ny här"
 
 #: ../../mod/home.php:48
-msgid "Red Matrix - &quot;The Network&quot;"
-msgstr "Red Matrix - &quot;Nätverket&quot;"
+msgid "Hubzilla - &quot;The Network&quot;"
+msgstr "Hubzilla - &quot;Nätverket&quot;"
 
 #: ../../mod/home.php:101
 #, php-format
@@ -4574,12 +4574,12 @@ msgstr "Offentliga servrar"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in"
+"The listed sites allow public registration into the Hubzilla. All sites in"
 " the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
 "additional details."
-msgstr "De listade servrarna tillåter offentlig registrering i Red Matrix. Alla servrar i matrisen är sammankopplade, så medlemskap i en av dem medför medlemskap i matrisen som helhet. Vissa servrar kan kräva abonnemang eller erbjuda uppdelade tjänstenivåer. Leverantörslänkarna <strong>kan</strong> ge ytterligare detaljer."
+msgstr "De listade servrarna tillåter offentlig registrering i Hubzilla. Alla servrar i matrisen är sammankopplade, så medlemskap i en av dem medför medlemskap i matrisen som helhet. Vissa servrar kan kräva abonnemang eller erbjuda uppdelade tjänstenivåer. Leverantörslänkarna <strong>kan</strong> ge ytterligare detaljer."
 
 #: ../../mod/pubsites.php:25
 msgid "Site URL"
@@ -5546,9 +5546,9 @@ msgstr "Red"
 
 #: ../../mod/siteinfo.php:137
 msgid ""
-"This is a hub of the Red Matrix - a global cooperative network of "
+"This is a hub of the Hubzilla - a global cooperative network of "
 "decentralized privacy enhanced websites."
-msgstr "Det här är en hubb som ingår i Red Matrix - ett globalt samverkande nätverk av decentraliserade webbplatser med bättre integritetskydd."
+msgstr "Det här är en hubb som ingår i Hubzilla - ett globalt samverkande nätverk av decentraliserade webbplatser med bättre integritetskydd."
 
 #: ../../mod/siteinfo.php:139
 msgid "Tag: "
@@ -5565,8 +5565,8 @@ msgstr "Kör på webbutrymmet"
 #: ../../mod/siteinfo.php:145
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">Redmatrix.me</a> to learn more"
-" about the Red Matrix."
-msgstr "Besök <a href=\"https://redmatrix.me\">Redmatrix.me</a> för att lära dig mer om Red Matrix."
+" about the Hubzilla."
+msgstr "Besök <a href=\"https://redmatrix.me\">Redmatrix.me</a> för att lära dig mer om Hubzilla."
 
 #: ../../mod/siteinfo.php:146
 msgid "Bug reports and issues: please visit"
@@ -8387,8 +8387,8 @@ msgid "Right offset of the aside element"
 msgstr "Höger offset för sidoelement"
 
 #: ../../view/theme/redbasic/php/config.php:84
-msgid "Light (Red Matrix default)"
-msgstr "Light (standard för Red Matrix)"
+msgid "Light (Hubzilla default)"
+msgstr "Light (standard för Hubzilla)"
 
 #: ../../view/theme/redbasic/php/config.php:104
 msgid "Narrow navbar"
@@ -8522,8 +8522,8 @@ msgstr "Uppdateringsfel på %s"
 
 #: ../../boot.php:1525
 msgid ""
-"Create an account to access services and applications within the Red Matrix"
-msgstr "Skapa ett konto för att komma åt tjänster och applikationer inom Red Matrix"
+"Create an account to access services and applications within the Hubzilla"
+msgstr "Skapa ett konto för att komma åt tjänster och applikationer inom Hubzilla"
 
 #: ../../boot.php:1553
 msgid "Password"

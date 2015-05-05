@@ -10,7 +10,7 @@ To create a derived theme, first choose a name. For our example we'll call our t
 
 **Directory Structure**
 
-First you need to create a theme directory structure. We'll keep it simple. We need a php directory and a css directory. Here are the Unix/Linux commands to do this. Assume that 'mywebsite' is your top level Red Matrix folder. 
+First you need to create a theme directory structure. We'll keep it simple. We need a php directory and a css directory. Here are the Unix/Linux commands to do this. Assume that 'mywebsite' is your top level Hubzilla folder. 
 
 
     cd mywebsite

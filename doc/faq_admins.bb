@@ -1,4 +1,4 @@
-[size=large][b]The Red Matrix FAQ[/b][/size]
+[size=large][b]The Hubzilla FAQ[/b][/size]
 
 [toc]
 

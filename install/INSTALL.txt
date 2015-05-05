@@ -1,18 +1,18 @@
-Red Matrix Installation
+Hubzilla Installation
 
-We've tried very hard to ensure that the Red Matrix will run on commodity
+We've tried very hard to ensure that the Hubzilla will run on commodity
 hosting platforms - such as those used to host Wordpress blogs and Drupal 
 websites. It will run on most any Linux VPS system. Windows LAMP platforms
 such as XAMPP and WAMP are not officially supported at this time - however 
 we welcome patches if you manage to get it working. 
 
-Be aware that the Red Matrix is more than a simple web application. It is a 
+Be aware that the Hubzilla is more than a simple web application. It is a 
 complex communications system which more closely resembles an email server 
 than a web server. For reliability and performance, messages are delivered in
 the background and are queued for later delivery when sites are down. This
 kind of functionality requires a bit more of the host system than the typical
 blog. Not every PHP/MySQL hosting provider will be able to support the 
-Red Matrix. Many will - but please review the requirements and confirm these 
+Hubzilla. Many will - but please review the requirements and confirm these 
 with your hosting provider prior to installation. (And preferably before 
 entering into a long-term contract.)
 
@@ -29,7 +29,7 @@ issues.
 
 Before you begin: Choose a domain name or subdomain name for your server.
 
-The Red Matrix can only be installed into the root of a domain or
+The Hubzilla can only be installed into the root of a domain or
 sub-domain, and can not be installed using alternate TCP ports. 
 
 Decide if you will use SSL and obtain an SSL certificate before software
@@ -57,7 +57,7 @@ Free "browser-valid" certificates are available from providers such as StartSSL.
 
 If you do NOT use SSL, there may be a delay of up to a minute for the initial
 install script - while we check the SSL port to see if anything responds there.
-When communicating with new sites, Red Matrix always attempts connection on the
+When communicating with new sites, Hubzilla always attempts connection on the
 SSL port first, before falling back to a less secure connection.  If you do not
 use SSL, your webserver must not listen on port 443 at all.
 
@@ -281,7 +281,7 @@ Retry the installation. As soon as the database has been created,
 
 #####################################################################
 - Some configurations with "suhosin" security are configured without
-an ability to run external processes. The Red Matrix requires this ability.
+an ability to run external processes. The Hubzilla requires this ability.
 Following are some notes provided by one of our members.
 #####################################################################
 
@@ -291,7 +291,7 @@ certain functions like proc_open, as configured in /etc/php5/conf.d/suhosin.ini:
 
  suhosin.executor.func.blacklist = proc_open, ...
 
-For those sites like Red Matrix that really need these functions they can be
+For those sites like Hubzilla that really need these functions they can be
 enabled, e.g. in /etc/apache2/sites-available/hubzilla:
 
  <Directory /var/www/hubzilla/>
@@ -299,7 +299,7 @@ enabled, e.g. in /etc/apache2/sites-available/hubzilla:
   php_admin_value suhosin.executor.eval.blacklist none
  </Directory>
 
-This enables every function for Red Matrix if accessed via browser, but not for
+This enables every function for Hubzilla if accessed via browser, but not for
 the cronjob that is called via php command line. I attempted to enable it for
 cron by using something like
 

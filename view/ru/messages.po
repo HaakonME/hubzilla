@@ -1,5 +1,5 @@
-# Red Matrix Project
-# Copyright (C) 2012-2014 the Red Matrix Project
+# Hubzilla Project
+# Copyright (C) 2012-2014 the Hubzilla Project
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
@@ -8,7 +8,7 @@
 # puser, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Red Matrix\n"
+"Project-Id-Version: Hubzilla\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-27 00:02-0700\n"
 "PO-Revision-Date: 2014-06-30 12:10+0000\n"
@@ -1479,7 +1479,7 @@ msgid "Safe Mode"
 msgstr "Безопасный режим"
 
 #: ../../include/enotify.php:41
-msgid "Red Matrix Notification"
+msgid "Hubzilla Notification"
 msgstr "Оповещения Red матрицы"
 
 #: ../../include/enotify.php:42
@@ -4480,7 +4480,7 @@ msgstr "Публичные сайты"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in"
+"The listed sites allow public registration into the Hubzilla. All sites in"
 " the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
@@ -4656,7 +4656,7 @@ msgid "Please login."
 msgstr "Войдите пожалуйста."
 
 #: ../../mod/cloud.php:113
-msgid "Red Matrix - Guests: Username: {your email address}, Password: +++"
+msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
 msgstr ""
 
 #: ../../mod/removeme.php:49
@@ -5300,7 +5300,7 @@ msgid "This site is not a directory server"
 msgstr "Этот сайт не является сервером каталога"
 
 #: ../../mod/home.php:81
-msgid "Red Matrix - &quot;The Network&quot;"
+msgid "Hubzilla - &quot;The Network&quot;"
 msgstr ""
 
 #: ../../mod/home.php:94
@@ -5309,8 +5309,8 @@ msgid "Welcome to %s"
 msgstr "Добро пожаловать в %s"
 
 #: ../../mod/setup.php:162
-msgid "Red Matrix Server - Setup"
-msgstr "Red Matrix Сервер - Установка"
+msgid "Hubzilla Server - Setup"
+msgstr "Hubzilla Сервер - Установка"
 
 #: ../../mod/setup.php:168
 msgid "Could not connect to database."
@@ -5358,7 +5358,7 @@ msgstr "Подключение к базе данных"
 
 #: ../../mod/setup.php:285
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install Hubzilla we need to know how to connect to your "
 "database."
 msgstr ""
 
@@ -5793,7 +5793,7 @@ msgstr "Red"
 
 #: ../../mod/siteinfo.php:98
 msgid ""
-"This is a hub of the Red Matrix - a global cooperative network of "
+"This is a hub of the Hubzilla - a global cooperative network of "
 "decentralised privacy enhanced websites."
 msgstr ""
 
@@ -5804,8 +5804,8 @@ msgstr ""
 #: ../../mod/siteinfo.php:102
 msgid ""
 "Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
-"about the Red Matrix."
-msgstr "Пожалуйста посетите <a href=\"http://getzot.com\">GetZot.com</a> чтобы узнать больше о Red Matrix."
+"about the Hubzilla."
+msgstr "Пожалуйста посетите <a href=\"http://getzot.com\">GetZot.com</a> чтобы узнать больше о Hubzilla."
 
 #: ../../mod/siteinfo.php:103
 msgid "Bug reports and issues: please visit"
@@ -7008,8 +7008,8 @@ msgstr "Пожалуйста, посетите мой канал на"
 
 #: ../../mod/invite.php:151
 msgid ""
-"Once you have registered (on ANY Red Matrix site - they are all inter-"
-"connected), please connect with my Red Matrix channel address:"
+"Once you have registered (on ANY Hubzilla site - they are all inter-"
+"connected), please connect with my Hubzilla channel address:"
 msgstr ""
 
 #: ../../mod/invite.php:153
@@ -7018,10 +7018,10 @@ msgstr ""
 
 #: ../../mod/invite.php:155
 msgid ""
-"For more information about the Red Matrix Project and why it has the "
+"For more information about the Hubzilla Project and why it has the "
 "potential to change the internet as we know it, please visit "
 "http://getzot.com"
-msgstr "Чтобы узнать больше о проекте Red Matrix, и чтобы узнать почему он имеет потенциал для изменения привычного нам Интернета, пожалуйста, посетите http://getzot.com"
+msgstr "Чтобы узнать больше о проекте Hubzilla, и чтобы узнать почему он имеет потенциал для изменения привычного нам Интернета, пожалуйста, посетите http://getzot.com"
 
 #: ../../mod/item.php:147
 msgid "Unable to locate original post."
@@ -7814,7 +7814,7 @@ msgstr "Ошибка обновления на %s"
 
 #: ../../boot.php:1440
 msgid ""
-"Create an account to access services and applications within the Red Matrix"
+"Create an account to access services and applications within the Hubzilla"
 msgstr ""
 
 #: ../../boot.php:1468

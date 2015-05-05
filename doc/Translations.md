@@ -1,4 +1,4 @@
-Translating the Red Matrix
+Translating the Hubzilla
 ==========================
 
 Translation Process

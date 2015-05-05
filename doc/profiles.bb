@@ -14,7 +14,7 @@ In addition, if you'd like to meet people that share some general interests with
 
 To create an alternate profile, first go to [zrl=[baseurl]/settings/features]Settings &gt; Additional Features[/zrl] and enable &quot;Multiple Profiles&quot; there, otherwise you won't have the ability to use more than just your default profile.
 
-Then select &quot;Edit Profiles&quot; from the menu of your Red Matrix site. You may edit an existing profile, change the profile photo, add things to a profile or create a new profile. You may also create a &quot;clone&quot; of an existing profile if you only wish to change a few items but don't wish to enter all the information again. To do that, click on the profile you want to clone and choose &quot;Clone this profile&quot; there.
+Then select &quot;Edit Profiles&quot; from the menu of your Hubzilla site. You may edit an existing profile, change the profile photo, add things to a profile or create a new profile. You may also create a &quot;clone&quot; of an existing profile if you only wish to change a few items but don't wish to enter all the information again. To do that, click on the profile you want to clone and choose &quot;Clone this profile&quot; there.
 
 In the list of your profiles, you can also choose the contacts who can see a specific profile. Just click on &quot;Edit visibility&quot; next to the profile in question (only available for the profiles that are not your default profile) and then click on user images to add them to or remove them from the group of people who can see this profile.
 

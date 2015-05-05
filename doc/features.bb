@@ -142,7 +142,7 @@ Forums are typically channels which may be open to participation from multiple a
 
 [b]Account Cloning[/b]
 
-Accounts in the Red Matrix are referred to as [i]nomadic identities[/i], because a member's identity is not bound to the hub where the identity was originally created.  For example, when you create a Facebook or Gmail account, it is tied to those services.  They cannot function without Facebook.com or Gmail.com.  
+Accounts in the Hubzilla are referred to as [i]nomadic identities[/i], because a member's identity is not bound to the hub where the identity was originally created.  For example, when you create a Facebook or Gmail account, it is tied to those services.  They cannot function without Facebook.com or Gmail.com.  
 
 By contrast, say you've created a Red identity called [b]tina@redhub.com[/b].  You can clone it to another Red hub by choosing the same, or a different name: [b]liveForever@SomeHubzillaHub.info[/b]
 
@@ -152,9 +152,9 @@ This is a rather revolutionary feature, if we consider some scenarios:
 
  - What happens if the hub where an identity is based suddenly goes offline?  Without cloning, a member will not be able to communicate until that hub comes back online (no doubt many of you have seen and cursed the Twitter "Fail Whale").  With cloning, you just log into your cloned account, and life goes on happily ever after. 
 
- - The administrator of your hub can no longer afford to pay for his free and public Red Matrix hub. He announces that the hub will be shutting down in two weeks.  This gives you ample time to clone your identity(ies) and preserve your Red relationships, friends and content.
+ - The administrator of your hub can no longer afford to pay for his free and public Hubzilla hub. He announces that the hub will be shutting down in two weeks.  This gives you ample time to clone your identity(ies) and preserve your Red relationships, friends and content.
 
- - What if your identity is subject to government censorship?  Your hub provider may be compelled to delete your account, along with any identities and associated data.  With cloning, the Red Matrix offers [b]censorship resistance[/b].  You can have hundreds of clones, if you wanted to, all named different, and existing on many different hubs, strewn around the internet.  
+ - What if your identity is subject to government censorship?  Your hub provider may be compelled to delete your account, along with any identities and associated data.  With cloning, the Hubzilla offers [b]censorship resistance[/b].  You can have hundreds of clones, if you wanted to, all named different, and existing on many different hubs, strewn around the internet.  
 
 Red offers interesting new possibilities for privacy. You can read more at the &lt;&lt;Private Communications Best Practices&gt;&gt; page.
 
@@ -183,7 +183,7 @@ Red supports a number of different ways of adding rich-text content. The default
 When creating &quot;Websites&quot;, content may be entered in HTML, Markdown, BBcode, and/or plain text.
 
 [b]Deletion of content[/b]
-Any content created in the Red Matrix remains under the control of the member (or channel) that originally created it.  At any time, a member can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot (the Hubzilla communication and authentication protocol).
+Any content created in the Hubzilla remains under the control of the member (or channel) that originally created it.  At any time, a member can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot (the Hubzilla communication and authentication protocol).
 
 [b]Media[/b]
 Similar to any other modern blogging system, social network, or a micro-blogging service, Red supports the uploading of files, embedding of videos, linking web pages.

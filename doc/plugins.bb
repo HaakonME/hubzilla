@@ -1,9 +1,9 @@
 [b]Plugins[/b]
 
-So you want to make the Red Matrix do something it doesn't already do. There are lots of ways. But let's learn how to write a plugin or addon. 
+So you want to make the Hubzilla do something it doesn't already do. There are lots of ways. But let's learn how to write a plugin or addon. 
 
 
-In your Red Matrix folder/directory, you will probably see a sub-directory called 'addon'. If you don't have one already, go ahead and create it. 
+In your Hubzilla folder/directory, you will probably see a sub-directory called 'addon'. If you don't have one already, go ahead and create it. 
 [code]
 	mkdir addon
 [/code]
@@ -26,7 +26,7 @@ Then we're going to create a comment block to describe the plugin. There's a spe
 	/**
 	 *
 	 * Name: Random Place (here you can use better descriptions than you could in the filename)
-	 * Description: Sample Red Matrix plugin, Sets a random place when posting.
+	 * Description: Sample Hubzilla plugin, Sets a random place when posting.
 	 * Version: 1.0
 	 * Author: Mike Macgirvin &lt;mike@zothub.com&gt;
 	 *
@@ -45,9 +45,9 @@ In our case, we'll call them randplace_load() and randplace_unload(), as that is
  pluginname_uninstall()
 [/code]
 
-Next we'll talk about **hooks**. Hooks are places in the Red Matrix code where we allow plugins to do stuff. There are a [lot of these](help/Hooks), and they each have a name. What we normally do is use the pluginname_load() function to register a &quot;handler function&quot; for any hooks you are interested in. Then when any of these hooks are triggered, your code will be called.
+Next we'll talk about **hooks**. Hooks are places in the Hubzilla code where we allow plugins to do stuff. There are a [lot of these](help/Hooks), and they each have a name. What we normally do is use the pluginname_load() function to register a &quot;handler function&quot; for any hooks you are interested in. Then when any of these hooks are triggered, your code will be called.
 
-We register hook handlers with the 'register_hook()' function. It takes 3 arguments. The first is the hook we wish to catch, the second is the filename of the file to find our handler function (relative to the base of your Red Matrix installation), and the third is the function name of your handler function. So let's create our randplace_load() function right now. 
+We register hook handlers with the 'register_hook()' function. It takes 3 arguments. The first is the hook we wish to catch, the second is the filename of the file to find our handler function (relative to the base of your Hubzilla installation), and the third is the function name of your handler function. So let's create our randplace_load() function right now. 
 
 [code]
 	function randplace_load() {
@@ -247,18 +247,18 @@ If you want to keep your plugin hidden from the siteinfo page, simply create a f
 
 ***Porting Friendica Plugins***
 
-The Red Matrix uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
+The Hubzilla uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
 
 [li] Friendica's pluginname_install() is pluginname_load()[/li]
 
 [li] Friendica's pluginname_uninstall() is pluginname_unload()[/li]
 
-The Red Matrix has _install and _uninstall functions but these are used differently.
+The Hubzilla has _install and _uninstall functions but these are used differently.
 
 [li] Friendica's &quot;plugin_settings&quot; hook is called &quot;feature_settings&quot;[/li]
 
 [li] Friendica's &quot;plugin_settings_post&quot; hook is called &quot;feature_settings_post&quot;[/li]
 
-Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the Red Matrix. Many structured data names (especially DB schema columns) are also quite different.
+Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the Hubzilla. Many structured data names (especially DB schema columns) are also quite different.
 
 #include doc/macros/main_footer.bb;

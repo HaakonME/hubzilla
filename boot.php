@@ -5,9 +5,9 @@
  */
 
 /**
- * Red Matrix.
+ * Hubzilla.
  *
- * The Red Matrix (aka "Red") is an open source decentralised communications
+ * The Hubzilla (aka "Red") is an open source decentralised communications
  * platform combined with a decentralised identity/authentication framework
  * wrapped in an extensible content management system, providing website designers
  * the ability to embed fully decentralised communications and social tools
@@ -1512,7 +1512,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		$reglink = 'register';
 
 	$reg = array(
-		'title' => t('Create an account to access services and applications within the Red Matrix'),
+		'title' => t('Create an account to access services and applications within the Hubzilla'),
 		'desc' => t('Register'),
 		'link' => (($register) ? $reglink : 'pubsites')
 	);

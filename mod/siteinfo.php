@@ -161,7 +161,7 @@ function siteinfo_content(&$a) {
 		'$lastpoll' => get_poller_runtime(),
 		'$commit' => $commit,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
-		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about the Red Matrix.'),
+		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about the Hubzilla.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
 		'$bug_link_url' => 'https://github.com/redmatrix/hubzilla/issues',
 		'$bug_link_text' => 'hubzilla issues',

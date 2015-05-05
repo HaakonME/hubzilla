@@ -1,5 +1,5 @@
-# Red Matrix Project
-# Copyright (C) 2012-2014 the Red Matrix Project
+# Hubzilla Project
+# Copyright (C) 2012-2014 the Hubzilla Project
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
@@ -1113,7 +1113,7 @@ msgid "Public Hubs"
 msgstr "Hub pubblici"
 
 #: ../../include/enotify.php:58
-msgid "Red Matrix Notification"
+msgid "Hubzilla Notification"
 msgstr "Notifica di Hubzilla"
 
 #: ../../include/enotify.php:59
@@ -4652,7 +4652,7 @@ msgid "Fetching URL returns error: %1$s"
 msgstr "La chiamata all'URL restituisce questo errore: %1$s"
 
 #: ../../mod/home.php:53
-msgid "Red Matrix - &quot;The Network&quot;"
+msgid "Hubzilla - &quot;The Network&quot;"
 msgstr "Hubzilla - &quot;La tua rete&quot;"
 
 #: ../../mod/home.php:124
@@ -4922,7 +4922,7 @@ msgstr "Siti pubblici"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in"
+"The listed sites allow public registration into the Hubzilla. All sites in"
 " the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
@@ -5055,8 +5055,8 @@ msgstr "In esecuzione sull'indirizzo web"
 #: ../../mod/siteinfo.php:164
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">redmatrix.me</a> to learn more"
-" about the Red Matrix."
-msgstr "Visita <a href=\"https://redmatrix.me\">Redmatrix.me</a> per scoprire cosa è Red Matrix."
+" about the Hubzilla."
+msgstr "Visita <a href=\"https://redmatrix.me\">Redmatrix.me</a> per scoprire cosa è Hubzilla."
 
 #: ../../mod/siteinfo.php:165
 msgid "Bug reports and issues: please visit"
@@ -5081,7 +5081,7 @@ msgid "Not Found"
 msgstr "Non disponibile"
 
 #: ../../mod/setup.php:166
-msgid "Red Matrix Server - Setup"
+msgid "Hubzilla Server - Setup"
 msgstr "Hubzilla Server - Installazione"
 
 #: ../../mod/setup.php:172
@@ -5126,7 +5126,7 @@ msgstr "Connessione al database"
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install Hubzilla we need to know how to connect to your "
 "database."
 msgstr "Per installare Hubzilla è necessario conoscere i parametri di connessione al database."
 
@@ -5598,7 +5598,7 @@ msgstr "%1$s ha taggato %3$s di %2$s con %4$s"
 
 #: ../../mod/cloud.php:120
 msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
-msgstr "Accesso a Red Matrix. {Inserisci l'email con cui sei registrato e la password.}"
+msgstr "Accesso a Hubzilla. {Inserisci l'email con cui sei registrato e la password.}"
 
 #: ../../mod/photos.php:77
 msgid "Page owner information could not be retrieved."
@@ -8757,7 +8757,7 @@ msgid "Right offset of the aside element"
 msgstr "Margine destro della colonna laterale"
 
 #: ../../view/theme/redbasic/php/config.php:82
-msgid "Light (Red Matrix default)"
+msgid "Light (Hubzilla default)"
 msgstr "Light (predefinito)"
 
 #: ../../view/theme/redbasic/php/config.php:101
@@ -8896,7 +8896,7 @@ msgstr "Errore di aggiornamento su %s"
 
 #: ../../boot.php:1515
 msgid ""
-"Create an account to access services and applications within the Red Matrix"
+"Create an account to access services and applications within the Hubzilla"
 msgstr "Registrati per accedere ai servizi e alle applicazioni di Hubzilla"
 
 #: ../../boot.php:1543

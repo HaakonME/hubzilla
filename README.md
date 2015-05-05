@@ -6,11 +6,11 @@ Make Hubz with Hubzilla
 
 **What are Hubz?**
 
-Hubz are general-purpose websites built with **Hubzilla**. Every website member can create their own unique website or social space, and these can all share and interact.
+Hubz are general-purpose websites. Every member can create or customise their own personal websites, media collections and/or social spaces, and these can all share and interact.
 
 Hubz all over the internet connect together "magically" to create very large communities and social networks; and *these* can all share and interact. 
 
-Hubz members can easily and securely share stuff with members of other Hubz. Publicly or **privately**. Anything, anybody. 
+Hubz members can securely and privately share anything; with anybody, on any Hubz. Or share stuff publicly with the entire internet if desired. 
 
 
 **Hubzilla** is open source and built using common webserver technology (PHP/MySQL/Apache, althogh Mariadb or Postgres and Nginx could also be used, we're pretty easy).  

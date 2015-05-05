@@ -18,22 +18,22 @@ Members of *my* Hubz can easily and securely share stuff with members of *your* 
 Hubz are
 
 * decentralised
-* social
+* inherently social
+* optionally inter-networked with other Hubz
 * privacy-enabled (privacy exclusions work across the entire internet to any registered identity on any compatible Hubz)
-* optionally inter-networked with other hubs
 
 Possible website applications include
 
-* decentralised social networking
+* decentralised social networking nodes
 * personal cloud storage
+* file dropboxes
 * managing organisational communications and activities
+* collaboration and community decision-making
 * small business websites
-* public and private media/file management and access
+* public and private media/file libraries
 * blogs
 * event promotion
 * feed aggregation and republishing
 * forums
-* pretty much anything you can do on a traditional blog or community website, but that you could do better if you could easily connect it with other websites.
-
-
-Hubzilla members can also interact to varying degrees with several independant social networks such as Diaspora, Redmatrix, and Friendica; and can cross-post published items to a large number of other social and communication providers via plugins.  
+* dating websites
+* pretty much anything you can do on a traditional blog or community website, but that you could do better if you could easily connect it with other websites or privately share things across website boundaries. 

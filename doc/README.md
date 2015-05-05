@@ -6,7 +6,7 @@ Make Hubz with Hubzilla
 
 **What are Hubz?**
 
-Hubz are general-purpose websites built using our revolutionary platform. Every website member can create their own unique website or social space to suit their needs and personality, and these can all interact.
+Hubz are general-purpose websites built with **Hubzilla**. Every website member can create their own unique website or social space to suit their needs and personality, and these can all interact.
 
 But we don't stop there. Hubz all over the internet "magically" connect together into very large (or "internet-scale") social networks, websites, and communities; and *these* can all interact. 
 

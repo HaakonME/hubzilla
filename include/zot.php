@@ -1,7 +1,7 @@
 <?php
 /**
  * @file include/zot.php
- * @brief RedMatrix implementation of zot protocol.
+ * @brief Hubzilla implementation of zot protocol.
  *
  * https://github.com/friendica/red/wiki/zot
  * https://github.com/friendica/red/wiki/Zot---A-High-Level-Overview

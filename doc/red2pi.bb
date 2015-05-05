@@ -8,7 +8,7 @@ Then this page is for you! You will:
 [*] Install Apache Web Server, PHP, MaySQL, phpMyAdmin
 [*] Register a free domain (dynamic DNS) and use it for your RED hub
 [*] Install the RED Matrix
-[*] Keep your Raspberry Pi and your Redmatrix up-to-date
+[*] Keep your Raspberry Pi and your Hubzilla up-to-date
 [*] TODO Setting up SSL
 [*] TODO Running Friendica with SSL
 [*] TODO Make the webserver less vulnarable to attacks
@@ -239,10 +239,10 @@ Cleanup: Remove the directory www/ (Git will not create files and folders in dir
 Remove directory[code]pi@pi /var $ sudo rm -rf www/[/code]
 
 Download the sources of RED from GIT
-[code]pi@pi /var $ sudo git clone https://github.com/redmatrix/redmatrix.git www[/code]
+[code]pi@pi /var $ sudo git clone https://github.com/redmatrix/hubzilla.git www[/code]
 
 Download the sources of the addons from GIT
-[code]pi@pi /var/www $ sudo git clone https://github.com/redmatrix/redmatrix-addons.git addon[/code]
+[code]pi@pi /var/www $ sudo git clone https://github.com/redmatrix/hubzilla-addons.git addon[/code]
 
 Make user www-data the owner of the whole red directory (including subdirectories and files)
 (TODO: This step has to be proofed by the next installation.)
@@ -319,7 +319,7 @@ php util/config system block_public_search 1
 
 
 
-[size=large]5. Keep your Raspberry Pi and your Redmatrix up-to-date[/size] 
+[size=large]5. Keep your Raspberry Pi and your Hubzilla up-to-date[/size] 
 
 Git update of RED every day at 4 am and addons at 5 am every day
 Try if the command is working

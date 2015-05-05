@@ -1,22 +1,22 @@
 [img][baseurl]/assets/hashlogo.png[/img]
 
-[size=large][b]RedMatrix Documentation[/b][/size]
+[size=large][b]Hubzilla Documentation[/b][/size]
 
-[zrl=[baseurl]/help/about][b]What is the RedMatrix?[/b][/zrl]
-RedMatrix is a decentralized communication and publishing platform that enables you to keep in control of your communication needs by automatic encryption and finely grained access control. It's you, and only you who decides who is allowed to see your stuff.
+[zrl=[baseurl]/help/about][b]What is the Hubzilla?[/b][/zrl]
+Hubzilla is a decentralized communication and publishing platform that enables you to keep in control of your communication needs by automatic encryption and finely grained access control. It's you, and only you who decides who is allowed to see your stuff.
 
-[zrl=[baseurl]/help/features][b]RedMatrix Features[/b][/zrl]
+[zrl=[baseurl]/help/features][b]Hubzilla Features[/b][/zrl]
 
-The RedMatrix is already running as a global distributed network and proves its versatility and scalability from standalone to huge sites on a daily basis. 
-Think of standalone family communication platforms, distributed online communities, support forums, blogs and homepages. Or professional content providers with commercial premium channels and targeted content acces. Whatever you want, the RedMatrix is there to cater to your creativity.
+The Hubzilla is already running as a global distributed network and proves its versatility and scalability from standalone to huge sites on a daily basis. 
+Think of standalone family communication platforms, distributed online communities, support forums, blogs and homepages. Or professional content providers with commercial premium channels and targeted content acces. Whatever you want, the Hubzilla is there to cater to your creativity.
 
 [zrl=[baseurl]/help/what_is_zot][b]Got Zot? Well, you should.[/b][/zrl]
-Zot is the great new communicaton protocol invented especially for the RedMatrix. As a member you are no longer bound to a single site or hub thanks to "Nomadic Identities". Migrate easily to another server and keep your contacts intact, or clone it and run the same channel on several servers. Just in case one of them might shut down, you don't lose out. Plus once you are inside the RedMatrix there is no need for you to authenticate twice, even when accessing another RedMatrix site. Zot is what sets the RedMatrix apart. 
+Zot is the great new communicaton protocol invented especially for the Hubzilla. As a member you are no longer bound to a single site or hub thanks to "Nomadic Identities". Migrate easily to another server and keep your contacts intact, or clone it and run the same channel on several servers. Just in case one of them might shut down, you don't lose out. Plus once you are inside the Hubzilla there is no need for you to authenticate twice, even when accessing another Hubzilla site. Zot is what sets the Hubzilla apart. 
 
 [size=large][b]Getting Started[/b][/size]
 [zrl=[baseurl]/help/Privacy]Privacy Policy[/zrl]
 [zrl=[baseurl]/help/registration]Account Registration[/zrl]
-[zrl=[baseurl]/help/accounts_profiles_channels_basics]You at the RedMatrix: accounts, profiles and channels in short[/zrl]
+[zrl=[baseurl]/help/accounts_profiles_channels_basics]You at the Hubzilla: accounts, profiles and channels in short[/zrl]
 [zrl=[baseurl]/help/profiles]Profiles[/zrl]
 [zrl=[baseurl]/help/channels]Channels[/zrl]
 [zrl=[baseurl]/help/roles]Permission roles and Channel types[/zrl]
@@ -42,11 +42,11 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 [zrl=[baseurl]/help/debian_install]Easy Install on Debian via script[/zrl]
 [zrl=[baseurl]/help/red2pi]Installing Red on the Raspberry Pi[/zrl]
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting Tips[/zrl]
-[zrl=[baseurl]/help/hidden_configs]Tweaking RedMatrix's Hidden Configurations[/zrl]
+[zrl=[baseurl]/help/hidden_configs]Tweaking Hubzilla's Hidden Configurations[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [size=large][b]Technical Documentation[/b][/size]
-[zrl=[baseurl]/help/history]RedMatrix history[/zrl]
+[zrl=[baseurl]/help/history]Hubzilla history[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
 [zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]
@@ -76,14 +76,14 @@ Zot is the great new communicaton protocol invented especially for the RedMatrix
 
 [size=large][b]External Resources[/b][/size]
 [zrl=[baseurl]/help/external-resource-links]External Resource Links[/zrl]
-[url=https://github.com/redmatrix/redmatrix]Main Website[/url]
-[url=https://github.com/redmatrix/redmatrix-addons]Addon Website[/url]
+[url=https://github.com/redmatrix/hubzilla]Main Website[/url]
+[url=https://github.com/redmatrix/hubzilla-addons]Addon Website[/url]
 [url=https://zothub.com/channel/one]Development Channel[/url]
-[url=https://federated.social/channel/postgres]Postgres-specific RedMatrix Admin Support Channel[/url]
+[url=https://federated.social/channel/postgres]Postgres-specific Hubzilla Admin Support Channel[/url]
 
-[url=[baseurl]/help/credits]RedMatrix Credits[/url]
+[url=[baseurl]/help/credits]Hubzilla Credits[/url]
 
-[size=large][b]About This RedMatrix Hub[/b][/size]
+[size=large][b]About This Hubzilla Hub[/b][/size]
 [zrl=[baseurl]/help/TermsOfService]Terms of Service For This Hub[/zrl]
 [zrl=[baseurl]/siteinfo]Hub Information (/siteinfo)[/zrl]
 [zrl=[baseurl]/siteinfo/json]Detailed Technical Hub Information in JSON format(/siteinfo/json)[/zrl]

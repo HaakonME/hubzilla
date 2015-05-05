@@ -65,7 +65,7 @@ then
     sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER//g" "$OUTFILE"
     sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.//g" "$OUTFILE"
     sed -i "s/PACKAGE VERSION//g" "$OUTFILE"
-    sed -i "s/PACKAGE/RedMatrix $ADDONNAME addon/g" "$OUTFILE"
+    sed -i "s/PACKAGE/Hubzilla $ADDONNAME addon/g" "$OUTFILE"
     sed -i "s/CHARSET/UTF-8/g" "$OUTFILE"
 	sed -i '/^\"Plural-Forms/d' "$OUTFILE"
 else

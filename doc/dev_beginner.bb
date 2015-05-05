@@ -174,8 +174,8 @@ It is a good idea to read the whole manual! Git is different to other version co
 Now you should
 [list]
 [*] create an account at github.com
-[*] fork https://github.com/redmatrix/redmatrix
-[*] fork https://github.com/redmatrix/redmatrix-addons
+[*] fork https://github.com/redmatrix/hubzilla
+[*] fork https://github.com/redmatrix/hubzilla-addons
 [/list]
 
 If you not want to use GIT from the command line - there is a usefull Eclipse plugin named ""Eclipse Mylyn to GitHub connector".
@@ -362,7 +362,7 @@ surfer@debian:/var/www$ git checkout -b dev_beginning
 Make sure your local repository is up-to-date with the main project.
 Add the original repository as a remote named “upstream” if not done yet
 [code]
-surfer@debian:/var/www$ git remote add upstream https://github.com/redmatrix/redmatrix
+surfer@debian:/var/www$ git remote add upstream https://github.com/redmatrix/hubzilla
 [/code]
 
 Fetch the newest work from that remote

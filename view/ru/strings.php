@@ -348,7 +348,7 @@ $a->strings["Enable Safe Search"] = "";
 $a->strings["Disable Safe Search"] = "";
 $a->strings["Safe Mode"] = "Безопасный режим";
 $a->strings["Red Matrix Notification"] = "Оповещения Red матрицы";
-$a->strings["redmatrix"] = "redmatrix";
+$a->strings["hubzilla"] = "hubzilla";
 $a->strings["Thank You,"] = "Спасибо,";
 $a->strings["%s Administrator"] = "%s администратор";
 $a->strings["%s <!item_type!>"] = "%s <!item_type!>";
@@ -1371,7 +1371,7 @@ $a->strings["This is a hub of the Red Matrix - a global cooperative network of d
 $a->strings["Running at web location"] = "";
 $a->strings["Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more about the Red Matrix."] = "Пожалуйста посетите <a href=\"http://getzot.com\">GetZot.com</a> чтобы узнать больше о Red Matrix.";
 $a->strings["Bug reports and issues: please visit"] = "";
-$a->strings["Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot com"] = "";
+$a->strings["Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot com"] = "";
 $a->strings["Site Administrators"] = "Администратор сайта";
 $a->strings["Page owner information could not be retrieved."] = "";
 $a->strings["Album not found."] = "Альбом не найден.";

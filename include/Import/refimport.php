@@ -205,7 +205,7 @@ function reflect_find_user($users,$name) {
 
 function reflect_comment_store($channel,$post,$comment,$user) {
 
-	// if the commenter was the channel owner, use their redmatrix xchan
+	// if the commenter was the channel owner, use their hubzilla xchan
 
 	if($comment['author'] === REFLECT_EXPORTUSERNAME && $comment['registered'])
 		$hash = $channel['xchan_hash'];

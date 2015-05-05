@@ -11,7 +11,7 @@
 # tuscanhobbit <pynolo@tarine.net>, 2013-2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Redmatrix\n"
+"Project-Id-Version: Hubzilla\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-24 00:03-0700\n"
 "PO-Revision-Date: 2015-05-04 14:29+0000\n"
@@ -1114,11 +1114,11 @@ msgstr "Hub pubblici"
 
 #: ../../include/enotify.php:58
 msgid "Red Matrix Notification"
-msgstr "Notifica di RedMatrix"
+msgstr "Notifica di Hubzilla"
 
 #: ../../include/enotify.php:59
-msgid "redmatrix"
-msgstr "RedMatrix"
+msgid "hubzilla"
+msgstr "Hubzilla"
 
 #: ../../include/enotify.php:61
 msgid "Thank You,"
@@ -1137,7 +1137,7 @@ msgstr "%s <!item_type!>"
 #: ../../include/enotify.php:100
 #, php-format
 msgid "[Red:Notify] New mail received at %s"
-msgstr "[RedMatrix] Nuovo messaggio su %s"
+msgstr "[Hubzilla] Nuovo messaggio su %s"
 
 #: ../../include/enotify.php:102
 #, php-format
@@ -1176,7 +1176,7 @@ msgstr "%1$s, %2$s ha commentato [zrl=%3$s]%4$s che hai creato[/zrl]"
 #: ../../include/enotify.php:186
 #, php-format
 msgid "[Red:Notify] Comment to conversation #%1$d by %2$s"
-msgstr "[RedMatrix] Nuovo commento di %2$s alla conversazione #%1$d"
+msgstr "[Hubzilla] Nuovo commento di %2$s alla conversazione #%1$d"
 
 #: ../../include/enotify.php:187
 #, php-format
@@ -1193,7 +1193,7 @@ msgstr "Visita %s per leggere o commentare la conversazione."
 #: ../../include/enotify.php:196
 #, php-format
 msgid "[Red:Notify] %s posted to your profile wall"
-msgstr "[RedMatrix] %s ha scritto sulla tua bacheca"
+msgstr "[Hubzilla] %s ha scritto sulla tua bacheca"
 
 #: ../../include/enotify.php:198
 #, php-format
@@ -1208,7 +1208,7 @@ msgstr "%1$s, %2$s ha scritto sulla [zrl=%3$s]tua bacheca[/zrl]"
 #: ../../include/enotify.php:224
 #, php-format
 msgid "[Red:Notify] %s tagged you"
-msgstr "[RedMatrix] %s ti ha taggato"
+msgstr "[Hubzilla] %s ti ha taggato"
 
 #: ../../include/enotify.php:225
 #, php-format
@@ -1223,7 +1223,7 @@ msgstr "%1$s, %2$s [zrl=%3$s]ti ha taggato[/zrl]."
 #: ../../include/enotify.php:238
 #, php-format
 msgid "[Red:Notify] %1$s poked you"
-msgstr "[RedMatrix] %1$s ti ha mandato un poke"
+msgstr "[Hubzilla] %1$s ti ha mandato un poke"
 
 #: ../../include/enotify.php:239
 #, php-format
@@ -1238,7 +1238,7 @@ msgstr "%1$s, %2$s [zrl=%2$s]ti ha mandato un poke[/zrl]."
 #: ../../include/enotify.php:256
 #, php-format
 msgid "[Red:Notify] %s tagged your post"
-msgstr "[RedMatrix] %s ha taggato il tuo articolo"
+msgstr "[Hubzilla] %s ha taggato il tuo articolo"
 
 #: ../../include/enotify.php:257
 #, php-format
@@ -1252,7 +1252,7 @@ msgstr "%1$s, %2$s ha taggato [zrl=%3$s]il tuo articolo[/zrl]"
 
 #: ../../include/enotify.php:270
 msgid "[Red:Notify] Introduction received"
-msgstr "[RedMatrix] Hai una richiesta di amicizia"
+msgstr "[Hubzilla] Hai una richiesta di amicizia"
 
 #: ../../include/enotify.php:271
 #, php-format
@@ -1277,7 +1277,7 @@ msgstr "Visita %s per approvare o rifiutare la richiesta di entrare in contatto.
 
 #: ../../include/enotify.php:285
 msgid "[Red:Notify] Friend suggestion received"
-msgstr "[RedMatrix] Ti è stato suggerito un amico"
+msgstr "[Hubzilla] Ti è stato suggerito un amico"
 
 #: ../../include/enotify.php:286
 #, php-format
@@ -1306,7 +1306,7 @@ msgstr "Visita %s per approvare o rifiutare il suggerimento."
 
 #: ../../include/enotify.php:508
 msgid "[Red:Notify]"
-msgstr "[RedMatrix]"
+msgstr "[Hubzilla]"
 
 #: ../../include/contact_selectors.php:56
 msgid "Frequently"
@@ -1681,8 +1681,8 @@ msgid "Attachments:"
 msgstr "Allegati:"
 
 #: ../../include/bb2diaspora.php:453
-msgid "Redmatrix event notification:"
-msgstr "Notifica eventi RedMatrix:"
+msgid "Hubzilla event notification:"
+msgstr "Notifica eventi Hubzilla:"
 
 #: ../../include/text.php:329
 msgid "prev"
@@ -2171,7 +2171,7 @@ msgstr "Elenco pubblico canali"
 
 #: ../../include/nav.php:180 ../../include/apps.php:133
 msgid "Matrix"
-msgstr "RedMatrix"
+msgstr "Hubzilla"
 
 #: ../../include/nav.php:180
 msgid "Your matrix"
@@ -4653,7 +4653,7 @@ msgstr "La chiamata all'URL restituisce questo errore: %1$s"
 
 #: ../../mod/home.php:53
 msgid "Red Matrix - &quot;The Network&quot;"
-msgstr "RedMatrix - &quot;La tua rete&quot;"
+msgstr "Hubzilla - &quot;La tua rete&quot;"
 
 #: ../../mod/home.php:124
 #, php-format
@@ -4755,9 +4755,9 @@ msgstr "Questa funzionalità è riservata agli iscritti."
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
-"href=\"register\">register as a new RedMatrix member</a> to continue."
-msgstr "Per favore <a href=\"rmagic\">accedi con il tuo identificativo RedMatrix</a> o <a href=\"register\">registrati su RedMatrix</a> per continuare."
+"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a "
+"href=\"register\">register as a new Redmatrix.member</a> to continue."
+msgstr "Per favore <a href=\"rmagic\">accedi con il tuo identificativo Hubzilla</a> o <a href=\"register\">registrati su Hubzilla</a> per continuare."
 
 #: ../../mod/like.php:101 ../../mod/like.php:128 ../../mod/like.php:166
 msgid "Invalid request."
@@ -4927,7 +4927,7 @@ msgid ""
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
 "additional details."
-msgstr "Gli indirizzi elencati permettono la registrazione su RedMatrix. Tutti i siti di questa rete sono interconnessi, quindi essere registrati su uno è come essere registrati ovunque. Alcuni potrebbero richiedere un'iscrizione a pagamento o prevedere diverse tipologie di abbonamento. Eventualmente potrai trovare maggiori informazioni visitando ciascun sito."
+msgstr "Gli indirizzi elencati permettono la registrazione su Hubzilla. Tutti i siti di questa rete sono interconnessi, quindi essere registrati su uno è come essere registrati ovunque. Alcuni potrebbero richiedere un'iscrizione a pagamento o prevedere diverse tipologie di abbonamento. Eventualmente potrai trovare maggiori informazioni visitando ciascun sito."
 
 #: ../../mod/pubsites.php:25
 msgid "Rate this hub"
@@ -4966,8 +4966,8 @@ msgid "Edit post"
 msgstr "Modifica articolo"
 
 #: ../../mod/dav.php:121
-msgid "RedMatrix channel"
-msgstr "Canale RedMatrix"
+msgid "Hubzilla channel"
+msgstr "Canale Hubzilla"
 
 #: ../../mod/group.php:20
 msgid "Collection created."
@@ -5032,13 +5032,13 @@ msgstr "Nessuna app o componente installato"
 
 #: ../../mod/siteinfo.php:155
 msgid "Red"
-msgstr "RedMatrix"
+msgstr "Hubzilla"
 
 #: ../../mod/siteinfo.php:156
 msgid ""
-"This is a hub of redmatrix - a global cooperative network of decentralized "
+"This is a hub of hubzilla - a global cooperative network of decentralized "
 "privacy enhanced websites."
-msgstr "Questo è un hub di RedMatrix - una rete cooperativa e decentralizzata di siti ad elevata privacy. "
+msgstr "Questo è un hub di Hubzilla - una rete cooperativa e decentralizzata di siti ad elevata privacy. "
 
 #: ../../mod/siteinfo.php:158
 msgid "Tag: "
@@ -5056,7 +5056,7 @@ msgstr "In esecuzione sull'indirizzo web"
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">redmatrix.me</a> to learn more"
 " about the Red Matrix."
-msgstr "Visita <a href=\"https://redmatrix.me\">RedMatrix.me</a> per scoprire cosa è Red Matrix."
+msgstr "Visita <a href=\"https://redmatrix.me\">Redmatrix.me</a> per scoprire cosa è Red Matrix."
 
 #: ../../mod/siteinfo.php:165
 msgid "Bug reports and issues: please visit"
@@ -5064,9 +5064,9 @@ msgstr "Per segnalare bug e problemi: visita"
 
 #: ../../mod/siteinfo.php:168
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
 "com"
-msgstr "Per consigli, ringraziamenti, ecc. - scrivi a \"redmatrix\" at librelist - dot com"
+msgstr "Per consigli, ringraziamenti, ecc. - scrivi a \"hubzilla\" at librelist - dot com"
 
 #: ../../mod/siteinfo.php:170
 msgid "Site Administrators"
@@ -5082,7 +5082,7 @@ msgstr "Non disponibile"
 
 #: ../../mod/setup.php:166
 msgid "Red Matrix Server - Setup"
-msgstr "RedMatrix Server - Installazione"
+msgstr "Hubzilla Server - Installazione"
 
 #: ../../mod/setup.php:172
 msgid "Could not connect to database."
@@ -5128,7 +5128,7 @@ msgstr "Connessione al database"
 msgid ""
 "In order to install Red Matrix we need to know how to connect to your "
 "database."
-msgstr "Per installare RedMatrix è necessario conoscere i parametri di connessione al database."
+msgstr "Per installare Hubzilla è necessario conoscere i parametri di connessione al database."
 
 #: ../../mod/setup.php:291
 msgid ""
@@ -5327,7 +5327,7 @@ msgstr "Errore: il modulo PHP mcrypt è richiesto ma non installato."
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\""
 " in the top folder of your web server and it is unable to do so."
-msgstr "L'installazione web deve poter creare un file chiamato \".htconfig.php\" nella cartella di RedMatrix ma non è in grado di farlo."
+msgstr "L'installazione web deve poter creare un file chiamato \".htconfig.php\" nella cartella di Hubzilla ma non è in grado di farlo."
 
 #: ../../mod/setup.php:509
 msgid ""
@@ -5339,7 +5339,7 @@ msgstr "Spesso ciò è dovuto ai permessi di accesso al disco: il web server pot
 msgid ""
 "At the end of this procedure, we will give you a text to save in a file "
 "named .htconfig.php in your Red top folder."
-msgstr "Alla fine di questa procedura ti sarà dato il testo da salvare in un file di nome .htconfig.php dentro la cartella principale di RedMatrix."
+msgstr "Alla fine di questa procedura ti sarà dato il testo da salvare in un file di nome .htconfig.php dentro la cartella principale di Hubzilla."
 
 #: ../../mod/setup.php:511
 msgid ""
@@ -5362,7 +5362,7 @@ msgstr "Red usa il sistema Smarty3 per costruire i suoi template grafici. Smarty
 msgid ""
 "In order to store these compiled templates, the web server needs to have "
 "write access to the directory %s under the Red top level folder."
-msgstr "Per poter memorizzare i template compilati, il web server deve avere accesso in scrittura a %s sotto la cartella di installazione di RedMatrix."
+msgstr "Per poter memorizzare i template compilati, il web server deve avere accesso in scrittura a %s sotto la cartella di installazione di Hubzilla."
 
 #: ../../mod/setup.php:526 ../../mod/setup.php:544
 msgid ""
@@ -5386,7 +5386,7 @@ msgstr "%s è scrivibile"
 msgid ""
 "Red uses the store directory to save uploaded files. The web server needs to"
 " have write access to the store directory under the Red top level folder"
-msgstr "RedMatrix salva i file caricati nella cartella \"store\" sul server. Il server deve avere i diritti di scrittura su quella cartella che si trova dentro l'installazione di RedMatrix"
+msgstr "Hubzilla salva i file caricati nella cartella \"store\" sul server. Il server deve avere i diritti di scrittura su quella cartella che si trova dentro l'installazione di Hubzilla"
 
 #: ../../mod/setup.php:547
 msgid "store is writable"
@@ -5597,7 +5597,7 @@ msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr "%1$s ha taggato %3$s di %2$s con %4$s"
 
 #: ../../mod/cloud.php:120
-msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
+msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
 msgstr "Accesso a Red Matrix. {Inserisci l'email con cui sei registrato e la password.}"
 
 #: ../../mod/photos.php:77
@@ -6118,7 +6118,7 @@ msgstr "%s: non è un indirizzo email valido."
 
 #: ../../mod/invite.php:76
 msgid "Please join us on Red"
-msgstr "Vieni con noi su RedMatrix"
+msgstr "Vieni con noi su Hubzilla"
 
 #: ../../mod/invite.php:87
 msgid "Invitation limit exceeded. Please contact your site administrator."
@@ -6153,20 +6153,20 @@ msgid "Your message:"
 msgstr "Il tuo messaggio:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
-msgstr "Entra a far parte della mia comunità su RedMatrix."
+msgid "Please join my community on Hubzilla."
+msgstr "Entra a far parte della mia comunità su Hubzilla."
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
 msgstr "Dovrai fornire questo codice di invito:"
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
-msgstr "1. Registrati su un qualsiasi sito RedMatrix (sono tutti interconnessi)"
+msgid "1. Register at any Hubzilla location (they are all inter-connected)"
+msgstr "1. Registrati su un qualsiasi sito Hubzilla (sono tutti interconnessi)"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
-msgstr "2. Inserisci il mio indirizzo RedMatrix nella barra di ricerca che compare nella pagina."
+msgid "2. Enter my Hubzilla network address into the site searchbar."
+msgstr "2. Inserisci il mio indirizzo Hubzilla nella barra di ricerca che compare nella pagina."
 
 #: ../../mod/invite.php:138
 msgid "or visit "
@@ -6774,8 +6774,8 @@ msgid "Link Target"
 msgstr "Destinazione link"
 
 #: ../../mod/mitem.php:156 ../../mod/mitem.php:226
-msgid "Use RedMatrix magic-auth if available"
-msgstr "Usa l'autenticazione magica di RedMatrix, se disponibile"
+msgid "Use Hubzilla magic-auth if available"
+msgstr "Usa l'autenticazione magica di Hubzilla, se disponibile"
 
 #: ../../mod/mitem.php:157 ../../mod/mitem.php:227
 msgid "Open link in new window"
@@ -7651,7 +7651,7 @@ msgstr "File di log"
 #: ../../mod/admin.php:1364
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
-msgstr "Deve essere scrivibile dal web server. La posizione è relativa alla cartella dove è installato RedMatrix."
+msgstr "Deve essere scrivibile dal web server. La posizione è relativa alla cartella dove è installato Hubzilla."
 
 #: ../../mod/admin.php:1365
 msgid "Log level"
@@ -8461,7 +8461,7 @@ msgstr "Oppure <a href=\"import\">importa un tuo canale esistente</a> da un altr
 msgid ""
 "Please choose a channel type (such as social networking or community forum) "
 "and privacy requirements so we can select the best permissions for you"
-msgstr "Descrivi il tipo di canale che vorresti creare (per esempio se ti interessa più usarlo come social network, come un forum di discussione...) e il tipo di privacy che preferisci. RedMatrix sceglierà per te i permessi più adatti."
+msgstr "Descrivi il tipo di canale che vorresti creare (per esempio se ti interessa più usarlo come social network, come un forum di discussione...) e il tipo di privacy che preferisci. Hubzilla sceglierà per te i permessi più adatti."
 
 #: ../../mod/new_channel.php:119
 msgid "Channel Type"
@@ -8897,7 +8897,7 @@ msgstr "Errore di aggiornamento su %s"
 #: ../../boot.php:1515
 msgid ""
 "Create an account to access services and applications within the Red Matrix"
-msgstr "Registrati per accedere ai servizi e alle applicazioni di RedMatrix"
+msgstr "Registrati per accedere ai servizi e alle applicazioni di Hubzilla"
 
 #: ../../boot.php:1543
 msgid "Password"

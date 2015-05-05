@@ -398,8 +398,8 @@ msgid "Red Matrix Notification"
 msgstr "Red Matrix Benachrichtigung"
 
 #: ../../include/enotify.php:42
-msgid "redmatrix"
-msgstr "redmatrix"
+msgid "hubzilla"
+msgstr "hubzilla"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -2069,8 +2069,8 @@ msgid "l F d, Y \\@ g:i A"
 msgstr "l, d. F Y, H:i"
 
 #: ../../include/bb2diaspora.php:430
-msgid "Redmatrix event notification:"
-msgstr "RedMatrix Termin-Benachrichtigung:"
+msgid "Hubzilla event notification:"
+msgstr "Hubzilla Termin-Benachrichtigung:"
 
 #: ../../include/bb2diaspora.php:434 ../../include/event.php:20
 msgid "Starts:"
@@ -2656,7 +2656,7 @@ msgstr "Nur für Dich sichtbar."
 
 #: ../../include/items.php:1185
 msgid "Visible to anybody in this network."
-msgstr "Für jedes Mitglied der RedMatrix sichtbar."
+msgstr "Für jedes Mitglied der Hubzilla sichtbar."
 
 #: ../../include/items.php:1187
 msgid "Visible to anybody authenticated."
@@ -4314,7 +4314,7 @@ msgstr "Derzeit anstehend"
 
 #: ../../mod/home.php:48
 msgid "Red Matrix - &quot;The Network&quot;"
-msgstr "RedMatrix – &quot;Das Netzwerk&quot;"
+msgstr "Hubzilla – &quot;Das Netzwerk&quot;"
 
 #: ../../mod/home.php:101
 #, php-format
@@ -4386,8 +4386,8 @@ msgid "Fetching URL returns error: %1$s"
 msgstr "Abrufen der URL gab einen Fehler zurück: %1$s"
 
 #: ../../mod/dav.php:121
-msgid "RedMatrix channel"
-msgstr "RedMatrix-Kanal"
+msgid "Hubzilla channel"
+msgstr "Hubzilla-Kanal"
 
 #: ../../mod/profile_photo.php:108
 msgid "Image uploaded but image cropping failed."
@@ -5225,8 +5225,8 @@ msgid "Remove this channel"
 msgstr "Diesen Kanal löschen"
 
 #: ../../mod/cloud.php:120
-msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
-msgstr "RedMatrix – Gäste: Username: {Deine E-Mail-Adresse}, Passwort: +++"
+msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
+msgstr "Hubzilla – Gäste: Username: {Deine E-Mail-Adresse}, Passwort: +++"
 
 #: ../../mod/tagrm.php:44 ../../mod/tagrm.php:94
 msgid "Tag removed"
@@ -5313,7 +5313,7 @@ msgstr "Red"
 msgid ""
 "This is a hub of the Red Matrix - a global cooperative network of "
 "decentralized privacy enhanced websites."
-msgstr "Dieser Hub ist Teil der RedMatrix – eines globalen, kooperativen Netzwerks aus dezentralen Websites, die Rücksicht auf Deine Privatsphäre nehmen."
+msgstr "Dieser Hub ist Teil der Hubzilla – eines globalen, kooperativen Netzwerks aus dezentralen Websites, die Rücksicht auf Deine Privatsphäre nehmen."
 
 #: ../../mod/siteinfo.php:139
 msgid "Tag: "
@@ -5329,9 +5329,9 @@ msgstr "Erreichbar unter der Web-Adresse"
 
 #: ../../mod/siteinfo.php:145
 msgid ""
-"Please visit <a href=\"https://redmatrix.me\">RedMatrix.me</a> to learn more"
+"Please visit <a href=\"https://redmatrix.me\">Redmatrix.me</a> to learn more"
 " about the Red Matrix."
-msgstr "Bitte besuchen Sie <a href=\"https://redmatrix.me\">RedMatrix.me</a>, um mehr über RedMatrix zu erfahren."
+msgstr "Bitte besuchen Sie <a href=\"https://redmatrix.me\">Redmatrix.me</a>, um mehr über Hubzilla zu erfahren."
 
 #: ../../mod/siteinfo.php:146
 msgid "Bug reports and issues: please visit"
@@ -5339,9 +5339,9 @@ msgstr "Probleme oder Fehler gefunden? Bitte besuche"
 
 #: ../../mod/siteinfo.php:149
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
 "com"
-msgstr "Vorschläge, Lob, usw.: E-Mail an 'redmatrix' at librelist - dot - com"
+msgstr "Vorschläge, Lob, usw.: E-Mail an 'hubzilla' at librelist - dot - com"
 
 #: ../../mod/siteinfo.php:151
 msgid "Site Administrators"
@@ -6341,20 +6341,20 @@ msgid "Your message:"
 msgstr "Deine Nachricht:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
-msgstr "Schließe Dich uns in der RedMatrix an!"
+msgid "Please join my community on Hubzilla."
+msgstr "Schließe Dich uns in der Hubzilla an!"
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
 msgstr "Gib folgenden Einladungs-Code ein:"
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
-msgstr "1. Registriere Dich auf irgendeinem RedMatrix-Server (sie sind alle miteinander verbunden)"
+msgid "1. Register at any Hubzilla location (they are all inter-connected)"
+msgstr "1. Registriere Dich auf irgendeinem Hubzilla-Server (sie sind alle miteinander verbunden)"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
-msgstr "2. Gib meine RedMatrix-Adresse im Suchfeld ein."
+msgid "2. Enter my Hubzilla network address into the site searchbar."
+msgstr "2. Gib meine Hubzilla-Adresse im Suchfeld ein."
 
 #: ../../mod/invite.php:138
 msgid "or visit "
@@ -7360,7 +7360,7 @@ msgstr "Den „Entdecken“-Reiter ausblenden"
 msgid ""
 "Remove the tab in the network view with public content pulled from sources "
 "chosen for this site."
-msgstr "Entferne den „Entdecken“-Reiter aus der Matrix-Seite, in dem öffentliche Inhalte angezeigt werden, die von anderen RedMatrix-Hubs geholt wurden."
+msgstr "Entferne den „Entdecken“-Reiter aus der Matrix-Seite, in dem öffentliche Inhalte angezeigt werden, die von anderen Hubzilla-Hubs geholt wurden."
 
 #: ../../mod/admin.php:445
 msgid "No login on Homepage"
@@ -7785,7 +7785,7 @@ msgstr "Dieses Konto, all seine Kanäle sowie alle Kanal-Klone aus dem Netzwerk 
 msgid ""
 "By default only the instances of the channels located on this hub will be "
 "removed from the network"
-msgstr "Standardmäßig werden nur die Kanalklone auf diesem RedMatrix-Hub aus dem Netzwerk entfernt"
+msgstr "Standardmäßig werden nur die Kanalklone auf diesem Hubzilla-Hub aus dem Netzwerk entfernt"
 
 #: ../../mod/update_channel.php:43 ../../mod/update_display.php:25
 #: ../../mod/update_network.php:23 ../../mod/update_search.php:46
@@ -7898,8 +7898,8 @@ msgid "URL of link"
 msgstr "URL des Links"
 
 #: ../../mod/mitem.php:165 ../../mod/mitem.php:209
-msgid "Use RedMatrix magic-auth if available"
-msgstr "Verwende die automatische RedMatrix-Authentifizierung (magic-auth), wenn verfügbar"
+msgid "Use Hubzilla magic-auth if available"
+msgstr "Verwende die automatische Hubzilla-Authentifizierung (magic-auth), wenn verfügbar"
 
 #: ../../mod/mitem.php:166 ../../mod/mitem.php:210
 msgid "Open link in new window"
@@ -7989,9 +7989,9 @@ msgstr "Diese Aktion kann nur von Mitgliedern ausgeführt werden."
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
-"href=\"register\">register as a new RedMatrix member</a> to continue."
-msgstr "Bitte <a href=\"rmagic\">melde Dich mit Deiner RedMatrix-ID an</a> oder <a href=\"register\">registriere Dich als neues Mitglied der RedMatrix</a>, um fortzufahren."
+"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a "
+"href=\"register\">register as a new Redmatrix.member</a> to continue."
+msgstr "Bitte <a href=\"rmagic\">melde Dich mit Deiner Hubzilla-ID an</a> oder <a href=\"register\">registriere Dich als neues Mitglied der Hubzilla</a>, um fortzufahren."
 
 #: ../../mod/like.php:101 ../../mod/like.php:128 ../../mod/like.php:166
 msgid "Invalid request."
@@ -8607,7 +8607,7 @@ msgstr "Rechter Rand des Aside-Elements"
 
 #: ../../view/theme/redbasic/php/config.php:84
 msgid "Light (Red Matrix default)"
-msgstr "Hell (RedMatrix-Voreinstellung)"
+msgstr "Hell (Hubzilla-Voreinstellung)"
 
 #: ../../view/theme/redbasic/php/config.php:104
 msgid "Narrow navbar"

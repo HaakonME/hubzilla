@@ -13,7 +13,7 @@ Hubz all over the internet connect together "magically" to create very large com
 Hubz members can securely and privately share anything; with anybody, on any Hubz. Or share stuff publicly with the entire internet if desired. 
 
 
-**Hubzilla** is open source and built using common webserver technology (PHP/MySQL/Apache, althogh Mariadb or Postgres and Nginx could also be used, we're pretty easy).  
+**Hubzilla** is open source and built using common webserver technology (PHP/MySQL/Apache, although Mariadb or Postgres and Nginx could also be used, we're pretty easy).  
 
 Hubz are
 

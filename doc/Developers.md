@@ -8,7 +8,7 @@ doing development.
 
 Create your own github account.
 
-You may fork/clone the Red repository from [https://github.com/redmatrix/redmatrix.git](https://github.com/redmatrix/redmatrix.git).
+You may fork/clone the Red repository from [https://github.com/redmatrix/hubzilla.git](https://github.com/redmatrix/hubzilla.git).
 
 Follow the instructions provided here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
 to create and use your own tracking fork on github

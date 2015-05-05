@@ -17,7 +17,7 @@ with your hosting provider prior to installation. (And preferably before
 entering into a long-term contract.)
 
 If you encounter installation issues, please let us know via the Github issue 
-tracker (https://github.com/redmatrix/redmatrix/issues). Please be as clear as you 
+tracker (https://github.com/redmatrix/hubzilla/issues). Please be as clear as you 
 can about your operating environment and provide as much detail as possible
 about any error messages you may see, so that we can prevent it from happening 
 in the future. Due to the large variety of operating systems and PHP platforms 
@@ -85,7 +85,7 @@ use SSL, your webserver must not listen on port 443 at all.
     - Installation into a top-level domain or sub-domain (without a 
     directory/path component in the URL) is REQUIRED.
 
-2. Unpack the RedMatrix files into the root of your web server document area.
+2. Unpack the Hubzilla files into the root of your web server document area.
     
      If you copy the directory tree to your webserver, make sure that you 
     also copy .htaccess - as "dot" files are often hidden and aren't normally 
@@ -96,7 +96,7 @@ use SSL, your webserver must not listen on port 443 at all.
     software much easier to update. The Linux command to clone the repository 
     into a directory "mywebsite" would be
 
-        git clone https://github.com/redmatrix/redmatrix.git mywebsite
+        git clone https://github.com/redmatrix/hubzilla.git mywebsite
 
     - and then you can pick up the latest changes at any time with
 
@@ -124,10 +124,10 @@ use SSL, your webserver must not listen on port 443 at all.
             cd mywebsite
 
     - Then you should clone the addon repository (separately). We'll give this repository
-         a nickname of 'matrix'. You can pull in other redmatrix addon repositories by 
+         a nickname of 'matrix'. You can pull in other hubzilla addon repositories by 
          giving them different nicknames.
 
-            util/add_addon_repo https://github.com/redmatrix/redmatrix-addons.git matrix
+            util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git matrix
 
     - For keeping the addon tree updated, you should be on your top level website 
 		directory and issue an update command for that repository.
@@ -184,7 +184,7 @@ one shown, substituting for your unique paths and settings:
 
 You can generally find the location of PHP by executing "which php". If you 
 have troubles with this section please contact your hosting provider for 
-assistance. RedMatrix will not work correctly if you cannot perform this step.
+assistance. Hubzilla will not work correctly if you cannot perform this step.
 
 You should also be sure that $a->config['system']['php_path'] is set correctly, 
 it should look like (changing it to the correct PHP location)
@@ -231,7 +231,7 @@ generally be world-readable.
 
 Ensure that mod-rewite is installed and working, and that your
 .htaccess file is being used. To verify the latter, create a file test.out
-containing the word "test" in the top directory of the RedMatrix, make it world 
+containing the word "test" in the top directory of the Hubzilla, make it world 
 readable and point your web browser to
 
 http://yoursitenamehere.com/test.out
@@ -292,9 +292,9 @@ certain functions like proc_open, as configured in /etc/php5/conf.d/suhosin.ini:
  suhosin.executor.func.blacklist = proc_open, ...
 
 For those sites like Red Matrix that really need these functions they can be
-enabled, e.g. in /etc/apache2/sites-available/redmatrix:
+enabled, e.g. in /etc/apache2/sites-available/hubzilla:
 
- <Directory /var/www/redmatrix/>
+ <Directory /var/www/hubzilla/>
   php_admin_value suhosin.executor.func.blacklist none
   php_admin_value suhosin.executor.eval.blacklist none
  </Directory>
@@ -303,14 +303,14 @@ This enables every function for Red Matrix if accessed via browser, but not for
 the cronjob that is called via php command line. I attempted to enable it for
 cron by using something like
 
- */10 * * * * cd /var/www/redmatrix/ && sudo -u www-data /usr/bin/php
+ */10 * * * * cd /var/www/hubzilla/ && sudo -u www-data /usr/bin/php
 -d suhosin.executor.func.blacklist=none -d suhosin.executor.eval.blacklist=none
 -f include/poller.php
 
 This worked well for simple test cases, but the cron job still failed with
 a fatal error:
 suhosin[22962]: ALERT - function within blacklist called: proc_open() (attacker
-'REMOTE_ADDR not set', file '/var/www/redmatrix/boot.php', line 1341)
+'REMOTE_ADDR not set', file '/var/www/hubzilla/boot.php', line 1341)
 
 After a while I noticed, that include/poller.php calls further php script via
 proc_open. These scripts themselves also use proc_open and fail, because they

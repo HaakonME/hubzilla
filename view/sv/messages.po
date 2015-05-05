@@ -966,8 +966,8 @@ msgid "l F d, Y \\@ g:i A"
 msgstr "l j F Y \\k\\l. H.i"
 
 #: ../../include/bb2diaspora.php:447
-msgid "Redmatrix event notification:"
-msgstr "Händelsenotifiering från Redmatrix:"
+msgid "Hubzilla event notification:"
+msgstr "Händelsenotifiering från Hubzilla:"
 
 #: ../../include/bb2diaspora.php:451 ../../include/event.php:20
 msgid "Starts:"
@@ -2254,8 +2254,8 @@ msgid "Red Matrix Notification"
 msgstr "Red Matrix-meddelande"
 
 #: ../../include/enotify.php:42
-msgid "redmatrix"
-msgstr "redmatrix"
+msgid "hubzilla"
+msgstr "hubzilla"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -4465,8 +4465,8 @@ msgid "URL of link"
 msgstr "Länkens URL"
 
 #: ../../mod/mitem.php:165 ../../mod/mitem.php:209
-msgid "Use RedMatrix magic-auth if available"
-msgstr "Använd RedMatrix magic-auth om tillgängligt"
+msgid "Use Hubzilla magic-auth if available"
+msgstr "Använd Hubzilla magic-auth om tillgängligt"
 
 #: ../../mod/mitem.php:166 ../../mod/mitem.php:210
 msgid "Open link in new window"
@@ -4606,8 +4606,8 @@ msgid "Insufficient permissions.  Request redirected to profile page."
 msgstr "Otillräckliga behörigheter. Förfrågan omdirigerad till profilsidan."
 
 #: ../../mod/cloud.php:120
-msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
-msgstr "RedMatrix - Gäster: Användarnamn {din e-postadress}, Lösenord: +++"
+msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
+msgstr "Hubzilla - Gäster: Användarnamn {din e-postadress}, Lösenord: +++"
 
 #: ../../mod/regmod.php:11
 msgid "Please login."
@@ -5564,9 +5564,9 @@ msgstr "Kör på webbutrymmet"
 
 #: ../../mod/siteinfo.php:145
 msgid ""
-"Please visit <a href=\"https://redmatrix.me\">RedMatrix.me</a> to learn more"
+"Please visit <a href=\"https://redmatrix.me\">Redmatrix.me</a> to learn more"
 " about the Red Matrix."
-msgstr "Besök <a href=\"https://redmatrix.me\">RedMatrix.me</a> för att lära dig mer om Red Matrix."
+msgstr "Besök <a href=\"https://redmatrix.me\">Redmatrix.me</a> för att lära dig mer om Red Matrix."
 
 #: ../../mod/siteinfo.php:146
 msgid "Bug reports and issues: please visit"
@@ -5574,9 +5574,9 @@ msgstr "Buggrapporter och problem: besök"
 
 #: ../../mod/siteinfo.php:149
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
 "com"
-msgstr "Förslag, uppskattning, etc. - maila \"redmatrix\" at librelist - dot com"
+msgstr "Förslag, uppskattning, etc. - maila \"hubzilla\" at librelist - dot com"
 
 #: ../../mod/siteinfo.php:151
 msgid "Site Administrators"
@@ -6099,9 +6099,9 @@ msgstr "Den här åtgärden fungerar bara för medlemmar."
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
-"href=\"register\">register as a new RedMatrix member</a> to continue."
-msgstr "<a href=\"rmagic\">Logga in med ditt RedMatrix-ID</a> eller <a href=\"register\">registrera dig som ny RedMatrix medlem</a> för att fortsätta."
+"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a "
+"href=\"register\">register as a new Redmatrix.member</a> to continue."
+msgstr "<a href=\"rmagic\">Logga in med ditt Hubzilla-ID</a> eller <a href=\"register\">registrera dig som ny Redmatrix.medlem</a> för att fortsätta."
 
 #: ../../mod/like.php:89 ../../mod/like.php:116 ../../mod/like.php:154
 msgid "Invalid request."
@@ -6188,20 +6188,20 @@ msgid "Your message:"
 msgstr "Ditt meddelande:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
-msgstr "Gå med mig i gemenskapen på RedMatrix."
+msgid "Please join my community on Hubzilla."
+msgstr "Gå med mig i gemenskapen på Hubzilla."
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
 msgstr "Du kommer att behöva den här inbjudningskoden: "
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
-msgstr "1. Skapa konto på en RedMatrix-server (alla är ihopkopplade)"
+msgid "1. Register at any Hubzilla location (they are all inter-connected)"
+msgstr "1. Skapa konto på en Hubzilla-server (alla är ihopkopplade)"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
-msgstr "2. Ange min RedMatrix-adress i webbplatsens sökruta."
+msgid "2. Enter my Hubzilla network address into the site searchbar."
+msgstr "2. Ange min Hubzilla-adress i webbplatsens sökruta."
 
 #: ../../mod/invite.php:138
 msgid "or visit "
@@ -6256,8 +6256,8 @@ msgid "Do not show in shared with me folder of your connections"
 msgstr "Visa inte i dina kontakters mapp med delat material"
 
 #: ../../mod/dav.php:121
-msgid "RedMatrix channel"
-msgstr "RedMatrix-kanal"
+msgid "Hubzilla channel"
+msgstr "Hubzilla-kanal"
 
 #: ../../mod/lockview.php:31
 msgid "Remote privacy information not available."

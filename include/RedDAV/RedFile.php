@@ -1,6 +1,6 @@
 <?php
 
-namespace RedMatrix\RedDAV;
+namespace Hubzilla\RedDAV;
 
 use Sabre\DAV;
 
@@ -29,7 +29,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	private $data;
 	/**
 	 * @see \Sabre\DAV\Auth\Backend\BackendInterface
-	 * @var \RedMatrix\RedDAV\RedBasicAuth
+	 * @var \Hubzilla\RedDAV\RedBasicAuth
 	 */
 	private $auth;
 	/**

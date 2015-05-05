@@ -1111,7 +1111,7 @@ msgid "Red Matrix Notification"
 msgstr ""
 
 #: ../../include/enotify.php:59
-msgid "redmatrix"
+msgid "hubzilla"
 msgstr ""
 
 #: ../../include/enotify.php:61
@@ -1674,7 +1674,7 @@ msgid "Attachments:"
 msgstr ""
 
 #: ../../include/bb2diaspora.php:453
-msgid "Redmatrix event notification:"
+msgid "Hubzilla event notification:"
 msgstr ""
 
 #: ../../include/text.php:329
@@ -4746,8 +4746,8 @@ msgstr ""
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a href="
-"\"register\">register as a new RedMatrix member</a> to continue."
+"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a href="
+"\"register\">register as a new Redmatrix.member</a> to continue."
 msgstr ""
 
 #: ../../mod/like.php:101 ../../mod/like.php:128 ../../mod/like.php:166
@@ -4957,7 +4957,7 @@ msgid "Edit post"
 msgstr ""
 
 #: ../../mod/dav.php:121
-msgid "RedMatrix channel"
+msgid "Hubzilla channel"
 msgstr ""
 
 #: ../../mod/group.php:20
@@ -5027,7 +5027,7 @@ msgstr ""
 
 #: ../../mod/siteinfo.php:156
 msgid ""
-"This is a hub of redmatrix - a global cooperative network of decentralized "
+"This is a hub of hubzilla - a global cooperative network of decentralized "
 "privacy enhanced websites."
 msgstr ""
 
@@ -5055,7 +5055,7 @@ msgstr ""
 
 #: ../../mod/siteinfo.php:168
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot com"
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot com"
 msgstr ""
 
 #: ../../mod/siteinfo.php:170
@@ -5585,7 +5585,7 @@ msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr ""
 
 #: ../../mod/cloud.php:120
-msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
+msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
 msgstr ""
 
 #: ../../mod/photos.php:77
@@ -6141,7 +6141,7 @@ msgid "Your message:"
 msgstr ""
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
+msgid "Please join my community on Hubzilla."
 msgstr ""
 
 #: ../../mod/invite.php:134
@@ -6149,11 +6149,11 @@ msgid "You will need to supply this invitation code: "
 msgstr ""
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
+msgid "1. Register at any Hubzilla location (they are all inter-connected)"
 msgstr ""
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
+msgid "2. Enter my Hubzilla network address into the site searchbar."
 msgstr ""
 
 #: ../../mod/invite.php:138
@@ -6762,7 +6762,7 @@ msgid "Link Target"
 msgstr ""
 
 #: ../../mod/mitem.php:156 ../../mod/mitem.php:226
-msgid "Use RedMatrix magic-auth if available"
+msgid "Use Hubzilla magic-auth if available"
 msgstr ""
 
 #: ../../mod/mitem.php:157 ../../mod/mitem.php:227

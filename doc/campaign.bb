@@ -153,7 +153,7 @@ Each contributor at this level gets their own Red Matrix virtual private server,
 
 We're a handful of volunteers, and we understand that not everyone can contribute by donating money.  There are many other ways you can in getting the Matrix to version 1.0!
 
-First, you can checkout our source code on github: https://github.com/redmatrix/redmatrix
+First, you can checkout our source code on github: https://github.com/redmatrix/hubzilla
 
 Maybe you can dive in and help us out with some development.
 

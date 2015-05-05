@@ -1483,8 +1483,8 @@ msgid "Red Matrix Notification"
 msgstr "Оповещения Red матрицы"
 
 #: ../../include/enotify.php:42
-msgid "redmatrix"
-msgstr "redmatrix"
+msgid "hubzilla"
+msgstr "hubzilla"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -5813,7 +5813,7 @@ msgstr ""
 
 #: ../../mod/siteinfo.php:106
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
 "com"
 msgstr ""
 

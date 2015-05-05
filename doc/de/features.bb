@@ -1,6 +1,6 @@
-[size=large][b]Features der Redmatrix[/b][/size]
+[size=large][b]Features der Hubzilla[/b][/size]
 
-Die Redmatrix ist ein Allzweck-Kommunikationsnetzwerk mit einigen einzigartigen Features. Sie wurde für eine große Bandbreite von Nutzern entwickelt, von Nutzern sozialer Netzwerke über technisch nicht interessierte Blogger bis hin zu PHP-Experten und erfahrenen Systemadministratoren.
+Die Hubzilla ist ein Allzweck-Kommunikationsnetzwerk mit einigen einzigartigen Features. Sie wurde für eine große Bandbreite von Nutzern entwickelt, von Nutzern sozialer Netzwerke über technisch nicht interessierte Blogger bis hin zu PHP-Experten und erfahrenen Systemadministratoren.
 
 Diese Seite listet einige der Kern-Features von Red auf, die in der offiziellen Distribution enthalten sind. Wie immer bei freier Open-Source-Software sind den Möglichkeiten keine Grenzen gesetzt. Beliebige Erweiterungen, Addons, Themes und Konfigurationen sind möglich.
 
@@ -10,7 +10,7 @@ Eines der Design-Ziele von Red ist einfache Kommunikations über das Web, ohne d
 
 [b]Beziehungs-Tool[/b]
 
-Wenn Du in der Redmatrix einen Kontakt hinzufügst (und das Beziehungs-Tool aktiviert hast), hast Du die Möglichkeit, einen „Grad der Freundschaft“ zu bestimmen. Bespiel: Wenn Du ein Blog eines Bekannten hinzufügst, könntest Du ihm den Freundschaftsgrad „Bekannte“ (Acquaintances) geben.
+Wenn Du in der Hubzilla einen Kontakt hinzufügst (und das Beziehungs-Tool aktiviert hast), hast Du die Möglichkeit, einen „Grad der Freundschaft“ zu bestimmen. Bespiel: Wenn Du ein Blog eines Bekannten hinzufügst, könntest Du ihm den Freundschaftsgrad „Bekannte“ (Acquaintances) geben.
 
 [img]https://friendicared.net/photo/b07b0262e3146325508b81a9d1ae4a1e-0.png[/img]
 
@@ -28,15 +28,15 @@ Diese Nachricht kann dann nur vom Absender und den eingestellten Empfängern bet
 
 Solche Zugriffsrechte gibt es bei Beiträgen, Fotos, Terminen, Webseiten, Chat-Räumen und Dateien.
 
-[b]Ein Passwort für alle Redmatrix-Server (Single Sign-on)[/b]
+[b]Ein Passwort für alle Hubzilla-Server (Single Sign-on)[/b]
 
-Zugriffsrechte funktionieren in der gesamten Redmatrix mit allen Kanälen. Die meisten Links, die innerhalb der Redmatrix verlinken, enthalten deine Identität (zid), so dass der Zielserver Dich direkt anmelden kann. Du kannst Dich aber auch so auf jedem Redmatrix-Server mit Deinem Redmatrix-Identität anmelden und erhältst dann Zugriff auf die Inhalte, die für Dich freigegeben sind.
+Zugriffsrechte funktionieren in der gesamten Hubzilla mit allen Kanälen. Die meisten Links, die innerhalb der Hubzilla verlinken, enthalten deine Identität (zid), so dass der Zielserver Dich direkt anmelden kann. Du kannst Dich aber auch so auf jedem Hubzilla-Server mit Deinem Hubzilla-Identität anmelden und erhältst dann Zugriff auf die Inhalte, die für Dich freigegeben sind.
 
-Du loggst Dich nur einmal auf Deinem Heimatserver ein. Ab dann funktioniert die Authentifizierung gegenüber anderen Redmatrix-Servern „magisch“ von selbst.
+Du loggst Dich nur einmal auf Deinem Heimatserver ein. Ab dann funktioniert die Authentifizierung gegenüber anderen Hubzilla-Servern „magisch“ von selbst.
 
 [b]Dateiablage (Cloud) mit WebDAV-Zugriff[/b]
 
-Du kannst in Deinem persönlichen Speicherbereich Dateien hochladen und ihn sogar als Verzeichnis von Deinem lokalen Betriebssystem anzeigen lassen (via WebDAV). Die Dateien können über Zugriffsrechte bestimmten Redmatrix-Mitgliedern (und den Mitgliedern mancher anderer Netze) zugänglich gemacht oder auch komplett öffentlich zur Verfügung gestellt werden.
+Du kannst in Deinem persönlichen Speicherbereich Dateien hochladen und ihn sogar als Verzeichnis von Deinem lokalen Betriebssystem anzeigen lassen (via WebDAV). Die Dateien können über Zugriffsrechte bestimmten Hubzilla-Mitgliedern (und den Mitgliedern mancher anderer Netze) zugänglich gemacht oder auch komplett öffentlich zur Verfügung gestellt werden.
 
 [b]Fotoalben[/b]
 
@@ -48,19 +48,19 @@ Im eingebauten Terminkalender kannst Du Termine erstellen und verwalten. Auch hi
 
 [b]Chat-Räume[/b]
 
-Du kannst Chaträume erstellen und über die Zugriffsrechte nur bestimmten Nutzern öffnen. Die Nachrichten sind sicherer verschlüsselt als es normalerweise bei Jabber/XMPP, IRC und anderen Instant Messengern üblich ist. Über Plugins ist es aber auch möglich, andere IM-Dienste aus der Redmatrix heraus zu nutzen.
+Du kannst Chaträume erstellen und über die Zugriffsrechte nur bestimmten Nutzern öffnen. Die Nachrichten sind sicherer verschlüsselt als es normalerweise bei Jabber/XMPP, IRC und anderen Instant Messengern üblich ist. Über Plugins ist es aber auch möglich, andere IM-Dienste aus der Hubzilla heraus zu nutzen.
 
 [b]Erstellen von Webseiten[/b]
 
-In der Redmatrix gibt es Werkzeuge für „Content Management“, mit denen Du einfache Webseiten erstellen kannst, aber auch komplexe Layouts, Menüs, Blöcke und Widgets. Auch hier greifen die Zugriffsrechte, so dass die entstandenen Seiten nur von denen betrachtet werden können, denen Du das Recht dazu eingeräumt hast.
+In der Hubzilla gibt es Werkzeuge für „Content Management“, mit denen Du einfache Webseiten erstellen kannst, aber auch komplexe Layouts, Menüs, Blöcke und Widgets. Auch hier greifen die Zugriffsrechte, so dass die entstandenen Seiten nur von denen betrachtet werden können, denen Du das Recht dazu eingeräumt hast.
 
 [b]Apps[/b]
 
-Redmatrix-Mitglieder könnnen Apps erstellen und verteilen. Anders als bei anderen Systemen, bei denen man an den System-Anbieter gebunden ist, werden diese Apps komplett vom App-Anbieter kontrolliert, der auf Wunsch seine eigene Zugriffskontrolle und ein Bezahlsystem einbauen kann. Die meisten Apps in der Redmatrix sind kostenlos. Sie sind sehr einfach und ohne große Programmierkenntnisse zu erstellen.
+Hubzilla-Mitglieder könnnen Apps erstellen und verteilen. Anders als bei anderen Systemen, bei denen man an den System-Anbieter gebunden ist, werden diese Apps komplett vom App-Anbieter kontrolliert, der auf Wunsch seine eigene Zugriffskontrolle und ein Bezahlsystem einbauen kann. Die meisten Apps in der Hubzilla sind kostenlos. Sie sind sehr einfach und ohne große Programmierkenntnisse zu erstellen.
 
 [b]Layout[/b]
 
-Das Seiten-Layout basiert auf eine Beschreibungssprache namens Comanche. Die Redmatrix ist selbst in Comanche-Layouts verfasst, die man verändern kann. Dadurch ist eine sehr starke Anpassung an die eigenen Bedürfnisse möglich, wie man sie so in Multi-User-Umgebungen normalerweise nicht findet.
+Das Seiten-Layout basiert auf eine Beschreibungssprache namens Comanche. Die Hubzilla ist selbst in Comanche-Layouts verfasst, die man verändern kann. Dadurch ist eine sehr starke Anpassung an die eigenen Bedürfnisse möglich, wie man sie so in Multi-User-Umgebungen normalerweise nicht findet.
 
 [b]Lesezeichen[/b]
 
@@ -72,7 +72,7 @@ Nachrichten mit eingeschränktem Empfängerkreis werden mit einem symmetrischen 
 
 Jeder Red-Kanal hat seinen eigenes 4096-bit-RSA-Schlüsselpaar, das erzeugt wird, wenn der Kanal erstellt wird.
 
-Zusätzlich können Nachrichten mit Ende-zu-Ende-Verschlüsselung versehen werden, so dass weder Redmatrix-Server-Administratoren noch ISPs irgendetwas mitlesen können, solange sie nicht über das Passwort verfügen.
+Zusätzlich können Nachrichten mit Ende-zu-Ende-Verschlüsselung versehen werden, so dass weder Hubzilla-Server-Administratoren noch ISPs irgendetwas mitlesen können, solange sie nicht über das Passwort verfügen.
 
 Komplett öffentliche Nachrichten werden weder in der Datenbank noch bei der Übertragung verschlüsselt (abgesehen ggfs. von SSL).
 
@@ -82,7 +82,7 @@ Alle Nachrichten können mit einem „Verfallsdatum“ versehen werden. Zu diese
 
 [b]Verbindung zu anderen Diensten[/b]
 
-Neben Plugins, die das „crossposten“ zu diversen anderen Netzwerk erlauben, wird der Import von RSS/Atom-Feeds nativ unterstützt, auch, um mit diesen Inhalten spezielle Kanäle zu erstellen. Außerdem kann über das Diaspora-Protokoll mit Kontakten in den Netzwerken Friendica und Diaspora kommuniziert werden. Diese Unterstützung ist als experimentell eingestuft, da diese Netzwerke nicht die gleichen Möglichkeiten wie die Redmatrix in Sachen Privatsphäre und Verschlüsselung bieten, so dass Kommunikation mit ihnen zu Privatsphäreproblemen führen könnte.
+Neben Plugins, die das „crossposten“ zu diversen anderen Netzwerk erlauben, wird der Import von RSS/Atom-Feeds nativ unterstützt, auch, um mit diesen Inhalten spezielle Kanäle zu erstellen. Außerdem kann über das Diaspora-Protokoll mit Kontakten in den Netzwerken Friendica und Diaspora kommuniziert werden. Diese Unterstützung ist als experimentell eingestuft, da diese Netzwerke nicht die gleichen Möglichkeiten wie die Hubzilla in Sachen Privatsphäre und Verschlüsselung bieten, so dass Kommunikation mit ihnen zu Privatsphäreproblemen führen könnte.
 
 Weiterhin wird OpenID auf experimenteller Ebene unterstützt und kann bei den Zugriffsrechten genutzt werden, um Inhalte für per OpenID authentifizierte Nutzer freizugeben. An dieser Funktion wird noch gearbeitet.
 
@@ -94,7 +94,7 @@ Die Inhalte von Kanälen können als Quellen für andere Kanäle dienen (wenn de
 
 [b]Verzeichnisdienste[/b]
 
-Wir stellen einfachen Zugriff auf ein Mitgliederverzeichnis zur Verfügung, samt einer dezentralen Möglichkeit, sich neue Kontakte basierend auf den eigenen vorschlagen zu lassen. Die Verzeichnis-Server sind normale Redmatrix-Server, bei denen der Administrator sich entschieden hat, sie auch als Verzeichnis agieren zu lassen. Das benötigt mehr Ressourcen als eine normale Redmatrix-Installation, deshalb ist das nicht voreingestellt. Die Verzeichnis-Server synchronisieren sich miteinander, so dass (abgesehen von einer gewissen Verzögerung bis zur nächsten Synchronisation) all Verzeichnis-Server aktuelle Informationen über das gesamte Netzwerk bereitstellen können.
+Wir stellen einfachen Zugriff auf ein Mitgliederverzeichnis zur Verfügung, samt einer dezentralen Möglichkeit, sich neue Kontakte basierend auf den eigenen vorschlagen zu lassen. Die Verzeichnis-Server sind normale Hubzilla-Server, bei denen der Administrator sich entschieden hat, sie auch als Verzeichnis agieren zu lassen. Das benötigt mehr Ressourcen als eine normale Hubzilla-Installation, deshalb ist das nicht voreingestellt. Die Verzeichnis-Server synchronisieren sich miteinander, so dass (abgesehen von einer gewissen Verzögerung bis zur nächsten Synchronisation) all Verzeichnis-Server aktuelle Informationen über das gesamte Netzwerk bereitstellen können.
 
 [b]TLS/SSL[/b]
 
@@ -124,7 +124,7 @@ Foren sind Kanäle, in denen mehrere Nutzer als Autoren fungieren können; eine 
 
 [b]Klone[/b]
 
-Konten in der Redmatrix werden auch als [i]nomadische Identitäten[/i] bezeichnet (eine ausführliche Erklärung dazu gibt es unter [url=[baseurl]/help/what_is_zot]What is Zot?[/url]). Nomadisch, weil bei anderen Diensten die Identität eines Nutzers an den Server oder die Plattform gebunden ist, auf der er ursprünglich erstellt wurde. Ein Facebook- oder Gmail-Konto ist and diese Dienste gekettet. Er funktioniert nicht ohne Facebook.com bzw. Gmail.com.
+Konten in der Hubzilla werden auch als [i]nomadische Identitäten[/i] bezeichnet (eine ausführliche Erklärung dazu gibt es unter [url=[baseurl]/help/what_is_zot]What is Zot?[/url]). Nomadisch, weil bei anderen Diensten die Identität eines Nutzers an den Server oder die Plattform gebunden ist, auf der er ursprünglich erstellt wurde. Ein Facebook- oder Gmail-Konto ist and diese Dienste gekettet. Er funktioniert nicht ohne Facebook.com bzw. Gmail.com.
 
 Bei Red ist das anders. Sagen wir, Du hast eine Red-Indentität namens tina@redhub.com. Die kannst Du auf einen anderen Server klonen, mit dem gleichen oder einem anderen Namen, zum Beispiel lebtEwig@matrixserver.info.
 
@@ -134,7 +134,7 @@ Das ist ein ziemlich revolutionäres Feature, wenn man sich einige Szenarien daz
 
 [ul][*]Was passiert, wenn ein Server, auf dem sich Deine Identität befindet, plötzlich offline ist? Ohne Klone ist der Nutzer nicht in der Lage zu kommunzieren, bis der Server wieder online ist. Mit Klonen loggst Du Dich einfach bei Deinem geklonten Kanal ein und lebst glücklich bis an Dein Ende.
 [*]Der Administrator Deines Red-Servers kann es sich nicht länger leisten, seinen für alle kostenlosen Server zu bezahlen. Er gibt bekannt, dass der Server in zwei Wochen vom Netz gehen wird. Zeit genug, um Deine Red-Kanäle auf andere Server zu klonen und somit Verbindungen und Freunde zu behalten.
-[*]Was, wenn Dein Kanal staatlicher Zensur unterliegt? Dein Server-Admin wird gezwungen, Dein Konto und alle damit verbundenen Kanäle und Daten zu löschen. Durch Klone bietet die Redmatrix Zensur-Resistenz. Wenn Du willst, kannst Du hunderte von Klonen haben, alle mit unterschiedlichen Namen und auf unterschiedlichen Servern überall im Internet.[/ul]
+[*]Was, wenn Dein Kanal staatlicher Zensur unterliegt? Dein Server-Admin wird gezwungen, Dein Konto und alle damit verbundenen Kanäle und Daten zu löschen. Durch Klone bietet die Hubzilla Zensur-Resistenz. Wenn Du willst, kannst Du hunderte von Klonen haben, alle mit unterschiedlichen Namen und auf unterschiedlichen Servern überall im Internet.[/ul]
 
 Red bietet interessante, neue Möglichkeiten in Bezug auf die Privatsphäre. Mehr dazu unter „Tipps und Tricks zur privaten Kommunikation“.
 
@@ -158,13 +158,13 @@ Konten und Kanäle können sofort gelöscht werden, indem Du einfach auf einen L
 
 [b]Beiträge schreiben[/b]
 
-Red unterstützt diverse verschiedene Wege, um Inhalte mit Auszeichnung (z.B. fett, kursiv, farbig etc.) zu erstellen. Voreinstellung ist die Redmatrix-Variante von BBCode (wie in vielen Web-Foren) mit einigen Ergänzungen, die nur hier funktionieren. Du kannst auch Markdown benutzen, wenn Dir das leichter fällt. Bis vor kurzem konnte auch ein grafischer Editor eingesetzt werden, der jedoch große Probleme aufwies und deshalb entfernt wurde. Wir suchen gerade nach einer Alternative.
+Red unterstützt diverse verschiedene Wege, um Inhalte mit Auszeichnung (z.B. fett, kursiv, farbig etc.) zu erstellen. Voreinstellung ist die Hubzilla-Variante von BBCode (wie in vielen Web-Foren) mit einigen Ergänzungen, die nur hier funktionieren. Du kannst auch Markdown benutzen, wenn Dir das leichter fällt. Bis vor kurzem konnte auch ein grafischer Editor eingesetzt werden, der jedoch große Probleme aufwies und deshalb entfernt wurde. Wir suchen gerade nach einer Alternative.
 
 Webseiten können neben BBCode und Markdown auch in HTML und Plain Text erstellt werden.
 
 [b]Inhalte löschen[/b]
 
-Alle Inhalte in der Redmatrix bleiben unter der Kontrolle des Mitglieds (bzw. Kanals), der sie ursprünglich erstellt hat. Alle Beiträge können jederzeit gelöscht werden, egal, ob sie auf dem Heimat-Server des Nutzers oder auf einem anderen Server erstellt wurden, an dem der Nutzer via Zot angemeldet war.
+Alle Inhalte in der Hubzilla bleiben unter der Kontrolle des Mitglieds (bzw. Kanals), der sie ursprünglich erstellt hat. Alle Beiträge können jederzeit gelöscht werden, egal, ob sie auf dem Heimat-Server des Nutzers oder auf einem anderen Server erstellt wurden, an dem der Nutzer via Zot angemeldet war.
 
 [b]Medien[/b]
 
@@ -174,12 +174,12 @@ Genau wie jedes andere Blog-System, soziale Netzwerk oder Mikro-Blogging-Dienst 
 
 Vor dem Absenden kann eine Vorschau von Beiträgen betrachtet werden. Außerdem können Beiträge auch nach dem Absenden noch verändert werden.
 
-[b]Redmatrix erweitern[/b]
+[b]Hubzilla erweitern[/b]
 
-Die Redmatrix kann auf vielerlei Art erweitert werden: Durch Server-Anpassung, persönliche Anpassung, setzen von Optionen, Themes und Addons/Plugins.
+Die Hubzilla kann auf vielerlei Art erweitert werden: Durch Server-Anpassung, persönliche Anpassung, setzen von Optionen, Themes und Addons/Plugins.
 
 [b]API[/b]
 
-Es existiert eine API, die von beliebigen Programmen/Apps und Diensten genutzt werden kann. Sie basiert auf der ursprünglichen Twitter-API (für die es hunderte von Tools und Apps gibt). Sie wird aktuell erweitert, um Zugriff auf Möglichkeiten zu gewähren, die es nur in der Redmatrix gibt. Authentifikation erfolgt über Login/Passwort oder OAuth. Eine Client-Registrierung für OAuth-Applikationen ist möglich.
+Es existiert eine API, die von beliebigen Programmen/Apps und Diensten genutzt werden kann. Sie basiert auf der ursprünglichen Twitter-API (für die es hunderte von Tools und Apps gibt). Sie wird aktuell erweitert, um Zugriff auf Möglichkeiten zu gewähren, die es nur in der Hubzilla gibt. Authentifikation erfolgt über Login/Passwort oder OAuth. Eine Client-Registrierung für OAuth-Applikationen ist möglich.
 
 #include doc/macros/main_footer.bb;

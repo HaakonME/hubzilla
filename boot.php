@@ -80,9 +80,9 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zothub.com', 
 	'https://zotid.net', 
 	'https://red.zottel.red',
-	'https://redmatrix.info',
+	'https://hubzilla.info',
 	'https://my.federated.social',
-	'https://redmatrix.nl'
+	'https://hubzilla.nl'
 );
 
 
@@ -2179,7 +2179,7 @@ function construct_page(&$a) {
 }
 
 /**
- * @brief Returns RedMatrix's root directory.
+ * @brief Returns Hubzilla's root directory.
  *
  * @return string
  */
@@ -2287,7 +2287,7 @@ function z_check_cert() {
 /**
  * @brief Send email to admin if server has an invalid certificate.
  *
- * If a RedMatrix hub is available over https it must have a publicly valid
+ * If a Hubzilla hub is available over https it must have a publicly valid
  * certificate.
  */
 function cert_bad_email() {

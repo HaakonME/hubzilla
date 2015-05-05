@@ -1936,7 +1936,7 @@ require_once('include/items.php');
 			'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
 			'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
 			'shorturllength' => '30',
-        	'redmatrix' => array(
+        	'hubzilla' => array(
 				'RED_PLATFORM' => RED_PLATFORM,
 				'RED_VERSION' => RED_VERSION,
 				'ZOT_REVISION' => ZOT_REVISION,

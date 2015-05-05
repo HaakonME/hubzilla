@@ -153,7 +153,7 @@ function siteinfo_content(&$a) {
 
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
                 '$title' => t('Red'),
-		'$description' => t('This is a hub of redmatrix - a global cooperative network of decentralized privacy enhanced websites.'),
+		'$description' => t('This is a hub of hubzilla - a global cooperative network of decentralized privacy enhanced websites.'),
 		'$version' => $version,
 		'$tag_txt' => t('Tag: '),
 		'$tag' => $tag,
@@ -163,9 +163,9 @@ function siteinfo_content(&$a) {
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
 		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about the Red Matrix.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
-		'$bug_link_url' => 'https://github.com/redmatrix/redmatrix/issues',
-		'$bug_link_text' => 'redmatrix issues',
-		'$contact' => t('Suggestions, praise, etc. - please email "redmatrix" at librelist - dot com'),
+		'$bug_link_url' => 'https://github.com/redmatrix/hubzilla/issues',
+		'$bug_link_text' => 'hubzilla issues',
+		'$contact' => t('Suggestions, praise, etc. - please email "hubzilla" at librelist - dot com'),
 		'$donate' => $donate,
 		'$adminlabel' => t('Site Administrators'),
 		'$admininfo' => $admininfo,

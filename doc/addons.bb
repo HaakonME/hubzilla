@@ -42,7 +42,7 @@
 [*] qrator - generate QR code images
 [*] rainbowtag - display your tag and category clouds in colours
 [*] randpost - post/reply bot based on and requires fortunate
-[*] redred - Crosspost to another Redmatrix channel
+[*] redred - Crosspost to another Hubzilla channel
 [*] rtof - Crosspost to Friendica
 [*] smiley_pack - extend the built-in smilie (emoticon) support
 [*] smileybutton - provides a smiley selector on the post window
@@ -61,7 +61,7 @@
 
 [h3]Addon Repositories[/h3]
 
-[url=https://github.com/redmatrix/redmatrix-addons]https://github.com/redmatrix/redmatrix-addons[/url] Main project addon repository
+[url=https://github.com/redmatrix/hubzilla-addons]https://github.com/redmatrix/hubzilla-addons[/url] Main project addon repository
 
 [url=https://github.com/23n/red-addons]https://github.com/23n/red-addons[/url] Oliver's repository (mayan_places and flip)
 

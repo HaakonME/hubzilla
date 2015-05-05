@@ -513,9 +513,9 @@ function attribute_contains($attr, $s) {
 }
 
 /**
- * @brief Logging function for RedMatrix.
+ * @brief Logging function for Hubzilla.
  *
- * Logging output is configured through RedMatrix's system config. The log file
+ * Logging output is configured through Hubzilla's system config. The log file
  * is set in system logfile, log level in system loglevel and to enable logging
  * set system debugging.
  *
@@ -681,7 +681,7 @@ function get_tags($s) {
 	// make sure the longer tags are returned first so that if two or more have common substrings
 	// we'll replace the longest ones first. Otherwise the common substring would be found in
 	// both strings and the string replacement would link both to the shorter strings and 
-	// fail to link the longer string. RedMatrix github issue #378
+	// fail to link the longer string. Hubzilla github issue #378
  
 	usort($ret,'tag_sort_length');
 

@@ -1,6 +1,6 @@
 
 
-Roadmap for Redmatrix V3
+Roadmap for Hubzilla V3
 
 Crypto
 	Convert E2EE to dynamic loading (on demand) using jQuery.getScript() [or other methods] to only load encryption libs when you require them. This should also support multiple encryption libraries (e.g. SJCL, others) triggered from the choice of algorithm and remain pluggable.
@@ -49,5 +49,5 @@ Evangelism
 	Libzot
 
 DNS abstraction for V3
-	Allow a channel to live in an arbitrary "DNS" namespace, for instance "mike@core.redmatrix". Use our directories and zot to find the actual DNS location via redirection. This could potentially allow hubs to be hidden behind tor or alt-roots and accessible only via the matrix.
+	Allow a channel to live in an arbitrary "DNS" namespace, for instance "mike@core.hubzilla". Use our directories and zot to find the actual DNS location via redirection. This could potentially allow hubs to be hidden behind tor or alt-roots and accessible only via the matrix.
  

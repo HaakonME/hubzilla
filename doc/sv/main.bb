@@ -1,21 +1,21 @@
 [img][baseurl]/assets/hashlogo.png[/img]
 
-[size=large][b]RedMatrix dokumentation[/b][/size]
+[size=large][b]Hubzilla dokumentation[/b][/size]
 
-[zrl=[baseurl]/help/about][b]Vad är RedMatrix?[/b][/zrl]
-RedMatrix är en decentraliserad publicerings- och kommunikationsplattform som möjliggör att du behåller kontrollen över dina kommunikationer med hjälp av automatisk kryptering och fininställbar behörighetskontroll. Det är du, och bara du, som beslutar vem som är behörig att ta del av ditt innehåll.
+[zrl=[baseurl]/help/about][b]Vad är Hubzilla?[/b][/zrl]
+Hubzilla är en decentraliserad publicerings- och kommunikationsplattform som möjliggör att du behåller kontrollen över dina kommunikationer med hjälp av automatisk kryptering och fininställbar behörighetskontroll. Det är du, och bara du, som beslutar vem som är behörig att ta del av ditt innehåll.
 
-[zrl=[baseurl]/help/features][b]RedMatrix funktioner[/b][/zrl]
-RedMatrix används redan och bildar ett globalt distribuerad närverk och bevisar* dagligen sin skalbarhet och diversitet i allt från installationer med en kanal till installationer med många användare och många kanaler med en stor mängd innehåll.
-Föreställ dig isolerade familjekommunikationsplatformer, distribuerade nätforum med fildelning, hjälpforum, bloggar och hemsidor. Eller proffesionellt anpassade innehållsleverantörer med kommersiella premium* kanaler och målriktat innehållsstyrning. Vad du än önskar så finns RedMatrix för att stödja dig i förverkligande av din kreativitet.
+[zrl=[baseurl]/help/features][b]Hubzilla funktioner[/b][/zrl]
+Hubzilla används redan och bildar ett globalt distribuerad närverk och bevisar* dagligen sin skalbarhet och diversitet i allt från installationer med en kanal till installationer med många användare och många kanaler med en stor mängd innehåll.
+Föreställ dig isolerade familjekommunikationsplatformer, distribuerade nätforum med fildelning, hjälpforum, bloggar och hemsidor. Eller proffesionellt anpassade innehållsleverantörer med kommersiella premium* kanaler och målriktat innehållsstyrning. Vad du än önskar så finns Hubzilla för att stödja dig i förverkligande av din kreativitet.
 
 [zrl=[baseurl]/help/what_is_zot][b]Har du Zot? Skaffa det, direkt.[/b][/zrl]
-Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för RedMatrix. Som medlem är du inte längre bunden till en enskild sida eller hub tack vara "nomadiska identiteter". Flytt lätt till en annan server och håll dina kontakter och förbindelser intakta eller klona och kör den samma kanal på flera servrar simultant. I tillfälle av att en av dem stänger ner så går du inte miste om något. Plus när du är loggat in i RedMatrix så är det inga flera inloggningar även när du kontakter andra hubbar i nätverket. Zot är det som gör RedMatrix till något särskilt värdefullt/som urskiljer RedMatrix från mängden.
+Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för Hubzilla. Som medlem är du inte längre bunden till en enskild sida eller hub tack vara "nomadiska identiteter". Flytt lätt till en annan server och håll dina kontakter och förbindelser intakta eller klona och kör den samma kanal på flera servrar simultant. I tillfälle av att en av dem stänger ner så går du inte miste om något. Plus när du är loggat in i Hubzilla så är det inga flera inloggningar även när du kontakter andra hubbar i nätverket. Zot är det som gör Hubzilla till något särskilt värdefullt/som urskiljer Hubzilla från mängden.
 
 [size=large][b]Kom igång[/b][/size]
 [zrl=[baseurl]/help/Privacy]Privacy Policy[/zrl]
 [zrl=[baseurl]/help/registration]Account Registration[/zrl]
-[zrl=[baseurl]/help/accounts_profiles_channels_basics]You at the RedMatrix: accounts, profiles and channels in short[/zrl]
+[zrl=[baseurl]/help/accounts_profiles_channels_basics]You at the Hubzilla: accounts, profiles and channels in short[/zrl]
 [zrl=[baseurl]/help/profiles]Profiles[/zrl]
 [zrl=[baseurl]/help/channels]Channels[/zrl]
 [zrl=[baseurl]/help/sv/roles]Behörighetsförval för kanaler[/zrl]
@@ -41,11 +41,11 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för RedMat
 [zrl=[baseurl]/help/debian_install]Easy Install on Debian via script[/zrl]
 [zrl=[baseurl]/help/red2pi]Installing Red on the Raspberry Pi[/zrl]
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting Tips[/zrl]
-[zrl=[baseurl]/help/hidden_configs]Tweaking RedMatrix's Hidden Configurations[/zrl]
+[zrl=[baseurl]/help/hidden_configs]Tweaking Hubzilla's Hidden Configurations[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [size=large][b]Teknisk dokumentation[/b][/size]
-[zrl=[baseurl]/help/history]RedMatrix history[/zrl]
+[zrl=[baseurl]/help/history]Hubzilla history[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
 [zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]
@@ -78,9 +78,9 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för RedMat
 [url=https://github.com/friendica/red-addons]Addon Website[/url]
 [url=https://zothub.com/channel/one]Development Channel[/url]
 
-[url=[baseurl]/help/credits]RedMatrix Credits[/url]
+[url=[baseurl]/help/credits]Hubzilla Credits[/url]
 
-[size=large][b]About This RedMatrix Hub[/b][/size]
+[size=large][b]About This Hubzilla Hub[/b][/size]
 [zrl=[baseurl]/help/TermsOfService]Terms of Service For This Hub[/zrl]
 [zrl=[baseurl]/siteinfo]Hub Information (/siteinfo)[/zrl]
 [zrl=[baseurl]/siteinfo_json]Detailed Technical Hub Information (/siteinfo_json)[/zrl]

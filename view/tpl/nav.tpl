@@ -189,7 +189,7 @@
 
 			{{if $nav.help}}
 				<li class="{{$sel.help}}">
-					<a class="{{$nav.help.2}}" target="redmatrix-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"><i class="icon-question"></i></a>
+					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"><i class="icon-question"></i></a>
 				</li>
 			{{/if}}
 			</ul>

@@ -1651,8 +1651,8 @@ msgid "Red Matrix Notification"
 msgstr "Notificação da Red Matrix"
 
 #: ../../include/enotify.php:42
-msgid "redmatrix"
-msgstr "redmatrix"
+msgid "hubzilla"
+msgstr "hubzilla"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -4344,9 +4344,9 @@ msgstr "Relatos e acompanhamentos de erros podem ser encontrados em"
 
 #: ../../mod/siteinfo.php:175
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
 "com"
-msgstr "Sugestões, elogios, etc - mande um e-mail para \"redmatrix\" arrôba librelist ponto com"
+msgstr "Sugestões, elogios, etc - mande um e-mail para \"hubzilla\" arrôba librelist ponto com"
 
 #: ../../mod/siteinfo.php:177
 msgid "Site Administrators"
@@ -7261,20 +7261,20 @@ msgid "Your message:"
 msgstr "Sua mensagem:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
-msgstr "Por favor junte-se à minha comunidade na RedMatrix"
+msgid "Please join my community on Hubzilla."
+msgstr "Por favor junte-se à minha comunidade na Hubzilla"
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
 msgstr "Você precisará fornecer este código de convite:"
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
-msgstr "1. Registre-se em qualquer site da RedMatrix (eles são todos interconectados)"
+msgid "1. Register at any Hubzilla location (they are all inter-connected)"
+msgstr "1. Registre-se em qualquer site da Hubzilla (eles são todos interconectados)"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
-msgstr "2. Entre meu endereço da rede RedMatrix na barra de busca do site."
+msgid "2. Enter my Hubzilla network address into the site searchbar."
+msgstr "2. Entre meu endereço da rede Hubzilla na barra de busca do site."
 
 #: ../../mod/invite.php:138
 msgid "or visit "
@@ -7333,9 +7333,9 @@ msgstr "Esta ação é restrita a membros."
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
-"href=\"register\">register as a new RedMatrix member</a> to continue."
-msgstr "Por favor <a href=\"rmagic\">entre com sua ID da RedMatrix</a> ou <a href=\"register\">registre-se como um novo membro da RedMatrix</a> para continuar."
+"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a "
+"href=\"register\">register as a new Redmatrix.member</a> to continue."
+msgstr "Por favor <a href=\"rmagic\">entre com sua ID da Hubzilla</a> ou <a href=\"register\">registre-se como um novo membro da Hubzilla</a> para continuar."
 
 #: ../../mod/like.php:77 ../../mod/like.php:104 ../../mod/like.php:142
 msgid "Invalid request."

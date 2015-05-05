@@ -6,14 +6,10 @@ Hubzilla - Hub Deployment Platform
 
 **What are Hubs?**
 
-Hubs are general-purpose websites. You can decide what you want them to do. These may have one or more members. Every hub member can create or customise their own "channels", which are personal websites, forums, media collections, and/or social spaces within the hub, and these can all share and interact. 
+Hubs are independant general-purpose websites that not only connect with their associated members and viewers, but also connect together to exchange personal communications and other information with each other.  
+This allows hub members on any hub to securely and privately share anything; with anybody, on any hub - anywhere; or share stuff publicly with anybody on the internet if desired. 
 
-Hubs and their members from all over the internet connect together "magically" to create very large communities and social networks; and *these* can all share and interact. 
-
-Hub members can securely and privately share anything; with anybody, on any hub - or share stuff publicly with anybody on the internet if desired. 
-
-
-**Hubzilla** is the server software which makes this possible. It consists of an open source content management system combined with a decentralised identity, communications, and permissions framework and protocol suite, built using common webserver technology (PHP/MySQL/Apache, although Mariadb or Postgres and Nginx could also be used - we're pretty easy). The end result is a level of systems integration, privacy control, and communications features that you wouldn't think are possible in either a content management system or a decentralised communications network.
+**Hubzilla** is the server software which makes this possible. It is a sophisticated and unique combination of an open source content management system and a decentralised identity, communications, and permissions framework and protocol suite, built using common webserver technology (PHP/MySQL/Apache, although Mariadb or Postgres and Nginx could also be used - we're pretty easy). The end result is a level of systems integration, privacy control, and communications features that you wouldn't think are possible in either a content management system or a decentralised communications network. It also brings a new level of cooperation and privacy to the web and introduces the concept of personally owned "single sign-on" to web services across the entire internet. 
 
 Hubzilla hubs are
 

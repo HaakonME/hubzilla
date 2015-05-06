@@ -292,7 +292,7 @@ function bb_ShareAttributesSimple($match) {
 	if ($matches[1] != "")
 		$profile = $matches[1];
 
-	$text = '<br />' . html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8') . ' <a href="' . $profile . '">' . $author . '</a>: div class="reshared-content">' . $match[2] . '</div>';
+	$text = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8') . ' <a href="' . $profile . '">' . $author . '</a>: div class="reshared-content">' . $match[2] . '</div>';
 
 	return($text);
 }

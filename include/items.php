@@ -417,14 +417,6 @@ function post_activity_item($arr) {
 				$arr['item_flags'] = $arr['item_flags'] | ITEM_VERIFIED;
 			}
 		}
-
-		logger('Encrypting local storage');
-		$key = get_config('system','pubkey');
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-		if($arr['title'])
-			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-		if($arr['body'])
-			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	}
 
 	$arr['mid']          = ((x($arr,'mid')) ? $arr['mid'] : item_message_id());
@@ -899,21 +891,6 @@ function get_item_elements($x) {
 		else
 			logger('get_item_elements: message verification failed.');
 	}
-
-
-	// if it's a private post, encrypt it in the DB.
-	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
-	// and we need plaintext to do that.
-
-
-	if(intval($arr['item_private'])) {
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-		if($arr['title'])
-			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-		if($arr['body'])
-			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
-	}
-
 
 	if(array_key_exists('revision',$x)) {
 		// extended export encoding
@@ -2063,14 +2040,6 @@ function item_store($arr, $allow_exec = false) {
 			}
 			$arr = $translate['item'];
 		}
-		if($arr['item_private']) {
-			$key = get_config('system','pubkey');
-			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-			if($arr['title'])
-				$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-			if($arr['body'])
-				$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
-		}
 	}
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
@@ -2459,14 +2428,6 @@ function item_store_update($arr,$allow_exec = false) {
 				return $ret;
 			}
 			$arr = $translate['item'];
-		}
-		if($arr['item_private']) {
-			$key = get_config('system','pubkey');
-			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-			if($arr['title'])
-				$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-			if($arr['body'])
-				$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 		}
 	}
 
@@ -3173,17 +3134,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$title = $item['title'];
 	$body  = $item['body'];
 
-	if($private) {
-		if(!($flag_bits & ITEM_OBSCURED)) {
-			$key = get_config('system','pubkey');
-			$flag_bits = $flag_bits|ITEM_OBSCURED;
-			if($title)
-				$title = json_encode(crypto_encapsulate($title,$key));
-			if($body)
-				$body  = json_encode(crypto_encapsulate($body,$key));
-		}
-	}
-	else {
+	if(! $private) {
 		if($flag_bits & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
 			$flag_bits = $flag_bits ^ ITEM_OBSCURED;

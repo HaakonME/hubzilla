@@ -356,15 +356,6 @@ function localize_item(&$item){
 		}
 	}
 */
-	// add sparkle links to appropriate permalinks
-
-//	$x = stristr($item['plink'],'/display/');
-//	if($x) {
-//		$sparkle = false;
-//		$y = best_link_url($item,$sparkle,true);
-	//	if($sparkle)
-//			$item['plink'] = $y . '?f=&url=' . $item['plink'];
-//	} 
 
 	// if item body was obscured and we changed it, re-obscure it
 	// FIXME - we need a better filter than just the string 'data'; try and

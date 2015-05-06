@@ -133,10 +133,11 @@ function comanche_get_channel_id() {
 	return $channel_id;
 }
 
-function comanche_block($s) {
+function comanche_block($s, $class = '') {
 	$var = array();
 	$matches = array();
 	$name = $s;
+	$class = (($class) ? $class : 'bblock widget');
 
 	$cnt = preg_match_all("/\[var=(.*?)\](.*?)\[\/var\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
@@ -155,7 +156,7 @@ function comanche_block($s) {
 			dbesc($name)
 		);
 		if($r) {
-			$o .= (($var['wrap'] == 'none') ? '' : '<div class="bblock widget">');
+			$o .= (($var['wrap'] == 'none') ? '' : '<div class="' . $class . '">');
 			if($r[0]['title'])
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 
@@ -235,6 +236,13 @@ function comanche_region(&$a, $s) {
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$s = str_replace($mtch[0],comanche_block(trim($mtch[1])),$s);
+		}
+	}
+
+	$cnt = preg_match_all("/\[block=(.*?)\](.*?)\[\/block\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_block(trim($mtch[2]),trim($mtch[1])),$s);
 		}
 	}
 

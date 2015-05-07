@@ -1523,7 +1523,7 @@ function diaspora_comment($importer,$xml,$msg) {
 		$key = get_config('system','pubkey');
 		$x = array('signer' => $diaspora_handle, 'body' => $text, 
 			'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
-		$datarray['diaspora_meta'] = json_encode(crypto_encapsulate(json_encode($x),$key));
+		$datarray['diaspora_meta'] = json_encode($x);
 	}
 
 
@@ -2137,7 +2137,7 @@ function diaspora_like($importer,$xml,$msg) {
 		$key = get_config('system','pubkey');
 		$x = array('signer' => $diaspora_handle, 'body' => $text, 
 			'signed_text' => $signed_data, 'signature' => base64_encode($author_signature));
-		$arr['diaspora_meta'] = json_encode(crypto_encapsulate(json_encode($x),$key));
+		$arr['diaspora_meta'] = json_encode($x);
 	}
 
 	$x = item_store($arr);

@@ -843,7 +843,7 @@ function get_item_elements($x) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
-	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? json_encode(crypto_encapsulate($x['diaspora_signature'],$key)) : '');
+	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? json_encode($x['diaspora_signature']) : '');
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -1155,9 +1155,15 @@ function encode_item($item,$mirror = false) {
 	if($item['term'])
 		$x['tags']        = encode_item_terms($item['term']);
 
-	if($item['diaspora_meta'])
-		$x['diaspora_signature'] = crypto_unencapsulate(json_decode($item['diaspora_meta'],true),$key);
-
+	if($item['diaspora_meta']) {
+		$z = json_decode($item['diaspora_meta'],true);
+		if($z) {
+			if(array_key_exists('iv',$z))
+				$x['diaspora_signature'] = crypto_unencapsulate($z,$key);
+			else
+				$x['diaspora_signature'] = $z;
+		}
+	}
 	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
 
 	return $x;

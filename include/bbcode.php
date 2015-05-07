@@ -490,8 +490,6 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		}
 	}
 
-*/
-
 
 	$x = bb_extract_images($Text);
 	$Text = $x['body'];

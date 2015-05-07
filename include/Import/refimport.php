@@ -88,7 +88,8 @@ function refimport_content(&$a) {
 		$arr['author_xchan'] = $channel['channel_hash'];
 		$arr['owner_xchan'] = $channel['channel_hash'];
 		$arr['app'] = REFLECT_BLOGNAME;
-		$arr['item_flags'] = ITEM_ORIGIN|ITEM_WALL|ITEM_THREAD_TOP;
+		$arr['item_flags'] = ITEM_ORIGIN|ITEM_THREAD_TOP;
+		$arr['item_wall'] = 1;
 		$arr['verb'] = ACTIVITY_POST;
 
 		// this is an assumption
@@ -256,7 +257,8 @@ function reflect_comment_store($channel,$post,$comment,$user) {
 	$arr['edited'] = $comment['created'];
 	$arr['author_xchan'] = $hash;
 	$arr['owner_xchan'] = $channel['channel_hash'];
-	$arr['item_flags'] = ITEM_ORIGIN|ITEM_WALL;
+	$arr['item_flags'] = ITEM_ORIGIN;
+	$arr['item_wall'] = 1;
 	$arr['verb'] = ACTIVITY_POST;
 	$arr['comment_policy'] = 'contacts';
 

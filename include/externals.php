@@ -99,14 +99,14 @@ function externals_run($argv, $argc){
 //						);
 $z = null;
 						if($z) {
-							$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
+							$flag_bits = ITEM_ORIGIN|ITEM_UPLINK;
 							// preserve the source
 
 							$r = q("update item set source_xchan = owner_xchan where id = %d",
 								intval($z[0]['id'])
 							);
 
-    						$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s' 
+    						$r = q("update item set item_flags = ( item_flags | %d ), item_wall = 1, owner_xchan = '%s' 
 								where id = %d",
 								intval($flag_bits),
 								dbesc($sys['xchan_hash']),

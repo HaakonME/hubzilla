@@ -23,8 +23,7 @@ function update_channels_active_halfyear_stat() {
 				$s .= ',';
 			$s .= intval($rr['channel_id']);
 		}
-		$x = q("select uid from item where uid in ( $s ) and (item_flags & %d)>0 and created > %s - INTERVAL %s group by uid",
-			intval(ITEM_WALL),
+		$x = q("select uid from item where uid in ( $s ) and item_wall = 1 and created > %s - INTERVAL %s group by uid",
 			db_utcnow(), db_quoteinterval('6 MONTH')
 		);
 		if($x) {
@@ -50,8 +49,7 @@ function update_channels_active_monthly_stat() {
 				$s .= ',';
 			$s .= intval($rr['channel_id']);
 		}
-		$x = q("select uid from item where uid in ( $s ) and ( item_flags & %d )>0 and created > %s - INTERVAL %s group by uid",
-			intval(ITEM_WALL),
+		$x = q("select uid from item where uid in ( $s ) and item_wall = 1 and created > %s - INTERVAL %s group by uid",
 			db_utcnow(), db_quoteinterval('1 MONTH')
 		);
 		if($x) {
@@ -66,8 +64,7 @@ function update_channels_active_monthly_stat() {
 }
 
 function update_local_posts_stat() {
-	$posts = q("SELECT COUNT(*) AS local_posts FROM `item` WHERE (item_flags & %d)>0 ",
-			intval(ITEM_WALL) );
+	$posts = q("SELECT COUNT(*) AS local_posts FROM `item` WHERE item_wall = 1 ");
 	if (is_array($posts)) {
 		$local_posts_stat = intval($posts[0]["local_posts"]);
 		set_config('system','local_posts_stat',$local_posts_stat);

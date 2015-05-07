@@ -61,7 +61,7 @@ function mood_init(&$a) {
 	$mid = item_message_id();
 
 	$action = sprintf( t('%1$s is %2$s','mood'), '[zrl=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/zrl]' , $verbs[$verb]); 
-	$item_flags = ITEM_WALL|ITEM_ORIGIN;
+	$item_flags = ITEM_ORIGIN;
 	if(! $parent_mid)
 		$item_flags |= ITEM_THREAD_TOP;
 
@@ -72,6 +72,7 @@ function mood_init(&$a) {
 	$arr['mid']           = $mid;
 	$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
 	$arr['item_flags']    = $item_flags;
+	$arr['item_wall']     = 1;
 	$arr['author_xchan']  = $poster['xchan_hash'];
 	$arr['owner_xchan']   = (($parent_mid) ? $r[0]['owner_xchan'] : $poster['xchan_hash']);
 	$arr['title']         = '';

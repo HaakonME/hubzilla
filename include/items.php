@@ -385,8 +385,10 @@ function post_activity_item($arr) {
 	if(! x($arr,'item_flags')) {
 		if($is_comment)
 			$arr['item_flags'] = ITEM_ORIGIN;
-		else
-			$arr['item_flags'] = ITEM_ORIGIN | ITEM_WALL | ITEM_THREAD_TOP;
+		else {
+			$arr['item_wall'] = 1;
+			$arr['item_flags'] = ITEM_ORIGIN | ITEM_THREAD_TOP;
+		}
 	}
 
 	$channel  = get_app()->get_channel();
@@ -2016,6 +2018,7 @@ function item_store($arr, $allow_exec = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
+	$arr['item_wall']     = ((x($arr,'item_wall'))     ? intval($arr['item_wall'])           : 0 );
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
@@ -2178,8 +2181,8 @@ function item_store($arr, $allow_exec = false) {
 			$public_policy   = $r[0]['public_policy'];
 			$comments_closed = $r[0]['comments_closed'];
 
-			if($r[0]['item_flags'] & ITEM_WALL)
-				$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL;
+			if(intval($r[0]['item_wall']))
+				$arr['item_wall'] = 1;
 
 			// An uplinked comment might arrive with a downstream owner.
 			// Fix it.
@@ -2607,11 +2610,10 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 
 	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => base64_encode($authorsig));
 
-	$key = get_config('system','pubkey');
-	$y = crypto_encapsulate(json_encode($x),$key);
+	$y = json_encode($x);
 
 	$r = q("update item set diaspora_meta = '%s' where id = %d",
-		dbesc(json_encode($y)),
+		dbesc($y),
 		intval($post_id)
 	);
 
@@ -2966,7 +2968,7 @@ function tag_deliver($uid, $item_id) {
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
-	if(($item['item_flags'] & ITEM_WALL)
+	if((intval($item['item_wall']))
 		|| ($item['item_flags'] & ITEM_ORIGIN)
 		|| (!($item['item_flags'] & ITEM_THREAD_TOP))
 		|| ($item['id'] != $item['parent'])) {
@@ -3106,7 +3108,8 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	if((! $private) && $new_public_policy)
 		$private = 1;
 
-	$flag_bits = $item['item_flags'] | ITEM_WALL;
+	
+	$flag_bits = $item['item_flags'];
 
 	// The message didn't necessarily originate on this site, (we'll honour it if it did),
 	// but the parent post of this thread will be reset as a local post, as it is the top of
@@ -3152,7 +3155,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	}
 
 	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s',
-		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s'  where id = %d",
+		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = 1 where id = %d",
 		intval($flag_bits),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_allow_cid']),
@@ -3909,7 +3912,7 @@ function item_expire($uid,$days) {
 	if(! intval($expire_limit))
 		$expire_limit = 5000;
 
-	$sql_extra = ((intval($expire_network_only)) ? " AND (item_flags & " . intval(ITEM_WALL) . ") = 0 " : "");
+	$sql_extra = ((intval($expire_network_only)) ? " AND item_wall = 0 " : "");
 
 	$r = q("SELECT * FROM `item`
 		WHERE `uid` = %d
@@ -4070,7 +4073,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		// We'll rely on the undocumented behaviour that DROPITEM_PHASE1 is (hopefully) only
 		// set if we know we're going to send delete notifications out to others.
 
-		if((($item['item_flags'] & ITEM_WALL) && ($stage != DROPITEM_PHASE2)) || ($stage == DROPITEM_PHASE1))
+		if((intval($item['item_wall']) && ($stage != DROPITEM_PHASE2)) || ($stage == DROPITEM_PHASE1))
 			proc_run('php','include/notifier.php','drop',$notify_id);
 
 		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
@@ -4178,7 +4181,7 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 
 function first_post_date($uid,$wall = false) {
 
-	$wall_sql = (($wall) ? sprintf(" and (item_flags & %d)>0 ", ITEM_WALL) : "" );
+	$wall_sql = (($wall) ? " and item_wall = 1 " : "" );
 
 	$r = q("select id, created from item
 		where item_restrict = %d and uid = %d and id = parent $wall_sql
@@ -4386,19 +4389,17 @@ function zot_feed($uid,$observer_xchan,$arr) {
 		$r = q("SELECT parent, created, postopts from item
 			WHERE uid != %d
 			AND item_private = 0 AND item_restrict = 0 AND uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ")
-			AND (item_flags &  %d) > 0
+			AND item_wall = 1
 			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
-			intval($uid),
-			intval(ITEM_WALL)
+			intval($uid)
 		);
 	}
 	else {
 		$r = q("SELECT parent, created, postopts from item
 			WHERE uid = %d AND item_restrict = 0
-			AND (item_flags &  %d) > 0
+			AND item_wall = 1
 			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
-			intval($uid),
-			intval(ITEM_WALL)
+			intval($uid)
 		);
 	}
 
@@ -4465,7 +4466,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ")>0 ";
 
 	if($arr['wall'])
-		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ")>0 ";
+		$sql_options .= " and item_wall = 1 ";
 
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ")>0 $sql_options ) ";
 

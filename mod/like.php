@@ -337,10 +337,11 @@ function like_content(&$a) {
 	}
 
 	$mid = item_message_id();
+	$item_wall = 0;
 
 	if($extended_like) {
-		$item_flags = ITEM_THREAD_TOP|ITEM_ORIGIN|ITEM_WALL;
-
+		$item_flags = ITEM_THREAD_TOP|ITEM_ORIGIN;
+		$item_wall = 1;
 	}
 	else {
 		$post_type = (($item['resource_type'] === 'photo') ? t('photo') : t('status'));
@@ -376,8 +377,8 @@ function like_content(&$a) {
 			$post_type = 'comment';		
 
 		$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
-		if($item['item_flags'] & ITEM_WALL)
-			$item_flags |= ITEM_WALL;
+		if(intval($item['item_wall']))
+			$item_wall = 1;
 
 		// if this was a linked photo and was hidden, unhide it.
 
@@ -437,6 +438,7 @@ function like_content(&$a) {
 	$arr['aid']          = (($extended_like) ? $ch[0]['channel_account_id'] : $owner_aid);
 	$arr['uid']          = $owner_uid;
 	$arr['item_flags']   = $item_flags;
+	$arr['item_wall']    = $item_wall;
 	$arr['parent_mid']   = (($extended_like) ? $mid : $item['mid']);
 	$arr['owner_xchan']  = (($extended_like) ? $ch[0]['xchan_hash'] : $thread_owner['xchan_hash']);
 	$arr['author_xchan'] = $observer['xchan_hash'];

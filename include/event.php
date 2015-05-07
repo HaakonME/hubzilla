@@ -479,7 +479,7 @@ function event_store_item($arr, $event) {
 
 			$item_flags = ITEM_THREAD_TOP;
 			if($wall) {
-				$item_flags |= ITEM_WALL;
+				$item_arr['item_wall'] = 1;
 				$item_flags |= ITEM_ORIGIN;
 			}
 			$item_arr['item_flags'] = $item_flags;

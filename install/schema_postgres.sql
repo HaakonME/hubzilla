@@ -502,6 +502,7 @@ CREATE TABLE "item" (
   "mimetype" text NOT NULL DEFAULT '',
   "title" text NOT NULL,
   "body" text NOT NULL,
+  "html" text NOT NULL,
   "app" text NOT NULL DEFAULT '',
   "lang" varchar(64) NOT NULL DEFAULT '',
   "revision" bigint  NOT NULL DEFAULT '0',
@@ -532,6 +533,7 @@ CREATE TABLE "item" (
   "item_flags" bigint NOT NULL DEFAULT '0',
   "item_private" numeric(4) NOT NULL DEFAULT '0',
   "item_unseen" smallint NOT NULL DEFAULT '0',
+  "item_wall" smallint NOT NULL DEFAULT '0',
   "item_search_vector" tsvector,
   PRIMARY KEY ("id")
 );
@@ -564,6 +566,7 @@ create index "item_public_policy" on item ("public_policy");
 create index "item_comment_policy" on item ("comment_policy");
 create index "item_layout_mid" on item ("layout_mid");
 create index "item_unseen" on item ("item_unseen");
+create index "item_wall" on item ("item_wall");
 
 -- fulltext indexes
 create index "item_search_idx" on  item USING gist("item_search_vector");

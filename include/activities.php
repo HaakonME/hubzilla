@@ -21,7 +21,8 @@ function profile_activity($changed, $value) {
 	$arr['uid']         = local_channel();
 	$arr['aid']         = $self['channel_account_id'];
 	$arr['owner_xchan'] = $arr['author_xchan'] = $self['xchan_hash'];
-	$arr['item_flags']  = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+	$arr['item_flags']  = ITEM_ORIGIN|ITEM_THREAD_TOP;
+	$arr['item_wall']   = 1;
 	$arr['verb']        = ACTIVITY_UPDATE;
 	$arr['obj_type']    = ACTIVITY_OBJ_PROFILE;
 

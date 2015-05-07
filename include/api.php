@@ -344,10 +344,9 @@ require_once('include/items.php');
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE `uid` = %d
-					AND ( item_flags & %d )>0 and item_restrict = 0 
+					AND item_wall = 1 and item_restrict = 0 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-					intval($usr[0]['channel_id']),
-					intval(ITEM_WALL)
+					intval($usr[0]['channel_id'])
 			);
 			$countitms = $r[0]['count'];
 		}

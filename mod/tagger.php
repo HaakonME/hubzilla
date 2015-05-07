@@ -109,8 +109,7 @@ function tagger_content(&$a) {
 
 
 	$arr['item_flags'] = ITEM_ORIGIN;
-	if($item['item_flags'] & ITEM_WALL)
-		$arr['item_flags'] |= ITEM_WALL;
+	$arr['item_wall'] = $item['item_wall'];
 	
 	$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
 	$alink = '[zrl=' . $item['xchan_url'] . ']' . $item['xchan_name'] . '[/zrl]';

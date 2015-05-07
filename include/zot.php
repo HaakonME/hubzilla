@@ -1559,12 +1559,12 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		// This is our own post, possibly coming from a channel clone
 
 		if($arr['owner_xchan'] == $d['hash']) {
-			$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL;
+			$arr['item_wall'] = 1;
 		}
 		else {
 			// clear the wall flag if it is set
-			if($arr['item_flags'] & ITEM_WALL) {
-				$arr['item_flags'] = ($arr['item_flags'] ^ ITEM_WALL);
+			if(intval($arr['item_wall'])) {
+				$arr['item_wall'] = 0;
 			}
 		}
 

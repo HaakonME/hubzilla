@@ -156,8 +156,7 @@ function ping_init(&$a) {
 				);
 				break;
 			case 'home':
-				$r = q("update item set item_unseen = 0 where item_unseen = 1 and (item_flags & %d) > 0  and uid = %d", 
-					intval(ITEM_WALL),
+				$r = q("update item set item_unseen = 0 where item_unseen = 1 and item_wall = 1  and uid = %d", 
 					intval(local_channel())
 				);
 				break;
@@ -282,7 +281,7 @@ function ping_init(&$a) {
 		if($r) {
 			xchan_query($r);
 			foreach($r as $item) {
-				if((argv(1) === 'home') && (! ($item['item_flags'] & ITEM_WALL)))
+				if((argv(1) === 'home') && (! intval($item['item_wall'])))
 					continue;
 				$result[] = format_notification($item);
 			}
@@ -390,7 +389,7 @@ function ping_init(&$a) {
 			call_hooks('network_ping', $arr);
 	
 			foreach ($r as $it) {
-				if($it['item_flags'] & ITEM_WALL)
+				if(intval($it['item_wall']))
 					$result['home'] ++;
 				else
 					$result['network'] ++;

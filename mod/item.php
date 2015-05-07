@@ -295,7 +295,7 @@ function item_post(&$a) {
 		// For comments, We need to additionally look at the parent and see if it's a wall post that originated locally.
 
 		if($observer['xchan_name'] != $owner_xchan['xchan_name'])  {
-			if($parent_item && ($parent_item['item_flags'] & (ITEM_WALL|ITEM_ORIGIN)) == (ITEM_WALL|ITEM_ORIGIN)) {
+			if($parent_item && ($parent_item['item_flags'] & ITEM_ORIGIN) && intval($parent_item['item_wall'])) {
 				$walltowall_comment = true;
 				$walltowall = true;
 			}
@@ -658,9 +658,10 @@ function item_post(&$a) {
 	}
 
 	$item_unseen =  1;
-	
+	$item_wall = 0;
+
 	if($post_type === 'wall' || $post_type === 'wall-comment')
-		$item_flags = $item_flags | ITEM_WALL;
+		$item_wall = 1;
 
 	if($origin)
 		$item_flags = $item_flags | ITEM_ORIGIN;
@@ -731,6 +732,7 @@ function item_post(&$a) {
 	$datarray['deny_cid']       = $str_contact_deny;
 	$datarray['deny_gid']       = $str_group_deny;
 	$datarray['item_private']   = $private;
+	$datarray['item_wall']      = $item_wall;
 	$datarray['attach']         = $attachments;
 	$datarray['thr_parent']     = $thr_parent;
 	$datarray['postopts']       = $postopts;
@@ -823,7 +825,7 @@ function item_post(&$a) {
 			// only send comment notification if this is a wall-to-wall comment,
 			// otherwise it will happen during delivery
 
-			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && ($parent_item['item_flags'] & ITEM_WALL)) {
+			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && intval($parent_item['item_wall'])) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
 					'from_xchan'   => $datarray['author_xchan'],
@@ -1085,8 +1087,7 @@ function item_check_service_class($channel_id,$iswebpage) {
 		);
 	}
 	else {
-		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and (item_flags & %d) > 0 and uid = %d ",
-			intval(ITEM_WALL),
+		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and item_wall = 1 and uid = %d ",
 			intval($channel_id)
 		);
 	}

@@ -103,9 +103,6 @@ function subthread_content(&$a) {
 	$bodyverb = t('%1$s is following %2$s\'s %3$s');
 
 	$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
-	if($item['item_flags'] & ITEM_WALL)
-		$item_flags |= ITEM_WALL;
-	
 
 	$arr = array();
 
@@ -113,6 +110,7 @@ function subthread_content(&$a) {
 	$arr['aid']          = $owner_aid;
 	$arr['uid']          = $owner_uid;
 	$arr['item_flags']   = $item_flags;
+	$arr['item_wall']    = $item['item_wall'];
 	$arr['parent']       = $item['id'];
 	$arr['parent_mid']   = $item['mid'];
 	$arr['thr_parent']   = $item['mid'];

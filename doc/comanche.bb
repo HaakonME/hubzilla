@@ -100,13 +100,18 @@ This places the menu called &quot;mymenu&quot; at this location on the page, whi
 [code]
 	[menu=horizontal]mymenu[/menu]
 [/code]
-This places the menu called &quot;mymenu&quot; at this location on the page, which must be inside a region. Additionally it applies the "horizontal" style to the menu. "horizontal" is defined in the redbasic theme. It may or may not be available in other themes. 
+This places the menu called &quot;mymenu&quot; at this location on the page, which must be inside a region. Additionally it applies the "horizontal" class to the menu. "horizontal" is defined in the redbasic theme. It may or may not be available in other themes. 
 
 
 [code]
 	[block]contributors[/block]
 [/code]
 This places a block named &quot;contributors&quot; in this region.
+
+[code]
+	[block=someclass]contributors[/block]
+[/code]
+This places a block named &quot;contributors&quot; in this region. Additionally it applies the &quot;someclass&quot; class to the block. This replaces the default block classes &quot;bblock widget&quot;.
 
 [code]
 	[block][var=wrap]none[/var]contributors[/block]

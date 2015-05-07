@@ -83,10 +83,13 @@ This places the menu called "mymenu" at this location on the page, which must be
 
 This places the menu called "mymenu" at this location on the page, which must be inside a region. Additionally it adds the CSS class "horizontal-menu" to this menu. This *may* result in a menu that looks different than the default menu style, *if* the css for the current theme defines a "horizontal-menu" class. 
 
-
 	[block]contributors[/block]
 
 This places a block named "contributors" in this region.
+
+	[block=someclass]contributors[/block]
+
+This places a block named "contributors" in this region. Additionally it applies the "someclass" class to the block. This replaces the default block classes "bblock widget".
 
 	[block][var=wrap]none[/var]contributors[/block]
 

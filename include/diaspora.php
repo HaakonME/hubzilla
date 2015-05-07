@@ -2427,6 +2427,20 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	}
 */
 
+	if($item['item_flags'] & ITEM_CONSENSUS) {
+		$poll = replace_macros(get_markup_template('diaspora_consensus.tpl'), array(
+			'$guid_q' => random_string(),
+			'$question' => '',
+			'$guid_y' => random_string(),
+			'$agree' => t('Agree'),
+			'$guid_n' => random_string(),
+			'$disagree' => t('Disagree'),
+			'$guid_a' => random_string(),
+			'$abstain' => t('Abstain')
+		));
+	}
+	else
+		$poll = '';
 
 	$public = (($item['item_private']) ? 'false' : 'true');
 
@@ -2451,6 +2465,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 		$msg = replace_macros($tpl, array(
 			'$body' => xmlify($body),
 			'$guid' => $item['mid'],
+			'$poll' => $poll,
 			'$handle' => xmlify($myaddr),
 			'$public' => $public,
 			'$created' => $created,

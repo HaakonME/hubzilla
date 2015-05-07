@@ -1379,15 +1379,15 @@ function generate_named_map($location) {
 
 function prepare_body(&$item,$attach = false) {
 
-	if(get_config('system','item_cache') && $item['html'])
-		return $item['html'];
+	if($item['html'])
+		return bb_observer($item['html']);
 
 	call_hooks('prepare_body_init', $item); 
 
 
 	unobscure($item);
 
-	$s = prepare_text($item['body'],$item['mimetype']);
+	$s = prepare_text($item['body'],$item['mimetype'], true);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
@@ -1452,11 +1452,11 @@ function prepare_body(&$item,$attach = false) {
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
 
-	if(get_config('system','item_cache'))
-		q("update item set html = '%s' where id = %d",
-			dbesc($prep_arr['html']),
-			intval($item['id'])
-		);
+
+	q("update item set html = '%s' where id = %d",
+		dbesc($prep_arr['html']),
+		intval($item['id'])
+	);
 
 	return $prep_arr['html'];
 }
@@ -1468,7 +1468,7 @@ function prepare_body(&$item,$attach = false) {
  * @param sting $content_type
  * @return string
  */
-function prepare_text($text, $content_type = 'text/bbcode') {
+function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 
 	switch($content_type) {
 		case 'text/plain':
@@ -1506,9 +1506,9 @@ function prepare_text($text, $content_type = 'text/bbcode') {
 			require_once('include/bbcode.php');
 
 			if(stristr($text,'[nosmile]'))
-				$s = bbcode($text);
+				$s = bbcode($text,false,true,$cache);
 			else
-				$s = smilies(bbcode($text));
+				$s = smilies(bbcode($text,false,true,$cache));
 			$s = zidify_links($s);
 			break;
 	}

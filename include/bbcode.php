@@ -381,10 +381,47 @@ function bb_sanitize_style($input) {
 	return '<span style="' . $css_string_san . '">' . $input[2] . '</span>';
 }
 
+function bb_observer($Text) {
+
+	$observer = $a->get_observer();
+
+	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
+		if ($observer) {
+			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
+			$Text = preg_replace_callback("/\[rpost(=(.*?))?\](.*?)\[\/rpost\]/ism", 'rpost_callback', $Text);
+		} else {
+			$Text = preg_replace("/\[observer\=1\].*?\[\/observer\]/ism", '', $Text);
+			$Text = preg_replace("/\[observer\=0\](.*?)\[\/observer\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[rpost(=.*?)?\](.*?)\[\/rpost\]/ism", '', $Text);
+		}
+	}
+
+	$channel = $a->get_channel();
+
+	if (strpos($Text,'[/channel]') !== false) {
+		if ($channel) {
+			$Text = preg_replace("/\[channel\=1\](.*?)\[\/channel\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[channel\=0\].*?\[\/channel\]/ism", '', $Text);
+		} else {
+			$Text = preg_replace("/\[channel\=1\].*?\[\/channel\]/ism", '', $Text);
+			$Text = preg_replace("/\[channel\=0\](.*?)\[\/channel\]/ism", '$1', $Text);
+		}
+	}
+
+	return $Text;
+}
+
+
+
+
+
+
+
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica/Red - Mike Macgirvin
 
-function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
+function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) {
 
 	$a = get_app();
 
@@ -420,7 +457,8 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
 
-	if(get_config('system','item_cache'))
+
+	if($cache)
 		$observer = false;
 	else
 		$observer = $a->get_observer();
@@ -437,7 +475,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 		}
 	}
 
-	if(get_config('system','item_cache'))
+	if($cache)
 		$channel = false;
 	else
 		$channel = $a->get_channel();
@@ -451,6 +489,8 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 			$Text = preg_replace("/\[channel\=0\](.*?)\[\/channel\]/ism", '$1', $Text);
 		}
 	}
+
+*/
 
 
 	$x = bb_extract_images($Text);

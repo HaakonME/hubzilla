@@ -383,6 +383,8 @@ function bb_sanitize_style($input) {
 
 function bb_observer($Text) {
 
+	$a = get_app();
+
 	$observer = $a->get_observer();
 
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {

@@ -790,7 +790,7 @@ a.rateme, div.rateme {
 }
 
 nav .acpopup {
-	top: 49px !important;
+	top: 50px !important;
 	margin-left: -35px;
 	width: 290px;
 }
@@ -1231,7 +1231,7 @@ div.jGrowl div.jGrowl-notification {
 
 #nav-search-text-ac .autocomplete {
 	position: fixed;
-	top: 50px;
+	top: 51px;
 	border: 1px solid $nav_bd;
 	border-top: none;
 }

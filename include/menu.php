@@ -24,7 +24,7 @@ function menu_fetch($name,$uid,$observer_xchan) {
 	return null;
 }
 	
-function menu_render($menu, $class='', $edit = false) {
+function menu_render($menu, $class='', $edit = false, $var = '') {
 
 	if(! $menu)
 		return '';
@@ -37,12 +37,15 @@ function menu_render($menu, $class='', $edit = false) {
 		$menu['items'][$x]['mitem_desc'] = bbcode($menu['items'][$x]['mitem_desc']);
 	}
 
+	$wrap = (($var['wrap'] === 'none') ? false : true);
+
 	return replace_macros(get_markup_template('usermenu.tpl'),array(
 		'$menu' => $menu['menu'],
 		'$class' => $class,
 		'$edit' => (($edit) ? t("Edit") : ''),
 		'$id' => $menu['menu']['menu_id'],
-		'$items' => $menu['items']
+		'$items' => $menu['items'],
+		'$wrap' => $wrap
 	));
 }
 

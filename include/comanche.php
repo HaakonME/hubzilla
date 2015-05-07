@@ -101,11 +101,22 @@ function comanche_parser(&$a, $s, $pass = 0) {
 }
 
 
-function comanche_menu($name, $class = '') {
+function comanche_menu($s, $class = '') {
+
 	$channel_id = comanche_get_channel_id();
+	$name = $s;
+
+	$cnt = preg_match_all("/\[var=(.*?)\](.*?)\[\/var\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$var[$mtch[1]] = $mtch[2];
+			$name = str_replace($mtch[0], '', $name);
+		}
+	}
+
 	if($channel_id) {
 		$m = menu_fetch($name,$channel_id, get_observer_hash());
-		return menu_render($m, $class);
+		return menu_render($m, $class, $edit = false, $var);
 	}
 }
 

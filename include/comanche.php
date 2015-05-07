@@ -168,6 +168,33 @@ function comanche_block($s, $class = '') {
 	return $o;
 }
 
+function comanche_js($s) {
+
+	switch($s) {
+		case 'jquery':
+			$path = 'view/js/jquery.js';
+			break;
+		case 'bootstrap':
+			$path = 'library/bootstrap/js/bootstrap.min.js';
+			break;
+	}
+
+	return '<script src="' . z_root() . '/' . $path . '" ></script>';
+
+}
+
+function comanche_css($s) {
+
+	switch($s) {
+		case 'bootstrap':
+			$path = 'library/bootstrap/css/bootstrap.min.css';
+			break;
+	}
+
+	return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="screen">';
+
+}
+
 // This doesn't really belong in Comanche, but it could also be argued that it is the perfect place.
 // We need to be able to select what kind of template and decoration to use for the webpage at the heart of our content.
 // For now we'll allow an '[authored]' element which defaults to name and date, or 'none' to remove these, and perhaps
@@ -246,6 +273,19 @@ function comanche_region(&$a, $s) {
 		}
 	}
 
+	$cnt = preg_match_all("/\[js\](.*?)\[\/js\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_js(trim($mtch[1])),$s);
+		}
+	}
+
+	$cnt = preg_match_all("/\[css\](.*?)\[\/css\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_css(trim($mtch[1])),$s);
+		}
+	}
 	// need to modify this to accept parameters
 
 	$cnt = preg_match_all("/\[widget=(.*?)\](.*?)\[\/widget\]/ism", $s, $matches, PREG_SET_ORDER);

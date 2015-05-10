@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-05-01.1019\n"
+"Project-Id-Version: 2015-05-08.1026\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 00:03-0700\n"
+"POT-Creation-Date: 2015-05-08 00:03-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2336,49 +2336,6 @@ msgstr ""
 msgid "%1$s has an updated %2$s, changing %3$s."
 msgstr ""
 
-#: ../../include/bbcode.php:122 ../../include/bbcode.php:743
-#: ../../include/bbcode.php:746 ../../include/bbcode.php:751
-#: ../../include/bbcode.php:754 ../../include/bbcode.php:757
-#: ../../include/bbcode.php:760 ../../include/bbcode.php:765
-#: ../../include/bbcode.php:768 ../../include/bbcode.php:773
-#: ../../include/bbcode.php:776 ../../include/bbcode.php:779
-#: ../../include/bbcode.php:782
-msgid "Image/photo"
-msgstr ""
-
-#: ../../include/bbcode.php:161 ../../include/bbcode.php:793
-msgid "Encrypted content"
-msgstr ""
-
-#: ../../include/bbcode.php:177
-msgid "Install design element: "
-msgstr ""
-
-#: ../../include/bbcode.php:190
-msgid "QR code"
-msgstr ""
-
-#: ../../include/bbcode.php:241
-#, php-format
-msgid "%1$s wrote the following %2$s %3$s"
-msgstr ""
-
-#: ../../include/bbcode.php:243
-msgid "post"
-msgstr ""
-
-#: ../../include/bbcode.php:493
-msgid "Different viewers will see this text differently"
-msgstr ""
-
-#: ../../include/bbcode.php:704
-msgid "$1 spoiler"
-msgstr ""
-
-#: ../../include/bbcode.php:731
-msgid "$1 wrote:"
-msgstr ""
-
 #: ../../include/items.php:399 ../../mod/like.php:270
 #: ../../mod/subthread.php:49 ../../mod/group.php:68 ../../mod/profperm.php:23
 #: ../../mod/bulksetclose.php:11 ../../index.php:392
@@ -3103,6 +3060,49 @@ msgid "Abstain"
 msgid_plural "Abstains"
 msgstr[0] ""
 msgstr[1] ""
+
+#: ../../include/bbcode.php:122 ../../include/bbcode.php:743
+#: ../../include/bbcode.php:746 ../../include/bbcode.php:751
+#: ../../include/bbcode.php:754 ../../include/bbcode.php:757
+#: ../../include/bbcode.php:760 ../../include/bbcode.php:765
+#: ../../include/bbcode.php:768 ../../include/bbcode.php:773
+#: ../../include/bbcode.php:776 ../../include/bbcode.php:779
+#: ../../include/bbcode.php:782
+msgid "Image/photo"
+msgstr ""
+
+#: ../../include/bbcode.php:161 ../../include/bbcode.php:793
+msgid "Encrypted content"
+msgstr ""
+
+#: ../../include/bbcode.php:177
+msgid "Install design element: "
+msgstr ""
+
+#: ../../include/bbcode.php:190
+msgid "QR code"
+msgstr ""
+
+#: ../../include/bbcode.php:241
+#, php-format
+msgid "%1$s wrote the following %2$s %3$s"
+msgstr ""
+
+#: ../../include/bbcode.php:243
+msgid "post"
+msgstr ""
+
+#: ../../include/bbcode.php:493
+msgid "Different viewers will see this text differently"
+msgstr ""
+
+#: ../../include/bbcode.php:704
+msgid "$1 spoiler"
+msgstr ""
+
+#: ../../include/bbcode.php:731
+msgid "$1 wrote:"
+msgstr ""
 
 #: ../../include/photos.php:94
 #, php-format
@@ -3845,6 +3845,22 @@ msgstr ""
 
 #: ../../include/chat.php:141
 msgid "Room is full"
+msgstr ""
+
+#: ../../include/diaspora.php:2433
+msgid "Please choose"
+msgstr ""
+
+#: ../../include/diaspora.php:2435
+msgid "Agree"
+msgstr ""
+
+#: ../../include/diaspora.php:2437
+msgid "Disagree"
+msgstr ""
+
+#: ../../include/diaspora.php:2439
+msgid "Abstain"
 msgstr ""
 
 #: ../../mod/achievements.php:34

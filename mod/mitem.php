@@ -124,6 +124,13 @@ function mitem_content(&$a) {
 	$m = menu_fetch($a->data['menu']['menu_name'],$uid,$ob_hash);
 	$a->data['menu_item'] = $m;
 
+	$menu_list = menu_list($uid);
+
+	foreach($menu_list as $menus) {
+		if($menus['menu_name'] != $m['menu']['menu_name'])
+			$menu_names[] = $menus['menu_name'];
+	}
+
 	$perm_defaults = array(
 		'allow_cid' => $channel['channel_allow_cid'],
 		'allow_gid' => $channel['channel_allow_gid'],
@@ -152,14 +159,15 @@ function mitem_content(&$a) {
 			'$permdesc'    => t("\x28click to open/close\x29"),
 			'$aclselect'   => populate_acl($perm_defaults,false),
 			'$mitem_desc'  => array('mitem_desc', t('Link Name'), '', 'Visible name of the link','*'),
-			'$mitem_link'  => array('mitem_link', t('Link Target'), '', 'URL of the link', '*'),
-			'$usezid'      => array('usezid', t('Use Hubzilla magic-auth if available'), true, ''),
+			'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), '', 'Enter URL of the link or select a menu name to create a submenu', '*', 'list="menu-names"'),
+			'$usezid'      => array('usezid', t('Use magic-auth if available'), true, ''),
 			'$newwin'      => array('newwin', t('Open link in new window'), false,''),
 			'$mitem_order' => array('mitem_order', t('Order in list'),'0',t('Higher numbers will sink to bottom of listing')),
 			'$submit'      => t('Submit and finish'),
 			'$submit_more' => t('Submit and continue'),
 			'$display'     => $display,
-			'$lockstate'     => $lockstate
+			'$lockstate'   => $lockstate,
+			'$menu_names'  => $menu_names
 		));
 
 		$o .= replace_macros(get_markup_template('mitemlist.tpl'),array(
@@ -222,12 +230,18 @@ function mitem_content(&$a) {
 				'$aclselect' => populate_acl($mitem,false),
 				'$mitem_id' => intval(argv(2)),
 				'$mitem_desc' => array('mitem_desc', t('Link text'), $mitem['mitem_desc'], '','*'),
+<<<<<<< HEAD
 				'$mitem_link' => array('mitem_link', t('URL of link'), $mitem['mitem_link'], '', '*'),
 				'$usezid' => array('usezid', t('Use Hubzilla magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
+=======
+				'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), $mitem['mitem_link'], 'Enter URL of the link or select a menu name to create a submenu', '*', 'list="menu-names"'),
+				'$usezid' => array('usezid', t('Use RedMatrix magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
+>>>>>>> 2cb8b19972eb6a023eca1297f281ef9f68934c64
 				'$newwin' => array('newwin', t('Open link in new window'), (($mitem['mitem_flags'] & MENU_ITEM_NEWWIN) ? 1 : 0),''),
 				'$mitem_order' => array('mitem_order', t('Order in list'),$mitem['mitem_order'],t('Higher numbers will sink to bottom of listing')),
 				'$submit' => t('Submit'),
-				'$lockstate'     => $lockstate
+				'$lockstate'     => $lockstate,
+				'$menu_names'  => $menu_names
 			));
 
 			return $o;

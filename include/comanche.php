@@ -101,11 +101,22 @@ function comanche_parser(&$a, $s, $pass = 0) {
 }
 
 
-function comanche_menu($name, $class = '') {
+function comanche_menu($s, $class = '') {
+
 	$channel_id = comanche_get_channel_id();
+	$name = $s;
+
+	$cnt = preg_match_all("/\[var=(.*?)\](.*?)\[\/var\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$var[$mtch[1]] = $mtch[2];
+			$name = str_replace($mtch[0], '', $name);
+		}
+	}
+
 	if($channel_id) {
 		$m = menu_fetch($name,$channel_id, get_observer_hash());
-		return menu_render($m, $class);
+		return menu_render($m, $class, $edit = false, $var);
 	}
 }
 
@@ -133,10 +144,11 @@ function comanche_get_channel_id() {
 	return $channel_id;
 }
 
-function comanche_block($s) {
+function comanche_block($s, $class = '') {
 	$var = array();
 	$matches = array();
 	$name = $s;
+	$class = (($class) ? $class : 'bblock widget');
 
 	$cnt = preg_match_all("/\[var=(.*?)\](.*?)\[\/var\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
@@ -155,7 +167,7 @@ function comanche_block($s) {
 			dbesc($name)
 		);
 		if($r) {
-			$o .= (($var['wrap'] == 'none') ? '' : '<div class="bblock widget">');
+			$o .= (($var['wrap'] == 'none') ? '' : '<div class="' . $class . '">');
 			if($r[0]['title'])
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 
@@ -165,6 +177,33 @@ function comanche_block($s) {
 	}
 
 	return $o;
+}
+
+function comanche_js($s) {
+
+	switch($s) {
+		case 'jquery':
+			$path = 'view/js/jquery.js';
+			break;
+		case 'bootstrap':
+			$path = 'library/bootstrap/js/bootstrap.min.js';
+			break;
+	}
+
+	return '<script src="' . z_root() . '/' . $path . '" ></script>';
+
+}
+
+function comanche_css($s) {
+
+	switch($s) {
+		case 'bootstrap':
+			$path = 'library/bootstrap/css/bootstrap.min.css';
+			break;
+	}
+
+	return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="screen">';
+
 }
 
 // This doesn't really belong in Comanche, but it could also be argued that it is the perfect place.
@@ -238,6 +277,26 @@ function comanche_region(&$a, $s) {
 		}
 	}
 
+	$cnt = preg_match_all("/\[block=(.*?)\](.*?)\[\/block\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_block(trim($mtch[2]),trim($mtch[1])),$s);
+		}
+	}
+
+	$cnt = preg_match_all("/\[js\](.*?)\[\/js\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_js(trim($mtch[1])),$s);
+		}
+	}
+
+	$cnt = preg_match_all("/\[css\](.*?)\[\/css\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_css(trim($mtch[1])),$s);
+		}
+	}
 	// need to modify this to accept parameters
 
 	$cnt = preg_match_all("/\[widget=(.*?)\](.*?)\[\/widget\]/ism", $s, $matches, PREG_SET_ORDER);

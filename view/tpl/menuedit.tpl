@@ -19,6 +19,7 @@
 		{{/if}}
 		{{include file="field_input.tpl" field=$menu_name}}
 		{{include file="field_input.tpl" field=$menu_desc}}
+
 		{{include file="field_checkbox.tpl" field=$menu_bookmark}}
 		<div class="menuedit-submit-wrapper form-group pull-right" >
 			<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>

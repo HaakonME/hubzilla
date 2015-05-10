@@ -26,12 +26,12 @@ nav i {
 }
 
 nav ul li {
-	max-height: 49px;
+	max-height: 50px;
 }
 
 nav img {
-	height: 48px;
-	width: 48px;
+	height: 49px;
+	width: 49px;
 	margin-top: 1px;
 }
 
@@ -55,6 +55,11 @@ nav .navbar-toggle {
 }
 
 /* nav overrides end */
+
+
+aside .nav-pills > li > a {
+	padding: 6px 10px;
+}
 
 .dropdown-menu img {
 	float: left;

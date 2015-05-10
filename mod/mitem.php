@@ -159,7 +159,7 @@ function mitem_content(&$a) {
 			'$permdesc'    => t("\x28click to open/close\x29"),
 			'$aclselect'   => populate_acl($perm_defaults,false),
 			'$mitem_desc'  => array('mitem_desc', t('Link Name'), '', 'Visible name of the link','*'),
-			'$mitem_link'  => array('mitem_link', t('Link Target or Submenu'), '', 'Enter URL of the link or select a menu name to create a submenu', '*', 'list="menu-names"'),
+			'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), '', 'Enter URL of the link or select a menu name to create a submenu', '*', 'list="menu-names"'),
 			'$usezid'      => array('usezid', t('Use RedMatrix magic-auth if available'), true, ''),
 			'$newwin'      => array('newwin', t('Open link in new window'), false,''),
 			'$mitem_order' => array('mitem_order', t('Order in list'),'0',t('Higher numbers will sink to bottom of listing')),
@@ -230,12 +230,13 @@ function mitem_content(&$a) {
 				'$aclselect' => populate_acl($mitem,false),
 				'$mitem_id' => intval(argv(2)),
 				'$mitem_desc' => array('mitem_desc', t('Link text'), $mitem['mitem_desc'], '','*'),
-				'$mitem_link' => array('mitem_link', t('URL of link'), $mitem['mitem_link'], '', '*'),
+				'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), $mitem['mitem_link'], 'Enter URL of the link or select a menu name to create a submenu', '*', 'list="menu-names"'),
 				'$usezid' => array('usezid', t('Use RedMatrix magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
 				'$newwin' => array('newwin', t('Open link in new window'), (($mitem['mitem_flags'] & MENU_ITEM_NEWWIN) ? 1 : 0),''),
 				'$mitem_order' => array('mitem_order', t('Order in list'),$mitem['mitem_order'],t('Higher numbers will sink to bottom of listing')),
 				'$submit' => t('Submit'),
-				'$lockstate'     => $lockstate
+				'$lockstate'     => $lockstate,
+				'$menu_names'  => $menu_names
 			));
 
 			return $o;

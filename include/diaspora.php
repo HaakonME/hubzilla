@@ -2430,7 +2430,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	if($item['item_flags'] & ITEM_CONSENSUS) {
 		$poll = replace_macros(get_markup_template('diaspora_consensus.tpl'), array(
 			'$guid_q' => random_string(),
-			'$question' => '',
+			'$question' => t('Please choose'),
 			'$guid_y' => random_string(),
 			'$agree' => t('Agree'),
 			'$guid_n' => random_string(),

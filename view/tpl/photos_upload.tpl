@@ -6,7 +6,7 @@
 			<div class="form-group">
 				<label for="photos-upload-album">{{$newalbum_label}}</label>
 				<input type="text" class="form-control" id="photos-upload-album" name="newalbum" placeholder="{{$newalbum_placeholder}}" value="{{$selname}}" list="dl-photo-upload">
-				<datalist id="dl-photo-upload">
+				<datalist id="menu-names">
 				{{foreach $albums as $al}}
 					{{if $al.text}}
 					<option value="{{$al.text}}">

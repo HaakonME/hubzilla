@@ -11,6 +11,11 @@
 		{{/if}}
 		{{include file="field_input.tpl" field=$mitem_desc}}
 		{{include file="field_input.tpl" field=$mitem_link}}
+		<datalist id="menu-names">
+			{{foreach $menu_names as $menu_name}}
+			<option value="{{$menu_name}}">
+			{{/foreach}}
+		</datalist>
 		{{include file="field_input.tpl" field=$mitem_order}}
 		{{include file="field_checkbox.tpl" field=$usezid}}
 		{{include file="field_checkbox.tpl" field=$newwin}}

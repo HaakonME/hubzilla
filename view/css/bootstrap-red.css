@@ -56,6 +56,11 @@ nav .navbar-toggle {
 
 /* nav overrides end */
 
+
+aside .nav-pills > li > a {
+	padding: 6px 10px;
+}
+
 .dropdown-menu img {
 	float: left;
 	width: 32px;

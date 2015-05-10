@@ -29,8 +29,8 @@ function menu_render($menu, $class='', $edit = false, $var = '') {
 	if(! $menu)
 		return '';
 
-	$uid = local_channel();
-	$menu_list = menu_list($uid);
+	$channel_id = ((is_array(get_app()->profile)) ? get_app()->profile['profile_uid'] : 0);
+	$menu_list = menu_list($channel_id);
 
 	foreach($menu_list as $menus) {
 		if($menus['menu_name'] != $menu['menu']['menu_name'])
@@ -39,7 +39,7 @@ function menu_render($menu, $class='', $edit = false, $var = '') {
 
 	for($x = 0; $x < count($menu['items']); $x ++) {
 		if(in_array($menu['items'][$x]['mitem_link'], $menu_names)) {
-			$m = menu_fetch($menu['items'][$x]['mitem_link'],local_channel(), get_observer_hash());
+			$m = menu_fetch($menu['items'][$x]['mitem_link'], $channel_id, get_observer_hash());
 			$submenu = menu_render($m, 'dropdown-menu', $edit = false, $var = array('wrap' => 'none'));
 			$menu['items'][$x]['submenu'] = $submenu;
 		}

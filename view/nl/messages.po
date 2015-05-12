@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 00:03-0700\n"
-"PO-Revision-Date: 2015-05-07 12:20+0000\n"
+"POT-Creation-Date: 2015-05-08 00:03-0700\n"
+"PO-Revision-Date: 2015-05-12 20:58+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -2339,49 +2339,6 @@ msgstr "Bezoek het %2$s van %1$s"
 msgid "%1$s has an updated %2$s, changing %3$s."
 msgstr "%1$s heeft een aangepaste %2$s, %3$s veranderd."
 
-#: ../../include/bbcode.php:122 ../../include/bbcode.php:743
-#: ../../include/bbcode.php:746 ../../include/bbcode.php:751
-#: ../../include/bbcode.php:754 ../../include/bbcode.php:757
-#: ../../include/bbcode.php:760 ../../include/bbcode.php:765
-#: ../../include/bbcode.php:768 ../../include/bbcode.php:773
-#: ../../include/bbcode.php:776 ../../include/bbcode.php:779
-#: ../../include/bbcode.php:782
-msgid "Image/photo"
-msgstr "Afbeelding/foto"
-
-#: ../../include/bbcode.php:161 ../../include/bbcode.php:793
-msgid "Encrypted content"
-msgstr "Versleutelde inhoud"
-
-#: ../../include/bbcode.php:177
-msgid "Install design element: "
-msgstr "Installeer ontwerpelement: "
-
-#: ../../include/bbcode.php:190
-msgid "QR code"
-msgstr "QR-code"
-
-#: ../../include/bbcode.php:241
-#, php-format
-msgid "%1$s wrote the following %2$s %3$s"
-msgstr "%1$s schreef het volgende %2$s %3$s"
-
-#: ../../include/bbcode.php:243
-msgid "post"
-msgstr "bericht"
-
-#: ../../include/bbcode.php:493
-msgid "Different viewers will see this text differently"
-msgstr "Deze tekst wordt per persoon anders weergeven."
-
-#: ../../include/bbcode.php:704
-msgid "$1 spoiler"
-msgstr "$1 spoiler"
-
-#: ../../include/bbcode.php:731
-msgid "$1 wrote:"
-msgstr "$1 schreef:"
-
 #: ../../include/items.php:399 ../../mod/like.php:270
 #: ../../mod/subthread.php:49 ../../mod/group.php:68 ../../mod/profperm.php:23
 #: ../../mod/bulksetclose.php:11 ../../index.php:392
@@ -2690,7 +2647,7 @@ msgstr "oneens"
 #: ../../include/conversation.php:573 ../../mod/photos.php:985
 msgctxt "title"
 msgid "Abstain"
-msgstr "onthoudingen"
+msgstr "onthouding"
 
 #: ../../include/conversation.php:574 ../../mod/photos.php:986
 msgctxt "title"
@@ -3107,6 +3064,49 @@ msgid "Abstain"
 msgid_plural "Abstains"
 msgstr[0] "onthouding"
 msgstr[1] "onthoudingen"
+
+#: ../../include/bbcode.php:122 ../../include/bbcode.php:743
+#: ../../include/bbcode.php:746 ../../include/bbcode.php:751
+#: ../../include/bbcode.php:754 ../../include/bbcode.php:757
+#: ../../include/bbcode.php:760 ../../include/bbcode.php:765
+#: ../../include/bbcode.php:768 ../../include/bbcode.php:773
+#: ../../include/bbcode.php:776 ../../include/bbcode.php:779
+#: ../../include/bbcode.php:782
+msgid "Image/photo"
+msgstr "Afbeelding/foto"
+
+#: ../../include/bbcode.php:161 ../../include/bbcode.php:793
+msgid "Encrypted content"
+msgstr "Versleutelde inhoud"
+
+#: ../../include/bbcode.php:177
+msgid "Install design element: "
+msgstr "Installeer ontwerpelement: "
+
+#: ../../include/bbcode.php:190
+msgid "QR code"
+msgstr "QR-code"
+
+#: ../../include/bbcode.php:241
+#, php-format
+msgid "%1$s wrote the following %2$s %3$s"
+msgstr "%1$s schreef het volgende %2$s %3$s"
+
+#: ../../include/bbcode.php:243
+msgid "post"
+msgstr "bericht"
+
+#: ../../include/bbcode.php:493
+msgid "Different viewers will see this text differently"
+msgstr "Deze tekst wordt per persoon anders weergeven."
+
+#: ../../include/bbcode.php:704
+msgid "$1 spoiler"
+msgstr "$1 spoiler"
+
+#: ../../include/bbcode.php:731
+msgid "$1 wrote:"
+msgstr "$1 schreef:"
 
 #: ../../include/photos.php:94
 #, php-format
@@ -3850,6 +3850,22 @@ msgstr "Chatkanaal niet gevonden"
 #: ../../include/chat.php:141
 msgid "Room is full"
 msgstr "Chatkanaal is vol"
+
+#: ../../include/diaspora.php:2433
+msgid "Please choose"
+msgstr "Maak een keuze"
+
+#: ../../include/diaspora.php:2435
+msgid "Agree"
+msgstr "Eens"
+
+#: ../../include/diaspora.php:2437
+msgid "Disagree"
+msgstr "Oneens"
+
+#: ../../include/diaspora.php:2439
+msgid "Abstain"
+msgstr "onthouding"
 
 #: ../../mod/achievements.php:34
 msgid "Some blurb about what to do when you're new here"

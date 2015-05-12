@@ -230,13 +230,8 @@ function mitem_content(&$a) {
 				'$aclselect' => populate_acl($mitem,false),
 				'$mitem_id' => intval(argv(2)),
 				'$mitem_desc' => array('mitem_desc', t('Link text'), $mitem['mitem_desc'], '','*'),
-<<<<<<< HEAD
-				'$mitem_link' => array('mitem_link', t('URL of link'), $mitem['mitem_link'], '', '*'),
+				'$mitem_link' => array('mitem_link', t('Link or Submenu Target'), $mitem['mitem_link'], t('Enter URL of the link or select a menu name to create a submenu'), '*', 'list="menu-name"'),
 				'$usezid' => array('usezid', t('Use Hubzilla magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
-=======
-				'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), $mitem['mitem_link'], 'Enter URL of the link or select a menu name to create a submenu', '*', 'list="menu-names"'),
-				'$usezid' => array('usezid', t('Use RedMatrix magic-auth if available'), (($mitem['mitem_flags'] & MENU_ITEM_ZID) ? 1 : 0), ''),
->>>>>>> 2cb8b19972eb6a023eca1297f281ef9f68934c64
 				'$newwin' => array('newwin', t('Open link in new window'), (($mitem['mitem_flags'] & MENU_ITEM_NEWWIN) ? 1 : 0),''),
 				'$mitem_order' => array('mitem_order', t('Order in list'),$mitem['mitem_order'],t('Higher numbers will sink to bottom of listing')),
 				'$submit' => t('Submit'),

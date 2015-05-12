@@ -159,7 +159,7 @@ function mitem_content(&$a) {
 			'$permdesc'    => t("\x28click to open/close\x29"),
 			'$aclselect'   => populate_acl($perm_defaults,false),
 			'$mitem_desc'  => array('mitem_desc', t('Link Name'), '', 'Visible name of the link','*'),
-			'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), '', 'Enter URL of the link or select a menu name to create a submenu', '*', 'list="menu-names"'),
+			'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), '', t('Enter URL of the link or select a menu name to create a submenu'), '*', 'list="menu-names"'),
 			'$usezid'      => array('usezid', t('Use RedMatrix magic-auth if available'), true, ''),
 			'$newwin'      => array('newwin', t('Open link in new window'), false,''),
 			'$mitem_order' => array('mitem_order', t('Order in list'),'0',t('Higher numbers will sink to bottom of listing')),

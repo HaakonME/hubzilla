@@ -45,7 +45,7 @@ require_once('include/Contact.php');
 require_once('include/account.php');
 
 
-define ( 'RED_PLATFORM',            'redmatrix' );
+define ( 'PLATFORM_NAME',            'redmatrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
@@ -1013,7 +1013,7 @@ class App {
 			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
 			'$local_channel' => local_channel(),
-			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
+			'$generator' => PLATFORM_NAME . ' ' . RED_VERSION,
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),

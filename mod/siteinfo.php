@@ -90,7 +90,7 @@ function siteinfo_init(&$a) {
 			'default_service_restrictions' => $service_class,
 			'admin' => $admin,
 			'site_name' => (($site_name) ? $site_name : ''),
-			'platform' => RED_PLATFORM,
+			'platform' => PLATFORM_NAME,
 			'dbdriver' => $db->getdriver(),
 			'lastpoll' => get_config('system','lastpoll'),
 			'info' => (($site_info) ? $site_info : ''),

@@ -62,7 +62,7 @@ function ical_wrapper($ev) {
 	$o .= "BEGIN:VCALENDAR";
 	$o .= "\nVERSION:2.0";
 	$o .= "\nMETHOD:PUBLISH";
-	$o .= "\nPRODID:-//" . get_config('system','sitename') . "//" . RED_PLATFORM . "//" . strtoupper(get_app()->language). "\n";
+	$o .= "\nPRODID:-//" . get_config('system','sitename') . "//" . PLATFORM_NAME . "//" . strtoupper(get_app()->language). "\n";
 	if(array_key_exists('start', $ev))
 		$o .= format_event_ical($ev);
 	else {

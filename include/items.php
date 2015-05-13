@@ -560,7 +560,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(RED_VERSION),
-		'$red'          => xmlify(RED_PLATFORM),
+		'$red'          => xmlify(PLATFORM_NAME),
 		'$feed_id'      => xmlify($channel['xchan_url']),
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,

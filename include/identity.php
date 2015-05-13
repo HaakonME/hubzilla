@@ -481,7 +481,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 	$ret = array();
 
-	$ret['compatibility'] = array('project' => RED_PLATFORM, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
+	$ret['compatibility'] = array('project' => PLATFORM_NAME, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
 
 	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($channel_id)

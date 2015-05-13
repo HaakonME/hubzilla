@@ -245,6 +245,9 @@ function comanche_widget($name, $text) {
 		}
 	}
 
+	if(file_exists('widget/' . trim($name) . '.php'))
+		require_once('widget/' . trim($name) . '.php');
+
 	$func = 'widget_' . trim($name);
 	if (function_exists($func))
 		return $func($vars);

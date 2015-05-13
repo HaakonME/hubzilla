@@ -2244,7 +2244,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 			// The '=' is needed to not replace color codes if the code is also used as a tag
 			// Much better would be to somehow completely avoiding things in e.g. [color]-tags.
 			// This would allow writing things like "my favourite tag=#foobar".
-			$body = preg_replace('/(?<![a-zA-Z0-9=])'.preg_quote($tag).'/', $newtag, $body);
+			$body = preg_replace('/(?<![a-zA-Z0-9=])'.preg_quote($tag,'/').'/', $newtag, $body);
 			$replaced = true;
 		}
 		//is the link already in str_tags?

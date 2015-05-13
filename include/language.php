@@ -159,11 +159,24 @@ function t($s, $ctx = '') {
 	if (x($a->strings, $cs)) {
 		$t = $a->strings[$cs];
 
-		return is_array($t) ? $t[0] : $t;
+		return ((is_array($t)) ? translate_product($t[0]) : translate_product($t));
 	}
 
-	return $s;
+	return translate_product($s);
 }
+
+/**
+ * @brief translate product name
+ *  Merging strings from different project names is problematic so we'll do that with a string replacement
+ */
+
+function translate_product($s) {
+
+	return str_replace(array('$product','$Product'),array(RED_PLATFORM,ucfirst(RED_PLATFORM)),$s);
+
+}
+
+
 
 /**
  * @brief

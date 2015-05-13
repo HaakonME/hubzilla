@@ -66,7 +66,6 @@ function page_init(&$a) {
 		intval(ITEM_WEBPAGE),
 		intval(ITEM_PDL)
 	);
-
 	if(! $r) {
 
 		// Check again with no permissions clause to see if it is a permissions issue

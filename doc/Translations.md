@@ -1,4 +1,4 @@
-Translating the Hubzilla
+Translating the $Projectname
 ==========================
 
 Translation Process

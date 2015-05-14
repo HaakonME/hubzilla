@@ -1,6 +1,6 @@
 [size=large][b]Registration[/b][/size]
 
-Not all Hubzilla sites allow open registration. If registration is allowed, you will see a &quot;Register&quot; link immediately below the login prompts on the site home page. Following this link will take you to the site Registration page. On some sites it may redirect you to another site which allow registrations. As all Hubzilla sites are linked, it does not matter where your account resides.
+Not all $Projectname sites allow open registration. If registration is allowed, you will see a &quot;Register&quot; link immediately below the login prompts on the site home page. Following this link will take you to the site Registration page. On some sites it may redirect you to another site which allow registrations. As all $Projectname sites are linked, it does not matter where your account resides.
 
 [b]Your Email Address[/b]
 
@@ -8,7 +8,7 @@ Please provide a valid email address. Your email address is never published. Thi
 
 [b]Password[/b]
 
-Enter a password of your choice, and repeat it in the second box to ensure it was typed correctly. As the Hubzilla offers a decentralised identity, your account can log you in to many other websites.
+Enter a password of your choice, and repeat it in the second box to ensure it was typed correctly. As the $Projectname offers a decentralised identity, your account can log you in to many other websites.
 
 [b]Terms Of Service[/b]
 
@@ -25,7 +25,7 @@ Next, you will be presented with the &quot;Add a channel&quot; screen. Normally,
 When your channel is created you will be taken straight to your settings page where you can define permissions, enable features, etc. All these things are covered in the appropriate section of the helpfiles.
 
 See Also
-[zrl=[baseurl]/help/accounts_profiles_channels_basics]The Basics about Identities within the Hubzilla[/zrl]
+[zrl=[baseurl]/help/accounts_profiles_channels_basics]The Basics about Identities within the $Projectname[/zrl]
 [zrl=[baseurl]/help/accounts]Accounts[/zrl]
 [zrl=[baseurl]/help/profiles]Profiles[/zrl]
 [zrl=[baseurl]/help/permissions]Permissions[/zrl]

@@ -1,6 +1,6 @@
 
 
-Roadmap for Hubzilla V3
+Roadmap for $Projectname V3
 
 Crypto
 	Convert E2EE to dynamic loading (on demand) using jQuery.getScript() [or other methods] to only load encryption libs when you require them. This should also support multiple encryption libraries (e.g. SJCL, others) triggered from the choice of algorithm and remain pluggable.

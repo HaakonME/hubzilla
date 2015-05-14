@@ -1,6 +1,7 @@
 [b]Advanced Configurations for Administrators[/b]
 
-Hubzilla contains many configuration options hidden from the main admin panel.
+$Projectname contains many configuration options hidden from the main admin panel.
+
 These are generally options considered too niche, confusing, or advanced for 
 the average member.  These settings can be activated from the the top level Red 
 directory with the syntax [code]util/config cat key value[/code] for a site

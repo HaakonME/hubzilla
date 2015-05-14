@@ -4,6 +4,7 @@ Hubzilla - Hub Deployment Platform
 
 ![Hubzilla](images/ghash-32.png)
 
+
 **What are Hubs?**
 
 Hubs are independent general-purpose websites that not only connect with their associated members and viewers, but also connect together to exchange personal communications and other information with each other.  
@@ -33,3 +34,4 @@ Possible website applications include
 * forums
 * dating websites
 * pretty much anything you can do on a traditional blog or community website, but that you could do better if you could easily connect it with other websites or privately share things across website boundaries. 
+

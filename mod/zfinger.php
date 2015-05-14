@@ -280,7 +280,7 @@ function zfinger_init(&$a) {
 		$ret['site']['channels'] = channel_total();
 
 
-		$ret['site']['version'] = RED_PLATFORM . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+		$ret['site']['version'] = PLATFORM_NAME . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
 

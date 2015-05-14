@@ -1,6 +1,6 @@
 [b]What is Zot?[/b]
 
-Zot is the protocol that powers the Red Matrix, providing three core capabilities: Communications, Identity, and Access Control.
+Zot is the protocol that powers the $Projectname, providing three core capabilities: Communications, Identity, and Access Control.
 
 The functionality it provides can also be described as follows: 
 
@@ -39,7 +39,7 @@ You cannot be silenced. You cannot be removed from the matrix, unless you yourse
 
 [b][size=20]Access Control[/size][/b]
 
-Zot's identity layer allows you to provide fine-grained permissions to any content you wish to publish - and these permissions extend across the Red Matrix. This is like having one super huge website made up of an army of small individual websites - and where each channel in the matrix can completely control their privacy and sharing preferences for any web resources they create. 
+Zot's identity layer allows you to provide fine-grained permissions to any content you wish to publish - and these permissions extend across the $Projectname. This is like having one super huge website made up of an army of small individual websites - and where each channel in the matrix can completely control their privacy and sharing preferences for any web resources they create. 
 
 Currently, the matrix supports communications, photo albums, events, and files. This will be extended in the future to provide content management services (web pages) and cloud storage facilities, such as WebDAV and multi-media libraries. Every object and how it is shared and with whom is completely under your control.
 

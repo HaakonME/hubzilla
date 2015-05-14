@@ -1,4 +1,4 @@
-[b]How to install the Red Matrix on a Raspberry Pi[/b]
+[b]How to install the $Projectname on a Raspberry Pi[/b]
 
 You just bought a Raspberry Pi and want to run the RED Matrix with your own domain name?
 
@@ -6,11 +6,11 @@ Then this page is for you! You will:
 [list=1]
 [*] Install Raspberry OS (Debian Linux) on a Raspberry
 [*] Install Apache Web Server, PHP, MaySQL, phpMyAdmin
-[*] Register a free domain (dynamic DNS) and use it for your RED hub
-[*] Install the RED Matrix
-[*] Keep your Raspberry Pi and your Redmatrix up-to-date
+[*] Register a free domain (dynamic DNS) and use it for your hub
+[*] Install $Projectname
+[*] Keep your Raspberry Pi and $Projectname up-to-date
 [*] TODO Setting up SSL
-[*] TODO Running Friendica with SSL
+[*] TODO Running with SSL
 [*] TODO Make the webserver less vulnarable to attacks
 [/list]
 
@@ -224,27 +224,27 @@ To check the logs you can use this:
 [code]more /var/log/messages |grep INADYN[/code]
 
 
-[size=large]4. Install RED [/size] 
+[size=large]4. Install $Projectname[/size] 
 
-(Source: [zrl=https://friendicared.net/help/Install]https://friendicared.net/help/Install[/zrl])
+(Source: [zrl=[baseurl]/help/Install][baseurl]/help/Install[/zrl])
 
 Linux Appache document root is /var/www/
 Two files exist there (created by the steps above): index.html, phpinfo.php
 
 
-[b]Install RED and its Addons[/b]
+[b]Install $Projectname and its Addons[/b]
 
 Cleanup: Remove the directory www/ (Git will not create files and folders in directories that are not empty.) Make sure you are in directory var[code]pi@pi /var $ cd /var[/code]
  
 Remove directory[code]pi@pi /var $ sudo rm -rf www/[/code]
 
-Download the sources of RED from GIT
+Download the sources of $Projectname from GIT
 [code]pi@pi /var $ sudo git clone https://github.com/redmatrix/redmatrix.git www[/code]
 
 Download the sources of the addons from GIT
 [code]pi@pi /var/www $ sudo git clone https://github.com/redmatrix/redmatrix-addons.git addon[/code]
 
-Make user www-data the owner of the whole red directory (including subdirectories and files)
+Make user www-data the owner of the whole web directory (including subdirectories and files)
 (TODO: This step has to be proofed by the next installation.)
 [code]pi@pi /var $ chown -R www-data:www-data /var/www/[/code]
 
@@ -319,14 +319,14 @@ php util/config system block_public_search 1
 
 
 
-[size=large]5. Keep your Raspberry Pi and your Redmatrix up-to-date[/size] 
+[size=large]5. Keep your Raspberry Pi and your $Projectname up-to-date[/size] 
 
-Git update of RED every day at 4 am and addons at 5 am every day
+Git update every day at 4 am and addons at 5 am every day
 Try if the command is working
 - pi@pi /var/www $ sudo git pull
 Create the cronjob
 - pi@pi /var/www $ crontab -e
-Enter the following to update RED at 4:01 am every day
+Enter the following to update at 4:01 am every day
 - 01 04 * * * cd /var/www/; sudo git pull
 Enter the following to update the addons at 5:01 am every day
 - 01 05 * * * cd /var/www/addon/; sudo git pull
@@ -334,7 +334,7 @@ Enter the following to update the Raspberry Pi (Raspbian OS = Debian) at 6:01 am
 - 01 06 * * * sudo aptitude -y update &amp;&amp; sudo aptitude -y safe-upgrade
 Save and exit.
 
-[size=large]6. Running Friendica with SSL[/size] 
+[size=large]6. Running with SSL[/size] 
 
 Follow the instructions here:
 [url=https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL]https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL[/url]

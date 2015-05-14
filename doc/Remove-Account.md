@@ -13,7 +13,7 @@ Visit the URL
 
 	https://yoursite/removeme 
 
-(replace 'yoursite' with the domain name of your Red Matrix site). 
+(replace 'yoursite' with the domain name of your $Projectname site). 
 You will need to confirm your password and the channel you are currently logged into will be removed. 
 
 This is irreversible.

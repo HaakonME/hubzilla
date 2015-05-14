@@ -25,7 +25,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/cloud]Cloud-Speicher[/zrl]
 [zrl=[baseurl]/help/remove_account]Einen Kanal oder das ganze Konto löschen[/zrl]
 
-[size=large][b]Hilfe für RedMatrix-Mitglieder[/b][/size]
+[size=large][b]Hilfe für $Projectname-Mitglieder[/b][/size]
 [zrl=[baseurl]/help/tags_and_mentions]Tags und Erwähnungen[/zrl]
 [zrl=[baseurl]/help/webpages]Webseiten[/zrl]
 [zrl=[baseurl]/help/bbcode]BBcode-Referenz für Posts und Kommentare[/zrl]
@@ -45,7 +45,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/faq_admins]FAQ für Admins[/zrl]
 
 [size=large][b]Technische Dokumentation[/b][/size]
-[zrl=[baseurl]/help/history]Die Geschichte der RedMatrix[/zrl]
+[zrl=[baseurl]/help/history]Die Geschichte der $Projectname[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]Zot – ein grober Überblick[/zrl]
 [zrl=[baseurl]/help/zot]Eine Einführung ins Zot-Protokoll[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot-Strukturen[/zrl]
@@ -81,7 +81,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [url=https://federated.social/channel/postgres]Postgres-spezifischer Admin-Support-Kanal[/url]
 
 
-[url=[baseurl]/help/credits]RedMatrix Credits[/url]
+[url=[baseurl]/help/credits]$Projectname Credits[/url]
 
 [size=large][b]Über diesen Red-Server[/b][/size]
 [zrl=[baseurl]/help/TermsOfService]Nutzungsbedingungen dieses Red-Servers[/zrl]

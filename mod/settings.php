@@ -95,18 +95,23 @@ function settings_post(&$a) {
 						dbesc($name),
 						dbesc($redirect),
 						dbesc($icon),
-						local_channel(),
+						intval(local_channel()),
 						dbesc($key));
 			} else {
-				$r = q("INSERT INTO clients
-							(client_id, pw, name, redirect_uri, icon, uid)
-						VALUES ('%s','%s','%s','%s','%s',%d)",
-						dbesc($key),
-						dbesc($secret),
-						dbesc($name),
-						dbesc($redirect),
-						dbesc($icon),
-						local_channel());
+				$r = q("INSERT INTO clients (client_id, pw, name, redirect_uri, icon, uid)
+					VALUES ('%s','%s','%s','%s','%s',%d)",
+					dbesc($key),
+					dbesc($secret),
+					dbesc($name),
+					dbesc($redirect),
+					dbesc($icon),
+					intval(local_channel())
+				);
+				$r = q("INSERT INTO xperm (xp_client, xp_channel, xp_perm) VALUES ('%s', %d, '%s') ",
+					dbesc($key),
+					intval(local_channel()),
+					dbesc('all')
+				);
 			}
 		}
 		goaway($a->get_baseurl(true)."/settings/oauth/");

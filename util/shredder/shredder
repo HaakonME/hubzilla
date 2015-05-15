@@ -45,7 +45,7 @@ Use -h -c command to get options for the command.
 
 show_config_help () {
 	echo "Please create $FCLI_RC with:
-redmatrix_url=YOR_SERVER_URL (no trailing /)
+hubzilla_url=YOR_SERVER_URL (no trailing /)
 oauth_consumer_key=YOUR_CONSUMER_KEY
 oauth_consumer_secret=YOUR_CONSUMER_SECRET
 

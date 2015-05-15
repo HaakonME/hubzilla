@@ -17,7 +17,7 @@
 <link rel="search"
          href="{{$baseurl}}/opensearch" 
          type="application/opensearchdescription+xml" 
-         title="Search in the Red Matrix" />
+         title="Search in the Hubzilla" />
 
 
 <script>

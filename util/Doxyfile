@@ -1,6 +1,6 @@
 INPUT = README.md index.php boot.php mod/ include/ util/ view/ version.inc
 RECURSIVE = YES
-PROJECT_NAME = "The RedMatrix"
+PROJECT_NAME = "The Hubzilla"
 PROJECT_LOGO = images/rm-64.png
 EXCLUDE = .htconfig.php library/ doc/ vendor/ .git/ util/zotsh/easywebdav/
 EXCLUDE_PATTERNS = *smarty3* *strings.php *.out *test*

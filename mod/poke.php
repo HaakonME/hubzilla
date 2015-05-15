@@ -88,6 +88,7 @@ function poke_init(&$a) {
 
 	$arr = array();
 
+	$arr['item_wall']     = 1;
 	$arr['owner_xchan']   = (($parent_item) ? $parent_item['owner_xchan'] : $channel['channel_hash']);
 	$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
 	$arr['title']         = '';

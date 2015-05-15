@@ -50,7 +50,7 @@ function home_content(&$a, $update = 0, $load = false) {
 	if(get_config('system','projecthome')) {
 		$o .= file_get_contents('assets/home.html');
 		$a->page['template'] = 'full';
-		$a->page['title'] = t('Red Matrix - &quot;The Network&quot;');
+		$a->page['title'] = t('Hubzilla - &quot;The Network&quot;');
 		return $o;
 	}
 
@@ -190,7 +190,7 @@ function home_content(&$a, $update = 0, $load = false) {
 
 			if(get_config('system','site_firehose')) {
 				require_once('include/security.php');
-				$uids = " and item.uid in ( " . stream_perms_api_uids(PERMS_PUBLIC) . " ) and item_private = 0  and (item_flags & " . intval(ITEM_WALL) . " ) > 0 ";
+				$uids = " and item.uid in ( " . stream_perms_api_uids(PERMS_PUBLIC) . " ) and item_private = 0  and item_wall = 1 ";
 			}
 			else {
 				$sys = get_sys_channel();

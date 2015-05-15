@@ -1,15 +1,35 @@
-![the Red Matrix](images/rm.png)
 
-Note: please update your repository pointers to https://github.com/redmatrix/redmatrix .
+Hubzilla - Hub Deployment Platform
+==================================
 
-One of the traditional problems with independent publishing on the internet has always been the fact that independent publishers often operate as isolated islands within their own website, and spend most of their resources attracting visitors. The rise of corporate providers and social networking services alleviated many of these problems; however centralisation has led to a situation where your content is no longer under your direct control. It is shared fully with corporate advertisers and governments, but ironically you are now often asked to pay money to ensure that your friends can see it. What if you could have advantages of scale and connections that centralisation typically offers whilst maintaining independent control over your own web presence?
+![Hubzilla](images/ghash-32.png)
 
-The RedMatrix is a super network created from a huge number of smaller independent and autonomous websites - which are linked together into a cooperative publishing and social platform. It consists of an open source webapp providing a complete multi-user **decentralised** publishing, sharing, and communications system - known as a "hub". Each hub provides communications (private messaging, chat, blogging, forums, and social networking), along with media management (photos, events, files, web pages, shareable apps) for its members; all in a feature-rich platform. These hubs automatically reach out and connect with each other and the rest of the matrix. Privacy and content ownership always remain under the direct personal control of the individual; and permission to access any item can be granted or denied to anybody in the entire matrix.
+**What are Hubs?**
 
-What makes the RedMatrix unique is what we call "magic authentication" - which is based on our groundbreaking work in decentralised identity services. No other platform provides this ability. Within the matrix the boundaries between different hubs are blurred or seemingly non-existent. Identity in the matrix is considered transient and potentially nomadic. "Who you are" has nothing to do with "what computer you're connected to", and website content can adapt itself according to who is viewing it. You have the ability to "clone" your identity to other hubs; which allows you to continue to communicate with your friends seamlessly if your primary hub is ever disabled (temporarily or permanently).
+Hubs are independent general-purpose websites that not only connect with their associated members and viewers, but also connect together to exchange personal communications and other information with each other.  
+This allows hub members on any hub to securely and privately share anything; with anybody, on any hub - anywhere; or share stuff publicly with anybody on the internet if desired. 
 
-The RedMatrix is ideal for communities of any size, from private individuals and families to online forums, business websites, and organisations. It can be used by anybody who has communications or web content that they wish to share, but where they desire complete control of whom they share it with.
+**Hubzilla** is the server software which makes this possible. It is a sophisticated and unique combination of an open source content management system and a decentralised identity, communications, and permissions framework and protocol suite, built using common webserver technology (PHP/MySQL/Apache, although Mariadb or Postgres and Nginx could also be used - we're pretty easy). The end result is a level of systems integration, privacy control, and communications features that you wouldn't think are possible in either a content management system or a decentralised communications network. It also brings a new level of cooperation and privacy to the web and introduces the concept of personally owned "single sign-on" to web services across the entire internet. 
 
-The Red Matrix is free and open source distributed under the MIT license.
+Hubzilla hubs are
 
-For a list of public hubs see [redmatrix.me/pubsites](https://redmatrix.me/pubsites). For installation instructions see [install/INSTALL.txt](install/INSTALL.txt)
+* decentralised
+* inherently social
+* optionally inter-networked with other hubs
+* privacy-enabled (privacy exclusions work across the entire internet to any registered identity on any compatible hubs)
+
+Possible website applications include
+
+* decentralised social networking nodes
+* personal cloud storage
+* file dropboxes
+* managing organisational communications and activities
+* collaboration and community decision-making
+* small business websites
+* public and private media/file libraries
+* blogs
+* event promotion
+* feed aggregation and republishing
+* forums
+* dating websites
+* pretty much anything you can do on a traditional blog or community website, but that you could do better if you could easily connect it with other websites or privately share things across website boundaries. 

@@ -3,7 +3,7 @@
 <h2>{{$mname}} {{$module}}</h2>
 
 <br />
-<a href="help/Comanche" target="redmatrix-help">{{$help}}</a>
+<a href="help/Comanche" target="hubzilla-help">{{$help}}</a>
 <br />
 <br />
 

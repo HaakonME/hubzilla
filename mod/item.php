@@ -652,6 +652,7 @@ function item_post(&$a) {
 		}
 	}
 
+
 	$item_unseen = ((local_channel() != $profile_uid) ? 1 : 0);
 	$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);
 	$item_origin = (($origin) ? 1 : 0);
@@ -687,14 +688,8 @@ function item_post(&$a) {
 
 	$item_thead_top = ((! $parent) ? 1 : 0);
 
-<<<<<<< HEAD
-	if ((! $plink) && ($item_thread_top)) {
-=======
-	if($consensus)
-		$item_flags |= ITEM_CONSENSUS;
 
-	if ((! $plink) && ($item_flags & ITEM_THREAD_TOP)) {
->>>>>>> master
+	if ((! $plink) && ($item_thread_top)) {
 		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
 	}
 	
@@ -724,6 +719,7 @@ function item_post(&$a) {
 	$datarray['deny_cid']       = $str_contact_deny;
 	$datarray['deny_gid']       = $str_group_deny;
 	$datarray['item_private']   = $private;
+	$datarray['item_wall']      = $item_wall;
 	$datarray['attach']         = $attachments;
 	$datarray['thr_parent']     = $thr_parent;
 	$datarray['postopts']       = $postopts;
@@ -787,14 +783,6 @@ function item_post(&$a) {
 				$datarray['item_verified'] = 1;
 			}
 		}
-
-		logger('Encrypting local storage');
-		$key = get_config('system','pubkey');
-		$datarray['item_obscured'] = 1;
-		if($datarray['title'])
-			$datarray['title'] = json_encode(crypto_encapsulate($datarray['title'],$key));
-		if($datarray['body'])
-			$datarray['body']  = json_encode(crypto_encapsulate($datarray['body'],$key));
 	}
 
 	if($orig_post) {
@@ -1080,24 +1068,15 @@ function item_check_service_class($channel_id,$iswebpage) {
 	$ret = array('success' => false, $message => '');
 
 	if ($iswebpage) {
-<<<<<<< HEAD
 		$r = q("select count(i.id)  as total from item i 
 			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
 			and i.parent=i.id and i.item_type = %d and i.item_deleted = 0 and i.uid= %d ",
 			intval(ITEM_TYPE_WEBPAGE),
-=======
-		// note: we aren't counting comanche templates and blocks, only webpages
-		$r = q("select count(id) as total from item where parent = id 
-			and ( item_restrict & %d ) > 0 and ( item_restrict & %d ) = 0 and uid = %d ",
-			intval(ITEM_WEBPAGE),
-			intval(ITEM_DELETED),
->>>>>>> master
 			intval($channel_id)
 		);
 	}
 	else {
-		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and (item_flags & %d) > 0 and uid = %d ",
-			intval(ITEM_WALL),
+		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and item_wall = 1 and uid = %d ",
 			intval($channel_id)
 		);
 	}

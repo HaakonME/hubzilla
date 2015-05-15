@@ -417,14 +417,6 @@ function post_activity_item($arr) {
 				$arr['item_verified'] = 1;
 			}
 		}
-
-		logger('Encrypting local storage');
-		$key = get_config('system','pubkey');
-		$arr['item_obscured'] = 1;
-		if($arr['title'])
-			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-		if($arr['body'])
-			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	}
 
 	$arr['mid']          = ((x($arr,'mid')) ? $arr['mid'] : item_message_id());
@@ -560,7 +552,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(RED_VERSION),
-		'$red'          => xmlify(RED_PLATFORM),
+		'$red'          => xmlify(PLATFORM_NAME),
 		'$feed_id'      => xmlify($channel['xchan_url']),
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
@@ -851,7 +843,7 @@ function get_item_elements($x) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
-	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? json_encode(crypto_encapsulate($x['diaspora_signature'],$key)) : '');
+	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? json_encode($x['diaspora_signature']) : '');
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -900,21 +892,6 @@ function get_item_elements($x) {
 		else
 			logger('get_item_elements: message verification failed.');
 	}
-
-
-	// if it's a private post, encrypt it in the DB.
-	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
-	// and we need plaintext to do that.
-
-
-	if(intval($arr['item_private'])) {
-		$arr['item_obscured'] = 1;
-		if($arr['title'])
-			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-		if($arr['body'])
-			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
-	}
-
 
 	if(array_key_exists('revision',$x)) {
 		// extended export encoding
@@ -1179,9 +1156,15 @@ function encode_item($item,$mirror = false) {
 	if($item['term'])
 		$x['tags']        = encode_item_terms($item['term']);
 
-	if($item['diaspora_meta'])
-		$x['diaspora_signature'] = crypto_unencapsulate(json_decode($item['diaspora_meta'],true),$key);
-
+	if($item['diaspora_meta']) {
+		$z = json_decode($item['diaspora_meta'],true);
+		if($z) {
+			if(array_key_exists('iv',$z))
+				$x['diaspora_signature'] = crypto_unencapsulate($z,$key);
+			else
+				$x['diaspora_signature'] = $z;
+		}
+	}
 	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
 
 	return $x;
@@ -2034,6 +2017,7 @@ function item_store($arr, $allow_exec = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
+	$arr['item_wall']     = ((x($arr,'item_wall'))     ? intval($arr['item_wall'])           : 0 );
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
@@ -2063,14 +2047,6 @@ function item_store($arr, $allow_exec = false) {
 				return $ret;
 			}
 			$arr = $translate['item'];
-		}
-		if($arr['item_private']) {
-			$key = get_config('system','pubkey');
-			$arr['item_obscured'] = 1;
-			if($arr['title'])
-				$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-			if($arr['body'])
-				$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 		}
 	}
 
@@ -2207,7 +2183,6 @@ function item_store($arr, $allow_exec = false) {
 
 			if(intval($r[0]['item_wall']))
 				$arr['item_wall'] = 1;
-
 
 			// An uplinked comment might arrive with a downstream owner.
 			// Fix it.
@@ -2456,14 +2431,6 @@ function item_store_update($arr,$allow_exec = false) {
 			}
 			$arr = $translate['item'];
 		}
-		if($arr['item_private']) {
-            $key = get_config('system','pubkey');
-            $arr['item_obscured'] = 1;
-            if($arr['title'])
-                $arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
-            if($arr['body'])
-                $arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
-        }
 	}
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
@@ -2636,11 +2603,10 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 
 	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => base64_encode($authorsig));
 
-	$key = get_config('system','pubkey');
-	$y = crypto_encapsulate(json_encode($x),$key);
+	$y = json_encode($x);
 
 	$r = q("update item set diaspora_meta = '%s' where id = %d",
-		dbesc(json_encode($y)),
+		dbesc($y),
 		intval($post_id)
 	);
 
@@ -2994,6 +2960,7 @@ function tag_deliver($uid, $item_id) {
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
+
 	if(intval($item['item_wall']) || intval($item['item_origin']) || (! intval($item['item_thread_top'])) || ($item['id'] != $item['parent'])) {
 		logger('tag_deliver: item was local or a comment. rejected.');
 		return;
@@ -3158,18 +3125,8 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$title = $item['title'];
 	$body  = $item['body'];
 
-	if($private) {
-		if(! intval($item['item_obscured'])) {
-			$key = get_config('system','pubkey');
-			if($title)
-				$title = json_encode(crypto_encapsulate($title,$key));
-			if($body)
-				$body  = json_encode(crypto_encapsulate($body,$key));
-			$item_obscured = 1;
-		}
-	}
-	else {
-		if(intval($item['item_obscured'])) {
+	if(! $private) {
+		if($flag_bits & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($title)
 				$title = crypto_unencapsulate(json_decode($title,true),$key);

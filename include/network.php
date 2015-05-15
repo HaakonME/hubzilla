@@ -603,7 +603,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 				$scaled = str_replace($scale_replace[0], $scale_replace[1], $mtch[3]);
 			else
 				$scaled = $mtch[3];
-			$i = z_fetch_url($scaled);
+			$i = z_fetch_url($scaled,true);
 
 
 			$cache = get_config('system','itemcache');
@@ -613,7 +613,10 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			}
 
 			// guess mimetype from headers or filename
+
 			$type = guess_image_type($mtch[3],$i['header']);
+			if(strpos($type,'image') === false)
+				continue;
 			
 			if($i['success']) {
 				$ph = photo_factory($i['body'], $type);

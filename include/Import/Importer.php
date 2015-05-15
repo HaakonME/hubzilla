@@ -1,11 +1,11 @@
 <?php /** @file */
 
-namespace RedMatrix\Import;
+namespace Hubzilla\Import;
 
 /**
  * @brief Class Import
  *
- * @package RedMatrix\Import
+ * @package Hubzilla\Import
  */
 class Import {
 

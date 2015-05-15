@@ -1,4 +1,4 @@
-Red Developer Guide
+Developer Guide
 ===================
 
 **Here is how you can join us.**
@@ -8,7 +8,7 @@ doing development.
 
 Create your own github account.
 
-You may fork/clone the Red repository from [https://github.com/redmatrix/redmatrix.git](https://github.com/redmatrix/redmatrix.git).
+You may fork/clone the Red repository from [https://github.com/redmatrix/hubzilla.git](https://github.com/redmatrix/hubzilla.git).
 
 Follow the instructions provided here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
 to create and use your own tracking fork on github
@@ -18,7 +18,7 @@ to notify us to merge your work.
 
 **Translations**
 
-Our translations are managed through Transifex. If you wish to help out translating the Red Matrix to another language, sign up on transifex.com, visit [https://www.transifex.com/projects/p/red-matrix/](https://www.transifex.com/projects/p/red-matrix/) and request to join one of the existing language teams or create a new one. Notify one of the core developers when you have a translation update which requires merging, or ask about merging it yourself if you're comfortable with git and PHP. We have a string file called 'messages.po' which is gettext compliant and a handful of email templates, and from there we automatically generate the application's language files.   
+Our translations are managed through Transifex. If you wish to help out translating the $Projectname to another language, sign up on transifex.com, visit [https://www.transifex.com/projects/p/red-matrix/](https://www.transifex.com/projects/p/red-matrix/) and request to join one of the existing language teams or create a new one. Notify one of the core developers when you have a translation update which requires merging, or ask about merging it yourself if you're comfortable with git and PHP. We have a string file called 'messages.po' which is gettext compliant and a handful of email templates, and from there we automatically generate the application's language files.   
 
 [Translations - More Info](help/Translations)
 

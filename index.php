@@ -2,7 +2,7 @@
 
 /**
  *
- * Red Matrix
+ * Hubzilla
  *
  */
 

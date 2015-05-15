@@ -5,9 +5,9 @@
  */
 
 /**
- * Red Matrix.
+ * Hubzilla.
  *
- * The Red Matrix (aka "Red") is an open source decentralised communications
+ * The Hubzilla (aka "Red") is an open source decentralised communications
  * platform combined with a decentralised identity/authentication framework
  * wrapped in an extensible content management system, providing website designers
  * the ability to embed fully decentralised communications and social tools
@@ -45,7 +45,7 @@ require_once('include/Contact.php');
 require_once('include/account.php');
 
 
-define ( 'RED_PLATFORM',            'redmatrix' );
+define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
@@ -80,9 +80,9 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zothub.com', 
 	'https://zotid.net', 
 	'https://red.zottel.red',
-	'https://redmatrix.info',
+	'https://hubzilla.info',
 	'https://my.federated.social',
-	'https://redmatrix.nl'
+	'https://hubzilla.nl'
 );
 
 
@@ -967,7 +967,7 @@ class App {
 			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
 			'$local_channel' => local_channel(),
-			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
+			'$generator' => PLATFORM_NAME . ' ' . RED_VERSION,
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
@@ -1466,7 +1466,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		$reglink = 'register';
 
 	$reg = array(
-		'title' => t('Create an account to access services and applications within the Red Matrix'),
+		'title' => t('Create an account to access services and applications within the Hubzilla'),
 		'desc' => t('Register'),
 		'link' => (($register) ? $reglink : 'pubsites')
 	);
@@ -2133,7 +2133,7 @@ function construct_page(&$a) {
 }
 
 /**
- * @brief Returns RedMatrix's root directory.
+ * @brief Returns Hubzilla's root directory.
  *
  * @return string
  */
@@ -2241,7 +2241,7 @@ function z_check_cert() {
 /**
  * @brief Send email to admin if server has an invalid certificate.
  *
- * If a RedMatrix hub is available over https it must have a publicly valid
+ * If a Hubzilla hub is available over https it must have a publicly valid
  * certificate.
  */
 function cert_bad_email() {

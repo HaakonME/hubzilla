@@ -1,12 +1,12 @@
 ##Diaspora Compatibility
 
-Diaspora protocol compatibility is presently considered an ***experimental*** feature. It may not be available on all sites and presents some serious compatibility issues with redmatrix. At the moment these compatibility issues will be shared with "Friendica-over-Diaspora" protocol communications. 
+Diaspora protocol compatibility is presently considered an ***experimental*** feature. It may not be available on all sites and presents some serious compatibility issues with hubzilla. At the moment these compatibility issues will be shared with "Friendica-over-Diaspora" protocol communications. 
 
 Private mail retraction (unsend) will not be possible on Diaspora. 
 
 Private posts and their associated comments are sent in plaintext email notifications in Diaspora and Friendica. This is a major privacy issue and affects any private communications you have where *any* member of the conversation is on another network. Be aware of it. 
 
-Access control only works on posts and comments. Diaspora members will get permission denied trying to access any other access controlled redmatrix objects such as files, photos, webpages, chatrooms, etc. In the case of private photos that are linked to posts, they will see a "prohibited sign" instead of the photo. Diaspora has no concept of private media. There is no workaround except to make your media resources public (to everybody on the internet).
+Access control only works on posts and comments. Diaspora members will get permission denied trying to access any other access controlled hubzilla objects such as files, photos, webpages, chatrooms, etc. In the case of private photos that are linked to posts, they will see a "prohibited sign" instead of the photo. Diaspora has no concept of private media. There is no workaround except to make your media resources public (to everybody on the internet).
 
 
 Edited posts will not be delivered. Diaspora members will see the original post/comment without edits. There is no mechanism in the protocol to update an existing post. We cannot delete it and submit another invisibly because the message-id will change and we need to keep the same message-id on our own network. The only workaround is to delete the post/comment and do it over. We may eventually provide a way to delete the out of date copy only from Diaspora and keep it intact on networks that can handle edits. 
@@ -32,7 +32,7 @@ Community tags will not work. We will send a tagging activity as a comment. It w
 
 Privacy tags (@!somebody) will not be available to Diaspora members. These tags may have to be stripped or obscured to prevent them from being hijacked - which could result in privacy issues.  
 
-Plus-tagged redmatrix forums should work from Diaspora. 
+Plus-tagged hubzilla forums should work from Diaspora. 
 
 Premium channel redirects will not be sent. If you allow Diaspora connections, they will not see that you have a premium channel. 
 

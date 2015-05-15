@@ -130,7 +130,7 @@ function editlayout_content(&$a) {
 	// FIXME A return path with $_SESSION doesn't always work for observer - it may WSoD
 	// instead of loading a sensible page.  So, send folk to the webpage list.
 
-	$rp = '/layouts/' . $which;
+	$rp = 'layouts/' . $which;
 
 	$o .= replace_macros($tpl,array(
 		'$return_path'         => $rp,

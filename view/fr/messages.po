@@ -1,18 +1,18 @@
-# Red Matrix Project
-# Copyright (C) 2012-2014 the Red Matrix Project
+# Hubzilla Project
+# Copyright (C) 2012-2014 the Hubzilla Project
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
 # Olivier <olivier+transifex@migeot.org>, 2013-2014
-# Webmaster_Redmatrix.ca <webmaster@redmatrix.ca>, 2014
-# Webmaster_Redmatrix.ca <webmaster@redmatrix.ca>, 2014
+# Webmaster_Hubzilla.ca <webmaster@hubzilla.ca>, 2014
+# Webmaster_Hubzilla.ca <webmaster@hubzilla.ca>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Red Matrix\n"
+"Project-Id-Version: Hubzilla\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-15 00:03-0700\n"
 "PO-Revision-Date: 2014-08-17 00:08+0000\n"
-"Last-Translator: Webmaster_Redmatrix.ca <webmaster@redmatrix.ca>\n"
+"Last-Translator: Webmaster_Hubzilla.ca <webmaster@hubzilla.ca>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/red-matrix/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1410,11 +1410,11 @@ msgid "Safe Mode"
 msgstr "Mode sûr"
 
 #: ../../include/enotify.php:41
-msgid "Red Matrix Notification"
+msgid "Hubzilla Notification"
 msgstr "Notification Matrice Rouge"
 
 #: ../../include/enotify.php:42
-msgid "redmatrix"
+msgid "hubzilla"
 msgstr "Matrice Rouge"
 
 #: ../../include/enotify.php:44
@@ -4599,7 +4599,7 @@ msgstr "Sites publics"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in"
+"The listed sites allow public registration into the Hubzilla. All sites in"
 " the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
@@ -4775,7 +4775,7 @@ msgid "Please login."
 msgstr "Merci de vous connecter."
 
 #: ../../mod/cloud.php:126
-msgid "Red Matrix - Guests: Username: {your email address}, Password: +++"
+msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
 msgstr "Matrice Rouge - Pour les invités: Nom d'utilisateur = {votre courriel}, Mot de passe = +++"
 
 #: ../../mod/removeme.php:29
@@ -5413,7 +5413,7 @@ msgid "This site is not a directory server"
 msgstr "Ce site n'est pas un serveur d'annuaire"
 
 #: ../../mod/home.php:81
-msgid "Red Matrix - &quot;The Network&quot;"
+msgid "Hubzilla - &quot;The Network&quot;"
 msgstr "La Matrice Rouge - &quot;LE Réseau&quot;"
 
 #: ../../mod/home.php:94
@@ -5422,7 +5422,7 @@ msgid "Welcome to %s"
 msgstr "Bienvenue sur %s"
 
 #: ../../mod/setup.php:162
-msgid "Red Matrix Server - Setup"
+msgid "Hubzilla Server - Setup"
 msgstr "Serveur de la Matrice Rouge - Configuration"
 
 #: ../../mod/setup.php:168
@@ -5471,7 +5471,7 @@ msgstr "Connexion à la base de données"
 
 #: ../../mod/setup.php:285
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install Hubzilla we need to know how to connect to your "
 "database."
 msgstr "Pour installer la Matrice Rouge, nous avons besoin de savoir comment contacter votre base de données."
 
@@ -5908,7 +5908,7 @@ msgstr "Rouge"
 
 #: ../../mod/siteinfo.php:98
 msgid ""
-"This is a hub of the Red Matrix - a global cooperative network of "
+"This is a hub of the Hubzilla - a global cooperative network of "
 "decentralized privacy enhanced websites."
 msgstr "Ceci est un serveur de la Matrice Rouge - un réseau collaboratif de plusieurs serveurs qui assurent la protection de votre vie privée notamment par la décentralisation de votre identité."
 
@@ -5919,7 +5919,7 @@ msgstr "Installée sur"
 #: ../../mod/siteinfo.php:102
 msgid ""
 "Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
-"about the Red Matrix."
+"about the Hubzilla."
 msgstr "Merci de visiter <a href=\"http://getzot.com\">GetZot.com</a> pour en apprendre davantage sur la Matrice Rouge."
 
 #: ../../mod/siteinfo.php:103
@@ -5928,9 +5928,9 @@ msgstr "Pour remonter bogues et problèmes, merci de visiter"
 
 #: ../../mod/siteinfo.php:106
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
 "com"
-msgstr "Suggestions, demandes, etc. - merci de vous adresser à \"redmatrix\" à librelist - point com"
+msgstr "Suggestions, demandes, etc. - merci de vous adresser à \"hubzilla\" à librelist - point com"
 
 #: ../../mod/siteinfo.php:108
 msgid "Site Administrators"
@@ -7114,7 +7114,7 @@ msgid "Your message:"
 msgstr "Votre message&nbsp;:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
+msgid "Please join my community on Hubzilla."
 msgstr "Veuillez me rejoindre sur la Matrice Rouge."
 
 #: ../../mod/invite.php:134
@@ -7122,11 +7122,11 @@ msgid "You will need to supply this invitation code: "
 msgstr "Vous aurez besoin de fournir le code suivant:"
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
+msgid "1. Register at any Hubzilla location (they are all inter-connected)"
 msgstr "1. Enregistrez-vous sur n'importe quel serveurs ( ils sont tous inter-connectés )"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
+msgid "2. Enter my Hubzilla network address into the site searchbar."
 msgstr "2. Saisissez l'adresse de mon canal dans la barre de recherche du site."
 
 #: ../../mod/invite.php:138
@@ -7186,8 +7186,8 @@ msgstr "Cette action est réservée aux membres."
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
-"href=\"register\">register as a new RedMatrix member</a> to continue."
+"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a "
+"href=\"register\">register as a new Redmatrix.member</a> to continue."
 msgstr "SVP <a href=\"rmagic\">connectez-vous</a> ou <a href=\"register\">enregistrez-vous</a> pour continuer."
 
 #: ../../mod/like.php:77 ../../mod/like.php:104 ../../mod/like.php:142
@@ -7871,7 +7871,7 @@ msgid "Header image only on profile pages"
 msgstr "Image de l'entête tel qu'elle est affichée sur la page du profil"
 
 #: ../../view/theme/redbasic/php/config.php:84
-msgid "Light (Red Matrix default)"
+msgid "Light (Hubzilla default)"
 msgstr "Blanc (valeur par défaut)"
 
 #: ../../view/theme/redbasic/php/config.php:104
@@ -8006,7 +8006,7 @@ msgstr "Erreur de mise à jour sur %s"
 
 #: ../../boot.php:1473
 msgid ""
-"Create an account to access services and applications within the Red Matrix"
+"Create an account to access services and applications within the Hubzilla"
 msgstr "Créez un compte pour pouvoir accéder aux services et applications de la Matrice Red"
 
 #: ../../boot.php:1501

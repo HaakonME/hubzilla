@@ -1,13 +1,13 @@
 <?php
 /**
  * @file mod/dav.php
- * @brief Initialize RedMatrix's cloud (SabreDAV).
+ * @brief Initialize Hubzilla's cloud (SabreDAV).
  *
  * Module for accessing the DAV storage area from a DAV client.
  */
 
 use Sabre\DAV;
-use RedMatrix\RedDAV;
+use Hubzilla\RedDAV;
 
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
@@ -118,7 +118,7 @@ function dav_init(&$a) {
 
 	if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
 		try {
-			$auth->Authenticate($server, t('RedMatrix channel'));
+			$auth->Authenticate($server, t('Hubzilla channel'));
 		}
 		catch (Exception $e) {
 			logger('mod_cloud: auth exception' . $e->getMessage());
@@ -127,7 +127,7 @@ function dav_init(&$a) {
 	}
 
 	require_once('include/RedDAV/RedBrowser.php');
-	// provide a directory view for the cloud in Red Matrix
+	// provide a directory view for the cloud in Hubzilla
 	$browser = new RedDAV\RedBrowser($auth);
 	$auth->setBrowserPlugin($browser);
 

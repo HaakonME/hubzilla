@@ -481,7 +481,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 	$ret = array();
 
-	$ret['compatibility'] = array('project' => RED_PLATFORM, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
+	$ret['compatibility'] = array('project' => PLATFORM_NAME, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
 
 	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($channel_id)
@@ -1369,7 +1369,7 @@ function get_default_profile_photo($size = 175) {
 }
 
 /**
- * @brief Test whether a given identity is NOT a member of the Red Matrix.
+ * @brief Test whether a given identity is NOT a member of the Hubzilla.
  *
  * @param string $s;
  *    xchan_hash of the identity in question
@@ -1380,7 +1380,7 @@ function is_foreigner($s) {
 }
 
 /**
- * @brief Test whether a given identity is a member of the Red Matrix.
+ * @brief Test whether a given identity is a member of the Hubzilla.
  *
  * @param string $s;
  *    xchan_hash of the identity in question

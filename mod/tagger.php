@@ -109,7 +109,7 @@ function tagger_content(&$a) {
 
 	$arr['item_origin'] = 1;
 	$arr['item_wall'] = ((intval($item['item_wall'])) ? 1 : 0);
-	
+
 	$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
 	$alink = '[zrl=' . $item['xchan_url'] . ']' . $item['xchan_name'] . '[/zrl]';
 	$plink = '[zrl=' . $item['plink'] . ']' . $post_type . '[/zrl]';

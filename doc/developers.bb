@@ -9,7 +9,7 @@ doing development.
 
 Create your own github account.
 
-You may fork/clone the Red repository from [url=https://github.com/redmatrix/redmatrix.git]https://github.com/redmatrix/redmatrix.git[/url]
+You may fork/clone the Red repository from [url=https://github.com/redmatrix/hubzilla.git]https://github.com/redmatrix/hubzilla.git[/url]
 
 Follow the instructions provided here: [url=http://help.github.com/fork-a-repo/]http://help.github.com/fork-a-repo/[/url]
 to create and use your own tracking fork on github
@@ -19,7 +19,7 @@ to notify us to merge your work.
 
 [b]Translations[/b]
 
-Our translations are managed through Transifex. If you wish to help out translating the Red Matrix to another language, sign up on transifex.com, visit [url=https://www.transifex.com/projects/p/red-matrix/]https://www.transifex.com/projects/p/red-matrix/[/url] and request to join one of the existing language teams or create a new one. Notify one of the core developers when you have a translation update which requires merging, or ask about merging it yourself if you're comfortable with git and PHP. We have a string file called 'messages.po' which is gettext compliant and a handful of email templates, and from there we automatically generate the application's language files.   
+Our translations are managed through Transifex. If you wish to help out translating the $Projectname to another language, sign up on transifex.com, visit [url=https://www.transifex.com/projects/p/red-matrix/]https://www.transifex.com/projects/p/red-matrix/[/url] and request to join one of the existing language teams or create a new one. Notify one of the core developers when you have a translation update which requires merging, or ask about merging it yourself if you're comfortable with git and PHP. We have a string file called 'messages.po' which is gettext compliant and a handful of email templates, and from there we automatically generate the application's language files.   
 
 [zrl=[baseurl]/help/Translations]Translations - More Info[/zrl]
 

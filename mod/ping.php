@@ -157,7 +157,7 @@ function ping_init(&$a) {
 				break;
 			case 'home':
 				$r = q("update item set item_unseen = 0 where item_unseen = 1 and item_wall = 1  and uid = %d", 
-					intval(channel())
+					intval(local_channel())
 				);
 				break;
 			case 'messages':

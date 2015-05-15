@@ -63,7 +63,6 @@ tonnerkiller
 Antoine G
 Christian Drechsler
 Ludovic Grossard
-RedMatrixCanada
 Stanislav Lechev [0xAF]
 aweiher
 bufalo1973

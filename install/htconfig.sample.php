@@ -3,7 +3,7 @@
 // If automatic system installation fails: 
 
 // Copy or rename this file to .htconfig.php in the top level 
-// Red Matrix directory
+// Hubzilla directory
 
 // Why .htconfig.php? Because it contains sensitive information which could
 // give somebody complete control of your database. Apache's default 
@@ -40,7 +40,7 @@ $default_timezone = 'America/Los_Angeles';
 // What is your site name?
 
 $a->config['system']['baseurl'] = 'https://myredsite.example';
-$a->config['system']['sitename'] = "Red Matrix";
+$a->config['system']['sitename'] = "Hubzilla";
 $a->config['system']['location_hash'] = 'if the auto install failed, put a unique random string here';
 
 

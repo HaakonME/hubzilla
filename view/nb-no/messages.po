@@ -1,12 +1,12 @@
-# Red Matrix Project
-# Copyright (C) 2012-2014 the Red Matrix Project
+# Hubzilla Project
+# Copyright (C) 2012-2014 the Hubzilla Project
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
 # Haakon Meland Eriksen <haakon.eriksen@far.no>, 2013-2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Red Matrix\n"
+"Project-Id-Version: Hubzilla\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-20 00:03-0700\n"
 "PO-Revision-Date: 2015-03-25 13:13+0000\n"
@@ -2422,8 +2422,8 @@ msgid "l F d, Y \\@ g:i A"
 msgstr "l F d, Y \\@ g:i A"
 
 #: ../../include/bb2diaspora.php:430
-msgid "Redmatrix event notification:"
-msgstr "RedMatrix hendelsesvarsling:"
+msgid "Hubzilla event notification:"
+msgstr "Hubzilla hendelsesvarsling:"
 
 #: ../../include/bb2diaspora.php:434 ../../include/event.php:20
 msgid "Starts:"
@@ -2805,12 +2805,12 @@ msgid "Login failed."
 msgstr "Innlogging mislyktes."
 
 #: ../../include/enotify.php:41
-msgid "Red Matrix Notification"
-msgstr "Red Matrix-varsling"
+msgid "Hubzilla Notification"
+msgstr "Hubzilla-varsling"
 
 #: ../../include/enotify.php:42
-msgid "redmatrix"
-msgstr "redmatrix"
+msgid "hubzilla"
+msgstr "hubzilla"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -4615,8 +4615,8 @@ msgid "Fetching URL returns error: %1$s"
 msgstr "Henting av URL gir følgende feil: %1$s"
 
 #: ../../mod/home.php:48
-msgid "Red Matrix - &quot;The Network&quot;"
-msgstr "Red Matrix - &quot;Nettverket&quot;"
+msgid "Hubzilla - &quot;The Network&quot;"
+msgstr "Hubzilla - &quot;Nettverket&quot;"
 
 #: ../../mod/home.php:101
 #, php-format
@@ -4718,9 +4718,9 @@ msgstr "Denne handlingen er begrenset til medlemmer."
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
-"href=\"register\">register as a new RedMatrix member</a> to continue."
-msgstr "Vennligst <a href=\"rmagic\">logg inn med din RedMatrix ID</a> eller <a href=\"register\">registrer deg som et nytt RedMatrix-medlem</a> for å fortsette"
+"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a "
+"href=\"register\">register as a new Redmatrix.member</a> to continue."
+msgstr "Vennligst <a href=\"rmagic\">logg inn med din Hubzilla ID</a> eller <a href=\"register\">registrer deg som et nytt Redmatrix.medlem</a> for å fortsette"
 
 #: ../../mod/like.php:101 ../../mod/like.php:128 ../../mod/like.php:166
 msgid "Invalid request."
@@ -4885,12 +4885,12 @@ msgstr "Offentlige nettsteder"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in"
+"The listed sites allow public registration into the Hubzilla. All sites in"
 " the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
 "additional details."
-msgstr "Nettstedene på listen tillater offentlig registrering i Red Matrix. Alle nettsteder i matrix er forbundet så medlemskap på enhver av dem formidler medlemskap i hele matrix. Noen nettsteder kan kreve abonnement eller tilby lagdelte tjenesteavtaler. Tilbyderlenkene <strong>kan</strong> gi tilleggsopplysninger."
+msgstr "Nettstedene på listen tillater offentlig registrering i Hubzilla. Alle nettsteder i matrix er forbundet så medlemskap på enhver av dem formidler medlemskap i hele matrix. Noen nettsteder kan kreve abonnement eller tilby lagdelte tjenesteavtaler. Tilbyderlenkene <strong>kan</strong> gi tilleggsopplysninger."
 
 #: ../../mod/pubsites.php:25
 msgid "Rate this hub"
@@ -5268,8 +5268,8 @@ msgid "Currently pending"
 msgstr "For øyeblikket ventende"
 
 #: ../../mod/dav.php:121
-msgid "RedMatrix channel"
-msgstr "RedMatrix-kanal"
+msgid "Hubzilla channel"
+msgstr "Hubzilla-kanal"
 
 #: ../../mod/group.php:20
 msgid "Collection created."
@@ -5338,9 +5338,9 @@ msgstr "Red"
 
 #: ../../mod/siteinfo.php:150
 msgid ""
-"This is a hub of the Red Matrix - a global cooperative network of "
+"This is a hub of the Hubzilla - a global cooperative network of "
 "decentralized privacy enhanced websites."
-msgstr "Dette er en hub i Red Matrix - et globalt kooperativt nettverk av desentraliserte personvernforsterkede nettsteder."
+msgstr "Dette er en hub i Hubzilla - et globalt kooperativt nettverk av desentraliserte personvernforsterkede nettsteder."
 
 #: ../../mod/siteinfo.php:152
 msgid "Tag: "
@@ -5356,9 +5356,9 @@ msgstr "Kjører på webplasseringen"
 
 #: ../../mod/siteinfo.php:158
 msgid ""
-"Please visit <a href=\"https://redmatrix.me\">RedMatrix.me</a> to learn more"
-" about the Red Matrix."
-msgstr "Vennligst besøk <a href=\"https://redmatrix.me\">RedMatrix.me</a> for å lære mer om RedMatrix."
+"Please visit <a href=\"https://redmatrix.me\">Redmatrix.me</a> to learn more"
+" about the Hubzilla."
+msgstr "Vennligst besøk <a href=\"https://redmatrix.me\">Redmatrix.me</a> for å lære mer om Hubzilla."
 
 #: ../../mod/siteinfo.php:159
 msgid "Bug reports and issues: please visit"
@@ -5366,9 +5366,9 @@ msgstr "Feilmeldinger og feilretting: vennligst besøk"
 
 #: ../../mod/siteinfo.php:162
 msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
 "com"
-msgstr "Forslag, ros og så videre - vennligst e-post \"redmatrix\" hos librelist - punktum com"
+msgstr "Forslag, ros og så videre - vennligst e-post \"hubzilla\" hos librelist - punktum com"
 
 #: ../../mod/siteinfo.php:164
 msgid "Site Administrators"
@@ -5383,8 +5383,8 @@ msgid "Not Found"
 msgstr "Ikke funnet"
 
 #: ../../mod/setup.php:166
-msgid "Red Matrix Server - Setup"
-msgstr "Red Matrix tjener - oppsett"
+msgid "Hubzilla Server - Setup"
+msgstr "Hubzilla tjener - oppsett"
 
 #: ../../mod/setup.php:172
 msgid "Could not connect to database."
@@ -5428,9 +5428,9 @@ msgstr "Databaseforbindelse"
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install Hubzilla we need to know how to connect to your "
 "database."
-msgstr "For å installere Red Matrix må du oppgi hvordan din database kan kontaktes."
+msgstr "For å installere Hubzilla må du oppgi hvordan din database kan kontaktes."
 
 #: ../../mod/setup.php:291
 msgid ""
@@ -5951,8 +5951,8 @@ msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr "%1$s merket %3$s til %2$s med %4$s"
 
 #: ../../mod/cloud.php:120
-msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
-msgstr "RedMatrix - gjester: brukernavn: {din e-postadresse}, passord: +++"
+msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
+msgstr "Hubzilla - gjester: brukernavn: {din e-postadresse}, passord: +++"
 
 #: ../../mod/item.php:165
 msgid "Unable to locate original post."
@@ -6435,20 +6435,20 @@ msgid "Your message:"
 msgstr "Din melding:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
-msgstr "Du er velkommen til å bli med i mitt fellesskap på RedMatrix."
+msgid "Please join my community on Hubzilla."
+msgstr "Du er velkommen til å bli med i mitt fellesskap på Hubzilla."
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
 msgstr "Du må oppgi denne invitasjonskoden:"
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
-msgstr "1. Registrer ved enhver RedMatrix-lokasjon (de er alle forbundet med hverandre)"
+msgid "1. Register at any Hubzilla location (they are all inter-connected)"
+msgstr "1. Registrer ved enhver Hubzilla-lokasjon (de er alle forbundet med hverandre)"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
-msgstr "2. Skriv inn min RedMatrix-adresse i nettstedets søkefelt."
+msgid "2. Enter my Hubzilla network address into the site searchbar."
+msgstr "2. Skriv inn min Hubzilla-adresse i nettstedets søkefelt."
 
 #: ../../mod/invite.php:138
 msgid "or visit "
@@ -8215,8 +8215,8 @@ msgid "URL of link"
 msgstr "URL-en til lenken"
 
 #: ../../mod/mitem.php:165 ../../mod/mitem.php:209
-msgid "Use RedMatrix magic-auth if available"
-msgstr "Bruk RedMatrixs magiske-autentisering hvis tilgjengelig"
+msgid "Use Hubzilla magic-auth if available"
+msgstr "Bruk Hubzillas magiske-autentisering hvis tilgjengelig"
 
 #: ../../mod/mitem.php:166 ../../mod/mitem.php:210
 msgid "Open link in new window"
@@ -8716,8 +8716,8 @@ msgid "Right offset of the aside element"
 msgstr "Til høyre for sidestolpen"
 
 #: ../../view/theme/redbasic/php/config.php:82
-msgid "Light (Red Matrix default)"
-msgstr "Lys (Red Matrix standard)"
+msgid "Light (Hubzilla default)"
+msgstr "Lys (Hubzilla standard)"
 
 #: ../../view/theme/redbasic/php/config.php:101
 msgid "Select scheme"
@@ -8855,8 +8855,8 @@ msgstr "Oppdateringsfeil ved %s"
 
 #: ../../boot.php:1527
 msgid ""
-"Create an account to access services and applications within the Red Matrix"
-msgstr "Lag en konto for å få tilgang til tjenester og programmer i Red Matrix"
+"Create an account to access services and applications within the Hubzilla"
+msgstr "Lag en konto for å få tilgang til tjenester og programmer i Hubzilla"
 
 #: ../../boot.php:1555
 msgid "Password"

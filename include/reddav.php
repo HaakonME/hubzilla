@@ -1,7 +1,7 @@
 <?php
 /**
  * @file include/reddav.php
- * @brief some DAV related functions for RedMatrix.
+ * @brief some DAV related functions for Hubzilla.
  *
  * This file contains some functions which did not fit into one of the RedDAV
  * classes.
@@ -19,7 +19,7 @@
  */
 
 use Sabre\DAV;
-use RedMatrix\RedDAV;
+use Hubzilla\RedDAV;
 
 require_once('vendor/autoload.php');
 require_once('include/attach.php');

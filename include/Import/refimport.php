@@ -88,6 +88,7 @@ function refimport_content(&$a) {
 		$arr['author_xchan'] = $channel['channel_hash'];
 		$arr['owner_xchan'] = $channel['channel_hash'];
 		$arr['app'] = REFLECT_BLOGNAME;
+
 		$arr['item_origin'] = 1;
 		$arr['item_wall'] = 1;
 		$arr['item_thread_top'] = 1;
@@ -208,7 +209,7 @@ function reflect_find_user($users,$name) {
 
 function reflect_comment_store($channel,$post,$comment,$user) {
 
-	// if the commenter was the channel owner, use their redmatrix xchan
+	// if the commenter was the channel owner, use their hubzilla xchan
 
 	if($comment['author'] === REFLECT_EXPORTUSERNAME && $comment['registered'])
 		$hash = $channel['xchan_hash'];
@@ -259,7 +260,11 @@ function reflect_comment_store($channel,$post,$comment,$user) {
 	$arr['edited'] = $comment['created'];
 	$arr['author_xchan'] = $hash;
 	$arr['owner_xchan'] = $channel['channel_hash'];
+<<<<<<< HEAD
 	$arr['item_origin'] = 1;
+=======
+	$arr['item_flags'] = ITEM_ORIGIN;
+>>>>>>> master
 	$arr['item_wall'] = 1;
 	$arr['verb'] = ACTIVITY_POST;
 	$arr['comment_policy'] = 'contacts';

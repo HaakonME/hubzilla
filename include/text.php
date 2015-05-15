@@ -513,9 +513,9 @@ function attribute_contains($attr, $s) {
 }
 
 /**
- * @brief Logging function for RedMatrix.
+ * @brief Logging function for Hubzilla.
  *
- * Logging output is configured through RedMatrix's system config. The log file
+ * Logging output is configured through Hubzilla's system config. The log file
  * is set in system logfile, log level in system loglevel and to enable logging
  * set system debugging.
  *
@@ -681,7 +681,7 @@ function get_tags($s) {
 	// make sure the longer tags are returned first so that if two or more have common substrings
 	// we'll replace the longest ones first. Otherwise the common substring would be found in
 	// both strings and the string replacement would link both to the shorter strings and 
-	// fail to link the longer string. RedMatrix github issue #378
+	// fail to link the longer string. Hubzilla github issue #378
  
 	usort($ret,'tag_sort_length');
 
@@ -1379,15 +1379,15 @@ function generate_named_map($location) {
 
 function prepare_body(&$item,$attach = false) {
 
-	if(get_config('system','item_cache') && $item['html'])
-		return $item['html'];
+	if($item['html'])
+		return bb_observer($item['html']);
 
 	call_hooks('prepare_body_init', $item); 
 
 
 	unobscure($item);
 
-	$s = prepare_text($item['body'],$item['mimetype']);
+	$s = prepare_text($item['body'],$item['mimetype'], true);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
@@ -1452,11 +1452,11 @@ function prepare_body(&$item,$attach = false) {
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
 
-	if(get_config('system','item_cache'))
-		q("update item set html = '%s' where id = %d",
-			dbesc($prep_arr['html']),
-			intval($item['id'])
-		);
+
+	q("update item set html = '%s' where id = %d",
+		dbesc($prep_arr['html']),
+		intval($item['id'])
+	);
 
 	return $prep_arr['html'];
 }
@@ -1468,7 +1468,7 @@ function prepare_body(&$item,$attach = false) {
  * @param sting $content_type
  * @return string
  */
-function prepare_text($text, $content_type = 'text/bbcode') {
+function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 
 	switch($content_type) {
 		case 'text/plain':
@@ -1506,9 +1506,9 @@ function prepare_text($text, $content_type = 'text/bbcode') {
 			require_once('include/bbcode.php');
 
 			if(stristr($text,'[nosmile]'))
-				$s = bbcode($text);
+				$s = bbcode($text,false,true,$cache);
 			else
-				$s = smilies(bbcode($text));
+				$s = smilies(bbcode($text,false,true,$cache));
 			$s = zidify_links($s);
 			break;
 	}
@@ -2244,7 +2244,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 			// The '=' is needed to not replace color codes if the code is also used as a tag
 			// Much better would be to somehow completely avoiding things in e.g. [color]-tags.
 			// This would allow writing things like "my favourite tag=#foobar".
-			$body = preg_replace('/(?<![a-zA-Z0-9=])'.preg_quote($tag).'/', $newtag, $body);
+			$body = preg_replace('/(?<![a-zA-Z0-9=])'.preg_quote($tag,'/').'/', $newtag, $body);
 			$replaced = true;
 		}
 		//is the link already in str_tags?

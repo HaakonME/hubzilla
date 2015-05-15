@@ -1934,8 +1934,8 @@ require_once('include/items.php');
 			'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
 			'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
 			'shorturllength' => '30',
-        	'redmatrix' => array(
-				'RED_PLATFORM' => RED_PLATFORM,
+        	'hubzilla' => array(
+				'PLATFORM_NAME' => PLATFORM_NAME,
 				'RED_VERSION' => RED_VERSION,
 				'ZOT_REVISION' => ZOT_REVISION,
 				'DB_UPDATE_VERSION' => DB_UPDATE_VERSION

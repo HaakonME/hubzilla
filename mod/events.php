@@ -414,7 +414,7 @@ function events_content(&$a) {
 				$is_first = ($d !== $last_date);
 					
 				$last_date = $d;
-// FIXME
+
 				$edit = (intval($rr['item_wall']) ? array($a->get_baseurl().'/events/event/'.$rr['event_hash'],t('Edit event'),'','') : null);
 
 				$drop = array($a->get_baseurl().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');

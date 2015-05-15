@@ -222,7 +222,6 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
-
 	$title = '';
 	$mid = item_message_id();
 

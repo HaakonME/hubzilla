@@ -15,6 +15,7 @@ function probe_content(&$a) {
 	if(x($_GET,'addr')) {
 		$channel = $a->get_channel();
 		$addr = trim($_GET['addr']);
+		$do_import = ((intval($_GET['import']) && is_site_admin()) ? true : false);
 		$res = zot_finger($addr,$channel,false);
 		$o .= '<pre>';
 		if($res['success'])
@@ -29,6 +30,8 @@ function probe_content(&$a) {
 				$o .= sprintf( t('Fetching URL returns error: %1$s'),$res['error'] . "\r\n\r\n");
 
 		}
+		if($do_import && $j)
+			$x = import_xchan($j);
 		if($j && $j['permissions'] && $j['permissions']['iv'])
 			$j['permissions'] = json_decode(crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']),true);
 		$o .= str_replace("\n",'<br />',print_r($j,true));

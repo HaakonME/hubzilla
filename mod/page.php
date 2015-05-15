@@ -35,7 +35,11 @@ function page_init(&$a) {
 	}
 
 	$channel_address = argv(1);
-	$page_id = argv(2);
+
+	// The page link title was stored in a urlencoded format
+	// php or the browser may/will have decoded it, so re-encode it for our search
+
+	$page_id = urlencode(argv(2));
 
 	$u = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($channel_address)
@@ -62,7 +66,6 @@ function page_init(&$a) {
 		intval(ITEM_TYPE_WEBPAGE),
 		intval(ITEM_PDL)
 	);
-
 	if(! $r) {
 
 		// Check again with no permissions clause to see if it is a permissions issue

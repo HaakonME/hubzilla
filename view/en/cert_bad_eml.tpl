@@ -1,11 +1,11 @@
 This is the webserver at {{$sitename}};
    
 A routine check indicates the SSL certificate for this website is
-not valid. Your website cannot fully participate in the RedMatrix
+not valid. Your website cannot fully participate in the Hubzilla
 until this is resolved. Please check your certificate and with your
 certificate provider or service provider to ensure it is "browser valid" 
 and installed correctly. Self-signed certificates are NOT SUPPORTED 
-and NOT ALLOWED in the RedMatrix.
+and NOT ALLOWED in the Hubzilla.
 
 The check is performed by fetching a URL from your website with strict
 SSL checking enabled, and if this fails, checking again with SSL 

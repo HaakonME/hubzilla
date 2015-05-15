@@ -27,13 +27,13 @@ F_API_VERSION="1"
 
 # Friendica API endpoints
 
-F_ACCOUNF_UPDATE_PROFILE_IMAGE="${redmatrix_url}/api/account/update_profile_image"
-F_STATUSES_UPDATE="${redmatrix_url}/api/statuses/update"
-F_STATUSES_HOME_TIMELINE="${redmatrix_url}/api/statuses/home_timeline"
+F_ACCOUNF_UPDATE_PROFILE_IMAGE="${hubzilla_url}/api/account/update_profile_image"
+F_STATUSES_UPDATE="${hubzilla_url}/api/statuses/update"
+F_STATUSES_HOME_TIMELINE="${hubzilla_url}/api/statuses/home_timeline"
 
-F_REQUESF_TOKEN=${redmatrix_url}'/api/oauth/request_token'
-F_ACCESS_TOKEN=${redmatrix_url}'/api/oauth/access_token'
-F_AUTHORIZE_TOKEN=${redmatrix_url}'/api/oauth/authorize'
+F_REQUESF_TOKEN=${hubzilla_url}'/api/oauth/request_token'
+F_ACCESS_TOKEN=${hubzilla_url}'/api/oauth/access_token'
+F_AUTHORIZE_TOKEN=${hubzilla_url}'/api/oauth/authorize'
 
 # Source OAuth.sh
 
@@ -76,7 +76,7 @@ FO_access_token_helper () {
 
   # Request Token
   
-  local auth_header="$(_OAuth_authorization_header 'Authorization' "$redmatrix_url/" "$oauth_consumer_key" "$oauth_consumer_secret" '' '' "$oauth_signature_method" "$oauth_version" "$(OAuth_nonce)" "$(OAuth_timestamp)" 'POST' "$F_REQUESF_TOKEN" "$(OAuth_param 'oauth_callback' 'oob')"), $(OAuth_param_quote 'oauth_callback' 'oob')"
+  local auth_header="$(_OAuth_authorization_header 'Authorization' "$hubzilla_url/" "$oauth_consumer_key" "$oauth_consumer_secret" '' '' "$oauth_signature_method" "$oauth_version" "$(OAuth_nonce)" "$(OAuth_timestamp)" 'POST' "$F_REQUESF_TOKEN" "$(OAuth_param 'oauth_callback' 'oob')"), $(OAuth_param_quote 'oauth_callback' 'oob')"
 
 #  echo $auth_header
 #  echo $F_REQUESF_TOKEN
@@ -95,7 +95,7 @@ FO_access_token_helper () {
 
   # Access Token
 
-  local auth_header="$(_OAuth_authorization_header 'Authorization' "$redmatrix_url/" "$oauth_consumer_key" "$oauth_consumer_secret" "$_oauth_token" "$_oauth_token_secret" "$oauth_signature_method" "$oauth_version" "$(OAuth_nonce)" "$(OAuth_timestamp)" 'POST' "$F_ACCESS_TOKEN" "$(OAuth_param 'oauth_verifier' "$PIN")"), $(OAuth_param_quote 'oauth_verifier' "$PIN")"
+  local auth_header="$(_OAuth_authorization_header 'Authorization' "$hubzilla_url/" "$oauth_consumer_key" "$oauth_consumer_secret" "$_oauth_token" "$_oauth_token_secret" "$oauth_signature_method" "$oauth_version" "$(OAuth_nonce)" "$(OAuth_timestamp)" 'POST' "$F_ACCESS_TOKEN" "$(OAuth_param 'oauth_verifier' "$PIN")"), $(OAuth_param_quote 'oauth_verifier' "$PIN")"
 
   resp=$(curl -s -d "" -H "$auth_header" "$F_ACCESS_TOKEN")
   FO_rval=$?
@@ -133,7 +133,7 @@ FO_statuses_update () {
   [[ "$3" != "" ]] && params[${#params[@]}]=$(OAuth_param 'in_reply_to_status_id' "$3") && local in_reply_to_status_id=( '--data-urlencode' "in_reply_to_status_id=$3" )
     
   
-  local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'POST' "$F_STATUSES_UPDATE.$format" ${params[@]})
+  local auth_header=$(OAuth_authorization_header 'Authorization' "$hubzilla_url" '' '' 'POST' "$F_STATUSES_UPDATE.$format" ${params[@]})
     
   
   FO_ret=$(curl -s -H "$auth_header" --data-urlencode "status=$2" --data-urlencode "source=shred" ${in_reply_to_status_id[@]} "$F_STATUSES_UPDATE.$format")
@@ -163,7 +163,7 @@ FO_statuses_home_timeline () {
     $(OAuth_param 'count' $count)
     )
 
-  local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "$F_STATUSES_HOME_TIMELINE.$format" ${params[@]})
+  local auth_header=$(OAuth_authorization_header 'Authorization' "$hubzilla_url" '' '' 'GET' "$F_STATUSES_HOME_TIMELINE.$format" ${params[@]})
 
   convscreen=$(OAuth_PE "$screen_name");
   FO_ret=$(curl -s --get "${F_STATUSES_HOME_TIMELINE}.${format}" --data "screen_name=${convscreen}&count=${count}" --header "${auth_header}")
@@ -204,12 +204,12 @@ FO_command () {
 	local auth_header='';
 
 	if [ "$post" == '1' ]; then
-		auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'POST' "${redmatrix_url}/api/${command}.json" ${params[@]})
-		FO_ret=$(curl -s "${redmatrix_url}/api/${command}.json" --data-urlencode "${data}" --header "${auth_header}")
+		auth_header=$(OAuth_authorization_header 'Authorization' "$hubzilla_url" '' '' 'POST' "${hubzilla_url}/api/${command}.json" ${params[@]})
+		FO_ret=$(curl -s "${hubzilla_url}/api/${command}.json" --data-urlencode "${data}" --header "${auth_header}")
 
 	else
-		auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "${redmatrix_url}/api/${command}.json" ${params[@]})
-		FO_ret=$(curl -s --get "${redmatrix_url}/api/${command}.json" --data "${data}" --header "${auth_header}")
+		auth_header=$(OAuth_authorization_header 'Authorization' "$hubzilla_url" '' '' 'GET' "${hubzilla_url}/api/${command}.json" ${params[@]})
+		FO_ret=$(curl -s --get "${hubzilla_url}/api/${command}.json" --data "${data}" --header "${auth_header}")
 
 	fi
 

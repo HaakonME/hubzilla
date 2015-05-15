@@ -18,7 +18,7 @@ function like_content(&$a) {
 		if(! $observer) {
 			$_SESSION['return_url'] = $a->query_string;
 			$o .= t('This action is restricted to members.') . EOL;
-			$o .= t('Please <a href="rmagic">login with your RedMatrix ID</a> or <a href="register">register as a new RedMatrix member</a> to continue.') . EOL;
+			$o .= t('Please <a href="rmagic">login with your Hubzilla ID</a> or <a href="register">register as a new Redmatrix.member</a> to continue.') . EOL;
 			return $o;
 		}
 	}
@@ -338,6 +338,7 @@ function like_content(&$a) {
 	}
 
 	$mid = item_message_id();
+
 	$arr = array();
 
 	if($extended_like) {
@@ -440,6 +441,7 @@ function like_content(&$a) {
 	$arr['aid']          = (($extended_like) ? $ch[0]['channel_account_id'] : $owner_aid);
 	$arr['uid']          = $owner_uid;
 	$arr['item_flags']   = $item_flags;
+	$arr['item_wall']    = $item_wall;
 	$arr['parent_mid']   = (($extended_like) ? $mid : $item['mid']);
 	$arr['owner_xchan']  = (($extended_like) ? $ch[0]['xchan_hash'] : $thread_owner['xchan_hash']);
 	$arr['author_xchan'] = $observer['xchan_hash'];

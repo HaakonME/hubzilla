@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1140 );
+define( 'UPDATE_VERSION' , 1141 );
 
 /**
  *
@@ -1603,3 +1603,24 @@ function update_r1139() {
 	return UPDATE_FAILED;
 
 }
+
+function update_r1140() {
+	$r = q("select * from clients where true");
+	$x = false;
+	if($r) {
+		foreach($r as $rr) {
+			$m = q("INSERT INTO xperm (xp_client, xp_channel, xp_perm) VALUES ('%s', %d, '%s') ",
+				dbesc($rr['client_id']),
+				intval($rr['uid']),
+				dbesc('all')
+			);
+			if(! $m)
+				$x = true;
+		}
+	}
+	if($x)
+		return UPDATE_FAILED;
+	return UPDATE_SUCCESS;
+}
+
+

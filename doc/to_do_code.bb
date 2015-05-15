@@ -14,6 +14,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Integrate the &quot;open site&quot; list with the register page[/li]
 [li]implement oembed provider interface[/li]
 [li]refactor the oembed client interface so that we can safely sandbox remote content[/li]
+[li]Many modern social apps now have both a profile photo and a "cover photo". Add support for this. 
 [li]Write more webpage layouts[/li]
 [li]Write more webpage widgets[/li]
 [li]restricted access OAuth clients[/li]

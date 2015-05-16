@@ -4,10 +4,11 @@
  *
  * @brief File/attach API with the potential for revision control.
  *
- * @TODO: a filesystem storage abstraction which maintains security (and 'data' contains a system filename
- * which is inaccessible from the web). This could get around PHP storage limits and store videos and larger
- * items, using fread or OS methods or native code to read/write or chunk it through.
- * Also an 'append' option to the storage function might be a useful addition. 
+ * @TODO A filesystem storage abstraction which maintains security (and 'data'
+ * contains a system filename which is inaccessible from the web). This could
+ * get around PHP storage limits and store videos and larger items, using fread
+ * or OS methods or native code to read/write or chunk it through.
+ * @todo Also an 'append' option to the storage function might be a useful addition.
  */
 
 require_once('include/permissions.php');
@@ -123,7 +124,7 @@ function z_mime_content_type($filename) {
  * @param string $hash (optional)
  * @param string $filename (optional)
  * @param string $filetype (optional)
- * @return assoziative array with:
+ * @return associative array with:
  *  * \e boolean \b success
  *  * \e int|boolean \b results amount of found results, or false
  *  * \e string \b message with error messages if any
@@ -161,7 +162,7 @@ function attach_count_files($channel_id, $observer, $hash = '', $filename = '', 
 
 /**
  * @brief Returns a list of files/attachments.
- * 
+ *
  * @param $channel_id
  * @param $observer
  * @param $hash (optional)
@@ -170,10 +171,10 @@ function attach_count_files($channel_id, $observer, $hash = '', $filename = '', 
  * @param $orderby
  * @param $start
  * @param $entries
- * @return array
- * 	$ret['success'] boolean
- * 	$ret['results'] array with results, or false
- * 	$ret['message'] string with error messages if any
+ * @return associative array with:
+ *  * \e boolean \b success
+ *  * \e array|boolean \b results array with results, or false
+ *  * \e string \b message with error messages if any
  */
 function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $filetype = '', $orderby = 'created desc', $start = 0, $entries = 0) {
 
@@ -213,11 +214,11 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 /**
  * @brief Find an attachment by hash and revision.
- * 
+ *
  * Returns the entire attach structure including data.
- * 
+ *
  * This could exhaust memory so most useful only when immediately sending the data.
- * 
+ *
  * @param string $hash
  * @param int $rev Revision
  * @return array
@@ -275,7 +276,7 @@ function attach_by_hash($hash, $rev = 0) {
  * @see attach_by_hash()
  * @param $hash
  * @param $rev revision default 0
- * @return array Everything except data.
+ * @return associative array with everything except data
  *  * \e boolean \b success boolean true or false
  *  * \e string \b message (optional) only when success is false
  *  * \e array \b data array of attach DB entry without data component
@@ -326,12 +327,18 @@ function attach_by_hash_nodata($hash, $rev = 0) {
 }
 
 /**
- * @brief 
+ * @brief Stores an attachment from a POST file upload.
  *
- * @param $channel channel array of owner
- * @param $observer_hash hash of current observer
- * @param $options (optional)
- * @param $arr (optional)
+ * This function stores an attachment. It can be a new one, a replacement or a
+ * new revision depending on value set in \e $options.
+ *
+ * @note Requires an input field \e userfile and does not accept multiple files
+ * in one request.
+ *
+ * @param array $channel channel array of owner
+ * @param string $observer_hash hash of current observer
+ * @param string $options (optional) one of update, replace, revision
+ * @param array $arr (optional) associative array
  */
 function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
@@ -366,7 +373,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if($options === 'replace') {
 		/** @BUG $replace is undefined here */
-		$x = q("select id, hash, filesize from attach where id = %d and uid = %d limit 1",	
+		$x = q("select id, hash, filesize from attach where id = %d and uid = %d limit 1",
 			intval($replace),
 			intval($channel_id)
 		);
@@ -457,7 +464,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	elseif($options === 'update') {
-		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s', 
+		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s',
 			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d",
 			dbesc((array_key_exists('filename',$arr))  ? $arr['filename']  : $x[0]['filename']),
 			dbesc((array_key_exists('filetype',$arr))  ? $arr['filetype']  : $x[0]['filetype']),
@@ -551,7 +558,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 				intval(ATTACH_FLAG_DIR)
 			);
 			if(! $r) {
-				$ret['message'] = t('Path not available.');		
+				$ret['message'] = t('Path not available.');
 				return $ret;
 			}
 
@@ -621,7 +628,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	// Check for duplicate name.
 	// Check both the filename and the hash as we will be making use of both.
-	
+
 	$r = q("select hash from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
 		dbesc($arr['filename']),
 		dbesc($arr['hash']),
@@ -644,7 +651,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		$sql_options = permissions_sql($channel['channel_id']);
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0 
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0
 				$sql_options limit 1",
 				intval($channel['channel_id']),
 				dbesc($lfile),
@@ -660,7 +667,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 				$lpath = $r[0]['hash'] . '/' . $lpath;
 			$lfile = $r[0]['folder'];
 		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR)) ;
-		$path = $basepath . '/' . $lpath;			
+		$path = $basepath . '/' . $lpath;
 	}
 	else
 		$path = $basepath . '/';
@@ -716,7 +723,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 /**
  * @brief Changes permissions of a file.
- * 
+ *
  * @param int $channel_id
  * @param array $resource
  * @param string $allow_cid
@@ -841,7 +848,7 @@ function attach_delete($channel_id, $resource) {
  * @warning This function cannot be used with mod/dav as it always returns a
  * path valid under mod/cloud.
  *
- * @param array $arr assoziative array with:
+ * @param array $arr associative array with:
  *  * \e int \b uid the channel's uid
  *  * \e string \b folder
  *  * \e string \b filename
@@ -866,7 +873,7 @@ function get_cloudpath($arr) {
 		$lfile = $arr['folder'];
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0 
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0
 				limit 1",
 				intval($arr['uid']),
 				dbesc($lfile),
@@ -961,7 +968,7 @@ function find_filename_by_hash($channel_id, $attachHash) {
 }
 
 /**
- * 
+ *
  * @param $in
  * @param $out
  */
@@ -1210,6 +1217,7 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 
 	$ret = array();
 	$parent_arr = array();
+	$count_values = array();
 	$poster = get_app()->get_observer();
 
 	//turn allow_gid into allow_cid's
@@ -1317,11 +1325,10 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 	return $ret;
 }
 
-
 /**
- * @brief Returns members of a group
+ * @brief Returns members of a group.
  *
- * @param $group_id
+ * @param int $group_id id of the group to look up
  */
 function in_group($group_id) {
 	$group_members = array();

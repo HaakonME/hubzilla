@@ -1,6 +1,9 @@
 
-Hubzilla - Hub Deployment Platform
-==================================
+Hubzilla
+========
+
+###Websites. Redefined.
+
 
 ![Hubzilla](images/ghash-32.png)
 

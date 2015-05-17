@@ -118,7 +118,7 @@ function dav_init(&$a) {
 
 	if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
 		try {
-			$auth->Authenticate($server, t('RedMatrix channel'));
+			$auth->Authenticate($server, t('$Projectname channel'));
 		}
 		catch (Exception $e) {
 			logger('mod_cloud: auth exception' . $e->getMessage());

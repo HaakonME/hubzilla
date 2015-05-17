@@ -152,8 +152,8 @@ function siteinfo_content(&$a) {
 		$donate .= file_get_contents('doc/site_donate.html');
 
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
-                '$title' => t('Red'),
-		'$description' => t('This is a hub of redmatrix - a global cooperative network of decentralized privacy enhanced websites.'),
+		'$title' => t('$Projectname'),
+		'$description' => t('This is a hub of $Projectname - a global cooperative network of decentralized privacy enhanced websites.'),
 		'$version' => $version,
 		'$tag_txt' => t('Tag: '),
 		'$tag' => $tag,
@@ -161,10 +161,10 @@ function siteinfo_content(&$a) {
 		'$lastpoll' => get_poller_runtime(),
 		'$commit' => $commit,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
-		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about the Red Matrix.'),
+		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about $Projectname.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
 		'$bug_link_url' => 'https://github.com/redmatrix/redmatrix/issues',
-		'$bug_link_text' => 'redmatrix issues',
+		'$bug_link_text' => '$projectname issues',
 		'$contact' => t('Suggestions, praise, etc. - please email "redmatrix" at librelist - dot com'),
 		'$donate' => $donate,
 		'$adminlabel' => t('Site Administrators'),

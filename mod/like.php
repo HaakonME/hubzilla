@@ -18,7 +18,7 @@ function like_content(&$a) {
 		if(! $observer) {
 			$_SESSION['return_url'] = $a->query_string;
 			$o .= t('This action is restricted to members.') . EOL;
-			$o .= t('Please <a href="rmagic">login with your RedMatrix ID</a> or <a href="register">register as a new RedMatrix member</a> to continue.') . EOL;
+			$o .= t('Please <a href="rmagic">login with your $Projectname ID</a> or <a href="register">register as a new $Projectname member</a> to continue.') . EOL;
 			return $o;
 		}
 	}

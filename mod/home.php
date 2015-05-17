@@ -50,7 +50,7 @@ function home_content(&$a, $update = 0, $load = false) {
 	if(get_config('system','projecthome')) {
 		$o .= file_get_contents('assets/home.html');
 		$a->page['template'] = 'full';
-		$a->page['title'] = t('Red Matrix - &quot;The Network&quot;');
+		$a->page['title'] = t('$Projectname');
 		return $o;
 	}
 

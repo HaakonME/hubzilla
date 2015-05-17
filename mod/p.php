@@ -43,7 +43,7 @@ function p_init(&$a) {
 		'$handle' => xmlify($myaddr),
 		'$public' => 'true',
 		'$created' => $created,
-		'$provider' => (($item['app']) ? $item['app'] : 'redmatrix')
+		'$provider' => (($item['app']) ? $item['app'] : t('$projectname'))
 	));
 
 	header('Content-type: text/xml');

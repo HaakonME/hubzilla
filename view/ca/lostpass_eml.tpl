@@ -1,7 +1,7 @@
 
-Apreciat/da $username,
+Apreciat/da {{$username}},
 	
-	S'ha rebut una sol·licitud en $sitename recentment per restablir
+	S'ha rebut una sol·licitud en {{$sitename}} recentment per restablir
 la teva contrasenya. Per confirmar aquesta sol·licitud, per favor seleccioni l'enllaç de
 verificació sota o copia-ho i pega-ho en la barra d'adreces del teu navegador.
 
@@ -13,7 +13,7 @@ va emetre aquesta sol·licitud.
 
 Segueix aquest enllaç per verificar la teva identitat:
 
-$reset_link
+{{$reset_link}}
 
 A continuació rebràs un missatge amb la nova contrasenya.
 
@@ -23,13 +23,13 @@ configuració.
 Les dades d'accés són els següents:
 
 
-Lloc:	$siteurl
-Nom:	$email
+Lloc:	{{$siteurl}}
+Nom:	{{$email}}
 
 
 
 
 Salutacions,
-	L'administració de $sitename
+	L'administració de {{$sitename}}
 
  

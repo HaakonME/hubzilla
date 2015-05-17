@@ -2139,7 +2139,9 @@ function construct_page(&$a) {
 				}
 
 				// And a couple of convenience macros
-
+				if(strpos($v, '$htmlhead') !== false) {
+					$v = str_replace('$htmlhead', $a->page['htmlhead'], $v);
+				}
 				if(strpos($v, '$nav') !== false) {
 					$v = str_replace('$nav', $a->page['nav'], $v);
 				}

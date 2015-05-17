@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-05-15.1033\n"
+"Project-Id-Version: 2015-05-17.1035\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-15 00:03-0700\n"
+"POT-Creation-Date: 2015-05-17 16:33-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1108,11 +1108,12 @@ msgid "Public Hubs"
 msgstr ""
 
 #: ../../include/enotify.php:58
-msgid "Red Matrix Notification"
+msgid "$Projectname Notification"
 msgstr ""
 
-#: ../../include/enotify.php:59
-msgid "redmatrix"
+#: ../../include/enotify.php:59 ../../include/diaspora.php:2461
+#: ../../mod/p.php:46
+msgid "$projectname"
 msgstr ""
 
 #: ../../include/enotify.php:61
@@ -1675,7 +1676,7 @@ msgid "Attachments:"
 msgstr ""
 
 #: ../../include/bb2diaspora.php:453
-msgid "Redmatrix event notification:"
+msgid "$Projectname event notification:"
 msgstr ""
 
 #: ../../include/text.php:329
@@ -3863,6 +3864,10 @@ msgstr ""
 msgid "Abstain"
 msgstr ""
 
+#: ../../include/diaspora.php:2472
+msgid "projectname"
+msgstr ""
+
 #: ../../mod/achievements.php:34
 msgid "Some blurb about what to do when you're new here"
 msgstr ""
@@ -4662,8 +4667,8 @@ msgstr ""
 msgid "Fetching URL returns error: %1$s"
 msgstr ""
 
-#: ../../mod/home.php:53
-msgid "Red Matrix - &quot;The Network&quot;"
+#: ../../mod/home.php:53 ../../mod/siteinfo.php:155
+msgid "$Projectname"
 msgstr ""
 
 #: ../../mod/home.php:124
@@ -4766,8 +4771,8 @@ msgstr ""
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a href="
-"\"register\">register as a new RedMatrix member</a> to continue."
+"Please <a href=\"rmagic\">login with your $Projectname ID</a> or <a href="
+"\"register\">register as a new $Projectname member</a> to continue."
 msgstr ""
 
 #: ../../mod/like.php:101 ../../mod/like.php:128 ../../mod/like.php:166
@@ -4933,11 +4938,11 @@ msgstr ""
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in "
-"the matrix are interlinked so membership on any of them conveys membership "
-"in the matrix as a whole. Some sites may require subscription or provide "
-"tiered service plans. The provider links <strong>may</strong> provide "
-"additional details."
+"The listed sites allow public registration for the $Projectname network. All "
+"sites in the network are interlinked so membership on any of them conveys "
+"membership in the network as a whole. Some sites may require subscription or "
+"provide tiered service plans. The provider links <strong>may</strong> "
+"provide additional details."
 msgstr ""
 
 #: ../../mod/pubsites.php:25
@@ -4977,7 +4982,7 @@ msgid "Edit post"
 msgstr ""
 
 #: ../../mod/dav.php:121
-msgid "RedMatrix channel"
+msgid "$Projectname channel"
 msgstr ""
 
 #: ../../mod/group.php:20
@@ -5041,14 +5046,10 @@ msgstr ""
 msgid "No installed plugins/addons/apps"
 msgstr ""
 
-#: ../../mod/siteinfo.php:155
-msgid "Red"
-msgstr ""
-
 #: ../../mod/siteinfo.php:156
 msgid ""
-"This is a hub of redmatrix - a global cooperative network of decentralized "
-"privacy enhanced websites."
+"This is a hub of $Projectname - a global cooperative network of "
+"decentralized privacy enhanced websites."
 msgstr ""
 
 #: ../../mod/siteinfo.php:158
@@ -5066,7 +5067,7 @@ msgstr ""
 #: ../../mod/siteinfo.php:164
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">redmatrix.me</a> to learn more "
-"about the Red Matrix."
+"about $Projectname."
 msgstr ""
 
 #: ../../mod/siteinfo.php:165
@@ -5091,7 +5092,7 @@ msgid "Not Found"
 msgstr ""
 
 #: ../../mod/setup.php:166
-msgid "Red Matrix Server - Setup"
+msgid "$Projectname Server - Setup"
 msgstr ""
 
 #: ../../mod/setup.php:172
@@ -5136,7 +5137,7 @@ msgstr ""
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install $Projectname we need to know how to connect to your "
 "database."
 msgstr ""
 
@@ -5596,7 +5597,7 @@ msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr ""
 
 #: ../../mod/cloud.php:120
-msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
+msgid "$Projectname - Guests: Username: {your email address}, Password: +++"
 msgstr ""
 
 #: ../../mod/photos.php:77
@@ -6157,7 +6158,7 @@ msgid "Your message:"
 msgstr ""
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
+msgid "Please join my community on $Projectname."
 msgstr ""
 
 #: ../../mod/invite.php:134
@@ -6165,11 +6166,11 @@ msgid "You will need to supply this invitation code: "
 msgstr ""
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
+msgid "1. Register at any $Projectname location (they are all inter-connected)"
 msgstr ""
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
+msgid "2. Enter my $Projectname network address into the site searchbar."
 msgstr ""
 
 #: ../../mod/invite.php:138
@@ -7900,7 +7901,7 @@ msgid "Enter URL of the link or select a menu name to create a submenu"
 msgstr ""
 
 #: ../../mod/mitem.php:163 ../../mod/mitem.php:234
-msgid "Use RedMatrix magic-auth if available"
+msgid "Use magic-auth if available"
 msgstr ""
 
 #: ../../mod/mitem.php:164 ../../mod/mitem.php:235

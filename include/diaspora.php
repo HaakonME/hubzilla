@@ -2469,7 +2469,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			'$handle' => xmlify($myaddr),
 			'$public' => $public,
 			'$created' => $created,
-			'$provider' => (($item['app']) ? $item['app'] : t('projectname'))
+			'$provider' => (($item['app']) ? $item['app'] : t('$projectname'))
 		));
 	}
 

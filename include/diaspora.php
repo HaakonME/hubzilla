@@ -706,8 +706,9 @@ function diaspora_request($importer,$xml) {
 		$cnv = random_string();
 		$mid = random_string();
 
-		$msg = t('You have started sharing with a Hubzilla premium channel.');
-		$msg .= t('Hubzilla premium channels are not available for sharing with Diaspora members. This sharing request has been blocked.') . "\r";
+		$msg = t('You have started sharing with a $Projectname premium channel.');
+		$msg .= t('$Projectname premium channels are not available for sharing with Diaspora members. This sharing request has been blocked.') . "\r";
+
 		$msg .= t('Please do not reply to this message, as this channel is not sharing with you and any reply will not be seen by the recipient.') . "\r";
 
 		$created = datetime_convert('UTC','UTC',$item['created'],'Y-m-d H:i:s \U\T\C');
@@ -2458,7 +2459,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			'$handle' => xmlify($myaddr),
 			'$public' => $public,
 			'$created' => $created,
-			'$provider' => (($item['app']) ? $item['app'] : 'hubzilla')
+			'$provider' => (($item['app']) ? $item['app'] : t('$projectname'))
 		));
 	} else {
 		$tpl = get_markup_template('diaspora_post.tpl');
@@ -2469,7 +2470,7 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 			'$handle' => xmlify($myaddr),
 			'$public' => $public,
 			'$created' => $created,
-			'$provider' => (($item['app']) ? $item['app'] : 'hubzilla')
+			'$provider' => (($item['app']) ? $item['app'] : t('$projectname'))
 		));
 	}
 

@@ -129,12 +129,12 @@ function invite_content(&$a) {
 		'$invite' => t('Send invitations'),
 		'$addr_text' => t('Enter email addresses, one per line:'),
 		'$msg_text' => t('Your message:'),
-		'$default_message' => t('Please join my community on Hubzilla.') . "\r\n" . "\r\n"
+		'$default_message' => t('Please join my community on $Projectname.') . "\r\n" . "\r\n"
 			. $linktxt
 			. (($invonly) ? "\r\n" . "\r\n" . t('You will need to supply this invitation code: ') . $invite_code . "\r\n" . "\r\n" : '') 
-			. t('1. Register at any Hubzilla location (they are all inter-connected)')
+			. t('1. Register at any $Projectname location (they are all inter-connected)')
 			. "\r\n" . "\r\n" . z_root() . '/register'
-			. "\r\n" . "\r\n" . t('2. Enter my Hubzilla network address into the site searchbar.')
+			. "\r\n" . "\r\n" . t('2. Enter my $Projectname network address into the site searchbar.')
 			. "\r\n" . "\r\n" . $ob['xchan_addr'] . ' (' . t('or visit ') . z_root() . '/channel/' . $channel['channel_address'] . ')'
 			. "\r\n" . "\r\n"
 			. t('3. Click [Connect]')

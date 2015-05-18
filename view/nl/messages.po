@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-08 00:03-0700\n"
-"PO-Revision-Date: 2015-05-12 20:58+0000\n"
+"POT-Creation-Date: 2015-05-17 16:33-0700\n"
+"PO-Revision-Date: 2015-05-18 14:00+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -260,8 +260,8 @@ msgstr "Nieuwe pagina"
 
 #: ../../include/page_widgets.php:8 ../../include/page_widgets.php:36
 #: ../../include/RedDAV/RedBrowser.php:269 ../../include/ItemObject.php:100
-#: ../../include/apps.php:254 ../../include/menu.php:43
-#: ../../mod/settings.php:644 ../../mod/webpages.php:179
+#: ../../include/apps.php:254 ../../include/menu.php:61
+#: ../../mod/settings.php:649 ../../mod/webpages.php:180
 #: ../../mod/thing.php:227 ../../mod/connections.php:382
 #: ../../mod/connections.php:395 ../../mod/connections.php:414
 #: ../../mod/blocks.php:152 ../../mod/editlayout.php:139
@@ -271,24 +271,24 @@ msgstr "Nieuwe pagina"
 msgid "Edit"
 msgstr "Bewerken"
 
-#: ../../include/page_widgets.php:39 ../../mod/webpages.php:185
+#: ../../include/page_widgets.php:39 ../../mod/webpages.php:186
 #: ../../mod/blocks.php:158 ../../mod/layouts.php:187
 msgid "View"
 msgstr "Weergeven"
 
 #: ../../include/page_widgets.php:40 ../../include/ItemObject.php:677
-#: ../../include/conversation.php:1155 ../../mod/webpages.php:186
+#: ../../include/conversation.php:1155 ../../mod/webpages.php:187
 #: ../../mod/events.php:653 ../../mod/photos.php:970
 #: ../../mod/editwebpage.php:214 ../../mod/editpost.php:149
 #: ../../mod/editblock.php:176
 msgid "Preview"
 msgstr "Voorvertoning"
 
-#: ../../include/page_widgets.php:41 ../../mod/webpages.php:187
+#: ../../include/page_widgets.php:41 ../../mod/webpages.php:188
 msgid "Actions"
 msgstr "Acties"
 
-#: ../../include/page_widgets.php:42 ../../mod/webpages.php:188
+#: ../../include/page_widgets.php:42 ../../mod/webpages.php:189
 msgid "Page Link"
 msgstr "Paginalink"
 
@@ -296,12 +296,12 @@ msgstr "Paginalink"
 msgid "Title"
 msgstr "Titel"
 
-#: ../../include/page_widgets.php:44 ../../mod/webpages.php:190
+#: ../../include/page_widgets.php:44 ../../mod/webpages.php:191
 #: ../../mod/blocks.php:149 ../../mod/layouts.php:180
 msgid "Created"
 msgstr "Aangemaakt"
 
-#: ../../include/page_widgets.php:45 ../../mod/webpages.php:191
+#: ../../include/page_widgets.php:45 ../../mod/webpages.php:192
 #: ../../mod/blocks.php:150 ../../mod/layouts.php:181
 msgid "Edited"
 msgstr "Bewerkt"
@@ -443,10 +443,10 @@ msgid "Describe (optional)"
 msgstr "Omschrijving (optioneel)"
 
 #: ../../include/js_strings.php:22 ../../include/ItemObject.php:668
-#: ../../mod/settings.php:582 ../../mod/settings.php:684
-#: ../../mod/settings.php:710 ../../mod/settings.php:738
-#: ../../mod/settings.php:761 ../../mod/settings.php:843
-#: ../../mod/settings.php:1039 ../../mod/xchan.php:11 ../../mod/connect.php:93
+#: ../../mod/settings.php:587 ../../mod/settings.php:689
+#: ../../mod/settings.php:715 ../../mod/settings.php:743
+#: ../../mod/settings.php:766 ../../mod/settings.php:848
+#: ../../mod/settings.php:1044 ../../mod/xchan.php:11 ../../mod/connect.php:93
 #: ../../mod/thing.php:275 ../../mod/thing.php:318 ../../mod/events.php:656
 #: ../../mod/group.php:81 ../../mod/setup.php:313 ../../mod/setup.php:358
 #: ../../mod/photos.php:565 ../../mod/photos.php:642 ../../mod/photos.php:929
@@ -455,9 +455,9 @@ msgstr "Omschrijving (optioneel)"
 #: ../../mod/rate.php:167 ../../mod/invite.php:142 ../../mod/locs.php:105
 #: ../../mod/sources.php:104 ../../mod/sources.php:138
 #: ../../mod/filestorage.php:156 ../../mod/fsuggest.php:108
-#: ../../mod/poke.php:166 ../../mod/profiles.php:667 ../../mod/mitem.php:229
-#: ../../mod/admin.php:446 ../../mod/admin.php:810 ../../mod/admin.php:946
-#: ../../mod/admin.php:1077 ../../mod/admin.php:1271 ../../mod/admin.php:1356
+#: ../../mod/poke.php:166 ../../mod/profiles.php:667 ../../mod/admin.php:446
+#: ../../mod/admin.php:810 ../../mod/admin.php:946 ../../mod/admin.php:1077
+#: ../../mod/admin.php:1271 ../../mod/admin.php:1356 ../../mod/mitem.php:237
 #: ../../mod/mood.php:134 ../../mod/connedit.php:679 ../../mod/mail.php:355
 #: ../../mod/appman.php:99 ../../mod/poll.php:68 ../../mod/bulksetclose.php:24
 #: ../../view/theme/apw/php/config.php:256
@@ -606,7 +606,7 @@ msgid "Shared"
 msgstr "Gedeeld"
 
 #: ../../include/RedDAV/RedBrowser.php:256
-#: ../../include/RedDAV/RedBrowser.php:306 ../../mod/webpages.php:178
+#: ../../include/RedDAV/RedBrowser.php:306 ../../mod/webpages.php:179
 #: ../../mod/blocks.php:151 ../../mod/menu.php:104 ../../mod/layouts.php:174
 #: ../../mod/new_channel.php:121
 msgid "Create"
@@ -618,8 +618,8 @@ msgstr "Aanmaken"
 msgid "Upload"
 msgstr "Uploaden"
 
-#: ../../include/RedDAV/RedBrowser.php:264 ../../mod/settings.php:584
-#: ../../mod/settings.php:610 ../../mod/admin.php:953
+#: ../../include/RedDAV/RedBrowser.php:264 ../../mod/settings.php:589
+#: ../../mod/settings.php:615 ../../mod/admin.php:953
 #: ../../mod/sharedwithme.php:95
 msgid "Name"
 msgstr "Naam"
@@ -638,7 +638,7 @@ msgstr "Laatst gewijzigd"
 
 #: ../../include/RedDAV/RedBrowser.php:270 ../../include/ItemObject.php:120
 #: ../../include/conversation.php:660 ../../include/apps.php:255
-#: ../../mod/settings.php:645 ../../mod/webpages.php:181
+#: ../../mod/settings.php:650 ../../mod/webpages.php:182
 #: ../../mod/thing.php:228 ../../mod/group.php:176 ../../mod/blocks.php:154
 #: ../../mod/photos.php:1050 ../../mod/editlayout.php:107
 #: ../../mod/editwebpage.php:225 ../../mod/admin.php:817
@@ -660,7 +660,7 @@ msgstr "Bestand uploaden"
 msgid "%1$s's bookmarks"
 msgstr "Bladwijzers van %1$s"
 
-#: ../../include/network.php:632
+#: ../../include/network.php:635
 msgid "view full size"
 msgstr "volledige grootte tonen"
 
@@ -1006,9 +1006,9 @@ msgstr "Familie"
 
 #: ../../include/widgets.php:429 ../../include/identity.php:394
 #: ../../include/identity.php:395 ../../include/identity.php:402
-#: ../../include/profile_selectors.php:80 ../../mod/settings.php:339
-#: ../../mod/settings.php:343 ../../mod/settings.php:344
-#: ../../mod/settings.php:347 ../../mod/settings.php:358
+#: ../../include/profile_selectors.php:80 ../../mod/settings.php:344
+#: ../../mod/settings.php:348 ../../mod/settings.php:349
+#: ../../mod/settings.php:352 ../../mod/settings.php:363
 #: ../../mod/connedit.php:574
 msgid "Friends"
 msgstr "Vrienden"
@@ -1110,11 +1110,12 @@ msgid "Public Hubs"
 msgstr "Openbare hubs"
 
 #: ../../include/enotify.php:58
-msgid "Red Matrix Notification"
+msgid "$Projectname Notification"
 msgstr "RedMatrix-notificatie"
 
-#: ../../include/enotify.php:59
-msgid "redmatrix"
+#: ../../include/enotify.php:59 ../../include/diaspora.php:2461
+#: ../../mod/p.php:46
+msgid "$projectname"
 msgstr "RedMatrix"
 
 #: ../../include/enotify.php:61
@@ -1678,8 +1679,8 @@ msgid "Attachments:"
 msgstr "Bijlagen:"
 
 #: ../../include/bb2diaspora.php:453
-msgid "Redmatrix event notification:"
-msgstr "Notificatie RedMatrix-gebeurtenis:"
+msgid "$Projectname event notification:"
+msgstr "Notificatie -gebeurtenis:"
 
 #: ../../include/text.php:329
 msgid "prev"
@@ -2099,7 +2100,7 @@ msgid "Your bookmarks"
 msgstr "Jouw bladwijzers"
 
 #: ../../include/nav.php:113 ../../include/conversation.php:1645
-#: ../../include/apps.php:136 ../../mod/webpages.php:176
+#: ../../include/apps.php:136 ../../mod/webpages.php:177
 msgid "Webpages"
 msgstr "Webpagina's"
 
@@ -2397,7 +2398,7 @@ msgstr "Item niet gevonden."
 #: ../../include/attach.php:611 ../../include/chat.php:131
 #: ../../mod/profile.php:64 ../../mod/profile.php:72
 #: ../../mod/achievements.php:30 ../../mod/manage.php:6
-#: ../../mod/settings.php:564 ../../mod/api.php:26 ../../mod/api.php:31
+#: ../../mod/settings.php:569 ../../mod/api.php:26 ../../mod/api.php:31
 #: ../../mod/webpages.php:69 ../../mod/thing.php:241 ../../mod/thing.php:256
 #: ../../mod/thing.php:290 ../../mod/profile_photo.php:264
 #: ../../mod/profile_photo.php:277 ../../mod/block.php:22
@@ -2415,17 +2416,17 @@ msgstr "Item niet gevonden."
 #: ../../mod/filestorage.php:73 ../../mod/filestorage.php:88
 #: ../../mod/filestorage.php:115 ../../mod/fsuggest.php:78
 #: ../../mod/poke.php:128 ../../mod/profiles.php:188
-#: ../../mod/profiles.php:576 ../../mod/viewsrc.php:14 ../../mod/mitem.php:115
+#: ../../mod/profiles.php:576 ../../mod/viewsrc.php:14
 #: ../../mod/viewconnections.php:22 ../../mod/viewconnections.php:27
 #: ../../mod/editblock.php:65 ../../mod/register.php:72 ../../mod/item.php:206
 #: ../../mod/item.php:214 ../../mod/item.php:962 ../../mod/layouts.php:69
 #: ../../mod/layouts.php:76 ../../mod/layouts.php:87 ../../mod/id.php:71
-#: ../../mod/message.php:16 ../../mod/mood.php:111 ../../mod/connedit.php:331
-#: ../../mod/mail.php:114 ../../mod/notifications.php:66
-#: ../../mod/regmod.php:17 ../../mod/new_channel.php:68
-#: ../../mod/new_channel.php:99 ../../mod/appman.php:66
-#: ../../mod/network.php:12 ../../mod/page.php:28 ../../mod/page.php:79
-#: ../../mod/bookmarks.php:46 ../../mod/channel.php:100
+#: ../../mod/message.php:16 ../../mod/mitem.php:115 ../../mod/mood.php:111
+#: ../../mod/connedit.php:331 ../../mod/mail.php:114
+#: ../../mod/notifications.php:66 ../../mod/regmod.php:17
+#: ../../mod/new_channel.php:68 ../../mod/new_channel.php:99
+#: ../../mod/appman.php:66 ../../mod/network.php:12 ../../mod/page.php:28
+#: ../../mod/page.php:82 ../../mod/bookmarks.php:46 ../../mod/channel.php:100
 #: ../../mod/channel.php:219 ../../mod/channel.php:262
 #: ../../mod/suggest.php:26 ../../mod/service_limits.php:7
 #: ../../mod/sharedwithme.php:7 ../../index.php:190 ../../index.php:393
@@ -2707,7 +2708,7 @@ msgstr "Foto's weergeven"
 
 #: ../../include/conversation.php:944
 msgid "Matrix Activity"
-msgstr "Activiteit in de RedMatrix"
+msgstr "RedMatrix-activiteit"
 
 #: ../../include/conversation.php:946
 msgid "Edit Contact"
@@ -2800,7 +2801,7 @@ msgstr "Waar bevind je je op dit moment?"
 msgid "Expires YYYY-MM-DD HH:MM"
 msgstr "Verloopt op DD-MM-YYYY om HH:MM"
 
-#: ../../include/conversation.php:1174 ../../mod/webpages.php:180
+#: ../../include/conversation.php:1174 ../../mod/webpages.php:181
 #: ../../mod/blocks.php:153 ../../mod/photos.php:949 ../../mod/layouts.php:183
 msgid "Share"
 msgstr "Delen"
@@ -2927,8 +2928,8 @@ msgstr "Verloopdatum instellen"
 msgid "OK"
 msgstr "OK"
 
-#: ../../include/conversation.php:1239 ../../mod/settings.php:583
-#: ../../mod/settings.php:609 ../../mod/tagrm.php:11 ../../mod/tagrm.php:134
+#: ../../include/conversation.php:1239 ../../mod/settings.php:588
+#: ../../mod/settings.php:614 ../../mod/tagrm.php:11 ../../mod/tagrm.php:134
 #: ../../mod/events.php:636 ../../mod/fbrowser.php:82
 #: ../../mod/fbrowser.php:117 ../../mod/editpost.php:160
 msgid "Cancel"
@@ -3432,7 +3433,7 @@ msgstr "Gebeurtenissen deze week:"
 msgid "Profile"
 msgstr "Profiel"
 
-#: ../../include/identity.php:1115 ../../mod/settings.php:1045
+#: ../../include/identity.php:1115 ../../mod/settings.php:1050
 msgid "Full Name:"
 msgstr "Volledige naam:"
 
@@ -3819,7 +3820,7 @@ msgid "Profile Photo"
 msgstr "Profielfoto"
 
 #: ../../include/apps.php:247 ../../mod/settings.php:84
-#: ../../mod/settings.php:608
+#: ../../mod/settings.php:613
 msgid "Update"
 msgstr "Bijwerken"
 
@@ -3867,9 +3868,13 @@ msgstr "Oneens"
 msgid "Abstain"
 msgstr "onthouding"
 
+#: ../../include/diaspora.php:2472
+msgid "projectname"
+msgstr "RedMatrix"
+
 #: ../../mod/achievements.php:34
 msgid "Some blurb about what to do when you're new here"
-msgstr "Welkom op de RedMatrix. Klik op de tab ontdekken of klik rechtsboven op de <a href=\"directory\">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href=\"directory\">apps</a>, waar je vrijwel alles van de RedMatrix kan vinden. Voor <a href=\"directory\">hulp</a> met de RedMatrix klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href=\"https://zothost.me/channel/support\">supportkanaal</a> (liefst in het Engels)."
+msgstr "Welkom op RedMatrix. Klik op de tab ontdekken of klik rechtsboven op de <a href=\"directory\">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href=\"directory\">apps</a>, waar je vrijwel alles van RedMatrix kan vinden. Voor <a href=\"directory\">hulp</a> met RedMatrix klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href=\"https://zothost.me/channel/support\">supportkanaal</a> (liefst in het Engels)."
 
 #: ../../mod/manage.php:136
 #, php-format
@@ -3918,43 +3923,43 @@ msgstr "Naam is vereist"
 msgid "Key and Secret are required"
 msgstr "Key en secret zijn vereist"
 
-#: ../../mod/settings.php:124
+#: ../../mod/settings.php:129
 msgid "Diaspora Policy Settings updated."
 msgstr "Beleidsinstellingen Diaspora bijgewerkt."
 
-#: ../../mod/settings.php:232
+#: ../../mod/settings.php:237
 msgid "Passwords do not match. Password unchanged."
 msgstr "Wachtwoorden komen niet overeen. Wachtwoord onveranderd."
 
-#: ../../mod/settings.php:236
+#: ../../mod/settings.php:241
 msgid "Empty passwords are not allowed. Password unchanged."
 msgstr "Lege wachtwoorden zijn niet toegestaan. Wachtwoord onveranderd."
 
-#: ../../mod/settings.php:250
+#: ../../mod/settings.php:255
 msgid "Password changed."
 msgstr "Wachtwoord veranderd."
 
-#: ../../mod/settings.php:252
+#: ../../mod/settings.php:257
 msgid "Password update failed. Please try again."
 msgstr "Bijwerken wachtwoord mislukt. Probeer opnieuw."
 
-#: ../../mod/settings.php:266
+#: ../../mod/settings.php:271
 msgid "Not valid email."
 msgstr "Geen geldig e-mailadres."
 
-#: ../../mod/settings.php:269
+#: ../../mod/settings.php:274
 msgid "Protected email address. Cannot change to that email."
 msgstr "Beschermd e-mailadres. Kan dat e-mailadres niet gebruiken."
 
-#: ../../mod/settings.php:278
+#: ../../mod/settings.php:283
 msgid "System failure storing new email. Please try again."
 msgstr "Systeemfout opslaan van nieuwe e-mail. Probeer het nog een keer."
 
-#: ../../mod/settings.php:517
+#: ../../mod/settings.php:522
 msgid "Settings updated."
 msgstr "Instellingen bijgewerkt."
 
-#: ../../mod/settings.php:573 ../../mod/api.php:106 ../../mod/photos.php:556
+#: ../../mod/settings.php:578 ../../mod/api.php:106 ../../mod/photos.php:556
 #: ../../mod/menu.php:88 ../../mod/filestorage.php:151
 #: ../../mod/filestorage.php:159 ../../mod/admin.php:424
 #: ../../mod/removeme.php:60 ../../view/theme/redbasic/php/config.php:102
@@ -3962,7 +3967,7 @@ msgstr "Instellingen bijgewerkt."
 msgid "No"
 msgstr "Nee"
 
-#: ../../mod/settings.php:573 ../../mod/api.php:105 ../../mod/photos.php:556
+#: ../../mod/settings.php:578 ../../mod/api.php:105 ../../mod/photos.php:556
 #: ../../mod/menu.php:88 ../../mod/filestorage.php:151
 #: ../../mod/filestorage.php:159 ../../mod/admin.php:426
 #: ../../mod/removeme.php:60 ../../view/theme/redbasic/php/config.php:102
@@ -3970,537 +3975,537 @@ msgstr "Nee"
 msgid "Yes"
 msgstr "Ja"
 
-#: ../../mod/settings.php:581 ../../mod/settings.php:607
-#: ../../mod/settings.php:643
+#: ../../mod/settings.php:586 ../../mod/settings.php:612
+#: ../../mod/settings.php:648
 msgid "Add application"
 msgstr "Applicatie toevoegen"
 
-#: ../../mod/settings.php:584
+#: ../../mod/settings.php:589
 msgid "Name of application"
 msgstr "Naam van applicatie"
 
-#: ../../mod/settings.php:585 ../../mod/settings.php:611
+#: ../../mod/settings.php:590 ../../mod/settings.php:616
 msgid "Consumer Key"
 msgstr "Consumer key"
 
-#: ../../mod/settings.php:585 ../../mod/settings.php:586
+#: ../../mod/settings.php:590 ../../mod/settings.php:591
 msgid "Automatically generated - change if desired. Max length 20"
 msgstr "Automatische gegenereerd - verander wanneer gewenst. Maximale lengte is 20"
 
-#: ../../mod/settings.php:586 ../../mod/settings.php:612
+#: ../../mod/settings.php:591 ../../mod/settings.php:617
 msgid "Consumer Secret"
 msgstr "Consumer secret"
 
-#: ../../mod/settings.php:587 ../../mod/settings.php:613
+#: ../../mod/settings.php:592 ../../mod/settings.php:618
 msgid "Redirect"
 msgstr "Redirect/doorverwijzing"
 
-#: ../../mod/settings.php:587
+#: ../../mod/settings.php:592
 msgid ""
 "Redirect URI - leave blank unless your application specifically requires "
 "this"
 msgstr "URI voor redirect - laat leeg, behalve wanneer de applicatie dit vereist"
 
-#: ../../mod/settings.php:588 ../../mod/settings.php:614
+#: ../../mod/settings.php:593 ../../mod/settings.php:619
 msgid "Icon url"
 msgstr "URL van pictogram"
 
-#: ../../mod/settings.php:588
+#: ../../mod/settings.php:593
 msgid "Optional"
 msgstr "Optioneel"
 
-#: ../../mod/settings.php:599
+#: ../../mod/settings.php:604
 msgid "You can't edit this application."
 msgstr "Je kan deze applicatie niet bewerken"
 
-#: ../../mod/settings.php:642
+#: ../../mod/settings.php:647
 msgid "Connected Apps"
 msgstr "Verbonden applicaties"
 
-#: ../../mod/settings.php:646
+#: ../../mod/settings.php:651
 msgid "Client key starts with"
 msgstr "Client key begint met"
 
-#: ../../mod/settings.php:647
+#: ../../mod/settings.php:652
 msgid "No name"
 msgstr "Geen naam"
 
-#: ../../mod/settings.php:648
+#: ../../mod/settings.php:653
 msgid "Remove authorization"
 msgstr "Autorisatie verwijderen"
 
-#: ../../mod/settings.php:662
+#: ../../mod/settings.php:667
 msgid "No feature settings configured"
 msgstr "Geen extra functie- of plugin-instellingen"
 
-#: ../../mod/settings.php:678
+#: ../../mod/settings.php:683
 msgid "Feature/Addon Settings"
 msgstr "Extra functie- en plugin-instellingen"
 
-#: ../../mod/settings.php:680
+#: ../../mod/settings.php:685
 msgid "Settings for the built-in Diaspora emulator"
 msgstr "Instellingen voor de ingebouwde Diaspora-emulator"
 
-#: ../../mod/settings.php:681
+#: ../../mod/settings.php:686
 msgid "Allow any Diaspora member to comment on your public posts"
 msgstr "Sta toe dat elk Diaspora-lid op jouw openbare berichten kan reageren."
 
-#: ../../mod/settings.php:682
+#: ../../mod/settings.php:687
 msgid "Diaspora Policy Settings"
 msgstr "Beleidsinstellingen Diaspora"
 
-#: ../../mod/settings.php:683
+#: ../../mod/settings.php:688
 msgid "Prevent your hashtags from being redirected to other sites"
 msgstr "Voorkom dat jouw tags naar andere websites worden doorverwezen"
 
-#: ../../mod/settings.php:707
+#: ../../mod/settings.php:712
 msgid "Account Settings"
 msgstr "Account-instellingen"
 
-#: ../../mod/settings.php:708
+#: ../../mod/settings.php:713
 msgid "Enter New Password:"
 msgstr "Nieuw wachtwoord invoeren:"
 
-#: ../../mod/settings.php:709
+#: ../../mod/settings.php:714
 msgid "Confirm New Password:"
 msgstr "Nieuw wachtwoord bevestigen:"
 
-#: ../../mod/settings.php:709
+#: ../../mod/settings.php:714
 msgid "Leave password fields blank unless changing"
 msgstr "Laat de wachtwoordvelden leeg, behalve wanneer je deze wil veranderen"
 
-#: ../../mod/settings.php:711 ../../mod/settings.php:1046
+#: ../../mod/settings.php:716 ../../mod/settings.php:1051
 msgid "Email Address:"
 msgstr "E-mailadres:"
 
-#: ../../mod/settings.php:712 ../../mod/removeaccount.php:61
+#: ../../mod/settings.php:717 ../../mod/removeaccount.php:61
 msgid "Remove Account"
 msgstr "Account verwijderen"
 
-#: ../../mod/settings.php:713
+#: ../../mod/settings.php:718
 msgid "Remove this account including all its channels"
 msgstr "Dit account en al zijn kanalen verwijderen"
 
-#: ../../mod/settings.php:729
+#: ../../mod/settings.php:734
 msgid "Off"
 msgstr "Uit"
 
-#: ../../mod/settings.php:729
+#: ../../mod/settings.php:734
 msgid "On"
 msgstr "Aan"
 
-#: ../../mod/settings.php:736
+#: ../../mod/settings.php:741
 msgid "Additional Features"
 msgstr "Extra functies"
 
-#: ../../mod/settings.php:760
+#: ../../mod/settings.php:765
 msgid "Connector Settings"
 msgstr "Instellingen externe koppelingen"
 
-#: ../../mod/settings.php:799
+#: ../../mod/settings.php:804
 msgid "No special theme for mobile devices"
 msgstr "Geen speciaal thema voor mobiele apparaten"
 
-#: ../../mod/settings.php:802
+#: ../../mod/settings.php:807
 #, php-format
 msgid "%s - (Experimental)"
 msgstr "%s - (experimenteel)"
 
-#: ../../mod/settings.php:805 ../../mod/admin.php:396
+#: ../../mod/settings.php:810 ../../mod/admin.php:396
 msgid "mobile"
 msgstr "mobiel"
 
-#: ../../mod/settings.php:841
+#: ../../mod/settings.php:846
 msgid "Display Settings"
 msgstr "Weergave-instellingen"
 
-#: ../../mod/settings.php:847
+#: ../../mod/settings.php:852
 msgid "Display Theme:"
 msgstr "Gebruik thema:"
 
-#: ../../mod/settings.php:848
+#: ../../mod/settings.php:853
 msgid "Mobile Theme:"
 msgstr "Mobiel thema:"
 
-#: ../../mod/settings.php:849
+#: ../../mod/settings.php:854
 msgid "Enable user zoom on mobile devices"
 msgstr "Inzoomen op smartphones en tablets toestaan"
 
-#: ../../mod/settings.php:850
+#: ../../mod/settings.php:855
 msgid "Update browser every xx seconds"
 msgstr "Ververs de webbrowser om de zoveel seconde"
 
-#: ../../mod/settings.php:850
+#: ../../mod/settings.php:855
 msgid "Minimum of 10 seconds, no maximum"
 msgstr "Minimaal 10 seconde, geen maximum"
 
-#: ../../mod/settings.php:851
+#: ../../mod/settings.php:856
 msgid "Maximum number of conversations to load at any time:"
 msgstr "Maximaal aantal conversaties die per keer geladen worden:"
 
-#: ../../mod/settings.php:851
+#: ../../mod/settings.php:856
 msgid "Maximum of 100 items"
 msgstr "Maximaal 100 conversaties"
 
-#: ../../mod/settings.php:852
+#: ../../mod/settings.php:857
 msgid "Show emoticons (smilies) as images"
 msgstr "Toon emoticons (smilies) als afbeeldingen"
 
-#: ../../mod/settings.php:853
+#: ../../mod/settings.php:858
 msgid "Link post titles to source"
 msgstr "Berichtkoppen naar originele locatie linken"
 
-#: ../../mod/settings.php:854
+#: ../../mod/settings.php:859
 msgid "System Page Layout Editor - (advanced)"
 msgstr "Lay-out bewerken van systeempagina's (geavanceerd)"
 
-#: ../../mod/settings.php:857
+#: ../../mod/settings.php:862
 msgid "Use blog/list mode on channel page"
 msgstr "Gebruik blog/lijst-modus op kanaalpagina"
 
-#: ../../mod/settings.php:857 ../../mod/settings.php:858
+#: ../../mod/settings.php:862 ../../mod/settings.php:863
 msgid "(comments displayed separately)"
 msgstr "(reacties worden afzonderlijk weergeven)"
 
-#: ../../mod/settings.php:858
+#: ../../mod/settings.php:863
 msgid "Use blog/list mode on matrix page"
 msgstr "Gebruik blog/lijst-modus op matrixpagina"
 
-#: ../../mod/settings.php:859
+#: ../../mod/settings.php:864
 msgid "Channel page max height of content (in pixels)"
 msgstr "Maximale hoogte berichtinhoud op kanaalpagina (in pixels)"
 
-#: ../../mod/settings.php:859 ../../mod/settings.php:860
+#: ../../mod/settings.php:864 ../../mod/settings.php:865
 msgid "click to expand content exceeding this height"
 msgstr "klik om inhoud uit te klappen die deze hoogte overschrijdt"
 
-#: ../../mod/settings.php:860
+#: ../../mod/settings.php:865
 msgid "Matrix page max height of content (in pixels)"
 msgstr "Maximale hoogte berichtinhoud op matrixpagina (in pixels)"
 
-#: ../../mod/settings.php:894
+#: ../../mod/settings.php:899
 msgid "Nobody except yourself"
 msgstr "Niemand, behalve jezelf"
 
-#: ../../mod/settings.php:895
+#: ../../mod/settings.php:900
 msgid "Only those you specifically allow"
 msgstr "Alleen connecties met uitdrukkelijke toestemming"
 
-#: ../../mod/settings.php:896
+#: ../../mod/settings.php:901
 msgid "Approved connections"
 msgstr "Geaccepteerde connecties"
 
-#: ../../mod/settings.php:897
+#: ../../mod/settings.php:902
 msgid "Any connections"
 msgstr "Alle connecties"
 
-#: ../../mod/settings.php:898
+#: ../../mod/settings.php:903
 msgid "Anybody on this website"
 msgstr "Iedereen op deze hub"
 
-#: ../../mod/settings.php:899
+#: ../../mod/settings.php:904
 msgid "Anybody in this network"
 msgstr "Iedereen in dit netwerk"
 
-#: ../../mod/settings.php:900
+#: ../../mod/settings.php:905
 msgid "Anybody authenticated"
 msgstr "Geauthenticeerd"
 
-#: ../../mod/settings.php:901
+#: ../../mod/settings.php:906
 msgid "Anybody on the internet"
 msgstr "Iedereen op het internet"
 
-#: ../../mod/settings.php:975
+#: ../../mod/settings.php:980
 msgid "Publish your default profile in the network directory"
 msgstr "Publiceer je standaardprofiel in de kanalengids"
 
-#: ../../mod/settings.php:980
+#: ../../mod/settings.php:985
 msgid "Allow us to suggest you as a potential friend to new members?"
 msgstr "Sta ons toe om jouw kanaal als mogelijke connectie voor te stellen aan nieuwe kanalen"
 
-#: ../../mod/settings.php:984 ../../mod/profile_photo.php:366
+#: ../../mod/settings.php:989 ../../mod/profile_photo.php:366
 msgid "or"
 msgstr "of"
 
-#: ../../mod/settings.php:989
+#: ../../mod/settings.php:994
 msgid "Your channel address is"
 msgstr "Jouw kanaaladres is"
 
-#: ../../mod/settings.php:1037
+#: ../../mod/settings.php:1042
 msgid "Channel Settings"
 msgstr "Kanaal-instellingen"
 
-#: ../../mod/settings.php:1044
+#: ../../mod/settings.php:1049
 msgid "Basic Settings"
 msgstr "Basis-instellingen"
 
-#: ../../mod/settings.php:1047
+#: ../../mod/settings.php:1052
 msgid "Your Timezone:"
 msgstr "Jouw tijdzone:"
 
-#: ../../mod/settings.php:1048
+#: ../../mod/settings.php:1053
 msgid "Default Post Location:"
 msgstr "Standaardlocatie bericht:"
 
-#: ../../mod/settings.php:1048
+#: ../../mod/settings.php:1053
 msgid "Geographical location to display on your posts"
 msgstr "Geografische locatie die bij het bericht moet worden vermeld"
 
-#: ../../mod/settings.php:1049
+#: ../../mod/settings.php:1054
 msgid "Use Browser Location:"
 msgstr "Locatie van webbrowser gebruiken:"
 
-#: ../../mod/settings.php:1051
+#: ../../mod/settings.php:1056
 msgid "Adult Content"
 msgstr "Inhoud voor volwassenen"
 
-#: ../../mod/settings.php:1051
+#: ../../mod/settings.php:1056
 msgid ""
 "This channel frequently or regularly publishes adult content. (Please tag "
 "any adult material and/or nudity with #NSFW)"
 msgstr "Dit kanaal publiceert regelmatig of vaak materiaal dat alleen geschikt is voor volwassenen. (Gebruik de tag #NSFW in berichten met een seksueel getinte inhoud of ander voor minderjarigen ongeschikt materiaal)"
 
-#: ../../mod/settings.php:1053
+#: ../../mod/settings.php:1058
 msgid "Security and Privacy Settings"
 msgstr "Veiligheids- en privacy-instellingen"
 
-#: ../../mod/settings.php:1055
+#: ../../mod/settings.php:1060
 msgid "Your permissions are already configured. Click to view/adjust"
 msgstr "Jouw permissies zijn al ingesteld. Klik om ze te bekijken of aan te passen."
 
-#: ../../mod/settings.php:1057
+#: ../../mod/settings.php:1062
 msgid "Hide my online presence"
 msgstr "Verberg mijn aanwezigheid"
 
-#: ../../mod/settings.php:1057
+#: ../../mod/settings.php:1062
 msgid "Prevents displaying in your profile that you are online"
-msgstr "Voorkomt dat op je kanaal te zien valt dat je momenteel op de RedMatrix aanwezig bent"
+msgstr "Voorkomt dat op je kanaal te zien valt dat je momenteel op RedMatrix aanwezig bent"
 
-#: ../../mod/settings.php:1059
+#: ../../mod/settings.php:1064
 msgid "Simple Privacy Settings:"
 msgstr "Eenvoudige privacy-instellingen:"
 
-#: ../../mod/settings.php:1060
+#: ../../mod/settings.php:1065
 msgid ""
 "Very Public - <em>extremely permissive (should be used with caution)</em>"
 msgstr "Zeer openbaar <em>(kanaal staat volledig open - moet met grote zorgvuldigheid gebruikt worden)</em>"
 
-#: ../../mod/settings.php:1061
+#: ../../mod/settings.php:1066
 msgid ""
 "Typical - <em>default public, privacy when desired (similar to social "
 "network permissions but with improved privacy)</em>"
 msgstr "Normaal <em>(standaard openbaar, maar privacy wanneer noodzakelijk - vergelijkbaar met die van sociale netwerken, maar met verbeterde privacy)</em>"
 
-#: ../../mod/settings.php:1062
+#: ../../mod/settings.php:1067
 msgid "Private - <em>default private, never open or public</em>"
 msgstr "Privé <em>(standaard privé en nooit openbaar)</em>"
 
-#: ../../mod/settings.php:1063
+#: ../../mod/settings.php:1068
 msgid "Blocked - <em>default blocked to/from everybody</em>"
 msgstr "Geblokkeerd <em>(standaard geblokkeerd naar/van iedereen)</em>"
 
-#: ../../mod/settings.php:1065
+#: ../../mod/settings.php:1070
 msgid "Allow others to tag your posts"
 msgstr "Anderen toestaan om je berichten te taggen"
 
-#: ../../mod/settings.php:1065
+#: ../../mod/settings.php:1070
 msgid ""
 "Often used by the community to retro-actively flag inappropriate content"
 msgstr "Vaak in groepen/forums gebruikt om met terugwerkende kracht ongepast materiaal te markeren"
 
-#: ../../mod/settings.php:1067
+#: ../../mod/settings.php:1072
 msgid "Advanced Privacy Settings"
 msgstr "Geavanceerde privacy-instellingen"
 
-#: ../../mod/settings.php:1069
+#: ../../mod/settings.php:1074
 msgid "Expire other channel content after this many days"
 msgstr "Inhoud van andere kanalen na zoveel aantal dagen laten verlopen:"
 
-#: ../../mod/settings.php:1069
+#: ../../mod/settings.php:1074
 msgid "0 or blank prevents expiration"
 msgstr "0 of leeg voorkomt het verlopen"
 
-#: ../../mod/settings.php:1070
+#: ../../mod/settings.php:1075
 msgid "Maximum Friend Requests/Day:"
 msgstr "Maximum aantal connectieverzoeken per dag:"
 
-#: ../../mod/settings.php:1070
+#: ../../mod/settings.php:1075
 msgid "May reduce spam activity"
 msgstr "Kan eventuele spam verminderen"
 
-#: ../../mod/settings.php:1071
+#: ../../mod/settings.php:1076
 msgid "Default Post Permissions"
 msgstr "Standaard permissies voor nieuwe berichten"
 
-#: ../../mod/settings.php:1072 ../../mod/mitem.php:152 ../../mod/mitem.php:221
+#: ../../mod/settings.php:1077 ../../mod/mitem.php:159 ../../mod/mitem.php:229
 msgid "(click to open/close)"
 msgstr "(klik om te openen/sluiten)"
 
-#: ../../mod/settings.php:1076
+#: ../../mod/settings.php:1081
 msgid "Channel permissions category:"
 msgstr "Kanaaltype en -permissies:"
 
-#: ../../mod/settings.php:1082
+#: ../../mod/settings.php:1087
 msgid "Maximum private messages per day from unknown people:"
 msgstr "Maximum aantal privé-berichten per dag van onbekende personen:"
 
-#: ../../mod/settings.php:1082
+#: ../../mod/settings.php:1087
 msgid "Useful to reduce spamming"
 msgstr "Kan eventuele spam verminderen"
 
-#: ../../mod/settings.php:1085
+#: ../../mod/settings.php:1090
 msgid "Notification Settings"
 msgstr "Notificatie-instellingen"
 
-#: ../../mod/settings.php:1086
+#: ../../mod/settings.php:1091
 msgid "By default post a status message when:"
 msgstr "Plaats automatisch een statusbericht wanneer:"
 
-#: ../../mod/settings.php:1087
+#: ../../mod/settings.php:1092
 msgid "accepting a friend request"
 msgstr "Een connectieverzoek wordt geaccepteerd"
 
-#: ../../mod/settings.php:1088
+#: ../../mod/settings.php:1093
 msgid "joining a forum/community"
 msgstr "Je lid wordt van een forum/groep"
 
-#: ../../mod/settings.php:1089
+#: ../../mod/settings.php:1094
 msgid "making an <em>interesting</em> profile change"
 msgstr "Er sprake is van een <em>interessante</em> profielwijziging"
 
-#: ../../mod/settings.php:1090
+#: ../../mod/settings.php:1095
 msgid "Send a notification email when:"
 msgstr "Verzend een notificatie per e-mail wanneer:"
 
-#: ../../mod/settings.php:1091
+#: ../../mod/settings.php:1096
 msgid "You receive a connection request"
 msgstr "Je een connectieverzoek ontvangt"
 
-#: ../../mod/settings.php:1092
+#: ../../mod/settings.php:1097
 msgid "Your connections are confirmed"
 msgstr "Jouw connecties zijn bevestigd"
 
-#: ../../mod/settings.php:1093
+#: ../../mod/settings.php:1098
 msgid "Someone writes on your profile wall"
 msgstr "Iemand iets op jouw kanaal heeft geschreven"
 
-#: ../../mod/settings.php:1094
+#: ../../mod/settings.php:1099
 msgid "Someone writes a followup comment"
 msgstr "Iemand een reactie schrijft"
 
-#: ../../mod/settings.php:1095
+#: ../../mod/settings.php:1100
 msgid "You receive a private message"
 msgstr "Je een privé-bericht ontvangt"
 
-#: ../../mod/settings.php:1096
+#: ../../mod/settings.php:1101
 msgid "You receive a friend suggestion"
 msgstr "Je een kanaalvoorstel ontvangt"
 
-#: ../../mod/settings.php:1097
+#: ../../mod/settings.php:1102
 msgid "You are tagged in a post"
 msgstr "Je expliciet in een bericht bent genoemd"
 
-#: ../../mod/settings.php:1098
+#: ../../mod/settings.php:1103
 msgid "You are poked/prodded/etc. in a post"
 msgstr "Je bent in een bericht aangestoten/gepord/etc."
 
-#: ../../mod/settings.php:1101
+#: ../../mod/settings.php:1106
 msgid "Show visual notifications including:"
 msgstr "Toon de volgende zichtbare notificaties:"
 
-#: ../../mod/settings.php:1103
+#: ../../mod/settings.php:1108
 msgid "Unseen matrix activity"
 msgstr "Niet bekeken matrix-activiteit"
 
-#: ../../mod/settings.php:1104
+#: ../../mod/settings.php:1109
 msgid "Unseen channel activity"
 msgstr "Niet bekeken kanaal-activiteit"
 
-#: ../../mod/settings.php:1105
+#: ../../mod/settings.php:1110
 msgid "Unseen private messages"
 msgstr "Niet bekeken privéberichten"
 
-#: ../../mod/settings.php:1105 ../../mod/settings.php:1110
-#: ../../mod/settings.php:1111 ../../mod/settings.php:1112
+#: ../../mod/settings.php:1110 ../../mod/settings.php:1115
+#: ../../mod/settings.php:1116 ../../mod/settings.php:1117
 msgid "Recommended"
 msgstr "Aanbevolen"
 
-#: ../../mod/settings.php:1106
+#: ../../mod/settings.php:1111
 msgid "Upcoming events"
 msgstr "Aankomende gebeurtenissen"
 
-#: ../../mod/settings.php:1107
+#: ../../mod/settings.php:1112
 msgid "Events today"
 msgstr "Gebeurtissen van vandaag"
 
-#: ../../mod/settings.php:1108
+#: ../../mod/settings.php:1113
 msgid "Upcoming birthdays"
 msgstr "Aankomende verjaardagen"
 
-#: ../../mod/settings.php:1108
+#: ../../mod/settings.php:1113
 msgid "Not available in all themes"
 msgstr "Niet in alle thema's beschikbaar"
 
-#: ../../mod/settings.php:1109
+#: ../../mod/settings.php:1114
 msgid "System (personal) notifications"
 msgstr "(Persoonlijke) systeemnotificaties"
 
-#: ../../mod/settings.php:1110
+#: ../../mod/settings.php:1115
 msgid "System info messages"
 msgstr "Systeemmededelingen"
 
-#: ../../mod/settings.php:1111
+#: ../../mod/settings.php:1116
 msgid "System critical alerts"
 msgstr "Kritische systeemwaarschuwingen"
 
-#: ../../mod/settings.php:1112
+#: ../../mod/settings.php:1117
 msgid "New connections"
 msgstr "Nieuwe connecties"
 
-#: ../../mod/settings.php:1113
+#: ../../mod/settings.php:1118
 msgid "System Registrations"
 msgstr "Nieuwe accountregistraties op deze hub"
 
-#: ../../mod/settings.php:1114
+#: ../../mod/settings.php:1119
 msgid ""
 "Also show new wall posts, private messages and connections under Notices"
 msgstr "Toon tevens nieuwe kanaalberichten, privéberichten en connecties onder Notificaties"
 
-#: ../../mod/settings.php:1116
+#: ../../mod/settings.php:1121
 msgid "Notify me of events this many days in advance"
 msgstr "Herinner mij zoveel dagen van te voren aan gebeurtenissen"
 
-#: ../../mod/settings.php:1116
+#: ../../mod/settings.php:1121
 msgid "Must be greater than 0"
 msgstr "Moet hoger dan 0 zijn"
 
-#: ../../mod/settings.php:1118
+#: ../../mod/settings.php:1123
 msgid "Advanced Account/Page Type Settings"
 msgstr "Instellingen geavanceerd account/paginatype"
 
-#: ../../mod/settings.php:1119
+#: ../../mod/settings.php:1124
 msgid "Change the behaviour of this account for special situations"
 msgstr "Verander het gedrag van dit account voor speciale situaties"
 
-#: ../../mod/settings.php:1122
+#: ../../mod/settings.php:1127
 msgid ""
 "Please enable expert mode (in <a href=\"settings/features\">Settings > "
 "Additional features</a>) to adjust!"
 msgstr "Schakel de expertmodus in (in <a href=\"settings/features\">Instellingen > Extra functies</a>) om aan te kunnen passen!"
 
-#: ../../mod/settings.php:1123
+#: ../../mod/settings.php:1128
 msgid "Miscellaneous Settings"
 msgstr "Diverse instellingen"
 
-#: ../../mod/settings.php:1125
+#: ../../mod/settings.php:1130
 msgid "Personal menu to display in your channel pages"
 msgstr "Persoonlijk menu om op je kanaalpagina's weer te geven"
 
-#: ../../mod/settings.php:1126 ../../mod/removeme.php:61
+#: ../../mod/settings.php:1131 ../../mod/removeme.php:61
 msgid "Remove Channel"
 msgstr "Kanaal verwijderen"
 
-#: ../../mod/settings.php:1127
+#: ../../mod/settings.php:1132
 msgid "Remove this channel."
 msgstr "Verwijder dit kanaal."
 
@@ -4534,7 +4539,7 @@ msgid ""
 " and/or create new posts for you?"
 msgstr "Wil je deze applicatie toestemming geven om jouw berichten en connecties te zien, en/of nieuwe berichten voor jou te plaatsen?"
 
-#: ../../mod/webpages.php:189
+#: ../../mod/webpages.php:190
 msgid "Page Title"
 msgstr "Paginatitel"
 
@@ -4662,14 +4667,14 @@ msgstr "Ding aan je profiel toevoegen"
 msgid "Item not available."
 msgstr "Item is niet aanwezig."
 
-#: ../../mod/probe.php:23 ../../mod/probe.php:29
+#: ../../mod/probe.php:24 ../../mod/probe.php:30
 #, php-format
 msgid "Fetching URL returns error: %1$s"
 msgstr "Ophalen URL gaf een foutmelding terug: %1$s"
 
-#: ../../mod/home.php:53
-msgid "Red Matrix - &quot;The Network&quot;"
-msgstr "RedMatrix - &quot;The Network&quot;"
+#: ../../mod/home.php:53 ../../mod/siteinfo.php:155
+msgid "$Projectname"
+msgstr "RedMatrix"
 
 #: ../../mod/home.php:124
 #, php-format
@@ -4752,12 +4757,12 @@ msgstr "Verkleinen [%s] van afbeelding mislukt."
 msgid "Invalid item."
 msgstr "Ongeldig item."
 
-#: ../../mod/block.php:39 ../../mod/wall_upload.php:29 ../../mod/page.php:45
+#: ../../mod/block.php:39 ../../mod/wall_upload.php:29 ../../mod/page.php:49
 msgid "Channel not found."
 msgstr "Kanaal niet gevonden."
 
 #: ../../mod/block.php:75 ../../mod/help.php:79 ../../mod/display.php:106
-#: ../../mod/page.php:82 ../../index.php:241
+#: ../../mod/page.php:85 ../../index.php:241
 msgid "Page not found."
 msgstr "Pagina niet gevonden."
 
@@ -4771,8 +4776,8 @@ msgstr "Deze actie kan alleen door mensen met een RedMatrix-account worden uitge
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
-"href=\"register\">register as a new RedMatrix member</a> to continue."
+"Please <a href=\"rmagic\">login with your $Projectname ID</a> or <a "
+"href=\"register\">register as a new $Projectname member</a> to continue."
 msgstr "Je dient <a href=\"rmagic\">in te loggen met je RedMatrix-account</a> of <a href=\"register\">een nieuw RedMatrix-account te registreren</a> om verder te kunnen gaan."
 
 #: ../../mod/like.php:101 ../../mod/like.php:128 ../../mod/like.php:166
@@ -4938,12 +4943,12 @@ msgstr "Openbare hubs"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Red Matrix. All sites in"
-" the matrix are interlinked so membership on any of them conveys membership "
-"in the matrix as a whole. Some sites may require subscription or provide "
-"tiered service plans. The provider links <strong>may</strong> provide "
-"additional details."
-msgstr "Op de hier weergegeven hubs kan iedereen zich voor de RedMatrix aanmelden. Alle hubs in de Matrix zijn met elkaar verbonden, dus maakt het qua lidmaatschap niet uit waar je je aanmeldt. Op sommige hubs heb je eerst goedkeuring nodig en sommige hubs vereisen betaalde abonnementen voor uitbreidingen. <strong>Mogelijk</strong> wordt hierover op de hub zelf meer informatie gegeven."
+"The listed sites allow public registration for the $Projectname network. All"
+" sites in the network are interlinked so membership on any of them conveys "
+"membership in the network as a whole. Some sites may require subscription or"
+" provide tiered service plans. The provider links <strong>may</strong> "
+"provide additional details."
+msgstr "Op de hier weergegeven hubs kan iedereen zich voor het RedMatrix-netwerk aanmelden. Alle hubs in het RedMatrix-netwerk zijn met elkaar verbonden, dus maakt het qua lidmaatschap niet uit waar je je aanmeldt. Op sommige hubs heb je eerst goedkeuring nodig en sommige hubs vereisen betaalde abonnementen voor uitbreidingen. <strong>Mogelijk</strong> wordt hierover op de hub zelf meer informatie gegeven."
 
 #: ../../mod/pubsites.php:25
 msgid "Rate this hub"
@@ -4982,7 +4987,7 @@ msgid "Edit post"
 msgstr "Bericht bewerken"
 
 #: ../../mod/dav.php:121
-msgid "RedMatrix channel"
+msgid "$Projectname channel"
 msgstr "RedMatrix-kanaal"
 
 #: ../../mod/group.php:20
@@ -5046,15 +5051,11 @@ msgstr "Ingeschakelde plug-ins/add-ons/apps:"
 msgid "No installed plugins/addons/apps"
 msgstr "Geen ingeschakelde plug-ins/add-ons/apps"
 
-#: ../../mod/siteinfo.php:155
-msgid "Red"
-msgstr "Red"
-
 #: ../../mod/siteinfo.php:156
 msgid ""
-"This is a hub of redmatrix - a global cooperative network of decentralized "
-"privacy enhanced websites."
-msgstr "Dit is een hub van de RedMatrix - een wereldwijd coöperatief netwerk van gedecentraliseerde websites met verbeterde privacy."
+"This is a hub of $Projectname - a global cooperative network of "
+"decentralized privacy enhanced websites."
+msgstr "Dit is een RedMatrix-hub - RedMatrix is een wereldwijd coöperatief netwerk van gedecentraliseerde websites (hubs) met verbeterde privacy."
 
 #: ../../mod/siteinfo.php:158
 msgid "Tag: "
@@ -5071,8 +5072,8 @@ msgstr "Draaiend op weblocatie"
 #: ../../mod/siteinfo.php:164
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">redmatrix.me</a> to learn more"
-" about the Red Matrix."
-msgstr "Bezoek <a href=\"https://redmatrix.me\">RedMatrix.me</a> om meer over de RedMatrix te leren."
+" about $Projectname."
+msgstr "Bezoek <a href=\"https://redmatrix.me\">RedMatrix.me</a> om meer over RedMatrix te leren."
 
 #: ../../mod/siteinfo.php:165
 msgid "Bug reports and issues: please visit"
@@ -5097,7 +5098,7 @@ msgid "Not Found"
 msgstr "Niet gevonden"
 
 #: ../../mod/setup.php:166
-msgid "Red Matrix Server - Setup"
+msgid "$Projectname Server - Setup"
 msgstr "RedMatrix Server - Setup"
 
 #: ../../mod/setup.php:172
@@ -5142,7 +5143,7 @@ msgstr "Database connection"
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Red Matrix we need to know how to connect to your "
+"In order to install $Projectname we need to know how to connect to your "
 "database."
 msgstr "In order to install RedMatrix we need to know how to connect to your database."
 
@@ -5604,8 +5605,8 @@ msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr "%1$s heeft het %3$s van %2$s getagd met %4$s"
 
 #: ../../mod/cloud.php:120
-msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
-msgstr "RedMatrix - gasttoegang: Toegangsnaam: {jouw e-mailadres}, wachtwoord: +++"
+msgid "$Projectname - Guests: Username: {your email address}, Password: +++"
+msgstr "RedMatrix - gasttoegang: Accountnaam: {jouw e-mailadres}, wachtwoord: +++"
 
 #: ../../mod/photos.php:77
 msgid "Page owner information could not be retrieved."
@@ -6130,7 +6131,7 @@ msgstr "%s : Geen geldig e-mailadres."
 
 #: ../../mod/invite.php:76
 msgid "Please join us on Red"
-msgstr "Uitnodiging voor de RedMatrix"
+msgstr "Uitnodiging voor RedMatrix"
 
 #: ../../mod/invite.php:87
 msgid "Invitation limit exceeded. Please contact your site administrator."
@@ -6165,20 +6166,21 @@ msgid "Your message:"
 msgstr "Jouw bericht:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on RedMatrix."
-msgstr "Hierbij nodig ik je uit om mij, en andere vrienden en kennissen, op de RedMatrix te vergezellen. Lees meer over de RedMatrix op https://redmatrix.me."
+msgid "Please join my community on $Projectname."
+msgstr "Hierbij nodig ik je uit om mij, en andere vrienden en kennissen, op RedMatrix te vergezellen. Lees meer over RedMatrix op https://redmatrix.me."
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
 msgstr "Je moet deze uitnodigingscode opgeven:"
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any RedMatrix location (they are all inter-connected)"
+msgid ""
+"1. Register at any $Projectname location (they are all inter-connected)"
 msgstr "1. Registreer je op een willekeurige RedMatrix-hub (ze zijn allemaal onderling met elkaar verbonden):"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my RedMatrix network address into the site searchbar."
-msgstr "2. Nadat je bent ingelogd en een kanaal hebt aangemaakt kan je mijn kanaaladres in het zoekveld invullen:"
+msgid "2. Enter my $Projectname network address into the site searchbar."
+msgstr "2. Nadat je bent ingelogd en een kanaal hebt aangemaakt kan je mijn RedMatrix-kanaaladres in het zoekveld invullen:"
 
 #: ../../mod/invite.php:138
 msgid "or visit "
@@ -6773,114 +6775,6 @@ msgstr "Omschrijving: "
 #: ../../mod/viewsrc.php:38
 msgid "Source of Item"
 msgstr "Bron van item"
-
-#: ../../mod/mitem.php:51
-msgid "Unable to create element."
-msgstr "Niet in staat om onderdeel aan te maken."
-
-#: ../../mod/mitem.php:74
-msgid "Unable to update menu element."
-msgstr "Menu-onderdeel kan niet worden geüpdatet."
-
-#: ../../mod/mitem.php:89
-msgid "Unable to add menu element."
-msgstr "Menu-onderdeel kan niet worden toegevoegd."
-
-#: ../../mod/mitem.php:151 ../../mod/mitem.php:220
-msgid "Menu Item Permissions"
-msgstr "Permissies menu-item"
-
-#: ../../mod/mitem.php:154 ../../mod/mitem.php:168
-msgid "Link Name"
-msgstr "Linknaam"
-
-#: ../../mod/mitem.php:155 ../../mod/mitem.php:169
-msgid "Link Target"
-msgstr "Linkdoel"
-
-#: ../../mod/mitem.php:156 ../../mod/mitem.php:226
-msgid "Use RedMatrix magic-auth if available"
-msgstr "Gebruik RedMatrix' magic-auth wanneer beschikbaar"
-
-#: ../../mod/mitem.php:157 ../../mod/mitem.php:227
-msgid "Open link in new window"
-msgstr "Open link in nieuw venster"
-
-#: ../../mod/mitem.php:158 ../../mod/mitem.php:228
-msgid "Order in list"
-msgstr "Volgorde in lijst"
-
-#: ../../mod/mitem.php:158 ../../mod/mitem.php:228
-msgid "Higher numbers will sink to bottom of listing"
-msgstr "Hogere nummers komen onderaan de lijst terecht"
-
-#: ../../mod/mitem.php:159
-msgid "Submit and finish"
-msgstr "Opslaan en afsluiten"
-
-#: ../../mod/mitem.php:160
-msgid "Submit and continue"
-msgstr "Opslaan en doorgaan"
-
-#: ../../mod/mitem.php:166
-msgid "Menu:"
-msgstr "Menu:"
-
-#: ../../mod/mitem.php:172
-msgid "Edit menu"
-msgstr "Menu bewerken"
-
-#: ../../mod/mitem.php:175
-msgid "Edit element"
-msgstr "Onderdeel bewerken"
-
-#: ../../mod/mitem.php:176
-msgid "Drop element"
-msgstr "Onderdeel verwijderen"
-
-#: ../../mod/mitem.php:177
-msgid "New element"
-msgstr "Nieuw element"
-
-#: ../../mod/mitem.php:178
-msgid "Edit this menu container"
-msgstr "Deze menu-container bewerken"
-
-#: ../../mod/mitem.php:179
-msgid "Add menu element"
-msgstr "Menu-element toevoegen"
-
-#: ../../mod/mitem.php:180
-msgid "Delete this menu item"
-msgstr "Dit menu-item verwijderen"
-
-#: ../../mod/mitem.php:181
-msgid "Edit this menu item"
-msgstr "Dit menu-item bewerken"
-
-#: ../../mod/mitem.php:198
-msgid "Menu item not found."
-msgstr "Menu-item niet gevonden."
-
-#: ../../mod/mitem.php:209
-msgid "Menu item deleted."
-msgstr "Menu-item verwijderd."
-
-#: ../../mod/mitem.php:211
-msgid "Menu item could not be deleted."
-msgstr "Menu-item kon niet worden verwijderd."
-
-#: ../../mod/mitem.php:218
-msgid "Edit Menu Element"
-msgstr "Menu-element bewerken"
-
-#: ../../mod/mitem.php:224
-msgid "Link text"
-msgstr "Linktekst"
-
-#: ../../mod/mitem.php:225
-msgid "URL of link"
-msgstr "URL of link"
 
 #: ../../mod/openid.php:26
 msgid "OpenID protocol error. No ID returned."
@@ -7989,6 +7883,118 @@ msgstr "Verwijder conversatie"
 msgid "D, d M Y - g:i A"
 msgstr "D, j M Y - G:i"
 
+#: ../../mod/mitem.php:51
+msgid "Unable to create element."
+msgstr "Niet in staat om onderdeel aan te maken."
+
+#: ../../mod/mitem.php:74
+msgid "Unable to update menu element."
+msgstr "Menu-onderdeel kan niet worden geüpdatet."
+
+#: ../../mod/mitem.php:89
+msgid "Unable to add menu element."
+msgstr "Menu-onderdeel kan niet worden toegevoegd."
+
+#: ../../mod/mitem.php:158 ../../mod/mitem.php:228
+msgid "Menu Item Permissions"
+msgstr "Permissies menu-item"
+
+#: ../../mod/mitem.php:161 ../../mod/mitem.php:176
+msgid "Link Name"
+msgstr "Linknaam"
+
+#: ../../mod/mitem.php:162 ../../mod/mitem.php:233
+msgid "Link or Submenu Target"
+msgstr "Linkdoel of submenu-doel"
+
+#: ../../mod/mitem.php:162
+msgid "Enter URL of the link or select a menu name to create a submenu"
+msgstr "Geef de URL van de link of kies een menunaam om een submenu aan te maken"
+
+#: ../../mod/mitem.php:163 ../../mod/mitem.php:234
+msgid "Use magic-auth if available"
+msgstr "Gebruik magic-auth wanneer beschikbaar"
+
+#: ../../mod/mitem.php:164 ../../mod/mitem.php:235
+msgid "Open link in new window"
+msgstr "Open link in nieuw venster"
+
+#: ../../mod/mitem.php:165 ../../mod/mitem.php:236
+msgid "Order in list"
+msgstr "Volgorde in lijst"
+
+#: ../../mod/mitem.php:165 ../../mod/mitem.php:236
+msgid "Higher numbers will sink to bottom of listing"
+msgstr "Hogere nummers komen onderaan de lijst terecht"
+
+#: ../../mod/mitem.php:166
+msgid "Submit and finish"
+msgstr "Opslaan en afsluiten"
+
+#: ../../mod/mitem.php:167
+msgid "Submit and continue"
+msgstr "Opslaan en doorgaan"
+
+#: ../../mod/mitem.php:174
+msgid "Menu:"
+msgstr "Menu:"
+
+#: ../../mod/mitem.php:177
+msgid "Link Target"
+msgstr "Linkdoel"
+
+#: ../../mod/mitem.php:180
+msgid "Edit menu"
+msgstr "Menu bewerken"
+
+#: ../../mod/mitem.php:183
+msgid "Edit element"
+msgstr "Onderdeel bewerken"
+
+#: ../../mod/mitem.php:184
+msgid "Drop element"
+msgstr "Onderdeel verwijderen"
+
+#: ../../mod/mitem.php:185
+msgid "New element"
+msgstr "Nieuw element"
+
+#: ../../mod/mitem.php:186
+msgid "Edit this menu container"
+msgstr "Deze menu-container bewerken"
+
+#: ../../mod/mitem.php:187
+msgid "Add menu element"
+msgstr "Menu-element toevoegen"
+
+#: ../../mod/mitem.php:188
+msgid "Delete this menu item"
+msgstr "Dit menu-item verwijderen"
+
+#: ../../mod/mitem.php:189
+msgid "Edit this menu item"
+msgstr "Dit menu-item bewerken"
+
+#: ../../mod/mitem.php:206
+msgid "Menu item not found."
+msgstr "Menu-item niet gevonden."
+
+#: ../../mod/mitem.php:217
+msgid "Menu item deleted."
+msgstr "Menu-item verwijderd."
+
+#: ../../mod/mitem.php:219
+msgid "Menu item could not be deleted."
+msgstr "Menu-item kon niet worden verwijderd."
+
+#: ../../mod/mitem.php:226
+msgid "Edit Menu Element"
+msgstr "Menu-element bewerken"
+
+#: ../../mod/mitem.php:232
+msgid "Link text"
+msgstr "Linktekst"
+
 #: ../../mod/mood.php:131
 msgid "Set your current mood and tell your friends"
 msgstr "Noteer je huidige stemming en toon het aan je connecties"
@@ -8580,7 +8586,7 @@ msgstr "Connectie: "
 msgid "Invalid connection."
 msgstr "Ongeldige connectie."
 
-#: ../../mod/page.php:119
+#: ../../mod/page.php:122
 msgid "Ipsum Lorem"
 msgstr "Lorem ipsum"
 
@@ -8918,7 +8924,7 @@ msgstr "Update-fout op %s"
 #: ../../boot.php:1515
 msgid ""
 "Create an account to access services and applications within the Red Matrix"
-msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van de RedMatrix"
+msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van RedMatrix"
 
 #: ../../boot.php:1543
 msgid "Password"

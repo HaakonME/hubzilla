@@ -174,7 +174,7 @@ function comanche_block($s, $class = '') {
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 			}
 
-			if($r[0]['title'] && trim($r[0]['title']) === '$content') {
+			if($r[0]['title'] && trim($r[0]['title']) === '$content' && get_app()->data['webpage'][0]['title']) {
 				$o .= '<h3>' . get_app()->data['webpage'][0]['title'] . '</h3>';
 			}
 

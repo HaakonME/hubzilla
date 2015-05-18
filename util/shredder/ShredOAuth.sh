@@ -128,7 +128,7 @@ FO_statuses_update () {
     $(OAuth_param 'status' "$2")
     )
   
-  params[${#params[@]}]=$(OAuth_param 'source' "shred")
+  params[${#params[@]}]=$(OAuth_param 'source' "shredder")
   
   [[ "$3" != "" ]] && params[${#params[@]}]=$(OAuth_param 'in_reply_to_status_id' "$3") && local in_reply_to_status_id=( '--data-urlencode' "in_reply_to_status_id=$3" )
     

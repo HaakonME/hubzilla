@@ -65,6 +65,10 @@ function get_perms() {
  */
 function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
+	$api = get_app()->get_oauth_key();
+	if($api)
+		return get_all_api_perms($uid,$api);	
+
 	$global_perms = get_perms();
 
 	// Save lots of individual lookups
@@ -265,6 +269,10 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
  */
 function perm_is_allowed($uid, $observer_xchan, $permission) {
 
+	$api = get_app()->get_oauth_key();
+	if($api)
+		return api_perm_is_allowed($uid,$api,$permission);
+
 	$arr = array(
 		'channel_id'    => $uid,
 		'observer_hash' => $observer_xchan,
@@ -387,6 +395,82 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 
 	return false;
 }
+
+function get_all_api_perms($uid,$api) {	
+
+	$global_perms = get_perms();
+
+	$ret = array();
+
+	$r = q("select * from xperm where xp_client = '%s' and xp_channel = %d",
+		dbesc($api),
+		intval($uid)
+	);
+
+	if(! $r)
+		return false;
+
+	$allow_all = false;
+	$allowed = array();
+	foreach($r as $rr) {
+		if($rr['xp_perm'] === 'all')
+			$allow_all = true;
+		if(! in_array($rr['xp_perm'],$allowed))
+			$allowed[] = $rr['xp_perm'];
+	}
+
+	foreach($global_perms as $perm_name => $permission) {
+		if($allow_all || in_array($perm_name,$allowed))
+			$ret[$perm_name] = true;
+		else
+			$ret[$perm_name] = false;
+
+	}
+
+	$arr = array(
+		'channel_id'    => $uid,
+		'observer_hash' => $observer_xchan,
+		'permissions'   => $ret);
+
+	call_hooks('get_all_api_perms',$arr);
+
+	return $arr['permissions'];
+
+}
+
+
+function api_perm_is_allowed($uid,$api,$permission) {
+
+	$arr = array(
+		'channel_id'    => $uid,
+		'observer_hash' => $observer_xchan,
+		'permission'    => $permission,
+		'result'        => false
+	);
+
+	call_hooks('api_perm_is_allowed', $arr);
+	if($arr['result'])
+		return true;
+
+	$r = q("select * from xperm where xp_client = '%s' and xp_channel = %d and ( xp_perm = 'all' OR xp_perm = '%s' )",
+		dbesc($api),
+		intval($uid),
+		dbesc($permission)
+	);
+
+	if(! $r)
+		return false;
+
+	foreach($r as $rr) {
+		if($rr['xp_perm'] === 'all' || $rr['xp_perm'] === $permission)
+			return true;
+
+	}
+
+	return false;
+
+}
+
 
 
 // Check a simple array of observers against a permissions

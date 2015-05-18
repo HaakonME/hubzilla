@@ -20,19 +20,21 @@ class FKOAuthDataStore extends OAuthDataStore {
 		logger(__function__.":".$consumer_key);
 //      echo "<pre>"; var_dump($consumer_key); killme();
 
-		$r = q("SELECT client_id, pw, redirect_uri FROM clients WHERE client_id='%s'",
+		$r = q("SELECT client_id, pw, redirect_uri FROM clients WHERE client_id = '%s'",
 			dbesc($consumer_key)
 		);
 
-		if (count($r))
+		if($r) {
+			get_app()->set_oauth_key($consumer_key);
 			return new OAuthConsumer($r[0]['client_id'],$r[0]['pw'],$r[0]['redirect_uri']);
+		}
 		return null;
   }
 
   function lookup_token($consumer, $token_type, $token) {
 		logger(__function__.":".$consumer.", ". $token_type.", ".$token);
 
-		$r = q("SELECT id, secret,scope, expires, uid  FROM tokens WHERE client_id='%s' AND scope='%s' AND id='%s'",
+		$r = q("SELECT id, secret, scope, expires, uid  FROM tokens WHERE client_id = '%s' AND scope = '%s' AND id = '%s'",
 			dbesc($consumer->key),
 			dbesc($token_type),
 			dbesc($token)
@@ -51,7 +53,7 @@ class FKOAuthDataStore extends OAuthDataStore {
   function lookup_nonce($consumer, $token, $nonce, $timestamp) {
 //		echo __file__.":".__line__."<pre>"; var_dump($consumer,$key); killme();
 
-		$r = q("SELECT id, secret  FROM tokens WHERE client_id='%s' AND id='%s' AND expires=%d",
+		$r = q("SELECT id, secret FROM tokens WHERE client_id = '%s' AND id = '%s' AND expires = %d",
 			dbesc($consumer->key),
 			dbesc($nonce),
 			intval($timestamp)
@@ -132,6 +134,7 @@ class FKOAuthDataStore extends OAuthDataStore {
 }
 
 class FKOAuth1 extends OAuthServer {
+
 	function __construct() {
 		parent::__construct(new FKOAuthDataStore());
 		$this->add_signature_method(new OAuthSignatureMethod_PLAINTEXT());

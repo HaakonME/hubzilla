@@ -180,19 +180,8 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET item_restrict = (item_restrict | %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
-					intval(ITEM_DELETED),
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					dbesc($i[0]['mid']),
-					intval($page_owner_uid)
-				);
-
+				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
 				$url = $a->get_baseurl();
-				$drop_id = intval($i[0]['id']);
-
-				if($i[0]['visible'])
-					proc_run('php',"include/notifier.php","drop","$drop_id");
 			}
 		}
 
@@ -878,8 +867,8 @@ function photos_content(&$a) {
 				}
 			}
 
-			if((local_channel()) && (local_channel() == $link_item['uid'])) {
-				q("UPDATE `item` SET item_unseen = 0 WHERE item_unseen = 1 AND parent = %d AND uid = %d ",
+			if((local_channel()) && (local_user() == $link_item['uid'])) {
+				q("UPDATE `item` SET item_unseen = 0 WHERE parent = %d and uid = %d and item_unseen = 1",
 					intval($link_item['parent']),
 					intval(local_channel())
 				);

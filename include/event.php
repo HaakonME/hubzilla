@@ -471,48 +471,50 @@ function event_store_item($arr, $event) {
 
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 
+		$item_wall = 0;
+		$item_origin = 0;
+		$item_thread_top = 0;				
+
 		if($item) {
 			$item_arr['id'] = $item['id'];
 		}
 		else {
 			$wall = (($z[0]['channel_hash'] == $event['event_xchan']) ? true : false);
-
-			$item_flags = ITEM_THREAD_TOP;
+			$item_thread_top = 1;
 			if($wall) {
-				$item_arr['item_wall'] = 1;
-				$item_flags |= ITEM_ORIGIN;
+				$item_wall = 1;
+				$item_origin = 1;
 			}
-			$item_arr['item_flags'] = $item_flags;
 		}
 
 		if(! $arr['mid'])
 			$arr['mid'] = item_message_id();
 
-		$item_arr['aid']           = $z[0]['channel_account_id'];
-		$item_arr['uid']           = $arr['uid'];
-		$item_arr['author_xchan']  = $arr['event_xchan'];
-		$item_arr['mid']           = $arr['mid'];
-		$item_arr['parent_mid']    = $arr['mid'];
-
-		$item_arr['owner_xchan']   = (($wall) ? $z[0]['channel_hash'] : $arr['event_xchan']);
-		$item_arr['author_xchan']  = $arr['event_xchan'];
-		$item_arr['title']         = $arr['summary'];
-		$item_arr['allow_cid']     = $arr['allow_cid'];
-		$item_arr['allow_gid']     = $arr['allow_gid'];
-		$item_arr['deny_cid']      = $arr['deny_cid'];
-		$item_arr['deny_gid']      = $arr['deny_gid'];
-		$item_arr['item_private']  = $private;
-		$item_arr['verb']          = ACTIVITY_POST;
+		$item_arr['aid']             = $z[0]['channel_account_id'];
+		$item_arr['uid']             = $arr['uid'];
+		$item_arr['author_xchan']    = $arr['event_xchan'];
+		$item_arr['mid']             = $arr['mid'];
+		$item_arr['parent_mid']      = $arr['mid'];
+		$item_arr['owner_xchan']     = (($wall) ? $z[0]['channel_hash'] : $arr['event_xchan']);
+		$item_arr['author_xchan']    = $arr['event_xchan'];
+		$item_arr['title']           = $arr['summary'];
+		$item_arr['allow_cid']       = $arr['allow_cid'];
+		$item_arr['allow_gid']       = $arr['allow_gid'];
+		$item_arr['deny_cid']        = $arr['deny_cid'];
+		$item_arr['deny_gid']        = $arr['deny_gid'];
+		$item_arr['item_private']    = $private;
+		$item_arr['verb']            = ACTIVITY_POST;
+		$item_arr['item_wall']       = $item_wall;
+		$item_arr['item_origin']     = $item_origin;
+		$item_arr['item_thread_top'] = $item_thread_top;;
 
 		if(array_key_exists('term', $arr))
 			$item_arr['term'] = $arr['term'];
 
-		$item_arr['resource_type'] = 'event';
-		$item_arr['resource_id']   = $event['event_hash'];
-
-		$item_arr['obj_type']      = ACTIVITY_OBJ_EVENT;
-
-		$item_arr['body']          = $prefix . format_event_bbcode($arr);
+		$item_arr['resource_type']   = 'event';
+		$item_arr['resource_id']     = $event['event_hash'];
+		$item_arr['obj_type']        = ACTIVITY_OBJ_EVENT;
+		$item_arr['body']            = $prefix . format_event_bbcode($arr);
 
 		// if it's local send the permalink to the channel page.
 		// otherwise we'll fallback to /display/$message_id

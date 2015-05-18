@@ -56,7 +56,7 @@ function manage_content(&$a) {
 				$channels[$x]['default_links'] = '1';
 
 
-				$c = q("SELECT id, item_restrict, item_flags, item_wall FROM item
+				$c = q("SELECT id, item_restrict, item_wall FROM item
 					WHERE item_restrict = 0 and item_unseen = 1 and uid = %d",
 					intval($channels[$x]['channel_id'])
 				);
@@ -71,11 +71,10 @@ function manage_content(&$a) {
 				}
 
 
-				$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
+				$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or xchan_deleted = 1 or xchan_orphan = 1)",
 					intval($channels[$x]['channel_id']),
 					intval(ABOOK_FLAG_PENDING),
-					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
-					intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED)
 				);
 
 				if($intr)

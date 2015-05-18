@@ -96,28 +96,28 @@ function subthread_content(&$a) {
 			),
 	));
 
-	if(! ($item['item_flags'] & ITEM_THREAD_TOP))
+	if(! intval($item['item_thread_top']))
 		$post_type = 'comment';		
-
 
 	$bodyverb = t('%1$s is following %2$s\'s %3$s');
 
-	$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
-
 	$arr = array();
 
-	$arr['mid']          = $mid;
-	$arr['aid']          = $owner_aid;
-	$arr['uid']          = $owner_uid;
-	$arr['item_flags']   = $item_flags;
-	$arr['item_wall']    = $item['item_wall'];
-	$arr['parent']       = $item['id'];
-	$arr['parent_mid']   = $item['mid'];
-	$arr['thr_parent']   = $item['mid'];
-	$arr['owner_xchan']  = $thread_owner['xchan_hash'];
-	$arr['author_xchan'] = $observer['xchan_hash'];
+	$arr['mid']           = $mid;
+	$arr['aid']           = $owner_aid;
+	$arr['uid']           = $owner_uid;
+	$arr['parent']        = $item['id'];
+	$arr['parent_mid']    = $item['mid'];
+	$arr['thr_parent']    = $item['mid'];
+	$arr['owner_xchan']   = $thread_owner['xchan_hash'];
+	$arr['author_xchan']  = $observer['xchan_hash'];
+	$arr['item_origin']   = 1;
+	$arr['item_notshown'] = 1;
+	if(intval($item['item_wall']))
+		$arr['item_wall'] = 1;
+	else
+		$arr['item_wall'] = 0;
 
-	
 	$ulink = '[zrl=' . $item_author['xchan_url'] . ']' . $item_author['xchan_name'] . '[/zrl]';
 	$alink = '[zrl=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/zrl]';
 	$plink = '[zrl=' . $a->get_baseurl() . '/display/' . $item['mid'] . ']' . $post_type . '[/zrl]';

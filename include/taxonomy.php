@@ -112,10 +112,8 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 	$count = intval($count);
 
 	if($flags) {
-		if($flags == ITEM_WALL)
+		if($flags === 'wall')
 			$sql_options .= " and item_wall = 1 ";
-		else
-			$sql_options .= " and ((item_flags & " . intval($flags) . ") = " . intval($flags) . ") ";
 	}
 
 	if($authors) {
@@ -129,7 +127,7 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 	// Fetch tags
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
 		where term.uid = %d and term.type = %d 
-		and otype = %d and item_restrict = %d
+		and otype = %d and item_type = %d and item_private = 0
 		$sql_options
 		group by term order by total desc %s",
 		intval($uid),

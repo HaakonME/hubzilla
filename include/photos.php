@@ -210,6 +210,9 @@ function photo_upload($channel, $observer, $args) {
 
 	// Create item container
 
+
+	$item_hidden = (($visible) ? 0 : 1 );
+
 	$lat = $lon = null;
 
 	if($exif && $exif['GPS']) {
@@ -219,8 +222,6 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
-	$item_flags = ITEM_ORIGIN|ITEM_THREAD_TOP;
-	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);
 	$title = '';
 	$mid = item_message_id();
 
@@ -229,23 +230,24 @@ function photo_upload($channel, $observer, $args) {
 	if($lat && $lon)
 		$arr['coord'] = $lat . ' ' . $lon;
 
-	$arr['aid']           = $account_id;
-	$arr['uid']           = $channel_id;
-	$arr['mid']           = $mid;
-	$arr['parent_mid']    = $mid; 
-	$arr['item_flags']    = $item_flags;
-	$arr['item_wall']     = 1;
-	$arr['item_restrict'] = $item_restrict;
-	$arr['resource_type'] = 'photo';
-	$arr['resource_id']   = $photo_hash;
-	$arr['owner_xchan']   = $channel['channel_hash'];
-	$arr['author_xchan']  = $observer['xchan_hash'];
-	$arr['title']         = $title;
-	$arr['allow_cid']     = $str_contact_allow;
-	$arr['allow_gid']     = $str_group_allow;
-	$arr['deny_cid']      = $str_contact_deny;
-	$arr['deny_gid']      = $str_group_deny;
-	$arr['verb']          = ACTIVITY_POST;
+	$arr['aid']            = $account_id;
+	$arr['uid']            = $channel_id;
+	$arr['mid']            = $mid;
+	$arr['parent_mid']     = $mid; 
+	$arr['item_hidden']    = $item_hidden;
+	$arr['resource_type']  = 'photo';
+	$arr['resource_id']    = $photo_hash;
+	$arr['owner_xchan']    = $channel['channel_hash'];
+	$arr['author_xchan']   = $observer['xchan_hash'];
+	$arr['title']          = $title;
+	$arr['allow_cid']      = $str_contact_allow;
+	$arr['allow_gid']      = $str_group_allow;
+	$arr['deny_cid']       = $str_contact_deny;
+	$arr['deny_gid']       = $str_group_deny;
+	$arr['verb']           = ACTIVITY_POST;
+	$arr['item_wall']      = 1;
+	$arr['item_origin']    = 1;
+	$arr['item_thread_top'] = 1;
 
 	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 
@@ -489,33 +491,34 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 
 	// Create item container
 
-	$item_flags = ITEM_ORIGIN|ITEM_THREAD_TOP;
-	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);
+
+	$item_hidden = (($visible) ? 0 : 1 );
 
 	$mid = item_message_id();
 
 	$arr = array();
 
-	$arr['aid']           = $channel['channel_account_id'];
-	$arr['uid']           = $channel['channel_id'];
-	$arr['mid']           = $mid;
-	$arr['parent_mid']    = $mid; 
-	$arr['item_flags']    = $item_flags;
-	$arr['item_wall']     = 1;
-	$arr['item_restrict'] = $item_restrict;
-	$arr['resource_type'] = 'photo';
-	$arr['resource_id']   = $photo['resource_id'];
-	$arr['owner_xchan']   = $channel['channel_hash'];
-	$arr['author_xchan']  = $creator_hash;
+	$arr['aid']             = $channel['channel_account_id'];
+	$arr['uid']             = $channel['channel_id'];
+	$arr['mid']             = $mid;
+	$arr['parent_mid']      = $mid; 
+	$arr['item_wall']       = 1;
+	$arr['item_origin']     = 1;
+	$arr['item_thread_top'] = 1;
+	$arr['item_hidden']     = $item_hidden;
+	$arr['resource_type']   = 'photo';
+	$arr['resource_id']     = $photo['resource_id'];
+	$arr['owner_xchan']     = $channel['channel_hash'];
+	$arr['author_xchan']    = $creator_hash;
 
-	$arr['allow_cid']     = $photo['allow_cid'];
-	$arr['allow_gid']     = $photo['allow_gid'];
-	$arr['deny_cid']      = $photo['deny_cid'];
-	$arr['deny_gid']      = $photo['deny_gid'];
+	$arr['allow_cid']       = $photo['allow_cid'];
+	$arr['allow_gid']       = $photo['allow_gid'];
+	$arr['deny_cid']        = $photo['deny_cid'];
+	$arr['deny_gid']        = $photo['deny_gid'];
 
-	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
-
-	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
+	$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+			
+	$arr['body']            = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
 		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 
 		. '[/zrl]';
 

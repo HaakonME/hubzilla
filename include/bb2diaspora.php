@@ -326,7 +326,7 @@ function bb2diaspora_itembody($item, $force_update = false) {
 
 	$newitem = $item;
 
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		$b = json_decode($item['body'],true);
 		// if called from diaspora_process_outbound, this decoding has already been done.

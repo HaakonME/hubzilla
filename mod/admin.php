@@ -89,6 +89,7 @@ function admin_content(&$a) {
 	 */
 
 	// array( url, name, extra css classes )
+
 	$aside = array(
 		'site'      => array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
 		'users'     => array($a->get_baseurl(true)."/admin/users/", t("Accounts") , "users"),
@@ -99,6 +100,7 @@ function admin_content(&$a) {
 //		'hubloc'    => array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
 		'profs'     => array(z_root() . '/admin/profs', t('Profile Config'), 'profs'),
 		'dbsync'    => array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
+
 	);
 
 	/* get plugins admin page */
@@ -148,9 +150,9 @@ function admin_content(&$a) {
 			case 'themes':
 				$o = admin_page_themes($a);
 				break;
-			case 'hubloc':
-				$o = admin_page_hubloc($a);
-				break;
+//			case 'hubloc':
+//				$o = admin_page_hubloc($a);
+//				break;
 			case 'logs':
 				$o = admin_page_logs($a);
 				break;

@@ -285,20 +285,13 @@ function post_init(&$a) {
 			$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 			info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 			logger('mod_zot: auth success from ' . $x[0]['xchan_addr']); 
-			q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_id = %d ",
-					intval(HUBLOC_WORKS),
-					intval($x[0]['hubloc_id'])
-			);
-		} else {
-			if ($test) {
+		}
+		else {
+			if($test) {
 				$ret['message'] .= 'auth failure. ' . print_r($_REQUEST,true) . print_r($j,true) . EOL;
 				json_return_and_die($ret);
 			}
 			logger('mod_zot: magic-auth failure - not authenticated: ' . $x[0]['xchan_addr']);
-			q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_id = %d ",
-				intval(HUBLOC_RECEIVE_ERROR),
-				intval($x[0]['hubloc_id'])
-			);
 		}
 
 		/**
@@ -693,20 +686,16 @@ function post_post(&$a) {
 
 	// a dead hub came back to life - reset any tombstones we might have
 
-	if ($hub['hubloc_status'] & HUBLOC_OFFLINE) {
-		q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
-			intval(HUBLOC_OFFLINE),
+	if(intval($hub['hubloc_error'])) {
+		q("update hubloc set hubloc_error = 0 where hubloc_id = %d",
 			intval($hub['hubloc_id'])		
 		);
-		if ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-			q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
-				intval(HUBLOC_FLAGS_ORPHANCHECK),
+		if(intval($r[0]['hubloc_orphancheck'])) {
+			q("update hubloc set hubloc_orhpancheck = 0 where hubloc_id = %d",
 				intval($hub['hubloc_id'])
 			);
 		}
-		q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
-			intval(XCHAN_FLAGS_ORPHAN),
-			intval(XCHAN_FLAGS_ORPHAN),
+		q("update xchan set xchan_orphan = 0 where xchan_orphan = 1 and xchan_hash = '%s'",
 			dbesc($hub['hubloc_hash'])
 		);
 	}
@@ -718,8 +707,7 @@ function post_post(&$a) {
 	 * Get rid of them (mark them deleted). There's a good chance they were re-installs.
 	 */
 
-	q("update hubloc set hubloc_flags = ( hubloc_flags | %d ) where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
-		intval(HUBLOC_FLAGS_DELETED),
+	q("update hubloc set hubloc_deleted = 1 where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
 		dbesc($hub['hubloc_url']),
 		dbesc($hub['hubloc_sitekey'])
 	);

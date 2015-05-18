@@ -131,8 +131,8 @@ function openid_content(&$a) {
 
 	        $x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
                 xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, 
-				xchan_name_date, xchan_flags)
-                values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
+				xchan_name_date, xchan_hidden)
+                values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 1) ",
 	            dbesc($url),
     	        dbesc(''),
         	    dbesc(''),
@@ -147,8 +147,7 @@ function openid_content(&$a) {
             	dbesc($name),
 	            dbesc($network),
     	        dbesc(datetime_convert()),
-        	    dbesc(datetime_convert()),
-            	intval(XCHAN_FLAGS_HIDDEN)
+        	    dbesc(datetime_convert())
         	);
 			if($x) {
 				$r = q("select * from xchan where xchan_hash = '%s' limit 1",

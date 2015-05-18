@@ -102,7 +102,7 @@ function editwebpage_content(&$a) {
 		return;
 	}
 
-	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
+	if(intval($itm[0]['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($itm[0]['title'])
 			$itm[0]['title'] = crypto_unencapsulate(json_decode_plus($itm[0]['title']),$key);
@@ -169,7 +169,7 @@ function editwebpage_content(&$a) {
 
 	$editor = replace_macros($tpl,array(
 		'$return_path' => $rp,
-		'$webpage' => ITEM_WEBPAGE,
+		'$webpage' => ITEM_TYPE_WEBPAGE,
 		'$placeholdpagetitle' => t('Page link title'),
 		'$pagetitle' => $page_title,
 		'$writefiles' => (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')),

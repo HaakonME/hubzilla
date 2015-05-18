@@ -40,6 +40,7 @@
 #event-datetime-break {
     clear: both;
 }
+
 #event-nofinish-break {
     margin-bottom: 10px;
 }
@@ -51,3 +52,4 @@
 #event-edit-preview-btn {
 	margin-right: 15px;
 }
+

@@ -177,8 +177,9 @@ function thing_init(&$a) {
 		$arr['owner_xchan']  = $channel['channel_hash'];
 		$arr['author_xchan'] = $channel['channel_hash'];
 
-		$arr['item_flags'] = ITEM_ORIGIN|ITEM_THREAD_TOP;
+		$arr['item_origin'] = 1;
 		$arr['item_wall'] = 1;
+		$arr['item_thread_top'] = 1;
 
 		$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
 		$plink = '[zrl=' . $term['url'] . ']' . $term['term'] . '[/zrl]';

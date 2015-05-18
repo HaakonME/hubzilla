@@ -399,36 +399,6 @@ define ( 'VNOTIFY_INTRO',      0x0200 );
 define ( 'VNOTIFY_REGISTER',   0x0400 );
 
 
-// We need a flag to designate that a site is a
-// global directory mirror, but probably doesn't
-// belong in hubloc.
-// This indicates a need for an 'xsite' table
-// which contains only sites and not people.
-// Then we might have to revisit hubloc as a
-// linked structure between xchan and xsite
-
-define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
-define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
-define ( 'HUBLOC_FLAGS_ORPHANCHECK',  0x0004); 
-define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
-
-define ( 'XCHAN_FLAGS_NORMAL',		  0x0000);
-define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
-define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
-define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
-define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
-define ( 'XCHAN_FLAGS_SYSTEM',        0x0010);
-define ( 'XCHAN_FLAGS_PUBFORUM',      0x0020);
-define ( 'XCHAN_FLAGS_DELETED',       0x1000);
-/*
- * Traficlights for Administration of HubLoc
- * to detect problems in inter server communication
- */
-define ('HUBLOC_NOTUSED',             0x0000);
-define ('HUBLOC_SEND_ERROR',          0x0001);
-define ('HUBLOC_RECEIVE_ERROR',       0x0002);
-define ('HUBLOC_WORKS',               0x0004);
-define ('HUBLOC_OFFLINE',             0x0008);
 
 /**
  * Tag/term types
@@ -550,40 +520,24 @@ define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
  */
 
 define ( 'ITEM_VISIBLE',         0x0000);
-define ( 'ITEM_HIDDEN',          0x0001);
+//define ( 'ITEM_HIDDEN',          0x0001);
 define ( 'ITEM_BLOCKED',         0x0002);
 define ( 'ITEM_MODERATED',       0x0004);
 define ( 'ITEM_SPAM',            0x0008);
-define ( 'ITEM_DELETED',         0x0010);
+//define ( 'ITEM_DELETED',         0x0010);
 define ( 'ITEM_UNPUBLISHED',     0x0020);
-define ( 'ITEM_WEBPAGE',         0x0040);	// is a static web page, not a conversational item
+//define ( 'ITEM_WEBPAGE',         0x0040);	// is a static web page, not a conversational item
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080);
 define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
-define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
+//define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
 define ( 'ITEM_PENDING_REMOVE',  0x0800);   // deleted, notification period has lapsed
-
-/**
- * Item Flags
- */
-
-define ( 'ITEM_ORIGIN',          0x0001);
-define ( 'ITEM_UNSEEN',          0x0002);
-define ( 'ITEM_STARRED',         0x0004);
-define ( 'ITEM_UPLINK',          0x0008);
-define ( 'ITEM_CONSENSUS',       0x0010);  // an item which may present agree/disagree/abstain options
-define ( 'ITEM_WALL',            0x0020);
-define ( 'ITEM_THREAD_TOP',      0x0040);
-define ( 'ITEM_NOTSHOWN',        0x0080);  // technically visible but not normally shown (e.g. like/dislike)
-define ( 'ITEM_NSFW',            0x0100);
-define ( 'ITEM_RELAY',           0x0200);  // used only in the communication layers, not stored
-define ( 'ITEM_MENTIONSME',      0x0400);
-define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
-define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
-define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
-define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
-define ( 'ITEM_RSS',             0x8000);  // Item comes from a feed. Use this to decide whether to link the title
 										   // Don't make us evaluate this same item again.
+
+define ( 'ITEM_TYPE_POST',       0 );
+define ( 'ITEM_TYPE_BLOCK',      1 );
+define ( 'ITEM_TYPE_PDL',        2 );
+define ( 'ITEM_TYPE_WEBPAGE',    3 );
 
 define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );

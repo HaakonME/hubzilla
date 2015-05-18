@@ -294,11 +294,10 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0) ORDER BY abook_created DESC LIMIT 50",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or xchan_deleted = 1 or xchan_orphan = 1) ORDER BY abook_created DESC LIMIT 50",
 			intval(local_channel()),
 			intval(ABOOK_FLAG_PENDING),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
-			intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED)
 		);
 
 		if($r) {
@@ -378,7 +377,7 @@ function ping_init(&$a) {
 
 	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
 		$r = q("SELECT id, item_restrict, item_flags FROM item
-			WHERE item_restrict = 0 and item_unseen = 1 and uid = %d
+			WHERE (item_restrict = 0) and item_unseen = 1 and uid = %d
 			and author_xchan != '%s'",
 			intval(local_channel()),
 			dbesc($ob_hash)
@@ -405,11 +404,10 @@ function ping_init(&$a) {
 	$t2 = dba_timer();
 
 	if($vnotify & VNOTIFY_INTRO) {
-		$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or (xchan_flags & %d) > 0)",
+		$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) > 0 and not ((abook_flags & %d) > 0 or xchan_deleted = 1 or xchan_orphan = 1)",
 			intval(local_channel()),
 			intval(ABOOK_FLAG_PENDING),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
-			intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED)
 		);
 
 		$t3 = dba_timer();

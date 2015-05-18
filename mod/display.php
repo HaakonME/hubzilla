@@ -81,7 +81,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$target_item = null;
 
-	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid like '%s' limit 1",
+	$r = q("select id, uid, mid, parent_mid, item_type, item_deleted from item where mid like '%s' limit 1",
 		dbesc($item_hash . '%')
 	);
 
@@ -91,7 +91,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$r = null;
 
-	if($target_item['item_restrict'] & ITEM_WEBPAGE) {
+	if($target_item['item_type']  == ITEM_TYPE_WEBPAGE) {
 		$x = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
 		);
@@ -247,7 +247,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($updateable) {
-		$x = q("UPDATE item SET item_unseen = 0 WHERE item_unseen = 1 AND uid = %d and parent = %d ",
+		$x = q("UPDATE item SET item_unseen = 0 where item_unseen = 1 AND uid = %d and parent = %d ",
 			intval(local_channel()),
 			intval($r[0]['parent'])
 		);
@@ -266,7 +266,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			dbesc($item_hash)
 		);
 		if($r) {
-			if($r[0]['item_flags'] & ITEM_DELETED) {
+			if(intval($r[0]['item_deleted'])) {
 				notice( t('Item has been removed.') . EOL );
 			}
 			else {	

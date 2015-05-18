@@ -80,9 +80,8 @@ function zot_get_hublocs($hash) {
 
 	/* Only search for active hublocs - e.g. those that haven't been marked deleted */
 
-	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d )>0 order by hubloc_url ",
-		dbesc($hash),
-		intval(HUBLOC_FLAGS_DELETED)
+	$ret = q("select * from hubloc where hubloc_hash = '%s' and hubloc_deleted != 0 order by hubloc_url ",
+		dbesc($hash)
 	);
 
 	return $ret;
@@ -200,9 +199,8 @@ function zot_finger($webbie, $channel = null, $autofallback = true) {
 
 	$r = q("select xchan.*, hubloc.* from xchan
 			left join hubloc on xchan_hash = hubloc_hash
-			where xchan_addr = '%s' and (hubloc_flags & %d) > 0 limit 1",
-		dbesc($xchan_addr),
-		intval(HUBLOC_FLAGS_PRIMARY)
+			where xchan_addr = '%s' and hubloc_primary = 1 limit 1",
+		dbesc($xchan_addr)
 	);
 
 	if ($r) {
@@ -709,43 +707,36 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 		$hidden = (1 - intval($arr['searchable']));
 
-		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
-		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $hidden)
-			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
-		else
-			$new_flags = $r[0]['xchan_flags'];
+		$hidden_changed = $adult_changed = $deleted_changed = $pubforum_changed = 0;
 
-		$adult = (($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED) ? true : false);
-		$adult_changed =  ((intval($adult) != intval($arr['adult_content'])) ? true : false);
-		if($adult_changed)
-			$new_flags = $new_flags ^ XCHAN_FLAGS_SELFCENSORED;
+		if(intval($r[0]['xchan_hidden']) != (1 - intval($arr['searchable'])))
+			$hidden_changed = 1;
+		if(intval($r[0]['xchan_selfcensored']) != intval($arr['adult_content']))
+			$adult_changed = 1;
+		if(intval($r[0]['xchan_deleted']) != intval($arr['deleted']))
+			$deleted_changed = 1;
+		if(intval($r[0]['xchan_pubforum']) != intval($arr['public_forum']))
+			$pubforum_changed = 1;
 
-		$deleted = (($r[0]['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
-		$deleted_changed =  ((intval($deleted) != intval($arr['deleted'])) ? true : false);
-		if($deleted_changed)
-			$new_flags = $new_flags ^ XCHAN_FLAGS_DELETED;
-
-		$public_forum = (($r[0]['xchan_flags'] & XCHAN_FLAGS_PUBFORUM) ? true : false);
-		$pubforum_changed = ((intval($public_forum) != intval($arr['public_forum'])) ? true : false);
-		if($pubforum_changed)
-			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_PUBFORUM;
-
-		if(($r[0]['xchan_name_date'] != $arr['name_updated'])
-			|| ($r[0]['xchan_connurl'] != $arr['connections_url'])
-			|| ($r[0]['xchan_flags'] != $new_flags)
+		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
+			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
 			|| ($r[0]['xchan_addr'] != $arr['address'])
 			|| ($r[0]['xchan_follow'] != $arr['follow_url'])
-			|| ($r[0]['xchan_connpage'] != $arr['connect_url'])
-			|| ($r[0]['xchan_url'] != $arr['url'])) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s',
-				xchan_connpage = '%s', xchan_flags = %d,
+			|| ($r[0]['xchan_connpage'] != $arr['connect_url']) 
+			|| ($r[0]['xchan_url'] != $arr['url'])
+			|| $hidden_changed || adult_changed || deleted_changed || $pubforum_changed ) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s', 
+				xchan_connpage = '%s', xchan_hidden = %d, xchan_selfcensored = %d, xchan_deleted = %d, xchan_pubforum = %d, 
 				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s'",
 				dbesc(($arr['name']) ? $arr['name'] : '-'),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
 				dbesc($arr['follow_url']),
 				dbesc($arr['connect_url']),
-				intval($new_flags),
+				intval(1 - intval($arr['searchable'])),
+				intval($arr['adult_content']),
+				intval($arr['deleted']),
+				intval($arr['public_forum']),
 				dbesc($arr['address']),
 				dbesc($arr['url']),
 				dbesc($xchan_hash)
@@ -764,20 +755,9 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 				&& ($arr['site']['url'] != z_root()))
 			$arr['searchable'] = false;
 
-		$hidden = (1 - intval($arr['searchable']));
-
-		if($hidden)
-			$new_flags = XCHAN_FLAGS_HIDDEN;
-		else
-			$new_flags = 0;
-		if($arr['adult_content'])
-			$new_flags |= XCHAN_FLAGS_SELFCENSORED;
-		if(array_key_exists('deleted',$arr) && $arr['deleted'])
-			$new_flags |= XCHAN_FLAGS_DELETED;
-
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
+				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_selfcensored, xchan_deleted, xchan_pubforum )
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d) ",
 			dbesc($xchan_hash),
 			dbesc($arr['guid']),
 			dbesc($arr['guid_sig']),
@@ -793,7 +773,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			dbesc('zot'),
 			dbescdate($arr['photo_updated']),
 			dbescdate($arr['name_updated']),
-			intval($new_flags)
+			intval(1 - intval($arr['searchable'])),
+			intval($arr['adult_content']),
+			intval($arr['deleted']),
+			intval($arr['public_forum'])
 		);
 
 		$what .= 'new_xchan';
@@ -1541,11 +1524,11 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private']) && (! $relay)) {
 			$local_public = true;
 
-			$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
+			$r = q("select xchan_selfcensored from xchan where xchan_hash = '%s' limit 1",
 				dbesc($sender['hash'])
 			);
 			// don't import sys channel posts from selfcensored authors
-			if($r && ($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED)) {
+			if($r && (intval($r[0]['xchan_selfcensored']))) {
 				$local_public = false;
 				continue;
 			}
@@ -1562,10 +1545,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			$arr['item_wall'] = 1;
 		}
 		else {
-			// clear the wall flag if it is set
-			if(intval($arr['item_wall'])) {
-				$arr['item_wall'] = 0;
-			}
+			$arr['item_wall'] = 0;
 		}
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $local_public)) {
@@ -1653,7 +1633,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			}
 		}
 
-		if($arr['item_restrict'] & ITEM_DELETED) {
+		if(intval($arr['item_deleted'])) {
 
 			// remove_community_tag is a no-op if this isn't a community tag activity
 			remove_community_tag($sender,$arr,$channel['channel_id']);
@@ -1676,15 +1656,16 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			continue;
 		}
 
-		$r = q("select id, edited, item_restrict, item_flags, mid, parent_mid from item where mid = '%s' and uid = %d limit 1",
+		$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
 			intval($channel['channel_id'])
 		);
 		if($r) {
 			// We already have this post.
 			$item_id = $r[0]['id'];
-			if($r[0]['item_restrict'] & ITEM_DELETED) {
-				// It was deleted locally.
+
+			if(intval($r[0]['item_deleted'])) {
+				// It was deleted locally. 
 				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 				continue;
 			}
@@ -1699,9 +1680,10 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			}
 			else {
 				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
-				// We need this line to ensure wall-to-wall comments are relayed (by falling through to the relay bit),
-				// and at the same time not relay any other relayable posts more than once, because to do so is very wasteful.
-				if(! ($r[0]['item_flags'] & ITEM_ORIGIN))
+
+				// We need this line to ensure wall-to-wall comments are relayed (by falling through to the relay bit), 
+				// and at the same time not relay any other relayable posts more than once, because to do so is very wasteful. 
+				if(! intval($r[0]['item_origin']))
 					continue;
 			}
 		}
@@ -1848,7 +1830,12 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 	$item_found = false;
 	$post_id = 0;
 
-	$r = q("select id, item_restrict, author_xchan, owner_xchan, source_xchan from item where mid = '%s' and uid = %d limit 1",
+
+	$r = q("select id, item_deleted from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
+		and mid = '%s' and uid = %d limit 1",
+		dbesc($sender['hash']),
+		dbesc($sender['hash']),
+		dbesc($sender['hash']),
 		dbesc($item['mid']),
 		intval($uid)
 	);
@@ -1880,8 +1867,10 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 		return false;
 	}
 
+	require_once('include/items.php');
+
 	if ($item_found) {
-		if ($r[0]['item_restrict'] & ITEM_DELETED) {
+		if (intval($r[0]['item_deleted'])) {
 			logger('delete_imported_item: item was already deleted');
 			if (! $relay)
 				return false;
@@ -1893,9 +1882,8 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 			// back, and we aren't going to (or shouldn't at any rate) delete it again in the future - so losing
 			// this information from the metadata should have no other discernible impact.
 
-			if (($r[0]['id'] != $r[0]['parent']) && ($r[0]['item_flags'] & ITEM_ORIGIN)) {
-				q("update item set item_flags = %d where id = %d and uid = %d",
-					intval($r[0]['item_flags'] ^ ITEM_ORIGIN),
+			if (($r[0]['id'] != $r[0]['parent']) && intval($r[0]['item_origin'])) {
+				q("update item set item_origin = 0 where id = %d and uid = %d",
 					intval($r[0]['id']),
 					intval($r[0]['uid'])
 				);
@@ -2156,23 +2144,16 @@ function sync_locations($sender, $arr, $absolute = false) {
 					$current_site = true;
 				}
 
-				// If it is the site we're currently talking to, and it's marked offline,
-				// either we have some bad information - or the thing came back to life.
-
-				if(($current_site) && ($r[0]['hubloc_status'] & HUBLOC_OFFLINE)) {
-					q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
-						intval(HUBLOC_OFFLINE),
+				if($current_site && intval($r[0]['hubloc_error'])) {
+					q("update hubloc set hubloc_error = 0 where hubloc_id = %d",
 						intval($r[0]['hubloc_id'])
 					);
-					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-						q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
-							intval(HUBLOC_FLAGS_ORPHANCHECK),
+					if(intval($r[0]['hubloc_orphancheck'])) {
+						q("update hubloc set hubloc_orphancheck = 0 where hubloc_id = %d",
 							intval($r[0]['hubloc_id'])
 						);
 					}
-					q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
-						intval(XCHAN_FLAGS_ORPHAN),
-						intval(XCHAN_FLAGS_ORPHAN),
+					q("update xchan set xchan_orphan = 0 where xchan_orphan = 1 and xchan_hash = '%s'",
 						dbesc($sender['hash'])
 					);
 				}
@@ -2188,9 +2169,8 @@ function sync_locations($sender, $arr, $absolute = false) {
 					}
 				}
 
-				if(($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary'])) {
-					$m = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_PRIMARY),
+				if(intval($r[0]['hubloc_primary']) && (! $location['primary'])) {
+					$m = q("update hubloc set hubloc_primary = 0, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
@@ -2199,14 +2179,13 @@ function sync_locations($sender, $arr, $absolute = false) {
 					$what .= 'primary_hub ';
 					$changed = true;
 				}
-				elseif((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary'])) {
-					$m = q("update hubloc set hubloc_flags = (hubloc_flags | %d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_PRIMARY),
+				elseif((! intval($r[0]['hubloc_primary'])) && ($location['primary'])) {
+					$m = q("update hubloc set hubloc_primary = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
 					// make sure hubloc_change_primary() has current data
-					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
+					$r[0]['hubloc_primary'] = intval($location['primary']);
 					hubloc_change_primary($r[0]);
 					$what .= 'primary_hub ';
 					$changed = true;
@@ -2219,18 +2198,17 @@ function sync_locations($sender, $arr, $absolute = false) {
 						$changed = true;
 					}
 				}
-				if(($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED) && (! $location['deleted'])) {
-					$n = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_DELETED),
+				if((intval($r[0]['hubloc_deleted']) && (! $location['deleted']))
+					|| ((! (intval($r[0]['hubloc_deleted']))) && ($location['deleted']))) {
+					$n = q("update hubloc set hubloc_deleted = 0, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
 					$what .= 'delete_hub ';
 					$changed = true;
 				}
-				elseif((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && ($location['deleted'])) {
-					$n = q("update hubloc set hubloc_flags = (hubloc_flags | %d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_DELETED),
+				elseif((! intval($r[0]['hubloc_deleted'])) && ($location['deleted'])) {
+					$n = q("update hubloc set hubloc_deleted = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
@@ -2244,22 +2222,20 @@ function sync_locations($sender, $arr, $absolute = false) {
 			// New hub claiming to be primary. Make it so by removing any existing primaries.
 
 			if(intval($location['primary'])) {
-				$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )>0",
-					intval(HUBLOC_FLAGS_PRIMARY),
+				$r = q("update hubloc set hubloc_primary = 0, hubloc_updated = '%s' where hubloc_hash = '%s' and hubloc_primary = 1",
 					dbesc(datetime_convert()),
-					dbesc($sender['hash']),
-					intval(HUBLOC_FLAGS_PRIMARY)
+					dbesc($sender['hash'])
 				);
 			}
 			logger('sync_locations: new hub: ' . $location['url']);
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_primary, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
 					values ( '%s','%s','%s','%s', '%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
 				dbesc($sender['guid']),
 				dbesc($sender['guid_sig']),
 				dbesc($sender['hash']),
 				dbesc($location['address']),
 				dbesc('zot'),
-				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
+				intval($location['primary']),
 				dbesc($location['url']),
 				dbesc($location['url_sig']),
 				dbesc($location['host']),
@@ -2287,8 +2263,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
 					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_url']);
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
-						intval(HUBLOC_FLAGS_DELETED),
+					$r = q("update hubloc set hubloc_deleted = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($x['hubloc_id'])
 					);
@@ -2317,20 +2292,19 @@ function zot_encode_locations($channel) {
 	$ret = array();
 
 	$x = zot_get_hublocs($channel['channel_hash']);
-	if ($x && count($x)) {
-		foreach ($x as $hub) {
-			if (! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
-				$ret[] = array(
-					'host'     => $hub['hubloc_host'],
-					'address'  => $hub['hubloc_addr'],
-					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
-					'url'      => $hub['hubloc_url'],
-					'url_sig'  => $hub['hubloc_url_sig'],
-					'callback' => $hub['hubloc_callback'],
-					'sitekey'  => $hub['hubloc_sitekey'],
-					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
-				);
-			}
+
+	if($x && count($x)) {
+		foreach($x as $hub) {
+			$ret[] = array(
+				'host'     => $hub['hubloc_host'],
+				'address'  => $hub['hubloc_addr'],
+				'primary'  => (intval($hub['hubloc_primary']) ? true : false),
+				'url'      => $hub['hubloc_url'],
+				'url_sig'  => $hub['hubloc_url_sig'],
+				'callback' => $hub['hubloc_callback'],
+				'sitekey'  => $hub['hubloc_sitekey'],
+				'deleted'  => (intval($hub['hubloc_deleted']) ? true : false)
+			);
 		}
 	}
 
@@ -2386,9 +2360,8 @@ function import_directory_profile($hash, $profile, $addr, $ud_flags = UPDATE_FLA
 	// These are not translated, so the German "erwachsenen" keyword will not censor the directory profile. Only the English form - "adult".
 
 
-	if (in_arrayi('nsfw', $clean) || in_arrayi('adult', $clean)) {
-		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-			intval(XCHAN_FLAGS_SELFCENSORED),
+	if(in_arrayi('nsfw',$clean) || in_arrayi('adult',$clean)) {
+		q("update xchan set xchan_selfcensored = 1 where xchan_hash = '%s'",
 			dbesc($hash)
 		);
 	}
@@ -3209,11 +3182,11 @@ function get_rpost_path($observer) {
  * @return boolean|string return false or a hash
  */
 function import_author_zot($x) {
-	$hash = make_xchan_hash($x['guid'], $x['guid_sig']);
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d)>0 limit 1",
+
+	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
+	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_primary = 1 limit 1",
 		dbesc($x['guid']),
-		dbesc($x['guid_sig']),
-		intval(HUBLOC_FLAGS_PRIMARY)
+		dbesc($x['guid_sig'])
 	);
 
 	if ($r) {
@@ -3283,12 +3256,9 @@ function zot_process_message_request($data) {
 	if ($messages) {
 		$env_recips = null;
 
-		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host
-			from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)>0
-			and not (hubloc_status & %d)>0 ",
-			dbesc($sender_hash),
-			intval(HUBLOC_FLAGS_DELETED),
-			intval(HUBLOC_OFFLINE)
+		$r = q("select * from hubloc where hubloc_hash = '%s' and not hubloc_error and not hubloc_deleted 
+			group by hubloc_sitekey",
+			dbesc($sender_hash)
 		);
 		if (! $r) {
 			logger('no hubs');

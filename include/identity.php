@@ -100,7 +100,7 @@ function create_sys_channel() {
 		'name' => 'System',
 		'pageflags' => PAGE_SYSTEM,
 		'publish' => 0,
-		'xchanflags' => XCHAN_FLAGS_SYSTEM
+		'system' => 1
 	));
 }
 
@@ -201,7 +201,7 @@ function create_identity($arr) {
 
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
-	$xchanflags = ((x($arr,'xchanflags')) ? intval($arr['xchanflags']) : XCHAN_FLAGS_NORMAL);
+	$system = ((x($arr,'system')) ? intval($arr['system']) : 0);
 	$name_error = validate_channelname($arr['name']);
 	if($name_error) {
 		$ret['message'] = $name_error;
@@ -300,14 +300,14 @@ function create_identity($arr) {
 
 	// Create a verified hub location pointing to this site.
 
-	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 
+	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_primary, 
 		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
 		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($guid),
 		dbesc($sig),
 		dbesc($hash),
 		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
-		intval(($primary) ? HUBLOC_FLAGS_PRIMARY : 0),
+		intval($primary),
 		dbesc(z_root()),
 		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
 		dbesc(get_app()->get_hostname()),
@@ -320,7 +320,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_system ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
 		dbesc($hash),
 		dbesc($guid),
 		dbesc($sig),
@@ -336,7 +336,7 @@ function create_identity($arr) {
 		dbesc('zot'),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
-		intval($xchanflags)
+		intval($system)
 	);
 
 	// Not checking return value.
@@ -583,8 +583,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 	/** @warning this may run into memory limits on smaller systems */
 
-	$r = q("select * from item where item_wall = 1 and (item_restrict & %d) = 0 and uid = %d",
-		intval(ITEM_DELETED),
+	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d",
 		intval($channel_id)
 	);
 	if($r) {

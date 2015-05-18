@@ -214,11 +214,10 @@ function connections_content(&$a) {
 				nav_set_selected('intros');
 				break;
 			case 'ifpending':
-				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or (xchan_flags & %d)>0)",
+				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or xchan_deleted = 1 or xchan_orphan = 1)",
 					intval(local_channel()),
 					intval(ABOOK_FLAG_PENDING),
-					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
-					intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED)
 				);
 				if($r && $r[0]['total']) {
 					$search_flags = ABOOK_FLAG_PENDING;
@@ -343,10 +342,9 @@ function connections_content(&$a) {
 	}
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
-		where abook_channel = %d and not (abook_flags & %d)>0 and not (xchan_flags & %d )>0 $sql_extra $sql_extra2 ",
+		where abook_channel = %d and not (abook_flags & %d)>0 and xchan_deleted = 0 and xchan_orphan = 0 $sql_extra $sql_extra2 ",
 		intval(local_channel()),
-		intval(ABOOK_FLAG_SELF),
-		intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
+		intval(ABOOK_FLAG_SELF)
 	);
 	if($r) {
 		$a->set_pager_total($r[0]['total']);
@@ -354,10 +352,9 @@ function connections_content(&$a) {
 	}
 
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
-		WHERE abook_channel = %d and not (abook_flags & %d)>0 and not ( xchan_flags & %d)>0 $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d OFFSET %d ",
+		WHERE abook_channel = %d and not (abook_flags & %d)>0 and xchan_deleted = 0 and xchan_orphan = 0 $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d OFFSET %d ",
 		intval(local_channel()),
 		intval(ABOOK_FLAG_SELF),
-		intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN),
 		intval($a->pager['itemspage']),
 		intval($a->pager['start'])
 	);

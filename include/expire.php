@@ -12,9 +12,7 @@ function expire_run($argv, $argc){
 
 	// perform final cleanup on previously delete items
 
-	$r = q("select id from item where (item_restrict & %d) > 0 and (item_restrict & %d) = 0
-		and changed < %s - INTERVAL %s",
-		intval(ITEM_DELETED),
+	$r = q("select id from item where item_deleted = 1 and not (item_restrict & %d)>0 and changed < %s - INTERVAL %s",
 		intval(ITEM_PENDING_REMOVE),
 		db_utcnow(), db_quoteinterval('10 DAY')
 	);

@@ -19,15 +19,15 @@ function starred_init(&$a) {
 	if(! count($r))
 		killme();
 
-	$item_flags = ( $r[0]['item_flags'] ^ ITEM_STARRED );
+	$item_starred = (intval($r[0]['item_starred']) ? 0 : 1);
 
-	$r = q("UPDATE item SET item_flags = %d WHERE uid = %d and id = %d",
-		intval($item_flags),
+	$r = q("UPDATE item SET item_starred = %d WHERE uid = %d and id = %d",
+		intval($item_starred),
 		intval(local_channel()),
 		intval($message_id)
 	);
 
 	header('Content-type: application/json');
-	echo json_encode(array('result' => (($item_flags & ITEM_STARRED) ? 1 : 0)));
+	echo json_encode(array('result' => $item_starred));
 	killme();
 }

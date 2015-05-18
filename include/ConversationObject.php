@@ -166,7 +166,7 @@ class Conversation extends BaseObject {
 			if(($item->get_data_value('author_xchan') === $ob_hash) || ($item->get_data_value('owner_xchan') === $ob_hash))
 				$item->set_commentable(true);
 
-			if($item->get_data_value('item_flags') & ITEM_NOCOMMENT) {
+			if(intval($item->get_data_value('item_nocomment'))) {
 				$item->set_commentable(false);
 			}
 			elseif(($this->observer) && (! $item->is_commentable())) {

@@ -29,7 +29,7 @@ function widget_tagcloud($args) {
 	$type = TERM_CATEGORY;
 
 	// FIXME there exists no $authors variable
-	$r = tagadelic($uid, $count, $authors, $flags, ITEM_WEBPAGE, $type);
+	$r = tagadelic($uid, $count, $authors, $flags, ITEM_TYPE_WEBPAGE, $type);
 
 	if($r) {
 		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
@@ -393,7 +393,7 @@ function widget_tagcloud_wall($arr) {
 
 	$limit = ((array_key_exists('limit', $arr)) ? intval($arr['limit']) : 50);
 	if(feature_enabled($a->profile['profile_uid'], 'tagadelic'))
-		return wtagblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], ITEM_WALL);
+		return wtagblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], 'wall');
 
 	return '';
 }
@@ -408,7 +408,7 @@ function widget_catcloud_wall($arr) {
 
 	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
 
-	return catblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], ITEM_WALL);
+	return catblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], 'wall');
 }
 
 
@@ -704,7 +704,7 @@ function widget_item($arr) {
 	require_once('include/security.php');
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select * from item where mid = '%s' and uid = %d and item_restrict = " . intval(ITEM_WEBPAGE) . " $sql_extra limit 1",
+	$r = q("select * from item where mid = '%s' and uid = %d and item_type = " . intval(ITEM_TYPE_WEBPAGE) . " $sql_extra limit 1",
 		dbesc($arr['mid']),
 		intval($uid)
 	);
@@ -986,3 +986,5 @@ function widget_pubsites() {
 		return;
 	return '<div class="widget"><ul class="nav nav-pills"><li><a href="pubsites">' . t('Public Hubs') . '</a></li></ul></div>';
 }
+
+

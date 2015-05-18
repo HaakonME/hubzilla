@@ -104,7 +104,7 @@ function zfinger_init(&$a) {
 	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)    ? true : false);
 	$censored        = (($e['channel_pageflags'] & PAGE_CENSORED) ? true : false);
 	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)   ? false : true);
-	$deleted         = (($e['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
+	$deleted         = (intval($e['xchan_deleted']) ? true : false);
 
 	if($deleted || $censored || $sys_channel)
 		$searchable = false;

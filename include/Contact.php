@@ -22,9 +22,8 @@ function rconnect_url($channel_id,$xchan) {
 	if(($r) && ($r[0]['xchan_follow']))
 		return $r[0]['xchan_follow'];
 
-	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d )>0 limit 1",
-		dbesc($xchan),
-		intval(HUBLOC_FLAGS_PRIMARY)
+	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and hubloc_primary = 1 limit 1",
+		dbesc($xchan)
 	);
 
 	if($r)
@@ -272,14 +271,12 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		);
 
 			
-		$r = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_hash = '%s'",
-			intval(HUBLOC_FLAGS_DELETED),
+		$r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s'",
 			dbesc($channel['channel_hash'])
 		);
 
 
-		$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-			intval(XCHAN_FLAGS_DELETED),
+		$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
 			dbesc($channel['channel_hash'])
 		);
 
@@ -312,8 +309,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		intval($channel_id)
 	);
 
-	$r = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_hash = '%s' and hubloc_url = '%s' ",
-		intval(HUBLOC_FLAGS_DELETED),
+	$r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s' and hubloc_url = '%s' ",
 		dbesc($channel['channel_hash']),
 		dbesc(z_root())
 	);
@@ -322,16 +318,14 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 
 	$hublocs = 0;
 
-	$r = q("select hubloc_id from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d)>0",
-		dbesc($channel['channel_hash']),
-		intval(HUBLOC_FLAGS_DELETED)
+	$r = q("select hubloc_id from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0",
+		dbesc($channel['channel_hash'])
 	);
 	if($r)
 		$hublocs = count($r);
 
 	if(! $hublocs) {
-		$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' ",
-			intval(XCHAN_FLAGS_DELETED),
+		$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s' ",
 			dbesc($channel['channel_hash'])
 		);
 	}
@@ -374,10 +368,8 @@ function mark_orphan_hubsxchans() {
 	if($dirmode == DIRECTORY_MODE_NORMAL)
 		return;
 
-    $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where (hubloc_status & %d) = 0 
+    $r = q("update hubloc set hubloc_error = 1 where hubloc_error = 0 
 		and hubloc_network = 'zot' and hubloc_connected < %s - interval %s",
-        intval(HUBLOC_OFFLINE),
-        intval(HUBLOC_OFFLINE),
         db_utcnow(), db_quoteinterval('36 day')
     );
 
@@ -394,27 +386,21 @@ function mark_orphan_hubsxchans() {
 //	}
 
 
-	$r = q("select hubloc_id, hubloc_hash from hubloc where (hubloc_status & %d)>0 and not (hubloc_flags & %d)>0",
-		intval(HUBLOC_OFFLINE),
-		intval(HUBLOC_FLAGS_ORPHANCHECK)
-	);
+	$r = q("select hubloc_id, hubloc_hash from hubloc where hubloc_error = 0 and hubloc_orphancheck = 0");
 
 	if($r) {
 		foreach($r as $rr) {
 
 			// see if any other hublocs are still alive for this channel
 
-			$x = q("select * from hubloc where hubloc_hash = '%s' and not (hubloc_status & %d)>0",
-				dbesc($rr['hubloc_hash']),
-				intval(HUBLOC_OFFLINE)
+			$x = q("select * from hubloc where hubloc_hash = '%s' and hubloc_error = 0",
+				dbesc($rr['hubloc_hash'])
 			);
 			if($x) {
 
 				// yes - if the xchan was marked as an orphan, undo it
 
-				$y = q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
-					intval(XCHAN_FLAGS_ORPHAN),
-					intval(XCHAN_FLAGS_ORPHAN),
+				$y = q("update xchan set xchan_orphan = 0 where xchan_orphan = 1 and xchan_hash = '%s'",
 					dbesc($rr['hubloc_hash'])
 				);
 
@@ -423,16 +409,14 @@ function mark_orphan_hubsxchans() {
 
 				// nope - mark the xchan as an orphan
 
-				$y = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-					intval(XCHAN_FLAGS_ORPHAN),
+				$y = q("update xchan set xchan_orphan = 1 where xchan_hash = '%s'",
 					dbesc($rr['hubloc_hash'])
 				);
 			}
 
 			// mark that we've checked this entry so we don't need to do it again
 
-			$y = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_id = %d",
-				intval(HUBLOC_FLAGS_ORPHANCHECK),
+			$y = q("update hubloc set hubloc_orphancheck = 1 where hubloc_id = %d",
 				dbesc($rr['hubloc_id'])
 			);
 		}
@@ -501,13 +485,11 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 
 			// directory servers need to keep the record around for sync purposes - mark it deleted
 
-	        $r = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_hash = '%s'",
-    	        intval(HUBLOC_FLAGS_DELETED),
+	        $r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s'",
         	    dbesc($xchan)
         	);
 
-        	$r = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s'",
-            	intval(XCHAN_FLAGS_DELETED),
+        	$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
             	dbesc($xchan)
         	);
 		}

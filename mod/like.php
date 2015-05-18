@@ -241,9 +241,10 @@ function like_content(&$a) {
 
 		// get the item. Allow linked photos (which are normally hidden) to be liked
 
-		$r = q("SELECT * FROM item WHERE id = %d and (item_restrict = 0 or item_restrict = %d) LIMIT 1",
-			intval($item_id),
-			intval(ITEM_HIDDEN)
+		$r = q("SELECT * FROM item WHERE id = %d 
+			and item_blocked = 0 and item_moderated = 0 and item_spam = 0 
+			and item_deleted = 0 and item_unpublished = 0 and item_delayed_publish = 0 LIMIT 1",
+			intval($item_id)
 		);
 
 		if(! $item_id || (! $r)) {
@@ -337,11 +338,13 @@ function like_content(&$a) {
 	}
 
 	$mid = item_message_id();
-	$item_wall = 0;
+
+	$arr = array();
 
 	if($extended_like) {
-		$item_flags = ITEM_THREAD_TOP|ITEM_ORIGIN;
-		$item_wall = 1;
+		$arr['item_thread_top'] = 1;
+		$arr['item_origin'] = 1;
+		$arr['item_wall'] = 1;
 	}
 	else {
 		$post_type = (($item['resource_type'] === 'photo') ? t('photo') : t('status'));
@@ -373,18 +376,19 @@ function like_content(&$a) {
 				),
 		));
 
-		if(! ($item['item_flags'] & ITEM_THREAD_TOP))
+		if(! intval($item['item_thread_top']))
 			$post_type = 'comment';		
 
-		$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
+		$arr['item_origin'] = 1;
+		$arr['item_notshown'] = 1;
+
 		if(intval($item['item_wall']))
-			$item_wall = 1;
+			$arr['item_wall'] = 1;
 
 		// if this was a linked photo and was hidden, unhide it.
 
-		if($item['item_restrict'] & ITEM_HIDDEN) {
-			$r = q("update item set item_restrict = (item_restrict ^ %d) where id = %d",
-				intval(ITEM_HIDDEN),
+		if(intval($item['item_hidden'])) {
+			$r = q("update item set item_hidden = 0 where id = %d",
 				intval($item['id'])
 			);
 		}	
@@ -412,7 +416,6 @@ function like_content(&$a) {
 			killme(); 
 
 	
-	$arr = array();
 
 	if($extended_like) {
 		$ulink = '[zrl=' . $ch[0]['xchan_url'] . ']' . $ch[0]['xchan_name'] . '[/zrl]';

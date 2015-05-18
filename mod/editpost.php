@@ -55,7 +55,7 @@ function editpost_content(&$a) {
 
 
 
-	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
+	if(intval($itm[0]['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($itm[0]['title'])
 			$itm[0]['title'] = crypto_unencapsulate(json_decode_plus($itm[0]['title']),$key);

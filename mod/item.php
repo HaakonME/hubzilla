@@ -295,7 +295,7 @@ function item_post(&$a) {
 		// For comments, We need to additionally look at the parent and see if it's a wall post that originated locally.
 
 		if($observer['xchan_name'] != $owner_xchan['xchan_name'])  {
-			if($parent_item && ($parent_item['item_flags'] & ITEM_ORIGIN) && intval($parent_item['item_wall'])) {
+			if(($parent_item) && ($parent_item['item_wall'] && $parent_item['item_origin'])) {
 				$walltowall_comment = true;
 				$walltowall = true;
 			}
@@ -343,11 +343,6 @@ function item_post(&$a) {
 		$title             = $_REQUEST['title'];
 		$body              = $_REQUEST['body'];
 		$item_flags        = $orig_post['item_flags'];
-
-		// force us to recalculate if we need to obscure this post
-
-		if($item_flags & ITEM_OBSCURED)
-			$item_flags = ($item_flags ^ ITEM_OBSCURED);
 
 		$item_restrict     = $orig_post['item_restrict'];
 		$postopts          = $orig_post['postopts'];
@@ -657,14 +652,10 @@ function item_post(&$a) {
 		}
 	}
 
-	$item_unseen =  1;
-	$item_wall = 0;
 
-	if($post_type === 'wall' || $post_type === 'wall-comment')
-		$item_wall = 1;
-
-	if($origin)
-		$item_flags = $item_flags | ITEM_ORIGIN;
+	$item_unseen = ((local_channel() != $profile_uid) ? 1 : 0);
+	$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);
+	$item_origin = (($origin) ? 1 : 0);
 
 	if($moderated)
 		$item_restrict = $item_restrict | ITEM_MODERATED;
@@ -695,14 +686,10 @@ function item_post(&$a) {
 
 	$datarray = array();
 
-	if(! $parent) {
-		$item_flags = $item_flags | ITEM_THREAD_TOP;
-	}
+	$item_thead_top = ((! $parent) ? 1 : 0);
 
-	if($consensus)
-		$item_flags |= ITEM_CONSENSUS;
 
-	if ((! $plink) && ($item_flags & ITEM_THREAD_TOP)) {
+	if ((! $plink) && ($item_thread_top)) {
 		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
 	}
 	
@@ -738,6 +725,10 @@ function item_post(&$a) {
 	$datarray['postopts']       = $postopts;
 	$datarray['item_restrict']  = $item_restrict;
 	$datarray['item_flags']     = $item_flags;
+	$datarray['item_unseen']    = $item_unseen;
+	$datarray['item_wall']      = $item_wall;
+	$datarray['item_origin']    = $item_origin;
+	$datarray['item_thread_top'] = $item_thread_top;
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['public_policy']  = $public_policy;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
@@ -789,7 +780,7 @@ function item_post(&$a) {
 		if($uid) {
 			if($channel['channel_hash'] === $datarray['author_xchan']) {
 				$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
-				$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
+				$datarray['item_verified'] = 1;
 			}
 		}
 	}
@@ -825,7 +816,7 @@ function item_post(&$a) {
 			// only send comment notification if this is a wall-to-wall comment,
 			// otherwise it will happen during delivery
 
-			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && intval($parent_item['item_wall'])) {
+			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && (intval($parent_item['item_wall']))) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
 					'from_xchan'   => $datarray['author_xchan'],
@@ -867,9 +858,8 @@ function item_post(&$a) {
 		// This way we don't see every picture in your new photo album posted to your wall at once.
 		// They will show up as people comment on them.
 
-		if($parent_item['item_restrict'] & ITEM_HIDDEN) {
-			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d",
-				intval($parent_item['item_restrict'] - ITEM_HIDDEN),
+		if(intval($parent_item['item_hidden'])) {
+			$r = q("UPDATE item SET item_hidden = 0 WHERE id = %d",
 				intval($parent_item['id'])
 			);
 		}
@@ -1078,11 +1068,10 @@ function item_check_service_class($channel_id,$iswebpage) {
 	$ret = array('success' => false, $message => '');
 
 	if ($iswebpage) {
-		// note: we aren't counting comanche templates and blocks, only webpages
-		$r = q("select count(id) as total from item where parent = id 
-			and ( item_restrict & %d ) > 0 and ( item_restrict & %d ) = 0 and uid = %d ",
-			intval(ITEM_WEBPAGE),
-			intval(ITEM_DELETED),
+		$r = q("select count(i.id)  as total from item i 
+			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
+			and i.parent=i.id and i.item_type = %d and i.item_deleted = 0 and i.uid= %d ",
+			intval(ITEM_TYPE_WEBPAGE),
 			intval($channel_id)
 		);
 	}

@@ -82,8 +82,9 @@ function notification($params) {
 			localize_item($i);
 			$title = $i['title'];
 			$body = $i['body'];
-			$private = (($i['item_private']) || ($i['item_flags'] & ITEM_OBSCURED));
-		} else {
+			$private = (($i['item_private']) || intval($i['item_obscured']));
+		}
+		else {
 			$title = $params['item']['title'];
 			$body = $params['item']['body'];
 		}

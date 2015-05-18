@@ -96,7 +96,7 @@ function localize_item(&$item){
 		if(! $item['object'])
 			return;
 
-		if($item['item_flags'] & ITEM_THREAD_TOP)
+		if(intval($item['item_thread_top']))
 			return;	
 
 		$obj = json_decode_plus($item['object']);
@@ -361,7 +361,7 @@ function localize_item(&$item){
 	// FIXME - we need a better filter than just the string 'data'; try and
 	// match the fact that it's json encoded
 
-	if(($item['item_flags'] & ITEM_OBSCURED) 
+	if(intval($item['item_obscured'])
 		&& strlen($item['body']) && (! strpos($item['body'],'data'))) {
 		$item['body']  = json_encode(crypto_encapsulate($item['body'],get_config('system','pubkey')));
 	}
@@ -662,8 +662,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$likebuttons = false;
 				$shareable = false;
 
-				$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message signature validated') : '');
-				$forged = ((($item['sig']) && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message signature incorrect') : '');
+				$verified = (intval($item['item_verified']) ? t('Message signature validated') : '');
+				$forged = ((($item['sig']) && (! intval($item['item_verified']))) ? t('Message signature incorrect') : '');
 
 				$unverified = '';
 

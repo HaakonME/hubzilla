@@ -117,10 +117,9 @@ function group_content(&$a) {
 
 		check_form_security_token_ForbiddenOnErr('group_member_change', 't');
 
-		$r = q("SELECT abook_xchan from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and not (xchan_flags & %d)>0 and not (abook_flags & %d)>0 and not (abook_flags & %d)>0 limit 1",
+		$r = q("SELECT abook_xchan from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and xchan_deleted = 0 and not (abook_flags & %d)>0 and not (abook_flags & %d)>0 limit 1",
 			dbesc(base64url_decode(argv(2))),
 			intval(local_channel()),
-			intval(XCHAN_FLAGS_DELETED),
 			intval(ABOOK_FLAG_BLOCKED),
 			intval(ABOOK_FLAG_PENDING)
 		);
@@ -211,10 +210,9 @@ function group_content(&$a) {
 			group_rmv_member(local_channel(),$group['name'],$member['xchan_hash']);
 	}
 
-	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND  not (abook_flags & %d)>0 and not (xchan_flags & %d)>0 and not (abook_flags & %d)>0 order by xchan_name asc",
+	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND  not (abook_flags & %d)>0 and xchan_deleted = 0 and not (abook_flags & %d)>0 order by xchan_name asc",
 		intval(local_channel()),
 		intval(ABOOK_FLAG_BLOCKED),
-		intval(XCHAN_FLAGS_DELETED),
 		intval(ABOOK_FLAG_PENDING)
 	);
 

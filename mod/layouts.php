@@ -111,7 +111,7 @@ function layouts_content(&$a) {
 	// This lets you post pages at other people's channels.
 
 	$x = array(
-		'webpage'     => ITEM_PDL,
+		'webpage'     => ITEM_TYPE_PDL,
 		'is_owner'    => true,
 		'nickname'    => $a->profile['channel_address'],
 		'bang'        => '',

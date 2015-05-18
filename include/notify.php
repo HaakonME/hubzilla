@@ -5,9 +5,6 @@ function format_notification($item) {
 
 	$ret = '';
 
-// return array();
-
-
 	require_once('include/conversation.php');
 
 	// Call localize_item with the "brief" flag to get a one line status for activities. 
@@ -19,7 +16,7 @@ function format_notification($item) {
 		$itemem_text = $item['localize'];
 	}
 	else {
-		$itemem_text = (($item['item_flags'] & ITEM_THREAD_TOP)
+		$itemem_text = (($item['item_thread_top'])
 			? t('created a new post')
 			: sprintf( t('commented on %s\'s post'), $item['owner']['xchan_name']));
 	}

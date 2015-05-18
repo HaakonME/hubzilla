@@ -174,7 +174,7 @@ function diaspora_process_outbound($arr) {
 
 	$target_item = $arr['target_item'];
 
-	if($target_item && array_key_exists('item_flags',$target_item) && ($target_item['item_flags'] & ITEM_OBSCURED)) {
+	if($target_item && array_key_exists('item_obscured',$target_item) && intval($target_item['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($target_item['title'])
 			$target_item['title'] = crypto_unencapsulate(json_decode($target_item['title'],true),$key);
@@ -223,7 +223,7 @@ function diaspora_process_outbound($arr) {
 			if(! $contact['xchan_pubkey'])
 				continue;
 
-			if(($target_item['item_restrict'] & ITEM_DELETED) 
+			if(intval($target_item['item_deleted']) 
 				&& (($target_item['mid'] === $target_item['parent_mid']) || $arr['followup'])) {
 				// send both top-level retractions and relayable retractions for owner to relay
 				diaspora_send_retraction($target_item,$arr['channel'],$contact);
@@ -252,8 +252,8 @@ function diaspora_process_outbound($arr) {
 
 		$contact = $arr['hub'];
 
-		if(($target_item['deleted']) 
-			&& ($target_item['mid'] === $target_item['parent_mod'])) {
+		if(intval($target_item['item_deleted']) 
+			&& ($target_item['mid'] === $target_item['parent_mid'])) {
 			// top-level retraction
 			logger('delivery: diaspora retract: ' . $loc);
 			diaspora_send_retraction($target_item,$arr['channel'],$contact,true);
@@ -965,9 +965,8 @@ function diaspora_post($importer,$xml,$msg) {
 
 	$datarray['app']  = $app;
 
-	$datarray['item_flags'] = ITEM_THREAD_TOP;
 	$datarray['item_unseen'] = 1;
-
+	$datarray['item_thread_top'] = 1;
 
 	$tgroup = tgroup_check($importer['channel_id'],$datarray);
 
@@ -975,7 +974,6 @@ function diaspora_post($importer,$xml,$msg) {
 		logger('diaspora_post: Ignoring this author.');
 		return 202;
 	}
-
 
 	$result = item_store($datarray);
 	return;
@@ -1548,7 +1546,7 @@ function diaspora_comment($importer,$xml,$msg) {
 	if($result && $result['success'])
 		$message_id = $result['item_id'];
 
-	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
+	if(intval($parent_item['item_origin']) && (! $parent_author_signature)) {
 		// if the message isn't already being relayed, notify others
 		// the existence of parent_author_signature means the parent_author or owner
 		// is already relaying.
@@ -2150,7 +2148,7 @@ function diaspora_like($importer,$xml,$msg) {
 	// the existence of parent_author_signature means the parent_author or owner
 	// is already relaying. The parent_item['origin'] indicates the message was created on our system
 
-	if(($parent_item['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature))
+	if(intval($parent_item['item_origin']) && (! $parent_author_signature))
 		proc_run('php','include/notifier.php','comment-import',$message_id);
 
 	return;
@@ -2259,19 +2257,12 @@ function diaspora_signed_retraction($importer,$xml,$msg) {
 					$r[0]['parent']
 				);
 				if($p) {
-					if(($p[0]['item_flags'] & ITEM_ORIGIN) && (! $parent_author_signature)) {
-// FIXME so we can relay this
-//						q("insert into sign (`retract_iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-//							$r[0]['id'],
-//							dbesc($signed_data),
-//							dbesc($sig),
-//							dbesc($diaspora_handle)
-//						);
+					if(intval($p[0]['item_origin']) && (! $parent_author_signature)) {
 
 						// the existence of parent_author_signature would have meant the parent_author or owner
 						// is already relaying.
-						logger('diaspora_signed_retraction: relaying relayable_retraction');
 
+						logger('diaspora_signed_retraction: relaying relayable_retraction');
 						proc_run('php','include/notifier.php','drop',$r[0]['id']);
 					}
 				}
@@ -2612,7 +2603,7 @@ function diaspora_send_followup($item,$owner,$contact,$public_batch = false) {
 		$target_type = 'Post';
 		$positive = 'true';
 
-		if(($item_['item_restrict'] & ITEM_DELETED))
+		if(intval($item['item_deleted']))
 			logger('diaspora_send_followup: received deleted "like". Those should go to diaspora_send_retraction');
 	}
 	else {
@@ -2708,7 +2699,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	$relay_retract = false;
 	$sql_sign_id = 'iid';
 
-	if( $item['item_restrict'] & ITEM_DELETED) {
+	if( intval($item['item_deleted'])) {
 		$relay_retract = true;
 
 		$target_type = ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
@@ -2720,7 +2711,7 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 		$like = true;
 
 		$target_type = ( $parent['mid'] === $parent['parent_mid']  ? 'Post' : 'Comment');
-//		$positive = (($item['item_restrict'] & ITEM_DELETED) ? 'false' : 'true');
+//		$positive = (intval($item['item_deleted']) ? 'false' : 'true');
 		$positive = 'true';
 
 		$tpl = get_markup_template('diaspora_like_relay.tpl');

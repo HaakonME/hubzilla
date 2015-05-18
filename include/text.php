@@ -746,20 +746,21 @@ function contact_block() {
 		return;
 
 	$is_owner = ((local_channel() && local_channel() == $a->profile['uid']) ? true : false);
+	$sql_extra = '';
 
 	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
-	$xchan_flags = XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED;
+
 	if(! $is_owner) {
 		$abook_flags = $abook_flags | ABOOK_FLAG_HIDDEN;
-		$xchan_flags = $xchan_flags | XCHAN_FLAGS_HIDDEN;
+		$sql_extra = " and xchan_hidden = 0 ";
 	}
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
-	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and ( abook_flags & %d ) = 0 and ( xchan_flags & %d ) = 0",
+
+	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and not ( abook_flags & %d )>0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra",
 			intval($a->profile['uid']),
-			intval($abook_flags),
-			intval($xchan_flags)
+			intval($abook_flags)
 	);
 	if(count($r)) {
 		$total = intval($r[0]['total']);
@@ -768,14 +769,13 @@ function contact_block() {
 		$contacts = t('No connections');
 		$micropro = null;
 	} else {
-
+		
 		$randfunc = db_getfunc('RAND');
-
-		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND ( abook_flags & %d ) = 0 and ( xchan_flags & %d ) = 0 ORDER BY $randfunc LIMIT %d",
-				intval($a->profile['uid']),
-				intval($abook_flags|ABOOK_FLAG_ARCHIVED),
-				intval($xchan_flags),
-				intval($shown)
+	
+		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d)>0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra ORDER BY $randfunc LIMIT %d",
+			intval($a->profile['uid']),
+			intval($abook_flags|ABOOK_FLAG_ARCHIVED),
+			intval($shown)
 		);
 
 		if(count($r)) {
@@ -1179,7 +1179,7 @@ function link_compare($a, $b) {
 
 
 function unobscure(&$item) {
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
 			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
@@ -1620,9 +1620,9 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and (item_restrict & %d)>0",
+	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and item_type = %d ",
 		intval($channel_id),
-		intval(ITEM_PDL)
+		intval(ITEM_TYPE_PDL)
 	);
 
 	if($r) {
@@ -1975,13 +1975,13 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 	if(count($arr)) {
 		if($abook) {
 			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash and abook_channel = %d
-				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0",
+				where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1",
 				intval($item['uid'])
 			);
 		}
 		else {
 			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0");
+				where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1");
 		}
 		$xchans = q("select * from xchan where xchan_hash in (" . implode(',',$arr) . ") and xchan_network in ('rss','unknown')");
 		if(! $chans)
@@ -2009,7 +2009,7 @@ function xchan_mail_query(&$item) {
 
 	if(count($arr)) {
 		$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-			where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )>0");
+			where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1");
 	}
 	if($chans) {
 		$item['from'] = find_xchan_in_array($item['from_xchan'],$chans);

@@ -382,14 +382,12 @@ function post_activity_item($arr) {
 	if((($arr['parent']) && $arr['parent'] != $arr['id']) || (($arr['parent_mid']) && $arr['parent_mid'] != $arr['mid']))
 		$is_comment = true;
 
-	if(! x($arr,'item_flags')) {
-		if($is_comment)
-			$arr['item_flags'] = ITEM_ORIGIN;
-		else {
-			$arr['item_wall'] = 1;
-			$arr['item_flags'] = ITEM_ORIGIN | ITEM_THREAD_TOP;
-		}
-	}
+	if(! array_key_exists('item_origin',$arr))
+		$arr['item_origin'] = 1;
+	if(! array_key_exists('item_wall',$arr) && (! $is_comment))
+		$arr['item_wall'] = 1;
+	if(! array_key_exists('item_thread_top',$arr) && (! $is_comment))
+		$arr['item_thread_top'] = 1;
 
 	$channel  = get_app()->get_channel();
 	$observer = get_app()->get_observer();
@@ -416,7 +414,7 @@ function post_activity_item($arr) {
 		if($channel) {
 			if($channel['channel_hash'] === $arr['author_xchan']) {
 				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-				$arr['item_flags'] = $arr['item_flags'] | ITEM_VERIFIED;
+				$arr['item_verified'] = 1;
 			}
 		}
 	}
@@ -440,7 +438,7 @@ function post_activity_item($arr) {
 
 	$arr['comment_policy'] = map_scope($channel['channel_w_comment']);
 
-	if ((! $arr['plink']) && ($arr['item_flags'] & ITEM_THREAD_TOP)) {
+	if ((! $arr['plink']) && (intval($arr['item_thread_top']))) {
 		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 	}
 
@@ -857,11 +855,12 @@ function get_item_elements($x) {
 	$arr['item_flags'] = 0;
 
 	if(array_key_exists('flags',$x) && in_array('consensus',$x['flags']))
-		$arr['item_flags'] |= ITEM_CONSENSUS;
+		$arr['item_consensus'] = 1;
+
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
-		$arr['item_restrict'] |= ITEM_DELETED;
+		$arr['item_deleted'] = 1;
 	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
-		$arr['item_restrict'] |= ITEM_HIDDEN;
+		$arr['item_hidden'] = 1;
 
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
@@ -889,7 +888,7 @@ function get_item_elements($x) {
 			dbesc($arr['author_xchan'])
 		);
 		if($r && rsa_verify($x['body'],base64url_decode($arr['sig']),$r[0]['xchan_pubkey']))
-			$arr['item_flags'] |= ITEM_VERIFIED;
+			$arr['item_verified'] = 1;
 		else
 			logger('get_item_elements: message verification failed.');
 	}
@@ -1083,7 +1082,7 @@ function encode_item($item,$mirror = false) {
 
 	$key = get_config('system','prvkey');
 
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		if($item['title'])
 			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
@@ -1149,7 +1148,7 @@ function encode_item($item,$mirror = false) {
 
 	$x['public_scope']    = $scope;
 
-	if($item['item_flags'] & ITEM_NOCOMMENT)
+	if($item['item_nocomment'])
 		$x['comment_scope'] = 'none';
 	else
 		$x['comment_scope'] = $c_scope;
@@ -1378,15 +1377,15 @@ function encode_item_flags($item) {
 
 	$ret = array();
 
-	if($item['item_restrict'] & ITEM_DELETED)
+	if(intval($item['item_deleted']))
 		$ret[] = 'deleted';
-	if($item['item_restrict'] & ITEM_HIDDEN)
+	if(intval($item['item_hidden']))
 		$ret[] = 'hidden';
-	if($item['item_flags'] & ITEM_THREAD_TOP)
+	if(intval($item['item_thread_top']))
 		$ret[] = 'thread_parent';
-	if($item['item_flags'] & ITEM_NSFW)
+	if(intval($item['item_nsfw']))
 		$ret[] = 'nsfw';
-	if($item['item_flags'] & ITEM_CONSENSUS)
+	if(intval($item['item_consensus']))
 		$ret[] = 'consensus';
 	if($item['item_private'])
 		$ret[] = 'private';
@@ -1544,7 +1543,7 @@ function get_atom_elements($feed, $item, &$author) {
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
-	$res['item_flags'] = ITEM_RSS;
+	$res['item_rss'] = 1;
 
 
 	// removing the content of the title if its identically to the body
@@ -1984,11 +1983,11 @@ function item_store($arr, $allow_exec = false) {
 	// If a page layout is provided, ensure it exists and belongs to us.
 
 	if(array_key_exists('layout_mid',$arr) && $arr['layout_mid']) {
-		$l = q("select item_restrict from item where mid = '%s' and uid = %d limit 1",
+		$l = q("select item_type from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['layout_mid']),
 			intval($arr['uid'])
 		);
-		if((! $l) || (! ($l[0]['item_restrict'] & ITEM_PDL)))
+		if((! $l) || (! ($l[0]['item_type'] != ITEM_TYPE_PDL)))
 			unset($arr['layout_mid']);
 	}
 
@@ -2023,7 +2022,7 @@ function item_store($arr, $allow_exec = false) {
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
 
-	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+	if((! array_key_exists('item_obscured',$arr)) || $arr['item_obscured'] == 0) {
 
 		$arr['lang'] = detect_language($arr['body']);
 		// apply the input filter here - if it is obscured it has been filtered already
@@ -2033,7 +2032,7 @@ function item_store($arr, $allow_exec = false) {
 			$channel = get_app()->get_channel();
 			if($channel['channel_hash'] === $arr['author_xchan']) {
 				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-				$arr['item_flags'] |= ITEM_VERIFIED;
+				$arr['item_verified'] = 1;
 			}
 		}
 
@@ -2095,11 +2094,12 @@ function item_store($arr, $allow_exec = false) {
 	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : '' );
 
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
+	
+	if(! array_key_exists('item_unseen',$arr))
+		$arr['item_unseen'] = 1;
 
-	$arr['item_unseen'] = ((array_key_exists('item_unseen',$arr)) ? intval($arr['item_unseen']) : 1);
-
-	if($arr['comment_policy'] == 'none')
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_NOCOMMENT;
+	if((! array_key_exists('item_nocomment',$arr)) && ($arr['comment_policy'] == 'none'))
+		$arr['item_nocomment'] = 1;
 
 	// handle time travelers
 	// Allow a bit of fudge in case somebody just has a slightly slow/fast clock
@@ -2123,7 +2123,7 @@ function item_store($arr, $allow_exec = false) {
 		$deny_gid  = $arr['deny_gid'];
 		$public_policy = $arr['public_policy'];
 		$comments_closed = $arr['comments_closed'];
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_THREAD_TOP;
+		$arr['item_thread_top'] = 1;
 	}
 	else {
 
@@ -2173,7 +2173,7 @@ function item_store($arr, $allow_exec = false) {
 			}
 
 			$parent_id       = $r[0]['id'];
-			$parent_deleted  = $r[0]['item_restrict'] & ITEM_DELETED;
+			$parent_deleted  = $r[0]['item_deleted'];
 			$allow_cid       = $r[0]['allow_cid'];
 			$allow_gid       = $r[0]['allow_gid'];
 			$deny_cid        = $r[0]['deny_cid'];
@@ -2201,7 +2201,7 @@ function item_store($arr, $allow_exec = false) {
 			// The original author commented, but as this is a comment, the permissions
 			// weren't fixed up so it will still show the comment as private unless we fix it here.
 
-			if((intval($r[0]['item_flags']) & ITEM_UPLINK) && (! $r[0]['item_private']))
+			if(intval($r[0]['item_uplink']) && (! $r[0]['item_private']))
 				$arr['item_private'] = 0;
 		}
 		else {
@@ -2212,7 +2212,7 @@ function item_store($arr, $allow_exec = false) {
 	}
 
 	if($parent_deleted)
-		$arr['item_restrict'] = $arr['item_restrict'] | ITEM_DELETED;
+		$arr['item_deleted'] = 1;
 
 	$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 		dbesc($arr['mid']),
@@ -2389,14 +2389,7 @@ function item_store_update($arr,$allow_exec = false) {
 
 	// override the unseen flag with the original
 
-	if(intval($arr['item_flags']))
-		$arr['item_unseen'] = 0;
-
-	if($orig[0]['item_flags'] & ITEM_VERIFIED)
-		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_VERIFIED;
-
-	if($orig[0]['item_flags'] & ITEM_OBSCURED)
-		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_OBSCURED;
+	$arr['item_unseen'] = $orig[0]['item_unseen'];
 
 	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
 	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];
@@ -2412,19 +2405,19 @@ function item_store_update($arr,$allow_exec = false) {
 		return $ret;
 	}
 
-	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+    if((! array_key_exists('item_obscured', $arr)) || $arr['item_obscured'] == 0) {
 
 		$arr['lang'] = detect_language($arr['body']);
-		// apply the input filter here - if it is obscured it has been filtered already
-		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+        // apply the input filter here - if it is obscured it has been filtered already
+        $arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
 
-		if(local_channel() && (! $arr['sig'])) {
-			$channel = get_app()->get_channel();
-			if($channel['channel_hash'] === $arr['author_xchan']) {
-				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-				$arr['item_flags'] |= ITEM_VERIFIED;
-			}
-		}
+        if(local_channel() && (! $arr['sig'])) {
+            $channel = get_app()->get_channel();
+            if($channel['channel_hash'] === $arr['author_xchan']) {
+                $arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+                $arr['item_verified'] = 1;
+            }
+        }
 
 		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
 
@@ -2738,8 +2731,8 @@ function tag_deliver($uid, $item_id) {
 
 	$item = $i[0];
 
-	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK)
-		&& ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
+	if(($item['source_xchan']) && intval($item['item_uplink'])
+		&& intval($item['item_thread_top']) && ($item['edited'] != $item['created'])) {
 		// this is an update (edit) to a post which was already processed by us and has a second delivery chain
 		// Just start the second delivery chain to deliver the updated post
 		proc_run('php','include/notifier.php','tgroup',$item['id']);
@@ -2838,13 +2831,13 @@ function tag_deliver($uid, $item_id) {
 	// This might be a followup (e.g. comment) by the original post author to a tagged forum
 	// If so setup a second delivery chain
 
-	if( ! ($item['item_flags'] & ITEM_THREAD_TOP)) {
+	if( ! intval($item['item_thread_top'])) {
 		$x = q("select * from item where id = parent and parent = %d and uid = %d limit 1",
 			intval($item['parent']),
 			intval($uid)
 		);
 
-		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK)) {
+		if(($x) && intval($x[0]['item_uplink'])) {
 			start_delivery_chain($u[0],$item,$item_id,$x[0]);
 		}
 	}
@@ -2872,9 +2865,8 @@ function tag_deliver($uid, $item_id) {
 
 	if($mention) {
 		logger('tag_deliver: mention found for ' . $u[0]['channel_name']);
-
-		$r = q("update item set item_flags = ( item_flags | %d ) where id = %d",
-			intval(ITEM_MENTIONSME),
+		
+		$r = q("update item set item_mentionsme = 1 where id = %d",
 			intval($item_id)
 		);
 
@@ -2884,7 +2876,7 @@ function tag_deliver($uid, $item_id) {
 
 		$body = '';
 
-		if($item['item_flags'] & ITEM_OBSCURED) {
+		if(intval($item['item_obscured'])) {
 			$key = get_config('system','prvkey');
 			if($item['body'])
 				$body = crypto_unencapsulate(json_decode_plus($item['body']),$key);
@@ -2968,10 +2960,8 @@ function tag_deliver($uid, $item_id) {
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
-	if((intval($item['item_wall']))
-		|| ($item['item_flags'] & ITEM_ORIGIN)
-		|| (!($item['item_flags'] & ITEM_THREAD_TOP))
-		|| ($item['id'] != $item['parent'])) {
+
+	if(intval($item['item_wall']) || intval($item['item_origin']) || (! intval($item['item_thread_top'])) || ($item['id'] != $item['parent'])) {
 		logger('tag_deliver: item was local or a comment. rejected.');
 		return;
 	}
@@ -2996,10 +2986,9 @@ function tgroup_check($uid,$item) {
 	// or is a followup and we have already accepted the top level post as an uplink
 
 	if($item['mid'] != $item['parent_mid']) {
-		$r = q("select id from item where mid = '%s' and uid = %d and ( item_flags & %d )>0 limit 1",
+		$r = q("select id from item where mid = '%s' and uid = %d and item_uplink = 1 limit 1",
 			dbesc($item['parent_mid']),
-			intval($uid),
-			intval(ITEM_UPLINK)
+			intval($uid)
 		);
 		if($r)
 			return true;
@@ -3045,7 +3034,7 @@ function tgroup_check($uid,$item) {
 
 	$body = $item['body'];
 
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED) && $body) {
+	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured']) && $body) {
 		$key = get_config('system','prvkey');
 		$body = crypto_unencapsulate(json_decode($body,true),$key);
 	}
@@ -3108,21 +3097,14 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	if((! $private) && $new_public_policy)
 		$private = 1;
 
-	
+
+	$item_wall = 1;
+	$item_origin = 1;
+	$item_uplink = 0;
+	$item_nocomment = 0;
+	$item_obscured = 0;
+
 	$flag_bits = $item['item_flags'];
-
-	// The message didn't necessarily originate on this site, (we'll honour it if it did),
-	// but the parent post of this thread will be reset as a local post, as it is the top of
-	// this delivery chain and is coming from this site, regardless of where the original
-	// originated.
-
-	if(! $parent)
-		$flag_bits = $flag_bits | ITEM_ORIGIN;
-
-	// unset the nocomment bit if it's there.
-
-	if($flag_bits & ITEM_NOCOMMENT)
-		$flag_bits = $flag_bits ^ ITEM_NOCOMMENT;
 
 	// maintain the original source, which will be the original item owner and was stored in source_xchan
 	// when we created the delivery fork
@@ -3134,7 +3116,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 		);
 	}
 	else {
-		$flag_bits = $flag_bits | ITEM_UPLINK;
+		$item_uplink = 1;
 		$r = q("update item set source_xchan = owner_xchan where id = %d",
 			intval($item_id)
 		);
@@ -3146,16 +3128,19 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	if(! $private) {
 		if($flag_bits & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
-			$flag_bits = $flag_bits ^ ITEM_OBSCURED;
 			if($title)
 				$title = crypto_unencapsulate(json_decode($title,true),$key);
 			if($body)
 				$body = crypto_unencapsulate(json_decode($body,true),$key);
+			$item_obscured = 0;
 		}
 	}
 
-	$r = q("update item set item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s',
-		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = 1 where id = %d",
+	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_obscured = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = %d, item_origin = %d  where id = %d",
+		intval($item_uplink),
+		intval($item_nocomment),
+		intval($item_obscured),
 		intval($flag_bits),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_allow_cid']),
@@ -3167,6 +3152,8 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 		dbesc(map_scope($channel['channel_w_comment'])),
 		dbesc($title),
 		dbesc($body),
+		intval($item_wall),
+		$intval($item_origin),
 		intval($item_id)
 	);
 
@@ -3413,7 +3400,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				if($r) {
 					$item = $r[0];
 
-					if(! ($item['item_restrict'] & ITEM_DELETED)) {
+					if(! intval($item['item_deleted'])) {
 						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . base64url_decode($item['mid']), LOGGER_DEBUG);
 						drop_item($item['id'],false);
 					}
@@ -3908,22 +3895,21 @@ function item_expire($uid,$days) {
 
 	$expire_network_only = 1;
 
+	$sql_extra = ((intval($expire_network_only)) ? " AND item_wall = 0 " : "");
+
 	$expire_limit = get_config('system','expire_limit');
 	if(! intval($expire_limit))
 		$expire_limit = 5000;
-
-	$sql_extra = ((intval($expire_network_only)) ? " AND item_wall = 0 " : "");
 
 	$r = q("SELECT * FROM `item`
 		WHERE `uid` = %d
 		AND `created` < %s - INTERVAL %s
 		AND `id` = `parent`
 		$sql_extra
-		AND ( item_flags & %d ) = 0
-		AND ( item_restrict = 0 ) LIMIT $expire_limit ",
+		AND item_retained = 0
+		AND (item_restrict = 0 ) LIMIT $expire_limit ",
 		intval($uid),
-		db_utcnow(), db_quoteinterval(intval($days).' DAY'),
-		intval(ITEM_RETAINED)
+		db_utcnow(), db_quoteinterval(intval($days).' DAY')
 	);
 
 	if(! $r)
@@ -3947,7 +3933,7 @@ function item_expire($uid,$days) {
 			retain_item($item['id']);
 			continue;
 		}
-		if($item['item_flags'] & ITEM_STARRED) {
+		if(intval($item['item_starred'])) {
 			retain_item($item['id']);
 			continue;
 		}
@@ -3959,8 +3945,7 @@ function item_expire($uid,$days) {
 }
 
 function retain_item($id) {
-	$r = q("update item set item_flags = (item_flags | %d ) where id = %d",
-		intval(ITEM_RETAINED),
+	$r = q("update item set item_retained = 1 where id = %d",
 		intval($id)
 	);
 }
@@ -4005,7 +3990,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		intval($id)
 	);
 
-	if((! $r) || (($r[0]['item_restrict'] & ITEM_DELETED) && ($stage === DROPITEM_NORMAL))) {
+	if((! $r) || (intval($r[0]['item_deleted']) && ($stage === DROPITEM_NORMAL))) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
@@ -4041,10 +4026,16 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		// set the deleted flag immediately on this item just in case the
 		// hook calls a remote process which loops. We'll delete it properly in a second.
 
-		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d",
-			intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
-			intval($item['id'])
-		);
+		if(($linked_item) && (! $force)) {
+			$r = q("UPDATE item SET item_hidden = 1 WHERE id = %d",
+				intval($item['id'])
+			);
+		}
+		else {
+			$r = q("UPDATE item SET item_deleted = 1 WHERE id = %d",
+				intval($item['id'])
+			);
+		}
 
 		$arr = array('item' => $item, 'interactive' => $interactive, 'stage' => $stage);
 		call_hooks('drop_item', $arr );
@@ -4113,30 +4104,37 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 			break;
 
 		case DROPITEM_PHASE1:
-			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
-				changed = '%s', edited = '%s'  WHERE id = %d",
-				intval(($linked_item && ! $force) ? ITEM_HIDDEN : ITEM_DELETED),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				intval($item['id'])
-			);
-			break;
-
-		case DROPITEM_NORMAL:
-		default:
 			if($linked_item && ! $force) {
-				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
+				$r = q("UPDATE item SET item_hidden = 1,
 					changed = '%s', edited = '%s'  WHERE id = %d",
-					intval(ITEM_HIDDEN),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					intval($item['id'])
 				);
 			}
 			else {
-				$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+				$r = q("UPDATE item set item_deleted = 1, changed = '%s', edited = '%s' where if = %d",
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($item['id'])
+				);
+			}
+
+			break;
+
+		case DROPITEM_NORMAL:
+		default:
+			if($linked_item && ! $force) {
+				$r = q("UPDATE item SET item_hidden = 1,
 					changed = '%s', edited = '%s'  WHERE id = %d",
-					intval(ITEM_DELETED),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval($item['id'])
+				);
+			}
+			else {
+				$r = q("UPDATE item SET item_deleted = 1, body = '', title = '',
+					changed = '%s', edited = '%s'  WHERE id = %d",
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					intval($item['id'])
@@ -4388,9 +4386,9 @@ function zot_feed($uid,$observer_xchan,$arr) {
 		require_once('include/security.php');
 		$r = q("SELECT parent, created, postopts from item
 			WHERE uid != %d
-			AND item_private = 0 AND item_restrict = 0 AND uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ")
+			and uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ") AND item_restrict = 0 
 			AND item_wall = 1
-			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
+			and item_private = 0 $sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid)
 		);
 	}
@@ -4463,13 +4461,13 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	}
 
 	if($arr['star'])
-		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ")>0 ";
+		$sql_options .= " and item_starred = 1 ";
 
 	if($arr['wall'])
 		$sql_options .= " and item_wall = 1 ";
-
-	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ")>0 $sql_options ) ";
-
+									
+	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE item_thread_top = 1 $sql_options ) ";
+	
 	if($arr['since_id'])
 		$sql_extra .= " and item.id > " . $since_id . " ";
 
@@ -4532,24 +4530,24 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	}
 
 	if($arr['search']) {
-		if(strpos($arr['search'],'#') === 0)
-			$sql_extra .= term_query('item',substr($arr['search'],1),TERM_HASHTAG);
-		else
-			$sql_extra .= sprintf(" AND item.body like '%s' ",
-				dbesc(protect_sprintf('%' . $arr['search'] . '%'))
-			);
-	}
 
-	if (strlen($arr['file'])) {
-		$sql_extra .= term_query('item',$arr['files'],TERM_FILE);
-	}
+        if(strpos($arr['search'],'#') === 0)
+            $sql_extra .= term_query('item',substr($arr['search'],1),TERM_HASHTAG);
+        else
+            $sql_extra .= sprintf(" AND item.body like '%s' ",
+                dbesc(protect_sprintf('%' . $arr['search'] . '%'))
+            );
+    }
 
-	if ($arr['conv'] && $channel) {
-		$sql_extra .= sprintf(" AND parent IN (SELECT distinct parent from item where ( author_xchan like '%s' or ( item_flags & %d )>0)) ",
-			dbesc(protect_sprintf($uidhash)),
-			intval(ITEM_MENTIONSME)
-		);
-	}
+    if(strlen($arr['file'])) {
+        $sql_extra .= term_query('item',$arr['files'],TERM_FILE);
+    }
+
+    if($arr['conv'] && $channel) {
+        $sql_extra .= sprintf(" AND parent IN (SELECT distinct parent from item where ( author_xchan like '%s' or item_mentionsme = 1 )) ",
+            dbesc(protect_sprintf($uidhash))
+        );
+    }
 
 	if (($client_mode & CLIENT_MODE_UPDATE) && (! ($client_mode & CLIENT_MODE_LOAD))) {
 		// only setup pagination on initial page view
@@ -4584,19 +4582,19 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		}
 	}
 
-	$simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_unseen = 1 ) " : '');
-	if ($client_mode & CLIENT_MODE_LOAD)
-		$simple_update = '';
+    $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and item.item_unseen = 1 " : '');
+    if($client_mode & CLIENT_MODE_LOAD)
+        $simple_update = '';
 
 	//$start = dba_timer();
 
 	require_once('include/security.php');
 	$sql_extra .= item_permissions_sql($channel['channel_id']);
 
-	if ($arr['pages'])
-		$item_restrict = " AND (item_restrict & " . ITEM_WEBPAGE . ") ";
+	if($arr['pages'])
+		$item_restrict = " AND item_type = " . ITEM_TYPE_WEBPAGE . " ";
 	else
-		$item_restrict = " AND item_restrict = 0 ";
+		$item_restrict = " AND item_type = 0 ";
 
 	if ($arr['nouveau'] && ($client_mode & CLIENT_MODE_LOAD) && $channel) {
 		// "New Item View" - show all items unthreaded in reverse created date order
@@ -4697,11 +4695,11 @@ function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remo
 
 	$page_type = '';
 
-	if($webpage & ITEM_WEBPAGE)
+	if($webpage  == ITEM_TYPE_WEBPAGE)
 		$page_type = 'WEBPAGE';
-	elseif($webpage & ITEM_BUILDBLOCK)
+	elseif($webpage == ITEM_TYPE_BLOCK)
 		$page_type = 'BUILDBLOCK';
-	elseif($webpage & ITEM_PDL)
+	elseif($webpage == ITEM_TYPE_PDL)
 		$page_type = 'PDL';
 	elseif($namespace && $remote_id) {
 		$page_type = $namespace;

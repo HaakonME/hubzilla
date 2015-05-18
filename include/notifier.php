@@ -229,9 +229,8 @@ function notifier_run($argv, $argc){
 		$normal_mode = false;
 		$expire = true;
 		$items = q("SELECT * FROM item WHERE uid = %d AND item_wall = 1
-			AND ( item_restrict & %d )>0 AND `changed` > %s - INTERVAL %s",
+			AND item_deleted = 1 AND `changed` > %s - INTERVAL %s",
 			intval($item_id),
-			intval(ITEM_DELETED),
 			db_utcnow(), db_quoteinterval('10 MINUTE')
 		);
 		$uid = $item_id;
@@ -337,19 +336,22 @@ function notifier_run($argv, $argc){
 		$target_item = $r[0];
 		$deleted_item = false;
 
-		if($target_item['item_restrict'] & ITEM_DELETED) {
+		if(intval($target_item['item_deleted']))
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
 			$deleted_item = true;
 		}
 
-		if(strpos($target_item['postopts'],'nodeliver') !== false) {
-			logger('notifier: target item is undeliverable', LOGGER_DEBUG);
+		if(intval($target_item['item_type']) != ITEM_TYPE_POST) {
+			logger('notifier: target item not forwardable: type ' . $target_item['item_type'], LOGGER_DEBUG);
+			return;
+		}
+		if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed_publish'])) {
+			logger('notifier: target item not published, so not forwardable', LOGGER_DEBUG);
 			return;
 		}
 
-		$unforwardable = ITEM_UNPUBLISHED|ITEM_DELAYED_PUBLISH|ITEM_WEBPAGE|ITEM_BUILDBLOCK|ITEM_PDL;
-		if($target_item['item_restrict'] & $unforwardable) {
-			logger('notifier: target item not forwardable: flags ' . $target_item['item_restrict'], LOGGER_DEBUG);
+		if(strpos($target_item['postopts'],'nodeliver') !== false) {
+			logger('notifier: target item is undeliverable', LOGGER_DEBUG);
 			return;
 		}
 
@@ -406,10 +408,7 @@ function notifier_run($argv, $argc){
 		// flag on comments for an extended period. So we'll also call comment_local_origin() which looks at
 		// the hostname in the message_id and provides a second (fallback) opinion. 
 
-		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN) && comment_local_origin($target_item)) 
-			? true 
-			: false
-		);
+		$relay_to_owner = (((! $top_level_post) && (intval($target_item['item_origin'])) && comment_local_origin($target_item)) ? true : false);
 
 		$uplink = false;
 
@@ -418,11 +417,10 @@ function notifier_run($argv, $argc){
 
 		logger('notifier: relay_to_owner: ' . (($relay_to_owner) ? 'true' : 'false'), LOGGER_DATA);
 		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'), LOGGER_DATA);
-		logger('notifier: target_item_flags: ' . $target_item['item_flags'] . ' ' . (($target_item['item_flags'] & ITEM_ORIGIN ) ? 'true' : 'false'), LOGGER_DATA);
 
 		// tag_deliver'd post which needs to be sent back to the original author
 
-		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post)) {
+		if(($cmd === 'uplink') && intval($parent_item['item_uplink']) && (! $top_level_post)) {
 			logger('notifier: uplink');			
 			$uplink = true;
 		} 
@@ -443,7 +441,7 @@ function notifier_run($argv, $argc){
 			// if our parent is a tag_delivery recipient, uplink to the original author causing
 			// a delivery fork. 
 
-			if(($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && ($cmd !== 'uplink')) {
+			if(intval($parent_item['item_uplink']) && (! $top_level_post) && ($cmd !== 'uplink')) {
 				logger('notifier: uplinking this item');
 				proc_run('php','include/notifier.php','uplink',$item_id);
 			}
@@ -456,7 +454,7 @@ function notifier_run($argv, $argc){
 			// don't send deletions onward for other people's stuff
 			// TODO verify this is needed - copied logic from same place in old code
 
-			if(($target_item['item_restrict'] & ITEM_DELETED) && (! intval($target_item['item_wall']))) {
+			if(intval($target_item['item_deleted']) && (! intval($target_item['item_wall']))) {
 				logger('notifier: ignoring delete notification for non-wall item');
 				return;
 			}
@@ -538,15 +536,12 @@ function notifier_run($argv, $argc){
 		// aren't the owner or author.  
 
 
-		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+		$r = q("select * from hubloc 
 			where hubloc_hash in (" . implode(',',$recipients) . ") order by hubloc_connected desc limit 1");
 	} 
 	else {
-		$r = q("select hubloc_guid, hubloc_url, hubloc_sitekey, hubloc_network, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
-			intval(HUBLOC_FLAGS_DELETED),
-			intval(HUBLOC_OFFLINE)
-		);		
+		$r = q("select * from hubloc where hubloc_hash in (" . implode(',',$recipients) . ") 
+			and hubloc_error = 0 and hubloc_deleted = 0");		
 	} 
 
 	if(! $r) {

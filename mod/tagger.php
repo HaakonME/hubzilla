@@ -107,10 +107,9 @@ function tagger_content(&$a) {
 	$arr['owner_xchan'] = $item['owner_xchan'];
 	$arr['author_xchan'] = $channel['channel_hash'];
 
+	$arr['item_origin'] = 1;
+	$arr['item_wall'] = ((intval($item['item_wall'])) ? 1 : 0);
 
-	$arr['item_flags'] = ITEM_ORIGIN;
-	$arr['item_wall'] = $item['item_wall'];
-	
 	$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
 	$alink = '[zrl=' . $item['xchan_url'] . ']' . $item['xchan_name'] . '[/zrl]';
 	$plink = '[zrl=' . $item['plink'] . ']' . $post_type . '[/zrl]';

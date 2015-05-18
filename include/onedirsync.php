@@ -41,7 +41,7 @@ function onedirsync_run($argv, $argc){
 		intval(UPDATE_FLAGS_UPDATED)
 	);
 	if($x) {
-		$y = q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and ( ud_flags & %d ) = 0 and ud_date < '%s' ",
+		$y = q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and ( ud_flags & %d ) = 0 and ud_date != '%s'",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($r[0]['ud_addr']),
 			intval(UPDATE_FLAGS_UPDATED),

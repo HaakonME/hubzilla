@@ -1036,9 +1036,13 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	$mid = item_message_id();
 
-	$objtype = ACTIVITY_OBJ_FILE;
+	$arr = array();
 
-	$item_flags = ITEM_ORIGIN;
+	$arr['item_wall'] = 1; 
+	$arr['item_origin'] = 1;
+	$arr['item_unseen'] = 1;
+
+	$objtype = ACTIVITY_OBJ_FILE;
 
 	$private = (($arr_allow_cid[0] || $arr_allow_gid[0] || $arr_deny_cid[0] || $arr_deny_gid[0]) ? 1 : 0);
 
@@ -1077,24 +1081,20 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 		$u_mid = item_message_id();
 
-		$arr = array();
-
 		$arr['aid']           = get_account_id();
 		$arr['uid']           = $channel_id;
 		$arr['mid']           = $u_mid;
 		$arr['parent_mid']    = $u_mid;
-		$arr['item_flags']    = $item_flags;
-		$arr['item_unseen']   = 1;
-		$arr['item_wall']     = 1;
 		$arr['author_xchan']  = $poster['xchan_hash'];
 		$arr['owner_xchan']   = $poster['xchan_hash'];
 		$arr['title']         = '';
-		$arr['allow_cid']     = perms2str($u_arr_allow_cid);
-		$arr['allow_gid']     = perms2str($u_arr_allow_gid);
-		$arr['deny_cid']      = perms2str($u_arr_deny_cid);
-		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
-		$arr['item_restrict']  = ITEM_HIDDEN;
-		$arr['item_private']  = $private;
+		//updates should be visible to everybody -> perms may have changed
+		$arr['allow_cid']     = '';
+		$arr['allow_gid']     = '';
+		$arr['deny_cid']      = '';
+		$arr['deny_gid']      = '';
+		$arr['item_hidden']   = 1;
+		$arr['item_private']  = 0;
 		$arr['verb']          = ACTIVITY_UPDATE;
 		$arr['obj_type']      = $objtype;
 		$arr['object']        = $u_jsonobject;
@@ -1125,7 +1125,8 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$arr['uid']           = $channel_id;
 	$arr['mid']           = $mid;
 	$arr['parent_mid']    = $mid;
-	$arr['item_flags']    = $item_flags;
+	$arr['item_wall']     = 1; 
+	$arr['item_origin']   = 1;
 	$arr['item_unseen']   = 1;
 	$arr['author_xchan']  = $poster['xchan_hash'];
 	$arr['owner_xchan']   = $poster['xchan_hash'];
@@ -1134,7 +1135,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$arr['allow_gid']     = perms2str($arr_allow_gid);
 	$arr['deny_cid']      = perms2str($arr_deny_cid);
 	$arr['deny_gid']      = perms2str($arr_deny_gid);
-	$arr['item_restrict']  = ITEM_HIDDEN;
+	$arr['item_hidden']   = 1;
 	$arr['item_private']  = $private;
 	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
 	$arr['obj_type']      = $objtype;

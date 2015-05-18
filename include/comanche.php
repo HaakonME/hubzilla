@@ -167,12 +167,21 @@ function comanche_block($s, $class = '') {
 			dbesc($name)
 		);
 
+		//print_r($r); killme();
+
 		if($r) {
 			$o .= (($var['wrap'] == 'none') ? '' : '<div class="' . $class . '">');
-			if($r[0]['title'])
-				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 
-			if($r[0]['body'] === '$content') {
+			if($r[0]['title'] && trim($r[0]['title']) != '$content') {
+				$o .= '<h3>' . $r[0]['title'] . '</h3>';
+			}
+
+			if($r[0]['title'] && trim($r[0]['title']) === '$content') {
+				$o .= '<h3>' . get_app()->data['webpage'][0]['title'] . '</h3>';
+			}
+
+
+			if(trim($r[0]['body']) === '$content') {
 				$o .= prepare_text(get_app()->data['webpage'][0]['body'], get_app()->data['webpage'][0]['mimetype']);
 			}
 			else {

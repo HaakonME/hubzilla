@@ -163,9 +163,7 @@ function setup_content(&$a) {
 	global $install_wizard_pass, $db;
 	$o = '';
 	$wizard_status = "";
-	$install_title = t('Hubzilla Server - Setup');
-	
-
+	$install_title = t('$Projectname Server - Setup');
 	
 	if(x($a->data,'db_conn_failed')) {
 		$install_wizard_pass = 2;
@@ -287,7 +285,7 @@ function setup_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$title' => $install_title,
 				'$pass' => t('Database connection'),
-				'$info_01' => t('In order to install Hubzilla we need to know how to connect to your database.'),
+				'$info_01' => t('In order to install $Projectname we need to know how to connect to your database.'),
 				'$info_02' => t('Please contact your hosting provider or site administrator if you have questions about these settings.'),
 				'$info_03' => t('The database you specify below should already exist. If it does not, please create it before continuing.'),
 

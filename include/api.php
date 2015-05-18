@@ -78,11 +78,14 @@ require_once('include/items.php');
 //			list($consumer,$token) = $oauth->verify_request(OAuthRequest::from_request());
 			if (!is_null($token)){
 				$oauth->loginUser($token->uid);
+
+				$a->set_oauth_key($consumer->key);
+
 				call_hooks('logged_in', $a->user);
 				return;
 			}
 			echo __file__.__line__.__function__."<pre>"; 
-			var_dump($consumer, $token); 
+//			var_dump($consumer, $token); 
 			die();
 		}
 		catch(Exception $e) {

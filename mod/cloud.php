@@ -117,7 +117,7 @@ function cloud_init(&$a) {
 
 	if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
 		try {
-			$auth->Authenticate($server, t('Hubzilla - Guests: Username: {your email address}, Password: +++'));
+			$auth->Authenticate($server, t('$Projectname - Guests: Username: {your email address}, Password: +++'));
 		}
 		catch (Exception $e) {
 			logger('mod_cloud: auth exception' . $e->getMessage());

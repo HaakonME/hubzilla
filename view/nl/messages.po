@@ -1,5 +1,5 @@
-# Hubzilla Project
-# Copyright (C) 2012-2014 the Hubzilla Project
+# Red Matrix Project
+# Copyright (C) 2012-2014 the Red Matrix Project
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
@@ -7,7 +7,7 @@
 # jeroenpraat <jeroenpraat@xs4all.nl>, 2014-2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Hubzilla\n"
+"Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-01 00:03-0700\n"
 "PO-Revision-Date: 2015-05-07 12:20+0000\n"
@@ -90,11 +90,11 @@ msgstr "Geen geldig e-mailadres"
 
 #: ../../include/account.php:29
 msgid "Your email domain is not among those allowed on this site"
-msgstr "Jouw e-maildomein is op deze Hubzilla-hub niet toegestaan"
+msgstr "Jouw e-maildomein is op deze RedMatrix-hub niet toegestaan"
 
 #: ../../include/account.php:35
 msgid "Your email address is already registered at this site."
-msgstr "Jouw e-mailadres is al op deze Hubzilla-hub geregistreerd."
+msgstr "Jouw e-mailadres is al op deze RedMatrix-hub geregistreerd."
 
 #: ../../include/account.php:67
 msgid "An invitation is required."
@@ -1110,12 +1110,12 @@ msgid "Public Hubs"
 msgstr "Openbare hubs"
 
 #: ../../include/enotify.php:58
-msgid "Hubzilla Notification"
-msgstr "Hubzilla-notificatie"
+msgid "Red Matrix Notification"
+msgstr "RedMatrix-notificatie"
 
 #: ../../include/enotify.php:59
-msgid "hubzilla"
-msgstr "Hubzilla"
+msgid "redmatrix"
+msgstr "RedMatrix"
 
 #: ../../include/enotify.php:61
 msgid "Thank You,"
@@ -1678,8 +1678,8 @@ msgid "Attachments:"
 msgstr "Bijlagen:"
 
 #: ../../include/bb2diaspora.php:453
-msgid "Hubzilla event notification:"
-msgstr "Notificatie Hubzilla-gebeurtenis:"
+msgid "Redmatrix event notification:"
+msgstr "Notificatie RedMatrix-gebeurtenis:"
 
 #: ../../include/text.php:329
 msgid "prev"
@@ -2126,7 +2126,7 @@ msgstr "Authenticatie op afstand"
 
 #: ../../include/nav.php:137
 msgid "Click to authenticate to your home hub"
-msgstr "Authenticeer jezelf via (bijvoorbeeld) jouw Hubzilla-hub"
+msgstr "Authenticeer jezelf via (bijvoorbeeld) jouw RedMatrix-hub"
 
 #: ../../include/nav.php:151
 msgid "Home Page"
@@ -2155,7 +2155,7 @@ msgstr "Apps"
 
 #: ../../include/nav.php:165
 msgid "Search site content"
-msgstr "Inhoud van deze Hubzilla-hub doorzoeken"
+msgstr "Inhoud van deze RedMatrix-hub doorzoeken"
 
 #: ../../include/nav.php:168 ../../include/apps.php:141
 #: ../../mod/directory.php:366
@@ -2750,7 +2750,7 @@ msgstr "Foto's weergeven"
 
 #: ../../include/conversation.php:944
 msgid "Matrix Activity"
-msgstr "Activiteit in de Hubzilla"
+msgstr "Activiteit in de RedMatrix"
 
 #: ../../include/conversation.php:946
 msgid "Edit Contact"
@@ -3853,7 +3853,7 @@ msgstr "Chatkanaal is vol"
 
 #: ../../mod/achievements.php:34
 msgid "Some blurb about what to do when you're new here"
-msgstr "Welkom op de Hubzilla. Klik op de tab ontdekken of klik rechtsboven op de <a href=\"directory\">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href=\"directory\">apps</a>, waar je vrijwel alles van de Hubzilla kan vinden. Voor <a href=\"directory\">hulp</a> met de Hubzilla klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href=\"https://zothost.me/channel/support\">supportkanaal</a> (liefst in het Engels)."
+msgstr "Welkom op de RedMatrix. Klik op de tab ontdekken of klik rechtsboven op de <a href=\"directory\">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook onze <a href=\"directory\">apps</a>, waar je vrijwel alles van de RedMatrix kan vinden. Voor <a href=\"directory\">hulp</a> met de RedMatrix klik je op het vraagteken of als je meer vragen hebt stel je die in het <a href=\"https://zothost.me/channel/support\">supportkanaal</a> (liefst in het Engels)."
 
 #: ../../mod/manage.php:136
 #, php-format
@@ -4258,7 +4258,7 @@ msgstr "Verberg mijn aanwezigheid"
 
 #: ../../mod/settings.php:1057
 msgid "Prevents displaying in your profile that you are online"
-msgstr "Voorkomt dat op je kanaal te zien valt dat je momenteel op de Hubzilla aanwezig bent"
+msgstr "Voorkomt dat op je kanaal te zien valt dat je momenteel op de RedMatrix aanwezig bent"
 
 #: ../../mod/settings.php:1059
 msgid "Simple Privacy Settings:"
@@ -4652,8 +4652,8 @@ msgid "Fetching URL returns error: %1$s"
 msgstr "Ophalen URL gaf een foutmelding terug: %1$s"
 
 #: ../../mod/home.php:53
-msgid "Hubzilla - &quot;The Network&quot;"
-msgstr "Hubzilla - &quot;The Network&quot;"
+msgid "Red Matrix - &quot;The Network&quot;"
+msgstr "RedMatrix - &quot;The Network&quot;"
 
 #: ../../mod/home.php:124
 #, php-format
@@ -4751,13 +4751,13 @@ msgstr "Leuk/niet leuk"
 
 #: ../../mod/like.php:20
 msgid "This action is restricted to members."
-msgstr "Deze actie kan alleen door mensen met een Hubzilla-account worden uitgevoerd."
+msgstr "Deze actie kan alleen door mensen met een RedMatrix-account worden uitgevoerd."
 
 #: ../../mod/like.php:21
 msgid ""
-"Please <a href=\"rmagic\">login with your Hubzilla ID</a> or <a "
-"href=\"register\">register as a new Redmatrix.member</a> to continue."
-msgstr "Je dient <a href=\"rmagic\">in te loggen met je Hubzilla-account</a> of <a href=\"register\">een nieuw Hubzilla-account te registreren</a> om verder te kunnen gaan."
+"Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
+"href=\"register\">register as a new RedMatrix member</a> to continue."
+msgstr "Je dient <a href=\"rmagic\">in te loggen met je RedMatrix-account</a> of <a href=\"register\">een nieuw RedMatrix-account te registreren</a> om verder te kunnen gaan."
 
 #: ../../mod/like.php:101 ../../mod/like.php:128 ../../mod/like.php:166
 msgid "Invalid request."
@@ -4922,12 +4922,12 @@ msgstr "Openbare hubs"
 
 #: ../../mod/pubsites.php:19
 msgid ""
-"The listed sites allow public registration into the Hubzilla. All sites in"
+"The listed sites allow public registration into the Red Matrix. All sites in"
 " the matrix are interlinked so membership on any of them conveys membership "
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
 "additional details."
-msgstr "Op de hier weergegeven hubs kan iedereen zich voor de Hubzilla aanmelden. Alle hubs in de Matrix zijn met elkaar verbonden, dus maakt het qua lidmaatschap niet uit waar je je aanmeldt. Op sommige hubs heb je eerst goedkeuring nodig en sommige hubs vereisen betaalde abonnementen voor uitbreidingen. <strong>Mogelijk</strong> wordt hierover op de hub zelf meer informatie gegeven."
+msgstr "Op de hier weergegeven hubs kan iedereen zich voor de RedMatrix aanmelden. Alle hubs in de Matrix zijn met elkaar verbonden, dus maakt het qua lidmaatschap niet uit waar je je aanmeldt. Op sommige hubs heb je eerst goedkeuring nodig en sommige hubs vereisen betaalde abonnementen voor uitbreidingen. <strong>Mogelijk</strong> wordt hierover op de hub zelf meer informatie gegeven."
 
 #: ../../mod/pubsites.php:25
 msgid "Rate this hub"
@@ -4966,8 +4966,8 @@ msgid "Edit post"
 msgstr "Bericht bewerken"
 
 #: ../../mod/dav.php:121
-msgid "Hubzilla channel"
-msgstr "Hubzilla-kanaal"
+msgid "RedMatrix channel"
+msgstr "RedMatrix-kanaal"
 
 #: ../../mod/group.php:20
 msgid "Collection created."
@@ -5036,9 +5036,9 @@ msgstr "Red"
 
 #: ../../mod/siteinfo.php:156
 msgid ""
-"This is a hub of hubzilla - a global cooperative network of decentralized "
+"This is a hub of redmatrix - a global cooperative network of decentralized "
 "privacy enhanced websites."
-msgstr "Dit is een hub van de Hubzilla - een wereldwijd coöperatief netwerk van gedecentraliseerde websites met verbeterde privacy."
+msgstr "Dit is een hub van de RedMatrix - een wereldwijd coöperatief netwerk van gedecentraliseerde websites met verbeterde privacy."
 
 #: ../../mod/siteinfo.php:158
 msgid "Tag: "
@@ -5055,8 +5055,8 @@ msgstr "Draaiend op weblocatie"
 #: ../../mod/siteinfo.php:164
 msgid ""
 "Please visit <a href=\"https://redmatrix.me\">redmatrix.me</a> to learn more"
-" about the Hubzilla."
-msgstr "Bezoek <a href=\"https://redmatrix.me\">Redmatrix.me</a> om meer over de Hubzilla te leren."
+" about the Red Matrix."
+msgstr "Bezoek <a href=\"https://redmatrix.me\">RedMatrix.me</a> om meer over de RedMatrix te leren."
 
 #: ../../mod/siteinfo.php:165
 msgid "Bug reports and issues: please visit"
@@ -5064,9 +5064,9 @@ msgstr "Bugrapporten en andere kwesties: bezoek"
 
 #: ../../mod/siteinfo.php:168
 msgid ""
-"Suggestions, praise, etc. - please email \"hubzilla\" at librelist - dot "
+"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
 "com"
-msgstr "Voorstellen, lofbetuigingen, enz. - e-mail  \"hubzilla\" at librelist - dot com"
+msgstr "Voorstellen, lofbetuigingen, enz. - e-mail  \"redmatrix\" at librelist - dot com"
 
 #: ../../mod/siteinfo.php:170
 msgid "Site Administrators"
@@ -5081,8 +5081,8 @@ msgid "Not Found"
 msgstr "Niet gevonden"
 
 #: ../../mod/setup.php:166
-msgid "Hubzilla Server - Setup"
-msgstr "Hubzilla Server - Setup"
+msgid "Red Matrix Server - Setup"
+msgstr "RedMatrix Server - Setup"
 
 #: ../../mod/setup.php:172
 msgid "Could not connect to database."
@@ -5126,9 +5126,9 @@ msgstr "Database connection"
 
 #: ../../mod/setup.php:290
 msgid ""
-"In order to install Hubzilla we need to know how to connect to your "
+"In order to install Red Matrix we need to know how to connect to your "
 "database."
-msgstr "In order to install Hubzilla we need to know how to connect to your database."
+msgstr "In order to install RedMatrix we need to know how to connect to your database."
 
 #: ../../mod/setup.php:291
 msgid ""
@@ -5588,8 +5588,8 @@ msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr "%1$s heeft het %3$s van %2$s getagd met %4$s"
 
 #: ../../mod/cloud.php:120
-msgid "Hubzilla - Guests: Username: {your email address}, Password: +++"
-msgstr "Hubzilla - gasttoegang: Toegangsnaam: {jouw e-mailadres}, wachtwoord: +++"
+msgid "RedMatrix - Guests: Username: {your email address}, Password: +++"
+msgstr "RedMatrix - gasttoegang: Toegangsnaam: {jouw e-mailadres}, wachtwoord: +++"
 
 #: ../../mod/photos.php:77
 msgid "Page owner information could not be retrieved."
@@ -6114,7 +6114,7 @@ msgstr "%s : Geen geldig e-mailadres."
 
 #: ../../mod/invite.php:76
 msgid "Please join us on Red"
-msgstr "Uitnodiging voor de Hubzilla"
+msgstr "Uitnodiging voor de RedMatrix"
 
 #: ../../mod/invite.php:87
 msgid "Invitation limit exceeded. Please contact your site administrator."
@@ -6149,19 +6149,19 @@ msgid "Your message:"
 msgstr "Jouw bericht:"
 
 #: ../../mod/invite.php:132
-msgid "Please join my community on Hubzilla."
-msgstr "Hierbij nodig ik je uit om mij, en andere vrienden en kennissen, op de Hubzilla te vergezellen. Lees meer over de Hubzilla op https://redmatrix.me."
+msgid "Please join my community on RedMatrix."
+msgstr "Hierbij nodig ik je uit om mij, en andere vrienden en kennissen, op de RedMatrix te vergezellen. Lees meer over de RedMatrix op https://redmatrix.me."
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
 msgstr "Je moet deze uitnodigingscode opgeven:"
 
 #: ../../mod/invite.php:135
-msgid "1. Register at any Hubzilla location (they are all inter-connected)"
-msgstr "1. Registreer je op een willekeurige Hubzilla-hub (ze zijn allemaal onderling met elkaar verbonden):"
+msgid "1. Register at any RedMatrix location (they are all inter-connected)"
+msgstr "1. Registreer je op een willekeurige RedMatrix-hub (ze zijn allemaal onderling met elkaar verbonden):"
 
 #: ../../mod/invite.php:137
-msgid "2. Enter my Hubzilla network address into the site searchbar."
+msgid "2. Enter my RedMatrix network address into the site searchbar."
 msgstr "2. Nadat je bent ingelogd en een kanaal hebt aangemaakt kan je mijn kanaaladres in het zoekveld invullen:"
 
 #: ../../mod/invite.php:138
@@ -6783,8 +6783,8 @@ msgid "Link Target"
 msgstr "Linkdoel"
 
 #: ../../mod/mitem.php:156 ../../mod/mitem.php:226
-msgid "Use Hubzilla magic-auth if available"
-msgstr "Gebruik Hubzilla' magic-auth wanneer beschikbaar"
+msgid "Use RedMatrix magic-auth if available"
+msgstr "Gebruik RedMatrix' magic-auth wanneer beschikbaar"
 
 #: ../../mod/mitem.php:157 ../../mod/mitem.php:227
 msgid "Open link in new window"
@@ -7098,19 +7098,19 @@ msgstr "Ja - met goedkeuring"
 
 #: ../../mod/admin.php:431
 msgid "My site is not a public server"
-msgstr "Mijn Hubzilla-hub is niet openbaar"
+msgstr "Mijn RedMatrix-hub is niet openbaar"
 
 #: ../../mod/admin.php:432
 msgid "My site has paid access only"
-msgstr "Mijn Hubzilla-hub kent alleen betaalde toegang"
+msgstr "Mijn RedMatrix-hub kent alleen betaalde toegang"
 
 #: ../../mod/admin.php:433
 msgid "My site has free access only"
-msgstr "Mijn Hubzilla-hub kent alleen gratis toegang"
+msgstr "Mijn RedMatrix-hub kent alleen gratis toegang"
 
 #: ../../mod/admin.php:434
 msgid "My site offers free accounts with optional paid upgrades"
-msgstr "Mijn Hubzilla-hub biedt gratis accounts aan met betaalde uitbreidingen als optie"
+msgstr "Mijn RedMatrix-hub biedt gratis accounts aan met betaalde uitbreidingen als optie"
 
 #: ../../mod/admin.php:447 ../../mod/register.php:207
 msgid "Registration"
@@ -7126,7 +7126,7 @@ msgstr "Beleid"
 
 #: ../../mod/admin.php:454
 msgid "Site name"
-msgstr "Naam van deze Hubzilla-hub"
+msgstr "Naam van deze RedMatrix-hub"
 
 #: ../../mod/admin.php:455
 msgid "Banner/Logo"
@@ -7154,7 +7154,7 @@ msgstr "Standaardthema"
 msgid ""
 "Default system theme - may be over-ridden by user profiles - <a href='#' "
 "id='cnftheme'>change theme settings</a>"
-msgstr "Standaardthema voor Hubzilla-hub (kan door lid veranderd worden) - <a href='#' id='cnftheme'>verander thema-instellingen</a>"
+msgstr "Standaardthema voor RedMatrix-hub (kan door lid veranderd worden) - <a href='#' id='cnftheme'>verander thema-instellingen</a>"
 
 #: ../../mod/admin.php:459
 msgid "Mobile system theme"
@@ -7196,7 +7196,7 @@ msgstr "Staat deze hub nieuwe accounts toe?"
 
 #: ../../mod/admin.php:465
 msgid "Which best describes the types of account offered by this hub?"
-msgstr "Wat voor soort accounts biedt deze Hubzilla-hub aan? Kies wat het meest in de buurt komt."
+msgstr "Wat voor soort accounts biedt deze RedMatrix-hub aan? Kies wat het meest in de buurt komt."
 
 #: ../../mod/admin.php:466
 msgid "Register text"
@@ -7224,7 +7224,7 @@ msgstr "Toegestane domeinen"
 msgid ""
 "Comma separated list of domains which are allowed to establish friendships "
 "with this site. Wildcards are accepted. Empty to allow any domains"
-msgstr "Komma-gescheiden lijst van domeinen waarvan kanalen connecties kunnen aangaan met kanalen op deze Hubzilla-hub. Wildcards zijn toegestaan.\nLaat leeg om alle domeinen toe te laten."
+msgstr "Komma-gescheiden lijst van domeinen waarvan kanalen connecties kunnen aangaan met kanalen op deze RedMatrix-hub. Wildcards zijn toegestaan.\nLaat leeg om alle domeinen toe te laten."
 
 #: ../../mod/admin.php:469
 msgid "Allowed email domains"
@@ -7295,7 +7295,7 @@ msgid ""
 "Check to hide the login form from your sites homepage when visitors arrive "
 "who are not logged in (e.g. when you put the content of the homepage in via "
 "the site channel)."
-msgstr "Vink dit aan om het inlogformulier op de homepage van deze hub, die niet-ingelogde bezoekers te zien krijgen, te verbergen. (bijvoorbeeld wanneer je een kanaal op deze Hubzilla-hub als homepage gebruikt)"
+msgstr "Vink dit aan om het inlogformulier op de homepage van deze hub, die niet-ingelogde bezoekers te zien krijgen, te verbergen. (bijvoorbeeld wanneer je een kanaal op deze RedMatrix-hub als homepage gebruikt)"
 
 #: ../../mod/admin.php:477
 msgid "Proxy user"
@@ -7660,7 +7660,7 @@ msgstr "Logbestand"
 #: ../../mod/admin.php:1364
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
-msgstr "Moet door de webserver beschrijfbaar zijn. Relatief ten opzichte van de bovenste map van je Hubzilla-installatie."
+msgstr "Moet door de webserver beschrijfbaar zijn. Relatief ten opzichte van de bovenste map van je RedMatrix-installatie."
 
 #: ../../mod/admin.php:1365
 msgid "Log level"
@@ -7724,7 +7724,7 @@ msgstr "Blok verwijderen"
 
 #: ../../mod/register.php:44
 msgid "Maximum daily site registrations exceeded. Please try again tomorrow."
-msgstr "Maximum toegestane dagelijkse registraties op deze Hubzilla-hub bereikt. Probeer het morgen (UTC) nogmaals."
+msgstr "Maximum toegestane dagelijkse registraties op deze RedMatrix-hub bereikt. Probeer het morgen (UTC) nogmaals."
 
 #: ../../mod/register.php:50
 msgid ""
@@ -7743,7 +7743,7 @@ msgstr "Registratie geslaagd. Controleer je e-mail voor instructies."
 
 #: ../../mod/register.php:123
 msgid "Your registration is pending approval by the site owner."
-msgstr "Jouw accountregistratie wacht op goedkeuring van de beheerder van deze Hubzilla-hub."
+msgstr "Jouw accountregistratie wacht op goedkeuring van de beheerder van deze RedMatrix-hub."
 
 #: ../../mod/register.php:126
 msgid "Your registration can not be processed."
@@ -7751,17 +7751,17 @@ msgstr "Jouw registratie kan niet verwerkt worden."
 
 #: ../../mod/register.php:163
 msgid "Registration on this site/hub is by approval only."
-msgstr "Registraties op deze Hubzilla-hub moeten eerst worden goedgekeurd."
+msgstr "Registraties op deze RedMatrix-hub moeten eerst worden goedgekeurd."
 
 #: ../../mod/register.php:164
 msgid "<a href=\"pubsites\">Register at another affiliated site/hub</a>"
-msgstr "<a href=\"pubsites\">Registreer op een andere Hubzilla-hub</a>"
+msgstr "<a href=\"pubsites\">Registreer op een andere RedMatrix-hub</a>"
 
 #: ../../mod/register.php:174
 msgid ""
 "This site has exceeded the number of allowed daily account registrations. "
 "Please try again tomorrow."
-msgstr "Deze Hubzilla-hub heeft het maximum aantal dagelijks toegestane registraties bereikt. Probeer het morgen (UTC) nogmaals."
+msgstr "Deze RedMatrix-hub heeft het maximum aantal dagelijks toegestane registraties bereikt. Probeer het morgen (UTC) nogmaals."
 
 #: ../../mod/register.php:185
 msgid "Terms of Service"
@@ -7770,16 +7770,16 @@ msgstr "Gebruiksvoorwaarden"
 #: ../../mod/register.php:191
 #, php-format
 msgid "I accept the %s for this website"
-msgstr "Ik accepteer de %s van deze Hubzilla-hub"
+msgstr "Ik accepteer de %s van deze RedMatrix-hub"
 
 #: ../../mod/register.php:193
 #, php-format
 msgid "I am over 13 years of age and accept the %s for this website"
-msgstr "Ik accepteer de %s van deze Hubzilla-hub"
+msgstr "Ik accepteer de %s van deze RedMatrix-hub"
 
 #: ../../mod/register.php:212
 msgid "Membership on this site is by invitation only."
-msgstr "Registreren op deze Hubzilla-hub kan alleen op uitnodiging."
+msgstr "Registreren op deze RedMatrix-hub kan alleen op uitnodiging."
 
 #: ../../mod/register.php:213
 msgid "Please enter your invitation code"
@@ -7815,7 +7815,7 @@ msgstr "WAARSCHUWING: "
 msgid ""
 "This account and all its channels will be completely removed from the "
 "network. "
-msgstr "Dit account en al zijn kanalen worden volledig uit het Hubzilla-netwerk verwijderd."
+msgstr "Dit account en al zijn kanalen worden volledig uit het RedMatrix-netwerk verwijderd."
 
 #: ../../mod/removeaccount.php:58 ../../mod/removeme.php:58
 msgid "This action is permanent and can not be undone!"
@@ -7829,13 +7829,13 @@ msgstr "Vul je wachtwoord in ter verificatie:"
 msgid ""
 "Remove this account, all its channels and all its channel clones from the "
 "network"
-msgstr "Dit account, al zijn kanalen en alle klonen van zijn kanalen uit het Hubzilla-netwerk verwijderen"
+msgstr "Dit account, al zijn kanalen en alle klonen van zijn kanalen uit het RedMatrix-netwerk verwijderen"
 
 #: ../../mod/removeaccount.php:60
 msgid ""
 "By default only the instances of the channels located on this hub will be "
 "removed from the network"
-msgstr "Standaard worden alleen de kanalen die zich op deze hub bevinden uit het Hubzilla-netwerk verwijderd."
+msgstr "Standaard worden alleen de kanalen die zich op deze hub bevinden uit het RedMatrix-netwerk verwijderd."
 
 #: ../../mod/item.php:174
 msgid "Unable to locate original post."
@@ -7997,17 +7997,17 @@ msgstr "Verwijder dit kanaal"
 
 #: ../../mod/removeme.php:58
 msgid "This channel will be completely removed from the network. "
-msgstr "Dit kanaal wordt volledig uit het Hubzilla-netwerk verwijderd."
+msgstr "Dit kanaal wordt volledig uit het RedMatrix-netwerk verwijderd."
 
 #: ../../mod/removeme.php:60
 msgid "Remove this channel and all its clones from the network"
-msgstr "Dit kanaal en alle klonen hiervan uit het Hubzilla-netwerk verwijderen"
+msgstr "Dit kanaal en alle klonen hiervan uit het RedMatrix-netwerk verwijderen"
 
 #: ../../mod/removeme.php:60
 msgid ""
 "By default only the instance of the channel located on this hub will be "
 "removed from the network"
-msgstr "Standaard wordt alleen het kanaal dat zich op deze hub bevindt uit het Hubzilla-netwerk verwijderd."
+msgstr "Standaard wordt alleen het kanaal dat zich op deze hub bevindt uit het RedMatrix-netwerk verwijderd."
 
 #: ../../mod/connedit.php:262
 msgid "is now connected to"
@@ -8762,8 +8762,8 @@ msgid "Right offset of the aside element"
 msgstr "Rechter offset van het aside-element"
 
 #: ../../view/theme/redbasic/php/config.php:82
-msgid "Light (Hubzilla default)"
-msgstr "Light (Hubzilla-standaard)"
+msgid "Light (Red Matrix default)"
+msgstr "Light (RedMatrix-standaard)"
 
 #: ../../view/theme/redbasic/php/config.php:101
 msgid "Select scheme"
@@ -8901,8 +8901,8 @@ msgstr "Update-fout op %s"
 
 #: ../../boot.php:1515
 msgid ""
-"Create an account to access services and applications within the Hubzilla"
-msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van de Hubzilla"
+"Create an account to access services and applications within the Red Matrix"
+msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van de RedMatrix"
 
 #: ../../boot.php:1543
 msgid "Password"

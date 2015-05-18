@@ -191,8 +191,8 @@ Similar to any other modern blogging system, social network, or a micro-blogging
 [b]Previewing/Editing[/b] 
 Post can be previewed prior to sending and edited after sending.
 
-[b]Voting/Concensus[/b]
-Posts can be turned into "concensus" items which allows readers to offer feedback, which is collated into "agree", "disagree", and "abstain" counters. This lets you gauge interest for ideas and create informal surveys. 
+[b]Voting/Consensus[/b]
+Posts can be turned into "consensus" items which allows readers to offer feedback, which is collated into "agree", "disagree", and "abstain" counters. This lets you gauge interest for ideas and create informal surveys. 
 
 
 [b]Extending $Projectname[/b]

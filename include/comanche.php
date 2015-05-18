@@ -167,8 +167,6 @@ function comanche_block($s, $class = '') {
 			dbesc($name)
 		);
 
-		//print_r($r); killme();
-
 		if($r) {
 			$o .= (($var['wrap'] == 'none') ? '' : '<div class="' . $class . '">');
 

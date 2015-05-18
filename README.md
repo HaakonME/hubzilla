@@ -36,3 +36,7 @@ Possible website applications include
 * forums
 * dating websites
 * pretty much anything you can do on a traditional blog or community website, but that you could do better if you could easily connect it with other websites or privately share things across website boundaries. 
+
+
+
+This project is under development and is not yet available for general use.  

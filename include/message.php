@@ -163,11 +163,10 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$jattach = (($attachments) ? json_encode($attachments) : '');
 
-	$key = get_config('system','pubkey');
 	if($subject)
-		$subject = json_encode(crypto_encapsulate($subject,$key));
+		$subject = base64url_encode($subject);
 	if($body)
-		$body  = json_encode(crypto_encapsulate($body,$key));
+		$body  = base64url_encode($body);
 	
 
 
@@ -242,6 +241,8 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 	$where = '';
 	$limit = '';
 
+	$t0 = dba_timer();
+
 	if($numitems)
 		$limit = " LIMIT " . intval($numitems) . " OFFSET " . intval($start);
 		
@@ -284,11 +285,10 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 		$r[$k]['to']   = find_xchan_in_array($rr['to_xchan'],$c);
 		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
 		if($r[$k]['mail_flags'] & MAIL_OBSCURED) {
-			$key = get_config('system','prvkey');
 			if($r[$k]['title'])
-				$r[$k]['title'] = crypto_unencapsulate(json_decode_plus($r[$k]['title']),$key);
+				$r[$k]['title'] = base64url_decode($r[$k]['title']);
 			if($r[$k]['body'])
-				$r[$k]['body'] = crypto_unencapsulate(json_decode_plus($r[$k]['body']),$key);
+				$r[$k]['body'] = base64url_decode($r[$k]['body']);
 		}
 	}
 
@@ -323,11 +323,10 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
-			$key = get_config('system','prvkey');
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = crypto_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
+				$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = crypto_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
+				$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
 		}
 	}
 
@@ -411,11 +410,10 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
-			$key = get_config('system','prvkey');
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = crypto_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
+				$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = crypto_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
+				$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
 		}
 	}
 

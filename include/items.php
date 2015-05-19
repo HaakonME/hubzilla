@@ -1399,11 +1399,10 @@ function encode_mail($item) {
 	$x['encoding'] = 'zot';
 
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
-		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = base64url_decode($item['title']);
 		if($item['body'])
-			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = base64url_decode($item['body']);
 	}
 
 	$x['message_id']     = $item['mid'];
@@ -1455,13 +1454,15 @@ function get_mail_elements($x) {
 
 	$key = get_config('system','pubkey');
 	$arr['mail_flags'] |= MAIL_OBSCURED;
-	$arr['body'] = htmlspecialchars($arr['body'],ENT_COMPAT,'UTF-8',false);
-	if($arr['body'])
-		$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
-	$arr['title'] = htmlspecialchars($arr['title'],ENT_COMPAT,'UTF-8',false);
-	if($arr['title'])
-		$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
+	if($arr['body']) {
+		$arr['body']  = base64url_encode($arr['body']);
+		$arr['body'] = htmlspecialchars($arr['body'],ENT_COMPAT,'UTF-8',false);
+	}
 
+	if($arr['title']) {
+		$arr['title'] = base64url_encode($arr['title']);
+		$arr['title'] = htmlspecialchars($arr['title'],ENT_COMPAT,'UTF-8',false);
+	}
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
 

@@ -25,7 +25,6 @@ function message_content(&$a) {
 		$cipher = 'aes256';
 
 
-
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
 		'$messages' => t('Messages'),
@@ -48,7 +47,6 @@ function message_content(&$a) {
 		$o .= $header;
 
 		// private_messages_list() can do other more complicated stuff, for now keep it simple
-
 
 		$r = private_messages_list(local_channel(), '', $a->pager['start'], $a->pager['itemspage']);
 

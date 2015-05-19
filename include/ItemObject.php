@@ -152,7 +152,7 @@ class Item extends BaseObject {
 			}
 		}
 
-		$consensus = (($item['item_flags'] & ITEM_CONSENSUS) ? true : false);
+		$consensus = (intval($item['item_consensus']) ? true : false);
 		if($consensus) {
 			$response_verbs[] = 'agree';
 			$response_verbs[] = 'disagree';
@@ -373,12 +373,16 @@ class Item extends BaseObject {
 		$result['children'] = array();
 		$nb_children = count($children);
 
+		$visible_comments = get_config('system','expanded_comments');
+		if($visible_comments === false)
+			$visible_comments = 3;
+
 		if(($this->get_display_mode() === 'normal') && ($nb_children > 0)) {
 			foreach($children as $child) {
 				$result['children'][] = $child->get_template_data($conv_responses, $thread_level + 1);
 			}
 			// Collapse
-			if(($nb_children > 2) || ($thread_level > 1)) {
+			if(($nb_children > $visible_comments) || ($thread_level > 1)) {
 				$result['children'][0]['comment_firstcollapsed'] = true;
 				$result['children'][0]['num_comments'] = $comment_count_txt;
 				$result['children'][0]['hide_text'] = t('[+] show all');
@@ -386,7 +390,7 @@ class Item extends BaseObject {
 					$result['children'][$nb_children - 1]['comment_lastcollapsed'] = true;
 				}
 				else {
-					$result['children'][$nb_children - 3]['comment_lastcollapsed'] = true;
+					$result['children'][$nb_children - ($visible_comments + 1)]['comment_lastcollapsed'] = true;
 				}
 			}
 		}

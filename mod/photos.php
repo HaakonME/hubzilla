@@ -195,7 +195,7 @@ function photos_post(&$a) {
 		$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
 		$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
 		$albname     = ((x($_POST,'albname')) ? notags(trim($_POST['albname'])) : '');
-		$adult       = ((x($_POST,'adult'))   ? intval($_POST['adult'])         : 0);
+		$is_nsfw     = ((x($_POST,'adult'))   ? intval($_POST['adult'])         : 0);
 		$str_group_allow   = perms2str($_POST['group_allow']);
 		$str_contact_allow = perms2str($_POST['contact_allow']);
 		$str_group_deny    = perms2str($_POST['group_deny']);
@@ -284,10 +284,10 @@ function photos_post(&$a) {
 
 		$item_private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
 
-		$old_adult = (($p[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0);
-		if($old_adult != $adult) {
-			$r = q("update photo set photo_flags = ( photo_flags ^ %d) where resource_id = '%s' and uid = %d",
-				intval(PHOTO_ADULT),
+		$old_is_nsfw = $p[0]['is_nsfw'];
+		if($old_is_nsfw != $is_nsfw) {
+			$r = q("update photo set is_nsfw = %d where resource_id = '%s' and uid = %d",
+				intval($is_nsfw),
 				dbesc($resource_id),
 				intval($page_owner_uid)
 			);
@@ -722,7 +722,7 @@ function photos_content(&$a) {
 
 		// fetch image, item containing image, then comments
 
-		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,photo_usage,is_nsfw,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 			$sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
 			dbesc($datum)
@@ -916,7 +916,7 @@ function photos_content(&$a) {
 				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'adult_enabled' => feature_enabled($owner_uid,'adult_photo_flagging'),
-				'adult' => array('adult',t('Flag as adult in album view'), (($ph[0]['photo_flags'] & PHOTO_ADULT) ? 1 : 0),''),
+				'adult' => array('adult',t('Flag as adult in album view'), intval($ph[0]['is_nsfw']),''),
 				'submit' => t('Submit'),
 				'delete' => t('Delete Photo')
 			);

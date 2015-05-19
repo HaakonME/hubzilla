@@ -371,7 +371,7 @@ abstract class photo_driver {
 		else {
 			$r = q("INSERT INTO `photo`
 				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `photo_usage`, `title`, `description`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval($p['aid']),
 				intval($p['uid']),
 				dbesc($p['xchan']),

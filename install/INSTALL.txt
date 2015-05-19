@@ -74,9 +74,11 @@ use SSL, your webserver must not listen on port 443 at all.
     exec() and proc_open().
 
     - curl, gd (with at least jpeg and png support), mysqli, mbstring, mcrypt, 
-    and openssl extensions. The imagick extension is not required but desirable. 
+    and openssl extensions. The imagick extension is not required but desirable.
 
-    - some form of email server or email gateway such that PHP mail() works
+    - xml extension is required if you want webdav to work.
+
+    - some form of email server or email gateway such that PHP mail() works.
 
     - Mysql 5.x or MariaDB or postgres database server.
     

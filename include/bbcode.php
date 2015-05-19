@@ -173,8 +173,9 @@ function bb_parse_app($match) {
 
 function bb_parse_element($match) {
 	$j = json_decode(base64url_decode($match[1]),true);
+	print_r($j);
 	if ($j) {
-		$o = EOL . '<a href="#" onclick="importElement(\'' . $match[1] . '\'); return false;" >' . t('Install design element: ') . $j['pagetitle'] . '</a>' . EOL; 
+		$o = EOL . '<a href="#" onclick="importElement(\'' . $match[1] . '\'); return false;" >' . t('Install ' . $j['type'] . ' element: ') . $j['pagetitle'] . '</a>' . EOL;
 	}
 
 	return $o;

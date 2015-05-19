@@ -108,8 +108,9 @@ function blocks_content(&$a) {
 	$editor = status_editor($a,$x);
 
 	$r = q("select iid, sid, mid, title, body, mimetype, created, edited from item_id left join item on item_id.iid = item.id
-		where item_id.uid = %d and service = 'BUILDBLOCK' order by item.created desc",
-		intval($owner)
+		where item_id.uid = %d and service = 'BUILDBLOCK' and item_restrict = %d order by item.created desc",
+		intval($owner),
+		intval(ITEM_BUILDBLOCK)
 	);
 
 	$pages = null;

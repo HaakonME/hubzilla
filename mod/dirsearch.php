@@ -245,10 +245,12 @@ function dirsearch_content(&$a) {
 		json_return_and_die($spkt);
 	}
 	else {
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) $hub_query and xchan_network = 'zot' and xchan_hidden = 0 and xchan_orphan = 0 and xchan_deleted = 0 $safesql $order $qlimit ",
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash 
+			where ( $logic $sql_extra ) $hub_query and xchan_network = 'zot' and xchan_hidden = 0 and xchan_orphan = 0 and xchan_deleted = 0 
+			$safesql $order $qlimit "
+		);
 		$ret['page'] = $page + 1;
 		$ret['records'] = count($r);		
-		);
 	}
 
 

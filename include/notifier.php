@@ -336,7 +336,7 @@ function notifier_run($argv, $argc){
 		$target_item = $r[0];
 		$deleted_item = false;
 
-		if(intval($target_item['item_deleted']))
+		if(intval($target_item['item_deleted'])) {
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
 			$deleted_item = true;
 		}

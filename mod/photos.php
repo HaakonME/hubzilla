@@ -578,11 +578,12 @@ function photos_content(&$a) {
 		$album = hex2bin($datum);
 
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 and ((photo_flags = %d) or (photo_flags & %d ) > 0) $sql_extra GROUP BY `resource_id`",
+			AND `scale` <= 4 and photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
 			intval($owner_uid),
 			dbesc($album),
 			intval(PHOTO_NORMAL),
-			intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE)
+			intval(PHOTO_PROFILE),
+			intval($unsafe)
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
@@ -598,13 +599,14 @@ function photos_content(&$a) {
 
 			
 		$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
-				(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY resource_id) ph 
+				(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id) ph 
 				ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
 			ORDER BY created $order LIMIT %d OFFSET %d",
 			intval($owner_uid),
 			dbesc($album),
-			intvaL(PHOTO_NORMAL),
-			intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE),
+			intval(PHOTO_NORMAL),
+			intval(PHOTO_PROFILE),
+			intval($unsafe),
 			intval($a->pager['itemspage']),
 			intval($a->pager['start'])
 		);
@@ -1140,12 +1142,13 @@ function photos_content(&$a) {
 	//$o = '';
 
 	$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
-		and ((photo_flags = %d) or (photo_flags & %d) > 0) $sql_extra GROUP BY `resource_id`",
+		and photo_usage in ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval(PHOTO_NORMAL),
-		intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE)
+		intval(PHOTO_PROFILE),
+		intval($unsafe)
 	);
 	if(count($r)) {
 		$a->set_pager_total(count($r));
@@ -1155,13 +1158,14 @@ function photos_content(&$a) {
 	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.album, p.scale, p.created FROM photo p INNER JOIN 
 		(SELECT resource_id, max(scale) scale FROM photo 
 			WHERE uid=%d AND album != '%s' AND album != '%s' 
-			AND (photo_flags = %d or ( photo_flags & %d ) > 0 ) $sql_extra group by resource_id) ph 
+			AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra group by resource_id) ph 
 		ON (p.resource_id = ph.resource_id and p.scale = ph.scale) ORDER by p.created DESC LIMIT %d OFFSET %d",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
 		intval(PHOTO_NORMAL),
-		intval(($unsafe) ? (PHOTO_PROFILE|PHOTO_ADULT) : PHOTO_PROFILE),
+		intval(PHOTO_PROFILE),
+		intval($unsafe),
 		intval($a->pager['itemspage']),
 		intval($a->pager['start'])
 	);

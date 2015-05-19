@@ -302,7 +302,6 @@ abstract class photo_driver {
 		$p['filename'] = (($arr['filename']) ? $arr['filename'] : '');
 		$p['album'] = (($arr['album']) ? $arr['album'] : '');
 		$p['scale'] = ((intval($arr['scale'])) ? intval($arr['scale']) : 0);
-		$p['photo_flags'] = ((intval($arr['photo_flags'])) ? intval($arr['photo_flags']) : 0);
 		$p['allow_cid'] = (($arr['allow_cid']) ? $arr['allow_cid'] : '');
 		$p['allow_gid'] = (($arr['allow_gid']) ? $arr['allow_gid'] : '');
 		$p['deny_cid'] = (($arr['deny_cid']) ? $arr['deny_cid'] : '');
@@ -311,11 +310,7 @@ abstract class photo_driver {
 		$p['edited'] = (($arr['edited']) ? $arr['edited'] : $p['created']);
 		$p['title'] = (($arr['title']) ? $arr['title'] : '');
 		$p['description'] = (($arr['description']) ? $arr['description'] : '');
-
-		// temporary until we get rid of photo['profile'] and just use photo['photo_flags']
-		// but this will require updating all existing photos in the DB.
-
-		$p['profile'] = (($p['photo_flags'] & PHOTO_PROFILE) ? 1 : 0);
+		$p['photo_usage'] = intval($arr['photo_usage']);
 			
 
 		$x = q("select id from photo where resource_id = '%s' and uid = %d and xchan = '%s' and `scale` = %d limit 1",
@@ -340,8 +335,7 @@ abstract class photo_driver {
 				`data` = '%s',
 				`size` = %d,
 				`scale` = %d,
-				`profile` = %d,
-				`photo_flags` = %d,
+				`photo_usage` = %d,
 				`title` = '%s',
 				`description` = '%s',
 				`allow_cid` = '%s',
@@ -364,8 +358,7 @@ abstract class photo_driver {
 				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($p['scale']),
-				intval($p['profile']),
-				intval($p['photo_flags']),
+				intval($p['photo_usage']),
 				dbesc($p['title']),
 				dbesc($p['description']),
 				dbesc($p['allow_cid']),
@@ -377,7 +370,7 @@ abstract class photo_driver {
 		}
 		else {
 			$r = q("INSERT INTO `photo`
-				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `profile`, `photo_flags`, `title`, `description`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `photo_usage`, `title`, `description`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
 				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval($p['aid']),
 				intval($p['uid']),
@@ -393,8 +386,7 @@ abstract class photo_driver {
 				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($p['scale']),
-				intval($p['profile']),
-				intval($p['photo_flags']),
+				intval($p['photo_usage']),
 				dbesc($p['title']),
 				dbesc($p['description']),
 				dbesc($p['allow_cid']),
@@ -406,7 +398,7 @@ abstract class photo_driver {
 		return $r;
 	}
 
-	public function store($aid, $uid, $xchan, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
+	public function store($aid, $uid, $xchan, $rid, $filename, $album, $scale, $usage = PHOTO_NORMAL, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
 		$x = q("select id from photo where `resource_id` = '%s' and uid = %d and `xchan` = '%s' and `scale` = %d limit 1",
 				dbesc($rid),
@@ -430,7 +422,7 @@ abstract class photo_driver {
 				`data` = '%s',
 				`size` = %d,
 				`scale` = %d,
-				`profile` = %d,
+				`photo_usage` = %d,
 				`allow_cid` = '%s',
 				`allow_gid` = '%s',
 				`deny_cid` = '%s',
@@ -451,7 +443,7 @@ abstract class photo_driver {
 				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($scale),
-				intval($profile),
+				intval($photo_usage),
 				dbesc($allow_cid),
 				dbesc($allow_gid),
 				dbesc($deny_cid),
@@ -461,7 +453,7 @@ abstract class photo_driver {
 		}
 		else {
 			$r = q("INSERT INTO `photo`
-				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `photo_usage`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
 				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s' )",
 				intval($aid),
 				intval($uid),
@@ -477,7 +469,7 @@ abstract class photo_driver {
 				dbescbin($this->imageString()),
 				intval(strlen($this->imageString())),
 				intval($scale),
-				intval($profile),
+				intval($photo_usage),
 				dbesc($allow_cid),
 				dbesc($allow_gid),
 				dbesc($deny_cid),
@@ -569,7 +561,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 	if($thing)
 		$hash = photo_new_resource();
 	else {
-		$r = q("select resource_id from photo where xchan = '%s' and (photo_flags & %d )>0 and scale = 4 limit 1",
+		$r = q("select resource_id from photo where xchan = '%s' and photo_usage = %d and scale = 4 limit 1",
 			dbesc($xchan),
 			intval(PHOTO_XCHAN)
 		);
@@ -622,7 +614,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 		else 
 			$photo_failure = true;
 
-		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => basename($photo), 'album' => $album, 'photo_flags' => $flags, 'scale' => 4);
+		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => basename($photo), 'album' => $album, 'photo_usage' => $flags, 'scale' => 4);
 
 		$r = $img->save($p);
 
@@ -684,7 +676,7 @@ function import_channel_photo($photo,$type,$aid,$uid) {
 
 		$img->scaleImageSquare(175);
 
-		$p = array('aid' => $aid, 'uid' => $uid, 'resource_id' => $hash, 'filename' => $filename, 'album' => t('Profile Photos'), 'photo_flags' => PHOTO_PROFILE, 'scale' => 4);
+		$p = array('aid' => $aid, 'uid' => $uid, 'resource_id' => $hash, 'filename' => $filename, 'album' => t('Profile Photos'), 'photo_usage' => PHOTO_PROFILE, 'scale' => 4);
 
 		$r = $img->save($p);
 

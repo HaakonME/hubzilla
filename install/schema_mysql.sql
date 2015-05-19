@@ -830,7 +830,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `size` int(10) unsigned NOT NULL DEFAULT '0',
   `data` mediumblob NOT NULL,
   `scale` tinyint(3) NOT NULL DEFAULT '0',
-  `usage` smallint(6) NOT NULL DEFAULT '0',
+  `photo_usage` smallint(6) NOT NULL DEFAULT '0',
   `profile` tinyint(1) NOT NULL DEFAULT '0',
   `is_nsfw` tinyint(1) NOT NULL DEFAULT '0',
   `os_storage` tinyint(1) NOT NULL DEFAULT '0',
@@ -854,7 +854,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `resource_id` (`resource_id`),
   KEY `is_nsfw` (`is_nsfw`),
   KEY `os_storage` (`os_storage`),
-  KEY `usage` (`usage`)
+  KEY `photo_usage` (`photo_usage`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `poll` (

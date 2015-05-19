@@ -156,7 +156,7 @@ function photo_upload($channel, $observer, $args) {
 	$errors = false;
 
 	$p = array('aid' => $account_id, 'uid' => $channel_id, 'xchan' => $visitor, 'resource_id' => $photo_hash,
-		'filename' => $filename, 'album' => $album, 'scale' => 0, 'photo_flags' => PHOTO_NORMAL, 
+		'filename' => $filename, 'album' => $album, 'scale' => 0, 'photo_usage' => PHOTO_NORMAL, 
 		'allow_cid' => $str_contact_allow, 'allow_gid' => $str_group_allow,
 		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_group_deny
 	);
@@ -313,7 +313,7 @@ function photos_albums_list($channel, $observer) {
 
 	$sql_extra = permissions_sql($channel_id);
 
-	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra group by album order by max(created) desc",
+	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by max(created) desc",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
@@ -393,7 +393,7 @@ function photos_list_photos($channel, $observer, $album = '') {
 
 	$ret = array('success' => false);
 
-	$r = q("select resource_id, created, edited, title, description, album, filename, type, height, width, size, scale, profile, photo_flags, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra ",
+	$r = q("select resource_id, created, edited, title, description, album, filename, type, height, width, size, scale, photo_usage, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and photo_usage in ( %d, %d ) $sql_extra ",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)

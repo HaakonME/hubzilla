@@ -52,7 +52,7 @@ Zot is the great new communicaton protocol invented especially for the $Projectn
 [zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]
 [zrl=[baseurl]/help/comanche]Comanche Page Descriptions[/zrl]
 [zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
-[zrl=[baseurl]/help/Widgets]Core Widgets[/zrl]
+[zrl=[baseurl]/help/Widgets]Widgets[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
 [zrl=[baseurl]/help/doco]Contributing Documentation[/zrl]
 [zrl=[baseurl]/help/DerivedTheme1]Creating Derivative Themes[/zrl]

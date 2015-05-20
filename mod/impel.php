@@ -91,7 +91,7 @@ function impel_init(&$a) {
 		dbesc($namespace),
 		intval(local_channel())
 	);
-	$i = q("select id, item_restrict from item where mid = '%s' and uid = %d limit 1",
+	$i = q("select id, item_deleted from item where mid = '%s' and uid = %d limit 1",
 		dbesc($arr['mid']),
 		intval(local_channel())
 	);
@@ -104,7 +104,7 @@ function impel_init(&$a) {
 			$x = item_store_update($arr,$execflag);
 	}
 	else {
-		if(($i) && ($i[0]['item_restrict'] & ITEM_DELETED)) {
+		if(($i) && intval($i[0]['item_deleted'])) {
 			// was partially deleted already, finish it off
 			q("delete from item where mid = '%s' and uid = %d",
 				dbesc($arr['mid']),

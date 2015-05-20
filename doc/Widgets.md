@@ -99,4 +99,20 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * channel_id - if not your own
 <br />&nbsp;<br />
 
+
+Creating New Widgets
+====================
+
+If you want a widget named 'slugfish', create widget/slugfish.php containing
+
+
+    <?php
+    
+    function widget_slugfish($args) {
+    
+    .. widget code goes here
+    
+    }
+
+
 #include doc/macros/main_footer.bb;

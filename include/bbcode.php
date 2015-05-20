@@ -175,10 +175,27 @@ function bb_parse_element($match) {
 	$j = json_decode(base64url_decode($match[1]),true);
 
 	if ($j) {
-		$o = EOL . '<a href="#" onclick="importElement(\'' . $match[1] . '\'); return false;" >' . t('Install ' . $j['type'] . ' element: ') . $j['pagetitle'] . '</a>' . EOL;
+		$text = sprintf( t('Install %s element: '), translate_design_element($j['type'])) . $j['pagetitle'];
+		$o = EOL . '<a href="#" onclick="importElement(\'' . $match[1] . '\'); return false;" >' . $text . '</a>' . EOL;
 	}
 
 	return $o;
+}
+
+function translate_design_element($type) {
+	switch($type) {
+		case 'webpage':
+			$ret = t('webpage');
+			break;
+		case 'layout':
+			$ret =  t('layout');
+			break;
+		case 'block':
+			$ret =  t('block');
+			break;
+	}
+
+	return $ret;
 }
 
 /**

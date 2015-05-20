@@ -40,7 +40,7 @@ function poco_load($xchan = '', $url = null) {
 		return;
 	}
 
-	$url = $url . '?f=&fields=displayName,hash,urls,photos,rating' ;
+	$url = $url . '?f=&fields=displayName,hash,urls,photos' ;
 
 	logger('poco_load: ' . $url, LOGGER_DEBUG);
 
@@ -115,8 +115,6 @@ function poco_load($xchan = '', $url = null) {
 
 		$name   = $entry['displayName'];
 		$hash   = $entry['hash'];
-		$rating = ((array_key_exists('rating',$entry) && (! is_array($entry['rating']))) ? intval($entry['rating']) : 0);
-		$rating_text = ((array_key_exists('rating_text',$entry)) ? escape_tags($entry['rating_text']) :'');
 
 		if(x($entry,'urls') && is_array($entry['urls'])) {
 			foreach($entry['urls'] as $url) {
@@ -576,13 +574,6 @@ function poco($a,$extended = false) {
 					$entry['preferredUsername'] = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
 				if($fields_ret['photos'])
 					$entry['photos'] = array(array('value' => $rr['xchan_photo_l'], 'mimetype' => $rr['xchan_photo_mimetype'], 'type' => 'profile'));
-				if($fields_ret['rating']) {
-					$entry['rating'] = ((array_key_exists('abook_rating',$rr)) ? intval($rr['abook_rating']) : 0);
-					$entry['rating_text'] = ((array_key_exists('abook_rating_text',$rr)) ? $rr['abook_rating_text'] : '');
-					// maybe this should be a composite calculated rating in $system_mode
-					if($system_mode)
-						$entry['rating'] = 0;
-				}
 				$ret['entry'][] = $entry;
 			}
 		}

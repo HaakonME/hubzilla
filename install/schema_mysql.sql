@@ -7,13 +7,19 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_my_perms` int(11) NOT NULL DEFAULT '0',
   `abook_their_perms` int(11) NOT NULL DEFAULT '0',
   `abook_closeness` tinyint(3) unsigned NOT NULL DEFAULT '99',
-  `abook_rating` int(11) NOT NULL DEFAULT '0',
-  `abook_rating_text` text NOT NULL,
   `abook_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_connected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_dob` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_flags` int(11) NOT NULL DEFAULT '0',
+  `abook_blocked` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_ignored` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_hidden` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_archived` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_pending` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_unconnected` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_self` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_feed` tinyint(4) NOT NULL DEFAULT '0',
   `abook_profile` char(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`abook_id`),
   KEY `abook_account` (`abook_account`),
@@ -28,7 +34,14 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_profile` (`abook_profile`),
   KEY `abook_dob` (`abook_dob`),
   KEY `abook_connected` (`abook_connected`),
-  KEY `abook_rating` (`abook_rating`)
+  KEY `abook_blocked` (`abook_blocked`),
+  KEY `abook_ignored` (`abook_ignored`),
+  KEY `abook_hidden` (`abook_hidden`),
+  KEY `abook_archived` (`abook_archived`),
+  KEY `abook_pending` (`abook_pending`),
+  KEY `abook_unconnected` (`abook_unconnected`),
+  KEY `abook_self` (`abook_self`),
+  KEY `abook_feed` (`abook_feed`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `account` (
@@ -323,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `conv` (
   PRIMARY KEY (`id`),
   KEY `created` (`created`),
   KEY `updated` (`updated`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -677,6 +690,12 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `attach` mediumtext NOT NULL,
   `mid` char(255) NOT NULL DEFAULT '',
   `parent_mid` char(255) NOT NULL DEFAULT '',
+  `mail_deleted` tinyint(4) NOT NULL DEFAULT '0',
+  `mail_replied` tinyint(4) NOT NULL DEFAULT '0',
+  `mail_isreply` tinyint(4) NOT NULL DEFAULT '0',
+  `mail_seen` tinyint(4) NOT NULL DEFAULT '0',
+  `mail_recalled` tinyint(4) NOT NULL DEFAULT '0',
+  `mail_obscured` smallint(6) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
@@ -689,8 +708,14 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `mid` (`mid`),
   KEY `parent_mid` (`parent_mid`),
   KEY `expires` (`expires`),
-  KEY `convid` (`convid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `convid` (`convid`),
+  KEY `mail_deleted` (`mail_deleted`),
+  KEY `mail_replied` (`mail_replied`),
+  KEY `mail_isreply` (`mail_isreply`),
+  KEY `mail_seen` (`mail_seen`),
+  KEY `mail_recalled` (`mail_recalled`),
+  KEY `mail_obscured` (`mail_obscured`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `manage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

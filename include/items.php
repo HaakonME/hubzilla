@@ -1400,9 +1400,9 @@ function encode_mail($item) {
 
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		if($item['title'])
-			$item['title'] = base64url_decode($item['title']);
+			$item['title'] = base64url_decode(str_rot47($item['title']));
 		if($item['body'])
-			$item['body'] = base64url_decode($item['body']);
+			$item['body'] = base64url_decode(str_rot47($item['body']));
 	}
 
 	$x['message_id']     = $item['mid'];
@@ -1455,12 +1455,12 @@ function get_mail_elements($x) {
 	$key = get_config('system','pubkey');
 	$arr['mail_flags'] |= MAIL_OBSCURED;
 	if($arr['body']) {
-		$arr['body']  = base64url_encode($arr['body']);
+		$arr['body']  = str_rot47(base64url_encode($arr['body']));
 		$arr['body'] = htmlspecialchars($arr['body'],ENT_COMPAT,'UTF-8',false);
 	}
 
 	if($arr['title']) {
-		$arr['title'] = base64url_encode($arr['title']);
+		$arr['title'] = str_rot47(base64url_encode($arr['title']));
 		$arr['title'] = htmlspecialchars($arr['title'],ENT_COMPAT,'UTF-8',false);
 	}
 	if($arr['created'] > datetime_convert())

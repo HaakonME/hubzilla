@@ -1199,9 +1199,9 @@ function unobscure(&$item) {
 function unobscure_mail(&$item) {
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		if($item['title'])
-			$item['title'] = base64url_decode($item['title']);
+			$item['title'] = base64url_decode(str_rot47($item['title']));
 		if($item['body'])
-			$item['body'] = base64url_decode($item['body']);
+			$item['body'] = base64url_decode(str_rot47($item['body']));
 	}
 }
 
@@ -2556,4 +2556,10 @@ function userReadableSize($size) {
 	}
 
 	return $ret;
+}
+
+function str_rot47($str) {
+	return strtr($str,
+		'!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+		'PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO');
 }

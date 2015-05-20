@@ -164,9 +164,9 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	$jattach = (($attachments) ? json_encode($attachments) : '');
 
 	if($subject)
-		$subject = base64url_encode($subject);
+		$subject = str_rot47(base64url_encode($subject));
 	if($body)
-		$body  = base64url_encode($body);
+		$body  = str_rot47(base64url_encode($body));
 	
 
 
@@ -286,9 +286,9 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
 		if($r[$k]['mail_flags'] & MAIL_OBSCURED) {
 			if($r[$k]['title'])
-				$r[$k]['title'] = base64url_decode($r[$k]['title']);
+				$r[$k]['title'] = base64url_decode(str_rot47($r[$k]['title']));
 			if($r[$k]['body'])
-				$r[$k]['body'] = base64url_decode($r[$k]['body']);
+				$r[$k]['body'] = base64url_decode(str_rot47($r[$k]['body']));
 		}
 	}
 
@@ -324,9 +324,9 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
+				$messages[$k]['title'] = base64url_decode(str_rot47($messages[$k]['title']));
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
+				$messages[$k]['body'] = base64url_decode(str_rot47($messages[$k]['body']));
 		}
 	}
 
@@ -411,9 +411,9 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
+				$messages[$k]['title'] = base64url_decode(str_rot47($messages[$k]['title']));
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
+				$messages[$k]['body'] = base64url_decode(str_rot47($messages[$k]['body']));
 		}
 	}
 

@@ -1704,9 +1704,9 @@ function diaspora_conversation($importer,$xml,$msg) {
 		}
 
 		if($subject)
-			$subject = base64url_encode($subject);
+			$subject = str_rot47(base64url_encode($subject));
 		if($body)
-			$body  = base64url_encode($body);
+			$body  = str_rot47(base64url_encode($body));
 
 		q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
 			intval($importer['channel_id']),
@@ -1836,9 +1836,9 @@ function diaspora_message($importer,$xml,$msg) {
 
 	$key = get_config('system','pubkey');
 	if($subject)
-		$subject = base64url_encode($subject);
+		$subject = str_rot47(base64url_encode($subject));
 	if($body)
-		$body  = base64url_encode($body);
+		$body  = str_rot47(base64url_encode($body));
 
 	q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', '%d','%s','%s','%s')",
 		intval($importer['channel_id']),
@@ -2861,9 +2861,9 @@ function diaspora_send_mail($item,$owner,$contact) {
 
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		if($item['title'])
-			$item['title'] = base64url_decode($item['title']);
+			$item['title'] = base64url_decode(str_rot47($item['title']));
 		if($item['body'])
-			$item['body'] = base64url_decode($item['body']);
+			$item['body'] = base64url_decode(str_rot47($item['body']));
 	}
 
 

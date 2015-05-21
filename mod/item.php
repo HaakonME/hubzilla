@@ -304,6 +304,7 @@ function item_post(&$a) {
 			}
 		}
 	}
+
 		
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
 	if($webpage)
@@ -326,13 +327,15 @@ function item_post(&$a) {
 			$str_group_deny    = $orig_post['deny_gid'];
 			$str_contact_deny  = $orig_post['deny_cid'];
 			$public_policy     = $orig_post['public_policy'];
+			$private           = $orig_post['item_private'];
 		}
 
 		if((strlen($str_group_allow)) 
 			|| strlen($str_contact_allow) 
 			|| strlen($str_group_deny) 
 			|| strlen($str_contact_deny)
-			|| strlen($public_policy)) {
+			|| strlen($public_policy)
+			|| $private) {
 			$private = 1;
 		}
 

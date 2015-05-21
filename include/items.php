@@ -4142,6 +4142,8 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 
 	$linked_item = (($item['resource_id']) ? true : false);
 
+	logger('item: ' . $item . ' stage: ' . $stage . ' force: ' . $force, LOGGER_DATA);
+
 	switch($stage) {
 		case DROPITEM_PHASE2:
 			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
@@ -4742,6 +4744,9 @@ function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remo
 
 	$page_type = '';
 
+	if(! $post_id)
+		return;
+	
 	if($webpage & ITEM_WEBPAGE)
 		$page_type = 'WEBPAGE';
 	elseif($webpage & ITEM_BUILDBLOCK)

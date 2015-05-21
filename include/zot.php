@@ -2966,6 +2966,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}
 				}
+
+
+
 			}
 		}
 

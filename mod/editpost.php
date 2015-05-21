@@ -132,6 +132,7 @@ function editpost_content(&$a) {
 		'$ptyp' => $itm[0]['type'],
 		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
+		'$parent' => (($itm[0]['parent'] != $itm[0]['id']) ? $itm[0]['parent'] : ''),
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $channel['channel_location'],
 		'$visitor' => false,

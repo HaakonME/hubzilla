@@ -113,17 +113,18 @@ function impel_init(&$a) {
 		}
 		$x = item_store($arr,$execflag);
 	}
-	if($x['success'])
+	if($x['success']) {
 		$item_id = $x['item_id'];
+		update_remote_id($channel,$item_id,$arr['item_restrict'],$pagetitle,$namespace,$remote_id,$arr['mid']);
+		$ret['success'] = true;
 
+		info( sprintf( t('%s element installed'), $installed_type)); 
+	}
+	else {
+		notice( sprintf( t('%s element installation failed'), $installed_type)); 
+	}
 
-	update_remote_id($channel,$item_id,$arr['item_restrict'],$pagetitle,$namespace,$remote_id,$arr['mid']);
-
-
-	$ret['success'] = true;
-
-	info( sprintf( t('%s element installed'), $installed_type)); 
-
+//??? should perhaps return ret? 
 	json_return_and_die(true);
 
 }

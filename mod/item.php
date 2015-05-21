@@ -447,8 +447,6 @@ function item_post(&$a) {
 		}
 	}
 
-	$post_type = notags(trim($_REQUEST['type']));
-
 	$mimetype = notags(trim($_REQUEST['mimetype']));
 	if(! $mimetype)
 		$mimetype = 'text/bbcode';
@@ -656,6 +654,19 @@ function item_post(&$a) {
 	$item_unseen = ((local_channel() != $profile_uid) ? 1 : 0);
 	$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);
 	$item_origin = (($origin) ? 1 : 0);
+
+
+	// determine if this is a wall post
+
+	if($parent) {
+		$item_wall = $parent_item['item_wall'];
+	}
+	else {
+		if(! $webpage) {
+			$item_wall = 1;
+		}
+	}
+
 
 	if($moderated)
 		$item_restrict = $item_restrict | ITEM_MODERATED;

@@ -1384,7 +1384,6 @@ function prepare_body(&$item,$attach = false) {
 	else {
 		call_hooks('prepare_body_init', $item); 
 		unobscure($item);
-
 		$s = prepare_text($item['body'],$item['mimetype'], true);
 	}
 
@@ -1392,9 +1391,8 @@ function prepare_body(&$item,$attach = false) {
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];
 
-
 	q("update item set html = '%s' where id = %d",
-		dbesc($prep_arr['html']),
+		dbesc($s),
 		intval($item['id'])
 	);
 
@@ -1456,9 +1454,6 @@ function prepare_body(&$item,$attach = false) {
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body_final', $prep_arr);
-
-
-
 	return $prep_arr['html'];
 }
 

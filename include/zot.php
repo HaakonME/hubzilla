@@ -2899,25 +2899,14 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 				// Perform discovery if the referenced xchan hasn't ever been seen on this hub.
 				// This relies on the undocumented behaviour that red sites send xchan info with the abook
+				// and import_author_xchan will look them up on all federated networks
 
-				if($abook['abook_xchan'] && $abook['xchan_address']) {
+				if($abook['abook_xchan'] && $abook['xchan_addr']) {
 					$h = zot_get_hublocs($abook['abook_xchan']);
 					if(! $h) {
-						$f = zot_finger($abook['xchan_address'],$channel);
-						if(! $f['success']) {
-							logger('process_channel_sync_delivery: abook not probe-able' . $abook['xchan_address']);
-							continue;
-						}
-						$j = json_decode($f['body'],true);
-						if(! ($j['success'] && $j['guid'])) {
-							logger('process_channel_sync_delivery: probe failed.');
-							continue;
-						}
-
-						$x = import_xchan($j);
-
-						if(! $x['success']) {
-							logger('process_channel_sync_delivery: import failed.');
+						$xhash = import_author_xchan(encode_item_xchan($abook));
+						if(! $xhash) {
+							logger('process_channel_sync_delivery: import of ' . $abook['xchan_addr'] . ' failed.');
 							continue;
 						}
 					}

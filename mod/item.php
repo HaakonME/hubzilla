@@ -452,8 +452,6 @@ function item_post(&$a) {
 		}
 	}
 
-	$post_type = notags(trim($_REQUEST['type']));
-
 	$mimetype = notags(trim($_REQUEST['mimetype']));
 	if(! $mimetype)
 		$mimetype = 'text/bbcode';
@@ -659,8 +657,19 @@ function item_post(&$a) {
 
 	$item_unseen =  1;
 	
-	if($post_type === 'wall' || $post_type === 'wall-comment')
-		$item_flags = $item_flags | ITEM_WALL;
+
+	// determine if this is a wall post
+
+	if($parent) {
+		if($parent_item['item_flags'] & ITEM_WALL) {
+			$item_flags = $item_flags | ITEM_WALL;
+		}
+	}
+	else {
+		if(! $webpage) {
+			$item_flags = $item_flags | ITEM_WALL;
+		}
+	}
 
 	if($origin)
 		$item_flags = $item_flags | ITEM_ORIGIN;

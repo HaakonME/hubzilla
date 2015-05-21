@@ -146,7 +146,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	 */
 
 
-	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($a->profile['profile_uid']);
 
 	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode') && (! $mid))
 		$page_mode = 'list';

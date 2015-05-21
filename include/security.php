@@ -148,7 +148,7 @@ function change_channel($change_channel) {
  *
  * @return string additional SQL where statement
  */
-function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
+function permissions_sql($owner_id, $remote_observer = null) {
 
 	$local_channel = local_channel();
 
@@ -181,7 +181,7 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
 	 */
 
 	else {
-		$observer = get_observer_hash();
+		$observer = (($remote_observer) ? $remote_observer : get_observer_hash());
 		if($observer) {
 			$groups = init_groups_visitor($observer);
 
@@ -217,7 +217,7 @@ function permissions_sql($owner_id, $remote_verified = false, $groups = null) {
  *
  * @return string additional SQL where statement
  */
-function item_permissions_sql($owner_id, $remote_verified = false, $groups = null) {
+function item_permissions_sql($owner_id, $remote_observer = null) {
 
 	$local_channel = local_channel();
 
@@ -227,7 +227,7 @@ function item_permissions_sql($owner_id, $remote_verified = false, $groups = nul
 	 * default permissions - anonymous user
 	 */
 
-	$sql = " AND item_private=0 ";
+	$sql = " AND item_private = 0 ";
 
 	/**
 	 * Profile owner - everything is visible
@@ -246,7 +246,7 @@ function item_permissions_sql($owner_id, $remote_verified = false, $groups = nul
 	 */
 
 	else {
-		$observer = get_observer_hash();
+		$observer = (($remote_observer) ? $remote_observer : get_observer_hash());
 
 		if($observer) {
 			$groups = init_groups_visitor($observer);

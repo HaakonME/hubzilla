@@ -1,5 +1,8 @@
 <div id="profile-jot-wrapper">
 	<form id="profile-jot-form" action="{{$action}}" method="post">
+		{{if $parent}}
+			<input type="hidden" name="parent" value="{{$parent}}" />
+		{{/if}}
 		<input type="hidden" name="type" value="{{$ptyp}}" />
 		<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />
 		<input type="hidden" name="return" value="{{$return_path}}" />

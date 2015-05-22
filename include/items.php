@@ -4389,8 +4389,6 @@ function zot_feed($uid,$observer_hash,$arr) {
 	$mindate = null;
 	$message_id = null;
 
-	require_once('include/security.php');
-
 	if(array_key_exists('mindate',$arr)) {
 		$mindate = datetime_convert('UTC','UTC',$arr['mindate']);
 	}
@@ -4404,7 +4402,7 @@ function zot_feed($uid,$observer_hash,$arr) {
 
 	$mindate = dbesc($mindate);
 
-	logger('zot_feed: requested for uid ' . $uid . ' from observer ' . $observer_xchan, LOGGER_DEBUG);
+	logger('zot_feed: requested for uid ' . $uid . ' from observer ' . $observer_hash, LOGGER_DEBUG);
 	if($message_id)
 		logger('message_id: ' . $message_id,LOGGER_DEBUG);
 

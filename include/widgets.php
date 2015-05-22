@@ -902,10 +902,10 @@ function widget_random_block($arr) {
 
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid like '%s' and service = 'BUILDBLOCK' and 
-		item_restrict = %d $sql_options order by $randfunc limit 1",
+		item_type = %d $sql_options order by $randfunc limit 1",
 		intval($channel_id),
 		dbesc('%' . $contains . '%'),
-		intval(ITEM_BUILDBLOCK)
+		intval(ITEM_TYPE_BUILDBLOCK)
 	);
 
 	if($r) {

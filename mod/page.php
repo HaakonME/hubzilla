@@ -64,7 +64,7 @@ function page_init(&$a) {
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
 		intval(ITEM_TYPE_WEBPAGE),
-		intval(ITEM_PDL)
+		intval(ITEM_TYPE_PDL)
 	);
 	if(! $r) {
 
@@ -87,7 +87,7 @@ function page_init(&$a) {
 		return;
 	}
 
-	if($r[0]['item_restrict'] == ITEM_PDL) {
+	if($r[0]['item_type'] == ITEM_TYPE_PDL) {
 		require_once('include/comanche.php');
 		comanche_parser(get_app(),$r[0]['body']);
 			get_app()->pdl = $r[0]['body'];
@@ -118,8 +118,8 @@ function page_content(&$a) {
 	if(! $r)
 		return;
 
-	if($r[0]['item_restrict'] == ITEM_PDL) {
-		$r[0]['body'] = t('Ipsum Lorem');
+	if($r[0]['item_type'] == ITEM_TYPE_PDL) {
+		$r[0]['body'] = t('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
 		$r[0]['mimetype'] = 'text/plain';
 		$r[0]['title'] = '';
 		

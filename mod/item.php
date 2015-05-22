@@ -115,7 +115,7 @@ function item_post(&$a) {
 	 * Check service class limits
 	 */
 	if ($uid && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
-		$ret = item_check_service_class($uid,(($_REQUEST['webpage'] == ITEM_WEBPAGE) ? true : false));
+		$ret = item_check_service_class($uid,(($_REQUEST['webpage'] == ITEM_TYPE_WEBPAGE) ? true : false));
 		if (!$ret['success']) { 
 			notice( t($ret['message']) . EOL) ;
 			if(x($_REQUEST,'return')) 
@@ -674,9 +674,6 @@ function item_post(&$a) {
 	if($moderated)
 		$item_restrict = $item_restrict | ITEM_MODERATED;
 
-	if($webpage)
-		$item_restrict = $item_restrict | $webpage;
-		
 		
 	if(! strlen($verb))
 		$verb = ACTIVITY_POST ;
@@ -742,6 +739,7 @@ function item_post(&$a) {
 	$datarray['item_unseen']    = $item_unseen;
 	$datarray['item_wall']      = $item_wall;
 	$datarray['item_origin']    = $item_origin;
+	$datarray['item_type']      = $webpage;
 	$datarray['item_thread_top'] = $item_thread_top;
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['public_policy']  = $public_policy;

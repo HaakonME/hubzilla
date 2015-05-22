@@ -84,7 +84,7 @@ function blocks_content(&$a) {
 	}
 
 	$x = array(
-		'webpage' => ITEM_BUILDBLOCK,
+		'webpage' => ITEM_TYPE_BUILDBLOCK,
 		'is_owner' => true,
 		'nickname' => $a->profile['channel_address'],
 		'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
@@ -108,9 +108,9 @@ function blocks_content(&$a) {
 	$editor = status_editor($a,$x);
 
 	$r = q("select iid, sid, mid, title, body, mimetype, created, edited from item_id left join item on item_id.iid = item.id
-		where item_id.uid = %d and service = 'BUILDBLOCK' and item_restrict = %d order by item.created desc",
+		where item_id.uid = %d and service = 'BUILDBLOCK' and item_type = %d order by item.created desc",
 		intval($owner),
-		intval(ITEM_BUILDBLOCK)
+		intval(ITEM_TYPE_BUILDBLOCK)
 	);
 
 	$pages = null;
@@ -143,21 +143,21 @@ function blocks_content(&$a) {
 	$url = z_root() . '/editblock/' . $which; 
 
 	$o .= replace_macros(get_markup_template('blocklist.tpl'), array(
-		'$baseurl' => $url,
-		'$title' => t('Blocks'),
-		'$name' => t('Block Name'),
+		'$baseurl'    => $url,
+		'$title'      => t('Blocks'),
+		'$name'       => t('Block Name'),
 		'$blocktitle' => t('Block Title'),
-		'$created' => t('Created'),
-		'$edited' => t('Edited'),
-		'$create' => t('Create'),
-		'$edit' => t('Edit'),
-		'$share' => t('Share'),
-		'$delete' => t('Delete'),
-		'$editor' => $editor,
-		'$pages' => $pages,
-		'$channel' => $which,
-		'$view' => t('View'),
-		'$preview' => '1',
+		'$created'    => t('Created'),
+		'$edited'     => t('Edited'),
+		'$create'     => t('Create'),
+		'$edit'       => t('Edit'),
+		'$share'      => t('Share'),
+		'$delete'     => t('Delete'),
+		'$editor'     => $editor,
+		'$pages'      => $pages,
+		'$channel'    => $which,
+		'$view'       => t('View'),
+		'$preview'    => '1',
 	));
     
 	return $o;

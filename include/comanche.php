@@ -5,7 +5,7 @@ require_once('include/menu.php');
 require_once('include/widgets.php');
 
 // When editing a webpage - a dropdown is needed to select a page layout
-// On submit, the pdl_select value (which is the mid of an item with item_restrict = ITEM_PDL) is stored in 
+// On submit, the pdl_select value (which is the mid of an item with item_type = ITEM_TYPE_PDL) is stored in 
 // the webpage's resource_id, with resource_type 'pdl'.
 
 // Then when displaying a webpage, we can see if it has a pdl attached. If not we'll 

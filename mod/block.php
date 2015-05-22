@@ -50,10 +50,10 @@ function block_content(&$a) {
 
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and service = 'BUILDBLOCK' and 
-		item_restrict = %d $sql_options $revision limit 1",
+		item_type = %d $sql_options $revision limit 1",
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
-		intval(ITEM_BUILDBLOCK)
+		intval(ITEM_TYPE_BUILDBLOCK)
 	);
 
 	if(! $r) {
@@ -62,10 +62,10 @@ function block_content(&$a) {
 
 		$x = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and service = 'BUILDBLOCK' and 
-		item_restrict = %d $revision limit 1",
+		item_type = %d $revision limit 1",
 			intval($u[0]['channel_id']),
 			dbesc($page_id),
-			intval(ITEM_BUILDBLOCK)
+			intval(ITEM_TYPE_BUILDBLOCK)
 		);
 		if($x) {
 			// Yes, it's there. You just aren't allowed to see it.

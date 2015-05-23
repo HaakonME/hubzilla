@@ -431,7 +431,7 @@ function local_dir_update($uid, $force) {
 			);
 		}
 
-		$arr = array('hash' => $hash, 'profile' => $profile);
+		$arr = array('channel_id' => $uid, 'hash' => $hash, 'profile' => $profile);
 		call_hooks('local_dir_update', $arr);
 
 		$address = $p[0]['channel_address'] . '@' . get_app()->get_hostname();

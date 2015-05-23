@@ -976,7 +976,7 @@ function import_author_diaspora($x) {
 	);
 	if($r) {
 		logger('in_cache: ' . $x['address'], LOGGER_DATA);
-		return $r[0]['chan_hash'];
+		return $r[0]['xchan_hash'];
 	}
 
 	if(discover_by_webbie($x['address'])) {

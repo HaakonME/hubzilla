@@ -180,7 +180,7 @@ function comanche_block($s, $class = '') {
 
 
 			if(trim($r[0]['body']) === '$content') {
-				$o .= prepare_text(get_app()->page['content'], get_app()->data['webpage'][0]['mimetype']);
+				$o .= get_app()->page['content'];
 			}
 			else {
 				$o .= prepare_text($r[0]['body'], $r[0]['mimetype']);

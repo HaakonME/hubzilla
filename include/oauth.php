@@ -75,12 +75,12 @@ class FKOAuthDataStore extends OAuthDataStore {
 			$k = $consumer;
 		}
 
-		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires) VALUES ('%s','%s','%s','%s', UNIX_TIMESTAMP()+%d)",
+		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires) VALUES ('%s','%s','%s','%s', %d)",
 				dbesc($key),
 				dbesc($sec),
 				dbesc($k),
 				'request',
-				intval(REQUEST_TOKEN_DURATION));
+				time()+intval(REQUEST_TOKEN_DURATION));
 
 		if (!$r) return null;
 		return new OAuthToken($key,$sec);

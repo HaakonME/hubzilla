@@ -1,47 +1,42 @@
-<?php /** @file */
-
+<?php
 /**
+ * @file index.php
  *
- * Hubzilla
+ * @brief The main entry point to the application.
  *
+ * Bootstrap the application, load configuration, load modules, load theme, etc.
  */
 
-/**
- *
+/*
  * bootstrap the application
- *
  */
-
 require_once('boot.php');
-
+// our global App object
 $a = new App;
 
-/**
- *
+/*
  * Load the configuration file which contains our DB credentials.
- * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.'
- *
+ * Ignore errors. If the file doesn't exist or is empty, we are running in
+ * installation mode.
  */
 
 $a->install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
 
-@include(".htconfig.php");
+@include('.htconfig.php');
 
 $a->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
 date_default_timezone_set($a->timezone);
 
 
-/**
- *
+/*
  * Try to open the database;
- *
  */
 
-require_once("include/dba/dba_driver.php");
+require_once('include/dba/dba_driver.php');
 
 if(! $a->install) {
 	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, $a->install);
-    	    unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
+	unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
 
 	/**
 	 * Load configs from db. Overwrite configs from .htconfig.php
@@ -51,10 +46,10 @@ if(! $a->install) {
 	load_config('system');
 	load_config('feature');
 
-	require_once("include/session.php");
+	require_once('include/session.php');
 	load_hooks();
 	call_hooks('init_1');
-	
+
 	$a->language = get_best_language();
 	load_translation_table($a->language);
 	// Force the cookie to be secure (https only) if this site is SSL enabled. Must be done before session_start().
@@ -82,7 +77,7 @@ else {
  *
  * The order of these may be important so use caution if you think they're all
  * intertwingled with no logical order and decide to sort it out. Some of the
- * dependencies have changed, but at least at one time in the recent past - the 
+ * dependencies have changed, but at least at one time in the recent past - the
  * order was critical to everything working properly
  *
  */
@@ -100,7 +95,7 @@ if(array_key_exists('system_language',$_POST)) {
 	else
 		unset($_SESSION['language']);
 }
-if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
+if((x($_SESSION, 'language')) && ($_SESSION['language'] !== $lang)) {
 	$a->language = $_SESSION['language'];
 	load_translation_table($a->language);
 }
@@ -113,20 +108,19 @@ if((x($_GET,'zid')) && (! $a->install)) {
 	}
 }
 
-if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
-	require("include/auth.php");
+if((x($_SESSION, 'authenticated')) || (x($_POST, 'auth-params')) || ($a->module === 'login'))
+	require('include/auth.php');
 
-
-if(! x($_SESSION,'sysmsg'))
+if(! x($_SESSION, 'sysmsg'))
 	$_SESSION['sysmsg'] = array();
 
-if(! x($_SESSION,'sysmsg_info'))
+if(! x($_SESSION, 'sysmsg_info'))
 	$_SESSION['sysmsg_info'] = array();
 
 /*
- * check_config() is responsible for running update scripts. These automatically 
+ * check_config() is responsible for running update scripts. These automatically
  * update the DB schema whenever we push a new one out. It also checks to see if
- * any plugins have been added or removed and reacts accordingly. 
+ * any plugins have been added or removed and reacts accordingly.
  */
 
 
@@ -154,22 +148,21 @@ $a->set_apps($arr['app_menu']);
  * and use it for handling our URL request.
  * The module file contains a few functions that we call in various circumstances
  * and in the following order:
- * 
+ *
  * "module"_init
  * "module"_post (only called if there are $_POST variables)
  * "module"_aside
  *       $theme_$module_aside (and $extends_$module_aside) are run first if either exist
  *       if either of these return false, module_aside is not called
- *           This allows a theme to over-ride the sidebar layout completely. 
+ *           This allows a theme to over-ride the sidebar layout completely.
  * "module"_content - the string return of this function contains our page body
  *
- * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do 
+ * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do
  * so within the module init and/or post functions and then invoke killme() to terminate
  * further processing.
  */
 
 if(strlen($a->module)) {
-
 
 	/**
 	 *
@@ -184,7 +177,6 @@ if(strlen($a->module)) {
 			$a->module_loaded = true;
 	}
 
-
 	if((strpos($a->module,'admin') === 0) && (! is_site_admin())) {
 		$a->module_loaded = false;
 		notice( t('Permission denied.') . EOL);
@@ -197,7 +189,6 @@ if(strlen($a->module)) {
 	 */
 
 	if(! $a->module_loaded) {
-
 		if(file_exists("mod/site/{$a->module}.php")) {
 			include_once("mod/site/{$a->module}.php");
 			$a->module_loaded = true;
@@ -210,37 +201,36 @@ if(strlen($a->module)) {
 
 
 	/**
-	 *
 	 * The URL provided does not resolve to a valid module.
 	 *
-	 * On Dreamhost sites, quite often things go wrong for no apparent reason and they send us to '/internal_error.html'. 
-	 * We don't like doing this, but as it occasionally accounts for 10-20% or more of all site traffic - 
+	 * On Dreamhost sites, quite often things go wrong for no apparent reason and they send us to '/internal_error.html'.
+	 * We don't like doing this, but as it occasionally accounts for 10-20% or more of all site traffic -
 	 * we are going to trap this and redirect back to the requested page. As long as you don't have a critical error on your page
 	 * this will often succeed and eventually do the right thing.
 	 *
 	 * Otherwise we are going to emit a 404 not found.
-	 *
 	 */
 
 	if(! $a->module_loaded) {
 
 		// Stupid browser tried to pre-fetch our Javascript img template. Don't log the event or return anything - just quietly exit.
-		if((x($_SERVER,'QUERY_STRING')) && preg_match('/{[0-9]}/',$_SERVER['QUERY_STRING']) !== 0) {
+		if((x($_SERVER, 'QUERY_STRING')) && preg_match('/{[0-9]}/', $_SERVER['QUERY_STRING']) !== 0) {
 			killme();
 		}
 
-		if((x($_SERVER,'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && isset($dreamhost_error_hack)) {
+		if((x($_SERVER, 'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && isset($dreamhost_error_hack)) {
 			logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
 			goaway($a->get_baseurl() . $_SERVER['REQUEST_URI']);
 		}
 
 		logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
-		header($_SERVER["SERVER_PROTOCOL"] . ' 404 ' . t('Not Found'));
-		$tpl = get_markup_template("404.tpl");
+		header($_SERVER['SERVER_PROTOCOL'] . ' 404 ' . t('Not Found'));
+		$tpl = get_markup_template('404.tpl');
 		$a->page['content'] = replace_macros($tpl, array(
-			'$message' =>  t('Page not found.' )
+				'$message' => t('Page not found.')
 		));
-		// pretend this is a module so it will initialise the theme. 
+
+		// pretend this is a module so it will initialise the theme
 		$a->module = '404';
 		$a->module_loaded = true;
 	}
@@ -249,9 +239,8 @@ if(strlen($a->module)) {
 
 /* initialise content region */
 
-if(! x($a->page,'content'))
+if(! x($a->page, 'content'))
 	$a->page['content'] = '';
-
 
 
 if(! ($a->module === 'setup')) {
@@ -263,9 +252,9 @@ if(! ($a->module === 'setup')) {
 			$_COOKIE['jsAvailable'] = 1;
 		}
 	}
-	call_hooks('page_content_top',$a->page['content']);
-}
 
+	call_hooks('page_content_top', $a->page['content']);
+}
 
 
 
@@ -282,7 +271,7 @@ if($a->module_loaded) {
 	 * For this reason, please restrict the use of templates to those which
 	 * do not provide any presentation details - as themes will not be able
 	 * to over-ride them.
-	 */  
+	 */
 
 	if(function_exists($a->module . '_init')) {
 		call_hooks($a->module . '_mod_init', $placeholder);
@@ -310,31 +299,30 @@ if($a->module_loaded) {
  	 * load current theme info
  	 */
 
-	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
+	$theme_info_file = 'view/theme/' . current_theme() . '/php/theme.php';
 	if (file_exists($theme_info_file)){
 		require_once($theme_info_file);
 	}
 
-	if(function_exists(str_replace('-','_',current_theme()) . '_init')) {
-		$func = str_replace('-','_',current_theme()) . '_init';
+	if(function_exists(str_replace('-', '_', current_theme()) . '_init')) {
+		$func = str_replace('-', '_', current_theme()) . '_init';
 		$func($a);
 	}
-	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/php/theme.php")) {
-		require_once("view/theme/".$a->theme_info["extends"]."/php/theme.php");
-		if(function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_init')) {
-			$func = str_replace('-','_',$a->theme_info["extends"]) . '_init';
+	elseif (x($a->theme_info, 'extends') && file_exists('view/theme/' . $a->theme_info['extends'] . '/php/theme.php')) {
+		require_once('view/theme/' . $a->theme_info['extends'] . '/php/theme.php');
+		if(function_exists(str_replace('-', '_', $a->theme_info['extends']) . '_init')) {
+			$func = str_replace('-', '_', $a->theme_info['extends']) . '_init';
 			$func($a);
 		}
 	}
 
 	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
-		&& (! x($_POST,'auth-params'))) {
+		&& (! x($_POST, 'auth-params'))) {
 		call_hooks($a->module . '_mod_post', $_POST);
 		$func = $a->module . '_post';
 		$func($a);
 	}
-
 
 	if(! $a->error) {
 		// If a theme has defined an _aside() function, run that first
@@ -353,9 +341,9 @@ if($a->module_loaded) {
 			$func = str_replace('-','_',current_theme()) . '_' . $a->module . '_aside';
 			$aside_default = $func($a);
 		}
-		elseif($aside_default && x($a->theme_info,"extends") 
-			&& (function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside'))) {
-			$func = str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside';
+		elseif($aside_default && x($a->theme_info, "extends")
+			&& (function_exists(str_replace('-', '_',$a->theme_info["extends"]) . '_' . $a->module . '_aside'))) {
+			$func = str_replace('-', '_', $a->theme_info["extends"]) . '_' . $a->module . '_aside';
 			$aside_default = $func($a);
 		}
 		if($aside_default && function_exists($a->module . '_aside')) {
@@ -373,24 +361,25 @@ if($a->module_loaded) {
 		call_hooks($a->module . '_mod_aftercontent', $arr);
 		$a->page['content'] .= $arr['content'];
 	}
-
 }
 
 // If you're just visiting, let javascript take you home
 
-if(x($_SESSION,'visitor_home'))
+if(x($_SESSION, 'visitor_home')) {
 	$homebase = $_SESSION['visitor_home'];
-elseif(local_channel())
+} elseif(local_channel()) {
 	$homebase = $a->get_baseurl() . '/channel/' . $a->channel['channel_address'];
+}
 
-if(isset($homebase))
-	$a->page['content'] .= '<script>var homebase="' . $homebase . '" ; </script>';
+if(isset($homebase)) {
+	$a->page['content'] .= '<script>var homebase = "' . $homebase . '";</script>';
+}
 
 // now that we've been through the module content, see if the page reported
 // a permission problem and if so, a 403 response would seem to be in order.
 
-if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
-	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
+if(stristr(implode("", $_SESSION['sysmsg']), t('Permission denied'))) {
+	header($_SERVER['SERVER_PROTOCOL'] . ' 403 ' . t('Permission denied.'));
 }
 
 

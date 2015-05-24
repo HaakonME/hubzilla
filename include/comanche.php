@@ -170,17 +170,12 @@ function comanche_block($s, $class = '') {
 		if($r) {
 			$o .= (($var['wrap'] == 'none') ? '' : '<div class="' . $class . '">');
 
-			if($r[0]['title'] && trim($r[0]['title']) != '$content') {
+			if($r[0]['title'] && trim($r[0]['body']) != '$content') {
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 			}
 
-			if($r[0]['title'] && trim($r[0]['title']) === '$content' && get_app()->data['webpage'][0]['title']) {
-				$o .= '<h3>' . get_app()->data['webpage'][0]['title'] . '</h3>';
-			}
-
-
 			if(trim($r[0]['body']) === '$content') {
-				$o .= prepare_text(get_app()->data['webpage'][0]['body'], get_app()->data['webpage'][0]['mimetype']);
+				$o .= get_app()->page['content'];
 			}
 			else {
 				$o .= prepare_text($r[0]['body'], $r[0]['mimetype']);
@@ -202,9 +197,17 @@ function comanche_js($s) {
 		case 'bootstrap':
 			$path = 'library/bootstrap/js/bootstrap.min.js';
 			break;
+		case 'foundation':
+			$path = 'library/foundation/js/foundation.min.js';
+			$init = "\r\n" . '<script>$(document).ready(function() { $(document).foundation(); });</script>';
+			break;
 	}
 
-	return '<script src="' . z_root() . '/' . $path . '" ></script>';
+	$ret = '<script src="' . z_root() . '/' . $path . '" ></script>';
+	if($init)
+		$ret .= $init;
+
+	return $ret;
 
 }
 
@@ -214,9 +217,14 @@ function comanche_css($s) {
 		case 'bootstrap':
 			$path = 'library/bootstrap/css/bootstrap.min.css';
 			break;
+		case 'foundation':
+			$path = 'library/foundation/css/foundation.min.css';
+			break;
 	}
 
-	return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="screen">';
+	$ret = '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="screen">';
+
+	return $ret;
 
 }
 

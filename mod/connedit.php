@@ -347,12 +347,12 @@ function connedit_content(&$a) {
 		$o .= "<script>function connectDefaultShare() {
 		\$('.abook-edit-me').each(function() {
 			if(! $(this).is(':disabled'))
-				$(this).removeAttr('checked');
+				$(this).prop('checked', false);
 		});\n\n";
 		$perms = get_perms();
 		foreach($perms as $p => $v) {
 			if($my_perms & $v[1]) {
-				$o .= "\$('#me_id_perms_" . $p . "').attr('checked','checked'); \n";
+				$o .= "\$('#me_id_perms_" . $p . "').prop('checked', true); \n";
 			}
 		}
 		$o .= " }\n</script>\n";

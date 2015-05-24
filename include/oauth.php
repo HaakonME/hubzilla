@@ -104,12 +104,12 @@ class FKOAuthDataStore extends OAuthDataStore {
 		$key = $this->gen_token();
 		$sec = $this->gen_token();
 
-		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires, uid) VALUES ('%s','%s','%s','%s', UNIX_TIMESTAMP()+%d, %d)",
+		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires, uid) VALUES ('%s','%s','%s','%s', %d, %d)",
 				dbesc($key),
 				dbesc($sec),
 				dbesc($consumer->key),
 				'access',
-				intval(ACCESS_TOKEN_DURATION),
+				time()+intval(ACCESS_TOKEN_DURATION),
 				intval($uverifier));
 
 		if ($r)

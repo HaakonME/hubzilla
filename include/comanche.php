@@ -170,17 +170,12 @@ function comanche_block($s, $class = '') {
 		if($r) {
 			$o .= (($var['wrap'] == 'none') ? '' : '<div class="' . $class . '">');
 
-			if($r[0]['title'] && trim($r[0]['title']) != '$content') {
+			if($r[0]['title'] && trim($r[0]['body']) != '$content') {
 				$o .= '<h3>' . $r[0]['title'] . '</h3>';
 			}
 
-			if($r[0]['title'] && trim($r[0]['title']) === '$content' && get_app()->data['webpage'][0]['title']) {
-				$o .= '<h3>' . get_app()->page['title'] . '</h3>';
-			}
-
-
 			if(trim($r[0]['body']) === '$content') {
-				$o .= prepare_text(get_app()->page['content'], get_app()->data['webpage'][0]['mimetype']);
+				$o .= get_app()->page['content'];
 			}
 			else {
 				$o .= prepare_text($r[0]['body'], $r[0]['mimetype']);

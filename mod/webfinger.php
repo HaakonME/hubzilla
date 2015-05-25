@@ -14,10 +14,15 @@ function webfinger_content(&$a) {
 
 	if(x($_GET,'addr')) {
 		$addr = trim($_GET['addr']);
-		if(strpos($addr,'@' !== false))
-			$res = webfinger($addr);
-		else
-			$res = lrdd($addr);
+		if(strpos($addr,'@') !== false) {
+			$res = webfinger_rfc7033($addr);
+			if(! $res)
+				$res = old_webfinger($addr);
+		}
+		else {
+			if(function_exists('lrdd'))
+				$res = lrdd($addr);
+		}
 		$o .= '<pre>';
 		$o .= str_replace("\n",'<br />',print_r($res,true));
 		$o .= '</pre>';

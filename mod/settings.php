@@ -394,7 +394,7 @@ function settings_post(&$a) {
 	}
 
 	$username         = ((x($_POST,'username'))   ? notags(trim($_POST['username']))     : '');
-	$timezone         = ((x($_POST,'timezone'))   ? notags(trim($_POST['timezone']))     : '');
+	$timezone         = ((x($_POST,'timezone_select'))   ? notags(trim($_POST['timezone_select']))     : '');
 	$defloc           = ((x($_POST,'defloc'))     ? notags(trim($_POST['defloc']))       : '');
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);

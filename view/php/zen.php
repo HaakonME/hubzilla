@@ -2,6 +2,7 @@
 <html>
 <head>
   <title><?php if(x($page,'title')) echo $page['title'] ?></title>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
   <?php if(x($page,'htmlhead')) echo $page['htmlhead'] ?>
 </head>
 <body>

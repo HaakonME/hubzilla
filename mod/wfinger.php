@@ -65,7 +65,7 @@ function wfinger_init(&$a) {
 
 		$result['aliases'] = array();
 
-		$result['properties'] = array('http://webfinger.example/ns/name' => $r[0]['channel_name']);
+		$result['properties'] = array('http://webfinger.net/ns/name' => $r[0]['channel_name']);
 
 		foreach($aliases as $alias) 
 			if($alias != $resource)
@@ -75,18 +75,18 @@ function wfinger_init(&$a) {
 		$result['links'] = array(
 
 			array(
-				'rel' => 'http://webfinger.example/rel/avatar',
+				'rel' => 'http://webfinger.net/rel/avatar',
 				'type' => $r[0]['xchan_photo_mimetype'],
 				'href' => $r[0]['xchan_photo_l']	
 			),
 
 			array(
-				'rel' => 'http://webfinger.example/rel/profile-page',
+				'rel' => 'http://webfinger.net/rel/profile-page',
 				'href' => z_root() . '/profile/' . $r[0]['channel_address'],
 			),
 
 			array(
-				'rel' => 'http://webfinger.example/rel/blog',
+				'rel' => 'http://webfinger.net/rel/blog',
 				'href' => z_root() . '/channel/' . $r[0]['channel_address'],
 			),
 

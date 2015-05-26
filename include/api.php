@@ -460,7 +460,7 @@ require_once('include/items.php');
 			dbesc($name),
 			dbesc($redirect),
 			dbesc($icon),
-			intval(api_user()),
+			intval(api_user())
 		);
 		$r = q("INSERT INTO xperm (xp_client, xp_channel, xp_perm) VALUES ('%s', %d, '%s') ",
 			dbesc($key),

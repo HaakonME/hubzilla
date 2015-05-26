@@ -24,8 +24,9 @@ function diaspora_dispatch_public($msg) {
 
 	// find everybody following or allowing this author
 
-	$r = q("SELECT * from channel where channel_id in ( SELECT abook_channel from abook left join xchan on abook_xchan = xchan_hash WHERE xchan_network like '%%diaspora%%' and xchan_addr = '%s' )",
-		dbesc($msg['author'])
+	$r = q("SELECT * from channel where channel_id in ( SELECT abook_channel from abook left join xchan on abook_xchan = xchan_hash WHERE xchan_network like '%%diaspora%%' and xchan_addr = '%s' ) and ( channel_pageflags & %d ) = 0 ",
+		dbesc($msg['author']),
+		intval(PAGE_REMOVED)
 	);
 
 	// also need to look for those following public streams

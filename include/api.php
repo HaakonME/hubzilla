@@ -435,6 +435,48 @@ require_once('include/items.php');
 		
 	}
 
+	function api_client_register(&$a,$type) {
+
+		// This currently isn't providing the correct authentication flow.
+
+		if(! api_user())
+			return false;
+
+		$ret = array();
+		$key = random_string(16);
+		$secret = random_string(16);
+		$name = trim(escape_tags($_REQUEST['application_name']));
+		if(! $name)
+			json_return_and_die($ret);
+		if(is_array($_REQUEST['redirect_uris']))
+			$redirect = trim($_REQUEST['redirect_uris'][0]);
+		else
+			$redirect = trim($_REQUEST['redirect_uris']);
+		$icon = trim($_REQUEST['logo_uri']);
+		$r = q("INSERT INTO clients (client_id, pw, name, redirect_uri, icon, uid)
+			VALUES ('%s','%s','%s','%s','%s',%d)",
+			dbesc($key),
+			dbesc($secret),
+			dbesc($name),
+			dbesc($redirect),
+			dbesc($icon),
+			intval(api_user()),
+		);
+		$r = q("INSERT INTO xperm (xp_client, xp_channel, xp_perm) VALUES ('%s', %d, '%s') ",
+			dbesc($key),
+			intval(api_user()),
+			dbesc('all')
+		);
+
+		$ret['client_id'] = $key;
+		$ret['client_secret'] = $secret;
+		$ret['expires_at'] = 0;
+		json_return_and_die($ret);
+	}
+
+	api_register_func('api/client/register','api_client_register', false);
+
+
 
 	function api_item_get_user(&$a, $item) {
 		global $usercache;

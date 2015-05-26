@@ -439,8 +439,8 @@ require_once('include/items.php');
 
 		// This currently isn't providing the correct authentication flow.
 
-		if(! api_user())
-			return false;
+		if(! local_channel())
+			goaway(z_root() . '/login');
 
 		$ret = array();
 		$key = random_string(16);

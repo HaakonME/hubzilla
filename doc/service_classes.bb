@@ -18,6 +18,12 @@ list the services that are part of 'firstclass' service class
 [code]util/service_class firstclass photo_upload_limit 10000000[/code]
 set firstclass total photo disk usage to 10 million bytes
 
+[code]util/service_class --account=5 firstclass[/code]
+set account id 5 to service class 'firstclass' (with confirmation)
+
+[code]util/service_class --channel=blogchan firstclass[/code]
+set the account that owns channel 'blogchan' to service class 'firstclass' (with confirmation)
+
 [b]current limits[/b]
 photo_upload_limit - maximum total bytes for photos
 total_items - maximum total toplevel posts

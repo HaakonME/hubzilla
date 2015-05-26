@@ -44,6 +44,7 @@ Zot is the great new communicaton protocol invented especially for the $Projectn
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting Tips[/zrl]
 [zrl=[baseurl]/help/hidden_configs]Tweaking $Projectname's Hidden Configurations[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
+[zrl=[baseurl]/help/service_classes]Service Classes[/zrl]
 
 [size=large][b]Technical Documentation[/b][/size]
 [zrl=[baseurl]/help/history]$Projectname history[/zrl]

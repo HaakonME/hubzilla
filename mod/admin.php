@@ -849,16 +849,27 @@ function admin_page_channels_post(&$a) {
 	$channels = ( x($_POST, 'channel') ? $_POST['channel'] : Array() );
 
 	check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels');
+	
+	$xor = db_getfunc('^');
 
 	if (x($_POST,'page_channels_block')){
 		foreach($channels as $uid){
-			q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
+			q("UPDATE channel SET channel_pageflags = ( channel_pageflags $xor %d ) where channel_id = %d",
 				intval(PAGE_CENSORED),
 				intval( $uid )
 			);
 			proc_run('php','include/directory.php',$uid,'nopush');
 		}
 		notice( sprintf( tt("%s channel censored/uncensored", "%s channels censored/uncensored", count($channels)), count($channels)) );
+	}
+	if (x($_POST,'page_channels_code')){
+		foreach($channels as $uid){
+			q("UPDATE channel SET channel_pageflags = ( channel_pageflags $xor %d ) where channel_id = %d",
+				intval(PAGE_ALLOWCODE),
+				intval( $uid )
+			);
+		}
+		notice( sprintf( tt("%s channel code allowed/disallowed", "%s channels code allowed/disallowed", count($channels)), count($channels)) );
 	}
 	if (x($_POST,'page_channels_delete')){
 		require_once("include/Contact.php");
@@ -901,14 +912,29 @@ function admin_page_channels(&$a){
 
 			case "block":{
 				check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
-				q("UPDATE channel SET channel_pageflags = ( channel_pageflags & ~%d ) where channel_id = %d",
-					intval(PAGE_CENSORED),
+				$pflags = $channel[0]['channel_pageflags'] ^ PAGE_CENSORED; 
+				q("UPDATE channel SET channel_pageflags = %d where channel_id = %d",
+					intval($pflags),
 					intval( $uid )
 				);
 				proc_run('php','include/directory.php',$uid,'nopush');
 
-				notice( sprintf( (($channel[0]['channel_pageflags'] & PAGE_CENSORED) ? t("Channel '%s' uncensored"): t("Channel '%s' censored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
+				notice( sprintf( (($pflags & PAGE_CENSORED) ? t("Channel '%s' censored"): t("Channel '%s' uncensored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
 			}; break;
+
+			case "code":{
+				check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
+				$pflags = $channel[0]['channel_pageflags'] ^ PAGE_ALLOWCODE; 
+				q("UPDATE channel SET channel_pageflags = %d where channel_id = %d",
+					intval($pflags),
+					intval( $uid )
+				);
+
+				notice( sprintf( (($pflags & PAGE_ALLOWCODE) ? t("Channel '%s' code allowed"): t("Channel '%s' code disallowed")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
+			}; break;
+
+			default: 
+				break;
 		}
 		goaway($a->get_baseurl(true) . '/admin/channels' );
 	}
@@ -937,6 +963,11 @@ function admin_page_channels(&$a){
 				$channels[$x]['blocked'] = true;
 			else
 				$channels[$x]['blocked'] = false;
+
+			if($channels[$x]['channel_pageflags'] & PAGE_ALLOWCODE)
+				$channels[$x]['allowcode'] = true;
+			else
+				$channels[$x]['allowcode'] = false;
 		}
 	}
 
@@ -950,7 +981,8 @@ function admin_page_channels(&$a){
 		'$delete' => t('Delete'),
 		'$block' => t('Censor'),
 		'$unblock' => t('Uncensor'),
-
+		'$code' => t('Allow Code'),
+		'$uncode' => t('Disallow Code'),
 		'$h_channels' => t('Channel'),
 		'$th_channels' => array( t('UID'), t('Name'), t('Address')),
 

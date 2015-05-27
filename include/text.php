@@ -137,6 +137,72 @@ function purify_html($s) {
 	$config->set('Cache.DefinitionImpl', null);
 	$config->set('Attr.EnableID', true);
 
+	//Allow some custom data- attributes used by built-in libs.
+	//In this way members which do not have allowcode set can still use the built-in js libs in webpages to some extent.
+
+	$def = $config->getHTMLDefinition(true);
+
+	//data- attributes used by the foundation library
+	$def->info_global_attr['data-options'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-magellan-expedition'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-magellan-destination'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-magellan-arrival'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-offcanvas'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-topbar'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-orbit'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-orbit-slide-number'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-dropdown'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-dropdown-content'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-reveal-id'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-reveal'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-alert'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-tooltip'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-joyride'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-id'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-text'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-class'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-prev-tex'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-button'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-accordion'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-tab'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-equalizer'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-equalizer-watch'] = new HTMLPurifier_AttrDef_Text;
+
+	//data- attributes used by the bootstrap library
+	$def->info_global_attr['data-dismiss'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-target'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-toggle'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-backdrop'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-keyboard'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-show'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-spy'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-offset'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-animation'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-container'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-delay'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-placement'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-title'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-trigger'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-content'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-trigger'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-parent'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-ride'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-slide-to'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-slide'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-interval'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-pause'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-wrap'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-offset-top'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-offset-bottom'] = new HTMLPurifier_AttrDef_Text;
+
+	//some html5 elements
+	$def->addElement('section', 'Block', 'Flow', 'Common');
+	$def->addElement('nav',     'Block', 'Flow', 'Common');
+	$def->addElement('article', 'Block', 'Flow', 'Common');
+	$def->addElement('aside',   'Block', 'Flow', 'Common');
+	$def->addElement('header',  'Block', 'Flow', 'Common');
+	$def->addElement('footer',  'Block', 'Flow', 'Common');
+
 	$purifier = new HTMLPurifier($config);
 
 	return $purifier->purify($s);

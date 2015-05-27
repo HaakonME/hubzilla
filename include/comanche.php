@@ -168,6 +168,21 @@ function comanche_block($s, $class = '') {
 		);
 
 		if($r) {
+			//check for eventual menus in the block and parse them
+			$cnt = preg_match_all("/\[menu\](.*?)\[\/menu\]/ism", $r[0]['body'], $matches, PREG_SET_ORDER);
+			if($cnt) {
+				foreach($matches as $mtch) {
+					$r[0]['body'] = str_replace($mtch[0], comanche_menu(trim($mtch[1])), $r[0]['body']);
+				}
+			}
+			$cnt = preg_match_all("/\[menu=(.*?)\](.*?)\[\/menu\]/ism", $r[0]['body'], $matches, PREG_SET_ORDER);
+			if($cnt) {
+				foreach($matches as $mtch) {
+					$r[0]['body'] = str_replace($mtch[0],comanche_menu(trim($mtch[2]),$mtch[1]),$r[0]['body']);
+				}
+			}
+
+			//emit the block
 			$o .= (($var['wrap'] == 'none') ? '' : '<div class="' . $class . '">');
 
 			if($r[0]['title'] && trim($r[0]['body']) != '$content') {

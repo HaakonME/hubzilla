@@ -2400,6 +2400,11 @@ function diaspora_send_status($item,$owner,$contact,$public_batch = false) {
 	$a = get_app();
 	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
+	if(intval($item['id']) != intval($item['parent'])) {
+		logger('attempted to send a comment as a top-level post');
+		return;
+	}
+
 	$images = array();
 
 	$title = $item['title'];

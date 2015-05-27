@@ -430,17 +430,6 @@ function notifier_run($argv, $argc){
 			$uplink = true;
 		} 
 
-// FIXME - make sure this is complete (the other uplink) and check before enabling
-//		if((! $top_level_post) && (! $relay_to_owner) && (! $uplink) && ($cmd !== 'relay')) {
-
-			// We've been asked to deliver a comment, but it isn't being sent upstream
-			// and the owner isn't delivering it downstream. This is totally unexpected
-			// and shouldn't happen. We will also not allow it to happen.
-
-//			logger('Comment being processed with unspecific routing.');
-//			return;			
-//		}
-
 		if(($relay_to_owner || $uplink) && ($cmd !== 'relay')) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
 			$recipients = array(($uplink) ? $parent_item['source_xchan'] : $parent_item['owner_xchan']);

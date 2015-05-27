@@ -412,6 +412,8 @@ function notifier_run($argv, $argc){
 			: false
 		);
 
+
+
 		$uplink = false;
 
 		// $cmd === 'relay' indicates the owner is sending it to the original recipients
@@ -427,6 +429,17 @@ function notifier_run($argv, $argc){
 			logger('notifier: uplink');			
 			$uplink = true;
 		} 
+
+
+		if((! $top_level_post) && (! $relay_to_owner) && (! $uplink) && ($cmd !== 'relay')) {
+
+			// We've been asked to deliver a comment, but it isn't being sent upstream
+			// and the owner isn't delivering it downstream. This is totally unexpected
+			// and shouldn't happen. We will also not allow it to happen.
+
+			logger('Comment being processed with unspecific routing.');
+			return;			
+		}
 
 		if(($relay_to_owner || $uplink) && ($cmd !== 'relay')) {
 			logger('notifier: followup relay', LOGGER_DEBUG);

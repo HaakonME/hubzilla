@@ -30,6 +30,9 @@ function menu_element($menu) {
 	$arr['type'] = 'menu';
 	$arr['name'] = $menu['menu_name'];
 	$arr['desc'] = $menu['menu_desc'];
+	$arr['created'] = $menu['menu_created'];
+	$arr['edited'] = $menu['menu_edited'];
+
 	$arr['baseurl'] = z_root();
 	if($menu['menu_flags']) {
 		$arr['flags'] = array();
@@ -147,12 +150,14 @@ function menu_create($arr) {
 	if($r)
 		return false;
 
-	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id ) 
-		values( '%s', '%s', %d, %d )",
+	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id, menu_created, menu_edited ) 
+		values( '%s', '%s', %d, %d, '%s', '%s' )",
  		dbesc($menu_name),
 		dbesc($menu_desc),
 		intval($menu_flags),
-		intval($menu_channel_id)
+		intval($menu_channel_id),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert())
 	);
 	if(! $r)
 		return false;
@@ -237,11 +242,12 @@ function menu_edit($arr) {
 		return false;
 	}
 
-	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d
+	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d, menu_edited = '%s'
 		where menu_id = %d and menu_channel_id = %d", 
  		dbesc($menu_name),
 		dbesc($menu_desc),
 		intval($menu_flags),
+		dbesc(datetime_convert()),
 		intval($menu_id),
 		intval($menu_channel_id)
 	);
@@ -306,6 +312,13 @@ function menu_add_item($menu_id, $uid, $arr) {
 		intval($menu_id),
 		intval($mitem_order)
 	);
+
+	$x = q("update menu set menu_edited = '%s' where menu_id = %d and menu_channel_id = %d",
+		dbesc(datetime_convert()),
+		intval($menu_id),
+		intval($uid)
+	);
+
 	return $r;
 
 }
@@ -342,6 +355,13 @@ function menu_edit_item($menu_id, $uid, $arr) {
 		intval($menu_id),
 		intval($mitem_id)
 	);
+
+	$x = q("update menu set menu_edited = '%s' where menu_id = %d and menu_channel_id = %d",
+		dbesc(datetime_convert()),
+		intval($menu_id),
+		intval($uid)
+	);
+
 	return $r;
 }
 
@@ -354,6 +374,13 @@ function menu_del_item($menu_id,$uid,$item_id) {
 		intval($uid),
 		intval($item_id)
 	);
+
+	$x = q("update menu set menu_edited = '%s' where menu_id = %d and menu_channel_id = %d",
+		dbesc(datetime_convert()),
+		intval($menu_id),
+		intval($uid)
+	);
+
 	return $r;
 }
 

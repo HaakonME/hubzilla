@@ -410,6 +410,8 @@ function notifier_run($argv, $argc){
 
 		$relay_to_owner = (((! $top_level_post) && (intval($target_item['item_origin'])) && comment_local_origin($target_item)) ? true : false);
 
+
+
 		$uplink = false;
 
 		// $cmd === 'relay' indicates the owner is sending it to the original recipients

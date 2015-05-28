@@ -1097,7 +1097,7 @@ function zot_import($arr, $sender_url) {
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d )>0 ",
+				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) > 0 ",
 					intval(PAGE_REMOVED)
 				);
 				if(! $r) {
@@ -1361,7 +1361,8 @@ function public_recips($msg) {
 					if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
 						$address = basename($tag['url']);
 						if($address) {
-							$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
+							$z = q("select channel_hash as hash from channel where channel_address = '%s' 
+								and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0 limit 1",
 								dbesc($address)
 							);
 							if($z)
@@ -1465,7 +1466,7 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d ) > 0 ",
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and ( channel_pageflags & %d ) = 0 ",
 			dbesc($hash),
 			intval(PAGE_REMOVED)
 		);

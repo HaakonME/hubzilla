@@ -25,6 +25,10 @@ function impel_init(&$a) {
 	$channel = $a->get_channel();
 
 	$arr = array();
+	$is_menu = false;
+
+	// a portable menu has its links rewritten with the local baseurl
+	$portable_menu = false;
 
 	switch($j['type']) {
 		case 'webpage':
@@ -42,82 +46,104 @@ function impel_init(&$a) {
 			$namespace = 'PDL';
 			$installed_type = t('layout');
 			break;
+		case 'portable-menu':
+			$portable_menu = true;
+			// fall through
+		case 'menu':
+			$is_menu = true;
+			$installed_type = t('menu');
+			break;			
 		default:
 			logger('mod_impel: unrecognised element type' . print_r($j,true));
 			break;
 	}
-	$arr['uid'] = local_channel();
-	$arr['aid'] = $channel['channel_account_id'];
-	$arr['title'] = $j['title'];
-	$arr['body'] = $j['body'];
-	$arr['term'] = $j['term'];
-	$arr['created'] = datetime_convert('UTC','UTC', $j['created']);
-	$arr['edited'] = datetime_convert('UTC','UTC',$j['edited']);
-	$arr['owner_xchan'] = get_observer_hash();
-	$arr['author_xchan'] = (($j['author_xchan']) ? $j['author_xchan'] : get_observer_hash());
-	$arr['mimetype'] = (($j['mimetype']) ? $j['mimetype'] : 'text/bbcode');
-
-	if(! $j['mid'])
-		$j['mid'] = item_message_id();
-
-	$arr['mid'] = $arr['parent_mid'] = $j['mid'];
+	if($is_menu) {
 
 
-	if($j['pagetitle']) {
-		require_once('library/urlify/URLify.php');
-		$pagetitle = strtolower(URLify::transliterate($j['pagetitle']));
+
+
+
+
+
+
 	}
+	else {
+		$arr['uid'] = local_channel();
+		$arr['aid'] = $channel['channel_account_id'];
+		$arr['title'] = $j['title'];
+		$arr['body'] = $j['body'];
+		$arr['term'] = $j['term'];
+		$arr['created'] = datetime_convert('UTC','UTC', $j['created']);
+		$arr['edited'] = datetime_convert('UTC','UTC',$j['edited']);
+		$arr['owner_xchan'] = get_observer_hash();
+		$arr['author_xchan'] = (($j['author_xchan']) ? $j['author_xchan'] : get_observer_hash());
+		$arr['mimetype'] = (($j['mimetype']) ? $j['mimetype'] : 'text/bbcode');
+
+		if(! $j['mid'])
+			$j['mid'] = item_message_id();
+
+		$arr['mid'] = $arr['parent_mid'] = $j['mid'];
+
+
+		if($j['pagetitle']) {
+			require_once('library/urlify/URLify.php');
+			$pagetitle = strtolower(URLify::transliterate($j['pagetitle']));
+		}
 
 
 
-	// Verify ability to use html or php!!!
+		// Verify ability to use html or php!!!
 
-    $execflag = false;
+	    $execflag = false;
 
-	if($arr['mimetype'] === 'application/x-php') {
-		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+		if($arr['mimetype'] === 'application/x-php') {
+			$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+				intval(local_channel())
+			);
+
+			if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
+				$execflag = true;
+			}
+		}
+
+		$remote_id = 0;
+
+		$z = q("select * from item_id where sid = '%s' and service = '%s' and uid = %d limit 1",
+			dbesc($pagetitle),
+			dbesc($namespace),
+			intval(local_channel())
+		);
+		$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1",
+			dbesc($arr['mid']),
 			intval(local_channel())
 		);
 
-		if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-			$execflag = true;
+		if($z && $i) {
+			$remote_id = $z[0]['id'];
+			$arr['id'] = $i[0]['id'];
+			// don't update if it has the same timestamp as the original
+			if($arr['edited'] > $i[0]['edited'])
+				$x = item_store_update($arr,$execflag);
+		}
+		else {
+			if(($i) && (intval($i[0]['item_deleted']))) {
+				// was partially deleted already, finish it off
+				q("delete from item where mid = '%s' and uid = %d",
+					dbesc($arr['mid']),
+					intval(local_channel())
+				);
+			}
+			$x = item_store($arr,$execflag);
+		}
+
+		if($x['success']) {
+			$item_id = $x['item_id'];
+			update_remote_id($channel,$item_id,$arr['item_restrict'],$pagetitle,$namespace,$remote_id,$arr['mid']);
 		}
 	}
 
-	$remote_id = 0;
-
-	$z = q("select * from item_id where sid = '%s' and service = '%s' and uid = %d limit 1",
-		dbesc($pagetitle),
-		dbesc($namespace),
-		intval(local_channel())
-	);
-	$i = q("select id, item_deleted from item where mid = '%s' and uid = %d limit 1",
-		dbesc($arr['mid']),
-		intval(local_channel())
-	);
-
-	if($z && $i) {
-		$remote_id = $z[0]['id'];
-		$arr['id'] = $i[0]['id'];
-		// don't update if it has the same timestamp as the original
-		if($arr['edited'] > $i[0]['edited'])
-			$x = item_store_update($arr,$execflag);
-	}
-	else {
-		if(($i) && intval($i[0]['item_deleted'])) {
-			// was partially deleted already, finish it off
-			q("delete from item where mid = '%s' and uid = %d",
-				dbesc($arr['mid']),
-				intval(local_channel())
-			);
-		}
-		$x = item_store($arr,$execflag);
-	}
 	if($x['success']) {
-		$item_id = $x['item_id'];
-		update_remote_id($channel,$item_id,$arr['item_restrict'],$pagetitle,$namespace,$remote_id,$arr['mid']);
 		$ret['success'] = true;
-
 		info( sprintf( t('%s element installed'), $installed_type)); 
 	}
 	else {

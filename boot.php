@@ -230,15 +230,16 @@ define ( 'PAGE_REMOVED',           0x8000 );
 
 
 /**
- * Photo types
+ * Photo usage types
  */
 
 define ( 'PHOTO_NORMAL',           0x0000 );
 define ( 'PHOTO_PROFILE',          0x0001 );
 define ( 'PHOTO_XCHAN',            0x0002 );
 define ( 'PHOTO_THING',            0x0004 );
-define ( 'PHOTO_ADULT',            0x0008 );
+define ( 'PHOTO_COVER',            0x0010 );
 
+define ( 'PHOTO_ADULT',            0x0008 );
 define ( 'PHOTO_FLAG_OS',          0x4000 );
 
 /**

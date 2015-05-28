@@ -433,6 +433,38 @@ require_once('include/items.php');
 		
 	}
 
+	function api_client_register(&$a,$type) {
+
+		$ret = array();
+		$key = random_string(16);
+		$secret = random_string(16);
+		$name = trim(escape_tags($_REQUEST['application_name']));
+		if(! $name)
+			json_return_and_die($ret);
+		if(is_array($_REQUEST['redirect_uris']))
+			$redirect = trim($_REQUEST['redirect_uris'][0]);
+		else
+			$redirect = trim($_REQUEST['redirect_uris']);
+		$icon = trim($_REQUEST['logo_uri']);
+		$r = q("INSERT INTO clients (client_id, pw, name, redirect_uri, icon, uid)
+			VALUES ('%s','%s','%s','%s','%s',%d)",
+			dbesc($key),
+			dbesc($secret),
+			dbesc($name),
+			dbesc($redirect),
+			dbesc($icon),
+			intval(0)
+		);
+
+		$ret['client_id'] = $key;
+		$ret['client_secret'] = $secret;
+		$ret['expires_at'] = 0;
+		json_return_and_die($ret);
+	}
+
+	api_register_func('api/client/register','api_client_register', false);
+
+
 
 	function api_item_get_user(&$a, $item) {
 		global $usercache;

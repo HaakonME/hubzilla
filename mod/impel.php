@@ -113,7 +113,7 @@ function impel_init(&$a) {
 			dbesc($namespace),
 			intval(local_channel())
 		);
-		$i = q("select id, item_restrict from item where mid = '%s' and uid = %d limit 1",
+		$i = q("select id, edited, item_restrict from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
 			intval(local_channel())
 		);

@@ -437,11 +437,6 @@ require_once('include/items.php');
 
 	function api_client_register(&$a,$type) {
 
-		// This currently isn't providing the correct authentication flow.
-
-		if(! local_channel())
-			goaway(z_root() . '/login');
-
 		$ret = array();
 		$key = random_string(16);
 		$secret = random_string(16);
@@ -460,12 +455,7 @@ require_once('include/items.php');
 			dbesc($name),
 			dbesc($redirect),
 			dbesc($icon),
-			intval(api_user())
-		);
-		$r = q("INSERT INTO xperm (xp_client, xp_channel, xp_perm) VALUES ('%s', %d, '%s') ",
-			dbesc($key),
-			intval(api_user()),
-			dbesc('all')
+			intval(0)
 		);
 
 		$ret['client_id'] = $key;

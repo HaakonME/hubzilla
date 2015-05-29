@@ -113,6 +113,7 @@ function impel_init(&$a) {
 			dbesc($namespace),
 			intval(local_channel())
 		);
+
 		$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
 			intval(local_channel())

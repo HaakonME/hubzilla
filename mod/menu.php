@@ -78,6 +78,9 @@ function menu_content(&$a) {
 		$x = menu_list($uid);
 		if($x) {
 			for($y = 0; $y < count($x); $y ++) {
+				$m = menu_fetch($x[$y]['menu_name'],$uid,get_observer_hash());
+				if($m)
+					$x[$y]['element'] = '[element]' . base64url_encode(json_encode(menu_element($m))) . '[/element]';
 				$x[$y]['bookmark'] = (($x[$y]['menu_flags'] & MENU_BOOKMARK) ? true : false);
 			}
 		}

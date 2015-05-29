@@ -649,11 +649,15 @@ CREATE TABLE "menu" (
   "menu_name" text NOT NULL DEFAULT '',
   "menu_desc" text NOT NULL DEFAULT '',
   "menu_flags" bigint NOT NULL DEFAULT '0',
+  "menu_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "menu_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("menu_id")
 );
 create index "menu_channel_id" on menu ("menu_channel_id");
 create index "menu_name" on menu ("menu_name");
 create index "menu_flags" on menu ("menu_flags");
+create index "menu_created" on menu ("menu_created");
+create index "menu_edited" on menu ("menu_edited");
 CREATE TABLE "menu_item" (
   "mitem_id" serial  NOT NULL,
   "mitem_link" text NOT NULL DEFAULT '',

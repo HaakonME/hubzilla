@@ -24,6 +24,48 @@ function menu_fetch($name,$uid,$observer_xchan) {
 	return null;
 }
 	
+function menu_element($menu) {
+
+	$arr = array();
+	$arr['type'] = 'menu';
+	$arr['name'] = $menu['menu_name'];
+	$arr['desc'] = $menu['menu_desc'];
+	$arr['created'] = $menu['menu_created'];
+	$arr['edited'] = $menu['menu_edited'];
+
+	$arr['baseurl'] = z_root();
+	if($menu['menu_flags']) {
+		$arr['flags'] = array();
+		if($menu['menu_flags'] & MENU_BOOKMARK)
+			$arr['flags'][] = 'bookmark';
+		if($menu['menu_flags'] & MENU_SYSTEM)
+			$arr['flags'][] = 'system';
+	}
+	if($menu['items']) {
+		$arr['items'] = array();
+		foreach($menu['items'] as $it) {
+			$entry = array();
+			$entry['link'] = str_replace(z_root(),'[baseurl]',$it['mitem_link']);
+			$entry['desc'] = $it['mitem_desc'];
+			$entry['order'] = $it['mitem_order'];
+			if($it['mitem_flags']) {
+				$entry['flags'] = array();
+				if($it['mitem_flags'] & MENU_ITEM_ZID)
+					$entry['flags'][] = 'zid';
+				if($it['mitem_flags'] & MENU_ITEM_NEWWIN)
+					$entry['flags'][] = 'new-window';
+				if($it['mitem_flags'] & MENU_ITEM_CHATROOM)
+					$entry['flags'][] = 'chatroom';
+			}
+			$arr['items'][] = $entry;
+		}
+	}	
+
+	return $arr;
+}
+
+
+
 function menu_render($menu, $class='', $edit = false, $var = '') {
 
 	if(! $menu)
@@ -108,12 +150,14 @@ function menu_create($arr) {
 	if($r)
 		return false;
 
-	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id ) 
-		values( '%s', '%s', %d, %d )",
+	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id, menu_created, menu_edited ) 
+		values( '%s', '%s', %d, %d, '%s', '%s' )",
  		dbesc($menu_name),
 		dbesc($menu_desc),
 		intval($menu_flags),
-		intval($menu_channel_id)
+		intval($menu_channel_id),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert())
 	);
 	if(! $r)
 		return false;
@@ -198,11 +242,12 @@ function menu_edit($arr) {
 		return false;
 	}
 
-	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d
+	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d, menu_edited = '%s'
 		where menu_id = %d and menu_channel_id = %d", 
  		dbesc($menu_name),
 		dbesc($menu_desc),
 		intval($menu_flags),
+		dbesc(datetime_convert()),
 		intval($menu_id),
 		intval($menu_channel_id)
 	);
@@ -267,6 +312,13 @@ function menu_add_item($menu_id, $uid, $arr) {
 		intval($menu_id),
 		intval($mitem_order)
 	);
+
+	$x = q("update menu set menu_edited = '%s' where menu_id = %d and menu_channel_id = %d",
+		dbesc(datetime_convert()),
+		intval($menu_id),
+		intval($uid)
+	);
+
 	return $r;
 
 }
@@ -303,6 +355,13 @@ function menu_edit_item($menu_id, $uid, $arr) {
 		intval($menu_id),
 		intval($mitem_id)
 	);
+
+	$x = q("update menu set menu_edited = '%s' where menu_id = %d and menu_channel_id = %d",
+		dbesc(datetime_convert()),
+		intval($menu_id),
+		intval($uid)
+	);
+
 	return $r;
 }
 
@@ -315,6 +374,13 @@ function menu_del_item($menu_id,$uid,$item_id) {
 		intval($uid),
 		intval($item_id)
 	);
+
+	$x = q("update menu set menu_edited = '%s' where menu_id = %d and menu_channel_id = %d",
+		dbesc(datetime_convert()),
+		intval($menu_id),
+		intval($uid)
+	);
+
 	return $r;
 }
 

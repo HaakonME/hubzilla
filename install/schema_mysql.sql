@@ -732,11 +732,15 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `menu_name` char(255) NOT NULL DEFAULT '',
   `menu_desc` char(255) NOT NULL DEFAULT '',
   `menu_flags` int(11) NOT NULL DEFAULT '0',
+  `menu_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `menu_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`menu_id`),
   KEY `menu_channel_id` (`menu_channel_id`),
   KEY `menu_name` (`menu_name`),
-  KEY `menu_flags` (`menu_flags`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `menu_flags` (`menu_flags`),
+  KEY `menu_created` (`menu_created`),
+  KEY `menu_edited` (`menu_edited`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_id` int(10) unsigned NOT NULL AUTO_INCREMENT,

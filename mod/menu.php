@@ -102,6 +102,8 @@ function menu_content(&$a) {
 			'$desctitle' => t('Menu Title'),
 			'$edit' => t('Edit'),
 			'$drop' => t('Drop'),
+			'$created' => t('Created'),
+			'$edited' => t('Edited'),
 			'$new' => t('New'),
 			'$bmark' => t('Bookmarks allowed'),
 			'$hintnew' => t('Create'),

@@ -193,6 +193,9 @@ function translate_design_element($type) {
 		case 'block':
 			$ret =  t('block');
 			break;
+		case 'menu':
+			$ret =  t('menu');
+			break;
 	}
 
 	return $ret;

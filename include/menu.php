@@ -28,10 +28,10 @@ function menu_element($menu) {
 
 	$arr = array();
 	$arr['type'] = 'menu';
-	$arr['name'] = $menu['menu_name'];
-	$arr['desc'] = $menu['menu_desc'];
-	$arr['created'] = $menu['menu_created'];
-	$arr['edited'] = $menu['menu_edited'];
+	$arr['pagetitle'] = $menu['menu']['menu_name'];
+	$arr['desc'] = $menu['menu']['menu_desc'];
+	$arr['created'] = $menu['menu']['menu_created'];
+	$arr['edited'] = $menu['menu']['menu_edited'];
 
 	$arr['baseurl'] = z_root();
 	if($menu['menu_flags']) {
@@ -124,7 +124,6 @@ function menu_fetch_id($menu_id,$channel_id) {
 
 
 function menu_create($arr) {
-
 	$menu_name = trim(escape_tags($arr['menu_name']));
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
 	$menu_flags = intval($arr['menu_flags']);
@@ -286,7 +285,6 @@ function menu_delete_id($menu_id, $uid) {
 
 
 function menu_add_item($menu_id, $uid, $arr) {
-
 
 	$mitem_link = escape_tags($arr['mitem_link']);
 	$mitem_desc = escape_tags($arr['mitem_desc']);

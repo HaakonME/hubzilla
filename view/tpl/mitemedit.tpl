@@ -21,13 +21,13 @@
 		{{include file="field_input.tpl" field=$mitem_order}}
 		{{include file="field_checkbox.tpl" field=$usezid}}
 		{{include file="field_checkbox.tpl" field=$newwin}}
-		<div class="pull-right btn-group form-group">
+		<div class="pull-right form-group">
 			<div class="btn-group">
 				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}}"></i>
 				</button>
 				{{if $submit_more}}
-				<button class="btn btn-primary btn-sm" type="submit" name="submit-more" value="{{$submit_more}}">{{$submit_more}}&nbsp;<i id="jot-perms-icon" class="icon-caret-right"></i></button>
+				<button class="btn btn-primary btn-sm" type="submit" name="submit-more" value="{{$submit_more}}">{{$submit_more}}&nbsp;<i class="icon-caret-right"></i></button>
 				{{/if}}
 				<button class="btn btn-primary btn-sm" type="submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 			</div>

@@ -22,7 +22,7 @@
 
 		{{include file="field_checkbox.tpl" field=$menu_bookmark}}
 		<div class="menuedit-submit-wrapper form-group pull-right" >
-			<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
+			<button type="submit" name="submit" class="btn btn-primary">{{$submit}}&nbsp;<i class="icon-caret-right"></i></button>
 		</div>
 		<div class="clear"></div>
 	</form>

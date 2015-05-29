@@ -142,9 +142,9 @@ function menu_content(&$a) {
 				'$editcontents' => t('Edit menu contents'),
 				'$menu_name' => array('menu_name', t('Menu name'), $m['menu_name'], t('Must be unique, only seen by you'), '*'),
 				'$menu_desc' => array('menu_desc', t('Menu title'), $m['menu_desc'], t('Menu title as seen by others'), ''),
-				'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), (($m['menu_flags'] & MENU_BOOKMARK) ? 1 : 0), t('Menu may be used to store saved bookmarks'), ''),
+				'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), (($m['menu_flags'] & MENU_BOOKMARK) ? 1 : 0), t('Menu may be used to store saved bookmarks'), array(t('No'), t('Yes'))),
 				'$menu_system' => (($m['menu_flags'] & MENU_SYSTEM) ? 1 : 0),
-				'$submit' => t('Modify')
+				'$submit' => t('Submit and proceed')
 			));
 
 			return $o;

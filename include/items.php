@@ -4389,6 +4389,8 @@ function zot_feed($uid,$observer_hash,$arr) {
 	$mindate = null;
 	$message_id = null;
 
+	require_once('include/security.php');
+
 	if(array_key_exists('mindate',$arr)) {
 		$mindate = datetime_convert('UTC','UTC',$arr['mindate']);
 	}
@@ -4411,10 +4413,8 @@ function zot_feed($uid,$observer_hash,$arr) {
 		return $result;
 	}
 
-	if(! is_sys_channel($uid)) {
-		require_once('include/security.php');
+	if(! is_sys_channel($uid))
 		$sql_extra = item_permissions_sql($uid,$observer_hash);
-	}
 
 	$limit = " LIMIT 100 ";
 

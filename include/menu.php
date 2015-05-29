@@ -66,13 +66,17 @@ function menu_element($menu) {
 
 
 
-function menu_render($menu, $class='', $edit = false, $var = '') {
+function menu_render($menu, $class='', $edit = false, $var = array()) {
 
 	if(! $menu)
 		return '';
 
 	$channel_id = ((is_array(get_app()->profile)) ? get_app()->profile['profile_uid'] : 0);
+	if ((! $channel_id) && (local_channel()))
+		$channel_id = local_channel();
+
 	$menu_list = menu_list($channel_id);
+	$menu_names = array();
 
 	foreach($menu_list as $menus) {
 		if($menus['menu_name'] != $menu['menu']['menu_name'])

@@ -150,14 +150,16 @@ function menu_create($arr) {
 	if($r)
 		return false;
 
+	$t = datetime_convert();
+
 	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id, menu_created, menu_edited ) 
 		values( '%s', '%s', %d, %d, '%s', '%s' )",
  		dbesc($menu_name),
 		dbesc($menu_desc),
 		intval($menu_flags),
 		intval($menu_channel_id),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert())
+		dbesc(datetime_convert('UTC','UTC',(($arr['menu_created']) ? $arr['menu_created'] : $t)),
+		dbesc(datetime_convert('UTC','UTC',(($arr['menu_edited']) ? $arr['menu_edited'] : $t))
 	);
 	if(! $r)
 		return false;

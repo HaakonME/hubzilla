@@ -158,8 +158,8 @@ function menu_create($arr) {
 		dbesc($menu_desc),
 		intval($menu_flags),
 		intval($menu_channel_id),
-		dbesc(datetime_convert('UTC','UTC',(($arr['menu_created']) ? $arr['menu_created'] : $t)),
-		dbesc(datetime_convert('UTC','UTC',(($arr['menu_edited']) ? $arr['menu_edited'] : $t))
+		dbesc(datetime_convert('UTC','UTC',(($arr['menu_created']) ? $arr['menu_created'] : $t))),
+		dbesc(datetime_convert('UTC','UTC',(($arr['menu_edited']) ? $arr['menu_edited'] : $t)))
 	);
 	if(! $r)
 		return false;

@@ -954,3 +954,8 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 
 	return $Text;
 }
+
+
+function strip_bbimage($s) {
+		$Text = preg_replace("/\[[zi]mg(.*?)\](.*?)\[\/[zi]mg\]/ism", '', $Text);
+}

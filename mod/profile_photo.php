@@ -341,7 +341,7 @@ function profile_photo_content(&$a) {
 			return;
 		}
 
-		$ph = photo_factory($r[0]['data'], $r[0]['type']);
+		$ph = photo_factory(dbunescbin($r[0]['data']), $r[0]['type']);
 		// go ahead as if we have just uploaded a new photo to crop
 		profile_photo_crop_ui_head($a, $ph);
 	}

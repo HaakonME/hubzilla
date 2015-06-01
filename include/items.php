@@ -4884,6 +4884,17 @@ function comment_local_origin($item) {
 }
 
 
+function gen_asld($items) {
+	$ret = array();
+	if(! $items)
+		return $ret;
+	foreach($items as $item) {
+		$ret[] = i2asld($item);
+	}
+	return $ret;
+}
+
+
 function i2asld($i) {
 
 	if(! $i)
@@ -4896,17 +4907,36 @@ function i2asld($i) {
 		$ret['@type'] = ucfirst(basename($i['verb']));
 	}
 	$ret['@id'] = $i['plink'];
+
 	$ret['published'] = datetime_convert('UTC','UTC',$i['created'],ATOM_TIME);
-	if($i['title'])
-		$ret['title'] = $i['title'];
-	$ret['content'] = bbcode($i['body']);
+
+	if($i['obj_type'] === ACTIVITY_OBJ_NOTE)
+		$ret['object'] = asencode_note($i);
+
 
 	$ret['actor'] = asencode_person($i['author']);
-	$ret['owner'] = asencode_person($i['owner']);
 
 	
 	return $ret;
 	
+}
+
+function asencode_note($i) {
+
+	$ret = array();
+
+	$ret['@type'] = 'Note';
+	$ret['@id'] = $i['plink'];
+	$ret['@context'] = array('zot' => 'http://purl.org/zot/protocol');
+	if($i['title'])
+		$ret['title'] = bbcode($i['title']);
+	$ret['content'] = bbcode($i['body']);
+	$ret['zot:owner'] = asencode_person($i['owner']);
+	$ret['published'] = datetime_convert('UTC','UTC',$i['created'],ATOM_TIME);
+	if($i['created'] !== $i['edited'])
+		$ret['updated'] = datetime_convert('UTC','UTC',$i['edited'],ATOM_TIME);
+
+	return $ret;
 }
 
 
@@ -4915,6 +4945,16 @@ function asencode_person($p) {
 	$ret['@type'] = 'Person';
 	$ret['@id'] = 'acct:' . $p['xchan_addr'];
 	$ret['displayName'] = $p['xchan_name'];
+	$ret['icon'] = array(
+		'@type' => 'Link',
+		'mediaType' => $p['xchan_photo_mimetype'],
+		'href' => $p['xchan_photo_m']
+	);
+	$ret['url'] = array(
+		'@type' => 'Link',
+		'mediaType' => 'text/html',
+		'href' => $p['xchan_url']
+	);
 
 	return $ret;
 }

@@ -549,40 +549,6 @@ function item_post(&$a) {
 		$body = preg_replace_callback('/\[img(.*?)\](.*?)\[\/img\]/ism','red_zrlify_img_callback',$body);
 
 
-		/**
-		 *
-		 * When a photo was uploaded into the message using the (profile wall) ajax 
-		 * uploader, The permissions are initially set to disallow anybody but the
-		 * owner from seeing it. This is because the permissions may not yet have been
-		 * set for the post. If it's private, the photo permissions should be set
-		 * appropriately. But we didn't know the final permissions on the post until
-		 * now. So now we'll look for links of uploaded photos and attachments that are in the
-		 * post and set them to the same permissions as the post itself.
-		 *
-		 * If the post was end-to-end encrypted we can't find images and attachments in the body,
-		 * use our media_str input instead which only contains these elements - but only do this
-		 * when encrypted content exists because the photo/attachment may have been removed from 
-		 * the post and we should keep it private. If it's encrypted we have no way of knowing
-		 * so we'll set the permissions regardless and realise that the media may not be 
-		 * referenced in the post. 
-		 *
-		 * What is preventing us from being able to upload photos into comments is dealing with
-		 * the photo and attachment permissions, since we don't always know who was in the 
-		 * distribution for the top level post.
-		 * 
-		 * We might be able to provide this functionality with a lot of fiddling:
-		 * - if the top level post is public (make the photo public)
-		 * - if the top level post was written by us or a wall post that belongs to us (match the top level post)
-		 * - if the top level post has privacy mentions, add those to the permissions.
-		 * - otherwise disallow the photo *or* make the photo public. This is the part that gets messy. 
-		 */
-
-		if(! $preview) {
-			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
-
-			fix_attached_file_permissions($channel,$observer['xchan_hash'],((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
-
-		}
 
 
 
@@ -641,6 +607,42 @@ function item_post(&$a) {
 				$body = str_replace($match[1],'',$body);
 			}
 		}
+
+		/**
+		 *
+		 * When a photo was uploaded into the message using the (profile wall) ajax 
+		 * uploader, The permissions are initially set to disallow anybody but the
+		 * owner from seeing it. This is because the permissions may not yet have been
+		 * set for the post. If it's private, the photo permissions should be set
+		 * appropriately. But we didn't know the final permissions on the post until
+		 * now. So now we'll look for links of uploaded photos and attachments that are in the
+		 * post and set them to the same permissions as the post itself.
+		 *
+		 * If the post was end-to-end encrypted we can't find images and attachments in the body,
+		 * use our media_str input instead which only contains these elements - but only do this
+		 * when encrypted content exists because the photo/attachment may have been removed from 
+		 * the post and we should keep it private. If it's encrypted we have no way of knowing
+		 * so we'll set the permissions regardless and realise that the media may not be 
+		 * referenced in the post. 
+		 *
+		 * What is preventing us from being able to upload photos into comments is dealing with
+		 * the photo and attachment permissions, since we don't always know who was in the 
+		 * distribution for the top level post.
+		 * 
+		 * We might be able to provide this functionality with a lot of fiddling:
+		 * - if the top level post is public (make the photo public)
+		 * - if the top level post was written by us or a wall post that belongs to us (match the top level post)
+		 * - if the top level post has privacy mentions, add those to the permissions.
+		 * - otherwise disallow the photo *or* make the photo public. This is the part that gets messy. 
+		 */
+
+		if(! $preview) {
+			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+
+			fix_attached_file_permissions($channel,$observer['xchan_hash'],((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+
+		}
+
 	}
 
 // BBCODE end alert

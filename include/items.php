@@ -553,6 +553,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'order' => 'post',
 		'top'   => $params['top']
 		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
+	
 
 	$feed_template = get_markup_template('atom_feed.tpl');
 
@@ -4880,4 +4881,40 @@ function comment_local_origin($item) {
 		return true;
 
 	return false;
+}
+
+
+function i2asld($i) {
+
+	if(! $i)
+		return array();
+
+	$ret = array();
+
+	if($i['verb']) {
+		$ret['@context'] = dirname($i['verb']);
+		$ret['@type'] = ucfirst(basename($i['verb']));
+	}
+	$ret['@id'] = $i['plink'];
+	$ret['published'] = datetime_convert('UTC','UTC',$i['created'],ATOM_TIME);
+	if($i['title'])
+		$ret['title'] = $i['title'];
+	$ret['content'] = bbcode($i['body']);
+
+	$ret['actor'] = asencode_person($i['author']);
+	$ret['owner'] = asencode_person($i['owner']);
+
+	
+	return $ret;
+	
+}
+
+
+function asencode_person($p) {
+	$ret = array();
+	$ret['@type'] = 'Person';
+	$ret['@id'] = 'acct:' . $p['xchan_addr'];
+	$ret['displayName'] = $p['xchan_name'];
+
+	return $ret;
 }

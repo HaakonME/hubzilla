@@ -2,6 +2,7 @@
 
 // import page design element
 
+require_once('include/menu.php');
 
 function impel_init(&$a) {
 
@@ -20,7 +21,6 @@ function impel_init(&$a) {
 	$j = json_decode($x,true);
 	if(! $j)
 		json_return_and_die($ret);
-
 
 	$channel = $a->get_channel();
 
@@ -57,15 +57,58 @@ function impel_init(&$a) {
 			logger('mod_impel: unrecognised element type' . print_r($j,true));
 			break;
 	}
+
 	if($is_menu) {
+		$m = array();
+		$m['menu_channel_id'] = local_channel();
+		$m['menu_name'] = $j['pagetitle'];
+		$m['menu_desc'] = $j['desc'];
+		if($j['created'])
+			$m['menu_created'] = datetime_convert($j['created']);
+		if($j['edited'])
+			$m['menu_edited'] = datetime_convert($j['edited']);
 
+		$m['menu_flags'] = 0;
+		if($j['flags']) {
+			if(in_array('bookmark',$j['flags']))
+				$m['menu_flags'] |= MENU_BOOKMARK;
+			if(in_array('system',$j['flags']))
+				$m['menu_flags'] |= MENU_SYSTEM;
 
+		}
 
+		$menu_id = menu_create($m);
 
+		if($menu_id) {
+			if(is_array($j['items'])) {
+				foreach($j['items'] as $it) {
+					$mitem = array();
 
-
-
-
+					$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
+					$mitem['mitem_desc'] = escape_tags($it['desc']);
+					$mitem['mitem_order'] = intval($it['order']);
+					if(is_array($it['flags'])) {
+						$mitem['mitem_flags'] = 0;
+						if(in_array('zid',$it['flags']))
+							$mitem['mitem_flags'] |= MENU_ITEM_ZID;
+						if(in_array('new-window',$it['flags']))
+							$mitem['mitem_flags'] |= MENU_ITEM_NEWWIN;
+						if(in_array('chatroom',$it['flags']))
+							$mitem['mitem_flags'] |= MENU_ITEM_CHATROOM;
+					}
+					menu_add_item($menu_id,local_channel(),$mitem);
+				}
+				if($j['edited']) {
+					$x = q("update menu set menu_edited = '%s' where menu_id = %d and menu_channel_id = %d",
+						dbesc(datetime_convert('UTC','UTC',$j['edited'])),
+						intval($menu_id),
+						intval(local_channel())
+					);
+				}
+			}	
+			$ret['success'] = true;
+		}
+		$x = $ret;
 	}
 	else {
 		$arr['uid'] = local_channel();

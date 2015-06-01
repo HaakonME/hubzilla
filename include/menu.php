@@ -28,10 +28,10 @@ function menu_element($menu) {
 
 	$arr = array();
 	$arr['type'] = 'menu';
-	$arr['name'] = $menu['menu_name'];
-	$arr['desc'] = $menu['menu_desc'];
-	$arr['created'] = $menu['menu_created'];
-	$arr['edited'] = $menu['menu_edited'];
+	$arr['pagetitle'] = $menu['menu']['menu_name'];
+	$arr['desc'] = $menu['menu']['menu_desc'];
+	$arr['created'] = $menu['menu']['menu_created'];
+	$arr['edited'] = $menu['menu']['menu_edited'];
 
 	$arr['baseurl'] = z_root();
 	if($menu['menu_flags']) {
@@ -66,13 +66,17 @@ function menu_element($menu) {
 
 
 
-function menu_render($menu, $class='', $edit = false, $var = '') {
+function menu_render($menu, $class='', $edit = false, $var = array()) {
 
 	if(! $menu)
 		return '';
 
 	$channel_id = ((is_array(get_app()->profile)) ? get_app()->profile['profile_uid'] : 0);
+	if ((! $channel_id) && (local_channel()))
+		$channel_id = local_channel();
+
 	$menu_list = menu_list($channel_id);
+	$menu_names = array();
 
 	foreach($menu_list as $menus) {
 		if($menus['menu_name'] != $menu['menu']['menu_name'])
@@ -82,7 +86,7 @@ function menu_render($menu, $class='', $edit = false, $var = '') {
 	for($x = 0; $x < count($menu['items']); $x ++) {
 		if(in_array($menu['items'][$x]['mitem_link'], $menu_names)) {
 			$m = menu_fetch($menu['items'][$x]['mitem_link'], $channel_id, get_observer_hash());
-			$submenu = menu_render($m, 'dropdown-menu', $edit = false, $var = array('wrap' => 'none'));
+			$submenu = menu_render($m, 'dropdown-menu', $edit = false, array('wrap' => 'none'));
 			$menu['items'][$x]['submenu'] = $submenu;
 		}
 
@@ -124,7 +128,6 @@ function menu_fetch_id($menu_id,$channel_id) {
 
 
 function menu_create($arr) {
-
 	$menu_name = trim(escape_tags($arr['menu_name']));
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
 	$menu_flags = intval($arr['menu_flags']);
@@ -150,14 +153,16 @@ function menu_create($arr) {
 	if($r)
 		return false;
 
+	$t = datetime_convert();
+
 	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id, menu_created, menu_edited ) 
 		values( '%s', '%s', %d, %d, '%s', '%s' )",
  		dbesc($menu_name),
 		dbesc($menu_desc),
 		intval($menu_flags),
 		intval($menu_channel_id),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert())
+		dbesc(datetime_convert('UTC','UTC',(($arr['menu_created']) ? $arr['menu_created'] : $t))),
+		dbesc(datetime_convert('UTC','UTC',(($arr['menu_edited']) ? $arr['menu_edited'] : $t)))
 	);
 	if(! $r)
 		return false;
@@ -284,7 +289,6 @@ function menu_delete_id($menu_id, $uid) {
 
 
 function menu_add_item($menu_id, $uid, $arr) {
-
 
 	$mitem_link = escape_tags($arr['mitem_link']);
 	$mitem_desc = escape_tags($arr['mitem_desc']);

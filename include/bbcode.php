@@ -193,6 +193,9 @@ function translate_design_element($type) {
 		case 'block':
 			$ret =  t('block');
 			break;
+		case 'menu':
+			$ret =  t('menu');
+			break;
 	}
 
 	return $ret;
@@ -993,4 +996,17 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	call_hooks('bbcode', $Text);
 
 	return $Text;
+}
+
+/**
+ * This function exists as a short-term solution to folks linking to private images from their /cloud in
+ * their profiles, which brings up a login dialogue in the directory when that entry is viewed.
+ * The long term solution is to separate the web file browser from DAV so that you'll never see a 
+ * login prompt (though the resource may return a permission denied). 
+ */
+
+
+
+function strip_bbimage($s) {
+		$Text = preg_replace("/\[[zi]mg(.*?)\](.*?)\[\/[zi]mg\]/ism", '', $Text);
 }

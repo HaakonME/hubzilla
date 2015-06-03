@@ -4,22 +4,20 @@ Comanche is a markup language similar to bbcode with which to create elaborate a
 
 Comanche primarily chooses what content will appear in various regions of the page. The various regions have names and these names can change depending on what layout template you choose.
 
-Currently there are three layout templates, unless your site provides additional layouts (TODO list all templates)
+[b]Page Templates[/b]
+Currently there are five layout templates, unless your site provides additional layouts.
 
 [code]
-	default
-
+	[b]default[/b]
 	The default template defines a &quot;nav&quot; region across the top, &quot;aside&quot; as a fixed width sidebar, 
 	&quot;content&quot; for the main content region, and &quot;footer&quot; for a page footer.
 
 
-	full
-
+	[b]full[/b]
 	The full template defines the same as the default template with the exception that there is no &quot;aside&quot; region.
 
 
-	choklet
-
+	[b]choklet[/b]
 	The choklet template provides a number of fluid layout styles which can be specified by flavour:
 
 			(default flavour) - a two column layout similar to the "default" template, but more fluid
@@ -29,9 +27,12 @@ Currently there are three layout templates, unless your site provides additional
 			edgesthree - three column layout with fixed side margins
 			full - three column layout with fixed side margins and adds a "header" region beneath the navigation bar
 
-	redable
-	 
-	A template for reading longer texts. Three columns: aside, content and right_aside. For maximum readability it is advised to only use the middle content column.
+	[b]redable[/b]
+	A template for reading longer texts. Three columns: aside, content and right_aside.
+	For maximum readability it is advised to only use the middle content column.
+
+	[b]zen[/b]
+	Gives you the freedom to do everything yourself. Just a blank page with a content region.
 
 [/code]
 
@@ -39,29 +40,24 @@ To choose a layout template, use the 'template' tag.
 
 [code]
 	[template]full[/template]
-[/code]
 
+[/code]
 
 To choose the "choklet" template with the "three" flavour:
 
 [code]
 	[template=three]choklet[/template]
-[/code]
-	
-Or the "redable" (sic) template:
 
-[code]
-	[template]redable[/template]
 [/code]
-
 
 The default template will be used if no other template is specified. The template can use any names it desires for content regions. You will be using 'region' tags to decide what content to place in the respective regions.
 
-
-Two &quot;macros&quot; have been defined for your use.
+Three &quot;macros&quot; have been defined for your use.
 [code]
+	$htmlhead - replaced with the site head content.
 	$nav - replaced with the site navigation bar content.
 	$content - replaced with the main page content.
+
 [/code]
 
 By default, $nav is placed in the &quot;nav&quot; page region and $content is placed in the &quot;content&quot; region. You only need to use these macros if you wish to re-arrange where these items appear, either to change the order or to move them to other regions.
@@ -70,38 +66,61 @@ By default, $nav is placed in the &quot;nav&quot; page region and $content is pl
 To select a theme for your page, use the 'theme' tag.
 [code]
 	[theme]apw[/theme]
+
 [/code]
 This will select the theme named &quot;apw&quot;. By default your channel's preferred theme will be used.
 
 [code]
 	[theme=passion]apw[/theme]
+
 [/code]
 This will select the theme named &quot;apw&quot; and select the &quot;passion&quot; schema (theme variant). 
 
 
 [b]Regions[/b]
-
 Each region has a name, as noted above. You will specify the region of interest using a 'region' tag, which includes the name. Any content you wish placed in this region should be placed between the opening region tag and the closing tag.
 
 [code]
+	[region=htmlhead]....content goes here....[/region]
 	[region=aside]....content goes here....[/region]
 	[region=nav]....content goes here....[/region]
+	[region=content]....content goes here....[/region]
+
 [/code]
 
+[b]CSS and Javascript[/b]
+We have the possibility to include javascript and css libraries in the htmlhead region. At present we make use of jquery (js), bootstrap (css/js) and foundation (css/js).
+This will overwrite the selected themes htmlhead.
+
+[code]
+	[region=htmlhead]
+		[css]bootstrap[/css]
+		[js]jquery[/js]
+		[js]bootstrap[/js]
+	[/region]
+
+[/code]
 
 [b]Menus and Blocks[/b]
-
 Your webpage creation tools allow you to create menus and blocks, in addition to page content. These provide a chunk of existing content to be placed in whatever regions and whatever order you specify. Each of these has a name which you define when the menu or block is created.
+
 [code]
 	[menu]mymenu[/menu]
+
 [/code]
 This places the menu called &quot;mymenu&quot; at this location on the page, which must be inside a region. 
 
 [code]
 	[menu=horizontal]mymenu[/menu]
+
 [/code]
 This places the menu called &quot;mymenu&quot; at this location on the page, which must be inside a region. Additionally it applies the "horizontal" class to the menu. "horizontal" is defined in the redbasic theme. It may or may not be available in other themes. 
 
+[code]
+	[menu][var=wrap]none[/var]mymenu[/menu]
+
+[/code]
+The variable [var=wrap]none[/var] in a block removes the wrapping div element from the menu.
 
 [code]
 	[block]contributors[/block]
@@ -110,43 +129,43 @@ This places a block named &quot;contributors&quot; in this region.
 
 [code]
 	[block=someclass]contributors[/block]
+
 [/code]
 This places a block named &quot;contributors&quot; in this region. Additionally it applies the &quot;someclass&quot; class to the block. This replaces the default block classes &quot;bblock widget&quot;.
 
 [code]
 	[block][var=wrap]none[/var]contributors[/block]
+
 [/code]
 The variable [var=wrap]none[/var] in a block removes the wrapping div element from the block.
 
 [b]Widgets[/b]
-
 Widgets are executable apps provided by the system which you can place on your page. Some widgets take arguments which allows you to tailor the widget to your purpose. (TODO: list available widgets and arguments). The base system provides
+
 [code]
 	profile - widget which duplicates the profile sidebar of your channel page. This widget takes no arguments
 	tagcloud - provides a tag cloud of categories
 		count - maximum number of category tags to list	
-[/code]
 
+[/code]
 
 Widgets and arguments are specified with the 'widget' and 'var' tags.
 [code]
 	[widget=recent_visitors][var=count]24[/var][/widget]
+
 [/code]
 
 This loads the &quot;recent_visitors&quot; widget and supplies it with the argument &quot;count&quot; set to &quot;24&quot;. 
  
-
 [b]Comments[/b]
-
 The 'comment' tag is used to delimit comments. These comments will not appear on the rendered page.
 
 [code]
-	[comment]This is a comment[/comment] 
+	[comment]This is a comment[/comment]
+
 [/code]
  
-
 [b]Complex Example[/b]
-
 [code]
 	[comment]use an existing page template which provides a banner region plus 3 columns beneath it[/comment]
 
@@ -195,6 +214,7 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
 		[widget]channel[/widget]
 
 	[/region]
+
 [/code]
 
 #include doc/macros/main_footer.bb;

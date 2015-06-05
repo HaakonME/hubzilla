@@ -142,23 +142,8 @@ nav .dropdown-menu {
 	background-color: #fff;
 }
 
-.rconnect {
-	color: #000;
-}
-
 a.rateme, div.rateme {
-	color: #000;
 	border: 1px solid #fff;
-}
-
-a.rconnect, a.rateme, div.rateme {
-	color: #000;
-}
-
-.navbar-inverse .navbar-nav > .open > a,
-.navbar-inverse .navbar-nav > .open > a:hover,
-.navbar-inverse .navbar-nav > .open > a:focus {
-	color: #000;
 }
 
 #nav-search-text {

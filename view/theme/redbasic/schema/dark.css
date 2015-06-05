@@ -1,13 +1,5 @@
-.vcard {
-	border-bottom: 1px solid #333;
-}
-
-#contact-block {
-	border-bottom: 1px solid #333;
-}
-
-.widget {
-	border-bottom: 1px solid #333;
+.vcard, #contact-block, .widget {
+	border-bottom: 1px solid #fff;
 }
 
 .abook-pending-contact, .abook-permschange {
@@ -136,7 +128,6 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	background-image: none;
 }
 
-
 nav .dropdown-menu .divider{
 	background-color: #222;
 }
@@ -150,3 +141,113 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 nav .dropdown-menu {
 	background-color: #000;
 }
+
+#nav-search-text {
+	background-color: #999;
+}
+
+.autocomplete .selected {
+	background: #999;
+}
+
+.nav-tabs{
+	border-bottom:1px solid #333;
+}
+
+.nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
+	border:1px solid #333;
+}
+
+.nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus { 
+	color: #fff;
+	background-color: #111; 
+}
+
+.nav-tabs.nav-justified > li > a {
+	color: #ccc;
+}
+
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+    text-decoration: underline;
+    background-color: #222;
+	color: #ccc;
+}
+
+aside .nav > li > a:hover, aside .nav > li > a:focus {
+	text-decoration: underline;
+	background-color: #222;
+}
+
+a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
+	font-weight: bold;
+}
+
+.group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
+	color: #fff !important;
+	text-decoration: underline !important;
+}
+
+.generic-content-wrapper-styled {
+	background-color: rgba(28,28,28,0.8);
+}
+
+.autocomplete {
+	background: #222;
+}
+
+blockquote {
+	background-color: #1e1e1e;
+	border-left: 3px solid #666;
+	color: #ccc;
+}
+
+code {
+	border: 1px solid #090909;
+	background: #000;
+	color: #fff;
+}
+
+pre {
+	background: #000;
+	color: #fff;
+	border:1px solid #090909;
+}
+
+.notif-item a {
+	color: #ccc;
+}
+
+.notif-item a:hover {
+	color: #fff;
+}
+
+.dropdown-menu {
+	background-color: #222; 
+}
+
+.dropdown-menu >li > a {
+	color: #ccc; 
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    	color: #ddd; 
+    	background-color: #333; 
+	background-image: none;
+}
+
+.open .dropdown-toggle.btn-default {
+    color: #ccc; 
+    background-color: #222; 
+    border-color: #222; 
+}
+
+.preview {
+	background: url('../img/gray_and_black_diagonal_stripes_background_seamless.gif');
+}
+
+@media (min-width: 768px) {
+  .nav-tabs.nav-justified > li > a {
+    border-bottom: 1px solid #333;
+  }
+}
+

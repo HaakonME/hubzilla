@@ -75,7 +75,7 @@ a,
 }
 
 a:hover,
-a:focus
+a:focus,
 .fakelink:hover,
 .fakelink:focus {
   color: $link_colour;

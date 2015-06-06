@@ -1506,6 +1506,7 @@ margin-right: 50px;
 .admin-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
+	margin-right: 10px;
 }
 
 a .drop-icons {
@@ -1546,11 +1547,6 @@ a .drop-icons:hover {
 
 #menulist {
 	list-style-type: none;
-}
-
-.admin-icons {
-	color: $toolicon_colour;
-	margin-right: 10px;
 }
 
 #adminpage table tr:hover {

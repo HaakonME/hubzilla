@@ -1,6 +1,5 @@
 .vcard, #contact-block, .widget {
 	border-bottom: 1px solid #fff;
-	background-color: rgba(0,0,0,0.4);
 }
 
 .abook-pending-contact, .abook-permschange {
@@ -143,70 +142,16 @@ nav .dropdown-menu {
 	background-color: #000;
 }
 
-.rconnect {
-	color: #fff;
-	background-color: #000;
-}
-
 a.rateme, div.rateme {
-	color: #fff;
-	background-color: #000;
 	border: 1px solid #000;
 }
 
-a.rconnect, a.rateme, div.rateme {
-  color: #fff;
-}
-
-.navbar-inverse {
-	background-image: -webkit-linear-gradient(top, #000 0%, #000 100%);
-	background-image:         linear-gradient(to bottom, #000 0%, #000 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000, endColorstr=#000, GradientType=0);
-	background-color: #000;
-	border-color: #000;
-}
-
-.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-toggle {
-	border-color: #000;
-}
-
-.navbar-inverse .navbar-nav > .active > a {
-	background-image: -webkit-linear-gradient(top, #000 0%, #000 100%);
-	background-image: linear-gradient(to bottom, #000 0%, #000 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000, endColorstr=#000, GradientType=0);
-}
-
-.navbar-inverse .navbar-nav > .open > a,
-.navbar-inverse .navbar-nav > .open > a:hover,
-.navbar-inverse .navbar-nav > .open > a:focus {
-	background-color: #000;
-	color: #fff;
-}
-
-.navbar-inverse .navbar-toggle:hover,
-.navbar-inverse .navbar-toggle:focus {
-	background-color: #000;
-}
-
 #nav-search-text {
-	border-color: #000;
 	background-color: #000;
 }
 
 .autocomplete .selected {
 	background: #000;
-}
-
-#nav-search-text-ac .autocomplete {
-	border: 1px solid #000;
-}
-
-#usermenu-caret, .navbar-inverse .navbar-nav > li > a {
-	color: #eee;
-}
-
-.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus, .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-toggle .icon-bar, #nav-search-spinner, #avatar:hover + #usermenu-caret, #expand-aside, #expand-tabs {
-	color: #fff;
 }
 
 .nav-tabs{
@@ -239,19 +184,6 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
 	font-weight: bold;
-	color: #fff; 
-}
-
-a:hover, .fakelink:hover, .profile-import b, .field.checkbox:hover label {
-	color: #fff; 
-}
-
-.divgrow-showmore {
-	color: #fff;
-}
-
-.field.checkbox:hover > div label {
-	border-color: #fff;
 }
 
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
@@ -259,58 +191,11 @@ a:hover, .fakelink:hover, .profile-import b, .field.checkbox:hover label {
 	text-decoration: underline !important;
 }
 
-header #banner {
-  color: #000;
-}
-
-body {
-	background-color: #000;
-	color: #fff;
-}
-
-.jothidden > input {
-	border: 1px solid #000;
-	background-color: #000;
-}
-
-.jothidden .bootstrap-tagsinput {
-	border-color: #000;
-	background-color: #000;
-}
-
 .generic-content-wrapper-styled {
 	background-color: rgba(0,0,0,0.8);
 }
 
-.wall-item-content-wrapper.comment, .hide-comments-outer {
-	background-color: rgba(0,0,0,0.4);
-	border-color: rgba(0,0,0,0.8);
-}
-
-#photo-view-wrapper, .wall-item-content-wrapper, .wall-item-comment-wrapper, .section-title-wrapper, .section-subtitle-wrapper, .section-content-tools-wrapper, [id^="cloud-index-"]:hover td, .cloud-index-active, [id^="webpage-list-item-"]:hover td, [id^="block-list-item-"]:hover td,
-[id^="layout-list-item-"]:hover td, [id^="menu-list-item-"]:hover td, [id^="mitem-list-item-"]:hover td, .onoffswitch-inner:after {
-	background-color: rgba(0,0,0,0.8);
-}
-
-.onoffswitch-inner:before {
-    background-color: rgba(0,0,0,0.8);
-	color: #fff;
-}
-
-.section-content-tools-wrapper, .section-content-wrapper, .section-content-wrapper-np {
-	background-color: rgba(0,0,0,0.4);
-}
-
-.tool-icons, .admin-icons, a .drop-icons, .jot-icons, .item-tool, .like-rotator, .comment-icon, .widget h3 {
-	color: #eee;
-}
-
-.profile-import input {
-	color: #fff;
-}
-
 .autocomplete {
-	color: #fff;
 	background: #000;
 }
 
@@ -364,15 +249,10 @@ pre {
 	background: url('../img/gray_and_black_diagonal_stripes_background_seamless.gif');
 }
 
-
 @media (min-width: 768px) {
   .nav-tabs.nav-justified > li > a {
     border-bottom: 1px solid #fff;
   }
 }
 
-@media screen and (max-width: 767px) {
-	aside#region_1 {
-		border-right: 1px solid #000;
-	}
-	}
+

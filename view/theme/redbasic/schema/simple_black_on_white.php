@@ -16,98 +16,24 @@
 		$nav_icon_colour = "#111";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#000";
-
-	if (! $navtabs_borderc)
-		$navtabs_borderc = "#000";
-	if (! $navtabs_fontcolour)
-		$navtabs_fontcolour = "#000";
-	if (! $navtabs_bgcolour)
-		$navtabs_bgcolour = "#fff";
-	if (! $navtabs_linkcolour)
-		$navtabs_linkcolour = "color: #000;";
-	if (! $navtabs_linkchover)
-		$navtabs_linkchover = "color: #000;";
-	if (! $navtabs_bgchover)
-		$navtabs_bgchover = "#fff";
-	if (! $navtabs_decohover)
-		$navtabs_decohover = "underline";
-	if (! $navaside_bghover)
-		$navaside_bghover = "#F5F5F5";
-	if (! $link_colour)
-		$link_colour = "#000";
-	if (! $link_font_weight)
-		$link_font_weight = "bold";
-	if (! $selected_active_colour)
-		$selected_active_colour = "#000";
-	if (! $selected_active_deco)
-		$selected_active_deco = "underline";
 	if (! $banner_colour)
 		$banner_colour = "#fff";
-	if (! $search_background)
-		$search_background = "#F5F5F5";
+	if (! $link_colour)
+		$link_colour = "#000";
 	if (! $bgcolour)
 		$bgcolour = "#fff";
-	if (! $genericcontent_bgcolour)
-		$genericcontent_bgcolour = 'rgba(255,255,255,0.8)';		
+	if (! $toolicon_colour)
+		$toolicon_colour = "#111";
+	if (! $toolicon_activecolour)
+		$toolicon_activecolour = "#000";
 	if (! $item_colour)
 		$item_colour = "rgba(255,255,255,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(255,255,255,0.4)";
 	if (! $comment_border_colour)
 		$comment_border_colour = "rgba(255,255,255,0.8)";
-	if (! $toolicon_colour)
-		$toolicon_colour = '#111';
-	if (! $toolicon_activecolour)
-		$toolicon_activecolour = '#000';
 	if (! $font_colour)
 		$font_colour = "#000";
-	if (! $blockquote_colour)
-		$blockquote_colour = "#111";
-	if (! $blockquote_bgcolour)
-		$blockquote_bgcolour = "#fff";
-	if (! $blockquote_bordercolour)
-		$blockquote_bordercolour = "#000";
-	if (! $code_borderc)
-		$code_borderc = "#000";
-	if (! $code_bgcolour)
-		$code_bgcolour = "#fff";
-	if (! $code_txtcolour)
-		$code_txtcolour = "#000";
-	if (! $pre_borderc)
-		$pre_borderc = "#000";
-	if (! $pre_bgcolour)
-		$pre_bgcolour = "#fff";
-	if (! $pre_txtcolour)
-		$pre_txtcolour = "#111";
-	if (! $item_bordercolour)
-		$item_bordercolour = "#000";
-	if (! $notif_itemcolour)
-		$notif_itemcolour = "#000";
-	if (! $notif_itemhovercolour)
-		$notif_itemhovercolour = "#000";
-	if (! $acpopup_bgcolour)
-		$acpopup_bgcolour = "#fff";
-	if (! $acpopup_bordercolour)
-		$acpopup_bordercolour = "#000";
-	if (! $acpopup_tgbl_bgcolour)
-		$acpopup_tgbl_bgcolour = "#fff";
-	if (! $acpopup_hovercolour)
-		$acpopup_hovercolour = "#000";
-	if (! $dropdown_bgcolour)
-		$dropdown_bgcolour = "#fff";
-	if (! $dropdown_textcolour)
-		$dropdown_textcolour = "#000";
-	if (! $dropdown_txtcolhover)
-		$dropdown_txtcolhover = "#000";
-	if (! $dropdown_bgcolhover)
-		$dropdown_bgcolhover = "#F5F5F5";
-	if (! $dropdown_bgimghover)
-		$dropdown_bgimghover = "background-image: none;";
-	if (! $dropdown_togglecol)
-		$dropdown_togglecol = "#000";
-	if (! $dropdown_togglebgcol)
-		$dropdown_togglebgcol = "#fff";
-	if (! $dropdown_bordercol)
-		$dropdown_bordercol = "#fff";
-	if (! $preview_backgroundimg)
-		$preview_backgroundimg = "gray_and_white_diagonal_stripes_background_seamless.gif";
+		
+
+		

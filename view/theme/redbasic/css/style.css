@@ -69,28 +69,20 @@ abbr {
 	margin-right: 5px;
 }
 
-a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
-	font-weight: normal;
-	color: $link_colour; 
-	text-decoration: none; 
+a,
+.fakelink {
+  color: $link_colour;
 }
 
-a:hover, .fakelink:hover { color: $link_colour; text-decoration: underline; }
+a:hover,
+a:focus
+.fakelink:hover,
+.fakelink:focus {
+  color: $link_colour;
+}
 
 .fakelink {
 	cursor: pointer;
-}
-
-a.btn-default {
-	color: #333;
-}
-
-a.btn-success,
-a.btn-danger,
-a.btn-info,
-a.btn-warning,
-a.btn-primary {
-	color: #fff;
 }
 
 input[type="text"],

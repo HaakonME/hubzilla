@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-05-29.1047\n"
+"Project-Id-Version: 2015-06-05.1054\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-29 00:04-0700\n"
+"POT-Creation-Date: 2015-06-05 00:04-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -385,60 +385,17 @@ msgstr ""
 msgid "Collection"
 msgstr ""
 
-#: ../../include/bbcode.php:122 ../../include/bbcode.php:761
-#: ../../include/bbcode.php:764 ../../include/bbcode.php:769
-#: ../../include/bbcode.php:772 ../../include/bbcode.php:775
-#: ../../include/bbcode.php:778 ../../include/bbcode.php:783
-#: ../../include/bbcode.php:786 ../../include/bbcode.php:791
-#: ../../include/bbcode.php:794 ../../include/bbcode.php:797
-#: ../../include/bbcode.php:800
-msgid "Image/photo"
-msgstr ""
-
-#: ../../include/bbcode.php:161 ../../include/bbcode.php:811
-msgid "Encrypted content"
-msgstr ""
-
-#: ../../include/bbcode.php:178
-#, php-format
-msgid "Install %s element: "
-msgstr ""
-
-#: ../../include/bbcode.php:188 ../../mod/impel.php:37
-msgid "webpage"
-msgstr ""
-
-#: ../../include/bbcode.php:191 ../../mod/impel.php:47
-msgid "layout"
-msgstr ""
-
-#: ../../include/bbcode.php:194 ../../mod/impel.php:42
-msgid "block"
-msgstr ""
-
-#: ../../include/bbcode.php:208
-msgid "QR code"
-msgstr ""
-
-#: ../../include/bbcode.php:259
-#, php-format
-msgid "%1$s wrote the following %2$s %3$s"
-msgstr ""
-
-#: ../../include/bbcode.php:261
-msgid "post"
-msgstr ""
-
-#: ../../include/bbcode.php:511
-msgid "Different viewers will see this text differently"
-msgstr ""
-
-#: ../../include/bbcode.php:722
-msgid "$1 spoiler"
-msgstr ""
-
-#: ../../include/bbcode.php:749
-msgid "$1 wrote:"
+#: ../../include/menu.php:107 ../../include/page_widgets.php:8
+#: ../../include/page_widgets.php:36 ../../include/RedDAV/RedBrowser.php:269
+#: ../../include/ItemObject.php:100 ../../include/apps.php:254
+#: ../../mod/settings.php:649 ../../mod/webpages.php:180
+#: ../../mod/thing.php:227 ../../mod/connections.php:382
+#: ../../mod/connections.php:395 ../../mod/connections.php:414
+#: ../../mod/blocks.php:153 ../../mod/editlayout.php:139
+#: ../../mod/editwebpage.php:178 ../../mod/editpost.php:113
+#: ../../mod/menu.php:103 ../../mod/editblock.php:140
+#: ../../mod/layouts.php:183
+msgid "Edit"
 msgstr ""
 
 #: ../../include/notify.php:23
@@ -663,19 +620,6 @@ msgstr ""
 msgid "New Page"
 msgstr ""
 
-#: ../../include/page_widgets.php:8 ../../include/page_widgets.php:36
-#: ../../include/RedDAV/RedBrowser.php:269 ../../include/ItemObject.php:100
-#: ../../include/apps.php:254 ../../include/menu.php:103
-#: ../../mod/settings.php:649 ../../mod/webpages.php:180
-#: ../../mod/thing.php:227 ../../mod/connections.php:382
-#: ../../mod/connections.php:395 ../../mod/connections.php:414
-#: ../../mod/blocks.php:153 ../../mod/editlayout.php:139
-#: ../../mod/editwebpage.php:178 ../../mod/editpost.php:113
-#: ../../mod/menu.php:103 ../../mod/editblock.php:140
-#: ../../mod/layouts.php:183
-msgid "Edit"
-msgstr ""
-
 #: ../../include/page_widgets.php:39 ../../mod/webpages.php:186
 #: ../../mod/blocks.php:159 ../../mod/layouts.php:188
 msgid "View"
@@ -702,12 +646,12 @@ msgid "Title"
 msgstr ""
 
 #: ../../include/page_widgets.php:44 ../../mod/webpages.php:191
-#: ../../mod/blocks.php:150 ../../mod/layouts.php:181
+#: ../../mod/blocks.php:150 ../../mod/menu.php:105 ../../mod/layouts.php:181
 msgid "Created"
 msgstr ""
 
 #: ../../include/page_widgets.php:45 ../../mod/webpages.php:192
-#: ../../mod/blocks.php:151 ../../mod/layouts.php:182
+#: ../../mod/blocks.php:151 ../../mod/menu.php:106 ../../mod/layouts.php:182
 msgid "Edited"
 msgstr ""
 
@@ -1008,8 +952,8 @@ msgstr ""
 
 #: ../../include/RedDAV/RedBrowser.php:256
 #: ../../include/RedDAV/RedBrowser.php:306 ../../mod/webpages.php:179
-#: ../../mod/blocks.php:152 ../../mod/menu.php:107 ../../mod/layouts.php:175
-#: ../../mod/new_channel.php:121
+#: ../../mod/blocks.php:152 ../../mod/menu.php:109
+#: ../../mod/new_channel.php:121 ../../mod/layouts.php:175
 msgid "Create"
 msgstr ""
 
@@ -2901,7 +2845,7 @@ msgid "Posts that mention or involve you"
 msgstr ""
 
 #: ../../include/conversation.php:1513 ../../mod/connections.php:212
-#: ../../mod/connections.php:225 ../../mod/menu.php:105
+#: ../../mod/connections.php:225 ../../mod/menu.php:107
 msgid "New"
 msgstr ""
 
@@ -3009,51 +2953,51 @@ msgstr[1] ""
 msgid "Permission denied"
 msgstr ""
 
-#: ../../include/items.php:1020 ../../include/items.php:1066
+#: ../../include/items.php:1021 ../../include/items.php:1067
 msgid "(Unknown)"
 msgstr ""
 
-#: ../../include/items.php:1234
+#: ../../include/items.php:1235
 msgid "Visible to anybody on the internet."
 msgstr ""
 
-#: ../../include/items.php:1236
+#: ../../include/items.php:1237
 msgid "Visible to you only."
 msgstr ""
 
-#: ../../include/items.php:1238
+#: ../../include/items.php:1239
 msgid "Visible to anybody in this network."
 msgstr ""
 
-#: ../../include/items.php:1240
+#: ../../include/items.php:1241
 msgid "Visible to anybody authenticated."
 msgstr ""
 
-#: ../../include/items.php:1242
+#: ../../include/items.php:1243
 #, php-format
 msgid "Visible to anybody on %s."
 msgstr ""
 
-#: ../../include/items.php:1244
+#: ../../include/items.php:1245
 msgid "Visible to all connections."
 msgstr ""
 
-#: ../../include/items.php:1246
+#: ../../include/items.php:1247
 msgid "Visible to approved connections."
 msgstr ""
 
-#: ../../include/items.php:1248
+#: ../../include/items.php:1249
 msgid "Visible to specific connections."
 msgstr ""
 
-#: ../../include/items.php:4060 ../../mod/thing.php:74
+#: ../../include/items.php:4061 ../../mod/thing.php:74
 #: ../../mod/display.php:36 ../../mod/filestorage.php:27
 #: ../../mod/viewsrc.php:20 ../../mod/admin.php:167 ../../mod/admin.php:1016
 #: ../../mod/admin.php:1216
 msgid "Item not found."
 msgstr ""
 
-#: ../../include/items.php:4133 ../../include/photos.php:26
+#: ../../include/items.php:4134 ../../include/photos.php:26
 #: ../../include/attach.php:137 ../../include/attach.php:184
 #: ../../include/attach.php:247 ../../include/attach.php:261
 #: ../../include/attach.php:305 ../../include/attach.php:319
@@ -3066,55 +3010,56 @@ msgstr ""
 #: ../../mod/thing.php:290 ../../mod/profile_photo.php:264
 #: ../../mod/profile_photo.php:277 ../../mod/block.php:22
 #: ../../mod/block.php:72 ../../mod/like.php:178 ../../mod/events.php:219
-#: ../../mod/group.php:9 ../../mod/common.php:35 ../../mod/connections.php:169
-#: ../../mod/blocks.php:69 ../../mod/blocks.php:76 ../../mod/photos.php:68
-#: ../../mod/pdledit.php:21 ../../mod/authtest.php:13
-#: ../../mod/editlayout.php:63 ../../mod/editlayout.php:87
-#: ../../mod/chat.php:90 ../../mod/chat.php:95 ../../mod/editwebpage.php:64
-#: ../../mod/editwebpage.php:86 ../../mod/editwebpage.php:101
-#: ../../mod/editwebpage.php:125 ../../mod/rate.php:110
-#: ../../mod/editpost.php:13 ../../mod/invite.php:13 ../../mod/invite.php:104
-#: ../../mod/locs.php:77 ../../mod/sources.php:66 ../../mod/menu.php:69
-#: ../../mod/filestorage.php:18 ../../mod/filestorage.php:73
-#: ../../mod/filestorage.php:88 ../../mod/filestorage.php:115
-#: ../../mod/fsuggest.php:78 ../../mod/poke.php:128 ../../mod/profiles.php:188
+#: ../../mod/group.php:9 ../../mod/network.php:12 ../../mod/common.php:35
+#: ../../mod/connections.php:169 ../../mod/blocks.php:69
+#: ../../mod/blocks.php:76 ../../mod/photos.php:68 ../../mod/pdledit.php:21
+#: ../../mod/authtest.php:13 ../../mod/editlayout.php:63
+#: ../../mod/editlayout.php:87 ../../mod/chat.php:90 ../../mod/chat.php:95
+#: ../../mod/editwebpage.php:64 ../../mod/editwebpage.php:86
+#: ../../mod/editwebpage.php:101 ../../mod/editwebpage.php:125
+#: ../../mod/rate.php:110 ../../mod/editpost.php:13 ../../mod/invite.php:13
+#: ../../mod/invite.php:104 ../../mod/locs.php:77 ../../mod/sources.php:66
+#: ../../mod/menu.php:69 ../../mod/filestorage.php:18
+#: ../../mod/filestorage.php:73 ../../mod/filestorage.php:88
+#: ../../mod/filestorage.php:115 ../../mod/fsuggest.php:78
+#: ../../mod/poke.php:128 ../../mod/profiles.php:188
 #: ../../mod/profiles.php:576 ../../mod/viewsrc.php:14 ../../mod/setup.php:223
 #: ../../mod/viewconnections.php:22 ../../mod/viewconnections.php:27
 #: ../../mod/editblock.php:65 ../../mod/register.php:72 ../../mod/item.php:206
-#: ../../mod/item.php:214 ../../mod/item.php:974 ../../mod/layouts.php:69
-#: ../../mod/layouts.php:76 ../../mod/layouts.php:87 ../../mod/id.php:71
+#: ../../mod/item.php:214 ../../mod/item.php:976 ../../mod/id.php:71
 #: ../../mod/message.php:16 ../../mod/mitem.php:115 ../../mod/mood.php:111
 #: ../../mod/connedit.php:331 ../../mod/mail.php:114
 #: ../../mod/notifications.php:66 ../../mod/regmod.php:17
 #: ../../mod/new_channel.php:68 ../../mod/new_channel.php:99
-#: ../../mod/appman.php:66 ../../mod/network.php:12 ../../mod/page.php:28
-#: ../../mod/page.php:82 ../../mod/bookmarks.php:46 ../../mod/channel.php:100
+#: ../../mod/appman.php:66 ../../mod/layouts.php:69 ../../mod/layouts.php:76
+#: ../../mod/layouts.php:87 ../../mod/page.php:28 ../../mod/page.php:82
+#: ../../mod/bookmarks.php:46 ../../mod/channel.php:100
 #: ../../mod/channel.php:219 ../../mod/channel.php:262
 #: ../../mod/suggest.php:26 ../../mod/service_limits.php:7
 #: ../../mod/sharedwithme.php:7 ../../index.php:182 ../../index.php:382
 msgid "Permission denied."
 msgstr ""
 
-#: ../../include/items.php:4535 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4536 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr ""
 
-#: ../../include/items.php:4551
+#: ../../include/items.php:4552
 msgid "Collection is empty."
 msgstr ""
 
-#: ../../include/items.php:4558
+#: ../../include/items.php:4559
 #, php-format
 msgid "Collection: %s"
 msgstr ""
 
-#: ../../include/items.php:4568
+#: ../../include/items.php:4569
 #, php-format
 msgid "Connection: %s"
 msgstr ""
 
-#: ../../include/items.php:4570
+#: ../../include/items.php:4571
 msgid "Connection not found."
 msgstr ""
 
@@ -3841,6 +3786,66 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
+#: ../../include/bbcode.php:122 ../../include/bbcode.php:764
+#: ../../include/bbcode.php:767 ../../include/bbcode.php:772
+#: ../../include/bbcode.php:775 ../../include/bbcode.php:778
+#: ../../include/bbcode.php:781 ../../include/bbcode.php:786
+#: ../../include/bbcode.php:789 ../../include/bbcode.php:794
+#: ../../include/bbcode.php:797 ../../include/bbcode.php:800
+#: ../../include/bbcode.php:803
+msgid "Image/photo"
+msgstr ""
+
+#: ../../include/bbcode.php:161 ../../include/bbcode.php:814
+msgid "Encrypted content"
+msgstr ""
+
+#: ../../include/bbcode.php:178
+#, php-format
+msgid "Install %s element: "
+msgstr ""
+
+#: ../../include/bbcode.php:188 ../../mod/impel.php:37
+msgid "webpage"
+msgstr ""
+
+#: ../../include/bbcode.php:191 ../../mod/impel.php:47
+msgid "layout"
+msgstr ""
+
+#: ../../include/bbcode.php:194 ../../mod/impel.php:42
+msgid "block"
+msgstr ""
+
+#: ../../include/bbcode.php:197 ../../mod/impel.php:54
+msgid "menu"
+msgstr ""
+
+#: ../../include/bbcode.php:211
+msgid "QR code"
+msgstr ""
+
+#: ../../include/bbcode.php:262
+#, php-format
+msgid "%1$s wrote the following %2$s %3$s"
+msgstr ""
+
+#: ../../include/bbcode.php:264
+msgid "post"
+msgstr ""
+
+#: ../../include/bbcode.php:514
+msgid "Different viewers will see this text differently"
+msgstr ""
+
+#: ../../include/bbcode.php:725
+msgid "$1 spoiler"
+msgstr ""
+
+#: ../../include/bbcode.php:752
+msgid "$1 wrote:"
+msgstr ""
+
 #: ../../include/chat.php:23
 msgid "Missing room name"
 msgstr ""
@@ -3965,17 +3970,21 @@ msgid "Settings updated."
 msgstr ""
 
 #: ../../mod/settings.php:578 ../../mod/api.php:106 ../../mod/photos.php:556
-#: ../../mod/menu.php:91 ../../mod/filestorage.php:151
+#: ../../mod/menu.php:91 ../../mod/menu.php:145 ../../mod/filestorage.php:151
 #: ../../mod/filestorage.php:159 ../../mod/admin.php:424
-#: ../../mod/removeme.php:60 ../../view/theme/redbasic/php/config.php:102
+#: ../../mod/mitem.php:163 ../../mod/mitem.php:164 ../../mod/mitem.php:234
+#: ../../mod/mitem.php:235 ../../mod/removeme.php:60
+#: ../../view/theme/redbasic/php/config.php:102
 #: ../../view/theme/redbasic/php/config.php:127 ../../boot.php:1554
 msgid "No"
 msgstr ""
 
 #: ../../mod/settings.php:578 ../../mod/api.php:105 ../../mod/photos.php:556
-#: ../../mod/menu.php:91 ../../mod/filestorage.php:151
+#: ../../mod/menu.php:91 ../../mod/menu.php:145 ../../mod/filestorage.php:151
 #: ../../mod/filestorage.php:159 ../../mod/admin.php:426
-#: ../../mod/removeme.php:60 ../../view/theme/redbasic/php/config.php:102
+#: ../../mod/mitem.php:163 ../../mod/mitem.php:164 ../../mod/mitem.php:234
+#: ../../mod/mitem.php:235 ../../mod/removeme.php:60
+#: ../../view/theme/redbasic/php/config.php:102
 #: ../../view/theme/redbasic/php/config.php:127 ../../boot.php:1554
 msgid "Yes"
 msgstr ""
@@ -4521,7 +4530,7 @@ msgstr ""
 msgid "Lookup xchan beginning with (or webbie): "
 msgstr ""
 
-#: ../../mod/xchan.php:37 ../../mod/menu.php:152 ../../mod/mitem.php:120
+#: ../../mod/xchan.php:37 ../../mod/menu.php:154 ../../mod/mitem.php:120
 msgid "Not found."
 msgstr ""
 
@@ -5098,6 +5107,34 @@ msgstr ""
 
 #: ../../mod/help.php:76 ../../index.php:227
 msgid "Not Found"
+msgstr ""
+
+#: ../../mod/network.php:91
+msgid "No such group"
+msgstr ""
+
+#: ../../mod/network.php:129
+msgid "No such channel"
+msgstr ""
+
+#: ../../mod/network.php:143
+msgid "Search Results For:"
+msgstr ""
+
+#: ../../mod/network.php:198
+msgid "Collection is empty"
+msgstr ""
+
+#: ../../mod/network.php:207
+msgid "Collection: "
+msgstr ""
+
+#: ../../mod/network.php:226
+msgid "Connection: "
+msgstr ""
+
+#: ../../mod/network.php:233
+msgid "Invalid connection."
 msgstr ""
 
 #: ../../mod/common.php:10
@@ -5936,11 +5973,11 @@ msgstr ""
 msgid "Allow Bookmarks"
 msgstr ""
 
-#: ../../mod/menu.php:91 ../../mod/menu.php:143
+#: ../../mod/menu.php:91 ../../mod/menu.php:145
 msgid "Menu may be used to store saved bookmarks"
 msgstr ""
 
-#: ../../mod/menu.php:92
+#: ../../mod/menu.php:92 ../../mod/menu.php:147
 msgid "Submit and proceed"
 msgstr ""
 
@@ -5948,60 +5985,56 @@ msgstr ""
 msgid "Drop"
 msgstr ""
 
-#: ../../mod/menu.php:106
+#: ../../mod/menu.php:108
 msgid "Bookmarks allowed"
 msgstr ""
 
-#: ../../mod/menu.php:108
+#: ../../mod/menu.php:110
 msgid "Delete this menu"
 msgstr ""
 
-#: ../../mod/menu.php:109 ../../mod/menu.php:140
+#: ../../mod/menu.php:111 ../../mod/menu.php:142
 msgid "Edit menu contents"
 msgstr ""
 
-#: ../../mod/menu.php:110
+#: ../../mod/menu.php:112
 msgid "Edit this menu"
 msgstr ""
 
-#: ../../mod/menu.php:124
+#: ../../mod/menu.php:126
 msgid "Menu could not be deleted."
 msgstr ""
 
-#: ../../mod/menu.php:132 ../../mod/mitem.php:24
+#: ../../mod/menu.php:134 ../../mod/mitem.php:24
 msgid "Menu not found."
 msgstr ""
 
-#: ../../mod/menu.php:137
+#: ../../mod/menu.php:139
 msgid "Edit Menu"
 msgstr ""
 
-#: ../../mod/menu.php:139
+#: ../../mod/menu.php:141
 msgid "Add or remove entries to this menu"
 msgstr ""
 
-#: ../../mod/menu.php:141
+#: ../../mod/menu.php:143
 msgid "Menu name"
 msgstr ""
 
-#: ../../mod/menu.php:141
+#: ../../mod/menu.php:143
 msgid "Must be unique, only seen by you"
 msgstr ""
 
-#: ../../mod/menu.php:142
+#: ../../mod/menu.php:144
 msgid "Menu title"
 msgstr ""
 
-#: ../../mod/menu.php:142
+#: ../../mod/menu.php:144
 msgid "Menu title as seen by others"
 msgstr ""
 
-#: ../../mod/menu.php:143
-msgid "Allow bookmarks"
-msgstr ""
-
 #: ../../mod/menu.php:145
-msgid "Modify"
+msgid "Allow bookmarks"
 msgstr ""
 
 #: ../../mod/filestorage.php:82
@@ -6105,16 +6138,12 @@ msgstr ""
 msgid "Visible To"
 msgstr ""
 
-#: ../../mod/impel.php:54
-msgid "menu"
-msgstr ""
-
-#: ../../mod/impel.php:186
+#: ../../mod/impel.php:190
 #, php-format
 msgid "%s element installed"
 msgstr ""
 
-#: ../../mod/impel.php:189
+#: ../../mod/impel.php:193
 #, php-format
 msgid "%s element installation failed"
 msgstr ""
@@ -7812,20 +7841,20 @@ msgstr ""
 msgid "Executable content type not permitted to this channel."
 msgstr ""
 
-#: ../../mod/item.php:897
+#: ../../mod/item.php:899
 msgid "System error. Post not saved."
 msgstr ""
 
-#: ../../mod/item.php:1115
+#: ../../mod/item.php:1117
 msgid "Unable to obtain post information from database."
 msgstr ""
 
-#: ../../mod/item.php:1122
+#: ../../mod/item.php:1124
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr ""
 
-#: ../../mod/item.php:1129
+#: ../../mod/item.php:1131
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""
@@ -7842,18 +7871,6 @@ msgstr ""
 
 #: ../../mod/lockview.php:58
 msgid "Visible to:"
-msgstr ""
-
-#: ../../mod/layouts.php:176
-msgid "Comanche page description language help"
-msgstr ""
-
-#: ../../mod/layouts.php:180
-msgid "Layout Description"
-msgstr ""
-
-#: ../../mod/layouts.php:185
-msgid "Download PDL file"
 msgstr ""
 
 #: ../../mod/id.php:11
@@ -8613,32 +8630,16 @@ msgstr ""
 msgid "posted an event"
 msgstr ""
 
-#: ../../mod/network.php:91
-msgid "No such group"
+#: ../../mod/layouts.php:176
+msgid "Comanche page description language help"
 msgstr ""
 
-#: ../../mod/network.php:129
-msgid "No such channel"
+#: ../../mod/layouts.php:180
+msgid "Layout Description"
 msgstr ""
 
-#: ../../mod/network.php:143
-msgid "Search Results For:"
-msgstr ""
-
-#: ../../mod/network.php:198
-msgid "Collection is empty"
-msgstr ""
-
-#: ../../mod/network.php:207
-msgid "Collection: "
-msgstr ""
-
-#: ../../mod/network.php:226
-msgid "Connection: "
-msgstr ""
-
-#: ../../mod/network.php:233
-msgid "Invalid connection."
+#: ../../mod/layouts.php:185
+msgid "Download PDL file"
 msgstr ""
 
 #: ../../mod/page.php:122

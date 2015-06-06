@@ -70,7 +70,7 @@ abbr {
 }
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
-	font-weight: $link_font_weight;
+	font-weight: normal;
 	color: $link_colour; 
 	text-decoration: none; 
 }
@@ -130,18 +130,16 @@ pre code {
 code {
 	font-size: 1em;
 	padding: 5px;
-	border: 1px solid $code_borderc;
-	background: $code_bgcolour;
-	color: $code_txtcolour;
+	border: 1px solid #ccc;
+	background: #ccc;
+	color: #000;
 }
 
 pre {
-	background: $pre_bgcolour;
-	color: $pre_txtcolour;
-	border:1px solid $pre_borderc;
+	background: #F5F5F5;
+	color: #333;
+	border:1px solid #ccc;
 }
-
-
 
 .ccollapse-wrapper {
 	border: 1px solid #CCC;
@@ -255,7 +253,7 @@ footer {
 }
 
 .preview {
-	background: url('../img/$preview_backgroundimg');
+	background: url('../img/gray_and_white_diagonal_stripes_background_seamless.gif');
 }
 
 #theme-preview {
@@ -268,10 +266,12 @@ footer {
 }
 
 /*TODO: we should use one class for all this. */
+/*
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
-	color: $selected_active_colour !important;
-	text-decoration: $selected_active_deco !important;
+	color: #444 !important;
+	text-decoration: none !important;
 }
+*/
 
 .fileas-all {
 	text-decoration: none !important;
@@ -777,7 +777,7 @@ a.rateme, div.rateme {
 	padding: 0px 5px 0px 5px;
 	border-radius: $radiuspx;
 	border-color: $nav_bd;
-	background-color: $search_background;
+	background-color: #eee;
     	transition: background-color 300ms ease 0s;
 }
 
@@ -1250,7 +1250,6 @@ div.jGrowl div.jGrowl-notification {
 
 .autocomplete {
 	color: $font_colour;
-	background: $dropdown_bgcolour;
 	cursor: pointer;
 	text-align: left;
 	max-height: 350px;
@@ -1260,7 +1259,7 @@ div.jGrowl div.jGrowl-notification {
 }
 
 .autocomplete .selected {
-	background: $search_background;
+	background: #eee;
 }
 
 .autocomplete div {
@@ -1312,12 +1311,12 @@ header {
 }
 
 .notif-item a {
-	color: $notif_itemcolour;
+	color: #000;
 }
 
 .notif-item a:hover {
 	text-decoration: underline;
-	color: $notif_itemhovercolour;
+	color: #000;
 }
 
 .notif-image {
@@ -1650,7 +1649,7 @@ img.mail-list-sender-photo {
 }
 
 .generic-content-wrapper-styled {
-	background-color: $genericcontent_bgcolour;
+	background-color: $comment_item_colour;
 	padding: 10px;
 	border-radius: $radiuspx;
 }
@@ -1964,10 +1963,9 @@ nav ul li .notify-unseen
 blockquote {
 	font-size: $font_size;
 	font-style: italic;
-	background-color: $blockquote_bgcolour;
-	border-left: 3px solid $blockquote_bordercolour;
+	border-left: 3px solid #ccc;
 	padding: 0.4em;
-	color: $blockquote_colour;
+	color: #4d4d4d;
 	margin: 0px 0px 0px 20px;
 }
 
@@ -1996,33 +1994,10 @@ nav .badge.mail-update:hover {
 .dropdown-menu {
 	font-size: $body_font_size;
 	border-radius: $radiuspx;
-	background-color: $dropdown_bgcolour; 
-}
-
-.dropdown-menu >li > a {
-	color: $dropdown_textcolour; 
-}
-
-
-.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-    	color: $dropdown_txtcolhover; 
-    	background-color: $dropdown_bgcolhover; 
-	$dropdown_bgimghover
-}
-
-aside .nav > li > a:hover, aside .nav > li > a:focus {
-	text-decoration: $navtabs_decohover;
-	background-color: $navaside_bghover;
 }
 
 .dropdown-menu img {
 	border-radius: $radiuspx;
-}
-
-.open .dropdown-toggle.btn-default {
-    color: $dropdown_togglecol; 
-    background-color: $dropdown_togglebgcol; 
-    border-color: $dropdown_bordercol; 
 }
 
 .navbar-inverse {
@@ -2091,41 +2066,6 @@ aside .nav > li > a:hover, aside .nav > li > a:focus {
 	margin-bottom: 25px;
 	border-top: none;
 	box-shadow: none;
-}
-
-.nav-tabs{
-	border-bottom:1px solid $navtabs_borderc;
-}
-
-.nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus{
-	color: $navtabs_fontcolour;
-	background-color: $navtabs_bgcolour; 
-}
-
-.nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
-	border:1px solid $navtabs_borderc;
-}
-
-.nav-tabs.nav-justified > li > a {
-	$navtabs_linkcolour
-}
-
-.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
-    	text-decoration: $navtabs_decohover;
-    	background-color: $navtabs_bgchover;
-	border-color: transparent;
-	$navtabs_linkchover
-}
-
-@media (min-width: 768px) {
-  .nav-tabs.nav-justified > li > a {
-    border-bottom: 1px solid $navtabs_borderc;
-  }
-  .nav-tabs.nav-justified > .active > a,
-  .nav-tabs.nav-justified > .active > a:hover,
-  .nav-tabs.nav-justified > .active > a:focus {
-    border-bottom-color: transparent;
-  }
 }
 
 .btn {

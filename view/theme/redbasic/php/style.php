@@ -96,30 +96,10 @@ if(! $a->install) {
 		$nav_icon_colour = "#999";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#fff";
-	if (! $navtabs_borderc)
-		$navtabs_borderc = "rgba(204,204,204,0.8)";
-	if (! $navtabs_fontcolour)
-		$navtabs_fontcolour = "#555";
-	if (! $navtabs_bgcolour)
-		$navtabs_bgcolour = "rgba(254,254,254,0.4)";
-	if (! $navtabs_linkcolour)
-		$navtabs_linkcolour = "";
-	if (! $navtabs_linkchover)
-		$navtabs_linkchover = "";
-	if (! $navtabs_decohover)
-		$navtabs_decohover = "none";
-	if (! $navtabs_bgchover)
-		$navtabs_bgchover = "rgba(238,238,238,0.8)";
 	if (! $link_colour)
 		$link_colour = "#337AB7";
-	if (! $navaside_bghover)
-		$navaside_bghover = "#eee";
-	if (! $link_font_weight)
-		$link_font_weight = "normal";
 	if (! $banner_colour)
 		$banner_colour = "#fff";
-	if (! $search_background)
-		$search_background = "#eee";
 	if (! $bgcolour)
 		$bgcolour = "#fdfdfd";
 	if (! $background_image)
@@ -128,8 +108,6 @@ if(! $a->install) {
 		$item_colour = "rgba(238,238,238,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(254,254,254,0.4)";
-	if (! $genericcontent_bgcolour)
-		$genericcontent_bgcolour = $comment_item_colour;
 	if (! $comment_border_colour)
 		$comment_border_colour = "rgba(238,238,238,0.8)";
 	if (! $toolicon_colour)
@@ -144,65 +122,10 @@ if(! $a->install) {
 		$body_font_size = "0.75rem";
 	if (! $font_colour)
 		$font_colour = "#4d4d4d";
-	if (! $selected_active_colour)
-		$selected_active_colour = "#444";
-	if (! $selected_active_deco)
-		$selected_active_deco = "none";
-	if (! $blockquote_colour)
-		$blockquote_colour = "#4d4d4d";
-	if (! $blockquote_bgcolour)
-		$blockquote_bgcolour = "";
-	if (! $blockquote_bordercolour)
-		$blockquote_bordercolour = "#ccc";
-	if (! $code_borderc)
-		$code_borderc = "#ccc";
-	if (! $code_bgcolour)
-		$code_bgcolour = "#ccc";
-	if (! $code_txtcolour)
-		$code_txtcolour = "#000";
-	if (! $pre_borderc)
-		$pre_borderc = "#ccc";
-	if (! $pre_bgcolour)
-		$pre_bgcolour = "#F5F5F5";
-	if (! $pre_txtcolour)
-		$pre_txtcolour = "#333";
-	if (! $notif_itemcolour)
-		$notif_itemcolour = "#000";
-	if (! $notif_itemhovercolour)
-		$notif_itemhovercolour = "#000";
-	if (! $dropdown_bgcolour)
-		$dropdown_bgcolour = "#FFF";
-	if (! $dropdown_textcolour)
-		$dropdown_textcolour = "#333";
-	if (! $dropdown_txtcolhover)
-		$dropdown_txtcolhover = "#262626";
-	if (! $dropdown_bgcolhover)
-		$dropdown_bgcolhover = "#F5F5F5";
-	if (! $dropdown_bgimghover)
-		$dropdown_bgimghover = "";
-	if (! $dropdown_togglecol)
-		$dropdown_togglecol = "#333";
-	if (! $dropdown_togglebgcol)
-		$dropdown_togglebgcol = "#EBEBEB";
-	if (! $dropdown_bordercol)
-		$dropdown_bordercol = "#ADADAD";
-	if (! $preview_backgroundimg)
-		$preview_backgroundimg = "gray_and_white_diagonal_stripes_background_seamless.gif";
-	if (! $acpopup_bgcolour)
-		$acpopup_bgcolour = "#fff";
-	if (! $acpopup_bordercolour)
-		$acpopup_bordercolour = "#ccc";
-	if (! $acpopup_tgbl_bgcolour)
-		$acpopup_tgbl_bgcolour = "#ddddff";
-	if (! $acpopup_hovercolour)
-		$acpopup_hovercolour = "#000";
-
 	if (! $radius)
 		$radius = "4";
 	if (! $shadow)
 		$shadow = "0";
-	if(! $active_colour)
-		$active_colour = "#fff";
 	if (! $converse_width)
 		$converse_width = "1024";
 	if(! $top_photo)
@@ -211,7 +134,6 @@ if(! $a->install) {
 		$comment_indent = '0px';
 	if(! $reply_photo)
 		$reply_photo = '32px';
-
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -241,21 +163,10 @@ $options = array (
 '$nav_bd' => $nav_bd,
 '$nav_icon_colour' => $nav_icon_colour,
 '$nav_active_icon_colour' => $nav_active_icon_colour,
-'$navtabs_borderc' => $navtabs_borderc,
-'$navtabs_fontcolour' => $navtabs_fontcolour,
-'$navtabs_bgcolour' => $navtabs_bgcolour,
-'$navtabs_linkcolour' => $navtabs_linkcolour,
-'$navtabs_linkchover' => $navtabs_linkchover,
-'$navtabs_bgchover' => $navtabs_bgchover,
-'$navtabs_decohover' => $navtabs_decohover,
-'$navaside_bghover' => $navaside_bghover,
 '$link_colour' => $link_colour,
-'$link_font_weight' => $link_font_weight,
 '$banner_colour' => $banner_colour,
-'$search_background' => $search_background,
 '$bgcolour' => $bgcolour,
 '$background_image' => $background_image,
-'$genericcontent_bgcolour' => $genericcontent_bgcolour,
 '$item_colour' => $item_colour,
 '$comment_item_colour' => $comment_item_colour,
 '$comment_border_colour' => $comment_border_colour,
@@ -263,37 +174,9 @@ $options = array (
 '$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
 '$font_colour' => $font_colour,
-'$selected_active_colour' => $selected_active_colour,
-'$selected_active_deco' => $selected_active_deco,
 '$body_font_size' => $body_font_size,
-'$blockquote_colour' => $blockquote_colour,
-'$blockquote_bgcolour' => $blockquote_bgcolour,
-'$blockquote_bordercolour' => $blockquote_bordercolour,
-'$blockquote_bgcolourhover' => $blockquote_bgcolourhover,
-'$code_borderc' => $code_borderc,
-'$code_bgcolour' => $code_bgcolour,
-'$code_txtcolour' => $code_txtcolour,
-'$pre_borderc' => $pre_borderc,
-'$pre_bgcolour' => $pre_bgcolour,
-'$pre_txtcolour' => $pre_txtcolour,
-'$notif_itemcolour' => $notif_itemcolour,
-'$notif_itemhovercolour' => $notif_itemhovercolour,
-'$dropdown_bgcolour' => $dropdown_bgcolour,
-'$dropdown_textcolour' => $dropdown_textcolour,
-'$dropdown_txtcolhover' => $dropdown_txtcolhover,
-'$dropdown_bgcolhover' => $dropdown_bgcolhover,
-'$dropdown_bgimghover' => $dropdown_bgimghover,
-'$dropdown_togglecol' => $dropdown_togglecol,
-'$dropdown_togglebgcol' => $dropdown_togglebgcol,
-'$dropdown_bordercol' => $dropdown_bordercol,
-'$preview_backgroundimg' => $preview_backgroundimg,
-'$acpopup_bgcolour' => $acpopup_bgcolour,
-'$acpopup_bordercolour' => $acpopup_bordercolour,
-'$acpopup_tgbl_bgcolour' => $acpopup_tgbl_bgcolour,
-'$acpopup_hovercolour' => $acpopup_hovercolour,
 '$radius' => $radius,
 '$shadow' => $shadow,
-'$active_colour' => $active_colour,
 '$converse_width' => $converse_width,
 '$nav_float_min_opacity' => $nav_float_min_opacity,
 '$nav_percent_min_opacity' => $nav_percent_min_opacity,

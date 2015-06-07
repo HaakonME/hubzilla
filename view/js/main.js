@@ -372,7 +372,7 @@ function NavUpdate() {
 
 				if($('#live-network').length) { src = 'network'; liveUpdate(); }
 				if($('#live-channel').length) { src = 'channel'; liveUpdate(); }
-				if($('#live-home').length)    { src = 'home'; liveUpdate(); }
+				if($('#live-public').length)  { src = 'public'; liveUpdate(); }
 				if($('#live-display').length) { src = 'display'; liveUpdate(); }
 				if($('#live-search').length)  { src = 'search'; liveUpdate(); }
 

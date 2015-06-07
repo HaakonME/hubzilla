@@ -116,6 +116,7 @@ function impel_init(&$a) {
 		$arr['title'] = $j['title'];
 		$arr['body'] = $j['body'];
 		$arr['term'] = $j['term'];
+		$arr['layout_mid'] = $j['layout_mid'];
 		$arr['created'] = datetime_convert('UTC','UTC', $j['created']);
 		$arr['edited'] = datetime_convert('UTC','UTC',$j['edited']);
 		$arr['owner_xchan'] = get_observer_hash();

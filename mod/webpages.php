@@ -155,7 +155,8 @@ function webpages_content(&$a) {
 				'edited'	=> $rr['edited'],
 				'mimetype'	=> $rr['mimetype'],
 				'pagetitle'	=> $rr['sid'],
-				'mid'		=> $rr['mid']
+				'mid'		=> $rr['mid'],
+				'layout_mid'    => $rr['layout_mid']
 			);
 			$pages[$rr['iid']][] = array(
 				'url'		=> $rr['iid'],

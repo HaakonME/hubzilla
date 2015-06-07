@@ -844,6 +844,9 @@ function settings_content(&$a) {
 		$tpl = get_markup_template("settings_display.tpl");
 		$o = replace_macros($tpl, array(
 			'$ptitle' 	=> t('Display Settings'),
+			'$d_tset'       => t('Theme Settings'), 
+			'$d_ctset'      => t('Custom Theme Settings'), 
+			'$d_cset'       => t('Content Settings'),
 			'$form_security_token' => get_form_security_token("settings_display"),
 			'$submit' 	=> t('Submit'),
 			'$baseurl' => $a->get_baseurl(true),

@@ -11,7 +11,7 @@
 				<div class="section-subtitle-wrapper" role="tab" id="theme-settings-title">
 					<h3>
 						<a data-toggle="collapse" data-parent="#settings" href="#theme-settings-content" aria-expanded="true" aria-controls="theme-settings-content">
-							Theme Settings
+							{{$d_tset}}
 						</a>
 					</h3>
 				</div>
@@ -34,7 +34,7 @@
 				<div class="section-subtitle-wrapper" role="tab" id="custom-settings-title">
 					<h3>
 						<a data-toggle="collapse" data-parent="#settings" href="#custom-settings-content" aria-expanded="true" aria-controls="custom-settings-content">
-							Custom Theme Settings
+							{{$d_ctset}}
 						</a>
 					</h3>
 				</div>
@@ -50,7 +50,7 @@
 				<div class="section-subtitle-wrapper" role="tab" id="content-settings-title">
 					<h3>
 						<a data-toggle="collapse" data-parent="#settings" href="#content-settings-content" aria-expanded="true" aria-controls="content-settings-content">
-							Content Settings
+							{{$d_cset}}
 						</a>
 					</h3>
 				</div>

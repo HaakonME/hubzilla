@@ -61,8 +61,6 @@ function page_init(&$a) {
 	require_once('include/security.php');
 	$sql_options = item_permissions_sql($u[0]['channel_id']);
 
-dbg(1);
-
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and (( service = 'WEBPAGE' and 
 		item_restrict = %d ) or ( service = 'PDL' and item_restrict = %d )) $sql_options $revision limit 1",
@@ -83,7 +81,6 @@ dbg(1);
 			intval(ITEM_WEBPAGE)
 		);
 
-dbg(0);
 		if($x) {
 			// Yes, it's there. You just aren't allowed to see it.
 			notice( t('Permission denied.') . EOL);

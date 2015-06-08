@@ -47,7 +47,7 @@
 	{{include file="field_select.tpl" field=$theme}}
     {{include file="field_select.tpl" field=$theme_mobile}}
     {{include file="field_input.tpl" field=$frontpage}}
-    {{include file="field_checkbox.tpl" field=$no_login_on_homepage}}
+    {{include file="field_checkbox.tpl" field=$login_on_homepage}}
 
 	
 	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>

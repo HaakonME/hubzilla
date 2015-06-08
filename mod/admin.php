@@ -285,7 +285,7 @@ function admin_page_site_post(&$a){
 	$block_public         = ((x($_POST,'block_public'))		? True	: False);
 	$force_publish        = ((x($_POST,'publish_all'))		? True	: False);
 	$disable_discover_tab = ((x($_POST,'disable_discover_tab'))		? True	:	False);
-	$no_login_on_homepage = ((x($_POST,'no_login_on_homepage'))		? True	:	False);
+	$login_on_homepage    = ((x($_POST,'login_on_homepage'))		? True	:	False);
 	$global_directory     = ((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$no_community_page    = !((x($_POST,'no_community_page'))	? True	:	False);
 	$default_expire_days  = ((array_key_exists('default_expire_days',$_POST)) ? intval($_POST['default_expire_days']) : 0);
@@ -308,7 +308,7 @@ function admin_page_site_post(&$a){
 	set_config('system', 'maxloadavg', $maxloadavg);
 	set_config('system', 'frontpage', $frontpage);
 	set_config('system', 'sitename', $sitename);
-	set_config('system', 'no_login_on_homepage', $no_login_on_homepage);
+	set_config('system', 'login_on_homepage', login_on_homepage);
 	set_config('system', 'verify_email', $verify_email);
 	set_config('system', 'default_expire_days', $default_expire_days);
 
@@ -441,6 +441,9 @@ function admin_page_site(&$a) {
 //		SSL_POLICY_FULL     => t("Force all links to use SSL")
 //	);
 
+
+	$homelogin = get_config('system','login_on_homepage');
+
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
@@ -475,7 +478,7 @@ function admin_page_site(&$a) {
 		'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 		'$disable_discover_tab'	=> array('disable_discover_tab', t("Disable discovery tab"), get_config('system','disable_discover_tab'), t("Remove the tab in the network view with public content pulled from sources chosen for this site.")),
-		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
+		'$login_on_homepage'	=> array('login_on_homepage', t("login on Homepage"),((intval($homelogin) || $homelogin === false) ? 1 : '') , t("Present a login box to visitors on the home page if no other content has been configured.")),
 
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),

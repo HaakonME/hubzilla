@@ -30,16 +30,25 @@ function deliver_run($argv, $argc) {
 			if($h) {
 				$base = $h['scheme'] . '://' . $h['host'] . (($h['port']) ? ':' . $h['port'] : '');
 				if($base !== z_root()) {
-					$y = q("select site_update from site where site_url = '%s' ",
+					$y = q("select site_update, site_dead from site where site_url = '%s' ",
 						dbesc($base)
 					);
-					if($y && $y[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
-						q("update outq set outq_priority = %d where outq_hash = '%s'",
-							intval($r[0]['outq_priority'] + 10),
-							dbesc($r[0]['outq_hash'])
-						);
-						logger('immediate delivery deferred for site ' . $base);
-						continue;
+					if($y) {
+						if(intval($y[0]['site_dead'])) {
+							q("delete from outq where outq_posturl = '%s'",
+								dbesc($r[0]['outq_posturl'])
+							);
+							logger('dead site ignored ' . $base);
+							continue;							
+						}
+						if($y[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
+							q("update outq set outq_priority = %d where outq_hash = '%s'",
+								intval($r[0]['outq_priority'] + 10),
+								dbesc($r[0]['outq_hash'])
+							);
+							logger('immediate delivery deferred for site ' . $base);
+							continue;
+						}
 					}
 				}
 			} 

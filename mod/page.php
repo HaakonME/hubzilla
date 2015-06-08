@@ -11,10 +11,11 @@ function page_init(&$a) {
 	$profile = 0;
 	profile_load($a,$which,$profile);
 
+
+
 	if($a->profile['profile_uid'])
 		head_set_icon($a->profile['thumb']);
-
-
+	
 	// load the item here in the init function because we need to extract
 	// the page layout and initialise the correct theme.
 
@@ -22,9 +23,11 @@ function page_init(&$a) {
 	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
 
-	if(! $perms['view_pages']) {
+	// perm_is_allowed is denied unconditionally when 'site blocked to unauthenticated members'. 
+	// This bypasses that restriction for sys channel (public) content
+
+	if((! perm_is_allowed($a->profile['profile_uid'],$ob_hash,'view_pages')) && (! is_sys_channel($a->profile['profile_uid']))) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -58,6 +61,8 @@ function page_init(&$a) {
 	require_once('include/security.php');
 	$sql_options = item_permissions_sql($u[0]['channel_id']);
 
+dbg(1);
+
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and (( service = 'WEBPAGE' and 
 		item_restrict = %d ) or ( service = 'PDL' and item_restrict = %d )) $sql_options $revision limit 1",
@@ -77,6 +82,8 @@ function page_init(&$a) {
 			dbesc($page_id),
 			intval(ITEM_WEBPAGE)
 		);
+
+dbg(0);
 		if($x) {
 			// Yes, it's there. You just aren't allowed to see it.
 			notice( t('Permission denied.') . EOL);
@@ -119,7 +126,7 @@ function page_content(&$a) {
 		return;
 
 	if($r[0]['item_restrict'] == ITEM_PDL) {
-		$r[0]['body'] = t('Ipsum Lorem');
+		$r[0]['body'] = t('Lorem Ipsum');
 		$r[0]['mimetype'] = 'text/plain';
 		$r[0]['title'] = '';
 		

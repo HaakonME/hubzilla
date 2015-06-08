@@ -60,16 +60,19 @@ function public_content(&$a, $update = 0, $load = false) {
 	}
 
 	require_once('include/identity.php');
+	require_once('include/security.php');
 
 	if(get_config('system','site_firehose')) {
-		require_once('include/security.php');
 		$uids = " and item.uid in ( " . stream_perms_api_uids(PERMS_PUBLIC) . " ) and item_private = 0  and (item_flags & " . intval(ITEM_WALL) . " ) > 0 ";
 	}
 	else {
 		$sys = get_sys_channel();
 		$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
+		$sql_extra = item_permissions_sql($sys['channel_id']);
 		$a->data['firehose'] = intval($sys['channel_id']);
 	}
+
+
 
 	$page_mode = 'list';
 

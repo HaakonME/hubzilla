@@ -49,16 +49,18 @@ function home_content(&$a, $update = 0, $load = false) {
 	if($o)
 		return $o;
 
-	$startpage = get_config('system','frontpage');
-	if($startpage) {
-		if(strpos($startpage,'include:') !== false) {
-			$file = trim(str_replace('include:' , '', $startpage));
+	$frontpage = get_config('system','frontpage');
+	if($frontpage) {
+		if(strpos($frontpage,'include:') !== false) {
+			$file = trim(str_replace('include:' , '', $frontpage));
 			if(file_exists($file)) {
+				$a->page['template'] = 'full';
+				$a->page['title'] = t('$Projectname');
 				$o .= file_get_contents($file);
 				return $o;
 			}
 		}
-		goaway($z_root() . '/' . $startpage);
+		goaway(z_root() . '/' . $frontpage);
 	}
 
 	$sitename = get_config('system','sitename');

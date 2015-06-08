@@ -277,6 +277,7 @@ function admin_page_site_post(&$a){
 	$abandon_days	    =	((x($_POST,'abandon_days'))	    ? intval(trim($_POST['abandon_days']))	    :  0);
 
 	$register_text		=	((x($_POST,'register_text'))	? notags(trim($_POST['register_text']))		: '');
+	$frontpage		    =	((x($_POST,'frontpage'))	? notags(trim($_POST['frontpage']))		: '');
 
 	$allowed_sites        = ((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
 	$allowed_email        = ((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
@@ -305,6 +306,7 @@ function admin_page_site_post(&$a){
 	set_config('system', 'delivery_interval', $delivery_interval);
 	set_config('system', 'poll_interval', $poll_interval);
 	set_config('system', 'maxloadavg', $maxloadavg);
+	set_config('system', 'frontpage', $frontpage);
 	set_config('system', 'sitename', $sitename);
 	set_config('system', 'no_login_on_homepage', $no_login_on_homepage);
 	set_config('system', 'verify_email', $verify_email);
@@ -464,6 +466,7 @@ function admin_page_site(&$a) {
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Which best describes the types of account offered by this hub?"), get_config('system','access_policy'), "This is displayed on the public server site list.", $access_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlspecialchars(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
+		'$frontpage'	=> array('frontpage', t("Site page to show visitors (default login box)"), get_config('system','frontpage'), t("example: 'public' to show public stream or 'include:home.html' to include a file.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),

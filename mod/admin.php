@@ -279,6 +279,7 @@ function admin_page_site_post(&$a){
 	$abandon_days	    =	((x($_POST,'abandon_days'))	    ? intval(trim($_POST['abandon_days']))	    :  0);
 
 	$register_text		=	((x($_POST,'register_text'))	? notags(trim($_POST['register_text']))		: '');
+	$frontpage		    =	((x($_POST,'frontpage'))	? notags(trim($_POST['frontpage']))		: '');
 
 	$allowed_sites        = ((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
 	$allowed_email        = ((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
@@ -286,7 +287,7 @@ function admin_page_site_post(&$a){
 	$block_public         = ((x($_POST,'block_public'))		? True	: False);
 	$force_publish        = ((x($_POST,'publish_all'))		? True	: False);
 	$disable_discover_tab = ((x($_POST,'disable_discover_tab'))		? True	:	False);
-	$no_login_on_homepage = ((x($_POST,'no_login_on_homepage'))		? True	:	False);
+	$login_on_homepage    = ((x($_POST,'login_on_homepage'))		? True	:	False);
 	$global_directory     = ((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$no_community_page    = !((x($_POST,'no_community_page'))	? True	:	False);
 	$default_expire_days  = ((array_key_exists('default_expire_days',$_POST)) ? intval($_POST['default_expire_days']) : 0);
@@ -307,8 +308,9 @@ function admin_page_site_post(&$a){
 	set_config('system', 'delivery_interval', $delivery_interval);
 	set_config('system', 'poll_interval', $poll_interval);
 	set_config('system', 'maxloadavg', $maxloadavg);
+	set_config('system', 'frontpage', $frontpage);
 	set_config('system', 'sitename', $sitename);
-	set_config('system', 'no_login_on_homepage', $no_login_on_homepage);
+	set_config('system', 'login_on_homepage', $login_on_homepage);
 	set_config('system', 'verify_email', $verify_email);
 	set_config('system', 'default_expire_days', $default_expire_days);
 
@@ -441,6 +443,9 @@ function admin_page_site(&$a) {
 //		SSL_POLICY_FULL     => t("Force all links to use SSL")
 //	);
 
+
+	$homelogin = get_config('system','login_on_homepage');
+
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
 		'$title' => t('Administration'),
@@ -466,6 +471,7 @@ function admin_page_site(&$a) {
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Which best describes the types of account offered by this hub?"), get_config('system','access_policy'), "This is displayed on the public server site list.", $access_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlspecialchars(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
+		'$frontpage'	=> array('frontpage', t("Site homepage to show visitors (default: login box)"), get_config('system','frontpage'), t("example: 'public' to show public stream, 'page/sys/home' to show a system webpage called 'home' or 'include:home.html' to include a file.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
@@ -474,7 +480,7 @@ function admin_page_site(&$a) {
 		'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 		'$disable_discover_tab'	=> array('disable_discover_tab', t("Disable discovery tab"), get_config('system','disable_discover_tab'), t("Remove the tab in the network view with public content pulled from sources chosen for this site.")),
-		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
+		'$login_on_homepage'	=> array('login_on_homepage', t("login on Homepage"),((intval($homelogin) || $homelogin === false) ? 1 : '') , t("Present a login box to visitors on the home page if no other content has been configured.")),
 
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),

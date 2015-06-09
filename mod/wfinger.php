@@ -55,13 +55,22 @@ function wfinger_init(&$a) {
 
 	if($resource && $r) {
 
+		$h = q("select hubloc_addr from hubloc where hubloc_hash = '%s'",
+			dbesc($r[0]['channel_hash'])
+		);
+
 		$result['subject'] = $resource;
 
 		$aliases = array(
-			'acct:' . $r[0]['channel_address'] . '@' . $a->get_hostname(),
 			z_root() . '/channel/' . $r[0]['channel_address'],
 			z_root() . '/~' . $r[0]['channel_address']
 		);
+
+		if($h) {
+			foreach($h as $hh) {
+				$aliases[] = 'acct:' . $hh['hubloc_addr'];
+			}
+		}
 
 		$result['aliases'] = array();
 

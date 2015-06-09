@@ -745,8 +745,13 @@ function post_post(&$a) {
 		$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
 		// garbage collect any old unused notifications
+
+		// This was and should be 10 minutes but my hosting provider has time lag between the DB and 
+		// the web server. We should probably convert this to webserver time rather than DB time so 
+		// that the different clocks won't affect it and allow us to keep the time short. 
+
 		q("delete from verify where type = 'auth' and created < %s - INTERVAL %s",
-			db_utcnow(), db_quoteinterval('10 MINUTE')
+			db_utcnow(), db_quoteinterval('30 MINUTE')
 		);
 
 		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",

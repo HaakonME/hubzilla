@@ -2053,6 +2053,18 @@ nav .badge.mail-update:hover {
 	padding: 7px 10px;
 }
 
+.nav-tabs.nav-justified > .active > a,
+.nav-tabs.nav-justified > .active > a:hover,
+.nav-tabs.nav-justified > .active > a:focus {
+	border-bottom-color: transparent;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+	background-color: transparent;
+}
+
 #tabs-collapse-1 {
 	padding: 0px;
 	margin-bottom: 25px;

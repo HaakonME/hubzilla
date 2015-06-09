@@ -11,10 +11,11 @@ function page_init(&$a) {
 	$profile = 0;
 	profile_load($a,$which,$profile);
 
+
+
 	if($a->profile['profile_uid'])
 		head_set_icon($a->profile['thumb']);
-
-
+	
 	// load the item here in the init function because we need to extract
 	// the page layout and initialise the correct theme.
 
@@ -22,9 +23,11 @@ function page_init(&$a) {
 	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
 
-	if(! $perms['view_pages']) {
+	// perm_is_allowed is denied unconditionally when 'site blocked to unauthenticated members'. 
+	// This bypasses that restriction for sys channel (public) content
+
+	if((! perm_is_allowed($a->profile['profile_uid'],$ob_hash,'view_pages')) && (! is_sys_channel($a->profile['profile_uid']))) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -77,6 +80,7 @@ function page_init(&$a) {
 			dbesc($page_id),
 			intval(ITEM_TYPE_WEBPAGE)
 		);
+
 		if($x) {
 			// Yes, it's there. You just aren't allowed to see it.
 			notice( t('Permission denied.') . EOL);

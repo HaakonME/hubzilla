@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1142 );
+define( 'UPDATE_VERSION' , 1143 );
 
 /**
  *
@@ -1644,5 +1644,16 @@ function update_r1141() {
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+
+}
+
+function update_r1142() {
+
+	$r1 = q("alter table site add site_dead smallint not null default '0' ");
+	$r2 = q("create index site_dead on site ( site_dead ) ");
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
 
 }

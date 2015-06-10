@@ -24,8 +24,14 @@ body {
 	height: 100%;
 }
 
+aside {
+	width: $aside_widthpx;
+	min-width: $aside_widthpx;
+	max-width: $aside_widthpx;
+}
+
 main {
-	max-width: $main_width;
+	max-width: $main_widthpx;
 }
 
 h1, .h1, h2, .h2 {
@@ -2097,8 +2103,8 @@ nav .badge.mail-update:hover {
 	}
 
 	main {
-		left: -231px;
-		width: calc( 100% + 231px );
+		left: -$aside_widthpx;
+		width: calc( 100% + $aside_widthpx );
 	}
 
 	main.region_1-on {

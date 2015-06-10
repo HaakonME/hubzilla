@@ -153,11 +153,13 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 
 	$x = file_get_contents('view/theme/redbasic/css/style.css');
 
-	// left aside is 231px + converse width
-	$main_width = (231 + intval($converse_width));
+	$aside_width = 231;
+
+	// left aside and right aside are is 231px + converse width
+	$main_width = (($aside_width * 2) + intval($converse_width));
 
 	// prevent main_width smaller than 768px
-	$main_width = (($main_width < 768) ? 768 : $main_width) . 'px';
+	$main_width = (($main_width < 768) ? 768 : $main_width);
 
 	$options = array (
 		'$nav_bg' => $nav_bg,
@@ -191,6 +193,7 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 		'$pmenu_reply' => $pmenu_reply,
 		'$comment_indent' => $comment_indent,
 		'$main_width' => $main_width,
+		'$aside_width' => $aside_width
 	);
 
 	echo str_replace(array_keys($options), array_values($options), $x);

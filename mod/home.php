@@ -72,12 +72,9 @@ function home_content(&$a, $update = 0, $load = false) {
 	if($sitename) 
 		$o .= '<h1>' . sprintf( t("Welcome to %s") ,$sitename) . '</h1>';
 
-	if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
-		// If there's nothing special happening, just spit out a login box
-		$loginbox = get_config('system','login_on_homepage');
-		if(intval($loginbox) || $loginbox === false)
-			$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
-	}
+	$loginbox = get_config('system','login_on_homepage');
+	if(intval($loginbox) || $loginbox === false)
+		$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 
 	return $o;
 

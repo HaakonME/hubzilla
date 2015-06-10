@@ -14,10 +14,8 @@ main {
 	height: 100%;
 }
 
-aside#region_1 {
-	width: 231px;
-	min-width: 231px;
-	max-width: 231px;
+aside#region_1,
+aside#region_3 {
 	display: table-cell;
 	vertical-align: top;
 	padding: 65px 7px 0px 7px;

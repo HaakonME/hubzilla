@@ -17,6 +17,7 @@
 				<div id="dspr-settings-content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dspr-settings">
 					<div class="section-content-tools-wrapper">
 
+						{{include file="field_checkbox.tpl" field=$dspr_allowed}}
 						{{include file="field_checkbox.tpl" field=$pubcomments}}
 						{{include file="field_checkbox.tpl" field=$hijacking}}
 

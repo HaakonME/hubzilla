@@ -64,6 +64,15 @@ function diaspora_dispatch($importer,$msg) {
 		return;
 	}
 
+	$allowed = get_pconfig($importer['channel_id'],'system','diaspora_allowed');
+	if($allowed === false)
+		$allowed = 1;
+
+	if(! intval($allowed)) {
+		logger('mod-diaspora: disallowed for channel ' . $importer['channel_name']);
+		return;
+	}
+
 	// php doesn't like dashes in variable names
 
 	$msg['message'] = str_replace(
@@ -167,6 +176,16 @@ function diaspora_process_outbound($arr) {
 				'walltowall' => $walltowall,
 			));
 */
+
+
+	$allowed = get_pconfig($arr['channel']['channel_id'],'system','diaspora_allowed');
+	if($allowed === false)
+		$allowed = 1;
+
+	if(! intval($allowed)) {
+		logger('mod-diaspora: disallowed for channel ' . $arr['channel']['channel_name']);
+		return;
+	}
 
 
 	if($arr['location'])

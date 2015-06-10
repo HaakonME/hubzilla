@@ -135,6 +135,15 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 				$result['message'] = t('Protocol disabled.');
 				return $result;
 			}
+
+			$allowed = get_pconfig($uid,'system','diaspora_allowed');
+			if($allowed === false)
+				$allowed = 1;
+
+			if(! intval($allowed)) {
+				$result['message'] = t('Protocol blocked for this channel.');
+				return $result;
+			}
 		}
 
 		$their_perms = 0;

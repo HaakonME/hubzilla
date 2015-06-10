@@ -47,6 +47,7 @@
 	{{include file="field_select.tpl" field=$theme}}
     {{include file="field_select.tpl" field=$theme_mobile}}
     {{include file="field_input.tpl" field=$frontpage}}
+    {{include file="field_checkbox.tpl" field=$mirror_frontpage}}
     {{include file="field_checkbox.tpl" field=$login_on_homepage}}
 
 	

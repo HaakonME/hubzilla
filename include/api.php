@@ -344,10 +344,12 @@ require_once('include/items.php');
 				intval(api_user())
 			);
 
+			$item_normal = item_normal();
+
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE `uid` = %d
-					AND item_wall = 1 and item_restrict = 0 
+					AND item_wall = 1 $item_normal 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
 					intval($usr[0]['channel_id'])
 			);
@@ -373,7 +375,7 @@ require_once('include/items.php');
 			$countfollowers = $r[0]['count'];
 		}
 
-		$r = q("SELECT count(`id`) as `count` FROM item where item_starred = 1 and uid = %d and item_restrict = 0",
+		$r = q("SELECT count(`id`) as `count` FROM item where item_starred = 1 and uid = %d " . item_normal(),
 			intval($uinfo[0]['channel_id'])
 		);
 		$starred = $r[0]['count'];
@@ -856,8 +858,10 @@ require_once('include/items.php');
 	function api_get_status($xchan_hash) {
 		require_once('include/security.php');
 
+		$item_normal = item_normal();
+
 		$lastwall = q("SELECT * from item where
-			item_private = 0 and item_restrict = 0
+			item_private = 0 $item_normal
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
@@ -919,9 +923,10 @@ require_once('include/items.php');
 		// get last public message
 
 		require_once('include/security.php');
+		$item_normal = item_normal();
 
 		$lastwall = q("SELECT * from item where
-			item_private = 0 and item_restrict = 0
+			item_private = 0 $item_normal
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
@@ -992,9 +997,10 @@ require_once('include/items.php');
 		$user_info = api_get_user($a);
 
 		require_once('include/security.php');
+		$item_normal = item_normal();
 
 		$lastwall = q("SELECT * from item where 1
-			and item_private != 0 and item_restrict = 0
+			and item_private != 0 $item_normal
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
@@ -1095,7 +1101,9 @@ require_once('include/items.php');
 			$sql_extra .= " and item_private = 0 ";
 		}
 
-		$r = q("SELECT * from item WHERE uid = %d and item_restrict = 0
+		$item_normal = item_normal();
+
+		$r = q("SELECT * from item WHERE uid = %d $item_normal
 			$sql_extra
 			AND id > %d
 			ORDER BY received DESC LIMIT %d ,%d ",
@@ -1161,11 +1169,12 @@ require_once('include/items.php');
 		if ($max_id > 0)
 			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
 		require_once('include/security.php');
+		$item_normal = item_normal();
 
-        $r = q("select * from item where item_restrict = 0
-			and allow_cid = ''  and allow_gid = ''
+        $r = q("select * from item where allow_cid = ''  and allow_gid = ''
 			and deny_cid  = ''  and deny_gid  = ''
             and item_private = 0
+			$item_normal
 			and uid = " . $sys['channel_id'] . "
 			$sql_extra
 			AND id > %d group by mid
@@ -1221,7 +1230,8 @@ require_once('include/items.php');
 		else
 			$sql_extra .= " AND `item`.`id` = %d";
 
-		$r = q("select * from item where item_restrict = 0 $sql_extra",
+		$item_normal = item_normal();
+		$r = q("select * from item where true $item_normal $sql_extra",
 			intval($id)
 		);
 		xchan_query($r,true);
@@ -1261,7 +1271,9 @@ require_once('include/items.php');
 
 		$observer = get_app()->get_observer();
 
-		$r = q("SELECT * from item where item_restrict = 0 and id = %d limit 1",
+		$item_normal = item_normal();
+
+		$r = q("SELECT * from item where and id = %d $item_normal limit 1",
 			intval($id)
 		);
 
@@ -1624,12 +1636,13 @@ require_once('include/items.php');
 			$sql_extra .= " and item_private = 0 ";
 		}
 
-		$r = q("SELECT * from item WHERE uid = %d and item_restrict = 0
-			and ( item_flags & %d ) > 0 $sql_extra
+		$item_normal = item_normal();
+
+		$r = q("SELECT * from item WHERE uid = %d $item_normal
+			and item_starred = 1 $sql_extra
 			AND id > %d
 			ORDER BY received DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
-			intval(ITEM_STARRED),
 			intval($since_id),
 			intval($start),	
 			intval($count)

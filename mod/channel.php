@@ -145,7 +145,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	 * Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched his/her groups
 	 */
 
-
+	$item_normal = item_normal();
 	$sql_extra = item_permissions_sql($a->profile['profile_uid']);
 
 	if(get_pconfig($a->profile['profile_uid'],'system','channel_list_mode') && (! $mid))
@@ -165,7 +165,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if(($update) && (! $load)) {
 		if ($mid) {
-			$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d AND item_restrict = 0
+			$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d $item_normal
 				AND item_wall = 1 AND item_unseen = 1 $sql_extra limit 1",
 				dbesc($mid . '%'),
 				intval($a->profile['profile_uid'])
@@ -173,7 +173,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 		} else {
 			$r = q("SELECT distinct parent AS `item_id`, created from item
 				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
-				WHERE uid = %d AND item_restrict = 0
+				WHERE uid = %d $item_normal
 				AND item_wall = 1 AND item_unseen = 1
 				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra
@@ -207,7 +207,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			if ($mid) {
-				$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
+				$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d $item_normal
 					AND item_wall = 1 $sql_extra limit 1",
 					dbesc($mid),
 					intval($a->profile['profile_uid'])
@@ -219,7 +219,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			} else {
 				$r = q("SELECT distinct id AS item_id, created FROM item 
 					left join abook on item.author_xchan = abook.abook_xchan
-					WHERE uid = %d AND item_restrict = 0
+					WHERE uid = %d $item_normal
 					AND item_wall = 1 and item_thread_top = 1
 					AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 					$sql_extra $sql_extra2
@@ -240,7 +240,7 @@ function channel_content(&$a, $update = 0, $load = false) {
  
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
 			FROM `item`
-			WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
+			WHERE `item`.`uid` = %d $item_normal
 			AND `item`.`parent` IN ( %s )
 			$sql_extra ",
 			intval($a->profile['profile_uid']),

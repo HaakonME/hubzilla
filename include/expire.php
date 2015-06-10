@@ -12,7 +12,7 @@ function expire_run($argv, $argc){
 
 	// perform final cleanup on previously delete items
 
-	$r = q("select id from item where item_deleted = 1 and not (item_restrict & %d)>0 and changed < %s - INTERVAL %s",
+	$r = q("select id from item where item_deleted = 1 and item_pending_remove = 0 and changed < %s - INTERVAL %s",
 		intval(ITEM_PENDING_REMOVE),
 		db_utcnow(), db_quoteinterval('10 DAY')
 	);
@@ -25,8 +25,7 @@ function expire_run($argv, $argc){
 	// physically remove anything that has been deleted for more than two months
 	/** @FIXME - this is a wretchedly inefficient query */
 
-	$r = q("delete from item where ( item_restrict & %d ) > 0 and changed < %s - INTERVAL %s",
-		intval(ITEM_PENDING_REMOVE),
+	$r = q("delete from item where item_pending_remove = 1 and changed < %s - INTERVAL %s",
 		db_utcnow(), db_quoteinterval('36 DAY')
 	);
 

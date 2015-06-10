@@ -135,14 +135,13 @@ function photos_post(&$a) {
 				goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 			}
 
-			$r = q("select id, item_restrict from item where resource_id in ( $str ) and resource_type = 'photo' and uid = %d",
+			$r = q("select id from item where resource_id in ( $str ) and resource_type = 'photo' and uid = %d " . item_normal(),
 				intval($page_owner_uid)
 			);
 			if($r) {
 				foreach($r as $i) {
 					drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
-					if(! $item_restrict)
-						proc_run('php','include/notifier.php','drop',$i['id']);
+					proc_run('php','include/notifier.php','drop',$i['id']);
 				}
 			}
 

@@ -676,7 +676,7 @@ function item_post(&$a) {
 
 
 	if($moderated)
-		$item_restrict = $item_restrict | ITEM_MODERATED;
+		$item_blocked = ITEM_MODERATED;
 
 		
 	if(! strlen($verb))
@@ -940,7 +940,7 @@ function item_content(&$a) {
 	if((argc() == 3) && (argv(1) === 'drop') && intval(argv(2))) {
 
 		require_once('include/items.php');
-		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_restrict from item where id = %d limit 1",
+		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_type from item where id = %d limit 1",
 			intval(argv(2))
 		);
 
@@ -966,7 +966,7 @@ function item_content(&$a) {
 			// if this is a different page type or it's just a local delete
 			// but not by the item author or owner, do a simple deletion
 
-			if($i[0]['item_restrict'] || ($local_delete && (! $can_delete))) {
+			if(intval($i[0]['item_type']) || ($local_delete && (! $can_delete))) {
 				drop_item($i[0]['id']);
 			}
 			else {
@@ -1092,7 +1092,7 @@ function item_check_service_class($channel_id,$iswebpage) {
 		);
 	}
 	else {
-		$r = q("select count(id) as total from item where parent = id and item_restrict = 0 and item_wall = 1 and uid = %d ",
+		$r = q("select count(id) as total from item where parent = id and item_wall = 1 and uid = %d " . item_normal(),
 			intval($channel_id)
 		);
 	}

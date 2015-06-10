@@ -157,6 +157,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 	$observer_hash = get_observer_hash();
+	$item_normal = item_normal();
 
 	$sql_extra = public_permissions_sql($observer_hash);
 
@@ -175,9 +176,9 @@ function display_content(&$a, $update = 0, $load = false) {
 
 			if(local_channel()) {
 				$r = q("SELECT * from item
-					WHERE item_restrict = 0
-					and uid = %d
+					WHERE uid = %d
 					and mid = '%s'
+					$item_normal
 					limit 1",
 					intval(local_channel()),
 					dbesc($target_item['parent_mid'])
@@ -198,13 +199,13 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 				$r = q("SELECT * from item
-					WHERE item_restrict = 0
-					and mid = '%s'
+					WHERE mid = '%s'
 					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
 					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 					OR uid = %d )
 					$sql_extra )
+					$item_normal
 					limit 1",
 					dbesc($target_item['parent_mid']),
 					intval($sysid)
@@ -224,7 +225,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
 				FROM `item`
-				WHERE item_restrict = 0 and parent in ( %s ) ",
+				WHERE parent in ( %s ) $item_normal ",
 				dbesc($parents_str)
 			);
 

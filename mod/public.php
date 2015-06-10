@@ -10,6 +10,8 @@ function public_content(&$a, $update = 0, $load = false) {
 	if(get_config('system','disable_discover_tab'))
 		return;
 
+	$item_normal = item_normal();
+
 	if(! $update) {
 
 		$maxheight = get_config('system','home_divmore_height');
@@ -95,7 +97,7 @@ function public_content(&$a, $update = 0, $load = false) {
 
 			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
 				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE true $uids AND item.item_restrict = 0
+				WHERE true $uids $item_normal
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
@@ -109,7 +111,7 @@ function public_content(&$a, $update = 0, $load = false) {
 
 			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
 				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE true $uids AND item.item_restrict = 0
+				WHERE true $uids $item_normal
 				AND item.parent = item.id $simple_update
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets",
@@ -126,7 +128,7 @@ function public_content(&$a, $update = 0, $load = false) {
 			$parents_str = ids_to_querystr($r,'item_id');
 
 			$items = q("SELECT item.*, item.id AS item_id FROM item
-				WHERE true $uids AND item.item_restrict = 0
+				WHERE true $uids $item_normal
 				AND item.parent IN ( %s )
 				$sql_extra ",
 				dbesc($parents_str)

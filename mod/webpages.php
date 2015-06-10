@@ -133,9 +133,9 @@ function webpages_content(&$a) {
 	$sql_extra = item_permissions_sql($owner);
 
 	$r = q("select * from item_id left join item on item_id.iid = item.id 
-		where item_id.uid = %d and service = 'WEBPAGE' and item_restrict = %d $sql_extra order by item.created desc",
+		where item_id.uid = %d and service = 'WEBPAGE' and item_type = %d $sql_extra order by item.created desc",
 		intval($owner),
-		intval(ITEM_WEBPAGE)
+		intval(ITEM_TYPE_WEBPAGE)
 	);
 
 	$pages = null;

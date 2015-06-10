@@ -20,9 +20,10 @@ function viewsrc_content(&$a) {
 		notice( t('Item not found.') . EOL);
 	}
 
+	$item_normal = item_normal();
 
 	if(local_channel() && $item_id) {
-		$r = q("select id, item_flags, item_obscured, body from item where item_restrict = 0 and uid in (%d , %d) and id = %d limit 1",
+		$r = q("select id, item_flags, item_obscured, body from item where uid in (%d , %d) and id = %d $item_normal limit 1",
 			intval(local_channel()),
 			intval($sys['channel_id']),
 			intval($item_id)

@@ -56,8 +56,8 @@ function manage_content(&$a) {
 				$channels[$x]['default_links'] = '1';
 
 
-				$c = q("SELECT id, item_restrict, item_wall FROM item
-					WHERE item_restrict = 0 and item_unseen = 1 and uid = %d",
+				$c = q("SELECT id, item_wall FROM item
+					WHERE item_unseen = 1 and uid = %d " . item_normal(),
 					intval($channels[$x]['channel_id'])
 				);
 

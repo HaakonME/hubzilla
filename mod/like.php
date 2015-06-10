@@ -304,7 +304,9 @@ function like_content(&$a) {
 			$multi_undo = 1;
 		}
 
-		$r = q("SELECT id, parent, uid, verb FROM item WHERE verb in ( $verbs ) AND item_restrict = 0 
+		$item_normal = item_normal();
+
+		$r = q("SELECT id, parent, uid, verb FROM item WHERE verb in ( $verbs ) $item_normal
 			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') and uid = %d ",
 			dbesc($observer['xchan_hash']),
 			intval($item_id),

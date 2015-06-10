@@ -9,7 +9,9 @@ function bookmarks_init(&$a) {
 
 	$u = $a->get_channel();
 
-	$i = q("select * from item where id = %d and uid = %d limit 1",
+	$item_normal = item_normal();
+
+	$i = q("select * from item where id = %d and uid = %d $item_normal limit 1",
 		intval($item_id),
 		intval(local_channel())
 	);
@@ -23,7 +25,7 @@ function bookmarks_init(&$a) {
 
 	$terms = get_terms_oftype($item['term'],TERM_BOOKMARK);
 
-	if($terms && (! $item['item_restrict'])) {
+	if($terms) {
 		require_once('include/bookmarks.php');
 
 		$s = q("select * from xchan where xchan_hash = '%s' limit 1",

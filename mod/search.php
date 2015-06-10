@@ -125,6 +125,7 @@ function search_content(&$a,$update = 0, $load = false) {
 
 	}
 
+	$item_normal = item_normal();
 	$pub_sql = public_permissions_sql($observer_hash);
 
 	require_once('include/identity.php');
@@ -143,7 +144,7 @@ function search_content(&$a,$update = 0, $load = false) {
 
 		if($load) {
 			$r = null;
-			
+					
 			if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
 				$prefix = 'distinct on (created, mid)';
 				$suffix = 'ORDER BY created DESC, mid';
@@ -153,23 +154,22 @@ function search_content(&$a,$update = 0, $load = false) {
 			}
 			if(local_channel()) {
 				$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
-					WHERE item_restrict = 0 AND ( item_flags & %d ) = 0
-					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+					WHERE ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					OR ( `item`.`uid` = %d )) OR item.owner_xchan = '%s' )
+					$item_normal
 					$sql_extra
 					$suffix $pager_sql ",
-					intval(ITEM_OBSCURED),
 					intval(local_channel()),
 					dbesc($sys['xchan_hash'])
 				);
 			}
 			if($r === null) {
 				$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
-					WHERE item_restrict = 0 AND ( item_flags & %d ) = 0
-					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
+					WHERE (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
 					AND `item`.`deny_gid`  = '' AND item_private = 0 )
 					and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 						$pub_sql ) OR owner_xchan = '%s')
+					$item_normal
 					$sql_extra 
 					$suffix $pager_sql",
 					intval(ITEM_OBSCURED),

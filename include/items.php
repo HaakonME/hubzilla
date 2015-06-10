@@ -192,6 +192,13 @@ function comments_are_now_closed($item) {
 	return false;
 }
 
+function item_normal() {
+	return " and item.item_hidden = 0 and item.item_type = 0 and item.item_deleted = 0 
+		and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0 
+		and item.item_blocked = 0 ";
+}
+
+
 
 /**
  * @brief
@@ -1396,7 +1403,7 @@ function encode_item_flags($item) {
 		$ret[] = 'nsfw';
 	if(intval($item['item_consensus']))
 		$ret[] = 'consensus';
-	if($item['item_private'])
+	if(intval($item['item_private']))
 		$ret[] = 'private';
 
 	return $ret;
@@ -2117,7 +2124,7 @@ function item_store($arr, $allow_exec = false) {
 	$d1 = new DateTime('now +10 minutes', new DateTimeZone('UTC'));
 	$d2 = new DateTime($arr['created'] . '+00:00');
 	if($d2 > $d1)
-		$arr['item_restrict'] = $arr['item_restrict'] | ITEM_DELAYED_PUBLISH;
+		$arr['item_delayed'] = 1;
 
 	$arr['llink'] = z_root() . '/display/' . $arr['mid'];
 
@@ -2334,10 +2341,9 @@ function item_store($arr, $allow_exec = false) {
 
 	// update the commented timestamp on the parent
 
-	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and not ( item_restrict & %d )>0 ",
+	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and item_delayed = 0 ",
 		dbesc($arr['parent_mid']),
-		intval($arr['uid']),
-		intval(ITEM_DELAYED_PUBLISH)
+		intval($arr['uid'])
 	);
 
 	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d",
@@ -2352,7 +2358,7 @@ function item_store($arr, $allow_exec = false) {
 	// so that we have an item in the DB that's marked deleted and won't store a fresh post
 	// that isn't aware that we were already told to delete it.
 
-	if(! ($arr['item_restrict'] & ITEM_DELETED)) {
+	if(! intval($arr['item_deleted'])) {
 		send_status_notifications($current_post,$arr);
 		tag_deliver($arr['uid'],$current_post);
 	}
@@ -2766,7 +2772,7 @@ function tag_deliver($uid, $item_id) {
 			if($obj['id'] !== $u[0]['channel_hash'])
 				$poke_notify = false;
 		}
-		if($item['item_restrict'] & ITEM_DELETED)
+		if(intval($item['item_deleted']))
 			$poke_notify = false;
 
 		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
@@ -3913,13 +3919,15 @@ function item_expire($uid,$days) {
 	if(! intval($expire_limit))
 		$expire_limit = 5000;
 
+	$item_normal = item_normal();
+
 	$r = q("SELECT * FROM `item`
 		WHERE `uid` = %d
 		AND `created` < %s - INTERVAL %s
 		AND `id` = `parent`
 		$sql_extra
 		AND item_retained = 0
-		AND (item_restrict = 0 ) LIMIT $expire_limit ",
+		$item_normal LIMIT $expire_limit ",
 		intval($uid),
 		db_utcnow(), db_quoteinterval(intval($days).' DAY')
 	);
@@ -4108,9 +4116,8 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 
 	switch($stage) {
 		case DROPITEM_PHASE2:
-			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+			$r = q("UPDATE item SET item_pending_remove = 1, body = '', title = '',
 				changed = '%s', edited = '%s'  WHERE id = %d",
-				intval(ITEM_PENDING_REMOVE),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				intval($item['id'])
@@ -4194,9 +4201,10 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 function first_post_date($uid,$wall = false) {
 
 	$wall_sql = (($wall) ? " and item_wall = 1 " : "" );
+	$item_normal = item_normal();
 
 	$r = q("select id, created from item
-		where item_restrict = %d and uid = %d and id = parent $wall_sql
+		where uid = %d and id = parent $item_normal $wall_sql
 		order by created asc limit 1",
 		intval(ITEM_VISIBLE),
 		intval($uid)
@@ -4397,10 +4405,12 @@ function zot_feed($uid,$observer_hash,$arr) {
 		return array();
 	}
 
+	$item_normal = item_normal();
+
 	if(is_sys_channel($uid)) {
 		$r = q("SELECT parent, created, postopts from item
 			WHERE uid != %d
-			and uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ") AND item_restrict = 0 
+			and uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ") $item_normal
 			AND item_wall = 1
 			and item_private = 0 $sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid)
@@ -4408,7 +4418,7 @@ function zot_feed($uid,$observer_hash,$arr) {
 	}
 	else {
 		$r = q("SELECT parent, created, postopts from item
-			WHERE uid = %d AND item_restrict = 0
+			WHERE uid = %d $item_normal
 			AND item_wall = 1
 			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid)
@@ -4424,10 +4434,10 @@ function zot_feed($uid,$observer_hash,$arr) {
 	
 		$parents_str = ids_to_querystr($r,'parent');
 		$sys_query = ((is_sys_channel($uid)) ? $sql_extra : '');
+		$item_normal = item_normal();
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item`
-			WHERE `item`.`item_restrict` = 0
-			AND `item`.`parent` IN ( %s ) $sys_query ",
+			WHERE `item`.`parent` IN ( %s ) $item_normal $sys_query ",
 			dbesc($parents_str)
 		);
 	}
@@ -4465,6 +4475,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	$def_acl = '';
 
 	$item_uids = ' true ';
+	$item_normal = item_normal();
+
 
 	if ($arr['uid']) $uid= $arr['uid'];
 
@@ -4511,7 +4523,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			return $result;
 		}
 
-		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent $item_normal ) ";
 
 		$x = group_rec_byhash($uid,$r[0]['hash']);
 		$result['headline'] = sprintf( t('Collection: %s'),$x['name']);
@@ -4523,7 +4535,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			intval(local_channel())
 		);
 		if ($r) {
-			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
+			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) $item_normal ) ";
 			$result['headline'] = sprintf( t('Connection: %s'),$r[0]['xchan_name']);
 		} else {
 			$result['message'] = t('Connection not found.');

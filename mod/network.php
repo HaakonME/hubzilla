@@ -40,7 +40,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	call_hooks('network_content_init', $arr);
 
 	$channel = $a->get_channel();
-
+	$item_normal = item_normal();
 
 	$datequery = $datequery2 = '';
 
@@ -198,7 +198,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			info( t('Collection is empty'));
 		}
 
-		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent $item_normal ) ";
 
 		$x = group_rec_byhash(local_channel(), $group_hash);
 
@@ -221,7 +221,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			intval(local_channel())
 		);
 		if($r) {
-			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_channel()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
+			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_channel()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) $item_normal ) ";
 			$title = replace_macros(get_markup_template("section_title.tpl"),array(
 				'$title' => t('Connection: ') . $r[0]['xchan_name']
 			));
@@ -404,7 +404,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$items = q("SELECT item.*, item.id AS item_id, received FROM item
 			left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
-			WHERE true $uids AND item_restrict = 0
+			WHERE true $uids $item_normal
 			and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$simple_update
 			$sql_extra $sql_nets
@@ -433,7 +433,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
 				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
-				WHERE true $uids AND item.item_restrict = 0
+				WHERE true $uids $item_normal
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
@@ -446,7 +446,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			// this is an update
 			$r = q("SELECT item.parent AS item_id FROM item
 				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
-				WHERE true $uids AND item.item_restrict = 0 $simple_update
+				WHERE true $uids $item_normal $simple_update
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets ",
 				intval(ABOOK_FLAG_BLOCKED)
@@ -463,7 +463,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			$parents_str = ids_to_querystr($r,'item_id');
 
 			$items = q("SELECT item.*, item.id AS item_id FROM item
-				WHERE true $uids AND item.item_restrict = 0
+				WHERE true $uids $item_normal
 				AND item.parent IN ( %s )
 				$sql_extra ",
 				dbesc($parents_str)

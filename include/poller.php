@@ -90,15 +90,13 @@ function poller_run($argv, $argc){
 	// (time travel posts). Restrict to items that have come of age in the last
 	// couple of days to limit the query to something reasonable. 
 
-	$r = q("select id from item where ( item_restrict & %d ) > 0 and created <= %s  and created > '%s' ",
-		intval(ITEM_DELAYED_PUBLISH),
+	$r = q("select id from item where item_delayed = 1 and created <= %s  and created > '%s' ",
 		db_utcnow(),
 		dbesc(datetime_convert('UTC','UTC','now - 2 days'))
 	);
 	if($r) {
 		foreach($r as $rr) {
-			$x = q("update item set item_restrict = ( item_restrict & ~%d ) where id = %d",
-				intval(ITEM_DELAYED_PUBLISH),
+			$x = q("update item set item_delayed = 0 where id = %d",
 				intval($rr['id'])
 			);
 			if($x) {

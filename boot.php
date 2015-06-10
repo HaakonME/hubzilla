@@ -539,6 +539,7 @@ define ( 'ITEM_TYPE_POST',       0 );
 define ( 'ITEM_TYPE_BLOCK',      1 );
 define ( 'ITEM_TYPE_PDL',        2 );
 define ( 'ITEM_TYPE_WEBPAGE',    3 );
+define ( 'ITEM_TYPE_BUG',        4 );
 
 define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );

@@ -43,6 +43,8 @@ function ping_init(&$a) {
 
 	$vnotify = false;
 
+	$item_normal = item_normal();
+
 	if(local_channel())  {
 		$vnotify = get_pconfig(local_channel(),'system','vnotify');
 		$evdays = intval(get_pconfig(local_channel(),'system','evdays'));
@@ -272,7 +274,7 @@ function ping_init(&$a) {
 		$result = array();
 
 		$r = q("SELECT * FROM item
-			WHERE item_restrict = 0 and item_unseen = 1 and uid = %d
+			WHERE item_unseen = 1 and uid = %d $item_normal
 			and author_xchan != '%s' ORDER BY created DESC limit 300",
 			intval(local_channel()),
 			dbesc($ob_hash)
@@ -376,8 +378,9 @@ function ping_init(&$a) {
 	$t1 = dba_timer();
 
 	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
-		$r = q("SELECT id, item_restrict, item_flags FROM item
-			WHERE (item_restrict = 0) and item_unseen = 1 and uid = %d
+		$r = q("SELECT id, item_flags FROM item
+			WHERE item_unseen = 1 and uid = %d
+			$item_normal
 			and author_xchan != '%s'",
 			intval(local_channel()),
 			dbesc($ob_hash)

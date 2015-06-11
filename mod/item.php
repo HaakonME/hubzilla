@@ -586,27 +586,6 @@ function item_post(&$a) {
 			}
 		}
 
-		$attachments = '';
-		$match = false;
-
-		if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
-			$attachments = array();
-			foreach($match[2] as $mtch) {
-				$hash = substr($mtch,0,strpos($mtch,','));
-				$rev = intval(substr($mtch,strpos($mtch,',')));
-				$r = attach_by_hash_nodata($hash,$rev);
-				if($r['success']) {
-					$attachments[] = array(
-						'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
-						'length'   => $r['data']['filesize'],
-						'type'     => $r['data']['filetype'],
-						'title'    => urlencode($r['data']['filename']),
-						'revision' => $r['data']['revision']
-					);
-				}
-				$body = str_replace($match[1],'',$body);
-			}
-		}
 
 		/**
 		 *
@@ -641,6 +620,29 @@ function item_post(&$a) {
 
 			fix_attached_file_permissions($channel,$observer['xchan_hash'],((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
+		}
+
+
+		$attachments = '';
+		$match = false;
+
+		if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
+			$attachments = array();
+			foreach($match[2] as $mtch) {
+				$hash = substr($mtch,0,strpos($mtch,','));
+				$rev = intval(substr($mtch,strpos($mtch,',')));
+				$r = attach_by_hash_nodata($hash,$rev);
+				if($r['success']) {
+					$attachments[] = array(
+						'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+						'length'   => $r['data']['filesize'],
+						'type'     => $r['data']['filetype'],
+						'title'    => urlencode($r['data']['filename']),
+						'revision' => $r['data']['revision']
+					);
+				}
+				$body = str_replace($match[1],'',$body);
+			}
 		}
 
 	}

@@ -7,6 +7,12 @@ function public_content(&$a, $update = 0, $load = false) {
 	if($load)
 		$_SESSION['loadtime'] = datetime_convert();
 
+
+	if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
+			return login();
+	}
+
+
 	if(get_config('system','disable_discover_tab'))
 		return;
 

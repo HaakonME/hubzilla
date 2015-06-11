@@ -7,7 +7,7 @@
  */
 
 use Sabre\DAV;
-use Hubzilla\RedDAV;
+use RedMatrix\RedDAV;
 
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
@@ -130,8 +130,6 @@ function dav_init(&$a) {
 	// provide a directory view for the cloud in Hubzilla
 	$browser = new RedDAV\RedBrowser($auth);
 	$auth->setBrowserPlugin($browser);
-
-	$server->addPlugin($browser);
 
 	// Experimental QuotaPlugin
 //	require_once('include/RedDAV/QuotaPlugin.php');

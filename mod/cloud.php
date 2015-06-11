@@ -7,35 +7,17 @@
  */
 
 use Sabre\DAV;
-use Hubzilla\RedDAV;
+use RedMatrix\RedDAV;
 
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
-
-// workaround for HTTP-auth in CGI mode
-if (x($_SERVER, 'REDIRECT_REMOTE_USER')) {
- 	$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"], 6)) ;
-	if(strlen($userpass)) {
-	 	list($name, $password) = explode(':', $userpass);
-		$_SERVER['PHP_AUTH_USER'] = $name;
-		$_SERVER['PHP_AUTH_PW'] = $password;
-	}
-}
-
-if (x($_SERVER, 'HTTP_AUTHORIZATION')) {
-	$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)) ;
-	if(strlen($userpass)) {
-		list($name, $password) = explode(':', $userpass);
-		$_SERVER['PHP_AUTH_USER'] = $name;
-		$_SERVER['PHP_AUTH_PW'] = $password;
-	}
-}
 
 /**
  * @brief Fires up the SabreDAV server.
  *
  * @param App &$a
  */
+
 function cloud_init(&$a) {
 	require_once('include/reddav.php');
 
@@ -116,13 +98,8 @@ function cloud_init(&$a) {
 	}
 
 	if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
-		try {
-			$auth->Authenticate($server, t('$Projectname - Guests: Username: {your email address}, Password: +++'));
-		}
-		catch (Exception $e) {
-			logger('mod_cloud: auth exception' . $e->getMessage());
-			http_status_exit($e->getHTTPCode(), $e->getMessage());
-		}
+		logger('mod_cloud: auth exception');
+		http_status_exit(401, 'Permission denied.');
 	}
 
 	require_once('include/RedDAV/RedBrowser.php');

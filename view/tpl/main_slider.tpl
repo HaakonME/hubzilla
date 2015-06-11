@@ -1,7 +1,9 @@
 <div id="main-slider" class="slider" ><input id="main-range" type="text" name="cminmax" value="{{$val}}" /></div>
 <script>
+$(document).ready(function() {
 	var old_cmin = 0;
 	var old_cmax = 99;
+
 	$("#main-range").jRange({ isRange: true, from: 0, to: 99, step: 1, scale: [{{$labels}}], width:'100%', showLabels: false,  onstatechange: function(v) { 
 		var carr = v.split(",");
 		if(carr[0] != bParam_cmin) {
@@ -32,4 +34,5 @@
 		page_load = true;
 		liveUpdate();
 	}
+});
 </script>

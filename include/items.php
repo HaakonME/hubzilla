@@ -198,6 +198,18 @@ function item_normal() {
 		and item.item_blocked = 0 ";
 }
 
+function is_item_normal($item) {
+
+	if(intval($item['item_hidden')) || intval($item['item_type')) || intval($item['item_deleted'))
+		|| intval($item['item_unpublished')) || intval($item['item_delayed')) || intval($item['item_pending_remove']))
+		|| intval($item['item_blocked')))
+		return false;
+
+	return true; 
+
+}
+
+
 
 
 /**

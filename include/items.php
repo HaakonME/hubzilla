@@ -192,6 +192,20 @@ function comments_are_now_closed($item) {
 	return false;
 }
 
+/**
+ * @brief
+ * 
+ * This is a compatibility function primarily for plugins, because 
+ * in future hubzilla (and later) DB schemas the definition of a 
+ * normal item gets a bit more complicated. 
+ *
+ */
+
+function is_item_normal($item) {
+	return((intval($item['item_restrict'])) ? false : true);
+}
+
+
 
 /**
  * @brief

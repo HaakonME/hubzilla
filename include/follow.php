@@ -137,8 +137,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			}
 
 			$allowed = get_pconfig($uid,'system','diaspora_allowed');
-			if($allowed === false)
-				$allowed = 1;
 
 			if(! intval($allowed)) {
 				$result['message'] = t('Protocol blocked for this channel.');

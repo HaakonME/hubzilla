@@ -65,8 +65,6 @@ function diaspora_dispatch($importer,$msg) {
 	}
 
 	$allowed = get_pconfig($importer['channel_id'],'system','diaspora_allowed');
-	if($allowed === false)
-		$allowed = 1;
 
 	if(! intval($allowed)) {
 		logger('mod-diaspora: disallowed for channel ' . $importer['channel_name']);
@@ -179,8 +177,6 @@ function diaspora_process_outbound($arr) {
 
 
 	$allowed = get_pconfig($arr['channel']['channel_id'],'system','diaspora_allowed');
-	if($allowed === false)
-		$allowed = 1;
 
 	if(! intval($allowed)) {
 		logger('mod-diaspora: disallowed for channel ' . $arr['channel']['channel_name']);

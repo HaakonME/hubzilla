@@ -669,8 +669,6 @@ function settings_content(&$a) {
 
 		if($diaspora_enabled) {
 			$dspr_allowed = get_pconfig(local_channel(),'system','diaspora_allowed');
-			if($dspr_allowed === false)
-				$dspr_allowed = 1;
 			$pubcomments = get_pconfig(local_channel(),'system','diaspora_public_comments');
 			if($pubcomments === false)
 				$pubcomments = 1;

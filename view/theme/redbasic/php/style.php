@@ -156,8 +156,12 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 	$aside_width = 231;
 
 	// left aside and right aside are is 231px + converse width
-	$main_width = (($aside_width * 2) + intval($converse_width));
-
+	if($converse_center) {
+		$main_width = (($aside_width * 2) + intval($converse_width));
+	}
+	else {
+		$main_width = (($aside_width) + intval($converse_width));
+	}
 	// prevent main_width smaller than 768px
 	$main_width = (($main_width < 768) ? 768 : $main_width);
 
@@ -205,7 +209,8 @@ if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
 } 
 
 if($converse_center && file_exists('view/theme/redbasic/css/converse_center.css')) {
-	echo file_get_contents('view/theme/redbasic/css/converse_center.css');
+	$cc = file_get_contents('view/theme/redbasic/css/converse_center.css');
+	echo str_replace(array_keys($options), array_values($options), $cc);
 }
 
 if($schemecss) {

@@ -24,7 +24,7 @@ body {
 	height: 100%;
 }
 
-aside {
+aside#region_1 {
 	width: $aside_widthpx;
 	min-width: $aside_widthpx;
 	max-width: $aside_widthpx;

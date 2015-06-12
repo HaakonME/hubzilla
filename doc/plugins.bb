@@ -97,8 +97,8 @@ Let's go ahead and add some code to implement our post_local hook handler.
 	    if(local_channel() != $item['uid'])    /* Does this person own the post? */
 	        return;
 
-	    if(($item['parent']) || ($item['item_restrict'])) {
-		    /* If the item has a parent, or item_restrict is non-zero, this is a comment or something else, not a status post. */
+	    if(($item['parent']) || (! is_item_normal($item))) {
+		    /* If the item has a parent, or is not "normal", this is a comment or something else, not a status post. */
 	        return;
 		}
 

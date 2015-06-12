@@ -183,7 +183,7 @@ function impel_init(&$a) {
 
 		if($x['success']) {
 			$item_id = $x['item_id'];
-			update_remote_id($channel,$item_id,$arr['item_restrict'],$pagetitle,$namespace,$remote_id,$arr['mid']);
+			update_remote_id($channel,$item_id,$arr['item_type'],$pagetitle,$namespace,$remote_id,$arr['mid']);
 		}
 	}
 

@@ -345,9 +345,33 @@ function item_post(&$a) {
 		$app               = $orig_post['app'];
 		$title             = $_REQUEST['title'];
 		$body              = $_REQUEST['body'];
-		$item_flags        = $orig_post['item_flags'];
 
-		$item_restrict     = $orig_post['item_restrict'];
+		$item_origin   = $orig_post['item_origin'];
+		$item_unseen   = $orig_post['item_unseen'];
+		$item_starred   = $orig_post['item_starred'];
+		$item_uplink   = $orig_post['item_uplink'];
+		$item_consensus   = $orig_post['item_consensus'];
+		$item_wall   = $orig_post['item_wall'];
+		$item_thread_top   = $orig_post['item_thread_top'];
+		$item_notshown   = $orig_post['item_notshown'];
+		$item_nsfw   = $orig_post['item_nsfw'];
+		$item_relay   = $orig_post['item_relay'];
+		$item_mentionsme   = $orig_post['item_mentionsme'];
+		$item_nocomment   = $orig_post['item_nocomment'];
+		$item_obscured   = $orig_post['item_obscured'];
+		$item_verified   = $orig_post['item_verified'];
+		$item_retained   = $orig_post['item_retained'];
+		$item_rss   = $orig_post['item_rss'];
+		$item_deleted   = $orig_post['item_deleted'];
+		$item_type   = $orig_post['item_type'];
+		$item_hidden   = $orig_post['item_hidden'];
+		$item_unpublished   = $orig_post['item_unpublished'];
+		$item_delayed   = $orig_post['item_delayed'];
+		$item_pending_remove   = $orig_post['item_pedning_remove'];
+		$item_blocked   = $orig_post['item_blocked'];
+
+
+
 		$postopts          = $orig_post['postopts'];
 		$created           = $orig_post['created'];
 		$mid               = $orig_post['mid'];
@@ -738,20 +762,37 @@ function item_post(&$a) {
 	$datarray['attach']         = $attachments;
 	$datarray['thr_parent']     = $thr_parent;
 	$datarray['postopts']       = $postopts;
-	$datarray['item_restrict']  = $item_restrict;
-	$datarray['item_flags']     = $item_flags;
 	$datarray['item_unseen']    = $item_unseen;
 	$datarray['item_wall']      = $item_wall;
 	$datarray['item_origin']    = $item_origin;
 	$datarray['item_type']      = $webpage;
 	$datarray['item_thread_top'] = $item_thread_top;
+	$datarray['item_unseen']    = $item_unseen;
+	$datarray['item_starred']    = $item_starred;
+	$datarray['item_uplink']    = $item_uplink;
+	$datarray['item_consensus']    = $item_consensus;
+	$datarray['item_notshown']    = $item_notshown;
+	$datarray['item_nsfw']    = $item_nsfw;
+	$datarray['item_relay']    = $item_relay;
+	$datarray['item_mentionsme']    = $item_mentionsme;
+	$datarray['item_nocomment']    = $item_nocomment;
+	$datarray['item_obscured']    = $item_obscured;
+	$datarray['item_verified']    = $item_verified;
+	$datarray['item_retained']    = $item_retained;
+	$datarray['item_rss']    = $item_rss;
+	$datarray['item_deleted']    = $item_deleted;
+	$datarray['item_hidden']    = $item_hidden;
+	$datarray['item_unpublished']    = $item_unpublished;
+	$datarray['item_delayed']    = $item_delayed;
+	$datarray['item_pending_remove']    = $item_pending_remove;
+	$datarray['item_blocked']    = $item_blocked;
+
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['public_policy']  = $public_policy;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
 	$datarray['plink']          = $plink;
 	$datarray['route']          = $route;
-	$datarray['item_unseen']    = $item_unseen;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -862,7 +903,7 @@ function item_post(&$a) {
 				));
 			}
 
-			if($uid && $uid == $profile_uid && (! $datarray['item_restrict'])) {
+			if($uid && $uid == $profile_uid && (is_item_normal($datarray))) {
 				q("update channel set channel_lastpost = '%s' where channel_id = %d",
 					dbesc(datetime_convert()),
 					intval($uid)

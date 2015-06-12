@@ -841,9 +841,10 @@ function photos_content(&$a) {
 			$linked_items = fetch_post_tags($linked_items,true);
 
 			$link_item = $linked_items[0];
+			$item_normal = item_normal();
 
 			$r = q("select * from item where parent_mid = '%s' 
-				and item_restrict = 0 and uid = %d $sql_extra ",
+				$item_normal and uid = %d $sql_extra ",
 				dbesc($link_item['mid']),
 				intval($link_item['uid'])
 

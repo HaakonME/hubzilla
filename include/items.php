@@ -198,19 +198,24 @@ function item_normal() {
 		and item.item_blocked = 0 ";
 }
 
+/**
+ * @brief
+ * 
+ * This is a compatibility function primarily for plugins, because 
+ * in earlier DB schemas this was a much simpler single integer compare
+ *
+ */
+
 function is_item_normal($item) {
 
-	if(intval($item['item_hidden')) || intval($item['item_type')) || intval($item['item_deleted'))
-		|| intval($item['item_unpublished')) || intval($item['item_delayed')) || intval($item['item_pending_remove']))
-		|| intval($item['item_blocked')))
+	if(intval($item['item_hidden']) || intval($item['item_type']) || intval($item['item_deleted'])
+		|| intval($item['item_unpublished']) || intval($item['item_delayed']) || intval($item['item_pending_remove'])
+		|| intval($item['item_blocked']))
 		return false;
 
 	return true; 
 
 }
-
-
-
 
 /**
  * @brief
@@ -914,6 +919,7 @@ function get_item_elements($x) {
 	}
 
 	if(array_key_exists('revision',$x)) {
+
 		// extended export encoding
 
 		$arr['revision'] = $x['revision'];
@@ -925,9 +931,30 @@ function get_item_elements($x) {
 		$arr['postopts'] = $x['postopts'];
 		$arr['resource_id'] = $x['resource_id'];
 		$arr['resource_type'] = $x['resource_type'];
-		$arr['item_restrict'] = $x['item_restrict'];
-		$arr['item_flags'] = $x['item_flags'];
 		$arr['attach'] = $x['attach'];
+		$arr['item_origin'] = $x['item_origin'];
+		$arr['item_unseen'] = $x['item_unseen'];
+		$arr['item_starred'] = $x['item_starred'];
+		$arr['item_uplink'] = $x['item_uplink'];
+		$arr['item_consensus'] = $x['item_consensus'];
+		$arr['item_wall'] = $x['item_wall'];
+		$arr['item_thread_top'] = $x['item_thread_top'];
+		$arr['item_notshown'] = $x['item_notshown'];
+		$arr['item_nsfw'] = $x['item_nsfw'];
+		$arr['item_relay'] = $x['item_relay'];
+		$arr['item_mentionsme'] = $x['item_mentionsme'];
+		$arr['item_nocomment'] = $x['item_nocomment'];
+		$arr['item_obscured'] = $x['item_obscured'];
+		$arr['item_verified'] = $x['item_verified'];
+		$arr['item_retained'] = $x['item_retained'];
+		$arr['item_rss'] = $x['item_rss'];
+		$arr['item_deleted'] = $x['item_deleted'];
+		$arr['item_type'] = $x['item_type'];
+		$arr['item_hidden'] = $x['item_hidden'];
+		$arr['item_unpublished'] = $x['item_unpublished'];
+		$arr['item_delayed'] = $x['item_delayed'];
+		$arr['item_pending_remove'] = $x['item_pending_remove'];
+		$arr['item_blocked'] = $x['item_blocked'];
 	}
 
 	return $arr;
@@ -1133,9 +1160,31 @@ function encode_item($item,$mirror = false) {
 		$x['postopts'] = $item['postopts'];
 		$x['resource_id'] = $item['resource_id'];
 		$x['resource_type'] = $item['resource_type'];
-		$x['item_restrict'] = $item['item_restrict'];
-		$x['item_flags'] = $item['item_flags'];
 		$x['attach'] = $item['attach'];
+		$x['item_origin'] = $item['item_origin'];
+		$x['item_unseen'] = $item['item_unseen'];
+		$x['item_starred'] = $item['item_starred'];
+		$x['item_uplink'] = $item['item_uplink'];
+		$x['item_consensus'] = $item['item_consensus'];
+		$x['item_wall'] = $item['item_wall'];
+		$x['item_thread_top'] = $item['item_thread_top'];
+		$x['item_notshown'] = $item['item_notshown'];
+		$x['item_nsfw'] = $item['item_nsfw'];
+		$x['item_relay'] = $item['item_relay'];
+		$x['item_mentionsme'] = $item['item_mentionsme'];
+		$x['item_nocomment'] = $item['item_nocomment'];
+		$x['item_obscured'] = $item['item_obscured'];
+		$x['item_verified'] = $item['item_verified'];
+		$x['item_retained'] = $item['item_retained'];
+		$x['item_rss'] = $item['item_rss'];
+		$x['item_deleted'] = $item['item_deleted'];
+		$x['item_type'] = $item['item_type'];
+		$x['item_hidden'] = $item['item_hidden'];
+		$x['item_unpublished'] = $item['item_unpublished'];
+		$x['item_delayed'] = $item['item_delayed'];
+		$x['item_pending_remove'] = $item['item_pending_remove'];
+		$x['item_blocked'] = $item['item_blocked'];
+
 	}
 
 
@@ -2045,8 +2094,8 @@ function item_store($arr, $allow_exec = false) {
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
-	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	$arr['item_wall']     = ((x($arr,'item_wall'))     ? intval($arr['item_wall'])           : 0 );
+	$arr['item_type']     = ((x($arr,'item_type'))     ? intval($arr['item_type'])           : 0 );
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
@@ -2118,7 +2167,6 @@ function item_store($arr, $allow_exec = false) {
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
-	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
 
 	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : '' );
 
@@ -2419,8 +2467,6 @@ function item_store_update($arr,$allow_exec = false) {
 
 	$arr['item_unseen'] = $orig[0]['item_unseen'];
 
-	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
-	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];
 
 	if(array_key_exists('edit',$arr))
 		unset($arr['edit']);
@@ -2520,10 +2566,33 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 	$arr['html']  = ((array_key_exists('html',$arr) && strlen($arr['html']))    ? trim($arr['html'])  : '');
 
-	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : $orig[0]['attach']);
-	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : $orig[0]['app']);
-//	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
-//	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
+	$arr['attach']        = ((array_key_exists('attach',$arr))        ? notags(trim($arr['attach']))        : $orig[0]['attach']);
+	$arr['app']           = ((array_key_exists('app',$arr))           ? notags(trim($arr['app']))           : $orig[0]['app']);
+
+	$arr['item_origin']    = ((array_key_exists('item_origin',$arr))    ? intval($arr['item_origin'])          : $orig[0]['item_origin'] );
+	$arr['item_unseen']    = ((array_key_exists('item_unseen',$arr))    ? intval($arr['item_unseen'])          : $orig[0]['item_unseen'] );
+	$arr['item_starred']    = ((array_key_exists('item_starred',$arr))    ? intval($arr['item_starred'])          : $orig[0]['item_starred'] );
+	$arr['item_uplink']    = ((array_key_exists('item_uplink',$arr))    ? intval($arr['item_uplink'])          : $orig[0]['item_uplink'] );
+	$arr['item_consensus']    = ((array_key_exists('item_consensus',$arr))    ? intval($arr['item_consensus'])          : $orig[0]['item_consensus'] );
+	$arr['item_wall']    = ((array_key_exists('item_wall',$arr))    ? intval($arr['item_wall'])          : $orig[0]['item_wall'] );
+	$arr['item_thread_top']    = ((array_key_exists('item_thread_top',$arr))    ? intval($arr['item_thread_top'])          : $orig[0]['item_thread_top'] );
+	$arr['item_notshown']    = ((array_key_exists('item_notshown',$arr))    ? intval($arr['item_notshown'])          : $orig[0]['item_notshown'] );
+	$arr['item_nsfw']    = ((array_key_exists('item_nsfw',$arr))    ? intval($arr['item_nsfw'])          : $orig[0]['item_nsfw'] );
+	$arr['item_relay']    = ((array_key_exists('item_relay',$arr))    ? intval($arr['item_relay'])          : $orig[0]['item_relay'] );
+	$arr['item_mentionsme']    = ((array_key_exists('item_mentionsme',$arr))    ? intval($arr['item_mentionsme'])          : $orig[0]['item_mentionsme'] );
+	$arr['item_nocomment']    = ((array_key_exists('item_nocomment',$arr))    ? intval($arr['item_nocomment'])          : $orig[0]['item_nocomment'] );
+	$arr['item_obscured']    = ((array_key_exists('item_obscured',$arr))    ? intval($arr['item_obscured'])          : $orig[0]['item_obscured'] );
+	$arr['item_verified']    = ((array_key_exists('item_verified',$arr))    ? intval($arr['item_verified'])          : $orig[0]['item_verified'] );
+	$arr['item_retained']    = ((array_key_exists('item_retained',$arr))    ? intval($arr['item_retained'])          : $orig[0]['item_retained'] );
+	$arr['item_rss']    = ((array_key_exists('item_rss',$arr))    ? intval($arr['item_rss'])          : $orig[0]['item_rss'] );
+	$arr['item_deleted']    = ((array_key_exists('item_deleted',$arr))    ? intval($arr['item_deleted'])          : $orig[0]['item_deleted'] );
+	$arr['item_type']    = ((array_key_exists('item_type',$arr))    ? intval($arr['item_type'])          : $orig[0]['item_type'] );
+	$arr['item_hidden']    = ((array_key_exists('item_hidden',$arr))    ? intval($arr['item_hidden'])          : $orig[0]['item_hidden'] );
+	$arr['item_unpublished']    = ((array_key_exists('item_unpublished',$arr))    ? intval($arr['item_unpublished'])          : $orig[0]['item_unpublished'] );
+	$arr['item_delayed']    = ((array_key_exists('item_delayed',$arr))    ? intval($arr['item_delayed'])          : $orig[0]['item_delayed'] );
+	$arr['item_pending_remove']    = ((array_key_exists('item_pending_remove',$arr))    ? intval($arr['item_pending_remove'])          : $orig[0]['item_pending_remove'] );
+	$arr['item_blocked']    = ((array_key_exists('item_blocked',$arr))    ? intval($arr['item_blocked'])          : $orig[0]['item_blocked'] );
+
 
 	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
 	$arr['layout_mid']    = ((array_key_exists('layout_mid',$arr)) ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );

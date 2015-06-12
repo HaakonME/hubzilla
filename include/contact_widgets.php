@@ -71,6 +71,8 @@ function categories_widget($baseurl,$selected = '') {
 	if(! feature_enabled($a->profile['profile_uid'],'categories'))
 		return '';
 
+	$item_normal = item_normal();
+
 	$terms = array();
 	$r = q("select distinct(term.term)
                 from term join item on term.oid = item.id
@@ -78,7 +80,7 @@ function categories_widget($baseurl,$selected = '') {
                 and term.uid = item.uid
                 and term.type = %d
                 and item.author_xchan = '%s'
-				and item.item_restrict = 0
+				$item_normal
                 order by term.term asc",
 		intval($a->profile['profile_uid']),
 	        intval(TERM_CATEGORY),

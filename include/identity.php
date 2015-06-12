@@ -810,6 +810,10 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 	$is_owner = (($profile['uid'] == local_channel()) ? true : false);
 
+	if(is_sys_channel($profile['uid']))
+		$show_connect = false;
+
+
 	$profile['picdate'] = urlencode($profile['picdate']);
 
 	call_hooks('profile_sidebar_enter', $profile);

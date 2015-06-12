@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS `attach` (
   `folder` char(64) NOT NULL DEFAULT '',
   `flags` int(10) unsigned NOT NULL DEFAULT '0',
   `is_dir` tinyint(1) NOT NULL DEFAULT '0',
+  `is_photo` tinyint(1) NOT NULL DEFAULT '0',
   `os_storage` tinyint(1) NOT NULL DEFAULT '0',
   `os_path` mediumtext NOT NULL,
   `display_path` mediumtext NOT NULL,
@@ -153,6 +154,7 @@ CREATE TABLE IF NOT EXISTS `attach` (
   KEY `flags` (`flags`),
   KEY `creator` (`creator`),
   KEY `is_dir` (`is_dir`),
+  KEY `is_photo` (`is_photo`),
   KEY `os_storage` (`os_storage`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

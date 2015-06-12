@@ -202,7 +202,7 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 	// Retrieve all columns except 'data'
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra $orderby $limit",
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra $orderby $limit",
 		intval($channel_id)
 	);
 
@@ -310,7 +310,7 @@ function attach_by_hash_nodata($hash, $rev = 0) {
 
 	// Now we'll see if we can access the attachment
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
 		intval($r[0]['uid']),
 		dbesc($hash)
 	);
@@ -391,7 +391,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		if($options === 'update' &&  $arr && array_key_exists('revision',$arr))
 			$sql_options = " and revision = " . intval($arr['revision']) . " ";
 
-		$x = q("select id, aid, uid, filename, filetype, filesize, hash, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
+		$x = q("select id, aid, uid, filename, filetype, filesize, hash, revision, folder, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
 			dbesc($arr['hash']),
 			intval($channel_id)
 		);
@@ -430,13 +430,27 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	if(! isset($hash))
 		$hash = random_string();
 
+
+	$is_photo = 0;
+	$x = @getimagesize($src);
+	logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
+	if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+		$is_photo = 1;
+	}
+
+
+
+
+
+
 	$created = datetime_convert();
 
 	if($options === 'replace') {
-		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
+		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, is_photo = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
 			dbesc($filename),
 			dbesc($mimetype),
 			intval($filesize),
+			intval($is_photo),
 			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			intval($existing_id),
@@ -444,8 +458,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	elseif($options === 'revise') {
-		$r = q("insert into attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("insert into attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($x[0]['aid']),
 			intval($channel_id),
 			dbesc($x[0]['hash']),
@@ -454,6 +468,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($mimetype),
 			intval($filesize),
 			intval($x[0]['revision'] + 1),
+			intval($is_photo),
 			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
@@ -464,11 +479,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	elseif($options === 'update') {
-		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s',
+		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s', is_photo = %d, 
 			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d",
 			dbesc((array_key_exists('filename',$arr))  ? $arr['filename']  : $x[0]['filename']),
 			dbesc((array_key_exists('filetype',$arr))  ? $arr['filetype']  : $x[0]['filetype']),
 			dbesc($created),
+			intval($is_photo),
 			dbesc((array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $x[0]['allow_cid']),
 			dbesc((array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : $x[0]['allow_gid']),
 			dbesc((array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : $x[0]['deny_cid']),
@@ -478,8 +494,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	else {
-		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($channel['channel_account_id']),
 			intval($channel_id),
 			dbesc($hash),
@@ -488,6 +504,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($mimetype),
 			intval($filesize),
 			intval(0),
+			intval($is_photo),
 			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
@@ -508,7 +525,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	// Caution: This re-uses $sql_options set further above
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
@@ -568,7 +585,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 	else
 		$paths = array($pathname);
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id),
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id),
 		intval($channel_id),
 		dbesc($parent_hash),
 		dbesc($paths[0]),
@@ -1167,7 +1184,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
  */
 function get_file_activity_object($channel_id, $hash, $cloudpath) {
 
-	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
+	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
@@ -1195,6 +1212,7 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 		'revision'	=> $x[0]['revision'],
 		'folder'	=> $x[0]['folder'],
 		'flags'		=> $x[0]['flags'],
+		'is_photo'  => $x[0]['is_photo'],
 		'created'	=> $x[0]['created'],
 		'edited'	=> $x[0]['edited'],
 		'allow_cid'	=> $x[0]['allow_cid'],

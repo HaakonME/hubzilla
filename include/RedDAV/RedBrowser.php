@@ -1,6 +1,6 @@
 <?php
 
-namespace Hubzilla\RedDAV;
+namespace RedMatrix\RedDAV;
 
 use Sabre\DAV;
 

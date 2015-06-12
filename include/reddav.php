@@ -19,7 +19,7 @@
  */
 
 use Sabre\DAV;
-use Hubzilla\RedDAV;
+use RedMatrix\RedDAV;
 
 require_once('vendor/autoload.php');
 require_once('include/attach.php');

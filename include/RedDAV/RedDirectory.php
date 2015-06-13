@@ -220,7 +220,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			$is_photo = 1;
 		}
 
-		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, flags, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, os_storage, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($c[0]['channel_account_id']),
 			intval($c[0]['channel_id']),
@@ -228,7 +228,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($this->auth->observer),
 			dbesc($name),
 			dbesc($this->folder_hash),
-			dbesc(ATTACH_FLAG_OS),
+			intval(1),
 			dbesc($mimetype),
 			intval($filesize),
 			intval(0),

@@ -102,12 +102,12 @@ class RedFile extends DAV\Node implements DAV\IFile {
 			intval(PAGE_REMOVED)
 		);
 
-		$r = q("SELECT flags, folder, data FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$r = q("SELECT flags, folder, os_storage, data FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
 		if ($r) {
-			if ($r[0]['flags'] & ATTACH_FLAG_OS) {
+			if (intval($r[0]['os_storage'])) {
 				$fname = dbunescbin($r[0]['data']);
 				$f = 'store/' . $this->auth->owner_nick . '/' . (($fname) ? $fname : '');
 				// @todo check return value and set $size directly
@@ -179,7 +179,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	public function get() {
 		logger('get file ' . basename($this->name), LOGGER_DEBUG);
 
-		$r = q("SELECT data, flags, filename, filetype FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$r = q("SELECT data, flags, os_storage, filename, filetype FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($this->data['hash']),
 			intval($this->data['uid'])
 		);
@@ -192,7 +192,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				header('Content-type: text/plain');
 			}
 
-			if ($r[0]['flags'] & ATTACH_FLAG_OS ) {
+			if (intval($r[0]['os_storage'])) {
 				$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . dbunescbin($r[0]['data']);
 				return fopen($f, 'rb');
 			}

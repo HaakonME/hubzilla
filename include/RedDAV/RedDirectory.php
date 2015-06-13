@@ -213,8 +213,15 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$filesize = 0;
 		$hash = random_string();
 
-		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, flags, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$is_photo = 0;
+		$x = @getimagesize($src);
+		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
+		if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+			$is_photo = 1;
+		}
+
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, flags, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($c[0]['channel_account_id']),
 			intval($c[0]['channel_id']),
 			dbesc($hash),
@@ -225,6 +232,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($mimetype),
 			intval($filesize),
 			intval(0),
+			intval($is_photo),
 			dbesc($this->os_path . '/' . $hash),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),

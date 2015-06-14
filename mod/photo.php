@@ -69,6 +69,8 @@ function photo_init(&$a) {
 			$data = dbunescbin($r[0]['data']);
 			$mimetype = $r[0]['type'];
 		}
+		if(intval($r[0]['os_storage']))
+			$data = file_get_contents($data);
 		if(! isset($data)) {
 			$data = file_get_contents($default);
 			$mimetype = 'image/png';
@@ -142,6 +144,8 @@ function photo_init(&$a) {
 			if($r && $allowed) {
 				$data = dbunescbin($r[0]['data']);
 				$mimetype = $r[0]['type'];
+				if(intval($r[0]['os_storage']))
+					$data = file_get_contents($data);
 			}
 			else {
 

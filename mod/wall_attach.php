@@ -21,31 +21,37 @@ function wall_attach_post(&$a) {
 	$observer = $a->get_observer();
 
 
-	if($_FILES['userfile']['tmp_name']) {
-		$x = @getimagesize($_FILES['userfile']['tmp_name']);
-		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
-		if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
-			$args = array( 'source' => 'editor', 'visible' => 0, 'contact_allow' => array($channel['channel_hash']));
-			$ret = photo_upload($channel,$observer,$args);
-			if($ret['success']) {
-				echo  "\n\n" . $ret['body'] . "\n\n";
-				killme();
-			}
-			if($using_api)
-				return;
-			notice($ret['message']);
-			killme();
-		}
-	}
+//	if($_FILES['userfile']['tmp_name']) {
+//		$x = @getimagesize($_FILES['userfile']['tmp_name']);
+//		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
+//		if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+//			$args = array( 'source' => 'editor', 'visible' => 0, 'contact_allow' => array($channel['channel_hash']));
+//			$ret = photo_upload($channel,$observer,$args);
+//			if($ret['success']) {
+//				echo  "\n\n" . $ret['body'] . "\n\n";
+//				killme();
+//			}
+//			if($using_api)
+//				return;
+//			notice($ret['message']);
+//			killme();
+//		}
+//	}
 
-	$r = attach_store($channel,(($observer) ? $observer['xchan_hash'] : ''));
+	$r = attach_store($channel,(($observer) ? $observer['xchan_hash'] : ''),array('source' => 'editor'));
 
 	if(! $r['success']) {
 		notice( $r['message'] . EOL);
 		killme();
 	}
 
-	echo  "\n\n" . '[attachment]' . $r['data']['hash'] . ',' . $r['data']['revision'] . '[/attachment]' . "\n";
+	if(intval($r['data']['is_photo'])) {
+		echo "\n\n" . $r['body'] . "\n\n";
+		if($using_api)
+			return;
+	}
+	else
+		echo  "\n\n" . '[attachment]' . $r['data']['hash'] . ',' . $r['data']['revision'] . '[/attachment]' . "\n";
 	killme();
 
 }

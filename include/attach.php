@@ -345,6 +345,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
 	$sql_options = '';
+	$source = (($arr) ? $arr['source'] : '');
 
 	if(! perm_is_allowed($channel_id,get_observer_hash(), 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
@@ -439,10 +440,6 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 
-
-
-
-
 	$created = datetime_convert();
 
 	if($options === 'replace') {
@@ -519,6 +516,14 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 
+	if($is_photo) {
+		$args = array( 'source' => $source, 'visible' => 0, 'contact_allow' => array($channel['channel_hash']), 'data' => @file_get_contents($src));
+		$p = photo_upload($channel,get_app()->get_observer(),$args);
+		if($p['success']) {
+			$ret['body'] = $p['body'];
+		}
+	}
+
 	if($options !== 'update')
 		@unlink($src);
 
@@ -538,6 +543,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$ret['message'] = t('Stored file could not be verified. Upload failed.');
 		return $ret;
 	}
+
 
 	$ret['success'] = true;
 	$ret['data'] = $r[0];

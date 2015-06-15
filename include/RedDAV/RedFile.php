@@ -102,19 +102,33 @@ class RedFile extends DAV\Node implements DAV\IFile {
 			intval(PAGE_REMOVED)
 		);
 
-		$r = q("SELECT flags, folder, os_storage, data FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$is_photo = false;
+
+		$r = q("SELECT flags, folder, os_storage, is_photo FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
 		if ($r) {
 			if (intval($r[0]['os_storage'])) {
-				$fname = dbunescbin($r[0]['data']);
-				$f = 'store/' . $this->auth->owner_nick . '/' . (($fname) ? $fname : '');
-				// @todo check return value and set $size directly
-				@file_put_contents($f, $data);
-				$size = @filesize($f);
-				logger('filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
-			} else {
+				$d = q("select data from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($this->data['hash']),
+					intval($c[0]['channel_id'])
+				);
+				if($d) {	
+					$fname = dbunescbin($d[0]['data']);
+					$f = 'store/' . $this->auth->owner_nick . '/' . (($fname) ? $fname : '');
+					// @todo check return value and set $size directly
+					@file_put_contents($f, $data);
+					$size = @filesize($f);
+					logger('filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
+				}
+				$x = @getimagesize($f);
+				logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
+				if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+					$is_photo = 1;
+				}
+			} 
+			else {
 				$r = q("UPDATE attach SET data = '%s' WHERE hash = '%s' AND uid = %d",
 					dbescbin(stream_get_contents($data)),
 					dbesc($this->data['hash']),
@@ -133,12 +147,18 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		// returns now()
 		$edited = datetime_convert();
 
-		$d = q("UPDATE attach SET filesize = '%s', edited = '%s' WHERE hash = '%s' AND uid = %d",
+		$d = q("UPDATE attach SET filesize = '%s', is_photo = %d, edited = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($size),
+			intval($is_photo),
 			dbesc($edited),
 			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
+
+		if($is_photo) {
+			$args = array( 'data' => @file_get_contents($fname));
+			$p = photo_upload($c[0],$this->auth->observer,$args);
+		}
 
 		// update the folder's lastmodified timestamp
 		$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",

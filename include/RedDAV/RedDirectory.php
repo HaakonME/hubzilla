@@ -213,12 +213,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$filesize = 0;
 		$hash = random_string();
 
-		$is_photo = 0;
-		$x = @getimagesize($src);
-		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
-		if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
-			$is_photo = 1;
-		}
+		$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $hash;
+
 
 		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, os_storage, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
@@ -242,7 +238,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($c[0]['channel_deny_gid'])
 		);
 
-		$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $hash;
+
 
 		// returns the number of bytes that were written to the file, or FALSE on failure
 		$size = file_put_contents($f, $data);
@@ -256,9 +252,20 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		// returns now
 		$edited = datetime_convert();
 
+
+
+		$is_photo = 0;
+		$x = @getimagesize($f);
+		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
+		if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+			$is_photo = 1;
+		}
+
+
 		// updates entry with filesize and timestamp
-		$d = q("UPDATE attach SET filesize = '%s', edited = '%s' WHERE hash = '%s' AND uid = %d",
+		$d = q("UPDATE attach SET filesize = '%s', is_photo = %d, edited = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($size),
+			intval($is_photo),
 			dbesc($edited),
 			dbesc($hash),
 			intval($c[0]['channel_id'])
@@ -289,6 +296,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 				return;
 			}
 		}
+
+		if($is_photo) {
+			require_once('include/photos.php');
+			$args = array( 'data' => @file_get_contents($f));
+			$p = photo_upload($c[0],get_app()->get_observer(),$args);
+		}
+
 	}
 
 	/**

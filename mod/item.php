@@ -197,7 +197,7 @@ function item_post(&$a) {
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
 		$can_comment = false;
-		if((array_key_exists('owner',$parent_item)) && ($parent_item['owner']['abook_flags'] & ABOOK_FLAG_SELF))
+		if((array_key_exists('owner',$parent_item)) && intval($parent_item['owner']['abook_self']))
 			$can_comment = perm_is_allowed($profile_uid,$observer['xchan_hash'],'post_comments');
 		else
 			$can_comment = can_comment_on_post($observer['xchan_hash'],$parent_item);
@@ -367,7 +367,7 @@ function item_post(&$a) {
 		$item_hidden   = $orig_post['item_hidden'];
 		$item_unpublished   = $orig_post['item_unpublished'];
 		$item_delayed   = $orig_post['item_delayed'];
-		$item_pending_remove   = $orig_post['item_pedning_remove'];
+		$item_pending_remove   = $orig_post['item_pending_remove'];
 		$item_blocked   = $orig_post['item_blocked'];
 
 

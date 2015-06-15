@@ -34,18 +34,16 @@ function rconnect_url($channel_id,$xchan) {
 
 function abook_connections($channel_id, $sql_conditions = '') {
 	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
-		and not ( abook_flags & %d )>0 $sql_conditions",
-		intval($channel_id),
-		intval(ABOOK_FLAG_SELF)
+		and abook_self = 0 $sql_conditions",
+		intval($channel_id)
 	);
 	return(($r) ? $r : array());
 }	
 
 function abook_self($channel_id) {
 	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
-		and ( abook_flags & %d )>0 limit 1",
-		intval($channel_id),
-		intval(ABOOK_FLAG_SELF)
+		and abook_self = 1 limit 1",
+		intval($channel_id)
 	);
 	return(($r) ? $r[0] : array());
 }	
@@ -128,9 +126,40 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 function abook_toggle_flag($abook,$flag) {
 
-    $r = q("UPDATE abook set abook_flags = (abook_flags %s %d) where abook_id = %d and abook_channel = %d",
-			db_getfunc('^'),
-			intval($flag),
+	$field = '';
+
+	switch($flag) {
+		case ABOOK_FLAG_BLOCKED:
+			$field = 'abook_blocked';
+			break;
+		case ABOOK_FLAG_IGNORED:
+			$field = 'abook_ignored';
+			break;
+		case ABOOK_FLAG_HIDDEN:
+			$field = 'abook_hidden';
+			break;
+		case ABOOK_FLAG_ARCHIVED:
+			$field = 'abook_archived';
+			break;
+		case ABOOK_FLAG_PENDING:
+			$field = 'abook_pending';
+			break;
+		case ABOOK_FLAG_UNCONNECTED:
+			$field = 'abook_unconnected';
+			break;
+		case ABOOK_FLAG_SELF:
+			$field = 'abook_self';
+			break;
+		case ABOOK_FLAG_FEED:
+			$field = 'abook_feed';
+			break;
+		default:
+			break;
+	}
+	if(! $field)
+		return;
+
+    $r = q("UPDATE abook set $field = (1 - $field) where abook_id = %d and abook_channel = %d",
 			intval($abook['abook_id']),
 			intval($abook['abook_channel'])
 	);
@@ -138,7 +167,7 @@ function abook_toggle_flag($abook,$flag) {
 
 	// if unsetting the archive bit, update the timestamps so we'll try to connect for an additional 30 days. 
 
-	if(($flag === ABOOK_FLAG_ARCHIVED) && ($abook['abook_flags'] & ABOOK_FLAG_ARCHIVED)) {
+	if(($flag === ABOOK_FLAG_ARCHIVED) && (intval($abook['abook_archived']))) {
 		$r = q("update abook set abook_connected = '%s', abook_updated = '%s' 
 			where abook_id = %d and abook_channel = %d",
 			dbesc(datetime_convert()),
@@ -298,9 +327,8 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
 
 
-	q("delete from abook where abook_xchan = '%s' and (abook_flags & %d)>0",
-		dbesc($channel['channel_hash']),
-		dbesc(ABOOK_FLAG_SELF)
+	q("delete from abook where abook_xchan = '%s' and abook_self = 1 ",
+		dbesc($channel['channel_hash'])
 	);
 
 	$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d) where channel_id = %d",
@@ -506,8 +534,7 @@ function contact_remove($channel_id, $abook_id) {
 
 	$archive = get_pconfig($channel_id, 'system','archive_removed_contacts');
 	if($archive) {
-		q("update abook set abook_flags = ( abook_flags | %d ) where abook_id = %d and abook_channel = %d",
-			intval(ABOOK_FLAG_ARCHIVED),
+		q("update abook set abook_archived = 1 where abook_id = %d and abook_channel = %d",
 			intval($abook_id),
 			intval($channel_id)
 		);
@@ -524,7 +551,7 @@ function contact_remove($channel_id, $abook_id) {
 
 	$abook = $r[0];
 
-	if($abook['abook_flags'] & ABOOK_FLAG_SELF)
+	if(intval($abook['abook_self']))
 		return false;
 
 

@@ -170,7 +170,7 @@ class Conversation extends BaseObject {
 				$item->set_commentable(false);
 			}
 			elseif(($this->observer) && (! $item->is_commentable())) {
-				if((array_key_exists('owner',$item->data)) && ($item->data['owner']['abook_flags'] & ABOOK_FLAG_SELF))
+				if((array_key_exists('owner',$item->data)) && intval($item->data['owner']['abook_self']))
 					$item->set_commentable(perm_is_allowed($this->profile_owner,$this->observer['xchan_hash'],'post_comments'));
 				else
 					$item->set_commentable(can_comment_on_post($this->observer['xchan_hash'],$item->data));

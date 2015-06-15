@@ -384,10 +384,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 				dbesc($x['hash']),
-				intval($channel['channel_id']),
-				intval(ABOOK_FLAG_SELF)
+				intval($channel['channel_id'])
 			);
 
 			if(array_key_exists('profile',$j) && array_key_exists('next_birthday',$j['profile'])) {
@@ -406,16 +405,15 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if(substr($r[0]['abook_dob'],5) == substr($next_birthday,5))
 					$next_birthday = $r[0]['abook_dob'];
 
-				$current_abook_connected = (($r[0]['abook_flags'] & ABOOK_FLAG_UNCONNECTED) ? 0 : 1);
+				$current_abook_connected = (intval($r[0]['abook_unconnected']) ? 0 : 1);
 
 				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d
-					and not (abook_flags & %d) > 0 ",
+					and abook_self = 0 ",
 					intval($their_perms),
 					dbescdate($next_birthday),
 					dbesc($x['hash']),
-					intval($channel['channel_id']),
-					intval(ABOOK_FLAG_SELF)
+					intval($channel['channel_id'])
 				);
 
 //				if(($connected_set === 0 || $connected_set === 1) && ($connected_set !== $current_abook_unconnected)) {
@@ -424,13 +422,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 					// match your current connected state setting, toggle it.
 					/** @FIXME uncoverted to postgres */
 					/** @FIXME when this was enabled, all contacts became unconnected. Currently disabled intentionally */
-//					$y1 = q("update abook set abook_flags = (abook_flags ^ %d)
+//					$y1 = q("update abook set abook_unconnected = 1
 //						where abook_xchan = '%s' and abook_channel = %d
-//						and not (abook_flags & %d) limit 1",
-//						intval(ABOOK_FLAG_UNCONNECTED),
+//						and abook_self = 0 limit 1",
 //						dbesc($x['hash']),
-//						intval($channel['channel_id']),
-//						intval(ABOOK_FLAG_SELF)
+//						intval($channel['channel_id'])
 //					);
 //				}
 
@@ -461,7 +457,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if($closeness === false)
 					$closeness = 80;
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
+				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_pending ) values ( %d, %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					intval($closeness),
@@ -471,7 +467,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($next_birthday),
-					intval(($default_perms) ? 0 : ABOOK_FLAG_PENDING)
+					intval(($default_perms) ? 0 : 1)
 				);
 
 				if($y) {
@@ -479,15 +475,14 @@ function zot_refresh($them, $channel = null, $force = false) {
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
 					if($new_perms != $previous_perms) {
 						// Send back a permissions update if permissions have changed
-						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
+						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 							dbesc($x['hash']),
-							intval($channel['channel_id']),
-							intval(ABOOK_FLAG_SELF)
+							intval($channel['channel_id'])
 						);
 						if($z)
 							proc_run('php','include/notifier.php','permission_update',$z[0]['abook_id']);
 					}
-					$new_connection = q("select abook_id, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
+					$new_connection = q("select abook_id, abook_pending from abook where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
 						intval($channel['channel_id']),
 						dbesc($x['hash'])
 					);
@@ -503,7 +498,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 					if($new_connection && ($their_perms & PERMS_R_STREAM)) {
 						if(($channel['channel_w_stream'] & PERMS_PENDING)
-							|| (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) )
+							|| (! intval($new_connection[0]['abook_pending'])) )
 							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
 					}
 				}
@@ -1333,7 +1328,7 @@ function public_recips($msg) {
 		where abook_xchan = '%s' and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0
 		and (( " . $col . " & " . intval(PERMS_SPECIFIC) . " ) > 0  and ( abook_my_perms & " . intval($field) . " ) > 0 )
 		OR   ( " . $col . " & " . intval(PERMS_PENDING) . " ) > 0
-		OR  (( " . $col . " & " . intval(PERMS_CONTACTS) . " ) > 0 and ( abook_flags & " . intval(ABOOK_FLAG_PENDING) . " ) = 0 ) ",
+		OR  (( " . $col . " & " . intval(PERMS_CONTACTS) . " ) > 0 and abook_pending = 0 )) ",
 		dbesc($msg['notify']['sender']['hash'])
 	);
 
@@ -2863,14 +2858,14 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			$total_friends = 0;
 			$total_feeds = 0;
 
-			$r = q("select abook_id, abook_flags from abook where abook_channel = %d",
+			$r = q("select abook_id, abook_feed from abook where abook_channel = %d",
 				intval($channel['channel_id'])
 			);
 			if($r) {
 				// don't count yourself
 				$total_friends = ((count($r) > 0) ? count($r) - 1 : 0);
 				foreach($r as $rr)
-					if($rr['abook_flags'] & ABOOK_FLAG_FEED)
+					if(intval($rr['abook_feed']))
 						$total_feeds ++;
 			}
 
@@ -2883,16 +2878,15 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
 					require_once('include/Contact.php');
 
-					$r = q("select abook_id, abook_flags from abook where abook_xchan = '%s' and abook_channel = %d and not ( abook_flags & %d )>0 limit 1",
+					$r = q("select abook_id, abook_feed from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 						dbesc($abook['abook_xchan']),
-						intval($channel['channel_id']),
-						intval(ABOOK_FLAG_SELF)
+						intval($channel['channel_id'])
 					);
 					if($r) {
 						contact_remove($channel['channel_id'],$r[0]['abook_id']);
 						if($total_friends)
 							$total_friends --;
-						if($r[0]['abook_flags'] & ABOOK_FLAG_FEED)
+						if(intval($r[0]['abook_feed']))
 							$total_feeds --;
 					}
 					continue;
@@ -2934,7 +2928,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						logger('process_channel_sync_delivery: total_channels service class limit exceeded');
 						continue;
 					}
-					if($max_feeds !== false && ($clean['abook_flags'] & ABOOK_FLAG_FEED) && $total_feeds > $max_feeds) {
+					if($max_feeds !== false && intval($clean['abook_feed']) && $total_feeds > $max_feeds) {
 						logger('process_channel_sync_delivery: total_feeds service class limit exceeded');
 						continue;
 					}
@@ -2943,7 +2937,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						intval($channel['channel_id'])
 					);
 					$total_friends ++;
-					if($clean['abook_flags'] & ABOOK_FLAG_FEED)
+					if(intval($clean['abook_feed']))
 						$total_feeds ++;
 				}
 

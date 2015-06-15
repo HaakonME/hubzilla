@@ -113,11 +113,10 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 			}
 
 			if(! $abook_checked) {
-				$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash
-					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d )>0 limit 1",
+				$x = q("select abook_my_perms, abook_blocked, abook_ignored, abook_pending, xchan_network from abook left join xchan on abook_xchan = xchan_hash
+					where abook_channel = %d and abook_xchan = '%s' and abook_self = 0 limit 1",
 					intval($uid),
-					dbesc($observer_xchan),
-					intval(ABOOK_FLAG_SELF)
+					dbesc($observer_xchan)
 				);
 				if(! $x) {
 					// not in address book, see if they've got an xchan
@@ -131,7 +130,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 			// If they're blocked - they can't read or write
 
-			if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED)) {
+			if(($x) && intval($x[0]['abook_blocked'])) {
 				$ret[$perm_name] = false;
 				continue;
 			}
@@ -139,7 +138,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 			// Check if this is a write permission and they are being ignored
 			// This flag is only visible internally.
 
-			if(($x) && ($internal_use) && (! $global_perms[$perm_name][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED)) {
+			if(($x) && ($internal_use) && (! $global_perms[$perm_name][2]) && intval($x[0]['abook_ignored'])) {
 				$ret[$perm_name] = false;
 				continue;
 			}
@@ -218,7 +217,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 			continue;
 		}
 
-		if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
+		if(intval($x[0]['abook_pending'])) {
 			$ret[$perm_name] = false;
 			continue;
 		}
@@ -300,19 +299,18 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 		if($r[0][$channel_perm] & PERMS_AUTHED)
 			return true;
 
-		$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash 
-			where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d )>0 limit 1",
+		$x = q("select abook_my_perms, abook_blocked, abook_ignored, abook_pending, xchan_network from abook left join xchan on abook_xchan = xchan_hash 
+			where abook_channel = %d and abook_xchan = '%s' and abook_self = 0 limit 1",
 			intval($uid),
-			dbesc($observer_xchan),
-			intval(ABOOK_FLAG_SELF)
+			dbesc($observer_xchan)
 		);
 
 		// If they're blocked - they can't read or write
  
-		if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED))
+		if(($x) && intval($x[0]['abook_blocked']))
 			return false;
 
-		if(($x) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))
+		if(($x) && (! $global_perms[$permission][2]) && intval($x[0]['abook_ignored']))
 			return false;
 
 		if(! $x) {
@@ -374,7 +372,7 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 		return true;
 	}
 
-	if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
+	if(intval($x[0]['abook_pending'])) {
 		return false;
 	}
 

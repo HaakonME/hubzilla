@@ -324,7 +324,7 @@ function import_post(&$a) {
 		foreach($abooks as $abook) {
 			if($max_friends !== false && $friends > $max_friends)
 				continue;
-			if($max_feeds !== false && ($abook['abook_flags'] & ABOOK_FLAG_FEED) && $feeds > $max_feeds)
+			if($max_feeds !== false && intval($abook['abook_feed']) && ($feeds > $max_feeds))
 				continue;
 
 			unset($abook['abook_id']);
@@ -338,7 +338,7 @@ function import_post(&$a) {
 				. "')" );
 
 			$friends ++;
-			if($abook['abook_flags'] & ABOOK_FLAG_FEED)
+			if(intval($abook['abook_feed']))
 				$feeds ++;
 		}
 	}

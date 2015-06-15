@@ -42,9 +42,8 @@ function collect_recipients($item, &$private_envelope) {
 		// as that would allow the denied person to see the post by logging out.
 
 		if((! $item['allow_cid']) && (! $item['allow_gid'])) {
-			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d)>0 ",
-				intval($item['uid']),
-				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
+			$r = q("select * from abook where abook_channel = %d and abook_self = 0 and abook_pending = 0 and abook_archived = 0 ",
+				intval($item['uid'])
 			);
 
 			if($r) {
@@ -82,9 +81,8 @@ function collect_recipients($item, &$private_envelope) {
 		//$sys = get_sys_channel();
 
 		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {
-			$r = q("select abook_xchan, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d)>0 ",
-				intval($item['uid']),
-				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
+			$r = q("select abook_xchan, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_self = 0 and abook_pending = 0 and abook_archived = 0 ",
+				intval($item['uid'])
 			);
 			if($r) {
 
@@ -3281,7 +3279,7 @@ function check_item_source($uid, $item) {
 	if(! $r)
 		return false;
 
-	$x = q("select abook_their_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+	$x = q("select abook_their_perms, abook_feed from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
 		intval($uid),
 		dbesc($item['owner_xchan'])
 	);
@@ -3292,7 +3290,7 @@ function check_item_source($uid, $item) {
 	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
 		return false;
 
-	if($item['item_private'] && (! ($x[0]['abook_flags'] & ABOOK_FLAG_FEED)))
+	if($item['item_private'] && (! intval($x[0]['abook_feed'])))
 		return false;
 
 	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
@@ -4491,7 +4489,7 @@ function zot_feed($uid,$observer_hash,$arr) {
 	if(is_sys_channel($uid)) {
 		$r = q("SELECT parent, created, postopts from item
 			WHERE uid != %d
-			and uid in (" . stream_perms_api_uids(PERMS_PUBLIC,10,1) . ") $item_normal
+			$item_normal
 			AND item_wall = 1
 			and item_private = 0 $sql_extra GROUP BY parent ORDER BY created ASC $limit",
 			intval($uid)
@@ -4611,7 +4609,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	}
 	elseif($arr['cid'] && $uid) {
 
-		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ")>0 limit 1",
+		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and abook_blocked = 0 limit 1",
 			intval($arr['cid']),
 			intval(local_channel())
 		);
@@ -4735,10 +4733,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
                 left join abook on item.author_xchan = abook.abook_xchan
                 WHERE $item_uids $item_restrict
                 AND item.parent = item.id
-                and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+                and (abook.abook_blocked = 0 or abook.abook_flags is null)
                 $sql_extra3 $sql_extra $sql_nets
-                ORDER BY item.$ordering DESC $pager_sql ",
-                intval(ABOOK_FLAG_BLOCKED)
+                ORDER BY item.$ordering DESC $pager_sql "
             );
 
         }
@@ -4747,9 +4744,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
             $r = q("SELECT item.parent AS item_id FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
                 WHERE $item_uids $item_restrict $simple_update
-                and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-                $sql_extra3 $sql_extra $sql_nets ",
-                intval(ABOOK_FLAG_BLOCKED)
+                and (abook.abook_blocked = 0 or abook.abook_flags is null)
+                $sql_extra3 $sql_extra $sql_nets "
             );
         }
 

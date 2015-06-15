@@ -90,13 +90,12 @@ function acl_init(&$a){
 		// Getting info from the abook is better for local users because it contains info about permissions
 		if(local_channel()) {
 			if($extra_channels_sql != '')
-				$extra_channels_sql = " OR (abook_channel IN ($extra_channels_sql)) and not (abook_flags & ". intval(ABOOK_FLAG_HIDDEN) . ') > 0';
+				$extra_channels_sql = " OR (abook_channel IN ($extra_channels_sql)) and abook_hidden = 0 ";
 
 			$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE (abook_channel = %d $extra_channels_sql) AND not ( abook_flags & %d )>0 and xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
-				intval(local_channel()),
-				intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
+				WHERE (abook_channel = %d $extra_channels_sql) AND abook_blocked = 0 and abook_pending = 0 and abook_archived = 0 and xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
+				intval(local_channel())
 			);
 
 		}
@@ -119,9 +118,7 @@ function acl_init(&$a){
 
 				$r2 = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 					FROM abook left join xchan on abook_xchan = xchan_hash 
-					WHERE abook_channel IN ($extra_channels_sql) $known_hashes_sql AND not ( abook_flags & %d )>0 and xchan_deleted = 0 $sql_extra2 order by  $order_extra2 xchan_name asc" ,
-					intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_HIDDEN)
-				);
+					WHERE abook_channel IN ($extra_channels_sql) $known_hashes_sql AND abook_blocked = 0 and abook_pending = 0 and abook_archived = 0 and abook_hidden = 0 and xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc");
 				if($r2)
 					$r = array_merge($r,$r2);
 
@@ -220,7 +217,7 @@ function acl_init(&$a){
 					"xid"      => $g['hash'],
 					"link"     => $g['nick'],
 					"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
-					"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
+					"self"     => (intval($g['abook_self']) ? 'abook-self' : ''),
 					"taggable" => 'taggable',
 					"label"    => t('network')
 				);
@@ -233,7 +230,7 @@ function acl_init(&$a){
 				"xid"      => $g['hash'],
 				"link"     => $g['nick'],
 				"nick"     => (($g['nick']) ? substr($g['nick'],0,strpos($g['nick'],'@')) : t('RSS')),
-				"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
+				"self"     => (intval($g['abook_self']) ? 'abook-self' : ''),
 				"taggable" => '',
 				"label"    => '',
 			);

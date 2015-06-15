@@ -37,9 +37,8 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	// check service class limits
 
-	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d)>0 ",
-		intval($uid),
-		intval(ABOOK_FLAG_SELF)
+	$r = q("select count(*) as total from abook where abook_channel = %d and abook_self = 0 ",
+		intval($uid)
 	);
 	if($r)
 		$total_channels = $r[0]['total'];
@@ -205,9 +204,8 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			return $result;
 		}
 
-		$r = q("select count(*) as total from abook where abook_account = %d and ( abook_flags & %d )>0",
-			intval($aid),
-			intval(ABOOK_FLAG_FEED)
+		$r = q("select count(*) as total from abook where abook_account = %d and abook_feed = 1 ",
+			intval($aid)
 		);
 		if($r)
 			$total_feeds = $r[0]['total'];
@@ -239,13 +237,13 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		if($closeness === false)
 			$closeness = 80;
 
-		$r = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_flags, abook_their_perms, abook_my_perms, abook_created, abook_updated )
+		$r = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_feed, abook_their_perms, abook_my_perms, abook_created, abook_updated )
 			values( %d, %d, %d, '%s', %d, %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
 			intval($closeness),
 			dbesc($xchan_hash),
-			intval(($is_http) ? ABOOK_FLAG_FEED : 0),
+			intval(($is_http) ? 1 : 0),
 			intval(($is_http) ? $their_perms|PERMS_R_STREAM|PERMS_A_REPUBLISH : $their_perms),
 			intval($my_perms),
 			dbesc(datetime_convert()),

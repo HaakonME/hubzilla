@@ -155,9 +155,8 @@ function widget_follow($args) {
 
 	$a = get_app();
 	$uid =$a->channel['channel_id'];
-	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d)>0 ",
-		intval($uid),
-		intval(ABOOK_FLAG_SELF)
+	$r = q("select count(*) as total from abook where abook_channel = %d and abook_self = 0 ",
+		intval($uid)
 	);
 	if($r)
 		$total_channels = $r[0]['total'];	
@@ -473,9 +472,8 @@ function widget_settings_menu($arr) {
 
 	$role = get_pconfig(local_channel(),'system','permissions_role');
 
-	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d )>0 limit 1",
-		intval(local_channel()),
-		intval(ABOOK_FLAG_SELF)
+	$abk = q("select abook_id from abook where abook_channel = %d and abook_self = 1 limit 1",
+		intval(local_channel())
 	);
 	if($abk)
 		$abook_self_id = $abk[0]['abook_id'];

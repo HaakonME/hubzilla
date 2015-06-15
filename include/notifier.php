@@ -100,10 +100,9 @@ function notifier_run($argv, $argc){
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
 			left join hubloc on hubloc_hash = abook_xchan
-			where abook_id = %d and not ( abook_flags & %d ) > 0 
+			where abook_id = %d and abook_self = 0
 			and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0 limit 1",
 			intval($item_id),
-			intval(ABOOK_FLAG_SELF),
 			intval(HUBLOC_FLAGS_DELETED),
 			intval(HUBLOC_OFFLINE)
 		);

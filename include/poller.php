@@ -293,13 +293,11 @@ function poller_run($argv, $argc){
 
 	$randfunc = db_getfunc('RAND');
 	
-	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_xchan, abook_channel, xchan_network
-		FROM abook LEFT JOIN xchan on abook_xchan = xchan_hash LEFT JOIN account on abook_account = account_id
+	$contacts = q("SELECT * FROM abook LEFT JOIN xchan on abook_xchan = xchan_hash 
+		LEFT JOIN account on abook_account = account_id
+		where abook_self = 0
 		$sql_extra 
-		AND (( abook_flags & %d ) > 0 OR  ( abook_flags = %d )) 
 		AND (( account_flags = %d ) OR ( account_flags = %d )) $abandon_sql ORDER BY $randfunc",
-		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED|ABOOK_FLAG_FEED),
-		intval(0),
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)     // FIXME
 
@@ -309,15 +307,12 @@ function poller_run($argv, $argc){
 
 		foreach($contacts as $contact) {
 
-			if($contact['abook_flags'] & ABOOK_FLAG_SELF)
-				continue;
-
 			$update  = false;
 
 			$t = $contact['abook_updated'];
 			$c = $contact['abook_connected'];
 
-			if($contact['abook_flags'] & ABOOK_FLAG_FEED) {
+			if(intval($contact['abook_feed'])) {
 				$min = service_class_fetch($contact['abook_channel'],'minimum_feedcheck_minutes');
 				if(! $min)
 					$min = intval(get_config('system','minimum_feedcheck_minutes'));
@@ -356,15 +351,14 @@ function poller_run($argv, $argc){
 				// He's dead, Jim
 
 				if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 30 day")) > 0) {	
-					$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d",
-						intval(ABOOK_FLAG_ARCHIVED),
+					$r = q("update abook set abook_archived = 1 where abook_id = %d",
 						intval($contact['abook_id'])
 					);
 					$update = false;
 					continue;
 				}
 
-				if($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) {
+				if(intval($contact['abook_archived'])) {
 					$update = false;
 					continue;
 				}
@@ -385,7 +379,7 @@ function poller_run($argv, $argc){
 
 			}
 
-			if($contact['abook_flags'] & (ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_IGNORED))
+			if(intval($contact['abook_pending']) || intval($contact['abook_archived']) || intval($contact['abook_ignored']) || intval($contact['abook_blocked']))
 				continue;
 
 			if((! $update) && (! $force))

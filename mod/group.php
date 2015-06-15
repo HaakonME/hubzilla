@@ -117,11 +117,9 @@ function group_content(&$a) {
 
 		check_form_security_token_ForbiddenOnErr('group_member_change', 't');
 
-		$r = q("SELECT abook_xchan from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and xchan_deleted = 0 and not (abook_flags & %d)>0 and not (abook_flags & %d)>0 limit 1",
+		$r = q("SELECT abook_xchan from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and xchan_deleted = 0 and abook_blocked = 0 and abook_pending = 0 limit 1",
 			dbesc(base64url_decode(argv(2))),
-			intval(local_channel()),
-			intval(ABOOK_FLAG_BLOCKED),
-			intval(ABOOK_FLAG_PENDING)
+			intval(local_channel())
 		);
 		if(count($r))
 			$change = base64url_decode(argv(2));
@@ -202,7 +200,7 @@ function group_content(&$a) {
 	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 	foreach($members as $member) {
 		if($member['xchan_url']) {
-			$member['archived'] = (($member['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? true : false);
+			$member['archived'] = (intval($member['abook_archived']) ? true : false);
 			$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . base64url_encode($member['xchan_hash']) . '\',\'' . $sec_token . '\'); return false;';
 			$groupeditor['members'][] = micropro($member,true,'mpgroup', $textmode);
 		}
@@ -210,17 +208,15 @@ function group_content(&$a) {
 			group_rmv_member(local_channel(),$group['name'],$member['xchan_hash']);
 	}
 
-	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND  not (abook_flags & %d)>0 and xchan_deleted = 0 and not (abook_flags & %d)>0 order by xchan_name asc",
-		intval(local_channel()),
-		intval(ABOOK_FLAG_BLOCKED),
-		intval(ABOOK_FLAG_PENDING)
+	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND  abook_blocked = 0 and abook_pending = 0 and xchan_deleted = 0 order by xchan_name asc",
+		intval(local_channel())
 	);
 
 	if(count($r)) {
 		$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);
 		foreach($r as $member) {
 			if(! in_array($member['xchan_hash'],$preselected)) {
-				$member['archived'] = (($member['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? true : false);
+				$member['archived'] = (intval($member['abook_archived']) ? true : false);
 				$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . base64url_encode($member['xchan_hash']) . '\',\'' . $sec_token . '\'); return false;';
 				$groupeditor['contacts'][] = micropro($member,true,'mpall', $textmode);
 			}

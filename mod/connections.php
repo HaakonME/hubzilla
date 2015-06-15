@@ -71,21 +71,18 @@ function connections_post(&$a) {
 		}
 	}			
 
-	$abook_flags = $orig_record[0]['abook_flags'];
 	$new_friend = false;
 
-
-	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
-		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
+	if(($_REQUEST['pending']) && intval($orig_record[0]['abook_pending'])) {
 		$new_friend = true;
 	}
 
-	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
+	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d
 		where abook_id = %d AND abook_channel = %d",
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
-		intval($abook_flags),
+		intval(1 - intval($new_friend)),
 		intval($contact_id),
 		intval(local_channel())
 	);
@@ -96,7 +93,7 @@ function connections_post(&$a) {
 		notice( t('Failed to update connection record.') . EOL);
 
 	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms 
-		&& (! ($a->data['abook']['abook_flags'] & ABOOK_FLAG_SELF))) {
+		&& (! intval($a->data['abook']['abook_self']))) {
 		proc_run('php', 'include/notifier.php', 'permission_update', $contact_id);
 	}
 
@@ -182,45 +179,43 @@ function connections_content(&$a) {
 	if(! $_REQUEST['aj'])
 		$_SESSION['return_url'] = $a->query_string;
 
-	$search_flags = 0;
+	$search_flags = '';
 	$head = '';
 
 	if(argc() == 2) {
 		switch(argv(1)) {
 			case 'blocked':
-				$search_flags = ABOOK_FLAG_BLOCKED;
+				$search_flags = " and abook_blocked = 1 ";
 				$head = t('Blocked');
 				$blocked = true;
 				break;
 			case 'ignored':
-				$search_flags = ABOOK_FLAG_IGNORED;
+				$search_flags = " and abook_ignored = 1 ";
 				$head = t('Ignored');
 				$ignored = true;
 				break;
 			case 'hidden':
-				$search_flags = ABOOK_FLAG_HIDDEN;
+				$search_flags = " and abook_hidden = 1 ";
 				$head = t('Hidden');
 				$hidden = true;
 				break;
 			case 'archived':
-				$search_flags = ABOOK_FLAG_ARCHIVED;
+				$search_flags = " and abook_archived = 1 ";
 				$head = t('Archived');
 				$archived = true;
 				break;
 			case 'pending':
-				$search_flags = ABOOK_FLAG_PENDING;
+				$search_flags = " and abook_pending = 1 ";
 				$head = t('New');
 				$pending = true;
 				nav_set_selected('intros');
 				break;
 			case 'ifpending':
-				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d)>0 and not ((abook_flags & %d)>0 or xchan_deleted = 1 or xchan_orphan = 1)",
-					intval(local_channel()),
-					intval(ABOOK_FLAG_PENDING),
-					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED)
+				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and abook_pending = 1 and abook_self = 0 and abook_ignored = 0 and xchan_deleted = 0 and xchan_orphan = 0)",
+					intval(local_channel())
 				);
 				if($r && $r[0]['total']) {
-					$search_flags = ABOOK_FLAG_PENDING;
+					$search_flags = " and abook_pending = 1 ";
 					$head = t('New');
 					$pending = true;
 					nav_set_selected('intros');
@@ -228,7 +223,7 @@ function connections_content(&$a) {
 				}
 				else {
 					$head = t('All');
-					$search_flags = 0;
+					$search_flags = '';
 					$all = true;
 					$a->argc = 1;
 					unset($a->argv[1]);
@@ -236,7 +231,7 @@ function connections_content(&$a) {
 				nav_set_selected('intros');
 				break;
 //			case 'unconnected':
-//				$search_flags = ABOOK_FLAG_UNCONNECTED;
+//				$search_flags = " and abook_unconnected = 1 ";
 //				$head = t('Unconnected');
 //				$unconnected = true;
 //				break;
@@ -244,19 +239,19 @@ function connections_content(&$a) {
 			case 'all':
 				$head = t('All');
 			default:
-				$search_flags = 0;
+				$search_flags = '';
 				$all = true;
 				break;
 
 		}
 
-		$sql_extra = (($search_flags) ? " and ( abook_flags & " . $search_flags . " )>0 " : "");
+		$sql_extra = $search_flags;
 		if(argv(1) === 'pending')
-			$sql_extra .= " and not ( abook_flags & " . ABOOK_FLAG_IGNORED . " )>0 ";
+			$sql_extra .= " and abook_ignored = 0 ";
 
 	}
 	else {
-		$sql_extra = " and not ( abook_flags & " . ABOOK_FLAG_BLOCKED . " )>0 ";
+		$sql_extra = " and abook_blocked = 0 ";
 		$unblocked = true;
 	}
 
@@ -342,9 +337,8 @@ function connections_content(&$a) {
 	}
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
-		where abook_channel = %d and not (abook_flags & %d)>0 and xchan_deleted = 0 and xchan_orphan = 0 $sql_extra $sql_extra2 ",
-		intval(local_channel()),
-		intval(ABOOK_FLAG_SELF)
+		where abook_channel = %d and abook_self = 0 and xchan_deleted = 0 and xchan_orphan = 0 $sql_extra $sql_extra2 ",
+		intval(local_channel())
 	);
 	if($r) {
 		$a->set_pager_total($r[0]['total']);
@@ -352,9 +346,8 @@ function connections_content(&$a) {
 	}
 
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
-		WHERE abook_channel = %d and not (abook_flags & %d)>0 and xchan_deleted = 0 and xchan_orphan = 0 $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d OFFSET %d ",
+		WHERE abook_channel = %d and abook_self = 0 and xchan_deleted = 0 and xchan_orphan = 0 $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d OFFSET %d ",
 		intval(local_channel()),
-		intval(ABOOK_FLAG_SELF),
 		intval($a->pager['itemspage']),
 		intval($a->pager['start'])
 	);
@@ -374,7 +367,7 @@ function connections_content(&$a) {
 					'thumb' => $rr['xchan_photo_m'], 
 					'name' => $rr['xchan_name'],
 					'username' => $rr['xchan_name'],
-					'classes' => (($rr['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'archived' : ''),
+					'classes' => (intval($rr['abook_archived']) ? 'archived' : ''),
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
 					'edit' => t('Edit'),
 					'url' => chanlink_url($rr['xchan_url']),

@@ -363,7 +363,7 @@ function create_identity($arr) {
 			|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 			|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
 
-	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_flags, abook_my_perms )
+	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_self, abook_my_perms )
 		values ( %d, %d, '%s', %d, '%s', '%s', %d, %d ) ",
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
@@ -371,7 +371,7 @@ function create_identity($arr) {
 		intval(0),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
-		intval(ABOOK_FLAG_SELF),
+		intval(1),
 		intval($myperms)
 	);
 
@@ -1555,9 +1555,8 @@ function notifications_on($channel_id,$value) {
 
 function get_channel_default_perms($uid) {
 
-	$r = q("select abook_my_perms from abook where abook_channel = %d and (abook_flags & %d) > 0 limit 1",
-		intval($uid),
-		intval(ABOOK_FLAG_SELF)
+	$r = q("select abook_my_perms from abook where abook_channel = %d and abook_self = 1 limit 1",
+		intval($uid)
 	);
 	if($r)
 		return $r[0]['abook_my_perms'];

@@ -28,13 +28,9 @@ function onepoll_run($argv, $argc){
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
-		AND (( abook_flags & %d )>0 OR ( abook_flags = %d ))
-		AND NOT ( abook_flags & %d )>0
+		and abook_pending = 0 and abook_archived = 0 and abook_blocked = 0 and abook_ignored = 0
 		AND (( account_flags = %d ) OR ( account_flags = %d )) limit 1",
 		intval($contact_id),
-		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED|ABOOK_FLAG_FEED),
-		intval(0),
-		intval(ABOOK_FLAG_ARCHIVED|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_IGNORED),
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)
 	);

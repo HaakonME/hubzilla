@@ -105,10 +105,9 @@ function public_content(&$a, $update = 0, $load = false) {
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE true $uids $item_normal
 				AND item.parent = item.id
-				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+				and (abook.abook_blocked = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
-				ORDER BY $ordering DESC $pager_sql ",
-				intval(ABOOK_FLAG_BLOCKED)
+				ORDER BY $ordering DESC $pager_sql "
 			);
 
 
@@ -119,9 +118,8 @@ function public_content(&$a, $update = 0, $load = false) {
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE true $uids $item_normal
 				AND item.parent = item.id $simple_update
-				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra3 $sql_extra $sql_nets",
-				intval(ABOOK_FLAG_BLOCKED)
+				and (abook.abook_blocked = 0 or abook.abook_flags is null)
+				$sql_extra3 $sql_extra $sql_nets"
 			);
 			$_SESSION['loadtime'] = datetime_convert();
 		}

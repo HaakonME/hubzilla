@@ -117,9 +117,8 @@ function zfinger_init(&$a) {
 	}
 	else {
 		// check if it has characteristics of a public forum based on custom permissions.
-		$t = q("select abook_my_perms from abook where abook_channel = %d and (abook_flags & %d)>0 limit 1",
-			intval($e['channel_id']),
-			intval(ABOOK_FLAG_SELF)
+		$t = q("select abook_my_perms from abook where abook_channel = %d and abook_self = 1 limit 1",
+			intval($e['channel_id'])
 		);
 		if($t && ($t[0]['abook_my_perms'] & PERMS_W_TAGWALL))
 			$public_forum = true;

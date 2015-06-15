@@ -79,7 +79,7 @@ function connedit_post(&$a) {
 
 	call_hooks('contact_edit_post', $_POST);
 
-	if($orig_record[0]['abook_flags'] & ABOOK_FLAG_SELF) {
+	if(intval($orig_record[0]['abook_self'])) {
 		$autoperms = intval($_POST['autoperms']);
 		$is_self = true;
 	}
@@ -174,8 +174,7 @@ function connedit_post(&$a) {
 		}	
 	}
 
-	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
-		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
+	if(($_REQUEST['pending']) && intval($orig_record[0]['abook_pending'])) {
 		$new_friend = true;
 		if(! $abook_my_perms) {
 
@@ -190,12 +189,12 @@ function connedit_post(&$a) {
 		}
 	}
 
-	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
+	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d
 		where abook_id = %d AND abook_channel = %d",
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
-		intval($abook_flags),
+		intval(1 - intval($new_friend)),
 		intval($contact_id),
 		intval(local_channel())
 	);
@@ -216,7 +215,7 @@ function connedit_post(&$a) {
 		notice( t('Failed to update connection record.') . EOL);
 
 	if($a->poi && $a->poi['abook_my_perms'] != $abook_my_perms 
-		&& (! ($a->poi['abook_flags'] & ABOOK_FLAG_SELF))) {
+		&& (! intval($a->poi['abook_self']))) {
 		proc_run('php', 'include/notifier.php', 'permission_update', $contact_id);
 	}
 
@@ -236,8 +235,7 @@ function connedit_post(&$a) {
 		$pr = q("select * from profile where uid = %d and is_default = 1 and hide_friends = 0",
 			intval($channel['channel_id'])
 		);
-		if(($pr) && (! ($abook_flags & ABOOK_FLAG_HIDDEN)) 
-			&& (intval(get_pconfig($channel['channel_id'],'system','post_newfriend')))) {
+		if(($pr) && (! intval($orig_record[0]['abook_hidden'])) && (intval(get_pconfig($channel['channel_id'],'system','post_newfriend')))) {
 			$xarr = array();
 			$xarr['verb'] = ACTIVITY_FRIEND;
 			$xarr['item_wall'] = 1;
@@ -367,10 +365,9 @@ function connedit_content(&$a) {
 		$cmd = argv(2);
 
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d )>0 LIMIT 1",
+			WHERE abook_id = %d AND abook_channel = %d AND abook_self = 0 LIMIT 1",
 			intval($contact_id),
-			intval(local_channel()),
-			intval(ABOOK_FLAG_SELF)
+			intval(local_channel())
 		);
 
 		if(! count($orig_record)) {
@@ -394,7 +391,7 @@ function connedit_content(&$a) {
 
 		if($cmd === 'block') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
+				info((intval($orig_record[0]['abook_blocked']) 
 					? t('Channel has been unblocked') 
 					: t('Channel has been blocked')) . EOL );
 				connedit_clone($a);
@@ -406,7 +403,7 @@ function connedit_content(&$a) {
 
 		if($cmd === 'ignore') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_IGNORED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_IGNORED) 
+				info((intval($orig_record[0]['abook_ignored'])
 					? t('Channel has been unignored') 
 					: t('Channel has been ignored')) . EOL );
 				connedit_clone($a);
@@ -418,7 +415,7 @@ function connedit_content(&$a) {
 
 		if($cmd === 'archive') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_ARCHIVED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_ARCHIVED) 
+				info((intval($orig_record[0]['abook_archived']) 
 					? t('Channel has been unarchived') 
 					: t('Channel has been archived')) . EOL );
 				connedit_clone($a);
@@ -430,7 +427,7 @@ function connedit_content(&$a) {
 
 		if($cmd === 'hide') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_HIDDEN)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_HIDDEN) 
+				info((intval($orig_record[0]['abook_hidden'])
 					? t('Channel has been unhidden') 
 					: t('Channel has been hidden')) . EOL );
 				connedit_clone($a);
@@ -444,9 +441,9 @@ function connedit_content(&$a) {
 		// Though maybe somebody will want this eventually (??)
 
 		if($cmd === 'approve') {
-			if($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
+			if(intval($orig_record[0]['abook_pending'])) {
 				if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_PENDING)) {
-					info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) 
+					info((intval($orig_record[0]['abook_pending'])
 						? t('Channel has been approved') 
 						: t('Channel has been unapproved')) . EOL );
 					connedit_clone($a);
@@ -516,28 +513,28 @@ function connedit_content(&$a) {
 
 		$buttons = array(
 			array(
-				'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
+				'label' => (intval($contact['abook_blocked']) ? t('Unblock') : t('Block')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
-				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
+				'sel'   => (intval($contact['abook_blocked']) ? 'active' : ''),
 				'title' => t('Block (or Unblock) all communications with this connection'),
 			),
 
 			array(
-				'label' => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('Unignore') : t('Ignore')),
+				'label' => (intval($contact['abook_ignored']) ? t('Unignore') : t('Ignore')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
-				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
+				'sel'   => (intval($contact['abook_ignored']) ? 'active' : ''),
 				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
 			),
 			array(
-				'label' => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('Unarchive') : t('Archive')),
+				'label' => (intval($contact['abook_archived']) ? t('Unarchive') : t('Archive')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
-				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
+				'sel'   => (intval($contact['abook_archived']) ? 'active' : ''),
 				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
 			),
 			array(
-				'label' => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('Unhide') : t('Hide')),
+				'label' => (intval($contact['abook_hidden']) ? t('Unhide') : t('Hide')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
-				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
+				'sel'   => (intval($contact['abook_hidden']) ? 'active' : ''),
 				'title' => t('Hide or Unhide this connection from your other connections'),
 			),
 
@@ -552,7 +549,7 @@ function connedit_content(&$a) {
 
 		$self = false;
 
-		if(! ($contact['abook_flags'] & ABOOK_FLAG_SELF)) {
+		if(! intval($contact['abook_self'])) {
 			$tab_tpl = get_markup_template('common_tabs.tpl');
 			$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
 		}
@@ -671,7 +668,7 @@ function connedit_content(&$a) {
 			'$tabs'           => $t,
 			'$tab_str'        => $tab_str,
 			'$perms_step1'    => t('Default permissions for your channel type have (just) been applied. They have not yet been submitted. Please review the permissions on this page and make any desired changes at this time. This new connection may <em>not</em> be able to communicate with you until you submit this page, which will install and apply the selected permissions.'),
-			'$is_pending'     => (($contact['abook_flags'] & ABOOK_FLAG_PENDING) ? 1 : ''),
+			'$is_pending'     => (intval($contact['abook_pending']) ? 1 : ''),
 			'$unapproved'     => $unapproved,
 			'$inherited'      => t('inherited'),
 			'$approve'        => t('Approve this connection'),

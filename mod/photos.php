@@ -390,8 +390,9 @@ function photos_post(&$a) {
 	 */
 
 	$_REQUEST['source'] = 'photos';
+	require_once('include/attach.php');
 
-	$r = photo_upload($a->channel,$a->get_observer(), $_REQUEST);
+	$r = attach_store($a->channel,get_observer_hash(), $_REQUEST);
 	if(! $r['success']) {
 		notice($r['message'] . EOL);
 	}		

@@ -216,7 +216,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	elseif($cid) {
 
-		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") > 0 limit 1",
+		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and abook_blocked = 0 limit 1",
 			intval($cid),
 			intval(local_channel())
 		);
@@ -405,11 +405,10 @@ function network_content(&$a, $update = 0, $load = false) {
 		$items = q("SELECT item.*, item.id AS item_id, received FROM item
 			left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 			WHERE true $uids $item_normal
-			and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+			and (abook.abook_blocked = 0 or abook.abook_flags is null)
 			$simple_update
 			$sql_extra $sql_nets
-			ORDER BY item.received DESC $pager_sql ",
-			intval(ABOOK_FLAG_BLOCKED)
+			ORDER BY item.received DESC $pager_sql "
 		);
 
 		require_once('include/items.php');
@@ -435,10 +434,9 @@ function network_content(&$a, $update = 0, $load = false) {
 				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 				WHERE true $uids $item_normal
 				AND item.parent = item.id
-				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+				and (abook.abook_blocked = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
-				ORDER BY $ordering DESC $pager_sql ",
-				intval(ABOOK_FLAG_BLOCKED)
+				ORDER BY $ordering DESC $pager_sql "
 			);
 
 		}
@@ -447,9 +445,8 @@ function network_content(&$a, $update = 0, $load = false) {
 			$r = q("SELECT item.parent AS item_id FROM item
 				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 				WHERE true $uids $item_normal $simple_update
-				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra3 $sql_extra $sql_nets ",
-				intval(ABOOK_FLAG_BLOCKED)
+				and (abook.abook_blocked = 0 or abook.abook_flags is null)
+				$sql_extra3 $sql_extra $sql_nets "
 			);
 			$_SESSION['loadtime'] = datetime_convert();
 		}

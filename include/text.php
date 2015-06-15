@@ -814,19 +814,19 @@ function contact_block() {
 	$is_owner = ((local_channel() && local_channel() == $a->profile['uid']) ? true : false);
 	$sql_extra = '';
 
-	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
+	$abook_flags = " and abook_pending = 0 and abook_self = 0 ";
 
 	if(! $is_owner) {
-		$abook_flags = $abook_flags | ABOOK_FLAG_HIDDEN;
+		$abook_flags .= " and abook_hidden = 0 ";
 		$sql_extra = " and xchan_hidden = 0 ";
 	}
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
 
-	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and not ( abook_flags & %d )>0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra",
-			intval($a->profile['uid']),
-			intval($abook_flags)
+	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d
+		$abook_flags and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra",
+		intval($a->profile['uid'])
 	);
 	if(count($r)) {
 		$total = intval($r[0]['total']);
@@ -838,9 +838,8 @@ function contact_block() {
 		
 		$randfunc = db_getfunc('RAND');
 	
-		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d)>0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra ORDER BY $randfunc LIMIT %d",
+		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d $abook_flags and abook_archived = 0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra ORDER BY $randfunc LIMIT %d",
 			intval($a->profile['uid']),
-			intval($abook_flags|ABOOK_FLAG_ARCHIVED),
 			intval($shown)
 		);
 
@@ -848,7 +847,7 @@ function contact_block() {
 			$contacts = sprintf( tt('%d Connection','%d Connections', $total),$total);
 			$micropro = Array();
 			foreach($r as $rr) {
-				$rr['archived'] = (($rr['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? true : false);
+				$rr['archived'] = (intval($rr['abook_archived']) ? true : false);
 				$micropro[] = micropro($rr,true,'mpfriend');
 			}
 		}

@@ -212,7 +212,7 @@ function poco_load($xchan = '', $url = null) {
 function count_common_friends($uid,$xchan) {
 
 	$r = q("SELECT count(xlink_id) as total from xlink where xlink_xchan = '%s' and xlink_static = 0 and xlink_link in
-		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 )",
+		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_self = 0 )",
 		dbesc($xchan),
 		dbesc($xchan),
 		intval($uid)
@@ -233,7 +233,7 @@ function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false
 		$sql_extra = " order by xchan_name asc "; 
 
 	$r = q("SELECT * from xchan left join xlink on xlink_link = xchan_hash where xlink_xchan = '%s' and xlink_static = 0 and xlink_link in
-		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d offset %d",
+		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_self = 0 ) $sql_extra limit %d offset %d",
 		dbesc($xchan),
 		dbesc($xchan),
 		intval($uid),
@@ -459,16 +459,16 @@ function poco($a,$extended = false) {
 	}
 
 	if($justme)
-		$sql_extra = " and ( abook_flags & " . ABOOK_FLAG_SELF . " )>0 ";
+		$sql_extra = " and abook_self = 1 ";
 	else
-		$sql_extra = " and abook_flags = 0 ";
+		$sql_extra = " and abook_self = 0 ";
 
 	if($cid)
-		$sql_extra = sprintf(" and abook_id = %d  and ( abook_flags & " . ABOOK_FLAG_HIDDEN . " ) = 0 ",intval($cid));
+		$sql_extra = sprintf(" and abook_id = %d and abook_hidden = 0 ",intval($cid));
 
 	if($system_mode) {
-		$r = q("SELECT count(*) as `total` from abook where ( abook_flags & " . ABOOK_FLAG_SELF . 
-			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') ");
+		$r = q("SELECT count(*) as `total` from abook where abook_self = 1 
+			and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') ");
 	}
 	else {
 		$r = q("SELECT count(*) as `total` from abook where abook_channel = %d 
@@ -491,8 +491,9 @@ function poco($a,$extended = false) {
 	$itemsPerPage = ((x($_GET,'count') && intval($_GET['count'])) ? intval($_GET['count']) : $totalResults);
 
 	if($system_mode) {
-		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where ( abook_flags & " . ABOOK_FLAG_SELF . 
-			" )>0 and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') limit %d offset %d ",
+		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_self = 1 
+			and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = '1') 
+			limit %d offset %d ",
 			intval($itemsPerPage),
 			intval($startIndex)
 		);

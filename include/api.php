@@ -318,7 +318,7 @@ require_once('include/items.php');
 				return False;
 			} else {
 				$user = local_channel();
-				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " )>0 ";
+				$extra_query = " AND abook_channel = %d AND abook_self = 1 ";
 			}
 			
 		}
@@ -336,7 +336,7 @@ require_once('include/items.php');
 			return False;
 		}
 		
-		if($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF) {
+		if(intval($uinfo[0]['abook_self'])) {
 			$usr = q("select * from channel where channel_id = %d limit 1",
 				intval(api_user())
 			);
@@ -368,7 +368,7 @@ require_once('include/items.php');
 		// count friends
 		if($usr) {
 			$r = q("SELECT COUNT(abook_id) as `count` FROM abook
-					WHERE abook_channel = %d AND abook_flags = 0 ",
+					WHERE abook_channel = %d AND abook_self = 0 ",
 					intval($usr[0]['channel_id'])
 			);
 			$countfriends = $r[0]['count'];
@@ -381,7 +381,7 @@ require_once('include/items.php');
 		$starred = $r[0]['count'];
 	
 
-		if(! ($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF)) {
+		if(! intval($uinfo[0]['abook_self'])) {
 			$countfriends = 0;
 			$countfollowers = 0;
 			$starred = 0;
@@ -389,7 +389,7 @@ require_once('include/items.php');
 
 		$ret = Array(
 			'id' => intval($uinfo[0]['abook_id']),
-			'self' => (($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF) ? 1 : 0),
+			'self' => (intval($uinfo[0]['abook_self']) ? 1 : 0),
 			'uid' => intval($uinfo[0]['abook_channel']),
 			'guid' => $uinfo[0]['xchan_hash'],
 			'name' => (($uinfo[0]['xchan_name']) ? $uinfo[0]['xchan_name'] : substr($uinfo[0]['xchan_addr'],0,strpos($uinfo[0]['xchan_addr'],'@'))),
@@ -1929,7 +1929,7 @@ require_once('include/items.php');
 		if($qtype == 'followers')
 			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
-		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
+		$r = q("SELECT abook_id FROM abook where abook_self = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
 		);
 
@@ -2045,7 +2045,7 @@ require_once('include/items.php');
 		if($qtype == 'followers')
 			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
-		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
+		$r = q("SELECT abook_id FROM abook where abook_self = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
 		);
 

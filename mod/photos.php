@@ -539,7 +539,7 @@ function photos_content(&$a) {
 			$lockstate = (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock');
 		}
 
-		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl,false) : '');
+		$aclselect = (($_is_owner) ? populate_acl($channel_acl,false) : '');
 
 		$selname = (($datum) ? hex2bin($datum) : '');
 
@@ -557,7 +557,7 @@ function photos_content(&$a) {
 			'$albums' => $albums['albums'],
 			'$selname' => $selname,
 			'$permissions' => t('Permissions'),
-			'$aclselect' => $aclselect_e,
+			'$aclselect' => $aclselect,
 			'$lockstate' => $lockstate,
 			'$uploader' => $ret['addon_text'],
 			'$default' => (($ret['default_upload']) ? true : false),
@@ -900,7 +900,7 @@ function photos_content(&$a) {
 		if($can_post) {
 			$album_e = $ph[0]['album'];
 			$caption_e = $ph[0]['description'];
-			$aclselect_e = populate_acl($ph[0]);
+			$aclselect_e = (($_is_owner) ? populate_acl($ph[0]) : '');
 			$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
 			$_SESSION['album_return'] = bin2hex($ph[0]['album']);

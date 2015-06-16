@@ -342,10 +342,16 @@ function attach_by_hash_nodata($hash, $rev = 0) {
  */
 function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
+	require_once('include/photos.php');
+
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
 	$sql_options = '';
 	$source = (($arr) ? $arr['source'] : '');
+	$album = (($arr) ? $arr['album'] : '');
+	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
+
+logger('arr: ' . print_r($arr,true));
 
 	// This is currently used only in mod/wall_attach
 
@@ -432,7 +438,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$mimetype = z_mime_content_type($filename);
 	}
 
-	if(! isset($hash))
+	if(! $hash)
 		$hash = random_string();
 
 

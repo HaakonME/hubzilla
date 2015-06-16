@@ -217,31 +217,45 @@ function profile_photo_post(&$a) {
 		return; // NOTREACHED
 	}
 
-	$src      = $_FILES['userfile']['tmp_name'];
-	$filename = basename($_FILES['userfile']['name']);
-	$filesize = intval($_FILES['userfile']['size']);
-	$filetype = $_FILES['userfile']['type'];
-    if ($filetype=="") $filetype=guess_image_type($filename);
-    
-	$maximagesize = get_config('system','maximagesize');
 
-	if(($maximagesize) && ($filesize > $maximagesize)) {
-		notice( sprintf(t('Image exceeds size limit of %d'), $maximagesize) . EOL);
-		@unlink($src);
-		return;
+
+	$hash = photo_new_resource();
+	$smallest = 0;
+
+	require_once('include/attach.php');
+
+	$res = attach_store($a->get_channel(), get_observer_hash(), '', array('album' => t('Profile Photos'), 'hash' => $hash));
+
+	logger('attach_store: ' . print_r($res,true));
+
+	if($res && intval($res['data']['is_photo'])) {
+		$i = q("select * from photo where resource_id = '%s' and uid = %d order by scale",
+			dbesc($hash),
+			intval(local_channel())
+		);
+
+		if(! $i) {
+			notice( t('Image upload failed.') . EOL );
+			return;
+		}
+		foreach($i as $ii) {
+			if(intval($ii['scale']) < 2) {
+				$smallest = intval($ii['scale']);
+				$imagedata = $ii['data'];
+				$filetype = $ii['type'];
+			}
+		}
 	}
 
-	$imagedata = @file_get_contents($src);
+//	$imagedata = @file_get_contents($src);
 	$ph = photo_factory($imagedata, $filetype);
 
 	if(! $ph->is_valid()) {
 		notice( t('Unable to process image.') . EOL );
-		@unlink($src);
 		return;
 	}
-	$ph->orient($src);
-	@unlink($src);
-	return profile_photo_crop_ui_head($a, $ph);
+
+	return profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
 	
 }
 
@@ -253,7 +267,6 @@ function profile_photo_post(&$a) {
  */
 
 
-if(! function_exists('profile_photo_content')) {
 function profile_photo_content(&$a) {
 
 	if(! local_channel()) {
@@ -359,7 +372,7 @@ function profile_photo_content(&$a) {
 		return $o;
 	}
 	else {
-		$filename = $a->data['imagecrop'] . '-' . $a->data['imagecrop_resolution'] . '.' . $a->data['imagecrop_ext'];
+		$filename = $a->data['imagecrop'] . '-' . $a->data['imagecrop_resolution'];
 		$resolution = $a->data['imagecrop_resolution'];
 		$tpl = get_markup_template("cropbody.tpl");
 		$o .= replace_macros($tpl,array(
@@ -376,7 +389,7 @@ function profile_photo_content(&$a) {
 	}
 
 	return; // NOTREACHED
-}}
+}
 
 /* @brief Generate the UI for photo-cropping
  *
@@ -387,8 +400,8 @@ function profile_photo_content(&$a) {
  */
 
 
-if(! function_exists('profile_photo_crop_ui_head')) {
-function profile_photo_crop_ui_head(&$a, $ph){
+
+function profile_photo_crop_ui_head(&$a, $ph, $hash, $smallest){
 
 	$max_length = get_config('system','max_image_length');
 	if(! $max_length)
@@ -405,34 +418,10 @@ function profile_photo_crop_ui_head(&$a, $ph){
 		$height = $ph->getHeight();
 	}
 
-	$hash = photo_new_resource();
-	$smallest = 0;
-
-	$p = array('aid' => get_account_id(), 'uid' => local_channel(), 'resource_id' => $hash,
-		'filename' => $filename, 'album' => t('Profile Photos'), 'scale' => 0);
-	$r = $ph->save($p);
-
-	if($r)
-		info( t('Image uploaded successfully.') . EOL );
-	else
-		notice( t('Image upload failed.') . EOL );
-
-	if($width > 640 || $height > 640) {
-		$ph->scaleImage(640);
-		$p['scale'] = 1;
-
-		$r = $ph->save($p);
-
-		if($r === false)
-			notice( sprintf(t('Image size reduction [%s] failed.'),"640") . EOL );
-		else
-			$smallest = 1;
-	}
 
 	$a->data['imagecrop'] = $hash;
 	$a->data['imagecrop_resolution'] = $smallest;
-	$a->data['imagecrop_ext'] = $ph->getExt();
 	$a->page['htmlhead'] .= replace_macros(get_markup_template("crophead.tpl"), array());
 	return;
-}}
+}
 

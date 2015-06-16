@@ -61,9 +61,10 @@ function photo_init(&$a) {
 
 		$uid = $person;
 
-		$r = q("SELECT * FROM photo WHERE scale = %d AND uid = %d AND profile = 1 LIMIT 1",
+		$r = q("SELECT * FROM photo WHERE scale = %d AND uid = %d AND photo_usage = %d LIMIT 1",
 			intval($resolution),
-			intval($uid)
+			intval($uid),
+			intval(PHOTO_PROFILE)
 		);
 		if(count($r)) {
 			$data = dbunescbin($r[0]['data']);

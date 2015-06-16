@@ -347,6 +347,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$sql_options = '';
 	$source = (($arr) ? $arr['source'] : '');
 
+	$str_contact_allow = perms2str(((is_array($arr['contact_allow'])) ? $arr['contact_allow'] : explode(',',$arr['contact_allow'])));
+
 	if(! perm_is_allowed($channel_id,get_observer_hash(), 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
@@ -509,7 +511,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbescbin(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
-			dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
+			dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $str_contact_allow),
 			dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
 			dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
 			dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
@@ -517,7 +519,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	if($is_photo) {
-		$args = array( 'source' => $source, 'visible' => 0, 'contact_allow' => array($channel['channel_hash']), 'data' => @file_get_contents($src));
+		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'data' => @file_get_contents($src));
+		if($arr['contact_allow'])
+			$args['contact_allow'] = $arr['contact_allow'];
 		$p = photo_upload($channel,get_app()->get_observer(),$args);
 		if($p['success']) {
 			$ret['body'] = $p['body'];

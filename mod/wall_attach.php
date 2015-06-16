@@ -38,7 +38,7 @@ function wall_attach_post(&$a) {
 //		}
 //	}
 
-	$r = attach_store($channel,(($observer) ? $observer['xchan_hash'] : ''),array('source' => 'editor'));
+	$r = attach_store($channel,(($observer) ? $observer['xchan_hash'] : ''),array('source' => 'editor', 'visible' => 0, 'contact_allow' => array($channel['channel_hash'])));
 
 	if(! $r['success']) {
 		notice( $r['message'] . EOL);

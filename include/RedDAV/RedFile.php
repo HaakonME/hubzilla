@@ -155,7 +155,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		);
 
 		if($is_photo) {
-			$args = array( 'data' => @file_get_contents($fname));
+			$args = array( 'data' => @file_get_contents($fname), 'resource_id' => $this->data['hash']);
 			$p = photo_upload($c[0],$this->auth->observer,$args);
 		}
 

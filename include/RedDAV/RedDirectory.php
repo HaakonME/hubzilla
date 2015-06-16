@@ -298,7 +298,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		if($is_photo) {
 			require_once('include/photos.php');
-			$args = array( 'data' => @file_get_contents($f));
+			$args = array( 'data' => @file_get_contents($f), 'resource_id' => $hash);
 			$p = photo_upload($c[0],get_app()->get_observer(),$args);
 		}
 

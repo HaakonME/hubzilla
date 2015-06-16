@@ -347,6 +347,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$sql_options = '';
 	$source = (($arr) ? $arr['source'] : '');
 
+	// This is currently used only in mod/wall_attach
+
 	$str_contact_allow = perms2str(((is_array($arr['contact_allow'])) ? $arr['contact_allow'] : explode(',',$arr['contact_allow'])));
 
 	if(! perm_is_allowed($channel_id,get_observer_hash(), 'write_storage')) {

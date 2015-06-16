@@ -1086,6 +1086,21 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 							intval($uid)
 						);
 					}
+					$r = q("select id from attach where hash = '%s' and uid = %d limit 1",
+						dbesc($image_uri),
+						intval($uid)
+					);
+					if($r) {
+						q("update attach SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+							WHERE id = %d AND uid = %d",
+							dbesc($str_contact_allow),
+							dbesc($str_group_allow),
+							dbesc($str_contact_deny),
+							dbesc($str_group_deny),
+							intval($r[0]['id']),
+							intval($uid)
+						);
+					} 
 				}
 			}
 		}

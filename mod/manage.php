@@ -41,9 +41,8 @@ function manage_content(&$a) {
 	$channels = null;
 
 	if(local_channel()) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d )>0 order by channel_name ",
-			intval(get_account_id()),
-			intval(PAGE_REMOVED)
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and channel_removed = 0 order by channel_name ",
+			intval(get_account_id())
 		);
 
 		$account = get_app()->get_account();
@@ -124,9 +123,8 @@ function manage_content(&$a) {
 			}
 		}
 		
-	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d )>0",
-			intval(get_account_id()),
-			intval(PAGE_REMOVED)
+	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d and channel_removed = 0",
+			intval(get_account_id())
 		);
 		$limit = account_service_class_fetch(get_account_id(),'total_identities');
 		if($limit !== false) {

@@ -103,9 +103,7 @@ function post_init(&$a) {
 		// Any channel will do, providing it's currently active. We just need to have an 
 		// identity to attach to the packet we send back. So find one. 
 
-		$c = q("select * from channel where not ( channel_pageflags & %d )>0 limit 1",
-			intval(PAGE_REMOVED)
-		);
+		$c = q("select * from channel where channel_removed = 0 limit 1");
 
 		if (! $c) {
 			// nobody here

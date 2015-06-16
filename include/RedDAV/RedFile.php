@@ -97,9 +97,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		$size = 0;
 
 		// @todo only 3 values are needed
-		$c = q("SELECT * FROM channel WHERE channel_id = %d AND (channel_pageflags & %d) = 0 LIMIT 1",
-			intval($this->auth->owner_id),
-			intval(PAGE_REMOVED)
+		$c = q("SELECT * FROM channel WHERE channel_id = %d AND channel_removed = 0 LIMIT 1",
+			intval($this->auth->owner_id)
 		);
 
 		$is_photo = false;

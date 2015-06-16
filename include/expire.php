@@ -45,7 +45,7 @@ function expire_run($argv, $argc){
 		foreach ($r as $rr) {
 
 			// expire the sys channel separately
-			if ($rr['channel_pageflags'] & PAGE_SYSTEM)
+			if (intval($rr['channel_system']))
 				continue;
 
 			// service class default (if non-zero) over-rides the site default

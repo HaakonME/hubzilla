@@ -1092,9 +1092,7 @@ function zot_import($arr, $sender_url) {
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) > 0 ",
-					intval(PAGE_REMOVED)
-				);
+				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and channel_removed = 0 ");
 				if(! $r) {
 					logger('recips: no recipients on this site');
 					continue;
@@ -1308,13 +1306,13 @@ function public_recips($msg) {
 					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0
 					or (  " . $col . " & " . intval(PERMS_AUTHED)  . ") > 0 ) ";
 	} else {
-		$sql = " where (( " . $col . " & " . intval(PERMS_NETWORK) . " ) > 0
-					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0
-					or (  " . $col . " & " . intval(PERMS_AUTHED) . ") > 0 ) ";
+		$sql = " where ( " . $col . " = " . intval(PERMS_NETWORK) . " 
+					or " . $col . " = " . intval(PERMS_PUBLIC) . "
+					or " . $col . " = " . intval(PERMS_AUTHED) . " ) ";
 	}
 
 	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s'
-		and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0 ",
+		and channel_removed = 0 ",
 		dbesc($msg['notify']['sender']['hash'])
 	);
 
@@ -1325,10 +1323,10 @@ function public_recips($msg) {
 	// and is allowing this sender at least at a high level.
 
 	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id
-		where abook_xchan = '%s' and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0
-		and (( " . $col . " & " . intval(PERMS_SPECIFIC) . " ) > 0  and ( abook_my_perms & " . intval($field) . " ) > 0 )
-		OR   ( " . $col . " & " . intval(PERMS_PENDING) . " ) > 0
-		OR  (( " . $col . " & " . intval(PERMS_CONTACTS) . " ) > 0 and abook_pending = 0 )) ",
+		where abook_xchan = '%s' and channel_removed = 0
+		and (( " . $col . " = " . intval(PERMS_SPECIFIC) . " and ( abook_my_perms & " . intval($field) . " ) > 0 )
+		OR   " . $col . " = " . intval(PERMS_PENDING) . " 
+		OR  ( " . $col . " = " . intval(PERMS_CONTACTS) . " and abook_pending = 0 )) ",
 		dbesc($msg['notify']['sender']['hash'])
 	);
 
@@ -1357,7 +1355,7 @@ function public_recips($msg) {
 						$address = basename($tag['url']);
 						if($address) {
 							$z = q("select channel_hash as hash from channel where channel_address = '%s' 
-								and ( channel_pageflags & " . intval(PAGE_REMOVED) . " ) = 0 limit 1",
+								and channel_removed = 0 limit 1",
 								dbesc($address)
 							);
 							if($z)
@@ -1461,9 +1459,8 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and ( channel_pageflags & %d ) = 0 ",
-			dbesc($hash),
-			intval(PAGE_REMOVED)
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and channel_removed = 0 ",
+			dbesc($hash)
 		);
 		if($r) {
 			foreach($r as $rr)
@@ -1517,7 +1514,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		// for comments travelling upstream. Wait and catch them on the way down.
 		// They may have been blocked by the owner.
 
-		if(($channel['channel_pageflags'] & PAGE_SYSTEM) && (! $arr['item_private']) && (! $relay)) {
+		if(intval($channel['channel_system']) && (! $arr['item_private']) && (! $relay)) {
 			$local_public = true;
 
 			$r = q("select xchan_selfcensored from xchan where xchan_hash = '%s' limit 1",

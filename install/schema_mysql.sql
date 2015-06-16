@@ -221,6 +221,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_w_pages` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_a_republish` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_w_like` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_removed` tinyint(1) NOT NULL DEFAULT '0',
+  `channel_system` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`channel_id`),
   UNIQUE KEY `channel_address_unique` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),
@@ -257,6 +259,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_a_republish` (`channel_a_republish`),
   KEY `channel_dirdate` (`channel_dirdate`),
   KEY `channel_w_like` (`channel_w_like`),
+  KEY `channel_removed` (`channel_removed`),
+  KEY `channel_system` (`channel_system`),
   KEY `channel_lastpost` (`channel_lastpost`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

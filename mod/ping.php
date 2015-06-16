@@ -376,7 +376,7 @@ function ping_init(&$a) {
 	$t1 = dba_timer();
 
 	if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
-		$r = q("SELECT id, item_flags FROM item
+		$r = q("SELECT id, item_wall FROM item
 			WHERE item_unseen = 1 and uid = %d
 			$item_normal
 			and author_xchan != '%s'",

@@ -74,14 +74,10 @@ function zfinger_init(&$a) {
 			 */
 
 			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-				where ( channel_pageflags & %d )>0 order by channel_id limit 1",
-				intval(PAGE_SYSTEM)
-			);
+				where channel_system = 1 order by channel_id limit 1");
 			if(! $r) {
 				$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-					where not ( channel_pageflags & %d )>0 order by channel_id limit 1",
-					intval(PAGE_REMOVED)
-				);
+					where channel_removed = 0 order by channel_id limit 1");
 			}
 		} 
 	}
@@ -99,7 +95,7 @@ function zfinger_init(&$a) {
 
 	$id = $e['channel_id'];
 
-	$sys_channel     = (($e['channel_pageflags'] & PAGE_SYSTEM)   ? true : false);
+	$sys_channel     = (intval($e['channel_system'])   ? true : false);
 	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM)  ? true : false);
 	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)    ? true : false);
 	$censored        = (($e['channel_pageflags'] & PAGE_CENSORED) ? true : false);

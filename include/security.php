@@ -71,9 +71,8 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	/* This account has never created a channel. Send them to new_channel by default */
 
 	if($a->module === 'login') {
-		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d)>0",
-			intval($a->account['account_id']),
-			intval(PAGE_REMOVED)
+		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and channel_removed = 0 ",
+			intval($a->account['account_id'])
 		);
 		if(($r) && (! $r[0]['total']))
 			goaway(z_root() . '/new_channel');
@@ -94,20 +93,17 @@ function change_channel($change_channel) {
 	$ret = false;
 
 	if($change_channel) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d and not ( channel_pageflags & %d)>0 limit 1",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d and channel_removed = 0 limit 1",
 			intval($change_channel),
-			intval(get_account_id()),
-			intval(PAGE_REMOVED)
+			intval(get_account_id())
 		);
 
 		// It's not there.  Is this an administrator, and is this the sys channel?
 		if (is_developer()) {
 			if (! $r) {
 				if (is_site_admin()) {
-					$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and ( channel_pageflags & %d) and not (channel_pageflags & %d )>0 limit 1",
-						intval($change_channel),
-						intval(PAGE_SYSTEM),
-						intval(PAGE_REMOVED)
+					$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_system = 1 and channel_removed = 0 limit 1",
+						intval($change_channel)
 					);
 				}
 			}
@@ -404,9 +400,9 @@ function stream_perms_api_uids($perms = NULL, $limit = 0, $rand = 0 ) {
 	$random_sql = (($rand) ? " ORDER BY " . db_getfunc('RAND') . " " : '');
 	if(local_channel())
 		$ret[] = local_channel();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and ( channel_r_stream & %d )>0 and ( channel_pageflags & %d ) = 0 $random_sql $limit_sql ",
+	$r = q("select channel_id from channel where channel_r_stream > 0 and ( channel_r_stream & %d )>0 and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 $random_sql $limit_sql ",
 		intval($perms),
-		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
+		intval(PAGE_ADULT|PAGE_CENSORED)
 	);
 	if($r) {
 		foreach($r as $rr)
@@ -434,9 +430,9 @@ function stream_perms_xchans($perms = NULL ) {
 	if(local_channel())
 		$ret[] = get_observer_hash();
 
-	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0",
+	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0 and channel_system = 0 and channel_removed = 0 ",
 		intval($perms),
-		intval(PAGE_ADULT|PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
+		intval(PAGE_ADULT|PAGE_CENSORED)
 	);
 	if($r) {
 		foreach($r as $rr)

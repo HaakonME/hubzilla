@@ -200,9 +200,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$mimetype = z_mime_content_type($name);
 
-		$c = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d)>0 LIMIT 1",
-			intval($this->auth->owner_id),
-			intval(PAGE_REMOVED)
+		$c = q("SELECT * FROM channel WHERE channel_id = %d AND channel_removed = 0 LIMIT 1",
+			intval($this->auth->owner_id)
 		);
 
 		if (! $c) {
@@ -318,9 +317,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		$r = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d)>0 LIMIT 1",
-			intval($this->auth->owner_id),
-			intval(PAGE_REMOVED)
+		$r = q("SELECT * FROM channel WHERE channel_id = %d AND channel_removed = 0 LIMIT 1",
+			intval($this->auth->owner_id)
 		);
 
 		if ($r) {
@@ -389,9 +387,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$channel_name = $path_arr[0];
 
-		$r = q("SELECT channel_id FROM channel WHERE channel_address = '%s' AND NOT ( channel_pageflags & %d )>0 LIMIT 1",
-			dbesc($channel_name),
-			intval(PAGE_REMOVED)
+		$r = q("SELECT channel_id FROM channel WHERE channel_address = '%s' AND channel_removed = 0 LIMIT 1",
+			dbesc($channel_name)
 		);
 
 		if (! $r) {
@@ -467,9 +464,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$free = disk_free_space('store');
 
 		if ($this->auth->owner_id) {
-			$c = q("select * from channel where channel_id = %d and not (channel_pageflags & %d)>0 limit 1",
-				intval($this->auth->owner_id),
-				intval(PAGE_REMOVED)
+			$c = q("select * from channel where channel_id = %d and channel_removed = 0 limit 1",
+				intval($this->auth->owner_id)
 			);
 
 			$ulimit = service_class_fetch($c[0]['channel_id'], 'attach_upload_limit');

@@ -211,9 +211,7 @@ function admin_page_summary(&$a) {
 
 	// available channels, primary and clones
 	$channels = array();
-	$r = q("SELECT COUNT(*) AS total, COUNT(CASE WHEN channel_primary = 1 THEN 1 ELSE NULL END) AS main, COUNT(CASE WHEN channel_primary = 0 THEN 1 ELSE NULL END) AS clones FROM channel WHERE NOT (channel_pageflags & %d)>0",
-		intval(PAGE_REMOVED)
-	);
+	$r = q("SELECT COUNT(*) AS total, COUNT(CASE WHEN channel_primary = 1 THEN 1 ELSE NULL END) AS main, COUNT(CASE WHEN channel_primary = 0 THEN 1 ELSE NULL END) AS clones FROM channel WHERE channel_removed = 0");
 	if ($r) {
 		$channels['total']  = array('label' => t('# Channels'), 'val' => $r[0]['total']);
 		$channels['main']   = array('label' => t('# primary'), 'val' => $r[0]['main']);
@@ -788,11 +786,10 @@ function admin_page_users(&$a){
 
 	$users = q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d )>0 as `blocked`, " .
 			"(SELECT %s FROM channel as ch " .
-			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )>0) as `channels` " .
+			"WHERE ch.channel_account_id = ac.account_id and ch.channel_removed = 0 ) as `channels` " .
 		"FROM account as ac where true $serviceclass $order limit %d offset %d ",
 		intval(ACCOUNT_BLOCKED),
 		db_concat('ch.channel_address', ' '),
-		intval(PAGE_REMOVED),
 		intval($a->pager['itemspage']),
 		intval($a->pager['start'])
 	);
@@ -950,9 +947,7 @@ function admin_page_channels(&$a){
 
 	/* get channels */
 
-	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)>0",
-		intval(PAGE_REMOVED|PAGE_SYSTEM)
-	);
+	$total = q("SELECT count(*) as total FROM channel where channel_removed = 0 and channel_system = 0");
 	if($total) {
 		$a->set_pager_total($total[0]['total']);
 		$a->set_pager_itemspage(100);
@@ -960,8 +955,7 @@ function admin_page_channels(&$a){
 
 	$order = " order by channel_name asc ";
 
-	$channels = q("SELECT * from channel where not ( channel_pageflags & %d )>0 $order limit %d offset %d ",
-		intval(PAGE_REMOVED|PAGE_SYSTEM),
+	$channels = q("SELECT * from channel where channel_removed = 0 and channel_system = 0 $order limit %d offset %d ",
 		intval($a->pager['itemspage']),
 		intval($a->pager['start'])
 	);

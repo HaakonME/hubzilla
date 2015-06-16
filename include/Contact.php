@@ -49,25 +49,22 @@ function abook_self($channel_id) {
 }	
 
 function channelx_by_nick($nick) {
-	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d )>0 LIMIT 1",
-		dbesc($nick),
-		intval(PAGE_REMOVED)
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and channel_removed = 0 LIMIT 1",
+		dbesc($nick)
 	);
 	return(($r) ? $r[0] : false);
 }
 
 function channelx_by_hash($hash) {
-	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d )>0 LIMIT 1",
-		dbesc($hash),
-		intval(PAGE_REMOVED)
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and channel_removed = 0 LIMIT 1",
+		dbesc($hash)
 	);
 	return(($r) ? $r[0] : false);
 }
 
 function channelx_by_n($id) {
-	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d )>0 LIMIT 1",
-		dbesc($id),
-		intval(PAGE_REMOVED)
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and channel_removed = 0 LIMIT 1",
+		dbesc($id)
 	);
 	return(($r) ? $r[0] : false);
 }
@@ -289,13 +286,12 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 	
 	if(! $local) {
 
-		$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d), channel_r_stream = 0, channel_r_profile = 0,
+		$r = q("update channel set channel_deleted = '%s', channel_removed = 1, channel_r_stream = 0, channel_r_profile = 0,
 			channel_r_photos = 0, channel_r_abook = 0, channel_w_stream = 0, channel_w_wall = 0, channel_w_tagwall = 0,
 			channel_w_comment = 0, channel_w_mail = 0, channel_w_photos = 0, channel_w_chat = 0, channel_a_delegate = 0,
 			channel_r_storage = 0, channel_w_storage = 0, channel_r_pages = 0, channel_w_pages = 0, channel_a_republish = 0 
 			where channel_id = %d",
 			dbesc(datetime_convert()),
-			intval(PAGE_REMOVED),
 			intval($channel_id)
 		);
 
@@ -331,9 +327,8 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 		dbesc($channel['channel_hash'])
 	);
 
-	$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d) where channel_id = %d",
+	$r = q("update channel set channel_deleted = '%s', channel_removed = 1 where channel_id = %d",
 		dbesc(datetime_convert()),
-		intval(PAGE_REMOVED),
 		intval($channel_id)
 	);
 

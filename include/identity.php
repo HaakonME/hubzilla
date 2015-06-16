@@ -24,9 +24,8 @@ require_once('include/crypto.php');
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, 'message' => '');
 
-	$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d )>0 ",
-		intval($account_id),
-		intval(PAGE_REMOVED)
+	$r = q("select count(channel_id) as total from channel where channel_account_id = %d and channel_removed = 0 ",
+		intval($account_id)
 	);
 	if(! ($r && count($r))) {
 		$ret['total_identities'] = 0;
@@ -98,7 +97,7 @@ function create_sys_channel() {
 		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
 		'nickname' => 'sys',
 		'name' => 'System',
-		'pageflags' => PAGE_SYSTEM,
+		'pageflags' => 0,
 		'publish' => 0,
 		'system' => 1
 	));
@@ -111,9 +110,7 @@ function create_sys_channel() {
  * @return array|boolean
  */
 function get_sys_channel() {
-	$r = q("select * from channel left join xchan on channel_hash = xchan_hash where (channel_pageflags & %d)>0 limit 1",
-		intval(PAGE_SYSTEM)
-	);
+	$r = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_system = 1 limit 1");
 
 	if ($r)
 		return $r[0];
@@ -129,11 +126,11 @@ function get_sys_channel() {
  * @return boolean
  */
 function is_sys_channel($channel_id) {
-	$r = q("select channel_pageflags from channel where channel_id = %d limit 1",
+	$r = q("select channel_system from channel where channel_id = %d and channel_system = 1 limit 1",
 		intval($channel_id)
 	);
 
-	if (($r) && ($r[0]['channel_pageflags'] & PAGE_SYSTEM))
+	if($r)
 		return true;
 
 	return false;
@@ -149,9 +146,7 @@ function is_sys_channel($channel_id) {
  *   on error returns boolean false
  */
 function channel_total() {
-	$r = q("select channel_id from channel where not ( channel_pageflags & %d )>0",
-		intval(PAGE_REMOVED)
-	);
+	$r = q("select channel_id from channel where channel_removed = 0");
 
 	if (is_array($r))
 		return count($r);
@@ -208,7 +203,7 @@ function create_identity($arr) {
 		return $ret;
 	}
 
-	if($nick === 'sys' && (! ($pageflags & PAGE_SYSTEM))) {
+	if($nick === 'sys' && (! $system)) {
 		$ret['message'] = t('Reserved nickname. Please choose another.');
 		return $ret;
 	}
@@ -265,8 +260,8 @@ function create_identity($arr) {
 
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
-		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_expire_days, channel_timezone $perms_keys )
-		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s' $perms_vals ) ",
+		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_system, channel_expire_days, channel_timezone $perms_keys )
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s' $perms_vals ) ",
 
 		intval($arr['account_id']),
 		intval($primary),
@@ -278,6 +273,7 @@ function create_identity($arr) {
 		dbesc($key['prvkey']),
 		dbesc($key['pubkey']),
 		intval($pageflags),
+		intval($system),
 		intval($expire),
 		dbesc($a->timezone)
 	);
@@ -619,9 +615,8 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	logger('profile_load: ' . $nickname . (($profile) ? ' profile: ' . $profile : ''));
 
-	$user = q("select channel_id from channel where channel_address = '%s' and not ( channel_pageflags & %d ) > 0  limit 1",
-		dbesc($nickname),
-		intval(PAGE_REMOVED)
+	$user = q("select channel_id from channel where channel_address = '%s' and channel_removed = 0  limit 1",
+		dbesc($nickname)
 	);
 
 	if(! $user) {
@@ -664,10 +659,9 @@ function profile_load(&$a, $nickname, $profile = '') {
 	if(! $p) {
 		$p = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 			LEFT JOIN channel ON profile.uid = channel.channel_id
-			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d )>0 
+			WHERE channel.channel_address = '%s' and channel_removed = 0
 			AND profile.is_default = 1 LIMIT 1",
-			dbesc($nickname),
-			intval(PAGE_REMOVED)
+			dbesc($nickname)
 		);
 	}
 
@@ -1457,9 +1451,8 @@ function get_channel_by_nick($nick) {
  */
 function identity_selector() {
 	if (local_channel()) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and (channel_pageflags & %d) = 0 order by channel_name ",
-			intval(get_account_id()),
-			intval(PAGE_REMOVED)
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and channel_removed = 0 order by channel_name ",
+			intval(get_account_id())
 		);
 		if (count($r) > 1) {
 			//$account = get_app()->get_account();

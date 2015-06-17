@@ -164,7 +164,7 @@ function siteinfo_content(&$a) {
 		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about $Projectname.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
 		'$bug_link_url' => 'https://github.com/redmatrix/hubzilla/issues',
-		'$bug_link_text' => '$projectname issues',
+		'$bug_link_text' => t('$projectname issues'),
 		'$contact' => t('Suggestions, praise, etc. - please email "redmatrix" at librelist - dot com'),
 		'$donate' => $donate,
 		'$adminlabel' => t('Site Administrators'),

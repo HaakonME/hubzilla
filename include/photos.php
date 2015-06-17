@@ -455,13 +455,13 @@ function photos_album_rename($channel_id, $oldname, $newname) {
 function photos_album_get_db_idstr($channel_id, $album, $remote_xchan = '') {
 
 	if ($remote_xchan) {
-		$r = q("SELECT distinct resource_id as from photo where xchan = '%s' and uid = %d and album = '%s' ",
+		$r = q("SELECT distinct resource_id from photo where xchan = '%s' and uid = %d and album = '%s' ",
 			dbesc($remote_xchan),
 			intval($channel_id),
 			dbesc($album)
 		);
 	} else {
-		$r = q("SELECT distinct resource_id  from photo where uid = %d and album = '%s' ",
+		$r = q("SELECT distinct resource_id from photo where uid = %d and album = '%s' ",
 			intval($channel_id),
 			dbesc($album)
 		);

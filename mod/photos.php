@@ -7,6 +7,7 @@ require_once('include/bbcode.php');
 require_once('include/security.php');
 require_once('include/Contact.php');
 require_once('include/attach.php');
+require_once('include/text.php');
 
 
 function photos_init(&$a) {
@@ -334,6 +335,17 @@ function photos_post(&$a) {
 				intval($item_id)
 		);
 
+		// make sure the attach has the same permissions as the photo regardless of any other changes
+		$x = q("update attach set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s' where hash = '%s' and uid = %d and is_photo = 1",
+				dbesc($str_contact_allow),
+				dbesc($str_group_allow),
+				dbesc($str_contact_deny),
+				dbesc($str_group_deny),
+				dbesc($resource_id),
+				intval($page_owner_uid)
+		);
+
+
 
 		if(strlen($rawtags)) {
 
@@ -396,10 +408,21 @@ function photos_post(&$a) {
 	 * default post action - upload a photo
 	 */
 
+	$channel = $a->data['channel'];
+	$observer = $a->data['observer'];
+
 	$_REQUEST['source'] = 'photos';
 	require_once('include/attach.php');
 
+	if(!local_channel()) {
+		$_REQUEST['contact_allow'] = expand_acl($channel['channel_allow_cid']);
+		$_REQUEST['group_allow'] = expand_acl($channel['channel_allow_gid']);
+		$_REQUEST['contact_deny'] = expand_acl($channel['channel_deny_cid']);
+		$_REQUEST['group_deny'] = expand_acl($channel['channel_deny_gid']);
+	}
+
 	$r = attach_store($a->channel,get_observer_hash(), $_REQUEST);
+
 	if(! $r['success']) {
 		notice($r['message'] . EOL);
 	}		

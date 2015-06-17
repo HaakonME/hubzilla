@@ -649,7 +649,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
  *  * \e string \b filename
  *  * \e string \b folder hash of parent directory, empty string for root directory
  * - Optional:
- *  * \e string \b hash precumputed hash for this node
+ *  * \e string \b hash precomputed hash for this node
  *  * \e tring  \b allow_cid
  *  * \e string \b allow_gid
  *  * \e string \b deny_cid
@@ -660,6 +660,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
+
 	$sql_options = '';
 
 	$basepath = 'store/' . $channel['channel_address'];
@@ -776,6 +777,94 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	return $ret;
 }
+
+/**
+ * @brief Create directory (recursive).
+ *
+ * @param array $channel channel array of owner
+ * @param string $observer_hash hash of current observer
+ * @param array $arr parameter array to fulfil request
+ * - Required:
+ *  * \e string \b pathname
+ *  * \e string \b folder hash of parent directory, empty string for root directory
+ * - Optional:
+ *  * \e string \b allow_cid
+ *  * \e string \b allow_gid
+ *  * \e string \b deny_cid
+ *  * \e string \b deny_gid
+ * @return array
+ */
+function attach_mkdirp($channel, $observer_hash, $arr = null) {
+
+	$ret = array('success' => false);
+	$channel_id = $channel['channel_id'];
+
+	$sql_options = '';
+
+	$basepath = 'store/' . $channel['channel_address'];
+
+	logger('attach_mkdirp: basepath: ' . $basepath);
+
+	if(! is_dir($basepath))
+		os_mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS, true);
+
+	if(! perm_is_allowed($channel_id, $observer_hash, 'write_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+	if(! $arr['pathname']) {
+		$ret['message'] = t('Empty pathname');
+		return $ret;
+	}
+
+	$paths = explode('/',$arr['pathname']);
+	if(! $paths) {
+		$ret['message'] = t('Empty path');
+		return $ret;
+	}
+
+	$current_parent = '';
+
+	foreach($paths as $p) {
+		if(! $p)
+			continue;
+		$arx = array(
+			'filename' => $p, 
+			'folder' => $current_parent
+		);
+		if(array_key_exists('allow_cid',$arr))
+			$arx['allow_cid'] = $arr['allow_cid'];
+		if(array_key_exists('deny_cid',$arr))
+			$arx['deny_cid'] = $arr['deny_cid'];
+		if(array_key_exists('allow_gid',$arr))
+			$arx['allow_gid'] = $arr['allow_gid'];
+		if(array_key_exists('deny_gid',$arr))
+			$arx['deny_gid'] = $arr['deny_gid'];
+
+		$x = attach_mkdir($channel, $observer_hash, $arx);		
+		if($x['success']) {
+			$current_parent = $x['data']['hash'];
+		}
+		else {
+			$ret['message'] = $x['message'];
+			return $ret;
+		}
+	}
+	if(isset($x)) {
+		$ret['success'] = true;
+		$ret['data'] = $x['data'];
+	}
+
+	return $ret;	
+
+}
+
+
+
+
+
+
 
 /**
  * @brief Changes permissions of a file.

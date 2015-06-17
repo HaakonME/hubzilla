@@ -6,6 +6,7 @@ require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
 require_once('include/security.php');
 require_once('include/Contact.php');
+require_once('include/text.php');
 
 
 function photos_init(&$a) {
@@ -401,9 +402,20 @@ function photos_post(&$a) {
 	 * default post action - upload a photo
 	 */
 
+	$channel = $a->data['channel'];
+	$observer = $a->data['observer'];
+
 	$_REQUEST['source'] = 'photos';
 
-	$r = photo_upload($a->channel,$a->get_observer(), $_REQUEST);
+	if(!local_channel()) {
+		$_REQUEST['contact_allow'] = expand_acl($channel['channel_allow_cid']);
+		$_REQUEST['group_allow'] = expand_acl($channel['channel_allow_gid']);
+		$_REQUEST['contact_deny'] = expand_acl($channel['channel_deny_cid']);
+		$_REQUEST['group_deny'] = expand_acl($channel['channel_deny_gid']);
+	}
+
+	$r = photo_upload($channel, $observer, $_REQUEST);
+
 	if(! $r['success']) {
 		notice($r['message'] . EOL);
 	}		

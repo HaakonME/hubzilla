@@ -818,15 +818,16 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
  *  The hash to delete
  * @return void
  */
-function attach_delete($channel_id, $resource) {
+function attach_delete($channel_id, $resource, $is_photo = 0) {
 
 	$c = q("SELECT channel_address FROM channel WHERE channel_id = %d LIMIT 1",
 		intval($channel_id)
 	);
 
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
+	$photo_sql = (($is_photo) ? " and is_photo = 1 " : '');
 
-	$r = q("SELECT hash, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
+	$r = q("SELECT hash, flags, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);

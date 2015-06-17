@@ -6,6 +6,7 @@ require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
 require_once('include/security.php');
 require_once('include/Contact.php');
+require_once('include/attach.php');
 
 
 function photos_init(&$a) {
@@ -140,6 +141,7 @@ function photos_post(&$a) {
 			);
 			if($r) {
 				foreach($r as $i) {
+					attach_delete($page_owner_uid, $i['resource_id'], 1 );
 					drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
 					proc_run('php','include/notifier.php','drop',$i['id']);
 				}
@@ -150,6 +152,9 @@ function photos_post(&$a) {
 			q("delete from photo where resource_id in ( $str ) and uid = %d",
 				intval($page_owner_uid)
 			);
+
+			// @FIXME do the same for the linked attach
+
 		}
 		
 		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address']);
@@ -174,6 +179,8 @@ function photos_post(&$a) {
 				intval($page_owner_uid),
 				dbesc($r[0]['resource_id'])
 			);
+			attach_delete($page_owner_uid, $r[0]['resource_id'], 1 );
+
 			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND resource_type = 'photo' and `uid` = %d LIMIT 1",
 				dbesc($r[0]['resource_id']),
 				intval($page_owner_uid)

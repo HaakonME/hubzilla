@@ -349,9 +349,10 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$sql_options = '';
 	$source = (($arr) ? $arr['source'] : '');
 	$album = (($arr) ? $arr['album'] : '');
+	$newalbum = (($arr) ? $arr['newalbum'] : '');
 	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
 
-logger('arr: ' . print_r($arr,true));
+// logger('arr: ' . print_r($arr,true));
 
 	// This is currently used only in mod/wall_attach
 
@@ -449,6 +450,21 @@ logger('arr: ' . print_r($arr,true));
 		$is_photo = 1;
 	}
 
+	if($is_photo) {
+		if($newalbum) {
+			$x = z_readdir($channel_id, $observer_hash, filepath_macro($newalbum));
+		}
+		elseif($album) {
+			$x = z_readdir($channel_id, $observer_hash, filepath_macro($album));
+		}
+		if(! $x['success']) {
+			// recursively create the directory path
+
+		}
+
+
+	}
+
 
 	$created = datetime_convert();
 
@@ -471,7 +487,7 @@ logger('arr: ' . print_r($arr,true));
 			intval($x[0]['aid']),
 			intval($channel_id),
 			dbesc($x[0]['hash']),
-			dbesc(get_observer_hash()),
+			dbesc($observer_hash),
 			dbesc($filename),
 			dbesc($mimetype),
 			intval($filesize),
@@ -1392,4 +1408,16 @@ function in_group($group_id) {
 	}
 
 	return $group_members;
+}
+
+
+function filepath_macro($s) {
+
+	return str_replace(
+		array( '%Y', '%M', '%D' ),
+		array( datetime_convert('UTC',date_default_timezone_get(),'now', 'Y'),
+			datetime_convert('UTC',date_default_timezone_get(),'now', 'm'),
+			datetime_convert('UTC',date_default_timezone_get(),'now', 'd')
+		), $s);
+
 }

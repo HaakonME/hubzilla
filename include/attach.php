@@ -685,13 +685,19 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	// Check for duplicate name.
 	// Check both the filename and the hash as we will be making use of both.
 
-	$r = q("select hash from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
+	$r = q("select hash, is_dir, flags from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
 		dbesc($arr['filename']),
 		dbesc($arr['hash']),
 		dbesc($arr['folder']),
 		intval($channel['channel_id'])
 	);
 	if($r) {
+		if(array_key_exists('force',$arr) && intval($arr['force']) 
+			&& ( intval($r[0]['is_dir']) || $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+				$ret['success'] = true;
+				$ret['data'] = $r[0];
+				return $ret;
+		}
 		$ret['message'] = t('duplicate filename or path');
 		return $ret;
 	}
@@ -831,7 +837,8 @@ function attach_mkdirp($channel, $observer_hash, $arr = null) {
 			continue;
 		$arx = array(
 			'filename' => $p, 
-			'folder' => $current_parent
+			'folder' => $current_parent,
+			'force' => 1
 		);
 		if(array_key_exists('allow_cid',$arr))
 			$arx['allow_cid'] = $arr['allow_cid'];

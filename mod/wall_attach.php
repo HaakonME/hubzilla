@@ -38,7 +38,10 @@ function wall_attach_post(&$a) {
 //		}
 //	}
 
-	$r = attach_store($channel,(($observer) ? $observer['xchan_hash'] : ''),'', array('source' => 'editor', 'visible' => 0, 'contact_allow' => array($channel['channel_hash'])));
+	$def_album  = get_pconfig($channel['channel_id'],'system','photo_path');
+	$def_attach = get_pconfig($channel['channel_id'],'system','attach_path');
+
+	$r = attach_store($channel,(($observer) ? $observer['xchan_hash'] : ''),'', array('source' => 'editor', 'visible' => 0, 'album' => $def_album, 'directory' => $def_attach, 'allow_cid' => '<' . $channel['channel_hash'] . '>'));
 
 	if(! $r['success']) {
 		notice( $r['message'] . EOL);

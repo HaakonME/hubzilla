@@ -9,7 +9,7 @@
 				<datalist id="dl-photo-upload">
 				{{foreach $albums as $al}}
 					{{if $al.text}}
-					<option value="{{$al.text}}">
+					<option value="{{$al.text}}" />
 					{{/if}}
 				{{/foreach}}
 				</datalist>

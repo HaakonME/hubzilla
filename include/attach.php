@@ -351,12 +351,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$album = (($arr) ? $arr['album'] : '');
 	$newalbum = (($arr) ? $arr['newalbum'] : '');
 	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
+	$upload_path = (($arr && $arr['directory']) ? $arr['directory'] : '');
 
  logger('arr: ' . print_r($arr,true));
 
 	// This is currently used only in mod/wall_attach
 
-	$str_contact_allow = perms2str(((is_array($arr['contact_allow'])) ? $arr['contact_allow'] : explode(',',$arr['contact_allow'])));
 
 	if(! perm_is_allowed($channel_id,get_observer_hash(), 'write_storage')) {
 		$ret['message'] = t('Permission denied.');

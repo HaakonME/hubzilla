@@ -563,14 +563,20 @@ function photos_content(&$a) {
 
 		$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
+		$def_album = get_pconfig($a->data['channel']['channel_id'],'system','photo_path');
+		if($def_album) {
+			$selname = filepath_macro($def_album);
+			$albums['album'][] = array('text' => $selname);
+		}
+
 		$tpl = get_markup_template('photos_upload.tpl');
 		$upload_form = replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
 			'$sessid' => session_id(),
 			'$usage' => $usage_message,
 			'$nickname' => $a->data['channel']['channel_address'],
-			'$newalbum_label' => t('Enter a new album name'),
-			'$newalbum_placeholder' => t('or select an existing one (doubleclick)'),
+			'$newalbum_label' => t('Enter an album name'),
+			'$newalbum_placeholder' => t('or select an existing album (doubleclick)'),
 			'$visible' => array('visible', t('Create a status post for this upload'), 0, '', array(t('No'), t('Yes'))),
 			'$albums' => $albums['albums'],
 			'$selname' => $selname,
@@ -899,7 +905,7 @@ function photos_content(&$a) {
 				}
 			}
 
-			if((local_channel()) && (local_user() == $link_item['uid'])) {
+			if((local_channel()) && (local_channel() == $link_item['uid'])) {
 				q("UPDATE `item` SET item_unseen = 0 WHERE parent = %d and uid = %d and item_unseen = 1",
 					intval($link_item['parent']),
 					intval(local_channel())

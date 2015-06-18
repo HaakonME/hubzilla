@@ -277,9 +277,8 @@ function photos_post(&$a) {
 		if($p) {
 			$ext = $phototypes[$p[0]['type']];
 
-			$r = q("UPDATE `photo` SET `description` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
+			$r = q("UPDATE `photo` SET `description` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
 				dbesc($desc),
-				dbesc($albname),
 				dbesc($str_contact_allow),
 				dbesc($str_group_allow),
 				dbesc($str_contact_deny),
@@ -421,7 +420,7 @@ function photos_post(&$a) {
 		$_REQUEST['group_deny'] = expand_acl($channel['channel_deny_gid']);
 	}
 
-	$r = attach_store($a->channel,get_observer_hash(), $_REQUEST);
+	$r = attach_store($a->channel,get_observer_hash(), '', $_REQUEST);
 
 	if(! $r['success']) {
 		notice($r['message'] . EOL);

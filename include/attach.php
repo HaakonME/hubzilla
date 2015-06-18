@@ -352,7 +352,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$newalbum = (($arr) ? $arr['newalbum'] : '');
 	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
 
-// logger('arr: ' . print_r($arr,true));
+ logger('arr: ' . print_r($arr,true));
 
 	// This is currently used only in mod/wall_attach
 
@@ -450,28 +450,44 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$is_photo = 1;
 	}
 
+	$pathname = '';
+
 	if($is_photo) {
-		if($newalbum) {
-			$x = z_readdir($channel_id, $observer_hash, filepath_macro($newalbum));
-		}
-		elseif($album) {
-			$x = z_readdir($channel_id, $observer_hash, filepath_macro($album));
-		}
-		if(! $x['success']) {
-			// recursively create the directory path
-
-		}
-
-
+		if($newalbum)
+			$pathname = filepath_macro($newalbum);
+		else
+			$pathname = filepath_macro($album);
+	}
+	else {
+		$pathname = filepath_macro($upload_path);
 	}
 
+	$darr = array('pathname' => $pathname);
+	if($arr && array_key_exists('allow_cid',$arr))
+		$darr['allow_cid'] = $arr['allow_cid'];
+	if($arr && array_key_exists('allow_gid',$arr))
+		$darr['allow_gid'] = $arr['allow_gid'];
+	if($arr && array_key_exists('deny_cid',$arr))
+		$darr['deny_cid'] = $arr['deny_cid'];
+	if($arr && array_key_exists('deny_gid',$arr))
+		$darr['deny_gid'] = $arr['deny_gid'];
+
+
+	if($pathname) {
+		$x = attach_mkdirp($channel_id, $observer_hash, $darr);
+		$folder_hash = (($x['success']) ? $x['data']['hash'] : '');
+	}
+	else {
+		$folder_hash = '';
+	}		
 
 	$created = datetime_convert();
 
 	if($options === 'replace') {
-		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, os_storage = %d, is_photo = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
+		$r = q("update attach set filename = '%s', filetype = '%s', folder = '%s', filesize = %d, os_storage = %d, is_photo = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
 			dbesc($filename),
 			dbesc($mimetype),
+			dbesc($folder_hash),
 			intval($filesize),
 			intval(0),
 			intval($is_photo),
@@ -482,14 +498,15 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	elseif($options === 'revise') {
-		$r = q("insert into attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, os_storage, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("insert into attach ( aid, uid, hash, creator, filename, filetype, folder, filesize, revision, os_storage, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($x[0]['aid']),
 			intval($channel_id),
 			dbesc($x[0]['hash']),
 			dbesc($observer_hash),
 			dbesc($filename),
 			dbesc($mimetype),
+			dbesc($folder_hash),
 			intval($filesize),
 			intval($x[0]['revision'] + 1),
 			intval(0),
@@ -504,10 +521,11 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	elseif($options === 'update') {
-		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s', os_storage = %d, is_photo = %d, 
+		$r = q("update attach set filename = '%s', filetype = '%s', folder = '%s', edited = '%s', os_storage = %d, is_photo = %d, 
 			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d",
 			dbesc((array_key_exists('filename',$arr))  ? $arr['filename']  : $x[0]['filename']),
 			dbesc((array_key_exists('filetype',$arr))  ? $arr['filetype']  : $x[0]['filetype']),
+			dbesc(($folder_hash) ? $folder_hash : $x[0]['folder']),
 			dbesc($created),
 			dbesc((array_key_exists('os_storage',$arr))  ? $arr['os_storage']  : $x[0]['os_storage']),
 			dbesc((array_key_exists('is_photo',$arr))  ? $arr['is_photo']  : $x[0]['is_photo']),
@@ -520,14 +538,15 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	else {
-		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, os_storage, is_photo, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, folder, filesize, revision, os_storage, is_photo, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($channel['channel_account_id']),
 			intval($channel_id),
 			dbesc($hash),
 			dbesc(get_observer_hash()),
 			dbesc($filename),
 			dbesc($mimetype),
+			dbesc($folder_hash),
 			intval($filesize),
 			intval(0),
 			intval(0),
@@ -543,7 +562,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	if($is_photo) {
-		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'data' => @file_get_contents($src));
+		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'data' => @file_get_contents($src));
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		$p = photo_upload($channel,get_app()->get_observer(),$args);
@@ -1510,10 +1529,11 @@ function in_group($group_id) {
 function filepath_macro($s) {
 
 	return str_replace(
-		array( '%Y', '%M', '%D' ),
+		array( '%Y', '%m', '%d' ),
 		array( datetime_convert('UTC',date_default_timezone_get(),'now', 'Y'),
 			datetime_convert('UTC',date_default_timezone_get(),'now', 'm'),
 			datetime_convert('UTC',date_default_timezone_get(),'now', 'd')
 		), $s);
 
 }
+

@@ -406,6 +406,11 @@ function create_identity($arr) {
 			}
 		}
 
+		if(! $system) {
+			set_pconfig($ret['channel']['channel_id'],'system','photo_path', '%Y-%m');
+			set_pconfig($ret['channel']['channel_id'],'system','attach_path','%Y-%m');
+		}
+
 		// auto-follow any of the hub's pre-configured channel choices.
 		// Only do this if it's the first channel for this account;
 		// otherwise it could get annoying. Don't make this list too big

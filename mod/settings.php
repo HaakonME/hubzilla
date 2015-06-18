@@ -400,6 +400,8 @@ function settings_post(&$a) {
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
 	$evdays           = ((x($_POST,'evdays'))     ? intval($_POST['evdays'])             : 3);
+	$photo_path       = ((x($_POST,'photo_path')) ? escape_tags(trim($_POST['photo_path'])) : '');
+	$attach_path      = ((x($_POST,'attach_path')) ? escape_tags(trim($_POST['attach_path'])) : '');
 
 	$channel_menu     = ((x($_POST['channel_menu'])) ? htmlspecialchars_decode(trim($_POST['channel_menu']),ENT_QUOTES) : '');
 
@@ -506,6 +508,8 @@ function settings_post(&$a) {
 	set_pconfig(local_channel(),'system','vnotify',$vnotify);
 	set_pconfig(local_channel(),'system','always_show_in_notices',$always_show_in_notices);
 	set_pconfig(local_channel(),'system','evdays',$evdays);
+	set_pconfig(local_channel(),'system','photo_path',$photo_path);
+	set_pconfig(local_channel(),'system','attach_path',$attach_path);
 
 	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d",
 		dbesc($username),
@@ -1011,7 +1015,6 @@ function settings_content(&$a) {
 			'deny_gid' => $channel['channel_deny_gid']
 		); 
 
-
 		require_once('include/group.php');
 		$group_select = mini_group_select(local_channel(),$channel['channel_default_group']);
 
@@ -1129,7 +1132,9 @@ function settings_content(&$a) {
 			'$expert' => feature_enabled(local_channel(),'expert'),
 			'$hint' => t('Please enable expert mode (in <a href="settings/features">Settings > Additional features</a>) to adjust!'),
 			'$lbl_misc' => t('Miscellaneous Settings'),
-			'$menus' => $menu,
+			'$photo_path' => array('photo_path', t('Default photo upload folder'), get_pconfig(local_channel(),'system','photo_path'), '%Y - current year, %m -  current month'),
+			'$attach_path' => array('attach_path', t('Default file upload folder'), get_pconfig(local_channel(),'system','attach_path'), '%Y - current year, %m -  current month'),
+			'$menus' => $menu,			
 			'$menu_desc' => t('Personal menu to display in your channel pages'),
 			'$removeme' => t('Remove Channel'),
 			'$removechannel' => t('Remove this channel.'),

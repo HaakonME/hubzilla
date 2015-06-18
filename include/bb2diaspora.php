@@ -413,9 +413,17 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	// Convert it to HTML - don't try oembed
 	$Text = bbcode($Text, $preserve_nl, false);
 
+	// Markdownify does not preserve previously escaped html entities such as <> and &. 
+
+	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
+
 	// Now convert HTML to Markdown
 	$md = new Markdownify(false, false, false);
 	$Text = $md->parseString($Text);
+
+	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason. 
+
+	$Text = str_replace(array('&\\_lt\\_;','&\\_gt\\_;','&\\_amp\\_;'),array('&lt;','&gt;','&amp;'),$Text);
 
 	// If the text going into bbcode() has a plain URL in it, i.e.
 	// with no [url] tags around it, it will come out of parseString()

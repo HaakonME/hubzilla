@@ -1,6 +1,6 @@
 <div id="threads-begin"></div>
 {{foreach $threads as $thread}}
-<div id="thread-wrapper-{{$thread.id}}" class="thread-wrapper">
+<div id="thread-wrapper-{{$thread.id}}" class="thread-wrapper generic-content-wrapper">
 	{{foreach $thread.items as $item}}
 		{{if $item.comment_firstcollapsed}}
 			<div class="hide-comments-outer">

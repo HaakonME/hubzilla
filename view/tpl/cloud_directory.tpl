@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper section-content-wrapper-np">
+<div class="section-content-wrapper-np">
 	<table id="cloud-index">
 		<tr>
 			<th width="1%"></th>

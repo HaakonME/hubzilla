@@ -247,7 +247,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$this->server->broadcastEvent('onHTMLActionsPanel', array($parent, &$output));
 		}
 
-		$html .= replace_macros(get_markup_template('cloud_header.tpl'), array(
+		$html .= replace_macros(get_markup_template('cloud.tpl'), array(
 				'$header' => t('Files') . ": " . $this->escapeHTML($path) . "/",
 				'$quota' => $quota,
 				'$total' => t('Total'),
@@ -255,10 +255,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$shared' => t('Shared'),
 				'$create' => t('Create'),
 				'$upload' => t('Upload'),
-				'$is_owner' => $is_owner
-			));
-
-		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
+				'$is_owner' => $is_owner,
 				'$parentpath' => $parentpath,
 				'$entries' => $f,
 				'$name' => t('Name'),

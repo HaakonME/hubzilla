@@ -84,6 +84,13 @@ function import_post(&$a) {
 
 	$data = json_decode($data,true);
 
+	if(array_key_exists('user',$data) && array_key_exists('aspects',$data)) {
+		require_once('include/Import/import_diaspora.php');
+		import_diaspora($data);
+		return;
+	}
+
+
 //	logger('import: data: ' . print_r($data,true));
 
 //	print_r($data);
@@ -308,7 +315,7 @@ function import_post(&$a) {
 				dbesc($photos[2]),
 				dbesc($photos[3]),
 				dbesc($photodate),
-				dbesc($xchan_hash)
+				dbesc($xchan['xchan_hash'])
 			);
 			
 		}

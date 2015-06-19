@@ -1,6 +1,5 @@
 <div id="live-photos"></div>
 <div class="generic-content-wrapper">
-
 	<div class="section-title-wrapper">
 		<div class="pull-right">
 
@@ -155,17 +154,17 @@
 		{{/if}}
 		<div class="clear"></div>
 	</div>
+
+	{{$comments}}
+
+	{{if $commentbox}}
+	<div class="wall-item-comment-wrapper{{if $comments}} wall-item-comment-wrapper-wc{{/if}}" >
+		{{$commentbox}}
+	</div>
+	{{/if}}
+
+	<div class="clear"></div>
 </div>
-
-{{$comments}}
-
-{{if $commentbox}}
-<div class="wall-item-comment-wrapper{{if $comments}} wall-item-comment-wrapper-wc{{/if}}" >
-	{{$commentbox}}
-</div>
-{{/if}}
-
-<div class="clear"></div>
 
 {{$paginate}}
 

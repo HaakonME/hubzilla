@@ -1889,7 +1889,6 @@ nav .dropdown-menu {
 	color: #31708f;
 	background-color: #d9edf7;
 	margin-bottom: 3px;
-	border-radius: $radiuspx;
 	text-align: center;
 }
 
@@ -1898,7 +1897,6 @@ nav .dropdown-menu {
 	color: #8a6d3b;
 	background-color: #fcf8e3;
 	margin-bottom: 3px;
-	border-radius: $radiuspx;
 	text-align: center;
 }
 
@@ -1907,9 +1905,19 @@ nav .dropdown-menu {
 	color: #a94442;
 	background-color: #f2dede;
 	margin-bottom: 3px;
-	border-radius: $radiuspx;
 	text-align: center;
 }
+
+.section-content-tools-wrapper .section-content-info-wrapper,
+.section-content-wrapper .section-content-info-wrapper,
+.section-content-tools-wrapper .section-content-warning-wrapper,
+.section-content-wrapper .section-content-warning-wrapper,
+.section-content-tools-wrapper .section-content-danger-wrapper,
+.section-content-wrapper .section-content-danger-wrapper {
+	margin-bottom: 0px;
+	border-radius: $radiuspx;
+}
+
 
 .section-content-wrapper {
 	padding: 7px 10px;

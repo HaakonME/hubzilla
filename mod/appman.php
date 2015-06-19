@@ -54,7 +54,7 @@ function appman_post(&$a) {
 
 	if($_SESSION['return_url']) 
 		goaway(z_root() . '/' . $_SESSION['return_url']);
-	goaway(z_root() . '/apps/personal');
+	goaway(z_root() . '/apps');
 
 
 }

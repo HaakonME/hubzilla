@@ -150,9 +150,10 @@ function attach_count_files($channel_id, $observer, $hash = '', $filename = '', 
 	if($filetype)
 		$sql_extra .= protect_sprintf(" and filetype like '@" . dbesc($filetype) . "@' ");
 
-	$r = q("select id from attach where uid = %d $sql_extra",
+	$r = q("select id, uid, folder from attach where uid = %d $sql_extra",
 		intval($channel_id)
 	);
+
 
 	$ret['success'] = ((is_array($r)) ? true : false);
 	$ret['results'] = ((is_array($r)) ? count($r) : false);
@@ -262,11 +263,39 @@ function attach_by_hash($hash, $rev = 0) {
 		return $ret;
 	}
 
+	if($r[0]['folder']) {
+		$x = attach_can_view_folder($r[0]['uid'],get_observer_hash(),$r[0]['folder']);
+		if(! $x) {
+			$ret['message'] = t('Permission denied.');
+			return $ret;
+		}
+	}
+
 	$ret['success'] = true;
 	$ret['data'] = $r[0];
 
 	return $ret;
 }
+
+function attach_can_view_folder($uid,$ob_hash,$folder_hash) {
+
+	$sql_extra = permissions_sql($uid,$ob_hash);
+	$hash = $folder_hash;	
+	$result = false;
+
+	do {
+		$r = q("select folder from attach where hash = '%s' and uid = %d $sql_extra",
+			dbesc($hash),
+			intval($uid)
+		);
+		if(! $r)
+			return false;
+		$hash = $r[0]['folder'];
+	}
+	while($hash);
+	return true;
+}
+
 
 /**
  * @brief Find an attachment by hash and revision.
@@ -319,6 +348,15 @@ function attach_by_hash_nodata($hash, $rev = 0) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
+
+	if($r[0]['folder']) {
+		$x = attach_can_view_folder($r[0]['uid'],get_observer_hash(),$r[0]['folder']);
+		if(! $x) {
+			$ret['message'] = t('Permission denied.');
+			return $ret;
+		}
+	}
+
 
 	$ret['success'] = true;
 	$ret['data'] = $r[0];
@@ -474,12 +512,26 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 
 	if($pathname) {
-		$x = attach_mkdirp($channel_id, $observer_hash, $darr);
+		$x = attach_mkdirp($channel, $observer_hash, $darr);
 		$folder_hash = (($x['success']) ? $x['data']['hash'] : '');
 	}
 	else {
 		$folder_hash = '';
 	}		
+
+	$os_basepath = 'store/' . $channel['channel_address'] . '/' ;
+	$os_relpath = '';
+
+	if($folder_hash) {
+		$curr = find_folder_hash_by_attach_hash($channel_id,$folder_hash,true);
+		if($curr) 
+			$os_relpath .= $curr . '/';
+		$os_relpath .= $folder_hash . '/';
+	}
+
+	$os_relpath .= $hash;
+
+	@file_put_contents($os_basepath . $os_relpath,@file_get_contents($src));
 
 	$created = datetime_convert();
 
@@ -489,9 +541,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($mimetype),
 			dbesc($folder_hash),
 			intval($filesize),
-			intval(0),
+			intval(1),
 			intval($is_photo),
-			dbescbin(@file_get_contents($src)),
+			dbesc($os_relpath),
 			dbesc($created),
 			intval($existing_id),
 			intval($channel_id)
@@ -509,9 +561,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($folder_hash),
 			intval($filesize),
 			intval($x[0]['revision'] + 1),
-			intval(0),
+			intval(1),
 			intval($is_photo),
-			dbescbin(@file_get_contents($src)),
+			dbesc($os_relpath),
 			dbesc($created),
 			dbesc($created),
 			dbesc($x[0]['allow_cid']),
@@ -549,9 +601,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($folder_hash),
 			intval($filesize),
 			intval(0),
-			intval(0),
+			intval(1),
 			intval($is_photo),
-			dbescbin(@file_get_contents($src)),
+			dbesc($os_relpath),
 			dbesc($created),
 			dbesc($created),
 			dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $str_contact_allow),
@@ -1104,14 +1156,19 @@ function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
  *  The hash of the attachment
  * @return string
  */
-function find_folder_hash_by_attach_hash($channel_id, $attachHash) {
+function find_folder_hash_by_attach_hash($channel_id, $attachHash, $recurse = false) {
+
+logger('attach_hash: ' . $attachHash);
 	$r = q("SELECT folder FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
 		intval($channel_id),
 		dbesc($attachHash)
 	);
 	$hash = '';
-	if ($r) {
-		$hash = $r[0]['folder'];
+	if($r && $r[0]['folder']) {
+		if($recurse)
+			$hash = find_folder_hash_by_attach_hash($channel_id,$r[0]['folder'],true) . '/' . $r[0]['folder']; 
+		else
+			$hash = $r[0]['folder'];
 	}
 	return $hash;
 }

@@ -38,6 +38,15 @@ function import_post(&$a) {
 
 
 	if($src) {
+
+		// This is OS specific and could also fail if your tmpdir isn't very large
+		// mostly used for Diaspora which exports gzipped files.
+
+		if(strpos($filename,'.gz')){
+			@rename($src,$src . '.gz');
+			@system('gunzip ' . escapeshellarg($src . '.gz'));
+		}
+
 		if($filesize) {
 			$data = @file_get_contents($src);
 		}

@@ -2,6 +2,7 @@
 
 require_once('include/bb2diaspora.php');
 require_once('include/group.php');
+require_once('include/follow.php');
 
 function import_diaspora($data) {
 	$a = get_app();
@@ -75,14 +76,22 @@ function import_diaspora($data) {
 	// now add connections and send friend requests
 
 
-
-
+	if($data['contacts']) {
+		foreach($data['contacts'] as $contact) {
+			$result = new_contact($channel_id, $contact['person_diaspora_handle'], $c['channel']);
+			if($result['success']) {
+				if($contact['aspects']) {
+					foreach($contact['aspects'] as $aspect) {
+						group_add_member($channel_id,$aspect['name'],$result['abook']['xchan_hash']);
+					}
+				}
+			}
+		}
+	}
 
 
 	// Then add items - note this can't be done until Diaspora adds guids to exported 
 	// items and comments
-
-
 
 
 	proc_run('php','include/notifier.php','location',$channel_id);

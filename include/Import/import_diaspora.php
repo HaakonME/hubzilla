@@ -25,15 +25,26 @@ function import_diaspora($data) {
 
 	$channel_id = $c['channel']['channel_id'];
 
-	// todo - add nsfw, auto follow, (and strip exif in hubzilla)
+	// todo - add auto follow settings, (and strip exif in hubzilla)
 
 	$location = escape_tags($data['user']['profile']['location']);
 	if(! $location)
 		$location = '';
 
+
 	q("update channel set channel_location = '%s' where channel_id = %d",
-		dbesc($location)
+		dbesc($location),
+		intval($channel_id)
 	);
+
+	if($data['user']['profile']['nsfw']) { 
+		// fixme for hubzilla which doesn't use pageflags any more
+		q("update channel set channel_pageflags = (channel_pageflags & %d) where channel_id = %d",
+				intval(PAGE_ADULT),
+				intval($channel_id)
+		);
+	}
+
 
 
 	$photos = import_profile_photo($data['user']['profile']['image_url'],$c['channel']['channel_hash']);
@@ -55,15 +66,20 @@ function import_diaspora($data) {
 
 	$gender = escape_tags($data['user']['profile']['gender']);
 	$about = diaspora2bb($data['user']['profile']['bio']);
+	$publish = intval($data['user']['profile']['searchable']);
 	if($data['user']['profile']['birthday'])
 		$dob = datetime_convert('UTC','UTC',$data['user']['profile']['birthday'],'Y-m-d');
 	else
 		$dob = '0000-00-00';
 
-	$r = q("update profile set gender = '%s', about = '%s', dob = '%s' where uid = %d",
+	// we're relying on the fact that this channel was just created and will only 
+	// have the default profile currently
+
+	$r = q("update profile set gender = '%s', about = '%s', dob = '%s', publish = %d where uid = %d",
 		dbesc($gender),
 		dbesc($about),
 		dbesc($dob),
+		dbesc($publish),
 		intval($channel_id)
 	);
 

@@ -3,6 +3,7 @@
 require_once('include/bb2diaspora.php');
 require_once('include/group.php');
 require_once('include/follow.php');
+require_once('include/photo/photo_driver.php');
 
 function import_diaspora($data) {
 	$a = get_app();

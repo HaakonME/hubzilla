@@ -39,7 +39,7 @@ function import_diaspora($data) {
 
 	if($data['user']['profile']['nsfw']) { 
 		// fixme for hubzilla which doesn't use pageflags any more
-		q("update channel set channel_pageflags = (channel_pageflags & %d) where channel_id = %d",
+		q("update channel set channel_pageflags = (channel_pageflags | %d) where channel_id = %d",
 				intval(PAGE_ADULT),
 				intval($channel_id)
 		);

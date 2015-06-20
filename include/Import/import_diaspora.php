@@ -11,10 +11,42 @@ function import_diaspora($data) {
 	if(! $account)
 		return false;
 
+	$address = escape_tags($data['user']['username']);
+	if(! $address) {
+		notice( t('No username found in import file.') . EOL);
+		return false;
+	}
+
+	$r = q("select * from channel where channel_address = '%s' limit 1",
+		dbesc($address)
+	);
+	if($r) {
+		// try at most ten times to generate a unique address.
+		$x = 0;
+		$found_unique = false;
+		do {
+			$tmp = $address . mt_rand(1000,9999);
+			$r = q("select * from channel where channel_address = '%s' limit 1",
+				dbesc($tmp)
+			);
+			if(! $r) {
+				$address = $tmp;
+				$found_unique = true;
+				break;
+			}
+			$x ++;
+		} while ($x < 10);
+		if(! $found_unique) {
+			logger('import_diaspora: duplicate channel address. randomisation failed.');
+			notice( t('Unable to create a unique channel address. Import failed.') . EOL);
+			return;
+		}
+	}		
+
 
 	$c = create_identity(array(
-		'name' => $data['user']['name'],
-		'nickname' => $data['user']['username'],
+		'name' => escape_tags($data['user']['name']),
+		'nickname' => $address,
 		'account_id' => $account['account_id'],
 		'permissions_role' => 'social'
 	));
@@ -45,24 +77,14 @@ function import_diaspora($data) {
 		);
 	}
 
-
-
-	$photos = import_profile_photo($data['user']['profile']['image_url'],$c['channel']['channel_hash']);
-	if($photos[4])
-		$photodate = NULL_DATE;
-	else
-		$photodate = $xchan['xchan_photo_date'];
-
-	$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s'
-		where xchan_hash = '%s'",
-		dbesc($photos[0]),
-		dbesc($photos[1]),
-		dbesc($photos[2]),
-		dbesc($photos[3]),
-		dbesc($photodate),
-		dbesc($c['channel']['channel_hash'])
-	);
-
+	if($data['user']['profile']['image_url']) {
+		$p = z_fetch_url($data['user']['profile']['image_url'],true);
+		if($p['success']) {
+			$rawbytes = $p['body'];
+			$type = guess_image_type('dummyfile',$p['header']);
+			import_channel_photo($rawbytes,$type,$c['channel']['channel_account_id'],$channel_id);
+		}
+	}
 
 	$gender = escape_tags($data['user']['profile']['gender']);
 	$about = diaspora2bb($data['user']['profile']['bio']);

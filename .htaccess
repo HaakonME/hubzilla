@@ -5,7 +5,13 @@ AddType audio/ogg .oga
 
 # don't allow any web access to logfiles, even after rotation/compression
 <FilesMatch "\.(out|log|gz)$">
-Deny from all
+  <IfModule !mod_access_compat.c>
+    Require all denied
+  </IfModule>
+  <IfModule mod_access_compat.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
 </FilesMatch>
 
 <IfModule mod_rewrite.c>
@@ -22,6 +28,4 @@ Deny from all
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.*)$ index.php?q=$1 [E=REMOTE_USER:%{HTTP:Authorization},L,QSA]
-
 </IfModule>
-

@@ -84,8 +84,10 @@ function redbasic_form(&$a, $arr) {
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file, ".php");
-			$scheme_name = $f;
-			$scheme_choices[$f] = $scheme_name;
+			if($f != 'default') {
+				$scheme_name = $f;
+				$scheme_choices[$f] = $scheme_name;
+			}
 		}
 	}
 

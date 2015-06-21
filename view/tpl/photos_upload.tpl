@@ -1,4 +1,4 @@
-<div id="photo-upload-form" class="generic-content-wrapper">
+<div id="photo-upload-form">
 	<div class="section-content-tools-wrapper">
 		<form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form">
 			<input type="hidden" id="photos-upload-source" name="source" value="photos" />

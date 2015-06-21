@@ -28,6 +28,7 @@ If no personal options are set, and no schema is selected, we will first try to 
 with the file name &quot;default.php&quot;.  This file should never be included with a theme. If it
 is, merge conflicts will occur as people update their code. Rather, this should be defined
 by administrators on a site by site basis.
+default.php and default.css MUST be symlinks to existing scheme files.
 
 You schema does not need to - and should not - contain all of these values.  Only the values
 that differ from the defaults should be listed.  This gives you some very powerful options

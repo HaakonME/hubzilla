@@ -70,6 +70,7 @@ if (($schema) && ($schema != '---')) {
 
 // If we haven't got a schema, load the default.  We shouldn't touch this - we
 // should leave it for admins to define for themselves.
+// default.php and default.css MUST be symlinks to existing schema files.
 if (! $schema) {
 
 	if(file_exists('view/theme/redbasic/schema/default.php')) {

@@ -798,7 +798,7 @@ function item_post(&$a) {
 
 	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
 
-		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
+		$datarray['body'] = trim(z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']));
 
 		if($uid) {
 			if($channel['channel_hash'] === $datarray['author_xchan']) {

@@ -36,5 +36,8 @@
 	<input type="submit" name="submit" id="import-submit-button" value="{{$submit}}" />
 	<div id="import-submit-end" class="import-field-end"></div>
 
+	<div id="import-common-desc" class="descriptive-paragraph">{{$pleasewait}}</div>
+
+
 </form>
 

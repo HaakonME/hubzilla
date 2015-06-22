@@ -38,6 +38,15 @@ function import_post(&$a) {
 
 
 	if($src) {
+
+		// This is OS specific and could also fail if your tmpdir isn't very large
+		// mostly used for Diaspora which exports gzipped files.
+
+		if(strpos($filename,'.gz')){
+			@rename($src,$src . '.gz');
+			@system('gunzip ' . escapeshellarg($src . '.gz'));
+		}
+
 		if($filesize) {
 			$data = @file_get_contents($src);
 		}
@@ -85,8 +94,14 @@ function import_post(&$a) {
 	$data = json_decode($data,true);
 
 //	logger('import: data: ' . print_r($data,true));
-
 //	print_r($data);
+
+
+	if(array_key_exists('user',$data) && array_key_exists('version',$data)) {
+		require_once('include/Import/import_diaspora.php');
+		import_diaspora($data);
+		return;
+	}
 
 	// import channel
 
@@ -306,7 +321,7 @@ function import_post(&$a) {
 				dbesc($photos[2]),
 				dbesc($photos[3]),
 				dbesc($photodate),
-				dbesc($xchan_hash)
+				dbesc($xchan['xchan_hash'])
 			);
 			
 		}
@@ -488,7 +503,7 @@ function import_content(&$a) {
 
 	$o = replace_macros(get_markup_template('channel_import.tpl'),array(
 		'$title' => t('Import Channel'),
-		'$desc' => t('Use this form to import an existing channel from a different server/hub. You may retrieve the channel identity from the old server/hub via the network or provide an export file. Only identity and connections/relationships will be imported. Importation of content is not yet available.'),
+		'$desc' => t('Use this form to import an existing channel from a different server/hub. You may retrieve the channel identity from the old server/hub via the network or provide an export file.'),
 		'$label_filename' => t('File to Upload'),
 		'$choice' => t('Or provide the old server/hub details'),
 		'$label_old_address' => t('Your old identity address (xyz@example.com)'),
@@ -496,7 +511,8 @@ function import_content(&$a) {
 		'$label_old_pass' => t('Your old login password'),
 		'$common' => t('For either option, please choose whether to make this hub your new primary address, or whether your old location should continue this role. You will be able to post from either location, but only one can be marked as the primary location for files, photos, and media.'),
 		'$label_import_primary' => t('Make this hub my primary location'),
-		'$label_import_posts' => t('Import existing posts if possible'),
+		'$label_import_posts' => t('Import existing posts if possible (experimental - limited by available memory'),
+		'$pleasewait' => t('This process may take several minutes to complete. Please submit the form only once and leave this page open until finished.'), 
 		'$email' => '',
 		'$pass' => '',
 		'$submit' => t('Submit')

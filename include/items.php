@@ -2592,6 +2592,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['item_blocked']    = ((array_key_exists('item_blocked',$arr))    ? intval($arr['item_blocked'])          : $orig[0]['item_blocked'] );
 
 
+
 	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
 	$arr['layout_mid']    = ((array_key_exists('layout_mid',$arr)) ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
 
@@ -2635,12 +2636,11 @@ function item_store_update($arr,$allow_exec = false) {
 		return $ret;
 	}
 
-	$r = q("delete from term where oid = %d and otype = %d",
-		intval($orig_post_id),
-		intval(TERM_OBJ_POST)
-	);
-
-	if(($terms) && (is_array($terms))) {
+	if(is_array($terms)) {
+		$r = q("delete from term where oid = %d and otype = %d",
+			intval($orig_post_id),
+			intval(TERM_OBJ_POST)
+		);
 		foreach($terms as $t) {
 			q("insert into term (uid,oid,otype,type,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
@@ -2666,6 +2666,8 @@ function item_store_update($arr,$allow_exec = false) {
 
 	return $ret;
 }
+
+
 
 function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id, $walltowall = false) {
 

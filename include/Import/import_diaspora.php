@@ -51,7 +51,6 @@ function import_diaspora($data) {
 		'account_id' => $account['account_id'],
 		'permissions_role' => 'social'
 	));
-
 	
 	if(! $c['success'])
 		return;
@@ -106,8 +105,8 @@ function import_diaspora($data) {
 		intval($channel_id)
 	);
 
-	if($data['aspects']) {
-		foreach($data['aspects'] as $aspect) {
+	if($data['user']['aspects']) {
+		foreach($data['user']['aspects'] as $aspect) {
 			group_add($channel_id,escape_tags($aspect['name']),intval($aspect['contacts_visible']));
 		}
 	} 
@@ -115,8 +114,8 @@ function import_diaspora($data) {
 	// now add connections and send friend requests
 
 
-	if($data['contacts']) {
-		foreach($data['contacts'] as $contact) {
+	if($data['user']['contacts']) {
+		foreach($data['user']['contacts'] as $contact) {
 			$result = new_contact($channel_id, $contact['person_diaspora_handle'], $c['channel']);
 			if($result['success']) {
 				if($contact['aspects']) {
@@ -133,7 +132,6 @@ function import_diaspora($data) {
 	// items and comments
 
 
-	proc_run('php','include/notifier.php','location',$channel_id);
 
 	// This will indirectly perform a refresh_all *and* update the directory
 

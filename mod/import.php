@@ -93,16 +93,15 @@ function import_post(&$a) {
 
 	$data = json_decode($data,true);
 
-	if(array_key_exists('user',$data) && array_key_exists('aspects',$data)) {
+//	logger('import: data: ' . print_r($data,true));
+//	print_r($data);
+
+
+	if(array_key_exists('user',$data) && array_key_exists('version',$data)) {
 		require_once('include/Import/import_diaspora.php');
 		import_diaspora($data);
 		return;
 	}
-
-
-//	logger('import: data: ' . print_r($data,true));
-
-//	print_r($data);
 
 	// import channel
 
@@ -515,6 +514,7 @@ function import_content(&$a) {
 		'$common' => t('For either option, please choose whether to make this hub your new primary address, or whether your old location should continue this role. You will be able to post from either location, but only one can be marked as the primary location for files, photos, and media.'),
 		'$label_import_primary' => t('Make this hub my primary location'),
 		'$label_import_posts' => t('Import existing posts if possible'),
+		'$pleasewait' => t('This process may take several minutes to complete. Please submit the form only once and leave this page open until finished.'), 
 		'$email' => '',
 		'$pass' => '',
 		'$submit' => t('Submit')

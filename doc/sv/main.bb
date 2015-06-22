@@ -1,7 +1,5 @@
 [img][baseurl]/assets/hashlogo.png[/img]
 
-[size=large][b]$Projectname dokumentation[/b][/size]
-
 [zrl=[baseurl]/help/about][b]Vad är $Projectname?[/b][/zrl]
 $Projectname är en decentraliserad publicerings- och kommunikationsplattform som möjliggör att du behåller kontrollen över dina kommunikationer med hjälp av automatisk kryptering och fininställbar behörighetskontroll. Det är du, och bara du, som beslutar vem som är behörig att ta del av ditt innehåll.
 
@@ -12,7 +10,7 @@ Föreställ dig isolerade familjekommunikationsplatformer, distribuerade nätfor
 [zrl=[baseurl]/help/what_is_zot][b]Har du Zot? Skaffa det, direkt.[/b][/zrl]
 Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Projectname. Som medlem är du inte längre bunden till en enskild sida eller hub tack vara "nomadiska identiteter". Flytt lätt till en annan server och håll dina kontakter och förbindelser intakta eller klona och kör den samma kanal på flera servrar simultant. I tillfälle av att en av dem stänger ner så går du inte miste om något. Plus när du är loggat in i $Projectname så är det inga flera inloggningar även när du kontakter andra hubbar i nätverket. Zot är det som gör $Projectname till något särskilt värdefullt/som urskiljer $Projectname från mängden.
 
-[size=large][b]Kom igång[/b][/size]
+[h3]Kom igång[/h3]
 [zrl=[baseurl]/help/Privacy]Privacy Policy[/zrl]
 [zrl=[baseurl]/help/registration]Account Registration[/zrl]
 [zrl=[baseurl]/help/accounts_profiles_channels_basics]You at the $Projectname: accounts, profiles and channels in short[/zrl]
@@ -25,7 +23,7 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 [zrl=[baseurl]/help/cloud]Cloud Storage[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Channel or Account[/zrl]
 
-[size=large][b]Hjälp till medlemmar[/b][/size]
+[h3]Hjälp till medlemmar[/h3]
 [zrl=[baseurl]/help/tags_and_mentions]Tags and Mentions[/zrl]
 [zrl=[baseurl]/help/webpages]Web Pages[/zrl]
 [zrl=[baseurl]/help/bbcode]BBcode reference for posts and comments[/zrl]
@@ -36,7 +34,7 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 [zrl=[baseurl]/help/diaspora_compat]Diaspora Communications Compatibility (Diaspora and Friendica)[/zrl]
 [zrl=[baseurl]/help/faq_members]FAQ For Members[/zrl]
 
-[size=large][b]Hjälp till administratorer[/b][/size]
+[h3]Hjälp till administratorer[/h3]
 [zrl=[baseurl]/help/install]Install[/zrl]
 [zrl=[baseurl]/help/debian_install]Easy Install on Debian via script[/zrl]
 [zrl=[baseurl]/help/red2pi]Installing Red on the Raspberry Pi[/zrl]
@@ -44,7 +42,7 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 [zrl=[baseurl]/help/hidden_configs]Tweaking $Projectname's Hidden Configurations[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
-[size=large][b]Teknisk dokumentation[/b][/size]
+[h3]Teknisk dokumentation[/h3]
 [zrl=[baseurl]/help/history]$Projectname history[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
 [zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
@@ -69,10 +67,10 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl]
 [zrl=[baseurl]/help/dev_beginner]Sep-for-step manual for beginning developers[/zrl]
 
-[size=large][b]FAQ för utvecklare[/b][/size]
+[h3]FAQ för utvecklare[/h3]
 [zrl=[baseurl]/help/faq_developers]FAQ For Developers[/zrl]
 
-[size=large][b]Externa resurser[/b][/size]
+[h3]Externa resurser[/h3]
 [zrl=[baseurl]/help/external-resource-links]External Resource Links[/zrl]
 [url=https://github.com/friendica/red]Main Website[/url]
 [url=https://github.com/friendica/red-addons]Addon Website[/url]
@@ -80,7 +78,7 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 
 [url=[baseurl]/help/credits]$Projectname Credits[/url]
 
-[size=large][b]About This $Projectname Hub[/b][/size]
+[h3]About This $Projectname Hub[/h3]
 [zrl=[baseurl]/help/TermsOfService]Terms of Service For This Hub[/zrl]
 [zrl=[baseurl]/siteinfo]Hub Information (/siteinfo)[/zrl]
 [zrl=[baseurl]/siteinfo_json]Detailed Technical Hub Information (/siteinfo_json)[/zrl]

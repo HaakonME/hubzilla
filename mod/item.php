@@ -343,8 +343,8 @@ function item_post(&$a) {
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$app               = $orig_post['app'];
-		$title             = $_REQUEST['title'];
-		$body              = $_REQUEST['body'];
+		$title             = escape_tags(trim($_REQUEST['title']));
+		$body              = trim($_REQUEST['body']);
 		$item_flags        = $orig_post['item_flags'];
 
 		// force us to recalculate if we need to obscure this post
@@ -798,7 +798,7 @@ function item_post(&$a) {
 
 	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
 
-		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
+		$datarray['body'] = trim(z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']));
 
 		if($uid) {
 			if($channel['channel_hash'] === $datarray['author_xchan']) {

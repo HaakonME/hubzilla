@@ -1,46 +1,73 @@
-<div class="directory-item lframe{{if $entry.safe}} safe{{/if}}" id="directory-item-{{$entry.hash}}" >
+<div class="directory-item{{if $entry.safe}} safe{{/if}}" id="directory-item-{{$entry.hash}}" >
+	<div class="section-subtitle-wrapper">
+		<div class="pull-right">
+			{{if $entry.viewrate}}
+				{{if $entry.canrate}}<button class="btn btn-default btn-xs" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="icon-pencil"></i><span id="edited-{{$entry.hash}}" class="required" id="edited-{{$entry.hash}}" style="display: none;" >&nbsp;*</span></button>{{/if}}
+				{{if $entry.total_ratings}}<a href="ratings/{{$entry.hash}}" id="dir-rating-{{$entry.hash}}" class="btn btn-default btn-xs">{{$entry.total_ratings}}</a>{{/if}}
+			{{/if}}
+			{{if $entry.ignlink}}
+			<a class="directory-ignore btn btn-warning btn-xs" href="{{$entry.ignlink}}"> {{$entry.ignore_label}}</a>
+			{{/if}}
+			<a class="btn btn-success btn-xs" href="{{$entry.connect}}"><i class="icon-plus connect-icon"></i> {{$entry.conn_label}}</a>
+		</div>
+		<h3>{{if $entry.public_forum}}<i class="icon-comments-alt" title="{{$entry.forum_label}} @{{$entry.nickname}}+"></i>&nbsp;{{/if}}<a href='{{$entry.profile_link}}' >{{$entry.name}}</a>{{if $entry.online}}&nbsp;<i class="icon-asterisk online-now" title="{{$entry.online}}"></i>{{/if}}</h3>
+	</div>
+	<div class="section-content-wrapper directory-collapse">
+		<div class="contact-photo-wrapper" id="directory-photo-wrapper-{{$entry.hash}}" >
+			<div class="contact-photo" id="directory-photo-{{$entry.hash}}" >
+				<a href="{{$entry.profile_link}}" class="directory-profile-link" id="directory-profile-link-{{$entry.hash}}" >
+					<img class="directory-photo-img" src="{{$entry.photo}}" alt="{{$entry.alttext}}" title="{{$entry.alttext}}" />
+				</a>
+			</div>
+		</div>
+		<div class="contact-info">
+			{{if $entry.common_friends}}
+			<div id="dir-common" class="contact-info-element">
+				<span class="contact-info-label">{{$entry.common_label}}</span> {{$entry.common_count}}
+			</div>
+			{{/if}}
 
-<div class="contact-photo-wrapper" id="directory-photo-wrapper-{{$entry.hash}}" >
-<div class="contact-photo" id="directory-photo-{{$entry.hash}}" >
-<a href="{{$entry.profile_link}}" class="directory-profile-link" id="directory-profile-link-{{$entry.hash}}" ><img class="directory-photo-img" src="{{$entry.photo}}" alt="{{$entry.alttext}}" title="{{$entry.alttext}}" /></a>
-{{if $entry.connect}}
-<div class="directory-connect btn btn-default"><a href="{{$entry.connect}}"><i class="icon-plus connect-icon"></i> {{$entry.conn_label}}</a></div>
-{{/if}}
-{{if $entry.ignlink}}
-<div class="directory-ignore btn btn-default"><a href="{{$entry.ignlink}}"> {{$entry.ignore_label}}</a></div>
-{{/if}}
-</div>
-</div>
+			{{if $entry.pdesc}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$entry.pdesc_label}}</span> {{$entry.pdesc}}
+			</div>
+			{{/if}}
 
-<div class='contact-info'>
-<div class="contact-name" id="directory-name-{{$entry.hash}}"  ><a href='{{$entry.profile_link}}' >{{$entry.name}}</a>{{if $entry.online}} <i class="icon-asterisk online-now" title="{{$entry.online}}"></i>{{/if}}</div>
+			{{if $entry.age}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$entry.age_label}}</span> {{$entry.age}}
+			</div>
+			{{/if}}
 
-{{if $entry.viewrate}}
-<div id="dir-rating-wrapper-{{$entry.hash}}" class="directory-rating" >{{if $entry.total_ratings}}<a href="ratings/{{$entry.hash}}"><button class="btn btn-default">{{$entry.total_ratings}}</button></a>{{/if}}
-{{if $entry.canrate}}<button class="btn btn-default" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="icon-pencil"></i></button><span class="required" id="edited-{{$entry.hash}}" style="display: none;" >*</span>{{/if}}
-</div>
-{{/if}}
-{{if $entry.common_friends}}
-<div id="dir-common">{{$entry.common_txt}}</div>
-{{/if}}
-{{if $entry.public_forum}}
-<div class="contact-forum">
-{{$entry.forum_label}} @{{$entry.nickname}}+
-</div>
-{{/if}}
+			{{if $entry.details}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$entry.location}}</span> {{$entry.details}}
+			</div>
+			{{/if}}
 
-<div class="contact-details">{{$entry.details}}</div>
-{{if $entry.hometown}}
-<div class="directory-hometown">{{$entry.hometown}} </div>
-{{/if}}
-{{if $entry.about}}
-<div class="directory-about">{{$entry.about}} </div>
-{{/if}}
-{{if $entry.homepage}}
-<div class="directory-homepage">{{$entry.homepage}}{{$entry.homepageurl}} </div>
-{{/if}}
-{{if $entry.kw}}
-<div class="directory-keywords">{{$entry.kw}} {{$entry.keywords}}</div>
-{{/if}}
-</div>
+			{{if $entry.hometown}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$entry.hometown_label}}</span> {{$entry.hometown}}
+			</div>
+			{{/if}}
+
+			{{if $entry.homepage}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$entry.homepage}}</span> {{$entry.homepageurl}}
+			</div>
+			{{/if}}
+
+			{{if $entry.kw}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$entry.kw}}</span> {{$entry.keywords}}
+			</div>
+			{{/if}}
+
+			{{if $entry.about}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$entry.about_label}}</span> {{$entry.about}}
+			</div>
+			{{/if}}
+		</div>
+	</div>
 </div>

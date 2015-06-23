@@ -1097,7 +1097,7 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 }
 
 function item_check_service_class($channel_id,$iswebpage) {
-	$ret = array('success' => false, $message => '');
+	$ret = array('success' => false, 'message' => '');
 
 	if ($iswebpage) {
 		// note: we aren't counting comanche templates and blocks, only webpages

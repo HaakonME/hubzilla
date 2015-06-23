@@ -343,8 +343,8 @@ function item_post(&$a) {
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$app               = $orig_post['app'];
-		$title             = $_REQUEST['title'];
-		$body              = $_REQUEST['body'];
+		$title             = escape_tags(trim($_REQUEST['title']));
+		$body              = trim($_REQUEST['body']);
 		$item_flags        = $orig_post['item_flags'];
 
 		// force us to recalculate if we need to obscure this post

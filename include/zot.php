@@ -1373,8 +1373,7 @@ function public_recips($msg) {
 
 		if($msg['message']['message_top']) {
 			$z = q("select owner_xchan as hash from item where parent_mid = '%s' ",
-				dbesc($msg['message']['message_top']),
-				intval(ITEM_UPLINK)
+				dbesc($msg['message']['message_top'])
 			);
 			if($z)
 				$r = array_merge($r,$z);

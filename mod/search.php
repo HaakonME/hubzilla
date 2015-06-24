@@ -172,7 +172,6 @@ function search_content(&$a,$update = 0, $load = false) {
 					$item_normal
 					$sql_extra 
 					$suffix $pager_sql",
-					intval(ITEM_OBSCURED),
 					dbesc($sys['xchan_hash'])
 				);
 			}

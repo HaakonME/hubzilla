@@ -1547,8 +1547,8 @@ require_once('include/items.php');
         }
 
         $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
-               intval($itemid), 
-				intval(api_user())
+			intval($itemid), 
+			intval(api_user())
 		);
 
         if (! $item)
@@ -1556,19 +1556,16 @@ require_once('include/items.php');
 
         switch($action){
             case "create":
-
-                $flags = $item[0]['item_flags'] | ITEM_STARRED;
-
+                $flags = $item[0]['item_starred'] = 1;
                 break;
             case "destroy":
-
-                $flags = $item[0]['item_flags'] | (~ ITEM_STARRED);
+                $flags = $item[0]['item_starred'] = 0;
                 break;
             default:
                 return false;
         }
 
-        $r = q("UPDATE item SET item_flags = %d where id = %d and uid = %d",
+        $r = q("UPDATE item SET item_starred = %d where id = %d and uid = %d",
                 intval($flags),
 				intval($itemid),
 				intval(api_user())
@@ -1577,8 +1574,8 @@ require_once('include/items.php');
 			return false;
 
         $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
-               intval($itemid), 
-				intval(api_user())
+			intval($itemid), 
+			intval(api_user())
 		);
 
 		xchan_query($item,true);

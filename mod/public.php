@@ -71,7 +71,7 @@ function public_content(&$a, $update = 0, $load = false) {
 	require_once('include/security.php');
 
 	if(get_config('system','site_firehose')) {
-		$uids = " and item.uid in ( " . stream_perms_api_uids(PERMS_PUBLIC) . " ) and item_private = 0  and (item_flags & " . intval(ITEM_WALL) . " ) > 0 ";
+		$uids = " and item.uid in ( " . stream_perms_api_uids(PERMS_PUBLIC) . " ) and item_private = 0  and item_wall = 1 ";
 	}
 	else {
 		$sys = get_sys_channel();

@@ -3225,17 +3225,6 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$title = $item['title'];
 	$body  = $item['body'];
 
-	if(! $private) {
-		if($flag_bits & ITEM_OBSCURED) {
-			$key = get_config('system','prvkey');
-			if($title)
-				$title = crypto_unencapsulate(json_decode($title,true),$key);
-			if($body)
-				$body = crypto_unencapsulate(json_decode($body,true),$key);
-			$item_obscured = 0;
-		}
-	}
-
 	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_obscured = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
 		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = %d, item_origin = %d  where id = %d",
 		intval($item_uplink),

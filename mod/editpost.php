@@ -126,7 +126,7 @@ function editpost_content(&$a) {
 		'$noloc' => t('Clear browser location'),
 		'$voting' => t('Toggle voting'),
 		'$feature_voting' => $voting,
-		'$consensus' => (($itm[0]['item_flags'] & ITEM_CONSENSUS) ? 1 : 0),
+		'$consensus' => intval($itm[0]['item_consensus']),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$ptyp' => $itm[0]['type'],

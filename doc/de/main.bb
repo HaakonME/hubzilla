@@ -1,7 +1,5 @@
 [img][baseurl]/assets/hashlogo.png[/img]
 
-[size=large][b]Dokumentation zur Red-Matrix[/b][/size]
-
 [zrl=[baseurl]/help/about]Was ist die Red-Matrix?[/zrl]
 Die Red-Matrix ist eine dezentrale Kommunikations- und Publishing-Plattform. Sie ermöglicht Dir die volle Kontrolle über all Deine Kommunikation mit Hilfe von automatischer Verschlüsselung und detaillierter Zugriffskontrolle. Du, und [i]nur[/i] Du, entscheidest, wer Deine Beiträge sehen darf.
 
@@ -12,7 +10,7 @@ Kommunikationsplattformen für Familien, verteilte Online-Communities, Support-F
 [zrl=[baseurl]/help/what_is_zot]Got Zot? Hast Du schon Zot? Wenn nicht wird es Zeit.[/zrl]
 Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Matrix entwickelt wurde. Als Mitglied bist Du dank „Nomadischer Identität“ nicht länger an einen einzigen Server oder Anbieter gebunden. Ziehe einfach auf einen anderen Server um und behalte dabei alle Deine Kontakte, oder klone Deinen Kanal und lasse ihn auf mehreren Servern gleichzeitig laufen – sollte einer davon plötzlich geschlossen werden, ist das kein Problem für Dich. Und bist Du erst Teil der Red-Matrix, musst Du Dich nie wieder mehrfach anmelden, selbst wenn Du Seiten auf einem andere Red-Server betrachtest. Zot ist, was die Red-Matrix besonders macht.
 
-[size=large][b]Erste Schritte[/b][/size]
+[h3]Erste Schritte[/h3]
 [zrl=[baseurl]/help/Privacy]Datenschutz[/zrl]
 [zrl=[baseurl]/help/registration]Ein Konto registrieren[/zrl]
 [zrl=[baseurl]/help/accounts_profiles_channels_basics]Du in der Red-Matrix: Konten, Profile und Kanäle kurz erklärt[/zrl]
@@ -25,7 +23,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/cloud]Cloud-Speicher[/zrl]
 [zrl=[baseurl]/help/remove_account]Einen Kanal oder das ganze Konto löschen[/zrl]
 
-[size=large][b]Hilfe für $Projectname-Mitglieder[/b][/size]
+[h3]Hilfe für $Projectname-Mitglieder[/h3]
 [zrl=[baseurl]/help/tags_and_mentions]Tags und Erwähnungen[/zrl]
 [zrl=[baseurl]/help/webpages]Webseiten[/zrl]
 [zrl=[baseurl]/help/bbcode]BBcode-Referenz für Posts und Kommentare[/zrl]
@@ -36,7 +34,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/diaspora_compat]Kompatibilität zum Diaspora-Protokoll (zur Kommunikation mit Kontakten aus Diaspora und Friendica)[/zrl]
 [zrl=[baseurl]/help/faq_members]FAQ für Mitglieder[/zrl]
 
-[size=large][b]Hilfe für Administratoren[/b][/size]
+[h3]Hilfe für Administratoren[/h3]
 [zrl=[baseurl]/help/install]Installation[/zrl]
 [zrl=[baseurl]/help/debian_install]Einfache Installation unter Debian mit einem Skript[/zrl]
 [zrl=[baseurl]/help/red2pi]Red auf einem Raspberry Pi installieren[/zrl]
@@ -44,7 +42,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/hidden_configs]Versteckte Konfigurations-Optionen[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ für Admins[/zrl]
 
-[size=large][b]Technische Dokumentation[/b][/size]
+[h3]Technische Dokumentation[/h3]
 [zrl=[baseurl]/help/history]Die Geschichte der $Projectname[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]Zot – ein grober Überblick[/zrl]
 [zrl=[baseurl]/help/zot]Eine Einführung ins Zot-Protokoll[/zrl]
@@ -70,10 +68,10 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/git_for_non_developers]Git für Nicht-Entwickler[/zrl]
 [zrl=[baseurl]/help/dev_beginner]Schritt-für-Schritt-Einführung für neue Entwickler[/zrl]
 
-[size=large][b]Häufig gestellte Fragen für Entwickler[/b][/size]
+[h3]Häufig gestellte Fragen für Entwickler[/h3]
 [zrl=[baseurl]/help/faq_developers]FAQ für Entwickler[/zrl]
 
-[size=large][b]Externe Ressourcen[/b][/size]
+[h3]Externe Ressourcen[/h3]
 [zrl=[baseurl]/help/external-resource-links]Links zu externen Ressourcen[/zrl]
 [url=https://github.com/friendica/red]Haupt-Website[/url]
 [url=https://github.com/friendica/red-addons]Addons-Website[/url]
@@ -82,7 +80,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 
 [url=[baseurl]/help/credits]$Projectname Credits[/url]
 
-[size=large][b]Über diesen Red-Server[/b][/size]
+[h3]Über diesen Red-Server[/h3]
 [zrl=[baseurl]/help/TermsOfService]Nutzungsbedingungen dieses Red-Servers[/zrl]
 [zrl=[baseurl]/siteinfo]Informationen zu diesem Server und der Red-Version[/zrl]
 [zrl=[baseurl]/siteinfo/json]Detaillierte technische Informationen zu diesem Server im JSON-Format[/zrl]

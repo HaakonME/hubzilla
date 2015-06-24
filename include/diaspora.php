@@ -2357,6 +2357,24 @@ function diaspora_profile($importer,$xml,$msg) {
 
 function diaspora_share($owner,$contact) {
 	$a = get_app();
+
+	$enabled = intval(get_config('system','diaspora_enabled'));
+	if(! $enabled) {
+		logger('diaspora_share: disabled');
+		return;
+	}
+
+	$allowed = get_pconfig($owner['channel_id'],'system','diaspora_allowed');
+	if($allowed === false)
+		$allowed = 1;
+
+	if(! intval($allowed)) {
+		logger('diaspora_share: disallowed for channel ' . $importer['channel_name']);
+		return;
+	}
+
+
+
 	$myaddr = $owner['channel_address'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
 
 	if(! array_key_exists('xchan_hash',$contact)) {
@@ -2929,6 +2947,14 @@ function diaspora_transmit($owner,$contact,$slap,$public_batch,$queue_run=false)
 
 	$enabled = intval(get_config('system','diaspora_enabled'));
 	if(! $enabled) {
+		return 200;
+	}
+
+	$allowed = get_pconfig($owner['channel_id'],'system','diaspora_allowed');
+	if($allowed === false)
+		$allowed = 1;
+
+	if(! intval($allowed)) {
 		return 200;
 	}
 

@@ -1,76 +1,29 @@
-
-.directory-end {
-	clear: both;
-}
-.directory-name {
-	float: left;
-	width: 250px;
-}
-
-.directory-photo {
-	margin-left: 25px;
-}
 .directory-photo-img {
-	margin-left: auto;
-	margin-right: auto;
-	display:block;
 	width: 80px;
 	height: 80px;
-}
-.directory-details {
-	text-align: center;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-.directory-item {
-	overflow: hidden;
-	margin: 2px;
-	border-bottom: 2px solid #f1f1f1;
-	padding-bottom: 3px;
-}
-
-#directory-search-wrapper {
-	margin-top: 20px;
-	margin-right: 20px;
-	margin-bottom: 50px;
-}
-
-#directory-search-end {
-}
-
-.directory-photo-img {
 	border: none;
 }
 
-div.dirtagblock.widget {
-  overflow: hidden;
+.directory-item {
+	margin-bottom: 20px;
 }
 
-.dirpopup {
-	float: left;
-	width: 225px;
-}
-
-.contact-photo {
-	float: left;
-	margin-right: 16px;
-}
-
-.contact-name {
-	font-size: larger;
+.contact-photo-wrapper {
+	display: table-cell;
+	vertical-align: top;
 }
 
 .contact-info {
-	display: block;
-	overflow: hidden;
+	display: table-cell;
+	vertical-align: top;
+	padding-left: 10px;
 }
 
-.directory-item {
-	margin: 16px;
+.contact-info-label {
+	font-weight: bold;
 }
-.directory-connect {
-	margin-top: 3px;
-	display:block;
-	margin-left:auto;
-	margin-right: auto;
+
+.section-subtitle-wrapper .btn-xs {
+	margin-top: -2px;
 }
+

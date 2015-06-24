@@ -13,6 +13,7 @@ function directory_init(&$a) {
 			intval(local_channel()),
 			dbesc($_GET['ignore'])
 		);
+		goaway(z_root() . '/directory?suggest=1');
 	}
 
 	$observer = get_observer_hash();
@@ -200,22 +201,24 @@ function directory_content(&$a) {
 						if(in_array($rr['hash'],$contacts))
 							$connect_link = '';
 
-						$details = '';
+						$location = '';
 						if(strlen($rr['locale']))
-							$details .= $rr['locale'];
+							$location .= $rr['locale'];
 						if(strlen($rr['region'])) {
 							if(strlen($rr['locale']))
-								$details .= ', ';
-							$details .= $rr['region'];
+								$location .= ', ';
+							$location .= $rr['region'];
 						}
 						if(strlen($rr['country'])) {
 							if(strlen($details))
-								$details .= ', ';
-							$details .= $rr['country'];
+								$location .= ', ';
+							$location .= $rr['country'];
 						}
+
+						$age = '';
 						if(strlen($rr['birthday'])) {
 							if(($years = age($rr['birthday'],'UTC','')) != 0)
-								$details .= '<br />' . t('Age: ') . $years ; 
+								$age = $years;
 						}
 
 						$page_type = '';
@@ -231,7 +234,6 @@ function directory_content(&$a) {
 							|| (x($profile,'region') == 1)
 							|| (x($profile,'postcode') == 1)
 							|| (x($profile,'country') == 1))
-						$location = t('Location:');
 
 						$gender = ((x($profile,'gender') == 1) ? t('Gender: ') . $profile['gender']: False);
 	
@@ -240,9 +242,9 @@ function directory_content(&$a) {
 						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage: ') : False);
 						$homepageurl = ((x($profile,'homepage') == 1) ?  $profile['homepage'] : ''); 
 
-						$hometown = ((x($profile,'hometown') == 1) ?  t('Hometown: ') . $profile['hometown']  : False);
+						$hometown = ((x($profile,'hometown') == 1) ? $profile['hometown']  : False);
 
-						$about = ((x($profile,'about') == 1) ?  t('About: ') . bbcode(strip_bbimage($profile['about'])) : False);
+						$about = ((x($profile,'about') == 1) ? bbcode(strip_bbimage($profile['about'])) : False);
 
 						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
 
@@ -284,21 +286,27 @@ function directory_content(&$a) {
 							'hash' => $rr['hash'],
 							'alttext' => $rr['name'] . ((local_channel() || remote_channel()) ? ' ' . $rr['address'] : ''),
 							'name' => $rr['name'],
-							'details' => $pdesc . $details,
+							'details' => $details,
+							'age' => $age,
+							'age_label' => t('Age:'),
 							'profile' => $profile,
 							'address' =>  $rr['address'],
 							'nickname' => substr($rr['address'],0,strpos($rr['address'],'@')),
 							'location' => $location,
+							'location_label' => t('Location:'),
 							'gender'   => $gender,
 							'total_ratings' => $total_ratings,
 							'viewrate' => true,
 							'canrate' => ((local_channel()) ? true : false),
 							'pdesc'	=> $pdesc,
+							'pdesc_label' => t('Description:'),
 							'marital'  => $marital,
 							'homepage' => $homepage,
 							'homepageurl' => linkify($homepageurl),
 							'hometown' => $hometown,
+							'hometown_label' => t('Hometown:'),
 							'about' => $about,
+							'about_label' => t('About:'),
 							'conn_label' => t('Connect'),
 							'forum_label' => t('Public Forum:'), 
 							'connect' => $connect_link,
@@ -306,9 +314,10 @@ function directory_content(&$a) {
 							'kw' => (($out) ? t('Keywords: ') : ''),
 							'keywords' => $out,
 							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
-							'ignore_label' => "Don't suggest",
+							'ignore_label' => t('Don\'t suggest'),
 							'common_friends' => (($common[$rr['address']]) ? intval($common[$rr['address']]) : ''),
-							'common_txt' => sprintf( t('Common connections: %s'), intval($common[$rr['address']]) ),
+							'common_label' => t('Common connections:'),
+							'common_count' => intval($common[$rr['address']]),
 							'safe' => $safe_mode
 						);
 
@@ -354,7 +363,7 @@ function directory_content(&$a) {
 						killme();
 					}
 					else {
-						$maxheight = 175;
+						$maxheight = 94;
 
 						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; divmore_height = " . intval($maxheight) . ";  </script>";
 						$o .= replace_macros($tpl, array(

@@ -431,7 +431,7 @@ function post_activity_item($arr) {
 
 	if(array_key_exists('item_private',$arr) && $arr['item_private']) {
 
-		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+		$arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
 
 		if($channel) {
 			if($channel['channel_hash'] === $arr['author_xchan']) {
@@ -2102,7 +2102,7 @@ function item_store($arr, $allow_exec = false) {
 
 		$arr['lang'] = detect_language($arr['body']);
 		// apply the input filter here - if it is obscured it has been filtered already
-		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+		$arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
 
 		if(local_channel() && (! $arr['sig'])) {
 			$channel = get_app()->get_channel();
@@ -2480,8 +2480,9 @@ function item_store_update($arr,$allow_exec = false) {
     if((! array_key_exists('item_obscured', $arr)) || $arr['item_obscured'] == 0) {
 
 		$arr['lang'] = detect_language($arr['body']);
+
         // apply the input filter here - if it is obscured it has been filtered already
-        $arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+        $arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
 
         if(local_channel() && (! $arr['sig'])) {
             $channel = get_app()->get_channel();

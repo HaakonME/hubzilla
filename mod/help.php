@@ -97,6 +97,7 @@ function help_content(&$a) {
 	$content = preg_replace_callback("/#include (.*?)\;/ism", 'preg_callback_help_include', $content);
 
 	return replace_macros(get_markup_template("help.tpl"), array(
+		'$title' => t('$Projectname Documentation'),
 		'$content' => translate_projectname($content)
 	));
 

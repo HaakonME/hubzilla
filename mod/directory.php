@@ -365,6 +365,8 @@ function directory_content(&$a) {
 					else {
 						$maxheight = 94;
 
+						$dirtitle = (($globaldir) ? t('Global Directory') : t('Local Directory'));
+
 						$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; divmore_height = " . intval($maxheight) . ";  </script>";
 						$o .= replace_macros($tpl, array(
 							'$search' => $search,
@@ -372,10 +374,9 @@ function directory_content(&$a) {
 							'$finddsc' => t('Finding:'),
 							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
 							'$entries' => $entries,
-							'$dirlbl' => $suggest ? t('Channel Suggestions') : t('Directory'),
+							'$dirlbl' => $suggest ? t('Channel Suggestions') : $dirtitle,
 							'$submit' => t('Find'),
 							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page'))
-
 						));
 
 

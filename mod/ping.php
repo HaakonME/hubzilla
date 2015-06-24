@@ -163,10 +163,8 @@ function ping_init(&$a) {
 				);
 				break;
 			case 'messages':
-				$r = q("update mail set mail_flags = ( mail_flags | %d ) where channel_id = %d and not (mail_flags & %d) > 0",
-					intval(MAIL_SEEN),
-					intval(local_channel()),
-					intval(MAIL_SEEN)
+				$r = q("update mail set mail_seen = 1 where mail_seen = 0 and channel_id = %d ",
+					intval(local_channel())
 				);
 				break;
 			case 'all_events':
@@ -244,11 +242,9 @@ function ping_init(&$a) {
 	if(argc() > 1 && argv(1) === 'messages') {
 		$channel = $a->get_channel();
 		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
-			where channel_id = %d and not ( mail_flags & %d ) > 0 and not (mail_flags & %d ) > 0 
+			where channel_id = %d and mail_seen = 0 and mail_deleted = 0 
 			and from_xchan != '%s' order by created desc limit 50",
 			intval(local_channel()),
-			intval(MAIL_SEEN),
-			intval(MAIL_DELETED),
 			dbesc($channel['channel_hash'])
 		);
 
@@ -260,7 +256,7 @@ function ping_init(&$a) {
 					'url' => $zz['xchan_url'],
 					'photo' => $zz['xchan_photo_s'],
 					'when' => relative_date($zz['created']), 
-					'hclass' => (($zz['mail_flags'] & MAIL_SEEN) ? 'notify-seen' : 'notify-unseen'), 
+					'hclass' => (intval($zz['mail_seen']) ? 'notify-seen' : 'notify-unseen'), 
 					'message' => t('sent you a private message'),
 				);
 			}
@@ -420,9 +416,8 @@ function ping_init(&$a) {
 
 	if($vnotify & VNOTIFY_MAIL) {
 		$mails = q("SELECT count(id) as total from mail
-			WHERE channel_id = %d AND not (mail_flags & %d) > 0 and from_xchan != '%s' ",
+			WHERE channel_id = %d AND mail_seen = 0 and from_xchan != '%s' ",
 			intval(local_channel()),
-			intval(MAIL_SEEN),		
 			dbesc($channel['channel_hash'])
 		);
 		if($mails)

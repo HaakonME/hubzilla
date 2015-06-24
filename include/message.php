@@ -283,8 +283,8 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 	foreach($r as $k => $rr) {
 		$r[$k]['from'] = find_xchan_in_array($rr['from_xchan'],$c);
 		$r[$k]['to']   = find_xchan_in_array($rr['to_xchan'],$c);
-		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
-		if($r[$k]['mail_flags'] & MAIL_OBSCURED) {
+		$r[$k]['seen'] = intval($rr['mail_seen']);
+		if(intval($r[$k]['mail_obscured'])) {
 			if($r[$k]['title'])
 				$r[$k]['title'] = base64url_decode(str_rot47($r[$k]['title']));
 			if($r[$k]['body'])
@@ -322,7 +322,7 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 	foreach($messages as $k => $message) {
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
-		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
+		if(intval($messages[$k]['mail_obscured'])) {
 			if($messages[$k]['title'])
 				$messages[$k]['title'] = base64url_decode(str_rot47($messages[$k]['title']));
 			if($messages[$k]['body'])
@@ -331,9 +331,7 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 	}
 
 	if($updateseen) {
-		$r = q("UPDATE `mail` SET mail_flags = (mail_flags | %d) where not (mail_flags & %d)>0 and id = %d AND channel_id = %d",
-			intval(MAIL_SEEN),
-			intval(MAIL_SEEN),
+		$r = q("UPDATE `mail` SET mail_seen = 1 where mail_seen = 0 and id = %d AND channel_id = %d",
 			dbesc($messageitem_id),
 			intval($channel_id)
 		);
@@ -409,7 +407,7 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 	foreach($messages as $k => $message) {
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
-		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
+		if(intval($messages[$k]['mail_obscured'])) {
 			if($messages[$k]['title'])
 				$messages[$k]['title'] = base64url_decode(str_rot47($messages[$k]['title']));
 			if($messages[$k]['body'])
@@ -419,9 +417,7 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 
 
 	if($updateseen) {
-		$r = q("UPDATE `mail` SET mail_flags = (mail_flags | %d) where not (mail_flags & %d)>0 and parent_mid = '%s' AND channel_id = %d",
-			intval(MAIL_SEEN),
-			intval(MAIL_SEEN),
+		$r = q("UPDATE `mail` SET mail_seen = 1 where mail_seen = 0 and parent_mid = '%s' AND channel_id = %d",
 			dbesc($r[0]['parent_mid']),
 			intval($channel_id)
 		);

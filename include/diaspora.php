@@ -1723,14 +1723,14 @@ function diaspora_conversation($importer,$xml,$msg) {
 		if($body)
 			$body  = str_rot47(base64url_encode($body));
 
-		q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
+		q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_obscured`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')",
 			intval($importer['channel_id']),
 			intval($conversation['id']),
 			dbesc($person['xchan_hash']),
 			dbesc($importer['channel_hash']),
 			dbesc($subject),
 			dbesc($body),
-			intval(MAIL_OBSCURED),
+			intval(1),
 			dbesc($msg_guid),
 			dbesc($parent_uri),
 			dbesc($msg_created_at)
@@ -1855,14 +1855,14 @@ function diaspora_message($importer,$xml,$msg) {
 	if($body)
 		$body  = str_rot47(base64url_encode($body));
 
-	q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_flags`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', '%d','%s','%s','%s')",
+	q("insert into mail ( `channel_id`, `convid`, `from_xchan`,`to_xchan`,`title`,`body`,`mail_obscured`,`mid`,`parent_mid`,`created`) values ( %d, %d, '%s', '%s', '%s', '%s', '%d','%s','%s','%s')",
 		intval($importer['channel_id']),
 		intval($conversation['id']),
 		dbesc($person['xchan_hash']),
 		dbesc($importer['xchan_hash']),
 		dbesc($subject),
 		dbesc($body),
-		intval(MAIL_OBSCURED),
+		intval(1),
 		dbesc($msg_guid),
 		dbesc($parent_uri),
 		dbesc($msg_created_at)
@@ -2897,7 +2897,7 @@ function diaspora_send_mail($item,$owner,$contact) {
 		'participant_handles' => xmlify($cnv['recips'])
 	);
 
-	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+	if(array_key_exists('mail_obscured',$item) && intval($item['mail_obscured'])) {
 		if($item['title'])
 			$item['title'] = base64url_decode(str_rot47($item['title']));
 		if($item['body'])

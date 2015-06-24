@@ -1473,7 +1473,7 @@ function encode_mail($item) {
 	$x['type'] = 'mail';
 	$x['encoding'] = 'zot';
 
-	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+	if(array_key_exists('mail_obscured',$item) && intval($item['mail_obscured'])) {
 		if($item['title'])
 			$item['title'] = base64url_decode(str_rot47($item['title']));
 		if($item['body'])
@@ -1495,7 +1495,7 @@ function encode_mail($item) {
 
 	$x['flags'] = array();
 
-	if($item['mail_flags'] & MAIL_RECALLED) {
+	if(intval($item['mail_recalled'])) {
 		$x['flags'][] = 'recalled';
 		$x['title'] = '';
 		$x['body']  = '';
@@ -1523,12 +1523,12 @@ function get_mail_elements($x) {
 
 	if($x['flags'] && is_array($x['flags'])) {
 		if(in_array('recalled',$x['flags'])) {
-			$arr['mail_flags'] |= MAIL_RECALLED;
+			$arr['mail_recalled'] = 1;
 		}
 	}
 
 	$key = get_config('system','pubkey');
-	$arr['mail_flags'] |= MAIL_OBSCURED;
+	$arr['mail_obscured'] = 1;
 	if($arr['body']) {
 		$arr['body']  = str_rot47(base64url_encode($arr['body']));
 		$arr['body'] = htmlspecialchars($arr['body'],ENT_COMPAT,'UTF-8',false);

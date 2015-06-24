@@ -1251,10 +1251,9 @@ function unobscure(&$item) {
 		if($item['body'])
 			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 		if(get_config('system','item_cache')) {
-			q("update item set title = '%s', body = '%s', item_flags = %d where id = %d",
+			q("update item set title = '%s', body = '%s', item_obscured = 0 where id = %d",
 				dbesc($item['title']),
 				dbesc($item['body']),
-				intval($item['item_flags'] - ITEM_OBSCURED),
 				intval($item['id'])
 			);
 		}
@@ -1262,7 +1261,7 @@ function unobscure(&$item) {
 }
 
 function unobscure_mail(&$item) {
-	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+	if(array_key_exists('mail_obscured',$item) && intval($item['mail_obscured'])) {
 		if($item['title'])
 			$item['title'] = base64url_decode(str_rot47($item['title']));
 		if($item['body'])

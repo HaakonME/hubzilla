@@ -1926,7 +1926,7 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 			intval($channel['channel_id'])
 		);
 		if($r) {
-			if($arr['mail_flags'] & MAIL_RECALLED) {
+			if(intval($arr['mail_recalled'])) {
 				$x = q("delete from mail where id = %d and channel_id = %d",
 					intval($r[0]['id']),
 					intval($channel['channel_id'])

@@ -145,8 +145,7 @@ function mail_content(&$a) {
 		if(! intval(argv(2)))
 			return;
 		$cmd = argv(1);
-		$r = q("update mail set mail_flags = mail_flags | %d where id = %d and channel_id = %d",
-			intval(MAIL_RECALLED),
+		$r = q("update mail set mail_recalled = 1 where id = %d and channel_id = %d",
 			intval(argv(2)),
 			intval(local_channel())
 		);
@@ -312,7 +311,7 @@ function mail_content(&$a) {
 				'delete' => t('Delete message'),
 				'recall' => t('Recall message'),
 				'can_recall' => (($channel['channel_hash'] == $message['from_xchan']) ? true : false),
-				'is_recalled' => (($message['mail_flags'] & MAIL_RECALLED) ? t('Message has been recalled.') : ''),
+				'is_recalled' => (intval($message['mail_recalled']) ? t('Message has been recalled.') : ''),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
 			);
 				

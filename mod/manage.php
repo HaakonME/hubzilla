@@ -78,9 +78,8 @@ function manage_content(&$a) {
 					$channels[$x]['intros'] = intval($intr[0]['total']);
 
 
-				$mails = q("SELECT count(id) as total from mail WHERE channel_id = %d AND not (mail_flags & %d)>0 and from_xchan != '%s' ",
+				$mails = q("SELECT count(id) as total from mail WHERE channel_id = %d AND mail_seen = 0 and from_xchan != '%s' ",
 					intval($channels[$x]['channel_id']),
-					intval(MAIL_SEEN),		
 					dbesc($channels[$x]['channel_hash'])
 				);
 

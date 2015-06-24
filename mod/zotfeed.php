@@ -9,7 +9,7 @@ function zotfeed_init(&$a) {
 
 	$mindate = (($_REQUEST['mindate']) ? datetime_convert('UTC','UTC',$_REQUEST['mindate']) : '');
 	if(! $mindate)
-		$mindate = datetime_convert('UTC','UTC', 'now - 4 days');
+		$mindate = datetime_convert('UTC','UTC', 'now - 14 days');
 
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
 		$result['message'] = 'Public access denied';
@@ -29,7 +29,7 @@ function zotfeed_init(&$a) {
 		$x = get_sys_channel();
 		if($x)
 			$r = array($x);
-		$mindate = datetime_convert('UTC','UTC', 'now - 2 days');
+		$mindate = datetime_convert('UTC','UTC', 'now - 14 days');
 	}
 	if(! $r) {
 		$result['message'] = 'Channel not found.';

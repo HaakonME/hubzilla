@@ -55,7 +55,18 @@ function photo_upload($channel, $observer, $args) {
 	$str_group_deny    = perms2str(((is_array($args['group_deny']))    ? $args['group_deny']    : explode(',',$args['group_deny'])));
 	$str_contact_deny  = perms2str(((is_array($args['contact_deny']))  ? $args['contact_deny']  : explode(',',$args['contact_deny'])));
 
-	if ($args['data']) {
+	$os_storage = 0;
+
+	if($args['os_path'] && $args['getimagesize']) {
+		$imagedata = @file_get_contents($args['os_path']);
+		$filename = $args['filename'];
+		$filesize = strlen($imagedata);
+		// this is going to be deleted if it exists
+		$src = '/tmp/deletemenow';
+		$type = $args['getimagesize']['mime'];
+		$os_storage = 1;
+	}
+	elseif ($args['data']) {
 
 		// allow an import from a binary string representing the image.
 		// This bypasses the upload step and max size limit checking
@@ -158,7 +169,8 @@ function photo_upload($channel, $observer, $args) {
 	$p = array('aid' => $account_id, 'uid' => $channel_id, 'xchan' => $visitor, 'resource_id' => $photo_hash,
 		'filename' => $filename, 'album' => $album, 'scale' => 0, 'photo_usage' => PHOTO_NORMAL, 
 		'allow_cid' => $str_contact_allow, 'allow_gid' => $str_group_allow,
-		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_group_deny
+		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_group_deny,
+		'os_storage' => $os_storage, 'os_path' => $args['os_path']
 	);
 	if($args['created'])
 		$p['created'] = $args['created'];
@@ -172,6 +184,10 @@ function photo_upload($channel, $observer, $args) {
 	$r1 = $ph->save($p);
 	if(! $r1)
 		$errors = true;
+
+
+	unset($p['os_storage']);
+	unset($p['os_path']);
 
 	if(($width > 640 || $height > 640) && (! $errors)) {
 		$ph->scaleImage(640);

@@ -311,7 +311,11 @@ abstract class photo_driver {
 		$p['title'] = (($arr['title']) ? $arr['title'] : '');
 		$p['description'] = (($arr['description']) ? $arr['description'] : '');
 		$p['photo_usage'] = intval($arr['photo_usage']);
-			
+		$p['os_storage'] = intval($arr['os_storage']);			
+		$p['os_path'] = $arr['os_path'];
+
+		if(! intval($p['scale']))
+			logger('save: ' . print_r($arr,true));
 
 		$x = q("select id from photo where resource_id = '%s' and uid = %d and xchan = '%s' and `scale` = %d limit 1",
 				dbesc($p['resource_id']),
@@ -333,6 +337,7 @@ abstract class photo_driver {
 				`height` = %d,
 				`width` = %d,
 				`data` = '%s',
+				`os_storage` = %d, 
 				`size` = %d,
 				`scale` = %d,
 				`photo_usage` = %d,
@@ -355,7 +360,8 @@ abstract class photo_driver {
 				dbesc($p['album']),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				dbescbin($this->imageString()),
+				(intval($p['os_storage']) ? dbesc($p['os_path']) : dbescbin($this->imageString())),
+				intval($p['os_storage']),
 				intval(strlen($this->imageString())),
 				intval($p['scale']),
 				intval($p['photo_usage']),
@@ -370,8 +376,8 @@ abstract class photo_driver {
 		}
 		else {
 			$r = q("INSERT INTO `photo`
-				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `photo_usage`, `title`, `description`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
+				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `os_storage`, `size`, `scale`, `photo_usage`, `title`, `description`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval($p['aid']),
 				intval($p['uid']),
 				dbesc($p['xchan']),
@@ -383,7 +389,8 @@ abstract class photo_driver {
 				dbesc($p['album']),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				dbescbin($this->imageString()),
+				(intval($p['os_storage']) ? dbesc($p['os_path']) : dbescbin($this->imageString())),
+				intval($p['os_storage']),
 				intval(strlen($this->imageString())),
 				intval($p['scale']),
 				intval($p['photo_usage']),

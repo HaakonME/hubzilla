@@ -391,10 +391,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
 	$upload_path = (($arr && $arr['directory']) ? $arr['directory'] : '');
 
- logger('arr: ' . print_r($arr,true));
-
-	// This is currently used only in mod/wall_attach
-
+	// logger('arr: ' . print_r($arr,true));
 
 	if(! perm_is_allowed($channel_id,get_observer_hash(), 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
@@ -417,6 +414,14 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$src      = $_FILES['userfile']['tmp_name'];
 		$filename = basename($_FILES['userfile']['name']);
 		$filesize = intval($_FILES['userfile']['size']);
+
+
+
+
+
+
+
+
 	}
 
 	$existing_size = 0;
@@ -482,9 +487,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 
 	$is_photo = 0;
-	$x = @getimagesize($src);
-	logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
-	if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+	$gis = @getimagesize($src);
+	logger('getimagesize: ' . print_r($gis,true), LOGGER_DATA); 
+	if(($gis) && ($gis[2] === IMAGETYPE_GIF || $gis[2] === IMAGETYPE_JPEG || $gis[2] === IMAGETYPE_PNG)) {
 		$is_photo = 1;
 	}
 
@@ -518,6 +523,30 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	else {
 		$folder_hash = '';
 	}		
+
+	$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' ",
+		dbesc($filename),
+		dbesc($filename . '(%)'),
+		dbesc($folder_hash)
+	);
+
+	if($r) {
+		$x = 1;
+
+		do {
+			$found = false;
+			foreach($r as $rr) {
+				if($rr['filename'] === $filename . '(' . $x . ')') {
+					$found = true;
+					break;
+				}
+			}
+			if($found)
+				$x++;
+		}			
+		while($found);
+		$filename = $filename . '(' . $x . ')';
+	}
 
 	$os_basepath = 'store/' . $channel['channel_address'] . '/' ;
 	$os_relpath = '';
@@ -614,7 +643,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	if($is_photo) {
-		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'data' => @file_get_contents($src));
+		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis);
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		$p = photo_upload($channel,get_app()->get_observer(),$args);

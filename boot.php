@@ -80,9 +80,9 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zothub.com', 
 	'https://zotid.net', 
 	'https://red.zottel.red',
-	'https://hubzilla.info',
+	'https://redmatrix.info',
 	'https://my.federated.social',
-	'https://hubzilla.nl'
+	'https://redmatrix.nl'
 );
 
 

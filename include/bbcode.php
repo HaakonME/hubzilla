@@ -201,16 +201,6 @@ function translate_design_element($type) {
 	return $ret;
 }
 
-/**
- * @brief Returns an QR-code image from a value given in $match[1].
- *
- * @param array $match
- * @return string HTML img with QR-code of $match[1]
- */
-function bb_qr($match) {
-	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . htmlspecialchars($match[1],ENT_QUOTES,'UTF-8') . '" />';
-}
-
 
 function bb_ShareAttributes($match) {
 
@@ -578,10 +568,6 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 
 	if (strpos($Text,'http') !== false) {
 		$Text = preg_replace("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/$urlchars+)/ism", '$1<a href="$2" >$2</a>', $Text);
-	}
-
-	if (strpos($Text,'[/qr]') !== false) {
-		$Text = preg_replace_callback("/\[qr\](.*?)\[\/qr\]/ism", 'bb_qr', $Text);
 	}
 
 	if (strpos($Text,'[/share]') !== false) {

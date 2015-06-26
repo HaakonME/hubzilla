@@ -1442,23 +1442,23 @@ function generate_named_map($location) {
 
 function prepare_body(&$item,$attach = false) {
 
-	if($item['html']) {
-		$s = bb_observer($item['html']);
-	}
-	else {
+//	if($item['html']) {
+//		$s = bb_observer($item['html']);
+//	}
+//	else {
 		call_hooks('prepare_body_init', $item); 
-		unobscure($item);
+//		unobscure($item);
 		$s = prepare_text($item['body'],$item['mimetype'], true);
-	}
+//	}
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
 	$s = $prep_arr['html'];
 
-	q("update item set html = '%s' where id = %d",
-		dbesc($s),
-		intval($item['id'])
-	);
+//	q("update item set html = '%s' where id = %d",
+//		dbesc($s),
+//		intval($item['id'])
+//	);
 
 	if(! $attach) {
 		return $s;

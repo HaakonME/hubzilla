@@ -15,7 +15,7 @@ function update_home_content(&$a) {
         $text = home_content($a,$profile_uid, $load);
         $pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
         $replace = "<img\${1} dst=\"\${2}\"";
-        $text = preg_replace($pattern, $replace, $text);
+//        $text = preg_replace($pattern, $replace, $text);
 
 		if(! $load) {
 			$replace = '<br />' . t('[Embedded content - reload page to view]') . '<br />';

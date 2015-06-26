@@ -244,7 +244,7 @@ function directory_content(&$a) {
 
 						$hometown = ((x($profile,'hometown') == 1) ? $profile['hometown']  : False);
 
-						$about = ((x($profile,'about') == 1) ? bbcode(strip_bbimage($profile['about'])) : False);
+						$about = ((x($profile,'about') == 1) ? bbcode($profile['about']) : False);
 
 						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
 

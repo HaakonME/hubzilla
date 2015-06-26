@@ -29,6 +29,21 @@
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},			
+			monthNames: aStr['monthNames'],
+			monthNamesShort: aStr['monthNamesShort'],
+			dayNames: aStr['dayNames'],
+			dayNamesShort: aStr['dayNamesShort'],
+			buttonText: { 
+				prev: "<span class='fc-text-arrow'>&lsaquo;</span>",
+				next: "<span class='fc-text-arrow'>&rsaquo;</span>",
+				prevYear: "<span class='fc-text-arrow'>&laquo;</span>",
+				nextYear: "<span class='fc-text-arrow'>&raquo;</span>",
+				today: aStr['today'],
+				month: aStr['month'],
+				week: aStr['week'],
+				day: aStr['day']
+			},
+			allDayText: aStr['allday'],
 			timeFormat: 'H(:mm)',
 			eventClick: function(calEvent, jsEvent, view) {
 				showEvent(calEvent.id);

@@ -398,6 +398,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		return $ret;
 	}
 
+
 	// The 'update' option sets db values without uploading a new attachment
 	// 'replace' replaces the existing uploaded data
 	// 'revision' creates a new revision with new upload data
@@ -415,21 +416,13 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$filename = basename($_FILES['userfile']['name']);
 		$filesize = intval($_FILES['userfile']['size']);
 
-
-
-
-
-
-
-
 	}
 
 	$existing_size = 0;
 
 	if($options === 'replace') {
-		/** @BUG $replace is undefined here */
 		$x = q("select id, hash, filesize from attach where id = %d and uid = %d limit 1",
-			intval($replace),
+			intval($arr['id']),
 			intval($channel_id)
 		);
 		if(! $x) {
@@ -457,33 +450,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$hash = $x[0]['hash'];
 	}
 
-	// Check storage limits
-	if($options !== 'update') {
-		$maxfilesize = get_config('system','maxfilesize');
 
-		if(($maxfilesize) && ($filesize > $maxfilesize)) {
-			$ret['message'] = sprintf( t('File exceeds size limit of %d'), $maxfilesize);
-			@unlink($src);
-			return $ret;
-		}
-
-		$limit = service_class_fetch($channel_id, 'attach_upload_limit');
-
-		if($limit !== false) {
-			$r = q("select sum(filesize) as total from attach where aid = %d ",
-				intval($channel['channel_account_id'])
-			);
-			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
-				$ret['message'] = upgrade_message(true) . sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."), $limit / 1024000);
-				@unlink($src);
-				return $ret;
-			}
-		}
-		$mimetype = z_mime_content_type($filename);
-	}
-
-	if(! $hash)
-		$hash = random_string();
 
 
 	$is_photo = 0;
@@ -524,28 +491,76 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$folder_hash = '';
 	}		
 
-	$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' ",
-		dbesc($filename),
-		dbesc($filename . '(%)'),
-		dbesc($folder_hash)
-	);
+	if(! $options) {
 
-	if($r) {
-		$x = 1;
+		// A freshly uploaded file. Check for duplicate and resolve with the channel's overwrite settings.
 
-		do {
-			$found = false;
-			foreach($r as $rr) {
-				if($rr['filename'] === $filename . '(' . $x . ')') {
-					$found = true;
-					break;
+		$r = q("select filename, id, hash, filesize from attach where filename = '%s' and folder = '%s' ",
+			dbesc($filename),
+			dbesc($folder_hash)
+		);
+		if($r) {
+			$overwrite = get_pconfig($channel_id,'system','overwrite_dup_files');
+			if($overwrite) {
+				$options = 'replace';
+				$existing_id = $x[0]['id'];
+				$existing_size = intval($x[0]['filesize']);
+				$hash = $x[0]['hash'];
+			}
+			else {
+				$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' ",
+					dbesc($filename),
+					dbesc($filename . '(%)'),
+					dbesc($folder_hash)
+				);
+
+				if($r) {
+					$x = 1;
+
+					do {
+						$found = false;
+						foreach($r as $rr) {
+							if($rr['filename'] === $filename . '(' . $x . ')') {
+								$found = true;
+								break;
+							}
+						}
+						if($found)
+							$x++;
+					}			
+					while($found);
+					$filename = $filename . '(' . $x . ')';
 				}
 			}
-			if($found)
-				$x++;
-		}			
-		while($found);
-		$filename = $filename . '(' . $x . ')';
+		}
+	}
+
+	if(! $hash)
+		$hash = random_string();
+
+	// Check storage limits
+	if($options !== 'update') {
+		$maxfilesize = get_config('system','maxfilesize');
+
+		if(($maxfilesize) && ($filesize > $maxfilesize)) {
+			$ret['message'] = sprintf( t('File exceeds size limit of %d'), $maxfilesize);
+			@unlink($src);
+			return $ret;
+		}
+
+		$limit = service_class_fetch($channel_id, 'attach_upload_limit');
+
+		if($limit !== false) {
+			$r = q("select sum(filesize) as total from attach where aid = %d ",
+				intval($channel['channel_account_id'])
+			);
+			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
+				$ret['message'] = upgrade_message(true) . sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."), $limit / 1024000);
+				@unlink($src);
+				return $ret;
+			}
+		}
+		$mimetype = z_mime_content_type($filename);
 	}
 
 	$os_basepath = 'store/' . $channel['channel_address'] . '/' ;
@@ -560,7 +575,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	$os_relpath .= $hash;
 
-	@file_put_contents($os_basepath . $os_relpath,@file_get_contents($src));
+	if($src)
+		@file_put_contents($os_basepath . $os_relpath,@file_get_contents($src));
 
 	$created = datetime_convert();
 

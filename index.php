@@ -151,10 +151,6 @@ $a->set_apps($arr['app_menu']);
  *
  * "module"_init
  * "module"_post (only called if there are $_POST variables)
- * "module"_aside
- *       $theme_$module_aside (and $extends_$module_aside) are run first if either exist
- *       if either of these return false, module_aside is not called
- *           This allows a theme to over-ride the sidebar layout completely.
  * "module"_content - the string return of this function contains our page body
  *
  * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do
@@ -322,34 +318,6 @@ if($a->module_loaded) {
 		call_hooks($a->module . '_mod_post', $_POST);
 		$func = $a->module . '_post';
 		$func($a);
-	}
-
-	if(! $a->error) {
-		// If a theme has defined an _aside() function, run that first
-		//
-		// If the theme function doesn't exist, see if this theme extends another,
-		// and see if that other theme has an _aside() function--if it does, run it
-		//
-		// If $aside_default is not False after the theme _aside() function, run the
-		// module's _aside() function too
-		//
-		// This gives themes more control over how the sidebar looks
-
-		$aside_default = true;
-		call_hooks($a->module . '_mod_aside',$placeholder);
-		if(function_exists(str_replace('-','_',current_theme()) . '_' . $a->module . '_aside')) {
-			$func = str_replace('-','_',current_theme()) . '_' . $a->module . '_aside';
-			$aside_default = $func($a);
-		}
-		elseif($aside_default && x($a->theme_info, "extends")
-			&& (function_exists(str_replace('-', '_',$a->theme_info["extends"]) . '_' . $a->module . '_aside'))) {
-			$func = str_replace('-', '_', $a->theme_info["extends"]) . '_' . $a->module . '_aside';
-			$aside_default = $func($a);
-		}
-		if($aside_default && function_exists($a->module . '_aside')) {
-			$func = $a->module . '_aside';
-			$func($a);
-		}
 	}
 
 	if((! $a->error) && (function_exists($a->module . '_content'))) {

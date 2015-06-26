@@ -8,7 +8,9 @@
 			{{if $entry.ignlink}}
 			<a class="directory-ignore btn btn-warning btn-xs" href="{{$entry.ignlink}}"> {{$entry.ignore_label}}</a>
 			{{/if}}
+			{{if $entry.connect}}
 			<a class="btn btn-success btn-xs" href="{{$entry.connect}}"><i class="icon-plus connect-icon"></i> {{$entry.conn_label}}</a>
+			{{/if}}
 		</div>
 		<h3>{{if $entry.public_forum}}<i class="icon-comments-alt" title="{{$entry.forum_label}} @{{$entry.nickname}}+"></i>&nbsp;{{/if}}<a href='{{$entry.profile_link}}' >{{$entry.name}}</a>{{if $entry.online}}&nbsp;<i class="icon-asterisk online-now" title="{{$entry.online}}"></i>{{/if}}</h3>
 	</div>

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-06-19.1068\n"
+"Project-Id-Version: 2015-06-26.1075\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-19 00:04-0700\n"
+"POT-Creation-Date: 2015-06-26 00:05-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -386,7 +386,7 @@ msgid "Collection"
 msgstr ""
 
 #: ../../include/menu.php:107 ../../include/page_widgets.php:8
-#: ../../include/page_widgets.php:36 ../../include/RedDAV/RedBrowser.php:269
+#: ../../include/page_widgets.php:36 ../../include/RedDAV/RedBrowser.php:266
 #: ../../include/ItemObject.php:100 ../../include/apps.php:254
 #: ../../mod/webpages.php:181 ../../mod/thing.php:227
 #: ../../mod/connections.php:382 ../../mod/connections.php:395
@@ -404,23 +404,23 @@ msgstr ""
 msgid "%1$s likes %2$s's %3$s"
 msgstr ""
 
-#: ../../include/diaspora.php:2458
+#: ../../include/diaspora.php:2476
 msgid "Please choose"
 msgstr ""
 
-#: ../../include/diaspora.php:2460
+#: ../../include/diaspora.php:2478
 msgid "Agree"
 msgstr ""
 
-#: ../../include/diaspora.php:2462
+#: ../../include/diaspora.php:2480
 msgid "Disagree"
 msgstr ""
 
-#: ../../include/diaspora.php:2464
+#: ../../include/diaspora.php:2482
 msgid "Abstain"
 msgstr ""
 
-#: ../../include/diaspora.php:2486 ../../include/diaspora.php:2497
+#: ../../include/diaspora.php:2504 ../../include/diaspora.php:2515
 #: ../../include/enotify.php:59 ../../mod/p.php:46
 msgid "$projectname"
 msgstr ""
@@ -432,6 +432,18 @@ msgstr ""
 #: ../../include/notify.php:24
 #, php-format
 msgid "commented on %s's post"
+msgstr ""
+
+#: ../../include/Import/import_diaspora.php:17
+msgid "No username found in import file."
+msgstr ""
+
+#: ../../include/Import/import_diaspora.php:42 ../../mod/import.php:142
+msgid "Unable to create a unique channel address. Import failed."
+msgstr ""
+
+#: ../../include/Import/import_diaspora.php:140 ../../mod/import.php:490
+msgid "Import completed."
 msgstr ""
 
 #: ../../include/group.php:26
@@ -740,8 +752,8 @@ msgid "Finishes:"
 msgstr ""
 
 #: ../../include/event.php:47 ../../include/bb2diaspora.php:481
-#: ../../include/identity.php:879 ../../mod/events.php:647
-#: ../../mod/directory.php:234
+#: ../../include/identity.php:879 ../../mod/directory.php:296
+#: ../../mod/events.php:647
 msgid "Location:"
 msgstr ""
 
@@ -823,7 +835,7 @@ msgstr ""
 #: ../../mod/thing.php:318 ../../mod/events.php:656 ../../mod/group.php:81
 #: ../../mod/photos.php:577 ../../mod/photos.php:654 ../../mod/photos.php:941
 #: ../../mod/photos.php:981 ../../mod/photos.php:1099 ../../mod/pdledit.php:58
-#: ../../mod/import.php:504 ../../mod/chat.php:177 ../../mod/chat.php:211
+#: ../../mod/import.php:520 ../../mod/chat.php:177 ../../mod/chat.php:211
 #: ../../mod/rate.php:167 ../../mod/invite.php:142 ../../mod/locs.php:105
 #: ../../mod/sources.php:104 ../../mod/sources.php:138
 #: ../../mod/filestorage.php:156 ../../mod/fsuggest.php:108
@@ -837,7 +849,7 @@ msgstr ""
 #: ../../mod/mitem.php:237 ../../mod/mood.php:134 ../../mod/connedit.php:679
 #: ../../mod/mail.php:355 ../../mod/appman.php:99 ../../mod/poll.php:68
 #: ../../mod/bulksetclose.php:24 ../../view/theme/apw/php/config.php:256
-#: ../../view/theme/redbasic/php/config.php:97
+#: ../../view/theme/redbasic/php/config.php:99
 msgid "Submit"
 msgstr ""
 
@@ -923,7 +935,7 @@ msgid "timeago.numbers"
 msgstr ""
 
 #: ../../include/RedDAV/RedBrowser.php:107
-#: ../../include/RedDAV/RedBrowser.php:268
+#: ../../include/RedDAV/RedBrowser.php:265
 msgid "parent"
 msgstr ""
 
@@ -978,37 +990,37 @@ msgid "Shared"
 msgstr ""
 
 #: ../../include/RedDAV/RedBrowser.php:256
-#: ../../include/RedDAV/RedBrowser.php:306 ../../mod/webpages.php:180
+#: ../../include/RedDAV/RedBrowser.php:303 ../../mod/webpages.php:180
 #: ../../mod/blocks.php:152 ../../mod/menu.php:109
 #: ../../mod/new_channel.php:121 ../../mod/layouts.php:175
 msgid "Create"
 msgstr ""
 
 #: ../../include/RedDAV/RedBrowser.php:257
-#: ../../include/RedDAV/RedBrowser.php:308 ../../mod/profile_photo.php:362
+#: ../../include/RedDAV/RedBrowser.php:305 ../../mod/profile_photo.php:362
 #: ../../mod/photos.php:718 ../../mod/photos.php:1248
 msgid "Upload"
 msgstr ""
 
-#: ../../include/RedDAV/RedBrowser.php:264 ../../mod/admin.php:994
+#: ../../include/RedDAV/RedBrowser.php:261 ../../mod/admin.php:994
 #: ../../mod/settings.php:590 ../../mod/settings.php:616
 #: ../../mod/sharedwithme.php:95
 msgid "Name"
 msgstr ""
 
-#: ../../include/RedDAV/RedBrowser.php:265
+#: ../../include/RedDAV/RedBrowser.php:262
 msgid "Type"
 msgstr ""
 
-#: ../../include/RedDAV/RedBrowser.php:266 ../../mod/sharedwithme.php:97
+#: ../../include/RedDAV/RedBrowser.php:263 ../../mod/sharedwithme.php:97
 msgid "Size"
 msgstr ""
 
-#: ../../include/RedDAV/RedBrowser.php:267 ../../mod/sharedwithme.php:98
+#: ../../include/RedDAV/RedBrowser.php:264 ../../mod/sharedwithme.php:98
 msgid "Last Modified"
 msgstr ""
 
-#: ../../include/RedDAV/RedBrowser.php:270 ../../include/ItemObject.php:120
+#: ../../include/RedDAV/RedBrowser.php:267 ../../include/ItemObject.php:120
 #: ../../include/conversation.php:660 ../../include/apps.php:255
 #: ../../mod/webpages.php:183 ../../mod/thing.php:228 ../../mod/group.php:176
 #: ../../mod/blocks.php:155 ../../mod/photos.php:1062
@@ -1018,11 +1030,11 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: ../../include/RedDAV/RedBrowser.php:305
+#: ../../include/RedDAV/RedBrowser.php:302
 msgid "Create new folder"
 msgstr ""
 
-#: ../../include/RedDAV/RedBrowser.php:307
+#: ../../include/RedDAV/RedBrowser.php:304
 msgid "Upload file"
 msgstr ""
 
@@ -1310,8 +1322,8 @@ msgstr ""
 
 #: ../../include/widgets.php:136 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../include/conversation.php:945
-#: ../../include/identity.php:828 ../../mod/match.php:64
-#: ../../mod/directory.php:302 ../../mod/suggest.php:52
+#: ../../include/identity.php:828 ../../mod/directory.php:310
+#: ../../mod/match.php:64 ../../mod/suggest.php:52
 msgid "Connect"
 msgstr ""
 
@@ -2176,7 +2188,6 @@ msgid "Search site content"
 msgstr ""
 
 #: ../../include/nav.php:168 ../../include/apps.php:141
-#: ../../mod/directory.php:366
 msgid "Directory"
 msgstr ""
 
@@ -3009,27 +3020,27 @@ msgstr ""
 msgid "Visible to specific connections."
 msgstr ""
 
-#: ../../include/items.php:4075 ../../mod/thing.php:74
+#: ../../include/items.php:4076 ../../mod/thing.php:74
 #: ../../mod/display.php:36 ../../mod/filestorage.php:27
 #: ../../mod/viewsrc.php:20 ../../mod/admin.php:167 ../../mod/admin.php:1025
 #: ../../mod/admin.php:1225
 msgid "Item not found."
 msgstr ""
 
-#: ../../include/items.php:4148 ../../include/attach.php:137
+#: ../../include/items.php:4149 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
 #: ../../include/attach.php:546 ../../include/attach.php:618
 #: ../../include/chat.php:131 ../../include/photos.php:26
 #: ../../mod/profile.php:64 ../../mod/profile.php:72
-#: ../../mod/achievements.php:30 ../../mod/manage.php:6 ../../mod/item.php:206
-#: ../../mod/item.php:214 ../../mod/item.php:978 ../../mod/api.php:26
+#: ../../mod/achievements.php:30 ../../mod/manage.php:6 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/webpages.php:69 ../../mod/thing.php:241
 #: ../../mod/thing.php:256 ../../mod/thing.php:290
 #: ../../mod/profile_photo.php:264 ../../mod/profile_photo.php:277
 #: ../../mod/block.php:22 ../../mod/block.php:72 ../../mod/like.php:178
-#: ../../mod/events.php:219 ../../mod/group.php:9 ../../mod/network.php:12
+#: ../../mod/events.php:219 ../../mod/group.php:9 ../../mod/item.php:206
+#: ../../mod/item.php:214 ../../mod/item.php:978 ../../mod/network.php:12
 #: ../../mod/common.php:35 ../../mod/connections.php:169
 #: ../../mod/blocks.php:69 ../../mod/blocks.php:76 ../../mod/photos.php:69
 #: ../../mod/pdledit.php:21 ../../mod/authtest.php:13
@@ -3059,26 +3070,26 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: ../../include/items.php:4550 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4551 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr ""
 
-#: ../../include/items.php:4566
+#: ../../include/items.php:4567
 msgid "Collection is empty."
 msgstr ""
 
-#: ../../include/items.php:4573
+#: ../../include/items.php:4574
 #, php-format
 msgid "Collection: %s"
 msgstr ""
 
-#: ../../include/items.php:4583
+#: ../../include/items.php:4584
 #, php-format
 msgid "Connection: %s"
 msgstr ""
 
-#: ../../include/items.php:4585
+#: ../../include/items.php:4586
 msgid "Connection not found."
 msgstr ""
 
@@ -3142,12 +3153,12 @@ msgstr ""
 msgid "Examples: Robert Morgenstein, Fishing"
 msgstr ""
 
-#: ../../include/contact_widgets.php:26 ../../mod/connections.php:413
-#: ../../mod/directory.php:362 ../../mod/directory.php:367
+#: ../../include/contact_widgets.php:26 ../../mod/directory.php:373
+#: ../../mod/directory.php:378 ../../mod/connections.php:413
 msgid "Find"
 msgstr ""
 
-#: ../../include/contact_widgets.php:27 ../../mod/directory.php:366
+#: ../../include/contact_widgets.php:27 ../../mod/directory.php:377
 #: ../../mod/suggest.php:60
 msgid "Channel Suggestions"
 msgstr ""
@@ -3405,7 +3416,7 @@ msgstr ""
 msgid "Birthday:"
 msgstr ""
 
-#: ../../include/identity.php:1163
+#: ../../include/identity.php:1163 ../../mod/directory.php:291
 msgid "Age:"
 msgstr ""
 
@@ -3418,7 +3429,8 @@ msgstr ""
 msgid "Sexual Preference:"
 msgstr ""
 
-#: ../../include/identity.php:1179 ../../mod/profiles.php:693
+#: ../../include/identity.php:1179 ../../mod/directory.php:307
+#: ../../mod/profiles.php:693
 msgid "Hometown:"
 msgstr ""
 
@@ -3434,7 +3446,7 @@ msgstr ""
 msgid "Religion:"
 msgstr ""
 
-#: ../../include/identity.php:1187
+#: ../../include/identity.php:1187 ../../mod/directory.php:309
 msgid "About:"
 msgstr ""
 
@@ -3928,34 +3940,73 @@ msgstr ""
 msgid "Delegated Channels"
 msgstr ""
 
-#: ../../mod/item.php:174
-msgid "Unable to locate original post."
+#: ../../mod/directory.php:48 ../../mod/photos.php:441 ../../mod/search.php:13
+#: ../../mod/display.php:13 ../../mod/ratings.php:82
+#: ../../mod/viewconnections.php:17
+msgid "Public access denied."
 msgstr ""
 
-#: ../../mod/item.php:440
-msgid "Empty post discarded."
-msgstr ""
-
-#: ../../mod/item.php:480
-msgid "Executable content type not permitted to this channel."
-msgstr ""
-
-#: ../../mod/item.php:901
-msgid "System error. Post not saved."
-msgstr ""
-
-#: ../../mod/item.php:1119
-msgid "Unable to obtain post information from database."
-msgstr ""
-
-#: ../../mod/item.php:1126
+#: ../../mod/directory.php:227
 #, php-format
-msgid "You have reached your limit of %1$.0f top level posts."
+msgid "%d rating"
+msgid_plural "%d ratings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../mod/directory.php:238
+msgid "Gender: "
 msgstr ""
 
-#: ../../mod/item.php:1133
-#, php-format
-msgid "You have reached your limit of %1$.0f webpages."
+#: ../../mod/directory.php:240
+msgid "Status: "
+msgstr ""
+
+#: ../../mod/directory.php:242
+msgid "Homepage: "
+msgstr ""
+
+#: ../../mod/directory.php:302 ../../mod/events.php:645
+msgid "Description:"
+msgstr ""
+
+#: ../../mod/directory.php:311
+msgid "Public Forum:"
+msgstr ""
+
+#: ../../mod/directory.php:314
+msgid "Keywords: "
+msgstr ""
+
+#: ../../mod/directory.php:317
+msgid "Don't suggest"
+msgstr ""
+
+#: ../../mod/directory.php:319
+msgid "Common connections:"
+msgstr ""
+
+#: ../../mod/directory.php:368
+msgid "Global Directory"
+msgstr ""
+
+#: ../../mod/directory.php:368
+msgid "Local Directory"
+msgstr ""
+
+#: ../../mod/directory.php:374
+msgid "Finding:"
+msgstr ""
+
+#: ../../mod/directory.php:379
+msgid "next page"
+msgstr ""
+
+#: ../../mod/directory.php:379
+msgid "previous page"
+msgstr ""
+
+#: ../../mod/directory.php:395
+msgid "No entries (some entries may be hidden)."
 msgstr ""
 
 #: ../../mod/xchan.php:6
@@ -3993,8 +4044,8 @@ msgstr ""
 #: ../../mod/filestorage.php:159 ../../mod/admin.php:430
 #: ../../mod/settings.php:579 ../../mod/mitem.php:163 ../../mod/mitem.php:164
 #: ../../mod/mitem.php:234 ../../mod/mitem.php:235 ../../mod/removeme.php:60
-#: ../../view/theme/redbasic/php/config.php:102
-#: ../../view/theme/redbasic/php/config.php:127 ../../boot.php:1554
+#: ../../view/theme/redbasic/php/config.php:104
+#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1554
 msgid "Yes"
 msgstr ""
 
@@ -4003,8 +4054,8 @@ msgstr ""
 #: ../../mod/filestorage.php:159 ../../mod/admin.php:428
 #: ../../mod/settings.php:579 ../../mod/mitem.php:163 ../../mod/mitem.php:164
 #: ../../mod/mitem.php:234 ../../mod/mitem.php:235 ../../mod/removeme.php:60
-#: ../../view/theme/redbasic/php/config.php:102
-#: ../../view/theme/redbasic/php/config.php:127 ../../boot.php:1554
+#: ../../view/theme/redbasic/php/config.php:104
+#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1554
 msgid "No"
 msgstr ""
 
@@ -4225,7 +4276,7 @@ msgstr ""
 msgid "Channel not found."
 msgstr ""
 
-#: ../../mod/block.php:75 ../../mod/help.php:79 ../../mod/display.php:106
+#: ../../mod/block.php:75 ../../mod/display.php:106 ../../mod/help.php:79
 #: ../../mod/page.php:89 ../../index.php:230
 msgid "Page not found."
 msgstr ""
@@ -4382,10 +4433,6 @@ msgstr ""
 msgid ""
 "Important for events that happen in a particular place. Not practical for "
 "global holidays."
-msgstr ""
-
-#: ../../mod/events.php:645
-msgid "Description:"
 msgstr ""
 
 #: ../../mod/events.php:649
@@ -4560,12 +4607,34 @@ msgstr ""
 msgid "Site Administrators"
 msgstr ""
 
-#: ../../mod/help.php:49 ../../mod/help.php:55 ../../mod/help.php:61
-msgid "Help:"
+#: ../../mod/item.php:174
+msgid "Unable to locate original post."
 msgstr ""
 
-#: ../../mod/help.php:76 ../../index.php:227
-msgid "Not Found"
+#: ../../mod/item.php:440
+msgid "Empty post discarded."
+msgstr ""
+
+#: ../../mod/item.php:480
+msgid "Executable content type not permitted to this channel."
+msgstr ""
+
+#: ../../mod/item.php:901
+msgid "System error. Post not saved."
+msgstr ""
+
+#: ../../mod/item.php:1119
+msgid "Unable to obtain post information from database."
+msgstr ""
+
+#: ../../mod/item.php:1126
+#, php-format
+msgid "You have reached your limit of %1$.0f top level posts."
+msgstr ""
+
+#: ../../mod/item.php:1133
+#, php-format
+msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""
 
 #: ../../mod/network.php:91
@@ -4736,12 +4805,6 @@ msgstr ""
 
 #: ../../mod/photos.php:160 ../../mod/photos.php:942
 msgid "Delete Photo"
-msgstr ""
-
-#: ../../mod/photos.php:441 ../../mod/search.php:13 ../../mod/display.php:13
-#: ../../mod/ratings.php:82 ../../mod/directory.php:47
-#: ../../mod/viewconnections.php:17
-msgid "Public access denied."
 msgstr ""
 
 #: ../../mod/photos.php:452
@@ -4966,76 +5029,67 @@ msgstr ""
 msgid "Your service plan only allows %d channels."
 msgstr ""
 
-#: ../../mod/import.php:51
+#: ../../mod/import.php:60
 msgid "Nothing to import."
 msgstr ""
 
-#: ../../mod/import.php:75
+#: ../../mod/import.php:84
 msgid "Unable to download data from old server"
 msgstr ""
 
-#: ../../mod/import.php:81
+#: ../../mod/import.php:90
 msgid "Imported file is empty."
 msgstr ""
 
-#: ../../mod/import.php:106
+#: ../../mod/import.php:121
 msgid ""
 "Cannot create a duplicate channel identifier on this system. Import failed."
 msgstr ""
 
-#: ../../mod/import.php:127
-msgid "Unable to create a unique channel address. Import failed."
-msgstr ""
-
-#: ../../mod/import.php:147
+#: ../../mod/import.php:162
 msgid "Channel clone failed. Import failed."
 msgstr ""
 
-#: ../../mod/import.php:157
+#: ../../mod/import.php:172
 msgid "Cloned channel not found. Import failed."
 msgstr ""
 
-#: ../../mod/import.php:475
-msgid "Import completed."
-msgstr ""
-
-#: ../../mod/import.php:487
+#: ../../mod/import.php:502
 msgid "You must be logged in to use this feature."
 msgstr ""
 
-#: ../../mod/import.php:492
+#: ../../mod/import.php:507
 msgid "Import Channel"
 msgstr ""
 
-#: ../../mod/import.php:493
+#: ../../mod/import.php:508
 msgid ""
 "Use this form to import an existing channel from a different server/hub. You "
 "may retrieve the channel identity from the old server/hub via the network or "
-"provide an export file. Only identity and connections/relationships will be "
-"imported. Importation of content is not yet available."
+"provide an export file."
 msgstr ""
 
-#: ../../mod/import.php:494
+#: ../../mod/import.php:509
 msgid "File to Upload"
 msgstr ""
 
-#: ../../mod/import.php:495
+#: ../../mod/import.php:510
 msgid "Or provide the old server/hub details"
 msgstr ""
 
-#: ../../mod/import.php:496
+#: ../../mod/import.php:511
 msgid "Your old identity address (xyz@example.com)"
 msgstr ""
 
-#: ../../mod/import.php:497
+#: ../../mod/import.php:512
 msgid "Your old login email address"
 msgstr ""
 
-#: ../../mod/import.php:498
+#: ../../mod/import.php:513
 msgid "Your old login password"
 msgstr ""
 
-#: ../../mod/import.php:499
+#: ../../mod/import.php:514
 msgid ""
 "For either option, please choose whether to make this hub your new primary "
 "address, or whether your old location should continue this role. You will be "
@@ -5043,12 +5097,19 @@ msgid ""
 "location for files, photos, and media."
 msgstr ""
 
-#: ../../mod/import.php:500
+#: ../../mod/import.php:515
 msgid "Make this hub my primary location"
 msgstr ""
 
-#: ../../mod/import.php:501
-msgid "Import existing posts if possible"
+#: ../../mod/import.php:516
+msgid ""
+"Import existing posts if possible (experimental - limited by available memory"
+msgstr ""
+
+#: ../../mod/import.php:517
+msgid ""
+"This process may take several minutes to complete. Please submit the form "
+"only once and leave this page open until finished."
 msgstr ""
 
 #: ../../mod/editlayout.php:76 ../../mod/editwebpage.php:77
@@ -5848,7 +5909,7 @@ msgstr ""
 msgid "This is your default profile."
 msgstr ""
 
-#: ../../mod/profiles.php:728 ../../mod/directory.php:218
+#: ../../mod/profiles.php:728
 msgid "Age: "
 msgstr ""
 
@@ -6301,62 +6362,6 @@ msgstr ""
 #: ../../mod/openid.php:72 ../../mod/openid.php:180 ../../mod/post.php:286
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
-msgstr ""
-
-#: ../../mod/directory.php:224
-#, php-format
-msgid "%d rating"
-msgid_plural "%d ratings"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../mod/directory.php:236
-msgid "Gender: "
-msgstr ""
-
-#: ../../mod/directory.php:238
-msgid "Status: "
-msgstr ""
-
-#: ../../mod/directory.php:240
-msgid "Homepage: "
-msgstr ""
-
-#: ../../mod/directory.php:243
-msgid "Hometown: "
-msgstr ""
-
-#: ../../mod/directory.php:245
-msgid "About: "
-msgstr ""
-
-#: ../../mod/directory.php:303
-msgid "Public Forum:"
-msgstr ""
-
-#: ../../mod/directory.php:306
-msgid "Keywords: "
-msgstr ""
-
-#: ../../mod/directory.php:311
-#, php-format
-msgid "Common connections: %s"
-msgstr ""
-
-#: ../../mod/directory.php:363
-msgid "Finding:"
-msgstr ""
-
-#: ../../mod/directory.php:368
-msgid "next page"
-msgstr ""
-
-#: ../../mod/directory.php:368
-msgid "previous page"
-msgstr ""
-
-#: ../../mod/directory.php:385
-msgid "No entries (some entries may be hidden)."
 msgstr ""
 
 #: ../../mod/uexport.php:33 ../../mod/uexport.php:34
@@ -7313,6 +7318,18 @@ msgstr ""
 
 #: ../../mod/removeaccount.php:61 ../../mod/settings.php:720
 msgid "Remove Account"
+msgstr ""
+
+#: ../../mod/help.php:49 ../../mod/help.php:55 ../../mod/help.php:61
+msgid "Help:"
+msgstr ""
+
+#: ../../mod/help.php:76 ../../index.php:227
+msgid "Not Found"
+msgstr ""
+
+#: ../../mod/help.php:100
+msgid "$Projectname Documentation"
 msgstr ""
 
 #: ../../mod/update_channel.php:43 ../../mod/update_display.php:25
@@ -8752,7 +8769,7 @@ msgid "Monospace"
 msgstr ""
 
 #: ../../view/theme/apw/php/config.php:259
-#: ../../view/theme/redbasic/php/config.php:100
+#: ../../view/theme/redbasic/php/config.php:102
 msgid "Theme settings"
 msgstr ""
 
@@ -8761,7 +8778,7 @@ msgid "Set scheme"
 msgstr ""
 
 #: ../../view/theme/apw/php/config.php:261
-#: ../../view/theme/redbasic/php/config.php:122
+#: ../../view/theme/redbasic/php/config.php:124
 msgid "Set font-size for posts and comments"
 msgstr ""
 
@@ -8885,127 +8902,127 @@ msgstr ""
 msgid "Light (Red Matrix default)"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:101
+#: ../../view/theme/redbasic/php/config.php:103
 msgid "Select scheme"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:102
+#: ../../view/theme/redbasic/php/config.php:104
 msgid "Narrow navbar"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:103
+#: ../../view/theme/redbasic/php/config.php:105
 msgid "Navigation bar background color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:104
+#: ../../view/theme/redbasic/php/config.php:106
 msgid "Navigation bar gradient top color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:105
+#: ../../view/theme/redbasic/php/config.php:107
 msgid "Navigation bar gradient bottom color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:106
+#: ../../view/theme/redbasic/php/config.php:108
 msgid "Navigation active button gradient top color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:107
+#: ../../view/theme/redbasic/php/config.php:109
 msgid "Navigation active button gradient bottom color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:108
+#: ../../view/theme/redbasic/php/config.php:110
 msgid "Navigation bar border color "
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:109
+#: ../../view/theme/redbasic/php/config.php:111
 msgid "Navigation bar icon color "
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:110
+#: ../../view/theme/redbasic/php/config.php:112
 msgid "Navigation bar active icon color "
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:111
+#: ../../view/theme/redbasic/php/config.php:113
 msgid "link color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:112
+#: ../../view/theme/redbasic/php/config.php:114
 msgid "Set font-color for banner"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:113
+#: ../../view/theme/redbasic/php/config.php:115
 msgid "Set the background color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:114
+#: ../../view/theme/redbasic/php/config.php:116
 msgid "Set the background image"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:115
+#: ../../view/theme/redbasic/php/config.php:117
 msgid "Set the background color of items"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:116
+#: ../../view/theme/redbasic/php/config.php:118
 msgid "Set the background color of comments"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:117
+#: ../../view/theme/redbasic/php/config.php:119
 msgid "Set the border color of comments"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:118
+#: ../../view/theme/redbasic/php/config.php:120
 msgid "Set the indent for comments"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:119
+#: ../../view/theme/redbasic/php/config.php:121
 msgid "Set the basic color for item icons"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:120
+#: ../../view/theme/redbasic/php/config.php:122
 msgid "Set the hover color for item icons"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:121
+#: ../../view/theme/redbasic/php/config.php:123
 msgid "Set font-size for the entire application"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:121
+#: ../../view/theme/redbasic/php/config.php:123
 msgid "Example: 14px"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:123
+#: ../../view/theme/redbasic/php/config.php:125
 msgid "Set font-color for posts and comments"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:124
+#: ../../view/theme/redbasic/php/config.php:126
 msgid "Set radius of corners"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:125
+#: ../../view/theme/redbasic/php/config.php:127
 msgid "Set shadow depth of photos"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:126
+#: ../../view/theme/redbasic/php/config.php:128
 msgid "Set maximum width of content region in pixel"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:126
+#: ../../view/theme/redbasic/php/config.php:128
 msgid "Leave empty for default width"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:127
+#: ../../view/theme/redbasic/php/config.php:129
 msgid "Center page content"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:128
+#: ../../view/theme/redbasic/php/config.php:130
 msgid "Set minimum opacity of nav bar - to hide it"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:129
+#: ../../view/theme/redbasic/php/config.php:131
 msgid "Set size of conversation author photo"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:130
+#: ../../view/theme/redbasic/php/config.php:132
 msgid "Set size of followup author photos"
 msgstr ""
 

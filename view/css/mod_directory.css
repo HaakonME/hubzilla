@@ -10,11 +10,13 @@
 
 .contact-photo-wrapper {
 	display: table-cell;
+	table-layout: fixed;
 	vertical-align: top;
 }
 
 .contact-info {
 	display: table-cell;
+	table-layout: fixed;
 	vertical-align: top;
 	padding-left: 10px;
 }

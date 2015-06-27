@@ -297,8 +297,18 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		}
 
 		if($is_photo) {
+			$album = '';
+			if($this->folder_hash) {
+				$f1 = q("select filename from attach WHERE hash = '%s' AND uid = %d",
+					dbesc($this->folder_hash),
+					intval($c[0]['channel_id'])
+				);
+				if($f1)
+					$album = $f1[0]['filename'];
+			}
+
 			require_once('include/photos.php');
-			$args = array( 'data' => @file_get_contents($f), 'resource_id' => $hash);
+			$args = array( 'resource_id' => $hash, 'album' => $album, 'os_path' => $f, 'filename' => $name, 'getimagesize' => $x);
 			$p = photo_upload($c[0],get_app()->get_observer(),$args);
 		}
 

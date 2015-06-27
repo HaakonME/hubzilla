@@ -102,18 +102,27 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		);
 
 		$is_photo = false;
+		$album = '';
 
-		$r = q("SELECT flags, folder, os_storage, is_photo FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$r = q("SELECT flags, folder, os_storage, filename, is_photo FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
 		if ($r) {
 			if (intval($r[0]['os_storage'])) {
-				$d = q("select data from attach where hash = '%s' and uid = %d limit 1",
+				$d = q("select folder, data from attach where hash = '%s' and uid = %d limit 1",
 					dbesc($this->data['hash']),
 					intval($c[0]['channel_id'])
 				);
-				if($d) {	
+				if($d) {
+					if($d[0]['folder']) {
+						$f1 = q("select filename from attach where is_dir = 1 and hash = '%s' and uid = %d limit 1",
+							dbesc($d[0]['folder']),
+							intval($c[0]['channel_id'])
+						);
+						if($f1)
+							$album = $f1[0]['filename'];
+					}	
 					$fname = dbunescbin($d[0]['data']);
 					$f = 'store/' . $this->auth->owner_nick . '/' . (($fname) ? $fname : '');
 					// @todo check return value and set $size directly
@@ -121,13 +130,14 @@ class RedFile extends DAV\Node implements DAV\IFile {
 					$size = @filesize($f);
 					logger('filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
 				}
-				$x = @getimagesize($f);
-				logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
-				if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+				$gis = @getimagesize($f);
+				logger('getimagesize: ' . print_r($gis,true), LOGGER_DATA); 
+				if(($gis) && ($gis[2] === IMAGETYPE_GIF || $gis[2] === IMAGETYPE_JPEG || $gis[2] === IMAGETYPE_PNG)) {
 					$is_photo = 1;
 				}
 			} 
 			else {
+				// this shouldn't happen any more
 				$r = q("UPDATE attach SET data = '%s' WHERE hash = '%s' AND uid = %d",
 					dbescbin(stream_get_contents($data)),
 					dbesc($this->data['hash']),
@@ -155,7 +165,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		);
 
 		if($is_photo) {
-			$args = array( 'data' => @file_get_contents($fname), 'resource_id' => $this->data['hash']);
+			$args = array( 'resource_id' => $this->data['hash'], 'album' => $album, 'os_path' => $f, 'filename' => $r[0]['filename'], 'getimagesize' => $gis );
 			$p = photo_upload($c[0],$this->auth->observer,$args);
 		}
 

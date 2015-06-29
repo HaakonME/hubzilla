@@ -4,7 +4,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 [li]Include TOS link in registration/verification email[/li]
-[li]forum widget with unread counts[/li]
+[li]forum widget with unread counts (requires the DB schema changes from v3/hubzilla to be viable)[/li]
 [li]Create bug tracker module[/li]
 [li]translation plugins - moses or apertium[/li]
 [li]Infinite scroll improvements (i.e. embedded page links) see http://scrollsample.appspot.com/items 

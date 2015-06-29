@@ -1654,6 +1654,12 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			}
 		}
 
+		$ab = q("select abook.* from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and (abook_flags & %d) = 0",
+			intval($channel['channel_id']),
+			intval(ABOOK_FLAG_SELF)
+		);
+		$abook = (($ab) ? $ab[0] : null); 
+
 		if($arr['item_restrict'] & ITEM_DELETED) {
 
 			// remove_community_tag is a no-op if this isn't a community tag activity
@@ -1693,10 +1699,15 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			elseif($arr['edited'] > $r[0]['edited']) {
 				$arr['id'] = $r[0]['id'];
 				$arr['uid'] = $channel['channel_id'];
-				update_imported_item($sender,$arr,$channel['channel_id']);
-				$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
-				if(! $relay)
-					add_source_route($item_id,$sender['hash']);
+				if(($arr['mid'] == $arr['parent_mid']) && (! post_is_importable($arr,$abook))) {
+					$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				}
+				else {
+					update_imported_item($sender,$arr,$channel['channel_id']);
+					$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					if(! $relay)
+						add_source_route($item_id,$sender['hash']);
+				}
 			}
 			else {
 				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
@@ -1715,18 +1726,24 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 			if(check_item_source($arr['uid'], $arr))
 				call_hooks('post_local', $arr);
-
-			$item_result = item_store($arr);
+				
 			$item_id = 0;
-			if($item_result['success']) {
-				$item_id = $item_result['item_id'];
-				$parr = array('item_id' => $item_id,'item' => $arr,'sender' => $sender,'channel' => $channel);
-				call_hooks('activity_received',$parr);
-				// don't add a source route if it's a relay or later recipients will get a route mismatch
-				if(! $relay)
-					add_source_route($item_id,$sender['hash']);
+
+			if(($arr['mid'] == $arr['parent_mid']) && (! post_is_importable($arr,$abook))) {
+				$result[] = array($d['hash'],'post ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			}
-			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			else {
+				$item_result = item_store($arr);
+				if($item_result['success']) {
+					$item_id = $item_result['item_id'];
+					$parr = array('item_id' => $item_id,'item' => $arr,'sender' => $sender,'channel' => $channel);
+					call_hooks('activity_received',$parr);
+					// don't add a source route if it's a relay or later recipients will get a route mismatch
+					if(! $relay)
+						add_source_route($item_id,$sender['hash']);
+				}
+				$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			}
 		}
 
 		if($relay && $item_id) {

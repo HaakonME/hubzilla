@@ -210,7 +210,7 @@ function directory_content(&$a) {
 							$location .= $rr['region'];
 						}
 						if(strlen($rr['country'])) {
-							if(strlen($details))
+							if(strlen($location))
 								$location .= ', ';
 							$location .= $rr['country'];
 						}
@@ -286,7 +286,6 @@ function directory_content(&$a) {
 							'hash' => $rr['hash'],
 							'alttext' => $rr['name'] . ((local_channel() || remote_channel()) ? ' ' . $rr['address'] : ''),
 							'name' => $rr['name'],
-							'details' => $details,
 							'age' => $age,
 							'age_label' => t('Age:'),
 							'profile' => $profile,

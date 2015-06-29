@@ -41,9 +41,9 @@
 			</div>
 			{{/if}}
 
-			{{if $entry.details}}
+			{{if $entry.location}}
 			<div class="contact-info-element">
-				<span class="contact-info-label">{{$entry.location}}</span> {{$entry.details}}
+				<span class="contact-info-label">{{$entry.location_label}}</span> {{$entry.location}}
 			</div>
 			{{/if}}
 

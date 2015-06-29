@@ -354,7 +354,7 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
-		$s = q("select * from channel where channel_id = %d limit 1",
+		$s = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
 			intval($target_item['uid'])
 		);
 		if($s)
@@ -509,6 +509,15 @@ function notifier_run($argv, $argc){
 			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
 			if($private)
 				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig'],'hash' => $d['xchan_hash']);
+
+			if($d['xchan_network'] === 'mail' && $normal_mode) {
+				$delivery_options = get_xconfig($d['xchan_hash'],'system','delivery_mode');
+				if(! $delivery_options)
+					format_and_send_email($channel,$d,$target_item);
+			}
+
+
+
 		}
 	}
 

@@ -1569,3 +1569,93 @@ function service_plink($contact, $guid) {
 
 	return $plink;
 }
+
+
+function format_and_send_email($sender,$xchan,$item) {
+
+	require_once('include/enotify.php');
+
+	$title = $item['title'];
+	$body = $item['body'];
+
+    $textversion = strip_tags(html_entity_decode(bbcode(str_replace(array("\\r", "\\n"), array( "", "\n"), $body)),ENT_QUOTES,'UTF-8'));
+
+	$htmlversion = bbcode(str_replace(array("\\r","\\n"), array("","<br />\n"),$body));
+
+   $banner     = t('$Projectname Notification');
+    $product    = t('$projectname'); // PLATFORM_NAME;
+    $siteurl    = z_root();
+    $thanks     = t('Thank You,');
+    $sitename   = get_config('system','sitename');
+    $site_admin = sprintf( t('%s Administrator'), $sitename);
+
+		// load the template for private message notifications
+		$tpl = get_markup_template('email_notify_html.tpl');
+		$email_html_body = replace_macros($tpl,array(
+			'$banner'	   => $banner,
+			'$product'	  => $product,
+			'$preamble'	 => '',
+			'$sitename'	 => $sitename,
+			'$siteurl'	  => $siteurl,
+			'$source_name'  => $sender['xchan_name'],
+			'$source_link'  => $sender['xchan_url'],
+			'$source_photo' => $sender['xchan_photo_m'],
+			'$username'	 => $xchan['xchan_name'],
+			'$hsitelink'	=> $datarray['hsitelink'],
+			'$hitemlink'	=> $datarray['hitemlink'],
+			'$thanks'	   => $thanks,
+			'$site_admin'   => $site_admin,
+			'$title'		=> $title,
+			'$htmlversion'  => $htmlversion,
+		));
+
+		// load the template for private message notifications
+		$tpl = get_markup_template('email_notify_text.tpl');
+		$email_text_body = replace_macros($tpl, array(
+			'$banner'	   => $banner,
+			'$product'	  => $product,
+			'$preamble'	 => '',
+			'$sitename'	 => $sitename,
+			'$siteurl'	  => $siteurl,
+			'$source_name'  => $sender['xchan_name'],
+			'$source_link'  => $sender['xchan_url'],
+			'$source_photo' => $sender['xchan_photo_m'],
+			'$username'	 => $xchan['xchan_name'],
+			'$hsitelink'	=> $datarray['hsitelink'],
+			'$hitemlink'	=> $datarray['hitemlink'],
+			'$thanks'	   => $thanks,
+			'$site_admin'   => $site_admin,
+			'$title'		=> $title,
+			'$textversion'  => $textversion
+		));
+
+		$sender_name = t('Administrator');
+		
+  		$hostname = get_app()->get_hostname();
+	    if(strpos($hostname,':'))
+    	    $hostname = substr($hostname,0,strpos($hostname,':'));
+		$sender_email = 'noreply' . '@' . $hostname;
+
+		// use the EmailNotification library to send the message
+
+		enotify::send(array(
+			'fromName'			 => $product,
+			'fromEmail'			=> $sender_email,
+			'replyTo'			  => $sender_email,
+			'toEmail'			  => str_replace('mailto:','',$xchan['xchan_addr']),
+			'messageSubject'	   => (($title) ? $title : t('No Subject')),
+			'htmlVersion'		  => $email_html_body,
+			'textVersion'		  => $email_text_body,
+			'additionalMailHeader' => '',
+		));
+
+
+
+
+
+
+
+
+
+
+}

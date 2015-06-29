@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_self` tinyint(4) NOT NULL DEFAULT '0',
   `abook_feed` tinyint(4) NOT NULL DEFAULT '0',
   `abook_profile` char(64) NOT NULL DEFAULT '',
+  `abook_incl` TEXT NOT NULL DEFAULT '',
+  `abook_excl` TEXT NOT NULL DEFAULT '',
   PRIMARY KEY (`abook_id`),
   KEY `abook_account` (`abook_account`),
   KEY `abook_channel` (`abook_channel`),

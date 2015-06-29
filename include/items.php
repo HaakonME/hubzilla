@@ -3295,8 +3295,7 @@ function check_item_source($uid, $item) {
 	$text = prepare_text($item['body'],$item['mimetype']);
 	$text = html2plain($text);
 
-	/** @BUG $items is undefined, should this be $item? */
-	$tags = ((count($items['term'])) ? $items['term'] : false);
+	$tags = ((count($item['term'])) ? $item['term'] : false);
 
 	$words = explode("\n",$r[0]['src_patt']);
 	if($words) {
@@ -3306,9 +3305,69 @@ function check_item_source($uid, $item) {
 					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
-			if(stristr($text,$word) !== false)
+			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+				return true;
+			elseif(stristr($text,$word) !== false)
 				return true;
 		}
+	}
+
+	return false;
+}
+
+function post_is_importable($item,$abook) {
+
+	if(! $abook)
+		return true;
+	if(! $item)
+		return false;
+
+	if((! $abook['abook_incl']) && (! $abook['abook_excl']))
+		return true;
+
+	require_once('include/html2plain.php');
+	$text = prepare_text($item['body'],$item['mimetype']);
+	$text = html2plain($text);
+
+	$tags = ((count($item['term'])) ? $item['term'] : false);
+
+	// exclude always has priority
+
+	$exclude = (($abook['abook_excl']) ? explode("\n",$abook['abook_excl']) : null);
+
+	if($exclude) {
+		foreach($exclude as $word) {
+			$word = trim($word);
+			if(substr($word,0,1) === '#' && $tags) {
+				foreach($tags as $t)
+					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
+						return false;
+			}
+			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+				return false;
+			elseif(stristr($text,$word) !== false)
+				return false;
+		}
+	}
+
+	$include = (($abook['abook_incl']) ? explode("\n",$abook['abook_incl']) : null);
+
+	if($include) {
+		foreach($include as $word) {
+			$word = trim($word);
+			if(substr($word,0,1) === '#' && $tags) {
+				foreach($tags as $t)
+					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
+						return true;
+			}
+			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+				return true;
+			elseif(stristr($text,$word) !== false)
+				return true;
+		}
+	}
+	else {
+		return true;
 	}
 
 	return false;

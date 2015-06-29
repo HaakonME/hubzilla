@@ -101,6 +101,9 @@ function connedit_post(&$a) {
 		}
 	}
 
+	$abook_incl = escape_tags($_POST['abook_incl']);
+	$abook_excl = escape_tags($_POST['abook_excl']);
+
 	$hidden = intval($_POST['hidden']);
 
 	$priority = intval($_POST['poll']);
@@ -189,12 +192,16 @@ function connedit_post(&$a) {
 		}
 	}
 
-	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d
+
+	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d,
+		abook_incl = '%s', abook_excl = '%s'
 		where abook_id = %d AND abook_channel = %d",
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
 		intval(1 - intval($new_friend)),
+		dbesc($abook_incl),
+		dbesc($abook_excl),
 		intval($contact_id),
 		intval(local_channel())
 	);
@@ -661,7 +668,9 @@ function connedit_content(&$a) {
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$lbl_rating'     => t('Rating (this information is public)'),
 			'$lbl_rating_txt' => t('Optionally explain your rating (this information is public)'),
-			'$rating_txt'     => $rating_text,
+			'$incl'           => array('abook_incl',t('Only import posts with this text'), $contact['abook_incl'],t('words one per line or #tags or /patterns/, leave blank to import all posts')), 
+			'$excl'           => array('abook_excl',t('Do not import posts with this text'), $contact['abook_excl'],t('words one per line or #tags or /patterns/, leave blank to import all posts')), 
+			'$rating_text'    => array('rating_text', t('Optionally explain your rating (this information is public)'),$rating_text,''),
 			'$rating'         => $rating,
 			'$rating_val'     => $rating_val,
 			'$slide'          => $slide,

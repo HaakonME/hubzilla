@@ -14,6 +14,8 @@ CREATE TABLE "abook" (
   "abook_dob" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "abook_flags" bigint NOT NULL DEFAULT '0',
   "abook_profile" char(64) NOT NULL DEFAULT '',
+  "abook_incl" TEXT NOT NULL DEFAULT '',
+  "abook_excl" TEXT NOT NULL DEFAULT '',
   PRIMARY KEY ("abook_id")
 );
   create index  "abook_account" on abook ("abook_account");

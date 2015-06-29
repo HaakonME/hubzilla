@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1143 );
+define( 'UPDATE_VERSION' , 1144 );
 
 /**
  *
@@ -1655,5 +1655,15 @@ function update_r1142() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 
+
+}
+
+function update_r1143() {
+
+	$r1 = q("ALTER TABLE abook ADD abook_incl TEXT NOT NULL DEFAULT ''");
+	$r2 = q("ALTER TABLE abook ADD abook_excl TEXT NOT NULL DEFAULT '' ");
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
 
 }

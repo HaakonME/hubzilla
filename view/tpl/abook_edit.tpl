@@ -50,6 +50,9 @@
 
 {{/if}}
 
+	{{include file="field_textarea.tpl" field=$incl}}
+	{{include file="field_textarea.tpl" field=$excl}}
+
 {{if $rating}}
 <h3>{{$lbl_rating}}</h3>
 
@@ -57,6 +60,8 @@
 
 
 {{/if}}
+
+
 
 {{/if}}
 
@@ -75,8 +80,7 @@
 
 {{if $rating}}
 {{if $notself}}
-<h3 class="abook-rating-text-desc">{{$lbl_rating_txt}}</h3>
-<textarea name="rating_text" id="rating-text" >{{$rating_txt}}</textarea>
+	{{include file="field_textarea.tpl" field=$rating_text}}
 {{/if}}
 {{/if}}
 

@@ -4,7 +4,9 @@ Roadmap for $Projectname V3
 
 Crypto
 	Convert E2EE to dynamic loading (on demand) using jQuery.getScript() [or other methods] to only load encryption libs when you require them. This should also support multiple encryption libraries (e.g. SJCL, others) triggered from the choice of algorithm and remain pluggable.
- 
+
+Diaspora
+	Convert core Diaspora federation code into a plugin. This presents a number of challenges since it touches and special cases a lot of core functionality.
 
 Subscriptions and business models
 	Build enough into core(/addons) to generate income (or at least try and cover costs) out of the box

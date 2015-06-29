@@ -48,7 +48,7 @@ function tagger_content(&$a) {
 			break;
 		default:
 			$targettype = ACTIVITY_OBJ_NOTE;
-			$post_type = t('status');
+			$post_type = t('post');
 			if($item['mid'] != $item['parent_mid'])
 				$post_type = t('comment');
 			break;

@@ -1559,6 +1559,11 @@ th,td {
 	padding: 3px;
 }
 
+#channels > tbody > tr > td, #users > tbody > tr > td {
+	max-width: 19.4em;
+	overflow: hidden;
+}
+	
 /* message */
 
 img.mail-list-sender-photo {

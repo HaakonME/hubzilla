@@ -37,7 +37,6 @@ Zot is the great new communicaton protocol invented especially for the $Projectn
 
 [h3]Administrators Help[/h3]
 [zrl=[baseurl]/help/install]Install[/zrl]
-[zrl=[baseurl]/help/debian_install]Easy Install on Debian via script[/zrl]
 [zrl=[baseurl]/help/red2pi]Installing Red on the Raspberry Pi[/zrl]
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting Tips[/zrl]
 [zrl=[baseurl]/help/hidden_configs]Tweaking $Projectname's Hidden Configurations[/zrl]

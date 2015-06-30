@@ -71,6 +71,7 @@ function get_features() {
 			array('personal_tab',   t('Network Personal Tab'),		t('Enable tab to display only Network posts that you\'ve interacted on'),false),
 			array('new_tab',   		t('Network New Tab'),			t('Enable tab to display all new Network activity'),false),
 			array('affinity',       t('Affinity Tool'),			    t('Filter stream activity by depth of relationships'),false),
+			array('connfilter',     t('Connection Filtering'),      t('Filter incoming posts from connections based on keywords/content')),
 			array('suggest',    	t('Suggest Channels'),			t('Show channel suggestions'),false),
 		),
 

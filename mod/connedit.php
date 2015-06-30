@@ -668,6 +668,7 @@ function connedit_content(&$a) {
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$lbl_rating'     => t('Rating (this information is public)'),
 			'$lbl_rating_txt' => t('Optionally explain your rating (this information is public)'),
+			'$connfilter'     => feature_enabled(local_channel(),'connfilter'),
 			'$incl'           => array('abook_incl',t('Only import posts with this text'), $contact['abook_incl'],t('words one per line or #tags or /patterns/, leave blank to import all posts')), 
 			'$excl'           => array('abook_excl',t('Do not import posts with this text'), $contact['abook_excl'],t('words one per line or #tags or /patterns/, leave blank to import all posts')), 
 			'$rating_text'    => array('rating_text', t('Optionally explain your rating (this information is public)'),$rating_text,''),

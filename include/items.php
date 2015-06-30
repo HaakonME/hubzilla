@@ -3308,11 +3308,16 @@ function post_is_importable($item,$abook) {
 
 	if(! $abook)
 		return true;
+
+	if(($abook['abook_channel']) && (! feature_enabled($abook['abook_channel'],'connfilter')))
+		return true;
+
 	if(! $item)
 		return false;
 
 	if((! $abook['abook_incl']) && (! $abook['abook_excl']))
 		return true;
+
 
 	require_once('include/html2plain.php');
 	$text = prepare_text($item['body'],$item['mimetype']);

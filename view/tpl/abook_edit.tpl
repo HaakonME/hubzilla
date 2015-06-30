@@ -50,8 +50,13 @@
 
 {{/if}}
 
+{{if $connfilter}}
 	{{include file="field_textarea.tpl" field=$incl}}
 	{{include file="field_textarea.tpl" field=$excl}}
+{{else}}
+	<input type="hidden" name="{{$incl.0}}" value="{{$incl.2}}" />
+	<input type="hidden" name="{{$excl.0}}" value="{{$excl.2}}" />
+{{/if}}
 
 {{if $rating}}
 <h3>{{$lbl_rating}}</h3>

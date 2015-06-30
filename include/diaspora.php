@@ -782,14 +782,13 @@ function diaspora_request($importer,$xml) {
 		$closeness = 80;
 
 
-	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_rating, abook_created, abook_updated, abook_connected, abook_dob, abook_pending) values ( %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
+	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_my_perms, abook_their_perms, abook_closeness, abook_created, abook_updated, abook_connected, abook_dob, abook_pending) values ( %d, %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
 		intval($importer['channel_account_id']),
 		intval($importer['channel_id']),
 		dbesc($ret['xchan_hash']),
 		intval($default_perms),
 		intval($their_perms),
 		intval($closeness),
-		intval(0),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),

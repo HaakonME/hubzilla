@@ -703,6 +703,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `channel_id` int(10) unsigned NOT NULL DEFAULT '0',
   `title` text NOT NULL,
   `body` mediumtext NOT NULL,
+  `sig` text NOT NULL,
   `attach` mediumtext NOT NULL,
   `mid` char(255) NOT NULL DEFAULT '',
   `parent_mid` char(255) NOT NULL DEFAULT '',

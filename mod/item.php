@@ -649,6 +649,7 @@ function item_post(&$a) {
 		if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
 			$attachments = array();
 			foreach($match[2] as $mtch) {
+				$attach_link = '';
 				$hash = substr($mtch,0,strpos($mtch,','));
 				$rev = intval(substr($mtch,strpos($mtch,',')));
 				$r = attach_by_hash_nodata($hash,$rev);
@@ -661,7 +662,12 @@ function item_post(&$a) {
 						'revision' => $r['data']['revision']
 					);
 				}
-				$body = str_replace($match[1],'',$body);
+				$ext = substr($r['data']['filename'],strrpos($r['data']['filename'],'.'));
+				if(strpos($r['data']['filetype'],'audio/') !== false)
+					$attach_link =  '[audio]' . z_root() . '/attach/' . $r['data']['hash'] . '/' . $r['data']['revision'] . (($ext) ? $ext : '') . '[/audio]';
+				elseif(strpos($r['data']['filetype'],'video/') !== false)
+					$attach_link =  '[video]' . z_root() . '/attach/' . $r['data']['hash'] . '/' . $r['data']['revision'] . (($ext) ? $ext : '') . '[/video]';
+				$body = str_replace($match[1],$attach_link,$body);
 			}
 		}
 

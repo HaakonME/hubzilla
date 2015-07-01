@@ -103,6 +103,20 @@ function import_post(&$a) {
 		return;
 	}
 
+	if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
+		$v1 = substr($data['compatibility']['database'],-4);
+		$v2 = substr(DB_UPDATE_VERSION,-4);
+		if($data['compatibility']['project'] !== PLATFORM_NAME) {
+			notice( t('The data provided is not compatible with this project.') );
+			return;
+		}
+	}
+	if($v2 > $v1) {
+		$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 ); 
+		notice($t);
+	}
+
+
 	// import channel
 
 	$channel = $data['channel'];

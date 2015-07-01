@@ -1,7 +1,6 @@
 [b]Credits[/b]
 
 Mike Macgirvin
-Thomas Willingham
 Fabio Comuni
 Simon L'nu
 marijus

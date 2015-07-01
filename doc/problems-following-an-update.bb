@@ -20,7 +20,7 @@ If you're using php5-fpm, this problem is usually resolved with [code]service ph
 
 Symptoms:  
 
-1) [zrl=https://beardyunixer.com/page/jargon/wsod]White Screen Of Death[/zrl].  This is most prevalent on the settings and admin pages.
+1) White Screen Of Death.  This is most prevalent on the settings and admin pages.
 
 2) Missing icons, tabs, menus or features.
 

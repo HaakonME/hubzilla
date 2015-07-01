@@ -106,23 +106,18 @@ function import_post(&$a) {
 	if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
 		$v1 = substr($data['compatibility']['database'],-4);
 		$v2 = substr(DB_UPDATE_VERSION,-4);
-		if($data['compatibility']['project'] !== PLATFORM_NAME) {
-			notice( t('The data provided is not compatible with this project.') );
-			return;
+		if($v2 > $v1) {
+			$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 ); 
+			notice($t);
 		}
 	}
-	if($v2 > $v1) {
-		$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 ); 
-		notice($t);
-	}
-
 
 	// import channel
 
 	$channel = $data['channel'];
 
 	if(! array_key_exists('channel_system',$channel)) {
-		$channel['channel_system'] = (($channel['channel_pageflags'] & 0x1000) ? 1 : 0);
+		$channel['channel_system']  = (($channel['channel_pageflags'] & 0x1000) ? 1 : 0);
 		$channel['channel_removed'] = (($channel['channel_pageflags'] & 0x8000) ? 1 : 0);
 	}
 

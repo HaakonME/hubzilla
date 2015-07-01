@@ -537,14 +537,13 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['config'] = $r;
 
-	$r = q("select type, data from photo where scale = 4 and profile = 1 and uid = %d limit 1",
+	$r = q("select type, data, os_storage from photo where scale = 4 and profile = 1 and uid = %d limit 1",
 		intval($channel_id)
 	);
 
 	if($r) {
-		$ret['photo'] = array('type' => $r[0]['type'], 'data' => base64url_encode($r[0]['data']));
+		$ret['photo'] = array('type' => $r[0]['type'], 'data' => (($r[0]['os_storage']) ? base64url_encode(file_get_contents($r[0]['data'])) : base64url_encode($r[0]['data'])));
 	}
-
 
 	// All other term types will be included in items, if requested.
 

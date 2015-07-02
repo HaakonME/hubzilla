@@ -1152,7 +1152,62 @@ function encode_item($item,$mirror = false) {
 		$x['resource_type'] = $item['resource_type'];
 		$x['item_restrict'] = $item['item_restrict'];
 		$x['item_flags'] = $item['item_flags'];
+		$x['item_unseen'] = $item['item_unseen'];
 		$x['attach'] = $item['attach'];
+		if(array_key_exists('item_starred',$item) && intval($item['item_starred']))
+			$x['item_flags'] |= ITEM_STARRED;
+		if(array_key_exists('item_uplink',$item) && intval($item['item_uplink']))
+			$x['item_flags'] |= ITEM_UPLINK;
+		if(array_key_exists('item_consensus',$item) && intval($item['item_consensus']))
+			$x['item_flags'] |= ITEM_CONSENSUS;
+		if(array_key_exists('item_wall',$item) && intval($item['item_wall']))
+			$x['item_flags'] |= ITEM_WALL;
+		if(array_key_exists('item_thread_top',$item) && intval($item['item_thread_top']))
+			$x['item_flags'] |= ITEM_THREAD_TOP;
+		if(array_key_exists('item_notshown',$item) && intval($item['item_notshown']))
+			$x['item_flags'] |= ITEM_NOTSHOWN;
+		if(array_key_exists('item_nsfw',$item) && intval($item['item_nsfw']))
+			$x['item_flags'] |= ITEM_NSFW;
+		if(array_key_exists('item_mentionsme',$item) && intval($item['item_mentionsme']))
+			$x['item_flags'] |= ITEM_MENTIONSME;
+		if(array_key_exists('item_nocomment',$item) && intval($item['item_nocomment']))
+			$x['item_flags'] |= ITEM_NOCOMMENT;
+		if(array_key_exists('item_retained',$item) && intval($item['item_retained']))
+			$x['item_flags'] |= ITEM_RETAINED;
+		if(array_key_exists('item_rss',$item) && intval($item['item_rss']))
+			$x['item_flags'] |= ITEM_RSS;
+		if(array_key_exists('item_deleted',$item) && intval($item['item_deleted']))
+			$x['item_restrict'] |= ITEM_DELETED;
+		if(array_key_exists('item_hidden',$item) && intval($item['item_hidden']))
+			$x['item_restrict'] |= ITEM_HIDDEN;
+		if(array_key_exists('item_unpublished',$item) && intval($item['item_unpublished']))
+			$x['item_restrict'] |= ITEM_UNPUBLISHED;
+		if(array_key_exists('item_delayed',$item) && intval($item['item_delayed']))
+			$x['item_restrict'] |= ITEM_DELAYED_PUBLISH;
+		if(array_key_exists('item_pending_remove',$item) && intval($item['item_pending_remove']))
+			$x['item_restrict'] |= ITEM_PENDING_REMOVE;
+		if(array_key_exists('item_blocked',$item) && intval($item['item_blocked']))
+			$x['item_flags'] |= ITEM_BLOCKED;
+		if(array_key_exists('item_',$item) && intval($item['item_']))
+			$x['item_flags'] |= ITEM_;
+		if(array_key_exists('item_type',$item) && intval($item['item_type'])) {
+			switch(intval($item['item_type'])) {
+				case 1:
+					$x['item_restrict'] |= ITEM_BUILDBLOCK;
+					break;
+				case 2:
+					$x['item_restrict'] |= ITEM_PDL;
+					break;
+				case 2:
+					$x['item_restrict'] |= ITEM_WEBPAGE;
+					break;
+				case 2:
+					$x['item_restrict'] |= ITEM_BUG;
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 

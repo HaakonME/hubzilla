@@ -939,11 +939,11 @@ function get_item_elements($x) {
 		$arr['item_thread_top'] = $x['item_thread_top'];
 		$arr['item_notshown'] = $x['item_notshown'];
 		$arr['item_nsfw'] = $x['item_nsfw'];
-		$arr['item_relay'] = $x['item_relay'];
+		// local only		$arr['item_relay'] = $x['item_relay'];
 		$arr['item_mentionsme'] = $x['item_mentionsme'];
 		$arr['item_nocomment'] = $x['item_nocomment'];
-		$arr['item_obscured'] = $x['item_obscured'];
-		$arr['item_verified'] = $x['item_verified'];
+		// local only $arr['item_obscured'] = $x['item_obscured'];
+		// local only $arr['item_verified'] = $x['item_verified'];
 		$arr['item_retained'] = $x['item_retained'];
 		$arr['item_rss'] = $x['item_rss'];
 		$arr['item_deleted'] = $x['item_deleted'];
@@ -953,6 +953,53 @@ function get_item_elements($x) {
 		$arr['item_delayed'] = $x['item_delayed'];
 		$arr['item_pending_remove'] = $x['item_pending_remove'];
 		$arr['item_blocked'] = $x['item_blocked'];
+		if(array_key_exists('item_flags',$x)) {
+			if($x['item_flags'] & 0x0004)
+				$arr['item_starred'] = 1;
+			if($x['item_flags'] & 0x0008)
+				$arr['item_uplink'] = 1;
+			if($x['item_flags'] & 0x0010)
+				$arr['item_consensus'] = 1;
+			if($x['item_flags'] & 0x0020)
+				$arr['item_wall'] = 1;
+			if($x['item_flags'] & 0x0040)
+				$arr['item_thread_top'] = 1;
+			if($x['item_flags'] & 0x0080)
+				$arr['item_notshown'] = 1;
+			if($x['item_flags'] & 0x0100)
+				$arr['item_nsfw'] = 1;
+			if($x['item_flags'] & 0x0400)
+				$arr['item_mentionsme'] = 1;
+			if($x['item_flags'] & 0x0800)
+				$arr['item_nocomment'] = 1;
+			if($x['item_flags'] & 0x4000)
+				$arr['item_retained'] = 1;
+			if($x['item_flags'] & 0x8000)
+				$arr['item_rss'] = 1;
+
+		}
+		if(array_key_exists('item_restrict',$x)) {
+			if($x['item_restrict'] & 0x0001)
+				$arr['item_hidden'] = 1;
+			if($x['item_restrict'] & 0x0002)
+				$arr['item_blocked'] = 1;
+			if($x['item_restrict'] & 0x0010)
+				$arr['item_deleted'] = 1;
+			if($x['item_restrict'] & 0x0020)
+				$arr['item_unpublished'] = 1;
+			if($x['item_restrict'] & 0x0040)
+				$arr['item_type'] = ITEM_TYPE_WEBPAGE;
+			if($x['item_restrict'] & 0x0080)
+				$arr['item_delayed'] = 1;
+			if($x['item_restrict'] & 0x0100)
+				$arr['item_type'] = ITEM_TYPE_BLOCK;
+			if($x['item_restrict'] & 0x0200)
+				$arr['item_type'] = ITEM_TYPE_PDL;
+			if($x['item_restrict'] & 0x0400)
+				$arr['item_type'] = ITEM_TYPE_BUG;
+			if($x['item_restrict'] & 0x0800)
+				$arr['item_pending_remove'] = 1;
+		}
 	}
 
 	return $arr;

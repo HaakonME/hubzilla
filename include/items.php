@@ -1198,11 +1198,14 @@ function encode_item($item,$mirror = false) {
 				case 2:
 					$x['item_restrict'] |= ITEM_PDL;
 					break;
-				case 2:
+				case 3:
 					$x['item_restrict'] |= ITEM_WEBPAGE;
 					break;
-				case 2:
+				case 4:
 					$x['item_restrict'] |= ITEM_BUG;
+					break;
+				case 5:
+					$x['item_restrict'] |= ITEM_DOC;
 					break;
 				default:
 					break;

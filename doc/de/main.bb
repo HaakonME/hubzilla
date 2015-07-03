@@ -36,7 +36,6 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die RedMatr
 
 [h3]Hilfe für Administratoren[/h3]
 [zrl=[baseurl]/help/install]Installation[/zrl]
-[zrl=[baseurl]/help/debian_install]Einfache Installation unter Debian mit einem Skript[/zrl]
 [zrl=[baseurl]/help/red2pi]Red auf einem Raspberry Pi installieren[/zrl]
 [zrl=[baseurl]/help/troubleshooting]Troubleshooting-Tipps[/zrl]
 [zrl=[baseurl]/help/hidden_configs]Versteckte Konfigurations-Optionen[/zrl]

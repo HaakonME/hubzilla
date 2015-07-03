@@ -1231,7 +1231,6 @@ function encode_item($item,$mirror = false) {
 		$x['item_delayed'] = $item['item_delayed'];
 		$x['item_pending_remove'] = $item['item_pending_remove'];
 		$x['item_blocked'] = $item['item_blocked'];
-
 	}
 
 

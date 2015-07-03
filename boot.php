@@ -535,7 +535,7 @@ define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody co
 //define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
 define ( 'ITEM_PENDING_REMOVE',  0x0800);   // deleted, notification period has lapsed
-										   // Don't make us evaluate this same item again.
+define ( 'ITEM_DOC',             0x1000);   // hubzilla only, define here so that item import does the right thing
 
 define ( 'ITEM_TYPE_POST',       0 );
 define ( 'ITEM_TYPE_BLOCK',      1 );

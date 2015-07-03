@@ -813,11 +813,25 @@ function diaspora_request($importer,$xml) {
 				'link'         => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
 			));
 
+
 			if($default_perms) {
 				// Send back a sharing notification to them
 				diaspora_share($importer,$new_connection[0]);
 		
 			}
+
+			$clone = array();
+			foreach($new_connection[0] as $k => $v) {
+				if(strpos($k,'abook_') === 0) {
+					$clone[$k] = $v;
+				}
+			}
+			unset($clone['abook_id']);
+			unset($clone['abook_account']);
+			unset($clone['abook_channel']);
+
+			build_sync_packet($importer['channel_id'], array('abook' => array($clone)));
+
 		}
 	}
 

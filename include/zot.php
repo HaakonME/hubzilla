@@ -2907,7 +2907,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						$abook['abook_feed'] = 1;
 				}
 
-
 				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);

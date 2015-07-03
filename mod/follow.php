@@ -24,6 +24,19 @@ function follow_init(&$a) {
 
 	info( t('Channel added.') . EOL);
 
+	$clone = array();
+	foreach($result['abook'] as $k => $v) {
+		if(strpos($k,'abook_') === 0) {
+			$clone[$k] = $v;
+		}
+	}
+	unset($clone['abook_id']);
+	unset($clone['abook_account']);
+	unset($clone['abook_channel']);
+
+	build_sync_packet(0 /* use the current local_channel */, array('abook' => array($clone)));
+
+
 	// If we can view their stream, pull in some posts
 
 	if(($result['abook']['abook_their_perms'] & PERMS_R_STREAM) || ($result['abook']['xchan_network'] === 'rss'))

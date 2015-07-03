@@ -2887,6 +2887,27 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 			foreach($arr['abook'] as $abook) {
 
+				if(! array_key_exists('abook_blocked',$abook)) {
+					// convert from redmatrix
+					if($abook['abook_flags'] & 0x0001)
+						$abook['abook_blocked'] = 1;
+					if($abook['abook_flags'] & 0x0002)
+						$abook['abook_ignored'] = 1;
+					if($abook['abook_flags'] & 0x0004)
+						$abook['abook_hidden'] = 1;
+					if($abook['abook_flags'] & 0x0008)
+						$abook['abook_archived'] = 1;
+					if($abook['abook_flags'] & 0x0010)
+						$abook['abook_pending'] = 1;
+					if($abook['abook_flags'] & 0x0020)
+						$abook['abook_unconnected'] = 1;
+					if($abook['abook_flags'] & 0x0080)
+						$abook['abook_self'] = 1;
+					if($abook['abook_flags'] & 0x0100)
+						$abook['abook_feed'] = 1;
+				}
+
+
 				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);

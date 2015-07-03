@@ -741,6 +741,7 @@ function pageUpdate() {
 function justifyPhotos() {
 	justifiedGalleryActive = true;
 	$('#photo-album-contents').justifiedGallery({
+		selector: '> a, > div:not(.spinner, #page-end)',
 		margins: 3,
 		border: 0,
 		sizeRangeSuffixes: {

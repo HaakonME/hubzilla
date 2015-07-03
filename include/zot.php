@@ -2922,6 +2922,28 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 			foreach($arr['abook'] as $abook) {
 
+				if(array_key_exists('abook_blocked',$abook)) {
+					// convert from hubzilla
+					$abook['abook_flags'] = 0;
+					if(intval($abook['abook_blocked']))
+						$abook['abook_flags'] |= ABOOK_FLAG_BLOCKED;
+					if(intval($abook['abook_ignored']))
+						$abook['abook_flags'] |= ABOOK_FLAG_IGNORED;
+					if(intval($abook['abook_hidden']))
+						$abook['abook_flags'] |= ABOOK_FLAG_HIDDEN;
+					if(intval($abook['abook_archived']))
+						$abook['abook_flags'] |= ABOOK_FLAG_ARCHIVED;
+					if(intval($abook['abook_pending']))
+						$abook['abook_flags'] |= ABOOK_FLAG_PENDING;
+					if(intval($abook['abook_unconnected']))
+						$abook['abook_flags'] |= ABOOK_FLAG_UNCONNECTED;
+					if(intval($abook['abook_self']))
+						$abook['abook_flags'] |= ABOOK_FLAG_SELF;
+					if(intval($abook['abook_feed']))
+						$abook['abook_flags'] |= ABOOK_FLAG_FEED;
+
+				}
+
 				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);

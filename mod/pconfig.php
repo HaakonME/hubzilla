@@ -33,6 +33,7 @@ function pconfig_post(&$a) {
 	}
 
 	set_pconfig(local_channel(),$cat,$k,$v);
+	build_sync_packet();
 
 	goaway(z_root() . '/pconfig/' . $cat . '/' .  $k);
 

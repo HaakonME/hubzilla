@@ -24,7 +24,7 @@ function pconfig_post(&$a) {
 	$v = trim($_POST['v']);
 
 	if(in_array(argv(2),disallowed_pconfig())) {
-		notice( t('This setting requires special processing and has been blocked.') . EOL);
+		notice( t('This setting requires special processing and editing has been blocked.') . EOL);
 		return;
 	}
 	
@@ -45,18 +45,27 @@ function pconfig_content(&$a) {
 		return login();
 	}
 
+	$content = '<h3>' . t('Configuration Editor') . '</h3>';
+	$content .= '<div class="descriptive-paragraph">' . t('Warning: Changing some settings could render your channel inoperable. Please leave this page unless you are comfortable with and knowledgeable about how to correctly use this feature.') . '</div>' . EOL . EOL;
+
 
 
 	if(argc() == 3) {
-		$content = '<a href="pconfig">pconfig[' . local_channel() . ']</a>' . EOL;
+		$content .= '<a href="pconfig">pconfig[' . local_channel() . ']</a>' . EOL;
 		$content .= '<a href="pconfig/' . escape_tags(argv(1)) . '">pconfig[' . local_channel() . '][' . escape_tags(argv(1)) . ']</a>' . EOL . EOL;
 		$content .= '<a href="pconfig/' . escape_tags(argv(1)) . '/' . escape_tags(argv(2)) . '" >pconfig[' . local_channel() . '][' . escape_tags(argv(1)) . '][' . escape_tags(argv(2)) . ']</a> = ' . get_pconfig(local_channel(),escape_tags(argv(1)),escape_tags(argv(2))) . EOL;
-		$content .= pconfig_form(escape_tags(argv(1)),escape_tags(argv(2)));
+
+		if(in_array(argv(2),disallowed_pconfig())) {
+			notice( t('This setting requires special processing and editing has been blocked.') . EOL);
+			return $content;
+		}
+		else
+			$content .= pconfig_form(escape_tags(argv(1)),escape_tags(argv(2)));
 	}
 
 
 	if(argc() == 2) {
-		$content = '<a href="pconfig">pconfig[' . local_channel() . ']</a>' . EOL;
+		$content .= '<a href="pconfig">pconfig[' . local_channel() . ']</a>' . EOL;
 		load_pconfig(local_channel(),escape_tags(argv(1)));
 		foreach($a->config[local_channel()][escape_tags(argv(1))] as $k => $x) {
 			$content .= '<a href="pconfig/' . escape_tags(argv(1)) . '/' . $k . '" >pconfig[' . local_channel() . '][' . escape_tags(argv(1)) . '][' . $k . ']</a> = ' . escape_tags($x) . EOL;
@@ -64,8 +73,6 @@ function pconfig_content(&$a) {
 	}
 
 	if(argc() == 1) {
-
-		$content = '';
 
 		$r = q("select * from pconfig where uid = " . local_channel());
 		if($r) {

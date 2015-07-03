@@ -999,6 +999,8 @@ function get_item_elements($x) {
 				$arr['item_type'] = ITEM_TYPE_BUG;
 			if($x['item_restrict'] & 0x0800)
 				$arr['item_pending_remove'] = 1;
+			if($x['item_restrict'] & 0x1000)
+				$arr['item_type'] = ITEM_TYPE_DOC;
 		}
 	}
 

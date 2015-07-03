@@ -414,6 +414,7 @@ define ( 'TERM_FILE',         5 );
 define ( 'TERM_SAVEDSEARCH',  6 );
 define ( 'TERM_THING',        7 );
 define ( 'TERM_BOOKMARK',     8 );
+define ( 'TERM_HIERARCHY',    9 );
 
 define ( 'TERM_OBJ_POST',    1 );
 define ( 'TERM_OBJ_PHOTO',   2 );
@@ -422,6 +423,7 @@ define ( 'TERM_OBJ_CHANNEL', 4 );
 define ( 'TERM_OBJ_OBJECT',  5 );
 define ( 'TERM_OBJ_THING',   6 );
 define ( 'TERM_OBJ_APP',     7 );
+
 
 /**
  * various namespaces we may need to parse
@@ -540,6 +542,7 @@ define ( 'ITEM_TYPE_BLOCK',      1 );
 define ( 'ITEM_TYPE_PDL',        2 );
 define ( 'ITEM_TYPE_WEBPAGE',    3 );
 define ( 'ITEM_TYPE_BUG',        4 );
+define ( 'ITEM_TYPE_DOC',        5 );
 
 define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );

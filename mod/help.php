@@ -11,20 +11,42 @@
  */
 
 
-if(! function_exists('load_doc_file')) {
+
 function load_doc_file($s) {
 	$lang = get_app()->language;
 	if(! isset($lang))
 		$lang = 'en';
 	$b = basename($s);
 	$d = dirname($s);
-	if(file_exists("$d/$lang/$b"))
-		return file_get_contents("$d/$lang/$b");
+
+	$c = find_doc_file("$d/$lang/$b");
+	if($c) 
+		return $c;
+	$c = find_doc_file($s);
+	if($c) 
+		return $c;
+	return '';
+}
+
+function find_doc_file($s) {
+
+	// If the file was edited more recently than we've stored a copy in the database, use the file.
+	// The stored database item will be searchable, the file won't be. 
+
+	$r = q("select * from item left join item_id on item.id = item.iid where service = 'docfile' and
+		sid = '%s' limit 1",
+		dbesc($s)
+	);
+
+	if($r) {
+		if($file_exists($s) && (filemtime($s) > datetime_convert('UTC','UTC',$r[0]['edited'],'U')))
+			return file_get_contents($s);
+		return($r[0]['body']);
+ 	}
 	if(file_exists($s))
 		return file_get_contents($s);
 	return '';
-}}
-
+}
 
 
 function help_content(&$a) {

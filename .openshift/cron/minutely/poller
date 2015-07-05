@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ ! -f $OPENSHIFT_DATA_DIR/last_run ]; then
+  touch $OPENSHIFT_DATA_DIR/last_run
+fi
+if [[ $(find $OPENSHIFT_DATA_DIR/last_run -mmin +4) ]]; then #run every 5 mins
+  rm -f $OPENSHIFT_DATA_DIR/last_run
+  touch $OPENSHIFT_DATA_DIR/last_run
+  # The command(s) that you want to run every 5 minutes
+cd /var/lib/openshift/55999305e0b8cd838f000053/app-root/repo; /opt/rh/php54/root/usr/bin/php include/poller.php
+fi

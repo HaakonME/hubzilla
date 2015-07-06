@@ -13,6 +13,10 @@
 	border-bottom-right-radius: 0px;
 }
 
+.tags {
+	word-wrap: break-word;
+}
+
 /* suggest */
 
 .suggest-widget-more {

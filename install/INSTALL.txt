@@ -137,6 +137,14 @@ use SSL, your webserver must not listen on port 443 at all.
             cd mywebsite
             util/update_addon_repo matrix
 
+	- Create searchable represenations of the online documentation. You may do this any time
+		that the documentation is updated.
+
+			cd mywebsite
+			util/importdoc
+
+
+
 
 3. Create an empty database and note the access details (hostname, username, 
 password, database name).

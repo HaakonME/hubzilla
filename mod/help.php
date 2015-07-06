@@ -12,6 +12,9 @@
 
 
 
+
+
+
 function load_doc_file($s) {
 	$lang = get_app()->language;
 	if(! isset($lang))
@@ -48,6 +51,30 @@ function find_doc_file($s) {
 		return file_get_contents($s);
 	return '';
 }
+
+function search_doc_files($s) {
+
+	$a = get_app();
+
+        $itemspage = get_pconfig(local_channel(),'system','itemspage');
+        $a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
+        $pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
+
+	// If the file was edited more recently than we've stored a copy in the database, use the file.
+	// The stored database item will be searchable, the file won't be. 
+
+	$r = q("select item_id.sid, item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
+		body regexp '%s' and item_type = %d order by created desc $pager_sql",
+		dbesc($s),
+		intval(ITEM_TYPE_DOC)
+	);
+
+	return $r;
+}
+
+
+
+
 
 
 
@@ -93,7 +120,7 @@ function store_doc_file($s) {
 	}
 
 	if($x['success']) {
-		update_remote_id($sys['channel_id'],$x['item_id'],ITEM_TYPE_DOC,$s,'docfile',0,$item['mid']);
+		update_remote_id($sys,$x['item_id'],ITEM_TYPE_DOC,$s,'docfile',0,$item['mid']);
 	}
 
 
@@ -102,6 +129,25 @@ function store_doc_file($s) {
 
 function help_content(&$a) {
 	nav_set_selected('help');
+
+	if($_REQUEST['search']) {
+		$r = search_doc_files($_REQUEST['search']);
+		if($r) {
+			$o .= '<ul>';
+			foreach($r as $rr) {
+				$dirname = dirname($rr['sid']);
+				$fname = basename($rr['sid']);
+				$fname = substr($fname,0,strrpos($fname,'.'));
+				$path = trim(substr($dirname,4),'/');
+
+				$o .= '<li><a href="help/' . (($path) ? $path . '/' : '') . $fname . '" >' . ucwords(str_replace('_',' ',notags($fname))) . '</a></li>';
+
+			}
+			$o .= '</ul>';
+		}
+		return $o;
+	}
+
 
 	global $lang;
 

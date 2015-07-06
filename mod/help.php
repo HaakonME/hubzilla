@@ -33,19 +33,70 @@ function find_doc_file($s) {
 	// If the file was edited more recently than we've stored a copy in the database, use the file.
 	// The stored database item will be searchable, the file won't be. 
 
-	$r = q("select * from item left join item_id on item.id = item.iid where service = 'docfile' and
-		sid = '%s' limit 1",
-		dbesc($s)
+	$r = q("select item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
+		sid = '%s' and item_type = %d limit 1",
+		dbesc($s),
+		intval(ITEM_TYPE_DOC)
 	);
 
 	if($r) {
-		if($file_exists($s) && (filemtime($s) > datetime_convert('UTC','UTC',$r[0]['edited'],'U')))
+		if(file_exists($s) && (filemtime($s) > datetime_convert('UTC','UTC',$r[0]['edited'],'U')))
 			return file_get_contents($s);
 		return($r[0]['body']);
  	}
 	if(file_exists($s))
 		return file_get_contents($s);
 	return '';
+}
+
+
+
+function store_doc_file($s) {
+
+	if(is_dir($s))
+		return;
+
+	$item = array();
+	$sys = get_sys_channel();
+
+	$item['aid'] = 0;
+	$item['uid'] = $sys['channel_id'];
+
+
+	if(strpos($s,'.md'))
+		$item['mimetype'] = 'text/markdown';
+	elseif(strpos($s,'.html'))
+		$item['mimetype'] = 'text/html';
+	else
+		$item['mimetype'] = 'text/bbcode';
+
+	
+	$item['body'] = file_get_contents($s);
+	$item['plink'] = z_root() . '/' . str_replace('doc','help',$s);
+	$item['owner_xchan'] = $item['author_xchan'] = $sys['channel_hash'];
+	$item['item_type'] = ITEM_TYPE_DOC;
+
+	$r = q("select item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
+		sid = '%s' and item_type = %d limit 1",
+		dbesc($s),
+		intval(ITEM_TYPE_DOC)
+	);
+
+	if($r) {
+		$item['id'] = $r[0]['id'];
+		$item['mid'] = $item['parent_mid'] = $r[0]['mid'];
+		$x = item_store_update($item);
+	}
+	else {
+		$item['mid'] = $item['parent_mid'] = item_message_id();
+		$x = item_store($item);
+	}
+
+	if($x['success']) {
+		update_remote_id($sys['channel_id'],$x['item_id'],ITEM_TYPE_DOC,$s,'docfile',0,$item['mid']);
+	}
+
+
 }
 
 

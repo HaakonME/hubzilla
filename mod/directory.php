@@ -19,6 +19,7 @@ function directory_init(&$a) {
 	$observer = get_observer_hash();
 	$global_changed = false;
 	$safe_changed = false;
+	$pubforums_changed = false;
 
 	if(array_key_exists('global',$_REQUEST)) {
 		$globaldir = intval($_REQUEST['global']);
@@ -28,7 +29,7 @@ function directory_init(&$a) {
 		$_SESSION['globaldir'] = $globaldir;
 		if($observer)
 			set_xconfig($observer,'directory','globaldir',$globaldir);
-	} 		
+	}
 
 	if(array_key_exists('safe',$_REQUEST)) {
 		$safemode = intval($_REQUEST['safe']);
@@ -37,9 +38,19 @@ function directory_init(&$a) {
 	if($safe_changed) {
 		$_SESSION['safemode'] = $safemode;
 		if($observer)
-			set_xconfig($observer,'directory','safe_mode',$safemode);
-	} 		
+			set_xconfig($observer,'directory','safemode',$safemode);
+	}
 
+
+	if(array_key_exists('pubforums',$_REQUEST)) {
+		$pubforums = intval($_REQUEST['pubforums']);
+		$pubforums_changed = true;
+	}
+	if($pubforums_changed) {
+		$_SESSION['pubforums'] = $pubforums;
+		if($observer)
+			set_xconfig($observer,'directory','pubforums',$pubforums);
+	}
 }
 
 function directory_content(&$a) {
@@ -51,18 +62,14 @@ function directory_content(&$a) {
 
 	$observer = get_observer_hash();
 
-	$globaldir = get_globaldir_setting($observer);
+	$globaldir = get_directory_settings($observer, 'globaldir');
 	// override your personal global search pref if we're doing a navbar search of the directory
 	if(intval($_REQUEST['navsearch']))
 		$globaldir = 1;
 
-	$safe_mode = get_safemode_setting($observer);
+	$safe_mode = get_directory_settings($observer, 'safemode');
 
-	$pubforums = null;
-	if(array_key_exists('pubforums',$_REQUEST))
-		$pubforums = intval($_REQUEST['pubforums']);
-	if(! $pubforums)
-		$pubforums = null;
+	$pubforums = get_directory_settings($observer, 'pubforums');
 
 	$o = '';
 	nav_set_selected('directory');

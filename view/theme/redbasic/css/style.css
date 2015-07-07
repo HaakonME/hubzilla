@@ -741,8 +741,8 @@ a.rateme, div.rateme {
 }
 
 .wall-item-conv {
-	margin-top: 5px;
-	margin-bottom: 25px;
+	padding-top: 5px;
+	padding-bottom: 10px;
 }
 
 

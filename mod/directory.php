@@ -62,14 +62,14 @@ function directory_content(&$a) {
 
 	$observer = get_observer_hash();
 
-	$globaldir = get_directory_settings($observer, 'globaldir');
+	$globaldir = get_directory_setting($observer, 'globaldir');
 	// override your personal global search pref if we're doing a navbar search of the directory
 	if(intval($_REQUEST['navsearch']))
 		$globaldir = 1;
 
-	$safe_mode = get_directory_settings($observer, 'safemode');
+	$safe_mode = get_directory_setting($observer, 'safemode');
 
-	$pubforums = get_directory_settings($observer, 'pubforums');
+	$pubforums = get_directory_setting($observer, 'pubforums');
 
 	$o = '';
 	nav_set_selected('directory');
@@ -382,7 +382,12 @@ function directory_content(&$a) {
 							'$entries' => $entries,
 							'$dirlbl' => $suggest ? t('Channel Suggestions') : $dirtitle,
 							'$submit' => t('Find'),
-							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page'))
+							'$next' => alt_pager($a,$j['records'], t('next page'), t('previous page')),
+							'$sort' => t('Sort options'),
+							'$normal' => t('Alphabetic'),
+							'$reverse' => t('Reverse Alphabetic'),
+							'$date' => t('Newest to Oldest'),
+							'$reversedate' => t('Oldest to Newest'),
 						));
 
 

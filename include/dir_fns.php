@@ -72,7 +72,7 @@ function check_upstream_directory() {
 		set_config('system', 'directory_server', '');
 }
 
-function get_directory_settings($observer, $setting) {
+function get_directory_setting($observer, $setting) {
 
 	if ($observer)
 		$ret = get_xconfig($observer, 'directory', $setting);
@@ -97,13 +97,12 @@ function dir_sort_links() {
 
 	$observer = get_observer_hash();
 
-	$safe_mode = get_directory_settings($observer, 'safemode');
-	$globaldir = get_directory_settings($observer, 'globaldir');
-	$pubforums = get_directory_settings($observer, 'pubforums');
+	$safe_mode = get_directory_setting($observer, 'safemode');
+	$globaldir = get_directory_setting($observer, 'globaldir');
+	$pubforums = get_directory_setting($observer, 'pubforums');
 
 	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
-
 
 	$directory_sort_order = get_config('system','directory_sort_order');
 	if(! $directory_sort_order)
@@ -117,14 +116,6 @@ function dir_sort_links() {
 	$tmp = array_merge($_GET,$_POST);
 	unset($tmp['suggest']);
 	unset($tmp['pubforums']);
-	unset($tmp['order']);
-	unset($tmp['q']);
-	unset($tmp['f']);
-	$sorturl = $url . $suggest . http_build_query($tmp);
-
-	$tmp = array_merge($_GET,$_POST);
-	unset($tmp['suggest']);
-	unset($tmp['pubforums']);
 	unset($tmp['global']);
 	unset($tmp['safe']);
 	unset($tmp['q']);
@@ -133,13 +124,6 @@ function dir_sort_links() {
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
 		'$header' => t('Directory Options'),
-		'$normal' => t('Alphabetic'),
-		'$reverse' => t('Reverse Alphabetic'),
-		'$date' => t('Newest to Oldest'),
-		'$reversedate' => t('Oldest to Newest'),
-		'$sort' => t('Sort'),
-		'$selected_sort' => $current_order,
-		'$sorturl' => $sorturl,
 		'$forumsurl' => $forumsurl,
 		'$safemode' => array('safemode', t('Safe Mode'),$safe_mode,'',array(t('No'), t('Yes')),' onchange=\'window.location.href="' . $forumsurl . '&safe="+(this.checked ? 1 : 0)\''),
 		'$pubforums' => array('pubforums', t('Public Forums Only'),$pubforums,'',array(t('No'), t('Yes')),' onchange=\'window.location.href="' . $forumsurl . '&pubforums="+(this.checked ? 1 : 0)\''),

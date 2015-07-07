@@ -276,7 +276,7 @@ function dir_tagblock($link,$r) {
 	$o = '';
 
 	$observer = get_observer_hash();
-	if(! get_directory_settings($observer, 'globaldir'))
+	if(! get_directory_setting($observer, 'globaldir'))
 		return $o;
 
 

@@ -113,8 +113,6 @@ function dir_sort_links() {
 	$safe_mode = get_safemode_setting($observer);
 	$globaldir = get_globaldir_setting($observer);
 
-	$suggest = ($_REQUEST['suggest']) ? '&suggest=' . $_REQUEST['suggest'] : '';
-
 	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
 
@@ -123,8 +121,9 @@ function dir_sort_links() {
 	if(! $directory_sort_order)
 		$directory_sort_order = 'date';
 
-
 	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : $directory_sort_order);
+	$suggest = (($_REQUEST['suggest']) ? '&suggest=' . $_REQUEST['suggest'] : '');
+
 	$url = 'directory?f=';
 
 	$tmp = array_merge($_GET,$_POST);

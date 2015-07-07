@@ -388,6 +388,7 @@ function directory_content(&$a) {
 							'$reverse' => t('Reverse Alphabetic'),
 							'$date' => t('Newest to Oldest'),
 							'$reversedate' => t('Oldest to Newest'),
+							'$suggest' => $suggest ? '&suggest=1' : ''
 						));
 
 

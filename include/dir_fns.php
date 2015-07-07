@@ -120,7 +120,7 @@ function dir_sort_links() {
 	unset($tmp['safe']);
 	unset($tmp['q']);
 	unset($tmp['f']);
-	$forumsurl = $url . $suggest . http_build_query($tmp);
+	$forumsurl = $url . http_build_query($tmp) . $suggest;
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
 		'$header' => t('Directory Options'),

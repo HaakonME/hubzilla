@@ -5,10 +5,10 @@
 				<i class="icon-sort"></i>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a href="directory?f=&order=date">{{$date}}</a></li>
-				<li><a href="directory?f=&order=normal">{{$normal}}</a></li>
-				<li><a href="directory?f=&order=reversedate">{{$reversedate}}</a></li>
-				<li><a href="directory?f=&order=reverse">{{$reverse}}</a></li>
+				<li><a href="directory?f=&order=date{{$suggest}}">{{$date}}</a></li>
+				<li><a href="directory?f=&order=normal{{$suggest}}">{{$normal}}</a></li>
+				<li><a href="directory?f=&order=reversedate{{$suggest}}">{{$reversedate}}</a></li>
+				<li><a href="directory?f=&order=reverse{{$suggest}}">{{$reverse}}</a></li>
 			</ul>
 		</div>
 		<h2>{{$dirlbl}}{{if $search}}:&nbsp;{{$safetxt}}{{/if}}</h2>

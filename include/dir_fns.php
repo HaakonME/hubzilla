@@ -72,33 +72,20 @@ function check_upstream_directory() {
 		set_config('system', 'directory_server', '');
 }
 
-function get_globaldir_setting($observer) {
-
-	if($observer)
-		$globaldir = get_xconfig($observer,'directory','globaldir');
-	else
-		$globaldir = ((array_key_exists('globaldir',$_SESSION)) ? intval($_SESSION['globaldir']) : false);
-
-	if($globaldir === false)
-		$globaldir = get_config('directory','globaldir');
-
-	return $globaldir;
-}
-
-function get_safemode_setting($observer) {
+function get_directory_setting($observer, $setting) {
 
 	if ($observer)
-		$safe_mode = get_xconfig($observer,'directory','safe_mode');
+		$ret = get_xconfig($observer, 'directory', $setting);
 	else
-		$safe_mode = ((array_key_exists('safemode',$_SESSION)) ? intval($_SESSION['safemode']) : false);
+		$ret = ((array_key_exists($setting,$_SESSION)) ? intval($_SESSION[$setting]) : false);
 
-	if($safe_mode === false)
-		$safe_mode = get_config('directory','safe_mode');
+	if($ret === false)
+		$ret = get_config('directory', $setting);
 
-	if($safe_mode === false)
-		$safe_mode = 1;
+	if($setting == 'safe_mode' && $ret === false)
+		$ret = 1;
 
-	return $safe_mode;
+	return $ret;
 }
 
 /**
@@ -110,49 +97,37 @@ function dir_sort_links() {
 
 	$observer = get_observer_hash();
 
-	$safe_mode = get_safemode_setting($observer);
-	$globaldir = get_globaldir_setting($observer);
+	$safe_mode = get_directory_setting($observer, 'safemode');
+	$globaldir = get_directory_setting($observer, 'globaldir');
+	$pubforums = get_directory_setting($observer, 'pubforums');
 
 	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
-
 
 	$directory_sort_order = get_config('system','directory_sort_order');
 	if(! $directory_sort_order)
 		$directory_sort_order = 'date';
 
-
 	$current_order = (($_REQUEST['order']) ? $_REQUEST['order'] : $directory_sort_order);
+	$suggest = (($_REQUEST['suggest']) ? '&suggest=' . $_REQUEST['suggest'] : '');
+
 	$url = 'directory?f=';
 
 	$tmp = array_merge($_GET,$_POST);
-	unset($tmp['order']);
-	unset($tmp['q']);
-	unset($tmp['f']);
-	$sorturl = $url . http_build_query($tmp);
-
-	$tmp = array_merge($_GET,$_POST);
+	unset($tmp['suggest']);
 	unset($tmp['pubforums']);
 	unset($tmp['global']);
 	unset($tmp['safe']);
 	unset($tmp['q']);
 	unset($tmp['f']);
-	$forumsurl = $url . http_build_query($tmp);
+	$forumsurl = $url . http_build_query($tmp) . $suggest;
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
 		'$header' => t('Directory Options'),
-		'$normal' => t('Alphabetic'),
-		'$reverse' => t('Reverse Alphabetic'),
-		'$date' => t('Newest to Oldest'),
-		'$reversedate' => t('Oldest to Newest'),
-		'$sort' => t('Sort'),
-		'$selected_sort' => $current_order,
-		'$sorturl' => $sorturl,
 		'$forumsurl' => $forumsurl,
-		'$safemode' => array('safemode', t('Safe Mode'),$safe_mode,'','',' onchange=\'window.location.href="' . $forumsurl . '&safe="+(this.checked ? 1 : 0)\''), 
-
-		'$pubforums' => array('pubforums', t('Public Forums Only'),(x($_REQUEST,'pubforums') ? $_REQUEST['pubforums'] : ''),'','',' onchange=\'window.location.href="' . $forumsurl . '&pubforums="+(this.checked ? 1 : 0)\''), 
-		'$globaldir' => array('globaldir', t('This Website Only'), 1-intval($globaldir),'','',' onchange=\'window.location.href="' . $forumsurl . '&global="+(this.checked ? 0 : 1)\''),
+		'$safemode' => array('safemode', t('Safe Mode'),$safe_mode,'',array(t('No'), t('Yes')),' onchange=\'window.location.href="' . $forumsurl . '&safe="+(this.checked ? 1 : 0)\''),
+		'$pubforums' => array('pubforums', t('Public Forums Only'),$pubforums,'',array(t('No'), t('Yes')),' onchange=\'window.location.href="' . $forumsurl . '&pubforums="+(this.checked ? 1 : 0)\''),
+		'$globaldir' => array('globaldir', t('This Website Only'), 1-intval($globaldir),'',array(t('No'), t('Yes')),' onchange=\'window.location.href="' . $forumsurl . '&global="+(this.checked ? 0 : 1)\''),
 	));
 
 	return $o;

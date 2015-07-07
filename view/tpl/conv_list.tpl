@@ -179,8 +179,7 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-			<div class="wall-item-wrapper-end"></div>
-			<div class="wall-item-outside-wrapper-end {{$item.indent}}" ></div>
+			<div class="clear{{if $indent}} {{$indent}}{{/if}}"></div>
 		</div>
 	</div>
 {{if $item.comment_lastcollapsed}}

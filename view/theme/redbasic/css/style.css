@@ -741,8 +741,8 @@ a.rateme, div.rateme {
 }
 
 .wall-item-conv {
-	margin-top: 5px;
-	margin-bottom: 25px;
+	padding-top: 5px;
+	padding-bottom: 10px;
 }
 
 
@@ -1932,12 +1932,14 @@ nav .dropdown-menu {
 	background-color: $comment_item_colour;
 	border-bottom-left-radius: $radiuspx;
 	border-bottom-right-radius: $radiuspx;
+	word-wrap: break-word;
 }
 
 .section-content-wrapper-np {
 	background-color: $comment_item_colour;
 	border-bottom-left-radius: $radiuspx;
 	border-bottom-right-radius: $radiuspx;
+	word-wrap: break-word;
 }
 
 [id^="cloud-index-"]:hover td,

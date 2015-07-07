@@ -57,7 +57,7 @@
 			<a href='{{$item.conv.href}}' id='context-{{$item.id}}' title='{{$item.conv.title}}'>{{$item.conv.title}}</a>
 		</div>
 		{{/if}}
-		<div class="wall-item-outside-wrapper-end {{$item.indent}}" ></div>
+		<div class="clear{{if $indent}} {{$indent}}{{/if}}"></div>
 	</div>
 </div>
 

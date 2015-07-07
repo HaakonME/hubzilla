@@ -63,16 +63,43 @@ function search_doc_files($s) {
 	// If the file was edited more recently than we've stored a copy in the database, use the file.
 	// The stored database item will be searchable, the file won't be. 
 
+	$regexop = db_getfunc('REGEXP');
+
 	$r = q("select item_id.sid, item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
-		body regexp '%s' and item_type = %d order by created desc $pager_sql",
+		body $regexop '%s' and item_type = %d $pager_sql",
 		dbesc($s),
 		intval(ITEM_TYPE_DOC)
 	);
+	
+	$r = fetch_post_tags($r,true);
+	require_once('include/html2plain.php');
 
+	for($x = 0; $x < count($r); $x ++) {
+
+		$r[$x]['text'] = html2plain(prepare_text($r[$x]['body'],$r[$x]['mimetype'], true));
+
+		$r[$x]['rank'] = 0;
+		if($r[$x]['term']) {
+			foreach($r[$x]['term'] as $t) {
+				if(stristr($t['term'],$s)) {
+					$r[$x]['rank'] ++;
+				}
+			}
+		}
+		if(stristr($r[$x]['sid'],$s))
+			$r[$x]['rank'] ++;
+		$r[$x]['rank'] += substr_count(strtolower($r[$x]['text']),strtolower($s));
+	}
+	usort($r,'doc_rank_sort');
 	return $r;
 }
 
 
+function doc_rank_sort($a,$b) {
+	if($a['rank'] == $b['rank'])
+		return 0;
+	return (($a['rank'] < $b['rank']) ? 1 : (-1));
+}
 
 
 
@@ -140,7 +167,8 @@ function help_content(&$a) {
 				$fname = substr($fname,0,strrpos($fname,'.'));
 				$path = trim(substr($dirname,4),'/');
 
-				$o .= '<li><a href="help/' . (($path) ? $path . '/' : '') . $fname . '" >' . ucwords(str_replace('_',' ',notags($fname))) . '</a></li>';
+				$o .= '<li><a href="help/' . (($path) ? $path . '/' : '') . $fname . '" >' . ucwords(str_replace('_',' ',notags($fname))) . '</a><br />' . 
+				str_replace('$Projectname',PLATFORM_NAME,substr($rr['text'],0,200)) . '...<br /><br /></li>';
 
 			}
 			$o .= '</ul>';

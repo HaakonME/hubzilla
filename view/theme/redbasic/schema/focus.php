@@ -46,7 +46,7 @@ if (! $radius)
 if (! $shadow)
 	$shadow = "0";
 if (! $converse_width)
-	$converse_width = "676";
+	$converse_width = "656";
 if(! $top_photo)
 	$top_photo = '48px';
 if(! $comment_indent)

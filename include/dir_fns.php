@@ -113,6 +113,8 @@ function dir_sort_links() {
 	$safe_mode = get_safemode_setting($observer);
 	$globaldir = get_globaldir_setting($observer);
 
+	$suggest = ($_REQUEST['suggest']) ? '&suggest=' . $_REQUEST['suggest'] : '';
+
 	// Build urls without order and pubforums so it's easy to tack on the changed value
 	// Probably there's an easier way to do this
 
@@ -126,18 +128,20 @@ function dir_sort_links() {
 	$url = 'directory?f=';
 
 	$tmp = array_merge($_GET,$_POST);
+	unset($tmp['suggest']);
 	unset($tmp['order']);
 	unset($tmp['q']);
 	unset($tmp['f']);
-	$sorturl = $url . http_build_query($tmp);
+	$sorturl = $url . $suggest . http_build_query($tmp);
 
 	$tmp = array_merge($_GET,$_POST);
+	unset($tmp['suggest']);
 	unset($tmp['pubforums']);
 	unset($tmp['global']);
 	unset($tmp['safe']);
 	unset($tmp['q']);
 	unset($tmp['f']);
-	$forumsurl = $url . http_build_query($tmp);
+	$forumsurl = $url . $suggest . http_build_query($tmp);
 
 	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
 		'$header' => t('Directory Options'),

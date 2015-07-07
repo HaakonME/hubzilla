@@ -157,7 +157,7 @@ EOT;
 
 	$nav['apps'] = array('apps', t('Apps'), "", t('Applications, utilities, links, games'),'apps_nav_btn');
 
-	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
+	$nav['search'] = array('search', t('Search'), "", t('Search site @name, #tag, ?docs, content'));
 
 
 	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Directory'),'directory_nav_btn'); 
@@ -244,7 +244,7 @@ $powered_by = '';
 		'$localuser' => local_channel(),
 		'$sel' => 	$a->nav_sel,
 		'$powered_by' => $powered_by,
-		'$help' => t('@name, #tag, content'),
+		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...')
 	));
 

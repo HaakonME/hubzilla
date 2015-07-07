@@ -4911,6 +4911,8 @@ function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remo
 		$page_type = 'BUILDBLOCK';
 	elseif($webpage == ITEM_TYPE_PDL)
 		$page_type = 'PDL';
+	elseif($webpage == ITEM_TYPE_DOC)
+		$page_type = 'docfile';
 	elseif($namespace && $remote_id) {
 		$page_type = $namespace;
 		$pagetitle = $remote_id;

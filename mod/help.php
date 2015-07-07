@@ -11,24 +11,171 @@
  */
 
 
-if(! function_exists('load_doc_file')) {
+
+
+
+
 function load_doc_file($s) {
 	$lang = get_app()->language;
 	if(! isset($lang))
 		$lang = 'en';
 	$b = basename($s);
 	$d = dirname($s);
-	if(file_exists("$d/$lang/$b"))
-		return file_get_contents("$d/$lang/$b");
+
+	$c = find_doc_file("$d/$lang/$b");
+	if($c) 
+		return $c;
+	$c = find_doc_file($s);
+	if($c) 
+		return $c;
+	return '';
+}
+
+function find_doc_file($s) {
+
+	// If the file was edited more recently than we've stored a copy in the database, use the file.
+	// The stored database item will be searchable, the file won't be. 
+
+	$r = q("select item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
+		sid = '%s' and item_type = %d limit 1",
+		dbesc($s),
+		intval(ITEM_TYPE_DOC)
+	);
+
+	if($r) {
+		if(file_exists($s) && (filemtime($s) > datetime_convert('UTC','UTC',$r[0]['edited'],'U')))
+			return file_get_contents($s);
+		return($r[0]['body']);
+ 	}
 	if(file_exists($s))
 		return file_get_contents($s);
 	return '';
-}}
+}
 
+function search_doc_files($s) {
+
+	$a = get_app();
+
+        $itemspage = get_pconfig(local_channel(),'system','itemspage');
+        $a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
+        $pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
+
+	// If the file was edited more recently than we've stored a copy in the database, use the file.
+	// The stored database item will be searchable, the file won't be. 
+
+	$regexop = db_getfunc('REGEXP');
+
+	$r = q("select item_id.sid, item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
+		body $regexop '%s' and item_type = %d $pager_sql",
+		dbesc($s),
+		intval(ITEM_TYPE_DOC)
+	);
+	
+	$r = fetch_post_tags($r,true);
+	require_once('include/html2plain.php');
+
+	for($x = 0; $x < count($r); $x ++) {
+
+		$r[$x]['text'] = html2plain(prepare_text($r[$x]['body'],$r[$x]['mimetype'], true));
+
+		$r[$x]['rank'] = 0;
+		if($r[$x]['term']) {
+			foreach($r[$x]['term'] as $t) {
+				if(stristr($t['term'],$s)) {
+					$r[$x]['rank'] ++;
+				}
+			}
+		}
+		if(stristr($r[$x]['sid'],$s))
+			$r[$x]['rank'] ++;
+		$r[$x]['rank'] += substr_count(strtolower($r[$x]['text']),strtolower($s));
+	}
+	usort($r,'doc_rank_sort');
+	return $r;
+}
+
+
+function doc_rank_sort($a,$b) {
+	if($a['rank'] == $b['rank'])
+		return 0;
+	return (($a['rank'] < $b['rank']) ? 1 : (-1));
+}
+
+
+
+
+
+function store_doc_file($s) {
+
+	if(is_dir($s))
+		return;
+
+	$item = array();
+	$sys = get_sys_channel();
+
+	$item['aid'] = 0;
+	$item['uid'] = $sys['channel_id'];
+
+
+	if(strpos($s,'.md'))
+		$item['mimetype'] = 'text/markdown';
+	elseif(strpos($s,'.html'))
+		$item['mimetype'] = 'text/html';
+	else
+		$item['mimetype'] = 'text/bbcode';
+
+	
+	$item['body'] = file_get_contents($s);
+	$item['plink'] = z_root() . '/' . str_replace('doc','help',$s);
+	$item['owner_xchan'] = $item['author_xchan'] = $sys['channel_hash'];
+	$item['item_type'] = ITEM_TYPE_DOC;
+
+	$r = q("select item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
+		sid = '%s' and item_type = %d limit 1",
+		dbesc($s),
+		intval(ITEM_TYPE_DOC)
+	);
+
+	if($r) {
+		$item['id'] = $r[0]['id'];
+		$item['mid'] = $item['parent_mid'] = $r[0]['mid'];
+		$x = item_store_update($item);
+	}
+	else {
+		$item['mid'] = $item['parent_mid'] = item_message_id();
+		$x = item_store($item);
+	}
+
+	if($x['success']) {
+		update_remote_id($sys,$x['item_id'],ITEM_TYPE_DOC,$s,'docfile',0,$item['mid']);
+	}
+
+
+}
 
 
 function help_content(&$a) {
 	nav_set_selected('help');
+
+	if($_REQUEST['search']) {
+		$r = search_doc_files($_REQUEST['search']);
+		if($r) {
+			$o .= '<ul>';
+			foreach($r as $rr) {
+				$dirname = dirname($rr['sid']);
+				$fname = basename($rr['sid']);
+				$fname = substr($fname,0,strrpos($fname,'.'));
+				$path = trim(substr($dirname,4),'/');
+
+				$o .= '<li><a href="help/' . (($path) ? $path . '/' : '') . $fname . '" >' . ucwords(str_replace('_',' ',notags($fname))) . '</a><br />' . 
+				str_replace('$Projectname',PLATFORM_NAME,substr($rr['text'],0,200)) . '...<br /><br /></li>';
+
+			}
+			$o .= '</ul>';
+		}
+		return $o;
+	}
+
 
 	global $lang;
 

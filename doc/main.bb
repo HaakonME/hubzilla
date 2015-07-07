@@ -1,4 +1,3 @@
-[img][baseurl]/assets/hashlogo.png[/img]
 
 [zrl=[baseurl]/help/about][b]What is the $Projectname?[/b][/zrl]
 $Projectname is a decentralized communication and publishing platform that enables you to keep in control of your communication needs by automatic encryption and finely grained access control. It's you, and only you who decides who is allowed to see your stuff.

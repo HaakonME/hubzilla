@@ -80,7 +80,7 @@ function zot_get_hublocs($hash) {
 
 	/* Only search for active hublocs - e.g. those that haven't been marked deleted */
 
-	$ret = q("select * from hubloc where hubloc_hash = '%s' and hubloc_deleted != 0 order by hubloc_url ",
+	$ret = q("select * from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0 order by hubloc_url ",
 		dbesc($hash)
 	);
 

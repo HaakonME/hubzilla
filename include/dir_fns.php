@@ -82,7 +82,7 @@ function get_directory_setting($observer, $setting) {
 	if($ret === false)
 		$ret = get_config('directory', $setting);
 
-	if($setting == 'safe_mode' && $ret === false)
+	if($setting == 'safemode' && $ret === false)
 		$ret = 1;
 
 	return $ret;

@@ -154,7 +154,7 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 
 	$x = file_get_contents('view/theme/redbasic/css/style.css');
 
-	$aside_width = 279;
+	$aside_width = 284;
 
 	// left aside and right aside are is 231px + converse width
 	if($converse_center) {

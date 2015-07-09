@@ -903,7 +903,7 @@ function widget_random_block($arr) {
 		item_type = %d $sql_options order by $randfunc limit 1",
 		intval($channel_id),
 		dbesc('%' . $contains . '%'),
-		intval(ITEM_TYPE_BUILDBLOCK)
+		intval(ITEM_TYPE_BLOCK)
 	);
 
 	if($r) {

@@ -136,7 +136,7 @@ function editblock_content(&$a) {
 	$o .= replace_macros($tpl,array(
 		'$return_path'         => $rp,
 		'$action'              => 'item',
-		'$webpage'             => ITEM_TYPE_BUILDBLOCK,
+		'$webpage'             => ITEM_TYPE_BLOCK,
 		'$share'               => t('Edit'),
 		'$bold'                => t('Bold'),
 		'$italic'              => t('Italic'),

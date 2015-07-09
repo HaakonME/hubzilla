@@ -7,7 +7,7 @@ $(document).ready(function() {
 	if( $('#css3-calc').width() == 10) {
 		$(window).resize(function() {
 			if($(window).width() < 767) {
-				$('main').css('width', $(window).width() + 231 );
+				$('main').css('width', $(window).width() + 279 );
 			} else {
 				$('main').css('width', '100%' );
 			}

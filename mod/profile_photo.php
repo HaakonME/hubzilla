@@ -135,7 +135,7 @@ function profile_photo_post(&$a) {
 			$im = photo_factory($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
 
-				$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
+				$im->cropImage(300,$srcX,$srcY,$srcW,$srcH);
 
 				$aid = get_account_id();
 
@@ -411,7 +411,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 	$width  = $ph->getWidth();
 	$height = $ph->getHeight();
 
-	if($width < 175 || $height < 175) {
+	if($width < 300 || $height < 300) {
 		$ph->scaleImageUp(200);
 		$width  = $ph->getWidth();
 		$height = $ph->getHeight();

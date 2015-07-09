@@ -406,9 +406,10 @@ footer {
 
 
 #profile-photo-wrapper img {
+	width: 100%;
+	max-width: 300px;
+	height: auto;
 	padding: 10px;
-	width: 197px;
-	height: 197px;
 }
 
 #profile-photo-wrapper {
@@ -571,7 +572,7 @@ footer {
 }
 
 .photo {
-    border: 1px solid #AAAAAA;
+    border: 1px solid #ccc;
 }
 
 .photo-top-photo, .photo-album-photo {

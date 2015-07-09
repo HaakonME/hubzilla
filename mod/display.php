@@ -52,7 +52,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'deny_gid' => $channel['channel_deny_gid']
 		); 
 
-/*
+
 		$x = array(
 			'is_owner' => true,
 			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
@@ -68,7 +68,7 @@ function display_content(&$a, $update = 0, $load = false) {
 		);
 
 		$o .= status_editor($a,$x);
-*/
+
 	}
 
 	// This page can be viewed by anybody so the query could be complicated

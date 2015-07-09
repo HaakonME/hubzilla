@@ -347,7 +347,8 @@ footer {
 	word-wrap: break-word;
 }
 
-.vcard dl  {
+.vcard dl,
+.vcard .title {
 	margin-top: 10px;
 	margin-bottom: 0px;
 }

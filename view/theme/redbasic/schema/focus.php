@@ -61,5 +61,3 @@ else {
 	$nav_float_min_opacity = (float) $nav_min_opacity;
 	$nav_percent_min_opacity = (int) 100 * $nav_min_opacity;
 }
-
-$converse_center = "1";

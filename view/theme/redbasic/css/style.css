@@ -28,10 +28,15 @@ aside#region_1 {
 	width: $aside_widthpx;
 	min-width: $aside_widthpx;
 	max-width: $aside_widthpx;
+	padding: 65px 7px 0px 7px;
 }
 
 main {
 	max-width: $main_widthpx;
+}
+
+section {
+	padding: 65px 7px 200px 7px;
 }
 
 h1, .h1, h2, .h2 {

@@ -100,7 +100,7 @@ function editpost_content(&$a) {
 		$cipher = 'aes256';
 
 
-	$editor .= replace_macros($tpl,array(
+	$editor = replace_macros($tpl,array(
 		'$return_path' => $_SESSION['return_url'],
 		'$action' => 'item',
 		'$share' => t('Edit'),

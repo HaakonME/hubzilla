@@ -101,12 +101,6 @@ function editlayout_content(&$a) {
 		$layout_title = $item_id[0]['sid'];
 
 	$plaintext = true;
-
-	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit Layout'),
-		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
-		'$id' => $itm[0]['id']
-	));
 	
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl'       => $a->get_baseurl(),
@@ -132,7 +126,7 @@ function editlayout_content(&$a) {
 
 	$rp = 'layouts/' . $which;
 
-	$o .= replace_macros($tpl,array(
+	$editor = replace_macros($tpl,array(
 		'$return_path'         => $rp,
 		'$action'              => 'item',
 		'$webpage'             => ITEM_PDL,
@@ -176,6 +170,14 @@ function editlayout_content(&$a) {
 		'$defexpire'           => '',
 		'$feature_expire'      => false,
 		'$expires'             => t('Set expiration date'),
+	));
+
+
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit Layout'),
+		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
+		'$id' => $itm[0]['id'],
+		'$editor' => $editor
 	));
 
 	return $o;

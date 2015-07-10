@@ -1,4 +1,5 @@
 {{if $header}}
+<div class="generic-content-wrapper">
 <div class="section-title-wrapper">
 	{{if $menu_id}}
 	<div class="pull-right">
@@ -27,3 +28,6 @@
 		<div class="clear"></div>
 	</form>
 </div>
+{{if $header}}
+</div>
+{{/if}}

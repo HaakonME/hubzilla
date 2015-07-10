@@ -46,7 +46,7 @@ if (! $radius)
 if (! $shadow)
 	$shadow = "0";
 if (! $converse_width)
-	$converse_width = "656";
+	$converse_width = "790";
 if(! $top_photo)
 	$top_photo = '48px';
 if(! $comment_indent)
@@ -61,5 +61,3 @@ else {
 	$nav_float_min_opacity = (float) $nav_min_opacity;
 	$nav_percent_min_opacity = (int) 100 * $nav_min_opacity;
 }
-
-$converse_center = "1";

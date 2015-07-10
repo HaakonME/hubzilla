@@ -807,7 +807,7 @@ function contact_block() {
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
 
 	if($shown === false)
-		$shown = 24;
+		$shown = 25;
 	if($shown == 0)
 		return;
 

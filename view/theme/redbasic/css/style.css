@@ -269,12 +269,11 @@ footer {
 }
 
 /*TODO: we should use one class for all this. */
-/*
+
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
-	color: #444 !important;
-	text-decoration: none !important;
+	color: $font_colour;
 }
-*/
+
 
 .fileas-all {
 	text-decoration: none !important;

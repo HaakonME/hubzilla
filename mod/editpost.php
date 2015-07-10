@@ -38,11 +38,6 @@ function editpost_content(&$a) {
 
 	$channel = $a->get_channel();
 
-	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit post')
-	));
-
-	
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl' => $a->get_baseurl(),
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
@@ -52,8 +47,6 @@ function editpost_content(&$a) {
 		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
 	    '$confirmdelete' => t('Delete item?'),
 	));
-
-
 
 	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
 		$key = get_config('system','prvkey');
@@ -107,7 +100,7 @@ function editpost_content(&$a) {
 		$cipher = 'aes256';
 
 
-	$o .= replace_macros($tpl,array(
+	$editor = replace_macros($tpl,array(
 		'$return_path' => $_SESSION['return_url'],
 		'$action' => 'item',
 		'$share' => t('Edit'),
@@ -159,6 +152,11 @@ function editpost_content(&$a) {
 		'$cipher' => $cipher,
 		'$expiryModalOK' => t('OK'),
 		'$expiryModalCANCEL' => t('Cancel'),
+	));
+
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit post'),
+		'$editor' => $editor
 	));
 
 	return $o;

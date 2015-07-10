@@ -52,6 +52,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'deny_gid' => $channel['channel_deny_gid']
 		); 
 
+
 		$x = array(
 			'is_owner' => true,
 			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
@@ -63,10 +64,13 @@ function display_content(&$a, $update = 0, $load = false) {
 			'bang' => '',
 			'visitor' => true,
 			'profile_uid' => local_channel(),
-			'return_path' => 'channel/' . $channel['channel_address']
+			'return_path' => 'channel/' . $channel['channel_address'],
+			'expanded' => true
 		);
 
+		$o = '<div id="jot-popup">';
 		$o .= status_editor($a,$x);
+		$o .= '</div>';
 
 	}
 

@@ -25,8 +25,8 @@
 		'croppa',
 		{
 			previewWrap: 'previewWrap',
-			minWidth: 175,
-			minHeight: 175,
+			minWidth: 300,
+			minHeight: 300,
 			maxWidth: 640,
 			maxHeight: 640,
 			ratioDim: { x: 100, y:100 },

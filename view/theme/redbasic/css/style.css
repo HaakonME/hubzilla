@@ -270,7 +270,16 @@ footer {
 
 /*TODO: we should use one class for all this. */
 
-.group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
+.group-selected,
+.fileas-selected,
+.categories-selected,
+.search-selected,
+.active,
+.group-selected:hover,
+.fileas-selected:hover,
+.categories-selected:hover,
+.search-selected:hover,
+.active:hover {
 	color: $font_colour;
 }
 

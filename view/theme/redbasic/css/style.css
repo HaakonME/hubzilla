@@ -1594,8 +1594,8 @@ img.mail-list-sender-photo {
 }
 
 .jothidden > input {
-	border: 1px solid $bgcolour;
-	background-color: $bgcolour;
+	border: 1px solid transparent;
+	background-color: transparent;
 }
 .jothidden > input:hover,
 .jothidden > input:focus {

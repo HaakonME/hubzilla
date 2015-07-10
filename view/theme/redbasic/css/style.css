@@ -28,10 +28,15 @@ aside#region_1 {
 	width: $aside_widthpx;
 	min-width: $aside_widthpx;
 	max-width: $aside_widthpx;
+	padding: 80px 7px 0px 7px;
 }
 
 main {
 	max-width: $main_widthpx;
+}
+
+section {
+	padding: 80px 7px 200px 7px;
 }
 
 h1, .h1, h2, .h2 {
@@ -264,12 +269,20 @@ footer {
 }
 
 /*TODO: we should use one class for all this. */
-/*
-.group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
-	color: #444 !important;
-	text-decoration: none !important;
+
+.group-selected,
+.fileas-selected,
+.categories-selected,
+.search-selected,
+.active,
+.group-selected:hover,
+.fileas-selected:hover,
+.categories-selected:hover,
+.search-selected:hover,
+.active:hover {
+	color: $font_colour;
 }
-*/
+
 
 .fileas-all {
 	text-decoration: none !important;
@@ -347,7 +360,8 @@ footer {
 	word-wrap: break-word;
 }
 
-.vcard dl  {
+.vcard dl,
+.vcard .title {
 	margin-top: 10px;
 	margin-bottom: 0px;
 }
@@ -406,13 +420,14 @@ footer {
 
 
 #profile-photo-wrapper img {
-	padding: 10px;
-	width: 197px;
-	height: 197px;
+	width: 100%;
+	max-width: 300px;
+	height: auto;
 }
 
 #profile-photo-wrapper {
-	margin-top: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
 }
 
 
@@ -571,7 +586,7 @@ footer {
 }
 
 .photo {
-    border: 1px solid #AAAAAA;
+    border: 1px solid #ccc;
 }
 
 .photo-top-photo, .photo-album-photo {
@@ -704,8 +719,8 @@ a.rateme, div.rateme {
 
 .contact-block-div {
 	float: left;
-	width: 49px;
-	height: 49px;
+	width: 50px;
+	height: 50px;
 }
 .contact-block-textdiv {
 	float: left;
@@ -720,8 +735,8 @@ a.rateme, div.rateme {
 	float: left;
 }
 .contact-block-img {
-	width:47px;
-	height:47px;
+	width:48px;
+	height:48px;
 }
 
 #tag-remove {
@@ -1587,8 +1602,8 @@ img.mail-list-sender-photo {
 }
 
 .jothidden > input {
-	border: 1px solid $bgcolour;
-	background-color: $bgcolour;
+	border: 1px solid transparent;
+	background-color: transparent;
 }
 .jothidden > input:hover,
 .jothidden > input:focus {
@@ -2109,9 +2124,15 @@ nav .badge.mail-update:hover {
 }
 
 @media screen and (max-width: 767px) {
+
+	section {
+		padding: 65px 7px 200px 7px;
+	}
+
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;
+		padding: 65px 7px 0px 7px;
 	}
 
 	main {

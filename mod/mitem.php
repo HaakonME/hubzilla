@@ -162,7 +162,7 @@ function mitem_content(&$a) {
 			'$display'     => $display,
 			'$lockstate'   => $lockstate,
 			'$menu_names'  => $menu_names,
-			'$sys' => $a->is_sys
+			'$sys'         => $a->is_sys
 		));
 
 		$o .= replace_macros(get_markup_template('mitemlist.tpl'),array(

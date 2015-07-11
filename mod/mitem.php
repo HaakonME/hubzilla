@@ -149,7 +149,6 @@ function mitem_content(&$a) {
 
 		$create = replace_macros(get_markup_template('mitemedit.tpl'), array(
 			'$menu_id'     => $a->data['menu']['menu_id'],
-			'$action'      => 'mitem/' . $a->data['menu']['menu_id'] . (($a->is_sys) ? '?f=&sys=1' : ''),
 			'$permissions' => t('Menu Item Permissions'),
 			'$permdesc'    => t("\x28click to open/close\x29"),
 			'$aclselect'   => populate_acl($perm_defaults,false),
@@ -162,7 +161,8 @@ function mitem_content(&$a) {
 			'$submit_more' => t('Submit and continue'),
 			'$display'     => $display,
 			'$lockstate'   => $lockstate,
-			'$menu_names'  => $menu_names
+			'$menu_names'  => $menu_names,
+			'$sys' => $a->is_sys
 		));
 
 		$o .= replace_macros(get_markup_template('mitemlist.tpl'),array(

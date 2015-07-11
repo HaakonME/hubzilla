@@ -37,7 +37,7 @@ function menu_post(&$a) {
 		$_REQUEST['menu_id'] = intval(argv(1));
 		$r = menu_edit($_REQUEST);
 		if($r) {
-			//info( t('Menu updated.') . EOL);
+			info( t('Menu updated.') . EOL);
 			goaway(z_root() . '/mitem/' . $menu_id . (($a->is_sys) ? '?f=&sys=1' : '')); 
 		}
 		else
@@ -46,7 +46,7 @@ function menu_post(&$a) {
 	else {
 		$r = menu_create($_REQUEST);
 			if($r) {
-			//info( t('Menu created.') . EOL);
+			info( t('Menu created.') . EOL);
 			goaway(z_root() . '/mitem/' . $r . (($a->is_sys) ? '?f=&sys=1' : '')); 
 		}
 		else

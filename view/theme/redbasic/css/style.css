@@ -2120,14 +2120,9 @@ nav .badge.mail-update:hover {
 
 @media screen and (max-width: 767px) {
 
-	section {
-		padding: 65px 7px 200px 7px;
-	}
-
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;
-		padding: 65px 7px 0px 7px;
 	}
 
 	main {

@@ -44,9 +44,6 @@ function mitem_post(&$a) {
 	if(! $a->data['menu'])
 		return;
 
-
-	$channel = $a->get_channel();
-
 	if(!$_REQUEST['mitem_desc'] || !$_REQUEST['mitem_link']) {
 		notice( t('Unable to create element.') . EOL);
 		return;
@@ -89,9 +86,6 @@ function mitem_post(&$a) {
 			notice( t('Unable to add menu element.') . EOL);
 
 	}
-
-
-
 
 }
 
@@ -155,6 +149,7 @@ function mitem_content(&$a) {
 
 		$create = replace_macros(get_markup_template('mitemedit.tpl'), array(
 			'$menu_id'     => $a->data['menu']['menu_id'],
+			'$action'      => 'mitem/' . $a->data['menu']['menu_id'] . (($a->is_sys) ? '?f=&sys=1' : ''),
 			'$permissions' => t('Menu Item Permissions'),
 			'$permdesc'    => t("\x28click to open/close\x29"),
 			'$aclselect'   => populate_acl($perm_defaults,false),

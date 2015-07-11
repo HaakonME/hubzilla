@@ -416,13 +416,18 @@ footer {
 
 #profile-photo-wrapper img {
 	width: 100%;
+	height: 100%;
 	max-width: 300px;
-	height: auto;
+	max-height: 300px;
 }
 
 #profile-photo-wrapper {
+	width: 251px;
+	height: 251px;
 	margin-top: -10px;
 	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: $radiuspx;
 }
 
 
@@ -514,7 +519,6 @@ footer {
 	display: block;
 }
 
-
 .pager {
   padding: 10px;
   text-align: center;
@@ -578,10 +582,6 @@ footer {
 
 #sidebar-page-list .label {
     margin-left: 5px;
-}
-
-.photo {
-    border: 1px solid #ccc;
 }
 
 .photo-top-photo, .photo-album-photo {

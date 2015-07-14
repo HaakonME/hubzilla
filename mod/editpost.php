@@ -48,7 +48,6 @@ function editpost_content(&$a) {
 	    '$confirmdelete' => t('Delete item?'),
 	));
 
-
 	if(intval($itm[0]['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($itm[0]['title'])

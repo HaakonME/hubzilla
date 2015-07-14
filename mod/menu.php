@@ -137,7 +137,9 @@ function menu_content(&$a) {
 
 			$o = replace_macros(get_markup_template('menuedit.tpl'), array(
 				'$header' => t('Edit Menu'),
+				'$sys' => $a->is_sys,
 				'$menu_id' => intval(argv(1)),
+				'$menu_edit_link' => 'mitem/' . intval(argv(1)) . (($a->is_sys) ? '?f=&sys=1' : ''),
 				'$hintedit' => t('Add or remove entries to this menu'),
 				'$editcontents' => t('Edit menu contents'),
 				'$menu_name' => array('menu_name', t('Menu name'), $m['menu_name'], t('Must be unique, only seen by you'), '*'),

@@ -5,7 +5,7 @@
 	</div>
 {{/if}}
 	<div id="menu-element-creator" class="section-content-tools-wrapper" style="display: {{$display}};">
-		<form id="mitemedit" action="mitem/{{$menu_id}}{{if $mitem_id}}/{{$mitem_id}}{{/if}}" method="post" >
+		<form id="mitemedit" action="mitem/{{$menu_id}}{{if $mitem_id}}/{{$mitem_id}}{{/if}}{{if $sys}}?f=&sys=1{{/if}}" method="post" >
 			<input type="hidden" name="menu_id" value="{{$menu_id}}" />
 			{{if $mitem_id}}
 			<input type="hidden" name="mitem_id" value="{{$mitem_id}}" />

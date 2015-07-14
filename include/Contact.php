@@ -333,7 +333,7 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 	);
 	// if this was the default channel, set another one as default
 	if($a->account['account_default_channel'] == $channel_id) {
-		$r = q("select channel_id from channel where channel_account_id = %d and not ( channel_pageflags & %d)>0 limit 1",
+		$r = q("select channel_id from channel where channel_account_id = %d and channel_removed = 0 limit 1",
             intval($a->account['account_id']),
             intval(PAGE_REMOVED));
 		if ($r) {

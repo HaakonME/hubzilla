@@ -1110,7 +1110,9 @@ function zot_import($arr, $sender_url) {
 				logger('specific recipients');
 				$recip_arr = array();
 				foreach($i['notify']['recipients'] as $recip) {
-					$recip_arr[] =  make_xchan_hash($recip['guid'],$recip['guid_sig']);
+					if(is_array($recip)) {
+						$recip_arr[] =  make_xchan_hash($recip['guid'],$recip['guid_sig']);
+					}
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);

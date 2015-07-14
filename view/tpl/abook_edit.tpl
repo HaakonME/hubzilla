@@ -46,7 +46,7 @@
 				<div class="section-subtitle-wrapper" role="tab" id="pending-tool">
 					<h3>
 						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#pending-tool-collapse" aria-expanded="true" aria-controls="pending-tool-collapse">
-							Connection Pending Approval
+							{{$pending_label}}
 						</a>
 					</h3>
 				</div>
@@ -64,15 +64,15 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="myModalLabel">Connection Request</h4>
+							<h4 class="modal-title" id="myModalLabel">{{$pending_modal_title}}</h4>
 						</div>
 						<div class="modal-body">
-							<strong>{{$name}}</strong> ({{$addr}}) would like to connect with you. Please approve this connection to allow communication.
+							<strong>{{$name}}</strong> {{$pending_modal_body}}
 						</div>
 						<div class="modal-footer">
 							<button class="btn btn-sm btn-danger pull-left" title="{{$buttons.delete.title}}" onclick="window.location.href='{{$buttons.delete.url}}'; return false;">{{$buttons.delete.label}}</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Approve Later</button>
-							<button type="submit" class="btn btn-primary" name="pending" value="1">Approve</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">{{$pending_modal_dismiss}}</button>
+							<button type="submit" class="btn btn-primary" name="pending" value="1">{{$pending_modal_approve}}</button>
 						</div>
 					</div>
 				</div>
@@ -116,7 +116,7 @@
 				<div class="section-subtitle-wrapper" role="tab" id="fitert-tool">
 					<h3>
 						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#fitert-tool-collapse" aria-expanded="true" aria-controls="fitert-tool-collapse">
-							Custom Filter
+							{{$connfilter_label}}
 						</a>
 					</h3>
 				</div>

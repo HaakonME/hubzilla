@@ -1284,13 +1284,7 @@ div.jGrowl div.jGrowl-notification {
 	text-align: center;
 }
 
-#contact-slider {
-	position: relative; 
-	left: 5%; 
-	width: 90%;
-}
-
-a.rconnect, a.rateme, div.rateme {
+.rconnect, a.rateme, div.rateme {
   color: $nav_active_icon_colour;
   text-decoration: none;
   font-weight: normal;
@@ -1932,7 +1926,7 @@ nav .dropdown-menu {
 .section-content-wrapper .section-content-warning-wrapper,
 .section-content-tools-wrapper .section-content-danger-wrapper,
 .section-content-wrapper .section-content-danger-wrapper {
-	margin-bottom: 0px;
+	margin-bottom: 10px;
 	border-radius: $radiuspx;
 }
 
@@ -1962,6 +1956,10 @@ nav .dropdown-menu {
 [id^="layout-list-item-"]:hover td,
 [id^="menu-list-item-"]:hover td,
 [id^="mitem-list-item-"]:hover td {
+	background-color: $item_colour;
+}
+
+#perms-tool-table .highlight:hover {
 	background-color: $item_colour;
 }
 
@@ -2299,3 +2297,6 @@ nav .badge.mail-update:hover {
 	margin-top: -5px !important;
 }
 
+.collapse {
+width: 100% !important;
+}

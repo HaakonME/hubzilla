@@ -1284,7 +1284,7 @@ div.jGrowl div.jGrowl-notification {
 	text-align: center;
 }
 
-.rconnect, a.rateme, div.rateme {
+a.rconnect, a.rateme, div.rateme {
   color: $nav_active_icon_colour;
   text-decoration: none;
   font-weight: normal;
@@ -2295,8 +2295,4 @@ nav .badge.mail-update:hover {
 
 .channels_ckbx, .pending_ckbx, .users_ckbx {
 	margin-top: -5px !important;
-}
-
-.collapse {
-width: 100% !important;
 }

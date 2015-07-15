@@ -35,7 +35,8 @@ function import_post(&$a) {
 	$filename = basename($_FILES['filename']['name']);
 	$filesize = intval($_FILES['filename']['size']);
 	$filetype = $_FILES['filename']['type'];
-	$resume = ((array_key_exists('resume',$_REQUEST)) ? intval($_REQUEST['resume']) : 0);
+
+	$completed = ((array_key_exists('import_step',$_SESSION)) ? intval($_SESSION['import_step']) : 0);
 
 
 	if($src) {
@@ -115,360 +116,402 @@ function import_post(&$a) {
 
 	// import channel
 
-	$channel = $data['channel'];
+	if(array_key_exists('channel',$data)) {
+		$channel = $data['channel'];
 
-	if(! array_key_exists('channel_system',$channel)) {
-		$channel['channel_system']  = (($channel['channel_pageflags'] & 0x1000) ? 1 : 0);
-		$channel['channel_removed'] = (($channel['channel_pageflags'] & 0x8000) ? 1 : 0);
-	}
+		if($completed < 1) {
 
-	$r = q("select * from channel where (channel_guid = '%s' or channel_hash = '%s' or channel_address = '%s' ) limit 1",
-		dbesc($channel['channel_guid']),
-		dbesc($channel['channel_hash']),
-		dbesc($channel['channel_address'])
-	);
+			if(! array_key_exists('channel_system',$channel)) {
+				$channel['channel_system']  = (($channel['channel_pageflags'] & 0x1000) ? 1 : 0);
+				$channel['channel_removed'] = (($channel['channel_pageflags'] & 0x8000) ? 1 : 0);
+			}
 
-	// We should probably also verify the hash 
+			$r = q("select * from channel where (channel_guid = '%s' or channel_hash = '%s' or channel_address = '%s' ) limit 1",
+				dbesc($channel['channel_guid']),
+				dbesc($channel['channel_hash']),
+				dbesc($channel['channel_address'])
+			);
 
-	if($r) {
-		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
-			logger('mod_import: duplicate channel. ', print_r($channel,true));
-			notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
-			return;
-		}
-		else {
-			// try at most ten times to generate a unique address.
-			$x = 0;
-			$found_unique = false;
-			do {
-				$tmp = $channel['channel_address'] . mt_rand(1000,9999);
-				$r = q("select * from channel where channel_address = '%s' limit 1",
-					dbesc($tmp)
-				);
-				if(! $r) {
-					$channel['channel_address'] = $tmp;
-					$found_unique = true;
-					break;
+			// We should probably also verify the hash 
+	
+			if($r) {
+				if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
+					logger('mod_import: duplicate channel. ', print_r($channel,true));
+					notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
+					return;
 				}
-				$x ++;
-			} while ($x < 10);
-			if(! $found_unique) {
-				logger('mod_import: duplicate channel. randomisation failed.', print_r($channel,true));
-				notice( t('Unable to create a unique channel address. Import failed.') . EOL);
+				else {
+					// try at most ten times to generate a unique address.
+					$x = 0;
+					$found_unique = false;
+					do {
+						$tmp = $channel['channel_address'] . mt_rand(1000,9999);
+						$r = q("select * from channel where channel_address = '%s' limit 1",
+							dbesc($tmp)
+						);
+						if(! $r) {
+							$channel['channel_address'] = $tmp;
+							$found_unique = true;
+							break;
+						}
+						$x ++;
+					} while ($x < 10);
+					if(! $found_unique) {
+						logger('mod_import: duplicate channel. randomisation failed.', print_r($channel,true));
+						notice( t('Unable to create a unique channel address. Import failed.') . EOL);
+						return;
+					}
+				}		
+			}
+
+			unset($channel['channel_id']);
+			$channel['channel_account_id'] = get_account_id();
+			$channel['channel_primary'] = (($seize) ? 1 : 0);
+	
+			dbesc_array($channel);
+
+			$r = dbq("INSERT INTO channel (`" 
+				. implode("`, `", array_keys($channel)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($channel)) 
+				. "')" );
+
+			if(! $r) {
+				logger('mod_import: channel clone failed. ', print_r($channel,true));
+				notice( t('Channel clone failed. Import failed.') . EOL);
 				return;
 			}
-		}		
-	}
 
-	unset($channel['channel_id']);
-	$channel['channel_account_id'] = get_account_id();
-	$channel['channel_primary'] = (($seize) ? 1 : 0);
-	
-	dbesc_array($channel);
-
-	$r = dbq("INSERT INTO channel (`" 
-		. implode("`, `", array_keys($channel)) 
-		. "`) VALUES ('" 
-		. implode("', '", array_values($channel)) 
-		. "')" );
-
-	if(! $r) {
-		logger('mod_import: channel clone failed. ', print_r($channel,true));
-		notice( t('Channel clone failed. Import failed.') . EOL);
-		return;
-	}
-
-	$r = q("select * from channel where channel_account_id = %d and channel_guid = '%s' limit 1",
-		intval(get_account_id()),
-		$channel['channel_guid']   // Already dbesc'd
-	);
-	if(! $r) {
-		logger('mod_import: channel not found. ', print_r($channel,true));
-		notice( t('Cloned channel not found. Import failed.') . EOL);
-		return;
-	}
-	// reset
-	$channel = $r[0];
-
-	set_default_login_identity(get_account_id(),$channel['channel_id'],false);
-
-
-	$configs = $data['config'];
-	if($configs) {
-		foreach($configs as $config) {
-			unset($config['id']);
-			$config['uid'] = $channel['channel_id'];
-			dbesc_array($config);
-			$r = dbq("INSERT INTO pconfig (`" 
-				. implode("`, `", array_keys($config)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($config)) 
-				. "')" );
-		}
-	}
-
-
-	if($data['photo']) {
-		require_once('include/photo/photo_driver.php');
-		import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id(),$channel['channel_id']);
-	}
-
-	$profiles = $data['profile'];
-	if($profiles) {
-		foreach($profiles as $profile) {
-			unset($profile['id']);
-			$profile['aid'] = get_account_id();
-			$profile['uid'] = $channel['channel_id'];
-
-			// we are going to reset all profile photos to the original
-			// somebody will have to fix this later and put all the applicable photos into the export
-
-			$profile['photo'] = z_root() . '/photo/profile/l/' . $channel['channel_id'];
-			$profile['thumb'] = z_root() . '/photo/profile/m/' . $channel['channel_id'];
-
-
-			dbesc_array($profile);
-			$r = dbq("INSERT INTO profile (`" 
-				. implode("`, `", array_keys($profile)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($profile)) 
-				. "')" );
-		}
-	}
-
-
-	$hublocs = $data['hubloc'];
-	if($hublocs) {
-		foreach($hublocs as $hubloc) {
-
-			if(! array_key_exists('hubloc_primary',$hublocs)) {
-				$hubloc['hubloc_primary'] = (($hubloc['hubloc_flags'] & 0x0001) ? 1 : 0);
-				$hubloc['hubloc_orphancheck'] = (($hubloc['hubloc_flags'] & 0x0004) ? 1 : 0);
-				$hubloc['hubloc_error'] = (($hubloc['hubloc_status'] & 0x0003) ? 1 : 0);
-				$hubloc['hubloc_deleted'] = (($hubloc['hubloc_flags'] & 0x1000) ? 1 : 0);
-			}
-
-			$arr = array(
-				'guid' => $hubloc['hubloc_guid'],
-				'guid_sig' => $hubloc['guid_sig'],
-				'url' => $hubloc['hubloc_url'],
-				'url_sig' => $hubloc['hubloc_url_sig']
+			$r = q("select * from channel where channel_account_id = %d and channel_guid = '%s' limit 1",
+				intval(get_account_id()),
+				$channel['channel_guid']   // Already dbesc'd
 			);
-			if(($hubloc['hubloc_hash'] === $channel['channel_hash']) && intval($hubloc['hubloc_primary']) && ($seize))
-				$hubloc['hubloc_primary'] = 0;
-
-			if(! zot_gethub($arr)) {				
-				unset($hubloc['hubloc_id']);
-				dbesc_array($hubloc);
-		
-				$r = dbq("INSERT INTO hubloc (`" 
-					. implode("`, `", array_keys($hubloc)) 
-					. "`) VALUES ('" 
-					. implode("', '", array_values($hubloc)) 
-					. "')" );
-
+			if(! $r) {
+				logger('mod_import: channel not found. ', print_r($channel,true));
+				notice( t('Cloned channel not found. Import failed.') . EOL);
+				return;
 			}
+			// reset
+			$channel = $r[0];
 
+			set_default_login_identity(get_account_id(),$channel['channel_id'],false);
+
+			$_SESSION['import_step'] = 1;
 		}
 	}
+	else
+		$channel = $a->get_channel();
 
-	// create new hubloc for the new channel at this site
 
-	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_primary, 
-		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
-		values ( '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
-		dbesc($channel['channel_guid']),
-		dbesc($channel['channel_guid_sig']),
-		dbesc($channel['channel_hash']),
-		dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
-		dbesc('zot'),
-		intval(($seize) ? 1 : 0),
-		dbesc(z_root()),
-		dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
-		dbesc(get_app()->get_hostname()),
-		dbesc(z_root() . '/post'),
-		dbesc(get_config('system','pubkey'))
-	);
+	if($completed < 2) {
 
-	// reset the original primary hubloc if it is being seized
+		$configs = $data['config'];
+		if($configs) {
+			foreach($configs as $config) {
+				unset($config['id']);
+				$config['uid'] = $channel['channel_id'];
+				dbesc_array($config);
+				$r = dbq("INSERT INTO pconfig (`" 
+					. implode("`, `", array_keys($config)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($config)) 
+					. "')" );
+			}
+		}
 
-	if($seize)
-		$r = q("update hubloc set hubloc_primary = 0 where hubloc_primary = 1 and hubloc_hash = '%s' and hubloc_url != '%s' ",
-			dbesc($channel['channel_hash']),
-			dbesc(z_root())
-		);
- 
-	// import xchans and contact photos
+		$_SESSION['import_step'] = 2;
+	}
 
-	if($seize) {
 
-		// replace any existing xchan we may have on this site if we're seizing control
 
-		$r = q("delete from xchan where xchan_hash = '%s'",
-			dbesc($channel['channel_hash'])
-		);
+	if($completed < 3) {
 
-		$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_orphan, xchan_censored, xchan_selfcensored, xchan_system, xchan_pubforum, xchan_deleted ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, %d, %d )",
-			dbesc($channel['channel_hash']),
+		if($data['photo']) {
+			require_once('include/photo/photo_driver.php');
+			import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id(),$channel['channel_id']);
+		}
+
+		$profiles = $data['profile'];
+		if($profiles) {
+			foreach($profiles as $profile) {
+				unset($profile['id']);
+				$profile['aid'] = get_account_id();
+				$profile['uid'] = $channel['channel_id'];
+
+				// we are going to reset all profile photos to the original
+				// somebody will have to fix this later and put all the applicable photos into the export
+	
+				$profile['photo'] = z_root() . '/photo/profile/l/' . $channel['channel_id'];
+				$profile['thumb'] = z_root() . '/photo/profile/m/' . $channel['channel_id'];
+
+
+				dbesc_array($profile);
+				$r = dbq("INSERT INTO profile (`" 
+					. implode("`, `", array_keys($profile)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($profile)) 
+					. "')" );
+			}
+		}
+		$_SESSION['import_step'] = 3;
+	}
+
+
+	if($completed < 4) {
+		$hublocs = $data['hubloc'];
+		if($hublocs) {
+			foreach($hublocs as $hubloc) {
+
+				if(! array_key_exists('hubloc_primary',$hublocs)) {
+					$hubloc['hubloc_primary'] = (($hubloc['hubloc_flags'] & 0x0001) ? 1 : 0);
+					$hubloc['hubloc_orphancheck'] = (($hubloc['hubloc_flags'] & 0x0004) ? 1 : 0);
+					$hubloc['hubloc_error'] = (($hubloc['hubloc_status'] & 0x0003) ? 1 : 0);
+					$hubloc['hubloc_deleted'] = (($hubloc['hubloc_flags'] & 0x1000) ? 1 : 0);
+				}
+
+				$arr = array(
+					'guid' => $hubloc['hubloc_guid'],
+					'guid_sig' => $hubloc['guid_sig'],
+					'url' => $hubloc['hubloc_url'],
+					'url_sig' => $hubloc['hubloc_url_sig']
+				);
+				if(($hubloc['hubloc_hash'] === $channel['channel_hash']) && intval($hubloc['hubloc_primary']) && ($seize))
+					$hubloc['hubloc_primary'] = 0;
+
+				if(! zot_gethub($arr)) {				
+					unset($hubloc['hubloc_id']);
+					dbesc_array($hubloc);
+		
+					$r = dbq("INSERT INTO hubloc (`" 
+						. implode("`, `", array_keys($hubloc)) 
+						. "`) VALUES ('" 
+						. implode("', '", array_values($hubloc)) 
+						. "')" );
+				}
+			}
+		}
+		$_SESSION['import_step'] = 4;
+	}
+
+	if($completed < 5) {
+		// create new hubloc for the new channel at this site
+
+		$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_primary, 
+			hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
+			values ( '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
 			dbesc($channel['channel_guid']),
 			dbesc($channel['channel_guid_sig']),
-			dbesc($channel['channel_pubkey']),
-			dbesc($a->get_baseurl() . "/photo/profile/l/" . $channel['channel_id']),
-			dbesc($a->get_baseurl() . "/photo/profile/m/" . $channel['channel_id']),
-			dbesc($a->get_baseurl() . "/photo/profile/s/" . $channel['channel_id']),
+			dbesc($channel['channel_hash']),
 			dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
-			dbesc(z_root() . '/channel/' . $channel['channel_address']),
-			dbesc(z_root() . '/follow?f=&url=%s'),
-			dbesc(z_root() . '/poco/' . $channel['channel_address']),
-			dbesc($channel['channel_name']),
 			dbesc('zot'),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			0,0,0,0,0,0,0
+			intval(($seize) ? 1 : 0),
+			dbesc(z_root()),
+			dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
+			dbesc(get_app()->get_hostname()),
+			dbesc(z_root() . '/post'),
+			dbesc(get_config('system','pubkey'))
 		);
+	
+		// reset the original primary hubloc if it is being seized
+
+		if($seize) {
+			$r = q("update hubloc set hubloc_primary = 0 where hubloc_primary = 1 and hubloc_hash = '%s' and hubloc_url != '%s' ",
+				dbesc($channel['channel_hash']),
+				dbesc(z_root())
+			);
+		}
+
+		$_SESSION['import_step'] = 5;
+	}
+ 
+
+	if($completed < 6) {
+
+		// import xchans and contact photos
+
+		if($seize) {
+
+			// replace any existing xchan we may have on this site if we're seizing control
+
+			$r = q("delete from xchan where xchan_hash = '%s'",
+				dbesc($channel['channel_hash'])
+			);
+
+			$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_orphan, xchan_censored, xchan_selfcensored, xchan_system, xchan_pubforum, xchan_deleted ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, %d, %d )",
+				dbesc($channel['channel_hash']),
+				dbesc($channel['channel_guid']),
+				dbesc($channel['channel_guid_sig']),
+				dbesc($channel['channel_pubkey']),
+				dbesc($a->get_baseurl() . "/photo/profile/l/" . $channel['channel_id']),
+				dbesc($a->get_baseurl() . "/photo/profile/m/" . $channel['channel_id']),
+				dbesc($a->get_baseurl() . "/photo/profile/s/" . $channel['channel_id']),
+				dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+				dbesc(z_root() . '/channel/' . $channel['channel_address']),
+				dbesc(z_root() . '/follow?f=&url=%s'),
+				dbesc(z_root() . '/poco/' . $channel['channel_address']),
+				dbesc($channel['channel_name']),
+				dbesc('zot'),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				0,0,0,0,0,0,0
+			);
+		}
+		$_SESSION['import_step'] = 6;
 	}
 
-	$xchans = $data['xchan'];
-	if($xchans) {
-		foreach($xchans as $xchan) {
-			if(! array_key_exists('xchan_hidden',$xchan)) {
-				$xchan['xchan_hidden']       = (($xchan['xchan_flags'] & 0x0001) ? 1 : 0);
-				$xchan['xchan_orphan']       = (($xchan['xchan_flags'] & 0x0002) ? 1 : 0);
-				$xchan['xchan_censored']     = (($xchan['xchan_flags'] & 0x0004) ? 1 : 0);
-				$xchan['xchan_selfcensored'] = (($xchan['xchan_flags'] & 0x0008) ? 1 : 0);
-				$xchan['xchan_system']       = (($xchan['xchan_flags'] & 0x0010) ? 1 : 0);
-				$xchan['xchan_pubforum']     = (($xchan['xchan_flags'] & 0x0020) ? 1 : 0);
-				$xchan['xchan_deleted']      = (($xchan['xchan_flags'] & 0x1000) ? 1 : 0);
-			}
+	if($completed < 7) {
 
-			$r = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
-				dbesc($xchan['xchan_hash'])
-			);
-			if($r)
-				continue;
+		$xchans = $data['xchan'];
+		if($xchans) {
+			foreach($xchans as $xchan) {
+				if(! array_key_exists('xchan_hidden',$xchan)) {
+					$xchan['xchan_hidden']       = (($xchan['xchan_flags'] & 0x0001) ? 1 : 0);
+					$xchan['xchan_orphan']       = (($xchan['xchan_flags'] & 0x0002) ? 1 : 0);
+					$xchan['xchan_censored']     = (($xchan['xchan_flags'] & 0x0004) ? 1 : 0);
+					$xchan['xchan_selfcensored'] = (($xchan['xchan_flags'] & 0x0008) ? 1 : 0);
+					$xchan['xchan_system']       = (($xchan['xchan_flags'] & 0x0010) ? 1 : 0);
+					$xchan['xchan_pubforum']     = (($xchan['xchan_flags'] & 0x0020) ? 1 : 0);
+					$xchan['xchan_deleted']      = (($xchan['xchan_flags'] & 0x1000) ? 1 : 0);
+				}
 
-			dbesc_array($xchan);
+				$r = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
+					dbesc($xchan['xchan_hash'])
+				);
+				if($r)
+					continue;
+
+				dbesc_array($xchan);
 		
-			$r = dbq("INSERT INTO xchan (`" 
-				. implode("`, `", array_keys($xchan)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($xchan)) 
-				. "')" );
+				$r = dbq("INSERT INTO xchan (`" 
+					. implode("`, `", array_keys($xchan)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($xchan)) 
+					. "')" );
 
 	
-			require_once('include/photo/photo_driver.php');
-			$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
-			if($photos[4])
-				$photodate = NULL_DATE;
-			else
-				$photodate = $xchan['xchan_photo_date'];
+				require_once('include/photo/photo_driver.php');
+				$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
+				if($photos[4])
+					$photodate = NULL_DATE;
+				else
+					$photodate = $xchan['xchan_photo_date'];
 
-			$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s'
-				where xchan_hash = '%s'",
-				dbesc($photos[0]),
-				dbesc($photos[1]),
-				dbesc($photos[2]),
-				dbesc($photos[3]),
-				dbesc($photodate),
-				dbesc($xchan['xchan_hash'])
-			);
+				$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s'
+					where xchan_hash = '%s'",
+					dbesc($photos[0]),
+					dbesc($photos[1]),
+					dbesc($photos[2]),
+					dbesc($photos[3]),
+					dbesc($photodate),
+					dbesc($xchan['xchan_hash'])
+				);
 			
+			}
 		}
+		$_SESSION['import_step'] = 7;
 	}
+
+
 
 // FIXME - ensure we have an xchan if somebody is trying to pull a fast one
 
-	
-	$friends = 0;
-	$feeds = 0;
 
-	// import contacts
-	$abooks = $data['abook'];
-	if($abooks) {
-		foreach($abooks as $abook) {
-			if($max_friends !== false && $friends > $max_friends)
-				continue;
-			if($max_feeds !== false && intval($abook['abook_feed']) && ($feeds > $max_feeds))
-				continue;
+	if($completed < 8) {	
+		$friends = 0;
+		$feeds = 0;
 
-			unset($abook['abook_id']);
-			$abook['abook_account'] = get_account_id();
-			$abook['abook_channel'] = $channel['channel_id'];
-			if(! array_key_exists('abook_blocked',$abook)) {
-				$abook['abook_blocked']     = (($abook['abook_flags'] & 0x0001 ) ? 1 : 0);
-				$abook['abook_ignored']     = (($abook['abook_flags'] & 0x0002 ) ? 1 : 0);
-				$abook['abook_hidden']      = (($abook['abook_flags'] & 0x0004 ) ? 1 : 0);
-				$abook['abook_archived']    = (($abook['abook_flags'] & 0x0008 ) ? 1 : 0);
-				$abook['abook_pending']     = (($abook['abook_flags'] & 0x0010 ) ? 1 : 0);
-				$abook['abook_unconnected'] = (($abook['abook_flags'] & 0x0020 ) ? 1 : 0);
-				$abook['abook_self']        = (($abook['abook_flags'] & 0x0080 ) ? 1 : 0);
-				$abook['abook_feed']        = (($abook['abook_flags'] & 0x0100 ) ? 1 : 0);
+		// import contacts
+		$abooks = $data['abook'];
+		if($abooks) {
+			foreach($abooks as $abook) {
+				if($max_friends !== false && $friends > $max_friends)
+					continue;
+				if($max_feeds !== false && intval($abook['abook_feed']) && ($feeds > $max_feeds))
+					continue;
+
+				unset($abook['abook_id']);
+				$abook['abook_account'] = get_account_id();
+				$abook['abook_channel'] = $channel['channel_id'];
+				if(! array_key_exists('abook_blocked',$abook)) {
+					$abook['abook_blocked']     = (($abook['abook_flags'] & 0x0001 ) ? 1 : 0);
+					$abook['abook_ignored']     = (($abook['abook_flags'] & 0x0002 ) ? 1 : 0);
+					$abook['abook_hidden']      = (($abook['abook_flags'] & 0x0004 ) ? 1 : 0);
+					$abook['abook_archived']    = (($abook['abook_flags'] & 0x0008 ) ? 1 : 0);
+					$abook['abook_pending']     = (($abook['abook_flags'] & 0x0010 ) ? 1 : 0);
+					$abook['abook_unconnected'] = (($abook['abook_flags'] & 0x0020 ) ? 1 : 0);
+					$abook['abook_self']        = (($abook['abook_flags'] & 0x0080 ) ? 1 : 0);
+					$abook['abook_feed']        = (($abook['abook_flags'] & 0x0100 ) ? 1 : 0);
+				}
+
+				if($abook['abook_self']) {
+					$role = get_pconfig($channel['channel_id'],'system','permissions_role');
+					if(($role === 'forum') || ($abook['abook_my_perms'] & PERMS_W_TAGWALL)) {
+						q("update xchan set xchan_pubforum = 1 where xchan_hash = '%s' ",
+							dbesc($abook['abook_xchan'])
+						);
+					}
+				} 
+
+				dbesc_array($abook);
+				$r = dbq("INSERT INTO abook (`" 
+					. implode("`, `", array_keys($abook)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($abook)) 
+					. "')" );
+
+				$friends ++;
+				if(intval($abook['abook_feed']))
+					$feeds ++;
 			}
+		}
+		$_SESSION['import_step'] = 8;
+	}
 
-			if($abook['abook_self']) {
-				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
-				if(($role === 'forum') || ($abook['abook_my_perms'] & PERMS_W_TAGWALL)) {
-					q("update xchan set xchan_pubforum = 1 where xchan_hash = '%s' ",
-						dbesc($abook['abook_xchan'])
-					);
+
+
+	if($completed < 9) {
+		$groups = $data['group'];
+		if($groups) {
+			$saved = array();
+			foreach($groups as $group) {
+				$saved[$group['hash']] = array('old' => $group['id']);
+				unset($group['id']);
+				$group['uid'] = $channel['channel_id'];
+				dbesc_array($group);
+				$r = dbq("INSERT INTO groups (`" 
+					. implode("`, `", array_keys($group)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($group)) 
+					. "')" );
+			}
+			$r = q("select * from `groups` where uid = %d",
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				foreach($r as $rr) {
+					$saved[$rr['hash']]['new'] = $rr['id'];
 				}
 			} 
-
-			dbesc_array($abook);
-			$r = dbq("INSERT INTO abook (`" 
-				. implode("`, `", array_keys($abook)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($abook)) 
-				. "')" );
-
-			$friends ++;
-			if(intval($abook['abook_feed']))
-				$feeds ++;
 		}
-	}
 
-
-
-	$groups = $data['group'];
-	if($groups) {
-		$saved = array();
-		foreach($groups as $group) {
-			$saved[$group['hash']] = array('old' => $group['id']);
-			unset($group['id']);
-			$group['uid'] = $channel['channel_id'];
-			dbesc_array($group);
-			$r = dbq("INSERT INTO groups (`" 
-				. implode("`, `", array_keys($group)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($group)) 
-				. "')" );
-		}
-		$r = q("select * from `groups` where uid = %d",
-			intval($channel['channel_id'])
-		);
-		if($r) {
-			foreach($r as $rr) {
-				$saved[$rr['hash']]['new'] = $rr['id'];
+		$group_members = $data['group_member'];
+		if($groups_members) {
+			foreach($group_members as $group_member) {
+				unset($group_member['id']);
+				$group_member['uid'] = $channel['channel_id'];
+				foreach($saved as $x) {
+					if($x['old'] == $group_member['gid'])
+						$group_member['gid'] = $x['new'];
+				}
+				dbesc_array($group_member);
+				$r = dbq("INSERT INTO group_member (`" 
+					. implode("`, `", array_keys($group_member)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($group_member)) 
+					. "')" );
 			}
-		} 
-	}
-
-	$group_members = $data['group_member'];
-	if($groups_members) {
-		foreach($group_members as $group_member) {
-			unset($group_member['id']);
-			$group_member['uid'] = $channel['channel_id'];
-			foreach($saved as $x) {
-				if($x['old'] == $group_member['gid'])
-					$group_member['gid'] = $x['new'];
-			}
-			dbesc_array($group_member);
-			$r = dbq("INSERT INTO group_member (`" 
-				. implode("`, `", array_keys($group_member)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($group_member)) 
-				. "')" );
 		}
+		$_SESSION['import_step'] = 9;
 	}
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);
@@ -545,6 +588,7 @@ function import_post(&$a) {
 
 	change_channel($channel['channel_id']);
 
+	unset($_SESSION['import_step']);
 	goaway(z_root() . '/network' );
 
 }

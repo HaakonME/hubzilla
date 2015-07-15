@@ -176,7 +176,8 @@
 				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self}} in{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
 					<div class="section-content-tools-wrapper">
 						<div class="section-content-warning-wrapper">
-						{{$permnote}}
+						{{if $notself}}{{$permnote}}{{/if}}
+						{{if $self}}{{$permnote_self}}{{/if}}
 						</div>
 
 						<table id="perms-tool-table" class=form-group>
@@ -194,7 +195,9 @@
 
 						{{if $self}}
 						<div>
-							<div>{{$autolbl}}</div>
+							<div class="section-content-info-wrapper">
+								{{$autolbl}}
+							</div>
 							{{include file="field_checkbox.tpl" field=$autoperms}}
 						</div>
 						{{/if}}

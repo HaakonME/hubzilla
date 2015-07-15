@@ -422,6 +422,9 @@ function stream_perms_api_uids($perms = NULL, $limit = 0, $rand = 0 ) {
 			$str .= intval($rr);
 		}
 	}
+	else
+		$str = "''";
+
 	logger('stream_perms_api_uids: ' . $str, LOGGER_DEBUG);
 
 	return $str;
@@ -452,6 +455,9 @@ function stream_perms_xchans($perms = NULL ) {
 			$str .= "'" . dbesc($rr) . "'";
 		}
 	}
+	else
+		$str = "''";
+
 	logger('stream_perms_xchans: ' . $str, LOGGER_DEBUG);
 
 	return $str;

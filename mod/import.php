@@ -201,9 +201,19 @@ function import_post(&$a) {
 			ref_session_write(session_id(), serialize($_SESSION));
 		}
 	}
-	else
-		$channel = $a->get_channel();
-
+	else {
+		$r = q("select * from channel where channel_account_id = %d and channel_guid = '%s' limit 1",
+			intval(get_account_id()),
+			dbesc($channel['channel_guid'])
+		);
+		if($r)
+			$channel = $r[0];
+		else {
+			logger('mod_import: channel not found. ', print_r($channel,true));
+			notice( t('Cloned channel not found. Import failed.') . EOL);
+			return;
+		}
+	}
 
 	if($completed < 2) {
 
@@ -511,7 +521,7 @@ function import_post(&$a) {
 		}
 
 		$group_members = $data['group_member'];
-		if($groups_members) {
+		if($group_members) {
 			foreach($group_members as $group_member) {
 				unset($group_member['id']);
 				$group_member['uid'] = $channel['channel_id'];

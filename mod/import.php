@@ -195,7 +195,7 @@ function import_post(&$a) {
 			$channel = $r[0];
 
 			set_default_login_identity(get_account_id(),$channel['channel_id'],false);
-
+			logger('import step 1');
 			$_SESSION['import_step'] = 1;
 		}
 	}
@@ -218,7 +218,7 @@ function import_post(&$a) {
 					. "')" );
 			}
 		}
-
+		logger('import step 2');
 		$_SESSION['import_step'] = 2;
 	}
 
@@ -253,6 +253,7 @@ function import_post(&$a) {
 					. "')" );
 			}
 		}
+		logger('import step 3');
 		$_SESSION['import_step'] = 3;
 	}
 
@@ -290,6 +291,7 @@ function import_post(&$a) {
 				}
 			}
 		}
+		logger('import step 4');
 		$_SESSION['import_step'] = 4;
 	}
 
@@ -320,7 +322,7 @@ function import_post(&$a) {
 				dbesc(z_root())
 			);
 		}
-
+		logger('import step 5');
 		$_SESSION['import_step'] = 5;
 	}
  
@@ -356,6 +358,7 @@ function import_post(&$a) {
 				0,0,0,0,0,0,0
 			);
 		}
+		logger('import step 6');
 		$_SESSION['import_step'] = 6;
 	}
 
@@ -408,6 +411,7 @@ function import_post(&$a) {
 			
 			}
 		}
+		logger('import step 7');
 		$_SESSION['import_step'] = 7;
 	}
 
@@ -464,6 +468,7 @@ function import_post(&$a) {
 					$feeds ++;
 			}
 		}
+		logger('import step 8');
 		$_SESSION['import_step'] = 8;
 	}
 
@@ -511,6 +516,7 @@ function import_post(&$a) {
 					. "')" );
 			}
 		}
+		logger('import step 9');
 		$_SESSION['import_step'] = 9;
 	}
 

@@ -656,7 +656,7 @@ function connedit_content(&$a) {
 		$o .= replace_macros($tpl,array(
 
 			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
-			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), '', array(t('No'),('Yes'))),
+			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), 'Connection requests will be approved without your interaction', array(t('No'),('Yes'))),
 			'$addr'           => $contact['xchan_addr'],
 			'$addr_text'      => t('This connection\'s address is'),
 			'$notself'        => (($self) ? '' : '1'),

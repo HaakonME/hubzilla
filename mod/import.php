@@ -37,7 +37,8 @@ function import_post(&$a) {
 	$filetype = $_FILES['filename']['type'];
 
 	$completed = ((array_key_exists('import_step',$_SESSION)) ? intval($_SESSION['import_step']) : 0);
-
+	if($completed)
+		logger('saved import step: ' . $_SESSION['import_step']);
 
 	if($src) {
 
@@ -197,6 +198,7 @@ function import_post(&$a) {
 			set_default_login_identity(get_account_id(),$channel['channel_id'],false);
 			logger('import step 1');
 			$_SESSION['import_step'] = 1;
+			ref_session_write(session_id(), serialize($_SESSION));
 		}
 	}
 	else
@@ -220,6 +222,7 @@ function import_post(&$a) {
 		}
 		logger('import step 2');
 		$_SESSION['import_step'] = 2;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -255,6 +258,7 @@ function import_post(&$a) {
 		}
 		logger('import step 3');
 		$_SESSION['import_step'] = 3;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -293,6 +297,7 @@ function import_post(&$a) {
 		}
 		logger('import step 4');
 		$_SESSION['import_step'] = 4;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if($completed < 5) {
@@ -324,6 +329,7 @@ function import_post(&$a) {
 		}
 		logger('import step 5');
 		$_SESSION['import_step'] = 5;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
  
 
@@ -360,6 +366,7 @@ function import_post(&$a) {
 		}
 		logger('import step 6');
 		$_SESSION['import_step'] = 6;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if($completed < 7) {
@@ -413,6 +420,7 @@ function import_post(&$a) {
 		}
 		logger('import step 7');
 		$_SESSION['import_step'] = 7;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -434,6 +442,8 @@ function import_post(&$a) {
 					continue;
 
 				unset($abook['abook_id']);
+				unset($abook['abook_rating']);
+				unset($abook['abook_rating_text']);
 				$abook['abook_account'] = get_account_id();
 				$abook['abook_channel'] = $channel['channel_id'];
 				if(! array_key_exists('abook_blocked',$abook)) {
@@ -470,6 +480,7 @@ function import_post(&$a) {
 		}
 		logger('import step 8');
 		$_SESSION['import_step'] = 8;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -518,6 +529,7 @@ function import_post(&$a) {
 		}
 		logger('import step 9');
 		$_SESSION['import_step'] = 9;
+		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);

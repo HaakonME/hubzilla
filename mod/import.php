@@ -520,6 +520,7 @@ function import_post(&$a) {
 			} 
 		}
 
+
 		$group_members = $data['group_member'];
 		if($group_members) {
 			foreach($group_members as $group_member) {

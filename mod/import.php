@@ -414,7 +414,7 @@ function import_post(&$a) {
 	}
 
 	$group_members = $data['group_member'];
-	if($groups_members) {
+	if($group_members) {
 		foreach($group_members as $group_member) {
 			unset($group_member['id']);
 			$group_member['uid'] = $channel['channel_id'];

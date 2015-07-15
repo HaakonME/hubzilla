@@ -144,7 +144,6 @@ function connedit_post(&$a) {
 			dbesc($orig_record[0]['abook_xchan'])
 		);
 
-
 		if($z) {
 			$record = $z[0]['xlink_id'];
 			$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s' 
@@ -493,59 +492,58 @@ function connedit_content(&$a) {
 		$contact_id = $a->poi['abook_id'];
 		$contact = $a->poi;
 
+		$buttons = array(
 
-		$tabs = array(
-
-			array(
+			'view' => array(
 				'label' => t('View Profile'),
 				'url'   => chanlink_cid($contact['abook_id']), 
 				'sel'   => '',
 				'title' => sprintf( t('View %s\'s profile'), $contact['xchan_name']),
 			),
 
-			array(
+			'refresh' => array(
 				'label' => t('Refresh Permissions'),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/refresh', 
 				'sel'   => '',
 				'title' => t('Fetch updated permissions'),
 			),
 
-			array(
+			'recent' => array(
 				'label' => t('Recent Activity'),
 				'url'   => $a->get_baseurl(true) . '/network/?f=&cid=' . $contact['abook_id'], 
 				'sel'   => '',
 				'title' => t('View recent posts and comments'),
-			)
-		);
+			),
 
-		$buttons = array(
-			array(
+			'block' => array(
 				'label' => (intval($contact['abook_blocked']) ? t('Unblock') : t('Block')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
 				'sel'   => (intval($contact['abook_blocked']) ? 'active' : ''),
 				'title' => t('Block (or Unblock) all communications with this connection'),
 			),
 
-			array(
+			'ignore' => array(
 				'label' => (intval($contact['abook_ignored']) ? t('Unignore') : t('Ignore')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
 				'sel'   => (intval($contact['abook_ignored']) ? 'active' : ''),
 				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
 			),
-			array(
+
+			'archive' => array(
 				'label' => (intval($contact['abook_archived']) ? t('Unarchive') : t('Archive')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
 				'sel'   => (intval($contact['abook_archived']) ? 'active' : ''),
 				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
 			),
-			array(
+
+			'hide' => array(
 				'label' => (intval($contact['abook_hidden']) ? t('Unhide') : t('Hide')),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
 				'sel'   => (intval($contact['abook_hidden']) ? 'active' : ''),
 				'title' => t('Hide or Unhide this connection from your other connections'),
 			),
 
-			array(
+			'delete' => array(
 				'label' => t('Delete'),
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/drop', 
 				'sel'   => '',
@@ -556,17 +554,8 @@ function connedit_content(&$a) {
 
 		$self = false;
 
-		if(! intval($contact['abook_self'])) {
-			$tab_tpl = get_markup_template('common_tabs.tpl');
-			$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
-		}
-		else
+		if(intval($contact['abook_self']))
 			$self = true;
-
-		$a->page['htmlhead'] .= replace_macros(get_markup_template('contact_head.tpl'), array(
-			'$baseurl' => $a->get_baseurl(true),
-			'$editselect' => $editselect
-		));
 
 		require_once('include/contact_selectors.php');
 
@@ -616,7 +605,6 @@ function connedit_content(&$a) {
 			$rating_text = $xl[0]['xlink_rating_text'];
 		}
 
-
 		$poco_rating = get_config('system','poco_rating_enable');
 
 		// if unset default to enabled
@@ -640,8 +628,19 @@ function connedit_content(&$a) {
 		$global_perms = get_perms();
 		$existing = get_all_perms(local_channel(),$contact['abook_xchan']); 
 
-		$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'));
-		
+		$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'), array(t('No'),('Yes')));
+
+		$multiprofs = ((feature_enabled(local_channel(),'multi_profiles')) ? true : false);
+
+		if($slide && !$multiprofs)
+			$affinity = t('Set Affinity');
+
+		if(!$slide && $multiprofs)
+			$affinity = t('Set Profile');
+
+		if($slide && $multiprofs)
+			$affinity = t('Set Affinity & Profile');
+
 		foreach($global_perms as $k => $v) {
 			$thisperm = (($contact['abook_my_perms'] & $v[1]) ? "1" : '');
 
@@ -656,85 +655,50 @@ function connedit_content(&$a) {
 
 		$o .= replace_macros($tpl,array(
 
-			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connections: settings for %s'),$contact['xchan_name'])),
-			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), ''),
+			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
+			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), '', array(t('No'),('Yes'))),
 			'$addr'           => $contact['xchan_addr'],
+			'$addr_text'      => t('This connection\'s address is'),
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
 			'$autolbl'        => t('Apply the permissions indicated on this page to all new connections.'),
 			'$buttons'        => (($self) ? '' : $buttons),
-			'$viewprof'       => t('View Profile'),
-			'$clickme'        => t('Click to open/close'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
-			'$lbl_rating'     => t('Rating (this information is public)'),
-			'$lbl_rating_txt' => t('Optionally explain your rating (this information is public)'),
+			'$lbl_rating'     => t('Rating'),
+			'$lbl_rating_label' => t('Slide to adjust your rating'),
+			'$lbl_rating_txt' => t('Optionally explain your rating'),
 			'$connfilter'     => feature_enabled(local_channel(),'connfilter'),
+			'$connfilter_label' => t('Custom Filter'),
 			'$incl'           => array('abook_incl',t('Only import posts with this text'), $contact['abook_incl'],t('words one per line or #tags or /patterns/, leave blank to import all posts')), 
 			'$excl'           => array('abook_excl',t('Do not import posts with this text'), $contact['abook_excl'],t('words one per line or #tags or /patterns/, leave blank to import all posts')), 
-			'$rating_text'    => array('rating_text', t('Optionally explain your rating (this information is public)'),$rating_text,''),
+			'$rating_text'    => array('rating_text', t('Optionally explain your rating'),$rating_text,''),
+			'$rating_info'    => t('This information is public!'),
 			'$rating'         => $rating,
 			'$rating_val'     => $rating_val,
 			'$slide'          => $slide,
-			'$tabs'           => $t,
-			'$tab_str'        => $tab_str,
-			'$perms_step1'    => t('Default permissions for your channel type have (just) been applied. They have not yet been submitted. Please review the permissions on this page and make any desired changes at this time. This new connection may <em>not</em> be able to communicate with you until you submit this page, which will install and apply the selected permissions.'),
+			'$affinity'       => $affinity,
+			'$pending_label'  => t('Connection Pending Approval'),
+			'$pending_modal_title' => t('Connection Request'),
+			'$pending_modal_body' => sprintf(t('(%s) would like to connect with you. Please approve this connection to allow communication.'), $contact['xchan_addr']),
+			'$pending_modal_approve' => t('Approve'),
+			'$pending_modal_dismiss' => t('Approve Later'),
 			'$is_pending'     => (intval($contact['abook_pending']) ? 1 : ''),
 			'$unapproved'     => $unapproved,
 			'$inherited'      => t('inherited'),
-			'$approve'        => t('Approve this connection'),
-			'$noperms'        => (($contact['abook_my_perms']) ? false : true),
-			'$no_perms'        => (((! $self) && (! $contact['abook_my_perms'])) ? t('Connection has no individual permissions!') : ''),
-			'$noperm_desc'    => (((! $self) && (! $contact['abook_my_perms'])) ? t('This may be appropriate based on your <a href="settings">privacy settings</a>, though you may wish to review the "Advanced Permissions".') : ''),
 			'$submit'         => t('Submit'),
-			'$lbl_vis1'       => t('Profile Visibility'),
 			'$lbl_vis2'       => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['xchan_name']),
-			'$lbl_info1'      => t('Contact Information / Notes'),
-			'$infedit'        => t('Edit contact notes'),
 			'$close'          => $contact['abook_closeness'],
 			'$them'           => t('Their Settings'),
 			'$me'             => t('My Settings'),
 			'$perms'          => $perms,
-			'$perms_new'      => t('Default permissions for this channel type have (just) been applied. They have <em>not</em> been saved and there are currently no stored default permissions. Please review/edit the applied settings and click [Submit] to finalize.'),
-			'$clear'          => t('Clear/Disable Automatic Permissions'),
-			'$forum'          => t('Forum Members'),
-			'$soapbox'        => t('Soapbox'),
-			'$full'           => t('Full Sharing (typical social network permissions)'),
-			'$cautious'       => t('Cautious Sharing '),
-			'$follow'         => t('Follow Only'),
 			'$permlbl'        => t('Individual Permissions'),
-			'$permnote'       => t('Some permissions may be inherited from your channel <a href="settings">privacy settings</a>, which have higher priority than individual settings. Changing those inherited settings on this page will have no effect.'),
-			'$advanced'       => t('Advanced Permissions'),
-			'$quick'          => t('Simple Permissions (select one and submit)'),
-			'$common_link'    => $a->get_baseurl(true) . '/common/loc/' . local_channel() . '/' . $contact['id'],
-			'$all_friends'    => $all_friends,
-			'$relation_text'  => $relation_text,
-			'$visit'          => sprintf( t('Visit %s\'s profile - %s'),$contact['xchan_name'],$contact['xchan_url']),
-			'$blockunblock'   => t('Block/Unblock contact'),
-			'$ignorecont'     => t('Ignore contact'),
-			'$lblcrepair'     => t("Repair URL settings"),
-			'$lblrecent'      => t('View conversations'),
-			'$lblsuggest'     => $lblsuggest,
-			'$delete'         => t('Delete contact'),
-			
-			'$poll_interval'  => contact_poll_interval($contact['priority'],(! $poll_enabled)),
-			'$poll_enabled'   => $poll_enabled,
+			'$permnote'       => t('Some permissions may be inherited from your channel\'s <a href="settings"><strong>privacy settings</strong></a>, which have higher priority than individual settings. You can <strong>not</strong> change those settings here.'),
 			'$lastupdtext'    => t('Last update:'),
-			'$lost_contact'   => $lost_contact,
-			'$updpub'         => t('Update public posts'),
 			'$last_update'    => relative_date($contact['abook_connected']),
-			'$udnow'          => t('Update now'),
 			'$profile_select' => contact_profile_assign($contact['abook_profile']),
-			'$multiprofs'     => feature_enabled(local_channel(),'multi_profiles'),
+			'$multiprofs'     => $multiprofs,
 			'$contact_id'     => $contact['abook_id'],
-			'$block_text'     => (($contact['blocked']) ? t('Unblock') : t('Block') ),
-			'$ignore_text'    => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
-			'$blocked'        => (($contact['blocked']) ? t('Currently blocked') : ''),
-			'$ignored'        => (($contact['readonly']) ? t('Currently ignored') : ''),
-			'$archived'       => (($contact['archive']) ? t('Currently archived') : ''),
-			'$pending'        => (($contact['archive']) ? t('Currently pending') : ''),
-			'$name'           => $contact['name'],
-			'$alt_text'       => $alt_text,
-			'$url'            => $url
+			'$name'           => $contact['xchan_name'],
 
 		));
 

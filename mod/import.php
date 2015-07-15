@@ -35,6 +35,7 @@ function import_post(&$a) {
 	$filename = basename($_FILES['filename']['name']);
 	$filesize = intval($_FILES['filename']['size']);
 	$filetype = $_FILES['filename']['type'];
+	$resume = ((array_key_exists('resume',$_REQUEST)) ? intval($_REQUEST['resume']) : 0);
 
 
 	if($src) {

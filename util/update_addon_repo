@@ -1,4 +1,4 @@
-#!/bin/sh -f
+#!/bin/bash -f
 
 if [ $# -ne 1 ]; then
 	echo usage: $0 repository

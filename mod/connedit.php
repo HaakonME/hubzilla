@@ -643,16 +643,12 @@ function connedit_content(&$a) {
 
 		foreach($global_perms as $k => $v) {
 			$thisperm = (($contact['abook_my_perms'] & $v[1]) ? "1" : '');
-
 			$checkinherited = ((($channel[$v[0]]) && ($channel[$v[0]] != PERMS_SPECIFIC)) ? "1" : '');
 
 			// For auto permissions (when $self is true) we don't want to look at existing
 			// permissions because they are enabled for the channel owner
-
 			if((! $self) && ($existing[$k]))
 				$thisperm = "1";
-
-
 
 			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4], $checkinherited);
 		}

@@ -1448,7 +1448,7 @@ function prepare_body(&$item,$attach = false) {
 //	else {
 		call_hooks('prepare_body_init', $item); 
 //		unobscure($item);
-		$s = prepare_text($item['body'],$item['mimetype'], true);
+		$s = prepare_text($item['body'],$item['mimetype'], false);
 //	}
 
 	$prep_arr = array('item' => $item, 'html' => $s);

@@ -1114,11 +1114,14 @@ function zot_import($arr, $sender_url) {
 						$recip_arr[] =  make_xchan_hash($recip['guid'],$recip['guid_sig']);
 					}
 				}
-				stringify_array_elms($recip_arr);
-				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) > 0 ",
-					intval(PAGE_REMOVED)
-				);
+				$r = false;
+				if($recip_arr) {
+					stringify_array_elms($recip_arr);
+					$recips = implode(',',$recip_arr);
+					$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) > 0 ",
+						intval(PAGE_REMOVED)
+					);
+				}
 				if(! $r) {
 					logger('recips: no recipients on this site');
 					continue;

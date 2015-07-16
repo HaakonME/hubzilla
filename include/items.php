@@ -2657,11 +2657,12 @@ function item_store_update($arr,$allow_exec = false) {
 		return $ret;
 	}
 
+	$r = q("delete from term where oid = %d and otype = %d",
+		intval($orig_post_id),
+		intval(TERM_OBJ_POST)
+	);
+
 	if(is_array($terms)) {
-		$r = q("delete from term where oid = %d and otype = %d",
-			intval($orig_post_id),
-			intval(TERM_OBJ_POST)
-		);
 		foreach($terms as $t) {
 			q("insert into term (uid,oid,otype,type,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
@@ -2673,7 +2674,6 @@ function item_store_update($arr,$allow_exec = false) {
 				dbesc($t['url'])
 			);
 		}
-
 		$arr['term'] = $terms;
 	}
 

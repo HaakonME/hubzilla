@@ -643,25 +643,25 @@ function connedit_content(&$a) {
 
 		foreach($global_perms as $k => $v) {
 			$thisperm = (($contact['abook_my_perms'] & $v[1]) ? "1" : '');
+			$checkinherited = ((($channel[$v[0]]) && ($channel[$v[0]] != PERMS_SPECIFIC)) ? "1" : '');
 
 			// For auto permissions (when $self is true) we don't want to look at existing
 			// permissions because they are enabled for the channel owner
-
 			if((! $self) && ($existing[$k]))
 				$thisperm = "1";
 
-			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC || $self) ? '' : '1'), $v[4]);
+			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4], $checkinherited);
 		}
 
 		$o .= replace_macros($tpl,array(
 
 			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
-			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), '', array(t('No'),('Yes'))),
+			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), 'Connection requests will be approved without your interaction', array(t('No'),('Yes'))),
 			'$addr'           => $contact['xchan_addr'],
 			'$addr_text'      => t('This connection\'s address is'),
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
-			'$autolbl'        => t('Apply the permissions indicated on this page to all new connections.'),
+			'$autolbl'        => t('The permissions indicated on this page will be applied to all new connections.'),
 			'$buttons'        => (($self) ? '' : $buttons),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$lbl_rating'     => t('Rating'),
@@ -693,6 +693,7 @@ function connedit_content(&$a) {
 			'$perms'          => $perms,
 			'$permlbl'        => t('Individual Permissions'),
 			'$permnote'       => t('Some permissions may be inherited from your channel\'s <a href="settings"><strong>privacy settings</strong></a>, which have higher priority than individual settings. You can <strong>not</strong> change those settings here.'),
+			'$permnote_self'  => t('Some permissions may be inherited from your channel\'s <a href="settings"><strong>privacy settings</strong></a>, which have higher priority than individual settings. You can change those settings here but they wont have any impact unless the inherited setting changes.'),
 			'$lastupdtext'    => t('Last update:'),
 			'$last_update'    => relative_date($contact['abook_connected']),
 			'$profile_select' => contact_profile_assign($contact['abook_profile']),

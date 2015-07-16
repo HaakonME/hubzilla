@@ -29,7 +29,7 @@ function widget_tagcloud($args) {
 	$type = TERM_CATEGORY;
 
 	// FIXME there exists no $authors variable
-	$r = tagadelic($uid, $count, $authors, $flags, ITEM_TYPE_WEBPAGE, $type);
+	$r = tagadelic($uid, $count, $authors, $owner, $flags, ITEM_TYPE_WEBPAGE, $type);
 
 	if($r) {
 		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
@@ -392,7 +392,7 @@ function widget_tagcloud_wall($arr) {
 
 	$limit = ((array_key_exists('limit', $arr)) ? intval($arr['limit']) : 50);
 	if(feature_enabled($a->profile['profile_uid'], 'tagadelic'))
-		return wtagblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], 'wall');
+		return wtagblock($a->profile['profile_uid'], $limit, '', $a->profile['channel_hash'], 'wall');
 
 	return '';
 }
@@ -407,7 +407,7 @@ function widget_catcloud_wall($arr) {
 
 	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
 
-	return catblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], 'wall');
+	return catblock($a->profile['profile_uid'], $limit, '', $a->profile['channel_hash'], 'wall');
 }
 
 

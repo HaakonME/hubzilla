@@ -2854,7 +2854,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		}
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags');
+			if(array_key_exists('channel_removed',$arr['channel']))
+				$arr['channel_pageflags'] |= PAGE_REMOVED;
+			if(array_key_exists('channel_system',$arr['channel']))
+				$arr['channel_pageflags'] |= PAGE_SYSTEM;
+			
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_system');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {
@@ -3167,7 +3172,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				}
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
-						$r = dbq("UPDATE profile set " . dbesc($k) . " = '" . dbesc($v)
+						$r = dbq("UPDATE profile set `" . dbesc($k) . "` = '" . dbesc($v)
 						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']));
 					}
 				}

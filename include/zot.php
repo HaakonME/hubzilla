@@ -2854,12 +2854,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		}
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			if(array_key_exists('channel_removed',$arr['channel']))
-				$arr['channel_pageflags'] |= PAGE_REMOVED;
-			if(array_key_exists('channel_system',$arr['channel']))
-				$arr['channel_pageflags'] |= PAGE_SYSTEM;
+			if(array_key_exists('channel_page_flags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
+				$arr['channel']['channel_removed'] = (($arr['channel']['channel_pageflags'] & 0x8000) ? 1 : 0);
+				$arr['channel']['channel_system']  = (($arr['channel']['channel_pageflags'] & 0x1000) ? 1 : 0);
+			}
 			
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_system');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {

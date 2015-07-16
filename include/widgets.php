@@ -381,6 +381,7 @@ function widget_categories($arr) {
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
 
 	return categories_widget($srchurl, $cat);
+
 }
 
 function widget_tagcloud_wall($arr) {
@@ -409,6 +410,7 @@ function widget_catcloud_wall($arr) {
 	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
 
 	return catblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], ITEM_WALL);
+
 }
 
 

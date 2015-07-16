@@ -199,6 +199,17 @@ if(strlen($a->module)) {
 		}
 	}
 
+	/**
+	 * This provides a place for plugins to register module handlers which don't otherwise exist on the system.
+	 * If the plugin sets 'installed' to true we won't throw a 404 error for the specified module even if
+	 * there is no specific module file or matching plugin name.
+	 * The plugin should catch at least one of the module hooks for this URL. 
+	 */
+
+	$x = array('module' => $a->module, 'installed' => false);
+	call_hooks('module_loaded', $x);
+	if($x['installed'])
+		$a->module_loaded = true;
 
 	/**
 	 * The URL provided does not resolve to a valid module.

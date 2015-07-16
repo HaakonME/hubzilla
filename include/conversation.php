@@ -1377,7 +1377,8 @@ function render_location_default($item) {
 
 function prepare_page($item) {
 	$a = get_app();
-	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
+	$naked = 1;
+//	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = $a->get_observer();
 	//240 chars is the longest we can have before we start hitting problems with suhosin sites
 	$preview = substr(urlencode($item['body']), 0, 240);

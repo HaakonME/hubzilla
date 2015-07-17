@@ -2902,22 +2902,14 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 				if(! array_key_exists('abook_blocked',$abook)) {
 					// convert from redmatrix
-					if($abook['abook_flags'] & 0x0001)
-						$abook['abook_blocked'] = 1;
-					if($abook['abook_flags'] & 0x0002)
-						$abook['abook_ignored'] = 1;
-					if($abook['abook_flags'] & 0x0004)
-						$abook['abook_hidden'] = 1;
-					if($abook['abook_flags'] & 0x0008)
-						$abook['abook_archived'] = 1;
-					if($abook['abook_flags'] & 0x0010)
-						$abook['abook_pending'] = 1;
-					if($abook['abook_flags'] & 0x0020)
-						$abook['abook_unconnected'] = 1;
-					if($abook['abook_flags'] & 0x0080)
-						$abook['abook_self'] = 1;
-					if($abook['abook_flags'] & 0x0100)
-						$abook['abook_feed'] = 1;
+					$abook['abook_blocked']     = (($abook['abook_flags'] & 0x0001) ? 1 : 0);
+					$abook['abook_ignored']     = (($abook['abook_flags'] & 0x0002) ? 1 : 0);
+					$abook['abook_hidden']      = (($abook['abook_flags'] & 0x0004) ? 1 : 0);
+					$abook['abook_archived']    = (($abook['abook_flags'] & 0x0008) ? 1 : 0);
+					$abook['abook_pending']     = (($abook['abook_flags'] & 0x0010) ? 1 : 0);
+					$abook['abook_unconnected'] = (($abook['abook_flags'] & 0x0020) ? 1 : 0);
+					$abook['abook_self']        = (($abook['abook_flags'] & 0x0080) ? 1 : 0);
+					$abook['abook_feed']        = (($abook['abook_flags'] & 0x0100) ? 1 : 0);
 				}
 
 				$clean = array();

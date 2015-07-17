@@ -4389,7 +4389,6 @@ function first_post_date($uid,$wall = false) {
 	$r = q("select id, created from item
 		where uid = %d and id = parent $item_normal $wall_sql
 		order by created asc limit 1",
-		intval(ITEM_VISIBLE),
 		intval($uid)
 
 	);

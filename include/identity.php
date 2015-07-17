@@ -583,8 +583,14 @@ function identity_basic_export($channel_id, $items = false) {
 
 	/** @warning this may run into memory limits on smaller systems */
 
-	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d",
-		intval($channel_id)
+	/** export one year of posts. If you want to export and import all posts you have to start with 
+	  * the first year and export/import them in ascending order. 
+	  */
+
+	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d and created > %s - INTERVAL %s",
+		intval($channel_id),
+		db_utcnow(), 
+		db_quoteinterval('1 YEAR')
 	);
 	if($r) {
 		$ret['item'] = array();
@@ -596,6 +602,33 @@ function identity_basic_export($channel_id, $items = false) {
 
 	return $ret;
 }
+
+
+function identity_export_year($channel_id,$year) {
+
+	if(! $year)
+		return array();
+
+	$ret = array();
+	$mindate = datetime_convert('UTC','UTC',$year . '-01-01 00:00:00');
+	$maxdate = datetime_convert('UTC','UTC',$year+1 . '-01-01 00:00:00');
+	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d and created >= '%s' and created < '%s' ",
+		intval($channel_id),
+		dbesc($mindate), 
+		dbesc($maxdate)
+	);
+
+	if($r) {
+		$ret['item'] = array();
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		foreach($r as $rr)
+			$ret['item'][] = encode_item($rr,true);
+	}
+
+	return $ret;
+}
+
 
 
 /**

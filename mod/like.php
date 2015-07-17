@@ -242,8 +242,8 @@ function like_content(&$a) {
 		// get the item. Allow linked photos (which are normally hidden) to be liked
 
 		$r = q("SELECT * FROM item WHERE id = %d 
-			and item_blocked = 0 and item_moderated = 0 and item_spam = 0 
-			and item_deleted = 0 and item_unpublished = 0 and item_delayed_publish = 0 LIMIT 1",
+			and item_type = 0 and item_deleted = 0 and item_unpublished = 0 
+			and item_delayed = 0 and item_pending_remove = 0 and item_blocked = 0 LIMIT 1",
 			intval($item_id)
 		);
 

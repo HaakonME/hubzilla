@@ -9,9 +9,17 @@ function uexport_init(&$a) {
 
 		require_once('include/identity.php');
 
-		header('content-type: application/octet_stream');
-		header('content-disposition: attachment; filename="' . $channel['channel_address'] . '.json"' );
+		if(argc() > 1 && intval(argv(1)) > 1900) {
+			$year = intval(argv(1));
+		}
 
+		header('content-type: application/octet_stream');
+		header('content-disposition: attachment; filename="' . $channel['channel_address'] . (($year) ? '-' . $year : '') . '.json"' );
+
+		if($year) {
+			echo json_encode(identity_export_year(local_channel(),$year));
+			killme();
+		}
 
 		if(argc() > 1 && argv(1) === 'basic') {
 			echo json_encode(identity_basic_export(local_channel()));

@@ -583,11 +583,40 @@ function identity_basic_export($channel_id, $items = false) {
 
 	/** @warning this may run into memory limits on smaller systems */
 
-	$r = q("select * from item where (item_flags & %d)>0 and not (item_restrict & %d)>0 and uid = %d",
+	$r = q("select * from item where (item_flags & %d)>0 and not (item_restrict & %d)>0 and uid = %d order by created",
 		intval(ITEM_WALL),
 		intval(ITEM_DELETED),
 		intval($channel_id)
 	);
+	if($r) {
+		$ret['item'] = array();
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		foreach($r as $rr)
+			$ret['item'][] = encode_item($rr,true);
+	}
+
+	return $ret;
+}
+
+
+
+function identity_export_year($channel_id,$year) {
+
+	if(! $year)
+		return array();
+
+	$ret = array();
+	$mindate = datetime_convert('UTC','UTC',$year . '-01-01 00:00:00');
+	$maxdate = datetime_convert('UTC','UTC',$year+1 . '-01-01 00:00:00');
+	$r = q("select * from item where (item_flags & %d) > 0 and (item_restrict & %d) = 0 and uid = %d and created >= '%s' and created < '%s' order by created ",
+		intval(ITEM_WALL),
+		intval(ITEM_DELETED),
+		intval($channel_id),
+		dbesc($mindate), 
+		dbesc($maxdate)
+	);
+
 	if($r) {
 		$ret['item'] = array();
 		xchan_query($r);

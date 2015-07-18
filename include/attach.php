@@ -391,12 +391,17 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
 	$upload_path = (($arr && $arr['directory']) ? $arr['directory'] : '');
 
-	// logger('arr: ' . print_r($arr,true));
+	 logger('arr: ' . print_r($arr,true));
 
 	if(! perm_is_allowed($channel_id,get_observer_hash(), 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
+
+	$str_group_allow   = perms2str($arr['group_allow']); 
+	$str_contact_allow = perms2str($arr['contact_allow']);
+	$str_group_deny    = perms2str($arr['group_deny']);
+	$str_contact_deny  = perms2str($arr['contact_deny']);
 
 
 	// The 'update' option sets db values without uploading a new attachment
@@ -473,14 +478,13 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	$darr = array('pathname' => $pathname);
-	if($arr && array_key_exists('allow_cid',$arr))
-		$darr['allow_cid'] = $arr['allow_cid'];
-	if($arr && array_key_exists('allow_gid',$arr))
-		$darr['allow_gid'] = $arr['allow_gid'];
-	if($arr && array_key_exists('deny_cid',$arr))
-		$darr['deny_cid'] = $arr['deny_cid'];
-	if($arr && array_key_exists('deny_gid',$arr))
-		$darr['deny_gid'] = $arr['deny_gid'];
+
+	// if we need to create a directory, use the channel default permissions.
+
+	$darr['allow_cid'] = $channel['allow_cid'];
+	$darr['allow_gid'] = $channel['allow_gid'];
+	$darr['deny_cid']  = $channel['deny_cid'];
+	$darr['deny_gid']  = $channel['deny_gid'];
 
 
 	if($pathname) {
@@ -652,9 +656,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($created),
 			dbesc($created),
 			dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $str_contact_allow),
-			dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
-			dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
-			dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
+			dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : $str_group_allow),
+			dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : $str_contact_deny),
+			dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : $str_group_deny)
 		);
 	}
 
@@ -662,6 +666,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis);
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
+		if($arr['group_allow'])
+			$args['group_allow'] = $arr['group_allow'];
+		if($arr['contact_deny'])
+			$args['contact_deny'] = $arr['contact_deny'];
+		if($arr['group_deny'])
+			$args['group_deny'] = $arr['group_deny'];
 		$p = photo_upload($channel,get_app()->get_observer(),$args);
 		if($p['success']) {
 			$ret['body'] = $p['body'];

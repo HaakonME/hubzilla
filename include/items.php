@@ -1282,10 +1282,12 @@ function encode_item($item,$mirror = false) {
 	if($item['diaspora_meta']) {
 		$z = json_decode($item['diaspora_meta'],true);
 		if($z) {
-			if(array_key_exists('iv',$z))
+			if(is_array($z) && array_key_exists('iv',$z))
 				$x['diaspora_signature'] = crypto_unencapsulate($z,$key);
 			else
 				$x['diaspora_signature'] = $z;
+			if(! is_array($z))
+				logger('encode_item: diaspora meta is not an array: ' . print_r($z,true));
 		}
 	}
 	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);

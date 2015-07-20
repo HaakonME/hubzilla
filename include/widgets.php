@@ -380,6 +380,7 @@ function widget_categories($arr) {
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
 
 	return categories_widget($srchurl, $cat);
+
 }
 
 function widget_tagcloud_wall($arr) {

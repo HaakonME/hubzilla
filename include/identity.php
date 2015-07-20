@@ -630,7 +630,6 @@ function identity_export_year($channel_id,$year) {
 }
 
 
-
 /**
  * @brief Loads a profile into the App structure.
  *

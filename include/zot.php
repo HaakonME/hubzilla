@@ -566,7 +566,7 @@ function zot_gethub($arr) {
 }
 
 /**
- * @brief Registers an unknown hup.
+ * @brief Registers an unknown hub.
  *
  * A communication has been received which has an unknown (to us) sender.
  * Perform discovery based on our calculated hash of the sender at the

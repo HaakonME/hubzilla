@@ -137,7 +137,7 @@ function editblock_content(&$a) {
 		'$underline'           => t('Underline'),
 		'$quote'               => t('Quote'),
 		'$code'                => t('Code'),
-		'$writefiles'          => (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')),
+		'$writefiles'          => perm_is_allowed($owner, get_observer_hash(), 'write_storage'),
 		'$upload'              => t('Upload photo'),
 		'$attach'              => t('Attach file'),
 		'$weblink'             => t('Insert web link'),

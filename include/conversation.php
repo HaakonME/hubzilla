@@ -1168,7 +1168,7 @@ function status_editor($a, $x, $popup = false) {
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),
 		'$id_select' => $id_select,
 		'$id_seltext' => t('Post as'),
-		'$writefiles' => (perm_is_allowed($x['profile_uid'], get_observer_hash(), 'post_photos') || perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage')),
+		'$writefiles' => perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage'),
 		'$bold' => t('Bold'),
 		'$italic' => t('Italic'),
 		'$underline' => t('Underline'),
@@ -1587,7 +1587,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'id'    => 'profile-tab',
 		);
 	}
-	if ($p['view_photos']) {
+	if ($p['view_storage']) {
 		$tabs[] = array(
 			'label' => t('Photos'),
 			'url'   => $a->get_baseurl() . '/photos/' . $nickname,
@@ -1595,8 +1595,6 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'title' => t('Photo Albums'),
 			'id'    => 'photo-tab',
 		);
-	}
-	if ($p['view_storage']) {
 		$tabs[] = array(
 			'label' => t('Files'),
 			'url'   => $a->get_baseurl() . '/cloud/' . $nickname . ((get_observer_hash()) ? '' : '?f=&davguest=1'),

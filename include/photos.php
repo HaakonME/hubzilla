@@ -22,7 +22,7 @@ function photo_upload($channel, $observer, $args) {
 	$channel_id = $channel['channel_id'];
 	$account_id = $channel['channel_account_id'];
 
-	if(! perm_is_allowed($channel_id, $observer['xchan_hash'], 'post_photos')) {
+	if(! perm_is_allowed($channel_id, $observer['xchan_hash'], 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -313,7 +313,7 @@ function photo_upload($channel, $observer, $args) {
  *
  * @param array $channel
  * @param array $observer
- * @return bool|array false if no view_photos permission or an array
+ * @return bool|array false if no view_storage permission or an array
  *   * success (bool)
  *   * albums (array)
  */
@@ -322,7 +322,7 @@ function photos_albums_list($channel, $observer) {
 	$channel_id     = $channel['channel_id'];
 	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
-	if(! perm_is_allowed($channel_id, $observer_xchan, 'view_photos'))
+	if(! perm_is_allowed($channel_id, $observer_xchan, 'view_storage'))
 		return false;
 
 	/** @FIXME create a permissions SQL which works on arbitrary observers and channels, regardless of login or web status */
@@ -378,7 +378,7 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 			'$title'   => t('Photo Albums'),
 			'$albums'  => $albums['albums'],
 			'$baseurl' => z_root(),
-			'$upload'  => ((perm_is_allowed($channelx['channel_id'],(($observer) ? $observer['xchan_hash'] : ''),'post_photos')) 
+			'$upload'  => ((perm_is_allowed($channelx['channel_id'],(($observer) ? $observer['xchan_hash'] : ''),'write_storage')) 
 				? t('Upload New Photos') : '')
 		));
 	}
@@ -399,7 +399,7 @@ function photos_list_photos($channel, $observer, $album = '') {
 	$channel_id     = $channel['channel_id'];
 	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
-	if(! perm_is_allowed($channel_id,$observer_xchan,'view_photos'))
+	if(! perm_is_allowed($channel_id,$observer_xchan,'view_storage'))
 		return false;
 
 	$sql_extra = permissions_sql($channel_id);

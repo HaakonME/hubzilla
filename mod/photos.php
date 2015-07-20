@@ -63,7 +63,7 @@ function photos_post(&$a) {
 
 	$page_owner_uid = $a->data['channel']['channel_id'];
 
-	if(perm_is_allowed($page_owner_uid,get_observer_hash(),'post_photos'))
+	if(perm_is_allowed($page_owner_uid,get_observer_hash(),'write_storage'))
 		$can_post = true;
 
 	if(! $can_post) {
@@ -495,8 +495,8 @@ function photos_content(&$a) {
 
 	$observer = $a->get_observer();
 
-	$can_post = perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_photos');
-	$can_view = perm_is_allowed($owner_uid,$observer['xchan_hash'],'view_photos');
+	$can_post = perm_is_allowed($owner_uid,$observer['xchan_hash'],'write_storage');
+	$can_view = perm_is_allowed($owner_uid,$observer['xchan_hash'],'view_storage');
 
 	if(! $can_view) {
 		notice( t('Access to this item is restricted.') . EOL);

@@ -3381,7 +3381,10 @@ function post_is_importable($item,$abook) {
 	$text = prepare_text($item['body'],$item['mimetype']);
 	$text = html2plain($text);
 
-	$lang = detect_language($text);
+	$lang = null;
+
+	if((strpos($abook['abook_incl'],'lang=') !== false) || (strpos($abook['abook_incl'],'lang=') !== false))
+		$lang = detect_language($text);
 
 	$tags = ((count($item['term'])) ? $item['term'] : false);
 
@@ -3399,7 +3402,7 @@ function post_is_importable($item,$abook) {
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
 				return false;
-			elseif((strpos($word,'lang=') === 0) && ($lang) && (stricmp($lang,trim(substr($word,5))) == 0))
+			elseif((strpos($word,'lang=') === 0) && ($lang) && (strcasecmp($lang,trim(substr($word,5))) == 0))
 				return false;
 			elseif(stristr($text,$word) !== false)
 				return false;
@@ -3418,7 +3421,7 @@ function post_is_importable($item,$abook) {
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
 				return true;
-			elseif((strpos($word,'lang=') === 0) && ($lang) && (stricmp($lang,trim(substr($word,5))) == 0))
+			elseif((strpos($word,'lang=') === 0) && ($lang) && (strcasecmp($lang,trim(substr($word,5))) == 0))
 				return true;
 			elseif(stristr($text,$word) !== false)
 				return true;

@@ -606,16 +606,16 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 			if(($width / $height) > 1.2) {
 				// crop out the sides
 				$margin = $width - $height;
-				$img->cropImage(175,($margin / 2),0,$height,$height); 
+				$img->cropImage(300,($margin / 2),0,$height,$height);
 			}
 			elseif(($height / $width) > 1.2) {
 				// crop out the bottom
 				$margin = $height - $width;
-				$img->cropImage(175,0,0,$width,$width);
+				$img->cropImage(300,0,0,$width,$width);
 
 			}
 			else {
-				$img->scaleImageSquare(175);
+				$img->scaleImageSquare(300);
 			}
 
 		}
@@ -682,7 +682,7 @@ function import_channel_photo($photo,$type,$aid,$uid) {
 	$img = photo_factory($photo, $type);
 	if($img->is_valid()) {
 
-		$img->scaleImageSquare(175);
+		$img->scaleImageSquare(300);
 
 		$p = array('aid' => $aid, 'uid' => $uid, 'resource_id' => $hash, 'filename' => $filename, 'album' => t('Profile Photos'), 'photo_flags' => PHOTO_PROFILE, 'scale' => 4);
 

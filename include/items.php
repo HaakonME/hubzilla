@@ -3383,7 +3383,7 @@ function post_is_importable($item,$abook) {
 
 	$lang = null;
 
-	if((strpos($abook['abook_incl'],'lang=') !== false) || (strpos($abook['abook_incl'],'lang=') !== false))
+	if((strpos($abook['abook_incl'],'lang=') !== false) || (strpos($abook['abook_excl'],'lang=') !== false))
 		$lang = detect_language($text);
 
 	$tags = ((count($item['term'])) ? $item['term'] : false);

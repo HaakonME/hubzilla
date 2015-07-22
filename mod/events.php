@@ -451,6 +451,7 @@ function events_content(&$a) {
 		 
 		if($export) {
 			header('Content-type: text/calendar');
+			header('content-disposition: attachment; filename="' . t('calendar') . '-' . $channel['channel_address'] . '.ics"' );
 			echo ical_wrapper($r);
 			killme();
 		}

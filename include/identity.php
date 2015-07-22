@@ -1392,10 +1392,10 @@ function get_theme_uid() {
 * with the specified size.
 *
 * @param int $size
-*  one of (175, 80, 48)
+*  one of (300, 80, 48)
 * @returns string
 */
-function get_default_profile_photo($size = 175) {
+function get_default_profile_photo($size = 300) {
 	$scheme = get_config('system','default_profile_photo');
 	if(! $scheme)
 		$scheme = 'rainbow_man';

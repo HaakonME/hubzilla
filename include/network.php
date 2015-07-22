@@ -531,7 +531,7 @@ function avatar_img($email) {
 	$avatar = array();
 	$a = get_app();
 
-	$avatar['size'] = 175;
+	$avatar['size'] = 300;
 	$avatar['email'] = $email;
 	$avatar['url'] = '';
 	$avatar['success'] = false;

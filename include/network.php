@@ -1135,9 +1135,27 @@ function discover_by_webbie($webbie) {
 			} 
 
 			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
-				dbesc($webbie)
+				dbesc($addr)
 			);
-			if(! $r) {
+
+			/**
+			 *
+			 * Diaspora communications are notoriously unreliable and receiving profile update messages (indeed any messages) 
+			 * are pretty much random luck. We'll check the timestamp of the xchan_name_date at a higher level and refresh
+			 * this record once a month; because if you miss a profile update message and they update their profile photo or name 
+			 * you're otherwise stuck with stale info until they change their profile again - which could be years from now. 
+			 *
+			 */  			
+
+			if($r) {
+				$r = q("update xchan set xchan_name = '%s', xchan_network = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+					dbesc($vcard['fn']),
+					dbesc($network),
+					dbesc(datetime_convert()),
+					dbesc($addr)
+				);
+			}
+			else {
 
 				$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 					dbesc($addr),

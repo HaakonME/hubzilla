@@ -2009,7 +2009,6 @@ function load_pdl(&$a) {
 
 		if((! $s) && (($p = theme_include($n)) != ''))
 			$s = @file_get_contents($p);
-
 		if($s) {
 			comanche_parser($a, $s);
 			$a->pdl = $s;

@@ -284,6 +284,11 @@ function comanche_widget($name, $text) {
 
 	if(file_exists('widget/' . trim($name) . '.php'))
 		require_once('widget/' . trim($name) . '.php');
+	else {
+		$theme_widget = 'widget_' . trim($name) . '.php';
+		if(theme_include($theme_widget))
+			require_once(theme_include($theme_widget));
+	}
 
 	$func = 'widget_' . trim($name);
 	if (function_exists($func))

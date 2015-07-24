@@ -1009,7 +1009,6 @@ function diaspora_post($importer,$xml,$msg) {
 		return 202;
 	}
 
-
 	$result = item_store($datarray);
 	return;
 

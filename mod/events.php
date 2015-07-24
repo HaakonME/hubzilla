@@ -148,10 +148,9 @@ function events_post(&$a) {
 			}
 		}
 		else {
-			// Note: do not set `private` field for self-only events. It will
-			// keep even you from seeing them!
 			$str_contact_allow = '<' . $channel['channel_hash'] . '>';
 			$str_group_allow = $str_contact_deny = $str_group_deny = '';
+			$private_event = true;
 		}
 	}
 

@@ -397,9 +397,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'block') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
-					? t('Channel has been unblocked') 
-					: t('Channel has been blocked')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
+			//		? t('Channel has been unblocked') 
+			//		: t('Channel has been blocked')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -409,9 +409,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'ignore') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_IGNORED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_IGNORED) 
-					? t('Channel has been unignored') 
-					: t('Channel has been ignored')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_IGNORED) 
+			//		? t('Channel has been unignored') 
+			//		: t('Channel has been ignored')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -421,9 +421,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'archive') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_ARCHIVED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_ARCHIVED) 
-					? t('Channel has been unarchived') 
-					: t('Channel has been archived')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_ARCHIVED) 
+			//		? t('Channel has been unarchived') 
+			//		: t('Channel has been archived')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -433,9 +433,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'hide') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_HIDDEN)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_HIDDEN) 
-					? t('Channel has been unhidden') 
-					: t('Channel has been hidden')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_HIDDEN) 
+			//		? t('Channel has been unhidden') 
+			//		: t('Channel has been hidden')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -449,9 +449,9 @@ function connedit_content(&$a) {
 		if($cmd === 'approve') {
 			if($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
 				if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_PENDING)) {
-					info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) 
-						? t('Channel has been approved') 
-						: t('Channel has been unapproved')) . EOL );
+				//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) 
+				//		? t('Channel has been approved') 
+				//		: t('Channel has been unapproved')) . EOL );
 					connedit_clone($a);
 				}
 				else
@@ -520,6 +520,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
 				'title' => t('Block (or Unblock) all communications with this connection'),
+				'info'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('This connection is blocked!') : ''),
 			),
 
 			'ignore' => array(
@@ -527,6 +528,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
 				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
+				'info'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('This connection is ignored!') : ''),
 			),
 
 			'archive' => array(
@@ -534,6 +536,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
 				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
+				'info'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('This connection is archived!') : ''),
 			),
 
 			'hide' => array(
@@ -541,6 +544,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
 				'title' => t('Hide or Unhide this connection from your other connections'),
+				'info'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('This connection is hidden!') : ''),
 			),
 
 			'delete' => array(

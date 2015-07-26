@@ -22,6 +22,15 @@
 	</div>
 	<div class="section-content-wrapper-np">
 		{{if $notself}}
+		{{foreach $buttons as $b}}
+		{{if $b.info}}
+		<div class="section-content-danger-wrapper">
+			<div>
+				{{$b.info}}
+			</div>
+		</div>
+		{{/if}}
+		{{/foreach}}
 		<div class="section-content-info-wrapper">
 			<div>
 				{{$addr_text}} <strong>'{{$addr}}'</strong>

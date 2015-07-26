@@ -397,9 +397,6 @@ function connedit_content(&$a) {
 
 		if($cmd === 'block') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED)) {
-				info((intval($orig_record[0]['abook_blocked']) 
-					? t('Channel has been unblocked') 
-					: t('Channel has been blocked')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -409,9 +406,6 @@ function connedit_content(&$a) {
 
 		if($cmd === 'ignore') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_IGNORED)) {
-				info((intval($orig_record[0]['abook_ignored'])
-					? t('Channel has been unignored') 
-					: t('Channel has been ignored')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -421,9 +415,6 @@ function connedit_content(&$a) {
 
 		if($cmd === 'archive') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_ARCHIVED)) {
-				info((intval($orig_record[0]['abook_archived']) 
-					? t('Channel has been unarchived') 
-					: t('Channel has been archived')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -433,9 +424,6 @@ function connedit_content(&$a) {
 
 		if($cmd === 'hide') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_HIDDEN)) {
-				info((intval($orig_record[0]['abook_hidden'])
-					? t('Channel has been unhidden') 
-					: t('Channel has been hidden')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -449,9 +437,6 @@ function connedit_content(&$a) {
 		if($cmd === 'approve') {
 			if(intval($orig_record[0]['abook_pending'])) {
 				if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_PENDING)) {
-					info((intval($orig_record[0]['abook_pending'])
-						? t('Channel has been approved') 
-						: t('Channel has been unapproved')) . EOL );
 					connedit_clone($a);
 				}
 				else
@@ -520,6 +505,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
 				'sel'   => (intval($contact['abook_blocked']) ? 'active' : ''),
 				'title' => t('Block (or Unblock) all communications with this connection'),
+				'info'   => (intval($contact['abook_blocked']) ? t('This connection is blocked!') : ''),
 			),
 
 			'ignore' => array(
@@ -527,6 +513,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
 				'sel'   => (intval($contact['abook_ignored']) ? 'active' : ''),
 				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
+				'info'   => (intval($contact['abook_ignored']) ? t('This connection is ignored!') : ''),
 			),
 
 			'archive' => array(
@@ -534,6 +521,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
 				'sel'   => (intval($contact['abook_archived']) ? 'active' : ''),
 				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
+				'info'   => (intval($contact['abook_archived']) ? t('This connection is archived!') : ''),
 			),
 
 			'hide' => array(
@@ -541,6 +529,7 @@ function connedit_content(&$a) {
 				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
 				'sel'   => (intval($contact['abook_hidden']) ? 'active' : ''),
 				'title' => t('Hide or Unhide this connection from your other connections'),
+				'info'   => (intval($contact['abook_hidden']) ? t('This connection is hidden!') : ''),
 			),
 
 			'delete' => array(

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-07-17.1096\n"
+"Project-Id-Version: 2015-07-24.1103\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-17 00:04-0700\n"
+"POT-Creation-Date: 2015-07-24 00:04-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,42 +40,42 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../../include/diaspora.php:2115 ../../include/text.php:1888
+#: ../../include/diaspora.php:2114 ../../include/text.php:1888
 #: ../../include/conversation.php:120 ../../mod/like.php:346
 #: ../../mod/subthread.php:72 ../../mod/subthread.php:174
 #: ../../mod/tagger.php:43
 msgid "photo"
 msgstr ""
 
-#: ../../include/diaspora.php:2115 ../../include/text.php:1894
+#: ../../include/diaspora.php:2114 ../../include/text.php:1894
 #: ../../include/conversation.php:148 ../../mod/like.php:346
 #: ../../mod/subthread.php:72 ../../mod/subthread.php:174
 msgid "status"
 msgstr ""
 
-#: ../../include/diaspora.php:2144 ../../include/conversation.php:164
+#: ../../include/diaspora.php:2143 ../../include/conversation.php:164
 #: ../../mod/like.php:394
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
 msgstr ""
 
-#: ../../include/diaspora.php:2490
+#: ../../include/diaspora.php:2489
 msgid "Please choose"
 msgstr ""
 
-#: ../../include/diaspora.php:2492
+#: ../../include/diaspora.php:2491
 msgid "Agree"
 msgstr ""
 
-#: ../../include/diaspora.php:2494
+#: ../../include/diaspora.php:2493
 msgid "Disagree"
 msgstr ""
 
-#: ../../include/diaspora.php:2496
+#: ../../include/diaspora.php:2495
 msgid "Abstain"
 msgstr ""
 
-#: ../../include/diaspora.php:2518 ../../include/diaspora.php:2529
+#: ../../include/diaspora.php:2517 ../../include/diaspora.php:2528
 #: ../../include/network.php:1586 ../../include/enotify.php:59
 #: ../../mod/p.php:46
 msgid "$projectname"
@@ -297,7 +297,7 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: ../../include/datetime.php:262 ../../boot.php:2355
+#: ../../include/datetime.php:262 ../../boot.php:2354
 msgid "never"
 msgstr ""
 
@@ -942,7 +942,7 @@ msgstr ""
 msgid "Click to open/close"
 msgstr ""
 
-#: ../../include/text.php:1665 ../../mod/events.php:444
+#: ../../include/text.php:1665 ../../mod/events.php:443
 msgid "Link to Source"
 msgstr ""
 
@@ -3036,14 +3036,14 @@ msgstr ""
 msgid "Visible to specific connections."
 msgstr ""
 
-#: ../../include/items.php:4198 ../../mod/thing.php:74
+#: ../../include/items.php:4207 ../../mod/thing.php:74
 #: ../../mod/filestorage.php:27 ../../mod/viewsrc.php:20
 #: ../../mod/admin.php:167 ../../mod/admin.php:1025 ../../mod/admin.php:1225
 #: ../../mod/display.php:36
 msgid "Item not found."
 msgstr ""
 
-#: ../../include/items.php:4271 ../../include/attach.php:137
+#: ../../include/items.php:4280 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
@@ -3055,7 +3055,7 @@ msgstr ""
 #: ../../mod/thing.php:256 ../../mod/thing.php:290
 #: ../../mod/profile_photo.php:264 ../../mod/profile_photo.php:277
 #: ../../mod/block.php:22 ../../mod/block.php:72 ../../mod/like.php:178
-#: ../../mod/events.php:219 ../../mod/group.php:9 ../../mod/item.php:206
+#: ../../mod/events.php:218 ../../mod/group.php:9 ../../mod/item.php:206
 #: ../../mod/item.php:214 ../../mod/item.php:978 ../../mod/network.php:12
 #: ../../mod/common.php:35 ../../mod/connections.php:169
 #: ../../mod/blocks.php:69 ../../mod/blocks.php:76 ../../mod/editpost.php:13
@@ -3086,26 +3086,26 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: ../../include/items.php:4673 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4682 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr ""
 
-#: ../../include/items.php:4689
+#: ../../include/items.php:4698
 msgid "Collection is empty."
 msgstr ""
 
-#: ../../include/items.php:4696
+#: ../../include/items.php:4705
 #, php-format
 msgid "Collection: %s"
 msgstr ""
 
-#: ../../include/items.php:4706 ../../mod/connedit.php:658
+#: ../../include/items.php:4715 ../../mod/connedit.php:658
 #, php-format
 msgid "Connection: %s"
 msgstr ""
 
-#: ../../include/items.php:4708
+#: ../../include/items.php:4717
 msgid "Connection not found."
 msgstr ""
 
@@ -3117,7 +3117,7 @@ msgstr ""
 msgid "Unable to verify channel signature"
 msgstr ""
 
-#: ../../include/zot.php:2131
+#: ../../include/zot.php:2132
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr ""
@@ -4388,16 +4388,20 @@ msgstr ""
 msgid "Event not found."
 msgstr ""
 
-#: ../../mod/events.php:396
+#: ../../mod/events.php:395
 msgid "l, F j"
 msgstr ""
 
-#: ../../mod/events.php:418
+#: ../../mod/events.php:417
 msgid "Edit event"
 msgstr ""
 
-#: ../../mod/events.php:419
+#: ../../mod/events.php:418
 msgid "Delete event"
+msgstr ""
+
+#: ../../mod/events.php:452
+msgid "calendar"
 msgstr ""
 
 #: ../../mod/events.php:473
@@ -9046,24 +9050,24 @@ msgstr ""
 msgid "Forgot your password?"
 msgstr ""
 
-#: ../../boot.php:2179
+#: ../../boot.php:2178
 msgid "toggle mobile"
 msgstr ""
 
-#: ../../boot.php:2314
+#: ../../boot.php:2313
 msgid "Website SSL certificate is not valid. Please correct."
 msgstr ""
 
-#: ../../boot.php:2317
+#: ../../boot.php:2316
 #, php-format
 msgid "[red] Website SSL error for %s"
 msgstr ""
 
-#: ../../boot.php:2354
+#: ../../boot.php:2353
 msgid "Cron/Scheduled tasks not running."
 msgstr ""
 
-#: ../../boot.php:2358
+#: ../../boot.php:2357
 #, php-format
 msgid "[red] Cron tasks not running on %s"
 msgstr ""

@@ -130,7 +130,6 @@ function connedit_post(&$a) {
 		}
 	}
 
-	$abook_flags = $orig_record[0]['abook_flags'];
 	$new_friend = false;
 
 	if(! $is_self) {
@@ -191,6 +190,7 @@ function connedit_post(&$a) {
 		}
 	}
 
+	$abook_pending = $new_friend ? 0 : $orig_record[0]['abook_pending'];
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d,
 		abook_incl = '%s', abook_excl = '%s'
@@ -198,7 +198,7 @@ function connedit_post(&$a) {
 		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
-		intval(1 - intval($new_friend)),
+		intval($abook_pending),
 		dbesc($abook_incl),
 		dbesc($abook_excl),
 		intval($contact_id),

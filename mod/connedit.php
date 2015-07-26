@@ -397,9 +397,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'block') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
-					? t('Channel has been unblocked') 
-					: t('Channel has been blocked')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
+			//		? t('Channel has been unblocked') 
+			//		: t('Channel has been blocked')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -409,9 +409,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'ignore') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_IGNORED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_IGNORED) 
-					? t('Channel has been unignored') 
-					: t('Channel has been ignored')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_IGNORED) 
+			//		? t('Channel has been unignored') 
+			//		: t('Channel has been ignored')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -421,9 +421,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'archive') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_ARCHIVED)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_ARCHIVED) 
-					? t('Channel has been unarchived') 
-					: t('Channel has been archived')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_ARCHIVED) 
+			//		? t('Channel has been unarchived') 
+			//		: t('Channel has been archived')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -433,9 +433,9 @@ function connedit_content(&$a) {
 
 		if($cmd === 'hide') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_HIDDEN)) {
-				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_HIDDEN) 
-					? t('Channel has been unhidden') 
-					: t('Channel has been hidden')) . EOL );
+			//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_HIDDEN) 
+			//		? t('Channel has been unhidden') 
+			//		: t('Channel has been hidden')) . EOL );
 				connedit_clone($a);
 			}
 			else
@@ -449,9 +449,9 @@ function connedit_content(&$a) {
 		if($cmd === 'approve') {
 			if($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
 				if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_PENDING)) {
-					info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) 
-						? t('Channel has been approved') 
-						: t('Channel has been unapproved')) . EOL );
+				//	info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) 
+				//		? t('Channel has been approved') 
+				//		: t('Channel has been unapproved')) . EOL );
 					connedit_clone($a);
 				}
 				else

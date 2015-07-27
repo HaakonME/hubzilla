@@ -90,6 +90,7 @@ function format_event_ical($ev) {
 		$o .= "\nLOCATION:" . format_ical_text($ev['location']);
 	if($ev['description']) 
 		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
+	$o .= "\nUID:" . $ev['event_hash'] ;
 	$o .= "\nEND:VEVENT\n";
 
 	return $o;
@@ -361,6 +362,70 @@ function event_addtocal($item_id, $uid) {
 	}
 
 	return false;
+}
+
+
+function parse_ical_file($f,$uid) {
+	require_once('library/ical.php');
+	$ical = new ICAL($f);
+	if($ical) {
+		$events = $ical->events();
+		if($events) {
+			foreach($events as $ev) {
+				event_import_ical($ev,$uid);
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+
+
+function event_import_ical($ical, $uid) {
+
+	$c = q("select * from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+
+	if(! $c)
+		return false;
+
+	$channel = $c[0];
+	$ev = array();
+
+	if($ical['UID'])
+		$ev['event_hash'] = $ical['UID'];
+	if($ical['CREATED'])
+		$ev['created'] = $ical['CREATED'];
+	if($ical['LAST-MODIFIED'])
+		$ev['edited'] = $ical['LAST-MODIFIED'];
+	if($ical['LOCATION'])
+		$ev['location'] = $ical['LOCATION'];
+	if($ical['DESCRIPTION'])
+		$ev['description'] = $ical['DESCRIPTION'];
+	if($ical['DTEND'])
+		$ev['finish'] = datetime_convert('UTC','UTC', $ical['DTEND']);
+	else
+		$ev['nofinish'] = 1;
+	$ev['start'] = datetime_convert('UTC','UTC',$ical['DTSTART']);
+	if(substr($ical['DTSTART'],-1) === 'Z')
+		$ev['adjust'] = 1;
+		
+	if($ical['SUMMARY'] && $ical['DTSTART']) {
+		$ev['event_xchan'] = $channel['channel_hash'];
+		$ev['uid']         = $channel['channel_id'];
+		$ev['account']     = $channel['channel_account_id'];
+		$ev['private']     = 1;
+
+		$event = event_store_event($ev);
+		if($event) {
+			return true;
+		}
+	}
+
+	return false;
+
 }
 
 

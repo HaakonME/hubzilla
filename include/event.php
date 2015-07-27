@@ -209,6 +209,7 @@ function event_store_event($arr) {
 	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
 
+
 	// Existing event being modified
 
 	if($arr['id'] || $arr['event_hash']) {
@@ -276,7 +277,11 @@ function event_store_event($arr) {
 
 		// New event. Store it.
 
-		$hash = random_string();
+
+		if(array_key_exists('external_id',$arr))
+			$hash = $arr['external_id'];
+		else
+			$hash = random_string();
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
 			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
@@ -367,11 +372,12 @@ function event_addtocal($item_id, $uid) {
 
 function parse_ical_file($f,$uid) {
 	require_once('library/ical.php');
-	$ical = new ICAL($f);
+	$ical = new ICal($f);
 	if($ical) {
 		$events = $ical->events();
 		if($events) {
 			foreach($events as $ev) {
+				logger('event parsed: ' . print_r($ev,true), LOGGER_ALL);
 				event_import_ical($ev,$uid);
 			}
 		}
@@ -394,16 +400,16 @@ function event_import_ical($ical, $uid) {
 	$channel = $c[0];
 	$ev = array();
 
-	if($ical['UID'])
-		$ev['event_hash'] = $ical['UID'];
 	if($ical['CREATED'])
-		$ev['created'] = $ical['CREATED'];
+		$ev['created'] = datetime_convert('UTC','UTC',$ical['CREATED']);
 	if($ical['LAST-MODIFIED'])
-		$ev['edited'] = $ical['LAST-MODIFIED'];
+		$ev['edited'] = datetime_convert('UTC','UTC',$ical['LAST-MODIFIED']);
 	if($ical['LOCATION'])
 		$ev['location'] = $ical['LOCATION'];
 	if($ical['DESCRIPTION'])
 		$ev['description'] = $ical['DESCRIPTION'];
+	if($ical['SUMMARY'])
+		$ev['summary'] = $ical['SUMMARY'];
 	if($ical['DTEND'])
 		$ev['finish'] = datetime_convert('UTC','UTC', $ical['DTEND']);
 	else
@@ -411,6 +417,17 @@ function event_import_ical($ical, $uid) {
 	$ev['start'] = datetime_convert('UTC','UTC',$ical['DTSTART']);
 	if(substr($ical['DTSTART'],-1) === 'Z')
 		$ev['adjust'] = 1;
+
+	if($ical['UID']) {
+		$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+			dbesc($ical['UID']),
+			intval($arr['uid'])
+		);
+		if($r)
+			$ev['event_hash'] = $ical['UID'];	
+		else
+			$ev['external_id'] = $ical['UID'];
+	}
 		
 	if($ical['SUMMARY'] && $ical['DTSTART']) {
 		$ev['event_xchan'] = $channel['channel_hash'];
@@ -418,8 +435,10 @@ function event_import_ical($ical, $uid) {
 		$ev['account']     = $channel['channel_account_id'];
 		$ev['private']     = 1;
 
+		logger('storing event: ' . print_r($ev,true), LOGGER_ALL);		
 		$event = event_store_event($ev);
 		if($event) {
+			$item_id = event_store_item($ev,$event);
 			return true;
 		}
 	}

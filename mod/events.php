@@ -13,6 +13,20 @@ function events_post(&$a) {
 	if(! local_channel())
 		return;
 
+	if(($_FILES) && array_key_exists('userfile',$_FILES) && intval($_FILES['userfile']['size'])) {
+		$src = $_FILES['userfile']['tmp_name'];
+		if($src) {
+			$result = parse_ical_file($src,local_channel());
+			if($result)
+				info( t('Calendar entries imported.') . EOL);
+			else
+				notice( t('No calendar entries found.') . EOL);
+			@unlink($src);
+		}
+		goaway(z_root() . '/events');
+	}
+
+
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
 	$event_hash = ((x($_POST,'event_hash')) ? $_POST['event_hash'] : '');
 
@@ -476,8 +490,8 @@ function events_content(&$a) {
 			'$export'   => array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),
 			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
-			
-			
+			'$upload'   => t('Upload'),
+			'$submit'   => t('Submit')			
 		));
 		
 		if (x($_GET,'id')){ echo $o; killme(); }

@@ -2,8 +2,9 @@
 <div class="generic-content-wrapper-styled">
 <h2>{{$title}}</h2>
 
-
-<button class="btn btn-xs btn-success btn-xs pull-right" title="{{$usage}}" onclick="openClose('event-upload-form');"><i class="icon-upload"></i>&nbsp;{{$upload}}</button>
+<div class="pull-right">
+<button class="btn btn-xs" onclick="window.location.href='{{$new_event.0}}'; return false;" >{{$new_event.1}}</button>&nbsp;<button class="btn btn-xs" onclick="exportDate(); return false;" >{{$export.1}}</button>&nbsp;<button class="btn btn-xs btn-success" onclick="openClose('event-upload-form');"><i class="icon-upload"></i>&nbsp;{{$upload}}</button>
+</div>
 
 <div id="event-upload-form" style="display:none;">
     <div class="section-content-tools-wrapper">
@@ -16,9 +17,6 @@
     </div>
 </div>
 
-<div id="export-event-link"><button class="btn btn-default btn-sm" onclick="exportDate(); return false;" >{{$export.1}}</button></div>
-<div id="new-event-link"><button class="btn btn-default btn-sm" onclick="window.location.href='{{$new_event.0}}'; return false;" >{{$new_event.1}}</button></div>
-
 <script>
 function exportDate() {
     var moment = $('#events-calendar').fullCalendar('getDate');
@@ -26,6 +24,7 @@ function exportDate() {
     window.location.href=sT;
 }
 </script>
-
+<div class="clear"></div>
+<br />
 <div id="events-calendar"></div>
 </div>

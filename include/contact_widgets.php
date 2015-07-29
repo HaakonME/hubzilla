@@ -79,7 +79,8 @@ function categories_widget($baseurl,$selected = '') {
                 where item.uid = %d
                 and term.uid = item.uid
                 and term.type = %d
-                and item.author_xchan = '%s'
+                and item.owner_xchan = '%s'
+				and item.item_wall = 1
 				$item_normal
                 order by term.term asc",
 		intval($a->profile['profile_uid']),

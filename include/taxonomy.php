@@ -101,7 +101,7 @@ function format_term_for_display($term) {
 // Tag cloud functions - need to be adpated to this database format
 
 
-function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $type = TERM_HASHTAG) {
+function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $restrict = 0, $type = TERM_HASHTAG) {
 
 	require_once('include/security.php');
 
@@ -123,6 +123,11 @@ function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $restrict = 0, $
 		stringify_array_elms($authors,true);
 		$sql_options .= " and author_xchan in (" . implode(',',$authors) . ") "; 
 	}
+
+	if($owner) {
+		$sql_options .= " and owner_xchan  = '" . dbesc($owner) . "' ";
+	}	
+
 
 	// Fetch tags
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
@@ -215,10 +220,10 @@ function dir_tagadelic($count = 0) {
 }
 
 
-function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type = TERM_HASHTAG) {
+function tagblock($link,$uid,$count = 0,$authors = '',$owner = '', $flags = 0,$restrict = 0,$type = TERM_HASHTAG) {
 	$o = '';
 
-	$r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+	$r = tagadelic($uid,$count,$authors,$owner, $flags,$restrict,$type);
 
 	if($r) {
 		$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
@@ -232,10 +237,10 @@ function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$
 }
 
 
-function wtagblock($uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type = TERM_HASHTAG) {
+function wtagblock($uid,$count = 0,$authors = '',$owner = '', $flags = 0,$restrict = 0,$type = TERM_HASHTAG) {
 	$o = '';
 
-	$r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+	$r = tagadelic($uid,$count,$authors,$owner, $flags,$restrict,$type);
 
 	if($r) {
 		$c = q("select channel_address from channel where channel_id = %d limit 1",
@@ -253,10 +258,10 @@ function wtagblock($uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type 
 }
 
 
-function catblock($uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$type = TERM_CATEGORY) {
+function catblock($uid,$count = 0,$authors = '',$owner = '', $flags = 0,$restrict = 0,$type = TERM_CATEGORY) {
 	$o = '';
 
-	$r = tagadelic($uid,$count,$authors,$flags,$restrict,$type);
+	$r = tagadelic($uid,$count,$authors,$owner,$flags,$restrict,$type);
 
 	if($r) {
 		$c = q("select channel_address from channel where channel_id = %d limit 1",
@@ -278,7 +283,7 @@ function dir_tagblock($link,$r) {
 	$o = '';
 
 	$observer = get_observer_hash();
-	if(! get_globaldir_setting($observer))
+	if(! get_directory_setting($observer, 'globaldir'))
 		return $o;
 
 

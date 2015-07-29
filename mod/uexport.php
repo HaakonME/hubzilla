@@ -9,9 +9,17 @@ function uexport_init(&$a) {
 
 		require_once('include/identity.php');
 
-		header('content-type: application/octet_stream');
-		header('content-disposition: attachment; filename="' . $channel['channel_address'] . '.json"' );
+		if(argc() > 1 && intval(argv(1)) > 1900) {
+			$year = intval(argv(1));
+		}
 
+		header('content-type: application/octet_stream');
+		header('content-disposition: attachment; filename="' . $channel['channel_address'] . (($year) ? '-' . $year : '') . '.json"' );
+
+		if($year) {
+			echo json_encode(identity_export_year(local_channel(),$year));
+			killme();
+		}
 
 		if(argc() > 1 && argv(1) === 'basic') {
 			echo json_encode(identity_basic_export(local_channel()));
@@ -34,7 +42,9 @@ function uexport_content(&$a) {
 		'$basictitle' => t('Export Channel'),
 		'$basic' => t('Export your basic channel information to a small file.  This acts as a backup of your connections, permissions, profile and basic data, which can be used to import your data to a new hub, but	does not contain your content.'),
 		'$fulltitle' => t('Export Content'),
-		'$full' => t('Export your channel information and all the content to a JSON backup. This backs up all of your connections, permissions, profile data and all of your content, but is generally not suitable for importing a channel to a new hub as this file may be VERY large.  Please be patient - it may take several minutes for this download to begin.')
+		'$full' => t('Export your channel information and all the content to a JSON backup. This backs up all of your connections, permissions, profile data and the last year of posts. This file may be VERY large.  Please be patient - it may take several minutes for this download to begin.'),
+		'$by_year' => t('Export your posts from a given year.'),
+		
 	));
 return $o;
 }

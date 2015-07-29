@@ -84,7 +84,7 @@ function blocks_content(&$a) {
 	}
 
 	$x = array(
-		'webpage' => ITEM_TYPE_BUILDBLOCK,
+		'webpage' => ITEM_TYPE_BLOCK,
 		'is_owner' => true,
 		'nickname' => $a->profile['channel_address'],
 		'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
@@ -110,7 +110,7 @@ function blocks_content(&$a) {
 	$r = q("select iid, sid, mid, title, body, mimetype, created, edited from item_id left join item on item_id.iid = item.id
 		where item_id.uid = %d and service = 'BUILDBLOCK' and item_type = %d order by item.created desc",
 		intval($owner),
-		intval(ITEM_TYPE_BUILDBLOCK)
+		intval(ITEM_TYPE_BLOCK)
 	);
 
 	$pages = null;

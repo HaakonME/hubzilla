@@ -29,7 +29,7 @@ function widget_tagcloud($args) {
 	$type = TERM_CATEGORY;
 
 	// FIXME there exists no $authors variable
-	$r = tagadelic($uid, $count, $authors, $flags, ITEM_TYPE_WEBPAGE, $type);
+	$r = tagadelic($uid, $count, $authors, $owner, $flags, ITEM_TYPE_WEBPAGE, $type);
 
 	if($r) {
 		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
@@ -132,7 +132,7 @@ function widget_suggestions($arr) {
 			'profile' => $rr['xchan_url'],
 			'name' => $rr['xchan_name'],
 			'photo' => $rr['xchan_photo_m'],
-			'ignlnk' => z_root() . '/suggest?ignore=' . $rr['xchan_hash'],
+			'ignlnk' => z_root() . '/directory?ignore=' . $rr['xchan_hash'],
 			'conntxt' => t('Connect'),
 			'connlnk' => $connlnk,
 			'ignore' => t('Ignore/Hide')
@@ -380,6 +380,7 @@ function widget_categories($arr) {
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
 
 	return categories_widget($srchurl, $cat);
+
 }
 
 function widget_tagcloud_wall($arr) {
@@ -392,7 +393,7 @@ function widget_tagcloud_wall($arr) {
 
 	$limit = ((array_key_exists('limit', $arr)) ? intval($arr['limit']) : 50);
 	if(feature_enabled($a->profile['profile_uid'], 'tagadelic'))
-		return wtagblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], 'wall');
+		return wtagblock($a->profile['profile_uid'], $limit, '', $a->profile['channel_hash'], 'wall');
 
 	return '';
 }
@@ -407,7 +408,7 @@ function widget_catcloud_wall($arr) {
 
 	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
 
-	return catblock($a->profile['profile_uid'], $limit, $a->profile['channel_hash'], 'wall');
+	return catblock($a->profile['profile_uid'], $limit, '', $a->profile['channel_hash'], 'wall');
 }
 
 
@@ -604,7 +605,7 @@ function widget_photo_albums($arr) {
 	if(! $a->profile['profile_uid'])
 		return '';
 	$channelx = channelx_by_n($a->profile['profile_uid']);
-	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'], get_observer_hash(), 'view_photos')))
+	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'], get_observer_hash(), 'view_storage')))
 		return '';
 	require_once('include/photos.php');
 
@@ -903,7 +904,7 @@ function widget_random_block($arr) {
 		item_type = %d $sql_options order by $randfunc limit 1",
 		intval($channel_id),
 		dbesc('%' . $contains . '%'),
-		intval(ITEM_TYPE_BUILDBLOCK)
+		intval(ITEM_TYPE_BLOCK)
 	);
 
 	if($r) {

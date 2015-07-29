@@ -108,12 +108,6 @@ function editblock_content(&$a) {
 	else
 		$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 
-	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit Block'),
-		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
-		'$id' => $itm[0]['id']
-	));
-
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl'       => $a->get_baseurl(),
 		'$editselect'    => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
@@ -133,17 +127,17 @@ function editblock_content(&$a) {
 
 	$rp = 'blocks/' . $channel['channel_address'];
 
-	$o .= replace_macros($tpl,array(
+	$editor = replace_macros($tpl,array(
 		'$return_path'         => $rp,
 		'$action'              => 'item',
-		'$webpage'             => ITEM_TYPE_BUILDBLOCK,
+		'$webpage'             => ITEM_TYPE_BLOCK,
 		'$share'               => t('Edit'),
 		'$bold'                => t('Bold'),
 		'$italic'              => t('Italic'),
 		'$underline'           => t('Underline'),
 		'$quote'               => t('Quote'),
 		'$code'                => t('Code'),
-		'$writefiles'          => (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')),
+		'$writefiles'          => perm_is_allowed($owner, get_observer_hash(), 'write_storage'),
 		'$upload'              => t('Upload photo'),
 		'$attach'              => t('Attach file'),
 		'$weblink'             => t('Insert web link'),
@@ -179,6 +173,13 @@ function editblock_content(&$a) {
 		'$defexpire'           => '',
 		'$feature_expire'      => false,
 		'$expires'             => t('Set expiration date'),
+	));
+
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit Block'),
+		'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
+		'$id' => $itm[0]['id'],
+		'$editor' => $editor
 	));
 
 	return $o;

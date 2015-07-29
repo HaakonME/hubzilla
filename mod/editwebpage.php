@@ -165,15 +165,12 @@ function editwebpage_content(&$a) {
 
 	$rp = 'webpages/' . $which;
 
-	logger('canwrite: ' . (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')));
-
 	$editor = replace_macros($tpl,array(
 		'$return_path' => $rp,
 		'$webpage' => ITEM_TYPE_WEBPAGE,
 		'$placeholdpagetitle' => t('Page link title'),
 		'$pagetitle' => $page_title,
-		'$writefiles' => (perm_is_allowed($owner, get_observer_hash(), 'post_photos') || perm_is_allowed($owner, get_observer_hash(), 'write_storage')),
-
+		'$writefiles' => perm_is_allowed($owner, get_observer_hash(), 'write_storage'),
 		'$action' => 'item',
 		'$share' => t('Edit'),
 		'$bold' => t('Bold'),

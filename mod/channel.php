@@ -175,7 +175,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 				left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 				WHERE uid = %d $item_normal
 				AND item_wall = 1 AND item_unseen = 1
-				AND (abook.blocked = 0 or abook.abook_flags is null)
+				AND (abook.abook_blocked = 0 or abook.abook_flags is null)
 				$sql_extra
 				ORDER BY created DESC",
 				intval($a->profile['profile_uid'])

@@ -1,140 +1,223 @@
-<div class="generic-content-wrapper-styled">
-<h2>{{$header}}</h2>
+<div class="generic-content-wrapper">
+	<div class="section-title-wrapper">
+		{{if $notself}}
+		<div class="dropdown pull-right">
+			<button id="connection-dropdown" class="btn btn-default btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<i class="icon-caret-down"></i>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="dLabel">
+				<li><a  href="{{$buttons.view.url}}" title="{{$buttons.view.title}}">{{$buttons.view.label}}</a></li>
+				<li><a  href="{{$buttons.recent.url}}" title="{{$buttons.recent.title}}">{{$buttons.recent.label}}</a></li>
+				<li class="divider"></li>
+				<li><a  href="#" title="{{$buttons.refresh.title}}" onclick="window.location.href='{{$buttons.refresh.url}}'; return false;">{{$buttons.refresh.label}}</a></li>
+				<li><a  href="#" title="{{$buttons.block.title}}" onclick="window.location.href='{{$buttons.block.url}}'; return false;">{{$buttons.block.label}}</a></li>
+				<li><a  href="#" title="{{$buttons.ignore.title}}" onclick="window.location.href='{{$buttons.ignore.url}}'; return false;">{{$buttons.ignore.label}}</a></li>
+				<li><a  href="#" title="{{$buttons.archive.title}}" onclick="window.location.href='{{$buttons.archive.url}}'; return false;">{{$buttons.archive.label}}</a></li>
+				<li><a  href="#" title="{{$buttons.hide.title}}" onclick="window.location.href='{{$buttons.hide.url}}'; return false;">{{$buttons.hide.label}}</a></li>
+				<li><a  href="#" title="{{$buttons.delete.title}}" onclick="window.location.href='{{$buttons.delete.url}}'; return false;">{{$buttons.delete.label}}</a></li>
+			</ul>
+		</div>
+		{{/if}}
+		<h2>{{$header}}</h2>
+	</div>
+	<div class="section-content-wrapper-np">
+		{{if $notself}}
+		{{foreach $buttons as $b}}
+		{{if $b.info}}
+		<div class="section-content-danger-wrapper">
+			<div>
+				{{$b.info}}
+			</div>
+		</div>
+		{{/if}}
+		{{/foreach}}
+		<div class="section-content-info-wrapper">
+			<div>
+				{{$addr_text}} <strong>'{{$addr}}'</strong>
+			</div>
+			{{if $last_update}}
+			<div>
+				{{$lastupdtext}} {{$last_update}}
+			</div>
+			{{/if}}
+		</div>
+		{{/if}}
 
-<h3>{{$addr}}</h3>
+		<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
 
-{{if $notself}}
-<div id="connection-flag-tabs">
-{{$tabs}}
-</div>
-<div id="connection-edit-buttons">
-{{foreach $buttons as $b }}
-<button class="btn btn-sm btn-default" title="{{$b.title}}" onclick="window.location.href='{{$b.url}}'; return false;">{{$b.label}}</button>
-{{/foreach}}
-{{/if}}
+		<input type="hidden" name="contact_id" value="{{$contact_id}}">
 
+		<div class="panel-group" id="contact-edit-tools" role="tablist" aria-multiselectable="true">
+			{{if $notself}}
 
-<div id="contact-edit-wrapper">
-<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
+			{{if $is_pending}}
+			<div class="panel">
+				<div class="section-subtitle-wrapper" role="tab" id="pending-tool">
+					<h3>
+						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#pending-tool-collapse" aria-expanded="true" aria-controls="pending-tool-collapse">
+							{{$pending_label}}
+						</a>
+					</h3>
+				</div>
+				<div id="pending-tool-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="pending-tool">
+					<div class="section-content-tools-wrapper">
+						{{include file="field_checkbox.tpl" field=$unapproved}}
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal" id="abook-pending-modal" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">{{$pending_modal_title}}</h4>
+						</div>
+						<div class="modal-body">
+							<strong>{{$name}}</strong> {{$pending_modal_body}}
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-sm btn-danger pull-left" title="{{$buttons.delete.title}}" onclick="window.location.href='{{$buttons.delete.url}}'; return false;">{{$buttons.delete.label}}</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">{{$pending_modal_dismiss}}</button>
+							<button type="submit" class="btn btn-primary" name="pending" value="1">{{$pending_modal_approve}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script>$('#abook-pending-modal').modal('show');</script>
+			{{/if}}
 
-<div class="abook-permsnew" style="display: none;">
-<div class="abook-perms-msg">{{$perms_step1}}</div>
-</div>
+			{{if $affinity }}
+			<div class="panel">
+				<div class="section-subtitle-wrapper" role="tab" id="affinity-tool">
+					<h3>
+						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#affinity-tool-collapse" aria-expanded="true" aria-controls="affinity-tool-collapse">
+							{{$affinity }}
+						</a>
+					</h3>
+				</div>
+				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if !$is_pending}} in{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
+					<div class="section-content-tools-wrapper">
+						{{if $slide}}
+						<div class="form-group"><strong>{{$lbl_slider}}</strong></div>
+						{{$slide}}
+						<input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
+						{{/if}}
 
-<div class="abook-permsmsg" style="display: none;">
-<div class="abook-perms-msg">{{$perms_new}}</div>
-</div>
+						{{if $multiprofs }}
+						<div class="form-group">
+							<strong>{{$lbl_vis2}}</strong>
+							{{$profile_select}}
+						</div>
+						{{/if}}
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{/if}}
 
+			{{if $connfilter}}
+			<div class="panel">
+				<div class="section-subtitle-wrapper" role="tab" id="fitert-tool">
+					<h3>
+						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#fitert-tool-collapse" aria-expanded="true" aria-controls="fitert-tool-collapse">
+							{{$connfilter_label}}
+						</a>
+					</h3>
+				</div>
+				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if !$is_pending && !($slide || $multiprofs)}} in{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
+					<div class="section-content-tools-wrapper">
+						{{include file="field_textarea.tpl" field=$incl}}
+						{{include file="field_textarea.tpl" field=$excl}}
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{else}}
+			<input type="hidden" name="{{$incl.0}}" value="{{$incl.2}}" />
+			<input type="hidden" name="{{$excl.0}}" value="{{$excl.2}}" />
+			{{/if}}
 
-<div class="abook-permssave" style="display: none;">
-<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
-</div>
+			{{if $rating}}
+			<div class="panel">
+				<div class="section-subtitle-wrapper" role="tab" id="rating-tool">
+					<h3>
+						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#rating-tool-collapse" aria-expanded="true" aria-controls="rating-tool-collapse">
+							{{$lbl_rating}}
+						</a>
+					</h3>
+				</div>
+				<div id="rating-tool-collapse" class="panel-collapse collapse{{if !$is_pending && !($slide || $multiprofs) && !$connfilter}} in{{/if}}" role="tabpanel" aria-labelledby="rating-tool">
+					<div class="section-content-tools-wrapper">
+						<div class="section-content-warning-wrapper">
+							{{$rating_info}}
+						</div>
+						<div class="form-group"><strong>{{$lbl_rating_label}}</strong></div>
+						{{$rating}}
+						{{include file="field_textarea.tpl" field=$rating_text}}
+						<input id="contact-rating-mirror" type="hidden" name="rating" value="{{$rating_val}}" />
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{/if}}
 
-{{if $last_update}}
-{{$lastupdtext}} {{$last_update}}
-{{/if}}
+			{{/if}}
 
+			<div class="panel">
+				{{if $notself}}
+				<div class="section-subtitle-wrapper" role="tab" id="perms-tool">
+					<h3>
+						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#perms-tool-collapse" aria-expanded="true" aria-controls="perms-tool-collapse">
+							{{$permlbl}}
+						</a>
+					</h3>
+				</div>
+				{{/if}}
+				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self}} in{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
+					<div class="section-content-tools-wrapper">
+						<div class="section-content-warning-wrapper">
+						{{if $notself}}{{$permnote}}{{/if}}
+						{{if $self}}{{$permnote_self}}{{/if}}
+						</div>
 
-{{if $is_pending}}
-<div class="abook-pending-contact">
-{{include file="field_checkbox.tpl" field=$unapproved}}
-</div>
-{{/if}}
+						<table id="perms-tool-table" class=form-group>
+							<tr>
+								<td></td>
+								{{if $notself}}
+								<td class="abook-them">{{$them}}</td>
+								{{/if}}
+								<td colspan="2" class="abook-me">{{$me}}</td>
+							</tr>
+							{{foreach $perms as $prm}}
+							{{include file="field_acheckbox.tpl" field=$prm}}
+							{{/foreach}}
+						</table>
 
+						{{if $self}}
+						<div>
+							<div class="section-content-info-wrapper">
+								{{$autolbl}}
+							</div>
+							{{include file="field_checkbox.tpl" field=$autoperms}}
+						</div>
+						{{/if}}
 
-{{if $notself}}
-{{if $slide}}
-<h3>{{$lbl_slider}}</h3>
-
-{{$slide}}
-
-{{/if}}
-
-{{if $connfilter}}
-	{{include file="field_textarea.tpl" field=$incl}}
-	{{include file="field_textarea.tpl" field=$excl}}
-{{else}}
-	<input type="hidden" name="{{$incl.0}}" value="{{$incl.2}}" />
-	<input type="hidden" name="{{$excl.0}}" value="{{$excl.2}}" />
-{{/if}}
-
-{{if $rating}}
-<h3>{{$lbl_rating}}</h3>
-
-{{$rating}}
-
-
-{{/if}}
-
-
-
-{{/if}}
-
-
-{{if $self}}
-<div class="abook-autotext">
-<div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
-{{include file="field_checkbox.tpl" field=$autoperms}}
-</div>
-{{/if}}
-
-<input type="hidden" name="contact_id" value="{{$contact_id}}">
-<input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
-<input id="contact-rating-mirror" type="hidden" name="rating" value="{{$rating_val}}" />
-
-
-{{if $rating}}
-{{if $notself}}
-	{{include file="field_textarea.tpl" field=$rating_text}}
-{{/if}}
-{{/if}}
-
-{{if $notself}}
-{{if $multiprofs }}
-<div>
-<h3>{{$lbl_vis1}}</h3>
-<div>{{$lbl_vis2}}</div>
-
-{{$profile_select}}
-</div>
-{{/if}}
-{{/if}}
-
-<h3>{{$permlbl}}</h3>
-
-{{if $notself}}
-<div id="connedit-perms-wrap" class="fakelink" onclick="openClose('connedit-perms');">{{$clickme}}</div>
-<div id="connedit-perms" style="display: none;" >
-{{/if}}
- 
-<div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
-<table>
-<tr><td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td><td></td></tr>
-<tr><td colspan="5"><hr /></td></tr>
-{{foreach $perms as $prm}}
-{{include file="field_acheckbox.tpl" field=$prm}}
-{{/foreach}}
-<tr><td colspan="5"><hr /></td></tr>
-</table>
-
-</div>
-
-{{if $notself}}
-</div>
-{{/if}}
-
-<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
-
-{{if $self && $noperms}}
-<script>		
-	if(typeof(connectDefaultShare) !== 'undefined')
-		connectDefaultShare();
-	else
-		connectFullShare();
-	abook_perms_msg();
-</script>
-{{/if}}
-
-</form>
-</div>
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
 </div>

@@ -44,9 +44,6 @@ function mitem_post(&$a) {
 	if(! $a->data['menu'])
 		return;
 
-
-	$channel = $a->get_channel();
-
 	if(!$_REQUEST['mitem_desc'] || !$_REQUEST['mitem_link']) {
 		notice( t('Unable to create element.') . EOL);
 		return;
@@ -89,9 +86,6 @@ function mitem_post(&$a) {
 			notice( t('Unable to add menu element.') . EOL);
 
 	}
-
-
-
 
 }
 
@@ -167,7 +161,8 @@ function mitem_content(&$a) {
 			'$submit_more' => t('Submit and continue'),
 			'$display'     => $display,
 			'$lockstate'   => $lockstate,
-			'$menu_names'  => $menu_names
+			'$menu_names'  => $menu_names,
+			'$sys'         => $a->is_sys
 		));
 
 		$o .= replace_macros(get_markup_template('mitemlist.tpl'),array(

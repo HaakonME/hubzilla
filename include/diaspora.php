@@ -329,6 +329,7 @@ function diaspora_get_contact_by_handle($uid,$handle) {
 function find_diaspora_person_by_handle($handle) {
 
 	$person = false;
+	$refresh = false;
 
 	if(diaspora_is_blacklisted($handle))
 		return false;
@@ -339,9 +340,13 @@ function find_diaspora_person_by_handle($handle) {
 	if($r) {
 		$person = $r[0];
 		logger('find_diaspora_person_by handle: in cache ' . print_r($r,true), LOGGER_DATA);
+		if($person['xchan_name_date'] < datetime_convert('UTC','UTC', 'now - 1 month')) {
+			logger('Updating Diaspora cached record for ' . $handle);
+			$refresh = true;
+		}
 	}
 
-	if(! $person) {
+	if((! $person) || ($refresh)) {
 
 		// try webfinger. Make sure to distinguish between diaspora, 
 		// hubzilla w/diaspora protocol and friendica w/diaspora protocol.
@@ -349,7 +354,7 @@ function find_diaspora_person_by_handle($handle) {
 		$result = discover_by_webbie($handle);
 		if($result) {
 			$r = q("select * from xchan where xchan_addr = '%s' limit 1",
-				dbesc($handle)
+				dbesc(str_replace('acct:','',$handle))
 			);
 			if($r) {
 				$person = $r[0];
@@ -1000,6 +1005,11 @@ function diaspora_post($importer,$xml,$msg) {
 
 	if((! $importer['system']) && (! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $tgroup)) {
 		logger('diaspora_post: Ignoring this author.');
+		return 202;
+	}
+
+	if(! is_importable($datarray,$contact)) {
+		logger('diaspora_post: filtering this author.');
 		return 202;
 	}
 

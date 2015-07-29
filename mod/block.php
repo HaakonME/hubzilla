@@ -53,7 +53,7 @@ function block_content(&$a) {
 		item_type = %d $sql_options $revision limit 1",
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
-		intval(ITEM_TYPE_BUILDBLOCK)
+		intval(ITEM_TYPE_BLOCK)
 	);
 
 	if(! $r) {
@@ -65,7 +65,7 @@ function block_content(&$a) {
 		item_type = %d $revision limit 1",
 			intval($u[0]['channel_id']),
 			dbesc($page_id),
-			intval(ITEM_TYPE_BUILDBLOCK)
+			intval(ITEM_TYPE_BLOCK)
 		);
 		if($x) {
 			// Yes, it's there. You just aren't allowed to see it.

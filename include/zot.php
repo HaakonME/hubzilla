@@ -566,7 +566,7 @@ function zot_gethub($arr) {
 }
 
 /**
- * @brief Registers an unknown hup.
+ * @brief Registers an unknown hub.
  *
  * A communication has been received which has an unknown (to us) sender.
  * Perform discovery based on our calculated hash of the sender at the
@@ -1088,11 +1088,19 @@ function zot_import($arr, $sender_url) {
 				logger('specific recipients');
 				$recip_arr = array();
 				foreach($i['notify']['recipients'] as $recip) {
-					$recip_arr[] =  make_xchan_hash($recip['guid'],$recip['guid_sig']);
+					if(is_array($recip)) {
+						$recip_arr[] =  make_xchan_hash($recip['guid'],$recip['guid_sig']);
+					}
 				}
-				stringify_array_elms($recip_arr);
-				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and channel_removed = 0 ");
+
+				$r = false;
+				if($recip_arr) {
+					stringify_array_elms($recip_arr);
+					$recips = implode(',',$recip_arr);
+					$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) 
+						and channel_removed = 0 ");
+				}
+
 				if(! $r) {
 					logger('recips: no recipients on this site');
 					continue;
@@ -1248,7 +1256,8 @@ function public_recips($msg) {
 	$include_sys = false;
 
 	if($msg['message']['type'] === 'activity') {
-		$include_sys = true;
+		if(! get_config('system','disable_discover_tab'))
+			$include_sys = true;
 		$col = 'channel_w_stream';
 		$field = PERMS_W_STREAM;
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
@@ -2852,6 +2861,11 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		}
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
+			if(array_key_exists('channel_page_flags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
+				$arr['channel']['channel_removed'] = (($arr['channel']['channel_pageflags'] & 0x8000) ? 1 : 0);
+				$arr['channel']['channel_system']  = (($arr['channel']['channel_pageflags'] & 0x1000) ? 1 : 0);
+			}
+			
 			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags');
 
 			$clean = array();
@@ -2883,28 +2897,20 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						$total_feeds ++;
 			}
 
-			$disallowed = array('abook_id','abook_account','abook_channel');
+			$disallowed = array('abook_id','abook_account','abook_channel','abook_rating','abook_rating_text');
 
 			foreach($arr['abook'] as $abook) {
 
 				if(! array_key_exists('abook_blocked',$abook)) {
 					// convert from redmatrix
-					if($abook['abook_flags'] & 0x0001)
-						$abook['abook_blocked'] = 1;
-					if($abook['abook_flags'] & 0x0002)
-						$abook['abook_ignored'] = 1;
-					if($abook['abook_flags'] & 0x0004)
-						$abook['abook_hidden'] = 1;
-					if($abook['abook_flags'] & 0x0008)
-						$abook['abook_archived'] = 1;
-					if($abook['abook_flags'] & 0x0010)
-						$abook['abook_pending'] = 1;
-					if($abook['abook_flags'] & 0x0020)
-						$abook['abook_unconnected'] = 1;
-					if($abook['abook_flags'] & 0x0080)
-						$abook['abook_self'] = 1;
-					if($abook['abook_flags'] & 0x0100)
-						$abook['abook_feed'] = 1;
+					$abook['abook_blocked']     = (($abook['abook_flags'] & 0x0001) ? 1 : 0);
+					$abook['abook_ignored']     = (($abook['abook_flags'] & 0x0002) ? 1 : 0);
+					$abook['abook_hidden']      = (($abook['abook_flags'] & 0x0004) ? 1 : 0);
+					$abook['abook_archived']    = (($abook['abook_flags'] & 0x0008) ? 1 : 0);
+					$abook['abook_pending']     = (($abook['abook_flags'] & 0x0010) ? 1 : 0);
+					$abook['abook_unconnected'] = (($abook['abook_flags'] & 0x0020) ? 1 : 0);
+					$abook['abook_self']        = (($abook['abook_flags'] & 0x0080) ? 1 : 0);
+					$abook['abook_feed']        = (($abook['abook_flags'] & 0x0100) ? 1 : 0);
 				}
 
 				$clean = array();
@@ -3165,7 +3171,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				}
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
-						$r = dbq("UPDATE profile set " . dbesc($k) . " = '" . dbesc($v)
+						$r = dbq("UPDATE profile set `" . dbesc($k) . "` = '" . dbesc($v)
 						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']));
 					}
 				}

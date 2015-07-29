@@ -196,10 +196,6 @@ a.wall-item-name-link {
 	filter:alpha(opacity=100);
 }
 
-.wall-item-wrapper-end {
-	clear: both;
-}
-
 .shared_header {
 	margin-bottom: 20px;
 }

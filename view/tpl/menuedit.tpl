@@ -1,8 +1,9 @@
 {{if $header}}
+<div class="generic-content-wrapper">
 <div class="section-title-wrapper">
-	{{if $menu_id}}
+	{{if $menu_edit_link}}
 	<div class="pull-right">
-		<a href="mitem/{{$menu_id}}" title="{{$hintedit}}" class="btn btn-xs btn-success"><i class="icon-edit"></i>&nbsp;{{$editcontents}}</a>
+		<a href="{{$menu_edit_link}}" title="{{$hintedit}}" class="btn btn-xs btn-success"><i class="icon-edit"></i>&nbsp;{{$editcontents}}</a>
 	</div>
 	{{/if}}
 	<h2>{{$header}}</h2>
@@ -27,3 +28,6 @@
 		<div class="clear"></div>
 	</form>
 </div>
+{{if $header}}
+</div>
+{{/if}}

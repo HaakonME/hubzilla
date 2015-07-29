@@ -1282,10 +1282,12 @@ function encode_item($item,$mirror = false) {
 	if($item['diaspora_meta']) {
 		$z = json_decode($item['diaspora_meta'],true);
 		if($z) {
-			if(array_key_exists('iv',$z))
+			if(is_array($z) && array_key_exists('iv',$z))
 				$x['diaspora_signature'] = crypto_unencapsulate($z,$key);
 			else
 				$x['diaspora_signature'] = $z;
+			if(! is_array($z))
+				logger('encode_item: diaspora meta is not an array: ' . print_r($z,true));
 		}
 	}
 	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
@@ -2685,11 +2687,12 @@ function item_store_update($arr,$allow_exec = false) {
 		return $ret;
 	}
 
+	$r = q("delete from term where oid = %d and otype = %d",
+		intval($orig_post_id),
+		intval(TERM_OBJ_POST)
+	);
+
 	if(is_array($terms)) {
-		$r = q("delete from term where oid = %d and otype = %d",
-			intval($orig_post_id),
-			intval(TERM_OBJ_POST)
-		);
 		foreach($terms as $t) {
 			q("insert into term (uid,oid,otype,type,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
@@ -2701,7 +2704,6 @@ function item_store_update($arr,$allow_exec = false) {
 				dbesc($t['url'])
 			);
 		}
-
 		$arr['term'] = $terms;
 	}
 
@@ -3374,14 +3376,18 @@ function post_is_importable($item,$abook) {
 	if(! $item)
 		return false;
 
-	if((! $abook['abook_incl']) && (! $abook['abook_excl']))
+	if(! ($abook['abook_incl'] || $abook['abook_excl']))
 		return true;
-
 
 	require_once('include/html2plain.php');
 	$text = prepare_text($item['body'],$item['mimetype']);
 	$text = html2plain($text);
 
+	$lang = null;
+
+	if((strpos($abook['abook_incl'],'lang=') !== false) || (strpos($abook['abook_excl'],'lang=') !== false)) {
+		$lang = detect_language($text);
+	}
 	$tags = ((count($item['term'])) ? $item['term'] : false);
 
 	// exclude always has priority
@@ -3397,6 +3403,8 @@ function post_is_importable($item,$abook) {
 						return false;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+				return false;
+			elseif((strpos($word,'lang=') === 0) && ($lang) && (strcasecmp($lang,trim(substr($word,5))) == 0))
 				return false;
 			elseif(stristr($text,$word) !== false)
 				return false;
@@ -3414,6 +3422,8 @@ function post_is_importable($item,$abook) {
 						return true;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+				return true;
+			elseif((strpos($word,'lang=') === 0) && ($lang) && (strcasecmp($lang,trim(substr($word,5))) == 0))
 				return true;
 			elseif(stristr($text,$word) !== false)
 				return true;
@@ -3754,6 +3764,10 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$author['owner_link']   = $contact['url'];
 					$author['owner_avatar'] = $contact['thumb'];
 				}
+
+				if(! is_importable($datarray,$contact))
+					continue;
+
 
 				logger('consume_feed: author ' . print_r($author,true),LOGGER_DEBUG);
 
@@ -4389,7 +4403,6 @@ function first_post_date($uid,$wall = false) {
 	$r = q("select id, created from item
 		where uid = %d and id = parent $item_normal $wall_sql
 		order by created asc limit 1",
-		intval(ITEM_VISIBLE),
 		intval($uid)
 
 	);

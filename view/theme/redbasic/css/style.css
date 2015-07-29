@@ -264,12 +264,20 @@ footer {
 }
 
 /*TODO: we should use one class for all this. */
-/*
-.group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
-	color: #444 !important;
-	text-decoration: none !important;
+
+.group-selected,
+.fileas-selected,
+.categories-selected,
+.search-selected,
+.active,
+.group-selected:hover,
+.fileas-selected:hover,
+.categories-selected:hover,
+.search-selected:hover,
+.active:hover {
+	color: $font_colour;
 }
-*/
+
 
 .fileas-all {
 	text-decoration: none !important;
@@ -347,7 +355,8 @@ footer {
 	word-wrap: break-word;
 }
 
-.vcard dl  {
+.vcard dl,
+.vcard .title {
 	margin-top: 10px;
 	margin-bottom: 0px;
 }
@@ -406,13 +415,19 @@ footer {
 
 
 #profile-photo-wrapper img {
-	padding: 10px;
-	width: 197px;
-	height: 197px;
+	width: 100%;
+	height: 100%;
+	max-width: 300px;
+	max-height: 300px;
 }
 
 #profile-photo-wrapper {
-	margin-top: 10px;
+	width: 251px;
+	height: 251px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: $radiuspx;
 }
 
 
@@ -504,7 +519,6 @@ footer {
 	display: block;
 }
 
-
 .pager {
   padding: 10px;
   text-align: center;
@@ -568,10 +582,6 @@ footer {
 
 #sidebar-page-list .label {
     margin-left: 5px;
-}
-
-.photo {
-    border: 1px solid #AAAAAA;
 }
 
 .photo-top-photo, .photo-album-photo {
@@ -704,8 +714,8 @@ a.rateme, div.rateme {
 
 .contact-block-div {
 	float: left;
-	width: 49px;
-	height: 49px;
+	width: 50px;
+	height: 50px;
 }
 .contact-block-textdiv {
 	float: left;
@@ -720,8 +730,8 @@ a.rateme, div.rateme {
 	float: left;
 }
 .contact-block-img {
-	width:47px;
-	height:47px;
+	width:48px;
+	height:48px;
 }
 
 #tag-remove {
@@ -741,8 +751,8 @@ a.rateme, div.rateme {
 }
 
 .wall-item-conv {
-	margin-top: 5px;
-	margin-bottom: 25px;
+	padding-top: 5px;
+	padding-bottom: 10px;
 }
 
 
@@ -1274,12 +1284,6 @@ div.jGrowl div.jGrowl-notification {
 	text-align: center;
 }
 
-#contact-slider {
-	position: relative; 
-	left: 5%; 
-	width: 90%;
-}
-
 a.rconnect, a.rateme, div.rateme {
   color: $nav_active_icon_colour;
   text-decoration: none;
@@ -1587,8 +1591,8 @@ img.mail-list-sender-photo {
 }
 
 .jothidden > input {
-	border: 1px solid $bgcolour;
-	background-color: $bgcolour;
+	border: 1px solid transparent;
+	background-color: transparent;
 }
 .jothidden > input:hover,
 .jothidden > input:focus {
@@ -1922,7 +1926,7 @@ nav .dropdown-menu {
 .section-content-wrapper .section-content-warning-wrapper,
 .section-content-tools-wrapper .section-content-danger-wrapper,
 .section-content-wrapper .section-content-danger-wrapper {
-	margin-bottom: 0px;
+	margin-bottom: 10px;
 	border-radius: $radiuspx;
 }
 
@@ -1932,12 +1936,14 @@ nav .dropdown-menu {
 	background-color: $comment_item_colour;
 	border-bottom-left-radius: $radiuspx;
 	border-bottom-right-radius: $radiuspx;
+	word-wrap: break-word;
 }
 
 .section-content-wrapper-np {
 	background-color: $comment_item_colour;
 	border-bottom-left-radius: $radiuspx;
 	border-bottom-right-radius: $radiuspx;
+	word-wrap: break-word;
 }
 
 [id^="cloud-index-"]:hover td,
@@ -1950,6 +1956,10 @@ nav .dropdown-menu {
 [id^="layout-list-item-"]:hover td,
 [id^="menu-list-item-"]:hover td,
 [id^="mitem-list-item-"]:hover td {
+	background-color: $item_colour;
+}
+
+#perms-tool-table .highlight:hover {
 	background-color: $item_colour;
 }
 
@@ -2107,6 +2117,7 @@ nav .badge.mail-update:hover {
 }
 
 @media screen and (max-width: 767px) {
+
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;
@@ -2285,4 +2296,3 @@ nav .badge.mail-update:hover {
 .channels_ckbx, .pending_ckbx, .users_ckbx {
 	margin-top: -5px !important;
 }
-

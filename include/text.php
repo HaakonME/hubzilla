@@ -807,7 +807,7 @@ function contact_block() {
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
 
 	if($shown === false)
-		$shown = 24;
+		$shown = 25;
 	if($shown == 0)
 		return;
 
@@ -1448,7 +1448,7 @@ function prepare_body(&$item,$attach = false) {
 //	else {
 		call_hooks('prepare_body_init', $item); 
 //		unobscure($item);
-		$s = prepare_text($item['body'],$item['mimetype'], true);
+		$s = prepare_text($item['body'],$item['mimetype'], false);
 //	}
 
 	$prep_arr = array('item' => $item, 'html' => $s);

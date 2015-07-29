@@ -1,4 +1,6 @@
 <?php
+use Sabre\VObject;
+
 /**
  * @file include/event.php
  */
@@ -371,7 +373,32 @@ function event_addtocal($item_id, $uid) {
 
 
 function parse_ical_file($f,$uid) {
-	require_once('library/ical.php');
+require_once('vendor/autoload.php');
+
+	$s = @file_get_contents($f);
+
+	// Change the current timezone to something besides UTC.
+	// Doesn't matter what it is, as long as it isn't UTC.
+	// Save the current timezone so we can reset it when we're done processing.
+
+	$saved_timezone = date_default_timezone_get();
+	date_default_timezone_set('Australia/Sydney');
+
+	$ical = VObject\Reader::read($s);
+
+	if($ical) {
+		foreach($ical->VEVENT as $event) {
+			event_import_ical($event,$uid);
+
+		}
+	}
+
+	date_default_timezone_set($saved_timezone);
+
+	logger('vobject: ' . print_r($ical,true));
+	return true;
+
+//	require_once('library/ical.php');
 	$ical = new ICal($f);
 	if($ical) {
 		$events = $ical->events();
@@ -399,6 +426,28 @@ function event_import_ical($ical, $uid) {
 
 	$channel = $c[0];
 	$ev = array();
+
+
+
+
+	$dtstart = $event->DTSTART->getDateTime();
+	if(($dtstart['timezone_type'] == 2) || (($dtstart['timezone_type'] == 3) && ($dtstart['timezone'] === 'UTC'))) {
+		$ev['adjust'] = 1;
+	}
+	else {
+		$ev['adjust'] = 0;
+	}
+	
+	$ev['start'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+		$dtstart->format(\DateTime::W3C));
+
+
+
+//	logger('event: ' . print_r($event->DTSTART->getDateTime(),true));
+
+
+
+
 
 	if($ical['CREATED'])
 		$ev['created'] = datetime_convert('UTC','UTC',$ical['CREATED']);

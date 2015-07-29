@@ -281,7 +281,7 @@ function event_store_event($arr) {
 		if(array_key_exists('external_id',$arr))
 			$hash = $arr['external_id'];
 		else
-			$hash = random_string();
+			$hash = random_string() . '@' . get_app()->get_hostname();
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
 			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)

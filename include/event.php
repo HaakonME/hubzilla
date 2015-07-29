@@ -434,6 +434,7 @@ function event_import_ical($ical, $uid) {
 		$ev['uid']         = $channel['channel_id'];
 		$ev['account']     = $channel['channel_account_id'];
 		$ev['private']     = 1;
+		$ev['allow_cid']   = '<' . $channel['channel_hash'] . '>';
 
 		logger('storing event: ' . print_r($ev,true), LOGGER_ALL);		
 		$event = event_store_event($ev);

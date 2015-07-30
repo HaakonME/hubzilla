@@ -1,4 +1,6 @@
 <?php
+use Sabre\VObject;
+
 /**
  * @file include/event.php
  */
@@ -371,7 +373,32 @@ function event_addtocal($item_id, $uid) {
 
 
 function parse_ical_file($f,$uid) {
-	require_once('library/ical.php');
+require_once('vendor/autoload.php');
+
+	$s = @file_get_contents($f);
+
+	// Change the current timezone to something besides UTC.
+	// Doesn't matter what it is, as long as it isn't UTC.
+	// Save the current timezone so we can reset it when we're done processing.
+
+	$saved_timezone = date_default_timezone_get();
+	date_default_timezone_set('Australia/Sydney');
+
+	$ical = VObject\Reader::read($s);
+
+	if($ical) {
+		foreach($ical->VEVENT as $event) {
+			event_import_ical($event,$uid);
+
+		}
+	}
+
+	date_default_timezone_set($saved_timezone);
+
+//	logger('vobject: ' . print_r($ical,true));
+	return true;
+
+//	require_once('library/ical.php');
 	$ical = new ICal($f);
 	if($ical) {
 		$events = $ical->events();
@@ -400,43 +427,76 @@ function event_import_ical($ical, $uid) {
 	$channel = $c[0];
 	$ev = array();
 
-	if($ical['CREATED'])
-		$ev['created'] = datetime_convert('UTC','UTC',$ical['CREATED']);
-	if($ical['LAST-MODIFIED'])
-		$ev['edited'] = datetime_convert('UTC','UTC',$ical['LAST-MODIFIED']);
-	if($ical['LOCATION'])
-		$ev['location'] = $ical['LOCATION'];
-	if($ical['DESCRIPTION'])
-		$ev['description'] = $ical['DESCRIPTION'];
-	if($ical['SUMMARY'])
-		$ev['summary'] = $ical['SUMMARY'];
-	if($ical['DTEND'])
-		$ev['finish'] = datetime_convert('UTC','UTC', $ical['DTEND']);
+
+	if(! isset($ical->DTSTART)) {
+		logger('no event start');
+		return false;
+	}
+
+	$dtstart = $ical->DTSTART->getDateTime();
+
+//	logger('dtstart: ' . var_export($dtstart,true));
+
+	if(($dtstart->timezone_type == 2) || (($dtstart->timezone_type == 3) && ($dtstart->timezone === 'UTC'))) {
+		$ev['adjust'] = 1;
+	}
+	else {
+		$ev['adjust'] = 0;
+	}
+	
+	$ev['start'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+		$dtstart->format(\DateTime::W3C));
+
+
+	if(isset($ical->DTEND)) {
+		$dtend = $ical->DTEND->getDateTime();
+		$ev['finish'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+			$dtend->format(\DateTime::W3C));
+	}
 	else
 		$ev['nofinish'] = 1;
-	$ev['start'] = datetime_convert('UTC','UTC',$ical['DTSTART']);
-	if(substr($ical['DTSTART'],-1) === 'Z')
-		$ev['adjust'] = 1;
 
-	if($ical['UID']) {
+
+	if($ev['start'] === $ev['finish'])
+		$ev['nofinish'] = 1;
+
+	if(isset($ical->CREATED)) {
+		$created = $ical->CREATED->getDateTime();
+		$ev['created'] = datetime_convert('UTC','UTC',$created->format(\DateTime::W3C));
+	}
+
+	if(isset($ical->{'LAST-MODIFIED'})) {
+		$edited = $ical->{'LAST-MODIFIED'}->getDateTime();
+		$ev['edited'] = datetime_convert('UTC','UTC',$edited->format(\DateTime::W3C));
+	}
+
+	if(isset($ical->LOCATION))
+		$ev['location'] = (string) $ical->LOCATION;
+	if(isset($ical->DESCRIPTION))
+		$ev['description'] = (string) $ical->DESCRIPTION;
+	if(isset($ical->SUMMARY))
+		$ev['summary'] = (string) $ical->SUMMARY;
+
+	if(isset($ical->UID)) {
+		$evuid = (string) $ical->UID;
 		$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
-			dbesc($ical['UID']),
-			intval($arr['uid'])
+			dbesc($evuid),
+			intval($uid)
 		);
 		if($r)
-			$ev['event_hash'] = $ical['UID'];	
+			$ev['event_hash'] = $evuid;
 		else
-			$ev['external_id'] = $ical['UID'];
+			$ev['external_id'] = $evuid;
 	}
 		
-	if($ical['SUMMARY'] && $ical['DTSTART']) {
+	if($ev['summary'] && $ev['start']) {
 		$ev['event_xchan'] = $channel['channel_hash'];
 		$ev['uid']         = $channel['channel_id'];
 		$ev['account']     = $channel['channel_account_id'];
 		$ev['private']     = 1;
 		$ev['allow_cid']   = '<' . $channel['channel_hash'] . '>';
 
-		logger('storing event: ' . print_r($ev,true), LOGGER_ALL);		
+//		logger('storing event: ' . print_r($ev,true), LOGGER_ALL);		
 		$event = event_store_event($ev);
 		if($event) {
 			$item_id = event_store_item($ev,$event);

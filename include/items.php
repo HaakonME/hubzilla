@@ -3762,6 +3762,9 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$author['owner_avatar'] = $contact['thumb'];
 				}
 
+				if(! post_is_importable($datarray,$contact))
+					continue;
+
 				logger('consume_feed: author ' . print_r($author,true),LOGGER_DEBUG);
 
 				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);

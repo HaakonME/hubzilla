@@ -1008,7 +1008,7 @@ function diaspora_post($importer,$xml,$msg) {
 		return 202;
 	}
 
-	if(! is_importable($datarray,$contact)) {
+	if(! post_is_importable($datarray,$contact)) {
 		logger('diaspora_post: filtering this author.');
 		return 202;
 	}

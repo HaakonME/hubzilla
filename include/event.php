@@ -395,21 +395,8 @@ require_once('vendor/autoload.php');
 
 	date_default_timezone_set($saved_timezone);
 
-//	logger('vobject: ' . print_r($ical,true));
-	return true;
-
-//	require_once('library/ical.php');
-	$ical = new ICal($f);
-	if($ical) {
-		$events = $ical->events();
-		if($events) {
-			foreach($events as $ev) {
-				logger('event parsed: ' . print_r($ev,true), LOGGER_ALL);
-				event_import_ical($ev,$uid);
-			}
-		}
+	if($ical)
 		return true;
-	}
 	return false;
 }
 

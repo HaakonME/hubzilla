@@ -490,7 +490,7 @@ function events_content(&$a) {
 			'$export'   => array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),
 			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
-			'$upload'   => t('Upload'),
+			'$upload'   => t('Import'),
 			'$submit'   => t('Submit')			
 		));
 		

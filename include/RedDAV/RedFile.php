@@ -49,7 +49,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		$this->data = $data;
 		$this->auth = $auth;
 
-		//logger(print_r($this->data, true), LOGGER_DATA);
+		logger(print_r($this->data, true), LOGGER_DATA);
 	}
 
 	/**
@@ -207,6 +207,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	 */
 	public function get() {
 		logger('get file ' . basename($this->name), LOGGER_DEBUG);
+		logger('os_path: ' . $this->os_path, LOGGER_DATA);
 
 		$r = q("SELECT data, flags, os_storage, filename, filetype FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($this->data['hash']),

@@ -196,6 +196,12 @@ function RedFileData($file, &$auth, $test = false) {
 	if ($x === 0) {
 		$file = substr($file, 6);
 	}
+	else {
+		$x = strpos($file,'/dav');
+		if($x === 0)
+			$file = substr($file,4);
+	}
+
 
 	if ((! $file) || ($file === '/')) {
 		return new RedDAV\RedDirectory('/', $auth);
@@ -244,7 +250,7 @@ function RedFileData($file, &$auth, $test = false) {
 			$path = $path . '/' . $r[0]['filename'];
 		}
 		if (! $r) {
-			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, created, edited from attach 
+			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d $perms order by filename limit 1",
 				dbesc($folder),
 				dbesc(basename($file)),
@@ -253,7 +259,7 @@ function RedFileData($file, &$auth, $test = false) {
 		}
 		if (! $r) {
 			$errors = true;
-			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, created, edited from attach 
+			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d order by filename limit 1",
 				dbesc($folder),
 				dbesc(basename($file)),

@@ -3,7 +3,7 @@
 <h2>{{$title}}</h2>
 
 <div class="pull-right">
-<button class="btn btn-xs" onclick="window.location.href='{{$new_event.0}}'; return false;" >{{$new_event.1}}</button>&nbsp;<button class="btn btn-xs" onclick="exportDate(); return false;" >{{$export.1}}</button>&nbsp;<button class="btn btn-xs btn-success" onclick="openClose('event-upload-form');"><i class="icon-upload"></i>&nbsp;{{$upload}}</button>
+<button class="btn btn-xs" onclick="window.location.href='{{$new_event.0}}'; return false;" >{{$new_event.1}}</button>&nbsp;<button class="btn btn-xs" onclick="exportDate(); return false;" ><i class="icon-download"></i>&nbsp;{{$export.1}}</button>&nbsp;<button class="btn btn-xs" onclick="openClose('event-upload-form');"><i class="icon-upload"></i>&nbsp;{{$upload}}</button>
 </div>
 
 <div id="event-upload-form" style="display:none;">

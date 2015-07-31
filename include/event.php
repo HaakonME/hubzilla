@@ -167,8 +167,14 @@ function bbtoevent($s) {
 	if(preg_match("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",$s,$match))
 		$ev['adjust'] = $match[1];
 	if(array_key_exists('start',$ev)) {
-		if(array_key_exists('finish',$ev) && (! $ev['finish']))
-			$ev['nofinish'] = 0;
+		if(array_key_exists('finish',$ev)) {
+			if($ev['finish'] === $ev['start'])
+				$ev['nofinish'] = 1;
+			elseif($ev['finish'])
+				$ev['nofinish'] = 0;
+			else
+				$ev['nofinish'] = 1;
+		}
 		else
 			$ev['nofinish'] = 1;
 	}

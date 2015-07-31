@@ -18,6 +18,7 @@ function format_event_html($ev) {
 	if(! ((is_array($ev)) && count($ev)))
 		return '';
 
+
 	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8:01 AM
 
 	$o = '<div class="vevent">' . "\r\n";
@@ -165,7 +166,12 @@ function bbtoevent($s) {
 	$match = '';
 	if(preg_match("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",$s,$match))
 		$ev['adjust'] = $match[1];
-	$ev['nofinish'] = (((x($ev, 'start') && $ev['start']) && (!x($ev, 'finish') || !$ev['finish'])) ? 1 : 0);
+	if(array_key_exists('start',$ev)) {
+		if(array_key_exists('finish',$ev) && (! $ev['finish']))
+			$ev['nofinish'] = 0;
+		else
+			$ev['nofinish'] = 1;
+	}
 
 	return $ev;
 }
@@ -483,7 +489,7 @@ function event_import_ical($ical, $uid) {
 		$ev['private']     = 1;
 		$ev['allow_cid']   = '<' . $channel['channel_hash'] . '>';
 
-//		logger('storing event: ' . print_r($ev,true), LOGGER_ALL);		
+		logger('storing event: ' . print_r($ev,true), LOGGER_ALL);		
 		$event = event_store_event($ev);
 		if($event) {
 			$item_id = event_store_item($ev,$event);

@@ -926,14 +926,21 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true) {
 	// start which is always required). Allow desc with a missing summary for compatibility.
 
 	if ((x($ev,'desc') || x($ev,'summary')) && x($ev,'start')) {
+
 		$sub = format_event_html($ev);
+
+		$sub = str_replace('$',"\0",$sub);
+
+		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/ism",$sub,$Text); 
 
 		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/ism",'',$Text);
-		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/ism",$sub,$Text); 
 		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/ism",'',$Text);
+
+		$Text = str_replace("\0",'$',$Text);
+
 	}
 
 	// Unhide all [noparse] contained bbtags unspacefying them 

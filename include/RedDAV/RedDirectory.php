@@ -414,14 +414,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$os_path = '';
 
 		for ($x = 1; $x < count($path_arr); $x++) {
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)>0",
+			$r = q("select id, hash, filename, flags, is_dir from attach where folder = '%s' and filename = '%s' and uid = %d and is_dir != 0",
 				dbesc($folder),
 				dbesc($path_arr[$x]),
-				intval($channel_id),
-				intval(ATTACH_FLAG_DIR)
+				intval($channel_id)
 			);
 
-			if ($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+			if ($r && intval($r[0]['is_dir'])) {
 				$folder = $r[0]['hash'];
 				if (strlen($os_path))
 					$os_path .= '/';

@@ -733,10 +733,9 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 		if(count($paths) > 1) {
 			$curpath = array_shift($paths);
 
-			$r = q("select hash, id from attach where uid = %d and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id) . " limit 1",
+			$r = q("select hash, id, is_dir from attach where uid = %d and filename = '%s' and is_dir != 0 " . permissions_sql($channel_id) . " limit 1",
 				intval($channel_id),
-				dbesc($curpath),
-				intval(ATTACH_FLAG_DIR)
+				dbesc($curpath)
 			);
 			if(! $r) {
 				$ret['message'] = t('Path not available.');
@@ -749,11 +748,10 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 	else
 		$paths = array($pathname);
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d )>0 " . permissions_sql($channel_id),
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, is_photo, is_dir, os_storage, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and is_dir != 0 " . permissions_sql($channel_id),
 		intval($channel_id),
 		dbesc($parent_hash),
-		dbesc($paths[0]),
-		intval(ATTACH_FLAG_DIR)
+		dbesc($paths[0])
 	);
 	if(! $r) {
 		$ret['message'] = t('Path not available.');
@@ -839,11 +837,10 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		$sql_options = permissions_sql($channel['channel_id']);
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0
+			$r = q("select filename, hash, flags, is_dir, folder from attach where uid = %d and hash = '%s' and is_dir != 0
 				$sql_options limit 1",
 				intval($channel['channel_id']),
-				dbesc($lfile),
-				intval(ATTACH_FLAG_DIR)
+				dbesc($lfile)
 			);
 
 			if(! $r) {
@@ -854,7 +851,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 			if($lfile)
 				$lpath = $r[0]['hash'] . '/' . $lpath;
 			$lfile = $r[0]['folder'];
-		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR)) ;
+		} while ( ($r[0]['folder']) && intval($r[0]['is_dir'])) ;
 		$path = $basepath . '/' . $lpath;
 	}
 	else
@@ -864,7 +861,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$created = datetime_convert();
 
-	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, flags, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_dir, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 		intval($channel['channel_account_id']),
 		intval($channel_id),
@@ -876,7 +873,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		intval(0),
 		dbesc($arr['folder']),
 		intval(1),
-		intval(ATTACH_FLAG_DIR),
+		intval(1),
 		dbesc($path),
 		dbesc($created),
 		dbesc($created),
@@ -1012,7 +1009,7 @@ function attach_mkdirp($channel, $observer_hash, $arr = null) {
  */
 function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse = false) {
 
-	$r = q("select hash, flags from attach where hash = '%s' and uid = %d limit 1",
+	$r = q("select hash, flags, is_dir from attach where hash = '%s' and uid = %d limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
@@ -1020,9 +1017,9 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 	if(! $r)
 		return;
 
-	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
+	if(intval($r[0]['is_dir'])) {
 		if($recurse) {
-			$r = q("select hash, flags from attach where folder = '%s' and uid = %d",
+			$r = q("select hash, flags, is_dir from attach where folder = '%s' and uid = %d",
 				dbesc($resource),
 				intval($channel_id)
 			);
@@ -1065,7 +1062,7 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 	$photo_sql = (($is_photo) ? " and is_photo = 1 " : '');
 
-	$r = q("SELECT hash, flags, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
+	$r = q("SELECT hash, flags, is_dir, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
@@ -1077,8 +1074,8 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	$object = get_file_activity_object($channel_id, $resource, $cloudpath);
 
 	// If resource is a directory delete everything in the directory recursive
-	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
-		$x = q("SELECT hash, os_storage, flags FROM attach WHERE folder = '%s' AND uid = %d",
+	if(intval($r[0]['is_dir'])) {
+		$x = q("SELECT hash, os_storage, is_dir, flags FROM attach WHERE folder = '%s' AND uid = %d",
 			dbesc($resource),
 			intval($channel_id)
 		);
@@ -1152,11 +1149,10 @@ function get_cloudpath($arr) {
 		$lfile = $arr['folder'];
 
 		do {
-			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d )>0
+			$r = q("select filename, hash, flags, is_dir, folder from attach where uid = %d and hash = '%s' and is_dir != 0
 				limit 1",
 				intval($arr['uid']),
-				dbesc($lfile),
-				intval(ATTACH_FLAG_DIR)
+				dbesc($lfile)
 			);
 
 			if(! $r)
@@ -1166,7 +1162,7 @@ function get_cloudpath($arr) {
 				$lpath = $r[0]['filename'] . '/' . $lpath;
 			$lfile = $r[0]['folder'];
 
-		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR));
+		} while ( ($r[0]['folder']) && intval($r[0]['is_dir']));
 
 		$path .= $lpath;
 	}
@@ -1295,7 +1291,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	//filter out receivers which do not have permission to view filestorage
 	$arr_allow_cid = check_list_permissions($channel_id, $arr_allow_cid, 'view_storage');
 
-	$is_dir = (($object['flags'] & ATTACH_FLAG_DIR) ? true : false);
+	$is_dir = (intval($object['is_dir']) ? true : false);
 
 	//do not send activity for folders for now
 	if($is_dir)
@@ -1451,7 +1447,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
  */
 function get_file_activity_object($channel_id, $hash, $cloudpath) {
 
-	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, os_storage, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
+	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, os_storage, is_photo, is_dir, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
@@ -1479,8 +1475,9 @@ function get_file_activity_object($channel_id, $hash, $cloudpath) {
 		'revision'	=> $x[0]['revision'],
 		'folder'	=> $x[0]['folder'],
 		'flags'		=> $x[0]['flags'],
-		'flags'		=> $x[0]['os_storage'],
+		'os_storage' => $x[0]['os_storage'],
 		'is_photo'  => $x[0]['is_photo'],
+		'is_dir'    => $x[0]['is_dir'],
 		'created'	=> $x[0]['created'],
 		'edited'	=> $x[0]['edited'],
 		'allow_cid'	=> $x[0]['allow_cid'],

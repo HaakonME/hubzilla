@@ -300,7 +300,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		}
 
 		if ($this->auth->owner_id !== $this->auth->channel_id) {
-			if (($this->auth->observer !== $this->data['creator']) || ($this->data['flags'] & ATTACH_FLAG_DIR)) {
+			if (($this->auth->observer !== $this->data['creator']) || intval($this->data['is_dir'])) {
 				throw new DAV\Exception\Forbidden('Permission denied.');
 			}
 		}

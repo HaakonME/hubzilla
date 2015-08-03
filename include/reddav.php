@@ -114,20 +114,18 @@ function RedCollectionData($file, &$auth) {
 	$permission_error = false;
 
 	for ($x = 1; $x < count($path_arr); $x++) {
-		$r = q("SELECT id, hash, filename, flags FROM attach WHERE folder = '%s' AND filename = '%s' AND uid = %d AND (flags & %d)>0 $perms LIMIT 1",
+		$r = q("SELECT id, hash, filename, flags, is_dir FROM attach WHERE folder = '%s' AND filename = '%s' AND uid = %d AND is_dir != 0 $perms LIMIT 1",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
-			intval($channel_id),
-			intval(ATTACH_FLAG_DIR)
+			intval($channel_id)
 		);
 		if (! $r) {
 			// path wasn't found. Try without permissions to see if it was the result of permissions.
 			$errors = true;
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)>0 limit 1",
+			$r = q("select id, hash, filename, flags, is_dir from attach where folder = '%s' and filename = '%s' and uid = %d and is_dir != 0 limit 1",
 				dbesc($folder),
 				basename($path_arr[$x]),
-				intval($channel_id),
-				intval(ATTACH_FLAG_DIR)
+				intval($channel_id)
 			);
 			if ($r) {
 				$permission_error = true;
@@ -135,7 +133,7 @@ function RedCollectionData($file, &$auth) {
 			break;
 		}
 
-		if ($r && ($r[0]['flags'] & ATTACH_FLAG_DIR)) {
+		if ($r && intval($r[0]['is_dir'])) {
 			$folder = $r[0]['hash'];
 			$path = $path . '/' . $r[0]['filename'];
 		}
@@ -161,18 +159,17 @@ function RedCollectionData($file, &$auth) {
 		$prefix = '';
 		$suffix = 'GROUP BY filename';
 	}
-	$r = q("select $prefix id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach where folder = '%s' and uid = %d $perms $suffix",
+	$r = q("select $prefix id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, created, edited from attach where folder = '%s' and uid = %d $perms $suffix",
 		dbesc($folder),
 		intval($channel_id)
 	);
 
 	foreach ($r as $rr) {
 		//logger('filename: ' . $rr['filename'], LOGGER_DEBUG);
-		if ($rr['flags'] & ATTACH_FLAG_DIR) {
-			// @todo can't we drop '/cloud'? it gets stripped off anyway in RedDirectory
-			$ret[] = new RedDAV\RedDirectory('/cloud' . $path . '/' . $rr['filename'], $auth);
+		if (intval($rr['is_dir'])) {
+			$ret[] = new RedDAV\RedDirectory($path . '/' . $rr['filename'], $auth);
 		} else {
-			$ret[] = new RedDAV\RedFile('/cloud' . $path . '/' . $rr['filename'], $rr, $auth);
+			$ret[] = new RedDAV\RedFile($path . '/' . $rr['filename'], $rr, $auth);
 		}
 	}
 
@@ -199,6 +196,12 @@ function RedFileData($file, &$auth, $test = false) {
 	if ($x === 0) {
 		$file = substr($file, 6);
 	}
+	else {
+		$x = strpos($file,'/dav');
+		if($x === 0)
+			$file = substr($file,4);
+	}
+
 
 	if ((! $file) || ($file === '/')) {
 		return new RedDAV\RedDirectory('/', $auth);
@@ -236,19 +239,18 @@ function RedFileData($file, &$auth, $test = false) {
 	$errors = false;
 
 	for ($x = 1; $x < count($path_arr); $x++) {		
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)>0 $perms",
+		$r = q("select id, hash, filename, flags, is_dir from attach where folder = '%s' and filename = '%s' and uid = %d and is_dir != 0 $perms",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
-			intval($channel_id),
-			intval(ATTACH_FLAG_DIR)
+			intval($channel_id)
 		);
 
-		if ($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+		if ($r && intval($r[0]['is_dir'])) {
 			$folder = $r[0]['hash'];
 			$path = $path . '/' . $r[0]['filename'];
 		}
 		if (! $r) {
-			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
+			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d $perms order by filename limit 1",
 				dbesc($folder),
 				dbesc(basename($file)),
@@ -257,7 +259,7 @@ function RedFileData($file, &$auth, $test = false) {
 		}
 		if (! $r) {
 			$errors = true;
-			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
+			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d order by filename limit 1",
 				dbesc($folder),
 				dbesc(basename($file)),
@@ -272,7 +274,7 @@ function RedFileData($file, &$auth, $test = false) {
 		if ($test)
 			return true;
 		// final component was a directory.
-		return new RedDAV\RedDirectory('/cloud/' . $file, $auth);
+		return new RedDAV\RedDirectory($file, $auth);
 	}
 
 	if ($errors) {
@@ -290,11 +292,10 @@ function RedFileData($file, &$auth, $test = false) {
 		if ($test)
 			return true;
 
-		if ($r[0]['flags'] & ATTACH_FLAG_DIR) {
-			// @todo can't we drop '/cloud'? it gets stripped off anyway in RedDirectory
-			return new RedDAV\RedDirectory('/cloud' . $path . '/' . $r[0]['filename'], $auth);
+		if (intval($r[0]['is_dir'])) {
+			return new RedDAV\RedDirectory($path . '/' . $r[0]['filename'], $auth);
 		} else {
-			return new RedDAV\RedFile('/cloud' . $path . '/' . $r[0]['filename'], $r[0], $auth);
+			return new RedDAV\RedFile($path . '/' . $r[0]['filename'], $r[0], $auth);
 		}
 	}
 	return false;

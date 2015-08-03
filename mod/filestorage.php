@@ -117,7 +117,7 @@ function filestorage_content(&$a) {
 		}
 		$file = intval(argv(2));
 
-		$r = q("select id, uid, folder, filename, revision, flags, hash, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and uid = %d limit 1",
+		$r = q("select id, uid, folder, filename, revision, flags, is_dir, os_storage, hash, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and uid = %d limit 1",
 			intval($file),
 			intval($owner)
 		);
@@ -125,11 +125,11 @@ function filestorage_content(&$a) {
 		$f = $r[0];
 		$channel = $a->get_channel();
 
-		$cloudpath = get_cloudpath($f) . (($f['flags'] & ATTACH_FLAG_DIR) ? '?f=&davguest=1' : '');
+		$cloudpath = get_cloudpath($f) . (intval($f['is_dir']) ? '?f=&davguest=1' : '');
 		$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
 
 		$aclselect_e = populate_acl($f, false);
-		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);
+		$is_a_dir = (intval($f['is_dir']) ? true : false);
 
 		$lockstate = (($f['allow_cid'] || $f['allow_gid'] || $f['deny_cid'] || $f['deny_gid']) ? 'lock' : 'unlock'); 
 

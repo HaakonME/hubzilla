@@ -50,7 +50,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 */
 	public function __construct($ext_path, &$auth_plugin) {
 //		$ext_path = urldecode($ext_path);
-		//logger('directory ' . $ext_path, LOGGER_DATA);
+		logger('directory ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
 		$modulename = get_app()->module; 
@@ -80,7 +80,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @return array \Sabre\DAV\INode[]
 	 */
 	public function getChildren() {
-		//logger('children for ' . $this->ext_path, LOGGER_DATA);
+		logger('children for ' . $this->ext_path, LOGGER_DATA);
 		$this->log();
 
 		if (get_config('system', 'block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
@@ -370,15 +370,14 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @return void
 	 */
 	function getDir() {
-		//logger($this->ext_path, LOGGER_DEBUG);
+
+		logger('GetDir: ' . $this->ext_path, LOGGER_DEBUG);
 		$this->auth->log();
 		$modulename = get_app()->module;
 
 		$file = $this->ext_path;
 
 		$x = strpos($file, '/' . $modulename);
-		if ($x === false)
-			return;
 		if ($x === 0) {
 			$file = substr($file, strlen($modulename) + 1);
 		}
@@ -414,14 +413,12 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$os_path = '';
 
 		for ($x = 1; $x < count($path_arr); $x++) {
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)>0",
+			$r = q("select id, hash, filename, flags, is_dir from attach where folder = '%s' and filename = '%s' and uid = %d and is_dir != 0",
 				dbesc($folder),
 				dbesc($path_arr[$x]),
-				intval($channel_id),
-				intval(ATTACH_FLAG_DIR)
+				intval($channel_id)
 			);
-
-			if ($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+			if ($r && intval($r[0]['is_dir'])) {
 				$folder = $r[0]['hash'];
 				if (strlen($os_path))
 					$os_path .= '/';

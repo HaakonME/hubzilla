@@ -55,6 +55,17 @@ function photo_upload($channel, $observer, $args) {
 	$str_group_deny    = perms2str(((is_array($args['group_deny']))    ? $args['group_deny']    : explode(',',$args['group_deny'])));
 	$str_contact_deny  = perms2str(((is_array($args['contact_deny']))  ? $args['contact_deny']  : explode(',',$args['contact_deny'])));
 
+
+	if(    (! array_key_exists('group_allow',$args)) 
+		&& (! array_key_exists('contact_allow',$args)) 
+		&& (! array_key_exists('group_deny',$args)) 
+		&& (! array_key_exists('contact_deny',$args))) {
+		$str_group_allow = $channel['channel_allow_gid'];
+		$str_contact_allow = $channel['channel_allow_cid'];
+		$str_group_deny = $channel['channel_deny_gid'];
+		$str_contact_deny = $channel['channel_deny_cid'];
+	}
+
 	$os_storage = 0;
 
 	if($args['os_path'] && $args['getimagesize']) {

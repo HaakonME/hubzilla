@@ -113,11 +113,9 @@ function notifier_run($argv, $argc){
 				intval($r[0]['abook_channel'])
 			);
 			if($s) {
-				if($r[0]['hubloc_network'] === 'diaspora' || $r[0]['hubloc_network'] === 'friendica-over-diaspora') {
-					require_once('include/diaspora.php');
-					diaspora_share($s[0],$r[0]);
-				}
-				else {
+				$perm_update = array('sender' => $s[0], 'recipient' => $r[0], 'success' => false);
+				call_hooks('permissions_update',$perm_update);
+				if(! $perm_update['success']) {
 					// send a refresh message to each hub they have registered here	
 					$h = q("select * from hubloc where hubloc_hash = '%s' 
 						and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
@@ -606,18 +604,9 @@ function notifier_run($argv, $argc){
 
 	foreach($dhubs as $hub) {
 
-		if($hub['hubloc_network'] === 'diaspora' || $hub['hubloc_network'] === 'friendica-over-diaspora') {
-			if(! get_config('system','diaspora_enabled'))
-				continue;
+		if($hub['hubloc_network'] !== 'zot') {
 
-			// allow this to be set per message
-
-			if(strpos($target_item['postopts'],'nodspr') !== false)
-				continue;
-
-			require_once('include/diaspora.php');
-
-			diaspora_process_outbound(array(
+			$narr = array(
 				'channel' => $channel,
 				'env_recips' => $env_recips,
 				'recipients' => $recipients,
@@ -638,12 +627,13 @@ function notifier_run($argv, $argc){
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
 				'walltowall' => $walltowall
-			));
+			);
 
+
+			call_hooks('notifier_hub',$narr);
 			continue;
 
 		}
-
 
 		// default: zot protocol
 

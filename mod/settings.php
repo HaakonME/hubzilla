@@ -123,13 +123,6 @@ function settings_post(&$a) {
 
 		call_hooks('feature_settings_post', $_POST);
 
-		if($_POST['dspr-submit']) {
-			set_pconfig(local_channel(),'system','diaspora_allowed',intval($_POST['dspr_allowed']));
-			set_pconfig(local_channel(),'system','diaspora_public_comments',intval($_POST['dspr_pubcomment']));
-			set_pconfig(local_channel(),'system','prevent_tag_hijacking',intval($_POST['dspr_hijack']));
-			info( t('Diaspora Policy Settings updated.') . EOL);
-		}
-
 		build_sync_packet();
 		return;
 	}
@@ -664,19 +657,10 @@ function settings_content(&$a) {
 		$settings_addons = "";
 
 		$o = '';
-		$diaspora_enabled = get_config('system','diaspora_enabled');
 		
 		$r = q("SELECT * FROM `hook` WHERE `hook` = 'feature_settings' ");
-		if((! $r) && (! $diaspora_enabled))
+		if(! $r)
 			$settings_addons = t('No feature settings configured');
-
-		if($diaspora_enabled) {
-			$dspr_allowed = get_pconfig(local_channel(),'system','diaspora_allowed');
-			$pubcomments = get_pconfig(local_channel(),'system','diaspora_public_comments');
-			if($pubcomments === false)
-				$pubcomments = 1;
-			$hijacking = get_pconfig(local_channel(),'system','prevent_tag_hijacking');
-		}
 
 		call_hooks('feature_settings', $settings_addons);
 				
@@ -684,13 +668,6 @@ function settings_content(&$a) {
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_featured"),
 			'$title'	=> t('Feature/Addon Settings'),
-			'$diaspora_enabled' => $diaspora_enabled,
-			'$dsprdesc' => t('Settings for the built-in Diaspora emulator'), 
-			'$pubcomments' => array('dspr_pubcomment', t('Allow any Diaspora member to comment on your public posts'), $pubcomments, '', $yes_no),
-			'$dspr_allowed' => array('dspr_allowed', t('Enable the Diaspora protocol for this channel'), $dspr_allowed, '', $yes_no),
-			'$dsprtitle' => t('Diaspora Policy Settings'),
-			'$hijacking' => array('dspr_hijack', t('Prevent your hashtags from being redirected to other sites'), $hijacking, '', $yes_no),
-			'$dsprsubmit' => t('Submit'),
 			'$settings_addons' => $settings_addons
 		));
 		return $o;

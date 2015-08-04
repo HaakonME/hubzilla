@@ -265,8 +265,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	);
 	if($r) {
 		$result['abook'] = $r[0];
-		if($is_red)
-			proc_run('php', 'include/notifier.php', 'permission_update', $result['abook']['abook_id']);
+		proc_run('php', 'include/notifier.php', 'permission_update', $result['abook']['abook_id']);
 	}
 
 	$arr = array('channel_id' => $uid, 'abook' => $result['abook']);

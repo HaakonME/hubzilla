@@ -161,7 +161,7 @@ function filter_insecure($channel_id, $arr) {
 
 	$ret = array();
 
-	if((! intval(get_config($channel_id, 'system', 'filter_insecure_collections'))) || (! $arr))
+	if((! intval(get_pconfig($channel_id, 'system', 'filter_insecure_collections'))) || (! $arr))
 		return $arr;
 
 	$str = '';

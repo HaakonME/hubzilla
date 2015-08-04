@@ -3380,6 +3380,9 @@ function post_is_importable($item,$abook) {
 		return true;
 
 	require_once('include/html2plain.php');
+
+	unobscure($item);
+
 	$text = prepare_text($item['body'],$item['mimetype']);
 	$text = html2plain($text);
 

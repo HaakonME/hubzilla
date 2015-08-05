@@ -12,6 +12,7 @@ require_once('include/hubloc.php');
 function tryoembed($match) {
 	$url = ((count($match) == 2) ? $match[1] : $match[2]);
 
+
 	$o = oembed_fetch_url($url);
 
 	if ($o->type == 'error')

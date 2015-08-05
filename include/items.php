@@ -3335,6 +3335,9 @@ function check_item_source($uid, $item) {
 	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
 		return false;
 
+
+	// since we now have connection filters with more features, the source filter is redundant and can probably go away
+
 	if(! $r[0]['src_patt'])
 		return true;
 
@@ -3349,10 +3352,10 @@ function check_item_source($uid, $item) {
 		foreach($words as $word) {
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
+					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
-			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
 				return true;
 			elseif(stristr($text,$word) !== false)
 				return true;
@@ -3399,10 +3402,10 @@ function post_is_importable($item,$abook) {
 			$word = trim($word);
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
+					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return false;
 			}
-			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
 				return false;
 			elseif((strpos($word,'lang=') === 0) && ($lang) && (strcasecmp($lang,trim(substr($word,5))) == 0))
 				return false;
@@ -3418,10 +3421,10 @@ function post_is_importable($item,$abook) {
 			$word = trim($word);
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
+					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
-			elseif((strpos($word,'/') === 0) && preg_match($word,$body))
+			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
 				return true;
 			elseif((strpos($word,'lang=') === 0) && ($lang) && (strcasecmp($lang,trim(substr($word,5))) == 0))
 				return true;

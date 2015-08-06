@@ -34,16 +34,16 @@ function photo_upload($channel, $observer, $args) {
 	 */
 
 	$album    = $args['album'];
-	$newalbum = $args['newalbum'];
+//	$newalbum = $args['newalbum'];
 
-	logger('photo_upload: album= ' . $album . ' newalbum= ' . $newalbum , LOGGER_DEBUG);
+//	logger('photo_upload: album= ' . $album . ' newalbum= ' . $newalbum , LOGGER_DEBUG);
 
-	if(! $album) {
-		if($newalbum)
-			$album = $newalbum;
-		else
-			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y-m');
-	}
+//	if(! $album) {
+//		if($newalbum)
+//			$album = $newalbum;
+//		else
+//			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y-m');
+//	}
 
 	if(intval($args['visible']) || $args['visible'] === 'true')
 		$visible = 1;

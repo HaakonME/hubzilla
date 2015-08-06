@@ -2,6 +2,35 @@
 function oembed_replacecb($matches){
 
 	$embedurl=$matches[1];
+
+	// implements a personal embed white/black list for logged in members
+	if(local_channel()) {
+		if(($x = get_pconfig(local_channel(),'system','embed_deny'))) {
+			$l = explode("\n",$x);
+			if($l) {
+				foreach($l as $ll) {
+					if(trim($ll) && strpos($embedurl,trim($ll)) !== false)
+						return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
+				}
+			}
+		}
+		if(($x = get_pconfig(local_channel(),'system','embed_allow'))) {
+			$found = false;
+			$l = explode("\n",$x);
+			if($l) {
+				foreach($l as $ll) {
+					if(trim($ll) && strpos($embedurl,trim($ll)) !== false) {
+						$found = true;
+						break;
+					}
+				}
+			}
+			if(! $found) {
+				return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
+			}
+		}
+	}
+
 	$j = oembed_fetch_url($embedurl);
 	$s = oembed_format_object($j);
 	return $s;  
@@ -95,7 +124,8 @@ function oembed_fetch_url($embedurl){
 		Cache::set($a->videowidth . $embedurl,$txt);
 
 	}
-	
+
+
 	$j = json_decode($txt);
 	$j->embedurl = $embedurl;
 	return $j;

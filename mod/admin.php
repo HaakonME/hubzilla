@@ -299,11 +299,9 @@ function admin_page_site_post(&$a){
 	$poll_interval     = ((x($_POST,'poll_interval'))    ? intval(trim($_POST['poll_interval'])) : 0);
 	$maxloadavg        = ((x($_POST,'maxloadavg'))       ? intval(trim($_POST['maxloadavg'])) : 50);
 	$feed_contacts     = ((x($_POST,'feed_contacts'))    ? intval($_POST['feed_contacts'])    : 0);
-	$diaspora_enabled  = ((x($_POST,'diaspora_enabled')) ? intval($_POST['diaspora_enabled']) : 0);
 	$verify_email      = ((x($_POST,'verify_email'))     ? 1 : 0);
 
 	set_config('system', 'feed_contacts', $feed_contacts);
-	set_config('system', 'diaspora_enabled', $diaspora_enabled);
 	set_config('system', 'delivery_interval', $delivery_interval);
 	set_config('system', 'poll_interval', $poll_interval);
 	set_config('system', 'maxloadavg', $maxloadavg);
@@ -465,7 +463,6 @@ function admin_page_site(&$a) {
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 //		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
-		'$diaspora_enabled'  => array('diaspora_enabled',t('Enable Diaspora Protocol'), get_config('system','diaspora_enabled'), t('Communicate with Diaspora and Friendica - experimental')),
 		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),

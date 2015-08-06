@@ -1068,6 +1068,11 @@ function discover_by_webbie($webbie) {
 		}
 	}
 
+	$arr = array('address' => $webbie, 'success' => false);
+	call_hooks('discover_by_webbie', $arr);
+	if($arr['success'])
+		return true;
+
 	$result = array();
 	$network = null;
 	$diaspora = false;

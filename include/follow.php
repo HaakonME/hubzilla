@@ -129,19 +129,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		}
 	}
 	else {
-		if(! ($is_http)) {
-			if(! intval(get_config('system','diaspora_enabled'))) {
-				$result['message'] = t('Protocol disabled.');
-				return $result;
-			}
-
-			$allowed = get_pconfig($uid,'system','diaspora_allowed');
-
-			if(! intval($allowed)) {
-				$result['message'] = t('Protocol blocked for this channel.');
-				return $result;
-			}
-		}
 
 		$their_perms = 0;
 		$xchan_hash = '';
@@ -158,8 +145,15 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			}
 			elseif($is_http) {
 				$r = discover_by_url($url);
+				$r['allowed'] = intval(get_config('system','feed_contacts'));
 			}
 			if($r) {
+				$r['channel_id'] = $uid;
+				call_hooks('follow_allow',$r);
+				if(! $r['allowed']) {
+					$result['message'] = t('Protocol disabled.');
+					return $result;
+				}
 				$r = q("select * from xchan where xchan_hash = '%s' or xchan_url = '%s' limit 1",
 					dbesc($url),
 					dbesc($url)
@@ -199,10 +193,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	if($is_http) {
 
-		if(! intval(get_config('system','feed_contacts'))) {
-			$result['message'] = t('Protocol disabled.');
-			return $result;
-		}
 
 		$r = q("select count(*) as total from abook where abook_account = %d and abook_feed = 1 ",
 			intval($aid)
@@ -261,8 +251,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	);
 	if($r) {
 		$result['abook'] = $r[0];
-		if($is_red)
-			proc_run('php', 'include/notifier.php', 'permission_update', $result['abook']['abook_id']);
+		proc_run('php', 'include/notifier.php', 'permission_update', $result['abook']['abook_id']);
 	}
 
 	$arr = array('channel_id' => $uid, 'abook' => $result['abook']);

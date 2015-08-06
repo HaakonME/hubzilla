@@ -355,7 +355,7 @@ function photos_albums_list($channel, $observer) {
 		$ret['albums'] = array();
 		foreach($albums as $k => $album) {
 			$entry = array(
-				'text' => $album['album'],
+				'text' => (($album['album']) ? $album['album'] : '/'),
 				'total' => $album['total'], 
 				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']), 
 				'urlencode' => urlencode($album['album']),

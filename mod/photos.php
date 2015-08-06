@@ -474,7 +474,12 @@ function photos_content(&$a) {
 		$datatype = argv(2);
 		$datum = argv(3);
 	} else {
-		$datatype = 'summary';
+		if(argc() > 2) {
+			$datatype = argv(2);
+			$datum = '';
+		}
+		else
+			$datatype = 'summary';
 	}
 
 	if(argc() > 4)
@@ -602,15 +607,15 @@ function photos_content(&$a) {
 
 	if($datatype === 'album') {
 
-
-
-		if((strlen($datum) & 1) || (! ctype_xdigit($datum))) {
-			notice( t('Album name could not be decoded') . EOL);
-			logger('mod_photos: illegal album encoding: ' . $datum);
-			$datum = '';
+		if(strlen($datum)) {
+			if((strlen($datum) & 1) || (! ctype_xdigit($datum))) {
+				notice( t('Album name could not be decoded') . EOL);
+				logger('mod_photos: illegal album encoding: ' . $datum);
+				$datum = '';
+			}
 		}
 
-		$album = hex2bin($datum);
+		$album = (($datum) ? hex2bin($datum) : '');
 
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
 			AND `scale` <= 4 and photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",

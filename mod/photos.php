@@ -107,11 +107,16 @@ function photos_post(&$a) {
 
 		$newalbum = notags(trim($_REQUEST['albumname']));
 		if($newalbum != $album) {
-			$x = photos_album_rename($page_owner_uid,$album,$newalbum);
-			if($x) {
-				$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
-				goaway($a->get_baseurl() . '/' . $newurl);
-			}
+
+			// @fixme - syncronise with DAV or disallow completely
+
+			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+
+//			$x = photos_album_rename($page_owner_uid,$album,$newalbum);
+//			if($x) {
+//				$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
+//				goaway($a->get_baseurl() . '/' . $newurl);
+//			}
 		}
 
 		/*
@@ -568,10 +573,12 @@ function photos_content(&$a) {
 
 		$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
-		$def_album = get_pconfig($a->data['channel']['channel_id'],'system','photo_path');
-		if($def_album) {
-			$selname = filepath_macro($def_album);
-			$albums['album'][] = array('text' => $selname);
+		if(! $selname) {
+			$def_album = get_pconfig($a->data['channel']['channel_id'],'system','photo_path');
+			if($def_album) {
+				$selname = filepath_macro($def_album);
+				$albums['album'][] = array('text' => $selname);
+			}
 		}
 
 		$tpl = get_markup_template('photos_upload.tpl');
@@ -662,17 +669,21 @@ function photos_content(&$a) {
 					$album_e = $album;
 				}
 				$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
-				$edit_tpl = get_markup_template('album_edit.tpl');
-				$album_edit = replace_macros($edit_tpl,array(
-					'$nametext' => t('Enter a new album name'),
-					'$name_placeholder' => t('or select an existing one (doubleclick)'),
-					'$nickname' => $a->data['channel']['channel_address'],
-					'$album' => $album_e,
-					'$albums' => $albums['albums'],
-					'$hexalbum' => bin2hex($album),
-					'$submit' => t('Submit'),
-					'$dropsubmit' => t('Delete Album')
-				));
+
+				// @fixme - syncronise actions with DAV
+	
+//				$edit_tpl = get_markup_template('album_edit.tpl');
+//				$album_edit = replace_macros($edit_tpl,array(
+//					'$nametext' => t('Enter a new album name'),
+//					'$name_placeholder' => t('or select an existing one (doubleclick)'),
+//					'$nickname' => $a->data['channel']['channel_address'],
+//					'$album' => $album_e,
+//					'$albums' => $albums['albums'],
+//					'$hexalbum' => bin2hex($album),
+//					'$submit' => t('Submit'),
+//					'$dropsubmit' => t('Delete Album')
+//				));
+
 			}
 		}
 

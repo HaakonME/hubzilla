@@ -167,7 +167,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		if($is_photo) {
 			require_once('include/photos.php');
 			$args = array( 'resource_id' => $this->data['hash'], 'album' => $album, 'os_path' => $f, 'filename' => $r[0]['filename'], 'getimagesize' => $gis );
-			$p = photo_upload($c[0],$this->auth->observer,$args);
+			$p = photo_upload($c[0],get_app()->get_observer(),$args);
 		}
 
 		// update the folder's lastmodified timestamp

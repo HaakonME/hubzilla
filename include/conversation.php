@@ -1597,7 +1597,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 		$tabs[] = array(
 			'label' => t('Files'),
-			'url'   => $a->get_baseurl() . '/cloud/' . $nickname . ((get_observer_hash()) ? '' : '?f=&davguest=1'),
+			'url'   => $a->get_baseurl() . '/cloud/' . $nickname,
 			'sel'   => ((argv(0) == 'cloud' || argv(0) == 'sharedwithme') ? 'active' : ''),
 			'title' => t('Files and Storage'),
 			'id'    => 'files-tab',

@@ -116,12 +116,14 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				);
 				if($d) {
 					if($d[0]['folder']) {
-						$f1 = q("select filename from attach where is_dir = 1 and hash = '%s' and uid = %d limit 1",
+						$f1 = q("select * from attach where is_dir = 1 and hash = '%s' and uid = %d limit 1",
 							dbesc($d[0]['folder']),
 							intval($c[0]['channel_id'])
 						);
-						if($f1)
+						if($f1) {
 							$album = $f1[0]['filename'];
+							$direct = $f1[0];
+						}
 					}	
 					$fname = dbunescbin($d[0]['data']);
 					$f = 'store/' . $this->auth->owner_nick . '/' . (($fname) ? $fname : '');
@@ -166,7 +168,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 		if($is_photo) {
 			require_once('include/photos.php');
-			$args = array( 'resource_id' => $this->data['hash'], 'album' => $album, 'os_path' => $f, 'filename' => $r[0]['filename'], 'getimagesize' => $gis );
+			$args = array( 'resource_id' => $this->data['hash'], 'album' => $album, 'os_path' => $f, 'filename' => $r[0]['filename'], 'getimagesize' => $gis, 'directory' => $direct );
 			$p = photo_upload($c[0],get_app()->get_observer(),$args);
 		}
 

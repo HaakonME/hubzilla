@@ -1050,6 +1050,23 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 				if(! strlen($image_uri))
 					continue;
 				$srch = '<' . $xchan_hash . '>';
+					
+				$r = q("select folder from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($image_uri),
+					intval($uid)
+				);
+				if($r && $r[0]['folder']) {
+					$f = q("select * from attach where hash = '%s' and is_dir = 1 and uid = %d limit 1",
+						dbesc($r[0]['folder']),
+						intval($uid)
+					);
+					if(($f) && (($f[0]['allow_cid']) || ($f[0]['allow_gid']) || ($f[0]['deny_cid']) || ($f[0]['deny_gid']))) {
+						$str_contact_allow = $f[0]['allow_cid'];
+						$str_group_allow = $f[0]['allow_gid'];
+						$str_contact_deny = $f[0]['deny_cid'];
+						$str_group_deny = $f[0]['deny_gid'];
+					}
+				}
 
 				$r = q("SELECT id FROM photo 
 					WHERE allow_cid = '%s' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''

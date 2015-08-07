@@ -214,6 +214,29 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $hash;
 
+		$direct = null;
+
+		if($this->folder_hash) {
+			$r = q("select * from attach where hash = '%s' and is_dir = 1 and uid = %d limit 1",
+				dbesc($this->folder_hash),
+				intval($c[0]['channel_id'])
+			);
+			if($r)
+				$direct = $r[0];
+		}
+
+		if(($direct) && (($direct['allow_cid']) || ($direct['allow_gid']) || ($direct['deny_cid']) || ($direct['deny_gid']))) {
+			$allow_cid = $direct['allow_cid'];
+			$allow_gid = $direct['allow_gid'];
+			$deny_cid = $direct['deny_cid'];
+			$deny_gid = $direct['deny_gid'];
+		}
+		else { 
+			$allow_cid = $c[0]['channel_allow_cid'];
+			$allow_gid = $c[0]['channel_allow_gid'];
+			$deny_cid = $c[0]['channel_deny_cid'];
+			$deny_gid = $c[0]['channel_deny_gid'];
+		}
 
 		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, os_storage, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
@@ -231,10 +254,10 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($this->os_path . '/' . $hash),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
-			dbesc($c[0]['channel_allow_cid']),
-			dbesc($c[0]['channel_allow_gid']),
-			dbesc($c[0]['channel_deny_cid']),
-			dbesc($c[0]['channel_deny_gid'])
+			dbesc($allow_cid),
+			dbesc($allow_gid),
+			dbesc($deny_cid),
+			dbesc($deny_gid)
 		);
 
 
@@ -308,7 +331,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			}
 
 			require_once('include/photos.php');
-			$args = array( 'resource_id' => $hash, 'album' => $album, 'os_path' => $f, 'filename' => $name, 'getimagesize' => $x);
+			$args = array( 'resource_id' => $hash, 'album' => $album, 'os_path' => $f, 'filename' => $name, 'getimagesize' => $x, 'directory' => $direct);
 			$p = photo_upload($c[0],get_app()->get_observer(),$args);
 		}
 

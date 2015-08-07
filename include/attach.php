@@ -490,6 +490,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	if($pathname) {
 		$x = attach_mkdirp($channel, $observer_hash, $darr);
 		$folder_hash = (($x['success']) ? $x['data']['hash'] : '');
+		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
+			$str_contact_allow = $x['data']['allow_cid'];
+			$str_group_allow = $x['data']['allow_gid'];
+			$str_contact_deny = $x['data']['deny_cid'];
+			$str_group_deny = $x['data']['deny_gid'];
+		}
 	}
 	else {
 		$folder_hash = '';
@@ -886,7 +892,6 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	if($r) {
 		if(os_mkdir($path, STORAGE_DEFAULT_PERMISSIONS, true)) {
 			$ret['success'] = true;
-			$ret['data'] = $arr;
 
 			// update the parent folder's lastmodified timestamp
 			$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
@@ -894,6 +899,13 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 				dbesc($arr['folder']),
 				intval($channel_id)
 			);
+
+			$z = q("select * from attach where hash = '%s' and uid = %d and is_dir = 1 limit 1",
+				dbesc($arr['hash']),
+				intval($channel_id)
+			);
+			if($z)
+				$ret['data'] = $z[0];
 		}
 		else {
 			logger('attach_mkdir: ' . mkdir . ' ' . $path . ' failed.');

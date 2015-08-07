@@ -7,12 +7,12 @@
 /**
  * Hubzilla.
  *
- * The Hubzilla (aka "Red") is an open source decentralised communications
+ * Hubzilla is an open source decentralised communications
  * platform combined with a decentralised identity/authentication framework
  * wrapped in an extensible content management system, providing website designers
  * the ability to embed fully decentralised communications and social tools
  * into many traditional website designs (blogs, forums, small business
- * websites, charitable organisations, etc.). Red also provides DNS mobility
+ * websites, charitable organisations, etc.). Hubzilla also provides DNS mobility
  * and internet scale privacy/access control.
  *
  * This allows any individual website to participate in a matrix of linked
@@ -46,7 +46,7 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
+define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1145  );
@@ -717,7 +717,6 @@ class App {
 		set_include_path(
 			'include' . PATH_SEPARATOR
 			. 'library' . PATH_SEPARATOR
-			. 'library/phpsec' . PATH_SEPARATOR
 			. 'library/langdet' . PATH_SEPARATOR
 			. '.' );
 
@@ -1056,18 +1055,7 @@ class App {
 	}
 
 	function set_template_engine($engine = 'smarty3') {
-
 		$this->theme['template_engine'] = $engine;
-
-		/*if ($engine) {
-			case 'smarty3':
-				if(!is_writable(TEMPLATE_BUILD_PATH))
-					echo "<b>ERROR</b> folder <tt>" . TEMPLATE_BUILD_PATH . "</tt> must be writable by webserver."; killme();
-
-				break;
-			default:
-				break;
-		}*/
 	}
 
 	function get_template_ldelim($engine = 'smarty3') {
@@ -2271,7 +2259,7 @@ function cert_bad_email() {
 		'$error' => t('Website SSL certificate is not valid. Please correct.')
 	));
 
-	$subject = email_header_encode(sprintf(t('[red] Website SSL error for %s'), $a->get_hostname()));
+	$subject = email_header_encode(sprintf(t('[hubzilla] Website SSL error for %s'), $a->get_hostname()));
 	mail($a->config['system']['admin_email'], $subject, $email_msg,
 		'From: Administrator' . '@' . $a->get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -2312,7 +2300,7 @@ function check_cron_broken() {
 		'$lastdate' => (($d)? $d : t('never'))
 	));
 
-	$subject = email_header_encode(sprintf(t('[red] Cron tasks not running on %s'), $a->get_hostname()));
+	$subject = email_header_encode(sprintf(t('[hubzilla] Cron tasks not running on %s'), $a->get_hostname()));
 	mail($a->config['system']['admin_email'], $subject, $email_msg,
 		'From: Administrator' . '@' . $a->get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"

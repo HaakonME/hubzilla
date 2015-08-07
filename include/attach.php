@@ -487,9 +487,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$darr['deny_gid']  = $channel['deny_gid'];
 
 
+	$direct = null;
+
 	if($pathname) {
 		$x = attach_mkdirp($channel, $observer_hash, $darr);
 		$folder_hash = (($x['success']) ? $x['data']['hash'] : '');
+		$direct = (($x['success']) ? $x['data'] : null);
 		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
 			$str_contact_allow = $x['data']['allow_cid'];
 			$str_group_allow = $x['data']['allow_gid'];
@@ -669,7 +672,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	if($is_photo) {
-		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis);
+		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		if($arr['group_allow'])
@@ -815,7 +818,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	// Check for duplicate name.
 	// Check both the filename and the hash as we will be making use of both.
 
-	$r = q("select hash, is_dir, flags from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
+	$r = q("select id, hash, is_dir, flags from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
 		dbesc($arr['filename']),
 		dbesc($arr['hash']),
 		dbesc($arr['folder']),
@@ -823,9 +826,13 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	);
 	if($r) {
 		if(array_key_exists('force',$arr) && intval($arr['force']) 
-			&& ( intval($r[0]['is_dir']) || $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+			&& (intval($r[0]['is_dir']))) {
 				$ret['success'] = true;
-				$ret['data'] = $r[0];
+				$r = q("select * from attach where id = %d limit 1",
+					intval($r[0]['id'])
+				);
+				if($r)
+					$ret['data'] = $r[0];
 				return $ret;
 		}
 		$ret['message'] = t('duplicate filename or path');

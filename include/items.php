@@ -866,6 +866,9 @@ function get_item_elements($x) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
+	if(array_key_exists('diaspora_signature',$x) && is_array($x['diaspora_signature']))
+		$x['diaspora_signature'] = json_encode($x['diaspora_signature']);
+
 	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? $x['diaspora_signature'] : '');
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);

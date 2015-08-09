@@ -1584,12 +1584,10 @@ function get_mail_elements($x) {
 	$arr['mail_obscured'] = 1;
 	if($arr['body']) {
 		$arr['body']  = str_rot47(base64url_encode($arr['body']));
-		$arr['body'] = htmlspecialchars($arr['body'],ENT_COMPAT,'UTF-8',false);
 	}
 
 	if($arr['title']) {
 		$arr['title'] = str_rot47(base64url_encode($arr['title']));
-		$arr['title'] = htmlspecialchars($arr['title'],ENT_COMPAT,'UTF-8',false);
 	}
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
@@ -3453,8 +3451,10 @@ function mail_store($arr) {
 		return 0;
 	}
 
-	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false))
-		$arr['body'] = escape_tags($arr['body']);
+	if(! $arr['mail_obscured']) {
+		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false))
+			$arr['body'] = escape_tags($arr['body']);
+	}
 
 	if(array_key_exists('attach',$arr) && is_array($arr['attach']))
 		$arr['attach'] = json_encode($arr['attach']);

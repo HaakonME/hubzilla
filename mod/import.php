@@ -353,11 +353,37 @@ function import_post(&$a) {
 	$abooks = $data['abook'];
 	if($abooks) {
 		foreach($abooks as $abook) {
-			if($max_friends !== false && $friends > $max_friends)
-				continue;
-			if($max_feeds !== false && ($abook['abook_flags'] & ABOOK_FLAG_FEED) && $feeds > $max_feeds)
-				continue;
+			if(array_key_exists('abook_blocked',$abook) && intval($abook['abook_blocked'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_BLOCKED;
+			}
+			if(array_key_exists('abook_ignored',$abook) && intval($abook['abook_ignored'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_IGNORED;
+			}
+			if(array_key_exists('abook_hidden',$abook) && intval($abook['abook_hidden'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_HIDDEN;
+			}
+			if(array_key_exists('abook_archived',$abook) && intval($abook['abook_archived'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_ARCHIVED;
+			}
+			if(array_key_exists('abook_pending',$abook) && intval($abook['abook_pending'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_PENDING;
+			}
+			if(array_key_exists('abook_unconnected',$abook) && intval($abook['abook_unconnected'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_UNCONNECTED;
+			}
+			if(array_key_exists('abook_self',$abook) && intval($abook['abook_self'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_SELF;
+			}
+			if(array_key_exists('abook_feed',$abook) && intval($abook['abook_feed'])) {
+				$abook['abook_flags'] |= ABOOK_FLAG_FEED;
+			}
 
+			if(! ( $abook['abook_flags'] & ABOOK_FLAG_SELF)) {
+				if($max_friends !== false && $friends > $max_friends)
+					continue;
+				if($max_feeds !== false && ($abook['abook_flags'] & ABOOK_FLAG_FEED) && $feeds > $max_feeds)
+					continue;
+			}
 			unset($abook['abook_id']);
 			$abook['abook_account'] = get_account_id();
 			$abook['abook_channel'] = $channel['channel_id'];

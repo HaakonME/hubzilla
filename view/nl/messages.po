@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-31 00:03-0700\n"
-"PO-Revision-Date: 2015-08-05 20:25+0000\n"
+"POT-Creation-Date: 2015-08-07 00:03-0700\n"
+"PO-Revision-Date: 2015-08-09 13:50+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/Friendica/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -1021,7 +1021,7 @@ msgstr "Aanmaken"
 
 #: ../../include/RedDAV/RedBrowser.php:257
 #: ../../include/RedDAV/RedBrowser.php:305 ../../mod/profile_photo.php:362
-#: ../../mod/events.php:493 ../../mod/photos.php:718 ../../mod/photos.php:1248
+#: ../../mod/photos.php:718 ../../mod/photos.php:1248
 msgid "Upload"
 msgstr "Uploaden"
 
@@ -1281,7 +1281,7 @@ msgstr "Filter wat je in de Matrix ziet op hoe goed je iemand kent of mag"
 
 #: ../../include/features.php:74
 msgid "Connection Filtering"
-msgstr "Connectie-filters"
+msgstr "berichtenfilters"
 
 #: ../../include/features.php:74
 msgid "Filter incoming posts from connections based on keywords/content"
@@ -3041,14 +3041,14 @@ msgstr "Voor alle goedgekeurde connecties zichtbaar."
 msgid "Visible to specific connections."
 msgstr "Voor specifieke connecties zichtbaar."
 
-#: ../../include/items.php:4209 ../../mod/thing.php:74
+#: ../../include/items.php:4215 ../../mod/thing.php:74
 #: ../../mod/filestorage.php:27 ../../mod/viewsrc.php:20
 #: ../../mod/admin.php:167 ../../mod/admin.php:1025 ../../mod/admin.php:1225
 #: ../../mod/display.php:36
 msgid "Item not found."
 msgstr "Item niet gevonden."
 
-#: ../../include/items.php:4282 ../../include/attach.php:137
+#: ../../include/items.php:4288 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
@@ -3091,26 +3091,26 @@ msgstr "Item niet gevonden."
 msgid "Permission denied."
 msgstr "Toegang geweigerd"
 
-#: ../../include/items.php:4684 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4690 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr "Collectie niet gevonden."
 
-#: ../../include/items.php:4700
+#: ../../include/items.php:4706
 msgid "Collection is empty."
 msgstr "Collectie is leeg"
 
-#: ../../include/items.php:4707
+#: ../../include/items.php:4713
 #, php-format
 msgid "Collection: %s"
 msgstr "Collectie: %s"
 
-#: ../../include/items.php:4717 ../../mod/connedit.php:662
+#: ../../include/items.php:4723 ../../mod/connedit.php:662
 #, php-format
 msgid "Connection: %s"
 msgstr "Connectie: %s"
 
-#: ../../include/items.php:4719
+#: ../../include/items.php:4725
 msgid "Connection not found."
 msgstr "Connectie niet gevonden."
 
@@ -4432,6 +4432,10 @@ msgstr "Volgende"
 #: ../../mod/events.php:490
 msgid "Export"
 msgstr "Exporteren"
+
+#: ../../mod/events.php:493
+msgid "Import"
+msgstr "Importeren"
 
 #: ../../mod/events.php:518
 msgid "Event removed"

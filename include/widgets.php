@@ -980,10 +980,48 @@ function widget_rating($arr) {
 }
 
 // used by site ratings pages to provide a return link
-function widget_pubsites() {
+function widget_pubsites($arr) {
 	if(get_app()->poi)
 		return;
 	return '<div class="widget"><ul class="nav nav-pills"><li><a href="pubsites">' . t('Public Hubs') . '</a></li></ul></div>';
 }
 
+
+function widget_forums($arr) {
+
+	$a = get_app();
+
+	if(! local_channel())
+		return '';
+
+	if(! count($a->contacts))
+		load_contact_links(local_channel());
+
+	$o = '';
+
+	if(is_array($arr) && array_key_exists('limit',$arr))
+		$limit = " limit " . intval($limit) . " ";
+	else
+		$limit = " limit 12 ";
+
+	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
+	
+	$r = q("select count(item_unseen) as unseen, owner_xchan, xchan.* from item left join xchan on owner_xchan = xchan_hash group by owner_xchan order by unseen desc limit item  from xchan where xchan_pubforum = 1 and uid = %d $perms_sql group by owner_xchan $limit ",
+		intval(local_channel())
+	);
+	if($r) {
+		$o .= '<div class="widget">';
+		$o .= '<h3>' . t('Forums') . '</h3>';
+
+		foreach($r as $rr) {
+			if($a->contacts && array_key_exists($rr['owner_xchan'],$a->contacts))
+		        $contact = $a->contacts[$rr['owner_xchan']];
+			if($contact)
+				$o .= '<ul class="nav nav-pills"><li><a href="network?f=&cid=' . $contact['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" /> ' . $rr['xchan_name'] . '</a> ' . $rr['unseen'] . '</li>';
+		}
+		$o .= '</div>';
+	}
+	return $o; 
+
+}
 

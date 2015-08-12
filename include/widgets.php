@@ -1017,7 +1017,7 @@ function widget_forums($arr) {
 			if($a->contacts && array_key_exists($rr['owner_xchan'],$a->contacts))
 		        $contact = $a->contacts[$rr['owner_xchan']];
 			if($contact)
-				$o .= '<li><span class="pull-right" style="font-weight: bold;">' . $rr['unseen'] . '</span><a href="network?f=&cid=' . $contact['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+				$o .= '<li><span class="pull-right">' . $rr['unseen'] . '</span><a href="network?f=&cid=' . $contact['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';
 	}

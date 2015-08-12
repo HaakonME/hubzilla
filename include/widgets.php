@@ -999,7 +999,7 @@ function widget_forums($arr) {
 	if(is_array($arr) && array_key_exists('limit',$arr))
 		$limit = " limit " . intval($limit) . " ";
 	else
-		$limit = " limit 12 ";
+		$limit = '';
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 	

@@ -1011,7 +1011,7 @@ function widget_forums($arr) {
 		$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills nav-stacked">';
 
 		foreach($r as $rr) {
-			$o .= '<li><span class="pull-right">' . $rr['unseen'] . '</span><a href="network?f=&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';
 	}

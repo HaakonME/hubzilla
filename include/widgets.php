@@ -1006,20 +1006,20 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 	
-	$r = q("select count(item_unseen) as unseen, owner_xchan, xchan.* from item left join xchan on owner_xchan = xchan_hash group by owner_xchan order by unseen desc limit item  from xchan where xchan_pubforum = 1 and uid = %d $perms_sql group by owner_xchan $limit ",
+	$r = q("select sum(item_unseen) as unseen, owner_xchan, xchan.* from xchan left join item on owner_xchan = xchan_hash where xchan_pubforum = 1 and uid = %d $perms_sql group by owner_xchan $limit ",
 		intval(local_channel())
 	);
 	if($r) {
 		$o .= '<div class="widget">';
-		$o .= '<h3>' . t('Forums') . '</h3>';
+		$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills nav-stacked">';
 
 		foreach($r as $rr) {
 			if($a->contacts && array_key_exists($rr['owner_xchan'],$a->contacts))
 		        $contact = $a->contacts[$rr['owner_xchan']];
 			if($contact)
-				$o .= '<ul class="nav nav-pills"><li><a href="network?f=&cid=' . $contact['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" /> ' . $rr['xchan_name'] . '</a> ' . $rr['unseen'] . '</li>';
+				$o .= '<li><span class="pull-right" style="font-weight: bold;">' . $rr['unseen'] . '</span><a href="network?f=&cid=' . $contact['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
-		$o .= '</div>';
+		$o .= '</ul></div>';
 	}
 	return $o; 
 

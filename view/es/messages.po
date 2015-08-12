@@ -5,6 +5,7 @@
 # Translators:
 # boquiabierto <adrian@grell.es>, 2013-2014
 # Alfonso <admin@alfonsomh.eu>, 2015
+# jeroenpraat <jeroenpraat@xs4all.nl>, 2015
 # Manuel Jiménez Friaza <mjfriaza@openmailbox.org>, 2015
 # Rafael, 2015
 # tony baldwin <tonybaldwin@gmx.com>, 2014
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-07 00:03-0700\n"
-"PO-Revision-Date: 2015-08-12 09:43+0000\n"
+"PO-Revision-Date: 2015-08-12 17:17+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -177,15 +178,15 @@ msgstr "Dirección de correo inválida"
 
 #: ../../include/account.php:29
 msgid "Your email domain is not among those allowed on this site"
-msgstr "Tu dirección de correo no pertenece a los dominios permitidos en éste sitio."
+msgstr "Su dirección de correo no pertenece a los dominios permitidos en este sitio."
 
 #: ../../include/account.php:35
 msgid "Your email address is already registered at this site."
-msgstr "Tu dirección de correo está ya registrada en éste sitio."
+msgstr "Su dirección de correo está ya registrada en este sitio."
 
 #: ../../include/account.php:67
 msgid "An invitation is required."
-msgstr "Es requerido que te inviten."
+msgstr "Es obligatorio que le inviten."
 
 #: ../../include/account.php:71
 msgid "Invitation could not be verified."
@@ -193,7 +194,7 @@ msgstr "No se ha podido verificar su invitación."
 
 #: ../../include/account.php:121
 msgid "Please enter the required information."
-msgstr "Por favor introduce la información requerida."
+msgstr "Por favor introduzca la información requerida."
 
 #: ../../include/account.php:188
 msgid "Failed to store account information."
@@ -432,7 +433,7 @@ msgstr "Predeterminado"
 
 #: ../../include/js_strings.php:5
 msgid "Delete this item?"
-msgstr "¿Borrar este ítem?"
+msgstr "¿Borrar este elemento?"
 
 #: ../../include/js_strings.php:6 ../../include/ItemObject.php:667
 #: ../../mod/photos.php:980 ../../mod/photos.php:1098
@@ -526,7 +527,7 @@ msgstr "Enviar"
 
 #: ../../include/js_strings.php:23
 msgid "Please enter a link URL"
-msgstr "Por favor, introduce una dirección de enlace"
+msgstr "Por favor, introduzca una dirección de enlace"
 
 #: ../../include/js_strings.php:24
 msgid "Unsaved changes. Are you sure you wish to leave this page?"
@@ -663,7 +664,7 @@ msgstr "dar un toque"
 
 #: ../../include/text.php:994 ../../include/conversation.php:243
 msgid "poked"
-msgstr "dió un toque"
+msgstr "ha recibido un toque"
 
 #: ../../include/text.php:995
 msgid "ping"
@@ -671,7 +672,7 @@ msgstr "ping"
 
 #: ../../include/text.php:995
 msgid "pinged"
-msgstr " te hicieron un ping"
+msgstr " le hicieron un ping"
 
 #: ../../include/text.php:996
 msgid "prod"
@@ -1005,7 +1006,7 @@ msgstr "%1$s usado de %2$s (%3$s&#37;)"
 #: ../../include/conversation.php:1609 ../../include/apps.php:135
 #: ../../mod/fbrowser.php:114
 msgid "Files"
-msgstr "Archivos"
+msgstr "Ficheros"
 
 #: ../../include/RedDAV/RedBrowser.php:253
 msgid "Total"
@@ -1316,7 +1317,7 @@ msgstr "Categorías de entradas"
 
 #: ../../include/features.php:82
 msgid "Add categories to your posts"
-msgstr "Añade categorías a tus entradas"
+msgstr "Añadir categorías a sus publicaciones"
 
 #: ../../include/features.php:83 ../../include/widgets.php:304
 #: ../../include/contact_widgets.php:57
@@ -1367,7 +1368,7 @@ msgstr "Sistema"
 
 #: ../../include/widgets.php:94 ../../include/conversation.php:1504
 msgid "Personal"
-msgstr "Personal"
+msgstr "Personales"
 
 #: ../../include/widgets.php:95
 msgid "Create Personal App"
@@ -1428,7 +1429,7 @@ msgstr "Todo"
 
 #: ../../include/widgets.php:349
 msgid "Archives"
-msgstr "Archivos"
+msgstr "Ficheros"
 
 #: ../../include/widgets.php:429 ../../mod/connedit.php:571
 msgid "Me"
@@ -1541,7 +1542,7 @@ msgstr "Ver valoraciones"
 
 #: ../../include/widgets.php:989
 msgid "Public Hubs"
-msgstr "Centros de actividad públicos"
+msgstr "Servidores públicos"
 
 #: ../../include/event.php:22 ../../include/bb2diaspora.php:459
 msgid "l F d, Y \\@ g:i A"
@@ -1659,17 +1660,17 @@ msgstr "%1$s, %2$s [zrl=%3$s]te etiquetó[/zrl]."
 #: ../../include/enotify.php:238
 #, php-format
 msgid "[Red:Notify] %1$s poked you"
-msgstr "[Red notifica]  %1$s ta ha dado un toque"
+msgstr "[Red aviso]  %1$s ha recibido un toque"
 
 #: ../../include/enotify.php:239
 #, php-format
 msgid "%1$s, %2$s poked you at %3$s"
-msgstr "%1$s, %2$s te dieron un toque en %3$s"
+msgstr "%1$s, %2$s recibió un toque en %3$s"
 
 #: ../../include/enotify.php:240
 #, php-format
 msgid "%1$s, %2$s [zrl=%2$s]poked you[/zrl]."
-msgstr "%1$s, %2$s [zrl=%2$s]te dieron un toque[/zrl]."
+msgstr "%1$s, %2$s [zrl=%2$s]recibió un toque[/zrl]."
 
 #: ../../include/enotify.php:256
 #, php-format
@@ -1725,7 +1726,7 @@ msgstr "%1$s, has recibido una sugerencia de un amigo de '%2$s' a las %3$s"
 msgid ""
 "%1$s, you've received [zrl=%2$s]a friend suggestion[/zrl] for %3$s from "
 "%4$s."
-msgstr "%1$s, has recibido [zrl=%2$s]una sugerencia de un amigo[/zrl] para %3$s de %4$s."
+msgstr "%1$s, ha recibido [zrl=%2$s]una sugerencia de amistad[/zrl] para %3$s de %4$s."
 
 #: ../../include/enotify.php:293
 msgid "Name:"
@@ -1891,7 +1892,7 @@ msgstr "Invertir estado de estrella"
 
 #: ../../include/ItemObject.php:218
 msgid "starred"
-msgstr "con estrella"
+msgstr "preferidos"
 
 #: ../../include/ItemObject.php:227 ../../include/conversation.php:674
 msgid "Message signature validated"
@@ -2074,7 +2075,7 @@ msgstr "Usuario '%s' eliminado"
 
 #: ../../include/bb2diaspora.php:373
 msgid "Attachments:"
-msgstr "Archivos adjuntos:"
+msgstr "Ficheros adjuntos:"
 
 #: ../../include/bb2diaspora.php:461
 msgid "$Projectname event notification:"
@@ -2132,7 +2133,7 @@ msgstr "Sus fotos"
 
 #: ../../include/nav.php:98
 msgid "Your files"
-msgstr "Sus archivos"
+msgstr "Sus ficheros"
 
 #: ../../include/nav.php:103 ../../include/apps.php:146
 msgid "Chat"
@@ -2166,7 +2167,7 @@ msgstr "Iniciar sesión"
 
 #: ../../include/nav.php:117
 msgid "Sign in"
-msgstr "Regístrate"
+msgstr "Regístrese"
 
 #: ../../include/nav.php:134
 #, php-format
@@ -2187,7 +2188,7 @@ msgstr "Página de inicio"
 
 #: ../../include/nav.php:155 ../../mod/register.php:224 ../../boot.php:1527
 msgid "Register"
-msgstr "Regístrate"
+msgstr "Registrarse"
 
 #: ../../include/nav.php:155
 msgid "Create an account"
@@ -2228,15 +2229,15 @@ msgstr "Su red"
 
 #: ../../include/nav.php:181
 msgid "Mark all matrix notifications seen"
-msgstr "Marcar todas las notificaciones de la matriz como leídas"
+msgstr "Marcar todas las notificaciones de la red como leídas"
 
 #: ../../include/nav.php:183 ../../include/apps.php:137
 msgid "Channel Home"
-msgstr "Hogar del canal"
+msgstr "Mi canal"
 
 #: ../../include/nav.php:183
 msgid "Channel home"
-msgstr "Hogar del canal"
+msgstr "Mi canal"
 
 #: ../../include/nav.php:184
 msgid "Mark all channel notifications seen"
@@ -2415,7 +2416,7 @@ msgstr "Puede ver mis conexiones"
 
 #: ../../include/permissions.php:30
 msgid "Can view my file storage"
-msgstr "Puede ver mis archivos almacenados"
+msgstr "Puede ver mis ficheros almacenados"
 
 #: ../../include/permissions.php:31
 msgid "Can view my webpages"
@@ -2463,7 +2464,7 @@ msgstr "Puede charlar conmigo"
 
 #: ../../include/permissions.php:43
 msgid "Can write to my file storage"
-msgstr "Puede escribir en mi almacenamiento de archivos"
+msgstr "Puede escribir en mi almacenamiento de ficheros"
 
 #: ../../include/permissions.php:44
 msgid "Can edit my webpages"
@@ -2552,7 +2553,7 @@ msgstr "%1$s ahora es conectada con %2$s"
 #: ../../include/conversation.php:239
 #, php-format
 msgid "%1$s poked %2$s"
-msgstr "%1$s dió un toque a %2$s"
+msgstr "%1$s dio un toque a %2$s"
 
 #: ../../include/conversation.php:260 ../../mod/mood.php:63
 #, php-format
@@ -2709,15 +2710,15 @@ msgstr "Visible para cualquiera"
 #: ../../include/conversation.php:1141 ../../mod/mail.php:174
 #: ../../mod/mail.php:289
 msgid "Please enter a link URL:"
-msgstr "Por favor, introduce una URL de enlace:"
+msgstr "Por favor, introduzca una URL de enlace:"
 
 #: ../../include/conversation.php:1142
 msgid "Please enter a video link/URL:"
-msgstr "Por favor, introduce un enlace/URL de vídeo:"
+msgstr "Por favor, introduzca un enlace/URL de vídeo:"
 
 #: ../../include/conversation.php:1143
 msgid "Please enter an audio link/URL:"
-msgstr "Por favor, introduce un enlace/URL de audio:"
+msgstr "Por favor, introduzca un enlace/URL de audio:"
 
 #: ../../include/conversation.php:1144
 msgid "Tag term:"
@@ -2888,7 +2889,7 @@ msgstr "Ordenar por fecha de comentario"
 
 #: ../../include/conversation.php:1496
 msgid "Posted Order"
-msgstr "Orden de publicados"
+msgstr "Recientemente publicados"
 
 #: ../../include/conversation.php:1499
 msgid "Sort by Post Date"
@@ -2896,12 +2897,12 @@ msgstr "Ordenar por fecha de publicación"
 
 #: ../../include/conversation.php:1507
 msgid "Posts that mention or involve you"
-msgstr "Publicaciones que te mencionan o involucran"
+msgstr "Publicaciones que le mencionan o involucran"
 
 #: ../../include/conversation.php:1513 ../../mod/connections.php:212
 #: ../../mod/connections.php:225 ../../mod/menu.php:107
 msgid "New"
-msgstr "Nuevo"
+msgstr "Novedades"
 
 #: ../../include/conversation.php:1516
 msgid "Activity Stream - by date"
@@ -2909,7 +2910,7 @@ msgstr "Flujo de actividad - por fecha"
 
 #: ../../include/conversation.php:1522
 msgid "Starred"
-msgstr "con estrella"
+msgstr "Preferidos"
 
 #: ../../include/conversation.php:1525
 msgid "Favourite Posts"
@@ -2933,7 +2934,7 @@ msgstr "Mensajes de estado y publicaciones"
 
 #: ../../include/conversation.php:1591
 msgid "About"
-msgstr "Sobre"
+msgstr "Perfil"
 
 #: ../../include/conversation.php:1594
 msgid "Profile Details"
@@ -2945,7 +2946,7 @@ msgstr "Álbumes de fotos"
 
 #: ../../include/conversation.php:1612
 msgid "Files and Storage"
-msgstr "Archivos y almacenamiento"
+msgstr "Ficheros y almacenamiento"
 
 #: ../../include/conversation.php:1622 ../../include/conversation.php:1625
 msgid "Chatrooms"
@@ -2963,14 +2964,14 @@ msgstr "Administrar páginas web"
 msgctxt "noun"
 msgid "Attending"
 msgid_plural "Attending"
-msgstr[0] "Asiste"
+msgstr[0] "Asistir"
 msgstr[1] "Asistir"
 
 #: ../../include/conversation.php:1710
 msgctxt "noun"
 msgid "Not Attending"
 msgid_plural "Not Attending"
-msgstr[0] "No asiste"
+msgstr[0] "No asistir"
 msgstr[1] "No asistir"
 
 #: ../../include/conversation.php:1713
@@ -3230,7 +3231,7 @@ msgstr "Permisos"
 
 #: ../../include/attach.php:242 ../../include/attach.php:300
 msgid "Item was not found."
-msgstr "No se ha encontrado aquel ítem."
+msgstr "Elemento no encontrado."
 
 #: ../../include/attach.php:363
 msgid "No source file."
@@ -3321,7 +3322,7 @@ msgstr "No ha sido posible de conseguir la identidad creada"
 
 #: ../../include/identity.php:350
 msgid "Default Profile"
-msgstr "Perfil por defecto"
+msgstr "Perfil principal"
 
 #: ../../include/identity.php:660
 msgid "Requested channel is not available."
@@ -3472,7 +3473,7 @@ msgstr "Religión:"
 
 #: ../../include/identity.php:1216 ../../mod/directory.php:315
 msgid "About:"
-msgstr "Sobre tí:"
+msgstr "Sobre usted:"
 
 #: ../../include/identity.php:1218
 msgid "Hobbies/Interests:"
@@ -3760,7 +3761,7 @@ msgstr "No me importa"
 
 #: ../../include/profile_selectors.php:80
 msgid "Ask me"
-msgstr "Pregúntame"
+msgstr "Pregúnteme"
 
 #: ../../include/apps.php:128
 msgid "Site Admin"
@@ -4355,7 +4356,7 @@ msgstr "%1$s no están de acuerdo con %2$s de %3$s"
 #: ../../mod/like.php:402
 #, php-format
 msgid "%1$s abstains from a decision on %2$s's %3$s"
-msgstr "%1$s se abstiene de pronunciarse sobre %2$s's %3$s"
+msgstr "%1$s se abstiene de pronunciarse sobre %2$s de %3$s"
 
 #: ../../mod/like.php:404
 #, php-format
@@ -4506,7 +4507,7 @@ msgid ""
 "membership in the network as a whole. Some sites may require subscription or"
 " provide tiered service plans. The provider links <strong>may</strong> "
 "provide additional details."
-msgstr "Los sitios listados permiten el registro público de la red $Projectname. Todos los sitios de la red están vinculados entre sí por lo que sus miembros, en ninguna de ellas, indican la pertenencia a la red en su conjunto. Algunos sitios pueden requerir suscripción o proporcionar planes de servicio por niveles. Los enlaces de los proveedores de <strong>pueden </strong> proporcionar detalles adicionales."
+msgstr "Los sitios listados permiten el registro público de la red $Projectname. Todos los sitios de la red están vinculados entre sí por lo que sus miembros, en ninguna de ellas, indican la pertenencia a la red en su conjunto. Algunos sitios pueden requerir suscripción o proporcionar planes de servicio por niveles. Los enlaces de los proveedores de <strong> pueden </strong> proporcionar detalles adicionales."
 
 #: ../../mod/pubsites.php:25
 msgid "Rate this hub"
@@ -4747,19 +4748,19 @@ msgstr "Error al actualizar el registro de la conexión."
 
 #: ../../mod/connections.php:192 ../../mod/connections.php:293
 msgid "Blocked"
-msgstr "Bloqueado"
+msgstr "Bloqueados"
 
 #: ../../mod/connections.php:197 ../../mod/connections.php:300
 msgid "Ignored"
-msgstr "Ignorado"
+msgstr "Ignorados"
 
 #: ../../mod/connections.php:202 ../../mod/connections.php:314
 msgid "Hidden"
-msgstr "Oculto"
+msgstr "Ocultos"
 
 #: ../../mod/connections.php:207 ../../mod/connections.php:307
 msgid "Archived"
-msgstr "Archivado"
+msgstr "Archivados"
 
 #: ../../mod/connections.php:271
 msgid "Suggest new connections"
@@ -4783,7 +4784,7 @@ msgstr "Mostrar todas las conexiones"
 
 #: ../../mod/connections.php:286
 msgid "Unblocked"
-msgstr "Desbloqueado"
+msgstr "Desbloqueados"
 
 #: ../../mod/connections.php:289
 msgid "Only show unblocked connections"
@@ -5806,7 +5807,7 @@ msgstr "Dar un toque/Incitar"
 
 #: ../../mod/poke.php:160
 msgid "poke, prod or do other things to somebody"
-msgstr "dale un toque, incita o hasle otras cosas a alguien"
+msgstr "dar un toque, incitar u otras cosas a alguien"
 
 #: ../../mod/poke.php:161
 msgid "Recipient"
@@ -6625,7 +6626,7 @@ msgstr "Actualizaciones de la base de datos"
 
 #: ../../mod/admin.php:115 ../../mod/admin.php:122 ../../mod/admin.php:1396
 msgid "Logs"
-msgstr "Registros"
+msgstr "Informes"
 
 #: ../../mod/admin.php:121
 msgid "Plugin Features"
@@ -7640,7 +7641,7 @@ msgstr "Configuración para el emulador de Diaspora incorporado"
 
 #: ../../mod/settings.php:688
 msgid "Allow any Diaspora member to comment on your public posts"
-msgstr "Permitir a cualquier miembro de Diaspora comentar en tus publicaciones públicas"
+msgstr "Permitir a cualquier miembro de Diaspora comentar en sus publicaciones públicas"
 
 #: ../../mod/settings.php:689
 msgid "Enable the Diaspora protocol for this channel"
@@ -7652,7 +7653,7 @@ msgstr "Configuración de directivas de Diaspora"
 
 #: ../../mod/settings.php:691
 msgid "Prevent your hashtags from being redirected to other sites"
-msgstr "Impedir que tus hashtags sean redirigidos a otros sitios "
+msgstr "Impedir que sus \"hashtags\" sean redirigidos a otros sitios "
 
 #: ../../mod/settings.php:715
 msgid "Account Settings"
@@ -7660,7 +7661,7 @@ msgstr "Configuración de la cuenta"
 
 #: ../../mod/settings.php:716
 msgid "Enter New Password:"
-msgstr "Introduce la nueva contraseña:"
+msgstr "Introduzca la nueva contraseña:"
 
 #: ../../mod/settings.php:717
 msgid "Confirm New Password:"
@@ -7821,7 +7822,7 @@ msgstr "Publicar tu perfil predeterminado en el directorio de la red"
 
 #: ../../mod/settings.php:991
 msgid "Allow us to suggest you as a potential friend to new members?"
-msgstr "Nos permites sugierirte como amigo potencial a los nuevos miembros?"
+msgstr "¿Nos permite sugierirle como amigo potencial a los nuevos miembros?"
 
 #: ../../mod/settings.php:1000
 msgid "Your channel address is"
@@ -7867,7 +7868,7 @@ msgstr "Configuración de seguridad y privacidad"
 
 #: ../../mod/settings.php:1066
 msgid "Your permissions are already configured. Click to view/adjust"
-msgstr "Tus permisos ya están configurados. Pulsa para ver/ajustar"
+msgstr "Sus permisos ya están configurados. Pulse para ver/ajustar"
 
 #: ../../mod/settings.php:1068
 msgid "Hide my online presence"
@@ -7902,7 +7903,7 @@ msgstr "Bloqueado - <em>por defecto bloqueado bloqueado a/para cualquiera</em>"
 
 #: ../../mod/settings.php:1076
 msgid "Allow others to tag your posts"
-msgstr "Permitir a otros etiquetar tus publicaciones"
+msgstr "Permitir a otros etiquetar sus publicaciones"
 
 #: ../../mod/settings.php:1076
 msgid ""
@@ -7999,7 +8000,7 @@ msgstr "Sea etiquetado en una publicación"
 
 #: ../../mod/settings.php:1109
 msgid "You are poked/prodded/etc. in a post"
-msgstr "Te han dado un toque/incitado/etc. en una entrada"
+msgstr "Ha recibido un toque o ha sido incitado, etc. en una publicación"
 
 #: ../../mod/settings.php:1112
 msgid "Show visual notifications including:"
@@ -8470,11 +8471,11 @@ msgstr "Autenticación Remota"
 
 #: ../../mod/rmagic.php:85
 msgid "Enter your channel address (e.g. channel@example.com)"
-msgstr "Introduce la dirección del canal (p.e. canal@ejemplo.com)"
+msgstr "Introduzca la dirección del canal (p.e. channel@example.com)"
 
 #: ../../mod/rmagic.php:86
 msgid "Authenticate"
-msgstr "Autentícate"
+msgstr "Identifíquese"
 
 #: ../../mod/mail.php:33
 msgid "Unable to lookup recipient."
@@ -8740,7 +8741,7 @@ msgstr "No se han encontrado clases de restricción de servicio."
 
 #: ../../mod/sharedwithme.php:94
 msgid "Files: shared with me"
-msgstr "Archivos: compartidos conmigo"
+msgstr "Ficheros: compartidos conmigo"
 
 #: ../../mod/sharedwithme.php:96
 msgid "NEW"
@@ -8748,7 +8749,7 @@ msgstr "NUEVO"
 
 #: ../../mod/sharedwithme.php:99
 msgid "Remove all files"
-msgstr "Borra todos los archivos"
+msgstr "Borrar todos los ficheros"
 
 #: ../../mod/sharedwithme.php:100
 msgid "Remove this file"
@@ -8859,7 +8860,7 @@ msgstr "Ajusta el tamaño de fondo del elemento"
 
 #: ../../view/theme/apw/php/config.php:281
 msgid "Item opacity"
-msgstr "Opacidad del item"
+msgstr "Opacidad del elemento"
 
 #: ../../view/theme/apw/php/config.php:282
 msgid "Display post previews only"
@@ -8875,7 +8876,7 @@ msgstr "Color de la barra de navegación"
 
 #: ../../view/theme/apw/php/config.php:285
 msgid "Item float"
-msgstr "Item flotante"
+msgstr "Elemento flotante"
 
 #: ../../view/theme/apw/php/config.php:286
 msgid "Left offset of the section element"
@@ -9028,7 +9029,7 @@ msgstr "Ajusta el tamaño de foto de los seguidores del autor"
 #: ../../boot.php:1356
 #, php-format
 msgid "Update %s failed. See error logs."
-msgstr "La actualización %s ha fallado. Mire el registro de errores."
+msgstr "La actualización %s ha fallado. Mire el informe de errores."
 
 #: ../../boot.php:1359
 #, php-format
@@ -9054,7 +9055,7 @@ msgstr "¿Olvidó su contraseña?"
 
 #: ../../boot.php:2178
 msgid "toggle mobile"
-msgstr "alterna movil"
+msgstr "cambiar a móvil"
 
 #: ../../boot.php:2313
 msgid "Website SSL certificate is not valid. Please correct."

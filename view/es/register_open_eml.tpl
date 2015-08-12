@@ -1,19 +1,19 @@
 
-An account has been created at {{$sitename}} for this email address. 
-The login details are as follows:
+Una cuenta ha sido creada en {{$sitename}} con esta dirección de correo electrónico. 
+Los detalles del inicio de sesión son los siguientes:
 
-Site Location:	{{$siteurl}}
-Login:	{{$email}}
-Password: (the password which was provided during registration)
+Localización del Sitio:	{{$siteurl}}
+Nombre de usuario:	{{$email}}
+Contraseña: (la contraseña que proporcionó durante el proceso de registro)
 
-If this account was created without your knowledge and is not desired, you may 
-visit this site and reset the password. This will allow you to remove the 
-account from the links on the Settings page, and we 
-apologise for any inconvenience. 
+Si esta cuenta se creó sin su consentimiento y no es deseada, puedes 
+visitar el sitio y cambiar la contraseña. Esto le permitirá eliminar la 
+cuenta de los enlaces en la página de Ajustes, le 
+pedimos disculpas por cualquier inconveniente que hayamos podido causar. 
 
-Thank you and welcome to {{$sitename}}.
+gracias y bienvenido a {{$sitename}}.
 
-Sincerely,
-	{{$sitename}} Administrator
+Atentamente,
+	Administrador de {{$sitename}}
 
  

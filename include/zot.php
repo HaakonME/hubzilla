@@ -1537,7 +1537,17 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 
-		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
+		if ($arr['mid'] == $arr['parent_mid']){
+			$perm = 'send_stream';
+		}
+		else{
+			$r = q("select item_owner from item where item.mid == '%s' limit 1",
+				dbesc($arr['parent_mid']));
+			if($channel['channel_hash'] == $r[0]['item_owner'])
+				$perm = 'post_comments';
+			else
+				$perm = 'send_stream';
+		}
 
 
 		// This is our own post, possibly coming from a channel clone

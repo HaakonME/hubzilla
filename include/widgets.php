@@ -1001,17 +1001,39 @@ function widget_forums($arr) {
 	else
 		$limit = '';
 
+	$unseen = 0;
+	if(is_array($arr) && array_key_exists('unseen',$arr) && intval($arr['unseen']))
+		$unseen = 1;
+
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
-	
-	$r = q("select sum(item_unseen) as unseen, owner_xchan, abook_id, xchan.* from xchan left join item on owner_xchan = xchan_hash left join abook on abook_xchan = xchan_hash where xchan_pubforum = 1 and uid = %d and abook_channel = %d $perms_sql group by owner_xchan order by xchan_name $limit ",
-		intval(local_channel()),
+
+	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where xchan_pubforum = 1 and abook_channel = %d order by xchan_name $limit ",
 		intval(local_channel())
 	);
-	if($r) {
+	if(! $r1)
+		return $o;
+
+	$str = '';
+
+	// Trying to cram all this into a single query with joins and the proper group by's is tough.
+	// There also should be a way to update this via ajax.
+
+	for($x = 0; $x < count($r1); $x ++) {
+		$r = q("select sum(item_unseen) as unseen from item where owner_xchan = '%s' and uid = %d $perms_sql ",
+			dbesc($r1[$x]['xchan_hash']),
+			intval(local_channel())
+		);
+		if($r)
+			$r1[$x]['unseen'] = $r[0]['unseen'];
+	}
+
+	if($r1) {
 		$o .= '<div class="widget">';
 		$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills nav-stacked">';
 
-		foreach($r as $rr) {
+		foreach($r1 as $rr) {
+			if($unseen && (! intval($rr['unseen'])))
+				continue;
 			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';

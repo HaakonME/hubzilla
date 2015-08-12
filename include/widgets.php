@@ -1003,7 +1003,7 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 	
-	$r = q("select sum(item_unseen) as unseen, owner_xchan, abook_id, xchan.* from xchan left join item on owner_xchan = xchan_hash left join abook on abook_channel = uid where xchan_pubforum = 1 and uid = %d $perms_sql group by owner_xchan $limit ",
+	$r = q("select sum(item_unseen) as unseen, owner_xchan, abook_id, xchan.* from xchan left join item on owner_xchan = xchan_hash left join abook on abook_channel = uid where xchan_pubforum = 1 and uid = %d $perms_sql group by owner_xchan order by xchan_name $limit ",
 		intval(local_channel())
 	);
 	if($r) {

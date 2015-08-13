@@ -68,6 +68,10 @@ function setup_post(&$a) {
 			$adminmail = trim($_POST['adminmail']);
 			$siteurl = trim($_POST['siteurl']);
 
+			// $siteurl should not have a trailing slash
+
+			$siteurl = rtrim($siteurl,'/');
+
 			require_once('include/dba/dba_driver.php');
 			unset($db);
 			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);

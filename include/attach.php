@@ -378,6 +378,29 @@ function attach_by_hash_nodata($hash, $rev = 0) {
  * @param string $options (optional) one of update, replace, revision
  * @param array $arr (optional) associative array
  */
+
+/**
+ * A lot going on in this function, and some of it is old cruft and some is new cruft
+ * and the entire thing probably needs to be refactored. It started out just storing
+ * files, before we had DAV. It was made extensible to do extra stuff like edit an 
+ * existing file or optionally store a separate revision using $options to choose between different
+ * storage models. Along the way we moved from
+ * DB data storage to file system storage. 
+ * Then DAV came along and used different upload methods depending on whether the 
+ * file was stored as a DAV directory object or updated as a file object. One of these 
+ * is essentially an update and the other is basically an upload, but doesn't use the traditional PHP
+ * upload workflow. 
+ * Then came hubzilla and we tried to merge photo functionality with the file storage. Most of
+ * that integration occurs within this function. 
+ * This required overlap with the old photo_upload stuff and photo albums were
+ * completely different concepts from directories which needed to be reconciled somehow.
+ * The old revision stuff is kind of orphaned currently. There's new revision stuff for photos
+ * which attaches (2) etc. onto the name, but doesn't integrate with the attach table revisioning.
+ * That's where it sits currently. I repeat it needs to be refactored, and this note is here
+ * for future explorers and those who may be doing that work to understand where it came
+ * from and got to be the monstrosity of tangled unrelated code that it currently is.
+ */
+
 function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	require_once('include/photos.php');

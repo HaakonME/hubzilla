@@ -1178,8 +1178,10 @@ function zot_import($arr, $sender_url) {
 				if($i['message']['type'] === 'activity') {
 					$arr = get_item_elements($i['message']);
 
-					if(! array_key_exists('created',$arr)) {
-						logger('Activity rejected: probable failure to lookup author/owner. ' . print_r($i['message'],true));
+					$v = validate_item_elements($i['message'],$arr);
+
+					if(! $v['success']) {
+						logger('Activity rejected: ' . $v['message'] . ' ' . print_r($i['message'],true));
 						continue;
 					}
 
@@ -1538,24 +1540,11 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 
 
-		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
+//		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
 
-// checkin 36b5f6ac - multiple issues, not yet ready for prime time
-// currently this is mostly fixed except for what to do if the post is in a second delivery chain
-//		if ($arr['mid'] == $arr['parent_mid']){
-//			$perm = 'send_stream';
-//		}
-//		else{
-//			$perm = 'post_comments';
-//
-//			$r = q("select owner_xchan from item where item.mid = '%s' and uid = %d limit 1",
-//				dbesc($arr['parent_mid']),
-//				intval($channel['channel_id'])
-//			);
-//			if(($r) && $channel['channel_hash'] !== $r[0]['owner_xchan'])
-//				$perm = 'send_stream';
-//		}
-
+		$perm = 'send_stream';
+		if(($arr['mid'] !== $arr['parent_mid']) && ($relay))
+			$perm = 'post_comments';
 
 		// This is our own post, possibly coming from a channel clone
 

@@ -495,6 +495,32 @@ function post_activity_item($arr) {
 	return $ret;
 }
 
+
+function validate_item_elements($message,$arr) {
+
+	$result = array('success' => false);
+
+	if(! array_key_exists('created',$arr))
+		$result['message'] = 'missing created, possible author/owner lookup failure';
+
+	if((! $arr['mid']) || (! $arr['parent_mid'])) 
+		$result['message'] = 'missing message-id or parent message-id';
+
+	if(array_key_exists('flags',$message) && in_array('relay',$message['flags']) && $arr['mid'] === $arr['parent_mid'])
+		$result['message'] = 'relay set on top level post';
+
+	if(! $result['message'])
+		$result['success'] = true;
+
+	return $result;
+
+}
+
+
+
+
+
+
 /**
  * @brief Generate an Atom feed.
  *

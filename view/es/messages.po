@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-07 00:03-0700\n"
-"PO-Revision-Date: 2015-08-12 17:17+0000\n"
+"PO-Revision-Date: 2015-08-14 07:27+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -154,7 +154,7 @@ msgstr "editar"
 
 #: ../../include/group.php:298
 msgid "Collections"
-msgstr "Coleciones"
+msgstr "Colecciones"
 
 #: ../../include/group.php:299
 msgid "Edit collection"
@@ -1429,7 +1429,7 @@ msgstr "Todo"
 
 #: ../../include/widgets.php:349
 msgid "Archives"
-msgstr "Ficheros"
+msgstr "Hemeroteca"
 
 #: ../../include/widgets.php:429 ../../mod/connedit.php:571
 msgid "Me"
@@ -2167,7 +2167,7 @@ msgstr "Iniciar sesión"
 
 #: ../../include/nav.php:117
 msgid "Sign in"
-msgstr "Regístrese"
+msgstr "Acceder"
 
 #: ../../include/nav.php:134
 #, php-format
@@ -2192,7 +2192,7 @@ msgstr "Registrarse"
 
 #: ../../include/nav.php:155
 msgid "Create an account"
-msgstr "Crea una cuenta"
+msgstr "Crear una cuenta"
 
 #: ../../include/nav.php:160 ../../include/apps.php:142 ../../mod/help.php:67
 #: ../../mod/help.php:72 ../../mod/layouts.php:176
@@ -2881,7 +2881,7 @@ msgstr "Flujos públicos importados"
 
 #: ../../include/conversation.php:1489
 msgid "Commented Order"
-msgstr "Orden de comentados"
+msgstr "Comentarios recientes"
 
 #: ../../include/conversation.php:1492
 msgid "Sort by Comment Date"
@@ -4768,7 +4768,7 @@ msgstr "Sugerir nuevas conexiones"
 
 #: ../../mod/connections.php:274
 msgid "New Connections"
-msgstr "Nuevas conecciones"
+msgstr "Nuevas conexiones"
 
 #: ../../mod/connections.php:277
 msgid "Show pending (new) connections"
@@ -7822,7 +7822,7 @@ msgstr "Publicar tu perfil predeterminado en el directorio de la red"
 
 #: ../../mod/settings.php:991
 msgid "Allow us to suggest you as a potential friend to new members?"
-msgstr "¿Nos permite sugierirle como amigo potencial a los nuevos miembros?"
+msgstr "¿Nos permite sugerirle como amigo potencial a los nuevos miembros?"
 
 #: ../../mod/settings.php:1000
 msgid "Your channel address is"
@@ -9047,7 +9047,7 @@ msgstr "Contraseña"
 
 #: ../../boot.php:1555
 msgid "Remember me"
-msgstr "Recuérdame"
+msgstr "Recuérdeme"
 
 #: ../../boot.php:1558
 msgid "Forgot your password?"

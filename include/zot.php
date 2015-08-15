@@ -1539,9 +1539,6 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 
-
-//		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
-
 		$perm = 'send_stream';
 		if(($arr['mid'] !== $arr['parent_mid']) && ($relay))
 			$perm = 'post_comments';

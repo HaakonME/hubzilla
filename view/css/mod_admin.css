@@ -61,7 +61,7 @@
 #adminpage table tr:hover { background-color: #bbc7d7; }
 #adminpage .selectall { text-align: right; }
 
-.checkbox {
+.checkbox_bulkedit {
    width: 1.2em;
    height: 1.2em;
 }

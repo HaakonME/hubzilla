@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-07 00:03-0700\n"
+"POT-Creation-Date: 2015-08-14 00:04-0700\n"
 "PO-Revision-Date: 2015-08-09 13:50+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/Friendica/red-matrix/language/nl/)\n"
@@ -125,7 +125,7 @@ msgstr "Geen gebruikersnaam in het importbestand gevonden."
 msgid "Unable to create a unique channel address. Import failed."
 msgstr "Niet in staat om een uniek kanaaladres aan te maken. Importeren is mislukt."
 
-#: ../../include/Import/import_diaspora.php:140 ../../mod/import.php:504
+#: ../../include/Import/import_diaspora.php:140 ../../mod/import.php:530
 msgid "Import completed."
 msgstr "Import voltooid."
 
@@ -502,7 +502,7 @@ msgstr "Omschrijving (optioneel)"
 #: ../../mod/thing.php:318 ../../mod/events.php:494 ../../mod/events.php:670
 #: ../../mod/group.php:81 ../../mod/photos.php:577 ../../mod/photos.php:654
 #: ../../mod/photos.php:941 ../../mod/photos.php:981 ../../mod/photos.php:1099
-#: ../../mod/pdledit.php:58 ../../mod/import.php:534 ../../mod/chat.php:177
+#: ../../mod/pdledit.php:58 ../../mod/import.php:560 ../../mod/chat.php:177
 #: ../../mod/chat.php:211 ../../mod/mitem.php:232 ../../mod/rate.php:167
 #: ../../mod/invite.php:142 ../../mod/locs.php:105 ../../mod/sources.php:104
 #: ../../mod/sources.php:138 ../../mod/filestorage.php:156
@@ -3004,51 +3004,51 @@ msgstr[1] "onthoudingen"
 msgid "Permission denied"
 msgstr "Toegang geweigerd"
 
-#: ../../include/items.php:1035 ../../include/items.php:1081
+#: ../../include/items.php:1038 ../../include/items.php:1084
 msgid "(Unknown)"
 msgstr "(Onbekend)"
 
-#: ../../include/items.php:1307
+#: ../../include/items.php:1310
 msgid "Visible to anybody on the internet."
 msgstr "Voor iedereen op het internet zichtbaar."
 
-#: ../../include/items.php:1309
+#: ../../include/items.php:1312
 msgid "Visible to you only."
 msgstr "Alleen voor jou zichtbaar."
 
-#: ../../include/items.php:1311
+#: ../../include/items.php:1314
 msgid "Visible to anybody in this network."
 msgstr "Voor iedereen in dit netwerk zichtbaar."
 
-#: ../../include/items.php:1313
+#: ../../include/items.php:1316
 msgid "Visible to anybody authenticated."
 msgstr "Voor iedereen die geauthenticeerd is zichtbaar."
 
-#: ../../include/items.php:1315
+#: ../../include/items.php:1318
 #, php-format
 msgid "Visible to anybody on %s."
 msgstr "Voor iedereen op %s zichtbaar."
 
-#: ../../include/items.php:1317
+#: ../../include/items.php:1320
 msgid "Visible to all connections."
 msgstr "Voor alle connecties zichtbaar."
 
-#: ../../include/items.php:1319
+#: ../../include/items.php:1322
 msgid "Visible to approved connections."
 msgstr "Voor alle goedgekeurde connecties zichtbaar."
 
-#: ../../include/items.php:1321
+#: ../../include/items.php:1324
 msgid "Visible to specific connections."
 msgstr "Voor specifieke connecties zichtbaar."
 
-#: ../../include/items.php:4215 ../../mod/thing.php:74
+#: ../../include/items.php:4218 ../../mod/thing.php:74
 #: ../../mod/filestorage.php:27 ../../mod/viewsrc.php:20
 #: ../../mod/admin.php:167 ../../mod/admin.php:1025 ../../mod/admin.php:1225
 #: ../../mod/display.php:36
 msgid "Item not found."
 msgstr "Item niet gevonden."
 
-#: ../../include/items.php:4288 ../../include/attach.php:137
+#: ../../include/items.php:4291 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
@@ -3091,26 +3091,26 @@ msgstr "Item niet gevonden."
 msgid "Permission denied."
 msgstr "Toegang geweigerd"
 
-#: ../../include/items.php:4690 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4693 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr "Collectie niet gevonden."
 
-#: ../../include/items.php:4706
+#: ../../include/items.php:4709
 msgid "Collection is empty."
 msgstr "Collectie is leeg"
 
-#: ../../include/items.php:4713
+#: ../../include/items.php:4716
 #, php-format
 msgid "Collection: %s"
 msgstr "Collectie: %s"
 
-#: ../../include/items.php:4723 ../../mod/connedit.php:662
+#: ../../include/items.php:4726 ../../mod/connedit.php:662
 #, php-format
 msgid "Connection: %s"
 msgstr "Connectie: %s"
 
-#: ../../include/items.php:4725
+#: ../../include/items.php:4728
 msgid "Connection not found."
 msgstr "Connectie niet gevonden."
 
@@ -3122,7 +3122,7 @@ msgstr "Datapakket ongeldig"
 msgid "Unable to verify channel signature"
 msgstr "Kanaalkenmerk kon niet worden geverifieerd.  "
 
-#: ../../include/zot.php:2132
+#: ../../include/zot.php:2144
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr "Hubkenmerk voor %s kon niet worden geverifieerd"
@@ -5132,42 +5132,42 @@ msgstr "Het klonen van het kanaal is mislukt. Importeren mislukt."
 msgid "Cloned channel not found. Import failed."
 msgstr "Gekloond kanaal niet gevonden. Importeren mislukt."
 
-#: ../../mod/import.php:516
+#: ../../mod/import.php:542
 msgid "You must be logged in to use this feature."
 msgstr "Je moet ingelogd zijn om dit onderdeel te kunnen gebruiken."
 
-#: ../../mod/import.php:521
+#: ../../mod/import.php:547
 msgid "Import Channel"
 msgstr "Kanaal importeren"
 
-#: ../../mod/import.php:522
+#: ../../mod/import.php:548
 msgid ""
 "Use this form to import an existing channel from a different server/hub. You"
 " may retrieve the channel identity from the old server/hub via the network "
 "or provide an export file."
 msgstr "Gebruik dit formulier om een bestaand kanaal te importeren van een andere hub. Je kan de kanaal-identiteit van de oude hub via het netwerk ontvangen of een exportbestand verstrekken."
 
-#: ../../mod/import.php:523
+#: ../../mod/import.php:549
 msgid "File to Upload"
 msgstr "Bestand om te uploaden"
 
-#: ../../mod/import.php:524
+#: ../../mod/import.php:550
 msgid "Or provide the old server/hub details"
 msgstr "Of vul de gegevens van de oude hub in"
 
-#: ../../mod/import.php:525
+#: ../../mod/import.php:551
 msgid "Your old identity address (xyz@example.com)"
 msgstr "Jouw oude kanaaladres (xyz@example.com)"
 
-#: ../../mod/import.php:526
+#: ../../mod/import.php:552
 msgid "Your old login email address"
 msgstr "Het e-mailadres van je oude account"
 
-#: ../../mod/import.php:527
+#: ../../mod/import.php:553
 msgid "Your old login password"
 msgstr "Wachtwoord van jouw oude account"
 
-#: ../../mod/import.php:528
+#: ../../mod/import.php:554
 msgid ""
 "For either option, please choose whether to make this hub your new primary "
 "address, or whether your old location should continue this role. You will be"
@@ -5175,17 +5175,17 @@ msgid ""
 "primary location for files, photos, and media."
 msgstr "Voor elke optie geldt dat je moet kiezen of je jouw primaire kanaaladres op deze hub wil instellen of dat jouw oude hub deze rol blijft vervullen."
 
-#: ../../mod/import.php:529
+#: ../../mod/import.php:555
 msgid "Make this hub my primary location"
 msgstr "Stel deze hub als mijn primaire locatie in"
 
-#: ../../mod/import.php:530
+#: ../../mod/import.php:556
 msgid ""
 "Import existing posts if possible (experimental - limited by available "
 "memory"
 msgstr "Importeer bestaande berichten wanneer mogelijk (experimenteel - afhankelijk van hoeveelheid geheugen hub)"
 
-#: ../../mod/import.php:531
+#: ../../mod/import.php:557
 msgid ""
 "This process may take several minutes to complete. Please submit the form "
 "only once and leave this page open until finished."

@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-07 00:03-0700\n"
-"PO-Revision-Date: 2015-08-14 07:27+0000\n"
+"POT-Creation-Date: 2015-08-14 00:04-0700\n"
+"PO-Revision-Date: 2015-08-17 16:39+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -86,7 +86,7 @@ msgstr "RSS/Atom"
 #: ../../mod/admin.php:831 ../../mod/id.php:15 ../../mod/id.php:16
 #: ../../boot.php:1553
 msgid "Email"
-msgstr "Email"
+msgstr "Correo electrónico"
 
 #: ../../include/contact_selectors.php:80
 msgid "Diaspora"
@@ -123,13 +123,13 @@ msgstr "comentar la entrada de %s"
 
 #: ../../include/Import/import_diaspora.php:17
 msgid "No username found in import file."
-msgstr "No se ha encontrado nombre de usuario en el archivo importado."
+msgstr "No se ha encontrado el nombre de usuario en el archivo importado."
 
 #: ../../include/Import/import_diaspora.php:42 ../../mod/import.php:156
 msgid "Unable to create a unique channel address. Import failed."
 msgstr "No se ha podido crear una dirección de canal única. Ha fallado la importación."
 
-#: ../../include/Import/import_diaspora.php:140 ../../mod/import.php:504
+#: ../../include/Import/import_diaspora.php:140 ../../mod/import.php:530
 msgid "Import completed."
 msgstr "Importación completada."
 
@@ -506,7 +506,7 @@ msgstr "Describir (opcional)"
 #: ../../mod/thing.php:318 ../../mod/events.php:494 ../../mod/events.php:670
 #: ../../mod/group.php:81 ../../mod/photos.php:577 ../../mod/photos.php:654
 #: ../../mod/photos.php:941 ../../mod/photos.php:981 ../../mod/photos.php:1099
-#: ../../mod/pdledit.php:58 ../../mod/import.php:534 ../../mod/chat.php:177
+#: ../../mod/pdledit.php:58 ../../mod/import.php:560 ../../mod/chat.php:177
 #: ../../mod/chat.php:211 ../../mod/mitem.php:232 ../../mod/rate.php:167
 #: ../../mod/invite.php:142 ../../mod/locs.php:105 ../../mod/sources.php:104
 #: ../../mod/sources.php:138 ../../mod/filestorage.php:156
@@ -531,7 +531,7 @@ msgstr "Por favor, introduzca una dirección de enlace"
 
 #: ../../include/js_strings.php:24
 msgid "Unsaved changes. Are you sure you wish to leave this page?"
-msgstr "Cambios no guardados. ¿Estás seguro que deseas abandonar la página?"
+msgstr "Cambios no guardados. ¿Está seguro que desea abandonar la página?"
 
 #: ../../include/js_strings.php:26
 msgid "timeago.prefixAgo"
@@ -668,7 +668,7 @@ msgstr "ha recibido un toque"
 
 #: ../../include/text.php:995
 msgid "ping"
-msgstr "ping"
+msgstr "avisar"
 
 #: ../../include/text.php:995
 msgid "pinged"
@@ -684,15 +684,15 @@ msgstr "incitaros"
 
 #: ../../include/text.php:997
 msgid "slap"
-msgstr "bofetada"
+msgstr "abofetear"
 
 #: ../../include/text.php:997
 msgid "slapped"
-msgstr "abofetear"
+msgstr "abofeteado"
 
 #: ../../include/text.php:998
 msgid "finger"
-msgstr "manoseo"
+msgstr "señalar"
 
 #: ../../include/text.php:998
 msgid "fingered"
@@ -700,11 +700,11 @@ msgstr "manosear"
 
 #: ../../include/text.php:999
 msgid "rebuff"
-msgstr "desaire"
+msgstr "desairar"
 
 #: ../../include/text.php:999
 msgid "rebuffed"
-msgstr "desaireado/a"
+msgstr "desairado"
 
 #: ../../include/text.php:1009
 msgid "happy"
@@ -1181,7 +1181,7 @@ msgstr "Canal premium"
 msgid ""
 "Allows you to set restrictions and terms on those that connect with your "
 "channel"
-msgstr "Te permite configurar restricciones y términos a aquellos que conectan con su canal"
+msgstr "Les permite configurar restricciones y normas de uso a aquellos que conectan con su canal"
 
 #: ../../include/features.php:55
 msgid "Post Composition Features"
@@ -1265,7 +1265,7 @@ msgstr "Pestaña de red personal"
 
 #: ../../include/features.php:71
 msgid "Enable tab to display only Network posts that you've interacted on"
-msgstr "Habilitar una pestaña en la cual se muestran solo entradas de red en las que has participado."
+msgstr "Habilitar una pestaña en la cual se muestran solo entradas de red en las que ha participado."
 
 #: ../../include/features.php:72
 msgid "Network New Tab"
@@ -1334,7 +1334,7 @@ msgstr "No me gusta:"
 
 #: ../../include/features.php:84
 msgid "Ability to dislike posts/comments"
-msgstr "Capacidad de desaprovar entradas/comentarios"
+msgstr "Capacidad de mostrar desacuerdo con el contenido de  entradas/comentarios"
 
 #: ../../include/features.php:85
 msgid "Star Posts"
@@ -1372,11 +1372,11 @@ msgstr "Personales"
 
 #: ../../include/widgets.php:95
 msgid "Create Personal App"
-msgstr "Crear App personal"
+msgstr "Crear una aplicación personal"
 
 #: ../../include/widgets.php:96
 msgid "Edit Personal App"
-msgstr "Editar App personal"
+msgstr "Editar una aplicación personal"
 
 #: ../../include/widgets.php:136 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../include/conversation.php:945
@@ -1400,7 +1400,7 @@ msgstr "Ver más..."
 #: ../../include/widgets.php:166
 #, php-format
 msgid "You have %1$.0f of %2$.0f allowed connections."
-msgstr "Tienes %1$.0f de %2$.0f conexiones permitidas."
+msgstr "Tiene %1$.0f de %2$.0f conexiones permitidas."
 
 #: ../../include/widgets.php:172
 msgid "Add New Connection"
@@ -1408,7 +1408,7 @@ msgstr "Añadir nueva conección"
 
 #: ../../include/widgets.php:173
 msgid "Enter the channel address"
-msgstr "Introduce la dirección del canal"
+msgstr "Introduzca la dirección del canal"
 
 #: ../../include/widgets.php:174
 msgid "Example: bob@example.com, http://example.com/barbara"
@@ -1495,7 +1495,7 @@ msgstr "Permisos predeterminados de conexión"
 
 #: ../../include/widgets.php:540
 msgid "Premium Channel Settings"
-msgstr "Configuración de canal premium"
+msgstr "Configuración del canal premium"
 
 #: ../../include/widgets.php:556 ../../include/nav.php:208
 #: ../../include/apps.php:134 ../../mod/admin.php:1079
@@ -1534,7 +1534,7 @@ msgstr "foto/imagen"
 
 #: ../../include/widgets.php:972 ../../include/widgets.php:974
 msgid "Rate Me"
-msgstr "Califícame"
+msgstr "Valorar este canal"
 
 #: ../../include/widgets.php:978
 msgid "View Ratings"
@@ -1579,7 +1579,7 @@ msgstr "[Red notifica] Nuevo correo recibido en %s"
 #: ../../include/enotify.php:102
 #, php-format
 msgid "%1$s, %2$s sent you a new private message at %3$s."
-msgstr "%1$s, %2$s te ha enviado un nuevo mensaje privado a las %3$s."
+msgstr "%1$s, %2$s te ha enviado un nuevo mensaje privado en %3$s."
 
 #: ../../include/enotify.php:103
 #, php-format
@@ -1593,7 +1593,7 @@ msgstr "un mensaje privado"
 #: ../../include/enotify.php:104
 #, php-format
 msgid "Please visit %s to view and/or reply to your private messages."
-msgstr "Por favor visita %s para ver y/o responder a tu mensaje privado"
+msgstr "Por favor visite %s para ver y/o responder a su mensaje privado."
 
 #: ../../include/enotify.php:158
 #, php-format
@@ -1618,7 +1618,7 @@ msgstr "[Red notifica] Comentario en la conversación #%1$d por %2$s"
 #: ../../include/enotify.php:187
 #, php-format
 msgid "%1$s, %2$s commented on an item/conversation you have been following."
-msgstr "%1$s, %2$s comentó sobre un elemento/conversación que has estado siguiendo."
+msgstr "%1$s, %2$s comentó sobre un elemento/conversación que ha estado siguiendo."
 
 #: ../../include/enotify.php:190 ../../include/enotify.php:205
 #: ../../include/enotify.php:231 ../../include/enotify.php:249
@@ -1635,7 +1635,7 @@ msgstr "[Red:aviso] %s escribió en su muro"
 #: ../../include/enotify.php:198
 #, php-format
 msgid "%1$s, %2$s posted to your profile wall at %3$s"
-msgstr "%1$s, %2$s publicó en su muro de perfil a las %3$s"
+msgstr "%1$s, %2$s publicó en su muro de perfil en %3$s"
 
 #: ../../include/enotify.php:200
 #, php-format
@@ -1645,17 +1645,17 @@ msgstr "%1$s, %2$s publicó en [zrl=%3$s]su muro[/zrl]"
 #: ../../include/enotify.php:224
 #, php-format
 msgid "[Red:Notify] %s tagged you"
-msgstr "[Red notifica] %s te etiquetó"
+msgstr "[Red notifica] %s le etiquetó"
 
 #: ../../include/enotify.php:225
 #, php-format
 msgid "%1$s, %2$s tagged you at %3$s"
-msgstr "%1$s, %2$s te etiquetó a las %3$s"
+msgstr "%1$s, %2$s le etiquetó en %3$s"
 
 #: ../../include/enotify.php:226
 #, php-format
 msgid "%1$s, %2$s [zrl=%3$s]tagged you[/zrl]."
-msgstr "%1$s, %2$s [zrl=%3$s]te etiquetó[/zrl]."
+msgstr "%1$s, %2$s [zrl=%3$s]le etiquetó[/zrl]."
 
 #: ../../include/enotify.php:238
 #, php-format
@@ -1680,7 +1680,7 @@ msgstr "[Red notifica]  %s etiquetó su entrada"
 #: ../../include/enotify.php:257
 #, php-format
 msgid "%1$s, %2$s tagged your post at %3$s"
-msgstr "%1$s, %2$s etiquetó su publicación a las %3$s"
+msgstr "%1$s, %2$s etiquetó su publicación en %3$s"
 
 #: ../../include/enotify.php:258
 #, php-format
@@ -1689,12 +1689,12 @@ msgstr "%1$s, %2$s etiquetó [zrl=%3$s]su publicación[/zrl]"
 
 #: ../../include/enotify.php:270
 msgid "[Red:Notify] Introduction received"
-msgstr "[Red notifica] Introducción recibida"
+msgstr "[Red notifica] S\nDemanda de amistad recibida"
 
 #: ../../include/enotify.php:271
 #, php-format
 msgid "%1$s, you've received an new connection request from '%2$s' at %3$s"
-msgstr "%1$s, ha recibido una nueva solicitud de conexión de '%2$s' a las %3$s"
+msgstr "%1$s, ha recibido una nueva solicitud de conexión de '%2$s' en  %3$s"
 
 #: ../../include/enotify.php:272
 #, php-format
@@ -1705,7 +1705,7 @@ msgstr "%1$s, ha recibido [zrl=%2$s]una nueva solicitud de conexión[/zrl] de %3
 #: ../../include/enotify.php:276 ../../include/enotify.php:295
 #, php-format
 msgid "You may visit their profile at %s"
-msgstr "Puedes visitar su perfil en %s"
+msgstr "Puede visitar su perfil en %s"
 
 #: ../../include/enotify.php:278
 #, php-format
@@ -1714,12 +1714,12 @@ msgstr "Por favor, visita %s para permitir o rechazar la solicitd de conexión."
 
 #: ../../include/enotify.php:285
 msgid "[Red:Notify] Friend suggestion received"
-msgstr "[Red notifica] recibiste una sugerencia de amistad"
+msgstr "[Red notifica] recibió una sugerencia de amistad"
 
 #: ../../include/enotify.php:286
 #, php-format
 msgid "%1$s, you've received a friend suggestion from '%2$s' at %3$s"
-msgstr "%1$s, has recibido una sugerencia de un amigo de '%2$s' a las %3$s"
+msgstr "%1$s, ha recibido una sugerencia de un amigo de '%2$s' en %3$s"
 
 #: ../../include/enotify.php:287
 #, php-format
@@ -1739,7 +1739,7 @@ msgstr "Foto:"
 #: ../../include/enotify.php:297
 #, php-format
 msgid "Please visit %s to approve or reject the suggestion."
-msgstr "Para aprovar o rechazar la sugerencia, visita %s"
+msgstr "Por favor, visite %s para aprobar o rechazar la sugerencia."
 
 #: ../../include/enotify.php:508
 msgid "[Red:Notify]"
@@ -1817,7 +1817,7 @@ msgstr "No se ha encontrado la cuenta local."
 
 #: ../../include/follow.php:224
 msgid "Cannot connect to yourself."
-msgstr "No puedes conectarte contigo mismo."
+msgstr "No puede conectarse consigo mismo."
 
 #: ../../include/ItemObject.php:89 ../../include/conversation.php:667
 msgid "Private Message"
@@ -1868,7 +1868,7 @@ msgctxt "noun"
 msgid "Like"
 msgid_plural "Likes"
 msgstr[0] "Le gusta"
-msgstr[1] "Le gusta"
+msgstr[1] "Me gusta"
 
 #: ../../include/ItemObject.php:184 ../../include/conversation.php:1704
 #: ../../mod/photos.php:1024
@@ -1876,7 +1876,7 @@ msgctxt "noun"
 msgid "Dislike"
 msgid_plural "Dislikes"
 msgstr[0] "No le gusta"
-msgstr[1] "No les gusta"
+msgstr[1] "No me gusta"
 
 #: ../../include/ItemObject.php:212
 msgid "Add Star"
@@ -1988,12 +1988,12 @@ msgstr "Marcar todos como vistos"
 #: ../../include/ItemObject.php:353 ../../mod/photos.php:1145
 msgctxt "noun"
 msgid "Likes"
-msgstr "Le gusta"
+msgstr "Me gusta"
 
 #: ../../include/ItemObject.php:354 ../../mod/photos.php:1146
 msgctxt "noun"
 msgid "Dislikes"
-msgstr "No le gusta"
+msgstr "No me gusta"
 
 #: ../../include/ItemObject.php:359 ../../include/acl_selectors.php:249
 #: ../../mod/photos.php:1151
@@ -2120,7 +2120,7 @@ msgstr "Editar perfil"
 
 #: ../../include/nav.php:95
 msgid "Edit your profile"
-msgstr "Editar tu perfil"
+msgstr "Editar su perfil"
 
 #: ../../include/nav.php:97 ../../include/conversation.php:1600
 #: ../../include/apps.php:139 ../../mod/fbrowser.php:25
@@ -2335,7 +2335,7 @@ msgstr "@nombre, #etiqueta, contenido"
 
 #: ../../include/nav.php:253
 msgid "Please wait..."
-msgstr "Espera por favor…"
+msgstr "Espere por favor…"
 
 #: ../../include/taxonomy.php:222 ../../include/taxonomy.php:243
 msgid "Tags"
@@ -2347,7 +2347,7 @@ msgstr "Palabras clave"
 
 #: ../../include/taxonomy.php:308
 msgid "have"
-msgstr "tienes"
+msgstr "tener"
 
 #: ../../include/taxonomy.php:308
 msgid "has"
@@ -2355,7 +2355,7 @@ msgstr "tiene"
 
 #: ../../include/taxonomy.php:309
 msgid "want"
-msgstr "quieres"
+msgstr "quiere"
 
 #: ../../include/taxonomy.php:309
 msgid "wants"
@@ -2485,7 +2485,7 @@ msgstr "Puede administrar mis recursos de canal"
 #: ../../include/permissions.php:48
 msgid ""
 "Extremely advanced. Leave this alone unless you know what you are doing"
-msgstr "Muy avanzado. Dejalo a no ser que sabes bien lo que estás haciendo."
+msgstr "Muy avanzado. Déjelo a no ser que sepa bien lo que está haciendo."
 
 #: ../../include/permissions.php:893
 msgid "Social Networking"
@@ -2564,12 +2564,12 @@ msgstr "%1$s está %2$s"
 #: ../../include/conversation.php:572 ../../mod/photos.php:996
 msgctxt "title"
 msgid "Likes"
-msgstr "Le gusta"
+msgstr "Me gusta"
 
 #: ../../include/conversation.php:572 ../../mod/photos.php:996
 msgctxt "title"
 msgid "Dislikes"
-msgstr "No le gusta"
+msgstr "No me gusta"
 
 #: ../../include/conversation.php:573 ../../mod/photos.php:997
 msgctxt "title"
@@ -2661,12 +2661,12 @@ msgstr "Dar un toque"
 #: ../../include/conversation.php:1062
 #, php-format
 msgid "%s likes this."
-msgstr "a %s les gusta esto."
+msgstr "a %s le gusta esto."
 
 #: ../../include/conversation.php:1062
 #, php-format
 msgid "%s doesn't like this."
-msgstr "%s no les gusta esto."
+msgstr "a %s no le gusta esto."
 
 #: ../../include/conversation.php:1066
 #, php-format
@@ -2696,12 +2696,12 @@ msgstr[1] ", y %d personas más"
 #: ../../include/conversation.php:1078
 #, php-format
 msgid "%s like this."
-msgstr "%s les gusta esto."
+msgstr "a %s le gusta esto."
 
 #: ../../include/conversation.php:1078
 #, php-format
 msgid "%s don't like this."
-msgstr "%s no les gusta esto."
+msgstr "a %s no le gusta esto."
 
 #: ../../include/conversation.php:1140
 msgid "Visible to <strong>everybody</strong>"
@@ -2889,7 +2889,7 @@ msgstr "Ordenar por fecha de comentario"
 
 #: ../../include/conversation.php:1496
 msgid "Posted Order"
-msgstr "Recientemente publicados"
+msgstr "Publicaciones recientes"
 
 #: ../../include/conversation.php:1499
 msgid "Sort by Post Date"
@@ -3008,51 +3008,51 @@ msgstr[1] "se abstienen"
 msgid "Permission denied"
 msgstr "Permiso denegado"
 
-#: ../../include/items.php:1035 ../../include/items.php:1081
+#: ../../include/items.php:1038 ../../include/items.php:1084
 msgid "(Unknown)"
 msgstr "(Desconocido)"
 
-#: ../../include/items.php:1307
+#: ../../include/items.php:1310
 msgid "Visible to anybody on the internet."
 msgstr "Visible para todo el mundo en internet."
 
-#: ../../include/items.php:1309
+#: ../../include/items.php:1312
 msgid "Visible to you only."
-msgstr "Visible sólo para ti."
+msgstr "Visible sólo para usted."
 
-#: ../../include/items.php:1311
+#: ../../include/items.php:1314
 msgid "Visible to anybody in this network."
 msgstr "Visible para cualquiera en esta red."
 
-#: ../../include/items.php:1313
+#: ../../include/items.php:1316
 msgid "Visible to anybody authenticated."
 msgstr "Visible para cualquiera autenticado."
 
-#: ../../include/items.php:1315
+#: ../../include/items.php:1318
 #, php-format
 msgid "Visible to anybody on %s."
 msgstr "Visible para cualquiera en %s."
 
-#: ../../include/items.php:1317
+#: ../../include/items.php:1320
 msgid "Visible to all connections."
 msgstr "Visible para todas las conexiones."
 
-#: ../../include/items.php:1319
+#: ../../include/items.php:1322
 msgid "Visible to approved connections."
 msgstr "Visible para conexiones permitidas."
 
-#: ../../include/items.php:1321
+#: ../../include/items.php:1324
 msgid "Visible to specific connections."
 msgstr "Visible para conexiones específicas."
 
-#: ../../include/items.php:4215 ../../mod/thing.php:74
+#: ../../include/items.php:4218 ../../mod/thing.php:74
 #: ../../mod/filestorage.php:27 ../../mod/viewsrc.php:20
 #: ../../mod/admin.php:167 ../../mod/admin.php:1025 ../../mod/admin.php:1225
 #: ../../mod/display.php:36
 msgid "Item not found."
 msgstr "Elemento no encontrado."
 
-#: ../../include/items.php:4288 ../../include/attach.php:137
+#: ../../include/items.php:4291 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
@@ -3095,26 +3095,26 @@ msgstr "Elemento no encontrado."
 msgid "Permission denied."
 msgstr "Acceso denegado."
 
-#: ../../include/items.php:4690 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4693 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr "Colección no encontrada."
 
-#: ../../include/items.php:4706
+#: ../../include/items.php:4709
 msgid "Collection is empty."
 msgstr "La colección está vacía."
 
-#: ../../include/items.php:4713
+#: ../../include/items.php:4716
 #, php-format
 msgid "Collection: %s"
 msgstr "Colección: %s"
 
-#: ../../include/items.php:4723 ../../mod/connedit.php:662
+#: ../../include/items.php:4726 ../../mod/connedit.php:662
 #, php-format
 msgid "Connection: %s"
 msgstr "Conexión: %s"
 
-#: ../../include/items.php:4725
+#: ../../include/items.php:4728
 msgid "Connection not found."
 msgstr "Conexión no encontrada"
 
@@ -3126,7 +3126,7 @@ msgstr "Paquete de datos inválido"
 msgid "Unable to verify channel signature"
 msgstr "No ha sido posible de verificar la signatura del canal"
 
-#: ../../include/zot.php:2132
+#: ../../include/zot.php:2144
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr "No ha sido posible de verificar la signatura del sitio para %s"
@@ -3213,7 +3213,7 @@ msgstr "mostrar más"
 
 #: ../../include/acl_selectors.php:240
 msgid "Visible to your default audience"
-msgstr "Visible para tu público predeterminado."
+msgstr "Visible para su público predeterminado."
 
 #: ../../include/acl_selectors.php:241
 msgid "Show"
@@ -3309,7 +3309,7 @@ msgstr "Se requiere un sobrenombre (alias)."
 
 #: ../../include/identity.php:212
 msgid "Reserved nickname. Please choose another."
-msgstr "Sobrenombre en uso. Por favor, elige otro."
+msgstr "Sobrenombre en uso. Por favor, elija otro."
 
 #: ../../include/identity.php:217 ../../include/dimport.php:34
 msgid ""
@@ -3368,7 +3368,7 @@ msgstr "Editar visibilidad"
 
 #: ../../include/identity.php:912 ../../include/identity.php:1151
 msgid "Gender:"
-msgstr "Sexo:"
+msgstr "Género:"
 
 #: ../../include/identity.php:913 ../../include/identity.php:1195
 msgid "Status:"
@@ -3613,7 +3613,7 @@ msgstr "Autosexual"
 
 #: ../../include/profile_selectors.php:42
 msgid "Abstinent"
-msgstr "Abstinente"
+msgstr "Abstemio"
 
 #: ../../include/profile_selectors.php:42
 msgid "Virgin"
@@ -3870,7 +3870,7 @@ msgstr "Código QR"
 #: ../../include/bbcode.php:266
 #, php-format
 msgid "%1$s wrote the following %2$s %3$s"
-msgstr "%1$s escribió lo siguiente %2$s %3$s"
+msgstr "%1$s escribió la siguiente %2$s %3$s"
 
 #: ../../include/bbcode.php:268 ../../mod/tagger.php:51
 msgid "post"
@@ -3936,7 +3936,7 @@ msgstr "Algunas palabras sobre qué hacer cuando eres nuevo aquí"
 #: ../../mod/manage.php:136
 #, php-format
 msgid "You have created %1$.0f of %2$.0f allowed channels."
-msgstr "Has creado %1$.0f de %2$.0f canales permitidos."
+msgstr "Ha creado %1$.0f de %2$.0f canales permitidos."
 
 #: ../../mod/manage.php:144
 msgid "Create a new channel"
@@ -4079,7 +4079,7 @@ msgstr "Autorizar conexión de aplicación"
 
 #: ../../mod/api.php:77
 msgid "Return to your app and insert this Securty Code:"
-msgstr "Volver a su \"app\" e introducir este código de seguridad:"
+msgstr "Volver a su aplicación e introducir este código de seguridad:"
 
 #: ../../mod/api.php:89
 msgid "Please login to continue."
@@ -4121,7 +4121,7 @@ msgstr "Continuar"
 
 #: ../../mod/connect.php:85
 msgid "Premium Channel Setup"
-msgstr "Configuración de canal premium"
+msgstr "Configuración del canal premium"
 
 #: ../../mod/connect.php:87
 msgid "Enable premium channel connection restrictions"
@@ -4604,11 +4604,11 @@ msgstr "Versión %s"
 
 #: ../../mod/siteinfo.php:133
 msgid "Installed plugins/addons/apps:"
-msgstr "Plugins/addons/apps instalados:"
+msgstr "Extensiones/Aplicaciones instaladas:"
 
 #: ../../mod/siteinfo.php:146
 msgid "No installed plugins/addons/apps"
-msgstr "Plugins/addons/apps no instalados:"
+msgstr "Extensiones/Aplicaciones no instaladas:"
 
 #: ../../mod/siteinfo.php:155 ../../mod/home.php:58 ../../mod/home.php:64
 msgid "$Projectname"
@@ -4985,7 +4985,7 @@ msgstr "Ejemplo: @bob, @Barbara_Jensen, @jim@example.com"
 
 #: ../../mod/photos.php:940
 msgid "Flag as adult in album view"
-msgstr "Marcar como \"adultos\" en el álbum"
+msgstr "Marcar como \"solo para adultos\" en el álbum"
 
 #: ../../mod/photos.php:1132
 msgid "In This Photo:"
@@ -5059,7 +5059,7 @@ msgstr "O introduzca un nuevo nombre para la carpeta de marcadores"
 
 #: ../../mod/notify.php:53 ../../mod/notifications.php:94
 msgid "No more system notifications."
-msgstr "No hay más notificaciones de sistema"
+msgstr "No hay más notificaciones del sistema"
 
 #: ../../mod/notify.php:57 ../../mod/notifications.php:98
 msgid "System Notifications"
@@ -5136,42 +5136,42 @@ msgstr "No se ha podido importar el canal porque el canal no se ha podido clonar
 msgid "Cloned channel not found. Import failed."
 msgstr "No se ha podido importar el canal porque el canal clonado no se ha encontrado."
 
-#: ../../mod/import.php:516
+#: ../../mod/import.php:542
 msgid "You must be logged in to use this feature."
 msgstr "Debe estar registrado para poder usar esta funcionalidad."
 
-#: ../../mod/import.php:521
+#: ../../mod/import.php:547
 msgid "Import Channel"
 msgstr "Importar canal"
 
-#: ../../mod/import.php:522
+#: ../../mod/import.php:548
 msgid ""
 "Use this form to import an existing channel from a different server/hub. You"
 " may retrieve the channel identity from the old server/hub via the network "
 "or provide an export file."
 msgstr "Emplee este formulario para importar un canal desde un servidor/hub diferente. Puede recuperar el canal desde el antiguo servidor/hub a través de la red o proporcionando un fichero de exportación."
 
-#: ../../mod/import.php:523
+#: ../../mod/import.php:549
 msgid "File to Upload"
 msgstr "Fichero para subir"
 
-#: ../../mod/import.php:524
+#: ../../mod/import.php:550
 msgid "Or provide the old server/hub details"
-msgstr "O proporcionando los detalles de su antiguo servidor/hub"
+msgstr "O proporcione los detalles de su antiguo servidor/hub"
 
-#: ../../mod/import.php:525
+#: ../../mod/import.php:551
 msgid "Your old identity address (xyz@example.com)"
 msgstr "Su identidad en el antiguo servidor  (canal@ejemplo.com)"
 
-#: ../../mod/import.php:526
+#: ../../mod/import.php:552
 msgid "Your old login email address"
 msgstr "Su antigua dirección de correo electrónico"
 
-#: ../../mod/import.php:527
+#: ../../mod/import.php:553
 msgid "Your old login password"
 msgstr "Su antigua contraseña"
 
-#: ../../mod/import.php:528
+#: ../../mod/import.php:554
 msgid ""
 "For either option, please choose whether to make this hub your new primary "
 "address, or whether your old location should continue this role. You will be"
@@ -5179,17 +5179,17 @@ msgid ""
 "primary location for files, photos, and media."
 msgstr "Para cualquiera de las opciones, elija si hacer de este servidor su nueva dirección primaria, o si su antigua ubicación debe continuar con este papel. Usted podrá publicar desde cualquier ubicación, pero sólo una puede estar marcada como la ubicación principal para los ficheros, fotos y otras imágenes o vídeos."
 
-#: ../../mod/import.php:529
+#: ../../mod/import.php:555
 msgid "Make this hub my primary location"
 msgstr "Convertir este servidor en mi ubicación primaria"
 
-#: ../../mod/import.php:530
+#: ../../mod/import.php:556
 msgid ""
 "Import existing posts if possible (experimental - limited by available "
 "memory"
-msgstr "Importa el contenido publicado si es posible (experimental - limitado por la memoria disponible"
+msgstr "Importar el contenido publicado si es posible (experimental - limitado por la memoria disponible"
 
-#: ../../mod/import.php:531
+#: ../../mod/import.php:557
 msgid ""
 "This process may take several minutes to complete. Please submit the form "
 "only once and leave this page open until finished."
@@ -5415,7 +5415,7 @@ msgstr "La solicitud no ha podido ser verificada. (Puede que la haya enviado con
 
 #: ../../mod/lostpass.php:85 ../../boot.php:1559
 msgid "Password Reset"
-msgstr "Contraseña restablecida"
+msgstr "Restablecer la contraseña"
 
 #: ../../mod/lostpass.php:86
 msgid "Your password has been reset as requested."
@@ -5452,7 +5452,7 @@ msgstr "¿Ha olvidado su contraseña?"
 msgid ""
 "Enter your email address and submit to have your password reset. Then check "
 "your email for further instructions."
-msgstr "Introduzca y envíe su dirección de correo electrónico para que el restablecimiento de csu ontraseña. Luego revise su correo para obtener más instrucciones."
+msgstr "Introduzca y envíe su dirección de correo electrónico para que el restablecimiento de su contraseña. Luego revise su correo para obtener más instrucciones."
 
 #: ../../mod/lostpass.php:124
 msgid "Email Address"
@@ -6398,7 +6398,7 @@ msgstr "Error: el módulo PHP xml es necesario para DAV, pero no está instalado
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\""
 " in the top folder of your web server and it is unable to do so."
-msgstr "El instalador web no ha podido crear un fichero llamado “.htconfig.php” en la carpeta base de tu servidor."
+msgstr "El instalador web no ha podido crear un fichero llamado “.htconfig.php” en la carpeta base de su servidor."
 
 #: ../../mod/setup.php:567
 msgid ""
@@ -6457,7 +6457,7 @@ msgstr "%s tiene permisos de escritura"
 msgid ""
 "Red uses the store directory to save uploaded files. The web server needs to"
 " have write access to the store directory under the Red top level folder"
-msgstr "Red guarda los ficheros descargados en la carpeta \"store\". El servidor web necesita tener permisos de escritura sobre esa carpeta, en el directorio de instalación de Red."
+msgstr "Red guarda los ficheros descargados en la carpeta \"store\". El servidor web necesita tener permisos de escritura sobre esa carpeta, en el directorio de instalación."
 
 #: ../../mod/setup.php:612
 msgid "store is writable"
@@ -7427,12 +7427,12 @@ msgstr "Términos del servicio"
 #: ../../mod/register.php:191
 #, php-format
 msgid "I accept the %s for this website"
-msgstr "Acepto el %s de este sitio"
+msgstr "Acepto los %s de este sitio"
 
 #: ../../mod/register.php:193
 #, php-format
 msgid "I am over 13 years of age and accept the %s for this website"
-msgstr "Tengo más de 13 años de edad y acepto el %s de este sitio"
+msgstr "Tengo más de 13 años de edad y acepto los %s de este sitio"
 
 #: ../../mod/register.php:212
 msgid "Membership on this site is by invitation only."
@@ -7554,15 +7554,15 @@ msgstr "La actualización de la contraseña ha fallado. Por favor, inténtalo de
 
 #: ../../mod/settings.php:272
 msgid "Not valid email."
-msgstr "Email no válido."
+msgstr "Correo electrónico no válido."
 
 #: ../../mod/settings.php:275
 msgid "Protected email address. Cannot change to that email."
-msgstr "Dirección de email protegida. No se peude cambiar a ese email."
+msgstr "Dirección de correo electrónico protegida. No se puede cambiar a ella."
 
 #: ../../mod/settings.php:284
 msgid "System failure storing new email. Please try again."
-msgstr "Fallo de sistema al guardar el nuevo email. Por favor, inténtalo de nuevo."
+msgstr "Fallo de sistema al guardar el nuevo correo electrónico. Por favor, inténtelo de nuevo."
 
 #: ../../mod/settings.php:523
 msgid "Settings updated."
@@ -7583,7 +7583,7 @@ msgstr "Clave de consumidor"
 
 #: ../../mod/settings.php:591 ../../mod/settings.php:592
 msgid "Automatically generated - change if desired. Max length 20"
-msgstr "Generado automáticamente - si lo deseas,  cámbialo. Longitud máxima: 20"
+msgstr "Generado automáticamente - si lo desea,  cámbielo. Longitud máxima: 20"
 
 #: ../../mod/settings.php:592 ../../mod/settings.php:618
 msgid "Consumer Secret"
@@ -7597,7 +7597,7 @@ msgstr "Redirigir"
 msgid ""
 "Redirect URI - leave blank unless your application specifically requires "
 "this"
-msgstr "URI de redirección - dejar en blanco a menos que tu aplicación específicamente lo requiera"
+msgstr "URI de redirección - dejar en blanco a menos que su aplicación específicamente lo requiera"
 
 #: ../../mod/settings.php:594 ../../mod/settings.php:620
 msgid "Icon url"
@@ -7609,11 +7609,11 @@ msgstr "Opcional"
 
 #: ../../mod/settings.php:605
 msgid "You can't edit this application."
-msgstr "No puedes editar esta aplicación."
+msgstr "No puede modificar esta aplicación."
 
 #: ../../mod/settings.php:648
 msgid "Connected Apps"
-msgstr "Apps conectadas"
+msgstr "Aplicaciones conectadas"
 
 #: ../../mod/settings.php:652
 msgid "Client key starts with"
@@ -7669,11 +7669,11 @@ msgstr "Confirma la nueva contraseña:"
 
 #: ../../mod/settings.php:717
 msgid "Leave password fields blank unless changing"
-msgstr "Deja en blanco los campos de contraseña a menos que cambie"
+msgstr "Dejar en blanco los campos de contraseña a menos que cambie"
 
 #: ../../mod/settings.php:719 ../../mod/settings.php:1057
 msgid "Email Address:"
-msgstr "Dirección de email:"
+msgstr "Dirección de correo electrónico:"
 
 #: ../../mod/settings.php:721
 msgid "Remove this account including all its channels"
@@ -7770,7 +7770,7 @@ msgstr "(comentarios mostrados de forma separada)"
 
 #: ../../mod/settings.php:869
 msgid "Use blog/list mode on matrix page"
-msgstr "Usar modo blog/lista en página de matrix"
+msgstr "Mostrar su red en modo blog/lista"
 
 #: ../../mod/settings.php:870
 msgid "Channel page max height of content (in pixels)"
@@ -7830,7 +7830,7 @@ msgstr "Su dirección de canal es"
 
 #: ../../mod/settings.php:1048
 msgid "Channel Settings"
-msgstr "Configuración de canal"
+msgstr "Configuración del canal"
 
 #: ../../mod/settings.php:1055
 msgid "Basic Settings"
@@ -7854,13 +7854,13 @@ msgstr "Usar localización de navegador:"
 
 #: ../../mod/settings.php:1062
 msgid "Adult Content"
-msgstr "Contenido adulto"
+msgstr "Contenido solo para adultos"
 
 #: ../../mod/settings.php:1062
 msgid ""
 "This channel frequently or regularly publishes adult content. (Please tag "
 "any adult material and/or nudity with #NSFW)"
-msgstr "Este canal frecuentemente o regularmente publica contenido adulto. (Por favor etiqueta cualquier material adulto y/o desnudez con #NSFW)"
+msgstr "Este canal publica contenido solo para adultos con frecuencia o regularmente. (Por favor etiquete cualquier material para adultos con la etiqueta #NSFW)"
 
 #: ../../mod/settings.php:1064
 msgid "Security and Privacy Settings"
@@ -7996,7 +7996,7 @@ msgstr "Reciba una sugerencia de amistad"
 
 #: ../../mod/settings.php:1108
 msgid "You are tagged in a post"
-msgstr "Sea etiquetado en una publicación"
+msgstr "Usted es etiquetado en una publicación"
 
 #: ../../mod/settings.php:1109
 msgid "You are poked/prodded/etc. in a post"
@@ -8084,7 +8084,7 @@ msgstr "Cambiar el comportamiento de esta cuenta en situaciones especiales"
 msgid ""
 "Please enable expert mode (in <a href=\"settings/features\">Settings > "
 "Additional features</a>) to adjust!"
-msgstr "Activa modo experto (en <a href=\"settings/features\">Ajustes > Características Adicionales</a>) para ajustar!"
+msgstr "Activar modo experto (en <a href=\"settings/features\">Ajustes > Características Adicionales</a>) para ajustar."
 
 #: ../../mod/settings.php:1134
 msgid "Miscellaneous Settings"
@@ -8379,7 +8379,7 @@ msgstr "Importar solo entradas que contengan este texto"
 #: ../../mod/connedit.php:676 ../../mod/connedit.php:677
 msgid ""
 "words one per line or #tags or /patterns/, leave blank to import all posts"
-msgstr "Palabras, una por línea o #etiquetas o /patrones/, deja en blanco para importar todas las entradas"
+msgstr "Palabras, una por línea o #etiquetas o /patrones/, dejar en blanco para importar todas las entradas"
 
 #: ../../mod/connedit.php:677
 msgid "Do not import posts with this text"
@@ -8417,7 +8417,7 @@ msgstr "heredado"
 msgid ""
 "Please choose the profile you would like to display to %s when viewing your "
 "profile securely."
-msgstr "Por favor, escoge el perfil que quieres mostrar a %s cuando este viendo el perfil de seguridad."
+msgstr "Por favor, escoja el perfil que quiere mostrar a %s cuando esté viendo su perfil de forma segura."
 
 #: ../../mod/connedit.php:695
 msgid "Their Settings"
@@ -8541,7 +8541,7 @@ msgstr "Conversación Privada"
 msgid ""
 "No secure communications available. You <strong>may</strong> be able to "
 "respond from the sender's profile page."
-msgstr "Comunicación segura no disponible. Pero <strong>puedes</strong> responder desde la página de perfil del remitente."
+msgstr "Comunicación segura no disponible. Pero <strong>puede</strong> responder desde la página de perfil del remitente."
 
 #: ../../mod/mail.php:342
 msgid "Send Reply"
@@ -8563,7 +8563,7 @@ msgstr "Por favor, inicia sesión."
 msgid ""
 "Remote authentication blocked. You are logged into this site locally. Please"
 " logout and retry."
-msgstr "La autenticación remota está bloqueada. Has iniciado sesión localmente. Por favor, sal de la sesión y vuelve a intentarlo."
+msgstr "La autenticación remota está bloqueada. Ha iniciado sesión localmente. Por favor, salga de la sesión y vuelva a intentarlo."
 
 #: ../../mod/new_channel.php:109
 msgid "Add a Channel"
@@ -8583,7 +8583,7 @@ msgstr "Ejemplos: \"Bob Jameson\", \"Lisa and her Horses\", \"Soccer\", \"Aviati
 
 #: ../../mod/new_channel.php:114
 msgid "Choose a short nickname"
-msgstr "Escoge un alias corto"
+msgstr "Elija un alias corto"
 
 #: ../../mod/new_channel.php:115
 msgid ""
@@ -8593,13 +8593,13 @@ msgstr "Su alias podrá usarse para crear una dirección de canal fácilmente me
 
 #: ../../mod/new_channel.php:116
 msgid "Or <a href=\"import\">import an existing channel</a> from another location"
-msgstr "O <a href=\"import\">importa un canal existente</a> de otro lugar"
+msgstr "O <a href=\"import\">importar un canal existente</a> de otro lugar"
 
 #: ../../mod/new_channel.php:118
 msgid ""
 "Please choose a channel type (such as social networking or community forum) "
 "and privacy requirements so we can select the best permissions for you"
-msgstr "escoge el tipo de canal (como red social o fofo de comunidad) y la privacidad que requiera, así podemos seleccionar el mejor conjunto de permisos para ti"
+msgstr "elija el tipo de canal (como red social o foro de comunidad) y la privacidad que requiera, así podemos seleccionar el mejor conjunto de permisos para usted"
 
 #: ../../mod/new_channel.php:119
 msgid "Channel Type"
@@ -8607,7 +8607,7 @@ msgstr "Tipo de Canal"
 
 #: ../../mod/new_channel.php:119
 msgid "Read more about roles"
-msgstr "Lee más sobre los roles"
+msgstr "Lea más sobre los roles"
 
 #: ../../mod/appman.php:28 ../../mod/appman.php:44
 msgid "App installed."
@@ -8623,11 +8623,11 @@ msgstr "codigo embebido"
 
 #: ../../mod/appman.php:86
 msgid "Edit App"
-msgstr "Edita la aplicación"
+msgstr "Modificar la aplicación"
 
 #: ../../mod/appman.php:86
 msgid "Create App"
-msgstr "Crea una aplicación"
+msgstr "Crear una aplicación"
 
 #: ../../mod/appman.php:91
 msgid "Name of app"
@@ -8725,7 +8725,7 @@ msgstr "Atención: El cambio de algunos ajustes puede convertir su canal en inop
 msgid ""
 "No suggestions available. If this is a new site, please try again in 24 "
 "hours."
-msgstr "No hay sugerencias disponibles. Si es un lugar nuevo, espera 24 horas y prueba de nuevo."
+msgstr "No hay sugerencias disponibles. Si es un sitio nuevo, espere 24 horas y pruebe de nuevo."
 
 #: ../../mod/poll.php:64
 msgid "Poll"
@@ -8775,32 +8775,32 @@ msgstr "Ajustes de tema"
 
 #: ../../view/theme/apw/php/config.php:260
 msgid "Set scheme"
-msgstr "Ajusta esquema"
+msgstr "Ajustar esquema"
 
 #: ../../view/theme/apw/php/config.php:261
 #: ../../view/theme/redbasic/php/config.php:124
 msgid "Set font-size for posts and comments"
-msgstr "Ajusta el tamaño del tipo de letra para entradas y comentarios"
+msgstr "Ajustar el tamaño del tipo de letra para entradas y comentarios"
 
 #: ../../view/theme/apw/php/config.php:262
 msgid "Set font face"
-msgstr "Ajusta el tipo de letra"
+msgstr "Ajustar el tipo de letra"
 
 #: ../../view/theme/apw/php/config.php:263
 msgid "Set iconset"
-msgstr "Ajusta el conjunto de iconos"
+msgstr "Ajustar el conjunto de iconos"
 
 #: ../../view/theme/apw/php/config.php:264
 msgid "Set big shadow size, default 15px 15px 15px"
-msgstr "Ajusta el sombreado grande, por defecto 15px 15px 15px"
+msgstr "Ajustar el sombreado grande, por defecto 15px 15px 15px"
 
 #: ../../view/theme/apw/php/config.php:265
 msgid "Set small shadow size, default 5px 5px 5px"
-msgstr "Ajusta el sombreado pequeño, por defecto 5px 5px 5px"
+msgstr "Ajustar el sombreado pequeño, por defecto 5px 5px 5px"
 
 #: ../../view/theme/apw/php/config.php:266
 msgid "Set shadow color, default #000"
-msgstr "Ajusta el color del sombreado, predeterminado a #000"
+msgstr "Ajustar el color del sombreado, predeterminado a #000"
 
 #: ../../view/theme/apw/php/config.php:267
 msgid "Set radius size, default 5px"
@@ -8808,7 +8808,7 @@ msgstr "Ajusta el tamaño del radio, predeterminado a 5px"
 
 #: ../../view/theme/apw/php/config.php:268
 msgid "Set line-height for posts and comments"
-msgstr "Ajusta la altura de linea para entradas y comentarios"
+msgstr "Ajustar la altura de linea para entradas y comentarios"
 
 #: ../../view/theme/apw/php/config.php:269
 msgid "Set background image"
@@ -8816,47 +8816,47 @@ msgstr "Ajusta la imagen de fondo"
 
 #: ../../view/theme/apw/php/config.php:270
 msgid "Set background attachment"
-msgstr "Ajusta el fondo adjuntado"
+msgstr "Ajustar el fondo adjuntado"
 
 #: ../../view/theme/apw/php/config.php:271
 msgid "Set background color"
-msgstr "Ajusta el color de fondo"
+msgstr "Ajustar el color de fondo"
 
 #: ../../view/theme/apw/php/config.php:272
 msgid "Set section background image"
-msgstr "Ajusta la imagen de la sección del fondo"
+msgstr "Ajustar la imagen de la sección del fondo"
 
 #: ../../view/theme/apw/php/config.php:273
 msgid "Set section background color"
-msgstr "Ajusta el color de la sección del fondo"
+msgstr "Ajustar el color de la sección del fondo"
 
 #: ../../view/theme/apw/php/config.php:274
 msgid "Set color of items - use hex"
-msgstr "Ajusta el color de los elementos - utiliza código hexadecimal"
+msgstr "Ajustar el color de los elementos - utilizar código hexadecimal"
 
 #: ../../view/theme/apw/php/config.php:275
 msgid "Set color of links - use hex"
-msgstr "Ajusta el color de los enlaces - utiliza código hexadecimal"
+msgstr "Ajusta el color de los enlaces - utilizar código hexadecimal"
 
 #: ../../view/theme/apw/php/config.php:276
 msgid "Set max-width for items.  Default 400px"
-msgstr "Ajusta la anchura máxima para los elementos. Predeterminado a 400px"
+msgstr "Ajustar la anchura máxima para los elementos. Predeterminado a 400px"
 
 #: ../../view/theme/apw/php/config.php:277
 msgid "Set min-width for items.  Default 240px"
-msgstr "Ajusta la anchura mínima para los elementos. Predeterminado a 240px"
+msgstr "Ajustar la anchura mínima para los elementos. Predeterminado a 240px"
 
 #: ../../view/theme/apw/php/config.php:278
 msgid "Set the generic content wrapper width.  Default 48%"
-msgstr "Ajusta el ancho de la envoltura del contenido genérico. Predeterminado 48%"
+msgstr "Ajustar el ancho de la envoltura del contenido genérico. Predeterminado 48%"
 
 #: ../../view/theme/apw/php/config.php:279
 msgid "Set color of fonts - use hex"
-msgstr "Ajusta el color del tipo de letra - utiliza código hexadecimal"
+msgstr "Ajustar el color del tipo de letra - utiliza código hexadecimal"
 
 #: ../../view/theme/apw/php/config.php:280
 msgid "Set background-size element"
-msgstr "Ajusta el tamaño de fondo del elemento"
+msgstr "Ajustar el tamaño de fondo del elemento"
 
 #: ../../view/theme/apw/php/config.php:281
 msgid "Item opacity"
@@ -8904,7 +8904,7 @@ msgstr "Ligero (Red Matrix predeterminado)"
 
 #: ../../view/theme/redbasic/php/config.php:103
 msgid "Select scheme"
-msgstr "Escoge esquema"
+msgstr "Elija un esquema"
 
 #: ../../view/theme/redbasic/php/config.php:104
 msgid "Narrow navbar"
@@ -8948,27 +8948,27 @@ msgstr "Color del enlace"
 
 #: ../../view/theme/redbasic/php/config.php:114
 msgid "Set font-color for banner"
-msgstr "Ajusta el color del tipo de letra para la pancarta"
+msgstr "Ajustar el color del tipo de letra para la pancarta"
 
 #: ../../view/theme/redbasic/php/config.php:115
 msgid "Set the background color"
-msgstr "Ajusta el color de fondo"
+msgstr "Ajustar el color de fondo"
 
 #: ../../view/theme/redbasic/php/config.php:116
 msgid "Set the background image"
-msgstr "Ajusta la imagen de fondo"
+msgstr "Ajustar la imagen de fondo"
 
 #: ../../view/theme/redbasic/php/config.php:117
 msgid "Set the background color of items"
-msgstr "Ajusta el color de los elementos de fondo"
+msgstr "Ajustar el color de los elementos de fondo"
 
 #: ../../view/theme/redbasic/php/config.php:118
 msgid "Set the background color of comments"
-msgstr "Ajusta el color de fondo de los comentarios"
+msgstr "Ajustar el color de fondo de los comentarios"
 
 #: ../../view/theme/redbasic/php/config.php:119
 msgid "Set the border color of comments"
-msgstr "Ajusta el color del borde de los comentarios"
+msgstr "Ajustar el color del borde de los comentarios"
 
 #: ../../view/theme/redbasic/php/config.php:120
 msgid "Set the indent for comments"
@@ -8976,15 +8976,15 @@ msgstr "Ajusta la indentación de los comentarios"
 
 #: ../../view/theme/redbasic/php/config.php:121
 msgid "Set the basic color for item icons"
-msgstr "Ajusta el color básico para los iconos de los elementos"
+msgstr "Ajustar el color básico para los iconos de los elementos"
 
 #: ../../view/theme/redbasic/php/config.php:122
 msgid "Set the hover color for item icons"
-msgstr "Ajusta el color flotante para los iconos de los artículos"
+msgstr "Ajustar el color flotante para los iconos de los elementos"
 
 #: ../../view/theme/redbasic/php/config.php:123
 msgid "Set font-size for the entire application"
-msgstr "Ajusta el tamaño del tipo de letra para toda la aplicación"
+msgstr "Ajustar el tamaño del tipo de letra para toda la aplicación"
 
 #: ../../view/theme/redbasic/php/config.php:123
 msgid "Example: 14px"
@@ -9000,15 +9000,15 @@ msgstr "Establecer el radio de curvatura de las esquinas"
 
 #: ../../view/theme/redbasic/php/config.php:127
 msgid "Set shadow depth of photos"
-msgstr "Ajusta profundidad de sombras de las fotos"
+msgstr "Ajustar la profundidad de sombras de las fotos"
 
 #: ../../view/theme/redbasic/php/config.php:128
 msgid "Set maximum width of content region in pixel"
-msgstr "Ajusta la anchura máxima de la región de contenido, en pixels"
+msgstr "Ajustar la anchura máxima de la región de contenido, en pixels"
 
 #: ../../view/theme/redbasic/php/config.php:128
 msgid "Leave empty for default width"
-msgstr "Deja en blanco para la anchura predeterminada"
+msgstr "Dejar en blanco para la anchura predeterminada"
 
 #: ../../view/theme/redbasic/php/config.php:129
 msgid "Center page content"
@@ -9016,15 +9016,15 @@ msgstr "Contenido del centro de la página"
 
 #: ../../view/theme/redbasic/php/config.php:130
 msgid "Set minimum opacity of nav bar - to hide it"
-msgstr "Ajusta la opacidad mínima de la barra de navegación - para ocultarla"
+msgstr "Ajustar la opacidad mínima de la barra de navegación - para ocultarla"
 
 #: ../../view/theme/redbasic/php/config.php:131
 msgid "Set size of conversation author photo"
-msgstr "Ajusta el tamaño de la foto del autor de la conversación"
+msgstr "Ajustar el tamaño de la foto del autor de la conversación"
 
 #: ../../view/theme/redbasic/php/config.php:132
 msgid "Set size of followup author photos"
-msgstr "Ajusta el tamaño de foto de los seguidores del autor"
+msgstr "Ajustar el tamaño de foto de los seguidores del autor"
 
 #: ../../boot.php:1356
 #, php-format
@@ -9039,7 +9039,7 @@ msgstr "Error de Actualización en %s"
 #: ../../boot.php:1526
 msgid ""
 "Create an account to access services and applications within the Red Matrix"
-msgstr "Crea una cuenta para acceder a los servicios y aplicaciones dentro de Red Matrix"
+msgstr "Crear una cuenta para acceder a los servicios y aplicaciones dentro de la red"
 
 #: ../../boot.php:1554
 msgid "Password"

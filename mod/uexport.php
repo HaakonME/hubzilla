@@ -13,7 +13,7 @@ function uexport_init(&$a) {
 			$year = intval(argv(1));
 		}
 
-		if(argc() > 2 && intval(argv(2)) > 1 && intval(argv(2)) <= 12) {
+		if(argc() > 2 && intval(argv(2)) > 0 && intval(argv(2)) <= 12) {
 			$month = intval(argv(2));
 		}
 

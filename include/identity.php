@@ -601,14 +601,25 @@ function identity_basic_export($channel_id, $items = false) {
 
 
 
-function identity_export_year($channel_id,$year) {
+function identity_export_year($channel_id,$year,$month = 0) {
 
 	if(! $year)
 		return array();
 
+	if($month && $month <= 12) {
+		$target_month = sprintf('%02d',$month);
+		$target_month_plus = sprintf('%02d',$month+1);
+	}
+	else
+		$target_month = '01';
+
 	$ret = array();
-	$mindate = datetime_convert('UTC','UTC',$year . '-01-01 00:00:00');
-	$maxdate = datetime_convert('UTC','UTC',$year+1 . '-01-01 00:00:00');
+	$mindate = datetime_convert('UTC','UTC',$year . '-' . $target_month . '-01 00:00:00');
+	if($month && $month < 12)
+		$maxdate = datetime_convert('UTC','UTC',$year . '-' . $target_month_plus . '-01 00:00:00');
+	else
+		$maxdate = datetime_convert('UTC','UTC',$year+1 . '-01-01 00:00:00');
+
 	$r = q("select * from item where (item_flags & %d) > 0 and (item_restrict & %d) = 0 and uid = %d and created >= '%s' and created < '%s' order by created ",
 		intval(ITEM_WALL),
 		intval(ITEM_DELETED),

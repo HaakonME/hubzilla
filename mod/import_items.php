@@ -85,10 +85,9 @@ function import_items_post(&$a) {
 
 	$channel = $a->get_channel();
 
-
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 
-	if($import_posts && array_key_exists('item',$data) && $data['item']) {
+	if(array_key_exists('item',$data) && $data['item']) {
 
 		foreach($data['item'] as $i) {
 			$item = get_item_elements($i);

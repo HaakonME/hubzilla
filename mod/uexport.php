@@ -13,11 +13,15 @@ function uexport_init(&$a) {
 			$year = intval(argv(1));
 		}
 
+		if(argc() > 2 && intval(argv(2)) > 1 && intval(argv(2)) <= 12) {
+			$month = intval(argv(2));
+		}
+
 		header('content-type: application/octet_stream');
 		header('content-disposition: attachment; filename="' . $channel['channel_address'] . (($year) ? '-' . $year : '') . '.json"' );
 
 		if($year) {
-			echo json_encode(identity_export_year(local_channel(),$year));
+			echo json_encode(identity_export_year(local_channel(),$year,$month));
 			killme();
 		}
 

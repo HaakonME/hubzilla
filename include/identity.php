@@ -625,6 +625,18 @@ function identity_export_year($channel_id,$year) {
 			$ret['item'][] = encode_item($rr,true);
 	}
 
+
+	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d 
+		and item.created >= '%s' and item.created < '%s' order by created ",
+		intval($channel_id),
+		dbesc($mindate), 
+		dbesc($maxdate)
+	);
+
+	if($r)
+		$ret['item_id'] = $r;
+
+
 	return $ret;
 }
 

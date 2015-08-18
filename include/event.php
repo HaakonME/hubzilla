@@ -698,3 +698,14 @@ function event_store_item($arr, $event) {
 		return $item_id;
 	}
 }
+
+
+function todo_stat() {
+	return array(
+		''             => t('Not specified'),
+		'NEEDS-ACTION' => t('Needs Action'),
+		'COMPLETED'    => t('Completed'),
+		'IN-PROCESS'   => t('In Process'),
+		'CANCELLED'    => t('Cancelled')
+	);
+}

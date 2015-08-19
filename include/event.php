@@ -80,9 +80,16 @@ function ical_wrapper($ev) {
 
 function format_event_ical($ev) {
 
+	if($ev['type'] === 'task')
+		return format_todo_ical($ev);
+
 	$o = '';
 
 	$o .= "\nBEGIN:VEVENT";
+
+	$o .= "\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
+	$o .= "\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
 	if($ev['start']) 
 		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['finish'] && ! $ev['nofinish']) 
@@ -98,6 +105,41 @@ function format_event_ical($ev) {
 
 	return $o;
 }
+
+
+function format_todo_ical($ev) {
+
+	$o = '';
+
+	$o .= "\nBEGIN:VTODO";
+	$o .= "\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
+	$o .= "\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	if($ev['start']) 
+		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['finish'] && ! $ev['nofinish']) 
+		$o .= "\nDUE:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['summary']) 
+		$o .= "\nSUMMARY:" . format_ical_text($ev['summary']);
+	if($ev['event_status']) {
+		$o .= "\nSTATUS:" . $ev['event_status'];
+		if($ev['event_status'] === 'COMPLETED')
+			$o .= "\nCOMPLETED:" . datetime_convert('UTC','UTC', $ev['event_status_date'],'Ymd\\THis\\Z');
+	}
+	if(intval($ev['event_percent']))
+		$o .= "\nPERCENT-COMPLETE:" . $ev['event_percent'];		
+	if(intval($ev['event_sequence'])) 
+		$o .= "\nSEQUENCE:" . $ev['event_sequence'];
+	if($ev['location'])
+		$o .= "\nLOCATION:" . format_ical_text($ev['location']);
+	if($ev['description']) 
+		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
+	$o .= "\nUID:" . $ev['event_hash'] ;
+	$o .= "\nEND:VTODO\n";
+
+	return $o;
+}
+
 
 
 function format_ical_text($s) {
@@ -224,6 +266,11 @@ function event_store_event($arr) {
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
 
 
+	if(array_key_exists('event_status_date',$arr))
+		$arr['event_status_date'] = datetime_convert('UTC','UTC', $arr['event_status_date']);
+	else
+		$arr['event_status_date'] = NULL_DATE;
+
 	// Existing event being modified
 
 	if($arr['id'] || $arr['event_hash']) {
@@ -265,6 +312,11 @@ function event_store_event($arr) {
 			`type` = '%s',
 			`adjust` = %d,
 			`nofinish` = %d,
+			`event_status` = '%s',
+			`event_status_date` = '%s',
+			`event_percent` = %d,
+			`event_repeat` = '%s',
+			`event_sequence` = %d,
 			`allow_cid` = '%s',
 			`allow_gid` = '%s',
 			`deny_cid` = '%s',
@@ -280,6 +332,11 @@ function event_store_event($arr) {
 			dbesc($arr['type']),
 			intval($arr['adjust']),
 			intval($arr['nofinish']),
+			dbesc($arr['event_status']),
+			dbesc($arr['event_status_date']),
+			intval($arr['event_percent']),
+			dbesc($arr['event_repeat']),
+			intval($arr['event_sequence']),
 			dbesc($arr['allow_cid']),
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
@@ -298,8 +355,8 @@ function event_store_event($arr) {
 			$hash = random_string() . '@' . get_app()->get_hostname();
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
-			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			adjust,nofinish, event_status, event_status_date, event_percent, event_repeat, event_sequence, allow_cid,allow_gid,deny_cid,deny_gid)
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
 			intval($arr['account']),
 			dbesc($arr['event_xchan']),
@@ -314,6 +371,11 @@ function event_store_event($arr) {
 			dbesc($arr['type']),
 			intval($arr['adjust']),
 			intval($arr['nofinish']),
+			dbesc($arr['event_status']),
+			dbesc($arr['event_status_date']),
+			intval($arr['event_percent']),
+			dbesc($arr['event_repeat']),
+			intval($arr['event_sequence']),
 			dbesc($arr['allow_cid']),
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
@@ -399,9 +461,15 @@ require_once('vendor/autoload.php');
 	$ical = VObject\Reader::read($s);
 
 	if($ical) {
-		foreach($ical->VEVENT as $event) {
-			event_import_ical($event,$uid);
-
+		if($ical->VEVENT) {
+			foreach($ical->VEVENT as $event) {
+				event_import_ical($event,$uid);
+			}
+		}
+		if($ical->VTODO) {
+			foreach($ical->VTODO as $event) {
+				event_import_ical_task($event,$uid);
+			}
 		}
 	}
 
@@ -506,6 +574,136 @@ function event_import_ical($ical, $uid) {
 	return false;
 
 }
+
+function event_import_ical_task($ical, $uid) {
+
+	$c = q("select * from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+
+	if(! $c)
+		return false;
+
+	$channel = $c[0];
+	$ev = array();
+
+
+	if(! isset($ical->DTSTART)) {
+		logger('no event start');
+		return false;
+	}
+
+	$dtstart = $ical->DTSTART->getDateTime();
+
+//	logger('dtstart: ' . var_export($dtstart,true));
+
+	if(($dtstart->timezone_type == 2) || (($dtstart->timezone_type == 3) && ($dtstart->timezone === 'UTC'))) {
+		$ev['adjust'] = 1;
+	}
+	else {
+		$ev['adjust'] = 0;
+	}
+	
+	$ev['start'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+		$dtstart->format(\DateTime::W3C));
+
+
+	if(isset($ical->DUE)) {
+		$dtend = $ical->DUE->getDateTime();
+		$ev['finish'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+			$dtend->format(\DateTime::W3C));
+	}
+	else
+		$ev['nofinish'] = 1;
+
+
+	if($ev['start'] === $ev['finish'])
+		$ev['nofinish'] = 1;
+
+	if(isset($ical->CREATED)) {
+		$created = $ical->CREATED->getDateTime();
+		$ev['created'] = datetime_convert('UTC','UTC',$created->format(\DateTime::W3C));
+	}
+
+	if(isset($ical->{'DTSTAMP'})) {
+		$edited = $ical->{'DTSTAMP'}->getDateTime();
+		$ev['edited'] = datetime_convert('UTC','UTC',$edited->format(\DateTime::W3C));
+	}
+
+	if(isset($ical->{'LAST-MODIFIED'})) {
+		$edited = $ical->{'LAST-MODIFIED'}->getDateTime();
+		$ev['edited'] = datetime_convert('UTC','UTC',$edited->format(\DateTime::W3C));
+	}
+
+	if(isset($ical->LOCATION))
+		$ev['location'] = (string) $ical->LOCATION;
+	if(isset($ical->DESCRIPTION))
+		$ev['description'] = (string) $ical->DESCRIPTION;
+	if(isset($ical->SUMMARY))
+		$ev['summary'] = (string) $ical->SUMMARY;
+
+	$stored_event = null;
+
+	if(isset($ical->UID)) {
+		$evuid = (string) $ical->UID;
+		$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+			dbesc($evuid),
+			intval($uid)
+		);
+		if($r) {
+			$ev['event_hash'] = $evuid;
+			$stored_event = $r[0];
+		}
+		else {
+			$ev['external_id'] = $evuid;
+		}
+	}
+
+	if(isset($ical->SEQUENCE)) {
+		$ev['event_sequence'] = (string) $ical->SEQUENCE;
+		// see if our stored event is more current than the one we're importing
+		if((intval($ev['event_sequence']) <= intval($stored_event['event_sequence'])) 
+			&& ($ev['edited'] <= $stored_event['edited']))
+			return false;
+	}
+
+	if(isset($ical->STATUS)) {
+		$ev['event_status'] = (string) $ical->STATUS;
+	}
+
+	if(isset($ical->{'COMPLETED'})) {
+		$completed = $ical->{'COMPLETED'}->getDateTime();
+		$ev['event_status_date'] = datetime_convert('UTC','UTC',$completed->format(\DateTime::W3C));
+	}
+
+	if(isset($ical->{'PERCENT-COMPLETE'})) {
+		$ev['event_percent'] = (string) $ical->{'PERCENT-COMPLETE'} ;
+	}
+
+	$ev['type'] = 'task';
+
+	if($ev['summary'] && $ev['start']) {
+		$ev['event_xchan'] = $channel['channel_hash'];
+		$ev['uid']         = $channel['channel_id'];
+		$ev['account']     = $channel['channel_account_id'];
+		$ev['private']     = 1;
+		$ev['allow_cid']   = '<' . $channel['channel_hash'] . '>';
+
+		logger('storing event: ' . print_r($ev,true), LOGGER_ALL);		
+		$event = event_store_event($ev);
+		if($event) {
+			$item_id = event_store_item($ev,$event);
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+
+
+
 
 
 function event_store_item($arr, $event) {

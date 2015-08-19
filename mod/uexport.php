@@ -18,7 +18,7 @@ function uexport_init(&$a) {
 		}
 
 		header('content-type: application/octet_stream');
-		header('content-disposition: attachment; filename="' . $channel['channel_address'] . (($year) ? '-' . $year : '') . '.json"' );
+		header('content-disposition: attachment; filename="' . $channel['channel_address'] . (($year) ? '-' . $year : '') . (($month) ? '-' . $month : '') . '.json"' );
 
 		if($year) {
 			echo json_encode(identity_export_year(local_channel(),$year,$month));

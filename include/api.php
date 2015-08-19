@@ -631,6 +631,27 @@ require_once('include/items.php');
 	}
 	api_register_func('api/red/photos','api_photos', true);
 
+	function api_photo_detail(&$a,$type) {
+		if (api_user()===false) return false;
+		if(! $_REQUEST['photo_id']) return false;
+		$scale = ((array_key_exists('scale',$_REQUEST)) ? intval($_REQUEST['scale']) : 0);
+		$r = q("select * from photo where uid = %d and resource_id = '%s' and scale = %d limit 1",
+			intval(local_channel()),
+			dbesc($_REQUEST['photo_id']),
+			intval($scale)
+		);
+		if($r) {
+            $data = dbunescbin($r[0]['data']);
+			if(array_key_exists('os_storage',$r[0]) && intval($r[0]['os_storage']))
+				$data = file_get_contents($data);
+			$r[0]['data'] = base64_encode($data);
+			json_return_and_die($r[0]);
+		}
+		killme();
+	}
+
+	api_register_func('api/red/photo', 'api_photo_detail', true);
+
 
 	function api_group_members(&$a,$type) {
 		if(api_user() === false)
@@ -686,7 +707,7 @@ require_once('include/items.php');
 	api_register_func('api/red/xchan','api_red_xchan',true);
 	
 
-    function api_statuses_mediap(&$a, $type) {
+	function api_statuses_mediap(&$a, $type) {
 		if (api_user() === false) {
 			logger('api_statuses_update: no user');
 			return false;
@@ -696,7 +717,7 @@ require_once('include/items.php');
 		$_REQUEST['type'] = 'wall';
 		$_REQUEST['profile_uid'] = api_user();
 		$_REQUEST['api_source'] = true;
-                
+				
 		$txt = requestdata('status');
 
 		require_once('library/HTMLPurifier.auto.php');
@@ -711,13 +732,13 @@ require_once('include/items.php');
 		}
 		$txt = html2bbcode($txt);
 		
-        $a->argv[1] = $user_info['screen_name'];
+		$a->argv[1] = $user_info['screen_name'];
 		
 		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 		$_FILES['userfile'] = $_FILES['media'];
 		require_once('mod/wall_attach.php');
 		$posted = wall_attach_post($a);
-                
+				
 		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
 		$_REQUEST['body']=$txt."\n\n".$posted;
 		require_once('mod/item.php');
@@ -1164,14 +1185,14 @@ require_once('include/items.php');
 			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
 		require_once('include/security.php');
 
-        $r = q("select * from item where item_restrict = 0
+		$r = q("select * from item where item_restrict = 0
 			and allow_cid = ''  and allow_gid = ''
 			and deny_cid  = ''  and deny_gid  = ''
-            and item_private = 0
+			and item_private = 0
 			and uid = " . $sys['channel_id'] . "
 			$sql_extra
 			AND id > %d group by mid
-            order by received desc LIMIT %d OFFSET %d ",
+			order by received desc LIMIT %d OFFSET %d ",
 			intval($since_id),
 			intval($count),
 			intval($start)
@@ -1382,17 +1403,17 @@ require_once('include/items.php');
 		$diasp_url = str_replace('/channel/','/u/',$myurl);
 
 		if (get_config('system','use_fulltext_engine'))
-                        $sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
-                                dbesc(protect_sprintf($myurl)),
-                                dbesc(protect_sprintf($myurl)),
-                                dbesc(protect_sprintf($diasp_url))
-                        );
-                else
-                        $sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
-                                dbesc(protect_sprintf('%' . $myurl)),
-                                dbesc(protect_sprintf('%' . $myurl . ']%')),
-                                dbesc(protect_sprintf('%' . $diasp_url . ']%'))
-                        );
+						$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
+								dbesc(protect_sprintf($myurl)),
+								dbesc(protect_sprintf($myurl)),
+								dbesc(protect_sprintf($diasp_url))
+						);
+				else
+						$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
+								dbesc(protect_sprintf('%' . $myurl)),
+								dbesc(protect_sprintf('%' . $myurl . ']%')),
+								dbesc(protect_sprintf('%' . $diasp_url . ']%'))
+						);
 
 		if ($max_id > 0)
 			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
@@ -1486,10 +1507,10 @@ require_once('include/items.php');
 // 		);
 
 		$arr = array(
-          'uid' => api_user(),
-          'since_id' => $since_id,
-          'start' => $start,
-          'records' => $count);
+		  'uid' => api_user(),
+		  'since_id' => $since_id,
+		  'start' => $start,
+		  'records' => $count);
 	
 		if ($user_info['self']==1)
 			$arr['wall'] = 1;
@@ -1498,7 +1519,7 @@ require_once('include/items.php');
 
 
 		$r = items_fetch($arr,get_app()->get_channel(),get_observer_hash());
-        
+		
 		$ret = api_format_items($r,$user_info);
 
 
@@ -1516,80 +1537,80 @@ require_once('include/items.php');
 
 
 
-    /**
-     * Star/unstar an item
-     * param: id : id of the item
-     *
-     * api v1 : https://web.archive.org/web/20131019055350/https://dev.twitter.com/docs/api/1/post/favorites/create/%3Aid
-     */
-    function api_favorites_create_destroy(&$a, $type){
+	/**
+	 * Star/unstar an item
+	 * param: id : id of the item
+	 *
+	 * api v1 : https://web.archive.org/web/20131019055350/https://dev.twitter.com/docs/api/1/post/favorites/create/%3Aid
+	 */
+	function api_favorites_create_destroy(&$a, $type){
 
 		logger('favorites_create_destroy');
 
-        if (api_user()===false) 
+		if (api_user()===false) 
 			return false;
 
-        $action = str_replace(".".$type,"",argv(2));
-        if (argc() > 3) {
-            $itemid = intval(argv(3));
-        } else {
-            $itemid = intval($_REQUEST['id']);
-        }
+		$action = str_replace(".".$type,"",argv(2));
+		if (argc() > 3) {
+			$itemid = intval(argv(3));
+		} else {
+			$itemid = intval($_REQUEST['id']);
+		}
 
-        $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
-               intval($itemid), 
+		$item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
+			   intval($itemid), 
 				intval(api_user())
 		);
 
-        if (! $item)
+		if (! $item)
 			return false;
 
-        switch($action){
-            case "create":
+		switch($action){
+			case "create":
 
-                $flags = $item[0]['item_flags'] | ITEM_STARRED;
+				$flags = $item[0]['item_flags'] | ITEM_STARRED;
 
-                break;
-            case "destroy":
+				break;
+			case "destroy":
 
-                $flags = $item[0]['item_flags'] | (~ ITEM_STARRED);
-                break;
-            default:
-                return false;
-        }
+				$flags = $item[0]['item_flags'] | (~ ITEM_STARRED);
+				break;
+			default:
+				return false;
+		}
 
-        $r = q("UPDATE item SET item_flags = %d where id = %d and uid = %d",
-                intval($flags),
+		$r = q("UPDATE item SET item_flags = %d where id = %d and uid = %d",
+				intval($flags),
 				intval($itemid),
 				intval(api_user())
 		);
 		if(! $r)
 			return false;
 
-        $item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
-               intval($itemid), 
+		$item = q("SELECT * FROM item WHERE id = %d AND uid = %d",
+			   intval($itemid), 
 				intval(api_user())
 		);
 
 		xchan_query($item,true);
 
 
-        $user_info = api_get_user($a);
-        $rets = api_format_items($item,$user_info);
-        $ret = $rets[0];
+		$user_info = api_get_user($a);
+		$rets = api_format_items($item,$user_info);
+		$ret = $rets[0];
 
-        $data = array('$status' => $ret);
-        switch($type){
-            case "atom":
-            case "rss":
-                $data = api_rss_extra($a, $data, $user_info);
-        }
+		$data = array('$status' => $ret);
+		switch($type){
+			case "atom":
+			case "rss":
+				$data = api_rss_extra($a, $data, $user_info);
+		}
 
-        return api_apply_template("status", $type, $data);
-    }
+		return api_apply_template("status", $type, $data);
+	}
 
-    api_register_func('api/favorites/create', 'api_favorites_create_destroy', true);
-    api_register_func('api/favorites/destroy', 'api_favorites_create_destroy', true);
+	api_register_func('api/favorites/create', 'api_favorites_create_destroy', true);
+	api_register_func('api/favorites/destroy', 'api_favorites_create_destroy', true);
 
 
 
@@ -1600,7 +1621,7 @@ require_once('include/items.php');
 		$user_info = api_get_user($a);
 
 		// params
-		$count           = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$count	       = (x($_REQUEST,'count')?$_REQUEST['count']:20);
 		$page            = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
 		if($page < 0) 
 			$page = 0;

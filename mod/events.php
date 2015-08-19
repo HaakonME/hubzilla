@@ -8,7 +8,7 @@ require_once('include/items.php');
 
 function events_post(&$a) {
 
-	logger('post: ' . print_r($_REQUEST,true));
+	logger('post: ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	if(! local_channel())
 		return;
@@ -282,6 +282,10 @@ function events_content(&$a) {
 			$mode = 'edit';
 			$event_id = argv(2);
 		}
+		if(argc() > 2 && argv(1) == 'ical') {
+			$mode = 'ical';
+			$event_id = argv(2);
+		}
 		if(argc() > 2 && argv(1) === 'add') {
 			$mode = 'add';
 			$item_id = intval(argv(2));
@@ -305,6 +309,26 @@ function events_content(&$a) {
 		event_addtocal($item_id,local_channel());
 		killme();
 	}
+
+
+	if($mode === 'ical') {
+		$r = q("select * from event where event_hash = '%s' and uid = %d limit 1",
+			dbesc($event_id),
+			intval(local_channel())
+		);
+		if($r) { 
+			header('Content-type: text/calendar');
+			header('content-disposition: attachment; filename="' . t('event') . '-' . $event_id . '.ics"' );
+			echo ical_wrapper($r);
+			killme();
+		}
+		else {
+			notice( t('Event not found.') . EOL );
+			return;
+		}
+	}
+
+
 
 	if($mode == 'view') {
 		

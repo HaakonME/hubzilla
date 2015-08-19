@@ -850,6 +850,17 @@ function event_store_item($arr, $event) {
 		$item_arr['item_origin']     = $item_origin;
 		$item_arr['item_thread_top'] = $item_thread_top;;
 
+		$attach = array(array(
+			'href' => z_root() . '/events/ical/' .  urlencode($event['event_hash']),
+			'length' => 0,
+			'type' => 'text/calendar',
+			'title' => t('event') . '-' . $event['event_hash'],
+			'revision' => ''
+		));
+
+		$item_arr['attach'] = $attach;
+
+
 		if(array_key_exists('term', $arr))
 			$item_arr['term'] = $arr['term'];
 

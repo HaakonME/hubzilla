@@ -1688,7 +1688,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 					$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 				}
 				else {
-					update_imported_item($sender,$arr,$channel['channel_id']);
+					update_imported_item($sender,$arr,$r[0],$channel['channel_id']);
 					$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 					if(! $relay)
 						add_source_route($item_id,$sender['hash']);
@@ -1825,9 +1825,20 @@ function remove_community_tag($sender, $arr, $uid) {
  * @param array $item
  * @param int $uid (unused)
  */
-function update_imported_item($sender, $item, $uid) {
+function update_imported_item($sender, $item, $orig, $uid) {
+
 
 	$x = item_store_update($item);
+
+	// If we're updating an event that we've saved locally, we store the item info first
+	// because event_addtocal will parse the body to get the 'new' event details
+
+	if($orig['resource_type'] === 'event') {
+		$res = event_addtocal($orig['id'],$uid);
+		if(! $res)
+			logger('update event: failed');
+	}
+
 	if(! $x['item_id'])
 		logger('update_imported_item: failed: ' . $x['message']);
 	else

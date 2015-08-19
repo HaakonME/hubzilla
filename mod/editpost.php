@@ -32,6 +32,12 @@ function editpost_content(&$a) {
 		return;
 	}
 
+	if($itm[0]['resource_type'] === 'event' && $itm[0]['resource_id']) {
+		goaway(z_root() . '/events/event/' . $itm[0]['resource_id']);
+	}
+
+
+
 	$plaintext = true;
 //	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;

@@ -677,7 +677,7 @@ function admin_page_users_post($a) {
 				intval($users[$i])
 			);
 		}
-		notice( sprintf( tt("%s user blocked/unblocked", "%s users blocked/unblocked", count($users)), count($users)) );
+		notice( sprintf( tt("%s account blocked/unblocked", "%s account blocked/unblocked", count($users)), count($users)) );
 	}
 	// account delete button was submitted
 	if (x($_POST, 'page_users_delete')) {
@@ -685,7 +685,7 @@ function admin_page_users_post($a) {
 		foreach ($users as $uid){
 			account_remove($uid, true, false);
 		}
-		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
+		notice( sprintf( tt("%s account deleted", "%s accounts deleted", count($users)), count($users)) );
 	}
 	// registration approved button was submitted
 	if (x($_POST, 'page_users_approve')) {
@@ -733,7 +733,7 @@ function admin_page_users(&$a){
 				require_once('include/Contact.php');
 				account_remove($uid,true,false);
 
-				notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
+				notice( sprintf(t("Account '%s' deleted"), $account[0]['account_email']) . EOL);
 				break;
 			case 'block':
 				q("UPDATE account SET account_flags = ( account_flags | %d ) WHERE account_id = %d",
@@ -741,7 +741,7 @@ function admin_page_users(&$a){
 					intval($uid)
 				);
 
-				notice( sprintf( t("User '%s' blocked") , $account[0]['account_email']) . EOL);
+				notice( sprintf( t("Account '%s' blocked") , $account[0]['account_email']) . EOL);
 				break;
 			case 'unblock':
 				q("UPDATE account SET account_flags = ( account_flags & ~%d ) WHERE account_id = %d",
@@ -749,7 +749,7 @@ function admin_page_users(&$a){
 						intval($uid)
 				);
 
-				notice( sprintf( t("User '%s' unblocked"), $account[0]['account_email']) . EOL);
+				notice( sprintf( t("Account '%s' unblocked"), $account[0]['account_email']) . EOL);
 				break;
 		}
 
@@ -826,8 +826,8 @@ function admin_page_users(&$a){
 		'$h_users' => t('Users'),
 		'$th_users' => array( t('ID'), t('Email'), t('All Channels'), t('Register date'), t('Last login'), t('Expires'), t('Service Class')),
 
-		'$confirm_delete_multi' => t('Selected users will be deleted!\n\nEverything these users had posted on this site will be permanently deleted!\n\nAre you sure?'),
-		'$confirm_delete' => t('The user {0} will be deleted!\n\nEverything this user has posted on this site will be permanently deleted!\n\nAre you sure?'),
+		'$confirm_delete_multi' => t('Selected accounts will be deleted!\n\nEverything these accounts had posted on this site will be permanently deleted!\n\nAre you sure?'),
+		'$confirm_delete' => t('The account {0} will be deleted!\n\nEverything this account has posted on this site will be permanently deleted!\n\nAre you sure?'),
 
 		'$form_security_token' => get_form_security_token("admin_users"),
 

@@ -378,6 +378,29 @@ function attach_by_hash_nodata($hash, $rev = 0) {
  * @param string $options (optional) one of update, replace, revision
  * @param array $arr (optional) associative array
  */
+
+/**
+ * A lot going on in this function, and some of it is old cruft and some is new cruft
+ * and the entire thing probably needs to be refactored. It started out just storing
+ * files, before we had DAV. It was made extensible to do extra stuff like edit an 
+ * existing file or optionally store a separate revision using $options to choose between different
+ * storage models. Along the way we moved from
+ * DB data storage to file system storage. 
+ * Then DAV came along and used different upload methods depending on whether the 
+ * file was stored as a DAV directory object or updated as a file object. One of these 
+ * is essentially an update and the other is basically an upload, but doesn't use the traditional PHP
+ * upload workflow. 
+ * Then came hubzilla and we tried to merge photo functionality with the file storage. Most of
+ * that integration occurs within this function. 
+ * This required overlap with the old photo_upload stuff and photo albums were
+ * completely different concepts from directories which needed to be reconciled somehow.
+ * The old revision stuff is kind of orphaned currently. There's new revision stuff for photos
+ * which attaches (2) etc. onto the name, but doesn't integrate with the attach table revisioning.
+ * That's where it sits currently. I repeat it needs to be refactored, and this note is here
+ * for future explorers and those who may be doing that work to understand where it came
+ * from and got to be the monstrosity of tangled unrelated code that it currently is.
+ */
+
 function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	require_once('include/photos.php');
@@ -487,9 +510,18 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$darr['deny_gid']  = $channel['deny_gid'];
 
 
+	$direct = null;
+
 	if($pathname) {
 		$x = attach_mkdirp($channel, $observer_hash, $darr);
 		$folder_hash = (($x['success']) ? $x['data']['hash'] : '');
+		$direct = (($x['success']) ? $x['data'] : null);
+		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
+			$str_contact_allow = $x['data']['allow_cid'];
+			$str_group_allow = $x['data']['allow_gid'];
+			$str_contact_deny = $x['data']['deny_cid'];
+			$str_group_deny = $x['data']['deny_gid'];
+		}
 	}
 	else {
 		$folder_hash = '';
@@ -663,7 +695,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	if($is_photo) {
-		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis);
+		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		if($arr['group_allow'])
@@ -809,7 +841,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	// Check for duplicate name.
 	// Check both the filename and the hash as we will be making use of both.
 
-	$r = q("select hash, is_dir, flags from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
+	$r = q("select id, hash, is_dir, flags from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
 		dbesc($arr['filename']),
 		dbesc($arr['hash']),
 		dbesc($arr['folder']),
@@ -817,9 +849,13 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	);
 	if($r) {
 		if(array_key_exists('force',$arr) && intval($arr['force']) 
-			&& ( intval($r[0]['is_dir']) || $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+			&& (intval($r[0]['is_dir']))) {
 				$ret['success'] = true;
-				$ret['data'] = $r[0];
+				$r = q("select * from attach where id = %d limit 1",
+					intval($r[0]['id'])
+				);
+				if($r)
+					$ret['data'] = $r[0];
 				return $ret;
 		}
 		$ret['message'] = t('duplicate filename or path');
@@ -886,7 +922,6 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	if($r) {
 		if(os_mkdir($path, STORAGE_DEFAULT_PERMISSIONS, true)) {
 			$ret['success'] = true;
-			$ret['data'] = $arr;
 
 			// update the parent folder's lastmodified timestamp
 			$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
@@ -894,6 +929,13 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 				dbesc($arr['folder']),
 				intval($channel_id)
 			);
+
+			$z = q("select * from attach where hash = '%s' and uid = %d and is_dir = 1 limit 1",
+				dbesc($arr['hash']),
+				intval($channel_id)
+			);
+			if($z)
+				$ret['data'] = $z[0];
 		}
 		else {
 			logger('attach_mkdir: ' . mkdir . ' ' . $path . ' failed.');

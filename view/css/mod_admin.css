@@ -61,7 +61,12 @@
 #adminpage table tr:hover { background-color: #bbc7d7; }
 #adminpage .selectall { text-align: right; }
 
+.checkbox_bulkedit {
+   width: 1.2em;
+   height: 1.2em;
+}
 
 .channels_ckbx, .pending_ckbx, .users_ckbx {
-	margin-top: -5px !important;
+	margin-top: 0px !important;
+	margin-left: 0px !important;
 }

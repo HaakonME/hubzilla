@@ -4,10 +4,10 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 [li]Include TOS link in registration/verification email[/li]
-[li]forum widget with unread counts (requires the DB schema changes from v3/hubzilla to be viable)[/li]
+[li](done) forum widget with unread counts (requires the DB schema changes from v3/hubzilla to be viable)[/li]
 [li]Create bug tracker module[/li]
 [li]translation plugins - moses or apertium[/li]
-[li]Infinite scroll improvements (i.e. embedded page links) see http://scrollsample.appspot.com/items 
+[li]Infinite scroll improvements (i.e. embedded page links) see http://scrollsample.appspot.com/items [/li]
 [li]Finish the anti-spam bayesian engine[/li]
 [li]implement an email permission denied bounce message from the sys channel[/li]
 [li]provide a way for xchans with a certain network type to upgrade (unknown to rss, rss to statusnet, friendica-over-diaspora to friendica, for instance) based on new knowledge and/or redmatrix ability[/li]
@@ -15,7 +15,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Integrate the &quot;open site&quot; list with the register page[/li]
 [li]implement oembed provider interface[/li]
 [li]refactor the oembed client interface so that we can safely sandbox remote content[/li]
-[li]Many modern social apps now have both a profile photo and a "cover photo". Add support for this. 
+[li]Many modern social apps now have both a profile photo and a "cover photo". Add support for this. [/li]
 [li]Write more webpage layouts[/li]
 [li]Write more webpage widgets[/li]
 [li]restricted access OAuth clients[/li]

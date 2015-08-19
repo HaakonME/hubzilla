@@ -437,7 +437,6 @@ function import_post(&$a) {
 
 // FIXME - ensure we have an xchan if somebody is trying to pull a fast one
 
-
 	if($completed < 8) {	
 		$friends = 0;
 		$feeds = 0;
@@ -446,10 +445,6 @@ function import_post(&$a) {
 		$abooks = $data['abook'];
 		if($abooks) {
 			foreach($abooks as $abook) {
-				if($max_friends !== false && $friends > $max_friends)
-					continue;
-				if($max_feeds !== false && intval($abook['abook_feed']) && ($feeds > $max_feeds))
-					continue;
 
 				unset($abook['abook_id']);
 				unset($abook['abook_rating']);
@@ -475,6 +470,12 @@ function import_post(&$a) {
 						);
 					}
 				} 
+				else {
+					if($max_friends !== false && $friends > $max_friends)
+						continue;
+					if($max_feeds !== false && intval($abook['abook_feed']) && ($feeds > $max_feeds))
+						continue;
+				}
 
 				dbesc_array($abook);
 				$r = dbq("INSERT INTO abook (`" 

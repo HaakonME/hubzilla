@@ -358,6 +358,11 @@ CREATE TABLE "event" (
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
   "deny_gid" text NOT NULL,
+  "event_status" char(255) NOT NULL DEFAULT '',
+  "event_status_date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "event_percent" smallint(6) NOT NULL DEFAULT '0',
+  "event_repeat" text NOT NULL,
+  "event_sequence" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("id")
 );
 create index "event_uid_idx" on event ("uid");
@@ -370,6 +375,8 @@ create index "event_ignore_idx" on event ("ignore");
 create index "event_aid_idx" on event ("aid");
 create index "event_hash_idx" on event ("event_hash");
 create index "event_xchan_idx" on event ("event_xchan");
+create index "event_status_idx" on event ("event_status");
+create index "event_sequence_idx" on event ("event_sequence");
 
 
 CREATE TABLE "fcontact" (

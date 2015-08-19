@@ -980,10 +980,65 @@ function widget_rating($arr) {
 }
 
 // used by site ratings pages to provide a return link
-function widget_pubsites() {
+function widget_pubsites($arr) {
 	if(get_app()->poi)
 		return;
 	return '<div class="widget"><ul class="nav nav-pills"><li><a href="pubsites">' . t('Public Hubs') . '</a></li></ul></div>';
 }
 
+
+function widget_forums($arr) {
+
+	$a = get_app();
+
+	if(! local_channel())
+		return '';
+
+	$o = '';
+
+	if(is_array($arr) && array_key_exists('limit',$arr))
+		$limit = " limit " . intval($limit) . " ";
+	else
+		$limit = '';
+
+	$unseen = 0;
+	if(is_array($arr) && array_key_exists('unseen',$arr) && intval($arr['unseen']))
+		$unseen = 1;
+
+	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
+
+	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where xchan_pubforum = 1 and abook_channel = %d order by xchan_name $limit ",
+		intval(local_channel())
+	);
+	if(! $r1)
+		return $o;
+
+	$str = '';
+
+	// Trying to cram all this into a single query with joins and the proper group by's is tough.
+	// There also should be a way to update this via ajax.
+
+	for($x = 0; $x < count($r1); $x ++) {
+		$r = q("select sum(item_unseen) as unseen from item where owner_xchan = '%s' and uid = %d $perms_sql ",
+			dbesc($r1[$x]['xchan_hash']),
+			intval(local_channel())
+		);
+		if($r)
+			$r1[$x]['unseen'] = $r[0]['unseen'];
+	}
+
+	if($r1) {
+		$o .= '<div class="widget">';
+		$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills nav-stacked">';
+
+		foreach($r1 as $rr) {
+			if($unseen && (! intval($rr['unseen'])))
+				continue;
+			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+		}
+		$o .= '</ul></div>';
+	}
+	return $o; 
+
+}
 

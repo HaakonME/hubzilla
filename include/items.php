@@ -495,6 +495,32 @@ function post_activity_item($arr) {
 	return $ret;
 }
 
+
+function validate_item_elements($message,$arr) {
+
+	$result = array('success' => false);
+
+	if(! array_key_exists('created',$arr))
+		$result['message'] = 'missing created, possible author/owner lookup failure';
+
+	if((! $arr['mid']) || (! $arr['parent_mid'])) 
+		$result['message'] = 'missing message-id or parent message-id';
+
+	if(array_key_exists('flags',$message) && in_array('relay',$message['flags']) && $arr['mid'] === $arr['parent_mid'])
+		$result['message'] = 'relay set on top level post';
+
+	if(! $result['message'])
+		$result['success'] = true;
+
+	return $result;
+
+}
+
+
+
+
+
+
 /**
  * @brief Generate an Atom feed.
  *
@@ -866,7 +892,11 @@ function get_item_elements($x) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
+	if(array_key_exists('diaspora_signature',$x) && is_array($x['diaspora_signature']))
+		$x['diaspora_signature'] = json_encode($x['diaspora_signature']);
+
 	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? $x['diaspora_signature'] : '');
+
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -1581,12 +1611,10 @@ function get_mail_elements($x) {
 	$arr['mail_obscured'] = 1;
 	if($arr['body']) {
 		$arr['body']  = str_rot47(base64url_encode($arr['body']));
-		$arr['body'] = htmlspecialchars($arr['body'],ENT_COMPAT,'UTF-8',false);
 	}
 
 	if($arr['title']) {
 		$arr['title'] = str_rot47(base64url_encode($arr['title']));
-		$arr['title'] = htmlspecialchars($arr['title'],ENT_COMPAT,'UTF-8',false);
 	}
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
@@ -3450,8 +3478,10 @@ function mail_store($arr) {
 		return 0;
 	}
 
-	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false))
-		$arr['body'] = escape_tags($arr['body']);
+	if(! $arr['mail_obscured']) {
+		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false))
+			$arr['body'] = escape_tags($arr['body']);
+	}
 
 	if(array_key_exists('attach',$arr) && is_array($arr['attach']))
 		$arr['attach'] = json_encode($arr['attach']);

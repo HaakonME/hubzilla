@@ -72,10 +72,11 @@ function lostpass_content(&$a) {
 
 		$salt = random_string(32);
 		$password_encoded = hash('whirlpool', $salt . $new_password);
-
-		$r = q("UPDATE account SET account_salt = '%s', account_password = '%s', account_reset = '' where account_id = %d",
+		
+		$r = q("UPDATE account SET account_salt = '%s', account_password = '%s', account_reset = '', account_flags = (account_flags & ~%d) where account_id = %d",
 			dbesc($salt),
 			dbesc($password_encoded),
+			intval(ACCOUNT_UNVERIFIED),
 			intval($aid)
 		);
 

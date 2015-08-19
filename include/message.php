@@ -170,11 +170,11 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	
 
 
-	$r = q("INSERT INTO mail ( account_id, convid, mail_flags, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
+	$r = q("INSERT INTO mail ( account_id, convid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
 		VALUES ( %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
 		intval($convid),
-		intval(MAIL_OBSCURED),
+		intval(1),
 		intval($channel['channel_id']),
 		dbesc($channel['channel_hash']),
 		dbesc($recipient),
@@ -330,6 +330,7 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 		}
 	}
 
+
 	if($updateseen) {
 		$r = q("UPDATE `mail` SET mail_seen = 1 where mail_seen = 0 and id = %d AND channel_id = %d",
 			dbesc($messageitem_id),
@@ -414,6 +415,7 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 				$messages[$k]['body'] = base64url_decode(str_rot47($messages[$k]['body']));
 		}
 	}
+
 
 
 	if($updateseen) {

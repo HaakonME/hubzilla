@@ -166,7 +166,7 @@ function photo_upload($channel, $observer, $args) {
 		return $ret;
 	}
 
-	$exif = $ph->orient($src);
+	$exif = $ph->orient(($args['os_path']) ? $args['os_path'] : $src);
 
 	@unlink($src);
 
@@ -578,6 +578,16 @@ function getGps($exifCoord, $hemi) {
 
     return floatval($flip * ($degrees + ($minutes / 60) + ($seconds / 3600)));
 }
+
+function getGpstimestamp($exifCoord) {
+
+    $hours = count($exifCoord) > 0 ? gps2Num($exifCoord[0]) : 0;
+    $minutes = count($exifCoord) > 1 ? gps2Num($exifCoord[1]) : 0;
+    $seconds = count($exifCoord) > 2 ? gps2Num($exifCoord[2]) : 0;
+
+	return sprintf('%02d:%02d:%02d',$hours,$minutes,$seconds);
+}
+
 
 function gps2Num($coordPart) {
 

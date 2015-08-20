@@ -63,9 +63,9 @@ function ical_wrapper($ev) {
 		return '';
 
 	$o .= "BEGIN:VCALENDAR";
-	$o .= "\nVERSION:2.0";
-	$o .= "\nMETHOD:PUBLISH";
-	$o .= "\nPRODID:-//" . get_config('system','sitename') . "//" . PLATFORM_NAME . "//" . strtoupper(get_app()->language). "\n";
+	$o .= "\r\nVERSION:2.0";
+	$o .= "\r\nMETHOD:PUBLISH";
+	$o .= "\r\nPRODID:-//" . get_config('system','sitename') . "//" . PLATFORM_NAME . "//" . strtoupper(get_app()->language). "\r\n";
 	if(array_key_exists('start', $ev))
 		$o .= format_event_ical($ev);
 	else {
@@ -73,7 +73,7 @@ function ical_wrapper($ev) {
 			$o .= format_event_ical($e);
 		}
 	}
-	$o .= "\nEND:VCALENDAR\n";
+	$o .= "\r\nEND:VCALENDAR\r\n";
 
 	return $o;
 }
@@ -85,23 +85,23 @@ function format_event_ical($ev) {
 
 	$o = '';
 
-	$o .= "\nBEGIN:VEVENT";
+	$o .= "\r\nBEGIN:VEVENT";
 
-	$o .= "\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
-	$o .= "\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
-	$o .= "\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
+	$o .= "\r\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
 	if($ev['start']) 
-		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['finish'] && ! $ev['nofinish']) 
-		$o .= "\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['summary']) 
-		$o .= "\nSUMMARY:" . format_ical_text($ev['summary']);
+		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
 	if($ev['location'])
-		$o .= "\nLOCATION:" . format_ical_text($ev['location']);
+		$o .= "\r\nLOCATION:" . format_ical_text($ev['location']);
 	if($ev['description']) 
-		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
-	$o .= "\nUID:" . $ev['event_hash'] ;
-	$o .= "\nEND:VEVENT\n";
+		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
+	$o .= "\r\nUID:" . $ev['event_hash'] ;
+	$o .= "\r\nEND:VEVENT\r\n";
 
 	return $o;
 }
@@ -111,31 +111,31 @@ function format_todo_ical($ev) {
 
 	$o = '';
 
-	$o .= "\nBEGIN:VTODO";
-	$o .= "\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
-	$o .= "\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
-	$o .= "\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nBEGIN:VTODO";
+	$o .= "\r\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
+	$o .= "\r\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
 	if($ev['start']) 
-		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['finish'] && ! $ev['nofinish']) 
-		$o .= "\nDUE:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDUE:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['summary']) 
-		$o .= "\nSUMMARY:" . format_ical_text($ev['summary']);
+		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
 	if($ev['event_status']) {
-		$o .= "\nSTATUS:" . $ev['event_status'];
+		$o .= "\r\nSTATUS:" . $ev['event_status'];
 		if($ev['event_status'] === 'COMPLETED')
-			$o .= "\nCOMPLETED:" . datetime_convert('UTC','UTC', $ev['event_status_date'],'Ymd\\THis\\Z');
+			$o .= "\r\nCOMPLETED:" . datetime_convert('UTC','UTC', $ev['event_status_date'],'Ymd\\THis\\Z');
 	}
 	if(intval($ev['event_percent']))
-		$o .= "\nPERCENT-COMPLETE:" . $ev['event_percent'];		
+		$o .= "\r\nPERCENT-COMPLETE:" . $ev['event_percent'];		
 	if(intval($ev['event_sequence'])) 
-		$o .= "\nSEQUENCE:" . $ev['event_sequence'];
+		$o .= "\r\nSEQUENCE:" . $ev['event_sequence'];
 	if($ev['location'])
-		$o .= "\nLOCATION:" . format_ical_text($ev['location']);
+		$o .= "\r\nLOCATION:" . format_ical_text($ev['location']);
 	if($ev['description']) 
-		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
-	$o .= "\nUID:" . $ev['event_hash'] ;
-	$o .= "\nEND:VTODO\n";
+		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
+	$o .= "\r\nUID:" . $ev['event_hash'] ;
+	$o .= "\r\nEND:VTODO\r\n";
 
 	return $o;
 }
@@ -146,7 +146,7 @@ function format_ical_text($s) {
 	require_once('include/bbcode.php');
 	require_once('include/html2plain.php');
 
-	return(wordwrap(str_replace(',','\\,',html2plain(bbcode($s))),72,"\n ",true));
+	return(wordwrap(str_replace(',','\\,',html2plain(bbcode($s))),72,"\r\n ",true));
 }
 
 

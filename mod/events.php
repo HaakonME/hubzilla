@@ -312,9 +312,12 @@ function events_content(&$a) {
 
 
 	if($mode === 'ical') {
-		$r = q("select * from event where event_hash = '%s' and uid = %d limit 1",
-			dbesc($event_id),
-			intval(local_channel())
+
+		require_once('include/security.php');
+		$sql_extra = permissions_sql(local_channel());
+
+		$r = q("select * from event where event_hash = '%s' $sql_extra limit 1",
+			dbesc($event_id)
 		);
 		if($r) { 
 			header('Content-type: text/calendar');

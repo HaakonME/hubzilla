@@ -229,7 +229,7 @@ function mini_group_select($uid,$group = '') {
 	logger('mini_group_select: ' . print_r($grps,true), LOGGER_DATA);
 
 	$o = replace_macros(get_markup_template('group_selection.tpl'), array(
-		'$label' => t('Default privacy group for new contacts'),
+		'$label' => t('Add new connections to this collection (privacy group)'),
 		'$groups' => $grps 
 	));
 	return $o;

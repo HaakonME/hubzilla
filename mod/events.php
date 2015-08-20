@@ -228,6 +228,27 @@ function events_post(&$a) {
 
 function events_content(&$a) {
 
+	if(argc() > 2 && argv(1) == 'ical') {
+		$event_id = argv(2);
+
+		require_once('include/security.php');
+		$sql_extra = permissions_sql(local_channel());
+
+		$r = q("select * from event where event_hash = '%s' $sql_extra limit 1",
+			dbesc($event_id)
+		);
+		if($r) { 
+			header('Content-type: text/calendar');
+			header('content-disposition: attachment; filename="' . t('event') . '-' . $event_id . '.ics"' );
+			echo ical_wrapper($r);
+			killme();
+		}
+		else {
+			notice( t('Event not found.') . EOL );
+			return;
+		}
+	}
+
 	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return;
@@ -282,10 +303,6 @@ function events_content(&$a) {
 			$mode = 'edit';
 			$event_id = argv(2);
 		}
-		if(argc() > 2 && argv(1) == 'ical') {
-			$mode = 'ical';
-			$event_id = argv(2);
-		}
 		if(argc() > 2 && argv(1) === 'add') {
 			$mode = 'add';
 			$item_id = intval(argv(2));
@@ -311,25 +328,6 @@ function events_content(&$a) {
 	}
 
 
-	if($mode === 'ical') {
-
-		require_once('include/security.php');
-		$sql_extra = permissions_sql(local_channel());
-
-		$r = q("select * from event where event_hash = '%s' $sql_extra limit 1",
-			dbesc($event_id)
-		);
-		if($r) { 
-			header('Content-type: text/calendar');
-			header('content-disposition: attachment; filename="' . t('event') . '-' . $event_id . '.ics"' );
-			echo ical_wrapper($r);
-			killme();
-		}
-		else {
-			notice( t('Event not found.') . EOL );
-			return;
-		}
-	}
 
 
 

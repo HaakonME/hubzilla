@@ -146,7 +146,7 @@ function format_ical_text($s) {
 	require_once('include/bbcode.php');
 	require_once('include/html2plain.php');
 
-	return(wordwrap(str_replace(',','\\,',html2plain(bbcode($s))),72,"\r\n ",true));
+	return(wordwrap(str_replace(array(',',';','\\'),array('\\,','\\;','\\\\'),html2plain(bbcode($s))),72,"\r\n ",true));
 }
 
 

@@ -12,6 +12,7 @@
 <input type="hidden" name="event_hash" value="{{$event_hash}}" />
 <input type="hidden" name="xchan" value="{{$xchan}}" />
 <input type="hidden" name="mid" value="{{$mid}}" />
+<input type="hidden" name="type" value="{{$type}}" />
 <input type="hidden" name="preview" id="event-edit-preview" value="0" />
 
 <div id="event-summary-text">{{$t_text}}</div>
@@ -92,14 +93,6 @@
 	</div>
 	
 	</div>
-					
-<!--	<div class="btn-group pull-right" id="comment-edit-submit-wrapper-desc">
-	{{if $preview}}
-	<button id="comment-edit-submit-desc" class="btn btn-default btn-xs" onclick="preview_comment(desc); return false;" title="{{$preview}}">
-		<i class="icon-eye-open comment-icon" ></i>
-	</button>
-	{{/if}}
--->
 </div>
 
 <div class="clear"></div>

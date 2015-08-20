@@ -89,14 +89,14 @@ function events_post(&$a) {
 	$summary  = escape_tags(trim($_POST['summary']));
 	$desc     = escape_tags(trim($_POST['desc']));
 	$location = escape_tags(trim($_POST['location']));
-	$type     = 'event';
+	$type     = escape_tags(trim($_POST['type']));
 
 	require_once('include/text.php');
 	linkify_tags($a, $desc, local_channel());
 	linkify_tags($a, $location, local_channel());
 
 	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
-	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish";
+	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
 	if(strcmp($finish,$start) < 0 && !$nofinish) {
 		notice( t('Event can not end before it has started.') . EOL);
 		if(intval($_REQUEST['preview'])) {
@@ -400,7 +400,7 @@ function events_content(&$a) {
 
 			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                               from event left join item on event_hash = resource_id 
-				where resource_type = 'event' and event.uid = %d $ignored
+				where resource_type in ( 'event', 'birthday' ) and event.uid = %d $ignored
 				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
 				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
 				intval(local_channel()),
@@ -409,7 +409,6 @@ function events_content(&$a) {
 				dbesc($adjust_start),
 				dbesc($adjust_finish)
 			);
-
 		}
 
 		$links = array();
@@ -572,9 +571,7 @@ function events_content(&$a) {
 		if(x($_REQUEST,'location')) $orig_event['location'] = $_REQUEST['location'];
 		if(x($_REQUEST,'start')) $orig_event['start'] = $_REQUEST['start'];
 		if(x($_REQUEST,'finish')) $orig_event['finish'] = $_REQUEST['finish'];
-	}
-
-	if($mode === 'edit' || $mode === 'new') {
+		if(x($_REQUEST,'type')) $orig_event['type'] = $_REQUEST['type'];
 
 		$n_checked = ((x($orig_event) && $orig_event['nofinish']) ? ' checked="checked" ' : '');
 		$a_checked = ((x($orig_event) && $orig_event['adjust']) ? ' checked="checked" ' : '');
@@ -592,9 +589,6 @@ function events_content(&$a) {
 
 		if($orig_event['event_xchan'])
 			$sh_checked .= ' disabled="disabled" ';
-
-
-
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
@@ -621,6 +615,7 @@ function events_content(&$a) {
 		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : 0);
 		$ftext = datetime_convert('UTC',$tz,$fdt);
 		$ftext = substr($ftext,0,14) . "00:00";
+		$type = ((x($orig_event)) ? $orig_event['type'] : 'event');
 
 		$f = get_config('system','event_input_format');
 		if(! $f)
@@ -660,6 +655,7 @@ function events_content(&$a) {
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$eid' => $eid, 
+			'$type' => $type,
 			'$xchan' => $event_xchan,
 			'$mid' => $mid,
 			'$event_hash' => $event_id,

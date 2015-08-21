@@ -1047,17 +1047,17 @@ function widget_tasklist($arr) {
 
 
 	require_once('include/event.php');
-	$o .= '<script>$("#tasklist-new-summary").keyup(function(e) { if (e.keyCode == 13) { $.post( "tasks/new", $("#tasklist-new").serialize() ); return false; } });</script>';
-	$o .= '<script>function taskComplete(id) { $.post("tasks/complete/"+id); }</script>'; 
-	$o .= '<div class="widget">' . '<h3>' . t('Tasks') . '</h3>';
-	$x = tasks_fetch(array());
-
-	if($x['success']) {
-		foreach($x['tasks'] as $y) {
-			$o .= '<div class="tasklist-item"><input type="checkbox" onchange="taskComplete(' . $y['id'] . '); return false;" /> ' . $y['summary'] . '</div>';
+	$o .= '<script>var tasksShowAll = 0; $(document).ready(function() { tasksFetch(); $("#tasklist-new-form").submit(function(event) { event.preventDefault(); $.post( "tasks/new", $("#tasklist-new-form").serialize(), function(data) { tasksFetch();  $("#tasklist-new-summary").val(""); } ); return false; } )});</script>';
+	$o .= '<script>function taskComplete(id) { $.post("tasks/complete/"+id, function(data) { tasksFetch();}); }
+		function tasksFetch() {
+			$.get("tasks/fetch" + ((tasksShowAll) ? "/all" : ""), function(data) {
+				$(".tasklist-tasks").html(data.html);
+			});
 		}
-	}
-	$o .= '<form id="tasklist-new" action="tasks/new" method="post"><input id="tasklist-new-summary" type="text" name="summary" value="" /></form>';
+		</script>'; 
+
+	$o .= '<div class="widget">' . '<h3>' . t('Tasks') . '</h3><div class="tasklist-tasks">';
+	$o .= '</div><form id="tasklist-new-form" action="" ><input id="tasklist-new-summary" type="text" name="summary" value="" /></form>';
 	$o .= '</div>';
 	return $o;
 

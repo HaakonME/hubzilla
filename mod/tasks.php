@@ -1,7 +1,38 @@
 <?php
 
+require_once('include/event.php');
+
+
+function tasks_init(&$a) {
+
+
+//	logger('request: ' . print_r($_REQUEST,true));
+
+	$arr = array();
+
+	if(argc() > 1 && argv(1) === 'fetch') {		
+		if(argc() > 2 && argv(2) === 'all')
+			$arr['all'] = 1;
+		
+		$x = tasks_fetch($arr);
+		if($x['tasks']) {
+			$x['html'] = '';
+			foreach($x['tasks'] as $y) {
+				$x['html'] .= '<div class="tasklist-item"><input type="checkbox" onchange="taskComplete(' . $y['id'] . '); return false;" /> ' . $y['summary'] . '</div>';
+			}
+		}
+		json_return_and_die($x);
+	}
+
+}
+
+
 
 function tasks_post(&$a) {
+
+
+//	logger('post: ' . print_r($_POST,true));
+
 
 	if(! local_channel())
 		return;
@@ -71,27 +102,6 @@ function tasks_content(&$a) {
 	if(! local_channel())
 		return;
 
-	$ret = array();
-	$sql_extra = " and event_status != 'COMPLETED' ";
-	if(argc() > 1 && argv(1) === 'all')
-		$sql_extra = '';
-dbg(1);
-	$r = q("select * from event where type = 'task' and uid = %d $sql_extra ",
-		intval(local_channel())
-	);
-dbg(0);
 
-	$ret['success'] = (($r) ? true : false);
-	if($r) {
-		$ret['tasks'] = $r;
-	}
-
-//	return $ret;		
-
-	return json_encode($ret);
-
-//	json_return_and_die($ret);
-
-
-
+	return '';
 }

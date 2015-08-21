@@ -927,10 +927,10 @@ function tasks_fetch($arr) {
 
     $ret = array();
     $sql_extra = " and event_status != 'COMPLETED' ";
-    if(argc() > 1 && argv(1) === 'all')
+    if($arr && $arr['all'] == 1)
         $sql_extra = '';
 
-    $r = q("select * from event where type = 'task' and uid = %d $sql_extra ",
+    $r = q("select * from event where type = 'task' and uid = %d $sql_extra order by created desc",
         intval(local_channel())
     );
 

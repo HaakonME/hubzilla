@@ -918,3 +918,27 @@ function todo_stat() {
 		'CANCELLED'    => t('Cancelled')
 	);
 }
+
+
+function tasks_fetch($arr) {
+
+   if(! local_channel())
+        return;
+
+    $ret = array();
+    $sql_extra = " and event_status != 'COMPLETED' ";
+    if(argc() > 1 && argv(1) === 'all')
+        $sql_extra = '';
+
+    $r = q("select * from event where type = 'task' and uid = %d $sql_extra ",
+        intval(local_channel())
+    );
+
+    $ret['success'] = (($r) ? true : false);
+    if($r) {
+        $ret['tasks'] = $r;
+    }
+
+	return $ret;
+
+}

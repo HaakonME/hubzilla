@@ -1042,3 +1042,24 @@ function widget_forums($arr) {
 
 }
 
+
+function widget_tasklist($arr) {
+
+
+	require_once('include/event.php');
+	$o .= '<script>$("#tasklist-new-summary").keyup(function(e) { if (e.keyCode == 13) { $.post( "tasks/new", $("#tasklist-new").serialize() ); return false; } });</script>';
+	$o .= '<script>function taskComplete(id) { $.post("tasks/complete/"+id); }</script>'; 
+	$o .= '<div class="widget">' . '<h3>' . t('Tasks') . '</h3>';
+	$x = tasks_fetch(array());
+
+	if($x['success']) {
+		foreach($x['tasks'] as $y) {
+			$o .= '<div class="tasklist-item"><input type="checkbox" onchange="taskComplete(' . $y['id'] . '); return false;" /> ' . $y['summary'] . '</div>';
+		}
+	}
+	$o .= '<form id="tasklist-new" action="tasks/new" method="post"><input id="tasklist-new-summary" type="text" name="summary" value="" /></form>';
+	$o .= '</div>';
+	return $o;
+
+}
+

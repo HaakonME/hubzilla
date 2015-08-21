@@ -75,18 +75,22 @@ function tasks_content(&$a) {
 	$sql_extra = " and event_status != 'COMPLETED' ";
 	if(argc() > 1 && argv(1) === 'all')
 		$sql_extra = '';
-
-
+dbg(1);
 	$r = q("select * from event where type = 'task' and uid = %d $sql_extra ",
 		intval(local_channel())
 	);
+dbg(0);
 
 	$ret['success'] = (($r) ? true : false);
 	if($r) {
 		$ret['tasks'] = $r;
 	}
-		
-	json_return_and_die($r);
+
+//	return $ret;		
+
+	return json_encode($ret);
+
+//	json_return_and_die($ret);
 
 
 

@@ -391,8 +391,18 @@ function events_content(&$a) {
 				intval(local_channel()),
 				intval($_GET['id'])
 			);
-		} else {
-
+		} elseif($export) {
+			$r = q("SELECT * from event where uid = %d
+				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
+				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
+				intval(local_channel()),
+				dbesc($start),
+				dbesc($finish),
+				dbesc($adjust_start),
+				dbesc($adjust_finish)
+			);
+		}
+		else {
 			// fixed an issue with "nofinish" events not showing up in the calendar.
 			// There's still an issue if the finish date crosses the end of month.
 			// Noting this for now - it will need to be fixed here and in Friendica.
@@ -400,7 +410,7 @@ function events_content(&$a) {
 
 			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                               from event left join item on event_hash = resource_id 
-				where resource_type in ( 'event', 'birthday' ) and event.uid = %d $ignored
+				where resource_type = 'event' and event.uid = %d $ignored
 				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
 				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
 				intval(local_channel()),
@@ -411,21 +421,23 @@ function events_content(&$a) {
 			);
 		}
 
+
 		$links = array();
 
-		if($r) {
+		if($r && ! $export) {
 			xchan_query($r);
 			$r = fetch_post_tags($r,true);
 
 			$r = sort_by_date($r);
+		}
 
+		if($r) {
 			foreach($r as $rr) {
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				if(! x($links,$j)) 
 					$links[$j] = $a->get_baseurl() . '/' . $a->cmd . '#link-' . $j;
 			}
 		}
-
 
 		$events=array();
 

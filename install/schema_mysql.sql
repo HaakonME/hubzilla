@@ -372,6 +372,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `event_percent` smallint(6) NOT NULL DEFAULT '0',
   `event_repeat` text NOT NULL,
   `event_sequence` smallint(6) NOT NULL DEFAULT '0',
+  `event_priority` smallint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `type` (`type`),
@@ -384,7 +385,8 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `event_hash` (`event_hash`),
   KEY `event_xchan` (`event_xchan`),
   KEY `event_status` (`event_status`),
-  KEY `event_sequence` (`event_sequence`)
+  KEY `event_sequence` (`event_sequence`),
+  KEY `event_priority` (`event_priority`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (

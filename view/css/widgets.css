@@ -110,3 +110,11 @@ li:hover .group-edit-icon {
 .directory-rating-submit {
 	margin-top: 15px;
 }
+
+
+/* tasklist */
+
+.tasklist-tasks {
+	max-height: 300px;
+	overflow-y: auto;
+}

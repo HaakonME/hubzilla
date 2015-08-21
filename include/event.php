@@ -100,9 +100,11 @@ function format_event_ical($ev) {
 		$o .= "\r\nLOCATION:" . format_ical_text($ev['location']);
 	if($ev['description']) 
 		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
+	if($ev['event_priority'])
+		$o .= "\r\nPRIORITY:" . intval($ev['event_priority']);
 	$o .= "\r\nUID:" . $ev['event_hash'] ;
 	$o .= "\r\nEND:VEVENT\r\n";
-
+	
 	return $o;
 }
 
@@ -135,6 +137,8 @@ function format_todo_ical($ev) {
 	if($ev['description']) 
 		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
 	$o .= "\r\nUID:" . $ev['event_hash'] ;
+	if($ev['event_priority'])
+		$o .= "\r\nPRIORITY:" . intval($ev['event_priority']);
 	$o .= "\r\nEND:VTODO\r\n";
 
 	return $o;
@@ -260,10 +264,11 @@ function ev_compare($a, $b) {
 
 function event_store_event($arr) {
 
-	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
-	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
-	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );
-	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
+	$arr['created']        = (($arr['created'])        ? $arr['created']        : datetime_convert());
+	$arr['edited']         = (($arr['edited'])         ? $arr['edited']         : datetime_convert());
+	$arr['type']           = (($arr['type'])           ? $arr['type']           : 'event' );
+	$arr['event_xchan']    = (($arr['event_xchan'])    ? $arr['event_xchan']    : '');
+	$arr['event_priority'] = (($arr['event_priority']) ? $arr['event_priority'] : 0);
 
 
 	if(array_key_exists('event_status_date',$arr))
@@ -317,6 +322,7 @@ function event_store_event($arr) {
 			`event_percent` = %d,
 			`event_repeat` = '%s',
 			`event_sequence` = %d,
+			`event_priority` = %d,
 			`allow_cid` = '%s',
 			`allow_gid` = '%s',
 			`deny_cid` = '%s',
@@ -337,6 +343,7 @@ function event_store_event($arr) {
 			intval($arr['event_percent']),
 			dbesc($arr['event_repeat']),
 			intval($arr['event_sequence']),
+			intval($arr['event_priority']),
 			dbesc($arr['allow_cid']),
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
@@ -355,8 +362,8 @@ function event_store_event($arr) {
 			$hash = random_string() . '@' . get_app()->get_hostname();
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
-			adjust,nofinish, event_status, event_status_date, event_percent, event_repeat, event_sequence, allow_cid,allow_gid,deny_cid,deny_gid)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, '%s', '%s', '%s', '%s' ) ",
+			adjust,nofinish, event_status, event_status_date, event_percent, event_repeat, event_sequence, event_priority, allow_cid,allow_gid,deny_cid,deny_gid)
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
 			intval($arr['account']),
 			dbesc($arr['event_xchan']),
@@ -376,6 +383,7 @@ function event_store_event($arr) {
 			intval($arr['event_percent']),
 			dbesc($arr['event_repeat']),
 			intval($arr['event_sequence']),
+			intval($arr['event_priority']),
 			dbesc($arr['allow_cid']),
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
@@ -543,6 +551,8 @@ function event_import_ical($ical, $uid) {
 		$ev['description'] = (string) $ical->DESCRIPTION;
 	if(isset($ical->SUMMARY))
 		$ev['summary'] = (string) $ical->SUMMARY;
+	if(isset($ical->PRIORITY))
+		$ev['event_priority'] = intval((string) $ical->PRIORITY);
 
 	if(isset($ical->UID)) {
 		$evuid = (string) $ical->UID;
@@ -641,6 +651,8 @@ function event_import_ical_task($ical, $uid) {
 		$ev['description'] = (string) $ical->DESCRIPTION;
 	if(isset($ical->SUMMARY))
 		$ev['summary'] = (string) $ical->SUMMARY;
+	if(isset($ical->PRIORITY))
+		$ev['event_priority'] = intval((string) $ical->PRIORITY);
 
 	$stored_event = null;
 

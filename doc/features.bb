@@ -56,7 +56,7 @@ Store photos in albums. All your photos may be protected by Access Control Lists
 
 [b]Events Calendar[/b]
 
-Create and manage events, which may also be protected with Access Control Lists. Events can be exported to other software using the industry standard vcalendar/iCal format and shared in posts with others. Birthday events are automatically added from your friends and converted to your correct timezone so that you will know precisely when the birthday occurs - no matter where you are located in the world in relation to the birthday person. Events are normally created with attendance counters so your friends and connections can RSVP instantly. 
+Create and manage events and tasks, which may also be protected with Access Control Lists. Events can be imported/exported to other software using the industry standard vcalendar/iCal format and shared in posts with others. Birthday events are automatically added from your friends and converted to your correct timezone so that you will know precisely when the birthday occurs - no matter where you are located in the world in relation to the birthday person. Events are normally created with attendance counters so your friends and connections can RSVP instantly. 
 
 [b]Chatrooms[/b]
 

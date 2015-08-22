@@ -1990,6 +1990,11 @@ function load_pdl(&$a) {
 	require_once('include/comanche.php');
 
 	if (! count($a->layout)) {
+
+		$arr = array('module' => $a->module, 'layout' => '');
+		call_hooks('load_pdl',$arr);
+		$s = $arr['layout'];
+
 		$n = 'mod_' . $a->module . '.pdl' ;
 		$u = comanche_get_channel_id();
 		if($u)

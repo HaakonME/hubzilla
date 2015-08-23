@@ -294,12 +294,12 @@ function zot_refresh($them, $channel = null, $force = false) {
 	if ($them['hubloc_url']) {
 		$url = $them['hubloc_url'];
 	} else {
-		$r = q("select hubloc_url, hubloc_flags from hubloc where hubloc_hash = '%s'",
+		$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
 			dbesc($them['xchan_hash'])
 		);
 		if ($r) {
 			foreach ($r as $rr) {
-				if ($rr['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) {
+				if (intval($rr['hubloc_primary'])) {
 					$url = $rr['hubloc_url'];
 					break;
 				}
@@ -2207,7 +2207,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
+					$r[0]['hubloc_primary'] = intval($location['primary']);
 					hubloc_change_primary($r[0]);
 					$what .= 'primary_hub ';
 					$changed = true;

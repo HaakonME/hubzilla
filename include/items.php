@@ -4366,7 +4366,7 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 				);
 			}
 			else {
-				$r = q("UPDATE item set item_deleted = 1, changed = '%s', edited = '%s' where if = %d",
+				$r = q("UPDATE item set item_deleted = 1, changed = '%s', edited = '%s' where id = %d",
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					intval($item['id'])

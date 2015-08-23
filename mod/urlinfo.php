@@ -220,7 +220,9 @@ function arr_add_hashes(&$item,$k) {
 	$item = '#' . $item;
 }
 
-function parse_url_content(&$a) {
+function urlinfo_content(&$a) {
+
+	logger('urlinfo: ' . print_r($_REQUEST,true));
 
 	$text = null;
 	$str_tags = '';
@@ -251,7 +253,7 @@ function parse_url_content(&$a) {
 		}
 	}
 
-	logger('parse_url: ' . $url);
+	logger('urlinfo: ' . $url);
 
 	$result = z_fetch_url($url,false,0,array('novalidate' => true, 'nobody' => true));
 	if($result['success']) {
@@ -315,7 +317,7 @@ function parse_url_content(&$a) {
 
 		$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
 
-		logger('parse_url (unparsed): returns: ' . $result);
+		logger('urlinfo (unparsed): returns: ' . $result);
 
 		echo $result;
 		killme();
@@ -374,7 +376,7 @@ function parse_url_content(&$a) {
 
 	$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
 
-	logger('parse_url: returns: ' . $result, LOGGER_DEBUG);
+	logger('urlinfo: returns: ' . $result, LOGGER_DEBUG);
 
 	echo trim($result);
 	killme();

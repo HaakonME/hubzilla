@@ -7,6 +7,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li](done) forum widget with unread counts (requires the DB schema changes from v3/hubzilla to be viable)[/li]
 [li]Create bug tracker module[/li]
 [li]translation plugins - moses or apertium[/li]
+[li]plugins - provide 'disable' which is softer than 'uninstall' for those plugins which create additional DB tables[/li]
 [li]Infinite scroll improvements (i.e. embedded page links) see http://scrollsample.appspot.com/items [/li]
 [li]Finish the anti-spam bayesian engine[/li]
 [li]implement an email permission denied bounce message from the sys channel[/li]

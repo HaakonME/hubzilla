@@ -191,7 +191,7 @@ function enableOnUser(){
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').spin('tiny');
-			$.get('{{$baseurl}}/parse_url?binurl=' + reply, function(data) {
+			$.get('{{$baseurl}}/urlinfo?f=&binurl=' + reply, function(data) {
 				addeditortext(data);
 				$('#profile-rotator').spin(false);
 			});
@@ -258,7 +258,7 @@ function enableOnUser(){
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').spin('tiny');
-			$.get('{{$baseurl}}/parse_url?binurl=' + reply, function(data) {
+			$.get('{{$baseurl}}/urlinfo?f=&binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
 					addeditortext(data);

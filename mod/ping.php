@@ -321,6 +321,7 @@ function ping_init(&$a) {
 
 		$r = q("SELECT * FROM event left join xchan on event_xchan = xchan_hash
 			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
+			and type in ( 'event', 'birthday' )
 			ORDER BY `start` DESC LIMIT 1000",
 			intval(local_channel()),
 			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
@@ -439,6 +440,7 @@ function ping_init(&$a) {
 	if($vnotify & (VNOTIFY_EVENT|VNOTIFY_EVENTTODAY|VNOTIFY_BIRTHDAY)) {
 		$events = q("SELECT type, start, adjust FROM `event`
 			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
+			and type in ( 'event', 'birthday' )
 			ORDER BY `start` ASC ",
 				intval(local_channel()),
 				dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),

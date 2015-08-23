@@ -63,9 +63,9 @@ function ical_wrapper($ev) {
 		return '';
 
 	$o .= "BEGIN:VCALENDAR";
-	$o .= "\nVERSION:2.0";
-	$o .= "\nMETHOD:PUBLISH";
-	$o .= "\nPRODID:-//" . get_config('system','sitename') . "//" . PLATFORM_NAME . "//" . strtoupper(get_app()->language). "\n";
+	$o .= "\r\nVERSION:2.0";
+	$o .= "\r\nMETHOD:PUBLISH";
+	$o .= "\r\nPRODID:-//" . get_config('system','sitename') . "//" . PLATFORM_NAME . "//" . strtoupper(get_app()->language). "\r\n";
 	if(array_key_exists('start', $ev))
 		$o .= format_event_ical($ev);
 	else {
@@ -73,7 +73,7 @@ function ical_wrapper($ev) {
 			$o .= format_event_ical($e);
 		}
 	}
-	$o .= "\nEND:VCALENDAR\n";
+	$o .= "\r\nEND:VCALENDAR\r\n";
 
 	return $o;
 }
@@ -85,24 +85,26 @@ function format_event_ical($ev) {
 
 	$o = '';
 
-	$o .= "\nBEGIN:VEVENT";
+	$o .= "\r\nBEGIN:VEVENT";
 
-	$o .= "\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
-	$o .= "\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
-	$o .= "\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
+	$o .= "\r\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
 	if($ev['start']) 
-		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['finish'] && ! $ev['nofinish']) 
-		$o .= "\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['summary']) 
-		$o .= "\nSUMMARY:" . format_ical_text($ev['summary']);
+		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
 	if($ev['location'])
-		$o .= "\nLOCATION:" . format_ical_text($ev['location']);
+		$o .= "\r\nLOCATION:" . format_ical_text($ev['location']);
 	if($ev['description']) 
-		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
-	$o .= "\nUID:" . $ev['event_hash'] ;
-	$o .= "\nEND:VEVENT\n";
-
+		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
+	if($ev['event_priority'])
+		$o .= "\r\nPRIORITY:" . intval($ev['event_priority']);
+	$o .= "\r\nUID:" . $ev['event_hash'] ;
+	$o .= "\r\nEND:VEVENT\r\n";
+	
 	return $o;
 }
 
@@ -111,31 +113,33 @@ function format_todo_ical($ev) {
 
 	$o = '';
 
-	$o .= "\nBEGIN:VTODO";
-	$o .= "\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
-	$o .= "\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
-	$o .= "\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nBEGIN:VTODO";
+	$o .= "\r\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
+	$o .= "\r\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
+	$o .= "\r\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
 	if($ev['start']) 
-		$o .= "\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['finish'] && ! $ev['nofinish']) 
-		$o .= "\nDUE:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+		$o .= "\r\nDUE:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['summary']) 
-		$o .= "\nSUMMARY:" . format_ical_text($ev['summary']);
+		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
 	if($ev['event_status']) {
-		$o .= "\nSTATUS:" . $ev['event_status'];
+		$o .= "\r\nSTATUS:" . $ev['event_status'];
 		if($ev['event_status'] === 'COMPLETED')
-			$o .= "\nCOMPLETED:" . datetime_convert('UTC','UTC', $ev['event_status_date'],'Ymd\\THis\\Z');
+			$o .= "\r\nCOMPLETED:" . datetime_convert('UTC','UTC', $ev['event_status_date'],'Ymd\\THis\\Z');
 	}
 	if(intval($ev['event_percent']))
-		$o .= "\nPERCENT-COMPLETE:" . $ev['event_percent'];		
+		$o .= "\r\nPERCENT-COMPLETE:" . $ev['event_percent'];		
 	if(intval($ev['event_sequence'])) 
-		$o .= "\nSEQUENCE:" . $ev['event_sequence'];
+		$o .= "\r\nSEQUENCE:" . $ev['event_sequence'];
 	if($ev['location'])
-		$o .= "\nLOCATION:" . format_ical_text($ev['location']);
+		$o .= "\r\nLOCATION:" . format_ical_text($ev['location']);
 	if($ev['description']) 
-		$o .= "\nDESCRIPTION:" . format_ical_text($ev['description']);
-	$o .= "\nUID:" . $ev['event_hash'] ;
-	$o .= "\nEND:VTODO\n";
+		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
+	$o .= "\r\nUID:" . $ev['event_hash'] ;
+	if($ev['event_priority'])
+		$o .= "\r\nPRIORITY:" . intval($ev['event_priority']);
+	$o .= "\r\nEND:VTODO\r\n";
 
 	return $o;
 }
@@ -146,7 +150,7 @@ function format_ical_text($s) {
 	require_once('include/bbcode.php');
 	require_once('include/html2plain.php');
 
-	return(wordwrap(str_replace(',','\\,',html2plain(bbcode($s))),72,"\n ",true));
+	return(wordwrap(str_replace(array(',',';','\\'),array('\\,','\\;','\\\\'),html2plain(bbcode($s))),72,"\r\n ",true));
 }
 
 
@@ -260,10 +264,11 @@ function ev_compare($a, $b) {
 
 function event_store_event($arr) {
 
-	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
-	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
-	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );
-	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
+	$arr['created']        = (($arr['created'])        ? $arr['created']        : datetime_convert());
+	$arr['edited']         = (($arr['edited'])         ? $arr['edited']         : datetime_convert());
+	$arr['type']           = (($arr['type'])           ? $arr['type']           : 'event' );
+	$arr['event_xchan']    = (($arr['event_xchan'])    ? $arr['event_xchan']    : '');
+	$arr['event_priority'] = (($arr['event_priority']) ? $arr['event_priority'] : 0);
 
 
 	if(array_key_exists('event_status_date',$arr))
@@ -317,6 +322,7 @@ function event_store_event($arr) {
 			`event_percent` = %d,
 			`event_repeat` = '%s',
 			`event_sequence` = %d,
+			`event_priority` = %d,
 			`allow_cid` = '%s',
 			`allow_gid` = '%s',
 			`deny_cid` = '%s',
@@ -337,6 +343,7 @@ function event_store_event($arr) {
 			intval($arr['event_percent']),
 			dbesc($arr['event_repeat']),
 			intval($arr['event_sequence']),
+			intval($arr['event_priority']),
 			dbesc($arr['allow_cid']),
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
@@ -355,8 +362,8 @@ function event_store_event($arr) {
 			$hash = random_string() . '@' . get_app()->get_hostname();
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
-			adjust,nofinish, event_status, event_status_date, event_percent, event_repeat, event_sequence, allow_cid,allow_gid,deny_cid,deny_gid)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, '%s', '%s', '%s', '%s' ) ",
+			adjust,nofinish, event_status, event_status_date, event_percent, event_repeat, event_sequence, event_priority, allow_cid,allow_gid,deny_cid,deny_gid)
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
 			intval($arr['account']),
 			dbesc($arr['event_xchan']),
@@ -376,6 +383,7 @@ function event_store_event($arr) {
 			intval($arr['event_percent']),
 			dbesc($arr['event_repeat']),
 			intval($arr['event_sequence']),
+			intval($arr['event_priority']),
 			dbesc($arr['allow_cid']),
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
@@ -543,6 +551,8 @@ function event_import_ical($ical, $uid) {
 		$ev['description'] = (string) $ical->DESCRIPTION;
 	if(isset($ical->SUMMARY))
 		$ev['summary'] = (string) $ical->SUMMARY;
+	if(isset($ical->PRIORITY))
+		$ev['event_priority'] = intval((string) $ical->PRIORITY);
 
 	if(isset($ical->UID)) {
 		$evuid = (string) $ical->UID;
@@ -641,6 +651,8 @@ function event_import_ical_task($ical, $uid) {
 		$ev['description'] = (string) $ical->DESCRIPTION;
 	if(isset($ical->SUMMARY))
 		$ev['summary'] = (string) $ical->SUMMARY;
+	if(isset($ical->PRIORITY))
+		$ev['event_priority'] = intval((string) $ical->PRIORITY);
 
 	$stored_event = null;
 
@@ -850,6 +862,17 @@ function event_store_item($arr, $event) {
 		$item_arr['item_origin']     = $item_origin;
 		$item_arr['item_thread_top'] = $item_thread_top;;
 
+		$attach = array(array(
+			'href' => z_root() . '/events/ical/' .  urlencode($event['event_hash']),
+			'length' => 0,
+			'type' => 'text/calendar',
+			'title' => t('event') . '-' . $event['event_hash'],
+			'revision' => ''
+		));
+
+		$item_arr['attach'] = $attach;
+
+
 		if(array_key_exists('term', $arr))
 			$item_arr['term'] = $arr['term'];
 
@@ -906,4 +929,28 @@ function todo_stat() {
 		'IN-PROCESS'   => t('In Process'),
 		'CANCELLED'    => t('Cancelled')
 	);
+}
+
+
+function tasks_fetch($arr) {
+
+   if(! local_channel())
+        return;
+
+    $ret = array();
+    $sql_extra = " and event_status != 'COMPLETED' ";
+    if($arr && $arr['all'] == 1)
+        $sql_extra = '';
+
+    $r = q("select * from event where type = 'task' and uid = %d $sql_extra order by created desc",
+        intval(local_channel())
+    );
+
+    $ret['success'] = (($r) ? true : false);
+    if($r) {
+        $ret['tasks'] = $r;
+    }
+
+	return $ret;
+
 }

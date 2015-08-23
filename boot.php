@@ -49,7 +49,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1147  );
+define ( 'DB_UPDATE_VERSION',       1148  );
 
 /**
  * @brief Constant with a HTML line break.
@@ -1990,6 +1990,11 @@ function load_pdl(&$a) {
 	require_once('include/comanche.php');
 
 	if (! count($a->layout)) {
+
+		$arr = array('module' => $a->module, 'layout' => '');
+		call_hooks('load_pdl',$arr);
+		$s = $arr['layout'];
+
 		$n = 'mod_' . $a->module . '.pdl' ;
 		$u = comanche_get_channel_id();
 		if($u)
@@ -2002,6 +2007,7 @@ function load_pdl(&$a) {
 			$a->pdl = $s;
 		}
 	}
+
 }
 
 

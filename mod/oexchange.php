@@ -47,7 +47,7 @@ function oexchange_content(&$a) {
 	$tags = (((x($_REQUEST,'tags')) && strlen($_REQUEST['tags'])) 
 		? '&tags=' . urlencode(notags(trim($_REQUEST['tags']))) : '');
 
-	$ret = z_fetch_url($a->get_baseurl() . '/parse_url?f=&url=' . $url . $title . $description . $tags);
+	$ret = z_fetch_url($a->get_baseurl() . '/urlinfo?f=&url=' . $url . $title . $description . $tags);
 
 	if($ret['success'])
 		$s = $ret['body'];

@@ -135,7 +135,7 @@ function insertCommentURL(comment, id) {
 	if(reply && reply.length) {
 		reply = bin2hex(reply);
 		$('body').css('cursor', 'wait');
-		$.get('parse_url?binurl=' + reply, function(data) {
+		$.get('urlinfo?f=&binurl=' + reply, function(data) {
 			var tmpStr = $("#comment-edit-text-" + id).val();
 			if(tmpStr == comment) {
 				tmpStr = "";

@@ -1305,7 +1305,7 @@ function theme_attachments(&$item) {
 			$title = htmlspecialchars($r['title'], ENT_COMPAT,'UTF-8');
 			if(! $title)
 				$title = t('unknown.???');
-			$title .= ' ' . $r['length'] . ' ' . t('bytes');
+			$title .= ' ' . (($r['length']) ? $r['length'] . ' ' . t('bytes') : '');
 
 			require_once('include/identity.php');
 			if(is_foreigner($item['author_xchan']))

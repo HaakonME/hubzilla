@@ -99,6 +99,11 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * channel_id - if not your own
 <br />&nbsp;<br />
 
+* tasklist - provide a task or to-do list for the currently logged-in channel.
+	* args:
+	* all - display completed tasks if all is non-zero.
+<br />&nbsp;<br />
+
 
 Creating New Widgets
 ====================

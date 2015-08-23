@@ -52,6 +52,7 @@ function wall_attach_post(&$a) {
 		echo "\n\n" . $r['body'] . "\n\n";
 		if($using_api)
 			return;
+		killme();
 	}
 	echo  "\n\n" . '[attachment]' . $r['data']['hash'] . ',' . $r['data']['revision'] . '[/attachment]' . "\n";
 	killme();

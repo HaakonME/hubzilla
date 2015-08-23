@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-14 00:04-0700\n"
-"PO-Revision-Date: 2015-08-17 16:39+0000\n"
+"PO-Revision-Date: 2015-08-20 11:57+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -268,7 +268,7 @@ msgstr "nunca"
 
 #: ../../include/datetime.php:268
 msgid "less than a second ago"
-msgstr "hace menos de un segundo"
+msgstr "hace un instante"
 
 #: ../../include/datetime.php:271
 msgid "year"
@@ -330,7 +330,7 @@ msgstr "segundos"
 #, php-format
 msgctxt "e.g. 22 hours ago, 1 minute ago"
 msgid "%1$d %2$s ago"
-msgstr "hace %1$d %2$s"
+msgstr "Hace %1$d y %2$s"
 
 #: ../../include/datetime.php:519
 #, php-format
@@ -543,7 +543,7 @@ msgstr "timeago.prefixFromNow"
 
 #: ../../include/js_strings.php:28
 msgid "ago"
-msgstr "hace"
+msgstr "de su publicación"
 
 #: ../../include/js_strings.php:29
 msgid "from now"
@@ -555,7 +555,7 @@ msgstr "menos de un minuto"
 
 #: ../../include/js_strings.php:31
 msgid "about a minute"
-msgstr "hace como un minuto"
+msgstr "alrededor de un minuto"
 
 #: ../../include/js_strings.php:32
 #, php-format
@@ -564,12 +564,12 @@ msgstr "%d minutos"
 
 #: ../../include/js_strings.php:33
 msgid "about an hour"
-msgstr "hace como una hora"
+msgstr "alrededor de una hora"
 
 #: ../../include/js_strings.php:34
 #, php-format
 msgid "about %d hours"
-msgstr "hace %d minutos"
+msgstr "alrededor de %d horas"
 
 #: ../../include/js_strings.php:35
 msgid "a day"
@@ -582,7 +582,7 @@ msgstr "%d días"
 
 #: ../../include/js_strings.php:37
 msgid "about a month"
-msgstr "hace como un mes"
+msgstr "alrededor de un mes"
 
 #: ../../include/js_strings.php:38
 #, php-format
@@ -591,7 +591,7 @@ msgstr "%d meses"
 
 #: ../../include/js_strings.php:39
 msgid "about a year"
-msgstr "hace un año"
+msgstr "alrededor de un año"
 
 #: ../../include/js_strings.php:40
 #, php-format
@@ -888,7 +888,7 @@ msgstr "Pulsar para abrir/cerrar"
 
 #: ../../include/text.php:1665 ../../mod/events.php:457
 msgid "Link to Source"
-msgstr "Enlace a la fuente"
+msgstr "Ir al mensaje original"
 
 #: ../../include/text.php:1686 ../../include/text.php:1757
 msgid "default"
@@ -1483,7 +1483,7 @@ msgstr "Configuración de visualización"
 
 #: ../../include/widgets.php:517
 msgid "Connected apps"
-msgstr "Apps conectadas"
+msgstr "Aplicaciones conectadas"
 
 #: ../../include/widgets.php:523
 msgid "Export channel"
@@ -1630,7 +1630,7 @@ msgstr "Para ver o comentar la conversación, visita %s"
 #: ../../include/enotify.php:196
 #, php-format
 msgid "[Red:Notify] %s posted to your profile wall"
-msgstr "[Red:aviso] %s escribió en su muro"
+msgstr "[Red:Notify] %s escribió en su muro"
 
 #: ../../include/enotify.php:198
 #, php-format
@@ -1765,7 +1765,7 @@ msgstr "No se ha podido verificar las entradas guardadas."
 #: ../../mod/like.php:394
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
-msgstr "a %1$s le gusta el/la %3$s de %2$s"
+msgstr "a %1$s le gusta el %3$s de %2$s"
 
 #: ../../include/diaspora.php:2494
 msgid "Please choose"
@@ -1781,7 +1781,7 @@ msgstr "En desacuerdo"
 
 #: ../../include/diaspora.php:2500
 msgid "Abstain"
-msgstr "Se abstiene"
+msgstr "Abstención"
 
 #: ../../include/follow.php:28
 msgid "Channel is blocked on this site."
@@ -1833,11 +1833,11 @@ msgstr "Guardar en carpeta"
 
 #: ../../include/ItemObject.php:151
 msgid "I will attend"
-msgstr "Asistiré"
+msgstr "Participaré"
 
 #: ../../include/ItemObject.php:151
 msgid "I will not attend"
-msgstr "No asistiré"
+msgstr "No participaré"
 
 #: ../../include/ItemObject.php:151
 msgid "I might attend"
@@ -1867,7 +1867,7 @@ msgstr "Ver todo"
 msgctxt "noun"
 msgid "Like"
 msgid_plural "Likes"
-msgstr[0] "Le gusta"
+msgstr[0] "Me gusta"
 msgstr[1] "Me gusta"
 
 #: ../../include/ItemObject.php:184 ../../include/conversation.php:1704
@@ -1875,7 +1875,7 @@ msgstr[1] "Me gusta"
 msgctxt "noun"
 msgid "Dislike"
 msgid_plural "Dislikes"
-msgstr[0] "No le gusta"
+msgstr[0] "No me gusta"
 msgstr[1] "No me gusta"
 
 #: ../../include/ItemObject.php:212
@@ -1888,7 +1888,7 @@ msgstr "Eliminar estrella"
 
 #: ../../include/ItemObject.php:214
 msgid "Toggle Star Status"
-msgstr "Invertir estado de estrella"
+msgstr "Activa o desactiva el estado de preferido"
 
 #: ../../include/ItemObject.php:218
 msgid "starred"
@@ -1908,7 +1908,7 @@ msgstr "Añadir etiqueta"
 
 #: ../../include/ItemObject.php:254 ../../mod/photos.php:959
 msgid "I like this (toggle)"
-msgstr "me gusta (conmutar)"
+msgstr "me gusta (cambiar)"
 
 #: ../../include/ItemObject.php:254 ../../include/taxonomy.php:310
 msgid "like"
@@ -1916,7 +1916,7 @@ msgstr "Me gusta"
 
 #: ../../include/ItemObject.php:255 ../../mod/photos.php:960
 msgid "I don't like this (toggle)"
-msgstr "No me gusta (conmutar)"
+msgstr "No me gusta (cambiar)"
 
 #: ../../include/ItemObject.php:255 ../../include/taxonomy.php:311
 msgid "dislike"
@@ -1961,7 +1961,7 @@ msgstr "mediante Muro-a-Muro"
 #: ../../include/ItemObject.php:312 ../../include/conversation.php:716
 #, php-format
 msgid "from %s"
-msgstr "de %s"
+msgstr "desde %s"
 
 #: ../../include/ItemObject.php:315 ../../include/conversation.php:719
 #, php-format
@@ -2176,7 +2176,7 @@ msgstr "%s - pulsar para cerrar sesión"
 
 #: ../../include/nav.php:137
 msgid "Remote authentication"
-msgstr "Autenticación remota"
+msgstr "Acceder desde su servidor"
 
 #: ../../include/nav.php:137
 msgid "Click to authenticate to your home hub"
@@ -2543,12 +2543,12 @@ msgstr "canal"
 #: ../../include/conversation.php:167 ../../mod/like.php:396
 #, php-format
 msgid "%1$s doesn't like %2$s's %3$s"
-msgstr "a %1$s no le gusta el/la %3$s de %2$s"
+msgstr "a %1$s no le gusta el %3$s de %2$s"
 
 #: ../../include/conversation.php:204
 #, php-format
 msgid "%1$s is now connected with %2$s"
-msgstr "%1$s ahora es conectada con %2$s"
+msgstr "%1$s ahora está conectado con %2$s"
 
 #: ../../include/conversation.php:239
 #, php-format
@@ -2589,17 +2589,17 @@ msgstr "Abstenerse"
 #: ../../include/conversation.php:574 ../../mod/photos.php:998
 msgctxt "title"
 msgid "Attending"
-msgstr "Asistir"
+msgstr "Participar"
 
 #: ../../include/conversation.php:574 ../../mod/photos.php:998
 msgctxt "title"
 msgid "Not attending"
-msgstr "No asistir"
+msgstr "No participar"
 
 #: ../../include/conversation.php:574 ../../mod/photos.php:998
 msgctxt "title"
 msgid "Might attend"
-msgstr "Quizá asista"
+msgstr "Quizá participe"
 
 #: ../../include/conversation.php:692
 #, php-format
@@ -2616,7 +2616,7 @@ msgstr "Archivado bajo:"
 
 #: ../../include/conversation.php:735
 msgid "View in context"
-msgstr "Mostrar en contexto"
+msgstr "Mostrar en su contexto"
 
 #: ../../include/conversation.php:846
 msgid "remove"
@@ -2644,7 +2644,7 @@ msgstr "Ver fotos"
 
 #: ../../include/conversation.php:944
 msgid "Matrix Activity"
-msgstr "Actvidad de Matrix"
+msgstr "Actividad en la red"
 
 #: ../../include/conversation.php:946
 msgid "Edit Contact"
@@ -2730,7 +2730,7 @@ msgstr "Guardar en carpeta:"
 
 #: ../../include/conversation.php:1146
 msgid "Where are you right now?"
-msgstr "¿Donde estás ahora?"
+msgstr "¿Donde está ahora?"
 
 #: ../../include/conversation.php:1147 ../../mod/editpost.php:47
 #: ../../mod/mail.php:175 ../../mod/mail.php:290
@@ -2965,14 +2965,14 @@ msgctxt "noun"
 msgid "Attending"
 msgid_plural "Attending"
 msgstr[0] "Asistir"
-msgstr[1] "Asistir"
+msgstr[1] "Participar"
 
 #: ../../include/conversation.php:1710
 msgctxt "noun"
 msgid "Not Attending"
 msgid_plural "Not Attending"
 msgstr[0] "No asistir"
-msgstr[1] "No asistir"
+msgstr[1] "No participar"
 
 #: ../../include/conversation.php:1713
 msgctxt "noun"
@@ -3000,7 +3000,7 @@ msgctxt "noun"
 msgid "Abstain"
 msgid_plural "Abstains"
 msgstr[0] "se abstiene"
-msgstr[1] "se abstienen"
+msgstr[1] "Abstenerse"
 
 #: ../../include/items.php:413 ../../mod/like.php:270
 #: ../../mod/subthread.php:49 ../../mod/group.php:68 ../../mod/profperm.php:23
@@ -3414,7 +3414,7 @@ msgstr "Recordatorios de eventos"
 
 #: ../../include/identity.php:1128
 msgid "Events this week:"
-msgstr "Eventos esta semana:"
+msgstr "Eventos de esta semana:"
 
 #: ../../include/identity.php:1141 ../../include/identity.php:1258
 #: ../../include/apps.php:138 ../../mod/profperm.php:112
@@ -3473,7 +3473,7 @@ msgstr "Religión:"
 
 #: ../../include/identity.php:1216 ../../mod/directory.php:315
 msgid "About:"
-msgstr "Sobre usted:"
+msgstr "Sobre mí:"
 
 #: ../../include/identity.php:1218
 msgid "Hobbies/Interests:"
@@ -3521,7 +3521,7 @@ msgstr "Trabajo/empleo:"
 
 #: ../../include/identity.php:1240
 msgid "School/education:"
-msgstr "Escuela/educación:"
+msgstr "Estudios:"
 
 #: ../../include/identity.php:1260
 msgid "Like this thing"
@@ -4346,32 +4346,32 @@ msgstr "Acción anterior revocada."
 #: ../../mod/like.php:398
 #, php-format
 msgid "%1$s agrees with %2$s's %3$s"
-msgstr "%1$s está de acuerdo con %2$s de %3$s"
+msgstr "%1$s está de acuerdo con %3$s de %2$s"
 
 #: ../../mod/like.php:400
 #, php-format
 msgid "%1$s doesn't agree with %2$s's %3$s"
-msgstr "%1$s no están de acuerdo con %2$s de %3$s"
+msgstr "%1$s no está de acuerdo con %3$s de %2$s"
 
 #: ../../mod/like.php:402
 #, php-format
 msgid "%1$s abstains from a decision on %2$s's %3$s"
-msgstr "%1$s se abstiene de pronunciarse sobre %2$s de %3$s"
+msgstr "%1$s se abstiene en %3$s de %2$s"
 
 #: ../../mod/like.php:404
 #, php-format
 msgid "%1$s is attending %2$s's %3$s"
-msgstr "%1$s asistirá a %2$s de %3$s"
+msgstr "%1$s participará en el %3$s de %2$s"
 
 #: ../../mod/like.php:406
 #, php-format
 msgid "%1$s is not attending %2$s's %3$s"
-msgstr "%1$s no asistirá a %2$s de %3$s"
+msgstr "%1$s no participará en el %3$s de %2$s"
 
 #: ../../mod/like.php:408
 #, php-format
 msgid "%1$s may attend %2$s's %3$s"
-msgstr "%1$s podrá asistir a %2$s de %3$s"
+msgstr "%1$s tal vez participe en el %3$s de %2$s"
 
 #: ../../mod/like.php:492
 msgid "Action completed."
@@ -4626,11 +4626,11 @@ msgstr "Etiqueta:"
 
 #: ../../mod/siteinfo.php:160
 msgid "Last background fetch: "
-msgstr "Último fondo elegido:"
+msgstr "Última actualización en segundo plano:"
 
 #: ../../mod/siteinfo.php:163
 msgid "Running at web location"
-msgstr "Corriendo en un sitio web"
+msgstr "Corriendo en el sitio web"
 
 #: ../../mod/siteinfo.php:164
 msgid ""
@@ -4843,7 +4843,7 @@ msgstr "El elemento no es editable"
 
 #: ../../mod/editpost.php:48
 msgid "Delete item?"
-msgstr "¿Borrar este elemento?"
+msgstr "¿Borrar el elemento?"
 
 #: ../../mod/editpost.php:115 ../../mod/editlayout.php:142
 #: ../../mod/editwebpage.php:187 ../../mod/editblock.php:144
@@ -6082,7 +6082,7 @@ msgstr "Trabajo"
 
 #: ../../mod/profiles.php:711
 msgid "School/education"
-msgstr "Educación"
+msgstr "Estudios"
 
 #: ../../mod/profiles.php:717
 msgid "This is your default profile."
@@ -6543,7 +6543,7 @@ msgstr "Error del protocolo OpenID. Ningún ID recibido como respuesta."
 #: ../../mod/openid.php:72 ../../mod/openid.php:180 ../../mod/post.php:286
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
-msgstr "Bienvenido %s. La identificación remota se ha llevado a cabo correctamente."
+msgstr "Bienvenido %s. La identificación desde su servidor se ha llevado a cabo correctamente."
 
 #: ../../mod/tagger.php:96
 #, php-format
@@ -7960,7 +7960,7 @@ msgstr "acepte una solicitud de amistad"
 
 #: ../../mod/settings.php:1099
 msgid "joining a forum/community"
-msgstr "se una a un foro o comunidad"
+msgstr "unirse a un foro o comunidad"
 
 #: ../../mod/settings.php:1100
 msgid "making an <em>interesting</em> profile change"
@@ -8467,7 +8467,7 @@ msgstr "Falló la autenticación."
 
 #: ../../mod/rmagic.php:84
 msgid "Remote Authentication"
-msgstr "Autenticación Remota"
+msgstr "Acceso desde su servidor"
 
 #: ../../mod/rmagic.php:85
 msgid "Enter your channel address (e.g. channel@example.com)"
@@ -8563,7 +8563,7 @@ msgstr "Por favor, inicia sesión."
 msgid ""
 "Remote authentication blocked. You are logged into this site locally. Please"
 " logout and retry."
-msgstr "La autenticación remota está bloqueada. Ha iniciado sesión localmente. Por favor, salga de la sesión y vuelva a intentarlo."
+msgstr "La autenticación desde su servidor está bloqueada. Ha iniciado sesión localmente. Por favor, salga de la sesión y vuelva a intentarlo."
 
 #: ../../mod/new_channel.php:109
 msgid "Add a Channel"
@@ -8667,7 +8667,7 @@ msgstr "se añadió su canal"
 
 #: ../../mod/ping.php:355
 msgid "posted an event"
-msgstr "Se publicó un evento"
+msgstr "publicó un evento"
 
 #: ../../mod/layouts.php:176
 msgid "Comanche page description language help"
@@ -8908,7 +8908,7 @@ msgstr "Elija un esquema"
 
 #: ../../view/theme/redbasic/php/config.php:104
 msgid "Narrow navbar"
-msgstr "Limita la barra de navegación"
+msgstr "Estrechar la barra de navegación"
 
 #: ../../view/theme/redbasic/php/config.php:105
 msgid "Navigation bar background color"

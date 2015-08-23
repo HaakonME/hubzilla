@@ -238,10 +238,12 @@ abstract class photo_driver {
 		if(! $this->is_valid())
 			return FALSE;
 
+
 		if((! function_exists('exif_read_data')) || ($this->getType() !== 'image/jpeg'))
 			return;
 
 		$exif = @exif_read_data($filename,null,true);
+
 		if($exif) {
 			$ort = $exif['IFD0']['Orientation'];
 
@@ -281,7 +283,6 @@ abstract class photo_driver {
 					break;
 			}
 
-			//			logger('exif: ' . print_r($exif,true));
 			return $exif;
 
 		}

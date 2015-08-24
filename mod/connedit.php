@@ -313,6 +313,18 @@ function connedit_clone(&$a) {
 
 		if(! $a->poi)
 			return;
+
+        $r = q("SELECT abook.*, xchan.*
+            FROM abook left join xchan on abook_xchan = xchan_hash
+            WHERE abook_channel = %d and abook_id = %d LIMIT 1",
+            intval(local_channel()),
+            intval($a->poi['abook_id'])
+        );
+        if($r) {
+            $a->poi = $r[0];
+        }
+
+
 		$clone = $a->poi;
 
 		unset($clone['abook_id']);

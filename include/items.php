@@ -272,6 +272,8 @@ function can_comment_on_post($observer_xchan, $item) {
 	}
 	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'red'))
 		return true;
+	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'diaspora'))
+		return true;
 	if(strstr($item['comment_policy'],'site:') && strstr($item['comment_policy'],get_app()->get_hostname()))
 		return true;
 

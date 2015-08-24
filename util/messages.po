@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-08-14.1124\n"
+"Project-Id-Version: 2015-08-21.1131\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-14 00:04-0700\n"
+"POT-Creation-Date: 2015-08-21 00:04-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -416,7 +416,7 @@ msgstr ""
 msgid "Edited"
 msgstr ""
 
-#: ../../include/api.php:1193
+#: ../../include/api.php:1214
 msgid "Public Timeline"
 msgstr ""
 
@@ -1374,7 +1374,7 @@ msgstr ""
 
 #: ../../include/widgets.php:136 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../include/conversation.php:945
-#: ../../include/identity.php:857 ../../mod/directory.php:316
+#: ../../include/identity.php:880 ../../mod/directory.php:316
 #: ../../mod/match.php:64 ../../mod/suggest.php:52
 msgid "Connect"
 msgstr ""
@@ -1551,7 +1551,7 @@ msgid "Finishes:"
 msgstr ""
 
 #: ../../include/event.php:50 ../../include/bb2diaspora.php:481
-#: ../../include/identity.php:908 ../../mod/directory.php:302
+#: ../../include/identity.php:931 ../../mod/directory.php:302
 #: ../../mod/events.php:661
 msgid "Location:"
 msgstr ""
@@ -1855,7 +1855,7 @@ msgid "View all"
 msgstr ""
 
 #: ../../include/ItemObject.php:179 ../../include/taxonomy.php:396
-#: ../../include/conversation.php:1701 ../../include/identity.php:1167
+#: ../../include/conversation.php:1701 ../../include/identity.php:1190
 #: ../../mod/photos.php:1019
 msgctxt "noun"
 msgid "Like"
@@ -2061,7 +2061,7 @@ msgstr ""
 msgid "Open the selected location in a different window or browser tab"
 msgstr ""
 
-#: ../../include/Contact.php:215 ../../mod/admin.php:739
+#: ../../include/Contact.php:215
 #, php-format
 msgid "User '%s' deleted"
 msgstr ""
@@ -2107,7 +2107,7 @@ msgstr ""
 msgid "Manage/Edit profiles"
 msgstr ""
 
-#: ../../include/nav.php:95 ../../include/identity.php:880
+#: ../../include/nav.php:95 ../../include/identity.php:903
 msgid "Edit Profile"
 msgstr ""
 
@@ -3118,7 +3118,7 @@ msgstr ""
 msgid "Unable to verify channel signature"
 msgstr ""
 
-#: ../../include/zot.php:2144
+#: ../../include/zot.php:2133
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr ""
@@ -3316,11 +3316,11 @@ msgstr ""
 msgid "Default Profile"
 msgstr ""
 
-#: ../../include/identity.php:660
+#: ../../include/identity.php:683
 msgid "Requested channel is not available."
 msgstr ""
 
-#: ../../include/identity.php:707 ../../mod/profile.php:16
+#: ../../include/identity.php:730 ../../mod/profile.php:16
 #: ../../mod/achievements.php:11 ../../mod/webpages.php:29
 #: ../../mod/connect.php:13 ../../mod/hcard.php:8 ../../mod/blocks.php:29
 #: ../../mod/editlayout.php:27 ../../mod/editwebpage.php:28
@@ -3329,193 +3329,193 @@ msgstr ""
 msgid "Requested profile is not available."
 msgstr ""
 
-#: ../../include/identity.php:870 ../../mod/profiles.php:774
+#: ../../include/identity.php:893 ../../mod/profiles.php:774
 msgid "Change profile photo"
 msgstr ""
 
-#: ../../include/identity.php:876
+#: ../../include/identity.php:899
 msgid "Profiles"
 msgstr ""
 
-#: ../../include/identity.php:876
+#: ../../include/identity.php:899
 msgid "Manage/edit profiles"
 msgstr ""
 
-#: ../../include/identity.php:877 ../../mod/profiles.php:775
+#: ../../include/identity.php:900 ../../mod/profiles.php:775
 msgid "Create New Profile"
 msgstr ""
 
-#: ../../include/identity.php:892 ../../mod/profiles.php:786
+#: ../../include/identity.php:915 ../../mod/profiles.php:786
 msgid "Profile Image"
 msgstr ""
 
-#: ../../include/identity.php:895
+#: ../../include/identity.php:918
 msgid "visible to everybody"
 msgstr ""
 
-#: ../../include/identity.php:896 ../../mod/profiles.php:669
+#: ../../include/identity.php:919 ../../mod/profiles.php:669
 #: ../../mod/profiles.php:790
 msgid "Edit visibility"
 msgstr ""
 
-#: ../../include/identity.php:912 ../../include/identity.php:1151
+#: ../../include/identity.php:935 ../../include/identity.php:1174
 msgid "Gender:"
 msgstr ""
 
-#: ../../include/identity.php:913 ../../include/identity.php:1195
+#: ../../include/identity.php:936 ../../include/identity.php:1218
 msgid "Status:"
 msgstr ""
 
-#: ../../include/identity.php:914 ../../include/identity.php:1206
+#: ../../include/identity.php:937 ../../include/identity.php:1229
 msgid "Homepage:"
 msgstr ""
 
-#: ../../include/identity.php:915
+#: ../../include/identity.php:938
 msgid "Online Now"
 msgstr ""
 
-#: ../../include/identity.php:998 ../../include/identity.php:1076
+#: ../../include/identity.php:1021 ../../include/identity.php:1099
 #: ../../mod/ping.php:324
 msgid "g A l F d"
 msgstr ""
 
-#: ../../include/identity.php:999 ../../include/identity.php:1077
+#: ../../include/identity.php:1022 ../../include/identity.php:1100
 msgid "F d"
 msgstr ""
 
-#: ../../include/identity.php:1044 ../../include/identity.php:1116
+#: ../../include/identity.php:1067 ../../include/identity.php:1139
 #: ../../mod/ping.php:346
 msgid "[today]"
 msgstr ""
 
-#: ../../include/identity.php:1055
+#: ../../include/identity.php:1078
 msgid "Birthday Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1056
+#: ../../include/identity.php:1079
 msgid "Birthdays this week:"
 msgstr ""
 
-#: ../../include/identity.php:1109
+#: ../../include/identity.php:1132
 msgid "[No description]"
 msgstr ""
 
-#: ../../include/identity.php:1127
+#: ../../include/identity.php:1150
 msgid "Event Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1128
+#: ../../include/identity.php:1151
 msgid "Events this week:"
 msgstr ""
 
-#: ../../include/identity.php:1141 ../../include/identity.php:1258
+#: ../../include/identity.php:1164 ../../include/identity.php:1281
 #: ../../include/apps.php:138 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr ""
 
-#: ../../include/identity.php:1149 ../../mod/settings.php:1056
+#: ../../include/identity.php:1172 ../../mod/settings.php:1056
 msgid "Full Name:"
 msgstr ""
 
-#: ../../include/identity.php:1156
+#: ../../include/identity.php:1179
 msgid "Like this channel"
 msgstr ""
 
-#: ../../include/identity.php:1180
+#: ../../include/identity.php:1203
 msgid "j F, Y"
 msgstr ""
 
-#: ../../include/identity.php:1181
+#: ../../include/identity.php:1204
 msgid "j F"
 msgstr ""
 
-#: ../../include/identity.php:1188
+#: ../../include/identity.php:1211
 msgid "Birthday:"
 msgstr ""
 
-#: ../../include/identity.php:1192 ../../mod/directory.php:297
+#: ../../include/identity.php:1215 ../../mod/directory.php:297
 msgid "Age:"
 msgstr ""
 
-#: ../../include/identity.php:1201
+#: ../../include/identity.php:1224
 #, php-format
 msgid "for %1$d %2$s"
 msgstr ""
 
-#: ../../include/identity.php:1204 ../../mod/profiles.php:691
+#: ../../include/identity.php:1227 ../../mod/profiles.php:691
 msgid "Sexual Preference:"
 msgstr ""
 
-#: ../../include/identity.php:1208 ../../mod/directory.php:313
+#: ../../include/identity.php:1231 ../../mod/directory.php:313
 #: ../../mod/profiles.php:693
 msgid "Hometown:"
 msgstr ""
 
-#: ../../include/identity.php:1210
+#: ../../include/identity.php:1233
 msgid "Tags:"
 msgstr ""
 
-#: ../../include/identity.php:1212 ../../mod/profiles.php:694
+#: ../../include/identity.php:1235 ../../mod/profiles.php:694
 msgid "Political Views:"
 msgstr ""
 
-#: ../../include/identity.php:1214
+#: ../../include/identity.php:1237
 msgid "Religion:"
 msgstr ""
 
-#: ../../include/identity.php:1216 ../../mod/directory.php:315
+#: ../../include/identity.php:1239 ../../mod/directory.php:315
 msgid "About:"
 msgstr ""
 
-#: ../../include/identity.php:1218
+#: ../../include/identity.php:1241
 msgid "Hobbies/Interests:"
 msgstr ""
 
-#: ../../include/identity.php:1220 ../../mod/profiles.php:697
+#: ../../include/identity.php:1243 ../../mod/profiles.php:697
 msgid "Likes:"
 msgstr ""
 
-#: ../../include/identity.php:1222 ../../mod/profiles.php:698
+#: ../../include/identity.php:1245 ../../mod/profiles.php:698
 msgid "Dislikes:"
 msgstr ""
 
-#: ../../include/identity.php:1224
+#: ../../include/identity.php:1247
 msgid "Contact information and Social Networks:"
 msgstr ""
 
-#: ../../include/identity.php:1226
+#: ../../include/identity.php:1249
 msgid "My other channels:"
 msgstr ""
 
-#: ../../include/identity.php:1228
+#: ../../include/identity.php:1251
 msgid "Musical interests:"
 msgstr ""
 
-#: ../../include/identity.php:1230
+#: ../../include/identity.php:1253
 msgid "Books, literature:"
 msgstr ""
 
-#: ../../include/identity.php:1232
+#: ../../include/identity.php:1255
 msgid "Television:"
 msgstr ""
 
-#: ../../include/identity.php:1234
+#: ../../include/identity.php:1257
 msgid "Film/dance/culture/entertainment:"
 msgstr ""
 
-#: ../../include/identity.php:1236
+#: ../../include/identity.php:1259
 msgid "Love/Romance:"
 msgstr ""
 
-#: ../../include/identity.php:1238
+#: ../../include/identity.php:1261
 msgid "Work/employment:"
 msgstr ""
 
-#: ../../include/identity.php:1240
+#: ../../include/identity.php:1263
 msgid "School/education:"
 msgstr ""
 
-#: ../../include/identity.php:1260
+#: ../../include/identity.php:1283
 msgid "Like this thing"
 msgstr ""
 
@@ -5387,7 +5387,7 @@ msgstr ""
 msgid "Password reset request issued. Check your email."
 msgstr ""
 
-#: ../../mod/lostpass.php:35 ../../mod/lostpass.php:102
+#: ../../mod/lostpass.php:35 ../../mod/lostpass.php:103
 #, php-format
 msgid "Site Member (%s)"
 msgstr ""
@@ -5403,52 +5403,52 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../mod/lostpass.php:85 ../../boot.php:1559
+#: ../../mod/lostpass.php:86 ../../boot.php:1559
 msgid "Password Reset"
 msgstr ""
 
-#: ../../mod/lostpass.php:86
+#: ../../mod/lostpass.php:87
 msgid "Your password has been reset as requested."
 msgstr ""
 
-#: ../../mod/lostpass.php:87
+#: ../../mod/lostpass.php:88
 msgid "Your new password is"
 msgstr ""
 
-#: ../../mod/lostpass.php:88
+#: ../../mod/lostpass.php:89
 msgid "Save or copy your new password - and then"
 msgstr ""
 
-#: ../../mod/lostpass.php:89
+#: ../../mod/lostpass.php:90
 msgid "click here to login"
 msgstr ""
 
-#: ../../mod/lostpass.php:90
+#: ../../mod/lostpass.php:91
 msgid ""
 "Your password may be changed from the <em>Settings</em> page after "
 "successful login."
 msgstr ""
 
-#: ../../mod/lostpass.php:107
+#: ../../mod/lostpass.php:108
 #, php-format
 msgid "Your password has changed at %s"
 msgstr ""
 
-#: ../../mod/lostpass.php:122
+#: ../../mod/lostpass.php:123
 msgid "Forgot your Password?"
 msgstr ""
 
-#: ../../mod/lostpass.php:123
+#: ../../mod/lostpass.php:124
 msgid ""
 "Enter your email address and submit to have your password reset. Then check "
 "your email for further instructions."
 msgstr ""
 
-#: ../../mod/lostpass.php:124
+#: ../../mod/lostpass.php:125
 msgid "Email Address"
 msgstr ""
 
-#: ../../mod/lostpass.php:125
+#: ../../mod/lostpass.php:126
 msgid "Reset"
 msgstr ""
 
@@ -6537,22 +6537,22 @@ msgstr ""
 msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr ""
 
-#: ../../mod/uexport.php:41 ../../mod/uexport.php:42
+#: ../../mod/uexport.php:45 ../../mod/uexport.php:46
 msgid "Export Channel"
 msgstr ""
 
-#: ../../mod/uexport.php:43
+#: ../../mod/uexport.php:47
 msgid ""
 "Export your basic channel information to a small file.  This acts as a "
 "backup of your connections, permissions, profile and basic data, which can "
 "be used to import your data to a new hub, but\tdoes not contain your content."
 msgstr ""
 
-#: ../../mod/uexport.php:44
+#: ../../mod/uexport.php:48
 msgid "Export Content"
 msgstr ""
 
-#: ../../mod/uexport.php:45
+#: ../../mod/uexport.php:49
 msgid ""
 "Export your channel information and all the content to a JSON backup. This "
 "backs up all of your connections, permissions, profile data and all of your "
@@ -7074,15 +7074,15 @@ msgstr ""
 
 #: ../../mod/admin.php:683
 #, php-format
-msgid "%s user blocked/unblocked"
-msgid_plural "%s users blocked/unblocked"
+msgid "%s account blocked/unblocked"
+msgid_plural "%s account blocked/unblocked"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../mod/admin.php:691
 #, php-format
-msgid "%s user deleted"
-msgid_plural "%s users deleted"
+msgid "%s account deleted"
+msgid_plural "%s accounts deleted"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -7090,14 +7090,19 @@ msgstr[1] ""
 msgid "Account not found"
 msgstr ""
 
+#: ../../mod/admin.php:739
+#, php-format
+msgid "Account '%s' deleted"
+msgstr ""
+
 #: ../../mod/admin.php:747
 #, php-format
-msgid "User '%s' blocked"
+msgid "Account '%s' blocked"
 msgstr ""
 
 #: ../../mod/admin.php:755
 #, php-format
-msgid "User '%s' unblocked"
+msgid "Account '%s' unblocked"
 msgstr ""
 
 #: ../../mod/admin.php:818 ../../mod/admin.php:830
@@ -7154,14 +7159,14 @@ msgstr ""
 
 #: ../../mod/admin.php:833
 msgid ""
-"Selected users will be deleted!\\n\\nEverything these users had posted on "
-"this site will be permanently deleted!\\n\\nAre you sure?"
+"Selected accounts will be deleted!\\n\\nEverything these accounts had posted "
+"on this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
 #: ../../mod/admin.php:834
 msgid ""
-"The user {0} will be deleted!\\n\\nEverything this user has posted on this "
-"site will be permanently deleted!\\n\\nAre you sure?"
+"The account {0} will be deleted!\\n\\nEverything this account has posted on "
+"this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
 #: ../../mod/admin.php:870

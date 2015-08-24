@@ -2930,7 +2930,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						$total_feeds ++;
 			}
 
-			$disallowed = array('abook_id','abook_account','abook_channel');
+			$disallowed = array('abook_id','abook_account','abook_channel','abook_blocked','abook_ignored','abook_hidden','abook_archived','abook_pending','abook_unconnected','abook_self','abook_feed');
 
 			foreach($arr['abook'] as $abook) {
 
@@ -3029,7 +3029,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					foreach($clean as $k => $v) {
 						if($k == 'abook_dob')
 							$v = dbescdate($v);
-
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v)
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}

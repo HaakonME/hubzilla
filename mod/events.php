@@ -132,6 +132,10 @@ function events_post(&$a) {
 			}
 			return;
 		}
+
+		$created = $x[0]['created'];
+		$edited = datetime_convert();
+
 		if($x[0]['allow_cid'] === '<' . $channel['channel_hash'] . '>' 
 			&& $x[0]['allow_gid'] === '' && $x[0]['deny_cid'] === '' && $x[0]['deny_gid'] === '') {
 			$share = false;
@@ -150,6 +154,7 @@ function events_post(&$a) {
 		}
 	}
 	else {
+		$created = $edited = datetime_convert();
 		if($share) {
 			$str_group_allow   = perms2str($_POST['group_allow']);
 			$str_contact_allow = perms2str($_POST['contact_allow']);

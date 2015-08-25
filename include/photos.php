@@ -52,12 +52,21 @@ function photo_upload($channel, $observer, $args) {
 
 	// Set to default channel permissions. If the parent directory (album) has permissions set, 
 	// use those instead. If we have specific permissions supplied, they take precedence over
-	// all other settings. 
+	// all other settings. 'allow_cid' being passed from an external source takes priority over channel settings.
+	// ...messy... needs re-factoring once the photos/files integration stabilises
 
-	$str_group_allow = $channel['channel_allow_gid'];
-	$str_contact_allow = $channel['channel_allow_cid'];
-	$str_group_deny = $channel['channel_deny_gid'];
-	$str_contact_deny = $channel['channel_deny_cid'];
+	if(array_key_exists('allow_cid',$args)) {
+		$str_group_allow = $args['allow_gid'];
+		$str_contact_allow = $args['allow_cid'];
+		$str_group_deny = $args['deny_gid'];
+		$str_contact_deny = $args['deny_cid'];
+	}
+	else {
+		$str_group_allow = $channel['channel_allow_gid'];
+		$str_contact_allow = $channel['channel_allow_cid'];
+		$str_group_deny = $channel['channel_deny_gid'];
+		$str_contact_deny = $channel['channel_deny_cid'];
+	}
 
 	if($args['directory']) {
 		$str_group_allow = $args['directory']['allow_gid'];

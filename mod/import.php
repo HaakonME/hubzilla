@@ -237,19 +237,19 @@ function import_post(&$a) {
 			}
 
 			if(array_key_exists('hubloc_primary',$hubloc)) {		
-				if(intval($hubloc['hubloc_primary']) {
+				if(intval($hubloc['hubloc_primary'])) {
 					$hubloc['hubloc_flags'] |= HUBLOC_FLAGS_PRIMARY;
 					unset($hubloc['hubloc_primary']);
 				}
-				if(intval($hubloc['hubloc_orphancheck']) {
+				if(intval($hubloc['hubloc_orphancheck'])) {
 					$hubloc['hubloc_flags'] |= HUBLOC_FLAGS_ORPHANCHECK;
 					unset($hubloc['hubloc_orphancheck']);
 				}
-				if(intval($hubloc['hubloc_deleted']) {
+				if(intval($hubloc['hubloc_deleted'])) {
 					$hubloc['hubloc_flags'] |= HUBLOC_FLAGS_DELETED;
 					unset($hubloc['hubloc_deleted']);
 				}
-				if(intval($hubloc['hubloc_error']) {
+				if(intval($hubloc['hubloc_error'])) {
 					$hubloc['hubloc_status'] |= HUBLOC_ERROR;
 					unset($hubloc['hubloc_error']);
 				}

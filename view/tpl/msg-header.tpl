@@ -78,7 +78,7 @@ else
 		reply = prompt("{{$linkurl}}");
 		if(reply && reply.length) {
 			$('#prvmail-rotator').spin('tiny');
-			$.get('urlinfo?f=&url=' + reply, function(data) {
+			$.get('linkinfo?f=&url=' + reply, function(data) {
 				addmailtext(data);
 				$('#prvmail-rotator').spin(false);
 			});
@@ -104,7 +104,7 @@ else
 		event.preventDefault();
 		if(reply && reply.length) {
 			$('#prvmail-rotator').spin('tiny');
-			$.get('urlinfo?f=&url=' + reply, function(data) {
+			$.get('linkinfo?f=&url=' + reply, function(data) {
 				addmailtext(data);
 				$('#prvmail-rotator').spin(false);
 			});

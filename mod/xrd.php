@@ -24,7 +24,7 @@ function xrd_init(&$a) {
 
 	$dspr = replace_macros(get_markup_template('xrd_diaspora.tpl'),array(
 		'$baseurl' => $a->get_baseurl(),
-		'$dspr_guid' => $r[0]['channel_guid'],
+		'$dspr_guid' => $r[0]['channel_guid'] . str_replace('.','',$a->get_hostname()),
 		'$dspr_key' => base64_encode(pemtorsa($r[0]['channel_pubkey']))
 	));
 

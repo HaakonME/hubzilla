@@ -257,7 +257,6 @@ function import_post(&$a) {
 				$profile['photo'] = z_root() . '/photo/profile/l/' . $channel['channel_id'];
 				$profile['thumb'] = z_root() . '/photo/profile/m/' . $channel['channel_id'];
 
-
 				dbesc_array($profile);
 				$r = dbq("INSERT INTO profile (`" 
 					. implode("`, `", array_keys($profile)) 

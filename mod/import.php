@@ -225,10 +225,36 @@ function import_post(&$a) {
 		foreach($hublocs as $hubloc) {
 			$arr = array(
 				'guid' => $hubloc['hubloc_guid'],
-				'guid_sig' => $hubloc['guid_sig'],
+				'guid_sig' => $hubloc['hubloc_guid_sig'],
 				'url' => $hubloc['hubloc_url'],
 				'url_sig' => $hubloc['hubloc_url_sig']
 			);
+
+			$hash = make_xchan_hash($hubloc['hubloc_guid'],$hubloc['hubloc_guid_sig']);
+			if($hubloc['hubloc_network'] === 'zot' && $hash !== $hubloc['hubloc_hash']) {
+				logger('forged hubloc: ' . print_r($hubloc,true));
+				continue;
+			}
+
+			if(array_key_exists('hubloc_primary',$hubloc)) {		
+				if(intval($hubloc['hubloc_primary']) {
+					$hubloc['hubloc_flags'] |= HUBLOC_FLAGS_PRIMARY;
+					unset($hubloc['hubloc_primary']);
+				}
+				if(intval($hubloc['hubloc_orphancheck']) {
+					$hubloc['hubloc_flags'] |= HUBLOC_FLAGS_ORPHANCHECK;
+					unset($hubloc['hubloc_orphancheck']);
+				}
+				if(intval($hubloc['hubloc_deleted']) {
+					$hubloc['hubloc_flags'] |= HUBLOC_FLAGS_DELETED;
+					unset($hubloc['hubloc_deleted']);
+				}
+				if(intval($hubloc['hubloc_error']) {
+					$hubloc['hubloc_status'] |= HUBLOC_ERROR;
+					unset($hubloc['hubloc_error']);
+				}
+			}
+
 			if(($hubloc['hubloc_hash'] === $channel['channel_hash']) && ($hubloc['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && ($seize))
 				$hubloc['hubloc_flags'] = ($hubloc['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY);
 
@@ -307,6 +333,12 @@ function import_post(&$a) {
 	$xchans = $data['xchan'];
 	if($xchans) {
 		foreach($xchans as $xchan) {
+
+			$hash = make_xchan_hash($xchan['xchan_guid'],$xchan['xchan_guid_sig']);
+			if($xchan['xchan_network'] === 'zot' && $hash !== $xchan['xchan_hash']) {
+				logger('forged xchan: ' . print_r($xchan,true));
+				continue;
+			}
 
 			$r = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
 				dbesc($xchan['xchan_hash'])

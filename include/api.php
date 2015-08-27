@@ -660,7 +660,7 @@ require_once('include/items.php');
 					if($ii) {
 						$ret['item'] = array();
 						foreach($ii as $iii)
-							$ret['item'][] = encode_item($iii);
+							$ret['item'][] = encode_item($iii,true);
 					}
 				}
 			}

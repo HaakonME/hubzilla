@@ -758,6 +758,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 		$args['created'] = $created;
 		$args['edited'] = $edited;
+		if($arr['item'])
+			$args['item'] = $arr['item'];
 
 		$p = photo_upload($channel,$observer,$args);
 		if($p['success']) {

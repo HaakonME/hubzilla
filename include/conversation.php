@@ -404,7 +404,9 @@ function count_descendants($item) {
  * @brief Check if the activity of the item is visible.
  *
  * likes (etc.) can apply to other things besides posts. Check if they are post
- * children, in which case we handle them specially.
+ * children, in which case we handle them specially. Activities which are unrecognised
+ * as having special meaning and hidden will be treated as posts or comments and visible
+ * in the stream.  
  *
  * @param array $item
  * @return boolean
@@ -412,11 +414,20 @@ function count_descendants($item) {
 function visible_activity($item) {
 	$hidden_activities = array(ACTIVITY_LIKE, ACTIVITY_DISLIKE, ACTIVITY_AGREE, ACTIVITY_DISAGREE, ACTIVITY_ABSTAIN, ACTIVITY_ATTEND, ACTIVITY_ATTENDNO, ACTIVITY_ATTENDMAYBE);
 
+	$post_types = array(ACTIVITY_OBJ_NOTE,ACTIVITY_OBJ_COMMENT,basename(ACTIVITY_OBJ_NOTE),basename(ACTIVITY_OBJ_COMMENT)); 
+
 	foreach ($hidden_activities as $act) {
 		if ((activity_match($item['verb'], $act)) && ($item['mid'] != $item['parent_mid'])) {
 			return false;
 		}
 	}
+
+	// In order to share edits with networks which have no concept of editing, we'll create 
+	// separate activities to indicate the edit. Our network will not require them, since our
+	// edits are automatically applied and the activity indicated.  
+
+	if(($item['verb'] === ACTIVITY_UPDATE) && (in_array($item['obj_type'],$post_types)))
+		return false;
 
 	return true;
 }

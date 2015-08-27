@@ -645,7 +645,27 @@ require_once('include/items.php');
 			if(array_key_exists('os_storage',$r[0]) && intval($r[0]['os_storage']))
 				$data = file_get_contents($data);
 			$r[0]['data'] = base64_encode($data);
-			json_return_and_die($r[0]);
+			$ret = array('photo' => $r[0]);
+			$i = q("select id from item where uid = %d and resource_type = 'photo' and resource_id = '%s' limit 1",
+				intval(local_channel()),
+				dbesc($_REQUEST['photo_id'])
+			);
+			if($i) {
+				$ii = q("select * from item where parent = %d order by id",
+					intval($i[0]['id'])
+				);
+				if($ii) {
+					xchan_query($ii,true,0);
+					$ii = fetch_post_tags($ii,true);
+					if($ii) {
+						$ret['item'] = array();
+						foreach($ii as $iii)
+							$ret['item'][] = encode_item($iii);
+					}
+				}
+			}
+
+			json_return_and_die($ret);
 		}
 		killme();
 	}

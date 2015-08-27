@@ -33,6 +33,10 @@ At this point, the $Projectname [i]Affinity Slider[/i] tool, which usually appea
 
 The Affinity Slider allows instantaneous filtering of large amounts of content, grouped by levels of closeness.
 
+[b]Connection Filtering[/b]
+
+You have the ability to control precisely what appears in your stream using the optional "Connection Filter". When enabled, the Connection Editor provides inputs for selecting criteria which needs to be matched in order to include or exclude a specific post from a specific channel. Once a post has been allowed, all comments to that post are allowed regardless of whether they match the selection criteria. You may select words that if present block the post or ensure it is included in your stream. Regular expressions may be used for even finer control, as well as hashtags or even the detected language of the post.  
+
 [b]Access Control Lists[/b]
 
 When sharing content, members have the option of restricting who sees the content.  By clicking on the padlock underneath the sharing box, one may choose desired recipients of the post, by clicking on their names.

@@ -272,6 +272,8 @@ function can_comment_on_post($observer_xchan, $item) {
 	}
 	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'red'))
 		return true;
+	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'diaspora'))
+		return true;
 	if(strstr($item['comment_policy'],'site:') && strstr($item['comment_policy'],get_app()->get_hostname()))
 		return true;
 
@@ -4366,7 +4368,7 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 				);
 			}
 			else {
-				$r = q("UPDATE item set item_deleted = 1, changed = '%s', edited = '%s' where if = %d",
+				$r = q("UPDATE item set item_deleted = 1, changed = '%s', edited = '%s' where id = %d",
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					intval($item['id'])

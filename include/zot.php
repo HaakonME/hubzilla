@@ -294,12 +294,12 @@ function zot_refresh($them, $channel = null, $force = false) {
 	if ($them['hubloc_url']) {
 		$url = $them['hubloc_url'];
 	} else {
-		$r = q("select hubloc_url, hubloc_flags from hubloc where hubloc_hash = '%s'",
+		$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
 			dbesc($them['xchan_hash'])
 		);
 		if ($r) {
 			foreach ($r as $rr) {
-				if ($rr['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) {
+				if (intval($rr['hubloc_primary'])) {
 					$url = $rr['hubloc_url'];
 					break;
 				}
@@ -2207,7 +2207,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-					$r[0]['hubloc_flags'] = $r[0]['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY;
+					$r[0]['hubloc_primary'] = intval($location['primary']);
 					hubloc_change_primary($r[0]);
 					$what .= 'primary_hub ';
 					$changed = true;
@@ -2911,6 +2911,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						$total_feeds ++;
 			}
 
+
 			$disallowed = array('abook_id','abook_account','abook_channel','abook_rating','abook_rating_text');
 
 			foreach($arr['abook'] as $abook) {
@@ -2999,7 +3000,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					foreach($clean as $k => $v) {
 						if($k == 'abook_dob')
 							$v = dbescdate($v);
-
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v)
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}

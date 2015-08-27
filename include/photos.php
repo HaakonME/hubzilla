@@ -52,12 +52,21 @@ function photo_upload($channel, $observer, $args) {
 
 	// Set to default channel permissions. If the parent directory (album) has permissions set, 
 	// use those instead. If we have specific permissions supplied, they take precedence over
-	// all other settings. 
+	// all other settings. 'allow_cid' being passed from an external source takes priority over channel settings.
+	// ...messy... needs re-factoring once the photos/files integration stabilises
 
-	$str_group_allow = $channel['channel_allow_gid'];
-	$str_contact_allow = $channel['channel_allow_cid'];
-	$str_group_deny = $channel['channel_deny_gid'];
-	$str_contact_deny = $channel['channel_deny_cid'];
+	if(array_key_exists('allow_cid',$args)) {
+		$str_group_allow = $args['allow_gid'];
+		$str_contact_allow = $args['allow_cid'];
+		$str_group_deny = $args['deny_gid'];
+		$str_contact_deny = $args['deny_cid'];
+	}
+	else {
+		$str_group_allow = $channel['channel_allow_gid'];
+		$str_contact_allow = $channel['channel_allow_cid'];
+		$str_group_deny = $channel['channel_deny_gid'];
+		$str_contact_deny = $channel['channel_deny_cid'];
+	}
 
 	if($args['directory']) {
 		$str_group_allow = $args['directory']['allow_gid'];
@@ -261,62 +270,105 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
-	$title = '';
-	$mid = item_message_id();
+	if($args['item']) {
+		foreach($args['item'] as $i) {
 
-	$arr = array();
+			$item = get_item_elements($i);
+			$force = false;
 
-	if($lat && $lon)
-		$arr['coord'] = $lat . ' ' . $lon;
+			if($item['mid'] === $item['parent_mid']) {
 
-	$arr['aid']            = $account_id;
-	$arr['uid']            = $channel_id;
-	$arr['mid']            = $mid;
-	$arr['parent_mid']     = $mid; 
-	$arr['item_hidden']    = $item_hidden;
-	$arr['resource_type']  = 'photo';
-	$arr['resource_id']    = $photo_hash;
-	$arr['owner_xchan']    = $channel['channel_hash'];
-	$arr['author_xchan']   = $observer['xchan_hash'];
-	$arr['title']          = $title;
-	$arr['allow_cid']      = $str_contact_allow;
-	$arr['allow_gid']      = $str_group_allow;
-	$arr['deny_cid']       = $str_contact_deny;
-	$arr['deny_gid']       = $str_group_deny;
-	$arr['verb']           = ACTIVITY_POST;
-	$arr['item_wall']      = 1;
-	$arr['item_origin']    = 1;
-	$arr['item_thread_top'] = 1;
+				$item['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+					. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
+					. '[/zrl]';
 
-	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+				if($item['author_xchan'] === $channel['channel_hash']) {
+	              	$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
+	                $item['item_verified']  = 1;
+				}
+				else {
+					$item['sig'] = '';
+				}
+				$force = true;
 
-	// We should also put a width_x_height on large photos. Left as an exercise for 
-	// devs looking fo simple stuff to fix.
-
-	$larger = feature_enabled($channel['channel_id'], 'large_photos');
-	if($larger) {
-		$tag = '[zmg]';
-		if($r2)
-			$smallest = 1;
-		else
-			$smallest = 0;
+			}
+			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+				dbesc($item['mid']),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				if(($item['edited'] > $r[0]['edited']) || $force) {
+					$item['id'] = $r[0]['id'];
+					$item['uid'] = $channel['channel_id'];
+					item_store_update($item);
+					continue;
+				}	
+			}
+			else {
+				$item['aid'] = $channel['channel_account_id'];
+				$item['uid'] = $channel['channel_id'];
+				$item_result = item_store($item);
+			}
+		}
 	}
 	else {
-		if ($width_x_height)
-			$tag = '[zmg=' . $width_x_height. ']';
-		else
-			$tag = '[zmg]';
-	}
+		$title = '';
+		$mid = item_message_id();
 
-	$arr['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+		$arr = array();
+
+		if($lat && $lon)
+			$arr['coord'] = $lat . ' ' . $lon;
+
+		$arr['aid']            = $account_id;
+		$arr['uid']            = $channel_id;
+		$arr['mid']            = $mid;
+		$arr['parent_mid']     = $mid; 
+		$arr['item_hidden']    = $item_hidden;
+		$arr['resource_type']  = 'photo';
+		$arr['resource_id']    = $photo_hash;
+		$arr['owner_xchan']    = $channel['channel_hash'];
+		$arr['author_xchan']   = $observer['xchan_hash'];
+		$arr['title']          = $title;
+		$arr['allow_cid']      = $str_contact_allow;
+		$arr['allow_gid']      = $str_group_allow;
+		$arr['deny_cid']       = $str_contact_deny;
+		$arr['deny_gid']       = $str_group_deny;
+		$arr['verb']           = ACTIVITY_POST;
+		$arr['item_wall']      = 1;
+		$arr['item_origin']    = 1;
+		$arr['item_thread_top'] = 1;
+
+		$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+
+		// We should also put a width_x_height on large photos. Left as an exercise for 
+		// devs looking for simple stuff to fix.
+
+		$larger = feature_enabled($channel['channel_id'], 'large_photos');
+		if($larger) {
+			$tag = '[zmg]';
+			if($r2)
+				$smallest = 1;
+			else
+				$smallest = 0;
+		}
+		else {
+			if ($width_x_height)
+				$tag = '[zmg=' . $width_x_height. ']';
+			else
+				$tag = '[zmg]';
+		}
+
+		$arr['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 			. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
 			. '[/zrl]';
 
-	$result = item_store($arr);
-	$item_id = $result['item_id'];
+		$result = item_store($arr);
+		$item_id = $result['item_id'];
 
-	if($visible) 
-		proc_run('php', "include/notifier.php", 'wall-new', $item_id);
+		if($visible) 
+			proc_run('php', "include/notifier.php", 'wall-new', $item_id);
+	}
 
 	$ret['success'] = true;
 	$ret['item'] = $arr;

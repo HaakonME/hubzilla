@@ -108,7 +108,7 @@ function zfinger_init(&$a) {
 	$public_forum = false;
 
 	$role = get_pconfig($e['channel_id'],'system','permissions_role');
-	if($role === 'forum') {
+	if($role === 'forum' || $role === 'repository') {
 		$public_forum = true;
 	}
 	else {

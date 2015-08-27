@@ -174,9 +174,6 @@ function abook_toggle_flag($abook,$flag) {
 		);
 	}
 
-	$a = get_app();
-	if($a->data['abook'])
-		$a->data['abook']['abook_flags'] = $a->data['abook']['abook_flags'] ^ $flag;
 	return $r;
 
 }

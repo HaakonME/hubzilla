@@ -778,7 +778,12 @@ function event_store_item($arr, $event) {
 
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 
-		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d, obj_type = '%s'  WHERE id = %d AND uid = %d",
+		// @FIXME can only update sig if we have the author's channel on this site
+		// Until fixed, set it to nothing so it won't give us signature errors
+
+		$sig = '';
+
+		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', sig = '%s', item_flags = %d, item_private = %d, obj_type = '%s'  WHERE id = %d AND uid = %d",
 			dbesc($arr['summary']),
 			dbesc($prefix . format_event_bbcode($arr)),
 			dbesc($object),
@@ -787,6 +792,7 @@ function event_store_item($arr, $event) {
 			dbesc($arr['deny_cid']),
 			dbesc($arr['deny_gid']),
 			dbesc($arr['edited']),
+			dbesc($sig),
 			intval($r[0]['item_flags']),
 			intval($private),
 			dbesc(ACTIVITY_OBJ_EVENT),

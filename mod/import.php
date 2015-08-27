@@ -257,7 +257,6 @@ function import_post(&$a) {
 				$profile['photo'] = z_root() . '/photo/profile/l/' . $channel['channel_id'];
 				$profile['thumb'] = z_root() . '/photo/profile/m/' . $channel['channel_id'];
 
-
 				dbesc_array($profile);
 				$r = dbq("INSERT INTO profile (`" 
 					. implode("`, `", array_keys($profile)) 
@@ -277,7 +276,13 @@ function import_post(&$a) {
 		if($hublocs) {
 			foreach($hublocs as $hubloc) {
 
-				if(! array_key_exists('hubloc_primary',$hublocs)) {
+				$hash = make_xchan_hash($hubloc['hubloc_guid'],$hubloc['hubloc_guid_sig']);
+				if($hubloc['hubloc_network'] === 'zot' && $hash !== $hubloc['hubloc_hash']) {
+					logger('forged hubloc: ' . print_r($hubloc,true));
+					continue;
+				}
+
+				if(! array_key_exists('hubloc_primary',$hubloc)) {
 					$hubloc['hubloc_primary'] = (($hubloc['hubloc_flags'] & 0x0001) ? 1 : 0);
 					$hubloc['hubloc_orphancheck'] = (($hubloc['hubloc_flags'] & 0x0004) ? 1 : 0);
 					$hubloc['hubloc_error'] = (($hubloc['hubloc_status'] & 0x0003) ? 1 : 0);
@@ -286,7 +291,7 @@ function import_post(&$a) {
 
 				$arr = array(
 					'guid' => $hubloc['hubloc_guid'],
-					'guid_sig' => $hubloc['guid_sig'],
+					'guid_sig' => $hubloc['hubloc_guid_sig'],
 					'url' => $hubloc['hubloc_url'],
 					'url_sig' => $hubloc['hubloc_url_sig']
 				);
@@ -384,6 +389,13 @@ function import_post(&$a) {
 		$xchans = $data['xchan'];
 		if($xchans) {
 			foreach($xchans as $xchan) {
+
+				$hash = make_xchan_hash($xchan['xchan_guid'],$xchan['xchan_guid_sig']);
+				if($xchan['xchan_network'] === 'zot' && $hash !== $xchan['xchan_hash']) {
+					logger('forged xchan: ' . print_r($xchan,true));
+					continue;
+				}
+
 				if(! array_key_exists('xchan_hidden',$xchan)) {
 					$xchan['xchan_hidden']       = (($xchan['xchan_flags'] & 0x0001) ? 1 : 0);
 					$xchan['xchan_orphan']       = (($xchan['xchan_flags'] & 0x0002) ? 1 : 0);

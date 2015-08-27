@@ -281,7 +281,14 @@ function photo_upload($channel, $observer, $args) {
 				$item['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 					. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
 					. '[/zrl]';
-				$item['sig'] = '';
+
+				if($item['author_xchan'] === $channel['channel_hash']) {
+	              	$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
+	                $item['item_verified']  = 1;
+				}
+				else {
+					$item['sig'] = '';
+				}
 				$force = true;
 
 			}

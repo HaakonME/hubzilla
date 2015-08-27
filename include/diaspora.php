@@ -2742,20 +2742,25 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	// versions of Diaspora (i.e. Diaspora-pistos) support
 	// likes on comments
 
+
+	// That version is now dead so detect a "sublike" and
+	// just send it as an activity.
+
+	$sublike = false;
+
+
 	if($item['verb'] === ACTIVITY_LIKE && $item['thr_parent']) {
-		$p = q("select * from item where mid = '%s' limit 1",
-				dbesc($item['thr_parent'])
-		);
+		$sublike = true;
 	}
-	else {
-		// The first item in the `item` table with the parent id is the parent. However, MySQL doesn't always
-		// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
-		// The only item with `parent` and `id` as the parent id is the parent item.
-		$p = q("select * from item where parent = %d and id = %d limit 1",
-			   intval($item['parent']),
-			   intval($item['parent'])
-			  );
-	}
+
+
+	// The first item in the `item` table with the parent id is the parent. However, MySQL doesn't always
+	// return the items ordered by `item`.`id`, in which case the wrong item is chosen as the parent.
+	// The only item with `parent` and `id` as the parent id is the parent item.
+	$p = q("select * from item where parent = %d and id = %d limit 1",
+	   intval($item['parent']),
+	   intval($item['parent'])
+	);
 
 	if($p)
 		$parent = $p[0];
@@ -2771,12 +2776,12 @@ function diaspora_send_relay($item,$owner,$contact,$public_batch = false) {
 	if( $item['item_restrict'] & ITEM_DELETED) {
 		$relay_retract = true;
 
-		$target_type = ( ($item['verb'] === ACTIVITY_LIKE) ? 'Like' : 'Comment');
+		$target_type = ( ($item['verb'] === ACTIVITY_LIKE && (! $sublike)) ? 'Like' : 'Comment');
 
 		$sql_sign_id = 'retract_iid';
 		$tpl = get_markup_template('diaspora_relayable_retraction.tpl');
 	}
-	elseif($item['verb'] === ACTIVITY_LIKE) {
+	elseif(($item['verb'] === ACTIVITY_LIKE) && (! $sublike)) {
 		$like = true;
 
 		$target_type = ( $parent['mid'] === $parent['parent_mid']  ? 'Post' : 'Comment');

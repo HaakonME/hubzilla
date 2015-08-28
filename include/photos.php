@@ -303,7 +303,7 @@ function photo_upload($channel, $observer, $args) {
 		$arr['author_xchan']    = $observer['xchan_hash'];
 		$arr['title']           = $title;
 		$arr['allow_cid']       = $ac['allow_cid'];
-		$arr['allow_gid']       = $ac['allow_gid']
+		$arr['allow_gid']       = $ac['allow_gid'];
 		$arr['deny_cid']        = $ac['deny_cid'];
 		$arr['deny_gid']        = $ac['deny_gid'];
 		$arr['verb']            = ACTIVITY_POST;

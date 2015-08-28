@@ -34,16 +34,6 @@ function photo_upload($channel, $observer, $args) {
 	 */
 
 	$album    = $args['album'];
-//	$newalbum = $args['newalbum'];
-
-//	logger('photo_upload: album= ' . $album . ' newalbum= ' . $newalbum , LOGGER_DEBUG);
-
-//	if(! $album) {
-//		if($newalbum)
-//			$album = $newalbum;
-//		else
-//			$album = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y-m');
-//	}
 
 	if(intval($args['visible']) || $args['visible'] === 'true')
 		$visible = 1;
@@ -55,37 +45,19 @@ function photo_upload($channel, $observer, $args) {
 	// all other settings. 'allow_cid' being passed from an external source takes priority over channel settings.
 	// ...messy... needs re-factoring once the photos/files integration stabilises
 
-	if(array_key_exists('allow_cid',$args)) {
-		$str_group_allow = $args['allow_gid'];
-		$str_contact_allow = $args['allow_cid'];
-		$str_group_deny = $args['deny_gid'];
-		$str_contact_deny = $args['deny_cid'];
-	}
-	else {
-		$str_group_allow = $channel['channel_allow_gid'];
-		$str_contact_allow = $channel['channel_allow_cid'];
-		$str_group_deny = $channel['channel_deny_gid'];
-		$str_contact_deny = $channel['channel_deny_cid'];
-	}
-
-	if($args['directory']) {
-		$str_group_allow = $args['directory']['allow_gid'];
-		$str_contact_allow = $args['directory']['allow_cid'];
-		$str_group_deny = $args['directory']['deny_gid'];
-		$str_contact_deny = $args['directory']['deny_cid'];
-	}
-
+	$acl = new AccessList($channel);
+	if(array_key_exists('directory',$args) && $args['directory'])
+		$acl->set($args['directory']);
+	if(array_key_exists('allow_cid',$args))
+		$acl->set($args);
 	if( (array_key_exists('group_allow',$args)) 
 		|| (array_key_exists('contact_allow',$args)) 
 		|| (array_key_exists('group_deny',$args)) 
 		|| (array_key_exists('contact_deny',$args))) {
-
-			$str_group_allow   = perms2str(((is_array($args['group_allow']))   ? $args['group_allow']   : explode(',',$args['group_allow'])));
-			$str_contact_allow = perms2str(((is_array($args['contact_allow'])) ? $args['contact_allow'] : explode(',',$args['contact_allow'])));
-			$str_group_deny    = perms2str(((is_array($args['group_deny']))    ? $args['group_deny']    : explode(',',$args['group_deny'])));
-			$str_contact_deny  = perms2str(((is_array($args['contact_deny']))  ? $args['contact_deny']  : explode(',',$args['contact_deny'])));
-
+		$acl->set_from_array($args);
 	}
+
+	$ac = $acl->get();
 
 	$os_storage = 0;
 
@@ -200,8 +172,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$p = array('aid' => $account_id, 'uid' => $channel_id, 'xchan' => $visitor, 'resource_id' => $photo_hash,
 		'filename' => $filename, 'album' => $album, 'scale' => 0, 'photo_usage' => PHOTO_NORMAL, 
-		'allow_cid' => $str_contact_allow, 'allow_gid' => $str_group_allow,
-		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_group_deny,
+		'allow_cid' => $ac['allow_cid'], 'allow_gid' => $ac['allow_gid'],
+		'deny_cid' => $ac['deny_cid'], 'deny_gid' => $ac['deny_gid'],
 		'os_storage' => $os_storage, 'os_path' => $args['os_path']
 	);
 	if($args['created'])
@@ -320,26 +292,26 @@ function photo_upload($channel, $observer, $args) {
 		if($lat && $lon)
 			$arr['coord'] = $lat . ' ' . $lon;
 
-		$arr['aid']            = $account_id;
-		$arr['uid']            = $channel_id;
-		$arr['mid']            = $mid;
-		$arr['parent_mid']     = $mid; 
-		$arr['item_hidden']    = $item_hidden;
-		$arr['resource_type']  = 'photo';
-		$arr['resource_id']    = $photo_hash;
-		$arr['owner_xchan']    = $channel['channel_hash'];
-		$arr['author_xchan']   = $observer['xchan_hash'];
-		$arr['title']          = $title;
-		$arr['allow_cid']      = $str_contact_allow;
-		$arr['allow_gid']      = $str_group_allow;
-		$arr['deny_cid']       = $str_contact_deny;
-		$arr['deny_gid']       = $str_group_deny;
-		$arr['verb']           = ACTIVITY_POST;
-		$arr['item_wall']      = 1;
-		$arr['item_origin']    = 1;
+		$arr['aid']             = $account_id;
+		$arr['uid']             = $channel_id;
+		$arr['mid']             = $mid;
+		$arr['parent_mid']      = $mid; 
+		$arr['item_hidden']     = $item_hidden;
+		$arr['resource_type']   = 'photo';
+		$arr['resource_id']     = $photo_hash;
+		$arr['owner_xchan']     = $channel['channel_hash'];
+		$arr['author_xchan']    = $observer['xchan_hash'];
+		$arr['title']           = $title;
+		$arr['allow_cid']       = $ac['allow_cid'];
+		$arr['allow_gid']       = $ac['allow_gid']
+		$arr['deny_cid']        = $ac['deny_cid'];
+		$arr['deny_gid']        = $ac['deny_gid'];
+		$arr['verb']            = ACTIVITY_POST;
+		$arr['item_wall']       = 1;
+		$arr['item_origin']     = 1;
 		$arr['item_thread_top'] = 1;
-
-		$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+		$arr['item_private']    = intval($acl->is_private());
+		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 
 		// We should also put a width_x_height on large photos. Left as an exercise for 
 		// devs looking for simple stuff to fix.

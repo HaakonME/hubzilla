@@ -2,7 +2,7 @@
 
 require_once('include/security.php');
 require_once('include/bbcode.php');
-require_once('include/AccessList.php');
+
 
 function menu_fetch($name,$uid,$observer_xchan) {
 

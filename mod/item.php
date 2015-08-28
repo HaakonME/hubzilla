@@ -19,7 +19,6 @@ require_once('include/crypto.php');
 require_once('include/enotify.php');
 require_once('include/items.php');
 require_once('include/attach.php');
-require_once('include/AccessList.php');
 
 function item_post(&$a) {
 

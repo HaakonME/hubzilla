@@ -8,7 +8,9 @@ class AccessList {
 	private $deny_cid;
 	private $deny_gid;
 
-	private $explicit;
+	/* indicates if we are using the default constructor values or values that have been set explicitly. */
+
+	private $explicit; 
 
 	function __construct($channel) {
 
@@ -69,3 +71,61 @@ class AccessList {
 
 }
 
+/**
+ * @brief Used to wrap ACL elements in angle brackets for storage.
+ *
+ * @param[in,out] array &$item
+ */
+function sanitise_acl(&$item) {
+	if (strlen($item))
+		$item = '<' . notags(trim($item)) . '>';
+	else
+		unset($item);
+}
+
+/**
+ * @brief Convert an ACL array to a storable string.
+ *
+ * @param array $p
+ * @return array
+ */
+function perms2str($p) {
+	$ret = '';
+
+	if (is_array($p))
+		$tmp = $p;
+	else
+		$tmp = explode(',', $p);
+
+	if (is_array($tmp)) {
+		array_walk($tmp, 'sanitise_acl');
+		$ret = implode('', $tmp);
+	}
+
+	return $ret;
+}
+
+
+/**
+ * @brief Turn user/group ACLs stored as angle bracketed text into arrays.
+ *
+ * turn string array of angle-bracketed elements into string array
+ * e.g. "<123xyz><246qyo><sxo33e>" => array(123xyz,246qyo,sxo33e);
+ *
+ * @param string $s
+ * @return array
+ */
+function expand_acl($s) {
+	$ret = array();
+
+	if(strlen($s)) {
+		$t = str_replace('<','',$s);
+		$a = explode('>',$t);
+		foreach($a as $aa) {
+			if($aa)
+				$ret[] = $aa;
+		}
+	}
+
+	return $ret;
+}

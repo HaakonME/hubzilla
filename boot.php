@@ -43,6 +43,7 @@ require_once('include/taxonomy.php');
 require_once('include/identity.php');
 require_once('include/Contact.php');
 require_once('include/account.php');
+require_once('include/AccessList.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );

@@ -2,7 +2,6 @@
 
 require_once('include/menu.php');
 require_once('include/acl_selectors.php');
-require_once('include/AccessList.php');
 
 function mitem_init(&$a) {
 

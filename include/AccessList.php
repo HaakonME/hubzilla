@@ -10,8 +10,7 @@ class AccessList {
 
 	private $explicit;
 
-
-	function _construct($channel) {
+	function __construct($channel) {
 
 		if($channel) {		
 			$this->allow_cid = $channel['channel_allow_cid'];

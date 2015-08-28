@@ -2,6 +2,7 @@
 
 require_once('include/menu.php');
 require_once('include/acl_selectors.php');
+require_once('include/AccessList.php');
 
 function mitem_init(&$a) {
 
@@ -125,12 +126,7 @@ function mitem_content(&$a) {
 			$menu_names[] = $menus['menu_name'];
 	}
 
-	$perm_defaults = array(
-		'allow_cid' => $channel['channel_allow_cid'],
-		'allow_gid' => $channel['channel_allow_gid'],
-		'deny_cid'  => $channel['channel_deny_cid'],
-		'deny_gid'  => $channel['channel_deny_gid']
-	);
+	$acl = new AccessList($channel);
 
 	$lockstate = (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock');
 
@@ -151,7 +147,7 @@ function mitem_content(&$a) {
 			'$menu_id'     => $a->data['menu']['menu_id'],
 			'$permissions' => t('Menu Item Permissions'),
 			'$permdesc'    => t("\x28click to open/close\x29"),
-			'$aclselect'   => populate_acl($perm_defaults,false),
+			'$aclselect'   => populate_acl($acl->get(),false),
 			'$mitem_desc'  => array('mitem_desc', t('Link Name'), '', 'Visible name of the link','*'),
 			'$mitem_link'  => array('mitem_link', t('Link or Submenu Target'), '', t('Enter URL of the link or select a menu name to create a submenu'), '*', 'list="menu-names"'),
 			'$usezid'      => array('usezid', t('Use magic-auth if available'), true, '', array(t('No'), t('Yes'))),

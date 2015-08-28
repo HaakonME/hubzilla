@@ -19,6 +19,7 @@ require_once('include/crypto.php');
 require_once('include/enotify.php');
 require_once('include/items.php');
 require_once('include/attach.php');
+require_once('include/AccessList.php');
 
 function item_post(&$a) {
 
@@ -304,6 +305,8 @@ function item_post(&$a) {
 			}
 		}
 	}
+
+	$ACL = new AccessList($channel);
 
 		
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));

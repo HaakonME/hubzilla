@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-21 00:04-0700\n"
-"PO-Revision-Date: 2015-08-27 06:50+0000\n"
+"PO-Revision-Date: 2015-08-29 14:42+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -377,11 +377,11 @@ msgstr "Sí"
 
 #: ../../include/dir_fns.php:129
 msgid "Public Forums Only"
-msgstr "Solamente foros públicos"
+msgstr "Solo foros públicos"
 
 #: ../../include/dir_fns.php:130
 msgid "This Website Only"
-msgstr "Solamente este sitio web"
+msgstr "Solo este sitio web"
 
 #: ../../include/page_widgets.php:6
 msgid "New Page"
@@ -900,7 +900,7 @@ msgstr "Formato de la página"
 
 #: ../../include/text.php:1694
 msgid "You can create your own with the layouts tool"
-msgstr "Puede crear la suya propia con las herramientas de diseño"
+msgstr "Puede crear su propio formato gráfico con las herramientas de diseño"
 
 #: ../../include/text.php:1735
 msgid "Page content type"
@@ -1455,7 +1455,7 @@ msgstr "Conocidos/as"
 #: ../../include/widgets.php:433 ../../mod/connections.php:231
 #: ../../mod/connections.php:246 ../../mod/connedit.php:575
 msgid "All"
-msgstr "Todos"
+msgstr "Todas"
 
 #: ../../include/widgets.php:452
 msgid "Refresh"
@@ -1975,7 +1975,7 @@ msgstr "Caduca: %s"
 
 #: ../../include/ItemObject.php:337
 msgid "Save Bookmarks"
-msgstr "Guardar marcadores"
+msgstr "Guardar en Marcadores"
 
 #: ../../include/ItemObject.php:338
 msgid "Add to Calendar"
@@ -1983,7 +1983,7 @@ msgstr "Añadir al calendario"
 
 #: ../../include/ItemObject.php:347
 msgid "Mark all seen"
-msgstr "Marcar todos como vistos"
+msgstr "Marcar todo como visto"
 
 #: ../../include/ItemObject.php:353 ../../mod/photos.php:1145
 msgctxt "noun"
@@ -2100,7 +2100,7 @@ msgstr "Sus entradas y conversaciones"
 #: ../../include/nav.php:91 ../../include/conversation.php:942
 #: ../../mod/connedit.php:498
 msgid "View Profile"
-msgstr "Ver el perfil del autor de esta entrada"
+msgstr "Ver el perfil"
 
 #: ../../include/nav.php:91
 msgid "Your profile page"
@@ -2644,7 +2644,7 @@ msgstr "Ver fotos"
 
 #: ../../include/conversation.php:944
 msgid "Matrix Activity"
-msgstr "Actividad en la red de este usuario"
+msgstr "Actividad en la red de esta conexión"
 
 #: ../../include/conversation.php:946
 msgid "Edit Contact"
@@ -4748,19 +4748,19 @@ msgstr "Error al actualizar el registro de la conexión."
 
 #: ../../mod/connections.php:192 ../../mod/connections.php:293
 msgid "Blocked"
-msgstr "Bloqueados"
+msgstr "Bloqueadas"
 
 #: ../../mod/connections.php:197 ../../mod/connections.php:300
 msgid "Ignored"
-msgstr "Ignorados"
+msgstr "Ignoradas"
 
 #: ../../mod/connections.php:202 ../../mod/connections.php:314
 msgid "Hidden"
-msgstr "Ocultos"
+msgstr "Ocultas"
 
 #: ../../mod/connections.php:207 ../../mod/connections.php:307
 msgid "Archived"
-msgstr "Archivados"
+msgstr "Archivadas"
 
 #: ../../mod/connections.php:271
 msgid "Suggest new connections"
@@ -4784,7 +4784,7 @@ msgstr "Mostrar todas las conexiones"
 
 #: ../../mod/connections.php:286
 msgid "Unblocked"
-msgstr "Desbloqueados"
+msgstr "Desbloqueadas"
 
 #: ../../mod/connections.php:289
 msgid "Only show unblocked connections"
@@ -5206,11 +5206,11 @@ msgstr "Descripción del formato gráfico (opcional)"
 #: ../../mod/editlayout.php:160 ../../mod/layouts.php:121
 #: ../../mod/layouts.php:179
 msgid "Layout Name"
-msgstr "Nombre del formato gráfico"
+msgstr "Nombre del formato"
 
 #: ../../mod/editlayout.php:177
 msgid "Edit Layout"
-msgstr "Editar formato"
+msgstr "Modificar formato"
 
 #: ../../mod/chat.php:19 ../../mod/channel.php:25
 msgid "You must be logged in to see this page."
@@ -7090,15 +7090,15 @@ msgstr "Último contacto conocido"
 #, php-format
 msgid "%s account blocked/unblocked"
 msgid_plural "%s account blocked/unblocked"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s cuenta bloqueada/desbloqueada"
+msgstr[1] "%s cuenta bloqueada/desbloqueada"
 
 #: ../../mod/admin.php:691
 #, php-format
 msgid "%s account deleted"
 msgid_plural "%s accounts deleted"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s cuentas eliminadas"
+msgstr[1] "%s cuentas eliminadas"
 
 #: ../../mod/admin.php:727
 msgid "Account not found"
@@ -7107,17 +7107,17 @@ msgstr "Cuenta no encontrada"
 #: ../../mod/admin.php:739
 #, php-format
 msgid "Account '%s' deleted"
-msgstr ""
+msgstr "La cuenta '%s' ha sido eliminada"
 
 #: ../../mod/admin.php:747
 #, php-format
 msgid "Account '%s' blocked"
-msgstr ""
+msgstr "La cuenta '%s' ha sido bloqueada"
 
 #: ../../mod/admin.php:755
 #, php-format
 msgid "Account '%s' unblocked"
-msgstr ""
+msgstr "La cuenta '%s' ha sido desbloqueada"
 
 #: ../../mod/admin.php:818 ../../mod/admin.php:830
 msgid "Users"
@@ -7175,13 +7175,13 @@ msgstr "Clase de servicio"
 msgid ""
 "Selected accounts will be deleted!\\n\\nEverything these accounts had posted"
 " on this site will be permanently deleted!\\n\\nAre you sure?"
-msgstr ""
+msgstr "¡Las cuentas seleccionadas van a ser eliminadas!\\n\\n¡Todo lo que estas cuentas han publicado en este sitio será borrado de forma permanente!\\n\\n¿Está seguro de querer hacerlo?"
 
 #: ../../mod/admin.php:834
 msgid ""
 "The account {0} will be deleted!\\n\\nEverything this account has posted on "
 "this site will be permanently deleted!\\n\\nAre you sure?"
-msgstr ""
+msgstr "¡La cuenta {0} va a ser eliminada!\\n\\n¡Todo lo que esta cuenta ha publicado en este sitio será borrado de forma permanente!\\n\\n¿Está seguro de querer hacerlo?"
 
 #: ../../mod/admin.php:870
 #, php-format
@@ -7795,7 +7795,7 @@ msgstr "Nadie excepto tú"
 
 #: ../../mod/settings.php:906
 msgid "Only those you specifically allow"
-msgstr "Solamente aquellos a los que usted permita específicamente"
+msgstr "Solo aquellos a los que usted permita explícitamente"
 
 #: ../../mod/settings.php:907
 msgid "Approved connections"
@@ -8353,7 +8353,7 @@ msgstr "Aplicar estos permisos automaticamente"
 
 #: ../../mod/connedit.php:665
 msgid "This connection's address is"
-msgstr "Esta dirección de conexión es"
+msgstr "La dirección de esta conexión es"
 
 #: ../../mod/connedit.php:668
 msgid ""
@@ -8680,7 +8680,7 @@ msgstr "Página de ayuda del lenguaje de descripción de páginas (PDL) Comanche
 
 #: ../../mod/layouts.php:180
 msgid "Layout Description"
-msgstr "Descripción del formato gráfico"
+msgstr "Descripción del formato"
 
 #: ../../mod/layouts.php:185
 msgid "Download PDL file"

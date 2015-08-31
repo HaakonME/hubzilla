@@ -1,0 +1,31 @@
+<?php
+
+require_once('include/cli_startup.php');
+
+cli_startup();
+
+require_once('mod/help.php');
+
+function update_docs_dir($s) {
+	$f = basename($s);
+	$d = dirname($s);
+	if($s === 'doc/html')
+		return;
+
+	$files = glob("$d/$f");
+	if($files) {
+		foreach($files as $fi) {
+			if($fi === 'doc/html')
+				continue;
+			if(is_dir($fi))
+				update_docs_dir("$fi/*");
+			else
+				store_doc_file($fi);
+		}
+	}
+}
+
+update_docs_dir('doc/*');
+
+
+

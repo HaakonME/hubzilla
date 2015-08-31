@@ -175,6 +175,9 @@ function poller_run($argv, $argc){
 				logger('regdir: ' . print_r(z_fetch_url(get_directory_primary() . '/regdir?f=&url=' . urlencode(z_root()) . '&realm=' . urlencode(get_directory_realm())),true));
 			}
 
+			
+			proc_run('php', 'include/importdoc.php');
+
 			/**
 			 * End Cron Weekly
 			 */

@@ -84,7 +84,6 @@ function siteinfo_init(&$a) {
 			'register_policy' =>  $register_policy[$a->config['system']['register_policy']],
 			'directory_mode' =>  $directory_mode[$a->config['system']['directory_mode']],
 			'language' => get_config('system','language'),
-			'diaspora_emulation' => get_config('system','diaspora_enabled'),
 			'rss_connections' => get_config('system','feed_contacts'),
 			'expiration' => $site_expire,
 			'default_service_restrictions' => $service_class,

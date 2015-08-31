@@ -143,9 +143,12 @@ function help_content(&$a) {
 	nav_set_selected('help');
 
 	if($_REQUEST['search']) {
+
+		$o .= '<h2>' . t('Documentation Search') . ' - ' . htmlspecialchars($_REQUEST['search']) . '</h2>';
+
 		$r = search_doc_files($_REQUEST['search']);
 		if($r) {
-			$o .= '<ul>';
+			$o .= '<ul class="help-searchlist">';
 			foreach($r as $rr) {
 				$dirname = dirname($rr['sid']);
 				$fname = basename($rr['sid']);

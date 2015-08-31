@@ -104,6 +104,9 @@ Some/many of these widgets have restrictions which may restrict the type of page
 	* all - display completed tasks if all is non-zero.
 <br />&nbsp;<br />
 
+* forums - provide a list of connected public forums with unseen counts for the current logged-in channel.
+<br />&nbsp;<br />
+
 
 Creating New Widgets
 ====================

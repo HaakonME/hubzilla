@@ -2296,3 +2296,11 @@ nav .badge.mail-update:hover {
 /*.channels_ckbx, .pending_ckbx, .users_ckbx {
 	margin-top: -5px !important;
 }*/
+
+.help-searchlist {
+	list-style-type: none;
+}
+
+.help-searchlist a {
+	font-size: 130%;
+}

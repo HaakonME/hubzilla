@@ -1067,10 +1067,10 @@ function widget_tasklist($arr) {
 function widget_helpindex($arr) {
 	$o .= '<div class="widget">' . '<h3>' . t('Documentation') . '</h3>';
 	$o .= '<ul class="nav nav-pills nav-stacked">';
-	$o .= '<li><a href="help/general">' . t('Project/Site Information') . '</li>';
-	$o .= '<li><a href="help/members">' . t('For Members') . '</li>';
-	$o .= '<li><a href="help/admins">'  . t('For Administrators') . '</li>';
-	$o .= '<li><a href="help/develop">' . t('For Developers') . '</li>';
+	$o .= '<li><a href="help/general">' . t('Project/Site Information') . '</a></li>';
+	$o .= '<li><a href="help/members">' . t('For Members') . '</a></li>';
+	$o .= '<li><a href="help/admins">'  . t('For Administrators') . '</a></li>';
+	$o .= '<li><a href="help/develop">' . t('For Developers') . '</a></li>';
 	$o .= '</ul></div>';
 	return $o;
 

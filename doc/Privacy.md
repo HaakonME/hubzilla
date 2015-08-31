@@ -1,6 +1,9 @@
-#Privacy Policy
+Privacy Policy
+==============
 
-##Summary
+
+##Summary##
+
 
 Q: Who can see my content?
  

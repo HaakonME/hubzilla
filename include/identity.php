@@ -427,7 +427,7 @@ function create_identity($arr) {
 			}
 		}
 
-		call_hooks('register_account', $newuid);
+		call_hooks('create_identity', $newuid);
 
 		proc_run('php','include/directory.php', $ret['channel']['channel_id']);
 	}

@@ -83,7 +83,7 @@ echo "Files sym links created"
 # Copy .htconfig.php from the repo, rename it and place it in the data directory.
 # if it's there already, skip it.
 
-if [ ! -f ${OPENSHIFT_DATA_DIR}config.php ];
+if [ ! -f ${OPENSHIFT_DATA_DIR}.htconfig.php ];
 
 then
 
@@ -136,4 +136,3 @@ ln -sf ${OPENSHIFT_DATA_DIR}.htaccess ${OPENSHIFT_REPO_DIR}.htaccess
 echo ".htaccess symlink created"
 
 ####
-

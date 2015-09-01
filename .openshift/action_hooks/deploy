@@ -80,31 +80,60 @@ echo "Files sym links created"
 
 ####
 
-# Copy config.php from the repo, rename it and place it in the data directory.
+# Copy .htconfig.php from the repo, rename it and place it in the data directory.
 # if it's there already, skip it.
 
 if [ ! -f ${OPENSHIFT_DATA_DIR}config.php ];
 
 then
 
-cp ${OPENSHIFT_REPO_DIR}config.php ${OPENSHIFT_DATA_DIR}config.php
+cp ${OPENSHIFT_REPO_DIR}.htconfig.php ${OPENSHIFT_DATA_DIR}.htconfig.php
 
-echo "config.php copied."
+echo ".htconfig.php copied."
 
 else
 
-echo "Looks like the config.php file is already there, we won't overwrite it."
+echo "Looks like the .htconfig.php file is already there, we won't overwrite it."
 
 fi
 
 ####
 
-# symlink the config.php file.
+# symlink the .htconfig.php file.
 
-echo "Create sym link for config.php"
+echo "Create sym link for .htconfig.php"
 
-ln -sf ${OPENSHIFT_DATA_DIR}config.php ${OPENSHIFT_REPO_DIR}config.php
+ln -sf ${OPENSHIFT_DATA_DIR}.htconfig.php ${OPENSHIFT_REPO_DIR}.htconfig.php
 
-echo "config.php symlink created"
+echo ".htconfig.php symlink created"
 
 ####
+# Copy .htaccess from the repo, rename it and place it in the data directory.
+# if it's there already, skip it.
+
+if [ ! -f ${OPENSHIFT_DATA_DIR}.htaccess ];
+
+then
+
+cp ${OPENSHIFT_REPO_DIR}.htaccess ${OPENSHIFT_DATA_DIR}.htaccess
+
+echo ".htaccess copied."
+
+else
+
+echo "Looks like the .htaccess file is already there, we won't overwrite it."
+
+fi
+
+####
+
+# symlink the .htaccess file.
+
+echo "Create sym link for .htaccess"
+
+ln -sf ${OPENSHIFT_DATA_DIR}.htaccess ${OPENSHIFT_REPO_DIR}.htaccess
+
+echo ".htaccess symlink created"
+
+####
+

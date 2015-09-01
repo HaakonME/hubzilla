@@ -674,7 +674,7 @@ function identity_export_year($channel_id,$year,$month = 0) {
  */
 function profile_load(&$a, $nickname, $profile = '') {
 
-	logger('profile_load: ' . $nickname . (($profile) ? ' profile: ' . $profile : ''));
+//	logger('profile_load: ' . $nickname . (($profile) ? ' profile: ' . $profile : ''));
 
 	$user = q("select channel_id from channel where channel_address = '%s' and channel_removed = 0  limit 1",
 		dbesc($nickname)
@@ -937,7 +937,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
 	$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
 	$profile['online']   = (($profile['online_status'] === 'online') ? t('Online Now') : False);
-	logger('online: ' . $profile['online']);
+
+//	logger('online: ' . $profile['online']);
 
 	if(! perm_is_allowed($profile['uid'],((is_array($observer)) ? $observer['xchan_hash'] : ''),'view_profile')) {
 		$block = true;

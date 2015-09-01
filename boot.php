@@ -50,7 +50,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1148  );
+define ( 'DB_UPDATE_VERSION',       1149  );
 
 /**
  * @brief Constant with a HTML line break.
@@ -83,7 +83,6 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://red.zottel.red',
 	'https://gravizot.de',
 	'https://my.federated.social',
-	'https://redmatrix.nl'
 );
 
 

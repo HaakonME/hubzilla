@@ -681,6 +681,7 @@ CREATE TABLE "likes" (
   "liker" char(128) NOT NULL DEFAULT '',
   "likee" char(128) NOT NULL DEFAULT '',
   "iid" bigint  NOT NULL DEFAULT '0',
+  "i_mid" char(255) NOT NULL DEFAULT '',
   "verb" text NOT NULL DEFAULT '',
   "target_type" text NOT NULL DEFAULT '',
   "target_id" char(128) NOT NULL DEFAULT '',
@@ -691,6 +692,7 @@ create index "likes_channel_id" on likes ("channel_id");
 create index "likes_liker" on likes ("liker");
 create index "likes_likee" on likes ("likee");
 create index "likes_iid" on likes ("iid");
+create index "likes_i_mid" on likes ("i_mid");
 create index "likes_verb" on likes ("verb");
 create index "likes_target_type" on likes ("target_type");
 create index "likes_target_id" on likes ("target_id");

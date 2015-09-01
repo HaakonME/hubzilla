@@ -1,0 +1,110 @@
+#!/bin/bash
+# This deploy hook gets executed after dependencies are resolved and the
+# build hook has been run but before the application has been started back
+# up again. This script gets executed directly, so it could be python, php,
+# ruby, etc.
+
+# Bash help: http://www.panix.com/~elflord/unix/bash-tute.html
+
+# For information about action hooks supported by OpenShift, consult the documentation:
+# http://openshift.github.io/documentation/oo_user_guide.html#the-openshift-directory
+
+####
+
+# Hubzilla specific deploy script
+
+# Place this file in /.openshift/action_hooks/ (The .openshift folder will be in the root of your repo)
+# The file name should be "deploy" such that you have:
+# .openshift/action_hooks/deploy
+
+# Conventions: Vars in curley braces have the slash after implied so no need to add it.
+# e.g. ${OPENSHIFT_REPO_DIR}php/foobar = /repo/php/foobar
+# See all OpenShift vars here:
+# https://www.openshift.com/developers/openshift-environment-variables
+
+# HME - NOTE - leftover from original openshift-drupal-deploy
+# In config.php you can leverage the enviroment variables like this:
+# // Define env vars.
+# if (array_key_exists('OPENSHIFT_APP_NAME', $_SERVER)) {
+#  $src = $_SERVER;
+# } else {
+#  $src = $_ENV;
+# }
+#
+# $conf["file_private_path"] = $src['OPENSHIFT_DATA_DIR'] . "private";
+# $conf["file_temporary_path"] = $src['OPENSHIFT_DATA_DIR'] . "tmp";
+
+
+####
+
+# Start Deploy
+
+echo "Starting Deploy..."
+
+# Let's create the Hubzilla files directory in the Openshift data folder ($OPENSHIFT_DATA_DIR).
+
+echo "Check for the files directory called store, if not created - create it"
+
+if [ ! -d ${OPENSHIFT_DATA_DIR}store ]; then
+mkdir -p ${OPENSHIFT_DATA_DIR}"store/[data]/smarty3"
+echo "Done creating files directory"
+
+else
+
+echo "The files directory called store already exists"
+
+fi
+
+####
+
+# Set permissions on the files directory.
+
+echo "Now chmod 777 -R files"
+
+chmod -R 777 ${OPENSHIFT_DATA_DIR}store
+
+echo "chmod done, permissions set to 777"
+
+####
+
+# Symlink our files folder to the repo.
+
+# Note the "php" directory below seems to be the best way to serve OpenShift files.
+# This is good as that allows us for directories one level above such as tmp and private
+
+echo "Create sym links for writeable directories"
+
+ln -sf ${OPENSHIFT_DATA_DIR}store ${OPENSHIFT_REPO_DIR}store
+
+echo "Files sym links created"
+
+####
+
+# Copy config.php from the repo, rename it and place it in the data directory.
+# if it's there already, skip it.
+
+if [ ! -f ${OPENSHIFT_DATA_DIR}config.php ];
+
+then
+
+cp ${OPENSHIFT_REPO_DIR}config.php ${OPENSHIFT_DATA_DIR}config.php
+
+echo "config.php copied."
+
+else
+
+echo "Looks like the config.php file is already there, we won't overwrite it."
+
+fi
+
+####
+
+# symlink the config.php file.
+
+echo "Create sym link for config.php"
+
+ln -sf ${OPENSHIFT_DATA_DIR}config.php ${OPENSHIFT_REPO_DIR}config.php
+
+echo "config.php symlink created"
+
+####

@@ -43,13 +43,14 @@ require_once('include/taxonomy.php');
 require_once('include/identity.php');
 require_once('include/Contact.php');
 require_once('include/account.php');
+require_once('include/AccessList.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1148  );
+define ( 'DB_UPDATE_VERSION',       1149  );
 
 /**
  * @brief Constant with a HTML line break.
@@ -80,9 +81,8 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zothub.com', 
 	'https://zotid.net', 
 	'https://red.zottel.red',
-	'https://redmatrix.info',
+	'https://gravizot.de',
 	'https://my.federated.social',
-	'https://redmatrix.nl'
 );
 
 
@@ -800,7 +800,7 @@ class App {
 		$this->is_mobile = $mobile_detect->isMobile();
 		$this->is_tablet = $mobile_detect->isTablet();
 
-		$this->head_set_icon('/images/rm-32.png');
+		$this->head_set_icon('/images/hz-32.png');
 
 		BaseObject::set_app($this);
 

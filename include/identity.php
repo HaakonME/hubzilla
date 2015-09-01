@@ -427,7 +427,7 @@ function create_identity($arr) {
 			}
 		}
 
-		call_hooks('register_account', $newuid);
+		call_hooks('create_identity', $newuid);
 
 		proc_run('php','include/directory.php', $ret['channel']['channel_id']);
 	}
@@ -565,7 +565,8 @@ function identity_basic_export($channel_id, $items = false) {
 	if(! $items)
 		return $ret;
 
-	$r = q("select likes.*, item.mid from likes left join item on likes.iid = item.id where likes.channel_id = %d",
+
+	$r = q("select * from likes where channel_id = %d",
 		intval($channel_id)
 	);
 

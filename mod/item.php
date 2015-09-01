@@ -305,6 +305,8 @@ function item_post(&$a) {
 		}
 	}
 
+	$acl = new AccessList($channel);
+
 		
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
 	if($webpage)
@@ -316,28 +318,17 @@ function item_post(&$a) {
 		$private = 0;
 		// webpages are allowed to change ACLs after the fact. Normal conversation items aren't. 
 		if($webpage) {
-			$str_group_allow   = perms2str($_REQUEST['group_allow']); 
-			$str_contact_allow = perms2str($_REQUEST['contact_allow']);
-			$str_group_deny    = perms2str($_REQUEST['group_deny']);
-			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
+			$acl->set_from_arry($_REQUEST);
 		}
 		else {
-			$str_group_allow   = $orig_post['allow_gid'];
-			$str_contact_allow = $orig_post['allow_cid'];
-			$str_group_deny    = $orig_post['deny_gid'];
-			$str_contact_deny  = $orig_post['deny_cid'];
+			$acl->set($orig_post);
 			$public_policy     = $orig_post['public_policy'];
 			$private           = $orig_post['item_private'];
 		}
 
-		if((strlen($str_group_allow)) 
-			|| strlen($str_contact_allow) 
-			|| strlen($str_group_deny) 
-			|| strlen($str_contact_deny)
-			|| strlen($public_policy)
-			|| $private) {
+		if($private || $public_policy || $acl->is_private())
 			$private = 1;
-		}
+
 
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
@@ -381,38 +372,12 @@ function item_post(&$a) {
 
 	}
 	else {
-
-		// if coming from the API and no privacy settings are set, 
-		// use the user default permissions - as they won't have
-		// been supplied via a form.
-
-		if(($api_source) 
-			&& (! array_key_exists('contact_allow',$_REQUEST))
-			&& (! array_key_exists('group_allow',$_REQUEST))
-			&& (! array_key_exists('contact_deny',$_REQUEST))
-			&& (! array_key_exists('group_deny',$_REQUEST))) {
-			$str_group_allow   = $channel['channel_allow_gid'];
-			$str_contact_allow = $channel['channel_allow_cid'];
-			$str_group_deny    = $channel['channel_deny_gid'];
-			$str_contact_deny  = $channel['channel_deny_cid'];
-		}
-		elseif($walltowall) {
-
-			// use the channel owner's default permissions
-
-			$str_group_allow   = $channel['channel_allow_gid'];
-			$str_contact_allow = $channel['channel_allow_cid'];
-			$str_group_deny    = $channel['channel_deny_gid'];
-			$str_contact_deny  = $channel['channel_deny_cid'];
-		}
-		else {
-
-			// use the posted permissions
-
-			$str_group_allow   = perms2str($_REQUEST['group_allow']);
-			$str_contact_allow = perms2str($_REQUEST['contact_allow']);
-			$str_group_deny    = perms2str($_REQUEST['group_deny']);
-			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
+		if((! $walltowall) && 
+			((array_key_exists('contact_allow',$_REQUEST))
+			|| (array_key_exists('group_allow',$_REQUEST))
+			|| (array_key_exists('contact_deny',$_REQUEST))
+			|| (array_key_exists('group_deny',$_REQUEST)))) {
+			$acl->set_from_array($_REQUEST);
 		}
 
 
@@ -424,33 +389,15 @@ function item_post(&$a) {
 		$body              .= trim($_REQUEST['attachment']);
 		$postopts          = '';
 
-		$private = ( 
-				(  strlen($str_group_allow) 
-				|| strlen($str_contact_allow) 
-				|| strlen($str_group_deny) 
-				|| strlen($str_contact_deny)
-				|| strlen($public_policy)
-		) ? 1 : 0);
+		$private = intval($acl->is_private() || ($public_policy));
 
 		// If this is a comment, set the permissions from the parent.
 
 		if($parent_item) {
 			$private = 0;
-
-			if(($parent_item['item_private']) 
-				|| strlen($parent_item['allow_cid']) 
-				|| strlen($parent_item['allow_gid']) 
-				|| strlen($parent_item['deny_cid']) 
-				|| strlen($parent_item['deny_gid'])
-				|| strlen($parent_item['public_policy'])) {
-				$private = (($parent_item['item_private']) ? $parent_item['item_private'] : 1);
-			}
-
+			$acl->set($parent_item);
+			$private = intval($acl->is_private() || $parent_item['item_private']);
 			$public_policy     = $parent_item['public_policy'];
-			$str_contact_allow = $parent_item['allow_cid'];
-			$str_group_allow   = $parent_item['allow_gid'];
-			$str_contact_deny  = $parent_item['deny_cid'];
-			$str_group_deny    = $parent_item['deny_gid'];
 			$owner_hash        = $parent_item['owner_xchan'];
 		}
 	
@@ -505,6 +452,11 @@ function item_post(&$a) {
 		}
 	}
 
+	$gacl = $acl->get();
+	$str_contact_allow = $gacl['allow_cid'];
+	$str_group_allow   = $gacl['allow_gid'];
+	$str_contact_deny  = $gacl['deny_cid'];
+	$str_group_deny    = $gacl['deny_gid'];
 
 	if($mimetype === 'text/bbcode') {
 
@@ -567,9 +519,6 @@ function item_post(&$a) {
 		// fix any img tags that should be zmg
 
 		$body = preg_replace_callback('/\[img(.*?)\](.*?)\[\/img\]/ism','red_zrlify_img_callback',$body);
-
-
-
 
 
 		$body = bb_translate_video($body);

@@ -480,15 +480,16 @@ function like_content(&$a) {
 
 
 	if($extended_like) {
-		$r = q("insert into likes (channel_id,liker,likee,iid,verb,target_type,target_id,target) values (%d,'%s','%s',%d,'%s','%s','%s','%s')",
+		$r = q("insert into likes (channel_id,liker,likee,iid,i_mid,verb,target_type,target_id,target) values (%d,'%s','%s',%d,'%s','%s','%s','%s','%s')",
 			intval($ch[0]['channel_id']),
 			dbesc($observer['xchan_hash']),
 			dbesc($ch[0]['channel_hash']),
 			intval($post_id),
+			dbesc($mid),
 			dbesc($activity),
-			dbesc(($tgttype)?$tgttype:$objtype),
+			dbesc(($tgttype)? $tgttype : $objtype),
 			dbesc($obj_id),
-			dbesc(json_encode(($target)?$target:$object))
+			dbesc(($target) ? $target  : $object)
 		);
 	};
 

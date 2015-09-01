@@ -41,15 +41,10 @@ function events_post(&$a) {
 
 	$categories = escape_tags(trim($_POST['category']));
 
-
-
 	// only allow editing your own events. 
 
 	if(($xchan) && ($xchan !== get_observer_hash()))
 		return;
-
-	// The default setting for the `private` field in event_store() is false, so mirror that	
-	$private_event = false;
 
 	if($start_text) {
 		$start = $start_text;
@@ -119,6 +114,8 @@ function events_post(&$a) {
 
 	$channel = $a->get_channel();
 
+	$acl = new AccessList(false);
+
 	if($event_id) {
 		$x = q("select * from event where id = %d and uid = %d limit 1",
 			intval($event_id),
@@ -133,6 +130,8 @@ function events_post(&$a) {
 			return;
 		}
 
+		$acl->set($x[0]);
+
 		$created = $x[0]['created'];
 		$edited = datetime_convert();
 
@@ -142,39 +141,21 @@ function events_post(&$a) {
 		}
 		else {
 			$share = true;
-			$str_group_allow = $x[0]['allow_gid'];
-			$str_contact_allow = $x[0]['allow_cid'];
-			$str_group_deny = $x[0]['deny_gid'];
-			$str_contact_deny = $x[0]['deny_cid'];
-
-			if(strlen($str_group_allow) || strlen($str_contact_allow) 
-				|| strlen($str_group_deny) || strlen($str_contact_deny)) {
-				$private_event = true;
-			}
 		}
 	}
 	else {
 		$created = $edited = datetime_convert();
 		if($share) {
-			$str_group_allow   = perms2str($_POST['group_allow']);
-			$str_contact_allow = perms2str($_POST['contact_allow']);
-			$str_group_deny    = perms2str($_POST['group_deny']);
-			$str_contact_deny  = perms2str($_POST['contact_deny']);
-
-			if(strlen($str_group_allow) || strlen($str_contact_allow) 
-				|| strlen($str_group_deny) || strlen($str_contact_deny)) {
-				$private_event = true;
-			}
+			$acl->set_from_array($_POST);
 		}
 		else {
-			$str_contact_allow = '<' . $channel['channel_hash'] . '>';
-			$str_group_allow = $str_contact_deny = $str_group_deny = '';
-			$private_event = true;
+			$acl->set(array('allow_cid' => '<' . $channel['channel_hash'] . '>', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => ''));
 		}
 	}
 
 	$post_tags = array();
 	$channel = $a->get_channel();
+	$ac = $acl->get();
 
 	if(strlen($categories)) {
 		$cats = explode(',',$categories);
@@ -201,11 +182,11 @@ function events_post(&$a) {
 	$datarray['uid'] = local_channel();
 	$datarray['account'] = get_account_id();
 	$datarray['event_xchan'] = $channel['channel_hash'];
-	$datarray['allow_cid'] = $str_contact_allow;
-	$datarray['allow_gid'] = $str_group_allow;
-	$datarray['deny_cid'] = $str_contact_deny;
-	$datarray['deny_gid'] = $str_group_deny;
-	$datarray['private'] = (($private_event) ? 1 : 0);
+	$datarray['allow_cid'] = $ac['allow_cid'];
+	$datarray['allow_gid'] = $ac['allow_gid'];
+	$datarray['deny_cid'] = $ac['deny_cid'];
+	$datarray['deny_gid'] = $ac['deny_gid'];
+	$datarray['private'] = (($acl->is_private()) ? 1 : 0);
 	$datarray['id'] = $event_id;
 	$datarray['created'] = $created;
 	$datarray['edited'] = $edited;
@@ -660,12 +641,9 @@ function events_content(&$a) {
 
 		require_once('include/acl_selectors.php');
 
-		$perm_defaults = array(
-			'allow_cid' => $channel['channel_allow_cid'], 
-			'allow_gid' => $channel['channel_allow_gid'], 
-			'deny_cid' => $channel['channel_deny_cid'], 
-			'deny_gid' => $channel['channel_deny_gid']
-		); 
+		$acl = new AccessList($channel);
+		$perm_defaults = $acl->get();
+
 
 		$tpl = get_markup_template('event_form.tpl');
 

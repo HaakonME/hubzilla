@@ -486,9 +486,9 @@ function like_content(&$a) {
 			dbesc($ch[0]['channel_hash']),
 			intval($post_id),
 			dbesc($activity),
-			dbesc(($tgttype)?$tgttype:$objtype),
+			dbesc(($tgttype)? $tgttype : $objtype),
 			dbesc($obj_id),
-			dbesc(json_encode(($target)?$target:$object))
+			dbesc(($target) ? $target  : $object)
 		);
 	};
 

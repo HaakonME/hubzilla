@@ -447,7 +447,7 @@ function import_post(&$a) {
 
 
 
-// FIXME - ensure we have an xchan if somebody is trying to pull a fast one
+	// FIXME - ensure we have an xchan if somebody is trying to pull a fast one
 
 	if($completed < 8) {	
 		$friends = 0;
@@ -556,6 +556,23 @@ function import_post(&$a) {
 		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
+
+	$objs = $data['obj'];
+	if($objs) {
+		foreach($objs as $obj) {
+			unset($obj['obj_id']);
+			$obj['channel'] = $channel['channel_id'];
+
+			dbesc_array($obj);
+			$r = dbq("INSERT INTO obj (`" 
+				. implode("`, `", array_keys($obj)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($obj)) 
+				. "')" );
+		}
+	}
+
+
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 
 	if($import_posts && array_key_exists('item',$data) && $data['item']) {
@@ -614,7 +631,7 @@ function import_post(&$a) {
 
 
 
-// FIXME - ensure we have a self entry if somebody is trying to pull a fast one
+	// FIXME - ensure we have a self entry if somebody is trying to pull a fast one
 
 	// send out refresh requests
 	// notify old server that it may no longer be primary.

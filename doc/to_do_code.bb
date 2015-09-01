@@ -14,6 +14,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]provide a way for xchans with a certain network type to upgrade (unknown to rss, rss to statusnet, friendica-over-diaspora to friendica, for instance) based on new knowledge and/or redmatrix ability[/li]
 [li](done - HZ) If DAV folders exist, add an option to the Settings page to set a default folder for attachment uploads.[/li] 
 [li]Integrate the &quot;open site&quot; list with the register page[/li]
+[li]Support comments and member notes on documentation pages (to achieve an effect similar to php.net)[/li]
 [li]implement oembed provider interface[/li]
 [li]refactor the oembed client interface so that we can safely sandbox remote content[/li]
 [li]Many modern social apps now have both a profile photo and a "cover photo". Add support for this. [/li]

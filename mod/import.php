@@ -557,20 +557,21 @@ function import_post(&$a) {
 	}
 
 
-	$objs = $data['obj'];
-	if($objs) {
-		foreach($objs as $obj) {
-			unset($obj['obj_id']);
-			$obj['channel'] = $channel['channel_id'];
+// This needs more work - we also need the term where otype = 6 to link with this, and the terms need to be relocated.	
+//	$objs = $data['obj'];
+//	if($objs) {
+//		foreach($objs as $obj) {
+//			unset($obj['obj_id']);
+//			$obj['channel'] = $channel['channel_id'];
 
-			dbesc_array($obj);
-			$r = dbq("INSERT INTO obj (`" 
-				. implode("`, `", array_keys($obj)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($obj)) 
-				. "')" );
-		}
-	}
+//			dbesc_array($obj);
+//			$r = dbq("INSERT INTO obj (`" 
+//				. implode("`, `", array_keys($obj)) 
+//				. "`) VALUES ('" 
+//				. implode("', '", array_values($obj)) 
+//				. "')" );
+//		}
+//	}
 
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);

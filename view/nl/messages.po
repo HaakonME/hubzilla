@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-14 00:04-0700\n"
-"PO-Revision-Date: 2015-08-09 13:50+0000\n"
+"POT-Creation-Date: 2015-08-21 00:04-0700\n"
+"PO-Revision-Date: 2015-08-28 12:04+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/Friendica/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -418,7 +418,7 @@ msgstr "Aangemaakt"
 msgid "Edited"
 msgstr "Bewerkt"
 
-#: ../../include/api.php:1193
+#: ../../include/api.php:1214
 msgid "Public Timeline"
 msgstr "Openbare tijdlijn"
 
@@ -1376,7 +1376,7 @@ msgstr "Persoonlijke app bewerken"
 
 #: ../../include/widgets.php:136 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../include/conversation.php:945
-#: ../../include/identity.php:857 ../../mod/directory.php:316
+#: ../../include/identity.php:880 ../../mod/directory.php:316
 #: ../../mod/match.php:64 ../../mod/suggest.php:52
 msgid "Connect"
 msgstr "Verbinden"
@@ -1553,7 +1553,7 @@ msgid "Finishes:"
 msgstr "Einde:"
 
 #: ../../include/event.php:50 ../../include/bb2diaspora.php:481
-#: ../../include/identity.php:908 ../../mod/directory.php:302
+#: ../../include/identity.php:931 ../../mod/directory.php:302
 #: ../../mod/events.php:661
 msgid "Location:"
 msgstr "Plaats:"
@@ -1858,7 +1858,7 @@ msgid "View all"
 msgstr "Toon alles"
 
 #: ../../include/ItemObject.php:179 ../../include/taxonomy.php:396
-#: ../../include/conversation.php:1701 ../../include/identity.php:1167
+#: ../../include/conversation.php:1701 ../../include/identity.php:1190
 #: ../../mod/photos.php:1019
 msgctxt "noun"
 msgid "Like"
@@ -2064,7 +2064,7 @@ msgstr "Nieuw venster"
 msgid "Open the selected location in a different window or browser tab"
 msgstr "Open de geselecteerde locatie in een ander venster of tab"
 
-#: ../../include/Contact.php:215 ../../mod/admin.php:739
+#: ../../include/Contact.php:215
 #, php-format
 msgid "User '%s' deleted"
 msgstr "Account '%s' verwijderd"
@@ -2110,7 +2110,7 @@ msgstr "Bewerk profielen"
 msgid "Manage/Edit profiles"
 msgstr "Beheer/wijzig profielen"
 
-#: ../../include/nav.php:95 ../../include/identity.php:880
+#: ../../include/nav.php:95 ../../include/identity.php:903
 msgid "Edit Profile"
 msgstr "Profiel bewerken"
 
@@ -3122,7 +3122,7 @@ msgstr "Datapakket ongeldig"
 msgid "Unable to verify channel signature"
 msgstr "Kanaalkenmerk kon niet worden geverifieerd.  "
 
-#: ../../include/zot.php:2144
+#: ../../include/zot.php:2133
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr "Hubkenmerk voor %s kon niet worden geverifieerd"
@@ -3320,11 +3320,11 @@ msgstr "Niet in staat om aangemaakte identiteit te vinden"
 msgid "Default Profile"
 msgstr "Standaardprofiel"
 
-#: ../../include/identity.php:660
+#: ../../include/identity.php:683
 msgid "Requested channel is not available."
 msgstr "Opgevraagd kanaal is niet beschikbaar."
 
-#: ../../include/identity.php:707 ../../mod/profile.php:16
+#: ../../include/identity.php:730 ../../mod/profile.php:16
 #: ../../mod/achievements.php:11 ../../mod/webpages.php:29
 #: ../../mod/connect.php:13 ../../mod/hcard.php:8 ../../mod/blocks.php:29
 #: ../../mod/editlayout.php:27 ../../mod/editwebpage.php:28
@@ -3333,193 +3333,193 @@ msgstr "Opgevraagd kanaal is niet beschikbaar."
 msgid "Requested profile is not available."
 msgstr "Opgevraagd profiel is niet beschikbaar"
 
-#: ../../include/identity.php:870 ../../mod/profiles.php:774
+#: ../../include/identity.php:893 ../../mod/profiles.php:774
 msgid "Change profile photo"
 msgstr "Profielfoto veranderen"
 
-#: ../../include/identity.php:876
+#: ../../include/identity.php:899
 msgid "Profiles"
 msgstr "Profielen"
 
-#: ../../include/identity.php:876
+#: ../../include/identity.php:899
 msgid "Manage/edit profiles"
 msgstr "Profielen beheren/bewerken"
 
-#: ../../include/identity.php:877 ../../mod/profiles.php:775
+#: ../../include/identity.php:900 ../../mod/profiles.php:775
 msgid "Create New Profile"
 msgstr "Nieuw profiel aanmaken"
 
-#: ../../include/identity.php:892 ../../mod/profiles.php:786
+#: ../../include/identity.php:915 ../../mod/profiles.php:786
 msgid "Profile Image"
 msgstr "Profielfoto"
 
-#: ../../include/identity.php:895
+#: ../../include/identity.php:918
 msgid "visible to everybody"
 msgstr "Voor iedereen zichtbaar"
 
-#: ../../include/identity.php:896 ../../mod/profiles.php:669
+#: ../../include/identity.php:919 ../../mod/profiles.php:669
 #: ../../mod/profiles.php:790
 msgid "Edit visibility"
 msgstr "Zichtbaarheid bewerken"
 
-#: ../../include/identity.php:912 ../../include/identity.php:1151
+#: ../../include/identity.php:935 ../../include/identity.php:1174
 msgid "Gender:"
 msgstr "Geslacht:"
 
-#: ../../include/identity.php:913 ../../include/identity.php:1195
+#: ../../include/identity.php:936 ../../include/identity.php:1218
 msgid "Status:"
 msgstr "Status:"
 
-#: ../../include/identity.php:914 ../../include/identity.php:1206
+#: ../../include/identity.php:937 ../../include/identity.php:1229
 msgid "Homepage:"
 msgstr "Homepagina:"
 
-#: ../../include/identity.php:915
+#: ../../include/identity.php:938
 msgid "Online Now"
 msgstr "Nu online"
 
-#: ../../include/identity.php:998 ../../include/identity.php:1076
+#: ../../include/identity.php:1021 ../../include/identity.php:1099
 #: ../../mod/ping.php:324
 msgid "g A l F d"
 msgstr "G:i, l d F"
 
-#: ../../include/identity.php:999 ../../include/identity.php:1077
+#: ../../include/identity.php:1022 ../../include/identity.php:1100
 msgid "F d"
 msgstr "d F"
 
-#: ../../include/identity.php:1044 ../../include/identity.php:1116
+#: ../../include/identity.php:1067 ../../include/identity.php:1139
 #: ../../mod/ping.php:346
 msgid "[today]"
 msgstr "[vandaag]"
 
-#: ../../include/identity.php:1055
+#: ../../include/identity.php:1078
 msgid "Birthday Reminders"
 msgstr "Verjaardagsherinneringen"
 
-#: ../../include/identity.php:1056
+#: ../../include/identity.php:1079
 msgid "Birthdays this week:"
 msgstr "Verjaardagen deze week:"
 
-#: ../../include/identity.php:1109
+#: ../../include/identity.php:1132
 msgid "[No description]"
 msgstr "[Geen omschrijving]"
 
-#: ../../include/identity.php:1127
+#: ../../include/identity.php:1150
 msgid "Event Reminders"
 msgstr "Herinneringen"
 
-#: ../../include/identity.php:1128
+#: ../../include/identity.php:1151
 msgid "Events this week:"
 msgstr "Gebeurtenissen deze week:"
 
-#: ../../include/identity.php:1141 ../../include/identity.php:1258
+#: ../../include/identity.php:1164 ../../include/identity.php:1281
 #: ../../include/apps.php:138 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr "Profiel"
 
-#: ../../include/identity.php:1149 ../../mod/settings.php:1056
+#: ../../include/identity.php:1172 ../../mod/settings.php:1056
 msgid "Full Name:"
 msgstr "Volledige naam:"
 
-#: ../../include/identity.php:1156
+#: ../../include/identity.php:1179
 msgid "Like this channel"
 msgstr "Vind dit kanaal leuk"
 
-#: ../../include/identity.php:1180
+#: ../../include/identity.php:1203
 msgid "j F, Y"
 msgstr "F j Y"
 
-#: ../../include/identity.php:1181
+#: ../../include/identity.php:1204
 msgid "j F"
 msgstr "F j"
 
-#: ../../include/identity.php:1188
+#: ../../include/identity.php:1211
 msgid "Birthday:"
 msgstr "Geboortedatum:"
 
-#: ../../include/identity.php:1192 ../../mod/directory.php:297
+#: ../../include/identity.php:1215 ../../mod/directory.php:297
 msgid "Age:"
 msgstr "Leeftijd:"
 
-#: ../../include/identity.php:1201
+#: ../../include/identity.php:1224
 #, php-format
 msgid "for %1$d %2$s"
 msgstr "voor %1$d %2$s"
 
-#: ../../include/identity.php:1204 ../../mod/profiles.php:691
+#: ../../include/identity.php:1227 ../../mod/profiles.php:691
 msgid "Sexual Preference:"
 msgstr "Seksuele voorkeur:"
 
-#: ../../include/identity.php:1208 ../../mod/directory.php:313
+#: ../../include/identity.php:1231 ../../mod/directory.php:313
 #: ../../mod/profiles.php:693
 msgid "Hometown:"
 msgstr "Oorspronkelijk uit:"
 
-#: ../../include/identity.php:1210
+#: ../../include/identity.php:1233
 msgid "Tags:"
 msgstr "Tags:"
 
-#: ../../include/identity.php:1212 ../../mod/profiles.php:694
+#: ../../include/identity.php:1235 ../../mod/profiles.php:694
 msgid "Political Views:"
 msgstr "Politieke overtuigingen:"
 
-#: ../../include/identity.php:1214
+#: ../../include/identity.php:1237
 msgid "Religion:"
 msgstr "Religie:"
 
-#: ../../include/identity.php:1216 ../../mod/directory.php:315
+#: ../../include/identity.php:1239 ../../mod/directory.php:315
 msgid "About:"
 msgstr "Over:"
 
-#: ../../include/identity.php:1218
+#: ../../include/identity.php:1241
 msgid "Hobbies/Interests:"
 msgstr "Hobby's/interesses:"
 
-#: ../../include/identity.php:1220 ../../mod/profiles.php:697
+#: ../../include/identity.php:1243 ../../mod/profiles.php:697
 msgid "Likes:"
 msgstr "Houdt van:"
 
-#: ../../include/identity.php:1222 ../../mod/profiles.php:698
+#: ../../include/identity.php:1245 ../../mod/profiles.php:698
 msgid "Dislikes:"
 msgstr "Houdt niet van:"
 
-#: ../../include/identity.php:1224
+#: ../../include/identity.php:1247
 msgid "Contact information and Social Networks:"
 msgstr "Contactinformatie en sociale netwerken:"
 
-#: ../../include/identity.php:1226
+#: ../../include/identity.php:1249
 msgid "My other channels:"
 msgstr "Mijn andere kanalen"
 
-#: ../../include/identity.php:1228
+#: ../../include/identity.php:1251
 msgid "Musical interests:"
 msgstr "Muzikale interesses:"
 
-#: ../../include/identity.php:1230
+#: ../../include/identity.php:1253
 msgid "Books, literature:"
 msgstr "Boeken, literatuur:"
 
-#: ../../include/identity.php:1232
+#: ../../include/identity.php:1255
 msgid "Television:"
 msgstr "Televisie:"
 
-#: ../../include/identity.php:1234
+#: ../../include/identity.php:1257
 msgid "Film/dance/culture/entertainment:"
 msgstr "Films/dansen/cultuur/vermaak:"
 
-#: ../../include/identity.php:1236
+#: ../../include/identity.php:1259
 msgid "Love/Romance:"
 msgstr "Liefde/romantiek:"
 
-#: ../../include/identity.php:1238
+#: ../../include/identity.php:1261
 msgid "Work/employment:"
 msgstr "Werk/beroep:"
 
-#: ../../include/identity.php:1240
+#: ../../include/identity.php:1263
 msgid "School/education:"
 msgstr "School/opleiding:"
 
-#: ../../include/identity.php:1260
+#: ../../include/identity.php:1283
 msgid "Like this thing"
 msgstr "Vind dit ding leuk"
 
@@ -5393,7 +5393,7 @@ msgstr "Geen geldige account gevonden."
 msgid "Password reset request issued. Check your email."
 msgstr "Het verzoek om je wachtwoord opnieuw in te stellen is behandeld. Controleer je e-mail."
 
-#: ../../mod/lostpass.php:35 ../../mod/lostpass.php:102
+#: ../../mod/lostpass.php:35 ../../mod/lostpass.php:103
 #, php-format
 msgid "Site Member (%s)"
 msgstr "Lid van hub (%s)"
@@ -5409,52 +5409,52 @@ msgid ""
 "Password reset failed."
 msgstr "Het verzoek kon niet worden geverifieerd. (Mogelijk heb je al eerder een verzoek ingediend.) Opnieuw instellen van wachtwoord is mislukt."
 
-#: ../../mod/lostpass.php:85 ../../boot.php:1559
+#: ../../mod/lostpass.php:86 ../../boot.php:1559
 msgid "Password Reset"
 msgstr "Wachtwoord vergeten?"
 
-#: ../../mod/lostpass.php:86
+#: ../../mod/lostpass.php:87
 msgid "Your password has been reset as requested."
 msgstr "Jouw wachtwoord is opnieuw ingesteld zoals je had verzocht."
 
-#: ../../mod/lostpass.php:87
+#: ../../mod/lostpass.php:88
 msgid "Your new password is"
 msgstr "Jouw nieuwe wachtwoord is"
 
-#: ../../mod/lostpass.php:88
+#: ../../mod/lostpass.php:89
 msgid "Save or copy your new password - and then"
 msgstr "Kopieer of sla je nieuwe wachtwoord op - en"
 
-#: ../../mod/lostpass.php:89
+#: ../../mod/lostpass.php:90
 msgid "click here to login"
 msgstr "klik dan hier om in te loggen"
 
-#: ../../mod/lostpass.php:90
+#: ../../mod/lostpass.php:91
 msgid ""
 "Your password may be changed from the <em>Settings</em> page after "
 "successful login."
 msgstr "Jouw wachtwoord kan worden veranderd onder <em>instellingen</em>, nadat je succesvol bent ingelogd."
 
-#: ../../mod/lostpass.php:107
+#: ../../mod/lostpass.php:108
 #, php-format
 msgid "Your password has changed at %s"
 msgstr "Jouw wachtwoord op %s is veranderd"
 
-#: ../../mod/lostpass.php:122
+#: ../../mod/lostpass.php:123
 msgid "Forgot your Password?"
 msgstr "Wachtwoord vergeten?"
 
-#: ../../mod/lostpass.php:123
+#: ../../mod/lostpass.php:124
 msgid ""
 "Enter your email address and submit to have your password reset. Then check "
 "your email for further instructions."
 msgstr "Voer je e-mailadres in en verstuur deze om je wachtwoord opnieuw in te stellen. Controleer hierna hier je e-mail voor verdere instructies."
 
-#: ../../mod/lostpass.php:124
+#: ../../mod/lostpass.php:125
 msgid "Email Address"
 msgstr "E-mailadres"
 
-#: ../../mod/lostpass.php:125
+#: ../../mod/lostpass.php:126
 msgid "Reset"
 msgstr "Opnieuw instellen"
 
@@ -6546,11 +6546,11 @@ msgstr "Welkom %s. Authenticatie op afstand geslaagd."
 msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr "%1$s heeft het %3$s van %2$s getagd met %4$s"
 
-#: ../../mod/uexport.php:41 ../../mod/uexport.php:42
+#: ../../mod/uexport.php:45 ../../mod/uexport.php:46
 msgid "Export Channel"
 msgstr "Kanaal exporteren"
 
-#: ../../mod/uexport.php:43
+#: ../../mod/uexport.php:47
 msgid ""
 "Export your basic channel information to a small file.  This acts as a "
 "backup of your connections, permissions, profile and basic data, which can "
@@ -6558,11 +6558,11 @@ msgid ""
 "content."
 msgstr "Exporteer de basisinformatie van jouw kanaal naar een klein bestand. Dit fungeert als een back-up van jouw connecties, permissies, profiel en basisgegevens, die gebruikt kan worden om op een nieuwe hub jouw gegevens te importeren. Deze back-up bevat echter niet de inhoud van jouw kanaal."
 
-#: ../../mod/uexport.php:44
+#: ../../mod/uexport.php:48
 msgid "Export Content"
 msgstr "Inhoud exporteren"
 
-#: ../../mod/uexport.php:45
+#: ../../mod/uexport.php:49
 msgid ""
 "Export your channel information and all the content to a JSON backup. This "
 "backs up all of your connections, permissions, profile data and all of your "
@@ -7084,15 +7084,15 @@ msgstr "Voor het laatst contact"
 
 #: ../../mod/admin.php:683
 #, php-format
-msgid "%s user blocked/unblocked"
-msgid_plural "%s users blocked/unblocked"
+msgid "%s account blocked/unblocked"
+msgid_plural "%s account blocked/unblocked"
 msgstr[0] "%s account geblokkeerd/gedeblokkeerd"
 msgstr[1] "%s accounts geblokkeerd/gedeblokkeerd"
 
 #: ../../mod/admin.php:691
 #, php-format
-msgid "%s user deleted"
-msgid_plural "%s users deleted"
+msgid "%s account deleted"
+msgid_plural "%s accounts deleted"
 msgstr[0] "%s account verwijderd"
 msgstr[1] "%s accounts verwijderd"
 
@@ -7100,14 +7100,19 @@ msgstr[1] "%s accounts verwijderd"
 msgid "Account not found"
 msgstr "Account niet gevonden"
 
+#: ../../mod/admin.php:739
+#, php-format
+msgid "Account '%s' deleted"
+msgstr "Account '%s' verwijderd"
+
 #: ../../mod/admin.php:747
 #, php-format
-msgid "User '%s' blocked"
-msgstr "Lid '%s' geblokkeerd"
+msgid "Account '%s' blocked"
+msgstr "Account '%s' geblokkeerd"
 
 #: ../../mod/admin.php:755
 #, php-format
-msgid "User '%s' unblocked"
+msgid "Account '%s' unblocked"
 msgstr "Account '%s' gedeblokkeerd"
 
 #: ../../mod/admin.php:818 ../../mod/admin.php:830
@@ -7164,14 +7169,14 @@ msgstr "Abonnementen"
 
 #: ../../mod/admin.php:833
 msgid ""
-"Selected users will be deleted!\\n\\nEverything these users had posted on "
-"this site will be permanently deleted!\\n\\nAre you sure?"
+"Selected accounts will be deleted!\\n\\nEverything these accounts had posted"
+" on this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr "Geselecteerde accounts (met bijbehorende kanalen) worden verwijderd!\\n\\nAlles wat deze accounts op deze hub hebben gepubliceerd wordt definitief verwijderd!\\n\\Weet je het zeker?"
 
 #: ../../mod/admin.php:834
 msgid ""
-"The user {0} will be deleted!\\n\\nEverything this user has posted on this "
-"site will be permanently deleted!\\n\\nAre you sure?"
+"The account {0} will be deleted!\\n\\nEverything this account has posted on "
+"this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr "Account {0} (met bijbehorende kanalen) wordt verwijderd !\\n\\nAlles wat dit account op deze hub heeft gepubliceerd wordt definitief verwijderd!\\n\\nWeet je het zeker?"
 
 #: ../../mod/admin.php:870

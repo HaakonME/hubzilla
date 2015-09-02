@@ -555,7 +555,15 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['term'] = $r;
 
-	$r = q("select * from obj where obj_channel = %d",
+
+	// make the obj output match the hubzilla file format
+
+	$datestamp = datetime_convert();
+
+	$r = q("select obj.*, term.term as obj_term, term.url as obj_url, term.imgurl as obj_imgurl, '%s' as obj_created, '%s' as obj_edited, '%s' as obj_baseurl from obj left join term on obj_obj = term.term_hash where obj_channel = %d",
+		dbesc($datestamp),
+		dbesc($datestamp),
+		dbesc(z_root()),
 		intval($channel_id)
 	);
 

@@ -565,7 +565,6 @@ function identity_basic_export($channel_id, $items = false) {
 	if(! $items)
 		return $ret;
 
-
 	$r = q("select * from likes where channel_id = %d",
 		intval($channel_id)
 	);

@@ -66,16 +66,16 @@ function thing_init(&$a) {
 		return;
 
 	if($term_hash) {
-		$t = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
-			intval(TERM_OBJ_THING),
-			dbesc($term_hash)
+		$t = q("select * from obj where obj_obj = '%s' and obj_channel = %d limit 1",
+			dbesc($term_hash),
+			intval(local_channel())
 		);
 		if(! $t) {
 			notice( t('Item not found.') . EOL);
 			return;
 		}
 		$orig_record = $t[0];
-		if($photo != $orig_record['imgurl']) {
+		if($photo != $orig_record['obj_imgurl']) {
 			$arr = import_profile_photo($photo,get_observer_hash(),true);
 			$local_photo = $arr[0];
 			$local_photo_type = $arr[3];
@@ -83,10 +83,11 @@ function thing_init(&$a) {
 		else
 			$local_photo = $orig_record['imgurl'];
 
-		$r = q("update term  set term = '%s', url = '%s', imgurl = '%s' where term_hash = '%s' and uid = %d",
+		$r = q("update obj set obj_term = '%s', obj_url = '%s', obj_imgurl = '%s', obj_edited = '%s' where obj_obj = '%s' and uid = %d",
 			dbesc($name),
 			dbesc(($url) ? $url : z_root() . '/thing/' . $term_hash),
 			dbesc($local_photo),
+			dbesc(datetime_convert()),
 			dbesc($term_hash),
 			intval(local_channel())
 		);
@@ -113,10 +114,9 @@ function thing_init(&$a) {
 		$local_photo_type = $arr[3];
 	}
 
-	$r = q("select * from term where uid = %d and otype = %d and type = %d and term = '%s' limit 1",
+	$r = q("select * from obj where obj_channel = %d and obj_type = %d and obj_term = '%s' limit 1",
 		intval(local_channel()),
 		intval(TERM_OBJ_THING),
-		intval(TERM_THING),
 		dbesc($name)
 	);
 	if(! $r) {
@@ -139,14 +139,21 @@ function thing_init(&$a) {
 			dbesc($name)
 		);
 	}
-	$term = $r[0];
 
-	$r = q("insert into obj ( obj_page, obj_verb, obj_type, obj_channel, obj_obj) values ('%s','%s', %d, %d, '%s') ",
+	$created = datetime_convert();
+	$url = (($url) ? $url : z_root() . '/thing/' . $hash);
+
+	$r = q("insert into obj ( obj_page, obj_verb, obj_type, obj_channel, obj_obj, obj_term, obj_url, obj_imgurl, obj_created, obj_edited ) values ('%s','%s', %d, %d, '%s','%s','%s','%s','%s','%s') ",
 		dbesc($profile['profile_guid']),
 		dbesc($verb),
 		intval(TERM_OBJ_THING),
 		intval(local_channel()),
-		dbesc($term['term_hash'])
+		dbesc($hash),
+		dbesc($name),
+		dbesc($url),
+		dbesc(($photo) ? $local_photo : ''),
+		dbesc($created),
+		dbesc($created)
 	);
 
 	if(! $r) {
@@ -155,10 +162,10 @@ function thing_init(&$a) {
 	}
 
 	info( t('Thing added'));
-
+	
 	if($activity) {
 		$arr = array();
-		$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $term['url']));
+		$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $url));
 		if($local_photo)
 			$links[] = array('rel' => 'photo', 'type' => $local_photo_type, 'href' => $local_photo);
 
@@ -166,10 +173,10 @@ function thing_init(&$a) {
 
 		$obj = json_encode(array(
 			'type'    => $objtype,
-			'id'      => $term['url'],
+			'id'      => $url,
 			'link'    => $links,
-			'title'   => $term['term'],
-			'content' => $term['term']
+			'title'   => $name,
+			'content' => $name
 		));
 
 		$bodyverb = str_replace('OBJ: ', '',t('OBJ: %1$s %2$s %3$s'));
@@ -182,7 +189,7 @@ function thing_init(&$a) {
 		$arr['item_thread_top'] = 1;
 
 		$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
-		$plink = '[zrl=' . $term['url'] . ']' . $term['term'] . '[/zrl]';
+		$plink = '[zrl=' . $url . ']' . $name . '[/zrl]';
 
 		$arr['body'] =  sprintf( $bodyverb, $ulink, $translated_verb, $plink );
 
@@ -218,7 +225,7 @@ function thing_content(&$a) {
 
 	if(argc() == 2) {
 
-		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
+		$r = q("select * from obj where obj_type = %d and obj_obj = '%s' limit 1",
 			intval(TERM_OBJ_THING),
 			dbesc(argv(1))
 		);
@@ -249,7 +256,7 @@ function thing_content(&$a) {
 	if(argc() == 3 && argv(1) === 'edit') {
 		$thing_hash = argv(2);
 
-		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
+		$r = q("select * from obj where obj_type = %d and obj_obj = '%s' limit 1",
 			intval(TERM_OBJ_THING),
 			dbesc($thing_hash)
 		);
@@ -269,11 +276,11 @@ function thing_content(&$a) {
 			'$activity' => array('activity',t('Post an activity'),true,t('Only sends to viewers of the applicable profile')),
 			'$thing_hash' => $thing_hash,
 			'$thing_lbl' => t('Name of thing e.g. something'),
-			'$thething' => $r[0]['term'],
+			'$thething' => $r[0]['obj_term'],
 			'$url_lbl' => t('URL of thing (optional)'),
-			'$theurl' => $r[0]['url'],
+			'$theurl' => $r[0]['obj_url'],
 			'$img_lbl' => t('URL for photo of thing (optional)'),
-			'$imgurl' => $r[0]['imgurl'],
+			'$imgurl' => $r[0]['obj_imgurl'],
 			'$submit' => t('Submit')
 		));
 
@@ -283,7 +290,7 @@ function thing_content(&$a) {
 	if(argc() == 3 && argv(1) === 'drop') {
 		$thing_hash = argv(2);
 
-		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
+		$r = q("select * from obj where obj_type = %d and obj_obj = '%s' limit 1",
 			intval(TERM_OBJ_THING),
 			dbesc($thing_hash)
 		);
@@ -296,10 +303,6 @@ function thing_content(&$a) {
 		$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d",
 			dbesc($thing_hash),
 			intval(TERM_OBJ_THING),
-			intval(local_channel())
-		);
-		$x = q("delete from term where term_hash = '%s' and uid = %d",
-			dbesc($thing_hash),
 			intval(local_channel())
 		);
 

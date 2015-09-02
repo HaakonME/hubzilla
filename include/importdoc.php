@@ -1,17 +1,30 @@
 <?php
 
+
+
 require_once('include/cli_startup.php');
 
-cli_startup();
 
-require_once('mod/help.php');
+function importdoc_run($argv, $argc){
+
+	cli_startup();
+
+	require_once('mod/help.php');
+
+
+	update_docs_dir('doc/*');
+
+}
+if (array_search(__file__,get_included_files())===0){
+  importdoc_run($argv,$argc);
+  killme();
+}
 
 function update_docs_dir($s) {
 	$f = basename($s);
 	$d = dirname($s);
 	if($s === 'doc/html')
 		return;
-
 	$files = glob("$d/$f");
 	if($files) {
 		foreach($files as $fi) {
@@ -24,8 +37,5 @@ function update_docs_dir($s) {
 		}
 	}
 }
-
-update_docs_dir('doc/*');
-
 
 

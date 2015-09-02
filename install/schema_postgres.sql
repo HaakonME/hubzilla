@@ -812,6 +812,11 @@ CREATE TABLE "obj" (
   "obj_type" bigint  NOT NULL DEFAULT '0',
   "obj_obj" text NOT NULL DEFAULT '',
   "obj_channel" bigint  NOT NULL DEFAULT '0',
+  "obj_term" char(255) NOT NULL DEFAULT '',
+  "obj_url" char(255) NOT NULL DEFAULT '',
+  "obj_imgurl" char(255) NOT NULL DEFAULT '',
+  "obj_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "obj_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
@@ -824,6 +829,11 @@ create index "obj_page" on obj ("obj_page");
 create index "obj_type" on obj ("obj_type");
 create index "obj_channel" on obj ("obj_channel");
 create index "obj_obj" on obj ("obj_obj");
+create index "obj_term" on obj ("obj_term");
+create index "obj_url" on obj ("obj_url");
+create index "obj_imgurl" on obj ("obj_imgurl");
+create index "obj_created" on obj ("obj_created");
+create index "obj_edited" on obj ("obj_edited");
 
 CREATE TABLE "outq" (
   "outq_hash" text NOT NULL,

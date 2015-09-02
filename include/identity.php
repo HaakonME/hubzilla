@@ -570,6 +570,13 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['obj'] = $r;
 
+
+	$r = q("select * from app where app_channel = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['app'] = $r;
+
 	if(! $items)
 		return $ret;
 

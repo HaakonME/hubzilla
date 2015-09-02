@@ -1663,7 +1663,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		$ab = q("select * from abook where abook_channel = %d and abook_xchan = '%s'",
 			intval($channel['channel_id']),
-			$arr['owner_xchan']
+			dbesc($arr['owner_xchan'])
 		);
 		$abook = (($ab) ? $ab[0] : null); 
 

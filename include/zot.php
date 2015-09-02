@@ -1638,9 +1638,10 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		}
 
 
-		$ab = q("select abook.* from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d 
-			and abook_self = 0",
-			intval($channel['channel_id'])
+		$ab = q("select * from abook where abook_channel = %d 
+			and abook_xchan = '%s'",
+			intval($channel['channel_id']),
+			$arr['owner_xchan']
 		);
 		$abook = (($ab) ? $ab[0] : null); 
 

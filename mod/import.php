@@ -586,6 +586,29 @@ function import_post(&$a) {
 		}
 	}
 
+	$apps = $data['app'];
+	if($app) {
+		foreach($apps as $app) {
+
+			unset($app['id']);
+			unset($app['app_channel']);
+
+			$app['app_channel'] = $channel['channel_id'];
+
+			if($app['app_photo']) {
+	            $x = import_xchan_photo($app['app_photo'],get_observer_hash(),true);
+				$app['app_photo'] = $x[0];
+			}
+
+			dbesc_array($app);
+			$r = dbq("INSERT INTO app (`" 
+				. implode("`, `", array_keys($obj)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($obj)) 
+				. "')" );
+		}
+	}
+
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 

@@ -235,7 +235,7 @@ function poller_run($argv, $argc){
 	if($r) {
 		require_once('include/photo/photo_driver.php');
 		foreach($r as $rr) {
-			$photos = import_profile_photo($rr['xchan_photo_l'],$rr['xchan_hash']);
+			$photos = import_xchan_photo($rr['xchan_photo_l'],$rr['xchan_hash']);
 			$x = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
 				where xchan_hash = '%s'",
 				dbesc($photos[0]),

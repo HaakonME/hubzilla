@@ -801,7 +801,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 				);
 			}
 		} else {
-			$photos = import_profile_photo($arr['photo'], $xchan_hash);
+			$photos = import_xchan_photo($arr['photo'], $xchan_hash);
 		}
 		if ($photos) {
 			if ($photos[4]) {

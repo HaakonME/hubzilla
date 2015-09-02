@@ -230,7 +230,7 @@ function xchan_store($arr) {
 	if(! $r)
 		return $r;
 
-	$photos = import_profile_photo($arr['photo'],$arr['hash']);
+	$photos = import_xchan_photo($arr['photo'],$arr['hash']);
 	$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s'",
 		dbesc(datetime_convert()),
 		dbesc($photos[0]),

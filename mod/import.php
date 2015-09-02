@@ -422,7 +422,7 @@ function import_post(&$a) {
 
 	
 				require_once('include/photo/photo_driver.php');
-				$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
+				$photos = import_xchan_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
 				if($photos[4])
 					$photodate = NULL_DATE;
 				else
@@ -556,22 +556,35 @@ function import_post(&$a) {
 		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
+	$objs = $data['obj'];
+	if($objs) {
+		foreach($objs as $obj) {
+			// if it's the old term format - too hard to support
+			if(! $obj['obj_created'])
+				continue;
+			$baseurl = $obj['obj_baseurl'];
+			unset($obj['obj_id']);
+			unset($obj['obj_baseurl']);
 
-// This needs more work - we also need the term where otype = 6 to link with this, and the terms need to be relocated.	
-//	$objs = $data['obj'];
-//	if($objs) {
-//		foreach($objs as $obj) {
-//			unset($obj['obj_id']);
-//			$obj['channel'] = $channel['channel_id'];
+			$obj['obj_channel'] = $channel['channel_id'];
 
-//			dbesc_array($obj);
-//			$r = dbq("INSERT INTO obj (`" 
-//				. implode("`, `", array_keys($obj)) 
-//				. "`) VALUES ('" 
-//				. implode("', '", array_values($obj)) 
-//				. "')" );
-//		}
-//	}
+			if($baseurl && (strpos($obj['obj_url'],$baseurl . '/thing/') !== false)) {
+				$obj['obj_url'] = str_replace($baseurl,z_root(),$obj['obj_url']);
+			}
+
+			if($obj['obj_imgurl']) {
+	            $x = import_xchan_photo($obj['obj_imgurl'],get_observer_hash(),true);
+				$obj['obj_imgurl'] = $x[0];
+			}
+
+			dbesc_array($obj);
+			$r = dbq("INSERT INTO obj (`" 
+				. implode("`, `", array_keys($obj)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($obj)) 
+				. "')" );
+		}
+	}
 
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);

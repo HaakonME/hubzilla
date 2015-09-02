@@ -325,7 +325,7 @@ function app_store($arr) {
 		return $ret;
 
 	if($arr['photo'] && ! strstr($arr['photo'],z_root())) {
-		$x = import_profile_photo($arr['photo'],get_observer_hash(),true);
+		$x = import_xchan_photo($arr['photo'],get_observer_hash(),true);
 		$arr['photo'] = $x[1];
 	}
 
@@ -378,7 +378,7 @@ function app_update($arr) {
 		return $ret;
 
 	if($arr['photo'] && ! strstr($arr['photo'],z_root())) {
-		$x = import_profile_photo($arr['photo'],get_observer_hash(),true);
+		$x = import_xchan_photo($arr['photo'],get_observer_hash(),true);
 		$arr['photo'] = $x[1];
 	}
 

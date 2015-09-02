@@ -88,7 +88,7 @@ function thing_init(&$a) {
 		}
 		$orig_record = $t[0];
 		if($photo != $orig_record['obj_imgurl']) {
-			$arr = import_profile_photo($photo,get_observer_hash(),true);
+			$arr = import_xchan_photo($photo,get_observer_hash(),true);
 			$local_photo = $arr[0];
 			$local_photo_type = $arr[3];
 		}
@@ -125,7 +125,7 @@ function thing_init(&$a) {
 	$local_photo = null;
 
 	if($photo) {
-		$arr = import_profile_photo($photo,get_observer_hash(),true);
+		$arr = import_xchan_photo($photo,get_observer_hash(),true);
 		$local_photo = $arr[0];
 		$local_photo_type = $arr[3];
 	}

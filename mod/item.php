@@ -318,7 +318,7 @@ function item_post(&$a) {
 		$private = 0;
 		// webpages are allowed to change ACLs after the fact. Normal conversation items aren't. 
 		if($webpage) {
-			$acl->set_from_arry($_REQUEST);
+			$acl->set_from_array($_REQUEST);
 		}
 		else {
 			$acl->set($orig_post);

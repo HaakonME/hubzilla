@@ -5,8 +5,9 @@
  */
 
 require_once('include/items.php');
+require_once('include/security.php');
 require_once('include/contact_selectors.php');
-
+require_once('include/acl_selectors.php');
 
 function thing_init(&$a) {
 
@@ -61,9 +62,6 @@ function thing_init(&$a) {
 	 * Future work on this module might produce more complex activities with targets, e.g. Phillip likes Karen's moustache
 	 * and to describe other non-thing objects like channels, such as Karl wants Susan - where Susan represents a channel profile.
 	 */
-
-	/** @FIXME add and fix ACL support to the input forms */
-
  
 	if((! $name) || (! $translated_verb))
 		return;
@@ -221,7 +219,9 @@ function thing_content(&$a) {
 
 	if(argc() == 2) {
 
-		$r = q("select * from obj where obj_type = %d and obj_obj = '%s' limit 1",
+		$sql_extra = permissions_sql();
+
+		$r = q("select * from obj where obj_type = %d and obj_obj = '%s' $sql_extra limit 1",
 			intval(TERM_OBJ_THING),
 			dbesc(argv(1))
 		);
@@ -246,6 +246,11 @@ function thing_content(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
+	$acl = new AccessList($channel);
+	$channel_acl = $acl->get();
+
+	$lockstate = (($acl->is_private()) ? 'lock' : 'unlock');
 
 	$thing_hash = '';
 
@@ -277,6 +282,9 @@ function thing_content(&$a) {
 			'$theurl' => $r[0]['obj_url'],
 			'$img_lbl' => t('URL for photo of thing (optional)'),
 			'$imgurl' => $r[0]['obj_imgurl'],
+			'$permissions' => t('Permissions'),
+			'$aclselect' => populate_acl($channel_acl,false),
+			'$lockstate' => $lockstate,
 			'$submit' => t('Submit')
 		));
 
@@ -316,6 +324,9 @@ function thing_content(&$a) {
 		'$thing_lbl' => t('Name of thing e.g. something'),
 		'$url_lbl' => t('URL of thing (optional)'),
 		'$img_lbl' => t('URL for photo of thing (optional)'),
+		'$permissions' => t('Permissions'),
+		'$aclselect' => populate_acl($channel_acl,false),
+		'$lockstate' => $lockstate,
 		'$submit' => t('Submit')
 	));
 

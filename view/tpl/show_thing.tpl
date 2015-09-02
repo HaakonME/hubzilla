@@ -1,7 +1,7 @@
 <h2>{{$header}}</h2>
 {{if $thing}}
 <div class="thing-show">
-{{if $thing.obj_imgurl}}<img src="{{$thing.obj_imgurl}}" width="175" height="175" alt="{{$thing.obj_term}}" />{{/if}}
+{{if $thing.obj_imgurl}}<a href="{{$thing.obj_url}}" ><img src="{{$thing.obj_imgurl}}" width="175" height="175" alt="{{$thing.obj_term}}" /></a>{{/if}}
 <a href="{{$thing.obj_url}}" >{{$thing.obj_term}}</a>
 </div>
 {{if $canedit}}

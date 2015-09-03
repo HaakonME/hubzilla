@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1150 );
+define( 'UPDATE_VERSION' , 1151 );
 
 /**
  *
@@ -1776,3 +1776,25 @@ function update_r1149() {
     return UPDATE_FAILED;
 
 }
+
+function update_r1150() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) { 
+		$r1 = q("ALTER TABLE app ADD app_created timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+			ADD app_edited timestamp NOT NULL DEFAULT '0001-01-01 00:00:00' ");
+	}
+	else {
+		$r1 = q("ALTER TABLE app ADD app_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+			ADD app_edited DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' ");
+	}
+
+	$r2 = q("create index app_created on app ( app_created ) ");
+	$r3 = q("create index app_edited on app ( app_edited ) ");
+
+	$r = $r1 && $r2 && $r3;
+    if($r)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+
+}
+

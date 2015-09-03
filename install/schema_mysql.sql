@@ -108,6 +108,8 @@ CREATE TABLE IF NOT EXISTS `app` (
   `app_price` char(255) NOT NULL DEFAULT '',
   `app_page` char(255) NOT NULL DEFAULT '',
   `app_requires` char(255) NOT NULL DEFAULT '',
+  `app_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `app_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `app_id` (`app_id`),
   KEY `app_name` (`app_name`),
@@ -115,7 +117,9 @@ CREATE TABLE IF NOT EXISTS `app` (
   KEY `app_photo` (`app_photo`),
   KEY `app_version` (`app_version`),
   KEY `app_channel` (`app_channel`),
-  KEY `app_price` (`app_price`)
+  KEY `app_price` (`app_price`),
+  KEY `app_created` (`app_created`),
+  KEY `app_edited` (`app_edited`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `attach` (

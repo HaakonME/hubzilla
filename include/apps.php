@@ -264,18 +264,37 @@ function app_install($uid,$app) {
 	else
 		$x = app_store($app);
 
-	if($x['success'])
-		return $x['app_id'];
+	if($x['success']) {
+		$r = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+			dbesc($x['app_id']),
+			intval($uid)
+		);
+		if($r)
+			build_sync_packet($uid,array('app' => $r[0]));
 
+		return $x['app_id'];
+	}
 	return false;
 }
 
 function app_destroy($uid,$app) {
+
+
 	if($uid && $app['guid']) {
+
+		$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+			dbesc($app['guid']),
+			intval($uid)
+		);
+		$x[0]['app_deleted'] = 1;
+
+
 		$r = q("delete from app where app_id = '%s' and app_channel = %d",
 			dbesc($app['guid']),
 			intval($uid)
 		);
+
+		build_sync_packet($uid,array('app' => $x));
 	}
 }
 

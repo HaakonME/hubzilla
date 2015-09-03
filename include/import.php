@@ -257,6 +257,7 @@ function sync_objs($channel,$objs) {
 			$hash = $obj['obj_obj'];
 			
 			if($exists) {
+				unset($obj['obj_obj']);
 				foreach($obj as $k => $v) {
 					$r = q("UPDATE obj SET `%s` = '%s' WHERE obj_obj = '%s' AND obj_channel = %d",
 						dbesc($k),
@@ -307,6 +308,73 @@ function import_apps($channel,$apps) {
 				. implode("', '", array_values($app)) 
 				. "')" 
 			);
+		}
+	}
+}
+
+
+
+function sync_apps($channel,$apps) {
+
+	if($channel && $apps) {
+		foreach($apps as $app) {
+
+           if(array_key_exists('app_deleted',$app) && $app['app_deleted'] && $app['app_id']) {
+                q("delete from app where app_id = '%s' and app_channel = %d limit 1",
+                    dbesc($app['app_id']),
+                    intval($channel['channel_id'])
+                );
+                continue;
+            }
+
+			unset($app['id']);
+			unset($app['app_channel']);
+
+			if(! $app['app_created'] || $app['app_created'] === NULL_DATE)
+				$app['app_created'] = datetime_convert();
+			if(! $app['app_edited'] || $app['app_edited'] === NULL_DATE)
+				$app['app_edited'] = datetime_convert();
+
+			$app['app_channel'] = $channel['channel_id'];
+
+			if($app['app_photo']) {
+				$x = import_xchan_photo($app['app_photo'],$channel['channel_hash'],true);
+				$app['app_photo'] = $x[0];
+			}
+
+			$exists = false;
+
+			$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+				dbesc($app['app_id']),
+				intval($channel['channel_id'])
+			);
+			if($x) {
+				if($x[0]['app_edited'] >= $obj['app_edited'])
+					continue;
+				$exists = true;
+			}
+			$hash = $app['app_id'];
+
+			if($exists) {
+				unset($app['app_id']);
+				foreach($app as $k => $v) {
+					$r = q("UPDATE app SET `%s` = '%s' WHERE app_id = '%s' AND app_channel = %d",
+						dbesc($k),
+						dbesc($v),
+						dbesc($hash),
+						intval($channel['channel_id'])
+					);
+				}
+			}
+			else {
+				dbesc_array($app);
+				$r = dbq("INSERT INTO app (`" 
+					. implode("`, `", array_keys($app)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($app)) 
+					. "')" 
+				);
+			}
 		}
 	}
 }

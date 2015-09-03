@@ -34,6 +34,11 @@ class AccessList {
 		return $this->explicit;
 	}
 
+	/**
+	 * Set AccessList from strings such as those in already
+	 * existing stored data items
+	 */
+
 	function set($arr,$explicit = true) {
 		$this->allow_cid = $arr['allow_cid'];
 		$this->allow_gid = $arr['allow_gid'];
@@ -43,6 +48,12 @@ class AccessList {
 		$this->explicit = $explicit;
 	}
 
+	/**
+	 * return an array consisting of the current
+	 * access list components where the elements
+	 * are directly storable. 
+	 */
+
 	function get() {
 		return array(
 			'allow_cid' => $this->allow_cid,
@@ -51,6 +62,12 @@ class AccessList {
 			'deny_gid'  => $this->deny_gid,
 		);
 	}
+
+	/**
+	 * Set AccessList from arrays, such as those provided by
+	 * acl_selector(). For convenience, a string (or non-array) input is 
+	 * assumed to be a comma-separated list and auto-converted into an array. 
+	 */ 
 
 	function set_from_array($arr,$explicit = true) {
 		$this->allow_cid = perms2str((is_array($arr['contact_allow'])) 

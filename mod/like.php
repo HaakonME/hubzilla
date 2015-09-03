@@ -117,8 +117,7 @@ function like_content(&$a) {
 		}
 		elseif($obj_type == 'thing') {
 
-			$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' 
-				and obj_type = %d and term_hash = '%s' limit 1",
+			$r = q("select * from obj where obj_type = %d and obj_obj = '%s' limit 1",
             	intval(TERM_OBJ_THING),
             	dbesc(argv(2))
         	);
@@ -146,18 +145,18 @@ function like_content(&$a) {
 
 			$links   = array();
 			$links[] = array('rel' => 'alternate', 'type' => 'text/html',
-				'href' => z_root() . '/thing/' . $r[0]['term_hash']);
+				'href' => z_root() . '/thing/' . $r[0]['obj_obj']);
 			if($r[0]['imgurl'])	
-				$links[] = array('rel' => 'photo', 'href' => $r[0]['imgurl']);
+				$links[] = array('rel' => 'photo', 'href' => $r[0]['obj_imgurl']);
 
 			$target = json_encode(array(
 				'type'  => $tgttype,
-				'title' => $r[0]['term'],
-				'id'    => z_root() . '/thing/' . $r[0]['term_hash'],
+				'title' => $r[0]['obj_term'],
+				'id'    => z_root() . '/thing/' . $r[0]['obj_obj'],
 				'link'  => $links
 			));
 
-			$plink = '[zrl=' . z_root() . '/thing/' . $r[0]['term_hash'] . ']' . $r[0]['term'] . '[/zrl]';
+			$plink = '[zrl=' . z_root() . '/thing/' . $r[0]['obj_obj'] . ']' . $r[0]['obj_term'] . '[/zrl]';
 
 		}
 		

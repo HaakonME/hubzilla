@@ -1127,7 +1127,7 @@ function import_author_rss($x) {
 
 	if($r && $x['photo']) {
 
-		$photos = import_profile_photo($x['photo']['src'],$x['url']);
+		$photos = import_xchan_photo($x['photo']['src'],$x['url']);
 
 		if($photos) {
 			/** @bug $arr is undefined in this SQL query */
@@ -1172,7 +1172,7 @@ function import_author_unknown($x) {
 	);
 	if($r && $x['photo']) {
 
-		$photos = import_profile_photo($x['photo']['src'],$x['url']);
+		$photos = import_xchan_photo($x['photo']['src'],$x['url']);
 
 		if($photos) {
 			/** @bug $arr is undefined in this SQL query */

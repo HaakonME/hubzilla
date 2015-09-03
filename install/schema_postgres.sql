@@ -107,6 +107,8 @@ CREATE TABLE "app" (
   "app_price" text NOT NULL DEFAULT '',
   "app_page" text NOT NULL DEFAULT '',
   "app_requires" text NOT NULL DEFAULT '',
+  "app_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "app_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("id")
 );
 create index "app_id" on app ("app_id");
@@ -116,6 +118,8 @@ create index "app_photo" on app ("app_photo");
 create index "app_version" on app ("app_version");
 create index "app_channel" on app ("app_channel");
 create index "app_price" on app ("app_price");
+create index "app_created" on app ("app_created");
+create index "app_edited" on app ("app_edited");
 CREATE TABLE "attach" (
   "id" serial  NOT NULL,
   "aid" bigint  NOT NULL DEFAULT '0',
@@ -812,6 +816,11 @@ CREATE TABLE "obj" (
   "obj_type" bigint  NOT NULL DEFAULT '0',
   "obj_obj" text NOT NULL DEFAULT '',
   "obj_channel" bigint  NOT NULL DEFAULT '0',
+  "obj_term" char(255) NOT NULL DEFAULT '',
+  "obj_url" char(255) NOT NULL DEFAULT '',
+  "obj_imgurl" char(255) NOT NULL DEFAULT '',
+  "obj_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "obj_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
@@ -824,6 +833,11 @@ create index "obj_page" on obj ("obj_page");
 create index "obj_type" on obj ("obj_type");
 create index "obj_channel" on obj ("obj_channel");
 create index "obj_obj" on obj ("obj_obj");
+create index "obj_term" on obj ("obj_term");
+create index "obj_url" on obj ("obj_url");
+create index "obj_imgurl" on obj ("obj_imgurl");
+create index "obj_created" on obj ("obj_created");
+create index "obj_edited" on obj ("obj_edited");
 
 CREATE TABLE "outq" (
   "outq_hash" text NOT NULL,

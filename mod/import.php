@@ -6,6 +6,8 @@
 require_once('include/Contact.php');
 require_once('include/zot.php');
 require_once('include/identity.php');
+require_once('include/import.php');
+
 
 function import_post(&$a) {
 
@@ -118,118 +120,41 @@ function import_post(&$a) {
 	// import channel
 
 	if(array_key_exists('channel',$data)) {
-		$channel = $data['channel'];
 
 		if($completed < 1) {
+			$channel = import_channel($data['channel']);
 
-			if(! array_key_exists('channel_system',$channel)) {
-				$channel['channel_system']  = (($channel['channel_pageflags'] & 0x1000) ? 1 : 0);
-				$channel['channel_removed'] = (($channel['channel_pageflags'] & 0x8000) ? 1 : 0);
-			}
-
-			$r = q("select * from channel where (channel_guid = '%s' or channel_hash = '%s' or channel_address = '%s' ) limit 1",
-				dbesc($channel['channel_guid']),
-				dbesc($channel['channel_hash']),
-				dbesc($channel['channel_address'])
-			);
-
-			// We should probably also verify the hash 
-	
-			if($r) {
-				if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
-					logger('mod_import: duplicate channel. ', print_r($channel,true));
-					notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
-					return;
-				}
-				else {
-					// try at most ten times to generate a unique address.
-					$x = 0;
-					$found_unique = false;
-					do {
-						$tmp = $channel['channel_address'] . mt_rand(1000,9999);
-						$r = q("select * from channel where channel_address = '%s' limit 1",
-							dbesc($tmp)
-						);
-						if(! $r) {
-							$channel['channel_address'] = $tmp;
-							$found_unique = true;
-							break;
-						}
-						$x ++;
-					} while ($x < 10);
-					if(! $found_unique) {
-						logger('mod_import: duplicate channel. randomisation failed.', print_r($channel,true));
-						notice( t('Unable to create a unique channel address. Import failed.') . EOL);
-						return;
-					}
-				}		
-			}
-
-			unset($channel['channel_id']);
-			$channel['channel_account_id'] = get_account_id();
-			$channel['channel_primary'] = (($seize) ? 1 : 0);
-	
-			dbesc_array($channel);
-
-			$r = dbq("INSERT INTO channel (`" 
-				. implode("`, `", array_keys($channel)) 
-				. "`) VALUES ('" 
-				. implode("', '", array_values($channel)) 
-				. "')" );
-
-			if(! $r) {
-				logger('mod_import: channel clone failed. ', print_r($channel,true));
-				notice( t('Channel clone failed. Import failed.') . EOL);
-				return;
-			}
-
+		}
+		else {
 			$r = q("select * from channel where channel_account_id = %d and channel_guid = '%s' limit 1",
 				intval(get_account_id()),
-				$channel['channel_guid']   // Already dbesc'd
+				dbesc($channel['channel_guid'])
 			);
-			if(! $r) {
-				logger('mod_import: channel not found. ', print_r($channel,true));
-				notice( t('Cloned channel not found. Import failed.') . EOL);
-				return;
-			}
-			// reset
-			$channel = $r[0];
-
-			set_default_login_identity(get_account_id(),$channel['channel_id'],false);
-			logger('import step 1');
-			$_SESSION['import_step'] = 1;
-			ref_session_write(session_id(), serialize($_SESSION));
+			if($r)
+				$channel = $r[0];
 		}
-	}
-	else {
-		$r = q("select * from channel where channel_account_id = %d and channel_guid = '%s' limit 1",
-			intval(get_account_id()),
-			dbesc($channel['channel_guid'])
-		);
-		if($r)
-			$channel = $r[0];
-		else {
+		if(! $channel) {
 			logger('mod_import: channel not found. ', print_r($channel,true));
 			notice( t('Cloned channel not found. Import failed.') . EOL);
 			return;
 		}
 	}
 
-	if($completed < 2) {
+	if(! $channel)
+		$channel = $a->get_channel();
+	
+	if(! $channel) {
+		logger('mod_import: channel not found. ', print_r($channel,true));
+		notice( t('No channel. Import failed.') . EOL);
+		return;
+	}
 
-		$configs = $data['config'];
-		if($configs) {
-			foreach($configs as $config) {
-				unset($config['id']);
-				$config['uid'] = $channel['channel_id'];
-				dbesc_array($config);
-				$r = dbq("INSERT INTO pconfig (`" 
-					. implode("`, `", array_keys($config)) 
-					. "`) VALUES ('" 
-					. implode("', '", array_values($config)) 
-					. "')" );
-			}
+
+	if($completed < 2) {
+		if(is_array($data['config'])) {
+			import_config($channel,$data['config']);
 		}
+
 		logger('import step 2');
 		$_SESSION['import_step'] = 2;
 		ref_session_write(session_id(), serialize($_SESSION));
@@ -244,27 +169,9 @@ function import_post(&$a) {
 			import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id(),$channel['channel_id']);
 		}
 
-		$profiles = $data['profile'];
-		if($profiles) {
-			foreach($profiles as $profile) {
-				unset($profile['id']);
-				$profile['aid'] = get_account_id();
-				$profile['uid'] = $channel['channel_id'];
+		if(is_array($data['profiles']))
+			import_profiles($channel,$data['profiles']);
 
-				// we are going to reset all profile photos to the original
-				// somebody will have to fix this later and put all the applicable photos into the export
-	
-				$profile['photo'] = z_root() . '/photo/profile/l/' . $channel['channel_id'];
-				$profile['thumb'] = z_root() . '/photo/profile/m/' . $channel['channel_id'];
-
-				dbesc_array($profile);
-				$r = dbq("INSERT INTO profile (`" 
-					. implode("`, `", array_keys($profile)) 
-					. "`) VALUES ('" 
-					. implode("', '", array_values($profile)) 
-					. "')" );
-			}
-		}
 		logger('import step 3');
 		$_SESSION['import_step'] = 3;
 		ref_session_write(session_id(), serialize($_SESSION));
@@ -272,43 +179,10 @@ function import_post(&$a) {
 
 
 	if($completed < 4) {
-		$hublocs = $data['hubloc'];
-		if($hublocs) {
-			foreach($hublocs as $hubloc) {
 
-				$hash = make_xchan_hash($hubloc['hubloc_guid'],$hubloc['hubloc_guid_sig']);
-				if($hubloc['hubloc_network'] === 'zot' && $hash !== $hubloc['hubloc_hash']) {
-					logger('forged hubloc: ' . print_r($hubloc,true));
-					continue;
-				}
+		if(is_array($data['hubloc'])) {
+			import_hublocs($channel,$data['hubloc'],$seize);
 
-				if(! array_key_exists('hubloc_primary',$hubloc)) {
-					$hubloc['hubloc_primary'] = (($hubloc['hubloc_flags'] & 0x0001) ? 1 : 0);
-					$hubloc['hubloc_orphancheck'] = (($hubloc['hubloc_flags'] & 0x0004) ? 1 : 0);
-					$hubloc['hubloc_error'] = (($hubloc['hubloc_status'] & 0x0003) ? 1 : 0);
-					$hubloc['hubloc_deleted'] = (($hubloc['hubloc_flags'] & 0x1000) ? 1 : 0);
-				}
-
-				$arr = array(
-					'guid' => $hubloc['hubloc_guid'],
-					'guid_sig' => $hubloc['hubloc_guid_sig'],
-					'url' => $hubloc['hubloc_url'],
-					'url_sig' => $hubloc['hubloc_url_sig']
-				);
-				if(($hubloc['hubloc_hash'] === $channel['channel_hash']) && intval($hubloc['hubloc_primary']) && ($seize))
-					$hubloc['hubloc_primary'] = 0;
-
-				if(! zot_gethub($arr)) {				
-					unset($hubloc['hubloc_id']);
-					dbesc_array($hubloc);
-		
-					$r = dbq("INSERT INTO hubloc (`" 
-						. implode("`, `", array_keys($hubloc)) 
-						. "`) VALUES ('" 
-						. implode("', '", array_values($hubloc)) 
-						. "')" );
-				}
-			}
 		}
 		logger('import step 4');
 		$_SESSION['import_step'] = 4;
@@ -422,7 +296,7 @@ function import_post(&$a) {
 
 	
 				require_once('include/photo/photo_driver.php');
-				$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
+				$photos = import_xchan_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
 				if($photos[4])
 					$photodate = NULL_DATE;
 				else
@@ -556,23 +430,11 @@ function import_post(&$a) {
 		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
+	if(is_array($data['obj']))
+		import_objs($channel,$data['obj']);
 
-// This needs more work - we also need the term where otype = 6 to link with this, and the terms need to be relocated.	
-//	$objs = $data['obj'];
-//	if($objs) {
-//		foreach($objs as $obj) {
-//			unset($obj['obj_id']);
-//			$obj['channel'] = $channel['channel_id'];
-
-//			dbesc_array($obj);
-//			$r = dbq("INSERT INTO obj (`" 
-//				. implode("`, `", array_keys($obj)) 
-//				. "`) VALUES ('" 
-//				. implode("', '", array_values($obj)) 
-//				. "')" );
-//		}
-//	}
-
+	if(is_array($data['app']))
+		import_apps($channel,$data['app']);
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 

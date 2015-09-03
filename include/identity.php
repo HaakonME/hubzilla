@@ -555,16 +555,26 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['term'] = $r;
 
-	$r = q("select * from obj where obj_channel = %d",
+
+	// add psuedo-column obj_baseurl to aid in relocations
+
+	$r = q("select obj.*, '%s' as obj_baseurl from obj where obj_channel = %d",
+		dbesc(z_root()),
 		intval($channel_id)
 	);
 
 	if($r)
 		$ret['obj'] = $r;
 
+
+	$r = q("select * from app where app_channel = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['app'] = $r;
+
 	if(! $items)
 		return $ret;
-
 
 	$r = q("select * from likes where channel_id = %d",
 		intval($channel_id)

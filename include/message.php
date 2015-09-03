@@ -75,13 +75,16 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 		$handles = $recip_handle . ';' . $sender_handle;
 
+		if($subject)
+			$nsubject = str_rot47(base64url_encode($subject));
+
 		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
 			intval(local_channel()),
 			dbesc($conv_guid),
 			dbesc($sender_handle),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
-			dbesc($subject),
+			dbesc($nsubject),
 			dbesc($handles)
 		);
 
@@ -207,6 +210,12 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			$image_uri = substr($image,strrpos($image,'/') + 1);
 			$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 			$r = q("UPDATE photo SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d and allow_cid = '%s'",
+				dbesc('<' . $recipient . '>'),
+				dbesc($image_uri),
+				intval($channel['channel_id']),
+				dbesc('<' . $channel['channel_hash'] . '>')
+			); 
+			$r = q("UPDATE attach SET allow_cid = '%s' WHERE hash = '%s' AND is_photo = 1 and uid = %d and allow_cid = '%s'",
 				dbesc('<' . $recipient . '>'),
 				dbesc($image_uri),
 				intval($channel['channel_id']),

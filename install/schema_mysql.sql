@@ -108,6 +108,8 @@ CREATE TABLE IF NOT EXISTS `app` (
   `app_price` char(255) NOT NULL DEFAULT '',
   `app_page` char(255) NOT NULL DEFAULT '',
   `app_requires` char(255) NOT NULL DEFAULT '',
+  `app_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `app_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `app_id` (`app_id`),
   KEY `app_name` (`app_name`),
@@ -115,7 +117,9 @@ CREATE TABLE IF NOT EXISTS `app` (
   KEY `app_photo` (`app_photo`),
   KEY `app_version` (`app_version`),
   KEY `app_channel` (`app_channel`),
-  KEY `app_price` (`app_price`)
+  KEY `app_price` (`app_price`),
+  KEY `app_created` (`app_created`),
+  KEY `app_edited` (`app_edited`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `attach` (
@@ -823,6 +827,11 @@ CREATE TABLE IF NOT EXISTS `obj` (
   `obj_type` int(10) unsigned NOT NULL DEFAULT '0',
   `obj_obj` char(255) NOT NULL DEFAULT '',
   `obj_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `obj_term` char(255) NOT NULL DEFAULT '',
+  `obj_url` char(255) NOT NULL DEFAULT '',
+  `obj_imgurl` char(255) NOT NULL DEFAULT '',
+  `obj_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `obj_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -832,6 +841,11 @@ CREATE TABLE IF NOT EXISTS `obj` (
   KEY `obj_page` (`obj_page`),
   KEY `obj_type` (`obj_type`),
   KEY `obj_channel` (`obj_channel`),
+  KEY `obj_term` (`obj_term`),
+  KEY `obj_url` (`obj_url`),
+  KEY `obj_imgurl` (`obj_imgurl`),
+  KEY `obj_created` (`obj_created`),
+  KEY `obj_edited` (`obj_edited`),
   KEY `obj_obj` (`obj_obj`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

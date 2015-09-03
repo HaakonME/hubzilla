@@ -557,14 +557,14 @@ function guess_image_type($filename, $headers = '') {
 
 }
 
-function import_profile_photo($photo,$xchan,$thing = false) {
+function import_xchan_photo($photo,$xchan,$thing = false) {
 
 	$a = get_app();
 
 	$flags = (($thing) ? PHOTO_THING : PHOTO_XCHAN);
 	$album = (($thing) ? 'Things' : 'Contact Photos');
 
-	logger('import_profile_photo: updating channel photo from ' . $photo . ' for ' . $xchan, LOGGER_DEBUG);
+	logger('import_xchan_photo: updating channel photo from ' . $photo . ' for ' . $xchan, LOGGER_DEBUG);
 
 	if($thing)
 		$hash = photo_new_resource();
@@ -650,7 +650,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 		$micro = $a->get_baseurl() . '/photo/' . $hash . '-6';
 	}
 	else {
-		logger('import_profile_photo: invalid image from ' . $photo);	
+		logger('import_xchan_photo: invalid image from ' . $photo);	
 		$photo_failure = true;
 	}
 	if($photo_failure) {

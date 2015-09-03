@@ -342,7 +342,9 @@ function app_store($arr) {
 	$darray['app_page']     = ((x($arr,'page'))     ? escape_tags($arr['page']) : '');
 	$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 
-	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page, app_requires ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+	$created = datetime_convert();
+
+	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page, app_requires, app_created, app_edited ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($darray['app_id']),
 		dbesc($darray['app_sig']),
 		dbesc($darray['app_author']),
@@ -355,7 +357,9 @@ function app_store($arr) {
 		dbesc($darray['app_addr']),
 		dbesc($darray['app_price']),
 		dbesc($darray['app_page']),
-		dbesc($darray['app_requires'])
+		dbesc($darray['app_requires']),
+		dbesc($created),
+		dbesc($created)
 	);
 	if($r) {
 		$ret['success'] = true;
@@ -393,7 +397,9 @@ function app_update($arr) {
 	$darray['app_page']     = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
 	$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 
-	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s' where app_id = '%s' and app_channel = %d",
+	$edited = datetime_convert();
+
+	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s', app_edited = '%s' where app_id = '%s' and app_channel = %d",
 		dbesc($darray['app_sig']),
 		dbesc($darray['app_author']),
 		dbesc($darray['app_name']),
@@ -405,6 +411,7 @@ function app_update($arr) {
 		dbesc($darray['app_price']),
 		dbesc($darray['app_page']),
 		dbesc($darray['app_requires']),
+		dbesc($edited),
 		dbesc($darray['app_id']),
 		intval($darray['app_channel'])
 	);

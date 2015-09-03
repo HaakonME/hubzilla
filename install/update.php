@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1150 );
+define( 'UPDATE_VERSION' , 1151 );
 
 /**
  *
@@ -1776,3 +1776,11 @@ function update_r1149() {
     return UPDATE_FAILED;
 
 }
+
+function update_r1150() {
+
+	// hubzilla update does not apply here, but we're keeping the numbers in sync
+	return UPDATE_SUCCESS;
+
+}
+

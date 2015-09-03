@@ -161,7 +161,6 @@ function import_post(&$a) {
 	}
 
 
-
 	if($completed < 3) {
 
 		if($data['photo']) {
@@ -169,8 +168,8 @@ function import_post(&$a) {
 			import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id(),$channel['channel_id']);
 		}
 
-		if(is_array($data['profiles']))
-			import_profiles($channel,$data['profiles']);
+		if(is_array($data['profile']))
+			import_profiles($channel,$data['profile']);
 
 		logger('import step 3');
 		$_SESSION['import_step'] = 3;

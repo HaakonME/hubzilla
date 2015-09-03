@@ -1750,8 +1750,7 @@ function update_r1151() {
 		}
 	}
 
-	if ($r3)
-		return UPDATE_SUCCESS;
-    return UPDATE_FAILED;
+
+	return UPDATE_SUCCESS;
 
 }

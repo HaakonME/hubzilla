@@ -72,10 +72,6 @@ function notags($string) {
 //	return(str_replace(array("<",">","\xBA","\xBC","\xBE"), array('[',']','','',''), $string));
 }
 
-// use this on "body" or "content" input where angle chars shouldn't be removed,
-// and allow them to be safely displayed.
-
-
 
 /**
  * use this on "body" or "content" input where angle chars shouldn't be removed,

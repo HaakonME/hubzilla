@@ -1,6 +1,15 @@
 .app-container {
 	float: left;
 	width: 125px;
-	height: 200px;
+	height: 180px;
 	padding: 20px;
+}
+
+.app-detail {
+	height: 140px;
+	overflow: none;
+}
+
+.app-tools {
+	margin-bottom: 0;
 }

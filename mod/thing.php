@@ -109,6 +109,15 @@ function thing_init(&$a) {
 		);
 
 		info( t('Thing updated') . EOL);
+
+		$r = q("select * from obj where obj_channel = %d and obj_obj = '%s' limit 1",
+			intval(local_channel()),
+			dbesc($term_hash)
+		);
+		if($r) {
+			build_sync_packet(0, array('obj' => $r));
+		}
+
 		return;
 	}
 
@@ -157,6 +166,14 @@ function thing_init(&$a) {
 
 	info( t('Thing added'));
 	
+	$r = q("select * from obj where obj_channel = %d and obj_obj = '%s' limit 1",
+		intval(local_channel()),
+		dbesc($hash)
+	);
+	if($r) {
+		build_sync_packet(0, array('obj' => $r));
+	}
+
 	if($activity) {
 		$arr = array();
 		$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $url));
@@ -309,6 +326,10 @@ function thing_content(&$a) {
 			intval(TERM_OBJ_THING),
 			intval(local_channel())
 		);
+
+		$r[0]['obj_deleted'] = 1;
+
+		build_sync_packet(0,array('obj' => $r));
 
 		return $o;
 	}

@@ -2841,6 +2841,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
  */
 function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
+	require_once('include/import.php');
+
 	/** @FIXME this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic. */
 
 	$result = array();
@@ -2872,6 +2874,10 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					set_pconfig($channel['channel_id'],$cat,$k,$v);
 			}
 		}
+
+		if(array_key_exists('obj',$arr) && $arr['obj'])
+			sync_objs($channel,$arr['obj']);
+
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 			if(array_key_exists('channel_page_flags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {

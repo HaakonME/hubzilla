@@ -6,8 +6,9 @@
 }
 
 .app-detail {
-	height: 140px;
-	overflow: none;
+	height: 130px;
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 
 .app-tools {

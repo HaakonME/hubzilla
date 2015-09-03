@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1151 );
+define( 'UPDATE_VERSION' , 1152 );
 
 /**
  *
@@ -1718,16 +1718,6 @@ function update_r1148() {
     $r1 = q("alter table likes add i_mid char(255) not null default '' ");
     $r2 = q("create index i_mid on likes ( i_mid ) ");
 
-	$r3 = q("select likes.*, item.mid from from likes left join item on likes.iid = item.id");
-	if($r3) {
-		foreach($r3 as $rr) {
-			q("update likes set i_mid = '%s' where id = $d",
-				dbesc($rr['mid']),
-				intval($rr['id'])
-			);
-		}
-	}
-
     if($r1 && $r2)
         return UPDATE_SUCCESS;
     return UPDATE_FAILED;
@@ -1748,3 +1738,20 @@ function update_r1150() {
 
 }
 
+function update_r1151() {
+
+	$r3 = q("select likes.*, item.mid from likes left join item on likes.iid = item.id");
+	if($r3) {
+		foreach($r3 as $rr) {
+			q("update likes set i_mid = '%s' where id = $d",
+				dbesc($rr['mid']),
+				intval($rr['id'])
+			);
+		}
+	}
+
+	if ($r3)
+		return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+
+}

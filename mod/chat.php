@@ -62,10 +62,12 @@ function chat_post(&$a) {
 
 	chatroom_create($channel,$arr);
 
-	$x = q("select cr_id from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
+	$x = q("select * from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
 		dbesc($room),
 		intval(local_channel())
 	);
+
+	create_sync_packet(0, array['chatroom'] => $x);
 
 	if($x)
 		goaway(z_root() . '/chat/' . $channel['channel_address'] . '/' . $x[0]['cr_id']);

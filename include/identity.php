@@ -566,12 +566,17 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['obj'] = $r;
 
-
 	$r = q("select * from app where app_channel = %d",
 		intval($channel_id)
 	);
 	if($r)
 		$ret['app'] = $r;
+
+	$r = q("select * from chatroom where cr_uid = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['chatroom'] = $r;
 
 	if(! $items)
 		return $ret;

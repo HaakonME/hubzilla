@@ -435,6 +435,9 @@ function import_post(&$a) {
 	if(is_array($data['app']))
 		import_apps($channel,$data['app']);
 
+	if(is_array($data['chatroom']))
+		import_chatrooms($channel,$data['chatroom']);
+
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 
 	if($import_posts && array_key_exists('item',$data) && $data['item']) {

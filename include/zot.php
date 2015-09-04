@@ -2881,6 +2881,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		if(array_key_exists('app',$arr) && $arr['app'])
 			sync_apps($channel,$arr['app']);
 
+		if(array_key_exists('chatroom',$arr) && $arr['chatroom'])
+			sync_apps($channel,$arr['chatroom']);
+
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 			if(array_key_exists('channel_page_flags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
 				$arr['channel']['channel_removed'] = (($arr['channel']['channel_pageflags'] & 0x8000) ? 1 : 0);

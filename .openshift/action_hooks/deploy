@@ -136,3 +136,27 @@ ln -sf ${OPENSHIFT_DATA_DIR}.htaccess ${OPENSHIFT_REPO_DIR}.htaccess
 echo ".htaccess symlink created"
 
 ####
+
+echo "Check for the poller at .openshift/cron/minutely/poller , if not created - create it"
+
+if [ ! -f ${OPENSHIFT_REPO_DIR}.openshift/cron/minutely/poller ]; then
+printf '%s\n' '#!/bin/bash' 'if [ ! -f $OPENSHIFT_DATA_DIR/last_run ]; then' '  touch $OPENSHIFT_DATA_DIR/last_run' 'fi' 'if [[ $(find $OPENSHIFT_DATA_DIR/last_run -mmin +4) ]]; then #run every 5 mins' '  rm -f $OPENSHIFT_DATA_DIR/last_run' '  touch $OPENSHIFT_DATA_DIR/last_run' '  # The command(s) that you want to run every 5 minutes' 'cd /var/lib/openshift/${OPENSHIFT_APP_UUID}/app-root/repo; /opt/rh/php54/root/usr/bin/php include/poller.php' 'fi' >${OPENSHIFT_REPO_DIR}.openshift/cron/minutely/poller
+echo "Done creating file .openshift/cron/minutely/poller"
+
+else
+
+echo "The poller already exists"
+
+fi
+
+####
+
+# Set permissions on the poller script to make it executable.
+
+echo "Now chmod 777 -R poller"
+
+chmod -R 777 ${OPENSHIFT_REPO}.openshift/cron/minutely/poller
+
+echo "chmod done, permissions set to 777 on poller script."
+
+####

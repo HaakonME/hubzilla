@@ -598,7 +598,9 @@ function identity_basic_export($channel_id, $items = false) {
 
 	/** @warning this may run into memory limits on smaller systems */
 
-	$r = q("select * from item where (item_flags & %d)>0 and not (item_restrict & %d)>0 and uid = %d order by created",
+	/** Don't export linked resource items. we'll have to pull those out separately. */
+
+	$r = q("select * from item where (item_flags & %d) > 0 and not (item_restrict & %d) > 0 and uid = %d and resource_type = '' order by created",
 		intval(ITEM_WALL),
 		intval(ITEM_DELETED),
 		intval($channel_id)
@@ -635,7 +637,7 @@ function identity_export_year($channel_id,$year,$month = 0) {
 	else
 		$maxdate = datetime_convert('UTC','UTC',$year+1 . '-01-01 00:00:00');
 
-	$r = q("select * from item where (item_flags & %d) > 0 and (item_restrict & %d) = 0 and uid = %d and created >= '%s' and created < '%s' order by created ",
+	$r = q("select * from item where (item_flags & %d) > 0 and (item_restrict & %d) = 0 and uid = %d and created >= '%s' and created < '%s' and resource_type = '' order by created ",
 		intval(ITEM_WALL),
 		intval(ITEM_DELETED),
 		intval($channel_id),

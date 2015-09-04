@@ -349,7 +349,7 @@ function sync_apps($channel,$apps) {
 				intval($channel['channel_id'])
 			);
 			if($x) {
-				if($x[0]['app_edited'] >= $obj['app_edited'])
+				if($x[0]['app_edited'] >= $app['app_edited'])
 					continue;
 				$exists = true;
 			}
@@ -372,6 +372,101 @@ function sync_apps($channel,$apps) {
 					. implode("`, `", array_keys($app)) 
 					. "`) VALUES ('" 
 					. implode("', '", array_values($app)) 
+					. "')" 
+				);
+			}
+		}
+	}
+}
+
+
+
+function import_chatrooms($channel,$chatrooms) {
+
+	if($channel && $chatrooms) {
+		foreach($chatrooms as $chatroom) {
+
+			if(! $chatroom['cr_name'])
+				continue;
+
+			unset($chatroom['cr_id']);
+			unset($chatroom['cr_aid']);
+			unset($chatroom['cr_uid']);
+
+			$chatroom['cr_aid'] = $channel['channel_account_id'];
+			$chatroom['cr_uid'] = $channel['channel_id'];
+
+			dbesc_array($chatroom);
+			$r = dbq("INSERT INTO chatroom (`" 
+				. implode("`, `", array_keys($chatroom)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($chatroom)) 
+				. "')" 
+			);
+		}
+	}
+}
+
+
+
+function sync_chatrooms($channel,$chatrooms) {
+
+	if($channel && $chatrooms) {
+		foreach($chatrooms as $chatroom) {
+
+			if(! $chatroom['cr_name'])
+				continue;
+
+			if(array_key_exists('cr_deleted',$chatroom) && $chatroom['cr_deleted']) {
+                q("delete from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
+                    dbesc($chatroom['cr_name']),
+                    intval($channel['channel_id'])
+                );
+                continue;
+            }
+
+
+			unset($chatroom['cr_id']);
+			unset($chatroom['cr_aid']);
+			unset($chatroom['cr_uid']);
+
+			if(! $chatroom['cr_created'] || $chatroom['cr_created'] === NULL_DATE)
+				$chatroom['cr_created'] = datetime_convert();
+			if(! $chatroom['cr_edited'] || $chatroom['cr_edited'] === NULL_DATE)
+				$chatroom['cr_edited'] = datetime_convert();
+
+			$chatroom['cr_aid'] = $channel['channel_account_id'];
+			$chatroom['cr_uid'] = $channel['channel_id'];
+
+			$exists = false;
+
+			$x = q("select * from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
+				dbesc($chatroom['cr_name']),
+				intval($channel['channel_id'])
+			);
+			if($x) {
+				if($x[0]['cr_edited'] >= $chatroom['cr_edited'])
+					continue;
+				$exists = true;
+			}
+			$name = $chatroom['cr_name'];
+
+			if($exists) {
+				foreach($chatroom as $k => $v) {
+					$r = q("UPDATE chatroom SET `%s` = '%s' WHERE cr_name = '%s' AND cr_uid = %d",
+						dbesc($k),
+						dbesc($v),
+						dbesc($name),
+						intval($channel['channel_id'])
+					);
+				}
+			}
+			else {
+				dbesc_array($chatroom);
+				$r = dbq("INSERT INTO chatroom (`" 
+					. implode("`, `", array_keys($chatroom)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($chatroom)) 
 					. "')" 
 				);
 			}

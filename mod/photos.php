@@ -85,7 +85,7 @@ function photos_post(&$a) {
 
 	$owner_record = $s[0];	
 
-	$acl = AccessList($a->data['channel']);
+	$acl = new AccessList($a->data['channel']);
 
 	if((argc() > 3) && (argv(2) === 'album')) {
 

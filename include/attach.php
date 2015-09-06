@@ -405,6 +405,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	require_once('include/photos.php');
 
+
+	call_hooks('photo_upload_begin',$arr);
+
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
 	$sql_options = '';
@@ -451,15 +454,28 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$hash     = $arr['resource_id'];
 	}
 	elseif($options !== 'update') {
-		if(! x($_FILES,'userfile')) {
-			$ret['message'] = t('No source file.');
-			return $ret;
+		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
+
+        call_hooks('photo_upload_file',$f);
+		call_hooks('attach_upload_file',$f);
+
+        if (x($f,'src') && x($f,'filesize')) {
+            $src      = $f['src'];
+            $filename = $f['filename'];
+            $filesize = $f['filesize'];
+            $type     = $f['type'];
+
+        } else {
+
+			if(! x($_FILES,'userfile')) {
+				$ret['message'] = t('No source file.');
+				return $ret;
+			}
+
+			$src      = $_FILES['userfile']['tmp_name'];
+			$filename = basename($_FILES['userfile']['name']);
+			$filesize = intval($_FILES['userfile']['size']);
 		}
-
-		$src      = $_FILES['userfile']['tmp_name'];
-		$filename = basename($_FILES['userfile']['name']);
-		$filesize = intval($_FILES['userfile']['size']);
-
 	}
 
 	$existing_size = 0;
@@ -615,6 +631,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		if(($maxfilesize) && ($filesize > $maxfilesize)) {
 			$ret['message'] = sprintf( t('File exceeds size limit of %d'), $maxfilesize);
 			@unlink($src);
+			call_hooks('photo_upload_end',$ret);
 			return $ret;
 		}
 
@@ -627,10 +644,11 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
 				$ret['message'] = upgrade_message(true) . sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."), $limit / 1024000);
 				@unlink($src);
+				call_hooks('photo_upload_end',$ret);
 				return $ret;
 			}
 		}
-		$mimetype = z_mime_content_type($filename);
+		$mimetype = ((isset($type) && $type) ? $type : z_mime_content_type($filename));
 	}
 
 	$os_basepath = 'store/' . $channel['channel_address'] . '/' ;
@@ -657,7 +675,6 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$edited = $arr['edited'];
 	else
 		$edited = $created;
-
 
 	if($options === 'replace') {
 		$r = q("update attach set filename = '%s', filetype = '%s', folder = '%s', filesize = %d, os_storage = %d, is_photo = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
@@ -714,6 +731,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	else {
+
 		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, folder, filesize, revision, os_storage, is_photo, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($channel['channel_account_id']),
@@ -738,6 +756,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	if($is_photo) {
+
 		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
@@ -772,6 +791,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if(! $r) {
 		$ret['message'] = t('File upload failed. Possible system limit or action terminated.');
+		call_hooks('photo_upload_end',$ret);
 		return $ret;
 	}
 
@@ -784,13 +804,17 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if(! $r) {
 		$ret['message'] = t('Stored file could not be verified. Upload failed.');
+		call_hooks('photo_upload_end',$ret);
 		return $ret;
 	}
 
 
 	$ret['success'] = true;
 	$ret['data'] = $r[0];
-
+	if(! $is_photo) {
+		// This would've been called already with a success result in photos_upload() if it was a photo.
+		call_hooks('photo_upload_end',$ret);
+	}
 	return $ret;
 }
 

@@ -25,7 +25,7 @@ Edit /etc/fstab
  to include your cloud directory by adding
 
 [code]
-[baseurl]/cloud/ /mount/point davfs user,noauto,uid=&lt;DesktopUser&gt;,file_mode=600,dir_mode=700 0 1
+[baseurl]/dav/ /mount/point davfs user,noauto,uid=&lt;DesktopUser&gt;,file_mode=600,dir_mode=700 0 1
 [/code]
 
 Where [baseurl] is the URL of your hub, /mount/point is the location you want to mount the cloud, and &lt;DesktopUser&gt; is the user you log in to one your computer.  Note that if you are mounting as a normal user (not root) the mount point must be in your home directory.

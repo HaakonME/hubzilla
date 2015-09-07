@@ -3322,7 +3322,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 		dbesc($title),
 		dbesc($body),
 		intval($item_wall),
-		$intval($item_origin),
+		intval($item_origin),
 		intval($item_id)
 	);
 

@@ -2,10 +2,10 @@
 Hubzilla
 ========
 
-###Websites. Redefined.
+Websites. Redefined.
+--------------------
 
-
-![Hubzilla](images/ghash-32.png)
+![Hubzilla](images/hubzilla_house_arrows.png)
 
 **What are Hubs?**
 

@@ -256,7 +256,7 @@ function item_permissions_sql($owner_id, $remote_observer = null) {
 			$regexop = db_getfunc('REGEXP');
 			$sql = sprintf(
 				" AND ( NOT (deny_cid like '%s' OR deny_gid $regexop '%s')
-				  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '') )
+				  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '' AND item_private = 0 ) )
 				  )
 				",
 				dbesc(protect_sprintf( '%<' . $observer . '>%')),
@@ -291,7 +291,7 @@ function public_permissions_sql($observer_hash) {
 		$regexop = db_getfunc('REGEXP');
 		$sql = sprintf(
 			" OR (( NOT (deny_cid like '%s' OR deny_gid $regexop '%s')
-			  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '' AND item_private = 0 ) )
 			  ))
 			",
 			dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),

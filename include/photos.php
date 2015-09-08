@@ -226,10 +226,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 
-	$mid = item_message_id();
-
 	// Create item container
-
 
 	$item_hidden = (($visible) ? 0 : 1 );
 

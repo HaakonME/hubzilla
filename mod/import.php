@@ -438,6 +438,13 @@ function import_post(&$a) {
 	if(is_array($data['chatroom']))
 		import_chatrooms($channel,$data['chatroom']);
 
+	if(is_array($data['event']))
+		import_events($channel,$data['event']);
+
+	if(is_array($data['event_item']))
+		import_items($channel,$data['event_item']);
+	
+
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 
 	if($import_posts && array_key_exists('item',$data) && $data['item'])

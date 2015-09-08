@@ -2882,7 +2882,13 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			sync_apps($channel,$arr['app']);
 
 		if(array_key_exists('chatroom',$arr) && $arr['chatroom'])
-			sync_apps($channel,$arr['chatroom']);
+			sync_chatrooms($channel,$arr['chatroom']);
+
+		if(array_key_exists('event',$arr) && $arr['event'])
+			sync_events($channel,$arr['event']);
+
+		if(array_key_exists('event_item',$arr) && $arr['event_item'])
+			sync_items($channel,$arr['event_item']);
 
 		if(array_key_exists('item',$arr) && $arr['item'])
 			sync_items($channel,$arr['item']);

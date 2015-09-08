@@ -540,6 +540,81 @@ function import_item_ids($channel,$itemids) {
 	}
 }
 
+function import_events($channel,$events) {
+
+	if($channel && $events) {
+		foreach($events as $event) {
+			unset($event['id']);
+			$event['aid'] = $channel['channel_account_id'];
+			$event['uid'] = $channel['channel_id'];
+
+			dbesc_array($event);
+			$r = dbq("INSERT INTO event (`" 
+				. implode("`, `", array_keys($event)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($event)) 
+				. "')" 
+			);
+		}
+	}
+}
+
+
+function sync_events($channel,$events) {
+
+	if($channel && $events) {
+		foreach($events as $event) {
+
+			if((! $event['event_hash']) || (! $event['start']))
+				continue;
+
+			if($event['event_deleted']) {
+				$r = q("delete from event where event_hash = '%s' and uid = %d limit 1",
+					dbesc($event['event_hash']),
+					intval($channel['channel_id'])
+				);	
+				continue;
+			}
+
+			unset($event['id']);
+			$event['aid'] = $channel['channel_account_id'];
+			$event['uid'] = $channel['channel_id'];
+
+			$exists = false;
+
+			$x = q("select * from event where event_hash = '%s' and uid = %d limit 1",
+				dbesc($event['event_hash']),
+				intval($channel['channel_id'])
+			);
+			if($x) {
+				if($x[0]['edited'] >= $event['edited'])
+					continue;
+				$exists = true;
+			}
+
+			if($exists) {
+				foreach($event as $k => $v) {
+					$r = q("UPDATE event SET `%s` = '%s' WHERE event_hash = '%s' AND uid = %d",
+						dbesc($k),
+						dbesc($v),
+						dbesc($event['event_hash']),
+						intval($channel['channel_id'])
+					);
+				}
+			}
+			else {
+				dbesc_array($event);
+				$r = dbq("INSERT INTO event (`" 
+					. implode("`, `", array_keys($event)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($event)) 
+					. "')" 
+				);
+			}
+		}
+	}
+}
+
 
 
 

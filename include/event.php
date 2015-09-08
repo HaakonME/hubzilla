@@ -376,6 +376,20 @@ function event_addtocal($item_id, $uid) {
 				intval($channel['channel_id'])
 			);
 
+			$item['resource_id'] = $event['event_hash'];
+			$item['resource_type'] = 'event';
+
+			$i = array($item);
+			xchan_query($i);
+			$sync_item = fetch_post_tags($i);
+			$z = q("select * from event where event_hash = '%s' and uid = %d limit 1",
+				dbesc($event['event_hash']),
+				intval($channel['channel_id'])
+			);
+			if($z) {
+				build_sync_packet($channel['channel_id'],array('event_item' => array(encode_item($sync_item[0],true)),'event' => $z));
+			}
+
 			return true;
 		}
 	}

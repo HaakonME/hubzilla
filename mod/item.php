@@ -805,6 +805,19 @@ function item_post(&$a) {
 
 		update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
 
+		if(! $parent) {
+			$r = q("select * from item where id = %d",
+				intval($post_id)
+			);
+			if($r) {
+				xchan_query($r);
+				$sync_item = fetch_post_tags($r);
+				$rid = q("select * from item_id where iid = %d",
+					intval($post_id)
+				);
+				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+			}
+		}
 		if(! $nopush)
 			proc_run('php', "include/notifier.php", 'edit_post', $post_id);
 

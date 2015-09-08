@@ -205,18 +205,22 @@ function events_post(&$a) {
 
 	$item_id = event_store_item($datarray,$event);
 
-	if($r) {
-		xchan_query($r);
-		$sync_item = fetch_post_tags($r);
-		$z = q("select * from event where event_hash = '%s' and uid = %d limit 1",
-			dbesc($r[0]['resource_id']),
-			intval($channel['channel_id'])
+	if($item_id) {
+		$r = q("select * from item where id = %d",
+			intval($item_id)
 		);
-		if($z) {
-			build_sync_packet($channel['channel_id'],array('event_item' => array(encode_item($sync_item[0],true)),'event' => $z));
+		if($r) {
+			xchan_query($r);
+			$sync_item = fetch_post_tags($r);
+			$z = q("select * from event where event_hash = '%s' and uid = %d limit 1",
+				dbesc($r[0]['resource_id']),
+				intval($channel['channel_id'])
+			);
+			if($z) {
+				build_sync_packet($channel['channel_id'],array('event_item' => array(encode_item($sync_item[0],true)),'event' => $z));
+			}
 		}
 	}
-
 
 	if($share)
 		proc_run('php',"include/notifier.php","event","$item_id");

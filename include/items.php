@@ -4632,10 +4632,12 @@ function zot_feed($uid,$observer_hash,$arr) {
 
 	$items = array();
 
-	/** @FIXME fix this part for PostgreSQL */
+	/** @FIXME re-unite these SQL statements. There is no need for them to be separate. The mySQL is convoluted with misuse of group by. As it stands, there is a slight difference where the postgres version doesn't remove the duplicate parents up to 100. In practice this doesn't matter. It could be made to match behavior by adding "distinct on (parent) " to the front of the selection list, at a not-worth-it performance penalty (page temp results to disk). duplicates are still ignored in the in() clause, you just get less than 100 parents if there are many children. */
 
 	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
-		return array();
+		$groupby = '';
+	} else {
+		$groupby = 'GROUP BY parent';
 	}
 
 	$item_normal = item_normal();
@@ -4645,7 +4647,7 @@ function zot_feed($uid,$observer_hash,$arr) {
 			WHERE uid != %d
 			$item_normal
 			AND item_wall = 1
-			and item_private = 0 $sql_extra GROUP BY parent ORDER BY created ASC $limit",
+			and item_private = 0 $sql_extra $groupby ORDER BY created ASC $limit",
 			intval($uid)
 		);
 	}
@@ -4653,7 +4655,7 @@ function zot_feed($uid,$observer_hash,$arr) {
 		$r = q("SELECT parent, created, postopts from item
 			WHERE uid = %d $item_normal
 			AND item_wall = 1
-			$sql_extra GROUP BY parent ORDER BY created ASC $limit",
+			$sql_extra $groupby ORDER BY created ASC $limit",
 			intval($uid)
 		);
 	}

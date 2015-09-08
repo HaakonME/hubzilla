@@ -578,6 +578,25 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['chatroom'] = $r;
 
+
+	$r = q("select * from event where uid = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['event'] = $r;
+
+	$r = q("select * from item where resource_type = 'event' and uid = %d",
+		intval($channel_id)
+	);
+	if($r) {
+		$ret['event_item'] = array();
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		foreach($r as $rr)
+			$ret['event_item'][] = encode_item($rr,true);
+	}
+
+
 	if(! $items)
 		return $ret;
 

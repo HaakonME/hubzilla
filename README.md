@@ -1,6 +1,6 @@
 
-Hubzilla
-========
+Hubzilla - Community Server
+===========================
 
 Websites. Redefined.
 --------------------

@@ -130,7 +130,7 @@ function profile_photo_post(&$a) {
 		if($r) {
 
 			$base_image = $r[0];
-			$base_image['data'] = dbunescbin($base_image['data']);
+			$base_image['data'] = (($r[0]['os_storage']) ? @file_get_contents($base_image['data']) : dbunescbin($base_image['data']));
 		
 			$im = photo_factory($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
@@ -332,7 +332,7 @@ function profile_photo_content(&$a) {
 			goaway($a->get_baseurl() . '/profiles');
 		}
 
-		$r = q("SELECT `data`, `type` FROM photo WHERE id = %d and uid = %d limit 1",
+		$r = q("SELECT `data`, `type`, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
 			intval($r[0]['id']),
 			intval(local_channel())
 
@@ -342,9 +342,31 @@ function profile_photo_content(&$a) {
 			return;
 		}
 
-		$ph = photo_factory(dbunescbin($r[0]['data']), $r[0]['type']);
-		// go ahead as if we have just uploaded a new photo to crop
-		profile_photo_crop_ui_head($a, $ph);
+		if(intval($r[0]['os_storage']))
+			$data = @file_get_contents($r[0]['data']);
+		else
+			$data = dbunescbin($r[0]['data']); 
+
+		$ph = photo_factory($data, $r[0]['type']);
+		$smallest = 0;
+		if($ph->is_valid()) {
+			// go ahead as if we have just uploaded a new photo to crop
+			$i = q("select resource_id, scale from photo where resource_id = '%s' and uid = %d order by scale",
+				dbesc($r[0]['resource_id']),
+				intval(local_channel())
+			);
+
+			if($i) {
+				$hash = $i[0]['resource_id'];
+				foreach($i as $ii) {
+					if(intval($ii['scale']) < 2) {
+						$smallest = intval($ii['scale']);
+					}
+				}
+            }
+        }
+ 
+		profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
 	}
 
 	$profiles = q("select id, profile_name as name, is_default from profile where uid = %d",

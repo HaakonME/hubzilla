@@ -64,6 +64,7 @@ function mitem_post(&$a) {
 		$_REQUEST['mitem_id'] = $mitem_id;
 		$r = menu_edit_item($_REQUEST['menu_id'],$uid,$_REQUEST);	
 		if($r) {
+			menu_sync_packet($uid,get_observer_hash(),$_REQUEST['menu_id']);
 			//info( t('Menu element updated.') . EOL);
 			goaway(z_root() . '/mitem/' . $_REQUEST['menu_id'] . (($a->is_sys) ? '?f=&sys=1' : ''));
 		}
@@ -74,6 +75,7 @@ function mitem_post(&$a) {
 	else {
 		$r = menu_add_item($_REQUEST['menu_id'],$uid,$_REQUEST);	
 		if($r) {
+			menu_sync_packet($uid,get_observer_hash(),$_REQUEST['menu_id']);
 			//info( t('Menu element added.') . EOL);
 			if($_REQUEST['submit']) {
 				goaway(z_root() . '/menu' . (($a->is_sys) ? '?f=&sys=1' : ''));
@@ -202,7 +204,9 @@ function mitem_content(&$a) {
 			$lockstate = (($mitem['allow_cid'] || $mitem['allow_gid'] || $mitem['deny_cid'] || $mitem['deny_gid']) ? 'lock' : 'unlock');
 
 			if(argc() == 4 && argv(3) == 'drop') {
+				menu_sync_packet($uid,get_observer_hash(),$mitem['mitem_menu_id']);
 				$r = menu_del_item($mitem['mitem_menu_id'], $uid, intval(argv(2)));
+				menu_sync_packet($uid,get_observer_hash(),$mitem['mitem_menu_id']);
 				if($r)
 					info( t('Menu item deleted.') . EOL);
 				else

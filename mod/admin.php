@@ -84,48 +84,6 @@ function admin_content(&$a) {
 		return login(false);
 	}
 
-	/*
-	 * Side bar links
-	 */
-
-	// array( url, name, extra css classes )
-
-	$aside = array(
-		'site'      => array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
-		'users'     => array($a->get_baseurl(true)."/admin/users/", t("Accounts") , "users"),
-		'channels'  => array($a->get_baseurl(true)."/admin/channels/", t("Channels") , "channels"),
-		'plugins'   => array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
-		'themes'    => array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
-		'queue'     => array(z_root() . '/admin/queue', t('Inspect queue'), 'queue'),
-//		'hubloc'    => array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
-		'profs'     => array(z_root() . '/admin/profs', t('Profile Config'), 'profs'),
-		'dbsync'    => array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
-
-	);
-
-	/* get plugins admin page */
-
-	$r = q("SELECT * FROM addon WHERE plugin_admin = 1");
-	$aside['plugins_admin'] = array();
-	foreach ($r as $h){
-		$plugin = $h['name'];
-		$aside['plugins_admin'][] = array($a->get_baseurl(true) . '/admin/plugins/' . $plugin, $plugin, 'plugin');
-		// temp plugins with admin
-		$a->plugins_admin[] = $plugin;
-	}
-
-	$aside['logs'] = Array($a->get_baseurl(true)."/admin/logs/", t("Logs"), "logs");
-
-	$t = get_markup_template("admin_aside.tpl");
-	$a->page['aside'] .= replace_macros( $t, array(
-			'$admin' => $aside, 
-			'$admtxt' => t('Admin'),
-			'$plugadmtxt' => t('Plugin Features'),
-			'$logtxt' => t('Logs'),
-			'$h_pending' => t('User registrations waiting for confirmation'),
-			'$admurl'=> $a->get_baseurl(true)."/admin/"
-	));
-
 
 	/*
 	 * Page content

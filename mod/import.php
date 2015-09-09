@@ -443,6 +443,9 @@ function import_post(&$a) {
 
 	if(is_array($data['event_item']))
 		import_items($channel,$data['event_item']);
+
+	if(is_array($data['menu']))
+		import_menus($channel,$data['menu']);
 	
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);

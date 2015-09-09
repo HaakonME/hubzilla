@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/menu.php');
 
 function import_channel($channel) {
 
@@ -49,6 +50,11 @@ function import_channel($channel) {
 	unset($channel['channel_id']);
 	$channel['channel_account_id'] = get_account_id();
 	$channel['channel_primary'] = (($seize) ? 1 : 0);
+
+	if($channel['channel_pageflags'] & PAGE_ALLOWCODE) {
+		if(! is_site_admin())
+			$channel['channel_pageflags'] = $channel['channel_pageflags'] ^ PAGE_ALLOWCODE;
+	}
 	
 	dbesc_array($channel);
 
@@ -479,8 +485,19 @@ function sync_chatrooms($channel,$chatrooms) {
 function import_items($channel,$items) {
 
 	if($channel && $items) {
+		$allow_code = false;
+		$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id 
+			where channel_id = %d limit 1",
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
+				$allow_code = true;
+			}
+		}
+
 		foreach($items as $i) {
-			$item = get_item_elements($i);
+			$item = get_item_elements($i,$allow_code);
 			if(! $item)
 				continue;
 
@@ -616,7 +633,132 @@ function sync_events($channel,$events) {
 }
 
 
+function import_menus($channel,$menus) {
 
+	if($channel && $menus) {
+		foreach($menus as $menu) {
+			$m = array();
+			$m['menu_channel_id'] = $channel['channel_id'];
+			$m['menu_name'] = $menu['pagetitle'];
+			$m['menu_desc'] = $menu['desc'];
+			if($menu['created'])
+				$m['menu_created'] = datetime_convert($menu['created']);
+			if($menu['edited'])
+				$m['menu_edited'] = datetime_convert($menu['edited']);
+
+			$m['menu_flags'] = 0;
+			if($menu['flags']) {
+				if(in_array('bookmark',$menu['flags']))
+					$m['menu_flags'] |= MENU_BOOKMARK;
+				if(in_array('system',$menu['flags']))
+					$m['menu_flags'] |= MENU_SYSTEM;
+
+			}
+
+			$menu_id = menu_create($m);
+
+			if($menu_id) {
+				if(is_array($menu['items'])) {
+					foreach($menu['items'] as $it) {
+						$mitem = array();
+
+						$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
+						$mitem['mitem_desc'] = escape_tags($it['desc']);
+						$mitem['mitem_order'] = intval($it['order']);
+						if(is_array($it['flags'])) {
+							$mitem['mitem_flags'] = 0;
+							if(in_array('zid',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_ZID;
+							if(in_array('new-window',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_NEWWIN;
+							if(in_array('chatroom',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_CHATROOM;
+						}
+						menu_add_item($menu_id,$channel['channel_id'],$mitem);
+					}
+				}	
+			}
+		}
+	}
+}
+
+
+function sync_menus($channel,$menus) {
+
+	if($channel && $menus) {
+		foreach($menus as $menu) {
+			$m = array();
+			$m['menu_channel_id'] = $channel['channel_id'];
+			$m['menu_name'] = $menu['pagetitle'];
+			$m['menu_desc'] = $menu['desc'];
+			if($menu['created'])
+				$m['menu_created'] = datetime_convert($menu['created']);
+			if($menu['edited'])
+				$m['menu_edited'] = datetime_convert($menu['edited']);
+
+			$m['menu_flags'] = 0;
+			if($menu['flags']) {
+				if(in_array('bookmark',$menu['flags']))
+					$m['menu_flags'] |= MENU_BOOKMARK;
+				if(in_array('system',$menu['flags']))
+					$m['menu_flags'] |= MENU_SYSTEM;
+
+			}
+
+			$editing = false;
+
+			$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
+				dbesc($m['menu_name']),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				if($r[0]['menu_edited'] >= $m['menu_edited'])
+					continue;
+				if($menu['menu_deleted']) {
+					menu_delete_id($r[0]['menu_id'],$channel['channel_id']);
+					continue;
+				}
+				$menu_id = $r[0]['menu_id'];
+				$m['menu_id'] = $r[0]['menu_id'];
+				$x = menu_edit($m);
+				if(! $x)
+					continue;
+				$editing = true;
+			}
+			if(! $editing) {
+				$menu_id = menu_create($m);
+			}
+			if($menu_id) {
+				if($editing) {
+					// don't try syncing - just delete all the entries and start over
+					q("delete from menu_item where mitem_menu_id = %d",
+						intval($menu_id)
+					);
+				}
+
+				if(is_array($menu['items'])) {
+					foreach($menu['items'] as $it) {
+						$mitem = array();
+
+						$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
+						$mitem['mitem_desc'] = escape_tags($it['desc']);
+						$mitem['mitem_order'] = intval($it['order']);
+						if(is_array($it['flags'])) {
+							$mitem['mitem_flags'] = 0;
+							if(in_array('zid',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_ZID;
+							if(in_array('new-window',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_NEWWIN;
+							if(in_array('chatroom',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_CHATROOM;
+						}
+						menu_add_item($menu_id,$channel['channel_id'],$mitem);
+					}
+				}	
+			}
+		}
+	}
+}
 
 
 

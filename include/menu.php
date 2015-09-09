@@ -6,7 +6,7 @@ require_once('include/bbcode.php');
 
 function menu_fetch($name,$uid,$observer_xchan) {
 
-	$sql_options = permissions_sql($uid);
+	$sql_options = permissions_sql($uid,$observer_xchan);
 
 	$r = q("select * from menu where menu_channel_id = %d and menu_name = '%s' limit 1",
 		intval($uid),
@@ -238,7 +238,6 @@ function menu_edit($arr) {
 		return false;
 	}
 
-
 	$r = q("select * from menu where menu_id = %d and menu_channel_id = %d limit 1",
 		intval($menu_id),
 		intval($menu_channel_id)
@@ -388,3 +387,14 @@ function menu_del_item($menu_id,$uid,$item_id) {
 	return $r;
 }
 
+function menu_sync_packet($uid,$observer_hash,$menu_id,$delete = false) {
+	$r = menu_fetch_id($menu_id,$uid);
+	if($r) {
+		$m = menu_fetch($r['menu_name'],$uid,$observer_hash);	
+		if($m) {
+			if($delete)
+				$m['menu_delete'] = 1;
+			build_sync_packet($uid,array('menu' => array(menu_element($m))));
+		}
+	}
+}

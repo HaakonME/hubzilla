@@ -896,6 +896,55 @@ require_once('include/items.php');
 	api_register_func('api/red/item/new','red_item_new', true);
 
 
+	function red_item(&$a, $type) {
+
+		if (api_user() === false) {
+			logger('api_red_item_new: no user');
+			return false;
+		}
+
+		if($_REQUEST['mid']) {
+			$arr = array('mid' => $_REQUEST['mid']);
+		}
+		elseif($_REQUEST['item_id']) {
+			$arr = array('item_id' => $_REQUEST['item_id']);
+		}
+		else
+			json_return_and_die(array());
+
+		$arr['start'] = 0;
+		$arr['records'] = 999999;
+		$arr['item_type'] = '*';
+
+		$i = items_fetch($arr,$a->get_channel(),get_observer_hash());
+
+		if(! $i)
+			json_return_and_die(array());
+
+		$ret = array();
+		$tmp = array();
+		$str = '';
+		foreach($i as $ii) {
+			$tmp[] = encode_item($ii,true);
+			if($str)
+				$str .= ',';
+			$str .= $ii['id'];
+		}
+		$ret['item'] = $tmp;	
+		if($str) {
+			$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item.id in ( $str ) ");
+
+		    if($r)
+        		$ret['item_id'] = $r;
+		}
+					 
+		json_return_and_die($ret);
+	}
+
+	api_register_func('api/red/item/full','red_item', true);
+
+
+
 	function api_get_status($xchan_hash) {
 		require_once('include/security.php');
 

@@ -47,7 +47,7 @@ function menu_post(&$a) {
 	else {
 		$r = menu_create($_REQUEST);
 		if($r) {
-			menu_sync_packet($uid,get_observer_hash(),$menu_id);
+			menu_sync_packet($uid,get_observer_hash(),$r);
 	
 			//info( t('Menu created.') . EOL);
 			goaway(z_root() . '/mitem/' . $r . (($a->is_sys) ? '?f=&sys=1' : '')); 

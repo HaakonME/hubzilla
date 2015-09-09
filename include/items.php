@@ -833,10 +833,13 @@ function title_is_body($title, $body) {
 }
 
 
-function get_item_elements($x) {
+function get_item_elements($x,$allow_code = false) {
 
 	$arr = array();
-	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+	if($allow_code)
+		$arr['body'] = $x['body'];
+	else
+		$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$key = get_config('system','pubkey');
 
@@ -4731,6 +4734,12 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	if($arr['wall'])
 		$sql_options .= " and item_wall = 1 ";
+
+	if($arr['item_id'])
+		$sql_options .= " and parent = " . intval($arr['item_id']) . " ";
+
+	if($arr['mid'])
+		$sql_options .= " and parent_mid = '" . dbesc($arr['mid']) . "' ";
 									
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE item_thread_top = 1 $sql_options ) ";
 	
@@ -4857,10 +4866,14 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	require_once('include/security.php');
 	$sql_extra .= item_permissions_sql($channel['channel_id'],$observer_hash);
 
+
 	if($arr['pages'])
 		$item_restrict = " AND item_type = " . ITEM_TYPE_WEBPAGE . " ";
 	else
 		$item_restrict = " AND item_type = 0 ";
+
+	if($arr['item_type'] === '*')
+		$item_restrict = '';
 
 	if ($arr['nouveau'] && ($client_mode & CLIENT_MODE_LOAD) && $channel) {
 		// "New Item View" - show all items unthreaded in reverse created date order

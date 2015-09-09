@@ -50,6 +50,11 @@ function import_channel($channel) {
 	unset($channel['channel_id']);
 	$channel['channel_account_id'] = get_account_id();
 	$channel['channel_primary'] = (($seize) ? 1 : 0);
+
+	if($channel['channel_pageflags'] & PAGE_ALLOWCODE) {
+		if(! is_site_admin())
+			$channel['channel_pageflags'] = $channel['channel_pageflags'] ^ PAGE_ALLOWCODE;
+	}
 	
 	dbesc_array($channel);
 
@@ -480,8 +485,19 @@ function sync_chatrooms($channel,$chatrooms) {
 function import_items($channel,$items) {
 
 	if($channel && $items) {
+		$allow_code = false;
+		$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id 
+			where channel_id = %d limit 1",
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
+				$allow_code = true;
+			}
+		}
+
 		foreach($items as $i) {
-			$item = get_item_elements($i);
+			$item = get_item_elements($i,$allow_code);
 			if(! $item)
 				continue;
 

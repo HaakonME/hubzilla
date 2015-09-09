@@ -1075,3 +1075,62 @@ function widget_helpindex($arr) {
 	return $o;
 
 }
+
+
+
+function widget_admin($arr) {
+
+	/*
+	 * Side bar links
+	 */
+
+	if(! is_site_admin()) {
+		return login(false);
+	}
+
+
+	$a = get_app();
+	$o = '';
+
+	// array( url, name, extra css classes )
+
+	$aside = array(
+		'site'      => array(z_root() . '/admin/site/',     t('Site'),           'site'),
+		'users'     => array(z_root() . '/admin/users/',    t('Accounts'),       'users'),
+		'channels'  => array(z_root() . '/admin/channels/', t('Channels'),       'channels'),
+		'plugins'   => array(z_root() . '/admin/plugins/',  t('Plugins'),        'plugins'),
+		'themes'    => array(z_root() . '/admin/themes/',   t('Themes'),         'themes'),
+		'queue'     => array(z_root() . '/admin/queue',     t('Inspect queue'),  'queue'),
+		'profs'     => array(z_root() . '/admin/profs',     t('Profile Config'), 'profs'),
+		'dbsync'    => array(z_root() . '/admin/dbsync/',   t('DB updates'),     'dbsync')
+
+	);
+
+	/* get plugins admin page */
+
+	$r = q("SELECT * FROM addon WHERE plugin_admin = 1");
+
+	$aside['plugins_admin'] = array();
+	if($r) {
+		foreach ($r as $h){
+			$plugin = $h['name'];
+			$aside['plugins_admin'][] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
+			// temp plugins with admin
+			$a->plugins_admin[] = $plugin;
+		}
+	}
+
+	$aside['logs'] = array(z_root() . '/admin/logs/', t('Logs'), 'logs');
+
+	$o .= replace_macros(get_markup_template('admin_aside.tpl'), array(
+			'$admin' => $aside, 
+			'$admtxt' => t('Admin'),
+			'$plugadmtxt' => t('Plugin Features'),
+			'$logtxt' => t('Logs'),
+			'$h_pending' => t('User registrations waiting for confirmation'),
+			'$admurl'=> z_root() . '/admin/'
+	));
+
+	return $o;
+
+}

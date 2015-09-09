@@ -45,7 +45,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Create mobile clients for the top platforms - which involves extending the API so that we can do stuff far beyond the current crop of Twitter/Statusnet clients. Ditto for mobile themes. We can probably use something like the Friendica Android app as a base to start from.[/li]
 [li](in progress Habeas Codice) Implement owned and exchangeable &quot;things&quot;.[/li]
 [li]Family Account creation - using service classes (an account holder can create a certain number of sub-accounts which are all tied to their subscription - if the subscription lapses they all go away).[/li]
-[li]Put mod_admin under Comanche[/li]
+
 
 In many cases some of the work has already been started and code exists so that you needn't start from scratch. Please contact one of the developer channels like Channel One (one@zothub.com) before embarking and we can tell you what we already have and provide some insights on how we envision these features fitting together.
 

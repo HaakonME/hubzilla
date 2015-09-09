@@ -5,6 +5,7 @@
 
 require_once('include/zot.php');
 require_once('include/crypto.php');
+require_once('include/menu.php');
 
 
 /**
@@ -594,6 +595,16 @@ function identity_basic_export($channel_id, $items = false) {
 		$r = fetch_post_tags($r,true);
 		foreach($r as $rr)
 			$ret['event_item'][] = encode_item($rr,true);
+	}
+	
+	$x = menu_list($channel_id);
+	if($x) {
+		$ret['menu'] = array();
+		for($y = 0; $y < count($x); $y ++) {
+			$m = menu_fetch($x[$y]['menu_name'],$channel_id,$ret['channel']['channel_hash']);
+			if($m)
+				$ret['menu'][] = menu_element($m);
+		}
 	}
 
 

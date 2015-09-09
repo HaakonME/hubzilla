@@ -238,16 +238,19 @@ function profile_photo_post(&$a) {
 			notice( t('Image upload failed.') . EOL );
 			return;
 		}
+		$os_storage = false;
+
 		foreach($i as $ii) {
 			if(intval($ii['scale']) < 2) {
 				$smallest = intval($ii['scale']);
+				$os_storage = intval($ii['os_storage']);
 				$imagedata = $ii['data'];
 				$filetype = $ii['type'];
 			}
 		}
 	}
 
-//	$imagedata = @file_get_contents($src);
+	$imagedata = (($os_storage) ? @file_get_contents($imagedata) : $imagedata);
 	$ph = photo_factory($imagedata, $filetype);
 
 	if(! $ph->is_valid()) {

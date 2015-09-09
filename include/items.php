@@ -1309,7 +1309,7 @@ function encode_item($item,$mirror = false) {
 		$x['comment_scope'] = $c_scope;
 
 	if($item['term'])
-		$x['tags']        = encode_item_terms($item['term']);
+		$x['tags']        = encode_item_terms($item['term'],$mirror);
 
 	if($item['diaspora_meta']) {
 		$z = json_decode($item['diaspora_meta'],true);
@@ -1401,10 +1401,15 @@ function encode_item_xchan($xchan) {
 	return $ret;
 }
 
-function encode_item_terms($terms) {
+function encode_item_terms($terms,$mirror = false) {
 	$ret = array();
 
 	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK );
+
+	if($mirror) {
+		$allowed_export_terms[] = TERM_PCATEGORY;
+		$allowed_export_terms[] = TERM_FILE;
+	}
 
 	if($terms) {
 		foreach($terms as $term) {

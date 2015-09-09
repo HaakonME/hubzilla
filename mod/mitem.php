@@ -204,6 +204,7 @@ function mitem_content(&$a) {
 			$lockstate = (($mitem['allow_cid'] || $mitem['allow_gid'] || $mitem['deny_cid'] || $mitem['deny_gid']) ? 'lock' : 'unlock');
 
 			if(argc() == 4 && argv(3) == 'drop') {
+				menu_sync_packet($uid,get_observer_hash(),$mitem['mitem_menu_id']);
 				$r = menu_del_item($mitem['mitem_menu_id'], $uid, intval(argv(2)));
 				menu_sync_packet($uid,get_observer_hash(),$mitem['mitem_menu_id']);
 				if($r)

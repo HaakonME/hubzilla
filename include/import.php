@@ -690,6 +690,7 @@ function sync_menus($channel,$menus) {
 			}
 
 			$editing = false;
+
 			$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
 				dbesc($m['menu_name']),
 				intval($channel['channel_id'])
@@ -702,6 +703,7 @@ function sync_menus($channel,$menus) {
 					continue;
 				}
 				$menu_id = $r[0]['menu_id'];
+				$m['menu_id'] = $r[0]['menu_id'];
 				$x = menu_edit($m);
 				if(! $x)
 					continue;

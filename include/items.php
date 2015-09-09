@@ -1260,7 +1260,7 @@ function encode_item($item,$mirror = false) {
 		$x['comment_scope'] = $c_scope;
 
 	if($item['term'])
-		$x['tags']        = encode_item_terms($item['term']);
+		$x['tags']        = encode_item_terms($item['term'],$mirror);
 
 	if($item['diaspora_meta'])
 		$x['diaspora_signature'] = crypto_unencapsulate(json_decode($item['diaspora_meta'],true),$key);
@@ -1348,6 +1348,11 @@ function encode_item_terms($terms) {
 	$ret = array();
 
 	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK );
+
+	if($mirror) {
+		$allowed_export_terms[] = TERM_PCATEGORY;
+		$allowed_export_terms[] = TERM_FILE;
+	}
 
 	if($terms) {
 		foreach($terms as $term) {

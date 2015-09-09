@@ -666,6 +666,7 @@ function identity_export_year($channel_id,$year,$month = 0) {
 		$target_month = '01';
 
 	$ret = array();
+
 	$mindate = datetime_convert('UTC','UTC',$year . '-' . $target_month . '-01 00:00:00');
 	if($month && $month < 12)
 		$maxdate = datetime_convert('UTC','UTC',$year . '-' . $target_month_plus . '-01 00:00:00');

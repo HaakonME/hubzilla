@@ -115,6 +115,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	$file     = ((x($_GET,'file'))  ? $_GET['file']          : '');
 
 
+	$deftag = '';
+
 	if(x($_GET,'search') || x($_GET,'file'))
 		$nouveau = true;
 	if($cid) {
@@ -130,7 +132,10 @@ function network_content(&$a, $update = 0, $load = false) {
 			goaway($a->get_baseurl(true) . '/network');
 			// NOTREACHED
 		}
-		$def_acl = array('allow_cid' => '<' . $r[0]['abook_xchan'] . '>');
+		if($_GET['pf'] === '1')
+			$deftag = '@' . t('forum') . '+' . intval($cid) . '+';
+		else
+			$def_acl = array('allow_cid' => '<' . $r[0]['abook_xchan'] . '>');
 	}
 
 	if(! $update) {
@@ -164,6 +169,8 @@ function network_content(&$a, $update = 0, $load = false) {
 			'visitor'          => true,
 			'profile_uid'      => local_channel()
 		);
+		if($deftag)
+			$x['body'] = $deftag;
 
 		$status_editor = status_editor($a,$x);
 		$o .= $status_editor;
@@ -223,7 +230,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		if($r) {
 			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_channel()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) $item_normal ) ";
 			$title = replace_macros(get_markup_template("section_title.tpl"),array(
-				'$title' => t('Connection: ') . $r[0]['xchan_name']
+				'$title' => (($_GET['pf'] === '1') ? t('Forum: ') : t('Connection: ')) . $r[0]['xchan_name']
 			));
 			$o = $tabs;
 			$o .= $title;

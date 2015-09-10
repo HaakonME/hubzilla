@@ -1036,7 +1036,7 @@ function widget_forums($arr) {
 		foreach($r1 as $rr) {
 			if($unseen && (! intval($rr['unseen'])))
 				continue;
-			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';
 	}

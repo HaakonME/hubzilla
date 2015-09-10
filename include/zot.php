@@ -296,9 +296,18 @@ function zot_refresh($them, $channel = null, $force = false) {
 	if ($them['hubloc_url']) {
 		$url = $them['hubloc_url'];
 	} else {
-		$r = q("select hubloc_url, hubloc_flags from hubloc where hubloc_hash = '%s'",
-			dbesc($them['xchan_hash'])
-		);
+		$r = null;
+
+		if(array_key_exists('xchan_addr',$them) && $them['xchan_addr']) {
+			$r = q("select hubloc_url, hubloc_flags from hubloc where hubloc_addr = '%s'",
+				dbesc($them['xchan_addr'])
+			);
+		}
+		if(! $r) {
+			$r = q("select hubloc_url, hubloc_flags from hubloc where hubloc_hash = '%s'",
+				dbesc($them['xchan_hash'])
+			);
+		}
 		if ($r) {
 			foreach ($r as $rr) {
 				if ($rr['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) {

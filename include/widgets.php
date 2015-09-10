@@ -1007,7 +1007,9 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where xchan_pubforum = 1 and abook_channel = %d order by xchan_name $limit ",
+	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and abook_channel = %d order by xchan_name $limit ",
+		intval(PERMS_W_TAGWALL),
+		intval(PERMS_W_STREAM),
 		intval(local_channel())
 	);
 	if(! $r1)

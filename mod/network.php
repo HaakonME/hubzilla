@@ -158,14 +158,16 @@ function network_content(&$a, $update = 0, $load = false) {
 			'deny_gid'  => $channel['channel_deny_gid']
 		); 
 
+		$private_editing = ((($group || $cid) && (! intval($_GET['pf']))) ? true : false);
+
 		$x = array(
 			'is_owner'         => true,
 			'allow_location'   => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
 			'default_location' => $channel['channel_location'],
 			'nickname'         => $channel['channel_address'],
-			'lockstate'        => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-			'acl'              => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
-			'bang'             => (($group || $cid) ? '!' : ''),
+			'lockstate'        => (($private_editing || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+			'acl'              => populate_acl((($private_editing) ? $def_acl : $channel_acl)),
+			'bang'             => (($private_editing) ? '!' : ''),
 			'visitor'          => true,
 			'profile_uid'      => local_channel()
 		);

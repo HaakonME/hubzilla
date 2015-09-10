@@ -347,7 +347,7 @@ footer {
 .vcard {
 	margin-bottom: 10px;
 	padding: 10px;
-	background-color: $comment_item_colour;
+	background-color: rgba(254,254,254,0.5);
 	border-bottom: 1px solid rgba(238,238,238,0.8);
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
@@ -698,7 +698,7 @@ a.rateme, div.rateme {
 #contact-block {
 	width: 100%;
 	float: left;
-	background-color: $comment_item_colour;
+	background-color: rgba(254,254,254,0.5);
 	border-bottom: 1px solid rgba(238,238,238,0.8);
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
@@ -751,8 +751,8 @@ a.rateme, div.rateme {
 }
 
 .wall-item-conv {
-	padding-top: 5px;
-	padding-bottom: 10px;
+	padding-top: 10px;
+	padding-left: 10px;
 }
 
 
@@ -1655,12 +1655,6 @@ img.mail-list-sender-photo {
 	border-top-left-radius: $radiuspx;
 }
 
-.generic-content-wrapper-styled {
-	background-color: $comment_item_colour;
-	padding: 10px;
-	border-radius: $radiuspx;
-}
-
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
 	border-color: $comment_border_colour;
@@ -1786,7 +1780,7 @@ img.mail-list-sender-photo {
 /* widgets */
 
 .widget {
-	background-color: $comment_item_colour;
+	background-color: rgba(254,254,254,0.5);
 	border-bottom: 1px solid rgba(238,238,238,0.8);
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
@@ -1865,6 +1859,19 @@ nav .dropdown-menu {
 
 .page-title {
 	margin: 7px 0px;
+}
+
+.generic-content-wrapper-styled {
+	background-color: $bgcolour;
+	padding: 10px;
+	border-radius: $radiuspx;
+}
+
+.generic-content-wrapper {
+	border: 1px solid #ccc;
+	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.2);
+	border-radius: 4px;
+	background-color: #fff;
 }
 
 .section-title-wrapper {

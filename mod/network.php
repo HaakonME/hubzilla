@@ -172,7 +172,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'profile_uid'      => local_channel()
 		);
 		if($deftag)
-			$x['body'] = $deftag;
+			$x['pretext'] = $deftag;
 
 		$status_editor = status_editor($a,$x);
 		$o .= $status_editor;

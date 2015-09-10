@@ -107,15 +107,15 @@ if (! $link_colour)
 if (! $banner_colour)
 	$banner_colour = "#fff";
 if (! $bgcolour)
-	$bgcolour = "#fdfdfd";
+	$bgcolour = "rgb(254,254,254)";
 if (! $background_image)
 	$background_image ='';
 if (! $item_colour)
-	$item_colour = "rgba(238,238,238,0.8)";
+	$item_colour = "rgb(238,238,238)";
 if (! $comment_item_colour)
-	$comment_item_colour = "rgba(254,254,254,0.4)";
+	$comment_item_colour = "rgb(255,255,255)";
 if (! $comment_border_colour)
-	$comment_border_colour = "rgba(238,238,238,0.8)";
+	$comment_border_colour = "rgb(255,255,255)";
 if (! $toolicon_colour)
 	$toolicon_colour = '#777';
 if (! $toolicon_activecolour)
@@ -133,7 +133,7 @@ if (! $radius)
 if (! $shadow)
 	$shadow = "0";
 if (! $converse_width)
-	$converse_width = "1024";
+	$converse_width = "790";
 if(! $top_photo)
 	$top_photo = '48px';
 if(! $comment_indent)

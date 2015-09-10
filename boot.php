@@ -82,7 +82,7 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zotid.net', 
 	'https://red.zottel.red',
 	'https://gravizot.de',
-	'https://my.federated.social',
+	'https://my.federated.social'
 );
 
 

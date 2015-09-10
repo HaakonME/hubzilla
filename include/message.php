@@ -49,6 +49,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	// look for any existing conversation structure
 
+
 	if(strlen($replyto)) {
 		$r = q("select convid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
 			intval(local_channel()),

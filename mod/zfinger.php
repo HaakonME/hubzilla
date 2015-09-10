@@ -116,7 +116,7 @@ function zfinger_init(&$a) {
 		$t = q("select abook_my_perms from abook where abook_channel = %d and abook_self = 1 limit 1",
 			intval($e['channel_id'])
 		);
-		if($t && ($t[0]['abook_my_perms'] & PERMS_W_TAGWALL))
+		if(($t) && (($t[0]['abook_my_perms'] & PERMS_W_TAGWALL) && (! ($t[0]['abook_my_perms'] & PERMS_W_STREAM))))
 			$public_forum = true;
 	}
 

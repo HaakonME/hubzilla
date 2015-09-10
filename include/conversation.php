@@ -1137,6 +1137,7 @@ function status_editor($a, $x, $popup = false) {
 		'$newpost' => 'true',
 		'$baseurl' => $a->get_baseurl(true),
 		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
+		'$pretext' => ((x($x,'pretext')) ? $x['pretext'] : ''),
 		'$geotag' => $geotag,
 		'$nickname' => $x['nickname'],
 		'$ispublic' => t('Visible to <strong>everybody</strong>'),

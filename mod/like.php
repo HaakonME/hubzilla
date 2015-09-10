@@ -222,10 +222,17 @@ function like_content(&$a) {
 			q("delete from likes where id = %d limit 1",
 				intval($z[0]['id'])
 			);
-			drop_item($z[0]['iid'],false);
-			if($interactive) {
-				notice( t('Previous action reversed.') . EOL);
-				return $o;
+			if($z[0]['i_mid']) {
+				$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+					dbesc($z[0]['i_mid']),
+					intval($ch[0]['channel_id'])
+				);
+				if($r)
+					drop_item($r[0]['id'],false);
+				if($interactive) {
+					notice( t('Previous action reversed.') . EOL);
+					return $o;
+				}
 			}
 			killme();
 		}

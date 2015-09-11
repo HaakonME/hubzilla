@@ -953,7 +953,7 @@ function zot_process_response($hub, $arr, $outq) {
 
 	// update the timestamp for this site
 
-	q("update site set site_update = '%s' where site_url = '%s'",
+	q("update site set site_dead = 0, site_update = '%s' where site_url = '%s'",
 		dbesc(datetime_convert()),
 		dbesc(dirname($hub))
 	);
@@ -2682,7 +2682,7 @@ function import_site($arr, $pubkey) {
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
+			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
 				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2700,7 +2700,7 @@ function import_site($arr, $pubkey) {
 		}
 		else {
 			// update the timestamp to indicate we communicated with this site
-			q("update site set site_update = '%s' where site_url = '%s'",
+			q("update site set site_dead = 0, site_update = '%s' where site_url = '%s'",
 				dbesc(datetime_convert()),
 				dbesc($url)
 			);

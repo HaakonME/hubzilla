@@ -2888,6 +2888,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		if(array_key_exists('obj',$arr) && $arr['obj'])
 			sync_objs($channel,$arr['obj']);
 
+		if(array_key_exists('likes',$arr) && $arr['likes'])
+			import_likes($channel,$arr['likes']);
+
 		if(array_key_exists('app',$arr) && $arr['app'])
 			sync_apps($channel,$arr['app']);
 

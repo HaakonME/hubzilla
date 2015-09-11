@@ -762,6 +762,43 @@ function sync_menus($channel,$menus) {
 
 
 
+function import_likes($channel,$likes) {
+	if($channel && $likes) {
+		foreach($likes as $like) {
+			if($like['deleted']) {
+				q("delete from likes where liker = '%s' and likee = '%s' and verb = '%s' and target_type = '%s' and target_id = '%s'",
+					dbesc($like['liker']),
+					dbesc($like['likee']),
+					dbesc($like['verb']),
+					dbesc($like['target_type']),
+					dbesc($like['target_id'])
+				);
+				continue;
+			}
+			
+			unset($like['id']);
+			unset($like['iid']);
+			$like['channel_id'] = $channel['channel_id'];
+			$r = q("select * from likes where liker = '%s' and likee = '%s' and verb = '%s' and target_type = '%s' and target_id = '%s' and i_mid = '%s'",
+				dbesc($like['liker']),
+				dbesc($like['likee']),
+				dbesc($like['verb']),
+				dbesc($like['target_type']),
+				dbesc($like['target_id']),
+				dbesc($like['i_mid'])
+			);
+			if($r)
+				continue;
+
+			dbesc_array($config);
+			$r = dbq("INSERT INTO likes (`" 
+				. implode("`, `", array_keys($like)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($like)) 
+				. "')" );
+		}
+	}	
+}
 
 
 

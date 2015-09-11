@@ -4,7 +4,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 [li]Include TOS link in registration/verification email[/li]
-[li](done) forum widget with unread counts (requires the DB schema changes from v3/hubzilla to be viable)[/li]
+[li]Auto preview posts/comments (configurable timer kicks in the preview if not 0)[/li]
 [li]Create bug tracker module[/li]
 [li]translation plugins - moses or apertium[/li]
 [li]plugins - provide 'disable' which is softer than 'uninstall' for those plugins which create additional DB tables[/li]

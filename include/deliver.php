@@ -92,12 +92,12 @@ function deliver_run($argv, $argc) {
 					$m = json_decode($r[0]['outq_msg'],true);
 					if(array_key_exists('message_list',$m)) {
 						foreach($m['message_list'] as $mm) {
-							$msg = array('body' => json_encode(array('pickup' => array(array('notify' => $notify,'message' => $mm)))));
+							$msg = array('body' => json_encode(array('success' => true, 'pickup' => array(array('notify' => $notify,'message' => $mm)))));
 							zot_import($msg,z_root());
 						}
 					}	
 					else {	
-						$msg = array('body' => json_encode(array('pickup' => array(array('notify' => $notify,'message' => $m)))));
+						$msg = array('body' => json_encode(array('success' => true, 'pickup' => array(array('notify' => $notify,'message' => $m)))));
 						zot_import($msg,z_root());
 					}
 					$r = q("delete from outq where outq_hash = '%s'",

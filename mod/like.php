@@ -219,13 +219,23 @@ function like_content(&$a) {
 		);
 
 		if($z) {
+			$z[0]['deleted'] = 1;
+			build_sync_packet($ch[0]['channel_id'],array('likes' => $z));
+
 			q("delete from likes where id = %d limit 1",
 				intval($z[0]['id'])
 			);
-			drop_item($z[0]['iid'],false);
-			if($interactive) {
-				notice( t('Previous action reversed.') . EOL);
-				return $o;
+			if($z[0]['i_mid']) {
+				$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+					dbesc($z[0]['i_mid']),
+					intval($ch[0]['channel_id'])
+				);
+				if($r)
+					drop_item($r[0]['id'],false);
+				if($interactive) {
+					notice( t('Previous action reversed.') . EOL);
+					return $o;
+				}
 			}
 			killme();
 		}
@@ -490,7 +500,18 @@ function like_content(&$a) {
 			dbesc($obj_id),
 			dbesc(($target) ? $target  : $object)
 		);
-	};
+		$r = q("select * from likes where liker = '%s' and likee = '%s' and i_mid = '%s' and verb = '%s' and target_type = '%s' and target_id = '%s' ",
+			dbesc($observer['xchan_hash']),
+			dbesc($ch[0]['channel_hash']),
+			dbesc($mid),
+			dbesc($activity),
+			dbesc(($tgttype)? $tgttype : $objtype),
+			dbesc($obj_id)
+		);
+		if($r)
+			build_sync_packet($ch[0]['channel_id'],array('likes' => $r));	
+
+	}
 
 
 	proc_run('php',"include/notifier.php","like","$post_id");

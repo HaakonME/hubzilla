@@ -22,3 +22,4 @@
 [zrl=[baseurl]/help/addons]Help With Addons[/zrl]
 [zrl=[baseurl]/help/diaspora_compat]Diaspora Communications Compatibility (Diaspora and Friendica)[/zrl]
 [zrl=[baseurl]/help/faq_members]FAQ For Members[/zrl]
+[zrl=[baseurl]/help/bugs]Bugs, Issues, and things that go bump in the night...[/zrl]

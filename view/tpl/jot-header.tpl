@@ -3,6 +3,7 @@
 var editor = false;
 var textlen = 0;
 var plaintext = '{{$editselect}}';
+var pretext = '{{$pretext}}';
 
 function initEditor(cb){
 	if (editor==false){
@@ -21,6 +22,8 @@ function initEditor(cb){
 			});
 			$(".jothidden").show();
 			if (typeof cb!="undefined") cb();
+			if(pretext.length)
+				addeditortext(pretext);
 			return;
 		}
 		tinyMCE.init({

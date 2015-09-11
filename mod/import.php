@@ -161,7 +161,6 @@ function import_post(&$a) {
 	}
 
 
-
 	if($completed < 3) {
 
 		if($data['photo']) {
@@ -169,8 +168,8 @@ function import_post(&$a) {
 			import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id(),$channel['channel_id']);
 		}
 
-		if(is_array($data['profiles']))
-			import_profiles($channel,$data['profiles']);
+		if(is_array($data['profile']))
+			import_profiles($channel,$data['profile']);
 
 		logger('import step 3');
 		$_SESSION['import_step'] = 3;
@@ -433,65 +432,35 @@ function import_post(&$a) {
 	if(is_array($data['obj']))
 		import_objs($channel,$data['obj']);
 
+	if(is_array($data['likes']))
+		import_likes($channel,$data['likes']);
+
 	if(is_array($data['app']))
 		import_apps($channel,$data['app']);
 
+	if(is_array($data['chatroom']))
+		import_chatrooms($channel,$data['chatroom']);
+
+	if(is_array($data['event']))
+		import_events($channel,$data['event']);
+
+	if(is_array($data['event_item']))
+		import_items($channel,$data['event_item']);
+
+	if(is_array($data['menu']))
+		import_menus($channel,$data['menu']);
+	
+
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 
-	if($import_posts && array_key_exists('item',$data) && $data['item']) {
-
-		foreach($data['item'] as $i) {
-			$item = get_item_elements($i);
-
-			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
-				dbesc($item['mid']),
-				intval($channel['channel_id'])
-			);
-			if($r) {
-				if($item['edited'] > $r[0]['edited']) {
-					$item['id'] = $r[0]['id'];
-					$item['uid'] = $channel['channel_id'];
-					item_store_update($item);
-					continue;
-				}	
-			}
-			else {
-				$item['aid'] = $channel['channel_account_id'];
-				$item['uid'] = $channel['channel_id'];
-				$item_result = item_store($item);
-			}
-
-		}
-
-	}
+	if($import_posts && array_key_exists('item',$data) && $data['item'])
+		import_items($channel,$data['item']);
 
 	notifications_on($channel['channel_id'],$saved_notification_flags);
 
-	if(array_key_exists('item_id',$data) && $data['item_id']) {
-		foreach($data['item_id'] as $i) {
-			$r = q("select id from item where mid = '%s' and uid = %d limit 1",
-				dbesc($i['mid']),
-				intval($channel['channel_id'])
-			);
-			if(! $r)
-				continue;
-			$z = q("select * from item_id where service = '%s' and sid = '%s' and iid = %d and uid = %d limit 1",
-				dbesc($i['service']),
-				dbesc($i['sid']),
-				intval($r[0]['id']),
-				intval($channel['channel_id'])
-			);
-			if(! $z) {
-				q("insert into item_id (iid,uid,sid,service) values(%d,%d,'%s','%s')",
-					intval($r[0]['id']),
-					intval($channel['channel_id']),
-					dbesc($i['sid']),
-					dbesc($i['service'])
-				);
-			}
-		}
-	}
 
+	if(array_key_exists('item_id',$data) && $data['item_id'])
+		import_item_ids($channel,$data['item_id']);
 
 
 	// FIXME - ensure we have a self entry if somebody is trying to pull a fast one

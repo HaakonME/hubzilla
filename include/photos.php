@@ -27,7 +27,7 @@ function photo_upload($channel, $observer, $args) {
 		return $ret;
 	}
 
-	call_hooks('photo_upload_begin', $args);
+//	call_hooks('photo_upload_begin', $args);
 
 	/*
 	 * Determine the album to use
@@ -84,7 +84,7 @@ function photo_upload($channel, $observer, $args) {
 	} else {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
 
-		call_hooks('photo_upload_file',$f);
+//		call_hooks('photo_upload_file',$f);
 
 		if (x($f,'src') && x($f,'filesize')) {
 			$src      = $f['src'];
@@ -226,10 +226,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 
-	$mid = item_message_id();
-
 	// Create item container
-
 
 	$item_hidden = (($visible) ? 0 : 1 );
 

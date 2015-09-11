@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/menu.php');
 
 function import_channel($channel) {
 
@@ -49,6 +50,11 @@ function import_channel($channel) {
 	unset($channel['channel_id']);
 	$channel['channel_account_id'] = get_account_id();
 	$channel['channel_primary'] = (($seize) ? 1 : 0);
+
+	if($channel['channel_pageflags'] & PAGE_ALLOWCODE) {
+		if(! is_site_admin())
+			$channel['channel_pageflags'] = $channel['channel_pageflags'] ^ PAGE_ALLOWCODE;
+	}
 	
 	dbesc_array($channel);
 
@@ -349,7 +355,7 @@ function sync_apps($channel,$apps) {
 				intval($channel['channel_id'])
 			);
 			if($x) {
-				if($x[0]['app_edited'] >= $obj['app_edited'])
+				if($x[0]['app_edited'] >= $app['app_edited'])
 					continue;
 				$exists = true;
 			}
@@ -378,3 +384,423 @@ function sync_apps($channel,$apps) {
 		}
 	}
 }
+
+
+
+function import_chatrooms($channel,$chatrooms) {
+
+	if($channel && $chatrooms) {
+		foreach($chatrooms as $chatroom) {
+
+			if(! $chatroom['cr_name'])
+				continue;
+
+			unset($chatroom['cr_id']);
+			unset($chatroom['cr_aid']);
+			unset($chatroom['cr_uid']);
+
+			$chatroom['cr_aid'] = $channel['channel_account_id'];
+			$chatroom['cr_uid'] = $channel['channel_id'];
+
+			dbesc_array($chatroom);
+			$r = dbq("INSERT INTO chatroom (`" 
+				. implode("`, `", array_keys($chatroom)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($chatroom)) 
+				. "')" 
+			);
+		}
+	}
+}
+
+
+
+function sync_chatrooms($channel,$chatrooms) {
+
+	if($channel && $chatrooms) {
+		foreach($chatrooms as $chatroom) {
+
+			if(! $chatroom['cr_name'])
+				continue;
+
+			if(array_key_exists('cr_deleted',$chatroom) && $chatroom['cr_deleted']) {
+                q("delete from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
+                    dbesc($chatroom['cr_name']),
+                    intval($channel['channel_id'])
+                );
+                continue;
+            }
+
+
+			unset($chatroom['cr_id']);
+			unset($chatroom['cr_aid']);
+			unset($chatroom['cr_uid']);
+
+			if(! $chatroom['cr_created'] || $chatroom['cr_created'] === NULL_DATE)
+				$chatroom['cr_created'] = datetime_convert();
+			if(! $chatroom['cr_edited'] || $chatroom['cr_edited'] === NULL_DATE)
+				$chatroom['cr_edited'] = datetime_convert();
+
+			$chatroom['cr_aid'] = $channel['channel_account_id'];
+			$chatroom['cr_uid'] = $channel['channel_id'];
+
+			$exists = false;
+
+			$x = q("select * from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
+				dbesc($chatroom['cr_name']),
+				intval($channel['channel_id'])
+			);
+			if($x) {
+				if($x[0]['cr_edited'] >= $chatroom['cr_edited'])
+					continue;
+				$exists = true;
+			}
+			$name = $chatroom['cr_name'];
+
+			if($exists) {
+				foreach($chatroom as $k => $v) {
+					$r = q("UPDATE chatroom SET `%s` = '%s' WHERE cr_name = '%s' AND cr_uid = %d",
+						dbesc($k),
+						dbesc($v),
+						dbesc($name),
+						intval($channel['channel_id'])
+					);
+				}
+			}
+			else {
+				dbesc_array($chatroom);
+				$r = dbq("INSERT INTO chatroom (`" 
+					. implode("`, `", array_keys($chatroom)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($chatroom)) 
+					. "')" 
+				);
+			}
+		}
+	}
+}
+
+
+
+function import_items($channel,$items) {
+
+	if($channel && $items) {
+		$allow_code = false;
+		$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id 
+			where channel_id = %d limit 1",
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
+				$allow_code = true;
+			}
+		}
+
+		foreach($items as $i) {
+			$item = get_item_elements($i,$allow_code);
+			if(! $item)
+				continue;
+
+			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+				dbesc($item['mid']),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				if($item['edited'] > $r[0]['edited']) {
+					$item['id'] = $r[0]['id'];
+					$item['uid'] = $channel['channel_id'];
+					item_store_update($item);
+					continue;
+				}	
+			}
+			else {
+				$item['aid'] = $channel['channel_account_id'];
+				$item['uid'] = $channel['channel_id'];
+				$item_result = item_store($item);
+			}
+
+		}
+	}
+}
+
+
+function sync_items($channel,$items) {
+	import_items($channel,$items);
+}
+
+
+
+function import_item_ids($channel,$itemids) {
+	if($channel && $itemids) {
+		foreach($itemids as $i) {
+			$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+				dbesc($i['mid']),
+				intval($channel['channel_id'])
+			);
+			if(! $r)
+				continue;
+			$z = q("select * from item_id where service = '%s' and sid = '%s' and iid = %d and uid = %d limit 1",
+				dbesc($i['service']),
+				dbesc($i['sid']),
+				intval($r[0]['id']),
+				intval($channel['channel_id'])
+			);
+			if(! $z) {
+				q("insert into item_id (iid,uid,sid,service) values(%d,%d,'%s','%s')",
+					intval($r[0]['id']),
+					intval($channel['channel_id']),
+					dbesc($i['sid']),
+					dbesc($i['service'])
+				);
+			}
+		}
+	}
+}
+
+function import_events($channel,$events) {
+
+	if($channel && $events) {
+		foreach($events as $event) {
+			unset($event['id']);
+			$event['aid'] = $channel['channel_account_id'];
+			$event['uid'] = $channel['channel_id'];
+
+			dbesc_array($event);
+			$r = dbq("INSERT INTO event (`" 
+				. implode("`, `", array_keys($event)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($event)) 
+				. "')" 
+			);
+		}
+	}
+}
+
+
+function sync_events($channel,$events) {
+
+	if($channel && $events) {
+		foreach($events as $event) {
+
+			if((! $event['event_hash']) || (! $event['start']))
+				continue;
+
+			if($event['event_deleted']) {
+				$r = q("delete from event where event_hash = '%s' and uid = %d limit 1",
+					dbesc($event['event_hash']),
+					intval($channel['channel_id'])
+				);	
+				continue;
+			}
+
+			unset($event['id']);
+			$event['aid'] = $channel['channel_account_id'];
+			$event['uid'] = $channel['channel_id'];
+
+			$exists = false;
+
+			$x = q("select * from event where event_hash = '%s' and uid = %d limit 1",
+				dbesc($event['event_hash']),
+				intval($channel['channel_id'])
+			);
+			if($x) {
+				if($x[0]['edited'] >= $event['edited'])
+					continue;
+				$exists = true;
+			}
+
+			if($exists) {
+				foreach($event as $k => $v) {
+					$r = q("UPDATE event SET `%s` = '%s' WHERE event_hash = '%s' AND uid = %d",
+						dbesc($k),
+						dbesc($v),
+						dbesc($event['event_hash']),
+						intval($channel['channel_id'])
+					);
+				}
+			}
+			else {
+				dbesc_array($event);
+				$r = dbq("INSERT INTO event (`" 
+					. implode("`, `", array_keys($event)) 
+					. "`) VALUES ('" 
+					. implode("', '", array_values($event)) 
+					. "')" 
+				);
+			}
+		}
+	}
+}
+
+
+function import_menus($channel,$menus) {
+
+	if($channel && $menus) {
+		foreach($menus as $menu) {
+			$m = array();
+			$m['menu_channel_id'] = $channel['channel_id'];
+			$m['menu_name'] = $menu['pagetitle'];
+			$m['menu_desc'] = $menu['desc'];
+			if($menu['created'])
+				$m['menu_created'] = datetime_convert($menu['created']);
+			if($menu['edited'])
+				$m['menu_edited'] = datetime_convert($menu['edited']);
+
+			$m['menu_flags'] = 0;
+			if($menu['flags']) {
+				if(in_array('bookmark',$menu['flags']))
+					$m['menu_flags'] |= MENU_BOOKMARK;
+				if(in_array('system',$menu['flags']))
+					$m['menu_flags'] |= MENU_SYSTEM;
+
+			}
+
+			$menu_id = menu_create($m);
+
+			if($menu_id) {
+				if(is_array($menu['items'])) {
+					foreach($menu['items'] as $it) {
+						$mitem = array();
+
+						$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
+						$mitem['mitem_desc'] = escape_tags($it['desc']);
+						$mitem['mitem_order'] = intval($it['order']);
+						if(is_array($it['flags'])) {
+							$mitem['mitem_flags'] = 0;
+							if(in_array('zid',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_ZID;
+							if(in_array('new-window',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_NEWWIN;
+							if(in_array('chatroom',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_CHATROOM;
+						}
+						menu_add_item($menu_id,$channel['channel_id'],$mitem);
+					}
+				}	
+			}
+		}
+	}
+}
+
+
+function sync_menus($channel,$menus) {
+
+	if($channel && $menus) {
+		foreach($menus as $menu) {
+			$m = array();
+			$m['menu_channel_id'] = $channel['channel_id'];
+			$m['menu_name'] = $menu['pagetitle'];
+			$m['menu_desc'] = $menu['desc'];
+			if($menu['created'])
+				$m['menu_created'] = datetime_convert($menu['created']);
+			if($menu['edited'])
+				$m['menu_edited'] = datetime_convert($menu['edited']);
+
+			$m['menu_flags'] = 0;
+			if($menu['flags']) {
+				if(in_array('bookmark',$menu['flags']))
+					$m['menu_flags'] |= MENU_BOOKMARK;
+				if(in_array('system',$menu['flags']))
+					$m['menu_flags'] |= MENU_SYSTEM;
+
+			}
+
+			$editing = false;
+
+			$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
+				dbesc($m['menu_name']),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				if($r[0]['menu_edited'] >= $m['menu_edited'])
+					continue;
+				if($menu['menu_deleted']) {
+					menu_delete_id($r[0]['menu_id'],$channel['channel_id']);
+					continue;
+				}
+				$menu_id = $r[0]['menu_id'];
+				$m['menu_id'] = $r[0]['menu_id'];
+				$x = menu_edit($m);
+				if(! $x)
+					continue;
+				$editing = true;
+			}
+			if(! $editing) {
+				$menu_id = menu_create($m);
+			}
+			if($menu_id) {
+				if($editing) {
+					// don't try syncing - just delete all the entries and start over
+					q("delete from menu_item where mitem_menu_id = %d",
+						intval($menu_id)
+					);
+				}
+
+				if(is_array($menu['items'])) {
+					foreach($menu['items'] as $it) {
+						$mitem = array();
+
+						$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
+						$mitem['mitem_desc'] = escape_tags($it['desc']);
+						$mitem['mitem_order'] = intval($it['order']);
+						if(is_array($it['flags'])) {
+							$mitem['mitem_flags'] = 0;
+							if(in_array('zid',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_ZID;
+							if(in_array('new-window',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_NEWWIN;
+							if(in_array('chatroom',$it['flags']))
+								$mitem['mitem_flags'] |= MENU_ITEM_CHATROOM;
+						}
+						menu_add_item($menu_id,$channel['channel_id'],$mitem);
+					}
+				}	
+			}
+		}
+	}
+}
+
+
+
+function import_likes($channel,$likes) {
+	if($channel && $likes) {
+		foreach($likes as $like) {
+			if($like['deleted']) {
+				q("delete from likes where liker = '%s' and likee = '%s' and verb = '%s' and target_type = '%s' and target_id = '%s'",
+					dbesc($like['liker']),
+					dbesc($like['likee']),
+					dbesc($like['verb']),
+					dbesc($like['target_type']),
+					dbesc($like['target_id'])
+				);
+				continue;
+			}
+			
+			unset($like['id']);
+			unset($like['iid']);
+			$like['channel_id'] = $channel['channel_id'];
+			$r = q("select * from likes where liker = '%s' and likee = '%s' and verb = '%s' and target_type = '%s' and target_id = '%s' and i_mid = '%s'",
+				dbesc($like['liker']),
+				dbesc($like['likee']),
+				dbesc($like['verb']),
+				dbesc($like['target_type']),
+				dbesc($like['target_id']),
+				dbesc($like['i_mid'])
+			);
+			if($r)
+				continue;
+
+			dbesc_array($config);
+			$r = dbq("INSERT INTO likes (`" 
+				. implode("`, `", array_keys($like)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($like)) 
+				. "')" );
+		}
+	}	
+}
+
+
+
+
+

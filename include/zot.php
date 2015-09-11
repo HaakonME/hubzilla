@@ -294,9 +294,19 @@ function zot_refresh($them, $channel = null, $force = false) {
 	if ($them['hubloc_url']) {
 		$url = $them['hubloc_url'];
 	} else {
-		$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
-			dbesc($them['xchan_hash'])
-		);
+		$r = null;
+
+		if(array_key_exists('xchan_addr',$them) && $them['xchan_addr']) {
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_addr = '%s'",
+				dbesc($them['xchan_addr'])
+			);
+		}
+		if(! $r) {
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
+				dbesc($them['xchan_hash'])
+			);
+		}
+
 		if ($r) {
 			foreach ($r as $rr) {
 				if (intval($rr['hubloc_primary'])) {
@@ -962,7 +972,7 @@ function zot_process_response($hub, $arr, $outq) {
 		);
 	}
 
-	logger('zot_process_response: ' . print_r($x,true), LOGGER_DATA);
+	logger('zot_process_response: ' . print_r($x,true), LOGGER_DEBUG);
 }
 
 /**
@@ -2226,7 +2236,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 					// Absolute sync - make sure the current primary is correctly reflected in the xchan
 					$pr = hubloc_change_primary($r[0]);
 					if($pr) {
-						$what .= 'xchan_primary';
+						$what .= 'xchan_primary ';
 						$changed = true;
 					}
 				}
@@ -2878,8 +2888,29 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		if(array_key_exists('obj',$arr) && $arr['obj'])
 			sync_objs($channel,$arr['obj']);
 
+		if(array_key_exists('likes',$arr) && $arr['likes'])
+			import_likes($channel,$arr['likes']);
+
 		if(array_key_exists('app',$arr) && $arr['app'])
 			sync_apps($channel,$arr['app']);
+
+		if(array_key_exists('chatroom',$arr) && $arr['chatroom'])
+			sync_chatrooms($channel,$arr['chatroom']);
+
+		if(array_key_exists('event',$arr) && $arr['event'])
+			sync_events($channel,$arr['event']);
+
+		if(array_key_exists('event_item',$arr) && $arr['event_item'])
+			sync_items($channel,$arr['event_item']);
+
+		if(array_key_exists('item',$arr) && $arr['item'])
+			sync_items($channel,$arr['item']);
+
+		if(array_key_exists('item_id',$arr) && $arr['item_id'])
+			sync_items($channel,$arr['item_id']);
+
+		if(array_key_exists('menu',$arr) && $arr['menu'])
+			sync_menus($channel,$arr['menu']);
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 			if(array_key_exists('channel_page_flags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {

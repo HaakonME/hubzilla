@@ -805,6 +805,19 @@ function item_post(&$a) {
 
 		update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
 
+		if(! $parent) {
+			$r = q("select * from item where id = %d",
+				intval($post_id)
+			);
+			if($r) {
+				xchan_query($r);
+				$sync_item = fetch_post_tags($r);
+				$rid = q("select * from item_id where iid = %d",
+					intval($post_id)
+				);
+				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+			}
+		}
 		if(! $nopush)
 			proc_run('php', "include/notifier.php", 'edit_post', $post_id);
 
@@ -884,14 +897,28 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
-	if($parent) {
+
+	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
+
+	if(($parent) && ($parent != $post_id)) {
 		// Store the comment signature information in case we need to relay to Diaspora
 		$ditem = $datarray;
 		$ditem['author'] = $observer;
 		store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id, (($walltowall_comment) ? 1 : 0));
 	}
-
-	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
+	else {
+		$r = q("select * from item where id = %d",
+			intval($post_id)
+		);
+		if($r) {
+			xchan_query($r);
+			$sync_item = fetch_post_tags($r);
+			$rid = q("select * from item_id where iid = %d",
+				intval($post_id)
+			);
+			build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+		}
+	}
 
 	$datarray['id']    = $post_id;
 	$datarray['llink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
@@ -902,6 +929,11 @@ function item_post(&$a) {
 		proc_run('php', 'include/notifier.php', $notify_type, $post_id);
 
 	logger('post_complete');
+
+
+
+
+
 
 	// figure out how to return, depending on from whence we came
 

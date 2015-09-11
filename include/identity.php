@@ -5,7 +5,7 @@
 
 require_once('include/zot.php');
 require_once('include/crypto.php');
-
+require_once('include/menu.php');
 
 /**
  * @brief Called when creating a new channel.
@@ -566,12 +566,56 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['obj'] = $r;
 
-
 	$r = q("select * from app where app_channel = %d",
 		intval($channel_id)
 	);
 	if($r)
 		$ret['app'] = $r;
+
+	$r = q("select * from chatroom where cr_uid = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['chatroom'] = $r;
+
+
+	$r = q("select * from event where uid = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['event'] = $r;
+
+	$r = q("select * from item where resource_type = 'event' and uid = %d",
+		intval($channel_id)
+	);
+	if($r) {
+		$ret['event_item'] = array();
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		foreach($r as $rr)
+			$ret['event_item'][] = encode_item($rr,true);
+	}
+	
+	$x = menu_list($channel_id);
+	if($x) {
+		$ret['menu'] = array();
+		for($y = 0; $y < count($x); $y ++) {
+			$m = menu_fetch($x[$y]['menu_name'],$channel_id,$ret['channel']['channel_hash']);
+			if($m)
+				$ret['menu'][] = menu_element($m);
+		}
+	}
+
+	$x = menu_list($channel_id);
+	if($x) {
+		$ret['menu'] = array();
+		for($y = 0; $y < count($x); $y ++) {
+			$m = menu_fetch($x[$y]['menu_name'],$channel_id,$ret['channel']['channel_hash']);
+			if($m)
+				$ret['menu'][] = menu_element($m);
+		}
+	}
+
 
 	if(! $items)
 		return $ret;
@@ -594,14 +638,17 @@ function identity_basic_export($channel_id, $items = false) {
 
 	/** @warning this may run into memory limits on smaller systems */
 
-	/** export one year of posts. If you want to export and import all posts you have to start with 
+
+	/** export three months of posts. If you want to export and import all posts you have to start with 
 	  * the first year and export/import them in ascending order. 
+	  *
+	  * Don't export linked resource items. we'll have to pull those out separately.
 	  */
 
-	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d and created > %s - INTERVAL %s",
+	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d and created > %s - INTERVAL %s and resource_type = '' order by created",
 		intval($channel_id),
 		db_utcnow(), 
-		db_quoteinterval('1 YEAR')
+		db_quoteinterval('3 MONTH')
 	);
 	if($r) {
 		$ret['item'] = array();
@@ -635,7 +682,7 @@ function identity_export_year($channel_id,$year,$month = 0) {
 	else
 		$maxdate = datetime_convert('UTC','UTC',$year+1 . '-01-01 00:00:00');
 
-	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d and created >= '%s' and created < '%s'  order by created",
+	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d and created >= '%s' and created < '%s'  and resource_type = '' order by created",
 		intval($channel_id),
 		dbesc($mindate), 
 		dbesc($maxdate)
@@ -648,7 +695,6 @@ function identity_export_year($channel_id,$year,$month = 0) {
 		foreach($r as $rr)
 			$ret['item'][] = encode_item($rr,true);
 	}
-
 
 	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d 
 		and item.created >= '%s' and item.created < '%s' order by created ",

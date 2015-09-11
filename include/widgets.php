@@ -1007,7 +1007,9 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where xchan_pubforum = 1 and abook_channel = %d order by xchan_name $limit ",
+	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and abook_channel = %d order by xchan_name $limit ",
+		intval(PERMS_W_TAGWALL),
+		intval(PERMS_W_STREAM),
 		intval(local_channel())
 	);
 	if(! $r1)
@@ -1034,7 +1036,7 @@ function widget_forums($arr) {
 		foreach($r1 as $rr) {
 			if($unseen && (! intval($rr['unseen'])))
 				continue;
-			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';
 	}
@@ -1072,6 +1074,65 @@ function widget_helpindex($arr) {
 	$o .= '<li><a href="help/admins">'  . t('For Administrators') . '</a></li>';
 	$o .= '<li><a href="help/develop">' . t('For Developers') . '</a></li>';
 	$o .= '</ul></div>';
+	return $o;
+
+}
+
+
+
+function widget_admin($arr) {
+
+	/*
+	 * Side bar links
+	 */
+
+	if(! is_site_admin()) {
+		return login(false);
+	}
+
+
+	$a = get_app();
+	$o = '';
+
+	// array( url, name, extra css classes )
+
+	$aside = array(
+		'site'      => array(z_root() . '/admin/site/',     t('Site'),           'site'),
+		'users'     => array(z_root() . '/admin/users/',    t('Accounts'),       'users'),
+		'channels'  => array(z_root() . '/admin/channels/', t('Channels'),       'channels'),
+		'plugins'   => array(z_root() . '/admin/plugins/',  t('Plugins'),        'plugins'),
+		'themes'    => array(z_root() . '/admin/themes/',   t('Themes'),         'themes'),
+		'queue'     => array(z_root() . '/admin/queue',     t('Inspect queue'),  'queue'),
+		'profs'     => array(z_root() . '/admin/profs',     t('Profile Config'), 'profs'),
+		'dbsync'    => array(z_root() . '/admin/dbsync/',   t('DB updates'),     'dbsync')
+
+	);
+
+	/* get plugins admin page */
+
+	$r = q("SELECT * FROM addon WHERE plugin_admin = 1");
+
+	$aside['plugins_admin'] = array();
+	if($r) {
+		foreach ($r as $h){
+			$plugin = $h['name'];
+			$aside['plugins_admin'][] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
+			// temp plugins with admin
+			$a->plugins_admin[] = $plugin;
+		}
+	}
+
+	$aside['logs'] = array(z_root() . '/admin/logs/', t('Logs'), 'logs');
+
+	$o .= replace_macros(get_markup_template('admin_aside.tpl'), array(
+			'$admin' => $aside, 
+			'$admtxt' => t('Admin'),
+			'$plugadmtxt' => t('Plugin Features'),
+			'$logtxt' => t('Logs'),
+			'$h_pending' => t('User registrations waiting for confirmation'),
+			'$admurl'=> z_root() . '/admin/'
+	));
+
 	return $o;
 
 }

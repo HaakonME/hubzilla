@@ -294,9 +294,19 @@ function zot_refresh($them, $channel = null, $force = false) {
 	if ($them['hubloc_url']) {
 		$url = $them['hubloc_url'];
 	} else {
-		$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
-			dbesc($them['xchan_hash'])
-		);
+		$r = null;
+
+		if(array_key_exists('xchan_addr',$them) && $them['xchan_addr']) {
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_addr = '%s'",
+				dbesc($them['xchan_addr'])
+			);
+		}
+		if(! $r) {
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
+				dbesc($them['xchan_hash'])
+			);
+		}
+
 		if ($r) {
 			foreach ($r as $rr) {
 				if (intval($rr['hubloc_primary'])) {
@@ -962,7 +972,7 @@ function zot_process_response($hub, $arr, $outq) {
 		);
 	}
 
-	logger('zot_process_response: ' . print_r($x,true), LOGGER_DATA);
+	logger('zot_process_response: ' . print_r($x,true), LOGGER_DEBUG);
 }
 
 /**
@@ -2226,7 +2236,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 					// Absolute sync - make sure the current primary is correctly reflected in the xchan
 					$pr = hubloc_change_primary($r[0]);
 					if($pr) {
-						$what .= 'xchan_primary';
+						$what .= 'xchan_primary ';
 						$changed = true;
 					}
 				}
@@ -2877,6 +2887,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('obj',$arr) && $arr['obj'])
 			sync_objs($channel,$arr['obj']);
+
+		if(array_key_exists('likes',$arr) && $arr['likes'])
+			import_likes($channel,$arr['likes']);
 
 		if(array_key_exists('app',$arr) && $arr['app'])
 			sync_apps($channel,$arr['app']);

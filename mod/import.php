@@ -432,6 +432,9 @@ function import_post(&$a) {
 	if(is_array($data['obj']))
 		import_objs($channel,$data['obj']);
 
+	if(is_array($data['likes']))
+		import_likes($channel,$data['likes']);
+
 	if(is_array($data['app']))
 		import_apps($channel,$data['app']);
 

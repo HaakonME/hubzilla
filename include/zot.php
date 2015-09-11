@@ -1089,8 +1089,11 @@ function zot_import($arr, $sender_url) {
 		$data = json_decode(crypto_unencapsulate($data,get_config('system','prvkey')),true);
 	}
 
-	if(! $data['success'])
+	if(! $data['success']) {
+		if($data['message'])
+			logger('remote pickup failed: ' . $data['message']);
 		return false;
+	}
 
 	$incoming = $data['pickup'];
 

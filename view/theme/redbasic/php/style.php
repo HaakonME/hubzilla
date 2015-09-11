@@ -36,7 +36,7 @@ if(! $a->install) {
 	$radius = get_pconfig($uid, "redbasic", "radius");
 	$shadow = get_pconfig($uid,"redbasic","photo_shadow");
 	$converse_width=get_pconfig($uid,"redbasic","converse_width");
-	$converse_center=get_pconfig($uid,"redbasic","converse_center");
+	$align_left=get_pconfig($uid,"redbasic","align_left");
 	$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 	$top_photo=get_pconfig($uid,'redbasic','top_photo');
 	$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
@@ -157,11 +157,11 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 	$aside_width = 285;
 
 	// left aside and right aside are is 231px + converse width
-	if($converse_center) {
-		$main_width = (($aside_width * 2) + intval($converse_width));
+	if($align_left) {
+		$main_width = (($aside_width) + intval($converse_width));
 	}
 	else {
-		$main_width = (($aside_width) + intval($converse_width));
+		$main_width = (($aside_width * 2) + intval($converse_width));
 	}
 	// prevent main_width smaller than 768px
 	$main_width = (($main_width < 768) ? 768 : $main_width);
@@ -209,9 +209,8 @@ if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
 	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
 } 
 
-if($converse_center && file_exists('view/theme/redbasic/css/converse_center.css')) {
-	$cc = file_get_contents('view/theme/redbasic/css/converse_center.css');
-	echo str_replace(array_keys($options), array_values($options), $cc);
+if($align_left && file_exists('view/theme/redbasic/css/align_left.css')) {
+	echo file_get_contents('view/theme/redbasic/css/align_left.css');
 }
 
 if($schemecss) {

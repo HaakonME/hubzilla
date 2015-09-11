@@ -232,7 +232,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		if($r) {
 			$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_channel()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) $item_normal ) ";
 			$title = replace_macros(get_markup_template("section_title.tpl"),array(
-				'$title' => (($_GET['pf'] === '1') ? t('Forum: ') : t('Connection: ')) . $r[0]['xchan_name']
+				'$title' => '<a href="' . zid($r[0]['xchan_url']) . '" /><img src="' . zid($r[0]['xchan_photo_s'])  . '" alt="' . urlencode($r[0]['xchan_name']) . '" /> ' . $r[0]['xchan_name'] . '</a>'
 			));
 			$o = $tabs;
 			$o .= $title;

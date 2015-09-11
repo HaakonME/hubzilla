@@ -972,7 +972,7 @@ function zot_process_response($hub, $arr, $outq) {
 		);
 	}
 
-	logger('zot_process_response: ' . print_r($x,true), LOGGER_DATA);
+	logger('zot_process_response: ' . print_r($x,true), LOGGER_DEBUG);
 }
 
 /**
@@ -2236,7 +2236,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 					// Absolute sync - make sure the current primary is correctly reflected in the xchan
 					$pr = hubloc_change_primary($r[0]);
 					if($pr) {
-						$what .= 'xchan_primary';
+						$what .= 'xchan_primary ';
 						$changed = true;
 					}
 				}

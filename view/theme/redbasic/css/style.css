@@ -201,13 +201,14 @@ nav #banner #logo-text a:hover { text-decoration: none; }
 .nav-channel-select { margin-left: 8px; }
 
 header #banner {
-/*  overflow: hidden; */
-  text-align: center;
-  font-size: 14px;
-  font-family: tahoma, "Lucida Sans", sans;
-  color: $banner_colour;
-  font-weight: bold;
-  margin-top: 14px;
+	z-index: 1040;
+	margin-top: 14px;
+	text-align: center;
+	font-size: 14px;
+	font-family: tahoma, "Lucida Sans", sans;
+	color: $banner_colour;
+	font-weight: bold;
+	whitespace: nowrap;
 }
 
 header #banner a,
@@ -215,15 +216,17 @@ header #banner a:active,
 header #banner a:visited,
 header #banner a:link,
 header #banner a:hover {
-  color: #FFF;
-  text-decoration: none;
-  outline: none;
-  vertical-align: bottom;
+	color: $banner_colour;
+	text-decoration: none;
+	outline: none;
+	vertical-align: bottom;
 }
+
 header #banner #logo-img {
   height: 22px;
   margin-top: 5px;
 }
+
 header #banner #logo-text {
   font-size: 22px;
 }
@@ -1300,17 +1303,6 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .widget.rateme {
 	margin-top: 15px;
 	padding: 0;
-}
-
-/* header */
-header {
-  position: fixed;
-  left: 43%;
-  right: 43%;
-  margin: 0px;
-  padding: 0px;
-  z-index: 1040;
-  color: #fff;
 }
 
 .notif-item a {

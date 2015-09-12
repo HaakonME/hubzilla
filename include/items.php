@@ -3441,6 +3441,8 @@ function post_is_importable($item,$abook) {
 	if($exclude) {
 		foreach($exclude as $word) {
 			$word = trim($word);
+			if(! $word)
+				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
 					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
@@ -3460,6 +3462,8 @@ function post_is_importable($item,$abook) {
 	if($include) {
 		foreach($include as $word) {
 			$word = trim($word);
+			if(! $word)
+				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
 					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))

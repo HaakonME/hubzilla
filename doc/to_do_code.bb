@@ -6,6 +6,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Include TOS link in registration/verification email[/li]
 [li]Auto preview posts/comments (configurable timer kicks in the preview if not 0)[/li]
 [li]Create bug tracker module[/li]
+[li]Filing posts - provide a dropdown menu integrated with the 'post actions menu'[/li]
 [li]translation plugins - moses or apertium[/li]
 [li]plugins - provide 'disable' which is softer than 'uninstall' for those plugins which create additional DB tables[/li]
 [li]Infinite scroll improvements (i.e. embedded page links) see http://scrollsample.appspot.com/items [/li]

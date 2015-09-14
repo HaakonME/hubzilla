@@ -537,7 +537,7 @@ function zot_refresh($them, $channel = null, $force = false) {
  * @returns array|null null if site is blacklisted or not found, otherwise an
  *  array with an hubloc record
  */
-function zot_gethub($arr) {
+function zot_gethub($arr,$multiple = false) {
 
 	if($arr['guid'] && $arr['guid_sig'] && $arr['url'] && $arr['url_sig']) {
 
@@ -556,18 +556,20 @@ function zot_gethub($arr) {
 			return null;
 		}
 
+		$limit = (($multiple) ? '' : ' limit 1 ');
+
 		$r = q("select * from hubloc
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s'
 				and hubloc_url = '%s' and hubloc_url_sig = '%s'
-				limit 1",
+				$limit",
 			dbesc($arr['guid']),
 			dbesc($arr['guid_sig']),
 			dbesc($arr['url']),
 			dbesc($arr['url_sig'])
 		);
-		if($r && count($r)) {
+		if($r) {
 			logger('zot_gethub: found', LOGGER_DEBUG);
-			return $r[0];
+			return (($multiple) ? $r : $r[0]);
 		}
 	}
 	logger('zot_gethub: not found: ' . print_r($arr,true), LOGGER_DEBUG);
@@ -951,7 +953,7 @@ function zot_process_response($hub, $arr, $outq) {
 
 	// update the timestamp for this site
 
-	q("update site set site_update = '%s' where site_url = '%s'",
+	q("update site set site_dead = 0, site_update = '%s' where site_url = '%s'",
 		dbesc(datetime_convert()),
 		dbesc(dirname($hub))
 	);
@@ -996,27 +998,38 @@ function zot_fetch($arr) {
 
 	$url = $arr['sender']['url'] . $arr['callback'];
 
-	$ret_hub = zot_gethub($arr['sender']);
-	if(! $ret_hub) {
+	// set $multiple param on zot_gethub() to return all matching hubs
+	// This allows us to recover from re-installs when a redundant (but invalid) hubloc for
+	// this identity is widely dispersed throughout the network. 
+
+	$ret_hubs = zot_gethub($arr['sender'],true);
+	if(! $ret_hubs) {
 		logger('zot_fetch: no hub: ' . print_r($arr['sender'],true));
 		return;
 	}
 
-	$data = array(
-		'type'    => 'pickup',
-		'url'     => z_root(),
-		'callback_sig' => base64url_encode(rsa_sign(z_root() . '/post',get_config('system','prvkey'))),
-		'callback' => z_root() . '/post',
-		'secret' => $arr['secret'],
-		'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
-	);
+	foreach($ret_hubs as $ret_hub) {
+		$data = array(
+			'type'    => 'pickup',
+			'url'     => z_root(),
+			'callback_sig' => base64url_encode(rsa_sign(z_root() . '/post',get_config('system','prvkey'))),	
+			'callback' => z_root() . '/post',
+			'secret' => $arr['secret'],
+			'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
+		);
 
-	$datatosend = json_encode(crypto_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
+		$datatosend = json_encode(crypto_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
 
-	$fetch = zot_zot($url,$datatosend);
-	$result = zot_import($fetch, $arr['sender']['url']);
+		$fetch = zot_zot($url,$datatosend);
 
-	return $result;
+		$result = zot_import($fetch, $arr['sender']['url']);
+		
+		if($result)
+			return $result;
+	}
+
+	return;
+
 }
 
 /**
@@ -1053,6 +1066,12 @@ function zot_import($arr, $sender_url) {
 
 	if(array_key_exists('iv', $data)) {
 		$data = json_decode(crypto_unencapsulate($data,get_config('system','prvkey')),true);
+	}
+
+	if(! $data['success']) {
+		if($data['message'])
+			logger('remote pickup failed: ' . $data['message']);
+		return false;
 	}
 
 	$incoming = $data['pickup'];
@@ -2663,7 +2682,7 @@ function import_site($arr, $pubkey) {
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
+			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
 				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2681,7 +2700,7 @@ function import_site($arr, $pubkey) {
 		}
 		else {
 			// update the timestamp to indicate we communicated with this site
-			q("update site set site_update = '%s' where site_url = '%s'",
+			q("update site set site_dead = 0, site_update = '%s' where site_url = '%s'",
 				dbesc(datetime_convert()),
 				dbesc($url)
 			);

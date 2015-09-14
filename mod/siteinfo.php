@@ -150,6 +150,9 @@ function siteinfo_content(&$a) {
 	if(file_exists('doc/site_donate.html'))
 		$donate .= file_get_contents('doc/site_donate.html');
 
+	if(function_exists('sys_getloadavg'))
+		$loadavg = sys_getloadavg();
+
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
 		'$title' => t('$Projectname'),
 		'$description' => t('This is a hub of $Projectname - a global cooperative network of decentralized privacy enhanced websites.'),
@@ -158,6 +161,8 @@ function siteinfo_content(&$a) {
 		'$tag' => $tag,
 		'$polled' => t('Last background fetch: '),
 		'$lastpoll' => get_poller_runtime(),
+		'$load_average' => t('Current load average: '),
+		'$loadavg_all' => $loadavg[0] . ', ' . $loadavg[1] . ', ' . $loadavg[2],		
 		'$commit' => $commit,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
 		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about $Projectname.'),

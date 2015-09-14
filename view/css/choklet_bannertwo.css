@@ -1,9 +1,8 @@
 header #banner {
 	position: fixed;
-	top: 0;
-	width: 250px;
-	margin-left: auto;
-	margin-right: auto;
+	width: 33%;
+	margin-left: 33%;
+	margin-right: 33%;
 }
 #blog-banner {
 	position: relative; 

@@ -276,3 +276,28 @@ function xchan_fetch($arr) {
 	}
 	return $ret;
 }
+
+
+
+function ping_site($url) {
+
+		$ret = array('success' => false);
+
+		$sys = get_sys_channel();
+
+		$m = zot_build_packet($sys,'ping');
+		$r = zot_zot($url . '/post',$m);
+		if(! $r['success']) {
+			$ret['message'] = 'no answer from ' . $url;
+			return $ret;
+		}
+		$packet_result = $r['body'];
+		if(! $packet_result['success']) {
+			$ret['message'] = 'packet failure from ' . $url;		
+			return $ret;
+		}
+
+		$ret['success'] = true;
+		return $ret;
+
+}

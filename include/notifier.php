@@ -486,20 +486,6 @@ function notifier_run($argv, $argc){
 	if($details) {
 		foreach($details as $d) {
 
-			// If the recipient is federated from a traditional network they won't be able to 
-			// handle nomadic identity. If we're publishing from a site that they aren't
-			// directly connected with, ignore them.
-
-			// FIXME: make sure we run through a notifier loop on the hub they're connected
-			// with if this post comes in from a different hub - so that we will deliver to them.
-
-			// On the down side, these channels will stop working if the hub they connected with
-			// goes down permanently, as they are (doh) not nomadic. 
-
-			if(($d['xchan_instance_url']) && ($d['xchan_instance_url'] != z_root()))
-				continue; 
-
-
 			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
 			if($private)
 				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig'],'hash' => $d['xchan_hash']);

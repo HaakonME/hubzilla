@@ -291,13 +291,18 @@ function ping_site($url) {
 			$ret['message'] = 'no answer from ' . $url;
 			return $ret;
 		}
-		$packet_result = $r['body'];
+		$packet_result = json_decode($r['body'],true);
 		if(! $packet_result['success']) {
 			$ret['message'] = 'packet failure from ' . $url;		
 			return $ret;
 		}
 
-		$ret['success'] = true;
-		return $ret;
+		if($packet_result['success']) {
+			$ret['success'] = true;
+		}
+		else {
+			$ret['message'] = 'unknown error from ' . $url;
+		}
 
+		return $ret;
 }

@@ -5,6 +5,7 @@ require_once('include/crypto.php');
 function xrd_init(&$a) {
 
 	$uri = urldecode(notags(trim($_GET['uri'])));
+	logger('xrd: ' . $uri,LOGGER_DEBUG);
 
 	if(substr($uri,0,4) === 'http')
 		$name = basename($uri);

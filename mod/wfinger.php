@@ -19,7 +19,7 @@ function wfinger_init(&$a) {
 	}
 
 	$resource = $_REQUEST['resource'];
-
+	logger('webfinger: ' . $resource,LOGGER_DEBUG);
 
 	$r = null;
 

@@ -437,7 +437,7 @@ function bb_observer($Text) {
 
 
 	// BBcode 2 HTML was written by WAY2WEB.net
-	// extended to work with Mistpark/Friendica/Red - Mike Macgirvin
+	// extended to work with Mistpark/Friendica/Redmatrix/Hubzilla - Mike Macgirvin
 
 function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) {
 

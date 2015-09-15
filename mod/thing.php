@@ -234,9 +234,17 @@ function thing_init(&$a) {
 
 function thing_content(&$a) {
 
+	// @FIXME one problem with things is we can't share them unless we provide the channel in the url
+	// so we can definitively lookup the owner. 
+
 	if(argc() == 2) {
 
-		$sql_extra = permissions_sql();
+		$r = q("select obj_channel from obj where obj_type = %d and obj_obj = '%s' limit 1",
+			intval(TERM_OBJ_THING),
+			dbesc(argv(1))
+		);
+		if($r) 
+			$sql_extra = permissions_sql($r[0]['obj_channel']);
 
 		$r = q("select * from obj where obj_type = %d and obj_obj = '%s' $sql_extra limit 1",
 			intval(TERM_OBJ_THING),

@@ -25,11 +25,9 @@ function checksites_run($argv, $argc){
 	if($days < 1)
 		$days = 30;
 
-
 	$r = q("select * from site where site_dead = 0 and site_update < %s - INTERVAL %s $sql_options ",
 		db_utcnow(), db_quoteinterval($days . ' DAY')
 	);
-
 
 	if(! $r)
 		return;

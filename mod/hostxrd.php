@@ -2,7 +2,7 @@
 
 function hostxrd_init(&$a) {
 	header('Access-Control-Allow-Origin: *');
-	header("Content-type: text/xml");
+	header("Content-type: application/xrd+xml");
 	logger('hostxrd',LOGGER_DEBUG);
 
 	$tpl = get_markup_template('xrd_host.tpl');

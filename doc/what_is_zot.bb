@@ -13,7 +13,7 @@ Zot is a revolutionary protocol which provides [i]decentralised communications[/
 
 Communications and social networking are an integral part of the grid. Any channel (and any services provided by that channel) can make full use of feature-rich social communications on a global scale. These communications may be public or private - and private communications comprise not only fully encrypted transport, but also encrypted storage to help protect against accidental snooping and disclosure by rogue system administrators and internet service providers. 
 
-Zot allows a wide array of background services in the grid, from offering friend suggestions, to directory services. You can also perform other things which would typically only be possibly on a centralized provider - such as &quot;Wall to Wall&quot; posts. Priivate/multiple profiles can be easily created, and web content can be tailored to the viewer via the [i]Affinity Slider[/i]. 
+Zot allows a wide array of background services in the grid, from offering friend suggestions, to directory services. You can also perform other things which would typically only be possibly on a centralized provider - such as &quot;Wall to Wall&quot; posts. Private/multiple profiles can be easily created, and web content can be tailored to the viewer via the [i]Affinity Slider[/i]. 
 
 You won't find these features at all on other decentralized communication services. In addition to providing hub (server) decentralization, perhaps the most innovative and interesting Zot feature is its provision of [i]decentralized identity[/i] services.
 
@@ -27,11 +27,11 @@ The important bits of your identity and relationships can be backed up to a thum
 
 Crucially, these nomadic instances are kept in sync so any instance can take over if another one is compromised or damaged. This protects you against not only major system failure, but also temporary site overloads and governmental manipulation or censorship. 
 
-Nomadic identity, single sign-on, and$Projectname's decentralization of hubs, we believe, introduce a high degree of degree of [i]resiliency[/i] and [i]persistence[/i] in internet communications, that are sorely needed amidst global trends towards corporate centralization, as well as mass and indiscriminate government surveillance and censorship.
+Nomadic identity, single sign-on, and $Projectname's decentralization of hubs, we believe, introduce a high degree of degree of [i]resiliency[/i] and [i]persistence[/i] in internet communications, that are sorely needed amidst global trends towards corporate centralization, as well as mass and indiscriminate government surveillance and censorship.
 
 As you browse the grid, viewing channels and their unique content, you are seamlessly authenticated as you go, even across completely different server hubs. No passwords to enter. Nothing to type. You're just greeted by name on every new site you visit. 
 
-How does Zot do that? We call it [i]magic-auth[/i], because$Projectname hides the details of the complexities that go into single sign-on logins, and nomadic identities, from the experience of browsing on the grid.  This is one of the design goals of$Projectname: to increase privacy, and freedom on the web, while reducing the complexity and tedium brought by the need to enter new passwords and user names for every different sight that someone might visit online.
+How does Zot do that? We call it [i]magic-auth[/i], because $Projectname hides the details of the complexities that go into single sign-on logins, and nomadic identities, from the experience of browsing on the grid.  This is one of the design goals of $Projectname: to increase privacy, and freedom on the web, while reducing the complexity and tedium brought by the need to enter new passwords and user names for every different sight that someone might visit online.
 
 You login only once on your home hub (or any nomadic backup hub you have chosen). This allows you to access any authenticated services provided anywhere in the grid - such as shopping, blogs, forums, and access to private information. This is just like the services offered by large corporate providers with huge user databases; however you can be a member of this community, as well as a server on this network using a $35 Rasberry Pi. Your password isn't stored on a thousand different sites, or even worse, only on a few sites like Google and Facebook, beyond your direct control.
 

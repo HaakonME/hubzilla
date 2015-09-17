@@ -125,8 +125,7 @@ function mail_content(&$a) {
 
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
-		'$messages' => t('Messages'),
-		'$tab_content' => $tab_content
+		'$header' => t('Messages'),
 	));
 
 	if((argc() == 3) && (argv(1) === 'drop')) {
@@ -159,8 +158,6 @@ function mail_content(&$a) {
 	}
 
 	if((argc() > 1) && (argv(1) === 'new')) {
-		
-		$o .= $header;
 		
 		$plaintext = true;
 

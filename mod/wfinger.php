@@ -18,6 +18,8 @@ function wfinger_init(&$a) {
 		killme();
 	}
 
+	$zot = intval($_REQUEST['zot']);
+
 	$resource = $_REQUEST['resource'];
 	logger('webfinger: ' . $resource,LOGGER_DEBUG);
 
@@ -30,7 +32,7 @@ function wfinger_init(&$a) {
 			if(strpos($channel,'@') !== false) {
 				$host = substr($channel,strpos($channel,'@')+1);
 				if(strcasecmp($host,get_app()->get_hostname())) {
-					goaway('https://' . $host . '/.well-known/webfinger?resource=' . $resource);
+					goaway('https://' . $host . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=' . $zot : ''));
 				}
 				$channel = substr($channel,0,strpos($channel,'@'));
 			}		
@@ -52,10 +54,9 @@ function wfinger_init(&$a) {
 	header('Content-type: application/jrd+json');
 
 
-
 	if($resource && $r) {
 
-		$h = q("select hubloc_addr from hubloc where hubloc_hash = '%s'",
+		$h = q("select hubloc_addr from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0",
 			dbesc($r[0]['channel_hash'])
 		);
 
@@ -105,6 +106,13 @@ function wfinger_init(&$a) {
 			)
 		);
 
+		if($zot) {
+			// @FIXME do a lookup straightaway and return the zot-info packet
+
+			$_REQUEST['address'] = $r[0]['xchan_address'];
+
+
+		}
 	}
 	else {
 		header($_SERVER["SERVER_PROTOCOL"] . ' ' . 400 . ' ' . 'Bad Request');

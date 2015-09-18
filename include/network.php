@@ -1282,7 +1282,7 @@ LSIeXnd14lQYK/uxW/8cTFjcmddsKxeXysoQxbSa9VdDK+KkpZdgYXYrTTofXs6v+
 }
 
 
-function webfinger_rfc7033($webbie) {
+function webfinger_rfc7033($webbie,$zot = false) {
 
 
 	if(! strpos($webbie,'@'))
@@ -1292,7 +1292,7 @@ function webfinger_rfc7033($webbie) {
 
 	$resource = 'acct:' . $webbie;
 
-	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?resource=' . $resource);
+	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=1' : ''));
 
 	if($s['success'])
 		$j = json_decode($s['body'],true);

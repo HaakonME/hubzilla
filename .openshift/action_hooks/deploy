@@ -167,7 +167,7 @@ if [ ! -f ${OPENSHIFT_REPO_DIR}.openshift/markers/hot_deploy ]; then
 
 touch ${OPENSHIFT_REPO_DIR}.openshift/markers/hot_deploy
 
-echo "Done creating file .openshift/cron/minutely/poller"
+echo "Done creating file .openshift/markers/hot_deploy"
 
 else
 

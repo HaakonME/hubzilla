@@ -15,7 +15,7 @@
 				<i class="icon-pencil btn btn-default btn-xs" title="{{$edit.edit}}" onclick="openClose('photo-edit');"></i>
 				{{/if}}
 				{{if $lock}}
-				<i id="lockview" class="icon-lock btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview('item',{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>
+				<i id="lockview" class="icon-lock btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="{{$lock}}" onclick="lockview('photo',{{$id}});" ></i><ul id="panel-{{$id}}" class="lockview-panel dropdown-menu"></ul>
 				{{/if}}
 			</div>
 			<div class="btn-group btn-group">

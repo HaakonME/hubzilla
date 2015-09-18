@@ -26,6 +26,9 @@
 						{{include file="field_input.tpl" field=$photo_path}}
 						{{include file="field_input.tpl" field=$attach_path}}
 
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -74,6 +77,9 @@
 							{{$suggestme}}
 							{{include file="field_checkbox.tpl" field=$blocktags}}
 							{{include file="field_input.tpl" field=$expire}}
+						</div>
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 						</div>
 					</div>
 				</div>
@@ -124,14 +130,10 @@
 								{{include file="field_input.tpl" field=$evdays}}
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="panel">
-				<div class"section-subtitle-wrapper" role="tab" id="form-buttons">
 						<div class="settings-submit-wrapper" >
 							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 						</div>
+					</div>
 				</div>
 			</div>
 			{{if $menus}}

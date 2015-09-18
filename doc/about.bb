@@ -12,7 +12,7 @@ It is written in the PHP scripting language, thus making it trivial to install o
 
 In other words, $Projectname can run on any computing platform that comes with a web server, a MySQL-compatible database, and the PHP scripting language. 
 
-Along the way,$Projectname offers a number of unique goodies: 
+Along the way, $Projectname offers a number of unique goodies: 
 
 [b]Single-click user identification:[/b] meaning you can access sites on $Projectname simply by clicking on links to remote sites. Authentication just happens automagically behind the scenes. Forget about remembering multiple user names with multiple passwords when accessing different sites online.
 

@@ -190,7 +190,7 @@ When creating &quot;Websites&quot;, content may be entered in HTML, Markdown, BB
 Any content created in $Projectname remains under the control of the member (or channel) that originally created it.  At any time, a member can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot ($Projectname communication and authentication protocol).
 
 [b]Media[/b]
-Similar to any other modern blogging system, social network, or a micro-blogging service,$Projectname supports the uploading of files, embedding of videos, linking web pages.
+Similar to any other modern blogging system, social network, or a micro-blogging service, $Projectname supports the uploading of files, embedding of videos, linking web pages.
 
 [b]Previewing/Editing[/b] 
 Post can be previewed prior to sending and edited after sending.

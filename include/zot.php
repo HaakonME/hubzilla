@@ -296,13 +296,17 @@ function zot_refresh($them, $channel = null, $force = false) {
 	} else {
 		$r = null;
 
+		// if they re-installed the server we could end up with the wrong record - pointing to the old install.
+		// We'll order by reverse id to try and pick off the newest one first and hopefully end up with the
+		// correct hubloc. If this doesn't work we may have to re-write this section to try them all. 
+
 		if(array_key_exists('xchan_addr',$them) && $them['xchan_addr']) {
-			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_addr = '%s'",
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_addr = '%s' order by hubloc_id desc",
 				dbesc($them['xchan_addr'])
 			);
 		}
 		if(! $r) {
-			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s' order by hubloc_id desc",
 				dbesc($them['xchan_hash'])
 			);
 		}

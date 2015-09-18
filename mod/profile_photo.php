@@ -92,12 +92,15 @@ function profile_photo_post(&$a) {
 		$is_default_profile = 1;
 
 		if($_REQUEST['profile']) {
-			$r = q("select id, is_default from profile where id = %d and uid = %d limit 1",
+			$r = q("select id, profile_guid, is_default, gender from profile where id = %d and uid = %d limit 1",
 				intval($_REQUEST['profile']),
 				intval(local_channel())
 			);
-			if(($r) && (! intval($r[0]['is_default'])))
-				$is_default_profile = 0;
+			if($r) {
+				$profile = $r[0];
+				if(! intval($profile['is_default']))
+					$is_default_profile = 0;
+			}
 		} 
 
 		
@@ -167,6 +170,8 @@ function profile_photo_post(&$a) {
 					return;
 				}
 
+				$channel = $a->get_channel();
+
 				// If setting for the default profile, unset the profile photo flag from any other photos I own
 
 				if($is_default_profile) {
@@ -177,6 +182,9 @@ function profile_photo_post(&$a) {
 						dbesc($base_image['resource_id']),
 						intval(local_channel())
 					);
+
+					send_profile_photo_activity($channel,$base_image,$profile);
+
 				}
 				else {
 					$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d",
@@ -190,7 +198,6 @@ function profile_photo_post(&$a) {
 				// We'll set the updated profile-photo timestamp even if it isn't the default profile,
 				// so that browsers will do a cache update unconditionally
 
-				$channel = $a->get_channel();
 
 				$r = q("UPDATE xchan set xchan_photo_mimetype = '%s', xchan_photo_date = '%s' 
 					where xchan_hash = '%s'",
@@ -206,7 +213,9 @@ function profile_photo_post(&$a) {
 
 				// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
 
-                                profile_photo_set_profile_perms($_REQUEST['profile']);
+				profile_photo_set_profile_perms($_REQUEST['profile']);
+
+
 
 			}
 			else
@@ -261,6 +270,59 @@ function profile_photo_post(&$a) {
 	return profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
 	
 }
+
+function send_profile_photo_activity($channel,$photo,$profile) {
+
+	// for now only create activities for the default profile
+
+	if(! intval($profile['is_default']))
+		return;
+
+	$arr = array();
+	$arr['item_thread_top'] = 1;
+	$arr['item_origin'] = 1;
+	$arr['item_wall'] = 1;
+	$arr['obj_type'] = ACTIVITY_OBJ_PHOTO;
+	$arr['verb'] = ACTIVITY_UPDATE;
+
+	$arr['object'] = json_encode(array(
+		'type' => $arr['obj_type'],
+		'id' => z_root() . '/photo/profile/l/' . $channel['channel_id'],
+		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/profile/l/' . $channel['channel_id'])
+	));
+
+	if(stripos($profile['gender'],t('female')) !== false)
+		$t = t('%1$s updated her %2$s');
+	elseif(stripos($profile['gender'],t('male')) !== false)
+		$t = t('%1$s updated his %2$s');
+	else
+		$t = t('%1$s updated their %2$s');
+
+	$ptext = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' . t('profile photo') . '[/zrl]';
+
+	$ltext = '[zrl=' . z_root() . '/profile/' . $channel['channel_address'] . ']' . '[zmg=150x150]' . z_root() . '/photo/' . $photo['resource_id'] . '-4[/zmg][/zrl]'; 
+
+	$arr['body'] = sprintf($t,$channel['channel_name'],$ptext) . "\n\n" . $ltext;
+
+	$acl = new AccessList($channel);
+	$x = $acl->get();
+	$arr['allow_cid'] = $x['allow_cid'];
+
+	$arr['allow_gid'] = $x['allow_gid'];
+	$arr['deny_cid'] = $x['deny_cid'];
+	$arr['deny_gid'] = $x['deny_gid'];
+
+	$arr['uid'] = $channel['channel_id'];
+	$arr['aid'] = $channel['channel_account_id'];
+
+	$arr['owner_xchan'] = $channel['channel_hash'];
+	$arr['author_xchan'] = $channel['channel_hash'];
+
+	post_activity_item($arr);
+
+
+}
+
 
 /* @brief Generate content of profile-photo view
  *

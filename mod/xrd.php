@@ -5,6 +5,7 @@ require_once('include/crypto.php');
 function xrd_init(&$a) {
 
 	$uri = urldecode(notags(trim($_GET['uri'])));
+	logger('xrd: ' . $uri,LOGGER_DEBUG);
 
 	if(substr($uri,0,4) === 'http')
 		$name = basename($uri);
@@ -31,7 +32,7 @@ function xrd_init(&$a) {
 	$salmon_key = salmon_key($r[0]['channel_pubkey']);
 
 	header('Access-Control-Allow-Origin: *');
-	header("Content-type: text/xml");
+	header("Content-type: application/xrd+xml");
 
 
 	$tpl = get_markup_template('view/xrd_person.tpl');

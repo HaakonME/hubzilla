@@ -486,20 +486,6 @@ function notifier_run($argv, $argc){
 	if($details) {
 		foreach($details as $d) {
 
-			// If the recipient is federated from a traditional network they won't be able to 
-			// handle nomadic identity. If we're publishing from a site that they aren't
-			// directly connected with, ignore them.
-
-			// FIXME: make sure we run through a notifier loop on the hub they're connected
-			// with if this post comes in from a different hub - so that we will deliver to them.
-
-			// On the down side, these channels will stop working if the hub they connected with
-			// goes down permanently, as they are (doh) not nomadic. 
-
-			if(($d['xchan_instance_url']) && ($d['xchan_instance_url'] != z_root()))
-				continue; 
-
-
 			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
 			if($private)
 				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig'],'hash' => $d['xchan_hash']);
@@ -526,31 +512,10 @@ function notifier_run($argv, $argc){
 	// Now we have collected recipients (except for external mentions, FIXME)
 	// Let's reduce this to a set of hubs.
 
-	logger('notifier: hub choice: ' . intval($relay_to_owner) . ' ' . intval($private) . ' ' . $cmd, LOGGER_DEBUG);
-
-	// FIXME: I think we need to remove the private bit or this clause will never execute. Needs more coffee to think it through.
-	// We may in fact have to send it to clones in case the one we pick recently died. 
-
-	if($relay_to_owner && (! $private) && ($cmd !== 'relay')) {
-
-		// If sending a followup to the post owner, only send it to one channel clone - to avoid race conditions.
-		// In this case we'll pick the most recently contacted hub, as their primary might be down and the most
-		// recently contacted has the best chance of being alive.
-
-		// For private posts or uplinks we have to do things differently as only the sending clone will have the recipient list. 
-		// We have to send to all clone channels of the owner to find out who has the definitive list. Posts with 
-		// item_private set (but no ACL list) will return empty recipients (except for the sender and owner) in 
-		// collect_recipients() above. The end result is we should get only one delivery per delivery chain if we 
-		// aren't the owner or author.  
-
-
-		$r = q("select * from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") order by hubloc_connected desc limit 1");
-	} 
-	else {
-		$r = q("select * from hubloc where hubloc_hash in (" . implode(',',$recipients) . ") 
-			and hubloc_error = 0 and hubloc_deleted = 0");		
-	} 
+	$r = q("select * from hubloc where hubloc_hash in (" . implode(',',$recipients) . ") 
+		and hubloc_error = 0 and hubloc_deleted = 0"
+	);		
+ 
 
 	if(! $r) {
 		logger('notifier: no hubs');
@@ -558,6 +523,15 @@ function notifier_run($argv, $argc){
 	}
 
 	$hubs = $r;
+
+	$dead_hubs = array();
+
+	$dh = q("select site_url from site where site_dead = 1");
+	if(dh) {
+		foreach($dh as $dead) {
+			$dead_hubs[] = $dead['site_url'];
+		}
+	}
 
 
 	/**
@@ -574,6 +548,11 @@ function notifier_run($argv, $argc){
 
 
 	foreach($hubs as $hub) {
+		if(in_array($hub['hubloc_url'],$dead_hubs)) {
+			logger('skipping dead hub: ' . $hub['hubloc_url'], LOGGER_DEBUG);
+			continue;
+		}
+
 		if($hub['hubloc_network'] == 'zot') {
 			if(! in_array($hub['hubloc_sitekey'],$keys)) {
 				$hublist[] = $hub['hubloc_host'];

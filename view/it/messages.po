@@ -4672,7 +4672,7 @@ msgstr "Il ridimensionamento dell'immagine è fallito."
 msgid ""
 "Shift-reload the page or clear browser cache if the new photo does not "
 "display immediately."
-msgstr "Ricarica la pagina con shift+F5 o cancella la cache del browser se la nuova foto non viene mostrata immediatamente."
+msgstr "Ricarica la pagina con shift+control+r o cancella la cache del browser se la nuova foto non viene mostrata immediatamente."
 
 #: ../../mod/profile_photo.php:233
 #, php-format

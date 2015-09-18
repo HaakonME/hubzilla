@@ -770,7 +770,7 @@ function photos_content(&$a) {
 
 		// fetch image, item containing image, then comments
 
-		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,photo_usage,is_nsfw,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+		$ph = q("SELECT id,aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,photo_usage,is_nsfw,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 			$sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
 			dbesc($datum)
@@ -1147,7 +1147,7 @@ function photos_content(&$a) {
 
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
-			'$id' => $link_item['id'], //$ph[0]['id'],
+			'$id' => $ph[0]['id'],
 			'$album' => $album_e,
 			'$tools' => $tools,
 			'$lock' => $lockstate[1],

@@ -1132,7 +1132,7 @@ function attach_mkdirp($channel, $observer_hash, $arr = null) {
  */
 function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse = false) {
 
-	$r = q("select hash, flags, is_dir from attach where hash = '%s' and uid = %d limit 1",
+	$r = q("select hash, flags, is_dir, is_photo from attach where hash = '%s' and uid = %d limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
@@ -1162,6 +1162,16 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 		dbesc($resource),
 		intval($channel_id)
 	);
+	if($r[0]['is_photo']) {
+		$x = q("update photo set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s' where resource_id = '%s' and uid = %d",
+			dbesc($allow_cid),
+			dbesc($allow_gid),
+			dbesc($deny_cid),
+			dbesc($deny_gid),
+			dbesc($resource),
+			intval($channel_id)
+		);
+	}
 }
 
 /**

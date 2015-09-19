@@ -1531,6 +1531,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 	$result = array();
 
+	$result['site'] = z_root();
+
 	// We've validated the sender. Now make sure that the sender is the owner or author
 
 	if(! $public) {

@@ -579,7 +579,7 @@ $a->strings["Social Networking"] = "Redes sociales";
 $a->strings["Mostly Public"] = "Público en su mayor parte";
 $a->strings["Restricted"] = "Restringido";
 $a->strings["Private"] = "Privado";
-$a->strings["Community Forum"] = "Foro de la comunidad";
+$a->strings["Community Forum"] = "Foro de discusión";
 $a->strings["Feed Republish"] = "Republicar un \"feed\"";
 $a->strings["Special Purpose"] = "Propósito especial";
 $a->strings["Celebrity/Soapbox"] = "Página para fans";
@@ -2031,7 +2031,7 @@ $a->strings["Examples: \"Bob Jameson\", \"Lisa and her Horses\", \"Soccer\", \"A
 $a->strings["Choose a short nickname"] = "Elija un alias corto";
 $a->strings["Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others."] = "Su alias podrá usarse para crear una dirección de canal fácilmente memorizable (como una dirección de correo electrónico) que puede ser compartido con otros.";
 $a->strings["Or <a href=\"import\">import an existing channel</a> from another location"] = "O <a href=\"import\">importar un canal existente</a> de otro lugar";
-$a->strings["Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you"] = "Elija el tipo de canal (como red social o foro de comunidad) y la privacidad que requiera, así podremos seleccionar el mejor conjunto de permisos para usted";
+$a->strings["Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you"] = "Elija el tipo de canal (como red social o foro de discusión) y la privacidad que requiera, así podremos seleccionar el mejor conjunto de permisos para usted";
 $a->strings["Channel Type"] = "Tipo de canal";
 $a->strings["Read more about roles"] = "Leer más sobre los roles";
 $a->strings["App installed."] = "Aplicación instalada.";

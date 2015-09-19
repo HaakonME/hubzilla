@@ -341,6 +341,28 @@ CREATE TABLE "conv" (
 create index "conv_created_idx" on conv ("created");
 create index "conv_updated_idx" on conv ("updated");
 
+CREATE TABLE IF NOT EXISTS "dreport" (
+  "dreport_id" int(11) NOT NULL,
+  "dreport_channel" int(11) NOT NULL DEFAULT '0',
+  "dreport_mid" char(255) NOT NULL DEFAULT '',
+  "dreport_site" char(255) NOT NULL DEFAULT '',
+  "dreport_recip" char(255) NOT NULL DEFAULT '',
+  "dreport_result" char(255) NOT NULL DEFAULT '',
+  "dreport_time" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "dreport_xchan" char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY ("dreport_id")
+);
+
+create index "dreport_mid" on dreport ("dreport_mid");
+create index "dreport_site" on dreport ("dreport_site");
+create index "dreport_time" on dreport ("dreport_time");
+create index "dreport_xchan" on dreport ("dreport_xchan");
+create index "dreport_channel" on dreport ("dreport_channel");
+
+
+
+
+
 CREATE TABLE "event" (
   "id" serial NOT NULL,
   "aid" bigint  NOT NULL DEFAULT '0',

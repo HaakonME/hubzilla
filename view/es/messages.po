@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-11 00:05-0700\n"
-"PO-Revision-Date: 2015-09-14 11:47+0000\n"
+"PO-Revision-Date: 2015-09-14 18:21+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -2507,7 +2507,7 @@ msgstr "Privado"
 
 #: ../../include/permissions.php:894
 msgid "Community Forum"
-msgstr "Foro de la comunidad"
+msgstr "Foro de discusión"
 
 #: ../../include/permissions.php:895
 msgid "Feed Republish"
@@ -8604,7 +8604,7 @@ msgstr "O <a href=\"import\">importar un canal existente</a> de otro lugar"
 msgid ""
 "Please choose a channel type (such as social networking or community forum) "
 "and privacy requirements so we can select the best permissions for you"
-msgstr "Elija el tipo de canal (como red social o foro de comunidad) y la privacidad que requiera, así podremos seleccionar el mejor conjunto de permisos para usted"
+msgstr "Elija el tipo de canal (como red social o foro de discusión) y la privacidad que requiera, así podremos seleccionar el mejor conjunto de permisos para usted"
 
 #: ../../mod/new_channel.php:119
 msgid "Channel Type"

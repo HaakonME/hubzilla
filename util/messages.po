@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-09-11.1152\n"
+"Project-Id-Version: 2015-09-18.1159\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-11 00:05-0700\n"
+"POT-Creation-Date: 2015-09-18 00:04-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3110,15 +3110,15 @@ msgstr ""
 msgid "Connection not found."
 msgstr ""
 
-#: ../../include/zot.php:675
+#: ../../include/zot.php:677
 msgid "Invalid data packet"
 msgstr ""
 
-#: ../../include/zot.php:691
+#: ../../include/zot.php:693
 msgid "Unable to verify channel signature"
 msgstr ""
 
-#: ../../include/zot.php:2142
+#: ../../include/zot.php:2161
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr ""

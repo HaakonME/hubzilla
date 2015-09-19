@@ -488,21 +488,17 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if($y) {
 					logger("New introduction received for {$channel['channel_name']}");
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
-					if($new_perms != $previous_perms) {
-						// Send back a permissions update if permissions have changed
-						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
-							dbesc($x['hash']),
-							intval($channel['channel_id']),
-							intval(ABOOK_FLAG_SELF)
-						);
-						if($z)
-							proc_run('php','include/notifier.php','permission_update',$z[0]['abook_id']);
-					}
-					$new_connection = q("select abook_id, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
+
+					// Send a clone sync packet and a permissions update if permissions have changed
+					$new_connection = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 order by abook_created desc limit 1",
+						dbesc($x['hash']),
 						intval($channel['channel_id']),
-						dbesc($x['hash'])
+						intval(ABOOK_FLAG_SELF)
 					);
+
 					if($new_connection) {
+						if($new_perms != $previous_perms)
+							proc_run('php','include/notifier.php','permission_update',$new_connection[0]['abook_id']);
 						require_once('include/enotify.php');
 						notification(array(
 							'type'       => NOTIFY_INTRO,
@@ -510,12 +506,17 @@ function zot_refresh($them, $channel = null, $force = false) {
 							'to_xchan'   => $channel['channel_hash'],
 							'link'       => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
 						));
-					}
+					
+						if($their_perms & PERMS_R_STREAM) {
+							if(($channel['channel_w_stream'] & PERMS_PENDING)
+								|| (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) )
+								proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
+						}
 
-					if($new_connection && ($their_perms & PERMS_R_STREAM)) {
-						if(($channel['channel_w_stream'] & PERMS_PENDING)
-							|| (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) )
-							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
+						unset($new_connection[0]['abook_id']);
+						unset($new_connection[0]['abook_account']);
+						unset($new_connection[0]['abook_channel']);
+						build_sync_packet($channel['channel_id'], array('abook' => $new_connection));
 					}
 				}
 			}
@@ -995,7 +996,7 @@ function zot_process_response($hub, $arr, $outq) {
 		);
 	}
 
-	logger('zot_process_response: ' . print_r($x,true), LOGGER_DATA);
+	logger('zot_process_response: ' . print_r($x,true), LOGGER_DEBUG);
 }
 
 /**

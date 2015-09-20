@@ -490,7 +490,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
 
 					// Send a clone sync packet and a permissions update if permissions have changed
-					$new_connection = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 order by abook_created desc limit 1",
+					$new_connection = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 order by abook_created desc limit 1",
 						dbesc($x['hash']),
 						intval($channel['channel_id']),
 						intval(ABOOK_FLAG_SELF)

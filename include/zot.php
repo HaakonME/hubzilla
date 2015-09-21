@@ -2941,11 +2941,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 
-
-
 			if(array_key_exists('channel_pageflags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
 				// These flags cannot be sync'd.
-				// If these bits aren't set locally, remove the bits from the incoming flags.
+				// remove the bits from the incoming flags.
 
 				if($arr['channel_pageflags'] & 0x8000)
 					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x8000;

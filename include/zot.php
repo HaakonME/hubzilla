@@ -1532,6 +1532,7 @@ function allowed_public_recips($msg) {
 function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $request = false) {
 
 	$result = array();
+	require_once('include/DReport.php');
 
 	$result['site'] = z_root();
 
@@ -1546,16 +1547,22 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 	foreach($deliveries as $d) {
 		$local_public = $public;
+
+		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
 
 		if(! $r) {
-			$result[] = array($d['hash'], 'recipients not found');
+			$DR->update('recipient not found');
+			$result[] = $DR->get();
 			continue;
 		}
 
 		$channel = $r[0];
+		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+
 
 		// allow public postings to the sys channel regardless of permissions, but not
 		// for comments travelling upstream. Wait and catch them on the way down.
@@ -1591,7 +1598,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $local_public)) {
 			logger("permission denied for delivery to channel {$channel['channel_id']} {$channel['channel_address']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			$DR->update('permission denied');
+			$result[] = $DR->get();
 			continue;
 		}
 
@@ -1608,7 +1616,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 				intval($channel['channel_id'])
 			);
 			if(! $r) {
-				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('comment parent not found');
+				$result[] = $DR->get();
 
 				// We don't seem to have a copy of this conversation or at least the parent
 				// - so request a copy of the entire conversation to date.
@@ -1663,7 +1672,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 				if($last_hop && $last_hop != $sender['hash']) {
 					logger('comment route mismatch: parent route = ' . $r[0]['route'] . ' expected = ' . $current_route, LOGGER_DEBUG);
 					logger('comment route mismatch: parent msg = ' . $r[0]['id'],LOGGER_DEBUG);
-					$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					$DR->update('comment route mismatch');
+					$result[] = $DR->get();
 					continue;
 				}
 
@@ -1692,12 +1702,14 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			$arr['uid'] = $channel['channel_id'];
 
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id'],$relay);
-			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			$DR->update(($item_id) ? 'deleted' : 'delete_failed');			
+			$result[] = $DR->get();
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
 				proc_run('php','include/notifier.php','relay',intval($item_id));
-				$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('relayed');
+				$result[] = $DR->get();
 			}
 
 			continue;
@@ -1713,7 +1725,9 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 			if(intval($r[0]['item_deleted'])) {
 				// It was deleted locally. 
-				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('update ignored');
+				$result[] = $DR->get();
+
 				continue;
 			}
 			// Maybe it has been edited?
@@ -1721,17 +1735,21 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 				$arr['id'] = $r[0]['id'];
 				$arr['uid'] = $channel['channel_id'];
 				if(($arr['mid'] == $arr['parent_mid']) && (! post_is_importable($arr,$abook))) {
-					$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					$DR->update('update ignored');
+					$result[] = $DR->get();
 				}
 				else {
 					update_imported_item($sender,$arr,$r[0],$channel['channel_id']);
-					$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					$DR->update('updated');
+					$result[] = $DR->get();
 					if(! $relay)
 						add_source_route($item_id,$sender['hash']);
 				}
 			}
 			else {
-				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('update ignored');
+				$result[] = $DR->get();
+
 
 				// We need this line to ensure wall-to-wall comments are relayed (by falling through to the relay bit), 
 				// and at the same time not relay any other relayable posts more than once, because to do so is very wasteful. 
@@ -1752,7 +1770,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			$item_id = 0;
 
 			if(($arr['mid'] == $arr['parent_mid']) && (! post_is_importable($arr,$abook))) {
-				$result[] = array($d['hash'],'post ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('post ignored');
+				$result[] = $DR->get();
 			}
 			else {
 				$item_result = item_store($arr);
@@ -1764,14 +1783,16 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 					if(! $relay)
 						add_source_route($item_id,$sender['hash']);
 				}
-				$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update(($item_id) ? 'posted' : 'storage failed: ' . $item_result['message']);
+				$result[] = $DR->get();
 			}
 		}
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
 			proc_run('php','include/notifier.php','relay',intval($item_id));
-			$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			$DR->addto_update('relayed');
+			$result[] = $DR->get();
 		}
 	}
 

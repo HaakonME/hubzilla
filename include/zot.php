@@ -2940,12 +2940,21 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			sync_menus($channel,$arr['menu']);
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			if(array_key_exists('channel_page_flags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
-				$arr['channel']['channel_removed'] = (($arr['channel']['channel_pageflags'] & 0x8000) ? 1 : 0);
-				$arr['channel']['channel_system']  = (($arr['channel']['channel_pageflags'] & 0x1000) ? 1 : 0);
+
+
+
+			if(array_key_exists('channel_pageflags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
+				// These flags cannot be sync'd.
+				// If these bits aren't set locally, remove the bits from the incoming flags.
+
+				if($arr['channel_pageflags'] & 0x8000)
+					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x8000;
+				if($arr['channel_pageflags'] & 0x1000)
+					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x1000;
+
 			}
 			
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_deleted', 'channel_system');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {

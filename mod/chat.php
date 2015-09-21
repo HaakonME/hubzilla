@@ -67,7 +67,7 @@ function chat_post(&$a) {
 		intval(local_channel())
 	);
 
-	create_sync_packet(0, array('chatroom' => $x));
+	build_sync_packet(0, array('chatroom' => $x));
 
 	if($x)
 		goaway(z_root() . '/chat/' . $channel['channel_address'] . '/' . $x[0]['cr_id']);

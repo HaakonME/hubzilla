@@ -91,7 +91,7 @@ function chatroom_destroy($channel,$arr) {
 		return $ret;
 	}
 
-	create_sync_packet($channel['channel_id'],array('chatroom' => $r));
+	build_sync_packet($channel['channel_id'],array('chatroom' => $r));
 
 	q("delete from chatroom where cr_id = %d",
 		intval($r[0]['cr_id'])

@@ -94,9 +94,8 @@ EOT;
 
 		require_once('include/chat.php');
 		$has_chats = chatroom_list_count(local_channel());
-		if($has_chats) {
-			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'],t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
-		}
+		$nav['usermenu'][] = Array('chat/' . $channel['channel_address'] . (($has_chats) ? '' : '/new'), t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
+
 
 		require_once('include/menu.php');
 		$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);

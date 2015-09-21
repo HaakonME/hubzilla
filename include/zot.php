@@ -2934,7 +2934,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			if(! ($channel['channel_pageflags'] & PAGE_SYSTEM))
 				$arr['channel_pageflags'] = $arr['channel_pageflags'] & PAGE_SYSTEM;
 
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_system');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_system', 'channel_deleted' );
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {

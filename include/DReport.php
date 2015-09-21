@@ -24,6 +24,15 @@ class DReport {
 		$this->date       = datetime_convert();
 	}
 
+	function addto_recipient($name) {
+		$this->recipient = $this->recipient . ' ' . $name;
+	}
+
+	function addto_update($status) {
+		$this->status = $this->status . ' ' . $status;
+	}
+
+
 	function set($arr) {
 		$this->location   = $arr['location'];
 		$this->sender     = $arr['sender'];

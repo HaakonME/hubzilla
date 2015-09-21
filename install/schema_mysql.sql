@@ -350,6 +350,23 @@ CREATE TABLE IF NOT EXISTS `conv` (
   KEY `updated` (`updated`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `dreport` (
+  `dreport_id` int(11) NOT NULL AUTO_INCREMENT,
+  `dreport_channel` int(11) NOT NULL DEFAULT '0',
+  `dreport_mid` char(255) NOT NULL DEFAULT '',
+  `dreport_site` char(255) NOT NULL DEFAULT '',
+  `dreport_recip` char(255) NOT NULL DEFAULT '',
+  `dreport_result` char(255) NOT NULL DEFAULT '',
+  `dreport_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `dreport_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`dreport_id`),
+  KEY `dreport_mid` (`dreport_mid`),
+  KEY `dreport_site` (`dreport_site`),
+  KEY `dreport_time` (`dreport_time`),
+  KEY `dreport_xchan` (`dreport_xchan`),
+  KEY `dreport_channel` (`dreport_channel`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',

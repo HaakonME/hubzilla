@@ -1,5 +1,7 @@
 <?php
 
+require_once('include/zot.php');
+
 function wfinger_init(&$a) {
 
 	$result = array();
@@ -11,14 +13,13 @@ function wfinger_init(&$a) {
 	elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
 		$scheme = 'https';
 
-	// Don't complain to me - I'm just implementing the spec. 
+	$zot = intval($_REQUEST['zot']);
 
-	if($scheme !== 'https') {
+	if(($scheme !== 'https') && (! $zot)) {
 		header($_SERVER["SERVER_PROTOCOL"] . ' ' . 500 . ' ' . 'Webfinger requires HTTPS');
 		killme();
 	}
 
-	$zot = intval($_REQUEST['zot']);
 
 	$resource = $_REQUEST['resource'];
 	logger('webfinger: ' . $resource,LOGGER_DEBUG);
@@ -47,7 +48,6 @@ function wfinger_init(&$a) {
 		);
 
 	}
-
 
 	header('Access-Control-Allow-Origin: *');
 
@@ -107,11 +107,8 @@ function wfinger_init(&$a) {
 		);
 
 		if($zot) {
-			// @FIXME do a lookup straightaway and return the zot-info packet
-
-			$_REQUEST['address'] = $r[0]['xchan_address'];
-
-
+			// get a zotinfo packet and return it with webfinger
+			$result['zot'] = zotinfo(array('address' => $r[0]['xchan_addr']));
 		}
 	}
 	else {

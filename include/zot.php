@@ -296,13 +296,17 @@ function zot_refresh($them, $channel = null, $force = false) {
 	} else {
 		$r = null;
 
+		// if they re-installed the server we could end up with the wrong record - pointing to the old install.
+		// We'll order by reverse id to try and pick off the newest one first and hopefully end up with the
+		// correct hubloc. If this doesn't work we may have to re-write this section to try them all. 
+
 		if(array_key_exists('xchan_addr',$them) && $them['xchan_addr']) {
-			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_addr = '%s'",
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_addr = '%s' order by hubloc_id desc",
 				dbesc($them['xchan_addr'])
 			);
 		}
 		if(! $r) {
-			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s'",
+			$r = q("select hubloc_url, hubloc_primary from hubloc where hubloc_hash = '%s' order by hubloc_id desc",
 				dbesc($them['xchan_hash'])
 			);
 		}
@@ -483,20 +487,17 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if($y) {
 					logger("New introduction received for {$channel['channel_name']}");
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
-					if($new_perms != $previous_perms) {
-						// Send back a permissions update if permissions have changed
-						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
-							dbesc($x['hash']),
-							intval($channel['channel_id'])
-						);
-						if($z)
-							proc_run('php','include/notifier.php','permission_update',$z[0]['abook_id']);
-					}
-					$new_connection = q("select abook_id, abook_pending from abook where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
-						intval($channel['channel_id']),
-						dbesc($x['hash'])
+
+					// Send a clone sync packet and a permissions update if permissions have changed
+
+					$new_connection = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 order by abook_created desc limit 1",
+						dbesc($x['hash']),
+						intval($channel['channel_id'])
 					);
+
 					if($new_connection) {
+						if($new_perms != $previous_perms)
+							proc_run('php','include/notifier.php','permission_update',$new_connection[0]['abook_id']);
 						require_once('include/enotify.php');
 						notification(array(
 							'type'       => NOTIFY_INTRO,
@@ -504,12 +505,17 @@ function zot_refresh($them, $channel = null, $force = false) {
 							'to_xchan'   => $channel['channel_hash'],
 							'link'       => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
 						));
-					}
+					
+						if($their_perms & PERMS_R_STREAM) {
+							if(($channel['channel_w_stream'] & PERMS_PENDING)
+								|| (! intval($new_connection[0]['abook_pending'])) )
+								proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
+						}
 
-					if($new_connection && ($their_perms & PERMS_R_STREAM)) {
-						if(($channel['channel_w_stream'] & PERMS_PENDING)
-							|| (! intval($new_connection[0]['abook_pending'])) )
-							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
+						unset($new_connection[0]['abook_id']);
+						unset($new_connection[0]['abook_account']);
+						unset($new_connection[0]['abook_channel']);
+						build_sync_packet($channel['channel_id'], array('abook' => $new_connection));
 					}
 				}
 			}
@@ -1526,6 +1532,9 @@ function allowed_public_recips($msg) {
 function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $request = false) {
 
 	$result = array();
+	require_once('include/DReport.php');
+
+	$result['site'] = z_root();
 
 	// We've validated the sender. Now make sure that the sender is the owner or author
 
@@ -1538,16 +1547,22 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 	foreach($deliveries as $d) {
 		$local_public = $public;
+
+		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
 
 		if(! $r) {
-			$result[] = array($d['hash'], 'recipients not found');
+			$DR->update('recipient not found');
+			$result[] = $DR->get();
 			continue;
 		}
 
 		$channel = $r[0];
+		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+
 
 		// allow public postings to the sys channel regardless of permissions, but not
 		// for comments travelling upstream. Wait and catch them on the way down.
@@ -1583,7 +1598,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $local_public)) {
 			logger("permission denied for delivery to channel {$channel['channel_id']} {$channel['channel_address']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			$DR->update('permission denied');
+			$result[] = $DR->get();
 			continue;
 		}
 
@@ -1600,7 +1616,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 				intval($channel['channel_id'])
 			);
 			if(! $r) {
-				$result[] = array($d['hash'],'comment parent not found',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('comment parent not found');
+				$result[] = $DR->get();
 
 				// We don't seem to have a copy of this conversation or at least the parent
 				// - so request a copy of the entire conversation to date.
@@ -1655,7 +1672,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 				if($last_hop && $last_hop != $sender['hash']) {
 					logger('comment route mismatch: parent route = ' . $r[0]['route'] . ' expected = ' . $current_route, LOGGER_DEBUG);
 					logger('comment route mismatch: parent msg = ' . $r[0]['id'],LOGGER_DEBUG);
-					$result[] = array($d['hash'],'comment route mismatch',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					$DR->update('comment route mismatch');
+					$result[] = $DR->get();
 					continue;
 				}
 
@@ -1684,12 +1702,14 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			$arr['uid'] = $channel['channel_id'];
 
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id'],$relay);
-			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			$DR->update(($item_id) ? 'deleted' : 'delete_failed');			
+			$result[] = $DR->get();
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
 				proc_run('php','include/notifier.php','relay',intval($item_id));
-				$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('relayed');
+				$result[] = $DR->get();
 			}
 
 			continue;
@@ -1705,7 +1725,9 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 			if(intval($r[0]['item_deleted'])) {
 				// It was deleted locally. 
-				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('update ignored');
+				$result[] = $DR->get();
+
 				continue;
 			}
 			// Maybe it has been edited?
@@ -1713,17 +1735,21 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 				$arr['id'] = $r[0]['id'];
 				$arr['uid'] = $channel['channel_id'];
 				if(($arr['mid'] == $arr['parent_mid']) && (! post_is_importable($arr,$abook))) {
-					$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					$DR->update('update ignored');
+					$result[] = $DR->get();
 				}
 				else {
 					update_imported_item($sender,$arr,$r[0],$channel['channel_id']);
-					$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+					$DR->update('updated');
+					$result[] = $DR->get();
 					if(! $relay)
 						add_source_route($item_id,$sender['hash']);
 				}
 			}
 			else {
-				$result[] = array($d['hash'],'update ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('update ignored');
+				$result[] = $DR->get();
+
 
 				// We need this line to ensure wall-to-wall comments are relayed (by falling through to the relay bit), 
 				// and at the same time not relay any other relayable posts more than once, because to do so is very wasteful. 
@@ -1744,7 +1770,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			$item_id = 0;
 
 			if(($arr['mid'] == $arr['parent_mid']) && (! post_is_importable($arr,$abook))) {
-				$result[] = array($d['hash'],'post ignored',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update('post ignored');
+				$result[] = $DR->get();
 			}
 			else {
 				$item_result = item_store($arr);
@@ -1756,14 +1783,16 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 					if(! $relay)
 						add_source_route($item_id,$sender['hash']);
 				}
-				$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+				$DR->update(($item_id) ? 'posted' : 'storage failed: ' . $item_result['message']);
+				$result[] = $DR->get();
 			}
 		}
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
 			proc_run('php','include/notifier.php','relay',intval($item_id));
-			$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
+			$DR->addto_update('relayed');
+			$result[] = $DR->get();
 		}
 	}
 
@@ -2932,12 +2961,19 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			sync_menus($channel,$arr['menu']);
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			if(array_key_exists('channel_page_flags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
-				$arr['channel']['channel_removed'] = (($arr['channel']['channel_pageflags'] & 0x8000) ? 1 : 0);
-				$arr['channel']['channel_system']  = (($arr['channel']['channel_pageflags'] & 0x1000) ? 1 : 0);
+
+			if(array_key_exists('channel_pageflags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
+				// These flags cannot be sync'd.
+				// remove the bits from the incoming flags.
+
+				if($arr['channel_pageflags'] & 0x8000)
+					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x8000;
+				if($arr['channel_pageflags'] & 0x1000)
+					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x1000;
+
 			}
 			
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_deleted', 'channel_system');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {
@@ -3403,4 +3439,292 @@ function zot_process_message_request($data) {
 	$ret['success'] = true;
 
 	return $ret;
+}
+
+
+function zotinfo($arr) {
+
+	$ret = array('success' => false);
+
+	$zhash     = ((x($arr,'guid_hash'))  ? $arr['guid_hash']   : '');
+	$zguid     = ((x($arr,'guid'))       ? $arr['guid']        : '');
+	$zguid_sig = ((x($arr,'guid_sig'))   ? $arr['guid_sig']    : '');
+	$zaddr     = ((x($arr,'address'))    ? $arr['address']     : '');
+	$ztarget   = ((x($arr,'target'))     ? $arr['target']      : '');
+	$zsig      = ((x($arr,'target_sig')) ? $arr['target_sig']  : '');
+	$zkey      = ((x($arr,'key'))        ? $arr['key']         : '');
+	$mindate   = ((x($arr,'mindate'))    ? $arr['mindate']     : '');
+	$feed      = ((x($arr,'feed'))       ? intval($arr['feed']) : 0);
+
+	if($ztarget) {
+		if((! $zkey) || (! $zsig) || (! rsa_verify($ztarget,base64url_decode($zsig),$zkey))) {
+			logger('zfinger: invalid target signature');
+			$ret['message'] = t("invalid target signature");
+			return($ret);
+		}
+	}
+
+	$r = null;
+
+	if(strlen($zhash)) {
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash 
+			where channel_hash = '%s' limit 1",
+			dbesc($zhash)
+		);
+	}
+	elseif(strlen($zguid) && strlen($zguid_sig)) {
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash 
+			where channel_guid = '%s' and channel_guid_sig = '%s' limit 1",
+			dbesc($zguid),
+			dbesc($zguid_sig)
+		);
+	}
+	elseif(strlen($zaddr)) {
+		if(strpos($zaddr,'[system]') === false) {       /* normal address lookup */
+			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+				where ( channel_address = '%s' or xchan_addr = '%s' ) limit 1",
+				dbesc($zaddr),
+				dbesc($zaddr)
+			);
+		}
+
+		else {
+
+			/**
+			 * The special address '[system]' will return a system channel if one has been defined,
+			 * Or the first valid channel we find if there are no system channels. 
+			 *
+			 * This is used by magic-auth if we have no prior communications with this site - and
+			 * returns an identity on this site which we can use to create a valid hub record so that
+			 * we can exchange signed messages. The precise identity is irrelevant. It's the hub
+			 * information that we really need at the other end - and this will return it.
+			 *
+			 */
+
+			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+				where channel_system = 1 order by channel_id limit 1");
+			if(! $r) {
+				$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+					where channel_removed = 0 order by channel_id limit 1");
+			}
+		} 
+	}
+	else {
+		$ret['message'] = 'Invalid request';
+		return($ret);
+	}
+
+	if(! $r) {
+		$ret['message'] = 'Item not found.';
+		return($ret);
+	}
+
+	$e = $r[0];
+
+	$id = $e['channel_id'];
+
+	$sys_channel     = (intval($e['channel_system'])   ? true : false);
+	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM)  ? true : false);
+	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)    ? true : false);
+	$censored        = (($e['channel_pageflags'] & PAGE_CENSORED) ? true : false);
+	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)   ? false : true);
+	$deleted         = (intval($e['xchan_deleted']) ? true : false);
+
+	if($deleted || $censored || $sys_channel)
+		$searchable = false;
+	 
+	$public_forum = false;
+
+	$role = get_pconfig($e['channel_id'],'system','permissions_role');
+	if($role === 'forum' || $role === 'repository') {
+		$public_forum = true;
+	}
+	else {
+		// check if it has characteristics of a public forum based on custom permissions.
+		$t = q("select abook_my_perms from abook where abook_channel = %d and abook_self = 1 limit 1",
+			intval($e['channel_id'])
+		);
+		if(($t) && (($t[0]['abook_my_perms'] & PERMS_W_TAGWALL) && (! ($t[0]['abook_my_perms'] & PERMS_W_STREAM))))
+			$public_forum = true;
+	}
+
+
+	//  This is for birthdays and keywords, but must check access permissions
+	$p = q("select * from profile where uid = %d and is_default = 1",
+		intval($e['channel_id'])
+	);
+
+	$profile = array();
+
+	if($p) {
+
+		if(! intval($p[0]['publish']))
+			$searchable = false; 
+
+		$profile['description']   = $p[0]['pdesc'];
+		$profile['birthday']      = $p[0]['dob'];
+		if(($profile['birthday'] != '0000-00-00') && (($bd = z_birthday($p[0]['dob'],$e['channel_timezone'])) !== ''))
+			$profile['next_birthday'] = $bd;
+
+		if($age = age($p[0]['dob'],$e['channel_timezone'],''))  
+			$profile['age'] = $age;
+		$profile['gender']        = $p[0]['gender'];
+		$profile['marital']       = $p[0]['marital'];
+		$profile['sexual']        = $p[0]['sexual'];
+		$profile['locale']        = $p[0]['locality'];
+		$profile['region']        = $p[0]['region'];
+		$profile['postcode']      = $p[0]['postal_code'];
+		$profile['country']       = $p[0]['country_name'];
+		$profile['about']         = $p[0]['about'];
+		$profile['homepage']      = $p[0]['homepage'];
+		$profile['hometown']      = $p[0]['hometown'];
+
+		if($p[0]['keywords']) {
+			$tags = array();
+			$k = explode(' ',$p[0]['keywords']);
+			if($k) {
+				foreach($k as $kk) {
+					if(trim($kk," \t\n\r\0\x0B,")) {
+						$tags[] = trim($kk," \t\n\r\0\x0B,");
+					}
+				}
+			}
+			if($tags)
+				$profile['keywords'] = $tags;
+		}
+	}
+
+	$ret['success'] = true;
+
+	// Communication details
+
+	$ret['guid']           = $e['xchan_guid'];
+	$ret['guid_sig']       = $e['xchan_guid_sig'];
+	$ret['key']            = $e['xchan_pubkey'];
+	$ret['name']           = $e['xchan_name'];
+	$ret['name_updated']   = $e['xchan_name_date'];
+	$ret['address']        = $e['xchan_addr'];
+	$ret['photo_mimetype'] = $e['xchan_photo_mimetype'];
+	$ret['photo']          = $e['xchan_photo_l'];
+	$ret['photo_updated']  = $e['xchan_photo_date'];
+	$ret['url']            = $e['xchan_url'];
+	$ret['connections_url']= (($e['xchan_connurl']) ? $e['xchan_connurl'] : z_root() . '/poco/' . $e['channel_address']);
+	$ret['target']         = $ztarget;
+	$ret['target_sig']     = $zsig;
+	$ret['searchable']     = $searchable;
+	$ret['adult_content']  = $adult_channel;
+	$ret['public_forum']   = $public_forum;
+	if($deleted)
+		$ret['deleted']        = $deleted;	
+
+	// premium or other channel desiring some contact with potential followers before connecting.
+	// This is a template - %s will be replaced with the follow_url we discover for the return channel.
+
+	if($special_channel) 
+		$ret['connect_url'] = z_root() . '/connect/' . $e['channel_address'];
+
+	// This is a template for our follow url, %s will be replaced with a webbie
+
+	$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
+
+	$ztarget_hash = (($ztarget && $zsig) 
+			? make_xchan_hash($ztarget,$zsig)
+			: '' ); 
+
+	$permissions = get_all_perms($e['channel_id'],$ztarget_hash,false);
+
+	if($ztarget_hash) {
+		$permissions['connected'] = false;
+		$b = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+			dbesc($ztarget_hash),
+			intval($e['channel_id'])
+		);
+		if($b)
+			$permissions['connected'] = true;
+	}
+
+	$ret['permissions'] = (($ztarget && $zkey) ? crypto_encapsulate(json_encode($permissions),$zkey) : $permissions);
+
+	if($permissions['view_profile'])
+		$ret['profile']  = $profile;
+
+	// array of (verified) hubs this channel uses
+
+	$x = zot_encode_locations($e);
+	if($x)
+		$ret['locations'] = $x;
+
+	$ret['site'] = array();
+	$ret['site']['url'] = z_root();
+	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$e['channel_prvkey']));
+
+	$dirmode = get_config('system','directory_mode');
+	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))
+		$ret['site']['directory_mode'] = 'normal';
+
+	if($dirmode == DIRECTORY_MODE_PRIMARY)
+		$ret['site']['directory_mode'] = 'primary';
+	elseif($dirmode == DIRECTORY_MODE_SECONDARY)
+		$ret['site']['directory_mode'] = 'secondary';
+	elseif($dirmode == DIRECTORY_MODE_STANDALONE)
+		$ret['site']['directory_mode'] = 'standalone';
+	if($dirmode != DIRECTORY_MODE_NORMAL)
+		$ret['site']['directory_url'] = z_root() . '/dirsearch';
+
+
+	// hide detailed site information if you're off the grid
+
+	if($dirmode != DIRECTORY_MODE_STANDALONE) {
+
+		$register_policy = intval(get_config('system','register_policy'));
+
+		if($register_policy == REGISTER_CLOSED)
+			$ret['site']['register_policy'] = 'closed';
+		if($register_policy == REGISTER_APPROVE)
+			$ret['site']['register_policy'] = 'approve';
+		if($register_policy == REGISTER_OPEN)
+			$ret['site']['register_policy'] = 'open';
+
+
+		$access_policy = intval(get_config('system','access_policy'));
+
+		if($access_policy == ACCESS_PRIVATE)
+			$ret['site']['access_policy'] = 'private';
+		if($access_policy == ACCESS_PAID)
+			$ret['site']['access_policy'] = 'paid';
+		if($access_policy == ACCESS_FREE)
+			$ret['site']['access_policy'] = 'free';
+		if($access_policy == ACCESS_TIERED)
+			$ret['site']['access_policy'] = 'tiered';
+
+		$ret['site']['accounts'] = account_total();
+	
+		require_once('include/identity.php');
+		$ret['site']['channels'] = channel_total();
+
+
+		$ret['site']['version'] = PLATFORM_NAME . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+
+		$ret['site']['admin'] = get_config('system','admin_email');
+
+		$a = get_app();
+
+		$visible_plugins = array();
+		if(is_array($a->plugins) && count($a->plugins)) {
+			$r = q("select * from addon where hidden = 0");
+			if($r)
+				foreach($r as $rr)
+					$visible_plugins[] = $rr['name'];
+		}
+
+		$ret['site']['plugins'] = $visible_plugins;
+		$ret['site']['sitehash'] = get_config('system','location_hash');
+		$ret['site']['sitename'] = get_config('system','sitename');
+		$ret['site']['sellpage'] = get_config('system','sellpage');
+		$ret['site']['location'] = get_config('system','site_location');
+		$ret['site']['realm'] = get_directory_realm();
+
+	}
+	call_hooks('zot_finger',$ret);
+	return($ret);
 }

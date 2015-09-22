@@ -3281,7 +3281,17 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			sync_items($channel,$arr['item_id']);
 
 
-		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name'],'');
+		// we should probably do this for all items, but usually we only send one.
+
+		require_once('include/DReport.php');
+
+		if(array_key_exists('item',$arr) && is_array($arr['item'][0]))
+			$DR = new DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
+		else
+			$DR = new DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
+
+		$result[] = $DR->get();
+
 	}
 
 	return $result;

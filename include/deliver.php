@@ -15,7 +15,10 @@ function deliver_run($argv, $argc) {
 
 	logger('deliver: invoked: ' . print_r($argv,true), LOGGER_DATA);
 
+
 	for($x = 1; $x < $argc; $x ++) {
+
+		$dresult = null;
 		$r = q("select * from outq where outq_hash = '%s' limit 1",
 			dbesc($argv[$x])
 		);
@@ -98,9 +101,27 @@ function deliver_run($argv, $argc) {
 					}	
 					else {	
 						$msg = array('body' => json_encode(array('success' => true, 'pickup' => array(array('notify' => $notify,'message' => $m)))));
-						zot_import($msg,z_root());
+						$dresult = zot_import($msg,z_root());
 					}
 					$r = q("delete from outq where outq_hash = '%s'",
+						dbesc($argv[$x])
+					);
+					if($dresult && is_array($dresult)) {
+						foreach($dresult as $xx) {
+							if(is_array($xx) && array_key_exists('message_id',$xx)) {
+								q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
+									dbesc($xx['message_id']),
+									dbesc($xx['location']),
+									dbesc($xx['recipient']),
+									dbesc($xx['status']),
+									dbesc(datetime_convert($xx['date'])),
+									dbesc($xx['sender'])
+								);
+							}
+						}
+					}
+
+					q("delete from dreport where dreport_queue = '%s' limit 1",
 						dbesc($argv[$x])
 					);
 				}

@@ -957,7 +957,7 @@ function zot_process_response($hub, $arr, $outq) {
 		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA);
 	}
 
-	if(array_key_exists('delivery_report',$x)) {
+	if(is_array($x) && array_key_exists('delivery_report',$x) && is_array($x['delivery_report'])) {
 		foreach($x['delivery_report'] as $xx) {
 			if(is_array($xx) && array_key_exists('message_id',$xx)) {
 				q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
@@ -971,7 +971,11 @@ function zot_process_response($hub, $arr, $outq) {
 			}
 		}
 	}
-					
+
+	q("delete from dreport where dreport_queue = '%s' limit 1",
+		dbesc($outq['outq_hash'])
+	);
+								
 	// update the timestamp for this site
 
 	q("update site set site_dead = 0, site_update = '%s' where site_url = '%s'",
@@ -1577,6 +1581,14 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		$channel = $r[0];
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+
+
+// uncomment this once we find out what's stopping the clone sync of the item from working
+//		if($d['hash'] === $sender['hash']) {
+//			$DR->update('self delivery ignored');
+//			$result[] = $DR->get();
+//			continue;
+//		}
 
 
 		// allow public postings to the sys channel regardless of permissions, but not

@@ -3312,6 +3312,14 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			}
 		}
 
+
+		if(array_key_exists('item',$arr) && $arr['item'])
+			sync_items($channel,$arr['item']);
+
+		if(array_key_exists('item_id',$arr) && $arr['item_id'])
+			sync_items($channel,$arr['item_id']);
+
+
 		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name'],'');
 	}
 
@@ -3754,4 +3762,5 @@ function zotinfo($arr) {
 	}
 	call_hooks('zot_finger',$ret);
 	return($ret);
+
 }

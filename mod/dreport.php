@@ -32,7 +32,7 @@ function dreport_content(&$a) {
 
 	foreach($r as $rr) {
 		$name = escape_tags(substr($rr['dreport_recip'],strpos($rr['dreport_recip'],' ')));
-		$o .= '<tr><td>' . $name . '</td><td>' . $rr['dreport_result'] . '</td><td>' . $rr['dreport_time'] . '</td></tr>';
+		$o .= '<tr><td>' . $name . '</td><td>' . escape_tags($rr['dreport_result']) . '</td><td>' . escape_tags($rr['dreport_time']) . '</td></tr>';
 	}
 	$o .= '</table>';
 

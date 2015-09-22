@@ -201,6 +201,17 @@ function poller_run($argv, $argc){
 			db_utcnow(), db_quoteinterval('30 DAY')
 		);
 
+		// expire old delivery reports
+
+		$keep_reports = intval(get_config('system','expire_delivery_reports'));
+		if($keep_reports === 0)
+			$keep_reports = 30;
+
+		q("delete from dreport where dreport_time < %s - INTERVAL %s",
+			db_utcnow(),
+			db_quoteinterval($keep_reports . ' DAY')
+		);
+
 		// expire any expired accounts
 		downgrade_accounts();
 

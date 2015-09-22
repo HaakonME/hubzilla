@@ -1865,7 +1865,3 @@ function update_r1153() {
 
 
 }
-
-function update_r1153() {
-	return UPDATE_SUCCESS;
-}

@@ -3285,8 +3285,10 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		require_once('include/DReport.php');
 
-		if(array_key_exists('item',$arr) && is_array($arr['item'][0]))
+		if(array_key_exists('item',$arr) && is_array($arr['item'][0])) {
 			$DR = new DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
+			$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+		}
 		else
 			$DR = new DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
 

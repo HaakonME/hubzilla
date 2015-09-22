@@ -957,6 +957,21 @@ function zot_process_response($hub, $arr, $outq) {
 		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA);
 	}
 
+	if(array_key_exists('delivery_report',$x)) {
+		foreach($x['delivery_report'] as $xx) {
+			if(is_array($xx) && array_key_exists('message_id',$xx)) {
+				q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
+					dbesc($xx['message_id']),
+					dbesc($xx['location']),
+					dbesc($xx['recipient']),
+					dbesc($xx['status']),
+					dbesc(datetime_convert($xx['date'])),
+					dbesc($xx['sender'])
+				);
+			}
+		}
+	}
+					
 	// update the timestamp for this site
 
 	q("update site set site_dead = 0, site_update = '%s' where site_url = '%s'",

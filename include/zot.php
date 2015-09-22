@@ -3273,6 +3273,14 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			}
 		}
 
+
+		if(array_key_exists('item',$arr) && $arr['item'])
+			sync_items($channel,$arr['item']);
+
+		if(array_key_exists('item_id',$arr) && $arr['item_id'])
+			sync_items($channel,$arr['item_id']);
+
+
 		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name'],'');
 	}
 
@@ -3430,4 +3438,81 @@ function zot_process_message_request($data) {
 	$ret['success'] = true;
 
 	return $ret;
+}
+
+
+
+function import_items($channel,$items) {
+
+	if($channel && $items) {
+		$allow_code = false;
+		$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id 
+			where channel_id = %d limit 1",
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
+				$allow_code = true;
+			}
+		}
+
+		foreach($items as $i) {
+			$item = get_item_elements($i,$allow_code);
+			if(! $item)
+				continue;
+
+			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+				dbesc($item['mid']),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				if($item['edited'] > $r[0]['edited']) {
+					$item['id'] = $r[0]['id'];
+					$item['uid'] = $channel['channel_id'];
+					item_store_update($item);
+					continue;
+				}	
+			}
+			else {
+				$item['aid'] = $channel['channel_account_id'];
+				$item['uid'] = $channel['channel_id'];
+				$item_result = item_store($item);
+			}
+
+		}
+	}
+}
+
+
+function sync_items($channel,$items) {
+	import_items($channel,$items);
+}
+
+
+
+function import_item_ids($channel,$itemids) {
+	if($channel && $itemids) {
+		foreach($itemids as $i) {
+			$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+				dbesc($i['mid']),
+				intval($channel['channel_id'])
+			);
+			if(! $r)
+				continue;
+			$z = q("select * from item_id where service = '%s' and sid = '%s' and iid = %d and uid = %d limit 1",
+				dbesc($i['service']),
+				dbesc($i['sid']),
+				intval($r[0]['id']),
+				intval($channel['channel_id'])
+			);
+			if(! $z) {
+				q("insert into item_id (iid,uid,sid,service) values(%d,%d,'%s','%s')",
+					intval($r[0]['id']),
+					intval($channel['channel_id']),
+					dbesc($i['sid']),
+					dbesc($i['service'])
+				);
+			}
+		}
+	}
 }

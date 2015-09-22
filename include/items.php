@@ -805,10 +805,14 @@ function title_is_body($title, $body) {
 }
 
 
-function get_item_elements($x) {
+function get_item_elements($x,$allow_code = false) {
 
 	$arr = array();
-	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+
+	if($allow_code)
+		$arr['body'] = $x['body'];
+	else
+		$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$key = get_config('system','pubkey');
 

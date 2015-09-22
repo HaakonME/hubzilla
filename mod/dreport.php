@@ -26,7 +26,18 @@ function dreport_content(&$a) {
 		return;
 	}
 
-	return print_r($r,true);
+
+	$o .= '<h2>' . sprintf( t('Delivery report for %1$s'),substr($mid,0,32)) . '...' . '</h2>';
+	$o .= '<table>';
+
+	foreach($r as $rr) {
+		$name = escape_tags(substr($rr['dreport_recip'],strpos($rr['dreport_recip'],' ')));
+		$o .= '<tr><td>' . $name . '</td><td>' . $rr['dreport_result'] . '</td><td>' . $rr['dreport_time'] . '</td></tr>';
+	}
+	$o .= '</table>';
+
+	return $o;
+
 
 
 }

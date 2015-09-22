@@ -123,6 +123,11 @@
 							{{if $item.item_photo_menu}}
 							<li role="presentation" class="divider"></li>
 							{{$item.item_photo_menu}}
+
+							{{if $item.edpost}}
+							<li role="presentation"><a role="menuitem" href="dreport/{{$item.mid}}">{{$item.dreport}}</a></li>
+							{{/if}}
+
 							{{/if}}
 						</ul>
 					</div>

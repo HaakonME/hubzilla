@@ -957,7 +957,7 @@ function zot_process_response($hub, $arr, $outq) {
 		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA);
 	}
 
-	if(array_key_exists('delivery_report',$x) && is_array($x['delivery_report'])) {
+	if(is_array($x) && array_key_exists('delivery_report',$x) && is_array($x['delivery_report'])) {
 		foreach($x['delivery_report'] as $xx) {
 			if(is_array($xx) && array_key_exists('message_id',$xx)) {
 				q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",

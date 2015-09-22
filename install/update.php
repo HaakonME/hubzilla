@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1153 );
+define( 'UPDATE_VERSION' , 1154 );
 
 /**
  *
@@ -1852,5 +1852,16 @@ function update_r1152() {
     if($r)
         return UPDATE_SUCCESS;
     return UPDATE_FAILED;
+
+}
+
+function update_r1153() {
+
+	$r1 = q("ALTER TABLE dreport ADD dreport_queue CHAR( 255 ) NOT NULL DEFAULT '' ");
+	$r2 = q("create index dreport_queue on dreport ( dreport_queue) ");
+    if($r1 && $r2)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+
 
 }

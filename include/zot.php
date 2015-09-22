@@ -971,7 +971,11 @@ function zot_process_response($hub, $arr, $outq) {
 			}
 		}
 	}
-					
+
+	q("delete from dreport where dreport_queue = '%s' limit 1",
+		dbesc($outq['outq_hash'])
+	);
+								
 	// update the timestamp for this site
 
 	q("update site set site_dead = 0, site_update = '%s' where site_url = '%s'",
@@ -1571,6 +1575,12 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		if(! $r) {
 			$DR->update('recipient not found');
+			$result[] = $DR->get();
+			continue;
+		}
+
+		if($d['hash'] === $sender['hash']) {
+			$DR->update('self delivery ignored');
 			$result[] = $DR->get();
 			continue;
 		}

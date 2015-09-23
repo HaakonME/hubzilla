@@ -2363,7 +2363,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
 					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_url']);
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags & ~%d), hubloc_updated = '%s' where hubloc_id = %d",
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags | %d), hubloc_updated = '%s' where hubloc_id = %d",
 						intval(HUBLOC_FLAGS_DELETED),
 						dbesc(datetime_convert()),
 						intval($x['hubloc_id'])

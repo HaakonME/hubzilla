@@ -2802,8 +2802,10 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$channel = $r[0];
 
-	$h = q("select * from hubloc where hubloc_hash = '%s'",
-		dbesc($channel['channel_hash'])
+	$h = q("select * from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
+		dbesc($channel['channel_hash']),
+		intval(HUBLOC_FLAGS_DELETED),
+		intval(HUBLOC_OFFLINE)
 	);
 
 	if(! $h)

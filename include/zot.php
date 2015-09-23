@@ -2816,7 +2816,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$channel = $r[0];
 
-	$h = q("select * from hubloc where hubloc_hash = '%s'",
+	$h = q("select * from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0",
 		dbesc($channel['channel_hash'])
 	);
 
@@ -3312,7 +3312,27 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			}
 		}
 
-		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name'],'');
+
+		if(array_key_exists('item',$arr) && $arr['item'])
+			sync_items($channel,$arr['item']);
+
+		if(array_key_exists('item_id',$arr) && $arr['item_id'])
+			sync_items($channel,$arr['item_id']);
+
+
+		// we should probably do this for all items, but usually we only send one.
+
+		require_once('include/DReport.php');
+
+		if(array_key_exists('item',$arr) && is_array($arr['item'][0])) {
+			$DR = new DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
+			$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+		}
+		else
+			$DR = new DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
+
+		$result[] = $DR->get();
+
 	}
 
 	return $result;
@@ -3754,4 +3774,5 @@ function zotinfo($arr) {
 	}
 	call_hooks('zot_finger',$ret);
 	return($ret);
+
 }

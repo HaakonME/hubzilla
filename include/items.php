@@ -836,6 +836,7 @@ function title_is_body($title, $body) {
 function get_item_elements($x,$allow_code = false) {
 
 	$arr = array();
+
 	if($allow_code)
 		$arr['body'] = $x['body'];
 	else
@@ -4416,6 +4417,18 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 		intval($item['id']),
 		intval($item['uid'])
 	);
+
+	// remove delivery reports
+
+	$c = q("select channel_hash from channel where channel_id = %d limit 1",
+		intval($item['uid'])
+	);
+	if($c) {
+		q("delete from dreport where dreport_xchan = '%s' and  dreport_mid = '%s'",
+			dbesc($c[0]['channel_hash']),
+			dbesc($item['mid'])
+		);
+	}
 
 	// network deletion request. Keep the message structure so that we can deliver delete notifications.
 	// Come back after several days (or perhaps a month) to do the lowlevel delete (DROPITEM_PHASE2).

@@ -641,6 +641,7 @@ function item_post(&$a) {
 	$item_unseen = ((local_channel() != $profile_uid) ? 1 : 0);
 	$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);
 	$item_origin = (($origin) ? 1 : 0);
+	$item_consensus = (($consensus) ? 1 : 0);
 
 
 	// determine if this is a wall post

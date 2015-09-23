@@ -836,6 +836,7 @@ function title_is_body($title, $body) {
 function get_item_elements($x,$allow_code = false) {
 
 	$arr = array();
+
 	if($allow_code)
 		$arr['body'] = $x['body'];
 	else

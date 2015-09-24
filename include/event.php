@@ -755,12 +755,15 @@ function event_store_item($arr, $event) {
 		}
 	}
 
+
+
 	$item_arr = array();
 	$prefix = '';
 //	$birthday = false;
 
 	if($event['type'] === 'birthday') {
-		$prefix =  t('This event has been added to your calendar.');
+		if(! is_sys_channel($arr['uid']))
+			$prefix =  t('This event has been added to your calendar.');
 //		$birthday = true;
 
 		// The event is created on your own site by the system, but appears to belong 

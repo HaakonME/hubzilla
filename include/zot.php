@@ -3319,6 +3319,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		if(array_key_exists('item_id',$arr) && $arr['item_id'])
 			sync_items($channel,$arr['item_id']);
 
+		$addon = array('channel' => $channel,'data' => $arr);
+		call_hooks('process_channel_sync_delivery',$addon);
 
 		// we should probably do this for all items, but usually we only send one.
 

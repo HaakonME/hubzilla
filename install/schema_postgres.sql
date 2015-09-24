@@ -392,6 +392,7 @@ CREATE TABLE "event" (
   "event_repeat" text NOT NULL,
   "event_sequence" smallint NOT NULL DEFAULT '0',
   "event_priority" smallint NOT NULL DEFAULT '0',
+  "event_vdata" text NOT NULL,
   PRIMARY KEY ("id")
 );
 create index "event_uid_idx" on event ("uid");

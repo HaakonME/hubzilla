@@ -262,18 +262,30 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 		);
 		if(! $x)
 			return array();
-		if($mailbox === 'inbox')
-			$where = " and sender_xchan != '" . dbesc($x[0]['channel_hash']) . "' ";
-		elseif($mailbox === 'outbox')
-			$where = " and sender_xchan  = '" . dbesc($x[0]['channel_hash']) . "' ";
+
+		$channel_hash = dbesc($x[0]['channel_hash']);
+		$local_channel = intval(local_channel());
+
+		switch($mailbox) {
+
+			case 'inbox':
+				$sql = "SELECT * FROM mail WHERE channel_id = $local_channel AND from_xchan != '$channel_hash' ORDER BY created DESC $limit";
+				break;
+
+			case 'outbox':
+				$sql = "SELECT * FROM mail WHERE channel_id = $local_channel AND from_xchan = '$channel_hash' ORDER BY created DESC $limit";
+				break;
+
+			case 'combined':
+				$sql = "SELECT * FROM ( SELECT * FROM mail WHERE channel_id = $local_channel ORDER BY created DESC $limit ) AS temp_table GROUP BY parent_mid ORDER BY created DESC";
+				break;
+
+		}
+
 	}
 
-	// For different orderings, consider applying usort on the results. We thought of doing that
-	// inside this function or having some preset sorts, but don't wish to limit app developers. 
-		
-	$r = q("SELECT * from mail WHERE channel_id = %d $where order by created desc $limit",
-		intval(local_channel())
-	);
+	$r = q($sql);
+
 	if(! $r) {
 		return array();
 	}

@@ -185,11 +185,11 @@ EOT;
 		$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
 		$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 
-		$nav['messages'] = array('message', t('Mail'), "", t('Private mail'),'mail_nav_btn');
-		$nav['messages']['all']=array('message', t('See all private messages'), "", "");
+		$nav['messages'] = array('mail/combined', t('Mail'), "", t('Private mail'),'mail_nav_btn');
+		$nav['messages']['all']=array('mail/combined', t('See all private messages'), "", "");
 		$nav['messages']['mark'] = array('', t('Mark all private messages seen'), '','');
-		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
-		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
+		$nav['messages']['inbox'] = array('mail/inbox', t('Inbox'), "", t('Inbox'));
+		$nav['messages']['outbox']= array('mail/outbox', t('Outbox'), "", t('Outbox'));
 		$nav['messages']['new'] = array('mail/new', t('New Message'), "", t('New Message'));
 
 

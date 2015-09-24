@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1154 );
+define( 'UPDATE_VERSION' , 1155 );
 
 /**
  *
@@ -1865,3 +1865,13 @@ function update_r1153() {
 
 
 }
+
+function update_r1154() {
+
+	$r = q("ALTER TABLE event ADD event_vdata text NOT NULL ");
+    if($r)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+
+}
+

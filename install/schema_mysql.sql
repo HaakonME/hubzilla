@@ -396,6 +396,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `event_repeat` text NOT NULL,
   `event_sequence` smallint(6) NOT NULL DEFAULT '0',
   `event_priority` smallint(6) NOT NULL DEFAULT '0',
+  `event_vdata` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `type` (`type`),

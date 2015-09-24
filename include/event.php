@@ -526,13 +526,17 @@ function event_import_ical($ical, $uid) {
 
 //	logger('dtstart: ' . var_export($dtstart,true));
 
-	if(($dtstart->timezone_type == 2) || (($dtstart->timezone_type == 3) && ($dtstart->timezone === 'UTC'))) {
-		$ev['adjust'] = 1;
+
+	switch($dtstart->timezone_type) {
+		case VObject\Property\DateTime::UTC :
+			$ev['adjust'] = 0;
+			break;
+		case VObject\Property\DateTime::LOCALTZ :
+		default:
+			$ev['adjust'] = 1;
+			break;
 	}
-	else {
-		$ev['adjust'] = 0;
-	}
-	
+
 	$ev['start'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
 		$dtstart->format(\DateTime::W3C));
 

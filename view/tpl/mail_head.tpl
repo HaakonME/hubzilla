@@ -1,10 +1,8 @@
-<div class="generic-content-wrapper">
-	<div class="section-title-wrapper">
-		<h2>{{$header}}</h2>
-	</div>
-	<div class="section-content-wrapper">
-		{{foreach $messages as $message}}
-			{{include file="mail_list.tpl"}}
-		{{/foreach}}
-	</div>
+<div class="widget">
+	<h3>{{$header}}</h3>
+	<ul class="nav nav-pills nav-stacked">
+	{{foreach $messages as $message}}
+		{{include file="mail_list.tpl"}}
+	{{/foreach}}
+	</ul>
 </div>

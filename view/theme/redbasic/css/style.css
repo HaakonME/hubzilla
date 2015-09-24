@@ -1305,6 +1305,10 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	padding: 0;
 }
 
+.widget .conv-participants {
+	color: $font_colour;
+}
+
 .notif-item a {
 	color: #000;
 }

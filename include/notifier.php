@@ -675,14 +675,8 @@ function notifier_run($argv, $argc){
 				);
 			}
 		}
-		$deliveries[] = $hash;
 
-		if(count($deliver) >= $deliveries_per_process) {
-			proc_run('php','include/deliver.php',$deliver);
-			$deliver = array();
-			if($interval)
-				@time_sleep_until(microtime(true) + (float) $interval);
-		}
+		$deliveries[] = $hash;	
 	}
 	
 	if($normal_mode) {

@@ -254,6 +254,7 @@ function admin_page_site_post(&$a){
 	$proxy             = ((x($_POST,'proxy'))            ? notags(trim($_POST['proxy']))      : '');
 	$timeout           = ((x($_POST,'timeout'))          ? intval(trim($_POST['timeout']))    : 60);
 	$delivery_interval = ((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval'])) : 0);
+	$delivery_batch_count = ((x($_POST,'delivery_batch_count') && $_POST['delivery_batch_count'] > 0)? intval(trim($_POST['delivery_batch_count'])) : 1);
 	$poll_interval     = ((x($_POST,'poll_interval'))    ? intval(trim($_POST['poll_interval'])) : 0);
 	$maxloadavg        = ((x($_POST,'maxloadavg'))       ? intval(trim($_POST['maxloadavg'])) : 50);
 	$feed_contacts     = ((x($_POST,'feed_contacts'))    ? intval($_POST['feed_contacts'])    : 0);
@@ -261,6 +262,7 @@ function admin_page_site_post(&$a){
 
 	set_config('system', 'feed_contacts', $feed_contacts);
 	set_config('system', 'delivery_interval', $delivery_interval);
+	set_config('system', 'delivery_batch_count', $delivery_batch_count);
 	set_config('system', 'poll_interval', $poll_interval);
 	set_config('system', 'maxloadavg', $maxloadavg);
 	set_config('system', 'frontpage', $frontpage);
@@ -442,6 +444,7 @@ function admin_page_site(&$a) {
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
 		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), t("Value is in seconds. Set to 0 for unlimited (not recommended).")),
 		'$delivery_interval'			=> array('delivery_interval', t("Delivery interval"), (x(get_config('system','delivery_interval'))?get_config('system','delivery_interval'):2), t("Delay background delivery processes by this many seconds to reduce system load. Recommend: 4-5 for shared hosts, 2-3 for virtual private servers. 0-1 for large dedicated servers.")),
+		'$delivery_batch_count' => array('delivery_batch_count', t('Deliveries per process'),(x(get_config('system','delivery_batch_count'))?get_config('system','delivery_batch_count'):1), t("Number of deliveries to attempt in a single operating system process. Adjust if necessary to tune system performance. Recommend: 1-5.")),
 		'$poll_interval'			=> array('poll_interval', t("Poll interval"), (x(get_config('system','poll_interval'))?get_config('system','poll_interval'):2), t("Delay background polling processes by this many seconds to reduce system load. If 0, use delivery interval.")),
 		'$maxloadavg'			=> array('maxloadavg', t("Maximum Load Average"), ((intval(get_config('system','maxloadavg')) > 0)?get_config('system','maxloadavg'):50), t("Maximum system load before delivery and poll processes are deferred - default 50.")),
 		'$default_expire_days' => array('default_expire_days', t('Expiration period in days for imported (matrix/network) content'), intval(get_config('system','default_expire_days')), t('0 for no expiration of imported content')),

@@ -579,7 +579,7 @@ function notifier_run($argv, $argc){
 	if($deliveries_per_process <= 0)
 		$deliveries_per_process = 1;
 
-	$deliver = array();
+	$deliveries = array();
 
 	foreach($dhubs as $hub) {
 
@@ -675,27 +675,38 @@ function notifier_run($argv, $argc){
 				);
 			}
 		}
-		$deliver[] = $hash;
 
-		if(count($deliver) >= $deliveries_per_process) {
-			proc_run('php','include/deliver.php',$deliver);
-			$deliver = array();
-			if($interval)
-				@time_sleep_until(microtime(true) + (float) $interval);
+		$deliveries[] = $hash;	
+	}
+	
+	if($normal_mode) {
+		$x = q("select * from hook where hook = 'notifier_normal'");
+		if($x)
+			proc_run('php','deliver_hooks.php', $target_item['id']);
+	}
+
+	if($deliveries) {
+		$deliver = array();
+
+		foreach($deliveries as $d) {
+
+			$deliver[] = $d;
+
+			if(count($deliver) >= $deliveries_per_process) {
+				proc_run('php','include/deliver.php',$deliver);
+				$deliver = array();
+				if($interval)
+					@time_sleep_until(microtime(true) + (float) $interval);
+			}
 		}
 	}
 
 	// catch any stragglers
 
-	if(count($deliver)) {
+	if($deliver)
 		proc_run('php','include/deliver.php',$deliver);
-	}
 
 	logger('notifier: basic loop complete.', LOGGER_DEBUG);
-	
-	if($normal_mode)
-		call_hooks('notifier_normal',$target_item);
-
 
 	call_hooks('notifier_end',$target_item);
 

@@ -62,9 +62,17 @@ function deliver_run($argv, $argc) {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
 				if($result['success'] && $result['return_code'] < 300) {
 					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
+
+					q("update dreport set status = '%s', dreport_time = '%s' where dreport_queue = '%s' limit 1",
+						dbesc('accepted for delivery'),
+						dbesc(datetime_convert()),
+						dbesc($argv[$x])
+					);
+
 					$y = q("delete from outq where outq_hash = '%s'",
 						dbesc($argv[$x])
 					);
+
 				}
 				else {
 					logger('deliver: queue post returned ' . $result['return_code'] . ' from ' . $r[0]['outq_posturl'],LOGGER_DEBUG);

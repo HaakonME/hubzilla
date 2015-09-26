@@ -1565,9 +1565,9 @@ th,td {
 	overflow: hidden;
 }
 	
-/* message */
+/* mail */
 
-img.mail-list-sender-photo {
+img.mail-conv-sender-photo {
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
 }

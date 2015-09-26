@@ -8,7 +8,7 @@
 <div id="prvmail-to-label">{{$to}}</div>
 
 {{if $showinputs}}
-<input type="text" id="recip" name="messagerecip" value="{{$prefill}}" maxlength="255" size="64" tabindex="10" />
+<input class="form-control" type="text" id="recip" name="messagerecip" value="{{$prefill}}" maxlength="255" tabindex="10" />
 <input type="hidden" id="recip-complete" name="messageto" value="{{$preid}}">
 {{else}}
 {{$select}}
@@ -18,10 +18,10 @@
 <input type="hidden" name="media_str" id="jot-media" value="" />
 
 <div id="prvmail-subject-label">{{$subject}}</div>
-<input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" value="{{$subjtxt}}" {{$readonly}} tabindex="11" />
+<input class="form-control" type="text" maxlength="255" id="prvmail-subject" name="subject" value="{{$subjtxt}}" {{$readonly}} tabindex="11" />
 
 <div id="prvmail-message-label">{{$yourmessage}}</div>
-<textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" tabindex="12">{{$text}}</textarea>
+<textarea class="prvmail-text form-control" id="prvmail-text" name="body" tabindex="12">{{$text}}</textarea>
 
 
 <div id="prvmail-submit-wrapper" >
@@ -51,6 +51,6 @@
 		<div id="prvmail-rotator"></div>
 	</div> 
 </div>
-<div id="prvmail-end"></div>
+<div id="prvmail-end" class="clear"></div>
 </form>
 </div>

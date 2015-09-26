@@ -2866,7 +2866,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 			// don't pass these elements, they should not be synchronised
 
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address','channel_deleted','channel_removed','channel_system');
 
 			if(in_array($k,$disallowed))
 				continue;

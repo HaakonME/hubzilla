@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-09-18.1159\n"
+"Project-Id-Version: 2015-09-25.1166\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 00:04-0700\n"
+"POT-Creation-Date: 2015-09-25 00:05-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3000,51 +3000,51 @@ msgstr[1] ""
 msgid "Permission denied"
 msgstr ""
 
-#: ../../include/items.php:1038 ../../include/items.php:1084
+#: ../../include/items.php:1101 ../../include/items.php:1147
 msgid "(Unknown)"
 msgstr ""
 
-#: ../../include/items.php:1310
+#: ../../include/items.php:1373
 msgid "Visible to anybody on the internet."
 msgstr ""
 
-#: ../../include/items.php:1312
+#: ../../include/items.php:1375
 msgid "Visible to you only."
 msgstr ""
 
-#: ../../include/items.php:1314
+#: ../../include/items.php:1377
 msgid "Visible to anybody in this network."
 msgstr ""
 
-#: ../../include/items.php:1316
+#: ../../include/items.php:1379
 msgid "Visible to anybody authenticated."
 msgstr ""
 
-#: ../../include/items.php:1318
+#: ../../include/items.php:1381
 #, php-format
 msgid "Visible to anybody on %s."
 msgstr ""
 
-#: ../../include/items.php:1320
+#: ../../include/items.php:1383
 msgid "Visible to all connections."
 msgstr ""
 
-#: ../../include/items.php:1322
+#: ../../include/items.php:1385
 msgid "Visible to approved connections."
 msgstr ""
 
-#: ../../include/items.php:1324
+#: ../../include/items.php:1387
 msgid "Visible to specific connections."
 msgstr ""
 
-#: ../../include/items.php:4223 ../../mod/thing.php:74
+#: ../../include/items.php:4286 ../../mod/thing.php:74
 #: ../../mod/filestorage.php:27 ../../mod/viewsrc.php:20
 #: ../../mod/admin.php:167 ../../mod/admin.php:1025 ../../mod/admin.php:1225
 #: ../../mod/display.php:36
 msgid "Item not found."
 msgstr ""
 
-#: ../../include/items.php:4296 ../../include/attach.php:137
+#: ../../include/items.php:4359 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
@@ -3087,38 +3087,38 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: ../../include/items.php:4700 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4763 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr ""
 
-#: ../../include/items.php:4716
+#: ../../include/items.php:4779
 msgid "Collection is empty."
 msgstr ""
 
-#: ../../include/items.php:4723
+#: ../../include/items.php:4786
 #, php-format
 msgid "Collection: %s"
 msgstr ""
 
-#: ../../include/items.php:4733 ../../mod/connedit.php:674
+#: ../../include/items.php:4796 ../../mod/connedit.php:674
 #, php-format
 msgid "Connection: %s"
 msgstr ""
 
-#: ../../include/items.php:4735
+#: ../../include/items.php:4798
 msgid "Connection not found."
 msgstr ""
 
-#: ../../include/zot.php:677
+#: ../../include/zot.php:678
 msgid "Invalid data packet"
 msgstr ""
 
-#: ../../include/zot.php:693
+#: ../../include/zot.php:694
 msgid "Unable to verify channel signature"
 msgstr ""
 
-#: ../../include/zot.php:2161
+#: ../../include/zot.php:2184
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr ""
@@ -6511,7 +6511,7 @@ msgstr ""
 msgid "OpenID protocol error. No ID returned."
 msgstr ""
 
-#: ../../mod/openid.php:72 ../../mod/openid.php:180 ../../mod/post.php:286
+#: ../../mod/openid.php:72 ../../mod/openid.php:180 ../../mod/post.php:287
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
 msgstr ""
@@ -8547,7 +8547,7 @@ msgstr ""
 msgid "Please login."
 msgstr ""
 
-#: ../../mod/post.php:235
+#: ../../mod/post.php:236
 msgid ""
 "Remote authentication blocked. You are logged into this site locally. Please "
 "logout and retry."

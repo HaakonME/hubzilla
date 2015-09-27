@@ -395,12 +395,6 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
-				dbesc($x['hash']),
-				intval($channel['channel_id']),
-				intval(ABOOK_FLAG_SELF)
-			);
-
 			if(array_key_exists('profile',$j) && array_key_exists('next_birthday',$j['profile'])) {
 				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
 			}
@@ -408,7 +402,15 @@ function zot_refresh($them, $channel = null, $force = false) {
 				$next_birthday = NULL_DATE;
 			}
 
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 limit 1",
+				dbesc($x['hash']),
+				intval($channel['channel_id']),
+				intval(ABOOK_FLAG_SELF)
+			);
+
 			if($r) {
+
+				// connection exists
 
 				// if the dob is the same as what we have stored (disregarding the year), keep the one
 				// we have as we may have updated the year after sending a notification; and resetting
@@ -454,6 +456,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 			}
 			else {
+
+				// new connection
+
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
 					$xx = get_role_perms($role);
@@ -490,6 +495,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
 
 					// Send a clone sync packet and a permissions update if permissions have changed
+
 					$new_connection = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) > 0 order by abook_created desc limit 1",
 						dbesc($x['hash']),
 						intval($channel['channel_id']),
@@ -2802,6 +2808,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$channel = $r[0];
 
+	if(intval($channel['channel_pageflags']) & PAGE_REMOVED)
+		return;
+
 	$h = q("select * from hubloc where hubloc_hash = '%s' and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
 		dbesc($channel['channel_hash']),
 		intval(HUBLOC_FLAGS_DELETED),
@@ -2853,6 +2862,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 				continue;
 
 			// don't pass these elements, they should not be synchronised
+
+			if(($k === 'channel_pageflags') && ($v & PAGE_SYSTEM))
+				$v = (string) intval($v - PAGE_SYSTEM); 
 
 			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address');
 
@@ -2992,7 +3004,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			foreach($arr['abook'] as $abook) {
 
 				if(array_key_exists('abook_blocked',$abook)) {
+
 					// convert from hubzilla
+
 					$abook['abook_flags'] = 0;
 					if(intval($abook['abook_blocked']))
 						$abook['abook_flags'] |= ABOOK_FLAG_BLOCKED;

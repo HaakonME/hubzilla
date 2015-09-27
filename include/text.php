@@ -1686,14 +1686,14 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 function lang_selector() {
 	global $a;
 
-	$langs = glob('view/*/strings.php');
+	$langs = glob('view/*/hstrings.php');
 
 	$lang_options = array();
 	$selected = "";
 
 	if(is_array($langs) && count($langs)) {
 		$langs[] = '';
-		if(! in_array('view/en/strings.php',$langs))
+		if(! in_array('view/en/hstrings.php',$langs))
 			$langs[] = 'view/en/';
 		asort($langs);
 		foreach($langs as $l) {

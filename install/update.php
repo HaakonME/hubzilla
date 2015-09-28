@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1155 );
+define( 'UPDATE_VERSION' , 1156 );
 
 /**
  *
@@ -1875,3 +1875,12 @@ function update_r1154() {
 
 }
 
+
+function update_r1155() {
+
+	$r1 = q("alter table site add site_type smallint not null default '0' ");
+	$r2 = q("create index site_type on site ( site_type ) ");
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}

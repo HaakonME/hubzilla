@@ -2963,10 +2963,10 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			// These flags cannot be sync'd.
 			// If these bits aren't set locally, remove the bits from the incoming flags.
 
-			if((! ($channel['channel_pageflags'] & PAGE_REMOVED)) && ($arr['channel_pageflags'] & PAGE_REMOVED))
-				$arr['channel_pageflags'] = $arr['channel_pageflags'] - PAGE_REMOVED;
-			if((! ($channel['channel_pageflags'] & PAGE_SYSTEM)) && ($arr['channel_pageflags'] & PAGE_SYSTEM))
-				$arr['channel_pageflags'] = $arr['channel_pageflags'] - PAGE_SYSTEM;
+			if((! ($channel['channel_pageflags'] & PAGE_REMOVED)) && ($arr['channel']['channel_pageflags'] & PAGE_REMOVED))
+				$arr['channel']['channel_pageflags'] = $arr['channel']['channel_pageflags'] - PAGE_REMOVED;
+			if((! ($channel['channel_pageflags'] & PAGE_SYSTEM)) && ($arr['channel']['channel_pageflags'] & PAGE_SYSTEM))
+				$arr['channel']['channel_pageflags'] = $arr['channel']['channel_pageflags'] - PAGE_SYSTEM;
 
 			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_system', 'channel_deleted' );
 

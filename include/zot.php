@@ -3001,10 +3001,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				// These flags cannot be sync'd.
 				// remove the bits from the incoming flags.
 
-				if($arr['channel_pageflags'] & 0x8000)
-					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x8000;
-				if($arr['channel_pageflags'] & 0x1000)
-					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x1000;
+				// These correspond to PAGE_REMOVED and PAGE_SYSTEM on redmatrix
+
+				if($arr['channel']['channel_pageflags'] & 0x8000)
+					$arr['channel']['channel_pageflags'] = $arr['channel']['channel_pageflags'] - 0x8000;
+				if($arr['channel']['channel_pageflags'] & 0x1000)
+					$arr['channel']['channel_pageflags'] = $arr['channel']['channel_pageflags'] - 0x1000;
 
 			}
 			

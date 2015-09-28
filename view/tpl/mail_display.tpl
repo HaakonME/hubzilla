@@ -1,6 +1,6 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		<a class="btn btn-xs btn-danger pull-right" href="message/dropconv/{{$thread_id}}" onclick="return confirmDelete();"><i class="icon-trash"></i> {{$delete}}</a>
+		<a class="btn btn-xs btn-danger pull-right" href="mail/{{$mailbox}}/dropconv/{{$thread_id}}" onclick="return confirmDelete();"><i class="icon-trash"></i> {{$delete}}</a>
 		<h2>{{$prvmsg_header}}</h2>
 
 	</div>

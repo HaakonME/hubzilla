@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-11 00:05-0700\n"
-"PO-Revision-Date: 2015-09-14 18:21+0000\n"
+"POT-Creation-Date: 2015-09-18 00:04-0700\n"
+"PO-Revision-Date: 2015-09-22 14:10+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1598,17 +1598,17 @@ msgstr "Por favor visite %s para ver y/o responder a su mensaje privado."
 #: ../../include/enotify.php:158
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]"
-msgstr "%1$s, %2$s comentó en [zrl=%3$s]a %4$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado sobre [zrl=%3$s]%4$s[/zrl]"
 
 #: ../../include/enotify.php:166
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]%4$s's %5$s[/zrl]"
-msgstr "%1$s, %2$s comentó en [zrl=%3$s]%4$s de %5$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado sobre el [zrl=%3$s]%5$s de %4$s[/zrl]"
 
 #: ../../include/enotify.php:175
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]"
-msgstr "%1$s, %2$s comentó en [zrl=%3$s]su %4$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado [zrl=%3$s]su %4$s[/zrl]"
 
 #: ../../include/enotify.php:186
 #, php-format
@@ -1665,7 +1665,7 @@ msgstr "[Red:Aviso]  %1$s le ha dado un toque"
 #: ../../include/enotify.php:239
 #, php-format
 msgid "%1$s, %2$s poked you at %3$s"
-msgstr "%1$s, %2$s le dio un toque en %3$s"
+msgstr "%1$s, %2$s le dio un toque sobre %3$s"
 
 #: ../../include/enotify.php:240
 #, php-format
@@ -1680,12 +1680,12 @@ msgstr "[Red:Aviso]  %s etiquetó su entrada"
 #: ../../include/enotify.php:257
 #, php-format
 msgid "%1$s, %2$s tagged your post at %3$s"
-msgstr "%1$s, %2$s etiquetó su publicación en %3$s"
+msgstr "%1$s, %2$s ha etiquetado su publicación sobre %3$s"
 
 #: ../../include/enotify.php:258
 #, php-format
 msgid "%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]"
-msgstr "%1$s, %2$s etiquetó [zrl=%3$s]su publicación[/zrl]"
+msgstr "%1$s, %2$s ha etiquetado [zrl=%3$s]su publicación[/zrl]"
 
 #: ../../include/enotify.php:270
 msgid "[Red:Notify] Introduction received"
@@ -3118,15 +3118,15 @@ msgstr "Conexión: %s"
 msgid "Connection not found."
 msgstr "Conexión no encontrada"
 
-#: ../../include/zot.php:675
+#: ../../include/zot.php:677
 msgid "Invalid data packet"
 msgstr "Paquete de datos no válido"
 
-#: ../../include/zot.php:691
+#: ../../include/zot.php:693
 msgid "Unable to verify channel signature"
 msgstr "No ha sido posible de verificar la signatura del canal"
 
-#: ../../include/zot.php:2142
+#: ../../include/zot.php:2161
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr "No ha sido posible de verificar la signatura del sitio para %s"
@@ -4640,7 +4640,7 @@ msgstr "Por favor, visite <a href=\"https://redmatrix.me\">redmatrix.me </a> par
 
 #: ../../mod/siteinfo.php:165
 msgid "Bug reports and issues: please visit"
-msgstr "Informes de errores e incidencias: por, favor visite"
+msgstr "Informes de errores e incidencias: por favor visite"
 
 #: ../../mod/siteinfo.php:167
 msgid "$projectname issues"
@@ -5275,7 +5275,7 @@ msgstr "Introduzca la dirección del enlace o seleccione el nombre de un submen�
 
 #: ../../mod/mitem.php:159 ../../mod/mitem.php:232
 msgid "Use magic-auth if available"
-msgstr "Use la autenticación mágica si está disponible"
+msgstr "Usar la autenticación mágica si está disponible"
 
 #: ../../mod/mitem.php:160 ../../mod/mitem.php:233
 msgid "Open link in new window"
@@ -6188,7 +6188,7 @@ msgstr "Puerto de la base de datos"
 
 #: ../../mod/setup.php:312
 msgid "Communication port number - use 0 for default"
-msgstr "Número del puerto de comunicaciones - use 0 como valor por defecto"
+msgstr "Número del puerto de comunicaciones - usar 0 como valor por defecto"
 
 #: ../../mod/setup.php:313
 msgid "Database Login Name"
@@ -6532,7 +6532,7 @@ msgstr "Bienvenido %s. La identificación desde su servidor se ha llevado a cabo
 #: ../../mod/tagger.php:96
 #, php-format
 msgid "%1$s tagged %2$s's %3$s with %4$s"
-msgstr "%1$s ha etiquetado el %3$s de %2$s con %4$s"
+msgstr "%1$s ha etiquetado la %3$s de %2$s con %4$s"
 
 #: ../../mod/uexport.php:45 ../../mod/uexport.php:46
 msgid "Export Channel"
@@ -6958,7 +6958,7 @@ msgstr "Intervalo de sondeo"
 msgid ""
 "Delay background polling processes by this many seconds to reduce system "
 "load. If 0, use delivery interval."
-msgstr "Retrasar el sondeo en segundo plano en esta cantidad de segundo para reducir la carga del sistema. Si es 0, use el intervalo de entrega."
+msgstr "Retrasar el sondeo en segundo plano en esta cantidad de segundos, para reducir la carga del sistema. Si es 0, se usará el intervalo de entrega."
 
 #: ../../mod/admin.php:491
 msgid "Maximum Load Average"
@@ -7985,7 +7985,7 @@ msgstr "Reciba una sugerencia de amistad"
 
 #: ../../mod/settings.php:1108
 msgid "You are tagged in a post"
-msgstr "Usted sea etiquetado en una publicación"
+msgstr "Usted ha sido etiquetado en una publicación"
 
 #: ../../mod/settings.php:1109
 msgid "You are poked/prodded/etc. in a post"
@@ -8305,7 +8305,7 @@ msgstr "Archiva (o desarchiva) esta conexión - marca el canal como muerto aunqu
 
 #: ../../mod/connedit.php:551
 msgid "This connection is archived!"
-msgstr "¡Esta conexión esta archivada!"
+msgstr "¡Esta conexión está archivada!"
 
 #: ../../mod/connedit.php:555
 msgid "Unhide"

@@ -398,11 +398,6 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
-				dbesc($x['hash']),
-				intval($channel['channel_id'])
-			);
-
 			if(array_key_exists('profile',$j) && array_key_exists('next_birthday',$j['profile'])) {
 				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
 			}
@@ -410,7 +405,14 @@ function zot_refresh($them, $channel = null, $force = false) {
 				$next_birthday = NULL_DATE;
 			}
 
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
+				dbesc($x['hash']),
+				intval($channel['channel_id'])
+			);
+
 			if($r) {
+
+				// connection exists
 
 				// if the dob is the same as what we have stored (disregarding the year), keep the one
 				// we have as we may have updated the year after sending a notification; and resetting
@@ -453,6 +455,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 			}
 			else {
+
+				// new connection
+
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
 					$xx = get_role_perms($role);
@@ -2815,6 +2820,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		return;
 
 	$channel = $r[0];
+
+	if(intval($channel['channel_removed']))
+		return;
 
 	$h = q("select * from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0",
 		dbesc($channel['channel_hash'])

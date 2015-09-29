@@ -3522,8 +3522,14 @@ function mail_store($arr) {
 		dbesc($arr['mid']),
 		intval($arr['channel_id'])
 	);
+
 	if($r) {
 		logger('mail_store: duplicate item ignored. ' . print_r($arr,true));
+		return 0;
+	}
+
+	if(! $r && $arr['mail_recalled'] = 1) {
+		logger('mail_store: recalled item not found. ' . print_r($arr,true));
 		return 0;
 	}
 

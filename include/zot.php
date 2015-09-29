@@ -2743,7 +2743,7 @@ function import_site($arr, $pubkey) {
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
+			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s', site_type = %d
 				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2753,6 +2753,7 @@ function import_site($arr, $pubkey) {
 				dbesc(datetime_convert()),
 				dbesc($sellpage),
 				dbesc($site_realm),
+				intval(SITE_TYPE_ZOT),
 				dbesc($url)
 			);
 			if(! $r) {
@@ -2769,7 +2770,7 @@ function import_site($arr, $pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm )
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type )
 			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
 			dbesc($site_location),
 			dbesc($url),
@@ -2779,7 +2780,8 @@ function import_site($arr, $pubkey) {
 			dbesc($directory_url),
 			intval($register_policy),
 			dbesc($sellpage),
-			dbesc($site_realm)
+			dbesc($site_realm),
+			intval(SITE_TYPE_ZOT)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));

@@ -1588,13 +1588,11 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
 
-// uncomment this once we find out what's stopping the clone sync of the item from working
-//		if($d['hash'] === $sender['hash']) {
-//			$DR->update('self delivery ignored');
-//			$result[] = $DR->get();
-//			continue;
-//		}
-
+		if($d['hash'] === $sender['hash']) {
+			$DR->update('self delivery ignored');
+			$result[] = $DR->get();
+			continue;
+		}
 
 		// allow public postings to the sys channel regardless of permissions, but not
 		// for comments travelling upstream. Wait and catch them on the way down.

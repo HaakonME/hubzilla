@@ -616,6 +616,10 @@ function identity_basic_export($channel_id, $items = false) {
 		}
 	}
 
+	$addon = array('channel_id' => $channel_id,'data' => $ret);
+	call_hooks('identity_basic_export',$addon);
+	$ret = $addon['data'];
+
 
 	if(! $items)
 		return $ret;

@@ -450,6 +450,8 @@ function import_post(&$a) {
 	if(is_array($data['menu']))
 		import_menus($channel,$data['menu']);
 	
+	$addon = array('channel' => $channel,'data' => $data);
+	call_hooks('import_channel',$addon);
 
 	$saved_notification_flags = notifications_off($channel['channel_id']);
 

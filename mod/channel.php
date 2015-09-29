@@ -153,7 +153,6 @@ function channel_content(&$a, $update = 0, $load = false) {
 	else
 		$page_mode = 'client';
 
-
 	$abook_uids = " and abook.abook_channel = " . intval($a->profile['profile_uid']) . " ";
 
 	$simple_update = (($update) ? " AND item_unseen = 1 " : '');
@@ -258,9 +257,6 @@ function channel_content(&$a, $update = 0, $load = false) {
 	} else {
 		$items = array();
 	}
-
-
-
 
 
 	if((! $update) && (! $load)) {

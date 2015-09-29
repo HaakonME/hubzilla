@@ -392,6 +392,7 @@ CREATE TABLE "event" (
   "event_repeat" text NOT NULL,
   "event_sequence" smallint NOT NULL DEFAULT '0',
   "event_priority" smallint NOT NULL DEFAULT '0',
+  "event_vdata" text NOT NULL,
   PRIMARY KEY ("id")
 );
 create index "event_uid_idx" on event ("uid");
@@ -1121,6 +1122,7 @@ CREATE TABLE "site" (
   "site_realm" text NOT NULL DEFAULT '',
   "site_valid" smallint NOT NULL DEFAULT '0',
   "site_dead" smallint NOT NULL DEFAULT '0',
+  "site_type" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("site_url")
 );
 create index "site_flags" on site ("site_flags");
@@ -1132,6 +1134,7 @@ create index "site_sellpage" on site ("site_sellpage");
 create index "site_realm" on site ("site_realm");
 create index "site_valid" on site ("site_valid");
 create index "site_dead" on site ("site_dead");
+create index "site_type" on site ("site_type");
 
 CREATE TABLE "source" (
   "src_id" serial  NOT NULL,

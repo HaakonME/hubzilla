@@ -8,5 +8,12 @@
 
 		<p><b><a href="uexport/complete">{{$fulltitle}}</a></b></p>
 		<p>{{$full}}</p>
+	
+		<p>{{$extra}}</p>
+		<p>{{$extra2}}</p>
+		<p>{{$extra3}}</p>
+
+		<p>{{$extra4}}</p>
+
 	</div>
 </div>

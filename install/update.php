@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1154 );
+define( 'UPDATE_VERSION' , 1156 );
 
 /**
  *
@@ -1865,3 +1865,23 @@ function update_r1153() {
 
 
 }
+
+function update_r1154() {
+
+	$r = q("ALTER TABLE event ADD event_vdata text NOT NULL ");
+    if($r)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+
+}
+
+
+function update_r1155() {
+
+	$r1 = q("alter table site add site_type smallint not null default '0' ");
+	$r2 = q("create index site_type on site ( site_type ) ");
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

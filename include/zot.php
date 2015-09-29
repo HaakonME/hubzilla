@@ -398,11 +398,6 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
-				dbesc($x['hash']),
-				intval($channel['channel_id'])
-			);
-
 			if(array_key_exists('profile',$j) && array_key_exists('next_birthday',$j['profile'])) {
 				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
 			}
@@ -410,7 +405,14 @@ function zot_refresh($them, $channel = null, $force = false) {
 				$next_birthday = NULL_DATE;
 			}
 
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
+				dbesc($x['hash']),
+				intval($channel['channel_id'])
+			);
+
 			if($r) {
+
+				// connection exists
 
 				// if the dob is the same as what we have stored (disregarding the year), keep the one
 				// we have as we may have updated the year after sending a notification; and resetting
@@ -453,6 +455,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 			}
 			else {
+
+				// new connection
+
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
 					$xx = get_role_perms($role);
@@ -1582,14 +1587,11 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		$channel = $r[0];
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
-
-// uncomment this once we find out what's stopping the clone sync of the item from working
-//		if($d['hash'] === $sender['hash']) {
-//			$DR->update('self delivery ignored');
-//			$result[] = $DR->get();
-//			continue;
-//		}
-
+		if($d['hash'] === $sender['hash']) {
+			$DR->update('self delivery ignored');
+			$result[] = $DR->get();
+			continue;
+		}
 
 		// allow public postings to the sys channel regardless of permissions, but not
 		// for comments travelling upstream. Wait and catch them on the way down.
@@ -2738,7 +2740,7 @@ function import_site($arr, $pubkey) {
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
+			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s', site_type = %d
 				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2748,6 +2750,7 @@ function import_site($arr, $pubkey) {
 				dbesc(datetime_convert()),
 				dbesc($sellpage),
 				dbesc($site_realm),
+				intval(SITE_TYPE_ZOT),
 				dbesc($url)
 			);
 			if(! $r) {
@@ -2764,7 +2767,7 @@ function import_site($arr, $pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm )
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type )
 			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
 			dbesc($site_location),
 			dbesc($url),
@@ -2774,7 +2777,8 @@ function import_site($arr, $pubkey) {
 			dbesc($directory_url),
 			intval($register_policy),
 			dbesc($sellpage),
-			dbesc($site_realm)
+			dbesc($site_realm),
+			intval(SITE_TYPE_ZOT)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));
@@ -2815,6 +2819,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		return;
 
 	$channel = $r[0];
+
+	if(intval($channel['channel_removed']))
+		return;
 
 	$h = q("select * from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0",
 		dbesc($channel['channel_hash'])
@@ -2866,7 +2873,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 			// don't pass these elements, they should not be synchronised
 
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address','channel_deleted','channel_removed','channel_system');
 
 			if(in_array($k,$disallowed))
 				continue;
@@ -2993,10 +3000,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				// These flags cannot be sync'd.
 				// remove the bits from the incoming flags.
 
-				if($arr['channel_pageflags'] & 0x8000)
-					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x8000;
-				if($arr['channel_pageflags'] & 0x1000)
-					$arr['channel_pageflags'] = $arr['channel_pageflags'] - 0x1000;
+				// These correspond to PAGE_REMOVED and PAGE_SYSTEM on redmatrix
+
+				if($arr['channel']['channel_pageflags'] & 0x8000)
+					$arr['channel']['channel_pageflags'] = $arr['channel']['channel_pageflags'] - 0x8000;
+				if($arr['channel']['channel_pageflags'] & 0x1000)
+					$arr['channel']['channel_pageflags'] = $arr['channel']['channel_pageflags'] - 0x1000;
 
 			}
 			
@@ -3319,6 +3328,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		if(array_key_exists('item_id',$arr) && $arr['item_id'])
 			sync_items($channel,$arr['item_id']);
 
+		$addon = array('channel' => $channel,'data' => $arr);
+		call_hooks('process_channel_sync_delivery',$addon);
 
 		// we should probably do this for all items, but usually we only send one.
 

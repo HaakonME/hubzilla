@@ -62,7 +62,7 @@ function deliver_run($argv, $argc) {
 						q("insert into site (site_url, site_update, site_dead, site_type) values ('%s','%s',0,%d) ",
 							dbesc($base),
 							dbesc(datetime_convert()),
-							intval(($r[0]['outq_driver'] === 'post' ?) SITE_TYPE_NOTZOT : SITE_TYPE_UNKNOWN)
+							intval(($r[0]['outq_driver'] === 'post') ? SITE_TYPE_NOTZOT : SITE_TYPE_UNKNOWN)
 						);
 					}
 				}
@@ -76,7 +76,7 @@ function deliver_run($argv, $argc) {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
 				if($result['success'] && $result['return_code'] < 300) {
 					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
-					q("update site set site_update = '%s', site_dead = 0 where site_url = '%s' "),
+					q("update site set site_update = '%s', site_dead = 0 where site_url = '%s' ",
 						dbesc(datetime_convert()),
 						dbesc($site_url)
 					);

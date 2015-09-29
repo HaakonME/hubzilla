@@ -3528,7 +3528,7 @@ function mail_store($arr) {
 		return 0;
 	}
 
-	if(! $r && $arr['mail_recalled'] = 1) {
+	if(! $r && $arr['mail_recalled'] == 1) {
 		logger('mail_store: recalled item not found. ' . print_r($arr,true));
 		return 0;
 	}

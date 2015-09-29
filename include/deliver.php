@@ -53,16 +53,33 @@ function deliver_run($argv, $argc) {
 							continue;
 						}
 					}
+					else {
+
+						// zot sites should all have a site record, unless they've been dead for as long as 
+						// your site has existed. Since we don't know for sure what these sites are, 
+						// call them unknown
+
+						q("insert into site (site_url, site_update, site_dead, site_type) values ('%s','%s',0,%d) ",
+							dbesc($base),
+							dbesc(datetime_convert()),
+							intval(($r[0]['outq_driver'] === 'post') ? SITE_TYPE_NOTZOT : SITE_TYPE_UNKNOWN)
+						);
+					}
 				}
 			} 
 
 			// "post" queue driver - used for diaspora and friendica-over-diaspora communications.
 
 			if($r[0]['outq_driver'] === 'post') {
+
+
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
 				if($result['success'] && $result['return_code'] < 300) {
 					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
-
+					q("update site set site_update = '%s', site_dead = 0 where site_url = '%s' ",
+						dbesc(datetime_convert()),
+						dbesc($site_url)
+					);
 					q("update dreport set status = '%s', dreport_time = '%s' where dreport_queue = '%s' limit 1",
 						dbesc('accepted for delivery'),
 						dbesc(datetime_convert()),

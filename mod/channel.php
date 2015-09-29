@@ -161,7 +161,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 	if($load)
 		$simple_update = '';
-
+dbg(1);
 	if(($update) && (! $load)) {
 		if ($mid) {
 			$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d $item_normal
@@ -259,7 +259,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 
-
+dbg(0);
 
 
 	if((! $update) && (! $load)) {

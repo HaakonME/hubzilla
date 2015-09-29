@@ -1593,13 +1593,6 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			continue;
 		}
 
-
-		if($d['hash'] === $sender['hash']) {
-			$DR->update('self delivery ignored');
-			$result[] = $DR->get();
-			continue;
-		}
-
 		// allow public postings to the sys channel regardless of permissions, but not
 		// for comments travelling upstream. Wait and catch them on the way down.
 		// They may have been blocked by the owner.

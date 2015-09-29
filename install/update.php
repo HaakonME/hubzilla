@@ -1885,6 +1885,3 @@ function update_r1155() {
 	return UPDATE_FAILED;
 }
 
-function update_r1155() {
-	return UPDATE_SUCCESS;
-}

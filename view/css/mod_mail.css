@@ -1,26 +1,3 @@
-/* message */
-
-#mail-list-wrapper {
-	border-top: 1px solid #ccc;
-	padding: 5px 5px 5px 5px;
-}
-
-span.mail-list {
-	float: left;
-	width: 20%;
-}
-
-img.mail-list-sender-photo {
-	height: 24px;
-	width: 24px;
-	float: left;
-	margin-right: 30px;
-}
-
-.mail-list-remove {
-	width: 5% !important;
-}
-
 /* message/new */
 
 #prvmail-to-label,
@@ -48,49 +25,26 @@ img.mail-list-sender-photo {
 	cursor: pointer;
 }
 
-#prvmail-end {
-	clear: both;
-}
-
 /* message/id */
 
 .mail-conv-outside-wrapper {
-	margin-top: 30px;
+	display: table;
+	table-layout: fixed;
 }
 
-.mail-conv-sender,
-.mail-conv-detail {
-	float: left;
-}
-
-.mail-conv-detail {
-	margin-left: 20px;
-	width: 500px;
-}
-
-.mail-conv-subject {
-    font-size: 1.4em;
-    margin: 10px 0;
-}
-
-.mail-conv-delete-wrapper {
-	float: right;
-	margin-right: 30px;
-	margin-top: 15px;
-	margin-bottom: 5px;
-}
-
-.mail-conv-recall-wrapper {
-	float: right;
+.mail-conv-sender {
+	display: table-cell;
+	vertical-align: top;
 	margin-right: 10px;
-	margin-top: 15px;
-	margin-bottom: 5px;
 }
 
-.mail-conv-outside-wrapper-end {
-	clear: both;
+.mail-conv-sender-name {
+	font-weight: bold;
 }
 
-.mail-conv-break {
-	clear: both;
+.mail-conv-detail {
+	display: table-cell;
+	vertical-align: top;
+	width: 100%;
+	padding-left: 10px;
 }

@@ -50,7 +50,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1155  );
+define ( 'DB_UPDATE_VERSION',       1156  );
 
 /**
  * @brief Constant with a HTML line break.
@@ -332,6 +332,12 @@ define ( 'ATTACH_FLAG_OS',     0x0002);
 define ( 'MENU_ITEM_ZID',       0x0001);
 define ( 'MENU_ITEM_NEWWIN',    0x0002);
 define ( 'MENU_ITEM_CHATROOM',  0x0004);
+
+
+
+define ( 'SITE_TYPE_ZOT',           0);
+define ( 'SITE_TYPE_NOTZOT',        1);
+define ( 'SITE_TYPE_UNKNOWN',       2);
 
 /**
  * Poll/Survey types

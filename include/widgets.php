@@ -637,6 +637,7 @@ function widget_conversations($arr) {
 		foreach($r as $rr) {
 
 			$messages[] = array(
+				'mailbox'      => $mailbox,
 				'id'           => $rr['id'],
 				'from_name'    => $rr['from']['xchan_name'],
 				'from_url'     => chanlink_hash($rr['from_xchan']),
@@ -648,7 +649,8 @@ function widget_conversations($arr) {
 				'delete'       => t('Delete conversation'),
 				'body'         => $rr['body'],
 				'date'         => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
-				'seen'         => $rr['seen']
+				'seen'         => $rr['seen'],
+				'selected'     => ((argv(2)) ? (argv(2) == $rr['id']) : ($r[0]['id'] == $rr['id']))
 			);
 		}
 

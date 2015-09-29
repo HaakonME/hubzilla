@@ -24,7 +24,7 @@ function message_content(&$a) {
 	if(! $cipher)
 		$cipher = 'aes256';
 
-
+/*
 	if((argc() == 3) && (argv(1) === 'dropconv')) {
 		if(! intval(argv(2)))
 			return;
@@ -34,7 +34,7 @@ function message_content(&$a) {
 			info( t('Conversation removed.') . EOL );
 		goaway($a->get_baseurl(true) . '/mail/combined' );
 	}
-/*
+
 	if(argc() == 2) {
 
 		switch(argv(1)) {

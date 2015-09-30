@@ -1569,6 +1569,8 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		}
 	}
 
+logger('sender: ' . print_r($sender,true));
+
 	foreach($deliveries as $d) {
 		$local_public = $public;
 
@@ -1587,8 +1589,17 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		$channel = $r[0];
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
-// breaks comments?
-//		if($d['hash'] === $sender['hash']) {
+		/**
+		 * @FIXME: Somehow we need to block normal message delivery from our clones, as the delivered
+		 * message doesn't have ACL information in it as the cloned copy does. That copy 
+		 * will normally arrive first via sync delivery, but this isn't guaranteed. 
+		 * There's a chance the current delivery could take place before the cloned copy arrives
+		 * hence the item could have the wrong ACL and *could* be used in subsequent deliveries or
+		 * access checks. So far all attempts at identifying this situation precisely
+		 * have caused issues with delivery of relayed comments. 
+		 */
+
+//		if(($d['hash'] === $sender['hash']) && ($sender['url'] !== z_root()) && (! $relay)) {
 //			$DR->update('self delivery ignored');
 //			$result[] = $DR->get();
 //			continue;

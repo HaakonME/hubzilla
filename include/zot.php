@@ -3798,6 +3798,9 @@ function zotinfo($arr) {
 
 function check_zotinfo($channel,$locations,&$ret) {
 
+
+//	logger('locations: ' . print_r($locations,true),LOGGER_DATA);
+
 	// This function will likely expand as we find more things to detect and fix.
 	// 1. Because magic-auth is reliant on it, ensure that the system channel has a valid hubloc
 	//    Force this to be the case if anything is found to be wrong with it. 
@@ -3808,10 +3811,15 @@ function check_zotinfo($channel,$locations,&$ret) {
 		// the sys channel must have a location (hubloc)
 		$valid_location = false;
 		if((count($locations) === 1) && ($locations[0]['primary']) && (! $locations[0]['deleted'])) {
-			$valid_location = true;
+			if((rsa_verify($locations[0]['url'],base64url_decode($locations[0]['url_sig']),$channel['channel_pubkey']))
+				&& ($locations[0]['sitekey'] === get_config('system','pubkey'))
+				&& ($locations[0]['url'] === z_root()))
+				$valid_location = true;
+			else
+				logger('sys channel: invalid url signature');
 		}
 
-		if((! $locations) || (! $valid_locations)) {
+		if((! $locations) || (! $valid_location)) {
 
 			logger('System channel locations are not valid. Attempting repair.');
 

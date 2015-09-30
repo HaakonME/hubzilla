@@ -605,11 +605,16 @@ function notifier_run($argv, $argc){
 				'request' => $request,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,
-				'walltowall' => $walltowall
+				'walltowall' => $walltowall,
+				'queued' => array()
 			);
 
 
 			call_hooks('notifier_hub',$narr);
+			if($narr['queued']) {
+				foreach($narr['queued'] as $pq)
+					$deliveries[] = $pq;
+			}
 			continue;
 
 		}

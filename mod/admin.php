@@ -332,10 +332,10 @@ function admin_page_site(&$a) {
 
 	/* Installed langs */
 	$lang_choices = array();
-	$langs = glob('view/*/strings.php');
+	$langs = glob('view/*/hstrings.php');
 
 	if(is_array($langs) && count($langs)) {
-		if(! in_array('view/en/strings.php',$langs))
+		if(! in_array('view/en/hstrings.php',$langs))
 			$langs[] = 'view/en/';
 		asort($langs);
 		foreach($langs as $l) {

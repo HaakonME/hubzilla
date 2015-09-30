@@ -128,33 +128,45 @@ function mail_content(&$a) {
 		'$header' => t('Messages'),
 	));
 
-	if((argc() == 3) && (argv(1) === 'drop')) {
-		if(! intval(argv(2)))
+	if((argc() == 4) && (argv(2) === 'drop')) {
+		if(! intval(argv(3)))
 			return;
-		$cmd = argv(1);
-
-		$r = private_messages_drop(local_channel(), argv(2));
+		$cmd = argv(2);
+		$mailbox = argv(1);
+		$r = private_messages_drop(local_channel(), argv(3));
 		if($r) {
-			info( t('Message deleted.') . EOL );
+			//info( t('Message deleted.') . EOL );
 		}
-		goaway($a->get_baseurl(true) . '/mail/combined' );
+		goaway($a->get_baseurl(true) . '/mail/' . $mailbox);
 	}
 
-	if((argc() == 3) && (argv(1) === 'recall')) {
-		if(! intval(argv(2)))
+	if((argc() == 4) && (argv(2) === 'recall')) {
+		if(! intval(argv(3)))
 			return;
-		$cmd = argv(1);
+		$cmd = argv(2);
+		$mailbox = argv(1);
 		$r = q("update mail set mail_recalled = 1 where id = %d and channel_id = %d",
-			intval(argv(2)),
+			intval(argv(3)),
 			intval(local_channel())
 		);
-		proc_run('php','include/notifier.php','mail',intval(argv(2)));
+		proc_run('php','include/notifier.php','mail',intval(argv(3)));
 
 		if($r) {
 				info( t('Message recalled.') . EOL );
 		}
-		goaway($a->get_baseurl(true) . '/mail/combined' );
+		goaway($a->get_baseurl(true) . '/mail/' . $mailbox . '/' . argv(3));
 
+	}
+
+	if((argc() == 4) && (argv(2) === 'dropconv')) {
+		if(! intval(argv(3)))
+			return;
+		$cmd = argv(2);
+		$mailbox = argv(1);
+		$r = private_messages_drop(local_channel(), argv(3), true);
+		if($r)
+			info( t('Conversation removed.') . EOL );
+		goaway($a->get_baseurl(true) . '/mail/' . $mailbox);
 	}
 
 	if((argc() > 1) && (argv(1) === 'new')) {
@@ -266,7 +278,7 @@ function mail_content(&$a) {
 
 	$last_message = private_messages_list(local_channel(), $mailbox, 0, 1);
 
-	$mid = ((argc() > 1) && (intval(argv(1)))) ? argv(1) : $last_message[0]['id'];
+	$mid = ((argc() > 2) && (intval(argv(2)))) ? argv(2) : $last_message[0]['id'];
 
 	$plaintext = true;
 
@@ -310,13 +322,14 @@ function mail_content(&$a) {
 		$s = theme_attachments($message);
 
 		$mails[] = array(
+			'mailbox' => $mailbox,
 			'id' => $message['id'],
 			'from_name' => $message['from']['xchan_name'],
 			'from_url' =>  chanlink_hash($message['from_xchan']),
-			'from_photo' => $message['from']['xchan_photo_m'],
+			'from_photo' => $message['from']['xchan_photo_s'],
 			'to_name' => $message['to']['xchan_name'],
 			'to_url' =>  chanlink_hash($message['to_xchan']),
-			'to_photo' => $message['to']['xchan_photo_m'],
+			'to_photo' => $message['to']['xchan_photo_s'],
 			'subject' => $message['title'],
 			'body' => smilies(bbcode($message['body']) . $s),
 			'delete' => t('Delete message'),
@@ -338,7 +351,8 @@ function mail_content(&$a) {
 	$parent = '<input type="hidden" name="replyto" value="' . $message['parent_mid'] . '" />';
 	$tpl = get_markup_template('mail_display.tpl');
 	$o = replace_macros($tpl, array(
-		'$prvmsg_header' => t('Subject:') . ' ' . $message['title'],
+		'$mailbox' => $mailbox,
+		'$prvmsg_header' => $message['title'],
 		'$thread_id' => $mid,
 		'$thread_subject' => $message['title'],
 		'$thread_seen' => $seen,
@@ -353,7 +367,7 @@ function mail_content(&$a) {
 		'$showinputs' => '',
 		'$subject' => t('Subject:'),
 		'$subjtxt' => $message['title'],
-		'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
+		'$readonly' => 'readonly="readonly"',
 		'$yourmessage' => t('Your message:'),
 		'$text' => '',
 		'$select' => $select,

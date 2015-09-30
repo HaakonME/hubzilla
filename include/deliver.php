@@ -29,6 +29,8 @@ function deliver_run($argv, $argc) {
 			 * If not, reduce the outq_priority.
 			 */
 
+			$base = '';
+
 			$h = parse_url($r[0]['outq_posturl']);
 			if($h) {
 				$base = $h['scheme'] . '://' . $h['host'] . (($h['port']) ? ':' . $h['port'] : '');
@@ -76,10 +78,12 @@ function deliver_run($argv, $argc) {
 				$result = z_post_url($r[0]['outq_posturl'],$r[0]['outq_msg']); 
 				if($result['success'] && $result['return_code'] < 300) {
 					logger('deliver: queue post success to ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
-					q("update site set site_update = '%s', site_dead = 0 where site_url = '%s' ",
-						dbesc(datetime_convert()),
-						dbesc($site_url)
-					);
+					if($base) {
+						q("update site set site_update = '%s', site_dead = 0 where site_url = '%s' ",
+							dbesc(datetime_convert()),
+							dbesc($base)
+						);
+					}
 					q("update dreport set status = '%s', dreport_time = '%s' where dreport_queue = '%s' limit 1",
 						dbesc('accepted for delivery'),
 						dbesc(datetime_convert()),

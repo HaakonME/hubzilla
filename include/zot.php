@@ -2392,6 +2392,9 @@ function sync_locations($sender, $arr, $absolute = false) {
 			}
 		}
 	}
+	else {
+		logger('No locations to sync!');
+	}
 
 	$ret['change_message'] = $what;
 	$ret['changed'] = $changed;
@@ -2768,7 +2771,7 @@ function import_site($arr, $pubkey) {
 	else {
 		$update = true;
 		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s', %d )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),
@@ -3783,7 +3786,73 @@ function zotinfo($arr) {
 		$ret['site']['realm'] = get_directory_realm();
 
 	}
+
+	check_zotinfo($e,$x,$ret);
+
+
 	call_hooks('zot_finger',$ret);
 	return($ret);
 
+}
+
+
+function check_zotinfo($channel,$locations,&$ret) {
+
+
+//	logger('locations: ' . print_r($locations,true),LOGGER_DATA);
+
+	// This function will likely expand as we find more things to detect and fix.
+	// 1. Because magic-auth is reliant on it, ensure that the system channel has a valid hubloc
+	//    Force this to be the case if anything is found to be wrong with it. 
+
+	// @FIXME ensure that the system channel exists in the first place and has an xchan
+
+	if($channel['channel_system']) {
+		// the sys channel must have a location (hubloc)
+		$valid_location = false;
+		if((count($locations) === 1) && ($locations[0]['primary']) && (! $locations[0]['deleted'])) {
+			if((rsa_verify($locations[0]['url'],base64url_decode($locations[0]['url_sig']),$channel['channel_pubkey']))
+				&& ($locations[0]['sitekey'] === get_config('system','pubkey'))
+				&& ($locations[0]['url'] === z_root()))
+				$valid_location = true;
+			else
+				logger('sys channel: invalid url signature');
+		}
+
+		if((! $locations) || (! $valid_location)) {
+
+			logger('System channel locations are not valid. Attempting repair.');
+
+			// Don't trust any existing records. Just get rid of them, but only do this 
+			// for the sys channel as normal channels will be trickier.
+ 
+			q("delete from hubloc where hubloc_hash = '%s'",
+				dbesc($channel['channel_hash'])
+			);
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_primary,
+				hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
+				values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
+				dbesc($channel['channel_guid']),
+				dbesc($channel['channel_guid_sig']),
+				dbesc($channel['channel_hash']),
+				dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+				intval(1),
+				dbesc(z_root()),
+				dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
+				dbesc(get_app()->get_hostname()),
+				dbesc(z_root() . '/post'),
+				dbesc(get_config('system','pubkey')),
+				dbesc('zot')
+			);
+			if($r) {
+				$x = zot_encode_locations($channel);
+				if($x) {
+					$ret['locations'] = $x;
+				}
+			}
+			else {
+				logger('Unable to store sys hub location');
+			}
+		}
+	}
 }

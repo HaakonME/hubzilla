@@ -84,7 +84,7 @@ function deliver_run($argv, $argc) {
 							dbesc($base)
 						);
 					}
-					q("update dreport set status = '%s', dreport_time = '%s' where dreport_queue = '%s' limit 1",
+					q("update dreport set dreport_result = '%s', dreport_time = '%s' where dreport_queue = '%s' limit 1",
 						dbesc('accepted for delivery'),
 						dbesc(datetime_convert()),
 						dbesc($argv[$x])

@@ -2771,7 +2771,7 @@ function import_site($arr, $pubkey) {
 	else {
 		$update = true;
 		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s', %d )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),

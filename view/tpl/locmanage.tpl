@@ -15,11 +15,15 @@ function drophub(id) {
 <tr><td>
 {{if $hub.deleted}}<strike>{{/if}}
 {{$hub.hubloc_url}} ({{$hub.hubloc_addr}}){{if $hub.deleted}}</strike>{{/if}}</td>
-<td>
 
+{{if ! $hub.deleted}}
+<td>
 {{if $hub.primary}}<button class="btn btn-std"><i class="icon-check"></i></button>{{else}}<button class="btn btn-std" onclick="primehub({{$hub.hubloc_id}}); return false;" ><i class="icon-check-empty"  ></i></button>{{/if}}
 </td>
 <td>{{if ! $hub.deleted}}<button class="btn btn-std" onclick="drophub({{$hub.hubloc_id}}); return false;"><i class="icon-trash"></i></button>{{/if}}</td>
+{{else}}
+<td><button class="btn btn-std"><i class="icon-minus"></i></button></td><td><button class="btn btn-std"><i class="icon-minus"></i></button></td>
+{{/if}}
 </tr>
 {{/foreach}}
 </table>

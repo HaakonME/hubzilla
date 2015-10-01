@@ -1960,8 +1960,7 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 	$item_found = false;
 	$post_id = 0;
 
-
-	$r = q("select id, item_deleted from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
+	$r = q("select id, author_xchan, owner_xchan, source_xchan, item_deleted from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
 		and mid = '%s' and uid = %d limit 1",
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
@@ -1969,6 +1968,7 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 		dbesc($item['mid']),
 		intval($uid)
 	);
+
 	if ($r) {
 		if ($r[0]['author_xchan'] === $sender['hash'] || $r[0]['owner_xchan'] === $sender['hash'] || $r[0]['source_xchan'] === $sender['hash'])
 			$ownership_valid = true;

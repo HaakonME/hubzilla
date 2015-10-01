@@ -140,7 +140,7 @@ echo ".htaccess symlink created"
 echo "Check for the poller at .openshift/cron/minutely/poller , if not created - create it"
 
 if [ ! -f ${OPENSHIFT_REPO_DIR}.openshift/cron/minutely/poller ]; then
-printf '%s\n' '#!/bin/bash' 'if [ ! -f $OPENSHIFT_DATA_DIR/last_run ]; then' '  touch $OPENSHIFT_DATA_DIR/last_run' 'fi' 'if [[ $(find $OPENSHIFT_DATA_DIR/last_run -mmin +4) ]]; then #run every 5 mins' '  rm -f $OPENSHIFT_DATA_DIR/last_run' '  touch $OPENSHIFT_DATA_DIR/last_run' '  # The command(s) that you want to run every 5 minutes' 'cd /var/lib/openshift/${OPENSHIFT_APP_UUID}/app-root/repo; /opt/rh/php54/root/usr/bin/php include/poller.php' 'fi' >${OPENSHIFT_REPO_DIR}.openshift/cron/minutely/poller
+printf '%s\n' '#!/bin/bash' 'if [ ! -f $OPENSHIFT_DATA_DIR/last_run ]; then' '  touch $OPENSHIFT_DATA_DIR/last_run' 'fi' 'if [[ $(find $OPENSHIFT_DATA_DIR/last_run -mmin +9) ]]; then #run every 10 mins' '  rm -f $OPENSHIFT_DATA_DIR/last_run' '  touch $OPENSHIFT_DATA_DIR/last_run' '  # The command(s) that you want to run every 5 minutes' 'cd /var/lib/openshift/${OPENSHIFT_APP_UUID}/app-root/repo; /opt/rh/php54/root/usr/bin/php include/poller.php' 'fi' >${OPENSHIFT_REPO_DIR}.openshift/cron/minutely/poller
 echo "Done creating file .openshift/cron/minutely/poller"
 
 else
@@ -161,17 +161,17 @@ echo "chmod done, permissions set to 777 on poller script."
 
 ####
 
-echo "Check for the hot deploy marker at .openshift/markers/hot_deploy , if not created - create it"
+### echo "Check for the hot deploy marker at .openshift/markers/hot_deploy , if not created - create it"
 
-if [ ! -f ${OPENSHIFT_REPO_DIR}.openshift/markers/hot_deploy ]; then
+### if [ ! -f ${OPENSHIFT_REPO_DIR}.openshift/markers/hot_deploy ]; then
 
-touch ${OPENSHIFT_REPO_DIR}.openshift/markers/hot_deploy
+### touch ${OPENSHIFT_REPO_DIR}.openshift/markers/hot_deploy
 
-echo "Done creating file .openshift/markers/hot_deploy"
+### echo "Done creating file .openshift/markers/hot_deploy"
 
-else
+### else
 
-echo "The hot deploy marker already exists"
+### echo "The hot deploy marker already exists"
 
 fi
 

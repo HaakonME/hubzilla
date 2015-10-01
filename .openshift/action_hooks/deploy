@@ -173,6 +173,6 @@ echo "chmod done, permissions set to 777 on poller script."
 
 ### echo "The hot deploy marker already exists"
 
-fi
+### fi
 
 ####

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-26 22:48-0700\n"
-"PO-Revision-Date: 2015-10-01 15:08+0000\n"
+"PO-Revision-Date: 2015-10-01 15:20+0000\n"
 "Last-Translator: tuscanhobbit <pynolo@tarine.net>\n"
 "Language-Team: Italian (http://www.transifex.com/Friendica/red-matrix/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -283,19 +283,19 @@ msgstr "Personalizzazione per esperti"
 
 #: ../../include/chat.php:23
 msgid "Missing room name"
-msgstr "Area chat senza nome"
+msgstr "Chat senza nome"
 
 #: ../../include/chat.php:32
 msgid "Duplicate room name"
-msgstr "Il nome dell'area chat è duplicato"
+msgstr "Il nome della chat è duplicato"
 
 #: ../../include/chat.php:82 ../../include/chat.php:90
 msgid "Invalid room specifier."
-msgstr "Il nome dell'area chat non è valido."
+msgstr "Il nome della chat non è valido."
 
 #: ../../include/chat.php:122
 msgid "Room not found."
-msgstr "Area chat non trovata."
+msgstr "Chat non trovata."
 
 #: ../../include/chat.php:133 ../../include/photos.php:26
 #: ../../include/attach.php:137 ../../include/attach.php:185
@@ -343,7 +343,7 @@ msgstr "Permesso negato."
 
 #: ../../include/chat.php:143
 msgid "Room is full"
-msgstr "L'area chat è al completo"
+msgstr "La chat è al completo"
 
 #: ../../include/datetime.php:48
 msgid "Miscellaneous"
@@ -5149,11 +5149,11 @@ msgstr "Devi aver effettuato l'accesso per vedere questa pagina."
 
 #: ../../mod/chat.php:171
 msgid "Room not found"
-msgstr "Area chat non trovata"
+msgstr "Chat non trovata"
 
 #: ../../mod/chat.php:182
 msgid "Leave Room"
-msgstr "Lascia l'area chat"
+msgstr "Lascia la chat"
 
 #: ../../mod/chat.php:183
 msgid "Delete This Room"
@@ -5169,7 +5169,7 @@ msgstr "Sono online"
 
 #: ../../mod/chat.php:187
 msgid "Bookmark this room"
-msgstr "Aggiungi l'area chat ai segnalibri"
+msgstr "Aggiungi questa chat ai segnalibri"
 
 #: ../../mod/chat.php:205 ../../mod/chat.php:227
 msgid "New Chatroom"

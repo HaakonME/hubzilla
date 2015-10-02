@@ -27,24 +27,25 @@
 
 /* message/id */
 
-.mail-conv-outside-wrapper {
-	display: table;
-	table-layout: fixed;
+.mail-conv-sender {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
 }
 
-.mail-conv-sender {
-	display: table-cell;
-	vertical-align: top;
-	margin-right: 10px;
+.mail-conv-sender img{
+	width: 32px;
+	height: 32px;
 }
 
 .mail-conv-sender-name {
 	font-weight: bold;
 }
 
-.mail-conv-detail {
-	display: table-cell;
-	vertical-align: top;
-	width: 100%;
-	padding-left: 10px;
+.mail-conv-body {
+	margin-bottom: 10px;
+}
+
+.mail-conv-body img {
+	max-width: 100%;
 }

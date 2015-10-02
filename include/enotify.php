@@ -315,9 +315,12 @@ function notification($params) {
 		'epreamble' => $epreamble,
 		'body'      => $body,
 		'sitelink'  => $sitelink,
+		'sitename'  => $sitename,
 		'tsitelink' => $tsitelink,
 		'hsitelink' => $hsitelink,
-		'itemlink'  => $itemlink
+		'itemlink'  => $itemlink,
+		'sender'    => $sender,
+		'recipient' => $recip
 	);
 
 	call_hooks('enotify', $h);

@@ -7,12 +7,42 @@ function dreport_content(&$a) {
 		return;
 	}
 
+	$table = 'item';
+
 	$channel = $a->get_channel();
 	
 	$mid = ((argc() > 1) ? argv(1) : '');
 
+	if($mid === 'mail') {
+		$table = 'mail';
+		$mid = ((argc() > 2) ? argv(2) : '');
+	}
+
+
 	if(! $mid) {
 		notice( t('Invalid message') . EOL);
+		return;
+	}
+
+	switch($table) {
+		case 'item':
+			$i = q("select id from item where mid = '%s' and author_xchan = '%s' ",
+				dbesc($mid),
+				dbesc($channel['channel_hash'])
+			);
+			break;
+		case 'mail':
+			$i = q("select id from mail where mid = '%s' and from_xchan = '%s'",
+				dbesc($mid),
+				dbesc($channel['channel_hash'])
+			);
+			break;
+		default:
+			break;
+	}
+
+	if(! $i) {
+		notice( t('Permission denied') . EOL);
 		return;
 	}
 	
@@ -32,6 +62,11 @@ function dreport_content(&$a) {
 
 	for($x = 0; $x < count($r); $x++ ) {
 		$r[$x]['name'] = escape_tags(substr($r[$x]['dreport_recip'],strpos($r[$x]['dreport_recip'],' ')));
+
+		// This has two purposes: 1. make the delivery report strings translateable, and
+		// 2. assign an ordering to item delivery results so we can group them and provide
+		// a readable report with more interesting events listed toward the top and lesser
+		// interesting items towards the bottom
 
 		switch($r[$x]['dreport_result']) {
 			case 'channel sync processed':
@@ -60,6 +95,18 @@ function dreport_content(&$a) {
 			case 'permission denied':
 				$r[$x]['dreport_result'] = t('permission denied');
 				$r[$x]['gravity'] = 6;
+				break;
+			case 'recipient not found':
+				$r[$x]['dreport_result'] = t('recipient not found');
+				break;
+			case 'mail recalled':
+				$r[$x]['dreport_result'] = t('mail recalled');
+				break;
+			case 'duplicate mail received':
+				$r[$x]['dreport_result'] = t('duplicate mail received');
+				break;
+			case 'mail delivered':
+				$r[$x]['dreport_result'] = t('mail delivered');
 				break;
 			default:
 				$r[$x]['gravity'] = 1;

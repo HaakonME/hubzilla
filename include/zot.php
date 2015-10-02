@@ -11,6 +11,7 @@
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
+require_once('include/DReport.php');
 
 
 /**
@@ -901,7 +902,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($xchan_hash)
 			);
-			$r = q("delete from xtag where xtag_hash = '%s'",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_flags = 0",
 				dbesc($xchan_hash)
 			);
 		}
@@ -1556,7 +1557,6 @@ function allowed_public_recips($msg) {
 function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $request = false) {
 
 	$result = array();
-	require_once('include/DReport.php');
 
 	$result['site'] = z_root();
 
@@ -1568,6 +1568,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			return;
 		}
 	}
+
 
 	foreach($deliveries as $d) {
 		$local_public = $public;
@@ -1587,11 +1588,21 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		$channel = $r[0];
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
-		if($d['hash'] === $sender['hash']) {
-			$DR->update('self delivery ignored');
-			$result[] = $DR->get();
-			continue;
-		}
+		/**
+		 * @FIXME: Somehow we need to block normal message delivery from our clones, as the delivered
+		 * message doesn't have ACL information in it as the cloned copy does. That copy 
+		 * will normally arrive first via sync delivery, but this isn't guaranteed. 
+		 * There's a chance the current delivery could take place before the cloned copy arrives
+		 * hence the item could have the wrong ACL and *could* be used in subsequent deliveries or
+		 * access checks. So far all attempts at identifying this situation precisely
+		 * have caused issues with delivery of relayed comments. 
+		 */
+
+//		if(($d['hash'] === $sender['hash']) && ($sender['url'] !== z_root()) && (! $relay)) {
+//			$DR->update('self delivery ignored');
+//			$result[] = $DR->get();
+//			continue;
+//		}
 
 		// allow public postings to the sys channel regardless of permissions, but not
 		// for comments travelling upstream. Wait and catch them on the way down.
@@ -1949,8 +1960,7 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 	$item_found = false;
 	$post_id = 0;
 
-
-	$r = q("select id, item_deleted from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
+	$r = q("select id, author_xchan, owner_xchan, source_xchan, item_deleted from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
 		and mid = '%s' and uid = %d limit 1",
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
@@ -1958,6 +1968,7 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 		dbesc($item['mid']),
 		intval($uid)
 	);
+
 	if ($r) {
 		if ($r[0]['author_xchan'] === $sender['hash'] || $r[0]['owner_xchan'] === $sender['hash'] || $r[0]['source_xchan'] === $sender['hash'])
 			$ownership_valid = true;
@@ -2031,20 +2042,26 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 	}
 
 	foreach($deliveries as $d) {
+
+		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
 
 		if(! $r) {
-			$result[] = array($d['hash'],'not found');
+			$DR->update('recipient not found');
+			$result[] = $DR->get();
 			continue;
 		}
 
 		$channel = $r[0];
+		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],'post_mail')) {
 			logger("permission denied for mail delivery {$channel['channel_id']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name'],$arr['mid']);
+			$DR->update('permission denied');
+			$result[] = $DR->get();
 			continue;
 		}
 
@@ -2058,11 +2075,13 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 					intval($r[0]['id']),
 					intval($channel['channel_id'])
 				);
-				$result[] = array($d['hash'],'mail recalled',$channel['channel_name'],$arr['mid']);
+				$DR->update('mail recalled');
+				$result[] = $DR->get();
 				logger('mail_recalled');
 			}
 			else {
-				$result[] = array($d['hash'],'duplicate mail received',$channel['channel_name'],$arr['mid']);
+				$DR->update('duplicate mail received');
+				$result[] = $DR->get();
 				logger('duplicate mail received');
 			}
 			continue;
@@ -2071,7 +2090,8 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 			$arr['account_id'] = $channel['channel_account_id'];
 			$arr['channel_id'] = $channel['channel_id'];
 			$item_id = mail_store($arr);
-			$result[] = array($d['hash'],'mail delivered',$channel['channel_name'],$arr['mid']);
+			$DR->update('mail delivered');
+			$result[] = $DR->get();
 		}
 	}
 
@@ -2392,6 +2412,9 @@ function sync_locations($sender, $arr, $absolute = false) {
 			}
 		}
 	}
+	else {
+		logger('No locations to sync!');
+	}
 
 	$ret['change_message'] = $what;
 	$ret['changed'] = $changed;
@@ -2577,7 +2600,7 @@ function import_directory_profile($hash, $profile, $addr, $ud_flags = UPDATE_FLA
 function import_directory_keywords($hash, $keywords) {
 
 	$existing = array();
-	$r = q("select * from xtag where xtag_hash = '%s'",
+	$r = q("select * from xtag where xtag_hash = '%s' and xtag_flags = 0",
 		dbesc($hash)
 	);
 
@@ -2595,14 +2618,14 @@ function import_directory_keywords($hash, $keywords) {
 
 	foreach($existing as $x) {
 		if(! in_array($x, $clean))
-			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s'",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' and xtag_flags = 0",
 				dbesc($hash),
 				dbesc($x)
 			);
 	}
 	foreach($clean as $x) {
 		if(! in_array($x, $existing)) {
-			$r = q("insert into xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
+			$r = q("insert into xtag ( xtag_hash, xtag_term, xtag_flags) values ( '%s' ,'%s', 0 )",
 				dbesc($hash),
 				dbesc($x)
 			);
@@ -2768,7 +2791,7 @@ function import_site($arr, $pubkey) {
 	else {
 		$update = true;
 		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s', %d )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),
@@ -3783,7 +3806,73 @@ function zotinfo($arr) {
 		$ret['site']['realm'] = get_directory_realm();
 
 	}
+
+	check_zotinfo($e,$x,$ret);
+
+
 	call_hooks('zot_finger',$ret);
 	return($ret);
 
+}
+
+
+function check_zotinfo($channel,$locations,&$ret) {
+
+
+//	logger('locations: ' . print_r($locations,true),LOGGER_DATA);
+
+	// This function will likely expand as we find more things to detect and fix.
+	// 1. Because magic-auth is reliant on it, ensure that the system channel has a valid hubloc
+	//    Force this to be the case if anything is found to be wrong with it. 
+
+	// @FIXME ensure that the system channel exists in the first place and has an xchan
+
+	if($channel['channel_system']) {
+		// the sys channel must have a location (hubloc)
+		$valid_location = false;
+		if((count($locations) === 1) && ($locations[0]['primary']) && (! $locations[0]['deleted'])) {
+			if((rsa_verify($locations[0]['url'],base64url_decode($locations[0]['url_sig']),$channel['channel_pubkey']))
+				&& ($locations[0]['sitekey'] === get_config('system','pubkey'))
+				&& ($locations[0]['url'] === z_root()))
+				$valid_location = true;
+			else
+				logger('sys channel: invalid url signature');
+		}
+
+		if((! $locations) || (! $valid_location)) {
+
+			logger('System channel locations are not valid. Attempting repair.');
+
+			// Don't trust any existing records. Just get rid of them, but only do this 
+			// for the sys channel as normal channels will be trickier.
+ 
+			q("delete from hubloc where hubloc_hash = '%s'",
+				dbesc($channel['channel_hash'])
+			);
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_primary,
+				hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
+				values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
+				dbesc($channel['channel_guid']),
+				dbesc($channel['channel_guid_sig']),
+				dbesc($channel['channel_hash']),
+				dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+				intval(1),
+				dbesc(z_root()),
+				dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
+				dbesc(get_app()->get_hostname()),
+				dbesc(z_root() . '/post'),
+				dbesc(get_config('system','pubkey')),
+				dbesc('zot')
+			);
+			if($r) {
+				$x = zot_encode_locations($channel);
+				if($x) {
+					$ret['locations'] = $x;
+				}
+			}
+			else {
+				logger('Unable to store sys hub location');
+			}
+		}
+	}
 }

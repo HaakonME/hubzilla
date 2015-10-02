@@ -324,6 +324,7 @@ function mail_content(&$a) {
 		$mails[] = array(
 			'mailbox' => $mailbox,
 			'id' => $message['id'],
+			'mid' => $message['mid'],
 			'from_name' => $message['from']['xchan_name'],
 			'from_url' =>  chanlink_hash($message['from_xchan']),
 			'from_photo' => $message['from']['xchan_photo_s'],
@@ -333,6 +334,7 @@ function mail_content(&$a) {
 			'subject' => $message['title'],
 			'body' => smilies(bbcode($message['body']) . $s),
 			'delete' => t('Delete message'),
+			'dreport' => t('Delivery report'),
 			'recall' => t('Recall message'),
 			'can_recall' => (($channel['channel_hash'] == $message['from_xchan']) ? true : false),
 			'is_recalled' => (intval($message['mail_recalled']) ? t('Message has been recalled.') : ''),

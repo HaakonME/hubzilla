@@ -687,7 +687,7 @@ function notifier_run($argv, $argc){
 	if($normal_mode) {
 		$x = q("select * from hook where hook = 'notifier_normal'");
 		if($x)
-			proc_run('php','deliver_hooks.php', $target_item['id']);
+			proc_run('php','include/deliver_hooks.php', $target_item['id']);
 	}
 
 	if($deliveries) {

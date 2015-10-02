@@ -918,7 +918,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($xchan_hash)
 			);
-			$r = q("delete from xtag where xtag_hash = '%s'",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_flags = 0",
 				dbesc($xchan_hash)
 			);
 		}
@@ -2585,7 +2585,7 @@ function import_directory_profile($hash, $profile, $addr, $ud_flags = UPDATE_FLA
 function import_directory_keywords($hash, $keywords) {
 
 	$existing = array();
-	$r = q("select * from xtag where xtag_hash = '%s'",
+	$r = q("select * from xtag where xtag_hash = '%s' and xtag_flags = 0",
 		dbesc($hash)
 	);
 
@@ -2603,14 +2603,14 @@ function import_directory_keywords($hash, $keywords) {
 
 	foreach($existing as $x) {
 		if(! in_array($x, $clean))
-			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s'",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' and xtag_flags = 0",
 				dbesc($hash),
 				dbesc($x)
 			);
 	}
 	foreach($clean as $x) {
 		if(! in_array($x, $existing)) {
-			$r = q("insert into xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
+			$r = q("insert into xtag ( xtag_hash, xtag_term, xtag_flags) values ( '%s' ,'%s', 0 )",
 				dbesc($hash),
 				dbesc($x)
 			);

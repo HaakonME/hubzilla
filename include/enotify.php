@@ -317,7 +317,9 @@ function notification($params) {
 		'sitelink'  => $sitelink,
 		'tsitelink' => $tsitelink,
 		'hsitelink' => $hsitelink,
-		'itemlink'  => $itemlink
+		'itemlink'  => $itemlink,
+		'sender'    => $sender,
+		'recipient' => $recip
 	);
 
 	call_hooks('enotify', $h);

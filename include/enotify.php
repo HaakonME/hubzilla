@@ -315,6 +315,7 @@ function notification($params) {
 		'epreamble' => $epreamble,
 		'body'      => $body,
 		'sitelink'  => $sitelink,
+		'sitename'  => $sitename,
 		'tsitelink' => $tsitelink,
 		'hsitelink' => $hsitelink,
 		'itemlink'  => $itemlink,

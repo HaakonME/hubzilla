@@ -11,6 +11,7 @@
 	<div class="mail-conv-content">
 		<div class="mail-conv-body">
 			{{$mail.body}}
+			<div class="clear"></div>
 		</div>
 		<div class="pull-right dropdown">
 			<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="mail-item-menu-{{$mail.id}}">

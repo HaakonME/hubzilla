@@ -226,10 +226,11 @@ function mail_content(&$a) {
 
 		// the ugly select box
 		
-		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
+		//$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
 
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
+			'$new' => true,
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
 			'$showinputs' => 'true', 
@@ -347,10 +348,6 @@ function mail_content(&$a) {
 
 	$recp = (($message['from_xchan'] === $channel['channel_hash']) ? 'to' : 'from');
 
-// FIXME - move this HTML to template
-
-	$select = $message[$recp]['xchan_name'] . '<input type="hidden" name="messageto" value="' . $message[$recp]['xchan_hash'] . '" />';
-	$parent = '<input type="hidden" name="replyto" value="' . $message['parent_mid'] . '" />';
 	$tpl = get_markup_template('mail_display.tpl');
 	$o = replace_macros($tpl, array(
 		'$mailbox' => $mailbox,
@@ -366,14 +363,15 @@ function mail_content(&$a) {
 		// reply
 		'$header' => t('Send Reply'),
 		'$to' => t('To:'),
-		'$showinputs' => '',
+		'$reply' => true,
 		'$subject' => t('Subject:'),
 		'$subjtxt' => $message['title'],
 		'$readonly' => 'readonly="readonly"',
-		'$yourmessage' => t('Your message:'),
+		'$yourmessage' => sprintf(t('Your message for %s'), $message[$recp]['xchan_name']),
 		'$text' => '',
 		'$select' => $select,
-		'$parent' => $parent,
+		'$parent' => $message['parent_mid'],
+		'$recphash' => $message[$recp]['xchan_hash'],
 		'$upload' => t('Upload photo'),
 		'$attach' => t('Attach file'),
 		'$insert' => t('Insert web link'),

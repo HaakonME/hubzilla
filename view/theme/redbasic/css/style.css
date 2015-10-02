@@ -1722,6 +1722,7 @@ img.mail-conv-sender-photo {
 }
 
 .wall-item-content,
+.mail-conv-body,
 .page-body {
 	font-size: $font_size;
 	clear: both;

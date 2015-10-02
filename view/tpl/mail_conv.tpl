@@ -13,7 +13,6 @@
 			{{$mail.body}}
 		</div>
 		<div class="pull-right dropdown">
-
 			<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="mail-item-menu-{{$mail.id}}">
 				<i class="icon-caret-down"></i>
 			</button>
@@ -35,8 +34,6 @@
 			</ul>
 
 		</div>
-
-
 		<div class="clear"></div>
 	</div>
 	<div class="clear"></div>

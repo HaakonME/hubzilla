@@ -372,12 +372,23 @@ function item_post(&$a) {
 
 	}
 	else {
-		if((! $walltowall) && 
-			((array_key_exists('contact_allow',$_REQUEST))
-			|| (array_key_exists('group_allow',$_REQUEST))
-			|| (array_key_exists('contact_deny',$_REQUEST))
-			|| (array_key_exists('group_deny',$_REQUEST)))) {
-			$acl->set_from_array($_REQUEST);
+		if(! $walltowall) {
+			if((array_key_exists('contact_allow',$_REQUEST))
+				|| (array_key_exists('group_allow',$_REQUEST))
+				|| (array_key_exists('contact_deny',$_REQUEST))
+				|| (array_key_exists('group_deny',$_REQUEST))) {
+				$acl->set_from_array($_REQUEST);
+			}
+			elseif(! $api_source) {
+
+				// if no ACL has been defined and we aren't using the API, the form
+				// didn't send us any parameters. This means there's no ACL or it has
+				// been reset to the default audience.
+				// If $api_source is set and there are no ACL parameters, we default
+				// to the channel permissions which were set in the ACL contructor.
+
+				$acl->set(array('allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => ''));
+			}
 		}
 
 

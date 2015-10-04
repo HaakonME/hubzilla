@@ -185,48 +185,33 @@ function mail_content(&$a) {
 
 		$a->page['htmlhead'] .= $header;
 
-		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
-		$prename = $preurl = $preid = '';
+		$prename = '';
+		$preid = '';
 
 		if(x($_REQUEST,'hash')) {
+
 			$r = q("select abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash
 				where abook_channel = %d and abook_xchan = '%s' limit 1",
 				intval(local_channel()),
 				dbesc($_REQUEST['hash'])
 			);
 
-			if($r) {
-				$prename = $r[0]['xchan_name'];
-				$preurl = $r[0]['xchan_url'];
-				$preid = $r[0]['abook_xchan'];
-				$preselect = array($preid);
+			if(!$r) {
+				$r = q("select * from xchan where xchan_hash = '%s' and xchan_network = 'zot' limit 1",
+					dbesc($_REQUEST['hash'])
+				);
 			}
-		}
 
-
-		if($preselect) {
-			$r = q("select abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash
-				where abook_channel = %d and abook_id = %d limit 1",
-				intval(local_channel()),
-				intval(argv(2))
-			);
 			if($r) {
-				$prename = $r[0]['xchan_name'];
+				$prename = (($r[0]['abook_id']) ? $r[0]['xchan_name'] : $r[0]['xchan_addr']);
 				$preurl = $r[0]['xchan_url'];
-				$preid = $r[0]['abook_xchan'];
+				$preid = (($r[0]['abook_id']) ? ($r[0]['xchan_hash']) : '');
 			}
-		}	 
+			else {
+				notice( t('Requested channel is not in this network') . EOL );
+			}
 
-		$prefill = (($preselect) ? $prename  : '');
-
-		if(! $prefill) {
-			if(array_key_exists('to',$_REQUEST))
-				$prefill = $_REQUEST['to'];
 		}
-
-		// the ugly select box
-		
-		//$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);
 
 		$tpl = get_markup_template('prv_message.tpl');
 		$o .= replace_macros($tpl,array(
@@ -234,7 +219,7 @@ function mail_content(&$a) {
 			'$header' => t('Send Private Message'),
 			'$to' => t('To:'),
 			'$showinputs' => 'true', 
-			'$prefill' => $prefill,
+			'$prefill' => $prename,
 			'$autocomp' => $autocomp,
 			'$preid' => $preid,
 			'$subject' => t('Subject:'),
@@ -367,7 +352,7 @@ function mail_content(&$a) {
 		'$subject' => t('Subject:'),
 		'$subjtxt' => $message['title'],
 		'$readonly' => 'readonly="readonly"',
-		'$yourmessage' => sprintf(t('Your message for %s'), $message[$recp]['xchan_name']),
+		'$yourmessage' => sprintf(t('Your message for %s (%s):'), $message[$recp]['xchan_name'], $message[$recp]['xchan_addr']),
 		'$text' => '',
 		'$select' => $select,
 		'$parent' => $message['parent_mid'],

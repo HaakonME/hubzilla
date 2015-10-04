@@ -263,7 +263,14 @@ function mail_content(&$a) {
 //	if( local_channel() && feature_enabled(local_channel(),'richtext') )
 //		$plaintext = false;
 
-	$messages = private_messages_fetch_conversation(local_channel(), $mid, true);
+
+
+	if($mailbox == 'combined') {
+		$messages = private_messages_fetch_conversation(local_channel(), $mid, true);
+	}
+	else {
+		$messages = private_messages_fetch_message(local_channel(), $mid, true);
+	}
 
 	if(! $messages) {
 		//info( t('Message not found.') . EOL);

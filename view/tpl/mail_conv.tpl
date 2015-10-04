@@ -1,4 +1,5 @@
 <div id="mail-{{$mail.id}}" class="mail-conv-outside-wrapper">
+	<a name="mail-{{$mail.id}}"></a>
 	<div class="mail-conv-sender" >
 		<a href="{{$mail.from_url}}"><img class="mail-conv-sender-photo" src="{{$mail.from_photo}}" alt="{{$mail.from_name}}" /></a>
 	</div>

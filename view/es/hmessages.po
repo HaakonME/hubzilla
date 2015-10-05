@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-02 00:03-0700\n"
-"PO-Revision-Date: 2015-10-03 10:05+0000\n"
+"PO-Revision-Date: 2015-10-04 08:23+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1207,7 +1207,7 @@ msgstr "a %1$s no le gusta el %3$s de %2$s"
 #: ../../include/conversation.php:204
 #, php-format
 msgid "%1$s is now connected with %2$s"
-msgstr "%1$s ahora está conectado con %2$s"
+msgstr "%1$s ahora está conectado/a con %2$s"
 
 #: ../../include/conversation.php:239
 #, php-format
@@ -1873,7 +1873,7 @@ msgstr "Por favor visite %s para ver y/o responder a su mensaje privado."
 #: ../../include/enotify.php:158
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]"
-msgstr "%1$s, %2$s comentó en [zrl=%3$s]a %4$s[/zrl]"
+msgstr "%1$s, %2$s comentó en [zrl=%3$s]%4$s[/zrl]"
 
 #: ../../include/enotify.php:166
 #, php-format
@@ -2520,7 +2520,7 @@ msgstr "Autosexual"
 
 #: ../../include/profile_selectors.php:42
 msgid "Abstinent"
-msgstr "Casto"
+msgstr "Casto/a"
 
 #: ../../include/profile_selectors.php:42
 msgid "Virgin"
@@ -2565,7 +2565,7 @@ msgstr "Enamorado/a"
 
 #: ../../include/profile_selectors.php:80
 msgid "Infatuated"
-msgstr "Apasionado"
+msgstr "Apasionado/a"
 
 #: ../../include/profile_selectors.php:80
 #: ../../include/profile_selectors.php:97
@@ -2838,7 +2838,7 @@ msgstr "Comprar"
 
 #: ../../include/auth.php:131
 msgid "Logged out."
-msgstr "Desconectado."
+msgstr "Desconectado/a."
 
 #: ../../include/auth.php:272
 msgid "Failed authentication"
@@ -4492,7 +4492,7 @@ msgstr "Ausente"
 
 #: ../../mod/chatsvc.php:115
 msgid "Online"
-msgstr "Conectado"
+msgstr "Conectado/a"
 
 #: ../../mod/tagger.php:96
 #, php-format
@@ -4725,7 +4725,7 @@ msgstr "Error al actualizar el registro de la conexión."
 
 #: ../../mod/connedit.php:268
 msgid "is now connected to"
-msgstr "ahora está conectado a"
+msgstr "ahora está conectado/a"
 
 #: ../../mod/connedit.php:391
 msgid "Could not access address book record."
@@ -5175,7 +5175,7 @@ msgstr "Estoy ausente momentáneamente"
 
 #: ../../mod/chat.php:185
 msgid "I am online"
-msgstr "Estoy conectado"
+msgstr "Estoy conectado/a"
 
 #: ../../mod/chat.php:187
 msgid "Bookmark this room"
@@ -5309,11 +5309,11 @@ msgstr "correo recuperado"
 
 #: ../../mod/dreport.php:106
 msgid "duplicate mail received"
-msgstr "se ha recibido un correo duplicado"
+msgstr "se ha recibido correo duplicado"
 
 #: ../../mod/dreport.php:109
 msgid "mail delivered"
-msgstr "el correo ha sido enviado"
+msgstr "correo enviado"
 
 #: ../../mod/editblock.php:118
 msgid "Delete block?"
@@ -5581,7 +5581,7 @@ msgstr "Presenta la página personal del sitio en un marco en la ubicación orig
 
 #: ../../mod/admin.php:433
 msgid "Accounts abandoned after x days"
-msgstr "Cuentas abandonados después de x días"
+msgstr "Cuentas abandonadas después de x días"
 
 #: ../../mod/admin.php:433
 msgid ""
@@ -7127,7 +7127,7 @@ msgstr "Enviar"
 
 #: ../../mod/mail.php:336
 msgid "Delete message"
-msgstr "Mensaje eliminado"
+msgstr "Borrar mensaje"
 
 #: ../../mod/mail.php:337
 msgid "Delivery report"
@@ -7338,7 +7338,7 @@ msgstr "Publicar una actividad"
 
 #: ../../mod/thing.php:302 ../../mod/thing.php:351
 msgid "Only sends to viewers of the applicable profile"
-msgstr "Sólo envíos a espectadores del perfil pertinente."
+msgstr "Sólo enviar a espectadores del perfil pertinente."
 
 #: ../../mod/thing.php:304 ../../mod/thing.php:353
 msgid "Name of thing e.g. something"
@@ -7505,7 +7505,7 @@ msgstr "URI de redirección - dejar en blanco a menos que su aplicación especí
 
 #: ../../mod/settings.php:589 ../../mod/settings.php:615
 msgid "Icon url"
-msgstr "dirección del icono"
+msgstr "Dirección del icono"
 
 #: ../../mod/settings.php:589
 msgid "Optional"

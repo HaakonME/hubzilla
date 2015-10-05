@@ -112,12 +112,12 @@ function insertbbcomment(comment, BBcode, id) {
 	return true;
 }
 
-function inserteditortag(BBcode) {
+function inserteditortag(BBcode, id) {
 	// allow themes to override this
 	if(typeof(insertEditorFormatting) != 'undefined')
 		return(insertEditorFormatting(BBcode));
 
-	textarea = document.getElementById('profile-jot-text');
+	textarea = document.getElementById(id);
 	if (document.selection) {
 		textarea.focus();
 		selected = document.selection.createRange();

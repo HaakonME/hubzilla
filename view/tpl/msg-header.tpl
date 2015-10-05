@@ -57,9 +57,22 @@ else
 				onComplete: function(file,response) {
 					addmailtext(response);
 					$('#prvmail-rotator').spin(false);
-				}				 
+				}
 			}
 		);
+
+		var file_uploader_sub = new window.AjaxUpload(
+			'prvmail-attach-sub',
+			{ action: 'wall_attach/{{$nickname}}',
+				name: 'userfile',
+				onSubmit: function(file,ext) { $('#prvmail-rotator').spin('tiny'); },
+				onComplete: function(file,response) {
+					addmailtext(response);
+					$('#prvmail-rotator').spin(false);
+				}
+			}
+		);
+
 
 	});
 

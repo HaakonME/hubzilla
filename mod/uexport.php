@@ -41,6 +41,12 @@ function uexport_init(&$a) {
 }
 	
 function uexport_content(&$a) {
+    
+	$y = datetime_convert('UTC',date_default_timezone_get(),'now','Y');
+
+	$yearurl = z_root() . '/uexport/' . $y;
+	$janurl = z_root() . '/uexport/' . $y . '/1';
+	$impurl = '/import_items';
 	$o = replace_macros(get_markup_template('uexport.tpl'), array(
 		'$title' => t('Export Channel'),
 		'$basictitle' => t('Export Channel'),

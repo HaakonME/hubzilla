@@ -2564,3 +2564,47 @@ function str_rot47($str) {
 		'!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
 		'PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO');
 }
+
+
+function string_replace($old,$new,&$s) {
+
+	$x = str_replace($old,$new,$s);
+	$replaced = false;
+	if($x !== $s) {
+		$replaced = true;
+	}
+	$s = $x;
+	return $replaced;
+}
+
+
+function json_url_replace($old,$new,&$s) {
+
+	$old = str_replace('/','\\/',$old);
+	$new = str_replace('/','\\/',$new);
+
+	$x = str_replace($old,$new,$s);
+	$replaced = false;
+	if($x !== $s) {
+		$replaced = true;
+	}
+	$s = $x;
+	return $replaced;
+}
+		
+
+function item_url_replace($channel,&$item,$old,$new) {
+	
+	if($item['attach'])
+		json_url_replace($old,$new,$item['attach']);
+	if($item['object'])
+		json_url_replace($old,$new,$item['object']);
+	if($item['target'])
+		json_url_replace($old,$new,$item['target']);
+
+	if(string_replace($old,$new,$item['body'])) {
+		$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
+		$item['item_verified']  = 1;
+	}
+
+}

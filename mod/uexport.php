@@ -57,8 +57,7 @@ function uexport_content(&$a) {
 
 		'$extra' => t('You may also export your posts and conversations for a particular year or month. Adjust the date in your browser location bar to select other dates. If the export fails (possibly due to memory exhaustion on your server hub), please try again selecting a more limited date range.'),
 		'$extra2' => sprintf( t('To select all posts for a given year, such as this year, visit <a href="%1$s">%2$s</a>'),$yearurl,$yearurl),
-		'$extra3' => sprintf( t('To select all posts for a given month, such as January of this year, visit <a href="%1$s">%2$s</a>'),$janurl,$janurl),
-		'$extra4' => sprintf( t('These content files may be imported or restored by visiting <a href="%1$s">%2$s</a> on any site containing your channel. For best results please import or restore these in date order (oldest first).'),$impurl,$impurl)
+		'$extra3' => sprintf( t('To select all posts for a given month, such as January of this year, visit <a href="%1$s">%2$s</a>'),$janurl,$janurl)
 		
 	));
 return $o;

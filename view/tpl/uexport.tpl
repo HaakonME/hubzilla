@@ -13,7 +13,5 @@
 		<p>{{$extra2}}</p>
 		<p>{{$extra3}}</p>
 
-		<p>{{$extra4}}</p>
-
 	</div>
 </div>

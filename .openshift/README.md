@@ -9,7 +9,7 @@ rhc app-create your_app_name php-5.4 mysql-5.5 cron phpmyadmin --namespace your_
 
 Make a note of the database username and password OpenShift creates for your instance, and use these at https://your_app_name-your_domain.rhcloud.com/ to complete the setup.
 
-NOTE: PostgreSQL is NOT support yet.
+NOTE: PostgreSQL is NOT supported by the deploy script yet.
 
 Update
 To update, consider your own workflow first. I have forked Hubzilla code into my GitHub account to be able to try things out, this remote repo is called origin. Here is how I fetch new code from upstream, merge into my local repo, then push the updated code both into origin and the remote repo called openshift.
@@ -26,7 +26,7 @@ Symptoms of need for MySQL database administration are:
 
 ###How to fix crashed tables in MySQL
 Using MySQL and the MyISAM database engine can result in table indexes coming out of sync, and you have at least two options for fixing tables marked as crashed.
-- Use the database username and password OpenShift creates for your instance at #^https://your_app_name-your_domain.rhcloud.com/phpmyadmin/ to login via the web into your phpMyAdmin web interface, click your database in the left column, in the right column scroll down to the bottom of the list of tables and click the checkbox for marking all tables, then select Check tables from the drop down menu. This will check the tables for problems, and you can then checkmark only those tables with problems, and select Repair table from the same drop down menu at the bottom.
+- Use the database username and password OpenShift creates for your instance at https://your_app_name-your_domain.rhcloud.com/phpmyadmin/ to login via the web into your phpMyAdmin web interface, click your database in the left column, in the right column scroll down to the bottom of the list of tables and click the checkbox for marking all tables, then select Check tables from the drop down menu. This will check the tables for problems, and you can then checkmark only those tables with problems, and select Repair table from the same drop down menu at the bottom.
 - You can login to your instance with SSH - see OpenShift for details - then
 
 ```

@@ -8,7 +8,7 @@ Create an account on OpenShift, then use the registration e-mail and password to
 
 Make a note of the database username and password OpenShift creates for your instance, and use these at [url=https://your_app_name-your_domain.rhcloud.com/]https://your_app_name-your_domain.rhcloud.com/[/url] to complete the setup.
 
-NOTE: PostgreSQL is NOT support yet, see [zrl=https://zot-mor.rhcloud.com/display/3c7035f2a6febf87057d84ea0ae511223e9b38dc27913177bc0df053edecac7c@zot-mor.rhcloud.com?zid=haakon%40zot-mor.rhcloud.com]this thread[/zrl].
+NOTE: PostgreSQL is NOT supported yet, see [zrl=https://zot-mor.rhcloud.com/display/3c7035f2a6febf87057d84ea0ae511223e9b38dc27913177bc0df053edecac7c@zot-mor.rhcloud.com?zid=haakon%40zot-mor.rhcloud.com]this thread[/zrl].
 
 [b]Update[/b]
 To update, consider your own workflow first. I have forked Hubzilla code into my GitHub account to be able to try things out, this remote repo is called origin. Here is how I fetch new code from upstream, merge into my local repo, then push the updated code both into origin and the remote repo called openshift.

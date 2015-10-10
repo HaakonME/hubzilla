@@ -69,4 +69,5 @@ and hopefully your database tables are now okay.
 [*] DO add the above defaults into the deploy script.
 [*] DO add git gc to the deploy script
 [*] MAYBE DO add myisamchk - only checking? to the end of the deploy script.
+[*] mysqlcheck is similar in function to myisamchk, but works differently. The main operational difference is that mysqlcheck must be used when the mysqld server is running, whereas myisamchk should be used when it is not. The benefit of using mysqlcheck is that you do not have to stop the server to perform table maintenance - this means this documenation should be fixed.  
 [/list]

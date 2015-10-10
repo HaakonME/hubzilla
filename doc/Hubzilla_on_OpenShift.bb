@@ -1,12 +1,12 @@
 [b]Hubzilla on OpenShift[/b]
-You will notice a new .openshift folder when you fetch from upstream, i.e. from #^[url=https://github.com/redmatrix/hubzilla.git]https://github.com/redmatrix/hubzilla.git[/url] , which contains a deploy script to set up Hubzilla on OpenShift.
+You will notice a new .openshift folder when you fetch from upstream, i.e. from [url=https://github.com/redmatrix/hubzilla.git]https://github.com/redmatrix/hubzilla.git[/url] , which contains a deploy script to set up Hubzilla on OpenShift.
 
 Create an account on OpenShift, then use the registration e-mail and password to create your first Hubzilla instance. Install git and RedHat's command line tools - rhc - if you have not already done so.
 
 [code]rhc app-create your_app_name php-5.4 mysql-5.5 cron phpmyadmin --namespace your_domain --from-code https://github.com/redmatrix/hubzilla.git -l your@email.address -p your_account_password
 [/code]
 
-Make a note of the database username and password OpenShift creates for your instance, and use these at #^[url=https://your_app_name-your_domain.rhcloud.com/]https://your_app_name-your_domain.rhcloud.com/[/url] to complete the setup.
+Make a note of the database username and password OpenShift creates for your instance, and use these at [url=https://your_app_name-your_domain.rhcloud.com/]https://your_app_name-your_domain.rhcloud.com/[/url] to complete the setup.
 
 NOTE: PostgreSQL is NOT support yet, see [zrl=https://zot-mor.rhcloud.com/display/3c7035f2a6febf87057d84ea0ae511223e9b38dc27913177bc0df053edecac7c@zot-mor.rhcloud.com?zid=haakon%40zot-mor.rhcloud.com]this thread[/zrl].
 
@@ -27,7 +27,7 @@ Symptoms of need for MySQL database administration are:
 [b]How to fix crashed tables in MySQL[/b]
 Using MySQL and the MyISAM database engine can result in table indexes coming out of sync, and you have at least two options for fixing tables marked as crashed.
 [list]
-[*] Use the database username and password OpenShift creates for your instance at #^[url=https://your_app_name-your_domain.rhcloud.com/phpmyadmin/]https://your_app_name-your_domain.rhcloud.com/phpmyadmin/[/url] to login via the web into your phpMyAdmin web interface, click your database in the left column, in the right column scroll down to the bottom of the list of tables and click the checkbox for marking all tables, then select Check tables from the drop down menu. This will check the tables for problems, and you can then checkmark only those tables with problems, and select Repair table from the same drop down menu at the bottom.
+[*] Use the database username and password OpenShift creates for your instance at [url=https://your_app_name-your_domain.rhcloud.com/phpmyadmin/]https://your_app_name-your_domain.rhcloud.com/phpmyadmin/[/url] to login via the web into your phpMyAdmin web interface, click your database in the left column, in the right column scroll down to the bottom of the list of tables and click the checkbox for marking all tables, then select Check tables from the drop down menu. This will check the tables for problems, and you can then checkmark only those tables with problems, and select Repair table from the same drop down menu at the bottom.
 [*] You can login to your instance with SSH - see OpenShift for details - then
 
 [code]cd mysql/data/your_database
@@ -64,7 +64,9 @@ and hopefully your database tables are now okay.
 [/list]
 
 [b]Notes[/b]
-Note 1: definitely DO turn off feeds and discovery by default if you are on the Free or Bronze plan on OpenShift with a single 1Gb gear by visiting [observer.baseurl]admin/site when logged in as administrator of your Hubzilla site. 
-Note 2: DO add the above defaults into the deploy script.
-Note 3: DO add git gc to the deploy script
-Note 4: MAYBE DO add myisamchk - only checking? to the end of the deploy script.
+[list]
+[*] definitely DO turn off feeds and discovery by default if you are on the Free or Bronze plan on OpenShift with a single 1Gb gear by visiting [observer.baseurl]admin/site when logged in as administrator of your Hubzilla site. 
+[*] DO add the above defaults into the deploy script.
+[*] DO add git gc to the deploy script
+[*] MAYBE DO add myisamchk - only checking? to the end of the deploy script.
+[/list]

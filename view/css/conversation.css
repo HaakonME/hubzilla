@@ -83,15 +83,6 @@ code {
 	margin-right: 10px;
 }
 
-.wall-item-photo-wrapper {
-	margin-top: 0px;
-	margin-bottom: 20px;
-}
-
-.comment .wall-item-photo-wrapper {
-	margin-bottom: 15px;
-}
-
 .wall-item-wrapper {
 	margin-left:10px;
 }
@@ -168,11 +159,6 @@ a.wall-item-name-link {
 }
 
 .categorytags {
-	margin-top: 10px;
-}
-
-.wall-item-tools {
-	width: 100%;
 	margin-top: 10px;
 }
 

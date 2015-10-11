@@ -16,8 +16,8 @@
 	{{include file="field_colorinput.tpl" field=$background_image}}
 	{{include file="field_colorinput.tpl" field=$item_colour}}
 	{{include file="field_colorinput.tpl" field=$comment_item_colour}}
-	{{include file="field_colorinput.tpl" field=$comment_border_colour}}
-	{{include file="field_input.tpl" field=$comment_indent}}
+	{{*include file="field_colorinput.tpl" field=$comment_border_colour*}}
+	{{*include file="field_input.tpl" field=$comment_indent*}}
 	{{include file="field_input.tpl" field=$body_font_size}}
 	{{include file="field_input.tpl" field=$font_size}}
 	{{include file="field_colorinput.tpl" field=$font_colour}}

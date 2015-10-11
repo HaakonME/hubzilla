@@ -24,6 +24,14 @@ Symptoms of need for MySQL database administration are:
 [*] you can login and you can see your channel posts, but apparently nobody is getting your posts, comments, likes and so on. This can mean your outq table is marked as crashed.
 [/list]
 
+You can check your OpenShift logs by doing
+
+[code]
+rhc tail -a your_app_name -n your_domain -l your@email.address -p your_account_password
+[/code]
+
+and you might be able to confirm the above suspicions about crashed tables, or other problems you need to fix.
+
 [b]How to fix crashed tables in MySQL[/b]
 Using MySQL and the MyISAM database engine can result in table indexes coming out of sync, and you have at least two options for fixing tables marked as crashed.
 [list]

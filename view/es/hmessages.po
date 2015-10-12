@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:03-0700\n"
-"PO-Revision-Date: 2015-10-04 08:23+0000\n"
+"POT-Creation-Date: 2015-10-09 00:03-0700\n"
+"PO-Revision-Date: 2015-10-12 20:30+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -213,11 +213,11 @@ msgstr "Se puede charlar conmigo (cuando esté disponible)"
 
 #: ../../include/permissions.php:41
 msgid "Can write to my file storage and photos"
-msgstr "Pueden escribirse mis ficheros compartidos y fotos"
+msgstr "Puede escribirse en mi repositorio de ficheros y fotos"
 
 #: ../../include/permissions.php:42
 msgid "Can edit my webpages"
-msgstr "Puede editar mis páginas web"
+msgstr "Pueden editarse mis páginas web"
 
 #: ../../include/permissions.php:44
 msgid "Can source my public posts in derived channels"
@@ -326,14 +326,13 @@ msgstr "Sala no encontrada."
 #: ../../mod/new_channel.php:99 ../../mod/notifications.php:66
 #: ../../mod/pdledit.php:21 ../../mod/photos.php:70 ../../mod/events.php:256
 #: ../../mod/profile_photo.php:338 ../../mod/profile_photo.php:351
-#: ../../mod/message.php:16 ../../mod/webpages.php:69
+#: ../../mod/mail.php:114 ../../mod/message.php:16 ../../mod/webpages.php:69
 #: ../../mod/register.php:72 ../../mod/blocks.php:69 ../../mod/blocks.php:76
 #: ../../mod/service_limits.php:7 ../../mod/sources.php:66
-#: ../../mod/regmod.php:17 ../../mod/mail.php:114 ../../mod/thing.php:271
-#: ../../mod/thing.php:291 ../../mod/thing.php:328 ../../mod/invite.php:13
-#: ../../mod/invite.php:104 ../../mod/viewsrc.php:14
-#: ../../mod/settings.php:565 ../../mod/manage.php:6 ../../mod/api.php:26
-#: ../../mod/api.php:31 ../../mod/connections.php:29
+#: ../../mod/regmod.php:17 ../../mod/thing.php:271 ../../mod/thing.php:291
+#: ../../mod/thing.php:328 ../../mod/invite.php:13 ../../mod/invite.php:104
+#: ../../mod/viewsrc.php:14 ../../mod/settings.php:565 ../../mod/manage.php:6
+#: ../../mod/api.php:26 ../../mod/api.php:31 ../../mod/connections.php:29
 #: ../../mod/editlayout.php:63 ../../mod/editlayout.php:87
 #: ../../mod/editwebpage.php:64 ../../mod/editwebpage.php:86
 #: ../../mod/editwebpage.php:101 ../../mod/editwebpage.php:125
@@ -780,16 +779,16 @@ msgstr "Describir (opcional)"
 #: ../../mod/admin.php:1266 ../../mod/admin.php:1351 ../../mod/appman.php:99
 #: ../../mod/pdledit.php:58 ../../mod/photos.php:598 ../../mod/photos.php:969
 #: ../../mod/photos.php:1009 ../../mod/photos.php:1127
-#: ../../mod/events.php:534 ../../mod/events.php:710 ../../mod/sources.php:104
-#: ../../mod/sources.php:138 ../../mod/mail.php:380 ../../mod/import.php:511
-#: ../../mod/thing.php:313 ../../mod/thing.php:359 ../../mod/invite.php:142
-#: ../../mod/settings.php:583 ../../mod/settings.php:695
-#: ../../mod/settings.php:723 ../../mod/settings.php:746
-#: ../../mod/settings.php:831 ../../mod/settings.php:1020
-#: ../../mod/xchan.php:11 ../../mod/group.php:81 ../../mod/connect.php:93
-#: ../../mod/locs.php:108 ../../mod/setup.php:331 ../../mod/setup.php:371
-#: ../../mod/profiles.php:667 ../../mod/import_items.php:122
-#: ../../view/theme/redbasic/php/config.php:99
+#: ../../mod/events.php:534 ../../mod/events.php:710 ../../mod/mail.php:359
+#: ../../mod/sources.php:104 ../../mod/sources.php:138
+#: ../../mod/import.php:511 ../../mod/thing.php:313 ../../mod/thing.php:359
+#: ../../mod/invite.php:142 ../../mod/settings.php:583
+#: ../../mod/settings.php:695 ../../mod/settings.php:723
+#: ../../mod/settings.php:746 ../../mod/settings.php:831
+#: ../../mod/settings.php:1020 ../../mod/xchan.php:11 ../../mod/group.php:81
+#: ../../mod/connect.php:93 ../../mod/locs.php:108 ../../mod/setup.php:331
+#: ../../mod/setup.php:371 ../../mod/profiles.php:667
+#: ../../mod/import_items.php:122 ../../view/theme/redbasic/php/config.php:99
 msgid "Submit"
 msgstr "Enviar"
 
@@ -1187,7 +1186,7 @@ msgstr "canal"
 #: ../../mod/like.php:361 ../../mod/subthread.php:72
 #: ../../mod/subthread.php:172
 msgid "status"
-msgstr "estado"
+msgstr "el mensaje de estado"
 
 #: ../../include/conversation.php:150 ../../include/text.php:1840
 #: ../../mod/tagger.php:53
@@ -1212,7 +1211,7 @@ msgstr "%1$s ahora está conectado/a con %2$s"
 #: ../../include/conversation.php:239
 #, php-format
 msgid "%1$s poked %2$s"
-msgstr "%1$s dio un toque a %2$s"
+msgstr "%1$s ha dado un toque a %2$s"
 
 #: ../../include/conversation.php:243 ../../include/text.php:933
 msgid "poked"
@@ -1252,12 +1251,12 @@ msgstr "Abstención"
 #: ../../include/conversation.php:576 ../../mod/photos.php:1026
 msgctxt "title"
 msgid "Attending"
-msgstr "Participar"
+msgstr "Participando"
 
 #: ../../include/conversation.php:576 ../../mod/photos.php:1026
 msgctxt "title"
 msgid "Not attending"
-msgstr "No participar"
+msgstr "No participando"
 
 #: ../../include/conversation.php:576 ../../mod/photos.php:1026
 msgctxt "title"
@@ -1314,9 +1313,8 @@ msgstr "Mostrar en su contexto"
 
 #: ../../include/conversation.php:739 ../../include/conversation.php:1212
 #: ../../include/ItemObject.php:366 ../../mod/editpost.php:130
-#: ../../mod/editblock.php:150 ../../mod/photos.php:990 ../../mod/mail.php:249
-#: ../../mod/mail.php:381 ../../mod/editlayout.php:148
-#: ../../mod/editwebpage.php:190
+#: ../../mod/editblock.php:150 ../../mod/photos.php:990
+#: ../../mod/editlayout.php:148 ../../mod/editwebpage.php:190
 msgid "Please wait"
 msgstr "Espere por favor"
 
@@ -1342,7 +1340,7 @@ msgstr "Seguir el hilo"
 
 #: ../../include/conversation.php:943
 msgid "View Status"
-msgstr "Ver el mensaje de estado"
+msgstr "Estado actual"
 
 #: ../../include/conversation.php:944 ../../include/nav.php:86
 #: ../../mod/connedit.php:494
@@ -1367,7 +1365,7 @@ msgstr "Enviar un mensaje privado"
 
 #: ../../include/conversation.php:950 ../../include/apps.php:145
 msgid "Poke"
-msgstr "Dar un toque"
+msgstr "Toque"
 
 #: ../../include/conversation.php:1064
 #, php-format
@@ -1419,7 +1417,7 @@ msgid "Visible to <strong>everybody</strong>"
 msgstr "Visible para <strong>cualquiera</strong>"
 
 #: ../../include/conversation.php:1144 ../../mod/mail.php:182
-#: ../../mod/mail.php:311
+#: ../../mod/mail.php:296
 msgid "Please enter a link URL:"
 msgstr "Por favor, introduzca la dirección del enlace:"
 
@@ -1444,7 +1442,7 @@ msgid "Where are you right now?"
 msgstr "¿Donde está ahora?"
 
 #: ../../include/conversation.php:1150 ../../mod/editpost.php:54
-#: ../../mod/mail.php:183 ../../mod/mail.php:312
+#: ../../mod/mail.php:183 ../../mod/mail.php:297
 msgid "Expires YYYY-MM-DD HH:MM"
 msgstr "Caduca YYYY-MM-DD HH:MM"
 
@@ -1501,8 +1499,8 @@ msgid "Code"
 msgstr "Código"
 
 #: ../../include/conversation.php:1189 ../../mod/editpost.php:119
-#: ../../mod/editblock.php:142 ../../mod/mail.php:246 ../../mod/mail.php:377
-#: ../../mod/editlayout.php:140 ../../mod/editwebpage.php:182
+#: ../../mod/editblock.php:142 ../../mod/editlayout.php:140
+#: ../../mod/editwebpage.php:182
 msgid "Upload photo"
 msgstr "Subir foto"
 
@@ -1511,7 +1509,7 @@ msgid "upload photo"
 msgstr "subir foto"
 
 #: ../../include/conversation.php:1191 ../../mod/editpost.php:120
-#: ../../mod/editblock.php:143 ../../mod/mail.php:247 ../../mod/mail.php:378
+#: ../../mod/editblock.php:143 ../../mod/mail.php:228 ../../mod/mail.php:357
 #: ../../mod/editlayout.php:141 ../../mod/editwebpage.php:183
 msgid "Attach file"
 msgstr "Adjuntar fichero"
@@ -1521,7 +1519,7 @@ msgid "attach file"
 msgstr "adjuntar fichero"
 
 #: ../../include/conversation.php:1193 ../../mod/editpost.php:121
-#: ../../mod/editblock.php:144 ../../mod/mail.php:248 ../../mod/mail.php:379
+#: ../../mod/editblock.php:144 ../../mod/mail.php:229 ../../mod/mail.php:358
 #: ../../mod/editlayout.php:142 ../../mod/editwebpage.php:184
 msgid "Insert web link"
 msgstr "Insertar enlace web"
@@ -1604,13 +1602,13 @@ msgid "Example: bob@example.com, mary@example.com"
 msgstr "Ejemplo: roberto@ejemplo.com, maría@ejemplo.com"
 
 #: ../../include/conversation.php:1237 ../../mod/editpost.php:156
-#: ../../mod/editblock.php:176 ../../mod/mail.php:253 ../../mod/mail.php:384
+#: ../../mod/editblock.php:176 ../../mod/mail.php:233 ../../mod/mail.php:362
 #: ../../mod/editlayout.php:173 ../../mod/editwebpage.php:217
 msgid "Set expiration date"
 msgstr "Configurar fecha de caducidad"
 
 #: ../../include/conversation.php:1239 ../../include/ItemObject.php:686
-#: ../../mod/editpost.php:158 ../../mod/mail.php:255 ../../mod/mail.php:386
+#: ../../mod/editpost.php:158 ../../mod/mail.php:235 ../../mod/mail.php:364
 msgid "Encrypt text"
 msgstr "Cifrar texto"
 
@@ -1761,15 +1759,15 @@ msgstr[1] "No me gusta"
 msgctxt "noun"
 msgid "Attending"
 msgid_plural "Attending"
-msgstr[0] "Asistir"
-msgstr[1] "Participar"
+msgstr[0] "Participando"
+msgstr[1] "Participando"
 
 #: ../../include/conversation.php:1712
 msgctxt "noun"
 msgid "Not Attending"
 msgid_plural "Not Attending"
-msgstr[0] "No asistir"
-msgstr[1] "No participar"
+msgstr[0] "No participando"
+msgstr[1] "No participando"
 
 #: ../../include/conversation.php:1715
 msgctxt "noun"
@@ -1824,205 +1822,26 @@ msgstr "La foto no ha podido ser guardada."
 msgid "Upload New Photos"
 msgstr "Subir nuevas fotos"
 
-#: ../../include/enotify.php:57 ../../include/network.php:1613
-msgid "$Projectname Notification"
-msgstr "Notificación de $Projectname"
-
-#: ../../include/enotify.php:58 ../../include/network.php:1614
-msgid "$projectname"
-msgstr "$projectname"
-
-#: ../../include/enotify.php:60 ../../include/network.php:1616
-msgid "Thank You,"
-msgstr "Gracias,"
-
-#: ../../include/enotify.php:62 ../../include/network.php:1618
-#, php-format
-msgid "%s Administrator"
-msgstr "%s Administrador"
-
-#: ../../include/enotify.php:96
-#, php-format
-msgid "%s <!item_type!>"
-msgstr "%s <!item_type!>"
-
-#: ../../include/enotify.php:100
-#, php-format
-msgid "[Red:Notify] New mail received at %s"
-msgstr "[Hubzilla:Aviso] Nuevo correo recibido en %s"
-
-#: ../../include/enotify.php:102
-#, php-format
-msgid "%1$s, %2$s sent you a new private message at %3$s."
-msgstr "%1$s, %2$s le ha enviado un nuevo mensaje privado en %3$s."
-
-#: ../../include/enotify.php:103
-#, php-format
-msgid "%1$s sent you %2$s."
-msgstr "%1$s le envió %2$s."
-
-#: ../../include/enotify.php:103
-msgid "a private message"
-msgstr "un mensaje privado"
-
-#: ../../include/enotify.php:104
-#, php-format
-msgid "Please visit %s to view and/or reply to your private messages."
-msgstr "Por favor visite %s para ver y/o responder a su mensaje privado."
-
-#: ../../include/enotify.php:158
-#, php-format
-msgid "%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]"
-msgstr "%1$s, %2$s comentó en [zrl=%3$s]%4$s[/zrl]"
-
-#: ../../include/enotify.php:166
-#, php-format
-msgid "%1$s, %2$s commented on [zrl=%3$s]%4$s's %5$s[/zrl]"
-msgstr "%1$s, %2$s comentó en [zrl=%3$s]%4$s de %5$s[/zrl]"
-
-#: ../../include/enotify.php:175
-#, php-format
-msgid "%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]"
-msgstr "%1$s, %2$s comentó en [zrl=%3$s]su %4$s[/zrl]"
-
-#: ../../include/enotify.php:186
-#, php-format
-msgid "[Red:Notify] Comment to conversation #%1$d by %2$s"
-msgstr "[Hubzilla:Aviso] Nuevo comentario de %2$s en la conversación #%1$d"
-
-#: ../../include/enotify.php:187
-#, php-format
-msgid "%1$s, %2$s commented on an item/conversation you have been following."
-msgstr "%1$s, %2$s comentó un elemento/conversación que ha estado siguiendo."
-
-#: ../../include/enotify.php:190 ../../include/enotify.php:205
-#: ../../include/enotify.php:231 ../../include/enotify.php:249
-#: ../../include/enotify.php:263
-#, php-format
-msgid "Please visit %s to view and/or reply to the conversation."
-msgstr "Para ver o comentar la conversación, visite %s"
-
-#: ../../include/enotify.php:196
-#, php-format
-msgid "[Red:Notify] %s posted to your profile wall"
-msgstr "[Hubzilla:Aviso] %s escribió en su página del perfil"
-
-#: ../../include/enotify.php:198
-#, php-format
-msgid "%1$s, %2$s posted to your profile wall at %3$s"
-msgstr "%1$s, %2$s publicó en su página del perfil en %3$s"
-
-#: ../../include/enotify.php:200
-#, php-format
-msgid "%1$s, %2$s posted to [zrl=%3$s]your wall[/zrl]"
-msgstr "%1$s, %2$s publicó en [zrl=%3$s]su página del perfil[/zrl]"
-
-#: ../../include/enotify.php:224
-#, php-format
-msgid "[Red:Notify] %s tagged you"
-msgstr "[Hubzilla:Aviso] %s le etiquetó"
-
-#: ../../include/enotify.php:225
-#, php-format
-msgid "%1$s, %2$s tagged you at %3$s"
-msgstr "%1$s, %2$s le etiquetó en %3$s"
-
-#: ../../include/enotify.php:226
-#, php-format
-msgid "%1$s, %2$s [zrl=%3$s]tagged you[/zrl]."
-msgstr "%1$s, %2$s [zrl=%3$s]le etiquetó[/zrl]."
-
-#: ../../include/enotify.php:238
-#, php-format
-msgid "[Red:Notify] %1$s poked you"
-msgstr "[Hubzilla:Aviso]  %1$s le ha dado un toque"
-
-#: ../../include/enotify.php:239
-#, php-format
-msgid "%1$s, %2$s poked you at %3$s"
-msgstr "%1$s, %2$s le dio un toque en %3$s"
-
-#: ../../include/enotify.php:240
-#, php-format
-msgid "%1$s, %2$s [zrl=%2$s]poked you[/zrl]."
-msgstr "%1$s, %2$s [zrl=%2$s]le dio un toque[/zrl]."
-
-#: ../../include/enotify.php:256
-#, php-format
-msgid "[Red:Notify] %s tagged your post"
-msgstr "[Hubzilla:Aviso]  %s etiquetó su entrada"
-
-#: ../../include/enotify.php:257
-#, php-format
-msgid "%1$s, %2$s tagged your post at %3$s"
-msgstr "%1$s, %2$s etiquetó su publicación en %3$s"
-
-#: ../../include/enotify.php:258
-#, php-format
-msgid "%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]"
-msgstr "%1$s, %2$s etiquetó [zrl=%3$s]su publicación[/zrl]"
-
-#: ../../include/enotify.php:270
-msgid "[Red:Notify] Introduction received"
-msgstr "[Hubzilla:Aviso] Solicitud de conexión recibida"
-
-#: ../../include/enotify.php:271
-#, php-format
-msgid "%1$s, you've received an new connection request from '%2$s' at %3$s"
-msgstr "%1$s, ha recibido una nueva solicitud de conexión de '%2$s' en  %3$s"
-
-#: ../../include/enotify.php:272
-#, php-format
-msgid ""
-"%1$s, you've received [zrl=%2$s]a new connection request[/zrl] from %3$s."
-msgstr "%1$s, ha recibido [zrl=%2$s]una nueva solicitud de conexión[/zrl] de %3$s."
-
-#: ../../include/enotify.php:276 ../../include/enotify.php:295
-#, php-format
-msgid "You may visit their profile at %s"
-msgstr "Puede visitar su perfil en %s"
-
-#: ../../include/enotify.php:278
-#, php-format
-msgid "Please visit %s to approve or reject the connection request."
-msgstr "Por favor, visite %s para permitir o rechazar la solicitad de conexión."
-
-#: ../../include/enotify.php:285
-msgid "[Red:Notify] Friend suggestion received"
-msgstr "[Hubzilla:Aviso] recibió una sugerencia de conexión"
-
-#: ../../include/enotify.php:286
-#, php-format
-msgid "%1$s, you've received a friend suggestion from '%2$s' at %3$s"
-msgstr "%1$s, ha recibido una sugerencia de conexión de '%2$s' en %3$s"
-
-#: ../../include/enotify.php:287
-#, php-format
-msgid ""
-"%1$s, you've received [zrl=%2$s]a friend suggestion[/zrl] for %3$s from "
-"%4$s."
-msgstr "%1$s, ha recibido [zrl=%2$s]una sugerencia de conexión[/zrl] para %3$s de %4$s."
-
-#: ../../include/enotify.php:293
-msgid "Name:"
-msgstr "Nombre:"
-
-#: ../../include/enotify.php:294
-msgid "Photo:"
-msgstr "Foto:"
-
-#: ../../include/enotify.php:297
-#, php-format
-msgid "Please visit %s to approve or reject the suggestion."
-msgstr "Por favor, visite %s para aprobar o rechazar la sugerencia."
-
-#: ../../include/enotify.php:511
-msgid "[Red:Notify]"
-msgstr "[Hubzilla:Aviso]"
-
 #: ../../include/network.php:635
 msgid "view full size"
 msgstr "Ver en el tamaño original"
+
+#: ../../include/network.php:1613 ../../include/enotify.php:57
+msgid "$Projectname Notification"
+msgstr "Notificación de $Projectname"
+
+#: ../../include/network.php:1614 ../../include/enotify.php:58
+msgid "$projectname"
+msgstr "$projectname"
+
+#: ../../include/network.php:1616 ../../include/enotify.php:60
+msgid "Thank You,"
+msgstr "Gracias,"
+
+#: ../../include/network.php:1618 ../../include/enotify.php:62
+#, php-format
+msgid "%s Administrator"
+msgstr "%s Administrador"
 
 #: ../../include/network.php:1660 ../../include/account.php:316
 #: ../../include/account.php:343 ../../include/account.php:403
@@ -2092,11 +1911,11 @@ msgstr "Guardar"
 
 #: ../../include/text.php:933
 msgid "poke"
-msgstr "dar un toque"
+msgstr "un toque"
 
 #: ../../include/text.php:934
 msgid "ping"
-msgstr "avisar"
+msgstr "un ping"
 
 #: ../../include/text.php:934
 msgid "pinged"
@@ -2104,35 +1923,35 @@ msgstr "avisado/a"
 
 #: ../../include/text.php:935
 msgid "prod"
-msgstr "incitar"
+msgstr "una incitación"
 
 #: ../../include/text.php:935
 msgid "prodded"
-msgstr "incitado/a"
+msgstr "ha recibido una incitación"
 
 #: ../../include/text.php:936
 msgid "slap"
-msgstr "abofetear"
+msgstr "una bofetada"
 
 #: ../../include/text.php:936
 msgid "slapped"
-msgstr "abofeteado/a"
+msgstr "ha recibido una bofetada"
 
 #: ../../include/text.php:937
 msgid "finger"
-msgstr "señalar"
+msgstr "finger"
 
 #: ../../include/text.php:937
 msgid "fingered"
-msgstr "señalado/a"
+msgstr "ha recibido un \"finger\""
 
 #: ../../include/text.php:938
 msgid "rebuff"
-msgstr "desairar"
+msgstr "rechazo"
 
 #: ../../include/text.php:938
 msgid "rebuffed"
-msgstr "desairado/a"
+msgstr "ha sido rechazado/a"
 
 #: ../../include/text.php:948
 msgid "happy"
@@ -2486,7 +2305,7 @@ msgstr "No especificado"
 
 #: ../../include/profile_selectors.php:6
 msgid "Undecided"
-msgstr "Indeciso"
+msgstr "Indeciso/a"
 
 #: ../../include/profile_selectors.php:42
 #: ../../include/profile_selectors.php:61
@@ -2920,6 +2739,185 @@ msgstr "Conexión: %s"
 #: ../../include/items.php:4813
 msgid "Connection not found."
 msgstr "Conexión no encontrada"
+
+#: ../../include/enotify.php:96
+#, php-format
+msgid "%s <!item_type!>"
+msgstr "%s <!item_type!>"
+
+#: ../../include/enotify.php:100
+#, php-format
+msgid "[Hubzilla:Notify] New mail received at %s"
+msgstr "[Hubzilla:Aviso] Nuevo mensaje en %s"
+
+#: ../../include/enotify.php:102
+#, php-format
+msgid "%1$s, %2$s sent you a new private message at %3$s."
+msgstr "%1$s, %2$s le ha enviado un nuevo mensaje privado en %3$s."
+
+#: ../../include/enotify.php:103
+#, php-format
+msgid "%1$s sent you %2$s."
+msgstr "%1$s le envió %2$s."
+
+#: ../../include/enotify.php:103
+msgid "a private message"
+msgstr "un mensaje privado"
+
+#: ../../include/enotify.php:104
+#, php-format
+msgid "Please visit %s to view and/or reply to your private messages."
+msgstr "Por favor visite %s para ver y/o responder a su mensaje privado."
+
+#: ../../include/enotify.php:158
+#, php-format
+msgid "%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado [zrl=%3$s]%4$s[/zrl]"
+
+#: ../../include/enotify.php:166
+#, php-format
+msgid "%1$s, %2$s commented on [zrl=%3$s]%4$s's %5$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado [zrl=%3$s]%5$s de %4$s[/zrl] "
+
+#: ../../include/enotify.php:175
+#, php-format
+msgid "%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado [zrl=%3$s]su %4$s[/zrl]"
+
+#: ../../include/enotify.php:186
+#, php-format
+msgid "[Hubzilla:Notify] Comment to conversation #%1$d by %2$s"
+msgstr "[Hubzilla:Aviso] Nuevo comentario de %2$s a la conversación #%1$d"
+
+#: ../../include/enotify.php:187
+#, php-format
+msgid "%1$s, %2$s commented on an item/conversation you have been following."
+msgstr "%1$s, %2$s ha comentado un elemento/conversación que ha estado siguiendo."
+
+#: ../../include/enotify.php:190 ../../include/enotify.php:205
+#: ../../include/enotify.php:231 ../../include/enotify.php:249
+#: ../../include/enotify.php:263
+#, php-format
+msgid "Please visit %s to view and/or reply to the conversation."
+msgstr "Para ver o comentar la conversación, visite %s"
+
+#: ../../include/enotify.php:196
+#, php-format
+msgid "[Hubzilla:Notify] %s posted to your profile wall"
+msgstr "[Hubzilla:Aviso] %s ha publicado una entrada en su página de inicio del perfil"
+
+#: ../../include/enotify.php:198
+#, php-format
+msgid "%1$s, %2$s posted to your profile wall at %3$s"
+msgstr "%1$s, %2$s publicó en su página del perfil en %3$s"
+
+#: ../../include/enotify.php:200
+#, php-format
+msgid "%1$s, %2$s posted to [zrl=%3$s]your wall[/zrl]"
+msgstr "%1$s, %2$s publicó en [zrl=%3$s]su página del perfil[/zrl]"
+
+#: ../../include/enotify.php:224
+#, php-format
+msgid "[Hubzilla:Notify] %s tagged you"
+msgstr "[Hubzilla:Aviso] %s le ha etiquetado"
+
+#: ../../include/enotify.php:225
+#, php-format
+msgid "%1$s, %2$s tagged you at %3$s"
+msgstr "%1$s, %2$s le etiquetó en %3$s"
+
+#: ../../include/enotify.php:226
+#, php-format
+msgid "%1$s, %2$s [zrl=%3$s]tagged you[/zrl]."
+msgstr "%1$s, %2$s [zrl=%3$s]le etiquetó[/zrl]."
+
+#: ../../include/enotify.php:238
+#, php-format
+msgid "[Hubzilla:Notify] %1$s poked you"
+msgstr "[Hubzilla:Aviso] %1$s le ha dado un toque"
+
+#: ../../include/enotify.php:239
+#, php-format
+msgid "%1$s, %2$s poked you at %3$s"
+msgstr "%1$s, %2$s le dio un toque en %3$s"
+
+#: ../../include/enotify.php:240
+#, php-format
+msgid "%1$s, %2$s [zrl=%2$s]poked you[/zrl]."
+msgstr "%1$s, %2$s [zrl=%2$s]le dio un toque[/zrl]."
+
+#: ../../include/enotify.php:256
+#, php-format
+msgid "[Hubzilla:Notify] %s tagged your post"
+msgstr "[Hubzilla:Aviso] %s ha etiquetado su publicación"
+
+#: ../../include/enotify.php:257
+#, php-format
+msgid "%1$s, %2$s tagged your post at %3$s"
+msgstr "%1$s, %2$s etiquetó su publicación en %3$s"
+
+#: ../../include/enotify.php:258
+#, php-format
+msgid "%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]"
+msgstr "%1$s, %2$s etiquetó [zrl=%3$s]su publicación[/zrl]"
+
+#: ../../include/enotify.php:270
+msgid "[Hubzilla:Notify] Introduction received"
+msgstr "[Hubzilla:Aviso] Ha recibido una solicitud de conexión"
+
+#: ../../include/enotify.php:271
+#, php-format
+msgid "%1$s, you've received an new connection request from '%2$s' at %3$s"
+msgstr "%1$s, ha recibido una nueva solicitud de conexión de '%2$s' en  %3$s"
+
+#: ../../include/enotify.php:272
+#, php-format
+msgid ""
+"%1$s, you've received [zrl=%2$s]a new connection request[/zrl] from %3$s."
+msgstr "%1$s, ha recibido [zrl=%2$s]una nueva solicitud de conexión[/zrl] de %3$s."
+
+#: ../../include/enotify.php:276 ../../include/enotify.php:295
+#, php-format
+msgid "You may visit their profile at %s"
+msgstr "Puede visitar su perfil en %s"
+
+#: ../../include/enotify.php:278
+#, php-format
+msgid "Please visit %s to approve or reject the connection request."
+msgstr "Por favor, visite %s para permitir o rechazar la solicitad de conexión."
+
+#: ../../include/enotify.php:285
+msgid "[Hubzilla:Notify] Friend suggestion received"
+msgstr "[Hubzilla:Aviso] Ha recibido una sugerencia de amistad"
+
+#: ../../include/enotify.php:286
+#, php-format
+msgid "%1$s, you've received a friend suggestion from '%2$s' at %3$s"
+msgstr "%1$s, ha recibido una sugerencia de conexión de '%2$s' en %3$s"
+
+#: ../../include/enotify.php:287
+#, php-format
+msgid ""
+"%1$s, you've received [zrl=%2$s]a friend suggestion[/zrl] for %3$s from "
+"%4$s."
+msgstr "%1$s, ha recibido [zrl=%2$s]una sugerencia de conexión[/zrl] para %3$s de %4$s."
+
+#: ../../include/enotify.php:293
+msgid "Name:"
+msgstr "Nombre:"
+
+#: ../../include/enotify.php:294
+msgid "Photo:"
+msgstr "Foto:"
+
+#: ../../include/enotify.php:297
+#, php-format
+msgid "Please visit %s to approve or reject the suggestion."
+msgstr "Por favor, visite %s para aprobar o rechazar la sugerencia."
+
+#: ../../include/enotify.php:511
+msgid "[Hubzilla:Notify]"
+msgstr "[Hubzilla:Aviso]"
 
 #: ../../include/bb2diaspora.php:373
 msgid "Attachments:"
@@ -3778,153 +3776,149 @@ msgid "Private Mail Menu"
 msgstr "Menú de correo privado"
 
 #: ../../include/widgets.php:569
-msgid "Check Mail"
-msgstr "Comprobar correo"
-
-#: ../../include/widgets.php:575
 msgid "Combined View"
 msgstr "Vista combinada"
 
-#: ../../include/widgets.php:580 ../../include/nav.php:191
+#: ../../include/widgets.php:574 ../../include/nav.php:191
 msgid "Inbox"
 msgstr "Bandeja de entrada"
 
-#: ../../include/widgets.php:585 ../../include/nav.php:192
+#: ../../include/widgets.php:579 ../../include/nav.php:192
 msgid "Outbox"
 msgstr "Bandeja de salida"
 
-#: ../../include/widgets.php:590 ../../include/nav.php:193
+#: ../../include/widgets.php:584 ../../include/nav.php:193
 msgid "New Message"
 msgstr "Nuevo mensaje"
 
-#: ../../include/widgets.php:609 ../../include/widgets.php:621
+#: ../../include/widgets.php:603 ../../include/widgets.php:615
 msgid "Conversations"
 msgstr "Conversaciones"
 
-#: ../../include/widgets.php:613
+#: ../../include/widgets.php:607
 msgid "Received Messages"
 msgstr "Mensajes recibidos"
 
-#: ../../include/widgets.php:617
+#: ../../include/widgets.php:611
 msgid "Sent Messages"
 msgstr "Enviar mensajes"
 
-#: ../../include/widgets.php:631
+#: ../../include/widgets.php:625
 msgid "No messages."
 msgstr "Sin mensajes."
 
-#: ../../include/widgets.php:649
+#: ../../include/widgets.php:643
 msgid "Delete conversation"
 msgstr "Eliminar conversación"
 
-#: ../../include/widgets.php:651
+#: ../../include/widgets.php:645
 msgid "D, d M Y - g:i A"
 msgstr "D d M Y - G:i"
 
-#: ../../include/widgets.php:740
+#: ../../include/widgets.php:734
 msgid "Chat Rooms"
 msgstr "Salas de chat"
 
-#: ../../include/widgets.php:760
+#: ../../include/widgets.php:754
 msgid "Bookmarked Chatrooms"
 msgstr "Salas de chat preferidas"
 
-#: ../../include/widgets.php:780
+#: ../../include/widgets.php:774
 msgid "Suggested Chatrooms"
 msgstr "Salas de chat sugeridas"
 
-#: ../../include/widgets.php:907 ../../include/widgets.php:965
+#: ../../include/widgets.php:901 ../../include/widgets.php:959
 msgid "photo/image"
 msgstr "foto/imagen"
 
-#: ../../include/widgets.php:1060 ../../include/widgets.php:1062
+#: ../../include/widgets.php:1054 ../../include/widgets.php:1056
 msgid "Rate Me"
 msgstr "Valorar este canal"
 
-#: ../../include/widgets.php:1066
+#: ../../include/widgets.php:1060
 msgid "View Ratings"
 msgstr "Mostrar las valoraciones"
 
-#: ../../include/widgets.php:1077
+#: ../../include/widgets.php:1071
 msgid "Public Hubs"
 msgstr "Servidores públicos"
 
-#: ../../include/widgets.php:1125
+#: ../../include/widgets.php:1119
 msgid "Forums"
 msgstr "Foros"
 
-#: ../../include/widgets.php:1152
+#: ../../include/widgets.php:1146
 msgid "Tasks"
 msgstr "Tareas"
 
-#: ../../include/widgets.php:1161
+#: ../../include/widgets.php:1155
 msgid "Documentation"
 msgstr "Documentación"
 
-#: ../../include/widgets.php:1163
+#: ../../include/widgets.php:1157
 msgid "Project/Site Information"
 msgstr "Información sobre el proyecto o sitio"
 
-#: ../../include/widgets.php:1164
+#: ../../include/widgets.php:1158
 msgid "For Members"
 msgstr "Para los usuarios"
 
-#: ../../include/widgets.php:1165
+#: ../../include/widgets.php:1159
 msgid "For Administrators"
 msgstr "Para los administradores"
 
-#: ../../include/widgets.php:1166
+#: ../../include/widgets.php:1160
 msgid "For Developers"
 msgstr "Para los desarrolladores"
 
-#: ../../include/widgets.php:1191 ../../mod/admin.php:410
+#: ../../include/widgets.php:1185 ../../mod/admin.php:410
 msgid "Site"
 msgstr "Sitio"
 
-#: ../../include/widgets.php:1192
+#: ../../include/widgets.php:1186
 msgid "Accounts"
 msgstr "Cuentas"
 
-#: ../../include/widgets.php:1193 ../../mod/admin.php:939
+#: ../../include/widgets.php:1187 ../../mod/admin.php:939
 msgid "Channels"
 msgstr "Canales"
 
-#: ../../include/widgets.php:1194 ../../mod/admin.php:1031
+#: ../../include/widgets.php:1188 ../../mod/admin.php:1031
 #: ../../mod/admin.php:1071
 msgid "Plugins"
 msgstr "Extensiones"
 
-#: ../../include/widgets.php:1195 ../../mod/admin.php:1231
+#: ../../include/widgets.php:1189 ../../mod/admin.php:1231
 #: ../../mod/admin.php:1265
 msgid "Themes"
 msgstr "Temas"
 
-#: ../../include/widgets.php:1196
+#: ../../include/widgets.php:1190
 msgid "Inspect queue"
 msgstr "Examinar la cola"
 
-#: ../../include/widgets.php:1197
+#: ../../include/widgets.php:1191
 msgid "Profile Config"
 msgstr "Ajustes del perfil"
 
-#: ../../include/widgets.php:1198
+#: ../../include/widgets.php:1192
 msgid "DB updates"
 msgstr "Actualizaciones de la base de datos"
 
-#: ../../include/widgets.php:1216 ../../include/widgets.php:1222
+#: ../../include/widgets.php:1210 ../../include/widgets.php:1216
 #: ../../mod/admin.php:1350
 msgid "Logs"
 msgstr "Informes"
 
-#: ../../include/widgets.php:1220 ../../include/nav.php:210
+#: ../../include/widgets.php:1214 ../../include/nav.php:210
 msgid "Admin"
 msgstr "Administrador"
 
-#: ../../include/widgets.php:1221
+#: ../../include/widgets.php:1215
 msgid "Plugin Features"
 msgstr "Ajustes de la extensión"
 
-#: ../../include/widgets.php:1223
+#: ../../include/widgets.php:1217
 msgid "User registrations waiting for confirmation"
 msgstr "Registros de usuarios pendientes de confirmación"
 
@@ -4408,17 +4402,17 @@ msgstr "%1$s se abstiene en %3$s de %2$s"
 #: ../../mod/like.php:420
 #, php-format
 msgid "%1$s is attending %2$s's %3$s"
-msgstr "%1$s participará en el %3$s de %2$s"
+msgstr "%3$s de %2$s: %1$s participa"
 
 #: ../../mod/like.php:422
 #, php-format
 msgid "%1$s is not attending %2$s's %3$s"
-msgstr "%1$s no participará en el %3$s de %2$s"
+msgstr "%3$s de %2$s: %1$s no participa"
 
 #: ../../mod/like.php:424
 #, php-format
 msgid "%1$s may attend %2$s's %3$s"
-msgstr "%1$s tal vez participe en el %3$s de %2$s"
+msgstr "%3$s de %2$s: %1$s quizá participe"
 
 #: ../../mod/like.php:520
 msgid "Action completed."
@@ -4513,7 +4507,7 @@ msgstr "Ninguna  conexión en común."
 
 #: ../../mod/ping.php:260
 msgid "sent you a private message"
-msgstr "enviarle un mensaje privado"
+msgstr "le ha enviado un mensaje privado"
 
 #: ../../mod/ping.php:308
 msgid "added your channel"
@@ -4896,7 +4890,7 @@ msgstr "palabras, una por línea, o #etiquetas o /patrones/, dejar en blanco par
 
 #: ../../mod/connedit.php:673
 msgid "Do not import posts with this text"
-msgstr "No importar entradas que contienen este texto"
+msgstr "No importar entradas que contengan este texto"
 
 #: ../../mod/connedit.php:675
 msgid "This information is public!"
@@ -5107,7 +5101,7 @@ msgstr "Descargar el fichero PDL"
 
 #: ../../mod/poke.php:164
 msgid "Poke/Prod"
-msgstr "Dar un toque/Incitar"
+msgstr "Toque/Incitación"
 
 #: ../../mod/poke.php:165
 msgid "poke, prod or do other things to somebody"
@@ -5309,7 +5303,7 @@ msgstr "correo recuperado"
 
 #: ../../mod/dreport.php:106
 msgid "duplicate mail received"
-msgstr "se ha recibido correo duplicado"
+msgstr "se ha recibido mensaje duplicado"
 
 #: ../../mod/dreport.php:109
 msgid "mail delivered"
@@ -6842,6 +6836,93 @@ msgstr "Sitio web:"
 msgid "Description: "
 msgstr "Descripción:"
 
+#: ../../mod/mail.php:33
+msgid "Unable to lookup recipient."
+msgstr "Imposible asociar a un destinatario."
+
+#: ../../mod/mail.php:41
+msgid "Unable to communicate with requested channel."
+msgstr "Imposible comunicar con el canal solicitado."
+
+#: ../../mod/mail.php:48
+msgid "Cannot verify requested channel."
+msgstr "No se puede verificar el canal solicitado."
+
+#: ../../mod/mail.php:74
+msgid "Selected channel has private message restrictions. Send failed."
+msgstr "El canal seleccionado tiene restricciones sobre los mensajes privados. El envío falló."
+
+#: ../../mod/mail.php:128
+msgid "Messages"
+msgstr "Mensajes"
+
+#: ../../mod/mail.php:155
+msgid "Message recalled."
+msgstr "Mensaje recuperado."
+
+#: ../../mod/mail.php:168
+msgid "Conversation removed."
+msgstr "Conversación eliminada."
+
+#: ../../mod/mail.php:211
+msgid "Requested channel is not in this network"
+msgstr "El canal solicitado no existe en esta red"
+
+#: ../../mod/mail.php:219
+msgid "Send Private Message"
+msgstr "Enviar un mensaje privado"
+
+#: ../../mod/mail.php:220 ../../mod/mail.php:349
+msgid "To:"
+msgstr "Para:"
+
+#: ../../mod/mail.php:223 ../../mod/mail.php:351
+msgid "Subject:"
+msgstr "Asunto:"
+
+#: ../../mod/mail.php:226 ../../mod/invite.php:131
+msgid "Your message:"
+msgstr "Su mensaje:"
+
+#: ../../mod/mail.php:230
+msgid "Send"
+msgstr "Enviar"
+
+#: ../../mod/mail.php:321
+msgid "Delete message"
+msgstr "Borrar mensaje"
+
+#: ../../mod/mail.php:322
+msgid "Delivery report"
+msgstr "Informe de transmisión"
+
+#: ../../mod/mail.php:323
+msgid "Recall message"
+msgstr "Recuperar el mensaje"
+
+#: ../../mod/mail.php:325
+msgid "Message has been recalled."
+msgstr "El mensaje ha sido recuperado."
+
+#: ../../mod/mail.php:342
+msgid "Delete Conversation"
+msgstr "Eliminar Conversación"
+
+#: ../../mod/mail.php:344
+msgid ""
+"No secure communications available. You <strong>may</strong> be able to "
+"respond from the sender's profile page."
+msgstr "Comunicación segura no disponible. Pero <strong>puede</strong> responder desde la página del perfil del remitente."
+
+#: ../../mod/mail.php:348
+msgid "Send Reply"
+msgstr "Responder"
+
+#: ../../mod/mail.php:353
+#, php-format
+msgid "Your message for %s (%s):"
+msgstr "Su mensaje para %s (%s):"
+
 #: ../../mod/webpages.php:191
 msgid "Page Title"
 msgstr "Título de página"
@@ -7077,84 +7158,6 @@ msgstr "Introduzca la dirección del canal (p.ej. canal@ejemplo.com)"
 msgid "Authenticate"
 msgstr "Acceder"
 
-#: ../../mod/mail.php:33
-msgid "Unable to lookup recipient."
-msgstr "Imposible asociar a un destinatario."
-
-#: ../../mod/mail.php:41
-msgid "Unable to communicate with requested channel."
-msgstr "Imposible comunicar con el canal solicitado."
-
-#: ../../mod/mail.php:48
-msgid "Cannot verify requested channel."
-msgstr "No se puede verificar el canal solicitado."
-
-#: ../../mod/mail.php:74
-msgid "Selected channel has private message restrictions. Send failed."
-msgstr "El canal seleccionado tiene restricciones sobre los mensajes privados. El envío falló."
-
-#: ../../mod/mail.php:128
-msgid "Messages"
-msgstr "Mensajes"
-
-#: ../../mod/mail.php:155
-msgid "Message recalled."
-msgstr "Mensaje recuperado."
-
-#: ../../mod/mail.php:168
-msgid "Conversation removed."
-msgstr "Conversación eliminada."
-
-#: ../../mod/mail.php:233
-msgid "Send Private Message"
-msgstr "Enviar un mensaje privado"
-
-#: ../../mod/mail.php:234 ../../mod/mail.php:368
-msgid "To:"
-msgstr "Para:"
-
-#: ../../mod/mail.php:239 ../../mod/mail.php:370
-msgid "Subject:"
-msgstr "Asunto:"
-
-#: ../../mod/mail.php:243 ../../mod/mail.php:373 ../../mod/invite.php:131
-msgid "Your message:"
-msgstr "Su mensaje:"
-
-#: ../../mod/mail.php:250
-msgid "Send"
-msgstr "Enviar"
-
-#: ../../mod/mail.php:336
-msgid "Delete message"
-msgstr "Borrar mensaje"
-
-#: ../../mod/mail.php:337
-msgid "Delivery report"
-msgstr "Informe de transmisión"
-
-#: ../../mod/mail.php:338
-msgid "Recall message"
-msgstr "Recuperar el mensaje"
-
-#: ../../mod/mail.php:340
-msgid "Message has been recalled."
-msgstr "El mensaje ha sido recuperado."
-
-#: ../../mod/mail.php:361
-msgid "Delete Conversation"
-msgstr "Eliminar Conversación"
-
-#: ../../mod/mail.php:363
-msgid ""
-"No secure communications available. You <strong>may</strong> be able to "
-"respond from the sender's profile page."
-msgstr "Comunicación segura no disponible. Pero <strong>puede</strong> responder desde la página del perfil del remitente."
-
-#: ../../mod/mail.php:367
-msgid "Send Reply"
-msgstr "Responder"
-
 #: ../../mod/siteinfo.php:111
 #, php-format
 msgid "Version %s"
@@ -7376,7 +7379,7 @@ msgstr "Excedido el límite de invitaciones. Por favor, contacte con el Administ
 #: ../../mod/invite.php:92
 #, php-format
 msgid "%s : Message delivery failed."
-msgstr "%s : Falló la entrega del mensaje."
+msgstr "%s : Falló el envío del mensaje."
 
 #: ../../mod/invite.php:96
 #, php-format
@@ -7884,7 +7887,7 @@ msgstr "Usted sea etiquetado en una publicación"
 
 #: ../../mod/settings.php:1079
 msgid "You are poked/prodded/etc. in a post"
-msgstr "Recibir un toque o incitación en una publicación"
+msgstr "Reciba un toque o incitación en una entrada"
 
 #: ../../mod/settings.php:1082
 msgid "Show visual notifications including:"
@@ -9009,7 +9012,7 @@ msgstr "Importación completada"
 
 #: ../../mod/import_items.php:119
 msgid "Import Items"
-msgstr "Importar Artículos"
+msgstr "Importar elementos"
 
 #: ../../mod/import_items.php:120
 msgid ""

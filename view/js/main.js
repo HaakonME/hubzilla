@@ -616,7 +616,7 @@ function updateConvItems(mode,data) {
 
 function collapseHeight() {
 	$(".wall-item-content, .directory-collapse").each(function() {
-		var orgHeight = $(this).height();
+		var orgHeight = $(this).outerHeight(true);
 		if(orgHeight > divmore_height + 10) {
 			if(! $(this).hasClass('divmore')) {
 				$(this).readmore({

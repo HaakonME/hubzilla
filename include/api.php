@@ -636,9 +636,7 @@ require_once('include/attach.php');
 		);
 		if($r) {
             $data = dbunescbin($r[0]['data']);
-			if($r[0]['flags'] & ATTACH_FLAG_DIR)
-				$r[0]['is_dir'] = '1';
-			if($r[0]['flags'] & ATTACH_FLAG_OS) 
+			if(intval($r[0]['os_storage'])) 
 				$r[0]['data'] = base64_encode(file_get_contents(dbunescbin($r[0]['data'])));
 			else
 				$r[0]['data'] = base64_encode(dbunescbin($r[0]['data']));

@@ -455,9 +455,25 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$src      = $arr['src'];
 		$filename = $arr['filename'];
 		$filesize = @filesize($src);
+
 		$hash     = $arr['resource_id'];
+
+		if(array_key_exists('hash',$arr))
+			$hash = $arr['hash'];
+		if(array_key_exists('type',$arr))
+			$type = $arr['type'];
+
 		if($arr['preserve_original'])
 			$remove_when_processed = false;
+
+		// if importing a directory, just do it now and go home - we're done.
+
+		if(array_key_exists('is_dir',$arr) && intval($arr['is_dir'])) {
+			$x = attach_mkdir($channel,$observer_hash,$arr);
+			if($x['message'])
+				logger('import_directory: ' . $x['message']);
+			return;
+		}
 	}
 	elseif($options !== 'update') {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
@@ -536,10 +552,20 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$pathname = '';
 
 	if($is_photo) {
-		if($newalbum)
+		if($newalbum) {
 			$pathname = filepath_macro($newalbum);
-		else
+		}
+		elseif(array_key_exists('folder',$arr)) {
+			$x = q("select filename from attach where hash = '%s' and uid = %d limit 1",
+				dbesc($arr['folder']),
+				intval($channel['channel_id'])
+			);
+			if($x)
+				$pathname = $x[0]['filename'];
+		}
+		else {
 			$pathname = filepath_macro($album);
+		}
 	}
 	else {
 		$pathname = filepath_macro($upload_path);
@@ -569,7 +595,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		}
 	}
 	else {
-		$folder_hash = '';
+		$folder_hash = ((array_key_exists('folder',$args)) ? $args['folder'] : '');
 	}		
 
 	if((! $options) || ($options === 'import')) {
@@ -968,7 +994,6 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 				intval($channel['channel_id']),
 				dbesc($lfile)
 			);
-
 			if(! $r) {
 				logger('attach_mkdir: hash ' . $lfile . ' not found in ' . $lpath);
 				$ret['message'] = t('Path not found.');

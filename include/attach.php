@@ -181,7 +181,7 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 	$ret = array('success' => false);
 
-	if(! perm_is_allowed($channel_id,$observer, 'read_storage')) {
+	if(! perm_is_allowed($channel_id,$observer, 'view_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -203,7 +203,7 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 	// Retrieve all columns except 'data'
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, os_storage, is_dir, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra $orderby $limit",
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, os_storage, is_dir, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra ORDER BY $orderby $limit",
 		intval($channel_id)
 	);
 

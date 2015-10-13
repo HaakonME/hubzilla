@@ -621,6 +621,7 @@ function collapseHeight() {
 			if(! $(this).hasClass('divmore')) {
 				$(this).readmore({
 					speed: 0,
+					heightMargin: 50,
 					collapsedHeight: divmore_height, 
 					moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
 					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',

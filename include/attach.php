@@ -447,11 +447,17 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	// revise or update must provide $arr['hash'] of the thing to revise/update
 
+	// By default remove $src when finished
+
+	$remove_when processed = true;
+
 	if($options === 'import') {		
 		$src      = $arr['src'];
 		$filename = $arr['filename'];
 		$filesize = @filesize($src);
 		$hash     = $arr['resource_id'];
+		if($arr['preserve_original'])
+			$remove_when_processed = false;
 	}
 	elseif($options !== 'update') {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
@@ -630,7 +636,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 		if(($maxfilesize) && ($filesize > $maxfilesize)) {
 			$ret['message'] = sprintf( t('File exceeds size limit of %d'), $maxfilesize);
-			@unlink($src);
+			if($remove_when_processed)
+				@unlink($src);
 			call_hooks('photo_upload_end',$ret);
 			return $ret;
 		}
@@ -643,7 +650,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			);
 			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
 				$ret['message'] = upgrade_message(true) . sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."), $limit / 1024000);
-				@unlink($src);
+				if($remove_when_processed)
+					@unlink($src);
+
 				call_hooks('photo_upload_end',$ret);
 				return $ret;
 			}
@@ -786,7 +795,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		}
 	}
 
-	if($options !== 'update')
+	if(($options !== 'update') && ($remove_when_processed))
 		@unlink($src);
 
 	if(! $r) {

@@ -449,7 +449,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	// By default remove $src when finished
 
-	$remove_when processed = true;
+	$remove_when_processed = true;
 
 	if($options === 'import') {		
 		$src      = $arr['src'];

@@ -8,6 +8,7 @@ require_once("html2plain.php");
 require_once('include/security.php');
 require_once('include/photos.php');
 require_once('include/items.php');
+require_once('include/attach.php');
 
 	/*
 	 *
@@ -618,6 +619,13 @@ require_once('include/items.php');
 		}
 	}
 	api_register_func('api/red/channel/stream','api_channel_stream', true);
+
+	function api_attach_list(&$a,$type) {
+		logger('api_user: ' . api_user());
+		json_return_and_die(attach_list_files(api_user(),get_observer_hash()));
+	}
+	api_register_func('api/red/files','api_attach_list', true);
+
 
 
 	function api_albums(&$a,$type) {

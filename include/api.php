@@ -622,7 +622,7 @@ require_once('include/attach.php');
 
 	function api_attach_list(&$a,$type) {
 		logger('api_user: ' . api_user());
-		json_return_and_die(attach_list_files(api_user(),get_observer_hash()));
+		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),'','','','created asc'));
 	}
 	api_register_func('api/red/files','api_attach_list', true);
 
@@ -635,8 +635,9 @@ require_once('include/attach.php');
 			dbesc($_REQUEST['file_id'])
 		);
 		if($r) {
-            $data = dbunescbin($r[0]['data']);
-			if(intval($r[0]['os_storage'])) 
+			if($r[0]['is_dir'])
+				$r[0]['data'] = '';
+			elseif(intval($r[0]['os_storage'])) 
 				$r[0]['data'] = base64_encode(file_get_contents(dbunescbin($r[0]['data'])));
 			else
 				$r[0]['data'] = base64_encode(dbunescbin($r[0]['data']));

@@ -629,11 +629,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				if($item['author-link'] && (! $item['author-name']))
 					$profile_name = $item['author-link'];
 
-
-				$tags=array();
-				$hashtags = array();
-				$mentions = array();
-
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
 				if($sp)
@@ -678,13 +673,16 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				$unverified = '';
 
-				$tags=array();
-				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
-				if(count($terms))
-					foreach($terms as $tag)
-						$tags[] = format_term_for_display($tag);
+//				$tags=array();
+//				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
+//				if(count($terms))
+//					foreach($terms as $tag)
+//						$tags[] = format_term_for_display($tag);
 
 				$body = prepare_body($item,true);
+
+				$is_photo = (($item['resource_type'] == 'photo') ? true : false);
+				$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
 				$tmp_item = array(
 					'template' => $tpl,
@@ -699,10 +697,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'lock' => $lock,
 					'thumb' => $profile_avatar,
 					'title' => $item['title'],
-					'body' => $body,
-					'tags' => $tags,
-					'hashtags' => $hashtags,
-					'mentions' => $mentions,
+					'body' => $body['html'],
+					'tags' => $body['tags'],
+					'categories' => $body['categories'],
+					'mentions' => $body['mentions'],
+					'attachments' => $body['attachments'],
+					'folders' => $body['folders'],
 					'verified' => $verified,
 					'unverified' => $unverified,
 					'forged' => $forged,
@@ -712,7 +712,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'has_folders' => ((count($folders)) ? 'true' : ''),
 					'categories' => $categories,
 					'folders' => $folders,
-					'text' => strip_tags($body),
+					'text' => strip_tags($body['html']),
 					'ago' => relative_date($item['created']),
 					'app' => $item['app'],
 					'str_app' => sprintf( t('from %s'), $item['app']),
@@ -738,6 +738,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 					'thread_level' => 1,
+					'is_photo' => $is_photo,
+					'has_tags' => $has_tags,
 				);
 
 				$arr = array('item' => $item, 'output' => $tmp_item);

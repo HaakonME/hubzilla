@@ -1529,22 +1529,6 @@ a .drop-icons:hover {
 	margin-right: 10px;
 	color: #FF0000;
 }
- 
-.attachlink {
-	float: left;
-	border: 1px solid black;
-	padding: 5px;
-	margin-right: 8px;
-}
-
-.attach-icons {
-	font-size: 1.4em;
-}
-
-.attach-clip {
-	margin-right: 3px;
-	font-size: 1.8em;
-}
 
 #menulist {
 	list-style-type: none;
@@ -1646,13 +1630,17 @@ img.mail-conv-sender-photo {
 	padding: 1em 10px;
 }
 
+.wall-photo-item {
+	padding: 10px 0px;
+}
+
 .wall-item-tools {
 	padding: 0px 10px 10px 10px;
 }
 
 
 .wall-item-title {
-   font-size: $font_size;
+	font-size: $font_size;
 }
 
 .wall-item-content-wrapper {

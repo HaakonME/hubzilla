@@ -281,7 +281,7 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 	else {
-		$title = '';
+		$title = $args['filename'] ? $args['filename'] : '';
 		$mid = item_message_id();
 
 		$arr = array();

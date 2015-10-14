@@ -33,29 +33,42 @@
 					</div>
 					<div class="clear"></div>
 				</div>
-				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
+				<div class="{{if $item.is_photo}}wall-photo-item{{else}}wall-item-content{{/if}}" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-body" id="wall-item-body-{{$item.id}}" >
 						{{$item.body}}
-						{{if $item.tags}}
-						<div class="body-tag">
-						{{foreach $item.tags as $tag}}
-							<span class='tag'>{{$tag}}</span>
-						{{/foreach}}
-						</div>
-						{{/if}}
-						{{if $item.has_cats}}
-						<div class="categorytags">
-							<span>{{$item.txt_cats}} {{foreach $item.categories as $cat}}{{$cat.name}} <a href="{{$cat.removeurl}}" title="{{$remove}}">[{{$remove}}]</a> {{if $cat.last}}{{else}}, {{/if}}{{/foreach}}
-						</div>
-						{{/if}}
-							{{if $item.has_folders}}
-						<div class="filesavetags">
-							<span>{{$item.txt_folders}} {{foreach $item.folders as $cat}}{{$cat.name}} <a href="{{$cat.removeurl}}" title="{{$remove}}">[{{$remove}}]</a> {{if $cat.last}}{{else}}, {{/if}}{{/foreach}}
-						</div>
-						{{/if}}
 					</div>
 					<div class="clear"></div>
 				</div>
+				{{if $item.has_tags}}
+				<div class="wall-item-tools">
+					{{if $item.mentions}}
+					<div class="body-tags" id="item-mentions">
+						<span class="tag">{{$item.mentions}}</span>
+					</div>
+					{{/if}}
+					{{if $item.tags}}
+					<div class="body-tags" id="item-tags">
+						<span class="tag">{{$item.tags}}</span>
+					</div>
+					{{/if}}
+					{{if $item.categories}}
+					<div class="body-tags" id="item-categories">
+						<span class="tag">{{$item.categories}}</span>
+					</div>
+					{{/if}}
+					{{if $item.folders}}
+					<div class="body-tags" id="item-folders">
+						<span class="tag">{{$item.folders}}</span>
+					</div>
+					{{/if}}
+					{{if $item.attachments}}
+					<div class="body-tags" id="item-attachments">
+						<span class='tag'>{{$item.attachments}}</span>
+					</div>
+					{{/if}}
+					<div class="clear"></div>
+				</div>
+				{{/if}}
 				<div class="wall-item-tools">
 					<div class="wall-item-tools-right btn-group pull-right">
 						{{if $item.like}}

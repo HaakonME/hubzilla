@@ -1216,36 +1216,13 @@ function theme_attachments(&$item) {
 	if(is_array($arr) && count($arr)) {
 		$attaches = array();
 		foreach($arr as $r) {
-			$icon = '';
-			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
 
-			/**
-			 * @FIXME This should probably be a giant "if" statement in the
-			 * template so that we don't have icon names embedded in php code.
-			 */
+			$icon = getIconFromType($r['type']);
 
-			switch($icontype) {
-				case 'video':
-					$icon = 'icon-facetime-video';
-					break;
-				case 'audio':
-					$icon = 'icon-volume-up';
-					break;
-				case 'image':
-					$icon = 'icon-picture';
-					break;
-				case 'text':
-					$icon = 'icon-align-justify';
-					break;
-				default:
-					$icon = 'icon-question';
-					break;
-			}
-
-			$title = htmlspecialchars($r['title'], ENT_COMPAT,'UTF-8');
+			$label = urldecode(htmlspecialchars($r['title'], ENT_COMPAT, 'UTF-8'));
 			if(! $title)
 				$title = t('unknown.???');
-			$title .= ' ' . (($r['length']) ? $r['length'] . ' ' . t('bytes') : '');
+			$title = t('Attachment') . (($r['length']) ? ' ' . userReadableSize($r['length']) : '');
 
 			require_once('include/identity.php');
 			if(is_foreigner($item['author_xchan']))
@@ -1253,14 +1230,14 @@ function theme_attachments(&$item) {
 			else
 				$url = z_root() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
 
-			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
-			$attaches[] = array('title' => $title, 'url' => $url, 'icon' => $icon );
+			//$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
+			$attaches[] = array('label' => $label, 'url' => $url, 'icon' => $icon, 'title' => $title);
 		}
-	}
 
-	$s = replace_macros(get_markup_template('item_attach.tpl'), array(
-		'$attaches' => $attaches
-	));
+		$s = replace_macros(get_markup_template('item_attach.tpl'), array(
+			'$attaches' => $attaches
+		));
+	}
 
 	return $s;
 }
@@ -1279,11 +1256,12 @@ function format_categories(&$item,$writeable) {
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
 			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => zid($t['url']));
 		}
+
+		$s = replace_macros(get_markup_template('item_categories.tpl'),array(
+			'$remove' => t('remove category'),
+			'$categories' => $categories
+		));
 	}
-	$s = replace_macros(get_markup_template('item_categories.tpl'),array(
-		'$remove' => t('remove category'),
-		'$categories' => $categories
-	));
 
 	return $s;
 }
@@ -1294,6 +1272,7 @@ function format_categories(&$item,$writeable) {
  * @param[in] array &$item
  * @return string HTML link of hashtag
  */
+
 function format_hashtags(&$item) {
 	$s = '';
 
@@ -1354,11 +1333,12 @@ function format_filer(&$item) {
 			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
 			$categories[] = array('term' => $term, 'removelink' => $removelink);
 		}
+
+		$s = replace_macros(get_markup_template('item_filer.tpl'),array(
+			'$remove' => t('remove from file'),
+			'$categories' => $categories
+		));
 	}
-	$s = replace_macros(get_markup_template('item_filer.tpl'),array(
-		'$remove' => t('remove from file'),
-		'$categories' => $categories
-	));
 
 	return $s;
 }
@@ -1411,19 +1391,19 @@ function prepare_body(&$item,$attach = false) {
 		}
 	}		 
 
-	$s .= theme_attachments($item);
+	$attachments = theme_attachments($item);
 
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false);
 
-	$s .= format_hashtags($item);
+	$tags = format_hashtags($item);
 
 	if($item['resource_type'])
-		$s .= format_mentions($item);
+		$mentions = format_mentions($item);
 
-	$s .= format_categories($item,$writeable);
+	$categories = format_categories($item,$writeable);
 
 	if(local_channel() == $item['uid'])
-		$s .= format_filer($item);
+		$filer = format_filer($item);
 
 	$s = sslify($s);
 
@@ -1456,9 +1436,19 @@ function prepare_body(&$item,$attach = false) {
 		$s = substr($s, 0, $pos).$authorreplace.substr($s, $pos+strlen($authorsearch));
 	}
 
-	$prep_arr = array('item' => $item, 'html' => $s);
+	$prep_arr = array(
+			'item' => $item,
+			'html' => $s,
+			'categories' => $categories,
+			'folders' => $filer,
+			'tags' => $tags,
+			'mentions' => $mentions,
+			'attachments' => $attachments
+		);
+
 	call_hooks('prepare_body_final', $prep_arr);
-	return $prep_arr['html'];
+
+	return $prep_arr;
 }
 
 /**
@@ -2490,6 +2480,7 @@ function linkify_tags($a, &$body, $uid, $diaspora = false) {
  *
  * @param string $type mime type
  * @return string
+ * @todo rename to get_icon_from_type()
  */
 function getIconFromType($type) {
 	$iconMap = array(
@@ -2542,6 +2533,7 @@ function getIconFromType($type) {
  *
  * @param int $size filesize in bytes
  * @return string human readable formatted filesize
+ * @todo rename to user_readable_size()
  */
 function userReadableSize($size) {
 	$ret = '';

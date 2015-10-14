@@ -681,7 +681,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				$body = prepare_body($item,true);
 
-				$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($conv->get_profile_owner(),'large_photos'))) ? true : false);
+				$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($profile_owner,'large_photos'))) ? true : false);
 				$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
 				$tmp_item = array(

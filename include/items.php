@@ -1561,7 +1561,7 @@ function encode_item_flags($item) {
 	return $ret;
 }
 
-function encode_mail($item) {
+function encode_mail($item,$extended = false) {
 	$x = array();
 	$x['type'] = 'mail';
 	$x['encoding'] = 'zot';
@@ -1594,6 +1594,18 @@ function encode_mail($item) {
 		$x['body']  = '';
 	}
 
+	if($extended) {
+		$x['conv_guid'] = $item['conv_guid'];
+		if(intval($item['mail_deleted']))
+			$x['flags'][] = 'deleted';
+		if(intval($item['mail_replied']))
+			$x['flags'][] = 'replied';
+		if(intval($item['mail_isreply']))
+			$x['flags'][] = 'isreply';
+		if(intval($item['mail_seen']))
+			$x['flags'][] = 'seen';
+	}
+
 	return $x;
 }
 
@@ -1617,6 +1629,18 @@ function get_mail_elements($x) {
 	if($x['flags'] && is_array($x['flags'])) {
 		if(in_array('recalled',$x['flags'])) {
 			$arr['mail_recalled'] = 1;
+		}
+		if(in_array('replied',$x['flags'])) {
+			$arr['mail_replied'] = 1;
+		}
+		if(in_array('isreply',$x['flags'])) {
+			$arr['mail_isreply'] = 1;
+		}
+		if(in_array('seen',$x['flags'])) {
+			$arr['mail_seen'] = 1;
+		}
+		if(in_array('deleted',$x['flags'])) {
+			$arr['mail_deleted'] = 1;
 		}
 	}
 

@@ -330,14 +330,13 @@ function photos_post(&$a) {
 
 
 		// make sure the linked item has the same permissions as the photo regardless of any other changes
-		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d, title = '%s'
+		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
 			where id = %d",
 				dbesc($perm['allow_cid']),
 				dbesc($perm['allow_gid']),
 				dbesc($perm['deny_cid']),
 				dbesc($perm['deny_gid']),
 				intval($acl->is_private()),
-				dbesc($desc),
 				intval($item_id)
 		);
 

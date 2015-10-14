@@ -278,7 +278,7 @@ class Item extends BaseObject {
 		
 		$children = $this->get_children();
 
-		$is_photo = (($item['resource_type'] == 'photo') ? true : false) && feature_enabled($conv->get_profile_owner(),'large_photos');
+		$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($conv->get_profile_owner(),'large_photos'))) ? true : false);
 
 		$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 

@@ -149,8 +149,9 @@ function photos_post(&$a) {
 			if($r) {
 				foreach($r as $i) {
 					attach_delete($page_owner_uid, $i['resource_id'], 1 );
-					drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
-					proc_run('php','include/notifier.php','drop',$i['id']);
+		// This is now being done in attach_delete()
+		//			drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
+		//			proc_run('php','include/notifier.php','drop',$i['id']);
 				}
 			}
 

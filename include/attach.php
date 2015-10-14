@@ -1229,7 +1229,7 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 	$photo_sql = (($is_photo) ? " and is_photo = 1 " : '');
 
-	$r = q("SELECT hash, flags, is_dir, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
+	$r = q("SELECT hash, flags, is_dir, is_photo, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
@@ -1275,6 +1275,16 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		intval($channel_id)
 	);
 
+	if($r[0]['is_photo']) {
+		$x = q("select id, item_hidden from item where resource_id = '%s' and resource_type = 'photo' and uid = %d",
+			dbesc($resource),
+			intval($channel_id)
+		);
+		if($x) {
+			drop_item($x[0]['id'],false,(($x[0]['item_hidden']) ? DROPITEM_NORMAL : DROPITEM_PHASE1),true);
+		}
+	}
+			
 	// update the parent folder's lastmodified timestamp
 	$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
 		dbesc(datetime_convert()),

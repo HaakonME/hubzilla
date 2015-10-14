@@ -1594,13 +1594,13 @@ function encode_mail($item,$extended = false) {
 
 	if($extended) {
 		$x['conv_guid'] = $item['conv_guid'];
-		if($item['mail_flags'] & MAIL_DELETED)
+		if(intval($item['mail_deleted']))
 			$x['flags'][] = 'deleted';
-		if($item['mail_flags'] & MAIL_REPLIED)
+		if(intval($item['mail_replied']))
 			$x['flags'][] = 'replied';
-		if($item['mail_flags'] & MAIL_ISREPLY)
+		if(intval($item['mail_isreply']))
 			$x['flags'][] = 'isreply';
-		if($item['mail_flags'] & MAIL_SEEN)
+		if(intval($item['mail_seen']))
 			$x['flags'][] = 'seen';
 	}
 
@@ -1629,16 +1629,16 @@ function get_mail_elements($x) {
 			$arr['mail_recalled'] = 1;
 		}
 		if(in_array('replied',$x['flags'])) {
-			$arr['mail_flags'] |= MAIL_REPLIED;
+			$arr['mail_replied'] = 1;
 		}
 		if(in_array('isreply',$x['flags'])) {
-			$arr['mail_flags'] |= MAIL_ISREPLY;
+			$arr['mail_isreply'] = 1;
 		}
 		if(in_array('seen',$x['flags'])) {
-			$arr['mail_flags'] |= MAIL_SEEN;
+			$arr['mail_seen'] = 1;
 		}
 		if(in_array('deleted',$x['flags'])) {
-			$arr['mail_flags'] |= MAIL_DELETED;
+			$arr['mail_deleted'] = 1;
 		}
 	}
 

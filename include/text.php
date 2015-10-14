@@ -1437,7 +1437,7 @@ function prepare_body(&$item,$attach = false) {
 	}
 
 	$prep_arr = array(
-			'item' => $item,
+			//'item' => $item,
 			'html' => $s,
 			'categories' => $categories,
 			'folders' => $filer,

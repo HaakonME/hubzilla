@@ -595,7 +595,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		}
 	}
 	else {
-		$folder_hash = ((array_key_exists('folder',$args)) ? $args['folder'] : '');
+		$folder_hash = ((($arr) && array_key_exists('folder',$arr)) ? $arr['folder'] : '');
 	}		
 
 	if((! $options) || ($options === 'import')) {

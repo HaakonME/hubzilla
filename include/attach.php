@@ -405,7 +405,6 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	require_once('include/photos.php');
 
-
 	call_hooks('photo_upload_begin',$arr);
 
 	$ret = array('success' => false);
@@ -416,6 +415,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$newalbum = (($arr) ? $arr['newalbum'] : '');
 	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
 	$upload_path = (($arr && $arr['directory']) ? $arr['directory'] : '');
+	$visible = (($arr && $arr['visible']) ? $arr['visible'] : '');
 
 	$observer = array();
 
@@ -792,7 +792,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if($is_photo) {
 
-		$args = array( 'source' => $source, 'visible' => 0, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
+		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		if($arr['group_allow'])

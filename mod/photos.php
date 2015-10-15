@@ -252,12 +252,26 @@ function photos_post(&$a) {
 						intval($page_owner_uid)
 					);
 
+					if($width > 1024 || $height > 1024) {
+						$ph->scaleImage(1024);
+						$width  = $ph->getWidth();
+						$height = $ph->getHeight();
+
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1",
+							dbescbin($ph->imageString()),
+							intval($height),
+							intval($width),
+							dbesc($resource_id),
+							intval($page_owner_uid)
+						);
+					}
+
 					if($width > 640 || $height > 640) {
 						$ph->scaleImage(640);
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
-		
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1",
+
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2",
 							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
@@ -271,7 +285,7 @@ function photos_post(&$a) {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2",
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 3",
 							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),

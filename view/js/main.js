@@ -747,9 +747,9 @@ function justifyPhotos() {
 		border: 0,
 		rowHeight: 180,
 		sizeRangeSuffixes: {
-			'lt100': '-2',
-			'lt240': '-2',
-			'lt320': '-2',
+			'lt100': '-3',
+			'lt240': '-3',
+			'lt320': '-3',
 			'lt500': '',
 			'lt640': '-2',
 			'lt1024': '-1'

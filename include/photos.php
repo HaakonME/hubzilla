@@ -211,6 +211,15 @@ function photo_upload($channel, $observer, $args) {
 			$errors = true;
 	}
 
+	if(($width > 320 || $height > 320) && (! $errors)) {
+		$ph->scaleImage(320);
+		$p['scale'] = 3;
+		$r3 = $ph->save($p);
+		$smallest = 3;
+		if(! $r3)
+			$errors = true;
+	}
+
 	if($errors) {
 		q("delete from photo where resource_id = '%s' and uid = %d",
 			dbesc($photo_hash),

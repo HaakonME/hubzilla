@@ -1218,7 +1218,12 @@ function theme_attachments(&$item) {
 		foreach($arr as $r) {
 
 			$icon = getIconFromType($r['type']);
-			$label = (($r['title'] != ' ' || $r['title'] != '') ? urldecode(htmlspecialchars($r['title'], ENT_COMPAT, 'UTF-8')) : t('Unknown Attachment'));
+			$label = (($r['title']) ? urldecode(htmlspecialchars($r['title'], ENT_COMPAT, 'UTF-8')) : t('Unknown Attachment'));
+			
+			//some feeds provide an attachment where title an empty space
+			if($label  == ' ')
+				$label = t('Unknown Attachment');
+ 			
 			$title = t('Attachment') . ' - ' . (($r['length']) ? userReadableSize($r['length']) : t('Size Unknown'));
 
 			require_once('include/identity.php');

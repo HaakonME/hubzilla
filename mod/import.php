@@ -441,6 +441,12 @@ function import_post(&$a) {
 	if(is_array($data['chatroom']))
 		import_chatrooms($channel,$data['chatroom']);
 
+	if(is_array($data['conv']))
+		import_conv($channel,$data['conv']);
+
+	if(is_array($data['mail']))
+		import_mail($channel,$data['mail']);
+
 	if(is_array($data['event']))
 		import_events($channel,$data['event']);
 

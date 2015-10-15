@@ -236,7 +236,8 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($r)) {
-				$ph = photo_factory(dbunescbin($r[0]['data']), $r[0]['type']);
+				$d = (($r[0]['os_storage']) ? @file_get_contents($r[0]['data']) : dbunescbin($r[0]['data']));
+				$ph = photo_factory($d, $r[0]['type']);
 				if($ph->is_valid()) {
 					$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );
 					$ph->rotate($rotate_deg);

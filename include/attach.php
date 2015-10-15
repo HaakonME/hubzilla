@@ -1282,6 +1282,11 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		);
 		if($x) {
 			drop_item($x[0]['id'],false,(($x[0]['item_hidden']) ? DROPITEM_NORMAL : DROPITEM_PHASE1),true);
+
+			q("DELETE FROM photo WHERE uid = %d AND resource_id = '%s'",
+				intval($channel_id),
+				dbesc($resource)
+			);
 		}
 	}
 			

@@ -193,8 +193,8 @@ function photo_upload($channel, $observer, $args) {
 	unset($p['os_storage']);
 	unset($p['os_path']);
 
-	if(($width > 640 || $height > 640) && (! $errors)) {
-		$ph->scaleImage(640);
+	if(($width > 1024 || $height > 1024) && (! $errors)) {
+		$ph->scaleImage(1024);
 		$p['scale'] = 1;
 		$r2 = $ph->save($p);
 		$smallest = 1;
@@ -202,8 +202,8 @@ function photo_upload($channel, $observer, $args) {
 			$errors = true;
 	}
 
-	if(($width > 320 || $height > 320) && (! $errors)) {
-		$ph->scaleImage(320);
+	if(($width > 640 || $height > 640) && (! $errors)) {
+		$ph->scaleImage(640);
 		$p['scale'] = 2;
 		$r3 = $ph->save($p);
 		$smallest = 2;

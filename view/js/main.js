@@ -745,13 +745,14 @@ function justifyPhotos() {
 		selector: '> a, > div:not(.spinner, #page-end)',
 		margins: 3,
 		border: 0,
+		rowHeight: 180,
 		sizeRangeSuffixes: {
 			'lt100': '-2',
 			'lt240': '-2',
 			'lt320': '-2',
 			'lt500': '',
-			'lt640': '-1',
-			'lt1024': '-0'
+			'lt640': '-2',
+			'lt1024': '-1'
 		}
 	}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
 }

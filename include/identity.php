@@ -635,8 +635,12 @@ function identity_basic_export($channel_id, $items = false) {
 	$r = q("select * from conv where uid = %d",
 		intval($channel_id)
 	);
-	if($r)
+	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			$r[$x]['subject'] = base64url_decode(str_rot47($r[$x]['subject']));
+		}		
 		$ret['conv'] = $r;
+	}
 
 
 	$r = q("select mail.*, conv.guid as conv_guid from mail left join conv on mail.convid = conv.id where mail.uid = %d",
@@ -645,16 +649,10 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r) {
 		$m = array();
 		foreach($r as $rr) {
-			
-
-
-		
+			$m[] = mail_encode($rr,true);
 		}
 		$ret['mail'] = $m;
 	}
-
-
-
 
 	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d",
 		intval($channel_id)

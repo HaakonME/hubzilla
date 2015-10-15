@@ -848,6 +848,7 @@ function import_mail($channel,$mails) {
 			$m = get_mail_elements($mail);
 			if(! $m)
 				continue;
+
 			if($mail['conv_guid']) {
 				$x = q("select id from conv where guid = '%s' and uid = %d limit 1",
 					dbesc($mail['conv_guid']),

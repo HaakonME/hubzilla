@@ -50,7 +50,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1156  );
+define ( 'DB_UPDATE_VERSION',       1157  );
 
 /**
  * @brief Constant with a HTML line break.

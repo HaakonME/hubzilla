@@ -97,7 +97,10 @@ function mail_post(&$a) {
 	
 	$ret = send_message(0, $recipient, $body, $subject, $replyto, $expires);
 
-	if(! $ret['success']) {
+	if($ret['success']) {
+		build_sync_packet(0,array('conv' => array($ret['conv']),'mail' => array(encode_mail($ret['mail'],true))));
+	}
+	else {
 		notice($ret['message']);
 	}
 

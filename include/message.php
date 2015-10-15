@@ -49,6 +49,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	// look for any existing conversation structure
 
+	$conv_guid = '';
 
 	if(strlen($replyto)) {
 		$r = q("select convid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
@@ -56,8 +57,9 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			dbesc($replyto),
 			dbesc($replyto)
 		);
-		if($r)
+		if($r) {
 			$convid = $r[0]['convid'];
+		}
 	}		
 
 	if(! $convid) {
@@ -89,12 +91,15 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			dbesc($handles)
 		);
 
+
 		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
 			dbesc($conv_guid),
 			intval(local_channel())
 		);
-		if($r)
+		if($r) {
 			$convid = $r[0]['id'];
+			$retconv = $r[0];
+		}
 	}
 
 	if(! $convid) {
@@ -102,6 +107,16 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		return $ret;
 	}
 
+	if(! $conv_guid) {
+		$r = q("select * from conv where id = %d and uid = %d limit 1",
+			intval($convid),
+			intval(local_channel())
+		);
+		if($r) {
+			$conv_guid = $r[0]['guid'];
+			$retconv = $r[0];
+		}
+	}
 
 	// generate a unique message_id
 
@@ -197,8 +212,11 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($mid),
 		intval($channel['channel_id'])
 	);
-	if($r)
+	if($r) {
 		$post_id = $r[0]['id'];
+		$retmail = $r;
+		$retmail['conv_guid'] = $conv_guid;
+	}
 	else {
 		$ret['message'] = t('Stored post could not be verified.');
 		return $ret;
@@ -242,6 +260,10 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$ret['success'] = true;
 	$ret['message_item'] = intval($post_id);
+	if($retconv)
+		$ret['conv'] = $retconv;
+	if($retmail)
+		$ret['mail'] = $retmail;
 	return $ret;
 
 }
@@ -369,11 +391,12 @@ function private_messages_drop($channel_id, $messageitem_id, $drop_conversation 
 
 	if($drop_conversation) {
 		// find the parent_id
-		$p = q("SELECT parent_mid FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
+		$p = q("SELECT parent_mid, convid FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
 			intval($messageitem_id),
 			intval($channel_id)
 		);
 		if($p) {
+
 			$r = q("DELETE FROM mail WHERE parent_mid = '%s' AND channel_id = %d ",
 				dbesc($p[0]['parent_mid']),
 				intval($channel_id)

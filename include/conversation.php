@@ -1416,7 +1416,7 @@ function prepare_page($item) {
 		'$auth_url' => (($naked) ? '' : zid($item['author']['xchan_url'])),
 		'$date' => (($naked) ? '' : datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
-		'$body' => $body,
+		'$body' => $body['html'],
 		'$preview' => $preview,
 		'$link' => $link,
 	));

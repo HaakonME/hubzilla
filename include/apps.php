@@ -130,7 +130,7 @@ function translate_system_apps(&$arr) {
 		'Address Book' => t('Address Book'),
 		'Login' => t('Login'),
 		'Channel Manager' => t('Channel Manager'), 
-		'Matrix' => t('Matrix'), 
+		'Grid' => t('Grid'), 
 		'Settings' => t('Settings'),
 		'Files' => t('Files'),
 		'Webpages' => t('Webpages'),

@@ -165,7 +165,7 @@ function siteinfo_content(&$a) {
 		'$loadavg_all' => $loadavg[0] . ', ' . $loadavg[1] . ', ' . $loadavg[2],		
 		'$commit' => $commit,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
-		'$visit' => t('Please visit <a href="https://redmatrix.me">redmatrix.me</a> to learn more about $Projectname.'),
+		'$visit' => t('Please visit <a href="http://hubzilla.org">hubzilla.org</a> to learn more about $Projectname.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
 		'$bug_link_url' => 'https://github.com/redmatrix/hubzilla/issues',
 		'$bug_link_text' => t('$projectname issues'),

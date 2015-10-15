@@ -149,8 +149,9 @@ function photos_post(&$a) {
 			if($r) {
 				foreach($r as $i) {
 					attach_delete($page_owner_uid, $i['resource_id'], 1 );
-					drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
-					proc_run('php','include/notifier.php','drop',$i['id']);
+		// This is now being done in attach_delete()
+		//			drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
+		//			proc_run('php','include/notifier.php','drop',$i['id']);
 				}
 			}
 
@@ -982,13 +983,13 @@ function photos_content(&$a) {
 			$likebuttons = '';
 
 			if($can_post || $can_comment) {
-				$likebuttons = replace_macros($like_tpl,array(
-					'$id' => $link_item['id'],
-					'$likethis' => t("I like this \x28toggle\x29"),
-					'$nolike' => t("I don't like this \x28toggle\x29"),
-					'$share' => t('Share'),
-					'$wait' => t('Please wait')
-				));
+				$likebuttons = array(
+					'id' => $link_item['id'],
+					'likethis' => t("I like this \x28toggle\x29"),
+					'nolike' => t("I don't like this \x28toggle\x29"),
+					'share' => t('Share'),
+					'wait' => t('Please wait')
+				);
 			}
 
 			$comments = '';

@@ -2211,7 +2211,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		}
 		if($tag == '#getzot') {
 			$basetag = 'getzot'; 
-			$url = 'https://redmatrix.me';
+			$url = 'http://hubzilla.org';
 			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
 			$body = str_replace($tag,$newtag,$body);
 			$replaced = true;

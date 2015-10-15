@@ -193,32 +193,32 @@ function photo_upload($channel, $observer, $args) {
 	unset($p['os_storage']);
 	unset($p['os_path']);
 
-	if(($width > 1024 || $height > 1024) && (! $errors)) {
+	if(($width > 1024 || $height > 1024) && (! $errors))
 		$ph->scaleImage(1024);
-		$p['scale'] = 1;
-		$r2 = $ph->save($p);
-		$smallest = 1;
-		if(! $r2)
-			$errors = true;
-	}
 
-	if(($width > 640 || $height > 640) && (! $errors)) {
+	$p['scale'] = 1;
+	$r2 = $ph->save($p);
+	$smallest = 1;
+	if(! $r2)
+		$errors = true;
+	
+	if(($width > 640 || $height > 640) && (! $errors)) 
 		$ph->scaleImage(640);
-		$p['scale'] = 2;
-		$r3 = $ph->save($p);
-		$smallest = 2;
-		if(! $r3)
-			$errors = true;
-	}
 
-	if(($width > 320 || $height > 320) && (! $errors)) {
+	$p['scale'] = 2;
+	$r3 = $ph->save($p);
+	$smallest = 2;
+	if(! $r3)
+		$errors = true;
+
+	if(($width > 320 || $height > 320) && (! $errors)) 
 		$ph->scaleImage(320);
-		$p['scale'] = 3;
-		$r3 = $ph->save($p);
-		$smallest = 3;
-		if(! $r3)
-			$errors = true;
-	}
+
+	$p['scale'] = 3;
+	$r3 = $ph->save($p);
+	$smallest = 3;
+	if(! $r3)
+		$errors = true;
 
 	if($errors) {
 		q("delete from photo where resource_id = '%s' and uid = %d",

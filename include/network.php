@@ -586,7 +586,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			
 			if(substr($mtch[1],0,1) == '=') {
 				$owidth = intval(substr($mtch[2],1));
-				if(intval($owidth) > 0 && intval($owidth) < 640)
+				if(intval($owidth) > 0 && intval($owidth) < 1024)
 					continue;
 			}
 
@@ -624,9 +624,9 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 					$orig_width = $ph->getWidth();
 					$orig_height = $ph->getHeight();
 
-					if($orig_width > 640 || $orig_height > 640) {
+					if($orig_width > 1024 || $orig_height > 1024) {
 						$tag = (($match[1] == 'z') ? 'zmg' : 'img');
-						$ph->scaleImage(640);
+						$ph->scaleImage(1024);
 						$new_width = $ph->getWidth();
 						$new_height = $ph->getHeight();
 						logger('scale_external_images: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);

@@ -1218,11 +1218,8 @@ function theme_attachments(&$item) {
 		foreach($arr as $r) {
 
 			$icon = getIconFromType($r['type']);
-
-			$label = urldecode(htmlspecialchars($r['title'], ENT_COMPAT, 'UTF-8'));
-			if(! $title)
-				$title = t('unknown.???');
-			$title = t('Attachment') . (($r['length']) ? ' ' . userReadableSize($r['length']) : '');
+			$label = (($r['title'] == '') ? urldecode(htmlspecialchars($r['title'], ENT_COMPAT, 'UTF-8')) : t('Unknown Attachment'));
+			$title = t('Attachment') . ' - ' . (($r['length']) ? userReadableSize($r['length']) : t('Size Unknown'));
 
 			require_once('include/identity.php');
 			if(is_foreigner($item['author_xchan']))

@@ -316,10 +316,7 @@ function photos_post(&$a) {
 			}
 		}
 
-		// @FIXME This query includes data of all thumbnails and could probably 
-		// be made much more memory efficient.
-
-		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
+		$p = q("SELECT type, is_nsfw, description, resource_id, scale, allow_cid, allow_gid, deny_cid, deny_gid FROM photo WHERE resource_id = '%s' AND uid = %d ORDER BY scale DESC",
 			dbesc($resource_id),
 			intval($page_owner_uid)
 		);

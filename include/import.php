@@ -845,6 +845,14 @@ function import_mail($channel,$mails) {
 				);
 				continue;
 			}
+			if(array_key_exists('flags',$mail) && in_array('recalled',$mail['flags'])) {
+				q("update mail set mail_recalled = 1 where mid = '%s' and uid = %d limit 1",
+					dbesc($mail['message_id']),
+					intval($channel['channel_id'])
+				);
+				continue;
+			}
+
 			$m = get_mail_elements($mail);
 			if(! $m)
 				continue;

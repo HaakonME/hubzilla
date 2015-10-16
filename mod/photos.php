@@ -244,9 +244,25 @@ function photos_post(&$a) {
 
 					$width  = $ph->getWidth();
 					$height = $ph->getHeight();
+					
+					if(intval($r[0]['os_storage'])) {
+						@file_put_contents($r[0]['data'],$ph->imageString());
+						$data = $r[0]['data'];
+						$fsize = @filesize($r[0]['data']);
+						q("update attach set filesize = %d where hash = '%s' and uid = %d limit 1",
+							intval($fsize),
+							dbesc($resource_id),
+							intval($page_owner_uid)
+						);
+					}
+					else {
+						$data = $ph->imageString();
+						$fsize = strlen($data);
+					}
 
-					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0",
-						dbescbin($ph->imageString()),
+					$x = q("update photo set data = '%s', `size` = %d, height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0",
+						dbescbin($data),
+						intval($fsize),
 						intval($height),
 						intval($width),
 						dbesc($resource_id),

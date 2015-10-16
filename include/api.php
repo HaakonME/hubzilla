@@ -1487,7 +1487,7 @@ require_once('include/attach.php');
 	 * 
 	 */
 
-// FIXME
+
 	function api_statuses_mentions(&$a, $type){
 		if (api_user()===false) return false;
 				
@@ -1512,38 +1512,24 @@ require_once('include/attach.php');
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$diasp_url = str_replace('/channel/','/u/',$myurl);
 
-		if (get_config('system','use_fulltext_engine'))
-						$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
-								dbesc(protect_sprintf($myurl)),
-								dbesc(protect_sprintf($myurl)),
-								dbesc(protect_sprintf($diasp_url))
-						);
-				else
-						$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `author-link` like '%s' or `tag` like '%s' or tag like '%s' )) ",
-								dbesc(protect_sprintf('%' . $myurl)),
-								dbesc(protect_sprintf('%' . $myurl . ']%')),
-								dbesc(protect_sprintf('%' . $diasp_url . ']%'))
-						);
-
+		$sql_extra .= " AND item_mentionsme = 1 ";
 		if ($max_id > 0)
-			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
+			$sql_extra .= " AND item.id <= " . intval($max_id) . " ";
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d
-			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			AND `item`.`id`>%d
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-			intval($user_info['uid']),
+		require_once('include/security.php');
+		$item_normal = item_normal();
+
+        $r = q("select * from item where uid = " . intval(api_user()) . "
+			$item_normal $sql_extra
+			AND id > %d group by mid
+			order by received desc LIMIT %d OFFSET %d ",
 			intval($since_id),
-			intval($start),	intval($count)
+			intval($count),
+			intval($start)
 		);
+
+		xchan_query($r,true);
+
 
 		$ret = api_format_items($r,$user_info);
 

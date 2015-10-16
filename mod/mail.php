@@ -98,6 +98,7 @@ function mail_post(&$a) {
 	$ret = send_message(0, $recipient, $body, $subject, $replyto, $expires);
 
 	if($ret['success']) {
+		xchan_mail_query($ret['mail']);
 		build_sync_packet(0,array('conv' => array($ret['conv']),'mail' => array(encode_mail($ret['mail'],true))));
 	}
 	else {
@@ -152,6 +153,14 @@ function mail_content(&$a) {
 			intval(argv(3)),
 			intval(local_channel())
 		);
+		$x = q("select * from mail where id = %d and channel_id = %d",
+			intval(argv(3)),
+			intval(local_channel())
+		);
+		if($x) {
+			build_sync_packet(local_channel(),array('mail' => encode_mail($x[0],true)));
+		}
+
 		proc_run('php','include/notifier.php','mail',intval(argv(3)));
 
 		if($r) {

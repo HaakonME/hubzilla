@@ -849,15 +849,6 @@ function import_mail($channel,$mails) {
 			if(! $m)
 				continue;
 
-			if($mail['conv_guid']) {
-				$x = q("select id from conv where guid = '%s' and uid = %d limit 1",
-					dbesc($mail['conv_guid']),
-					intval($channel['channel_id'])
-				);
-				if($x) {
-					$m['convid'] = $x[0]['id'];
-				}
-			}
 			$m['aid'] = $channel['channel_account_id'];
 			$m['uid'] = $channel['channel_id'];
 			mail_store($m);

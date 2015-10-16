@@ -28,8 +28,6 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 //		$expires = datetime_convert(date_default_timezone_get(),'UTC',$expires);
 
 
-
-
 	if($uid) {
 		$r = q("select * from channel where channel_id = %d limit 1",
 			intval($uid)
@@ -52,17 +50,17 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	$conv_guid = '';
 
 	if(strlen($replyto)) {
-		$r = q("select convid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
+		$r = q("select conv_guid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
 			intval(local_channel()),
 			dbesc($replyto),
 			dbesc($replyto)
 		);
 		if($r) {
-			$convid = $r[0]['convid'];
+			$conv_guid = $r[0]['conv_guid'];
 		}
 	}		
 
-	if(! $convid) {
+	if(! $conv_guid) {
 
 		// create a new conversation
 
@@ -91,31 +89,28 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			dbesc($handles)
 		);
 
-
 		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
 			dbesc($conv_guid),
 			intval(local_channel())
 		);
 		if($r) {
-			$convid = $r[0]['id'];
 			$retconv = $r[0];
 		}
 	}
 
-	if(! $convid) {
-		$ret['message'] = 'conversation not found';
-		return $ret;
-	}
-
-	if(! $conv_guid) {
-		$r = q("select * from conv where id = %d and uid = %d limit 1",
-			intval($convid),
+	if(! $retconv) {
+		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
+			dbesc($conv_guid),
 			intval(local_channel())
 		);
 		if($r) {
-			$conv_guid = $r[0]['guid'];
 			$retconv = $r[0];
 		}
+	}
+
+	if(! $retconv) {
+		$ret['message'] = 'conversation not found';
+		return $ret;
 	}
 
 	// generate a unique message_id
@@ -189,10 +184,10 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	
 
 
-	$r = q("INSERT INTO mail ( account_id, convid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
-		VALUES ( %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
+		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
-		intval($convid),
+		dbesc($conv_guid),
 		intval(1),
 		intval($channel['channel_id']),
 		dbesc($channel['channel_hash']),
@@ -215,7 +210,6 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	if($r) {
 		$post_id = $r[0]['id'];
 		$retmail = $r;
-		$retmail['conv_guid'] = $conv_guid;
 	}
 	else {
 		$ret['message'] = t('Stored post could not be verified.');
@@ -260,10 +254,9 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$ret['success'] = true;
 	$ret['message_item'] = intval($post_id);
-	if($retconv)
-		$ret['conv'] = $retconv;
-	if($retmail)
-		$ret['mail'] = $retmail;
+	$ret['conv'] = $retconv;
+	$ret['mail'] = $retmail;
+
 	return $ret;
 
 }
@@ -391,7 +384,7 @@ function private_messages_drop($channel_id, $messageitem_id, $drop_conversation 
 
 	if($drop_conversation) {
 		// find the parent_id
-		$p = q("SELECT parent_mid, convid FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
+		$p = q("SELECT parent_mid, conv_guid FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
 			intval($messageitem_id),
 			intval($channel_id)
 		);

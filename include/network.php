@@ -1677,13 +1677,40 @@ function format_and_send_email($sender,$xchan,$item) {
 			'additionalMailHeader' => '',
 		));
 
+}
 
 
+function do_delivery($deliveries) {
+
+	if(! (is_array($deliveries) && count($deliveries)))
+		return;
+
+	$interval = ((get_config('system','delivery_interval') !== false) 
+			? intval(get_config('system','delivery_interval')) : 2 );
+
+	$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
+
+	if($deliveries_per_process <= 0)
+		$deliveries_per_process = 1;
 
 
+	$deliver = array();
+	foreach($deliveries as $d) {
 
+		$deliver[] = $d;
 
+		if(count($deliver) >= $deliveries_per_process) {
+			proc_run('php','include/deliver.php',$deliver);
+			$deliver = array();
+			if($interval)
+				@time_sleep_until(microtime(true) + (float) $interval);
+		}
+	}
 
+	// catch any stragglers
 
+	if($deliver)
+		proc_run('php','include/deliver.php',$deliver);
+	
 
 }

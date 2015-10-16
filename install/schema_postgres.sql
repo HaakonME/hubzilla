@@ -728,6 +728,7 @@ create index "likes_target_id" on likes ("target_id");
 CREATE TABLE "mail" (
   "id" serial  NOT NULL,
   "convid" bigint  NOT NULL DEFAULT '0',
+  "conv_guid" text NOT NULL,
   "mail_flags" bigint  NOT NULL DEFAULT '0',
   "from_xchan" text NOT NULL DEFAULT '',
   "to_xchan" text NOT NULL DEFAULT '',
@@ -750,6 +751,7 @@ CREATE TABLE "mail" (
   PRIMARY KEY ("id")
 );
 create index "mail_convid" on mail ("convid");
+create index "mail_conv_guid" on mail ("conv_guid");
 create index "mail_created" on mail ("created");
 create index "mail_flags" on mail ("mail_flags");
 create index "mail_account_id" on mail ("account_id");

@@ -643,7 +643,7 @@ function identity_basic_export($channel_id, $items = false) {
 	}
 
 
-	$r = q("select mail.*, conv.guid as conv_guid from mail left join conv on mail.convid = conv.id where mail.uid = %d",
+	$r = q("select * from mail where mail.uid = %d",
 		intval($channel_id)
 	);
 	if($r) {

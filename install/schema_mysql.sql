@@ -731,6 +731,7 @@ CREATE TABLE IF NOT EXISTS `likes` (
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `convid` int(10) unsigned NOT NULL DEFAULT '0',
+  `conv_guid` char(255) NOT NULL DEFAULT '',
   `mail_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `from_xchan` char(255) NOT NULL DEFAULT '',
   `to_xchan` char(255) NOT NULL DEFAULT '',
@@ -761,6 +762,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `parent_mid` (`parent_mid`),
   KEY `expires` (`expires`),
   KEY `convid` (`convid`),
+  KEY `conv_guid` (`conv_guid`),
   KEY `mail_deleted` (`mail_deleted`),
   KEY `mail_replied` (`mail_replied`),
   KEY `mail_isreply` (`mail_isreply`),

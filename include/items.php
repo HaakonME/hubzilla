@@ -1618,6 +1618,8 @@ function get_mail_elements($x) {
 	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8',false) : '');
 	$arr['title']        = (($x['title'])? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
+	$arr['conv_guid']    = (($x['conv_guid'])? htmlspecialchars($x['conv_guid'],ENT_COMPAT,'UTF-8',false) : '');
+
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	if((! array_key_exists('expires',$x)) || ($x['expires'] === NULL_DATE))
 		$arr['expires'] = NULL_DATE;
@@ -1655,6 +1657,7 @@ function get_mail_elements($x) {
 	}
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
+
 
 	$arr['mid']          = (($x['message_id'])     ? htmlspecialchars($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_parent']) ? htmlspecialchars($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
@@ -3536,6 +3539,7 @@ function mail_store($arr) {
 	$arr['title']         = ((x($arr,'title'))         ? trim($arr['title'])         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+	$arr['conv_guid']     = ((x($arr,'conv_guid'))     ? trim($arr['conv_guid'])             : '');
 
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
 

@@ -649,6 +649,7 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r) {
 		$m = array();
 		foreach($r as $rr) {
+			xchan_mail_query($rr);
 			$m[] = mail_encode($rr,true);
 		}
 		$ret['mail'] = $m;

@@ -9,5 +9,6 @@
 [zrl=[baseurl]/help/hidden_configs]Tweaking $Projectname's Hidden Configurations[/zrl]
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 [zrl=[baseurl]/help/service_classes]Service Classes[/zrl]
+[zrl=[baseurl]/help/theme_management]Theme Management[/zrl]
 
 

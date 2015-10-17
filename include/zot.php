@@ -965,7 +965,7 @@ function zot_process_response($hub, $arr, $outq) {
 
 	if(is_array($x) && array_key_exists('delivery_report',$x) && is_array($x['delivery_report'])) {
 		foreach($x['delivery_report'] as $xx) {
-			if(is_array($xx) && array_key_exists('message_id',$xx)) {
+			if(is_array($xx) && array_key_exists('message_id',$xx) && delivery_report_is_storable($xx)) {
 				q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
 					dbesc($xx['message_id']),
 					dbesc($xx['location']),
@@ -3882,3 +3882,45 @@ function check_zotinfo($channel,$locations,&$ret) {
 		}
 	}
 }
+
+function delivery_report_is_storable($dr) {
+
+	call_hooks('dreport_is_storable',$dr);
+
+	// let plugins accept or reject - if neither, continue on
+	if(array_key_exists('accept',$dr) && intval($dr['accept']))
+		return true;
+	if(array_key_exists('reject',$dr) && intval($dr['reject']))
+		return false;
+
+	if(! ($dr['sender']))
+		return false;
+
+	// Is the sender one of our channels?
+
+	$c = q("select channel_id from channel where channel_hash = '%s' limit 1",
+		dbesc($dr['sender'])
+	);
+	if(! $c)
+		return false;
+
+	// is the recipient one of our connections, or do we want to store every report? 
+
+	$r = explode(' ', $dr['recipient']);
+	$rxchan = $r[0];
+	$pcf = get_pconfig($c[0]['channel_id'],'system','dreport_store_all');
+	if($pcf)
+		return true;
+
+	$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+		dbesc($rxchan),
+		intval($c[0]['channel_id'])
+	);
+	if($r)
+		return true;
+
+	return false;
+
+}
+
+

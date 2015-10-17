@@ -59,6 +59,9 @@ function chat_post(&$a) {
 
 	$arr = $acl->get();
 	$arr['name'] = $room;
+	$arr['expire'] = intval($_POST['chat_expire']);
+	if(intval($arr['expire']) < 0)
+		$arr['expire'] = 0;
 
 	chatroom_create($channel,$arr);
 
@@ -204,6 +207,7 @@ function chat_content(&$a) {
 		$o = replace_macros(get_markup_template('chatroom_new.tpl'),array(
 			'$header' => t('New Chatroom'),
 			'$name' => array('room_name',t('Chatroom Name'),'', ''),
+			'$chat_expire' => array('chat_expire',t('Expiration of chats (minutes)'),120,''),
 			'$permissions' =>  t('Permissions'),
 			'$acl' => populate_acl($channel_acl,false),
 			'$submit' => t('Submit')

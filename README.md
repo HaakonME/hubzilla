@@ -6,6 +6,7 @@ Hubzilla - Community Server
 Help us redefine the web - using integrated and united community websites. 
 --------------------------------------------------------------------------
 
+
 **What are Hubs?**
 
 Hubs are independent general-purpose websites that not only connect with their associated members and viewers, but also connect together to exchange personal communications and other information with each other.  

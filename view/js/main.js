@@ -745,12 +745,11 @@ function justifyPhotos() {
 		selector: '> a, > div:not(.spinner, #page-end)',
 		margins: 3,
 		border: 0,
-		rowHeight: 180,
 		sizeRangeSuffixes: {
 			'lt100': '-3',
 			'lt240': '-3',
 			'lt320': '-3',
-			'lt500': '',
+			'lt500': '-2',
 			'lt640': '-2',
 			'lt1024': '-1'
 		}

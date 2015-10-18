@@ -95,7 +95,7 @@ You can now start the MySQL service on OpenShift by locally doing
 
 [b]Notes[/b]
 [list]
-[*] definitely DO turn off feeds and discovery by default and limit delivery reports from 30 days to 3 days if you are on the Free or Bronze plan on OpenShift with a single 1Gb gear by visiting [observer.baseurl]admin/site when logged in as administrator of your Hubzilla site. 
+[*] definitely DO turn off feeds and discovery by default and limit delivery reports from 30 days to 3 days if you are on the Free or Bronze plan on OpenShift with a single 1Gb gear by visiting [observer.baseurl]/admin/site when logged in as administrator of your Hubzilla site. 
 [*] The above defaults have been added into the deploy script.
 [*] DO add git gc to the deploy script
 [*] MAYBE DO add myisamchk - only checking? to the end of the deploy script.

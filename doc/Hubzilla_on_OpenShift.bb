@@ -36,7 +36,26 @@ and you might be able to confirm the above suspicions about crashed tables, or o
 Using MySQL and the MyISAM database engine can result in table indexes coming out of sync, and you have at least two options for fixing tables marked as crashed.
 [list]
 [*] Use the database username and password OpenShift creates for your instance at [url=https://your_app_name-your_domain.rhcloud.com/phpmyadmin/]https://your_app_name-your_domain.rhcloud.com/phpmyadmin/[/url] to login via the web into your phpMyAdmin web interface, click your database in the left column, in the right column scroll down to the bottom of the list of tables and click the checkbox for marking all tables, then select Check tables from the drop down menu. This will check the tables for problems, and you can then checkmark only those tables with problems, and select Repair table from the same drop down menu at the bottom.
-[*] You can login to your instance with SSH - see OpenShift for details - then
+[*] You can port-forward the MySQL database service to your own machine and use the MySQL client called mysqlcheck to check, repair and optimize your database or individual database tables without stopping the MySQL service on OpenShift. Run the following in two separate console windows. 
+
+To port-forward do
+
+[code]rhc port-forward -a your_app_name -n your_domain -l your@email.address -p your_password[/code]
+
+in one console window, then do either -o for optimize, -c for check or -r for repair, like this
+
+[code]mysqlcheck -h 127.0.0.1 -r your_app_name -u your_app_admin_name -p[/code]
+
+and give the app's password at the prompt. If all goes well you should see a number of table names with an OK behind them. 
+
+You can now
+[code]Press CTRL-C to terminate port forwarding[/code]
+[*] You can do
+
+[code]rhc cartridge stop mysql-5.5 -a your_app_name[/code]
+
+to stop the MySQL service running in your app on OpenShift before running myisamchk - which should only be run when MySQL is stopped, and then
+login to your instance with SSH - see OpenShift for details - and do 
 
 [code]cd mysql/data/your_database
 myisamchk -r *.MYI[/code]
@@ -69,12 +88,15 @@ cd mysql/data/yourdatabase
 myisamchk -r -v -f*.MYI[/code]
 
 and hopefully your database tables are now okay.
+You can now start the MySQL service on OpenShift by locally doing
+
+[code]rhc cartridge start mysql-5.5 -a your_app_name[/code]
 [/list]
 
 [b]Notes[/b]
 [list]
-[*] definitely DO turn off feeds and discovery by default if you are on the Free or Bronze plan on OpenShift with a single 1Gb gear by visiting [observer.baseurl]admin/site when logged in as administrator of your Hubzilla site. 
-[*] DO add the above defaults into the deploy script.
+[*] definitely DO turn off feeds and discovery by default and limit delivery reports from 30 days to 3 days if you are on the Free or Bronze plan on OpenShift with a single 1Gb gear by visiting [observer.baseurl]admin/site when logged in as administrator of your Hubzilla site. 
+[*] The above defaults have been added into the deploy script.
 [*] DO add git gc to the deploy script
 [*] MAYBE DO add myisamchk - only checking? to the end of the deploy script.
 [*] mysqlcheck is similar in function to myisamchk, but works differently. The main operational difference is that mysqlcheck must be used when the mysqld server is running, whereas myisamchk should be used when it is not. The benefit of using mysqlcheck is that you do not have to stop the server to perform table maintenance - this means this documenation should be fixed.  

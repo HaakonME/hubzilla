@@ -28,8 +28,6 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 //		$expires = datetime_convert(date_default_timezone_get(),'UTC',$expires);
 
 
-
-
 	if($uid) {
 		$r = q("select * from channel where channel_id = %d limit 1",
 			intval($uid)
@@ -49,18 +47,20 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	// look for any existing conversation structure
 
+	$conv_guid = '';
 
 	if(strlen($replyto)) {
-		$r = q("select convid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
+		$r = q("select conv_guid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
 			intval(local_channel()),
 			dbesc($replyto),
 			dbesc($replyto)
 		);
-		if($r)
-			$convid = $r[0]['convid'];
+		if($r) {
+			$conv_guid = $r[0]['conv_guid'];
+		}
 	}		
 
-	if(! $convid) {
+	if(! $conv_guid) {
 
 		// create a new conversation
 
@@ -93,15 +93,27 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			dbesc($conv_guid),
 			intval(local_channel())
 		);
-		if($r)
-			$convid = $r[0]['id'];
+		if($r) {
+			$retconv = $r[0];
+			$retconv['subject'] = base64url_decode(str_rot47($retconv['subject']));
+		}
 	}
 
-	if(! $convid) {
+	if(! $retconv) {
+		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
+			dbesc($conv_guid),
+			intval(local_channel())
+		);
+		if($r) {
+			$retconv = $r[0];
+			$retconv['subject'] = base64url_decode(str_rot47($retconv['subject']));
+		}
+	}
+
+	if(! $retconv) {
 		$ret['message'] = 'conversation not found';
 		return $ret;
 	}
-
 
 	// generate a unique message_id
 
@@ -174,10 +186,10 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	
 
 
-	$r = q("INSERT INTO mail ( account_id, convid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
-		VALUES ( %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
+		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
-		intval($convid),
+		dbesc($conv_guid),
 		intval(1),
 		intval($channel['channel_id']),
 		dbesc($channel['channel_hash']),
@@ -197,8 +209,11 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($mid),
 		intval($channel['channel_id'])
 	);
-	if($r)
+	if($r) {
 		$post_id = $r[0]['id'];
+		$retmail = $r[0];
+		xchan_mail_query($retmail);
+	}
 	else {
 		$ret['message'] = t('Stored post could not be verified.');
 		return $ret;
@@ -242,6 +257,9 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$ret['success'] = true;
 	$ret['message_item'] = intval($post_id);
+	$ret['conv'] = $retconv;
+	$ret['mail'] = $retmail;
+
 	return $ret;
 
 }
@@ -367,30 +385,67 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 
 function private_messages_drop($channel_id, $messageitem_id, $drop_conversation = false) {
 
-	if($drop_conversation) {
-		// find the parent_id
-		$p = q("SELECT parent_mid FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
-			intval($messageitem_id),
+
+	$x = q("select * from mail where id = %d and channel_id = %d limit 1",
+		intval($messageitem_id),
+		intval($channel_id)
+	);
+	if(! $x)
+		return false;
+
+	$conversation = null;
+
+	if($x[0]['conv_guid']) {
+		$y = q("select * from conv where guid = '%s' and uid = %d limit 1",
+			dbesc($x[0]['conv_guid']),
 			intval($channel_id)
 		);
-		if($p) {
-			$r = q("DELETE FROM mail WHERE parent_mid = '%s' AND channel_id = %d ",
-				dbesc($p[0]['parent_mid']),
-				intval($channel_id)
-			);
-			if($r)
-				return true;
+		if($y) {
+			$conversation = $y[0];
+			$conversation['subject'] = base64url_decode(str_rot47($conversation['subject']));
 		}
 	}
+
+	if($drop_conversation) {
+		$m = array();
+		$m['conv'] = array($conversation);
+		$m['conv'][0]['deleted'] = 1;
+
+		$z = q("select * from mail where parent_mid = '%s' and channel_id = %d",
+			dbesc($x[0]['parent_mid']),
+			intval($channel_id)
+		);
+		if($z) {
+			q("delete from conv where guid = '%s' and uid = %d limit 1",
+				dbesc($x[0]['conv_guid']),
+				intval($channel_id)
+			);		
+			$m['mail'] = array();
+			foreach($z as $zz) {
+				xchan_mail_query($zz);
+				$zz['mail_deleted'] = 1;
+				$m['mail'][] = encode_mail($zz,true);
+			}
+			q("DELETE FROM mail WHERE parent_mid = '%s' AND channel_id = %d ",
+				dbesc($x[0]['parent_mid']),
+				intval($channel_id)
+			);
+		}
+		build_sync_packet($channel_id,$m);
+		return true;
+	}
 	else {
+		xchan_mail_query($x[0]);
+		$x[0]['mail_deleted'] = true;		
 		$r = q("DELETE FROM mail WHERE id = %d AND channel_id = %d",
 			intval($messageitem_id),
 			intval($channel_id)
 		);
-		if($r)
-			return true;
+		build_sync_packet($channel_id,array('mail' => array(encode_mail($x,true))));
+		return true;
 	}
 	return false;
+
 }
 
 

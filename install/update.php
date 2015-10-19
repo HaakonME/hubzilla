@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1156 );
+define( 'UPDATE_VERSION' , 1157 );
 
 /**
  *
@@ -1882,6 +1882,28 @@ function update_r1155() {
 	$r2 = q("create index site_type on site ( site_type ) ");
 	if($r1 && $r2)
 		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1156() {
+	$r1 = q("ALTER TABLE mail ADD conv_guid CHAR( 255 ) NOT NULL DEFAULT '' ");
+	$r2 = q("create index conv_guid on mail ( conv_guid ) ");
+
+	$r3 = q("select mail.id, mail.convid, conv.guid from mail left join conv on mail.convid = conv.id where true");
+	if($r3) {
+		foreach($r3 as $rr) {
+			if($rr['convid']) {
+				q("update mail set conv_guid = '%s' where id = %d",
+					dbesc($rr['guid']),
+					intval($rr['id'])
+				);
+			}
+		}
+	}
+		
+    if($r1 && $r2)
+        return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
 

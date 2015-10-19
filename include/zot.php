@@ -11,6 +11,7 @@
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
+require_once('include/DReport.php');
 
 
 /**
@@ -502,7 +503,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 					if($new_connection) {
 						if($new_perms != $previous_perms)
-							proc_run('php','include/notifier.php','permission_update',$new_connection[0]['abook_id']);
+							proc_run('php','include/notifier.php','permission_create',$new_connection[0]['abook_id']);
 						require_once('include/enotify.php');
 						notification(array(
 							'type'       => NOTIFY_INTRO,
@@ -901,7 +902,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			$r = q("delete from xprof where xprof_hash = '%s'",
 				dbesc($xchan_hash)
 			);
-			$r = q("delete from xtag where xtag_hash = '%s'",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_flags = 0",
 				dbesc($xchan_hash)
 			);
 		}
@@ -964,7 +965,7 @@ function zot_process_response($hub, $arr, $outq) {
 
 	if(is_array($x) && array_key_exists('delivery_report',$x) && is_array($x['delivery_report'])) {
 		foreach($x['delivery_report'] as $xx) {
-			if(is_array($xx) && array_key_exists('message_id',$xx)) {
+			if(is_array($xx) && array_key_exists('message_id',$xx) && delivery_report_is_storable($xx)) {
 				q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
 					dbesc($xx['message_id']),
 					dbesc($xx['location']),
@@ -1556,7 +1557,6 @@ function allowed_public_recips($msg) {
 function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $request = false) {
 
 	$result = array();
-	require_once('include/DReport.php');
 
 	$result['site'] = z_root();
 
@@ -1568,6 +1568,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 			return;
 		}
 	}
+
 
 	foreach($deliveries as $d) {
 		$local_public = $public;
@@ -1587,11 +1588,21 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		$channel = $r[0];
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
-		if($d['hash'] === $sender['hash']) {
-			$DR->update('self delivery ignored');
-			$result[] = $DR->get();
-			continue;
-		}
+		/**
+		 * @FIXME: Somehow we need to block normal message delivery from our clones, as the delivered
+		 * message doesn't have ACL information in it as the cloned copy does. That copy 
+		 * will normally arrive first via sync delivery, but this isn't guaranteed. 
+		 * There's a chance the current delivery could take place before the cloned copy arrives
+		 * hence the item could have the wrong ACL and *could* be used in subsequent deliveries or
+		 * access checks. So far all attempts at identifying this situation precisely
+		 * have caused issues with delivery of relayed comments. 
+		 */
+
+//		if(($d['hash'] === $sender['hash']) && ($sender['url'] !== z_root()) && (! $relay)) {
+//			$DR->update('self delivery ignored');
+//			$result[] = $DR->get();
+//			continue;
+//		}
 
 		// allow public postings to the sys channel regardless of permissions, but not
 		// for comments travelling upstream. Wait and catch them on the way down.
@@ -1949,8 +1960,7 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 	$item_found = false;
 	$post_id = 0;
 
-
-	$r = q("select id, item_deleted from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
+	$r = q("select id, author_xchan, owner_xchan, source_xchan, item_deleted from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
 		and mid = '%s' and uid = %d limit 1",
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
@@ -1958,6 +1968,7 @@ function delete_imported_item($sender, $item, $uid, $relay) {
 		dbesc($item['mid']),
 		intval($uid)
 	);
+
 	if ($r) {
 		if ($r[0]['author_xchan'] === $sender['hash'] || $r[0]['owner_xchan'] === $sender['hash'] || $r[0]['source_xchan'] === $sender['hash'])
 			$ownership_valid = true;
@@ -2031,20 +2042,26 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 	}
 
 	foreach($deliveries as $d) {
+
+		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
 
 		if(! $r) {
-			$result[] = array($d['hash'],'not found');
+			$DR->update('recipient not found');
+			$result[] = $DR->get();
 			continue;
 		}
 
 		$channel = $r[0];
+		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],'post_mail')) {
 			logger("permission denied for mail delivery {$channel['channel_id']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name'],$arr['mid']);
+			$DR->update('permission denied');
+			$result[] = $DR->get();
 			continue;
 		}
 
@@ -2058,11 +2075,13 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 					intval($r[0]['id']),
 					intval($channel['channel_id'])
 				);
-				$result[] = array($d['hash'],'mail recalled',$channel['channel_name'],$arr['mid']);
+				$DR->update('mail recalled');
+				$result[] = $DR->get();
 				logger('mail_recalled');
 			}
 			else {
-				$result[] = array($d['hash'],'duplicate mail received',$channel['channel_name'],$arr['mid']);
+				$DR->update('duplicate mail received');
+				$result[] = $DR->get();
 				logger('duplicate mail received');
 			}
 			continue;
@@ -2071,7 +2090,8 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 			$arr['account_id'] = $channel['channel_account_id'];
 			$arr['channel_id'] = $channel['channel_id'];
 			$item_id = mail_store($arr);
-			$result[] = array($d['hash'],'mail delivered',$channel['channel_name'],$arr['mid']);
+			$DR->update('mail delivered');
+			$result[] = $DR->get();
 		}
 	}
 
@@ -2580,7 +2600,7 @@ function import_directory_profile($hash, $profile, $addr, $ud_flags = UPDATE_FLA
 function import_directory_keywords($hash, $keywords) {
 
 	$existing = array();
-	$r = q("select * from xtag where xtag_hash = '%s'",
+	$r = q("select * from xtag where xtag_hash = '%s' and xtag_flags = 0",
 		dbesc($hash)
 	);
 
@@ -2598,14 +2618,14 @@ function import_directory_keywords($hash, $keywords) {
 
 	foreach($existing as $x) {
 		if(! in_array($x, $clean))
-			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s'",
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' and xtag_flags = 0",
 				dbesc($hash),
 				dbesc($x)
 			);
 	}
 	foreach($clean as $x) {
 		if(! in_array($x, $existing)) {
-			$r = q("insert into xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
+			$r = q("insert into xtag ( xtag_hash, xtag_term, xtag_flags) values ( '%s' ,'%s', 0 )",
 				dbesc($hash),
 				dbesc($x)
 			);
@@ -2981,6 +3001,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('chatroom',$arr) && $arr['chatroom'])
 			sync_chatrooms($channel,$arr['chatroom']);
+
+		if(array_key_exists('conv',$arr) && $arr['conv'])
+			import_conv($channel,$arr['conv']);
+
+		if(array_key_exists('mail',$arr) && $arr['mail'])
+			import_mail($channel,$arr['mail']);
 
 		if(array_key_exists('event',$arr) && $arr['event'])
 			sync_events($channel,$arr['event']);
@@ -3856,3 +3882,45 @@ function check_zotinfo($channel,$locations,&$ret) {
 		}
 	}
 }
+
+function delivery_report_is_storable($dr) {
+
+	call_hooks('dreport_is_storable',$dr);
+
+	// let plugins accept or reject - if neither, continue on
+	if(array_key_exists('accept',$dr) && intval($dr['accept']))
+		return true;
+	if(array_key_exists('reject',$dr) && intval($dr['reject']))
+		return false;
+
+	if(! ($dr['sender']))
+		return false;
+
+	// Is the sender one of our channels?
+
+	$c = q("select channel_id from channel where channel_hash = '%s' limit 1",
+		dbesc($dr['sender'])
+	);
+	if(! $c)
+		return false;
+
+	// is the recipient one of our connections, or do we want to store every report? 
+
+	$r = explode(' ', $dr['recipient']);
+	$rxchan = $r[0];
+	$pcf = get_pconfig($c[0]['channel_id'],'system','dreport_store_all');
+	if($pcf)
+		return true;
+
+	$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+		dbesc($rxchan),
+		intval($c[0]['channel_id'])
+	);
+	if($r)
+		return true;
+
+	return false;
+
+}
+
+

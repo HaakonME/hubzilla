@@ -1,3 +1,4 @@
+![Hubzilla](images/hubzilla-banner.png)
 
 Hubzilla - Community Server
 ===========================
@@ -5,7 +6,6 @@ Hubzilla - Community Server
 Help us redefine the web - using integrated and united community websites. 
 --------------------------------------------------------------------------
 
-![Hubzilla](images/hubzilla_house_arrows.png)
 
 **What are Hubs?**
 

@@ -631,6 +631,30 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['likes'] = $r;
 
+
+	$r = q("select * from conv where uid = %d",
+		intval($channel_id)
+	);
+	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			$r[$x]['subject'] = base64url_decode(str_rot47($r[$x]['subject']));
+		}		
+		$ret['conv'] = $r;
+	}
+
+
+	$r = q("select * from mail where mail.uid = %d",
+		intval($channel_id)
+	);
+	if($r) {
+		$m = array();
+		foreach($r as $rr) {
+			xchan_mail_query($rr);
+			$m[] = mail_encode($rr,true);
+		}
+		$ret['mail'] = $m;
+	}
+
 	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d",
 		intval($channel_id)
 	);

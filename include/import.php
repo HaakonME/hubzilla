@@ -790,7 +790,7 @@ function import_likes($channel,$likes) {
 			if($r)
 				continue;
 
-			dbesc_array($config);
+			dbesc_array($like);
 			$r = dbq("INSERT INTO likes (`" 
 				. implode("`, `", array_keys($like)) 
 				. "`) VALUES ('" 
@@ -799,6 +799,71 @@ function import_likes($channel,$likes) {
 		}
 	}	
 }
+
+function import_conv($channel,$convs) {
+	if($channel && $convs) {
+		foreach($convs as $conv) {
+			if($conv['deleted']) {
+				q("delete from conv where guid = '%s' and uid = %d limit 1",
+					dbesc($conv['guid']),
+					intval($channel['channel_id'])
+				);
+				continue;
+			}
+			
+			unset($conv['id']);
+
+			$conv['uid'] = $channel['channel_id'];
+			$conv['subject'] = str_rot47(base64url_encode($conv['subject']));
+
+			$r = q("select id from conv where guid = '%s' and uid = %d limit 1",
+				dbesc($conv['guid']),
+				intval($channel['channel_id'])
+			);
+			if($r)
+				continue;
+
+			dbesc_array($conv);
+			$r = dbq("INSERT INTO conv (`" 
+				. implode("`, `", array_keys($conv)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($conv)) 
+				. "')" );
+		}
+	}	
+}
+
+
+
+function import_mail($channel,$mails) {
+	if($channel && $mails) {
+		foreach($mails as $mail) {
+			if(array_key_exists('flags',$mail) && in_array('deleted',$mail['flags'])) {
+				q("delete from mail where mid = '%s' and uid = %d limit 1",
+					dbesc($mail['message_id']),
+					intval($channel['channel_id'])
+				);
+				continue;
+			}
+			if(array_key_exists('flags',$mail) && in_array('recalled',$mail['flags'])) {
+				q("update mail set mail_recalled = 1 where mid = '%s' and uid = %d limit 1",
+					dbesc($mail['message_id']),
+					intval($channel['channel_id'])
+				);
+				continue;
+			}
+
+			$m = get_mail_elements($mail);
+			if(! $m)
+				continue;
+
+			$m['aid'] = $channel['channel_account_id'];
+			$m['uid'] = $channel['channel_id'];
+			mail_store($m);
+ 		}
+	}	
+}
+
 
 
 

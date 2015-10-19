@@ -1216,36 +1216,15 @@ function theme_attachments(&$item) {
 	if(is_array($arr) && count($arr)) {
 		$attaches = array();
 		foreach($arr as $r) {
-			$icon = '';
-			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
 
-			/**
-			 * @FIXME This should probably be a giant "if" statement in the
-			 * template so that we don't have icon names embedded in php code.
-			 */
-
-			switch($icontype) {
-				case 'video':
-					$icon = 'icon-facetime-video';
-					break;
-				case 'audio':
-					$icon = 'icon-volume-up';
-					break;
-				case 'image':
-					$icon = 'icon-picture';
-					break;
-				case 'text':
-					$icon = 'icon-align-justify';
-					break;
-				default:
-					$icon = 'icon-question';
-					break;
-			}
-
-			$title = htmlspecialchars($r['title'], ENT_COMPAT,'UTF-8');
-			if(! $title)
-				$title = t('unknown.???');
-			$title .= ' ' . (($r['length']) ? $r['length'] . ' ' . t('bytes') : '');
+			$icon = getIconFromType($r['type']);
+			$label = (($r['title']) ? urldecode(htmlspecialchars($r['title'], ENT_COMPAT, 'UTF-8')) : t('Unknown Attachment'));
+			
+			//some feeds provide an attachment where title an empty space
+			if($label  == ' ')
+				$label = t('Unknown Attachment');
+ 			
+			$title = t('Attachment') . ' - ' . (($r['length']) ? userReadableSize($r['length']) : t('Size Unknown'));
 
 			require_once('include/identity.php');
 			if(is_foreigner($item['author_xchan']))
@@ -1253,14 +1232,14 @@ function theme_attachments(&$item) {
 			else
 				$url = z_root() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
 
-			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
-			$attaches[] = array('title' => $title, 'url' => $url, 'icon' => $icon );
+			//$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
+			$attaches[] = array('label' => $label, 'url' => $url, 'icon' => $icon, 'title' => $title);
 		}
-	}
 
-	$s = replace_macros(get_markup_template('item_attach.tpl'), array(
-		'$attaches' => $attaches
-	));
+		$s = replace_macros(get_markup_template('item_attach.tpl'), array(
+			'$attaches' => $attaches
+		));
+	}
 
 	return $s;
 }
@@ -1279,11 +1258,12 @@ function format_categories(&$item,$writeable) {
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
 			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => zid($t['url']));
 		}
+
+		$s = replace_macros(get_markup_template('item_categories.tpl'),array(
+			'$remove' => t('remove category'),
+			'$categories' => $categories
+		));
 	}
-	$s = replace_macros(get_markup_template('item_categories.tpl'),array(
-		'$remove' => t('remove category'),
-		'$categories' => $categories
-	));
 
 	return $s;
 }
@@ -1294,6 +1274,7 @@ function format_categories(&$item,$writeable) {
  * @param[in] array &$item
  * @return string HTML link of hashtag
  */
+
 function format_hashtags(&$item) {
 	$s = '';
 
@@ -1354,11 +1335,12 @@ function format_filer(&$item) {
 			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
 			$categories[] = array('term' => $term, 'removelink' => $removelink);
 		}
+
+		$s = replace_macros(get_markup_template('item_filer.tpl'),array(
+			'$remove' => t('remove from file'),
+			'$categories' => $categories
+		));
 	}
-	$s = replace_macros(get_markup_template('item_filer.tpl'),array(
-		'$remove' => t('remove from file'),
-		'$categories' => $categories
-	));
 
 	return $s;
 }
@@ -1411,19 +1393,19 @@ function prepare_body(&$item,$attach = false) {
 		}
 	}		 
 
-	$s .= theme_attachments($item);
+	$attachments = theme_attachments($item);
 
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false);
 
-	$s .= format_hashtags($item);
+	$tags = format_hashtags($item);
 
 	if($item['resource_type'])
-		$s .= format_mentions($item);
+		$mentions = format_mentions($item);
 
-	$s .= format_categories($item,$writeable);
+	$categories = format_categories($item,$writeable);
 
 	if(local_channel() == $item['uid'])
-		$s .= format_filer($item);
+		$filer = format_filer($item);
 
 	$s = sslify($s);
 
@@ -1456,9 +1438,19 @@ function prepare_body(&$item,$attach = false) {
 		$s = substr($s, 0, $pos).$authorreplace.substr($s, $pos+strlen($authorsearch));
 	}
 
-	$prep_arr = array('item' => $item, 'html' => $s);
+	$prep_arr = array(
+			//'item' => $item,
+			'html' => $s,
+			'categories' => $categories,
+			'folders' => $filer,
+			'tags' => $tags,
+			'mentions' => $mentions,
+			'attachments' => $attachments
+		);
+
 	call_hooks('prepare_body_final', $prep_arr);
-	return $prep_arr['html'];
+
+	return $prep_arr;
 }
 
 /**
@@ -1983,7 +1975,7 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
 				where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1");
 		}
-		$xchans = q("select * from xchan where xchan_hash in (" . implode(',',$arr) . ") and xchan_network in ('rss','unknown')");
+		$xchans = q("select * from xchan where xchan_hash in (" . protect_sprintf(implode(',',$arr)) . ") and xchan_network in ('rss','unknown')");
 		if(! $chans)
 			$chans = $xchans;
 		else
@@ -2221,7 +2213,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		}
 		if($tag == '#getzot') {
 			$basetag = 'getzot'; 
-			$url = 'https://redmatrix.me';
+			$url = 'http://hubzilla.org';
 			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
 			$body = str_replace($tag,$newtag,$body);
 			$replaced = true;
@@ -2490,6 +2482,7 @@ function linkify_tags($a, &$body, $uid, $diaspora = false) {
  *
  * @param string $type mime type
  * @return string
+ * @todo rename to get_icon_from_type()
  */
 function getIconFromType($type) {
 	$iconMap = array(
@@ -2542,6 +2535,7 @@ function getIconFromType($type) {
  *
  * @param int $size filesize in bytes
  * @return string human readable formatted filesize
+ * @todo rename to user_readable_size()
  */
 function userReadableSize($size) {
 	$ret = '';
@@ -2563,4 +2557,48 @@ function str_rot47($str) {
 	return strtr($str,
 		'!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
 		'PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO');
+}
+
+
+function string_replace($old,$new,&$s) {
+
+	$x = str_replace($old,$new,$s);
+	$replaced = false;
+	if($x !== $s) {
+		$replaced = true;
+	}
+	$s = $x;
+	return $replaced;
+}
+
+
+function json_url_replace($old,$new,&$s) {
+
+	$old = str_replace('/','\\/',$old);
+	$new = str_replace('/','\\/',$new);
+
+	$x = str_replace($old,$new,$s);
+	$replaced = false;
+	if($x !== $s) {
+		$replaced = true;
+	}
+	$s = $x;
+	return $replaced;
+}
+		
+
+function item_url_replace($channel,&$item,$old,$new) {
+	
+	if($item['attach'])
+		json_url_replace($old,$new,$item['attach']);
+	if($item['object'])
+		json_url_replace($old,$new,$item['object']);
+	if($item['target'])
+		json_url_replace($old,$new,$item['target']);
+
+	if(string_replace($old,$new,$item['body'])) {
+		$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
+		$item['item_verified']  = 1;
+	}
+
 }

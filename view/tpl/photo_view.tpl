@@ -133,14 +133,14 @@
 			{{/if}}
 			{{if $likebuttons}}
 			<div class="photo-item-tools-right btn-group pull-right">
-				<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$id}},'like'); return false">
-					<i class="icon-thumbs-up-alt" title="{{$likethis}}"></i>
+				<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$likebuttons.id}},'like'); return false">
+					<i class="icon-thumbs-up-alt" title="{{$likebuttons.likethis}}"></i>
 				</button>
-				<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$id}},'dislike'); return false">
-					<i class="icon-thumbs-down-alt" title="{{$nolike}}"></i>
+				<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$likebuttons.id}},'dislike'); return false">
+					<i class="icon-thumbs-down-alt" title="{{$likebuttons.nolike}}"></i>
 				</button>
 			</div>
-			<div id="like-rotator-{{$id}}" class="photo-like-rotator pull-right"></div>
+			<div id="like-rotator-{{$likebuttons.id}}" class="photo-like-rotator pull-right"></div>
 			{{/if}}
 			<div class="clear"></div>
 		</div>

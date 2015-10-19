@@ -278,13 +278,21 @@ class Item extends BaseObject {
 		
 		$children = $this->get_children();
 
+		$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($conv->get_profile_owner(),'large_photos'))) ? true : false);
+
+		$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
+
 		$tmp_item = array(
 			'template' => $this->get_template(),
 			'mode' => $mode,			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
-			'tags' => array(),
-			'body' => $body,
-			'text' => strip_tags($body),
+			'body' => $body['html'],
+			'tags' => $body['tags'],
+			'categories' => $body['categories'],
+			'mentions' => $body['mentions'],
+			'attachments' => $body['attachments'],
+			'folders' => $body['folders'],
+			'text' => strip_tags($body['html']),
 			'id' => $this->get_id(),
 			'mid' => $item['mid'],
 			'isevent' => $isevent,
@@ -325,6 +333,8 @@ class Item extends BaseObject {
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => $this->get_owner_name(),
+			'is_photo' => $is_photo,
+			'has_tags' => $has_tags,
 
 // Item toolbar buttons
 			'like'      => $like,

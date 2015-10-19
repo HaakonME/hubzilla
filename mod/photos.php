@@ -149,8 +149,9 @@ function photos_post(&$a) {
 			if($r) {
 				foreach($r as $i) {
 					attach_delete($page_owner_uid, $i['resource_id'], 1 );
-					drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
-					proc_run('php','include/notifier.php','drop',$i['id']);
+		// This is now being done in attach_delete()
+		//			drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
+		//			proc_run('php','include/notifier.php','drop',$i['id']);
 				}
 			}
 
@@ -182,12 +183,17 @@ function photos_post(&$a) {
 		);
 
 		if($r) {
+
+			/* this happens in attach_delete
 			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s'",
 				intval($page_owner_uid),
 				dbesc($r[0]['resource_id'])
 			);
+			*/
+
 			attach_delete($page_owner_uid, $r[0]['resource_id'], 1 );
 
+			/* this happens in attach_delete
 			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND resource_type = 'photo' and `uid` = %d LIMIT 1",
 				dbesc($r[0]['resource_id']),
 				intval($page_owner_uid)
@@ -196,6 +202,7 @@ function photos_post(&$a) {
 				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
 				$url = $a->get_baseurl();
 			}
+			*/
 		}
 
 		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
@@ -229,15 +236,46 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($r)) {
-				$ph = photo_factory(dbunescbin($r[0]['data']), $r[0]['type']);
+				$d = (($r[0]['os_storage']) ? @file_get_contents($r[0]['data']) : dbunescbin($r[0]['data']));
+				$ph = photo_factory($d, $r[0]['type']);
 				if($ph->is_valid()) {
 					$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );
 					$ph->rotate($rotate_deg);
 
 					$width  = $ph->getWidth();
 					$height = $ph->getHeight();
+					
+					if(intval($r[0]['os_storage'])) {
+						@file_put_contents($r[0]['data'],$ph->imageString());
+						$data = $r[0]['data'];
+						$fsize = @filesize($r[0]['data']);
+						q("update attach set filesize = %d where hash = '%s' and uid = %d limit 1",
+							intval($fsize),
+							dbesc($resource_id),
+							intval($page_owner_uid)
+						);
+					}
+					else {
+						$data = $ph->imageString();
+						$fsize = strlen($data);
+					}
 
-					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0",
+					$x = q("update photo set data = '%s', `size` = %d, height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0",
+						dbescbin($data),
+						intval($fsize),
+						intval($height),
+						intval($width),
+						dbesc($resource_id),
+						intval($page_owner_uid)
+					);
+
+					if($width > 1024 || $height > 1024) 
+						$ph->scaleImage(1024);
+
+					$width  = $ph->getWidth();
+					$height = $ph->getHeight();
+
+					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1",
 						dbescbin($ph->imageString()),
 						intval($height),
 						intval($width),
@@ -245,38 +283,40 @@ function photos_post(&$a) {
 						intval($page_owner_uid)
 					);
 
-					if($width > 640 || $height > 640) {
+
+					if($width > 640 || $height > 640) 
 						$ph->scaleImage(640);
-						$width  = $ph->getWidth();
-						$height = $ph->getHeight();
-		
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1",
-							dbescbin($ph->imageString()),
-							intval($height),
-							intval($width),
-							dbesc($resource_id),
-							intval($page_owner_uid)
-						);
-					}
 
-					if($width > 320 || $height > 320) {
+					$width  = $ph->getWidth();
+					$height = $ph->getHeight();
+
+					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2",
+						dbescbin($ph->imageString()),
+						intval($height),
+						intval($width),
+						dbesc($resource_id),
+						intval($page_owner_uid)
+					);
+
+
+					if($width > 320 || $height > 320) 
 						$ph->scaleImage(320);
-						$width  = $ph->getWidth();
-						$height = $ph->getHeight();
 
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2",
-							dbescbin($ph->imageString()),
-							intval($height),
-							intval($width),
-							dbesc($resource_id),
-							intval($page_owner_uid)
-						);
-					}	
+					$width  = $ph->getWidth();
+					$height = $ph->getHeight();
+
+					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 3",
+						dbescbin($ph->imageString()),
+						intval($height),
+						intval($width),
+						dbesc($resource_id),
+						intval($page_owner_uid)
+					);
 				}
 			}
 		}
 
-		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
+		$p = q("SELECT type, is_nsfw, description, resource_id, scale, allow_cid, allow_gid, deny_cid, deny_gid FROM photo WHERE resource_id = '%s' AND uid = %d ORDER BY scale DESC",
 			dbesc($resource_id),
 			intval($page_owner_uid)
 		);
@@ -982,13 +1022,13 @@ function photos_content(&$a) {
 			$likebuttons = '';
 
 			if($can_post || $can_comment) {
-				$likebuttons = replace_macros($like_tpl,array(
-					'$id' => $link_item['id'],
-					'$likethis' => t("I like this \x28toggle\x29"),
-					'$nolike' => t("I don't like this \x28toggle\x29"),
-					'$share' => t('Share'),
-					'$wait' => t('Please wait')
-				));
+				$likebuttons = array(
+					'id' => $link_item['id'],
+					'likethis' => t("I like this \x28toggle\x29"),
+					'nolike' => t("I don't like this \x28toggle\x29"),
+					'share' => t('Share'),
+					'wait' => t('Please wait')
+				);
 			}
 
 			$comments = '';

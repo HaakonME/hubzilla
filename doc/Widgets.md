@@ -88,7 +88,7 @@ Some/many of these widgets have restrictions which may restrict the type of page
 * photo_rand - display a random photo from one of your photo albums. Photo permissions are honoured
     * args: 
     * album - album name (very strongly recommended if you have lots of photos)
-    * scale - typically 0 (original size), 1 (640px), or 2 (320px)
+    * scale - typically 0 (original size), 1 (1024px), 2, (640px), or 3 (320px)
     * style - CSS style string
 	* channel_id - if not your own
 <br />&nbsp;<br />

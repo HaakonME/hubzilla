@@ -586,7 +586,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			
 			if(substr($mtch[1],0,1) == '=') {
 				$owidth = intval(substr($mtch[2],1));
-				if(intval($owidth) > 0 && intval($owidth) < 640)
+				if(intval($owidth) > 0 && intval($owidth) < 1024)
 					continue;
 			}
 
@@ -624,9 +624,9 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 					$orig_width = $ph->getWidth();
 					$orig_height = $ph->getHeight();
 
-					if($orig_width > 640 || $orig_height > 640) {
+					if($orig_width > 1024 || $orig_height > 1024) {
 						$tag = (($match[1] == 'z') ? 'zmg' : 'img');
-						$ph->scaleImage(640);
+						$ph->scaleImage(1024);
 						$new_width = $ph->getWidth();
 						$new_height = $ph->getHeight();
 						logger('scale_external_images: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);
@@ -1677,13 +1677,40 @@ function format_and_send_email($sender,$xchan,$item) {
 			'additionalMailHeader' => '',
 		));
 
+}
 
 
+function do_delivery($deliveries) {
+
+	if(! (is_array($deliveries) && count($deliveries)))
+		return;
+
+	$interval = ((get_config('system','delivery_interval') !== false) 
+			? intval(get_config('system','delivery_interval')) : 2 );
+
+	$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
+
+	if($deliveries_per_process <= 0)
+		$deliveries_per_process = 1;
 
 
+	$deliver = array();
+	foreach($deliveries as $d) {
 
+		$deliver[] = $d;
 
+		if(count($deliver) >= $deliveries_per_process) {
+			proc_run('php','include/deliver.php',$deliver);
+			$deliver = array();
+			if($interval)
+				@time_sleep_until(microtime(true) + (float) $interval);
+		}
+	}
 
+	// catch any stragglers
 
+	if($deliver)
+		proc_run('php','include/deliver.php',$deliver);
+	
 
 }

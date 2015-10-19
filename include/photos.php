@@ -185,31 +185,40 @@ function photo_upload($channel, $observer, $args) {
 	if($args['description'])
 		$p['description'] = $args['description'];
 
-	$r1 = $ph->save($p);
-	if(! $r1)
+	$r0 = $ph->save($p);
+	$r0wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	if(! $r0)
 		$errors = true;
-
 
 	unset($p['os_storage']);
 	unset($p['os_path']);
 
-	if(($width > 640 || $height > 640) && (! $errors)) {
-		$ph->scaleImage(640);
-		$p['scale'] = 1;
-		$r2 = $ph->save($p);
-		$smallest = 1;
-		if(! $r2)
-			$errors = true;
-	}
+	if(($width > 1024 || $height > 1024) && (! $errors))
+		$ph->scaleImage(1024);
 
-	if(($width > 320 || $height > 320) && (! $errors)) {
+	$p['scale'] = 1;
+	$r1 = $ph->save($p);
+	$r1wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	if(! $r1)
+		$errors = true;
+	
+	if(($width > 640 || $height > 640) && (! $errors)) 
+		$ph->scaleImage(640);
+
+	$p['scale'] = 2;
+	$r2 = $ph->save($p);
+	$r2wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	if(! $r2)
+		$errors = true;
+
+	if(($width > 320 || $height > 320) && (! $errors)) 
 		$ph->scaleImage(320);
-		$p['scale'] = 2;
-		$r3 = $ph->save($p);
-		$smallest = 2;
-		if(! $r3)
-			$errors = true;
-	}
+
+	$p['scale'] = 3;
+	$r3 = $ph->save($p);
+	$r3wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	if(! $r3)
+		$errors = true;
 
 	if($errors) {
 		q("delete from photo where resource_id = '%s' and uid = %d",
@@ -222,12 +231,6 @@ function photo_upload($channel, $observer, $args) {
 		return $ret;
 	}
 
-	// This will be the width and height of the smallest representation
-
-	$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
-
-	// Create item container
-
 	$item_hidden = (($visible) ? 0 : 1 );
 
 	$lat = $lon = null;
@@ -239,6 +242,19 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
+	$larger = feature_enabled($channel['channel_id'], 'large_photos');
+
+	if($larger) {
+		$tag = (($r1wxh) ? '[zmg=' . $r1wxh . ']' : '[zmg]');
+		$scale = 1;
+	}
+	else {
+		$tag = (($r2wxh) ? '[zmg=' . $r2wxh . ']' : '[zmg]');
+		$scale = 2;
+	}
+
+	// Create item container
+
 	if($args['item']) {
 		foreach($args['item'] as $i) {
 
@@ -248,7 +264,7 @@ function photo_upload($channel, $observer, $args) {
 			if($item['mid'] === $item['parent_mid']) {
 
 				$item['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-					. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
+					. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]'
 					. '[/zrl]';
 
 				if($item['author_xchan'] === $channel['channel_hash']) {
@@ -281,7 +297,7 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 	else {
-		$title = '';
+		$title = $args['filename'] ? $args['filename'] : '';
 		$mid = item_message_id();
 
 		$arr = array();
@@ -310,26 +326,8 @@ function photo_upload($channel, $observer, $args) {
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 
-		// We should also put a width_x_height on large photos. Left as an exercise for 
-		// devs looking for simple stuff to fix.
-
-		$larger = feature_enabled($channel['channel_id'], 'large_photos');
-		if($larger) {
-			$tag = '[zmg]';
-			if($r2)
-				$smallest = 1;
-			else
-				$smallest = 0;
-		}
-		else {
-			if ($width_x_height)
-				$tag = '[zmg=' . $width_x_height. ']';
-			else
-				$tag = '[zmg]';
-		}
-
 		$arr['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-			. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
+			. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]'
 			. '[/zrl]';
 
 		$result = item_store($arr);

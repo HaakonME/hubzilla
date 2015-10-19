@@ -565,12 +565,6 @@ function widget_mailmenu($arr) {
 
 	return replace_macros(get_markup_template('message_side.tpl'), array(
 		'$title' => t('Private Mail Menu'),
-		'$check'=>array(
-			'label' => t('Check Mail'),
-			'url' => $a->get_baseurl(true) . '/mail/combined',
-			'sel' => (argv(1) == ''),
-		),
-
 		'$combined'=>array(
 			'label' => t('Combined View'),
 			'url' => $a->get_baseurl(true) . '/mail/combined',

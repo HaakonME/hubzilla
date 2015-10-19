@@ -889,6 +889,7 @@ function get_item_elements($x,$allow_code = false) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlspecialchars($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlspecialchars($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlspecialchars($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['resource_type'] = (($x['resource_type']) ? htmlspecialchars($x['resource_type'],  ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['public_policy'] = (($x['public_scope']) ? htmlspecialchars($x['public_scope'], ENT_COMPAT,'UTF-8',false) : '');
 	if($arr['public_policy'] === 'public')
@@ -1285,6 +1286,7 @@ function encode_item($item,$mirror = false) {
 	$x['verb']            = $item['verb'];
 	$x['object_type']     = $item['obj_type'];
 	$x['target_type']     = $item['tgt_type'];
+	$x['resource_type']     = $item['resource_type'];
 	$x['permalink']       = $item['plink'];
 	$x['location']        = $item['location'];
 	$x['longlat']         = $item['coord'];
@@ -1559,7 +1561,7 @@ function encode_item_flags($item) {
 	return $ret;
 }
 
-function encode_mail($item) {
+function encode_mail($item,$extended = false) {
 	$x = array();
 	$x['type'] = 'mail';
 	$x['encoding'] = 'zot';
@@ -1592,6 +1594,18 @@ function encode_mail($item) {
 		$x['body']  = '';
 	}
 
+	if($extended) {
+		$x['conv_guid'] = $item['conv_guid'];
+		if(intval($item['mail_deleted']))
+			$x['flags'][] = 'deleted';
+		if(intval($item['mail_replied']))
+			$x['flags'][] = 'replied';
+		if(intval($item['mail_isreply']))
+			$x['flags'][] = 'isreply';
+		if(intval($item['mail_seen']))
+			$x['flags'][] = 'seen';
+	}
+
 	return $x;
 }
 
@@ -1604,6 +1618,8 @@ function get_mail_elements($x) {
 	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8',false) : '');
 	$arr['title']        = (($x['title'])? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
+	$arr['conv_guid']    = (($x['conv_guid'])? htmlspecialchars($x['conv_guid'],ENT_COMPAT,'UTF-8',false) : '');
+
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	if((! array_key_exists('expires',$x)) || ($x['expires'] === NULL_DATE))
 		$arr['expires'] = NULL_DATE;
@@ -1615,6 +1631,18 @@ function get_mail_elements($x) {
 	if($x['flags'] && is_array($x['flags'])) {
 		if(in_array('recalled',$x['flags'])) {
 			$arr['mail_recalled'] = 1;
+		}
+		if(in_array('replied',$x['flags'])) {
+			$arr['mail_replied'] = 1;
+		}
+		if(in_array('isreply',$x['flags'])) {
+			$arr['mail_isreply'] = 1;
+		}
+		if(in_array('seen',$x['flags'])) {
+			$arr['mail_seen'] = 1;
+		}
+		if(in_array('deleted',$x['flags'])) {
+			$arr['mail_deleted'] = 1;
 		}
 	}
 
@@ -1629,6 +1657,7 @@ function get_mail_elements($x) {
 	}
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
+
 
 	$arr['mid']          = (($x['message_id'])     ? htmlspecialchars($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_parent']) ? htmlspecialchars($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
@@ -3510,6 +3539,7 @@ function mail_store($arr) {
 	$arr['title']         = ((x($arr,'title'))         ? trim($arr['title'])         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+	$arr['conv_guid']     = ((x($arr,'conv_guid'))     ? trim($arr['conv_guid'])             : '');
 
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
 

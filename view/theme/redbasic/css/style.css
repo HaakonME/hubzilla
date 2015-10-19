@@ -129,7 +129,7 @@ pre code {
 
 code {
 	font-size: 1em;
-	padding: 5px;
+	padding: 1em;
 	border: 1px solid #ccc;
 	background: #ccc;
 	color: #000;
@@ -1432,7 +1432,10 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .profile-match-connect { margin-top: 5px; }
 
 .reshared-content { margin-left: 20px; }
-.shared_header img { margin-right: 10px; }
+.shared_header img {
+	border-radius: $radiuspx;
+	margin-right: 10px;
+}
 
 .tag1 {
     font-size : 0.9em !important;
@@ -1525,22 +1528,6 @@ a .drop-icons:hover {
 	float: left;
 	margin-right: 10px;
 	color: #FF0000;
-}
- 
-.attachlink {
-	float: left;
-	border: 1px solid black;
-	padding: 5px;
-	margin-right: 8px;
-}
-
-.attach-icons {
-	font-size: 1.4em;
-}
-
-.attach-clip {
-	margin-right: 3px;
-	font-size: 1.8em;
 }
 
 #menulist {
@@ -1635,39 +1622,43 @@ img.mail-conv-sender-photo {
 
 /* conversation */
 
-.wall-item-title {
-   font-size: $font_size;
+.wall-item-head {
+	padding: 10px 10px 0px 10px;
 }
 
-.hide-comments-outer,
-.thread-wrapper .wall-item-comment-wrapper,
-.wall-item-content-wrapper.comment {
-	margin-left: $comment_indent;
+.wall-item-content {
+	padding: 1em 10px;
+}
+
+.wall-photo-item {
+	padding: 10px 0px;
+}
+
+.wall-item-tools {
+	padding: 0px 10px 10px 10px;
+}
+
+
+.wall-item-title {
+	font-size: $font_size;
 }
 
 .wall-item-content-wrapper {
 	background-color: $item_colour;
-	padding: 10px;
 	border-top-right-radius: $radiuspx;
 	border-top-left-radius: $radiuspx;
 }
 
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-color: $comment_border_colour;
-	border-style: solid;
-	border-width: 0px 0px 0px 3px;
-	border-radius: 0px;
-	padding: 7px 10px 7px 7px;
 }
 
 .hide-comments-outer {
 	background-color: $comment_item_colour;
-	border-color: $comment_border_colour;
 	border-top-color: #ccc;
 	border-style: solid;
 	border-top-style: dashed;
-	border-width: 1px 0px 0px 3px;
+	border-width: 1px 0px 0px 0px;
 	text-align: center;
 	border-radius: 0px;
 }
@@ -1722,6 +1713,7 @@ img.mail-conv-sender-photo {
 }
 
 .wall-item-content,
+.mail-conv-body,
 .page-body {
 	font-size: $font_size;
 	clear: both;

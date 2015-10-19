@@ -319,6 +319,8 @@ function channel_remove($channel_id, $local = true, $unset_session=true) {
 	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
 
+	// @FIXME At this stage we need to remove the file resources located under /store/$nickname
+
 
 	q("delete from abook where abook_xchan = '%s' and abook_self = 1 ",
 		dbesc($channel['channel_hash'])

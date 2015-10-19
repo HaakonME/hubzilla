@@ -248,6 +248,7 @@ function zfinger_init(&$a) {
 	if($dirmode != DIRECTORY_MODE_NORMAL)
 		$ret['site']['directory_url'] = z_root() . '/dirsearch';
 
+	$ret['site']['project'] = PLATFORM_NAME;
 
 	// hide detailed site information if you're off the grid
 

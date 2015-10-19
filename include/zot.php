@@ -2724,6 +2724,7 @@ function import_site($arr, $pubkey) {
 	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
 	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
+	$site_project = htmlspecialchars($arr['project'],ENT_COMPAT,'UTF-8',false);
 
 	// You can have one and only one primary directory per realm.
 	// Downgrade any others claiming to be primary. As they have
@@ -2742,13 +2743,14 @@ function import_site($arr, $pubkey) {
 			|| ($siterecord['site_sellpage'] != $sellpage)
 			|| ($siterecord['site_location'] != $site_location)
 			|| ($siterecord['site_register'] != $register_policy)
+			|| ($siterecord['site_project'] != $site_project)
 			|| ($siterecord['site_realm'] != $site_realm)) {
 			$update = true;
 
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s'
+			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s', site_project = '%s'
 				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2758,6 +2760,7 @@ function import_site($arr, $pubkey) {
 				dbesc(datetime_convert()),
 				dbesc($sellpage),
 				dbesc($site_realm),
+				dbeswc($site_project),
 				dbesc($url)
 			);
 			if(! $r) {
@@ -2774,8 +2777,8 @@ function import_site($arr, $pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s' )",
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_project )
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s' )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),
@@ -2784,7 +2787,8 @@ function import_site($arr, $pubkey) {
 			dbesc($directory_url),
 			intval($register_policy),
 			dbesc($sellpage),
-			dbesc($site_realm)
+			dbesc($site_realm),
+			dbesc($site_project)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));

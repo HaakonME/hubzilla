@@ -983,6 +983,7 @@ CREATE TABLE "site" (
   "site_realm" text NOT NULL DEFAULT '',
   "site_valid" smallint NOT NULL DEFAULT '0',
   "site_dead" smallint NOT NULL DEFAULT '0',
+  "site_project" text NOT NULL DEFAULT '',
   PRIMARY KEY ("site_url")
 );
 create index "site_flags" on site ("site_flags");
@@ -994,6 +995,7 @@ create index "site_sellpage" on site ("site_sellpage");
 create index "site_realm" on site ("site_realm");
 create index "site_valid" on site ("site_valid");
 create index "site_dead" on site ("site_dead");
+create index "site_project" on site ("site_project");
 
 CREATE TABLE "source" (
   "src_id" serial  NOT NULL,

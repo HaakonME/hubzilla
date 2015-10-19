@@ -127,7 +127,7 @@ function notifier_run($argv, $argc){
 			if($s) {
 				$perm_update = array('sender' => $s[0], 'recipient' => $r[0], 'success' => false, 'deliveries' => '');
 
-				if($cmd == 'permission_create'])
+				if($cmd == 'permission_create')
 					call_hooks('permissions_create',$perm_update);
 				else
 					call_hooks('permissions_update',$perm_update);

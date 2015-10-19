@@ -9,5 +9,4 @@ function zfinger_init(&$a) {
 	$x = zotinfo($_REQUEST);
 	json_return_and_die($x);
 
-
 }

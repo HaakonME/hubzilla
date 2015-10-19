@@ -1134,6 +1134,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_valid` smallint NOT NULL DEFAULT '0',
   `site_dead` smallint NOT NULL DEFAULT '0',
   `site_type` smallint NOT NULL DEFAULT '0',
+  `site_project` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
@@ -1145,7 +1146,8 @@ CREATE TABLE IF NOT EXISTS `site` (
   KEY `site_realm` (`site_realm`),
   KEY `site_valid` (`site_valid`),
   KEY `site_dead` (`site_dead`),
-  KEY `site_type` (`site_type`)
+  KEY `site_type` (`site_type`),
+  KEY `site_project` (`site_project`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `source` (

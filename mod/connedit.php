@@ -190,7 +190,7 @@ function connedit_post(&$a) {
 		}
 	}
 
-	$abook_pending = (($new_friend) ? 0 : $orig_record[0]['abook_pending'];
+	$abook_pending = (($new_friend) ? 0 : $orig_record[0]['abook_pending']);
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d,
 		abook_incl = '%s', abook_excl = '%s'

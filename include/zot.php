@@ -503,7 +503,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 					if($new_connection) {
 						if($new_perms != $previous_perms)
-							proc_run('php','include/notifier.php','permission_update',$new_connection[0]['abook_id']);
+							proc_run('php','include/notifier.php','permission_create',$new_connection[0]['abook_id']);
 						require_once('include/enotify.php');
 						notification(array(
 							'type'       => NOTIFY_INTRO,

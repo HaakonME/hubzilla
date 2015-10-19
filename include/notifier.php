@@ -108,7 +108,7 @@ function notifier_run($argv, $argc){
 	}
 
 
-	if($cmd == 'permission_update') {
+	if($cmd == 'permission_update' || $cmd == 'permission_create') {
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
 			left join hubloc on hubloc_hash = abook_xchan
@@ -126,7 +126,12 @@ function notifier_run($argv, $argc){
 			);
 			if($s) {
 				$perm_update = array('sender' => $s[0], 'recipient' => $r[0], 'success' => false, 'deliveries' => '');
-				call_hooks('permissions_update',$perm_update);
+
+				if($cmd == 'permission_create'])
+					call_hooks('permissions_create',$perm_update);
+				else
+					call_hooks('permissions_update',$perm_update);
+
 				if($perm_update['success'] && $perm_update['deliveries'])
 					$deliveries[] = $perm_update['deliveries'];
 

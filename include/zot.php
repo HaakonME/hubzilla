@@ -2760,7 +2760,7 @@ function import_site($arr, $pubkey) {
 				dbesc(datetime_convert()),
 				dbesc($sellpage),
 				dbesc($site_realm),
-				dbeswc($site_project),
+				dbesc($site_project),
 				dbesc($url)
 			);
 			if(! $r) {

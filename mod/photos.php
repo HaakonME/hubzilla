@@ -184,16 +184,13 @@ function photos_post(&$a) {
 
 		if($r) {
 
-			/* this happens in attach_delete
 			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s'",
 				intval($page_owner_uid),
 				dbesc($r[0]['resource_id'])
 			);
-			*/
 
 			attach_delete($page_owner_uid, $r[0]['resource_id'], 1 );
 
-			/* this happens in attach_delete
 			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND resource_type = 'photo' and `uid` = %d LIMIT 1",
 				dbesc($r[0]['resource_id']),
 				intval($page_owner_uid)
@@ -202,7 +199,6 @@ function photos_post(&$a) {
 				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
 				$url = $a->get_baseurl();
 			}
-			*/
 		}
 
 		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);

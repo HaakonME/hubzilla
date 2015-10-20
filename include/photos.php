@@ -297,7 +297,9 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = $body;
+				$item['body'] = (($object) ? '' : $body);
+				$item['obj_type'] = (($object) ? ACTIVITY_OBJ_PHOTO : '');
+				$item['object']	= (($object) ? json_encode($object) : '');
 
 				if($item['author_xchan'] === $channel['channel_hash']) {
 					$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));

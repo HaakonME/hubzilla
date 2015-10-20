@@ -129,7 +129,7 @@ function editpost_content(&$a) {
 		'$consensus' => intval($itm[0]['item_consensus']),
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
-		'$ptyp' => $itm[0]['type'],
+		'$ptyp' => $itm[0]['obj_type'],
 		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
 		'$parent' => (($itm[0]['parent'] != $itm[0]['id']) ? $itm[0]['parent'] : ''),

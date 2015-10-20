@@ -3,7 +3,7 @@
 		{{if $parent}}
 			<input type="hidden" name="parent" value="{{$parent}}" />
 		{{/if}}
-		<input type="hidden" name="type" value="{{$ptyp}}" />
+		<input type="hidden" name="obj_type" value="{{$ptyp}}" />
 		<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />
 		<input type="hidden" name="return" value="{{$return_path}}" />
 		<input type="hidden" name="location" id="jot-location" value="{{$defloc}}" />

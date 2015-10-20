@@ -33,12 +33,19 @@
 					</div>
 					<div class="clear"></div>
 				</div>
-				<div class="{{if $item.is_photo}}wall-photo-item{{else}}wall-item-content{{/if}}" id="wall-item-content-{{$item.id}}">
+				{{if $item.is_photo}}
+				<div class="wall-photo-item" id="wall-photo-item-{{$item.id}}">
+					<a href="{{$item.photo.link}}"><img style="max-width:{{$item.photo.width}}px; width:100%; height:auto;" src={{$item.photo.url}}></a>
+				</div>
+				{{/if}}
+				{{if $item.body}}
+				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-body" id="wall-item-body-{{$item.id}}" >
 						{{$item.body}}
 					</div>
 					<div class="clear"></div>
 				</div>
+				{{/if}}
 				{{if $item.has_tags}}
 				<div class="wall-item-tools">
 					{{if $item.mentions}}

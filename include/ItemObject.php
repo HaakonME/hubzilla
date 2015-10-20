@@ -278,7 +278,16 @@ class Item extends BaseObject {
 		
 		$children = $this->get_children();
 
-		$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($conv->get_profile_owner(),'large_photos'))) ? true : false);
+		$is_photo = (($item['obj_type'] == ACTIVITY_OBJ_PHOTO) ? true : false);
+		if($is_photo) {
+			$object = json_decode($item['object'],true);
+			$photo = array(
+				'url' => rawurldecode($object['id']) . '?zid=' . $observer['xchan_addr'],
+				'link' => rawurldecode(get_rel_link($object['link'],'alternate')) . '?zid=' . $observer['xchan_addr'],
+				'width' => $object['width'],
+				'height' => $object['height']
+			);
+		}
 
 		$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
@@ -334,6 +343,7 @@ class Item extends BaseObject {
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => $this->get_owner_name(),
 			'is_photo' => $is_photo,
+			'photo' => (($is_photo) ? $photo : ''),
 			'has_tags' => $has_tags,
 
 // Item toolbar buttons

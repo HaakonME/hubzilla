@@ -1623,19 +1623,19 @@ img.mail-conv-sender-photo {
 /* conversation */
 
 .wall-item-head {
-	padding: 10px 10px 0px 10px;
+	padding: 10px 10px 0.5em 10px;
 }
 
 .wall-item-content {
-	padding: 1em 10px;
+	padding: 0.5em 10px;
 }
 
 .wall-photo-item {
-	padding: 10px 0px;
+	padding: 0.5em 0px;
 }
 
 .wall-item-tools {
-	padding: 0px 10px 10px 10px;
+	padding: 0.5em 10px 10px 10px;
 }
 
 

@@ -186,7 +186,8 @@ function photo_upload($channel, $observer, $args) {
 		$p['description'] = $args['description'];
 
 	$r0 = $ph->save($p);
-	$r0wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$r0width =  $ph->getWidth();
+	$r0height =  $ph->getHeight();
 	if(! $r0)
 		$errors = true;
 
@@ -198,7 +199,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 1;
 	$r1 = $ph->save($p);
-	$r1wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$r1width =  $ph->getWidth();
+	$r1height =  $ph->getHeight();
 	if(! $r1)
 		$errors = true;
 	
@@ -207,7 +209,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 2;
 	$r2 = $ph->save($p);
-	$r2wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$r2width =  $ph->getWidth();
+	$r2height =  $ph->getHeight();
 	if(! $r2)
 		$errors = true;
 
@@ -216,7 +219,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 3;
 	$r3 = $ph->save($p);
-	$r3wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$r3width =  $ph->getWidth();
+	$r3height =  $ph->getHeight();
 	if(! $r3)
 		$errors = true;
 
@@ -242,16 +246,47 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
-	$larger = feature_enabled($channel['channel_id'], 'large_photos');
+	$title = (($args['filename']) ? $args['filename'] : '');
 
-	if($larger) {
-		$tag = (($r1wxh) ? '[zmg=' . $r1wxh . ']' : '[zmg]');
+	$large_photos = feature_enabled($channel['channel_id'], 'large_photos');
+
+	if($large_photos) {
 		$scale = 1;
+		$width = $r1width;
+		$height = $r1height;
+		$tag = (($r1) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
+
+		// Create item object
+		$href = rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash);
+		$url = rawurlencode(z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt());
+
+		$link   = array();
+		$link[] = array(
+			'rel'  => 'alternate',
+			'type' => 'text/html',
+			'href' => $href
+		);
+
+		$object = array(
+			'type'   => ACTIVITY_OBJ_PHOTO,
+			'title'  => $title,
+			'id'     => $url,
+			'link'   => $link,
+			'width'  => $width,
+			'height' => $height
+		);
 	}
 	else {
-		$tag = (($r2wxh) ? '[zmg=' . $r2wxh . ']' : '[zmg]');
 		$scale = 2;
+		$width = $r2width;
+		$height = $r2height;
+		$tag = (($r2) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
+
+		$body = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+			. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]' 
+			. '[/zrl]';
 	}
+
 
 	// Create item container
 
@@ -263,13 +298,14 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-					. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]'
-					. '[/zrl]';
+				$item['body'] = (($body) ? $body: '');
+
+				$arr['obj_type'] = (($object) ? ACTIVITY_OBJ_PHOTO : '');
+				$arr['object'] = (($object) ? json_encode($object) : '');
 
 				if($item['author_xchan'] === $channel['channel_hash']) {
-	              	$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
-	                $item['item_verified']  = 1;
+					$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
+					$item['item_verified']  = 1;
 				}
 				else {
 					$item['sig'] = '';
@@ -297,7 +333,6 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 	else {
-		$title = $args['filename'] ? $args['filename'] : '';
 		$mid = item_message_id();
 
 		$arr = array();
@@ -320,15 +355,14 @@ function photo_upload($channel, $observer, $args) {
 		$arr['deny_cid']        = $ac['deny_cid'];
 		$arr['deny_gid']        = $ac['deny_gid'];
 		$arr['verb']            = ACTIVITY_POST;
+		$arr['obj_type']	= (($object) ? ACTIVITY_OBJ_PHOTO : '');
+		$arr['object']		= (($object) ? json_encode($object) : '');
 		$arr['item_wall']       = 1;
 		$arr['item_origin']     = 1;
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
-
-		$arr['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-			. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]'
-			. '[/zrl]';
+		$arr['body']		= (($body) ? $body : '');
 
 		$result = item_store($arr);
 		$item_id = $result['item_id'];

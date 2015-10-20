@@ -78,8 +78,12 @@ code {
 /* conv_item */
 
 .wall-photo-item img {
-	width: 100% !important;
-	max-width: 100% !important;
+
+}
+
+.wall-photo-item {
+	display: table;
+	margin: 0px auto;
 }
 
 .wall-item-info {

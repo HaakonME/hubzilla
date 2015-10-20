@@ -889,7 +889,6 @@ function get_item_elements($x,$allow_code = false) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlspecialchars($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlspecialchars($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlspecialchars($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['resource_type'] = (($x['resource_type']) ? htmlspecialchars($x['resource_type'],  ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['public_policy'] = (($x['public_scope']) ? htmlspecialchars($x['public_scope'], ENT_COMPAT,'UTF-8',false) : '');
 	if($arr['public_policy'] === 'public')
@@ -1286,7 +1285,6 @@ function encode_item($item,$mirror = false) {
 	$x['verb']            = $item['verb'];
 	$x['object_type']     = $item['obj_type'];
 	$x['target_type']     = $item['tgt_type'];
-	$x['resource_type']     = $item['resource_type'];
 	$x['permalink']       = $item['plink'];
 	$x['location']        = $item['location'];
 	$x['longlat']         = $item['coord'];

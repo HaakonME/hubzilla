@@ -296,7 +296,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 		$quota['used'] = $used;
 		$quota['limit'] = $limit;
 		$quota['desc'] = $quotaDesc;
-		$quota['warning'] = (($limit && ($limit - $used) < 104857600) ? true : false); // 10485760 bytes = 100MB
+		$quota['warning'] = ((($limit) && ((round($used / $limit, 1) * 100) >= 90)) ? t('WARNING:') : ''); // 10485760 bytes = 100MB
 
 		$output .= replace_macros(get_markup_template('cloud_actionspanel.tpl'), array(
 				'$folder_header' => t('Create new folder'),

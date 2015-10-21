@@ -9,7 +9,6 @@
 	</div>
 	{{/if}}
 	<h2>{{$header}}</h2>
-	{{if $quota.limit || $quota.used}}{{$quota.desc}}{{/if}}
 	<div class="clear"></div>
 </div>
 {{if $actionspanel}}

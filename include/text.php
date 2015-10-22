@@ -1440,12 +1440,19 @@ function generate_named_map($location) {
 
 
 function prepare_body(&$item,$attach = false) {
+	require_once('include/identity.php');
 
 	call_hooks('prepare_body_init', $item); 
 
 	unobscure($item);
 
-	$s = prepare_text($item['body'],$item['mimetype']);
+	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
+	if($is_photo) {
+		$object = json_decode($item['object'],true);
+		$s = '<a href="' . zid(rawurldecode(get_rel_link($object['link'],'alternate'))) . '"><img style="max-width:' . $object['width'] . 'px; width:100%; height:auto;" src="'. zid(rawurldecode($object['id'])) . '"></a>';
+	}
+
+	$s .= prepare_text($item['body'],$item['mimetype']);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);

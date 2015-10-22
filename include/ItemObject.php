@@ -264,18 +264,7 @@ class Item extends BaseObject {
 
 		localize_item($item);
 
-		$is_photo = (($item['obj_type'] == ACTIVITY_OBJ_PHOTO) ? true : false);
-		if($is_photo) {
-			$object = json_decode($item['object'],true);
-			$photo = array(
-				'url' => rawurldecode($object['id']) . '?zid=' . $observer['xchan_addr'],
-				'link' => rawurldecode(get_rel_link($object['link'],'alternate')) . '?zid=' . $observer['xchan_addr'],
-				'width' => $object['width'],
-				'height' => $object['height']
-			);
-		}
-
-		$body .= prepare_body($item,true);
+		$body = prepare_body($item,true);
 
 		// $viewthread (below) is only valid in list mode. If this is a channel page, build the thread viewing link
 		// since we can't depend on llink or plink pointing to the right local location.
@@ -335,8 +324,6 @@ class Item extends BaseObject {
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => $this->get_owner_name(),
-			'is_photo' => $is_photo,
-			'photo' => (($is_photo) ? $photo : ''),
 
 // Item toolbar buttons
 			'like'      => $like,

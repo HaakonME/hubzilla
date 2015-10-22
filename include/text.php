@@ -1375,6 +1375,8 @@ function prepare_body(&$item,$attach = false) {
 //	}
 
 	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
+	$photo = '';
+
 	if($is_photo) {
 		$object = json_decode($item['object'],true);
 		$photo = '<a href="' . zid(rawurldecode(get_rel_link($object['link'],'alternate'))) . '"><img style="max-width:' . $object['width'] . 'px; width:100%; height:auto;" src="'. zid(rawurldecode($object['id'])) . '"></a>';

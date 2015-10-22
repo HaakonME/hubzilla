@@ -77,11 +77,6 @@ code {
 
 /* conv_item */
 
-.wall-photo-item {
-	display: table;
-	margin: 0px auto;
-}
-
 .wall-item-info {
 	display: block;
 	float: left;

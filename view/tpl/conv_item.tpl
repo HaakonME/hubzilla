@@ -33,9 +33,9 @@
 					</div>
 					<div class="clear"></div>
 				</div>
-				{{if $item.is_photo}}
+				{{if $item.photo}}
 				<div class="wall-photo-item" id="wall-photo-item-{{$item.id}}">
-					<a href="{{$item.photo.link}}"><img style="max-width:{{$item.photo.width}}px; width:100%; height:auto;" src={{$item.photo.url}}></a>
+					{{$item.photo}}
 				</div>
 				{{/if}}
 				{{if $item.body}}

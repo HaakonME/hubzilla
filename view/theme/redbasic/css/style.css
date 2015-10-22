@@ -794,11 +794,11 @@ a.rateme, div.rateme {
 }
 
 #nav-search-text::-webkit-input-placeholder {
-	font-family: FontAwesome;
+	font-family: FontAwesome, sans-serif;
 }
 
 #nav-search-text::-moz-placeholder {
-	font-family: FontAwesome;
+	font-family: FontAwesome, sans-serif;
 }
 
 nav .acpopup {

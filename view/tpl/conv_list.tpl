@@ -8,6 +8,11 @@
 		<a name="{{$item.id}}" ></a>
 		<div class="wall-item-outside-wrapper {{$item.indent}}{{$item.previewing}}" id="wall-item-outside-wrapper-{{$item.id}}" >
 			<div class="wall-item-content-wrapper {{$item.indent}}" id="wall-item-content-wrapper-{{$item.id}}" style="clear:both;">
+				{{if $item.photo}}
+				<div class="wall-photo-item" id="wall-photo-item-{{$item.id}}">
+					{{$item.photo}}
+				</div>
+				{{/if}}
 				<div class="wall-item-head">
 					<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
 						<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}}" id="wall-item-photo-wrapper-{{$item.id}}">

@@ -278,17 +278,6 @@ class Item extends BaseObject {
 		
 		$children = $this->get_children();
 
-		$is_photo = (($item['obj_type'] == ACTIVITY_OBJ_PHOTO) ? true : false);
-		if($is_photo) {
-			$object = json_decode($item['object'],true);
-			$photo = array(
-				'url' => rawurldecode($object['id']) . '?zid=' . $observer['xchan_addr'],
-				'link' => rawurldecode(get_rel_link($object['link'],'alternate')) . '?zid=' . $observer['xchan_addr'],
-				'width' => $object['width'],
-				'height' => $object['height']
-			);
-		}
-
 		$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
 		$tmp_item = array(
@@ -342,8 +331,7 @@ class Item extends BaseObject {
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => $this->get_owner_name(),
-			'is_photo' => $is_photo,
-			'photo' => (($is_photo) ? $photo : ''),
+			'photo' => $body['photo'],
 			'has_tags' => $has_tags,
 
 // Item toolbar buttons

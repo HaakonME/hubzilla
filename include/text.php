@@ -1363,6 +1363,7 @@ function generate_named_map($location) {
 
 
 function prepare_body(&$item,$attach = false) {
+	require_once('include/identity.php');
 
 //	if($item['html']) {
 //		$s = bb_observer($item['html']);
@@ -1373,9 +1374,24 @@ function prepare_body(&$item,$attach = false) {
 		$s = prepare_text($item['body'],$item['mimetype'], false);
 //	}
 
-	$prep_arr = array('item' => $item, 'html' => $s);
+	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
+	$photo = '';
+
+	if($is_photo) {
+		$object = json_decode($item['object'],true);
+		$photo = '<a href="' . zid(rawurldecode(get_rel_link($object['link'],'alternate'))) . '" target="_newwin"><img style="max-width:' . $object['width'] . 'px; width:100%; height:auto;" src="'. zid(rawurldecode($object['id'])) . '"></a>';
+	}
+
+	$prep_arr = array(
+		'item' => $item,
+		'html' => $s,
+		'photo' => $photo
+	);
+
 	call_hooks('prepare_body', $prep_arr);
+
 	$s = $prep_arr['html'];
+	$photo = $prep_arr['photo'];
 
 //	q("update item set html = '%s' where id = %d",
 //		dbesc($s),
@@ -1391,7 +1407,7 @@ function prepare_body(&$item,$attach = false) {
 		if($x) {
 			$s = preg_replace('/\<div class\=\"map\"\>/','$0' . $x,$s);
 		}
-	}		 
+	}
 
 	$attachments = theme_attachments($item);
 
@@ -1439,16 +1455,19 @@ function prepare_body(&$item,$attach = false) {
 	}
 
 	$prep_arr = array(
-			//'item' => $item,
-			'html' => $s,
-			'categories' => $categories,
-			'folders' => $filer,
-			'tags' => $tags,
-			'mentions' => $mentions,
-			'attachments' => $attachments
-		);
+		'item' => $item,
+		'photo' => $photo,
+		'html' => $s,
+		'categories' => $categories,
+		'folders' => $filer,
+		'tags' => $tags,
+		'mentions' => $mentions,
+		'attachments' => $attachments
+	);
 
 	call_hooks('prepare_body_final', $prep_arr);
+
+	unset($prep_arr['item']);
 
 	return $prep_arr;
 }

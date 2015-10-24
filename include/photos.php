@@ -302,7 +302,7 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = (($object) ? '' : $body);
+				$item['body'] = (($object) ? $args['body'] : $body . "\r\n" . $args['body']);
 				$item['obj_type'] = (($object) ? ACTIVITY_OBJ_PHOTO : '');
 				$item['object']	= (($object) ? json_encode($object) : '');
 
@@ -365,7 +365,7 @@ function photo_upload($channel, $observer, $args) {
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
-		$arr['body']		= (($object) ? $args['body'] : $body . $args['body']);
+		$arr['body']		= (($object) ? $args['body'] : $body . "\r\n" . $args['body']);
 
 		$result = item_store($arr);
 		$item_id = $result['item_id'];

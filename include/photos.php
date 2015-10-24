@@ -7,6 +7,7 @@
 require_once('include/permissions.php');
 require_once('include/items.php');
 require_once('include/photo/photo_driver.php');
+require_once('include/text.php');
 
 /**
  * @brief
@@ -17,6 +18,8 @@ require_once('include/photo/photo_driver.php');
  * @return array
  */
 function photo_upload($channel, $observer, $args) {
+
+	$a = get_app();
 
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
@@ -186,8 +189,8 @@ function photo_upload($channel, $observer, $args) {
 		$p['description'] = $args['description'];
 
 	$r0 = $ph->save($p);
-	$r0width =  $ph->getWidth();
-	$r0height =  $ph->getHeight();
+	$r0width = $ph->getWidth();
+	$r0height = $ph->getHeight();
 	if(! $r0)
 		$errors = true;
 
@@ -199,8 +202,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 1;
 	$r1 = $ph->save($p);
-	$r1width =  $ph->getWidth();
-	$r1height =  $ph->getHeight();
+	$r1width = $ph->getWidth();
+	$r1height = $ph->getHeight();
 	if(! $r1)
 		$errors = true;
 	
@@ -209,8 +212,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 2;
 	$r2 = $ph->save($p);
-	$r2width =  $ph->getWidth();
-	$r2height =  $ph->getHeight();
+	$r2width = $ph->getWidth();
+	$r2height = $ph->getHeight();
 	if(! $r2)
 		$errors = true;
 
@@ -219,8 +222,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 3;
 	$r3 = $ph->save($p);
-	$r3width =  $ph->getWidth();
-	$r3height =  $ph->getHeight();
+	$r3width = $ph->getWidth();
+	$r3height = $ph->getHeight();
 	if(! $r3)
 		$errors = true;
 
@@ -246,9 +249,11 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
-	$title = (($args['filename']) ? $args['filename'] : '');
+	$title = (($args['description']) ? $args['description'] : $args['filename']);
 
 	$large_photos = feature_enabled($channel['channel_id'], 'large_photos');
+
+	linkify_tags($a, $args['body'], $channel_id);
 
 	if($large_photos) {
 		$scale = 1;
@@ -360,7 +365,7 @@ function photo_upload($channel, $observer, $args) {
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
-		$arr['body']		= (($object) ? '' : $body);
+		$arr['body']		= (($object) ? $args['body'] : $body . $args['body']);
 
 		$result = item_store($arr);
 		$item_id = $result['item_id'];

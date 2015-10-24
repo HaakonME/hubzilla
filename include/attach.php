@@ -815,6 +815,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		if($arr['item'])
 			$args['item'] = $arr['item'];
 
+		if($arr['body'])
+			$args['body'] = $arr['body'];
+
+		if($arr['description'])
+			$args['description'] = $arr['description'];
+
 		$p = photo_upload($channel,$observer,$args);
 		if($p['success']) {
 			$ret['body'] = $p['body'];
@@ -1282,12 +1288,11 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		);
 		if($x) {
 			drop_item($x[0]['id'],false,(($x[0]['item_hidden']) ? DROPITEM_NORMAL : DROPITEM_PHASE1),true);
-
-			q("DELETE FROM photo WHERE uid = %d AND resource_id = '%s'",
-				intval($channel_id),
-				dbesc($resource)
-			);
 		}
+		q("DELETE FROM photo WHERE uid = %d AND resource_id = '%s'",
+			intval($channel_id),
+			dbesc($resource)
+		);
 	}
 			
 	// update the parent folder's lastmodified timestamp

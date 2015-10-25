@@ -1449,7 +1449,8 @@ function prepare_body(&$item,$attach = false) {
 	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
 	if($is_photo) {
 		$object = json_decode($item['object'],true);
-		$s = '<a href="' . zid(rawurldecode(get_rel_link($object['link'],'alternate'))) . '"><img style="max-width:' . $object['width'] . 'px; width:100%; height:auto;" src="'. zid(rawurldecode($object['id'])) . '"></a>';
+		$scale = ((($object['link'][1]['width'] == 1024) || ($object['link'][1]['height'] == 1024)) ? 1 : 0);
+		$s = '<div class="inline-photo-item-wrapper"><a href="' . zid(rawurldecode($object['id'])) . '"><img class="inline-photo-item" style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a></div>';
 	}
 
 	$s .= prepare_text($item['body'],$item['mimetype']);

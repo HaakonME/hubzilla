@@ -505,17 +505,12 @@ function script_path() {
 	else
 		$scheme = 'http';
 
-	if(x($_SERVER,'SERVER_NAME')) {
-		$hostname = $_SERVER['SERVER_NAME'];
+	if(x($_SERVER,'HTTP_HOST')) {
+		$hostname = $_SERVER['HTTP_HOST'];
 	}
 	else {
 		return z_root();
 	}
-
-	if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
-		$hostname .= ':' . $_SERVER['SERVER_PORT'];
-	}
-
 	return $scheme . '://' . $hostname;
 }
 

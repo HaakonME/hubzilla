@@ -504,9 +504,17 @@ function script_path() {
 		$scheme = 'https';
 	else
 		$scheme = 'http';
+	
+	// Some proxy setups may require using http_host
 
-	if(x($_SERVER,'HTTP_HOST')) {
-		$hostname = $_SERVER['HTTP_HOST'];
+	if(intval(get_app()->config['system']['script_path_use_http_host']))
+		$server_var = 'HTTP_HOST';
+	else
+		$server_var = 'SERVER_NAME';
+
+
+	if(x($_SERVER,$server_var)) {
+		$hostname = $_SERVER[$server_var];
 	}
 	else {
 		return z_root();

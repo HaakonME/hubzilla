@@ -188,9 +188,16 @@ function photo_upload($channel, $observer, $args) {
 	if($args['description'])
 		$p['description'] = $args['description'];
 
+	$link   = array();
+
 	$r0 = $ph->save($p);
-	$r0width = $ph->getWidth();
-	$r0height = $ph->getHeight();
+	$link[0] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-0.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r0)
 		$errors = true;
 
@@ -202,8 +209,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 1;
 	$r1 = $ph->save($p);
-	$r1width = $ph->getWidth();
-	$r1height = $ph->getHeight();
+	$link[1] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-1.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r1)
 		$errors = true;
 	
@@ -212,8 +224,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 2;
 	$r2 = $ph->save($p);
-	$r2width = $ph->getWidth();
-	$r2height = $ph->getHeight();
+	$link[2] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-2.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r2)
 		$errors = true;
 
@@ -222,8 +239,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 3;
 	$r3 = $ph->save($p);
-	$r3width = $ph->getWidth();
-	$r3height = $ph->getHeight();
+	$link[3] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-3.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r3)
 		$errors = true;
 
@@ -257,43 +279,32 @@ function photo_upload($channel, $observer, $args) {
 
 	if($large_photos) {
 		$scale = 1;
-		$width = $r1width;
-		$height = $r1height;
+		$width = $link[1]['width'];
+		$height = $link[1]['height'];
 		$tag = (($r1) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
 
-		// Create item object
-		$href = rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash);
-		$url = rawurlencode(z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt());
 
-		$link   = array();
-		$link[] = array(
-			'rel'  => 'alternate',
-			'type' => 'text/html',
-			'href' => $href
-		);
-
-		$object = array(
-			'type'   => ACTIVITY_OBJ_PHOTO,
-			'title'  => $title,
-			'id'     => $url,
-			'link'   => $link,
-			'width'  => $width,
-			'height' => $height
-		);
 	}
 	else {
 		$scale = 2;
-		$width = $r2width;
-		$height = $r2height;
+		$width = $link[2]['width'];
+		$height = $link[2]['height'];
 		$tag = (($r2) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
 	}
 
+	// Create item object
+	$object = array(
+		'type'   => ACTIVITY_OBJ_PHOTO,
+		'title'  => $title,
+		'id'     => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash),
+		'link'   => $link
+	);
+
 	$body = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-		. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]' 
+		. $tag . z_root() . "/photo/{$photo_hash}-{$scale}." . $ph->getExt() . '[/zmg]' 
 		. '[/zrl]';
 
 	// Create item container
-
 	if($args['item']) {
 		foreach($args['item'] as $i) {
 

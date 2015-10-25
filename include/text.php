@@ -1374,12 +1374,23 @@ function prepare_body(&$item,$attach = false) {
 		$s = prepare_text($item['body'],$item['mimetype'], false);
 //	}
 
-	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
+
 	$photo = '';
+	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
 
 	if($is_photo) {
 		$object = json_decode($item['object'],true);
-		$photo = '<a href="' . zid(rawurldecode(get_rel_link($object['link'],'alternate'))) . '" target="_newwin"><img style="max-width:' . $object['width'] . 'px; width:100%; height:auto;" src="'. zid(rawurldecode($object['id'])) . '"></a>';
+
+		// if original photo width is <= 640px prepend it to item body
+		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {
+			$s = '<div class="inline-photo-item-wrapper"><a href="' . zid(rawurldecode($object['id'])) . '" target="_newwin"><img class="inline-photo-item" style="max-width:' . $object['link'][0]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][0]['href'])) . '"></a></div>' . $s;
+		}
+
+		// if original photo width is > 640px make it a cover photo
+		if($object['link'][0]['width'] && $object['link'][0]['width'] > 640) {
+			$scale = ((($object['link'][1]['width'] == 1024) || ($object['link'][1]['height'] == 1024)) ? 1 : 0);
+			$photo = '<a href="' . zid(rawurldecode($object['id'])) . '" target="_newwin"><img style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a>';
+		}
 	}
 
 	$prep_arr = array(

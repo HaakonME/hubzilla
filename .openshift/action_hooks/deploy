@@ -179,7 +179,15 @@ echo "chmod done, permissions set to 777 on poller script."
 
 # Hubzilla configuration - changes to default settings
 # to make Hubzilla on OpenShift a more pleasant experience 
+echo "Changing default configuration to conserve space"
 cd ${OPENSHIFT_REPO_DIR}
 util/config system expire_delivery_reports 3
 util/config system feed_contacts 0
 util/config system disable_discover_tab 1
+
+# Hubzill addons
+echo "Try to add or update Hubzilla addons"
+cd ${OPENSHIFT_REPO_DIR}
+util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git HubzillaAddons 
+D
+ihttps://github.com/redmatrix/hubzilla-addons.git

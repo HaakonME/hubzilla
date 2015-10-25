@@ -309,15 +309,10 @@ function bb2diaspora_itembody($item, $force_update = false) {
 	$is_photo = (($item['obj_type'] == ACTIVITY_OBJ_PHOTO) ? true : false);
 	if($is_photo) {
 		$object = json_decode($item['object'],true);
-			$photo = array(
-				'url' => rawurldecode($object['id']),
-				'link' => rawurldecode(get_rel_link($object['link'],'alternate')),
-				'width' => $object['width'],
-				'height' => $object['height']
-			);
-
-		$photo_bb = '[zrl=' . $photo['link'] . ']' . '[zmg=' . $photo['width'] . 'x' . $photo['height'] . ']' . $photo['url'] . '[/zmg]' . '[/zrl]';
-		$item['body'] = (($item['body']) ? $photo_bb . $item['body'] : $photo_bb);
+		if($object['link'][2]) {
+			$photo_bb = '[zrl=' . rawurldecode($object['id']) . ']' . '[zmg=' . $object['link'][2]['width'] . 'x' . $object['link'][2]['height'] . ']' . rawurldecode($object['link'][2]['href']) . '[/zmg]' . '[/zrl]';
+			$item['body'] = (($item['body']) ? $photo_bb . $item['body'] : $photo_bb);
+		}
 	}
 
 	if(($item['diaspora_meta']) && (! $force_update)) {

@@ -1,5 +1,5 @@
 [b]Hubzilla on OpenShift[/b]
-You will notice a new .openshift folder when you fetch from upstream, i.e. from [url=https://github.com/redmatrix/hubzilla.git]https://github.com/redmatrix/hubzilla.git[/url] , which contains a deploy script to set up Hubzilla on OpenShift.
+You will notice a new .openshift folder when you fetch from upstream, i.e. from [url=https://github.com/redmatrix/hubzilla.git]https://github.com/redmatrix/hubzilla.git[/url] , which contains a deploy script to set up Hubzilla on OpenShift with plugins and extra themes.
 
 Create an account on OpenShift, then use the registration e-mail and password to create your first Hubzilla instance. Install git and RedHat's command line tools - rhc - if you have not already done so.
 

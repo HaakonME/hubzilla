@@ -366,7 +366,7 @@ function notifier_run($argv, $argc){
 			logger('notifier: target item not forwardable: type ' . $target_item['item_type'], LOGGER_DEBUG);
 			return;
 		}
-		if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed_publish'])) {
+		if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed'])) {
 			logger('notifier: target item not published, so not forwardable', LOGGER_DEBUG);
 			return;
 		}

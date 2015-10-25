@@ -1166,6 +1166,10 @@ function status_editor($a, $x, $popup = false) {
 	if($defexpire)
 		$defexpire = datetime_convert('UTC',date_default_timezone_get(),$defexpire,'Y-m-d H:i');
 
+	$defpublish = ((($z = get_pconfig($x['profile_uid'], 'system', 'default_post_publish')) && (! $webpage)) ? $z : '');
+	if($defpublish)
+		$defpublish = datetime_convert('UTC',date_default_timezone_get(),$defpublish,'Y-m-d H:i');
+
 	$cipher = get_pconfig($x['profile_uid'], 'system', 'default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
@@ -1237,6 +1241,9 @@ function status_editor($a, $x, $popup = false) {
 		'$defexpire' => $defexpire,
 		'$feature_expire' => ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false),
 		'$expires' => t('Set expiration date'),
+		'$defpublish' => $defpublish,
+		'$feature_future' => ((feature_enabled($x['profile_uid'], 'delayed_posting') && (! $webpage)) ? true : false),
+		'$future_txt' => t('Set publish date'),
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'], 'content_encrypt') && (! $webpage)) ? true : false),
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,

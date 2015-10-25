@@ -189,3 +189,8 @@ util/config system disable_discover_tab 1
 echo "Try to add or update Hubzilla addons"
 cd ${OPENSHIFT_REPO_DIR}
 util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git HubzillaAddons 
+
+# Hubzilla themes
+echo "Try to add or update Hubzilla themes"
+cd ${OPENSHIFT_REPO_DIR}
+util/add_theme_repo https://github.com/DeadSuperHero/redmatrix-themes.git DeadSuperHeroThemes 

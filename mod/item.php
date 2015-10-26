@@ -96,7 +96,7 @@ function item_post(&$a) {
 	$owner_hash = null;
 
 	$message_id  = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
-	$created     = ((x($_REQUEST,'created'))     ? datetime_convert('UTC','UTC',$_REQUEST['created']) : datetime_convert());
+	$created     = ((x($_REQUEST,'created'))     ? datetime_convert(date_default_timezone_get(),'UTC',$_REQUEST['created']) : datetime_convert());
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])        : 0);
 	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])     : '');
 	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                 : '');

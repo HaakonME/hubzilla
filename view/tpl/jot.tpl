@@ -196,7 +196,7 @@
       </div>
      <!--  <div class="modal-body"> -->
             <div class="modal-body form-group" style="width:90%">
-		<div class='date'><input type='text' placeholder='yyyy-mm-dd HH:MM' name='start_text' id='created-date' class="form-control" /></div><script type='text/javascript'>$(function () {var picker = $('#created-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 }); })</script>
+		<div class='date'><input type='text' placeholder='yyyy-mm-dd HH:MM' name='created_text' id='created-date' class="form-control" /></div><script type='text/javascript'>$(function () {var picker = $('#created-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 }); })</script>
             </div>
       <!-- </div> -->
       <div class="modal-footer">

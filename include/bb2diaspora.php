@@ -305,6 +305,16 @@ function bb2diaspora_itembody($item, $force_update = false) {
 
 	$matches = array();
 
+	//if we have a photo item just prepend the photo bbcode to item['body']
+	$is_photo = (($item['obj_type'] == ACTIVITY_OBJ_PHOTO) ? true : false);
+	if($is_photo) {
+		$object = json_decode($item['object'],true);
+		if($object['link'][2]) {
+			$photo_bb = '[zrl=' . rawurldecode($object['id']) . ']' . '[zmg=' . $object['link'][2]['width'] . 'x' . $object['link'][2]['height'] . ']' . rawurldecode($object['link'][2]['href']) . '[/zmg]' . '[/zrl]';
+			$item['body'] = (($item['body']) ? $photo_bb . $item['body'] : $photo_bb);
+		}
+	}
+
 	if(($item['diaspora_meta']) && (! $force_update)) {
 		$diaspora_meta = json_decode($item['diaspora_meta'],true);
 		if($diaspora_meta) {

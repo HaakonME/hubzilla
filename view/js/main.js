@@ -112,12 +112,12 @@ function insertbbcomment(comment, BBcode, id) {
 	return true;
 }
 
-function inserteditortag(BBcode) {
+function inserteditortag(BBcode, id) {
 	// allow themes to override this
 	if(typeof(insertEditorFormatting) != 'undefined')
 		return(insertEditorFormatting(BBcode));
 
-	textarea = document.getElementById('profile-jot-text');
+	textarea = document.getElementById(id);
 	if (document.selection) {
 		textarea.focus();
 		selected = document.selection.createRange();
@@ -616,11 +616,12 @@ function updateConvItems(mode,data) {
 
 function collapseHeight() {
 	$(".wall-item-content, .directory-collapse").each(function() {
-		var orgHeight = $(this).height();
+		var orgHeight = $(this).outerHeight(true);
 		if(orgHeight > divmore_height + 10) {
 			if(! $(this).hasClass('divmore')) {
 				$(this).readmore({
 					speed: 0,
+					heightMargin: 50,
 					collapsedHeight: divmore_height, 
 					moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
 					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',
@@ -745,12 +746,12 @@ function justifyPhotos() {
 		margins: 3,
 		border: 0,
 		sizeRangeSuffixes: {
-			'lt100': '-2',
-			'lt240': '-2',
-			'lt320': '-2',
-			'lt500': '',
-			'lt640': '-1',
-			'lt1024': '-0'
+			'lt100': '-3',
+			'lt240': '-3',
+			'lt320': '-3',
+			'lt500': '-2',
+			'lt640': '-2',
+			'lt1024': '-1'
 		}
 	}).on('jg.complete', function(e){ justifiedGalleryActive = false; });
 }

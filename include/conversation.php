@@ -629,11 +629,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				if($item['author-link'] && (! $item['author-name']))
 					$profile_name = $item['author-link'];
 
-
-				$tags=array();
-				$hashtags = array();
-				$mentions = array();
-
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
 				if($sp)
@@ -678,13 +673,16 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				$unverified = '';
 
-				$tags=array();
-				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
-				if(count($terms))
-					foreach($terms as $tag)
-						$tags[] = format_term_for_display($tag);
+//				$tags=array();
+//				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
+//				if(count($terms))
+//					foreach($terms as $tag)
+//						$tags[] = format_term_for_display($tag);
 
 				$body = prepare_body($item,true);
+
+				$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($profile_owner,'large_photos'))) ? true : false);
+				$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
 				$tmp_item = array(
 					'template' => $tpl,
@@ -699,10 +697,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'lock' => $lock,
 					'thumb' => $profile_avatar,
 					'title' => $item['title'],
-					'body' => $body,
-					'tags' => $tags,
-					'hashtags' => $hashtags,
-					'mentions' => $mentions,
+					'body' => $body['html'],
+					'tags' => $body['tags'],
+					'categories' => $body['categories'],
+					'mentions' => $body['mentions'],
+					'attachments' => $body['attachments'],
+					'folders' => $body['folders'],
 					'verified' => $verified,
 					'unverified' => $unverified,
 					'forged' => $forged,
@@ -712,7 +712,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'has_folders' => ((count($folders)) ? 'true' : ''),
 					'categories' => $categories,
 					'folders' => $folders,
-					'text' => strip_tags($body),
+					'text' => strip_tags($body['html']),
 					'ago' => relative_date($item['created']),
 					'app' => $item['app'],
 					'str_app' => sprintf( t('from %s'), $item['app']),
@@ -738,6 +738,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 					'thread_level' => 1,
+					'is_photo' => $is_photo,
+					'has_tags' => $has_tags,
 				);
 
 				$arr = array('item' => $item, 'output' => $tmp_item);
@@ -1164,6 +1166,10 @@ function status_editor($a, $x, $popup = false) {
 	if($defexpire)
 		$defexpire = datetime_convert('UTC',date_default_timezone_get(),$defexpire,'Y-m-d H:i');
 
+	$defpublish = ((($z = get_pconfig($x['profile_uid'], 'system', 'default_post_publish')) && (! $webpage)) ? $z : '');
+	if($defpublish)
+		$defpublish = datetime_convert('UTC',date_default_timezone_get(),$defpublish,'Y-m-d H:i');
+
 	$cipher = get_pconfig($x['profile_uid'], 'system', 'default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
@@ -1235,6 +1241,9 @@ function status_editor($a, $x, $popup = false) {
 		'$defexpire' => $defexpire,
 		'$feature_expire' => ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false),
 		'$expires' => t('Set expiration date'),
+		'$defpublish' => $defpublish,
+		'$feature_future' => ((feature_enabled($x['profile_uid'], 'delayed_posting') && (! $webpage)) ? true : false),
+		'$future_txt' => t('Set publish date'),
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'], 'content_encrypt') && (! $webpage)) ? true : false),
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,
@@ -1414,7 +1423,7 @@ function prepare_page($item) {
 		'$auth_url' => (($naked) ? '' : zid($item['author']['xchan_url'])),
 		'$date' => (($naked) ? '' : datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
-		'$body' => $body,
+		'$body' => $body['html'],
 		'$preview' => $preview,
 		'$link' => $link,
 	));

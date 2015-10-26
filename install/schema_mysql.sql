@@ -731,6 +731,7 @@ CREATE TABLE IF NOT EXISTS `likes` (
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `convid` int(10) unsigned NOT NULL DEFAULT '0',
+  `conv_guid` char(255) NOT NULL DEFAULT '',
   `mail_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `from_xchan` char(255) NOT NULL DEFAULT '',
   `to_xchan` char(255) NOT NULL DEFAULT '',
@@ -761,6 +762,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `parent_mid` (`parent_mid`),
   KEY `expires` (`expires`),
   KEY `convid` (`convid`),
+  KEY `conv_guid` (`conv_guid`),
   KEY `mail_deleted` (`mail_deleted`),
   KEY `mail_replied` (`mail_replied`),
   KEY `mail_isreply` (`mail_isreply`),
@@ -1132,6 +1134,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_valid` smallint NOT NULL DEFAULT '0',
   `site_dead` smallint NOT NULL DEFAULT '0',
   `site_type` smallint NOT NULL DEFAULT '0',
+  `site_project` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
@@ -1143,7 +1146,8 @@ CREATE TABLE IF NOT EXISTS `site` (
   KEY `site_realm` (`site_realm`),
   KEY `site_valid` (`site_valid`),
   KEY `site_dead` (`site_dead`),
-  KEY `site_type` (`site_type`)
+  KEY `site_type` (`site_type`),
+  KEY `site_project` (`site_project`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `source` (

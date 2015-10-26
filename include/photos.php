@@ -7,6 +7,7 @@
 require_once('include/permissions.php');
 require_once('include/items.php');
 require_once('include/photo/photo_driver.php');
+require_once('include/text.php');
 
 /**
  * @brief
@@ -17,6 +18,8 @@ require_once('include/photo/photo_driver.php');
  * @return array
  */
 function photo_upload($channel, $observer, $args) {
+
+	$a = get_app();
 
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
@@ -185,31 +188,66 @@ function photo_upload($channel, $observer, $args) {
 	if($args['description'])
 		$p['description'] = $args['description'];
 
-	$r1 = $ph->save($p);
-	if(! $r1)
-		$errors = true;
+	$link   = array();
 
+	$r0 = $ph->save($p);
+	$link[0] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-0.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
+	if(! $r0)
+		$errors = true;
 
 	unset($p['os_storage']);
 	unset($p['os_path']);
 
-	if(($width > 640 || $height > 640) && (! $errors)) {
-		$ph->scaleImage(640);
-		$p['scale'] = 1;
-		$r2 = $ph->save($p);
-		$smallest = 1;
-		if(! $r2)
-			$errors = true;
-	}
+	if(($width > 1024 || $height > 1024) && (! $errors))
+		$ph->scaleImage(1024);
 
-	if(($width > 320 || $height > 320) && (! $errors)) {
+	$p['scale'] = 1;
+	$r1 = $ph->save($p);
+	$link[1] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-1.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
+	if(! $r1)
+		$errors = true;
+	
+	if(($width > 640 || $height > 640) && (! $errors)) 
+		$ph->scaleImage(640);
+
+	$p['scale'] = 2;
+	$r2 = $ph->save($p);
+	$link[2] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-2.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
+	if(! $r2)
+		$errors = true;
+
+	if(($width > 320 || $height > 320) && (! $errors)) 
 		$ph->scaleImage(320);
-		$p['scale'] = 2;
-		$r3 = $ph->save($p);
-		$smallest = 2;
-		if(! $r3)
-			$errors = true;
-	}
+
+	$p['scale'] = 3;
+	$r3 = $ph->save($p);
+	$link[3] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-3.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
+	if(! $r3)
+		$errors = true;
 
 	if($errors) {
 		q("delete from photo where resource_id = '%s' and uid = %d",
@@ -222,12 +260,6 @@ function photo_upload($channel, $observer, $args) {
 		return $ret;
 	}
 
-	// This will be the width and height of the smallest representation
-
-	$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
-
-	// Create item container
-
 	$item_hidden = (($visible) ? 0 : 1 );
 
 	$lat = $lon = null;
@@ -239,6 +271,40 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
+	$title = (($args['description']) ? $args['description'] : $args['filename']);
+
+	$large_photos = feature_enabled($channel['channel_id'], 'large_photos');
+
+	linkify_tags($a, $args['body'], $channel_id);
+
+	if($large_photos) {
+		$scale = 1;
+		$width = $link[1]['width'];
+		$height = $link[1]['height'];
+		$tag = (($r1) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
+
+
+	}
+	else {
+		$scale = 2;
+		$width = $link[2]['width'];
+		$height = $link[2]['height'];
+		$tag = (($r2) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
+	}
+
+	// Create item object
+	$object = array(
+		'type'   => ACTIVITY_OBJ_PHOTO,
+		'title'  => $title,
+		'id'     => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash),
+		'link'   => $link
+	);
+
+	$body = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+		. $tag . z_root() . "/photo/{$photo_hash}-{$scale}." . $ph->getExt() . '[/zmg]' 
+		. '[/zrl]';
+
+	// Create item container
 	if($args['item']) {
 		foreach($args['item'] as $i) {
 
@@ -247,13 +313,13 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-					. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
-					. '[/zrl]';
+				$item['body'] = (($object) ? $args['body'] : $body . "\r\n" . $args['body']);
+				$item['obj_type'] = (($object) ? ACTIVITY_OBJ_PHOTO : '');
+				$item['object']	= (($object) ? json_encode($object) : '');
 
 				if($item['author_xchan'] === $channel['channel_hash']) {
-	              	$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
-	                $item['item_verified']  = 1;
+					$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
+					$item['item_verified']  = 1;
 				}
 				else {
 					$item['sig'] = '';
@@ -281,7 +347,6 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 	else {
-		$title = '';
 		$mid = item_message_id();
 
 		$arr = array();
@@ -304,33 +369,14 @@ function photo_upload($channel, $observer, $args) {
 		$arr['deny_cid']        = $ac['deny_cid'];
 		$arr['deny_gid']        = $ac['deny_gid'];
 		$arr['verb']            = ACTIVITY_POST;
+		$arr['obj_type']	= (($object) ? ACTIVITY_OBJ_PHOTO : '');
+		$arr['object']		= (($object) ? json_encode($object) : '');
 		$arr['item_wall']       = 1;
 		$arr['item_origin']     = 1;
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
-
-		// We should also put a width_x_height on large photos. Left as an exercise for 
-		// devs looking for simple stuff to fix.
-
-		$larger = feature_enabled($channel['channel_id'], 'large_photos');
-		if($larger) {
-			$tag = '[zmg]';
-			if($r2)
-				$smallest = 1;
-			else
-				$smallest = 0;
-		}
-		else {
-			if ($width_x_height)
-				$tag = '[zmg=' . $width_x_height. ']';
-			else
-				$tag = '[zmg]';
-		}
-
-		$arr['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-			. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
-			. '[/zrl]';
+		$arr['body']		= (($object) ? $args['body'] : $body . "\r\n" . $args['body']);
 
 		$result = item_store($arr);
 		$item_id = $result['item_id'];
@@ -341,7 +387,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$ret['success'] = true;
 	$ret['item'] = $arr;
-	$ret['body'] = $arr['body'];
+	$ret['body'] = $body;
 	$ret['resource_id'] = $photo_hash;
 	$ret['photoitem_id'] = $item_id;
 

@@ -728,6 +728,7 @@ create index "likes_target_id" on likes ("target_id");
 CREATE TABLE "mail" (
   "id" serial  NOT NULL,
   "convid" bigint  NOT NULL DEFAULT '0',
+  "conv_guid" text NOT NULL,
   "mail_flags" bigint  NOT NULL DEFAULT '0',
   "from_xchan" text NOT NULL DEFAULT '',
   "to_xchan" text NOT NULL DEFAULT '',
@@ -750,6 +751,7 @@ CREATE TABLE "mail" (
   PRIMARY KEY ("id")
 );
 create index "mail_convid" on mail ("convid");
+create index "mail_conv_guid" on mail ("conv_guid");
 create index "mail_created" on mail ("created");
 create index "mail_flags" on mail ("mail_flags");
 create index "mail_account_id" on mail ("account_id");
@@ -1123,6 +1125,7 @@ CREATE TABLE "site" (
   "site_valid" smallint NOT NULL DEFAULT '0',
   "site_dead" smallint NOT NULL DEFAULT '0',
   "site_type" smallint NOT NULL DEFAULT '0',
+  "site_project" text NOT NULL DEFAULT '',
   PRIMARY KEY ("site_url")
 );
 create index "site_flags" on site ("site_flags");
@@ -1135,6 +1138,7 @@ create index "site_realm" on site ("site_realm");
 create index "site_valid" on site ("site_valid");
 create index "site_dead" on site ("site_dead");
 create index "site_type" on site ("site_type");
+create index "site_project" on site ("site_project");
 
 CREATE TABLE "source" (
   "src_id" serial  NOT NULL,

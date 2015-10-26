@@ -130,7 +130,7 @@ function translate_system_apps(&$arr) {
 		'Address Book' => t('Address Book'),
 		'Login' => t('Login'),
 		'Channel Manager' => t('Channel Manager'), 
-		'Matrix' => t('Matrix'), 
+		'Grid' => t('Grid'), 
 		'Settings' => t('Settings'),
 		'Files' => t('Files'),
 		'Webpages' => t('Webpages'),
@@ -176,13 +176,18 @@ function app_render($papp,$mode = 'view') {
 
 	$installed = false;
 
-	if(! $papp['photo'])
-		$papp['photo'] = z_root() . '/' . get_default_profile_photo(80);
-	
 	if(! $papp)
 		return;
 
+	if(! $papp['photo'])
+		$papp['photo'] = z_root() . '/' . get_default_profile_photo(80);
+
+			
+
 	$papp['papp'] = papp_encode($papp);
+
+	if(! strstr($papp['url'],'://'))
+		$papp['url'] = z_root() . ((strpos($papp['url'],'/') === 0) ? '' : '/') . $papp['url'];
 
 	foreach($papp as $k => $v) {
 		if(strpos($v,'http') === 0 && $k != 'papp')

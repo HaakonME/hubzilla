@@ -129,7 +129,7 @@ pre code {
 
 code {
 	font-size: 1em;
-	padding: 5px;
+	padding: 1em;
 	border: 1px solid #ccc;
 	background: #ccc;
 	color: #000;
@@ -794,11 +794,11 @@ a.rateme, div.rateme {
 }
 
 #nav-search-text::-webkit-input-placeholder {
-	font-family: FontAwesome;
+	font-family: FontAwesome, sans-serif;
 }
 
 #nav-search-text::-moz-placeholder {
-	font-family: FontAwesome;
+	font-family: FontAwesome, sans-serif;
 }
 
 nav .acpopup {
@@ -1432,7 +1432,10 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .profile-match-connect { margin-top: 5px; }
 
 .reshared-content { margin-left: 20px; }
-.shared_header img { margin-right: 10px; }
+.shared_header img {
+	border-radius: $radiuspx;
+	margin-right: 10px;
+}
 
 .tag1 {
     font-size : 0.9em !important;
@@ -1526,22 +1529,6 @@ a .drop-icons:hover {
 	margin-right: 10px;
 	color: #FF0000;
 }
- 
-.attachlink {
-	float: left;
-	border: 1px solid black;
-	padding: 5px;
-	margin-right: 8px;
-}
-
-.attach-icons {
-	font-size: 1.4em;
-}
-
-.attach-clip {
-	margin-right: 3px;
-	font-size: 1.8em;
-}
 
 #menulist {
 	list-style-type: none;
@@ -1634,40 +1621,56 @@ img.mail-conv-sender-photo {
 }
 
 /* conversation */
-
-.wall-item-title {
-   font-size: $font_size;
+.nsfw-wrap {
+	text-align: center;
+	font-size: $body_font_size;
 }
 
-.hide-comments-outer,
-.thread-wrapper .wall-item-comment-wrapper,
-.wall-item-content-wrapper.comment {
-	margin-left: $comment_indent;
+.wall-item-head {
+	padding: 10px 10px 0.5em 10px;
+}
+
+.wall-item-content {
+	padding: 0.5em 10px;
+}
+
+.wall-photo-item {
+	/*padding: 0.5em 10px;*/
+}
+
+.wall-photo-item img {
+	max-width: 100% !important;
+	border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radiuspx;
+}
+
+.wall-item-tools {
+	padding: 0.5em 10px 10px 10px;
+}
+
+
+.wall-item-title {
+	font-size: $font_size;
 }
 
 .wall-item-content-wrapper {
 	background-color: $item_colour;
-	padding: 10px;
 	border-top-right-radius: $radiuspx;
 	border-top-left-radius: $radiuspx;
 }
 
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-color: $comment_border_colour;
-	border-style: solid;
-	border-width: 0px 0px 0px 3px;
-	border-radius: 0px;
-	padding: 7px 10px 7px 7px;
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
 }
 
 .hide-comments-outer {
 	background-color: $comment_item_colour;
-	border-color: $comment_border_colour;
 	border-top-color: #ccc;
 	border-style: solid;
 	border-top-style: dashed;
-	border-width: 1px 0px 0px 3px;
+	border-width: 1px 0px 0px 0px;
 	text-align: center;
 	border-radius: 0px;
 }
@@ -1682,11 +1685,11 @@ img.mail-conv-sender-photo {
 	border-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
-	margin-top: 3px;
+	border-top: 3px solid $comment_item_colour;
 }
 
 .wall-item-comment-wrapper-wc {
-	margin-top: 0px;
+	border-top: 0px solid $comment_item_colour;
 }
 
 .wall-item-like,
@@ -1722,6 +1725,7 @@ img.mail-conv-sender-photo {
 }
 
 .wall-item-content,
+.mail-conv-body,
 .page-body {
 	font-size: $font_size;
 	clear: both;
@@ -1770,7 +1774,6 @@ img.mail-conv-sender-photo {
 
 .divgrow-showmore:hover {
 	border-top: 1px dashed #adadad;
-	text-decoration: underline;
 }
 
 
@@ -1868,7 +1871,6 @@ nav .dropdown-menu {
 	border: 1px solid #ccc;
 	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.2);
 	border-radius:  $radiuspx;
-	background-color: #fff;
 }
 
 .section-title-wrapper {
@@ -1876,7 +1878,7 @@ nav .dropdown-menu {
 	background-color: $item_colour;
 	border-top-left-radius: $radiuspx;
 	border-top-right-radius: $radiuspx;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 }
 
 .section-title-wrapper h2,
@@ -1891,20 +1893,20 @@ nav .dropdown-menu {
 .section-subtitle-wrapper {
 	padding: 7px 10px;
 	background-color: $item_colour;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 }
 
 .section-content-tools-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
-	margin-bottom: 3px
+	border-bottom: 3px solid $comment_item_colour;
 }
 
 .section-content-info-wrapper {
 	padding: 21px 10px;
 	color: #31708f;
 	background-color: #d9edf7;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 
@@ -1912,7 +1914,7 @@ nav .dropdown-menu {
 	padding: 21px 10px;
 	color: #8a6d3b;
 	background-color: #fcf8e3;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 
@@ -1920,7 +1922,7 @@ nav .dropdown-menu {
 	padding: 21px 10px;
 	color: #a94442;
 	background-color: #f2dede;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 

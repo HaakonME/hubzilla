@@ -3,11 +3,12 @@
 		{{if $parent}}
 			<input type="hidden" name="parent" value="{{$parent}}" />
 		{{/if}}
-		<input type="hidden" name="type" value="{{$ptyp}}" />
+		<input type="hidden" name="obj_type" value="{{$ptyp}}" />
 		<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />
 		<input type="hidden" name="return" value="{{$return_path}}" />
 		<input type="hidden" name="location" id="jot-location" value="{{$defloc}}" />
 		<input type="hidden" name="expire" id="jot-expire" value="{{$defexpire}}" />
+		<input type="hidden" name="created" id="jot-created" value="{{$defpublish}}" />
 		<input type="hidden" name="media_str" id="jot-media" value="" />
 		<input type="hidden" name="source" id="jot-source" value="{{$source}}" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
@@ -47,19 +48,19 @@
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
 				<div class="btn-group">
-					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b'); return false;">
+					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
 					</button>
-					<button id="main-editor-italic" class="btn btn-default btn-sm" title="{{$italic}}" onclick="inserteditortag('i'); return false;">
+					<button id="main-editor-italic" class="btn btn-default btn-sm" title="{{$italic}}" onclick="inserteditortag('i', 'profile-jot-text'); return false;">
 						<i class="icon-italic jot-icons"></i>
 					</button>
-					<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u'); return false;">
+					<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u', 'profile-jot-text'); return false;">
 						<i class="icon-underline jot-icons"></i>
 					</button>
-					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote'); return false;">
+					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
 						<i class="icon-quote-left jot-icons"></i>
 					</button>
-					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code'); return false;">
+					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
 						<i class="icon-terminal jot-icons"></i>
 					</button>
 				</div>
@@ -89,6 +90,11 @@
 				{{if $feature_expire}}
 					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
 						<i id="profile-expires" class="icon-eraser jot-icons"></i>
+					</button>
+				{{/if}}
+				{{if $feature_future}}
+					<button id="profile-future-wrapper" class="btn btn-default btn-sm" title="{{$future_txt}}" onclick="jotGetPubDate();return false;">
+						<i id="profile-future" class="icon-time jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_encrypt}}
@@ -179,6 +185,28 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- Modal for item created-->
+<div class="modal" id="createdModal" tabindex="-1" role="dialog" aria-labelledby="createdModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="createdModalLabel">{{$future_txt}}</h4>
+      </div>
+     <!--  <div class="modal-body"> -->
+            <div class="modal-body form-group" style="width:90%">
+		<div class='date'><input type='text' placeholder='yyyy-mm-dd HH:MM' name='created_text' id='created-date' class="form-control" /></div><script type='text/javascript'>$(function () {var picker = $('#created-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 }); })</script>
+            </div>
+      <!-- </div> -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
+        <button id="created-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 {{if $content || $attachment || $expanded}}
 <script>initEditor();</script>

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-09-25.1166\n"
+"Project-Id-Version: 2015-10-17.1188\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-25 00:05-0700\n"
+"POT-Creation-Date: 2015-10-17 16:47-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -416,7 +416,7 @@ msgstr ""
 msgid "Edited"
 msgstr ""
 
-#: ../../include/api.php:1234
+#: ../../include/api.php:1267
 msgid "Public Timeline"
 msgstr ""
 
@@ -828,7 +828,8 @@ msgstr ""
 msgid "April"
 msgstr ""
 
-#: ../../include/text.php:1201
+#: ../../include/text.php:1201 ../../mod/uexport.php:58
+#: ../../mod/uexport.php:59
 msgid "May"
 msgstr ""
 
@@ -1374,7 +1375,7 @@ msgstr ""
 
 #: ../../include/widgets.php:136 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../include/conversation.php:956
-#: ../../include/identity.php:933 ../../mod/directory.php:316
+#: ../../include/identity.php:956 ../../mod/directory.php:316
 #: ../../mod/match.php:64 ../../mod/suggest.php:52
 msgid "Connect"
 msgstr ""
@@ -1551,7 +1552,7 @@ msgid "Finishes:"
 msgstr ""
 
 #: ../../include/event.php:50 ../../include/bb2diaspora.php:481
-#: ../../include/identity.php:984 ../../mod/directory.php:302
+#: ../../include/identity.php:1007 ../../mod/directory.php:302
 #: ../../mod/events.php:684
 msgid "Location:"
 msgstr ""
@@ -1855,7 +1856,7 @@ msgid "View all"
 msgstr ""
 
 #: ../../include/ItemObject.php:179 ../../include/taxonomy.php:396
-#: ../../include/conversation.php:1712 ../../include/identity.php:1243
+#: ../../include/conversation.php:1712 ../../include/identity.php:1266
 #: ../../mod/photos.php:1019
 msgctxt "noun"
 msgid "Like"
@@ -2107,7 +2108,7 @@ msgstr ""
 msgid "Manage/Edit profiles"
 msgstr ""
 
-#: ../../include/nav.php:95 ../../include/identity.php:956
+#: ../../include/nav.php:95 ../../include/identity.php:979
 msgid "Edit Profile"
 msgstr ""
 
@@ -3037,14 +3038,14 @@ msgstr ""
 msgid "Visible to specific connections."
 msgstr ""
 
-#: ../../include/items.php:4286 ../../mod/thing.php:74
+#: ../../include/items.php:4310 ../../mod/thing.php:74
 #: ../../mod/filestorage.php:27 ../../mod/viewsrc.php:20
 #: ../../mod/admin.php:167 ../../mod/admin.php:1025 ../../mod/admin.php:1225
 #: ../../mod/display.php:36
 msgid "Item not found."
 msgstr ""
 
-#: ../../include/items.php:4359 ../../include/attach.php:137
+#: ../../include/items.php:4383 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
@@ -3087,38 +3088,38 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: ../../include/items.php:4763 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4787 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr ""
 
-#: ../../include/items.php:4779
+#: ../../include/items.php:4803
 msgid "Collection is empty."
 msgstr ""
 
-#: ../../include/items.php:4786
+#: ../../include/items.php:4810
 #, php-format
 msgid "Collection: %s"
 msgstr ""
 
-#: ../../include/items.php:4796 ../../mod/connedit.php:674
+#: ../../include/items.php:4820 ../../mod/connedit.php:674
 #, php-format
 msgid "Connection: %s"
 msgstr ""
 
-#: ../../include/items.php:4798
+#: ../../include/items.php:4822
 msgid "Connection not found."
 msgstr ""
 
-#: ../../include/zot.php:678
+#: ../../include/zot.php:684
 msgid "Invalid data packet"
 msgstr ""
 
-#: ../../include/zot.php:694
+#: ../../include/zot.php:700
 msgid "Unable to verify channel signature"
 msgstr ""
 
-#: ../../include/zot.php:2184
+#: ../../include/zot.php:2208
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr ""
@@ -3316,11 +3317,11 @@ msgstr ""
 msgid "Default Profile"
 msgstr ""
 
-#: ../../include/identity.php:736
+#: ../../include/identity.php:759
 msgid "Requested channel is not available."
 msgstr ""
 
-#: ../../include/identity.php:783 ../../mod/profile.php:16
+#: ../../include/identity.php:806 ../../mod/profile.php:16
 #: ../../mod/achievements.php:11 ../../mod/webpages.php:29
 #: ../../mod/connect.php:13 ../../mod/hcard.php:8 ../../mod/blocks.php:29
 #: ../../mod/editlayout.php:27 ../../mod/editwebpage.php:28
@@ -3329,193 +3330,193 @@ msgstr ""
 msgid "Requested profile is not available."
 msgstr ""
 
-#: ../../include/identity.php:946 ../../mod/profiles.php:774
+#: ../../include/identity.php:969 ../../mod/profiles.php:774
 msgid "Change profile photo"
 msgstr ""
 
-#: ../../include/identity.php:952
+#: ../../include/identity.php:975
 msgid "Profiles"
 msgstr ""
 
-#: ../../include/identity.php:952
+#: ../../include/identity.php:975
 msgid "Manage/edit profiles"
 msgstr ""
 
-#: ../../include/identity.php:953 ../../mod/profiles.php:775
+#: ../../include/identity.php:976 ../../mod/profiles.php:775
 msgid "Create New Profile"
 msgstr ""
 
-#: ../../include/identity.php:968 ../../mod/profiles.php:786
+#: ../../include/identity.php:991 ../../mod/profiles.php:786
 msgid "Profile Image"
 msgstr ""
 
-#: ../../include/identity.php:971
+#: ../../include/identity.php:994
 msgid "visible to everybody"
 msgstr ""
 
-#: ../../include/identity.php:972 ../../mod/profiles.php:669
+#: ../../include/identity.php:995 ../../mod/profiles.php:669
 #: ../../mod/profiles.php:790
 msgid "Edit visibility"
 msgstr ""
 
-#: ../../include/identity.php:988 ../../include/identity.php:1227
+#: ../../include/identity.php:1011 ../../include/identity.php:1250
 msgid "Gender:"
 msgstr ""
 
-#: ../../include/identity.php:989 ../../include/identity.php:1271
+#: ../../include/identity.php:1012 ../../include/identity.php:1294
 msgid "Status:"
 msgstr ""
 
-#: ../../include/identity.php:990 ../../include/identity.php:1282
+#: ../../include/identity.php:1013 ../../include/identity.php:1305
 msgid "Homepage:"
 msgstr ""
 
-#: ../../include/identity.php:991
+#: ../../include/identity.php:1014
 msgid "Online Now"
 msgstr ""
 
-#: ../../include/identity.php:1074 ../../include/identity.php:1152
+#: ../../include/identity.php:1097 ../../include/identity.php:1175
 #: ../../mod/ping.php:324
 msgid "g A l F d"
 msgstr ""
 
-#: ../../include/identity.php:1075 ../../include/identity.php:1153
+#: ../../include/identity.php:1098 ../../include/identity.php:1176
 msgid "F d"
 msgstr ""
 
-#: ../../include/identity.php:1120 ../../include/identity.php:1192
+#: ../../include/identity.php:1143 ../../include/identity.php:1215
 #: ../../mod/ping.php:346
 msgid "[today]"
 msgstr ""
 
-#: ../../include/identity.php:1131
+#: ../../include/identity.php:1154
 msgid "Birthday Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1132
+#: ../../include/identity.php:1155
 msgid "Birthdays this week:"
 msgstr ""
 
-#: ../../include/identity.php:1185
+#: ../../include/identity.php:1208
 msgid "[No description]"
 msgstr ""
 
-#: ../../include/identity.php:1203
+#: ../../include/identity.php:1226
 msgid "Event Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1204
+#: ../../include/identity.php:1227
 msgid "Events this week:"
 msgstr ""
 
-#: ../../include/identity.php:1217 ../../include/identity.php:1334
+#: ../../include/identity.php:1240 ../../include/identity.php:1357
 #: ../../include/apps.php:138 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr ""
 
-#: ../../include/identity.php:1225 ../../mod/settings.php:1056
+#: ../../include/identity.php:1248 ../../mod/settings.php:1056
 msgid "Full Name:"
 msgstr ""
 
-#: ../../include/identity.php:1232
+#: ../../include/identity.php:1255
 msgid "Like this channel"
 msgstr ""
 
-#: ../../include/identity.php:1256
+#: ../../include/identity.php:1279
 msgid "j F, Y"
 msgstr ""
 
-#: ../../include/identity.php:1257
+#: ../../include/identity.php:1280
 msgid "j F"
 msgstr ""
 
-#: ../../include/identity.php:1264
+#: ../../include/identity.php:1287
 msgid "Birthday:"
 msgstr ""
 
-#: ../../include/identity.php:1268 ../../mod/directory.php:297
+#: ../../include/identity.php:1291 ../../mod/directory.php:297
 msgid "Age:"
 msgstr ""
 
-#: ../../include/identity.php:1277
+#: ../../include/identity.php:1300
 #, php-format
 msgid "for %1$d %2$s"
 msgstr ""
 
-#: ../../include/identity.php:1280 ../../mod/profiles.php:691
+#: ../../include/identity.php:1303 ../../mod/profiles.php:691
 msgid "Sexual Preference:"
 msgstr ""
 
-#: ../../include/identity.php:1284 ../../mod/directory.php:313
+#: ../../include/identity.php:1307 ../../mod/directory.php:313
 #: ../../mod/profiles.php:693
 msgid "Hometown:"
 msgstr ""
 
-#: ../../include/identity.php:1286
+#: ../../include/identity.php:1309
 msgid "Tags:"
 msgstr ""
 
-#: ../../include/identity.php:1288 ../../mod/profiles.php:694
+#: ../../include/identity.php:1311 ../../mod/profiles.php:694
 msgid "Political Views:"
 msgstr ""
 
-#: ../../include/identity.php:1290
+#: ../../include/identity.php:1313
 msgid "Religion:"
 msgstr ""
 
-#: ../../include/identity.php:1292 ../../mod/directory.php:315
+#: ../../include/identity.php:1315 ../../mod/directory.php:315
 msgid "About:"
 msgstr ""
 
-#: ../../include/identity.php:1294
+#: ../../include/identity.php:1317
 msgid "Hobbies/Interests:"
 msgstr ""
 
-#: ../../include/identity.php:1296 ../../mod/profiles.php:697
+#: ../../include/identity.php:1319 ../../mod/profiles.php:697
 msgid "Likes:"
 msgstr ""
 
-#: ../../include/identity.php:1298 ../../mod/profiles.php:698
+#: ../../include/identity.php:1321 ../../mod/profiles.php:698
 msgid "Dislikes:"
 msgstr ""
 
-#: ../../include/identity.php:1300
+#: ../../include/identity.php:1323
 msgid "Contact information and Social Networks:"
 msgstr ""
 
-#: ../../include/identity.php:1302
+#: ../../include/identity.php:1325
 msgid "My other channels:"
 msgstr ""
 
-#: ../../include/identity.php:1304
+#: ../../include/identity.php:1327
 msgid "Musical interests:"
 msgstr ""
 
-#: ../../include/identity.php:1306
+#: ../../include/identity.php:1329
 msgid "Books, literature:"
 msgstr ""
 
-#: ../../include/identity.php:1308
+#: ../../include/identity.php:1331
 msgid "Television:"
 msgstr ""
 
-#: ../../include/identity.php:1310
+#: ../../include/identity.php:1333
 msgid "Film/dance/culture/entertainment:"
 msgstr ""
 
-#: ../../include/identity.php:1312
+#: ../../include/identity.php:1335
 msgid "Love/Romance:"
 msgstr ""
 
-#: ../../include/identity.php:1314
+#: ../../include/identity.php:1337
 msgid "Work/employment:"
 msgstr ""
 
-#: ../../include/identity.php:1316
+#: ../../include/identity.php:1339
 msgid "School/education:"
 msgstr ""
 
-#: ../../include/identity.php:1336
+#: ../../include/identity.php:1359
 msgid "Like this thing"
 msgstr ""
 
@@ -4602,7 +4603,7 @@ msgstr ""
 msgid "No installed plugins/addons/apps"
 msgstr ""
 
-#: ../../mod/siteinfo.php:155 ../../mod/home.php:58 ../../mod/home.php:64
+#: ../../mod/siteinfo.php:155 ../../mod/home.php:58 ../../mod/home.php:66
 msgid "$Projectname"
 msgstr ""
 
@@ -6521,30 +6522,6 @@ msgstr ""
 msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr ""
 
-#: ../../mod/uexport.php:45 ../../mod/uexport.php:46
-msgid "Export Channel"
-msgstr ""
-
-#: ../../mod/uexport.php:47
-msgid ""
-"Export your basic channel information to a small file.  This acts as a "
-"backup of your connections, permissions, profile and basic data, which can "
-"be used to import your data to a new hub, but\tdoes not contain your content."
-msgstr ""
-
-#: ../../mod/uexport.php:48
-msgid "Export Content"
-msgstr ""
-
-#: ../../mod/uexport.php:49
-msgid ""
-"Export your channel information and all the content to a JSON backup. This "
-"backs up all of your connections, permissions, profile data and all of your "
-"content, but is generally not suitable for importing a channel to a new hub "
-"as this file may be VERY large.  Please be patient - it may take several "
-"minutes for this download to begin."
-msgstr ""
-
 #: ../../mod/viewconnections.php:62
 msgid "No connections."
 msgstr ""
@@ -8155,6 +8132,113 @@ msgstr ""
 msgid "D, d M Y - g:i A"
 msgstr ""
 
+#: ../../mod/uexport.php:50 ../../mod/uexport.php:51
+msgid "Export Channel"
+msgstr ""
+
+#: ../../mod/uexport.php:52
+msgid ""
+"Export your basic channel information to a file.  This acts as a backup of "
+"your connections, permissions, profile and basic data, which can be used to "
+"import your data to a new server hub, but does not contain your content."
+msgstr ""
+
+#: ../../mod/uexport.php:53
+msgid "Export Content"
+msgstr ""
+
+#: ../../mod/uexport.php:54
+msgid ""
+"Export your channel information and recent content to a JSON backup that can "
+"be restored or imported to another server hub. This backs up all of your "
+"connections, permissions, profile data and several months of posts. This "
+"file may be VERY large.  Please be patient - it may take several minutes for "
+"this download to begin."
+msgstr ""
+
+#: ../../mod/uexport.php:55
+msgid "Export your posts from a given year or month:"
+msgstr ""
+
+#: ../../mod/uexport.php:57
+msgid ""
+"You may also export your posts and conversations for a particular year or "
+"month. Click on one of the recent years or months below."
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Jan"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Feb"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Mar"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Apr"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Jun"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Jul"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Aug"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Sep"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Oct"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Nov"
+msgstr ""
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Dec"
+msgstr ""
+
+#: ../../mod/uexport.php:60
+msgid ""
+"If the export fails (possibly due to memory exhaustion on your server hub), "
+"please try again selecting a more limited date range."
+msgstr ""
+
+#: ../../mod/uexport.php:61
+#, php-format
+msgid ""
+"Or adjust the date in your browser location bar to select other dates. For "
+"example the year 2013; <a href=\"%1$s/2013\">%1$s/2013</a> or the month "
+"September 2013; <a href=\"%1$s/2013/9\">%1$s/2013/9</a>"
+msgstr ""
+
+#: ../../mod/uexport.php:62
+msgid "Please visit"
+msgstr ""
+
+#: ../../mod/uexport.php:62
+msgid "on another hub to import the backup files(s)."
+msgstr ""
+
+#: ../../mod/uexport.php:63
+msgid ""
+"We advise you to clone the channel on the new hub first and than to import "
+"the backup file(s) (from the same channel) in chronological order. Importing "
+"the backup files into another channel will certainly give permission issues."
+msgstr ""
+
 #: ../../mod/mood.php:131
 msgid "Set your current mood and tell your friends"
 msgstr ""
@@ -8672,7 +8756,7 @@ msgstr ""
 msgid "Download PDL file"
 msgstr ""
 
-#: ../../mod/home.php:73
+#: ../../mod/home.php:75
 #, php-format
 msgid "Welcome to %s"
 msgstr ""

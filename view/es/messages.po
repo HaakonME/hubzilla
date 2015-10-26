@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 00:04-0700\n"
-"PO-Revision-Date: 2015-09-22 14:10+0000\n"
+"POT-Creation-Date: 2015-10-17 16:47-0700\n"
+"PO-Revision-Date: 2015-10-18 15:17+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -422,7 +422,7 @@ msgstr "Creado"
 msgid "Edited"
 msgstr "Editado"
 
-#: ../../include/api.php:1234
+#: ../../include/api.php:1267
 msgid "Public Timeline"
 msgstr "Cronología pública"
 
@@ -660,7 +660,7 @@ msgstr "Guardar"
 
 #: ../../include/text.php:990
 msgid "poke"
-msgstr "dar un toque"
+msgstr "un toque"
 
 #: ../../include/text.php:990 ../../include/conversation.php:243
 msgid "poked"
@@ -668,7 +668,7 @@ msgstr "ha recibido un toque"
 
 #: ../../include/text.php:991
 msgid "ping"
-msgstr "avisar"
+msgstr "un \"ping\""
 
 #: ../../include/text.php:991
 msgid "pinged"
@@ -692,19 +692,19 @@ msgstr "abofeteado/a"
 
 #: ../../include/text.php:994
 msgid "finger"
-msgstr "señalar"
+msgstr "un \"finger\""
 
 #: ../../include/text.php:994
 msgid "fingered"
-msgstr "señalado/a"
+msgstr "ha recibido un \"finger\""
 
 #: ../../include/text.php:995
 msgid "rebuff"
-msgstr "desairar"
+msgstr "un rechazo"
 
 #: ../../include/text.php:995
 msgid "rebuffed"
-msgstr "desairado/a"
+msgstr "ha sido rechazado/a"
 
 #: ../../include/text.php:1005
 msgid "happy"
@@ -834,7 +834,8 @@ msgstr "marzo"
 msgid "April"
 msgstr "abril"
 
-#: ../../include/text.php:1201
+#: ../../include/text.php:1201 ../../mod/uexport.php:58
+#: ../../mod/uexport.php:59
 msgid "May"
 msgstr "mayo"
 
@@ -926,7 +927,7 @@ msgstr "evento"
 #: ../../include/conversation.php:148 ../../mod/like.php:349
 #: ../../mod/subthread.php:72 ../../mod/subthread.php:174
 msgid "status"
-msgstr "estado"
+msgstr "el mensaje de estado"
 
 #: ../../include/text.php:1892 ../../include/conversation.php:150
 #: ../../mod/tagger.php:53
@@ -1091,7 +1092,7 @@ msgstr "Gracias,"
 #: ../../include/network.php:1590 ../../include/enotify.php:63
 #, php-format
 msgid "%s Administrator"
-msgstr "%s Administrador"
+msgstr "Administrador de %s"
 
 #: ../../include/network.php:1646
 msgid "No Subject"
@@ -1380,7 +1381,7 @@ msgstr "Editar una aplicación personal"
 
 #: ../../include/widgets.php:136 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../include/conversation.php:956
-#: ../../include/identity.php:933 ../../mod/directory.php:316
+#: ../../include/identity.php:956 ../../mod/directory.php:316
 #: ../../mod/match.php:64 ../../mod/suggest.php:52
 msgid "Connect"
 msgstr "Conectar"
@@ -1557,7 +1558,7 @@ msgid "Finishes:"
 msgstr "Finaliza:"
 
 #: ../../include/event.php:50 ../../include/bb2diaspora.php:481
-#: ../../include/identity.php:984 ../../mod/directory.php:302
+#: ../../include/identity.php:1007 ../../mod/directory.php:302
 #: ../../mod/events.php:684
 msgid "Location:"
 msgstr "Ubicación:"
@@ -1603,12 +1604,12 @@ msgstr "%1$s, %2$s ha comentado sobre [zrl=%3$s]%4$s[/zrl]"
 #: ../../include/enotify.php:166
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]%4$s's %5$s[/zrl]"
-msgstr "%1$s, %2$s ha comentado sobre el [zrl=%3$s]%5$s de %4$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado [zrl=%3$s]%5$s de %4$s[/zrl]"
 
 #: ../../include/enotify.php:175
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]"
-msgstr "%1$s, %2$s ha comentado [zrl=%3$s]su %4$s[/zrl]"
+msgstr "%1$s, %2$s ha comentado [zrl=%3$s]%4$s creado por usted[/zrl]"
 
 #: ../../include/enotify.php:186
 #, php-format
@@ -1665,7 +1666,7 @@ msgstr "[Red:Aviso]  %1$s le ha dado un toque"
 #: ../../include/enotify.php:239
 #, php-format
 msgid "%1$s, %2$s poked you at %3$s"
-msgstr "%1$s, %2$s le dio un toque sobre %3$s"
+msgstr "%1$s, %2$s le dio un toque en %3$s"
 
 #: ../../include/enotify.php:240
 #, php-format
@@ -1680,7 +1681,7 @@ msgstr "[Red:Aviso]  %s etiquetó su entrada"
 #: ../../include/enotify.php:257
 #, php-format
 msgid "%1$s, %2$s tagged your post at %3$s"
-msgstr "%1$s, %2$s ha etiquetado su publicación sobre %3$s"
+msgstr "%1$s, %2$s ha etiquetado su publicación en %3$s"
 
 #: ../../include/enotify.php:258
 #, php-format
@@ -1862,7 +1863,7 @@ msgid "View all"
 msgstr "Ver todo"
 
 #: ../../include/ItemObject.php:179 ../../include/taxonomy.php:396
-#: ../../include/conversation.php:1712 ../../include/identity.php:1243
+#: ../../include/conversation.php:1712 ../../include/identity.php:1266
 #: ../../mod/photos.php:1019
 msgctxt "noun"
 msgid "Like"
@@ -2114,7 +2115,7 @@ msgstr "Editar perfiles"
 msgid "Manage/Edit profiles"
 msgstr "Administrar/editar perfiles"
 
-#: ../../include/nav.php:95 ../../include/identity.php:956
+#: ../../include/nav.php:95 ../../include/identity.php:979
 msgid "Edit Profile"
 msgstr "Editar perfil"
 
@@ -2416,7 +2417,7 @@ msgstr "Pueden verse mis conexiones"
 
 #: ../../include/permissions.php:30
 msgid "Can view my file storage"
-msgstr "Pueden verse mis ficheros compartidos"
+msgstr "Puede verse mi repositorio de ficheros"
 
 #: ../../include/permissions.php:31
 msgid "Can view my webpages"
@@ -2464,7 +2465,7 @@ msgstr "Se puede charlar conmigo (cuando esté disponible)"
 
 #: ../../include/permissions.php:43
 msgid "Can write to my file storage"
-msgstr "Puede escribirse en mi carpeta de ficheros"
+msgstr "Puede escribirse en mi repositorio de ficheros"
 
 #: ../../include/permissions.php:44
 msgid "Can edit my webpages"
@@ -2589,12 +2590,12 @@ msgstr "Abstención"
 #: ../../include/conversation.php:585 ../../mod/photos.php:998
 msgctxt "title"
 msgid "Attending"
-msgstr "Participar"
+msgstr "Participaré"
 
 #: ../../include/conversation.php:585 ../../mod/photos.php:998
 msgctxt "title"
 msgid "Not attending"
-msgstr "No participar"
+msgstr "No participaré"
 
 #: ../../include/conversation.php:585 ../../mod/photos.php:998
 msgctxt "title"
@@ -2636,7 +2637,7 @@ msgstr "Seguir el hilo"
 
 #: ../../include/conversation.php:952
 msgid "View Status"
-msgstr "Ver estado"
+msgstr "Estado actual"
 
 #: ../../include/conversation.php:954
 msgid "View Photos"
@@ -2656,7 +2657,7 @@ msgstr "Enviar Mensaje Privado"
 
 #: ../../include/conversation.php:959 ../../include/apps.php:145
 msgid "Poke"
-msgstr "Dar un toque"
+msgstr "Toques y otras cosas"
 
 #: ../../include/conversation.php:1073
 #, php-format
@@ -2946,7 +2947,7 @@ msgstr "Álbumes de fotos"
 
 #: ../../include/conversation.php:1623
 msgid "Files and Storage"
-msgstr "Ficheros y carpetas"
+msgstr "Repositorio de ficheros"
 
 #: ../../include/conversation.php:1633 ../../include/conversation.php:1636
 msgid "Chatrooms"
@@ -2965,14 +2966,14 @@ msgctxt "noun"
 msgid "Attending"
 msgid_plural "Attending"
 msgstr[0] "Asistir"
-msgstr[1] "Participar"
+msgstr[1] "Participaré"
 
 #: ../../include/conversation.php:1721
 msgctxt "noun"
 msgid "Not Attending"
 msgid_plural "Not Attending"
 msgstr[0] "No asistir"
-msgstr[1] "No participar"
+msgstr[1] "No participaré"
 
 #: ../../include/conversation.php:1724
 msgctxt "noun"
@@ -3008,51 +3009,51 @@ msgstr[1] "Se abstienen"
 msgid "Permission denied"
 msgstr "Permiso denegado"
 
-#: ../../include/items.php:1038 ../../include/items.php:1084
+#: ../../include/items.php:1101 ../../include/items.php:1147
 msgid "(Unknown)"
 msgstr "(Desconocido)"
 
-#: ../../include/items.php:1310
+#: ../../include/items.php:1373
 msgid "Visible to anybody on the internet."
 msgstr "Visible para cualquiera en internet."
 
-#: ../../include/items.php:1312
+#: ../../include/items.php:1375
 msgid "Visible to you only."
 msgstr "Visible sólo para usted."
 
-#: ../../include/items.php:1314
+#: ../../include/items.php:1377
 msgid "Visible to anybody in this network."
 msgstr "Visible para cualquiera en esta red."
 
-#: ../../include/items.php:1316
+#: ../../include/items.php:1379
 msgid "Visible to anybody authenticated."
 msgstr "Visible para cualquiera que haya sido autenticado."
 
-#: ../../include/items.php:1318
+#: ../../include/items.php:1381
 #, php-format
 msgid "Visible to anybody on %s."
 msgstr "Visible para cualquiera en %s."
 
-#: ../../include/items.php:1320
+#: ../../include/items.php:1383
 msgid "Visible to all connections."
 msgstr "Visible para todas las conexiones."
 
-#: ../../include/items.php:1322
+#: ../../include/items.php:1385
 msgid "Visible to approved connections."
 msgstr "Visible para las conexiones permitidas."
 
-#: ../../include/items.php:1324
+#: ../../include/items.php:1387
 msgid "Visible to specific connections."
 msgstr "Visible para conexiones específicas."
 
-#: ../../include/items.php:4223 ../../mod/thing.php:74
+#: ../../include/items.php:4310 ../../mod/thing.php:74
 #: ../../mod/filestorage.php:27 ../../mod/viewsrc.php:20
 #: ../../mod/admin.php:167 ../../mod/admin.php:1025 ../../mod/admin.php:1225
 #: ../../mod/display.php:36
 msgid "Item not found."
 msgstr "Elemento no encontrado."
 
-#: ../../include/items.php:4296 ../../include/attach.php:137
+#: ../../include/items.php:4383 ../../include/attach.php:137
 #: ../../include/attach.php:184 ../../include/attach.php:247
 #: ../../include/attach.php:261 ../../include/attach.php:305
 #: ../../include/attach.php:319 ../../include/attach.php:350
@@ -3095,38 +3096,38 @@ msgstr "Elemento no encontrado."
 msgid "Permission denied."
 msgstr "Acceso denegado."
 
-#: ../../include/items.php:4700 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4787 ../../mod/group.php:38 ../../mod/group.php:140
 #: ../../mod/bulksetclose.php:51
 msgid "Collection not found."
 msgstr "Colección no encontrada."
 
-#: ../../include/items.php:4716
+#: ../../include/items.php:4803
 msgid "Collection is empty."
 msgstr "La colección está vacía."
 
-#: ../../include/items.php:4723
+#: ../../include/items.php:4810
 #, php-format
 msgid "Collection: %s"
 msgstr "Colección: %s"
 
-#: ../../include/items.php:4733 ../../mod/connedit.php:674
+#: ../../include/items.php:4820 ../../mod/connedit.php:674
 #, php-format
 msgid "Connection: %s"
 msgstr "Conexión: %s"
 
-#: ../../include/items.php:4735
+#: ../../include/items.php:4822
 msgid "Connection not found."
 msgstr "Conexión no encontrada"
 
-#: ../../include/zot.php:677
+#: ../../include/zot.php:684
 msgid "Invalid data packet"
 msgstr "Paquete de datos no válido"
 
-#: ../../include/zot.php:693
+#: ../../include/zot.php:700
 msgid "Unable to verify channel signature"
 msgstr "No ha sido posible de verificar la signatura del canal"
 
-#: ../../include/zot.php:2161
+#: ../../include/zot.php:2208
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr "No ha sido posible de verificar la signatura del sitio para %s"
@@ -3324,11 +3325,11 @@ msgstr "No ha sido posible recuperar la identidad creada"
 msgid "Default Profile"
 msgstr "Perfil principal"
 
-#: ../../include/identity.php:736
+#: ../../include/identity.php:759
 msgid "Requested channel is not available."
 msgstr "El canal solicitado no está disponible."
 
-#: ../../include/identity.php:783 ../../mod/profile.php:16
+#: ../../include/identity.php:806 ../../mod/profile.php:16
 #: ../../mod/achievements.php:11 ../../mod/webpages.php:29
 #: ../../mod/connect.php:13 ../../mod/hcard.php:8 ../../mod/blocks.php:29
 #: ../../mod/editlayout.php:27 ../../mod/editwebpage.php:28
@@ -3337,193 +3338,193 @@ msgstr "El canal solicitado no está disponible."
 msgid "Requested profile is not available."
 msgstr "El perfil solicitado no está disponible."
 
-#: ../../include/identity.php:946 ../../mod/profiles.php:774
+#: ../../include/identity.php:969 ../../mod/profiles.php:774
 msgid "Change profile photo"
 msgstr "Cambiar foto de perfil"
 
-#: ../../include/identity.php:952
+#: ../../include/identity.php:975
 msgid "Profiles"
 msgstr "Perfiles"
 
-#: ../../include/identity.php:952
+#: ../../include/identity.php:975
 msgid "Manage/edit profiles"
 msgstr "Administrar/editar perfiles"
 
-#: ../../include/identity.php:953 ../../mod/profiles.php:775
+#: ../../include/identity.php:976 ../../mod/profiles.php:775
 msgid "Create New Profile"
 msgstr "Crear nuevo perfil"
 
-#: ../../include/identity.php:968 ../../mod/profiles.php:786
+#: ../../include/identity.php:991 ../../mod/profiles.php:786
 msgid "Profile Image"
 msgstr "Imagen de perfil"
 
-#: ../../include/identity.php:971
+#: ../../include/identity.php:994
 msgid "visible to everybody"
 msgstr "visible para cualquiera"
 
-#: ../../include/identity.php:972 ../../mod/profiles.php:669
+#: ../../include/identity.php:995 ../../mod/profiles.php:669
 #: ../../mod/profiles.php:790
 msgid "Edit visibility"
 msgstr "Editar visibilidad"
 
-#: ../../include/identity.php:988 ../../include/identity.php:1227
+#: ../../include/identity.php:1011 ../../include/identity.php:1250
 msgid "Gender:"
 msgstr "Género:"
 
-#: ../../include/identity.php:989 ../../include/identity.php:1271
+#: ../../include/identity.php:1012 ../../include/identity.php:1294
 msgid "Status:"
 msgstr "Estado:"
 
-#: ../../include/identity.php:990 ../../include/identity.php:1282
+#: ../../include/identity.php:1013 ../../include/identity.php:1305
 msgid "Homepage:"
 msgstr "Página personal:"
 
-#: ../../include/identity.php:991
+#: ../../include/identity.php:1014
 msgid "Online Now"
 msgstr "Ahora en línea"
 
-#: ../../include/identity.php:1074 ../../include/identity.php:1152
+#: ../../include/identity.php:1097 ../../include/identity.php:1175
 #: ../../mod/ping.php:324
 msgid "g A l F d"
 msgstr "g A l d F"
 
-#: ../../include/identity.php:1075 ../../include/identity.php:1153
+#: ../../include/identity.php:1098 ../../include/identity.php:1176
 msgid "F d"
 msgstr "d F"
 
-#: ../../include/identity.php:1120 ../../include/identity.php:1192
+#: ../../include/identity.php:1143 ../../include/identity.php:1215
 #: ../../mod/ping.php:346
 msgid "[today]"
 msgstr "[hoy]"
 
-#: ../../include/identity.php:1131
+#: ../../include/identity.php:1154
 msgid "Birthday Reminders"
 msgstr "Recordatorios de cumpleaños"
 
-#: ../../include/identity.php:1132
+#: ../../include/identity.php:1155
 msgid "Birthdays this week:"
 msgstr "Cumpleaños esta semana:"
 
-#: ../../include/identity.php:1185
+#: ../../include/identity.php:1208
 msgid "[No description]"
 msgstr "[Sin descripción]"
 
-#: ../../include/identity.php:1203
+#: ../../include/identity.php:1226
 msgid "Event Reminders"
 msgstr "Recordatorios de eventos"
 
-#: ../../include/identity.php:1204
+#: ../../include/identity.php:1227
 msgid "Events this week:"
 msgstr "Eventos de esta semana:"
 
-#: ../../include/identity.php:1217 ../../include/identity.php:1334
+#: ../../include/identity.php:1240 ../../include/identity.php:1357
 #: ../../include/apps.php:138 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr "Perfil"
 
-#: ../../include/identity.php:1225 ../../mod/settings.php:1056
+#: ../../include/identity.php:1248 ../../mod/settings.php:1056
 msgid "Full Name:"
 msgstr "Nombre completo:"
 
-#: ../../include/identity.php:1232
+#: ../../include/identity.php:1255
 msgid "Like this channel"
 msgstr "Me gusta este canal"
 
-#: ../../include/identity.php:1256
+#: ../../include/identity.php:1279
 msgid "j F, Y"
 msgstr "j F Y"
 
-#: ../../include/identity.php:1257
+#: ../../include/identity.php:1280
 msgid "j F"
 msgstr "j F"
 
-#: ../../include/identity.php:1264
+#: ../../include/identity.php:1287
 msgid "Birthday:"
 msgstr "Cumpleaños:"
 
-#: ../../include/identity.php:1268 ../../mod/directory.php:297
+#: ../../include/identity.php:1291 ../../mod/directory.php:297
 msgid "Age:"
 msgstr "Edad:"
 
-#: ../../include/identity.php:1277
+#: ../../include/identity.php:1300
 #, php-format
 msgid "for %1$d %2$s"
 msgstr "por %1$d %2$s"
 
-#: ../../include/identity.php:1280 ../../mod/profiles.php:691
+#: ../../include/identity.php:1303 ../../mod/profiles.php:691
 msgid "Sexual Preference:"
 msgstr "Orientación sexual:"
 
-#: ../../include/identity.php:1284 ../../mod/directory.php:313
+#: ../../include/identity.php:1307 ../../mod/directory.php:313
 #: ../../mod/profiles.php:693
 msgid "Hometown:"
 msgstr "Ciudad de origen:"
 
-#: ../../include/identity.php:1286
+#: ../../include/identity.php:1309
 msgid "Tags:"
 msgstr "Etiquetas:"
 
-#: ../../include/identity.php:1288 ../../mod/profiles.php:694
+#: ../../include/identity.php:1311 ../../mod/profiles.php:694
 msgid "Political Views:"
 msgstr "Posición política:"
 
-#: ../../include/identity.php:1290
+#: ../../include/identity.php:1313
 msgid "Religion:"
 msgstr "Religión:"
 
-#: ../../include/identity.php:1292 ../../mod/directory.php:315
+#: ../../include/identity.php:1315 ../../mod/directory.php:315
 msgid "About:"
 msgstr "Sobre mí:"
 
-#: ../../include/identity.php:1294
+#: ../../include/identity.php:1317
 msgid "Hobbies/Interests:"
 msgstr "Aficciones/Intereses:"
 
-#: ../../include/identity.php:1296 ../../mod/profiles.php:697
+#: ../../include/identity.php:1319 ../../mod/profiles.php:697
 msgid "Likes:"
 msgstr "Me gusta:"
 
-#: ../../include/identity.php:1298 ../../mod/profiles.php:698
+#: ../../include/identity.php:1321 ../../mod/profiles.php:698
 msgid "Dislikes:"
 msgstr "No me gusta:"
 
-#: ../../include/identity.php:1300
+#: ../../include/identity.php:1323
 msgid "Contact information and Social Networks:"
 msgstr "Información de contacto y redes sociales:"
 
-#: ../../include/identity.php:1302
+#: ../../include/identity.php:1325
 msgid "My other channels:"
 msgstr "Mis otros canales:"
 
-#: ../../include/identity.php:1304
+#: ../../include/identity.php:1327
 msgid "Musical interests:"
 msgstr "Intereses musicales:"
 
-#: ../../include/identity.php:1306
+#: ../../include/identity.php:1329
 msgid "Books, literature:"
 msgstr "Libros, literatura:"
 
-#: ../../include/identity.php:1308
+#: ../../include/identity.php:1331
 msgid "Television:"
 msgstr "Televisión:"
 
-#: ../../include/identity.php:1310
+#: ../../include/identity.php:1333
 msgid "Film/dance/culture/entertainment:"
 msgstr "Cine/danza/cultura/entretenimiento:"
 
-#: ../../include/identity.php:1312
+#: ../../include/identity.php:1335
 msgid "Love/Romance:"
 msgstr "Vida sentimental/amorosa:"
 
-#: ../../include/identity.php:1314
+#: ../../include/identity.php:1337
 msgid "Work/employment:"
 msgstr "Trabajo:"
 
-#: ../../include/identity.php:1316
+#: ../../include/identity.php:1339
 msgid "School/education:"
 msgstr "Estudios:"
 
-#: ../../include/identity.php:1336
+#: ../../include/identity.php:1359
 msgid "Like this thing"
 msgstr "Me gusta esto"
 
@@ -4273,7 +4274,7 @@ msgstr "Omitir este paso"
 
 #: ../../mod/profile_photo.php:366
 msgid "select a photo from your photo albums"
-msgstr "Seleccione una foto de sus álbumes de fotos"
+msgstr "Seleccione una foto de sus álbumes"
 
 #: ../../mod/profile_photo.php:382
 msgid "Crop Image"
@@ -4610,7 +4611,7 @@ msgstr "Extensiones/Aplicaciones instaladas:"
 msgid "No installed plugins/addons/apps"
 msgstr "Extensiones/Aplicaciones no instaladas:"
 
-#: ../../mod/siteinfo.php:155 ../../mod/home.php:58 ../../mod/home.php:64
+#: ../../mod/siteinfo.php:155 ../../mod/home.php:58 ../../mod/home.php:66
 msgid "$Projectname"
 msgstr "$Projectname"
 
@@ -4875,12 +4876,12 @@ msgstr "El acceso a este elemento está restringido."
 #: ../../mod/photos.php:535
 #, php-format
 msgid "%1$.2f MB of %2$.2f MB photo storage used."
-msgstr "%1$.2f MB de %2$.2f MB de almacenamiento de fotos utilizado."
+msgstr "%1$.2f MB de %2$.2f MB usados de la capacidad de almacenamiento de fotos."
 
 #: ../../mod/photos.php:538
 #, php-format
 msgid "%1$.2f MB photo storage used."
-msgstr "%1$.2f MB de almacenamiento de fotos utilizado."
+msgstr "%1$.2f MB utilizados de la capacidad de almacenamiento de fotos."
 
 #: ../../mod/photos.php:562
 msgid "Upload Photos"
@@ -5787,7 +5788,7 @@ msgstr "Servidor no encontrado"
 
 #: ../../mod/poke.php:159
 msgid "Poke/Prod"
-msgstr "Dar un toque/Incitar"
+msgstr "Toque/Incitación"
 
 #: ../../mod/poke.php:160
 msgid "poke, prod or do other things to somebody"
@@ -6524,7 +6525,7 @@ msgstr "IMPORTANTE: Debe crear [manualmente] una tarea programada para las actua
 msgid "OpenID protocol error. No ID returned."
 msgstr "Error del protocolo OpenID. Ningún ID recibido como respuesta."
 
-#: ../../mod/openid.php:72 ../../mod/openid.php:180 ../../mod/post.php:286
+#: ../../mod/openid.php:72 ../../mod/openid.php:180 ../../mod/post.php:287
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
 msgstr "Bienvenido %s. La identificación desde su servidor se ha llevado a cabo correctamente."
@@ -6533,31 +6534,6 @@ msgstr "Bienvenido %s. La identificación desde su servidor se ha llevado a cabo
 #, php-format
 msgid "%1$s tagged %2$s's %3$s with %4$s"
 msgstr "%1$s ha etiquetado la %3$s de %2$s con %4$s"
-
-#: ../../mod/uexport.php:45 ../../mod/uexport.php:46
-msgid "Export Channel"
-msgstr "Exportar el canal"
-
-#: ../../mod/uexport.php:47
-msgid ""
-"Export your basic channel information to a small file.  This acts as a "
-"backup of your connections, permissions, profile and basic data, which can "
-"be used to import your data to a new hub, but\tdoes not contain your "
-"content."
-msgstr "Exportar la base de datos de su canal a un pequeño fichero. Este podrá servir como una copia de seguridad de sus conexiones, permisos, perfil y datos básicos, que podrá importar a un nuevo canal, pero sin sus contenidos."
-
-#: ../../mod/uexport.php:48
-msgid "Export Content"
-msgstr "Exportar contenidos"
-
-#: ../../mod/uexport.php:49
-msgid ""
-"Export your channel information and all the content to a JSON backup. This "
-"backs up all of your connections, permissions, profile data and all of your "
-"content, but is generally not suitable for importing a channel to a new hub "
-"as this file may be VERY large.  Please be patient - it may take several "
-"minutes for this download to begin."
-msgstr "Exportar toda la información del canal y todo su contenido a un fichero JSON. Este contendrá todas sus conexiones, permisos, información del perfil y todo su contenido, Sin embargo, a menudo, no será una buena solución para importarlo en una nueva instancia, pues el fichero será MUY voluminoso. Por favor, tenga paciencia - pueden pasar muchos minutos antes de que comience la carga."
 
 #: ../../mod/viewconnections.php:62
 msgid "No connections."
@@ -7989,7 +7965,7 @@ msgstr "Usted ha sido etiquetado en una publicación"
 
 #: ../../mod/settings.php:1109
 msgid "You are poked/prodded/etc. in a post"
-msgstr "Recibir un toque o incitación en una publicación"
+msgstr "Reciba un toque o incitación en una entrada"
 
 #: ../../mod/settings.php:1112
 msgid "Show visual notifications including:"
@@ -8170,6 +8146,114 @@ msgstr "Eliminar conversación"
 #: ../../mod/message.php:74
 msgid "D, d M Y - g:i A"
 msgstr "D d M Y - G:i"
+
+#: ../../mod/uexport.php:50 ../../mod/uexport.php:51
+msgid "Export Channel"
+msgstr "Exportar el canal"
+
+#: ../../mod/uexport.php:52
+msgid ""
+"Export your basic channel information to a file.  This acts as a backup of "
+"your connections, permissions, profile and basic data, which can be used to "
+"import your data to a new server hub, but does not contain your content."
+msgstr "Exportar la información básica del canal a un fichero. Este equivale a una copia de seguridad de sus conexiones, el perfil y datos fundamentales, que puede usarse para importar sus datos a un nuevo servidor, pero no incluye su contenido."
+
+#: ../../mod/uexport.php:53
+msgid "Export Content"
+msgstr "Exportar contenidos"
+
+#: ../../mod/uexport.php:54
+msgid ""
+"Export your channel information and recent content to a JSON backup that can"
+" be restored or imported to another server hub. This backs up all of your "
+"connections, permissions, profile data and several months of posts. This "
+"file may be VERY large.  Please be patient - it may take several minutes for"
+" this download to begin."
+msgstr "Exportar la información sobre su canal y el contenido reciente a un fichero de respaldo JSON, que puede ser restaurado o importado a otro servidor. Este fichero incluye todas sus conexiones, permisos, datos del perfil y publicaciones de varios meses. Puede llegar a ser MUY grande. Por favor, sea paciente, la descarga puede tardar varios minutos en comenzar."
+
+#: ../../mod/uexport.php:55
+msgid "Export your posts from a given year or month:"
+msgstr "Exporta sus entradas de un año o mes determinados."
+
+#: ../../mod/uexport.php:57
+msgid ""
+"You may also export your posts and conversations for a particular year or "
+"month. Click on one of the recent years or months below."
+msgstr "También puede exportar sus entradas y conversaciones de un año o mes en particular. Hágalo en primer lugar con uno de los años o meses más recientes."
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Jan"
+msgstr "Ene"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Feb"
+msgstr "Feb"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Mar"
+msgstr "Mar"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Apr"
+msgstr "Abr"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Jun"
+msgstr "Jun"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Jul"
+msgstr "Jul"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Aug"
+msgstr "Ago"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Sep"
+msgstr "Sep"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Oct"
+msgstr "Oct"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Nov"
+msgstr "Nov"
+
+#: ../../mod/uexport.php:58 ../../mod/uexport.php:59
+msgid "Dec"
+msgstr "Dic"
+
+#: ../../mod/uexport.php:60
+msgid ""
+"If the export fails (possibly due to memory exhaustion on your server hub), "
+"please try again selecting a more limited date range."
+msgstr "Si la exportación falla (posiblemente debido al agotamiento de la memoria del servidor hub), por favor, inténtelo de nuevo seleccionando un rango de fechas más pequeño."
+
+#: ../../mod/uexport.php:61
+#, php-format
+msgid ""
+"Or adjust the date in your browser location bar to select other dates. For "
+"example the year 2013; <a href=\"%1$s/2013\">%1$s/2013</a> or the month "
+"September 2013; <a href=\"%1$s/2013/9\">%1$s/2013/9</a>"
+msgstr "Ajuste la fecha en la barra de direcciones del navegador para seleccionar otras fechas. Por ejemlo, el año 2013:  <a href=\"%1$s/2013\">%1$s/2013</a> o el mes de septiembre de 2013: <a href=\"%1$s/2013/9\">%1$s/2013/9</a>"
+
+#: ../../mod/uexport.php:62
+msgid "Please visit"
+msgstr "Por favor, visite"
+
+#: ../../mod/uexport.php:62
+msgid "on another hub to import the backup files(s)."
+msgstr "en otro servidor hub para importar el fichero (s) de copia de seguridad."
+
+#: ../../mod/uexport.php:63
+msgid ""
+"We advise you to clone the channel on the new hub first and than to import "
+"the backup file(s) (from the same channel) in chronological order. Importing"
+" the backup files into another channel will certainly give permission "
+"issues."
+msgstr "Aviso: al clonar el canal en un nuevo servidor hub, en primer lugar tiene que importar el fichero (s) con las copias de seguridad (desde el mismo canal) en orden cronológico.  Importar los ficheros de copia de seguridad en otro canal le dará, con toda seguridad, problemas de permisos."
 
 #: ../../mod/mood.php:131
 msgid "Set your current mood and tell your friends"
@@ -8504,7 +8588,7 @@ msgstr "Mensaje eliminado."
 
 #: ../../mod/mail.php:156
 msgid "Message recalled."
-msgstr "Mensaje recuperado."
+msgstr "Mensaje revocado."
 
 #: ../../mod/mail.php:225
 msgid "Send Private Message"
@@ -8532,11 +8616,11 @@ msgstr "Mensaje eliminado"
 
 #: ../../mod/mail.php:313
 msgid "Recall message"
-msgstr "Recuperar el mensaje"
+msgstr "Revocar el mensaje"
 
 #: ../../mod/mail.php:315
 msgid "Message has been recalled."
-msgstr "El mensaje ha sido recuperado."
+msgstr "El mensaje ha sido revocado."
 
 #: ../../mod/mail.php:332
 msgid "Private Conversation"
@@ -8564,7 +8648,7 @@ msgstr "Descartar"
 msgid "Please login."
 msgstr "Por favor, inicie sesión."
 
-#: ../../mod/post.php:235
+#: ../../mod/post.php:236
 msgid ""
 "Remote authentication blocked. You are logged into this site locally. Please"
 " logout and retry."
@@ -8686,7 +8770,7 @@ msgstr "Descripción del formato"
 msgid "Download PDL file"
 msgstr "Descargar el fichero PDL"
 
-#: ../../mod/home.php:73
+#: ../../mod/home.php:75
 #, php-format
 msgid "Welcome to %s"
 msgstr "Bienvenido a %s"
@@ -8897,11 +8981,11 @@ msgstr "Ancho de la sección"
 
 #: ../../view/theme/apw/php/config.php:289
 msgid "Left offset of the aside"
-msgstr "Desplazamiento izquierdo del lateral"
+msgstr "Desplazamiento izquierdo del panel lateral"
 
 #: ../../view/theme/apw/php/config.php:290
 msgid "Right offset of the aside element"
-msgstr "Desplazamiento derecho del elemento lateral"
+msgstr "Desplazamiento derecho del elemento del panel lateral"
 
 #: ../../view/theme/redbasic/php/config.php:82
 msgid "Light (Red Matrix default)"
@@ -9073,7 +9157,7 @@ msgstr "[red] Error SSL del sitio web en %s"
 
 #: ../../boot.php:2352
 msgid "Cron/Scheduled tasks not running."
-msgstr "Las tareas del Planificador/Cron no se están funcionando."
+msgstr "Las tareas del Planificador/Cron no están funcionando."
 
 #: ../../boot.php:2356
 #, php-format

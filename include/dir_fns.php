@@ -178,9 +178,10 @@ function sync_directories($dirmode) {
 			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
 			'site_realm' => DIRECTORY_REALM,
 			'site_valid' => 1
+			
 		);
 		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm, site_valid )
-			values ( '%s', %d', '%s', '%s', '%s' ) ",
+			values ( '%s', %d, '%s', '%s', '%s', %d ) ",
 			dbesc($r[0]['site_url']),
 			intval($r[0]['site_flags']),
 			dbesc($r[0]['site_update']),

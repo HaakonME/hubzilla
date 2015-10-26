@@ -1,8 +1,8 @@
-<link href="custom/css/loginreg.css" rel="stylesheet">
-<div class="reg-box">
 <h2>{{$title}}</h2>
 
-<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+<form action="register" method="post" id="register-form">
+
+
 
 {{if $reg_is}}
 <div id="register-desc" class="descriptive-paragraph">{{$reg_is}}</div>
@@ -11,11 +11,6 @@
 {{/if}}
 {{if $other_sites}}<div id="register-sites" class="descriptive-paragraph">{{$other_sites}}</div>
 {{/if}}
-
-</div>
-<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-<form action="register" method="post" id="register-form"  >
 
 {{if $invitations}}
 	<p id="register-invite-desc">{{$invite_desc}}</p>
@@ -50,8 +45,7 @@
 	<input type="hidden" name="tos" value="1" />
 	{{/if}}
 
-	<button type="submit" name="submit" class="btn btn-default btn-lg" id="register-submit-button">{{$submit}}</button>
+	<input type="submit" name="submit" class="btn btn-default" id="register-submit-button" value="{{$submit}}" />
 	<div id="register-submit-end" class="register-field-end"></div>
+
 </form>
-</div>
-</div>

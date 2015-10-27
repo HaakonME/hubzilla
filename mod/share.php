@@ -60,7 +60,7 @@ function share_init(&$a) {
 			"' message_id='".$r[0]['mid']."']";
 		if($r[0]['title'])
 			$o .= '[b]'.$r[0]['title'].'[/b]'."\r\n";
-		$o .= (($is_photo) ? $r[0]['body'] . "\r\n" . $photo_bb : $r[0]['body']);
+		$o .= (($is_photo) ? $photo_bb . "\r\n" . $r[0]['body'] : $r[0]['body']);
 		$o .= "[/share]";
 	}
 

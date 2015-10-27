@@ -292,17 +292,18 @@ function photo_upload($channel, $observer, $args) {
 		$tag = (($r2) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
 	}
 
+	$body = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+		. $tag . z_root() . "/photo/{$photo_hash}-{$scale}." . $ph->getExt() . '[/zmg]' 
+		. '[/zrl]';
+
 	// Create item object
 	$object = array(
 		'type'   => ACTIVITY_OBJ_PHOTO,
 		'title'  => $title,
 		'id'     => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash),
-		'link'   => $link
+		'link'   => $link,
+		'bbcode' => $body
 	);
-
-	$body = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-		. $tag . z_root() . "/photo/{$photo_hash}-{$scale}." . $ph->getExt() . '[/zmg]' 
-		. '[/zrl]';
 
 	// Create item container
 	if($args['item']) {

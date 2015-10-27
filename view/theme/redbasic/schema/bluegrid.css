@@ -11,7 +11,7 @@ body 	{
 	border: 1px solid #FFF;
 }
 
-.generic-content-wrapper-styled a:hover, .generic-content-wrapper-styled a:focus, .generic-content-wrapper-styled .field.checkbox:hover label, .generic-content-wrapper-styled .field.checkbox:focus label {
+.generic-content-wrapper-styled a:hover, .generic-content-wrapper-styled a:focus, .generic-content-wrapper-styled .field.checkbox:hover label, .generic-content-wrapper-styled .field.checkbox:focus label, .allcontact-link:hover, .allcontact-link:focus {
 	color: rgba(255,255,255,.8);
 }
 
@@ -20,7 +20,16 @@ body 	{
 }
 
 .generic-content-wrapper {
+	background-color: rgba(255,255,255,.8);
+	color: #4d4d4d;
+}
+
+.wall-item-content-wrapper {
 	background-color: #FFF;
+}
+
+.hide-comments-outer, .wall-item-content-wrapper.comment, .wall-item-comment-wrapper {
+	background-color: transparent;
 }
 
 .generic-content-wrapper-styled .generic-content-wrapper {
@@ -76,7 +85,7 @@ input#jot-title:hover, input#jot-title:focus {
 }
 
 nav .dropdown-menu, .wall-item-tools .dropdown-menu, .section-title-wrapper .dropdown-menu {
-    background-color: rgba(67,72,138,.95);
+    background-color: rgba(67,72,138,.97);
     color: #fff;
     border-radius: 0;
     border: none;
@@ -86,6 +95,23 @@ nav .dropdown-menu, .wall-item-tools .dropdown-menu, .section-title-wrapper .dro
 .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
     color: #43488A;
     background-color: rgba(255,255,255,.7);
+    text-decoration: underline;
+}
+
+.vcard .dropdown-menu {
+    background-color: rgba(255,255,255,.97);
+    border-radius: 0;
+    border: none;
+    box-shadow: 0px 6px 12px rgba(169,169,169,.176);
+}
+
+.vcard .dropdown-menu a, .fc-today {
+    color: #43488A;
+}
+
+.vcard .dropdown-menu > li > a:focus, .vcard .dropdown-menu > li > a:hover {
+    color: #43488A;
+    background-color: rgba(	255,255,255,.7);
     text-decoration: underline;
 }
 
@@ -173,10 +199,6 @@ nav .badge:hover, nav .badge:focus {
     text-shadow: none !important;
 }
 
-.fc-today {
-    color: #43488A;
-}
-
 div.rateme {
 	border-radius: 0px;
     font-weight: 400;
@@ -197,8 +219,12 @@ div.rateme:hover, div.rateme:focus, a.rateme:hover, a.rateme:focus {
 	color: #43488A !important;
 }
 
+.notice {
+	background: rgba(215,43,52,.7) url("/images/hz-white-32.png") no-repeat scroll 15px center !important;
+	color: #FFF !important;
+}
+
 input {
-	-moz-border-radius: 0px;
 	border-radius: 0px;	
 }
 
@@ -211,9 +237,18 @@ input {
 	border: 1px solid rgba(255,255,255,.5);
 }
 
-.contact-entry-edit a:hover, .contact-entry-edit a:focus {
+.contact-entry-edit a:hover, .contact-entry-edit a:focus, .generic-content-wrapper-styled > p > span.btn.btn-default > a:hover,.generic-content-wrapper-styled > p > span.btn.btn-default > a:focus, div#profile-edit-links a:hover, div#profile-edit-links a:focus {
 	color: #43488A;
-} 
+}
+
+.profile-edit-side-link, input#profile-photo-upload, .allcontact-link {
+	color: #FFF;
+}
+
+.profile-edit-side-link:hover, .profile-edit-side-link:focus {
+	color: #FFF;
+	text-decoration: none;
+}
 
 .btn, #event-edit-form .btn {
     border: 1px solid #FFF;
@@ -252,7 +287,7 @@ input {
     border-color: #398439;
 }
 
-.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit {
+.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit {
     background-color: #FFF;
     color: #43488A;
 	border-radius: 0px;
@@ -261,7 +296,7 @@ input {
     transition: all .3s ease-in-out;
 }
 
-.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus {
+.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus {
     border-color: #FFF;
     background-color: #43488A;
     color: #FFF;

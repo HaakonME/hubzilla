@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper-styled">
 <h2>{{$header}}</h2>
 
 <script>
@@ -23,4 +24,4 @@ function drophub(id) {
 {{/if}}
 {{/foreach}}
 </table>
-
+</div>

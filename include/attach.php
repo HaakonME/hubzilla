@@ -108,9 +108,9 @@ function z_mime_content_type($filename) {
 	'oth' => 'application/vnd.oasis.opendocument.text-web'
 	);
 
-	$dot = strpos($filename, '.');
-	if ($dot !== false) {
-		$ext = strtolower(substr($filename, $dot + 1));
+	$last_dot = strrpos($filename, '.');
+	if ($last_dot !== false) {
+		$ext = strtolower(substr($filename, $last_dot + 1));
 		if (array_key_exists($ext, $mime_types)) {
 			return $mime_types[$ext];
 		}

@@ -542,23 +542,22 @@ function guess_image_type($filename, $headers = '') {
 			}
 		}
 
-/*
 		if(is_null($type)) {
 			$ext = pathinfo($filename, PATHINFO_EXTENSION);
 			$ph = photo_factory('');
 			$types = $ph->supportedTypes();
-			$type = "image/jpeg";
 			foreach ($types as $m=>$e){
 				if ($ext==$e) $type = $m;
 			}
 		}
-*/
+
 		if(is_null($type)) {
 			$size = getimagesize($filename);
 			$ph = photo_factory('');
 			$types = $ph->supportedTypes();
 			$type = ((array_key_exists($size['mime'], $types)) ? $size['mime'] : 'image/jpeg');
 		}
+
 	}
 	logger('Photo: guess_image_type: type='.$type, LOGGER_DEBUG);
 	return $type;

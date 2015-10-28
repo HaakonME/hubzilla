@@ -75,8 +75,9 @@ require_once('include/attach.php');
 		try {
 			$oauth = new FKOAuth1();
 			$req = OAuthRequest::from_request();
+
 			list($consumer,$token) = $oauth->verify_request($req);
-//			list($consumer,$token) = $oauth->verify_request(OAuthRequest::from_request());
+
 			if (!is_null($token)){
 				$oauth->loginUser($token->uid);
 

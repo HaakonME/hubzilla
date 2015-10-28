@@ -912,8 +912,17 @@ function sslify($s) {
 	if (strpos(z_root(),'https:') === false)
 		return $s;
 
+	// By default we'll only sslify img tags because media files will probably choke.
+	// You can set sslify_everything if you want - but it will likely white-screen if it hits your php memory limit.
+	// The downside is that http: media files will likely be blocked by your browser
+	// Complain to your browser maker
+
+	$allow = get_config('system','sslify_everything');
+	
+	$pattern = (($allow) ? "/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/" : "/\<img(.*?)src=\"(http\:.*?)\"(.*?)\>/" ); 
+
 	$matches = null;
-	$cnt = preg_match_all("/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/",$s,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all($pattern,$s,$matches,PREG_SET_ORDER);
 	if ($cnt) {
 		foreach ($matches as $match) {
 			$filename = basename( parse_url($match[2], PHP_URL_PATH) );

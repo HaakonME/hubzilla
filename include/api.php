@@ -826,6 +826,7 @@ require_once('include/attach.php');
 			require_once('include/html2bbcode.php');
 
 			$txt = requestdata('htmlstatus');
+
 			if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
 
 				$txt = html2bb_video($txt);
@@ -837,8 +838,9 @@ require_once('include/attach.php');
 				$purifier = new HTMLPurifier($config);
 				$txt = $purifier->purify($txt);
 
-				$_REQUEST['body'] = html2bbcode($txt);
 			}
+
+			$_REQUEST['body'] = html2bbcode($txt);
 
 		}
 		else

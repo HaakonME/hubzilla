@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper-styled">
 <h1>{{$room_name}}</h1>
 <div id="chatContainer">
 
@@ -32,6 +33,7 @@
 
     </div>
 
+</div>
 </div>
 
 <script>

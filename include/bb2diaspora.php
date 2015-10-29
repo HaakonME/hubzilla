@@ -309,9 +309,8 @@ function bb2diaspora_itembody($item, $force_update = false) {
 	$is_photo = (($item['obj_type'] == ACTIVITY_OBJ_PHOTO) ? true : false);
 	if($is_photo) {
 		$object = json_decode($item['object'],true);
-		if($object['link'][2]) {
-			$photo_bb = '[zrl=' . rawurldecode($object['id']) . ']' . '[zmg=' . $object['link'][2]['width'] . 'x' . $object['link'][2]['height'] . ']' . rawurldecode($object['link'][2]['href']) . '[/zmg]' . '[/zrl]';
-			$item['body'] = (($item['body']) ? $photo_bb . $item['body'] : $photo_bb);
+		if($object['bbcode']) {
+			$item['body'] = (($item['body']) ? $object['bbcode'] . "\r\n" . $item['body'] : $object['bbcode']);
 		}
 	}
 

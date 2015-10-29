@@ -593,11 +593,6 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 
 	if($photo) {
 		$filename = basename($photo);
-		$type = guess_image_type($photo);
-
-		if(! $type)
-			$type = 'image/jpeg';
-
 
 		$result = z_fetch_url($photo,true);
 
@@ -614,6 +609,7 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 					}
 				}
 			}
+			$type = guess_image_type($photo, $result['header']);
 		}
 	}
 	else {

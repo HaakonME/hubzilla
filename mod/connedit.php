@@ -652,19 +652,21 @@ function connedit_content(&$a) {
 			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4], $checkinherited);
 		}
 
-			$locstr = '';
+		$locstr = '';
 
-			$locs = q("select hubloc_addr as location from hubloc where hubloc_hash = '%s'",
-				dbesc($contact['xchan_hash'])
-			);
+		$locs = q("select hubloc_addr as location from hubloc where hubloc_hash = '%s'",
+			dbesc($contact['xchan_hash'])
+		);
 
-			if($locs) {
-				foreach($locs as $l) {
-					if(strlen($locstr))
-						$locstr .= ', ';
-					$locstr .= $l['location'];
-				}
+		if($locs) {
+			foreach($locs as $l) {
+				if(strlen($locstr))
+					$locstr .= ', ';
+				$locstr .= $l['location'];
 			}
+		}
+		else
+			$locstr = t('none');
 
 		$o .= replace_macros($tpl,array(
 

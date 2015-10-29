@@ -652,12 +652,28 @@ function connedit_content(&$a) {
 			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4], $checkinherited);
 		}
 
+			$locstr = '';
+
+			$locs = q("select hubloc_addr as location from hubloc where hubloc_hash = '%s'",
+				dbesc($contact['xchan_hash'])
+			);
+
+			if($locs) {
+				foreach($locs as $l) {
+					if(strlen($locstr))
+						$locstr .= ', ';
+					$locstr .= $l['location'];
+				}
+			}
+
 		$o .= replace_macros($tpl,array(
 
 			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
 			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), 'Connection requests will be approved without your interaction', array(t('No'),('Yes'))),
 			'$addr'           => $contact['xchan_addr'],
-			'$addr_text'      => t('This connection\'s address is'),
+			'$addr_text'      => t('This connection\'s primary address is'),
+			'$loc_text'       => t('Available locations:'),
+			'$locstr'         => $locstr,
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
 			'$autolbl'        => t('The permissions indicated on this page will be applied to all new connections.'),

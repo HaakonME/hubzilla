@@ -598,6 +598,7 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 
 		if($result['success']) {
 			$img_str = $result['body'];
+			$type = guess_image_type($photo, $result['header']);
 
 			$h = explode("\n",$result['header']);
 			if($h) {
@@ -609,7 +610,6 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 					}
 				}
 			}
-			$type = guess_image_type($photo, $result['header']);
 		}
 	}
 	else {

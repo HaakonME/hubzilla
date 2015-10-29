@@ -387,7 +387,7 @@ function photo_upload($channel, $observer, $args) {
 		// in the photos pages - using the photos permissions instead. We need the public policy to keep the photo
 		// linked item from leaking into the feed when somebody has a channel with read_stream restrictions.  
 
-		$arr['public_policy']   = map_scope($channel['channel_r_stream'],true));
+		$arr['public_policy']   = map_scope($channel['channel_r_stream'],true);
 		if($arr['public_policy'])
 			$arr['item_private'] = 1;
 

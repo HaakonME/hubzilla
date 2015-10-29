@@ -593,15 +593,24 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 
 	if($photo) {
 		$filename = basename($photo);
-		$type = guess_image_type($photo);
-
-		if(! $type)
-			$type = 'image/jpeg';
 
 		$result = z_fetch_url($photo,true);
 
-		if($result['success'])
+		if($result['success']) {
 			$img_str = $result['body'];
+
+			$h = explode("\n",$result['header']);
+			if($h) {
+				foreach($h as $hl) {
+					if(stristr($hl,'content-type:')) {
+						if(! stristr($hl,'image/')) {
+							$photo_failure = true;
+						}
+					}
+				}
+			}
+			$type = guess_image_type($photo, $result['header']);
+		}
 	}
 
 	$img = photo_factory($img_str, $type);

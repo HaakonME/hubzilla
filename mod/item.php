@@ -607,6 +607,7 @@ function item_post(&$a) {
 
 		if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
 			$attachments = array();
+			$i = 0;
 			foreach($match[2] as $mtch) {
 				$attach_link = '';
 				$hash = substr($mtch,0,strpos($mtch,','));
@@ -626,7 +627,8 @@ function item_post(&$a) {
 					$attach_link =  '[audio]' . z_root() . '/attach/' . $r['data']['hash'] . '/' . $r['data']['revision'] . (($ext) ? $ext : '') . '[/audio]';
 				elseif(strpos($r['data']['filetype'],'video/') !== false)
 					$attach_link =  '[video]' . z_root() . '/attach/' . $r['data']['hash'] . '/' . $r['data']['revision'] . (($ext) ? $ext : '') . '[/video]';
-				$body = str_replace($match[1],$attach_link,$body);
+				$body = str_replace($match[1][$i],$attach_link,$body);
+				$i++;
 			}
 		}
 

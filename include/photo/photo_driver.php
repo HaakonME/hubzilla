@@ -593,16 +593,12 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 
 	if($photo) {
 		$filename = basename($photo);
-		$type = guess_image_type($photo);
-
-		if(! $type)
-			$type = 'image/jpeg';
-
 
 		$result = z_fetch_url($photo,true);
 
 		if($result['success']) {
 			$img_str = $result['body'];
+			$type = guess_image_type($photo, $result['header']);
 
 			$h = explode("\n",$result['header']);
 			if($h) {

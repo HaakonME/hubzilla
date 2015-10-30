@@ -681,7 +681,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				$body = prepare_body($item,true);
 
-				$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($profile_owner,'large_photos'))) ? true : false);
 				$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
 				$tmp_item = array(
@@ -698,6 +697,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'thumb' => $profile_avatar,
 					'title' => $item['title'],
 					'body' => $body['html'],
+					'photo' => $body['photo'],
 					'tags' => $body['tags'],
 					'categories' => $body['categories'],
 					'mentions' => $body['mentions'],
@@ -738,7 +738,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 					'thread_level' => 1,
-					'is_photo' => $is_photo,
 					'has_tags' => $has_tags,
 				);
 

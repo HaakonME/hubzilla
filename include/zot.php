@@ -814,6 +814,28 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		if ($local) {
 			$ph = z_fetch_url($arr['photo'], true);
 			if ($ph['success']) {
+
+				// unless proven otherwise
+				$is_default_profile = 1;
+
+				$profile = q("select is_default from profile where aid = %d and uid = %d limit 1",
+					intval($local[0]['channel_account_id']),
+					intval($local[0]['channel_id'])
+				);
+				if($profile) {
+					if(! intval($profile[0]['is_default']))
+						$is_default_profile = 0;
+				}
+
+				if($is_default_profile) {
+					q("UPDATE photo SET photo_usage = %d WHERE photo_usage = %d AND aid = %d AND uid = %d",
+						intval(PHOTO_NORMAL),
+						intval(PHOTO_PROFILE),
+						intval($local[0]['channel_account_id']),
+						intval($local[0]['channel_id'])
+					);
+				}
+
 				import_channel_photo($ph['body'], $arr['photo_mimetype'], $local[0]['channel_account_id'],$local[0]['channel_id']);
 				// reset the names in case they got messed up when we had a bug in this function
 				$photos = array(

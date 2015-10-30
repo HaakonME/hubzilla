@@ -1233,7 +1233,7 @@ function theme_attachments(&$item) {
 			if($label  == ' ')
 				$label = t('Unknown Attachment');
  			
-			$title = t('Attachment') . ' - ' . (($r['length']) ? userReadableSize($r['length']) : t('Size Unknown'));
+			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
 			require_once('include/identity.php');
 			if(is_foreigner($item['author_xchan']))

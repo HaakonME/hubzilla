@@ -28,7 +28,7 @@ function tryzrlaudio($match) {
 	if($zrl)
 		$link = zid($link);
 
-	return '<audio src="' . str_replace(' ','%20',$link) . '" controls="controls"><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></audio>';
+	return '<audio src="' . str_replace(' ','%20',$link) . '" controls="controls" preload="none"><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></audio>';
 }
 
 function tryzrlvideo($match) {
@@ -37,7 +37,7 @@ function tryzrlvideo($match) {
 	if($zrl)
 		$link = zid($link);
 
-	return '<video controls="controls" src="' . str_replace(' ','%20',$link) . '" style="width:100%; max-width:' . get_app()->videowidth . 'px"><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></video>';
+	return '<video controls="controls" preload="none" src="' . str_replace(' ','%20',$link) . '" style="width:100%; max-width:' . get_app()->videowidth . 'px"><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></video>';
 }
 
 // [noparse][i]italic[/i][/noparse] turns into

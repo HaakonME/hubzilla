@@ -33,11 +33,27 @@ body 	{
 }
 
 .generic-content-wrapper-styled .generic-content-wrapper {
-		color: #4d4d4d;
+		color: #4D4D4D;
 }
+
 .generic-content-wrapper-styled .generic-content-wrapper a {
 		color: #43488A;
 }
+
+.generic-content-wrapper #profile-jot-wrapper {
+    background-color: transparent;
+	color: #4D4D4D;
+}
+
+.generic-content-wrapper input#jot-title, .generic-content-wrapper input#jot-pagetitle {
+    color: #4D4D4D;
+}
+
+.generic-content-wrapper input#jot-title:hover, .generic-content-wrapper input#jot-title:focus {
+    color: #4D4D4D;
+    border-radius: 0px;
+}
+
 
 .fn, .widget h3, .nav-tabs a, .generic-content-wrapper-styled a, .dropdown-menu > li > a, #channels-desc, input#jot-title {
     color: #fff;
@@ -224,6 +240,20 @@ div.rateme:hover, div.rateme:focus, a.rateme:hover, a.rateme:focus {
 	color: #FFF !important;
 }
 
+#chatTopBar {
+	background-color: rgba(255,255,255,.8);
+	color: #4d4d4d;
+    height: 500px;
+    width: 596px;
+    overflow-y: auto;
+}
+
+.chat-item-text {
+    border-radius: 0px;
+	padding: 5px;
+    background-color: #FFF;
+}
+
 input {
 	border-radius: 0px;	
 }
@@ -231,6 +261,12 @@ input {
 #login-main {
     max-width: 100%;
     margin-top: 0;
+}
+
+.directory-item {
+    margin-bottom: 0px;
+	padding-bottom: 20px;
+	background-color: #FFF;
 }
 
 .contact-entry-wrapper {
@@ -241,7 +277,7 @@ input {
 	color: #43488A;
 }
 
-.profile-edit-side-link, input#profile-photo-upload, .allcontact-link {
+.profile-edit-side-link, input#profile-photo-upload, .allcontact-link, #newchannel-form .descriptive-paragraph	 {
 	color: #FFF;
 }
 
@@ -275,19 +311,7 @@ input {
     background-color: #FFF;
 }
 
-.btn-success {
-    color: #FFF;
-    background-color: #5CB85C;
-    border-color: #4CAE4C;
-}
-
-.btn-success:hover, .btn-success:focus {
-    color: #FFF;
-    background-color: #449D44;
-    border-color: #398439;
-}
-
-.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit {
+.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit, form#chat-form > input {
     background-color: #FFF;
     color: #43488A;
 	border-radius: 0px;
@@ -296,45 +320,70 @@ input {
     transition: all .3s ease-in-out;
 }
 
-.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus {
+.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus, form#chat-form > input:hover, form#chat-form > input:focus {
     border-color: #FFF;
     background-color: #43488A;
     color: #FFF;
 	border-radius: 0px;
 }
 
-.comment-tools .btn, #prvmail-tools .btn {
+.comment-tools .btn, #prvmail-tools .btn, .generic-content-wrapper .btn {
     border: 1px solid #43488A;
     color: #43488A; 
     background-color: #FFF;
 }
 
-.comment-tools .btn:hover, .comment-tools .btn:focus, #prvmail-tools .btn:hover, #prvmail-tools .btn:focus {
-    border: 1px solid #43488A;
+.comment-tools .btn:hover, .comment-tools .btn:focus, #prvmail-tools .btn:hover, #prvmail-tools .btn:focus, .generic-content-wrapper .btn:hover, .generic-content-wrapper .btn:focus {
+    border: 1px solid #43488A !important;
     color: #FFF; 
     background-color: #43488A;
 }
 
-.comment-tools .btn-primary, #prvmail-submit .btn-primary, .settings-submit-wrapper .btn-primary {
+.comment-tools .btn-primary, #prvmail-submit .btn-primary, .settings-submit-wrapper .btn-primary, .generic-content-wrapper .btn-primary {
     background-color: #43488A;
     color: #FFF;
     border: 1px solid #43488A;
 }
 
-.comment-tools .btn-primary:hover, .comment-tools .btn-primary:focus, #prvmail-submit .btn-primary:hover, #prvmail-submit .btn-primary:focus, .settings-submit-wrapper .btn-primary:hover, .settings-submit-wrapper .btn-primary:focus {
+.comment-tools .btn-primary:hover, .comment-tools .btn-primary:focus, #prvmail-submit .btn-primary:hover, #prvmail-submit .btn-primary:focus, .settings-submit-wrapper .btn-primary:hover, .settings-submit-wrapper .btn-primary:focus, .generic-content-wrapper .btn-primary:hover, .generic-content-wrapper .btn-primary:focus {
     border-color: #43488A;
     background-color: #FFF;
     color: #43488A;
 }
 
-.btn-danger {
-    background-color: #D9534F;
-    border-color: #D43F3A;
+.btn-success {
+    color: #FFF !important;
+    background-color: #5CB85C !important;
+    border-color: #4CAE4C !important;
 }
-.btn-danger:hover, .btn-danger:focus {
-	color: #FFF;
-    background-color: #C9302C;
-    border-color: #AC2925;
+
+.btn-success:hover, .btn-success:focus {
+    color: #FFF !important;
+    background-color: #449D44 !important;
+    border-color: #398439 !important;
+}
+
+.btn-warning {
+    color: #FFF !important;
+    background-color: #F0AD4E !important;
+    border-color: #EEA236 !important;
+}
+
+.btn-warning:hover, .btn-warning:focus {
+	color: #FFF !important;
+	background-color: #EC971F !important;
+	border-color: #D58512 !important;
+}
+
+.btn-danger, form#chat-destroy > input {
+    background-color: #D9534F !important;
+    border-color: #D43F3A !important;
+	color: #FFF !important;
+}
+.btn-danger:hover, .btn-danger:focus, form#chat-destroy > input:hover, form#chat-destroy > input:focus {
+	color: #FFF !important;
+    background-color: #C9302C !important;		
+    border-color: #AC2925 !important;
 }
 
 @media screen and (max-width: 767px) {

@@ -3455,6 +3455,7 @@ function post_is_importable($item,$abook) {
 	$text = prepare_text($item['body'],$item['mimetype']);
 	$text = html2plain($text);
 
+
 	$lang = null;
 
 	if((strpos($abook['abook_incl'],'lang=') !== false) || (strpos($abook['abook_excl'],'lang=') !== false)) {

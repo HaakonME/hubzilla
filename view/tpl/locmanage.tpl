@@ -10,6 +10,15 @@ function drophub(id) {
 }
 </script>
 
+<div class="descriptive-text">{{$sync_text}}</div>
+<br />
+<div class="descriptive-text">{{$drop_text}}</div>
+<div class="descriptive-text">{{$last_resort}}</div>
+<br />
+
+
+
+
 <table>
 <tr><td>{{$loc}}</td><td>{{$mkprm}}</td><td>{{$drop}}</td></tr>
 {{foreach $hubs as $hub}}
@@ -25,3 +34,5 @@ function drophub(id) {
 {{/foreach}}
 </table>
 </div>
+<div class="clear"></div>
+<button class="btn btn-std" onclick="window.location.href='/locs/f=&sync=1'; return false;">{{$sync}}</button>

@@ -60,6 +60,16 @@ body 	{
 	border-radius: 0px
 }
 
+ul.dropdown-menu.acpopup > li.textcomplete-item > a {
+	color: #43488A;
+}
+
+ul.dropdown-menu.acpopup > li.textcomplete-item > a:hover, ul.dropdown-menu.acpopup > li.textcomplete-item > a:focus {
+	background-color: #43488A;
+	color: #FFF;
+	cursor: pointer;
+}
+
 input#jot-title:hover, input#jot-title:focus {
 	color: #43488A;
 	border-radius: 0px;
@@ -150,8 +160,20 @@ nav .badge:hover, nav .badge:focus {
     color: rgba(255,255,255,.8);
 }
 
-.help-block, .comment-icon, .jot-icons {
+.help-block, .comment-icon, .jot-icons, .admin-icons {
 	color: inherit;
+}
+
+#adminpage table tr:hover, #adminpage table tr:hover a, #adminpage table tr td.tools a:hover, #adminpage table tr:focus, #adminpage table tr:focus a, #adminpage table tr td.tools a:focus {
+    color: #43488A;
+}
+
+#adminpage table tr:hover .tools a, #adminpage table tr:focus .tools a, .generic-content-wrapper-styled > .descriptive-text {
+	color: #FFF;
+}
+
+.generic-content-wrapper-styled > .sources-links {
+	font-weight: bold;
 }
 
 .wall-item-tools .btn {
@@ -269,6 +291,10 @@ input {
 	background-color: #FFF;
 }
 
+.directory-item.lframe {
+	background-color: transparent !important;
+}
+
 .contact-entry-wrapper {
 	border: 1px solid rgba(255,255,255,.5);
 }
@@ -286,7 +312,7 @@ input {
 	text-decoration: none;
 }
 
-.btn, #event-edit-form .btn {
+.btn, #event-edit-form .btn, input.directory-rating-submit {
     border: 1px solid #FFF;
     color: #FFF; 
     background-color: #43488A;
@@ -304,14 +330,14 @@ input {
     background-color: #FFF;
 }
 
-.btn-default:hover, .btn-default:focus, .open > .dropdown-toggle.btn-default {
+.btn-default:hover, .btn-default:focus, .open > .dropdown-toggle.btn-default, input.directory-rating-submit:hover, input.directory-rating-submit:focus {
     border: 1px solid #43488A;
     outline: 0;
     color: #43488A;
     background-color: #FFF;
 }
 
-.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit, form#chat-form > input {
+.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit, form#chat-form > input, div#adminpage > form > div.submit > input, input.sources-submit, input.contact-edit-submit {
     background-color: #FFF;
     color: #43488A;
 	border-radius: 0px;
@@ -320,7 +346,7 @@ input {
     transition: all .3s ease-in-out;
 }
 
-.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus, form#chat-form > input:hover, form#chat-form > input:focus {
+.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus, form#chat-form > input:hover, form#chat-form > input:focus, div#adminpage > form > div.submit > input:hover, div#adminpage > form > div.submit > input:focus, input.sources-submit:hover, input.sources-submit:focus, input.contact-edit-submit:focus, input.contact-edit-submit:hover {
     border-color: #FFF;
     background-color: #43488A;
     color: #FFF;
@@ -384,6 +410,10 @@ input {
 	color: #FFF !important;
     background-color: #C9302C !important;		
     border-color: #AC2925 !important;
+}
+
+a:hover > .icon-trash {
+	color: #C9302C !important;	
 }
 
 @media screen and (max-width: 767px) {

@@ -13,14 +13,24 @@ function fhublocs_content(&$a) {
 	$o = '';
 
 	$r = q("select * from channel where channel_removed = 0");
+	$sitekey = get_config('system','pubkey');
 	
 	if($r) {
 		foreach($r as $rr) {
+			$found = false;
 			$primary_address = '';
 			$x = zot_get_hublocs($rr['channel_hash']);
 			if($x) {
-				$o .= 'Hubloc exists for ' . $rr['channel_name'] . EOL;
-				continue;	
+				foreach($x as $xx) {
+					if($xx['hubloc_url'] === z_root() && $xx['hubloc_sitekey'] === $sitekey) {
+						$found = true;
+						break;
+					}
+				}
+				if($found) {
+					$o .= 'Hubloc exists for ' . $rr['channel_name'] . EOL;
+					continue;
+				}	
 			}
 			$y = q("select xchan_addr from xchan where xchan_hash = '%s' limit 1",
 				dbesc($rr['channel_hash'])
@@ -53,7 +63,7 @@ function fhublocs_content(&$a) {
 				dbesc(base64url_encode(rsa_sign(z_root(),$rr['channel_prvkey']))),
 				dbesc(get_app()->get_hostname()),
 				dbesc(z_root() . '/post'),
-				dbesc(get_config('system','pubkey')),
+				dbesc($sitekey),
 				dbesc('zot')
 			);
 

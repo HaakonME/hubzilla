@@ -654,7 +654,7 @@ function connedit_content(&$a) {
 
 		$locstr = '';
 
-		$locs = q("select hubloc_addr as location from hubloc where hubloc_hash = '%s'",
+		$locs = q("select hubloc_addr as location from hubloc where hubloc_hash = '%s' and hubloc_network = 'zot'",
 			dbesc($contact['xchan_hash'])
 		);
 

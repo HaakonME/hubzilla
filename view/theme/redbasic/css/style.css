@@ -757,6 +757,7 @@ a.rateme, div.rateme {
 
 .wall-item-conv {
 	padding: 7px 10px;
+	background-color: $comment_item_colour;
 }
 
 

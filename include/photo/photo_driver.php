@@ -734,6 +734,11 @@ function import_channel_photo($photo,$type,$aid,$uid) {
 		$photo_failure = true;
 	}
 
-	return(($photo_failure)? false : true);
+	//return(($photo_failure)? false : true);
+
+	if($photo_failure)
+		return false;
+	else
+		return $hash;
 
 }

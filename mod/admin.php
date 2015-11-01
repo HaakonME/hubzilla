@@ -557,7 +557,7 @@ function admin_page_dbsync(&$a) {
 		}
 	}
 	if(! count($failed))
-		return '<h3>' . t('No failed updates.') . '</h3>';
+		return '<div class="generic-content-wrapper-styled"><h3>' . t('No failed updates.') . '</h3></div>';
 
 	$o = replace_macros(get_markup_template('failed_updates.tpl'),array(
 		'$base' => $a->get_baseurl(true),

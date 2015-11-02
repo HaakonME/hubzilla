@@ -112,7 +112,7 @@ This document assumes you're an administrator.
     [b]system > cron_hour[/b]
         Specify an hour in which to run cron_daily.  By default with no config, this will run at midnight UTC.
     [b]system > minimum_feedcheck_minutes[/b]
-        The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds will be polled with each cronjob
+        The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds will be polled with each cronjob. Defaults to 60 if not set. The site setting can also be over-ridden on a channel by channel basis by a service class setting aptly named 'minimum_feedcheck_minutes'.
     [b]system > blacklisted_sites[/b]
         An array of specific hubs to block from this hub completely.
     [b]system > ignore_imagick[/b]

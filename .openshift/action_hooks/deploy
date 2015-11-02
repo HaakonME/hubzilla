@@ -184,6 +184,7 @@ cd ${OPENSHIFT_REPO_DIR}
 util/config system expire_delivery_reports 3
 util/config system feed_contacts 0
 util/config system disable_discover_tab 1
+util/config system https://blablanet.com
 
 # Hubzill addons
 echo "Try to add or update Hubzilla addons"

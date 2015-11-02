@@ -2464,6 +2464,13 @@ function zot_encode_locations($channel) {
 
 	if($x && count($x)) {
 		foreach($x as $hub) {
+
+			// if this is a local channel that has been deleted, the hubloc is no good - make sure it is marked deleted
+			// so that nobody tries to use it. 
+
+			if(intval($channel['channel_removed']) && $hub['hubloc_url'] === z_root())
+				$hub['hubloc_deleted'] = true;
+
 			$ret[] = array(
 				'host'     => $hub['hubloc_host'],
 				'address'  => $hub['hubloc_addr'],
@@ -3736,6 +3743,8 @@ function zotinfo($arr) {
 	$ret['public_forum']   = $public_forum;
 	if($deleted)
 		$ret['deleted']        = $deleted;	
+	if(intval($e['channel_removed']))
+		$ret['deleted_locally'] = true;
 
 	// premium or other channel desiring some contact with potential followers before connecting.
 	// This is a template - %s will be replaced with the follow_url we discover for the return channel.

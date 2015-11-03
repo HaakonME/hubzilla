@@ -140,17 +140,17 @@ This document assumes you're an administrator.
 		If configured, the maximum length of an imported text message. This is normally left at 200Kbytes or more to accomodate Friendica private photos, which are embedded.
 	[b]system > tempdir[/b]
 		Place to store temporary files, default is defined in the PHP configuration  
-	[b]system uploaddir[/b]
+	[b]system > uploaddir[/b]
 		Location to upload files (default is system.tempdir)
 	[b]system > disable_discover_tab[/b]
 		This allows you to completely disable the ability to discover public content from external sites.
 	[b]system > sys_expire_days[/b]
 		How many days to keep discovered public content from other sites
-	[b]system openssl_encrypt[/b]
+	[b]system > openssl_encrypt[/b]
 		Use openssl encryption engine, default is false (uses mcrypt for AES encryption)
-	[b]system max_tagged_forums[/b]
+	[b]system > max_tagged_forums[/b]
 		Spam prevention. Limits the number of tagged forums which are recognised in any post. Default is 2. Only the first 'n' tags will be delivered as forums, the others will not cause any delivery. 
-	[b]system openssl_conf_file[/b]
+	[b]system > openssl_conf_file[/b]
 		Needed in some Windows installations to locate the openssl configuration file on the system.
  
 

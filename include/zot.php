@@ -2364,16 +2364,15 @@ function sync_locations($sender, $arr, $absolute = false) {
 						$changed = true;
 					}
 				}
-				if((intval($r[0]['hubloc_deleted']) && (! $location['deleted']))
-					|| ((! (intval($r[0]['hubloc_deleted']))) && ($location['deleted']))) {
+				if(intval($r[0]['hubloc_deleted']) && (! intval($location['deleted']))) {
 					$n = q("update hubloc set hubloc_deleted = 0, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-					$what .= 'delete_hub ';
+					$what .= 'undelete_hub ';
 					$changed = true;
 				}
-				elseif((! intval($r[0]['hubloc_deleted'])) && ($location['deleted'])) {
+				elseif((! intval($r[0]['hubloc_deleted'])) && (intval($location['deleted']))) {
 					$n = q("update hubloc set hubloc_deleted = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])

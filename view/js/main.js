@@ -1166,7 +1166,6 @@ $(document).ready(function() {
 		numbers       : aStr['t17'],
 	};
 
-	$(".autotime").timeago();
 	$("#toc").toc();
 });
 

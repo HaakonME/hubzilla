@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-30 00:03-0700\n"
-"PO-Revision-Date: 2015-10-31 20:03+0000\n"
+"PO-Revision-Date: 2015-11-03 20:14+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/Friendica/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -569,11 +569,11 @@ msgstr "Sta toe dat inhoud extra end-to-end wordt versleuteld met een gedeelde g
 
 #: ../../include/features.php:61
 msgid "Enable Voting Tools"
-msgstr "Stemmen inschakelen"
+msgstr "Peilingen inschakelen"
 
 #: ../../include/features.php:61
 msgid "Provide a class of post which others can vote on"
-msgstr "Creëert een berichtenoptie zodat anderen op jouw vraag kunnen stemmen."
+msgstr "Maakt het mogelijk om een bericht op te stellen, waar mensen op kunnen stemmen."
 
 #: ../../include/features.php:62
 msgid "Delayed Posting"
@@ -3476,7 +3476,7 @@ msgstr "locatie instellen"
 
 #: ../../include/conversation.php:1207 ../../mod/editpost.php:126
 msgid "Toggle voting"
-msgstr "Stemmen in- of uitschakelen"
+msgstr "Peiling in- of uitschakelen"
 
 #: ../../include/conversation.php:1210 ../../mod/editblock.php:149
 #: ../../mod/editpost.php:125 ../../mod/editlayout.php:147

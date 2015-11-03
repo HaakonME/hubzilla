@@ -917,6 +917,9 @@ function item_photo_menu($item){
 		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
 			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
 		}
+		if($channel) {
+			$unsub_link = 'javascript:dounsubthread(' . $item['id'] . '); return false;';
+		}
 	}
 
 	$profile_link = chanlink_hash($item['author_xchan']);
@@ -941,6 +944,7 @@ function item_photo_menu($item){
 	$menu = Array(
 		t("View Source") => $vsrc_link,
 		t("Follow Thread") => $sub_link,
+		t("Stop Following") => $unsub_link,
 		t("View Status") => $status_link,
 		t("View Profile") => $profile_link,
 		t("View Photos") => $photos_link,

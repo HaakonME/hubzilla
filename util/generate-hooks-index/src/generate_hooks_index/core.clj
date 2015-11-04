@@ -53,14 +53,14 @@
   [path]
   [:div
    [:h3 "Hooks"]
-   [:p "Generated " (-> (java.util.Date.) str)]
    [:table
     [:tr (map #(vector :td %) ["Function" "Source File" "Arg"])]
     (for [{:keys [function arg file]} 
           (->> path
                show-hooks
                (sort-by :function))]
-      [:tr  (map #(vector :td (h/h %)) [function file arg])])]])
+      [:tr  (map #(vector :td (h/h %)) [function file arg])])]
+   [:p "Generated " (-> (java.util.Date.) str)]])
 
 
 (defn make-hook-docs

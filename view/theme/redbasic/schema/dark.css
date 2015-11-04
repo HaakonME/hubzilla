@@ -307,6 +307,11 @@ pre {
     border-color: #222; 
 }
 
+.pmenu-item:hover a {
+	background-color: #333 !important;
+	color: #ddd;
+}
+
 .preview {
 	background: url('../img/gray_and_black_diagonal_stripes_background_seamless.gif');
 }

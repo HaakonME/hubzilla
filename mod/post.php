@@ -724,12 +724,12 @@ function post_post(&$a) {
 	 * Any hub with the same URL and a different sitekey cannot be valid.
 	 * Get rid of them (mark them deleted). There's a good chance they were re-installs.
 	 */
-
-	q("update hubloc set hubloc_flags = ( hubloc_flags | %d ) where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
-		intval(HUBLOC_FLAGS_DELETED),
-		dbesc($hub['hubloc_url']),
-		dbesc($hub['hubloc_sitekey'])
-	);
+// fixed in hubzilla with a protocol change
+//	q("update hubloc set hubloc_flags = ( hubloc_flags | %d ) where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
+//		intval(HUBLOC_FLAGS_DELETED),
+//		dbesc($hub['hubloc_url']),
+//		dbesc($hub['hubloc_sitekey'])
+//	);
 
 	/** @TODO check which hub is primary and take action if mismatched */
 

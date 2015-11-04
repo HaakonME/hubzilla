@@ -673,16 +673,16 @@ function post_post(&$a) {
 
 	/* Check if the sender is already verified here */
 
-	$hub = zot_gethub($sender);
+	$hubs = zot_gethub($sender,true);
 
-	if (! $hub) {
+	if (! $hubs) {
 
 		/* Have never seen this guid or this guid coming from this location. Check it and register it. */
 
 		// (!!) this will validate the sender
 		$result = zot_register_hub($sender);
 
-		if ((! $result['success']) || (! ($hub = zot_gethub($sender)))) {
+		if ((! $result['success']) || (! ($hubs = zot_gethub($sender,true)))) {
 			$ret['message'] = 'Hub not available.';
 			logger('mod_zot: no hub');
 			json_return_and_die($ret);
@@ -690,46 +690,66 @@ function post_post(&$a) {
 	}
 
 
-	// Update our DB to show when we last communicated successfully with this hub
-	// This will allow us to prune dead hubs from using up resources
+	foreach($hubs as $hub) {
 
-	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d",
-		dbesc(datetime_convert()),
-		intval($hub['hubloc_id'])
-	);
+		$sitekey = $hub['hubloc_sitekey'];
 
-	// a dead hub came back to life - reset any tombstones we might have
+		if(array_key_exists('sitekey',$sender) && $sender['sitekey']) {
 
-	if ($hub['hubloc_status'] & HUBLOC_OFFLINE) {
-		q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d",
-			intval(HUBLOC_OFFLINE),
-			intval($hub['hubloc_id'])		
+			/*
+			 * This hub has now been proven to be valid.
+			 * Any hub with the same URL and a different sitekey cannot be valid.
+			 * Get rid of them (mark them deleted). There's a good chance they were re-installs.
+			 */
+
+			q("update hubloc set hubloc_flags = ( hubloc_flags | %d ) where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
+				intval(HUBLOC_FLAGS_DELETED),
+				dbesc($hub['hubloc_url']),
+				dbesc($sender['sitekey'])
+			);
+
+			$sitekey = $sender['sitekey'];
+		}
+
+		// $sender['sitekey'] is a new addition to the protcol to distinguish
+		// hublocs coming from re-installed sites. Older sites will not provide
+		// this field and we have to still mark them valid, since we can't tell
+		// if this hubloc has the same sitekey as the packet we received.
+
+		// Update our DB to show when we last communicated successfully with this hub
+		// This will allow us to prune dead hubs from using up resources
+
+		$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d and hubloc_sitekey = '%s' ",
+			dbesc(datetime_convert()),
+			intval($hub['hubloc_id']),
+			dbesc($sitekey)
 		);
-		if ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
-			q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d",
-				intval(HUBLOC_FLAGS_ORPHANCHECK),
-				intval($hub['hubloc_id'])
+
+		// a dead hub came back to life - reset any tombstones we might have
+
+		if ($hub['hubloc_status'] & HUBLOC_OFFLINE) {
+			q("update hubloc set hubloc_status = (hubloc_status & ~%d) where hubloc_id = %d and hubloc_sitekey = '%s' ",
+				intval(HUBLOC_OFFLINE),
+				intval($hub['hubloc_id']),
+				dbesc($sitekey)		
+			);
+			if ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
+				q("update hubloc set hubloc_flags = (hubloc_flags & ~%d) where hubloc_id = %d and hubloc_sitekey = '%s' ",
+					intval(HUBLOC_FLAGS_ORPHANCHECK),
+					intval($hub['hubloc_id']),
+					dbesc($sitekey)
+				);
+			}
+
+			q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
+				intval(XCHAN_FLAGS_ORPHAN),
+				intval(XCHAN_FLAGS_ORPHAN),
+				dbesc($hub['hubloc_hash'])
 			);
 		}
-		q("update xchan set xchan_flags = (xchan_flags & ~%d) where (xchan_flags & %d)>0 and xchan_hash = '%s'",
-			intval(XCHAN_FLAGS_ORPHAN),
-			intval(XCHAN_FLAGS_ORPHAN),
-			dbesc($hub['hubloc_hash'])
-		);
+
+		$connecting_url = $hub['hubloc_url'];
 	}
-
-
-	/*
-	 * This hub has now been proven to be valid.
-	 * Any hub with the same URL and a different sitekey cannot be valid.
-	 * Get rid of them (mark them deleted). There's a good chance they were re-installs.
-	 */
-// fixed in hubzilla with a protocol change
-//	q("update hubloc set hubloc_flags = ( hubloc_flags | %d ) where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
-//		intval(HUBLOC_FLAGS_DELETED),
-//		dbesc($hub['hubloc_url']),
-//		dbesc($hub['hubloc_sitekey'])
-//	);
 
 	/** @TODO check which hub is primary and take action if mismatched */
 
@@ -932,7 +952,7 @@ function post_post(&$a) {
 
 	if ($msgtype === 'notify') {
 
-		logger('notify received from ' . $hub['hubloc_url']);
+		logger('notify received from ' . $connecting_url);
 
 
 		$async = get_config('system','queued_fetch');

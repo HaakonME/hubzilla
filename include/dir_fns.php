@@ -190,8 +190,9 @@ function sync_directories($dirmode) {
 			intval($r[0]['site_valid'])
 		);
 
-		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and site_type = %d ",
-			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
+		$r = q("select * from site where site_flags in (%d, %d) and site_url != '%s' and site_type = %d ",
+			intval(DIRECTORY_MODE_PRIMARY),
+			intval(DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
 			intval(SITE_TYPE_ZOT)
 		);

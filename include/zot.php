@@ -2373,6 +2373,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 					$changed = true;
 				}
 				elseif((! intval($r[0]['hubloc_deleted'])) && (intval($location['deleted']))) {
+					logger('deleting hubloc: ' . $r[0]['hubloc_addr']);
 					$n = q("update hubloc set hubloc_deleted = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
@@ -2427,7 +2428,7 @@ function sync_locations($sender, $arr, $absolute = false) {
 		if($absolute && $xisting) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
-					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_url']);
+					logger('sync_locations: deleting unreferenced hub location ' . $x['hubloc_addr']);
 					$r = q("update hubloc set hubloc_deleted = 1, hubloc_updated = '%s' where hubloc_id = %d",
 						dbesc(datetime_convert()),
 						intval($x['hubloc_id'])
@@ -2468,7 +2469,7 @@ function zot_encode_locations($channel) {
 			// so that nobody tries to use it. 
 
 			if(intval($channel['channel_removed']) && $hub['hubloc_url'] === z_root())
-				$hub['hubloc_deleted'] = true;
+				$hub['hubloc_deleted'] = 1;
 
 			$ret[] = array(
 				'host'     => $hub['hubloc_host'],

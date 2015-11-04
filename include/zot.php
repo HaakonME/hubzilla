@@ -117,7 +117,8 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 			'guid' => $channel['channel_guid'],
 			'guid_sig' => base64url_encode(rsa_sign($channel['channel_guid'],$channel['channel_prvkey'])),
 			'url' => z_root(),
-			'url_sig' => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))
+			'url_sig' => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey'])),
+			'sitekey' => get_config('system','pubkey')
 		),
 		'callback' => '/post',
 		'version' => ZOT_REVISION
@@ -569,11 +570,12 @@ function zot_gethub($arr,$multiple = false) {
 		}
 
 		$limit = (($multiple) ? '' : ' limit 1 ');
-
+		$sitekey = ((array_key_exists('sitekey',$arr) && $arr['sitekey']) ? " and hubloc_sitekey = '" . protect_sprintf($arr['sitekey']) . "' " : '');
+ 
 		$r = q("select * from hubloc
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s'
 				and hubloc_url = '%s' and hubloc_url_sig = '%s'
-				$limit",
+				$sitekey $limit",
 			dbesc($arr['guid']),
 			dbesc($arr['guid_sig']),
 			dbesc($arr['url']),

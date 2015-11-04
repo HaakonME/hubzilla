@@ -682,45 +682,57 @@ function post_post(&$a) {
 
 	foreach($hubs as $hub) {
 
+		$sitekey = $hub['hubloc_sitekey'];
+
+		if(array_key_exists('sitekey',$sender) && $sender['sitekey']) {
+
+			/*
+			 * This hub has now been proven to be valid.
+			 * Any hub with the same URL and a different sitekey cannot be valid.
+			 * Get rid of them (mark them deleted). There's a good chance they were re-installs.
+			 */
+	
+			q("update hubloc set hubloc_deleted = 1, hubloc_error = 1 where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
+				dbesc($hub['hubloc_url']),
+				dbesc($sender['sitekey'])
+			);
+
+			$sitekey = $sender['sitekey'];
+		}
+
+		// $sender['sitekey'] is a new addition to the protcol to distinguish 
+		// hublocs coming from re-installed sites. Older sites will not provide
+		// this field and we have to still mark them valid, since we can't tell
+		// if this hubloc has the same sitekey as the packet we received.
+
 		// Update our DB to show when we last communicated successfully with this hub
 		// This will allow us to prune dead hubs from using up resources
 
-		$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d",
+		$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d and hubloc_sitekey = '%s' ",
 			dbesc(datetime_convert()),
-			intval($hub['hubloc_id'])
+			intval($hub['hubloc_id']),
+			dbesc($sitekey)
 		);
 
 		// a dead hub came back to life - reset any tombstones we might have
 
 		if(intval($hub['hubloc_error'])) {
-			q("update hubloc set hubloc_error = 0 where hubloc_id = %d",
-				intval($hub['hubloc_id'])		
+			q("update hubloc set hubloc_error = 0 where hubloc_id = %d and hubloc_sitekey = '%s' ",
+				intval($hub['hubloc_id']),
+				dbesc($sitekey)		
 			);
 			if(intval($r[0]['hubloc_orphancheck'])) {
-				q("update hubloc set hubloc_orhpancheck = 0 where hubloc_id = %d",
-					intval($hub['hubloc_id'])
+				q("update hubloc set hubloc_orhpancheck = 0 where hubloc_id = %d and hubloc_sitekey = '%s' ",
+					intval($hub['hubloc_id']),
+					dbesc($sitekey)
 				);
 			}
 			q("update xchan set xchan_orphan = 0 where xchan_orphan = 1 and xchan_hash = '%s'",
 				dbesc($hub['hubloc_hash'])
 			);
 		}
-
-
-		/*
-		 * This hub has now been proven to be valid.
-		 * Any hub with the same URL and a different sitekey cannot be valid.
-		 * Get rid of them (mark them deleted). There's a good chance they were re-installs.
-		 */
-
-	
-//		q("update hubloc set hubloc_deleted = 1 where hubloc_url = '%s' and hubloc_sitekey != '%s' ",
-//			dbesc($hub['hubloc_url']),
-//			dbesc($hub['hubloc_sitekey'])
-//		);
-
+		
 		$connecting_url = $hub['hubloc_url'];
-
 	}
 
 	/** @TODO check which hub is primary and take action if mismatched */

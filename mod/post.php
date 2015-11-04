@@ -705,6 +705,7 @@ function post_post(&$a) {
 		// this field and we have to still mark them valid, since we can't tell
 		// if this hubloc has the same sitekey as the packet we received.
 
+
 		// Update our DB to show when we last communicated successfully with this hub
 		// This will allow us to prune dead hubs from using up resources
 
@@ -734,6 +735,7 @@ function post_post(&$a) {
 		
 		$connecting_url = $hub['hubloc_url'];
 	}
+
 
 	/** @TODO check which hub is primary and take action if mismatched */
 

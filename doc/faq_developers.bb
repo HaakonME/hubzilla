@@ -28,8 +28,7 @@ function foo() {
 [/code]
 
 
-
-An example (large) &$a object showing some of its many members and structures is here:
+An example (large) &$a object showing some of its many members and structures-- in JSON format for easier readability-- is here:
 
 [code]  {
   "category": null,

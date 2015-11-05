@@ -660,26 +660,30 @@ require_once('include/attach.php');
 			dbesc($_REQUEST['file_id'])
 		);
 		if($r) {
-			if($r[0]['is_dir'])
-				$r[0]['data'] = '';
+			$ptr = $r[0];
+			if($length === 0)
+				$length = intval($ptr['filesize']);
+
+			if($ptr['is_dir'])
+				$ptr['data'] = '';
 			elseif(! intval($r[0]['os_storage'])) {
-				$r[0]['start'] = $start;
-				$x = substr(dbunescbin($r[0]['data'],$start,$length));
-				$r[0]['length'] = strlen($x);
-				$r[0]['data'] = base64_encode($x);
+				$ptr['start'] = $start;
+				$x = substr(dbunescbin($ptr['data'],$start,$length));
+				$ptr['length'] = strlen($x);
+				$ptr['data'] = base64_encode($x);
 			}
 			else {
-				$fp = fopen(dbunescbin($r[0]['data'],'r'));
+				$fp = fopen(dbunescbin($ptr['data']),'r');
 				if($fp) {
 					$seek = fseek($fp,$start,SEEK_SET);
 					$x = fread($fp,$length);
-					$r[0]['start'] = $start;
-					$r[0]['length'] = strlen($x);
-					$r[0]['data'] = base64_encode($x);
+					$ptr['start'] = $start;
+					$ptr['length'] = strlen($x);
+					$ptr['data'] = base64_encode($x);
 				}
 			}
 				
-			$ret = array('attach' => $r[0]);
+			$ret = array('attach' => $ptr);
 			json_return_and_die($ret);
 		}
 		killme();

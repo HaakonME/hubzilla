@@ -55,7 +55,7 @@ function activate(node) {
 }
 </script>
 
-<button onclick="activate(this)" title="activate the demo provider">$activate</button>
+<button onclick="activate(this)" title="activate the demo provider" class="btn btn-primary">$activate</button>
 
 EOT;
 

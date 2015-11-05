@@ -673,7 +673,7 @@ require_once('include/attach.php');
 				$ptr['data'] = base64_encode($x);
 			}
 			else {
-				$fp = fopen(dbunescbin($ptr['data'],'r'));
+				$fp = fopen(dbunescbin($ptr['data']),'r');
 				if($fp) {
 					$seek = fseek($fp,$start,SEEK_SET);
 					$x = fread($fp,$length);

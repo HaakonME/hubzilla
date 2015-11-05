@@ -33,10 +33,10 @@ var data = {
   //"statusURL": baseurl+"/statusPanel.html",
 
   // social bookmarks are available in Firefox 26
-  //"markURL": baseurl+"/mark.html?url=%{url}",
+  "markURL": baseurl+"/bmark?f=&url=%{url}&title=%{title}",
   // icons should be 32x32 pixels
-  //"markedIcon": baseurl+"/unchecked.jpg",
-  //"unmarkedIcon": baseurl+"/checked.jpg",
+  "markedIcon": baseurl+"/images/checkbox-checked-32.png",
+  "unmarkedIcon": baseurl+"/images/checkbox-unchecked-32.png",
 
   // should be available for display purposes
   "description": '$description',

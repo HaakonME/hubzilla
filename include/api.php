@@ -652,6 +652,63 @@ require_once('include/attach.php');
 	api_register_func('api/red/file', 'api_file_detail', true);
 
 
+	function api_file_meta(&$a,$type) {
+		if (api_user()===false) return false;
+		if(! $_REQUEST['file_id']) return false;
+		$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
+			intval(api_user()),
+			dbesc($_REQUEST['file_id'])
+		);
+		if($r) {
+			unset($r[0]['data']);				
+			$ret = array('attach' => $r[0]);
+			json_return_and_die($ret);
+		}
+		killme();
+	}
+
+	api_register_func('api/red/filemeta', 'api_file_meta', true);
+
+
+	function api_file_data(&$a,$type) {
+		if (api_user()===false) return false;
+		if(! $_REQUEST['file_id']) return false;
+		$start = (($_REQUEST['start']) ? intval($_REQUEST['start']) : 0);
+		$length = (($_REQUEST['length']) ? intval($_REQUEST['length']) : 0);
+
+		$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
+			intval(api_user()),
+			dbesc($_REQUEST['file_id'])
+		);
+		if($r) {
+			if($r[0]['is_dir'])
+				$r[0]['data'] = '';
+			elseif(! intval($r[0]['os_storage'])) {
+				$r[0]['start'] = $start;
+				$x = substr(dbunescbin($r[0]['data'],$start,$length));
+				$r[0]['length'] = strlen($x);
+				$r[0]['data'] = base64_encode($x);
+			}
+			else {
+				$fp = fopen(dbunescbin($r[0]['data'],'r'));
+				if($fp) {
+					$seek = fseek($fp,$start,SEEK_SET);
+					$x = fread($fp,$length);
+					$r[0]['start'] = $start;
+					$r[0]['length'] = strlen($x);
+					$r[0]['data'] = base64_encode($x);
+				}
+			}
+				
+			$ret = array('attach' => $r[0]);
+			json_return_and_die($ret);
+		}
+		killme();
+	}
+
+	api_register_func('api/red/filedata', 'api_file_data', true);
+
+
 	function api_albums(&$a,$type) {
 		json_return_and_die(photos_albums_list($a->get_channel(),$a->get_observer()));
 	}

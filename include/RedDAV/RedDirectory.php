@@ -251,7 +251,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			intval($filesize),
 			intval(0),
 			intval($is_photo),
-			dbesc($this->os_path . '/' . $hash),
+			dbesc($f),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc($allow_cid),

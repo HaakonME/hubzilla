@@ -4,7 +4,7 @@
 function ffsapi_content(&$a) {
 
 $baseurl = z_root();
-$name = sprintf( t('Social Provider on %1$s'), get_config('system','sitename'));
+$name = get_config('system','sitename');
 $description = t('Share content from Firefox to $Projectname');
 $author = 'Mike Macgirvin';
 $homepage = 'http://hubzilla.org';
@@ -35,8 +35,9 @@ var data = {
   // social bookmarks are available in Firefox 26
   "markURL": baseurl+"/rbmark?f=&url=%{url}&title=%{title}",
   // icons should be 32x32 pixels
-  "markedIcon": baseurl+"/images/checkbox-checked-32.png",
-  "unmarkedIcon": baseurl+"/images/checkbox-unchecked-32.png",
+  // "markedIcon": baseurl+"/images/checkbox-checked-32.png",
+  // "unmarkedIcon": baseurl+"/images/checkbox-unchecked-32.png",
+  "unmarkedIcon": baseurl+"/images/hz-bookmark-32.png",
 
   // should be available for display purposes
   "description": '$description',

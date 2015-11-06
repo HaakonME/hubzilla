@@ -218,7 +218,8 @@ function settings_post(&$a) {
 
 		check_form_security_token_redirectOnErr('/settings/account', 'settings_account');
 	
-		call_hooks('settings_account', $_POST);
+		call_hooks('account_settings_post', $_POST);
+//		call_hooks('settings_account', $_POST);
 
 		$errs = array();
 

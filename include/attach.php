@@ -1270,9 +1270,13 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		);
 
 		if($y) {
-			$f = 'store/' . $channel_address . '/' . $y[0]['data'];
-			if(is_dir($y[0]['data']))
-				@rmdir($y[0]['data']);
+			if(strpos($y[0]['data'],'store') === false)
+				$f = 'store/' . $channel_address . '/' . $y[0]['data'];
+			else
+				$f = $y[0]['data'];
+
+			if(is_dir($f))
+				@rmdir($f);
 			elseif(file_exists($f))
 				unlink($f);
 		}

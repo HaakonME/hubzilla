@@ -263,6 +263,7 @@ class Item extends BaseObject {
 
 
 		localize_item($item);
+
 		$body = prepare_body($item,true);
 
 		// $viewthread (below) is only valid in list mode. If this is a channel page, build the thread viewing link
@@ -277,8 +278,6 @@ class Item extends BaseObject {
 		$list_unseen_txt = (($unseen_comments) ? sprintf('%d unseen',$unseen_comments) : '');
 		
 		$children = $this->get_children();
-
-		$is_photo = ((($item['resource_type'] == 'photo') && (feature_enabled($conv->get_profile_owner(),'large_photos'))) ? true : false);
 
 		$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
@@ -333,7 +332,7 @@ class Item extends BaseObject {
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => $this->get_owner_name(),
-			'is_photo' => $is_photo,
+			'photo' => $body['photo'],
 			'has_tags' => $has_tags,
 
 // Item toolbar buttons

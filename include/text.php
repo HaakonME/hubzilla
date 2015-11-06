@@ -912,8 +912,17 @@ function sslify($s) {
 	if (strpos(z_root(),'https:') === false)
 		return $s;
 
+	// By default we'll only sslify img tags because media files will probably choke.
+	// You can set sslify_everything if you want - but it will likely white-screen if it hits your php memory limit.
+	// The downside is that http: media files will likely be blocked by your browser
+	// Complain to your browser maker
+
+	$allow = get_config('system','sslify_everything');
+	
+	$pattern = (($allow) ? "/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/" : "/\<img(.*?)src=\"(http\:.*?)\"(.*?)\>/" ); 
+
 	$matches = null;
-	$cnt = preg_match_all("/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/",$s,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all($pattern,$s,$matches,PREG_SET_ORDER);
 	if ($cnt) {
 		foreach ($matches as $match) {
 			$filename = basename( parse_url($match[2], PHP_URL_PATH) );
@@ -1224,7 +1233,7 @@ function theme_attachments(&$item) {
 			if($label  == ' ')
 				$label = t('Unknown Attachment');
  			
-			$title = t('Attachment') . ' - ' . (($r['length']) ? userReadableSize($r['length']) : t('Size Unknown'));
+			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
 			require_once('include/identity.php');
 			if(is_foreigner($item['author_xchan']))
@@ -1363,6 +1372,7 @@ function generate_named_map($location) {
 
 
 function prepare_body(&$item,$attach = false) {
+	require_once('include/identity.php');
 
 //	if($item['html']) {
 //		$s = bb_observer($item['html']);
@@ -1373,9 +1383,35 @@ function prepare_body(&$item,$attach = false) {
 		$s = prepare_text($item['body'],$item['mimetype'], false);
 //	}
 
-	$prep_arr = array('item' => $item, 'html' => $s);
+
+	$photo = '';
+	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
+
+	if($is_photo) {
+		$object = json_decode($item['object'],true);
+
+		// if original photo width is <= 640px prepend it to item body
+		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {
+			$s = '<div class="inline-photo-item-wrapper"><a href="' . zid(rawurldecode($object['id'])) . '" target="_newwin"><img class="inline-photo-item" style="max-width:' . $object['link'][0]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][0]['href'])) . '"></a></div>' . $s;
+		}
+
+		// if original photo width is > 640px make it a cover photo
+		if($object['link'][0]['width'] && $object['link'][0]['width'] > 640) {
+			$scale = ((($object['link'][1]['width'] == 1024) || ($object['link'][1]['height'] == 1024)) ? 1 : 0);
+			$photo = '<a href="' . zid(rawurldecode($object['id'])) . '" target="_newwin"><img style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a>';
+		}
+	}
+
+	$prep_arr = array(
+		'item' => $item,
+		'html' => $s,
+		'photo' => $photo
+	);
+
 	call_hooks('prepare_body', $prep_arr);
+
 	$s = $prep_arr['html'];
+	$photo = $prep_arr['photo'];
 
 //	q("update item set html = '%s' where id = %d",
 //		dbesc($s),
@@ -1391,7 +1427,7 @@ function prepare_body(&$item,$attach = false) {
 		if($x) {
 			$s = preg_replace('/\<div class\=\"map\"\>/','$0' . $x,$s);
 		}
-	}		 
+	}
 
 	$attachments = theme_attachments($item);
 
@@ -1439,16 +1475,19 @@ function prepare_body(&$item,$attach = false) {
 	}
 
 	$prep_arr = array(
-			//'item' => $item,
-			'html' => $s,
-			'categories' => $categories,
-			'folders' => $filer,
-			'tags' => $tags,
-			'mentions' => $mentions,
-			'attachments' => $attachments
-		);
+		'item' => $item,
+		'photo' => $photo,
+		'html' => $s,
+		'categories' => $categories,
+		'folders' => $filer,
+		'tags' => $tags,
+		'mentions' => $mentions,
+		'attachments' => $attachments
+	);
 
 	call_hooks('prepare_body_final', $prep_arr);
+
+	unset($prep_arr['item']);
 
 	return $prep_arr;
 }
@@ -1967,13 +2006,13 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 	if(count($arr)) {
 		if($abook) {
 			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash and abook_channel = %d
-				where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1",
+				where xchan_hash in (" . protect_sprintf(implode(',', $arr)) . ") and hubloc_primary = 1",
 				intval($item['uid'])
 			);
 		}
 		else {
 			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-				where xchan_hash in (" . implode(',', $arr) . ") and hubloc_primary = 1");
+				where xchan_hash in (" . protect_sprintf(implode(',', $arr)) . ") and hubloc_primary = 1");
 		}
 		$xchans = q("select * from xchan where xchan_hash in (" . protect_sprintf(implode(',',$arr)) . ") and xchan_network in ('rss','unknown')");
 		if(! $chans)

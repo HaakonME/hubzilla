@@ -7,6 +7,7 @@
 require_once('include/permissions.php');
 require_once('include/items.php');
 require_once('include/photo/photo_driver.php');
+require_once('include/text.php');
 
 /**
  * @brief
@@ -17,6 +18,8 @@ require_once('include/photo/photo_driver.php');
  * @return array
  */
 function photo_upload($channel, $observer, $args) {
+
+	$a = get_app();
 
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
@@ -185,8 +188,16 @@ function photo_upload($channel, $observer, $args) {
 	if($args['description'])
 		$p['description'] = $args['description'];
 
+	$link   = array();
+
 	$r0 = $ph->save($p);
-	$r0wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$link[0] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-0.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r0)
 		$errors = true;
 
@@ -198,7 +209,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 1;
 	$r1 = $ph->save($p);
-	$r1wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$link[1] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-1.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r1)
 		$errors = true;
 	
@@ -207,7 +224,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 2;
 	$r2 = $ph->save($p);
-	$r2wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$link[2] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-2.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r2)
 		$errors = true;
 
@@ -216,7 +239,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$p['scale'] = 3;
 	$r3 = $ph->save($p);
-	$r3wxh = $ph->getWidth() . 'x' . $ph->getHeight();
+	$link[3] = array(
+		'rel'  => 'alternate',
+		'type' => 'text/html',
+		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-3.' . $ph->getExt()),
+		'width' => $ph->getWidth(),
+		'height' => $ph->getHeight()
+	);
 	if(! $r3)
 		$errors = true;
 
@@ -242,19 +271,41 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 
-	$larger = feature_enabled($channel['channel_id'], 'large_photos');
+	$title = (($args['description']) ? $args['description'] : $args['filename']);
 
-	if($larger) {
-		$tag = (($r1wxh) ? '[zmg=' . $r1wxh . ']' : '[zmg]');
+	$large_photos = feature_enabled($channel['channel_id'], 'large_photos');
+
+	linkify_tags($a, $args['body'], $channel_id);
+
+	if($large_photos) {
 		$scale = 1;
+		$width = $link[1]['width'];
+		$height = $link[1]['height'];
+		$tag = (($r1) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
+
+
 	}
 	else {
-		$tag = (($r2wxh) ? '[zmg=' . $r2wxh . ']' : '[zmg]');
 		$scale = 2;
+		$width = $link[2]['width'];
+		$height = $link[2]['height'];
+		$tag = (($r2) ? '[zmg=' . $width . 'x' . $height . ']' : '[zmg]');
 	}
 
-	// Create item container
+	$body = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+		. $tag . z_root() . "/photo/{$photo_hash}-{$scale}." . $ph->getExt() . '[/zmg]' 
+		. '[/zrl]';
 
+	// Create item object
+	$object = array(
+		'type'   => ACTIVITY_OBJ_PHOTO,
+		'title'  => $title,
+		'id'     => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash),
+		'link'   => $link,
+		'bbcode' => $body
+	);
+
+	// Create item container
 	if($args['item']) {
 		foreach($args['item'] as $i) {
 
@@ -263,13 +314,13 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-					. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]'
-					. '[/zrl]';
+				$item['body'] = (($object) ? $args['body'] : $body . "\r\n" . $args['body']);
+				$item['obj_type'] = (($object) ? ACTIVITY_OBJ_PHOTO : '');
+				$item['object']	= (($object) ? json_encode($object) : '');
 
 				if($item['author_xchan'] === $channel['channel_hash']) {
-	              	$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
-	                $item['item_verified']  = 1;
+					$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
+					$item['item_verified']  = 1;
 				}
 				else {
 					$item['sig'] = '';
@@ -297,7 +348,6 @@ function photo_upload($channel, $observer, $args) {
 		}
 	}
 	else {
-		$title = $args['filename'] ? $args['filename'] : '';
 		$mid = item_message_id();
 
 		$arr = array();
@@ -320,15 +370,28 @@ function photo_upload($channel, $observer, $args) {
 		$arr['deny_cid']        = $ac['deny_cid'];
 		$arr['deny_gid']        = $ac['deny_gid'];
 		$arr['verb']            = ACTIVITY_POST;
+		$arr['obj_type']	= (($object) ? ACTIVITY_OBJ_PHOTO : '');
+		$arr['object']		= (($object) ? json_encode($object) : '');
 		$arr['item_wall']       = 1;
 		$arr['item_origin']     = 1;
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+		$arr['body']		= (($object) ? $args['body'] : $body . "\r\n" . $args['body']);
 
-		$arr['body'] = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-			. $tag . z_root() . "/photo/{$photo_hash}-{$scale}.".$ph->getExt() . '[/zmg]'
-			. '[/zrl]';
+
+		// this one is tricky because the item and the photo have the same permissions, those of the photo.
+		// Use the channel read_stream permissions to get the correct public_policy for the item and recalculate the
+		// private flag accordingly. This may cause subtle bugs due to custom permissions roles. We want to use 
+		// public policy when federating items to other sites, but should probably ignore them when accessing the item
+		// in the photos pages - using the photos permissions instead. We need the public policy to keep the photo
+		// linked item from leaking into the feed when somebody has a channel with read_stream restrictions.  
+
+		$arr['public_policy']   = map_scope($channel['channel_r_stream'],true);
+		if($arr['public_policy'])
+			$arr['item_private'] = 1;
+
+
 
 		$result = item_store($arr);
 		$item_id = $result['item_id'];
@@ -339,7 +402,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$ret['success'] = true;
 	$ret['item'] = $arr;
-	$ret['body'] = $arr['body'];
+	$ret['body'] = $body;
 	$ret['resource_id'] = $photo_hash;
 	$ret['photoitem_id'] = $item_id;
 

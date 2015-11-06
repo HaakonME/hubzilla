@@ -757,6 +757,7 @@ a.rateme, div.rateme {
 
 .wall-item-conv {
 	padding: 7px 10px;
+	background-color: $comment_item_colour;
 }
 
 
@@ -794,11 +795,11 @@ a.rateme, div.rateme {
 }
 
 #nav-search-text::-webkit-input-placeholder {
-	font-family: FontAwesome;
+	font-family: FontAwesome, sans-serif;
 }
 
 #nav-search-text::-moz-placeholder {
-	font-family: FontAwesome;
+	font-family: FontAwesome, sans-serif;
 }
 
 nav .acpopup {
@@ -1621,21 +1622,31 @@ img.mail-conv-sender-photo {
 }
 
 /* conversation */
+.nsfw-wrap {
+	text-align: center;
+	font-size: $body_font_size;
+}
 
 .wall-item-head {
-	padding: 10px 10px 0px 10px;
+	padding: 10px 10px 0.5em 10px;
 }
 
 .wall-item-content {
-	padding: 1em 10px;
+	padding: 0.5em 10px;
 }
 
 .wall-photo-item {
-	padding: 10px 0px;
+	/*padding: 0.5em 10px;*/
+}
+
+.wall-photo-item img {
+	max-width: 100% !important;
+	border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radiuspx;
 }
 
 .wall-item-tools {
-	padding: 0px 10px 10px 10px;
+	padding: 0.5em 10px 10px 10px;
 }
 
 
@@ -1651,6 +1662,8 @@ img.mail-conv-sender-photo {
 
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
 }
 
 .hide-comments-outer {
@@ -1673,11 +1686,11 @@ img.mail-conv-sender-photo {
 	border-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
-	margin-top: 3px;
+	border-top: 3px solid $comment_item_colour;
 }
 
 .wall-item-comment-wrapper-wc {
-	margin-top: 0px;
+	border-top: 0px solid $comment_item_colour;
 }
 
 .wall-item-like,
@@ -1762,7 +1775,6 @@ img.mail-conv-sender-photo {
 
 .divgrow-showmore:hover {
 	border-top: 1px dashed #adadad;
-	text-decoration: underline;
 }
 
 
@@ -1860,7 +1872,6 @@ nav .dropdown-menu {
 	border: 1px solid #ccc;
 	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.2);
 	border-radius:  $radiuspx;
-	background-color: #fff;
 }
 
 .section-title-wrapper {
@@ -1868,7 +1879,7 @@ nav .dropdown-menu {
 	background-color: $item_colour;
 	border-top-left-radius: $radiuspx;
 	border-top-right-radius: $radiuspx;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 }
 
 .section-title-wrapper h2,
@@ -1883,20 +1894,20 @@ nav .dropdown-menu {
 .section-subtitle-wrapper {
 	padding: 7px 10px;
 	background-color: $item_colour;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 }
 
 .section-content-tools-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
-	margin-bottom: 3px
+	border-bottom: 3px solid $comment_item_colour;
 }
 
 .section-content-info-wrapper {
 	padding: 21px 10px;
 	color: #31708f;
 	background-color: #d9edf7;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 
@@ -1904,7 +1915,7 @@ nav .dropdown-menu {
 	padding: 21px 10px;
 	color: #8a6d3b;
 	background-color: #fcf8e3;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 
@@ -1912,7 +1923,7 @@ nav .dropdown-menu {
 	padding: 21px 10px;
 	color: #a94442;
 	background-color: #f2dede;
-	margin-bottom: 3px;
+	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 

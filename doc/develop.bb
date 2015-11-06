@@ -8,6 +8,8 @@
 [zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
 [zrl=[baseurl]/help/Widgets]Widgets[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
+[zrl=[baseurl]/help/hooks]Hooks[/zrl]
+[zrl=[baseurl]/help/hooklist]Hooks (detailed - under construction)[/zrl]
 [zrl=[baseurl]/help/doco]Contributing Documentation[/zrl]
 [zrl=[baseurl]/help/DerivedTheme1]Creating Derivative Themes[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemas[/zrl]

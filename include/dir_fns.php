@@ -178,9 +178,10 @@ function sync_directories($dirmode) {
 			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
 			'site_realm' => DIRECTORY_REALM,
 			'site_valid' => 1
+			
 		);
 		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm, site_valid )
-			values ( '%s', %d', '%s', '%s', '%s' ) ",
+			values ( '%s', %d, '%s', '%s', '%s', %d ) ",
 			dbesc($r[0]['site_url']),
 			intval($r[0]['site_flags']),
 			dbesc($r[0]['site_update']),
@@ -189,8 +190,9 @@ function sync_directories($dirmode) {
 			intval($r[0]['site_valid'])
 		);
 
-		$r = q("select * from site where (site_flags & %d) > 0 and site_url != '%s' and site_type = %d ",
-			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
+		$r = q("select * from site where site_flags in (%d, %d) and site_url != '%s' and site_type = %d ",
+			intval(DIRECTORY_MODE_PRIMARY),
+			intval(DIRECTORY_MODE_SECONDARY),
 			dbesc(z_root()),
 			intval(SITE_TYPE_ZOT)
 		);

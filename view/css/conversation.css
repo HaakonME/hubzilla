@@ -77,11 +77,6 @@ code {
 
 /* conv_item */
 
-.wall-photo-item img {
-	width: 100% !important;
-	max-width: 100% !important;
-}
-
 .wall-item-info {
 	display: block;
 	float: left;

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1157 );
+define( 'UPDATE_VERSION' , 1159 );
 
 /**
  *
@@ -1906,4 +1906,29 @@ function update_r1156() {
         return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1157() {
+	$r1 = q("alter table site add site_project char(255) not null default '' ");
+    $r2 = q("create index site_project on site ( site_project ) ");
+    if($r1 && $r2)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+
+}
+
+
+function update_r1158() {
+	$r = q("select attach.id, attach.data, channel_address from attach left join channel on attach.uid = channel_id where os_storage = 1 and not attach.data like '%%store%%' ");
+	if($r) {
+		foreach($r as $rr) {
+			$has_slash = ((substr($rr['data'],0,1) === '/') ? true : false);
+			q("update attach set data = '%s' where id = %d",
+				dbesc('store/' . $rr['channel_address']. (($has_slash) ? '' : '/' . $rr['data'])),
+				dbesc($rr['id'])
+			);
+		}
+	}
+	return UPDATE_SUCCESS;
+}
+
 

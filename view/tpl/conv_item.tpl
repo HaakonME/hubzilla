@@ -8,6 +8,11 @@
 		<a name="{{$item.id}}" ></a>
 		<div class="wall-item-outside-wrapper {{$item.indent}}{{$item.previewing}}" id="wall-item-outside-wrapper-{{$item.id}}" >
 			<div class="wall-item-content-wrapper {{$item.indent}}" id="wall-item-content-wrapper-{{$item.id}}" style="clear:both;">
+				{{if $item.photo}}
+				<div class="wall-photo-item" id="wall-photo-item-{{$item.id}}">
+					{{$item.photo}}
+				</div>
+				{{/if}}
 				<div class="wall-item-head">
 					<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
 						<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}}" id="wall-item-photo-wrapper-{{$item.id}}">
@@ -33,12 +38,15 @@
 					</div>
 					<div class="clear"></div>
 				</div>
-				<div class="{{if $item.is_photo}}wall-photo-item{{else}}wall-item-content{{/if}}" id="wall-item-content-{{$item.id}}">
+
+				{{if $item.body}}
+				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-body" id="wall-item-body-{{$item.id}}" >
 						{{$item.body}}
 					</div>
 					<div class="clear"></div>
 				</div>
+				{{/if}}
 				{{if $item.has_tags}}
 				<div class="wall-item-tools">
 					{{if $item.mentions}}
@@ -59,11 +67,6 @@
 					{{if $item.folders}}
 					<div class="body-tags" id="item-folders">
 						<span class="tag">{{$item.folders}}</span>
-					</div>
-					{{/if}}
-					{{if $item.attachments}}
-					<div class="body-tags" id="item-attachments">
-						<span class='tag'>{{$item.attachments}}</span>
 					</div>
 					{{/if}}
 					<div class="clear"></div>
@@ -149,9 +152,15 @@
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 
-					{{if $item.responses }}
-					<div class="wall-item-tools-left{{if $item.responses.count > 1}} btn-group{{/if}}">
-					{{foreach $item.responses as $verb=>$response}}
+					{{if $item.responses || $item.attachments}}
+					<div class="wall-item-tools-left{{if ($item.responses.count > 1) || ($item.responses.count &&  $item.attachments)}} btn-group{{/if}}">
+						{{if $item.attachments}}
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="attachment-menu-{{$item.id}}"><i class="icon-paperclip"></i></button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="attachment-menu-{{$item.id}}">{{$item.attachments}}</ul>
+						</div>
+						{{/if}}
+						{{foreach $item.responses as $verb=>$response}}
 						{{if $response.count}}
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-{{$verb}}-{{$item.id}}">{{$response.count}} {{$response.button}}</button>
@@ -180,7 +189,7 @@
 							{{/if}}
 						</div>
 						{{/if}}
-					{{/foreach}}
+						{{/foreach}}
 					</div>
 					{{/if}}
 					<div class="clear"></div>

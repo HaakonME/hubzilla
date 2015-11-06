@@ -127,7 +127,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 					}	
 					$fname = dbunescbin($d[0]['data']);
 					if(strpos($fname,'store') === false)
-						$f = 'store/' . $this->auth->owner_nick . '/' . (($fname) ? $fname : '');
+						$f = 'store/' . $this->auth->owner_nick . '/' . $fname ;
 					else
 						$f = $fname;
 

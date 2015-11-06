@@ -20,7 +20,10 @@
 	Called when an account has expired, indicating a potential downgrade to "basic" service class
 
 [zrl=[baseurl]/help/hook/account_settings]account_settings[/zrl]
-	Called when account settings have been saved
+	Called when generating the account settings form
+
+[zrl=[baseurl]/help/hook/settings_account]account_settings_post[/zrl]
+	Called when posting from the account settings form
 
 [zrl=[baseurl]/help/hook/activity_received]activity_received[/zrl]
 	Called when an activity (post, comment, like, etc.) has been received from a zot source
@@ -448,9 +451,6 @@
 
 [zrl=[baseurl]/help/hook/reverse_magic_auth]reverse_magic_auth[/zrl]
 	Called before invoking reverse magic auth to send you to your own site to authenticate on this site
-
-[zrl=[baseurl]/help/hook/settings_account]settings_account[/zrl]
-	Called when generating the account settings form
 
 [zrl=[baseurl]/help/hook/settings_form]settings_form[/zrl]
 	Called when generating the channel settings form

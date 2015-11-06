@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1159 );
+define( 'UPDATE_VERSION' , 1160 );
 
 /**
  *
@@ -1785,6 +1785,10 @@ function update_r1157() {
 }
 
 function update_r1158() {
+	return UPDATE_SUCCESS;
+}
+
+function update_r1159() {
 	return UPDATE_SUCCESS;
 }
 

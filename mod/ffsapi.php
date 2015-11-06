@@ -4,7 +4,7 @@
 function ffsapi_content(&$a) {
 
 $baseurl = z_root();
-$name = sprintf( t('%1$s'), get_config('system','sitename'));
+$name = get_config('system','sitename');
 $description = t('Share content from Firefox to $Projectname');
 $author = 'Mike Macgirvin';
 $homepage = 'http://hubzilla.org';

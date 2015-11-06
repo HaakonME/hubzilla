@@ -230,7 +230,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 			}
 
 			if (intval($r[0]['os_storage'])) {
-				$x = dbunsecbin($r[0]['data']);
+				$x = dbunescbin($r[0]['data']);
 				if(strpos($x,'store') === false)
 					$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $x;
 				else

@@ -5,10 +5,10 @@ function ffsapi_content(&$a) {
 
 $baseurl = z_root();
 $name = get_config('system','sitename');
-$description = t("Share content from Firefox to $Projectname");
-$author = "Mike Macgirvin";
-$homepage = "http://hubzilla.org";
-$activate = t("Activate the Firefox $Projectname provider");
+$description = t('Share content from Firefox to $Projectname');
+$author = 'Mike Macgirvin';
+$homepage = 'http://hubzilla.org';
+$activate = t('Activate the Firefox $Projectname provider');
 
 $s = <<< EOT
 
@@ -56,7 +56,7 @@ function activate(node) {
 }
 </script>
 
-<button onclick="activate(this)" title="activate the demo provider" class="btn btn-primary">$activate</button>
+<button onclick="activate(this)" title="$activate" class="btn btn-primary">$activate</button>
 
 EOT;
 

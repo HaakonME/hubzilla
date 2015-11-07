@@ -2,6 +2,7 @@
 
 Hooks allow plugins/addons to "hook into" the code at many points and alter the behaviour or otherwise perform independent actions when an activity takes place or when certain data structures are accessed. There are many hooks which allow you to tie into the software at most any point and do something slightly different than the default thing. These hooks are passed two variables. The first is the App structure which contains details about the entire state of the page request as we build the resulting page. The second is unique to the specific hook that is called and provides specific detail about what is happening in the software at the time the hook is invoked.
 
+[zrl=[baseurl]/help/hooks]Generated index of all hooks and the files which call them[/zrl]
 
 [zrl=[baseurl]/help/hook/module_mod_aftercontent]module_mod_aftercontent[/zrl]
 	General purpose hook for any module, executed after mod_content(). Replace 'module' with module name, e.g. 'photos_mod_aftercontent'.

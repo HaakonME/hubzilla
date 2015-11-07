@@ -5,10 +5,10 @@ function ffsapi_content(&$a) {
 
 $baseurl = z_root();
 $name = get_config('system','sitename');
-$description = t('Share content from Firefox to $Projectname');
-$author = 'Mike Macgirvin';
-$homepage = 'http://hubzilla.org';
-$activate = t('Activate the Firefox $Projectname provider');
+$description = t("Share content from Firefox to $Projectname");
+$author = "Mike Macgirvin";
+$homepage = "http://hubzilla.org";
+$activate = t("Activate the Firefox $Projectname provider");
 
 $s = <<< EOT
 
@@ -40,9 +40,9 @@ var data = {
   "unmarkedIcon": baseurl+"/images/hz-bookmark-32.png",
 
   // should be available for display purposes
-  "description": '$description',
-  "author": '$author',
-  "homepageURL": '$homepage',
+  "description": "$description",
+  "author": "$author",
+  "homepageURL": "$homepage",
 
   // optional
   "version": "1.0"

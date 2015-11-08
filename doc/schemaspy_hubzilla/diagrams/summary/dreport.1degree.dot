@@ -1,0 +1,38 @@
+// dot 2.26.3 on Linux 3.2.0-4-686-pae
+// SchemaSpy rev 590
+digraph "dreport" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "dreport" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">dreport</TD></TR>
+      <TR><TD PORT="dreport_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">dreport_id</TD></TR>
+      <TR><TD PORT="dreport_channel" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">dreport_channel</TD></TR>
+      <TR><TD PORT="dreport_mid" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">dreport_mid</TD></TR>
+      <TR><TD PORT="dreport_site" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">dreport_site</TD></TR>
+      <TR><TD PORT="dreport_recip" COLSPAN="3" ALIGN="LEFT">dreport_recip</TD></TR>
+      <TR><TD PORT="dreport_result" COLSPAN="3" ALIGN="LEFT">dreport_result</TD></TR>
+      <TR><TD PORT="dreport_time" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">dreport_time</TD></TR>
+      <TR><TD PORT="dreport_xchan" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">dreport_xchan</TD></TR>
+      <TR><TD PORT="dreport_queue" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">dreport_queue</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3 775 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/dreport.html"
+    tooltip="dreport"
+  ];
+}

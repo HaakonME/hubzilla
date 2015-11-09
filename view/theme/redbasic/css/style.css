@@ -1382,6 +1382,15 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	border-radius: $radiuspx;
 }
 
+#jotnets-wrapper {
+	background-color: rgb(238, 238, 238);
+	font-size: 120%;
+    border-radius: 4px;
+	padding: 7px 10px;
+    cursor: pointer;
+	margin-bottom: 10px;
+}
+
 .acl-list-item {
 	width: 48%; /* fallback if browser does not support calc() */
 	width: calc(50% - 10px);

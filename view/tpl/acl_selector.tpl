@@ -6,13 +6,20 @@
 				<h4 class="modal-title">{{$aclModalTitle}}</h4>
 			</div>
 			<div class="modal-body">
+				{{if $jotnets}}
+				<div class="jotnets-wrapper" role="tab" id="jotnets-wrapper">
+         	       <a data-toggle="collapse" href="#jotnets-collapse" aria-expanded="false" aria-controls="jotnets-collapse">{{$jnetModalTitle}} <span class="caret"></span></a>
+                </div>
+				<div id="jotnets-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acl-select">
+				{{$jotnets}}
+				<div class="clear"></div>
+				</div>
+				{{/if}}
+
 				<div id="acl-wrapper">
 					<button id="acl-showall" class="btn btn-block btn-default"><i class="icon-globe"></i> {{$showall}}</button>
 					<input type="text" id="acl-search" placeholder="&#xf002;">
 
-				{{if $jotnets}}
-				{{$jotnets}}
-				{{/if}}
 					<div id="acl-list">
 						<div id="acl-list-content"></div>
 

@@ -2315,3 +2315,7 @@ nav .badge.mail-update:hover {
 .help-searchlist a {
 	font-size: 130%;
 }
+
+.response-list ul {
+	list-style-type: none;
+}

@@ -328,7 +328,9 @@
             <child column="channel_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="mail"/>
             <child column="channel_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="profext"/>
          </column>
-         <column autoUpdated="false" defaultValue="0" digits="0" id="1" name="channel_account_id" nullable="false" remarks="" size="10" type="INT UNSIGNED"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="1" name="channel_account_id" nullable="false" remarks="" size="10" type="INT UNSIGNED">
+		       <foreignKey table="account" column="account_id"/>
+		 </column>
          <column autoUpdated="false" defaultValue="0" digits="0" id="2" name="channel_primary" nullable="false" remarks="" size="0" type="BIT"/>
          <column autoUpdated="false" defaultValue="" digits="0" id="3" name="channel_name" nullable="false" remarks="" size="255" type="CHAR"/>
          <column autoUpdated="false" defaultValue="" digits="0" id="4" name="channel_address" nullable="false" remarks="" size="255" type="CHAR"/>

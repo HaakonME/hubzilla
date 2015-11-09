@@ -666,6 +666,10 @@ function connedit_content(&$a) {
 
 		if($locs) {
 			foreach($locs as $l) {
+				if(!($l['location']))
+					continue;
+				if(strpos($locstr,$l['location']) !== false)
+					continue;
 				if(strlen($locstr))
 					$locstr .= ', ';
 				$locstr .= $l['location'];

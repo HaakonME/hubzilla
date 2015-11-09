@@ -16,4 +16,4 @@ The RedMatrix is ideal for communities of any size, from private individuals and
 
 The Red Matrix is free and open source distributed under the MIT license.
 
-For a list of public hubs see [redmatrix.me/pubsites](https://redmatrix.me/pubsites). For installation instructions see [install/INSTALL.txt](install/INSTALL.txt)
+For a list of public hubs see [zothub.com/pubsites](https://zothub.com/pubsites). For installation instructions see [install/INSTALL.txt](install/INSTALL.txt)

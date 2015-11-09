@@ -1382,12 +1382,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	border-radius: $radiuspx;
 }
 
-#jotnets-wrapper {
-	background-color: rgb(238, 238, 238);
-	font-size: 120%;
-    border-radius: 4px;
-	padding: 7px 10px;
-    cursor: pointer;
+#jotnets-wrapper, #jotnets-collapse {
 	margin-bottom: 18px;
 }
 

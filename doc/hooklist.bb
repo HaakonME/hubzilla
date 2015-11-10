@@ -209,9 +209,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/get_role_perms]get_role_perms[/zrl]
 	Called when get_role_perms() is called to obtain permissions for named permission roles
 
-[zrl=[baseurl]/help/hook/get_widgets]get_widgets[/zrl]
-	No longer used - now widget placement is managed by Comanche
-
 [zrl=[baseurl]/help/hook/global_permissions]global_permissions[/zrl]
 	Called when the global permissions list is generated
 

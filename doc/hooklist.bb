@@ -58,9 +58,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/authenticate]authenticate[/zrl]
 	Can provide alternate authentication mechanisms
 
-[zrl=[baseurl]/help/hook/avatar_lookup]avatar_lookup[/zrl]
-	Used for "gravatar" or libravatar profile photo lookup.
- 
 [zrl=[baseurl]/help/hook/bb2diaspora]bb2diaspora[/zrl]
 	called when converting bbcode to markdown
 

@@ -177,16 +177,21 @@ function connedit_post(&$a) {
 
 	if(($_REQUEST['pending']) && intval($orig_record[0]['abook_pending'])) {
 		$new_friend = true;
-		if(! $abook_my_perms) {
 
-			$abook_my_perms = get_channel_default_perms(local_channel());
+		// @fixme it won't be common, but when you accept a new connection request
+		// the permissions will now be that of your permissions role and ignore
+		// any you may have set manually on the form. We'll probably see a bug if somebody
+		// tries to set the permissions *and* approve the connection in the same 
+		// request. The workaround is to approve the connection, then go back and
+		// adjust permissions as desired.
 
-			$role = get_pconfig(local_channel(),'system','permissions_role');
-			if($role) {
-				$x = get_role_perms($role);
-				if($x['perms_accept'])
-					$abook_my_perms = $x['perms_accept'];
-			}
+		$abook_my_perms = get_channel_default_perms(local_channel());
+
+		$role = get_pconfig(local_channel(),'system','permissions_role');
+		if($role) {
+			$x = get_role_perms($role);
+			if($x['perms_accept'])
+				$abook_my_perms = $x['perms_accept'];
 		}
 	}
 
@@ -661,6 +666,10 @@ function connedit_content(&$a) {
 
 		if($locs) {
 			foreach($locs as $l) {
+				if(!($l['location']))
+					continue;
+				if(strpos($locstr,$l['location']) !== false)
+					continue;
 				if(strlen($locstr))
 					$locstr .= ', ';
 				$locstr .= $l['location'];

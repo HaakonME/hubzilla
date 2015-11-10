@@ -40,9 +40,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/api_perm_is_allowed]api_perm_is_allowed[/zrl]
 	Called when perm_is_allowed() is executed from an API call.
 
-[zrl=[baseurl]/help/hook/app_menu]app_menu[/zrl]
-	Used to register plugins as apps
-
 [zrl=[baseurl]/help/hook/atom_author]atom_author[/zrl]
 	Called when generating an author or owner element for an Atom ActivityStream feed
 
@@ -61,9 +58,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/authenticate]authenticate[/zrl]
 	Can provide alternate authentication mechanisms
 
-[zrl=[baseurl]/help/hook/avatar_lookup]avatar_lookup[/zrl]
-	Used for "gravatar" or libravatar profile photo lookup.
- 
 [zrl=[baseurl]/help/hook/bb2diaspora]bb2diaspora[/zrl]
 	called when converting bbcode to markdown
 
@@ -211,9 +205,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/get_role_perms]get_role_perms[/zrl]
 	Called when get_role_perms() is called to obtain permissions for named permission roles
-
-[zrl=[baseurl]/help/hook/get_widgets]get_widgets[/zrl]
-	No longer used - now widget placement is managed by Comanche
 
 [zrl=[baseurl]/help/hook/global_permissions]global_permissions[/zrl]
 	Called when the global permissions list is generated

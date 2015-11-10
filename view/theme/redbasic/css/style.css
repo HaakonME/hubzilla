@@ -1382,6 +1382,10 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	border-radius: $radiuspx;
 }
 
+#jotnets-wrapper, #jotnets-collapse {
+	margin-bottom: 18px;
+}
+
 .acl-list-item {
 	width: 48%; /* fallback if browser does not support calc() */
 	width: calc(50% - 10px);
@@ -2310,4 +2314,8 @@ nav .badge.mail-update:hover {
 
 .help-searchlist a {
 	font-size: 130%;
+}
+
+.response-list ul {
+	list-style-type: none;
 }

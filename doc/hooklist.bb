@@ -40,9 +40,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/api_perm_is_allowed]api_perm_is_allowed[/zrl]
 	Called when perm_is_allowed() is executed from an API call.
 
-[zrl=[baseurl]/help/hook/app_menu]app_menu[/zrl]
-	Used to register plugins as apps
-
 [zrl=[baseurl]/help/hook/atom_author]atom_author[/zrl]
 	Called when generating an author or owner element for an Atom ActivityStream feed
 

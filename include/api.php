@@ -9,6 +9,7 @@ require_once('include/security.php');
 require_once('include/photos.php');
 require_once('include/items.php');
 require_once('include/attach.php');
+require_once('include/api_auth.php');
 
 	/*
 	 *

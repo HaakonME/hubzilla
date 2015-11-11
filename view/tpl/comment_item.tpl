@@ -22,20 +22,7 @@
 				<div class="clear"></div>
 				<div id="comment-tools-{{$id}}" class="comment-tools">
 					<div id="comment-edit-bb-{{$id}}" class="btn-toolbar pull-left">
-                                                {{if $feature_encrypt}}
-                                                <div class='btn-group'>
-                                                        <button class="btn btn-default btn-xs" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
-                                                                <i class="icon-key comment-icon"></i>
-                                                        </button>
-                                                </div>
-                                                {{/if}}
-
 						<div class='btn-group'>
-<!--button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('
-{{$comment}}','img', {{$id}}); return false;">
-                                                                <i class="icon-camera comment-icon"></i>
-                                                        </button-->
-
 							<button class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">
 								<i class="icon-bold comment-icon"></i>
 							</button>
@@ -53,6 +40,9 @@
 							</button>
 						</div>
 						<div class='btn-group'>
+							<!--button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
+								<i class="icon-camera comment-icon"></i>
+							</button-->
 							<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertCommentURL('{{$comment}}',{{$id}}); return false;">
 								<i class="icon-link comment-icon"></i>
 							</button>
@@ -60,6 +50,13 @@
 								<i class="icon-facetime-video comment-icon"></i>
 							</button-->
 						</div>
+						{{if $feature_encrypt}}
+						<div class='btn-group'>
+							<button class="btn btn-default btn-xs" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
+								<i class="icon-key comment-icon"></i>
+							</button>
+						</div>
+						{{/if}}
 					</div>
 					<div class="btn-group pull-right" id="comment-edit-submit-wrapper-{{$id}}">
 						{{if $preview}}

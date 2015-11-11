@@ -1,4 +1,4 @@
-[img][baseurl]/assets/hashlogo.png[/img]
+[img][baseurl]/images/hubzilla-banner.png[/img]
 
 [zrl=[baseurl]/help/about]Was ist Hubzilla?[/zrl]
 Hubzilla ist eine dezentrale Kommunikations- und Publishing-Plattform. Sie ermöglicht Dir die volle Kontrolle über all Deine Kommunikation mit Hilfe von automatischer Verschlüsselung und detaillierter Zugriffskontrolle. Du, und [i]nur[/i] Du, entscheidest, wer Deine Beiträge sehen darf. Hubzilla ist der Nachfolger, der seit einigen Jahren erfolgreichen Plattformen Firendica und Red Matrix. 

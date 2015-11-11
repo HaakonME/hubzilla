@@ -48,6 +48,16 @@
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
 				<div class="btn-group">
+					{{if $writefiles}}
+					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
+						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
+					</button>
+					{{/if}}
+					{{if $feature_encrypt}}
+					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
+						<i id="profile-encrypt" class="icon-key jot-icons"></i>
+					</button>
+					{{/if}}
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
 					</button>

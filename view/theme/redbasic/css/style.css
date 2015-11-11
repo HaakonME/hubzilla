@@ -757,6 +757,7 @@ a.rateme, div.rateme {
 
 .wall-item-conv {
 	padding: 7px 10px;
+	background-color: $comment_item_colour;
 }
 
 
@@ -1379,6 +1380,10 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
+}
+
+#jotnets-wrapper, #jotnets-collapse {
+	margin-bottom: 18px;
 }
 
 .acl-list-item {
@@ -2309,4 +2314,8 @@ nav .badge.mail-update:hover {
 
 .help-searchlist a {
 	font-size: 130%;
+}
+
+.response-list ul {
+	list-style-type: none;
 }

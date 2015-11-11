@@ -546,11 +546,18 @@ function guess_image_type($filename, $headers = '') {
 			$ext = pathinfo($filename, PATHINFO_EXTENSION);
 			$ph = photo_factory('');
 			$types = $ph->supportedTypes();
-			$type = "image/jpeg";
 			foreach ($types as $m=>$e){
 				if ($ext==$e) $type = $m;
 			}
 		}
+
+		if(is_null($type)) {
+			$size = getimagesize($filename);
+			$ph = photo_factory('');
+			$types = $ph->supportedTypes();
+			$type = ((array_key_exists($size['mime'], $types)) ? $size['mime'] : 'image/jpeg');
+		}
+
 	}
 	logger('Photo: guess_image_type: type='.$type, LOGGER_DEBUG);
 	return $type;
@@ -586,16 +593,12 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 
 	if($photo) {
 		$filename = basename($photo);
-		$type = guess_image_type($photo);
-
-		if(! $type)
-			$type = 'image/jpeg';
-
 
 		$result = z_fetch_url($photo,true);
 
 		if($result['success']) {
 			$img_str = $result['body'];
+			$type = guess_image_type($photo, $result['header']);
 
 			$h = explode("\n",$result['header']);
 			if($h) {
@@ -731,6 +734,11 @@ function import_channel_photo($photo,$type,$aid,$uid) {
 		$photo_failure = true;
 	}
 
-	return(($photo_failure)? false : true);
+	//return(($photo_failure)? false : true);
+
+	if($photo_failure)
+		return false;
+	else
+		return $hash;
 
 }

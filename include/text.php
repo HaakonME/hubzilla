@@ -872,15 +872,17 @@ function searchbox($s,$id='search-box',$url='/search',$save = false) {
 	));
 }
 
+function valid_email_regex($x){
+	if(preg_match('/^[_a-zA-Z0-9\-\+]+(\.[_a-zA-Z0-9\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
+		return true;
+	return false;
+}
 
 function valid_email($x){
 	if(get_config('system','disable_email_validation'))
 		return true;
 
-	if(preg_match('/^[_a-zA-Z0-9\-\+]+(\.[_a-zA-Z0-9\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
-		return true;
-
-	return false;
+	return valid_email_regex($x);
 }
 
 /**
@@ -912,8 +914,17 @@ function sslify($s) {
 	if (strpos(z_root(),'https:') === false)
 		return $s;
 
+	// By default we'll only sslify img tags because media files will probably choke.
+	// You can set sslify_everything if you want - but it will likely white-screen if it hits your php memory limit.
+	// The downside is that http: media files will likely be blocked by your browser
+	// Complain to your browser maker
+
+	$allow = get_config('system','sslify_everything');
+	
+	$pattern = (($allow) ? "/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/" : "/\<img(.*?)src=\"(http\:.*?)\"(.*?)\>/" ); 
+
 	$matches = null;
-	$cnt = preg_match_all("/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/",$s,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all($pattern,$s,$matches,PREG_SET_ORDER);
 	if ($cnt) {
 		foreach ($matches as $match) {
 			$filename = basename( parse_url($match[2], PHP_URL_PATH) );
@@ -1224,7 +1235,7 @@ function theme_attachments(&$item) {
 			if($label  == ' ')
 				$label = t('Unknown Attachment');
  			
-			$title = t('Attachment') . ' - ' . (($r['length']) ? userReadableSize($r['length']) : t('Size Unknown'));
+			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
 			require_once('include/identity.php');
 			if(is_foreigner($item['author_xchan']))

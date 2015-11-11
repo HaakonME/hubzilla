@@ -642,7 +642,7 @@ function widget_conversations($arr) {
 				'subject'      => (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
 				'delete'       => t('Delete conversation'),
 				'body'         => $rr['body'],
-				'date'         => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
+				'date'         => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], 'c'),
 				'seen'         => $rr['seen'],
 				'selected'     => ((argv(2)) ? (argv(2) == $rr['id']) : ($r[0]['id'] == $rr['id']))
 			);

@@ -68,7 +68,9 @@
 					</button>
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="icon-link jot-icons"></i>
-					</button>					
+					</button>
+				</div>
+				<div class="btn-group hidden-xs">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
 					</button>
@@ -80,25 +82,6 @@
 					</button>					
 				</div>
 				{{if $visitor}}
-				<div class="btn-group hidden-xs">
-					{{if $writefiles}}
-					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
-						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
-					</button>
-					{{/if}}
-					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
-						<i id="profile-link" class="icon-link jot-icons"></i>
-					</button>
-				</div>
-				<div class="btn-group hidden-xs hidden-sm">
-					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
-						<i id="profile-location" class="icon-globe jot-icons"></i>
-					</button>
-					{{if $noloc}}
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
-						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
-					</button>
-				{{/if}}
 				{{else}}
 				<div class="btn-group hidden-xs">
 				{{/if}}
@@ -117,6 +100,14 @@
 						<i id="profile-expires" class="icon-eraser jot-icons"></i>
 					</button>
 				{{/if}}
+					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
+						<i id="profile-location" class="icon-globe jot-icons"></i>
+					</button>
+				{{if $noloc}}
+					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
+						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
+					</button>
+				{{/if}}				
 				{{if $showacl}}
 				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
 					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="icon-exclamation jot-icons"></i>{{/if}}
@@ -128,7 +119,7 @@
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu dropdown-menu-right" role="menu">
-						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
+						<!-- li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li -->
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
 						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>

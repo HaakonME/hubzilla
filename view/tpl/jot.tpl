@@ -81,10 +81,7 @@
 						<i class="icon-underline jot-icons"></i>
 					</button>					
 				</div>
-				{{if $visitor}}
-				{{else}}
 				<div class="btn-group hidden-xs">
-				{{/if}}
 				{{if $feature_encrypt}}
 					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
 						<i id="profile-encrypt" class="icon-key jot-icons"></i>

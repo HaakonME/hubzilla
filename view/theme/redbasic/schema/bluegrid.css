@@ -299,7 +299,7 @@ input {
 	border: 1px solid rgba(255,255,255,.5);
 }
 
-.contact-entry-edit a:hover, .contact-entry-edit a:focus, .generic-content-wrapper-styled > p > span.btn.btn-default > a:hover,.generic-content-wrapper-styled > p > span.btn.btn-default > a:focus, div#profile-edit-links a:hover, div#profile-edit-links a:focus {
+.contact-entry-edit:hover a, .contact-entry-edit:focus	 a, .generic-content-wrapper-styled > p > span.btn.btn-default > a:hover,.generic-content-wrapper-styled > p > span.btn.btn-default > a:focus, div#profile-edit-links a:hover, div#profile-edit-links a:focus {
 	color: #43488A;
 }
 

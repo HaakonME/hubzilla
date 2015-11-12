@@ -18,7 +18,7 @@ function find_upstream_directory($dirmode) {
 
 	// Thwart attempts to use a private directory
 
-	if(($preferred) && ($prefered != z_root())) {
+	if(($preferred) && ($preferred != z_root())) {
 		$r = q("select * from site where site_url = '%s' limit 1",
 			dbesc($preferred)
 		);

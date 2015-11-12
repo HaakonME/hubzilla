@@ -49,15 +49,17 @@
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
 				<div class="btn-group">
 					{{if $writefiles}}
-					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
-						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
-					</button>
-					{{/if}}
-					{{if $feature_encrypt}}
-					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
-						<i id="profile-encrypt" class="icon-key jot-icons"></i>
-					</button>
-					{{/if}}
+                                        <button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
+                                                <i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
+                                        </button>
+                                        {{/if}}
+                                        {{if $feature_encrypt}}
+                                        <button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
+                                                <i id="profile-encrypt" class="icon-key jot-icons"></i>
+                                        </button>
+                                        {{/if}}
+				</div>
+				<div class="btn-group">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
 					</button>
@@ -126,7 +128,6 @@
 						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
-						{{if $writefiles}}<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>{{/if}}
 						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
 						<!--li class="visible-xs"><a href="#" onclick="jotVideoURL(); return false;"><i class="icon-facetime-video"></i>&nbsp;{{$video}}</a></li-->
 						<!--li class="visible-xs"><a href="#" onclick="jotAudioURL(); return false;"><i class="icon-volume-up"></i>&nbsp;{{$audio}}</a></li-->
@@ -138,9 +139,6 @@
 						{{/if}}
 						{{if $feature_expire}}
 						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>
-						{{/if}}
-						{{if $feature_encrypt}}
-						<li class="visible-xs visible-sm"><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
 						{{/if}}
 						{{if $feature_voting}}
 						<li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>

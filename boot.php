@@ -2056,6 +2056,10 @@ function construct_page(&$a) {
 
 	$a->build_pagehead();
 
+	if($a->page['pdl_content']) {
+		$a->page['content'] = comanche_region($a,$a->page['content']);
+	}
+
 	// Let's say we have a comanche declaration '[region=nav][/region][region=content]$nav $content[/region]'.
 	// The text 'region=' identifies a section of the layout by that name. So what we want to do here is leave
 	// $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section']
@@ -2069,6 +2073,7 @@ function construct_page(&$a) {
 		$arr = array('module' => $a->module, 'layout' => $a->layout);
 		call_hooks('construct_page', $arr);
 		$a->layout = $arr['layout'];
+
 
 		foreach($a->layout as $k => $v) {
 			if((strpos($k, 'region_') === 0) && strlen($v)) {

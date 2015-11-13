@@ -1089,6 +1089,11 @@ function format_like($cnt, $arr, $type, $id) {
 	return $o;
 }
 
+/**
+ * This is our general purpose content editor. 
+ * It was once nicknamed "jot" and you may see references to "jot" littered throughout the code.
+ * They are referring to the content editor or components thereof. 
+ */
 
 function status_editor($a, $x, $popup = false) {
 

@@ -48,29 +48,6 @@
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
 				<div class="btn-group">
-					{{if $writefiles}}
-                                        <button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
-                                                <i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
-                                        </button>
-                                        {{/if}}
-					{{if $feature_voting}}
-					<button id="profile-voting-wrapper" class="btn btn-default btn-sm" title="{{$voting}}" onclick="toggleVoting();return false;">
-						<i id="profile-voting" class="icon-check-empty jot-icons"></i>
-					</button>
-					{{/if}}
-				</div>
-				<div class="btn-group">
-					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
-						<i id="profile-link" class="icon-link jot-icons"></i>
-					</button>					
-					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
-						<i class="icon-terminal jot-icons"></i>
-					</button>
-					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
-						<i class="icon-quote-left jot-icons"></i>
-					</button>					
-				</div>
-				<div class="btn-group hidden-xs">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
 					</button>
@@ -79,48 +56,68 @@
 					</button>
 					<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u', 'profile-jot-text'); return false;">
 						<i class="icon-underline jot-icons"></i>
-					</button>					
+					</button>
+					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
+						<i class="icon-quote-left jot-icons"></i>
+					</button>
+					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
+						<i class="icon-terminal jot-icons"></i>
+					</button>
 				</div>
+				{{if $visitor}}
 				<div class="btn-group hidden-xs">
-				{{if $feature_encrypt}}
-					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
-						<i id="profile-encrypt" class="icon-key jot-icons"></i>
+					{{if $writefiles}}
+					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
+						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
+					</button>
+					{{/if}}
+					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
+						<i id="profile-link" class="icon-link jot-icons"></i>
+					</button>
+				</div>
+				<div class="btn-group hidden-xs hidden-sm">
+					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
+						<i id="profile-location" class="icon-globe jot-icons"></i>
+					</button>
+					{{if $noloc}}
+					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
+						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
+					</button>
+					{{/if}}
+				{{else}}
+				<div class="btn-group hidden-xs">
+				{{/if}}
+				{{if $feature_expire}}
+					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
+						<i id="profile-expires" class="icon-eraser jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_future}}
 					<button id="profile-future-wrapper" class="btn btn-default btn-sm" title="{{$future_txt}}" onclick="jotGetPubDate();return false;">
 						<i id="profile-future" class="icon-time jot-icons"></i>
 					</button>
-				{{/if}}				
-				{{if $feature_expire}}
-					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
-						<i id="profile-expires" class="icon-eraser jot-icons"></i>
+				{{/if}}
+				{{if $feature_encrypt}}
+					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
+						<i id="profile-encrypt" class="icon-key jot-icons"></i>
 					</button>
 				{{/if}}
-					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
-						<i id="profile-location" class="icon-globe jot-icons"></i>
+				{{if $feature_voting}}
+					<button id="profile-voting-wrapper" class="btn btn-default btn-sm" title="{{$voting}}" onclick="toggleVoting();return false;">
+						<i id="profile-voting" class="icon-check-empty jot-icons"></i>
 					</button>
-				{{if $noloc}}
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
-						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
-					</button>
-				{{/if}}				
-				{{if $showacl}}
-				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
-					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="icon-exclamation jot-icons"></i>{{/if}}
-				</button>
-				{{/if}}				
+				{{/if}}
 				</div>
 				<div class="btn-group visible-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu dropdown-menu-right" role="menu">
-						<!-- li class="visible-xs"><a href="#" onclick="showacl();return false;"><i class="icon-{{$lockstate}}"></i>&nbsp;{{lockstate}}</a></li -->
-						<!-- li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li -->
+						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
-						<!--li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li -->
+						{{if $writefiles}}<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>{{/if}}
+						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
 						<!--li class="visible-xs"><a href="#" onclick="jotVideoURL(); return false;"><i class="icon-facetime-video"></i>&nbsp;{{$video}}</a></li-->
 						<!--li class="visible-xs"><a href="#" onclick="jotAudioURL(); return false;"><i class="icon-volume-up"></i>&nbsp;{{$audio}}</a></li-->
 						{{/if}}
@@ -132,8 +129,11 @@
 						{{if $feature_expire}}
 						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>
 						{{/if}}
+						{{if $feature_encrypt}}
+						<li class="visible-xs visible-sm"><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
+						{{/if}}
 						{{if $feature_voting}}
-						<!-- li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li-->
+						<li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>
 						{{/if}}
 					</ul>
 				</div>
@@ -142,8 +142,13 @@
 				<div id="profile-rotator"></div>
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
+				{{if $showacl}}
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
+					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="icon-exclamation jot-icons"></i>{{/if}}
+				</button>
+				{{/if}}
 				{{if $preview}}
-				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
+				<button class="btn btn-default btn-sm hidden-xs" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}

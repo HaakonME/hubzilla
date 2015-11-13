@@ -60,15 +60,15 @@
 					{{/if}}
 				</div>
 				<div class="btn-group">
-					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
-						<i class="icon-quote-left jot-icons"></i>
-					</button>
+					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
+						<i id="profile-link" class="icon-link jot-icons"></i>
+					</button>					
 					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
 						<i class="icon-terminal jot-icons"></i>
 					</button>
-					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
-						<i id="profile-link" class="icon-link jot-icons"></i>
-					</button>
+					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
+						<i class="icon-quote-left jot-icons"></i>
+					</button>					
 				</div>
 				<div class="btn-group hidden-xs">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
@@ -116,6 +116,7 @@
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu dropdown-menu-right" role="menu">
+						<li class="visible-xs"><a href="#" onclick="showacl();return false;"><i class="icon-{{$lockstate}}"></i>&nbsp;{{lockstate}}</a></li>
 						<!-- li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li -->
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
@@ -132,7 +133,7 @@
 						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>
 						{{/if}}
 						{{if $feature_voting}}
-						<li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>
+						<!-- li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li-->
 						{{/if}}
 					</ul>
 				</div>

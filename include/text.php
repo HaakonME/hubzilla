@@ -94,6 +94,8 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return escape_tags($s);
 	if($type == 'text/plain')
 		return escape_tags($s);
+	if($type == 'application/x-pdl')
+		return escape_tags($s);
 
 	$a = get_app();
 	if($a->is_sys) {
@@ -1517,6 +1519,11 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 			$s = Markdown($text);
 			break;
 
+
+		case 'application/x-pdl';
+			$s = escape_tags($text);
+			break;
+		
 		// No security checking is done here at display time - so we need to verify 
 		// that the author is allowed to use PHP before storing. We also cannot allow 
 		// importation of PHP text bodies from other sites. Therefore this content 
@@ -1681,7 +1688,8 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'text/bbcode',
 		'text/html',
 		'text/markdown',
-		'text/plain'
+		'text/plain',
+		'application/x-pdl'
 	);
 
 	$a = get_app();

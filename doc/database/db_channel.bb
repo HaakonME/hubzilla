@@ -15,7 +15,7 @@
 [/td][/tr]
 [tr][td]channel_guid_sig[/td][td]channel.gui signed with channel.prvkey and base64url_encoded[/td][td]text[/td][td]NO[/td][td][/td][td]NULL[/td][td]
 [/td][/tr]
-[tr][td]channel_hash[/td][td]whirlpool hash of channel.guid and channel_guid_sig concatenated, synonymous with xchan_hash[/td][td]char(255)[/td][td]NO[/td][td]MUL[/td][td][/td][td]
+[tr][td]channel_hash[/td][td]base64url_encode of a 64-char whirlpool hash of channel.guid and channel_guid_sig concatenated, synonymous with xchan_hash.[/td][td]char(255)[/td][td]NO[/td][td]MUL[/td][td][/td][td]
 [/td][/tr]
 [tr][td]channel_timezone[/td][td]PHP-legal timezone[/td][td]char(128)[/td][td]NO[/td][td]MUL[/td][td]UTC[/td][td]
 [/td][/tr]

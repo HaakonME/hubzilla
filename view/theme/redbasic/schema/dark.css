@@ -88,6 +88,10 @@
     background-color: #111;
 }
 
+.jotnets-wrapper > a.btn {
+	font-weight: 400 !important;
+}
+
 .btn {
 	background-color: #1e1e1e;
 	border-color: #222;

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-06 00:02-0800\n"
-"PO-Revision-Date: 2015-11-07 22:32+0000\n"
+"POT-Creation-Date: 2015-11-13 00:03-0800\n"
+"PO-Revision-Date: 2015-11-14 19:22+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/Friendica/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../../include/conversation.php:120 ../../include/text.php:1863
+#: ../../include/conversation.php:120 ../../include/text.php:1873
 #: ../../mod/like.php:361 ../../mod/tagger.php:43 ../../mod/subthread.php:77
 msgid "photo"
 msgstr "foto"
 
 #: ../../include/conversation.php:123 ../../include/event.php:896
-#: ../../include/text.php:1866 ../../mod/like.php:363 ../../mod/tagger.php:47
+#: ../../include/text.php:1876 ../../mod/like.php:363 ../../mod/tagger.php:47
 #: ../../mod/events.php:245
 msgid "event"
 msgstr "gebeurtenis"
@@ -33,12 +33,12 @@ msgstr "gebeurtenis"
 msgid "channel"
 msgstr "kanaal"
 
-#: ../../include/conversation.php:148 ../../include/text.php:1869
+#: ../../include/conversation.php:148 ../../include/text.php:1879
 #: ../../mod/like.php:361 ../../mod/subthread.php:77
 msgid "status"
 msgstr "bericht"
 
-#: ../../include/conversation.php:150 ../../include/text.php:1871
+#: ../../include/conversation.php:150 ../../include/text.php:1881
 #: ../../mod/tagger.php:53
 msgid "comment"
 msgstr "reactie"
@@ -63,7 +63,7 @@ msgstr "%1$s is nu met %2$s verbonden"
 msgid "%1$s poked %2$s"
 msgstr "%1$s heeft %2$s aangestoten"
 
-#: ../../include/conversation.php:243 ../../include/text.php:942
+#: ../../include/conversation.php:243 ../../include/text.php:946
 msgid "poked"
 msgstr "aangestoten"
 
@@ -119,7 +119,7 @@ msgstr "Kies"
 
 #: ../../include/conversation.php:657 ../../include/RedDAV/RedBrowser.php:241
 #: ../../include/apps.php:260 ../../include/ItemObject.php:120
-#: ../../mod/connedit.php:546 ../../mod/photos.php:1129
+#: ../../mod/connedit.php:551 ../../mod/photos.php:1129
 #: ../../mod/editblock.php:181 ../../mod/admin.php:808 ../../mod/admin.php:967
 #: ../../mod/webpages.php:183 ../../mod/blocks.php:155 ../../mod/thing.php:258
 #: ../../mod/settings.php:647 ../../mod/editlayout.php:179
@@ -171,7 +171,7 @@ msgstr "Verloopt: %s"
 msgid "View in context"
 msgstr "In context bekijken"
 
-#: ../../include/conversation.php:739 ../../include/conversation.php:1221
+#: ../../include/conversation.php:739 ../../include/conversation.php:1226
 #: ../../include/ItemObject.php:375 ../../mod/photos.php:1029
 #: ../../mod/editblock.php:150 ../../mod/editpost.php:129
 #: ../../mod/editlayout.php:148 ../../mod/editwebpage.php:190
@@ -207,7 +207,7 @@ msgid "View Status"
 msgstr "Status weergeven"
 
 #: ../../include/conversation.php:949 ../../include/nav.php:86
-#: ../../mod/connedit.php:493
+#: ../../mod/connedit.php:498
 msgid "View Profile"
 msgstr "Profiel weergeven"
 
@@ -220,8 +220,8 @@ msgid "Activity/Posts"
 msgstr "Kanaal-activiteit"
 
 #: ../../include/conversation.php:952 ../../include/Contact.php:101
-#: ../../include/identity.php:965 ../../include/widgets.php:136
-#: ../../include/widgets.php:174 ../../mod/directory.php:316
+#: ../../include/identity.php:952 ../../include/widgets.php:136
+#: ../../include/widgets.php:174 ../../mod/directory.php:318
 #: ../../mod/match.php:64 ../../mod/suggest.php:52
 msgid "Connect"
 msgstr "Verbinden"
@@ -240,7 +240,8 @@ msgstr "Aanstoten"
 
 #: ../../include/conversation.php:1026 ../../include/RedDAV/RedBrowser.php:164
 #: ../../include/apps.php:360 ../../include/apps.php:415
-#: ../../mod/photos.php:759 ../../mod/photos.php:1198
+#: ../../include/widgets.php:1281 ../../mod/photos.php:759
+#: ../../mod/photos.php:1198
 msgid "Unknown"
 msgstr "Onbekend"
 
@@ -289,41 +290,41 @@ msgstr "%s vinden dit leuk."
 msgid "%s don't like this."
 msgstr "%s vinden dit niet leuk."
 
-#: ../../include/conversation.php:1148
+#: ../../include/conversation.php:1153
 msgid "Visible to <strong>everybody</strong>"
 msgstr "Voor <strong>iedereen</strong> zichtbaar"
 
-#: ../../include/conversation.php:1149 ../../mod/mail.php:194
+#: ../../include/conversation.php:1154 ../../mod/mail.php:194
 #: ../../mod/mail.php:308
 msgid "Please enter a link URL:"
 msgstr "Vul een internetadres/URL in:"
 
-#: ../../include/conversation.php:1150
+#: ../../include/conversation.php:1155
 msgid "Please enter a video link/URL:"
 msgstr "Vul een videolink/URL in:"
 
-#: ../../include/conversation.php:1151
+#: ../../include/conversation.php:1156
 msgid "Please enter an audio link/URL:"
 msgstr "Vul een audiolink/URL in:"
 
-#: ../../include/conversation.php:1152
+#: ../../include/conversation.php:1157
 msgid "Tag term:"
 msgstr "Tag:"
 
-#: ../../include/conversation.php:1153 ../../mod/filer.php:48
+#: ../../include/conversation.php:1158 ../../mod/filer.php:48
 msgid "Save to Folder:"
 msgstr "Bewaar in map: "
 
-#: ../../include/conversation.php:1154
+#: ../../include/conversation.php:1159
 msgid "Where are you right now?"
 msgstr "Waar bevind je je op dit moment?"
 
-#: ../../include/conversation.php:1155 ../../mod/editpost.php:54
+#: ../../include/conversation.php:1160 ../../mod/editpost.php:54
 #: ../../mod/mail.php:195 ../../mod/mail.php:309
 msgid "Expires YYYY-MM-DD HH:MM"
 msgstr "Verloopt op DD-MM-YYYY om HH:MM"
 
-#: ../../include/conversation.php:1163 ../../include/page_widgets.php:40
+#: ../../include/conversation.php:1168 ../../include/page_widgets.php:40
 #: ../../include/ItemObject.php:692 ../../mod/photos.php:1049
 #: ../../mod/editblock.php:171 ../../mod/editpost.php:149
 #: ../../mod/events.php:707 ../../mod/webpages.php:188
@@ -331,302 +332,302 @@ msgstr "Verloopt op DD-MM-YYYY om HH:MM"
 msgid "Preview"
 msgstr "Voorvertoning"
 
-#: ../../include/conversation.php:1186 ../../mod/layouts.php:184
+#: ../../include/conversation.php:1191 ../../mod/layouts.php:184
 #: ../../mod/photos.php:1028 ../../mod/webpages.php:182
 #: ../../mod/blocks.php:154
 msgid "Share"
 msgstr "Delen"
 
-#: ../../include/conversation.php:1188
+#: ../../include/conversation.php:1193
 msgid "Page link name"
 msgstr "Linknaam pagina"
 
-#: ../../include/conversation.php:1191
+#: ../../include/conversation.php:1196
 msgid "Post as"
 msgstr "Bericht plaatsen als"
 
-#: ../../include/conversation.php:1193 ../../include/ItemObject.php:684
+#: ../../include/conversation.php:1198 ../../include/ItemObject.php:684
 #: ../../mod/editblock.php:136 ../../mod/editpost.php:113
 #: ../../mod/editlayout.php:135 ../../mod/editwebpage.php:177
 msgid "Bold"
 msgstr "Vet"
 
-#: ../../include/conversation.php:1194 ../../include/ItemObject.php:685
+#: ../../include/conversation.php:1199 ../../include/ItemObject.php:685
 #: ../../mod/editblock.php:137 ../../mod/editpost.php:114
 #: ../../mod/editlayout.php:136 ../../mod/editwebpage.php:178
 msgid "Italic"
 msgstr "Cursief"
 
-#: ../../include/conversation.php:1195 ../../include/ItemObject.php:686
+#: ../../include/conversation.php:1200 ../../include/ItemObject.php:686
 #: ../../mod/editblock.php:138 ../../mod/editpost.php:115
 #: ../../mod/editlayout.php:137 ../../mod/editwebpage.php:179
 msgid "Underline"
 msgstr "Onderstrepen"
 
-#: ../../include/conversation.php:1196 ../../include/ItemObject.php:687
+#: ../../include/conversation.php:1201 ../../include/ItemObject.php:687
 #: ../../mod/editblock.php:139 ../../mod/editpost.php:116
 #: ../../mod/editlayout.php:138 ../../mod/editwebpage.php:180
 msgid "Quote"
 msgstr "Citeren"
 
-#: ../../include/conversation.php:1197 ../../include/ItemObject.php:688
+#: ../../include/conversation.php:1202 ../../include/ItemObject.php:688
 #: ../../mod/editblock.php:140 ../../mod/editpost.php:117
 #: ../../mod/editlayout.php:139 ../../mod/editwebpage.php:181
 msgid "Code"
 msgstr "Broncode"
 
-#: ../../include/conversation.php:1198 ../../mod/editblock.php:142
+#: ../../include/conversation.php:1203 ../../mod/editblock.php:142
 #: ../../mod/editpost.php:118 ../../mod/editlayout.php:140
 #: ../../mod/editwebpage.php:182
 msgid "Upload photo"
 msgstr "Foto uploaden"
 
-#: ../../include/conversation.php:1199
+#: ../../include/conversation.php:1204
 msgid "upload photo"
 msgstr "foto uploaden"
 
-#: ../../include/conversation.php:1200 ../../mod/editblock.php:143
+#: ../../include/conversation.php:1205 ../../mod/editblock.php:143
 #: ../../mod/editpost.php:119 ../../mod/mail.php:240 ../../mod/mail.php:369
 #: ../../mod/editlayout.php:141 ../../mod/editwebpage.php:183
 msgid "Attach file"
 msgstr "Bestand toevoegen"
 
-#: ../../include/conversation.php:1201
+#: ../../include/conversation.php:1206
 msgid "attach file"
 msgstr "bestand toevoegen"
 
-#: ../../include/conversation.php:1202 ../../mod/editblock.php:144
+#: ../../include/conversation.php:1207 ../../mod/editblock.php:144
 #: ../../mod/editpost.php:120 ../../mod/mail.php:241 ../../mod/mail.php:370
 #: ../../mod/editlayout.php:142 ../../mod/editwebpage.php:184
 msgid "Insert web link"
 msgstr "Weblink invoegen"
 
-#: ../../include/conversation.php:1203
+#: ../../include/conversation.php:1208
 msgid "web link"
 msgstr "Weblink"
 
-#: ../../include/conversation.php:1204
+#: ../../include/conversation.php:1209
 msgid "Insert video link"
 msgstr "Videolink invoegen"
 
-#: ../../include/conversation.php:1205
+#: ../../include/conversation.php:1210
 msgid "video link"
 msgstr "videolink"
 
-#: ../../include/conversation.php:1206
+#: ../../include/conversation.php:1211
 msgid "Insert audio link"
 msgstr "Audiolink invoegen"
 
-#: ../../include/conversation.php:1207
+#: ../../include/conversation.php:1212
 msgid "audio link"
 msgstr "audiolink"
 
-#: ../../include/conversation.php:1208 ../../mod/editblock.php:148
+#: ../../include/conversation.php:1213 ../../mod/editblock.php:148
 #: ../../mod/editpost.php:124 ../../mod/editlayout.php:146
 #: ../../mod/editwebpage.php:188
 msgid "Set your location"
 msgstr "Locatie instellen"
 
-#: ../../include/conversation.php:1209
+#: ../../include/conversation.php:1214
 msgid "set location"
 msgstr "locatie instellen"
 
-#: ../../include/conversation.php:1210 ../../mod/editpost.php:126
+#: ../../include/conversation.php:1215 ../../mod/editpost.php:126
 msgid "Toggle voting"
 msgstr "Peiling in- of uitschakelen"
 
-#: ../../include/conversation.php:1213 ../../mod/editblock.php:149
+#: ../../include/conversation.php:1218 ../../mod/editblock.php:149
 #: ../../mod/editpost.php:125 ../../mod/editlayout.php:147
 #: ../../mod/editwebpage.php:189
 msgid "Clear browser location"
 msgstr "Locatie van webbrowser wissen"
 
-#: ../../include/conversation.php:1214
+#: ../../include/conversation.php:1219
 msgid "clear location"
 msgstr "locatie wissen"
 
-#: ../../include/conversation.php:1216 ../../mod/editblock.php:162
+#: ../../include/conversation.php:1221 ../../mod/editblock.php:162
 #: ../../mod/editpost.php:141 ../../mod/editwebpage.php:205
 msgid "Title (optional)"
 msgstr "Titel (optioneel)"
 
-#: ../../include/conversation.php:1220 ../../mod/editblock.php:165
+#: ../../include/conversation.php:1225 ../../mod/editblock.php:165
 #: ../../mod/editpost.php:143 ../../mod/editlayout.php:163
 #: ../../mod/editwebpage.php:207
 msgid "Categories (optional, comma-separated list)"
 msgstr "Categorieën (optioneel, door komma's gescheiden lijst)"
 
-#: ../../include/conversation.php:1222 ../../mod/editblock.php:151
+#: ../../include/conversation.php:1227 ../../mod/editblock.php:151
 #: ../../mod/editpost.php:130 ../../mod/editlayout.php:149
 #: ../../mod/editwebpage.php:191
 msgid "Permission settings"
 msgstr "Permissies"
 
-#: ../../include/conversation.php:1223
+#: ../../include/conversation.php:1228
 msgid "permissions"
 msgstr "permissies"
 
-#: ../../include/conversation.php:1231 ../../mod/editblock.php:159
+#: ../../include/conversation.php:1236 ../../mod/editblock.php:159
 #: ../../mod/editpost.php:138 ../../mod/editlayout.php:156
 #: ../../mod/editwebpage.php:200
 msgid "Public post"
 msgstr "Openbaar bericht"
 
-#: ../../include/conversation.php:1233 ../../mod/editblock.php:166
+#: ../../include/conversation.php:1238 ../../mod/editblock.php:166
 #: ../../mod/editpost.php:144 ../../mod/editlayout.php:164
 #: ../../mod/editwebpage.php:208
 msgid "Example: bob@example.com, mary@example.com"
 msgstr "Voorbeeld: bob@voorbeeld.nl, mary@voorbeeld.be"
 
-#: ../../include/conversation.php:1246 ../../mod/editblock.php:176
+#: ../../include/conversation.php:1251 ../../mod/editblock.php:176
 #: ../../mod/editpost.php:155 ../../mod/mail.php:245 ../../mod/mail.php:374
 #: ../../mod/editlayout.php:173 ../../mod/editwebpage.php:217
 msgid "Set expiration date"
 msgstr "Verloopdatum instellen"
 
-#: ../../include/conversation.php:1249
+#: ../../include/conversation.php:1254
 msgid "Set publish date"
 msgstr "Publicatiedatum instellen"
 
-#: ../../include/conversation.php:1251 ../../include/ItemObject.php:695
+#: ../../include/conversation.php:1256 ../../include/ItemObject.php:695
 #: ../../mod/editpost.php:157 ../../mod/mail.php:247 ../../mod/mail.php:376
 msgid "Encrypt text"
 msgstr "Tekst versleutelen"
 
-#: ../../include/conversation.php:1253 ../../mod/editpost.php:159
+#: ../../include/conversation.php:1258 ../../mod/editpost.php:159
 #: ../../mod/events.php:691
 msgid "OK"
 msgstr "OK"
 
-#: ../../include/conversation.php:1254 ../../mod/fbrowser.php:82
+#: ../../include/conversation.php:1259 ../../mod/fbrowser.php:82
 #: ../../mod/fbrowser.php:117 ../../mod/editpost.php:160
 #: ../../mod/events.php:690 ../../mod/tagrm.php:11 ../../mod/tagrm.php:134
 #: ../../mod/settings.php:585 ../../mod/settings.php:611
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../../include/conversation.php:1497
+#: ../../include/conversation.php:1502
 msgid "Discover"
 msgstr "Ontdekken"
 
-#: ../../include/conversation.php:1500
+#: ../../include/conversation.php:1505
 msgid "Imported public streams"
 msgstr "Openbare streams importeren"
 
-#: ../../include/conversation.php:1505
+#: ../../include/conversation.php:1510
 msgid "Commented Order"
 msgstr "Nieuwe reacties bovenaan"
 
-#: ../../include/conversation.php:1508
+#: ../../include/conversation.php:1513
 msgid "Sort by Comment Date"
 msgstr "Berichten met nieuwe reacties bovenaan"
 
-#: ../../include/conversation.php:1512
+#: ../../include/conversation.php:1517
 msgid "Posted Order"
 msgstr "Nieuwe berichten bovenaan"
 
-#: ../../include/conversation.php:1515
+#: ../../include/conversation.php:1520
 msgid "Sort by Post Date"
 msgstr "Nieuwe berichten bovenaan"
 
-#: ../../include/conversation.php:1520 ../../include/widgets.php:94
+#: ../../include/conversation.php:1525 ../../include/widgets.php:94
 msgid "Personal"
 msgstr "Persoonlijk"
 
-#: ../../include/conversation.php:1523
+#: ../../include/conversation.php:1528
 msgid "Posts that mention or involve you"
 msgstr "Alleen berichten die jou vermelden of waar je op een andere manier bij betrokken bent"
 
-#: ../../include/conversation.php:1529 ../../mod/menu.php:112
+#: ../../include/conversation.php:1534 ../../mod/menu.php:112
 #: ../../mod/connections.php:72 ../../mod/connections.php:82
 msgid "New"
 msgstr "Nieuw"
 
-#: ../../include/conversation.php:1532
+#: ../../include/conversation.php:1537
 msgid "Activity Stream - by date"
 msgstr "Activiteitenstroom - volgens datum"
 
-#: ../../include/conversation.php:1538
+#: ../../include/conversation.php:1543
 msgid "Starred"
 msgstr "Met ster"
 
-#: ../../include/conversation.php:1541
+#: ../../include/conversation.php:1546
 msgid "Favourite Posts"
 msgstr "Favoriete berichten"
 
-#: ../../include/conversation.php:1548
+#: ../../include/conversation.php:1553
 msgid "Spam"
 msgstr "Spam"
 
-#: ../../include/conversation.php:1551
+#: ../../include/conversation.php:1556
 msgid "Posts flagged as SPAM"
 msgstr "Berichten gemarkeerd als SPAM"
 
-#: ../../include/conversation.php:1595 ../../mod/admin.php:972
+#: ../../include/conversation.php:1600 ../../mod/admin.php:972
 msgid "Channel"
 msgstr "Kanaal"
 
-#: ../../include/conversation.php:1598
+#: ../../include/conversation.php:1603
 msgid "Status Messages and Posts"
 msgstr "Berichten in dit kanaal"
 
-#: ../../include/conversation.php:1607
+#: ../../include/conversation.php:1612
 msgid "About"
 msgstr "Over"
 
-#: ../../include/conversation.php:1610
+#: ../../include/conversation.php:1615
 msgid "Profile Details"
 msgstr "Profiel"
 
-#: ../../include/conversation.php:1616 ../../include/apps.php:139
+#: ../../include/conversation.php:1621 ../../include/apps.php:139
 #: ../../include/nav.php:92 ../../mod/fbrowser.php:25
 msgid "Photos"
 msgstr "Foto's"
 
-#: ../../include/conversation.php:1619 ../../include/photos.php:483
+#: ../../include/conversation.php:1624 ../../include/photos.php:483
 msgid "Photo Albums"
 msgstr "Fotoalbums"
 
-#: ../../include/conversation.php:1623 ../../include/RedDAV/RedBrowser.php:226
+#: ../../include/conversation.php:1628 ../../include/RedDAV/RedBrowser.php:226
 #: ../../include/apps.php:135 ../../include/nav.php:93
 #: ../../mod/fbrowser.php:114
 msgid "Files"
 msgstr "Bestanden"
 
-#: ../../include/conversation.php:1626
+#: ../../include/conversation.php:1631
 msgid "Files and Storage"
 msgstr "Bestanden en opslagruimte"
 
-#: ../../include/conversation.php:1636 ../../include/conversation.php:1639
+#: ../../include/conversation.php:1641 ../../include/conversation.php:1644
 msgid "Chatrooms"
 msgstr "Chatkanalen"
 
-#: ../../include/conversation.php:1649 ../../include/apps.php:129
+#: ../../include/conversation.php:1654 ../../include/apps.php:129
 #: ../../include/nav.php:103
 msgid "Bookmarks"
 msgstr "Bladwijzers"
 
-#: ../../include/conversation.php:1652
+#: ../../include/conversation.php:1657
 msgid "Saved Bookmarks"
 msgstr "Opgeslagen bladwijzers"
 
-#: ../../include/conversation.php:1659 ../../include/apps.php:136
+#: ../../include/conversation.php:1664 ../../include/apps.php:136
 #: ../../include/nav.php:107 ../../mod/webpages.php:178
 msgid "Webpages"
 msgstr "Webpagina's"
 
-#: ../../include/conversation.php:1662
+#: ../../include/conversation.php:1667
 msgid "Manage Webpages"
 msgstr "Webpagina's beheren"
 
-#: ../../include/conversation.php:1691 ../../include/ItemObject.php:175
+#: ../../include/conversation.php:1696 ../../include/ItemObject.php:175
 #: ../../include/ItemObject.php:187 ../../mod/photos.php:1082
 #: ../../mod/photos.php:1094
 msgid "View all"
 msgstr "Toon alles"
 
-#: ../../include/conversation.php:1715 ../../include/ItemObject.php:179
-#: ../../include/identity.php:1276 ../../include/taxonomy.php:403
+#: ../../include/conversation.php:1720 ../../include/ItemObject.php:179
+#: ../../include/identity.php:1263 ../../include/taxonomy.php:403
 #: ../../mod/photos.php:1086
 msgctxt "noun"
 msgid "Like"
@@ -634,7 +635,7 @@ msgid_plural "Likes"
 msgstr[0] "vindt dit leuk"
 msgstr[1] "vinden dit leuk"
 
-#: ../../include/conversation.php:1718 ../../include/ItemObject.php:184
+#: ../../include/conversation.php:1723 ../../include/ItemObject.php:184
 #: ../../mod/photos.php:1091
 msgctxt "noun"
 msgid "Dislike"
@@ -642,42 +643,42 @@ msgid_plural "Dislikes"
 msgstr[0] "vindt dit niet leuk"
 msgstr[1] "vinden dit niet leuk"
 
-#: ../../include/conversation.php:1721
+#: ../../include/conversation.php:1726
 msgctxt "noun"
 msgid "Attending"
 msgid_plural "Attending"
 msgstr[0] "aanwezig"
 msgstr[1] "aanwezig"
 
-#: ../../include/conversation.php:1724
+#: ../../include/conversation.php:1729
 msgctxt "noun"
 msgid "Not Attending"
 msgid_plural "Not Attending"
 msgstr[0] "niet aanwezig"
 msgstr[1] "niet aanwezig"
 
-#: ../../include/conversation.php:1727
+#: ../../include/conversation.php:1732
 msgctxt "noun"
 msgid "Undecided"
 msgid_plural "Undecided"
 msgstr[0] "nog niet beslist"
 msgstr[1] "nog niet beslist"
 
-#: ../../include/conversation.php:1730
+#: ../../include/conversation.php:1735
 msgctxt "noun"
 msgid "Agree"
 msgid_plural "Agrees"
 msgstr[0] "eens"
 msgstr[1] "eens"
 
-#: ../../include/conversation.php:1733
+#: ../../include/conversation.php:1738
 msgctxt "noun"
 msgid "Disagree"
 msgid_plural "Disagrees"
 msgstr[0] "oneens"
 msgstr[1] "oneens"
 
-#: ../../include/conversation.php:1736
+#: ../../include/conversation.php:1741
 msgctxt "noun"
 msgid "Abstain"
 msgid_plural "Abstains"
@@ -692,7 +693,7 @@ msgstr "Geen gebruikersnaam in het importbestand gevonden."
 msgid "Unable to create a unique channel address. Import failed."
 msgstr "Niet in staat om een uniek kanaaladres aan te maken. Importeren is mislukt."
 
-#: ../../include/Import/import_diaspora.php:143 ../../mod/import.php:486
+#: ../../include/Import/import_diaspora.php:143 ../../mod/import.php:487
 msgid "Import completed."
 msgstr "Import voltooid."
 
@@ -701,7 +702,7 @@ msgstr "Import voltooid."
 msgid "parent"
 msgstr "omhoog"
 
-#: ../../include/RedDAV/RedBrowser.php:131 ../../include/text.php:2529
+#: ../../include/RedDAV/RedBrowser.php:131 ../../include/text.php:2539
 msgid "Collection"
 msgstr "map"
 
@@ -741,8 +742,9 @@ msgid "Create"
 msgstr "Aanmaken"
 
 #: ../../include/RedDAV/RedBrowser.php:231
-#: ../../include/RedDAV/RedBrowser.php:305 ../../mod/photos.php:784
-#: ../../mod/photos.php:1317 ../../mod/profile_photo.php:450
+#: ../../include/RedDAV/RedBrowser.php:305 ../../include/widgets.php:1293
+#: ../../mod/photos.php:784 ../../mod/photos.php:1317
+#: ../../mod/profile_photo.php:450
 msgid "Upload"
 msgstr "Uploaden"
 
@@ -756,7 +758,7 @@ msgstr "Naam"
 msgid "Type"
 msgstr "Type"
 
-#: ../../include/RedDAV/RedBrowser.php:237 ../../include/text.php:1236
+#: ../../include/RedDAV/RedBrowser.php:237 ../../include/text.php:1240
 #: ../../mod/sharedwithme.php:97
 msgid "Size"
 msgstr "Grootte"
@@ -956,7 +958,7 @@ msgstr "Chatkanaal niet gevonden"
 #: ../../mod/fsuggest.php:78 ../../mod/authtest.php:13
 #: ../../mod/bookmarks.php:48 ../../mod/block.php:22 ../../mod/block.php:72
 #: ../../mod/id.php:71 ../../mod/like.php:177 ../../mod/common.php:35
-#: ../../mod/mitem.php:111 ../../mod/connedit.php:347 ../../mod/mood.php:112
+#: ../../mod/mitem.php:111 ../../mod/connedit.php:352 ../../mod/mood.php:112
 #: ../../mod/filestorage.php:18 ../../mod/filestorage.php:73
 #: ../../mod/filestorage.php:88 ../../mod/filestorage.php:115
 #: ../../mod/layouts.php:69 ../../mod/layouts.php:76 ../../mod/layouts.php:87
@@ -969,7 +971,7 @@ msgstr "Chatkanaal niet gevonden"
 #: ../../mod/notifications.php:66 ../../mod/pdledit.php:21
 #: ../../mod/events.php:256 ../../mod/profile_photo.php:338
 #: ../../mod/profile_photo.php:351 ../../mod/item.php:205
-#: ../../mod/item.php:213 ../../mod/item.php:1004 ../../mod/message.php:16
+#: ../../mod/item.php:213 ../../mod/item.php:1006 ../../mod/message.php:16
 #: ../../mod/webpages.php:69 ../../mod/register.php:72 ../../mod/blocks.php:69
 #: ../../mod/blocks.php:76 ../../mod/service_limits.php:7
 #: ../../mod/sources.php:66 ../../mod/regmod.php:17 ../../mod/channel.php:100
@@ -1006,7 +1008,7 @@ msgstr "JJJJ-MM-DD of MM-DD"
 msgid "Required"
 msgstr "Vereist"
 
-#: ../../include/datetime.php:262 ../../boot.php:2312
+#: ../../include/datetime.php:262 ../../boot.php:2287
 msgid "never"
 msgstr "nooit"
 
@@ -1414,7 +1416,7 @@ msgstr "Niets nieuw hier"
 msgid "Rate This Channel (this is public)"
 msgstr "Beoordeel dit kanaal (dit is openbaar)"
 
-#: ../../include/js_strings.php:20 ../../mod/connedit.php:685
+#: ../../include/js_strings.php:20 ../../mod/connedit.php:694
 #: ../../mod/rate.php:157
 msgid "Rating"
 msgstr "Beoordeling"
@@ -1425,7 +1427,7 @@ msgstr "Omschrijving (optioneel)"
 
 #: ../../include/js_strings.php:22 ../../include/ItemObject.php:683
 #: ../../mod/fsuggest.php:108 ../../mod/mitem.php:231
-#: ../../mod/connedit.php:706 ../../mod/mood.php:135 ../../mod/pconfig.php:108
+#: ../../mod/connedit.php:715 ../../mod/mood.php:135 ../../mod/pconfig.php:108
 #: ../../mod/filestorage.php:156 ../../mod/poke.php:171 ../../mod/chat.php:184
 #: ../../mod/chat.php:213 ../../mod/rate.php:168 ../../mod/photos.php:637
 #: ../../mod/photos.php:1008 ../../mod/photos.php:1048
@@ -1433,7 +1435,7 @@ msgstr "Omschrijving (optioneel)"
 #: ../../mod/admin.php:965 ../../mod/admin.php:1097 ../../mod/admin.php:1291
 #: ../../mod/admin.php:1376 ../../mod/appman.php:99 ../../mod/pdledit.php:58
 #: ../../mod/events.php:534 ../../mod/events.php:710 ../../mod/sources.php:104
-#: ../../mod/sources.php:138 ../../mod/import.php:517 ../../mod/thing.php:313
+#: ../../mod/sources.php:138 ../../mod/import.php:527 ../../mod/thing.php:313
 #: ../../mod/thing.php:359 ../../mod/invite.php:142 ../../mod/mail.php:371
 #: ../../mod/settings.php:584 ../../mod/settings.php:696
 #: ../../mod/settings.php:724 ../../mod/settings.php:747
@@ -1526,19 +1528,19 @@ msgstr " "
 msgid "timeago.numbers"
 msgstr "timeago.numbers"
 
-#: ../../include/js_strings.php:44 ../../include/text.php:1153
+#: ../../include/js_strings.php:44 ../../include/text.php:1157
 msgid "January"
 msgstr "januari"
 
-#: ../../include/js_strings.php:45 ../../include/text.php:1153
+#: ../../include/js_strings.php:45 ../../include/text.php:1157
 msgid "February"
 msgstr "februari"
 
-#: ../../include/js_strings.php:46 ../../include/text.php:1153
+#: ../../include/js_strings.php:46 ../../include/text.php:1157
 msgid "March"
 msgstr "maart"
 
-#: ../../include/js_strings.php:47 ../../include/text.php:1153
+#: ../../include/js_strings.php:47 ../../include/text.php:1157
 msgid "April"
 msgstr "april"
 
@@ -1547,31 +1549,31 @@ msgctxt "long"
 msgid "May"
 msgstr "mei"
 
-#: ../../include/js_strings.php:49 ../../include/text.php:1153
+#: ../../include/js_strings.php:49 ../../include/text.php:1157
 msgid "June"
 msgstr "juni"
 
-#: ../../include/js_strings.php:50 ../../include/text.php:1153
+#: ../../include/js_strings.php:50 ../../include/text.php:1157
 msgid "July"
 msgstr "juli"
 
-#: ../../include/js_strings.php:51 ../../include/text.php:1153
+#: ../../include/js_strings.php:51 ../../include/text.php:1157
 msgid "August"
 msgstr "augustus"
 
-#: ../../include/js_strings.php:52 ../../include/text.php:1153
+#: ../../include/js_strings.php:52 ../../include/text.php:1157
 msgid "September"
 msgstr "september"
 
-#: ../../include/js_strings.php:53 ../../include/text.php:1153
+#: ../../include/js_strings.php:53 ../../include/text.php:1157
 msgid "October"
 msgstr "oktober"
 
-#: ../../include/js_strings.php:54 ../../include/text.php:1153
+#: ../../include/js_strings.php:54 ../../include/text.php:1157
 msgid "November"
 msgstr "november"
 
-#: ../../include/js_strings.php:55 ../../include/text.php:1153
+#: ../../include/js_strings.php:55 ../../include/text.php:1157
 msgid "December"
 msgstr "december"
 
@@ -1624,31 +1626,31 @@ msgstr "nov"
 msgid "Dec"
 msgstr "dec"
 
-#: ../../include/js_strings.php:68 ../../include/text.php:1149
+#: ../../include/js_strings.php:68 ../../include/text.php:1153
 msgid "Sunday"
 msgstr "zondag"
 
-#: ../../include/js_strings.php:69 ../../include/text.php:1149
+#: ../../include/js_strings.php:69 ../../include/text.php:1153
 msgid "Monday"
 msgstr "maandag"
 
-#: ../../include/js_strings.php:70 ../../include/text.php:1149
+#: ../../include/js_strings.php:70 ../../include/text.php:1153
 msgid "Tuesday"
 msgstr "dinsdag"
 
-#: ../../include/js_strings.php:71 ../../include/text.php:1149
+#: ../../include/js_strings.php:71 ../../include/text.php:1153
 msgid "Wednesday"
 msgstr "woensdag"
 
-#: ../../include/js_strings.php:72 ../../include/text.php:1149
+#: ../../include/js_strings.php:72 ../../include/text.php:1153
 msgid "Thursday"
 msgstr "donderdag"
 
-#: ../../include/js_strings.php:73 ../../include/text.php:1149
+#: ../../include/js_strings.php:73 ../../include/text.php:1153
 msgid "Friday"
 msgstr "vrijdag"
 
-#: ../../include/js_strings.php:74 ../../include/text.php:1149
+#: ../../include/js_strings.php:74 ../../include/text.php:1153
 msgid "Saturday"
 msgstr "zaterdag"
 
@@ -1743,7 +1745,7 @@ msgstr "RSS/Atom"
 
 #: ../../include/contact_selectors.php:79 ../../mod/id.php:15
 #: ../../mod/id.php:16 ../../mod/admin.php:804 ../../mod/admin.php:813
-#: ../../boot.php:1505
+#: ../../boot.php:1486
 msgid "Email"
 msgstr "E-mail"
 
@@ -1812,10 +1814,10 @@ msgstr "Account '%s' verwijderd"
 msgid "Cannot locate DNS info for database server '%s'"
 msgstr "Kan DNS-informatie voor databaseserver '%s' niet vinden"
 
-#: ../../include/items.php:423 ../../mod/like.php:280 ../../mod/dreport.php:6
-#: ../../mod/dreport.php:45 ../../mod/subthread.php:52 ../../mod/group.php:68
-#: ../../mod/profperm.php:23 ../../mod/import_items.php:114
-#: ../../index.php:360
+#: ../../include/items.php:423 ../../mod/like.php:280
+#: ../../mod/subthread.php:52 ../../mod/dreport.php:6 ../../mod/dreport.php:45
+#: ../../mod/group.php:68 ../../mod/profperm.php:23
+#: ../../mod/import_items.php:114 ../../index.php:360
 msgid "Permission denied"
 msgstr "Toegang geweigerd"
 
@@ -1876,7 +1878,7 @@ msgstr "Collectie is leeg"
 msgid "Collection: %s"
 msgstr "Collectie: %s"
 
-#: ../../include/items.php:4853 ../../mod/connedit.php:674
+#: ../../include/items.php:4853 ../../mod/connedit.php:683
 #, php-format
 msgid "Connection: %s"
 msgstr "Connectie: %s"
@@ -1885,33 +1887,33 @@ msgstr "Connectie: %s"
 msgid "Connection not found."
 msgstr "Connectie niet gevonden."
 
-#: ../../include/network.php:635
+#: ../../include/network.php:613
 msgid "view full size"
 msgstr "volledige grootte tonen"
 
-#: ../../include/network.php:1613 ../../include/enotify.php:57
+#: ../../include/network.php:1591 ../../include/enotify.php:57
 msgid "$Projectname Notification"
 msgstr "$Projectname-notificatie"
 
-#: ../../include/network.php:1614 ../../include/enotify.php:58
+#: ../../include/network.php:1592 ../../include/enotify.php:58
 msgid "$projectname"
 msgstr "$projectname"
 
-#: ../../include/network.php:1616 ../../include/enotify.php:60
+#: ../../include/network.php:1594 ../../include/enotify.php:60
 msgid "Thank You,"
 msgstr "Bedankt,"
 
-#: ../../include/network.php:1618 ../../include/enotify.php:62
+#: ../../include/network.php:1596 ../../include/enotify.php:62
 #, php-format
 msgid "%s Administrator"
 msgstr "Beheerder %s"
 
-#: ../../include/network.php:1660 ../../include/account.php:316
+#: ../../include/network.php:1638 ../../include/account.php:316
 #: ../../include/account.php:343 ../../include/account.php:403
 msgid "Administrator"
 msgstr "Beheerder"
 
-#: ../../include/network.php:1674
+#: ../../include/network.php:1652
 msgid "No Subject"
 msgstr "Geen onderwerp"
 
@@ -1920,25 +1922,29 @@ msgstr "Geen onderwerp"
 msgid "%1$s's bookmarks"
 msgstr "Bladwijzers van %1$s"
 
-#: ../../include/acl_selectors.php:239
+#: ../../include/acl_selectors.php:240
 msgid "Visible to your default audience"
 msgstr "Voor iedereen zichtbaar, mits niet anders ingesteld"
 
-#: ../../include/acl_selectors.php:240
+#: ../../include/acl_selectors.php:241
 msgid "Show"
 msgstr "Tonen"
 
-#: ../../include/acl_selectors.php:241
+#: ../../include/acl_selectors.php:242
 msgid "Don't show"
 msgstr "Niet tonen"
 
-#: ../../include/acl_selectors.php:247 ../../mod/filestorage.php:147
+#: ../../include/acl_selectors.php:247
+msgid "Other networks and post services"
+msgstr "Andere netwerken en diensten"
+
+#: ../../include/acl_selectors.php:249 ../../mod/filestorage.php:147
 #: ../../mod/chat.php:211 ../../mod/photos.php:631 ../../mod/photos.php:1001
 #: ../../mod/events.php:708 ../../mod/thing.php:310 ../../mod/thing.php:356
 msgid "Permissions"
 msgstr "Permissies"
 
-#: ../../include/acl_selectors.php:248 ../../include/ItemObject.php:370
+#: ../../include/acl_selectors.php:250 ../../include/ItemObject.php:370
 #: ../../mod/photos.php:1218
 msgid "Close"
 msgstr "Sluiten"
@@ -1952,7 +1958,7 @@ msgstr "Kan geen dubbele kanaal-identificator op deze hub aanmaken. Importeren m
 msgid "Channel clone failed. Import failed."
 msgstr "Het klonen van het kanaal is mislukt. Importeren mislukt."
 
-#: ../../include/import.php:80 ../../mod/import.php:138
+#: ../../include/import.php:80 ../../mod/import.php:139
 msgid "Cloned channel not found. Import failed."
 msgstr "Gekloond kanaal niet gevonden. Importeren mislukt."
 
@@ -2017,7 +2023,7 @@ msgstr "Aangemaakt"
 msgid "Edited"
 msgstr "Bewerkt"
 
-#: ../../include/photo/photo_driver.php:708 ../../mod/photos.php:94
+#: ../../include/photo/photo_driver.php:719 ../../mod/photos.php:94
 #: ../../mod/photos.php:699 ../../mod/profile_photo.php:146
 #: ../../mod/profile_photo.php:236 ../../mod/profile_photo.php:376
 msgid "Profile Photos"
@@ -2171,7 +2177,7 @@ msgstr "Seksverslaafd"
 
 #: ../../include/profile_selectors.php:80 ../../include/identity.php:390
 #: ../../include/identity.php:391 ../../include/identity.php:398
-#: ../../include/widgets.php:429 ../../mod/connedit.php:568
+#: ../../include/widgets.php:429 ../../mod/connedit.php:573
 #: ../../mod/settings.php:338 ../../mod/settings.php:342
 #: ../../mod/settings.php:343 ../../mod/settings.php:346
 #: ../../mod/settings.php:357
@@ -2288,8 +2294,8 @@ msgstr "Start:"
 msgid "Finishes:"
 msgstr "Einde:"
 
-#: ../../include/event.php:50 ../../include/identity.php:1016
-#: ../../include/bb2diaspora.php:493 ../../mod/directory.php:302
+#: ../../include/event.php:50 ../../include/identity.php:1003
+#: ../../include/bb2diaspora.php:493 ../../mod/directory.php:304
 #: ../../mod/events.php:701
 msgid "Location:"
 msgstr "Plaats:"
@@ -2326,7 +2332,7 @@ msgstr "Hubbeheerder"
 msgid "Address Book"
 msgstr "Connecties"
 
-#: ../../include/apps.php:131 ../../include/nav.php:111 ../../boot.php:1503
+#: ../../include/apps.php:131 ../../include/nav.php:111 ../../boot.php:1484
 msgid "Login"
 msgstr "Inloggen"
 
@@ -2348,8 +2354,8 @@ msgstr "Instellingen"
 msgid "Channel Home"
 msgstr "Tijdlijn kanaal"
 
-#: ../../include/apps.php:138 ../../include/identity.php:1250
-#: ../../include/identity.php:1367 ../../mod/profperm.php:112
+#: ../../include/apps.php:138 ../../include/identity.php:1237
+#: ../../include/identity.php:1354 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr "Profiel"
 
@@ -2379,8 +2385,8 @@ msgstr "Stemming"
 msgid "Chat"
 msgstr "Chatten"
 
-#: ../../include/apps.php:147 ../../include/text.php:857
-#: ../../include/text.php:869 ../../include/nav.php:159
+#: ../../include/apps.php:147 ../../include/text.php:859
+#: ../../include/text.php:871 ../../include/nav.php:159
 #: ../../mod/search.php:40
 msgid "Search"
 msgstr "Zoeken"
@@ -2431,17 +2437,9 @@ msgstr "Installeren"
 msgid "Purchase"
 msgstr "Aanschaffen"
 
-#: ../../include/auth.php:131
-msgid "Logged out."
-msgstr "Uitgelogd."
-
-#: ../../include/auth.php:272
-msgid "Failed authentication"
-msgstr "Mislukte authenticatie"
-
-#: ../../include/auth.php:286 ../../mod/openid.php:189
-msgid "Login failed."
-msgstr "Inloggen mislukt."
+#: ../../include/api.php:1300
+msgid "Public Timeline"
+msgstr "Openbare tijdlijn"
 
 #: ../../include/enotify.php:96
 #, php-format
@@ -2782,9 +2780,17 @@ msgstr "Hubkenmerk voor %s kon niet worden geverifieerd"
 msgid "invalid target signature"
 msgstr "ongeldig doelkenmerk"
 
-#: ../../include/api.php:1389
-msgid "Public Timeline"
-msgstr "Openbare tijdlijn"
+#: ../../include/auth.php:132
+msgid "Logged out."
+msgstr "Uitgelogd."
+
+#: ../../include/auth.php:273
+msgid "Failed authentication"
+msgstr "Mislukte authenticatie"
+
+#: ../../include/auth.php:287 ../../mod/openid.php:189
+msgid "Login failed."
+msgstr "Inloggen mislukt."
 
 #: ../../include/bbcode.php:123 ../../include/bbcode.php:794
 #: ../../include/bbcode.php:797 ../../include/bbcode.php:802
@@ -2986,12 +2992,12 @@ msgstr "Verbinden/volgen"
 msgid "Examples: Robert Morgenstein, Fishing"
 msgstr "Voorbeeld: Robert Morgenstein, vissen"
 
-#: ../../include/contact_widgets.php:26 ../../mod/directory.php:379
-#: ../../mod/directory.php:384 ../../mod/connections.php:266
+#: ../../include/contact_widgets.php:26 ../../mod/directory.php:381
+#: ../../mod/directory.php:386 ../../mod/connections.php:266
 msgid "Find"
 msgstr "Vinden"
 
-#: ../../include/contact_widgets.php:27 ../../mod/directory.php:383
+#: ../../include/contact_widgets.php:27 ../../mod/directory.php:385
 #: ../../mod/suggest.php:60
 msgid "Channel Suggestions"
 msgstr "Voorgestelde kanalen"
@@ -3134,192 +3140,192 @@ msgstr "Opgevraagd kanaal is niet beschikbaar."
 msgid "Requested profile is not available."
 msgstr "Opgevraagd profiel is niet beschikbaar"
 
-#: ../../include/identity.php:978 ../../mod/profiles.php:774
+#: ../../include/identity.php:965 ../../mod/profiles.php:774
 msgid "Change profile photo"
 msgstr "Profielfoto veranderen"
 
-#: ../../include/identity.php:984
+#: ../../include/identity.php:971
 msgid "Profiles"
 msgstr "Profielen"
 
-#: ../../include/identity.php:984
+#: ../../include/identity.php:971
 msgid "Manage/edit profiles"
 msgstr "Profielen beheren/bewerken"
 
-#: ../../include/identity.php:985 ../../mod/profiles.php:775
+#: ../../include/identity.php:972 ../../mod/profiles.php:775
 msgid "Create New Profile"
 msgstr "Nieuw profiel aanmaken"
 
-#: ../../include/identity.php:988 ../../include/nav.php:90
+#: ../../include/identity.php:975 ../../include/nav.php:90
 msgid "Edit Profile"
 msgstr "Profiel bewerken"
 
-#: ../../include/identity.php:1000 ../../mod/profiles.php:786
+#: ../../include/identity.php:987 ../../mod/profiles.php:786
 msgid "Profile Image"
 msgstr "Profielfoto"
 
-#: ../../include/identity.php:1003
+#: ../../include/identity.php:990
 msgid "visible to everybody"
 msgstr "Voor iedereen zichtbaar"
 
-#: ../../include/identity.php:1004 ../../mod/profiles.php:669
+#: ../../include/identity.php:991 ../../mod/profiles.php:669
 #: ../../mod/profiles.php:790
 msgid "Edit visibility"
 msgstr "Zichtbaarheid bewerken"
 
-#: ../../include/identity.php:1020 ../../include/identity.php:1260
+#: ../../include/identity.php:1007 ../../include/identity.php:1247
 msgid "Gender:"
 msgstr "Geslacht:"
 
-#: ../../include/identity.php:1021 ../../include/identity.php:1304
+#: ../../include/identity.php:1008 ../../include/identity.php:1291
 msgid "Status:"
 msgstr "Status:"
 
-#: ../../include/identity.php:1022 ../../include/identity.php:1315
+#: ../../include/identity.php:1009 ../../include/identity.php:1302
 msgid "Homepage:"
 msgstr "Homepagina:"
 
-#: ../../include/identity.php:1023
+#: ../../include/identity.php:1010
 msgid "Online Now"
 msgstr "Nu online"
 
-#: ../../include/identity.php:1107 ../../include/identity.php:1185
+#: ../../include/identity.php:1094 ../../include/identity.php:1172
 #: ../../mod/ping.php:318
 msgid "g A l F d"
 msgstr "G:i, l d F"
 
-#: ../../include/identity.php:1108 ../../include/identity.php:1186
+#: ../../include/identity.php:1095 ../../include/identity.php:1173
 msgid "F d"
 msgstr "d F"
 
-#: ../../include/identity.php:1153 ../../include/identity.php:1225
+#: ../../include/identity.php:1140 ../../include/identity.php:1212
 #: ../../mod/ping.php:341
 msgid "[today]"
 msgstr "[vandaag]"
 
-#: ../../include/identity.php:1164
+#: ../../include/identity.php:1151
 msgid "Birthday Reminders"
 msgstr "Verjaardagsherinneringen"
 
-#: ../../include/identity.php:1165
+#: ../../include/identity.php:1152
 msgid "Birthdays this week:"
 msgstr "Verjaardagen deze week:"
 
-#: ../../include/identity.php:1218
+#: ../../include/identity.php:1205
 msgid "[No description]"
 msgstr "[Geen omschrijving]"
 
-#: ../../include/identity.php:1236
+#: ../../include/identity.php:1223
 msgid "Event Reminders"
 msgstr "Herinneringen"
 
-#: ../../include/identity.php:1237
+#: ../../include/identity.php:1224
 msgid "Events this week:"
 msgstr "Gebeurtenissen deze week:"
 
-#: ../../include/identity.php:1258 ../../mod/settings.php:1027
+#: ../../include/identity.php:1245 ../../mod/settings.php:1027
 msgid "Full Name:"
 msgstr "Volledige naam:"
 
-#: ../../include/identity.php:1265
+#: ../../include/identity.php:1252
 msgid "Like this channel"
 msgstr "Vind dit kanaal leuk"
 
-#: ../../include/identity.php:1289
+#: ../../include/identity.php:1276
 msgid "j F, Y"
 msgstr "F j Y"
 
-#: ../../include/identity.php:1290
+#: ../../include/identity.php:1277
 msgid "j F"
 msgstr "F j"
 
-#: ../../include/identity.php:1297
+#: ../../include/identity.php:1284
 msgid "Birthday:"
 msgstr "Geboortedatum:"
 
-#: ../../include/identity.php:1301 ../../mod/directory.php:297
+#: ../../include/identity.php:1288 ../../mod/directory.php:299
 msgid "Age:"
 msgstr "Leeftijd:"
 
-#: ../../include/identity.php:1310
+#: ../../include/identity.php:1297
 #, php-format
 msgid "for %1$d %2$s"
 msgstr "voor %1$d %2$s"
 
-#: ../../include/identity.php:1313 ../../mod/profiles.php:691
+#: ../../include/identity.php:1300 ../../mod/profiles.php:691
 msgid "Sexual Preference:"
 msgstr "Seksuele voorkeur:"
 
-#: ../../include/identity.php:1317 ../../mod/directory.php:313
+#: ../../include/identity.php:1304 ../../mod/directory.php:315
 #: ../../mod/profiles.php:693
 msgid "Hometown:"
 msgstr "Oorspronkelijk uit:"
 
-#: ../../include/identity.php:1319
+#: ../../include/identity.php:1306
 msgid "Tags:"
 msgstr "Tags:"
 
-#: ../../include/identity.php:1321 ../../mod/profiles.php:694
+#: ../../include/identity.php:1308 ../../mod/profiles.php:694
 msgid "Political Views:"
 msgstr "Politieke overtuigingen:"
 
-#: ../../include/identity.php:1323
+#: ../../include/identity.php:1310
 msgid "Religion:"
 msgstr "Religie:"
 
-#: ../../include/identity.php:1325 ../../mod/directory.php:315
+#: ../../include/identity.php:1312 ../../mod/directory.php:317
 msgid "About:"
 msgstr "Over:"
 
-#: ../../include/identity.php:1327
+#: ../../include/identity.php:1314
 msgid "Hobbies/Interests:"
 msgstr "Hobby's/interesses:"
 
-#: ../../include/identity.php:1329 ../../mod/profiles.php:697
+#: ../../include/identity.php:1316 ../../mod/profiles.php:697
 msgid "Likes:"
 msgstr "Houdt van:"
 
-#: ../../include/identity.php:1331 ../../mod/profiles.php:698
+#: ../../include/identity.php:1318 ../../mod/profiles.php:698
 msgid "Dislikes:"
 msgstr "Houdt niet van:"
 
-#: ../../include/identity.php:1333
+#: ../../include/identity.php:1320
 msgid "Contact information and Social Networks:"
 msgstr "Contactinformatie en sociale netwerken:"
 
-#: ../../include/identity.php:1335
+#: ../../include/identity.php:1322
 msgid "My other channels:"
 msgstr "Mijn andere kanalen"
 
-#: ../../include/identity.php:1337
+#: ../../include/identity.php:1324
 msgid "Musical interests:"
 msgstr "Muzikale interesses:"
 
-#: ../../include/identity.php:1339
+#: ../../include/identity.php:1326
 msgid "Books, literature:"
 msgstr "Boeken, literatuur:"
 
-#: ../../include/identity.php:1341
+#: ../../include/identity.php:1328
 msgid "Television:"
 msgstr "Televisie:"
 
-#: ../../include/identity.php:1343
+#: ../../include/identity.php:1330
 msgid "Film/dance/culture/entertainment:"
 msgstr "Films/dansen/cultuur/vermaak:"
 
-#: ../../include/identity.php:1345
+#: ../../include/identity.php:1332
 msgid "Love/Romance:"
 msgstr "Liefde/romantiek:"
 
-#: ../../include/identity.php:1347
+#: ../../include/identity.php:1334
 msgid "Work/employment:"
 msgstr "Werk/beroep:"
 
-#: ../../include/identity.php:1349
+#: ../../include/identity.php:1336
 msgid "School/education:"
 msgstr "School/opleiding:"
 
-#: ../../include/identity.php:1369
+#: ../../include/identity.php:1356
 msgid "Like this thing"
 msgstr "Vind dit ding leuk"
 
@@ -3475,8 +3481,8 @@ msgstr "Voorbeeld: bob@example.com, http://example.com/barbara"
 msgid "Notes"
 msgstr "Aantekeningen"
 
-#: ../../include/widgets.php:191 ../../include/text.php:858
-#: ../../include/text.php:870 ../../mod/filer.php:49 ../../mod/admin.php:1436
+#: ../../include/widgets.php:191 ../../include/text.php:860
+#: ../../include/text.php:872 ../../mod/filer.php:49 ../../mod/admin.php:1436
 #: ../../mod/admin.php:1456 ../../mod/rbmark.php:28 ../../mod/rbmark.php:100
 msgid "Save"
 msgstr "Opslaan"
@@ -3489,19 +3495,19 @@ msgstr "Verwijder zoekterm"
 msgid "Archives"
 msgstr "Archieven"
 
-#: ../../include/widgets.php:427 ../../mod/connedit.php:566
+#: ../../include/widgets.php:427 ../../mod/connedit.php:571
 msgid "Me"
 msgstr "Ik"
 
-#: ../../include/widgets.php:428 ../../mod/connedit.php:567
+#: ../../include/widgets.php:428 ../../mod/connedit.php:572
 msgid "Family"
 msgstr "Familie"
 
-#: ../../include/widgets.php:430 ../../mod/connedit.php:569
+#: ../../include/widgets.php:430 ../../mod/connedit.php:574
 msgid "Acquaintances"
 msgstr "Kennissen"
 
-#: ../../include/widgets.php:431 ../../mod/connedit.php:570
+#: ../../include/widgets.php:431 ../../mod/connedit.php:575
 #: ../../mod/connections.php:88 ../../mod/connections.php:103
 msgid "All"
 msgstr "Alles"
@@ -3538,7 +3544,7 @@ msgstr "Verbonden applicaties"
 msgid "Export channel"
 msgstr "Kanaal exporteren"
 
-#: ../../include/widgets.php:529 ../../mod/connedit.php:674
+#: ../../include/widgets.php:529 ../../mod/connedit.php:683
 msgid "Connection Default Permissions"
 msgstr "Standaard permissies voor connecties"
 
@@ -3693,246 +3699,255 @@ msgstr "Plug-in-opties"
 msgid "User registrations waiting for confirmation"
 msgstr "Accounts die op goedkeuring wachten"
 
-#: ../../include/text.php:391
+#: ../../include/widgets.php:1275 ../../mod/photos.php:753
+#: ../../mod/photos.php:1286
+msgid "View Photo"
+msgstr "Foto weergeven"
+
+#: ../../include/widgets.php:1291 ../../mod/photos.php:782
+msgid "Edit Album"
+msgstr "Album bewerken"
+
+#: ../../include/text.php:393
 msgid "prev"
 msgstr "vorige"
 
-#: ../../include/text.php:393
+#: ../../include/text.php:395
 msgid "first"
 msgstr "eerste"
 
-#: ../../include/text.php:422
+#: ../../include/text.php:424
 msgid "last"
 msgstr "laatste"
 
-#: ../../include/text.php:425
+#: ../../include/text.php:427
 msgid "next"
 msgstr "volgende"
 
-#: ../../include/text.php:435
+#: ../../include/text.php:437
 msgid "older"
 msgstr "ouder"
 
-#: ../../include/text.php:437
+#: ../../include/text.php:439
 msgid "newer"
 msgstr "nieuwer"
 
-#: ../../include/text.php:775
+#: ../../include/text.php:777
 msgid "No connections"
 msgstr "Geen connecties"
 
-#: ../../include/text.php:787
+#: ../../include/text.php:789
 #, php-format
 msgid "%d Connection"
 msgid_plural "%d Connections"
 msgstr[0] "%d connectie"
 msgstr[1] "%d connecties"
 
-#: ../../include/text.php:800 ../../mod/viewconnections.php:101
+#: ../../include/text.php:802 ../../mod/viewconnections.php:101
 msgid "View Connections"
 msgstr "Connecties weergeven"
 
-#: ../../include/text.php:942
+#: ../../include/text.php:946
 msgid "poke"
 msgstr "aanstoten"
 
-#: ../../include/text.php:943
+#: ../../include/text.php:947
 msgid "ping"
 msgstr "ping"
 
-#: ../../include/text.php:943
+#: ../../include/text.php:947
 msgid "pinged"
 msgstr "gepingd"
 
-#: ../../include/text.php:944
+#: ../../include/text.php:948
 msgid "prod"
 msgstr "por"
 
-#: ../../include/text.php:944
+#: ../../include/text.php:948
 msgid "prodded"
 msgstr "gepord"
 
-#: ../../include/text.php:945
+#: ../../include/text.php:949
 msgid "slap"
 msgstr "slaan"
 
-#: ../../include/text.php:945
+#: ../../include/text.php:949
 msgid "slapped"
 msgstr "sloeg"
 
-#: ../../include/text.php:946
+#: ../../include/text.php:950
 msgid "finger"
 msgstr "finger"
 
-#: ../../include/text.php:946
+#: ../../include/text.php:950
 msgid "fingered"
 msgstr "gefingerd"
 
-#: ../../include/text.php:947
+#: ../../include/text.php:951
 msgid "rebuff"
 msgstr "afpoeieren"
 
-#: ../../include/text.php:947
+#: ../../include/text.php:951
 msgid "rebuffed"
 msgstr "afgepoeierd"
 
-#: ../../include/text.php:957
+#: ../../include/text.php:961
 msgid "happy"
 msgstr "gelukkig"
 
-#: ../../include/text.php:958
+#: ../../include/text.php:962
 msgid "sad"
 msgstr "bedroefd"
 
-#: ../../include/text.php:959
+#: ../../include/text.php:963
 msgid "mellow"
 msgstr "mellow"
 
-#: ../../include/text.php:960
+#: ../../include/text.php:964
 msgid "tired"
 msgstr "moe"
 
-#: ../../include/text.php:961
+#: ../../include/text.php:965
 msgid "perky"
 msgstr "parmantig"
 
-#: ../../include/text.php:962
+#: ../../include/text.php:966
 msgid "angry"
 msgstr "boos"
 
-#: ../../include/text.php:963
+#: ../../include/text.php:967
 msgid "stupified"
 msgstr "beteuterd"
 
-#: ../../include/text.php:964
+#: ../../include/text.php:968
 msgid "puzzled"
 msgstr "verward"
 
-#: ../../include/text.php:965
+#: ../../include/text.php:969
 msgid "interested"
 msgstr "geïnteresseerd"
 
-#: ../../include/text.php:966
+#: ../../include/text.php:970
 msgid "bitter"
 msgstr "verbitterd"
 
-#: ../../include/text.php:967
+#: ../../include/text.php:971
 msgid "cheerful"
 msgstr "vrolijk"
 
-#: ../../include/text.php:968
+#: ../../include/text.php:972
 msgid "alive"
 msgstr "levendig"
 
-#: ../../include/text.php:969
+#: ../../include/text.php:973
 msgid "annoyed"
 msgstr "geërgerd"
 
-#: ../../include/text.php:970
+#: ../../include/text.php:974
 msgid "anxious"
 msgstr "bezorgd"
 
-#: ../../include/text.php:971
+#: ../../include/text.php:975
 msgid "cranky"
 msgstr "humeurig"
 
-#: ../../include/text.php:972
+#: ../../include/text.php:976
 msgid "disturbed"
 msgstr "verontrust"
 
-#: ../../include/text.php:973
+#: ../../include/text.php:977
 msgid "frustrated"
 msgstr "gefrustreerd "
 
-#: ../../include/text.php:974
+#: ../../include/text.php:978
 msgid "depressed"
 msgstr "gedeprimeerd"
 
-#: ../../include/text.php:975
+#: ../../include/text.php:979
 msgid "motivated"
 msgstr "gemotiveerd"
 
-#: ../../include/text.php:976
+#: ../../include/text.php:980
 msgid "relaxed"
 msgstr "ontspannen"
 
-#: ../../include/text.php:977
+#: ../../include/text.php:981
 msgid "surprised"
 msgstr "verrast"
 
-#: ../../include/text.php:1153
+#: ../../include/text.php:1157
 msgid "May"
 msgstr "mei"
 
-#: ../../include/text.php:1230 ../../include/text.php:1234
+#: ../../include/text.php:1234 ../../include/text.php:1238
 msgid "Unknown Attachment"
 msgstr "Onbekende bijlage"
 
-#: ../../include/text.php:1236
+#: ../../include/text.php:1240
 msgid "unknown"
 msgstr "onbekend"
 
-#: ../../include/text.php:1272
+#: ../../include/text.php:1276
 msgid "remove category"
 msgstr "categorie verwijderen"
 
-#: ../../include/text.php:1349
+#: ../../include/text.php:1353
 msgid "remove from file"
 msgstr "uit map verwijderen"
 
-#: ../../include/text.php:1461 ../../include/text.php:1472
+#: ../../include/text.php:1465 ../../include/text.php:1476
 msgid "Click to open/close"
 msgstr "Klik om te openen of te sluiten"
 
-#: ../../include/text.php:1640 ../../mod/events.php:497
+#: ../../include/text.php:1649 ../../mod/events.php:497
 msgid "Link to Source"
 msgstr "Originele locatie"
 
-#: ../../include/text.php:1661 ../../include/text.php:1732
+#: ../../include/text.php:1670 ../../include/text.php:1742
 msgid "default"
 msgstr "standaard"
 
-#: ../../include/text.php:1669
+#: ../../include/text.php:1678
 msgid "Page layout"
 msgstr "Pagina-lay-out"
 
-#: ../../include/text.php:1669
+#: ../../include/text.php:1678
 msgid "You can create your own with the layouts tool"
 msgstr "Je kan jouw eigen lay-out ontwerpen onder lay-outs"
 
-#: ../../include/text.php:1710
+#: ../../include/text.php:1720
 msgid "Page content type"
 msgstr "Opmaaktype pagina"
 
-#: ../../include/text.php:1744
+#: ../../include/text.php:1754
 msgid "Select an alternate language"
 msgstr "Kies een andere taal"
 
-#: ../../include/text.php:1876
+#: ../../include/text.php:1886
 msgid "activity"
 msgstr "activiteit"
 
-#: ../../include/text.php:2171
+#: ../../include/text.php:2181
 msgid "Design Tools"
 msgstr "Ontwerp-hulpmiddelen"
 
-#: ../../include/text.php:2174 ../../mod/blocks.php:147
+#: ../../include/text.php:2184 ../../mod/blocks.php:147
 msgid "Blocks"
 msgstr "Blokken"
 
-#: ../../include/text.php:2175 ../../mod/menu.php:103
+#: ../../include/text.php:2185 ../../mod/menu.php:103
 msgid "Menus"
 msgstr "Menu's"
 
-#: ../../include/text.php:2176 ../../mod/layouts.php:174
+#: ../../include/text.php:2186 ../../mod/layouts.php:174
 msgid "Layouts"
 msgstr "Lay-outs"
 
-#: ../../include/text.php:2177
+#: ../../include/text.php:2187
 msgid "Pages"
 msgstr "Pagina's"
 
-#: ../../include/nav.php:82 ../../include/nav.php:114 ../../boot.php:1502
+#: ../../include/nav.php:82 ../../include/nav.php:114 ../../boot.php:1483
 msgid "Logout"
 msgstr "Uitloggen"
 
@@ -4005,7 +4020,7 @@ msgstr "Authenticeer jezelf via (bijvoorbeeld) jouw hub"
 msgid "Home Page"
 msgstr "Homepage"
 
-#: ../../include/nav.php:149 ../../mod/register.php:224 ../../boot.php:1479
+#: ../../include/nav.php:149 ../../mod/register.php:224 ../../boot.php:1460
 msgid "Register"
 msgstr "Registreren"
 
@@ -4109,44 +4124,44 @@ msgstr "@kanaal, #tag, inhoud, ?hulp"
 msgid "Please wait..."
 msgstr "Wachten aub..."
 
-#: ../../include/dir_fns.php:126
+#: ../../include/dir_fns.php:139
 msgid "Directory Options"
 msgstr "Opties kanalengids"
 
-#: ../../include/dir_fns.php:128
+#: ../../include/dir_fns.php:141
 msgid "Safe Mode"
 msgstr "Veilig zoeken"
 
-#: ../../include/dir_fns.php:128 ../../include/dir_fns.php:129
-#: ../../include/dir_fns.php:130 ../../mod/removeme.php:60
+#: ../../include/dir_fns.php:141 ../../include/dir_fns.php:142
+#: ../../include/dir_fns.php:143 ../../mod/removeme.php:60
 #: ../../mod/mitem.php:154 ../../mod/mitem.php:155 ../../mod/mitem.php:228
-#: ../../mod/mitem.php:229 ../../mod/connedit.php:630
-#: ../../mod/connedit.php:675 ../../mod/filestorage.php:151
+#: ../../mod/mitem.php:229 ../../mod/connedit.php:635
+#: ../../mod/connedit.php:684 ../../mod/filestorage.php:151
 #: ../../mod/filestorage.php:159 ../../mod/photos.php:626
 #: ../../mod/admin.php:409 ../../mod/menu.php:96 ../../mod/menu.php:153
 #: ../../mod/settings.php:575 ../../mod/api.php:106
 #: ../../view/theme/redbasic/php/config.php:104
-#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1507
+#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1488
 msgid "No"
 msgstr "Nee"
 
-#: ../../include/dir_fns.php:128 ../../include/dir_fns.php:129
-#: ../../include/dir_fns.php:130 ../../mod/removeme.php:60
+#: ../../include/dir_fns.php:141 ../../include/dir_fns.php:142
+#: ../../include/dir_fns.php:143 ../../mod/removeme.php:60
 #: ../../mod/mitem.php:154 ../../mod/mitem.php:155 ../../mod/mitem.php:228
 #: ../../mod/mitem.php:229 ../../mod/filestorage.php:151
 #: ../../mod/filestorage.php:159 ../../mod/photos.php:626
 #: ../../mod/admin.php:411 ../../mod/menu.php:96 ../../mod/menu.php:153
 #: ../../mod/settings.php:575 ../../mod/api.php:105
 #: ../../view/theme/redbasic/php/config.php:104
-#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1507
+#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1488
 msgid "Yes"
 msgstr "Ja"
 
-#: ../../include/dir_fns.php:129
+#: ../../include/dir_fns.php:142
 msgid "Public Forums Only"
 msgstr "Alleen openbare forums"
 
-#: ../../include/dir_fns.php:130
+#: ../../include/dir_fns.php:143
 msgid "This Website Only"
 msgstr "Alleen deze hub"
 
@@ -4177,86 +4192,86 @@ msgstr "Stel een kanaal voor aan %s"
 msgid "Public access denied."
 msgstr "Openbare toegang geweigerd."
 
-#: ../../mod/directory.php:234
+#: ../../mod/directory.php:236
 #, php-format
 msgid "%d rating"
 msgid_plural "%d ratings"
 msgstr[0] "%d beoordeling"
 msgstr[1] "%d beoordelingen"
 
-#: ../../mod/directory.php:245
+#: ../../mod/directory.php:247
 msgid "Gender: "
 msgstr "Geslacht:"
 
-#: ../../mod/directory.php:247
+#: ../../mod/directory.php:249
 msgid "Status: "
 msgstr "Status: "
 
-#: ../../mod/directory.php:249
+#: ../../mod/directory.php:251
 msgid "Homepage: "
 msgstr "Homepage: "
 
-#: ../../mod/directory.php:308 ../../mod/events.php:699
+#: ../../mod/directory.php:310 ../../mod/events.php:699
 msgid "Description:"
 msgstr "Omschrijving:"
 
-#: ../../mod/directory.php:317
+#: ../../mod/directory.php:319
 msgid "Public Forum:"
 msgstr "Openbaar forum:"
 
-#: ../../mod/directory.php:320
+#: ../../mod/directory.php:322
 msgid "Keywords: "
 msgstr "Trefwoorden: "
 
-#: ../../mod/directory.php:323
+#: ../../mod/directory.php:325
 msgid "Don't suggest"
 msgstr "Niet voorstellen"
 
-#: ../../mod/directory.php:325
+#: ../../mod/directory.php:327
 msgid "Common connections:"
 msgstr "Gemeenschappelijke connecties:"
 
-#: ../../mod/directory.php:374
+#: ../../mod/directory.php:376
 msgid "Global Directory"
 msgstr "Volledige kanalengids"
 
-#: ../../mod/directory.php:374
+#: ../../mod/directory.php:376
 msgid "Local Directory"
 msgstr "Lokale kanalengids"
 
-#: ../../mod/directory.php:380
+#: ../../mod/directory.php:382
 msgid "Finding:"
 msgstr "Gezocht naar:"
 
-#: ../../mod/directory.php:385
+#: ../../mod/directory.php:387
 msgid "next page"
 msgstr "volgende pagina"
 
-#: ../../mod/directory.php:385
+#: ../../mod/directory.php:387
 msgid "previous page"
 msgstr "vorige pagina"
 
-#: ../../mod/directory.php:386
+#: ../../mod/directory.php:388
 msgid "Sort options"
 msgstr "Sorteeropties"
 
-#: ../../mod/directory.php:387
+#: ../../mod/directory.php:389
 msgid "Alphabetic"
 msgstr "Alfabetisch"
 
-#: ../../mod/directory.php:388
+#: ../../mod/directory.php:390
 msgid "Reverse Alphabetic"
 msgstr "Omgekeerd alfabetisch"
 
-#: ../../mod/directory.php:389
+#: ../../mod/directory.php:391
 msgid "Newest to Oldest"
 msgstr "Nieuw naar oud"
 
-#: ../../mod/directory.php:390
+#: ../../mod/directory.php:392
 msgid "Oldest to Newest"
 msgstr "Oud naar nieuw"
 
-#: ../../mod/directory.php:407
+#: ../../mod/directory.php:409
 msgid "No entries (some entries may be hidden)."
 msgstr "Niets gevonden (sommige kanalen kunnen verborgen zijn)."
 
@@ -4717,249 +4732,249 @@ msgstr "Kon geen toegang krijgen tot de connectie-gegevens."
 msgid "Could not locate selected profile."
 msgstr "Kon het gekozen profiel niet vinden."
 
-#: ../../mod/connedit.php:218
+#: ../../mod/connedit.php:223
 msgid "Connection updated."
 msgstr "Connectie bijgewerkt."
 
-#: ../../mod/connedit.php:220
+#: ../../mod/connedit.php:225
 msgid "Failed to update connection record."
 msgstr "Bijwerken van connectie-gegevens mislukt."
 
-#: ../../mod/connedit.php:267
+#: ../../mod/connedit.php:272
 msgid "is now connected to"
 msgstr "is nu verbonden met"
 
-#: ../../mod/connedit.php:390
+#: ../../mod/connedit.php:395
 msgid "Could not access address book record."
 msgstr "Kon geen toegang krijgen tot de record van de connectie."
 
-#: ../../mod/connedit.php:404
+#: ../../mod/connedit.php:409
 msgid "Refresh failed - channel is currently unavailable."
 msgstr "Vernieuwen mislukt - kanaal is momenteel niet beschikbaar"
 
-#: ../../mod/connedit.php:413 ../../mod/connedit.php:422
-#: ../../mod/connedit.php:431 ../../mod/connedit.php:440
-#: ../../mod/connedit.php:453
+#: ../../mod/connedit.php:418 ../../mod/connedit.php:427
+#: ../../mod/connedit.php:436 ../../mod/connedit.php:445
+#: ../../mod/connedit.php:458
 msgid "Unable to set address book parameters."
 msgstr "Niet in staat om de parameters van connecties in te stellen."
 
-#: ../../mod/connedit.php:477
+#: ../../mod/connedit.php:482
 msgid "Connection has been removed."
 msgstr "Connectie is verwijderd"
 
-#: ../../mod/connedit.php:496
+#: ../../mod/connedit.php:501
 #, php-format
 msgid "View %s's profile"
 msgstr "Profiel van %s weergeven"
 
-#: ../../mod/connedit.php:500
+#: ../../mod/connedit.php:505
 msgid "Refresh Permissions"
 msgstr "Permissies vernieuwen"
 
-#: ../../mod/connedit.php:503
+#: ../../mod/connedit.php:508
 msgid "Fetch updated permissions"
 msgstr "Aangepaste permissies ophalen"
 
-#: ../../mod/connedit.php:507
+#: ../../mod/connedit.php:512
 msgid "Recent Activity"
 msgstr "Kanaal-activiteit"
 
-#: ../../mod/connedit.php:510
+#: ../../mod/connedit.php:515
 msgid "View recent posts and comments"
 msgstr "Recente berichten en reacties weergeven"
 
-#: ../../mod/connedit.php:514 ../../mod/admin.php:810
+#: ../../mod/connedit.php:519 ../../mod/admin.php:810
 msgid "Unblock"
 msgstr "Deblokkeren"
 
-#: ../../mod/connedit.php:514 ../../mod/admin.php:809
+#: ../../mod/connedit.php:519 ../../mod/admin.php:809
 msgid "Block"
 msgstr "Blokkeren"
 
-#: ../../mod/connedit.php:517
+#: ../../mod/connedit.php:522
 msgid "Block (or Unblock) all communications with this connection"
 msgstr "Blokkeer (of deblokkeer) alle communicatie met deze connectie"
 
-#: ../../mod/connedit.php:518
+#: ../../mod/connedit.php:523
 msgid "This connection is blocked!"
 msgstr "Deze connectie is geblokkeerd!"
 
-#: ../../mod/connedit.php:522
+#: ../../mod/connedit.php:527
 msgid "Unignore"
 msgstr "Niet meer negeren"
 
-#: ../../mod/connedit.php:522 ../../mod/notifications.php:51
+#: ../../mod/connedit.php:527 ../../mod/notifications.php:51
 msgid "Ignore"
 msgstr "Negeren"
 
-#: ../../mod/connedit.php:525
+#: ../../mod/connedit.php:530
 msgid "Ignore (or Unignore) all inbound communications from this connection"
 msgstr "Negeer (of negeer niet meer) alle inkomende communicatie van deze connectie"
 
-#: ../../mod/connedit.php:526
+#: ../../mod/connedit.php:531
 msgid "This connection is ignored!"
 msgstr "Deze connectie wordt genegeerd!"
 
-#: ../../mod/connedit.php:530
+#: ../../mod/connedit.php:535
 msgid "Unarchive"
 msgstr "Niet meer archiveren"
 
-#: ../../mod/connedit.php:530
+#: ../../mod/connedit.php:535
 msgid "Archive"
 msgstr "Archiveren"
 
-#: ../../mod/connedit.php:533
+#: ../../mod/connedit.php:538
 msgid ""
 "Archive (or Unarchive) this connection - mark channel dead but keep content"
 msgstr "Archiveer (of dearchiveer) deze connectie - markeer het kanaal als dood, maar bewaar de inhoud"
 
-#: ../../mod/connedit.php:534
+#: ../../mod/connedit.php:539
 msgid "This connection is archived!"
 msgstr "Deze connectie is gearchiveerd!"
 
-#: ../../mod/connedit.php:538
+#: ../../mod/connedit.php:543
 msgid "Unhide"
 msgstr "Niet meer verbergen"
 
-#: ../../mod/connedit.php:538
+#: ../../mod/connedit.php:543
 msgid "Hide"
 msgstr "Verbergen"
 
-#: ../../mod/connedit.php:541
+#: ../../mod/connedit.php:546
 msgid "Hide or Unhide this connection from your other connections"
 msgstr "Deze connectie verbergen (of niet meer verbergen) voor jouw andere connecties"
 
-#: ../../mod/connedit.php:542
+#: ../../mod/connedit.php:547
 msgid "This connection is hidden!"
 msgstr "Deze connectie is verborgen!"
 
-#: ../../mod/connedit.php:549
+#: ../../mod/connedit.php:554
 msgid "Delete this connection"
 msgstr "Deze connectie verwijderen"
 
-#: ../../mod/connedit.php:630
+#: ../../mod/connedit.php:635
 msgid "Approve this connection"
 msgstr "Deze connectie accepteren"
 
-#: ../../mod/connedit.php:630
+#: ../../mod/connedit.php:635
 msgid "Accept connection to allow communication"
 msgstr "Keur deze connectie goed om communicatie toe te staan"
 
-#: ../../mod/connedit.php:635
+#: ../../mod/connedit.php:640
 msgid "Set Affinity"
 msgstr "Verwantschapsfilter instellen"
 
-#: ../../mod/connedit.php:638
+#: ../../mod/connedit.php:643
 msgid "Set Profile"
 msgstr "Profiel instellen"
 
-#: ../../mod/connedit.php:641
+#: ../../mod/connedit.php:646
 msgid "Set Affinity & Profile"
 msgstr "Verwantschapsfilter en profiel instellen"
 
-#: ../../mod/connedit.php:670
+#: ../../mod/connedit.php:679
 msgid "none"
 msgstr "geen"
 
-#: ../../mod/connedit.php:675
+#: ../../mod/connedit.php:684
 msgid "Apply these permissions automatically"
 msgstr "Deze permissies automatisch toepassen"
 
-#: ../../mod/connedit.php:677
+#: ../../mod/connedit.php:686
 msgid "This connection's primary address is"
 msgstr "Het primaire kanaaladres van deze connectie is"
 
-#: ../../mod/connedit.php:678
+#: ../../mod/connedit.php:687
 msgid "Available locations:"
 msgstr "Beschikbare locaties:"
 
-#: ../../mod/connedit.php:682
+#: ../../mod/connedit.php:691
 msgid ""
 "The permissions indicated on this page will be applied to all new "
 "connections."
 msgstr "Permissies die op deze pagina staan vermeld worden op alle nieuwe connecties toegepast."
 
-#: ../../mod/connedit.php:684
+#: ../../mod/connedit.php:693
 msgid "Slide to adjust your degree of friendship"
 msgstr "Schuif om te bepalen hoe goed je iemand kent en/of mag"
 
-#: ../../mod/connedit.php:686
+#: ../../mod/connedit.php:695
 msgid "Slide to adjust your rating"
 msgstr "Gebruik de schuif om je beoordeling te geven"
 
-#: ../../mod/connedit.php:687 ../../mod/connedit.php:692
+#: ../../mod/connedit.php:696 ../../mod/connedit.php:701
 msgid "Optionally explain your rating"
 msgstr "Verklaar jouw beoordeling (niet verplicht)"
 
-#: ../../mod/connedit.php:689
+#: ../../mod/connedit.php:698
 msgid "Custom Filter"
 msgstr "Berichtenfilter"
 
-#: ../../mod/connedit.php:690
+#: ../../mod/connedit.php:699
 msgid "Only import posts with this text"
 msgstr "Importeer alleen berichten met deze tekst"
 
-#: ../../mod/connedit.php:690 ../../mod/connedit.php:691
+#: ../../mod/connedit.php:699 ../../mod/connedit.php:700
 msgid ""
 "words one per line or #tags or /patterns/ or lang=xx, leave blank to import "
 "all posts"
 msgstr "woorden (één per regel), #tags, /regex/ of talen (lang=iso639-1)  - laat leeg om alle berichten te importeren"
 
-#: ../../mod/connedit.php:691
+#: ../../mod/connedit.php:700
 msgid "Do not import posts with this text"
 msgstr "Importeer geen berichten met deze tekst"
 
-#: ../../mod/connedit.php:693
+#: ../../mod/connedit.php:702
 msgid "This information is public!"
 msgstr "Deze informatie is openbaar!"
 
-#: ../../mod/connedit.php:698
+#: ../../mod/connedit.php:707
 msgid "Connection Pending Approval"
 msgstr "Connectie moet nog goedgekeurd worden"
 
-#: ../../mod/connedit.php:699
+#: ../../mod/connedit.php:708
 msgid "Connection Request"
 msgstr "Connectieverzoek"
 
-#: ../../mod/connedit.php:700
+#: ../../mod/connedit.php:709
 #, php-format
 msgid ""
 "(%s) would like to connect with you. Please approve this connection to allow"
 " communication."
 msgstr "(%s) wil met jou verbinden. Keur dit connectieverzoek goed om onderling te kunnen communiceren."
 
-#: ../../mod/connedit.php:701 ../../mod/admin.php:806
+#: ../../mod/connedit.php:710 ../../mod/admin.php:806
 msgid "Approve"
 msgstr "Goedkeuren"
 
-#: ../../mod/connedit.php:702
+#: ../../mod/connedit.php:711
 msgid "Approve Later"
 msgstr "Later goedkeuren"
 
-#: ../../mod/connedit.php:705
+#: ../../mod/connedit.php:714
 msgid "inherited"
 msgstr "geërfd"
 
-#: ../../mod/connedit.php:707
+#: ../../mod/connedit.php:716
 #, php-format
 msgid ""
 "Please choose the profile you would like to display to %s when viewing your "
 "profile securely."
 msgstr "Kies het profiel dat je aan %s wil tonen wanneer hij/zij ingelogd jouw profiel wil bekijken."
 
-#: ../../mod/connedit.php:709
+#: ../../mod/connedit.php:718
 msgid "Their Settings"
 msgstr "Hun instellingen"
 
-#: ../../mod/connedit.php:710
+#: ../../mod/connedit.php:719
 msgid "My Settings"
 msgstr "Mijn instellingen"
 
-#: ../../mod/connedit.php:712
+#: ../../mod/connedit.php:721
 msgid "Individual Permissions"
 msgstr "Individuele permissies"
 
-#: ../../mod/connedit.php:713
+#: ../../mod/connedit.php:722
 msgid ""
 "Some permissions may be inherited from your channel's <a "
 "href=\"settings\"><strong>privacy settings</strong></a>, which have higher "
@@ -4967,7 +4982,7 @@ msgid ""
 " settings here."
 msgstr "Sommige permissies worden mogelijk overgeërfd van de <a href=\"settings\">privacy-instellingen</a> van jouw kanaal, die een hogere prioriteit hebben dan deze individuele instellingen. Je kan je deze overgeërfde permissies hier <strong>niet</strong> veranderen."
 
-#: ../../mod/connedit.php:714
+#: ../../mod/connedit.php:723
 msgid ""
 "Some permissions may be inherited from your channel's <a "
 "href=\"settings\"><strong>privacy settings</strong></a>, which have higher "
@@ -4975,7 +4990,7 @@ msgid ""
 "they wont have any impact unless the inherited setting changes."
 msgstr "Sommige permissies worden mogelijk overgeërfd van de <a href=\"settings\">privacy-instellingen</a> van jouw kanaal, die een hogere prioriteit hebben dan deze individuele permissies. Je kan de permissies hier veranderen, maar die hebben geen effect, tenzij de overgeërfde permissies worden veranderd. "
 
-#: ../../mod/connedit.php:715
+#: ../../mod/connedit.php:724
 msgid "Last update:"
 msgstr "Laatste wijziging:"
 
@@ -5266,14 +5281,6 @@ msgstr "Nieuwste eerst weergeven"
 msgid "Show Oldest First"
 msgstr "Oudste eerst weergeven"
 
-#: ../../mod/photos.php:753 ../../mod/photos.php:1286
-msgid "View Photo"
-msgstr "Foto weergeven"
-
-#: ../../mod/photos.php:782
-msgid "Edit Album"
-msgstr "Album bewerken"
-
 #: ../../mod/photos.php:827
 msgid "Permission denied. Access to this item may be restricted."
 msgstr "Toegang geweigerd. Toegang tot dit item kan zijn beperkt."
@@ -5357,63 +5364,6 @@ msgstr "Album weergeven"
 #: ../../mod/photos.php:1315
 msgid "Recent Photos"
 msgstr "Recente foto's"
-
-#: ../../mod/dreport.php:23
-msgid "Invalid message"
-msgstr "Ongeldig bericht"
-
-#: ../../mod/dreport.php:55
-msgid "no results"
-msgstr "geen resultaten"
-
-#: ../../mod/dreport.php:60
-#, php-format
-msgid "Delivery report for %1$s"
-msgstr "Afleveringsrapport voor %1$s"
-
-#: ../../mod/dreport.php:74
-msgid "channel sync processed"
-msgstr "kanaalsync verwerkt"
-
-#: ../../mod/dreport.php:78
-msgid "queued"
-msgstr "in wachtrij"
-
-#: ../../mod/dreport.php:82
-msgid "posted"
-msgstr "verstuurd"
-
-#: ../../mod/dreport.php:86
-msgid "accepted for delivery"
-msgstr "geaccepteerd om afgeleverd te worden"
-
-#: ../../mod/dreport.php:90
-msgid "updated"
-msgstr "geüpdatet"
-
-#: ../../mod/dreport.php:93
-msgid "update ignored"
-msgstr "update genegeerd"
-
-#: ../../mod/dreport.php:96
-msgid "permission denied"
-msgstr "toegang geweigerd"
-
-#: ../../mod/dreport.php:100
-msgid "recipient not found"
-msgstr "ontvanger niet gevonden"
-
-#: ../../mod/dreport.php:103
-msgid "mail recalled"
-msgstr "Privébericht ingetrokken"
-
-#: ../../mod/dreport.php:106
-msgid "duplicate mail received"
-msgstr "dubbel privébericht ontvangen"
-
-#: ../../mod/dreport.php:109
-msgid "mail delivered"
-msgstr "privébericht afgeleverd"
 
 #: ../../mod/editblock.php:78 ../../mod/editblock.php:94
 #: ../../mod/editpost.php:20 ../../mod/editlayout.php:76
@@ -6483,7 +6433,7 @@ msgid ""
 "Password reset failed."
 msgstr "Het verzoek kon niet worden geverifieerd. (Mogelijk heb je al eerder een verzoek ingediend.) Opnieuw instellen van wachtwoord is mislukt."
 
-#: ../../mod/lostpass.php:86 ../../boot.php:1511
+#: ../../mod/lostpass.php:86 ../../boot.php:1492
 msgid "Password Reset"
 msgstr "Wachtwoord vergeten?"
 
@@ -6815,20 +6765,20 @@ msgstr "Leeg bericht geannuleerd"
 msgid "Executable content type not permitted to this channel."
 msgstr "Uitvoerbare bestanden zijn niet toegestaan op dit kanaal."
 
-#: ../../mod/item.php:908
+#: ../../mod/item.php:910
 msgid "System error. Post not saved."
 msgstr "Systeemfout. Bericht niet opgeslagen."
 
-#: ../../mod/item.php:1175
+#: ../../mod/item.php:1177
 msgid "Unable to obtain post information from database."
 msgstr "Niet in staat om informatie over dit bericht uit de database te verkrijgen."
 
-#: ../../mod/item.php:1182
+#: ../../mod/item.php:1184
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr "Je hebt jouw limiet van %1$.0f berichten bereikt."
 
-#: ../../mod/item.php:1189
+#: ../../mod/item.php:1191
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr "Je hebt jouw limiet van %1$.0f webpagina's bereikt."
@@ -7117,127 +7067,68 @@ msgstr "Authenticeren"
 msgid "Insufficient permissions.  Request redirected to profile page."
 msgstr "Onvoldoende permissies.  Doorgestuurd naar profielpagina."
 
-#: ../../mod/siteinfo.php:111
-#, php-format
-msgid "Version %s"
-msgstr "Versie %s"
-
-#: ../../mod/siteinfo.php:132
-msgid "Installed plugins/addons/apps:"
-msgstr "Ingeschakelde plug-ins/add-ons/apps:"
-
-#: ../../mod/siteinfo.php:145
-msgid "No installed plugins/addons/apps"
-msgstr "Geen ingeschakelde plug-ins/add-ons/apps"
-
-#: ../../mod/siteinfo.php:158
-msgid ""
-"This is a hub of $Projectname - a global cooperative network of "
-"decentralized privacy enhanced websites."
-msgstr "Dit is een $Projectname-hub - $Projectname is een wereldwijd coöperatief netwerk van gedecentraliseerde websites (hubs) met verbeterde privacy."
-
-#: ../../mod/siteinfo.php:160
-msgid "Tag: "
-msgstr "Tag: "
-
-#: ../../mod/siteinfo.php:162
-msgid "Last background fetch: "
-msgstr "Meest recente achtergrond-fetch:"
-
-#: ../../mod/siteinfo.php:164
-msgid "Current load average: "
-msgstr "Gemiddelde systeembelasting is nu:"
-
-#: ../../mod/siteinfo.php:167
-msgid "Running at web location"
-msgstr "Draaiend op weblocatie"
-
-#: ../../mod/siteinfo.php:168
-msgid ""
-"Please visit <a href=\"http://hubzilla.org\">hubzilla.org</a> to learn more "
-"about $Projectname."
-msgstr "Bezoek <a href=\"http://hubzilla.org\">hubzilla.org</a> "
-
-#: ../../mod/siteinfo.php:169
-msgid "Bug reports and issues: please visit"
-msgstr "Bugrapporten en andere kwesties: bezoek"
-
-#: ../../mod/siteinfo.php:171
-msgid "$projectname issues"
-msgstr "$projectname-issues"
-
-#: ../../mod/siteinfo.php:172
-msgid ""
-"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
-"com"
-msgstr "Voorstellen, lofbetuigingen, enz. - e-mail  \"redmatrix\" at librelist - dot com"
-
-#: ../../mod/siteinfo.php:174
-msgid "Site Administrators"
-msgstr "Hubbeheerders: "
-
-#: ../../mod/import.php:27
+#: ../../mod/import.php:28
 #, php-format
 msgid "Your service plan only allows %d channels."
 msgstr "Jouw abonnement staat maar %d kanalen toe."
 
-#: ../../mod/import.php:65 ../../mod/import_items.php:38
+#: ../../mod/import.php:66 ../../mod/import_items.php:38
 msgid "Nothing to import."
 msgstr "Niets gevonden om te importeren"
 
-#: ../../mod/import.php:89 ../../mod/import_items.php:62
+#: ../../mod/import.php:90 ../../mod/import_items.php:62
 msgid "Unable to download data from old server"
 msgstr "Niet in staat om gegevens van de oude hub te downloaden"
 
-#: ../../mod/import.php:95 ../../mod/import_items.php:68
+#: ../../mod/import.php:96 ../../mod/import_items.php:68
 msgid "Imported file is empty."
 msgstr "Geïmporteerde bestand is leeg"
 
-#: ../../mod/import.php:115 ../../mod/import_items.php:82
+#: ../../mod/import.php:116 ../../mod/import_items.php:82
 #, php-format
 msgid "Warning: Database versions differ by %1$d updates."
 msgstr "Waarschuwing: database-versies lopen %1$d updates achter."
 
-#: ../../mod/import.php:148
+#: ../../mod/import.php:149
 msgid "No channel. Import failed."
 msgstr "Geen kanaal. Importeren mislukt."
 
-#: ../../mod/import.php:499
+#: ../../mod/import.php:509
 msgid "You must be logged in to use this feature."
 msgstr "Je moet ingelogd zijn om dit onderdeel te kunnen gebruiken."
 
-#: ../../mod/import.php:504
+#: ../../mod/import.php:514
 msgid "Import Channel"
 msgstr "Kanaal importeren"
 
-#: ../../mod/import.php:505
+#: ../../mod/import.php:515
 msgid ""
 "Use this form to import an existing channel from a different server/hub. You"
 " may retrieve the channel identity from the old server/hub via the network "
 "or provide an export file."
 msgstr "Gebruik dit formulier om een bestaand kanaal te importeren van een andere hub. Je kan de kanaal-identiteit van de oude hub via het netwerk ontvangen of een exportbestand verstrekken."
 
-#: ../../mod/import.php:506 ../../mod/import_items.php:121
+#: ../../mod/import.php:516 ../../mod/import_items.php:121
 msgid "File to Upload"
 msgstr "Bestand om te uploaden"
 
-#: ../../mod/import.php:507
+#: ../../mod/import.php:517
 msgid "Or provide the old server/hub details"
 msgstr "Of vul de gegevens van de oude hub in"
 
-#: ../../mod/import.php:508
+#: ../../mod/import.php:518
 msgid "Your old identity address (xyz@example.com)"
 msgstr "Jouw oude kanaaladres (xyz@example.com)"
 
-#: ../../mod/import.php:509
+#: ../../mod/import.php:519
 msgid "Your old login email address"
 msgstr "Het e-mailadres van je oude account"
 
-#: ../../mod/import.php:510
+#: ../../mod/import.php:520
 msgid "Your old login password"
 msgstr "Wachtwoord van jouw oude account"
 
-#: ../../mod/import.php:511
+#: ../../mod/import.php:521
 msgid ""
 "For either option, please choose whether to make this hub your new primary "
 "address, or whether your old location should continue this role. You will be"
@@ -7245,21 +7136,78 @@ msgid ""
 "primary location for files, photos, and media."
 msgstr "Voor elke optie geldt dat je moet kiezen of je jouw primaire kanaaladres op deze hub wil instellen of dat jouw oude hub deze rol blijft vervullen."
 
-#: ../../mod/import.php:512
+#: ../../mod/import.php:522
 msgid "Make this hub my primary location"
 msgstr "Stel deze hub als mijn primaire locatie in"
 
-#: ../../mod/import.php:513
+#: ../../mod/import.php:523
 msgid ""
 "Import existing posts if possible (experimental - limited by available "
 "memory"
 msgstr "Importeer bestaande berichten wanneer mogelijk (experimenteel - afhankelijk van beschikbaar servergeheugen)"
 
-#: ../../mod/import.php:514
+#: ../../mod/import.php:524
 msgid ""
 "This process may take several minutes to complete. Please submit the form "
 "only once and leave this page open until finished."
 msgstr "Dit proces kan enkele minuten in beslag nemen. Klik maar één keer op opslaan en verlaat deze pagina niet alvorens het proces is voltooid."
+
+#: ../../mod/dreport.php:23
+msgid "Invalid message"
+msgstr "Ongeldig bericht"
+
+#: ../../mod/dreport.php:55
+msgid "no results"
+msgstr "geen resultaten"
+
+#: ../../mod/dreport.php:60
+#, php-format
+msgid "Delivery report for %1$s"
+msgstr "Afleveringsrapport voor %1$s"
+
+#: ../../mod/dreport.php:74
+msgid "channel sync processed"
+msgstr "kanaalsync verwerkt"
+
+#: ../../mod/dreport.php:78
+msgid "queued"
+msgstr "in wachtrij"
+
+#: ../../mod/dreport.php:82
+msgid "posted"
+msgstr "verstuurd"
+
+#: ../../mod/dreport.php:86
+msgid "accepted for delivery"
+msgstr "geaccepteerd om afgeleverd te worden"
+
+#: ../../mod/dreport.php:90
+msgid "updated"
+msgstr "geüpdatet"
+
+#: ../../mod/dreport.php:93
+msgid "update ignored"
+msgstr "update genegeerd"
+
+#: ../../mod/dreport.php:96
+msgid "permission denied"
+msgstr "toegang geweigerd"
+
+#: ../../mod/dreport.php:100
+msgid "recipient not found"
+msgstr "ontvanger niet gevonden"
+
+#: ../../mod/dreport.php:103
+msgid "mail recalled"
+msgstr "Privébericht ingetrokken"
+
+#: ../../mod/dreport.php:106
+msgid "duplicate mail received"
+msgstr "dubbel privébericht ontvangen"
+
+#: ../../mod/dreport.php:109
+msgid "mail delivered"
+msgstr "privébericht afgeleverd"
 
 #: ../../mod/thing.php:111
 msgid "Thing updated"
@@ -8803,6 +8751,65 @@ msgstr "Verwijder alle bestanden"
 msgid "Remove this file"
 msgstr "Verwijder dit bestand"
 
+#: ../../mod/siteinfo.php:111
+#, php-format
+msgid "Version %s"
+msgstr "Versie %s"
+
+#: ../../mod/siteinfo.php:132
+msgid "Installed plugins/addons/apps:"
+msgstr "Ingeschakelde plug-ins/add-ons/apps:"
+
+#: ../../mod/siteinfo.php:145
+msgid "No installed plugins/addons/apps"
+msgstr "Geen ingeschakelde plug-ins/add-ons/apps"
+
+#: ../../mod/siteinfo.php:158
+msgid ""
+"This is a hub of $Projectname - a global cooperative network of "
+"decentralized privacy enhanced websites."
+msgstr "Dit is een $Projectname-hub - $Projectname is een wereldwijd coöperatief netwerk van gedecentraliseerde websites (hubs) met verbeterde privacy."
+
+#: ../../mod/siteinfo.php:160
+msgid "Tag: "
+msgstr "Tag: "
+
+#: ../../mod/siteinfo.php:162
+msgid "Last background fetch: "
+msgstr "Meest recente achtergrond-fetch:"
+
+#: ../../mod/siteinfo.php:164
+msgid "Current load average: "
+msgstr "Gemiddelde systeembelasting is nu:"
+
+#: ../../mod/siteinfo.php:167
+msgid "Running at web location"
+msgstr "Draaiend op weblocatie"
+
+#: ../../mod/siteinfo.php:168
+msgid ""
+"Please visit <a href=\"http://hubzilla.org\">hubzilla.org</a> to learn more "
+"about $Projectname."
+msgstr "Bezoek <a href=\"http://hubzilla.org\">hubzilla.org</a> "
+
+#: ../../mod/siteinfo.php:169
+msgid "Bug reports and issues: please visit"
+msgstr "Bugrapporten en andere kwesties: bezoek"
+
+#: ../../mod/siteinfo.php:171
+msgid "$projectname issues"
+msgstr "$projectname-issues"
+
+#: ../../mod/siteinfo.php:172
+msgid ""
+"Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
+"com"
+msgstr "Voorstellen, lofbetuigingen, enz. - e-mail  \"redmatrix\" at librelist - dot com"
+
+#: ../../mod/siteinfo.php:174
+msgid "Site Administrators"
+msgstr "Hubbeheerders: "
+
 #: ../../mod/suggest.php:35
 msgid ""
 "No suggestions available. If this is a new site, please try again in 24 "
@@ -9243,51 +9250,51 @@ msgstr "Grootte profielfoto's van berichten instellen"
 msgid "Set size of followup author photos"
 msgstr "Grootte profielfoto's van reacties instellen"
 
-#: ../../boot.php:1308
+#: ../../boot.php:1289
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr "Update %s mislukt. Zie foutenlogboek."
 
-#: ../../boot.php:1311
+#: ../../boot.php:1292
 #, php-format
 msgid "Update Error at %s"
 msgstr "Update-fout op %s"
 
-#: ../../boot.php:1478
+#: ../../boot.php:1459
 msgid ""
 "Create an account to access services and applications within the Hubzilla"
 msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van Hubzilla"
 
-#: ../../boot.php:1506
+#: ../../boot.php:1487
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: ../../boot.php:1507
+#: ../../boot.php:1488
 msgid "Remember me"
 msgstr "Aangemeld blijven"
 
-#: ../../boot.php:1510
+#: ../../boot.php:1491
 msgid "Forgot your password?"
 msgstr "Wachtwoord vergeten?"
 
-#: ../../boot.php:2136
+#: ../../boot.php:2111
 msgid "toggle mobile"
 msgstr "mobiele weergave omschakelen"
 
-#: ../../boot.php:2271
+#: ../../boot.php:2246
 msgid "Website SSL certificate is not valid. Please correct."
 msgstr "Het SSL-certificaat van deze website is ongeldig. Corrigeer dit a.u.b."
 
-#: ../../boot.php:2274
+#: ../../boot.php:2249
 #, php-format
 msgid "[hubzilla] Website SSL error for %s"
 msgstr "[hubzilla] Probleem met SSL-certificaat voor %s"
 
-#: ../../boot.php:2311
+#: ../../boot.php:2286
 msgid "Cron/Scheduled tasks not running."
 msgstr "Cron is niet actief"
 
-#: ../../boot.php:2315
+#: ../../boot.php:2290
 #, php-format
 msgid "[hubzilla] Cron tasks not running on %s"
 msgstr "[hubzilla] Cron-taken zijn niet actief op %s"

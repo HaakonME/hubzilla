@@ -2962,9 +2962,12 @@ function tag_deliver($uid, $item_id) {
 
 	if(($item['source_xchan']) && intval($item['item_uplink'])
 		&& intval($item['item_thread_top']) && ($item['edited'] != $item['created'])) {
+
 		// this is an update (edit) to a post which was already processed by us and has a second delivery chain
 		// Just start the second delivery chain to deliver the updated post
-		proc_run('php','include/notifier.php','tgroup',$item['id']);
+		// after resetting ownership and permission bits
+
+		start_delivery_chain($u[0], $item, $item_id, 0);
 		return;
 	}
 
@@ -3181,7 +3184,7 @@ function tag_deliver($uid, $item_id) {
 	}
 
 	if((! $mention) && (! $union)) {
-		logger('tag_deliver: no mention and no union.');
+		logger('tag_deliver: no mention for ' . $u[0]['channel_name'] . ' and no union.');
 		return;
 	}
 

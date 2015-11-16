@@ -531,11 +531,12 @@ function attribute_contains($attr, $s) {
  * LOGGER_DATA and LOGGER_ALL.
  *
  * Since PHP5.4 we get the file, function and line automatically where the logger
- * was caleld, so no need to add it to the message anymore.
+ * was called, so no need to add it to the message anymore.
  *
  * @param string $msg Message to log
  * @param int $level A log level.
  */
+
 function logger($msg, $level = 0) {
 	// turn off logger in install mode
 	global $a;
@@ -557,7 +558,13 @@ function logger($msg, $level = 0) {
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 	}
 
-	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL, FILE_APPEND);
+	$s = datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL;
+	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'logged' => false);
+
+	call_hooks('logger',$pluginfo);
+
+	if(! $pluginfo['logged'])
+		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
 }
 
 /**

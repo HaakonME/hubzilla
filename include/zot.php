@@ -745,8 +745,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 			|| ($r[0]['xchan_follow'] != $arr['follow_url'])
 			|| ($r[0]['xchan_connpage'] != $arr['connect_url']) 
 			|| ($r[0]['xchan_url'] != $arr['url'])
-			|| $hidden_changed || adult_changed || deleted_changed || $pubforum_changed ) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s', 
+			|| $hidden_changed || $adult_changed || $deleted_changed || $pubforum_changed ) {
+			$rup = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s', 
 				xchan_connpage = '%s', xchan_hidden = %d, xchan_selfcensored = %d, xchan_deleted = %d, xchan_pubforum = %d, 
 				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s'",
 				dbesc(($arr['name']) ? $arr['name'] : '-'),
@@ -763,8 +763,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 				dbesc($xchan_hash)
 			);
 
-			logger('import_xchan: existing: ' . print_r($r[0],true), LOGGER_DATA);
-			logger('import_xchan: new: ' . print_r($arr,true), LOGGER_DATA);
+			logger('import_xchan: update: existing: ' . print_r($r[0],true), LOGGER_DATA);
+			logger('import_xchan: update: new: ' . print_r($arr,true), LOGGER_DATA);
 			$what .= 'xchan ';
 			$changed = true;
 		}

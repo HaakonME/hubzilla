@@ -564,7 +564,7 @@ function logger($msg, $level = 0) {
 	call_hooks('logger',$pluginfo);
 
 	if(! $pluginfo['logged'])
-		@file_put_contents($logfile, $s, FILE_APPEND);
+		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
 }
 
 /**

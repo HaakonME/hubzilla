@@ -3181,7 +3181,7 @@ function tag_deliver($uid, $item_id) {
 	}
 
 	if((! $mention) && (! $union)) {
-		logger('tag_deliver: no mention and no union.');
+		logger('tag_deliver: no mention for ' . $u[0]['channel_name'] . ' and no union.');
 		return;
 	}
 

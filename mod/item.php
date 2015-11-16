@@ -473,8 +473,8 @@ function item_post(&$a) {
 		require_once('include/text.php');			
 		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
 			require_once('include/bb2diaspora.php');
+			$body = escape_tags(trim($body));
 			$body = str_replace("\n",'<br />', $body);
-			$body = purify_html($body);
 
 			$body = preg_replace_callback('/\[share(.*?)\]/ism','share_shield',$body);			
 			$body = diaspora2bb($body,true);

@@ -1025,7 +1025,7 @@ function builtin_activity_puller($item, &$conv_responses) {
 		if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
 			$name = (($item['author']['xchan_name']) ? $item['author']['xchan_name'] : t('Unknown'));
 			$url = (($item['author']['xchan_url'] && $item['author']['xchan_photo_s']) 
-				? '<a href="' . chanlink_url($item['author']['xchan_url']) . '">' . '<img class="response-photo" src="' . zid($item['author']['xchan_photo_s'])  . ' alt="' . urlencode($name) . '" /> ' . $name . '</a>' 
+				? '<a href="' . chanlink_url($item['author']['xchan_url']) . '">' . '<img class="dropdown-menu-img-xs" src="' . zid($item['author']['xchan_photo_s'])  . '" alt="' . urlencode($name) . '" />' . $name . '</a>' 
 				: '<a href="#" class="disabled">' . $name . '</a>'
 			);
 

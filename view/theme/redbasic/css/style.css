@@ -1328,6 +1328,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .contactname {
 	padding-top: 2px;
 	font-weight: bold;
+	line-height: 1em;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1335,7 +1336,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 }
 
 .dropdown-sub-text {
-	font-size: 0.833em;
+	line-height: 1em;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: block;
@@ -1720,7 +1721,8 @@ img.mail-conv-sender-photo {
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
-.wall-item-ago {
+.wall-item-ago,
+.dropdown-sub-text {
 	color: #777;
 	font-size: 0.833em;
 }
@@ -1852,6 +1854,19 @@ nav .dropdown-menu {
 	border-top-left-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
+}
+
+.dropdown-menu-img-sm {
+	float: left;
+	width: 36px;
+	height: 36px;
+	margin-right: 5px;
+}
+
+.dropdown-menu-img-xs {
+	height: 18px;
+	width: 18px;
+	margin-right: 5px;
 }
 
 #usermenu-caret {

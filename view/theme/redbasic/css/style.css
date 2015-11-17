@@ -1856,7 +1856,18 @@ nav .dropdown-menu {
 	border-bottom-left-radius: $radiuspx;
 }
 
+.dropdown-menu-img-sm {
+	float: left;
+	width: 36px;
+	height: 36px;
+	margin-right: 5px;
+}
 
+.dropdown-menu-img-xs {
+	height: 18px;
+	width: 18px;
+	margin-right: 5px;
+}
 
 #usermenu-caret {
 	color: $nav_icon_colour;

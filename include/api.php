@@ -909,7 +909,7 @@ require_once('include/api_auth.php');
 	function red_item(&$a, $type) {
 
 		if (api_user() === false) {
-			logger('api_red_item_new: no user');
+			logger('api_red_item_full: no user');
 			return false;
 		}
 
@@ -2196,7 +2196,7 @@ require_once('include/api_auth.php');
 			}
 		}
 
-		$id = send_message($recipient['id'], $_POST['text'], $sub, $replyto);
+		$id = send_message(api_user(),$recipient['guid'], $_POST['text'], $sub, $replyto);
 
 		if ($id>-1) {
 			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));

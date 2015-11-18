@@ -958,10 +958,6 @@ nav .acpopup {
 	color: #FF0000;
 }
 
-.fc-state-highlight {
-	background: none repeat scroll 0% 0% #FCF8E3 !important;
-}
-
 #cboxOverlay {
 	z-index: 1050;
 }

@@ -1042,7 +1042,12 @@ function admin_page_plugins(&$a){
 		}
 
 		$admin_form = '';
-		if (is_array($a->plugins_admin) && in_array($plugin, $a->plugins_admin)){
+
+		$r = q("select * from addon where plugin_admin = 1 and name = '%s' limit 1",
+			dbesc($plugin)
+		);
+
+		if($r) {
 			@require_once("addon/$plugin/$plugin.php");
 			if(function_exists($plugin.'_plugin_admin')) {
 				$func = $plugin.'_plugin_admin';

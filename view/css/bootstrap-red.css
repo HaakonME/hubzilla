@@ -61,13 +61,6 @@ aside .nav-pills > li > a {
 	padding: 6px 10px;
 }
 
-.dropdown-menu img {
-	float: left;
-	width: 36px;
-	height: 36px;
-	margin-right: 5px;
-}
-
 .dropdown-menu li a {
 	overflow: hidden;
 	text-overflow: ellipsis;

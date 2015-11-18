@@ -1229,6 +1229,10 @@ function widget_album($args) {
 	$owner_uid = get_app()->profile_uid;
 	$sql_extra = permissions_sql($owner_uid);
 
+
+	if(! perm_is_allowed($owner_uid,get_observer_hash(),'view_storage'))
+		return '';
+
 	if($args['album'])
 		$album = $args['album'];
 	if($args['title'])

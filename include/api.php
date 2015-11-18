@@ -742,6 +742,8 @@ require_once('include/api_auth.php');
 		}
 		$user_info = api_get_user($a);
 
+//		logger('status_with_media: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
+
 		$_REQUEST['type'] = 'wall';
 		$_REQUEST['profile_uid'] = api_user();
 		$_REQUEST['api_source'] = true;

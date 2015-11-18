@@ -1238,6 +1238,23 @@ function widget_album($args) {
 	if($args['title'])
 		$title = $args['title'];
 
+	/** 
+	 * This may return incorrect permissions if you have multiple directories of the same name.
+	 * It is a limitation of the photo table using a name for a photo album instead of a folder hash
+	 */
+
+	if($album) {
+		$x = q("select hash from attach where filename = '%s' and uid = %d limit 1",
+			dbesc($album),
+			intval($owner_uid)
+		);
+		if($x) {
+			$y = attach_can_view_folder($owner_uid,get_observer_hash(),$x[0]['hash']);
+			if(! $y)
+				return '';
+		}
+	}
+
 	$order = 'DESC';
 
 	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN

@@ -31,7 +31,7 @@ function ACL(backend_url, preset) {
 			$("#acl-search").keypress(that.on_search);
 
 			/* startup! */
-			that.get(0,1000);
+			that.get(0,15000);
 			that.on_submit();
 	});
 }
@@ -60,7 +60,7 @@ ACL.prototype.on_submit = function() {
 ACL.prototype.search = function() {
 	var srcstr = $("#acl-search").val();
 	that.list_content.html("");
-	that.get(0, 1000, srcstr);
+	that.get(0, 15000, srcstr);
 };
 
 ACL.prototype.on_search = function(event) {

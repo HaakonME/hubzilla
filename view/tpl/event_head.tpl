@@ -1,5 +1,5 @@
 <link rel='stylesheet' type='text/css' href='{{$baseurl}}/library/fullcalendar/fullcalendar.css' />
-<script language="javascript" type="text/javascript" src="{{$baseurl}}/library/moment/min/moment.min.js"></script>
+<script language="javascript" type="text/javascript" src="{{$baseurl}}/library/moment/moment.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{$baseurl}}/library/fullcalendar/fullcalendar.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{$baseurl}}/library/fullcalendar/lang-all.js"></script>
 

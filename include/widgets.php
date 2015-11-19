@@ -671,7 +671,6 @@ function widget_eventsmenu($arr) {
 		'$day' => t('Day View'),
 		'$week' => t('Week View'),
 		'$month' => t('Month View'),
-		'$today' => t('Today'),
 		'$export' => t('Export'),
 		'$upload' => t('Import'),
 		'$submit' => t('Submit')

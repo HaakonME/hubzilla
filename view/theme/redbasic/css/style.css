@@ -847,6 +847,16 @@ nav .acpopup {
   cursor: pointer;
 }
 
+.fc-unthemed th,
+.fc-unthemed td,
+.fc-unthemed thead,
+.fc-unthemed tbody,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-row,
+.fc-unthemed .fc-popover {
+	border-color: #ccc !important;
+}
+
 .eventcal {
 	float: left;
 	font-size: 20px;

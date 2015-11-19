@@ -4,6 +4,5 @@
 		<li><a href="#" onclick="changeView('changeView', 'month'); return false;">{{$month}}</a></li>
 		<li><a href="#" onclick="changeView('changeView', 'agendaWeek'); return false;">{{$week}}</a></li>
 		<li><a href="#" onclick="changeView('changeView', 'agendaDay'); return false;">{{$day}}</a></li>
-		<li><a href="#" onclick="changeView('today', false); return false;">{{$today}}</a></li>
 	</ul>
 </div>

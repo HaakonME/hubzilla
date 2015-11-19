@@ -6,6 +6,7 @@
 
 			<div class="btn-group">
 				<button class="btn btn-default btn-xs" onclick="changeView('prev', false);" title="{{$prev}}"><i class="icon-backward"></i></button>
+				<button class="btn btn-default btn-xs" onclick="changeView('today', false);" title="{{$today}}"><i class="icon-bullseye"></i></button>
 				<button class="btn btn-default btn-xs" onclick="changeView('next', false);" title="{{$next}}"><i class="icon-forward"></i></button>
 			</div>
 		</div>

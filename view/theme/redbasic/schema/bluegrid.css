@@ -188,6 +188,10 @@ nav .badge:hover, nav .badge:focus {
     box-shadow: 0px 6px 12px rgba(45,48,92,.176);
 }
 
+.tags a {
+	color: inherit;
+}
+
 #profile-photo-wrapper {
     border: none;
 }
@@ -337,7 +341,7 @@ input {
     background-color: #FFF;
 }
 
-.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit, form#chat-form > input, div#adminpage > form > div.submit > input, input.sources-submit, input.contact-edit-submit, input#dbtn-submit, input#newchannel-submit-button {
+.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit, form#chat-form > input, div#adminpage > form > div.submit > input, input.sources-submit, input.contact-edit-submit, input#dbtn-submit, input#newchannel-submit-button, input#contacts-search-submit {
     background-color: #FFF;
     color: #43488A;
 	border-radius: 0px;
@@ -346,7 +350,7 @@ input {
     transition: all .3s ease-in-out;
 }
 
-.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus, form#chat-form > input:hover, form#chat-form > input:focus, div#adminpage > form > div.submit > input:hover, div#adminpage > form > div.submit > input:focus, input.sources-submit:hover, input.sources-submit:focus, input.contact-edit-submit:focus, input.contact-edit-submit:hover, input#dbtn-submit:hover, input#dbtn-submit:focus, input#newchannel-submit-button:hover, input#newchannel-submit-button:focus {
+.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus, form#chat-form > input:hover, form#chat-form > input:focus, div#adminpage > form > div.submit > input:hover, div#adminpage > form > div.submit > input:focus, input.sources-submit:hover, input.sources-submit:focus, input.contact-edit-submit:focus, input.contact-edit-submit:hover, input#dbtn-submit:hover, input#dbtn-submit:focus, input#newchannel-submit-button:hover, input#newchannel-submit-button:focus, input#contacts-search-submit:hover, input#contacts-search-submit:focus {
     border-color: #FFF;
     background-color: #43488A;
     color: #FFF;

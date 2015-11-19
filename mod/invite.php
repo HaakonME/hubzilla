@@ -51,7 +51,7 @@ function invite_post(&$a) {
 		}
 		
 		if($invonly && ($x || is_site_admin())) {
-			$code = autoname(8) . rand(1000,9999);
+			$code = autoname(8) . srand(1000,9999);
 			$nmessage = str_replace('$invite_code',$code,$message);
 
 			$r = q("INSERT INTO `register` (`hash`,`created`) VALUES ('%s', '%s') ",

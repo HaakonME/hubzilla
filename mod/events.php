@@ -530,7 +530,8 @@ function events_content(&$a) {
 			'$upload'   => t('Import'),
 			'$submit'   => t('Submit'),
 			'$prev'	    => t('Previous'),
-			'$next'     => t('Next'),			
+			'$next'     => t('Next'),
+			'$today'    => t('Today')
 		));
 		
 		if (x($_GET,'id')){ echo $o; killme(); }

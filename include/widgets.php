@@ -668,9 +668,9 @@ function widget_eventsmenu($arr) {
 
 	return replace_macros(get_markup_template('events_side.tpl'), array(
 		'$title' => t('Events Menu'),
-		'$day' => t('Day'),
-		'$week' => t('Week'),
-		'$month' => t('Month'),
+		'$day' => t('Day View'),
+		'$week' => t('Week View'),
+		'$month' => t('Month View'),
 		'$today' => t('Today'),
 		'$export' => t('Export'),
 		'$upload' => t('Import'),

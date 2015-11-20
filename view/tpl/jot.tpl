@@ -106,7 +106,7 @@
 				</button>
 				{{/if}}				
 				</div>
-				<div class="btn-group visible-xs visible-sm">
+				<div class="btn-group hidden-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
 					</button>

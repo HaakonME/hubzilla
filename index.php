@@ -36,6 +36,12 @@ require_once('include/dba/dba_driver.php');
 
 if(! $a->install) {
 	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, $a->install);
+	if(! $db->connected){
+		header('HTTP/1.0 520 Unknown Error');
+		// TODO: much friendlier error message
+		die("Database error, contact admin.");
+	}
+
 	unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
 
 	/**

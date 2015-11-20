@@ -651,6 +651,29 @@ function item_post(&$a) {
 		}
 	}
 
+	if($orig_post) {
+		// preserve original tags
+		$t = q("select * from term where oid = %d and otype = %d and uid = %d and type in ( %d, %d, %d )",
+			intval($orig_post['id']),
+			intval(TERM_OBJ_POST),
+			intval($profile_uid),
+			intval(TERM_UNKNOWN),
+			intval(TERM_FILE),
+			intval(TERM_COMMUNITYTAG)
+		);
+		if($t) {
+			foreach($t as $t1) {
+				$post_tags[] = array(
+					'uid'   => $profile_uid, 
+					'type'  => $t1['type'],
+					'otype' => TERM_OBJ_POST,
+					'term'  => $t1['term'],
+					'url'   => $t1['url'],
+				); 				
+			}
+		}
+	} 
+
 
 	$item_unseen = ((local_channel() != $profile_uid) ? 1 : 0);
 	$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);

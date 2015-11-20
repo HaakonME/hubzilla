@@ -1298,7 +1298,7 @@ function format_categories(&$item,$writeable) {
 function format_hashtags(&$item) {
 	$s = '';
 
-	$terms = get_terms_oftype($item['term'], TERM_HASHTAG);
+	$terms = get_terms_oftype($item['term'], array(TERM_HASHTAG,TERM_COMMUNITYTAG));
 	if($terms) {
 		foreach($terms as $t) {
 			$term = htmlspecialchars($t['term'], ENT_COMPAT, 'UTF-8', false) ;

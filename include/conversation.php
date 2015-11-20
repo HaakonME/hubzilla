@@ -674,7 +674,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$unverified = '';
 
 //				$tags=array();
-//				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
+//				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN,TERM_COMMUNITYTAG));
 //				if(count($terms))
 //					foreach($terms as $tag)
 //						$tags[] = format_term_for_display($tag);

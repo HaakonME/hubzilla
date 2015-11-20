@@ -1933,11 +1933,12 @@ function remove_community_tag($sender, $arr, $uid) {
 		return;
 	}
 
-	q("delete from term where uid = %d and oid = %d and otype = %d and type = %d and term = '%s' and url = '%s'",
+	q("delete from term where uid = %d and oid = %d and otype = %d and type in  ( %d, %d ) and term = '%s' and url = '%s'",
 		intval($uid),
 		intval($r[0]['id']),
 		intval(TERM_OBJ_POST),
 		intval(TERM_HASHTAG),
+		intval(TERM_COMMUNITYTAG),
 		dbesc($i['object']['title']),
 		dbesc(get_rel_link($i['object']['link'],'alternate'))
 	);

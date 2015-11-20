@@ -280,11 +280,11 @@ function events_content(&$a) {
 //		$plaintext = false;
 
 
-
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array(
 		'$baseurl' => $a->get_baseurl(),
-		'$editselect' => (($plaintext) ? 'none' : 'textareas')
+		'$editselect' => (($plaintext) ? 'none' : 'textareas'),
+		'$lang' => $a->language
 	));
 
 	$o ="";

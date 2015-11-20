@@ -423,6 +423,7 @@ define ( 'TERM_SAVEDSEARCH',  6 );
 define ( 'TERM_THING',        7 );
 define ( 'TERM_BOOKMARK',     8 );
 define ( 'TERM_HIERARCHY',    9 );
+define ( 'TERM_COMMUNITYTAG', 10 );
 
 define ( 'TERM_OBJ_POST',    1 );
 define ( 'TERM_OBJ_PHOTO',   2 );

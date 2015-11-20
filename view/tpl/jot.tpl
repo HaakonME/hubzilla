@@ -141,7 +141,7 @@
 			<div id="profile-rotator-wrapper">
 				<div id="profile-rotator"></div>
 			</div>
-			<div id="profile-jot-submit-right" class="btn-group pull-right">
+			<div id="profile-jot-submit-right" class="btn-group">
 				{{if $preview}}
 				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>

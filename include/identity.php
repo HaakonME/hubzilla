@@ -1689,3 +1689,14 @@ function get_channel_default_perms($uid) {
 
 	return 0;
 }
+
+
+function profiles_build_sync($channel_id) {
+	
+	$r = q("select * from profile where uid = %d",
+		intval($channel_id)
+	);
+	if($r) {
+		build_sync_packet($channel_id,array('profile' => $r));
+	}
+}

@@ -147,6 +147,8 @@
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}
+			</div>			
+			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" tabindex=3 name="button-submit" >{{$share}}</button>
 			</div>
 			<div id="profile-jot-perms-end"></div>

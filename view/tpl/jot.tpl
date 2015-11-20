@@ -59,7 +59,7 @@
 					</button>
 					{{/if}}
 				</div>
-				<div class="btn-group">
+				<div class="btn-group hidden-xs">
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="icon-link jot-icons"></i>
 					</button>					
@@ -81,7 +81,7 @@
 						<i class="icon-underline jot-icons"></i>
 					</button>					
 				</div>
-				<div class="btn-group hidden-xs">
+				<div class="btn-group">
 				{{if $feature_encrypt}}
 					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
 						<i id="profile-encrypt" class="icon-key jot-icons"></i>
@@ -116,10 +116,10 @@
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu dropdown-menu-right" role="menu">
-						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
+						<!--li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li-->
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
-						{{if $writefiles}}<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>{{/if}}
+						{{if $writefiles}}<!--li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li-->{{/if}}
 						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
 						<!--li class="visible-xs"><a href="#" onclick="jotVideoURL(); return false;"><i class="icon-facetime-video"></i>&nbsp;{{$video}}</a></li-->
 						<!--li class="visible-xs"><a href="#" onclick="jotAudioURL(); return false;"><i class="icon-volume-up"></i>&nbsp;{{$audio}}</a></li-->
@@ -136,7 +136,7 @@
 						<li class="visible-xs visible-sm"><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
 						{{/if}}
 						{{if $feature_voting}}
-						<li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>
+						<!--li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li-->
 						{{/if}}
 					</ul>
 				</div>
@@ -146,7 +146,7 @@
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $preview}}
-				<button class="btn btn-default btn-sm hidden-xs" onclick="preview_post();return false;" title="{{$preview}}">
+				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}

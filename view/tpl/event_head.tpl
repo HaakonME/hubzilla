@@ -38,7 +38,7 @@
 		$('#events-calendar').fullCalendar({
 			events: '{{$baseurl}}/events/json',
 			header: false,
-			//lang: 'de',	
+			lang: '{{$lang}}',
 			eventLimit: 3,
 			height: 'auto',
 

@@ -58,11 +58,11 @@
 						<i id="profile-voting" class="icon-check-empty jot-icons"></i>
 					</button>
 					{{/if}}
-				</div>
-				<div class="btn-group hidden-xs">
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="icon-link jot-icons"></i>
-					</button>					
+					</button>
+				</div>
+				<div class="btn-group hidden-xs">
 					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
 						<i class="icon-terminal jot-icons"></i>
 					</button>
@@ -111,6 +111,7 @@
 				</button>
 				{{/if}}				
 				</div>
+				<!--
 				<div class="btn-group visible-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
@@ -142,6 +143,7 @@
 						{{/if}}
 					</ul>
 				</div>
+				-->
 			</div>
 			<div id="profile-rotator-wrapper">
 				<div id="profile-rotator"></div>

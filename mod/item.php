@@ -703,6 +703,10 @@ function item_post(&$a) {
 		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
 	}
 	
+
+
+
+
 	$datarray['aid']            = $channel['channel_account_id'];
 	$datarray['uid']            = $profile_uid;
 	
@@ -780,6 +784,22 @@ function item_post(&$a) {
 	}
 	if($orig_post)
 		$datarray['edit'] = true;
+
+
+
+	if(feature_enabled($profile_uid,'suppress_duplicates')) {
+
+		$z = q("select created from item where uid = %d and body = '%s'",
+			intval($profile_uid),
+			dbesc($body)
+		);
+
+		if($z && $z[0]['created'] > datetime_convert('UTC','UTC', 'now - 2 minutes')) {
+			$datarray['cancel'] = 1;
+			notice( t('Duplicate post suppressed.') . EOL);
+			logger('Duplicate post. Faking plugin cancel.');
+		}
+	}
 
 	call_hooks('post_local',$datarray);
 

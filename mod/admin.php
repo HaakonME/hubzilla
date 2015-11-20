@@ -395,9 +395,10 @@ function admin_page_site(&$a) {
 	}
 
 	/* Banner */
+
 	$banner = get_config('system', 'banner');
-	if($banner == false) 
-		$banner = 'red';
+	if($banner === false) 
+		$banner = get_config('system','sitename');
 
 	$banner = htmlspecialchars($banner);
 

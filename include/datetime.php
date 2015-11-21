@@ -198,7 +198,7 @@ function timesel($format, $h, $m, $id='timepicker') {
  * @todo Once browser support is better this could probably be replaced with
  * native HTML5 date picker.
  */
-function datetimesel($format, $min, $max, $default, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '', $required = false) {
+function datetimesel($format, $min, $max, $default, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '', $required = false, $first_day = 0) {
 
 	$o = '';
 	$dateformat = '';
@@ -234,7 +234,7 @@ function datetimesel($format, $min, $max, $default, $id = 'datetimepicker', $pic
 	$o .= "<div class='date'><input type='text' placeholder='$readable_format' name='$id' id='$id' $input_text />";
 	$o .= (($required) ? '<span class="required" title="' . t('Required') . '" >*</span>' : '');
 	$o .= '</div>';
-	$o .= "<script type='text/javascript'>\$(function () {var picker = \$('#$id').datetimepicker({step:5,format:'$dateformat' $minjs $maxjs $pickers $defaultdatejs}); $extra_js})</script>";
+	$o .= "<script type='text/javascript'>\$(function () {var picker = \$('#$id').datetimepicker({step:5,timepickerScrollbar:false,format:'$dateformat' $minjs $maxjs $pickers $defaultdatejs,dayOfWeekStart:$first_day}); $extra_js})</script>";
 
 	return $o;
 }

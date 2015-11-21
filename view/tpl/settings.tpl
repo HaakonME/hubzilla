@@ -159,6 +159,7 @@
 							{{/foreach}}
 							</select>
 						</div>
+						{{include file="field_checkbox.tpl" field=$cal_first_day}}
 						<div class="settings-submit-wrapper" >
 							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 						</div>

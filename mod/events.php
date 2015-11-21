@@ -280,11 +280,14 @@ function events_content(&$a) {
 //		$plaintext = false;
 
 
+	$first_day = get_pconfig(local_channel(),'system','cal_first_day');
+
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array(
 		'$baseurl' => $a->get_baseurl(),
 		'$editselect' => (($plaintext) ? 'none' : 'textareas'),
-		'$lang' => $a->language
+		'$lang' => $a->language,
+		'$first_day' => (($first_day) ? $first_day : 0)
 	));
 
 	$o ="";

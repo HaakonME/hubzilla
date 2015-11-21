@@ -662,6 +662,20 @@ function widget_conversations($arr) {
 	return $o;
 }
 
+function widget_eventsmenu($arr) {
+	if (! local_channel())
+		return;
+
+	return replace_macros(get_markup_template('events_side.tpl'), array(
+		'$title' => t('Events Menu'),
+		'$day' => t('Day View'),
+		'$week' => t('Week View'),
+		'$month' => t('Month View'),
+		'$export' => t('Export'),
+		'$upload' => t('Import'),
+		'$submit' => t('Submit')
+	));
+}
 
 function widget_design_tools($arr) {
 	$a = get_app();

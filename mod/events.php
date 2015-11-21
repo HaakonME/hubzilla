@@ -280,21 +280,16 @@ function events_content(&$a) {
 //		$plaintext = false;
 
 
-
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array(
 		'$baseurl' => $a->get_baseurl(),
-		'$editselect' => (($plaintext) ? 'none' : 'textareas')
+		'$editselect' => (($plaintext) ? 'none' : 'textareas'),
+		'$lang' => $a->language
 	));
 
 	$o ="";
-	// tabs
 
 	$channel = $a->get_channel();
-
-	$tabs = profile_tabs($a, True, $channel['channel_address']);	
-
-
 
 	$mode = 'view';
 	$y = 0;
@@ -378,10 +373,10 @@ function events_content(&$a) {
 
 
 		if (argv(1) === 'json'){
-			if (x($_GET,'start'))	$start = date("Y-m-d h:i:s", $_GET['start']);
-			if (x($_GET,'end'))	$finish = date("Y-m-d h:i:s", $_GET['end']);
+			if (x($_GET,'start'))	$start = $_GET['start'];
+			if (x($_GET,'end'))	$finish = $_GET['end'];
 		}
-	
+
 		$start  = datetime_convert('UTC','UTC',$start);
 		$finish = datetime_convert('UTC','UTC',$finish);
 
@@ -413,16 +408,19 @@ function events_content(&$a) {
 
 			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
                               from event left join item on event_hash = resource_id 
-				where resource_type = 'event' and event.uid = %d $ignored
-				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
-				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
+				where resource_type = 'event' and event.uid = %d $ignored 
+				AND (( adjust = 0 AND ( finish >= '%s' or nofinish = 1 ) AND start <= '%s' ) 
+				OR  (  adjust = 1 AND ( finish >= '%s' or nofinish = 1 ) AND start <= '%s' )) ",
 				intval(local_channel()),
 				dbesc($start),
 				dbesc($finish),
 				dbesc($adjust_start),
 				dbesc($adjust_finish)
 			);
+
 		}
+
+
 
 
 		$links = array();
@@ -500,7 +498,7 @@ function events_content(&$a) {
 
 			}
 		}
-		 
+		
 		if($export) {
 			header('Content-type: text/calendar');
 			header('content-disposition: attachment; filename="' . t('calendar') . '-' . $channel['channel_address'] . '.ics"' );
@@ -522,16 +520,18 @@ function events_content(&$a) {
 
 		$o = replace_macros($tpl, array(
 			'$baseurl'	=> $a->get_baseurl(),
-			'$tabs'		=> $tabs,
 			'$title'	=> t('Events'),
-			'$new_event'=> array($a->get_baseurl().'/events/new',t('Create New Event'),'',''),
+			'$new_event'=> array($a->get_baseurl().'/events/new',t('New Event'),'',''),
 			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
 			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
 			'$export'   => array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),
 			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
 			'$upload'   => t('Import'),
-			'$submit'   => t('Submit')			
+			'$submit'   => t('Submit'),
+			'$prev'	    => t('Previous'),
+			'$next'     => t('Next'),
+			'$today'    => t('Today')
 		));
 		
 		if (x($_GET,'id')){ echo $o; killme(); }

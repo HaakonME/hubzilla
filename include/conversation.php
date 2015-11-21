@@ -674,7 +674,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$unverified = '';
 
 //				$tags=array();
-//				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
+//				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN,TERM_COMMUNITYTAG));
 //				if(count($terms))
 //					foreach($terms as $tag)
 //						$tags[] = format_term_for_display($tag);
@@ -944,7 +944,7 @@ function item_photo_menu($item){
 	$menu = Array(
 		t("View Source") => $vsrc_link,
 		t("Follow Thread") => $sub_link,
-		t("Stop Following") => $unsub_link,
+		t("Unfollow Thread") => $unsub_link,
 		t("View Status") => $status_link,
 		t("View Profile") => $profile_link,
 		t("View Photos") => $photos_link,

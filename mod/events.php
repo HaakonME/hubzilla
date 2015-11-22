@@ -280,11 +280,15 @@ function events_content(&$a) {
 //		$plaintext = false;
 
 
+	$first_day = get_pconfig(local_channel(),'system','cal_first_day');
+	$first_day = (($first_day) ? $first_day : 0);
+
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array(
 		'$baseurl' => $a->get_baseurl(),
 		'$editselect' => (($plaintext) ? 'none' : 'textareas'),
-		'$lang' => $a->language
+		'$lang' => $a->language,
+		'$first_day' => $first_day
 	));
 
 	$o ="";
@@ -689,11 +693,11 @@ function events_content(&$a) {
 			'$required' => '<span class="required" title="' . t('Required') . '">*</span>',
 			'$ModalCANCEL' => t('Cancel'),
 			'$ModalOK' => t('OK'),
-			'$s_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$syear+5),DateTime::createFromFormat('Y-m-d H:i',"$syear-$smonth-$sday $shour:$sminute"),'start_text',true,true,'','',true),
+			'$s_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$syear+5),DateTime::createFromFormat('Y-m-d H:i',"$syear-$smonth-$sday $shour:$sminute"),'start_text',true,true,'','',true,$first_day),
 			'$n_text' => t('Finish date/time is not known or not relevant'),
 			'$n_checked' => $n_checked,
 			'$f_text' => t('Event Finishes:'),
-			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"),'finish_text',true,true,'start_text'),
+			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"),'finish_text',true,true,'start_text','',false,$first_day),
 			'$adjust' => array('adjust', t('Adjust for viewer timezone'), $a_checked, t('Important for events that happen in a particular place. Not practical for global holidays.'),),
 			'$a_text' => t('Adjust for viewer timezone'),
 			'$d_text' => t('Description:'), 

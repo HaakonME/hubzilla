@@ -39,6 +39,8 @@
 			events: '{{$baseurl}}/events/json',
 			header: false,
 			lang: '{{$lang}}',
+			firstDay: {{$first_day}},
+
 			eventLimit: 3,
 			height: 'auto',
 

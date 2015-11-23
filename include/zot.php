@@ -3950,6 +3950,10 @@ function delivery_report_is_storable($dr) {
 	if(! $c)
 		return false;
 
+
+
+
+
 	// is the recipient one of our connections, or do we want to store every report? 
 
 	$r = explode(' ', $dr['recipient']);
@@ -3957,6 +3961,14 @@ function delivery_report_is_storable($dr) {
 	$pcf = get_pconfig($c[0]['channel_id'],'system','dreport_store_all');
 	if($pcf)
 		return true;
+
+	// We always add ourself as a recipient to private and relayed posts
+	// So if a remote site says they can't find us, that's no big surprise
+	// and just creates a lot of extra report noise
+ 
+	if(($dr['location'] !== z_root()) && ($dr['sender'] === $rxchan) && ($dr['status'] === 'recipient_not_found'))
+		return false;
+
 
 	$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 		dbesc($rxchan),

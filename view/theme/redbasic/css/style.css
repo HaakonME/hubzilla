@@ -866,22 +866,6 @@ nav .acpopup {
 	margin-top: 15px;
 }
 
-#event-share-checkbox {
-	float: left;
-	margin-top: 10px;
-}
-
-#event-share-text {
-	float: left;
-	margin-top: 10px;
-	margin-left: 5px;
-}
-
-#event-share-break {
-	clear: both;
-	margin-bottom: 10px;
-}
-
 .event-wrapper {
 	width: 400px;
 	height: auto;
@@ -959,14 +943,6 @@ nav .acpopup {
 	clear: both;
 }
 
- 
-.calendar {
-	font-family: Courier, monospace;
-}
-.today {
-	font-weight: bold;
-	color: #FF0000;
-}
 
 #cboxOverlay {
 	z-index: 1050;

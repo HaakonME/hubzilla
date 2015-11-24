@@ -23,84 +23,79 @@
 		{{if $catsenabled}}
 		<div id="event-category-text"><b>{{$c_text}}</b></div>
 		<div id="events-category-wrap">
-			<input name="category" id="event-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" class="event-cats form-control" data-role="cat-tagsinput" />
+			<input name="category" id="event-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="cat-tagsinput" />
 		</div>
 		{{/if}}
 
 		<div class="form-group">
 			<div id="event-desc-text"><b>{{$d_text}}</b></div>
-
-			<textarea id="comment-edit-text-desc" class="comment-edit-text-full" name="desc" >{{$d_orig}}</textarea>
-
+			<textarea id="comment-edit-text-desc" class="form-control" name="desc" >{{$d_orig}}</textarea>
 			<div id="comment-tools-desc" class="comment-tools" style="display: block;" >
-				<div id="comment-edit-bb-desc" class="btn-toolbar pull-left">
+				<div id="comment-edit-bb-desc" class="btn-toolbar">
 					<div class='btn-group'>
-						<button class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', 'desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('none','b', 'desc');">
 							<i class="icon-bold comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('{{$comment}}','i', 'desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('none','i', 'desc');">
 							<i class="icon-italic comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('{{$comment}}','u', 'desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('none','u', 'desc');">
 							<i class="icon-underline comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('{{$comment}}','quote','desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('none','quote','desc');">
 							<i class="icon-quote-left comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', 'desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('none','code', 'desc');">
 							<i class="icon-terminal comment-icon"></i>
 						</button>
 					</div>
 					<div class='btn-group'>
-						<button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', 'desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('none','img', 'desc');">
 							<i class="icon-camera comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('{{$comment}}','url', 'desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('none','url', 'desc');">
 							<i class="icon-link comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', 'desc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('none','video', 'desc');">
 							<i class="icon-facetime-video comment-icon"></i>
 						</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="clear"></div>
 		<div class="form-group">
 			<div id="event-location-text"><b>{{$l_text}}</b></div>
-
-			<textarea id="comment-edit-text-loc" class="comment-edit-text-full" name="location">{{$l_orig}}</textarea>
-
+			<textarea id="comment-edit-text-loc" class="form-control" name="location">{{$l_orig}}</textarea>
 			<div id="comment-tools-loc" class="comment-tools" style="display: block;" >
-				<div id="comment-edit-bb-loc" class="btn-toolbar pull-left">
+				<div id="comment-edit-bb-loc" class="btn-toolbar">
 					<div class='btn-group'>
-						<button class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', 'loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('none','b', 'loc');">
 							<i class="icon-bold comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('{{$comment}}','i', 'loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('none','i', 'loc');">
 							<i class="icon-italic comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('{{$comment}}','u', 'loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('none','u', 'loc');">
 							<i class="icon-underline comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('{{$comment}}','quote','loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('none','quote','loc');">
 							<i class="icon-quote-left comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', 'loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('none','code', 'loc');">
 							<i class="icon-terminal comment-icon"></i>
 						</button>
 					</div>
 					<div class='btn-group'>
-						<button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', 'loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('none','img', 'loc');">
 							<i class="icon-camera comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('{{$comment}}','url', 'loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('none','url', 'loc');">
 							<i class="icon-link comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', 'loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('none','video', 'loc');">
 							<i class="icon-facetime-video comment-icon"></i>
 						</button>
-						<button class="btn btn-default btn-xs" title="{{$mapper}}" onclick="insertbbcomment('{{$comment}}','map','loc'); return false;">
+						<button type="button" class="btn btn-default btn-xs" title="{{$mapper}}" onclick="insertbbcomment('none','map','loc');">
 							<i class="icon-globe comment-icon"></i>
 						</button>
 					</div>
@@ -109,8 +104,6 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="clear"></div>
 
 	{{if ! $eid}}
 	{{include file="field_checkbox.tpl" field=$share}}
@@ -121,7 +114,7 @@
 
 	<button type="button" class="btn btn-default" onclick="openClose('advanced');">{{$advanced}}</button>
 	<div class="btn-group pull-right">
-		<button id="event-edit-preview-btn" class="btn btn-default" type="button" title="{{$preview}}" onclick="doEventPreview(); return false;"><i class="icon-eye-open" ></i></button>
+		<button id="event-edit-preview-btn" class="btn btn-default" type="button" title="{{$preview}}" onclick="doEventPreview();"><i class="icon-eye-open" ></i></button>
 		{{if ! $eid}}
 		<button id="dbtn-acl" class="btn btn-default" type="button" data-toggle="modal" data-target="#aclModal" title="{{$permissions}}"><i id="jot-perms-icon"></i></button>
 		{{/if}}

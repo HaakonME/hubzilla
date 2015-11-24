@@ -306,7 +306,7 @@ function events_content(&$a) {
 			$y = intval(argv(1));
 			$m = intval(argv(2));
 		}
-		if(argc() > 1) {
+		if(argc() <= 2) {
 			$mode = 'view';
 			$event_id = argv(1);
 		}

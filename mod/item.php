@@ -810,7 +810,7 @@ function item_post(&$a) {
 
 
 
-	if(feature_enabled($profile_uid,'suppress_duplicates')) {
+	if(feature_enabled($profile_uid,'suppress_duplicates') && (! $orig_post)) {
 
 		$z = q("select created from item where uid = %d and body = '%s'",
 			intval($profile_uid),

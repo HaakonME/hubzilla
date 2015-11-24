@@ -178,7 +178,6 @@ a.wall-item-name-link {
 /* comment_item */
 
 .comment-edit-text-empty, .comment-edit-text-full {
-	float: left;
 	width: 100%;
 }
 

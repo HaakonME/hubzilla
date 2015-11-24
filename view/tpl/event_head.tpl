@@ -110,22 +110,13 @@
 		var view = $('#events-calendar').fullCalendar('getView');
 		$('#title').text(view.title);
 
-
-
-	});
-</script>
-
-
-<script>
-	$(document).ready(function() { 
-
 		$('#id_share').change(function() {
 
 			if ($('#id_share').is(':checked')) { 
-				$('#event-permissions-button').show();
+				$('#dbtn-acl').show();
 			}
 			else {
-				$('#event-permissions-button').hide();
+				$('#dbtn-acl').hide();
 			}
 		}).trigger('change');
 

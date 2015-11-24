@@ -25,3 +25,5 @@ Abstraction of nomadic identity so that sending/receiving to/from singleton netw
 CalDAV/CardDAV
 
 E-Commerce
+
+Auto Updater

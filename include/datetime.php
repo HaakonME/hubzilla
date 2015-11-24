@@ -153,7 +153,7 @@ function dob($dob) {
  *  id and name of datetimepicker (defaults to "datetimepicker")
  */
 function datesel($format, $min, $max, $default, $id = 'datepicker') {
-	return datetimesel($format, $min, $max, $default, $id,true, false, '', '');
+	return datetimesel($format, $min, $max, $default, '', $id,true, false, '', '');
 }
 
 /**
@@ -168,7 +168,7 @@ function datesel($format, $min, $max, $default, $id = 'datepicker') {
  *  id and name of datetimepicker (defaults to "timepicker")
  */
 function timesel($format, $h, $m, $id='timepicker') {
-	return datetimesel($format,new DateTime(),new DateTime(),new DateTime("$h:$m"),$id,false,true);
+	return datetimesel($format,new DateTime(),new DateTime(),new DateTime("$h:$m"),'', $id,false,true);
 }
 
 /**

@@ -198,7 +198,7 @@ function timesel($format, $h, $m, $id='timepicker') {
  * @todo Once browser support is better this could probably be replaced with
  * native HTML5 date picker.
  */
-function datetimesel($format, $min, $max, $default = 'bla', $label, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '', $required = false, $first_day = 0) {
+function datetimesel($format, $min, $max, $default, $label, $id = 'datetimepicker', $pickdate = true, $picktime = true, $minfrom = '', $maxfrom = '', $required = false, $first_day = 0) {
 
 	$o = '';
 	$dateformat = '';

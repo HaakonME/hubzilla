@@ -56,7 +56,10 @@
 			},
 			loading: function(isLoading, view) {
 				if(!isLoading) {
-					$('td.fc-day').dblclick(function() { window.location.href='/events/new?start='+$(this).data('date'); });
+					$('td.fc-day').dblclick(function() {
+						openMenu('form');
+						//window.location.href='/events/new?start='+$(this).data('date');
+					});
 				}
 			},
 

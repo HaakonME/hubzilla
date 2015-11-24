@@ -372,18 +372,26 @@ function events_content(&$a) {
 		if(x($orig_event))
 			$tz = (($orig_event['adjust']) ? date_default_timezone_get() : 'UTC');
 
-		$syear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'Y') : '00');
-		$smonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'm') : '00');
-		$sday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'd') : '00');
+//		$syear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'Y') : '0000');
+//		$smonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'm') : '00');
+//		$sday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'd') : '00');
+
+		$syear = datetime_convert('UTC', $tz, $sdt, 'Y');
+		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
+		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
 
 		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : '00');
 		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : '00');
 		$stext = datetime_convert('UTC',$tz,$sdt);
 		$stext = substr($stext,0,14) . "00:00";
 
-		$fyear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'Y') : '00');
-		$fmonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'm') : '00');
-		$fday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'd') : '00');
+//		$fyear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'Y') : '0000');
+//		$fmonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'm') : '00');
+//		$fday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'd') : '00');
+
+		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
+		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
+		$fday = datetime_convert('UTC', $tz, $fdt, 'd');
 
 		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : '00');
 		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : '00');

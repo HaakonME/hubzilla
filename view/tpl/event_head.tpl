@@ -97,7 +97,7 @@
 				}
 			}
 			
-		})
+		});
 		
 		// center on date
 		var args=location.href.replace(baseurl,"").split("/");
@@ -113,6 +113,20 @@
 		var view = $('#events-calendar').fullCalendar('getView');
 		$('#title').text(view.title);
 
+		// shift the finish time date on start time date change automagically
+		var origsval = $('#id_start_text').val();
+		$('#id_start_text').change(function() {
+			var origfval = $('#id_finish_text').val();
+			if(origfval) {
+				var sval = $('#id_start_text').val();
+				var diff = moment(sval).diff(origsval);
+				var fval = moment(origfval).add(diff, 'millisecond').format("YYYY-MM-DD HH:mm");
+				$('#id_finish_text').val(fval);
+				origsval = sval;
+			}
+		});
+
+		// ACL
 		$('#id_share').change(function() {
 
 			if ($('#id_share').is(':checked')) { 
@@ -122,7 +136,6 @@
 				$('#dbtn-acl').hide();
 			}
 		}).trigger('change');
-
 
 		$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 			var selstr;

@@ -245,3 +245,19 @@ a.wall-item-name-link {
 	color: #FF0000;
 	font-size: 1em !important;
 }
+
+/* event item */
+
+.event-title h3 {
+	font-weight: bold;
+}
+
+.event-title,
+.event-end,
+.event-description {
+	padding-bottom: 10px;
+}
+
+.event-label {
+	font-weight: bold;
+}

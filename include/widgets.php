@@ -7,6 +7,7 @@
 
 require_once('include/dir_fns.php');
 require_once('include/contact_widgets.php');
+require_once('include/attach.php');
 
 
 function widget_profile($args) {
@@ -661,6 +662,20 @@ function widget_conversations($arr) {
 	return $o;
 }
 
+function widget_eventsmenu($arr) {
+	if (! local_channel())
+		return;
+
+	return replace_macros(get_markup_template('events_side.tpl'), array(
+		'$title' => t('Events Menu'),
+		'$day' => t('Day View'),
+		'$week' => t('Week View'),
+		'$month' => t('Month View'),
+		'$export' => t('Export'),
+		'$upload' => t('Import'),
+		'$submit' => t('Submit')
+	));
+}
 
 function widget_design_tools($arr) {
 	$a = get_app();
@@ -1221,3 +1236,102 @@ function widget_admin($arr) {
 	return $o;
 
 }
+
+
+
+function widget_album($args) {
+
+	$owner_uid = get_app()->profile_uid;
+	$sql_extra = permissions_sql($owner_uid);
+
+
+	if(! perm_is_allowed($owner_uid,get_observer_hash(),'view_storage'))
+		return '';
+
+	if($args['album'])
+		$album = $args['album'];
+	if($args['title'])
+		$title = $args['title'];
+
+	/** 
+	 * This may return incorrect permissions if you have multiple directories of the same name.
+	 * It is a limitation of the photo table using a name for a photo album instead of a folder hash
+	 */
+
+	if($album) {
+		$x = q("select hash from attach where filename = '%s' and uid = %d limit 1",
+			dbesc($album),
+			intval($owner_uid)
+		);
+		if($x) {
+			$y = attach_can_view_folder($owner_uid,get_observer_hash(),$x[0]['hash']);
+			if(! $y)
+				return '';
+		}
+	}
+
+	$order = 'DESC';
+
+	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
+		(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
+		ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
+		ORDER BY created $order ",
+		intval($owner_uid),
+		dbesc($album),
+		intval(PHOTO_NORMAL),
+		intval(PHOTO_PROFILE)
+	);
+		
+	//edit album name
+	$album_edit = null;
+
+
+	$photos = array();
+	if($r) {
+		$twist = 'rotright';
+		foreach($r as $rr) {
+
+			if($twist == 'rotright')
+				$twist = 'rotleft';
+			else
+				$twist = 'rotright';
+				
+			$ext = $phototypes[$rr['type']];
+
+			$imgalt_e = $rr['filename'];
+			$desc_e = $rr['description'];
+
+			$imagelink = (z_root() . '/photos/' . get_app()->profile['channel_address'] . '/image/' . $rr['resource_id']);
+
+
+			$photos[] = array(
+				'id' => $rr['id'],
+				'twist' => ' ' . $twist . rand(2,4),
+				'link' => $imagelink,
+				'title' => t('View Photo'),
+				'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
+				'alt' => $imgalt_e,
+				'desc'=> $desc_e,
+				'ext' => $ext,
+				'hash'=> $rr['resource_id'],
+				'unknown' => t('Unknown')
+			);
+		}
+	}
+
+
+	$tpl = get_markup_template('photo_album.tpl');
+	$o .= replace_macros($tpl, array(
+		'$photos' => $photos,
+		'$album' => (($title) ? $title : $album),
+		'$album_edit' => array(t('Edit Album'), $album_edit),
+		'$can_post' => false,
+		'$upload' => array(t('Upload'), z_root() . '/photos/' . get_app()->profile['channel_address'] . '/upload/' . bin2hex($album)),
+		'$order' => false,
+		'$upload_form' => $upload_form,
+		'$usage' => $usage_message
+	));
+
+	return $o;
+}
+

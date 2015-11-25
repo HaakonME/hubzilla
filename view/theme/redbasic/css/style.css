@@ -847,6 +847,16 @@ nav .acpopup {
   cursor: pointer;
 }
 
+.fc-unthemed th,
+.fc-unthemed td,
+.fc-unthemed thead,
+.fc-unthemed tbody,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-row,
+.fc-unthemed .fc-popover {
+	border-color: #ccc !important;
+}
+
 .eventcal {
 	float: left;
 	font-size: 20px;
@@ -854,22 +864,6 @@ nav .acpopup {
 
 #event-summary-text {
 	margin-top: 15px;
-}
-
-#event-share-checkbox {
-	float: left;
-	margin-top: 10px;
-}
-
-#event-share-text {
-	float: left;
-	margin-top: 10px;
-	margin-left: 5px;
-}
-
-#event-share-break {
-	clear: both;
-	margin-bottom: 10px;
 }
 
 .event-wrapper {
@@ -949,18 +943,6 @@ nav .acpopup {
 	clear: both;
 }
 
- 
-.calendar {
-	font-family: Courier, monospace;
-}
-.today {
-	font-weight: bold;
-	color: #FF0000;
-}
-
-.fc-state-highlight {
-	background: none repeat scroll 0% 0% #FCF8E3 !important;
-}
 
 #cboxOverlay {
 	z-index: 1050;
@@ -1115,31 +1097,6 @@ nav .acpopup {
 
 .required {
 	color: #ff0000;
-}
-
-
-#event-start-text, #event-finish-text {
-	margin-top: 10px;
-	margin-bottom: 5px;
-}
-
-#event-nofinish-checkbox, #event-nofinish-text, #event-adjust-checkbox, #event-adjust-text {
-	float: left;
-}
-#event-datetime-break {
-	margin-bottom: 10px;
-}
-
-#event-nofinish-break, #event-adjust-break {
-	clear: both;
-}
-
-#event-desc-text, #event-location-text {
-	margin-top: 15px;
-	margin-bottom: 5px;
-}
-#event-submit {
-	margin-top: 10px;
 }
 
 #item-delete-selected {
@@ -1328,6 +1285,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .contactname {
 	padding-top: 2px;
 	font-weight: bold;
+	line-height: 1em;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1335,7 +1293,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 }
 
 .dropdown-sub-text {
-	font-size: 0.833em;
+	line-height: 1em;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: block;
@@ -1380,6 +1338,10 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
+}
+
+#jotnets-wrapper, #jotnets-collapse {
+	margin-bottom: 18px;
 }
 
 .acl-list-item {
@@ -1716,7 +1678,8 @@ img.mail-conv-sender-photo {
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
-.wall-item-ago {
+.wall-item-ago,
+.dropdown-sub-text {
 	color: #777;
 	font-size: 0.833em;
 }
@@ -1848,6 +1811,19 @@ nav .dropdown-menu {
 	border-top-left-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
+}
+
+.dropdown-menu-img-sm {
+	float: left;
+	width: 36px;
+	height: 36px;
+	margin-right: 5px;
+}
+
+.dropdown-menu-img-xs {
+	height: 18px;
+	width: 18px;
+	margin-right: 5px;
 }
 
 #usermenu-caret {
@@ -2310,4 +2286,8 @@ nav .badge.mail-update:hover {
 
 .help-searchlist a {
 	font-size: 130%;
+}
+
+.response-list ul {
+	list-style-type: none;
 }

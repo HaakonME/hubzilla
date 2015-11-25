@@ -40,9 +40,9 @@ var data = {
   "unmarkedIcon": baseurl+"/images/hz-bookmark-32.png",
 
   // should be available for display purposes
-  "description": '$description',
-  "author": '$author',
-  "homepageURL": '$homepage',
+  "description": "$description",
+  "author": "$author",
+  "homepageURL": "$homepage",
 
   // optional
   "version": "1.0"
@@ -56,7 +56,7 @@ function activate(node) {
 }
 </script>
 
-<button onclick="activate(this)" title="activate the demo provider" class="btn btn-primary">$activate</button>
+<button onclick="activate(this)" title="$activate" class="btn btn-primary">$activate</button>
 
 EOT;
 

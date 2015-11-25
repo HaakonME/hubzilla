@@ -363,6 +363,27 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	}
 
 	/**
+	 * @brief delete directory
+	 */
+
+	public function delete() {
+		logger('delete file ' . basename($this->red_path), LOGGER_DEBUG);
+
+		if ((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage'))) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+		}
+
+		if ($this->auth->owner_id !== $this->auth->channel_id) {
+			if (($this->auth->observer !== $this->data['creator']) || intval($this->data['is_dir'])) {
+				throw new DAV\Exception\Forbidden('Permission denied.');
+			}
+		}
+
+		attach_delete($this->auth->owner_id, $this->folder_hash);
+	}
+
+
+	/**
 	 * @brief Checks if a child exists.
 	 *
 	 * @param string $name

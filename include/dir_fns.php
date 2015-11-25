@@ -15,6 +15,19 @@ function find_upstream_directory($dirmode) {
 	global $DIRECTORY_FALLBACK_SERVERS;
 
 	$preferred = get_config('system','directory_server');
+
+	// Thwart attempts to use a private directory
+
+	if(($preferred) && ($preferred != z_root())) {
+		$r = q("select * from site where site_url = '%s' limit 1",
+			dbesc($preferred)
+		);
+		if(($r) && ($r[0]['site_flags'] & DIRECTORY_MODE_STADALONE)) {
+			$preferred = '';
+		}		
+	}
+
+
 	if (! $preferred) {
 
 		/*

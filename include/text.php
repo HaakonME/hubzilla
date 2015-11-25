@@ -94,6 +94,8 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return escape_tags($s);
 	if($type == 'text/plain')
 		return escape_tags($s);
+	if($type == 'application/x-pdl')
+		return escape_tags($s);
 
 	$a = get_app();
 	if($a->is_sys) {
@@ -529,11 +531,12 @@ function attribute_contains($attr, $s) {
  * LOGGER_DATA and LOGGER_ALL.
  *
  * Since PHP5.4 we get the file, function and line automatically where the logger
- * was caleld, so no need to add it to the message anymore.
+ * was called, so no need to add it to the message anymore.
  *
  * @param string $msg Message to log
  * @param int $level A log level.
  */
+
 function logger($msg, $level = 0) {
 	// turn off logger in install mode
 	global $a;
@@ -555,7 +558,13 @@ function logger($msg, $level = 0) {
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 	}
 
-	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL, FILE_APPEND);
+	$s = datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL;
+	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'logged' => false);
+
+	call_hooks('logger',$pluginfo);
+
+	if(! $pluginfo['logged'])
+		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
 }
 
 /**
@@ -872,15 +881,17 @@ function searchbox($s,$id='search-box',$url='/search',$save = false) {
 	));
 }
 
+function valid_email_regex($x){
+	if(preg_match('/^[_a-zA-Z0-9\-\+]+(\.[_a-zA-Z0-9\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
+		return true;
+	return false;
+}
 
 function valid_email($x){
 	if(get_config('system','disable_email_validation'))
 		return true;
 
-	if(preg_match('/^[_a-zA-Z0-9\-\+]+(\.[_a-zA-Z0-9\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
-		return true;
-
-	return false;
+	return valid_email_regex($x);
 }
 
 /**
@@ -1287,7 +1298,7 @@ function format_categories(&$item,$writeable) {
 function format_hashtags(&$item) {
 	$s = '';
 
-	$terms = get_terms_oftype($item['term'], TERM_HASHTAG);
+	$terms = get_terms_oftype($item['term'], array(TERM_HASHTAG,TERM_COMMUNITYTAG));
 	if($terms) {
 		foreach($terms as $t) {
 			$term = htmlspecialchars($t['term'], ENT_COMPAT, 'UTF-8', false) ;
@@ -1392,13 +1403,13 @@ function prepare_body(&$item,$attach = false) {
 
 		// if original photo width is <= 640px prepend it to item body
 		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {
-			$s = '<div class="inline-photo-item-wrapper"><a href="' . zid(rawurldecode($object['id'])) . '" target="_newwin"><img class="inline-photo-item" style="max-width:' . $object['link'][0]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][0]['href'])) . '"></a></div>' . $s;
+			$s = '<div class="inline-photo-item-wrapper"><a href="' . zid(rawurldecode($object['id'])) . '" target="_blank"><img class="inline-photo-item" style="max-width:' . $object['link'][0]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][0]['href'])) . '"></a></div>' . $s;
 		}
 
 		// if original photo width is > 640px make it a cover photo
 		if($object['link'][0]['width'] && $object['link'][0]['width'] > 640) {
 			$scale = ((($object['link'][1]['width'] == 1024) || ($object['link'][1]['height'] == 1024)) ? 1 : 0);
-			$photo = '<a href="' . zid(rawurldecode($object['id'])) . '" target="_newwin"><img style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a>';
+			$photo = '<a href="' . zid(rawurldecode($object['id'])) . '" target="_blank"><img style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a>';
 		}
 	}
 
@@ -1515,6 +1526,11 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 			$s = Markdown($text);
 			break;
 
+
+		case 'application/x-pdl';
+			$s = escape_tags($text);
+			break;
+		
 		// No security checking is done here at display time - so we need to verify 
 		// that the author is allowed to use PHP before storing. We also cannot allow 
 		// importation of PHP text bodies from other sites. Therefore this content 
@@ -1679,7 +1695,8 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'text/bbcode',
 		'text/html',
 		'text/markdown',
-		'text/plain'
+		'text/plain',
+		'application/x-pdl'
 	);
 
 	$a = get_app();

@@ -320,6 +320,29 @@ function xml_status($st, $message = '') {
 	killme();
 }
 
+
+
+/**
+ * @brief Send HTTP status header 
+ *
+ * @param int $val
+ *    integer HTTP status result value
+ * @param string $msg
+ *    optional message
+ * @returns nil
+ */
+function http_status($val, $msg = '') {
+	if ($val >= 400)
+		$msg = (($msg) ? $msg : 'Error');
+	if ($val >= 200 && $val < 300)
+		$msg = (($msg) ? $msg : 'OK');
+
+	logger('http_status_exit ' . $val . ' ' . $msg);	
+	header($_SERVER['SERVER_PROTOCOL'] . ' ' . $val . ' ' . $msg);
+}
+
+
+
 /**
  * @brief Send HTTP status header and exit.
  *
@@ -330,16 +353,10 @@ function xml_status($st, $message = '') {
  * @returns (does not return, process is terminated)
  */
 function http_status_exit($val, $msg = '') {
-
-	if ($val >= 400)
-		$msg = (($msg) ? $msg : 'Error');
-	if ($val >= 200 && $val < 300)
-		$msg = (($msg) ? $msg : 'OK');
-
-	logger('http_status_exit ' . $val . ' ' . $msg);	
-	header($_SERVER['SERVER_PROTOCOL'] . ' ' . $val . ' ' . $msg);
+	http_status($val, $msg);
 	killme();
 }
+
 
 
 // convert an XML document to a normalised, case-corrected array
@@ -522,28 +539,6 @@ function allowed_email($email) {
 		$return = true;	
 	}
 	return $return;
-}
-
-
-
-function avatar_img($email) {
-
-	$avatar = array();
-	$a = get_app();
-
-	$avatar['size'] = 300;
-	$avatar['email'] = $email;
-	$avatar['url'] = '';
-	$avatar['success'] = false;
-
-	call_hooks('avatar_lookup', $avatar);
-
-	if (! $avatar['success'])
-		$avatar['url'] = $a->get_baseurl() . '/' . get_default_profile_photo();
-
-	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
-
-	return $avatar['url'];
 }
 
 

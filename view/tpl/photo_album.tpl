@@ -1,7 +1,9 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
+			{{if $order}}
 			<a class="btn btn-default btn-xs" href="{{$order.1}}" title="{{$order.0}}"><i class="icon-sort"></i></a>
+			{{/if}}
 			<div class="btn-group btn-group">
 				{{if $album_edit.1}}
 				<i class="icon-pencil btn btn-default btn-xs" title="{{$album_edit.0}}" onclick="openClose('photo-album-edit-wrapper'); closeMenu('photo-upload-form');"></i>

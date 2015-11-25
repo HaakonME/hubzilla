@@ -143,7 +143,7 @@
 							<li role="presentation" class="divider"></li>
 							{{$item.item_photo_menu}}
 
-							{{if $item.edpost}}
+							{{if $item.edpost && $item.dreport}}
 							<li role="presentation"><a role="menuitem" href="dreport/{{$item.mid}}">{{$item.dreport}}</a></li>
 							{{/if}}
 
@@ -177,7 +177,7 @@
 											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 											<h4 class="modal-title">{{$response.title}}</h4>
 										</div>
-										<div class="modal-body">
+										<div class="modal-body response-list">
 										<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 										</div>
 										<div class="modal-footer clear">

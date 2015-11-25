@@ -1,6 +1,7 @@
 <link rel='stylesheet' type='text/css' href='{{$baseurl}}/library/fullcalendar/fullcalendar.css' />
-<script language="javascript" type="text/javascript"
-          src="{{$baseurl}}/library/fullcalendar/fullcalendar.min.js"></script>
+<script language="javascript" type="text/javascript" src="{{$baseurl}}/library/moment/moment.min.js"></script>
+<script language="javascript" type="text/javascript" src="{{$baseurl}}/library/fullcalendar/fullcalendar.min.js"></script>
+<script language="javascript" type="text/javascript" src="{{$baseurl}}/library/fullcalendar/lang-all.js"></script>
 
 <script>
 	function showEvent(eventid) {
@@ -20,37 +21,45 @@
 		$('#event-edit-preview').val(0);
 	}
 
+	function exportDate() {
+		var moment = $('#events-calendar').fullCalendar('getDate');
+		var sT = 'events/' + moment.year() + '/' + (moment.month() + 1) + '/export';
+		window.location.href=sT;
+	}
+	
+	function changeView(action, viewName) {
+		$('#events-calendar').fullCalendar(action, viewName);
+		var view = $('#events-calendar').fullCalendar('getView');
+		$('#title').text(view.title);
+	}
+
 
 	$(document).ready(function() {
 		$('#events-calendar').fullCalendar({
-			events: '{{$baseurl}}/events/json/',
-			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},			
+			events: '{{$baseurl}}/events/json',
+			header: false,
+			lang: '{{$lang}}',
+			firstDay: {{$first_day}},
+
+			eventLimit: 3,
+			height: 'auto',
+
 			monthNames: aStr['monthNames'],
 			monthNamesShort: aStr['monthNamesShort'],
 			dayNames: aStr['dayNames'],
 			dayNamesShort: aStr['dayNamesShort'],
-			buttonText: { 
-				prev: "<span class='fc-text-arrow'>&lsaquo;</span>",
-				next: "<span class='fc-text-arrow'>&rsaquo;</span>",
-				prevYear: "<span class='fc-text-arrow'>&laquo;</span>",
-				nextYear: "<span class='fc-text-arrow'>&raquo;</span>",
-				today: aStr['today'],
-				month: aStr['month'],
-				week: aStr['week'],
-				day: aStr['day']
-			},
+
 			allDayText: aStr['allday'],
-			timeFormat: 'H(:mm)',
+			timeFormat: 'HH:mm',
 			eventClick: function(calEvent, jsEvent, view) {
 				showEvent(calEvent.id);
 			},
 			loading: function(isLoading, view) {
 				if(!isLoading) {
-					$('td.fc-day').dblclick(function() { window.location.href='/events/new?start='+$(this).data('date'); });
+					$('td.fc-day').dblclick(function() {
+						openMenu('form');
+						//window.location.href='/events/new?start='+$(this).data('date');
+					});
 				}
 			},
 
@@ -100,55 +109,17 @@
 		var hash = location.hash.split("-")
 		if (hash.length==2 && hash[0]=="#link") showEvent(hash[1]);
 		
-	});
-</script>
-
-{{if $editselect != 'none'}}
-<script language="javascript" type="text/javascript"
-          src="{{$baseurl}}/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
-<script language="javascript" type="text/javascript">
-
-
-	tinyMCE.init({
-		theme : "advanced",
-		mode : "{{$editselect}}",
-		plugins : "bbcode,paste",
-		theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
-		theme_advanced_buttons2 : "",
-		theme_advanced_buttons3 : "",
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "center",
-		theme_advanced_blockformats : "blockquote,code",
-		gecko_spellcheck : true,
-		paste_text_sticky : true,
-		entity_encoding : "raw",
-		add_unload_trigger : false,
-		remove_linebreaks : false,
-		force_p_newlines : false,
-		force_br_newlines : true,
-		forced_root_block : '',
-		content_css: "{{$baseurl}}/view/custom_tinymce.css",
-		theme_advanced_path : false,
-		setup : function(ed) {
-			ed.onInit.add(function(ed) {
-				ed.pasteAsPlainText = true;
-			});
-		}
-
-	});
-	{{else}}
-	<script language="javascript" type="text/javascript">
-	{{/if}}
-
-	$(document).ready(function() { 
+		// echo the title
+		var view = $('#events-calendar').fullCalendar('getView');
+		$('#title').text(view.title);
 
 		$('#id_share').change(function() {
 
 			if ($('#id_share').is(':checked')) { 
-				$('#event-permissions-button').show();
+				$('#dbtn-acl').show();
 			}
 			else {
-				$('#event-permissions-button').hide();
+				$('#dbtn-acl').hide();
 			}
 		}).trigger('change');
 

@@ -2,6 +2,7 @@
 
 Hooks allow plugins/addons to "hook into" the code at many points and alter the behaviour or otherwise perform independent actions when an activity takes place or when certain data structures are accessed. There are many hooks which allow you to tie into the software at most any point and do something slightly different than the default thing. These hooks are passed two variables. The first is the App structure which contains details about the entire state of the page request as we build the resulting page. The second is unique to the specific hook that is called and provides specific detail about what is happening in the software at the time the hook is invoked.
 
+[zrl=[baseurl]/help/hooks]Generated index of all hooks and the files which call them[/zrl]
 
 [zrl=[baseurl]/help/hook/module_mod_aftercontent]module_mod_aftercontent[/zrl]
 	General purpose hook for any module, executed after mod_content(). Replace 'module' with module name, e.g. 'photos_mod_aftercontent'.
@@ -39,9 +40,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/api_perm_is_allowed]api_perm_is_allowed[/zrl]
 	Called when perm_is_allowed() is executed from an API call.
 
-[zrl=[baseurl]/help/hook/app_menu]app_menu[/zrl]
-	Used to register plugins as apps
-
 [zrl=[baseurl]/help/hook/atom_author]atom_author[/zrl]
 	Called when generating an author or owner element for an Atom ActivityStream feed
 
@@ -60,9 +58,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/authenticate]authenticate[/zrl]
 	Can provide alternate authentication mechanisms
 
-[zrl=[baseurl]/help/hook/avatar_lookup]avatar_lookup[/zrl]
-	Used for "gravatar" or libravatar profile photo lookup.
- 
 [zrl=[baseurl]/help/hook/bb2diaspora]bb2diaspora[/zrl]
 	called when converting bbcode to markdown
 
@@ -211,9 +206,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/get_role_perms]get_role_perms[/zrl]
 	Called when get_role_perms() is called to obtain permissions for named permission roles
 
-[zrl=[baseurl]/help/hook/get_widgets]get_widgets[/zrl]
-	No longer used - now widget placement is managed by Comanche
-
 [zrl=[baseurl]/help/hook/global_permissions]global_permissions[/zrl]
 	Called when the global permissions list is generated
 
@@ -270,6 +262,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/logged_in]logged_in[/zrl]
 	Called when authentication by any means has succeeeded
+
+[zrl=[baseurl]/help/hook/logger]logger[/zrl]
+	Called when making an entry to the application logfile
 
 [zrl=[baseurl]/help/hook/logging_out]logging_out[/zrl]
 	Called when logging out

@@ -1408,7 +1408,7 @@ function encode_item_xchan($xchan) {
 function encode_item_terms($terms,$mirror = false) {
 	$ret = array();
 
-	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK );
+	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK, TERM_COMMUNITYTAG );
 
 	if($mirror) {
 		$allowed_export_terms[] = TERM_PCATEGORY;
@@ -1432,7 +1432,7 @@ function encode_item_terms($terms,$mirror = false) {
  * @return string
  */
 function termtype($t) {
-	$types = array('unknown','hashtag','mention','category','private_category','file','search','thing','bookmark');
+	$types = array('unknown','hashtag','mention','category','private_category','file','search','thing','bookmark', 'hierarchy', 'communitytag');
 
 	return(($types[$t]) ? $types[$t] : 'unknown');
 }
@@ -1477,6 +1477,9 @@ function decode_tags($t) {
 					break;
 				case 'bookmark':
 					$tag['type'] = TERM_BOOKMARK;
+					break;
+				case 'communitytag':
+					$tag['type'] = TERM_COMMUNITYTAG;
 					break;
 				default:
 				case 'unknown':
@@ -2962,9 +2965,12 @@ function tag_deliver($uid, $item_id) {
 
 	if(($item['source_xchan']) && intval($item['item_uplink'])
 		&& intval($item['item_thread_top']) && ($item['edited'] != $item['created'])) {
+
 		// this is an update (edit) to a post which was already processed by us and has a second delivery chain
 		// Just start the second delivery chain to deliver the updated post
-		proc_run('php','include/notifier.php','tgroup',$item['id']);
+		// after resetting ownership and permission bits
+
+		start_delivery_chain($u[0], $item, $item_id, 0);
 		return;
 	}
 
@@ -3029,7 +3035,7 @@ function tag_deliver($uid, $item_id) {
 						if(is_array($j_obj['link']))
 							$taglink = get_rel_link($j_obj['link'],'alternate');
 
-						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j_obj['id']);
+						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_COMMUNITYTAG,$j_obj['title'],$j_obj['id']);
 						$x = q("update item set edited = '%s', received = '%s', changed = '%s' where mid = '%s' and uid = %d",
 							dbesc(datetime_convert()),
 							dbesc(datetime_convert()),
@@ -3181,7 +3187,7 @@ function tag_deliver($uid, $item_id) {
 	}
 
 	if((! $mention) && (! $union)) {
-		logger('tag_deliver: no mention and no union.');
+		logger('tag_deliver: no mention for ' . $u[0]['channel_name'] . ' and no union.');
 		return;
 	}
 
@@ -3434,7 +3440,7 @@ function check_item_source($uid, $item) {
 		foreach($words as $word) {
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -3487,7 +3493,7 @@ function post_is_importable($item,$abook) {
 				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return false;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -3508,7 +3514,7 @@ function post_is_importable($item,$abook) {
 				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if(($t['type'] == TERM_HASHTAG) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -4159,12 +4165,12 @@ function enumerate_permissions($obj) {
 
 function item_getfeedtags($item) {
 
-	$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION));
+	$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_COMMUNITYTAG));
 	$ret = array();
 
 	if(count($terms)) {
 		foreach($terms as $term) {
-			if($term['type'] == TERM_HASHTAG)
+			if(($term['type'] == TERM_HASHTAG) || ($term['type'] == TERM_COMMUNITYTAG))
 				$ret[] = array('#',$term['url'],$term['term']);
 			else
 				$ret[] = array('@',$term['url'],$term['term']);
@@ -4872,7 +4878,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	if($arr['search']) {
 
         if(strpos($arr['search'],'#') === 0)
-            $sql_extra .= term_query('item',substr($arr['search'],1),TERM_HASHTAG);
+            $sql_extra .= term_query('item',substr($arr['search'],1),TERM_HASHTAG,TERM_COMMUNITYTAG);
         else
             $sql_extra .= sprintf(" AND item.body like '%s' ",
                 dbesc(protect_sprintf('%' . $arr['search'] . '%'))

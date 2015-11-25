@@ -117,12 +117,13 @@
 		var origsval = $('#id_start_text').val();
 		$('#id_start_text').change(function() {
 			var origfval = $('#id_finish_text').val();
-			var sval = $('#id_start_text').val();
-			var diff = moment(sval).diff(origsval);
-			var fval = moment(origfval).add(diff, 'millisecond').format("YYYY-MM-DD HH:mm");
-
-			$('#id_finish_text').val(fval);
-			origsval = sval;
+			if(origfval) {
+				var sval = $('#id_start_text').val();
+				var diff = moment(sval).diff(origsval);
+				var fval = moment(origfval).add(diff, 'millisecond').format("YYYY-MM-DD HH:mm");
+				$('#id_finish_text').val(fval);
+				origsval = sval;
+			}
 		});
 
 		// ACL

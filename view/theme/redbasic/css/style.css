@@ -1289,14 +1289,14 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	display: block;
+/*	display: block; */
 }
 
 .dropdown-sub-text {
 	line-height: 1em;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	display: block;
+/*	display: block; */
 }
 
 .notify-seen a {
@@ -2291,3 +2291,4 @@ nav .badge.mail-update:hover {
 .response-list ul {
 	list-style-type: none;
 }
+

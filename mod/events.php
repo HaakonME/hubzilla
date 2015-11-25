@@ -366,7 +366,7 @@ function events_content(&$a) {
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 
-		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
+		$fdt = ((x($orig_event)) ? $orig_event['finish'] : '+1 hour');
 
 		$tz = date_default_timezone_get();
 		if(x($orig_event))
@@ -380,8 +380,12 @@ function events_content(&$a) {
 		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
 		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
 
-		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : '00');
-		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : '00');
+//		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : '00');
+//		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : '00');
+
+		$shour = datetime_convert('UTC', $tz, $sdt, 'H');
+		$sminute = datetime_convert('UTC', $tz, $sdt, 'i');
+
 		$stext = datetime_convert('UTC',$tz,$sdt);
 		$stext = substr($stext,0,14) . "00:00";
 
@@ -393,8 +397,12 @@ function events_content(&$a) {
 		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
 		$fday = datetime_convert('UTC', $tz, $fdt, 'd');
 
-		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : '00');
-		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : '00');
+//		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : '00');
+//		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : '00');
+
+		$fhour = datetime_convert('UTC', $tz, $fdt, 'H');
+		$fminute = datetime_convert('UTC', $tz, $fdt, 'i');
+
 		$ftext = datetime_convert('UTC',$tz,$fdt);
 		$ftext = substr($ftext,0,14) . "00:00";
 		$type = ((x($orig_event)) ? $orig_event['type'] : 'event');

@@ -2,7 +2,7 @@
 	<div class="event-wrapper">
 		<div class="event">
 			<div class="event-owner">
-				{{if $event.item.author.xchan_name}}<a href="{{$event.item.author.xchan_url}}" ><img src="{{$event.item.author.xchan_photo_s}}" height="64" width="64" />{{$event.item.author.xchan_name}}</a>{{/if}}
+				{{if $event.item.author.xchan_name}}<a href="{{$event.item.author.xchan_url}}" ><img src="{{$event.item.author.xchan_photo_s}}">{{$event.item.author.xchan_name}}</a>{{/if}}
 			</div>
 			{{$event.html}}
 			<div class="event-buttons">

@@ -91,7 +91,11 @@ function events_post(&$a) {
 	linkify_tags($a, $location, local_channel());
 
 	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
-	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
+
+	//fixme: this url gives a wsod if there is a linebreak detected in one of the variables ($desc or $location)
+	//$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
+	$onerror_url = $a->get_baseurl() . "/events";
+
 	if(strcmp($finish,$start) < 0 && !$nofinish) {
 		notice( t('Event can not end before it has started.') . EOL);
 		if(intval($_REQUEST['preview'])) {

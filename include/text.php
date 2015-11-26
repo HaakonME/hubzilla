@@ -1381,7 +1381,37 @@ function generate_named_map($location) {
 	return (($arr['html']) ? $arr['html'] : $location);
 }
 
+function format_event($jobject) {
+	$event = array();
 
+	$object = json_decode($jobject,true);
+
+	//ensure compatibility with older items - this check can be removed at a later point
+	if(array_key_exists('description', $object)) {
+
+		$bd_format = t('l F d, Y \@ g:i A'); // Friday January 18, 2011 @ 8:01 AM
+
+		$event['header'] = replace_macros(get_markup_template('event_item_header.tpl'),array(
+			'$title'	 => bbcode($object['title']),
+			'$dtstart_label' => t('Starts:'),
+			'$dtstart_title' => datetime_convert('UTC', 'UTC', $object['start'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
+			'$dtstart_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['start'] , $bd_format )) : day_translate(datetime_convert('UTC', 'UTC', $object['start'] , $bd_format))),
+			'$finish'	 => (($object['nofinish']) ? false : true),
+			'$dtend_label'	 => t('Finishes:'),
+			'$dtend_title'	 => datetime_convert('UTC','UTC',$object['finish'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
+			'$dtend_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['finish'] , $bd_format )) :  day_translate(datetime_convert('UTC', 'UTC', $object['finish'] , $bd_format )))
+		));
+
+		$event['content'] = replace_macros(get_markup_template('event_item_content.tpl'),array(
+			'$description'	  => bbcode($object['description']),
+			'$location_label' => t('Location:'),
+			'$location'	  => bbcode($object['location'])
+		));
+
+	}
+
+	return $event;
+}
 
 function prepare_body(&$item,$attach = false) {
 	require_once('include/identity.php');
@@ -1414,54 +1444,11 @@ function prepare_body(&$item,$attach = false) {
 		}
 	}
 
-	$event = array();
-	$is_event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? true : false);
-
-	if($is_event) {
-		$object = json_decode($item['object'],true);
-		
-		//ensure compatibility with older items
-		if(array_key_exists('description', $object)) {
-
-			$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8:01 AM
-
-			$event['header'] 	= '<div class="event-title"><h3><i class="icon-calendar"></i>&nbsp;' . bbcode($object['title']) .  '</h3></div>' . "\r\n";
-
-			$event['header'] 	.= '<div class="event-start"><span class="event-label">' . t('Starts:') . '</span>&nbsp;<span class="dtstart" title="'
-						. datetime_convert('UTC', 'UTC', $object['start'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
-						. '" >' 
-						. (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
-							$object['start'] , $bd_format ))
-							:  day_translate(datetime_convert('UTC', 'UTC', 
-							$object['start'] , $bd_format)))
-						. '</span></div>' . "\r\n";
-
-			if(! $object['nofinish'])
-				$event['header'] .= '<div class="event-end" ><span class="event-label">' . t('Finishes:') . '</span>&nbsp;<span class="dtend" title="'
-						 . datetime_convert('UTC','UTC',$object['finish'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
-						 . '" >' 
-						 . (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
-							$object['finish'] , $bd_format ))
-							:  day_translate(datetime_convert('UTC', 'UTC', 
-							$object['finish'] , $bd_format )))
-						 . '</span></div>'  . "\r\n";
-
-
-			$event['content'] = '<div class="event-description">' . bbcode($object['description']) .  '</div>' . "\r\n";
-
-			if(strlen($object['location']))
-				$event['content'] .= '<div class="event-location"><span class="event-label"> ' . t('Location:') . '</span>&nbsp;<span class="location">' 
-						  . bbcode($object['location'])
-						  . '</span></div>' . "\r\n";
-		}
-		else {
-			$is_event = false;
-		}
-	}
+	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event($item['object']) : false);
 
 	$prep_arr = array(
 		'item' => $item,
-		'html' => $is_event ? $event['content'] : $s,
+		'html' => $event ? $event['content'] : $s,
 		'event' => $event['header'],
 		'photo' => $photo
 	);

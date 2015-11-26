@@ -931,6 +931,11 @@ function event_store_item($arr, $event) {
 				'type'    => ACTIVITY_OBJ_EVENT,
 				'id'      => z_root() . '/event/' . $event['event_hash'],
 				'title'   => $arr['summary'],
+				'start'   => $arr['start'],
+				'finish'  => $arr['finish'],
+				'description' => $arr['description'],
+				'location'   => $arr['location'],
+				'adjust'   => $arr['adjust'],
 				'content' => format_event_bbcode($arr),
 				'author'  => array(
 					'name'     => $x[0]['xchan_name'],

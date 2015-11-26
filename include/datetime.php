@@ -235,7 +235,7 @@ function datetimesel($format, $min, $max, $default, $label, $id = 'datetimepicke
 	$o .= replace_macros($tpl,array(
 			'$field' => array($id, $label, $input_text, (($required) ? t('Required') : ''), (($required) ? '*' : ''), 'placeholder="' . $readable_format . '"'),
 		));
-	$o .= "<script>\$(function () {var picker = \$('#id_$id').datetimepicker({step:5,format:'$dateformat' $minjs $maxjs $pickers $defaultdatejs,dayOfWeekStart:$first_day}); $extra_js})</script>";
+	$o .= "<script>\$(function () {var picker = \$('#id_$id').datetimepicker({step:15,format:'$dateformat' $minjs $maxjs $pickers $defaultdatejs,dayOfWeekStart:$first_day}); $extra_js})</script>";
 
 	return $o;
 }

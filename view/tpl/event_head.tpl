@@ -71,7 +71,7 @@
 				switch(view.name){
 					case "month":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:12px;width:12px;' title='{1}'>&nbsp;<abbr title='{3}\r\n\r\n{4}'>{2}</abbr>".format(
+						"<img src='{0}' style='height:12px;width:12px;' title='{1}'>&nbsp;<span title='{3}\r\n\r\n{4}'>{2}</span>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
@@ -81,7 +81,7 @@
 					break;
 					case "agendaWeek":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <abbr title='{3}\r\n\r\n{4}'>{2}</abbr>".format(
+						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}\r\n\r\n{4}'>{2}</span>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
@@ -91,7 +91,7 @@
 					break;
 					case "agendaDay":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <abbr title='{3}\r\n\r\n{4}'>{2}</abbr>".format(
+						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}\r\n\r\n{4}'>{2}</span>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,

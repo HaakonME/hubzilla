@@ -857,6 +857,15 @@ nav .acpopup {
 	border-color: #ccc !important;
 }
 
+.wall-event-item {
+	padding: 10px;
+	color: #fff;
+	background-color: #3A87AD; /* should reflect calendar color */
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+}
+
+
 #event-summary-text {
 	margin-top: 15px;
 }
@@ -1242,14 +1251,14 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-/*	display: block; */
+	display: block;
 }
 
 .dropdown-sub-text {
 	line-height: 1em;
 	overflow: hidden;
 	text-overflow: ellipsis;
-/*	display: block; */
+	display: block;
 }
 
 .notify-seen a {

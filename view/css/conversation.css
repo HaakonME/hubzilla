@@ -249,11 +249,10 @@ a.wall-item-name-link {
 /* event item */
 
 .event-title h3 {
+	margin: 0px 0px 10px 0px;
 	font-weight: bold;
 }
 
-.event-title,
-.event-end,
 .event-description {
 	padding-bottom: 10px;
 }

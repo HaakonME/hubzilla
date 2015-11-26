@@ -346,6 +346,7 @@ class Item extends BaseObject {
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => $this->get_owner_name(),
 			'photo' => $body['photo'],
+			'event' => $body['event'],
 			'has_tags' => $has_tags,
 
 // Item toolbar buttons

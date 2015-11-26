@@ -79,20 +79,22 @@
 					break;
 					case "agendaWeek":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:10px; width:10px'>&nbsp;{1}: {2}<p>{3}</p>".format(
+						"<img src='{0}' style='height:10px; width:10px'>&nbsp;{1}: {2}<p>{3}</p><p>{4}</p>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
-							event.item.description
+							event.item.description,
+							event.item.location
 					));
 					break;
 					case "agendaDay":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:10px;width:10px'>&nbsp;{1}: {2}<p>{3}</p>".format(
+						"<img src='{0}' style='height:10px;width:10px'>&nbsp;{1}: {2}<p>{3}</p><p>{4}</p>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
-							event.item.description
+							event.item.description,
+							event.item.location
 					));
 					break;
 				}

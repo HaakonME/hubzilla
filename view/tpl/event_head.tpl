@@ -71,32 +71,32 @@
 				switch(view.name){
 					case "month":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:12px;width:12px;' title='{1}'>&nbsp;<span title='{3}\r\n\r\n{4}'>{2}</span>".format(
+						"<img src='{0}' style='height:12px;width:12px;' title='{1}'>&nbsp;<span title='{3}{4}'>{2}</span>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
-							event.item.description,
-							event.item.location.replace(/(<([^>]+)>)/ig,"")
+							event.item.description ? event.item.description + "\r\n\r\n" : '',
+							event.item.location ? aStr['location'] + ': ' + event.item.location.replace(/(<([^>]+)>)/ig,"") : ''
 					));
 					break;
 					case "agendaWeek":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}\r\n\r\n{4}'>{2}</span>".format(
+						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}{4}'>{2}</span>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
-							event.item.description,
-							event.item.location.replace(/(<([^>]+)>)/ig,"")
+							event.item.description ? event.item.description + "\r\n\r\n" : '',
+							event.item.location ? aStr['location'] + ': ' + event.item.location.replace(/(<([^>]+)>)/ig,"") : ''
 					));
 					break;
 					case "agendaDay":
 					element.find(".fc-title").html(
-						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}\r\n\r\n{4}'>{2}</span>".format(
+						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}{4}'>{2}</span>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
-							event.item.description,
-							event.item.location.replace(/(<([^>]+)>)/ig,"")
+							event.item.description ? event.item.description + "\r\n\r\n" : '',
+							event.item.location ? aStr['location'] + ': ' + event.item.location.replace(/(<([^>]+)>)/ig,"") : ''
 					));
 					break;
 				}

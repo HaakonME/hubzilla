@@ -8,3 +8,9 @@
 	width: 100%;
 	padding: 6px 12px;
 }
+
+.event-wrapper {
+	max-width: 700px;
+	height: auto;
+	padding: 10px;
+}

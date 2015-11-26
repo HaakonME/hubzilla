@@ -183,7 +183,7 @@
 											<h4 class="modal-title">{{$response.title}}</h4>
 										</div>
 										<div class="modal-body response-list">
-										<ul>{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+										<ul class="nav nav-pills nav-stacked">{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 										</div>
 										<div class="modal-footer clear">
 											<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>

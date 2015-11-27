@@ -117,6 +117,8 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 	if(! perm_is_allowed($uid,get_observer_hash(),'view_stream'))
 		return array();
 
+
+	$item_normal = item_normal();
 	$sql_options = item_permissions_sql($uid);
 	$count = intval($count);
 
@@ -142,7 +144,7 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
 		where term.uid = %d and term.type = %d 
 		and otype = %d and item_type = %d and item_private = 0
-		$sql_options
+		$sql_options $item_normal
 		group by term order by total desc %s",
 		intval($uid),
 		intval($type),

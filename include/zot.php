@@ -3951,9 +3951,6 @@ function delivery_report_is_storable($dr) {
 		return false;
 
 
-
-
-
 	// is the recipient one of our connections, or do we want to store every report? 
 
 	$r = explode(' ', $dr['recipient']);

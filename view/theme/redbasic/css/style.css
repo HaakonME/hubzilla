@@ -241,7 +241,8 @@ footer {
 	padding-right: 3em; 
 }
 
-.birthday-today, .event-today {
+.birthday-today,
+.event-today {
 	font-weight: bold;
 }
 
@@ -846,68 +847,6 @@ nav .acpopup {
 .tool-link {
   cursor: pointer;
 }
-
-.fc-unthemed th,
-.fc-unthemed td,
-.fc-unthemed thead,
-.fc-unthemed tbody,
-.fc-unthemed .fc-divider,
-.fc-unthemed .fc-row,
-.fc-unthemed .fc-popover {
-	border-color: #ccc !important;
-}
-
-.wall-event-item {
-	padding: 10px;
-	color: #fff;
-	background-color: #3A87AD; /* should reflect calendar color */
-	border-top-left-radius: $radiuspx;
-	border-top-right-radius: $radiuspx;
-}
-
-.vevent .event-end {
-	padding-bottom: 10px;
-}
-
-#event-summary-text {
-	margin-top: 15px;
-}
-
-
-#new-event-link {
-	margin-bottom: 10px;
-}
-
-.edit-event-link, .plink-event-link, .drop-event-link {
-	float: left;
-	margin-top: 4px;
-	margin-right: 4px;
-	margin-bottom: 15px;
-}
-
-.event-owner img {
-	padding-bottom: 10px;
-	padding-right: 10px;
-}
-
-.event-buttons {
-	margin-top: 10px;
-}
-
-.event-list-date {
-	margin-bottom: 10px;
-}
-
-.prevcal, .nextcal {
-	float: left;
-	margin-left: 32px;
-	margin-right: 32px;
-	margin-top: 64px;
-}
-.event-calendar-end {
-	clear: both;
-}
-
 
 #cboxOverlay {
 	z-index: 1050;
@@ -1562,8 +1501,12 @@ img.mail-conv-sender-photo {
 	padding: 0.5em 10px;
 }
 
-.wall-photo-item {
-	/*padding: 0.5em 10px;*/
+.wall-event-item {
+	padding: 10px;
+	color: #fff;
+	background-color: #3A87AD; /* should reflect calendar color */
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
 }
 
 .wall-photo-item img {
@@ -2252,8 +2195,3 @@ nav .badge.mail-update:hover {
 .help-searchlist a {
 	font-size: 130%;
 }
-
-.response-list ul {
-	list-style-type: none;
-}
-

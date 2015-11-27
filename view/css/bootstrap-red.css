@@ -57,7 +57,8 @@ nav .navbar-toggle {
 /* nav overrides end */
 
 
-aside .nav-pills > li > a {
+aside .nav-pills > li > a,
+.response-list .nav-pills > li > a {
 	padding: 6px 10px;
 }
 

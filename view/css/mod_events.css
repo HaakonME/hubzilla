@@ -19,3 +19,16 @@
 	height: auto;
 	padding: 10px;
 }
+
+.event-owner {
+	margin-bottom: 15px;
+}
+
+.event-owner img {
+	margin-right: 5px;
+}
+
+.event-buttons,
+.event-description {
+	margin-top: 10px;
+}

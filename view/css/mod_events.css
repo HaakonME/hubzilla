@@ -4,6 +4,11 @@
 	margin-bottom: -1px;
 }
 
+#events-spinner .spinner {
+	margin-top: 9px;
+	margin-bottom: -9px;
+}
+
 .bootstrap-tagsinput {
 	width: 100%;
 	padding: 6px 12px;

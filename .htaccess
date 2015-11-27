@@ -28,3 +28,9 @@ AddType audio/ogg .oga
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.*)$ index.php?q=$1 [E=REMOTE_USER:%{HTTP:Authorization},L,QSA]
 </IfModule>
+
+
+# Required to keep Apache from hanging waiting for MySql connections
+<IfModule mpm_prefork_module>
+    GracefulShutdownTimeout 300
+</IfModule>

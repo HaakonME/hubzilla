@@ -33,5 +33,5 @@ AddType audio/ogg .oga
 # Required to keep Apache from hanging waiting for MySql connections
 <IfModule mpm_prefork_module>
     GracefulShutdownTimeout 300
-    MaxRequestWorkers 100
+    MaxRequestWorkers 70
 </IfModule>

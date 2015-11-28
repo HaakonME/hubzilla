@@ -5,6 +5,7 @@
 
 require_once("include/template_processor.php");
 require_once("include/smarty.php");
+require_once("include/bbcode.php");
 
 // random string, there are 86 characters max in text mode, 128 for hex
 // output is urlsafe
@@ -1413,9 +1414,55 @@ function prepare_body(&$item,$attach = false) {
 		}
 	}
 
+	$event = array();
+	$is_event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? true : false);
+
+	if($is_event) {
+		$object = json_decode($item['object'],true);
+		
+		//ensure compatibility with older items
+		if(array_key_exists('description', $object)) {
+
+			$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8:01 AM
+
+			$event['header'] 	= '<div class="event-title"><h3><i class="icon-calendar"></i>&nbsp;' . bbcode($object['title']) .  '</h3></div>' . "\r\n";
+
+			$event['header'] 	.= '<div class="event-start"><span class="event-label">' . t('Starts:') . '</span>&nbsp;<span class="dtstart" title="'
+						. datetime_convert('UTC', 'UTC', $object['start'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
+						. '" >' 
+						. (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
+							$object['start'] , $bd_format ))
+							:  day_translate(datetime_convert('UTC', 'UTC', 
+							$object['start'] , $bd_format)))
+						. '</span></div>' . "\r\n";
+
+			if(! $object['nofinish'])
+				$event['header'] .= '<div class="event-end" ><span class="event-label">' . t('Finishes:') . '</span>&nbsp;<span class="dtend" title="'
+						 . datetime_convert('UTC','UTC',$object['finish'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
+						 . '" >' 
+						 . (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
+							$object['finish'] , $bd_format ))
+							:  day_translate(datetime_convert('UTC', 'UTC', 
+							$object['finish'] , $bd_format )))
+						 . '</span></div>'  . "\r\n";
+
+
+			$event['content'] = '<div class="event-description">' . bbcode($object['description']) .  '</div>' . "\r\n";
+
+			if(strlen($object['location']))
+				$event['content'] .= '<div class="event-location"><span class="event-label"> ' . t('Location:') . '</span>&nbsp;<span class="location">' 
+						  . bbcode($object['location'])
+						  . '</span></div>' . "\r\n";
+		}
+		else {
+			$is_event = false;
+		}
+	}
+
 	$prep_arr = array(
 		'item' => $item,
-		'html' => $s,
+		'html' => $is_event ? $event['content'] : $s,
+		'event' => $event['header'],
 		'photo' => $photo
 	);
 
@@ -1423,6 +1470,7 @@ function prepare_body(&$item,$attach = false) {
 
 	$s = $prep_arr['html'];
 	$photo = $prep_arr['photo'];
+	$event = $prep_arr['event'];
 
 //	q("update item set html = '%s' where id = %d",
 //		dbesc($s),
@@ -1489,6 +1537,7 @@ function prepare_body(&$item,$attach = false) {
 		'item' => $item,
 		'photo' => $photo,
 		'html' => $s,
+		'event' => $event,
 		'categories' => $categories,
 		'folders' => $filer,
 		'tags' => $tags,

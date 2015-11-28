@@ -33,7 +33,7 @@ function editpost_content(&$a) {
 	}
 
 	if($itm[0]['resource_type'] === 'event' && $itm[0]['resource_id']) {
-		goaway(z_root() . '/events/event/' . $itm[0]['resource_id']);
+		goaway(z_root() . '/events/' . $itm[0]['resource_id'] . '?expandform=1');
 	}
 
 

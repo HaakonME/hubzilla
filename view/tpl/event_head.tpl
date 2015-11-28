@@ -56,45 +56,51 @@
 			},
 			loading: function(isLoading, view) {
 				if(!isLoading) {
-					$('td.fc-day').dblclick(function() { window.location.href='/events/new?start='+$(this).data('date'); });
+					$('td.fc-day').dblclick(function() {
+						openMenu('form');
+						//window.location.href='/events/new?start='+$(this).data('date');
+					});
 				}
 			},
 
 			eventRender: function(event, element, view) {
+
 				//console.log(view.name);
 				if (event.item['author']['xchan_name']==null) return;
 
 				switch(view.name){
 					case "month":
-					element.find(".fc-event-title").html(
-						"<img src='{0}' style='height:10px;width:10px'>{1} : {2}".format(
+					element.find(".fc-title").html(
+						"<img src='{0}' style='height:10px;width:10px'>&nbsp;{1}: {2}".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title
 					));
 					break;
 					case "agendaWeek":
-					element.find(".fc-event-title").html(
-						"<img src='{0}' style='height:12px; width:12px'>{1}<p>{2}</p><p>{3}</p>".format(
+					element.find(".fc-title").html(
+						"<img src='{0}' style='height:10px; width:10px'>&nbsp;{1}: {2}<p>{3}</p><p>{4}</p>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
-							event.item.desc,
+							event.title,
+							event.item.description,
 							event.item.location
 					));
 					break;
 					case "agendaDay":
-					element.find(".fc-event-title").html(
-						"<img src='{0}' style='height:24px;width:24px'>{1}<p>{2}</p><p>{3}</p>".format(
+					element.find(".fc-title").html(
+						"<img src='{0}' style='height:10px;width:10px'>&nbsp;{1}: {2}<p>{3}</p><p>{4}</p>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
-							event.item.desc,
+							event.title,
+							event.item.description,
 							event.item.location
 					));
 					break;
 				}
 			}
 			
-		})
+		});
 		
 		// center on date
 		var args=location.href.replace(baseurl,"").split("/");
@@ -110,25 +116,29 @@
 		var view = $('#events-calendar').fullCalendar('getView');
 		$('#title').text(view.title);
 
+		// shift the finish time date on start time date change automagically
+		var origsval = $('#id_start_text').val();
+		$('#id_start_text').change(function() {
+			var origfval = $('#id_finish_text').val();
+			if(origfval) {
+				var sval = $('#id_start_text').val();
+				var diff = moment(sval).diff(origsval);
+				var fval = moment(origfval).add(diff, 'millisecond').format("YYYY-MM-DD HH:mm");
+				$('#id_finish_text').val(fval);
+				origsval = sval;
+			}
+		});
 
-
-	});
-</script>
-
-
-<script>
-	$(document).ready(function() { 
-
+		// ACL
 		$('#id_share').change(function() {
 
 			if ($('#id_share').is(':checked')) { 
-				$('#event-permissions-button').show();
+				$('#dbtn-acl').show();
 			}
 			else {
-				$('#event-permissions-button').hide();
+				$('#dbtn-acl').hide();
 			}
 		}).trigger('change');
-
 
 		$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 			var selstr;

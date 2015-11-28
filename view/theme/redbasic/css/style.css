@@ -857,57 +857,22 @@ nav .acpopup {
 	border-color: #ccc !important;
 }
 
-.eventcal {
-	float: left;
-	font-size: 20px;
+.wall-event-item {
+	padding: 10px;
+	color: #fff;
+	background-color: #3A87AD; /* should reflect calendar color */
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+}
+
+.vevent .event-end {
+	padding-bottom: 10px;
 }
 
 #event-summary-text {
 	margin-top: 15px;
 }
 
-#event-share-checkbox {
-	float: left;
-	margin-top: 10px;
-}
-
-#event-share-text {
-	float: left;
-	margin-top: 10px;
-	margin-left: 5px;
-}
-
-#event-share-break {
-	clear: both;
-	margin-bottom: 10px;
-}
-
-.event-wrapper {
-	width: 400px;
-	height: auto;
-	padding: 10px;
-}
-
-.vevent {
-	max-width: 100%; 
-	margin: 10px;
-	padding: 10px;
-	border: 1px solid #CCCCCC;
-}
-
-.vevent .event-summary {
-	margin: 10px;
-	font-weight: bold;
-}
-
-.vevent .event-description, .vevent .event-location {
-	margin-left: 10px;
-	margin-right: 10px;
-}
-.vevent .event-start {
-	margin-left: 10px;
-	margin-right: 10px;
-}
 
 #new-event-link {
 	margin-bottom: 10px;
@@ -920,29 +885,13 @@ nav .acpopup {
 	margin-bottom: 15px;
 }
 
-.event-description:before {
-	content: url('../../../../images/calendar.png');
-	margin-right: 15px;
-}
-
-.event-start, .event-end {
-	margin-left: 10px;
-	width: 300px;
-	clear: both;
-}
-
 .event-owner img {
-	padding: 10px;
+	padding-bottom: 10px;
+	padding-right: 10px;
 }
 
 .event-buttons {
 	margin-top: 10px;
-	margin-left: 10px;
-}
-
-.event-start .dtstart, .event-end .dtend {
-	float: right;
-	margin-right: 10px;
 }
 
 .event-list-date {
@@ -959,14 +908,6 @@ nav .acpopup {
 	clear: both;
 }
 
- 
-.calendar {
-	font-family: Courier, monospace;
-}
-.today {
-	font-weight: bold;
-	color: #FF0000;
-}
 
 #cboxOverlay {
 	z-index: 1050;
@@ -1121,31 +1062,6 @@ nav .acpopup {
 
 .required {
 	color: #ff0000;
-}
-
-
-#event-start-text, #event-finish-text {
-	margin-top: 10px;
-	margin-bottom: 5px;
-}
-
-#event-nofinish-checkbox, #event-nofinish-text, #event-adjust-checkbox, #event-adjust-text {
-	float: left;
-}
-#event-datetime-break {
-	margin-bottom: 10px;
-}
-
-#event-nofinish-break, #event-adjust-break {
-	clear: both;
-}
-
-#event-desc-text, #event-location-text {
-	margin-top: 15px;
-	margin-bottom: 5px;
-}
-#event-submit {
-	margin-top: 10px;
 }
 
 #item-delete-selected {
@@ -2340,3 +2256,4 @@ nav .badge.mail-update:hover {
 .response-list ul {
 	list-style-type: none;
 }
+

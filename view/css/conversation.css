@@ -178,7 +178,6 @@ a.wall-item-name-link {
 /* comment_item */
 
 .comment-edit-text-empty, .comment-edit-text-full {
-	float: left;
 	width: 100%;
 }
 
@@ -245,4 +244,19 @@ a.wall-item-name-link {
 .item-forged {
 	color: #FF0000;
 	font-size: 1em !important;
+}
+
+/* event item */
+
+.event-title h3 {
+	margin: 0px 0px 10px 0px;
+	font-weight: bold;
+}
+
+.event-description {
+	padding-bottom: 10px;
+}
+
+.event-label {
+	font-weight: bold;
 }

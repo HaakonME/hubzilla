@@ -697,6 +697,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'thumb' => $profile_avatar,
 					'title' => $item['title'],
 					'body' => $body['html'],
+					'event' => $body['event'],
 					'photo' => $body['photo'],
 					'tags' => $body['tags'],
 					'categories' => $body['categories'],

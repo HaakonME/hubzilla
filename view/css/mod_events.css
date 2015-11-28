@@ -24,29 +24,21 @@
 	padding: 6px 12px;
 }
 
-.event-wrapper {
+.event-wrapper,
+.vevent {
 	max-width: 700px;
-	height: auto;
-	padding: 10px;
 }
 
 .event-owner {
-	margin-bottom: 15px;
+	padding: 10px;
 }
 
 .event-owner img {
 	margin-right: 5px;
 }
 
-.event-buttons,
-.event-description {
-	margin-top: 10px;
+.vevent,
+.event-buttons {
+	padding: 10px;
 }
 
-#event-upload-form {
-	margin-top: 10px;
-}
-
-#event-upload-choose {
-	width: 100%;
-}

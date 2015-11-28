@@ -666,13 +666,25 @@ function widget_eventsmenu($arr) {
 	if (! local_channel())
 		return;
 
-	return replace_macros(get_markup_template('events_side.tpl'), array(
+	return replace_macros(get_markup_template('events_menu_side.tpl'), array(
 		'$title' => t('Events Menu'),
 		'$day' => t('Day View'),
 		'$week' => t('Week View'),
 		'$month' => t('Month View'),
 		'$export' => t('Export'),
 		'$upload' => t('Import'),
+		'$submit' => t('Submit')
+	));
+}
+
+function widget_eventstools($arr) {
+	if (! local_channel())
+		return;
+
+	return replace_macros(get_markup_template('events_tools_side.tpl'), array(
+		'$title' => t('Events Tools'),
+		'$export' => t('Export Calendar'),
+		'$import' => t('Import Calendar'),
 		'$submit' => t('Submit')
 	));
 }
@@ -1147,6 +1159,8 @@ function widget_forums($arr) {
 
 function widget_tasklist($arr) {
 
+	if (! local_channel())
+		return;
 
 	require_once('include/event.php');
 	$o .= '<script>var tasksShowAll = 0; $(document).ready(function() { tasksFetch(); $("#tasklist-new-form").submit(function(event) { event.preventDefault(); $.post( "tasks/new", $("#tasklist-new-form").serialize(), function(data) { tasksFetch();  $("#tasklist-new-summary").val(""); } ); return false; } )});</script>';

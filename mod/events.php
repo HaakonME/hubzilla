@@ -90,7 +90,11 @@ function events_post(&$a) {
 	linkify_tags($a, $desc, local_channel());
 	linkify_tags($a, $location, local_channel());
 
+<<<<<<< HEAD
 	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
+=======
+	//$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
+>>>>>>> upstream/master
 
 	//fixme: this url gives a wsod if there is a linebreak detected in one of the variables ($desc or $location)
 	//$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
@@ -322,6 +326,7 @@ function events_content(&$a) {
 	}
 
 	if($mode == 'view') {
+<<<<<<< HEAD
 
 		/* edit/create form */
 		if($event_id) {
@@ -339,6 +344,25 @@ function events_content(&$a) {
 		if(!x($orig_event))
 			$orig_event = array();
 
+=======
+
+		/* edit/create form */
+		if($event_id) {
+			$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($event_id),
+				intval(local_channel())
+			);
+			if(count($r))
+				$orig_event = $r[0];
+		}
+
+		$channel = $a->get_channel();
+
+		// Passed parameters overrides anything found in the DB
+		if(!x($orig_event))
+			$orig_event = array();
+
+>>>>>>> upstream/master
 		// In case of an error the browser is redirected back here, with these parameters filled in with the previous values
 		/*
 		if(x($_REQUEST,'nofinish')) $orig_event['nofinish'] = $_REQUEST['nofinish'];
@@ -376,6 +400,7 @@ function events_content(&$a) {
 		if(x($orig_event))
 			$tz = (($orig_event['adjust']) ? date_default_timezone_get() : 'UTC');
 
+<<<<<<< HEAD
 //		$syear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'Y') : '0000');
 //		$smonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'm') : '00');
 //		$sday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'd') : '00');
@@ -387,12 +412,18 @@ function events_content(&$a) {
 //		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : '00');
 //		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : '00');
 
+=======
+		$syear = datetime_convert('UTC', $tz, $sdt, 'Y');
+		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
+		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
+>>>>>>> upstream/master
 		$shour = datetime_convert('UTC', $tz, $sdt, 'H');
 		$sminute = datetime_convert('UTC', $tz, $sdt, 'i');
 
 		$stext = datetime_convert('UTC',$tz,$sdt);
 		$stext = substr($stext,0,14) . "00:00";
 
+<<<<<<< HEAD
 //		$fyear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'Y') : '0000');
 //		$fmonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'm') : '00');
 //		$fday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'd') : '00');
@@ -404,11 +435,20 @@ function events_content(&$a) {
 //		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : '00');
 //		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : '00');
 
+=======
+		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
+		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
+		$fday = datetime_convert('UTC', $tz, $fdt, 'd');
+>>>>>>> upstream/master
 		$fhour = datetime_convert('UTC', $tz, $fdt, 'H');
 		$fminute = datetime_convert('UTC', $tz, $fdt, 'i');
 
 		$ftext = datetime_convert('UTC',$tz,$fdt);
 		$ftext = substr($ftext,0,14) . "00:00";
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 		$type = ((x($orig_event)) ? $orig_event['type'] : 'event');
 
 		$f = get_config('system','event_input_format');
@@ -608,7 +648,11 @@ function events_content(&$a) {
 					
 				$last_date = $d;
 
+<<<<<<< HEAD
 				$edit = array($a->get_baseurl().'/events/'.$rr['event_hash'].'?expandform=1',t('Edit event'),'','');
+=======
+				$edit = ((local_channel() && $rr['author_xchan'] == get_observer_hash()) ? array($a->get_baseurl().'/events/'.$rr['event_hash'].'?expandform=1',t('Edit event'),'','') : false);
+>>>>>>> upstream/master
 
 				$drop = array($a->get_baseurl().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');
 

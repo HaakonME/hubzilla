@@ -241,7 +241,8 @@ footer {
 	padding-right: 3em; 
 }
 
-.birthday-today, .event-today {
+.birthday-today,
+.event-today {
 	font-weight: bold;
 }
 
@@ -847,6 +848,7 @@ nav .acpopup {
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 .fc-unthemed th,
 .fc-unthemed td,
 .fc-unthemed thead,
@@ -909,6 +911,8 @@ nav .acpopup {
 }
 
 
+=======
+>>>>>>> upstream/master
 #cboxOverlay {
 	z-index: 1050;
 }
@@ -1562,8 +1566,12 @@ img.mail-conv-sender-photo {
 	padding: 0.5em 10px;
 }
 
-.wall-photo-item {
-	/*padding: 0.5em 10px;*/
+.wall-event-item {
+	padding: 10px;
+	color: #fff;
+	background-color: #3A87AD; /* should reflect calendar color */
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
 }
 
 .wall-photo-item img {
@@ -2252,8 +2260,11 @@ nav .badge.mail-update:hover {
 .help-searchlist a {
 	font-size: 130%;
 }
+<<<<<<< HEAD
 
 .response-list ul {
 	list-style-type: none;
 }
 
+=======
+>>>>>>> upstream/master

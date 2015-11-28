@@ -55,7 +55,14 @@
 				showEvent(calEvent.id);
 			},
 			loading: function(isLoading, view) {
+				$('#events-spinner').spin('tiny');
+				$('#events-spinner > i').css('color', 'transparent');
 				if(!isLoading) {
+<<<<<<< HEAD
+=======
+					$('#events-spinner').spin(false);
+					$('#events-spinner > i').css('color', '');
+>>>>>>> upstream/master
 					$('td.fc-day').dblclick(function() {
 						openMenu('form');
 						//window.location.href='/events/new?start='+$(this).data('date');
@@ -71,30 +78,54 @@
 				switch(view.name){
 					case "month":
 					element.find(".fc-title").html(
+<<<<<<< HEAD
 						"<img src='{0}' style='height:10px;width:10px'>&nbsp;{1}: {2}".format(
+=======
+						"<img src='{0}' style='height:12px;width:12px;' title='{1}'>&nbsp;<span title='{3}{4}'>{2}</span>".format(
+>>>>>>> upstream/master
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
-							event.title
+							event.title,
+							event.item.description ? event.item.description + "\r\n\r\n" : '',
+							event.item.location ? aStr['location'] + ': ' + event.item.location.replace(/(<([^>]+)>)/ig,"") : ''
 					));
 					break;
 					case "agendaWeek":
 					element.find(".fc-title").html(
+<<<<<<< HEAD
 						"<img src='{0}' style='height:10px; width:10px'>&nbsp;{1}: {2}<p>{3}</p><p>{4}</p>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
 							event.item.description,
 							event.item.location
+=======
+						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}{4}'>{2}</span>".format(
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
+							event.title,
+							event.item.description ? event.item.description + "\r\n\r\n" : '',
+							event.item.location ? aStr['location'] + ': ' + event.item.location.replace(/(<([^>]+)>)/ig,"") : ''
+>>>>>>> upstream/master
 					));
 					break;
 					case "agendaDay":
 					element.find(".fc-title").html(
+<<<<<<< HEAD
 						"<img src='{0}' style='height:10px;width:10px'>&nbsp;{1}: {2}<p>{3}</p><p>{4}</p>".format(
 							event.item['author']['xchan_photo_s'],
 							event.item['author']['xchan_name'],
 							event.title,
 							event.item.description,
 							event.item.location
+=======
+						"<img src='{0}' style='height:12px;width:12px;'>&nbsp;{1}: <span title='{3}{4}'>{2}</span>".format(
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
+							event.title,
+							event.item.description ? event.item.description + "\r\n\r\n" : '',
+							event.item.location ? aStr['location'] + ': ' + event.item.location.replace(/(<([^>]+)>)/ig,"") : ''
+>>>>>>> upstream/master
 					));
 					break;
 				}

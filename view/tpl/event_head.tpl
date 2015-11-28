@@ -55,7 +55,11 @@
 				showEvent(calEvent.id);
 			},
 			loading: function(isLoading, view) {
+				$('#events-spinner').spin('tiny');
+				$('#events-spinner > i').css('color', 'transparent');
 				if(!isLoading) {
+					$('#events-spinner').spin(false);
+					$('#events-spinner > i').css('color', '');
 					$('td.fc-day').dblclick(function() {
 						openMenu('form');
 						//window.location.href='/events/new?start='+$(this).data('date');

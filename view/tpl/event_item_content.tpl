@@ -1,10 +1,10 @@
 {{if $description}}
-<div class="event-description">
+<div class="event-item-description">
 	{{$description}}
 </div>
 {{/if}}
 {{if $location}}
-<div class="event-location">
-	<span class="event-label">{{$location_label}}</span>&nbsp;<span class="event_location">{{$location}}</span>
+<div class="event-item-location">
+	<span class="event-item-label">{{$location_label}}</span>&nbsp;<span class="event-item-location">{{$location}}</span>
 </div>
 {{/if}}

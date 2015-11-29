@@ -1246,6 +1246,10 @@ function zot_import($arr, $sender_url) {
 			$no_dups = array();
 			if($deliveries) {
 				foreach($deliveries as $d) {
+					if(! is_array($d)) {
+						logger('Delivery hash array is not an array: ' . print_r($d,true));
+						continue;
+					}
 					if(! in_array($d['hash'],$no_dups))
 						$no_dups[] = $d['hash'];
 				}

@@ -248,12 +248,32 @@ a.wall-item-name-link {
 
 /* event item */
 
+.event-item-title h3 {
+	margin: 0px 0px 10px 0px;
+	font-weight: bold;
+}
+
+.event-item-description {
+	padding-bottom: 10px;
+}
+
+.event-item-label {
+	font-weight: bold;
+}
+
+/* vevent */
+
 .event-title h3 {
 	margin: 0px 0px 10px 0px;
 	font-weight: bold;
 }
 
+.vevent {
+	padding-top: 10px;
+}
+
 .event-description {
+	padding-top: 10px;
 	padding-bottom: 10px;
 }
 

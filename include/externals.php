@@ -28,7 +28,10 @@ function externals_run($argv, $argc){
 		} 
 		else {
 			$randfunc = db_getfunc('RAND');
-			$r = q("select site_url, site_pull from site where site_url != '%s' and site_flags != %d and site_type = %d order by $randfunc limit 1",
+
+			// fixme this query does not deal with directory realms. 
+
+			$r = q("select site_url, site_pull from site where site_url != '%s' and site_flags != %d and site_type = %d and site_dead = 0 order by $randfunc limit 1",
 				dbesc(z_root()),
 				intval(DIRECTORY_MODE_STANDALONE),
 				intval(SITE_TYPE_ZOT)

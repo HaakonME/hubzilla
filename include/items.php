@@ -550,6 +550,7 @@ function get_public_feed($channel, $params) {
 	$params['direction'] = ((x($params,'direction')) ? $params['direction']     : 'desc');
 	$params['pages']     = ((x($params,'pages'))     ? intval($params['pages']) : 0);
 	$params['top']       = ((x($params,'top'))       ? intval($params['top'])   : 0);
+	$params['cat']       = ((x($params,'cat'))       ? $params['cat']          : '');
 
 	switch($params['type']) {
 		case 'json':
@@ -593,7 +594,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'direction' => $params['direction'],  // FIXME
 		'pages' => $params['pages'],
 		'order' => 'post',
-		'top'   => $params['top']
+		'top'   => $params['top'],
+		'cat'   => $params['cat']
 		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 	
 
@@ -4816,6 +4818,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	
 	if($arr['since_id'])
 		$sql_extra .= " and item.id > " . $since_id . " ";
+
+	if($arr['cat'])
+		$sql_extra .= protect_sprintf(term_query('item', $arr['cat'], TERM_CATEGORY));
 
 	if($arr['gid'] && $uid) {
 		$r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",

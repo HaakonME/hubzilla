@@ -40,19 +40,11 @@ function externals_run($argv, $argc){
 				$url = $r[0]['site_url'];
 		}
 
-		// Note: blacklisted sites must be stored in the config as an array. 
-		// No simple way to turn this into a personal config because we have no identity here.
-		// For that we probably need a variant of superblock.
-
 		$blacklisted = false;
-		$bl1 = get_config('system','blacklisted_sites');
-		if(is_array($bl1) && $bl1) {
-			foreach($bl1 as $bl) {
-				if($bl && strpos($url,$bl) !== false) {
-					$blacklisted = true;
-					break;
-				}
-			}
+
+		if(! check_siteallowed($url)) {
+			logger('blacklisted site: ' . $url);
+			$blacklisted = true;
 		}
 
 		$attempts ++;

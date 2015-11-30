@@ -1813,3 +1813,58 @@ function get_site_info() {
 	);
 	return $data;
 }
+
+
+
+function check_siteallowed($url) {
+
+	$retvalue = true;
+
+	$bl1 = get_config('system','whitelisted_sites');
+	if(is_array($bl1) && $bl1) {
+		foreach($bl1 as $bl) {
+			if($bl1 === '*')
+				$retvalue = true;
+			if($bl && strpos($url,$bl) !== false)
+				return true;
+		}
+	}
+	$bl1 = get_config('system','blacklisted_sites');
+	if(is_array($bl1) && $bl1) {
+		foreach($bl1 as $bl) {
+			if($bl1 === '*')
+				$retvalue = false;
+			if($bl && strpos($url,$bl) !== false) {
+				return false;
+			}
+		}
+	}
+	return $retvalue;
+}
+
+function check_channelallowed($hash) {
+
+	$retvalue = true;
+
+	$bl1 = get_config('system','whitelisted_channels');
+	if(is_array($bl1) && $bl1) {
+		foreach($bl1 as $bl) {
+			if($bl1 === '*')
+				$retvalue = true;
+			if($bl && strpos($hash,$bl) !== false)
+				return true;
+		}
+	}
+	$bl1 = get_config('system','blacklisted_channels');
+	if(is_array($bl1) && $bl1) {
+		foreach($bl1 as $bl) {
+			if($bl1 === '*')
+				$retvalue = false;
+			if($bl && strpos($hash,$bl) !== false) {
+				return false;
+			}
+		}
+	}
+	return $retvalue;
+}
+

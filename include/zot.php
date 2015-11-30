@@ -554,18 +554,8 @@ function zot_gethub($arr,$multiple = false) {
 
 	if($arr['guid'] && $arr['guid_sig'] && $arr['url'] && $arr['url_sig']) {
 
-		$blacklisted = false;
-		$bl1 = get_config('system','blacklisted_sites');
-		if(is_array($bl1) && $bl1) {
-			foreach($bl1 as $bl) {
-				if($bl && strpos($arr['url'],$bl) !== false) {
-					$blacklisted = true;
-					break;
-				}
-			}
-		}
-		if($blacklisted) {
-			logger('zot_gethub: blacklisted site: ' . $arr['url']);
+		if(! check_siteallowed($arr['url'])) {
+			logger('blacklisted site: ' . $arr['url']);
 			return null;
 		}
 
@@ -1246,6 +1236,10 @@ function zot_import($arr, $sender_url) {
 			$no_dups = array();
 			if($deliveries) {
 				foreach($deliveries as $d) {
+					if(! is_array($d)) {
+						logger('Delivery hash array is not an array: ' . print_r($d,true));
+						continue;
+					}
 					if(! in_array($d['hash'],$no_dups))
 						$no_dups[] = $d['hash'];
 				}

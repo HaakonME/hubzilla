@@ -382,7 +382,6 @@ require_once('include/api_auth.php');
 
 
 	function api_item_get_user(&$a, $item) {
-		global $usercache;
 
 		// The author is our direct contact, in a conversation with us.
 
@@ -396,11 +395,11 @@ require_once('include/api_auth.php');
 		$name = $item['author']['xchan_name'];
 
 		// Generating a random ID
-		if (is_null($usercache[$nick]) or !array_key_exists($nick, $usercache))
-			$usercache[$nick] = mt_rand(2000000, 2100000);
+		if (! $nick)
+			$nick = mt_rand(2000000, 2100000);
 
 		$ret = array(
-			'id' => $usercache[$nick],
+			'id' => $nick,
 			'name' => $name,
 			'screen_name' => $nick,
 			'location' => '', //$uinfo[0]['default-location'],

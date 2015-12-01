@@ -786,6 +786,7 @@ a.rateme, div.rateme {
 
 #nav-search-text {
 	font-size: 12px;
+	width: 200px;
 	height: 20px;
 	margin: 15px;
 	padding: 0px 5px 0px 5px;

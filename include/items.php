@@ -3474,7 +3474,7 @@ function post_is_importable($item,$abook) {
 	unobscure($item);
 
 	$text = prepare_text($item['body'],$item['mimetype']);
-	$text = html2plain($text);
+	$text = html2plain(($item['title']) ? $item['title'] . ' ' . $text : $text);
 
 
 	$lang = null;

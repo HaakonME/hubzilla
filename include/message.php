@@ -173,7 +173,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 					'revision' => $r['data']['revision']
 				);
 			}
-			$body = str_replace($match[1],'',$body);
+			$body = trim(str_replace($match[1],'',$body));
 		}
 	}
 

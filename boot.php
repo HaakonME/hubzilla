@@ -48,6 +48,7 @@ require_once('include/AccessList.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
+define ( 'STD_VERSION',             '0.11.1' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1160  );
@@ -65,10 +66,10 @@ define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
 //define ( 'NULL_DATE',              '0000-00-00 00:00:00'  );
 define ( 'TEMPLATE_BUILD_PATH',    'store/[data]/smarty3' );
 
-define ( 'DIRECTORY_MODE_NORMAL',      0x0000); // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
-define ( 'DIRECTORY_MODE_PRIMARY',     0x0001);
-define ( 'DIRECTORY_MODE_SECONDARY',   0x0002);
-define ( 'DIRECTORY_MODE_STANDALONE',  0x0100);
+define ( 'DIRECTORY_MODE_NORMAL',      0x0000); // A directory client
+define ( 'DIRECTORY_MODE_PRIMARY',     0x0001); // There can only be *one* primary directory server in a directory_realm.
+define ( 'DIRECTORY_MODE_SECONDARY',   0x0002); // All other mirror directory servers
+define ( 'DIRECTORY_MODE_STANDALONE',  0x0100); // A detached (off the grid) hub with itself as directory server.
 
 // We will look for upstream directories whenever me make contact
 // with other sites, but if this is a new installation and isn't

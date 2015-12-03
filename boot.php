@@ -622,10 +622,10 @@ class App {
 	public  $poi        = null;            // "person of interest", generally a referenced connection
 	private $oauth_key  = null;            // consumer_id of oauth request, if used
 	public  $layout     = array();         // Comanche parsed template
-	public  $pdl        = null;
+	public  $pdl        = null;            // Comanche page description
 	private $perms      = null;            // observer permissions
 	private $widgets    = array();         // widgets for this page
-	//private $widgetlist = null;            // widget ordering and inclusion directives
+
 
 	public  $groups;
 	public  $language;
@@ -1158,7 +1158,7 @@ function z_root() {
 }
 
 /**
- * @brief Return absolut URL for given $path.
+ * @brief Return absolute URL for given $path.
  *
  * @param string $path
  *
@@ -1470,12 +1470,6 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
-//	There's no such thing as login_head.tpl, has never been in Red, removed from Friendica 1 Jun 2013...
-
-//		$a->page['htmlhead'] .= replace_macros(get_markup_template("login_head.tpl"), array(
-//			'$baseurl' => $a->get_baseurl(true)
-//		));
-
 		$tpl = get_markup_template("login.tpl");
 		if(strlen($a->query_string))
 			$_SESSION['login_return_url'] = $a->query_string;

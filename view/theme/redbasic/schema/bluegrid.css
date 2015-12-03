@@ -110,7 +110,7 @@ input#jot-title:hover, input#jot-title:focus {
     border-color: transparent;
 }
 
-nav .dropdown-menu, .wall-item-tools .dropdown-menu, .section-title-wrapper .dropdown-menu {
+nav .dropdown-menu, .wall-item-tools .dropdown-menu, .section-title-wrapper .dropdown-menu, .section-content-wrapper .dropdown-menu {
     background-color: rgba(67,72,138,.97);
     color: #fff;
     border-radius: 0;

@@ -495,6 +495,15 @@ function format_css_if_exists($source) {
 		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
 }
 
+/*
+ * This basically calculates the baseurl. We have other functions to do that, but
+ * there was an issue with script paths and mixed-content whose details are arcane 
+ * and perhaps lost in the message archives. The short answer is that we're ignoring 
+ * the URL which we are "supposed" to use, and generating script paths relative to 
+ * the URL which we are currently using; in order to ensure they are found and aren't
+ * blocked due to mixed content issues. 
+ */
+
 function script_path() {
 	if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
 		$scheme = 'https';

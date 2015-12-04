@@ -1611,6 +1611,14 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		$channel = $r[0];
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
+		/* blacklisted channels get a permission denied, no special message to tip them off */
+
+		if(! check_channelallowed($sender['hash'])) {
+			$DR->update('permission denied');
+			$result[] = $DR->get();
+			continue;
+		}
+
 		/**
 		 * @FIXME: Somehow we need to block normal message delivery from our clones, as the delivered
 		 * message doesn't have ACL information in it as the cloned copy does. That copy 
@@ -2081,6 +2089,14 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 
 		$channel = $r[0];
 		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+
+		/* blacklisted channels get a permission denied, no special message to tip them off */
+
+		if(! check_channelallowed($sender['hash'])) {
+			$DR->update('permission denied');
+			$result[] = $DR->get();
+			continue;
+		}
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],'post_mail')) {
 			logger("permission denied for mail delivery {$channel['channel_id']}");

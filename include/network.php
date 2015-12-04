@@ -1764,12 +1764,14 @@ function get_site_info() {
 	$site_name = get_config('system','sitename');
 	if(! get_config('system','hidden_version_siteinfo')) {
 		$version = RED_VERSION;
+		$tag = get_std_version();
+
 		if(@is_dir('.git') && function_exists('shell_exec')) {
 			$commit = trim( @shell_exec('git log -1 --format="%h"'));
-			if(! get_config('system','hidden_tag_siteinfo'))
-				$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
-			else 
-				$tag = '';
+//			if(! get_config('system','hidden_tag_siteinfo'))
+//				$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
+//			else 
+//				$tag = '';
 		}
 		if(! isset($commit) || strlen($commit) > 16)
 			$commit = '';

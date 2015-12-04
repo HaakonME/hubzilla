@@ -3,6 +3,17 @@
 function photo_factory($data, $type = null) {
 	$ph = null;
 
+
+	$unsupported_types = array(
+		'image/bmp',
+		'image/vnd.microsoft.icon',
+		'image/tiff',
+		'image/svg+xml'
+	);
+
+	if($type && in_array(strtolower($type),$unsupported_types))
+		return null;
+
 	$ignore_imagick = get_config('system', 'ignore_imagick');
 
 	if(class_exists('Imagick') && !$ignore_imagick) {

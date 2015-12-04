@@ -9,6 +9,7 @@ require_once('include/security.php');
 require_once('include/photos.php');
 require_once('include/items.php');
 require_once('include/attach.php');
+require_once('include/api_auth.php');
 
 	/*
 	 *
@@ -381,7 +382,6 @@ require_once('include/attach.php');
 
 
 	function api_item_get_user(&$a, $item) {
-		global $usercache;
 
 		// The author is our direct contact, in a conversation with us.
 
@@ -395,11 +395,11 @@ require_once('include/attach.php');
 		$name = $item['author']['xchan_name'];
 
 		// Generating a random ID
-		if (is_null($usercache[$nick]) or !array_key_exists($nick, $usercache))
-			$usercache[$nick] = mt_rand(2000000, 2100000);
+		if (! $nick)
+			$nick = mt_rand(2000000, 2100000);
 
 		$ret = array(
-			'id' => $usercache[$nick],
+			'id' => $nick,
 			'name' => $name,
 			'screen_name' => $nick,
 			'location' => '', //$uinfo[0]['default-location'],
@@ -741,6 +741,8 @@ require_once('include/attach.php');
 		}
 		$user_info = api_get_user($a);
 
+//		logger('status_with_media: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
+
 		$_REQUEST['type'] = 'wall';
 		$_REQUEST['profile_uid'] = api_user();
 		$_REQUEST['api_source'] = true;
@@ -908,7 +910,7 @@ require_once('include/attach.php');
 	function red_item(&$a, $type) {
 
 		if (api_user() === false) {
-			logger('api_red_item_new: no user');
+			logger('api_red_item_full: no user');
 			return false;
 		}
 
@@ -2195,7 +2197,7 @@ require_once('include/attach.php');
 			}
 		}
 
-		$id = send_message($recipient['id'], $_POST['text'], $sub, $replyto);
+		$id = send_message(api_user(),$recipient['guid'], $_POST['text'], $sub, $replyto);
 
 		if ($id>-1) {
 			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));

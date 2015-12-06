@@ -129,7 +129,7 @@ pre code {
 
 code {
 	font-size: 1em;
-	padding: 1em;
+	padding: 1em 1.5em;
 	border: 1px solid #ccc;
 	background: #ccc;
 	color: #000;
@@ -1887,9 +1887,7 @@ blockquote {
 	font-size: $font_size;
 	font-style: italic;
 	border-left: 3px solid #ccc;
-	padding: 0.4em;
-	color: #4d4d4d;
-	margin: 0px 0px 0px 20px;
+	padding: 1em 0px 1em 1.5em;
 }
 
 .badge {

@@ -1951,7 +1951,7 @@ function update_r1159() {
 
 
 function update_r1160() {
-	$r1 = q("alter table abook add abook_instance text not null default '' ");
+	$r = q("alter table abook add abook_instance text not null default '' ");
 	if($r)
 		return UPDATE_SUCCESS;
     return UPDATE_FAILED;

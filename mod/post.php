@@ -483,6 +483,14 @@ function post_init(&$a) {
  */
 function post_post(&$a) {
 
+	require_once('Zotlabs/Zot/Receiver.php');
+
+	$z = new Zotlabs\Zot\Receiver($_REQUEST['data'],get_config('system','prvkey'));
+	
+	// notreached;
+
+exit;
+
 	$encrypted_packet = false;
 	$ret = array('success' => false);
 
@@ -650,7 +658,6 @@ function post_post(&$a) {
 
 		/* pickup: end */
 	}
-
 
 	/*
 	 * All other message types require us to verify the sender. This is a generic check, so we 

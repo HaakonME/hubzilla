@@ -2,7 +2,6 @@
 
 namespace Zotlabs\Zot;
 
-
 class Receiver {
 
 	protected $data;
@@ -82,8 +81,8 @@ class Receiver {
 				zot_reply_ping();
 				break;
 			case 'pickup':
-				zot_reply_pickup($this->data);
 				/* perform site validation, as opposed to sender validation */
+				zot_reply_pickup($this->data);
 				break;
 
 			default:

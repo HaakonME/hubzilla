@@ -1822,6 +1822,13 @@ function check_siteallowed($url) {
 
 	$retvalue = true;
 
+
+	$arr = array('url' => $url);
+	call_hooks('check_siteallowed',$arr);
+
+	if(array_key_exists('allowed',$arr))
+		return $arr['allowed'];
+
 	$bl1 = get_config('system','whitelisted_sites');
 	if(is_array($bl1) && $bl1) {
 		foreach($bl1 as $bl) {
@@ -1847,6 +1854,12 @@ function check_siteallowed($url) {
 function check_channelallowed($hash) {
 
 	$retvalue = true;
+
+	$arr = array('hash' => $hash);
+	call_hooks('check_channelallowed',$arr);
+
+	if(array_key_exists('allowed',$arr))
+		return $arr['allowed'];
 
 	$bl1 = get_config('system','whitelisted_channels');
 	if(is_array($bl1) && $bl1) {

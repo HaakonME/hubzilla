@@ -1888,6 +1888,7 @@ blockquote {
 	font-style: italic;
 	border-left: 3px solid #ccc;
 	padding: 1em 0px 1em 1.5em;
+	margin: 0px;
 }
 
 .badge {

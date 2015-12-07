@@ -1299,7 +1299,6 @@ function widget_album($args) {
 	//edit album name
 	$album_edit = null;
 
-
 	$photos = array();
 	if($r) {
 		$twist = 'rotright';

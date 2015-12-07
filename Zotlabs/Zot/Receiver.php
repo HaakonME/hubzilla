@@ -46,8 +46,6 @@ class Receiver {
 			$this->ValidateSender();
 
 		$this->Dispatch();
-
-
 	}
 
 	function ValidateSender() {

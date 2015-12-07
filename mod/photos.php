@@ -779,6 +779,7 @@ function photos_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$photos' => $photos,
 				'$album' => $album,
+				'$album_id' => rand(),
 				'$album_edit' => array(t('Edit Album'), $album_edit),
 				'$can_post' => $can_post,
 				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
@@ -1313,6 +1314,7 @@ function photos_content(&$a) {
 		$tpl = get_markup_template('photos_recent.tpl'); 
 		$o .= replace_macros($tpl, array(
 			'$title' => t('Recent Photos'),
+			'$album_id' => rand(),
 			'$can_post' => $can_post,
 			'$upload' => array(t('Upload'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,

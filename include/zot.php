@@ -4335,7 +4335,6 @@ function zot_reply_purge($sender,$recipients) {
 		remove_all_xchan_resources($sender_hash);	
 
 		$ret['success'] = true;
-		json_return_and_die($ret);
 	}
 
 	json_return_and_die($ret);

@@ -20,7 +20,7 @@ class ZotHandler implements IHandler {
 	}
 
 	function Request($data) {
-		zot_reply_message_request($data));
+		zot_reply_message_request($data);
 	}
 
 	function AuthCheck($data,$encrypted) {

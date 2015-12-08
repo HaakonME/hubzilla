@@ -12,13 +12,16 @@ class Receiver {
 	protected $validated;
 	protected $recipients;
 	protected $response;
+	protected $handler;
 
-	function __construct($data,$prvkey) {
+	function __construct($data,$prvkey,$handler) {
 
 		$this->error       = false;
 		$this->validated   = false;
 		$this->messagetype = '';
 		$this->response    = array('success' => false);
+
+		$this->handler = $handler;
 
 		if(! is_array($data))
 			$data = json_decode($data,true);
@@ -76,11 +79,11 @@ class Receiver {
 		switch($this->messagetype) {
 			case 'ping':
 				/* no validation needed */
-				zot_reply_ping();
+				$this->handler->Ping();
 				break;
 			case 'pickup':
 				/* perform site validation, as opposed to sender validation */
-				zot_reply_pickup($this->data);
+				$this->handler->Pickup($this->data);
 				break;
 
 			default:
@@ -96,24 +99,24 @@ class Receiver {
 		switch($this->messagetype) {
 
 			case 'auth_check':
-				zot_reply_auth_check($this->data,$this->encrypted);
+				$this->handler->AuthCheck($this->data,$this->encrypted);
 				break;
 
 			case 'request':
-				json_return_and_die(zot_process_message_request($this->data));
+				$this->handler->Request($this->data);
 				break;
 
 			case 'purge':
-				zot_reply_purge($this->sender,$this->recipients);
+				$this->handler->Purge($this->sender,$this->recipients);
 				break;
 
 			case 'refresh':
 			case 'force_refresh':
-				zot_reply_refresh($this->sender,$this->recipients);
+				$this->handler->Refresh($this->sender,$this->recipients);
 				break;
 
 			case 'notify':
-				zot_reply_notify($this->data);
+				$this->handler->Notify($this->data);
 				break;
 
 			default:

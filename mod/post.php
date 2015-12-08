@@ -486,8 +486,9 @@ function post_init(&$a) {
 function post_post(&$a) {
 
 	require_once('Zotlabs/Zot/Receiver.php');
+	require_once('Zotlabs/Zot/ZotHandler.php');
 
-	$z = new Zotlabs\Zot\Receiver($_REQUEST['data'],get_config('system','prvkey'));
+	$z = new Zotlabs\Zot\Receiver($_REQUEST['data'],get_config('system','prvkey'), new Zotlabs\Zot\ZotHandler());
 	
 	// notreached;
 

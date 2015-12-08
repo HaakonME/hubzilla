@@ -3494,13 +3494,13 @@ function import_author_zot($x) {
  * @param array $data
  * @return array
  */
-function zot_process_message_request($data) {
+function zot_reply_message_request($data) {
 	$ret = array('success' => false);
 
 	if (! $data['message_id']) {
 		$ret['message'] = 'no message_id';
 		logger('no message_id');
-		return $ret;
+		json_return_and_die($ret);
 	}
 
 	$sender = $data['sender'];
@@ -3518,7 +3518,7 @@ function zot_process_message_request($data) {
 	if (! $c) {
 		logger('recipient channel not found.');
 		$ret['message'] .= 'recipient not found.' . EOL;
-		return $ret;
+		json_return_and_die($ret);
 	}
 
 	/*
@@ -3536,7 +3536,7 @@ function zot_process_message_request($data) {
 		);
 		if (! $r) {
 			logger('no hubs');
-			return $ret;
+			json_return_and_die($ret);
 		}
 		$hubs = $r;
 
@@ -3577,8 +3577,7 @@ function zot_process_message_request($data) {
 		}
 	}
 	$ret['success'] = true;
-
-	return $ret;
+	json_return_and_die($ret);
 }
 
 

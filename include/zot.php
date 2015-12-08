@@ -4389,7 +4389,7 @@ function zot_reply_notify($data) {
 
 	$ret = array('success' => false);
 
-	logger('notify received from ' . $connecting_url);
+	logger('notify received from ' . $data['sender']['url']);
 
 	$async = get_config('system','queued_fetch');
 

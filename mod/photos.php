@@ -765,6 +765,7 @@ function photos_content(&$a) {
 			if($photos) {
 				$o = replace_macros(get_markup_template('photosajax.tpl'),array(
 					'$photos' => $photos,
+					'$album_id' => bin2hex($album)
 				));
 			}
 			else {
@@ -779,6 +780,7 @@ function photos_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$photos' => $photos,
 				'$album' => $album,
+				'$album_id' => bin2hex($album),
 				'$album_edit' => array(t('Edit Album'), $album_edit),
 				'$can_post' => $can_post,
 				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
@@ -1300,6 +1302,7 @@ function photos_content(&$a) {
 		if($photos) {
 			$o = replace_macros(get_markup_template('photosajax.tpl'),array(
 				'$photos' => $photos,
+				'$album_id' => bin2hex(t('Recent Photos'))
 			));
 		}
 		else {
@@ -1313,6 +1316,7 @@ function photos_content(&$a) {
 		$tpl = get_markup_template('photos_recent.tpl'); 
 		$o .= replace_macros($tpl, array(
 			'$title' => t('Recent Photos'),
+			'$album_id' => bin2hex(t('Recent Photos')),
 			'$can_post' => $can_post,
 			'$upload' => array(t('Upload'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,

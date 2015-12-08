@@ -1299,7 +1299,6 @@ function widget_album($args) {
 	//edit album name
 	$album_edit = null;
 
-
 	$photos = array();
 	if($r) {
 		$twist = 'rotright';
@@ -1338,6 +1337,7 @@ function widget_album($args) {
 	$o .= replace_macros($tpl, array(
 		'$photos' => $photos,
 		'$album' => (($title) ? $title : $album),
+		'$album_id' => rand(),
 		'$album_edit' => array(t('Edit Album'), $album_edit),
 		'$can_post' => false,
 		'$upload' => array(t('Upload'), z_root() . '/photos/' . get_app()->profile['channel_address'] . '/upload/' . bin2hex($album)),

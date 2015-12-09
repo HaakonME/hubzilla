@@ -56,8 +56,9 @@
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="icon-link jot-icons"></i>
 					</button>
-				</div>			
-				<div class="btn-group hidden-xs text-formatting-button-group">
+				</div>
+				{{if $visitor}}
+				<div class="btn-group hidden-xs hidden-sm text-formatting-button-group">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
 					</button>
@@ -74,10 +75,6 @@
 						<i class="icon-terminal jot-icons"></i>
 					</button>
 				</div>
-				{{if $visitor}}
-				<div class="btn-group hidden-xs hidden-sm">
-
-
 				{{else}}
 				<div class="btn-group privacy-button-group">
 				{{/if}}

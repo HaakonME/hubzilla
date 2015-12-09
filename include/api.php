@@ -1,10 +1,10 @@
 <?php /** @file */
 
-require_once("bbcode.php");
-require_once("datetime.php");
-require_once("conversation.php");
-require_once("oauth.php");
-require_once("html2plain.php");
+require_once("include/bbcode.php");
+require_once("include/datetime.php");
+require_once("include/conversation.php");
+require_once("include/oauth.php");
+require_once("include/html2plain.php");
 require_once('include/security.php');
 require_once('include/photos.php');
 require_once('include/items.php');

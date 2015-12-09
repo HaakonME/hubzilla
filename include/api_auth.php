@@ -1,6 +1,6 @@
 <?php /** @file */
 
-require_once("oauth.php");
+require_once('include/oauth.php');
 
 
 /**
@@ -25,7 +25,7 @@ function api_login(&$a){
 		}
 		echo __file__.__line__.__function__."<pre>"; 
 //			var_dump($consumer, $token); 
-		die();
+		killme();
 	}
 	catch(Exception $e) {
 		logger(__file__.__line__.__function__."\n".$e);
@@ -56,7 +56,8 @@ function api_login(&$a){
 		logger('API_login: ' . print_r($_SERVER,true), LOGGER_DEBUG);
 		header('WWW-Authenticate: Basic realm="Red"');
 		header('HTTP/1.0 401 Unauthorized');
-		die('This api requires login');
+		echo('This api requires login');
+		killme();
 	}
 		
 	// process normal login request
@@ -81,7 +82,8 @@ function api_login(&$a){
 			logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
 			header('WWW-Authenticate: Basic realm="Red"');
 			header('HTTP/1.0 401 Unauthorized');
-			die('This api requires login');
+			echo('This api requires login');
+			killme();
 		}
 	}
 

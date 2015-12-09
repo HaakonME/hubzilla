@@ -896,12 +896,6 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	$_SESSION['theme'] = $p[0]['channel_theme'];
 
-//	$a->set_template_engine(); // reset the template engine to the default in case the user's theme doesn't specify one
-
-//	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
-//	if (file_exists($theme_info_file)){
-//		require_once($theme_info_file);
-//	}
 }
 
 /**

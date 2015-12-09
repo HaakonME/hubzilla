@@ -249,11 +249,6 @@ footer {
 	color: $font_colour;
 }
 
-#login-main {
-	max-width: 300px;
-	margin-top: 50px;
-}
-
 #cropimage-wrapper, #cropimage-preview-wrapper {
 	float: left;
 	padding: 30px;

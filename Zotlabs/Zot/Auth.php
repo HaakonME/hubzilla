@@ -57,7 +57,7 @@ class Auth {
 		if(strstr($this->desturl,z_root() . '/rmagic'))
 			goaway(z_root());
 
-		$this->reply_die();	
+		$this->reply_die('');	
 
 	}
 
@@ -259,7 +259,7 @@ class Auth {
 	}
 
 
-	function reply_die($msg,$goaway = true) {
+	function reply_die($msg) {
 		if($msg) {
 			if(array_key_exists('message',$this->ret))
 				$this->ret['message'] .= $msg;
@@ -268,8 +268,8 @@ class Auth {
 		}
 		if($this->test)
 			json_return_and_die($this->ret);
-		if($goaway)
-			goaway($this->desturl);
+
+		goaway($this->desturl);
 	}
 
 }

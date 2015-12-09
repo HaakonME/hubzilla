@@ -48,6 +48,16 @@
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
 				<div class="btn-group">
+					{{if $writefiles}}
+					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
+						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
+					</button>
+					{{/if}}
+					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
+						<i id="profile-link" class="icon-link jot-icons"></i>
+					</button>
+				</div>			
+				<div class="btn-group hidden-xs text-formatting-button-group">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
 					</button>
@@ -65,48 +75,35 @@
 					</button>
 				</div>
 				{{if $visitor}}
-				<div class="btn-group hidden-xs">
-					{{if $writefiles}}
-					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
-						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
-					</button>
-					{{/if}}
-					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
-						<i id="profile-link" class="icon-link jot-icons"></i>
-					</button>
-				</div>
 				<div class="btn-group hidden-xs hidden-sm">
-					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
-						<i id="profile-location" class="icon-globe jot-icons"></i>
-					</button>
-					{{if $noloc}}
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
-						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
-					</button>
-					{{/if}}
+
+
 				{{else}}
-				<div class="btn-group hidden-xs">
-				{{/if}}
-				{{if $feature_expire}}
-					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
-						<i id="profile-expires" class="icon-eraser jot-icons"></i>
-					</button>
-				{{/if}}
-				{{if $feature_future}}
-					<button id="profile-future-wrapper" class="btn btn-default btn-sm" title="{{$future_txt}}" onclick="jotGetPubDate();return false;">
-						<i id="profile-future" class="icon-time jot-icons"></i>
-					</button>
+				<div class="btn-group privacy-button-group">
 				{{/if}}
 				{{if $feature_encrypt}}
 					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
 						<i id="profile-encrypt" class="icon-key jot-icons"></i>
 					</button>
 				{{/if}}
-				{{if $feature_voting}}
-					<button id="profile-voting-wrapper" class="btn btn-default btn-sm" title="{{$voting}}" onclick="toggleVoting();return false;">
-						<i id="profile-voting" class="icon-check-empty jot-icons"></i>
+				{{if $feature_future}}
+					<button id="profile-future-wrapper" class="btn btn-default btn-sm" title="{{$future_txt}}" onclick="jotGetPubDate();return false;">
+						<i id="profile-future" class="icon-time jot-icons"></i>
+					</button>
+				{{/if}}				
+				{{if $feature_expire}}
+					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
+						<i id="profile-expires" class="icon-eraser jot-icons"></i>
 					</button>
 				{{/if}}
+				{{if $noloc}}
+					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
+						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
+					</button>
+				{{/if}}
+					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
+						<i id="profile-location" class="icon-globe jot-icons"></i>
+					</button>				
 				</div>
 				<div class="btn-group visible-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

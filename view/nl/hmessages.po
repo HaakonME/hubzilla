@@ -8316,7 +8316,7 @@ msgstr "Hierbij nodig ik je uit om mij, en andere vrienden en kennissen, op $Pro
 
 #: ../../mod/invite.php:134
 msgid "You will need to supply this invitation code: "
-msgstr "Je moet deze uitnodigingscode opgeven:"
+msgstr "Je moet deze uitnodigingscode opgeven: "
 
 #: ../../mod/invite.php:135
 msgid ""

@@ -54,10 +54,7 @@ function api_login(&$a){
 
 	if (!isset($_SERVER['PHP_AUTH_USER'])) {
 		logger('API_login: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-		header('WWW-Authenticate: Basic realm="Red"');
-		header('HTTP/1.0 401 Unauthorized');
-		echo('This api requires login');
-		killme();
+		retry_basic_auth();
 	}
 		
 	// process normal login request
@@ -80,10 +77,7 @@ function api_login(&$a){
 		}
 		if(! $record) {	
 			logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-			header('WWW-Authenticate: Basic realm="Red"');
-			header('HTTP/1.0 401 Unauthorized');
-			echo('This api requires login');
-			killme();
+			retry_basic_auth();
 		}
 	}
 
@@ -94,4 +88,12 @@ function api_login(&$a){
 		change_channel($channel_login);
 
 	$_SESSION['allow_api'] = true;
+}
+
+
+function retry_basic_auth() {
+	header('WWW-Authenticate: Basic realm="Hubzilla"');
+	header('HTTP/1.0 401 Unauthorized');
+	echo('This api requires login');
+	killme();
 }

@@ -22,7 +22,6 @@ class Auth {
 
 	function __construct($req) {
 
-		logger('construct');
 
 		$this->ret      = array('success' => false);
 		$this->success  = false;
@@ -41,14 +40,11 @@ class Auth {
 
 		$x = $this->GetHublocs($this->address);
 
-		logger('hublocs');
-
-		foreach($x as $xx) {
-
-		logger('verify');
-
-			if($this->Verify($c,$xx))
-				break;
+		if($x) {
+			foreach($x as $xx) {
+				if($this->Verify($c,$xx))
+					break;
+			}
 		}
 
 		/**

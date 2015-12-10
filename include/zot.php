@@ -3798,6 +3798,7 @@ function zotinfo($arr) {
 	$ret['site'] = array();
 	$ret['site']['url'] = z_root();
 	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$e['channel_prvkey']));
+	$ret['site']['zot_auth'] = z_root() . '/magic';
 
 	$dirmode = get_config('system','directory_mode');
 	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))

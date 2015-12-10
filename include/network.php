@@ -1883,3 +1883,16 @@ function check_channelallowed($hash) {
 	return $retvalue;
 }
 
+function deliverable_singleton($xchan) {
+	$r = q("select abook_instance from abook where abook_xchan = '%s' limit 1",
+		dbesc($xchan['xchan_hash'])
+	);
+	if($r) {
+		if(! $r[0]['abook_instance'])
+			return true;
+		if(strpos($r[0]['abook_instance'],z_root()) !== false)
+			return true;
+	}
+	return false;
+}
+

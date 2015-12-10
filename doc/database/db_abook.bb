@@ -41,6 +41,7 @@
 [tr][td]abook_feed[/td][td]indicates this connection is an RSS/Atom feed and may trigger special handling.[/td][td]int(11)[/td][td]NO[/td][td]MUL[/td][td]0[/td][td]
 [tr][td]abook_incl[/td][td]connection filter allow rules separated by LF[/td][td]int(11)[/td][td]NO[/td][td]MUL[/td][td]0[/td][td]
 [tr][td]abook_excl[/td][td]connection filter deny rules separated by LF[/td][td]int(11)[/td][td]NO[/td][td]MUL[/td][td]0[/td][td]
+[tr][td]abook_instance[/td][td]comma separated list of site urls of all channel clones that this connection is connected with (used only for singleton networks which don't support cloning)[/td][td]text[/td][td]NO[/td][td]MUL[/td][td]0[/td][td]
 [/table]
 
 

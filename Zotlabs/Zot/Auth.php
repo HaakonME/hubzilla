@@ -158,22 +158,19 @@ class Auth {
 		$this->Debug('packet contents: ' . $p);
 
 		$result = zot_zot($hubloc['hubloc_callback'],$p);
-
 		if(! $result['success']) {
 			logger('auth_check callback failed.');
-			if($this->test) {
+			if($this->test)
 				$this->Debug('auth check request to your site returned .' . print_r($result, true));
-				return false;
-			}
 			return false;
 		}
+
 		$j = json_decode($result['body'], true);
 		if(! $j) {
 			logger('auth_check json data malformed.');
-			if($this->test) {
+			if($this->test)
 				$this->Debug('json malformed: ' . $result['body']);
-				return false;
-			}
+			return false;
 		}
 
 		$this->Debug('auth check request returned .' . print_r($j, true));
@@ -185,10 +182,8 @@ class Auth {
 
 		if (! rsa_verify($this->sec . $hubloc['xchan_hash'],base64url_decode($j['confirm']),$hubloc['xchan_pubkey'])) {
 			logger('final confirmation failed.');
-			if($this->test) {
+			if($this->test)
 				$this->Debug('final confirmation failed. ' . $sec . print_r($j,true) . print_r($hubloc,true));
-				return false;
-			}
 			return false;
 		}
 
@@ -211,7 +206,8 @@ class Auth {
 
 		$_SESSION['authenticated'] = 1;
 
-		// check for delegation
+		// check for delegation and if all is well, log them in locally with delegation restrictions
+
 		$this->delegate_success = false;
 
 		if($this->delegate) {

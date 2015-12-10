@@ -4,8 +4,10 @@ namespace Zotlabs\Zot;
 
 class Auth {
 
-	protected $ret;
 	protected $test;
+	protected $test_results;
+	protected $debug_msg;
+
 	protected $address;
 	protected $desturl;
 	protected $sec;
@@ -23,19 +25,22 @@ class Auth {
 	function __construct($req) {
 
 
-		$this->ret      = array('success' => false);
-		$this->success  = false;
-		$this->test     = ((array_key_exists('test',$req)) ? intval($req['test']) : 0);
-		$this->address  = $req['auth'];
-		$this->desturl  = $req['dest'];
-		$this->sec      = $req['sec'];
-		$this->version  = $req['version'];
-		$this->delegate = $req['delegate'];
+		$this->test         = ((array_key_exists('test',$req)) ? intval($req['test']) : 0);
+		$this->test_results = array('success' => false);
+		$this->debug_msg    = '';
+
+		$this->success   = false;
+		$this->address   = $req['auth'];
+		$this->desturl   = $req['dest'];
+		$this->sec       = $req['sec'];
+		$this->version   = $req['version'];
+		$this->delegate  = $req['delegate'];
 
 		$c = get_sys_channel();
 		if(! $c) {
 			logger('unable to obtain response (sys) channel');
-			reply_die('no local channels found.');
+			$this->Debug('no local channels found.');
+			$this->Finalise();
 		}
 
 		$x = $this->GetHublocs($this->address);
@@ -57,13 +62,17 @@ class Auth {
 		if(strstr($this->desturl,z_root() . '/rmagic'))
 			goaway(z_root());
 
-		$this->reply_die('');	
+		$this->Finalise();	
 
 	}
 
 	function GetHublocs($address) {
 
-	   // Try and find a hubloc for the person attempting to auth
+		// Try and find a hubloc for the person attempting to auth.
+		// Since we're matching by address, we have to return all entries
+		// some of which may be from re-installed hubs; and we'll need to 
+		// try each sequentially to see if one can pass the test
+
 		$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash 
 			where hubloc_addr = '%s' order by hubloc_id desc",
 			dbesc($address)
@@ -74,7 +83,7 @@ class Auth {
 			$ret = zot_finger($address, null);
 			if ($ret['success']) {
 				$j = json_decode($ret['body'], true);
-				if ($j)
+				if($j)
 					import_xchan($j);
 				$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash 
 					where hubloc_addr = '%s' order by hubloc_id desc",
@@ -84,7 +93,8 @@ class Auth {
 		}
 		if(! $x) {
 			logger('mod_zot: auth: unable to finger ' . $address);
-			$this->reply_die('no hubloc found for ' . $address . ' and probing failed.');
+			$this->Debug('no hubloc found for ' . $address . ' and probing failed.');
+			$this->Finalise();
 		}
 
 		return $x;
@@ -107,167 +117,154 @@ class Auth {
 
 		// Also check that they are coming from the same site as they authenticated with originally.
 
-		$already_authed = ((($this->remote) && ($hubloc['hubloc_hash'] == $this->remote) 
+		$already_authed = (((remote_channel()) && ($hubloc['hubloc_hash'] == remote_channel()) 
 			&& ($hubloc['hubloc_url'] === $_SESSION['remote_hub'])) ? true : false);
-			if($this->delegate && $this->delegate !== $_SESSION['delegate_channel'])
-				$already_authed = false;
+	
+		if($this->delegate && $this->delegate !== $_SESSION['delegate_channel'])
+			$already_authed = false;
 
-			$j = array();
-			
-		if(! $already_authed) {
+		if($already_authed)
+			return true;
 
-			// Auth packets MUST use ultra top-secret hush-hush mode - e.g. the entire packet is encrypted using the 
-			// site private key
-			// The actual channel sending the packet ($c[0]) is not important, but this provides a 
-			// generic zot packet with a sender which can be verified
+		if(local_channel()) {
 
-			$p = zot_build_packet($channel,$type = 'auth_check', 
-				array(array('guid' => $hubloc['hubloc_guid'],'guid_sig' => $hubloc['hubloc_guid_sig'])), 
-				$hubloc['hubloc_sitekey'], $this->sec);
+			// tell them to logout if they're logged in locally as anything but the target remote account
+			// in which case just shut up because they don't need to be doing this at all.
 
-			$this->dbg_msg('auth check packet created using sitekey ' . $hubloc['hubloc_sitekey']);
-			$this->dbg_msg('packet contents: ' . $p);
-
-
-			$result = zot_zot($hubloc['hubloc_callback'],$p);
-
-			if(! $result['success']) {
-				logger('auth_check callback failed.');
-				if($this->test) {
-					$this->dbg_msg('auth check request to your site returned .' . print_r($result, true));
-					return false;
-				}
-				return false;
-			}
-			$j = json_decode($result['body'], true);
-			if(! $j) {
-				logger('auth_check json data malformed.');
-				if($this->test) {
-					$this->dbg_msg('json malformed: ' . $result['body']);
-					return false;
-				}
-			}
-
-			$this->dbg_msg('auth check request returned .' . print_r($j, true));
-
-			if ($already_authed || $j['success']) {
-				if($j['success']) {
-					// legit response, but we do need to check that this wasn't answered by a man-in-middle
-					if (! rsa_verify($this->sec . $hubloc['xchan_hash'],base64url_decode($j['confirm']),$hubloc['xchan_pubkey'])) {
-						logger('final confirmation failed.');
-						if($this->test) {
-							$this->dbg_msg('final confirmation failed. ' . $sec . print_r($j,true) . print_r($hubloc,true));
-							return false;
-						}
-						return false;
-					}
-					if (array_key_exists('service_class',$j))
-						$this->remote_service_class = $j['service_class'];
-					if (array_key_exists('level',$j))
-						$this->remote_level = $j['level'];
-					if (array_key_exists('DNT',$j))
-						$this->dnt = $j['DNT'];
-				}
-
-				// everything is good... maybe
-
-				if(local_channel()) {
-
-					// tell them to logout if they're logged in locally as anything but the target remote account
-					// in which case just shut up because they don't need to be doing this at all.
-
-					if (get_app()->channel['channel_hash'] != $hubloc['xchan_hash']) {
-						logger('already authenticated locally as somebody else.');
-						notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
-						if($this->test) {
-							$$this->dbg_msg('already logged in locally with a conflicting identity.');
-							return false;;
-						}
-					}
-					return false;;
-				}
-
-				// log them in
-
-				if ($this->test) {
-					$ret['success'] = true;
-					$this->reply_die('Authentication Success!');
-				}
-
-				$this->delegate_success = false;
-				if($this->delegate) {
-					$r = q("select * from channel left join xchan on channel_hash = xchan_hash where xchan_addr = '%s' limit 1",
-						dbesc($this->delegate)
-					);
-					if ($r && intval($r[0]['channel_id'])) {
-						$allowed = perm_is_allowed($r[0]['channel_id'],$hubloc['xchan_hash'],'delegate');
-						if($allowed) {
-							$_SESSION['delegate_channel'] = $r[0]['channel_id'];
-							$_SESSION['delegate'] = $hubloc['xchan_hash'];
-							$_SESSION['account_id'] = intval($r[0]['channel_account_id']);
-							require_once('include/security.php');
-							change_channel($r[0]['channel_id']);
-							$this->delegate_success = true;
-						}
-					}
-				}
-
-				$_SESSION['authenticated'] = 1;
-				if (! $this->delegate_success) {
-					$_SESSION['visitor_id'] = $hubloc['xchan_hash'];
-					$_SESSION['my_url'] = $hubloc['xchan_url'];
-					$_SESSION['my_address'] = $this->address;
-					$_SESSION['remote_service_class'] = $this->remote_service_class;
-					$_SESSION['remote_level'] = $this->remote_level;
-					$_SESSION['remote_hub'] = $this->remote_hub;
-					$_SESSION['DNT'] = $this->dnt;
-				}
-
-				$arr = array('xchan' => $hubloc, 'url' => $this->desturl, 'session' => $_SESSION);
-				call_hooks('magic_auth_success',$arr);
-				get_app()->set_observer($hubloc);
-				require_once('include/security.php');
-				get_app()->set_groups(init_groups_visitor($_SESSION['visitor_id']));
-				info(sprintf( t('Welcome %s. Remote authentication successful.'),$hubloc['xchan_name']));
-				logger('mod_zot: auth success from ' . $hubloc['xchan_addr']);
-				$this->success = true;
+			if (get_app()->channel['channel_hash'] == $hubloc['xchan_hash']) {
 				return true;
 			}
 			else {
+				logger('already authenticated locally as somebody else.');
+				notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
 				if($this->test) {
-					$this->dbg_msg('auth failure. ' . print_r($_REQUEST,true) . print_r($j,true));
+					$this->Debug('already logged in locally with a conflicting identity.');
 					return false;
 				}
-				logger('magic-auth failure - not authenticated: ' . $hubloc['xchan_addr']);
 			}
+			return false;
+		}
 
+		// Auth packets MUST use ultra top-secret hush-hush mode - e.g. the entire packet is encrypted using the 
+		// site private key
+		// The actual channel sending the packet ($c[0]) is not important, but this provides a 
+		// generic zot packet with a sender which can be verified
+
+		$p = zot_build_packet($channel,$type = 'auth_check', 
+			array(array('guid' => $hubloc['hubloc_guid'],'guid_sig' => $hubloc['hubloc_guid_sig'])), 
+			$hubloc['hubloc_sitekey'], $this->sec);
+
+		$this->Debug('auth check packet created using sitekey ' . $hubloc['hubloc_sitekey']);
+		$this->Debug('packet contents: ' . $p);
+
+		$result = zot_zot($hubloc['hubloc_callback'],$p);
+
+		if(! $result['success']) {
+			logger('auth_check callback failed.');
 			if($this->test) {
-				$this->dbg_msg('auth failure fallthrough ' . print_r($_REQUEST,true) . print_r($j,true));
+				$this->Debug('auth check request to your site returned .' . print_r($result, true));
 				return false;
-		   }
+			}
+			return false;
 		}
+		$j = json_decode($result['body'], true);
+		if(! $j) {
+			logger('auth_check json data malformed.');
+			if($this->test) {
+				$this->Debug('json malformed: ' . $result['body']);
+				return false;
+			}
+		}
+
+		$this->Debug('auth check request returned .' . print_r($j, true));
+
+		if(! $j['success']) 
+			return false;
+
+		// legit response, but we do need to check that this wasn't answered by a man-in-middle
+
+		if (! rsa_verify($this->sec . $hubloc['xchan_hash'],base64url_decode($j['confirm']),$hubloc['xchan_pubkey'])) {
+			logger('final confirmation failed.');
+			if($this->test) {
+				$this->Debug('final confirmation failed. ' . $sec . print_r($j,true) . print_r($hubloc,true));
+				return false;
+			}
+			return false;
+		}
+
+		if (array_key_exists('service_class',$j))
+			$this->remote_service_class = $j['service_class'];
+		if (array_key_exists('level',$j))
+			$this->remote_level = $j['level'];
+		if (array_key_exists('DNT',$j))
+			$this->dnt = $j['DNT'];
+
+
+		// log them in
+
+		if ($this->test) {
+			// testing only - return the success result
+			$this->test_results['success'] = true;
+			$this->Debug('Authentication Success!');
+			$this->Finalise();
+		}
+
+		$_SESSION['authenticated'] = 1;
+
+		// check for delegation
+		$this->delegate_success = false;
+
+		if($this->delegate) {
+			$r = q("select * from channel left join xchan on channel_hash = xchan_hash where xchan_addr = '%s' limit 1",
+				dbesc($this->delegate)
+			);
+			if ($r && intval($r[0]['channel_id'])) {
+				$allowed = perm_is_allowed($r[0]['channel_id'],$hubloc['xchan_hash'],'delegate');
+				if($allowed) {
+					$_SESSION['delegate_channel'] = $r[0]['channel_id'];
+					$_SESSION['delegate'] = $hubloc['xchan_hash'];
+					$_SESSION['account_id'] = intval($r[0]['channel_account_id']);
+					require_once('include/security.php');
+					// this will set the local_channel authentication in the session
+					change_channel($r[0]['channel_id']);
+					$this->delegate_success = true;
+				}
+			}
+		}
+
+		if (! $this->delegate_success) {
+			// normal visitor (remote_channel) login session credentials
+			$_SESSION['visitor_id'] = $hubloc['xchan_hash'];
+			$_SESSION['my_url'] = $hubloc['xchan_url'];
+			$_SESSION['my_address'] = $this->address;
+			$_SESSION['remote_service_class'] = $this->remote_service_class;
+			$_SESSION['remote_level'] = $this->remote_level;
+			$_SESSION['remote_hub'] = $this->remote_hub;
+			$_SESSION['DNT'] = $this->dnt;
+		}
+
+		$arr = array('xchan' => $hubloc, 'url' => $this->desturl, 'session' => $_SESSION);
+		call_hooks('magic_auth_success',$arr);
+		get_app()->set_observer($hubloc);
+		require_once('include/security.php');
+		get_app()->set_groups(init_groups_visitor($_SESSION['visitor_id']));
+		info(sprintf( t('Welcome %s. Remote authentication successful.'),$hubloc['xchan_name']));
+		logger('mod_zot: auth success from ' . $hubloc['xchan_addr']);
+		$this->success = true;
+		return true;
+	}
+
+	function Debug($msg) {
+		$this->debug_msg .= $msg . EOL;
 	}
 
 
-	function dbg_msg($msg) {
-		if($msg) {
-			if(array_key_exists('message',$this->ret))
-				$this->ret['message'] .= $msg;
-			else
-				$this->ret['message'] = $msg;
-		}
-	}
+	function Finalise() {
 
-
-	function reply_die($msg) {
-		if($msg) {
-			if(array_key_exists('message',$this->ret))
-				$this->ret['message'] .= $msg;
-			else
-				$this->ret['message'] = $msg;
+		if($this->test) {
+			$this->test_results['message'] = $this->debug_msg;
+			json_return_and_die($this->test_results);
 		}
-		if($this->test)
-			json_return_and_die($this->ret);
 
 		goaway($this->desturl);
 	}
@@ -276,11 +273,6 @@ class Auth {
 
 
 /**
- * @brief HTTP POST entry point for Zot.
- *
- * Most access to this endpoint is via the post method.
- * Here we will pick out the magic auth params which arrive as a get request,
- * and the only communications to arrive this way.
  *
  * Magic Auth
  * ==========
@@ -298,6 +290,8 @@ class Auth {
  * * version => the zot revision
  * * delegate => optional urlencoded webbie of a local channel to invoke delegation rights for
  *
+ * * test => (optional 1 or 0 - debugs the authentication exchange and returns a json response instead of redirecting the browser session)
+ *
  * When this packet is received, an "auth-check" zot message is sent to $mysite.
  * (e.g. if $_GET['auth'] is foobar@podunk.edu, a zot packet is sent to the podunk.edu zot endpoint, which is typically /post)
  * If no information has been recorded about the requesting identity a zot information packet will be retrieved before
@@ -313,7 +307,8 @@ class Auth {
  *     "guid":"kgVFf_...",
  *     "guid_sig":"PT9-TApz...",
  *     "url":"http:\/\/podunk.edu",
- *     "url_sig":"T8Bp7j..."
+ *     "url_sig":"T8Bp7j...",
+ *     "sitekey":"aMtgKTiirXrICP..."
  *   },
  *   "recipients":{
  *     {
@@ -338,6 +333,7 @@ class Auth {
  *   "confirm":"q0Ysovd1u...",
  *   "service_class":(optional)
  *   "level":(optional)
+ *   "DNT": (optional do-not-track - 1 or 0)
  * }
  * \endcode
  *

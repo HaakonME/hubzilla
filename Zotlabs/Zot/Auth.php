@@ -102,18 +102,19 @@ class Auth {
 
 
 	function Verify($channel,$hubloc) {
+
 		logger('auth request received from ' . $hubloc['hubloc_addr'] );
-
-		// check credentials and access
-
-		// If they are already authenticated and haven't changed credentials,
-		// we can save an expensive network round trip and improve performance.
 
 		$this->remote               = remote_channel();
 		$this->remote_service_class = '';
 		$this->remote_level         = 0;
 		$this->remote_hub           = $hubloc['hubloc_url'];
 		$this->dnt                  = 0;
+
+		// check credentials and access
+
+		// If they are already authenticated and haven't changed credentials,
+		// we can save an expensive network round trip and improve performance.
 
 		// Also check that they are coming from the same site as they authenticated with originally.
 

@@ -22,6 +22,7 @@ CREATE TABLE "abook" (
   "abook_profile" char(64) NOT NULL DEFAULT '',
   "abook_incl" TEXT NOT NULL DEFAULT '',
   "abook_excl" TEXT NOT NULL DEFAULT '',
+  "abook_instance" TEXT NOT NULL DEFAULT '',
   PRIMARY KEY ("abook_id")
 );
   create index  "abook_account" on abook ("abook_account");

@@ -57,6 +57,8 @@ require_once('include/html2plain.php');
  *       purge_all              channel_id
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
+ *       single_activity        item_id (deliver to a singleton network from the appropriate clone)
+ *       single_mail            mail_id (deliver to a singleton network from the appropriate clone)
  *       location               channel_id
  *       request                channel_id            xchan_hash             message_id
  *       rating                 xlink_id

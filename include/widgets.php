@@ -666,13 +666,25 @@ function widget_eventsmenu($arr) {
 	if (! local_channel())
 		return;
 
-	return replace_macros(get_markup_template('events_side.tpl'), array(
+	return replace_macros(get_markup_template('events_menu_side.tpl'), array(
 		'$title' => t('Events Menu'),
 		'$day' => t('Day View'),
 		'$week' => t('Week View'),
 		'$month' => t('Month View'),
 		'$export' => t('Export'),
 		'$upload' => t('Import'),
+		'$submit' => t('Submit')
+	));
+}
+
+function widget_eventstools($arr) {
+	if (! local_channel())
+		return;
+
+	return replace_macros(get_markup_template('events_tools_side.tpl'), array(
+		'$title' => t('Events Tools'),
+		'$export' => t('Export Calendar'),
+		'$import' => t('Import Calendar'),
 		'$submit' => t('Submit')
 	));
 }
@@ -1136,7 +1148,7 @@ function widget_forums($arr) {
 		foreach($r1 as $rr) {
 			if($unseen && (! intval($rr['unseen'])))
 				continue;
-			$o .= '<li><span class="pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><a href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+			$o .= '<li><a href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><span class="badge pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';
 	}
@@ -1147,6 +1159,8 @@ function widget_forums($arr) {
 
 function widget_tasklist($arr) {
 
+	if (! local_channel())
+		return;
 
 	require_once('include/event.php');
 	$o .= '<script>var tasksShowAll = 0; $(document).ready(function() { tasksFetch(); $("#tasklist-new-form").submit(function(event) { event.preventDefault(); $.post( "tasks/new", $("#tasklist-new-form").serialize(), function(data) { tasksFetch();  $("#tasklist-new-summary").val(""); } ); return false; } )});</script>';
@@ -1285,7 +1299,6 @@ function widget_album($args) {
 	//edit album name
 	$album_edit = null;
 
-
 	$photos = array();
 	if($r) {
 		$twist = 'rotright';
@@ -1324,6 +1337,7 @@ function widget_album($args) {
 	$o .= replace_macros($tpl, array(
 		'$photos' => $photos,
 		'$album' => (($title) ? $title : $album),
+		'$album_id' => rand(),
 		'$album_edit' => array(t('Edit Album'), $album_edit),
 		'$can_post' => false,
 		'$upload' => array(t('Upload'), z_root() . '/photos/' . get_app()->profile['channel_address'] . '/upload/' . bin2hex($album)),

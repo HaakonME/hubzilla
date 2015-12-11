@@ -26,8 +26,8 @@ function dirsearch_content(&$a) {
 
 	$token = get_config('system','realm_token');
 	if($token && $access_token != $token) {
-		$result['message'] = t('This directory server requires an access token');
-		return;
+		$ret['message'] = t('This directory server requires an access token');
+		json_return_and_die($ret);
 	}
 
 

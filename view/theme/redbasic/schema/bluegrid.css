@@ -110,7 +110,7 @@ input#jot-title:hover, input#jot-title:focus {
     border-color: transparent;
 }
 
-nav .dropdown-menu, .wall-item-tools .dropdown-menu, .section-title-wrapper .dropdown-menu {
+nav .dropdown-menu, .wall-item-tools .dropdown-menu, .section-title-wrapper .dropdown-menu, .section-content-wrapper .dropdown-menu {
     background-color: rgba(67,72,138,.97);
     color: #fff;
     border-radius: 0;
@@ -284,8 +284,12 @@ input {
 	border-radius: 0px;	
 }
 
+.home-welcome {
+	color: #FFF;
+	margin-bottom: 30px;
+} 
+
 #login-main {
-    max-width: 100%;
     margin-top: 0;
 }
 
@@ -341,7 +345,7 @@ input {
     background-color: #FFF;
 }
 
-.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit, form#chat-form > input, div#adminpage > form > div.submit > input, input.sources-submit, input.contact-edit-submit, input#dbtn-submit, input#newchannel-submit-button, input#contacts-search-submit {
+.btn-primary, input#event-submit, input#rmagic-submit-button, input#lostpass-submit-button, input#side-follow-submit, .profile-edit-submit-wrapper > input.profile-edit-submit-button, input#profile-photo-submit, form#chat-form > input, div#adminpage > form > div.submit > input, input.sources-submit, input.contact-edit-submit, input#dbtn-submit, input#newchannel-submit-button, input#contacts-search-submit, input#register-submit-button {
     background-color: #FFF;
     color: #43488A;
 	border-radius: 0px;
@@ -350,7 +354,7 @@ input {
     transition: all .3s ease-in-out;
 }
 
-.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus, form#chat-form > input:hover, form#chat-form > input:focus, div#adminpage > form > div.submit > input:hover, div#adminpage > form > div.submit > input:focus, input.sources-submit:hover, input.sources-submit:focus, input.contact-edit-submit:focus, input.contact-edit-submit:hover, input#dbtn-submit:hover, input#dbtn-submit:focus, input#newchannel-submit-button:hover, input#newchannel-submit-button:focus, input#contacts-search-submit:hover, input#contacts-search-submit:focus {
+.btn-primary:hover, .btn-primary:focus, input#event-submit:hover, input#event-submit:focus, input#rmagic-submit-button:hover, input#rmagic-submit-button:focus, input#lostpass-submit-button:hover, input#lostpass-submit-button:focus, input#side-follow-submit:hover, input#side-follow-submit:focus, .profile-edit-submit-wrapper > input.profile-edit-submit-button:hover, .profile-edit-submit-wrapper > input.profile-edit-submit-button:focus, input#profile-photo-submit:hover, input#profile-photo-submit:focus, form#chat-form > input:hover, form#chat-form > input:focus, div#adminpage > form > div.submit > input:hover, div#adminpage > form > div.submit > input:focus, input.sources-submit:hover, input.sources-submit:focus, input.contact-edit-submit:focus, input.contact-edit-submit:hover, input#dbtn-submit:hover, input#dbtn-submit:focus, input#newchannel-submit-button:hover, input#newchannel-submit-button:focus, input#contacts-search-submit:hover, input#contacts-search-submit:focus, input#register-submit-button:hover, input#register-submit-button:focus {
     border-color: #FFF;
     background-color: #43488A;
     color: #FFF;

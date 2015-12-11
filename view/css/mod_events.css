@@ -4,6 +4,16 @@
 	margin-bottom: -1px;
 }
 
+.fc-unthemed th,
+.fc-unthemed td,
+.fc-unthemed thead,
+.fc-unthemed tbody,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-row,
+.fc-unthemed .fc-popover {
+	border-color: #ccc !important;
+}
+
 #events-spinner .spinner {
 	margin-top: 9px;
 	margin-bottom: -9px;
@@ -14,21 +24,21 @@
 	padding: 6px 12px;
 }
 
-.event-wrapper {
+.event-wrapper,
+.vevent {
 	max-width: 700px;
-	height: auto;
-	padding: 10px;
 }
 
 .event-owner {
-	margin-bottom: 15px;
+	padding: 10px;
 }
 
 .event-owner img {
 	margin-right: 5px;
 }
 
-.event-buttons,
-.event-description {
-	margin-top: 10px;
+.vevent,
+.event-buttons {
+	padding: 10px;
 }
+

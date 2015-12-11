@@ -65,7 +65,7 @@ This document assumes you're an administrator.
         this website.  Can be overwritten by user settings.
     [b]system > projecthome[/b]
         Set the project homepage as the homepage of your hub.
-    [b]system > workflowchannelnext[/b]
+    [b]system > workflow_channel_next[/b]
         The page to direct users to immediately after creating a channel.
     [b]system > max_daily_registrations[/b]
         Set the maximum number of new registrations allowed on any day.
@@ -154,6 +154,8 @@ This document assumes you're an administrator.
 		Needed in some Windows installations to locate the openssl configuration file on the system.
  	[b]system > hide_help[/b]
 		Don't display help documentation link in nav bar
+ 	[b]system > expire_delivery_reports[/b]
+		Expiration in days for delivery reports - default 30
 
 [b]Directory config[/b]
 [b]Directory search defaults[/b]

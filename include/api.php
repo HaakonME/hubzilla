@@ -1,10 +1,10 @@
 <?php /** @file */
 
-require_once("bbcode.php");
-require_once("datetime.php");
-require_once("conversation.php");
-require_once("oauth.php");
-require_once("html2plain.php");
+require_once("include/bbcode.php");
+require_once("include/datetime.php");
+require_once("include/conversation.php");
+require_once("include/oauth.php");
+require_once("include/html2plain.php");
 require_once('include/security.php');
 require_once('include/photos.php');
 require_once('include/items.php');
@@ -382,7 +382,6 @@ require_once('include/api_auth.php');
 
 
 	function api_item_get_user(&$a, $item) {
-		global $usercache;
 
 		// The author is our direct contact, in a conversation with us.
 
@@ -396,11 +395,11 @@ require_once('include/api_auth.php');
 		$name = $item['author']['xchan_name'];
 
 		// Generating a random ID
-		if (is_null($usercache[$nick]) or !array_key_exists($nick, $usercache))
-			$usercache[$nick] = mt_rand(2000000, 2100000);
+		if (! $nick)
+			$nick = mt_rand(2000000, 2100000);
 
 		$ret = array(
-			'id' => $usercache[$nick],
+			'id' => $nick,
 			'name' => $name,
 			'screen_name' => $nick,
 			'location' => '', //$uinfo[0]['default-location'],
@@ -2299,12 +2298,11 @@ require_once('include/api_auth.php');
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
 
 
-
 	function api_oauth_request_token(&$a, $type){
 		try{
-			$oauth = new FKOAuth1();
+			$oauth = new ZotOAuth1();
 			$req = OAuthRequest::from_request();
-logger('Req: ' . var_export($req,true));
+			logger('Req: ' . var_export($req,true),LOGGER_DATA);
 			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
 			logger('oauth_exception: ' . print_r($e->getMessage(),true));
@@ -2314,9 +2312,10 @@ logger('Req: ' . var_export($req,true));
 		echo $r;
 		killme();	
 	}
+
 	function api_oauth_access_token(&$a, $type){
 		try{
-			$oauth = new FKOAuth1();
+			$oauth = new ZotOAuth1();
 			$req = OAuthRequest::from_request();
 			$r = $oauth->fetch_access_token($req);
 		}catch(Exception $e){

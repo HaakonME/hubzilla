@@ -57,7 +57,6 @@
 						<i id="profile-link" class="icon-link jot-icons"></i>
 					</button>
 				</div>
-				{{if $visitor}}
 				<div class="btn-group hidden-xs hidden-sm text-formatting-button-group">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="icon-bold jot-icons"></i>
@@ -75,10 +74,7 @@
 						<i class="icon-terminal jot-icons"></i>
 					</button>
 				</div>
-				
-				{{else}}
 				<div class="btn-group visible-xs visible-sm privacy-button-group">
-				{{/if}}
 				{{if $feature_encrypt}}
 					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
 						<i id="profile-encrypt" class="icon-key jot-icons"></i>

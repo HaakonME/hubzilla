@@ -2298,12 +2298,11 @@ require_once('include/api_auth.php');
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
 
 
-
 	function api_oauth_request_token(&$a, $type){
 		try{
-			$oauth = new FKOAuth1();
+			$oauth = new ZotOAuth1();
 			$req = OAuthRequest::from_request();
-logger('Req: ' . var_export($req,true));
+			logger('Req: ' . var_export($req,true),LOGGER_DATA);
 			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
 			logger('oauth_exception: ' . print_r($e->getMessage(),true));
@@ -2313,9 +2312,10 @@ logger('Req: ' . var_export($req,true));
 		echo $r;
 		killme();	
 	}
+
 	function api_oauth_access_token(&$a, $type){
 		try{
-			$oauth = new FKOAuth1();
+			$oauth = new ZotOAuth1();
 			$req = OAuthRequest::from_request();
 			$r = $oauth->fetch_access_token($req);
 		}catch(Exception $e){

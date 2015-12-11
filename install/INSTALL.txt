@@ -382,3 +382,19 @@ stuff on your server that might access MySQL, and Hubzilla's poller which
 needs MySQL access, too. A good setting for a medium-sized hub might be to
 keep MySQL's max_connections at 100 and set mpm_prefork's
 MaxRequestWorkers to 70.
+------------------------------------------------------------------------
+For Calculate Automatic according to your server resources and configure 
+mod_prefork you can Install and Execute ApacheTune 
+
+Home Page: https://github.com/royalterra/apache2tune
+
+git clone https://github.com/royalterra/apache2tune.git
+
+cd apache2tune
+
+chmod +x Apache2tune.sh
+
+Please Read the Documentation of Apache2tune
+./Apache2tune.sh
+
+

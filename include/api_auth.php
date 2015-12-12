@@ -28,7 +28,7 @@ function api_login(&$a){
 		killme();
 	}
 	catch(Exception $e) {
-		logger(__file__.__line__.__function__."\n".$e);
+		logger($e->getMessage());
 	}
 		
 	// workarounds for HTTP-auth in CGI mode

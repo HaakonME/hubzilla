@@ -139,7 +139,7 @@
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $preview}}
-				<button class="btn btn-default btn-sm hidden-xs" onclick="preview_post();return false;" title="{{$preview}}">
+				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}

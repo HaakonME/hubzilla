@@ -112,8 +112,11 @@ require_once('include/api_auth.php');
 						break;
 					case "json":
 						header ("Content-Type: application/json");
-						foreach($r as $rr)
+						foreach($r as $rr) {
+							if(! $rr)
+								$rr = array();
 							$json = json_encode($rr);
+						}
 						if ($_GET['callback'])
 							$json = $_GET['callback']."(".$json.")";
 						return $json; 
@@ -1079,6 +1082,8 @@ require_once('include/api_auth.php');
 				'contributors' => ''					
 			);
 			$status_info['user'] = $user_info;
+			if(array_key_exists('status',$status_info['user']))
+				unset($status_info['user']['status']);
 		}
 
 		return  api_apply_template("status", $type, array('$status' => $status_info));
@@ -1320,6 +1325,8 @@ require_once('include/api_auth.php');
 
 		// params
 		$id = intval(argv(3));
+		if(! $id)
+			$id = $_REQUEST['id'];
 
 		logger('API: api_statuses_show: '.$id);
 
@@ -1336,9 +1343,11 @@ require_once('include/api_auth.php');
 		$r = q("select * from item where true $item_normal $sql_extra",
 			intval($id)
 		);
+
 		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
+
 
 		if ($conversation) {
 			$data = array('$statuses' => $ret);

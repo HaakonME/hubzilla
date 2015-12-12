@@ -870,6 +870,7 @@ require_once('include/api_auth.php');
 		// this should output the last post (the one we just posted).
 		return api_status_show($a,$type);
 	}
+	api_register_func('api/statuses/update_with_media','api_statuses_update', true);
 	api_register_func('api/statuses/update','api_statuses_update', true);
 
 

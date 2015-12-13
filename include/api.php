@@ -2311,12 +2311,12 @@ require_once('include/api_auth.php');
 	function api_oauth_request_token(&$a, $type){
 		try{
 			$oauth = new ZotOAuth1();
-			$req = OAuthRequest::from_request();
+			$req = OAuth1Request::from_request();
 			logger('Req: ' . var_export($req,true),LOGGER_DATA);
 			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
 			logger('oauth_exception: ' . print_r($e->getMessage(),true));
-			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); 
+			echo "error=". OAuth1Util::urlencode_rfc3986($e->getMessage()); 
 			killme();
 		}
 		echo $r;
@@ -2326,10 +2326,10 @@ require_once('include/api_auth.php');
 	function api_oauth_access_token(&$a, $type){
 		try{
 			$oauth = new ZotOAuth1();
-			$req = OAuthRequest::from_request();
+			$req = OAuth1Request::from_request();
 			$r = $oauth->fetch_access_token($req);
 		}catch(Exception $e){
-			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
+			echo "error=". OAuth1Util::urlencode_rfc3986($e->getMessage()); killme();
 		}
 		echo $r;
 		killme();			

@@ -13,7 +13,7 @@ require_once("library/OAuth1.php");
 
 //require_once("library/oauth2-php/lib/OAuth2.inc");
 
-class ZotOAuthDataStore extends OAuthDataStore {
+class ZotOAuth1DataStore extends OAuth1DataStore {
 
 	function gen_token(){
 		return md5(base64_encode(pack('N6', mt_rand(), mt_rand(), mt_rand(), mt_rand(), mt_rand(), uniqid())));
@@ -28,7 +28,7 @@ class ZotOAuthDataStore extends OAuthDataStore {
 
 		if($r) {
 			get_app()->set_oauth_key($consumer_key);
-			return new OAuthConsumer($r[0]['client_id'],$r[0]['pw'],$r[0]['redirect_uri']);
+			return new OAuth1Consumer($r[0]['client_id'],$r[0]['pw'],$r[0]['redirect_uri']);
 		}
 		return null;
 	}
@@ -44,7 +44,7 @@ class ZotOAuthDataStore extends OAuthDataStore {
 		);
 
 		if (count($r)){
-			$ot=new OAuthToken($r[0]['id'],$r[0]['secret']);
+			$ot=new OAuth1Token($r[0]['id'],$r[0]['secret']);
 			$ot->scope=$r[0]['scope'];
 			$ot->expires = $r[0]['expires'];
 			$ot->uid = $r[0]['uid'];
@@ -62,7 +62,7 @@ class ZotOAuthDataStore extends OAuthDataStore {
 		);
 
 		if (count($r))
-			return new OAuthToken($r[0]['id'],$r[0]['secret']);
+			return new OAuth1Token($r[0]['id'],$r[0]['secret']);
 		return null;
 	}
 
@@ -88,7 +88,7 @@ class ZotOAuthDataStore extends OAuthDataStore {
 
 		if(! $r)
 			return null;
-		return new OAuthToken($key,$sec);
+		return new OAuth1Token($key,$sec);
 	}
 
 	function new_access_token($token, $consumer, $verifier = null) {
@@ -119,7 +119,7 @@ class ZotOAuthDataStore extends OAuthDataStore {
 				intval($uverifier));
 
 			if ($r)
-				$ret = new OAuthToken($key,$sec);		
+				$ret = new OAuth1Token($key,$sec);		
 		}
 		
 		
@@ -138,12 +138,12 @@ class ZotOAuthDataStore extends OAuthDataStore {
 	}
 }
 
-class ZotOAuth1 extends OAuthServer {
+class ZotOAuth1 extends OAuth1Server {
 
 	function __construct() {
-		parent::__construct(new ZotOAuthDataStore());
-		$this->add_signature_method(new OAuthSignatureMethod_PLAINTEXT());
-		$this->add_signature_method(new OAuthSignatureMethod_HMAC_SHA1());
+		parent::__construct(new ZotOAuth1DataStore());
+		$this->add_signature_method(new OAuth1SignatureMethod_PLAINTEXT());
+		$this->add_signature_method(new OAuth1SignatureMethod_HMAC_SHA1());
 	}
 	
 	function loginUser($uid){

@@ -704,10 +704,17 @@ class App {
 		'smarty3' => '}}'
 	);
 
+	// These represent the URL which was used to access the page
+
 	private $scheme;
 	private $hostname;
-	private $baseurl;
 	private $path;
+
+	// This is our standardised URL - regardless of what was used
+	// to access the page
+
+	private $baseurl;
+
 
 	/**
 	 * App constructor.

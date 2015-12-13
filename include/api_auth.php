@@ -13,7 +13,7 @@ function api_login(&$a){
 	// login with oauth
 	try {
 		$oauth = new ZotOAuth1();
-		$req = OAuthRequest::from_request();
+		$req = OAuth1Request::from_request();
 
 		list($consumer,$token) = $oauth->verify_request($req);
 

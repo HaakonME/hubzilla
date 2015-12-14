@@ -2349,7 +2349,7 @@ function item_store($arr, $allow_exec = false) {
 				return $ret;
 			}
 
-			if($arr['obj_type'] == ACTIVITY_OBJ_NOTE)
+			if(($arr['obj_type'] == ACTIVITY_OBJ_NOTE) && (! $arr['object']))
 				$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
 			// is the new message multi-level threaded?
@@ -2870,6 +2870,7 @@ function send_status_notifications($post_id,$item) {
 	if($x) {
 		foreach($x as $xx) {
 			if($xx['author_xchan'] === $r[0]['channel_hash']) {
+
 				$notify = true;
 
 				// check for an unfollow thread activity - we should probably decode the obj and check the id

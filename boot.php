@@ -83,7 +83,7 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://zothub.com', 
 	'https://hubzilla.site',
 	'https://red.zottel.red',
-	'https://gravizot.de',
+	'https://hub.pixelbits.de',
 	'https://my.federated.social',
 	'https://hubzilla.nl'
 );
@@ -704,10 +704,17 @@ class App {
 		'smarty3' => '}}'
 	);
 
+	// These represent the URL which was used to access the page
+
 	private $scheme;
 	private $hostname;
-	private $baseurl;
 	private $path;
+
+	// This is our standardised URL - regardless of what was used
+	// to access the page
+
+	private $baseurl;
+
 
 	/**
 	 * App constructor.
@@ -1324,7 +1331,7 @@ function check_config(&$a) {
 	 *
 	 */
 
-	$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
+	$r = q("SELECT * FROM addon WHERE installed = 1");
 	if($r)
 		$installed = $r;
 	else

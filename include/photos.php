@@ -377,7 +377,7 @@ function photo_upload($channel, $observer, $args) {
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
-		$arr['body']		= (($object) ? $args['body'] : $body . "\r\n" . $args['body']);
+		$arr['body']		    = (($object) ? $args['body'] : $body . "\r\n" . $args['body']);	
 
 
 		// this one is tricky because the item and the photo have the same permissions, those of the photo.

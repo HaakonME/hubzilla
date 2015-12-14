@@ -430,7 +430,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			$observer = $x[0];
 	}
 
-	logger('arr: ' . print_r($arr,true));
+	logger('arr: ' . print_r($arr,true), LOGGER_DATA);
 
 	if(! perm_is_allowed($channel_id,$observer_hash, 'write_storage')) {
 		$ret['message'] = t('Permission denied.');

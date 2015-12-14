@@ -698,12 +698,7 @@ function photos_content(&$a) {
 		$album_edit = null;
 		if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 			if($can_post) {
-				if($a->get_template_engine() === 'internal') {
-					$album_e = template_escape($album);
-				}
-				else {
-					$album_e = $album;
-				}
+				$album_e = $album;
 				$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));
 
 				// @fixme - syncronise actions with DAV

@@ -1,10 +1,10 @@
 <?php /** @file */
 
-require_once("bbcode.php");
-require_once("datetime.php");
-require_once("conversation.php");
-require_once("oauth.php");
-require_once("html2plain.php");
+require_once("include/bbcode.php");
+require_once("include/datetime.php");
+require_once("include/conversation.php");
+require_once("include/oauth.php");
+require_once("include/html2plain.php");
 require_once('include/security.php');
 require_once('include/photos.php');
 require_once('include/items.php');
@@ -112,8 +112,11 @@ require_once('include/api_auth.php');
 						break;
 					case "json":
 						header ("Content-Type: application/json");
-						foreach($r as $rr)
+						foreach($r as $rr) {
+							if(! $rr)
+								$rr = array();
 							$json = json_encode($rr);
+						}
 						if ($_GET['callback'])
 							$json = $_GET['callback']."(".$json.")";
 						return $json; 
@@ -852,13 +855,24 @@ require_once('include/api_auth.php');
 			$_REQUEST['type'] = 'wall';
 		
 			if(x($_FILES,'media')) {
-				$_FILES['userfile'] = $_FILES['media'];
-				// upload the image if we have one
-				$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-				require_once('mod/wall_attach.php');
-				$media = wall_attach_post($a);
-				if(strlen($media)>0)
-					$_REQUEST['body'] .= "\n\n".$media;
+				$num_uploads = count($_FILES['media']['name']);
+				for($x = 0; $x < $num_uploads; $x ++) {
+					$_FILES['userfile'] = array();
+					$_FILES['userfile']['name'] = $_FILES['media']['name'][$x];
+					$_FILES['userfile']['type'] = $_FILES['media']['type'][$x];
+					$_FILES['userfile']['tmp_name'] = $_FILES['media']['tmp_name'][$x];
+					$_FILES['userfile']['error'] = $_FILES['media']['error'][$x];
+					$_FILES['userfile']['size'] = $_FILES['media']['size'][$x];
+
+					// upload each image if we have any
+					$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
+					require_once('mod/wall_attach.php');
+					$a->data['api_info'] = $user_info;
+					$media = wall_attach_post($a);
+
+					if(strlen($media)>0)
+						$_REQUEST['body'] .= "\n\n" . $media;
+				}
 			}
 		}
 
@@ -870,6 +884,7 @@ require_once('include/api_auth.php');
 		// this should output the last post (the one we just posted).
 		return api_status_show($a,$type);
 	}
+	api_register_func('api/statuses/update_with_media','api_statuses_update', true);
 	api_register_func('api/statuses/update','api_statuses_update', true);
 
 
@@ -1078,6 +1093,8 @@ require_once('include/api_auth.php');
 				'contributors' => ''					
 			);
 			$status_info['user'] = $user_info;
+			if(array_key_exists('status',$status_info['user']))
+				unset($status_info['user']['status']);
 		}
 
 		return  api_apply_template("status", $type, array('$status' => $status_info));
@@ -1319,6 +1336,8 @@ require_once('include/api_auth.php');
 
 		// params
 		$id = intval(argv(3));
+		if(! $id)
+			$id = $_REQUEST['id'];
 
 		logger('API: api_statuses_show: '.$id);
 
@@ -1335,9 +1354,11 @@ require_once('include/api_auth.php');
 		$r = q("select * from item where true $item_normal $sql_extra",
 			intval($id)
 		);
+
 		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
+
 
 		if ($conversation) {
 			$data = array('$statuses' => $ret);
@@ -2298,28 +2319,28 @@ require_once('include/api_auth.php');
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
 
 
-
 	function api_oauth_request_token(&$a, $type){
 		try{
-			$oauth = new FKOAuth1();
-			$req = OAuthRequest::from_request();
-logger('Req: ' . var_export($req,true));
+			$oauth = new ZotOAuth1();
+			$req = OAuth1Request::from_request();
+			logger('Req: ' . var_export($req,true),LOGGER_DATA);
 			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
 			logger('oauth_exception: ' . print_r($e->getMessage(),true));
-			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); 
+			echo "error=". OAuth1Util::urlencode_rfc3986($e->getMessage()); 
 			killme();
 		}
 		echo $r;
 		killme();	
 	}
+
 	function api_oauth_access_token(&$a, $type){
 		try{
-			$oauth = new FKOAuth1();
-			$req = OAuthRequest::from_request();
+			$oauth = new ZotOAuth1();
+			$req = OAuth1Request::from_request();
 			$r = $oauth->fetch_access_token($req);
 		}catch(Exception $e){
-			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
+			echo "error=". OAuth1Util::urlencode_rfc3986($e->getMessage()); killme();
 		}
 		echo $r;
 		killme();			

@@ -114,20 +114,17 @@ function queue_run($argv, $argc){
 					dbesc(datetime_convert()),
 					dbesc($rr['outq_hash'])
 				);
-				$y = q("delete from outq where outq_hash = '%s'",
-					dbesc($rr['outq_hash'])
-				);
+				remove_queue_item($rr['outq_hash']);
 			}
 			else {
 				logger('queue: queue post returned ' . $result['return_code'] . ' from ' . $rr['outq_posturl'],LOGGER_DEBUG);
-				$y = q("update outq set outq_updated = '%s', outq_priority = outq_priority + 10 where outq_hash = '%s'",
-					dbesc(datetime_convert()),
-					dbesc($rr['outq_hash'])
-				);
+				update_queue_item($rr['outq_hash'],10);
 				$deadguys[] = $rr['outq_posturl'];
 			}
 			continue;
 		}
+
+
 		$result = zot_zot($rr['outq_posturl'],$rr['outq_notify']); 
 		if($result['success']) {
 			logger('queue: deliver zot success to ' . $rr['outq_posturl'], LOGGER_DEBUG);			
@@ -136,10 +133,7 @@ function queue_run($argv, $argc){
 		else {
 			$deadguys[] = $rr['outq_posturl'];
 			logger('queue: deliver zot returned ' . $result['return_code'] . ' from ' . $rr['outq_posturl'],LOGGER_DEBUG);
-			$y = q("update outq set outq_updated = '%s', outq_priority = outq_priority + 10 where outq_hash = '%s'",
-				dbesc(datetime_convert()),
-				dbesc($rr['outq_hash'])
-			);
+			update_queue_item($rr['outq_hash'],10);
 		}
 	}
 }

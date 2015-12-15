@@ -998,6 +998,8 @@ function zot_process_response($hub, $arr, $outq) {
 		}
 	}
 
+	// we have a more descriptive delivery report, so discard the per hub 'queued' report. 
+
 	q("delete from dreport where dreport_queue = '%s' limit 1",
 		dbesc($outq['outq_hash'])
 	);
@@ -1012,18 +1014,8 @@ function zot_process_response($hub, $arr, $outq) {
 	// synchronous message types are handled immediately
 	// async messages remain in the queue until processed.
 
-	if (intval($outq['outq_async'])) {
-		q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' and outq_channel = %d",
-			dbesc(datetime_convert()),
-			dbesc($outq['outq_hash']),
-			intval($outq['outq_channel'])
-		);
-	} else {
-		q("delete from outq where outq_hash = '%s' and outq_channel = %d",
-			dbesc($outq['outq_hash']),
-			intval($outq['outq_channel'])
-		);
-	}
+	if(intval($outq['outq_async']))
+		queue_set_delivered($outq['outq_hash'],$outq['outq_channel']);
 
 	logger('zot_process_response: ' . print_r($x,true), LOGGER_DEBUG);
 }

@@ -12,6 +12,7 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
 require_once('include/DReport.php');
+require_once('include/queue_fn.php');
 
 
 /**
@@ -2974,24 +2975,19 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	$interval = ((get_config('system','delivery_interval') !== false)
 			? intval(get_config('system','delivery_interval')) : 2 );
 
-
 	logger('build_sync_packet: packet: ' . print_r($info,true), LOGGER_DATA);
 
 	foreach($synchubs as $hub) {
 		$hash = random_string();
 		$n = zot_build_packet($channel,'notify',$env_recips,$hub['hubloc_sitekey'],$hash);
-		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-			dbesc($hash),
-			intval($channel['channel_account']),
-			intval($channel['channel_id']),
-			dbesc('zot'),
-			dbesc($hub['hubloc_callback']),
-			intval(1),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($n),
-			dbesc(json_encode($info))
-		);
+		queue_insert(array(
+			'hash'       => $hash,
+			'account_id' => $channel['channel_account_id'],
+			'channel_id' => $channel['channel_id'],
+			'posturl'    => $hub['hubloc_callback'],
+			'notify'     => $n,
+			'msg'        => json_encode($info)
+		));
 
 		proc_run('php', 'include/deliver.php', $hash);
 		if($interval)
@@ -3554,20 +3550,15 @@ function zot_reply_message_request($data) {
 			 */
 
 			$n = zot_build_packet($c[0],'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash,array('message_id' => $data['message_id']));
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async,
-				outq_created, outq_updated, outq_notify, outq_msg )
-				values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-				dbesc($hash),
-				intval($c[0]['channel_account_id']),
-				intval($c[0]['channel_id']),
-				dbesc('zot'),
-				dbesc($hub['hubloc_callback']),
-				intval(1),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($n),
-				dbesc($data_packet)
-			);
+
+			queue_insert(array(
+				'hash'       => $hash,
+				'account_id' => $c[0]['channel_account_id'],
+				'channel_id' => $c[0]['channel_id'],
+				'posturl'    => $hub['hubloc_callback'],
+				'notify'     => $n,
+				'msg'        => json_encode($data_packet)
+			));
 
 			/*
 			 * invoke delivery to send out the notify packet

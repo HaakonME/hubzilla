@@ -159,23 +159,16 @@ function notifier_run($argv, $argc){
 							));
 							if($data) {
 								$hash = random_string();
-								q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
-									values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-                					dbesc($hash),
-									intval($s[0]['channel_account_id']),
-									intval($s[0]['channel_id']),
-									dbesc('zot'),
-									dbesc($hh['hubloc_callback']),
-									intval(1),
-									dbesc(datetime_convert()),
-									dbesc(datetime_convert()),
-									dbesc($data),
-									dbesc('')
-								);
+								queue_insert(array(
+									'hash'       => $hash,
+									'account_id' => $s[0]['channel_account_id'],
+									'channel_id' => $s[0]['channel_id'],
+									'posturl'    => $hh['hubloc_callback'],
+									'notify'     => $data,
+								));
 								$deliveries[] = $hash;
 							}
 						}
-
 					}
 				}
 

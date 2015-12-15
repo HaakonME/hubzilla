@@ -337,7 +337,7 @@ require_once('include/api_auth.php');
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
 			'notifications' => false,
-			'following' => '', // #XXX: fix me
+			'following' => false, // #XXX: fix me
 			'verified' => true // #XXX: fix me
 		);
 

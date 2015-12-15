@@ -333,6 +333,17 @@ function bb2diaspora_itembody($item, $force_update = false) {
 		}
 	}
 
+
+	// since November 2015 linked photo items don't or at least may not have a body. Recreate one. 
+
+	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO) && (! trim($item['body']))) {
+		$j = json_decode($item['object'],true);
+		if($j) {
+			$item['body'] = $j['bbcode'];
+			$item['sig'] = '';
+		}
+	}
+
 	$newitem = $item;
 
 	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
@@ -345,6 +356,7 @@ function bb2diaspora_itembody($item, $force_update = false) {
 			$newitem['body']  = (($item['body'])  ? crypto_unencapsulate(json_decode($item['body'],true),$key) : '');
 		}
 	}
+
 
 	bb2diaspora_itemwallwall($newitem);
 

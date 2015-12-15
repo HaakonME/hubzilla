@@ -2,6 +2,7 @@
 
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
+require_once('include/queue_fn.php');
 
 
 function deliver_run($argv, $argc) {
@@ -90,17 +91,11 @@ function deliver_run($argv, $argc) {
 						dbesc($argv[$x])
 					);
 
-					$y = q("delete from outq where outq_hash = '%s'",
-						dbesc($argv[$x])
-					);
-
+					remove_queue_item($argv[$x]);
 				}
 				else {
 					logger('deliver: queue post returned ' . $result['return_code'] . ' from ' . $r[0]['outq_posturl'],LOGGER_DEBUG);
-					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s'",
-						dbesc(datetime_convert()),
-						dbesc($argv[$x])
-					);
+					update_queue_item($argv[$x]);
 				}
 				continue;
 			}
@@ -127,9 +122,9 @@ function deliver_run($argv, $argc) {
 						$msg = array('body' => json_encode(array('success' => true, 'pickup' => array(array('notify' => $notify,'message' => $m)))));
 						$dresult = zot_import($msg,z_root());
 					}
-					$r = q("delete from outq where outq_hash = '%s'",
-						dbesc($argv[$x])
-					);
+
+					remove_queue_item($argv[$x]);
+
 					if($dresult && is_array($dresult)) {
 						foreach($dresult as $xx) {
 							if(is_array($xx) && array_key_exists('message_id',$xx)) {
@@ -162,10 +157,7 @@ function deliver_run($argv, $argc) {
 				else {
 					logger('deliver: remote zot delivery failed to ' . $r[0]['outq_posturl']);
 					logger('deliver: remote zot delivery fail data: ' . print_r($result,true), LOGGER_DATA);
-					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s'",
-						dbesc(datetime_convert()),
-						dbesc($argv[$x])
-					);
+					update_queue_item($argv[$x],10);
 				}
 			}
 		}

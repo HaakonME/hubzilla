@@ -630,52 +630,38 @@ function notifier_run($argv, $argc){
 
 		// default: zot protocol
 
-
 		$hash = random_string();
+		$packet = null;
+
 		if($packet_type === 'refresh' || $packet_type === 'purge') {
-			$n = zot_build_packet($channel,$packet_type);
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-				dbesc($hash),
-				intval($channel['channel_account_id']),
-				intval($channel['channel_id']),
-				dbesc('zot'),
-				dbesc($hub['hubloc_callback']),
-				intval(1),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($n),
-				dbesc('')
-			);
+			$packet = zot_build_packet($channel,$packet_type);
 		}
 		elseif($packet_type === 'request') {
-			$n = zot_build_packet($channel,'request',$env_recips,$hub['hubloc_sitekey'],$hash,array('message_id' => $request_message_id));
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-				dbesc($hash),
-				intval($channel['channel_account_id']),
-				intval($channel['channel_id']),
-				dbesc('zot'),
-				dbesc($hub['hubloc_callback']),
-				intval(1),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($n),
-				dbesc('')
+			$packet = zot_build_packet($channel,$packet_type,$env_recips,$hub['hubloc_sitekey'],$hash,
+				array('message_id' => $request_message_id)
 			);
 		}
+
+		if($packet) {
+			queue_insert(array(
+				'hash'       => $hash,
+				'account_id' => $channel['channel_account_id'],
+				'channel_id' => $channel['channel_id'],
+				'posturl'    => $hub['hubloc_callback'],
+				'notify'     => $packet
+			));
+		}
 		else {
-			$n = zot_build_packet($channel,'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-				dbesc($hash),
-				intval($target_item['aid']),
-				intval($target_item['uid']),
-				dbesc('zot'),
-				dbesc($hub['hubloc_callback']),
-				intval(1),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($n),
-				dbesc(json_encode($encoded_item))
-			);
+			$packet = zot_build_packet($channel,'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
+			queue_insert(array(
+				'hash'       => $hash,
+				'account_id' => $target_item['aid'],
+				'channel_id' => $target_item['uid'],
+				'posturl'    => $hub['hubloc_callback'],
+				'notify'     => $packet,
+				'msg'        => json_encode($encoded_item)
+			));
+
 			// only create delivery reports for normal undeleted items
 			if(is_array($target_item) && array_key_exists('postopts',$target_item) && (! $target_item['item_deleted'])) {
 				q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan, dreport_queue ) values ( '%s','%s','%s','%s','%s','%s','%s' ) ",

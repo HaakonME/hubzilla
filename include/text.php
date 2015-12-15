@@ -1602,7 +1602,7 @@ function create_export_photo_body(&$item) {
 	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) {
 		$j = json_decode($item['object'],true);
 		if($j) {
-			$item['body'] .= (($j['body']) ? $j['body'] : $j['bbcode']);
+			$item['body'] .= "\n\n" . (($j['body']) ? $j['body'] : $j['bbcode']);
 			$item['sig'] = '';
 		}
 	}

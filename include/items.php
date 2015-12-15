@@ -3950,15 +3950,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		return '<at:deleted-entry ref="' . xmlify($item['mid']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
 
 
-	// since November 2015 linked photo items don't or at least may not have a body. Recreate one. 
-
-	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO) && (! trim($item['body']))) {
-		$j = json_decode($item['object'],true);
-		if($j) {
-			$item['body'] = $j['bbcode'];
-			$item['sig'] = '';
-		}
-	}
+	create_export_photo_body($item);
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid'])
 		$body = fix_private_photos($item['body'],$owner['uid'],$item,$cid);

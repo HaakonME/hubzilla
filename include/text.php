@@ -1416,20 +1416,14 @@ function format_event($jobject) {
 function prepare_body(&$item,$attach = false) {
 	require_once('include/identity.php');
 
-//	if($item['html']) {
-//		$s = bb_observer($item['html']);
-//	}
-//	else {
-		call_hooks('prepare_body_init', $item); 
-//		unobscure($item);
-		$s = prepare_text($item['body'],$item['mimetype'], false);
-//	}
+	call_hooks('prepare_body_init', $item); 
 
 
 	$photo = '';
-	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
+	$is_photo = ((($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) ? true : false);
 
 	if($is_photo) {
+
 		$object = json_decode($item['object'],true);
 
 		// if original photo width is <= 640px prepend it to item body
@@ -1443,6 +1437,8 @@ function prepare_body(&$item,$attach = false) {
 			$photo = '<a href="' . zid(rawurldecode($object['id'])) . '" target="_blank"><img style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a>';
 		}
 	}
+
+	$s = prepare_text($item['body'],$item['mimetype'], false);
 
 	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event($item['object']) : false);
 
@@ -1601,6 +1597,16 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 	return $s;
 }
 
+
+function create_export_photo_body(&$item) {
+	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) {
+		$j = json_decode($item['object'],true);
+		if($j) {
+			$item['body'] .= (($j['body']) ? $j['body'] : $j['bbcode']);
+			$item['sig'] = '';
+		}
+	}
+}
 
 /**
  * zidify_callback() and zidify_links() work together to turn any HTML a tags with class="zrl" into zid links

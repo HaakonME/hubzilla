@@ -63,7 +63,6 @@
     [li]item_id - other identifiers on other services for posts[/li]
     [li]likes - likes of 'things'[/li]
     [li]mail - private messages[/li]
-    [li]manage - deprecated table of accounts that can &quot;su&quot; each other[/li]
     [li]menu - channel menu data[/li]
     [li]menu_item - items uses by channel menus[/li]
     [li]notify - notifications[/li]

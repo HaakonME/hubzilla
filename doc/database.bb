@@ -29,7 +29,6 @@
 [tr][td][zrl=[baseurl]/help/database/db_item_id]item_id[/zrl][/td][td]other identifiers on other services for posts[/td][/tr]
 [tr][td][zrl=[baseurl]/help/database/db_likes]likes[/zrl][/td][td]likes of 'things'[/td][/tr]
 [tr][td][zrl=[baseurl]/help/database/db_mail]mail[/zrl][/td][td]private messages[/td][/tr]
-[tr][td][zrl=[baseurl]/help/database/db_manage]manage[/zrl][/td][td]Deprecated table of accounts that can "su" each other[/td][/tr]
 [tr][td][zrl=[baseurl]/help/database/db_menu]menu[/zrl][/td][td]webpage menu data[/td][/tr]
 [tr][td][zrl=[baseurl]/help/database/db_menu_item]menu_item[/zrl][/td][td]entries for webpage menus[/td][/tr]
 [tr][td][zrl=[baseurl]/help/database/db_notify]notify[/zrl][/td][td]notifications[/td][/tr]

@@ -41,17 +41,12 @@ function deliver_run($argv, $argc) {
 					);
 					if($y) {
 						if(intval($y[0]['site_dead'])) {
-							q("delete from outq where outq_posturl = '%s'",
-								dbesc($r[0]['outq_posturl'])
-							);
+							remove_queue_by_posturl($r[0]['outq_posturl']);
 							logger('dead site ignored ' . $base);
 							continue;							
 						}
 						if($y[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
-							q("update outq set outq_priority = %d where outq_hash = '%s'",
-								intval($r[0]['outq_priority'] + 10),
-								dbesc($r[0]['outq_hash'])
-							);
+							update_queue_item($r[0]['outq_hash'],10);
 							logger('immediate delivery deferred for site ' . $base);
 							continue;
 						}

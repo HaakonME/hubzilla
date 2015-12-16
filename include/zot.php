@@ -4152,9 +4152,8 @@ function zot_reply_pickup($data) {
 				}
 				else
 					$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $x);
-				$x = q("delete from outq where outq_hash = '%s'",
-					dbesc($rr['outq_hash'])
-				);
+				
+				remove_queue_item($rr['outq_hash']);
 			}
 		}
 	}

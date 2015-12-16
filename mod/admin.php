@@ -6,6 +6,8 @@
  * Controller for the /admin/ area.
  */
 
+require_once('include/queue_fn.php');
+
 
 /**
  * @param App &$a
@@ -616,12 +618,11 @@ function admin_page_queue($a) {
 	if($_REQUEST['drophub']) {
 		require_once('hubloc.php');
 		hubloc_mark_as_down($_REQUEST['drophub']);
+		remove_queue_by_posturl($_REQUEST['drophub']);
 	}
 
 	if($_REQUEST['emptyhub']) {
-		$r = q("delete from outq where outq_posturl = '%s' ",
-			dbesc($_REQUEST['emptyhub'])
-		);
+		remove_queue_by_posturl($_REQUEST['emptyhub']);
 	}
 
 	$r = q("select count(outq_posturl) as total, max(outq_priority) as priority, outq_posturl from outq 

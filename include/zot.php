@@ -4145,7 +4145,7 @@ function zot_reply_pickup($data) {
 				if(! $x)
 					continue;
 
-				if(array_key_exists('message_list',$x)) {
+				if(is_array($x) && array_key_exists('message_list',$x)) {
 					foreach($x['message_list'] as $xx) {
 						$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $xx);
 					}

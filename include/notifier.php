@@ -68,6 +68,12 @@ require_once('include/html2plain.php');
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
 require_once('include/queue_fn.php');
+require_once('include/session.php');
+require_once('include/datetime.php');
+require_once('include/items.php');
+require_once('include/bbcode.php');
+require_once('include/identity.php');
+require_once('include/Contact.php');
 
 function notifier_run($argv, $argc){
 
@@ -75,14 +81,9 @@ function notifier_run($argv, $argc){
 
 	$a = get_app();
 
-	require_once("session.php");
-	require_once("datetime.php");
-	require_once('include/items.php');
-	require_once('include/bbcode.php');
 
 	if($argc < 3)
 		return;
-
 
 	logger('notifier: invoked: ' . print_r($argv,true), LOGGER_DEBUG);
 
@@ -95,7 +96,6 @@ function notifier_run($argv, $argc){
 	if(! $item_id)
 		return;
 
-	require_once('include/identity.php');
 	$sys = get_sys_channel();
 
 	$deliveries = array();
@@ -112,22 +112,15 @@ function notifier_run($argv, $argc){
 
 	if($cmd == 'permission_update' || $cmd == 'permission_create') {
 		// Get the recipient	
-		$r = q("select abook.*, hubloc.* from abook 
-			left join hubloc on hubloc_hash = abook_xchan
-			where abook_id = %d and abook_self = 0
-			and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0 limit 1",
-			intval($item_id),
-			intval(HUBLOC_FLAGS_DELETED),
-			intval(HUBLOC_OFFLINE)
+		$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_self = 0",
+			intval($item_id)
 		);
 
 		if($r) {
 			// Get the sender
-			$s = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
-				intval($r[0]['abook_channel'])
-			);
+			$s = channelx_by_n($r[0]['abook_channel']);
 			if($s) {
-				$perm_update = array('sender' => $s[0], 'recipient' => $r[0], 'success' => false, 'deliveries' => '');
+				$perm_update = array('sender' => $s, 'recipient' => $r[0], 'success' => false, 'deliveries' => '');
 
 				if($cmd == 'permission_create')
 					call_hooks('permissions_create',$perm_update);
@@ -139,12 +132,11 @@ function notifier_run($argv, $argc){
 
 				if(! $perm_update['success']) {
 					// send a refresh message to each hub they have registered here	
-					$h = q("select * from hubloc where hubloc_hash = '%s' 
-						and not (hubloc_flags & %d) > 0  and not (hubloc_status & %d) > 0",
-						dbesc($r[0]['hubloc_hash']),
-						intval(HUBLOC_FLAGS_DELETED),
-						intval(HUBLOC_OFFLINE)
+					$h = q("select * from hubloc where hubloc_hash  = '%s'
+						and hubloc_error = 0 and hubloc_deleted = 0",
+						dbesc($r[0]['hubloc_hash'])
 					);
+		
 					if($h) {
 						foreach($h as $hh) {
 							if(in_array($hh['hubloc_url'],$dead_hubs)) {
@@ -152,7 +144,7 @@ function notifier_run($argv, $argc){
 									continue;
 							}
 
-							$data = zot_build_packet($s[0],'refresh',array(array(
+							$data = zot_build_packet($s,'refresh',array(array(
 								'guid' => $hh['hubloc_guid'],
 								'guid_sig' => $hh['hubloc_guid_sig'],
 								'url' => $hh['hubloc_url'])
@@ -161,8 +153,8 @@ function notifier_run($argv, $argc){
 								$hash = random_string();
 								queue_insert(array(
 									'hash'       => $hash,
-									'account_id' => $s[0]['channel_account_id'],
-									'channel_id' => $s[0]['channel_id'],
+									'account_id' => $s['channel_account_id'],
+									'channel_id' => $s['channel_id'],
 									'posturl'    => $hh['hubloc_callback'],
 									'notify'     => $data,
 								));

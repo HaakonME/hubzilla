@@ -82,7 +82,7 @@ define ( 'DIRECTORY_FALLBACK_MASTER',  'https://zothub.com');
 $DIRECTORY_FALLBACK_SERVERS = array( 
 	'https://zothub.com', 
 	'https://hubzilla.site',
-	'https://red.zottel.red',
+	'https://hubzilla.zottel.net',
 	'https://hub.pixelbits.de',
 	'https://my.federated.social',
 	'https://hubzilla.nl'

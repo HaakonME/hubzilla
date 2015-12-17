@@ -62,3 +62,84 @@ function queue_insert($arr) {
 
 }
 
+
+
+function queue_deliver($outq, $immediate = false) {
+
+	$base = null;
+	$h = parse_url($outq['outq_posturl']);
+	if($h) 
+		$base = $h['scheme'] . '://' . $h['host'] . (($h['port']) ? ':' . $h['port'] : '');
+
+	if(($base) && ($base !== z_root()) && ($immediate)) {
+		$y = q("select site_update, site_dead from site where site_url = '%s' ",
+			dbesc($base)
+		);
+		if($y) {
+			if(intval($y[0]['site_dead'])) {
+				remove_queue_by_posturl($outq['outq_posturl']);
+				logger('dead site ignored ' . $base);
+				return;
+			}
+			if($y[0]['site_update'] < datetime_convert('UTC','UTC','now - 1 month')) {
+				update_queue_item($outq['outq_hash'],10);
+				logger('immediate delivery deferred for site ' . $base);
+				return;
+			}
+		}
+		else {
+			// zot sites should all have a site record, unless they've been dead for as long as
+			// your site has existed. Since we don't know for sure what these sites are,
+			// call them unknown
+
+			q("insert into site (site_url, site_update, site_dead, site_type) values ('%s','%s',0,%d) ",
+				dbesc($base),
+				dbesc(datetime_convert()),
+				intval(($outq['outq_driver'] === 'post') ? SITE_TYPE_NOTZOT : SITE_TYPE_UNKNOWN)
+			);
+		}
+	}
+
+	// "post" queue driver - used for diaspora and friendica-over-diaspora communications.
+
+	if($outq['outq_driver'] === 'post') {
+		$result = z_post_url($outq['outq_posturl'],$outq['outq_msg']);
+		if($result['success'] && $result['return_code'] < 300) {
+			logger('deliver: queue post success to ' . $outq['outq_posturl'], LOGGER_DEBUG);
+			if($base) {
+				q("update site set site_update = '%s', site_dead = 0 where site_url = '%s' ",
+					dbesc(datetime_convert()),
+					dbesc($base)
+				);
+			}
+			q("update dreport set dreport_result = '%s', dreport_time = '%s' where dreport_queue = '%s' limit 1",
+				dbesc('accepted for delivery'),
+				dbesc(datetime_convert()),
+				dbesc($outq['outq_hash'])
+			);
+			remove_queue_item($outq['outq_hash']);
+		}
+		else {
+			logger('deliver: queue post returned ' . $result['return_code'] 
+				. ' from ' . $outq['outq_posturl'],LOGGER_DEBUG);
+				update_queue_item($argv[$x]);
+		}
+		return;
+	}
+
+	// normal zot delivery
+
+	logger('deliver: dest: ' . $outq['outq_posturl'], LOGGER_DEBUG);
+	$result = zot_zot($outq['outq_posturl'],$outq['outq_notify']);
+	if($result['success']) {
+		logger('deliver: remote zot delivery succeeded to ' . $outq['outq_posturl']);
+		zot_process_response($outq['outq_posturl'],$result, $outq);
+	}
+	else {
+		logger('deliver: remote zot delivery failed to ' . $outq['outq_posturl']);
+		logger('deliver: remote zot delivery fail data: ' . print_r($result,true), LOGGER_DATA);
+		update_queue_item($outq['outq_hash'],10);
+	}
+	return;
+}
+

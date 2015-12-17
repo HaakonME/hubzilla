@@ -44,7 +44,6 @@ require_once('include/html2plain.php');
  *		expire					(in items.php)
  *		like					(in like.php, poke.php)
  *		mail					(in message.php)
- *		suggest					(in fsuggest.php)
  *		tag						(in photos.php, poke.php, tagger.php)
  *		tgroup					(in items.php)
  *		wall-new				(in photos.php, item.php)
@@ -52,6 +51,7 @@ require_once('include/html2plain.php');
  * and ITEM_ID is the id of the item in the database that needs to be sent to others.
  *
  * ZOT 
+ *       permission_create      abook_id
  *       permission_update      abook_id
  *       refresh_all            channel_id
  *       purge_all              channel_id
@@ -110,72 +110,8 @@ function notifier_run($argv, $argc){
 	}
 
 
-	if($cmd == 'permission_update' || $cmd == 'permission_create') {
-		// Get the recipient	
-		$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_self = 0",
-			intval($item_id)
-		);
-
-		if($r) {
-			// Get the sender
-			$s = channelx_by_n($r[0]['abook_channel']);
-			if($s) {
-				$perm_update = array('sender' => $s, 'recipient' => $r[0], 'success' => false, 'deliveries' => '');
-
-				if($cmd == 'permission_create')
-					call_hooks('permissions_create',$perm_update);
-				else
-					call_hooks('permissions_update',$perm_update);
-
-				if($perm_update['success'] && $perm_update['deliveries'])
-					$deliveries[] = $perm_update['deliveries'];
-
-				if(! $perm_update['success']) {
-					// send a refresh message to each hub they have registered here	
-					$h = q("select * from hubloc where hubloc_hash  = '%s'
-						and hubloc_error = 0 and hubloc_deleted = 0",
-						dbesc($r[0]['hubloc_hash'])
-					);
-		
-					if($h) {
-						foreach($h as $hh) {
-							if(in_array($hh['hubloc_url'],$dead_hubs)) {
-								logger('skipping dead hub: ' . $hh['hubloc_url'], LOGGER_DEBUG);
-									continue;
-							}
-
-							$data = zot_build_packet($s,'refresh',array(array(
-								'guid' => $hh['hubloc_guid'],
-								'guid_sig' => $hh['hubloc_guid_sig'],
-								'url' => $hh['hubloc_url'])
-							));
-							if($data) {
-								$hash = random_string();
-								queue_insert(array(
-									'hash'       => $hash,
-									'account_id' => $s['channel_account_id'],
-									'channel_id' => $s['channel_id'],
-									'posturl'    => $hh['hubloc_callback'],
-									'notify'     => $data,
-								));
-								$deliveries[] = $hash;
-							}
-						}
-					}
-				}
-
-				if($deliveries) 
-					do_delivery($deliveries);
-			}
-		}
-		return;
-	}	
-
-
-	$expire = false;
 	$request = false;
 	$mail = false;
-	$fsuggest = false;
 	$top_level = false;
 	$location  = false;
 	$recipients = array();
@@ -224,51 +160,42 @@ function notifier_run($argv, $argc){
 		$packet_type = 'request';
 		$normal_mode = false;
 	}
-	elseif($cmd === 'expire') {
-
-		// FIXME
-		// This will require a special zot packet containing a list of item message_id's to be expired. 
-		// This packet will be public, since we cannot selectively deliver here. 
-		// We need the handling on this end to create the array, and the handling on the remote end
-		// to verify permissions (for each item) and process it. Until this is complete, the expire feature will be disabled.
- 
-		return;
-
-		$normal_mode = false;
-		$expire = true;
-		$items = q("SELECT * FROM item WHERE uid = %d AND item_wall = 1
-			AND item_deleted = 1 AND `changed` > %s - INTERVAL %s",
-			intval($item_id),
-			db_utcnow(), db_quoteinterval('10 MINUTE')
-		);
-		$uid = $item_id;
-		$item_id = 0;
-		if(! $items)
-			return;
-
-	}
-	elseif($cmd === 'suggest') {
-		$normal_mode = false;
-		$fsuggest = true;
-
-		$suggest = q("SELECT * FROM `fsuggest` WHERE `id` = %d LIMIT 1",
+	elseif($cmd == 'permission_update' || $cmd == 'permission_create') {
+		// Get the (single) recipient	
+		$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_self = 0",
 			intval($item_id)
 		);
-		if(! count($suggest))
-			return;
-		$uid = $suggest[0]['uid'];
-		$recipients[] = $suggest[0]['cid'];
-		$item = $suggest[0];
+		if($r) {
+			$uid = $r[0]['abook_channel'];
+			// Get the sender
+			$channel = channelx_by_n($uid);
+			if($channel) {
+				$perm_update = array('sender' => $channel, 'recipient' => $r[0], 'success' => false, 'deliveries' => '');
+
+				if($cmd == 'permission_create')
+					call_hooks('permissions_create',$perm_update);
+				else
+					call_hooks('permissions_update',$perm_update);
+
+				if($perm_update['success']) {
+					if($perm_update['deliveries']) {
+						$deliveries[] = $perm_update['deliveries'];
+						do_delivery($deliveries);
+					}
+					return;				
+				}
+				else {
+					$recipients[] = $r[0]['abook_xchan'];
+					$private = false;
+					$packet_type = 'refresh';
+				}
+			}
+		}
 	}
 	elseif($cmd === 'refresh_all') {
 		logger('notifier: refresh_all: ' . $item_id);
-		$s = q("select * from channel where channel_id = %d limit 1",
-			intval($item_id)
-		);
-		if($s)
-			$channel = $s[0];
 		$uid = $item_id;
-		$recipients = array();
+		$channel = channelx_by_n($item_id);
 		$r = q("select abook_xchan from abook where abook_channel = %d",
 			intval($item_id)
 		);
@@ -592,10 +519,8 @@ function notifier_run($argv, $argc){
 				'relay_to_owner' => $relay_to_owner,
 				'uplink' => $uplink,
 				'cmd' => $cmd,
-				'expire' =>	$expire,
 				'mail' => $mail,
 				'location' => $location,
-				'fsuggest' => $fsuggest,
 				'request' => $request,
 				'normal_mode' => $normal_mode,
 				'packet_type' => $packet_type,

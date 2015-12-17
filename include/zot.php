@@ -3518,7 +3518,7 @@ function zot_reply_message_request($data) {
 	if ($messages) {
 		$env_recips = null;
 
-		$r = q("select * from hubloc where hubloc_hash = '%s' and not hubloc_error and not hubloc_deleted 
+		$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_error = 0 and hubloc_deleted = 0 
 			group by hubloc_sitekey",
 			dbesc($sender_hash)
 		);
@@ -3549,7 +3549,7 @@ function zot_reply_message_request($data) {
 				'channel_id' => $c[0]['channel_id'],
 				'posturl'    => $hub['hubloc_callback'],
 				'notify'     => $n,
-				'msg'        => json_encode($data_packet)
+				'msg'        => $data_packet
 			));
 
 			/*

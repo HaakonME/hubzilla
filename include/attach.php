@@ -503,6 +503,10 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		}
 	}
 
+	// AndStatus sends jpegs with a non-standard mimetype
+	if($type === 'image/jpg')
+		$type = 'image/jpeg';
+
 	$existing_size = 0;
 
 	if($options === 'replace') {

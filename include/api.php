@@ -859,15 +859,29 @@ require_once('include/api_auth.php');
 			$_REQUEST['type'] = 'wall';
 		
 			if(x($_FILES,'media')) {
-				$num_uploads = count($_FILES['media']['name']);
-				for($x = 0; $x < $num_uploads; $x ++) {
-					$_FILES['userfile'] = array();
-					$_FILES['userfile']['name'] = $_FILES['media']['name'][$x];
-					$_FILES['userfile']['type'] = $_FILES['media']['type'][$x];
-					$_FILES['userfile']['tmp_name'] = $_FILES['media']['tmp_name'][$x];
-					$_FILES['userfile']['error'] = $_FILES['media']['error'][$x];
-					$_FILES['userfile']['size'] = $_FILES['media']['size'][$x];
+				if(is_array($_FILES['media']['name'])) {
+					$num_uploads = count($_FILES['media']['name']);
+					for($x = 0; $x < $num_uploads; $x ++) {
+						$_FILES['userfile'] = array();
+						$_FILES['userfile']['name'] = $_FILES['media']['name'][$x];
+						$_FILES['userfile']['type'] = $_FILES['media']['type'][$x];
+						$_FILES['userfile']['tmp_name'] = $_FILES['media']['tmp_name'][$x];
+						$_FILES['userfile']['error'] = $_FILES['media']['error'][$x];
+						$_FILES['userfile']['size'] = $_FILES['media']['size'][$x];
 
+						// upload each image if we have any
+						$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
+						require_once('mod/wall_attach.php');
+						$a->data['api_info'] = $user_info;
+						$media = wall_attach_post($a);
+
+						if(strlen($media)>0)
+							$_REQUEST['body'] .= "\n\n" . $media;
+					}
+				}
+				else {
+					// AndStatus doesn't present media as an array
+					$_FILES['userfile'] = $_FILES['media'];
 					// upload each image if we have any
 					$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 					require_once('mod/wall_attach.php');

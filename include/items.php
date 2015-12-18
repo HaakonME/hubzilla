@@ -3335,7 +3335,6 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	if((! $private) && $new_public_policy)
 		$private = 1;
 
-
 	$item_wall = 1;
 	$item_origin = 1;
 	$item_uplink = 0;
@@ -3386,8 +3385,13 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 
 	if($r)
 		proc_run('php','include/notifier.php','tgroup',$item_id);
-	else
+	else {
 		logger('start_delivery_chain: failed to update item');
+		// reset the source xchan to prevent loops
+		$r = q("update item set source_xchan = '' where id = %d",
+			intval($item_id)
+		);
+	}
 }
 
 /**

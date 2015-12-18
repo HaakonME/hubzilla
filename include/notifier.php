@@ -378,9 +378,12 @@ function notifier_run($argv, $argc){
 			// if our parent is a tag_delivery recipient, uplink to the original author causing
 			// a delivery fork. 
 
-			if(intval($parent_item['item_uplink']) && (! $top_level_post) && ($cmd !== 'uplink')) {
-				logger('notifier: uplinking this item');
-				proc_run('php','include/notifier.php','uplink',$item_id);
+			if(($parent_item) && intval($parent_item['item_uplink']) && (! $top_level_post) && ($cmd !== 'uplink')) {
+				// don't uplink a relayed post to the relay owner
+				if($parent_item['source_xchan'] !== $parent_item['owner_xchan']) {
+					logger('notifier: uplinking this item');
+					proc_run('php','include/notifier.php','uplink',$item_id);
+				}
 			}
 
 			$private = false;

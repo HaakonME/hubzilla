@@ -284,8 +284,13 @@ function comanche_widget($name, $text) {
 
 	$func = 'widget_' . trim($name);
 
-	if((! function_exists($func)) && file_exists('widget/' . trim($name) . '.php'))
-		require_once('widget/' . trim($name) . '.php');
+	if(! function_exists($func)) {
+		if(file_exists('widget/' . trim($name) . '.php'))
+			require_once('widget/' . trim($name) . '.php');
+		elseif(is_dir('widget/'. trim($name)) 
+			&& (file_exists('widget/' . trim($name) . '/' . trim($name) . '.php')))
+			require_once('widget/' . trim($name) . '/' . trim($name) . '.php');
+	}
 	else {
 		$theme_widget = $func . '.php';
 		if((! function_exists($func)) && theme_include($theme_widget))

@@ -1000,7 +1000,7 @@ function zot_process_response($hub, $arr, $outq) {
 
 	// we have a more descriptive delivery report, so discard the per hub 'queued' report. 
 
-	q("delete from dreport where dreport_queue = '%s' limit 1",
+	q("delete from dreport where dreport_queue = '%s' ",
 		dbesc($outq['outq_hash'])
 	);
 								

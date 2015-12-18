@@ -86,9 +86,6 @@ class Smarty_Internal_Runtime_GetIncludePath
             $this->_include_path = $_i_path;
             $_dirs = (array) explode(PATH_SEPARATOR, $_i_path);
             foreach ($_dirs as $_path) {
-                if ($_path[0] != '/' && isset($dir[1]) && $dir[1] != ':') {
-                    $_path = $smarty->_realpath($_path . DS, true);
-                }
                 if (is_dir($_path)) {
                     $this->_include_dirs[] = $smarty->_realpath($_path . DS, true);
                 }

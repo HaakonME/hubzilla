@@ -6,6 +6,8 @@
  * Controller for the /admin/ area.
  */
 
+require_once('include/queue_fn.php');
+
 
 /**
  * @param App &$a
@@ -164,7 +166,7 @@ function admin_page_summary(&$a) {
 	}
 
 	// pending registrations
-	$r = q("SELECT COUNT(id) AS `count` FROM register");
+	$r = q("SELECT COUNT(id) AS `count` FROM `register` WHERE `uid` != '0'");
 	$pending = $r[0]['count'];
 
 	// available channels, primary and clones
@@ -231,7 +233,9 @@ function admin_page_site_post(&$a){
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
 
 	$register_policy	=	((x($_POST,'register_policy'))	? intval(trim($_POST['register_policy']))	:  0);
+	
 	$access_policy	=	((x($_POST,'access_policy'))	? intval(trim($_POST['access_policy']))	:  0);
+	$invite_only        = ((x($_POST,'invite_only'))		? True	: False);
 	$abandon_days	    =	((x($_POST,'abandon_days'))	    ? intval(trim($_POST['abandon_days']))	    :  0);
 
 	$register_text		=	((x($_POST,'register_text'))	? notags(trim($_POST['register_text']))		: '');
@@ -299,6 +303,7 @@ function admin_page_site_post(&$a){
 	set_config('system','maximagesize', $maximagesize);
 
 	set_config('system','register_policy', $register_policy);
+	set_config('system','invitation_only', $invite_only);	
 	set_config('system','access_policy', $access_policy);
 	set_config('system','account_abandon_days', $abandon_days);
 	set_config('system','register_text', $register_text);
@@ -457,6 +462,7 @@ function admin_page_site(&$a) {
 		'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
+		'$invite_only'		=> array('invite_only', t("Invitation only"), get_config('system','invitation_only'), t("Only allow new member registrations with an invitation code. Above register policy must be set to Yes.")),
 		'$access_policy'	=> array('access_policy', t("Which best describes the types of account offered by this hub?"), get_config('system','access_policy'), "This is displayed on the public server site list.", $access_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlspecialchars(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
 		'$frontpage'	=> array('frontpage', t("Site homepage to show visitors (default: login box)"), get_config('system','frontpage'), t("example: 'public' to show public stream, 'page/sys/home' to show a system webpage called 'home' or 'include:home.html' to include a file.")),
@@ -612,12 +618,11 @@ function admin_page_queue($a) {
 	if($_REQUEST['drophub']) {
 		require_once('hubloc.php');
 		hubloc_mark_as_down($_REQUEST['drophub']);
+		remove_queue_by_posturl($_REQUEST['drophub']);
 	}
 
 	if($_REQUEST['emptyhub']) {
-		$r = q("delete from outq where outq_posturl = '%s' ",
-			dbesc($_REQUEST['emptyhub'])
-		);
+		remove_queue_by_posturl($_REQUEST['emptyhub']);
 	}
 
 	$r = q("select count(outq_posturl) as total, max(outq_priority) as priority, outq_posturl from outq 

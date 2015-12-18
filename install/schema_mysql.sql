@@ -772,15 +772,6 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `mail_obscured` (`mail_obscured`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `manage` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL DEFAULT '0',
-  `xchan` char(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `xchan` (`xchan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `menu` (
   `menu_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `menu_channel_id` int(10) unsigned NOT NULL DEFAULT '0',

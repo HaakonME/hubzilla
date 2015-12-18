@@ -251,6 +251,7 @@ require_once('include/api_auth.php');
 		if (count($uinfo)==0) {
 			return False;
 		}
+		$following = false;
 		
 		if(intval($uinfo[0]['abook_self'])) {
 			$usr = q("select * from channel where channel_id = %d limit 1",
@@ -266,18 +267,22 @@ require_once('include/api_auth.php');
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE `uid` = %d
 					AND item_wall = 1 $item_normal 
-					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
+					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''
+					AND item_private = 0 ",
 					intval($usr[0]['channel_id'])
 			);
 			$countitms = $r[0]['count'];
+			$following = true;
 		}
 		else {
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE author_xchan = '%s'
-					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
+					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''
+					AND item_private = 0 ",
 					intval($uinfo[0]['xchan_hash'])
 			);
 			$countitms = $r[0]['count'];
+			$following = (($uinfo[0]['abook_myperms'] & PERMS_R_STREAM) ? true : false );
 		}
 
 
@@ -313,7 +318,6 @@ require_once('include/api_auth.php');
 			'location' => ($usr) ? $usr[0]['channel_location'] : '',
 			'profile_image_url' => $uinfo[0]['xchan_photo_l'],
 			'url' => $uinfo[0]['xchan_url'],
-//FIXME
 			'contact_url' => $a->get_baseurl() . "/connections/".$uinfo[0]['abook_id'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
@@ -337,7 +341,7 @@ require_once('include/api_auth.php');
 			'profile_background_tile' => false,
 			'profile_use_background_image' => false,
 			'notifications' => false,
-			'following' => '', // #XXX: fix me
+			'following' => $following,
 			'verified' => true // #XXX: fix me
 		);
 
@@ -417,7 +421,7 @@ require_once('include/api_auth.php');
 			'utc_offset' => 0, // #XXX: fix me
 			'time_zone' => '', //$uinfo[0]['timezone'],
 			'statuses_count' => 0,
-			'following' => 1,
+			'following' => false,
 			'statusnet_blocking' => false,
 			'notifications' => false,
 			'uid' => 0,
@@ -855,15 +859,29 @@ require_once('include/api_auth.php');
 			$_REQUEST['type'] = 'wall';
 		
 			if(x($_FILES,'media')) {
-				$num_uploads = count($_FILES['media']['name']);
-				for($x = 0; $x < $num_uploads; $x ++) {
-					$_FILES['userfile'] = array();
-					$_FILES['userfile']['name'] = $_FILES['media']['name'][$x];
-					$_FILES['userfile']['type'] = $_FILES['media']['type'][$x];
-					$_FILES['userfile']['tmp_name'] = $_FILES['media']['tmp_name'][$x];
-					$_FILES['userfile']['error'] = $_FILES['media']['error'][$x];
-					$_FILES['userfile']['size'] = $_FILES['media']['size'][$x];
+				if(is_array($_FILES['media']['name'])) {
+					$num_uploads = count($_FILES['media']['name']);
+					for($x = 0; $x < $num_uploads; $x ++) {
+						$_FILES['userfile'] = array();
+						$_FILES['userfile']['name'] = $_FILES['media']['name'][$x];
+						$_FILES['userfile']['type'] = $_FILES['media']['type'][$x];
+						$_FILES['userfile']['tmp_name'] = $_FILES['media']['tmp_name'][$x];
+						$_FILES['userfile']['error'] = $_FILES['media']['error'][$x];
+						$_FILES['userfile']['size'] = $_FILES['media']['size'][$x];
 
+						// upload each image if we have any
+						$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
+						require_once('mod/wall_attach.php');
+						$a->data['api_info'] = $user_info;
+						$media = wall_attach_post($a);
+
+						if(strlen($media)>0)
+							$_REQUEST['body'] .= "\n\n" . $media;
+					}
+				}
+				else {
+					// AndStatus doesn't present media as an array
+					$_FILES['userfile'] = $_FILES['media'];
 					// upload each image if we have any
 					$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 					require_once('mod/wall_attach.php');

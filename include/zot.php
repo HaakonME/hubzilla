@@ -12,6 +12,7 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
 require_once('include/DReport.php');
+require_once('include/queue_fn.php');
 
 
 /**
@@ -997,6 +998,8 @@ function zot_process_response($hub, $arr, $outq) {
 		}
 	}
 
+	// we have a more descriptive delivery report, so discard the per hub 'queued' report. 
+
 	q("delete from dreport where dreport_queue = '%s' limit 1",
 		dbesc($outq['outq_hash'])
 	);
@@ -1011,18 +1014,8 @@ function zot_process_response($hub, $arr, $outq) {
 	// synchronous message types are handled immediately
 	// async messages remain in the queue until processed.
 
-	if (intval($outq['outq_async'])) {
-		q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' and outq_channel = %d",
-			dbesc(datetime_convert()),
-			dbesc($outq['outq_hash']),
-			intval($outq['outq_channel'])
-		);
-	} else {
-		q("delete from outq where outq_hash = '%s' and outq_channel = %d",
-			dbesc($outq['outq_hash']),
-			intval($outq['outq_channel'])
-		);
-	}
+	if(intval($outq['outq_async']))
+		queue_set_delivered($outq['outq_hash'],$outq['outq_channel']);
 
 	logger('zot_process_response: ' . print_r($x,true), LOGGER_DEBUG);
 }
@@ -2974,24 +2967,19 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	$interval = ((get_config('system','delivery_interval') !== false)
 			? intval(get_config('system','delivery_interval')) : 2 );
 
-
 	logger('build_sync_packet: packet: ' . print_r($info,true), LOGGER_DATA);
 
 	foreach($synchubs as $hub) {
 		$hash = random_string();
 		$n = zot_build_packet($channel,'notify',$env_recips,$hub['hubloc_sitekey'],$hash);
-		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-			dbesc($hash),
-			intval($channel['channel_account']),
-			intval($channel['channel_id']),
-			dbesc('zot'),
-			dbesc($hub['hubloc_callback']),
-			intval(1),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($n),
-			dbesc(json_encode($info))
-		);
+		queue_insert(array(
+			'hash'       => $hash,
+			'account_id' => $channel['channel_account_id'],
+			'channel_id' => $channel['channel_id'],
+			'posturl'    => $hub['hubloc_callback'],
+			'notify'     => $n,
+			'msg'        => json_encode($info)
+		));
 
 		proc_run('php', 'include/deliver.php', $hash);
 		if($interval)
@@ -3530,7 +3518,7 @@ function zot_reply_message_request($data) {
 	if ($messages) {
 		$env_recips = null;
 
-		$r = q("select * from hubloc where hubloc_hash = '%s' and not hubloc_error and not hubloc_deleted 
+		$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_error = 0 and hubloc_deleted = 0 
 			group by hubloc_sitekey",
 			dbesc($sender_hash)
 		);
@@ -3554,20 +3542,15 @@ function zot_reply_message_request($data) {
 			 */
 
 			$n = zot_build_packet($c[0],'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash,array('message_id' => $data['message_id']));
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async,
-				outq_created, outq_updated, outq_notify, outq_msg )
-				values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-				dbesc($hash),
-				intval($c[0]['channel_account_id']),
-				intval($c[0]['channel_id']),
-				dbesc('zot'),
-				dbesc($hub['hubloc_callback']),
-				intval(1),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($n),
-				dbesc($data_packet)
-			);
+
+			queue_insert(array(
+				'hash'       => $hash,
+				'account_id' => $c[0]['channel_account_id'],
+				'channel_id' => $c[0]['channel_id'],
+				'posturl'    => $hub['hubloc_callback'],
+				'notify'     => $n,
+				'msg'        => $data_packet
+			));
 
 			/*
 			 * invoke delivery to send out the notify packet
@@ -4162,16 +4145,15 @@ function zot_reply_pickup($data) {
 				if(! $x)
 					continue;
 
-				if(array_key_exists('message_list',$x)) {
+				if(is_array($x) && array_key_exists('message_list',$x)) {
 					foreach($x['message_list'] as $xx) {
 						$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $xx);
 					}
 				}
 				else
 					$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => $x);
-				$x = q("delete from outq where outq_hash = '%s'",
-					dbesc($rr['outq_hash'])
-				);
+				
+				remove_queue_item($rr['outq_hash']);
 			}
 		}
 	}

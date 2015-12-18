@@ -767,15 +767,6 @@ create index "mail_isreply" on mail ("mail_isreply");
 create index "mail_seen" on mail ("mail_seen");
 create index "mail_recalled" on mail ("mail_recalled");
 create index "mail_obscured" on mail ("mail_obscured");
-CREATE TABLE "manage" (
-  "id" serial NOT NULL,
-  "uid" bigint NOT NULL,
-  "xchan" text NOT NULL DEFAULT '',
-  PRIMARY KEY ("id")
-
-);
-create index "manage_uid" on manage ("uid");
-create index "manage_xchan" on manage ("xchan");
 CREATE TABLE "menu" (
   "menu_id" serial  NOT NULL,
   "menu_channel_id" bigint  NOT NULL DEFAULT '0',

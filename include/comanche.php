@@ -287,7 +287,7 @@ function comanche_widget($name, $text) {
 	if(! function_exists($func)) {
 		if(file_exists('widget/' . trim($name) . '.php'))
 			require_once('widget/' . trim($name) . '.php');
-		elseif(is_dir('widget/'. trim($name)) 
+		elseif(folder_exists('widget/'. trim($name)) 
 			&& (file_exists('widget/' . trim($name) . '/' . trim($name) . '.php')))
 			require_once('widget/' . trim($name) . '/' . trim($name) . '.php');
 	}

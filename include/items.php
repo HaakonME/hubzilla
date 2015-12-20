@@ -550,6 +550,7 @@ function get_public_feed($channel, $params) {
 	$params['direction'] = ((x($params,'direction')) ? $params['direction']     : 'desc');
 	$params['pages']     = ((x($params,'pages'))     ? intval($params['pages']) : 0);
 	$params['top']       = ((x($params,'top'))       ? intval($params['top'])   : 0);
+	$params['cat']       = ((x($params,'cat'))       ? $params['cat']          : '');
 
 	switch($params['type']) {
 		case 'json':
@@ -593,7 +594,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'direction' => $params['direction'],  // FIXME
 		'pages' => $params['pages'],
 		'order' => 'post',
-		'top'   => $params['top']
+		'top'   => $params['top'],
+		'cat'   => $params['cat']
 		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 	
 
@@ -2347,7 +2349,7 @@ function item_store($arr, $allow_exec = false) {
 				return $ret;
 			}
 
-			if($arr['obj_type'] == ACTIVITY_OBJ_NOTE)
+			if(($arr['obj_type'] == ACTIVITY_OBJ_NOTE) && (! $arr['object']))
 				$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
 			// is the new message multi-level threaded?
@@ -2868,6 +2870,7 @@ function send_status_notifications($post_id,$item) {
 	if($x) {
 		foreach($x as $xx) {
 			if($xx['author_xchan'] === $r[0]['channel_hash']) {
+
 				$notify = true;
 
 				// check for an unfollow thread activity - we should probably decode the obj and check the id
@@ -3332,7 +3335,6 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	if((! $private) && $new_public_policy)
 		$private = 1;
 
-
 	$item_wall = 1;
 	$item_origin = 1;
 	$item_uplink = 0;
@@ -3383,8 +3385,13 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 
 	if($r)
 		proc_run('php','include/notifier.php','tgroup',$item_id);
-	else
+	else {
 		logger('start_delivery_chain: failed to update item');
+		// reset the source xchan to prevent loops
+		$r = q("update item set source_xchan = '' where id = %d",
+			intval($item_id)
+		);
+	}
 }
 
 /**
@@ -3472,7 +3479,7 @@ function post_is_importable($item,$abook) {
 	unobscure($item);
 
 	$text = prepare_text($item['body'],$item['mimetype']);
-	$text = html2plain($text);
+	$text = html2plain(($item['title']) ? $item['title'] . ' ' . $text : $text);
 
 
 	$lang = null;
@@ -3946,6 +3953,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if($item['deleted'])
 		return '<at:deleted-entry ref="' . xmlify($item['mid']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
 
+
+	create_export_photo_body($item);
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid'])
 		$body = fix_private_photos($item['body'],$owner['uid'],$item,$cid);
@@ -4816,6 +4825,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	
 	if($arr['since_id'])
 		$sql_extra .= " and item.id > " . $since_id . " ";
+
+	if($arr['cat'])
+		$sql_extra .= protect_sprintf(term_query('item', $arr['cat'], TERM_CATEGORY));
 
 	if($arr['gid'] && $uid) {
 		$r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",

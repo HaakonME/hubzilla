@@ -5,6 +5,7 @@
 
 require_once("include/template_processor.php");
 require_once("include/smarty.php");
+require_once("include/bbcode.php");
 
 // random string, there are 86 characters max in text mode, 128 for hex
 // output is urlsafe
@@ -1380,25 +1381,49 @@ function generate_named_map($location) {
 	return (($arr['html']) ? $arr['html'] : $location);
 }
 
+function format_event($jobject) {
+	$event = array();
 
+	$object = json_decode($jobject,true);
+
+	//ensure compatibility with older items - this check can be removed at a later point
+	if(array_key_exists('description', $object)) {
+
+		$bd_format = t('l F d, Y \@ g:i A'); // Friday January 18, 2011 @ 8:01 AM
+
+		$event['header'] = replace_macros(get_markup_template('event_item_header.tpl'),array(
+			'$title'	 => bbcode($object['title']),
+			'$dtstart_label' => t('Starts:'),
+			'$dtstart_title' => datetime_convert('UTC', 'UTC', $object['start'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
+			'$dtstart_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['start'] , $bd_format )) : day_translate(datetime_convert('UTC', 'UTC', $object['start'] , $bd_format))),
+			'$finish'	 => (($object['nofinish']) ? false : true),
+			'$dtend_label'	 => t('Finishes:'),
+			'$dtend_title'	 => datetime_convert('UTC','UTC',$object['finish'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
+			'$dtend_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['finish'] , $bd_format )) :  day_translate(datetime_convert('UTC', 'UTC', $object['finish'] , $bd_format )))
+		));
+
+		$event['content'] = replace_macros(get_markup_template('event_item_content.tpl'),array(
+			'$description'	  => bbcode($object['description']),
+			'$location_label' => t('Location:'),
+			'$location'	  => bbcode($object['location'])
+		));
+
+	}
+
+	return $event;
+}
 
 function prepare_body(&$item,$attach = false) {
 	require_once('include/identity.php');
 
-//	if($item['html']) {
-//		$s = bb_observer($item['html']);
-//	}
-//	else {
-		call_hooks('prepare_body_init', $item); 
-//		unobscure($item);
-		$s = prepare_text($item['body'],$item['mimetype'], false);
-//	}
+	call_hooks('prepare_body_init', $item); 
 
 
 	$photo = '';
-	$is_photo = (($item['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
+	$is_photo = ((($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) ? true : false);
 
 	if($is_photo) {
+
 		$object = json_decode($item['object'],true);
 
 		// if original photo width is <= 640px prepend it to item body
@@ -1413,9 +1438,14 @@ function prepare_body(&$item,$attach = false) {
 		}
 	}
 
+	$s = prepare_text($item['body'],$item['mimetype'], false);
+
+	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event($item['object']) : false);
+
 	$prep_arr = array(
 		'item' => $item,
-		'html' => $s,
+		'html' => $event ? $event['content'] : $s,
+		'event' => $event['header'],
 		'photo' => $photo
 	);
 
@@ -1423,6 +1453,7 @@ function prepare_body(&$item,$attach = false) {
 
 	$s = $prep_arr['html'];
 	$photo = $prep_arr['photo'];
+	$event = $prep_arr['event'];
 
 //	q("update item set html = '%s' where id = %d",
 //		dbesc($s),
@@ -1489,6 +1520,7 @@ function prepare_body(&$item,$attach = false) {
 		'item' => $item,
 		'photo' => $photo,
 		'html' => $s,
+		'event' => $event,
 		'categories' => $categories,
 		'folders' => $filer,
 		'tags' => $tags,
@@ -1565,6 +1597,16 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 	return $s;
 }
 
+
+function create_export_photo_body(&$item) {
+	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) {
+		$j = json_decode($item['object'],true);
+		if($j) {
+			$item['body'] .= "\n\n" . (($j['body']) ? $j['body'] : $j['bbcode']);
+			$item['sig'] = '';
+		}
+	}
+}
 
 /**
  * zidify_callback() and zidify_links() work together to turn any HTML a tags with class="zrl" into zid links

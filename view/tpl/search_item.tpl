@@ -7,6 +7,11 @@
 				{{$item.photo}}
 			</div>
 			{{/if}}
+			{{if $item.event}}
+			<div class="wall-event-item" id="wall-event-item-{{$item.id}}">
+				{{$item.event}}
+			</div>
+			{{/if}}
 			<div class="wall-item-head">
 				<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
 					<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}}" id="wall-item-photo-wrapper-{{$item.id}}">
@@ -60,11 +65,6 @@
 					<span class="tag">{{$item.folders}}</span>
 				</div>
 				{{/if}}
-				{{if $item.attachments}}
-				<div class="body-tags" id="item-attachments">
-					<span class='tag'>{{$item.attachments}}</span>
-				</div>
-				{{/if}}
 				<div class="clear"></div>
 			</div>
 			{{/if}}
@@ -83,6 +83,12 @@
 						{{/if}}
 					</ul>
 				</div>
+				{{if $item.attachments}}
+				<div class="wall-item-tools-left btn-group">
+					<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="attachment-menu-{{$item.id}}"><i class="icon-paperclip"></i></button>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="attachment-menu-{{$item.id}}">{{$item.attachments}}</ul>
+				</div>
+				{{/if}}
 				<div class="clear"></div>
 			</div>
 			<div class="clear"></div>

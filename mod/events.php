@@ -90,8 +90,12 @@ function events_post(&$a) {
 	linkify_tags($a, $desc, local_channel());
 	linkify_tags($a, $location, local_channel());
 
-	$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
-	$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
+	//$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
+
+	//fixme: this url gives a wsod if there is a linebreak detected in one of the variables ($desc or $location)
+	//$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
+	$onerror_url = $a->get_baseurl() . "/events";
+
 	if(strcmp($finish,$start) < 0 && !$nofinish) {
 		notice( t('Event can not end before it has started.') . EOL);
 		if(intval($_REQUEST['preview'])) {
@@ -366,37 +370,30 @@ function events_content(&$a) {
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 
-		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
+		$fdt = ((x($orig_event)) ? $orig_event['finish'] : '+1 hour');
 
 		$tz = date_default_timezone_get();
 		if(x($orig_event))
 			$tz = (($orig_event['adjust']) ? date_default_timezone_get() : 'UTC');
 
-//		$syear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'Y') : '0000');
-//		$smonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'm') : '00');
-//		$sday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'd') : '00');
-
 		$syear = datetime_convert('UTC', $tz, $sdt, 'Y');
 		$smonth = datetime_convert('UTC', $tz, $sdt, 'm');
 		$sday = datetime_convert('UTC', $tz, $sdt, 'd');
+		$shour = datetime_convert('UTC', $tz, $sdt, 'H');
+		$sminute = datetime_convert('UTC', $tz, $sdt, 'i');
 
-		$shour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'H') : '00');
-		$sminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $sdt, 'i') : '00');
 		$stext = datetime_convert('UTC',$tz,$sdt);
 		$stext = substr($stext,0,14) . "00:00";
-
-//		$fyear = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'Y') : '0000');
-//		$fmonth = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'm') : '00');
-//		$fday = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'd') : '00');
 
 		$fyear = datetime_convert('UTC', $tz, $fdt, 'Y');
 		$fmonth = datetime_convert('UTC', $tz, $fdt, 'm');
 		$fday = datetime_convert('UTC', $tz, $fdt, 'd');
+		$fhour = datetime_convert('UTC', $tz, $fdt, 'H');
+		$fminute = datetime_convert('UTC', $tz, $fdt, 'i');
 
-		$fhour = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'H') : '00');
-		$fminute = ((x($orig_event)) ? datetime_convert('UTC', $tz, $fdt, 'i') : '00');
 		$ftext = datetime_convert('UTC',$tz,$fdt);
 		$ftext = substr($ftext,0,14) . "00:00";
+
 		$type = ((x($orig_event)) ? $orig_event['type'] : 'event');
 
 		$f = get_config('system','event_input_format');
@@ -437,22 +434,22 @@ function events_content(&$a) {
 			'$xchan' => $event_xchan,
 			'$mid' => $mid,
 			'$event_hash' => $event_id,
-			'$summary' => array('summary', t('Event Title'), $t_orig, t('Required'), '*'),
+			'$summary' => array('summary', (($event_id) ? t('Edit event titel') : t('Event titel')), $t_orig, t('Required'), '*'),
 			'$catsenabled' => $catsenabled,
 			'$placeholdercategory' => t('Categories (comma-separated list)'),
-			'$c_text' => t('Category'),
+			'$c_text' => (($event_id) ? t('Edit Category') : t('Category')),
 			'$category' => $category,
 			'$required' => '<span class="required" title="' . t('Required') . '">*</span>',
-			'$s_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$syear+5),DateTime::createFromFormat('Y-m-d H:i',"$syear-$smonth-$sday $shour:$sminute"), t('Start date and time'), 'start_text',true,true,'','',true,$first_day),
+			'$s_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$syear+5),DateTime::createFromFormat('Y-m-d H:i',"$syear-$smonth-$sday $shour:$sminute"), (($event_id) ? t('Edit start date and time') : t('Start date and time')), 'start_text',true,true,'','',true,$first_day),
 			'$n_text' => t('Finish date and time are not known or not relevant'),
 			'$n_checked' => $n_checked,
-			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"), t('Finish date and time'),'finish_text',true,true,'start_text','',false,$first_day),
+			'$f_dsel' => datetimesel($f,new DateTime(),DateTime::createFromFormat('Y',$fyear+5),DateTime::createFromFormat('Y-m-d H:i',"$fyear-$fmonth-$fday $fhour:$fminute"), (($event_id) ? t('Edit finish date and time') : t('Finish date and time')),'finish_text',true,true,'start_text','',false,$first_day),
 			'$nofinish' => array('nofinish', t('Finish date and time are not known or not relevant'), $n_checked, '', array(t('No'),t('Yes')), 'onclick="enableDisableFinishDate();"'),
 			'$adjust' => array('adjust', t('Adjust for viewer timezone'), $a_checked, t('Important for events that happen in a particular place. Not practical for global holidays.'), array(t('No'),t('Yes'))),
 			'$a_text' => t('Adjust for viewer timezone'),
-			'$d_text' => t('Description'),
+			'$d_text' => (($event_id) ? t('Edit Description') : t('Description')),
 			'$d_orig' => $d_orig,
-			'$l_text' => t('Location'),
+			'$l_text' => (($event_id) ? t('Edit Location') : t('Location')),
 			'$l_orig' => $l_orig,
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
@@ -596,7 +593,7 @@ function events_content(&$a) {
 					
 				$last_date = $d;
 
-				$edit = array($a->get_baseurl().'/events/'.$rr['event_hash'].'?expandform=1',t('Edit event'),'','');
+				$edit = ((local_channel() && $rr['author_xchan'] == get_observer_hash()) ? array($a->get_baseurl().'/events/'.$rr['event_hash'].'?expandform=1',t('Edit event'),'','') : false);
 
 				$drop = array($a->get_baseurl().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');
 
@@ -651,7 +648,7 @@ function events_content(&$a) {
 
 		$o = replace_macros($tpl, array(
 			'$baseurl'	=> $a->get_baseurl(),
-			'$new_event'	=> array($a->get_baseurl().'/events/new',t('New Event'),'',''),
+			'$new_event'	=> array($a->get_baseurl().'/events',(($event_id) ? t('Edit Event') : t('Create Event')),'',''),
 			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
 			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
 			'$export'	=> array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),

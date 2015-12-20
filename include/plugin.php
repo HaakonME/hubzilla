@@ -495,6 +495,15 @@ function format_css_if_exists($source) {
 		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
 }
 
+/*
+ * This basically calculates the baseurl. We have other functions to do that, but
+ * there was an issue with script paths and mixed-content whose details are arcane 
+ * and perhaps lost in the message archives. The short answer is that we're ignoring 
+ * the URL which we are "supposed" to use, and generating script paths relative to 
+ * the URL which we are currently using; in order to ensure they are found and aren't
+ * blocked due to mixed content issues. 
+ */
+
 function script_path() {
 	if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
 		$scheme = 'https';
@@ -615,4 +624,25 @@ function get_markup_template($s, $root = '') {
 	$t = $a->template_engine();
 	$template = $t->get_markup_template($s, $root);
 	return $template;
+}
+
+// return the standardised version. Since we can't easily compare
+// before the STD_VERSION definition was applied, we have to treat 
+// all prior release versions the same. You can dig through them
+// with other means (such as RED_VERSION) if necessary. 
+
+function get_std_version() {
+	if(defined('STD_VERSION'))
+		return STD_VERSION;
+	return '0.0.0';
+}
+
+
+function folder_exists($folder)
+{
+    // Get canonicalized absolute pathname
+    $path = realpath($folder);
+
+    // If it exist, check if it's a directory
+    return (($path !== false) && is_dir($path)) ? $path : false;
 }

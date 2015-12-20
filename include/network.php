@@ -1796,6 +1796,7 @@ function get_site_info() {
 		'url' => z_root(),
 		'plugins' => $visible_plugins,
 		'register_policy' =>  $register_policy[get_config('system','register_policy')],
+		'invitation_only' => intval(get_config('system','invitation_only')),
 		'directory_mode' =>  $directory_mode[get_config('system','directory_mode')],
 		'language' => get_config('system','language'),
 		'rss_connections' => get_config('system','feed_contacts'),

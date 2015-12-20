@@ -636,3 +636,13 @@ function get_std_version() {
 		return STD_VERSION;
 	return '0.0.0';
 }
+
+
+function folder_exists($folder)
+{
+    // Get canonicalized absolute pathname
+    $path = realpath($folder);
+
+    // If it exist, check if it's a directory
+    return (($path !== false) && is_dir($path)) ? $path : false;
+}

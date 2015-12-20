@@ -66,7 +66,7 @@ function deliver_run($argv, $argc) {
 						}
 					}
 
-					q("delete from dreport where dreport_queue = '%s' limit 1",
+					q("delete from dreport where dreport_queue = '%s'",
 						dbesc($argv[$x])
 					);
 				}

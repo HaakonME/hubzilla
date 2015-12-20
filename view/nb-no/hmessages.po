@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-27 00:03-0800\n"
-"PO-Revision-Date: 2015-12-02 19:20+0000\n"
+"POT-Creation-Date: 2015-12-18 00:03-0800\n"
+"PO-Revision-Date: 2015-12-20 13:37+0000\n"
 "Last-Translator: Haakon Meland Eriksen <haakon.eriksen@far.no>\n"
 "Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/Friendica/red-matrix/language/nb_NO/)\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../../include/Contact.php:101 ../../include/identity.php:953
+#: ../../include/Contact.php:101 ../../include/identity.php:947
 #: ../../include/widgets.php:137 ../../include/widgets.php:175
 #: ../../include/conversation.php:953 ../../mod/match.php:64
 #: ../../mod/directory.php:318 ../../mod/suggest.php:52
@@ -54,17 +54,17 @@ msgstr "Ugyldig rom-spesifisering"
 msgid "Room not found."
 msgstr "Rommet ble ikke funnet."
 
-#: ../../include/chat.php:133 ../../include/items.php:4396
-#: ../../include/attach.php:140 ../../include/attach.php:188
-#: ../../include/attach.php:251 ../../include/attach.php:265
-#: ../../include/attach.php:272 ../../include/attach.php:337
-#: ../../include/attach.php:351 ../../include/attach.php:358
-#: ../../include/attach.php:436 ../../include/attach.php:884
-#: ../../include/attach.php:955 ../../include/attach.php:1107
-#: ../../include/photos.php:29 ../../mod/filestorage.php:18
+#: ../../include/chat.php:133 ../../include/items.php:4405
+#: ../../include/photos.php:29 ../../include/attach.php:140
+#: ../../include/attach.php:188 ../../include/attach.php:251
+#: ../../include/attach.php:265 ../../include/attach.php:272
+#: ../../include/attach.php:337 ../../include/attach.php:351
+#: ../../include/attach.php:358 ../../include/attach.php:436
+#: ../../include/attach.php:888 ../../include/attach.php:959
+#: ../../include/attach.php:1111 ../../mod/filestorage.php:18
 #: ../../mod/filestorage.php:73 ../../mod/filestorage.php:88
-#: ../../mod/filestorage.php:115 ../../mod/group.php:9 ../../mod/item.php:205
-#: ../../mod/item.php:213 ../../mod/item.php:1049 ../../mod/common.php:35
+#: ../../mod/filestorage.php:115 ../../mod/group.php:9 ../../mod/item.php:206
+#: ../../mod/item.php:214 ../../mod/item.php:1050 ../../mod/common.php:35
 #: ../../mod/achievements.php:30 ../../mod/rate.php:111
 #: ../../mod/blocks.php:69 ../../mod/blocks.php:76 ../../mod/id.php:71
 #: ../../mod/like.php:177 ../../mod/page.php:31 ../../mod/page.php:86
@@ -77,20 +77,20 @@ msgstr "Rommet ble ikke funnet."
 #: ../../mod/editwebpage.php:125 ../../mod/profile.php:64
 #: ../../mod/profile.php:72 ../../mod/api.php:26 ../../mod/api.php:31
 #: ../../mod/fsuggest.php:78 ../../mod/sources.php:66
-#: ../../mod/notifications.php:66 ../../mod/photos.php:70
-#: ../../mod/profile_photo.php:341 ../../mod/profile_photo.php:354
-#: ../../mod/thing.php:271 ../../mod/thing.php:291 ../../mod/thing.php:328
-#: ../../mod/editblock.php:65 ../../mod/network.php:12
-#: ../../mod/pdledit.php:21 ../../mod/register.php:72
+#: ../../mod/notifications.php:66 ../../mod/invite.php:13
+#: ../../mod/invite.php:87 ../../mod/profile_photo.php:341
+#: ../../mod/profile_photo.php:354 ../../mod/thing.php:271
+#: ../../mod/thing.php:291 ../../mod/thing.php:328 ../../mod/editblock.php:65
+#: ../../mod/network.php:12 ../../mod/pdledit.php:21 ../../mod/register.php:72
 #: ../../mod/editlayout.php:63 ../../mod/editlayout.php:87
 #: ../../mod/settings.php:568 ../../mod/webpages.php:69
 #: ../../mod/appman.php:66 ../../mod/layouts.php:69 ../../mod/layouts.php:76
-#: ../../mod/layouts.php:87 ../../mod/locs.php:83 ../../mod/mail.php:118
-#: ../../mod/regmod.php:17 ../../mod/channel.php:100 ../../mod/channel.php:214
-#: ../../mod/channel.php:254 ../../mod/invite.php:13 ../../mod/invite.php:104
-#: ../../mod/editpost.php:13 ../../mod/chat.php:94 ../../mod/chat.php:99
-#: ../../mod/viewsrc.php:14 ../../mod/authtest.php:13
-#: ../../mod/connections.php:29 ../../mod/manage.php:6 ../../mod/menu.php:74
+#: ../../mod/layouts.php:87 ../../mod/locs.php:83 ../../mod/regmod.php:17
+#: ../../mod/channel.php:100 ../../mod/channel.php:214
+#: ../../mod/channel.php:254 ../../mod/photos.php:70 ../../mod/editpost.php:13
+#: ../../mod/chat.php:94 ../../mod/chat.php:99 ../../mod/viewsrc.php:14
+#: ../../mod/authtest.php:13 ../../mod/connections.php:29
+#: ../../mod/manage.php:6 ../../mod/menu.php:74 ../../mod/mail.php:126
 #: ../../mod/service_limits.php:7 ../../mod/suggest.php:26
 #: ../../mod/events.php:260 ../../mod/message.php:16 ../../mod/block.php:22
 #: ../../mod/block.php:72 ../../mod/mitem.php:111 ../../mod/sharedwithme.php:7
@@ -120,14 +120,389 @@ msgstr "Kanalkloning mislyktes. Import mislyktes."
 msgid "Cloned channel not found. Import failed."
 msgstr "Klonet kanal ble ikke funnet. Import mislyktes."
 
+#: ../../include/text.php:394
+msgid "prev"
+msgstr "forrige"
+
+#: ../../include/text.php:396
+msgid "first"
+msgstr "første"
+
+#: ../../include/text.php:425
+msgid "last"
+msgstr "siste"
+
+#: ../../include/text.php:428
+msgid "next"
+msgstr "neste"
+
+#: ../../include/text.php:438
+msgid "older"
+msgstr "eldre"
+
+#: ../../include/text.php:440
+msgid "newer"
+msgstr "nyere"
+
+#: ../../include/text.php:785
+msgid "No connections"
+msgstr "Ingen forbindelser"
+
+#: ../../include/text.php:797
+#, php-format
+msgid "%d Connection"
+msgid_plural "%d Connections"
+msgstr[0] "%d forbindelse"
+msgstr[1] "%d forbindelser"
+
+#: ../../include/text.php:810 ../../mod/viewconnections.php:101
+msgid "View Connections"
+msgstr "Vis forbindelser"
+
+#: ../../include/text.php:867 ../../include/text.php:879
+#: ../../include/nav.php:159 ../../include/apps.php:147
+#: ../../mod/search.php:40
+msgid "Search"
+msgstr "Søk"
+
+#: ../../include/text.php:868 ../../include/text.php:880
+#: ../../include/widgets.php:192 ../../mod/rbmark.php:28
+#: ../../mod/rbmark.php:100 ../../mod/admin.php:1454 ../../mod/admin.php:1474
+#: ../../mod/filer.php:49
+msgid "Save"
+msgstr "Lagre"
+
+#: ../../include/text.php:954
+msgid "poke"
+msgstr "prikk"
+
+#: ../../include/text.php:954 ../../include/conversation.php:243
+msgid "poked"
+msgstr "prikket"
+
+#: ../../include/text.php:955
+msgid "ping"
+msgstr "varsle"
+
+#: ../../include/text.php:955
+msgid "pinged"
+msgstr "varslet"
+
+#: ../../include/text.php:956
+msgid "prod"
+msgstr "oppildne"
+
+#: ../../include/text.php:956
+msgid "prodded"
+msgstr "oppildnet"
+
+#: ../../include/text.php:957
+msgid "slap"
+msgstr "daske"
+
+#: ../../include/text.php:957
+msgid "slapped"
+msgstr "dasket"
+
+#: ../../include/text.php:958
+msgid "finger"
+msgstr "fingre"
+
+#: ../../include/text.php:958
+msgid "fingered"
+msgstr "fingret"
+
+#: ../../include/text.php:959
+msgid "rebuff"
+msgstr "tilbakevise"
+
+#: ../../include/text.php:959
+msgid "rebuffed"
+msgstr "tilbakeviste"
+
+#: ../../include/text.php:969
+msgid "happy"
+msgstr "glad"
+
+#: ../../include/text.php:970
+msgid "sad"
+msgstr "trist"
+
+#: ../../include/text.php:971
+msgid "mellow"
+msgstr "dempet"
+
+#: ../../include/text.php:972
+msgid "tired"
+msgstr "trøtt"
+
+#: ../../include/text.php:973
+msgid "perky"
+msgstr "oppkvikket"
+
+#: ../../include/text.php:974
+msgid "angry"
+msgstr "sint"
+
+#: ../../include/text.php:975
+msgid "stupified"
+msgstr "sløvet"
+
+#: ../../include/text.php:976
+msgid "puzzled"
+msgstr "forundret"
+
+#: ../../include/text.php:977
+msgid "interested"
+msgstr "interessert"
+
+#: ../../include/text.php:978
+msgid "bitter"
+msgstr "bitter"
+
+#: ../../include/text.php:979
+msgid "cheerful"
+msgstr "munter"
+
+#: ../../include/text.php:980
+msgid "alive"
+msgstr "levende"
+
+#: ../../include/text.php:981
+msgid "annoyed"
+msgstr "irritert"
+
+#: ../../include/text.php:982
+msgid "anxious"
+msgstr "nervøs"
+
+#: ../../include/text.php:983
+msgid "cranky"
+msgstr "gretten"
+
+#: ../../include/text.php:984
+msgid "disturbed"
+msgstr "foruroliget"
+
+#: ../../include/text.php:985
+msgid "frustrated"
+msgstr "frustrert"
+
+#: ../../include/text.php:986
+msgid "depressed"
+msgstr "lei seg"
+
+#: ../../include/text.php:987
+msgid "motivated"
+msgstr "motivert"
+
+#: ../../include/text.php:988
+msgid "relaxed"
+msgstr "avslappet"
+
+#: ../../include/text.php:989
+msgid "surprised"
+msgstr "overrasket"
+
+#: ../../include/text.php:1161 ../../include/js_strings.php:70
+msgid "Monday"
+msgstr "mandag"
+
+#: ../../include/text.php:1161 ../../include/js_strings.php:71
+msgid "Tuesday"
+msgstr "tirsdag"
+
+#: ../../include/text.php:1161 ../../include/js_strings.php:72
+msgid "Wednesday"
+msgstr "onsdag"
+
+#: ../../include/text.php:1161 ../../include/js_strings.php:73
+msgid "Thursday"
+msgstr "torsdag"
+
+#: ../../include/text.php:1161 ../../include/js_strings.php:74
+msgid "Friday"
+msgstr "fredag"
+
+#: ../../include/text.php:1161 ../../include/js_strings.php:75
+msgid "Saturday"
+msgstr "lørdag"
+
+#: ../../include/text.php:1161 ../../include/js_strings.php:69
+msgid "Sunday"
+msgstr "søndag"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:45
+msgid "January"
+msgstr "januar"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:46
+msgid "February"
+msgstr "februar"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:47
+msgid "March"
+msgstr "mars"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:48
+msgid "April"
+msgstr "april"
+
+#: ../../include/text.php:1165
+msgid "May"
+msgstr "mai"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:50
+msgid "June"
+msgstr "juni"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:51
+msgid "July"
+msgstr "juli"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:52
+msgid "August"
+msgstr "august"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:53
+msgid "September"
+msgstr "september"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:54
+msgid "October"
+msgstr "oktober"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:55
+msgid "November"
+msgstr "november"
+
+#: ../../include/text.php:1165 ../../include/js_strings.php:56
+msgid "December"
+msgstr "desember"
+
+#: ../../include/text.php:1242 ../../include/text.php:1246
+msgid "Unknown Attachment"
+msgstr "Ukjent vedlegg"
+
+#: ../../include/text.php:1248 ../../include/RedDAV/RedBrowser.php:237
+#: ../../mod/sharedwithme.php:97
+msgid "Size"
+msgstr "Størrelse"
+
+#: ../../include/text.php:1248
+msgid "unknown"
+msgstr "ukjent"
+
+#: ../../include/text.php:1284
+msgid "remove category"
+msgstr "fjern kategori"
+
+#: ../../include/text.php:1361
+msgid "remove from file"
+msgstr "fjern fra fil"
+
+#: ../../include/text.php:1392 ../../include/event.php:22
+#: ../../include/bb2diaspora.php:465
+msgid "l F d, Y \\@ g:i A"
+msgstr "l F d, Y \\@ g:i A"
+
+#: ../../include/text.php:1396 ../../include/event.php:30
+#: ../../include/bb2diaspora.php:471
+msgid "Starts:"
+msgstr "Starter:"
+
+#: ../../include/text.php:1400 ../../include/event.php:40
+#: ../../include/bb2diaspora.php:479
+msgid "Finishes:"
+msgstr "Slutter:"
+
+#: ../../include/text.php:1407 ../../include/event.php:52
+#: ../../include/identity.php:998 ../../include/bb2diaspora.php:487
+#: ../../mod/directory.php:304
+msgid "Location:"
+msgstr "Plassering:"
+
+#: ../../include/text.php:1503 ../../include/text.php:1514
+msgid "Click to open/close"
+msgstr "Klikk for å åpne/lukke"
+
+#: ../../include/text.php:1698 ../../mod/events.php:623
+msgid "Link to Source"
+msgstr "Lenke til kilde"
+
+#: ../../include/text.php:1719 ../../include/text.php:1791
+msgid "default"
+msgstr "standard"
+
+#: ../../include/text.php:1727
+msgid "Page layout"
+msgstr "Sidens layout"
+
+#: ../../include/text.php:1727
+msgid "You can create your own with the layouts tool"
+msgstr "Du kan lage din egen med layout-verktøyet"
+
+#: ../../include/text.php:1769
+msgid "Page content type"
+msgstr "Sidens innholdstype"
+
+#: ../../include/text.php:1803
+msgid "Select an alternate language"
+msgstr "Velg et annet språk"
+
+#: ../../include/text.php:1922 ../../include/conversation.php:120
+#: ../../mod/tagger.php:43 ../../mod/like.php:361 ../../mod/subthread.php:83
+msgid "photo"
+msgstr "foto"
+
+#: ../../include/text.php:1925 ../../include/event.php:904
+#: ../../include/conversation.php:123 ../../mod/tagger.php:47
+#: ../../mod/like.php:363 ../../mod/events.php:249
+msgid "event"
+msgstr "hendelse"
+
+#: ../../include/text.php:1928 ../../include/conversation.php:148
+#: ../../mod/like.php:361 ../../mod/subthread.php:83
+msgid "status"
+msgstr "status"
+
+#: ../../include/text.php:1930 ../../include/conversation.php:150
+#: ../../mod/tagger.php:53
+msgid "comment"
+msgstr "kommentar"
+
+#: ../../include/text.php:1935
+msgid "activity"
+msgstr "aktivitet"
+
+#: ../../include/text.php:2230
+msgid "Design Tools"
+msgstr "Designverktøy"
+
+#: ../../include/text.php:2233 ../../mod/blocks.php:147
+msgid "Blocks"
+msgstr "Byggeklosser"
+
+#: ../../include/text.php:2234 ../../mod/menu.php:103
+msgid "Menus"
+msgstr "Menyer"
+
+#: ../../include/text.php:2235 ../../mod/layouts.php:174
+msgid "Layouts"
+msgstr "Layout"
+
+#: ../../include/text.php:2236
+msgid "Pages"
+msgstr "Sider"
+
+#: ../../include/text.php:2588 ../../include/RedDAV/RedBrowser.php:131
+msgid "Collection"
+msgstr "Samling"
+
 #: ../../include/RedDAV/RedBrowser.php:107
 #: ../../include/RedDAV/RedBrowser.php:239
 msgid "parent"
 msgstr "opp et nivå"
-
-#: ../../include/RedDAV/RedBrowser.php:131 ../../include/text.php:2582
-msgid "Collection"
-msgstr "Samling"
 
 #: ../../include/RedDAV/RedBrowser.php:134
 msgid "Principal"
@@ -149,16 +524,16 @@ msgstr "Tidsplan innboks"
 msgid "Schedule Outbox"
 msgstr "Tidsplan utboks"
 
-#: ../../include/RedDAV/RedBrowser.php:164 ../../include/widgets.php:1317
+#: ../../include/RedDAV/RedBrowser.php:164 ../../include/widgets.php:1330
 #: ../../include/conversation.php:1027 ../../include/apps.php:360
-#: ../../include/apps.php:415 ../../mod/photos.php:759
-#: ../../mod/photos.php:1198
+#: ../../include/apps.php:415 ../../mod/photos.php:754
+#: ../../mod/photos.php:1195
 msgid "Unknown"
 msgstr "Ukjent"
 
 #: ../../include/RedDAV/RedBrowser.php:226 ../../include/conversation.php:1629
 #: ../../include/nav.php:93 ../../include/apps.php:135
-#: ../../mod/fbrowser.php:114
+#: ../../mod/fbrowser.php:109
 msgid "Files"
 msgstr "Filer"
 
@@ -178,13 +553,13 @@ msgid "Create"
 msgstr "Lag"
 
 #: ../../include/RedDAV/RedBrowser.php:231
-#: ../../include/RedDAV/RedBrowser.php:305 ../../include/widgets.php:1329
-#: ../../mod/photos.php:784 ../../mod/photos.php:1317
-#: ../../mod/profile_photo.php:453
+#: ../../include/RedDAV/RedBrowser.php:305 ../../include/widgets.php:1343
+#: ../../mod/profile_photo.php:453 ../../mod/photos.php:781
+#: ../../mod/photos.php:1316
 msgid "Upload"
 msgstr "Last opp"
 
-#: ../../include/RedDAV/RedBrowser.php:235 ../../mod/admin.php:974
+#: ../../include/RedDAV/RedBrowser.php:235 ../../mod/admin.php:986
 #: ../../mod/settings.php:588 ../../mod/settings.php:614
 #: ../../mod/sharedwithme.php:95
 msgid "Name"
@@ -193,11 +568,6 @@ msgstr "Navn"
 #: ../../include/RedDAV/RedBrowser.php:236
 msgid "Type"
 msgstr "Type"
-
-#: ../../include/RedDAV/RedBrowser.php:237 ../../include/text.php:1248
-#: ../../mod/sharedwithme.php:97
-msgid "Size"
-msgstr "Størrelse"
 
 #: ../../include/RedDAV/RedBrowser.php:238 ../../mod/sharedwithme.php:98
 msgid "Last Modified"
@@ -219,10 +589,10 @@ msgstr "Endre"
 #: ../../include/RedDAV/RedBrowser.php:241 ../../include/conversation.php:657
 #: ../../include/ItemObject.php:120 ../../include/apps.php:260
 #: ../../mod/group.php:173 ../../mod/blocks.php:155 ../../mod/connedit.php:551
-#: ../../mod/editwebpage.php:223 ../../mod/photos.php:1129
-#: ../../mod/thing.php:258 ../../mod/editblock.php:181 ../../mod/admin.php:809
-#: ../../mod/admin.php:968 ../../mod/editlayout.php:179
-#: ../../mod/settings.php:649 ../../mod/webpages.php:183
+#: ../../mod/editwebpage.php:223 ../../mod/thing.php:258
+#: ../../mod/editblock.php:181 ../../mod/admin.php:821 ../../mod/admin.php:980
+#: ../../mod/editlayout.php:179 ../../mod/settings.php:649
+#: ../../mod/webpages.php:183 ../../mod/photos.php:1126
 msgid "Delete"
 msgstr "Slett"
 
@@ -253,7 +623,7 @@ msgid "Delete this item?"
 msgstr "Slett dette elementet?"
 
 #: ../../include/js_strings.php:6 ../../include/ItemObject.php:696
-#: ../../mod/photos.php:1047 ../../mod/photos.php:1165
+#: ../../mod/photos.php:1044 ../../mod/photos.php:1162
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -319,24 +689,25 @@ msgid "Describe (optional)"
 msgstr "Beskriv (valgfritt)"
 
 #: ../../include/js_strings.php:22 ../../include/widgets.php:676
-#: ../../include/ItemObject.php:697 ../../mod/filestorage.php:156
-#: ../../mod/group.php:81 ../../mod/connect.php:93 ../../mod/rate.php:168
-#: ../../mod/mood.php:135 ../../mod/setup.php:331 ../../mod/setup.php:371
-#: ../../mod/pconfig.php:108 ../../mod/poke.php:171 ../../mod/profiles.php:675
+#: ../../include/widgets.php:688 ../../include/ItemObject.php:697
+#: ../../mod/filestorage.php:156 ../../mod/group.php:81
+#: ../../mod/connect.php:93 ../../mod/rate.php:168 ../../mod/mood.php:135
+#: ../../mod/setup.php:331 ../../mod/setup.php:371 ../../mod/pconfig.php:108
+#: ../../mod/poke.php:171 ../../mod/profiles.php:675
 #: ../../mod/connedit.php:715 ../../mod/fsuggest.php:108
 #: ../../mod/sources.php:104 ../../mod/sources.php:138
-#: ../../mod/import.php:527 ../../mod/photos.php:637 ../../mod/photos.php:1008
-#: ../../mod/photos.php:1048 ../../mod/photos.php:1166 ../../mod/thing.php:313
+#: ../../mod/import.php:527 ../../mod/invite.php:142 ../../mod/thing.php:313
 #: ../../mod/thing.php:359 ../../mod/import_items.php:122
-#: ../../mod/pdledit.php:58 ../../mod/admin.php:435 ../../mod/admin.php:802
-#: ../../mod/admin.php:966 ../../mod/admin.php:1103 ../../mod/admin.php:1297
-#: ../../mod/admin.php:1382 ../../mod/settings.php:586
+#: ../../mod/pdledit.php:58 ../../mod/admin.php:447 ../../mod/admin.php:814
+#: ../../mod/admin.php:978 ../../mod/admin.php:1115 ../../mod/admin.php:1309
+#: ../../mod/admin.php:1394 ../../mod/settings.php:586
 #: ../../mod/settings.php:698 ../../mod/settings.php:726
 #: ../../mod/settings.php:749 ../../mod/settings.php:834
 #: ../../mod/settings.php:1023 ../../mod/appman.php:99 ../../mod/locs.php:116
-#: ../../mod/mail.php:371 ../../mod/xchan.php:11 ../../mod/invite.php:142
-#: ../../mod/chat.php:184 ../../mod/chat.php:213 ../../mod/events.php:476
-#: ../../mod/events.php:673 ../../mod/mitem.php:231
+#: ../../mod/xchan.php:11 ../../mod/photos.php:637 ../../mod/photos.php:1005
+#: ../../mod/photos.php:1045 ../../mod/photos.php:1163 ../../mod/chat.php:184
+#: ../../mod/chat.php:213 ../../mod/mail.php:380 ../../mod/events.php:461
+#: ../../mod/events.php:658 ../../mod/mitem.php:231
 #: ../../view/theme/redbasic/php/config.php:99
 msgid "Submit"
 msgstr "Send"
@@ -350,7 +721,7 @@ msgid "Unsaved changes. Are you sure you wish to leave this page?"
 msgstr "Endringene er ikke lagret. Er du sikker på at du ønsker å forlate denne siden?"
 
 #: ../../include/js_strings.php:25 ../../mod/pubsites.php:28
-#: ../../mod/profiles.php:464 ../../mod/events.php:467
+#: ../../mod/profiles.php:464 ../../mod/events.php:452
 msgid "Location"
 msgstr "Plassering"
 
@@ -427,54 +798,10 @@ msgstr " "
 msgid "timeago.numbers"
 msgstr "timeago.numbers"
 
-#: ../../include/js_strings.php:45 ../../include/text.php:1165
-msgid "January"
-msgstr "januar"
-
-#: ../../include/js_strings.php:46 ../../include/text.php:1165
-msgid "February"
-msgstr "februar"
-
-#: ../../include/js_strings.php:47 ../../include/text.php:1165
-msgid "March"
-msgstr "mars"
-
-#: ../../include/js_strings.php:48 ../../include/text.php:1165
-msgid "April"
-msgstr "april"
-
 #: ../../include/js_strings.php:49
 msgctxt "long"
 msgid "May"
 msgstr "mai"
-
-#: ../../include/js_strings.php:50 ../../include/text.php:1165
-msgid "June"
-msgstr "juni"
-
-#: ../../include/js_strings.php:51 ../../include/text.php:1165
-msgid "July"
-msgstr "juli"
-
-#: ../../include/js_strings.php:52 ../../include/text.php:1165
-msgid "August"
-msgstr "august"
-
-#: ../../include/js_strings.php:53 ../../include/text.php:1165
-msgid "September"
-msgstr "september"
-
-#: ../../include/js_strings.php:54 ../../include/text.php:1165
-msgid "October"
-msgstr "oktober"
-
-#: ../../include/js_strings.php:55 ../../include/text.php:1165
-msgid "November"
-msgstr "november"
-
-#: ../../include/js_strings.php:56 ../../include/text.php:1165
-msgid "December"
-msgstr "desember"
 
 #: ../../include/js_strings.php:57
 msgid "Jan"
@@ -524,34 +851,6 @@ msgstr "Nov"
 #: ../../include/js_strings.php:68
 msgid "Dec"
 msgstr "Des"
-
-#: ../../include/js_strings.php:69 ../../include/text.php:1161
-msgid "Sunday"
-msgstr "søndag"
-
-#: ../../include/js_strings.php:70 ../../include/text.php:1161
-msgid "Monday"
-msgstr "mandag"
-
-#: ../../include/js_strings.php:71 ../../include/text.php:1161
-msgid "Tuesday"
-msgstr "tirsdag"
-
-#: ../../include/js_strings.php:72 ../../include/text.php:1161
-msgid "Wednesday"
-msgstr "onsdag"
-
-#: ../../include/js_strings.php:73 ../../include/text.php:1161
-msgid "Thursday"
-msgstr "torsdag"
-
-#: ../../include/js_strings.php:74 ../../include/text.php:1161
-msgid "Friday"
-msgstr "fredag"
-
-#: ../../include/js_strings.php:75 ../../include/text.php:1161
-msgid "Saturday"
-msgstr "lørdag"
 
 #: ../../include/js_strings.php:76
 msgid "Sun"
@@ -614,7 +913,7 @@ msgstr "Ingen brukernavn ble funnet i importfilen."
 msgid "Import completed."
 msgstr "Import ferdig."
 
-#: ../../include/comanche.php:34 ../../mod/admin.php:351
+#: ../../include/comanche.php:34 ../../mod/admin.php:356
 msgid "Default"
 msgstr "Standard"
 
@@ -625,147 +924,74 @@ msgstr "Standard"
 msgid "Permission denied"
 msgstr "Tillatelse avvist"
 
-#: ../../include/items.php:1128 ../../include/items.php:1174
+#: ../../include/items.php:1130 ../../include/items.php:1176
 msgid "(Unknown)"
 msgstr "(Ukjent)"
 
-#: ../../include/items.php:1371
+#: ../../include/items.php:1373
 msgid "Visible to anybody on the internet."
 msgstr "Synlig for enhver på Internett."
 
-#: ../../include/items.php:1373
+#: ../../include/items.php:1375
 msgid "Visible to you only."
 msgstr "Synlig bare for deg."
 
-#: ../../include/items.php:1375
+#: ../../include/items.php:1377
 msgid "Visible to anybody in this network."
 msgstr "Synlig for enhver i dette nettverket."
 
-#: ../../include/items.php:1377
+#: ../../include/items.php:1379
 msgid "Visible to anybody authenticated."
 msgstr "Synlig for enhver som er autentisert."
 
-#: ../../include/items.php:1379
+#: ../../include/items.php:1381
 #, php-format
 msgid "Visible to anybody on %s."
 msgstr "Synlig for alle på %s."
 
-#: ../../include/items.php:1381
+#: ../../include/items.php:1383
 msgid "Visible to all connections."
 msgstr "Synlig for alle forbindelser."
 
-#: ../../include/items.php:1383
+#: ../../include/items.php:1385
 msgid "Visible to approved connections."
 msgstr "Synlig for godkjente forbindelser."
 
-#: ../../include/items.php:1385
+#: ../../include/items.php:1387
 msgid "Visible to specific connections."
 msgstr "Synlig for spesifikke forbindelser."
 
-#: ../../include/items.php:4317 ../../mod/filestorage.php:27
-#: ../../mod/thing.php:86 ../../mod/admin.php:127 ../../mod/admin.php:1005
-#: ../../mod/admin.php:1210 ../../mod/display.php:36 ../../mod/viewsrc.php:20
+#: ../../include/items.php:4326 ../../mod/filestorage.php:27
+#: ../../mod/display.php:36 ../../mod/thing.php:86 ../../mod/admin.php:129
+#: ../../mod/admin.php:1017 ../../mod/admin.php:1222 ../../mod/viewsrc.php:20
 msgid "Item not found."
 msgstr "Elementet ble ikke funnet."
 
-#: ../../include/items.php:4826 ../../mod/group.php:38 ../../mod/group.php:137
+#: ../../include/items.php:4838 ../../mod/group.php:38 ../../mod/group.php:137
 msgid "Collection not found."
 msgstr "Samlingen ble ikke funnet."
 
-#: ../../include/items.php:4842
+#: ../../include/items.php:4854
 msgid "Collection is empty."
 msgstr "Samlingen er tom."
 
-#: ../../include/items.php:4849
+#: ../../include/items.php:4861
 #, php-format
 msgid "Collection: %s"
 msgstr "Samling: %s"
 
-#: ../../include/items.php:4859 ../../mod/connedit.php:683
+#: ../../include/items.php:4871 ../../mod/connedit.php:683
 #, php-format
 msgid "Connection: %s"
 msgstr "Forbindelse: %s"
 
-#: ../../include/items.php:4861
+#: ../../include/items.php:4873
 msgid "Connection not found."
 msgstr "Forbindelsen ble ikke funnet."
-
-#: ../../include/message.php:18
-msgid "No recipient provided."
-msgstr "Ingen mottaker angitt."
-
-#: ../../include/message.php:23
-msgid "[no subject]"
-msgstr "[ikke noe emne]"
-
-#: ../../include/message.php:43
-msgid "Unable to determine sender."
-msgstr "Kan ikke avgjøre avsender."
-
-#: ../../include/message.php:218
-msgid "Stored post could not be verified."
-msgstr "Lagret innlegg kunne ikke bekreftes."
-
-#: ../../include/network.php:630
-msgid "view full size"
-msgstr "vis full størrelse"
-
-#: ../../include/network.php:1608 ../../include/enotify.php:57
-msgid "$Projectname Notification"
-msgstr "$Projectname varsling"
-
-#: ../../include/network.php:1609 ../../include/enotify.php:58
-msgid "$projectname"
-msgstr "$projectname"
-
-#: ../../include/network.php:1611 ../../include/enotify.php:60
-msgid "Thank You,"
-msgstr "Tusen takk,"
-
-#: ../../include/network.php:1613 ../../include/enotify.php:62
-#, php-format
-msgid "%s Administrator"
-msgstr "%s administrator"
-
-#: ../../include/network.php:1655 ../../include/account.php:316
-#: ../../include/account.php:343 ../../include/account.php:403
-msgid "Administrator"
-msgstr "Administrator"
-
-#: ../../include/network.php:1669
-msgid "No Subject"
-msgstr "Uten emne"
-
-#: ../../include/event.php:22 ../../include/bb2diaspora.php:471
-#: ../../include/text.php:1392
-msgid "l F d, Y \\@ g:i A"
-msgstr "l F d, Y \\@ g:i A"
-
-#: ../../include/event.php:30 ../../include/bb2diaspora.php:477
-#: ../../include/text.php:1396
-msgid "Starts:"
-msgstr "Starter:"
-
-#: ../../include/event.php:40 ../../include/bb2diaspora.php:485
-#: ../../include/text.php:1400
-msgid "Finishes:"
-msgstr "Slutter:"
-
-#: ../../include/event.php:52 ../../include/identity.php:1004
-#: ../../include/bb2diaspora.php:493 ../../include/text.php:1407
-#: ../../mod/directory.php:304
-msgid "Location:"
-msgstr "Plassering:"
 
 #: ../../include/event.php:768
 msgid "This event has been added to your calendar."
 msgstr "Denne hendelsen er lagt til i din kalender."
-
-#: ../../include/event.php:904 ../../include/conversation.php:123
-#: ../../include/text.php:1919 ../../mod/tagger.php:47 ../../mod/like.php:363
-#: ../../mod/events.php:249
-msgid "event"
-msgstr "hendelse"
 
 #: ../../include/event.php:967
 msgid "Not specified"
@@ -846,206 +1072,206 @@ msgstr "Forespurt kanal er ikke tilgjengelig."
 msgid "Requested profile is not available."
 msgstr "Forespurt profil er ikke tilgjengelig."
 
-#: ../../include/identity.php:966 ../../mod/profiles.php:782
+#: ../../include/identity.php:960 ../../mod/profiles.php:782
 msgid "Change profile photo"
 msgstr "Endre profilbilde"
 
-#: ../../include/identity.php:972
+#: ../../include/identity.php:966
 msgid "Profiles"
 msgstr "Profiler"
 
-#: ../../include/identity.php:972
+#: ../../include/identity.php:966
 msgid "Manage/edit profiles"
 msgstr "Håndtere/endre profiler"
 
-#: ../../include/identity.php:973 ../../mod/profiles.php:783
+#: ../../include/identity.php:967 ../../mod/profiles.php:783
 msgid "Create New Profile"
 msgstr "Lag ny profil"
 
-#: ../../include/identity.php:976 ../../include/nav.php:90
+#: ../../include/identity.php:970 ../../include/nav.php:90
 msgid "Edit Profile"
 msgstr "Endre profil"
 
-#: ../../include/identity.php:988 ../../mod/profiles.php:794
+#: ../../include/identity.php:982 ../../mod/profiles.php:794
 msgid "Profile Image"
 msgstr "Profilbilde"
 
-#: ../../include/identity.php:991
+#: ../../include/identity.php:985
 msgid "visible to everybody"
 msgstr "synlig for alle"
 
-#: ../../include/identity.php:992 ../../mod/profiles.php:677
+#: ../../include/identity.php:986 ../../mod/profiles.php:677
 #: ../../mod/profiles.php:798
 msgid "Edit visibility"
 msgstr "Endre synlighet"
 
-#: ../../include/identity.php:1008 ../../include/identity.php:1248
+#: ../../include/identity.php:1002 ../../include/identity.php:1242
 msgid "Gender:"
 msgstr "Kjønn:"
 
-#: ../../include/identity.php:1009 ../../include/identity.php:1292
+#: ../../include/identity.php:1003 ../../include/identity.php:1286
 msgid "Status:"
 msgstr "Status:"
 
-#: ../../include/identity.php:1010 ../../include/identity.php:1303
+#: ../../include/identity.php:1004 ../../include/identity.php:1297
 msgid "Homepage:"
 msgstr "Hjemmeside:"
 
-#: ../../include/identity.php:1011
+#: ../../include/identity.php:1005
 msgid "Online Now"
 msgstr "Online nå"
 
-#: ../../include/identity.php:1095 ../../include/identity.php:1173
+#: ../../include/identity.php:1089 ../../include/identity.php:1167
 #: ../../mod/ping.php:318
 msgid "g A l F d"
 msgstr "g A l F d"
 
-#: ../../include/identity.php:1096 ../../include/identity.php:1174
+#: ../../include/identity.php:1090 ../../include/identity.php:1168
 msgid "F d"
 msgstr "F d"
 
-#: ../../include/identity.php:1141 ../../include/identity.php:1213
+#: ../../include/identity.php:1135 ../../include/identity.php:1207
 #: ../../mod/ping.php:341
 msgid "[today]"
 msgstr "[idag]"
 
-#: ../../include/identity.php:1152
+#: ../../include/identity.php:1146
 msgid "Birthday Reminders"
 msgstr "Fødselsdagspåminnnelser"
 
-#: ../../include/identity.php:1153
+#: ../../include/identity.php:1147
 msgid "Birthdays this week:"
 msgstr "Fødselsdager denne uken:"
 
-#: ../../include/identity.php:1206
+#: ../../include/identity.php:1200
 msgid "[No description]"
 msgstr "[Ingen beskrivelse]"
 
-#: ../../include/identity.php:1224
+#: ../../include/identity.php:1218
 msgid "Event Reminders"
 msgstr "Hendelsespåminnelser"
 
-#: ../../include/identity.php:1225
+#: ../../include/identity.php:1219
 msgid "Events this week:"
 msgstr "Hendelser denne uken:"
 
-#: ../../include/identity.php:1238 ../../include/identity.php:1355
+#: ../../include/identity.php:1232 ../../include/identity.php:1349
 #: ../../include/apps.php:138 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr "Profil"
 
-#: ../../include/identity.php:1246 ../../mod/settings.php:1029
+#: ../../include/identity.php:1240 ../../mod/settings.php:1029
 msgid "Full Name:"
 msgstr "Fullt navn:"
 
-#: ../../include/identity.php:1253
+#: ../../include/identity.php:1247
 msgid "Like this channel"
 msgstr "Lik denne kanalen"
 
-#: ../../include/identity.php:1264 ../../include/taxonomy.php:414
+#: ../../include/identity.php:1258 ../../include/taxonomy.php:414
 #: ../../include/conversation.php:1721 ../../include/ItemObject.php:179
-#: ../../mod/photos.php:1086
+#: ../../mod/photos.php:1083
 msgctxt "noun"
 msgid "Like"
 msgid_plural "Likes"
 msgstr[0] "Liker"
 msgstr[1] "Liker"
 
-#: ../../include/identity.php:1277
+#: ../../include/identity.php:1271
 msgid "j F, Y"
 msgstr "j F, Y"
 
-#: ../../include/identity.php:1278
+#: ../../include/identity.php:1272
 msgid "j F"
 msgstr "j F"
 
-#: ../../include/identity.php:1285
+#: ../../include/identity.php:1279
 msgid "Birthday:"
 msgstr "Fødselsdag:"
 
-#: ../../include/identity.php:1289 ../../mod/directory.php:299
+#: ../../include/identity.php:1283 ../../mod/directory.php:299
 msgid "Age:"
 msgstr "Alder:"
 
-#: ../../include/identity.php:1298
+#: ../../include/identity.php:1292
 #, php-format
 msgid "for %1$d %2$s"
 msgstr "for %1$d %2$s"
 
-#: ../../include/identity.php:1301 ../../mod/profiles.php:699
+#: ../../include/identity.php:1295 ../../mod/profiles.php:699
 msgid "Sexual Preference:"
 msgstr "Seksuell preferanse:"
 
-#: ../../include/identity.php:1305 ../../mod/profiles.php:701
+#: ../../include/identity.php:1299 ../../mod/profiles.php:701
 #: ../../mod/directory.php:315
 msgid "Hometown:"
 msgstr "Hjemby:"
 
-#: ../../include/identity.php:1307
+#: ../../include/identity.php:1301
 msgid "Tags:"
 msgstr "Merkelapper:"
 
-#: ../../include/identity.php:1309 ../../mod/profiles.php:702
+#: ../../include/identity.php:1303 ../../mod/profiles.php:702
 msgid "Political Views:"
 msgstr "Politiske synspunkter:"
 
-#: ../../include/identity.php:1311
+#: ../../include/identity.php:1305
 msgid "Religion:"
 msgstr "Religion:"
 
-#: ../../include/identity.php:1313 ../../mod/directory.php:317
+#: ../../include/identity.php:1307 ../../mod/directory.php:317
 msgid "About:"
 msgstr "Om:"
 
-#: ../../include/identity.php:1315
+#: ../../include/identity.php:1309
 msgid "Hobbies/Interests:"
 msgstr "Hobbyer/interesser:"
 
-#: ../../include/identity.php:1317 ../../mod/profiles.php:705
+#: ../../include/identity.php:1311 ../../mod/profiles.php:705
 msgid "Likes:"
 msgstr "Liker:"
 
-#: ../../include/identity.php:1319 ../../mod/profiles.php:706
+#: ../../include/identity.php:1313 ../../mod/profiles.php:706
 msgid "Dislikes:"
 msgstr "Misliker:"
 
-#: ../../include/identity.php:1321
+#: ../../include/identity.php:1315
 msgid "Contact information and Social Networks:"
 msgstr "Kontaktinformasjon og sosiale nettverk:"
 
-#: ../../include/identity.php:1323
+#: ../../include/identity.php:1317
 msgid "My other channels:"
 msgstr "Mine andre kanaler:"
 
-#: ../../include/identity.php:1325
+#: ../../include/identity.php:1319
 msgid "Musical interests:"
 msgstr "Musikkinteresse:"
 
-#: ../../include/identity.php:1327
+#: ../../include/identity.php:1321
 msgid "Books, literature:"
 msgstr "Bøker, litteratur:"
 
-#: ../../include/identity.php:1329
+#: ../../include/identity.php:1323
 msgid "Television:"
 msgstr "TV:"
 
-#: ../../include/identity.php:1331
+#: ../../include/identity.php:1325
 msgid "Film/dance/culture/entertainment:"
 msgstr "Film/dans/kultur/underholdning:"
 
-#: ../../include/identity.php:1333
+#: ../../include/identity.php:1327
 msgid "Love/Romance:"
 msgstr "Kjærlighet/romantikk:"
 
-#: ../../include/identity.php:1335
+#: ../../include/identity.php:1329
 msgid "Work/employment:"
 msgstr "Arbeid/sysselsetting:"
 
-#: ../../include/identity.php:1337
+#: ../../include/identity.php:1331
 msgid "School/education:"
 msgstr "Skole/utdannelse:"
 
-#: ../../include/identity.php:1357
+#: ../../include/identity.php:1351
 msgid "Like this thing"
 msgstr "Lik denne tingen"
 
@@ -1094,6 +1320,41 @@ msgstr "misliker"
 msgid "dislikes"
 msgstr "misliker"
 
+#: ../../include/photos.php:112
+#, php-format
+msgid "Image exceeds website size limit of %lu bytes"
+msgstr "Bilde overstiger nettstedets størrelsesbegrensning på %lu bytes"
+
+#: ../../include/photos.php:119
+msgid "Image file is empty."
+msgstr "Bildefilen er tom."
+
+#: ../../include/photos.php:146 ../../mod/profile_photo.php:225
+msgid "Unable to process image"
+msgstr "Kan ikke behandle bildet"
+
+#: ../../include/photos.php:257
+msgid "Photo storage failed."
+msgstr "Bildelagring mislyktes."
+
+#: ../../include/photos.php:297
+msgid "a new photo"
+msgstr "et nytt bilde"
+
+#: ../../include/photos.php:301
+#, php-format
+msgctxt "photo_upload"
+msgid "%1$s posted %2$s to %3$s"
+msgstr "%1$s la inn %2$s til %3$s"
+
+#: ../../include/photos.php:506 ../../include/conversation.php:1625
+msgid "Photo Albums"
+msgstr "Fotoalbum"
+
+#: ../../include/photos.php:510
+msgid "Upload New Photos"
+msgstr "Last opp nye bilder"
+
 #: ../../include/acl_selectors.php:240
 msgid "Visible to your default audience"
 msgstr "Synlig for ditt standard publikum"
@@ -1111,13 +1372,13 @@ msgid "Other networks and post services"
 msgstr "Andre nettverk og innleggstjenester"
 
 #: ../../include/acl_selectors.php:249 ../../mod/filestorage.php:147
-#: ../../mod/photos.php:631 ../../mod/photos.php:1001 ../../mod/thing.php:310
-#: ../../mod/thing.php:356 ../../mod/chat.php:211
+#: ../../mod/thing.php:310 ../../mod/thing.php:356 ../../mod/photos.php:631
+#: ../../mod/photos.php:998 ../../mod/chat.php:211
 msgid "Permissions"
 msgstr "Tillatelser"
 
 #: ../../include/acl_selectors.php:250 ../../include/ItemObject.php:384
-#: ../../mod/photos.php:1218
+#: ../../mod/photos.php:1215
 msgid "Close"
 msgstr "Lukk"
 
@@ -1152,67 +1413,59 @@ msgstr "Elementet ble ikke funnet."
 msgid "No source file."
 msgstr "Ingen kildefil."
 
-#: ../../include/attach.php:514
+#: ../../include/attach.php:518
 msgid "Cannot locate file to replace"
 msgstr "Kan ikke finne filen som skal byttes ut"
 
-#: ../../include/attach.php:532
+#: ../../include/attach.php:536
 msgid "Cannot locate file to revise/update"
 msgstr "Finner ikke filen som skal revideres/oppdateres"
 
-#: ../../include/attach.php:667
+#: ../../include/attach.php:671
 #, php-format
 msgid "File exceeds size limit of %d"
 msgstr "Filens størrelse overgår grensen på %d"
 
-#: ../../include/attach.php:681
+#: ../../include/attach.php:685
 #, php-format
 msgid "You have reached your limit of %1$.0f Mbytes attachment storage."
 msgstr "Du har nådd din lagringsgrense for vedlegg på %1$.0f Mbytes."
 
-#: ../../include/attach.php:837
+#: ../../include/attach.php:841
 msgid "File upload failed. Possible system limit or action terminated."
 msgstr "Mislyktes med å laste opp filen. Mulig systemgrense eller handling avbrutt."
 
-#: ../../include/attach.php:850
+#: ../../include/attach.php:854
 msgid "Stored file could not be verified. Upload failed."
 msgstr "Lagret fil kunne ikke bekreftes. Opplasting mislyktes."
 
-#: ../../include/attach.php:898 ../../include/attach.php:914
+#: ../../include/attach.php:902 ../../include/attach.php:918
 msgid "Path not available."
 msgstr "Stien er ikke tilgjengelig."
 
-#: ../../include/attach.php:960 ../../include/attach.php:1112
+#: ../../include/attach.php:964 ../../include/attach.php:1116
 msgid "Empty pathname"
 msgstr "Tomt sti-navn"
 
-#: ../../include/attach.php:986
+#: ../../include/attach.php:990
 msgid "duplicate filename or path"
 msgstr "duplikat av filnavn eller sti"
 
-#: ../../include/attach.php:1008
+#: ../../include/attach.php:1012
 msgid "Path not found."
 msgstr "Stien ble ikke funnet."
 
-#: ../../include/attach.php:1066
+#: ../../include/attach.php:1070
 msgid "mkdir failed."
 msgstr "mkdir mislyktes."
 
-#: ../../include/attach.php:1070
+#: ../../include/attach.php:1074
 msgid "database storage failed."
 msgstr "databaselagring mislyktes."
 
-#: ../../include/attach.php:1118
+#: ../../include/attach.php:1122
 msgid "Empty path"
 msgstr "Tom sti"
-
-#: ../../include/bb2diaspora.php:382
-msgid "Attachments:"
-msgstr "Vedlegg:"
-
-#: ../../include/bb2diaspora.php:473
-msgid "$Projectname event notification:"
-msgstr "$Projectname hendelsesvarsling:"
 
 #: ../../include/notify.php:20
 msgid "created a new post"
@@ -1276,12 +1529,6 @@ msgstr "Eksempel: ola.nordmann@eksempel.no, http://eksempel.no/karinordmann"
 #: ../../include/widgets.php:190
 msgid "Notes"
 msgstr "Merknader"
-
-#: ../../include/widgets.php:192 ../../include/text.php:868
-#: ../../include/text.php:880 ../../mod/rbmark.php:28 ../../mod/rbmark.php:100
-#: ../../mod/admin.php:1442 ../../mod/admin.php:1462 ../../mod/filer.php:49
-msgid "Save"
-msgstr "Lagre"
 
 #: ../../include/widgets.php:266
 msgid "Remove term"
@@ -1372,8 +1619,8 @@ msgid "Channel Sources"
 msgstr "Kanalkilder"
 
 #: ../../include/widgets.php:554 ../../include/nav.php:202
-#: ../../include/apps.php:134 ../../mod/admin.php:1064
-#: ../../mod/admin.php:1264
+#: ../../include/apps.php:134 ../../mod/admin.php:1076
+#: ../../mod/admin.php:1276
 msgid "Settings"
 msgstr "Innstillinger"
 
@@ -1433,129 +1680,149 @@ msgstr "Uke"
 msgid "Month View"
 msgstr "Måned"
 
-#: ../../include/widgets.php:674 ../../mod/events.php:669
+#: ../../include/widgets.php:674 ../../mod/events.php:654
 msgid "Export"
 msgstr "Eksport"
 
-#: ../../include/widgets.php:675 ../../mod/events.php:672
+#: ../../include/widgets.php:675 ../../mod/events.php:657
 msgid "Import"
 msgstr "Importer"
 
-#: ../../include/widgets.php:749
+#: ../../include/widgets.php:685
+msgid "Events Tools"
+msgstr "Kalenderverktøy"
+
+#: ../../include/widgets.php:686
+msgid "Export Calendar"
+msgstr "Eksporter kalender"
+
+#: ../../include/widgets.php:687
+msgid "Import Calendar"
+msgstr "Importer kalender"
+
+#: ../../include/widgets.php:761
 msgid "Chat Rooms"
 msgstr "Chatrom"
 
-#: ../../include/widgets.php:769
+#: ../../include/widgets.php:781
 msgid "Bookmarked Chatrooms"
 msgstr "Bokmerkede chatrom"
 
-#: ../../include/widgets.php:789
+#: ../../include/widgets.php:801
 msgid "Suggested Chatrooms"
 msgstr "Foreslåtte chatrom"
 
-#: ../../include/widgets.php:916 ../../include/widgets.php:974
+#: ../../include/widgets.php:928 ../../include/widgets.php:986
 msgid "photo/image"
 msgstr "foto/bilde"
 
-#: ../../include/widgets.php:1069 ../../include/widgets.php:1071
+#: ../../include/widgets.php:1081 ../../include/widgets.php:1083
 msgid "Rate Me"
 msgstr "Vurder meg"
 
-#: ../../include/widgets.php:1075
+#: ../../include/widgets.php:1087
 msgid "View Ratings"
 msgstr "Vis vurderinger"
 
-#: ../../include/widgets.php:1086
+#: ../../include/widgets.php:1098
 msgid "Public Hubs"
 msgstr "Offentlige huber"
 
-#: ../../include/widgets.php:1134
+#: ../../include/widgets.php:1146
 msgid "Forums"
 msgstr "Forum"
 
-#: ../../include/widgets.php:1161
+#: ../../include/widgets.php:1175
 msgid "Tasks"
 msgstr "Oppgaver"
 
-#: ../../include/widgets.php:1170
+#: ../../include/widgets.php:1184
 msgid "Documentation"
 msgstr "Dokumentasjon"
 
-#: ../../include/widgets.php:1172
+#: ../../include/widgets.php:1186
 msgid "Project/Site Information"
 msgstr "Prosjekt-/Nettstedsinformasjon"
 
-#: ../../include/widgets.php:1173
+#: ../../include/widgets.php:1187
 msgid "For Members"
 msgstr "For medlemmer"
 
-#: ../../include/widgets.php:1174
+#: ../../include/widgets.php:1188
 msgid "For Administrators"
 msgstr "For administratorer"
 
-#: ../../include/widgets.php:1175
+#: ../../include/widgets.php:1189
 msgid "For Developers"
 msgstr "For utviklere"
 
-#: ../../include/widgets.php:1200 ../../mod/admin.php:434
+#: ../../include/widgets.php:1214 ../../mod/admin.php:446
 msgid "Site"
 msgstr "Nettsted"
 
-#: ../../include/widgets.php:1201
+#: ../../include/widgets.php:1215
 msgid "Accounts"
 msgstr "Kontoer"
 
-#: ../../include/widgets.php:1202 ../../mod/admin.php:965
+#: ../../include/widgets.php:1216 ../../mod/admin.php:977
 msgid "Channels"
 msgstr "Kanaler"
 
-#: ../../include/widgets.php:1203 ../../mod/admin.php:1062
-#: ../../mod/admin.php:1102
+#: ../../include/widgets.php:1217 ../../mod/admin.php:1074
+#: ../../mod/admin.php:1114
 msgid "Plugins"
 msgstr "Tilleggsfunksjoner"
 
-#: ../../include/widgets.php:1204 ../../mod/admin.php:1262
-#: ../../mod/admin.php:1296
+#: ../../include/widgets.php:1218 ../../mod/admin.php:1274
+#: ../../mod/admin.php:1308
 msgid "Themes"
 msgstr "Temaer"
 
-#: ../../include/widgets.php:1205
+#: ../../include/widgets.php:1219
 msgid "Inspect queue"
 msgstr "Inspiser kø"
 
-#: ../../include/widgets.php:1206
+#: ../../include/widgets.php:1220
 msgid "Profile Config"
 msgstr "Profilinnstillinger"
 
-#: ../../include/widgets.php:1207
+#: ../../include/widgets.php:1221
 msgid "DB updates"
 msgstr "Databaseoppdateringer"
 
-#: ../../include/widgets.php:1225 ../../include/widgets.php:1231
-#: ../../mod/admin.php:1381
+#: ../../include/widgets.php:1239 ../../include/widgets.php:1245
+#: ../../mod/admin.php:1393
 msgid "Logs"
 msgstr "Logger"
 
-#: ../../include/widgets.php:1229 ../../include/nav.php:210
+#: ../../include/widgets.php:1243 ../../include/nav.php:210
 msgid "Admin"
 msgstr "Administrator"
 
-#: ../../include/widgets.php:1230
+#: ../../include/widgets.php:1244
 msgid "Plugin Features"
 msgstr "Tilleggsfunksjoner"
 
-#: ../../include/widgets.php:1232
+#: ../../include/widgets.php:1246
 msgid "User registrations waiting for confirmation"
 msgstr "Brukerregistreringer som venter på bekreftelse"
 
-#: ../../include/widgets.php:1311 ../../mod/photos.php:753
-#: ../../mod/photos.php:1286
+#: ../../include/widgets.php:1324 ../../mod/photos.php:748
+#: ../../mod/photos.php:1283
 msgid "View Photo"
 msgstr "Vis foto"
 
-#: ../../include/widgets.php:1327 ../../mod/photos.php:782
+#: ../../include/widgets.php:1341 ../../mod/photos.php:779
 msgid "Edit Album"
 msgstr "Endre album"
+
+#: ../../include/bb2diaspora.php:376
+msgid "Attachments:"
+msgstr "Vedlegg:"
+
+#: ../../include/bb2diaspora.php:467
+msgid "$Projectname event notification:"
+msgstr "$Projectname hendelsesvarsling:"
 
 #: ../../include/bookmarks.php:35
 #, php-format
@@ -2073,11 +2340,11 @@ msgid "YYYY-MM-DD or MM-DD"
 msgstr "YYYY-MM-DD eller MM-DD"
 
 #: ../../include/datetime.php:236 ../../mod/appman.php:91
-#: ../../mod/appman.php:92 ../../mod/events.php:452 ../../mod/events.php:457
+#: ../../mod/appman.php:92 ../../mod/events.php:437 ../../mod/events.php:442
 msgid "Required"
 msgstr "Påkrevd"
 
-#: ../../include/datetime.php:263 ../../boot.php:2289
+#: ../../include/datetime.php:263 ../../boot.php:2291
 msgid "never"
 msgstr "aldri"
 
@@ -2157,28 +2424,13 @@ msgstr "%1$s sin fødselsdag"
 msgid "Happy Birthday %1$s"
 msgstr "Gratulerer med dagen, %1$s !"
 
-#: ../../include/api.php:1302
+#: ../../include/api.php:1336
 msgid "Public Timeline"
 msgstr "Offentlig tidslinje"
-
-#: ../../include/conversation.php:120 ../../include/text.php:1916
-#: ../../mod/tagger.php:43 ../../mod/like.php:361 ../../mod/subthread.php:83
-msgid "photo"
-msgstr "foto"
 
 #: ../../include/conversation.php:126 ../../mod/like.php:113
 msgid "channel"
 msgstr "kanal"
-
-#: ../../include/conversation.php:148 ../../include/text.php:1922
-#: ../../mod/like.php:361 ../../mod/subthread.php:83
-msgid "status"
-msgstr "status"
-
-#: ../../include/conversation.php:150 ../../include/text.php:1924
-#: ../../mod/tagger.php:53
-msgid "comment"
-msgstr "kommentar"
 
 #: ../../include/conversation.php:164 ../../mod/like.php:410
 #, php-format
@@ -2200,52 +2452,48 @@ msgstr "%1$s er nå forbundet med %2$s"
 msgid "%1$s poked %2$s"
 msgstr "%1$s prikket %2$s"
 
-#: ../../include/conversation.php:243 ../../include/text.php:954
-msgid "poked"
-msgstr "prikket"
-
 #: ../../include/conversation.php:260 ../../mod/mood.php:63
 #, php-format
 msgctxt "mood"
 msgid "%1$s is %2$s"
 msgstr "%1$s er %2$s"
 
-#: ../../include/conversation.php:574 ../../mod/photos.php:1063
+#: ../../include/conversation.php:574 ../../mod/photos.php:1060
 msgctxt "title"
 msgid "Likes"
 msgstr "Liker"
 
-#: ../../include/conversation.php:574 ../../mod/photos.php:1063
+#: ../../include/conversation.php:574 ../../mod/photos.php:1060
 msgctxt "title"
 msgid "Dislikes"
 msgstr "Liker ikke"
 
-#: ../../include/conversation.php:575 ../../mod/photos.php:1064
+#: ../../include/conversation.php:575 ../../mod/photos.php:1061
 msgctxt "title"
 msgid "Agree"
 msgstr "Enig"
 
-#: ../../include/conversation.php:575 ../../mod/photos.php:1064
+#: ../../include/conversation.php:575 ../../mod/photos.php:1061
 msgctxt "title"
 msgid "Disagree"
 msgstr "Uenig"
 
-#: ../../include/conversation.php:575 ../../mod/photos.php:1064
+#: ../../include/conversation.php:575 ../../mod/photos.php:1061
 msgctxt "title"
 msgid "Abstain"
 msgstr "Avstår"
 
-#: ../../include/conversation.php:576 ../../mod/photos.php:1065
+#: ../../include/conversation.php:576 ../../mod/photos.php:1062
 msgctxt "title"
 msgid "Attending"
 msgstr "Deltar"
 
-#: ../../include/conversation.php:576 ../../mod/photos.php:1065
+#: ../../include/conversation.php:576 ../../mod/photos.php:1062
 msgctxt "title"
 msgid "Not attending"
 msgstr "Deltar ikke"
 
-#: ../../include/conversation.php:576 ../../mod/photos.php:1065
+#: ../../include/conversation.php:576 ../../mod/photos.php:1062
 msgctxt "title"
 msgid "Might attend"
 msgstr "Deltar kanskje"
@@ -2300,8 +2548,8 @@ msgstr "Vis i sammenheng"
 
 #: ../../include/conversation.php:740 ../../include/conversation.php:1227
 #: ../../include/ItemObject.php:389 ../../mod/editwebpage.php:190
-#: ../../mod/photos.php:1029 ../../mod/editblock.php:150
-#: ../../mod/editlayout.php:148 ../../mod/editpost.php:129
+#: ../../mod/editblock.php:150 ../../mod/editlayout.php:148
+#: ../../mod/photos.php:1026 ../../mod/editpost.php:129
 msgid "Please wait"
 msgstr "Vennligst vent"
 
@@ -2407,8 +2655,8 @@ msgstr "%s liker ikke dette."
 msgid "Visible to <strong>everybody</strong>"
 msgstr "Synlig for <strong>alle</strong>"
 
-#: ../../include/conversation.php:1155 ../../mod/mail.php:194
-#: ../../mod/mail.php:308
+#: ../../include/conversation.php:1155 ../../mod/mail.php:202
+#: ../../mod/mail.php:316
 msgid "Please enter a link URL:"
 msgstr "Vennligst skriv inn en lenke URL:"
 
@@ -2432,22 +2680,22 @@ msgstr "Lagre til mappe:"
 msgid "Where are you right now?"
 msgstr "Hvor er du akkurat nå?"
 
-#: ../../include/conversation.php:1161 ../../mod/mail.php:195
-#: ../../mod/mail.php:309 ../../mod/editpost.php:56
+#: ../../include/conversation.php:1161 ../../mod/editpost.php:56
+#: ../../mod/mail.php:203 ../../mod/mail.php:317
 msgid "Expires YYYY-MM-DD HH:MM"
 msgstr "Utløper YYYY-MM-DD HH:MM"
 
 #: ../../include/conversation.php:1169 ../../include/page_widgets.php:40
 #: ../../include/ItemObject.php:706 ../../mod/editwebpage.php:212
-#: ../../mod/photos.php:1049 ../../mod/editblock.php:171
-#: ../../mod/webpages.php:188 ../../mod/editpost.php:149
-#: ../../mod/events.php:473
+#: ../../mod/editblock.php:171 ../../mod/webpages.php:188
+#: ../../mod/photos.php:1046 ../../mod/editpost.php:149
+#: ../../mod/events.php:458
 msgid "Preview"
 msgstr "Forhåndsvisning"
 
 #: ../../include/conversation.php:1192 ../../mod/blocks.php:154
-#: ../../mod/photos.php:1028 ../../mod/webpages.php:182
-#: ../../mod/layouts.php:184
+#: ../../mod/webpages.php:182 ../../mod/layouts.php:184
+#: ../../mod/photos.php:1025
 msgid "Share"
 msgstr "Del"
 
@@ -2501,7 +2749,7 @@ msgstr "last opp bilde"
 
 #: ../../include/conversation.php:1206 ../../mod/editwebpage.php:183
 #: ../../mod/editblock.php:143 ../../mod/editlayout.php:141
-#: ../../mod/mail.php:240 ../../mod/mail.php:369 ../../mod/editpost.php:119
+#: ../../mod/editpost.php:119 ../../mod/mail.php:248 ../../mod/mail.php:378
 msgid "Attach file"
 msgstr "Legg ved fil"
 
@@ -2511,7 +2759,7 @@ msgstr "legg ved fil"
 
 #: ../../include/conversation.php:1208 ../../mod/editwebpage.php:184
 #: ../../mod/editblock.php:144 ../../mod/editlayout.php:142
-#: ../../mod/mail.php:241 ../../mod/mail.php:370 ../../mod/editpost.php:120
+#: ../../mod/editpost.php:120 ../../mod/mail.php:249 ../../mod/mail.php:379
 msgid "Insert web link"
 msgstr "Sett inn web-lenke"
 
@@ -2572,7 +2820,7 @@ msgstr "Kategorier (valgfri, kommaseparert liste)"
 
 #: ../../include/conversation.php:1228 ../../mod/editwebpage.php:191
 #: ../../mod/editblock.php:151 ../../mod/editlayout.php:149
-#: ../../mod/editpost.php:130 ../../mod/events.php:474
+#: ../../mod/editpost.php:130 ../../mod/events.php:459
 msgid "Permission settings"
 msgstr "Tillatelser - innstillinger"
 
@@ -2594,7 +2842,7 @@ msgstr "Eksempel: ola@eksempel.no, kari@eksempel.no"
 
 #: ../../include/conversation.php:1252 ../../mod/editwebpage.php:217
 #: ../../mod/editblock.php:176 ../../mod/editlayout.php:173
-#: ../../mod/mail.php:245 ../../mod/mail.php:374 ../../mod/editpost.php:155
+#: ../../mod/editpost.php:155 ../../mod/mail.php:253 ../../mod/mail.php:383
 msgid "Set expiration date"
 msgstr "Angi utløpsdato"
 
@@ -2603,7 +2851,7 @@ msgid "Set publish date"
 msgstr "Angi publiseringsdato"
 
 #: ../../include/conversation.php:1257 ../../include/ItemObject.php:709
-#: ../../mod/mail.php:247 ../../mod/mail.php:376 ../../mod/editpost.php:157
+#: ../../mod/editpost.php:157 ../../mod/mail.php:255 ../../mod/mail.php:385
 msgid "Encrypt text"
 msgstr "Krypter tekst"
 
@@ -2611,8 +2859,8 @@ msgstr "Krypter tekst"
 msgid "OK"
 msgstr "OK"
 
-#: ../../include/conversation.php:1260 ../../mod/fbrowser.php:82
-#: ../../mod/fbrowser.php:117 ../../mod/tagrm.php:11 ../../mod/tagrm.php:134
+#: ../../include/conversation.php:1260 ../../mod/fbrowser.php:77
+#: ../../mod/fbrowser.php:112 ../../mod/tagrm.php:11 ../../mod/tagrm.php:134
 #: ../../mod/settings.php:587 ../../mod/settings.php:613
 #: ../../mod/editpost.php:160
 msgid "Cancel"
@@ -2671,7 +2919,7 @@ msgstr "Søppel"
 msgid "Posts flagged as SPAM"
 msgstr "Innlegg merket som SØPPEL"
 
-#: ../../include/conversation.php:1601 ../../mod/admin.php:973
+#: ../../include/conversation.php:1601 ../../mod/admin.php:985
 msgid "Channel"
 msgstr "Kanal"
 
@@ -2691,10 +2939,6 @@ msgstr "Profildetaljer"
 #: ../../include/apps.php:139 ../../mod/fbrowser.php:25
 msgid "Photos"
 msgstr "Bilder"
-
-#: ../../include/conversation.php:1625 ../../include/photos.php:483
-msgid "Photo Albums"
-msgstr "Fotoalbum"
 
 #: ../../include/conversation.php:1632
 msgid "Files and Storage"
@@ -2723,13 +2967,13 @@ msgid "Manage Webpages"
 msgstr "Håndtere websider"
 
 #: ../../include/conversation.php:1697 ../../include/ItemObject.php:175
-#: ../../include/ItemObject.php:187 ../../mod/photos.php:1082
-#: ../../mod/photos.php:1094
+#: ../../include/ItemObject.php:187 ../../mod/photos.php:1079
+#: ../../mod/photos.php:1091
 msgid "View all"
 msgstr "Vis alle"
 
 #: ../../include/conversation.php:1724 ../../include/ItemObject.php:184
-#: ../../mod/photos.php:1091
+#: ../../mod/photos.php:1088
 msgctxt "noun"
 msgid "Dislike"
 msgid_plural "Dislikes"
@@ -2827,8 +3071,8 @@ msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
 #: ../../include/contact_selectors.php:79 ../../mod/id.php:15
-#: ../../mod/id.php:16 ../../mod/admin.php:805 ../../mod/admin.php:814
-#: ../../boot.php:1488
+#: ../../mod/id.php:16 ../../mod/admin.php:817 ../../mod/admin.php:826
+#: ../../boot.php:1490
 msgid "Email"
 msgstr "E-post"
 
@@ -2855,23 +3099,6 @@ msgstr "XMPP/IM"
 #: ../../include/contact_selectors.php:85
 msgid "MySpace"
 msgstr "MySpace"
-
-#: ../../include/zot.php:685
-msgid "Invalid data packet"
-msgstr "Ugyldig datapakke"
-
-#: ../../include/zot.php:701
-msgid "Unable to verify channel signature"
-msgstr "Ikke i stand til å sjekke kanalsignaturen"
-
-#: ../../include/zot.php:2265
-#, php-format
-msgid "Unable to verify site signature for %s"
-msgstr "Ikke i stand til å bekrefte signaturen til %s"
-
-#: ../../include/zot.php:3592
-msgid "invalid target signature"
-msgstr "Målets signatur er ugyldig"
 
 #: ../../include/bbcode.php:123 ../../include/bbcode.php:794
 #: ../../include/bbcode.php:797 ../../include/bbcode.php:802
@@ -2943,7 +3170,7 @@ msgid_plural "%d invitations available"
 msgstr[0] "%d invitasjon tilgjengelig"
 msgstr[1] "%d invitasjoner tilgjengelig"
 
-#: ../../include/contact_widgets.php:19 ../../mod/admin.php:439
+#: ../../include/contact_widgets.php:19 ../../mod/admin.php:451
 msgid "Advanced"
 msgstr "Avansert"
 
@@ -2996,46 +3223,22 @@ msgstr[1] "%d forbindelser felles"
 msgid "show more"
 msgstr "vis mer"
 
-#: ../../include/dir_fns.php:139
-msgid "Directory Options"
-msgstr "Kataloginnstillinger"
+#: ../../include/enotify.php:57 ../../include/network.php:1608
+msgid "$Projectname Notification"
+msgstr "$Projectname varsling"
 
-#: ../../include/dir_fns.php:141
-msgid "Safe Mode"
-msgstr "Trygt modus"
+#: ../../include/enotify.php:58 ../../include/network.php:1609
+msgid "$projectname"
+msgstr "$projectname"
 
-#: ../../include/dir_fns.php:141 ../../include/dir_fns.php:142
-#: ../../include/dir_fns.php:143 ../../mod/filestorage.php:151
-#: ../../mod/filestorage.php:159 ../../mod/removeme.php:60
-#: ../../mod/connedit.php:635 ../../mod/connedit.php:684 ../../mod/api.php:106
-#: ../../mod/photos.php:626 ../../mod/admin.php:410 ../../mod/settings.php:577
-#: ../../mod/menu.php:96 ../../mod/menu.php:153 ../../mod/events.php:462
-#: ../../mod/events.php:463 ../../mod/events.php:472 ../../mod/mitem.php:154
-#: ../../mod/mitem.php:155 ../../mod/mitem.php:228 ../../mod/mitem.php:229
-#: ../../view/theme/redbasic/php/config.php:104
-#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1490
-msgid "No"
-msgstr "Nei"
+#: ../../include/enotify.php:60 ../../include/network.php:1611
+msgid "Thank You,"
+msgstr "Tusen takk,"
 
-#: ../../include/dir_fns.php:141 ../../include/dir_fns.php:142
-#: ../../include/dir_fns.php:143 ../../mod/filestorage.php:151
-#: ../../mod/filestorage.php:159 ../../mod/removeme.php:60
-#: ../../mod/api.php:105 ../../mod/photos.php:626 ../../mod/admin.php:412
-#: ../../mod/settings.php:577 ../../mod/menu.php:96 ../../mod/menu.php:153
-#: ../../mod/events.php:462 ../../mod/events.php:463 ../../mod/events.php:472
-#: ../../mod/mitem.php:154 ../../mod/mitem.php:155 ../../mod/mitem.php:228
-#: ../../mod/mitem.php:229 ../../view/theme/redbasic/php/config.php:104
-#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1490
-msgid "Yes"
-msgstr "Ja"
-
-#: ../../include/dir_fns.php:142
-msgid "Public Forums Only"
-msgstr "Bare offentlige forum"
-
-#: ../../include/dir_fns.php:143
-msgid "This Website Only"
-msgstr "Kun dette nettstedet"
+#: ../../include/enotify.php:62 ../../include/network.php:1613
+#, php-format
+msgid "%s Administrator"
+msgstr "%s administrator"
 
 #: ../../include/enotify.php:96
 #, php-format
@@ -3232,19 +3435,19 @@ msgstr "Svaret fra den andre kanalen var ikke komplett."
 msgid "Channel was deleted and no longer exists."
 msgstr "Kanalen er slettet og finnes ikke lenger."
 
-#: ../../include/follow.php:152 ../../include/follow.php:180
+#: ../../include/follow.php:152 ../../include/follow.php:181
 msgid "Protocol disabled."
 msgstr "Protokollen er avskrudd."
 
-#: ../../include/follow.php:170
+#: ../../include/follow.php:171
 msgid "Channel discovery failed."
 msgstr "Kanaloppdagelse mislyktes."
 
-#: ../../include/follow.php:196
+#: ../../include/follow.php:197
 msgid "local account not found."
 msgstr "lokal konto ble ikke funnet."
 
-#: ../../include/follow.php:220
+#: ../../include/follow.php:221
 msgid "Cannot connect to yourself."
 msgstr "Kan ikke lage forbindelse med deg selv."
 
@@ -3256,7 +3459,23 @@ msgstr "Innebygget innhold"
 msgid "Embedding disabled"
 msgstr "Innbygging avskrudd"
 
-#: ../../include/nav.php:82 ../../include/nav.php:114 ../../boot.php:1485
+#: ../../include/message.php:19
+msgid "No recipient provided."
+msgstr "Ingen mottaker angitt."
+
+#: ../../include/message.php:24
+msgid "[no subject]"
+msgstr "[ikke noe emne]"
+
+#: ../../include/message.php:44
+msgid "Unable to determine sender."
+msgstr "Kan ikke avgjøre avsender."
+
+#: ../../include/message.php:219
+msgid "Stored post could not be verified."
+msgstr "Lagret innlegg kunne ikke bekreftes."
+
+#: ../../include/nav.php:82 ../../include/nav.php:114 ../../boot.php:1487
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -3312,7 +3531,7 @@ msgstr "Dine bokmerker"
 msgid "Your webpages"
 msgstr "Dine websider"
 
-#: ../../include/nav.php:111 ../../include/apps.php:131 ../../boot.php:1486
+#: ../../include/nav.php:111 ../../include/apps.php:131 ../../boot.php:1488
 msgid "Login"
 msgstr "Logg inn"
 
@@ -3337,7 +3556,7 @@ msgstr "Klikk for å godkjennes mot din hjemme-hub"
 msgid "Home Page"
 msgstr "Hjemmeside"
 
-#: ../../include/nav.php:149 ../../mod/register.php:224 ../../boot.php:1462
+#: ../../include/nav.php:149 ../../mod/register.php:226 ../../boot.php:1470
 msgid "Register"
 msgstr "Registrer"
 
@@ -3346,7 +3565,7 @@ msgid "Create an account"
 msgstr "Lag en konto"
 
 #: ../../include/nav.php:154 ../../include/apps.php:142
-#: ../../mod/layouts.php:176 ../../mod/help.php:202 ../../mod/help.php:207
+#: ../../mod/layouts.php:176 ../../mod/help.php:204 ../../mod/help.php:209
 msgid "Help"
 msgstr "Hjelp"
 
@@ -3357,12 +3576,6 @@ msgstr "Hjelp og dokumentasjon"
 #: ../../include/nav.php:157
 msgid "Applications, utilities, links, games"
 msgstr "Programmer, verktøy, lenker, spill"
-
-#: ../../include/nav.php:159 ../../include/text.php:867
-#: ../../include/text.php:879 ../../include/apps.php:147
-#: ../../mod/search.php:40
-msgid "Search"
-msgstr "Søk"
 
 #: ../../include/nav.php:159
 msgid "Search site @name, #tag, ?docs, content"
@@ -3483,244 +3696,46 @@ msgid ""
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr "Skjemaets sikkerhetspollett var ikke gyldig. Dette skjedde antakelig fordi skjemaet har vært åpnet for lenge (>3 timer) før det ble sendt inn."
 
-#: ../../include/text.php:394
-msgid "prev"
-msgstr "forrige"
+#: ../../include/dir_fns.php:139
+msgid "Directory Options"
+msgstr "Kataloginnstillinger"
 
-#: ../../include/text.php:396
-msgid "first"
-msgstr "første"
+#: ../../include/dir_fns.php:141
+msgid "Safe Mode"
+msgstr "Trygt modus"
 
-#: ../../include/text.php:425
-msgid "last"
-msgstr "siste"
+#: ../../include/dir_fns.php:141 ../../include/dir_fns.php:142
+#: ../../include/dir_fns.php:143 ../../mod/filestorage.php:151
+#: ../../mod/filestorage.php:159 ../../mod/removeme.php:60
+#: ../../mod/connedit.php:635 ../../mod/connedit.php:684 ../../mod/api.php:102
+#: ../../mod/admin.php:415 ../../mod/settings.php:577 ../../mod/photos.php:626
+#: ../../mod/menu.php:96 ../../mod/menu.php:153 ../../mod/events.php:447
+#: ../../mod/events.php:448 ../../mod/events.php:457 ../../mod/mitem.php:154
+#: ../../mod/mitem.php:155 ../../mod/mitem.php:228 ../../mod/mitem.php:229
+#: ../../view/theme/redbasic/php/config.php:104
+#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1492
+msgid "No"
+msgstr "Nei"
 
-#: ../../include/text.php:428
-msgid "next"
-msgstr "neste"
+#: ../../include/dir_fns.php:141 ../../include/dir_fns.php:142
+#: ../../include/dir_fns.php:143 ../../mod/filestorage.php:151
+#: ../../mod/filestorage.php:159 ../../mod/removeme.php:60
+#: ../../mod/api.php:101 ../../mod/admin.php:417 ../../mod/settings.php:577
+#: ../../mod/photos.php:626 ../../mod/menu.php:96 ../../mod/menu.php:153
+#: ../../mod/events.php:447 ../../mod/events.php:448 ../../mod/events.php:457
+#: ../../mod/mitem.php:154 ../../mod/mitem.php:155 ../../mod/mitem.php:228
+#: ../../mod/mitem.php:229 ../../view/theme/redbasic/php/config.php:104
+#: ../../view/theme/redbasic/php/config.php:129 ../../boot.php:1492
+msgid "Yes"
+msgstr "Ja"
 
-#: ../../include/text.php:438
-msgid "older"
-msgstr "eldre"
+#: ../../include/dir_fns.php:142
+msgid "Public Forums Only"
+msgstr "Bare offentlige forum"
 
-#: ../../include/text.php:440
-msgid "newer"
-msgstr "nyere"
-
-#: ../../include/text.php:785
-msgid "No connections"
-msgstr "Ingen forbindelser"
-
-#: ../../include/text.php:797
-#, php-format
-msgid "%d Connection"
-msgid_plural "%d Connections"
-msgstr[0] "%d forbindelse"
-msgstr[1] "%d forbindelser"
-
-#: ../../include/text.php:810 ../../mod/viewconnections.php:101
-msgid "View Connections"
-msgstr "Vis forbindelser"
-
-#: ../../include/text.php:954
-msgid "poke"
-msgstr "prikk"
-
-#: ../../include/text.php:955
-msgid "ping"
-msgstr "varsle"
-
-#: ../../include/text.php:955
-msgid "pinged"
-msgstr "varslet"
-
-#: ../../include/text.php:956
-msgid "prod"
-msgstr "oppildne"
-
-#: ../../include/text.php:956
-msgid "prodded"
-msgstr "oppildnet"
-
-#: ../../include/text.php:957
-msgid "slap"
-msgstr "daske"
-
-#: ../../include/text.php:957
-msgid "slapped"
-msgstr "dasket"
-
-#: ../../include/text.php:958
-msgid "finger"
-msgstr "fingre"
-
-#: ../../include/text.php:958
-msgid "fingered"
-msgstr "fingret"
-
-#: ../../include/text.php:959
-msgid "rebuff"
-msgstr "tilbakevise"
-
-#: ../../include/text.php:959
-msgid "rebuffed"
-msgstr "tilbakeviste"
-
-#: ../../include/text.php:969
-msgid "happy"
-msgstr "glad"
-
-#: ../../include/text.php:970
-msgid "sad"
-msgstr "trist"
-
-#: ../../include/text.php:971
-msgid "mellow"
-msgstr "dempet"
-
-#: ../../include/text.php:972
-msgid "tired"
-msgstr "trøtt"
-
-#: ../../include/text.php:973
-msgid "perky"
-msgstr "oppkvikket"
-
-#: ../../include/text.php:974
-msgid "angry"
-msgstr "sint"
-
-#: ../../include/text.php:975
-msgid "stupified"
-msgstr "sløvet"
-
-#: ../../include/text.php:976
-msgid "puzzled"
-msgstr "forundret"
-
-#: ../../include/text.php:977
-msgid "interested"
-msgstr "interessert"
-
-#: ../../include/text.php:978
-msgid "bitter"
-msgstr "bitter"
-
-#: ../../include/text.php:979
-msgid "cheerful"
-msgstr "munter"
-
-#: ../../include/text.php:980
-msgid "alive"
-msgstr "levende"
-
-#: ../../include/text.php:981
-msgid "annoyed"
-msgstr "irritert"
-
-#: ../../include/text.php:982
-msgid "anxious"
-msgstr "nervøs"
-
-#: ../../include/text.php:983
-msgid "cranky"
-msgstr "gretten"
-
-#: ../../include/text.php:984
-msgid "disturbed"
-msgstr "foruroliget"
-
-#: ../../include/text.php:985
-msgid "frustrated"
-msgstr "frustrert"
-
-#: ../../include/text.php:986
-msgid "depressed"
-msgstr "lei seg"
-
-#: ../../include/text.php:987
-msgid "motivated"
-msgstr "motivert"
-
-#: ../../include/text.php:988
-msgid "relaxed"
-msgstr "avslappet"
-
-#: ../../include/text.php:989
-msgid "surprised"
-msgstr "overrasket"
-
-#: ../../include/text.php:1165
-msgid "May"
-msgstr "mai"
-
-#: ../../include/text.php:1242 ../../include/text.php:1246
-msgid "Unknown Attachment"
-msgstr "Ukjent vedlegg"
-
-#: ../../include/text.php:1248
-msgid "unknown"
-msgstr "ukjent"
-
-#: ../../include/text.php:1284
-msgid "remove category"
-msgstr "fjern kategori"
-
-#: ../../include/text.php:1361
-msgid "remove from file"
-msgstr "fjern fra fil"
-
-#: ../../include/text.php:1507 ../../include/text.php:1518
-msgid "Click to open/close"
-msgstr "Klikk for å åpne/lukke"
-
-#: ../../include/text.php:1692 ../../mod/events.php:638
-msgid "Link to Source"
-msgstr "Lenke til kilde"
-
-#: ../../include/text.php:1713 ../../include/text.php:1785
-msgid "default"
-msgstr "standard"
-
-#: ../../include/text.php:1721
-msgid "Page layout"
-msgstr "Sidens layout"
-
-#: ../../include/text.php:1721
-msgid "You can create your own with the layouts tool"
-msgstr "Du kan lage din egen med layout-verktøyet"
-
-#: ../../include/text.php:1763
-msgid "Page content type"
-msgstr "Sidens innholdstype"
-
-#: ../../include/text.php:1797
-msgid "Select an alternate language"
-msgstr "Velg et annet språk"
-
-#: ../../include/text.php:1929
-msgid "activity"
-msgstr "aktivitet"
-
-#: ../../include/text.php:2224
-msgid "Design Tools"
-msgstr "Designverktøy"
-
-#: ../../include/text.php:2227 ../../mod/blocks.php:147
-msgid "Blocks"
-msgstr "Byggeklosser"
-
-#: ../../include/text.php:2228 ../../mod/menu.php:103
-msgid "Menus"
-msgstr "Menyer"
-
-#: ../../include/text.php:2229 ../../mod/layouts.php:174
-msgid "Layouts"
-msgstr "Layout"
-
-#: ../../include/text.php:2230
-msgid "Pages"
-msgstr "Sider"
+#: ../../include/dir_fns.php:143
+msgid "This Website Only"
+msgstr "Kun dette nettstedet"
 
 #: ../../include/group.php:26
 msgid ""
@@ -3733,7 +3748,7 @@ msgstr "En slettet gruppe med dette navnet ble gjenopprettet. Eksisterende tilla
 msgid "Add new connections to this collection (privacy group)"
 msgstr "Legg nye forbindelser til denne samlingen (personverngruppe)"
 
-#: ../../include/group.php:251 ../../mod/admin.php:814
+#: ../../include/group.php:251 ../../mod/admin.php:826
 msgid "All Channels"
 msgstr "Alle kanaler"
 
@@ -3756,6 +3771,23 @@ msgstr "Legg til ny samling"
 #: ../../include/group.php:298
 msgid "Channels not in any collection"
 msgstr "Kanaler som ikke er i noen samling"
+
+#: ../../include/zot.php:676
+msgid "Invalid data packet"
+msgstr "Ugyldig datapakke"
+
+#: ../../include/zot.php:692
+msgid "Unable to verify channel signature"
+msgstr "Ikke i stand til å sjekke kanalsignaturen"
+
+#: ../../include/zot.php:2268
+#, php-format
+msgid "Unable to verify site signature for %s"
+msgstr "Ikke i stand til å bekrefte signaturen til %s"
+
+#: ../../include/zot.php:3584
+msgid "invalid target signature"
+msgstr "Målets signatur er ugyldig"
 
 #: ../../include/page_widgets.php:6
 msgid "New Page"
@@ -3788,31 +3820,23 @@ msgstr "Laget"
 msgid "Edited"
 msgstr "Endret"
 
+#: ../../include/network.php:630
+msgid "view full size"
+msgstr "vis full størrelse"
+
+#: ../../include/network.php:1655 ../../include/account.php:316
+#: ../../include/account.php:343 ../../include/account.php:403
+msgid "Administrator"
+msgstr "Administrator"
+
+#: ../../include/network.php:1669
+msgid "No Subject"
+msgstr "Uten emne"
+
 #: ../../include/dba/dba_driver.php:141
 #, php-format
 msgid "Cannot locate DNS info for database server '%s'"
 msgstr "Kan ikke finne DNS-informasjon om databasetjener '%s'"
-
-#: ../../include/photos.php:112
-#, php-format
-msgid "Image exceeds website size limit of %lu bytes"
-msgstr "Bilde overstiger nettstedets størrelsesbegrensning på %lu bytes"
-
-#: ../../include/photos.php:119
-msgid "Image file is empty."
-msgstr "Bildefilen er tom."
-
-#: ../../include/photos.php:146 ../../mod/profile_photo.php:225
-msgid "Unable to process image"
-msgstr "Kan ikke behandle bildet"
-
-#: ../../include/photos.php:257
-msgid "Photo storage failed."
-msgstr "Bildelagring mislyktes."
-
-#: ../../include/photos.php:487
-msgid "Upload New Photos"
-msgstr "Last opp nye bilder"
 
 #: ../../include/ItemObject.php:130
 msgid "Save to Folder"
@@ -3862,11 +3886,11 @@ msgstr "stjernemerket"
 msgid "Add Tag"
 msgstr "Legg til merkelapp"
 
-#: ../../include/ItemObject.php:254 ../../mod/photos.php:1026
+#: ../../include/ItemObject.php:254 ../../mod/photos.php:1023
 msgid "I like this (toggle)"
 msgstr "Jeg liker dette (skru av og på)"
 
-#: ../../include/ItemObject.php:255 ../../mod/photos.php:1027
+#: ../../include/ItemObject.php:255 ../../mod/photos.php:1024
 msgid "I don't like this (toggle)"
 msgstr "Jeg liker ikke dette (skru av og på)"
 
@@ -3922,18 +3946,18 @@ msgstr "Legg til i kalender"
 msgid "Mark all seen"
 msgstr "Merk alle som sett"
 
-#: ../../include/ItemObject.php:378 ../../mod/photos.php:1212
+#: ../../include/ItemObject.php:378 ../../mod/photos.php:1209
 msgctxt "noun"
 msgid "Likes"
 msgstr "Liker"
 
-#: ../../include/ItemObject.php:379 ../../mod/photos.php:1213
+#: ../../include/ItemObject.php:379 ../../mod/photos.php:1210
 msgctxt "noun"
 msgid "Dislikes"
 msgstr "Liker ikke"
 
-#: ../../include/ItemObject.php:694 ../../mod/photos.php:1045
-#: ../../mod/photos.php:1163
+#: ../../include/ItemObject.php:694 ../../mod/photos.php:1042
+#: ../../mod/photos.php:1160
 msgid "This is you"
 msgstr "Dette er deg"
 
@@ -3948,78 +3972,6 @@ msgstr "Sett inn lenke"
 #: ../../include/ItemObject.php:705
 msgid "Video"
 msgstr "Video"
-
-#: ../../include/account.php:27
-msgid "Not a valid email address"
-msgstr "Ikke en gyldig e-postadresse"
-
-#: ../../include/account.php:29
-msgid "Your email domain is not among those allowed on this site"
-msgstr "Ditt e-postdomene er ikke blant de som er tillatt på dette stedet"
-
-#: ../../include/account.php:35
-msgid "Your email address is already registered at this site."
-msgstr "Din e-postadresse er allerede registrert på dette nettstedet."
-
-#: ../../include/account.php:67
-msgid "An invitation is required."
-msgstr "En invitasjon er påkrevd."
-
-#: ../../include/account.php:71
-msgid "Invitation could not be verified."
-msgstr "Invitasjon kunne ikke bekreftes."
-
-#: ../../include/account.php:121
-msgid "Please enter the required information."
-msgstr "Vennligst skriv inn nødvendig informasjon."
-
-#: ../../include/account.php:188
-msgid "Failed to store account information."
-msgstr "Mislyktes med å lagre kontoinformasjon."
-
-#: ../../include/account.php:248
-#, php-format
-msgid "Registration confirmation for %s"
-msgstr "Registreringsbekreftelse for %s"
-
-#: ../../include/account.php:314
-#, php-format
-msgid "Registration request at %s"
-msgstr "Registreringsforespørsel hos %s"
-
-#: ../../include/account.php:338
-msgid "your registration password"
-msgstr "ditt registreringspassord"
-
-#: ../../include/account.php:341 ../../include/account.php:401
-#, php-format
-msgid "Registration details for %s"
-msgstr "Registreringsdetaljer for %s"
-
-#: ../../include/account.php:410
-msgid "Account approved."
-msgstr "Konto godkjent."
-
-#: ../../include/account.php:449
-#, php-format
-msgid "Registration revoked for %s"
-msgstr "Registrering trukket tilbake for %s"
-
-#: ../../include/account.php:494
-msgid "Account verified. Please login."
-msgstr "Konto bekreftet. Vennligst logg inn."
-
-#: ../../include/account.php:707 ../../include/account.php:709
-msgid "Click here to upgrade."
-msgstr "Klikk her for å oppgradere."
-
-#: ../../include/account.php:715
-msgid "This action exceeds the limits set by your subscription plan."
-msgstr "Denne handlingen går utenfor grensene satt i din abonnementsplan."
-
-#: ../../include/account.php:720
-msgid "This action is not available under your subscription plan."
-msgstr "Denne handlingen er ikke tilgjengelig i din abonnementsplan."
 
 #: ../../include/apps.php:128
 msgid "Site Admin"
@@ -4202,11 +4154,83 @@ msgstr "Gruppelager"
 msgid "Custom/Expert Mode"
 msgstr "Tilpasset/Ekspertmodus"
 
-#: ../../include/photo/photo_driver.php:719 ../../mod/photos.php:94
-#: ../../mod/photos.php:699 ../../mod/profile_photo.php:147
+#: ../../include/photo/photo_driver.php:719 ../../mod/profile_photo.php:147
 #: ../../mod/profile_photo.php:239 ../../mod/profile_photo.php:379
+#: ../../mod/photos.php:94 ../../mod/photos.php:699
 msgid "Profile Photos"
 msgstr "Profilbilder"
+
+#: ../../include/account.php:27
+msgid "Not a valid email address"
+msgstr "Ikke en gyldig e-postadresse"
+
+#: ../../include/account.php:29
+msgid "Your email domain is not among those allowed on this site"
+msgstr "Ditt e-postdomene er ikke blant de som er tillatt på dette stedet"
+
+#: ../../include/account.php:35
+msgid "Your email address is already registered at this site."
+msgstr "Din e-postadresse er allerede registrert på dette nettstedet."
+
+#: ../../include/account.php:67
+msgid "An invitation is required."
+msgstr "En invitasjon er påkrevd."
+
+#: ../../include/account.php:71
+msgid "Invitation could not be verified."
+msgstr "Invitasjon kunne ikke bekreftes."
+
+#: ../../include/account.php:121
+msgid "Please enter the required information."
+msgstr "Vennligst skriv inn nødvendig informasjon."
+
+#: ../../include/account.php:188
+msgid "Failed to store account information."
+msgstr "Mislyktes med å lagre kontoinformasjon."
+
+#: ../../include/account.php:248
+#, php-format
+msgid "Registration confirmation for %s"
+msgstr "Registreringsbekreftelse for %s"
+
+#: ../../include/account.php:314
+#, php-format
+msgid "Registration request at %s"
+msgstr "Registreringsforespørsel hos %s"
+
+#: ../../include/account.php:338
+msgid "your registration password"
+msgstr "ditt registreringspassord"
+
+#: ../../include/account.php:341 ../../include/account.php:401
+#, php-format
+msgid "Registration details for %s"
+msgstr "Registreringsdetaljer for %s"
+
+#: ../../include/account.php:410
+msgid "Account approved."
+msgstr "Konto godkjent."
+
+#: ../../include/account.php:449
+#, php-format
+msgid "Registration revoked for %s"
+msgstr "Registrering trukket tilbake for %s"
+
+#: ../../include/account.php:494
+msgid "Account verified. Please login."
+msgstr "Konto bekreftet. Vennligst logg inn."
+
+#: ../../include/account.php:707 ../../include/account.php:709
+msgid "Click here to upgrade."
+msgstr "Klikk her for å oppgradere."
+
+#: ../../include/account.php:715
+msgid "This action exceeds the limits set by your subscription plan."
+msgstr "Denne handlingen går utenfor grensene satt i din abonnementsplan."
+
+#: ../../include/account.php:720
+msgid "This action is not available under your subscription plan."
+msgstr "Denne handlingen er ikke tilgjengelig i din abonnementsplan."
 
 #: ../../mod/filestorage.php:82
 msgid "Permission Denied."
@@ -4300,36 +4324,36 @@ msgstr "Alle tilkoblede kanaler"
 msgid "Click on a channel to add or remove."
 msgstr "Klikk på en kanal for å legge til eller fjerne."
 
-#: ../../mod/item.php:173
+#: ../../mod/item.php:174
 msgid "Unable to locate original post."
 msgstr "Ikke i stand til å finne opprinnelig innlegg."
 
-#: ../../mod/item.php:417
+#: ../../mod/item.php:418
 msgid "Empty post discarded."
 msgstr "Tomt innlegg forkastet."
 
-#: ../../mod/item.php:457
+#: ../../mod/item.php:458
 msgid "Executable content type not permitted to this channel."
 msgstr "Kjørbar innholdstype er ikke tillat for denne kanalen."
 
-#: ../../mod/item.php:822
+#: ../../mod/item.php:823
 msgid "Duplicate post suppressed."
 msgstr "Duplikat av innlegg forhindret."
 
-#: ../../mod/item.php:953
+#: ../../mod/item.php:954
 msgid "System error. Post not saved."
 msgstr "Systemfeil. Innlegg ble ikke lagret."
 
-#: ../../mod/item.php:1220
+#: ../../mod/item.php:1221
 msgid "Unable to obtain post information from database."
 msgstr "Ikke i stand til å få tak i informasjon om innlegg fra databasen."
 
-#: ../../mod/item.php:1227
+#: ../../mod/item.php:1228
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr "Du har nådd din grense på %1$.0f startinnlegg."
 
-#: ../../mod/item.php:1234
+#: ../../mod/item.php:1235
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr "Du har nådd din grense på %1$.0f websider."
@@ -4409,7 +4433,8 @@ msgstr "Ingen treff"
 msgid "OpenID protocol error. No ID returned."
 msgstr "OpenID protokollfeil. Ingen ID ble returnert."
 
-#: ../../mod/openid.php:72 ../../mod/openid.php:179 ../../mod/post.php:285
+#: ../../mod/openid.php:72 ../../mod/openid.php:179
+#: ../../Zotlabs/Zot/Auth.php:248
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
 msgstr "Velkommen %s. Ekstern autentisering er vellykket."
@@ -4645,7 +4670,7 @@ msgstr "Ugyldig element."
 msgid "Channel not found."
 msgstr "Kanalen ble ikke funnet."
 
-#: ../../mod/page.php:89 ../../mod/display.php:110 ../../mod/help.php:214
+#: ../../mod/page.php:89 ../../mod/display.php:110 ../../mod/help.php:216
 #: ../../mod/block.php:75 ../../index.php:241
 msgid "Page not found."
 msgstr "Siden ikke funnet."
@@ -4757,8 +4782,8 @@ msgstr "Les mer om roller"
 msgid "No ratings"
 msgstr "Ingen vurderinger"
 
-#: ../../mod/ratings.php:82 ../../mod/search.php:13 ../../mod/directory.php:59
-#: ../../mod/photos.php:490 ../../mod/display.php:13
+#: ../../mod/ratings.php:82 ../../mod/display.php:13
+#: ../../mod/directory.php:59 ../../mod/photos.php:490 ../../mod/search.php:13
 #: ../../mod/viewconnections.php:17
 msgid "Public access denied."
 msgstr "Offentlig tilgang avvist."
@@ -4815,8 +4840,8 @@ msgstr "Vennligst les filen \"install/INSTALL.txt\"."
 msgid "System check"
 msgstr "Systemsjekk"
 
-#: ../../mod/setup.php:285 ../../mod/photos.php:914 ../../mod/events.php:668
-#: ../../mod/events.php:675
+#: ../../mod/setup.php:285 ../../mod/photos.php:911 ../../mod/events.php:653
+#: ../../mod/events.php:660
 msgid "Next"
 msgstr "Neste"
 
@@ -5204,15 +5229,6 @@ msgstr "Mine bokmerker"
 msgid "My Connections Bookmarks"
 msgstr "Mine forbindelsers bokmerker"
 
-#: ../../mod/home.php:57 ../../mod/home.php:65 ../../mod/siteinfo.php:157
-msgid "$Projectname"
-msgstr "$Projectname"
-
-#: ../../mod/home.php:75
-#, php-format
-msgid "Welcome to %s"
-msgstr "Velkommen til %s"
-
 #: ../../mod/pconfig.php:27 ../../mod/pconfig.php:60
 msgid "This setting requires special processing and editing has been blocked."
 msgstr "Denne innstillingen krever spesiell behandling og redigering har blitt blokkert."
@@ -5317,7 +5333,7 @@ msgstr "Hjemmeside"
 msgid "Interests"
 msgstr "Interesser"
 
-#: ../../mod/profiles.php:457 ../../mod/admin.php:974
+#: ../../mod/profiles.php:457 ../../mod/admin.php:986
 msgid "Address"
 msgstr "Adresse"
 
@@ -5501,16 +5517,6 @@ msgstr "Legg til profilting"
 msgid "Include desirable objects in your profile"
 msgstr "Inkluder ønskverdige objekter i din profil"
 
-#: ../../mod/search.php:212
-#, php-format
-msgid "Items tagged with: %s"
-msgstr "Elementer merket med: %s"
-
-#: ../../mod/search.php:214
-#, php-format
-msgid "Search results for: %s"
-msgstr "Søkeresultater for: %s"
-
 #: ../../mod/connedit.php:75
 msgid "Could not access contact record."
 msgstr "Fikk ikke tilgang til kontaktinformasjonen."
@@ -5570,11 +5576,11 @@ msgstr "Nylig aktivitet"
 msgid "View recent posts and comments"
 msgstr "Vis nylige innlegg og kommentarer"
 
-#: ../../mod/connedit.php:519 ../../mod/admin.php:811
+#: ../../mod/connedit.php:519 ../../mod/admin.php:823
 msgid "Unblock"
 msgstr "Ikke blokker lenger"
 
-#: ../../mod/connedit.php:519 ../../mod/admin.php:810
+#: ../../mod/connedit.php:519 ../../mod/admin.php:822
 msgid "Block"
 msgstr "Blokker"
 
@@ -5730,7 +5736,7 @@ msgid ""
 " communication."
 msgstr "(%s) ønsker forbindelse med deg. Vennligst godkjenn denne forbindelsen for å tillate kommunikasjon."
 
-#: ../../mod/connedit.php:710 ../../mod/admin.php:807
+#: ../../mod/connedit.php:710 ../../mod/admin.php:819
 msgid "Approve"
 msgstr "Godkjenn"
 
@@ -5903,19 +5909,19 @@ msgstr "la til din kanal"
 msgid "posted an event"
 msgstr "la ut en hendelse"
 
-#: ../../mod/api.php:76 ../../mod/api.php:102
+#: ../../mod/api.php:74 ../../mod/api.php:98
 msgid "Authorize application connection"
 msgstr "Tillat programforbindelse"
 
-#: ../../mod/api.php:77
+#: ../../mod/api.php:75
 msgid "Return to your app and insert this Securty Code:"
 msgstr "Gå tilbake til din app og legg inn denne sikkerhetskoden:"
 
-#: ../../mod/api.php:89
+#: ../../mod/api.php:85
 msgid "Please login to continue."
 msgstr "Vennligst logg inn for å fortsette."
 
-#: ../../mod/api.php:104
+#: ../../mod/api.php:100
 msgid ""
 "Do you want to authorize this application to access your posts and contacts,"
 " and/or create new posts for you?"
@@ -5941,7 +5947,7 @@ msgstr "Lagre bokmerke"
 msgid "URL of bookmark"
 msgstr "URL-en til bokmerket"
 
-#: ../../mod/rbmark.php:97 ../../mod/appman.php:93 ../../mod/events.php:465
+#: ../../mod/rbmark.php:97 ../../mod/appman.php:93 ../../mod/events.php:450
 msgid "Description"
 msgstr "Beskrivelse"
 
@@ -6044,7 +6050,7 @@ msgstr "Fjern merkelapp fra element"
 msgid "Select a tag to remove: "
 msgstr "Velg merkelapp å fjerne:"
 
-#: ../../mod/tagrm.php:133 ../../mod/photos.php:954
+#: ../../mod/tagrm.php:133 ../../mod/photos.php:951
 msgid "Remove"
 msgstr "Fjern"
 
@@ -6155,7 +6161,7 @@ msgid ""
 "Password reset failed."
 msgstr "Forespørsel kunne ikke bekreftes. (Du kan ha sendt den inn tidligere.) Tilbakestilling av passord mislyktes."
 
-#: ../../mod/lostpass.php:86 ../../boot.php:1494
+#: ../../mod/lostpass.php:86 ../../boot.php:1496
 msgid "Password Reset"
 msgstr "Tilbakestill passord"
 
@@ -6313,156 +6319,75 @@ msgid ""
 "only once and leave this page open until finished."
 msgstr "Denne prosessen kan ta flere minutter å fullføre. Vennligst send inn dette skjemaet bare en gang og la siden være åpen inntil den er ferdig."
 
-#: ../../mod/photos.php:79
-msgid "Page owner information could not be retrieved."
-msgstr "Informasjon om sideeier kunne ikke hentes."
+#: ../../mod/invite.php:25
+msgid "Total invitation limit exceeded."
+msgstr "Grensen for totalt antall invitasjoner er overskredet."
 
-#: ../../mod/photos.php:100
-msgid "Album not found."
-msgstr "Albumet ble ikke funnet."
-
-#: ../../mod/photos.php:127
-msgid "Delete Album"
-msgstr "Slett album"
-
-#: ../../mod/photos.php:171 ../../mod/photos.php:1009
-msgid "Delete Photo"
-msgstr "Slett bilde"
-
-#: ../../mod/photos.php:501
-msgid "No photos selected"
-msgstr "Ingen bilder valgt"
-
-#: ../../mod/photos.php:550
-msgid "Access to this item is restricted."
-msgstr "Tilgang til dette elementet er begrenset."
-
-#: ../../mod/photos.php:589
+#: ../../mod/invite.php:49
 #, php-format
-msgid "%1$.2f MB of %2$.2f MB photo storage used."
-msgstr "%1$.2f MB av %2$.2f MB lagringsplass til bilder er brukt."
+msgid "%s : Not a valid email address."
+msgstr "%s : ikke en gyldig e-postadresse."
 
-#: ../../mod/photos.php:592
+#: ../../mod/invite.php:59
+msgid "Please join us on $Projectname"
+msgstr "Bli med oss på $Projectname"
+
+#: ../../mod/invite.php:70
+msgid "Invitation limit exceeded. Please contact your site administrator."
+msgstr "Invitasjonsgrensen er overskredet. Vennligst kontakt administratoren ved ditt nettsted."
+
+#: ../../mod/invite.php:75
 #, php-format
-msgid "%1$.2f MB photo storage used."
-msgstr "%1$.2f MB lagringsplass til bilder er brukt."
+msgid "%s : Message delivery failed."
+msgstr "%s : meldingslevering feilet."
 
-#: ../../mod/photos.php:620
-msgid "Upload Photos"
-msgstr "Last opp bilder"
+#: ../../mod/invite.php:79
+#, php-format
+msgid "%d message sent."
+msgid_plural "%d messages sent."
+msgstr[0] "%d melding sendt."
+msgstr[1] "%d meldinger sendt."
 
-#: ../../mod/photos.php:624
-msgid "Enter an album name"
-msgstr "Skriv et albumnavn"
+#: ../../mod/invite.php:98
+msgid "You have no more invitations available"
+msgstr "Du har ikke flere invitasjoner tilgjengelig"
 
-#: ../../mod/photos.php:625
-msgid "or select an existing album (doubleclick)"
-msgstr "eller velg et eksisterende album (dobbeltklikk)"
+#: ../../mod/invite.php:129
+msgid "Send invitations"
+msgstr "Send invitasjoner"
 
-#: ../../mod/photos.php:626
-msgid "Create a status post for this upload"
-msgstr "Lag et statusinnlegg for denne opplastingen"
+#: ../../mod/invite.php:130
+msgid "Enter email addresses, one per line:"
+msgstr "Skriv e-postadresser, en per linje:"
 
-#: ../../mod/photos.php:627
-msgid "Caption (optional):"
-msgstr "Bildetekst (valgfritt):"
+#: ../../mod/invite.php:131 ../../mod/mail.php:246
+msgid "Your message:"
+msgstr "Din melding:"
 
-#: ../../mod/photos.php:628
-msgid "Description (optional):"
-msgstr "Beskrivelse (valgfritt):"
+#: ../../mod/invite.php:132
+msgid "Please join my community on $Projectname."
+msgstr "Du er velkommen til å bli med i mitt fellesskap på $Projectname."
 
-#: ../../mod/photos.php:655
-msgid "Album name could not be decoded"
-msgstr "Albumnavnet kunne ikke dekodes"
+#: ../../mod/invite.php:134
+msgid "You will need to supply this invitation code: "
+msgstr "Du må oppgi denne invitasjonskoden:"
 
-#: ../../mod/photos.php:699 ../../mod/photos.php:1236
-#: ../../mod/photos.php:1253
-msgid "Contact Photos"
-msgstr "Kontaktbilder"
+#: ../../mod/invite.php:135
+msgid ""
+"1. Register at any $Projectname location (they are all inter-connected)"
+msgstr "1. Registrer ved enhver $Projectname-lokasjon (de er alle forbundet med hverandre)"
 
-#: ../../mod/photos.php:727
-msgid "Show Newest First"
-msgstr "Vis nyeste først"
+#: ../../mod/invite.php:137
+msgid "2. Enter my $Projectname network address into the site searchbar."
+msgstr "2. Skriv inn min $Projectname-adresse i nettstedets søkefelt."
 
-#: ../../mod/photos.php:729
-msgid "Show Oldest First"
-msgstr "Vis eldste først"
+#: ../../mod/invite.php:138
+msgid "or visit "
+msgstr "eller besøk"
 
-#: ../../mod/photos.php:827
-msgid "Permission denied. Access to this item may be restricted."
-msgstr "Tillatelse avvist. Tilgang til dette elementet kan være begrenset."
-
-#: ../../mod/photos.php:829
-msgid "Photo not available"
-msgstr "Bilde er utilgjengelig"
-
-#: ../../mod/photos.php:887
-msgid "Use as profile photo"
-msgstr "Bruk som profilbilde"
-
-#: ../../mod/photos.php:894
-msgid "Private Photo"
-msgstr "Privat bilde"
-
-#: ../../mod/photos.php:905 ../../mod/events.php:667 ../../mod/events.php:674
-msgid "Previous"
-msgstr "Forrige"
-
-#: ../../mod/photos.php:909
-msgid "View Full Size"
-msgstr "Vis i full størrelse"
-
-#: ../../mod/photos.php:988
-msgid "Edit photo"
-msgstr "Endre bilde"
-
-#: ../../mod/photos.php:990
-msgid "Rotate CW (right)"
-msgstr "Roter med klokka (mot høyre)"
-
-#: ../../mod/photos.php:991
-msgid "Rotate CCW (left)"
-msgstr "Roter mot klokka (venstre)"
-
-#: ../../mod/photos.php:994
-msgid "Enter a new album name"
-msgstr "Skriv et nytt albumnavn"
-
-#: ../../mod/photos.php:995
-msgid "or select an existing one (doubleclick)"
-msgstr "eller velg et eksisterende album (dobbeltklikk)"
-
-#: ../../mod/photos.php:998
-msgid "Caption"
-msgstr "Overskrift"
-
-#: ../../mod/photos.php:1000
-msgid "Add a Tag"
-msgstr "Legg til merkelapp"
-
-#: ../../mod/photos.php:1004
-msgid "Example: @bob, @Barbara_Jensen, @jim@example.com"
-msgstr "Eksempel: @bob, @Barbara_Jensen, @jim@example.com"
-
-#: ../../mod/photos.php:1007
-msgid "Flag as adult in album view"
-msgstr "Flag som voksent i albumvisning"
-
-#: ../../mod/photos.php:1199
-msgid "In This Photo:"
-msgstr "I dette bildet:"
-
-#: ../../mod/photos.php:1204
-msgid "Map"
-msgstr "Kart"
-
-#: ../../mod/photos.php:1292
-msgid "View Album"
-msgstr "Vis album"
-
-#: ../../mod/photos.php:1315
-msgid "Recent Photos"
-msgstr "Nye bilder"
+#: ../../mod/invite.php:140
+msgid "3. Click [Connect]"
+msgstr "3. Klikk [Forbindelse]"
 
 #: ../../mod/probe.php:24 ../../mod/probe.php:30
 #, php-format
@@ -6733,807 +6658,817 @@ msgstr "Vennligst angi at tjenesteavtalen er akseptert. Registrering mislyktes."
 msgid "Passwords do not match."
 msgstr "Passordene er ikke like."
 
-#: ../../mod/register.php:117
+#: ../../mod/register.php:119
 msgid ""
 "Registration successful. Please check your email for validation "
 "instructions."
 msgstr "Registreringen er vellykket. Vennligst sjekk e-posten din for å bekrefte opprettelsen."
 
-#: ../../mod/register.php:123
+#: ../../mod/register.php:125
 msgid "Your registration is pending approval by the site owner."
 msgstr "Din registrering venter på godkjenning av nettstedets eier."
 
-#: ../../mod/register.php:126
+#: ../../mod/register.php:128
 msgid "Your registration can not be processed."
 msgstr "Din registrering kan ikke behandles."
 
-#: ../../mod/register.php:163
+#: ../../mod/register.php:165
 msgid "Registration on this site/hub is by approval only."
 msgstr "Registrering på dette nettstedet/denne hubben skjer bare gjennom godkjenning."
 
-#: ../../mod/register.php:164
+#: ../../mod/register.php:166
 msgid "<a href=\"pubsites\">Register at another affiliated site/hub</a>"
 msgstr "<a href=\"pubsites\">Registrer på et annet tilknyttet nettsted/hub</a>"
 
-#: ../../mod/register.php:174
+#: ../../mod/register.php:176
 msgid ""
 "This site has exceeded the number of allowed daily account registrations. "
 "Please try again tomorrow."
 msgstr "Dette nettstedet har overskredet antallet tillate kontoregistreringer per dag. Vennligst prøv igjen imorgen."
 
-#: ../../mod/register.php:185
+#: ../../mod/register.php:187
 msgid "Terms of Service"
 msgstr "Tjenesteavtale"
 
-#: ../../mod/register.php:191
+#: ../../mod/register.php:193
 #, php-format
 msgid "I accept the %s for this website"
 msgstr "Jeg godtar %s for dette nettstedet"
 
-#: ../../mod/register.php:193
+#: ../../mod/register.php:195
 #, php-format
 msgid "I am over 13 years of age and accept the %s for this website"
 msgstr "Jeg er over 13 år gammel og aksepterer %s for dette nettstedet."
 
-#: ../../mod/register.php:207 ../../mod/admin.php:436
+#: ../../mod/register.php:209 ../../mod/admin.php:448
 msgid "Registration"
 msgstr "Registrering"
 
-#: ../../mod/register.php:212
+#: ../../mod/register.php:214
 msgid "Membership on this site is by invitation only."
 msgstr "Medlemskap ved dette nettstedet skjer kun via invitasjon."
 
-#: ../../mod/register.php:213
+#: ../../mod/register.php:215
 msgid "Please enter your invitation code"
 msgstr "Vennligst skriv din invitasjonskode"
 
-#: ../../mod/register.php:216
+#: ../../mod/register.php:218
 msgid "Your email address"
 msgstr "Din e-postadresse"
 
-#: ../../mod/register.php:217
+#: ../../mod/register.php:219
 msgid "Choose a password"
 msgstr "Velg et passord"
 
-#: ../../mod/register.php:218
+#: ../../mod/register.php:220
 msgid "Please re-enter your password"
 msgstr "Vennligst skriv ditt passord en gang til"
 
-#: ../../mod/admin.php:52
+#: ../../mod/admin.php:54
 msgid "Theme settings updated."
 msgstr "Temainnstillinger er oppdatert."
 
-#: ../../mod/admin.php:160
+#: ../../mod/admin.php:162
 msgid "# Accounts"
 msgstr "# Kontoer"
 
-#: ../../mod/admin.php:161
+#: ../../mod/admin.php:163
 msgid "# blocked accounts"
 msgstr "# blokkerte kontoer"
 
-#: ../../mod/admin.php:162
+#: ../../mod/admin.php:164
 msgid "# expired accounts"
 msgstr "# utgåtte kontoer"
 
-#: ../../mod/admin.php:163
+#: ../../mod/admin.php:165
 msgid "# expiring accounts"
 msgstr "# kontoer som holder på å gå ut"
 
-#: ../../mod/admin.php:174
+#: ../../mod/admin.php:176
 msgid "# Channels"
 msgstr "# Kanaler"
 
-#: ../../mod/admin.php:175
+#: ../../mod/admin.php:177
 msgid "# primary"
 msgstr "# hoved"
 
-#: ../../mod/admin.php:176
+#: ../../mod/admin.php:178
 msgid "# clones"
 msgstr "# kloner"
 
-#: ../../mod/admin.php:182
+#: ../../mod/admin.php:184
 msgid "Message queues"
 msgstr "Meldingskøer"
 
-#: ../../mod/admin.php:198 ../../mod/admin.php:433 ../../mod/admin.php:532
-#: ../../mod/admin.php:800 ../../mod/admin.php:964 ../../mod/admin.php:1061
-#: ../../mod/admin.php:1101 ../../mod/admin.php:1261 ../../mod/admin.php:1295
-#: ../../mod/admin.php:1380
+#: ../../mod/admin.php:200 ../../mod/admin.php:445 ../../mod/admin.php:545
+#: ../../mod/admin.php:812 ../../mod/admin.php:976 ../../mod/admin.php:1073
+#: ../../mod/admin.php:1113 ../../mod/admin.php:1273 ../../mod/admin.php:1307
+#: ../../mod/admin.php:1392
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: ../../mod/admin.php:199
+#: ../../mod/admin.php:201
 msgid "Summary"
 msgstr "Sammendrag"
 
-#: ../../mod/admin.php:202
+#: ../../mod/admin.php:204
 msgid "Registered accounts"
 msgstr "Registrerte kontoer"
 
-#: ../../mod/admin.php:203 ../../mod/admin.php:536
+#: ../../mod/admin.php:205 ../../mod/admin.php:549
 msgid "Pending registrations"
 msgstr "Ventende registreringer"
 
-#: ../../mod/admin.php:204
+#: ../../mod/admin.php:206
 msgid "Registered channels"
 msgstr "Registrerte kanaler"
 
-#: ../../mod/admin.php:205 ../../mod/admin.php:537
+#: ../../mod/admin.php:207 ../../mod/admin.php:550
 msgid "Active plugins"
 msgstr "Aktive tilleggsfunksjoner"
 
-#: ../../mod/admin.php:206
+#: ../../mod/admin.php:208
 msgid "Version"
 msgstr "Versjon"
 
-#: ../../mod/admin.php:324
+#: ../../mod/admin.php:329
 msgid "Site settings updated."
 msgstr "Nettstedsinnstillinger er oppdatert."
 
-#: ../../mod/admin.php:361 ../../mod/settings.php:793
+#: ../../mod/admin.php:366 ../../mod/settings.php:793
 msgid "mobile"
 msgstr "mobil"
 
-#: ../../mod/admin.php:363
+#: ../../mod/admin.php:368
 msgid "experimental"
 msgstr "eksperimentell"
 
-#: ../../mod/admin.php:365
+#: ../../mod/admin.php:370
 msgid "unsupported"
 msgstr "ikke støttet"
 
-#: ../../mod/admin.php:411
+#: ../../mod/admin.php:416
 msgid "Yes - with approval"
 msgstr "Ja - med godkjenning"
 
-#: ../../mod/admin.php:417
+#: ../../mod/admin.php:422
 msgid "My site is not a public server"
 msgstr "Mitt nettsted er ikke en offentlig tjeneste"
 
-#: ../../mod/admin.php:418
+#: ../../mod/admin.php:423
 msgid "My site has paid access only"
 msgstr "Mitt nettsted gir kun tilgang mot betaling"
 
-#: ../../mod/admin.php:419
+#: ../../mod/admin.php:424
 msgid "My site has free access only"
 msgstr "Mitt nettsted har kun gratis tilgang"
 
-#: ../../mod/admin.php:420
+#: ../../mod/admin.php:425
 msgid "My site offers free accounts with optional paid upgrades"
 msgstr "Mitt nettsted tilbyr gratis konto med valgfri oppgradering til betalt tjeneste"
 
-#: ../../mod/admin.php:437
+#: ../../mod/admin.php:449
 msgid "File upload"
 msgstr "Last opp fil"
 
-#: ../../mod/admin.php:438
+#: ../../mod/admin.php:450
 msgid "Policies"
 msgstr "Retningslinjer"
 
-#: ../../mod/admin.php:443
+#: ../../mod/admin.php:455
 msgid "Site name"
 msgstr "Nettstedets navn"
 
-#: ../../mod/admin.php:444
+#: ../../mod/admin.php:456
 msgid "Banner/Logo"
 msgstr "Banner/Logo"
 
-#: ../../mod/admin.php:445
+#: ../../mod/admin.php:457
 msgid "Administrator Information"
 msgstr "Administratorinformasjon"
 
-#: ../../mod/admin.php:445
+#: ../../mod/admin.php:457
 msgid ""
 "Contact information for site administrators.  Displayed on siteinfo page.  "
 "BBCode can be used here"
 msgstr "Kontaktinformasjon til nettstedsadministratorer. Vises på siteinfo-siden. BBCode kan brukes her"
 
-#: ../../mod/admin.php:446
+#: ../../mod/admin.php:458
 msgid "System language"
 msgstr "Systemspråk"
 
-#: ../../mod/admin.php:447
+#: ../../mod/admin.php:459
 msgid "System theme"
 msgstr "Systemtema"
 
-#: ../../mod/admin.php:447
+#: ../../mod/admin.php:459
 msgid ""
 "Default system theme - may be over-ridden by user profiles - <a href='#' "
 "id='cnftheme'>change theme settings</a>"
 msgstr "Standard systemtema - kan overstyres av brukerprofiler - <a href='#' id='cnftheme'>endre temainnstillinger</a>"
 
-#: ../../mod/admin.php:448
+#: ../../mod/admin.php:460
 msgid "Mobile system theme"
 msgstr "Mobilt systemtema"
 
-#: ../../mod/admin.php:448
+#: ../../mod/admin.php:460
 msgid "Theme for mobile devices"
 msgstr "Tema for mobile enheter"
 
-#: ../../mod/admin.php:450
+#: ../../mod/admin.php:462
 msgid "Allow Feeds as Connections"
 msgstr "Tillat strømmer som forbindelser"
 
-#: ../../mod/admin.php:450
+#: ../../mod/admin.php:462
 msgid "(Heavy system resource usage)"
 msgstr "(Tung bruk av systemressurser)"
 
-#: ../../mod/admin.php:451
+#: ../../mod/admin.php:463
 msgid "Maximum image size"
 msgstr "Største bildestørrelse"
 
-#: ../../mod/admin.php:451
+#: ../../mod/admin.php:463
 msgid ""
 "Maximum size in bytes of uploaded images. Default is 0, which means no "
 "limits."
 msgstr "Største størrelse i bytes for opplastede bilder. Standard er 0, som betyr ubegrenset."
 
-#: ../../mod/admin.php:452
+#: ../../mod/admin.php:464
 msgid "Does this site allow new member registration?"
 msgstr "Tillater dette nettstedet registrering av nye medlemmer?"
 
-#: ../../mod/admin.php:453
+#: ../../mod/admin.php:465
+msgid "Invitation only"
+msgstr "Kun inviterte"
+
+#: ../../mod/admin.php:465
+msgid ""
+"Only allow new member registrations with an invitation code. Above register "
+"policy must be set to Yes."
+msgstr "Tillat bare nye medlemsregistreringer med en invitasjonskode. Ovenstående retningslinjer for registrering må være satt til Ja."
+
+#: ../../mod/admin.php:466
 msgid "Which best describes the types of account offered by this hub?"
 msgstr "Hvilket alternativ beskriver best hva slags kontotype som tilbys av dette nettstedet/denne hubben?"
 
-#: ../../mod/admin.php:454
+#: ../../mod/admin.php:467
 msgid "Register text"
 msgstr "Registreringstekst"
 
-#: ../../mod/admin.php:454
+#: ../../mod/admin.php:467
 msgid "Will be displayed prominently on the registration page."
 msgstr "Vil bli vist på en fremtredende måte på registreringssiden."
 
-#: ../../mod/admin.php:455
+#: ../../mod/admin.php:468
 msgid "Site homepage to show visitors (default: login box)"
 msgstr "Nettstedets hjemmeside som vises til besøkende (standard: innloggingsboks)"
 
-#: ../../mod/admin.php:455
+#: ../../mod/admin.php:468
 msgid ""
 "example: 'public' to show public stream, 'page/sys/home' to show a system "
 "webpage called 'home' or 'include:home.html' to include a file."
 msgstr "eksempel: 'public' for å vise offentlig strøm av innlegg, 'page/sys/home/ for å vise en system-webside called 'home\" eller 'include:home.html' for å inkludere en fil."
 
-#: ../../mod/admin.php:456
+#: ../../mod/admin.php:469
 msgid "Preserve site homepage URL"
 msgstr "Bevar URL-en til nettstedets hjemmeside"
 
-#: ../../mod/admin.php:456
+#: ../../mod/admin.php:469
 msgid ""
 "Present the site homepage in a frame at the original location instead of "
 "redirecting"
 msgstr "Presenter hjemmesiden til nettstedet i en ramme fra den opprinnelige plasseringen i stedet for å omdirigere"
 
-#: ../../mod/admin.php:457
+#: ../../mod/admin.php:470
 msgid "Accounts abandoned after x days"
 msgstr "Kontoer forlatt etter x dager"
 
-#: ../../mod/admin.php:457
+#: ../../mod/admin.php:470
 msgid ""
 "Will not waste system resources polling external sites for abandonded "
 "accounts. Enter 0 for no time limit."
 msgstr "Vil ikke kaste bort systemressurser på å spørre eksterne nettsteder etter forlatte kontoer. Skriv 0 for å ikke sette noen tidsgrense."
 
-#: ../../mod/admin.php:458
+#: ../../mod/admin.php:471
 msgid "Allowed friend domains"
 msgstr "Tillatte vennedomener"
 
-#: ../../mod/admin.php:458
+#: ../../mod/admin.php:471
 msgid ""
 "Comma separated list of domains which are allowed to establish friendships "
 "with this site. Wildcards are accepted. Empty to allow any domains"
 msgstr "Kommaseparert liste over domener som har lov til å etablere vennskap med dette nettstedet. Jokertegn er akseptert. Tøm for å tillate alle domener."
 
-#: ../../mod/admin.php:459
+#: ../../mod/admin.php:472
 msgid "Allowed email domains"
 msgstr "Tillate e-postdomener"
 
-#: ../../mod/admin.php:459
+#: ../../mod/admin.php:472
 msgid ""
 "Comma separated list of domains which are allowed in email addresses for "
 "registrations to this site. Wildcards are accepted. Empty to allow any "
 "domains"
 msgstr "Kommaseparert liste med domener som er tillatt i e-postadresser ved registrering på dette nettstedet. Jokertegn er akseptert. Tomt betyr at alle domener er tillatt"
 
-#: ../../mod/admin.php:460
+#: ../../mod/admin.php:473
 msgid "Not allowed email domains"
 msgstr "Ikke tillatte e-postdomener"
 
-#: ../../mod/admin.php:460
+#: ../../mod/admin.php:473
 msgid ""
 "Comma separated list of domains which are not allowed in email addresses for"
 " registrations to this site. Wildcards are accepted. Empty to allow any "
 "domains, unless allowed domains have been defined."
 msgstr "Kommaseparert liste med domener som ikke er tillatt i e-postadresser ved registrering på dette nettstedet. Jokertegn er akseptert. Tomt betyr at alle domener er tillatt, med mindre tillate domener er blitt definert."
 
-#: ../../mod/admin.php:461
+#: ../../mod/admin.php:474
 msgid "Block public"
 msgstr "Blokker offentlig tilgang"
 
-#: ../../mod/admin.php:461
+#: ../../mod/admin.php:474
 msgid ""
 "Check to block public access to all otherwise public personal pages on this "
 "site unless you are currently logged in."
 msgstr "Kryss av for å blokkere tilgang til alle personlige sider som ellers ville vært offentlig tilgjengelige på dette nettstedet med mindre du er logget inn."
 
-#: ../../mod/admin.php:462
+#: ../../mod/admin.php:475
 msgid "Verify Email Addresses"
 msgstr "Bekreft e-postadresser"
 
-#: ../../mod/admin.php:462
+#: ../../mod/admin.php:475
 msgid ""
 "Check to verify email addresses used in account registration (recommended)."
 msgstr "Sett hake for å sjekke e-postadresser brukt ved kontoregistrering (anbefales)."
 
-#: ../../mod/admin.php:463
+#: ../../mod/admin.php:476
 msgid "Force publish"
 msgstr "Tving publisering"
 
-#: ../../mod/admin.php:463
+#: ../../mod/admin.php:476
 msgid ""
 "Check to force all profiles on this site to be listed in the site directory."
 msgstr "Kryss av for å tvinge alle profiler på dette nettstedet til å bli oppført i nettstedet sin katalog."
 
-#: ../../mod/admin.php:464
-msgid "Disable discovery tab"
-msgstr "Skru av oppdagelsesfanen"
+#: ../../mod/admin.php:477
+msgid "Import Public Streams"
+msgstr "Importer offentlige innholdsstrømmer"
 
-#: ../../mod/admin.php:464
+#: ../../mod/admin.php:477
 msgid ""
-"Remove the tab in the network view with public content pulled from sources "
-"chosen for this site."
-msgstr "Fjern fanen fra nettverksvisningen med offentlig innhold trukket inn fra kilder valg for dette nettstedet."
+"Import and allow access to public content pulled from other sites. Warning: "
+"this content is unmoderated."
+msgstr "Importer og gi tilgang til offentlig innhold trukket inn fra andre nettsteder. Advarsel: dette innholdet er ikke moderert."
 
-#: ../../mod/admin.php:465
+#: ../../mod/admin.php:478
 msgid "login on Homepage"
 msgstr "Logg inn på hjemmesiden"
 
-#: ../../mod/admin.php:465
+#: ../../mod/admin.php:478
 msgid ""
 "Present a login box to visitors on the home page if no other content has "
 "been configured."
 msgstr "Presenter en innloggingsboks til besøkende på hjemmesiden hvis ikke noe annet innhold har blitt konfigurert."
 
-#: ../../mod/admin.php:467
+#: ../../mod/admin.php:480
 msgid "Directory Server URL"
 msgstr "Katalogtjener URL"
 
-#: ../../mod/admin.php:467
+#: ../../mod/admin.php:480
 msgid "Default directory server"
 msgstr "Standard katalogtjener"
 
-#: ../../mod/admin.php:469
+#: ../../mod/admin.php:482
 msgid "Proxy user"
 msgstr "Brukernavn mellomtjener"
 
-#: ../../mod/admin.php:470
+#: ../../mod/admin.php:483
 msgid "Proxy URL"
 msgstr "Mellomtjener URL"
 
-#: ../../mod/admin.php:471
+#: ../../mod/admin.php:484
 msgid "Network timeout"
 msgstr "Nettverk tidsavbrudd"
 
-#: ../../mod/admin.php:471
+#: ../../mod/admin.php:484
 msgid "Value is in seconds. Set to 0 for unlimited (not recommended)."
 msgstr "Verdien i sekunder. Skriv 0 for ubegrenset (ikke anbefalt)."
 
-#: ../../mod/admin.php:472
+#: ../../mod/admin.php:485
 msgid "Delivery interval"
 msgstr "Leveringsinterval"
 
-#: ../../mod/admin.php:472
+#: ../../mod/admin.php:485
 msgid ""
 "Delay background delivery processes by this many seconds to reduce system "
 "load. Recommend: 4-5 for shared hosts, 2-3 for virtual private servers. 0-1 "
 "for large dedicated servers."
 msgstr "Forsink leveringsprosessene i bakgrunnen med dette antall sekunder for å redusere systembelastningen. Anbefaling: 4-5 for delte tjenere, 2-3 for virtuelle tjenere, 0-1 for større dedikerte tjenere."
 
-#: ../../mod/admin.php:473
+#: ../../mod/admin.php:486
 msgid "Deliveries per process"
 msgstr "Leveranser per prosess"
 
-#: ../../mod/admin.php:473
+#: ../../mod/admin.php:486
 msgid ""
 "Number of deliveries to attempt in a single operating system process. Adjust"
 " if necessary to tune system performance. Recommend: 1-5."
 msgstr "Antall leveranser som forsøkes i en enkelt operativsystemprosess. Juster om nødvendig for å fininnstille systemets yteevne. Anbefaling: 1-5."
 
-#: ../../mod/admin.php:474
+#: ../../mod/admin.php:487
 msgid "Poll interval"
 msgstr "Spørreintervall"
 
-#: ../../mod/admin.php:474
+#: ../../mod/admin.php:487
 msgid ""
 "Delay background polling processes by this many seconds to reduce system "
 "load. If 0, use delivery interval."
 msgstr "Forsink spørreprosessene i bakgrunnen med dette antall sekunder for å redusere systembelastningen. Hvis 0, bruk dette leveringsintervallet."
 
-#: ../../mod/admin.php:475
+#: ../../mod/admin.php:488
 msgid "Maximum Load Average"
 msgstr "Største belastningsgjennomsnitt"
 
-#: ../../mod/admin.php:475
+#: ../../mod/admin.php:488
 msgid ""
 "Maximum system load before delivery and poll processes are deferred - "
 "default 50."
 msgstr "Største systembelastning før leverings- og spørreprosesser blir utsatt - standard 50."
 
-#: ../../mod/admin.php:476
+#: ../../mod/admin.php:489
 msgid "Expiration period in days for imported (matrix/network) content"
 msgstr "Antall dager før importert innhold (matrix/nettverk) utgår"
 
-#: ../../mod/admin.php:476
+#: ../../mod/admin.php:489
 msgid "0 for no expiration of imported content"
 msgstr "0 dersom importert innhold ikke skal utgå"
 
-#: ../../mod/admin.php:524
+#: ../../mod/admin.php:537
 msgid "No server found"
 msgstr "Ingen tjener funnet"
 
-#: ../../mod/admin.php:531 ../../mod/admin.php:814
+#: ../../mod/admin.php:544 ../../mod/admin.php:826
 msgid "ID"
 msgstr "ID"
 
-#: ../../mod/admin.php:531
+#: ../../mod/admin.php:544
 msgid "for channel"
 msgstr "for kanalen"
 
-#: ../../mod/admin.php:531
+#: ../../mod/admin.php:544
 msgid "on server"
 msgstr "på tjener"
 
-#: ../../mod/admin.php:531
+#: ../../mod/admin.php:544
 msgid "Status"
 msgstr "Status"
 
-#: ../../mod/admin.php:533
+#: ../../mod/admin.php:546
 msgid "Server"
 msgstr "Tjener"
 
-#: ../../mod/admin.php:550
+#: ../../mod/admin.php:563
 msgid "Update has been marked successful"
 msgstr "Oppdateringen har blitt merket som en suksess"
 
-#: ../../mod/admin.php:560
+#: ../../mod/admin.php:573
 #, php-format
 msgid "Executing %s failed. Check system logs."
 msgstr "Utføring av %s feilet. Sjekk systemlogger."
 
-#: ../../mod/admin.php:563
+#: ../../mod/admin.php:576
 #, php-format
 msgid "Update %s was successfully applied."
 msgstr "Oppdatering %s ble gjennomført med suksess."
 
-#: ../../mod/admin.php:567
+#: ../../mod/admin.php:580
 #, php-format
 msgid "Update %s did not return a status. Unknown if it succeeded."
 msgstr "Oppdatering %s returnerte ingen status. Det er ukjent om den ble vellykket."
 
-#: ../../mod/admin.php:570
+#: ../../mod/admin.php:583
 #, php-format
 msgid "Update function %s could not be found."
 msgstr "Oppdatering av funksjon %s kunne ikke finnes."
 
-#: ../../mod/admin.php:586
+#: ../../mod/admin.php:599
 msgid "No failed updates."
 msgstr "Ingen mislykkede oppdateringer."
 
-#: ../../mod/admin.php:590
+#: ../../mod/admin.php:603
 msgid "Failed Updates"
 msgstr "Mislykkede oppdateringer"
 
-#: ../../mod/admin.php:592
+#: ../../mod/admin.php:605
 msgid "Mark success (if update was manually applied)"
 msgstr "Marker suksess (hvis oppdateringen ble gjennomført manuelt)"
 
-#: ../../mod/admin.php:593
+#: ../../mod/admin.php:606
 msgid "Attempt to execute this update step automatically"
 msgstr "Prøv å gjennomføre dette oppdateringstrinnet automatisk"
 
-#: ../../mod/admin.php:625
+#: ../../mod/admin.php:637
 msgid "Queue Statistics"
 msgstr "Køstatistikk"
 
-#: ../../mod/admin.php:626
+#: ../../mod/admin.php:638
 msgid "Total Entries"
 msgstr "Totalt antall oppføringer"
 
-#: ../../mod/admin.php:627
+#: ../../mod/admin.php:639
 msgid "Priority"
 msgstr "Prioritet"
 
-#: ../../mod/admin.php:628
+#: ../../mod/admin.php:640
 msgid "Destination URL"
 msgstr "Mål-URL"
 
-#: ../../mod/admin.php:629
+#: ../../mod/admin.php:641
 msgid "Mark hub permanently offline"
 msgstr "Merk hub som permanent offline"
 
-#: ../../mod/admin.php:630
+#: ../../mod/admin.php:642
 msgid "Empty queue for this hub"
 msgstr "Tøm køen for denne hubben"
 
-#: ../../mod/admin.php:631
+#: ../../mod/admin.php:643
 msgid "Last known contact"
 msgstr "Siste kjente kontakt"
 
-#: ../../mod/admin.php:667
+#: ../../mod/admin.php:679
 #, php-format
 msgid "%s account blocked/unblocked"
 msgid_plural "%s account blocked/unblocked"
 msgstr[0] "%s konto blokkert/ikke blokkert lenger"
 msgstr[1] "%s kontoer blokkert/ikke blokkert lenger"
 
-#: ../../mod/admin.php:675
+#: ../../mod/admin.php:687
 #, php-format
 msgid "%s account deleted"
 msgid_plural "%s accounts deleted"
 msgstr[0] "%s konto slettet"
 msgstr[1] "%s kontoer slettet"
 
-#: ../../mod/admin.php:711
+#: ../../mod/admin.php:723
 msgid "Account not found"
 msgstr "Kontoen ble ikke funnet"
 
-#: ../../mod/admin.php:723
+#: ../../mod/admin.php:735
 #, php-format
 msgid "Account '%s' deleted"
 msgstr "Kontoen '%s' slettet"
 
-#: ../../mod/admin.php:731
+#: ../../mod/admin.php:743
 #, php-format
 msgid "Account '%s' blocked"
 msgstr "Kontoen '%s' blokkert"
 
-#: ../../mod/admin.php:739
+#: ../../mod/admin.php:751
 #, php-format
 msgid "Account '%s' unblocked"
 msgstr "Kontoen '%s' er ikke blokkert lenger"
 
-#: ../../mod/admin.php:801 ../../mod/admin.php:813
+#: ../../mod/admin.php:813 ../../mod/admin.php:825
 msgid "Users"
 msgstr "Brukere"
 
-#: ../../mod/admin.php:803 ../../mod/admin.php:967
+#: ../../mod/admin.php:815 ../../mod/admin.php:979
 msgid "select all"
 msgstr "velg alle"
 
-#: ../../mod/admin.php:804
+#: ../../mod/admin.php:816
 msgid "User registrations waiting for confirm"
 msgstr "Brukerregistreringer som venter på bekreftelse"
 
-#: ../../mod/admin.php:805
+#: ../../mod/admin.php:817
 msgid "Request date"
 msgstr "Dato for forespørsel"
 
-#: ../../mod/admin.php:806
+#: ../../mod/admin.php:818
 msgid "No registrations."
 msgstr "Ingen registreringer."
 
-#: ../../mod/admin.php:808
+#: ../../mod/admin.php:820
 msgid "Deny"
 msgstr "Avslå"
 
-#: ../../mod/admin.php:814
+#: ../../mod/admin.php:826
 msgid "Register date"
 msgstr "Registreringsdato"
 
-#: ../../mod/admin.php:814
+#: ../../mod/admin.php:826
 msgid "Last login"
 msgstr "Siste innlogging"
 
-#: ../../mod/admin.php:814
+#: ../../mod/admin.php:826
 msgid "Expires"
 msgstr "Utløper"
 
-#: ../../mod/admin.php:814
+#: ../../mod/admin.php:826
 msgid "Service Class"
 msgstr "Tjenesteklasse"
 
-#: ../../mod/admin.php:816
+#: ../../mod/admin.php:828
 msgid ""
 "Selected accounts will be deleted!\\n\\nEverything these accounts had posted"
 " on this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr "Valgte kontoer vil bli slettet!\\n\\nAlt disse kontoene har lagt inn på dette nettstedet vil bli slettet permanent!\\n\\nEr du sikker på at du vil slette disse valgte kontoene?"
 
-#: ../../mod/admin.php:817
+#: ../../mod/admin.php:829
 msgid ""
 "The account {0} will be deleted!\\n\\nEverything this account has posted on "
 "this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr "Kontoen {0} vl bli slettet!\\n\\nAlt denne kontoen har lagt inn på dette nettstedet vil bli slettet permanent!\\n\\nEr du sikker på at du vil slette denne kontoen?"
 
-#: ../../mod/admin.php:853
+#: ../../mod/admin.php:865
 #, php-format
 msgid "%s channel censored/uncensored"
 msgid_plural "%s channels censored/uncensored"
 msgstr[0] "%s kanal er sensurert/ikke sensurert lenger"
 msgstr[1] "%s kanaler er sensurert/ikke sensurert lenger"
 
-#: ../../mod/admin.php:862
+#: ../../mod/admin.php:874
 #, php-format
 msgid "%s channel code allowed/disallowed"
 msgid_plural "%s channels code allowed/disallowed"
 msgstr[0] "%s kanal med kode tillatt/ikke tillatt"
 msgstr[1] "%s kanaler med kode tillatt/ikke tillatt"
 
-#: ../../mod/admin.php:869
+#: ../../mod/admin.php:881
 #, php-format
 msgid "%s channel deleted"
 msgid_plural "%s channels deleted"
 msgstr[0] "%s kanal slettet"
 msgstr[1] "%s kanaler slettet"
 
-#: ../../mod/admin.php:889
+#: ../../mod/admin.php:901
 msgid "Channel not found"
 msgstr "Kanalen ble ikke funnet"
 
-#: ../../mod/admin.php:900
+#: ../../mod/admin.php:912
 #, php-format
 msgid "Channel '%s' deleted"
 msgstr "Kanalen '%s' er slettet"
 
-#: ../../mod/admin.php:912
+#: ../../mod/admin.php:924
 #, php-format
 msgid "Channel '%s' censored"
 msgstr "Kanalen '%s' er sensurert"
 
-#: ../../mod/admin.php:912
+#: ../../mod/admin.php:924
 #, php-format
 msgid "Channel '%s' uncensored"
 msgstr "Kanalen '%s' er ikke sensurert lenger"
 
-#: ../../mod/admin.php:923
+#: ../../mod/admin.php:935
 #, php-format
 msgid "Channel '%s' code allowed"
 msgstr "Kanal '%s' kode tillatt"
 
-#: ../../mod/admin.php:923
+#: ../../mod/admin.php:935
 #, php-format
 msgid "Channel '%s' code disallowed"
 msgstr "Kanal '%s' kode ikke tillatt"
 
-#: ../../mod/admin.php:969
+#: ../../mod/admin.php:981
 msgid "Censor"
 msgstr "Sensurer"
 
-#: ../../mod/admin.php:970
+#: ../../mod/admin.php:982
 msgid "Uncensor"
 msgstr "Ikke sensurer lenger"
 
-#: ../../mod/admin.php:971
+#: ../../mod/admin.php:983
 msgid "Allow Code"
 msgstr "Tillat kode"
 
-#: ../../mod/admin.php:972
+#: ../../mod/admin.php:984
 msgid "Disallow Code"
 msgstr "Ikke tillat kode"
 
-#: ../../mod/admin.php:974
+#: ../../mod/admin.php:986
 msgid "UID"
 msgstr "UID"
 
-#: ../../mod/admin.php:976
+#: ../../mod/admin.php:988
 msgid ""
 "Selected channels will be deleted!\\n\\nEverything that was posted in these "
 "channels on this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr "Valgte kanaler vil bli slettet!\\n\\nAlt innhold som er lagt inn i disse kanalene på dette nettstedet vil bli slettet for alltid!\\n\\nEr du sikker på at du vil slette disse kanalene med alt innhold?"
 
-#: ../../mod/admin.php:977
+#: ../../mod/admin.php:989
 msgid ""
 "The channel {0} will be deleted!\\n\\nEverything that was posted in this "
 "channel on this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr "Kanalen {0} vil bli slettet!\\n\\nAlt innhold som er lagt inn i denne kanalen på dettet nettstedet vil bli slettet for alltid!\\n\\nEr du sikker på at du vil slette denne kanalen med alt innhold?"
 
-#: ../../mod/admin.php:1017
+#: ../../mod/admin.php:1029
 #, php-format
 msgid "Plugin %s disabled."
 msgstr "Tilleggsfunksjonen %s er avskrudd."
 
-#: ../../mod/admin.php:1021
+#: ../../mod/admin.php:1033
 #, php-format
 msgid "Plugin %s enabled."
 msgstr "Tilleggsfunksjonen %s er påskrudd."
 
-#: ../../mod/admin.php:1031 ../../mod/admin.php:1234
+#: ../../mod/admin.php:1043 ../../mod/admin.php:1246
 msgid "Disable"
 msgstr "Skru av"
 
-#: ../../mod/admin.php:1034 ../../mod/admin.php:1236
+#: ../../mod/admin.php:1046 ../../mod/admin.php:1248
 msgid "Enable"
 msgstr "Skru på"
 
-#: ../../mod/admin.php:1063 ../../mod/admin.php:1263
+#: ../../mod/admin.php:1075 ../../mod/admin.php:1275
 msgid "Toggle"
 msgstr "Skru av og på"
 
-#: ../../mod/admin.php:1071 ../../mod/admin.php:1273
+#: ../../mod/admin.php:1083 ../../mod/admin.php:1285
 msgid "Author: "
 msgstr "Forfatter:"
 
-#: ../../mod/admin.php:1072 ../../mod/admin.php:1274
+#: ../../mod/admin.php:1084 ../../mod/admin.php:1286
 msgid "Maintainer: "
 msgstr "Vedlikeholder:"
 
-#: ../../mod/admin.php:1199
+#: ../../mod/admin.php:1211
 msgid "No themes found."
 msgstr "Ingen temaer er funnet."
 
-#: ../../mod/admin.php:1255
+#: ../../mod/admin.php:1267
 msgid "Screenshot"
 msgstr "Skjermbilde"
 
-#: ../../mod/admin.php:1301
+#: ../../mod/admin.php:1313
 msgid "[Experimental]"
 msgstr "[Eksperimentelt]"
 
-#: ../../mod/admin.php:1302
+#: ../../mod/admin.php:1314
 msgid "[Unsupported]"
 msgstr "[Ingen støtte]"
 
-#: ../../mod/admin.php:1326
+#: ../../mod/admin.php:1338
 msgid "Log settings updated."
 msgstr "Logginnstillinger er oppdatert."
 
-#: ../../mod/admin.php:1383
+#: ../../mod/admin.php:1395
 msgid "Clear"
 msgstr "Tøm"
 
-#: ../../mod/admin.php:1389
+#: ../../mod/admin.php:1401
 msgid "Debugging"
 msgstr "Feilsøking"
 
-#: ../../mod/admin.php:1390
+#: ../../mod/admin.php:1402
 msgid "Log file"
 msgstr "Loggfil"
 
-#: ../../mod/admin.php:1390
+#: ../../mod/admin.php:1402
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
 msgstr "Må kunne skrives til av webtjenesten. Relativ til din Red sin toppnivåkatalog."
 
-#: ../../mod/admin.php:1391
+#: ../../mod/admin.php:1403
 msgid "Log level"
 msgstr "Loggnivå"
 
-#: ../../mod/admin.php:1437
+#: ../../mod/admin.php:1449
 msgid "New Profile Field"
 msgstr "Nytt profilfelt"
 
-#: ../../mod/admin.php:1438 ../../mod/admin.php:1458
+#: ../../mod/admin.php:1450 ../../mod/admin.php:1470
 msgid "Field nickname"
 msgstr "Feltets kallenavn"
 
-#: ../../mod/admin.php:1438 ../../mod/admin.php:1458
+#: ../../mod/admin.php:1450 ../../mod/admin.php:1470
 msgid "System name of field"
 msgstr "Systemnavnet til feltet"
 
-#: ../../mod/admin.php:1439 ../../mod/admin.php:1459
+#: ../../mod/admin.php:1451 ../../mod/admin.php:1471
 msgid "Input type"
 msgstr "Inndata-type"
 
-#: ../../mod/admin.php:1440 ../../mod/admin.php:1460
+#: ../../mod/admin.php:1452 ../../mod/admin.php:1472
 msgid "Field Name"
 msgstr "Feltnavn"
 
-#: ../../mod/admin.php:1440 ../../mod/admin.php:1460
+#: ../../mod/admin.php:1452 ../../mod/admin.php:1472
 msgid "Label on profile pages"
 msgstr "Merkelapp på profilsider"
 
-#: ../../mod/admin.php:1441 ../../mod/admin.php:1461
+#: ../../mod/admin.php:1453 ../../mod/admin.php:1473
 msgid "Help text"
 msgstr "Hjelpetekst"
 
-#: ../../mod/admin.php:1441 ../../mod/admin.php:1461
+#: ../../mod/admin.php:1453 ../../mod/admin.php:1473
 msgid "Additional info (optional)"
 msgstr "Tilleggsinformasjon (valgfritt)"
 
-#: ../../mod/admin.php:1451
+#: ../../mod/admin.php:1463
 msgid "Field definition not found"
 msgstr "Feltdefinisjonen ble ikke funnet"
 
-#: ../../mod/admin.php:1457
+#: ../../mod/admin.php:1469
 msgid "Edit Profile Field"
 msgstr "Endre profilfelt"
 
@@ -8252,92 +8187,14 @@ msgstr "Når mulig, fjern en plassering ved å logge inn på det nettstedet elle
 msgid "Use this form to drop the location if the hub is no longer operating."
 msgstr "Bruk dette skjemaet for å fjerne plasseringen hvis huben ikke er i drift lenger."
 
-#: ../../mod/mail.php:33
-msgid "Unable to lookup recipient."
-msgstr "Ikke i stand til å slå opp mottaker."
+#: ../../mod/home.php:57 ../../mod/home.php:65 ../../mod/siteinfo.php:61
+msgid "$Projectname"
+msgstr "$Projectname"
 
-#: ../../mod/mail.php:41
-msgid "Unable to communicate with requested channel."
-msgstr "Ikke i stand til å kommunisere med forespurt kanal."
-
-#: ../../mod/mail.php:48
-msgid "Cannot verify requested channel."
-msgstr "Kan ikke bekrefte forespurt kanal."
-
-#: ../../mod/mail.php:74
-msgid "Selected channel has private message restrictions. Send failed."
-msgstr "Valgt kanal har restriksjoner for private meldinger. Sending feilet."
-
-#: ../../mod/mail.php:132
-msgid "Messages"
-msgstr "Meldinger"
-
-#: ../../mod/mail.php:167
-msgid "Message recalled."
-msgstr "Innlegg tilbakekalt."
-
-#: ../../mod/mail.php:180
-msgid "Conversation removed."
-msgstr "Samtale fjernet."
-
-#: ../../mod/mail.php:223
-msgid "Requested channel is not in this network"
-msgstr "Forespurt kanal er ikke tilgjengelig i dette nettverket."
-
-#: ../../mod/mail.php:231
-msgid "Send Private Message"
-msgstr "Send privat melding"
-
-#: ../../mod/mail.php:232 ../../mod/mail.php:361
-msgid "To:"
-msgstr "Til:"
-
-#: ../../mod/mail.php:235 ../../mod/mail.php:363
-msgid "Subject:"
-msgstr "Emne:"
-
-#: ../../mod/mail.php:238 ../../mod/invite.php:131
-msgid "Your message:"
-msgstr "Din melding:"
-
-#: ../../mod/mail.php:242
-msgid "Send"
-msgstr "Send"
-
-#: ../../mod/mail.php:333
-msgid "Delete message"
-msgstr "Slett melding"
-
-#: ../../mod/mail.php:334
-msgid "Delivery report"
-msgstr "Leveringsrapport"
-
-#: ../../mod/mail.php:335
-msgid "Recall message"
-msgstr "Tilbakekall innlegg"
-
-#: ../../mod/mail.php:337
-msgid "Message has been recalled."
-msgstr "Innlegget har blitt tilbakekalt."
-
-#: ../../mod/mail.php:354
-msgid "Delete Conversation"
-msgstr "Slett samtale"
-
-#: ../../mod/mail.php:356
-msgid ""
-"No secure communications available. You <strong>may</strong> be able to "
-"respond from the sender's profile page."
-msgstr "Ingen sikret kommunikasjon tilgjengelig. Du kan <strong>muligens</strong> greie å svare via senderens profilside."
-
-#: ../../mod/mail.php:360
-msgid "Send Reply"
-msgstr "Send svar"
-
-#: ../../mod/mail.php:365
+#: ../../mod/home.php:75
 #, php-format
-msgid "Your message for %s (%s):"
-msgstr "Din melding til %s (%s):"
+msgid "Welcome to %s"
+msgstr "Velkommen til %s"
 
 #: ../../mod/regmod.php:11
 msgid "Please login."
@@ -8367,71 +8224,157 @@ msgstr "Utilstrekkelig tillatelse. Forespørsel omdirigert til profilsiden."
 msgid "Item not available."
 msgstr "Elementet er ikke tilgjengelig."
 
-#: ../../mod/invite.php:25
-msgid "Total invitation limit exceeded."
-msgstr "Grensen for totalt antall invitasjoner er overskredet."
+#: ../../mod/photos.php:79
+msgid "Page owner information could not be retrieved."
+msgstr "Informasjon om sideeier kunne ikke hentes."
 
-#: ../../mod/invite.php:49
+#: ../../mod/photos.php:100
+msgid "Album not found."
+msgstr "Albumet ble ikke funnet."
+
+#: ../../mod/photos.php:127
+msgid "Delete Album"
+msgstr "Slett album"
+
+#: ../../mod/photos.php:171 ../../mod/photos.php:1006
+msgid "Delete Photo"
+msgstr "Slett bilde"
+
+#: ../../mod/photos.php:501
+msgid "No photos selected"
+msgstr "Ingen bilder valgt"
+
+#: ../../mod/photos.php:550
+msgid "Access to this item is restricted."
+msgstr "Tilgang til dette elementet er begrenset."
+
+#: ../../mod/photos.php:589
 #, php-format
-msgid "%s : Not a valid email address."
-msgstr "%s : ikke en gyldig e-postadresse."
+msgid "%1$.2f MB of %2$.2f MB photo storage used."
+msgstr "%1$.2f MB av %2$.2f MB lagringsplass til bilder er brukt."
 
-#: ../../mod/invite.php:76
-msgid "Please join us on $Projectname"
-msgstr "Bli med oss på $Projectname"
-
-#: ../../mod/invite.php:87
-msgid "Invitation limit exceeded. Please contact your site administrator."
-msgstr "Invitasjonsgrensen er overskredet. Vennligst kontakt administratoren ved ditt nettsted."
-
-#: ../../mod/invite.php:92
+#: ../../mod/photos.php:592
 #, php-format
-msgid "%s : Message delivery failed."
-msgstr "%s : meldingslevering feilet."
+msgid "%1$.2f MB photo storage used."
+msgstr "%1$.2f MB lagringsplass til bilder er brukt."
 
-#: ../../mod/invite.php:96
-#, php-format
-msgid "%d message sent."
-msgid_plural "%d messages sent."
-msgstr[0] "%d melding sendt."
-msgstr[1] "%d meldinger sendt."
+#: ../../mod/photos.php:620
+msgid "Upload Photos"
+msgstr "Last opp bilder"
 
-#: ../../mod/invite.php:115
-msgid "You have no more invitations available"
-msgstr "Du har ikke flere invitasjoner tilgjengelig"
+#: ../../mod/photos.php:624
+msgid "Enter an album name"
+msgstr "Skriv et albumnavn"
 
-#: ../../mod/invite.php:129
-msgid "Send invitations"
-msgstr "Send invitasjoner"
+#: ../../mod/photos.php:625
+msgid "or select an existing album (doubleclick)"
+msgstr "eller velg et eksisterende album (dobbeltklikk)"
 
-#: ../../mod/invite.php:130
-msgid "Enter email addresses, one per line:"
-msgstr "Skriv e-postadresser, en per linje:"
+#: ../../mod/photos.php:626
+msgid "Create a status post for this upload"
+msgstr "Lag et statusinnlegg for denne opplastingen"
 
-#: ../../mod/invite.php:132
-msgid "Please join my community on $Projectname."
-msgstr "Du er velkommen til å bli med i mitt fellesskap på $Projectname."
+#: ../../mod/photos.php:627
+msgid "Caption (optional):"
+msgstr "Bildetekst (valgfritt):"
 
-#: ../../mod/invite.php:134
-msgid "You will need to supply this invitation code: "
-msgstr "Du må oppgi denne invitasjonskoden:"
+#: ../../mod/photos.php:628
+msgid "Description (optional):"
+msgstr "Beskrivelse (valgfritt):"
 
-#: ../../mod/invite.php:135
-msgid ""
-"1. Register at any $Projectname location (they are all inter-connected)"
-msgstr "1. Registrer ved enhver $Projectname-lokasjon (de er alle forbundet med hverandre)"
+#: ../../mod/photos.php:655
+msgid "Album name could not be decoded"
+msgstr "Albumnavnet kunne ikke dekodes"
 
-#: ../../mod/invite.php:137
-msgid "2. Enter my $Projectname network address into the site searchbar."
-msgstr "2. Skriv inn min $Projectname-adresse i nettstedets søkefelt."
+#: ../../mod/photos.php:699 ../../mod/photos.php:1233
+#: ../../mod/photos.php:1250
+msgid "Contact Photos"
+msgstr "Kontaktbilder"
 
-#: ../../mod/invite.php:138
-msgid "or visit "
-msgstr "eller besøk"
+#: ../../mod/photos.php:722
+msgid "Show Newest First"
+msgstr "Vis nyeste først"
 
-#: ../../mod/invite.php:140
-msgid "3. Click [Connect]"
-msgstr "3. Klikk [Forbindelse]"
+#: ../../mod/photos.php:724
+msgid "Show Oldest First"
+msgstr "Vis eldste først"
+
+#: ../../mod/photos.php:824
+msgid "Permission denied. Access to this item may be restricted."
+msgstr "Tillatelse avvist. Tilgang til dette elementet kan være begrenset."
+
+#: ../../mod/photos.php:826
+msgid "Photo not available"
+msgstr "Bilde er utilgjengelig"
+
+#: ../../mod/photos.php:884
+msgid "Use as profile photo"
+msgstr "Bruk som profilbilde"
+
+#: ../../mod/photos.php:891
+msgid "Private Photo"
+msgstr "Privat bilde"
+
+#: ../../mod/photos.php:902 ../../mod/events.php:652 ../../mod/events.php:659
+msgid "Previous"
+msgstr "Forrige"
+
+#: ../../mod/photos.php:906
+msgid "View Full Size"
+msgstr "Vis i full størrelse"
+
+#: ../../mod/photos.php:985
+msgid "Edit photo"
+msgstr "Endre bilde"
+
+#: ../../mod/photos.php:987
+msgid "Rotate CW (right)"
+msgstr "Roter med klokka (mot høyre)"
+
+#: ../../mod/photos.php:988
+msgid "Rotate CCW (left)"
+msgstr "Roter mot klokka (venstre)"
+
+#: ../../mod/photos.php:991
+msgid "Enter a new album name"
+msgstr "Skriv et nytt albumnavn"
+
+#: ../../mod/photos.php:992
+msgid "or select an existing one (doubleclick)"
+msgstr "eller velg et eksisterende album (dobbeltklikk)"
+
+#: ../../mod/photos.php:995
+msgid "Caption"
+msgstr "Overskrift"
+
+#: ../../mod/photos.php:997
+msgid "Add a Tag"
+msgstr "Legg til merkelapp"
+
+#: ../../mod/photos.php:1001
+msgid "Example: @bob, @Barbara_Jensen, @jim@example.com"
+msgstr "Eksempel: @bob, @Barbara_Jensen, @jim@example.com"
+
+#: ../../mod/photos.php:1004
+msgid "Flag as adult in album view"
+msgstr "Flag som voksent i albumvisning"
+
+#: ../../mod/photos.php:1196
+msgid "In This Photo:"
+msgstr "I dette bildet:"
+
+#: ../../mod/photos.php:1201
+msgid "Map"
+msgstr "Kart"
+
+#: ../../mod/photos.php:1289
+msgid "View Album"
+msgstr "Vis album"
+
+#: ../../mod/photos.php:1300 ../../mod/photos.php:1313
+#: ../../mod/photos.php:1314
+msgid "Recent Photos"
+msgstr "Nye bilder"
 
 #: ../../mod/lockview.php:37
 msgid "Remote privacy information not available."
@@ -8582,6 +8525,16 @@ msgstr "Chat utgår (antall minutter)"
 msgid "%1$s's Chatrooms"
 msgstr "%1$s sine chatrom"
 
+#: ../../mod/search.php:212
+#, php-format
+msgid "Items tagged with: %s"
+msgstr "Elementer merket med: %s"
+
+#: ../../mod/search.php:214
+#, php-format
+msgid "Search results for: %s"
+msgstr "Søkeresultater for: %s"
+
 #: ../../mod/viewsrc.php:40
 msgid "Source of Item"
 msgstr "Kilde til element"
@@ -8674,22 +8627,6 @@ msgstr "Søk blant dine forbindelser"
 #: ../../mod/connections.php:265
 msgid "Finding: "
 msgstr "Fant:"
-
-#: ../../mod/help.php:147
-msgid "Documentation Search"
-msgstr "Søk i dokumentasjon"
-
-#: ../../mod/help.php:184 ../../mod/help.php:190 ../../mod/help.php:196
-msgid "Help:"
-msgstr "Hjelp:"
-
-#: ../../mod/help.php:211 ../../index.php:238
-msgid "Not Found"
-msgstr "Ikke funnet"
-
-#: ../../mod/help.php:235
-msgid "$Projectname Documentation"
-msgstr "$Projectname dokumentasjon"
 
 #: ../../mod/manage.php:130
 #, php-format
@@ -8822,72 +8759,165 @@ msgstr "Menytittelen andre ser"
 msgid "Allow bookmarks"
 msgstr "Tillat bokmerker"
 
-#: ../../mod/post.php:234
+#: ../../mod/mail.php:34
+msgid "Unable to lookup recipient."
+msgstr "Ikke i stand til å slå opp mottaker."
+
+#: ../../mod/mail.php:42
+msgid "Unable to communicate with requested channel."
+msgstr "Ikke i stand til å kommunisere med forespurt kanal."
+
+#: ../../mod/mail.php:49
+msgid "Cannot verify requested channel."
+msgstr "Kan ikke bekrefte forespurt kanal."
+
+#: ../../mod/mail.php:75
+msgid "Selected channel has private message restrictions. Send failed."
+msgstr "Valgt kanal har restriksjoner for private meldinger. Sending feilet."
+
+#: ../../mod/mail.php:140
+msgid "Messages"
+msgstr "Meldinger"
+
+#: ../../mod/mail.php:175
+msgid "Message recalled."
+msgstr "Innlegg tilbakekalt."
+
+#: ../../mod/mail.php:188
+msgid "Conversation removed."
+msgstr "Samtale fjernet."
+
+#: ../../mod/mail.php:231
+msgid "Requested channel is not in this network"
+msgstr "Forespurt kanal er ikke tilgjengelig i dette nettverket."
+
+#: ../../mod/mail.php:239
+msgid "Send Private Message"
+msgstr "Send privat melding"
+
+#: ../../mod/mail.php:240 ../../mod/mail.php:370
+msgid "To:"
+msgstr "Til:"
+
+#: ../../mod/mail.php:243 ../../mod/mail.php:372
+msgid "Subject:"
+msgstr "Emne:"
+
+#: ../../mod/mail.php:250
+msgid "Send"
+msgstr "Send"
+
+#: ../../mod/mail.php:342
+msgid "Delete message"
+msgstr "Slett melding"
+
+#: ../../mod/mail.php:343
+msgid "Delivery report"
+msgstr "Leveringsrapport"
+
+#: ../../mod/mail.php:344
+msgid "Recall message"
+msgstr "Tilbakekall innlegg"
+
+#: ../../mod/mail.php:346
+msgid "Message has been recalled."
+msgstr "Innlegget har blitt tilbakekalt."
+
+#: ../../mod/mail.php:363
+msgid "Delete Conversation"
+msgstr "Slett samtale"
+
+#: ../../mod/mail.php:365
 msgid ""
-"Remote authentication blocked. You are logged into this site locally. Please"
-" logout and retry."
-msgstr "Fjernautentisering blokkert. Du er logget inn på dette nettstedet lokalt. Vennligst logg ut og prøv på nytt."
+"No secure communications available. You <strong>may</strong> be able to "
+"respond from the sender's profile page."
+msgstr "Ingen sikret kommunikasjon tilgjengelig. Du kan <strong>muligens</strong> greie å svare via senderens profilside."
+
+#: ../../mod/mail.php:369
+msgid "Send Reply"
+msgstr "Send svar"
+
+#: ../../mod/mail.php:374
+#, php-format
+msgid "Your message for %s (%s):"
+msgstr "Din melding til %s (%s):"
+
+#: ../../mod/help.php:148
+msgid "Documentation Search"
+msgstr "Søk i dokumentasjon"
+
+#: ../../mod/help.php:186 ../../mod/help.php:192 ../../mod/help.php:198
+msgid "Help:"
+msgstr "Hjelp:"
+
+#: ../../mod/help.php:213 ../../index.php:238
+msgid "Not Found"
+msgstr "Ikke funnet"
+
+#: ../../mod/help.php:237
+msgid "$Projectname Documentation"
+msgstr "$Projectname dokumentasjon"
 
 #: ../../mod/service_limits.php:19
 msgid "No service class restrictions found."
 msgstr "Ingen restriksjoner er funnet i tjenesteklasse."
 
-#: ../../mod/siteinfo.php:111
+#: ../../mod/siteinfo.php:15
 #, php-format
 msgid "Version %s"
 msgstr "Versjon %s"
 
-#: ../../mod/siteinfo.php:132
+#: ../../mod/siteinfo.php:36
 msgid "Installed plugins/addons/apps:"
 msgstr "Installerte tilleggsfunksjoner/tillegg/apper:"
 
-#: ../../mod/siteinfo.php:145
+#: ../../mod/siteinfo.php:49
 msgid "No installed plugins/addons/apps"
 msgstr "Ingen installerte tilleggsfunksjoner/tillegg/apper"
 
-#: ../../mod/siteinfo.php:158
+#: ../../mod/siteinfo.php:62
 msgid ""
 "This is a hub of $Projectname - a global cooperative network of "
 "decentralized privacy enhanced websites."
 msgstr "Dette er en $Projectname-hub - et globalt samhandlende nettverk av desentraliserte nettsteder med innbygget personvern."
 
-#: ../../mod/siteinfo.php:160
+#: ../../mod/siteinfo.php:64
 msgid "Tag: "
 msgstr "Merkelapp:"
 
-#: ../../mod/siteinfo.php:162
+#: ../../mod/siteinfo.php:66
 msgid "Last background fetch: "
 msgstr "Siste innhenting i bakgrunnen:"
 
-#: ../../mod/siteinfo.php:164
+#: ../../mod/siteinfo.php:68
 msgid "Current load average: "
 msgstr "Gjeldende belastningsgjennomsnitt:"
 
-#: ../../mod/siteinfo.php:167
+#: ../../mod/siteinfo.php:71
 msgid "Running at web location"
 msgstr "Kjører på webplasseringen"
 
-#: ../../mod/siteinfo.php:168
+#: ../../mod/siteinfo.php:72
 msgid ""
 "Please visit <a href=\"http://hubzilla.org\">hubzilla.org</a> to learn more "
 "about $Projectname."
 msgstr "Vennligst besøk <a href=\"http://hubzilla.org\">hubzilla.org</a> for å lære mer om $Projectname."
 
-#: ../../mod/siteinfo.php:169
+#: ../../mod/siteinfo.php:73
 msgid "Bug reports and issues: please visit"
 msgstr "Feilmeldinger og feilretting: vennligst besøk"
 
-#: ../../mod/siteinfo.php:171
+#: ../../mod/siteinfo.php:75
 msgid "$projectname issues"
 msgstr "$projectname problemer"
 
-#: ../../mod/siteinfo.php:172
+#: ../../mod/siteinfo.php:76
 msgid ""
 "Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
 "com"
 msgstr "Forslag, ros og så videre - vennligst e-post \"redmatrix\" hos librelist - punktum com"
 
-#: ../../mod/siteinfo.php:174
+#: ../../mod/siteinfo.php:78
 msgid "Site Administrators"
 msgstr "Nettstedsadministratorer"
 
@@ -8921,77 +8951,105 @@ msgstr "Hendelsestittel og starttidspunkt er påkrevd."
 msgid "Event not found."
 msgstr "Hendelsen ble ikke funnet."
 
-#: ../../mod/events.php:452
-msgid "Event Title"
-msgstr "Hendelsestittel"
+#: ../../mod/events.php:437
+msgid "Edit event titel"
+msgstr "Rediger hendelsens tittel"
 
-#: ../../mod/events.php:454
+#: ../../mod/events.php:437
+msgid "Event titel"
+msgstr "Hendelsens tittel"
+
+#: ../../mod/events.php:439
 msgid "Categories (comma-separated list)"
 msgstr "Kategorier (kommaseparert liste)"
 
-#: ../../mod/events.php:455
+#: ../../mod/events.php:440
+msgid "Edit Category"
+msgstr "Endre kategori"
+
+#: ../../mod/events.php:440
 msgid "Category"
 msgstr "Kategori"
 
-#: ../../mod/events.php:458
+#: ../../mod/events.php:443
+msgid "Edit start date and time"
+msgstr "Endre startdato og tidspunkt"
+
+#: ../../mod/events.php:443
 msgid "Start date and time"
 msgstr "Startdato og tidspunkt"
 
-#: ../../mod/events.php:459 ../../mod/events.php:462
+#: ../../mod/events.php:444 ../../mod/events.php:447
 msgid "Finish date and time are not known or not relevant"
 msgstr "Sluttdato og tidspunkt er ikke kjent eller ikke relevant"
 
-#: ../../mod/events.php:461
+#: ../../mod/events.php:446
+msgid "Edit finish date and time"
+msgstr "Endre sluttdato og tidspunkt"
+
+#: ../../mod/events.php:446
 msgid "Finish date and time"
 msgstr "Sluttdato og tidspunkt"
 
-#: ../../mod/events.php:463 ../../mod/events.php:464
+#: ../../mod/events.php:448 ../../mod/events.php:449
 msgid "Adjust for viewer timezone"
 msgstr "Juster i forhold til tilskuerens tidssone"
 
-#: ../../mod/events.php:463
+#: ../../mod/events.php:448
 msgid ""
 "Important for events that happen in a particular place. Not practical for "
 "global holidays."
 msgstr "Viktig for hendelser som skjer på et bestemt sted. Ikke praktisk for globale ferier eller fridager."
 
-#: ../../mod/events.php:470 ../../mod/events.php:472
+#: ../../mod/events.php:450
+msgid "Edit Description"
+msgstr "Endre beskrivelse"
+
+#: ../../mod/events.php:452
+msgid "Edit Location"
+msgstr "Endre plassering"
+
+#: ../../mod/events.php:455 ../../mod/events.php:457
 msgid "Share this event"
 msgstr "Del denne hendelsen"
 
-#: ../../mod/events.php:477
+#: ../../mod/events.php:462
 msgid "Advanced Options"
 msgstr "Avanserte alternativer"
 
-#: ../../mod/events.php:589
+#: ../../mod/events.php:574
 msgid "l, F j"
 msgstr "l, F j"
 
-#: ../../mod/events.php:611
+#: ../../mod/events.php:596
 msgid "Edit event"
 msgstr "Endre hendelse"
 
-#: ../../mod/events.php:613
+#: ../../mod/events.php:598
 msgid "Delete event"
 msgstr "Slett hendelse"
 
-#: ../../mod/events.php:647
+#: ../../mod/events.php:632
 msgid "calendar"
 msgstr "kalender"
 
-#: ../../mod/events.php:666
-msgid "New Event"
-msgstr "Ny hendelse"
+#: ../../mod/events.php:651
+msgid "Edit Event"
+msgstr "Endre hendelse"
 
-#: ../../mod/events.php:676
+#: ../../mod/events.php:651
+msgid "Create Event"
+msgstr "Lag hendelse"
+
+#: ../../mod/events.php:661
 msgid "Today"
 msgstr "Idag"
 
-#: ../../mod/events.php:707
+#: ../../mod/events.php:692
 msgid "Event removed"
 msgstr "Hendelse slettet"
 
-#: ../../mod/events.php:710
+#: ../../mod/events.php:695
 msgid "Failed to remove event"
 msgstr "Mislyktes med å slette hendelse"
 
@@ -9288,51 +9346,57 @@ msgstr "Angi størrelsen for samtalens forfatterbilde"
 msgid "Set size of followup author photos"
 msgstr "Angi størrelsen på forfatterbilder ved oppfølging"
 
-#: ../../boot.php:1291
+#: ../../Zotlabs/Zot/Auth.php:140
+msgid ""
+"Remote authentication blocked. You are logged into this site locally. Please"
+" logout and retry."
+msgstr "Fjernautentisering blokkert. Du er logget inn på dette nettstedet lokalt. Vennligst logg ut og prøv på nytt."
+
+#: ../../boot.php:1299
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr "Oppdatering %s mislyktes. Se feilloggen."
 
-#: ../../boot.php:1294
+#: ../../boot.php:1302
 #, php-format
 msgid "Update Error at %s"
 msgstr "Oppdateringsfeil ved %s"
 
-#: ../../boot.php:1461
+#: ../../boot.php:1469
 msgid ""
 "Create an account to access services and applications within the Hubzilla"
 msgstr "Lag en konto for å få tilgang til tjenester og programmer i Hubzilla"
 
-#: ../../boot.php:1489
+#: ../../boot.php:1491
 msgid "Password"
 msgstr "Passord"
 
-#: ../../boot.php:1490
+#: ../../boot.php:1492
 msgid "Remember me"
 msgstr "Husk meg"
 
-#: ../../boot.php:1493
+#: ../../boot.php:1495
 msgid "Forgot your password?"
 msgstr "Glemt passordet ditt?"
 
-#: ../../boot.php:2113
+#: ../../boot.php:2115
 msgid "toggle mobile"
 msgstr "Skru på mobil"
 
-#: ../../boot.php:2248
+#: ../../boot.php:2250
 msgid "Website SSL certificate is not valid. Please correct."
 msgstr "Nettstedets SSL-sertifikat er ikke gyldig. Vennligst fiks dette."
 
-#: ../../boot.php:2251
+#: ../../boot.php:2253
 #, php-format
 msgid "[hubzilla] Website SSL error for %s"
 msgstr "[hubzilla] SSL-feil ved nettsted hos %s"
 
-#: ../../boot.php:2288
+#: ../../boot.php:2290
 msgid "Cron/Scheduled tasks not running."
 msgstr "Cron/planlagte oppgaver kjører ikke."
 
-#: ../../boot.php:2292
+#: ../../boot.php:2294
 #, php-format
 msgid "[hubzilla] Cron tasks not running on %s"
 msgstr "[hubzilla] Cron-oppgaver kjører ikke på %s"

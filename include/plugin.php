@@ -313,7 +313,6 @@ function call_hooks($name, &$data = null) {
  *   * Version: 1.2.3
  *   * Author: John <profile url>
  *   * Author: Jane <email>
- *   * Compat: Red [(version)], Friendica [(version)]
  *   *
  *\endcode
  * @param string $plugin the name of the plugin
@@ -325,8 +324,8 @@ function get_plugin_info($plugin){
 		'name' => $plugin,
 		'description' => '',
 		'author' => array(),
-		'version' => '',
-		'compat' => ''
+		'maintainer' => array(),
+		'version' => ''
 	);
 
 	if (!is_file("addon/$plugin/$plugin.php"))
@@ -342,21 +341,22 @@ function get_plugin_info($plugin){
 			if ($l != ""){
 				list($k, $v) = array_map("trim", explode(":", $l, 2));
 				$k = strtolower($k);
-				if ($k == 'author'){
+				if ($k == 'author' || $k == 'maintainer'){
 					$r = preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
-						$info['author'][] = array('name' => $m[1], 'link' => $m[2]);
+						$info[$k][] = array('name' => $m[1], 'link' => $m[2]);
 					} else {
-						$info['author'][] = array('name' => $v);
+						$info[$k][] = array('name' => $v);
 					}
 				} else {
-					if (array_key_exists($k, $info)){
+//					if (array_key_exists($k, $info)){
 						$info[$k] = $v;
-					}
+//					}
 				}
 			}
 		}
 	}
+
 
 	return $info;
 }

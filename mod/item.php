@@ -210,7 +210,7 @@ function item_post(&$a) {
 		}
 	}
 	else {
-		if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],'post_wall')) {
+		if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],($webpage) ? 'write_pages' : 'post_wall')) {
 			notice( t('Permission denied.') . EOL) ;
 			if(x($_REQUEST,'return')) 
 				goaway($a->get_baseurl() . "/" . $return_path );

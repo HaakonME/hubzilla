@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2015-12-18.1250\n"
+"Project-Id-Version: 2015-12-25.1257\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 00:03-0800\n"
+"POT-Creation-Date: 2015-12-25 00:03-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -9170,10 +9170,6 @@ msgstr ""
 
 #: ../../mod/mitem.php:226
 msgid "Link text"
-msgstr ""
-
-#: ../../mod/wholikesme.php:13
-msgid "Who likes me?"
 msgstr ""
 
 #: ../../mod/sharedwithme.php:94

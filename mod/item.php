@@ -919,7 +919,7 @@ function item_post(&$a) {
 		else {
 			$parent = $post_id;
 
-			if($datarray['owner_xchan'] != $datarray['author_xchan']) {
+			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && ($datarray['item_type'] == ITEM_TYPE_POST)) {
 				notification(array(
 					'type'         => NOTIFY_WALL,
 					'from_xchan'   => $datarray['author_xchan'],

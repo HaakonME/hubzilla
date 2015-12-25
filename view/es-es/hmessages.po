@@ -7,20 +7,19 @@
 # jeroenpraat <jeroenpraat@xs4all.nl>, 2015
 # Manuel Jiménez Friaza <mjfriaza@openmailbox.org>, 2015
 # Rafael, 2015
-# Rafael, 2015
 # tony baldwin <tonybaldwin@gmx.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-18 00:03-0800\n"
-"PO-Revision-Date: 2015-12-19 15:36+0000\n"
+"PO-Revision-Date: 2015-12-25 08:39+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
-"Language-Team: Spanish (http://www.transifex.com/Friendica/red-matrix/language/es/)\n"
+"Language-Team: Spanish (Spain) (http://www.transifex.com/Friendica/red-matrix/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
+"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../include/Contact.php:101 ../../include/identity.php:947
@@ -195,51 +194,51 @@ msgstr "ha enviado un \"ping\" a"
 
 #: ../../include/text.php:956
 msgid "prod"
-msgstr "una incitación"
+msgstr "una incitación "
 
 #: ../../include/text.php:956
 msgid "prodded"
-msgstr "ha incitado a"
+msgstr "ha incitado a "
 
 #: ../../include/text.php:957
 msgid "slap"
-msgstr "una bofetada"
+msgstr "una bofetada "
 
 #: ../../include/text.php:957
 msgid "slapped"
-msgstr "ha abofeteado a"
+msgstr "ha abofeteado a "
 
 #: ../../include/text.php:958
 msgid "finger"
-msgstr "un \"finger\""
+msgstr "un \"finger\" "
 
 #: ../../include/text.php:958
 msgid "fingered"
-msgstr "ha enviado un \"finger\" a"
+msgstr "le hizo un \"finger\" a"
 
 #: ../../include/text.php:959
 msgid "rebuff"
-msgstr "un reproche"
+msgstr "un reproche "
 
 #: ../../include/text.php:959
 msgid "rebuffed"
-msgstr "ha hecho un reproche a"
+msgstr "ha hecho un reproche a "
 
 #: ../../include/text.php:969
 msgid "happy"
-msgstr "feliz"
+msgstr "feliz "
 
 #: ../../include/text.php:970
 msgid "sad"
-msgstr "triste"
+msgstr "triste "
 
 #: ../../include/text.php:971
 msgid "mellow"
-msgstr "amable"
+msgstr "tranquilo/a "
 
 #: ../../include/text.php:972
 msgid "tired"
-msgstr "cansado/a"
+msgstr "cansado/a "
 
 #: ../../include/text.php:973
 msgid "perky"
@@ -1062,7 +1061,7 @@ msgstr "Perfil principal"
 #: ../../mod/settings.php:343 ../../mod/settings.php:346
 #: ../../mod/settings.php:357
 msgid "Friends"
-msgstr "Amigos"
+msgstr "Amigos/as"
 
 #: ../../include/identity.php:770
 msgid "Requested channel is not available."
@@ -1374,7 +1373,7 @@ msgstr "No mostrar"
 
 #: ../../include/acl_selectors.php:247
 msgid "Other networks and post services"
-msgstr "Otras redes y servicios de correo"
+msgstr "Otras redes y servicios de publicación"
 
 #: ../../include/acl_selectors.php:249 ../../mod/filestorage.php:147
 #: ../../mod/thing.php:310 ../../mod/thing.php:356 ../../mod/photos.php:631
@@ -1576,7 +1575,7 @@ msgstr "Conocidos/as"
 #: ../../include/widgets.php:432 ../../mod/connedit.php:575
 #: ../../mod/connections.php:88 ../../mod/connections.php:103
 msgid "All"
-msgstr "Todas"
+msgstr "Todos/as"
 
 #: ../../include/widgets.php:451
 msgid "Refresh"
@@ -3150,7 +3149,7 @@ msgstr "menú"
 #: ../../include/bbcode.php:257
 #, php-format
 msgid "%1$s wrote the following %2$s %3$s"
-msgstr "%1$s ha escrito la siguiente %2$s %3$s"
+msgstr "%1$s escribió la siguiente %2$s %3$s"
 
 #: ../../include/bbcode.php:259 ../../mod/tagger.php:51
 msgid "post"
@@ -3166,7 +3165,7 @@ msgstr "$1 spoiler"
 
 #: ../../include/bbcode.php:782
 msgid "$1 wrote:"
-msgstr "$1 ha escrito:"
+msgstr "$1 escribió:"
 
 #: ../../include/contact_widgets.php:14
 #, php-format

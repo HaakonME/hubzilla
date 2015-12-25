@@ -1,7 +1,7 @@
 <?php
 
-if(! function_exists("string_plural_select_es")) {
-function string_plural_select_es($n){
+if(! function_exists("string_plural_select_es_es")) {
+function string_plural_select_es_es($n){
 	return ($n != 1);;
 }}
 ;
@@ -37,18 +37,18 @@ $a->strings["poke"] = "un toque";
 $a->strings["poked"] = "ha dado un toque a";
 $a->strings["ping"] = "un \"ping\"";
 $a->strings["pinged"] = "ha enviado un \"ping\" a";
-$a->strings["prod"] = "una incitación";
-$a->strings["prodded"] = "ha incitado a";
-$a->strings["slap"] = "una bofetada";
-$a->strings["slapped"] = "ha abofeteado a";
-$a->strings["finger"] = "un \"finger\"";
-$a->strings["fingered"] = "ha enviado un \"finger\" a";
-$a->strings["rebuff"] = "un reproche";
-$a->strings["rebuffed"] = "ha hecho un reproche a";
-$a->strings["happy"] = "feliz";
-$a->strings["sad"] = "triste";
-$a->strings["mellow"] = "amable";
-$a->strings["tired"] = "cansado/a";
+$a->strings["prod"] = "una incitación ";
+$a->strings["prodded"] = "ha incitado a ";
+$a->strings["slap"] = "una bofetada ";
+$a->strings["slapped"] = "ha abofeteado a ";
+$a->strings["finger"] = "un \"finger\" ";
+$a->strings["fingered"] = "le hizo un \"finger\" a";
+$a->strings["rebuff"] = "un reproche ";
+$a->strings["rebuffed"] = "ha hecho un reproche a ";
+$a->strings["happy"] = "feliz ";
+$a->strings["sad"] = "triste ";
+$a->strings["mellow"] = "tranquilo/a ";
+$a->strings["tired"] = "cansado/a ";
 $a->strings["perky"] = "vivaz";
 $a->strings["angry"] = "enfadado/a";
 $a->strings["stupified"] = "estupefacto/a";
@@ -231,7 +231,7 @@ $a->strings["Reserved nickname. Please choose another."] = "Sobrenombre en uso. 
 $a->strings["Nickname has unsupported characters or is already being used on this site."] = "El alias contiene caracteres no admitidos o está ya en uso por otros usuarios de este sitio.";
 $a->strings["Unable to retrieve created identity"] = "No ha sido posible recuperar la identidad creada";
 $a->strings["Default Profile"] = "Perfil principal";
-$a->strings["Friends"] = "Amigos";
+$a->strings["Friends"] = "Amigos/as";
 $a->strings["Requested channel is not available."] = "El canal solicitado no está disponible.";
 $a->strings["Requested profile is not available."] = "El perfil solicitado no está disponible.";
 $a->strings["Change profile photo"] = "Cambiar la foto del perfil";
@@ -307,7 +307,7 @@ $a->strings["Upload New Photos"] = "Subir nuevas fotos";
 $a->strings["Visible to your default audience"] = "Visible para su público predeterminado.";
 $a->strings["Show"] = "Mostrar";
 $a->strings["Don't show"] = "No mostrar";
-$a->strings["Other networks and post services"] = "Otras redes y servicios de correo";
+$a->strings["Other networks and post services"] = "Otras redes y servicios de publicación";
 $a->strings["Permissions"] = "Permisos";
 $a->strings["Close"] = "Cerrar";
 $a->strings[" and "] = "y";
@@ -354,7 +354,7 @@ $a->strings["Archives"] = "Hemeroteca";
 $a->strings["Me"] = "Yo";
 $a->strings["Family"] = "Familia";
 $a->strings["Acquaintances"] = "Conocidos/as";
-$a->strings["All"] = "Todas";
+$a->strings["All"] = "Todos/as";
 $a->strings["Refresh"] = "Recargar";
 $a->strings["Account settings"] = "Configuración de la cuenta";
 $a->strings["Channel settings"] = "Configuración del canal";
@@ -739,11 +739,11 @@ $a->strings["webpage"] = "página web";
 $a->strings["layout"] = "disposición";
 $a->strings["block"] = "bloque";
 $a->strings["menu"] = "menú";
-$a->strings["%1\$s wrote the following %2\$s %3\$s"] = "%1\$s ha escrito la siguiente %2\$s %3\$s";
+$a->strings["%1\$s wrote the following %2\$s %3\$s"] = "%1\$s escribió la siguiente %2\$s %3\$s";
 $a->strings["post"] = "entrada";
 $a->strings["Different viewers will see this text differently"] = "Visitantes diferentes verán este texto de forma distinta";
 $a->strings["$1 spoiler"] = "$1 spoiler";
-$a->strings["$1 wrote:"] = "$1 ha escrito:";
+$a->strings["$1 wrote:"] = "$1 escribió:";
 $a->strings["%d invitation available"] = array(
 	0 => "%d invitación pendiente",
 	1 => "%d invitaciones disponibles",

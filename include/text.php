@@ -972,7 +972,7 @@ function get_mood_verbs() {
 		'tired'      => t('tired'),
 		'perky'      => t('perky'),
 		'angry'      => t('angry'),
-		'stupefied'  => t('stupified'),
+		'stupefied'  => t('stupefied'),
 		'puzzled'    => t('puzzled'),
 		'interested' => t('interested'),
 		'bitter'     => t('bitter'),

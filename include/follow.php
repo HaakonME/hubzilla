@@ -122,6 +122,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		else
 			$permissions = $j['permissions'];
 
+
 		foreach($permissions as $k => $v) {
 			if($v) {
 				$their_perms = $their_perms | intval($global_perms[$k][1]);
@@ -167,6 +168,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		}
 	}
 
+
 	if(! $xchan_hash) {
 		$result['message'] = t('Channel discovery failed.');
 		logger('follow: ' . $result['message']);
@@ -202,6 +204,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$default_group = $r[0]['channel_default_group'];
 	}
 
+
 	if($is_http) {
 
 
@@ -226,6 +229,8 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		dbesc($xchan_hash),
 		intval($uid)
 	);
+
+
 	if($r) {
 		$abook_instance = $r[0]['abook_instance'];
 
@@ -242,7 +247,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		);		
 	}
 	else {
-
 		$closeness = get_pconfig($uid,'system','new_abook_closeness');
 		if($closeness === false)
 			$closeness = 80;
@@ -270,6 +274,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		dbesc($xchan_hash),
 		intval($uid)
 	);
+
 	if($r) {
 		$result['abook'] = $r[0];
 		proc_run('php', 'include/notifier.php', 'permission_create', $result['abook']['abook_id']);

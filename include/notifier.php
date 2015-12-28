@@ -188,6 +188,8 @@ function notifier_run($argv, $argc){
 					$recipients[] = $r[0]['abook_xchan'];
 					$private = false;
 					$packet_type = 'refresh';
+					$packet_recips = array(array('guid' => $r[0]['xchan_guid'],'guid_sig' => $r[0]['xchan_guid_sig'],'hash' => $r[0]['xchan_hash']));
+
 				}
 			}
 		}
@@ -547,7 +549,7 @@ function notifier_run($argv, $argc){
 		$packet = null;
 
 		if($packet_type === 'refresh' || $packet_type === 'purge') {
-			$packet = zot_build_packet($channel,$packet_type);
+			$packet = zot_build_packet($channel,$packet_type,(($packet_recips) ? $packet_recips : null));
 		}
 		elseif($packet_type === 'request') {
 			$packet = zot_build_packet($channel,$packet_type,$env_recips,$hub['hubloc_sitekey'],$hash,

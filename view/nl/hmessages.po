@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 00:03-0800\n"
-"PO-Revision-Date: 2015-12-19 20:47+0000\n"
-"Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
+"POT-Creation-Date: 2015-12-25 00:03-0800\n"
+"PO-Revision-Date: 2015-12-26 08:59+0000\n"
+"Last-Translator: fabrixxm <fabrix.xm@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/Friendica/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9180,10 +9180,6 @@ msgstr "Menu-element bewerken"
 #: ../../mod/mitem.php:226
 msgid "Link text"
 msgstr "Linktekst"
-
-#: ../../mod/wholikesme.php:13
-msgid "Who likes me?"
-msgstr "Wie vindt mij leuk?"
 
 #: ../../mod/sharedwithme.php:94
 msgid "Files: shared with me"

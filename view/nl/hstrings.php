@@ -2164,7 +2164,6 @@ $a->strings["Menu item deleted."] = "Menu-item verwijderd.";
 $a->strings["Menu item could not be deleted."] = "Menu-item kon niet worden verwijderd.";
 $a->strings["Edit Menu Element"] = "Menu-element bewerken";
 $a->strings["Link text"] = "Linktekst";
-$a->strings["Who likes me?"] = "Wie vindt mij leuk?";
 $a->strings["Files: shared with me"] = "Bestanden: met mij gedeeld";
 $a->strings["NEW"] = "NIEUW";
 $a->strings["Remove all files"] = "Verwijder alle bestanden";

@@ -178,7 +178,7 @@ function create_identity($arr) {
 	$ret = array('success' => false);
 
 	if(! $arr['account_id']) {
-		$ret['message'] = t('No account identifier');
+	$ret['message'] = t('No account identifier');
 		return $ret;
 	}
 	$ret = identity_check_service_class($arr['account_id']);
@@ -352,7 +352,7 @@ function create_identity($arr) {
 	);
 
 	if($role_permissions) {
-		$myperms = ((array_key_exists('perms_auto',$role_permissions) && $role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0);
+		$myperms = ((array_key_exists('perms_accept',$role_permissions)) ? intval($role_permissions['perms_accept']) : 0);
 	}
 	else
 		$myperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK

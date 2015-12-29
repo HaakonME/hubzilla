@@ -26,7 +26,7 @@
 {{if $admin.update}}
 <ul class="nav nav-pills nav-stacked">
 	<li><a href='{{$admin.update.0}}'>{{$admin.update.1}}</a></li>
-	<li><a href='https://kakste.com/profile/inthegit'>Important Changes</a></li>
+	<li><a href=''>Important Changes</a></li>
 </ul>
 {{/if}}
 

@@ -536,6 +536,7 @@ function attribute_contains($attr, $s) {
  *
  * @param string $msg Message to log
  * @param int $level A log level.
+ * @param int $priority - compatible with syslog
  */
 
 function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {

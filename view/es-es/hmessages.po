@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Alfonso <admin@alfonsomh.eu>, 2015
-# jeroenpraat <jeroenpraat@xs4all.nl>, 2015
 # Manuel Jiménez Friaza <mjfriaza@openmailbox.org>, 2015
 # Rafael, 2015
 # tony baldwin <tonybaldwin@gmx.com>, 2014
@@ -12,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 00:03-0800\n"
-"PO-Revision-Date: 2015-12-25 08:39+0000\n"
+"POT-Creation-Date: 2015-12-25 00:03-0800\n"
+"PO-Revision-Date: 2015-12-29 12:41+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/Friendica/red-matrix/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -214,11 +213,11 @@ msgstr "un \"finger\" "
 
 #: ../../include/text.php:958
 msgid "fingered"
-msgstr "le hizo un \"finger\" a"
+msgstr "envió un \"finger\" a"
 
 #: ../../include/text.php:959
 msgid "rebuff"
-msgstr "un reproche "
+msgstr "un reproche"
 
 #: ../../include/text.php:959
 msgid "rebuffed"
@@ -234,7 +233,7 @@ msgstr "triste "
 
 #: ../../include/text.php:971
 msgid "mellow"
-msgstr "tranquilo/a "
+msgstr "tranquilo/a"
 
 #: ../../include/text.php:972
 msgid "tired"
@@ -1591,11 +1590,11 @@ msgstr "Configuración del canal"
 
 #: ../../include/widgets.php:497
 msgid "Additional features"
-msgstr "Características adicionales"
+msgstr "Funcionalidades"
 
 #: ../../include/widgets.php:503
 msgid "Feature/Addon settings"
-msgstr "Configuración de características o complementos"
+msgstr "Complementos"
 
 #: ../../include/widgets.php:509
 msgid "Display settings"
@@ -1805,7 +1804,7 @@ msgstr "Administrador"
 
 #: ../../include/widgets.php:1244
 msgid "Plugin Features"
-msgstr "Ajustes de la extensión"
+msgstr "Extensiones"
 
 #: ../../include/widgets.php:1246
 msgid "User registrations waiting for confirmation"
@@ -1835,7 +1834,7 @@ msgstr "Marcadores de %1$s"
 
 #: ../../include/features.php:38
 msgid "General Features"
-msgstr "Características generales"
+msgstr "Funcionalidades básicas"
 
 #: ../../include/features.php:40
 msgid "Content Expiration"
@@ -1921,7 +1920,7 @@ msgstr "Les permite configurar restricciones y normas de uso a aquellos que cone
 
 #: ../../include/features.php:55
 msgid "Post Composition Features"
-msgstr "Características de composición de entradas"
+msgstr "Opciones para la redacción de entradas"
 
 #: ../../include/features.php:57
 msgid "Use Markdown"
@@ -1956,7 +1955,7 @@ msgstr "Permitir cifrado adicional de contenido \"punto-a-punto\" con una clave 
 
 #: ../../include/features.php:61
 msgid "Enable Voting Tools"
-msgstr "Activar herramientas de votación"
+msgstr "Permitir entradas con votación"
 
 #: ../../include/features.php:61
 msgid "Provide a class of post which others can vote on"
@@ -2046,7 +2045,7 @@ msgstr "Mostrar sugerencias de canales"
 
 #: ../../include/features.php:82
 msgid "Post/Comment Tools"
-msgstr "Herramientas de entradas/comentarios"
+msgstr "Gestión de entradas y comentarios"
 
 #: ../../include/features.php:83
 msgid "Tagging"
@@ -4007,7 +4006,7 @@ msgstr "Invitar"
 
 #: ../../include/apps.php:152
 msgid "Features"
-msgstr "Características"
+msgstr "Funcionalidades"
 
 #: ../../include/apps.php:153 ../../mod/id.php:28
 msgid "Language"
@@ -7499,7 +7498,7 @@ msgstr "El nombre es obligatorio"
 
 #: ../../mod/settings.php:80
 msgid "Key and Secret are required"
-msgstr "Clave y Secreto son obligatorios"
+msgstr "\"Key\" y \"Secret\" son obligatorios"
 
 #: ../../mod/settings.php:232
 msgid "Passwords do not match. Password unchanged."
@@ -7544,7 +7543,7 @@ msgstr "Nombre de la aplicación"
 
 #: ../../mod/settings.php:589 ../../mod/settings.php:615
 msgid "Consumer Key"
-msgstr "Clave de consumidor"
+msgstr "Consumer Key"
 
 #: ../../mod/settings.php:589 ../../mod/settings.php:590
 msgid "Automatically generated - change if desired. Max length 20"
@@ -7552,7 +7551,7 @@ msgstr "Generado automáticamente - si lo desea,  cámbielo. Longitud máxima: 2
 
 #: ../../mod/settings.php:590 ../../mod/settings.php:616
 msgid "Consumer Secret"
-msgstr "Clave secreta de consumidor"
+msgstr "Consumer Secret"
 
 #: ../../mod/settings.php:591 ../../mod/settings.php:617
 msgid "Redirect"
@@ -7582,7 +7581,7 @@ msgstr "Aplicaciones conectadas"
 
 #: ../../mod/settings.php:650
 msgid "Client key starts with"
-msgstr "La clave de cliente empieza por"
+msgstr "La \"client key\" empieza por"
 
 #: ../../mod/settings.php:651
 msgid "No name"
@@ -7598,7 +7597,7 @@ msgstr "No se ha establecido la configuración de características"
 
 #: ../../mod/settings.php:672
 msgid "Feature/Addon Settings"
-msgstr "Ajustes de la característica o el complemento"
+msgstr "Ajustes de los complementos"
 
 #: ../../mod/settings.php:695
 msgid "Account Settings"
@@ -7634,7 +7633,7 @@ msgstr "Activado"
 
 #: ../../mod/settings.php:724
 msgid "Additional Features"
-msgstr "Características adicionales"
+msgstr "Funcionalidades"
 
 #: ../../mod/settings.php:748
 msgid "Connector Settings"
@@ -8033,7 +8032,7 @@ msgstr "Cambiar el comportamiento de esta cuenta en situaciones especiales"
 msgid ""
 "Please enable expert mode (in <a href=\"settings/features\">Settings > "
 "Additional features</a>) to adjust!"
-msgstr "Activar modo experto (en <a href=\"settings/features\">Ajustes > Características Adicionales</a>) para ajustar."
+msgstr "¡Activar el modo de experto (en <a href=\"settings/features\">Ajustes > Funcionalidades</a>) para realizar cambios!."
 
 #: ../../mod/settings.php:1107
 msgid "Miscellaneous Settings"
@@ -8101,7 +8100,7 @@ msgstr "Ubicación (URL) de la aplicación"
 
 #: ../../mod/appman.php:94
 msgid "Photo icon URL"
-msgstr "Dirección del icono que se va a utilizar para esta foto"
+msgstr "Dirección del icono"
 
 #: ../../mod/appman.php:94
 msgid "80 x 80 pixels - optional"
@@ -8873,11 +8872,11 @@ msgstr "Versión %s"
 
 #: ../../mod/siteinfo.php:36
 msgid "Installed plugins/addons/apps:"
-msgstr "Extensiones/Aplicaciones instaladas:"
+msgstr "Extensiones, complementos o aplicaciones instaladas:"
 
 #: ../../mod/siteinfo.php:49
 msgid "No installed plugins/addons/apps"
-msgstr "Extensiones/Aplicaciones no instaladas:"
+msgstr "No hay instalada ninguna extensión, complemento o aplicación"
 
 #: ../../mod/siteinfo.php:62
 msgid ""
@@ -9184,10 +9183,6 @@ msgstr "Editar elemento del menú"
 #: ../../mod/mitem.php:226
 msgid "Link text"
 msgstr "Texto del enlace"
-
-#: ../../mod/wholikesme.php:13
-msgid "Who likes me?"
-msgstr "¿Quién me ha puesto \"Me gusta\"?"
 
 #: ../../mod/sharedwithme.php:94
 msgid "Files: shared with me"

@@ -73,7 +73,7 @@ function deliver_run($argv, $argc) {
 				}
 			}
 
-			// otherwise it's a remote delivery - call queue_deliver();
+			// otherwise it's a remote delivery - call queue_deliver() with the $immediate flag
 
 			queue_deliver($r[0],true);
 

@@ -189,7 +189,6 @@ function notifier_run($argv, $argc){
 					$private = false;
 					$packet_type = 'refresh';
 					$packet_recips = array(array('guid' => $r[0]['xchan_guid'],'guid_sig' => $r[0]['xchan_guid_sig'],'hash' => $r[0]['xchan_hash']));
-
 				}
 			}
 		}
@@ -299,7 +298,7 @@ function notifier_run($argv, $argc){
 			$channel = $s[0];
 
 		if($channel['channel_hash'] !== $target_item['author_xchan'] && $channel['channel_hash'] !== $target_item['owner_xchan']) {
-			logger("notifier: Sending channel {$channel['channel_hash']} is not owner {$target_item['owner_xchan']} or author {$target_item['author_xchan']}");
+			logger("notifier: Sending channel {$channel['channel_hash']} is not owner {$target_item['owner_xchan']} or author {$target_item['author_xchan']}", LOGGER_NORMAL, LOG_WARNING);
 			return;
 		}
 
@@ -318,7 +317,7 @@ function notifier_run($argv, $argc){
 				return;
 
 			if(strpos($r[0]['postopts'],'nodeliver') !== false) {
-				logger('notifier: target item is undeliverable', LOGGER_DEBUG);
+				logger('notifier: target item is undeliverable', LOGGER_DEBUG, LOG_NOTICE);
 				return;
 			}
 
@@ -354,8 +353,8 @@ function notifier_run($argv, $argc){
 		// $cmd === 'relay' indicates the owner is sending it to the original recipients
 		// don't allow the item in the relay command to relay to owner under any circumstances, it will loop
 
-		logger('notifier: relay_to_owner: ' . (($relay_to_owner) ? 'true' : 'false'), LOGGER_DATA);
-		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'), LOGGER_DATA);
+		logger('notifier: relay_to_owner: ' . (($relay_to_owner) ? 'true' : 'false'), LOGGER_DATA, LOG_DEBUG);
+		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'), LOGGER_DATA, LOG_DEBUG);
 
 		// tag_deliver'd post which needs to be sent back to the original author
 
@@ -397,7 +396,7 @@ function notifier_run($argv, $argc){
 			// TODO verify this is needed - copied logic from same place in old code
 
 			if(intval($target_item['item_deleted']) && (! intval($target_item['item_wall']))) {
-				logger('notifier: ignoring delete notification for non-wall item');
+				logger('notifier: ignoring delete notification for non-wall item', LOGGER_NORMAL, LOG_NOTICE);
 				return;
 			}
 		}
@@ -412,13 +411,13 @@ function notifier_run($argv, $argc){
 	$x = $encoded_item;
 	$x['title'] = 'private';
 	$x['body'] = 'private';
-	logger('notifier: encoded item: ' . print_r($x,true), LOGGER_DATA);
+	logger('notifier: encoded item: ' . print_r($x,true), LOGGER_DATA, LOG_DEBUG);
 
 	stringify_array_elms($recipients);
 	if(! $recipients)
 		return;
 
-//	logger('notifier: recipients: ' . print_r($recipients,true));
+//	logger('notifier: recipients: ' . print_r($recipients,true), LOGGER_NORMAL, LOG_DEBUG);
 
 	$env_recips = (($private) ? array() : null);
 
@@ -446,7 +445,7 @@ function notifier_run($argv, $argc){
 
 	if(($private) && (! $env_recips)) {
 		// shouldn't happen
-		logger('notifier: private message with no envelope recipients.' . print_r($argv,true));
+		logger('notifier: private message with no envelope recipients.' . print_r($argv,true), LOGGER_NORMAL, LOG_NOTICE);
 	}
 	
 	logger('notifier: recipients (may be delivered to more if public): ' . print_r($recip_list,true), LOGGER_DEBUG);
@@ -461,7 +460,7 @@ function notifier_run($argv, $argc){
  
 
 	if(! $r) {
-		logger('notifier: no hubs');
+		logger('notifier: no hubs', LOGGER_NORMAL, LOG_NOTICE);
 		return;
 	}
 
@@ -484,7 +483,7 @@ function notifier_run($argv, $argc){
 
 	foreach($hubs as $hub) {
 		if(in_array($hub['hubloc_url'],$dead_hubs)) {
-			logger('skipping dead hub: ' . $hub['hubloc_url'], LOGGER_DEBUG);
+			logger('skipping dead hub: ' . $hub['hubloc_url'], LOGGER_DEBUG, LOG_INFO);
 			continue;
 		}
 
@@ -504,7 +503,7 @@ function notifier_run($argv, $argc){
 		}
 	}
 
-	logger('notifier: will notify/deliver to these hubs: ' . print_r($hublist,true), LOGGER_DEBUG);
+	logger('notifier: will notify/deliver to these hubs: ' . print_r($hublist,true), LOGGER_DEBUG, LOG_DEBUG);
 			 
 
 	foreach($dhubs as $hub) {
@@ -514,6 +513,7 @@ function notifier_run($argv, $argc){
 			$narr = array(
 				'channel' => $channel,
 				'env_recips' => $env_recips,
+				'packet_recips' => $packet_recips,
 				'recipients' => $recipients,
 				'item' => $item,
 				'target_item' => $target_item,

@@ -124,6 +124,26 @@ function queue_deliver($outq, $immediate = false) {
 				dbesc($outq['outq_hash'])
 			);
 			remove_queue_item($outq['outq_hash']);
+
+			// server is responding - see if anything else is going to this destination and is piled up 
+			// and try to send some more. We're relying on the fact that delivery_loop() results in an 
+			// immediate delivery otherwise we could get into a queue loop. 
+
+			if(! $immediate) {
+				$x = q("select outq_hash from outq where outq_posturl = '%s' and outq_delivered = 0",
+					dbesc($outq['outq_posturl'])
+				);
+
+				$piled_up = array();
+				if($x) {
+					foreach($x as $xx) {
+						 $piled_up[] = $xx['outq_hash'];
+					}
+				}
+				if($piled_up) {
+					delivery_loop($piled_up);
+				}
+			}
 		}
 		else {
 			logger('deliver: queue post returned ' . $result['return_code'] 

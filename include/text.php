@@ -538,7 +538,7 @@ function attribute_contains($attr, $s) {
  * @param int $level A log level.
  */
 
-function logger($msg, $level = 0) {
+function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	// turn off logger in install mode
 	global $a;
 	global $db;
@@ -559,13 +559,30 @@ function logger($msg, $level = 0) {
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 	}
 
-	$s = datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL;
-	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'logged' => false);
+	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
+	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
 
 	call_hooks('logger',$pluginfo);
 
 	if(! $pluginfo['logged'])
 		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
+}
+
+function log_priority_str($priority) {
+	$parr = array(
+		LOG_EMERG   => 'LOG_EMERG',
+		LOG_ALERT   => 'LOG_ALERT',
+		LOG_CRIT    => 'LOG_CRIT',
+		LOG_ERR     => 'LOG_ERR',
+		LOG_WARNING => 'LOG_WARNING',
+		LOG_NOTICE  => 'LOG_NOTICE',
+		LOG_INFO    => 'LOG_INFO',
+		LOG_DEBUG   => 'LOG_DEBUG'
+	);
+
+	if($parr[$priority])
+		return $parr[$priority];
+	return 'LOG_UNDEFINED';
 }
 
 /**

@@ -31,6 +31,7 @@ function deliver_run($argv, $argc) {
 
 			if(($r[0]['outq_posturl'] === z_root() . '/post') && ($r[0]['outq_msg'])) {
 				logger('deliver: local delivery', LOGGER_DEBUG);
+
 				// local delivery
 				// we should probably batch these and save a few delivery processes
 

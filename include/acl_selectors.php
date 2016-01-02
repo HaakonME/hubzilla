@@ -240,8 +240,8 @@ function populate_acl($defaults = null,$show_jotnets = true, $showall = '') {
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
 		'$showall'         => $showall,
-		'$show'		       => t("Show"),
-		'$hide'		       => t("Don't show"),
+		'$show'	           => t("Show"),
+		'$hide'	           => t("Don't show"),
 		'$allowcid'        => json_encode($allow_cid),
 		'$allowgid'        => json_encode($allow_gid),
 		'$denycid'         => json_encode($deny_cid),

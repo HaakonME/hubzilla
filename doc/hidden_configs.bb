@@ -65,6 +65,10 @@ This document assumes you're an administrator.
         this website.  Can be overwritten by user settings.
     [b]system > projecthome[/b]
         Set the project homepage as the homepage of your hub.
+	[b]system > default_permissions_role[/b]
+		If set to a valid permissions role name (for instance 'public'), use that role for
+		the first channel created by a new account and don't ask for the "Channel Type" on
+		the channel creation form. 
     [b]system > workflow_channel_next[/b]
         The page to direct users to immediately after creating a channel.
     [b]system > max_daily_registrations[/b]

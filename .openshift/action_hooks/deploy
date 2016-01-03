@@ -205,6 +205,10 @@ cd ${OPENSHIFT_REPO_DIR}
 util/add_addon_repo https://gitlab.com/zot/ownmapp.git ownMapp
 
 # Hubzilla Chess
+<<<<<<< HEAD
 echo "Try to add or update Hubzilla chess "
+=======
+echo "Try to add or update Hubzilla chess to Hubzilla on OpenShift"
+>>>>>>> upstream/master
 cd ${OPENSHIFT_REPO_DIR}
 util/add_addon_repo https://gitlab.com/zot/hubzilla-chess.git Chess

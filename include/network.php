@@ -1796,6 +1796,7 @@ function get_site_info() {
 		'url' => z_root(),
 		'plugins' => $visible_plugins,
 		'register_policy' =>  $register_policy[get_config('system','register_policy')],
+		'invitation_only' => intval(get_config('system','invitation_only')),
 		'directory_mode' =>  $directory_mode[get_config('system','directory_mode')],
 		'language' => get_config('system','language'),
 		'rss_connections' => get_config('system','feed_contacts'),
@@ -1821,6 +1822,13 @@ function get_site_info() {
 function check_siteallowed($url) {
 
 	$retvalue = true;
+
+
+	$arr = array('url' => $url);
+	call_hooks('check_siteallowed',$arr);
+
+	if(array_key_exists('allowed',$arr))
+		return $arr['allowed'];
 
 	$bl1 = get_config('system','whitelisted_sites');
 	if(is_array($bl1) && $bl1) {
@@ -1848,6 +1856,12 @@ function check_channelallowed($hash) {
 
 	$retvalue = true;
 
+	$arr = array('hash' => $hash);
+	call_hooks('check_channelallowed',$arr);
+
+	if(array_key_exists('allowed',$arr))
+		return $arr['allowed'];
+
 	$bl1 = get_config('system','whitelisted_channels');
 	if(is_array($bl1) && $bl1) {
 		foreach($bl1 as $bl) {
@@ -1868,5 +1882,18 @@ function check_channelallowed($hash) {
 		}
 	}
 	return $retvalue;
+}
+
+function deliverable_singleton($xchan) {
+	$r = q("select abook_instance from abook where abook_xchan = '%s' limit 1",
+		dbesc($xchan['xchan_hash'])
+	);
+	if($r) {
+		if(! $r[0]['abook_instance'])
+			return true;
+		if(strpos($r[0]['abook_instance'],z_root()) !== false)
+			return true;
+	}
+	return false;
 }
 

@@ -493,37 +493,40 @@ function widget_settings_menu($arr) {
 			'selected'	=> ((argv(1) === 'channel') ? 'active' : ''),
 		),
 
-		array(
-			'label'	=> t('Additional features'),
-			'url' 	=> $a->get_baseurl(true).'/settings/features',
-			'selected'	=> ((argv(1) === 'features') ? 'active' : ''),
-		),
-
-		array(
-			'label'	=> t('Feature/Addon settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/featured',
-			'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
-		),
-
-		array(
-			'label'	=> t('Display settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/display',
-			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
-		),	
-
-		array(
-			'label' => t('Connected apps'),
-			'url' => $a->get_baseurl(true) . '/settings/oauth',
-			'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
-		),
-
-		array(
-			'label' => t('Export channel'),
-			'url' => $a->get_baseurl(true) . '/uexport',
-			'selected' => ''
-		),
-
 	);
+
+	if(get_features()) {
+		$tabs[] = 	array(
+				'label'	=> t('Additional features'),
+				'url' 	=> $a->get_baseurl(true).'/settings/features',
+				'selected'	=> ((argv(1) === 'features') ? 'active' : ''),
+		);
+	}
+
+	$tabs[] =	array(
+		'label'	=> t('Feature/Addon settings'),
+		'url' 	=> $a->get_baseurl(true).'/settings/featured',
+		'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
+	);
+
+	$tabs[] =	array(
+		'label'	=> t('Display settings'),
+		'url' 	=> $a->get_baseurl(true).'/settings/display',
+		'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
+	);	
+
+	$tabs[] =	array(
+		'label' => t('Connected apps'),
+		'url' => $a->get_baseurl(true) . '/settings/oauth',
+		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
+	);
+
+	$tabs[] =	array(
+		'label' => t('Export channel'),
+		'url' => $a->get_baseurl(true) . '/uexport',
+		'selected' => ''
+	);
+
 
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(

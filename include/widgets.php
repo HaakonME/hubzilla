@@ -1217,6 +1217,7 @@ function widget_admin($arr) {
 		'site'      => array(z_root() . '/admin/site/',     t('Site'),           'site'),
 		'users'     => array(z_root() . '/admin/users/',    t('Accounts'),       'users'),
 		'channels'  => array(z_root() . '/admin/channels/', t('Channels'),       'channels'),
+		'features'  => array(z_root() . '/admin/features/', t('Features'),       'features'),
 		'plugins'   => array(z_root() . '/admin/plugins/',  t('Plugins'),        'plugins'),
 		'themes'    => array(z_root() . '/admin/themes/',   t('Themes'),         'themes'),
 		'queue'     => array(z_root() . '/admin/queue',     t('Inspect queue'),  'queue'),

@@ -47,8 +47,8 @@ require_once('include/AccessList.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'H');
-define ( 'STD_VERSION',             '1.0.1' );
+define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
+define ( 'STD_VERSION',             '1.1' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1161  );

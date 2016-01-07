@@ -874,6 +874,11 @@ class App {
 		}
 	}
 
+	function get_scheme() {
+		return $this->scheme;
+	}
+
+
 	function get_hostname() {
 		return $this->hostname;
 	}
@@ -2121,6 +2126,16 @@ function construct_page(&$a) {
 	$profile = $a->profile;
 
 	header("Content-type: text/html; charset=utf-8");
+	if($a->get_scheme() === 'https')
+		header("Strict-Transport-Security: max-age=31536000");
+
+	header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'");
+
+	if($a->config['system']['x_security_headers']) {
+		header("X-Frame-Options: SAMEORIGIN");
+		header("X-Xss-Protection: 1; mode=block;");
+		header("X-Content-Type-Options: nosniff");	
+	}
 
 	require_once(theme_include(
 		((x($a->page, 'template')) ? $a->page['template'] : 'default' ) . '.php' )

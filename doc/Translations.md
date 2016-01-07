@@ -32,23 +32,23 @@ The location of the translated files in the source tree is
     /view/LNG-CODE/
 where LNG-CODE is the language code used, e.g. de for German or fr for French.
 For the email templates (the *.tpl files) just place them into the directory
-and you are done. The translated strings come as a "messages.po" file from
+and you are done. The translated strings come as a "hmessages.po" file from
 transifex which needs to be translated into the PHP file Red uses.  To do
 so, place the file in the directory mentioned above and use the "po2php"
 utility from the util directory of your Red installation.
 
 Assuming you want to convert the German localization which is placed in
-view/de/messages.po you would do the following.
+view/de/hmessages.po you would do the following.
 
 1. Navigate at the command prompt to the base directory of your
    Red installation
 
 2. Execute the po2php script, which will place the translation
-   in the strings.php file that is used by Red.
+   in the hstrings.php file that is used by Red.
 
-       $> php util/po2php.php view/de/messages.po
+       $> php util/po2php.php view/de/hmessages.po
 
-   The output of the script will be placed at view/de/strings.php where
+   The output of the script will be placed at view/de/hstrings.php where
    froemdoca os expecting it, so you can test your translation mmediately.
                                   
 3. Visit your Red page to check if it still works in the language you
@@ -59,7 +59,7 @@ view/de/messages.po you would do the following.
    not give any output if the file is ok but might give a hint for
    searching the bug in the file.
 
-       $> php view/de/strings.php
+       $> php view/de/hstrings.php
 
 4. commit the two files with a meaningful commit message to your git
    repository, push it to your fork of the Red repository at github and

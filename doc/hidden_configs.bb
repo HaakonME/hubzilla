@@ -159,7 +159,7 @@ This document assumes you're an administrator.
  	[b]system > hide_help[/b]
 		Don't display help documentation link in nav bar
  	[b]system > expire_delivery_reports[/b]
-		Expiration in days for delivery reports - default 30
+		Expiration in days for delivery reports - default 10
 
 [b]Directory config[/b]
 [b]Directory search defaults[/b]

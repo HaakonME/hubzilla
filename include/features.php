@@ -36,7 +36,7 @@ function get_feature_default($feature) {
 }
 
 
-function get_features() {
+function get_features($filtered = true) {
 
 	$arr = array(
 
@@ -98,20 +98,22 @@ function get_features() {
 
 	// removed any locked features and remove the entire category if this makes it empty
 
-	foreach($arr as $k => $x) {
-		$has_items = false;
-		for($y = 0; $y < count($arr[$k]); $y ++) {	
-			if(is_array($arr[$k][$y])) {
-				if($arr[$k][$y][4] === false) {
-					$has_items = true;
-				}
-				else {
-					unset($arr[$k][$y]);
+	if($filtered) {
+		foreach($arr as $k => $x) {
+			$has_items = false;
+			for($y = 0; $y < count($arr[$k]); $y ++) {	
+				if(is_array($arr[$k][$y])) {
+					if($arr[$k][$y][4] === false) {
+						$has_items = true;
+					}
+					else {
+						unset($arr[$k][$y]);
+					}
 				}
 			}
-		}
-		if(! $has_items) {
-			unset($arr[$k]);
+			if(! $has_items) {
+				unset($arr[$k]);
+			}
 		}
 	}
 

@@ -2126,6 +2126,9 @@ function construct_page(&$a) {
 	$profile = $a->profile;
 
 	header("Content-type: text/html; charset=utf-8");
+
+	// security headers - see https://securityheaders.io
+
 	if($a->get_scheme() === 'https')
 		header("Strict-Transport-Security: max-age=31536000");
 
@@ -2135,6 +2138,10 @@ function construct_page(&$a) {
 		header("X-Frame-Options: SAMEORIGIN");
 		header("X-Xss-Protection: 1; mode=block;");
 		header("X-Content-Type-Options: nosniff");	
+	}
+
+	if($a->config['system']['public_key_pins']) {
+		header("Public-Key-Pins: " . $a->config['system']['public_key_pins']);
 	}
 
 	require_once(theme_include(

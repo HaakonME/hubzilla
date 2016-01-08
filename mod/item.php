@@ -720,8 +720,7 @@ function item_post(&$a) {
 
 	$datarray = array();
 
-	$item_thead_top = ((! $parent) ? 1 : 0);
-
+	$item_thread_top = ((! $parent) ? 1 : 0);
 
 	if ((! $plink) && ($item_thread_top)) {
 		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;

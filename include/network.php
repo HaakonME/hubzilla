@@ -1144,6 +1144,10 @@ function discover_by_webbie($webbie) {
 				dbesc($addr)
 			);
 
+			// fix relative urls
+			if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
+				$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];			
+
 			/**
 			 *
 			 * Diaspora communications are notoriously unreliable and receiving profile update messages (indeed any messages) 

@@ -3924,6 +3924,9 @@ function check_zotinfo($channel,$locations,&$ret) {
 
 function delivery_report_is_storable($dr) {
 
+	if(get_config('system','disable_dreport'))
+		return false;
+
 	call_hooks('dreport_is_storable',$dr);
 
 	// let plugins accept or reject - if neither, continue on

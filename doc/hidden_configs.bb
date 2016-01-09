@@ -60,6 +60,8 @@ This document assumes you're an administrator.
         Allow the @mention tagging of anyone whether you are connected or not.
     [b]system > directorytags[/b]
         Set the number of keyword tags displayed on the directory page.
+	[b]system > disable_dreport[/b]
+		If '1', don't store or link to delivery reports
     [b]system > startpage[/b]
         Set the default page to be taken to after a login for all channels at
         this website.  Can be overwritten by user settings.

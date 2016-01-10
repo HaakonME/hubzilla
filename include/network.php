@@ -1144,6 +1144,10 @@ function discover_by_webbie($webbie) {
 				dbesc($addr)
 			);
 
+			// fix relative urls
+			if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
+				$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];			
+
 			/**
 			 *
 			 * Diaspora communications are notoriously unreliable and receiving profile update messages (indeed any messages) 
@@ -1788,6 +1792,17 @@ function get_site_info() {
 	$hide_in_statistics = intval(get_config('system','hide_in_statistics'));
 	$site_expire = intval(get_config('system', 'default_expire_days'));
 
+	load_config('feature_lock');
+	$locked_features = array();
+	if(is_array($a->config['feature_lock']) && count($a->config['feature_lock'])) {
+		foreach($a->config['feature_lock'] as $k => $v) {
+			if($k === 'config_loaded')
+				continue;
+			$locked_features[$k] = intval($v);
+		}
+	}
+
+
 		
 	$data = Array(
 		'version' => $version,
@@ -1799,9 +1814,10 @@ function get_site_info() {
 		'invitation_only' => intval(get_config('system','invitation_only')),
 		'directory_mode' =>  $directory_mode[get_config('system','directory_mode')],
 		'language' => get_config('system','language'),
-		'rss_connections' => get_config('system','feed_contacts'),
+		'rss_connections' => intval(get_config('system','feed_contacts')),
 		'expiration' => $site_expire,
 		'default_service_restrictions' => $service_class,
+		'locked_features' => $locked_features,
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
 		'platform' => PLATFORM_NAME,

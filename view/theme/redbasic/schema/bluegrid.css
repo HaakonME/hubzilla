@@ -2,7 +2,7 @@ body 	{
     background-size: auto;
 }
 
-.generic-content-wrapper-styled, #profile-jot-wrapper {
+.generic-content-wrapper-styled {
     background-color: rgba(67,72,138,.8);
 	color: #FFF;
 }

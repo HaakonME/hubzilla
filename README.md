@@ -6,7 +6,7 @@ Hubzilla - Community Server
 Help us redefine the web - using integrated and united community websites. 
 --------------------------------------------------------------------------
 
-[![Build Status](https://travis-ci.org/redmatrix/hubzilla.svg)](https://travis-ci.org/redmatrix/hubzilla)
+*[Installing Hubzilla](https://github.com/redmatrix/hubzilla/blob/master/install/INSTALL.txt)*
 
 **What are Hubs?**
 
@@ -38,3 +38,6 @@ Possible website applications include
 * dating websites
 * pretty much anything you can do on a traditional blog or community website, but that you could do better if you could easily connect it with other websites or privately share things across website boundaries. 
 
+*[Installing Hubzilla](https://github.com/redmatrix/hubzilla/blob/master/install/INSTALL.txt)*
+
+[![Build Status](https://travis-ci.org/redmatrix/hubzilla.svg)](https://travis-ci.org/redmatrix/hubzilla)

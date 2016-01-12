@@ -22,6 +22,9 @@ CUR=`which curl`
 
 [ "$1" ] && CONF="$1"
 
+
+. ${CONF}
+
 [ "$USER" ] || { echo "no USER"; usage; exit 1; }
 [ "$PASS" ] || { echo "no PASS"; usage; exit 1; }
 [ "$HUB" ] || { echo "no HUB"; usage; exit 1; }

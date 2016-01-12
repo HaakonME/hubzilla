@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/identity.php');
 
 function register_init(&$a) {
 
@@ -103,9 +104,8 @@ function register_post(&$a) {
 
 	if($using_invites && $invite_code) {
 		q("delete * from register where hash = '%s'", dbesc($invite_code));
-// @FIXME - this total needs to be stored by account, but pconfig operates on channels
-// This also needs to be considered when using 'invites_remaining' in mod/invite.php
-//		set_pconfig($result['account']['account_id'],'system','invites_remaining',$num_invites);
+		// @FIXME - this also needs to be considered when using 'invites_remaining' in mod/invite.php
+		set_aconfig($result['account']['account_id'],'system','invites_remaining',$num_invites);
 	}
 
 	if($policy == REGISTER_OPEN ) {
@@ -113,7 +113,7 @@ function register_post(&$a) {
 			$res = verify_email_address($result);
 		}
 		else {
-			$res = send_verification_email($result['email'],$result['password']);
+			$res = send_register_success_email($result['email'],$result['password']);
 		}
 		if($res) {
 			info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
@@ -135,19 +135,29 @@ function register_post(&$a) {
 	}
 
 	authenticate_success($result['account'],true,false,true);
-
-	if(! strlen($next_page = get_config('system','workflow_register_next')))
-		$next_page = 'new_channel';
-
-	$_SESSION['workflow'] = true;
 	
+	$new_channel = false;
+
+	if(get_config('system','auto_channel_create')) {
+		$new_channel = auto_channel_create($result['account']['account_id']);
+		if($new_channel['success']) {
+			$channel_id = $new_channel['channel']['channel_id'];
+			change_channel($channel_id);
+			$next_page = '~';
+		}
+		else
+			$new_channel = false;
+	}
+	if(! $new_channel) {
+		if(! strlen($next_page = get_config('system','workflow_register_next')))
+			$next_page = 'new_channel';
+
+		$_SESSION['workflow'] = true;
+	}
+
 	goaway(z_root() . '/' . $next_page);
 
 }
-
-
-
-
 
 
 
@@ -157,6 +167,11 @@ function register_content(&$a) {
 	$other_sites = '';
 
 	if(get_config('system','register_policy') == REGISTER_CLOSED) {
+		if(get_config('system','directory_mode') == DIRECTORY_MODE_STANDALONE) {
+			notice( t('Registration on this site is disabled.')  . EOL);
+			return;
+		}
+
 		require_once('mod/pubsites.php');
 		return pubsites_content($a);
 	}

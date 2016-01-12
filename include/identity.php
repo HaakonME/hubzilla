@@ -1695,3 +1695,45 @@ function profiles_build_sync($channel_id) {
 		build_sync_packet($channel_id,array('profile' => $r));
 	}
 }
+
+
+function auto_channel_create($account_id) {
+
+	if(! $account_id)
+		return false;
+
+	$arr = array();
+	$arr['account_id'] = $account_id;
+	$arr['name'] = get_aconfig($account_id,'register','channel_name');
+	$arr['nickname'] = legal_webbie(get_aconfig($account_id,'register','channel_address'));
+	$arr['permissions_role'] = get_aconfig($account_id,'register','permissions_role');
+
+	del_aconfig($account_id,'register','channel_name');
+	del_aconfig($account_id,'register','channel_address');
+	del_aconfig($account_id,'register','permissions_role');
+
+	if((! $arr['name']) || (! $arr['nickname'])) {
+		$x = q("select * from account where account_id = %d limit 1",
+			intval($account_id)
+		);
+		if($x) {
+			if(! $arr['name'])
+				$arr['name'] = substr($x[0]['account_email'],0,strpos($x[0]['account_email'],'@'));
+			if(! $arr['nickname'])
+				$arr['nickname'] = legal_webbie(substr($x[0]['account_email'],0,strpos($x[0]['account_email'],'@')));
+		}
+	}
+	if(! $arr['permissions_role'])
+		$arr['permissions_role'] = 'social';
+
+	if(validate_channelname($arr['name']))
+		return false;
+	if($arr['nickname'] === 'sys')
+		$arr['nickname'] = $arr['nickname'] . mt_rand(1000,9999);
+
+	$arr['nickname'] = check_webbie(array($arr['nickname'], $arr['nickname'] . mt_rand(1000,9999)));
+
+	return create_identity($arr);
+
+}
+

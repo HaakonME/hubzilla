@@ -365,19 +365,19 @@ function check_plugin_versions($info) {
 		return true;
 
 	if(array_key_exists('minversion',$info)) {
-		if(version_compare(trim($info['minversion']),STD_VERSION, '<')) {
+		if(version_compare(trim($info['minversion']),STD_VERSION, '>=')) {
 			logger('minversion limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
 			return false;
 		}
 	}
 	if(array_key_exists('maxversion',$info)) {
-		if(version_compare(trim($info['maxversion']),STD_VERSION, '>')) {
+		if(version_compare(STD_VERSION,trim($info['maxversion']), '>')) {
 			logger('maxversion limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
 			return false;
 		}
 	}
 	if(array_key_exists('minphpversion',$info)) {
-		if(version_compare(trim($info['minphpversion']),PHP_VERSION, '<')) {
+		if(version_compare(trim($info['minphpversion']),PHP_VERSION, '>=')) {
 			logger('minphpversion limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
 			return false;
 		}

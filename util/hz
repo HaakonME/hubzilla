@@ -12,7 +12,7 @@ echo " USER=youruserame "
 echo " PASS=yourpass"
 echo " HUB=your.hub.domain.org"
 echo
-echo "Type \"hz\" (with or without a conf file as an arg), then enter your message. Hit control-d when done."
+echo "Type \"hz\" (with or without a conf file as an arg), then enter your message. Hit ENTER to send."
 
 }
 
@@ -29,7 +29,7 @@ CUR=`which curl`
 [ "$PASS" ] || { echo "no PASS"; usage; exit 1; }
 [ "$HUB" ] || { echo "no HUB"; usage; exit 1; }
 
-echo "enter your message to be posted as $USER @ $HUB, then hit control-d:"
+echo "enter your message to be posted as $USER @ $HUB, then hit ENTER to send:"
 
 (read MSG; curl -ssl -u${USER}:${PASS} --data-urlencode "status=${MSG}" https://${HUB}/api/statuses/update )
 

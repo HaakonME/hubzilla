@@ -10,6 +10,7 @@ echo <<< EOT
 		util/addons list all         # list all addons (*)= installed, (!)= disabled due to version compatibility
 		util/addons install foo      # install addon named 'foo'
 		util/addons uninstall foo    # uninstall addon named 'foo'
+
 EOT;
 }
 
@@ -58,12 +59,13 @@ if($argc == 1) {
 
 
 if($argc == 2 && $argv[1] === 'list') {
-	$r = q("select * from addon where installed = 1");
-	if($r) {
-		foreach($r as $rr) {
-			echo $rr['name'] . "\n";
+	if($plugins) {
+		foreach($plugins as $p) {
+			if($p[1]) {
+				echo $p[0] . "\n";
+			}
 		}
-	}
+	} 
 	killme();
 }
 

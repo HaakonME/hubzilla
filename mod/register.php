@@ -98,6 +98,14 @@ function register_post(&$a) {
 	require_once('include/security.php');
 
 
+	if($_REQUEST['name'])
+		set_aconfig($result['account']['account_id'],'register','channel_name',$_REQUEST['name']);
+	if($_REQUEST['nickname'])
+		set_aconfig($result['account']['account_id'],'register','channel_address',$_REQUEST['nickname']);
+	if($_REQUEST['permissions_role'])
+		set_aconfig($result['account']['account_id'],'register','permissions_role',$_REQUEST['permissions_role']);
+
+
  	$using_invites = intval(get_config('system','invitation_only'));
 	$num_invites   = intval(get_config('system','number_invites'));
 	$invite_code   = ((x($_POST,'invite_code'))  ? notags(trim($_POST['invite_code']))  : '');
@@ -215,7 +223,12 @@ function register_content(&$a) {
 	$password     = ((x($_REQUEST,'password'))    ? trim($_REQUEST['password'])                :  "" );
 	$password2    = ((x($_REQUEST,'password2'))   ? trim($_REQUEST['password2'])               :  "" );
 	$invite_code  = ((x($_REQUEST,'invite_code')) ? strip_tags(trim($_REQUEST['invite_code'])) :  "" );
+	$name         = ((x($_REQUEST,'name'))        ? escape_tags(trim($_REQUEST['name']))       :  "" );
+	$nickname     = ((x($_REQUEST,'nickname'))    ? strip_tags(trim($_REQUEST['nickname']))    :  "" );
+	$privacy_role = ((x($_REQUEST,'permissions_role')) ? $_REQUEST['permissions_role']         :  "" );
 
+	$auto_create = get_config('system','auto_channel_create');
+	$default_role = get_config('system','default_permissions_role');
 
 	require_once('include/bbcode.php');
 
@@ -229,7 +242,17 @@ function register_content(&$a) {
 		'$invite_desc'  => t('Membership on this site is by invitation only.'),
 		'$label_invite' => t('Please enter your invitation code'),
 		'$invite_code'  => $invite_code,
-
+		'$auto_create'  => $auto_create,
+		'$label_name'   => t('Channel Name'),
+		'$help_name'    => t('Enter your name'),
+		'$label_nick'   => t('Choose a short nickname'),
+		'$nick_desc'    => t('Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others.'),
+		'$name'         => $name,
+		'$help_role'    => t('Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),
+		'$role' => array('permissions_role' , t('Channel Type'), ($privacy_role) ? $privacy_role : 'social', '<a href="help/roles" target="_blank">'.t('Read more about roles').'</a>',get_roles()),
+		'$default_role' => $default_role,
+		'$nickname'     => $nickname,
+		'$submit'       => t('Create'),
 		'$label_email'  => t('Your email address'),
 		'$label_pass1'  => t('Choose a password'),
 		'$label_pass2'  => t('Please re-enter your password'),

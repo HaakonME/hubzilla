@@ -305,6 +305,9 @@ function connedit_post(&$a) {
 
 	connedit_clone($a);
 
+	if(($_REQUEST['pending']) && (!$_REQUEST['done']))
+		goaway($a->get_baseurl(true) . '/connections/ifpending');
+
 	return;
 
 }

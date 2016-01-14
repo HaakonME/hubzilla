@@ -121,53 +121,60 @@ function connections_content(&$a) {
 	$search = ((x($_REQUEST,'search')) ? notags(trim($_REQUEST['search'])) : '');
 
 	$tabs = array(
+		/*
 		array(
 			'label' => t('Suggestions'),
 			'url'   => z_root() . '/suggest', 
 			'sel'   => '',
 			'title' => t('Suggest new connections'),
 		),
-		array(
+		*/
+
+		'pending' => array(
 			'label' => t('New Connections'),
 			'url'   => z_root() . '/connections/pending', 
 			'sel'   => ($pending) ? 'active' : '',
 			'title' => t('Show pending (new) connections'),
 		),
-		array(
+
+		'all' => array(
 			'label' => t('All Connections'),
 			'url'   => z_root() . '/connections/all', 
 			'sel'   => ($all) ? 'active' : '',
 			'title' => t('Show all connections'),
 		),
+
+		/*
 		array(
 			'label' => t('Unblocked'),
 			'url'   => z_root() . '/connections',
 			'sel'   => (($unblocked) && (! $search) && (! $nets)) ? 'active' : '',
 			'title' => t('Only show unblocked connections'),
 		),
+		*/
 
-		array(
+		'blocked' => array(
 			'label' => t('Blocked'),
 			'url'   => z_root() . '/connections/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
 			'title' => t('Only show blocked connections'),
 		),
 
-		array(
+		'ignored' => array(
 			'label' => t('Ignored'),
 			'url'   => z_root() . '/connections/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
 			'title' => t('Only show ignored connections'),
 		),
 
-		array(
+		'archived' => array(
 			'label' => t('Archived'),
 			'url'   => z_root() . '/connections/archived',
 			'sel'   => ($archived) ? 'active' : '',
 			'title' => t('Only show archived connections'),
 		),
 
-		array(
+		'hidden' => array(
 			'label' => t('Hidden'),
 			'url'   => z_root() . '/connections/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
@@ -184,8 +191,8 @@ function connections_content(&$a) {
 
 	);
 
-	$tab_tpl = get_markup_template('common_tabs.tpl');
-	$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
+	//$tab_tpl = get_markup_template('common_tabs.tpl');
+	//$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
 
 	$searching = false;
 	if($search) {
@@ -224,6 +231,7 @@ function connections_content(&$a) {
 				$contacts[] = array(
 					'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
 					'edit_hover' => t('Edit connection'),
+					'delete_hover' => t('Delete connection'),
 					'id' => $rr['abook_id'],
 					'alt_text' => $alt_text,
 					'dir_icon' => $dir_icon,
@@ -232,7 +240,9 @@ function connections_content(&$a) {
 					'username' => $rr['xchan_name'],
 					'classes' => (intval($rr['abook_archived']) ? 'archived' : ''),
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
+					'deletelink' => z_root() . '/connedit/' . $rr['abook_id'] . '/drop',
 					'edit' => t('Edit'),
+					'delete' => t('Delete'),
 					'url' => chanlink_url($rr['xchan_url']),
 					'network' => network_to_name($rr['network']),
 				);
@@ -257,12 +267,13 @@ function connections_content(&$a) {
 	else {
 		$o .= "<script> var page_query = '" . $_GET['q'] . "'; var extra_args = '" . extra_query_args() . "' ; </script>";
 		$o .= replace_macros(get_markup_template('connections.tpl'),array(
-			'$header' => t('Connections') . (($head) ? ' - ' . $head : ''),
-			'$tabs' => $t,
+			'$header' => t('Connections') . (($head) ? ': ' . $head : ''),
+			'$tabs' => $tabs,
 			'$total' => $total,
 			'$search' => $search_hdr,
+			'$label' => t('Search'),
 			'$desc' => t('Search your connections'),
-			'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
+			'$finding' => (($searching) ? t('Connections search') . ": '" . $search . "'" : ""),
 			'$submit' => t('Find'),
 			'$edit' => t('Edit'),
 			'$cmd' => $a->cmd,

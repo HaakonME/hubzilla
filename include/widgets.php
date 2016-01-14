@@ -171,7 +171,7 @@ function widget_follow($args) {
 	return replace_macros(get_markup_template('follow.tpl'),array(
 		'$connect' => t('Add New Connection'),
 		'$desc' => t('Enter channel address'),
-		'$hint' => t('Examples: bob@example.com, https://example.com/channel/barbara'),
+		'$hint' => t('Examples: bob@example.com, https://example.com/barbara'),
 		'$follow' => t('Connect'),
 		'$abook_usage_message' => $abook_usage_message
 	));

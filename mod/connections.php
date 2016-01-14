@@ -228,6 +228,24 @@ function connections_content(&$a) {
 
 		foreach($r as $rr) {
 			if($rr['xchan_url']) {
+
+				$status_str = '';
+				$status = array(
+					((intval($rr['abook_pending'])) ? t('Pending') : ''),
+					((intval($rr['abook_archived'])) ? t('Archived') : ''),
+					((intval($rr['abook_hidden'])) ? t('Hidden') : ''),
+					((intval($rr['abook_ignored'])) ? t('Ignored') : ''),
+					((intval($rr['abook_blocked'])) ? t('Blocked') : '')
+				);
+
+				foreach($status as $str) {
+					if(!$str)
+						continue;
+					$status_str .= $str;
+					$status_str .= ', ';
+				}
+				$status_str = rtrim($status_str, ', ');
+
 				$contacts[] = array(
 					'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
 					'edit_hover' => t('Edit connection'),
@@ -244,7 +262,12 @@ function connections_content(&$a) {
 					'edit' => t('Edit'),
 					'delete' => t('Delete'),
 					'url' => chanlink_url($rr['xchan_url']),
-					'network' => network_to_name($rr['network']),
+					'network' => network_to_name($rr['xchan_network']),
+					'public_forum' => ((intval($rr['xchan_pubforum'])) ? true : false),
+					'status_label' => t('Status'),
+					'status' => $status_str,
+					'connected_label' => t('Connected'),
+					'connected' => datetime_convert('UTC',date_default_timezone_get(),$rr['abook_created'], 'c')
 				);
 			}
 		}

@@ -103,7 +103,7 @@ function cover_photo_post(&$a) {
 				$aid = get_account_id();
 
 				$p = array('aid' => $aid, 'uid' => local_channel(), 'resource_id' => $base_image['resource_id'],
-					'filename' => $base_image['filename'], 'album' => t('Profile Photos'));
+					'filename' => $base_image['filename'], 'album' => t('Cover Photos'));
 
 				$p['scale'] = 7;
 				$p['photo_usage'] = PHOTO_COVER;
@@ -143,7 +143,7 @@ function cover_photo_post(&$a) {
 
 	require_once('include/attach.php');
 
-	$res = attach_store($a->get_channel(), get_observer_hash(), '', array('album' => t('Profile Photos'), 'hash' => $hash));
+	$res = attach_store($a->get_channel(), get_observer_hash(), '', array('album' => t('Cover Photos'), 'hash' => $hash));
 
 	logger('attach_store: ' . print_r($res,true));
 

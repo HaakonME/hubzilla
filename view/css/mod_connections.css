@@ -11,3 +11,8 @@
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
+
+.directory-photo-img.archived {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}

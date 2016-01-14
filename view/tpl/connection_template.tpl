@@ -1,10 +1,15 @@
-<div class="contact-entry-wrapper" id="contact-entry-wrapper-{{$contact.id}}" >
-	<div class="contact-entry-photo-wrapper" >
-		<a href="{{$contact.url}}" title="{{$contact.img_hover}}" ><img class="contact-block-img {{if $contact.classes}}{{$contact.classes}}{{/if}}" src="{{$contact.thumb}}" alt="{{$contact.name}}" /></a>
+<div id="contact-entry-wrapper-{{$contact.id}}">
+	<div class="section-subtitle-wrapper">
+		<div class="pull-right">
+			<a href="#" class="btn btn-danger btn-xs" title="{{$contact.delete_hover}}" onclick="dropItem('{{$contact.deletelink}}', '#contact-entry-wrapper-{{$contact.id}}'); return false;"><i class="icon-trash"></i> {{$contact.delete}}</a>
+			<a href="{{$contact.link}}" class="btn btn-success btn-xs" title="{{$contact.edit_hover}}"><i class="icon-pencil"></i> {{$contact.edit}}</a>
+		</div>
+		<h3><a href="{{$contact.url}}" title="{{$contact.img_hover}}" >{{$contact.name}}</a></h3>
 	</div>
-	<div class="contact-entry-photo-end" ></div>
-	<a href="{{$contact.url}}" title="{{$contact.img_hover}}" ><div class="contact-entry-name" id="contact-entry-name-{{$contact.id}}" >{{$contact.name}}</div></a>
-	<div class="contact-entry-name-end" ></div>
-	<div class="contact-entry-edit btn btn-default"><a href="{{$contact.link}}"><i class="icon-pencil connection-edit-icons"></i> {{$contact.edit}}</a></div>
-	<div class="contact-entry-end" ></div>
+	<div class="section-content-tools-wrapper">
+		<div class="contact-entry-photo-wrapper" >
+			<a href="{{$contact.url}}" title="{{$contact.img_hover}}" ><img class="directory-photo-img {{if $contact.classes}}{{$contact.classes}}{{/if}}" src="{{$contact.thumb}}" alt="{{$contact.name}}" /></a>
+		</div>
+	</div>
 </div>
+

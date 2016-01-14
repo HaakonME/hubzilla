@@ -1,6 +1,6 @@
 <?php
 
-/* @file profile_photo.php
+/* @file cover_photo.php
    @brief Module-file with functions for handling of profile-photos
 
 */
@@ -8,60 +8,16 @@
 require_once('include/photo/photo_driver.php');
 require_once('include/identity.php');
 
-/* @brief Function for sync'ing  permissions of profile-photos and their profile
-*
-*  @param $profileid The id number of the profile to sync
-*  @return void
-*/
 
-function profile_photo_set_profile_perms($profileid = '') {
 
-	$allowcid = '';
-	if (x($profileid)) {
-
-		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.id = %d OR profile.profile_guid = '%s' LIMIT 1", intval($profileid), dbesc($profileid));
-
-	} else {
-
-		logger('Resetting permissions on default-profile-photo for user'.local_channel());
-		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.uid = %d AND is_default = 1 LIMIT 1", intval(local_channel()) ); //If no profile is given, we update the default profile
-	}
-
-	$profile = $r[0];
-	if(x($profile['id']) && x($profile['photo'])) { 
-	       	preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
-	       	$resource_id = $resource_id[0];
-
-		if (intval($profile['is_default']) != 1) {
-			$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", intval(local_channel()) );
-			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%d' ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
-			$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
-			$allowcid = "<" . $r0[0]['channel_hash'] . ">";
-			foreach ($r1 as $entry) {
-				$allowcid .= "<" . $entry['abook_xchan'] . ">"; 
-			}
-			foreach ($r2 as $entry) {
-               	                $allowcid .= "<" . $entry['abook_xchan'] . ">";
-	                      	}
-
-			q("UPDATE `photo` SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d",dbesc($allowcid),dbesc($resource_id),intval($profile['uid']));
-
-		} else {
-			q("UPDATE `photo` SET allow_cid = '' WHERE profile = 1 AND uid = %d",intval($profile['uid'])); //Reset permissions on default profile picture to public
-		}
-	}
-
-	return;
-}
-
-/* @brief Initalize the profile-photo edit view
+/* @brief Initalize the cover-photo edit view
  *
  * @param $a Current application
  * @return void
  *
  */
 
-function profile_photo_init(&$a) {
+function cover_photo_init(&$a) {
 
 	if(! local_channel()) {
 		return;
@@ -79,32 +35,15 @@ function profile_photo_init(&$a) {
  *
  */
 
-function profile_photo_post(&$a) {
+function cover_photo_post(&$a) {
 
 	if(! local_channel()) {
 		return;
 	}
 	
-	check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
+	check_form_security_token_redirectOnErr('/cover_photo', 'cover_photo');
         
 	if((x($_POST,'cropfinal')) && ($_POST['cropfinal'] == 1)) {
-
-		// unless proven otherwise
-		$is_default_profile = 1;
-
-		if($_REQUEST['profile']) {
-			$r = q("select id, profile_guid, is_default, gender from profile where id = %d and uid = %d limit 1",
-				intval($_REQUEST['profile']),
-				intval(local_channel())
-			);
-			if($r) {
-				$profile = $r[0];
-				if(! intval($profile['is_default']))
-					$is_default_profile = 0;
-			}
-		} 
-
-		
 
 		// phase 2 - we have finished cropping
 
@@ -126,10 +65,10 @@ function profile_photo_post(&$a) {
 		$srcW = $_POST['xfinal'] - $srcX;
 		$srcH = $_POST['yfinal'] - $srcY;
 
-		$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND scale = %d LIMIT 1",
+		$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND scale = 0 LIMIT 1",
 			dbesc($image_id),
-			dbesc(local_channel()),
-			intval($scale));
+			intval(local_channel())
+		);
 
 		if($r) {
 
@@ -139,32 +78,47 @@ function profile_photo_post(&$a) {
 			$im = photo_factory($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
 
-				$im->cropImage(300,$srcX,$srcY,$srcW,$srcH);
+				$g = q("select width, height from photo where resource_id = '%s' and uid = %d and scale = 3",
+					dbesc($image_id),
+					intval(local_channel())
+				);
+
+				// scale these numbers to the original photo instead of the scaled photo we operated on
+
+				$scaled_width = $g[0]['width'];
+				$scaled_height = $g[0]['height'];
+
+				if((! $scaled_width) || (! $scaled_height)) {
+					logger('potential divide by zero scaling cover photo');
+					return;
+				}
+
+				$orig_srcx = ( $r[0]['width'] / $scaled_width ) * $srcX;
+				$orig_srcy = ( $r[0]['height'] / $scaled_height ) * $srcY;
+ 				$orig_srcw = ( $srcW / $scaled_width ) * $r[0]['width'];
+ 				$orig_srch = ( $srcH / $scaled_height ) * $r[0]['height'];
+
+				$im->cropImageRect(1200,435,$orig_srcx, $orig_srcy, $orig_srcw, $orig_srch);
 
 				$aid = get_account_id();
 
 				$p = array('aid' => $aid, 'uid' => local_channel(), 'resource_id' => $base_image['resource_id'],
 					'filename' => $base_image['filename'], 'album' => t('Profile Photos'));
 
-				$p['scale'] = 4;
-				$p['photo_usage'] = (($is_default_profile) ? PHOTO_PROFILE : PHOTO_NORMAL);
+				$p['scale'] = 7;
+				$p['photo_usage'] = PHOTO_COVER;
 
 				$r1 = $im->save($p);
 
-				$im->scaleImage(80);
-				$p['scale'] = 5;
+				$im->doScaleImage(850,310);
+				$p['scale'] = 8;
 
 				$r2 = $im->save($p);
 			
-				$im->scaleImage(48);
-				$p['scale'] = 6;
-
-				$r3 = $im->save($p);
-			
-				if($r1 === false || $r2 === false || $r3 === false) {
+				if($r1 === false || $r2 === false) {
 					// if one failed, delete them all so we can start over.
 					notice( t('Image resize failed.') . EOL );
-					$x = q("delete from photo where resource_id = '%s' and uid = %d and scale >= 4 ",
+					$x = q("delete from photo where resource_id = '%s' and uid = %d and scale >= 7 ",
 						dbesc($base_image['resource_id']),
 						local_channel()
 					);
@@ -172,52 +126,6 @@ function profile_photo_post(&$a) {
 				}
 
 				$channel = $a->get_channel();
-
-				// If setting for the default profile, unset the profile photo flag from any other photos I own
-
-				if($is_default_profile) {
-					$r = q("UPDATE photo SET photo_usage = %d WHERE photo_usage = %d
-						AND resource_id != '%s' AND `uid` = %d",
-						intval(PHOTO_NORMAL),
-						intval(PHOTO_PROFILE),
-						dbesc($base_image['resource_id']),
-						intval(local_channel())
-					);
-
-					send_profile_photo_activity($channel,$base_image,$profile);
-
-				}
-				else {
-					$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d",
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-4'),
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-5'),
-						intval($_REQUEST['profile']),
-						intval(local_channel())
-					);
-				}
-
-				profiles_build_sync(local_channel());
-
-				// We'll set the updated profile-photo timestamp even if it isn't the default profile,
-				// so that browsers will do a cache update unconditionally
-
-
-				$r = q("UPDATE xchan set xchan_photo_mimetype = '%s', xchan_photo_date = '%s' 
-					where xchan_hash = '%s'",
-					dbesc($im->getType()),
-					dbesc(datetime_convert()),
-					dbesc($channel['xchan_hash'])
-				);
-
-				info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
-
-				// Update directory in background
-				proc_run('php',"include/directory.php",$channel['channel_id']);
-
-				// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
-
-				profile_photo_set_profile_perms($_REQUEST['profile']);
-
 
 
 			}
@@ -230,7 +138,6 @@ function profile_photo_post(&$a) {
 	}
 
 
-
 	$hash = photo_new_resource();
 	$smallest = 0;
 
@@ -241,7 +148,7 @@ function profile_photo_post(&$a) {
 	logger('attach_store: ' . print_r($res,true));
 
 	if($res && intval($res['data']['is_photo'])) {
-		$i = q("select * from photo where resource_id = '%s' and uid = %d order by scale",
+		$i = q("select * from photo where resource_id = '%s' and uid = %d and scale = 0",
 			dbesc($hash),
 			intval(local_channel())
 		);
@@ -253,12 +160,11 @@ function profile_photo_post(&$a) {
 		$os_storage = false;
 
 		foreach($i as $ii) {
-			if(intval($ii['scale']) < 2) {
-				$smallest = intval($ii['scale']);
-				$os_storage = intval($ii['os_storage']);
-				$imagedata = $ii['data'];
-				$filetype = $ii['type'];
-			}
+			$smallest = intval($ii['scale']);
+			$os_storage = intval($ii['os_storage']);
+			$imagedata = $ii['data'];
+			$filetype = $ii['type'];
+
 		}
 	}
 
@@ -270,11 +176,11 @@ function profile_photo_post(&$a) {
 		return;
 	}
 
-	return profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
+	return cover_photo_crop_ui_head($a, $ph, $hash, $smallest);
 	
 }
 
-function send_profile_photo_activity($channel,$photo,$profile) {
+function send_cover_photo_activity($channel,$photo,$profile) {
 
 	// for now only create activities for the default profile
 
@@ -335,7 +241,7 @@ function send_profile_photo_activity($channel,$photo,$profile) {
  */
 
 
-function profile_photo_content(&$a) {
+function cover_photo_content(&$a) {
 
 	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL );
@@ -355,10 +261,9 @@ function profile_photo_content(&$a) {
 			return;
 		};
 		
-//		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
+//		check_form_security_token_redirectOnErr('/cover_photo', 'cover_photo');
         
 		$resource_id = argv(2);
-
 
 		$r = q("SELECT id, album, scale FROM photo WHERE uid = %d AND resource_id = '%s' ORDER BY scale ASC",
 			intval(local_channel()),
@@ -370,34 +275,8 @@ function profile_photo_content(&$a) {
 		}
 		$havescale = false;
 		foreach($r as $rr) {
-			if($rr['scale'] == 5)
+			if($rr['scale'] == 7)
 				$havescale = true;
-		}
-
-		// set an already loaded photo as profile photo
-
-		if(($r[0]['album'] == t('Profile Photos')) && ($havescale)) {
-			// unset any existing profile photos
-			$r = q("UPDATE photo SET photo_usage = %d WHERE photo_usage = %d AND uid = %d",
-				intval(PHOTO_NORMAL),
-				intval(PHOTO_PROFILE),
-				intval(local_channel()));
-
-			$r = q("UPDATE photo SET photo_usage = %d WHERE uid = %d AND resource_id = '%s'",
-				intval(PHOTO_PROFILE),
-				intval(local_channel()),
-				dbesc($resource_id)
-				);
-
-			$r = q("UPDATE xchan set xchan_photo_date = '%s' 
-				where xchan_hash = '%s'",
-				dbesc(datetime_convert()),
-				dbesc($channel['xchan_hash'])
-			);
-
-			profile_photo_set_profile_perms(); //Reset default photo permissions to public
-			proc_run('php','include/directory.php',local_channel());
-			goaway($a->get_baseurl() . '/profiles');
 		}
 
 		$r = q("SELECT `data`, `type`, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
@@ -419,7 +298,7 @@ function profile_photo_content(&$a) {
 		$smallest = 0;
 		if($ph->is_valid()) {
 			// go ahead as if we have just uploaded a new photo to crop
-			$i = q("select resource_id, scale from photo where resource_id = '%s' and uid = %d order by scale",
+			$i = q("select resource_id, scale from photo where resource_id = '%s' and uid = %d and scale = 0",
 				dbesc($r[0]['resource_id']),
 				intval(local_channel())
 			);
@@ -427,52 +306,47 @@ function profile_photo_content(&$a) {
 			if($i) {
 				$hash = $i[0]['resource_id'];
 				foreach($i as $ii) {
-					if(intval($ii['scale']) < 2) {
-						$smallest = intval($ii['scale']);
-					}
+					$smallest = intval($ii['scale']);
 				}
             }
         }
  
-		profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
+		cover_photo_crop_ui_head($a, $ph, $hash, $smallest);
 	}
 
-	$profiles = q("select id, profile_name as name, is_default from profile where uid = %d",
-		intval(local_channel())
-	);
 
 	if(! x($a->data,'imagecrop')) {
 
-		$tpl = get_markup_template('profile_photo.tpl');
+		$tpl = get_markup_template('cover_photo.tpl');
 
 		$o .= replace_macros($tpl,array(
 			'$user' => $a->channel['channel_address'],
 			'$lbl_upfile' => t('Upload File:'),
 			'$lbl_profiles' => t('Select a profile:'),
-			'$title' => t('Upload Profile Photo'),
+			'$title' => t('Upload Cover Photo'),
 			'$submit' => t('Upload'),
 			'$profiles' => $profiles,
-			'$form_security_token' => get_form_security_token("profile_photo"),
+			'$form_security_token' => get_form_security_token("cover_photo"),
 // FIXME - yuk  
 			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
 		
-		call_hooks('profile_photo_content_end', $o);
+		call_hooks('cover_photo_content_end', $o);
 		
 		return $o;
 	}
 	else {
-		$filename = $a->data['imagecrop'] . '-' . $a->data['imagecrop_resolution'];
-		$resolution = $a->data['imagecrop_resolution'];
-		$tpl = get_markup_template("cropbody.tpl");
+		$filename = $a->data['imagecrop'] . '-3';
+		$resolution = 3;
+		$tpl = get_markup_template("cropcover.tpl");
 		$o .= replace_macros($tpl,array(
 			'$filename' => $filename,
 			'$profile' => intval($_REQUEST['profile']),
-			'$resource' => $a->data['imagecrop'] . '-' . $a->data['imagecrop_resolution'],
+			'$resource' => $a->data['imagecrop'] . '-3',
 			'$image_url' => $a->get_baseurl() . '/photo/' . $filename,
 			'$title' => t('Crop Image'),
 			'$desc' => t('Please adjust the image cropping for optimum viewing.'),
-			'$form_security_token' => get_form_security_token("profile_photo"),
+			'$form_security_token' => get_form_security_token("cover_photo"),
 			'$done' => t('Done Editing')
 		));
 		return $o;
@@ -491,7 +365,7 @@ function profile_photo_content(&$a) {
 
 
 
-function profile_photo_crop_ui_head(&$a, $ph, $hash, $smallest){
+function cover_photo_crop_ui_head(&$a, $ph, $hash, $smallest){
 
 	$max_length = get_config('system','max_image_length');
 	if(! $max_length)
@@ -502,8 +376,8 @@ function profile_photo_crop_ui_head(&$a, $ph, $hash, $smallest){
 	$width  = $ph->getWidth();
 	$height = $ph->getHeight();
 
-	if($width < 500 || $height < 500) {
-		$ph->scaleImageUp(400);
+	if($width < 300 || $height < 300) {
+		$ph->scaleImageUp(240);
 		$width  = $ph->getWidth();
 		$height = $ph->getHeight();
 	}

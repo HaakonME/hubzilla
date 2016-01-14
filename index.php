@@ -336,11 +336,13 @@ if($a->module_loaded) {
 	}
 
 	if((! $a->error) && (function_exists($a->module . '_content'))) {
-		$arr = array('content' => $a->page['content']);
+		$arr = array('content' => $a->page['content'], 'replace' => false);
 		call_hooks($a->module . '_mod_content', $arr);
 		$a->page['content'] = $arr['content'];
-		$func = $a->module . '_content';
-		$arr = array('content' => $func($a));
+		if(! $arr['replace']) {
+			$func = $a->module . '_content';
+			$arr = array('content' => $func($a));
+		}
 		call_hooks($a->module . '_mod_aftercontent', $arr);
 		$a->page['content'] .= $arr['content'];
 	}

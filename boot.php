@@ -245,6 +245,21 @@ define ( 'PHOTO_COVER',            0x0010 );
 define ( 'PHOTO_ADULT',            0x0008 );
 define ( 'PHOTO_FLAG_OS',          0x4000 );
 
+
+define ( 'PHOTO_RES_ORIG',              0 );
+define ( 'PHOTO_RES_1024',              1 );  // rectangular 1024 max width or height, floating height if not (4:3)
+define ( 'PHOTO_RES_640',               2 );  // to accomodate SMBC vertical comic strips without scrunching the width
+define ( 'PHOTO_RES_320',               3 );  // accordingly
+
+define ( 'PHOTO_RES_PROFILE_300',       4 );  // square 300 px
+define ( 'PHOTO_RES_PROFILE_80',        5 );  // square 80 px
+define ( 'PHOTO_RES_PROFILE_48',        6 );  // square 48 px
+
+define ( 'PHOTO_RES_COVER_1200',        7 );  // 1200w x 435h (2.75:1)
+define ( 'PHOTO_RES_COVER_850',         8 );  // 850w x 310h
+define ( 'PHOTO_RES_COVER_425',        	9 );  // 425w x 160h
+
+
 /**
  * Menu types
  */
@@ -256,11 +271,11 @@ define ( 'MENU_BOOKMARK',        0x0002 );
  * Network and protocol family types
  */
 
-define ( 'NETWORK_DFRN',             'dfrn');    // Friendica, Mistpark, other DFRN implementations
-define ( 'NETWORK_ZOT',              'zot!');    // Zot!
+define ( 'NETWORK_DFRN',             'friendica-over-diaspora');    // Friendica, Mistpark, other DFRN implementations
+define ( 'NETWORK_ZOT',              'zot');     // Zot!
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
-define ( 'NETWORK_FEED',             'feed');    // RSS/Atom feeds with no known "post/notify" protocol
-define ( 'NETWORK_DIASPORA',         'dspr');    // Diaspora
+define ( 'NETWORK_FEED',             'rss');    // RSS/Atom feeds with no known "post/notify" protocol
+define ( 'NETWORK_DIASPORA',         'diaspora');    // Diaspora
 define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
 define ( 'NETWORK_MAIL2',            'mai2');    // extended IMAP/POP
 define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API
@@ -1989,12 +2004,14 @@ function load_pdl(&$a) {
 
 		$arr = array('module' => $a->module, 'layout' => '');
 		call_hooks('load_pdl',$arr);
-		$s = $arr['layout'];
+		$layout = $arr['layout'];
 
 		$n = 'mod_' . $a->module . '.pdl' ;
 		$u = comanche_get_channel_id();
 		if($u)
 			$s = get_pconfig($u, 'system', $n);
+		if(! $s)
+			$s = $layout;
 
 		if((! $s) && (($p = theme_include($n)) != ''))
 			$s = @file_get_contents($p);

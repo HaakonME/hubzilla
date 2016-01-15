@@ -1,7 +1,8 @@
 <?php
 
-/* @file cover_photo.php
-   @brief Module-file with functions for handling of profile-photos
+/* 
+   @file cover_photo.php
+   @brief Module-file with functions for handling of cover-photos
 
 */
 
@@ -40,6 +41,8 @@ function cover_photo_post(&$a) {
 	if(! local_channel()) {
 		return;
 	}
+
+	$channel = $a->get_channel();
 	
 	check_form_security_token_redirectOnErr('/cover_photo', 'cover_photo');
         
@@ -65,6 +68,14 @@ function cover_photo_post(&$a) {
 		$srcW = $_POST['xfinal'] - $srcX;
 		$srcH = $_POST['yfinal'] - $srcY;
 
+
+		$r = q("select gender from profile where uid = %d and is_default = 1 limit 1",
+			intval(local_channel())
+		);
+		if($r) {
+			$profile = $r[0];
+		}
+
 		$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND scale = 0 LIMIT 1",
 			dbesc($image_id),
 			intval(local_channel())
@@ -78,12 +89,17 @@ function cover_photo_post(&$a) {
 			$im = photo_factory($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
 
+				// We are scaling and cropping the relative pixel locations to the original photo instead of the 
+				// scaled photo we operated on.
+
+				// First load the scaled photo to check its size. (Should probably pass this in the post form and save
+				// a query.)
+
 				$g = q("select width, height from photo where resource_id = '%s' and uid = %d and scale = 3",
 					dbesc($image_id),
 					intval(local_channel())
 				);
 
-				// scale these numbers to the original photo instead of the scaled photo we operated on
 
 				$scaled_width = $g[0]['width'];
 				$scaled_height = $g[0]['height'];
@@ -92,6 +108,14 @@ function cover_photo_post(&$a) {
 					logger('potential divide by zero scaling cover photo');
 					return;
 				}
+
+				// unset all other cover photos
+
+				q("update photo set photo_usage = %d where photo_usage = %d and uid = %d",
+					intval(PHOTO_NORMAL),
+					intval(PHOTO_COVER),
+					intval(local_channel())
+				);
 
 				$orig_srcx = ( $r[0]['width'] / $scaled_width ) * $srcX;
 				$orig_srcy = ( $r[0]['height'] / $scaled_height ) * $srcY;
@@ -103,7 +127,7 @@ function cover_photo_post(&$a) {
 				$aid = get_account_id();
 
 				$p = array('aid' => $aid, 'uid' => local_channel(), 'resource_id' => $base_image['resource_id'],
-					'filename' => $base_image['filename'], 'album' => t('Profile Photos'));
+					'filename' => $base_image['filename'], 'album' => t('Cover Photos'));
 
 				$p['scale'] = 7;
 				$p['photo_usage'] = PHOTO_COVER;
@@ -114,8 +138,14 @@ function cover_photo_post(&$a) {
 				$p['scale'] = 8;
 
 				$r2 = $im->save($p);
+
+
+				$im->doScaleImage(425,160);
+				$p['scale'] = 9;
+
+				$r3 = $im->save($p);
 			
-				if($r1 === false || $r2 === false) {
+				if($r1 === false || $r2 === false || $r3 === false) {
 					// if one failed, delete them all so we can start over.
 					notice( t('Image resize failed.') . EOL );
 					$x = q("delete from photo where resource_id = '%s' and uid = %d and scale >= 7 ",
@@ -126,6 +156,7 @@ function cover_photo_post(&$a) {
 				}
 
 				$channel = $a->get_channel();
+				send_cover_photo_activity($channel,$base_image,$profile);
 
 
 			}
@@ -133,8 +164,8 @@ function cover_photo_post(&$a) {
 				notice( t('Unable to process image') . EOL);
 		}
 
-		goaway($a->get_baseurl() . '/profiles');
-		return; // NOTREACHED
+		goaway(z_root() . '/channel/' . $channel['channel_address']);
+
 	}
 
 
@@ -143,7 +174,7 @@ function cover_photo_post(&$a) {
 
 	require_once('include/attach.php');
 
-	$res = attach_store($a->get_channel(), get_observer_hash(), '', array('album' => t('Profile Photos'), 'hash' => $hash));
+	$res = attach_store($a->get_channel(), get_observer_hash(), '', array('album' => t('Cover Photos'), 'hash' => $hash));
 
 	logger('attach_store: ' . print_r($res,true));
 
@@ -182,11 +213,6 @@ function cover_photo_post(&$a) {
 
 function send_cover_photo_activity($channel,$photo,$profile) {
 
-	// for now only create activities for the default profile
-
-	if(! intval($profile['is_default']))
-		return;
-
 	$arr = array();
 	$arr['item_thread_top'] = 1;
 	$arr['item_origin'] = 1;
@@ -196,20 +222,20 @@ function send_cover_photo_activity($channel,$photo,$profile) {
 
 	$arr['object'] = json_encode(array(
 		'type' => $arr['obj_type'],
-		'id' => z_root() . '/photo/profile/l/' . $channel['channel_id'],
-		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/profile/l/' . $channel['channel_id'])
+		'id' => z_root() . '/photo/' . $photo['resource_id'] . '-7',
+		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/' . $photo['resource_id'] . '-7')
 	));
 
-	if(stripos($profile['gender'],t('female')) !== false)
+	if($profile && stripos($profile['gender'],t('female')) !== false)
 		$t = t('%1$s updated her %2$s');
-	elseif(stripos($profile['gender'],t('male')) !== false)
+	elseif($profile && stripos($profile['gender'],t('male')) !== false)
 		$t = t('%1$s updated his %2$s');
 	else
 		$t = t('%1$s updated their %2$s');
 
-	$ptext = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' . t('profile photo') . '[/zrl]';
+	$ptext = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' . t('cover photo') . '[/zrl]';
 
-	$ltext = '[zrl=' . z_root() . '/profile/' . $channel['channel_address'] . ']' . '[zmg=150x150]' . z_root() . '/photo/' . $photo['resource_id'] . '-4[/zmg][/zrl]'; 
+	$ltext = '[zrl=' . z_root() . '/profile/' . $channel['channel_address'] . ']' . '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-8[/zmg][/zrl]'; 
 
 	$arr['body'] = sprintf($t,$channel['channel_name'],$ptext) . "\n\n" . $ltext;
 

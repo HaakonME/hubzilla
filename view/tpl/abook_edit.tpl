@@ -73,25 +73,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="modal" id="abook-pending-modal" tabindex="-1" role="dialog">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="myModalLabel">{{$pending_modal_title}}</h4>
-						</div>
-						<div class="modal-body">
-							<strong>{{$name}}</strong> {{$pending_modal_body}}
-						</div>
-						<div class="modal-footer">
-							<button class="btn btn-sm btn-danger pull-left" title="{{$buttons.delete.title}}" onclick="window.location.href='{{$buttons.delete.url}}'; return false;">{{$buttons.delete.label}}</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">{{$pending_modal_dismiss}}</button>
-							<button type="submit" class="btn btn-primary" name="pending" value="1">{{$pending_modal_approve}}</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<script>$('#abook-pending-modal').modal('show');</script>
 			{{/if}}
 
 			{{if $affinity }}

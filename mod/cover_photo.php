@@ -68,6 +68,14 @@ function cover_photo_post(&$a) {
 		$srcW = $_POST['xfinal'] - $srcX;
 		$srcH = $_POST['yfinal'] - $srcY;
 
+
+		$r = q("select gender from profile where uid = %d and is_default = 1 limit 1",
+			intval(local_channel())
+		);
+		if($r) {
+			$profile = $r[0];
+		}
+
 		$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND scale = 0 LIMIT 1",
 			dbesc($image_id),
 			intval(local_channel())
@@ -148,7 +156,7 @@ function cover_photo_post(&$a) {
 				}
 
 				$channel = $a->get_channel();
-				send_cover_photo_activity($channel,$base_image);
+				send_cover_photo_activity($channel,$base_image,$profile);
 
 
 			}
@@ -203,7 +211,7 @@ function cover_photo_post(&$a) {
 	
 }
 
-function send_cover_photo_activity($channel,$photo) {
+function send_cover_photo_activity($channel,$photo,$profile) {
 
 	$arr = array();
 	$arr['item_thread_top'] = 1;
@@ -218,7 +226,12 @@ function send_cover_photo_activity($channel,$photo) {
 		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/' . $photo['resource_id'] . '-7')
 	));
 
-	$t = t('%1$s updated their %2$s');
+	if($profile && stripos($profile['gender'],t('female')) !== false)
+		$t = t('%1$s updated her %2$s');
+	elseif($profile && stripos($profile['gender'],t('male')) !== false)
+		$t = t('%1$s updated his %2$s');
+	else
+		$t = t('%1$s updated their %2$s');
 
 	$ptext = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' . t('cover photo') . '[/zrl]';
 

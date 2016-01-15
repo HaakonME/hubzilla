@@ -2004,12 +2004,14 @@ function load_pdl(&$a) {
 
 		$arr = array('module' => $a->module, 'layout' => '');
 		call_hooks('load_pdl',$arr);
-		$s = $arr['layout'];
+		$layout = $arr['layout'];
 
 		$n = 'mod_' . $a->module . '.pdl' ;
 		$u = comanche_get_channel_id();
 		if($u)
 			$s = get_pconfig($u, 'system', $n);
+		if(! $s)
+			$s = $layout;
 
 		if((! $s) && (($p = theme_include($n)) != ''))
 			$s = @file_get_contents($p);

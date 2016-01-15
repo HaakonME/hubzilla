@@ -35,7 +35,7 @@
 			{{/if}}
 			{{if $contact.network}}
 			<div class="contact-info-element">
-				<span class="contact-info-label">{{$contact.network_label}}:</span> {{$contact.network}}
+				<span class="contact-info-label">{{$contact.network_label}}:</span> {{$contact.network}} - <a href="{{$contact.recentlink}}">{{$contact.recent_label}}</a>
 			</div>
 			{{/if}}
 		</div>

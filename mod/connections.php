@@ -255,7 +255,7 @@ function connections_content(&$a) {
 					'name' => $rr['xchan_name'],
 					'classes' => (intval($rr['abook_archived']) ? 'archived' : ''),
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
-					'deletelink' => z_root() . '/connedit/' . $rr['abook_id'] . '/drop',
+					'deletelink' => z_root() . '/connedit/' . intval($rr['abook_id']) . '/drop',
 					'delete' => t('Delete'),
 					'url' => chanlink_url($rr['xchan_url']),
 					'webbie_label' => t('Channel address'),
@@ -268,7 +268,9 @@ function connections_content(&$a) {
 					'connected_label' => t('Connected'),
 					'connected' => datetime_convert('UTC',date_default_timezone_get(),$rr['abook_created'], 'c'),
 					'approve_hover' => t('Approve connection'),
-					'approve' => (($rr['abook_pending']) ? t('Approve') : false)
+					'approve' => (($rr['abook_pending']) ? t('Approve') : false),
+					'recent_label' => t('Recent activity'),
+					'recentlink' => z_root() . '/network/?f=&cid=' . intval($rr['abook_id'])
 				);
 			}
 		}

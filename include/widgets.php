@@ -936,6 +936,38 @@ function widget_photo($arr) {
 }
 
 
+function widget_cover_photo($arr) {
+
+	require_once('include/identity.php');
+	$o = '';
+
+	$channel_id = 0;
+	if(array_key_exists('channel_id', $arr) && intval($arr['channel_id']))
+		$channel_id = intval($arr['channel_id']);
+	if(! $channel_id)
+		$channel_id = get_app()->profile_uid;
+	if(! $channel_id)
+		return '';
+
+	if(array_key_exists('style', $arr) && isset($arr['style']))
+		$style = $arr['style'];
+	else 
+		$style = 'width:100%; padding-right: 10px; height: auto;'; 
+
+	// ensure they can't sneak in an eval(js) function
+
+	if(strpos($style,'(') !== false)
+		return '';
+
+	$c = get_cover_photo($channel_id,'html');
+
+	if($c) {
+		$o = '<div class="widget">' . (($style) ? str_replace('alt=',' style="' . $style . '" alt=',$c) : $c) . '</div>';
+	}
+	return $o;
+}
+
+
 function widget_photo_rand($arr) {
 
 	require_once('include/photos.php');

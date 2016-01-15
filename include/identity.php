@@ -1737,3 +1737,38 @@ function auto_channel_create($account_id) {
 
 }
 
+function get_cover_photo($channel_id,$format = 'bbcode', $res = PHOTO_RES_COVER_1200) {
+
+	$r = q("select height, width, resource_id, type from photo where uid = %d and scale = %d and photo_usage = %d",
+		intval($channel_id),
+		intval($res),
+		intval(PHOTO_COVER)
+	);
+	if(! $r)
+		return false;
+
+	$output = false;
+
+	$url = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $res ;
+
+	switch($format) {
+		case 'bbcode':
+			$output = '[zrl=' . $r[0]['width'] . 'x' . $r[0]['height'] . ']' . $url . '[/zrl]';
+			break;
+		case 'html':
+ 			$output = '<img class="zrl" width="' . $r[0]['width'] . '" height="' . $r[0]['height'] . '" src="' . $url . '" alt="' . t('cover photo') . '" />';
+			break;
+		case 'array':
+		default:
+			$output = array(
+				'width' => $r[0]['width'],
+				'height' => $r[0]['type'],
+				'type' => $r[0]['type'],
+				'url' => $url
+			);
+			break;
+	}
+
+	return $output;  
+		
+}

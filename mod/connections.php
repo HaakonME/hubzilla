@@ -251,15 +251,11 @@ function connections_content(&$a) {
 					'edit_hover' => t('Edit connection'),
 					'delete_hover' => t('Delete connection'),
 					'id' => $rr['abook_id'],
-					'alt_text' => $alt_text,
-					'dir_icon' => $dir_icon,
 					'thumb' => $rr['xchan_photo_m'], 
 					'name' => $rr['xchan_name'],
-					'username' => $rr['xchan_name'],
 					'classes' => (intval($rr['abook_archived']) ? 'archived' : ''),
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
 					'deletelink' => z_root() . '/connedit/' . $rr['abook_id'] . '/drop',
-					'edit' => t('Edit'),
 					'delete' => t('Delete'),
 					'url' => chanlink_url($rr['xchan_url']),
 					'webbie_label' => t('Channel address'),
@@ -270,7 +266,9 @@ function connections_content(&$a) {
 					'status_label' => t('Status'),
 					'status' => $status_str,
 					'connected_label' => t('Connected'),
-					'connected' => datetime_convert('UTC',date_default_timezone_get(),$rr['abook_created'], 'c')
+					'connected' => datetime_convert('UTC',date_default_timezone_get(),$rr['abook_created'], 'c'),
+					'approve_hover' => t('Approve connection'),
+					'approve' => (($rr['abook_pending']) ? t('Approve') : false)
 				);
 			}
 		}

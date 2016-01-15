@@ -85,6 +85,13 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * style - CSS style string
 <br />&nbsp;<br />
 
+* cover_photo - display the cover photo for the selected channel
+    * args:
+	* channel_id - channel to use, default is the profile_uid 
+    * style - CSS style string (default is dynamically resized to width of region)
+<br />&nbsp;<br />
+
+
 * photo_rand - display a random photo from one of your photo albums. Photo permissions are honoured
     * args: 
     * album - album name (very strongly recommended if you have lots of photos)

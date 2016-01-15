@@ -231,7 +231,7 @@ function connections_content(&$a) {
 
 				$status_str = '';
 				$status = array(
-					((intval($rr['abook_pending'])) ? t('Pending') : ''),
+					((intval($rr['abook_pending'])) ? t('Pending approval') : ''),
 					((intval($rr['abook_archived'])) ? t('Archived') : ''),
 					((intval($rr['abook_hidden'])) ? t('Hidden') : ''),
 					((intval($rr['abook_ignored'])) ? t('Ignored') : ''),
@@ -262,6 +262,9 @@ function connections_content(&$a) {
 					'edit' => t('Edit'),
 					'delete' => t('Delete'),
 					'url' => chanlink_url($rr['xchan_url']),
+					'webbie_label' => t('Channel address'),
+					'webbie' => $rr['xchan_addr'],
+					'network_label' => t('Network'),
 					'network' => network_to_name($rr['xchan_network']),
 					'public_forum' => ((intval($rr['xchan_pubforum'])) ? true : false),
 					'status_label' => t('Status'),

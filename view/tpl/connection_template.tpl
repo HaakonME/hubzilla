@@ -21,6 +21,16 @@
 				<span class="contact-info-label">{{$contact.connected_label}}:</span> <span class="autotime" title="{{$contact.connected}}"></span>
 			</div>
 			{{/if}}
+			{{if $contact.webbie}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$contact.webbie_label}}:</span> {{$contact.webbie}}
+			</div>
+			{{/if}}
+			{{if $contact.network}}
+			<div class="contact-info-element">
+				<span class="contact-info-label">{{$contact.network_label}}:</span> {{$contact.network}}
+			</div>
+			{{/if}}
 		</div>
 
 	</div>

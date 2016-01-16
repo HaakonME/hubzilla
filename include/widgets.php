@@ -915,8 +915,8 @@ function widget_photo($arr) {
 
 	// ensure they can't sneak in an eval(js) function
 
-	if(strpos($style,'(') !== false)
-		return '';
+	if(strpbrk($style,'(\'"<>') !== false)
+		$style = '';
 
 	if(array_key_exists('zrl', $arr) && isset($arr['zrl']))
 		$zrl = (($arr['zrl']) ? true : false);
@@ -956,8 +956,8 @@ function widget_cover_photo($arr) {
 
 	// ensure they can't sneak in an eval(js) function
 
-	if(strpos($style,'(') !== false)
-		return '';
+	if(strpbrk($style,'(\'"<>') !== false)
+		$style = '';
 
 	$c = get_cover_photo($channel_id,'html');
 

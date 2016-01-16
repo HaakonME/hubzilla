@@ -75,7 +75,7 @@ function get_features($filtered = true) {
 		'net_module' => array(
 			t('Network and Stream Filtering'),
 			array('archives',       t('Search by Date'),			t('Ability to select posts by date ranges'),false,get_config('feature_lock','archives')),
-			array('groups',    		t('Collections Filter'),		t('Enable widget to display Network posts only from selected collections'),false,get_config('feature_lock','groups')),
+			array('groups',    		t('Collections (Privacy Groups)'),		t('Enable widget to display Network posts only from selected collections'),false,get_config('feature_lock','groups')),
 			array('savedsearch',    t('Saved Searches'),			t('Save search terms for re-use'),false,get_config('feature_lock','savedsearch')),
 			array('personal_tab',   t('Network Personal Tab'),		t('Enable tab to display only Network posts that you\'ve interacted on'),false,get_config('feature_lock','personal_tab')),
 			array('new_tab',   		t('Network New Tab'),			t('Enable tab to display all new Network activity'),false,get_config('feature_lock','new_tab')),

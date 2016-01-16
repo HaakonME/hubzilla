@@ -2160,7 +2160,7 @@ function encode_rel_links($links) {
  *   * \e boolean \b success
  *   * \e int \b item_id
  */
-function item_store($arr, $allow_exec = false) {
+function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
 	call_hooks('item_store', $d );
@@ -2537,7 +2537,7 @@ function item_store($arr, $allow_exec = false) {
 	// so that we have an item in the DB that's marked deleted and won't store a fresh post
 	// that isn't aware that we were already told to delete it.
 
-	if(! intval($arr['item_deleted'])) {
+	if(($deliver) && (! intval($arr['item_deleted']))) {
 		send_status_notifications($current_post,$arr);
 		tag_deliver($arr['uid'],$current_post);
 	}
@@ -2550,7 +2550,7 @@ function item_store($arr, $allow_exec = false) {
 
 
 
-function item_store_update($arr,$allow_exec = false) {
+function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
 	call_hooks('item_store_update', $d );
@@ -2780,9 +2780,11 @@ function item_store_update($arr,$allow_exec = false) {
 
 	call_hooks('post_remote_update_end',$arr);
 
-	send_status_notifications($orig_post_id,$arr);
+	if($deliver) {
+		send_status_notifications($orig_post_id,$arr);
+		tag_deliver($uid,$orig_post_id);
+	}
 
-	tag_deliver($uid,$orig_post_id);
 	$ret['success'] = true;
 	$ret['item_id'] = $orig_post_id;
 

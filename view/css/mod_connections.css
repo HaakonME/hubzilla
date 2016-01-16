@@ -16,3 +16,20 @@
 	opacity: 0.3;
 	filter:alpha(opacity=30);
 }
+
+.contact-photo-wrapper {
+	display: table-cell;
+	table-layout: fixed;
+	vertical-align: top;
+}
+
+.contact-info {
+	display: table-cell;
+	table-layout: fixed;
+	vertical-align: top;
+	padding-left: 10px;
+}
+
+.contact-info-label {
+	font-weight: bold;
+}

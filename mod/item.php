@@ -446,7 +446,7 @@ function item_post(&$a) {
 
 	$execflag = false;
 
-	if($mimetype === 'application/x-php') {
+	if($mimetype !== 'text/bbcode') {
 		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 			intval($profile_uid)
 		);

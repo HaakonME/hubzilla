@@ -118,6 +118,51 @@ function check_sanity {
     fi
 }
 
+function check_config {
+    print_info "config check..."
+    # backup is important and should be checked
+	if [ -n "$backup_device_name" ]
+	then
+        device_mounted=0
+		if fdisk -l | grep -i "$backup_device_name.*linux"
+		then
+		    print_info "ok - filesystem of external device is linux"
+	        if [ -n "$backup_device_pass" ]
+	        then
+	            echo "$backup_device_pass" | cryptsetup luksOpen $backup_device_name cryptobackup
+	            if [ ! -d /media/hubzilla_backup ]
+	            then
+	                mkdir /media/hubzilla_backup
+	            fi
+	            if mount /dev/mapper/cryptobackup /media/hubzilla_backup
+	            then
+                    device_mounted=1
+	                print_info "ok - could encrypt and mount external backup device"
+                	umount /media/hubzilla_backup
+	            else
+            		print_warn "backup to external device will fail because encryption failed"
+	            fi
+                cryptsetup luksClose cryptobackup
+            else
+	            if mount $backup_device_name /media/hubzilla_backup
+	            then
+                    device_mounted=1
+	                print_info "ok - could mount external backup device"
+                	umount /media/hubzilla_backup
+	            else
+            		print_warn "backup to external device will fail because mount failed"
+	            fi
+            fi
+		else
+        	print_warn "backup to external device will fail because filesystem is either not linux or 'backup_device_name' is not correct in $configfile"
+		fi
+        if [ $device_mounted == 0 ]
+        then
+            die "backup device not ready"
+        fi
+	fi
+}
+
 function die {
     echo "ERROR: $1" > /dev/null 1>&2
     exit 1
@@ -619,85 +664,94 @@ function configure_cron_daily {
     # - update hubzilla core and addon
     # - update and upgrade linux
     # - reboot
-    cat > /var/www/$hubzilladaily <<END
-#!/bin/sh
-#
-echo " "
-echo "+++ \$(date) +++"
-echo " "
-# renew certificat if over 30 days old
-echo "\$(date) - renew certificat if 30 days old..."
-bash /var/www/letsencrypt/letsencrypt.sh --cron
-#
-# stop hubzilla
-echo "\$(date) - stoping apaache and mysql..."
-service apache2 stop
-/etc/init.d/mysql stop # to avoid inconsistancies
-#
-# backup
-echo "\$(date) - try to mount external device for backup..."
-backup_device_name=$backup_device_name
-backup_device_pass=$backup_device_pass
-backup_mount_point=$backup_mount_point
-device_mounted=0
-if [ -n "$backup_device_name" ] && [ -n "$backup_device_pass" ]
-then
-    if blkid | grep $backup_device_name
-    then
-        echo "decrypting backup device..."
-        echo "$backup_device_pass" | cryptsetup luksOpen $backup_device_name cryptobackup
-        if [ ! -d $backup_mount_point ]
-        then
-            mkdir $backup_mount_point
-        fi
-        echo "mounting backup device..."
-        if mount /dev/mapper/cryptobackup $backup_mount_point
-        then
-            device_mounted=1
-            echo "device $backup_device_name is now mounted. Starting backup..."
-			rsnapshot -c $snapshotconfig_external_device daily
-			rsnapshot -c $snapshotconfig_external_device weekly
-			rsnapshot -c $snapshotconfig_external_device monthly
-			echo "\$(date) - disk sizes..."
-			df -h
-			echo "\$(date) - db size..."
-			du -h $backup_mount_point | grep mysql/hubzilla
-            echo "unmounting backup device..."
-            umount $backup_mount_point
-        else
-            echo "failed to mount device $backup_device_name"
-        fi
-        echo "closing decrypted backup device..."
-        cryptsetup luksClose cryptobackup
+echo "#!/bin/sh" > /var/www/$hubzilladaily
+echo "#" >> /var/www/$hubzilladaily
+echo "echo \" \"" >> /var/www/$hubzilladaily
+echo "echo \"+++ \$(date) +++\"" >> /var/www/$hubzilladaily
+echo "echo \" \"" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - renew certificat if 30 days old...\"" >> /var/www/$hubzilladaily
+echo "bash /var/www/letsencrypt/letsencrypt.sh --cron" >> /var/www/$hubzilladaily
+echo "#" >> /var/www/$hubzilladaily
+echo "# stop hubzilla" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - stoping apaache and mysql...\"" >> /var/www/$hubzilladaily
+echo "service apache2 stop" >> /var/www/$hubzilladaily
+echo "/etc/init.d/mysql stop # to avoid inconsistancies" >> /var/www/$hubzilladaily
+echo "#" >> /var/www/$hubzilladaily
+echo "# backup" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - try to mount external device for backup...\"" >> /var/www/$hubzilladaily
+echo "backup_device_name=$backup_device_name" >> /var/www/$hubzilladaily
+echo "backup_device_pass=$backup_device_pass" >> /var/www/$hubzilladaily
+echo "backup_mount_point=$backup_mount_point" >> /var/www/$hubzilladaily
+echo "device_mounted=0" >> /var/www/$hubzilladaily
+echo "if [ -n \"$backup_device_name\" ]" >> /var/www/$hubzilladaily
+echo "then" >> /var/www/$hubzilladaily
+echo "    if blkid | grep $backup_device_name" >> /var/www/$hubzilladaily
+echo "    then" >> /var/www/$hubzilladaily
+	if [ -n "$backup_device_pass" ]
+	then
+echo "        echo \"decrypting backup device...\"" >> /var/www/$hubzilladaily
+echo "        echo "\"$backup_device_pass\"" | cryptsetup luksOpen $backup_device_name cryptobackup" >> /var/www/$hubzilladaily
     fi
-fi
-if [ \$device_mounted == 0 ]
-then
-    echo "device could not be mounted $backup_device_name. Using internal disk for backup..."
-	rsnapshot -c $snapshotconfig daily
-	rsnapshot -c $snapshotconfig weekly
-	rsnapshot -c $snapshotconfig monthly
-fi
-#
-echo "\$(date) - db size..."
-du -h /var/cache/rsnapshot/ | grep mysql/hubzilla
-#
-# update
-echo "\$(date) - updating letsencrypt.sh..."
-git -C /var/www/letsencrypt/ pull
-echo "\$(date) - updating hubhilla core..."
-git -C /var/www/html/ pull
-echo "\$(date) - updating hubhilla addons..."
-git -C /var/www/html/addon/ pull
-chown -R www-data:www-data /var/www/html/ # make all accessable for the webserver
-chown root:www-data /var/www/html/.htaccess
-chmod 0644 /var/www/html/.htaccess # www-data can read but not write it
-echo "\$(date) - updating linux..."
-apt-get -q -y update && apt-get -q -y dist-upgrade # update linux and upgrade
-echo "\$(date) - Backup hubzilla and update linux finished. Rebooting..."
-#
-reboot
-END
+echo "        if [ ! -d $backup_mount_point ]" >> /var/www/$hubzilladaily
+echo "        then" >> /var/www/$hubzilladaily
+echo "            mkdir $backup_mount_point" >> /var/www/$hubzilladaily
+echo "        fi" >> /var/www/$hubzilladaily
+echo "        echo \"mounting backup device...\"" >> /var/www/$hubzilladaily
+	if [ -n "$backup_device_pass" ]
+	then
+echo "        if mount /dev/mapper/cryptobackup $backup_mount_point" >> /var/www/$hubzilladaily
+	else
+echo "        if mount $backup_device_name $backup_mount_point" >> /var/www/$hubzilladaily
+	fi
+echo "        then" >> /var/www/$hubzilladaily
+echo "            device_mounted=1" >> /var/www/$hubzilladaily
+echo "            echo \"device $backup_device_name is now mounted. Starting backup...\"" >> /var/www/$hubzilladaily
+echo "			rsnapshot -c $snapshotconfig_external_device daily" >> /var/www/$hubzilladaily
+echo "			rsnapshot -c $snapshotconfig_external_device weekly" >> /var/www/$hubzilladaily
+echo "			rsnapshot -c $snapshotconfig_external_device monthly" >> /var/www/$hubzilladaily
+echo "			echo \"\$(date) - disk sizes...\"" >> /var/www/$hubzilladaily
+echo "			df -h" >> /var/www/$hubzilladaily
+echo "			echo \"\$(date) - db size...\"" >> /var/www/$hubzilladaily
+echo "			du -h $backup_mount_point | grep mysql/hubzilla" >> /var/www/$hubzilladaily
+echo "            echo \"unmounting backup device...\"" >> /var/www/$hubzilladaily
+echo "            umount $backup_mount_point" >> /var/www/$hubzilladaily
+echo "        else" >> /var/www/$hubzilladaily
+echo "            echo \"failed to mount device $backup_device_name\"" >> /var/www/$hubzilladaily
+echo "        fi" >> /var/www/$hubzilladaily
+	if [ -n "$backup_device_pass" ]
+	then
+echo "        echo \"closing decrypted backup device...\"" >> /var/www/$hubzilladaily
+echo "        cryptsetup luksClose cryptobackup" >> /var/www/$hubzilladaily
+	fi
+echo "    fi" >> /var/www/$hubzilladaily
+echo "fi" >> /var/www/$hubzilladaily
+echo "if [ \$device_mounted == 0 ]" >> /var/www/$hubzilladaily
+echo "then" >> /var/www/$hubzilladaily
+echo "    echo \"device could not be mounted $backup_device_name. Using internal disk for backup...\"" >> /var/www/$hubzilladaily
+echo "	rsnapshot -c $snapshotconfig daily" >> /var/www/$hubzilladaily
+echo "	rsnapshot -c $snapshotconfig weekly" >> /var/www/$hubzilladaily
+echo "	rsnapshot -c $snapshotconfig monthly" >> /var/www/$hubzilladaily
+echo "fi" >> /var/www/$hubzilladaily
+echo "#" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - db size...\"" >> /var/www/$hubzilladaily
+echo "du -h /var/cache/rsnapshot/ | grep mysql/hubzilla" >> /var/www/$hubzilladaily
+echo "#" >> /var/www/$hubzilladaily
+echo "# update" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - updating letsencrypt.sh...\"" >> /var/www/$hubzilladaily
+echo "git -C /var/www/letsencrypt/ pull" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - updating hubhilla core...\"" >> /var/www/$hubzilladaily
+echo "git -C /var/www/html/ pull" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - updating hubhilla addons...\"" >> /var/www/$hubzilladaily
+echo "git -C /var/www/html/addon/ pull" >> /var/www/$hubzilladaily
+echo "chown -R www-data:www-data /var/www/html/ # make all accessable for the webserver" >> /var/www/$hubzilladaily
+echo "chown root:www-data /var/www/html/.htaccess" >> /var/www/$hubzilladaily
+echo "chmod 0644 /var/www/html/.htaccess # www-data can read but not write it" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - updating linux...\"" >> /var/www/$hubzilladaily
+echo "apt-get -q -y update && apt-get -q -y dist-upgrade # update linux and upgrade" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - Backup hubzilla and update linux finished. Rebooting...\"" >> /var/www/$hubzilladaily
+echo "#" >> /var/www/$hubzilladaily
+echo "reboot" >> /var/www/$hubzilladaily
+
     if [ -z "`grep 'hubzilla-daily.sh' /etc/crontab`" ]
     then
         echo "30 05 * * * root /bin/bash /var/www/$hubzilladaily >> /var/www/html/hubzilla-daily.log 2>&1" >> /etc/crontab
@@ -761,6 +815,7 @@ sslconf=/etc/apache2/sites-available/default-ssl.conf
 
 #set -x    # activate debugging from here
 
+check_config
 update_upgrade
 install_apache
 install_php

@@ -197,7 +197,7 @@ util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git HubzillaAdd
 # Hubzilla themes
 echo "Try to add or update Hubzilla themes"
 cd ${OPENSHIFT_REPO_DIR}
-util/add_theme_repo https://github.com/DeadSuperHero/redmatrix-themes.git DeadSuperHeroThemes 
+util/add_theme_repo https://github.com/DeadSuperHero/hubzilla-themes.git DeadSuperHeroThemes 
 
 # Hubzilla ownMapp
 echo "Try to add or update Hubzilla ownMapp"
@@ -208,3 +208,8 @@ util/add_addon_repo https://gitlab.com/zot/ownmapp.git ownMapp
 echo "Try to add or update Hubzilla chess "
 cd ${OPENSHIFT_REPO_DIR}
 util/add_addon_repo https://gitlab.com/zot/hubzilla-chess.git Chess
+
+# Hubzilla Hubsites
+echo "Try to add or update Hubzilla Hubsites"
+cd ${OPENSHIFT_REPO_DIR}
+util/add_addon_repo https://gitlab.com/zot/hubsites.git Hubsites

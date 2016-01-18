@@ -482,6 +482,8 @@ function identity_basic_export($channel_id, $items = false) {
 
 	$ret = array();
 
+	// use constants here as otherwise we will have no idea if we can import from a site 
+	// with a non-standard platform and version.
 	$ret['compatibility'] = array('project' => PLATFORM_NAME, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
 
 	$r = q("select * from channel where channel_id = %d limit 1",

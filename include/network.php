@@ -1767,16 +1767,13 @@ function get_site_info() {
 	$site_info = get_config('system','info');
 	$site_name = get_config('system','sitename');
 	if(! get_config('system','hidden_version_siteinfo')) {
-		$version = RED_VERSION;
+		$version = get_project_version();
 		$tag = get_std_version();
 
 		if(@is_dir('.git') && function_exists('shell_exec')) {
 			$commit = trim( @shell_exec('git log -1 --format="%h"'));
-//			if(! get_config('system','hidden_tag_siteinfo'))
-//				$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
-//			else 
-//				$tag = '';
 		}
+
 		if(! isset($commit) || strlen($commit) > 16)
 			$commit = '';
 	}
@@ -1820,7 +1817,7 @@ function get_site_info() {
 		'locked_features' => $locked_features,
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
-		'platform' => PLATFORM_NAME,
+		'platform' => get_platform_name(),
 		'dbdriver' => $db->getdriver(),
 		'lastpoll' => get_config('system','lastpoll'),
 		'info' => (($site_info) ? $site_info : ''),

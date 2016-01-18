@@ -2361,3 +2361,18 @@ function get_update_version() {
 	return DB_UPDATE_VERSION;
 }
 
+
+function get_notify_icon() {
+	$a = get_app();
+	if(is_array($a->config) && is_array($a->config['system']) && $a->config['system']['email_notify_icon_url'])
+		return $a->config['system']['email_notify_icon_url'];
+	return z_root() . '/images/hz-white-32.png';
+}
+
+function get_site_icon() {
+	$a = get_app();
+	if(is_array($a->config) && is_array($a->config['system']) && $a->config['system']['site_icon_url'])
+		return $a->config['system']['site_icon_url'];
+	return z_root() . '/images/hz-32.png';
+}
+

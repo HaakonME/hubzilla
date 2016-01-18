@@ -1619,18 +1619,19 @@ function format_and_send_email($sender,$xchan,$item) {
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
-			'$banner'	   => $banner,
-			'$product'	  => $product,
-			'$preamble'	 => '',
-			'$sitename'	 => $sitename,
-			'$siteurl'	  => $siteurl,
+			'$banner'	    => $banner,
+			'$notify_icon'  => get_notify_icon(),
+			'$product'	    => $product,
+			'$preamble'	    => '',
+			'$sitename'	    => $sitename,
+			'$siteurl'	    => $siteurl,
 			'$source_name'  => $sender['xchan_name'],
 			'$source_link'  => $sender['xchan_url'],
 			'$source_photo' => $sender['xchan_photo_m'],
-			'$username'	 => $xchan['xchan_name'],
+			'$username'	    => $xchan['xchan_name'],
 			'$hsitelink'	=> $datarray['hsitelink'],
 			'$hitemlink'	=> $datarray['hitemlink'],
-			'$thanks'	   => $thanks,
+			'$thanks'	    => $thanks,
 			'$site_admin'   => $site_admin,
 			'$title'		=> $title,
 			'$htmlversion'  => $htmlversion,
@@ -1639,20 +1640,20 @@ function format_and_send_email($sender,$xchan,$item) {
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_text.tpl');
 		$email_text_body = replace_macros($tpl, array(
-			'$banner'	   => $banner,
-			'$product'	  => $product,
-			'$preamble'	 => '',
-			'$sitename'	 => $sitename,
-			'$siteurl'	  => $siteurl,
+			'$banner'       => $banner,
+			'$product'      => $product,
+			'$preamble'     => '',
+			'$sitename'     => $sitename,
+			'$siteurl'      => $siteurl,
 			'$source_name'  => $sender['xchan_name'],
 			'$source_link'  => $sender['xchan_url'],
 			'$source_photo' => $sender['xchan_photo_m'],
-			'$username'	 => $xchan['xchan_name'],
-			'$hsitelink'	=> $datarray['hsitelink'],
-			'$hitemlink'	=> $datarray['hitemlink'],
-			'$thanks'	   => $thanks,
+			'$username'     => $xchan['xchan_name'],
+			'$hsitelink'    => $datarray['hsitelink'],
+			'$hitemlink'    => $datarray['hitemlink'],
+			'$thanks'       => $thanks,
 			'$site_admin'   => $site_admin,
-			'$title'		=> $title,
+			'$title'        => $title,
 			'$textversion'  => $textversion
 		));
 
@@ -1666,13 +1667,13 @@ function format_and_send_email($sender,$xchan,$item) {
 		// use the EmailNotification library to send the message
 
 		enotify::send(array(
-			'fromName'			 => $product,
-			'fromEmail'			=> $sender_email,
-			'replyTo'			  => $sender_email,
-			'toEmail'			  => str_replace('mailto:','',$xchan['xchan_addr']),
-			'messageSubject'	   => (($title) ? $title : t('No Subject')),
-			'htmlVersion'		  => $email_html_body,
-			'textVersion'		  => $email_text_body,
+			'fromName'             => $product,
+			'fromEmail'            => $sender_email,
+			'replyTo'              => $sender_email,
+			'toEmail'              => str_replace('mailto:','',$xchan['xchan_addr']),
+			'messageSubject'       => (($title) ? $title : t('No Subject')),
+			'htmlVersion'          => $email_html_body,
+			'textVersion'          => $email_text_body,
 			'additionalMailHeader' => '',
 		));
 
@@ -1767,16 +1768,13 @@ function get_site_info() {
 	$site_info = get_config('system','info');
 	$site_name = get_config('system','sitename');
 	if(! get_config('system','hidden_version_siteinfo')) {
-		$version = RED_VERSION;
+		$version = get_project_version();
 		$tag = get_std_version();
 
 		if(@is_dir('.git') && function_exists('shell_exec')) {
 			$commit = trim( @shell_exec('git log -1 --format="%h"'));
-//			if(! get_config('system','hidden_tag_siteinfo'))
-//				$tag = trim( @shell_exec('git describe --tags --abbrev=0'));
-//			else 
-//				$tag = '';
 		}
+
 		if(! isset($commit) || strlen($commit) > 16)
 			$commit = '';
 	}
@@ -1820,7 +1818,7 @@ function get_site_info() {
 		'locked_features' => $locked_features,
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
-		'platform' => PLATFORM_NAME,
+		'platform' => get_platform_name(),
 		'dbdriver' => $db->getdriver(),
 		'lastpoll' => get_config('system','lastpoll'),
 		'info' => (($site_info) ? $site_info : ''),

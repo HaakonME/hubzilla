@@ -3,7 +3,7 @@
 $Projectname contains many configuration options hidden from the main admin panel.
 
 These are generally options considered too niche, confusing, or advanced for 
-the average member.  These settings can be activated from the the top level Red 
+the average member.  These settings can be activated from the the top level web 
 directory with the syntax [code]util/config cat key value[/code] for a site
 configuration, or [code]util/pconfig channel_id cat key value[/code] for a 
 member configuration.
@@ -66,11 +66,18 @@ This document assumes you're an administrator.
         Set the default page to be taken to after a login for all channels at
         this website.  Can be overwritten by user settings.
     [b]system.projecthome[/b]
-        Set the project homepage as the homepage of your hub.
+        Set the project homepage as the homepage of your hub. (Obsolete)
+	[b]system.auto_channel_create[/b]
+		Add the necessary form elements to create the first channel on the account registration page, and create it
+		(possibly following email validation or administrator approval). This precludes the ability to import a channel
+		from another site as the first channel created on this site for a new account. 
+		Use with system.default_permissions_role to streamline registration. 
 	[b]system.default_permissions_role[/b]
 		If set to a valid permissions role name, use that role for
 		the first channel created by a new account and don't ask for the "Channel Type" on
-		the channel creation form. Examples of valid names are: 'social', 'social_restricted', 'social_private', 'forum', 'forum_restricted' and 'forum_private'. Read more about permissions roles [zrl=[baseurl]/help/roles]here[/zrl].
+		the channel creation form. Examples of valid names are: 'social', 'social_restricted', 'social_private', 
+		'forum', 'forum_restricted' and 'forum_private'. 
+		Read more about permissions roles [zrl=[baseurl]/help/roles]here[/zrl].
     [b]system.workflow_channel_next[/b]
         The page to direct users to immediately after creating a channel.
     [b]system.max_daily_registrations[/b]
@@ -145,9 +152,9 @@ This document assumes you're an administrator.
 	[b]system.max_import_size[/b]
 		If configured, the maximum length of an imported text message. This is normally left at 200Kbytes or more to accomodate Friendica private photos, which are embedded.
 	[b]system.tempdir[/b]
-		Place to store temporary files, default is defined in the PHP configuration  
+		Place to store temporary files (currently unused), default is defined in the PHP configuration  
 	[b]system.uploaddir[/b]
-		Location to upload files (default is system.tempdir)
+		Location to upload files (default is system.tempdir, currently used only by js_upload plugin)
 	[b]system.disable_discover_tab[/b]
 		This allows you to completely disable the ability to discover public content from external sites.
 	[b]system.sys_expire_days[/b]
@@ -162,13 +169,13 @@ This document assumes you're an administrator.
 		Don't display help documentation link in nav bar
  	[b]system.expire_delivery_reports[/b]
 		Expiration in days for delivery reports - default 10
-	[b]system.platform_name[/b]
-		What to report as the platform name in webpages and statistics
-	[b]system.hide_version[/b]
-		If true, do not report the software version on webpages and tools.
+	[b]system.platform_name[/b] *
+		What to report as the platform name in webpages and statistics. (*) Must be set in .htconfig.php
+	[b]system.hide_version[/b] *
+		If true, do not report the software version on webpages and tools. (*) Must be set in .htconfig.php
 	[b]system.hidden_version_siteinfo[/b]
 		If true, do not report the software version on siteinfo pages (system.hide_version also hides the version on these pages, this setting *only* hides the version on siteinfo pages).
-	[b]system.email_notify_icon_url
+	[b]system.email_notify_icon_url[/b]
 		URL of image (32x32) to display in email notifications (HTML bodies).
 
 [b]Directory config[/b]

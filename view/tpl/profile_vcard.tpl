@@ -49,7 +49,7 @@
 	{{include file="diaspora_vcard.tpl"}}
 	{{/if}}
 </div>
-<div id="vcard-end"></div>
+<div id="clear"></div>
 
 {{$rating}}
 

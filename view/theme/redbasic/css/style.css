@@ -310,6 +310,11 @@ footer {
 	margin-bottom: 0px;
 }
 
+.connect-btn-wrapper {
+	margin-bottom: 10px;
+
+}
+
 .profile-edit-side-link {
 	padding: 3px 0px;
 	opacity: 0;
@@ -475,53 +480,15 @@ footer {
 	float: right;
 }
 
-.rconnect {
-	display: block;
-	color: $nav_active_icon_colour;
-	margin-top: 15px;
-	background-color: $nav_bg;
-	-webkit-border-radius: $radiuspx ;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-	border: 1px solid $nav_bd;
-	padding: 5px;
-	font-weight: bold;
-	clear: both;
-}
-
-a.rateme, div.rateme {
-	display: block;
-	color: $nav_active_icon_colour;
-	background-color: $nav_bg;
-	-webkit-border-radius: $radiuspx ;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-	border: 1px solid $nav_bd;
-	padding: 5px;
-	font-weight: bold;
-	clear: both;
-}
-
 #pause {
 	position: fixed;
 	bottom: 5px;
 	right: 5px;
 }
 
-#vcard-end {
-	clear: both;
-}
-
 #contact-block {
 	width: 100%;
 	float: left;
-	background-color: rgba(254,254,254,0.5);
-	border-bottom: 1px solid rgba(238,238,238,0.8);
-	-moz-border-radius: $radiuspx;
-	-webkit-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-	padding: 10px;
-	margin-bottom:10px;
 }
 
 #contact-block-numcontacts {

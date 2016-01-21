@@ -817,25 +817,26 @@ function item_post(&$a) {
 			dbesc($body)
 		);
 
-		if($z && $z[0]['created'] > datetime_convert('UTC','UTC', 'now - 2 minutes')) {
-			$datarray['cancel'] = 1;
-			notice( t('Duplicate post suppressed.') . EOL);
-			logger('Duplicate post. Faking plugin cancel.');
+		if($z) {
+			foreach($z as $zz) {
+				if($zz['created'] > datetime_convert('UTC','UTC', 'now - 2 minutes')) {
+					$datarray['cancel'] = 1;
+					notice( t('Duplicate post suppressed.') . EOL);
+					logger('Duplicate post. Faking plugin cancel.');
+				}
+			}
 		}
 	}
 
 	call_hooks('post_local',$datarray);
 
 	if(x($datarray,'cancel')) {
-		logger('mod_item: post cancelled by plugin.');
-		if($return_path) {
+		logger('mod_item: post cancelled by plugin or duplicate suppressed.');
+		if($return_path)
 			goaway($a->get_baseurl() . "/" . $return_path);
-		}
 
 		$json = array('cancel' => 1);
-		if(x($_REQUEST,'jsreload') && strlen($_REQUEST['jsreload']))
-			$json['reload'] = $a->get_baseurl() . '/' . $_REQUEST['jsreload'];
-
+		$json['reload'] = $a->get_baseurl() . '/' . $_REQUEST['jsreload'];
 		echo json_encode($json);
 		killme();
 	}

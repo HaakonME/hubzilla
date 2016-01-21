@@ -310,6 +310,11 @@ footer {
 	margin-bottom: 0px;
 }
 
+.connect-btn-wrapper {
+	margin-bottom: 10px;
+
+}
+
 .profile-edit-side-link {
 	padding: 3px 0px;
 	opacity: 0;

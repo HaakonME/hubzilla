@@ -365,7 +365,7 @@ function check_plugin_versions($info) {
 		return true;
 
 	if(array_key_exists('minversion',$info)) {
-		if(version_compare(trim($info['minversion']),STD_VERSION, '>=')) {
+		if(! version_compare(STD_VERSION,trim($info['minversion']), '>=')) {
 			logger('minversion limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
 			return false;
 		}
@@ -377,7 +377,7 @@ function check_plugin_versions($info) {
 		}
 	}
 	if(array_key_exists('minphpversion',$info)) {
-		if(version_compare(trim($info['minphpversion']),PHP_VERSION, '>=')) {
+		if(! version_compare(PHP_VERSION,trim($info['minphpversion']), '>=')) {
 			logger('minphpversion limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
 			return false;
 		}

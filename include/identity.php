@@ -482,6 +482,8 @@ function identity_basic_export($channel_id, $items = false) {
 
 	$ret = array();
 
+	// use constants here as otherwise we will have no idea if we can import from a site 
+	// with a non-standard platform and version.
 	$ret['compatibility'] = array('project' => PLATFORM_NAME, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
 
 	$r = q("select * from channel where channel_id = %d limit 1",
@@ -1049,8 +1051,10 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$tpl = get_markup_template('profile_vcard.tpl');
 
 	require_once('include/widgets.php');
-	$z = widget_rating(array('target' => $profile['channel_hash']));
 
+	if(! feature_enabled($profile['uid'],'hide_rating'))
+		$z = widget_rating(array('target' => $profile['channel_hash']));
+		
 	$o .= replace_macros($tpl, array(
 		'$profile'       => $profile,
 		'$connect'       => $connect,

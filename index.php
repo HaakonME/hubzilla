@@ -11,6 +11,10 @@
  * bootstrap the application
  */
 require_once('boot.php');
+
+if(file_exists('.htsite.php'))
+	include('.htsite.php');
+
 // our global App object
 $a = new App;
 

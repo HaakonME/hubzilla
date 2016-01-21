@@ -529,6 +529,7 @@ function notification($params) {
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
 			'$banner'       => $datarray['banner'],
+			'$notify_icon'  => get_notify_icon(),
 			'$product'      => $datarray['product'],
 			'$preamble'     => $datarray['preamble'],
 			'$sitename'     => $datarray['sitename'],

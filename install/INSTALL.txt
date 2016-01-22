@@ -62,6 +62,14 @@ When communicating with new sites, Hubzilla always attempts connection on the
 SSL port first, before falling back to a less secure connection.  If you do not
 use SSL, your webserver MUST NOT listen on port 443 at all.
 
+If you use LetsEncrypt to provide certificates and create a file under 
+.well-known/acme-challenge so that LetsEncrypt can verify your domain ownership, 
+please remove or rename the .well-known directory as soon as the certificate is 
+generated. Hubzilla will provide its own handler for ".well-known" services when
+it is installed, and an existing directory in this location may prevent some of 
+these services from working correctly. 
+
+
 1. Requirements
     - Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 
     local .htaccess file. Some folks have successfully used nginx and lighttpd.

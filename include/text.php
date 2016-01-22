@@ -2716,5 +2716,7 @@ function item_url_replace($channel,&$item,$old,$new) {
 		$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
 		$item['item_verified']  = 1;
 	}
+	
+	// @fixme item['plink'] and item['llink']
 
 }

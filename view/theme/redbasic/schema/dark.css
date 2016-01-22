@@ -88,7 +88,7 @@
     background-color: #111;
 }
 
-.jotnets-wrapper > a.btn {
+a.btn, aside a {
 	font-weight: 400 !important;
 }
 

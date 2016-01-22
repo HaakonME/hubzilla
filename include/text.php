@@ -812,7 +812,7 @@ function contact_block() {
 		);
 
 		if(count($r)) {
-			$contacts = sprintf( tt('%d Connection','%d Connections', $total),$total);
+			$contacts = t('Connections');
 			$micropro = Array();
 			foreach($r as $rr) {
 				$rr['archived'] = (intval($rr['abook_archived']) ? true : false);
@@ -825,7 +825,7 @@ function contact_block() {
 	$o = replace_macros($tpl, array(
 		'$contacts' => $contacts,
 		'$nickname' => $a->profile['channel_address'],
-		'$viewconnections' => t('View Connections'),
+		'$viewconnections' => (($total > $shown) ? sprintf(t('View all %s connections'),$total) : ''),
 		'$micropro' => $micropro,
 	));
 

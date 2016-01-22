@@ -160,6 +160,14 @@ nav .badge:hover, nav .badge:focus {
     color: rgba(255,255,255,.8);
 }
 
+.widget .conv-participants {
+	color: #BBB;
+}
+
+.widget .active:hover .conv-participants, .widget .active:focus .conv-participants {
+	color: inherit;
+}
+
 .help-block, .comment-icon, .jot-icons, .admin-icons {
 	color: inherit;
 }

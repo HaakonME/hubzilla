@@ -1728,10 +1728,10 @@ function proc_run($cmd){
 		proc_close(proc_open($cmd, array(), $foo));
 	}
 	else {
-		if(get_config('system','proc_run_use_exec')) 
-			exec($cmdline . ' > /dev/null &');
-		else
+		if(get_config('system','use_proc_open')) 
 			proc_close(proc_open($cmdline ." &", array(), $foo));
+		else
+			exec($cmdline . ' > /dev/null &');
 	}
 }
 

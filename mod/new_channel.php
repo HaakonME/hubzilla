@@ -64,7 +64,7 @@ function new_channel_post(&$a) {
 
 	$arr = $_POST;
 
-	if(($arr['account_id'] = get_account_id()) === false) {
+	if((! $a->get_account()) || ($arr['account_id'] = get_account_id()) === false) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}
@@ -95,7 +95,7 @@ function new_channel_post(&$a) {
 
 function new_channel_content(&$a) {
 
-	if(! get_account_id()) {
+	if(! $a->get_account()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}

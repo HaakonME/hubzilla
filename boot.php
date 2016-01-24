@@ -1553,6 +1553,10 @@ function goaway($s) {
  * @return int|bool account_id or false
  */
 function get_account_id() {
+
+	if(intval($_SESSION['account_id']))
+		return intval($_SESSION['account_id']);
+
 	if(get_app()->account)
 		return intval(get_app()->account['account_id']);
 

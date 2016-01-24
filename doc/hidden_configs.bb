@@ -90,6 +90,9 @@ This document assumes you're an administrator.
         Similar to block_public, except only blocks public access to 
         search features.  Useful for sites that want to be public, but
         keep getting hammered by search engines.
+	[b]system.proc_run_use_exec
+		If 1, use the exec system call in proc_run to run background tasks. By default
+		we use proc_open and proc_close. On some (currently rare) systems this does not work well.
     [b]system.paranoia[/b]
         As the pconfig, but on a site-wide basis.  Can be overwritten
         by member settings.

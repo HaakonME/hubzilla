@@ -1723,8 +1723,12 @@ function proc_run($cmd){
 		$cmd = "cmd /c start \"title\" /D \"$cwd\" /b $cmdline";
 		proc_close(proc_open($cmd, array(), $foo));
 	}
-	else
-		proc_close(proc_open($cmdline ." &", array(), $foo));
+	else {
+		if(get_config('system','proc_run_use_exec')) 
+			exec($cmdline . ' > /dev/null &');
+		else
+			proc_close(proc_open($cmdline ." &", array(), $foo));
+	}
 }
 
 /**

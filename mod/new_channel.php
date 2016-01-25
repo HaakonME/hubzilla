@@ -64,7 +64,14 @@ function new_channel_post(&$a) {
 
 	$arr = $_POST;
 
-	if(($arr['account_id'] = get_account_id()) === false) {
+	$acc = $a->get_account();
+	$arr['account_id'] = get_account_id();
+
+	// prevent execution by delegated channels as well as those not logged in. 
+	// get_account_id() returns the account_id from the session. But $a->account
+	// may point to the original authenticated account. 
+
+	if((! $acc) || ($acc['account_id'] != $arr['account_id'])) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}
@@ -95,7 +102,10 @@ function new_channel_post(&$a) {
 
 function new_channel_content(&$a) {
 
-	if(! get_account_id()) {
+
+	$acc = $a->get_account();
+
+	if((! $acc) || $acc['account_id'] != get_account_id()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}

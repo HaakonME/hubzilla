@@ -1553,6 +1553,10 @@ function goaway($s) {
  * @return int|bool account_id or false
  */
 function get_account_id() {
+
+	if(intval($_SESSION['account_id']))
+		return intval($_SESSION['account_id']);
+
 	if(get_app()->account)
 		return intval(get_app()->account['account_id']);
 
@@ -1724,10 +1728,10 @@ function proc_run($cmd){
 		proc_close(proc_open($cmd, array(), $foo));
 	}
 	else {
-		if(get_config('system','proc_run_use_exec')) 
-			exec($cmdline . ' > /dev/null &');
-		else
+		if(get_config('system','use_proc_open')) 
 			proc_close(proc_open($cmdline ." &", array(), $foo));
+		else
+			exec($cmdline . ' > /dev/null &');
 	}
 }
 

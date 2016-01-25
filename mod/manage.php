@@ -148,6 +148,7 @@ function manage_content(&$a) {
 		for($x = 0; $x < count($delegates); $x ++) {
 			$delegates[$x]['link'] = 'magic?f=&dest=' . urlencode($delegates[$x]['xchan_url']) 
 			. '&delegate=' . urlencode($delegates[$x]['xchan_addr']);
+			$delegates[$x]['channel_name'] = $delegates[$x]['xchan_name'];
 		}
 	}
 	else {

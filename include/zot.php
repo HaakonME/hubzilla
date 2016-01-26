@@ -3186,8 +3186,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						logger('process_channel_sync_delivery: total_feeds service class limit exceeded');
 						continue;
 					}
-					q("insert into abook ( abook_xchan, abook_channel ) values ('%s', %d ) ",
+					q("insert into abook ( abook_xchan, abook_account, abook_channel ) values ('%s', %d, %d ) ",
 						dbesc($clean['abook_xchan']),
+						intval($channel['channel_account_id']),
 						intval($channel['channel_id'])
 					);
 					$total_friends ++;

@@ -3687,6 +3687,16 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		return;
 	}
 
+	$sys_expire = intval(get_config('system','default_expire_days'));
+	$chn_expire = intval($importer['channel_expire_days']);
+
+	$expire_days = $sys_expire;
+
+	if(($chn_expire != 0) && ($chn_expire < $sys_expire))
+		$expire_days = $chn_expire;
+
+logger('expire_days: ' . $expire_days);
+
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
 	$feed->init();
@@ -3790,6 +3800,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					intval($importer['channel_id'])
 				);
 
+
 				// Update content if 'updated' changes
 
 				if($r) {
@@ -3847,6 +3858,17 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$datarray['author_xchan'] = $contact['xchan_hash'];
 
 				$datarray['owner_xchan'] = $contact['xchan_hash'];
+
+				if(array_key_exists('created',$datarray) && $datarray['created'] != NULL_DATE && $expire_days) {
+					$t1 = $datarray['created'];
+					$t2 = datetime_convert('UTC','UTC','now - ' . $expire_days . 'days');
+					if($t1 < $t2) {
+						logger('feed content older than expiration. Ignoring.', LOGGER_DEBUG, LOG_INFO);
+						continue;
+					}
+				}
+
+
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($item_id),

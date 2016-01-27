@@ -59,7 +59,11 @@ This document assumes you're an administrator.
     [b]system.taganyone[/b]
         Allow the @mention tagging of anyone whether you are connected or not.
     [b]system.directorytags[/b]
-        Set the number of keyword tags displayed on the directory page.
+        Set the number of keyword tags displayed on the directory page. Default is 50 unless set to a 
+		positive integer.
+	[b]system.disable_directory_keywords[/b]
+		If '1', do not show directory keywords. If the hub is a directory server, prevent returning
+		tags to any directory clients. Please do not set this for directory servers in the RED_GLOBAL realm. 
 	[b]system.disable_dreport[/b]
 		If '1', don't store or link to delivery reports
     [b]system.startpage[/b]

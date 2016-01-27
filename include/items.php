@@ -159,7 +159,7 @@ function filter_insecure($channel_id, $arr) {
 
 	$ret = array();
 
-	if((! intval(get_pconfig($channel_id, 'system', 'filter_insecure_collections'))) || (! $arr))
+	if((! intval(get_pconfig($channel_id, 'system', 'filter_insecure_privacy_groups'))) || (! $arr))
 		return $arr;
 
 	$str = '';
@@ -4859,7 +4859,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			intval($uid)
 		);
 		if(! $r) {
-			$result['message']  = t('Collection not found.');
+			$result['message']  = t('Privacy group not found.');
 			return $result;
 		}
 
@@ -4875,14 +4875,14 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			}
 		} else {
 			$contact_str = ' 0 ';
-			$result['message'] = t('Collection is empty.');
+			$result['message'] = t('Privacy group is empty.');
 			return $result;
 		}
 
 		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent $item_normal ) ";
 
 		$x = group_rec_byhash($uid,$r[0]['hash']);
-		$result['headline'] = sprintf( t('Collection: %s'),$x['name']);
+		$result['headline'] = sprintf( t('Privacy group: %s'),$x['name']);
 	}
 	elseif($arr['cid'] && $uid) {
 

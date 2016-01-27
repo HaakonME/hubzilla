@@ -354,7 +354,7 @@ function settings_post(&$a) {
 					);
 				}
 				else {
-					notice( sprintf('Default privacy collection \'%s\' not found. Please create and re-submit permission change.', t('Friends')) . EOL);
+					notice( sprintf('Default privacy group \'%s\' not found. Please create and re-submit permission change.', t('Friends')) . EOL);
 					return;
 				}
 			}

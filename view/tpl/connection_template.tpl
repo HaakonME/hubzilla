@@ -5,7 +5,7 @@
 			<form action="connedit/{{$contact.id}}" method="post" >
 			<button type="submit" class="btn btn-success btn-xs" name="pending" value="1" title="{{$contact.approve_hover}}"><i class="icon-ok"></i> {{$contact.approve}}</button>
 
-			<a href="connedit/{{$contact.id}}/ignore" class="btn btn-danger btn-xs" title={{$contact.ignore_hover}}><i class="icon-ban-circle"></i> {{$contact.ignore}}</a>
+			<a href="connedit/{{$contact.id}}/ignore" class="btn btn-warning btn-xs" title="{{$contact.ignore_hover}}"><i class="icon-ban-circle"></i> {{$contact.ignore}}</a>
 
 			{{/if}}
 			<a href="#" class="btn btn-danger btn-xs" title="{{$contact.delete_hover}}" onclick="dropItem('{{$contact.deletelink}}', '#contact-entry-wrapper-{{$contact.id}}'); return false;"><i class="icon-trash"></i> {{$contact.delete}}</a>

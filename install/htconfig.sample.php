@@ -37,7 +37,7 @@ $db_type = 0; // use 1 for postgres, 0 for mysql
 
 $default_timezone = 'America/Los_Angeles';
 
-// What is your site name?
+// What is your site name? DO NOT ADD A TRAILING SLASH!
 
 $a->config['system']['baseurl'] = 'https://myredsite.example';
 $a->config['system']['sitename'] = "Hubzilla";

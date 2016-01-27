@@ -269,6 +269,8 @@ function connections_content(&$a) {
 					'connected' => datetime_convert('UTC',date_default_timezone_get(),$rr['abook_created'], 'c'),
 					'approve_hover' => t('Approve connection'),
 					'approve' => (($rr['abook_pending']) ? t('Approve') : false),
+					'ignore_hover' => t('Ignore connection'),
+					'ignore' => ((! $rr['abook_ignored']) ? t('Ignore') : false),
 					'recent_label' => t('Recent activity'),
 					'recentlink' => z_root() . '/network/?f=&cid=' . intval($rr['abook_id'])
 				);

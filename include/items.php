@@ -159,7 +159,7 @@ function filter_insecure($channel_id, $arr) {
 
 	$ret = array();
 
-	if((! intval(get_pconfig($channel_id, 'system', 'filter_insecure_collections'))) || (! $arr))
+	if((! intval(get_pconfig($channel_id, 'system', 'filter_insecure_privacy_groups'))) || (! $arr))
 		return $arr;
 
 	$str = '';
@@ -3687,6 +3687,16 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		return;
 	}
 
+	$sys_expire = intval(get_config('system','default_expire_days'));
+	$chn_expire = intval($importer['channel_expire_days']);
+
+	$expire_days = $sys_expire;
+
+	if(($chn_expire != 0) && ($chn_expire < $sys_expire))
+		$expire_days = $chn_expire;
+
+logger('expire_days: ' . $expire_days);
+
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
 	$feed->init();
@@ -3790,6 +3800,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					intval($importer['channel_id'])
 				);
 
+
 				// Update content if 'updated' changes
 
 				if($r) {
@@ -3847,6 +3858,17 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$datarray['author_xchan'] = $contact['xchan_hash'];
 
 				$datarray['owner_xchan'] = $contact['xchan_hash'];
+
+				if(array_key_exists('created',$datarray) && $datarray['created'] != NULL_DATE && $expire_days) {
+					$t1 = $datarray['created'];
+					$t2 = datetime_convert('UTC','UTC','now - ' . $expire_days . 'days');
+					if($t1 < $t2) {
+						logger('feed content older than expiration. Ignoring.', LOGGER_DEBUG, LOG_INFO);
+						continue;
+					}
+				}
+
+
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($item_id),
@@ -4837,7 +4859,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			intval($uid)
 		);
 		if(! $r) {
-			$result['message']  = t('Collection not found.');
+			$result['message']  = t('Privacy group not found.');
 			return $result;
 		}
 
@@ -4853,14 +4875,14 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			}
 		} else {
 			$contact_str = ' 0 ';
-			$result['message'] = t('Collection is empty.');
+			$result['message'] = t('Privacy group is empty.');
 			return $result;
 		}
 
 		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent $item_normal ) ";
 
 		$x = group_rec_byhash($uid,$r[0]['hash']);
-		$result['headline'] = sprintf( t('Collection: %s'),$x['name']);
+		$result['headline'] = sprintf( t('Privacy group: %s'),$x['name']);
 	}
 	elseif($arr['cid'] && $uid) {
 

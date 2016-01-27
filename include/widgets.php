@@ -807,20 +807,28 @@ function widget_suggestedchats($arr) {
 }
 
 function widget_item($arr) {
-	// FIXME there is no $a here
-	$uid = $a->profile['profile_uid'];
-	if((! $uid) || (! $arr['mid']))
+
+	$channel_id = 0;
+	if(array_key_exists('channel_id',$arr) && intval($arr['channel_id']))
+		$channel_id = intval($arr['channel_id']);
+	if(! $channel_id)
+		$channel_id = get_app()->profile_uid;
+	if(! $channel_id)
 		return '';
 
-	if(! perm_is_allowed($uid, get_observer_hash(), 'view_pages'))
+
+	if(! $arr['mid'])
+		return '';
+
+	if(! perm_is_allowed($channel_id, get_observer_hash(), 'view_pages'))
 		return '';
 
 	require_once('include/security.php');
-	$sql_extra = item_permissions_sql($uid);
+	$sql_extra = item_permissions_sql($channel_id);
 
 	$r = q("select * from item where mid = '%s' and uid = %d and item_type = " . intval(ITEM_TYPE_WEBPAGE) . " $sql_extra limit 1",
 		dbesc($arr['mid']),
-		intval($uid)
+		intval($channel_id)
 	);
 
 	if(! $r)

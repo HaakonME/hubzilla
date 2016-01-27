@@ -354,7 +354,7 @@ function settings_post(&$a) {
 					);
 				}
 				else {
-					notice( sprintf('Default privacy collection \'%s\' not found. Please create and re-submit permission change.', t('Friends')) . EOL);
+					notice( sprintf('Default privacy group \'%s\' not found. Please create and re-submit permission change.', t('Friends')) . EOL);
 					return;
 				}
 			}
@@ -917,6 +917,7 @@ function settings_content(&$a) {
 		$maxreq     = $channel['channel_max_friend_req'];
 		$expire     = $channel['channel_expire_days'];
 		$adult_flag = intval($channel['channel_pageflags'] & PAGE_ADULT);
+		$sys_expire = get_config('system','default_expire_days');
 
 //		$unkmail    = $a->user['unkmail'];
 //		$cntunkmail = $a->user['cntunkmail'];
@@ -1050,7 +1051,7 @@ function settings_content(&$a) {
 
 			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 
-			'$expire' => array('expire',t('Expire other channel content after this many days'),$expire,t('0 or blank prevents expiration')),
+			'$expire' => array('expire',t('Expire other channel content after this many days'),$expire,sprintf( t('0 or blank to use the website limit. The website expires after %d days.'),intval($sys_expire))),
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
 			'$permdesc' => t("\x28click to open/close\x29"),

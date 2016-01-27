@@ -15,7 +15,7 @@ Some/many of these widgets have restrictions which may restrict the type of page
     * args: count - number of items to return (default 24)
 <br />&nbsp;<br />
 
-* collections - collection selector for the current logged in channel
+* collections - privacy group selector for the current logged in channel
 
     * args: mode - one of "conversation", "group", "abook" depending on module
 <br />&nbsp;<br />

@@ -2,7 +2,7 @@
 
 require_once('include/menu.php');
 
-function import_channel($channel, $account_id) {
+function import_channel($channel, $account_id, $seize) {
 
 	if(! array_key_exists('channel_system',$channel)) {
 		$channel['channel_system']  = (($channel['channel_pageflags'] & 0x1000) ? 1 : 0);

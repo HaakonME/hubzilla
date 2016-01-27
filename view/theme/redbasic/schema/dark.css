@@ -10,7 +10,13 @@
 }
 
 #profile-photo-wrapper {
-	border:none;
+	border: none;
+}
+
+#profile-edit-default-desc {
+	background-color: #665029;
+	color: #FFF;
+	padding: 20px;
 }
 
 .photo {

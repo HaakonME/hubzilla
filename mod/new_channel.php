@@ -133,6 +133,7 @@ function new_channel_content(&$a) {
 		'$label_name'   => t('Channel Name'),
 		'$help_name'    => t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group" '),
 		'$label_nick'   => t('Choose a short nickname'),
+		'$nick_hub'     => '@' . str_replace(array('http://','https://','/'), '', get_config('system','baseurl')),
 		'$nick_desc'    => t('Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others.'),
 		'$label_import' => t('Or <a href="import">import an existing channel</a> from another location'),
 		'$name'         => $name,

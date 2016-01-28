@@ -10,7 +10,13 @@
 }
 
 #profile-photo-wrapper {
-	border:none;
+	border: none;
+}
+
+#profile-edit-default-desc {
+	background-color: #665029;
+	color: #FFF;
+	padding: 20px;
 }
 
 .photo {
@@ -88,7 +94,7 @@
     background-color: #111;
 }
 
-.jotnets-wrapper > a.btn {
+a.btn, aside a {
 	font-weight: 400 !important;
 }
 

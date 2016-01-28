@@ -75,6 +75,10 @@
     background-color: #000;
 }
 
+a.btn, aside a {
+	font-weight: 400 !important;
+}
+
 .btn-default {
     	background-color: #000;
     	border-color: #143D12;

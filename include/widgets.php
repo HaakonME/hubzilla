@@ -807,20 +807,28 @@ function widget_suggestedchats($arr) {
 }
 
 function widget_item($arr) {
-	// FIXME there is no $a here
-	$uid = $a->profile['profile_uid'];
-	if((! $uid) || (! $arr['mid']))
+
+	$channel_id = 0;
+	if(array_key_exists('channel_id',$arr) && intval($arr['channel_id']))
+		$channel_id = intval($arr['channel_id']);
+	if(! $channel_id)
+		$channel_id = get_app()->profile_uid;
+	if(! $channel_id)
 		return '';
 
-	if(! perm_is_allowed($uid, get_observer_hash(), 'view_pages'))
+
+	if(! $arr['mid'])
+		return '';
+
+	if(! perm_is_allowed($channel_id, get_observer_hash(), 'view_pages'))
 		return '';
 
 	require_once('include/security.php');
-	$sql_extra = item_permissions_sql($uid);
+	$sql_extra = item_permissions_sql($channel_id);
 
 	$r = q("select * from item where mid = '%s' and uid = %d and item_type = " . intval(ITEM_TYPE_WEBPAGE) . " $sql_extra limit 1",
 		dbesc($arr['mid']),
-		intval($uid)
+		intval($channel_id)
 	);
 
 	if(! $r)
@@ -1110,16 +1118,18 @@ function widget_rating($arr) {
 
 	}
 
+
+	$o = '<div class="widget">';
+	$o .= '<h3>' . t('Rating Tools') . '</h3>';
+
 	if((($remote) || (local_channel())) && (! $self)) {
-		$o = '<div class="widget rateme">';
 		if($remote)
-			$o .= '<a class="rateme" href="' . $url . '"><i class="icon-pencil"></i> ' . t('Rate Me') . '</a>';
+			$o .= '<a class="btn btn-block btn-primary btn-sm" href="' . $url . '"><i class="icon-pencil"></i> ' . t('Rate Me') . '</a>';
 		else
-			$o .= '<div class="rateme fakelink" onclick="doRatings(\'' . $hash . '\'); return false;"><i class="icon-pencil"></i> ' . t('Rate Me') . '</div>';
-		$o .= '</div>';
+			$o .= '<div class="btn btn-block btn-primary btn-sm" onclick="doRatings(\'' . $hash . '\'); return false;"><i class="icon-pencil"></i> ' . t('Rate Me') . '</div>';
 	}
 
-	$o .= '<div class="widget rateme"><a class="rateme" href="ratings/' . $hash . '"><i class="icon-eye-open"></i> ' . t('View Ratings') . '</a>';
+	$o .= '<a class="btn btn-block btn-default btn-sm" href="ratings/' . $hash . '"><i class="icon-eye-open"></i> ' . t('View Ratings') . '</a>';
 	$o .= '</div>';
 
 	return $o;

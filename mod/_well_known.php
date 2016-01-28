@@ -33,6 +33,19 @@ function _well_known_init(&$a){
 				break;
 
 			default:
+				// look in $WEBROOT/well_known for the requested file in case it is 
+				// something a site requires and for which we do not have a module
+
+				// @fixme - we may need to determine the content-type and stick it in the header
+				// for now this can be done with a php script masquerading as the requested file
+
+				$wk_file = str_replace('.well-known','well_known',$a->cmd);
+				if(file_exists($wk_file)) {
+					echo file_get_contents($wk_file); 
+					killme();
+				}
+				elseif(file_exists($wk_file . '.php'))
+					require_once($wk_file . '.php');
 				break;
 
 		}

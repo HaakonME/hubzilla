@@ -924,6 +924,9 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$pdesc = true;
 	$reddress = true;
 
+	if($block && intval(get_config('system','block_public_blackout')))
+		return $o;
+
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;
 
@@ -933,6 +936,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 	if(is_sys_channel($profile['uid']))
 		$show_connect = false;
+
 
 
 	$profile['picdate'] = urlencode($profile['picdate']);

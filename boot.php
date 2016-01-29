@@ -863,7 +863,7 @@ class App {
 			&& array_key_exists('baseurl',$this->config['system'])
 			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
-
+			$url = trim($url,'\\/');
 			return $url;
 		}
 
@@ -881,6 +881,7 @@ class App {
 			&& array_key_exists('baseurl',$this->config['system'])
 			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
+			$url = trim($url,'\\/');
 		}
 
 		$parsed = @parse_url($url);

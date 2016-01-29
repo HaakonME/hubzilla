@@ -630,14 +630,29 @@ function updateConvItems(mode,data) {
 	} else {
 		collapseHeight();
 	}
+
 }
 
 
+var contentHeightDiff = 0;
 function collapseHeight() {
+	var origContentHeight = parseInt($("#region_2").height());
+	var cDiff = 0;
+	var i = 0;
 	$(".wall-item-content, .directory-collapse").each(function() {
-		var orgHeight = $(this).outerHeight(true);
-		if(orgHeight > divmore_height + 10) {
+		var orgHeight = parseInt($(this).height());
+		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
+
+				// check if we will collapse some content above the visible content and compensate the diff later
+				if(($(this).offset().top + orgHeight - $(window).scrollTop()) < 50) {
+					diff = orgHeight - divmore_height;
+					//console.log('diff: ' + diff);
+
+					cDiff = cDiff + diff;
+					i++;
+				}
+
 				$(this).readmore({
 					speed: 0,
 					heightMargin: 50,
@@ -653,9 +668,38 @@ function collapseHeight() {
 					}
 				});
 				$(this).addClass('divmore');
+
 			}
 		}
 	});
+
+	var collapsedContentHeight = parseInt($("#region_2").height());
+	contentHeightDiff = origContentHeight - collapsedContentHeight;
+
+	if(i){
+
+		var position = $(window).scrollTop();
+
+		//console.log('cDiff: ' + cDiff);
+
+		//console.log('position: ' + position);
+
+		//console.log('origContentHeight: ' + origContentHeight);
+
+		//console.log('collapsedContentHeight: ' + collapsedContentHeight);
+
+		//console.log('contentHeightDiff: ' + contentHeightDiff);
+
+		var sval = position - cDiff + (i*3); // i*3 is possibly some border or margin/padding which might not be calculated correct
+
+		//console.log('sval: ' + sval);
+		console.log('collapsed above content count: ' + i);
+
+		$(window).scrollTop(sval);
+
+		//var nposition = $(document).scrollTop();
+		//console.log('nposition: ' + nposition);
+	}
 }
 
 function liveUpdate() {
@@ -708,7 +752,7 @@ function liveUpdate() {
 		$("#profile-jot-text-loading").spin(false);
 
 		if(update_mode === 'update') {
-			$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight);
+			$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
 		}
 
 		in_progress = false;

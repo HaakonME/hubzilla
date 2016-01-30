@@ -297,7 +297,7 @@ footer {
 	margin-bottom: 10px;
 	padding: 10px;
 	background-color: rgba(254,254,254,0.5);
-	border-bottom: 1px solid rgba(238,238,238,0.8);
+	border: 1px solid rgba(254,254,254,0.5);
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;

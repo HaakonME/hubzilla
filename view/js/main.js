@@ -625,7 +625,7 @@ function updateConvItems(mode,data) {
 		bimgs.load(function() {
 			bimgcount--;
 			if (! bimgcount) {
-				collapseHeight(true);
+				collapseHeight();
 			}
 		});
 	} else {
@@ -634,13 +634,13 @@ function updateConvItems(mode,data) {
 
 }
 
-function collapseHeight(below=false) {
+function collapseHeight() {
 	var origContentHeight = parseInt($("#region_2").height());
 	$(".wall-item-content, .directory-collapse").each(function() {
 		var orgHeight = parseInt($(this).height());
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
-				if((below=true) && ($(window).scrollTop() + ($(window).height() - divmore_height) < $(this).offset().top)) {
+				if($(window).scrollTop() + ($(window).height() - divmore_height) < $(this).offset().top) {
 					$(this).readmore({
 						speed: 0,
 						heightMargin: 50,

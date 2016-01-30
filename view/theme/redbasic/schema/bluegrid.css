@@ -11,6 +11,11 @@ body 	{
 	border: 1px solid #FFF;
 }
 
+#profile-jot-wrapper {
+	background-color: inherit;
+	border: none;
+}
+
 .generic-content-wrapper-styled a:hover, .generic-content-wrapper-styled a:focus, .generic-content-wrapper-styled .field.checkbox:hover label, .generic-content-wrapper-styled .field.checkbox:focus label, .allcontact-link:hover, .allcontact-link:focus {
 	color: rgba(255,255,255,.8);
 }
@@ -458,3 +463,5 @@ a:hover > .icon-trash {
 		background-color: #43488A !important;
 	}
 }
+
+

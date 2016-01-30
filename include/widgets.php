@@ -817,7 +817,7 @@ function widget_item($arr) {
 		return '';
 
 
-	if(! $arr['mid'])
+	if((! $arr['mid']) && (! $arr['title']))
 		return '';
 
 	if(! perm_is_allowed($channel_id, get_observer_hash(), 'view_pages'))
@@ -826,10 +826,20 @@ function widget_item($arr) {
 	require_once('include/security.php');
 	$sql_extra = item_permissions_sql($channel_id);
 
-	$r = q("select * from item where mid = '%s' and uid = %d and item_type = " . intval(ITEM_TYPE_WEBPAGE) . " $sql_extra limit 1",
-		dbesc($arr['mid']),
-		intval($channel_id)
-	);
+	if($arr['title']) {
+		$r = q("select item.* from item left join item_id on item.id = item_id.iid
+			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and item_type = %d $sql_options $revision limit 1",
+			intval($channel_id),
+			dbesc($arr['title']),
+			intval(ITEM_TYPE_WEBPAGE)
+		);
+	}
+	else {
+		$r = q("select * from item where mid = '%s' and uid = %d and item_type = " . intval(ITEM_TYPE_WEBPAGE) . " $sql_extra limit 1",
+			dbesc($arr['mid']),
+			intval($channel_id)
+		);
+	}
 
 	if(! $r)
 		return '';

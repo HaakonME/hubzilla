@@ -248,6 +248,7 @@ var updateCountsOnly = false;
 var divmore_height = 400;
 var last_filestorage_id = null;
 var mediaPlaying = false;
+var contentHeightDiff = 0;
 
 $(function() {
 	$.ajaxSetup({cache: false});
@@ -624,7 +625,7 @@ function updateConvItems(mode,data) {
 		bimgs.load(function() {
 			bimgcount--;
 			if (! bimgcount) {
-				collapseHeight();
+				collapseHeight(true);
 			}
 		});
 	} else {
@@ -633,42 +634,29 @@ function updateConvItems(mode,data) {
 
 }
 
-
-var contentHeightDiff = 0;
-function collapseHeight() {
+function collapseHeight(below=false) {
 	var origContentHeight = parseInt($("#region_2").height());
-	var cDiff = 0;
-	var i = 0;
 	$(".wall-item-content, .directory-collapse").each(function() {
 		var orgHeight = parseInt($(this).height());
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
-
-				// check if we will collapse some content above the visible content and compensate the diff later
-				if(($(this).offset().top + orgHeight - $(window).scrollTop()) < 50) {
-					diff = orgHeight - divmore_height;
-					//console.log('diff: ' + diff);
-
-					cDiff = cDiff + diff;
-					i++;
-				}
-
-				$(this).readmore({
-					speed: 0,
-					heightMargin: 50,
-					collapsedHeight: divmore_height, 
-					moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
-					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',
-					beforeToggle: function(trigger, element, expanded) {
-						if(expanded) {
-							if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
-								$('html, body').animate( { scrollTop: $(window).scrollTop() - (orgHeight - divmore_height) }, {duration: 0 } );
+				if((below=true) && ($(window).scrollTop() + ($(window).height() - divmore_height) < $(this).offset().top)) {
+					$(this).readmore({
+						speed: 0,
+						heightMargin: 50,
+						collapsedHeight: divmore_height,
+						moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
+						lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',
+						beforeToggle: function(trigger, element, expanded) {
+							if(expanded) {
+								if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
+									$('html, body').animate( { scrollTop: $(window).scrollTop() - (orgHeight - divmore_height) }, {duration: 0 } );
+								}
 							}
 						}
-					}
-				});
-				$(this).addClass('divmore');
-
+					});
+					$(this).addClass('divmore');
+				}
 			}
 		}
 	});
@@ -676,30 +664,7 @@ function collapseHeight() {
 	var collapsedContentHeight = parseInt($("#region_2").height());
 	contentHeightDiff = origContentHeight - collapsedContentHeight;
 
-	if(i){
 
-		var position = $(window).scrollTop();
-
-		//console.log('cDiff: ' + cDiff);
-
-		//console.log('position: ' + position);
-
-		//console.log('origContentHeight: ' + origContentHeight);
-
-		//console.log('collapsedContentHeight: ' + collapsedContentHeight);
-
-		//console.log('contentHeightDiff: ' + contentHeightDiff);
-
-		var sval = position - cDiff + (i*3); // i*3 is possibly some border or margin/padding which might not be calculated correct
-
-		//console.log('sval: ' + sval);
-		console.log('collapsed above content count: ' + i);
-
-		$(window).scrollTop(sval);
-
-		//var nposition = $(document).scrollTop();
-		//console.log('nposition: ' + nposition);
-	}
 }
 
 function liveUpdate() {
@@ -750,6 +715,8 @@ function liveUpdate() {
 		updateConvItems(update_mode,data);
 		$("#page-spinner").spin(false);
 		$("#profile-jot-text-loading").spin(false);
+
+		console.log('contentHeightDiff: ' + contentHeightDiff);
 
 		if(update_mode === 'update') {
 			$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);

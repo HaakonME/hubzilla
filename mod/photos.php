@@ -804,6 +804,8 @@ function photos_content(&$a) {
 
 	if($datatype === 'image') {
 
+		$a->page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . $a->cmd) . '" title="oembed" />' . "\r\n";
+
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT id,aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,photo_usage,is_nsfw,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 

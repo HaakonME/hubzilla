@@ -5,6 +5,7 @@
 
 .vcard, #contact-block, .widget {
 	background-color: transparent;
+	border: none;
 	border-bottom: 1px solid #fff;
 }
 
@@ -265,4 +266,12 @@ pre {
   }
 }
 
+#profile-jot-wrapper {
+	background-color: inherit;
+	border: none;
+}
 
+.nav-tabs.nav-justified {
+	background-color: inherit;
+	border: none;
+}

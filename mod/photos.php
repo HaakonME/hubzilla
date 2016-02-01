@@ -660,6 +660,10 @@ function photos_content(&$a) {
 
 		$album = (($datum) ? hex2bin($datum) : '');
 
+
+		$a->page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . $a->cmd) . '" title="oembed" />' . "\r\n";
+
+
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
 			AND `scale` <= 4 and photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
 			intval($owner_uid),

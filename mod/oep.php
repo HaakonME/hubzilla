@@ -35,7 +35,64 @@ function oep_init(&$a) {
 }
 
 
-function oep_album_reply() {
+function oep_album_reply($args) {
+
+	$ret = array();
+	$url = $args['url'];
+	$maxwidth  = intval($args['maxwidth']);
+	$maxheight = intval($args['maxheight']);
+
+	if(preg_match('|//(.*?)/(.*?)/(.*?)/album/|',$url,$matches)) {
+		$chn = $matches[3];
+		$res = hex2bin(basename($url));
+	}
+
+	if(! ($chn && $res))
+		return;
+	$c = q("select * from channel where channel_address = '%s' limit 1",
+		dbesc($chn)
+	);
+
+	if(! $c)
+		return;
+
+	$sql_extra = permissions_sql($c[0]['channel_id']);
+
+	$p = q("select resource_id from photo where album = '%s' and uid = %d group by resource_id $sql_extra order by created desc",
+  		dbesc($res),
+		intval($c[0]['channel_id'])
+	);
+	if(! $p)
+		return;
+
+	$res = $p[0]['resource_id'];
+
+	$r = q("select height, width, scale, resource_id from photo where uid = %d and resource_id = '%s' $sql_extra order by scale asc",
+		intval($c[0]['channel_id']),
+		dbesc($res)
+	);
+
+	if($r) {
+		foreach($r as $rr) {
+			$foundres = false;
+			if($maxheight && $rr['height'] > $maxheight)
+				continue;
+			if($maxwidth && $rr['width'] > $maxwidth)
+				continue;
+			$foundres = true;			
+			break;
+		}
+
+		if($foundres) {
+			$ret['type'] = 'link';
+			$ret['thumbnail_url'] = z_root() . '/photo/' . '/' . $rr['resource_id'] . '-' . $rr['scale'];
+			$ret['thumbnail_width'] = $rr['width'];
+			$ret['thumbnail_height'] = $rr['height'];
+		}
+			
+
+	}
+	return $ret;
 
 }
 

@@ -173,6 +173,10 @@ function oembed_format_object($j){
 		}; break;  
 		case "link": {
 			if($j->thumbnail_url) {
+				if(is_matrix_url($embedurl)) {
+					$embedurl = zid($embedurl);
+					$j->thumbnail_url = zid($j->thumbnail_url);
+				}
 				$ret = '<a href="' . $embedurl . '" ><img src="' . $j->thumbnail_url . '" alt="thumbnail" /></a><br /><br />';
 			}
 

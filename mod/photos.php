@@ -1232,6 +1232,9 @@ function photos_content(&$a) {
 	// Default - show recent photos with upload link (if applicable)
 	//$o = '';
 
+		$a->page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . $a->cmd) . '" title="oembed" />' . "\r\n";
+
+
 	$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
 		and photo_usage in ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
 		intval($a->data['channel']['channel_id']),

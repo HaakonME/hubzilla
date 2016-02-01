@@ -6,9 +6,13 @@
 
 function oep_init(&$a) {
 
+	logger('oep: ' . print_r($_REQUEST,true), LOGGER_DEBUG, LOG_INFO);
 
+	if($_REQUEST['url']) {
+		$_REQUEST['url'] = strip_zids($_REQUEST['url']);
+		$url = $_REQUEST['url'];
+	}
 
-	$url = $_REQUEST['url'];
 	if(! $url)
 		http_status_exit(404, 'Not found');
 
@@ -24,6 +28,12 @@ function oep_init(&$a) {
 		$arr = oep_photo_reply($_REQUEST);
 	elseif(fnmatch('*/photos*',$url))
 		$arr = oep_phototop_reply($_REQUEST);
+	elseif(fnmatch('*/display/*',$url))
+		$arr = oep_display_reply($_REQUEST);
+	elseif(fnmatch('*/channel/*mid=*',$url))
+		$arr = oep_mid_reply($_REQUEST);
+	elseif(fnmatch('*/profile/*',$url))
+		$arr = oep_profile_reply($_REQUEST);
 
 	if($arr) {
 		header('Content-Type: application/json+oembed');
@@ -35,6 +45,127 @@ function oep_init(&$a) {
 
 }
 
+function oep_display_reply($args) {
+
+	$ret = array();
+	$url = $args['url'];
+	$maxwidth  = intval($args['maxwidth']);
+	$maxheight = intval($args['maxheight']);
+
+	if(preg_match('#//(.*?)/(.*?)/(.*?)/(.*?)mid\=(.*?)(&|$)#',$url,$matches)) {
+		$chn = $matches[3];
+		$res = $matches[5];
+	}
+
+	if(! ($chn && $res))
+		return;
+	$c = q("select * from channel where channel_address = '%s' limit 1",
+		dbesc($chn)
+	);
+
+	if(! $c)
+		return;
+
+	$sql_extra = item_permissions_sql($c[0]['channel_id']);
+
+	$p = q("select * from item where mid = '%s' and uid = %d $sql_extra limit 1",
+  		dbesc($res),
+		intval($c[0]['channel_id'])
+	);
+	if(! $p)
+		return;
+	
+	xchan_query($p,true);
+	$p = fetch_post_tags($p,true);
+        
+	$o = "[share author='".urlencode($p[0]['author']['xchan_name']).
+            "' profile='".$p[0]['author']['xchan_url'] .
+            "' avatar='".$p[0]['author']['xchan_photo_s'].
+            "' link='".$p[0]['plink'].
+            "' posted='".$p[0]['created'].
+            "' message_id='".$p[0]['mid']."']";
+    if($p[0]['title'])
+            $o .= '[b]'.$p[0]['title'].'[/b]'."\r\n";
+        $o .= $p[0]['body'];
+        $o .= "[/share]";
+	$o = bbcode($o);
+
+	$ret['type'] = 'rich';
+
+	$w = (($maxwidth) ? $maxwidth : 640);
+	$h = (($maxheight) ? $maxheight : $w * 2 / 3);
+
+	$ret['html'] = '<div style="width: ' . $w . '; height: ' . $h . ';" >' . $o . '</div>';
+	
+	$ret['width'] = $w;
+	$ret['height'] = $h;
+
+	return $ret;
+
+}
+
+function oep_mid_reply($args) {
+
+	$ret = array();
+	$url = $args['url'];
+	$maxwidth  = intval($args['maxwidth']);
+	$maxheight = intval($args['maxheight']);
+
+	if(preg_match('#//(.*?)/(.*?)/(.*?)/(.*?)mid\=(.*?)(&|$)#',$url,$matches)) {
+		$chn = $matches[3];
+		$res = $matches[5];
+	}
+
+	if(! ($chn && $res))
+		return;
+	$c = q("select * from channel where channel_address = '%s' limit 1",
+		dbesc($chn)
+	);
+
+	if(! $c)
+		return;
+
+	$sql_extra = item_permissions_sql($c[0]['channel_id']);
+
+	$p = q("select * from item where mid = '%s' and uid = %d $sql_extra limit 1",
+  		dbesc($res),
+		intval($c[0]['channel_id'])
+	);
+	if(! $p)
+		return;
+	
+	xchan_query($p,true);
+	$p = fetch_post_tags($p,true);
+        
+	$o = "[share author='".urlencode($p[0]['author']['xchan_name']).
+            "' profile='".$p[0]['author']['xchan_url'] .
+            "' avatar='".$p[0]['author']['xchan_photo_s'].
+            "' link='".$p[0]['plink'].
+            "' posted='".$p[0]['created'].
+            "' message_id='".$p[0]['mid']."']";
+    if($p[0]['title'])
+            $o .= '[b]'.$p[0]['title'].'[/b]'."\r\n";
+        $o .= $p[0]['body'];
+        $o .= "[/share]";
+	$o = bbcode($o);
+
+	$ret['type'] = 'rich';
+
+	$w = (($maxwidth) ? $maxwidth : 640);
+	$h = (($maxheight) ? $maxheight : $w * 2 / 3);
+
+	$ret['html'] = '<div style="width: ' . $w . '; height: ' . $h . ';" >' . $o . '</div>';
+	
+	$ret['width'] = $w;
+	$ret['height'] = $h;
+
+	return $ret;
+
+}
+
+function oep_profile_reply($args) {
+
+}
 
 function oep_album_reply($args) {
 

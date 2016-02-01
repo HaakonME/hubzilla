@@ -53,6 +53,10 @@ function oembed_fetch_url($embedurl){
 
 	$a = get_app();
 
+	$embedurl = str_replace('&amp;','&', $embedurl);
+
+// logger('fetch: ' . $embedurl);
+
 	$txt = Cache::get($a->videowidth . $embedurl);
 
 	if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
@@ -120,19 +124,28 @@ function oembed_fetch_url($embedurl){
 		if ($txt[0]!="{") $txt='{"type":"error"}';
 	
 		//save in cache
-		Cache::set($a->videowidth . $embedurl,$txt);
+
+		if(! get_config('system','oembed_cache_disable'))
+			Cache::set($a->videowidth . $embedurl,$txt);
 
 	}
 
 
 	$j = json_decode($txt);
 	$j->embedurl = $embedurl;
+
+// logger('fetch return: ' . print_r($j,true));
+
 	return $j;
+
+
 }
 	
 function oembed_format_object($j){
 	$a = get_app();
     $embedurl = $j->embedurl;
+
+// logger('format: ' . print_r($j,true));
 
 	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null));
 

@@ -1,16 +1,16 @@
 
 Hubzilla 1.2
 	Provide extra HTTP security headers (several of them).
-	Allow a site to disable delivery reports
+	Allow a site to disable delivery reports if disk space is limited
 	Regression: Wrong theme when viewing single post as non-member
 	Some Diaspora profile photos use relative URLs - force absolute
 	Add locked features to siteinfo report to aid remote debugging
-	Provide version compatibility checking to plugins (minversion, maxversion and minphpversion)
+	Provide version compatibility checking to plugins (minversion, maxversion, and minphpversion)
 	Account config storage
 	Provide optional integrated registration and channel create form 
 	cli utility for managing addons
-	issue sharing photo "items"
-	cover photos: upload, crop, and store
+	issue with sharing photo "items"
+	cover photo manager: upload, crop, and store
 	cover photo widget created
 	rework the connections list page and provide a few management features there
 	fixed issue with Comanche layout definitions loaded by plugins

@@ -74,8 +74,11 @@ Some/many of these widgets have restrictions which may restrict the type of page
 
 * suggestedchats - "interesting" chatrooms chosen for the current observer
 
-* item - displays a single webpage item by mid
-    * args: mid - message_id of webpage to display (must be webpage, not a conversation item)
+* item - displays a single webpage item by mid or page title
+    * args:
+	* channel_id - channel that owns the content, defualt is the profile_uid 
+	* mid - message_id of webpage to display (must be webpage, not a conversation item)
+	* title - URL page title of webpage (must provide one of either title or mid)
 <br />&nbsp;<br />
 
 * photo - display a single photo

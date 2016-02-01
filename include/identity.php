@@ -924,6 +924,10 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$pdesc = true;
 	$reddress = true;
 
+	if(! perm_is_allowed($profile['uid'],((is_array($observer)) ? $observer['xchan_hash'] : ''),'view_profile')) {
+		$block = true;
+	}
+
 	if($block && intval(get_config('system','block_public_blackout')))
 		return $o;
 
@@ -1012,9 +1016,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 //	logger('online: ' . $profile['online']);
 
-	if(! perm_is_allowed($profile['uid'],((is_array($observer)) ? $observer['xchan_hash'] : ''),'view_profile')) {
-		$block = true;
-	}
 
 	if(($profile['hidewall'] && (! local_channel()) && (! remote_channel())) || $block ) {
 		$location = $reddress = $pdesc = $gender = $marital = $homepage = False;

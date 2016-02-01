@@ -5,6 +5,7 @@
 
 .vcard, #contact-block, .widget {
 	background-color: transparent;
+	border: none;
 	border-bottom: 1px solid #333;
 	border-radius: 0px
 }
@@ -336,11 +337,18 @@ pre {
 	text-decoration: underline;
 }
 
-
-
 @media (min-width: 768px) {
   .nav-tabs.nav-justified > li > a {
     border-bottom: 1px solid #333;
   }
 }
 
+#profile-jot-wrapper {
+	background-color: inherit;
+	border: none;
+}
+
+.nav-tabs.nav-justified {
+	background-color: inherit;
+	border: none;
+}

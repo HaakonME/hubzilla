@@ -48,7 +48,7 @@ require_once('include/AccessList.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
-define ( 'STD_VERSION',             '1.1.3' );
+define ( 'STD_VERSION',             '1.2' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1161  );
@@ -863,7 +863,7 @@ class App {
 			&& array_key_exists('baseurl',$this->config['system'])
 			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
-
+			$url = trim($url,'\\/');
 			return $url;
 		}
 
@@ -881,6 +881,7 @@ class App {
 			&& array_key_exists('baseurl',$this->config['system'])
 			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
+			$url = trim($url,'\\/');
 		}
 
 		$parsed = @parse_url($url);

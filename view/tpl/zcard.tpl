@@ -45,6 +45,6 @@
 		<div class="hz_name">{{$zcard.chan.xchan_name}}</div>
 		<div class="hz_addr">{{$zcard.chan.channel_addr}}</div>
 	</div>
-	<div class="hz_profile_photo"><img src="{{$pphoto.href}}" alt="{{$zcard.chan.xchan_name}}" /></div>
+	<div class="hz_profile_photo"><img style="width: 300px; height: 300px;" src="{{$pphoto.href}}" alt="{{$zcard.chan.xchan_name}}" /></div>
 </div>
 

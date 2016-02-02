@@ -640,7 +640,10 @@ function collapseHeight() {
 		var orgHeight = parseInt($(this).css('height'));
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
-				if($(window).scrollTop() + ($(window).height() - divmore_height) < $(this).offset().top) {
+
+				var trigger = $(window).scrollTop() + ($(window).height() - divmore_height) < $(this).offset().top ? true : false;
+
+				if(trigger) {
 					$(this).readmore({
 						speed: 0,
 						heightMargin: 50,

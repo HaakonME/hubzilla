@@ -204,13 +204,13 @@ function oembed_format_object($j){
 	// add link to source if not present in "rich" type
 	if (  $j->type!='rich' || !strpos($j->html,$embedurl) ){
 		$embedlink = (isset($j->title))?$j->title:$embedurl;
-		$ret .= '<span class="bookmark-identifier">#^</span>' . "<a href='$embedurl' rel='oembed'>$embedlink</a>";
-		$ret .= "<br>";
+		$ret .= '<br /><span class="bookmark-identifier">#^</span>' . "<a href='$embedurl' rel='oembed'>$embedlink</a>";
+		$ret .= "<br />";
 		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
 		if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
 	} else {
 		// add <a> for html2bbcode conversion
-		$ret .= "<br /><a href='$embedurl' rel='oembed'/>";
+		$ret .= "<br /><a href='$embedurl' rel='oembed'>$embedurl</a>";
 	}
 	$ret.="<br style='clear:left'></span>";
 	return  mb_convert_encoding($ret, 'HTML-ENTITIES', mb_detect_encoding($ret));

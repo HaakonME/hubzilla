@@ -1781,3 +1781,45 @@ function get_cover_photo($channel_id,$format = 'bbcode', $res = PHOTO_RES_COVER_
 	return $output;  
 		
 }
+
+function get_zcard($channel,$observer_hash = '',$args = array()) {
+
+	logger('get_zcard');
+
+	$channel['channel_addr'] = $channel['channel_address'] . '@' . get_app()->get_hostname();
+
+	$r = q("select height, width, resource_id, scale, type from photo where uid = %d and scale = %d and photo_usage = %d",
+		intval($channel['channel_id']),
+		intval(PHOTO_RES_COVER_1200),
+		intval(PHOTO_COVER)
+	);
+
+	if($r) {
+		$cover = $r[0];
+		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
+	}		
+	
+	$pphoto = array('type' => $channel['xchan_photo_mimetype'], 
+		'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
+
+	$maxwidth = (($args['width']) ? intval($args['width']) : 0);
+	$maxheight = (($args['height']) ? intval($args['height']) : 0);
+
+	$zcard = array('chan' => $channel);
+	if(($maxwidth > 1200) || ($maxwidth < 1))
+		$maxwidth = 1200;
+	$scale = (float) $maxwidth / 1200;
+
+	$translate = intval(($scale / 1.0) * 100);
+
+	$o .= replace_macros(get_markup_template('zcard.tpl'),array(
+		'$scale' => $scale,
+		'$translate' => $translate,
+		'$cover' => $cover,
+		'$pphoto' => $pphoto,
+		'$zcard' => $zcard
+	));		
+	
+	return $o;
+		
+}

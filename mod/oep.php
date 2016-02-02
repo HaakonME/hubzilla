@@ -165,6 +165,50 @@ function oep_mid_reply($args) {
 
 function oep_profile_reply($args) {
 
+	
+	require_once('include/identity.php');
+	require_once('include/Contact.php');
+	$url = $args['url'];
+
+	if(preg_match('#//(.*?)/(.*?)/(.*?)(/|\?|&|$)#',$url,$matches)) {
+		$chn = $matches[3];
+	}
+
+	if(! $chn)
+		return;
+
+	$c = channelx_by_nick($chn);
+
+	if(! $c)
+		return;
+
+
+	$maxwidth  = intval($args['maxwidth']);
+	$maxheight = intval($args['maxheight']);
+
+	$width = 800;
+	$height = 375;
+
+	if($maxwidth) {
+		$width = $maxwidth;
+		$height = (375 / 800) * $width;
+	}
+	if($maxheight) {
+		if($maxheight < $height) {
+			$width = (800 / 375) * $maxheight;
+			$height = $maxheight;
+		}
+	} 
+	$ret = array();
+
+	$ret['type'] = 'rich';
+	$ret['width'] = intval($width);
+	$ret['height'] = intval($height);
+
+	$ret['html'] = get_zcard($c,get_observer_hash(),array('width' => $width, 'height' => $height));
+
+	return $ret;
+
 }
 
 function oep_album_reply($args) {

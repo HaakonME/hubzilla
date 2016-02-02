@@ -1267,7 +1267,7 @@ function advanced_profile(&$a) {
 		$profile['like_button_label'] = tt('Like','Likes',$profile['like_count'],'noun');
 		if($likers) {
 			foreach($likers as $l)
-				$profile['likers'][] = array('name' => $l['xchan_name'],'url' => zid($l['xchan_url']));
+				$profile['likers'][] = array('name' => $l['xchan_name'],'photo' => zid($l['xchan_photo_s']), 'url' => zid($l['xchan_url']));
 		}
 
 		if(($a->profile['dob']) && ($a->profile['dob'] != '0000-00-00')) {

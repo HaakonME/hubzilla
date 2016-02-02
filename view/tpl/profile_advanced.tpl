@@ -4,7 +4,7 @@
 			{{if $profile.like_count}}
 			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" id="profile-like">{{$profile.like_count}} {{$profile.like_button_label}}</button>
 			{{if $profile.likers}}
-			<ul class="dropdown-menu" role="menu" aria-labelledby="profile-like">{{foreach $profile.likers as $liker}}<li role="presentation"><a href="{{$liker.url}}">{{$liker.name}}</a></li>{{/foreach}}</ul>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="profile-like">{{foreach $profile.likers as $liker}}<li role="presentation"><a href="{{$liker.url}}"><img class="dropdown-menu-img-xs" src="{{$liker.photo}}" alt="{{$liker.name}}" /> {{$liker.name}}</a></li>{{/foreach}}</ul>
 			{{/if}}
 			{{/if}}
 			{{if $profile.canlike}}
@@ -215,7 +215,7 @@
 		<div class="btn-group">
 		<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="thing-like-{{$item.term_hash}}">{{$item.like_count}} {{$item.like_label}}</button>
 		{{if $item.likes}}
-		<ul class="dropdown-menu" role="menu" aria-labelledby="thing-like-{{$item.term_hash}}">{{foreach $item.likes as $liker}}<li role="presentation"><a href="{{$liker.xchan_url}}">{{$liker.xchan_name}}</a></li>{{/foreach}}</ul>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="thing-like-{{$item.term_hash}}">{{foreach $item.likes as $liker}}<li role="presentation"><a href="{{$liker.xchan_url}}"><img class="dropdown-menu-img-xs" src="{{$liker.xchan_photo_s}}" alt="{{$liker.name}}" /> {{$liker.xchan_name}}</a></li>{{/foreach}}</ul>
 		{{/if}}
 		</div>
 		{{/if}}

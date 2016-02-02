@@ -22,6 +22,8 @@ function linkinfo_content(&$a) {
 	else
 		$url = trim($_GET['url']);
 
+	$url = strip_zids($url);
+
 	if((substr($url,0,1) != '/') && (substr($url,0,4) != 'http'))
 		$url = 'http://' . $url;
 

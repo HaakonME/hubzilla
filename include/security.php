@@ -181,7 +181,7 @@ function permissions_sql($owner_id, $remote_observer = null) {
 	 */
 
 	else {
-		$observer = (($remote_observer) ? $remote_observer : get_observer_hash());
+		$observer = ((! is_null($remote_observer)) ? $remote_observer : get_observer_hash());
 		if($observer) {
 			$groups = init_groups_visitor($observer);
 

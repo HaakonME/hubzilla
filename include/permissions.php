@@ -626,7 +626,7 @@ function get_role_perms($role) {
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
 			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
-			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_storage']   = PERMS_SPECIFIC;
 			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = PERMS_SPECIFIC;

@@ -1267,7 +1267,7 @@ function advanced_profile(&$a) {
 		$profile['like_button_label'] = tt('Like','Likes',$profile['like_count'],'noun');
 		if($likers) {
 			foreach($likers as $l)
-				$profile['likers'][] = array('name' => $l['xchan_name'],'url' => zid($l['xchan_url']));
+				$profile['likers'][] = array('name' => $l['xchan_name'],'photo' => zid($l['xchan_photo_s']), 'url' => zid($l['xchan_url']));
 		}
 
 		if(($a->profile['dob']) && ($a->profile['dob'] != '0000-00-00')) {
@@ -1779,5 +1779,70 @@ function get_cover_photo($channel_id,$format = 'bbcode', $res = PHOTO_RES_COVER_
 	}
 
 	return $output;  
+		
+}
+
+function get_zcard($channel,$observer_hash = '',$args = array()) {
+
+	logger('get_zcard');
+
+	$maxwidth = (($args['width']) ? intval($args['width']) : 0);
+	$maxheight = (($args['height']) ? intval($args['height']) : 0);
+
+
+	if(($maxwidth > 1200) || ($maxwidth < 1))
+		$maxwidth = 1200;
+
+	if($maxwidth <= 425) {
+		$width = 425;
+		$size = 'hz_small';
+		$cover_size = PHOTO_RES_COVER_425;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
+	}
+	elseif($maxwidth <= 850) {
+		$width = 850;
+		$size = 'hz_medium';
+		$cover_size = PHOTO_RES_COVER_850;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
+	}
+	elseif($maxwidth <= 1200) {
+		$width = 1200;
+		$size = 'hz_large';
+		$cover_size = PHOTO_RES_COVER_1200;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
+	}
+
+//	$scale = (float) $maxwidth / $width;
+//	$translate = intval(($scale / 1.0) * 100);
+
+
+	$channel['channel_addr'] = $channel['channel_address'] . '@' . get_app()->get_hostname();
+	$zcard = array('chan' => $channel);
+
+	$r = q("select height, width, resource_id, scale, type from photo where uid = %d and scale = %d and photo_usage = %d",
+		intval($channel['channel_id']),
+		intval($cover_size),
+		intval(PHOTO_COVER)
+	);
+
+	if($r) {
+		$cover = $r[0];
+		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
+	}		
+	else {
+		// @fixme remove this when we have a fallback cover photo and use that instead.
+		return;
+	}
+	
+	$o .= replace_macros(get_markup_template('zcard.tpl'),array(
+		'$scale' => $scale,
+		'$translate' => $translate,
+		'$size' => $size,
+		'$cover' => $cover,
+		'$pphoto' => $pphoto,
+		'$zcard' => $zcard
+	));		
+	
+	return $o;
 		
 }

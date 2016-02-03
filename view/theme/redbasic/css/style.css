@@ -962,6 +962,9 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	margin-bottom: 18px;
 }
 
+#jot-preview-content {
+	margin-top: 10px;
+}
 .acl-list-item {
 	width: 48%; /* fallback if browser does not support calc() */
 	width: calc(50% - 10px);

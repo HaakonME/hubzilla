@@ -3438,6 +3438,7 @@ function check_item_source($uid, $item) {
 	if(! $r[0]['src_patt'])
 		return true;
 
+
 	require_once('include/html2plain.php');
 	$text = prepare_text($item['body'],$item['mimetype']);
 	$text = html2plain($text);

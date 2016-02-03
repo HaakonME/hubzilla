@@ -217,10 +217,16 @@ function oembed_format_object($j){
 }
 
 function oembed_iframe($src,$width,$height) {
-	if(! $width || strstr($width,'%'))
+	$scroll = ' scrolling="no" ';
+	if(! $width || strstr($width,'%')) {
 		$width = '640';
-	if(! $height || strstr($height,'%'))
+		$scroll = ' scrolling="auto" ';
+	}
+	if(! $height || strstr($height,'%')) {
 		$height = '300';
+		$scroll = ' scrolling="auto" ';
+	}
+
 	// try and leave some room for the description line. 
 	$height = intval($height) + 80;
 	$width  = intval($width) + 40;
@@ -229,7 +235,7 @@ function oembed_iframe($src,$width,$height) {
 
 	// Make sure any children are sandboxed within their own iframe.
 
-	return '<iframe height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' 
+	return '<iframe ' . $scroll . 'height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' 
 		. t('Embedded content') . '</iframe>'; 
 
 }

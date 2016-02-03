@@ -1786,11 +1786,42 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 
 	logger('get_zcard');
 
+	$maxwidth = (($args['width']) ? intval($args['width']) : 0);
+	$maxheight = (($args['height']) ? intval($args['height']) : 0);
+
+
+	if(($maxwidth > 1200) || ($maxwidth < 1))
+		$maxwidth = 1200;
+
+	if($maxwidth <= 425) {
+		$width = 425;
+		$size = 'hz_small';
+		$cover_size = PHOTO_RES_COVER_425;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
+	}
+	elseif($maxwidth <= 850) {
+		$width = 850;
+		$size = 'hz_medium';
+		$cover_size = PHOTO_RES_COVER_850;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
+	}
+	elseif($maxwidth <= 1200) {
+		$width = 1200;
+		$size = 'hz_large';
+		$cover_size = PHOTO_RES_COVER_1200;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
+	}
+
+//	$scale = (float) $maxwidth / $width;
+//	$translate = intval(($scale / 1.0) * 100);
+
+
 	$channel['channel_addr'] = $channel['channel_address'] . '@' . get_app()->get_hostname();
+	$zcard = array('chan' => $channel);
 
 	$r = q("select height, width, resource_id, scale, type from photo where uid = %d and scale = %d and photo_usage = %d",
 		intval($channel['channel_id']),
-		intval(PHOTO_RES_COVER_1200),
+		intval($cover_size),
 		intval(PHOTO_COVER)
 	);
 
@@ -1799,22 +1830,10 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
 	}		
 	
-	$pphoto = array('type' => $channel['xchan_photo_mimetype'], 
-		'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
-
-	$maxwidth = (($args['width']) ? intval($args['width']) : 0);
-	$maxheight = (($args['height']) ? intval($args['height']) : 0);
-
-	$zcard = array('chan' => $channel);
-	if(($maxwidth > 1200) || ($maxwidth < 1))
-		$maxwidth = 1200;
-	$scale = (float) $maxwidth / 1200;
-
-	$translate = intval(($scale / 1.0) * 100);
-
 	$o .= replace_macros(get_markup_template('zcard.tpl'),array(
 		'$scale' => $scale,
 		'$translate' => $translate,
+		'$size' => $size,
 		'$cover' => $cover,
 		'$pphoto' => $pphoto,
 		'$zcard' => $zcard

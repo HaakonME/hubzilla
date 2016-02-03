@@ -32,6 +32,8 @@ function oep_init(&$a) {
 		$arr = oep_display_reply($_REQUEST);
 	elseif(fnmatch('*/channel/*mid=*',$url))
 		$arr = oep_mid_reply($_REQUEST);
+	elseif(fnmatch('*/channel*',$url))
+		$arr = oep_profile_reply($_REQUEST);
 	elseif(fnmatch('*/profile/*',$url))
 		$arr = oep_profile_reply($_REQUEST);
 

@@ -8,6 +8,7 @@ function oep_init(&$a) {
 
 	logger('oep: ' . print_r($_REQUEST,true), LOGGER_DEBUG, LOG_INFO);
 
+	$html = ((argc() > 1 && argv(1) === 'html') ? true : false);
 	if($_REQUEST['url']) {
 		$_REQUEST['url'] = strip_zids($_REQUEST['url']);
 		$url = $_REQUEST['url'];
@@ -38,8 +39,16 @@ function oep_init(&$a) {
 		$arr = oep_profile_reply($_REQUEST);
 
 	if($arr) {
-		header('Content-Type: application/json+oembed');
-		echo json_encode($arr);
+		if($html) {
+			if($arr['type'] === 'rich') {
+				header('Content-Type: text/html');
+				echo $arr['html'];
+			}
+		}
+		else {
+			header('Content-Type: application/json+oembed');
+			echo json_encode($arr);
+		}
 		killme();
 	}
 

@@ -703,8 +703,9 @@ function admin_page_security(&$a) {
 
 	$embed_coop = intval(get_config('system','embed_coop'));
 
-	if((! $whiteembeds) && (! $blackembeds) && (! $embed_coop))
-		$whiteembeds_str = "youtube.com\nyoutu.be\ntwitter.com\nvimeo.com\nsoundcloud.com\nwikipedia.com";
+// wait to implement this until we have a co-op in place. 
+//	if((! $whiteembeds) && (! $blackembeds) && (! $embed_coop))
+//		$whiteembeds_str = "youtube.com\nyoutu.be\ntwitter.com\nvimeo.com\nsoundcloud.com\nwikipedia.com";
 
 	$t = get_markup_template('admin_security.tpl');
 	return replace_macros($t, array(

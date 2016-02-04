@@ -542,9 +542,47 @@ function admin_page_hubloc_post(&$a){
 	goaway($a->get_baseurl(true) . '/admin/hubloc' );
 }
 
+function trim_array_elems($arr) {
+	$narr = array();
+
+	if($arr && is_array($arr)) {
+		for($x = 0; $x < count($arr); $x ++) {
+			$y = trim($arr[$x]);
+			if($y)
+				$narr[] = $y;
+		}
+	}
+	return $narr;
+}
+
 function admin_page_security_post(&$a){
 	check_form_security_token_redirectOnErr('/admin/security', 'admin_security');
 
+logger('post: ' . print_r($_POST,true));
+
+	$block_public         = ((x($_POST,'block_public'))		? True	: False);
+	set_config('system','block_public',$block_public);
+
+	$ws = trim_array_elems(explode("\n",$_POST['whitelisted_sites']));
+	set_config('system','whitelisted_sites',$ws);
+
+	$bs = trim_array_elems(explode("\n",$_POST['blacklisted_sites']));
+	set_config('system','blacklisted_sites',$bs);
+
+	$wc = trim_array_elems(explode("\n",$_POST['whitelisted_channels']));
+	set_config('system','whitelisted_channels',$wc);
+
+	$bc = trim_array_elems(explode("\n",$_POST['blacklisted_channels']));
+	set_config('system','blacklisted_channels',$bc);
+
+	$embed_coop         = ((x($_POST,'embed_coop'))		? True	: False);
+	set_config('system','embed_coop',$embed_coop);
+
+	$we = trim_array_elems(explode("\n",$_POST['embed_allow']));
+	set_config('system','embed_allow',$we);
+
+	$be = trim_array_elems(explode("\n",$_POST['embed_deny']));
+	set_config('system','embed_deny',$be);
 
 	goaway(z_root() . '/admin/security');
 }
@@ -666,7 +704,7 @@ function admin_page_security(&$a) {
 	$embed_coop = intval(get_config('system','embed_coop'));
 
 	if((! $whiteembeds) && (! $blackembeds) && (! $embed_coop))
-		$blackembeds_str = "youtube.com\nyoutu.be\ntwitter.com\nvimeo.com\nsoundcloud.com";
+		$whiteembeds_str = "youtube.com\nyoutu.be\ntwitter.com\nvimeo.com\nsoundcloud.com\nwikipedia.com";
 
 	$t = get_markup_template('admin_security.tpl');
 	return replace_macros($t, array(

@@ -3,6 +3,8 @@
 
 	<form action="{{$baseurl}}/admin/security" method="post">
 
+	<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
+
 
 	{{include file="field_checkbox.tpl" field=$block_public}}
 

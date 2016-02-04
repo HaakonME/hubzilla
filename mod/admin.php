@@ -257,7 +257,6 @@ function admin_page_site_post(&$a){
 	$allowed_sites        = ((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
 	$allowed_email        = ((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
 	$not_allowed_email    = ((x($_POST,'not_allowed_email'))	? notags(trim($_POST['not_allowed_email']))		: '');
-	$block_public         = ((x($_POST,'block_public'))		? True	: False);
 	$force_publish        = ((x($_POST,'publish_all'))		? True	: False);
 	$disable_discover_tab = ((x($_POST,'disable_discover_tab'))		? False	:	True);
 	$login_on_homepage    = ((x($_POST,'login_on_homepage'))		? True	:	False);
@@ -322,7 +321,6 @@ function admin_page_site_post(&$a){
 	set_config('system','allowed_sites', $allowed_sites);
 	set_config('system','allowed_email', $allowed_email);
 	set_config('system','not_allowed_email', $not_allowed_email);	
-	set_config('system','block_public', $block_public);
 	set_config('system','publish_all', $force_publish);
 	set_config('system','disable_discover_tab', $disable_discover_tab);
 	if ($global_directory == '') {
@@ -483,7 +481,6 @@ function admin_page_site(&$a) {
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$not_allowed_email'	=> array('not_allowed_email', t("Not allowed email domains"), get_config('system','not_allowed_email'), t("Comma separated list of domains which are not allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains, unless allowed domains have been defined.")),
-		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 		'$disable_discover_tab'	=> array('disable_discover_tab', t('Import Public Streams'), $discover_tab, t('Import and allow access to public content pulled from other sites. Warning: this content is unmoderated.')),

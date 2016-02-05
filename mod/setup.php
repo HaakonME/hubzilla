@@ -138,16 +138,17 @@ function setup_post(&$a) {
 
 			$tpl = get_intltext_template('htconfig.tpl');
 			$txt = replace_macros($tpl,array(
-				'$dbhost' => $dbhost,
-				'$dbport' => $dbport,
-				'$dbuser' => $dbuser,
-				'$dbpass' => $dbpass,
-				'$dbdata' => $dbdata,
-				'$dbtype' => $dbtype,
-				'$timezone' => $timezone,
-				'$siteurl' => $siteurl,
-				'$site_id' => random_string(),
-				'$phpath' => $phpath,
+				'$dbhost'    => $dbhost,
+				'$dbport'    => $dbport,
+				'$dbuser'    => $dbuser,
+				'$dbpass'    => $dbpass,
+				'$dbdata'    => $dbdata,
+				'$dbtype'    => $dbtype,
+				'$uno'       => 0,
+				'$timezone'  => $timezone,
+				'$siteurl'   => $siteurl,
+				'$site_id'   => random_string(),
+				'$phpath'    => $phpath,
 				'$adminmail' => $adminmail
 			));
 

@@ -19,6 +19,8 @@ $db_pass = 'mysqlpassword';
 $db_data = 'mysqldatabasename';
 $db_type = 0; // use 1 for postgres, 0 for mysql
 
+define( 'UNO', 0 );
+
 /*
  * Notice: Many of the following settings will be available in the admin panel 
  * after a successful site install. Once they are set in the admin panel, they

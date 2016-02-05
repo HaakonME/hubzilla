@@ -928,9 +928,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		$block = true;
 	}
 
-	if($block && intval(get_config('system','block_public_blackout')))
-		return $o;
-
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;
 

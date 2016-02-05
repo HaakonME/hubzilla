@@ -968,16 +968,24 @@ function get_poke_verbs() {
 	// index is present tense verb
 	// value is array containing past tense verb, translation of present, translation of past
 
-	$arr = array(
-		'poke' => array( 'poked', t('poke'), t('poked')),
-		'ping' => array( 'pinged', t('ping'), t('pinged')),
-		'prod' => array( 'prodded', t('prod'), t('prodded')),
-		'slap' => array( 'slapped', t('slap'), t('slapped')),
-		'finger' => array( 'fingered', t('finger'), t('fingered')),
-		'rebuff' => array( 'rebuffed', t('rebuff'), t('rebuffed')),
-	);
+	if(get_config('system','poke_basic')) {
+		$arr = array(
+			'poke' => array( 'poked', t('poke'), t('poked')),
+		);
+	}
+	else {
+		$arr = array(
+			'poke' => array( 'poked', t('poke'), t('poked')),
+			'ping' => array( 'pinged', t('ping'), t('pinged')),
+			'prod' => array( 'prodded', t('prod'), t('prodded')),
+			'slap' => array( 'slapped', t('slap'), t('slapped')),
+			'finger' => array( 'fingered', t('finger'), t('fingered')),
+			'rebuff' => array( 'rebuffed', t('rebuff'), t('rebuffed')),
+		);
 
-	call_hooks('poke_verbs', $arr);
+		call_hooks('poke_verbs', $arr);
+	}
+
 	return $arr;
 }
 

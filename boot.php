@@ -2164,7 +2164,7 @@ function construct_page(&$a) {
 
 	// security headers - see https://securityheaders.io
 
-	if($a->get_scheme() === 'https')
+	if($a->get_scheme() === 'https' && $a->config['system']['transport_security_header'])
 		header("Strict-Transport-Security: max-age=31536000");
 
 	header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'");

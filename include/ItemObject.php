@@ -681,6 +681,11 @@ class Item extends BaseObject {
 		$qc = ((local_channel()) ? get_pconfig(local_channel(),'system','qcomment') : null);
 		$qcomment = (($qc) ? explode("\n",$qc) : null);
 
+		$arr = array('comment_buttons' => '');
+		call_hooks('comment_buttons',$arr);
+		$comment_buttons = $arr['comment_buttons'];
+
+
 		$comment_box = replace_macros($template,array(
 			'$return_path' => '',
 			'$threaded' => $this->is_threaded(),
@@ -689,6 +694,7 @@ class Item extends BaseObject {
 			'$id' => $this->get_id(),
 			'$parent' => $this->get_id(),
 			'$qcomment' => $qcomment,
+			'$comment_buttons' => $comment_buttons,
 			'$profile_uid' =>  $conv->get_profile_owner(),
 			'$mylink' => $observer['xchan_url'],
 			'$mytitle' => t('This is you'),

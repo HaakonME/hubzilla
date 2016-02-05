@@ -100,6 +100,10 @@ This document assumes you're an administrator.
     [b]system.paranoia[/b]
         As the pconfig, but on a site-wide basis.  Can be overwritten
         by member settings.
+	[b]system.transport_security_header[/b]
+		if non-zero and SSL is being used, include a strict-transport-security header on webpages
+	[b]system.poke_basic[/b]
+		Reduce the number of poke verbs to exactly 1 ("poke"). Disable other verbs. 
     [b]system.openssl_conf_file[/b]
         Specify a file containing OpenSSL configuration.  Read the code first.
         If you can't read the code, don't play with it.

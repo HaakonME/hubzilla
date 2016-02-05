@@ -38,6 +38,9 @@ function get_feature_default($feature) {
 
 function get_features($filtered = true) {
 
+	if(UNO)
+		return array();
+
 	$arr = array(
 
 		// General

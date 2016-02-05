@@ -145,7 +145,10 @@ function help_content(&$a) {
 	if($_REQUEST['search']) {
 	
 		$o .= '<div id="help-content" class="generic-content-wrapper">';
+		$o .= '<div class="section-title-wrapper">';
 		$o .= '<h2>' . t('Documentation Search') . ' - ' . htmlspecialchars($_REQUEST['search']) . '</h2>';
+		$o .= '</div>';
+		$o .= '<div class="section-content-wrapper">';
 
 		$r = search_doc_files($_REQUEST['search']);
 		if($r) {
@@ -161,6 +164,7 @@ function help_content(&$a) {
 
 			}
 			$o .= '</ul>';
+			$o .= '</div>';
 			$o .= '</div>';
 		}
 		return $o;

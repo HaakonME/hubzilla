@@ -109,6 +109,9 @@ function import_account(&$a, $account_id) {
 		return;
 	}
 
+	if(UNO)
+		return;
+		
 	if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
 		$v1 = substr($data['compatibility']['database'],-4);
 		$v2 = substr(DB_UPDATE_VERSION,-4);
@@ -116,6 +119,12 @@ function import_account(&$a, $account_id) {
 			$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 ); 
 			notice($t);
 		}
+		if(array_key_exists('server_role',$data['compatibility']) 
+			&& $data['compatibility']['server_role'] != UNO) {
+			notice( t('Server platform is not compatible. Operation not permitted.') . EOL);
+			return;
+		}
+
 	}
 
 	// import channel

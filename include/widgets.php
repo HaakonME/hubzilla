@@ -527,7 +527,6 @@ function widget_settings_menu($arr) {
 		'selected' => ''
 	);
 
-
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(
 			'label' => t('Connection Default Permissions'),

@@ -28,6 +28,9 @@ $a->install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? fal
 
 @include('.htconfig.php');
 
+if(! defined('UNO'))
+	define('UNO', 0);
+
 $a->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
 date_default_timezone_set($a->timezone);
 

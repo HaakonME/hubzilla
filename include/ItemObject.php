@@ -681,7 +681,7 @@ class Item extends BaseObject {
 		$qc = ((local_channel()) ? get_pconfig(local_channel(),'system','qcomment') : null);
 		$qcomment = (($qc) ? explode("\n",$qc) : null);
 
-		$arr = array('comment_buttons' => '');
+		$arr = array('comment_buttons' => '','id' => $this->get_id());
 		call_hooks('comment_buttons',$arr);
 		$comment_buttons = $arr['comment_buttons'];
 

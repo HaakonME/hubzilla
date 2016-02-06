@@ -227,8 +227,8 @@ function register_content(&$a) {
 	$nickname     = ((x($_REQUEST,'nickname'))    ? strip_tags(trim($_REQUEST['nickname']))    :  "" );
 	$privacy_role = ((x($_REQUEST,'permissions_role')) ? $_REQUEST['permissions_role']         :  "" );
 
-	$auto_create = get_config('system','auto_channel_create');
-	$default_role = get_config('system','default_permissions_role');
+	$auto_create  = ((UNO) || (get_config('system','auto_channel_create')) ? true : false);
+	$default_role = ((UNO) ? 'social' : get_config('system','default_permissions_role'));
 
 	require_once('include/bbcode.php');
 

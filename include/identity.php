@@ -484,7 +484,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 	// use constants here as otherwise we will have no idea if we can import from a site 
 	// with a non-standard platform and version.
-	$ret['compatibility'] = array('project' => PLATFORM_NAME, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
+	$ret['compatibility'] = array('project' => PLATFORM_NAME, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION, 'server_role' => UNO );
 
 	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($channel_id)
@@ -927,9 +927,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	if(! perm_is_allowed($profile['uid'],((is_array($observer)) ? $observer['xchan_hash'] : ''),'view_profile')) {
 		$block = true;
 	}
-
-	if($block && intval(get_config('system','block_public_blackout')))
-		return $o;
 
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;

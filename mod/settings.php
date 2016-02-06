@@ -600,7 +600,7 @@ function settings_content(&$a) {
 					local_channel());
 			
 			if (!count($r)){
-				notice(t("You can't edit this application."));
+				notice(t('Application not found.'));
 				return;
 			}
 			$app = $r[0];

@@ -2868,6 +2868,9 @@ function import_site($arr, $pubkey) {
  */
 function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
+	if(UNO)
+		return;
+
 	$a = get_app();
 
 	logger('build_sync_packet');
@@ -2996,6 +2999,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
  * @return array
  */
 function process_channel_sync_delivery($sender, $arr, $deliveries) {
+
+	if(UNO)
+		return;
 
 	require_once('include/import.php');
 

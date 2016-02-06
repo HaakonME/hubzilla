@@ -67,7 +67,8 @@ function setup_post(&$a) {
 			$phpath = trim($_POST['phpath']);
 			$adminmail = trim($_POST['adminmail']);
 			$siteurl = trim($_POST['siteurl']);
-
+			$advanced = ((intval($_POST['advanced'])) ? 1 : 0);
+			
 			// $siteurl should not have a trailing slash
 
 			$siteurl = rtrim($siteurl,'/');
@@ -118,6 +119,7 @@ function setup_post(&$a) {
 			$timezone = notags(trim($_POST['timezone']));
 			$adminmail = notags(trim($_POST['adminmail']));
 			$siteurl = notags(trim($_POST['siteurl']));
+			$advanced = ((intval($_POST['advanced'])) ? 1 : 0);
 
 			if($siteurl != z_root()) {
 				$test = z_fetch_url($siteurl."/setup/testrewrite");
@@ -144,7 +146,7 @@ function setup_post(&$a) {
 				'$dbpass'    => $dbpass,
 				'$dbdata'    => $dbdata,
 				'$dbtype'    => $dbtype,
-				'$uno'       => 0,
+				'$uno'       => 1 - $advanced,
 				'$timezone'  => $timezone,
 				'$siteurl'   => $siteurl,
 				'$site_id'   => random_string(),
@@ -322,7 +324,6 @@ function setup_content(&$a) {
 
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
-
 				'$lbl_10' => t('Please select a default timezone for your website'),
 
 				'$baseurl' => $a->get_baseurl(),
@@ -364,6 +365,7 @@ function setup_content(&$a) {
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 
 				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
+				'$advanced' => array('advanced', t('Enable $Projectname <strong>advanced</strong> features?'), 0, t('Some advanced features, while useful - may be best suited for technically proficient audiences')),
 
 				'$timezone' => array('timezone', t('Please select a default timezone for your website'), $timezone, '', get_timezones()),
 

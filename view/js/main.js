@@ -641,7 +641,7 @@ function collapseHeight() {
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
 
-				var trigger = $(window).scrollTop() + ($(window).height() - divmore_height) < $(this).offset().top ? true : false;
+				var trigger = $(window).scrollTop() < $(this).offset().top ? true : false;
 
 				if(trigger) {
 					$(this).readmore({
@@ -653,7 +653,7 @@ function collapseHeight() {
 						beforeToggle: function(trigger, element, expanded) {
 							if(expanded) {
 								if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
-									$('html, body').animate( { scrollTop: $(window).scrollTop() - (orgHeight - divmore_height) }, {duration: 0 } );
+									$(window).scrollTop($(window).scrollTop() - (orgHeight - divmore_height));
 								}
 							}
 						}

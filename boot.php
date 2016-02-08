@@ -2394,3 +2394,9 @@ function get_site_icon() {
 	return z_root() . '/images/hz-32.png';
 }
 
+
+function get_server_role() {
+	if(UNO)
+		return 'basic';
+	return 'advanced';
+}

@@ -120,7 +120,7 @@ function import_account(&$a, $account_id) {
 			notice($t);
 		}
 		if(array_key_exists('server_role',$data['compatibility']) 
-			&& $data['compatibility']['server_role'] != UNO) {
+			&& $data['compatibility']['server_role'] != get_server_role()) {
 			notice( t('Server platform is not compatible. Operation not permitted.') . EOL);
 			return;
 		}

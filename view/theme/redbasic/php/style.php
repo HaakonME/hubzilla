@@ -40,7 +40,6 @@ if(! $a->install) {
 	$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 	$top_photo=get_pconfig($uid,'redbasic','top_photo');
 	$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
-
 }
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings

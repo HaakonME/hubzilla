@@ -913,7 +913,7 @@ function profile_load(&$a, $nickname, $profile = '') {
  * @return HTML string suitable for sidebar inclusion
  * Exceptions: Returns empty string if passed $profile is wrong type or not populated
  */
-function profile_sidebar($profile, $block = 0, $show_connect = true) {
+function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = false) {
 
 	$a = get_app();
 
@@ -1056,8 +1056,9 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 	if(! feature_enabled($profile['uid'],'hide_rating'))
 		$z = widget_rating(array('target' => $profile['channel_hash']));
-		
+
 	$o .= replace_macros($tpl, array(
+		'$zcard'         => $zcard,
 		'$profile'       => $profile,
 		'$connect'       => $connect,
 		'$connect_url'   => $connect_url,
@@ -1796,8 +1797,8 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 		$cover_size = PHOTO_RES_COVER_425;
 		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
 	}
-	elseif($maxwidth <= 850) {
-		$width = 850;
+	elseif($maxwidth <= 900) {
+		$width = 900;
 		$size = 'hz_medium';
 		$cover_size = PHOTO_RES_COVER_850;
 		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
@@ -1832,6 +1833,7 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 	}
 	
 	$o .= replace_macros(get_markup_template('zcard.tpl'),array(
+		'$maxwidth' => $maxwidth,
 		'$scale' => $scale,
 		'$translate' => $translate,
 		'$size' => $size,

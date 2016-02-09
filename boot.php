@@ -650,7 +650,6 @@ class App {
 	private $perms      = null;            // observer permissions
 	private $widgets    = array();         // widgets for this page
 
-
 	public  $groups;
 	public  $language;
 	public  $module_loaded = false;

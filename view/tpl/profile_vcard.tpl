@@ -1,8 +1,11 @@
 <div class="vcard">
+	{{if ! $zcard}}
 	<div id="profile-photo-wrapper"><img class="photo" src="{{$profile.photo}}?rev={{$profile.picdate}}" alt="{{$profile.name}}"></div>
+	{{/if}}
 	{{if $connect}}
 	<div class="connect-btn-wrapper"><a href="{{$connect_url}}" class="btn btn-block btn-success btn-sm"><i class="icon-plus"></i> {{$connect}}</a></div>
 	{{/if}}
+	{{if ! $zcard}}
 	{{if $profile.edit}}
 	<div class="dropdown">
 	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil" title="{{$profile.edit.1}}" ></i></a>
@@ -17,9 +20,12 @@
 	</ul>
 	</div>
 	{{/if}}
+	{{/if}}
 
+	{{if ! $zcard}}
 	<div class="fn">{{$profile.name}}{{if $profile.online}} <i class="icon-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
 	{{if $reddress}}<div class="reddress" oncopy="return false;">{{$profile.reddress}}</div>{{/if}}		
+	{{/if}}
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}
 
 

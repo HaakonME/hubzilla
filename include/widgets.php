@@ -8,13 +8,23 @@
 require_once('include/dir_fns.php');
 require_once('include/contact_widgets.php');
 require_once('include/attach.php');
-
+require_once('include/Contact.php');
 
 function widget_profile($args) {
 	$a = get_app();
 	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 	return profile_sidebar($a->profile, $block, true);
 }
+
+function widget_zcard($args) {
+	$a = get_app();
+	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$channel = channelx_by_n($a->profile_uid);
+	return get_zcard($channel,get_observer_hash(),array('width' => 875));
+}
+
+
+
 
 // FIXME The problem with the next widget is that we don't have a search function for webpages that we can send the links to.
 // Then we should also provide an option to search webpages and conversations.
@@ -368,6 +378,17 @@ function widget_fullprofile($arr) {
 
 	return profile_sidebar($a->profile, $block);
 }
+
+function widget_shortprofile($arr) {
+	$a = get_app();
+	if(! $a->profile['profile_uid'])
+		return;
+
+	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+
+	return profile_sidebar($a->profile, $block, true, true);
+}
+
 
 function widget_categories($arr) {
 	$a = get_app();

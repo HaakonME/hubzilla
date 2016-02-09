@@ -650,7 +650,6 @@ class App {
 	private $perms      = null;            // observer permissions
 	private $widgets    = array();         // widgets for this page
 
-
 	public  $groups;
 	public  $language;
 	public  $module_loaded = false;
@@ -2167,7 +2166,8 @@ function construct_page(&$a) {
 	if($a->get_scheme() === 'https' && $a->config['system']['transport_security_header'])
 		header("Strict-Transport-Security: max-age=31536000");
 
-	header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'");
+	if($a->config['system']['content_security_policy'])
+		header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'");
 
 	if($a->config['system']['x_security_headers']) {
 		header("X-Frame-Options: SAMEORIGIN");
@@ -2394,3 +2394,9 @@ function get_site_icon() {
 	return z_root() . '/images/hz-32.png';
 }
 
+
+function get_server_role() {
+	if(UNO)
+		return 'basic';
+	return 'advanced';
+}

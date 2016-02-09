@@ -1805,6 +1805,7 @@ function get_site_info() {
 	$data = Array(
 		'version' => $version,
 		'version_tag' => $tag,
+		'server_role' => get_server_role(),
 		'commit' => $commit,
 		'url' => z_root(),
 		'plugins' => $visible_plugins,

@@ -1013,6 +1013,7 @@ function settings_content(&$a) {
 			$permissions_role = 'custom';
 
 		$permissions_set = (($permissions_role != 'custom') ? true : false);
+
 		$vnotify = get_pconfig(local_channel(),'system','vnotify');
 		$always_show_in_notices = get_pconfig(local_channel(),'system','always_show_in_notices');
 		if($vnotify === false)
@@ -1037,6 +1038,7 @@ function settings_content(&$a) {
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 			'$permissions_set' => $permissions_set,
+			'$server_role' => get_server_role(),
 			'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 
 			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online'), $yes_no),

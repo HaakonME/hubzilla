@@ -36,6 +36,15 @@ $a->config['system']['baseurl'] = '{{$siteurl}}';
 $a->config['system']['sitename'] = "Hubzilla";
 $a->config['system']['location_hash'] = '{{$site_id}}';
 
+// These lines set additional security headers to be sent with all responses
+// You may wish to set transport_security_header to 0 if your server already sends
+// this header. content_security_policy may need to be disabled if you wish to
+// run the piwik analytics plugin or include other offsite resources on a page
+
+$a->config['system']['transport_security_header'] = 1;
+$a->config['system']['content_security_policy'] = 1;
+
+
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 
 // REGISTER_CLOSED. 'register_text' (if set) will be displayed prominently on 

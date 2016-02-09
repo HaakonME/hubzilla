@@ -146,7 +146,7 @@ function register_post(&$a) {
 	
 	$new_channel = false;
 
-	if(get_config('system','auto_channel_create')) {
+	if(get_config('system','auto_channel_create') || UNO) {
 		$new_channel = auto_channel_create($result['account']['account_id']);
 		if($new_channel['success']) {
 			$channel_id = $new_channel['channel']['channel_id'];

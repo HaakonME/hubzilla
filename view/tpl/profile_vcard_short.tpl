@@ -1,34 +1,13 @@
-<div class="vcard">
-	{{if ! $zcard}}
-	<div id="profile-photo-wrapper"><img class="photo" src="{{$profile.photo}}?rev={{$profile.picdate}}" alt="{{$profile.name}}"></div>
-	{{/if}}
+{{$contact_block}}
+
 	{{if $connect}}
 	<div class="connect-btn-wrapper"><a href="{{$connect_url}}" class="btn btn-block btn-success btn-sm"><i class="icon-plus"></i> {{$connect}}</a></div>
 	{{/if}}
-	{{if ! $zcard}}
-	{{if $profile.edit}}
-	<div class="dropdown">
-	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil" title="{{$profile.edit.1}}" ></i></a>
-	<ul class="dropdown-menu" role="menu">
-		{{foreach $profile.menu.entries as $e}}
-		<li>
-			<a href="profiles/{{$e.id}}"><img class="dropdown-menu-img-xs" src='{{$e.photo}}'>{{$e.profile_name}}<div class='clear'></div></a>
-		</li>
-		{{/foreach}}
-		<li><a href="profile_photo" >{{$profile.menu.chg_photo}}</a></li>
-		{{if $profile.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$profile.menu.cr_new}}</a></li>{{/if}}
-	</ul>
-	</div>
-	{{/if}}
-	{{/if}}
 
-	{{if ! $zcard}}
-	<div class="fn">{{$profile.name}}{{if $profile.online}} <i class="icon-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
-	{{if $reddress}}<div class="reddress" oncopy="return false;">{{$profile.reddress}}</div>{{/if}}		
-	{{/if}}
+
+{{$rating}}
+
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}
-
-
 
 	{{if $location}}
 		<dl class="location"><dt class="location-label">{{$location}}</dt> 
@@ -54,13 +33,10 @@
 	{{if $diaspora}}
 	{{include file="diaspora_vcard.tpl"}}
 	{{/if}}
-</div>
-<div id="clear"></div>
 
-{{$rating}}
+<div id="clear"></div>
 
 {{$chanmenu}}
 
-{{$contact_block}}
 
 

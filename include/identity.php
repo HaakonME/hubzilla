@@ -1050,7 +1050,10 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		$channel_menu .= comanche_block($menublock);
 	}
 
-	$tpl = get_markup_template('profile_vcard.tpl');
+	if($zcard)
+		$tpl = get_markup_template('profile_vcard_short.tpl');
+	else
+		$tpl = get_markup_template('profile_vcard.tpl');
 
 	require_once('include/widgets.php');
 

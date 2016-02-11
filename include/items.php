@@ -552,6 +552,12 @@ function get_public_feed($channel, $params) {
 	$params['top']       = ((x($params,'top'))       ? intval($params['top'])   : 0);
 	$params['cat']       = ((x($params,'cat'))       ? $params['cat']          : '');
 
+
+	// put a sane lower limit on feed requests if not specified
+
+	if($params['begin'] === NULL_DATE)
+		$params['begin'] = datetime_convert('UTC','UTC','now - 1 month');
+
 	switch($params['type']) {
 		case 'json':
 			header("Content-type: application/atom+json");

@@ -101,7 +101,7 @@ function queue_deliver($outq, $immediate = false) {
 		}
 	}
 
-	$arr = array('outq' => $outq, 'handled' => false, 'immediate' => $immediate);
+	$arr = array('outq' => $outq, 'base' => $base, 'handled' => false, 'immediate' => $immediate);
 	call_hooks('queue_deliver',$arr);
 	if($arr['handled'])
 		return;

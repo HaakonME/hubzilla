@@ -603,6 +603,14 @@ function photos_content(&$a) {
 
 		$aclselect = (($_is_owner) ? populate_acl($channel_acl,false) : '');
 
+		// this is wrong but is to work around an issue with js_upload wherein it chokes if these variables
+		// don't exist. They really should be set to a parseable representation of the channel's default permissions 
+		// which can be processed by getSelected() 
+
+		if(! $aclselect) {
+			$aclselect = '<input id="group_allow" type="hidden" name="allow_gid[]" value="" /><input id="contact_allow" type="hidden" name="allow_cid[]" value="" /><input id="group_deny" type="hidden" name="deny_gid[]" value="" /><input id="contact_deny" type="hidden" name="deny_cid[]" value="" />';
+		}
+
 		$selname = (($datum) ? hex2bin($datum) : '');
 
 		$albums = ((array_key_exists('albums', $a->data)) ? $a->data['albums'] : photos_albums_list($a->data['channel'],$a->data['observer']));

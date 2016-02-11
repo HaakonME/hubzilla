@@ -365,7 +365,7 @@ function setup_content(&$a) {
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 
 				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
-				'$advanced' => array('advanced', t('Enable $Projectname <strong>advanced</strong> features?'), 0, t('Some advanced features, while useful - may be best suited for technically proficient audiences')),
+				'$advanced' => array('advanced', t('Enable $Projectname <strong>advanced</strong> features?'), 1, t('Some advanced features, while useful - may be best suited for technically proficient audiences')),
 
 				'$timezone' => array('timezone', t('Please select a default timezone for your website'), $timezone, '', get_timezones()),
 

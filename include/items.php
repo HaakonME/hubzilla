@@ -593,8 +593,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 	}
 	$items = items_fetch(array(
 		'wall' => '1',
-		'datequery' => $params['begin'],
-		'datequery2' => $params['end'],
+		'datequery' => $params['end'],
+		'datequery2' => $params['begin'],
 		'start' => $params['start'],          // FIXME
 	 	'records' => $params['records'],      // FIXME
 		'direction' => $params['direction'],  // FIXME
@@ -4915,7 +4915,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	if(! array_key_exists('nouveau',$arr)) {
 		$sql_extra2 = " AND item.parent = item.id ";
-		$sql_extra3 = '';
+//		$sql_extra3 = '';
 	}
 
 	if($arr['search']) {

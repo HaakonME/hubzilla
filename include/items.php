@@ -552,6 +552,12 @@ function get_public_feed($channel, $params) {
 	$params['top']       = ((x($params,'top'))       ? intval($params['top'])   : 0);
 	$params['cat']       = ((x($params,'cat'))       ? $params['cat']          : '');
 
+
+	// put a sane lower limit on feed requests if not specified
+
+	if($params['begin'] === NULL_DATE)
+		$params['begin'] = datetime_convert('UTC','UTC','now - 1 month');
+
 	switch($params['type']) {
 		case 'json':
 			header("Content-type: application/atom+json");
@@ -587,8 +593,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 	}
 	$items = items_fetch(array(
 		'wall' => '1',
-		'datequery' => $params['begin'],
-		'datequery2' => $params['end'],
+		'datequery' => $params['end'],
+		'datequery2' => $params['begin'],
 		'start' => $params['start'],          // FIXME
 	 	'records' => $params['records'],      // FIXME
 		'direction' => $params['direction'],  // FIXME
@@ -622,6 +628,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'$birthday'     => '',
 		'$community'    => '',
 	));
+
 
 	call_hooks('atom_feed', $atom);
 
@@ -4901,15 +4908,15 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	}
 
 	if ($arr['datequery']) {
-		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$arr['datequery']))));
+		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert('UTC','UTC',$arr['datequery']))));
 	}
 	if ($arr['datequery2']) {
-		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$arr['datequery2']))));
+		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert('UTC','UTC',$arr['datequery2']))));
 	}
 
 	if(! array_key_exists('nouveau',$arr)) {
 		$sql_extra2 = " AND item.parent = item.id ";
-		$sql_extra3 = '';
+//		$sql_extra3 = '';
 	}
 
 	if($arr['search']) {

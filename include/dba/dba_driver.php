@@ -388,3 +388,4 @@ function db_getfunc($f) {
 	logger('Unable to abstract DB function "'. $f . '" for dbtype ' . ACTIVE_DBTYPE, LOGGER_DEBUG);
 	return $f;
 }
+

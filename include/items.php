@@ -629,6 +629,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'$community'    => '',
 	));
 
+
 	call_hooks('atom_feed', $atom);
 
 	if($items) {

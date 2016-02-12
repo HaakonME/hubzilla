@@ -291,7 +291,7 @@ function call_hooks($name, &$data = null) {
 				$func = $hook[1];
 				$func($a, $data);
 			} else {
-				// remove orphan hooks
+
 				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND function = '%s'",
 					dbesc($name),
 					dbesc($hook[0]),

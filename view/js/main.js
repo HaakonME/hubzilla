@@ -617,7 +617,7 @@ function updateConvItems(mode,data) {
 
 	/* autocomplete @nicknames */
 	$(".comment-edit-form  textarea").editor_autocomplete(baseurl+"/acl?f=&n=1");
-
+/*
 	var bimgs = $(".wall-item-body img").not(function() { return this.complete; });
 	var bimgcount = bimgs.length;
 
@@ -631,6 +631,8 @@ function updateConvItems(mode,data) {
 	} else {
 		collapseHeight();
 	}
+*/
+	collapseHeight();
 
 }
 
@@ -666,6 +668,7 @@ function collapseHeight() {
 
 	var collapsedContentHeight = parseInt($("#region_2").height());
 	contentHeightDiff = origContentHeight - collapsedContentHeight;
+	console.log('collapseHeight() - contentHeightDiff: ' + contentHeightDiff + 'px');
 
 
 }
@@ -712,14 +715,23 @@ function liveUpdate() {
 		var orgHeight = $("#region_2").height();
 	}
 
+
+	var dstart = new Date();
+	console.log('LOADING data...');
 	$.get(update_url, function(data) {
+		var dready = new Date();
+		console.log('DATA ready in: ' + (dready - dstart)/1000 + ' seconds.');
+		console.log('LOADING images...');
+
+		$('.wall-item-body, .wall-photo-item',data).imagesLoaded( function() {
+		var iready = new Date();
+		console.log('IMAGES ready in: ' + (iready - dready)/1000 + ' seconds.');
+
 		page_load = false;
 		scroll_next = false;
 		updateConvItems(update_mode,data);
 		$("#page-spinner").spin(false);
 		$("#profile-jot-text-loading").spin(false);
-
-		console.log('contentHeightDiff: ' + contentHeightDiff);
 
 		if(update_mode === 'update') {
 			$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
@@ -740,6 +752,9 @@ function liveUpdate() {
 		updateCountsOnly = true;
 		if(timer) clearTimeout(timer);
 		timer = setTimeout(NavUpdate,10);
+
+		});
+
 	});
 }
 

@@ -683,7 +683,7 @@ function collapseHeight() {
 
 	if(i){
 		var sval = position - cDiff + ($(".divgrow-showmore").outerHeight() * i);
-		console.log('collapsed above vieport count: ' + i);
+		console.log('collapsed above viewport count: ' + i);
 		$(window).scrollTop(sval);
 	}
 

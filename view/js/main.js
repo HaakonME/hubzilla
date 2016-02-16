@@ -1231,21 +1231,8 @@ function zFormError(elm,x) {
 $(window).scroll(function () {
 	if(typeof buildCmd == 'function') {
 		// This is a content page with items and/or conversations
-		$('#more').hide();
-		$('#no-more').hide();
-
-		if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
-			$('#more').css("top","400");
-			$('#more').show();
-		}
-
-		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-//		if($(window).scrollTop() > $(document).height() - ($(window).height() * 1.5 )) {
-
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 300) {
 			if((pageHasMoreContent) && (! loadingPage)) {
-				$('#more').hide();
-				$('#no-more').hide();
-
 				next_page++;
 				scroll_next = true;
 				loadingPage = true;
@@ -1255,18 +1242,8 @@ $(window).scroll(function () {
 	}
 	else {
 		// This is some other kind of page - perhaps a directory
-
-		if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
-			$('#more').css("top","400");
-			$('#more').show();
-		}
-
-		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-//		if($(window).scrollTop() > ($(document).height() - $(window).height() * 1.5 )) {
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 300) {
 			if((pageHasMoreContent) && (! loadingPage) && (! justifiedGalleryActive)) {
-				$('#more').hide();
-				$('#no-more').hide();
-
 				next_page++;
 				scroll_next = true;
 				loadingPage = true;

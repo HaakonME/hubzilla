@@ -130,7 +130,7 @@ function new_channel_content(&$a) {
 		'$title'        => t('Add a Channel'),
 		'$desc'         => t('A channel is your own collection of related web pages. A channel can be used to hold social network profiles, blogs, conversation groups and forums, celebrity pages, and much more. You may create as many channels as your service provider allows.'),
 
-		'$label_name'   => t('Channel Name'),
+		'$label_name'   => t('Name'),
 		'$help_name'    => t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group" '),
 		'$label_nick'   => t('Choose a short nickname'),
 		'$nick_hub'     => '@' . str_replace(array('http://','https://','/'), '', get_config('system','baseurl')),

@@ -5480,10 +5480,10 @@ function get_iconfig(&$item, $family, $key) {
 		dbesc($key)
 	);
 	if($r) {
-		$v = ((preg_match('|^a:[0-9]+:{.*}$|s',$r[0]['v'])) ? unserialize($r[0]['v']) : $r[0]['v']);
+		$r[0]['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$r[0]['v'])) ? unserialize($r[0]['v']) : $r[0]['v']);
 		if($is_item)
 			$item['iconfig'][] = $r[0];
-		return $v;
+		return $r[0]['v'];
 	}
 	return false;
 
@@ -5504,31 +5504,25 @@ function set_iconfig(&$item, $family, $key, $value) {
 			$item['iconfig'] = array();
 		elseif($item['iconfig']) {
 			for($x = 0; $x < count($item['iconfig']); $x ++) {
-				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig']['k'] == $key) {
+				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig'][$x]['k'] == $key) {
 					$idx = $x;
 				}
 			}
 		}
-		if(array_key_exists('item_id',$item))
-			$iid = intval($item['item_id']);
-		else
-			$iid = intval($item['id']);
+		$entry = array('cat' => $family, 'k' => $key, 'v' => $value);
 
+		if(is_null($idx))
+			$item['iconfig'][] = $entry;
+		else
+			$item['iconfig'][$idx] = $entry;
+		return $value;
 	}
-	elseif(intval($item))
+
+	if(intval($item))
 		$iid = intval($item);
 
-	if(! $iid) {
-		$entry = array('cat' => $family, 'k' => $key, 'v' => $value);
-		if($is_item) {
-			if(is_null($idx))
-				$item['iconfig'][] = $entry;
-			else
-				$item['iconfig'][$idx] = $entry;
-			return $value;
-		}
+	if(! $iid)
 		return false;
-	}
 
 	if(get_iconfig($item, $family, $key) === false) {
 		$r = q("insert into iconfig( iid, cat, k, v ) values ( %d, '%s', '%s', '%s' ) ",
@@ -5547,22 +5541,8 @@ function set_iconfig(&$item, $family, $key, $value) {
 		);
 	}
 
-	$y = q("select * from iconfig where iid = %d and cat = '%s' and k = '%s' limit 1",
-		intval($iid),
-		dbesc($family),
-		dbesc($key)
-	);
-	if(! $y)
+	if(! $r)
 		return false;
-
-	$y[0]['v'] = $value;
-
-	if($is_item) {
-		if(is_null($idx))
-			$item['iconfig'][] = $y[0];
-		else
-			$item['iconfig'][$idx] = $y[0];
-	}
 
 	return $value;
 }

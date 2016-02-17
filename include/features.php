@@ -38,7 +38,7 @@ function get_feature_default($feature) {
 
 function get_features($filtered = true) {
 
-	if(UNO)
+	if(UNO && $filtered)
 		return array();
 
 	$arr = array(

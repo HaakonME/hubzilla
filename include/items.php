@@ -849,7 +849,7 @@ function get_item_elements($x,$allow_code = false) {
 	if($allow_code)
 		$arr['body'] = $x['body'];
 	else
-		$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+		$arr['body'] = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$key = get_config('system','pubkey');
 
@@ -917,6 +917,7 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['attach']       = activity_sanitise($x['attach']);
 	$arr['term']         = decode_tags($x['tags']);
+	$arr['iconfig']      = decode_item_meta($x['meta']);
 
 	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
 
@@ -1324,6 +1325,9 @@ function encode_item($item,$mirror = false) {
 	if($item['term'])
 		$x['tags']        = encode_item_terms($item['term'],$mirror);
 
+	if($item['iconfig'])
+		$x['meta']        = encode_item_meta($item['iconfig'],$mirror);
+
 	if($item['diaspora_meta']) {
 		$z = json_decode($item['diaspora_meta'],true);
 		if($z) {
@@ -1432,6 +1436,28 @@ function encode_item_terms($terms,$mirror = false) {
 	}
 
 	return $ret;
+}
+
+function encode_item_meta($meta,$mirror = false) {
+	$ret = array();
+
+	if($meta) {
+		foreach($meta as $m) {
+			$ret[] = array('family' => $m['cat'], 'key' => $m['k'], 'value' => $m['v']);
+		}
+	}
+
+	return $ret;
+}
+
+function decode_item_meta($meta) {
+	$ret = array();
+
+	if(is_array($meta) && $meta) {
+		foreach($meta as $m) {
+			$ret[] = array('cat' => escape_tags($m['family']),'k' => escape_tags($m['key']),'v' => $m['value']);
+		}
+	}		
 }
 
 /**
@@ -2446,6 +2472,13 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		unset($arr['term']);
 	}
 
+	$meta = null;
+	if(array_key_exists('iconfig',$arr)) {
+		$meta = $arr['iconfig'];
+		unset($arr['iconfig']);
+	}
+
+
  	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid) || strlen($public_policy))
 		$private = 1;
 	else
@@ -2522,6 +2555,15 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 		$arr['term'] = $terms;
 	}
+
+	if($meta) {
+		foreach($meta as $m) {
+			set_iconfig($current_post,$m['cat'],$m['k'],$m['v']);
+		}
+		$arr['iconfig'] = $meta;
+	}
+
+
 
 	call_hooks('post_remote_end',$arr);
 
@@ -2744,6 +2786,13 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		unset($arr['term']);
 	}
 
+	$meta = null;
+	if(array_key_exists('iconfig',$arr)) {
+		$meta = $arr['iconfig'];
+		unset($arr['iconfig']);
+	}
+
+
 	dbesc_array($arr);
 
 	logger('item_store_update: ' . print_r($arr,true), LOGGER_DATA);
@@ -2783,6 +2832,17 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 			);
 		}
 		$arr['term'] = $terms;
+	}
+
+	$r = q("delete from iconfig where iid = %d",
+		intval($orig_post_id)
+	);
+
+	if($meta) {
+		foreach($meta as $m) {
+			set_iconfig($current_post,$m['cat'],$m['k'],$m['v']);
+		}
+		$arr['iconfig'] = $meta;
 	}
 
 	call_hooks('post_remote_update_end',$arr);
@@ -5450,15 +5510,25 @@ function set_iconfig(&$item, $family, $key, $value) {
 			}
 		}
 		if(array_key_exists('item_id',$item))
-			$iid = $item['item_id'];
+			$iid = intval($item['item_id']);
 		else
-			$iid = $item['id'];
+			$iid = intval($item['id']);
+
 	}
 	elseif(intval($item))
-		$iid = $item;
+		$iid = intval($item);
 
-	if(! $iid)
+	if(! $iid) {
+		$entry = array('cat' => $family, 'k' => $key, 'v' => $value);
+		if($is_item) {
+			if(is_null($idx))
+				$item['iconfig'][] = $entry;
+			else
+				$item['iconfig'][$idx] = $entry;
+			return $value;
+		}
 		return false;
+	}
 
 	if(get_iconfig($item, $family, $key) === false) {
 		$r = q("insert into iconfig( iid, cat, k, v ) values ( %d, '%s', '%s', '%s' ) ",

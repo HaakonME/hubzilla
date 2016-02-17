@@ -145,6 +145,7 @@ function register_post(&$a) {
 	authenticate_success($result['account'],true,false,true);
 	
 	$new_channel = false;
+	$next_page = 'new_channel';
 
 	if(get_config('system','auto_channel_create') || UNO) {
 		$new_channel = auto_channel_create($result['account']['account_id']);
@@ -156,10 +157,10 @@ function register_post(&$a) {
 		else
 			$new_channel = false;
 	}
-	if(! $new_channel) {
-		if(! strlen($next_page = get_config('system','workflow_register_next')))
-			$next_page = 'new_channel';
 
+	$x = get_config('system','workflow_register_next');
+	if($x) {
+		$next_page = $x;
 		$_SESSION['workflow'] = true;
 	}
 

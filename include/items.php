@@ -4675,6 +4675,10 @@ function fetch_post_tags($items,$link = false) {
 			dbesc($tag_finder_str),
 			intval(TERM_OBJ_POST)
 		);
+		$imeta = q("select * from iconfig where iid in ( %s )",
+			dbesc($tag_finger_str)
+		); 
+
 	}
 
 	for($x = 0; $x < count($items); $x ++) {
@@ -4694,6 +4698,26 @@ function fetch_post_tags($items,$link = false) {
 						if(! is_array($items[$x]['term']))
 							$items[$x]['term'] = array();
 						$items[$x]['term'][] = $t;
+					}
+				}
+			}
+		}
+		if($imeta) {
+			foreach($imeta as $i) {
+				if(array_key_exists('item_id',$items[$x])) {
+					if($i['iid'] == $items[$x]['item_id']) {
+						if(! is_array($items[$x]['iconfig']))
+							$items[$x]['iconfig'] = array();
+						$i['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$i['v'])) ? unserialize($i['v']) : $i['v']);
+						$items[$x]['iconfig'][] = $i;
+					}
+				}
+				else {
+					if($i['iid'] == $items[$x]['id']) {
+						if(! is_array($items[$x]['iconfig']))
+							$items[$x]['iconfig'] = array();
+						$i['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$i['v'])) ? unserialize($i['v']) : $i['v']);
+						$items[$x]['iconfig'][] = $i;
 					}
 				}
 			}
@@ -5358,5 +5382,118 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 	post_activity_item($arr);
 
 
+}
+
+
+
+
+
+function get_iconfig(&$item, $family, $key) {
+
+	$is_item = false;
+	if(is_array($item)) {
+		$is_item = true;
+		if((! array_key_exists('iconfig',$item)) || (! is_array($item['iconfig'])))
+			$item['iconfig'] = array();
+
+		if(array_key_exists('item_id',$item))
+			$iid = $item['item_id'];
+		else
+			$iid = $item['id'];
+	}
+	elseif(intval($item))
+		$iid = $item;
+
+	if(! $iid)
+		return false;
+
+	if(is_array($item) && array_key_exists('iconfig',$item) && is_array($item['iconfig'])) {
+		foreach($item['iconfig'] as $c) {
+			if($c['iid'] == $iid && $c['cat'] == $family && $c['k'] == $key)
+				return $c['v'];
+		}
+	}
+		 
+	$r = q("select * from iconfig where iid = %d and cat = '%s' and k = '%s' limit 1",
+		intval($iid),
+		dbesc($family),
+		dbesc($key)
+	);
+	if($r) {
+		$v = ((preg_match('|^a:[0-9]+:{.*}$|s',$r[0]['v'])) ? unserialize($r[0]['v']) : $r[0]['v']);
+		if($is_item)
+			$item['iconfig'][] = $r[0];
+		return $v;
+	}
+	return false;
+
+}
+
+
+function set_iconfig(&$item, $family, $key, $value) {
+
+	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
+	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
+
+	$is_item = false;
+	$idx = null;
+
+	if(is_array($item)) {
+		$is_item = true;
+		if((! array_key_exists('iconfig',$item)) || (! is_array($item['iconfig'])))
+			$item['iconfig'] = array();
+		elseif($item['iconfig']) {
+			for($x = 0; $x < count($item['iconfig']); $x ++) {
+				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig']['k'] == $key) {
+					$idx = $x;
+				}
+			}
+		}
+		if(array_key_exists('item_id',$item))
+			$iid = $item['item_id'];
+		else
+			$iid = $item['id'];
+	}
+	elseif(intval($item))
+		$iid = $item;
+
+	if(! $iid)
+		return false;
+
+	if(get_iconfig($item, $family, $key) === false) {
+		$r = q("insert into iconfig( iid, cat, k, v ) values ( %d, '%s', '%s', '%s' ) ",
+			intval($iid),
+			dbesc($family),
+			dbesc($key),
+			dbesc($dbvalue)
+		);
+	}
+	else {
+		$r = q("update iconfig set v = '%s' where iid = %d and cat = '%s' and  k = '%s' ",
+			dbesc($dbvalue),
+			intval($iid),
+			dbesc($family),
+			dbesc($key)
+		);
+	}
+
+	$y = q("select * from iconfig where iid = %d and cat = '%s' and k = '%s' limit 1",
+		intval($iid),
+		dbesc($family),
+		dbesc($key)
+	);
+	if(! $y)
+		return false;
+
+	$y[0]['v'] = $value;
+
+	if($is_item) {
+		if(is_null($idx))
+			$item['iconfig'][] = $y[0];
+		else
+			$item['iconfig'][$idx] = $y[0];
+	}
+
+	return $value;
 }
 

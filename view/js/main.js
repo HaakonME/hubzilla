@@ -650,7 +650,7 @@ function collapseHeight() {
 				//var trigger = $(window).scrollTop() < $(this).offset().top ? true : false;
 
 				// check if we will collapse some content above the visible content and compensate the diff later
-				if($(window).scrollTop() > $(this).offset().top) {
+				if(($(this).offset().top + orgHeight - $(window).scrollTop()) < 50) {
 					diff = orgHeight - divmore_height;
 					cDiff = cDiff + diff;
 					i++;
@@ -683,7 +683,7 @@ function collapseHeight() {
 
 	if(i){
 		var sval = position - cDiff + ($(".divgrow-showmore").outerHeight() * i);
-		console.log('collapsed above vieport count: ' + i);
+		console.log('collapsed above viewport count: ' + i);
 		$(window).scrollTop(sval);
 	}
 
@@ -753,7 +753,7 @@ function liveUpdate() {
 				$("#page-spinner").spin(false);
 				$("#profile-jot-text-loading").spin(false);
 
-				$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
+				//$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
 
 				in_progress = false;
 

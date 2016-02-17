@@ -66,6 +66,7 @@
 		<label for="newchannel-nickname" id="label-newchannel-nickname" class="register-label" >{{$label_nick}}</label>
 		<input type="text" name="nickname" id="newchannel-nickname" class="register-input" value="{{$nickname}}" />
 		<div id="nick-spinner"></div>
+		<div id="newchannel-nick-desc" class="descriptive-paragraph" style="text-align: right;">{{$nick_hub}}</div>
 		<div id="newchannel-nickname-feedback" class="register-feedback"></div>
 		<div id="newchannel-nickname-end"  class="register-field-end"></div>
 

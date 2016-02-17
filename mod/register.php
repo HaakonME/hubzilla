@@ -246,6 +246,7 @@ function register_content(&$a) {
 		'$label_name'   => t('Channel Name'),
 		'$help_name'    => t('Enter your name'),
 		'$label_nick'   => t('Choose a short nickname'),
+		'$nick_hub'     => '@' . str_replace(array('http://','https://','/'), '', get_config('system','baseurl')),
 		'$nick_desc'    => t('Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others.'),
 		'$name'         => $name,
 		'$help_role'    => t('Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),

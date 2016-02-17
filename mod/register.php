@@ -244,7 +244,7 @@ function register_content(&$a) {
 		'$label_invite' => t('Please enter your invitation code'),
 		'$invite_code'  => $invite_code,
 		'$auto_create'  => $auto_create,
-		'$label_name'   => t('Channel Name'),
+		'$label_name'   => t('Name'),
 		'$help_name'    => t('Enter your name'),
 		'$label_nick'   => t('Choose a short nickname'),
 		'$nick_hub'     => '@' . str_replace(array('http://','https://','/'), '', get_config('system','baseurl')),

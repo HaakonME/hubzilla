@@ -2840,7 +2840,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	if($meta) {
 		foreach($meta as $m) {
-			set_iconfig($current_post,$m['cat'],$m['k'],$m['v']);
+			set_iconfig($orig_post_id,$m['cat'],$m['k'],$m['v']);
 		}
 		$arr['iconfig'] = $meta;
 	}
@@ -4736,7 +4736,7 @@ function fetch_post_tags($items,$link = false) {
 			intval(TERM_OBJ_POST)
 		);
 		$imeta = q("select * from iconfig where iid in ( %s )",
-			dbesc($tag_finger_str)
+			dbesc($tag_finder_str)
 		); 
 
 	}

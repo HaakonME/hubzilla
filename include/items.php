@@ -4007,12 +4007,25 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
+	if(activity_compare($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_compare($item['verb'],ACTIVITY_POST)) {
+		$obj = ((is_array($item['obj'])) ? $item['object'] : json_decode($item['object'],true));
+ 
+		$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
+		$o .= '<summary>' . xmlify(bbcode($obj['title'])) . '</summary>' . "\r\n";
+		$o .= '<dtstart xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['start'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtstart>' . "\r\n";
+		$o .= '<dtend xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['finish'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtend>' . "\r\n";
+		$o .= '<location>' . bbcode($obj['location']) . '</location>' . "\r\n";
+		$o .= '<content type="' . $type . '" >' . xmlify(bbcode($obj['description'])) . '</content>' . "\r\n";
+	}
+	else {
+		$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
+		$o .= '<content type="' . $type . '" >' . xmlify(prepare_text($body,$item['mimetype'])) . '</content>' . "\r\n";
+	}
+
 	$o .= '<id>' . xmlify($item['mid']) . '</id>' . "\r\n";
-	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
 
-	$o .= '<content type="' . $type . '" >' . xmlify(prepare_text($body,$item['mimetype'])) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($item['plink']) . '" />' . "\r\n";
 
 	if($item['location']) {

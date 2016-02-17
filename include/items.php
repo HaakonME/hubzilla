@@ -5548,3 +5548,37 @@ function set_iconfig(&$item, $family, $key, $value) {
 	return $value;
 }
 
+
+
+function del_iconfig(&$item, $family, $key) {
+
+
+	$is_item = false;
+	$idx = null;
+
+	if(is_array($item)) {
+		$is_item = true;
+		if(is_array($item['iconfig'])) {
+			for($x = 0; $x < count($item['iconfig']); $x ++) {
+				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig'][$x]['k'] == $key) {
+					unset($item['iconfig'][$x]);
+				}
+			}
+		}
+		return true;
+	}
+
+	if(intval($item))
+		$iid = intval($item);
+
+	if(! $iid)
+		return false;
+
+	return q("delete from iconfig where iid = %d and cat = '%s' and  k = '%s' ",
+		intval($iid),
+		dbesc($family),
+		dbesc($key)
+	);
+
+}
+

@@ -1457,7 +1457,8 @@ function decode_item_meta($meta) {
 		foreach($meta as $m) {
 			$ret[] = array('cat' => escape_tags($m['family']),'k' => escape_tags($m['key']),'v' => $m['value']);
 		}
-	}		
+	}
+	return $ret;		
 }
 
 /**

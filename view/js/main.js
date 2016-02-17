@@ -618,7 +618,7 @@ function updateConvItems(mode,data) {
 	/* autocomplete @nicknames */
 	$(".comment-edit-form  textarea").editor_autocomplete(baseurl+"/acl?f=&n=1");
 
-	var bimgs = $(".wall-item-body img").not(function() { return this.complete; });
+	var bimgs = ((preloadImages) ? false : $(".wall-item-body img").not(function() { return this.complete; }));
 	var bimgcount = bimgs.length;
 
 	if (bimgcount) {
@@ -631,8 +631,6 @@ function updateConvItems(mode,data) {
 	} else {
 		collapseHeight();
 	}
-
-	//collapseHeight();
 
 }
 
@@ -742,8 +740,7 @@ function liveUpdate() {
 		var dready = new Date();
 		console.log('DATA ready in: ' + (dready - dstart)/1000 + ' seconds.');
 
-
-		if(update_mode === 'update') {
+		if(update_mode === 'update' || preloadImages) {
 			console.log('LOADING images...');
 
 			$('.wall-item-body, .wall-photo-item',data).imagesLoaded( function() {
@@ -757,7 +754,9 @@ function liveUpdate() {
 				$("#profile-jot-text-loading").spin(false);
 
 				// adjust scroll position if new content was added above viewport
-				$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
+				if(update_mode === 'update') {
+					$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
+				}
 
 				in_progress = false;
 

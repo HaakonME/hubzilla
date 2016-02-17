@@ -648,9 +648,12 @@ function collapseHeight() {
 			if(! $(this).hasClass('divmore')) {
 
 				//var trigger = $(window).scrollTop() < $(this).offset().top ? true : false;
+				//console.log($(this).offset().top + divmore_height - $(window).scrollTop() + cDiff - ($(".divgrow-showmore").outerHeight() * i));
 
 				// check if we will collapse some content above the visible content and compensate the diff later
-				if(($(this).offset().top + orgHeight - $(window).scrollTop()) < 50) {
+				if($(this).offset().top + divmore_height - $(window).scrollTop() + cDiff - ($(".divgrow-showmore").outerHeight() * i) < 65) {
+					//$(this).css('color', 'red');
+					//console.log($(this).offset().top + divmore_height + ' / ' + $(window).scrollTop());
 					diff = orgHeight - divmore_height;
 					cDiff = cDiff + diff;
 					i++;
@@ -753,7 +756,8 @@ function liveUpdate() {
 				$("#page-spinner").spin(false);
 				$("#profile-jot-text-loading").spin(false);
 
-				//$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
+				// adjust scroll position if new content was added above viewport
+				$(window).scrollTop($(window).scrollTop() + $("#region_2").height() - orgHeight + contentHeightDiff);
 
 				in_progress = false;
 

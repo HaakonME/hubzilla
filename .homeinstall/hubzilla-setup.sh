@@ -220,6 +220,11 @@ function install_apache {
     nocheck_install "apache2 apache2-utils"
 }
 
+function install_curl {
+    print_info "installing curl..."
+    nocheck_install "curl"
+}
+
 function install_php {
     # openssl and mbstring are included in libapache2-mod-php5
     # to_to:  php5-suhosin
@@ -817,6 +822,7 @@ sslconf=/etc/apache2/sites-available/default-ssl.conf
 
 check_config
 update_upgrade
+install_curl
 install_apache
 install_php
 install_mysql

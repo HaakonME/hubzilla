@@ -145,6 +145,7 @@ function register_post(&$a) {
 	authenticate_success($result['account'],true,false,true);
 	
 	$new_channel = false;
+	$next_page = 'new_channel';
 
 	if(get_config('system','auto_channel_create') || UNO) {
 		$new_channel = auto_channel_create($result['account']['account_id']);
@@ -156,10 +157,10 @@ function register_post(&$a) {
 		else
 			$new_channel = false;
 	}
-	if(! $new_channel) {
-		if(! strlen($next_page = get_config('system','workflow_register_next')))
-			$next_page = 'new_channel';
 
+	$x = get_config('system','workflow_register_next');
+	if($x) {
+		$next_page = $x;
 		$_SESSION['workflow'] = true;
 	}
 
@@ -243,9 +244,10 @@ function register_content(&$a) {
 		'$label_invite' => t('Please enter your invitation code'),
 		'$invite_code'  => $invite_code,
 		'$auto_create'  => $auto_create,
-		'$label_name'   => t('Channel Name'),
+		'$label_name'   => t('Name'),
 		'$help_name'    => t('Enter your name'),
 		'$label_nick'   => t('Choose a short nickname'),
+		'$nick_hub'     => '@' . str_replace(array('http://','https://','/'), '', get_config('system','baseurl')),
 		'$nick_desc'    => t('Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others.'),
 		'$name'         => $name,
 		'$help_role'    => t('Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),

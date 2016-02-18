@@ -83,7 +83,9 @@ This document assumes you're an administrator.
 		'forum', 'forum_restricted' and 'forum_private'. 
 		Read more about permissions roles [zrl=[baseurl]/help/roles]here[/zrl].
     [b]system.workflow_channel_next[/b]
-        The page to direct users to immediately after creating a channel.
+        The page to direct new members to immediately after creating a channel.
+    [b]system.workflow_register_next[/b]
+        The page to direct members to immediately after creating an account (only when auto_channel_create or UNO is enabled).
     [b]system.max_daily_registrations[/b]
         Set the maximum number of new registrations allowed on any day.
         Useful to prevent oversubscription after a bout of publicity

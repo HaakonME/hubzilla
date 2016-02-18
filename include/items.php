@@ -849,7 +849,7 @@ function get_item_elements($x,$allow_code = false) {
 	if($allow_code)
 		$arr['body'] = $x['body'];
 	else
-		$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+		$arr['body'] = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$key = get_config('system','pubkey');
 
@@ -917,6 +917,7 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['attach']       = activity_sanitise($x['attach']);
 	$arr['term']         = decode_tags($x['tags']);
+	$arr['iconfig']      = decode_item_meta($x['meta']);
 
 	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
 
@@ -1324,6 +1325,9 @@ function encode_item($item,$mirror = false) {
 	if($item['term'])
 		$x['tags']        = encode_item_terms($item['term'],$mirror);
 
+	if($item['iconfig'])
+		$x['meta']        = encode_item_meta($item['iconfig'],$mirror);
+
 	if($item['diaspora_meta']) {
 		$z = json_decode($item['diaspora_meta'],true);
 		if($z) {
@@ -1432,6 +1436,30 @@ function encode_item_terms($terms,$mirror = false) {
 	}
 
 	return $ret;
+}
+
+function encode_item_meta($meta,$mirror = false) {
+	$ret = array();
+
+	if($meta) {
+		foreach($meta as $m) {
+			if($m['sharing'] || $mirror)
+				$ret[] = array('family' => $m['cat'], 'key' => $m['k'], 'value' => $m['v'], 'sharing' => intval($m['sharing']));
+		}
+	}
+
+	return $ret;
+}
+
+function decode_item_meta($meta) {
+	$ret = array();
+
+	if(is_array($meta) && $meta) {
+		foreach($meta as $m) {
+			$ret[] = array('cat' => escape_tags($m['family']),'k' => escape_tags($m['key']),'v' => $m['value'],'sharing' => $m['sharing']);
+		}
+	}
+	return $ret;		
 }
 
 /**
@@ -2446,6 +2474,13 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		unset($arr['term']);
 	}
 
+	$meta = null;
+	if(array_key_exists('iconfig',$arr)) {
+		$meta = $arr['iconfig'];
+		unset($arr['iconfig']);
+	}
+
+
  	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid) || strlen($public_policy))
 		$private = 1;
 	else
@@ -2522,6 +2557,15 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 		$arr['term'] = $terms;
 	}
+
+	if($meta) {
+		foreach($meta as $m) {
+			set_iconfig($current_post,$m['cat'],$m['k'],$m['v'],$m['sharing']);
+		}
+		$arr['iconfig'] = $meta;
+	}
+
+
 
 	call_hooks('post_remote_end',$arr);
 
@@ -2744,6 +2788,13 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		unset($arr['term']);
 	}
 
+	$meta = null;
+	if(array_key_exists('iconfig',$arr)) {
+		$meta = $arr['iconfig'];
+		unset($arr['iconfig']);
+	}
+
+
 	dbesc_array($arr);
 
 	logger('item_store_update: ' . print_r($arr,true), LOGGER_DATA);
@@ -2783,6 +2834,17 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 			);
 		}
 		$arr['term'] = $terms;
+	}
+
+	$r = q("delete from iconfig where iid = %d",
+		intval($orig_post_id)
+	);
+
+	if($meta) {
+		foreach($meta as $m) {
+			set_iconfig($orig_post_id,$m['cat'],$m['k'],$m['v'],$m['sharing']);
+		}
+		$arr['iconfig'] = $meta;
 	}
 
 	call_hooks('post_remote_update_end',$arr);
@@ -4007,12 +4069,25 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
+	if(activity_compare($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_compare($item['verb'],ACTIVITY_POST)) {
+		$obj = ((is_array($item['obj'])) ? $item['object'] : json_decode($item['object'],true));
+ 
+		$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
+		$o .= '<summary>' . xmlify(bbcode($obj['title'])) . '</summary>' . "\r\n";
+		$o .= '<dtstart xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['start'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtstart>' . "\r\n";
+		$o .= '<dtend xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['finish'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtend>' . "\r\n";
+		$o .= '<location>' . bbcode($obj['location']) . '</location>' . "\r\n";
+		$o .= '<content type="' . $type . '" >' . xmlify(bbcode($obj['description'])) . '</content>' . "\r\n";
+	}
+	else {
+		$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
+		$o .= '<content type="' . $type . '" >' . xmlify(prepare_text($body,$item['mimetype'])) . '</content>' . "\r\n";
+	}
+
 	$o .= '<id>' . xmlify($item['mid']) . '</id>' . "\r\n";
-	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
 
-	$o .= '<content type="' . $type . '" >' . xmlify(prepare_text($body,$item['mimetype'])) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($item['plink']) . '" />' . "\r\n";
 
 	if($item['location']) {
@@ -4675,6 +4750,10 @@ function fetch_post_tags($items,$link = false) {
 			dbesc($tag_finder_str),
 			intval(TERM_OBJ_POST)
 		);
+		$imeta = q("select * from iconfig where iid in ( %s )",
+			dbesc($tag_finder_str)
+		); 
+
 	}
 
 	for($x = 0; $x < count($items); $x ++) {
@@ -4694,6 +4773,26 @@ function fetch_post_tags($items,$link = false) {
 						if(! is_array($items[$x]['term']))
 							$items[$x]['term'] = array();
 						$items[$x]['term'][] = $t;
+					}
+				}
+			}
+		}
+		if($imeta) {
+			foreach($imeta as $i) {
+				if(array_key_exists('item_id',$items[$x])) {
+					if($i['iid'] == $items[$x]['item_id']) {
+						if(! is_array($items[$x]['iconfig']))
+							$items[$x]['iconfig'] = array();
+						$i['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$i['v'])) ? unserialize($i['v']) : $i['v']);
+						$items[$x]['iconfig'][] = $i;
+					}
+				}
+				else {
+					if($i['iid'] == $items[$x]['id']) {
+						if(! is_array($items[$x]['iconfig']))
+							$items[$x]['iconfig'] = array();
+						$i['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$i['v'])) ? unserialize($i['v']) : $i['v']);
+						$items[$x]['iconfig'][] = $i;
 					}
 				}
 			}
@@ -5306,3 +5405,212 @@ function asencode_person($p) {
 
 	return $ret;
 }
+
+
+function send_profile_photo_activity($channel,$photo,$profile) {
+
+	// for now only create activities for the default profile
+
+	if(! intval($profile['is_default']))
+		return;
+
+	$arr = array();
+	$arr['item_thread_top'] = 1;
+	$arr['item_origin'] = 1;
+	$arr['item_wall'] = 1;
+	$arr['obj_type'] = ACTIVITY_OBJ_PHOTO;
+	$arr['verb'] = ACTIVITY_UPDATE;
+
+	$arr['object'] = json_encode(array(
+		'type' => $arr['obj_type'],
+		'id' => z_root() . '/photo/profile/l/' . $channel['channel_id'],
+		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/profile/l/' . $channel['channel_id'])
+	));
+
+	if(stripos($profile['gender'],t('female')) !== false)
+		$t = t('%1$s updated her %2$s');
+	elseif(stripos($profile['gender'],t('male')) !== false)
+		$t = t('%1$s updated his %2$s');
+	else
+		$t = t('%1$s updated their %2$s');
+
+	$ptext = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' . t('profile photo') . '[/zrl]';
+
+	$ltext = '[zrl=' . z_root() . '/profile/' . $channel['channel_address'] . ']' . '[zmg=150x150]' . z_root() . '/photo/' . $photo['resource_id'] . '-4[/zmg][/zrl]'; 
+
+	$arr['body'] = sprintf($t,$channel['channel_name'],$ptext) . "\n\n" . $ltext;
+
+	$acl = new AccessList($channel);
+	$x = $acl->get();
+	$arr['allow_cid'] = $x['allow_cid'];
+
+	$arr['allow_gid'] = $x['allow_gid'];
+	$arr['deny_cid'] = $x['deny_cid'];
+	$arr['deny_gid'] = $x['deny_gid'];
+
+	$arr['uid'] = $channel['channel_id'];
+	$arr['aid'] = $channel['channel_account_id'];
+
+	$arr['owner_xchan'] = $channel['channel_hash'];
+	$arr['author_xchan'] = $channel['channel_hash'];
+
+	post_activity_item($arr);
+
+
+}
+
+
+
+
+
+function get_iconfig(&$item, $family, $key) {
+
+	$is_item = false;
+	if(is_array($item)) {
+		$is_item = true;
+		if((! array_key_exists('iconfig',$item)) || (! is_array($item['iconfig'])))
+			$item['iconfig'] = array();
+
+		if(array_key_exists('item_id',$item))
+			$iid = $item['item_id'];
+		else
+			$iid = $item['id'];
+	}
+	elseif(intval($item))
+		$iid = $item;
+
+	if(! $iid)
+		return false;
+
+	if(is_array($item) && array_key_exists('iconfig',$item) && is_array($item['iconfig'])) {
+		foreach($item['iconfig'] as $c) {
+			if($c['iid'] == $iid && $c['cat'] == $family && $c['k'] == $key)
+				return $c['v'];
+		}
+	}
+		 
+	$r = q("select * from iconfig where iid = %d and cat = '%s' and k = '%s' limit 1",
+		intval($iid),
+		dbesc($family),
+		dbesc($key)
+	);
+	if($r) {
+		$r[0]['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$r[0]['v'])) ? unserialize($r[0]['v']) : $r[0]['v']);
+		if($is_item)
+			$item['iconfig'][] = $r[0];
+		return $r[0]['v'];
+	}
+	return false;
+
+}
+
+/**
+ * set_iconfig(&$item, $family, $key, $value, $sharing = false);
+ *
+ * $item - item array or item id. If passed an array the iconfig meta information is
+ *    added to the item structure (which will need to be saved with item_store eventually).
+ *    If passed an id, the DB is updated, but may not be federated and/or cloned.
+ * $family - namespace of meta variable
+ * $key - key of meta variable
+ * $value - value of meta variable
+ * $sharing - boolean (default false); if true the meta information is propagated with the item
+ *   to other sites/channels, mostly useful when $item is an array and has not yet been stored/delivered.
+ *   If the meta information is added after delivery and you wish it to be shared, it may be necessary to 
+ *   alter the item edited timestamp and invoke the delivery process on the updated item. The edited 
+ *   timestamp needs to be altered in order to trigger an item_store_update() at the receiving end.
+ */
+ 
+
+function set_iconfig(&$item, $family, $key, $value, $sharing = false) {
+
+	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
+	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
+
+	$is_item = false;
+	$idx = null;
+
+	if(is_array($item)) {
+		$is_item = true;
+		if((! array_key_exists('iconfig',$item)) || (! is_array($item['iconfig'])))
+			$item['iconfig'] = array();
+		elseif($item['iconfig']) {
+			for($x = 0; $x < count($item['iconfig']); $x ++) {
+				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig'][$x]['k'] == $key) {
+					$idx = $x;
+				}
+			}
+		}
+		$entry = array('cat' => $family, 'k' => $key, 'v' => $value, 'sharing' => $sharing);
+
+		if(is_null($idx))
+			$item['iconfig'][] = $entry;
+		else
+			$item['iconfig'][$idx] = $entry;
+		return $value;
+	}
+
+	if(intval($item))
+		$iid = intval($item);
+
+	if(! $iid)
+		return false;
+
+	if(get_iconfig($item, $family, $key) === false) {
+		$r = q("insert into iconfig( iid, cat, k, v, sharing ) values ( %d, '%s', '%s', '%s', %d ) ",
+			intval($iid),
+			dbesc($family),
+			dbesc($key),
+			dbesc($dbvalue),
+			intval($sharing)
+		);
+	}
+	else {
+		$r = q("update iconfig set v = '%s', sharing = %d where iid = %d and cat = '%s' and  k = '%s' ",
+			dbesc($dbvalue),
+			intval($sharing),
+			intval($iid),
+			dbesc($family),
+			dbesc($key)
+		);
+	}
+
+	if(! $r)
+		return false;
+
+	return $value;
+}
+
+
+
+function del_iconfig(&$item, $family, $key) {
+
+
+	$is_item = false;
+	$idx = null;
+
+	if(is_array($item)) {
+		$is_item = true;
+		if(is_array($item['iconfig'])) {
+			for($x = 0; $x < count($item['iconfig']); $x ++) {
+				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig'][$x]['k'] == $key) {
+					unset($item['iconfig'][$x]);
+				}
+			}
+		}
+		return true;
+	}
+
+	if(intval($item))
+		$iid = intval($item);
+
+	if(! $iid)
+		return false;
+
+	return q("delete from iconfig where iid = %d and cat = '%s' and  k = '%s' ",
+		intval($iid),
+		dbesc($family),
+		dbesc($key)
+	);
+
+}
+

@@ -538,6 +538,19 @@ create index "hubloc_primary" on hubloc ("hubloc_primary");
 create index "hubloc_orphancheck" on hubloc ("hubloc_orphancheck");
 create index "hubloc_error" on hubloc ("hubloc_error");
 create index "hubloc_deleted" on hubloc ("hubloc_deleted");
+CREATE TABLE "iconfig" (
+  "id" serial NOT NULL,
+  "iid" bigint NOT NULL DEFAULT '0',
+  "cat" text NOT NULL DEFAULT '',
+  "k" text NOT NULL DEFAULT '',
+  "v" text NOT NULL DEFAULT '',
+  "sharing" int NOT NULL DEFAULT '0',
+  PRIMARY_KEY("id")
+);
+create index "iconfig_iid" on iconfig ("iid");
+create index "iconfig_cat" on iconfig ("cat");
+create index "iconfig_k" on iconfig ("k");
+create index "iconfig_sharing" on iconfig ("sharing");
 CREATE TABLE "issue" (
   "issue_id" serial  NOT NULL,
   "issue_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',

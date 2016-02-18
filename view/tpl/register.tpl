@@ -31,14 +31,12 @@
 		{{include file="field_select_grouped.tpl" field=$role}}
 		<div id="newchannel-role-end"  class="newchannel-field-end"></div>
 		{{/if}}
-
-		<div id="newchannel-name-help" class="descriptive-paragraph">{{$help_name}}</div>
-
 		<label for="newchannel-name" id="label-newchannel-name" class="register-label" >{{$label_name}}</label>
 		<input type="text" name="name" id="newchannel-name" class="register-input" value="{{$name}}" />
 		<div id="name-spinner"></div>
 		<div id="newchannel-name-feedback" class="register-feedback"></div>
 		<div id="newchannel-name-end"  class="register-field-end"></div>
+		<div id="newchannel-name-help" class="descriptive-paragraph">{{$help_name}}</div>
 
 
 	{{/if}}
@@ -62,12 +60,13 @@
 	<div id="register-password2-end"  class="register-field-end"></div>
 
 	{{if $auto_create}}
-		<div id="newchannel-nick-desc" class="descriptive-paragraph">{{$nick_desc}}</div>
 		<label for="newchannel-nickname" id="label-newchannel-nickname" class="register-label" >{{$label_nick}}</label>
 		<input type="text" name="nickname" id="newchannel-nickname" class="register-input" value="{{$nickname}}" />
 		<div id="nick-spinner"></div>
+		<div id="newchannel-nick-desc" style="text-align: right;">{{$nick_hub}}</div>
 		<div id="newchannel-nickname-feedback" class="register-feedback"></div>
 		<div id="newchannel-nickname-end"  class="register-field-end"></div>
+		<div id="newchannel-nick-desc" class="descriptive-paragraph">{{$nick_desc}}</div>
 
 	{{/if}}
 

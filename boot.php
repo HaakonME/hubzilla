@@ -48,10 +48,10 @@ require_once('include/AccessList.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
-define ( 'STD_VERSION',             '1.2.2' );
+define ( 'STD_VERSION',             '1.2.3' );
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1161  );
+define ( 'DB_UPDATE_VERSION',       1163  );
 
 
 /**
@@ -85,7 +85,8 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://hubzilla.zottel.net',
 	'https://hub.pixelbits.de',
 	'https://my.federated.social',
-	'https://hubzilla.nl'
+	'https://hubzilla.nl',
+	'https://blablanet.es'
 );
 
 
@@ -991,6 +992,10 @@ class App {
 		if ($user_scalable === false)
 			$user_scalable = 1;
 
+		$preload_images = ((local_channel()) ? get_pconfig(local_channel(),'system','preload_images') : 0);
+		if ($preload_images === false)
+			$preload_images = 0;
+
 		$interval = ((local_channel()) ? get_pconfig(local_channel(),'system','update_interval') : 80000);
 		if($interval < 10000)
 			$interval = 80000;
@@ -1004,6 +1009,7 @@ class App {
 		 */
 		$tpl = get_markup_template('head.tpl');
 		$this->page['htmlhead'] = replace_macros($tpl, array(
+			'$preload_images' => $preload_images,
 			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
 			'$local_channel' => local_channel(),

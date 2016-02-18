@@ -7,7 +7,7 @@
  */
 
 require_once('include/queue_fn.php');
-
+require_once('include/account.php');
 
 /**
  * @param App &$a
@@ -861,13 +861,13 @@ function admin_page_users_post($a) {
 	// registration approved button was submitted
 	if (x($_POST, 'page_users_approve')) {
 		foreach ($pending as $hash) {
-			user_allow($hash);
+			account_allow($hash);
 		}
 	}
 	// registration deny button was submitted
 	if (x($_POST, 'page_users_deny')) {
 		foreach ($pending as $hash) {
-			user_deny($hash);
+			account_deny($hash);
 		}
 	}
 

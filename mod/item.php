@@ -233,6 +233,8 @@ function item_post(&$a) {
 			$post_id = $i[0]['iid'];	
 	}
 
+	$iconfig = null;
+
 	if($post_id) {
 		$i = q("SELECT * FROM `item` WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			intval($profile_uid),
@@ -241,6 +243,9 @@ function item_post(&$a) {
 		if(! count($i))
 			killme();
 		$orig_post = $i[0];
+		$iconfig = q("select * from iconfig where iid = %d",
+			intval($post_id)
+		);
 	}
 
 
@@ -792,6 +797,9 @@ function item_post(&$a) {
 	$datarray['plink']          = $plink;
 	$datarray['route']          = $route;
 
+	if($iconfig)
+		$datarray['iconfig'] = $iconfig;
+
 	// preview mode - prepare the body for display and send it via json
 
 	if($preview) {
@@ -807,8 +815,6 @@ function item_post(&$a) {
 	}
 	if($orig_post)
 		$datarray['edit'] = true;
-
-
 
 	if(feature_enabled($profile_uid,'suppress_duplicates') && (! $orig_post)) {
 

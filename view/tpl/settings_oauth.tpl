@@ -1,7 +1,9 @@
-<div class="generic-content-wrapper-styled">
-<h1>{{$title}}</h1>
+<div class="generic-content-wrapper">
+<div class="section-title-wrapper">
+	<h1>{{$title}}</h1>
+</div>
 
-
+<div class="section-content-tools-wrapper">
 <form action="settings/oauth" method="post" autocomplete="off">
 <input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 
@@ -30,4 +32,5 @@
 	{{/foreach}}
 
 </form>
+</div>
 </div>

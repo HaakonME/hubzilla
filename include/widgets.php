@@ -542,11 +542,14 @@ function widget_settings_menu($arr) {
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
 
-	$tabs[] =	array(
-		'label' => t('Export channel'),
-		'url' => $a->get_baseurl(true) . '/uexport',
-		'selected' => ''
-	);
+	// IF can go away when UNO export and import is fully functional
+	if(! UNO) {
+		$tabs[] =	array(
+			'label' => t('Export channel'),
+			'url' => $a->get_baseurl(true) . '/uexport',
+			'selected' => ''
+		);
+	}
 
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(

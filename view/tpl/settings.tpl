@@ -1,6 +1,6 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		<a title="{{$removechannel}}" class="btn btn-danger btn-xs pull-right" href="removeme"><i class="icon-trash"></i>&nbsp;{{$removeme}}</a>
+		{{if $server_role != 'basic'}}<a title="{{$removechannel}}" class="btn btn-danger btn-xs pull-right" href="removeme"><i class="icon-trash"></i>&nbsp;{{$removeme}}</a>{{/if}}
 		<h2>{{$ptitle}}</h2>
 		<div class="clear"></div>
 	</div>

@@ -1,6 +1,6 @@
 <div class="generic-content-wrapper">
 <div class="section-title-wrapper">
-	<h1>{{$title}}</h1>
+	<h2>{{$title}}</h2>
 </div>
 
 <div class="section-content-tools-wrapper">

@@ -45,6 +45,7 @@ require_once('include/Contact.php');
 require_once('include/account.php');
 require_once('include/AccessList.php');
 
+require_once('Zotlabs/Project/System.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
@@ -1013,7 +1014,7 @@ class App {
 			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
 			'$local_channel' => local_channel(),
-			'$generator' => get_platform_name() . ((get_project_version()) ? ' ' . get_project_version() : ''),
+			'$generator' => Zotlabs\Project\System::get_platform_name() . ((Zotlabs\Project\System::get_project_version()) ? ' ' . Zotlabs\Project\System::get_project_version() : ''),
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
@@ -2364,45 +2365,3 @@ function check_cron_broken() {
 }
 
 
-function get_platform_name() {
-	$a = get_app();
-	if(is_array($a->config) && is_array($a->config['system']) && $a->config['system']['platform_name'])
-		return $a->config['system']['platform_name'];
-	return PLATFORM_NAME;
-}
-
-function get_project_version() {
-	$a = get_app();
-	if(is_array($a->config) && is_array($a->config['system']) && $a->config['system']['hide_version'])
-		return '';
-	return RED_VERSION;
-}
-
-function get_update_version() {
-	$a = get_app();
-	if(is_array($a->config) && is_array($a->config['system']) && $a->config['system']['hide_version'])
-		return '';
-	return DB_UPDATE_VERSION;
-}
-
-
-function get_notify_icon() {
-	$a = get_app();
-	if(is_array($a->config) && is_array($a->config['system']) && $a->config['system']['email_notify_icon_url'])
-		return $a->config['system']['email_notify_icon_url'];
-	return z_root() . '/images/hz-white-32.png';
-}
-
-function get_site_icon() {
-	$a = get_app();
-	if(is_array($a->config) && is_array($a->config['system']) && $a->config['system']['site_icon_url'])
-		return $a->config['system']['site_icon_url'];
-	return z_root() . '/images/hz-32.png';
-}
-
-
-function get_server_role() {
-	if(UNO)
-		return 'basic';
-	return 'advanced';
-}

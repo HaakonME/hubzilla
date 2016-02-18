@@ -3835,7 +3835,7 @@ function zotinfo($arr) {
 		$ret['site']['channels'] = channel_total();
 
 
-		$ret['site']['version'] = get_platform_name() . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+		$ret['site']['version'] = Zotlabs\Project\System::get_platform_name() . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
 
@@ -3855,7 +3855,7 @@ function zotinfo($arr) {
 		$ret['site']['sellpage'] = get_config('system','sellpage');
 		$ret['site']['location'] = get_config('system','site_location');
 		$ret['site']['realm'] = get_directory_realm();
-		$ret['site']['project'] = get_platform_name();
+		$ret['site']['project'] = Zotlabs\Project\System::get_platform_name();
 
 	}
 

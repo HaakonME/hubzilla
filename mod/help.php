@@ -160,7 +160,7 @@ function help_content(&$a) {
 				$path = trim(substr($dirname,4),'/');
 
 				$o .= '<li><a href="help/' . (($path) ? $path . '/' : '') . $fname . '" >' . ucwords(str_replace('_',' ',notags($fname))) . '</a><br />' . 
-				str_replace('$Projectname',get_platform_name(),substr($rr['text'],0,200)) . '...<br /><br /></li>';
+				str_replace('$Projectname',Zotlabs\Project\System::get_platform_name(),substr($rr['text'],0,200)) . '...<br /><br /></li>';
 
 			}
 			$o .= '</ul>';

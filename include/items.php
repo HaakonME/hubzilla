@@ -1443,7 +1443,8 @@ function encode_item_meta($meta,$mirror = false) {
 
 	if($meta) {
 		foreach($meta as $m) {
-			$ret[] = array('family' => $m['cat'], 'key' => $m['k'], 'value' => $m['v']);
+			if($m['sharing'] || $mirror)
+				$ret[] = array('family' => $m['cat'], 'key' => $m['k'], 'value' => $m['v'], 'sharing' => intval($m['sharing']));
 		}
 	}
 
@@ -1455,7 +1456,7 @@ function decode_item_meta($meta) {
 
 	if(is_array($meta) && $meta) {
 		foreach($meta as $m) {
-			$ret[] = array('cat' => escape_tags($m['family']),'k' => escape_tags($m['key']),'v' => $m['value']);
+			$ret[] = array('cat' => escape_tags($m['family']),'k' => escape_tags($m['key']),'v' => $m['value'],'sharing' => $m['sharing']);
 		}
 	}
 	return $ret;		
@@ -2559,7 +2560,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	if($meta) {
 		foreach($meta as $m) {
-			set_iconfig($current_post,$m['cat'],$m['k'],$m['v']);
+			set_iconfig($current_post,$m['cat'],$m['k'],$m['v'],$m['sharing']);
 		}
 		$arr['iconfig'] = $meta;
 	}
@@ -2841,7 +2842,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	if($meta) {
 		foreach($meta as $m) {
-			set_iconfig($orig_post_id,$m['cat'],$m['k'],$m['v']);
+			set_iconfig($orig_post_id,$m['cat'],$m['k'],$m['v'],$m['sharing']);
 		}
 		$arr['iconfig'] = $meta;
 	}
@@ -5504,7 +5505,7 @@ function get_iconfig(&$item, $family, $key) {
 }
 
 
-function set_iconfig(&$item, $family, $key, $value) {
+function set_iconfig(&$item, $family, $key, $value, $sharing = false) {
 
 	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
 	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
@@ -5523,7 +5524,7 @@ function set_iconfig(&$item, $family, $key, $value) {
 				}
 			}
 		}
-		$entry = array('cat' => $family, 'k' => $key, 'v' => $value);
+		$entry = array('cat' => $family, 'k' => $key, 'v' => $value, 'sharing' => $sharing);
 
 		if(is_null($idx))
 			$item['iconfig'][] = $entry;
@@ -5539,16 +5540,18 @@ function set_iconfig(&$item, $family, $key, $value) {
 		return false;
 
 	if(get_iconfig($item, $family, $key) === false) {
-		$r = q("insert into iconfig( iid, cat, k, v ) values ( %d, '%s', '%s', '%s' ) ",
+		$r = q("insert into iconfig( iid, cat, k, v, sharing ) values ( %d, '%s', '%s', '%s', %d ) ",
 			intval($iid),
 			dbesc($family),
 			dbesc($key),
-			dbesc($dbvalue)
+			dbesc($dbvalue),
+			intval($sharing)
 		);
 	}
 	else {
-		$r = q("update iconfig set v = '%s' where iid = %d and cat = '%s' and  k = '%s' ",
+		$r = q("update iconfig set v = '%s', sharing = %d where iid = %d and cat = '%s' and  k = '%s' ",
 			dbesc($dbvalue),
+			intval($sharing),
 			intval($iid),
 			dbesc($family),
 			dbesc($key)

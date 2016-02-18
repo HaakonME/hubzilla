@@ -550,10 +550,12 @@ CREATE TABLE IF NOT EXISTS `iconfig` (
   `cat` char(255) NOT NULL DEFAULT '',
   `k` char(255) NOT NULL DEFAULT '',
   `v` mediumtext NOT NULL,
+  `sharing` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `iid` (`iid`),
   KEY `cat` (`cat`),
-  KEY `k` (`k`)
+  KEY `k` (`k`),
+  KEY `sharing` (`sharing`),
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `issue` (

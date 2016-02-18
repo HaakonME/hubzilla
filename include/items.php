@@ -849,7 +849,7 @@ function get_item_elements($x,$allow_code = false) {
 	if($allow_code)
 		$arr['body'] = $x['body'];
 	else
-		$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+		$arr['body'] = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$key = get_config('system','pubkey');
 
@@ -917,6 +917,7 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['attach']       = activity_sanitise($x['attach']);
 	$arr['term']         = decode_tags($x['tags']);
+	$arr['iconfig']      = decode_item_meta($x['meta']);
 
 	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
 
@@ -1324,6 +1325,9 @@ function encode_item($item,$mirror = false) {
 	if($item['term'])
 		$x['tags']        = encode_item_terms($item['term'],$mirror);
 
+	if($item['iconfig'])
+		$x['meta']        = encode_item_meta($item['iconfig'],$mirror);
+
 	if($item['diaspora_meta']) {
 		$z = json_decode($item['diaspora_meta'],true);
 		if($z) {
@@ -1432,6 +1436,29 @@ function encode_item_terms($terms,$mirror = false) {
 	}
 
 	return $ret;
+}
+
+function encode_item_meta($meta,$mirror = false) {
+	$ret = array();
+
+	if($meta) {
+		foreach($meta as $m) {
+			$ret[] = array('family' => $m['cat'], 'key' => $m['k'], 'value' => $m['v']);
+		}
+	}
+
+	return $ret;
+}
+
+function decode_item_meta($meta) {
+	$ret = array();
+
+	if(is_array($meta) && $meta) {
+		foreach($meta as $m) {
+			$ret[] = array('cat' => escape_tags($m['family']),'k' => escape_tags($m['key']),'v' => $m['value']);
+		}
+	}
+	return $ret;		
 }
 
 /**
@@ -2446,6 +2473,13 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		unset($arr['term']);
 	}
 
+	$meta = null;
+	if(array_key_exists('iconfig',$arr)) {
+		$meta = $arr['iconfig'];
+		unset($arr['iconfig']);
+	}
+
+
  	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid) || strlen($public_policy))
 		$private = 1;
 	else
@@ -2522,6 +2556,15 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 		$arr['term'] = $terms;
 	}
+
+	if($meta) {
+		foreach($meta as $m) {
+			set_iconfig($current_post,$m['cat'],$m['k'],$m['v']);
+		}
+		$arr['iconfig'] = $meta;
+	}
+
+
 
 	call_hooks('post_remote_end',$arr);
 
@@ -2744,6 +2787,13 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		unset($arr['term']);
 	}
 
+	$meta = null;
+	if(array_key_exists('iconfig',$arr)) {
+		$meta = $arr['iconfig'];
+		unset($arr['iconfig']);
+	}
+
+
 	dbesc_array($arr);
 
 	logger('item_store_update: ' . print_r($arr,true), LOGGER_DATA);
@@ -2783,6 +2833,17 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 			);
 		}
 		$arr['term'] = $terms;
+	}
+
+	$r = q("delete from iconfig where iid = %d",
+		intval($orig_post_id)
+	);
+
+	if($meta) {
+		foreach($meta as $m) {
+			set_iconfig($orig_post_id,$m['cat'],$m['k'],$m['v']);
+		}
+		$arr['iconfig'] = $meta;
 	}
 
 	call_hooks('post_remote_update_end',$arr);
@@ -4688,6 +4749,10 @@ function fetch_post_tags($items,$link = false) {
 			dbesc($tag_finder_str),
 			intval(TERM_OBJ_POST)
 		);
+		$imeta = q("select * from iconfig where iid in ( %s )",
+			dbesc($tag_finder_str)
+		); 
+
 	}
 
 	for($x = 0; $x < count($items); $x ++) {
@@ -4707,6 +4772,26 @@ function fetch_post_tags($items,$link = false) {
 						if(! is_array($items[$x]['term']))
 							$items[$x]['term'] = array();
 						$items[$x]['term'][] = $t;
+					}
+				}
+			}
+		}
+		if($imeta) {
+			foreach($imeta as $i) {
+				if(array_key_exists('item_id',$items[$x])) {
+					if($i['iid'] == $items[$x]['item_id']) {
+						if(! is_array($items[$x]['iconfig']))
+							$items[$x]['iconfig'] = array();
+						$i['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$i['v'])) ? unserialize($i['v']) : $i['v']);
+						$items[$x]['iconfig'][] = $i;
+					}
+				}
+				else {
+					if($i['iid'] == $items[$x]['id']) {
+						if(! is_array($items[$x]['iconfig']))
+							$items[$x]['iconfig'] = array();
+						$i['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$i['v'])) ? unserialize($i['v']) : $i['v']);
+						$items[$x]['iconfig'][] = $i;
 					}
 				}
 			}
@@ -5370,6 +5455,143 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 
 	post_activity_item($arr);
 
+
+}
+
+
+
+
+
+function get_iconfig(&$item, $family, $key) {
+
+	$is_item = false;
+	if(is_array($item)) {
+		$is_item = true;
+		if((! array_key_exists('iconfig',$item)) || (! is_array($item['iconfig'])))
+			$item['iconfig'] = array();
+
+		if(array_key_exists('item_id',$item))
+			$iid = $item['item_id'];
+		else
+			$iid = $item['id'];
+	}
+	elseif(intval($item))
+		$iid = $item;
+
+	if(! $iid)
+		return false;
+
+	if(is_array($item) && array_key_exists('iconfig',$item) && is_array($item['iconfig'])) {
+		foreach($item['iconfig'] as $c) {
+			if($c['iid'] == $iid && $c['cat'] == $family && $c['k'] == $key)
+				return $c['v'];
+		}
+	}
+		 
+	$r = q("select * from iconfig where iid = %d and cat = '%s' and k = '%s' limit 1",
+		intval($iid),
+		dbesc($family),
+		dbesc($key)
+	);
+	if($r) {
+		$r[0]['v'] = ((preg_match('|^a:[0-9]+:{.*}$|s',$r[0]['v'])) ? unserialize($r[0]['v']) : $r[0]['v']);
+		if($is_item)
+			$item['iconfig'][] = $r[0];
+		return $r[0]['v'];
+	}
+	return false;
+
+}
+
+
+function set_iconfig(&$item, $family, $key, $value) {
+
+	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
+	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
+
+	$is_item = false;
+	$idx = null;
+
+	if(is_array($item)) {
+		$is_item = true;
+		if((! array_key_exists('iconfig',$item)) || (! is_array($item['iconfig'])))
+			$item['iconfig'] = array();
+		elseif($item['iconfig']) {
+			for($x = 0; $x < count($item['iconfig']); $x ++) {
+				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig'][$x]['k'] == $key) {
+					$idx = $x;
+				}
+			}
+		}
+		$entry = array('cat' => $family, 'k' => $key, 'v' => $value);
+
+		if(is_null($idx))
+			$item['iconfig'][] = $entry;
+		else
+			$item['iconfig'][$idx] = $entry;
+		return $value;
+	}
+
+	if(intval($item))
+		$iid = intval($item);
+
+	if(! $iid)
+		return false;
+
+	if(get_iconfig($item, $family, $key) === false) {
+		$r = q("insert into iconfig( iid, cat, k, v ) values ( %d, '%s', '%s', '%s' ) ",
+			intval($iid),
+			dbesc($family),
+			dbesc($key),
+			dbesc($dbvalue)
+		);
+	}
+	else {
+		$r = q("update iconfig set v = '%s' where iid = %d and cat = '%s' and  k = '%s' ",
+			dbesc($dbvalue),
+			intval($iid),
+			dbesc($family),
+			dbesc($key)
+		);
+	}
+
+	if(! $r)
+		return false;
+
+	return $value;
+}
+
+
+
+function del_iconfig(&$item, $family, $key) {
+
+
+	$is_item = false;
+	$idx = null;
+
+	if(is_array($item)) {
+		$is_item = true;
+		if(is_array($item['iconfig'])) {
+			for($x = 0; $x < count($item['iconfig']); $x ++) {
+				if($item['iconfig'][$x]['cat'] == $family && $item['iconfig'][$x]['k'] == $key) {
+					unset($item['iconfig'][$x]);
+				}
+			}
+		}
+		return true;
+	}
+
+	if(intval($item))
+		$iid = intval($item);
+
+	if(! $iid)
+		return false;
+
+	return q("delete from iconfig where iid = %d and cat = '%s' and  k = '%s' ",
+		intval($iid),
+		dbesc($family),
+		dbesc($key)
+	);
 
 }
 

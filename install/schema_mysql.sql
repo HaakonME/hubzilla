@@ -543,6 +543,19 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_error` (`hubloc_error`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `iconfig` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `iid` int(11) NOT NULL DEFAULT '0',
+  `cat` char(255) NOT NULL DEFAULT '',
+  `k` char(255) NOT NULL DEFAULT '',
+  `v` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `iid` (`iid`),
+  KEY `cat` (`cat`),
+  KEY `k` (`k`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `issue` (
   `issue_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `issue_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

@@ -86,7 +86,7 @@ function cloud_init(&$a) {
 		}
 	}
 
-	require_once('Zotlabs/Storage/Browser.php');
+//	require_once('Zotlabs/Storage/Browser.php');
 	// provide a directory view for the cloud in Hubzilla
 	$browser = new Zotlabs\Storage\Browser($auth);
 	$auth->setBrowserPlugin($browser);

@@ -51,8 +51,6 @@ function wfinger_init(&$a) {
 
 	header('Access-Control-Allow-Origin: *');
 
-	header('Content-type: application/jrd+json');
-
 
 	if($resource && $r) {
 
@@ -124,7 +122,6 @@ function wfinger_init(&$a) {
 	$arr = array('channel' => $r[0], 'request' => $_REQUEST, 'result' => $result);
 	call_hooks('webfinger',$arr);
 
-	echo json_encode($arr['result']);
-	killme();
+	json_return_and_die($arr['result'],'application/jrd+json');
 
 }

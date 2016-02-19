@@ -294,8 +294,8 @@ function z_post_url_json($url, $params, $redirects = 0, $opts = array()) {
 }
 
 
-function json_return_and_die($x) {
-	header("content-type: application/json");
+function json_return_and_die($x, $content_type = 'application/json') {
+	header("Content-type: $content_type");
 	echo json_encode($x);
 	killme();
 }

@@ -864,10 +864,10 @@ function get_role_perms($role) {
  */
 function get_roles() {
 	$roles = array(
-		t('Social Networking') => array('social' => t('Mostly Public'), 'social_restricted' => t('Restricted'), 'social_private' => t('Private')),
-		t('Community Forum') => array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private')),
-		t('Feed Republish') => array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted')),
-		t('Special Purpose') => array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository')),
+		t('Social Networking') => array('social' => t('Social - Mostly Public'), 'social_restricted' => t('Social - Restricted'), 'social_private' => t('Social - Private')),
+		t('Community Forum') => array('forum' => t('Forum - Mostly Public'), 'forum_restricted' => t('Forum - Restricted'), 'forum_private' => t('Forum - Private')),
+		t('Feed Republish') => array('feed' => t('Feed - Mostly Public'), 'feed_restricted' => t('Feed - Restricted')),
+		t('Special Purpose') => array('soapbox' => t('Special - Celebrity/Soapbox'), 'repository' => t('Special - Group Repository')),
 		t('Other') => array('custom' => t('Custom/Expert Mode'))
 	);
 

@@ -1544,6 +1544,7 @@ nav .dropdown-menu {
 .section-content-tools-wrapper .section-content-danger-wrapper,
 .section-content-wrapper .section-content-danger-wrapper {
 	margin-bottom: 10px;
+	border-bottom: none;
 	border-radius: $radiuspx;
 }
 

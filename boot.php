@@ -45,7 +45,6 @@ require_once('include/Contact.php');
 require_once('include/account.php');
 require_once('include/AccessList.php');
 
-require_once('Zotlabs/Project/System.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
@@ -625,6 +624,21 @@ function startup() {
 	}
 }
 
+
+class ZotlabsAutoloader {
+    static public function loader($className) {
+        $filename = str_replace('\\', '/', $className) . ".php";
+        if (file_exists($filename)) {
+            include($filename);
+            if (class_exists($className)) {
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+}
+
+
 /**
  * class: App
  *
@@ -855,6 +869,9 @@ class App {
 				$this->register_template_engine($k);
 			}
 		}
+
+		spl_autoload_register('ZotlabsAutoloader::loader');
+
 	}
 
 	function get_baseurl($ssl = false) {

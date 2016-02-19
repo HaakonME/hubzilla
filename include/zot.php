@@ -11,7 +11,6 @@
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
-require_once('include/DReport.php');
 require_once('include/queue_fn.php');
 
 
@@ -1589,7 +1588,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 	foreach($deliveries as $d) {
 		$local_public = $public;
 
-		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+		$DR = new Zotlabs\Zot\DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
 
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
@@ -2068,7 +2067,7 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 
 	foreach($deliveries as $d) {
 
-		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+		$DR = new Zotlabs\Zot\DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
 
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
@@ -3410,14 +3409,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		// we should probably do this for all items, but usually we only send one.
 
-		require_once('include/DReport.php');
-
 		if(array_key_exists('item',$arr) && is_array($arr['item'][0])) {
-			$DR = new DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
+			$DR = new Zotlabs\Zot\DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
 			$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 		}
 		else
-			$DR = new DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
+			$DR = new Zotlabs\Zot\DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
 
 		$result[] = $DR->get();
 

@@ -225,10 +225,44 @@ function settings_post(&$a) {
 
 		$errs = array();
 
+		$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
+		$account = $a->get_account();
+		if($email != $account['account_email']) {
+    	    if(! valid_email($email))
+				$errs[] = t('Not valid email.');
+			$adm = trim(get_config('system','admin_email'));
+			if(($adm) && (strcasecmp($email,$adm) == 0)) {
+				$errs[] = t('Protected email address. Cannot change to that email.');
+				$email = $a->user['email'];
+			}
+			if(! $errs) {
+				$r = q("update account set account_email = '%s' where account_id = %d",
+					dbesc($email),
+					intval($account['account_id'])
+				);
+				if(! $r)
+					$errs[] = t('System failure storing new email. Please try again.');
+			}
+		}
+
+		if($errs) {
+			foreach($errs as $err)
+				notice($err . EOL);
+			$errs = array();
+		}
+
+
 		if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
 
-			$newpass = $_POST['npassword'];
-			$confirm = $_POST['confirm'];
+			$origpass = trim($_POST['origpass']);
+
+			require_once('include/auth.php');
+			if(! account_verify_password($email,$origpass)) {
+				$errs[] = t('Password verification failed.');
+			}
+
+			$newpass = trim($_POST['npassword']);
+			$confirm = trim($_POST['confirm']);
 
 			if($newpass != $confirm ) {
 				$errs[] = t('Passwords do not match. Password unchanged.');
@@ -255,31 +289,6 @@ function settings_post(&$a) {
 			}
 		}
 
-		if($errs) {
-			foreach($errs as $err)
-				notice($err . EOL);
-			$errs = array();
-		}
-
-		$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
-		$account = $a->get_account();
-		if($email != $account['account_email']) {
-    	    if(! valid_email($email))
-				$errs[] = t('Not valid email.');
-			$adm = trim(get_config('system','admin_email'));
-			if(($adm) && (strcasecmp($email,$adm) == 0)) {
-				$errs[] = t('Protected email address. Cannot change to that email.');
-				$email = $a->user['email'];
-			}
-			if(! $errs) {
-				$r = q("update account set account_email = '%s' where account_id = %d",
-					dbesc($email),
-					intval($account['account_id'])
-				);
-				if(! $r)
-					$errs[] = t('System failure storing new email. Please try again.');
-			}
-		}
 
 		if($errs) {
 			foreach($errs as $err)
@@ -695,8 +704,9 @@ function settings_content(&$a) {
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_account"),
 			'$title'	=> t('Account Settings'),
-			'$password1'=> array('npassword', t('Enter New Password:'), '', ''),
-			'$password2'=> array('confirm', t('Confirm New Password:'), '', t('Leave password fields blank unless changing')),
+			'$origpass' => array('origpass', t('Current Password'), ' ',''),
+			'$password1'=> array('npassword', t('Enter New Password'), '', ''),
+			'$password2'=> array('confirm', t('Confirm New Password'), '', t('Leave password fields blank unless changing')),
 			'$submit' 	=> t('Submit'),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$removeme' => t('Remove Account'),

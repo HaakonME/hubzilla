@@ -310,7 +310,7 @@ function item_post(&$a) {
 		}
 	}
 
-	$acl = new Zotlabs\Access\AccessList($channel);
+	$acl = new AccessList($channel);
 
 		
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));

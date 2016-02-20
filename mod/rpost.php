@@ -95,7 +95,7 @@ function rpost_content(&$a) {
 	$channel = $a->get_channel();
 
 
-	$acl = new Zotlabs\Access\AccessList($channel);
+	$acl = new AccessList($channel);
 
 	$channel_acl = $acl->get();
 

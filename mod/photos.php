@@ -85,7 +85,7 @@ function photos_post(&$a) {
 
 	$owner_record = $s[0];	
 
-	$acl = new Zotlabs\Access\AccessList($a->data['channel']);
+	$acl = new AccessList($a->data['channel']);
 
 	if((argc() > 3) && (argv(2) === 'album')) {
 
@@ -595,7 +595,7 @@ function photos_content(&$a) {
 		if($_is_owner) {
 			$channel = $a->get_channel();
 
-			$acl = new Zotlabs\Access\AccessList($channel);
+			$acl = new AccessList($channel);
 			$channel_acl = $acl->get();
 
 			$lockstate = (($acl->is_private()) ? 'lock' : 'unlock');

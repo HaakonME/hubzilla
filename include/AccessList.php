@@ -1,5 +1,5 @@
 <?php
-namespace Zotlabs\Access;
+
 
 class AccessList {
 

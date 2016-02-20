@@ -323,7 +323,7 @@ function settings_post(&$a) {
 			foreach($global_perms as $k => $v) {
 				$set_perms .= ', ' . $v[0] . ' = ' . intval($_POST[$k]) . ' ';
 			}
-			$acl = new Zotlabs\Access\AccessList($channel);
+			$acl = new AccessList($channel);
 			$acl->set_from_array($_POST);
 			$x = $acl->get();
 
@@ -1002,7 +1002,7 @@ function settings_content(&$a) {
 
 		$stpl = get_markup_template('settings.tpl');
 
-		$acl = new Zotlabs\Access\AccessList($channel);
+		$acl = new AccessList($channel);
 		$perm_defaults = $acl->get();
 
 		require_once('include/group.php');

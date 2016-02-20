@@ -118,7 +118,7 @@ function events_post(&$a) {
 
 	$channel = $a->get_channel();
 
-	$acl = new Zotlabs\Access\AccessList(false);
+	$acl = new AccessList(false);
 
 	if($event_id) {
 		$x = q("select * from event where id = %d and uid = %d limit 1",
@@ -422,7 +422,7 @@ function events_content(&$a) {
 
 		require_once('include/acl_selectors.php');
 
-		$acl = new Zotlabs\Access\AccessList($channel);
+		$acl = new AccessList($channel);
 		$perm_defaults = $acl->get();
 
 		$tpl = get_markup_template('event_form.tpl');

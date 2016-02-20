@@ -225,6 +225,11 @@ function install_curl {
     nocheck_install "curl"
 }
 
+function install_sendmail {
+    print_info "installing sendmail..."
+    nocheck_install "sendmail"
+}
+
 function install_php {
     # openssl and mbstring are included in libapache2-mod-php5
     # to_to:  php5-suhosin
@@ -823,6 +828,7 @@ sslconf=/etc/apache2/sites-available/default-ssl.conf
 check_config
 update_upgrade
 install_curl
+install_sendmail
 install_apache
 install_php
 install_mysql

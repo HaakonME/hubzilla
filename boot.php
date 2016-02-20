@@ -1420,6 +1420,9 @@ function check_config(&$a) {
 	}
 
 	load_hooks();
+
+	check_cron_broken();
+
 }
 
 

@@ -26,7 +26,7 @@
 			<div id="newchannel-nickname-feedback" class="newchannel-feedback"></div>
 			<div id="nick-spinner"></div>
 
-			<input type="submit" name="submit" id="newchannel-submit-button" value="{{$submit}}" />
+			<button class="btn btn-primary" type="submit" name="submit" id="newchannel-submit-button" value="{{$submit}}">{{$submit}}</button>
 			<div id="newchannel-submit-end" class="clear"></div>
 
 			<div id="newchannel-import-link" class="descriptive-paragraph" >{{$label_import}}</div>

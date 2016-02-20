@@ -8,7 +8,6 @@ function new_channel_init(&$a) {
 
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
-
 	if($cmd === 'autofill.json') {
 		require_once('library/urlify/URLify.php');
 		$result = array('error' => false, 'message' => '');
@@ -59,7 +58,6 @@ function new_channel_init(&$a) {
 
 }
 
-
 function new_channel_post(&$a) {
 
 	$arr = $_POST;
@@ -93,12 +91,6 @@ function new_channel_post(&$a) {
 	goaway(z_root() . '/' . $next_page);
 
 }
-
-
-
-
-
-
 
 function new_channel_content(&$a) {
 
@@ -136,9 +128,9 @@ function new_channel_content(&$a) {
 	$role = array('permissions_role' , t('Channel role and privacy'), ($privacy_role) ? $privacy_role : 'social', t('Select a channel role with your privacy requirements.') . ' <a href="help/roles" target="_blank">' . t('Read more about roles') . '</a>',get_roles());
 
 	$o = replace_macros(get_markup_template('new_channel.tpl'), array(
-		'$title'        => t('Create a Channel'),
-		'$desc'         => t('A channel is your identity on the grid. It can represent a person, a blog, or a forum to name a few. Channels can make connections with other channels to share information with highly detailed permissions.'),
-		'$label_import' => t('Or <a href="import">import an existing channel</a> from another location'),
+		'$title'        => t('Create Channel'),
+		'$desc'         => t('A channel is your identity on this network. It can represent a person, a blog, or a forum to name a few. Channels can make connections with other channels to share information with highly detailed permissions.'),
+		'$label_import' => t('or <a href="import">import an existing channel</a> from another location.'),
 		'$name'         => $name,
 		'$role'		=> $role,
 		'$default_role' => $default_role,

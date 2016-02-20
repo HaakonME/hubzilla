@@ -5440,7 +5440,7 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 
 	$arr['body'] = sprintf($t,$channel['channel_name'],$ptext) . "\n\n" . $ltext;
 
-	$acl = new AccessList($channel);
+	$acl = new Zotlabs\Access\AccessList($channel);
 	$x = $acl->get();
 	$arr['allow_cid'] = $x['allow_cid'];
 

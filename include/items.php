@@ -2887,13 +2887,13 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 
 	$signed_text = $datarray['mid'] . ';' . $parent_item['mid'] . ';' . $signed_body . ';' . $diaspora_handle;
 
-	/** @FIXME $uprvkey is undefined, do we still need this if-statement? */
-	if( $uprvkey !== false )
+
+	if( $channel && $channel['channel_prvkey'] )
 		$authorsig = base64_encode(rsa_sign($signed_text, $channel['channel_prvkey'], 'sha256'));
 	else
 		$authorsig = '';
 
-	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => base64_encode($authorsig));
+	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => $authorsig);
 
 	$y = json_encode($x);
 
@@ -2901,6 +2901,7 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 		dbesc($y),
 		intval($post_id)
 	);
+
 
 	if(! $r)
 		logger('store_diaspora_comment_sig: DB write failed');

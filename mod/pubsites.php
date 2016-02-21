@@ -15,29 +15,22 @@ function pubsites_content(&$a) {
 
 	$o .= '<div class="generic-content-wrapper-styled">';
 
-	$o .= '<h2>' . t('Public Hubs') . '</h2>';
+	$o .= '<h1>' . t('Public Sites') . '</h1>';
 
 	$o .= '<div class="descriptive-text">' . 
-		t('The listed hubs allow public registration for the $Projectname network. All hubs in the network are interlinked so membership on any of them conveys membership in the network as a whole. Some sites may require subscription or provide tiered service plans. The hub <strong>may</strong> provide additional details.') . '</div>' . EOL;
+		t('The listed sites allow public registration for the $Projectname network. All sites in the network are interlinked so membership on any of them conveys membership in the network as a whole. Some sites may require subscription or provide tiered service plans. The provider links <strong>may</strong> provide additional details.') . '</div>' . EOL;
 
 	$ret = z_fetch_url($url);
 	if($ret['success']) {
 		$j = json_decode($ret['body'],true);
 		if($j) {
-			$o .= '<table class="table table-striped table-hover"><tr><td>' . t('Hub URL') . '</td><td>' . t('Access Type') . ' / ' . '<br />' . t('Registration Policy') . '</td><td>' . t('Project') . '</td><td colspan="2">' . t('Ratings') . '</td></tr>';
+			$rate_meta = ((local_channel()) ? '<td>' . t('Rate this hub') . '</td>' : '');
+			$o .= '<table border="1"><tr><td>' . t('Site URL') . '</td><td>' . t('Access Type') . '</td><td>' . t('Registration Policy') . '</td><td>' . t('Location') . '</td><td>' . t('Project') . '</td><td>' . t('View hub ratings') . '</td>' . $rate_meta . '</tr>';
 			if($j['sites']) {
 				foreach($j['sites'] as $jj) {
 					$host = strtolower(substr($jj['url'],strpos($jj['url'],'://')+3));
 					$rate_links = ((local_channel()) ? '<td><a href="rate?f=&target=' . $host . '" class="btn-btn-default"><i class="icon-check"></i> ' . t('Rate') . '</a></td>' : '');
-					$location = '';
-					if(!empty($jj['location'])) { 
-						$location = '<p title="' . t('Location') . '" style="margin: 5px 5px 0 0; text-align: right"><i class="icon-globe"></i> ' . $jj['location'] . '</p>'; 
-						}
-					else {
-						$location = '<br />&nbsp;';
-						}
-					$urltext = str_replace(array('https://'), '', $jj['url']);
-					$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="icon-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . ' / ' . $jj['register'] . '</td><td>' . $jj['project'] . '</td><td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="icon-eye-open"></i> ' . t('View') . '</a></td>' . $rate_links . '</tr>';
+					$o .= '<tr><td>' . '<a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" >' . $jj['url'] . '</a>' . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><td>' . $jj['location'] . '</td><td>' . $jj['project'] . '</td><td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="icon-eye-open"></i> ' . t('View ratings') . '</a></td>' . $rate_links . '</tr>';
 				}
 			}
 	

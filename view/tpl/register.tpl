@@ -32,7 +32,7 @@
 		<div id="newchannel-role-end"  class="newchannel-field-end"></div>
 		{{/if}}
 		<label for="newchannel-name" id="label-newchannel-name" class="register-label" >{{$label_name}}</label>
-		<input type="text" name="name" id="newchannel-name" class="register-input" value="{{$name}}" />
+		<input type="text" maxlength="72" size="32" name="name" id="newchannel-name" class="register-input" value="{{$name}}" />
 		<div id="name-spinner"></div>
 		<div id="newchannel-name-feedback" class="register-feedback"></div>
 		<div id="newchannel-name-end"  class="register-field-end"></div>
@@ -40,9 +40,6 @@
 
 
 	{{/if}}
-
-
-
 
 	<label for="register-email" id="label-register-email" class="register-label" >{{$label_email}}</label>
 	<input type="text" maxlength="72" size="32" name="email" id="register-email" class="register-input" value="{{$email}}" />
@@ -61,7 +58,7 @@
 
 	{{if $auto_create}}
 		<label for="newchannel-nickname" id="label-newchannel-nickname" class="register-label" >{{$label_nick}}</label>
-		<input type="text" name="nickname" id="newchannel-nickname" class="register-input" value="{{$nickname}}" />
+		<input type="text" maxlength="72" size="32" name="nickname" id="newchannel-nickname" class="register-input" value="{{$nickname}}" />
 		<div id="nick-spinner"></div>
 		<div id="newchannel-nick-desc" style="text-align: right;">{{$nick_hub}}</div>
 		<div id="newchannel-nickname-feedback" class="register-feedback"></div>

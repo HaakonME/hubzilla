@@ -19,11 +19,9 @@
 			{{/if}}
 
 			{{include file="field_input.tpl" field=$name}}
-			<div id="newchannel-name-feedback" class="newchannel-feedback"></div>
 			<div id="name-spinner"></div>
 
 			{{include file="field_input.tpl" field=$nickname}}
-			<div id="newchannel-nickname-feedback" class="newchannel-feedback"></div>
 			<div id="nick-spinner"></div>
 
 			<button class="btn btn-primary" type="submit" name="submit" id="newchannel-submit-button" value="{{$submit}}">{{$submit}}</button>

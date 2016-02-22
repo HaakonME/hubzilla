@@ -43,12 +43,11 @@ require_once('include/taxonomy.php');
 require_once('include/identity.php');
 require_once('include/Contact.php');
 require_once('include/account.php');
-require_once('include/AccessList.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
-define ( 'STD_VERSION',             '1.2.3' );
+define ( 'STD_VERSION',             '1.2.4' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1163  );

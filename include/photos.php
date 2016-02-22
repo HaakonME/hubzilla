@@ -48,7 +48,7 @@ function photo_upload($channel, $observer, $args) {
 	// all other settings. 'allow_cid' being passed from an external source takes priority over channel settings.
 	// ...messy... needs re-factoring once the photos/files integration stabilises
 
-	$acl = new AccessList($channel);
+	$acl = new Zotlabs\Access\AccessList($channel);
 	if(array_key_exists('directory',$args) && $args['directory'])
 		$acl->set($args['directory']);
 	if(array_key_exists('allow_cid',$args))

@@ -254,7 +254,7 @@ function register_content(&$a) {
 		'$email'        => $email,
 		'$pass1'        => $password,
 		'$pass2'        => $password2,
-		'$submit'       => ((UNO || $auto_create) ? t('Register') : t('Register and proceed to create your first channel'))
+		'$submit'       => ((UNO || $auto_create) ? t('Register') : t('Proceed to create your first channel'))
 	));
 
 	return $o;

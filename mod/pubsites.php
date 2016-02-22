@@ -27,6 +27,8 @@ function pubsites_content(&$a) {
 			$o .= '<table class="table table-striped table-hover"><tr><td>' . t('Hub URL') . '</td><td>' . t('Access Type') . ' / ' . '<br />' . t('Registration Policy') . '</td><td>' . t('Project') . '</td><td colspan="2">' . t('Ratings') . '</td></tr>';
 			if($j['sites']) {
 				foreach($j['sites'] as $jj) {
+					if($jj['project'] !== Zotlabs\Project\System::get_platform_name())
+						continue;
 					$host = strtolower(substr($jj['url'],strpos($jj['url'],'://')+3));
 					$rate_links = ((local_channel()) ? '<td><a href="rate?f=&target=' . $host . '" class="btn-btn-default"><i class="icon-check"></i> ' . t('Rate') . '</a></td>' : '');
 					$location = '';
@@ -37,12 +39,7 @@ function pubsites_content(&$a) {
 						$location = '<br />&nbsp;';
 						}
 					$urltext = str_replace(array('https://'), '', $jj['url']);
-					if($jj['project'] == 'redmatrix' || $jj['project'] == '' ) {
-						$o .= ''; 
-						}
-					else {
 					$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="icon-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . ' / ' . $jj['register'] . '</td><td>' . $jj['project'] . '</td><td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="icon-eye-open"></i> ' . t('View') . '</a></td>' . $rate_links . '</tr>';
-					}
 				}
 			}
 	

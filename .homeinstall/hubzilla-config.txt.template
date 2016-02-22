@@ -9,7 +9,9 @@ db_pass=
 ###############################################
 ### MANDATORY - let's encrypt #################
 #
-# Hubilla does not allow ecrypted communication, httpS.
+# Hubilla requires encrypted communication via secure HTTP (HTTPS).
+# This script automates installation of an SSL certificate from
+# Let's Encrypt (https://letsencrypt.org)
 #
 # Please give the domain name of your hub
 #
@@ -136,12 +138,12 @@ backup_device_pass=
 ### OPTIONAL - do not mess with things below ##
 #              (...if you are not certain)
 #
-# Usally you are done here
-# All what comes below is OPTIONAL
+# Usually you are done here
+# Everything below is OPTIONAL
 #
 ###############################################
 #
-# Database for huzilla
+# Database for hubzilla
 hubzilla_db_name=hubzilla
 hubzilla_db_user=hubzilla
 hubzilla_db_pass=$db_pass
@@ -168,7 +170,7 @@ phpmyadminpass=$db_pass
 #   * in eclipse: switch php debugger from zend to xdebug
 #   * in eclipse: add local hubzilla github repository
 #
-# Wich user will use eclipse?
+# Which user will use eclipse?
 # Leave this empty if you do not want to prepare hubzilla for debugging
 #
 #developer_name=

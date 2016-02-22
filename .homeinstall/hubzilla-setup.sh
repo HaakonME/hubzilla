@@ -5,7 +5,7 @@
 # 
 # This file automates the installation of hubzilla under Debian Linux
 #
-# 1) Edit the file "hubzilla-config.txt"
+# 1) Copy the file "hubzilla-config.txt.template" to "hubzilla-config.txt"
 #       Follow the instuctions there
 # 
 # 2) Switch to user "root" by typing "su -"
@@ -92,12 +92,12 @@
 # Credits
 # -------
 #
-# The srcipt is based on Thomas Willinghams script "debian-setup.sh"
+# The script is based on Thomas Willinghams script "debian-setup.sh"
 # which he used to install the red#matrix.
 #
 # The script uses another script from https://github.com/lukas2511/letsencrypt.sh
 #
-# The documentation of bash is here
+# The documentation for bash is here
 # https://www.gnu.org/software/bash/manual/bash.html
 #
 function check_sanity {
@@ -120,6 +120,15 @@ function check_sanity {
 
 function check_config {
     print_info "config check..."
+    # Check for required parameters
+    if [ -z "$db_pass" ]
+    then
+        die "db_pass not set in $configfile"
+    fi     
+    if [ -z "$le_domain" ]
+    then
+        die "le_domain not set in $configfile"
+    fi   
     # backup is important and should be checked
 	if [ -n "$backup_device_name" ]
 	then
@@ -223,6 +232,11 @@ function install_apache {
 function install_curl {
     print_info "installing curl..."
     nocheck_install "curl"
+}
+
+function install_sendmail {
+    print_info "installing sendmail..."
+    nocheck_install "sendmail"
 }
 
 function install_php {
@@ -809,6 +823,7 @@ check_sanity
 # Read config file edited by user
 configfile=hubzilla-config.txt
 source $configfile
+
 selfhostdir=/etc/selfhost
 selfhostscript=selfhost-updater.sh
 hubzilladaily=hubzilla-daily.sh
@@ -823,6 +838,7 @@ sslconf=/etc/apache2/sites-available/default-ssl.conf
 check_config
 update_upgrade
 install_curl
+install_sendmail
 install_apache
 install_php
 install_mysql

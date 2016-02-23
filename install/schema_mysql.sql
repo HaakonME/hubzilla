@@ -555,7 +555,7 @@ CREATE TABLE IF NOT EXISTS `iconfig` (
   KEY `iid` (`iid`),
   KEY `cat` (`cat`),
   KEY `k` (`k`),
-  KEY `sharing` (`sharing`),
+  KEY `sharing` (`sharing`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `issue` (

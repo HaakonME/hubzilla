@@ -106,6 +106,11 @@ function wfinger_init(&$a) {
 			array(
 				'rel' => 'http://purl.org/zot/protocol',
 				'href' => z_root() . '/.well-known/zot-info' . '?address=' . $r[0]['xchan_addr'],
+			),
+
+			array(
+				'rel' => 'magic-public-key',
+				'href' => 'data:application/magic-public-key,' . salmon_key($r[0]['channel_pubkey']),
 			)
 		);
 

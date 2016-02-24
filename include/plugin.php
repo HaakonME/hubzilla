@@ -325,7 +325,8 @@ function get_plugin_info($plugin){
 		'description' => '',
 		'author' => array(),
 		'maintainer' => array(),
-		'version' => ''
+		'version' => '',
+		'requires' => ''
 	);
 
 	if (!is_file("addon/$plugin/$plugin.php"))
@@ -381,6 +382,22 @@ function check_plugin_versions($info) {
 			logger('minphpversion limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
 			return false;
 		}
+	}
+
+	if(array_key_exists('requires',$info)) {
+		$arr = explode(',',$info['requires']);
+		$found = true;
+		if($arr) {
+			foreach($arr as $test) {
+				$test = trim($test);
+				if(! $test)
+					continue;
+				if(! in_array($test,get_app()->plugins))
+					$found = false;				
+			}
+		}
+		if(! $found)
+			return false;
 	}
 
 	return true;

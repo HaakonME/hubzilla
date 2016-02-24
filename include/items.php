@@ -3724,10 +3724,6 @@ function mail_store($arr) {
 /**
  * @brief Process atom feed and update anything/everything we might need to update.
  *
- * $hub = should we find a hub declation in the feed, pass it back to our calling process, who might (or
- *        might not) try and subscribe to it.
- * $datedir sorts in reverse order
- *
  * @param array $xml
  *   The (atom) feed to consume - RSS isn't as fully supported but may work for simple feeds.
  * @param $importer
@@ -3766,7 +3762,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 	if(($chn_expire != 0) && ($chn_expire < $sys_expire))
 		$expire_days = $chn_expire;
 
-logger('expire_days: ' . $expire_days);
+	// logger('expire_days: ' . $expire_days);
 
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
@@ -3986,6 +3982,72 @@ logger('expire_days: ' . $expire_days);
 		}
 	}
 }
+
+
+/**
+ * @brief Process atom feed and return the first post and structure
+ *
+ * @param array $xml
+ *   The (atom) feed to consume - RSS isn't as fully supported but may work for simple feeds.
+ * @param $importer
+ *   The contact_record (joined to user_record) of the local user who owns this
+ *   relationship. It is this person's stuff that is going to be updated.
+ */
+
+function process_salmon_feed($xml, $importer) {
+
+	$ret = array();
+
+	require_once('library/simplepie/simplepie.inc');
+
+	if(! strlen($xml)) {
+		logger('process_feed: empty input');
+		return;
+	}
+
+	$feed = new SimplePie();
+	$feed->set_raw_data($xml);
+	$feed->init();
+
+	if($feed->error())
+		logger('Error parsing XML: ' . $feed->error());
+
+	$permalink = $feed->get_permalink();
+
+	if($feed->get_item_quantity()) {
+
+		// this should be exactly one
+
+		logger('feed item count = ' . $feed->get_item_quantity(), LOGGER_DEBUG);
+
+		$items = $feed->get_items();
+
+		foreach($items as $item) {
+
+			$item_id = base64url_encode($item->get_id());
+
+			logger('processing ' . $item_id, LOGGER_DEBUG);
+
+			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
+			if(isset($rawthread[0]['attribs']['']['ref'])) {
+				$is_reply = true;
+				$parent_mid = base64url_encode($rawthread[0]['attribs']['']['ref']);
+			}
+
+			if($is_reply)
+				$ret['is_reply'] = true;
+
+			$ret['author'] = array();
+
+			$datarray = get_atom_elements($feed,$item,$ret['author']);
+
+			$ret['item'] = $datarray;			
+		}
+	}
+
+	return $ret;
+}
+
 
 function update_feed_item($uid,$datarray) {
 	logger('update_feed_item: not implemented! ' . $uid . ' ' . print_r($datarray,true), LOGGER_DATA);

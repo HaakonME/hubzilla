@@ -4132,7 +4132,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
-	if(activity_compare($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_compare($item['verb'],ACTIVITY_POST)) {
+	if(activity_match($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_match($item['verb'],ACTIVITY_POST)) {
 		$obj = ((is_array($item['obj'])) ? $item['object'] : json_decode($item['object'],true));
  
 		$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";

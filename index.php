@@ -61,25 +61,11 @@ if(! $a->install) {
 	load_hooks();
 	call_hooks('init_1');
 
-	$a->language = get_best_language();
-	load_translation_table($a->language);
-	// Force the cookie to be secure (https only) if this site is SSL enabled. Must be done before session_start().
+}
 
-	if(intval($a->config['system']['ssl_cookie_protection'])) {
-		$arr = session_get_cookie_params();
-		session_set_cookie_params(
-			((isset($arr['lifetime']))  ? $arr['lifetime'] : 0),
-			((isset($arr['path']))      ? $arr['path']     : '/'),
-			((isset($arr['domain']))    ? $arr['domain']   : $a->get_hostname()),
-			((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
-			((isset($arr['httponly']))  ? $arr['httponly'] : true));
-	}
-}
-else {
-	// load translations but do not check plugins as we have no database
+
 	$a->language = get_best_language();
-	load_translation_table($a->language,true);
-}
+	load_translation_table($a->language,$a->install);
 
 
 /**

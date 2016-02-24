@@ -1,6 +1,6 @@
 <?php
 
-namespace RedMatrix\RedDAV;
+namespace Zotlabs\Storage;
 
 use Sabre\DAV;
 
@@ -16,7 +16,7 @@ use Sabre\DAV;
  * @link http://github.com/friendica/red
  * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
  */
-class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
+class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 	/**
 	 * @brief The path inside /cloud
@@ -116,7 +116,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$modulename = get_app()->module;
 		if ($this->red_path === '/' && $name === $modulename) {
-			return new RedDirectory('/' . $modulename, $this->auth);
+			return new Directory('/' . $modulename, $this->auth);
 		}
 
 		$x = RedFileData($this->ext_path . '/' . $name, $this->auth);

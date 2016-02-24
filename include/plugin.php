@@ -653,17 +653,6 @@ function get_markup_template($s, $root = '') {
 	return $template;
 }
 
-// return the standardised version. Since we can't easily compare
-// before the STD_VERSION definition was applied, we have to treat 
-// all prior release versions the same. You can dig through them
-// with other means (such as RED_VERSION) if necessary. 
-
-function get_std_version() {
-	if(defined('STD_VERSION'))
-		return STD_VERSION;
-	return '0.0.0';
-}
-
 
 function folder_exists($folder)
 {

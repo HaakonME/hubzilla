@@ -1,11 +1,11 @@
 <?php
 
-namespace RedMatrix\RedDAV;
+namespace Zotlabs\Storage;
 
 use Sabre\DAV;
 
 /**
- * @brief Authentication backend class for RedDAV.
+ * @brief Authentication backend class for DAV.
  *
  * This class also contains some data which is not necessary for authentication
  * like timezone settings.
@@ -15,7 +15,7 @@ use Sabre\DAV;
  * @link http://github.com/friendica/red
  * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
  */
-class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
+class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 
 	/**
 	 * @brief This variable holds the currently logged-in channel_address.
@@ -45,18 +45,18 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	public $observer = '';
 	/**
 	 *
-	 * @see RedBrowser::set_writeable()
+	 * @see Browser::set_writeable()
 	 * @var \Sabre\DAV\Browser\Plugin
 	 */
 	public $browser;
 	/**
-	 * channel_id of the current visited path. Set in RedDirectory::getDir().
+	 * channel_id of the current visited path. Set in Directory::getDir().
 	 *
 	 * @var int
 	 */
 	public $owner_id = 0;
 	/**
-	 * channel_name of the current visited path. Set in RedDirectory::getDir().
+	 * channel_name of the current visited path. Set in Directory::getDir().
 	 *
 	 * Used for creating the path in cloud/
 	 *
@@ -197,7 +197,7 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	}
 
 	/**
-	 * @brief Prints out all RedBasicAuth variables to logger().
+	 * @brief Prints out all BasicAuth variables to logger().
 	 *
 	 * @return void
 	 */

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedMatrix\RedDAV;
+namespace Zotlabs\Storage;
 
 use Sabre\DAV;
 
@@ -15,7 +15,7 @@ use Sabre\DAV;
  * @link http://github.com/friendica/red
  * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
  */
-class RedBrowser extends DAV\Browser\Plugin {
+class Browser extends DAV\Browser\Plugin {
 
 	/**
 	 * @see set_writeable()

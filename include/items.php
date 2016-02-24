@@ -610,8 +610,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 	$atom = '';
 
 	$atom .= replace_macros($feed_template, array(
-		'$version'      => xmlify(get_project_version()),
-		'$red'          => xmlify(get_platform_name()),
+		'$version'      => xmlify(Zotlabs\Project\System::get_project_version()),
+		'$red'          => xmlify(Zotlabs\Project\System::get_platform_name()),
 		'$feed_id'      => xmlify($channel['xchan_url']),
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
@@ -2887,13 +2887,13 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 
 	$signed_text = $datarray['mid'] . ';' . $parent_item['mid'] . ';' . $signed_body . ';' . $diaspora_handle;
 
-	/** @FIXME $uprvkey is undefined, do we still need this if-statement? */
-	if( $uprvkey !== false )
+
+	if( $channel && $channel['channel_prvkey'] )
 		$authorsig = base64_encode(rsa_sign($signed_text, $channel['channel_prvkey'], 'sha256'));
 	else
 		$authorsig = '';
 
-	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => base64_encode($authorsig));
+	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => $authorsig);
 
 	$y = json_encode($x);
 
@@ -2901,6 +2901,7 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 		dbesc($y),
 		intval($post_id)
 	);
+
 
 	if(! $r)
 		logger('store_diaspora_comment_sig: DB write failed');
@@ -5440,7 +5441,7 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 
 	$arr['body'] = sprintf($t,$channel['channel_name'],$ptext) . "\n\n" . $ltext;
 
-	$acl = new AccessList($channel);
+	$acl = new Zotlabs\Access\AccessList($channel);
 	$x = $acl->get();
 	$arr['allow_cid'] = $x['allow_cid'];
 

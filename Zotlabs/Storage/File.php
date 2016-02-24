@@ -1,6 +1,6 @@
 <?php
 
-namespace RedMatrix\RedDAV;
+namespace Zotlabs\Storage;
 
 use Sabre\DAV;
 
@@ -15,7 +15,7 @@ use Sabre\DAV;
  * @link http://github.com/friendica/red
  * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
  */
-class RedFile extends DAV\Node implements DAV\IFile {
+class File extends DAV\Node implements DAV\IFile {
 
 	/**
 	 * The file from attach table.

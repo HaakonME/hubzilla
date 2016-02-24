@@ -294,8 +294,8 @@ function z_post_url_json($url, $params, $redirects = 0, $opts = array()) {
 }
 
 
-function json_return_and_die($x) {
-	header("content-type: application/json");
+function json_return_and_die($x, $content_type = 'application/json') {
+	header("Content-type: $content_type");
 	echo json_encode($x);
 	killme();
 }
@@ -1620,7 +1620,7 @@ function format_and_send_email($sender,$xchan,$item) {
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
 			'$banner'	    => $banner,
-			'$notify_icon'  => get_notify_icon(),
+			'$notify_icon'  => Zotlabs\Project\System::get_notify_icon(),
 			'$product'	    => $product,
 			'$preamble'	    => '',
 			'$sitename'	    => $sitename,
@@ -1768,8 +1768,8 @@ function get_site_info() {
 	$site_info = get_config('system','info');
 	$site_name = get_config('system','sitename');
 	if(! get_config('system','hidden_version_siteinfo')) {
-		$version = get_project_version();
-		$tag = get_std_version();
+		$version = Zotlabs\Project\System::get_project_version();
+		$tag = Zotlabs\Project\System::get_std_version();
 
 		if(@is_dir('.git') && function_exists('shell_exec')) {
 			$commit = trim( @shell_exec('git log -1 --format="%h"'));
@@ -1805,7 +1805,7 @@ function get_site_info() {
 	$data = Array(
 		'version' => $version,
 		'version_tag' => $tag,
-		'server_role' => get_server_role(),
+		'server_role' => Zotlabs\Project\System::get_server_role(),
 		'commit' => $commit,
 		'url' => z_root(),
 		'plugins' => $visible_plugins,
@@ -1819,7 +1819,7 @@ function get_site_info() {
 		'locked_features' => $locked_features,
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
-		'platform' => get_platform_name(),
+		'platform' => Zotlabs\Project\System::get_platform_name(),
 		'dbdriver' => $db->getdriver(),
 		'lastpoll' => get_config('system','lastpoll'),
 		'info' => (($site_info) ? $site_info : ''),

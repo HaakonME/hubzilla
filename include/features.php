@@ -25,7 +25,7 @@ function feature_enabled($uid,$feature) {
 }
 
 function get_feature_default($feature) {
-	$f = get_features();
+	$f = get_features(false);
 	foreach($f as $cat) {
 		foreach($cat as $feat) {
 			if(is_array($feat) && $feat[0] === $feature)

@@ -283,6 +283,8 @@ function events_content(&$a) {
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array(
 		'$baseurl' => $a->get_baseurl(),
+		'$module_url' => '/events',
+		'$modparams' => 1,
 		'$lang' => $a->language,
 		'$first_day' => $first_day
 	));
@@ -295,6 +297,11 @@ function events_content(&$a) {
 	$y = 0;
 	$m = 0;
 	$ignored = ((x($_REQUEST,'ignored')) ? " and ignored = " . intval($_REQUEST['ignored']) . " "  : '');
+
+
+logger('args: ' . print_r($a->argv,true));
+
+
 
 	if(argc() > 1) {
 		if(argc() > 2 && argv(1) === 'add') {

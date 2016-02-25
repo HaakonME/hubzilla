@@ -1595,7 +1595,16 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if (is_null($nickname))
 		$nickname  = $channel['channel_address'];
 
+
 	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_channel());
+
+	if($uid == local_channel()) {
+		$cal_link = '/events';
+	}
+	else {
+		$cal_link = '/cal/' . $nickname;
+	}
+
 
 	if (get_pconfig($uid, 'system', 'noprofiletabs'))
 		return;
@@ -1643,6 +1652,17 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'id'    => 'files-tab',
 		);
 	}
+
+	if($p['view_stream']) {
+		$tabs[] = array(
+			'label' => t('Events'),
+			'url'   => $a->get_baseurl() . $cal_link,
+			'sel'   => ((argv(0) == 'cal' || argv(0) == 'events') ? 'active' : ''),
+			'title' => t('Events'),
+			'id'    => 'event-tab',
+		);
+	}
+
 
 	if ($p['chat']) {
 		require_once('include/chat.php');

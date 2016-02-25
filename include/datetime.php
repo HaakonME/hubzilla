@@ -549,7 +549,7 @@ function update_birthdays() {
 			$ev['event_xchan'] = $rr['xchan_hash'];
 			$ev['start'] = datetime_convert('UTC', 'UTC', $rr['abook_dob']);
 			$ev['finish'] = datetime_convert('UTC', 'UTC', $rr['abook_dob'] . ' + 1 day ');
-			$ev['adjust'] = 1;
+			$ev['adjust'] = 0;
 			$ev['summary'] = sprintf( t('%1$s\'s birthday'), $rr['xchan_name']);
 			$ev['description'] = sprintf( t('Happy Birthday %1$s'), 
 				'[zrl=' . $rr['xchan_url'] . ']' . $rr['xchan_name'] . '[/zrl]') ;

@@ -299,7 +299,7 @@ function events_content(&$a) {
 	$ignored = ((x($_REQUEST,'ignored')) ? " and ignored = " . intval($_REQUEST['ignored']) . " "  : '');
 
 
-logger('args: ' . print_r($a->argv,true));
+	// logger('args: ' . print_r($a->argv,true));
 
 
 

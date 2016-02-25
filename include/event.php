@@ -440,6 +440,17 @@ function event_addtocal($item_id, $uid) {
 			$ev['event_hash'] = $item['resource_id'];
 		}
 
+		if($ev->private)
+			$ev['allow_cid'] = '<' . $channel['channel_hash'] . '>'; 
+		else {
+			$acl = new Zotlabs\Access\AccessList($channel);
+			$x = $acl->get();
+			$ev['allow_cid'] = $x['allow_cid'];
+			$ev['allow_gid'] = $x['allow_gid'];
+			$ev['deny_cid']  = $x['deny_cid'];
+			$ev['deny_gid']  = $x['deny_gid'];
+		}
+
 		$event = event_store_event($ev);
 		if($event) {
 			$r = q("update item set resource_id = '%s', resource_type = 'event' where id = %d and uid = %d",

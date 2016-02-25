@@ -85,7 +85,7 @@ function cal_content(&$a) {
 	$m = 0;
 	$ignored = ((x($_REQUEST,'ignored')) ? " and ignored = " . intval($_REQUEST['ignored']) . " "  : '');
 
-logger('args: ' . print_r($a->argv,true));
+	// logger('args: ' . print_r($a->argv,true));
 
 	if(argc() > 3 && intval(argv(2)) && intval(argv(3))) {
 		$mode = 'view';

@@ -250,6 +250,7 @@ function register_content(&$a) {
 		'$role' 	=> $role,
 		'$default_role' => $default_role,
 		'$nickname'     => $nickname,
+		'$enable_tos'	=> $enable_tos,
 		'$tos'		=> $tos,
 		'$email'        => $email,
 		'$pass1'        => $password,

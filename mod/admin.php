@@ -1275,7 +1275,7 @@ function admin_page_plugins(&$a){
 			'$str_minversion' => t('Minimum project version: '),
 			'$str_maxversion' => t('Maximum project version: '),
 			'$str_minphpversion' => t('Minimum PHP version: '),
-
+			'$str_requires' => t('Requires: '),
 			'$disabled' => t('Disabled - version incompatibility'),
 
 			'$admin_form' => $admin_form,

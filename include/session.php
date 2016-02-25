@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file include/session.php
  *
@@ -14,8 +15,8 @@ $session_expire = 180000;
 function new_cookie($time) {
 	$old_sid = session_id();
 
-// ??? This shouldn't have any effect if called after session_start()
-// We probably need to set the session expiration and change the PHPSESSID cookie.
+	// ??? This shouldn't have any effect if called after session_start()
+	// We probably need to set the session expiration and change the PHPSESSID cookie.
 
 	session_set_cookie_params($time);
 	session_regenerate_id(false);
@@ -108,8 +109,9 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.cookie_httponly', 1);
 
 /*
- * PHP function which sets our user-level session storage functions.
+ * Set our session storage functions.
  */
+
 session_set_save_handler(
 		'ref_session_open',
 		'ref_session_close',
@@ -118,3 +120,16 @@ session_set_save_handler(
 		'ref_session_destroy',
 		'ref_session_gc'
 );
+
+
+   // Force cookies to be secure (https only) if this site is SSL enabled. Must be done before session_start().
+
+    if(intval($a->config['system']['ssl_cookie_protection'])) {
+        $arr = session_get_cookie_params();
+        session_set_cookie_params(
+            ((isset($arr['lifetime']))  ? $arr['lifetime'] : 0),
+            ((isset($arr['path']))      ? $arr['path']     : '/'),
+            ((isset($arr['domain']))    ? $arr['domain']   : $a->get_hostname()),
+            ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
+            ((isset($arr['httponly']))  ? $arr['httponly'] : true));
+    }

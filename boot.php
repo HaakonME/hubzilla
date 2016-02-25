@@ -50,7 +50,7 @@ define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
 define ( 'STD_VERSION',             '1.2.4' );
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1163  );
+define ( 'DB_UPDATE_VERSION',       1164  );
 
 
 /**

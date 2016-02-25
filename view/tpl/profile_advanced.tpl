@@ -12,6 +12,9 @@
 				<i class="icon-thumbs-up-alt" title="{{$profile.likethis}}"></i>
 			</button>
 			{{/if}}
+			{{if $edit}}
+			<a href="{{$edit.link}}" class="btn btn-primary btn-xs"><i class="icon-pencil"></i>&nbsp;{{$edit.label}}</a>
+			{{/if}}
 		</div>
 		<h2>{{$title}}</h2>
 		<div class="clear"></div>

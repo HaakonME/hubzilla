@@ -1,3 +1,4 @@
+{{$tabs}}
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">

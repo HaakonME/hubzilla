@@ -225,6 +225,7 @@ CREATE TABLE "channel" (
   "channel_w_like" bigint  NOT NULL DEFAULT '128',
   "channel_removed" smallint NOT NULL DEFAULT '0',
   "channel_system" smallint NOT NULL DEFAULT '0',
+  "channel_moved" text NOT NULL DEFAULT '',
   PRIMARY KEY ("channel_id"),
   UNIQUE ("channel_address")
 );
@@ -265,6 +266,7 @@ create index "channel_dirdate" on channel ("channel_dirdate");
 create index "channel_lastpost" on channel ("channel_lastpost");
 create index "channel_removed" on channel ("channel_removed");
 create index "channel_system" on channel ("channel_system");
+create index "channel_moved" on channel ("channel_moved");
 CREATE TABLE "chat" (
   "chat_id" serial  NOT NULL,
   "chat_room" bigint  NOT NULL DEFAULT '0',

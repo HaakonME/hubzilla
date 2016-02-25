@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1163 );
+define( 'UPDATE_VERSION' , 1164 );
 
 /**
  *
@@ -2000,6 +2000,21 @@ function update_r1162() {
 		$r2 = q("create index \"iconfig_sharing\" on iconfig (\"sharing\") "); 
 	else 
 		$r2 = q("alter table iconfig add index ( sharing ) ");
+    if($r1 && $r2)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+}
+
+function update_r1163() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("alter table channel add channel_moved text not null default '' ");
+		$r2 = q("create index \"channel_channel_moved\" on channel (\"channel_moved\") ");
+	} 
+	else {
+		$r1 = q("alter table channel add channel_moved char(255) not null default '' ");
+		$r2 = q("alter table channel add index ( channel_moved ) ");
+	}
     if($r1 && $r2)
         return UPDATE_SUCCESS;
     return UPDATE_FAILED;

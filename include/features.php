@@ -57,6 +57,7 @@ function get_features($filtered = true) {
 			array('nav_channel_select',  t('Navigation Channel Select'), t('Change channels directly from within the navigation dropdown menu'),false,get_config('feature_lock','nav_channel_select')),
 			array('photo_location',       t('Photo Location'),          t('If location data is available on uploaded photos, link this to a map.'),false,get_config('feature_lock','photo_location')),
 
+			array('smart_birthdays',       t('Smart Birthdays'),          t('Make birthday events timezone aware in case your friends are scattered across the planet.'),true,get_config('feature_lock','smart_birthdays')),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options'),false,get_config('feature_lock','expert')),
 			array('premium_channel', t('Premium Channel'), t('Allows you to set restrictions and terms on those that connect with your channel'),false,get_config('feature_lock','premium_channel')),
 		),

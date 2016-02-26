@@ -1313,7 +1313,7 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		intval($channel_id)
 	);
 
-	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=0);
+	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=1);
 }
 
 /**
@@ -1557,6 +1557,8 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$u_arr_deny_cid = array_unique(array_merge($arr_deny_cid, expand_acl($object['deny_cid'])));
 		$u_arr_deny_gid = array_unique(array_merge($arr_deny_gid, expand_acl($object['deny_gid'])));
 
+		$private = (($u_arr_allow_cid[0] || $u_arr_allow_gid[0] || $u_arr_deny_cid[0] || $u_arr_deny_gid[0]) ? 1 : 0);
+
 		$u_mid = item_message_id();
 
 		$arr['aid']           = get_account_id();
@@ -1566,13 +1568,12 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['author_xchan']  = $poster['xchan_hash'];
 		$arr['owner_xchan']   = $poster['xchan_hash'];
 		$arr['title']         = '';
-		//updates should be visible to everybody -> perms may have changed
-		$arr['allow_cid']     = '';
-		$arr['allow_gid']     = '';
-		$arr['deny_cid']      = '';
-		$arr['deny_gid']      = '';
+		$arr['allow_cid']     = perms2str($u_arr_allow_cid);
+		$arr['allow_gid']     = perms2str($u_arr_allow_gid);
+		$arr['deny_cid']      = perms2str($u_arr_deny_cid);
+		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
 		$arr['item_hidden']   = 1;
-		$arr['item_private']  = 0;
+		$arr['item_private']  = $private;
 		$arr['verb']          = ACTIVITY_UPDATE;
 		$arr['obj_type']      = $objtype;
 		$arr['object']        = $u_jsonobject;
@@ -1705,7 +1706,7 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 
 	//turn allow_gid into allow_cid's
 	foreach($arr_allow_gid as $gid) {
-		$in_group = in_group($gid);
+		$in_group = group_get_members($gid);
 		$arr_allow_cid = array_unique(array_merge($arr_allow_cid, $in_group));
 	}
 
@@ -1727,7 +1728,7 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 			 * */
 			if($parent_arr['allow_gid']) {
 				foreach($parent_arr['allow_gid'][$count] as $gid) {
-					$in_group = in_group($gid);
+					$in_group = group_get_members($gid);
 					$parent_arr['allow_cid'][$count] = array_unique(array_merge($parent_arr['allow_cid'][$count], $in_group));
 				}
 			}
@@ -1807,31 +1808,6 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 
 	return $ret;
 }
-
-/**
- * @brief Returns members of a group.
- *
- * @param int $group_id id of the group to look up
- */
-function in_group($group_id) {
-	$group_members = array();
-
-	/** @TODO make these two queries one with a join. */
-	$x = q("SELECT id FROM groups WHERE hash = '%s'",
-		dbesc($group_id)
-	);
-
-	$r = q("SELECT xchan FROM group_member WHERE gid = %d",
-		intval($x[0]['id'])
-	);
-
-	foreach($r as $ig) {
-		$group_members[] = $ig['xchan'];
-	}
-
-	return $group_members;
-}
-
 
 function filepath_macro($s) {
 

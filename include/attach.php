@@ -1313,7 +1313,7 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		intval($channel_id)
 	);
 
-	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=0);
+	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=1);
 }
 
 /**
@@ -1557,6 +1557,8 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$u_arr_deny_cid = array_unique(array_merge($arr_deny_cid, expand_acl($object['deny_cid'])));
 		$u_arr_deny_gid = array_unique(array_merge($arr_deny_gid, expand_acl($object['deny_gid'])));
 
+		$private = (($u_arr_allow_cid[0] || $u_arr_allow_gid[0] || $u_arr_deny_cid[0] || $u_arr_deny_gid[0]) ? 1 : 0);
+
 		$u_mid = item_message_id();
 
 		$arr['aid']           = get_account_id();
@@ -1566,13 +1568,12 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['author_xchan']  = $poster['xchan_hash'];
 		$arr['owner_xchan']   = $poster['xchan_hash'];
 		$arr['title']         = '';
-		//updates should be visible to everybody -> perms may have changed
-		$arr['allow_cid']     = '';
-		$arr['allow_gid']     = '';
-		$arr['deny_cid']      = '';
-		$arr['deny_gid']      = '';
+		$arr['allow_cid']     = perms2str($u_arr_allow_cid);
+		$arr['allow_gid']     = perms2str($u_arr_allow_gid);
+		$arr['deny_cid']      = perms2str($u_arr_deny_cid);
+		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
 		$arr['item_hidden']   = 1;
-		$arr['item_private']  = 0;
+		$arr['item_private']  = $private;
 		$arr['verb']          = ACTIVITY_UPDATE;
 		$arr['obj_type']      = $objtype;
 		$arr['object']        = $u_jsonobject;

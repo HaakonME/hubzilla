@@ -126,7 +126,7 @@ function queue_deliver($outq, $immediate = false) {
 			remove_queue_item($outq['outq_hash']);
 
 			// server is responding - see if anything else is going to this destination and is piled up 
-			// and try to send some more. We're relying on the fact that delivery_loop() results in an 
+			// and try to send some more. We're relying on the fact that do_delivery() results in an 
 			// immediate delivery otherwise we could get into a queue loop. 
 
 			if(! $immediate) {
@@ -141,7 +141,7 @@ function queue_deliver($outq, $immediate = false) {
 					}
 				}
 				if($piled_up) {
-					delivery_loop($piled_up);
+					do_delivery($piled_up);
 				}
 			}
 		}

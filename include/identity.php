@@ -1832,8 +1832,7 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
 	}		
 	else {
-		// @fixme remove this when we have a fallback cover photo and use that instead.
-		return;
+		$cover = $pphoto;
 	}
 	
 	$o .= replace_macros(get_markup_template('zcard.tpl'),array(

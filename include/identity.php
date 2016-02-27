@@ -1237,10 +1237,6 @@ function advanced_profile(&$a) {
 	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_profile'))
 		return '';
 
-	$o = '';
-
-	$o .= '<h2>' . t('Profile') . '</h2>';
-
 	if($a->profile['name']) {
 
 		$tpl = get_markup_template('profile_advanced.tpl');
@@ -1351,6 +1347,10 @@ function advanced_profile(&$a) {
 			$profile['extra_fields'] = $a->profile['extra_fields'];
 		}
 
+
+		$is_owner = (($a->profile['profile_uid'] == local_channel()) ? true : false);
+		$edit = (($is_owner) ? array('link' => $a->get_baseurl() . '/profiles/' . $a->profile['profile_uid'], 'label' => t('Edit')) : '');
+
 		$things = get_things($a->profile['profile_guid'],$a->profile['profile_uid']);
 
 //		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
@@ -1360,6 +1360,7 @@ function advanced_profile(&$a) {
 			'$canlike' => (($profile['canlike'])? true : false),
 			'$likethis' => t('Like this thing'),
 			'$profile' => $profile,
+			'$edit' => $edit,
 			'$things' => $things
 		));
 	}
@@ -1831,8 +1832,7 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
 	}		
 	else {
-		// @fixme remove this when we have a fallback cover photo and use that instead.
-		return;
+		$cover = $pphoto;
 	}
 	
 	$o .= replace_macros(get_markup_template('zcard.tpl'),array(

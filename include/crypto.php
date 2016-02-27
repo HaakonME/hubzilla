@@ -21,6 +21,21 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 	if(intval(OPENSSL_ALGO_SHA256) && $alg === 'sha256')
 		$alg = OPENSSL_ALGO_SHA256;
 	$verify = openssl_verify($data,$sig,$key,$alg);
+
+	if(! $verify) {
+		logger('openssl_verify: ' . openssl_error_string(),LOGGER_NORMAL,LOG_ERR);
+		logger('openssl_verify: key: ' . $key, LOGGER_DEBUG, LOG_ERR); 
+		// provide a backtrace so that we can debug key issues
+		if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			if($stack) {
+				foreach($stack as $s) {
+					logger('stack: ' . basename($s['file']) . ':' . $s['line'] . ':' . $s['function'] . '()',LOGGER_DEBUG,LOG_ERR);
+			    }
+			}
+		}
+	}
+
 	return $verify;
 }
 

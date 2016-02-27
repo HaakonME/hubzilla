@@ -107,13 +107,13 @@ function like_content(&$a) {
 				// to them.
 				$allow_cid = $allow_gid = $deny_cid = $deny_gid = '';
 				foreach($d as $dd) {
-					$allow_gid .= '<' . $dd['abook_xchan'] . '>';
+					$allow_cid .= '<' . $dd['abook_xchan'] . '>';
 				}
 			}
 			$post_type = t('channel');
 			$objtype = ACTIVITY_OBJ_PROFILE;
 
-
+			$profile = $r[0];
 		}
 		elseif($obj_type == 'thing') {
 
@@ -461,6 +461,13 @@ function like_content(&$a) {
 	$arr['body']          =  sprintf( $bodyverb, $alink, $ulink, $plink );
 	if($obj_type === 'thing' && $r[0]['imgurl']) {
 		$arr['body'] .= "\n\n[zmg=80x80]" . $r[0]['imgurl'] . '[/zmg]';
+	}	
+	if($obj_type === 'profile') {
+		if($public) {
+			$arr['body'] .= "\n\n" . '[embed]' . z_root() . '/profile/' . $ch[0]['channel_address'] . '[/embed]';	
+		}
+		else
+			$arr['body'] .= "\n\n[zmg=80x80]" . $profile['thumb'] . '[/zmg]';
 	}	
 
 

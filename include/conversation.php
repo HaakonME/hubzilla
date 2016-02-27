@@ -1599,7 +1599,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_channel());
 
 	if($uid == local_channel()) {
-		$cal_link = '/events';
+		$cal_link = '';
 	}
 	else {
 		$cal_link = '/cal/' . $nickname;
@@ -1653,7 +1653,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	}
 
-	if($p['view_stream']) {
+	if($p['view_stream'] && $cal_link) {
 		$tabs[] = array(
 			'label' => t('Events'),
 			'url'   => $a->get_baseurl() . $cal_link,

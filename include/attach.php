@@ -1314,6 +1314,8 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	);
 
 	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=1);
+
+	return;
 }
 
 /**

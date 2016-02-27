@@ -13,6 +13,7 @@
 
 require_once('include/permissions.php');
 require_once('include/security.php');
+require_once('include/group.php');
 
 /**
  * @brief Guess the mimetype from file ending.
@@ -1314,6 +1315,8 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	);
 
 	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=1);
+
+	return;
 }
 
 /**

@@ -40,7 +40,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	$ch = @curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
-		return false;
+		return $ret;
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
 	@curl_setopt($ch, CURLINFO_HEADER_OUT, true);
@@ -171,7 +171,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	$ch = curl_init($url);
 	if(($redirects > 8) || (! $ch)) 
-		return ret;
+		return $ret;
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
 	@curl_setopt($ch, CURLINFO_HEADER_OUT, true);

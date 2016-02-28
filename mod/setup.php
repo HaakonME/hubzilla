@@ -41,6 +41,9 @@ function setup_init(&$a) {
 	global $install_wizard_pass;
 	if (x($_POST, 'pass'))
 		$install_wizard_pass = intval($_POST['pass']);
+	else
+		$install_wizard_pass = 1;
+
 }
 
 /**

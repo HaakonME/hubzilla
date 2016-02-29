@@ -684,7 +684,11 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	}
 	// Check for centered text
 	if (strpos($Text,'[/center]') !== false) {
-	$Text = preg_replace("(\[center\](.*?)\[\/center\])ism", "<div style=\"text-align:center;\">$1</div>", $Text);
+		$Text = preg_replace("(\[center\](.*?)\[\/center\])ism", "<div style=\"text-align:center;\">$1</div>", $Text);
+	}
+	// Check for footer
+	if (strpos($Text,'[/footer]') !== false) {
+		$Text = preg_replace("(\[footer\](.*?)\[\/footer\])ism", "<div class=\"wall-item-footer\">$1</div>", $Text);
 	}
 	// Check for list text
 	$Text = str_replace("[*]", "<li>", $Text);

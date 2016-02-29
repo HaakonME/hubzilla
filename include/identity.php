@@ -982,12 +982,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 	head_set_icon($profile['thumb']);
 
-	$is_owner = (($profile['uid'] == local_channel()) ? true : false);
-
 	if(is_sys_channel($profile['uid']))
 		$show_connect = false;
-
-
 
 	$profile['picdate'] = urlencode($profile['picdate']);
 

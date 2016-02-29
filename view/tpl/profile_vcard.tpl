@@ -6,19 +6,21 @@
 	<div class="connect-btn-wrapper"><a href="{{$connect_url}}" class="btn btn-block btn-success btn-sm"><i class="icon-plus"></i> {{$connect}}</a></div>
 	{{/if}}
 	{{if ! $zcard}}
-	{{if $profile.edit}}
+	{{if $editmenu.multi}}
 	<div class="dropdown">
-	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil" title="{{$profile.edit.1}}" ></i></a>
+	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" href="#" ><i class="icon-pencil" title="{{$editmenu.edit.1}}"></i></a>
 	<ul class="dropdown-menu" role="menu">
-		{{foreach $profile.menu.entries as $e}}
+		{{foreach $editmenu.menu.entries as $e}}
 		<li>
-			<a href="profiles/{{$e.id}}"><img class="dropdown-menu-img-xs" src='{{$e.photo}}'>{{$e.profile_name}}<div class='clear'></div></a>
+			<a href="profiles/{{$e.id}}"><img class="dropdown-menu-img-xs" src='{{$e.photo}}'>{{$e.profile_name}}</a>
 		</li>
 		{{/foreach}}
-		<li><a href="profile_photo" >{{$profile.menu.chg_photo}}</a></li>
-		{{if $profile.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$profile.menu.cr_new}}</a></li>{{/if}}
+		<li><a href="profile_photo" >{{$editmenu.menu.chg_photo}}</a></li>
+		{{if $editmenu.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$editmenu.menu.cr_new}}</a></li>{{/if}}
 	</ul>
 	</div>
+	{{else}}
+	<a class="profile-edit-side-link" href="{{$editmenu.edit.0}}" ><i class="icon-pencil" title="{{$editmenu.edit.1}}"></i></a>
 	{{/if}}
 	{{/if}}
 
@@ -27,9 +29,6 @@
 	{{if $reddress}}<div class="reddress" oncopy="return false;">{{$profile.reddress}}</div>{{/if}}		
 	{{/if}}
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}
-
-
-
 	{{if $location}}
 		<dl class="location"><dt class="location-label">{{$location}}</dt> 
 		<dd class="adr">
@@ -45,7 +44,6 @@
 	{{/if}}
 
 	{{if $gender}}<dl class="mf"><dt class="gender-label">{{$gender}}</dt> <dd class="x-gender">{{$profile.gender}}</dd></dl>{{/if}}
-	
 
 	{{if $marital}}<dl class="marital"><dt class="marital-label"><span class="heart">&hearts;</span>{{$marital}}</dt><dd class="marital-text">{{$profile.marital}}</dd></dl>{{/if}}
 

@@ -20,7 +20,7 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 
 	if(intval(OPENSSL_ALGO_SHA256) && $alg === 'sha256')
 		$alg = OPENSSL_ALGO_SHA256;
-	$verify = openssl_verify($data,$sig,$key,$alg);
+	$verify = @openssl_verify($data,$sig,$key,$alg);
 
 	if(! $verify) {
 		logger('openssl_verify: ' . openssl_error_string(),LOGGER_NORMAL,LOG_ERR);

@@ -2971,6 +2971,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	logger('build_sync_packet: packet: ' . print_r($info,true), LOGGER_DATA, LOG_DEBUG);
 
+	$total = count($synchubs);
+
 	foreach($synchubs as $hub) {
 		$hash = random_string();
 		$n = zot_build_packet($channel,'notify',$env_recips,$hub['hubloc_sitekey'],$hash);
@@ -2984,7 +2986,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		));
 
 		proc_run('php', 'include/deliver.php', $hash);
-		if($interval)
+		$total = $total - 1;
+
+		if($interval && $total)
 			@time_sleep_until(microtime(true) + (float) $interval);
 	}
 }

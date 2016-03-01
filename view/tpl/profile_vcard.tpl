@@ -19,7 +19,7 @@
 		{{if $editmenu.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$editmenu.menu.cr_new}}</a></li>{{/if}}
 	</ul>
 	</div>
-	{{else}}
+	{{elseif $editmenu}}
 	<a class="profile-edit-side-link" href="{{$editmenu.edit.0}}" ><i class="icon-pencil" title="{{$editmenu.edit.1}}"></i></a>
 	{{/if}}
 	{{/if}}

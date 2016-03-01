@@ -560,7 +560,7 @@ CREATE TABLE "iconfig" (
   "k" text NOT NULL DEFAULT '',
   "v" text NOT NULL DEFAULT '',
   "sharing" int NOT NULL DEFAULT '0',
-  PRIMARY_KEY("id")
+  PRIMARY KEY("id")
 );
 create index "iconfig_iid" on iconfig ("iid");
 create index "iconfig_cat" on iconfig ("cat");

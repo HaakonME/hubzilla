@@ -1503,7 +1503,7 @@ nav .dropdown-menu {
 .section-content-tools-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 3px solid comment_item_colour;
 }
 
 .section-content-info-wrapper {

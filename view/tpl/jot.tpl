@@ -160,9 +160,10 @@
 		</div>
 		<div id="profile-jot-text-loading"></div>
 		<div id="profile-jot-end" class="clear"></div>
-		<div id="jot-preview-content" style="display:none;"></div>
 	</form>
 </div>
+
+<div id="jot-preview-content" style="display:none;"></div>
 
 <!-- Modal for item expiry-->
 <div class="modal" id="expiryModal" tabindex="-1" role="dialog" aria-labelledby="expiryModalLabel" aria-hidden="true">

@@ -31,186 +31,241 @@
 		<div class="clear"></div>
 	</div>
 	<div class="section-content-wrapper">
-		<dl id="aprofile-fullname" class="aprofile">
-		 <dt>{{$profile.fullname.0}}</dt>
-		 <dd>{{$profile.fullname.1}}</dd>
-		</dl>
 
+	{{foreach $fields as $f}}
+		{{if $f == 'name'}}
+			<dl id="aprofile-fullname" class="aprofile">
+			 <dt>{{$profile.fullname.0}}</dt>
+			 <dd>{{$profile.fullname.1}}</dd>
+			</dl>
+		{{/if}}
+
+		{{if $f == 'gender'}}
 		{{if $profile.gender}}
 		<dl id="aprofile-gender" class="aprofile">
 		 <dt>{{$profile.gender.0}}</dt>
 		 <dd>{{$profile.gender.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'birthday'}}
 		{{if $profile.birthday}}
 		<dl id="aprofile-birthday" class="aprofile">
 		 <dt>{{$profile.birthday.0}}</dt>
 		 <dd>{{$profile.birthday.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'age'}}
 		{{if $profile.age}}
 		<dl id="aprofile-age" class="aprofile">
 		 <dt>{{$profile.age.0}}</dt>
 		 <dd>{{$profile.age.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+
+		{{if $f == 'marital'}}
 		{{if $profile.marital}}
 		<dl id="aprofile-marital" class="aprofile">
 		 <dt><span class="heart">&hearts;</span>  {{$profile.marital.0}}</dt>
 		 <dd>{{$profile.marital.1}}{{if $profile.marital.with}} ({{$profile.marital.with}}){{/if}}{{if $profile.howlong}} {{$profile.howlong}}{{/if}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'sexual'}}
 		{{if $profile.sexual}}
 		<dl id="aprofile-sexual" class="aprofile">
 		 <dt>{{$profile.sexual.0}}</dt>
 		 <dd>{{$profile.sexual.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'keywords'}}
 		{{if $profile.keywords}}
 		<dl id="aprofile-tags" class="aprofile">
 		 <dt>{{$profile.keywords.0}}</dt>
 		 <dd>{{$profile.keywords.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'homepage'}}
 		{{if $profile.homepage}}
 		<dl id="aprofile-homepage" class="aprofile">
 		 <dt>{{$profile.homepage.0}}</dt>
 		 <dd>{{$profile.homepage.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'hometown'}}
 		{{if $profile.hometown}}
 		<dl id="aprofile-hometown" class="aprofile">
 		 <dt>{{$profile.hometown.0}}</dt>
 		 <dd>{{$profile.hometown.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+
+		{{if $f == 'politic'}}
 		{{if $profile.politic}}
 		<dl id="aprofile-politic" class="aprofile">
 		 <dt>{{$profile.politic.0}}</dt>
 		 <dd>{{$profile.politic.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'religion'}}
 		{{if $profile.religion}}
 		<dl id="aprofile-religion" class="aprofile">
 		 <dt>{{$profile.religion.0}}</dt>
 		 <dd>{{$profile.religion.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'about'}}
 		{{if $profile.about}}
 		<dl id="aprofile-about" class="aprofile">
 		 <dt>{{$profile.about.0}}</dt>
 		 <dd>{{$profile.about.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'interest'}}
 		{{if $profile.interest}}
 		<dl id="aprofile-interest" class="aprofile">
 		 <dt>{{$profile.interest.0}}</dt>
 		 <dd>{{$profile.interest.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'likes'}}
 		{{if $profile.likes}}
 		<dl id="aprofile-likes" class="aprofile">
 		 <dt>{{$profile.likes.0}}</dt>
 		 <dd>{{$profile.likes.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'dislikes'}}
 		{{if $profile.dislikes}}
 		<dl id="aprofile-dislikes" class="aprofile">
 		 <dt>{{$profile.dislikes.0}}</dt>
 		 <dd>{{$profile.dislikes.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'contact'}}
 		{{if $profile.contact}}
 		<dl id="aprofile-contact" class="aprofile">
 		 <dt>{{$profile.contact.0}}</dt>
 		 <dd>{{$profile.contact.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'channels'}}
 		{{if $profile.channels}}
 		<dl id="aprofile-channels" class="aprofile">
 		 <dt>{{$profile.channels.0}}</dt>
 		 <dd>{{$profile.channels.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
 
+		{{if $f == 'music'}}
 		{{if $profile.music}}
 		<dl id="aprofile-music" class="aprofile">
 		 <dt>{{$profile.music.0}}</dt>
 		 <dd>{{$profile.music.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
 
+		{{if $f == 'book'}}
 		{{if $profile.book}}
 		<dl id="aprofile-book" class="aprofile">
 		 <dt>{{$profile.book.0}}</dt>
 		 <dd>{{$profile.book.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
 
+		{{if $f == 'tv'}}
 		{{if $profile.tv}}
 		<dl id="aprofile-tv" class="aprofile">
 		 <dt>{{$profile.tv.0}}</dt>
 		 <dd>{{$profile.tv.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
 
+		{{if $f == 'film'}}
 		{{if $profile.film}}
 		<dl id="aprofile-film" class="aprofile">
 		 <dt>{{$profile.film.0}}</dt>
 		 <dd>{{$profile.film.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
 
+		{{if $f == 'romance'}}
 		{{if $profile.romance}}
 		<dl id="aprofile-romance" class="aprofile">
 		 <dt>{{$profile.romance.0}}</dt>
 		 <dd>{{$profile.romance.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
 
+		{{if $f == 'work'}}
 		{{if $profile.work}}
 		<dl id="aprofile-work" class="aprofile">
 		 <dt>{{$profile.work.0}}</dt>
 		 <dd>{{$profile.work.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
+		{{if $f == 'education'}}
 		{{if $profile.education}}
 		<dl id="aprofile-education" class="aprofile">
 		 <dt>{{$profile.education.0}}</dt>
 		 <dd>{{$profile.education.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 
-		{{foreach $profile.extra_fields as $f}}
-		{{if $profile.$f}}
-		<dl id="aprofile-{{$f}}" class="aprofile">
-		 <dt>{{$profile.$f.0}}</dt>
-		 <dd>{{$profile.$f.1}}</dd>
+		{{foreach $profile.extra_fields as $fld}}
+		{{if $f == $fld}}
+		{{if $profile.$fld}}
+		<dl id="aprofile-{{$fld}}" class="aprofile">
+		 <dt>{{$profile.$fld.0}}</dt>
+		 <dd>{{$profile.$fld.1}}</dd>
 		</dl>
 		{{/if}}
+		{{/if}}
 		{{/foreach}}
+	{{/foreach}}
 
 
 		{{if $things}}

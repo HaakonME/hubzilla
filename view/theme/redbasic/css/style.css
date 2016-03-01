@@ -1160,10 +1160,15 @@ img.mail-conv-sender-photo {
 }
 
 #profile-jot-text {
-	resize: vertical;
+	resize: none;
 	border-width: 0px;
 	border-radius: $radiuspx;
 }
+
+#profile-jot-text:focus {
+	resize: vertical;
+}
+
 
 #profile-jot-text::-webkit-input-placeholder {
 	font-size:16px;

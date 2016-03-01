@@ -61,7 +61,7 @@ code {
 }
 
 #profile-jot-form {
-	line-height: 1;
+	line-height: initial;
 }
 
 #profile-jot-wrapper {

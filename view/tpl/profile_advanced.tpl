@@ -12,8 +12,19 @@
 				<i class="icon-thumbs-up-alt" title="{{$profile.likethis}}"></i>
 			</button>
 			{{/if}}
-			{{if $edit}}
-			<a href="{{$edit.link}}" class="btn btn-primary btn-xs"><i class="icon-pencil"></i>&nbsp;{{$edit.label}}</a>
+			{{if $editmenu.multi}}
+			<a class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" href="#" ><i class="icon-pencil"></i>&nbsp;{{$editmenu.edit.3}}</a>
+			<ul class="dropdown-menu" role="menu">
+				{{foreach $editmenu.menu.entries as $e}}
+				<li>
+					<a href="profiles/{{$e.id}}"><img class="dropdown-menu-img-xs" src='{{$e.photo}}'>{{$e.profile_name}}<div class='clear'></div></a>
+				</li>
+				{{/foreach}}
+				<li><a href="profile_photo" >{{$editmenu.menu.chg_photo}}</a></li>
+				{{if $editmenu.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$editmenu.menu.cr_new}}</a></li>{{/if}}
+			</ul>
+			{{else}}
+			<a class="btn btn-primary btn-xs" href="{{$editmenu.edit.0}}" ><i class="icon-pencil"></i>&nbsp;{{$editmenu.edit.3}}</a>
 			{{/if}}
 		</div>
 		<h2>{{$title}}</h2>

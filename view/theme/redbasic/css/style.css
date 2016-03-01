@@ -1243,6 +1243,11 @@ img.mail-conv-sender-photo {
 	font-size: $font_size;
 }
 
+.wall-item-footer {
+	font-size: $body_font_size;
+	margin-top: 2em;
+}
+
 .wall-item-content-wrapper {
 	background-color: $item_colour;
 	border-top-right-radius: $radiuspx;

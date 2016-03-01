@@ -1,3 +1,16 @@
+CREATE TABLE "abconfig" (
+  "id" serial  NOT NULL,
+  "chan" text NOT NULL,
+  "xchan" text NOT NULL,
+  "cat" text NOT NULL,
+  "k" text NOT NULL,
+  "v" text NOT NULL,
+  PRIMARY KEY ("id")
+);
+create index "abconfig_chan" on abconfig ("chan");
+create index "abconfig_xchan" on abconfig ("xchan");
+create index "abconfig_cat" on abconfig ("cat");
+create index "abconfig_k" on abconfig ("k");
 CREATE TABLE "abook" (
   "abook_id" serial  NOT NULL,
   "abook_account" bigint  NOT NULL,
@@ -547,7 +560,7 @@ CREATE TABLE "iconfig" (
   "k" text NOT NULL DEFAULT '',
   "v" text NOT NULL DEFAULT '',
   "sharing" int NOT NULL DEFAULT '0',
-  PRIMARY_KEY("id")
+  PRIMARY KEY("id")
 );
 create index "iconfig_iid" on iconfig ("iid");
 create index "iconfig_cat" on iconfig ("cat");

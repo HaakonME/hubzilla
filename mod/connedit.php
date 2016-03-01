@@ -322,6 +322,9 @@ function connedit_clone(&$a) {
 		if(! $a->poi)
 			return;
 
+
+		$channel = $a->get_channel();
+
 		$r = q("SELECT abook.*, xchan.*
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
@@ -337,6 +340,10 @@ function connedit_clone(&$a) {
 		unset($clone['abook_id']);
 		unset($clone['abook_account']);
 		unset($clone['abook_channel']);
+
+		$abconfig = load_abconfig($channel['channel_hash'],$clone['abook_xchan']);
+		if($abconfig)
+			$clone['abconfig'] = $abconfig;
 
 		build_sync_packet(0 /* use the current local_channel */, array('abook' => array($clone)));
 }

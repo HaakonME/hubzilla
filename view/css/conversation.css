@@ -209,6 +209,7 @@ a.wall-item-name-link {
 	padding: 8px;
 	height: 150px;
 	overflow: auto;
+	resize: vertical;
 }
 
 .qcomment {

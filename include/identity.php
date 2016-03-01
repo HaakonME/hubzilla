@@ -505,8 +505,12 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r) {
 		$ret['abook'] = $r;
 
-		foreach($r as $rr)
-			$xchans[] = $rr['abook_xchan'];
+		for($x = 0; $x < count($ret['abook']); $x ++) {
+			$xchans[] = $ret['abook'][$x]['abook_chan'];
+			$abconfig = load_abconfig($ret['channel']['channel_hash'],$ret['abook'][$x]['abook_xchan']);
+			if($abconfig)
+				$ret['abook'][$x]['abconfig'] = $abconfig;
+		}		 
 		stringify_array_elms($xchans);
 	}
 

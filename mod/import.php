@@ -341,6 +341,10 @@ function import_account(&$a, $account_id) {
 		if($abooks) {
 			foreach($abooks as $abook) {
 
+				$abconfig = null;
+				if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && count($abook['abconfig']))
+					$abconfig = $abook['abconfig'];
+
 				unset($abook['abook_id']);
 				unset($abook['abook_rating']);
 				unset($abook['abook_rating_text']);
@@ -382,6 +386,17 @@ function import_account(&$a, $account_id) {
 				$friends ++;
 				if(intval($abook['abook_feed']))
 					$feeds ++;
+
+				if($abconfig) {
+					// @fixme does not handle sync of del_abconfig
+					foreach($abconfig as $abc) {
+						if($abc['chan'] === $channel['channel_hash'])
+							set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+					}
+				}
+
+
+
 			}
 		}
 		logger('import step 8');

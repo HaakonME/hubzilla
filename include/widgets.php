@@ -993,7 +993,7 @@ function widget_cover_photo($arr) {
 	if(array_key_exists('style', $arr) && isset($arr['style']))
 		$style = $arr['style'];
 	else 
-		$style = 'width:100%; padding-right: 10px; height: auto;'; 
+		$style = 'width:100%; height: auto;';
 
 	// ensure they can't sneak in an eval(js) function
 
@@ -1003,7 +1003,7 @@ function widget_cover_photo($arr) {
 	$c = get_cover_photo($channel_id,'html');
 
 	if($c) {
-		$o = '<div class="widget">' . (($style) ? str_replace('alt=',' style="' . $style . '" alt=',$c) : $c) . '</div>';
+		$o = '<div id="cover-photo">' . (($style) ? str_replace('alt=',' style="' . $style . '" alt=',$c) : $c) . '</div>';
 	}
 	return $o;
 }

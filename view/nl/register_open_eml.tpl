@@ -1,4 +1,4 @@
-s met dit e-mailadres een account aangemaakt op {{$sitename}}. 
+Er is met dit e-mailadres een account aangemaakt op {{$sitename}}. 
 De inloggegevens zijn als volgt:
 
 Hub:	{{$siteurl}}

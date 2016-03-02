@@ -1759,14 +1759,14 @@ function admin_page_profs(&$a) {
 	$o = replace_macros(get_markup_template('admin_profiles.tpl'),array(
 		'$title' => t('Profile Management'),
 		'$basic' => array('basic',t('Basic Profile Fields'),$basic,''),
-		'$advanced' => array('advanced',t('Advanced Profile Fields'),$advanced,t('In addition to basic fields')),
+		'$advanced' => array('advanced',t('Advanced Profile Fields'),$advanced,t('(In addition to basic fields)')),
 		'$all' => $all,
 		'$all_desc' => t('All available fields'),
 		'$cust_field_desc' => t('Custom Fields'),
 		'$cust_fields' => $r,
 		'$edit' => t('Edit'),
 		'$drop' => t('Delete'),
-		'$new' => t('Create'),		
+		'$new' => t('Create Custom Field'),		
 		'$submit' => t('Submit')
 	));
 

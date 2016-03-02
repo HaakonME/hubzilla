@@ -12,18 +12,17 @@ main {
 	position: relative;
 	width: 100%;
 	height: 100%;
-	padding-top: 71px;
 }
 
 aside {
 	display: table-cell;
 	vertical-align: top;
-	padding: 0px 7px 0px 7px;
+	padding: 71px 7px 0px 7px;
 }
 
 section {
 	width: 100%;
 	display: table-cell;
 	vertical-align: top;
-	padding: 0px 7px 200px 7px;
+	padding: 71px 7px 200px 7px;
 }

@@ -6,12 +6,11 @@ $(document).ready(function() {
 	//Simple cover-photo implementation
 	if($('#cover-photo').length && $(window).width() > 767) {
 		$('.navbar-fixed-top').css('position', 'relative');
-		$('main').css('padding-top', 0 + 'px');
+		$('aside, section').css('padding-top', 0 + 'px');
 		$('main').css('opacity', 0);
 	}
 	else {
 		$('#cover-photo').remove();
-
 	}
 
 	// CSS3 calc() fallback (for unsupported browsers)
@@ -67,7 +66,7 @@ $(document).ready(function() {
 //Simple cover-photo implementation
 $(window).scroll(function () {
 	if($('#cover-photo').length && $(window).width() > 767 && $(window).scrollTop() >= $('#cover-photo').height()) {
-		$('main').css('padding-top', 71 + 'px');
+		$('aside, section').css('padding-top', 71 + 'px');
 		$(window).scrollTop($(window).scrollTop() - $('#cover-photo').height())
 		$('.navbar-fixed-top').css('position', 'fixed');
 		$('#cover-photo').remove();

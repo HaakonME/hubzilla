@@ -1253,6 +1253,24 @@ function advanced_profile(&$a) {
 
 	if($a->profile['name']) {
 
+		$profile_fields_basic    = get_profile_fields_basic();
+		$profile_fields_advanced = get_profile_fields_advanced();
+
+		$advanced = ((feature_enabled($a->profile['profile_uid'],'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
+
+		$clean_fields = array();
+		if($fields) {
+			foreach($fields as $k => $v) {
+				$clean_fields[] = trim($k);
+			}
+		}
+
+
+
 		$tpl = get_markup_template('profile_advanced.tpl');
 
 		$profile = array();
@@ -1370,6 +1388,7 @@ function advanced_profile(&$a) {
 			'$canlike' => (($profile['canlike'])? true : false),
 			'$likethis' => t('Like this thing'),
 			'$profile' => $profile,
+			'$fields' => $clean_fields,
 			'$editmenu' => profile_edit_menu($a->profile['profile_uid']),
 			'$things' => $things
 		));

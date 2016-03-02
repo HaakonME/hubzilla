@@ -295,7 +295,7 @@ footer {
 
 .vcard {
 	margin-bottom: 10px;
-	padding: 10px;
+	padding: 0px 10px 10px 10px;
 	background-color: rgba(254,254,254,0.5);
 	border: 1px solid rgba(254,254,254,0.5);
 	-moz-border-radius: $radiuspx;
@@ -341,9 +341,7 @@ footer {
 #profile-photo-wrapper {
 	width: 251px;
 	height: 251px;
-	margin-top: -10px;
 	margin-bottom: 10px;
-	border: 1px solid #ccc;
 	border-radius: $radiuspx;
 }
 
@@ -1142,7 +1140,6 @@ img.mail-conv-sender-photo {
 
 .jothidden {
 	font-weight: bold;
-	border-radius: $radiuspx;
 }
 
 .jothidden input::-webkit-input-placeholder {
@@ -1153,29 +1150,25 @@ img.mail-conv-sender-photo {
 	font-weight: bold;
 }
 
-.jothidden > input {
-	border: 1px solid transparent;
-	background-color: transparent;
-}
-.jothidden > input:hover,
-.jothidden > input:focus {
-	border: 1px solid #cccccc;
-	background-color: #fff;
-}
+
 
 #profile-jot-wrapper {
-	background-color: rgba(254,254,254,.5);
-	border: 1px solid rgba(254,254,254,.5);
+	background-color: rgba(254,254,254,1);
+	border: 1px solid #ccc;
 	border-radius: $radiuspx;
 
 }
 
 #profile-jot-text {
-	color:#000;
-	border: 1px solid #cccccc;
-	-moz-border-radius: $radiuspx;
+	resize: none;
+	border-width: 0px;
 	border-radius: $radiuspx;
 }
+
+#profile-jot-text:focus {
+	resize: vertical;
+}
+
 
 #profile-jot-text::-webkit-input-placeholder {
 	font-size:16px;
@@ -1241,6 +1234,11 @@ img.mail-conv-sender-photo {
 
 .wall-item-title {
 	font-size: $font_size;
+}
+
+.wall-item-footer {
+	font-size: $body_font_size;
+	margin-top: 2em;
 }
 
 .wall-item-content-wrapper {
@@ -1510,7 +1508,7 @@ nav .dropdown-menu {
 .section-content-tools-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
-	border-bottom: 3px solid $comment_item_colour;
+	border-bottom: 3px solid comment_item_colour;
 }
 
 .section-content-info-wrapper {
@@ -1704,9 +1702,8 @@ nav .badge.mail-update:hover {
 
 .nav-tabs.nav-justified {
 	background-color: rgba(254,254,254,.5);
-	border: 1px solid rgba(254,254,254,.5);
-	border-top-left-radius: $radiuspx;
-	border-top-right-radius: $radiuspx;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
 }
 
 .nav-tabs.nav-justified > .active > a,
@@ -1819,23 +1816,18 @@ nav .badge.mail-update:hover {
 
 /* Modified original CSS to match input in Redbasic */
 .jothidden .bootstrap-tagsinput {
-	border-color: $bgcolour;
-	background-color: $bgcolour;
+	border: 0px solid transparent;
+	margin-bottom: 0px;
 	box-shadow: none;
 	display: inline-block;
 	border-radius: $radiuspx;
 	cursor: text;
-	padding: 0px 8px;
+	padding: 0px 10px;
 	width: 100%;
 }
 
 .bootstrap-tagsinput .label {
 	font-size: 100%;
-}
-
-.jothidden .bootstrap-tagsinput:hover, .jothidden .bootstrap-tagsinput:focus {
-	border: 1px solid #ccc;
-	background-color: #fff;
 }
 
 /* Abusing theme-green is less work than makeing a new new one */

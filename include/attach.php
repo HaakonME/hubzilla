@@ -1243,7 +1243,7 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 	$photo_sql = (($is_photo) ? " and is_photo = 1 " : '');
 
-	$r = q("SELECT hash, flags, is_dir, is_photo, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
+	$r = q("SELECT hash, os_storage, flags, is_dir, is_photo, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
@@ -1471,7 +1471,7 @@ function pipe_streams($in, $out) {
  * @param string $deny_cid
  * @param string $deny_gid
  * @param string $verb
- * @param boolean $no_activity
+ * @param boolean $notify
  */
 function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $notify) {
 
@@ -1517,13 +1517,21 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	$mid = item_message_id();
 
-	$arr = array();
+	$objtype = ACTIVITY_OBJ_FILE;
 
+	$arr = array();
+	$arr['aid']           = get_account_id();
+	$arr['uid']           = $channel_id;
 	$arr['item_wall'] = 1; 
 	$arr['item_origin'] = 1;
 	$arr['item_unseen'] = 1;
-
-	$objtype = ACTIVITY_OBJ_FILE;
+	$arr['author_xchan']  = $poster['xchan_hash'];
+	$arr['owner_xchan']   = $poster['xchan_hash'];
+	$arr['title']         = '';
+	$arr['item_hidden']   = 1;
+	$arr['obj_type']      = $objtype;
+	$arr['resource_id']   = $object['hash'];
+	$arr['resource_type'] = 'attach';
 
 	$private = (($arr_allow_cid[0] || $arr_allow_gid[0] || $arr_deny_cid[0] || $arr_deny_gid[0]) ? 1 : 0);
 
@@ -1551,9 +1559,8 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	}
 
+	//send update activity and create a new one
 	if($update && $verb == 'post' ) {
-		//send update activity and create a new one
-
 		//updates should be sent to everybody with recursive perms and all eventual former allowed members ($object['allow_cid'] etc.).
 		$u_arr_allow_cid = array_unique(array_merge($arr_allow_cid, expand_acl($object['allow_cid'])));
 		$u_arr_allow_gid = array_unique(array_merge($arr_allow_gid, expand_acl($object['allow_gid'])));
@@ -1564,24 +1571,15 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 		$u_mid = item_message_id();
 
-		$arr['aid']           = get_account_id();
-		$arr['uid']           = $channel_id;
 		$arr['mid']           = $u_mid;
 		$arr['parent_mid']    = $u_mid;
-		$arr['author_xchan']  = $poster['xchan_hash'];
-		$arr['owner_xchan']   = $poster['xchan_hash'];
-		$arr['title']         = '';
 		$arr['allow_cid']     = perms2str($u_arr_allow_cid);
 		$arr['allow_gid']     = perms2str($u_arr_allow_gid);
 		$arr['deny_cid']      = perms2str($u_arr_deny_cid);
 		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
-		$arr['item_hidden']   = 1;
 		$arr['item_private']  = $private;
 		$arr['verb']          = ACTIVITY_UPDATE;
-		$arr['obj_type']      = $objtype;
 		$arr['object']        = $u_jsonobject;
-		$arr['resource_id']   = $object['hash'];
-		$arr['resource_type'] = 'attach';
 		$arr['body']          = '';
 
 		$post = item_store($arr);
@@ -1597,32 +1595,25 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		//notice( t('File activity updated') . EOL);
 	}
 
+	//don't create new activity if notify was not enabled
 	if(! $notify) {
 		return;
 	}
 
-	$arr = array();
+	//don't create new activity if we have an update request but there is no item to update
+	//this can e.g. happen when deleting images
+	if(! $y && $verb == 'update') {
+		return;
+	}
 
-	$arr['aid']           = get_account_id();
-	$arr['uid']           = $channel_id;
 	$arr['mid']           = $mid;
 	$arr['parent_mid']    = $mid;
-	$arr['item_wall']     = 1; 
-	$arr['item_origin']   = 1;
-	$arr['item_unseen']   = 1;
-	$arr['author_xchan']  = $poster['xchan_hash'];
-	$arr['owner_xchan']   = $poster['xchan_hash'];
-	$arr['title']         = '';
 	$arr['allow_cid']     = perms2str($arr_allow_cid);
 	$arr['allow_gid']     = perms2str($arr_allow_gid);
 	$arr['deny_cid']      = perms2str($arr_deny_cid);
 	$arr['deny_gid']      = perms2str($arr_deny_gid);
-	$arr['item_hidden']   = 1;
 	$arr['item_private']  = $private;
 	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
-	$arr['obj_type']      = $objtype;
-	$arr['resource_id']   = $object['hash'];
-	$arr['resource_type'] = 'attach';
 	$arr['object']        = (($update) ? $u_jsonobject : $jsonobject);
 	$arr['body']          = '';
 

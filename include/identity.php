@@ -505,8 +505,12 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r) {
 		$ret['abook'] = $r;
 
-		foreach($r as $rr)
-			$xchans[] = $rr['abook_xchan'];
+		for($x = 0; $x < count($ret['abook']); $x ++) {
+			$xchans[] = $ret['abook'][$x]['abook_chan'];
+			$abconfig = load_abconfig($ret['channel']['channel_hash'],$ret['abook'][$x]['abook_xchan']);
+			if($abconfig)
+				$ret['abook'][$x]['abconfig'] = $abconfig;
+		}		 
 		stringify_array_elms($xchans);
 	}
 
@@ -900,6 +904,55 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 }
 
+function profile_edit_menu($uid) {
+
+	$a = get_app();
+	$ret = array();
+
+	$is_owner = (($uid == local_channel()) ? true : false);
+
+	// show edit profile to profile owner
+	if($is_owner) {
+		$ret['menu'] = array(
+			'chg_photo' => t('Change profile photo'),
+			'entries' => array(),
+		);
+
+		$multi_profiles = feature_enabled(local_channel(), 'multi_profiles');
+		if($multi_profiles) {
+			$ret['multi'] = 1;
+			$ret['edit'] = array($a->get_baseurl(). '/profiles', t('Edit Profiles'), '', t('Edit'));
+			$ret['menu']['cr_new'] = t('Create New Profile');
+		}
+		else {
+			$ret['edit'] = array($a->get_baseurl() . '/profiles/' . $uid, t('Edit Profile'), '', t('Edit'));
+		}
+
+		$r = q("SELECT * FROM profile WHERE uid = %d",
+				local_channel()
+		);
+
+		if($r) {
+			foreach($r as $rr) {
+				if(!($multi_profiles || $rr['is_default']))
+					 continue;
+				$ret['menu']['entries'][] = array(
+					'photo'                => $rr['thumb'],
+					'id'                   => $rr['id'],
+					'alt'                  => t('Profile Image'),
+					'profile_name'         => $rr['profile_name'],
+					'isdefault'            => $rr['is_default'],
+					'visible_to_everybody' => t('Visible to everybody'),
+					'edit_visibility'      => t('Edit visibility'),
+				);
+			}
+		}
+	}
+
+	return $ret;
+
+}
+
 /**
  * @brief Formats a profile for display in the sidebar.
  *
@@ -933,12 +986,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 	head_set_icon($profile['thumb']);
 
-	$is_owner = (($profile['uid'] == local_channel()) ? true : false);
-
 	if(is_sys_channel($profile['uid']))
 		$show_connect = false;
-
-
 
 	$profile['picdate'] = urlencode($profile['picdate']);
 
@@ -960,42 +1009,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		if($profile['channel_pageflags'] & PAGE_PREMIUM)
 			$connect_url = z_root() . '/connect/' . $profile['channel_address'];
 	}
-
-	// show edit profile to yourself
-	if($is_owner) {
-		$profile['menu'] = array(
-			'chg_photo' => t('Change profile photo'),
-			'entries' => array(),
-		);
-
-		$multi_profiles = feature_enabled(local_channel(), 'multi_profiles');
-		if($multi_profiles) {
-			$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
-			$profile['menu']['cr_new'] = t('Create New Profile');
-		}
-		else
-			$profile['edit'] = array($a->get_baseurl() . '/profiles/' . $profile['id'], t('Edit Profile'),'',t('Edit Profile'));
-
-		$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
-				local_channel());
-
-		if($r) {
-			foreach($r as $rr) {
-				if(!($multi_profiles || $rr['is_default']))
-					 continue;
-				$profile['menu']['entries'][] = array(
-					'photo'                => $rr['thumb'],
-					'id'                   => $rr['id'],
-					'alt'                  => t('Profile Image'),
-					'profile_name'         => $rr['profile_name'],
-					'isdefault'            => $rr['is_default'],
-					'visible_to_everybody' => t('visible to everybody'),
-					'edit_visibility'      => t('Edit visibility'),
-				);
-			}
-		}
-	}
-
 
 	if((x($profile,'address') == 1)
 		|| (x($profile,'locality') == 1)
@@ -1075,6 +1088,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		'$reddress'      => $reddress,
 		'$rating'        => $z,
 		'$contact_block' => $contact_block,
+		'$editmenu'	 => profile_edit_menu($profile['uid'])
 	));
 
 	$arr = array('profile' => &$profile, 'entry' => &$o);
@@ -1239,6 +1253,24 @@ function advanced_profile(&$a) {
 
 	if($a->profile['name']) {
 
+		$profile_fields_basic    = get_profile_fields_basic();
+		$profile_fields_advanced = get_profile_fields_advanced();
+
+		$advanced = ((feature_enabled($a->profile['profile_uid'],'advanced_profiles')) ? true : false);
+		if($advanced)
+			$fields = $profile_fields_advanced;
+		else
+			$fields = $profile_fields_basic;
+
+		$clean_fields = array();
+		if($fields) {
+			foreach($fields as $k => $v) {
+				$clean_fields[] = trim($k);
+			}
+		}
+
+
+
 		$tpl = get_markup_template('profile_advanced.tpl');
 
 		$profile = array();
@@ -1347,10 +1379,6 @@ function advanced_profile(&$a) {
 			$profile['extra_fields'] = $a->profile['extra_fields'];
 		}
 
-
-		$is_owner = (($a->profile['profile_uid'] == local_channel()) ? true : false);
-		$edit = (($is_owner) ? array('link' => $a->get_baseurl() . '/profiles/' . $a->profile['profile_uid'], 'label' => t('Edit')) : '');
-
 		$things = get_things($a->profile['profile_guid'],$a->profile['profile_uid']);
 
 //		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
@@ -1360,7 +1388,8 @@ function advanced_profile(&$a) {
 			'$canlike' => (($profile['canlike'])? true : false),
 			'$likethis' => t('Like this thing'),
 			'$profile' => $profile,
-			'$edit' => $edit,
+			'$fields' => $clean_fields,
+			'$editmenu' => profile_edit_menu($a->profile['profile_uid']),
 			'$things' => $things
 		));
 	}

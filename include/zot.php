@@ -522,6 +522,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 						unset($new_connection[0]['abook_id']);
 						unset($new_connection[0]['abook_account']);
 						unset($new_connection[0]['abook_channel']);
+
+						$abconfig = load_abconfig($channel['channel_hash'],$new_connection['abook_xchan']);
+						if($abconfig)
+							$new_connection['abconfig'] = $abconfig;
+
 						build_sync_packet($channel['channel_id'], array('abook' => $new_connection));
 					}
 				}
@@ -2971,6 +2976,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	logger('build_sync_packet: packet: ' . print_r($info,true), LOGGER_DATA, LOG_DEBUG);
 
+	$total = count($synchubs);
+
 	foreach($synchubs as $hub) {
 		$hash = random_string();
 		$n = zot_build_packet($channel,'notify',$env_recips,$hub['hubloc_sitekey'],$hash);
@@ -2984,7 +2991,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		));
 
 		proc_run('php', 'include/deliver.php', $hash);
-		if($interval)
+		$total = $total - 1;
+
+		if($interval && $total)
 			@time_sleep_until(microtime(true) + (float) $interval);
 	}
 }
@@ -3120,6 +3129,11 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 			foreach($arr['abook'] as $abook) {
 
+				$abconfig = null;
+
+				if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && count($abook['abconfig']))
+					$abconfig = $abook['abconfig'];
+
 				if(! array_key_exists('abook_blocked',$abook)) {
 					// convert from redmatrix
 					$abook['abook_blocked']     = (($abook['abook_flags'] & 0x0001) ? 1 : 0);
@@ -3210,8 +3224,13 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					}
 				}
 
-
-
+				if($abconfig) {
+					// @fixme does not handle sync of del_abconfig
+					foreach($abconfig as $abc) {
+						if($abc['chan'] === $channel['channel_hash'])
+							set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+					}
+				}
 			}
 		}
 

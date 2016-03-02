@@ -7,6 +7,7 @@ $(document).ready(function() {
 	if($('#cover-photo').length && $(window).width() > 767) {
 		$('.navbar-fixed-top').css('position', 'relative');
 		$('main').css('padding-top', 0 + 'px');
+		$('main').css('opacity', 0);
 	}
 	else {
 		$('#cover-photo').remove();
@@ -70,5 +71,9 @@ $(window).scroll(function () {
 		$(window).scrollTop($(window).scrollTop() - $('#cover-photo').height())
 		$('.navbar-fixed-top').css('position', 'fixed');
 		$('#cover-photo').remove();
+	}
+
+	if($('#cover-photo').length) {
+		$('main').css('opacity', ($(window).scrollTop()/$('#cover-photo').height()).toFixed(1));
 	}
 });

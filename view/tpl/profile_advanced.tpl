@@ -72,7 +72,7 @@
 		{{if $profile.marital}}
 		<dl id="aprofile-marital" class="aprofile">
 		 <dt><span class="heart">&hearts;</span>  {{$profile.marital.0}}</dt>
-		 <dd>{{$profile.marital.1}}{{if $profile.marital.with}} ({{$profile.marital.with}}){{/if}}{{if $profile.howlong}} {{$profile.howlong}}{{/if}}</dd>
+		 <dd>{{$profile.marital.1}}{{if in_array('with',$fields)}}{{if $profile.marital.with}} ({{$profile.marital.with}}){{/if}}{{/if}}{{if in_array('howlong',$fields)}}{{if $profile.howlong}} {{$profile.howlong}}{{/if}}{{/if}}</dd>
 		</dl>
 		{{/if}}
 		{{/if}}

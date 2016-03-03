@@ -66,7 +66,7 @@ function get_features($filtered = true) {
 		'composition' => array(
 			t('Post Composition Features'),
 //			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor'),falseget_config('feature_lock','richtext')),
-			array('markdown',       t('Use Markdown'),              t('Allow use of "Markdown" to format posts'),false,get_config('feature_lock','markdown')),
+//			array('markdown',       t('Use Markdown'),              t('Allow use of "Markdown" to format posts'),false,get_config('feature_lock','markdown')),
 			array('large_photos',   t('Large Photos'),              t('Include large (1024px) photo thumbnails in posts. If not enabled, use small (640px) photo thumbnails'),false,get_config('feature_lock','large_photos')),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds'),false,get_config('feature_lock','channel_sources')),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key'),false,get_config('feature_lock','content_encrypt')),

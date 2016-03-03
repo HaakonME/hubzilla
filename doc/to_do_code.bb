@@ -32,8 +32,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]API extensions, for Twitter API - search, friending, threading. For Red API, lots of stuff[/li]
 [li]Import channel from Diaspora/Friendica (Diaspora partially done)[/li]
 [li]MediaGoblin photo "crosspost" connector[/li]
-[li]Create management page/UI for extensible profile fields[/li]
-[li]Create interface to include/exclude and re-order standard profile fields[/li]
 [li]App taxonomy[/li]
 [li]Customisable App collection pages[/li]
 [li]replace the tinymce visual editor and/or make the visual editor pluggable and responsive to different output formats. We probably want library/bbedit for bbcode. This needs a fair bit of work to catch up with our &quot;enhanced bbcode&quot;, but start with images, links, bold and highlight and work from there.[/li]

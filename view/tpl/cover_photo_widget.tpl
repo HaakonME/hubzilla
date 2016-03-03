@@ -34,9 +34,13 @@
 		}
 
 	});
+
+	function slideUpCover() {
+		$('html, body').animate({scrollTop: $('#cover-photo').height() + 'px'});
+	}
 </script>
 
-<div id="cover-photo">
+<div id="cover-photo" onclick="slideUpCover();">
 	{{$photo_html}}
 	<div id="cover-photo-caption">
 		<div class="cover-photo-title">

@@ -1297,7 +1297,7 @@ function widget_admin($arr) {
 		'plugins'   => array(z_root() . '/admin/plugins/',  t('Plugins'),        'plugins'),
 		'themes'    => array(z_root() . '/admin/themes/',   t('Themes'),         'themes'),
 		'queue'     => array(z_root() . '/admin/queue',     t('Inspect queue'),  'queue'),
-		'profs'     => array(z_root() . '/admin/profs',     t('Profile Config'), 'profs'),
+		'profs'     => array(z_root() . '/admin/profs',     t('Profile Fields'), 'profs'),
 		'dbsync'    => array(z_root() . '/admin/dbsync/',   t('DB updates'),     'dbsync')
 
 	);

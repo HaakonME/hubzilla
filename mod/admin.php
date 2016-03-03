@@ -1757,7 +1757,7 @@ function admin_page_profs(&$a) {
 
 	
 	$o = replace_macros(get_markup_template('admin_profiles.tpl'),array(
-		'$title' => t('Profile Management'),
+		'$title' => t('Profile Fields'),
 		'$basic' => array('basic',t('Basic Profile Fields'),$basic,''),
 		'$advanced' => array('advanced',t('Advanced Profile Fields'),$advanced,t('(In addition to basic fields)')),
 		'$all' => $all,

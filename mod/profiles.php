@@ -675,6 +675,7 @@ function profiles_content(&$a) {
 			'$submit'       => t('Submit'),
 			'$viewprof'     => t('View this profile'),
 			'$editvis' 	    => t('Edit visibility'),
+			'$coverpic'     => t('Change Cover Photo'),
 			'$profpic'      => t('Change Profile Photo'),
 			'$cr_prof'      => t('Create a new profile using these settings'),
 			'$cl_prof'      => t('Clone this profile'),

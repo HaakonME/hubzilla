@@ -1,12 +1,12 @@
-{{$mimeselect}}
-{{$layoutselect}}
-{{if $id_select}}
-<div class="channel-id-select-div">
-	<span class="channel-id-select-desc">{{$id_seltext}}</span> {{$id_select}}
-</div>
-{{/if}}
-<div id="profile-jot-wrapper">
-	<form id="profile-jot-form" action="{{$action}}" method="post">
+<form id="profile-jot-form" action="{{$action}}" method="post">
+	{{$mimeselect}}
+	{{$layoutselect}}
+	{{if $id_select}}
+	<div class="channel-id-select-div">
+		<span class="channel-id-select-desc">{{$id_seltext}}</span> {{$id_select}}
+	</div>
+	{{/if}}
+	<div id="profile-jot-wrapper">
 		{{if $parent}}
 			<input type="hidden" name="parent" value="{{$parent}}" />
 		{{/if}}
@@ -160,8 +160,8 @@
 		</div>
 		<div id="profile-jot-text-loading"></div>
 		<div id="profile-jot-end" class="clear"></div>
-	</form>
-</div>
+	</div>
+</form>
 
 <div id="jot-preview-content" style="display:none;"></div>
 

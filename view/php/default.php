@@ -6,6 +6,7 @@
   <?php if(x($page,'htmlhead')) echo $page['htmlhead'] ?>
 </head>
 <body>
+	<?php if(x($page,'banner')) echo $page['banner']; ?>
 	<header><?php if(x($page,'header')) echo $page['header']; ?></header>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
 	<main>

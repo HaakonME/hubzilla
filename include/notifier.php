@@ -68,7 +68,6 @@ require_once('include/html2plain.php');
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
 require_once('include/queue_fn.php');
-require_once('include/session.php');
 require_once('include/datetime.php');
 require_once('include/items.php');
 require_once('include/bbcode.php');

@@ -1620,25 +1620,46 @@ readable.");
 
 function admin_page_profs_post(&$a) {
 
-	if($_REQUEST['id']) {
-		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d",
-			dbesc($_REQUEST['field_name']),
-			dbesc($_REQUEST['field_type']),
-			dbesc($_REQUEST['field_desc']),
-			dbesc($_REQUEST['field_help']),
-			dbesc($_REQUEST['field_inputs']),
-			intval($_REQUEST['id'])
-		);
+	if(array_key_exists('basic',$_REQUEST)) {
+		$arr = explode(',',$_REQUEST['basic']);
+		for($x = 0; $x < count($arr); $x ++) 
+			if(trim($arr[$x]))
+				$arr[$x] = trim($arr[$x]);
+		set_config('system','profile_fields_basic',$arr);
+
+		if(array_key_exists('advanced',$_REQUEST)) {
+			$arr = explode(',',$_REQUEST['advanced']);
+			for($x = 0; $x < count($arr); $x ++)
+				if(trim($arr[$x]))
+					$arr[$x] = trim($arr[$x]);
+			set_config('system','profile_fields_advanced',$arr);
+		}
+		goaway(z_root() . '/admin/profs');
 	}
-	else {
-		$r = q("insert into profdef ( field_name, field_type, field_desc, field_help, field_inputs ) values ( '%s' , '%s', '%s', '%s', '%s' )",
-			dbesc($_REQUEST['field_name']),
-			dbesc($_REQUEST['field_type']),
-			dbesc($_REQUEST['field_desc']),
-			dbesc($_REQUEST['field_help']),
-			dbesc($_REQUEST['field_inputs'])
-		);
+
+
+	if(array_key_exists('field_name',$_REQUEST)) {
+		if($_REQUEST['id']) {
+			$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d",
+				dbesc($_REQUEST['field_name']),
+				dbesc($_REQUEST['field_type']),
+				dbesc($_REQUEST['field_desc']),
+				dbesc($_REQUEST['field_help']),
+				dbesc($_REQUEST['field_inputs']),
+				intval($_REQUEST['id'])
+			);
+		}
+		else {
+			$r = q("insert into profdef ( field_name, field_type, field_desc, field_help, field_inputs ) values ( '%s' , '%s', '%s', '%s', '%s' )",
+				dbesc($_REQUEST['field_name']),
+				dbesc($_REQUEST['field_type']),
+				dbesc($_REQUEST['field_desc']),
+				dbesc($_REQUEST['field_help']),
+				dbesc($_REQUEST['field_inputs'])
+			);
+		}
 	}
+
 
 	// add to chosen array basic or advanced
 
@@ -1686,4 +1707,70 @@ function admin_page_profs(&$a) {
 			'$submit' => t('Save')
 		));
 	}
+
+	$basic = '';
+	$barr = array();
+	$fields = get_profile_fields_basic();
+	if(! $fields)
+		$fields = get_profile_fields_basic(1);
+	if($fields) {
+		foreach($fields as $k => $v) {
+			if($basic)
+				$basic .= ', ';
+			$basic .= trim($k);
+			$barr[] = trim($k);
+		}
+	}
+
+	$advanced = '';
+	$fields = get_profile_fields_advanced();
+	if(! $fields)
+		$fields = get_profile_fields_advanced(1);
+	if($fields) {
+		foreach($fields as $k => $v) {
+			if(in_array(trim($k),$barr))
+				continue;
+			if($advanced)
+				$advanced .= ', ';
+			$advanced .= trim($k);
+		}
+	}
+
+	$all = '';
+	$fields = get_profile_fields_advanced(1);
+	if($fields) {
+		foreach($fields as $k => $v) {
+			if($all)
+				$all .= ', ';
+			$all .= trim($k);
+		}
+	}
+
+	$r = q("select * from profdef where true");
+	if($r) {
+		foreach($r as $rr) {
+			if($all)
+				$all .= ', ';
+			$all .= $rr['field_name'];
+		}
+	}
+
+	
+	$o = replace_macros(get_markup_template('admin_profiles.tpl'),array(
+		'$title' => t('Profile Fields'),
+		'$basic' => array('basic',t('Basic Profile Fields'),$basic,''),
+		'$advanced' => array('advanced',t('Advanced Profile Fields'),$advanced,t('(In addition to basic fields)')),
+		'$all' => $all,
+		'$all_desc' => t('All available fields'),
+		'$cust_field_desc' => t('Custom Fields'),
+		'$cust_fields' => $r,
+		'$edit' => t('Edit'),
+		'$drop' => t('Delete'),
+		'$new' => t('Create Custom Field'),		
+		'$submit' => t('Submit')
+	));
+
+	return $o;
+
+
 }

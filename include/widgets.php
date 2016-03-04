@@ -982,28 +982,48 @@ function widget_cover_photo($arr) {
 	require_once('include/identity.php');
 	$o = '';
 
+	$a = get_app();
+
 	$channel_id = 0;
 	if(array_key_exists('channel_id', $arr) && intval($arr['channel_id']))
 		$channel_id = intval($arr['channel_id']);
 	if(! $channel_id)
-		$channel_id = get_app()->profile_uid;
+		$channel_id = $a->profile_uid;
 	if(! $channel_id)
 		return '';
+
+	$channel = channelx_by_n($channel_id);
 
 	if(array_key_exists('style', $arr) && isset($arr['style']))
 		$style = $arr['style'];
 	else 
-		$style = 'width:100%; padding-right: 10px; height: auto;'; 
+		$style = 'width:100%; height: auto;';
 
 	// ensure they can't sneak in an eval(js) function
 
 	if(strpbrk($style,'(\'"<>') !== false)
 		$style = '';
 
+	if(array_key_exists('title', $arr) && isset($arr['title']))
+		$title = $arr['title'];
+	else
+		$title = $channel['channel_name'];
+
+	if(array_key_exists('subtitle', $arr) && isset($arr['subtitle']))
+		$subtitle = $arr['subtitle'];
+	else
+		$subtitle = $channel['xchan_addr'];
+
 	$c = get_cover_photo($channel_id,'html');
 
 	if($c) {
-		$o = '<div class="widget">' . (($style) ? str_replace('alt=',' style="' . $style . '" alt=',$c) : $c) . '</div>';
+		$photo_html = (($style) ? str_replace('alt=',' style="' . $style . '" alt=',$c) : $c);
+
+		$o = replace_macros(get_markup_template('cover_photo_widget.tpl'),array(
+			'$photo_html'	=> $photo_html,
+			'$title'	=> $title,
+			'$subtitle'	=> $subtitle,
+		));
 	}
 	return $o;
 }
@@ -1297,7 +1317,7 @@ function widget_admin($arr) {
 		'plugins'   => array(z_root() . '/admin/plugins/',  t('Plugins'),        'plugins'),
 		'themes'    => array(z_root() . '/admin/themes/',   t('Themes'),         'themes'),
 		'queue'     => array(z_root() . '/admin/queue',     t('Inspect queue'),  'queue'),
-		'profs'     => array(z_root() . '/admin/profs',     t('Profile Config'), 'profs'),
+		'profs'     => array(z_root() . '/admin/profs',     t('Profile Fields'), 'profs'),
 		'dbsync'    => array(z_root() . '/admin/dbsync/',   t('DB updates'),     'dbsync')
 
 	);

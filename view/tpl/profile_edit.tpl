@@ -8,6 +8,7 @@
 
 <div id="profile-edit-links">
 <span class="btn btn-default"><a href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}">{{$profpic}}</a></span>
+{{if $is_default}}<span class="btn btn-default"><a href="cover_photo" id="cover-photo_upload-link" title="{{$coverpic}}">{{$coverpic}}</a></span>{{/if}}
 <span class="btn btn-default"><a href="profile/{{$profile_id}}/view" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a></span>
 {{if ! $is_default}}<span class="btn btn-default"><a href="profperm/{{$profile_id}}" id="profile-edit-view-link" title="{{$editvis}}">{{$editvis}}</a></span>{{/if}}
 {{if $profile_clone_link}}<span class="btn btn-default"><a href="{{$profile_clone_link}}" id="profile-edit-clone-link" title="{{$cr_prof}}">{{$cl_prof}}</a></span>{{/if}}

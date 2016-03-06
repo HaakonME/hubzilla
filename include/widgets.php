@@ -1023,6 +1023,7 @@ function widget_cover_photo($arr) {
 			'$photo_html'	=> $photo_html,
 			'$title'	=> $title,
 			'$subtitle'	=> $subtitle,
+			'$hovertitle' => t('Click to show more'),
 		));
 	}
 	return $o;

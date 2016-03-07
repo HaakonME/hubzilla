@@ -874,8 +874,6 @@ class App {
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
 		$this->OG = new Zotlabs\Web\OpenGraph();
-
-
 	}
 
 	function get_baseurl($ssl = false) {
@@ -1024,7 +1022,9 @@ class App {
 
 		if(! x($this->page,'title'))
 			$this->page['title'] = $this->config['system']['sitename'];
-		$this->OG->set('og:title',$this->page['title']);
+
+		if(! $this->OG->get_field('og:title'))
+			$this->OG->set('og:title',$this->page['title']);
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it

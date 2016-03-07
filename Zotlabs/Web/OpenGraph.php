@@ -29,6 +29,13 @@ class OpenGraph {
 		return false;
 	}
 
+	function get_field($field) {
+		if($this->vars && array_key_exists($field,$this->vars) && $this->vars[$field])
+			return $this->vars[$field];
+		return false;
+	}
+
+
 	function get() {
 		if($this->check_required()) {
 			$o = "\r\n";

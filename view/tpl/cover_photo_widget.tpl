@@ -15,7 +15,7 @@
 		if($('#cover-photo').length && $(window).width() > 755 && $(window).scrollTop() >= $('#cover-photo').height()) {
 			$('header').fadeIn();
 			$('main').css('opacity', 1);
-			$('aside, section').css('padding-top', 71 + 'px');
+			$('aside, section').css('padding-top', $('nav').outerHeight(true) + 'px');
 			$(window).scrollTop($(window).scrollTop() - $('#cover-photo').height())
 			$('.navbar-fixed-top').css('position', 'fixed');
 			$('#cover-photo').remove();
@@ -28,7 +28,7 @@
 	$(window).resize(function () {
 		if($('#cover-photo').length && $(window).width() < 755) {
 			$('main').css('opacity', 1);
-			$('aside, section').css('padding-top', 71 + 'px');
+			$('aside, section').css('padding-top', $('nav').outerHeight(true) + 'px');
 			$('.navbar-fixed-top').css('position', 'fixed');
 			$('#cover-photo').remove();
 		}

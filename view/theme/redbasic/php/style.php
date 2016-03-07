@@ -215,3 +215,8 @@ if($align_left && file_exists('view/theme/redbasic/css/align_left.css')) {
 if($schemecss) {
 	echo $schemecss;
 }
+
+// Set the schema to the default schema in derived themes. See the documentation for creating derived themes how to override this. 
+
+if($a->channel['channel_theme'] != 'redbasic')
+	set_pconfig(local_channel(), 'redbasic', 'schema', '---');

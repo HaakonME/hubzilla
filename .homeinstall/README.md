@@ -2,7 +2,10 @@
 
 Run hubzilla-setup.sh for an unattended installation of hubzilla.
 
-The script is known to work with Debian stable (Jessie).
+The script is known to work with Debian 8.3 stable (Jessie)
+
++ Home-PC (Debian-8.3.0-amd64)
++ DigitalOcean droplet (Debian 8.3 x64 / 512 MB Memory / 20 GB Disk / NYC3)
 
 # Step-by-Step Overwiew
 
@@ -19,13 +22,20 @@ Software
 + Fresh installation of Debian on your mini-pc
 + Router with open ports 80 and 443 for your Debian
 
-## The basic steps
+## The basic steps (quick overview)
 
 + Register your own domain (for example at selfHOST) or a free subdomain (for example at freeDNS)
-+ Clone hubzilla to /var/www/html
-+ Copy hubzilla-config.txt and hubzilla-setup.sh to your Debian (future hub)
-+ Edit hubzilla-config.txt. Enter your values there: db pass, domain, values for dyn DNS
-+ Run hubzilla-setup.sh as root ... wait, wait, wait until the script is finised
++ Log on to your new debian (server)
+  - apt-get install git
+  - mkdir -p /var/www/html
+  - cd /var/www/html
+  - git clone https://github.com/redmatrix/hubzilla.git .
+  - cp .homeinstall/hubzilla-config.txt.template .homeinstall/hubzilla-config.txt
+  - nano .homeinstall/hubzilla-config.txt
+    - Enter your values there: db pass, domain, values for dyn DNS
+  - hubzilla-setup.sh as root
+    - ... wait, wait, wait until the script is finised
+  - reboot
 + Open your domain with a browser and step throught the initial configuration of hubzilla.
 
 # Step-by-Step in Detail
@@ -76,6 +86,8 @@ There are two way to get a domain
 
 ### Method 1: Get yourself an own Domain (recommended)
 
+...for example at selfHOST.de
+
 ### Method 2 Register a (free) Subdomain
 
 Register a free subdomain for example at
@@ -118,8 +130,12 @@ Clone hubzilla from git ("git pull" will update it later)
 Change to the install script
 
     cd html/.homeinstall/
+    
+Copy the template file
+    
+    cp hubzilla-config.txt.template hubzilla-config.txt
 
-Change the file "hubzilla-config.txt". Enter your values there.
+Change the file "hubzilla-config.txt". Read the instructions there and enter your values.
 
     nano hubzilla-config.txt
 
@@ -145,11 +161,4 @@ Enter
 Leave db type "MySQL" untouched.
 
 Follow the instructions in the next pages.
-
-# The Script explained
-
-This chapter shows you
-
-- What the script does exactly
-- Explanations on technical details. May be this will encourage you to play with bash scripts?
 

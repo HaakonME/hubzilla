@@ -753,6 +753,7 @@ class App {
 
 	private $baseurl;
 
+	private $OG;
 
 	/**
 	 * App constructor.
@@ -766,6 +767,7 @@ class App {
 		$this->pager= array();
 
 		$this->query_string = '';
+
 
 		startup();
 
@@ -870,6 +872,9 @@ class App {
 		}
 
 		spl_autoload_register('ZotlabsAutoloader::loader');
+
+		$this->OG = new Zotlabs\Web\OpenGraph();
+
 
 	}
 
@@ -1019,6 +1024,7 @@ class App {
 
 		if(! x($this->page,'title'))
 			$this->page['title'] = $this->config['system']['sitename'];
+		$this->OG->set('og:title',$this->page['title']);
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
@@ -1031,6 +1037,7 @@ class App {
 			'$baseurl' => $this->get_baseurl(),
 			'$local_channel' => local_channel(),
 			'$generator' => Zotlabs\Project\System::get_platform_name() . ((Zotlabs\Project\System::get_project_version()) ? ' ' . Zotlabs\Project\System::get_project_version() : ''),
+			'$metas' => $this->OG->get(),
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),

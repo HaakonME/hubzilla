@@ -2,7 +2,7 @@
 <base href="{{$baseurl}}/" />
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable={{$user_scalable}}" />
 <meta name="generator" content="{{$generator}}" />
-
+{{$metas}}
 <!--[if IE]>
 <script src="{{$baseurl}}/library/html5.js"></script>
 <![endif]-->

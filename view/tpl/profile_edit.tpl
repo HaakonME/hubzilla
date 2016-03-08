@@ -1,7 +1,8 @@
-<div class="generic-content-wrapper-styled">
+<div class="generic-content-wrapper">
 
 <div class="section-title-wrapper"><h2>{{$banner}}</h2></div>
 
+<div class="section-content-wrapper">
 <form id="profile-edit-form" name="form1" action="profiles/{{$profile_id}}" enctype="multipart/form-data" method="post" >
 
 <div id="profile-edit-links">
@@ -367,6 +368,7 @@
 
 
 </form>
+</div>
 </div>
 </div>
 

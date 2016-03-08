@@ -272,8 +272,16 @@ function profiles_post(&$a) {
 			
 		$name = escape_tags(trim($_POST['name']));
 
-		if($orig[0]['name'] != $name)
+		if($orig[0]['name'] != $name) {
 			$namechanged = true;
+
+			$v = validate_channelname($name);
+			if($v) {
+				$notice($v);
+				$namechanged = false;
+				$name = $orig[0]['name'];
+			}
+		}
 
 		$pdesc        = escape_tags(trim($_POST['pdesc']));
 		$gender       = escape_tags(trim($_POST['gender']));
@@ -561,6 +569,10 @@ function profiles_post(&$a) {
 			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s'",
 				dbesc($name),
 				dbesc(datetime_convert()),
+				dbesc($channel['xchan_hash'])
+			);
+			$r = q("UPDATE channel SET channel_name = '%s' WHERE channel_hash = '%s'",
+				dbesc($name),
 				dbesc($channel['xchan_hash'])
 			);
 		}

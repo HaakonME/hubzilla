@@ -4300,7 +4300,7 @@ msgstr "%1$s heeft zijn %2$s bijgewerkt"
 #: ../../include/items.php:5498 ../../mod/cover_photo.php:234
 #, php-format
 msgid "%1$s updated their %2$s"
-msgstr "%1$s hebben hun %2$s bijgewerkt"
+msgstr "De %2$s van %1$s is bijgewerkt"
 
 #: ../../include/items.php:5500
 msgid "profile photo"

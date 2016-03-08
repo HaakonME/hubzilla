@@ -1021,7 +1021,7 @@ $a->strings["female"] = "vrouw";
 $a->strings["%1\$s updated her %2\$s"] = "%1\$s heeft haar %2\$s bijgewerkt";
 $a->strings["male"] = "man";
 $a->strings["%1\$s updated his %2\$s"] = "%1\$s heeft zijn %2\$s bijgewerkt";
-$a->strings["%1\$s updated their %2\$s"] = "%1\$s hebben hun %2\$s bijgewerkt";
+$a->strings["%1\$s updated their %2\$s"] = "De %2\$s van %1\$s is bijgewerkt";
 $a->strings["profile photo"] = "profielfoto";
 $a->strings["Some blurb about what to do when you're new here"] = "Welkom op \$Projectname. Klik op de tab ontdekken of klik rechtsboven op de <a href=\"directory\">kanalengids</a>, om kanalen te vinden. Rechtsboven vind je ook <a href=\"directory\">apps</a>, waar je vrijwel alle functies van \$Projectname kunt vinden. Voor <a href=\"directory\">hulp</a> met \$Projectname klik je op het vraagteken.";
 $a->strings["network"] = "netwerk";

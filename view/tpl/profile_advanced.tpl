@@ -1,4 +1,4 @@
-<div id="" class="generic-content-wrapper">
+<div id="profile-content-wrapper" class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right dropdown">
 			{{if $profile.like_count}}

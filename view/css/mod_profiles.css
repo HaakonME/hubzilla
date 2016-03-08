@@ -19,7 +19,7 @@
 
 #profile-edit-links-end {
 	clear: both;
-	margin-bottom: 15px;
+/*	margin-bottom: 15px; */
 }
 
 .profile-listing-photo {
@@ -43,8 +43,10 @@
 
 	width: 175px;
 	margin-left: 50px;
-	margin-bottom: 20px;
+/*	margin-bottom: 20px; */
 }
+
+/*
 
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
@@ -138,11 +140,13 @@
 #hide-friends-end {
 	clear: both;
 }
+*/
 
-
+/*
 #gender-select, #marital-select, #sexual-select {
 	width: 220px;
 }
+*/
 
 #profile-edit-profile-name-wrapper .required {
 	color: #FF0000;

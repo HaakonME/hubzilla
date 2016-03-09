@@ -983,6 +983,9 @@ function widget_cover_photo($arr) {
 	$o = '';
 
 	$a = get_app();
+	
+	if($a->module == 'channel' && $_REQUEST['mid'])
+		return '';
 
 	$channel_id = 0;
 	if(array_key_exists('channel_id', $arr) && intval($arr['channel_id']))

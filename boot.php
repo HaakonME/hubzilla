@@ -753,7 +753,7 @@ class App {
 
 	private $baseurl;
 
-	private $OG;
+	private $meta;
 
 	/**
 	 * App constructor.
@@ -873,7 +873,7 @@ class App {
 
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
-		$this->OG = new Zotlabs\Web\OpenGraph();
+		$this->meta= new Zotlabs\Web\HttpMeta();
 	}
 
 	function get_baseurl($ssl = false) {
@@ -1023,8 +1023,8 @@ class App {
 		if(! x($this->page,'title'))
 			$this->page['title'] = $this->config['system']['sitename'];
 
-		if(! $this->OG->get_field('og:title'))
-			$this->OG->set('og:title',$this->page['title']);
+		if(! $this->meta->get_field('og:title'))
+			$this->meta->set('og:title',$this->page['title']);
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
@@ -1037,7 +1037,7 @@ class App {
 			'$baseurl' => $this->get_baseurl(),
 			'$local_channel' => local_channel(),
 			'$generator' => Zotlabs\Project\System::get_platform_name() . ((Zotlabs\Project\System::get_project_version()) ? ' ' . Zotlabs\Project\System::get_project_version() : ''),
-			'$metas' => $this->OG->get(),
+			'$metas' => $this->meta->get(),
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),

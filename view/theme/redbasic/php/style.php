@@ -218,5 +218,5 @@ if($schemecss) {
 
 // Set the schema to the default schema in derived themes. See the documentation for creating derived themes how to override this. 
 
-if($a->channel['channel_theme'] != 'redbasic')
+if(local_channel() && $a->channel && $a->channel['channel_theme'] != 'redbasic')
 	set_pconfig(local_channel(), 'redbasic', 'schema', '---');

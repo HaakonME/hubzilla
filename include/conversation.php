@@ -1110,6 +1110,11 @@ function status_editor($a, $x, $popup = false) {
 
 	$o = '';
 
+	require_once('include/Contact.php');
+	$c = channelx_by_n($x['profile_uid']);
+	if($c && $c['channel_moved'])
+		return $o;
+
 	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
 
 	$plaintext = true;

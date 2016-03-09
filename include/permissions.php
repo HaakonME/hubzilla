@@ -151,9 +151,13 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// Check if this $uid is actually the $observer_xchan - if it's your content
 		// you always have permission to do anything
+		// if you've moved elsewhere, you will only have read only access
 
 		if(($observer_xchan) && ($r[0]['channel_hash'] === $observer_xchan)) {
-			$ret[$perm_name] = true;
+			if($r[0]['channel_moved'] && (! $permission[2]))
+				$ret[$perm_name] = false;
+			else
+				$ret[$perm_name] = true;
 			continue;
 		}
 
@@ -286,7 +290,7 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 
 	$channel_perm = $global_perms[$permission][0];
 
-	$r = q("select %s, channel_pageflags, channel_hash from channel where channel_id = %d limit 1",
+	$r = q("select %s, channel_pageflags, channel_moved, channel_hash from channel where channel_id = %d limit 1",
 		dbesc($channel_perm),
 		intval($uid)
 	);
@@ -325,9 +329,15 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 		return false;
 
 	// Check if this $uid is actually the $observer_xchan
+	// you will have full access unless the channel was moved - 
+	// in which case you will have read_only access
 
-	if($r[0]['channel_hash'] === $observer_xchan)
-		return true;
+	if($r[0]['channel_hash'] === $observer_xchan) {
+		if($r[0]['channel_moved'] && (! $global_perms[$permission][2]))
+			return false;
+		else
+			return true;
+	}
 
 	if($r[0][$channel_perm] & PERMS_PUBLIC)
 		return true;

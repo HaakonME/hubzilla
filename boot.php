@@ -1026,6 +1026,8 @@ class App {
 		if(! $this->meta->get_field('og:title'))
 			$this->meta->set('og:title',$this->page['title']);
 
+		$this->meta->set('generator', Zotlabs\Project\System::get_platform_name());
+
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
 		 * being first
@@ -1036,7 +1038,6 @@ class App {
 			'$user_scalable' => $user_scalable,
 			'$baseurl' => $this->get_baseurl(),
 			'$local_channel' => local_channel(),
-			'$generator' => Zotlabs\Project\System::get_platform_name() . ((Zotlabs\Project\System::get_project_version()) ? ' ' . Zotlabs\Project\System::get_project_version() : ''),
 			'$metas' => $this->meta->get(),
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),

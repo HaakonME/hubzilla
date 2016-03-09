@@ -2234,6 +2234,56 @@ function process_location_delivery($sender,$arr,$deliveries) {
 }
 
 /**
+ * @brief checks for a moved UNO channel and sets the channel_moved flag
+ *   
+ * Currently the effect of this flag is to turn the channel into 'read-only' mode.
+ * New content will not be processed (there was still an issue with blocking the 
+ * ability to post comments as of 10-Mar-2016).
+ * We do not physically remove the channel at this time. The hub admin may choose 
+ * to do so, but is encouraged to allow a grace period of several days in case there
+ * are any issues migrating content. This packet will generally be received by the
+ * original site when the basic channel import has been processed.
+ * 
+ * This will only be executed on the UNO system which is the old location
+ * if a new location is reported and there is only one location record.
+ * The rest of the hubloc syncronisation will be handled within
+ * sync_locations
+ */
+
+
+
+function check_location_move($sender_hash,$locations) {
+
+	if(! $locations)
+		return;	
+
+	if(! UNO)
+		return;
+
+	if(count($locations) != 1)
+		return;
+
+	$loc = $locations[0];
+
+	$r = q("select * from channel where channel_hash = '%s' limit 1",
+		dbesc($sender_hash)
+	);
+
+	if(! $r)
+		return;
+
+	if($loc['url'] !== z_root()) {
+		$x = q("update channel set channel_moved = '%s' where channel_hash = '%s' limit 1",
+			dbesc($loc['url']),
+			dbesc($sender_hash)
+		);
+
+	}		
+
+}
+
+
+/**
  * @brief Synchronises locations.
  *
  * @param array $sender
@@ -2246,6 +2296,10 @@ function sync_locations($sender, $arr, $absolute = false) {
 	$ret = array();
 
 	if($arr['locations']) {
+
+		if($absolute)
+			check_location_move($sender['hash'],$arr['locations']);
+
 
 		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
 			dbesc($sender['hash'])

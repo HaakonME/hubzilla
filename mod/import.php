@@ -108,10 +108,9 @@ function import_account(&$a, $account_id) {
 		import_diaspora($data);
 		return;
 	}
-
-	if(UNO)
-		return;
-		
+	
+	$moving = false;
+	
 	if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
 		$v1 = substr($data['compatibility']['database'],-4);
 		$v2 = substr(DB_UPDATE_VERSION,-4);
@@ -119,13 +118,12 @@ function import_account(&$a, $account_id) {
 			$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 ); 
 			notice($t);
 		}
-		if(array_key_exists('server_role',$data['compatibility']) 
-			&& $data['compatibility']['server_role'] != Zotlabs\Project\System::get_server_role()) {
-			notice( t('Server platform is not compatible. Operation not permitted.') . EOL);
-			return;
-		}
-
+		if(array_key_exists('server_role',$data['compatibility']) && $data['compatibility']['server_role'] == 'basic')
+			$moving = true;
 	}
+
+	if($moving)
+		$seize = 1;
 
 	// import channel
 
@@ -189,7 +187,7 @@ function import_account(&$a, $account_id) {
 
 	if($completed < 4) {
 
-		if(is_array($data['hubloc'])) {
+		if(is_array($data['hubloc']) && (! $moving)) {
 			import_hublocs($channel,$data['hubloc'],$seize);
 
 		}

@@ -593,6 +593,11 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[zrl\]([$URLSearchString]*)\[\/zrl\]/ism", '<a class="zrl" href="$1" target="_blank" >$1</a>', $Text);
 		$Text = preg_replace("/\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '<a class="zrl" href="$1" target="_blank" >$2</a>', $Text);
 	}
+
+	// Remove bookmarks from UNO
+	if (UNO)
+		$Text = str_replace('<span class="bookmark-identifier">#^</span>', '', $Text);
+
 	// Perform MAIL Search
 	if (strpos($Text,'[/mail]') !== false) {
 		$Text = preg_replace("/\[mail\]([$MAILSearchString]*)\[\/mail\]/", '<a href="mailto:$1" target="_blank" >$1</a>', $Text);

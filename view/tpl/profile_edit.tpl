@@ -21,32 +21,19 @@
 <div id="profile-edit-links-end"></div>
 
 {{if $is_default}}
-<p class="section-content-info-wrapper">{{$default}}</p>
+<div class="section-content-info-wrapper">{{$default}}</div>
 {{/if}}
 
 
 <div id="profile-edit-wrapper" >
 <input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 
-<div id="profile-edit-profile-name-wrapper" class="form-group field">
-<label id="profile-edit-profile-name-label" for="profile-edit-profile-name" ><span class="required">*</span>&nbsp;{{$lbl_profname}} </label>
-<input type="text" class="form-control" size="32" name="profile_name" id="profile-edit-profile-name" value="{{$profile_name}}" />
-</div>
-<div id="profile-edit-profile-name-end"></div>
+{{include file="field_input.tpl" field=$profile_name}}
 
-<div id="profile-edit-name-wrapper" class="form-group field" >
-<label id="profile-edit-name-label" for="profile-edit-name" >{{$lbl_fullname}} </label>
-<input type="text" class="form-control" size="32" name="name" id="profile-edit-name" value="{{$name}}" />
-</div>
-<div id="profile-edit-name-end"></div>
-
+{{include file="field_input.tpl" field=$name}}
 
 {{if $fields.pdesc}}
-<div id="profile-edit-pdesc-wrapper" class="form-group field" >
-<label id="profile-edit-pdesc-label" for="profile-edit-pdesc" >{{$lbl_title}} </label>
-<input type="text" class="form-control" size="32" name="pdesc" id="profile-edit-pdesc" value="{{$pdesc}}" />
-</div>
-<div id="profile-edit-pdesc-end"></div>
+{{include file="field_input.tpl" field=$pdesc}}
 {{/if}}
 
 {{if $fields.gender}}
@@ -62,16 +49,10 @@
 {{/if}}
 
 {{if $fields.dob}}
-<div id="profile-edit-dob-wrapper" class="form-group field" >
-<label id="profile-edit-dob-label" for="dob-select" >{{$lbl_bd}} </label>
-<div id="profile-edit-dob" >
-{{$dob}} {{$age}}
-</div>
-</div>
-<div id="profile-edit-dob-end"></div>
+{{$dob}}
 {{/if}}
 
-{{$hide_friends}}
+{{include file="field_checkbox.tpl" field=$hide_friends}}
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="{{$submit}}" />

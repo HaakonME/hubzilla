@@ -415,7 +415,7 @@ function init_groups_visitor($contact_id) {
 	$r = q("SELECT hash FROM `groups` left join group_member on groups.id = group_member.gid WHERE xchan = '%s' ",
 		dbesc($contact_id)
 	);
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr)
 			$groups[] = $rr['hash'];
 	}

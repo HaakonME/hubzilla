@@ -67,7 +67,8 @@ If you use LetsEncrypt to provide certificates and create a file under
 please remove or rename the .well-known directory as soon as the certificate is 
 generated. Hubzilla will provide its own handler for ".well-known" services when
 it is installed, and an existing directory in this location may prevent some of 
-these services from working correctly. 
+these services from working correctly. This should not be a problem with Apache,
+but may be an issue with nginx or other web server platforms.
 
 
 1. Requirements

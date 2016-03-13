@@ -119,6 +119,8 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
  * @return string
  */
 function dob($dob) {
+	$a = get_app();
+
 	list($year, $month, $day) = sscanf($dob, '%4d-%2d-%2d');
 	$f = get_config('system', 'birthday_input_format');
 	if (! $f)
@@ -129,7 +131,15 @@ function dob($dob) {
 	else
 		$value = (($year) ? datetime_convert('UTC','UTC',$dob,'Y-m-d') : datetime_convert('UTC','UTC',$dob,'m-d'));
 
-	$o = '<input class="form-control" type="text" name="dob" value="' . $value . '" placeholder="' . t('YYYY-MM-DD or MM-DD') . '" />';
+	$o = replace_macros(get_markup_template("field_input.tpl"), array('$field' => array(
+		'dob',
+		t('Birthday'),
+		$value,
+		((intval($value)) ? t('Age: ') . age($value,$a->user['timezone'],$a->user['timezone']) : ''),
+		'',
+		'placeholder="' . t('YYYY-MM-DD or MM-DD') .'"'
+	)));
+
 
 //	if ($dob && $dob != '0000-00-00')
 //		$o = datesel($f,mktime(0,0,0,0,0,1900),mktime(),mktime(0,0,0,$month,$day,$year),'dob');

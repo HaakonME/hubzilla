@@ -329,6 +329,5 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	}
 */
-	return $o;
 }
 

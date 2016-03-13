@@ -97,17 +97,22 @@
 {{$marital_min}}
 {{/if}}
 </div>
-
 <div class="clear"></div>
+
 {{if $fields.with}}
+<div class="form-group">
 <label id="profile-edit-with-label" for="profile-edit-with" > {{$lbl_with}} </label>
 <input type="text" class="form-control" size="32" name="with" id="profile-edit-with" title="{{$lbl_ex1}}" value="{{$with}}" />
 <div class="clear"></div>
+</div>
 {{/if}}
+
 {{if $fields.howlong}}
+<div class="form-group">
 <label id="profile-edit-howlong-label" for="profile-edit-howlong" > {{$lbl_howlong}} </label>
 <input type="text" class="form-control" size="32" name="howlong" id="profile-edit-howlong" title="{{$lbl_howlong}}" value="{{$howlong}}" />
 <div class="clear"></div>
+</div>
 {{/if}}
 <div id="profile-edit-marital-end"></div>
 {{/if}}

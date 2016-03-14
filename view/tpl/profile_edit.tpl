@@ -54,63 +54,39 @@
 
 {{include file="field_checkbox.tpl" field=$hide_friends}}
 
-<div class="profile-edit-submit-wrapper" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="{{$submit}}" />
+<div class="form-group" >
+<button type="submit" name="submit" class="btn btn-primary" value="{{$submit}}">{{$submit}}</button>
 </div>
-<div class="profile-edit-submit-end"></div>
+<div class="clear"></div>
 
 {{if $fields.address}}
-<div id="profile-edit-address-wrapper" class="form-group field" >
-<label id="profile-edit-address-label" for="profile-edit-address" >{{$lbl_address}} </label>
-<input type="text" class="form-control" size="32" name="address" id="profile-edit-address" value="{{$address}}" />
-</div>
-<div id="profile-edit-address-end"></div>
+{{include file="field_input.tpl" field=$address}}
 {{/if}}
 
 {{if $fields.locality}}
-<div id="profile-edit-locality-wrapper" class="form-group field" >
-<label id="profile-edit-locality-label" for="profile-edit-locality" >{{$lbl_city}} </label>
-<input type="text" class="form-control" size="32" name="locality" id="profile-edit-locality" value="{{$locality}}" />
-</div>
-<div id="profile-edit-locality-end"></div>
+{{include file="field_input.tpl" field=$locality}}
 {{/if}}
 
 {{if $fields.postal_code}}
-<div id="profile-edit-postal-code-wrapper" class="form-group field" >
-<label id="profile-edit-postal-code-label" for="profile-edit-postal-code" >{{$lbl_zip}} </label>
-<input type="text" class="form-control" size="32" name="postal_code" id="profile-edit-postal-code" value="{{$postal_code}}" />
-</div>
-<div id="profile-edit-postal-code-end"></div>
+{{include file="field_input.tpl" field=$postal_code}}
 {{/if}}
 
 {{if $fields.region}}
-<div id="profile-edit-region-wrapper" class="form-group field" >
-<label id="profile-edit-region-label" for="profile-edit-region" >{{$lbl_region}} </label>
-<input type="text" class="form-control" size="32" name="region" id="profile-edit-region" value="{{$region}}" />
-</div>
-<div id="profile-edit-region-end"></div>
+{{include file="field_input.tpl" field=$region}}
 {{/if}}
 
 {{if $fields.country_name}}
-<div id="profile-edit-country-name-wrapper" class="form-group field" >
-<label id="profile-edit-country-name-label" for="profile-edit-country-name" >{{$lbl_country}} </label>
-<input type="text" class="form-control" size="32" name="country_name" id="profile-edit-country-name" value="{{$country_name}}" />
-</div>
-<div id="profile-edit-country-name-end"></div>
+{{include file="field_input.tpl" field=$country_name}}
 {{/if}}
 
 {{if $fields.hometown}}
-<div id="profile-edit-hometown-wrapper" class="form-group field" >
-<label id="profile-edit-hometown-label" for="profile-edit-hometown" >{{$lbl_hometown}} </label>
-<input type="text" class="form-control" size="32" name="hometown" id="profile-edit-hometown" value="{{$hometown}}" />
-</div>
-<div id="profile-edit-hometown-end"></div>
+{{include file="field_input.tpl" field=$hometown}}
 {{/if}}
 
-<div class="profile-edit-submit-wrapper" class="form-group field" >
-<input type="submit" name="submit" class="profile-edit-submit-button" value="{{$submit}}" />
+<div class="form-group" >
+<button type="submit" name="submit" class="btn btn-primary" value="{{$submit}}">{{$submit}}</button>
 </div>
-<div class="profile-edit-submit-end"></div>
+<div class="clear"></div>
 
 {{if $fields.marital }}
 <div id="profile-edit-marital-wrapper" class="form-group field" >
@@ -122,19 +98,25 @@
 {{/if}}
 </div>
 <div class="clear"></div>
+
 {{if $fields.with}}
+<div class="form-group">
 <label id="profile-edit-with-label" for="profile-edit-with" > {{$lbl_with}} </label>
 <input type="text" class="form-control" size="32" name="with" id="profile-edit-with" title="{{$lbl_ex1}}" value="{{$with}}" />
 <div class="clear"></div>
+</div>
 {{/if}}
+
 {{if $fields.howlong}}
+<div class="form-group">
 <label id="profile-edit-howlong-label" for="profile-edit-howlong" > {{$lbl_howlong}} </label>
 <input type="text" class="form-control" size="32" name="howlong" id="profile-edit-howlong" title="{{$lbl_howlong}}" value="{{$howlong}}" />
 <div class="clear"></div>
+</div>
 {{/if}}
 <div id="profile-edit-marital-end"></div>
 {{/if}}
-<br /><br />
+
 {{if $fields.homepage}}
 <div id="profile-edit-homepage-wrapper" class="form-group field" >
 <label id="profile-edit-homepage-label" for="profile-edit-homepage" >{{$lbl_homepage}} </label>

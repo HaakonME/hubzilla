@@ -846,7 +846,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	// Caution: This re-uses $sql_options set further above
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
+	$r = q("select * from attach where uid = %d and hash = '%s' $sql_options limit 1",
 		intval($channel_id),
 		dbesc($hash)
 	);

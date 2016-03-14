@@ -639,14 +639,13 @@ function profiles_content(&$a) {
 		else
 			$fields = $profile_fields_basic;
 
-
-		$opt_tpl = get_markup_template("profile_hide_friends.tpl");
-		$hide_friends = replace_macros($opt_tpl,array('$field' => array(
-                       'hide_friends',
-                       t('Hide your contact/friend list from viewers of this profile?'),
-                       $r[0]['hide_friends'],
-                       '',
-               )));
+		$hide_friends = array(
+			'hide_friends',
+			t('Hide your connections list from viewers of this profile'),
+			$r[0]['hide_friends'],
+			'',
+			array(t('No'),t('Yes'))
+		);
 
 		$q = q("select * from profdef where true");
 		if($q) {
@@ -672,6 +671,7 @@ function profiles_content(&$a) {
 			$f = 'ymd';
 
 		$is_default = (($r[0]['is_default']) ? 1 : 0);
+
 		$tpl = get_markup_template("profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
 
@@ -695,23 +695,13 @@ function profiles_content(&$a) {
 			'$exportable'   => feature_enabled(local_channel(),'profile_export'),
 			'$lbl_import'   => t('Import profile from file'),
 			'$lbl_export'   => t('Export profile to file'),
-			'$lbl_profname' => t('Profile Name'),
-			'$lbl_fullname' => t('Your Full Name'),
-			'$lbl_title'    => t('Title/Description'),
 			'$lbl_gender'   => t('Your Gender'),
-			'$lbl_bd'       => t("Birthday"),
-			'$lbl_address'  => t('Street Address'),
-			'$lbl_city'     => t('Locality/City'),
-			'$lbl_zip'      => t('Postal/Zip Code'),
-			'$lbl_country'  => t('Country'),
-			'$lbl_region'   => t('Region/State'),
 			'$lbl_marital'  => t('<span class="heart">&hearts;</span> Marital Status'),
 			'$lbl_with'     => t("Who (if applicable)"),
 			'$lbl_ex1'      => t('Examples: cathy123, Cathy Williams, cathy@example.com'),
 			'$lbl_howlong'  => t('Since [date]'),
 			'$lbl_sexual'   => t('Sexual Preference'),
 			'$lbl_homepage' => t('Homepage URL'),
-			'$lbl_hometown' => t('Hometown'),
 			'$lbl_politic'  => t('Political Views'),
 			'$lbl_religion' => t('Religious Views'),
 			'$lbl_pubkey'   => t('Keywords'),
@@ -733,31 +723,30 @@ function profiles_content(&$a) {
 			'$disabled'     => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
 			'$baseurl'      => $a->get_baseurl(true),
 			'$profile_id'   => $r[0]['id'],
-			'$profile_name' => $r[0]['profile_name'],
+			'$profile_name' => array('profile_name', t('Profile Name'), $r[0]['profile_name'], '', '*'),
 			'$is_default'   => $is_default,
 			'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope($channel['channel_r_profile'])),
 			'$advanced'     => $advanced,
-			'$name'         => $r[0]['name'],
-			'$pdesc'        => $r[0]['pdesc'],
+			'$name'         => array('name', t('Your Full Name'), $r[0]['name']),
+			'$pdesc'        => array('pdesc', t('Title/Description'), $r[0]['pdesc']),
 			'$dob'          => dob($r[0]['dob']),
 			'$hide_friends' => $hide_friends,
-			'$address'      => $r[0]['address'],
-			'$locality'     => $r[0]['locality'],
-			'$region'       => $r[0]['region'],
-			'$postal_code'  => $r[0]['postal_code'],
-			'$country_name' => $r[0]['country_name'],
-			'$age'          => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
+			'$address'      => array('address', t('Street Address'), $r[0]['address']),
+			'$locality'     => array('locality', t('Locality/City'), $r[0]['locality']),
+			'$region'       => array('region', t('Region/State'), $r[0]['region']),
+			'$postal_code'  => array('postal_code', t('Postal/Zip Code'), $r[0]['postal_code']),
+			'$country_name' => array('country', t('Country'), $r[0]['country_name']),
 			'$gender'       => gender_selector($r[0]['gender']),
-			'$gender_min'       => gender_selector_min($r[0]['gender']),
+			'$gender_min'   => gender_selector_min($r[0]['gender']),
 			'$marital'      => marital_selector($r[0]['marital']),
-			'$marital_min'      => marital_selector_min($r[0]['marital']),
+			'$marital_min'  => marital_selector_min($r[0]['marital']),
 			'$with'         => $r[0]['with'],
 			'$howlong'      => ($r[0]['howlong'] === NULL_DATE ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual'       => sexpref_selector($r[0]['sexual']),
-			'$sexual_min'       => sexpref_selector_min($r[0]['sexual']),
+			'$sexual_min'   => sexpref_selector_min($r[0]['sexual']),
 			'$about'        => $r[0]['about'],
 			'$homepage'     => $r[0]['homepage'],
-			'$hometown'     => $r[0]['hometown'],
+			'$hometown'     => array('hometown', t('Hometown'), $r[0]['hometown']),
 			'$politic'      => $r[0]['politic'],
 			'$religion'     => $r[0]['religion'],
 			'$keywords'     => $r[0]['keywords'],

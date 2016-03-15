@@ -2091,6 +2091,10 @@ function get_atom_elements($feed, $item, &$author) {
 			$res['obj_type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
 			$obj['type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
 		}
+		if($child[NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
+			$res['obj_type'] = $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'];
+			$obj['type'] = $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'];
+		}
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
 			$obj['id'] = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'];
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
@@ -2123,6 +2127,10 @@ function get_atom_elements($feed, $item, &$author) {
 		if($child[NAMESPACE_ACTIVITY]['obj_type'][0]['data']) {
 			$res['tgt_type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
 			$obj['type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
+		}
+		if($child[NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
+			$res['tgt_type'] = $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'];
+			$obj['type'] = $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'];
 		}
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
 			$obj['id'] = $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'];
@@ -2162,26 +2170,27 @@ function get_atom_elements($feed, $item, &$author) {
 }
 
 function encode_rel_links($links) {
-	$o = '';
+	$o = array();
 	if(! ((is_array($links)) && (count($links))))
 		return $o;
 
 	foreach($links as $link) {
-		$o .= '<link ';
+		$l = array();
 		if($link['attribs']['']['rel'])
-			$o .= 'rel="' . $link['attribs']['']['rel'] . '" ';
+			$l['rel'] =  $link['attribs']['']['rel'];
 		if($link['attribs']['']['type'])
-			$o .= 'type="' . $link['attribs']['']['type'] . '" ';
+			$l['type'] =  $link['attribs']['']['type'];
 		if($link['attribs']['']['href'])
-			$o .= 'href="' . $link['attribs']['']['href'] . '" ';
+			$l['href'] = $link['attribs']['']['href'];
 		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['width'])
-			$o .= 'media:width="' . $link['attribs'][NAMESPACE_MEDIA]['width'] . '" ';
+			$l['width'] = $link['attribs'][NAMESPACE_MEDIA]['width'];
 		if( (x($link['attribs'],NAMESPACE_MEDIA)) && $link['attribs'][NAMESPACE_MEDIA]['height'])
-			$o .= 'media:height="' . $link['attribs'][NAMESPACE_MEDIA]['height'] . '" ';
-		$o .= ' />' . "\n" ;
-	}
+			$l['height'] = $link['attribs'][NAMESPACE_MEDIA]['height'];
 
-	return xmlify($o);
+		if($l)
+			$o[] = $l;
+	}
+	return $o;
 }
 
 /**
@@ -4038,6 +4047,11 @@ function process_salmon_feed($xml, $importer) {
 			$ret['author'] = array();
 
 			$datarray = get_atom_elements($feed,$item,$ret['author']);
+
+			// reset policies which are restricted by default for RSS connections
+			// This item is likely coming from GNU-social via salmon and allows public interaction 
+			$datarray['public_policy'] = '';
+			$datarray['comment_policy'] = '';
 
 			$ret['item'] = $datarray;			
 		}

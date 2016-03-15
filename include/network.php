@@ -1304,6 +1304,7 @@ function webfinger_rfc7033($webbie,$zot = false) {
 		else
 			return false;
 	}
+	logger('fetching url from resource: ' . $rhs . ':' . $webbie);
 
 	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=1' : ''));
 

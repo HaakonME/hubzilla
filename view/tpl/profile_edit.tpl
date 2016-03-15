@@ -90,7 +90,7 @@
 
 {{if $fields.marital }}
 <div id="profile-edit-marital-wrapper" class="form-group field" >
-<label id="profile-edit-marital-label" for="profile-edit-marital" >{{$lbl_marital}} </label>
+<label id="profile-edit-marital-label" for="profile-edit-marital" ><span class="heart">&hearts;</span>&nbsp;{{$lbl_marital}}</label>
 {{if $advanced}}
 {{$marital}}
 {{else}}
@@ -100,21 +100,14 @@
 <div class="clear"></div>
 
 {{if $fields.with}}
-<div class="form-group">
-<label id="profile-edit-with-label" for="profile-edit-with" > {{$lbl_with}} </label>
-<input type="text" class="form-control" size="32" name="with" id="profile-edit-with" title="{{$lbl_ex1}}" value="{{$with}}" />
-<div class="clear"></div>
-</div>
+{{include file="field_input.tpl" field=$with}}
 {{/if}}
 
 {{if $fields.howlong}}
-<div class="form-group">
-<label id="profile-edit-howlong-label" for="profile-edit-howlong" > {{$lbl_howlong}} </label>
-<input type="text" class="form-control" size="32" name="howlong" id="profile-edit-howlong" title="{{$lbl_howlong}}" value="{{$howlong}}" />
-<div class="clear"></div>
-</div>
+{{include file="field_input.tpl" field=$howlong}}
 {{/if}}
-<div id="profile-edit-marital-end"></div>
+
+<div class="clear"></div>
 {{/if}}
 
 {{if $fields.homepage}}

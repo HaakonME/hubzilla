@@ -1288,12 +1288,22 @@ LSIeXnd14lQYK/uxW/8cTFjcmddsKxeXysoQxbSa9VdDK+KkpZdgYXYrTTofXs6v+
 function webfinger_rfc7033($webbie,$zot = false) {
 
 
-	if(! strpos($webbie,'@'))
-		return false;
-	$lhs = substr($webbie,0,strpos($webbie,'@'));
-	$rhs = substr($webbie,strpos($webbie,'@')+1);
-
-	$resource = 'acct:' . $webbie;
+	if(strpos($webbie,'@')) {
+		$lhs = substr($webbie,0,strpos($webbie,'@'));
+		$rhs = substr($webbie,strpos($webbie,'@')+1);
+		$resource = 'acct:' . $webbie;
+	}
+	else {
+		$m = parse_url($webbie);
+		if($m) {
+			if($m['scheme'] !== 'https')
+				return false;
+			$rhs = $m['host'] . (($m['port']) ? ':' . $m['port'] : '');
+			$resource = urlencode($webbie);
+		}
+		else
+			return false;
+	}
 
 	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=1' : ''));
 
@@ -1455,8 +1465,25 @@ function scrape_vcard($url) {
 		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
 			$level2 = $item->getElementsByTagName('*');
 			foreach($level2 as $x) {
+				if(attribute_contains($x->getAttribute('id'),'pod_location'))
+					$ret['pod_location'] = $x->textContent;
 				if(attribute_contains($x->getAttribute('class'),'fn'))
 					$ret['fn'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'uid'))
+					$ret['uid'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'nickname'))
+					$ret['nick'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'searchable'))
+					$ret['searchable'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'key'))
+					$ret['public_key'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'given_name'))
+					$ret['given_name'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'family_name'))
+					$ret['family_name'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'url'))
+					$ret['url'] = $x->textContent;
+
 				if((attribute_contains($x->getAttribute('class'),'photo'))
 					|| (attribute_contains($x->getAttribute('class'),'avatar'))) {
 					$size = intval($x->getAttribute('width'));
@@ -1464,10 +1491,6 @@ function scrape_vcard($url) {
 						$ret['photo'] = $x->getAttribute('src');
 						$largest_photo = $size;
 					}
-				}
-				if((attribute_contains($x->getAttribute('class'),'nickname'))
-					|| (attribute_contains($x->getAttribute('class'),'uid'))) {
-					$ret['nick'] = $x->textContent;
 				}
 			}
 		}

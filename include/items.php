@@ -2156,9 +2156,6 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['target'] = $obj;
 	}
 
-	$res['public_policy'] = 'specific';
-	$res['comment_policy'] = 'none';
-
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
@@ -3850,6 +3847,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
+				if($contact['xchan_network'] === 'rss') {
+					$res['public_policy'] = 'specific';
+					$res['comment_policy'] = 'none';
+				}
+
 				if((! x($author,'author_name')) || ($author['author_is_feed']))
 					$author['author_name'] = $contact['xchan_name'];
 				if((! x($author,'author_link')) || ($author['author_is_feed']))
@@ -3906,6 +3908,12 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$item_id  = base64url_encode($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
+
+				if($contact['xchan_network'] === 'rss') {
+					$res['public_policy'] = 'specific';
+					$res['comment_policy'] = 'none';
+				}
+
 
 				if(is_array($contact)) {
 					if((! x($author,'author_name')) || ($author['author_is_feed']))
@@ -4060,6 +4068,33 @@ function process_salmon_feed($xml, $importer) {
 	return $ret;
 }
 
+/*
+ * Given an xml (atom) feed, find any links with rel="hub" and return an array of href links or false
+ */
+
+
+function find_hubs($xml) {
+	require_once('library/simplepie/simplepie.inc');
+
+    if(! strlen($xml)) {
+        logger('empty input');
+        return false;
+    }
+
+    $feed = new SimplePie();
+    $feed->set_raw_data($xml);
+    $feed->init();
+
+    if($feed->error())
+        logger('Error parsing XML: ' . $feed->error());
+
+    $hubs = $feed->get_links('hub');
+    logger('consume_feed: hubs: ' . print_r($hubs,true), LOGGER_DATA);
+
+	return $hubs;
+}
+
+
 
 function update_feed_item($uid,$datarray) {
 	logger('update_feed_item: not implemented! ' . $uid . ' ' . print_r($datarray,true), LOGGER_DATA);
@@ -4084,8 +4119,8 @@ function handle_feed($uid,$abook_id,$url) {
 //logger('handle_feed:' . print_r($z,true));
 
 	if($z['success']) {
-		consume_feed($z['body'],$channel,$x[0],0);
 		consume_feed($z['body'],$channel,$x[0],1);
+		consume_feed($z['body'],$channel,$x[0],2);
 	}
 }
 

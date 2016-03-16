@@ -260,34 +260,6 @@ footer {
 	clear: both;
 }
 
-#profile-edit-links {
-	padding-top: 15px;
-	padding-bottom: 15px;
-}
-
-#profile-edit-links .btn {
-	margin: 0 10px 15px 0;
-}
-
-.profile-import {
-	vertical-align: top;
-	text-align: left;
-}
-
-.profile-import b {
-	color: $link_colour;
-}
-
-.profile-import input {
-	color: $font_colour;
-	border: none;
-}
-
-#profile-edit-drop-link {
-	color: #FFF;
-	font-weight: normal;
-}
-
 .fn {
 	font-weight: bold;
 	font-size: 16px;

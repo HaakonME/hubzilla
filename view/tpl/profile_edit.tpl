@@ -6,24 +6,26 @@
 			</button>
 			<ul class="dropdown-menu">
 				<li class="nav-item">
-					<a class="nav-link" href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}">{{$profpic}}</a>
+					<a class="nav-link" href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}"><i class="icon-user"></i>&nbsp;{{$profpic}}</a>
 				</li>
 				{{if $is_default}}
 				<li class="nav-item">
-					<a href="cover_photo" id="cover-photo_upload-link" title="{{$coverpic}}">{{$coverpic}}</a>
+					<a href="cover_photo" id="cover-photo_upload-link" title="{{$coverpic}}"><i class="icon-picture"></i>&nbsp;{{$coverpic}}</a>
+				</li>
+				{{/if}}
+				{{if ! $is_default}}
+				<li class="nav-item">
+					<a href="profperm/{{$profile_id}}" id="profile-edit-visibility-link" title="{{$editvis}}"><i class="icon-pencil"></i>&nbsp;{{$editvis}}</a>
 				</li>
 				{{/if}}
 				<li class="nav-item">
-					<a href="thing" id="profile-edit-thing-link" title="{{$addthing}}">{{$addthing}}</a>
+					<a href="thing" id="profile-edit-thing-link" title="{{$addthing}}"><i class="icon-plus-sign"></i>&nbsp;{{$addthing}}</a>
 				</li>
+				<li class="divider"></li>
 				<li class="nav-item">
 					<a href="profile/{{$profile_id}}/view" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a>
 				</li>
-				{{if ! $is_default}}
-				<li class="nav-item">
-					<a href="profperm/{{$profile_id}}" id="profile-edit-visibility-link" title="{{$editvis}}">{{$editvis}}</a>
-				</li>
-				{{/if}}
+
 				{{if $profile_clone_link}}
 				<li class="divider"></li>
 				<li class="nav-item">

@@ -328,37 +328,6 @@ footer {
 	margin-bottom: 15px;
 }
 
-.profile-listing-photo-wrapper {
-	float: left;
-}
-
-.profile-listing-edit-buttons-wrapper {
-	clear: both;
-}
-.profile-listing-photo-edit-link {
-	float: left;
-	width: 125px;
-}
-.profile-listing-end {
-	clear: both;
-}
-.profile-listing-edit-buttons-wrapper img{
-	border: none;
-	margin-right: 20px;
-}
-.profile-listing {
-	margin-top: 25px;
-}
-.profile-listing-name {
-	float: left;
-	margin-left: 32px;
-	margin-top: 10px;
-	color: #3172BD;
-	font-weight: bold;
-	width: 200px;
-
-}
-
 .app-name {
 	overflow: none;
 }

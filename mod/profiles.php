@@ -758,21 +758,9 @@ function profiles_content(&$a) {
 			local_channel());
 		if(count($r)) {
 
-			$tpl_header = get_markup_template('profile_listing_header.tpl');
-			$o .= replace_macros($tpl_header,array(
-				'$header' => t('Edit/Manage Profiles'),
-				'$addstuff' => t('Add profile things'),
-				'$stuff_desc' => t('Include desirable objects in your profile'),
-				'$chg_photo' => t('Change profile photo'),
-				'$cr_new' => t('Create New Profile'),
-				'$cr_new_link' => 'profiles/new?t=' . get_form_security_token("profile_new")
-			));
-
-
 			$tpl = get_markup_template('profile_entry.tpl');
-
 			foreach($r as $rr) {
-				$o .= replace_macros($tpl, array(
+				$profiles .= replace_macros($tpl, array(
 					'$photo' => $rr['thumb'],
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
@@ -782,6 +770,17 @@ function profiles_content(&$a) {
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
+
+			$tpl_header = get_markup_template('profile_listing_header.tpl');
+			$o .= replace_macros($tpl_header,array(
+				'$header' => t('Edit Profiles'),
+				'$cr_new' => t('Create New'),
+				'$cr_new_link' => 'profiles/new?t=' . get_form_security_token("profile_new"),
+				'$profiles' => $profiles
+			));
+
+
+
 			
 		}
 		return $o;

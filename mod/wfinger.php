@@ -73,12 +73,14 @@ function wfinger_init(&$a) {
 
 		$result['aliases'] = array();
 
-		$result['properties'] = array('http://webfinger.net/ns/name' => $r[0]['channel_name']);
+		$result['properties'] = array(
+				'http://webfinger.net/ns/name' => $r[0]['channel_name'],
+				'http://xmlns.com/foaf/0.1/name' => $r[0]['channel_name']
+		);
 
 		foreach($aliases as $alias) 
 			if($alias != $resource)
 				$result['aliases'][] = $alias;
-
 
 		$result['links'] = array(
 

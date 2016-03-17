@@ -4069,29 +4069,65 @@ function process_salmon_feed($xml, $importer) {
 }
 
 /*
- * Given an xml (atom) feed, find any links with rel="hub" and return an array of href links or false
+ * Given an xml (atom) feed, find author and hub links
  */
 
 
-function find_hubs($xml) {
+function feed_meta($xml) {
 	require_once('library/simplepie/simplepie.inc');
+
+	$ret = array();
 
     if(! strlen($xml)) {
         logger('empty input');
-        return false;
+        return $ret;
     }
 
     $feed = new SimplePie();
     $feed->set_raw_data($xml);
     $feed->init();
 
-    if($feed->error())
+    if($feed->error()) {
         logger('Error parsing XML: ' . $feed->error());
+		return $ret;
+	}
 
-    $hubs = $feed->get_links('hub');
-    logger('consume_feed: hubs: ' . print_r($hubs,true), LOGGER_DATA);
+    $ret['hubs'] = $feed->get_links('hub');
 
-	return $hubs;
+//     logger('consume_feed: hubs: ' . print_r($hubs,true), LOGGER_DATA);
+	
+	$author = array();
+
+    $found_author = $feed->get_author();
+    if($found_author) {
+        $author['author_name'] = unxmlify($found_author->get_name());
+        $author['author_link'] = unxmlify($found_author->get_link());
+
+    	$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
+		logger('rawauthor: ' . print_r($rawauthor,true));
+
+	    if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
+    	    $base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+        	foreach($base as $link) {
+            	if(!x($author, 'author_photo') || ! $author['author_photo']) {
+                	if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar') {
+                    	$author['author_photo'] = unxmlify($link['attribs']['']['href']);
+						break;
+					}
+            	}
+        	}
+			if($rawauthor[0]['child'][NAMESPACE_POCO]['displayName'][0]['data'])
+				$author['full_name'] = unxmlify($rawauthor[0]['child'][NAMESPACE_POCO]['displayName'][0]['data']);
+		}
+    }
+
+
+    if(substr($author['author_link'],-1,1) == '/')
+        $author['author_link'] = substr($author['author_link'],0,-1);
+
+	$ret['author'] = $author; 
+
+	return $ret;
 }
 
 

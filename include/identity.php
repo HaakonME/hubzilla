@@ -410,7 +410,15 @@ function create_identity($arr) {
 			set_pconfig($ret['channel']['channel_id'],'system','photo_path', '%Y-%m');
 			set_pconfig($ret['channel']['channel_id'],'system','attach_path','%Y-%m');
 		}
-
+		
+		// UNO: channel defaults, incl addons (addons specific pconfig will only work after the relevant addon is enabled by the admin). It's located here, so members can modify these defaults after the channel is created.
+		if(UNO) {
+			//diaspora protocol addon
+			set_pconfig($ret['channel']['channel_id'],'system','diaspora_allowed', '1');
+			set_pconfig($ret['channel']['channel_id'],'system','diaspora_public_comments', '1');
+			set_pconfig($ret['channel']['channel_id'],'system','prevent_tag_hijacking', '0');
+		}
+		
 		// auto-follow any of the hub's pre-configured channel choices.
 		// Only do this if it's the first channel for this account;
 		// otherwise it could get annoying. Don't make this list too big

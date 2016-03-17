@@ -3893,6 +3893,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				}
 
 				$datarray['parent_mid'] = $parent_mid;
+				$datarray['aid'] = $importer['channel_account_id'];
 				$datarray['uid'] = $importer['channel_id'];
 
 				logger('consume_feed: ' . print_r($datarray,true),LOGGER_DATA);
@@ -3975,6 +3976,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				$datarray['parent_mid'] = $item_id;
 				$datarray['uid'] = $importer['channel_id'];
+				$datarray['aid'] = $importer['channel_account_id'];
 
 				if(! link_compare($author['owner_link'],$contact['xchan_url'])) {
 					logger('consume_feed: Correcting item owner.', LOGGER_DEBUG);
@@ -4050,7 +4052,7 @@ function process_salmon_feed($xml, $importer) {
 			}
 
 			if($is_reply)
-				$ret['is_reply'] = true;
+				$ret['parent_mid'] = $parent_mid;
 
 			$ret['author'] = array();
 

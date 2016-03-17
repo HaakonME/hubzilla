@@ -42,13 +42,8 @@ function get_salmon_key($uri,$keyhash) {
 	if(count($ret)) {
 		for($x = 0; $x < count($ret); $x ++) {
 			if(substr($ret[$x],0,5) === 'data:') {
-				if(strstr($ret[$x],','))
-					$ret[$x] = substr($ret[$x],strpos($ret[$x],',')+1);
-				else
-					$ret[$x] = substr($ret[$x],5);
+				$ret[$x] = convert_salmon_key($ret[$x]);
 			}
-			else
-				$ret[$x] = fetch_url($ret[$x]);
 		}
 	}
 

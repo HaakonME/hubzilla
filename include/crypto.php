@@ -23,7 +23,8 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 	$verify = @openssl_verify($data,$sig,$key,$alg);
 
 	if(! $verify) {
-		logger('openssl_verify: ' . openssl_error_string(),LOGGER_NORMAL,LOG_ERR);
+		while($msg = openssl_error_string())
+			logger('openssl_verify: ' . $msg,LOGGER_NORMAL,LOG_ERR);
 		logger('openssl_verify: key: ' . $key, LOGGER_DEBUG, LOG_ERR); 
 		// provide a backtrace so that we can debug key issues
 		if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
@@ -256,6 +257,7 @@ function pkcs1_encode($Modulus,$PublicExponent) {
 }
 
 
+// http://stackoverflow.com/questions/27568570/how-to-convert-raw-modulus-exponent-to-rsa-public-key-pem-format
 function metopem($m,$e) {
 	$der = pkcs8_encode($m,$e);
 	$key = DerToPem($der,false);

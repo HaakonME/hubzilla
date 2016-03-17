@@ -175,7 +175,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		return $result;
 	}
 
-	$allowed = ($r[0]['xchan_network'] === 'zot' || $r[0]['xchan_network'] === 'rss') ? 1 : 0);
+	$allowed = (($r[0]['xchan_network'] === 'zot' || $r[0]['xchan_network'] === 'rss') ? 1 : 0);
 
 	$x = array('channel_id' => $uid, 'follow_address' => $url, 'xchan' => $r[0], 'allowed' => $allowed, 'singleton' => 0);
 

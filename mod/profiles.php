@@ -248,7 +248,7 @@ function profiles_post(&$a) {
 
 		$profile_name = notags(trim($_POST['profile_name']));
 		if(! strlen($profile_name)) {
-			notify( t('Profile Name is required.') . EOL);
+			notice( t('Profile Name is required.') . EOL);
 			return;
 		}
 
@@ -277,7 +277,7 @@ function profiles_post(&$a) {
 
 			$v = validate_channelname($name);
 			if($v) {
-				$notice($v);
+				notice($v);
 				$namechanged = false;
 				$name = $orig[0]['name'];
 			}
@@ -687,31 +687,36 @@ function profiles_content(&$a) {
 			'$submit'       => t('Submit'),
 			'$viewprof'     => t('View this profile'),
 			'$editvis' 	=> t('Edit visibility'),
-			'$coverpic'     => t('Change Cover Photo'),
-			'$profpic'      => t('Change Profile Photo'),
+			'$coverpic'     => t('Change cover photo'),
+			'$profpic'      => t('Change profile photo'),
 			'$cr_prof'      => t('Create a new profile using these settings'),
 			'$cl_prof'      => t('Clone this profile'),
 			'$del_prof'     => t('Delete this profile'),
+			'$addthing'     => t('Add profile things'),
+			'$personal'     => t('Personal'),
+			'$location'     => t('Location'),
+			'$relation'     => t('Relation'),
+			'$miscellaneous'=> t('Miscellaneous'),
 			'$exportable'   => feature_enabled(local_channel(),'profile_export'),
 			'$lbl_import'   => t('Import profile from file'),
 			'$lbl_export'   => t('Export profile to file'),
-			'$lbl_gender'   => t('Your Gender'),
-			'$lbl_marital'  => t('Marital Status'),
-			'$lbl_sexual'   => t('Sexual Preference'),
+			'$lbl_gender'   => t('Your gender'),
+			'$lbl_marital'  => t('Marital status'),
+			'$lbl_sexual'   => t('Sexual preference'),
 			'$baseurl'      => $a->get_baseurl(true),
 			'$profile_id'   => $r[0]['id'],
-			'$profile_name' => array('profile_name', t('Profile Name'), $r[0]['profile_name'], '', '*'),
+			'$profile_name' => array('profile_name', t('Profile name'), $r[0]['profile_name'], t('Required'), '*'),
 			'$is_default'   => $is_default,
 			'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope($channel['channel_r_profile'])),
 			'$advanced'     => $advanced,
-			'$name'         => array('name', t('Your Full Name'), $r[0]['name']),
+			'$name'         => array('name', t('Your full name'), $r[0]['name'], t('Required'), '*'),
 			'$pdesc'        => array('pdesc', t('Title/Description'), $r[0]['pdesc']),
 			'$dob'          => dob($r[0]['dob']),
 			'$hide_friends' => $hide_friends,
-			'$address'      => array('address', t('Street Address'), $r[0]['address']),
+			'$address'      => array('address', t('Street address'), $r[0]['address']),
 			'$locality'     => array('locality', t('Locality/City'), $r[0]['locality']),
 			'$region'       => array('region', t('Region/State'), $r[0]['region']),
-			'$postal_code'  => array('postal_code', t('Postal/Zip Code'), $r[0]['postal_code']),
+			'$postal_code'  => array('postal_code', t('Postal/Zip code'), $r[0]['postal_code']),
 			'$country_name' => array('country_name', t('Country'), $r[0]['country_name']),
 			'$gender'       => gender_selector($r[0]['gender']),
 			'$gender_min'   => gender_selector_min($r[0]['gender']),
@@ -724,20 +729,20 @@ function profiles_content(&$a) {
 			'$about'        => array('about', t('Tell us about yourself'), $r[0]['about']),
 			'$homepage'     => array('homepage', t('Homepage URL'), $r[0]['homepage']),
 			'$hometown'     => array('hometown', t('Hometown'), $r[0]['hometown']),
-			'$politic'      => array('politic', t('Political Views'), $r[0]['politic']),
-			'$religion'     => array('religion', t('Religious Views'), $r[0]['religion']),
+			'$politic'      => array('politic', t('Political views'), $r[0]['politic']),
+			'$religion'     => array('religion', t('Religious views'), $r[0]['religion']),
 			'$keywords'     => array('keywords',  t('Keywords used in directory listings'), $r[0]['keywords'], t('Example: fishing photography software')),
 			'$likes'        => array('likes', t('Likes'), $r[0]['likes']),
 			'$dislikes'     => array('dislikes', t('Dislikes'), $r[0]['dislikes']),
 			'$music'        => array('music', t('Musical interests'), $r[0]['music']),
 			'$book'         => array('book', t('Books, literature'), $r[0]['book']),
 			'$tv'           => array('tv', t('Television'), $r[0]['tv']),
-			'$film'         => array('film', t('Film/dance/culture/entertainment'), $r[0]['film']),
+			'$film'         => array('film', t('Film/Dance/Culture/Entertainment'), $r[0]['film']),
 			'$interest'     => array('interest', t('Hobbies/Interests'), $r[0]['interest']),
-			'$romance'      => array('romance',t('Love/romance'), $r[0]['romance']),
-			'$work'         => array('work', t('Work/employment'), $r[0]['work']),
-			'$education'    => array('education', t('School/education'), $r[0]['education']),
-			'$contact'      => array('contact', t('Contact information and Social Networks'), $r[0]['contact']),
+			'$romance'      => array('romance',t('Love/Romance'), $r[0]['romance']),
+			'$work'         => array('work', t('Work/Employment'), $r[0]['work']),
+			'$education'    => array('education', t('School/Education'), $r[0]['education']),
+			'$contact'      => array('contact', t('Contact information and social networks'), $r[0]['contact']),
 			'$channels'     => array('channels', t('My other channels'), $r[0]['channels']),
 			'$extra_fields' => $extra_fields,
 		));
@@ -753,21 +758,9 @@ function profiles_content(&$a) {
 			local_channel());
 		if(count($r)) {
 
-			$tpl_header = get_markup_template('profile_listing_header.tpl');
-			$o .= replace_macros($tpl_header,array(
-				'$header' => t('Edit/Manage Profiles'),
-				'$addstuff' => t('Add profile things'),
-				'$stuff_desc' => t('Include desirable objects in your profile'),
-				'$chg_photo' => t('Change profile photo'),
-				'$cr_new' => t('Create New Profile'),
-				'$cr_new_link' => 'profiles/new?t=' . get_form_security_token("profile_new")
-			));
-
-
 			$tpl = get_markup_template('profile_entry.tpl');
-
 			foreach($r as $rr) {
-				$o .= replace_macros($tpl, array(
+				$profiles .= replace_macros($tpl, array(
 					'$photo' => $rr['thumb'],
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
@@ -777,6 +770,17 @@ function profiles_content(&$a) {
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
+
+			$tpl_header = get_markup_template('profile_listing_header.tpl');
+			$o .= replace_macros($tpl_header,array(
+				'$header' => t('Edit Profiles'),
+				'$cr_new' => t('Create New'),
+				'$cr_new_link' => 'profiles/new?t=' . get_form_security_token("profile_new"),
+				'$profiles' => $profiles
+			));
+
+
+
 			
 		}
 		return $o;

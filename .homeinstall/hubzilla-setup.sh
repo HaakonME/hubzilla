@@ -606,7 +606,7 @@ function install_hubzilla_plugins {
         echo "# 2. run" >> $plugin_install
         echo "#   cd /var/www/html/.homeinstall" >> $plugin_install
         echo "#   ./hubzilla-setup.sh" >> $plugin_install
-        echo "https://gitlab.com/zot/ownmapp.git ownMap" >> $plugin_install
+        echo "https://gitlab.com/zot/ownmapp.git ownMapp" >> $plugin_install
         echo "https://gitlab.com/zot/hubzilla-chess.git chess" >> $plugin_install
     fi
     # install plugins

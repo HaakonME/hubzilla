@@ -110,7 +110,7 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 			if ($x) {
 				// @fixme this foreach should not be needed?
 				foreach ($x as $record) {
-					if (($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
+					if ((($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED))
 					&& (hash('whirlpool', $record['account_salt'] . $password) === $record['account_password'])) {
 						logger('password verified for ' . $username);
 						return $this->setAuthenticated($r[0]);

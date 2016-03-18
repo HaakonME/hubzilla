@@ -896,6 +896,7 @@ function photos_content(&$a) {
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 			$tools = array(
 				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource_id'], t('Use as profile photo')),
+				'cover'=>array($a->get_baseurl() . '/cover_photo/use/'.$ph[0]['resource_id'], t('Use as cover photo')),
 			);
 		}
 

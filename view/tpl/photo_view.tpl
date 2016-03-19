@@ -18,7 +18,7 @@
 					{{/if}}
 					{{if $map}}
 					<li class="nav-item">
-						<a class="nav-link" href="#" onclick="var pos = $('#photo-map').css('position'); if(pos === 'absolute') { $('#photo-map').css( { position: 'relative', left: 'auto', top: 'auto' }); } else { $('#photo-map').css( { position: 'absolute', left: '-9999px', top: '-9999px' }); }" ><i class="icon-globe"></i>&nbsp;{{$map_text}}</a>
+						<a class="nav-link" href="#" onclick="var pos = $('#photo-map').css('position'); if(pos === 'absolute') { $('#photo-map').css( { position: 'relative', left: 'auto', top: 'auto' }); } else { $('#photo-map').css( { position: 'absolute', left: '-9999px', top: '-9999px' }); } return false; " ><i class="icon-globe"></i>&nbsp;{{$map_text}}</a>
 					</li>
 					{{/if}}
 					{{if $edit}}

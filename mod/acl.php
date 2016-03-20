@@ -47,7 +47,7 @@ function acl_init(&$a){
 	$contacts = array();
 	
 	if ($type=='' || $type=='g'){
-		
+
 		$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`, 
 				%s as uids
 				FROM `groups`,`group_member` 
@@ -71,6 +71,8 @@ function acl_init(&$a){
 				"name"  => $g['name'],
 				"id"	=> $g['id'],
 				"xid"   => $g['hash'],
+				//FIXME: db_concat aka GROUP_CONCAT has a defoult setting of group_concat_max_len = 1024 in mysql.
+				//	 This value is quickly exceeded here. As a result $g['uids'] only contains a part of the complete xchan set.
 				"uids"  => explode(",",$g['uids']),
 				"link"  => ''
 			);

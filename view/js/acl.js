@@ -231,14 +231,15 @@ ACL.prototype.update_view = function() {
 				}
 				$(that.group_uids[id]).each(function(i, v) {
 					if(uclass == "grouphide")
-						$("#c"+v).removeClass("groupshow");
+						// we need attr selection here because the id can include an @ (diaspora/friendica xchans)
+						$('[id="c' + v + '"]').removeClass("groupshow");
 					if(uclass !== "") {
-						var cls = $("#c"+v).attr('class');
+						var cls = $('[id="c' + v + '"]').attr('class');
 						if( cls === undefined)
 							return true;
 						var hiding = cls.indexOf('grouphide');
 						if(hiding == -1)
-							$("#c"+v).addClass(uclass);
+							$('[id="c' + v + '"]').addClass(uclass);
 					}
 				});
 				break;
@@ -277,7 +278,7 @@ ACL.prototype.populate = function(data) {
 	$(data.items).each(function(){
 		html = "<div class='acl-list-item {4} {7} {5}' title='{6}' id='{2}{3}'>"+that.item_tpl+"</div>";
 		html = html.format(this.photo, this.name, this.type, this.xid, '', this.self, this.link, this.taggable);
-		if (this.uids !== undefined) that.group_uids[this.id] = this.uids;
+		if (this.uids !== undefined) that.group_uids[this.xid] = this.uids;
 		//console.log(html);
 		that.list_content.append(html);
 	});

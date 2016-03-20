@@ -1314,7 +1314,7 @@ function widget_admin($arr) {
 
 	$aside = array(
 		'site'      => array(z_root() . '/admin/site/',     t('Site'),           'site'),
-		'users'     => array(z_root() . '/admin/users/',    t('Accounts'),       'users'),
+		'users'     => array(z_root() . '/admin/users/',    t('Accounts'),       'users', 'pending-update', t('Member registrations waiting for confirmation')),
 		'channels'  => array(z_root() . '/admin/channels/', t('Channels'),       'channels'),
 		'security'  => array(z_root() . '/admin/security/', t('Security'),       'security'),
 		'features'  => array(z_root() . '/admin/features/', t('Features'),       'features'),
@@ -1330,24 +1330,29 @@ function widget_admin($arr) {
 
 	$r = q("SELECT * FROM addon WHERE plugin_admin = 1");
 
-	$aside['plugins_admin'] = array();
+	$plugins = array();
 	if($r) {
 		foreach ($r as $h){
 			$plugin = $h['name'];
-			$aside['plugins_admin'][] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
+			$plugins[] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
 			// temp plugins with admin
 			$a->plugins_admin[] = $plugin;
 		}
 	}
 
-	$aside['logs'] = array(z_root() . '/admin/logs/', t('Logs'), 'logs');
+	$logs = array(z_root() . '/admin/logs/', t('Logs'), 'logs');
+
+	$arr = array('links' => $aside,'plugins' => $plugins,'logs' => $logs);
+	call_hooks('admin_aside',$arr);
 
 	$o .= replace_macros(get_markup_template('admin_aside.tpl'), array(
 			'$admin' => $aside, 
 			'$admtxt' => t('Admin'),
 			'$plugadmtxt' => t('Plugin Features'),
+			'$plugins' => $plugins,
 			'$logtxt' => t('Logs'),
-			'$h_pending' => t('User registrations waiting for confirmation'),
+			'$logs' => $logs,
+			'$h_pending' => t('Member registrations waiting for confirmation'),
 			'$admurl'=> z_root() . '/admin/'
 	));
 

@@ -2278,6 +2278,12 @@ function check_location_move($sender_hash,$locations) {
 			dbesc($sender_hash)
 		);
 
+		// federation plugins may wish to notify connections 
+		// of the move on singleton networks
+
+		$arr = array('channel' => $r[0],'locations' => $locations);
+		call_hooks('location_move',$arr);
+
 	}		
 
 }

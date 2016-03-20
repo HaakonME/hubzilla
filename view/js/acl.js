@@ -121,8 +121,10 @@ ACL.prototype.on_button_show = function(event) {
 	event.stopImmediatePropagation();
 	event.stopPropagation();
 
-	that.set_allow($(this).parent().attr('id'));
-	that.on_submit();
+	if(!$(this).parent().hasClass("grouphide")) {
+		that.set_allow($(this).parent().attr('id'));
+		that.on_submit();
+	}
 
 	return false;
 };
@@ -245,12 +247,15 @@ ACL.prototype.update_view = function() {
 				break;
 			case "c":
 				if (that.allow_cid.indexOf(id)>=0){
-					btshow.removeClass("btn-default").addClass("btn-success");
-					bthide.removeClass("btn-danger").addClass("btn-default");
+					if(!$(this).hasClass("grouphide") ) {
+						btshow.removeClass("btn-default").addClass("btn-success");
+						bthide.removeClass("btn-danger").addClass("btn-default");
+					}
 				}
 				if (that.deny_cid.indexOf(id)>=0){
 					btshow.removeClass("btn-success").addClass("btn-default");
 					bthide.removeClass("btn-default").addClass("btn-danger");
+					$(this).removeClass("groupshow");
 				}
 		}
 	});

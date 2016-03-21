@@ -1113,8 +1113,7 @@ function discover_by_webbie($webbie) {
 		}
 	}
 
-
-	logger('webfing: ' . print_r($x,true));
+	logger('webfing: ' . print_r($x,true), LOGGER_DATA, LOG_INFO);
 
 	$arr = array('address' => $webbie, 'success' => false, 'webfinger' => $x);
 	call_hooks('discover_channel_webfinger', $arr);
@@ -1131,6 +1130,13 @@ function discover_by_webbie($webbie) {
 		$k = z_fetch_url($atom_feed);
 		if($k['success'])
 			$feed_meta = feed_meta($k['body']);
+
+		// stash any discovered pubsubhubbub hubs in case we need to follow them
+		// this will save an expensive lookup later
+
+		if($feed_meta['hubs'])
+			set_xconfig($addr,'system','push_hubs',$feed_meta['hubs']);
+
 		if($feed_meta && $feed_meta['author']) {
 			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($addr)
@@ -1156,7 +1162,7 @@ function discover_by_webbie($webbie) {
 					dbescdate(datetime_convert())
 				);
 			}
-
+			
 			$r = q("select * from hubloc where hubloc_hash = '%s' limit 1",
 				dbesc($addr)
 			);

@@ -2,6 +2,7 @@
 
 /* ACL selector json backend */
 require_once("include/acl_selectors.php");
+require_once("include/group.php");
 
 function acl_init(&$a){
 
@@ -48,32 +49,28 @@ function acl_init(&$a){
 	
 	if ($type=='' || $type=='g'){
 
-		$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`, 
-				%s as uids
+		$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`
 				FROM `groups`,`group_member` 
 				WHERE `groups`.`deleted` = 0 AND `groups`.`uid` = %d 
-					AND `group_member`.`gid`=`groups`.`id`
-					$sql_extra
+				AND `group_member`.`gid`=`groups`.`id`
+				$sql_extra
 				GROUP BY `groups`.`id`
 				ORDER BY `groups`.`name` 
 				LIMIT %d OFFSET %d",
-			db_concat('group_member.xchan', ','),
 			intval(local_channel()),
 			intval($count),
 			intval($start)
 		);
 
 		foreach($r as $g){
-//		logger('acl: group: ' . $g['name'] . ' members: ' . $g['uids']);		
+//		logger('acl: group: ' . $g['name'] . ' members: ' . group_get_members_xchan($g['id']));
 			$groups[] = array(
 				"type"  => "g",
 				"photo" => "images/twopeople.png",
 				"name"  => $g['name'],
 				"id"	=> $g['id'],
 				"xid"   => $g['hash'],
-				//FIXME: db_concat aka GROUP_CONCAT has a defoult setting of group_concat_max_len = 1024 in mysql.
-				//	 This value is quickly exceeded here. As a result $g['uids'] only contains a part of the complete xchan set.
-				"uids"  => explode(",",$g['uids']),
+				"uids"  => group_get_members_xchan($g['id']),
 				"link"  => ''
 			);
 		}

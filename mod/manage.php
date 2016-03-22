@@ -168,6 +168,7 @@ function manage_content(&$a) {
 		'$channel_usage_message' => $channel_usage_message,
 		'$delegated_desc'   => t('Delegated Channel'),
 		'$delegates'        => $delegates,
+		'$locs'             => t('Manage locations')
 
 	));
 

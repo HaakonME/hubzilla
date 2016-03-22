@@ -185,9 +185,11 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	if($ciphers)
 		@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
 
-	if(x($opts,'headers'))
+	if(x($opts,'headers')) {
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
-
+logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
+	}
+ 
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
 
@@ -234,6 +236,21 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
 		$header .= $chunk;
 		$base = substr($base,strlen($chunk));
+	}
+
+	// would somebody take lighttpd and just shoot it?
+
+	if($http_code == 417) {
+		curl_close($ch);
+		if($opts) {
+			if($opts['headers'])
+				$opts['headers'][] = 'Expect:';
+			else
+				$opts['headers'] = array('Expect:');
+		}
+		else
+			$opts = array('headers' => array('Expect:'));
+		return z_post_url($url,$params,++$redirects,$opts);
 	}
 
 	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307 || $http_code == 308) {
@@ -1105,6 +1122,7 @@ function discover_by_webbie($webbie) {
 				}
 				if($link['rel'] == 'salmon') {
 					$has_salmon = true;
+					$salmon = $link['href'];
 				}
 				if($link['rel'] == 'http://schemas.google.com/g/2010#updates-from') {
 					$atom_feed = $link['href'];

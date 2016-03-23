@@ -1254,6 +1254,7 @@ function discover_by_webbie($webbie) {
 
 			if($feed_meta['hubs'] && $address) {
 				set_xconfig($address,'system','push_hubs',$feed_meta['hubs']);
+				set_xconfig($address,'system','feed_url',$atom_feed);
 			}
 			if($feed_meta['author']['author_name']) {
 				$fullname = $feed_meta['author']['author_name'];
@@ -1459,8 +1460,8 @@ function find_webfinger_location($j,$rhs) {
 
 function match_webfinger_location($s,$h) {
 
-	// GNU-social and the older StatusNet
-	if(preg_match('|' . $h . '/user/([0-9]*?)$|',$s))
+	// GNU-social and the older StatusNet - the $host/user/123 form doesn't work
+	if(preg_match('|' . $h . '/index.php/user/([0-9]*?)$|',$s))
 		return $s;
 	// Redmatrix / hubzilla
 	if(preg_match('|' . $h . '/channel/|',$s))

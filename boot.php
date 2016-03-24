@@ -47,7 +47,7 @@ require_once('include/account.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
-define ( 'STD_VERSION',             '1.3.1' );
+define ( 'STD_VERSION',             '1.3.2' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1165  );
@@ -271,9 +271,11 @@ define ( 'MENU_BOOKMARK',        0x0002 );
  * Network and protocol family types
  */
 
-define ( 'NETWORK_DFRN',             'friendica-over-diaspora');    // Friendica, Mistpark, other DFRN implementations
+define ( 'NETWORK_FRND',             'friendica-over-diaspora');    // Friendica, Mistpark, other DFRN implementations
+define ( 'NETWORK_DFRN',             'dfrn');    // Friendica, Mistpark, other DFRN implementations
 define ( 'NETWORK_ZOT',              'zot');     // Zot!
 define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-social, other OStatus implementations
+define ( 'NETWORK_GNUSOCIAL',        'gnusoc');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'rss');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'diaspora');    // Diaspora
 define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP

@@ -915,7 +915,15 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	border-radius: $radiuspx;
 }
 
-.acl-list-item img{
+.acl-list-item.grouphide {
+	border: 1px solid red;
+}
+
+.acl-list-item.groupshow {
+	border: 1px solid green;
+}
+
+.acl-list-item img {
 	width: 40px;
 	height: 40px;
 	float: left;

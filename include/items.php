@@ -3848,8 +3848,8 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray = get_atom_elements($feed,$item,$author);
 
 				if($contact['xchan_network'] === 'rss') {
-					$res['public_policy'] = 'specific';
-					$res['comment_policy'] = 'none';
+					$datarray['public_policy'] = 'specific';
+					$datarray['comment_policy'] = 'none';
 				}
 
 				if((! x($author,'author_name')) || ($author['author_is_feed']))
@@ -3911,8 +3911,8 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray = get_atom_elements($feed,$item,$author);
 
 				if($contact['xchan_network'] === 'rss') {
-					$res['public_policy'] = 'specific';
-					$res['comment_policy'] = 'none';
+					$datarray['public_policy'] = 'specific';
+					$datarray['comment_policy'] = 'none';
 				}
 
 
@@ -3931,6 +3931,16 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				}
 
 				$datarray['author_xchan'] = '';
+
+				if(activity_match($datarray['verb'],ACTIVITY_FOLLOW) && $datarray['obj_type'] === ACTIVITY_OBJ_PERSON) {
+					$cb = array('item' => $datarray,'channel' => $importer, 'xchan' => null, 'author' => $author, 'caught' => false);
+					call_hooks('follow_from_feed',$cb);
+					if($cb['caught']) {
+						if($cb['return_code'])
+							http_status_exit($cb['return_code']);
+						continue;
+					}
+				}
 
 				if($author['author_link'] != $contact['xchan_url']) {
 					$x = import_author_unknown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));

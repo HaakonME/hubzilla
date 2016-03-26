@@ -19,11 +19,12 @@
 	top: 50px;
 	left: -80%;
 	width: 80%;
+        height: 60%;
 	padding: 20px;
 	transition: left 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
-	overflow: hidden;
 	box-sizing: border-box;
 	border: #CCC thin solid;
+        overflow: auto;
 }
 
 .help-content-open {

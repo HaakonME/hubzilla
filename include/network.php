@@ -1144,21 +1144,23 @@ function discover_by_webbie($webbie) {
 	$avatar   = '';
 	$pubkey   = '';
 
-	if(array_key_exists('address',$x)) 
-		$address = $x['address'];
-	if(array_key_exists('location',$x)) 
-		$location = $x['location'];
-	if(array_key_exists('nickname',$x)) 
-		$nickname = $x['nickname'];
+	if(is_array($x)) {
+		if(array_key_exists('address',$x)) 
+			$address = $x['address'];
+		if(array_key_exists('location',$x)) 
+			$location = $x['location'];
+		if(array_key_exists('nickname',$x)) 
+			$nickname = $x['nickname'];
+	}
 
 	if(! $x)
 		$probe_old = true;
 
 	if($probe_old) {
-		$x = old_webfinger($webbie);			
-		if($x) {
+		$y = old_webfinger($webbie);			
+		if($y) {
 			logger('old_webfinger: ' . print_r($x,true));
-			foreach($x as $link) {
+			foreach($y as $link) {
 				if($link['@attributes']['rel'] === NAMESPACE_DFRN)
 					$dfrn = unamp($link['@attributes']['href']);				
 				if($link['@attributes']['rel'] === 'salmon')

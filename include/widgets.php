@@ -501,6 +501,12 @@ function widget_settings_menu($arr) {
 	if($abk)
 		$abook_self_id = $abk[0]['abook_id'];
 
+	$hublocs = q("select count(*) as total from hubloc where hubloc_hash = '%s'",
+		dbesc($channel['channel_hash'])
+	);
+
+	$hublocs = (($hublocs[0]['total'] > 1) ? true : false);
+
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
@@ -534,13 +540,15 @@ function widget_settings_menu($arr) {
 		'label'	=> t('Display settings'),
 		'url' 	=> $a->get_baseurl(true).'/settings/display',
 		'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
-	);	
-
-	$tabs[] =	array(
-		'label' => t('Connected apps'),
-		'url' => $a->get_baseurl(true) . '/settings/oauth',
-		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
+
+	if($hublocs) {
+		$tabs[] = array(
+			'label' => t('Manage locations'),
+			'url' => $a->get_baseurl(true) . '/locs',
+			'selected' => ((argv(1) === 'locs') ? 'active' : ''),
+		);
+	}
 
 	// IF can go away when UNO export and import is fully functional
 	if(! UNO) {

@@ -559,6 +559,12 @@ function widget_settings_menu($arr) {
 		);
 	}
 
+	$tabs[] =	array(
+		'label' => t('Connected apps'),
+		'url' => $a->get_baseurl(true) . '/settings/oauth',
+		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
+	);
+
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(
 			'label' => t('Connection Default Permissions'),

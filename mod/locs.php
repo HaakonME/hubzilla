@@ -110,11 +110,12 @@ function locs_content(&$a) {
 
 	$o = replace_macros(get_markup_template('locmanage.tpl'), array(
 		'$header' => t('Manage Channel Locations'),
-		'$loc' => t('Location (address)'),
-		'$mkprm' => t('Primary Location'),
-		'$drop' => t('Drop location'),
+		'$loc' => t('Location'),
+		'$addr' => t('Address'),
+		'$mkprm' => t('Primary'),
+		'$drop' => t('Drop'),
 		'$submit' => t('Submit'),
-		'$sync' => t('Sync now'),
+		'$sync' => t('Sync Now'),
 		'$sync_text' => t('Please wait several minutes between consecutive operations.'),
 		'$drop_text' => t('When possible, drop a location by logging into that website/hub and removing your channel.'),
 		'$last_resort' => t('Use this form to drop the location if the hub is no longer operating.'),

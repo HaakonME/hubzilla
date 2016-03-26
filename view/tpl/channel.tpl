@@ -44,10 +44,6 @@
 			<i class="icon-user{{if $channel.intros != 0}} new-notification{{/if}}"></i>
 			{{if $channel.intros != 0}}<a href='manage/{{$channel.channel_id}}/connections/ifpending'>{{/if}}{{$channel.intros|string_format:$intros_format}}{{if $channel.intros != 0}}</a>{{/if}}
 		</div>
-		<div class="channel-link">
-			<i class="icon-map-marker"></i>
-			<a href="manage/{{$channel.channel_id}}/locs">{{$locs}}</a>
-		</div>
 		{{/if}}
 	</div>
 </div>

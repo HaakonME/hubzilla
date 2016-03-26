@@ -3848,8 +3848,8 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray = get_atom_elements($feed,$item,$author);
 
 				if($contact['xchan_network'] === 'rss') {
-					$res['public_policy'] = 'specific';
-					$res['comment_policy'] = 'none';
+					$datarray['public_policy'] = 'specific';
+					$datarray['comment_policy'] = 'none';
 				}
 
 				if((! x($author,'author_name')) || ($author['author_is_feed']))
@@ -3911,8 +3911,8 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray = get_atom_elements($feed,$item,$author);
 
 				if($contact['xchan_network'] === 'rss') {
-					$res['public_policy'] = 'specific';
-					$res['comment_policy'] = 'none';
+					$datarray['public_policy'] = 'specific';
+					$datarray['comment_policy'] = 'none';
 				}
 
 
@@ -3931,6 +3931,16 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				}
 
 				$datarray['author_xchan'] = '';
+
+				if(activity_match($datarray['verb'],ACTIVITY_FOLLOW) && $datarray['obj_type'] === ACTIVITY_OBJ_PERSON) {
+					$cb = array('item' => $datarray,'channel' => $importer, 'xchan' => null, 'author' => $author, 'caught' => false);
+					call_hooks('follow_from_feed',$cb);
+					if($cb['caught']) {
+						if($cb['return_code'])
+							http_status_exit($cb['return_code']);
+						continue;
+					}
+				}
 
 				if($author['author_link'] != $contact['xchan_url']) {
 					$x = import_author_unknown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
@@ -4214,7 +4224,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
-		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
+		$o .= '<thr:in-reply-to ref="' . z_root() . '/display/' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
 	if(activity_match($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_match($item['verb'],ACTIVITY_POST)) {
@@ -4232,7 +4242,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		$o .= '<content type="' . $type . '" >' . xmlify(prepare_text($body,$item['mimetype'])) . '</content>' . "\r\n";
 	}
 
-	$o .= '<id>' . xmlify($item['mid']) . '</id>' . "\r\n";
+	$o .= '<id>' . z_root() . '/display/' . xmlify($item['mid']) . '</id>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
 

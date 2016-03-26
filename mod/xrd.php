@@ -7,8 +7,12 @@ function xrd_init(&$a) {
 	$uri = urldecode(notags(trim($_GET['uri'])));
 	logger('xrd: ' . $uri,LOGGER_DEBUG);
 
-	if(substr($uri,0,4) === 'http')
+	$resource = $uri;
+
+	if(substr($uri,0,4) === 'http') {
+		$uri = str_replace('~','',$uri);
 		$name = basename($uri);
+	}
 	else {
 		$local = str_replace('acct:', '', $uri);
 		if(substr($local,0,2) == '//')
@@ -35,9 +39,18 @@ function xrd_init(&$a) {
 	header("Content-type: application/xrd+xml");
 
 
+	$aliases = array('acct:' . $r[0]['channel_address'] . '@' . $a->get_hostname(), z_root() . '/channel/' . $r[0]['channel_address'], z_root() . '/~' . $r[0]['channel_address']);
+
+	for($x = 0; $x < count($aliases); $x ++) {
+		if($aliases[$x] === $resource)
+			unset($aliases[$x]);
+	}
+
+
 	$o = replace_macros(get_markup_template('xrd_person.tpl'), array(
 		'$nick'        => $r[0]['channel_address'],
-		'$accturi'     => $uri,
+		'$accturi'     => $resource,
+		'$aliases'     => $aliases,
 		'$profile_url' => $a->get_baseurl() . '/channel/'       . $r[0]['channel_address'],
 		'$hcard_url'   => $a->get_baseurl() . '/hcard/'         . $r[0]['channel_address'],
 		'$atom'        => $a->get_baseurl() . '/feed/'          . $r[0]['channel_address'],

@@ -28,7 +28,7 @@
 			</tr>
 			{{foreach $hubs as $hub}}
 			{{if ! $hub.deleted }}
-			<tr>
+			<tr class="locs-index-row">
 				<td>{{$hub.hubloc_addr}}</td>
 				<td class="hidden-xs">{{$hub.hubloc_url}}</td>
 				<td>{{if $hub.primary}}<i class="icon-check"></i>{{else}}<i class="icon-check-empty primehub" onclick="primehub({{$hub.hubloc_id}}); return false;"></i>{{/if}}</td>

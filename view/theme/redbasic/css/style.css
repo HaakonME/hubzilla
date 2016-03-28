@@ -1510,6 +1510,7 @@ nav .dropdown-menu {
 	word-wrap: break-word;
 }
 
+.locs-index-row:hover td,
 [id^="cloud-index-"]:hover td,
 .cloud-index-active {
 	background-color: $item_colour;

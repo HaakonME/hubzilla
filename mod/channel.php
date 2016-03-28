@@ -34,9 +34,8 @@ function channel_init(&$a) {
 		$profile = argv(1);		
 	}
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" title="' . t('Only posts') . '" href="' . $a->get_baseurl() . '/feed/' . $which . '?top=1" />' . "\r\n" ;
 	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" title="' . t('Posts and comments') . '" href="' . $a->get_baseurl() . '/feed/' . $which . '" />' . "\r\n" ;
-
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" title="' . t('Only posts') . '" href="' . $a->get_baseurl() . '/feed/' . $which . '?top=1" />' . "\r\n" ;
 
 // Not yet ready for prime time
 //	$a->page['htmlhead'] .= '<link rel="openid.server" href="' . $a->get_baseurl() . '/id/' . $which .'?f=" />' . "\r\n" ;

@@ -91,6 +91,9 @@ function page_init(&$a) {
 		return;
 	}
 
+	if($r[0]['title'])
+		$a->page['title'] = escape_tags($r[0]['title']);
+
 	if($r[0]['item_type'] == ITEM_TYPE_PDL) {
 		require_once('include/comanche.php');
 		comanche_parser(get_app(),$r[0]['body']);

@@ -1,3 +1,26 @@
+#chatroom-new {
+	display: none;
+}
+
+#chatrooms-index {
+	width: 100%;
+}
+
+#chatrooms-index th:nth-child(1),
+#chatrooms-index td:nth-child(1){
+	padding: 7px 3px 7px 10px;
+}
+
+#chatrooms-index th:nth-child(3),
+#chatrooms-index td:nth-child(3){
+	padding: 7px 10px 7px 7px;
+}
+
+.chatrooms-index-tool {
+	padding: 7px 10px;
+}
+
+
  #chatContainer {
 	 height: 100%;
 	 width: 100%;

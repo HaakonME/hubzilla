@@ -92,10 +92,8 @@ EOT;
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'),'photos_nav_btn');
 		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'),'cloud_nav_btn');
 
-		require_once('include/chat.php');
-		$has_chats = chatroom_list_count(local_channel());
 		if(! UNO)
-			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'] . (($has_chats) ? '' : '/new'), t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
+			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'], t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
 
 
 		require_once('include/menu.php');

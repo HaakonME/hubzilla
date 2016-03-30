@@ -797,12 +797,15 @@ function widget_chatroom_list($arr) {
 
 	require_once("include/chat.php");
 	$r = chatroom_list($a->profile['profile_uid']);
-	return replace_macros(get_markup_template('chatroomlist.tpl'), array(
-		'$header' => t('Chat Rooms'),
-		'$baseurl' => z_root(),
-		'$nickname' => $a->profile['channel_address'],
-		'$items' => $r,
-	));
+
+	if($r) {
+		return replace_macros(get_markup_template('chatroomlist.tpl'), array(
+			'$header' => t('Chat Rooms'),
+			'$baseurl' => z_root(),
+			'$nickname' => $a->profile['channel_address'],
+			'$items' => $r,
+		));
+	}
 }
 
 function widget_bookmarkedchats($arr) {

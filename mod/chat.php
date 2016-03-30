@@ -194,42 +194,38 @@ function chat_content(&$a) {
 	}
 
 
-
-
-
-	if(local_channel() && argc() > 2 && argv(2) === 'new') {
-
-		$acl = new Zotlabs\Access\AccessList($channel);
-		$channel_acl = $acl->get();
-
-		require_once('include/acl_selectors.php');
-
-		$o = replace_macros(get_markup_template('chatroom_new.tpl'),array(
-			'$header' => t('New Chatroom'),
-			'$name' => array('room_name',t('Chatroom Name'),'', ''),
-			'$chat_expire' => array('chat_expire',t('Expiration of chats (minutes)'),120,''),
-			'$permissions' =>  t('Permissions'),
-			'$acl' => populate_acl($channel_acl,false),
-			'$submit' => t('Submit')
-		));
-		return $o;
-	}
-
-
-
 	require_once('include/conversation.php');
 
 	$o = profile_tabs($a,((local_channel() && local_channel() == $a->profile['profile_uid']) ? true : false),$a->profile['channel_address']);
 
-	require_once('include/widgets.php');
+	$acl = new Zotlabs\Access\AccessList($channel);
+	$channel_acl = $acl->get();
+
+	$lockstate = (($channel_acl['allow_cid'] || $channel_acl['allow_gid'] || $channel_acl['deny_cid'] || $channel_acl['deny_gid']) ? 'lock' : 'unlock');
+	require_once('include/acl_selectors.php');
+
+	$chatroom_new = replace_macros(get_markup_template('chatroom_new.tpl'),array(
+		'$header' => t('New Chatroom'),
+		'$name' => array('room_name',t('Chatroom name'),'', ''),
+		'$chat_expire' => array('chat_expire',t('Expiration of chats (minutes)'),120,''),
+		'$permissions' =>  t('Permissions'),
+		'$acl' => populate_acl($channel_acl,false),
+		'$lockstate' => $lockstate,
+		'$submit' => t('Submit')
+
+	));
+
+	$rooms = chatroom_list($a->profile['profile_uid']);
 
 	$o .= replace_macros(get_markup_template('chatrooms.tpl'), array(
 		'$header' => sprintf( t('%1$s\'s Chatrooms'), $a->profile['name']),
 		'$baseurl' => z_root(),
-		'$nickname' => $channel['channel_address'],
-		'$rooms' => widget_chatroom_list(array()),
-		'$newroom' => t('New Chatroom'),
-		'$is_owner' => ((local_channel() && local_channel() == $a->profile['profile_uid']) ? 1 : 0)
+		'$nickname' => $a->profile['channel_address'],
+		'$rooms' => $rooms,
+		'$norooms' => t('No chatrooms available'),
+		'$newroom' => t('Create New'),
+		'$is_owner' => ((local_channel() && local_channel() == $a->profile['profile_uid']) ? 1 : 0),
+		'$chatroom_new' => $chatroom_new
 	));
  
 	return $o;

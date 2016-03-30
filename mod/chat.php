@@ -161,6 +161,7 @@ function chat_content(&$a) {
 			intval($room_id),
 			intval($a->profile['profile_uid'])
 		);
+
 		if($x) {
 			$acl = new Zotlabs\Access\AccessList(false);
 			$acl->set($x[0]);
@@ -175,6 +176,11 @@ function chat_content(&$a) {
 			return;
 		}
 
+		$cipher = get_pconfig(local_channel(),'system','default_cipher');
+		if(! $cipher)
+			$cipher = 'aes256';
+
+
 		$o = replace_macros(get_markup_template('chat.tpl'),array(
 			'$is_owner' => ((local_channel() && local_channel() == $x[0]['cr_uid']) ? true : false),
 			'$room_name' => $room_name,
@@ -183,12 +189,16 @@ function chat_content(&$a) {
 			'$nickname' => argv(1),
 			'$submit' => t('Submit'),
 			'$leave' => t('Leave Room'),
-			'$drop' => t('Delete This Room'),
+			'$drop' => t('Delete Room'),
 			'$away' => t('I am away right now'),
 			'$online' => t('I am online'),
 			'$bookmark_link' => $bookmark_link,
-			'$bookmark' => t('Bookmark this room')
-
+			'$bookmark' => t('Bookmark this room'),
+			'$feature_encrypt' => ((feature_enabled(local_channel(),'content_encrypt')) ? true : false),
+			'$cipher' => $cipher,
+			'$linkurl' => t('Please enter a link URL:'),
+			'$encrypt' => t('Encrypt text'),
+			'$insert' => t('Insert web link')
 		));
 		return $o;
 	}
@@ -229,7 +239,7 @@ function chat_content(&$a) {
 		'$norooms' => t('No chatrooms available'),
 		'$newroom' => t('Create New'),
 		'$is_owner' => ((local_channel() && local_channel() == $a->profile['profile_uid']) ? 1 : 0),
-		'$chatroom_new' => $chatroom_new
+		'$chatroom_new' => $chatroom_new,
 	));
  
 	return $o;

@@ -8,5 +8,8 @@
 		{{/foreach}}
 	</ul>
 	{{/if}}
+	<div id="chatSide">
+		<div id="chatUsers"></div>
+	</div>
 </div>
 

@@ -20,77 +20,67 @@
 	padding: 7px 10px;
 }
 
-
- #chatContainer {
-	 height: 100%;
-	 width: 100%;
- }
- 
- #chatTopBar {
-	 float: left;
-	 height: 400px;
-	 width: 77%;
-	 overflow-y: auto;
- }
- 
- #chatSide {
-	 float: right;
-	 width: 20%;
-	 height: 100%;
- }
-
- #chatDrop {
-	margin: 20px 0;
-	float: right;
+section,
+aside {
+	padding-bottom: 0px;
 }
 
- #chatUsers {
-	border: 1px solid #000;
+#chatTopBar {
+	float: left;
+	height: 400px;
+	overflow-y: auto;
 }
 
- #chatBottomBar {
-	 position: relative;
-	 bottom: 0;
-	 height: 150px;
-	 margin-top: 20px;
- }
- 
-#chatOptionsBar {
-	margin-top: 20px;
+
+#chatUsers img {
+	float: left;
+	margin-right: 5px;
 }
 
- #chatText {
-	 width: 100%;
- }
+.name {
+	font-weight: bold;
+}
 
- section {
-	 padding-bottom: 0;
- }
+#chatBottomBar {
+	position: relative;
+	bottom: 0;
+	margin-top: 10px;
+}
 
 .chat-item {
-	padding: 3px;
-}
+	display: table;
+	table-layout: fixed;
 
-.chat-item-end {
-	clear: both;
 }
 
 .chat-item-photo {
-	float: left;
+	display: table-cell;
 	height: 32px;
 	width: 32px;
+	vertical-align: top;
 }
 
 .chat-body {
-	float: left;
-	width: 80%;
-	margin-left: 15px;
+	display: table-cell;
+	vertical-align: top;
+	padding: 0px 0px 20px 10px;
 }
 
-.chat-item-text {
-	float: left;
-	padding: 3px;
+.chat-item-title {
 	display: inline-block;
+	padding: 3px;
+	margin-bottom: 3px;
 }
 
+.online {
+	color: green;
+}
+
+.away {
+	color: orange;
+}
+
+.leave {
+	color: red;
+}
 

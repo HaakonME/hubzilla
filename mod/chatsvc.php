@@ -109,14 +109,16 @@ function chatsvc_content(&$a) {
 				switch($rr['cp_status']) {
 					case 'away':
 						$status = t('Away');
+						$status_class = 'away';
 						break;
 					case 'online':
 					default:
 						$status = t('Online');
+						$status_class = 'online';
 						break;
 				}
 	
-				$inroom[] = array('img' => zid($rr['xchan_photo_m']), 'img_type' => $rr['xchan_photo_mimetype'],'name' => $rr['xchan_name'], status => $status);	
+				$inroom[] = array('img' => zid($rr['xchan_photo_m']), 'img_type' => $rr['xchan_photo_mimetype'],'name' => $rr['xchan_name'], 'status' => $status, 'status_class' => $status_class);
 			}
 		}
 

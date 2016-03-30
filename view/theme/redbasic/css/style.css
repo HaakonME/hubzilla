@@ -1263,7 +1263,8 @@ img.mail-conv-sender-photo {
 
 .wall-item-content,
 .mail-conv-body,
-.page-body {
+.page-body,
+.chat-item-text {
 	font-size: $font_size;
 	clear: both;
 }
@@ -1366,9 +1367,9 @@ img.mail-conv-sender-photo {
 	border-radius: $radiuspx;
 }
 
-.chat-item-text {
+.chat-item-title {
 	border-radius: $radiuspx;
-	background-color: #eee;
+	background-color: $item_colour;
 }
 
 /* nav bootstrap */

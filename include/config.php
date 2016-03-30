@@ -287,6 +287,17 @@ function get_pconfig($uid, $family, $key, $instore = false) {
 function set_pconfig($uid, $family, $key, $value) {
 	global $a;
 
+	// this catches subtle errors where this function has been called 
+	// with local_channel() when not logged in (which returns false)
+	// and throws an error in array_key_exists below. 
+	// we provide a function backtrace in the logs so that we can find
+	// and fix the calling function.
+
+	if($uid === false) {
+		btlogger('UID is FALSE!', LOGGER_NORMAL, LOG_ERR);
+		return;
+	}
+
 	// manage array value
 	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
 	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);

@@ -569,6 +569,25 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
 }
 
+// like logger() but with a function backtrace to pinpoint certain classes
+// of problems which show up deep in the calling stack
+
+
+function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
+
+	logger($msg, $level, $priority);
+	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
+       	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		if($stack) {
+			for($x = 1; $x < count($stack); $x ++) {
+				logger('stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()',$level, $priority);
+		    }
+		}
+	}
+}
+
+
+
 function log_priority_str($priority) {
 	$parr = array(
 		LOG_EMERG   => 'LOG_EMERG',

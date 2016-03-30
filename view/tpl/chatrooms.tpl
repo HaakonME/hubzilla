@@ -12,7 +12,7 @@
 	<div class="section-content-wrapper-np">
 		<table id="chatrooms-index">
 			<tr>
-				<th width="98%">name</th>
+				<th width="98%">{{$name}}</th>
 				<th width="1%" class="chatrooms-index-tool"></th>
 				<th width="1%"></th>
 			</tr>

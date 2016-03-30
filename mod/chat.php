@@ -203,22 +203,26 @@ function chat_content(&$a) {
 
 	$lockstate = (($channel_acl['allow_cid'] || $channel_acl['allow_gid'] || $channel_acl['deny_cid'] || $channel_acl['deny_gid']) ? 'lock' : 'unlock');
 	require_once('include/acl_selectors.php');
+	
+	$chatroom_new = '';
+	if(local_channel()) {
+		$chatroom_new = replace_macros(get_markup_template('chatroom_new.tpl'),array(
+			'$header' => t('New Chatroom'),
+			'$name' => array('room_name',t('Chatroom name'),'', ''),
+			'$chat_expire' => array('chat_expire',t('Expiration of chats (minutes)'),120,''),
+			'$permissions' =>  t('Permissions'),
+			'$acl' => populate_acl($channel_acl,false),
+			'$lockstate' => $lockstate,
+			'$submit' => t('Submit')
 
-	$chatroom_new = replace_macros(get_markup_template('chatroom_new.tpl'),array(
-		'$header' => t('New Chatroom'),
-		'$name' => array('room_name',t('Chatroom name'),'', ''),
-		'$chat_expire' => array('chat_expire',t('Expiration of chats (minutes)'),120,''),
-		'$permissions' =>  t('Permissions'),
-		'$acl' => populate_acl($channel_acl,false),
-		'$lockstate' => $lockstate,
-		'$submit' => t('Submit')
-
-	));
+		));
+	}
 
 	$rooms = chatroom_list($a->profile['profile_uid']);
 
 	$o .= replace_macros(get_markup_template('chatrooms.tpl'), array(
 		'$header' => sprintf( t('%1$s\'s Chatrooms'), $a->profile['name']),
+		'$name' => t('Name'),
 		'$baseurl' => z_root(),
 		'$nickname' => $a->profile['channel_address'],
 		'$rooms' => $rooms,

@@ -804,6 +804,7 @@ function widget_chatroom_list($arr) {
 			'$baseurl' => z_root(),
 			'$nickname' => $a->profile['channel_address'],
 			'$items' => $r,
+			'$overview' => t('Overview')
 		));
 	}
 }

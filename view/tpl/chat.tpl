@@ -1,8 +1,8 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
-			<button id="fullscreen" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();"><i class="icon-resize-full"></i></button>
-			<button id="inline" type="button" class="btn btn-default btn-xs" onclick="makeInline();"><i class="icon-resize-small"></i></button>
+			<button id="fullscreen" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenTopBarHeight();"><i class="icon-resize-full"></i></button>
+			<button id="inline" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false); adjustInlineTopBarHeight();"><i class="icon-resize-small"></i></button>
 			{{if $is_owner}}
 			<form id="chat-destroy" method="post" action="chat">
 				<input type="hidden" name="room_name" value="{{$room_name}}" />
@@ -109,12 +109,16 @@ $(document).ready(function() {
 	chat_timer = setTimeout(load_chats,300);
 	$('#chatroom_bookmarks, #vcard').hide();
 	$('#chatroom_list, #chatroom_members').show();
-	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23 );
+	adjustInlineTopBarHeight();
 });
 
 $(window).resize(function () {
-	var navHeight = $('.generic-content-wrapper').hasClass('fullscreen') ? 0 : $('nav').outerHeight(true);
-	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - navHeight - 23);
+	if($('.generic-content-wrapper').hasClass('fullscreen')) {
+		adjustFullscreenTopBarHeight();
+	}
+	else {
+		adjustInlineTopBarHeight();
+	}
 	$('#chatTopBar').scrollTop($('#chatTopBar').scrollTop() + $('#chatTopBar').outerHeight(true));
 });
 
@@ -177,7 +181,6 @@ function update_chats(chats) {
 
 }
 
-
 function chatJotGetLink() {
 	reply = prompt("{{$linkurl}}");
 	if(reply && reply.length) {
@@ -194,47 +197,39 @@ function addmailtext(data) {
 	$("#chatText").val(currentText + data);
 }
 
-function makeFullScreen() {
-	$('#fullscreen, aside').hide();
-	$('#inline').show();
-	$('.generic-content-wrapper').addClass('fullscreen');
+function adjustFullscreenTopBarHeight() {
 	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 23);
-
 }
 
-function makeInline() {
-	$('#fullscreen, aside').show();
-	$('#inline').hide();
-	$('.generic-content-wrapper').removeClass('fullscreen');
+function adjustInlineTopBarHeight() {
 	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23);
 }
 
-</script>
-<script>
 function isMobile() {
-if( navigator.userAgent.match(/Android/i)
- || navigator.userAgent.match(/webOS/i)
- || navigator.userAgent.match(/iPhone/i)
- || navigator.userAgent.match(/iPad/i)
- || navigator.userAgent.match(/iPod/i)
- || navigator.userAgent.match(/BlackBerry/i)
- || navigator.userAgent.match(/Windows Phone/i)
- ){
-    return true;
-  }
- else {
-    return false;
-  }
-}
-$(function(){
-
-  $('#chatText').keypress(function(e){
-  	if (e.keyCode == 13 && e.shiftKey||isMobile()) {
+	if( navigator.userAgent.match(/Android/i)
+		 || navigator.userAgent.match(/webOS/i)
+		 || navigator.userAgent.match(/iPhone/i)
+		 || navigator.userAgent.match(/iPad/i)
+		 || navigator.userAgent.match(/iPod/i)
+		 || navigator.userAgent.match(/BlackBerry/i)
+		 || navigator.userAgent.match(/Windows Phone/i)
+	 ){
+		return true;
 	}
-    else if (e.keyCode == 13) {
-	  e.preventDefault();
-      $('#chat-form').trigger('submit');
-    }
-  });
+	else {
+		 return false;
+	}
+}
+
+$(function(){
+	$('#chatText').keypress(function(e){
+		if (e.keyCode == 13 && e.shiftKey||isMobile()) {
+			//do nothing
+		}
+		else if (e.keyCode == 13) {
+			e.preventDefault();
+			$('#chat-form').trigger('submit');
+		}
+	});
 });
 </script>

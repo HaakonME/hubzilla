@@ -1451,3 +1451,16 @@ function zid(s) {
 
 	return s;
 }
+
+function makeFullScreen(full) {
+	if(typeof full=='undefined' || full == true) {
+		$('#fullscreen, aside').hide();
+		$('#inline').show();
+		$('.generic-content-wrapper').addClass('fullscreen');
+	}
+	else {
+		$('#fullscreen, aside').show();
+		$('#inline').hide();
+		$('.generic-content-wrapper').removeClass('fullscreen');
+	}
+}

@@ -1518,6 +1518,20 @@ nav .dropdown-menu {
 	word-wrap: break-word;
 }
 
+.generic-content-wrapper.fullscreen {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	border-radius: 0px;
+	z-index: 10000;
+}
+
+.generic-content-wrapper.fullscreen .section-title-wrapper {
+	border-radius: 0px;
+}
+
 .chatroom-index-row:hover td,
 .locs-index-row:hover td,
 [id^="cloud-index-"]:hover td,

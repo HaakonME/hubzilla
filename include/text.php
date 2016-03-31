@@ -386,7 +386,7 @@ function paginate(&$a) {
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$pagenum = $a->pager['page'];
-	$url = $a->get_baseurl() . '/' . $stripped;
+	$url = z_root() . '/' . $stripped;
 
 	if($a->pager['total'] > $a->pager['itemspage']) {
 		$o .= '<div class="pager">';
@@ -443,7 +443,7 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	//$pagenum = $a->pager['page'];
-	$url = $a->get_baseurl() . '/' . $stripped;
+	$url = z_root() . '/' . $stripped;
 
 	return replace_macros(get_markup_template('alt_pager.tpl'), array(
 		'$has_less' => (($a->pager['page'] > 1) ? true : false),
@@ -900,7 +900,7 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 	return replace_macros(get_markup_template('searchbox.tpl'),array(
 		'$s' => $s,
 		'$id' => $id,
-		'$action_url' => $a->get_baseurl((stristr($url,'network')) ? true : false) . $url,
+		'$action_url' => z_root() . $url,
 		'$search_label' => t('Search'),
 		'$save_label' => t('Save'),
 		'$savedsearch' => feature_enabled(local_channel(),'savedsearch')
@@ -1081,41 +1081,41 @@ function list_smilies() {
 	);
 
 	$icons = array(
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="&lt;3" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="&lt;/3" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="&lt;\\3" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-p" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt=":-O" />',                
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o_O" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O_o" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-cry.gif" alt=":\'(" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-undecided.gif" alt=":-/" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-embarassed.gif" alt=":-[" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-cool.gif" alt="8-)" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":beer" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/coffee.gif" alt=":coffee" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
+		'<img class="smiley" src="' . z_root() . '/images/smiley-heart.gif" alt="&lt;3" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-brokenheart.gif" alt="&lt;/3" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-brokenheart.gif" alt="&lt;\\3" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-smile.gif" alt=":-)" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-wink.gif" alt=";-)" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-frown.gif" alt=":-(" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-tongue-out.gif" alt=":-P" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-tongue-out.gif" alt=":-p" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-\"" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-\"" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-x" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-X" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-laughing.gif" alt=":-D" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt="8-|" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt="8-O" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt=":-O" />',                
+		'<img class="smiley" src="' . z_root() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="o.O" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="O.o" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="o_O" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="O_o" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-cry.gif" alt=":\'(" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-undecided.gif" alt=":-/" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-embarassed.gif" alt=":-[" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-cool.gif" alt="8-)" />',
+		'<img class="smiley" src="' . z_root() . '/images/beer_mug.gif" alt=":beer" />',
+		'<img class="smiley" src="' . z_root() . '/images/beer_mug.gif" alt=":homebrew" />',
+		'<img class="smiley" src="' . z_root() . '/images/coffee.gif" alt=":coffee" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
+		'<img class="smiley" src="' . z_root() . '/images/like.gif" alt=":like" />',
+		'<img class="smiley" src="' . z_root() . '/images/dislike.gif" alt=":dislike" />',
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
 
 	);
 
@@ -1192,7 +1192,7 @@ function preg_heart($x) {
 
 	$t = '';
 	for($cnt = 0; $cnt < strlen($x[1]); $cnt ++)
-		$t .= '<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="&lt;3" />';
+		$t .= '<img class="smiley" src="' . z_root() . '/images/smiley-heart.gif" alt="&lt;3" />';
 
 	$r =  str_replace($x[0],$t,$x[0]);
 
@@ -1720,12 +1720,12 @@ function feed_hublinks() {
 function feed_salmonlinks($nick) {
 	$a = get_app();
 
-	$salmon  = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ;
+	$salmon  = '<link rel="salmon" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ;
 
 	// old style links that status.net still needed as of 12/2010 
 
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ; 
 
 	return $salmon;
 }
@@ -2373,8 +2373,8 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 				$basetag = str_replace('_',' ',substr($tag,1));
 
 			//create text for link
-			$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
-			$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
+			$url = z_root() . '/search?tag=' . rawurlencode($basetag);
+			$newtag = '#[zrl=' . z_root() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
 			//replace tag by the link. Make sure to not replace something in the middle of a word
 			// The '=' is needed to not replace color codes if the code is also used as a tag
 			// Much better would be to somehow completely avoiding things in e.g. [color]-tags.

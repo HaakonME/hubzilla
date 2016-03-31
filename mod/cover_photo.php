@@ -354,7 +354,7 @@ function cover_photo_content(&$a) {
 			'$profiles' => $profiles,
 			'$form_security_token' => get_form_security_token("cover_photo"),
 // FIXME - yuk  
-			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
+			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . z_root() . '">' . t('skip this step') . '</a>' : '<a href="'. z_root() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
 		
 		call_hooks('cover_photo_content_end', $o);
@@ -369,7 +369,7 @@ function cover_photo_content(&$a) {
 			'$filename' => $filename,
 			'$profile' => intval($_REQUEST['profile']),
 			'$resource' => $a->data['imagecrop'] . '-3',
-			'$image_url' => $a->get_baseurl() . '/photo/' . $filename,
+			'$image_url' => z_root() . '/photo/' . $filename,
 			'$title' => t('Crop Image'),
 			'$desc' => t('Please adjust the image cropping for optimum viewing.'),
 			'$form_security_token' => get_form_security_token("cover_photo"),

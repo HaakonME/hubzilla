@@ -93,8 +93,8 @@ function events_post(&$a) {
 	//$action = ($event_hash == '') ? 'new' : "event/" . $event_hash;
 
 	//fixme: this url gives a wsod if there is a linebreak detected in one of the variables ($desc or $location)
-	//$onerror_url = $a->get_baseurl() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
-	$onerror_url = $a->get_baseurl() . "/events";
+	//$onerror_url = z_root() . "/events/" . $action . "?summary=$summary&description=$desc&location=$location&start=$start_text&finish=$finish_text&adjust=$adjust&nofinish=$nofinish&type=$type";
+	$onerror_url = z_root() . "/events";
 
 	if(strcmp($finish,$start) < 0 && !$nofinish) {
 		notice( t('Event can not end before it has started.') . EOL);
@@ -282,7 +282,7 @@ function events_content(&$a) {
 
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array(
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => z_root(),
 		'$module_url' => '/events',
 		'$modparams' => 1,
 		'$lang' => $a->language,
@@ -435,7 +435,7 @@ function events_content(&$a) {
 		$tpl = get_markup_template('event_form.tpl');
 
 		$form = replace_macros($tpl,array(
-			'$post' => $a->get_baseurl() . '/events',
+			'$post' => z_root() . '/events',
 			'$eid' => $eid,
 			'$type' => $type,
 			'$xchan' => $event_xchan,
@@ -571,7 +571,7 @@ function events_content(&$a) {
 			foreach($r as $rr) {
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				if(! x($links,$j)) 
-					$links[$j] = $a->get_baseurl() . '/' . $a->cmd . '#link-' . $j;
+					$links[$j] = z_root() . '/' . $a->cmd . '#link-' . $j;
 			}
 		}
 
@@ -600,9 +600,9 @@ function events_content(&$a) {
 					
 				$last_date = $d;
 
-				$edit = ((local_channel() && $rr['author_xchan'] == get_observer_hash()) ? array($a->get_baseurl().'/events/'.$rr['event_hash'].'?expandform=1',t('Edit event'),'','') : false);
+				$edit = ((local_channel() && $rr['author_xchan'] == get_observer_hash()) ? array(z_root().'/events/'.$rr['event_hash'].'?expandform=1',t('Edit event'),'','') : false);
 
-				$drop = array($a->get_baseurl().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');
+				$drop = array(z_root().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');
 
 				$title = strip_tags(html_entity_decode(bbcode($rr['summary']),ENT_QUOTES,'UTF-8'));
 				if(! $title) {
@@ -654,11 +654,11 @@ function events_content(&$a) {
 		}
 
 		$o = replace_macros($tpl, array(
-			'$baseurl'	=> $a->get_baseurl(),
-			'$new_event'	=> array($a->get_baseurl().'/events',(($event_id) ? t('Edit Event') : t('Create Event')),'',''),
-			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
-			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
-			'$export'	=> array($a->get_baseurl()."/events/$y/$m/export",t('Export'),'',''),
+			'$baseurl'	=> z_root(),
+			'$new_event'	=> array(z_root().'/events',(($event_id) ? t('Edit Event') : t('Create Event')),'',''),
+			'$previus'	=> array(z_root()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
+			'$next'		=> array(z_root()."/events/$nextyear/$nextmonth",t('Next'),'',''),
+			'$export'	=> array(z_root()."/events/$y/$m/export",t('Export'),'',''),
 			'$calendar'	=> cal($y,$m,$links, ' eventcal'),
 			'$events'	=> $events,
 			'$upload'	=> t('Import'),

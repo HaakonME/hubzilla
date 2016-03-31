@@ -71,7 +71,7 @@ function cal_content(&$a) {
 
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array(
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => z_root(),
 		'$module_url' => '/cal/' . $channel['channel_address'],
 		'$modparams' => 2,
 		'$lang' => $a->language,
@@ -243,7 +243,7 @@ function cal_content(&$a) {
 			foreach($r as $rr) {
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				if(! x($links,$j)) 
-					$links[$j] = $a->get_baseurl() . '/' . $a->cmd . '#link-' . $j;
+					$links[$j] = z_root() . '/' . $a->cmd . '#link-' . $j;
 			}
 		}
 
@@ -321,11 +321,11 @@ function cal_content(&$a) {
 		$nick = $channel['channel_address'];
 
 		$o = replace_macros($tpl, array(
-			'$baseurl'	=> $a->get_baseurl(),
-			'$new_event'	=> array($a->get_baseurl().'/cal',(($event_id) ? t('Edit Event') : t('Create Event')),'',''),
-			'$previus'	=> array($a->get_baseurl()."/cal/$nick/$prevyear/$prevmonth",t('Previous'),'',''),
-			'$next'		=> array($a->get_baseurl()."/cal/$nick/$nextyear/$nextmonth",t('Next'),'',''),
-			'$export'	=> array($a->get_baseurl()."/cal/$nick/$y/$m/export",t('Export'),'',''),
+			'$baseurl'	=> z_root(),
+			'$new_event'	=> array(z_root().'/cal',(($event_id) ? t('Edit Event') : t('Create Event')),'',''),
+			'$previus'	=> array(z_root()."/cal/$nick/$prevyear/$prevmonth",t('Previous'),'',''),
+			'$next'		=> array(z_root()."/cal/$nick/$nextyear/$nextmonth",t('Next'),'',''),
+			'$export'	=> array(z_root()."/cal/$nick/$y/$m/export",t('Export'),'',''),
 			'$calendar'	=> cal($y,$m,$links, ' eventcal'),
 			'$events'	=> $events,
 			'$upload'	=> t('Import'),

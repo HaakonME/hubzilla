@@ -47,7 +47,7 @@ function editpost_content(&$a) {
 	$channel = $a->get_channel();
 
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => z_root(),
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext' => '',
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
@@ -132,7 +132,7 @@ function editpost_content(&$a) {
 		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
 		'$parent' => (($itm[0]['parent'] != $itm[0]['id']) ? $itm[0]['parent'] : ''),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => z_root(),
 		'$defloc' => $channel['channel_location'],
 		'$visitor' => false,
 		'$public' => t('Public post'),

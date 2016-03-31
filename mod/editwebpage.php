@@ -144,7 +144,7 @@ function editwebpage_content(&$a) {
 		$layoutselect = layout_select($itm[0]['uid'],$itm[0]['layout_mid']);
 
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => z_root(),
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext'  => '',
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
@@ -192,7 +192,7 @@ function editwebpage_content(&$a) {
 		'$ptyp' => $itm[0]['type'],
 		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => z_root(),
 		'$defloc' => $itm[0]['location'],
 		'$visitor' => ($is_owner) ? true : false,
 		'$acl' => populate_acl($itm[0],false),

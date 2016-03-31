@@ -46,12 +46,12 @@ function notifications_post(&$a) {
 					intval(local_channel())
 				);
 			}
-			goaway($a->get_baseurl(true) . '/notifications/intros');
+			goaway(z_root() . '/notifications/intros');
 		}
 		if($_POST['submit'] == t('Ignore')) {
 			$r = q("UPDATE `intro` SET `ignore` = 1 WHERE `id` = %d",
 				intval($intro_id));
-			goaway($a->get_baseurl(true) . '/notifications/intros');
+			goaway(z_root() . '/notifications/intros');
 		}
 	}
 }
@@ -84,7 +84,7 @@ function notifications_content(&$a) {
 			$notifications_available =1;
 			foreach ($r as $it) {
 				$notif_content .= replace_macros($not_tpl,array(
-					'$item_link' => $a->get_baseurl(true).'/notify/view/'. $it['id'],
+					'$item_link' => z_root().'/notify/view/'. $it['id'],
 					'$item_image' => $it['photo'],
 					'$item_text' => strip_tags(bbcode($it['msg'])),
 					'$item_when' => relative_date($it['date'])

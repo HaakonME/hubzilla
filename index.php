@@ -166,7 +166,7 @@ $Router->Dispatch($a);
 if(x($_SESSION, 'visitor_home')) {
 	$homebase = $_SESSION['visitor_home'];
 } elseif(local_channel()) {
-	$homebase = $a->get_baseurl() . '/channel/' . $a->channel['channel_address'];
+	$homebase = z_root() . '/channel/' . $a->channel['channel_address'];
 }
 
 if(isset($homebase)) {

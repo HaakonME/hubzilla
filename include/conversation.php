@@ -844,7 +844,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 
 	$o .= replace_macros($page_template, array(
-		'$baseurl' => $a->get_baseurl($ssl_state),
+		'$baseurl' => z_root(),
 		'$photo_item' => $content_html,
 		'$live_update' => $live_update_div,
 		'$remove' => t('remove'),
@@ -871,7 +871,7 @@ function best_link_url($item) {
 	if((local_channel()) && (local_channel() == $item['uid'])) {
 		if(isset($a->contacts) && x($a->contacts,$clean_url)) {
 			if($a->contacts[$clean_url]['network'] === NETWORK_DFRN) {
-				$best_url = $a->get_baseurl($ssl_state) . '/redir/' . $a->contacts[$clean_url]['id'];
+				$best_url = z_root() . '/redir/' . $a->contacts[$clean_url]['id'];
 				$sparkle = true;
 			}
 			else
@@ -925,7 +925,7 @@ function item_photo_menu($item){
 
 	$profile_link = chanlink_hash($item['author_xchan']);
 	if($item['uid'] > 0)
-		$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
+		$pm_url = z_root() . '/mail/new/?f=&hash=' . $item['author_xchan'];
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
 		$contact = $a->contacts[$item['author_xchan']];
@@ -934,10 +934,10 @@ function item_photo_menu($item){
 			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
 
 	if($contact) {
-		$poke_link = $a->get_baseurl($ssl_state) . '/poke/?f=&c=' . $contact['abook_id'];
+		$poke_link = z_root() . '/poke/?f=&c=' . $contact['abook_id'];
 		if (! intval($contact['abook_self']))  
-			$contact_url = $a->get_baseurl($ssl_state) . '/connedit/' . $contact['abook_id'];
-		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $contact['abook_id'];
+			$contact_url = z_root() . '/connedit/' . $contact['abook_id'];
+		$posts_link = z_root() . '/network/?cid=' . $contact['abook_id'];
 
 		$clean_url = normalise_link($item['author-link']);
 	}
@@ -1161,7 +1161,7 @@ function status_editor($a, $x, $popup = false) {
 
 	$a->page['htmlhead'] .= replace_macros($tpl, array(
 		'$newpost' => 'true',
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext' => ((x($x,'pretext')) ? $x['pretext'] : ''),
 		'$geotag' => $geotag,
@@ -1203,7 +1203,7 @@ function status_editor($a, $x, $popup = false) {
 
 	$o .= replace_macros($tpl, array(
 		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : $a->query_string),
-		'$action' =>  $a->get_baseurl(true) . '/item',
+		'$action' =>  z_root() . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$webpage' => $webpage,
 		'$placeholdpagetitle' => ((x($x,'ptlabel')) ? $x['ptlabel'] : t('Page link name')),
@@ -1246,7 +1246,7 @@ function status_editor($a, $x, $popup = false) {
 		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8') : ''),
 		'$attachment' => ((x($x, 'attachment')) ? $x['attachment'] : ''),
 		'$post_id' => '',
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$defloc' => $x['default_location'],
 		'$visitor' => $x['visitor'],
 		'$public' => t('Public post'),
@@ -1617,8 +1617,8 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if (x($_GET, 'tab'))
 		$tab = notags(trim($_GET['tab']));
 
-	$url = $a->get_baseurl() . '/channel/' . $nickname;
-	$pr  = $a->get_baseurl() . '/profile/' . $nickname;
+	$url = z_root() . '/channel/' . $nickname;
+	$pr  = z_root() . '/profile/' . $nickname;
 
 	$tabs = array(
 		array(
@@ -1644,14 +1644,14 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if ($p['view_storage']) {
 		$tabs[] = array(
 			'label' => t('Photos'),
-			'url'   => $a->get_baseurl() . '/photos/' . $nickname,
+			'url'   => z_root() . '/photos/' . $nickname,
 			'sel'   => ((argv(0) == 'photos') ? 'active' : ''),
 			'title' => t('Photo Albums'),
 			'id'    => 'photo-tab',
 		);
 		$tabs[] = array(
 			'label' => t('Files'),
-			'url'   => $a->get_baseurl() . '/cloud/' . $nickname,
+			'url'   => z_root() . '/cloud/' . $nickname,
 			'sel'   => ((argv(0) == 'cloud' || argv(0) == 'sharedwithme') ? 'active' : ''),
 			'title' => t('Files and Storage'),
 			'id'    => 'files-tab',
@@ -1661,7 +1661,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if($p['view_stream'] && $cal_link) {
 		$tabs[] = array(
 			'label' => t('Events'),
-			'url'   => $a->get_baseurl() . $cal_link,
+			'url'   => z_root() . $cal_link,
 			'sel'   => ((argv(0) == 'cal' || argv(0) == 'events') ? 'active' : ''),
 			'title' => t('Events'),
 			'id'    => 'event-tab',
@@ -1675,7 +1675,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		if ($has_chats) {
 			$tabs[] = array(
 				'label' => t('Chatrooms'),
-				'url'   => $a->get_baseurl() . '/chat/' . $nickname,
+				'url'   => z_root() . '/chat/' . $nickname,
 				'sel'   => ((argv(0) == 'chat') ? 'active' : '' ),
 				'title' => t('Chatrooms'),
 				'id'    => 'chat-tab',
@@ -1688,7 +1688,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if ($is_owner && $has_bookmarks) {
 		$tabs[] = array(
 			'label' => t('Bookmarks'),
-			'url'   => $a->get_baseurl() . '/bookmarks',
+			'url'   => z_root() . '/bookmarks',
 			'sel'   => ((argv(0) == 'bookmarks') ? 'active' : ''),
 			'title' => t('Saved Bookmarks'),
 			'id'    => 'bookmarks-tab',
@@ -1698,7 +1698,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if ($p['write_pages'] && feature_enabled($uid,'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
-			'url'   => $a->get_baseurl() . '/webpages/' . $nickname,
+			'url'   => z_root() . '/webpages/' . $nickname,
 			'sel'   => ((argv(0) == 'webpages') ? 'active' : ''),
 			'title' => t('Manage Webpages'),
 			'id'    => 'webpages-tab',

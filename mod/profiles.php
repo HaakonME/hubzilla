@@ -17,7 +17,7 @@ function profiles_init(&$a) {
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
-			goaway($a->get_baseurl(true) . '/profiles');
+			goaway(z_root() . '/profiles');
 			return; // NOTREACHED
 		}
 		$profile_guid = $r['profile_guid'];
@@ -44,7 +44,7 @@ function profiles_init(&$a) {
 
 		// profiles_build_sync(local_channel());
 
-		goaway($a->get_baseurl(true) . '/profiles');
+		goaway(z_root() . '/profiles');
 		return; // NOTREACHED
 	}
 
@@ -83,9 +83,9 @@ function profiles_init(&$a) {
 
 		info( t('New profile created.') . EOL);
 		if(count($r3) == 1)
-			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
+			goaway(z_root() . '/profiles/' . $r3[0]['id']);
 		
-		goaway($a->get_baseurl(true) . '/profiles');
+		goaway(z_root() . '/profiles');
 	} 
 
 	if((argc() > 2) && (argv(1) === 'clone')) {
@@ -129,9 +129,9 @@ function profiles_init(&$a) {
 		profiles_build_sync(local_channel());
 
 		if(($r3) && (count($r3) == 1))
-			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
+			goaway(z_root() . '/profiles/' . $r3[0]['id']);
 		
-		goaway($a->get_baseurl(true) . '/profiles');
+		goaway(z_root() . '/profiles');
 		
 		return; // NOTREACHED
 	}
@@ -629,7 +629,7 @@ function profiles_content(&$a) {
 //			$editselect = 'textareas';
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
-			'$baseurl'    => $a->get_baseurl(true),
+			'$baseurl'    => z_root(),
 			'$editselect' => $editselect,
 		));
 
@@ -703,7 +703,7 @@ function profiles_content(&$a) {
 			'$lbl_gender'   => t('Your gender'),
 			'$lbl_marital'  => t('Marital status'),
 			'$lbl_sexual'   => t('Sexual preference'),
-			'$baseurl'      => $a->get_baseurl(true),
+			'$baseurl'      => z_root(),
 			'$profile_id'   => $r[0]['id'],
 			'$profile_name' => array('profile_name', t('Profile name'), $r[0]['profile_name'], t('Required'), '*'),
 			'$is_default'   => $is_default,
@@ -767,7 +767,7 @@ function profiles_content(&$a) {
 					'$profile_name' => $rr['profile_name'],
 					'$visible' => (($rr['is_default']) 
 						? '<strong>' . translate_scope(map_scope($channel['channel_r_profile'])) . '</strong>' 
-						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
+						: '<a href="' . z_root() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
 

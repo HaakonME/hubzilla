@@ -510,13 +510,13 @@ function widget_settings_menu($arr) {
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/account',
+			'url' 	=> z_root().'/settings/account',
 			'selected'	=> ((argv(1) === 'account') ? 'active' : ''),
 		),
 
 		array(
 			'label'	=> t('Channel settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/channel',
+			'url' 	=> z_root().'/settings/channel',
 			'selected'	=> ((argv(1) === 'channel') ? 'active' : ''),
 		),
 
@@ -525,27 +525,27 @@ function widget_settings_menu($arr) {
 	if(get_features()) {
 		$tabs[] = 	array(
 				'label'	=> t('Additional features'),
-				'url' 	=> $a->get_baseurl(true).'/settings/features',
+				'url' 	=> z_root().'/settings/features',
 				'selected'	=> ((argv(1) === 'features') ? 'active' : ''),
 		);
 	}
 
 	$tabs[] =	array(
 		'label'	=> t('Feature/Addon settings'),
-		'url' 	=> $a->get_baseurl(true).'/settings/featured',
+		'url' 	=> z_root().'/settings/featured',
 		'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
 	);
 
 	$tabs[] =	array(
 		'label'	=> t('Display settings'),
-		'url' 	=> $a->get_baseurl(true).'/settings/display',
+		'url' 	=> z_root().'/settings/display',
 		'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
 	);
 
 	if($hublocs) {
 		$tabs[] = array(
 			'label' => t('Manage locations'),
-			'url' => $a->get_baseurl(true) . '/locs',
+			'url' => z_root() . '/locs',
 			'selected' => ((argv(1) === 'locs') ? 'active' : ''),
 		);
 	}
@@ -554,21 +554,21 @@ function widget_settings_menu($arr) {
 	if(! UNO) {
 		$tabs[] =	array(
 			'label' => t('Export channel'),
-			'url' => $a->get_baseurl(true) . '/uexport',
+			'url' => z_root() . '/uexport',
 			'selected' => ''
 		);
 	}
 
 	$tabs[] =	array(
 		'label' => t('Connected apps'),
-		'url' => $a->get_baseurl(true) . '/settings/oauth',
+		'url' => z_root() . '/settings/oauth',
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
 
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(
 			'label' => t('Connection Default Permissions'),
-			'url' => $a->get_baseurl(true) . '/connedit/' . $abook_self_id,
+			'url' => z_root() . '/connedit/' . $abook_self_id,
 			'selected' => ''
 		);
 	}
@@ -576,7 +576,7 @@ function widget_settings_menu($arr) {
 	if(feature_enabled(local_channel(),'premium_channel')) {
 		$tabs[] = array(
 			'label' => t('Premium Channel Settings'),
-			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
+			'url' => z_root() . '/connect/' . $channel['channel_address'],
 			'selected' => ''
 		);
 	}
@@ -584,7 +584,7 @@ function widget_settings_menu($arr) {
 	if(feature_enabled(local_channel(),'channel_sources')) {
 		$tabs[] = array(
 			'label' => t('Channel Sources'),
-			'url' => $a->get_baseurl(true) . '/sources',
+			'url' => z_root() . '/sources',
 			'selected' => ''
 		);
 	}
@@ -608,22 +608,22 @@ function widget_mailmenu($arr) {
 		'$title' => t('Private Mail Menu'),
 		'$combined'=>array(
 			'label' => t('Combined View'),
-			'url' => $a->get_baseurl(true) . '/mail/combined',
+			'url' => z_root() . '/mail/combined',
 			'sel' => (argv(1) == 'combined'),
 		),
 		'$inbox'=>array(
 			'label' => t('Inbox'),
-			'url' => $a->get_baseurl(true) . '/mail/inbox',
+			'url' => z_root() . '/mail/inbox',
 			'sel' => (argv(1) == 'inbox'),
 		),
 		'$outbox'=>array(
 			'label' => t('Outbox'),
-			'url' => $a->get_baseurl(true) . '/mail/outbox',
+			'url' => z_root() . '/mail/outbox',
 			'sel' => (argv(1) == 'outbox'),
 		),
 		'$new'=>array(
 			'label' => t('New Message'),
-			'url' => $a->get_baseurl(true) . '/mail/new',
+			'url' => z_root() . '/mail/new',
 			'sel'=> (argv(1) == 'new'),
 		)
 	));

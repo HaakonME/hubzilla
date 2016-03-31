@@ -291,7 +291,7 @@ function setup_content(&$a) {
 				'$next' => t('Next'),
 				'$reload' => t('Check again'),
 				'$phpath' => $phpath,
-				'$baseurl' => $a->get_baseurl(),
+				'$baseurl' => z_root(),
 			));
 			return $o;
 		}; break;
@@ -329,7 +329,7 @@ function setup_content(&$a) {
 				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
 				'$lbl_10' => t('Please select a default timezone for your website'),
 
-				'$baseurl' => $a->get_baseurl(),
+				'$baseurl' => z_root(),
 
 				'$phpath' => $phpath,
 
@@ -372,7 +372,7 @@ function setup_content(&$a) {
 
 				'$timezone' => array('timezone', t('Please select a default timezone for your website'), $timezone, '', get_timezones()),
 
-				'$baseurl' => $a->get_baseurl(),
+				'$baseurl' => z_root(),
 
 				'$submit' => t('Submit'),
 			));
@@ -633,7 +633,7 @@ function check_htaccess(&$checks) {
 	$help = '';
 	$ssl_error = false;
 
-	$url = $a->get_baseurl() . '/setup/testrewrite';
+	$url = z_root() . '/setup/testrewrite';
 
 	if (function_exists('curl_init')){
 		$test = z_fetch_url($url);
@@ -733,7 +733,7 @@ function what_next() {
 	require_once ('include/identity.php');
 	create_sys_channel();
 
-	$baseurl = $a->get_baseurl();
+	$baseurl = z_root();
 	return
 		t('<h1>What next</h1>')
 		."<p>".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.')

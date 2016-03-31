@@ -33,7 +33,7 @@ function profile_init(&$a) {
 		$profile = $r[0]['profile_guid'];
 	}
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which .'" />' . "\r\n" ;
 
 	if(! $profile) {
 		$x = q("select channel_id as profile_uid from channel where channel_address = '%s' limit 1",

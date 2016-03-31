@@ -89,7 +89,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			if($update)
 				killme();
 			notice( t('No such group') . EOL );
-			goaway($a->get_baseurl(true) . '/network');
+			goaway(z_root() . '/network');
 			// NOTREACHED
 		}
 
@@ -129,7 +129,7 @@ function network_content(&$a, $update = 0, $load = false) {
 				killme();
 			}
 			notice( t('No such channel') . EOL );
-			goaway($a->get_baseurl(true) . '/network');
+			goaway(z_root() . '/network');
 			// NOTREACHED
 		}
 		if($_GET['pf'] === '1')
@@ -242,7 +242,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		}
 		else {
 			notice( t('Invalid connection.') . EOL);
-			goaway($a->get_baseurl(true) . '/network');
+			goaway(z_root() . '/network');
 		}
 	}
 

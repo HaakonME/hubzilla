@@ -2966,7 +2966,7 @@ function send_status_notifications($post_id,$item) {
 	if($unfollowed)
 		return;
 
-	$link =  get_app()->get_baseurl() . '/display/' . $item['mid'];
+	$link =  z_root() . '/display/' . $item['mid'];
 
 	$y = q("select id from notify where link = '%s' and uid = %d limit 1",
 		dbesc($link),
@@ -4297,7 +4297,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 	$a = get_app();
 
 	logger('fix_private_photos', LOGGER_DEBUG);
-	$site = substr($a->get_baseurl(),strpos($a->get_baseurl(),'://'));
+	$site = substr(z_root(),strpos(z_root(),'://'));
 
 	$orig_body = $s;
 	$new_body = '';
@@ -4589,7 +4589,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
-		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		goaway(z_root() . '/' . $_SESSION['return_url']);
 	}
 
 	$item = $r[0];
@@ -4662,13 +4662,13 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		if((intval($item['item_wall']) && ($stage != DROPITEM_PHASE2)) || ($stage == DROPITEM_PHASE1))
 			proc_run('php','include/notifier.php','drop',$notify_id);
 
-		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		goaway(z_root() . '/' . $_SESSION['return_url']);
 	}
 	else {
 		if(! $interactive)
 			return 0;
 		notice( t('Permission denied.') . EOL);
-		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		goaway(z_root() . '/' . $_SESSION['return_url']);
 	}
 }
 

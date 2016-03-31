@@ -602,7 +602,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 					continue;
 			}
 
-			$hostname = str_replace('www.','',substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3));
+			$hostname = str_replace('www.','',substr(z_root(),strpos(z_root(),'://')+3));
 			if(stristr($mtch[3],$hostname))
 				continue;
 

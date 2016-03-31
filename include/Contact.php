@@ -235,7 +235,7 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		notice( sprintf(t("User '%s' deleted"),$account_email) . EOL);
-		goaway(get_app()->get_baseurl());
+		goaway(z_root());
 	}
 	return $r;
 
@@ -390,7 +390,7 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 
 	if($channel_id == local_channel() && $unset_session) {
 		nuke_session();
-		goaway($a->get_baseurl());
+		goaway(z_root());
 	}
 
 }

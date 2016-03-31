@@ -321,9 +321,9 @@ function create_identity($arr) {
 		dbesc($guid),
 		dbesc($sig),
 		dbesc($key['pubkey']),
-		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
-		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}"),
-		dbesc($a->get_baseurl() . "/photo/profile/s/{$newuid}"),
+		dbesc(z_root() . "/photo/profile/l/{$newuid}"),
+		dbesc(z_root() . "/photo/profile/m/{$newuid}"),
+		dbesc(z_root() . "/photo/profile/s/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
 		dbesc(z_root() . '/channel/' . $ret['channel']['channel_address']),
 		dbesc(z_root() . '/follow?f=&url=%s'),
@@ -347,8 +347,8 @@ function create_identity($arr) {
 		1,
 		$publish,
 		dbesc($ret['channel']['channel_name']),
-		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
-		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}")
+		dbesc(z_root() . "/photo/profile/l/{$newuid}"),
+		dbesc(z_root() . "/photo/profile/m/{$newuid}")
 	);
 
 	if($role_permissions) {
@@ -929,11 +929,11 @@ function profile_edit_menu($uid) {
 		$multi_profiles = feature_enabled(local_channel(), 'multi_profiles');
 		if($multi_profiles) {
 			$ret['multi'] = 1;
-			$ret['edit'] = array($a->get_baseurl(). '/profiles', t('Edit Profiles'), '', t('Edit'));
+			$ret['edit'] = array(z_root(). '/profiles', t('Edit Profiles'), '', t('Edit'));
 			$ret['menu']['cr_new'] = t('Create New Profile');
 		}
 		else {
-			$ret['edit'] = array($a->get_baseurl() . '/profiles/' . $uid, t('Edit Profile'), '', t('Edit'));
+			$ret['edit'] = array(z_root() . '/profiles/' . $uid, t('Edit Profile'), '', t('Edit'));
 		}
 
 		$r = q("SELECT * FROM profile WHERE uid = %d",
@@ -1159,7 +1159,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 					$url = $rr['url'];
 					if($rr['network'] === NETWORK_DFRN) {
 						$sparkle = " sparkle";
-						$url = $a->get_baseurl() . '/redir/'  . $rr['cid'];
+						$url = z_root() . '/redir/'  . $rr['cid'];
 					}
 	
 					$rr['link'] = $url;
@@ -1172,7 +1172,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		}
 		$tpl = get_markup_template("birthdays_reminder.tpl");
 		return replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => z_root(),
 			'$classtoday' => $classtoday,
 			'$count' => $total,
 			'$event_reminders' => t('Birthday Reminders'),
@@ -1244,7 +1244,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 		$tpl = get_markup_template("events_reminder.tpl");
 		return replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(),
+			'$baseurl' => z_root(),
 			'$classtoday' => $classtoday,
 			'$count' => count($r),
 			'$event_reminders' => t('Event Reminders'),

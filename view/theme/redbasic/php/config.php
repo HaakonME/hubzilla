@@ -97,7 +97,7 @@ if(feature_enabled(local_channel(),'expert'))
 	  $t = get_markup_template('theme_settings.tpl');
 	  $o .= replace_macros($t, array(
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(),
+		'$baseurl' => z_root(),
 		'$theme' => $a->channel['channel_theme'],
 		'$expert' => $expert,
 		'$title' => t("Theme settings"),

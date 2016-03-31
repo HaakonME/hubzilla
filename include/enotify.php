@@ -56,7 +56,7 @@ function notification($params) {
 
 	$banner     = t('$Projectname Notification');
 	$product    = t('$projectname'); // PLATFORM_NAME;
-	$siteurl    = $a->get_baseurl(true);
+	$siteurl    = z_root();
 	$thanks     = t('Thank You,');
 	$sitename   = get_config('system','sitename');
 	$site_admin = sprintf( t('%s Administrator'), $sitename);
@@ -419,7 +419,7 @@ function notification($params) {
 		return;
 	}
 
-	$itemlink = $a->get_baseurl() . '/notify/view/' . $notify_id;
+	$itemlink = z_root() . '/notify/view/' . $notify_id;
 	$msg = str_replace('$itemlink',$itemlink,$epreamble);
 
 	// wretched hack, but we don't want to duplicate all the preamble variations and we also don't want to screw up a translation

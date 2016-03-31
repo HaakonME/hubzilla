@@ -57,7 +57,7 @@ function settings_post(&$a) {
 		q("DELETE FROM tokens WHERE id='%s' AND uid=%d",
 			dbesc($key),
 			local_channel());
-		goaway($a->get_baseurl(true)."/settings/oauth/");
+		goaway(z_root()."/settings/oauth/");
 		return;			
 	}
 
@@ -114,7 +114,7 @@ function settings_post(&$a) {
 				);
 			}
 		}
-		goaway($a->get_baseurl(true)."/settings/oauth/");
+		goaway(z_root()."/settings/oauth/");
 		return;
 	}
 
@@ -211,7 +211,7 @@ function settings_post(&$a) {
 	
 		call_hooks('display_settings_post', $_POST);
 		build_sync_packet();
-		goaway($a->get_baseurl(true) . '/settings/display' );
+		goaway(z_root() . '/settings/display' );
 		return; // NOTREACHED
 	}
 
@@ -294,7 +294,7 @@ function settings_post(&$a) {
 			foreach($errs as $err)
 				notice($err . EOL);
 		}
-		goaway($a->get_baseurl(true) . '/settings/account' );
+		goaway(z_root() . '/settings/account' );
 	}
 
 
@@ -563,7 +563,7 @@ function settings_post(&$a) {
 
 	}
 
-	goaway($a->get_baseurl(true) . '/settings' );
+	goaway(z_root() . '/settings' );
 	return; // NOTREACHED
 }
 		
@@ -637,7 +637,7 @@ function settings_content(&$a) {
 			$r = q("DELETE FROM clients WHERE client_id='%s' AND uid=%d",
 					dbesc(argv(3)),
 					local_channel());
-			goaway($a->get_baseurl(true)."/settings/oauth/");
+			goaway(z_root()."/settings/oauth/");
 			return;			
 		}
 		
@@ -653,7 +653,7 @@ function settings_content(&$a) {
 		$tpl = get_markup_template("settings_oauth.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_oauth"),
-			'$baseurl'	=> $a->get_baseurl(true),
+			'$baseurl'	=> z_root(),
 			'$title'	=> t('Connected Apps'),
 			'$add'		=> t('Add application'),
 			'$edit'		=> t('Edit'),
@@ -847,7 +847,7 @@ function settings_content(&$a) {
 			'$d_cset'       => t('Content Settings'),
 			'$form_security_token' => get_form_security_token("settings_display"),
 			'$submit' 	=> t('Submit'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 			'$uid' => local_channel(),
 		
 			'$theme'	=> (($themes) ? array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview') : false),
@@ -989,7 +989,7 @@ function settings_content(&$a) {
 
 		));
 
-		$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/channel/' . $nickname : '');
+		$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . z_root() . '/channel/' . $nickname : '');
 
 		$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
@@ -1039,7 +1039,7 @@ function settings_content(&$a) {
 			'$ptitle' 	=> t('Channel Settings'),
 
 			'$submit' 	=> t('Submit'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 			'$uid' => local_channel(),
 			'$form_security_token' => get_form_security_token("settings"),
 			'$nickname_block' => $prof_addr,

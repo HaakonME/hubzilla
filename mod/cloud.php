@@ -30,7 +30,7 @@ function cloud_init(&$a) {
 
 	$profile = 0;
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which . '" />' . "\r\n";
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which . '" />' . "\r\n";
 
 	if ($which)
 		profile_load($a, $which, $profile);

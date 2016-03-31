@@ -97,7 +97,7 @@ class Item extends BaseObject {
 		$mode = $conv->get_mode();
 
 		if(local_channel() && $observer['xchan_hash'] === $item['author_xchan'])
-			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
+			$edpost = array(z_root()."/editpost/".$item['id'], t("Edit"));
 		else
 			$edpost = false;
 

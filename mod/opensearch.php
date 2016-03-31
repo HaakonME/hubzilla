@@ -7,7 +7,7 @@ function opensearch_init(&$a) {
 	header("Content-type: application/opensearchdescription+xml");
 	
 	$o = replace_macros($tpl, array(
-		'$baseurl'  => $a->get_baseurl(),
+		'$baseurl'  => z_root(),
 		'$nodename' => $a->get_hostname(),
 	));
 		

@@ -73,7 +73,7 @@ function connedit_post(&$a) {
 
 	if(! $orig_record) {
 		notice( t('Could not access contact record.') . EOL);
-		goaway($a->get_baseurl(true) . '/connections');
+		goaway(z_root() . '/connections');
 		return; // NOTREACHED
 	}
 
@@ -306,7 +306,7 @@ function connedit_post(&$a) {
 	connedit_clone($a);
 
 	if(($_REQUEST['pending']) && (!$_REQUEST['done']))
-		goaway($a->get_baseurl(true) . '/connections/ifpending');
+		goaway(z_root() . '/connections/ifpending');
 
 	return;
 
@@ -405,13 +405,13 @@ function connedit_content(&$a) {
 
 		if(! count($orig_record)) {
 			notice( t('Could not access address book record.') . EOL);
-			goaway($a->get_baseurl(true) . '/connections');
+			goaway(z_root() . '/connections');
 		}
 
 		if($cmd === 'update') {
 			// pull feed and consume it, which should subscribe to the hub.
 			proc_run('php',"include/poller.php","$contact_id");
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 
 		}
 
@@ -425,7 +425,7 @@ function connedit_content(&$a) {
 				// if you are on a different network we'll force a refresh of the connection basic info
 				proc_run('php','include/notifier.php','permission_update',$contact_id);
 			}
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'block') {
@@ -434,7 +434,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'ignore') {
@@ -443,7 +443,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'archive') {
@@ -452,7 +452,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'hide') {
@@ -461,7 +461,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		// We'll prevent somebody from unapproving an already approved contact.
@@ -475,7 +475,7 @@ function connedit_content(&$a) {
 				else
 					notice(t('Unable to set address book parameters.') . EOL);
 			}
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 
@@ -499,8 +499,8 @@ function connedit_content(&$a) {
 
 			info( t('Connection has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
-				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
-			goaway($a->get_baseurl(true) . '/contacts');
+				goaway(z_root() . '/' . $_SESSION['return_url']);
+			goaway(z_root() . '/contacts');
 
 		}
 	}
@@ -521,21 +521,21 @@ function connedit_content(&$a) {
 
 			'refresh' => array(
 				'label' => t('Refresh Permissions'),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/refresh',
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/refresh',
 				'sel'   => '',
 				'title' => t('Fetch updated permissions'),
 			),
 
 			'recent' => array(
 				'label' => t('Recent Activity'),
-				'url'   => $a->get_baseurl(true) . '/network/?f=&cid=' . $contact['abook_id'],
+				'url'   => z_root() . '/network/?f=&cid=' . $contact['abook_id'],
 				'sel'   => '',
 				'title' => t('View recent posts and comments'),
 			),
 
 			'block' => array(
 				'label' => (intval($contact['abook_blocked']) ? t('Unblock') : t('Block')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block',
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/block',
 				'sel'   => (intval($contact['abook_blocked']) ? 'active' : ''),
 				'title' => t('Block (or Unblock) all communications with this connection'),
 				'info'   => (intval($contact['abook_blocked']) ? t('This connection is blocked!') : ''),
@@ -543,7 +543,7 @@ function connedit_content(&$a) {
 
 			'ignore' => array(
 				'label' => (intval($contact['abook_ignored']) ? t('Unignore') : t('Ignore')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore',
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/ignore',
 				'sel'   => (intval($contact['abook_ignored']) ? 'active' : ''),
 				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
 				'info'   => (intval($contact['abook_ignored']) ? t('This connection is ignored!') : ''),
@@ -551,7 +551,7 @@ function connedit_content(&$a) {
 
 			'archive' => array(
 				'label' => (intval($contact['abook_archived']) ? t('Unarchive') : t('Archive')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive',
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/archive',
 				'sel'   => (intval($contact['abook_archived']) ? 'active' : ''),
 				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
 				'info'   => (intval($contact['abook_archived']) ? t('This connection is archived!') : ''),
@@ -559,7 +559,7 @@ function connedit_content(&$a) {
 
 			'hide' => array(
 				'label' => (intval($contact['abook_hidden']) ? t('Unhide') : t('Hide')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide',
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/hide',
 				'sel'   => (intval($contact['abook_hidden']) ? 'active' : ''),
 				'title' => t('Hide or Unhide this connection from your other connections'),
 				'info'   => (intval($contact['abook_hidden']) ? t('This connection is hidden!') : ''),
@@ -567,7 +567,7 @@ function connedit_content(&$a) {
 
 			'delete' => array(
 				'label' => t('Delete'),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/drop',
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/drop',
 				'sel'   => '',
 				'title' => t('Delete this connection'),
 			),

@@ -169,7 +169,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			$r = attach_by_hash_nodata($hash,$rev);
 			if($r['success']) {
 				$attachments[] = array(
-					'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+					'href'     => z_root() . '/attach/' . $r['data']['hash'],
 					'length'   =>  $r['data']['filesize'],
 					'type'     => $r['data']['filetype'],
 					'title'    => urlencode($r['data']['filename']),
@@ -225,7 +225,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	if(count($images)) {
 		foreach($images as $image) {
-			if(! stristr($image,$a->get_baseurl() . '/photo/'))
+			if(! stristr($image,z_root() . '/photo/'))
 				continue;
 			$image_uri = substr($image,strrpos($image,'/') + 1);
 			$image_uri = substr($image_uri,0, strpos($image_uri,'-'));

@@ -52,7 +52,7 @@ function removeaccount_content(&$a) {
 	$_SESSION['remove_account_verify'] = $hash;
 	$tpl = get_markup_template('removeaccount.tpl');
 	$o .= replace_macros($tpl, array(
-		'$basedir' => $a->get_baseurl(),
+		'$basedir' => z_root(),
 		'$hash' => $hash,
 		'$title' => t('Remove This Account'),
 		'$desc' => array(t('WARNING: '), t('This account and all its channels will be completely removed from the network. '), t('This action is permanent and can not be undone!')),

@@ -1206,7 +1206,7 @@ function clean_urls() {
 function z_path() {
 	global $a;
 
-	$base = $a->get_baseurl();
+	$base = z_root();
 	if(! clean_urls())
 		$base .= '/?q=';
 
@@ -1293,7 +1293,7 @@ function check_config(&$a) {
 	// This will actually set the url to the one stored in .htconfig, and ignore what
 	// we're passing - unless we are installing and it has never been set.
 
-	$a->set_baseurl($a->get_baseurl());
+	$a->set_baseurl(z_root());
 
 	// Make sure each site has a system channel.  This is now created on install
 	// so we just need to keep this around a couple of weeks until the hubs that
@@ -1355,12 +1355,12 @@ function check_config(&$a) {
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
 								'$sitename' => $a->config['system']['sitename'],
-								'$siteurl' =>  $a->get_baseurl(),
+								'$siteurl' =>  z_root(),
 								'$update' => $x,
 								'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
 							));
 
-							$subject = email_header_encode(sprintf(t('Update Error at %s'), $a->get_baseurl()));
+							$subject = email_header_encode(sprintf(t('Update Error at %s'), z_root()));
 
 							mail($a->config['system']['admin_email'], $subject, $email_msg,
 								'From: Administrator' . '@' . $_SERVER['SERVER_NAME'] . "\n"
@@ -1535,7 +1535,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'link' => (($register) ? $reglink : 'pubsites')
 	);
 
-	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
+	$dest_url = z_root() . '/' . $a->query_string;
 
 	if(local_channel()) {
 		$tpl = get_markup_template("logout.tpl");
@@ -2177,10 +2177,10 @@ function construct_page(&$a) {
 
 	if($a->is_mobile || $a->is_tablet) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
-			$link = $a->get_baseurl() . '/toggle_mobile?f=&address=' . curPageURL();
+			$link = z_root() . '/toggle_mobile?f=&address=' . curPageURL();
 		}
 		else {
-			$link = $a->get_baseurl() . '/toggle_mobile?f=&off=1&address=' . curPageURL();
+			$link = z_root() . '/toggle_mobile?f=&off=1&address=' . curPageURL();
 		}
 		if ((isset($_SESSION) && $_SESSION['mobile_theme'] !='' && $_SESSION['mobile_theme'] !='---' ) ||
 			(isset($a->config['system']['mobile_theme']) && !isset($_SESSION['mobile_theme']))) {
@@ -2338,7 +2338,7 @@ function cert_bad_email() {
 	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
 		'$sitename' => $a->config['system']['sitename'],
-		'$siteurl' =>  $a->get_baseurl(),
+		'$siteurl' =>  z_root(),
 		'$error' => t('Website SSL certificate is not valid. Please correct.')
 	));
 
@@ -2378,7 +2378,7 @@ function check_cron_broken() {
 	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
 		'$sitename' => $a->config['system']['sitename'],
-		'$siteurl' =>  $a->get_baseurl(),
+		'$siteurl' =>  z_root(),
 		'$error' => t('Cron/Scheduled tasks not running.'),
 		'$lastdate' => (($d)? $d : t('never'))
 	));

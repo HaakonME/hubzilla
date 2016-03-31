@@ -17,7 +17,7 @@ function match_content(&$a) {
 	if (! local_channel())
 		return;
 
-	$_SESSION['return_url'] = $a->get_baseurl() . '/' . $a->cmd;
+	$_SESSION['return_url'] = z_root() . '/' . $a->cmd;
 
 	$o .= '<h2>' . t('Profile Match') . '</h2>';
 
@@ -43,7 +43,7 @@ function match_content(&$a) {
 //		if(strlen(get_config('system','directory_submit_url')))
 //			$x = post_url('http://dir.friendica.com/msearch', $params);
 //		else
-//			$x = post_url($a->get_baseurl() . '/msearch', $params);
+//			$x = post_url(z_root() . '/msearch', $params);
 
 		$j = json_decode($x);
 
@@ -55,7 +55,7 @@ function match_content(&$a) {
 		if (count($j->results)) {
 			$tpl = get_markup_template('match.tpl');
 			foreach ($j->results as $jj) {
-				$connlnk = $a->get_baseurl() . '/follow/?url=' . $jj->url;
+				$connlnk = z_root() . '/follow/?url=' . $jj->url;
 				$o .= replace_macros($tpl,array(
 					'$url' => zid($jj->url),
 					'$name' => $jj->name,

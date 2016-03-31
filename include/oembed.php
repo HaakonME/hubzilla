@@ -195,7 +195,7 @@ function oembed_format_object($j){
 				
 				}
 				$ret.=replace_macros($tpl, array(
-                    '$baseurl' => $a->get_baseurl(),
+                    '$baseurl' => z_root(),
 					'$embedurl'=>$embedurl,
 					'$escapedhtml'=>base64_encode($jhtml),
 					'$tw'=>$tw,

@@ -149,7 +149,7 @@ function mail_content(&$a) {
 		if($r) {
 			//info( t('Message deleted.') . EOL );
 		}
-		goaway($a->get_baseurl(true) . '/mail/' . $mailbox);
+		goaway(z_root() . '/mail/' . $mailbox);
 	}
 
 	if((argc() == 4) && (argv(2) === 'recall')) {
@@ -174,7 +174,7 @@ function mail_content(&$a) {
 		if($r) {
 				info( t('Message recalled.') . EOL );
 		}
-		goaway($a->get_baseurl(true) . '/mail/' . $mailbox . '/' . argv(3));
+		goaway(z_root() . '/mail/' . $mailbox . '/' . argv(3));
 
 	}
 
@@ -186,7 +186,7 @@ function mail_content(&$a) {
 		$r = private_messages_drop(local_channel(), argv(3), true);
 		if($r)
 			info( t('Conversation removed.') . EOL );
-		goaway($a->get_baseurl(true) . '/mail/' . $mailbox);
+		goaway(z_root() . '/mail/' . $mailbox);
 	}
 
 	if((argc() > 1) && (argv(1) === 'new')) {
@@ -196,7 +196,7 @@ function mail_content(&$a) {
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$header = replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $channel['channel_address'],
 			'$linkurl' => t('Please enter a link URL:'),
@@ -311,7 +311,7 @@ function mail_content(&$a) {
 	
 	$a->page['htmlhead'] .= replace_macros($tpl, array(
 		'$nickname' => $channel['channel_address'],
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$linkurl' => t('Please enter a link URL:'),
 		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')

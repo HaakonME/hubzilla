@@ -495,10 +495,10 @@ function get_theme_screenshot($theme) {
 	$exts = array('.png', '.jpg');
 	foreach($exts as $ext) {
 		if(file_exists('view/theme/' . $theme . '/img/screenshot' . $ext))
-			return($a->get_baseurl() . '/view/theme/' . $theme . '/img/screenshot' . $ext);
+			return(z_root() . '/view/theme/' . $theme . '/img/screenshot' . $ext);
 	}
 
-	return($a->get_baseurl() . '/images/blank.png');
+	return(z_root() . '/images/blank.png');
 }
 
 /**

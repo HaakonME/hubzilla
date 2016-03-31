@@ -93,12 +93,12 @@ function photos_post(&$a) {
 
 		if($album === t('Profile Photos')) {
 			// not allowed
-			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+			goaway(z_root() . '/' . $_SESSION['photo_return']);
 		}
 
 		if(! photos_album_exists($page_owner_uid,$album)) {
 			notice( t('Album not found.') . EOL);
-			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+			goaway(z_root() . '/' . $_SESSION['photo_return']);
 		}
 
 
@@ -111,12 +111,12 @@ function photos_post(&$a) {
 
 			// @fixme - syncronise with DAV or disallow completely
 
-			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+			goaway(z_root() . '/' . $_SESSION['photo_return']);
 
 //			$x = photos_album_rename($page_owner_uid,$album,$newalbum);
 //			if($x) {
 //				$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
-//				goaway($a->get_baseurl() . '/' . $newurl);
+//				goaway(z_root() . '/' . $newurl);
 //			}
 		}
 
@@ -140,7 +140,7 @@ function photos_post(&$a) {
 				$str = null;
 			}
 			if(! $str) {
-				goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+				goaway(z_root() . '/' . $_SESSION['photo_return']);
 			}
 
 			$r = q("select id from item where resource_id in ( $str ) and resource_type = 'photo' and uid = %d " . item_normal(),
@@ -165,7 +165,7 @@ function photos_post(&$a) {
 
 		}
 		
-		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address']);
+		goaway(z_root() . '/photos/' . $a->data['channel']['channel_address']);
 	}
 
 	if((argc() > 2) && (x($_REQUEST,'delete')) && ($_REQUEST['delete'] === t('Delete Photo'))) {
@@ -174,7 +174,7 @@ function photos_post(&$a) {
 
 		$ob_hash = get_observer_hash();
 		if(! $ob_hash)
-			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+			goaway(z_root() . '/' . $_SESSION['photo_return']);
 
 		$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE ( xchan = '%s' or `uid` = %d ) AND `resource_id` = '%s' LIMIT 1",
 			dbesc($ob_hash),
@@ -197,12 +197,12 @@ function photos_post(&$a) {
 			);
 			if(count($i)) {
 				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
-				$url = $a->get_baseurl();
+				$url = z_root();
 			}
 */
 		}
 
-		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
+		goaway(z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
 	}
 
 
@@ -440,7 +440,7 @@ function photos_post(&$a) {
 
 		}
 	
-		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+		goaway(z_root() . '/' . $_SESSION['photo_return']);
 		return; // NOTREACHED
 
 	}
@@ -470,9 +470,9 @@ function photos_post(&$a) {
 	}		
 	
 	if($_REQUEST['newalbum'])
-		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($_REQUEST['newalbum']));
+		goaway(z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($_REQUEST['newalbum']));
 	else
-		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex(datetime_convert('UTC',date_default_timezone_get(),'now', 'Y')));		
+		goaway(z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex(datetime_convert('UTC',date_default_timezone_get(),'now', 'Y')));		
 
 }
 
@@ -571,7 +571,7 @@ function photos_content(&$a) {
 
 		$uploader = '';
 
-		$ret = array('post_url' => $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'],
+		$ret = array('post_url' => z_root() . '/photos/' . $a->data['channel']['channel_address'],
 				'addon_text' => $uploader,
 				'default_upload' => true);
 
@@ -684,7 +684,7 @@ function photos_content(&$a) {
 			$a->set_pager_total(count($r));
 			$a->set_pager_itemspage(60);
 		} else {
-			goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address']);
+			goaway(z_root() . '/photos/' . $a->data['channel']['channel_address']);
 		}
 
 		if($_GET['order'] === 'posted')
@@ -731,9 +731,9 @@ function photos_content(&$a) {
 		}
 
 		if($_GET['order'] === 'posted')
-			$order =  array(t('Show Newest First'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album));
+			$order =  array(t('Show Newest First'), z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album));
 		else
-			$order = array(t('Show Oldest First'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '?f=&order=posted');
+			$order = array(t('Show Oldest First'), z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($album) . '?f=&order=posted');
 
 		$photos = array();
 		if(count($r)) {
@@ -750,7 +750,7 @@ function photos_content(&$a) {
 				$imgalt_e = $rr['filename'];
 				$desc_e = $rr['description'];
 
-				$imagelink = ($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
+				$imagelink = (z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
 				. (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''));
 
 				$photos[] = array(
@@ -758,7 +758,7 @@ function photos_content(&$a) {
 					'twist' => ' ' . $twist . rand(2,4),
 					'link' => $imagelink,
 					'title' => t('View Photo'),
-					'src' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
+					'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
 					'alt' => $imgalt_e,
 					'desc'=> $desc_e,
 					'ext' => $ext,
@@ -790,7 +790,7 @@ function photos_content(&$a) {
 				'$album_id' => bin2hex($album),
 				'$album_edit' => array(t('Edit Album'), $album_edit),
 				'$can_post' => $can_post,
-				'$upload' => array(t('Upload'), $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
+				'$upload' => array(t('Upload'), z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album)),
 				'$order' => $order,
 				'$upload_form' => $upload_form,
 				'$usage' => $usage_message
@@ -871,8 +871,8 @@ function photos_content(&$a) {
 				}
 			}
 
-			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$prv]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
-			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$nxt]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+			$prevlink = z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$prv]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+			$nextlink = z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$nxt]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
  		}
 
 
@@ -889,14 +889,14 @@ function photos_content(&$a) {
 			}
 		}
 
-		$album_link = $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($ph[0]['album']);
+		$album_link = z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($ph[0]['album']);
  		$tools = Null;
  		$lock = Null;
  
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 			$tools = array(
-				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource_id'], t('Use as profile photo')),
-				'cover'=>array($a->get_baseurl() . '/cover_photo/use/'.$ph[0]['resource_id'], t('Use as cover photo')),
+				'profile'=>array(z_root() . '/profile_photo/use/'.$ph[0]['resource_id'], t('Use as profile photo')),
+				'cover'=>array(z_root() . '/cover_photo/use/'.$ph[0]['resource_id'], t('Use as cover photo')),
 			);
 		}
 
@@ -917,9 +917,9 @@ function photos_content(&$a) {
 			$prevlink = array($prevlink, t('Previous'));
 
 		$photo = array(
-			'href' => $a->get_baseurl() . '/photo/' . $hires['resource_id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
+			'href' => z_root() . '/photo/' . $hires['resource_id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
 			'title'=> t('View Full Size'),
-			'src'  => $a->get_baseurl() . '/photo/' . $lores['resource_id'] . '-' . $lores['scale'] . '.' . $phototypes[$lores['type']] . '?f=&_u=' . datetime_convert('','','','ymdhis')
+			'src'  => z_root() . '/photo/' . $lores['resource_id'] . '-' . $lores['scale'] . '.' . $phototypes[$lores['type']] . '?f=&_u=' . datetime_convert('','','','ymdhis')
 		);
 
 		if($nextlink)
@@ -1123,7 +1123,7 @@ function photos_content(&$a) {
 					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
 						continue;
 
-					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+					$redirect_url = z_root() . '/redir/' . $item['cid'] ;
 			
 
 					$profile_url = zid($item['author']['xchan_url']);
@@ -1297,12 +1297,12 @@ function photos_content(&$a) {
 			$photos[] = array(
 				'id'       => $rr['id'],
 				'twist'    => ' ' . $twist . rand(2,4),
-				'link'  	=> $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id'],
+				'link'  	=> z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id'],
 				'title' 	=> t('View Photo'),
-				'src'     	=> $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.' . $ext,
+				'src'     	=> z_root() . '/photo/' . $rr['resource_id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.' . $ext,
 				'alt'     	=> $alt_e,
 				'album'	=> array(
-					'link'  => $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($rr['album']),
+					'link'  => z_root() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($rr['album']),
 					'name'  => $name_e,
 					'alt'   => t('View Album'),
 				),
@@ -1331,7 +1331,7 @@ function photos_content(&$a) {
 			'$title' => t('Recent Photos'),
 			'$album_id' => bin2hex(t('Recent Photos')),
 			'$can_post' => $can_post,
-			'$upload' => array(t('Upload'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
+			'$upload' => array(t('Upload'), z_root().'/photos/'.$a->data['channel']['channel_address'].'/upload'),
 			'$photos' => $photos,
 			'$upload_form' => $upload_form,
 			'$usage' => $usage_message

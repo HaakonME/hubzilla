@@ -189,8 +189,8 @@ function profile_photo_post(&$a) {
 				}
 				else {
 					$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d",
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-4'),
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-5'),
+						dbesc(z_root() . '/photo/' . $base_image['resource_id'] . '-4'),
+						dbesc(z_root() . '/photo/' . $base_image['resource_id'] . '-5'),
 						intval($_REQUEST['profile']),
 						intval(local_channel())
 					);
@@ -225,7 +225,7 @@ function profile_photo_post(&$a) {
 				notice( t('Unable to process image') . EOL);
 		}
 
-		goaway($a->get_baseurl() . '/profiles');
+		goaway(z_root() . '/profiles');
 		return; // NOTREACHED
 	}
 
@@ -345,7 +345,7 @@ function profile_photo_content(&$a) {
 
 			profile_photo_set_profile_perms(); //Reset default photo permissions to public
 			proc_run('php','include/directory.php',local_channel());
-			goaway($a->get_baseurl() . '/profiles');
+			goaway(z_root() . '/profiles');
 		}
 
 		$r = q("SELECT `data`, `type`, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
@@ -404,7 +404,7 @@ function profile_photo_content(&$a) {
 			'$profile0' => $profiles[0],
 			'$form_security_token' => get_form_security_token("profile_photo"),
 // FIXME - yuk  
-			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
+			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . z_root() . '">' . t('skip this step') . '</a>' : '<a href="'. z_root() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
 		
 		call_hooks('profile_photo_content_end', $o);
@@ -419,7 +419,7 @@ function profile_photo_content(&$a) {
 			'$filename' => $filename,
 			'$profile' => intval($_REQUEST['profile']),
 			'$resource' => $a->data['imagecrop'] . '-' . $a->data['imagecrop_resolution'],
-			'$image_url' => $a->get_baseurl() . '/photo/' . $filename,
+			'$image_url' => z_root() . '/photo/' . $filename,
 			'$title' => t('Crop Image'),
 			'$desc' => t('Please adjust the image cropping for optimum viewing.'),
 			'$form_security_token' => get_form_security_token("profile_photo"),

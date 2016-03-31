@@ -126,7 +126,7 @@ function common_friends_visitor_widget($profile_uid) {
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
 		'$desc' =>  sprintf( tt("%d connection in common", "%d connections in common", $t), $t),
-		'$base' => $a->get_baseurl(),
+		'$base' => z_root(),
 		'$uid' => $profile_uid,
 		'$cid' => $observer,
 		'$linkmore' => (($t > 5) ? 'true' : ''),

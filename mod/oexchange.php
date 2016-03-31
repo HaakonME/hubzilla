@@ -6,7 +6,7 @@ function oexchange_init(&$a) {
 	if((argc() > 1) && (argv(1) === 'xrd')) {
 		$tpl = get_markup_template('oexchange_xrd.tpl');
 
-		$o = replace_macros($tpl, array('$base' => $a->get_baseurl()));
+		$o = replace_macros($tpl, array('$base' => z_root()));
 		echo $o;
 		killme();
 	}
@@ -47,7 +47,7 @@ function oexchange_content(&$a) {
 	$tags = (((x($_REQUEST,'tags')) && strlen($_REQUEST['tags'])) 
 		? '&tags=' . urlencode(notags(trim($_REQUEST['tags']))) : '');
 
-	$ret = z_fetch_url($a->get_baseurl() . '/urlinfo?f=&url=' . $url . $title . $description . $tags);
+	$ret = z_fetch_url(z_root() . '/urlinfo?f=&url=' . $url . $title . $description . $tags);
 
 	if($ret['success'])
 		$s = $ret['body'];

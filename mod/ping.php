@@ -224,7 +224,7 @@ function ping_init(&$a) {
 		if(count($z)) {
 			foreach($z as $zz) {
 				$notifs[] = array(
-					'notify_link' => $a->get_baseurl() . '/notify/view/' . $zz['id'], 
+					'notify_link' => z_root() . '/notify/view/' . $zz['id'], 
 					'name' => $zz['name'],
 					'url' => $zz['url'],
 					'photo' => $zz['photo'],
@@ -251,7 +251,7 @@ function ping_init(&$a) {
 		if($t) {
 			foreach($t as $zz) {
 				$notifs[] = array(
-					'notify_link' => $a->get_baseurl() . '/mail/' . $zz['id'], 
+					'notify_link' => z_root() . '/mail/' . $zz['id'], 
 					'name' => $zz['xchan_name'],
 					'url' => $zz['xchan_url'],
 					'photo' => $zz['xchan_photo_s'],
@@ -299,7 +299,7 @@ function ping_init(&$a) {
 		if($r) {
 			foreach($r as $rr) {
 				$result[] = array(
-					'notify_link' => $a->get_baseurl() . '/connections/ifpending',
+					'notify_link' => z_root() . '/connections/ifpending',
 					'name' => $rr['xchan_name'],
 					'url' => $rr['xchan_url'],
 					'photo' => $rr['xchan_photo_s'],
@@ -341,7 +341,7 @@ function ping_init(&$a) {
 				$when = day_translate(datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
 
 				$result[] = array(
-					'notify_link' => $a->get_baseurl() . '/events', // FIXME this takes you to an edit page and it may not be yours, we really want to just view the single event  --> '/events/event/' . $rr['event_hash'],
+					'notify_link' => z_root() . '/events', // FIXME this takes you to an edit page and it may not be yours, we really want to just view the single event  --> '/events/event/' . $rr['event_hash'],
 					'name'        => $rr['xchan_name'],
 					'url'         => $rr['xchan_url'],
 					'photo'       => $rr['xchan_photo_s'],

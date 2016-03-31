@@ -109,7 +109,7 @@ function editblock_content(&$a) {
 		$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
-		'$baseurl'       => $a->get_baseurl(),
+		'$baseurl'       => z_root(),
 		'$editselect'    => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext'       => '',
 		'$ispublic'      => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
@@ -153,7 +153,7 @@ function editblock_content(&$a) {
 		'$mimeselect'          => $mimeselect,
 		'$content'             => undo_post_tagging($itm[0]['body']),
 		'$post_id'             => $post_id,
-		'$baseurl'             => $a->get_baseurl(),
+		'$baseurl'             => z_root(),
 		'$defloc'              => $channel['channel_location'],
 		'$visitor'             => false,
 		'$public'              => t('Public post'),

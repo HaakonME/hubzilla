@@ -324,7 +324,7 @@ function directory_content(&$a) {
 							'online' => $online,
 							'kw' => (($out) ? t('Keywords: ') : ''),
 							'keywords' => $out,
-							'ignlink' => $suggest ? $a->get_baseurl() . '/directory?ignore=' . $rr['hash'] : '',
+							'ignlink' => $suggest ? z_root() . '/directory?ignore=' . $rr['hash'] : '',
 							'ignore_label' => t('Don\'t suggest'),
 							'common_friends' => (($common[$rr['address']]) ? intval($common[$rr['address']]) : ''),
 							'common_label' => t('Common connections:'),

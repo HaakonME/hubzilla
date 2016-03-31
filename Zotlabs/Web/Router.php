@@ -94,7 +94,7 @@ class Router {
 
 				if((x($_SERVER, 'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && $a->config['system']['dreamhost_error_hack']) {
 					logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
-					goaway($a->get_baseurl() . $_SERVER['REQUEST_URI']);
+					goaway(z_root() . $_SERVER['REQUEST_URI']);
 				}
 
 				logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);

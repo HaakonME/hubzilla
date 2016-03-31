@@ -68,7 +68,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 			$return_url = '';
 
 		unset($_SESSION['login_return_url']);
-		goaway($a->get_baseurl() . '/' . $return_url);
+		goaway(z_root() . '/' . $return_url);
 	}
 
 	/* This account has never created a channel. Send them to new_channel by default */
@@ -127,7 +127,7 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(), strpos(get_app()->get_baseurl(), '://') + 3);
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(z_root(), strpos(z_root(), '://') + 3);
 
 			get_app()->set_observer($x[0]);
 			get_app()->set_perms(get_all_perms(local_channel(), $hash));
@@ -393,7 +393,7 @@ function check_form_security_token_redirectOnErr($err_redirect, $typename = '', 
 		logger('check_form_security_token failed: user ' . $a->user['guid'] . ' - form element ' . $typename);
 		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
 		notice( check_form_security_std_err_msg() );
-		goaway($a->get_baseurl() . $err_redirect );
+		goaway(z_root() . $err_redirect );
 	}
 }
 function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'form_security_token') {

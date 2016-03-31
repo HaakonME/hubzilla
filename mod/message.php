@@ -32,7 +32,7 @@ function message_content(&$a) {
 		$r = private_messages_drop(local_channel(), argv(2), true);
 		if($r)
 			info( t('Conversation removed.') . EOL );
-		goaway($a->get_baseurl(true) . '/mail/combined' );
+		goaway(z_root() . '/mail/combined' );
 	}
 
 	if(argc() == 2) {

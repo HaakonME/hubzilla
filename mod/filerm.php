@@ -27,7 +27,7 @@ function filerm_content(&$a) {
 	}
 
 	if(x($_SESSION,'return_url'))
-		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		goaway(z_root() . '/' . $_SESSION['return_url']);
 	
 	killme();
 }

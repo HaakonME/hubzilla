@@ -40,7 +40,7 @@ function admin_post(&$a){
 							$func($a);
 						}
 				}
-				goaway($a->get_baseurl(true) . '/admin/plugins/' . argv(2) );
+				goaway(z_root() . '/admin/plugins/' . argv(2) );
 				break;
 			case 'themes':
 				$theme = argv(2);
@@ -54,7 +54,7 @@ function admin_post(&$a){
 				info(t('Theme settings updated.'));
 				if(is_ajax()) return;
 
-				goaway($a->get_baseurl(true) . '/admin/themes/' . $theme );
+				goaway(z_root() . '/admin/themes/' . $theme );
 				break;
 			case 'logs':
 				admin_page_logs_post($a);
@@ -77,7 +77,7 @@ function admin_post(&$a){
 		}
 	}
 
-	goaway($a->get_baseurl(true) . '/admin' );
+	goaway(z_root() . '/admin' );
 }
 
 /**
@@ -337,7 +337,7 @@ function admin_page_site_post(&$a){
 	set_config('system','curl_timeout', $timeout);
 
 	info( t('Site settings updated.') . EOL);
-	goaway($a->get_baseurl(true) . '/admin/site' );
+	goaway(z_root() . '/admin/site' );
 }
 
 /**
@@ -460,7 +460,7 @@ function admin_page_site(&$a) {
 		'$corporate' => t('Policies'),
 		'$advanced' => t('Advanced'),
 
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		// name, label, value, help string, extra data...
 		'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
@@ -536,7 +536,7 @@ function admin_page_hubloc_post(&$a){
 		//after repair set hubloc flags to 0
 	}
 
-	goaway($a->get_baseurl(true) . '/admin/hubloc' );
+	goaway(z_root() . '/admin/hubloc' );
 }
 
 function trim_array_elems($arr) {
@@ -659,7 +659,7 @@ function admin_page_hubloc(&$a) {
 
 	if(! $hubloc){
 		notice( t('No server found') . EOL);
-		goaway($a->get_baseurl(true) . '/admin/hubloc');
+		goaway(z_root() . '/admin/hubloc');
 	}
 
 	$t = get_markup_template('admin_hubloc.tpl');
@@ -733,7 +733,7 @@ function admin_page_dbsync(&$a) {
 		if(intval(get_config('system','db_version')) <= intval(argv(3)))
 			set_config('system','db_version',intval(argv(3)) + 1);
 		info( t('Update has been marked successful') . EOL);
-		goaway($a->get_baseurl(true) . '/admin/dbsync');
+		goaway(z_root() . '/admin/dbsync');
 	}
 
 	if(argc() > 2 && intval(argv(2))) {
@@ -771,7 +771,7 @@ function admin_page_dbsync(&$a) {
 		return '<div class="generic-content-wrapper-styled"><h3>' . t('No failed updates.') . '</h3></div>';
 
 	$o = replace_macros(get_markup_template('failed_updates.tpl'),array(
-		'$base' => $a->get_baseurl(true),
+		'$base' => z_root(),
 		'$banner' => t('Failed Updates'),
 		'$desc' => '',
 		'$mark' => t('Mark success (if update was manually applied)'),
@@ -871,7 +871,7 @@ function admin_page_users_post($a) {
 		}
 	}
 
-	goaway($a->get_baseurl(true) . '/admin/users' );
+	goaway(z_root() . '/admin/users' );
 }
 
 /**
@@ -893,7 +893,7 @@ function admin_page_users(&$a){
 
 		if (! $account) {
 			notice( t('Account not found') . EOL);
-			goaway($a->get_baseurl(true) . '/admin/users' );
+			goaway(z_root() . '/admin/users' );
 		}
 
 		check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
@@ -924,7 +924,7 @@ function admin_page_users(&$a){
 				break;
 		}
 
-		goaway($a->get_baseurl(true) . '/admin/users' );
+		goaway(z_root() . '/admin/users' );
 	}
 
 	/* get pending */
@@ -1003,7 +1003,7 @@ function admin_page_users(&$a){
 		'$form_security_token' => get_form_security_token("admin_users"),
 
 		// values //
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 
 		'$pending' => $pending,
 		'$users' => $users,
@@ -1053,7 +1053,7 @@ function admin_page_channels_post(&$a) {
 		notice( sprintf( tt("%s channel deleted", "%s channels deleted", count($channels)), count($channels)) );
 	}
 
-	goaway($a->get_baseurl(true) . '/admin/channels' );
+	goaway(z_root() . '/admin/channels' );
 }
 
 /**
@@ -1071,7 +1071,7 @@ function admin_page_channels(&$a){
 
 		if (! $channel) {
 			notice( t('Channel not found') . EOL);
-			goaway($a->get_baseurl(true) . '/admin/channels' );
+			goaway(z_root() . '/admin/channels' );
 		}
 
 		switch(argv(2)) {
@@ -1110,7 +1110,7 @@ function admin_page_channels(&$a){
 			default: 
 				break;
 		}
-		goaway($a->get_baseurl(true) . '/admin/channels' );
+		goaway(z_root() . '/admin/channels' );
 	}
 
 	/* get channels */
@@ -1163,7 +1163,7 @@ function admin_page_channels(&$a){
 		'$form_security_token' => get_form_security_token("admin_channels"),
 
 		// values //
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$channels' => $channels,
 	));
 	$o .= paginate($a);
@@ -1222,7 +1222,7 @@ function admin_page_plugins(&$a){
 				info( sprintf( t("Plugin %s enabled."), $plugin ) );
 			}
 			set_config("system","addon", implode(", ",$a->plugins));
-			goaway($a->get_baseurl(true) . '/admin/plugins' );
+			goaway(z_root() . '/admin/plugins' );
 		}
 		// display plugin details
 		require_once('library/markdown.php');
@@ -1264,7 +1264,7 @@ function admin_page_plugins(&$a){
 			'$page' => t('Plugins'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 
 			'$plugin' => $plugin,
 			'$status' => $status,
@@ -1324,7 +1324,7 @@ function admin_page_plugins(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Plugins'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$function' => 'plugins',
 		'$plugins' => $plugins,
 		'$disabled' => t('Disabled - version incompatibility'),
@@ -1448,7 +1448,7 @@ function admin_page_themes(&$a){
 				info( sprintf('Theme %s disabled.', $theme));
 
 			set_config('system', 'allowed_themes', $s);
-			goaway($a->get_baseurl(true) . '/admin/themes' );
+			goaway(z_root() . '/admin/themes' );
 		}
 
 		// display theme details
@@ -1486,7 +1486,7 @@ function admin_page_themes(&$a){
 			'$page' => t('Themes'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 		
 			'$plugin' => $theme,
 			'$status' => $status,
@@ -1519,7 +1519,7 @@ function admin_page_themes(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Themes'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$function' => 'themes',
 		'$plugins' => $xthemes,
 		'$experimental' => t('[Experimental]'),
@@ -1548,7 +1548,7 @@ function admin_page_logs_post(&$a) {
 	}
 
 	info( t('Log settings updated.') );
-	goaway($a->get_baseurl(true) . '/admin/logs' );
+	goaway(z_root() . '/admin/logs' );
 }
 
 /**
@@ -1606,7 +1606,7 @@ readable.");
 		'$submit' => t('Submit'),
 		'$clear' => t('Clear'),
 		'$data' => $data,
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$logname' =>  get_config('system','logfile'),
 
 		// name, label, value, help string, extra data...

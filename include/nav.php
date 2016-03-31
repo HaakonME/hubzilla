@@ -56,7 +56,7 @@ EOT;
 		$banner = get_config('system','sitename');
 
 	$a->page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
-        '$baseurl' => $a->get_baseurl(),
+        '$baseurl' => z_root(),
 		'$sitelocation' => $sitelocation,
 		'$banner' =>  $banner
 	));
@@ -230,12 +230,12 @@ EOT;
 // turned off until somebody discovers this and figures out a good location for it. 
 $powered_by = '';
 
-//	$powered_by = '<strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="r#" />matrix</strong>';
+//	$powered_by = '<strong>red<img class="smiley" src="' . z_root() . '/images/rm-16.png" alt="r#" />matrix</strong>';
 
 	$tpl = get_markup_template('nav.tpl');
 
 	$a->page['nav'] .= replace_macros($tpl, array(
-        '$baseurl' => $a->get_baseurl(),
+        '$baseurl' => z_root(),
 		'$sitelocation' => $sitelocation,
 		'$nav' => $x['nav'],
 		'$banner' =>  $banner,

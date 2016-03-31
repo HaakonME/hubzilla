@@ -653,61 +653,63 @@ class ZotlabsAutoloader {
  */
 class App {
 
-	public  $install    = false;           // true if we are installing the software
+	public  static $install    = false;           // true if we are installing the software
 
-	public  $account    = null;            // account record of the logged-in account
-	public  $channel    = null;            // channel record of the current channel of the logged-in account
-	public  $observer   = null;            // xchan record of the page observer
-	public  $profile_uid = 0;              // If applicable, the channel_id of the "page owner"
-	public  $poi        = null;            // "person of interest", generally a referenced connection
-	private $oauth_key  = null;            // consumer_id of oauth request, if used
-	public  $layout     = array();         // Comanche parsed template
-	public  $pdl        = null;            // Comanche page description
-	private $perms      = null;            // observer permissions
-	private $widgets    = array();         // widgets for this page
+	public  static $account    = null;            // account record of the logged-in account
+	public  static $channel    = null;            // channel record of the current channel of the logged-in account
+	public  static $observer   = null;            // xchan record of the page observer
+	public  static $profile_uid = 0;              // If applicable, the channel_id of the "page owner"
+	public  static $poi        = null;            // "person of interest", generally a referenced connection
+	private static $oauth_key  = null;            // consumer_id of oauth request, if used
+	public  static $layout     = array();         // Comanche parsed template
+	public  static $pdl        = null;            // Comanche page description
+	private static $perms      = null;            // observer permissions
+	private static $widgets    = array();         // widgets for this page
 
-	public  $groups;
-	public  $language;
-	public  $module_loaded = false;
-	public  $query_string;
-	public  $config;                       // config cache
-	public  $page;
-	public  $profile;
-	public  $user;
-	public  $cid;
-	public  $contact;
-	public  $contacts;
-	public  $content;
-	public  $data = array();
-	public  $error = false;
-	public  $cmd;
-	public  $argv;
-	public  $argc;
-	public  $module;
-	public  $pager;
-	public  $strings;
-	public  $hooks;
-	public  $timezone;
-	public  $interactive = true;
-	public  $plugins;
-	private $apps = array();
-	public  $identities;
-	public  $css_sources = array();
-	public  $js_sources = array();
-	public  $theme_info = array();
-	public  $is_sys = false;
-	public  $nav_sel;
+	public static  $groups;
+	public static  $language;
+	public static  $module_loaded = false;
+	public static  $query_string;
+	public static  $config;                       // config cache
+	public static  $page;
+	public static  $profile;
+	public static  $user;
+	public static  $cid;
+	public static  $contact;
+	public static  $contacts;
+	public static  $content;
+	public static  $data = array();
+	public static  $error = false;
+	public static  $cmd;
+	public static  $argv;
+	public static  $argc;
+	public static  $module;
+	public static  $pager;
+	public static  $strings;
+	public static  $hooks;
+	public static  $timezone;
+	public static  $interactive = true;
+	public static  $plugins;
+	private static $apps = array();
+	public static  $identities;
+	public static  $css_sources = array();
+	public static  $js_sources = array();
+	public static  $theme_info = array();
+	public static  $is_sys = false;
+	public static  $nav_sel;
+	public static $is_mobile = false;
+	public static $is_tablet = false;
 
-	public  $category;
+	public static  $category;
 
 	// Allow themes to control internal parameters
 	// by changing App values in theme.php
 
-	public  $sourcename = '';
-	public  $videowidth = 425;
-	public  $videoheight = 350;
-	public  $force_max_items = 0;
-	public  $theme_thread_allow = true;
+	public static  $sourcename = '';
+	public static  $videowidth = 425;
+	public static  $videoheight = 350;
+	public static  $force_max_items = 0;
+	public static  $theme_thread_allow = true;
 
 	/**
 	 * @brief An array for all theme-controllable parameters
@@ -715,7 +717,7 @@ class App {
 	 * Mostly unimplemented yet. Only options 'template_engine' and
 	 * beyond are used.
 	 */
-	private $theme = array(
+	private static $theme = array(
 		'sourcename' => '',
 		'videowidth' => 425,
 		'videoheight' => 350,
@@ -728,33 +730,33 @@ class App {
 	/**
 	 * @brief An array of registered template engines ('name'=>'class name')
 	 */
-	public $template_engines = array();
+	public static $template_engines = array();
 	/**
 	 * @brief An array of instanced template engines ('name'=>'instance')
 	 */
-	public $template_engine_instance = array();
+	public static $template_engine_instance = array();
 
-	private $ldelim = array(
+	private static $ldelim = array(
 		'internal' => '',
 		'smarty3' => '{{'
 	);
-	private $rdelim = array(
+	private static $rdelim = array(
 		'internal' => '',
 		'smarty3' => '}}'
 	);
 
 	// These represent the URL which was used to access the page
 
-	private $scheme;
-	private $hostname;
-	private $path;
+	private static $scheme;
+	private static $hostname;
+	private static $path;
 
 	// This is our standardised URL - regardless of what was used
 	// to access the page
 
-	private $baseurl;
+	private static $baseurl;
 
-	private $meta;
+	private static $meta;
 
 	/**
 	 * App constructor.
@@ -763,11 +765,11 @@ class App {
 		// we'll reset this after we read our config file
 		date_default_timezone_set('UTC');
 
-		$this->config = array('system'=>array());
-		$this->page = array();
-		$this->pager= array();
+		self::$config = array('system'=>array());
+		self::$page = array();
+		self::$pager= array();
 
-		$this->query_string = '';
+		self::$query_string = '';
 
 
 		startup();
@@ -778,64 +780,64 @@ class App {
 			. 'library/langdet' . PATH_SEPARATOR
 			. '.' );
 
-		$this->scheme = 'http';
+		self::$scheme = 'http';
 		if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
-			$this->scheme = 'https';
+			self::$scheme = 'https';
 		elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
-			$this->scheme = 'https';
+			self::$scheme = 'https';
 
 		if(x($_SERVER,'SERVER_NAME')) {
-			$this->hostname = $_SERVER['SERVER_NAME'];
+			self::$hostname = $_SERVER['SERVER_NAME'];
 
 			if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
-				$this->hostname .= ':' . $_SERVER['SERVER_PORT'];
+				self::$hostname .= ':' . $_SERVER['SERVER_PORT'];
 			/**
 			 * Figure out if we are running at the top of a domain
 			 * or in a sub-directory and adjust accordingly
 			 */
 
 			$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/\\');
-			if(isset($path) && strlen($path) && ($path != $this->path))
-				$this->path = $path;
+			if(isset($path) && strlen($path) && ($path != self::$path))
+				self::$path = $path;
 		}
 
-		set_include_path("include/$this->hostname" . PATH_SEPARATOR . get_include_path());
+		set_include_path("include/self::$hostname" . PATH_SEPARATOR . get_include_path());
 
 		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'], 0, 2) === "q=") {
-			$this->query_string = substr($_SERVER['QUERY_STRING'], 2);
+			self::$query_string = substr($_SERVER['QUERY_STRING'], 2);
 			// removing trailing / - maybe a nginx problem
-			if (substr($this->query_string, 0, 1) == "/")
-				$this->query_string = substr($this->query_string, 1);
+			if (substr(self::$query_string, 0, 1) == "/")
+				self::$query_string = substr(self::$query_string, 1);
 		}
 		if(x($_GET,'q'))
-			$this->cmd = trim($_GET['q'],'/\\');
+			self::$cmd = trim($_GET['q'],'/\\');
 
 		// unix style "homedir"
 
-		if(substr($this->cmd, 0, 1) === '~')
-			$this->cmd = 'channel/' . substr($this->cmd, 1);
+		if(substr(self::$cmd, 0, 1) === '~')
+			self::$cmd = 'channel/' . substr(self::$cmd, 1);
 
 		/*
 		 * Break the URL path into C style argc/argv style arguments for our
-		 * modules. Given "http://example.com/module/arg1/arg2", $this->argc
-		 * will be 3 (integer) and $this->argv will contain:
+		 * modules. Given "http://example.com/module/arg1/arg2", self::$argc
+		 * will be 3 (integer) and self::$argv will contain:
 		 *   [0] => 'module'
 		 *   [1] => 'arg1'
 		 *   [2] => 'arg2'
 		 *
 		 * There will always be one argument. If provided a naked domain
-		 * URL, $this->argv[0] is set to "home".
+		 * URL, self::$argv[0] is set to "home".
 		 */
 
-		$this->argv = explode('/', $this->cmd);
-		$this->argc = count($this->argv);
-		if ((array_key_exists('0', $this->argv)) && strlen($this->argv[0])) {
-			$this->module = str_replace(".", "_", $this->argv[0]);
-			$this->module = str_replace("-", "_", $this->module);
+		self::$argv = explode('/', self::$cmd);
+		self::$argc = count(self::$argv);
+		if ((array_key_exists('0', self::$argv)) && strlen(self::$argv[0])) {
+			self::$module = str_replace(".", "_", self::$argv[0]);
+			self::$module = str_replace("-", "_", self::$module);
 		} else {
-			$this->argc = 1;
-			$this->argv = array('home');
-			$this->module = 'home';
+			self::$argc = 1;
+			self::$argv = array('home');
+			self::$module = 'home';
 		}
 
 		/*
@@ -843,22 +845,22 @@ class App {
 		 * pagination
 		 */
 
-		$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
-		$this->pager['itemspage'] = 60;
-		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
-		if($this->pager['start'] < 0)
-			$this->pager['start'] = 0;
-		$this->pager['total'] = 0;
+		self::$pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
+		self::$pager['itemspage'] = 60;
+		self::$pager['start'] = (self::$pager['page'] * self::$pager['itemspage']) - self::$pager['itemspage'];
+		if(self::$pager['start'] < 0)
+			self::$pager['start'] = 0;
+		self::$pager['total'] = 0;
 
 		/*
 		 * Detect mobile devices
 		 */
 
 		$mobile_detect = new Mobile_Detect();
-		$this->is_mobile = $mobile_detect->isMobile();
-		$this->is_tablet = $mobile_detect->isTablet();
+		self::$is_mobile = $mobile_detect->isMobile();
+		self::$is_tablet = $mobile_detect->isTablet();
 
-		$this->head_set_icon('/images/hz-32.png');
+		self::head_set_icon('/images/hz-32.png');
 
 		BaseObject::set_app($this);
 
@@ -868,146 +870,146 @@ class App {
 		$dc = get_declared_classes();
 		foreach ($dc as $k) {
 			if (in_array("ITemplateEngine", class_implements($k))){
-				$this->register_template_engine($k);
+				self::register_template_engine($k);
 			}
 		}
 
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
-		$this->meta= new Zotlabs\Web\HttpMeta();
+		self::$meta= new Zotlabs\Web\HttpMeta();
 	}
 
-	function get_baseurl($ssl = false) {
-		if(is_array($this->config)
-			&& array_key_exists('system',$this->config)
-			&& is_array($this->config['system'])
-			&& array_key_exists('baseurl',$this->config['system'])
-			&& strlen($this->config['system']['baseurl'])) {
-			$url = $this->config['system']['baseurl'];
+	public static function get_baseurl($ssl = false) {
+		if(is_array(self::$config)
+			&& array_key_exists('system',self::$config)
+			&& is_array(self::$config['system'])
+			&& array_key_exists('baseurl',self::$config['system'])
+			&& strlen(self::$config['system']['baseurl'])) {
+			$url = self::$config['system']['baseurl'];
 			$url = trim($url,'\\/');
 			return $url;
 		}
 
-		$scheme = $this->scheme;
+		$scheme = self::$scheme;
 
-		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+		self::$baseurl = $scheme . "://" . self::$hostname . ((isset(self::$path) && strlen(self::$path)) ? '/' . self::$path : '' );
 
-		return $this->baseurl;
+		return self::$baseurl;
 	}
 
-	function set_baseurl($url) {
-		if(is_array($this->config)
-			&& array_key_exists('system',$this->config)
-			&& is_array($this->config['system'])
-			&& array_key_exists('baseurl',$this->config['system'])
-			&& strlen($this->config['system']['baseurl'])) {
-			$url = $this->config['system']['baseurl'];
+	public static function set_baseurl($url) {
+		if(is_array(self::$config)
+			&& array_key_exists('system',self::$config)
+			&& is_array(self::$config['system'])
+			&& array_key_exists('baseurl',self::$config['system'])
+			&& strlen(self::$config['system']['baseurl'])) {
+			$url = self::$config['system']['baseurl'];
 			$url = trim($url,'\\/');
 		}
 
 		$parsed = @parse_url($url);
 
-		$this->baseurl = $url;
+		self::$baseurl = $url;
 
 		if($parsed) {
-			$this->scheme = $parsed['scheme'];
+			self::$scheme = $parsed['scheme'];
 
-			$this->hostname = $parsed['host'];
+			self::$hostname = $parsed['host'];
 			if(x($parsed,'port'))
-				$this->hostname .= ':' . $parsed['port'];
+				self::$hostname .= ':' . $parsed['port'];
 			if(x($parsed,'path'))
-				$this->path = trim($parsed['path'],'\\/');
+				self::$path = trim($parsed['path'],'\\/');
 		}
 	}
 
-	function get_scheme() {
-		return $this->scheme;
+	public static function get_scheme() {
+		return self::$scheme;
 	}
 
 
-	function get_hostname() {
-		return $this->hostname;
+	public static function get_hostname() {
+		return self::$hostname;
 	}
 
-	function set_hostname($h) {
-		$this->hostname = $h;
+	public static function set_hostname($h) {
+		self::$hostname = $h;
 	}
 
-	function set_path($p) {
-		$this->path = trim(trim($p), '/');
+	public static function set_path($p) {
+		self::$path = trim(trim($p), '/');
 	}
 
-	function get_path() {
-		return $this->path;
+	public static function get_path() {
+		return self::$path;
 	}
 
-	function set_account($acct) {
-		$this->account = $acct;
+	public static function set_account($acct) {
+		self::$account = $acct;
 	}
 
-	function get_account() {
-		return $this->account;
+	public static function get_account() {
+		return self::$account;
 	}
 
-	function set_channel($channel) {
-		$this->channel = $channel;
+	public static function set_channel($channel) {
+		self::$channel = $channel;
 	}
 
-	function get_channel() {
-		return $this->channel;
+	public static function get_channel() {
+		return self::$channel;
 	}
 
-	function set_observer($xchan) {
-		$this->observer = $xchan;
+	public static function set_observer($xchan) {
+		self::$observer = $xchan;
 	}
 
 
-	function get_observer() {
-		return $this->observer;
+	public static function get_observer() {
+		return self::$observer;
 	}
 
-	function set_perms($perms) {
-		$this->perms = $perms;
+	public static function set_perms($perms) {
+		self::$perms = $perms;
 	}
 
-	function get_perms() {
-		return $this->perms;
+	public static function get_perms() {
+		return self::$perms;
 	}
 
-	function set_oauth_key($consumer_id) {
-		$this->oauth_key = $consumer_id;
+	public static function set_oauth_key($consumer_id) {
+		self::$oauth_key = $consumer_id;
 	}
 
-	function get_oauth_key() {
-		return $this->oauth_key;
+	public static function get_oauth_key() {
+		return self::$oauth_key;
 	}
 
-	function get_apps() {
-		return $this->apps;
+	public static function get_apps() {
+		return self::$apps;
 	}
 
-	function set_apps($arr) {
-		$this->apps = $arr;
+	public static function set_apps($arr) {
+		self::$apps = $arr;
 	}
 
-	function set_groups($g) {
-		$this->groups = $g;
+	public static function set_groups($g) {
+		self::$groups = $g;
 	}
 
-	function get_groups() {
-		return $this->groups;
+	public static function get_groups() {
+		return self::$groups;
 	}
 
-	function set_pager_total($n) {
-		$this->pager['total'] = intval($n);
+	public static function set_pager_total($n) {
+		self::$pager['total'] = intval($n);
 	}
 
-	function set_pager_itemspage($n) {
-		$this->pager['itemspage'] = ((intval($n) > 0) ? intval($n) : 0);
-		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+	public static function set_pager_itemspage($n) {
+		self::$pager['itemspage'] = ((intval($n) > 0) ? intval($n) : 0);
+		self::$pager['start'] = (self::$pager['page'] * self::$pager['itemspage']) - self::$pager['itemspage'];
 	}
 
-	function build_pagehead() {
+	public static function build_pagehead() {
 
 		$user_scalable = ((local_channel()) ? get_pconfig(local_channel(),'system','user_scalable') : 1);
 		if ($user_scalable === false)
@@ -1021,36 +1023,36 @@ class App {
 		if($interval < 10000)
 			$interval = 80000;
 
-		if(! x($this->page,'title'))
-			$this->page['title'] = $this->config['system']['sitename'];
+		if(! x(self::$page,'title'))
+			self::$page['title'] = self::$config['system']['sitename'];
 
-		if(! $this->meta->get_field('og:title'))
-			$this->meta->set('og:title',$this->page['title']);
+		if(! self::$meta->get_field('og:title'))
+			self::$meta->set('og:title',self::$page['title']);
 
-		$this->meta->set('generator', Zotlabs\Project\System::get_platform_name());
+		self::$meta->set('generator', Zotlabs\Project\System::get_platform_name());
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
 		 * being first
 		 */
 		$tpl = get_markup_template('head.tpl');
-		$this->page['htmlhead'] = replace_macros($tpl, array(
+		self::$page['htmlhead'] = replace_macros($tpl, array(
 			'$preload_images' => $preload_images,
 			'$user_scalable' => $user_scalable,
-			'$baseurl' => $this->get_baseurl(),
+			'$baseurl' => self::get_baseurl(),
 			'$local_channel' => local_channel(),
-			'$metas' => $this->meta->get(),
+			'$metas' => self::$meta->get(),
 			'$update_interval' => $interval,
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
 			'$js_strings' => js_strings(),
 			'$zid' => get_my_address(),
-			'$channel_id' => $this->profile['uid'],
-		)) . $this->page['htmlhead'];
+			'$channel_id' => self::$profile['uid'],
+		)) . self::$page['htmlhead'];
 
 		// always put main.js at the end
-		$this->page['htmlhead'] .= head_get_main_js();
+		self::$page['htmlhead'] .= head_get_main_js();
 	}
 
 	/**
@@ -1059,7 +1061,7 @@ class App {
 	* @param string $class
 	* @param string $name
 	*/
-	function register_template_engine($class, $name = '') {
+	public static function register_template_engine($class, $name = '') {
 		if ($name === ""){
 			$v = get_class_vars( $class );
 			if(x($v, "name")) $name = $v['name'];
@@ -1068,7 +1070,7 @@ class App {
 			echo "template engine <tt>$class</tt> cannot be registered without a name.\n";
 			killme();
 		}
-		$this->template_engines[$name] = $class;
+		self::$template_engines[$name] = $class;
 	}
 
 	/**
@@ -1079,23 +1081,23 @@ class App {
 	*
 	* @return object Template Engine instance
 	*/
-	function template_engine($name = ''){
+	public static function template_engine($name = ''){
 		if ($name !== "") {
 			$template_engine = $name;
 		} else {
 			$template_engine = 'smarty3';
-			if (x($this->theme, 'template_engine')) {
-				$template_engine = $this->theme['template_engine'];
+			if (x(self::$theme, 'template_engine')) {
+				$template_engine = self::$theme['template_engine'];
 			}
 		}
 
-		if (isset($this->template_engines[$template_engine])){
-			if(isset($this->template_engine_instance[$template_engine])){
-				return $this->template_engine_instance[$template_engine];
+		if (isset(self::$template_engines[$template_engine])){
+			if(isset(self::$template_engine_instance[$template_engine])){
+				return self::$template_engine_instance[$template_engine];
 			} else {
-				$class = $this->template_engines[$template_engine];
+				$class = self::$template_engines[$template_engine];
 				$obj = new $class;
-				$this->template_engine_instance[$template_engine] = $obj;
+				self::$template_engine_instance[$template_engine] = $obj;
 				return $obj;
 			}
 		}
@@ -1108,28 +1110,28 @@ class App {
 	 *
 	 * @return string
 	 */
-	function get_template_engine() {
-		return $this->theme['template_engine'];
+	public static function get_template_engine() {
+		return self::$theme['template_engine'];
 	}
 
-	function set_template_engine($engine = 'smarty3') {
-		$this->theme['template_engine'] = $engine;
+	public static function set_template_engine($engine = 'smarty3') {
+		self::$theme['template_engine'] = $engine;
 	}
 
-	function get_template_ldelim($engine = 'smarty3') {
-		return $this->ldelim[$engine];
+	public static function get_template_ldelim($engine = 'smarty3') {
+		return self::$ldelim[$engine];
 	}
 
-	function get_template_rdelim($engine = 'smarty3') {
-		return $this->rdelim[$engine];
+	public static function get_template_rdelim($engine = 'smarty3') {
+		return self::$rdelim[$engine];
 	}
 
-	function head_set_icon($icon) {
-		$this->data['pageicon'] = $icon;
+	public static function head_set_icon($icon) {
+		self::$data['pageicon'] = $icon;
 	}
 
-	function head_get_icon() {
-		$icon = $this->data['pageicon'];
+	public static function head_get_icon() {
+		$icon = self::$data['pageicon'];
 		if(! strpos($icon,'://'))
 			$icon = z_root() . $icon;
 		return $icon;

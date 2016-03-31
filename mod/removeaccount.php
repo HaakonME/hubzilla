@@ -18,7 +18,7 @@ function removeaccount_post(&$a) {
 		return;
 
 
-	$account = $a->get_account();
+	$account = App::get_account();
 	$account_id = get_account_id();
 
 	if(! account_verify_password($account['account_email'],$_POST['qxz_password']))

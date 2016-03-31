@@ -92,7 +92,7 @@ $DIRECTORY_FALLBACK_SERVERS = array(
  *
  * Image storage quality. Lower numbers save space at cost of image detail.
  * For ease of upgrade, please do not change here. Change jpeg quality with
- * $a->config['system']['jpeg_quality'] = n;
+ * App::$config['system']['jpeg_quality'] = n;
  * in .htconfig.php, where n is netween 1 and 100, and with very poor results
  * below about 50
  *
@@ -100,7 +100,7 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 
 define ( 'JPEG_QUALITY',            100  );
 /**
- * $a->config['system']['png_quality'] from 0 (uncompressed) to 9
+ * App::$config['system']['png_quality'] from 0 (uncompressed) to 9
  */
 define ( 'PNG_QUALITY',             8  );
 
@@ -135,7 +135,7 @@ define ( 'STORAGE_DEFAULT_PERMISSIONS',   0770 );
  * this length (on the longest side, the other side will be scaled appropriately).
  * Modify this value using
  *
- *    $a->config['system']['max_image_length'] = n;
+ *    App::$config['system']['max_image_length'] = n;
  *
  * in .htconfig.php
  *
@@ -1200,7 +1200,7 @@ function system_unavailable() {
 function clean_urls() {
 	global $a;
 
-	//	if($a->config['system']['clean_urls'])
+	//	if(App::$config['system']['clean_urls'])
 	return true;
 	//	return false;
 }
@@ -1224,7 +1224,7 @@ function z_path() {
  */
 function z_root() {
 	global $a;
-	return $a->get_baseurl();
+	return App::get_baseurl();
 }
 
 /**
@@ -1295,7 +1295,7 @@ function check_config(&$a) {
 	// This will actually set the url to the one stored in .htconfig, and ignore what
 	// we're passing - unless we are installing and it has never been set.
 
-	$a->set_baseurl(z_root());
+	App::set_baseurl(z_root());
 
 	// Make sure each site has a system channel.  This is now created on install
 	// so we just need to keep this around a couple of weeks until the hubs that
@@ -1356,7 +1356,7 @@ function check_config(&$a) {
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
-								'$sitename' => $a->config['system']['sitename'],
+								'$sitename' => App::$config['system']['sitename'],
 								'$siteurl' =>  z_root(),
 								'$update' => $x,
 								'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
@@ -1364,7 +1364,7 @@ function check_config(&$a) {
 
 							$subject = email_header_encode(sprintf(t('Update Error at %s'), z_root()));
 
-							mail($a->config['system']['admin_email'], $subject, $email_msg,
+							mail(App::$config['system']['admin_email'], $subject, $email_msg,
 								'From: Administrator' . '@' . $_SERVER['SERVER_NAME'] . "\n"
 								. 'Content-type: text/plain; charset=UTF-8' . "\n"
 								. 'Content-transfer-encoding: 8bit' );
@@ -1384,7 +1384,7 @@ function check_config(&$a) {
 	 *
 	 * Synchronise plugins:
 	 *
-	 * $a->config['system']['addon'] contains a comma-separated list of names
+	 * App::$config['system']['addon'] contains a comma-separated list of names
 	 * of plugins/addons which are used on this system.
 	 * Go through the database list of already installed addons, and if we have
 	 * an entry, but it isn't in the config list, call the unload procedure
@@ -1406,7 +1406,7 @@ function check_config(&$a) {
 	if($plugins)
 		$plugins_arr = explode(',', str_replace(' ', '', $plugins));
 
-	$a->plugins = $plugins_arr;
+	App::$plugins = $plugins_arr;
 
 	$installed_arr = array();
 
@@ -1520,7 +1520,7 @@ function fix_system_urls($oldurl, $newurl) {
 
 
 // wrapper for adding a login box. If $register == true provide a registration
-// link. This will most always depend on the value of $a->config['system']['register_policy'].
+// link. This will most always depend on the value of App::$config['system']['register_policy'].
 // returns the complete html for inserting into the page
 
 function login($register = false, $form_id = 'main-login', $hiddens=false) {
@@ -1537,15 +1537,15 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'link' => (($register) ? $reglink : 'pubsites')
 	);
 
-	$dest_url = z_root() . '/' . $a->query_string;
+	$dest_url = z_root() . '/' . App::$query_string;
 
 	if(local_channel()) {
 		$tpl = get_markup_template("logout.tpl");
 	}
 	else {
 		$tpl = get_markup_template("login.tpl");
-		if(strlen($a->query_string))
-			$_SESSION['login_return_url'] = $a->query_string;
+		if(strlen(App::$query_string))
+			$_SESSION['login_return_url'] = App::$query_string;
 	}
 
 	$o .= replace_macros($tpl,array(
@@ -1597,8 +1597,8 @@ function get_account_id() {
 	if(intval($_SESSION['account_id']))
 		return intval($_SESSION['account_id']);
 
-	if(get_app()->account)
-		return intval(get_app()->account['account_id']);
+	if(App::$account)
+		return intval(App::$account['account_id']);
 
 	return false;
 }
@@ -1681,7 +1681,7 @@ function notice($s) {
 	if(in_array($s,$_SESSION['sysmsg']))
 		return;
 
-	if($a->interactive) {
+	if(App::$interactive) {
 		$_SESSION['sysmsg'][] = $s;
 	}
 
@@ -1697,7 +1697,7 @@ function notice($s) {
 function info($s) {
 	$a = get_app();
 	if(! x($_SESSION, 'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
-	if($a->interactive)
+	if(App::$interactive)
 		$_SESSION['sysmsg_info'][] = $s;
 }
 
@@ -1755,7 +1755,7 @@ function proc_run($cmd){
 		return;
 
 	if(count($args) && $args[0] === 'php')
-		$args[0] = ((x($a->config,'system')) && (x($a->config['system'],'php_path')) && (strlen($a->config['system']['php_path'])) ? $a->config['system']['php_path'] : 'php');
+		$args[0] = ((x(App::$config,'system')) && (x(App::$config['system'],'php_path')) && (strlen(App::$config['system']['php_path'])) ? App::$config['system']['php_path'] : 'php');
 
 	for($x = 0; $x < count($args); $x++)
 		$args[$x] = escapeshellarg($args[$x]);
@@ -1793,29 +1793,29 @@ function current_theme(){
 
 	// Find the theme that belongs to the channel whose stuff we are looking at
 
-	if($a->profile_uid && $a->profile_uid != local_channel()) {
+	if(App::$profile_uid && App::$profile_uid != local_channel()) {
 		$r = q("select channel_theme from channel where channel_id = %d limit 1",
-			intval($a->profile_uid)
+			intval(App::$profile_uid)
 		);
 		if($r)
 			$page_theme = $r[0]['channel_theme'];
 	}
 
-	if(array_key_exists('theme', $a->layout) && $a->layout['theme'])
-		$page_theme = $a->layout['theme'];
+	if(array_key_exists('theme', App::$layout) && App::$layout['theme'])
+		$page_theme = App::$layout['theme'];
 
 	// Allow folks to over-rule channel themes and always use their own on their own site.
 	// The default is for channel themes to take precedence over your own on pages belonging
 	// to that channel.
 
-	if($page_theme && local_channel() && local_channel() != $a->profile_url) {
+	if($page_theme && local_channel() && local_channel() != App::$profile_url) {
 		if(get_pconfig(local_channel(),'system','always_my_theme'))
 			$page_theme = null;
 	}
 
-	$is_mobile = $a->is_mobile || $a->is_tablet;
+	$is_mobile = App::$is_mobile || App::$is_tablet;
 
-	$standard_system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+	$standard_system_theme = ((isset(App::$config['system']['theme'])) ? App::$config['system']['theme'] : '');
 	$standard_theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $standard_system_theme);
 
 	if($is_mobile) {
@@ -1824,7 +1824,7 @@ function current_theme(){
 			$theme_name = $standard_theme_name;
 		}
 		else {
-			$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
+			$system_theme = ((isset(App::$config['system']['mobile_theme'])) ? App::$config['system']['mobile_theme'] : '');
 			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
 
 			if($theme_name === '' || $theme_name === '---' ) {
@@ -1875,8 +1875,8 @@ function current_theme_url($installing = false) {
 	$t = current_theme();
 
 	$opts = '';
-	$opts = (($a->profile_uid) ? '?f=&puid=' . $a->profile_uid : '');
-	$opts .= ((x($a->layout,'schema')) ? '&schema=' . $a->layout['schema'] : '');
+	$opts = ((App::$profile_uid) ? '?f=&puid=' . App::$profile_uid : '');
+	$opts .= ((x(App::$layout,'schema')) ? '&schema=' . App::$layout['schema'] : '');
 	if(file_exists('view/theme/' . $t . '/php/style.php'))
 		return('view/theme/' . $t . '/php/style.pcss' . $opts);
 
@@ -1897,8 +1897,8 @@ function is_site_admin() {
 		return false;
 
 	if((intval($_SESSION['authenticated']))
-		&& (is_array($a->account))
-		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))
+		&& (is_array(App::$account))
+		&& (App::$account['account_roles'] & ACCOUNT_ROLE_ADMIN))
 		return true;
 
 	return false;
@@ -1914,8 +1914,8 @@ function is_site_admin() {
 function is_developer() {
 	$a = get_app();
 	if((intval($_SESSION['authenticated']))
-		&& (is_array($a->account))
-		&& ($a->account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
+		&& (is_array(App::$account))
+		&& (App::$account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
 		return true;
 
 	return false;
@@ -1927,7 +1927,7 @@ function load_contact_links($uid) {
 
 	$ret = array();
 
-	if(! $uid || x($a->contacts,'empty'))
+	if(! $uid || x(App::$contacts,'empty'))
 		return;
 
 //	logger('load_contact_links');
@@ -1943,7 +1943,7 @@ function load_contact_links($uid) {
 	else
 		$ret['empty'] = true;
 
-	$a->contacts = $ret;
+	App::$contacts = $ret;
 }
 
 
@@ -1980,12 +1980,12 @@ function build_querystring($params, $name = null) {
 // much better way of dealing with c-style args
 
 function argc() {
-	return get_app()->argc;
+	return App::$argc;
 }
 
 function argv($x) {
-	if(array_key_exists($x,get_app()->argv))
-		return get_app()->argv[$x];
+	if(array_key_exists($x,App::$argv))
+		return App::$argv[$x];
 
 	return '';
 }
@@ -2000,7 +2000,7 @@ function dba_timer() {
  * @return string Empty if no observer, otherwise xchan_hash from observer
  */
 function get_observer_hash() {
-	$observer = get_app()->get_observer();
+	$observer = App::get_observer();
 	if(is_array($observer))
 		return $observer['xchan_hash'];
 
@@ -2039,7 +2039,7 @@ function curPageURL() {
  */
 function get_custom_nav(&$a, $navname) {
 	if (! $navname)
-		return $a->page['nav'];
+		return App::$page['nav'];
 	// load custom nav menu by name here
 }
 
@@ -2054,13 +2054,13 @@ function get_custom_nav(&$a, $navname) {
 function load_pdl(&$a) {
 	require_once('include/comanche.php');
 
-	if (! count($a->layout)) {
+	if (! count(App::$layout)) {
 
-		$arr = array('module' => $a->module, 'layout' => '');
+		$arr = array('module' => App::$module, 'layout' => '');
 		call_hooks('load_pdl',$arr);
 		$layout = $arr['layout'];
 
-		$n = 'mod_' . $a->module . '.pdl' ;
+		$n = 'mod_' . App::$module . '.pdl' ;
 		$u = comanche_get_channel_id();
 		if($u)
 			$s = get_pconfig($u, 'system', $n);
@@ -2071,7 +2071,7 @@ function load_pdl(&$a) {
 			$s = @file_get_contents($p);
 		if($s) {
 			comanche_parser($a, $s);
-			$a->pdl = $s;
+			App::$pdl = $s;
 		}
 	}
 
@@ -2081,8 +2081,8 @@ function load_pdl(&$a) {
 function exec_pdl(&$a) {
 	require_once('include/comanche.php');
 
-	if($a->pdl) {
-		comanche_parser($a, $a->pdl,1);
+	if(App::$pdl) {
+		comanche_parser($a, App::$pdl,1);
 	}
 }
 
@@ -2098,64 +2098,64 @@ function construct_page(&$a) {
 
 	exec_pdl($a);
 
-	$comanche = ((count($a->layout)) ? true : false);
+	$comanche = ((count(App::$layout)) ? true : false);
 
 	require_once(theme_include('theme_init.php'));
 
 	$installing = false;
 
-	if ($a->module == 'setup') {
+	if (App::$module == 'setup') {
 		$installing = true;
 	} else {
 		nav($a);
 	}
 
 	if ($comanche) {
-		if ($a->layout['nav']) {
-			$a->page['nav'] = get_custom_nav($a, $a->layout['nav']);
+		if (App::$layout['nav']) {
+			App::$page['nav'] = get_custom_nav($a, App::$layout['nav']);
 		}
 	}
 
 	if (($p = theme_include(current_theme() . '.js')) != '')
 		head_add_js($p);
 
-	if (($p = theme_include('mod_' . $a->module . '.php')) != '')
+	if (($p = theme_include('mod_' . App::$module . '.php')) != '')
 		require_once($p);
 
 	require_once('include/js_strings.php');
 
-	if (x($a->page, 'template_style'))
-		head_add_css($a->page['template_style'] . '.css');
+	if (x(App::$page, 'template_style'))
+		head_add_css(App::$page['template_style'] . '.css');
 	else
-		head_add_css(((x($a->page, 'template')) ? $a->page['template'] : 'default' ) . '.css');
+		head_add_css(((x(App::$page, 'template')) ? App::$page['template'] : 'default' ) . '.css');
 
-	head_add_css('mod_' . $a->module . '.css');
+	head_add_css('mod_' . App::$module . '.css');
 	head_add_css(current_theme_url($installing));
 
-	head_add_js('mod_' . $a->module . '.js');
+	head_add_js('mod_' . App::$module . '.js');
 
-	$a->build_pagehead();
+	App::build_pagehead();
 
-	if($a->page['pdl_content']) {
-		$a->page['content'] = comanche_region($a,$a->page['content']);
+	if(App::$page['pdl_content']) {
+		App::$page['content'] = comanche_region($a,App::$page['content']);
 	}
 
 	// Let's say we have a comanche declaration '[region=nav][/region][region=content]$nav $content[/region]'.
 	// The text 'region=' identifies a section of the layout by that name. So what we want to do here is leave
-	// $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section']
-	// into a new region called $a->data['content']. It is presumed that the chosen layout file for this comanche page
+	// App::$page['nav'] empty and put the default content from App::$page['nav'] and App::$page['section']
+	// into a new region called App::$data['content']. It is presumed that the chosen layout file for this comanche page
 	// has a '<content>' element instead of a '<section>'.
 
 	// This way the Comanche layout can include any existing content, alter the layout by adding stuff around it or changing the
 	// layout completely with a new layout definition, or replace/remove existing content.
 
 	if($comanche) {
-		$arr = array('module' => $a->module, 'layout' => $a->layout);
+		$arr = array('module' => App::$module, 'layout' => App::$layout);
 		call_hooks('construct_page', $arr);
-		$a->layout = $arr['layout'];
+		App::$layout = $arr['layout'];
 
 
-		foreach($a->layout as $k => $v) {
+		foreach(App::$layout as $k => $v) {
 			if((strpos($k, 'region_') === 0) && strlen($v)) {
 				if(strpos($v, '$region_') !== false) {
 					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism', 'comanche_replace_region', $v);
@@ -2163,21 +2163,21 @@ function construct_page(&$a) {
 
 				// And a couple of convenience macros
 				if(strpos($v, '$htmlhead') !== false) {
-					$v = str_replace('$htmlhead', $a->page['htmlhead'], $v);
+					$v = str_replace('$htmlhead', App::$page['htmlhead'], $v);
 				}
 				if(strpos($v, '$nav') !== false) {
-					$v = str_replace('$nav', $a->page['nav'], $v);
+					$v = str_replace('$nav', App::$page['nav'], $v);
 				}
 				if(strpos($v, '$content') !== false) {
-					$v = str_replace('$content', $a->page['content'], $v);
+					$v = str_replace('$content', App::$page['content'], $v);
 				}
 
-				$a->page[substr($k, 7)] = $v;
+				App::$page[substr($k, 7)] = $v;
 			}
 		}
 	}
 
-	if($a->is_mobile || $a->is_tablet) {
+	if(App::$is_mobile || App::$is_tablet) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
 			$link = z_root() . '/toggle_mobile?f=&address=' . curPageURL();
 		}
@@ -2185,39 +2185,39 @@ function construct_page(&$a) {
 			$link = z_root() . '/toggle_mobile?f=&off=1&address=' . curPageURL();
 		}
 		if ((isset($_SESSION) && $_SESSION['mobile_theme'] !='' && $_SESSION['mobile_theme'] !='---' ) ||
-			(isset($a->config['system']['mobile_theme']) && !isset($_SESSION['mobile_theme']))) {
-			$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
+			(isset(App::$config['system']['mobile_theme']) && !isset($_SESSION['mobile_theme']))) {
+			App::$page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
 				'$toggle_link' => $link,
 				'$toggle_text' => t('toggle mobile')
 			));
 		}
 	}
 
-	$page    = $a->page;
-	$profile = $a->profile;
+	$page    = App::$page;
+	$profile = App::$profile;
 
 	header("Content-type: text/html; charset=utf-8");
 
 	// security headers - see https://securityheaders.io
 
-	if($a->get_scheme() === 'https' && $a->config['system']['transport_security_header'])
+	if(App::get_scheme() === 'https' && App::$config['system']['transport_security_header'])
 		header("Strict-Transport-Security: max-age=31536000");
 
-	if($a->config['system']['content_security_policy'])
+	if(App::$config['system']['content_security_policy'])
 		header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'");
 
-	if($a->config['system']['x_security_headers']) {
+	if(App::$config['system']['x_security_headers']) {
 		header("X-Frame-Options: SAMEORIGIN");
 		header("X-Xss-Protection: 1; mode=block;");
 		header("X-Content-Type-Options: nosniff");	
 	}
 
-	if($a->config['system']['public_key_pins']) {
-		header("Public-Key-Pins: " . $a->config['system']['public_key_pins']);
+	if(App::$config['system']['public_key_pins']) {
+		header("Public-Key-Pins: " . App::$config['system']['public_key_pins']);
 	}
 
 	require_once(theme_include(
-		((x($a->page, 'template')) ? $a->page['template'] : 'default' ) . '.php' )
+		((x(App::$page, 'template')) ? App::$page['template'] : 'default' ) . '.php' )
 	);
 }
 
@@ -2238,7 +2238,7 @@ function appdirpath() {
 function head_set_icon($icon) {
 	global $a;
 
-	$a->data['pageicon'] = $icon;
+	App::$data['pageicon'] = $icon;
 //	logger('head_set_icon: ' . $icon);
 }
 
@@ -2250,7 +2250,7 @@ function head_set_icon($icon) {
 function head_get_icon() {
 	global $a;
 
-	$icon = $a->data['pageicon'];
+	$icon = App::$data['pageicon'];
 	if(! strpos($icon, '://'))
 		$icon = z_root() . $icon;
 
@@ -2339,14 +2339,14 @@ function cert_bad_email() {
 
 	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
-		'$sitename' => $a->config['system']['sitename'],
+		'$sitename' => App::$config['system']['sitename'],
 		'$siteurl' =>  z_root(),
 		'$error' => t('Website SSL certificate is not valid. Please correct.')
 	));
 
-	$subject = email_header_encode(sprintf(t('[hubzilla] Website SSL error for %s'), $a->get_hostname()));
-	mail($a->config['system']['admin_email'], $subject, $email_msg,
-		'From: Administrator' . '@' . $a->get_hostname() . "\n"
+	$subject = email_header_encode(sprintf(t('[hubzilla] Website SSL error for %s'), App::get_hostname()));
+	mail(App::$config['system']['admin_email'], $subject, $email_msg,
+		'From: Administrator' . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' );
 }
@@ -2379,15 +2379,15 @@ function check_cron_broken() {
 
 	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
-		'$sitename' => $a->config['system']['sitename'],
+		'$sitename' => App::$config['system']['sitename'],
 		'$siteurl' =>  z_root(),
 		'$error' => t('Cron/Scheduled tasks not running.'),
 		'$lastdate' => (($d)? $d : t('never'))
 	));
 
-	$subject = email_header_encode(sprintf(t('[hubzilla] Cron tasks not running on %s'), $a->get_hostname()));
-	mail($a->config['system']['admin_email'], $subject, $email_msg,
-		'From: Administrator' . '@' . $a->get_hostname() . "\n"
+	$subject = email_header_encode(sprintf(t('[hubzilla] Cron tasks not running on %s'), App::get_hostname()));
+	mail(App::$config['system']['admin_email'], $subject, $email_msg,
+		'From: Administrator' . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' );
 	set_config('system','lastpollcheck',datetime_convert());

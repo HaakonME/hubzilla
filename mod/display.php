@@ -21,7 +21,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	require_once('include/items.php');
 
 
-	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
+	App::$page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
 
 	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
@@ -32,7 +32,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 	if(! $item_hash) {
-		$a->error = 404;
+		App::$error = 404;
 		notice( t('Item not found.') . EOL);
 		return;
 	}
@@ -42,7 +42,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	if(local_channel() && (! $update)) {
 
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 
 		$channel_acl = array(
@@ -127,9 +127,9 @@ function display_content(&$a, $update = 0, $load = false) {
 
 		$o .= '<div id="live-display"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = " . ((intval(local_channel())) ? local_channel() : (-1))
-			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+			. "; var netargs = '?f='; var profile_page = " . App::$pager['page'] . "; </script>\r\n";
 
-		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
+		App::$page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
 			'$pgtype' => 'display',
 			'$uid' => '0',
@@ -144,7 +144,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'$fh' => '0',
 			'$nouveau' => '0',
 			'$wall' => '0',
-			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
+			'$page' => ((App::$pager['page'] != 1) ? App::$pager['page'] : 1),
 			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$search' => '',
 			'$order' => '',
@@ -169,7 +169,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 		$updateable = false;
 
-		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']),intval($a->pager['start']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(App::$pager['itemspage']),intval(App::$pager['start']));
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = null;
@@ -292,7 +292,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	} else {
 		$o .= conversation($a, $items, 'display', $update, 'traditional');
 		if ($items[0]['title'])
-			$a->page['title'] = $items[0]['title'] . " - " . $a->page['title'];
+			App::$page['title'] = $items[0]['title'] . " - " . App::$page['title'];
 
 	}
 

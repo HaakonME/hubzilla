@@ -15,19 +15,19 @@ function fbrowser_content($a){
 	if (!local_channel())
 		killme();
 
-	if ($a->argc==1)
+	if (App::$argc==1)
 		killme();
 	
-	//echo "<pre>"; var_dump($a->argv); killme();	
+	//echo "<pre>"; var_dump(App::$argv); killme();	
 	
-	switch($a->argv[1]){
+	switch(App::$argv[1]){
 		case "image":
 			$path = array( array(z_root()."/fbrowser/image/", t("Photos")));
 			$albums = false;
 			$sql_extra = "";
 			$sql_extra2 = " ORDER BY created DESC LIMIT 0, 10";
 			
-			if ($a->argc==2){
+			if (App::$argc==2){
 				$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d ",
 					intval(local_channel())
 				);
@@ -38,11 +38,11 @@ function fbrowser_content($a){
 			}
 			
 			$album = "";
-			if ($a->argc==3){
-				$album = hex2bin($a->argv[2]);
+			if (App::$argc==3){
+				$album = hex2bin(App::$argv[2]);
 				$sql_extra = sprintf("AND `album` = '%s' ",dbesc($album));
 				$sql_extra2 = "";
-				$path[]=array(z_root()."/fbrowser/image/".$a->argv[2]."/", $album);
+				$path[]=array(z_root()."/fbrowser/image/".App::$argv[2]."/", $album);
 			}
 				
 			$r = q("SELECT `resource_id`, `id`, `filename`, type, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `description`  
@@ -80,7 +80,7 @@ function fbrowser_content($a){
 				
 			break;
 		case "file":
-			if ($a->argc==2){
+			if (App::$argc==2){
 				$files = q("SELECT id, filename, filetype FROM `attach` WHERE `uid` = %d ",
 					intval(local_channel())
 				);
@@ -89,7 +89,7 @@ function fbrowser_content($a){
 					list($m1,$m2) = explode("/",$rr['filetype']);
 					$filetype = ( (file_exists("images/icons/$m1.png"))?$m1:"zip");
 
-					if($a->get_template_engine() === 'internal') {
+					if(App::get_template_engine() === 'internal') {
 						$filename_e = template_escape($rr['filename']);
 					}
 					else {

@@ -10,7 +10,7 @@ function chat_init(&$a) {
 		$which = argv(1);
 	if(! $which) {
 		if(local_channel()) {
-			$channel = $a->get_channel();
+			$channel = App::get_channel();
 			if($channel && $channel['channel_address'])
 			$which = $channel['channel_address'];
 		}
@@ -21,14 +21,14 @@ function chat_init(&$a) {
 	}
 
 	$profile = 0;
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	if((local_channel()) && (argc() > 2) && (argv(2) === 'view')) {
 		$which = $channel['channel_address'];
 		$profile = argv(1);		
 	}
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which .'" />' . "\r\n" ;
+	App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which .'" />' . "\r\n" ;
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
@@ -45,7 +45,7 @@ function chat_post(&$a) {
 	if((! $room) || (! local_channel()))
 		return;
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 
 	if($_POST['action'] === 'drop') {
@@ -86,16 +86,16 @@ function chat_post(&$a) {
 function chat_content(&$a) {
 
 	if(local_channel())
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
-	$ob = $a->get_observer();
+	$ob = App::get_observer();
 	$observer = get_observer_hash();
 	if(! $observer) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	if(! perm_is_allowed($a->profile['profile_uid'],$observer,'chat')) {
+	if(! perm_is_allowed(App::$profile['profile_uid'],$observer,'chat')) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -159,7 +159,7 @@ function chat_content(&$a) {
 			return;
 		$x = q("select * from chatroom where cr_id = %d and cr_uid = %d $sql_extra limit 1",
 			intval($room_id),
-			intval($a->profile['profile_uid'])
+			intval(App::$profile['profile_uid'])
 		);
 
 		if($x) {
@@ -206,7 +206,7 @@ function chat_content(&$a) {
 
 	require_once('include/conversation.php');
 
-	$o = profile_tabs($a,((local_channel() && local_channel() == $a->profile['profile_uid']) ? true : false),$a->profile['channel_address']);
+	$o = profile_tabs($a,((local_channel() && local_channel() == App::$profile['profile_uid']) ? true : false),App::$profile['channel_address']);
 
 	$acl = new Zotlabs\Access\AccessList($channel);
 	$channel_acl = $acl->get();
@@ -228,17 +228,17 @@ function chat_content(&$a) {
 		));
 	}
 
-	$rooms = chatroom_list($a->profile['profile_uid']);
+	$rooms = chatroom_list(App::$profile['profile_uid']);
 
 	$o .= replace_macros(get_markup_template('chatrooms.tpl'), array(
-		'$header' => sprintf( t('%1$s\'s Chatrooms'), $a->profile['name']),
+		'$header' => sprintf( t('%1$s\'s Chatrooms'), App::$profile['name']),
 		'$name' => t('Name'),
 		'$baseurl' => z_root(),
-		'$nickname' => $a->profile['channel_address'],
+		'$nickname' => App::$profile['channel_address'],
 		'$rooms' => $rooms,
 		'$norooms' => t('No chatrooms available'),
 		'$newroom' => t('Create New'),
-		'$is_owner' => ((local_channel() && local_channel() == $a->profile['profile_uid']) ? 1 : 0),
+		'$is_owner' => ((local_channel() && local_channel() == App::$profile['profile_uid']) ? 1 : 0),
 		'$chatroom_new' => $chatroom_new,
 	));
  

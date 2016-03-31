@@ -99,11 +99,11 @@ function profiles_init(&$a) {
 		$name = t('Profile-') . ($num_profiles + 1);
 		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			intval(local_channel()),
-			intval($a->argv[2])
+			intval(App::$argv[2])
 		);
 		if(! count($r1)) {
 			notice( t('Profile unavailable to clone.') . EOL);
-			$a->error = 404;
+			App::$error = 404;
 			return;
 		}
 		unset($r1[0]['id']);
@@ -144,7 +144,7 @@ function profiles_init(&$a) {
 		);
 		if(! $r1) {
 			notice( t('Profile unavailable to export.') . EOL);
-			$a->error = 404;
+			App::$error = 404;
 			return;
 		}
 		header('content-type: application/octet_stream');
@@ -168,7 +168,7 @@ function profiles_init(&$a) {
 	// we start loading content
 	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_channel(),'multi_profiles')) {
 		if(feature_enabled(local_channel(),'multi_profiles'))
-			$id = $a->argv[1];
+			$id = App::$argv[1];
 		else {
 			$x = q("select id from profile where uid = %d and is_default = 1",
 				intval(local_channel())
@@ -182,11 +182,11 @@ function profiles_init(&$a) {
 		);
 		if(! count($r)) {
 			notice( t('Profile not found.') . EOL);
-			$a->error = 404;
+			App::$error = 404;
 			return;
 		}
 
-		$chan = $a->get_channel();
+		$chan = App::get_channel();
 
 		profile_load($a,$chan['channel_address'],$r[0]['id']);
 	}
@@ -234,7 +234,7 @@ function profiles_post(&$a) {
 
 	if((argc() > 1) && (argv(1) !== "new") && intval(argv(1))) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval(App::$argv[1]),
 			intval(local_channel())
 		);
 		if(! count($orig)) {
@@ -563,7 +563,7 @@ function profiles_post(&$a) {
 			build_sync_packet(local_channel(),array('profile' => $r));
 		}
 
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 		if($namechanged && $is_default) {
 			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s'",
@@ -590,7 +590,7 @@ function profiles_content(&$a) {
 
 	$o = '';
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
@@ -604,7 +604,7 @@ function profiles_content(&$a) {
 
 	if(((argc() > 1) && (intval(argv(1)))) || !feature_enabled(local_channel(),'multi_profiles')) {
 		if(feature_enabled(local_channel(),'multi_profiles'))
-			$id = $a->argv[1];
+			$id = App::$argv[1];
 		else {
 			$x = q("select id from profile where uid = %d and is_default = 1",
 				intval(local_channel())
@@ -628,7 +628,7 @@ function profiles_content(&$a) {
 //		if(feature_enabled(local_channel(),'richtext'))
 //			$editselect = 'textareas';
 
-		$a->page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
+		App::$page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
 			'$baseurl'    => z_root(),
 			'$editselect' => $editselect,
 		));

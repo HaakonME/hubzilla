@@ -275,7 +275,7 @@ function create_identity($arr) {
 		intval($pageflags),
 		intval($system),
 		intval($expire),
-		dbesc($a->timezone)
+		dbesc(App::$timezone)
 	);
 
 	$r = q("select * from channel where channel_account_id = %d 
@@ -302,11 +302,11 @@ function create_identity($arr) {
 		dbesc($guid),
 		dbesc($sig),
 		dbesc($hash),
-		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
+		dbesc($ret['channel']['channel_address'] . '@' . App::get_hostname()),
 		intval($primary),
 		dbesc(z_root()),
 		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
-		dbesc(get_app()->get_hostname()),
+		dbesc(App::get_hostname()),
 		dbesc(z_root() . '/post'),
 		dbesc(get_config('system','pubkey')),
 		dbesc('zot')
@@ -324,7 +324,7 @@ function create_identity($arr) {
 		dbesc(z_root() . "/photo/profile/l/{$newuid}"),
 		dbesc(z_root() . "/photo/profile/m/{$newuid}"),
 		dbesc(z_root() . "/photo/profile/s/{$newuid}"),
-		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
+		dbesc($ret['channel']['channel_address'] . '@' . App::get_hostname()),
 		dbesc(z_root() . '/channel/' . $ret['channel']['channel_address']),
 		dbesc(z_root() . '/follow?f=&url=%s'),
 		dbesc(z_root() . '/poco/' . $ret['channel']['channel_address']),
@@ -780,14 +780,14 @@ function profile_load(&$a, $nickname, $profile = '') {
 	);
 
 	if(! $user) {
-		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
+		logger('profile error: ' . App::$query_string, LOGGER_DEBUG);
 		notice( t('Requested channel is not available.') . EOL );
-		$a->error = 404;
+		App::$error = 404;
 		return;
 	}
 
 	// get the current observer
-	$observer = $a->get_observer();
+	$observer = App::get_observer();
 
 	$can_view_profile = true;
 
@@ -826,9 +826,9 @@ function profile_load(&$a, $nickname, $profile = '') {
 	}
 
 	if(! $p) {
-		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
+		logger('profile error: ' . App::$query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
-		$a->error = 404;
+		App::$error = 404;
 		return;
 	}
 
@@ -885,23 +885,23 @@ function profile_load(&$a, $nickname, $profile = '') {
 	if($p[0]['keywords']) {
 		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$p[0]['keywords']);
 		if(strlen($keywords) && $can_view_profile)
-			$a->page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
+			App::$page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
 	}
 
-	$a->profile = $p[0];
-	$a->profile_uid = $p[0]['profile_uid'];
-	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
+	App::$profile = $p[0];
+	App::$profile_uid = $p[0]['profile_uid'];
+	App::$page['title'] = App::$profile['channel_name'] . " - " . App::$profile['channel_address'] . "@" . App::get_hostname();
 
-	$a->profile['permission_to_view'] = $can_view_profile;
+	App::$profile['permission_to_view'] = $can_view_profile;
 
 	if($can_view_profile) {
 		$online = get_online_status($nickname);
-		$a->profile['online_status'] = $online['result'];
+		App::$profile['online_status'] = $online['result'];
 	}
 
 	if(local_channel()) {
-		$a->profile['channel_mobile_theme'] = get_pconfig(local_channel(),'system', 'mobile_theme');
-		$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
+		App::$profile['channel_mobile_theme'] = get_pconfig(local_channel(),'system', 'mobile_theme');
+		$_SESSION['mobile_theme'] = App::$profile['channel_mobile_theme'];
 	}
 
 	/*
@@ -978,7 +978,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 	$a = get_app();
 
-	$observer = $a->get_observer();
+	$observer = App::get_observer();
 
 	$o = '';
 	$location = false;
@@ -1010,7 +1010,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		$connect_url = rconnect_url($profile['uid'],get_observer_hash());
 		$connect = (($connect_url) ? t('Connect') : '');
 		if($connect_url) 
-			$connect_url = sprintf($connect_url,urlencode($profile['channel_address'] . '@' . $a->get_hostname()));
+			$connect_url = sprintf($connect_url,urlencode($profile['channel_address'] . '@' . App::get_hostname()));
 
 		// premium channel - over-ride
 
@@ -1164,7 +1164,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	
 					$rr['link'] = $url;
 					$rr['title'] = $rr['name'];
-					$rr['date'] = day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '');
+					$rr['date'] = day_translate(datetime_convert('UTC', App::$timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '');
 					$rr['startime'] = Null;
 					$rr['today'] = $today;
 				}
@@ -1214,15 +1214,15 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 				if(strlen($rr['name']))
 					$total ++;
 
-				$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start'],'Y-m-d');
-				if($strt === datetime_convert('UTC',$a->timezone,'now','Y-m-d'))
+				$strt = datetime_convert('UTC',$rr['convert'] ? App::$timezone : 'UTC',$rr['start'],'Y-m-d');
+				if($strt === datetime_convert('UTC',App::$timezone,'now','Y-m-d'))
 					$istoday = true;
 			}
 			$classtoday = (($istoday) ? 'event-today' : '');
 
 			foreach($r as &$rr) {
 				if($rr['adjust'])
-					$md = datetime_convert('UTC',$a->timezone,$rr['start'],'Y/m');
+					$md = datetime_convert('UTC',App::$timezone,$rr['start'],'Y/m');
 				else
 					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
 				$md .= "/#link-".$rr['id'];
@@ -1231,12 +1231,12 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 				if(! $title)
 					$title = t('[No description]');
 
-				$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start']);
-				$today = ((substr($strt,0,10) === datetime_convert('UTC',$a->timezone,'now','Y-m-d')) ? true : false);
+				$strt = datetime_convert('UTC',$rr['convert'] ? App::$timezone : 'UTC',$rr['start']);
+				$today = ((substr($strt,0,10) === datetime_convert('UTC',App::$timezone,'now','Y-m-d')) ? true : false);
 				
 				$rr['link'] = $md;
 				$rr['title'] = $title;
-				$rr['date'] = day_translate(datetime_convert('UTC', $rr['adjust'] ? $a->timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
+				$rr['date'] = day_translate(datetime_convert('UTC', $rr['adjust'] ? App::$timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
 				$rr['startime'] = $strt;
 				$rr['today'] = $today;
 			}
@@ -1256,15 +1256,15 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 function advanced_profile(&$a) {
 	require_once('include/text.php');
-	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_profile'))
+	if(! perm_is_allowed(App::$profile['profile_uid'],get_observer_hash(),'view_profile'))
 		return '';
 
-	if($a->profile['name']) {
+	if(App::$profile['name']) {
 
 		$profile_fields_basic    = get_profile_fields_basic();
 		$profile_fields_advanced = get_profile_fields_advanced();
 
-		$advanced = ((feature_enabled($a->profile['profile_uid'],'advanced_profiles')) ? true : false);
+		$advanced = ((feature_enabled(App::$profile['profile_uid'],'advanced_profiles')) ? true : false);
 		if($advanced)
 			$fields = $profile_fields_advanced;
 		else
@@ -1283,19 +1283,19 @@ function advanced_profile(&$a) {
 
 		$profile = array();
 
-		$profile['fullname'] = array( t('Full Name:'), $a->profile['name'] ) ;
+		$profile['fullname'] = array( t('Full Name:'), App::$profile['name'] ) ;
 
-		if($a->profile['gender']) $profile['gender'] = array( t('Gender:'),  $a->profile['gender'] );
+		if(App::$profile['gender']) $profile['gender'] = array( t('Gender:'),  App::$profile['gender'] );
 
 		$ob_hash = get_observer_hash();
-		if($ob_hash && perm_is_allowed($a->profile['profile_uid'],$ob_hash,'post_like')) {
+		if($ob_hash && perm_is_allowed(App::$profile['profile_uid'],$ob_hash,'post_like')) {
 			$profile['canlike'] = true;
 			$profile['likethis'] = t('Like this channel');
-			$profile['profile_guid'] = $a->profile['profile_guid'];
+			$profile['profile_guid'] = App::$profile['profile_guid'];
 		}
 
 		$likers = q("select liker, xchan.*  from likes left join xchan on liker = xchan_hash where channel_id = %d and target_type = '%s' and verb = '%s'",
-			intval($a->profile['profile_uid']),
+			intval(App::$profile['profile_uid']),
 			dbesc(ACTIVITY_OBJ_PROFILE),
 			dbesc(ACTIVITY_LIKE)
 		);
@@ -1307,87 +1307,87 @@ function advanced_profile(&$a) {
 				$profile['likers'][] = array('name' => $l['xchan_name'],'photo' => zid($l['xchan_photo_s']), 'url' => zid($l['xchan_url']));
 		}
 
-		if(($a->profile['dob']) && ($a->profile['dob'] != '0000-00-00')) {
+		if((App::$profile['dob']) && (App::$profile['dob'] != '0000-00-00')) {
 
 			$val = '';
 
-			if((substr($a->profile['dob'],5,2) === '00') || (substr($a->profile['dob'],8,2) === '00'))
-				$val = substr($a->profile['dob'],0,4);
+			if((substr(App::$profile['dob'],5,2) === '00') || (substr(App::$profile['dob'],8,2) === '00'))
+				$val = substr(App::$profile['dob'],0,4);
 		
 			$year_bd_format = t('j F, Y');
 			$short_bd_format = t('j F');
 
 			if(! $val) {
-				$val = ((intval($a->profile['dob'])) 
-					? day_translate(datetime_convert('UTC','UTC',$a->profile['dob'] . ' 00:00 +00:00',$year_bd_format))
-					: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],5) . ' 00:00 +00:00',$short_bd_format)));
+				$val = ((intval(App::$profile['dob'])) 
+					? day_translate(datetime_convert('UTC','UTC',App::$profile['dob'] . ' 00:00 +00:00',$year_bd_format))
+					: day_translate(datetime_convert('UTC','UTC','2001-' . substr(App::$profile['dob'],5) . ' 00:00 +00:00',$short_bd_format)));
 			}
 			$profile['birthday'] = array( t('Birthday:'), $val);
 		}
 
-		if($age = age($a->profile['dob'],$a->profile['timezone'],''))
+		if($age = age(App::$profile['dob'],App::$profile['timezone'],''))
 			$profile['age'] = array( t('Age:'), $age );
 
-		if($a->profile['marital'])
-			$profile['marital'] = array( t('Status:'), $a->profile['marital']);
+		if(App::$profile['marital'])
+			$profile['marital'] = array( t('Status:'), App::$profile['marital']);
 
-		if($a->profile['with'])
-			$profile['marital']['with'] = bbcode($a->profile['with']);
+		if(App::$profile['with'])
+			$profile['marital']['with'] = bbcode(App::$profile['with']);
 
-		if(strlen($a->profile['howlong']) && $a->profile['howlong'] !== NULL_DATE) {
-			$profile['howlong'] = relative_date($a->profile['howlong'], t('for %1$d %2$s'));
+		if(strlen(App::$profile['howlong']) && App::$profile['howlong'] !== NULL_DATE) {
+			$profile['howlong'] = relative_date(App::$profile['howlong'], t('for %1$d %2$s'));
 		}
 
-		if($a->profile['sexual']) $profile['sexual'] = array( t('Sexual Preference:'), $a->profile['sexual'] );
+		if(App::$profile['sexual']) $profile['sexual'] = array( t('Sexual Preference:'), App::$profile['sexual'] );
 
-		if($a->profile['homepage']) $profile['homepage'] = array( t('Homepage:'), linkify($a->profile['homepage']) );
+		if(App::$profile['homepage']) $profile['homepage'] = array( t('Homepage:'), linkify(App::$profile['homepage']) );
 
-		if($a->profile['hometown']) $profile['hometown'] = array( t('Hometown:'), linkify($a->profile['hometown']) );
+		if(App::$profile['hometown']) $profile['hometown'] = array( t('Hometown:'), linkify(App::$profile['hometown']) );
 
-		if($a->profile['keywords']) $profile['keywords'] = array( t('Tags:'), $a->profile['keywords']);
+		if(App::$profile['keywords']) $profile['keywords'] = array( t('Tags:'), App::$profile['keywords']);
 
-		if($a->profile['politic']) $profile['politic'] = array( t('Political Views:'), $a->profile['politic']);
+		if(App::$profile['politic']) $profile['politic'] = array( t('Political Views:'), App::$profile['politic']);
 
-		if($a->profile['religion']) $profile['religion'] = array( t('Religion:'), $a->profile['religion']);
+		if(App::$profile['religion']) $profile['religion'] = array( t('Religion:'), App::$profile['religion']);
 
-		if($txt = prepare_text($a->profile['about'])) $profile['about'] = array( t('About:'), $txt );
+		if($txt = prepare_text(App::$profile['about'])) $profile['about'] = array( t('About:'), $txt );
 
-		if($txt = prepare_text($a->profile['interest'])) $profile['interest'] = array( t('Hobbies/Interests:'), $txt);
+		if($txt = prepare_text(App::$profile['interest'])) $profile['interest'] = array( t('Hobbies/Interests:'), $txt);
 
-		if($txt = prepare_text($a->profile['likes'])) $profile['likes'] = array( t('Likes:'), $txt);
+		if($txt = prepare_text(App::$profile['likes'])) $profile['likes'] = array( t('Likes:'), $txt);
 
-		if($txt = prepare_text($a->profile['dislikes'])) $profile['dislikes'] = array( t('Dislikes:'), $txt);
+		if($txt = prepare_text(App::$profile['dislikes'])) $profile['dislikes'] = array( t('Dislikes:'), $txt);
 
-		if($txt = prepare_text($a->profile['contact'])) $profile['contact'] = array( t('Contact information and Social Networks:'), $txt);
+		if($txt = prepare_text(App::$profile['contact'])) $profile['contact'] = array( t('Contact information and Social Networks:'), $txt);
 
-		if($txt = prepare_text($a->profile['channels'])) $profile['channels'] = array( t('My other channels:'), $txt);
+		if($txt = prepare_text(App::$profile['channels'])) $profile['channels'] = array( t('My other channels:'), $txt);
 
-		if($txt = prepare_text($a->profile['music'])) $profile['music'] = array( t('Musical interests:'), $txt);
+		if($txt = prepare_text(App::$profile['music'])) $profile['music'] = array( t('Musical interests:'), $txt);
 		
-		if($txt = prepare_text($a->profile['book'])) $profile['book'] = array( t('Books, literature:'), $txt);
+		if($txt = prepare_text(App::$profile['book'])) $profile['book'] = array( t('Books, literature:'), $txt);
 
-		if($txt = prepare_text($a->profile['tv'])) $profile['tv'] = array( t('Television:'), $txt);
+		if($txt = prepare_text(App::$profile['tv'])) $profile['tv'] = array( t('Television:'), $txt);
 
-		if($txt = prepare_text($a->profile['film'])) $profile['film'] = array( t('Film/dance/culture/entertainment:'), $txt);
+		if($txt = prepare_text(App::$profile['film'])) $profile['film'] = array( t('Film/dance/culture/entertainment:'), $txt);
 
-		if($txt = prepare_text($a->profile['romance'])) $profile['romance'] = array( t('Love/Romance:'), $txt);
+		if($txt = prepare_text(App::$profile['romance'])) $profile['romance'] = array( t('Love/Romance:'), $txt);
 		
-		if($txt = prepare_text($a->profile['work'])) $profile['work'] = array( t('Work/employment:'), $txt);
+		if($txt = prepare_text(App::$profile['work'])) $profile['work'] = array( t('Work/employment:'), $txt);
 
-		if($txt = prepare_text($a->profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
+		if($txt = prepare_text(App::$profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
 
-		if($a->profile['extra_fields']) {
-			foreach($a->profile['extra_fields'] as $f) {
+		if(App::$profile['extra_fields']) {
+			foreach(App::$profile['extra_fields'] as $f) {
 				$x = q("select * from profdef where field_name = '%s' limit 1",
 					dbesc($f)
 				);
-				if($x && $txt = prepare_text($a->profile[$f]))
+				if($x && $txt = prepare_text(App::$profile[$f]))
 					$profile[$f] = array( $x[0]['field_desc'] . ':',$txt);
 			}
-			$profile['extra_fields'] = $a->profile['extra_fields'];
+			$profile['extra_fields'] = App::$profile['extra_fields'];
 		}
 
-		$things = get_things($a->profile['profile_guid'],$a->profile['profile_uid']);
+		$things = get_things(App::$profile['profile_guid'],App::$profile['profile_uid']);
 
 //		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
 
@@ -1397,7 +1397,7 @@ function advanced_profile(&$a) {
 			'$likethis' => t('Like this thing'),
 			'$profile' => $profile,
 			'$fields' => $clean_fields,
-			'$editmenu' => profile_edit_menu($a->profile['profile_uid']),
+			'$editmenu' => profile_edit_menu(App::$profile['profile_uid']),
 			'$things' => $things
 		));
 	}
@@ -1440,7 +1440,7 @@ function zid_init(&$a) {
 	$tmp_str = get_my_address();
 	if(validate_email($tmp_str)) {
 		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
-		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
+		$arr = array('zid' => $tmp_str, 'url' => App::$cmd);
 		call_hooks('zid_init',$arr);
 		if(! local_channel()) {
 			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_connected desc limit 1",
@@ -1450,7 +1450,7 @@ function zid_init(&$a) {
 				return;
 			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
 			// try to avoid recursion - but send them home to do a proper magic auth
-			$query = $a->query_string;
+			$query = App::$query_string;
 			$query = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$query);
 			$dest = '/' . urlencode($query);
 			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic')) && (! strstr($dest,'/rmagic'))) {
@@ -1631,7 +1631,7 @@ function identity_selector() {
 			intval(get_account_id())
 		);
 		if (count($r) > 1) {
-			//$account = get_app()->get_account();
+			//$account = App::get_account();
 			$o = replace_macros(get_markup_template('channel_id_select.tpl'), array(
 				'$channels' => $r,
 				'$selected' => local_channel()
@@ -1649,7 +1649,7 @@ function is_public_profile() {
 		return false;
 	if(intval(get_config('system','block_public')))
 		return false;
-	$channel = get_app()->get_channel();
+	$channel = App::get_channel();
 	if($channel && $channel['channel_r_profile'] == PERMS_PUBLIC)
 		return true;
 
@@ -1855,7 +1855,7 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 //	$translate = intval(($scale / 1.0) * 100);
 
 
-	$channel['channel_addr'] = $channel['channel_address'] . '@' . get_app()->get_hostname();
+	$channel['channel_addr'] = $channel['channel_address'] . '@' . App::get_hostname();
 	$zcard = array('chan' => $channel);
 
 	$r = q("select height, width, resource_id, scale, type from photo where uid = %d and scale = %d and photo_usage = %d",

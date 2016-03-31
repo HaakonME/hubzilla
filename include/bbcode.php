@@ -37,7 +37,7 @@ function tryzrlvideo($match) {
 	if($zrl)
 		$link = zid($link);
 
-	return '<video controls="controls" preload="none" src="' . str_replace(' ','%20',$link) . '" style="width:100%; max-width:' . get_app()->videowidth . 'px"><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></video>';
+	return '<video controls="controls" preload="none" src="' . str_replace(' ','%20',$link) . '" style="width:100%; max-width:' . App::$videowidth . 'px"><a href="' . str_replace(' ','%20',$link) . '">' . $link . '</a></video>';
 }
 
 // [noparse][i]italic[/i][/noparse] turns into
@@ -280,9 +280,9 @@ function bb_location($match) {
 function bb_iframe($match) {
 	$a = get_app();
 
-	$sandbox = ((strpos($match[1], $a->get_hostname())) ? ' sandbox="allow-scripts" ' : '');
+	$sandbox = ((strpos($match[1], App::get_hostname())) ? ' sandbox="allow-scripts" ' : '');
 
-	return '<iframe ' . $sandbox . ' src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
+	return '<iframe ' . $sandbox . ' src="' . $match[1] . '" width="' . App::$videowidth . '" height="' . App::$videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
 }
 
 function bb_ShareAttributesSimple($match) {
@@ -315,9 +315,9 @@ function bb_ShareAttributesSimple($match) {
 
 function rpost_callback($match) {
 	if ($match[2]) {
-		return str_replace($match[0], get_rpost_path(get_app()->get_observer()) . '&title=' . urlencode($match[2]) . '&body=' . urlencode($match[3]), $match[0]);
+		return str_replace($match[0], get_rpost_path(App::get_observer()) . '&title=' . urlencode($match[2]) . '&body=' . urlencode($match[3]), $match[0]);
 	} else {
-		return str_replace($match[0], get_rpost_path(get_app()->get_observer()) . '&body=' . urlencode($match[3]), $match[0]);
+		return str_replace($match[0], get_rpost_path(App::get_observer()) . '&body=' . urlencode($match[3]), $match[0]);
 	}
 }
 
@@ -401,7 +401,7 @@ function bb_observer($Text) {
 
 	$a = get_app();
 
-	$observer = $a->get_observer();
+	$observer = App::get_observer();
 
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
@@ -415,7 +415,7 @@ function bb_observer($Text) {
 		}
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	if (strpos($Text,'[/channel]') !== false) {
 		if ($channel) {
@@ -477,7 +477,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	if($cache)
 		$observer = false;
 	else
-		$observer = $a->get_observer();
+		$observer = App::get_observer();
 
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
@@ -494,7 +494,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	if($cache)
 		$channel = false;
 	else
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 	if (strpos($Text,'[/channel]') !== false) {
 		if ($channel) {
@@ -930,7 +930,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 //			$Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/ism", '[youtube]$1[/youtube]', $Text);
 
 //		if ($tryoembed)
-//			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . $a->videowidth . '" height="' . $a->videoheight . '" src="http://www.youtube.com/embed/$1" frameborder="0"></iframe>', $Text);
+//			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . App::$videowidth . '" height="' . App::$videoheight . '" src="http://www.youtube.com/embed/$1" frameborder="0"></iframe>', $Text);
 //		else
 //			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", "http://www.youtube.com/watch?v=$1", $Text);
 //	}
@@ -944,7 +944,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 //		$Text = preg_replace("/\[vimeo\]https?:\/\/vimeo.com\/([0-9]+)(.*?)\[\/vimeo\]/ism", '[vimeo]$1[/vimeo]', $Text);
 
 //		if ($tryoembed)
-//			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . $a->videowidth . '" height="' . $a->videoheight . '" src="http://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $Text);
+//			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . App::$videowidth . '" height="' . App::$videoheight . '" src="http://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $Text);
 //		else
 //			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", "http://vimeo.com/$1", $Text);
 //	}

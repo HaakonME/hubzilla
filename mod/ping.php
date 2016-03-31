@@ -93,7 +93,7 @@ function ping_init(&$a) {
 		$result['notice'] = array();
 
 
-	if($a->install) {
+	if(App::$install) {
 		echo json_encode($result);
 		killme();
 	}
@@ -240,7 +240,7 @@ function ping_init(&$a) {
 	}
 
 	if(argc() > 1 && argv(1) === 'messages') {
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
 			where channel_id = %d and mail_seen = 0 and mail_deleted = 0 
 			and from_xchan != '%s' order by created desc limit 50",
@@ -413,7 +413,7 @@ function ping_init(&$a) {
 	}
 
 	$t4 = dba_timer();
-	$channel = get_app()->get_channel();
+	$channel = App::get_channel();
 
 	if($vnotify & VNOTIFY_MAIL) {
 		$mails = q("SELECT count(id) as total from mail
@@ -426,7 +426,7 @@ function ping_init(&$a) {
 	}
 	
 	if($vnotify & VNOTIFY_REGISTER) {
-		if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
+		if (App::$config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
 			$regs = q("SELECT count(account_id) as total from account where (account_flags & %d) > 0",
 				intval(ACCOUNT_PENDING)
 			);

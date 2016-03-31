@@ -97,7 +97,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 
 	// process a logout request
 
-	if(((x($_POST, 'auth-params')) && ($_POST['auth-params'] === 'logout')) || ($a->module === 'logout')) {
+	if(((x($_POST, 'auth-params')) && ($_POST['auth-params'] === 'logout')) || (App::$module === 'logout')) {
 		// process logout request
 		$args = array('channel_id' => local_channel());
 		call_hooks('logging_out', $args);
@@ -128,13 +128,13 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 			dbesc($_SESSION['visitor_id'])
 		);
 		if($r) {
-			get_app()->set_observer($r[0]);
+			App::set_observer($r[0]);
 		}
 		else {
 			unset($_SESSION['visitor_id']);
 			unset($_SESSION['authenticated']);
 		}
-		$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
+		App::set_groups(init_groups_visitor($_SESSION['visitor_id']));
 	}
 
 	// already logged in user returning
@@ -183,7 +183,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 		);
 
 		if(($r) && (($r[0]['account_flags'] == ACCOUNT_OK) || ($r[0]['account_flags'] == ACCOUNT_UNVERIFIED))) {
-			get_app()->account = $r[0];
+			App::$account = $r[0];
 			$login_refresh = false;
 			if(! x($_SESSION,'last_login_date')) {
 				$_SESSION['last_login_date'] = datetime_convert('UTC','UTC');
@@ -237,16 +237,16 @@ else {
 			$record = $addon_auth['user_record'];
 		}
 		else {
-			$record = get_app()->account = account_verify_password($_POST['username'], $_POST['password']);
+			$record = App::$account = account_verify_password($_POST['username'], $_POST['password']);
 
-			if(get_app()->account) {
-				$_SESSION['account_id'] = get_app()->account['account_id'];
+			if(App::$account) {
+				$_SESSION['account_id'] = App::$account['account_id'];
 			}
 			else {
 				notice( t('Failed authentication') . EOL);
 			}
 
-			logger('authenticate: ' . print_r(get_app()->account, true), LOGGER_DEBUG);
+			logger('authenticate: ' . print_r(App::$account, true), LOGGER_DEBUG);
 		}
 
 		if((! $record) || (! count($record))) {

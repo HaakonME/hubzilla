@@ -8,7 +8,7 @@ function editblock_init(&$a) {
 	if(argc() > 1 && argv(1) === 'sys' && is_site_admin()) {
 		$sys = get_sys_channel();
 		if($sys && intval($sys['channel_id'])) {
-			$a->is_sys = true;
+			App::$is_sys = true;
 		}
 	}
 
@@ -25,9 +25,9 @@ function editblock_init(&$a) {
 
 function editblock_content(&$a) {
 
-	if(! $a->profile) {
+	if(! App::$profile) {
 		notice( t('Requested profile is not available.') . EOL );
-		$a->error = 404;
+		App::$error = 404;
 		return;
 	}
 
@@ -36,11 +36,11 @@ function editblock_content(&$a) {
 	$uid = local_channel();
 	$owner = 0;
 	$channel = null;
-	$observer = $a->get_observer();
+	$observer = App::get_observer();
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
-	if($a->is_sys && is_site_admin()) {
+	if(App::$is_sys && is_site_admin()) {
 		$sys = get_sys_channel();
 		if($sys && intval($sys['channel_id'])) {
 			$uid = $owner = intval($sys['channel_id']);
@@ -108,7 +108,7 @@ function editblock_content(&$a) {
 	else
 		$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 
-	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
+	App::$page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl'       => z_root(),
 		'$editselect'    => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext'       => '',

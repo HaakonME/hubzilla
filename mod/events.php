@@ -116,7 +116,7 @@ function events_post(&$a) {
 
 	$share = ((intval($_POST['share'])) ? intval($_POST['share']) : 0);
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	$acl = new Zotlabs\Access\AccessList(false);
 
@@ -158,7 +158,7 @@ function events_post(&$a) {
 	}
 
 	$post_tags = array();
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	$ac = $acl->get();
 
 	if(strlen($categories)) {
@@ -281,17 +281,17 @@ function events_content(&$a) {
 	$first_day = (($first_day) ? $first_day : 0);
 
 	$htpl = get_markup_template('event_head.tpl');
-	$a->page['htmlhead'] .= replace_macros($htpl,array(
+	App::$page['htmlhead'] .= replace_macros($htpl,array(
 		'$baseurl' => z_root(),
 		'$module_url' => '/events',
 		'$modparams' => 1,
-		'$lang' => $a->language,
+		'$lang' => App::$language,
 		'$first_day' => $first_day
 	));
 
 	$o = '';
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	$mode = 'view';
 	$y = 0;
@@ -299,7 +299,7 @@ function events_content(&$a) {
 	$ignored = ((x($_REQUEST,'ignored')) ? " and ignored = " . intval($_REQUEST['ignored']) . " "  : '');
 
 
-	// logger('args: ' . print_r($a->argv,true));
+	// logger('args: ' . print_r(App::$argv,true));
 
 
 
@@ -340,7 +340,7 @@ function events_content(&$a) {
 				$orig_event = $r[0];
 		}
 
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 		// Passed parameters overrides anything found in the DB
 		if(!x($orig_event))
@@ -571,7 +571,7 @@ function events_content(&$a) {
 			foreach($r as $rr) {
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				if(! x($links,$j)) 
-					$links[$j] = z_root() . '/' . $a->cmd . '#link-' . $j;
+					$links[$j] = z_root() . '/' . App::$cmd . '#link-' . $j;
 			}
 		}
 
@@ -641,7 +641,7 @@ function events_content(&$a) {
 			killme();
 		}
 
-		if ($a->argv[1] === 'json'){
+		if (App::$argv[1] === 'json'){
 			echo json_encode($events); killme();
 		}
 		

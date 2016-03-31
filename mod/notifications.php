@@ -6,7 +6,7 @@ function notifications_post(&$a) {
 		goaway(z_root());
 	}
 	
-	$request_id = (($a->argc > 1) ? $a->argv[1] : 0);
+	$request_id = ((App::$argc > 1) ? App::$argv[1] : 0);
 	
 	if($request_id === "all")
 		return;

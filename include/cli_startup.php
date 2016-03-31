@@ -18,8 +18,8 @@ function cli_startup() {
 		if(! defined('UNO'))
 			define('UNO', 0);
 
-		$a->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
-		date_default_timezone_set($a->timezone);
+		App::$timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
+		date_default_timezone_set(App::$timezone);
 
     	require_once('include/dba/dba_driver.php');
 	    $db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
@@ -30,7 +30,7 @@ function cli_startup() {
 
 	load_config('system');
 
-	$a->set_baseurl(get_config('system','baseurl'));
+	App::set_baseurl(get_config('system','baseurl'));
 
 	load_hooks();
 

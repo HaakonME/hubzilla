@@ -192,7 +192,7 @@ function item_post(&$a) {
 	}
 
 	if(! $observer)
-		$observer = $a->get_observer();
+		$observer = App::get_observer();
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
@@ -251,7 +251,7 @@ function item_post(&$a) {
 
 	if(! $channel) {
 		if($uid && $uid == $profile_uid) {
-			$channel = $a->get_channel();
+			$channel = App::get_channel();
 		}
 		else {
 			// posting as yourself but not necessarily to a channel you control

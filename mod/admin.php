@@ -196,7 +196,7 @@ function admin_page_summary(&$a) {
 	$queues = array( 'label' => t('Message queues'), 'queue' => $queue );
 
 	// If no plugins active return 0, otherwise list of plugin names
-	$plugins = (count($a->plugins) == 0) ? count($a->plugins) : $a->plugins;
+	$plugins = (count(App::$plugins) == 0) ? count(App::$plugins) : App::$plugins;
 
 	// Could be extended to provide also other alerts to the admin
 	$alertmsg = '';
@@ -514,7 +514,7 @@ function admin_page_hubloc_post(&$a){
 		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
 
 		//perform ping
-		$m = zot_build_packet($a->get_channel(),'ping');
+		$m = zot_build_packet(App::get_channel(),'ping');
 		$r = zot_zot($hublocurl,$m);
 		//handle results and set the hubloc flags in db to make results visible
 		$r2 = $r['body'];
@@ -671,7 +671,7 @@ function admin_page_hubloc(&$a) {
 		'$queues' => $queues,
 		//'$accounts' => $accounts, /*$accounts is empty here*/
 		'$pending' => array( t('Pending registrations'), $pending),
-		'$plugins' => array( t('Active plugins'), $a->plugins ),
+		'$plugins' => array( t('Active plugins'), App::$plugins ),
 		'$form_security_token' => get_form_security_token('admin_hubloc')
 	));
 }
@@ -936,8 +936,8 @@ function admin_page_users(&$a){
 
 	$total = q("SELECT count(*) as total FROM account");
 	if (count($total)) {
-		$a->set_pager_total($total[0]['total']);
-		$a->set_pager_itemspage(100);
+		App::set_pager_total($total[0]['total']);
+		App::set_pager_itemspage(100);
 	}
 
 
@@ -958,8 +958,8 @@ function admin_page_users(&$a){
 		"FROM account as ac where true $serviceclass $order limit %d offset %d ",
 		intval(ACCOUNT_BLOCKED),
 		db_concat('ch.channel_address', ' '),
-		intval($a->pager['itemspage']),
-		intval($a->pager['start'])
+		intval(App::$pager['itemspage']),
+		intval(App::$pager['start'])
 	);
 
 //	function _setup_users($e){
@@ -1117,15 +1117,15 @@ function admin_page_channels(&$a){
 
 	$total = q("SELECT count(*) as total FROM channel where channel_removed = 0 and channel_system = 0");
 	if($total) {
-		$a->set_pager_total($total[0]['total']);
-		$a->set_pager_itemspage(100);
+		App::set_pager_total($total[0]['total']);
+		App::set_pager_itemspage(100);
 	}
 
 	$order = " order by channel_name asc ";
 
 	$channels = q("SELECT * from channel where channel_removed = 0 and channel_system = 0 $order limit %d offset %d ",
-		intval($a->pager['itemspage']),
-		intval($a->pager['start'])
+		intval(App::$pager['itemspage']),
+		intval(App::$pager['start'])
 	);
 
 	if($channels) {
@@ -1183,14 +1183,14 @@ function admin_page_plugins(&$a){
 	/*
 	 * Single plugin
 	 */
-	if ($a->argc == 3){
-		$plugin = $a->argv[2];
+	if (App::$argc == 3){
+		$plugin = App::$argv[2];
 		if (!is_file("addon/$plugin/$plugin.php")){
 			notice( t("Item not found.") );
 			return '';
 		}
 
-		$enabled = in_array($plugin,$a->plugins);
+		$enabled = in_array($plugin,App::$plugins);
 		$info = get_plugin_info($plugin);
 		$x = check_plugin_versions($info);
 
@@ -1198,11 +1198,11 @@ function admin_page_plugins(&$a){
 
 		if($enabled && ! $x) {
 			$enabled = false;
-			$idz = array_search($plugin, $a->plugins);
+			$idz = array_search($plugin, App::$plugins);
 			if ($idz !== false) {
-				unset($a->plugins[$idz]);
+				unset(App::$plugins[$idz]);
 				uninstall_plugin($plugin);
-				set_config("system","addon", implode(", ",$a->plugins));
+				set_config("system","addon", implode(", ",App::$plugins));
 			}
 		}
 		$info['disabled'] = 1-intval($x);
@@ -1211,23 +1211,23 @@ function admin_page_plugins(&$a){
 			check_form_security_token_redirectOnErr('/admin/plugins', 'admin_plugins', 't');
 
 			// Toggle plugin status
-			$idx = array_search($plugin, $a->plugins);
+			$idx = array_search($plugin, App::$plugins);
 			if ($idx !== false){
-				unset($a->plugins[$idx]);
+				unset(App::$plugins[$idx]);
 				uninstall_plugin($plugin);
 				info( sprintf( t("Plugin %s disabled."), $plugin ) );
 			} else {
-				$a->plugins[] = $plugin;
+				App::$plugins[] = $plugin;
 				install_plugin($plugin);
 				info( sprintf( t("Plugin %s enabled."), $plugin ) );
 			}
-			set_config("system","addon", implode(", ",$a->plugins));
+			set_config("system","addon", implode(", ",App::$plugins));
 			goaway(z_root() . '/admin/plugins' );
 		}
 		// display plugin details
 		require_once('library/markdown.php');
 
-		if (in_array($plugin, $a->plugins)){
+		if (in_array($plugin, App::$plugins)){
 			$status = 'on';
 			$action = t('Disable');
 		} else {
@@ -1298,18 +1298,18 @@ function admin_page_plugins(&$a){
 			if (is_dir($file)){
 				list($tmp, $id) = array_map('trim', explode('/', $file));
 				$info = get_plugin_info($id);
-				$enabled = in_array($id,$a->plugins);
+				$enabled = in_array($id,App::$plugins);
 				$x = check_plugin_versions($info);
 
 				// disable plugins which are installed but incompatible versions
 
 				if($enabled && ! $x) {
 					$enabled = false;
-					$idz = array_search($id, $a->plugins);
+					$idz = array_search($id, App::$plugins);
 					if ($idz !== false) {
-						unset($a->plugins[$idz]);
+						unset(App::$plugins[$idz]);
 						uninstall_plugin($id);
-						set_config("system","addon", implode(", ",$a->plugins));
+						set_config("system","addon", implode(", ",App::$plugins));
 					}
 				}
 				$info['disabled'] = 1-intval($x);
@@ -1428,8 +1428,8 @@ function admin_page_themes(&$a){
 	 * Single theme
 	 */
 
-	if ($a->argc == 3){
-		$theme = $a->argv[2];
+	if (App::$argc == 3){
+		$theme = App::$argv[2];
 		if(! is_dir("view/theme/$theme")){
 			notice( t("Item not found.") );
 			return '';

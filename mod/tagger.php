@@ -100,7 +100,7 @@ function tagger_content(&$a) {
 
 	$termlink = html_entity_decode('&#x22d5;') . '[zrl=' . z_root() . '/search?tag=' . urlencode($term) . ']'. $term . '[/zrl]';
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	$arr = array();
 

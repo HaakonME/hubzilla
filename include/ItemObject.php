@@ -714,7 +714,7 @@ class Item extends BaseObject {
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
 			'$cipher' => $conv->get_cipher(),
-			'$sourceapp' => get_app()->sourcename
+			'$sourceapp' => App::$sourcename
 
 		));
 

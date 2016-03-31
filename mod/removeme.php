@@ -18,7 +18,7 @@ function removeme_post(&$a) {
 		return;
 
 
-	$account = $a->get_account();
+	$account = App::get_account();
 
 	if(! account_verify_password($account['account_email'],$_POST['qxz_password']))
 		return;

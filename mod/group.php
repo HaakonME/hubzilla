@@ -62,7 +62,7 @@ function group_post(&$a) {
 function group_content(&$a) {
 	$change = false;
 
-	logger('mod_group: ' . $a->cmd,LOGGER_DEBUG);
+	logger('mod_group: ' . App::$cmd,LOGGER_DEBUG);
 	
 	if(! local_channel()) {
 		notice( t('Permission denied') . EOL);

@@ -1375,6 +1375,10 @@ img.mail-conv-sender-photo {
 	background-color: $item_colour;
 }
 
+#chatMembers img {
+	border-radius: $radiuspx;
+}
+
 /* nav bootstrap */
 
 

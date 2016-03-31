@@ -811,7 +811,7 @@ function widget_chatroom_list($arr) {
 
 function widget_chatroom_members() {
 	$o = replace_macros(get_markup_template('chatroom_members.tpl'), array(
-		'$header' => t('Chatroom Members')
+		'$header' => t('Chat Members')
 	));
 
 	return $o;

@@ -30,8 +30,8 @@
 				<div class="form-group">
 
 				</div>
-				<div id="chat-submit-wrapper" class="form-group">
-					<div id="chat-submit" class="btn-group dropup pull-right">
+				<div id="chat-submit-wrapper">
+					<div id="chat-submit" class="dropup pull-right">
 						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="icon-caret-down"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="chat-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 						<ul class="dropdown-menu">
@@ -109,14 +109,13 @@ $(document).ready(function() {
 	chat_timer = setTimeout(load_chats,300);
 	$('#chatroom_bookmarks, #vcard').hide();
 	$('#chatroom_list, #chatroom_members').show();
-
-	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 40 );
-
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23 );
 });
 
 $(window).resize(function () {
-	var navHeight = $('.generic-content-wrapper').hasClass('fullscreen') ? 0 : $('nav').outerHeight(true)
-	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - navHeight - 40 );
+	var navHeight = $('.generic-content-wrapper').hasClass('fullscreen') ? 0 : $('nav').outerHeight(true);
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - navHeight - 23);
+	$('#chatTopBar').scrollTop($('#chatTopBar').scrollTop() + $('#chatTopBar').outerHeight(true));
 });
 
 $('#chat-form').submit(function(ev) {
@@ -196,18 +195,18 @@ function addmailtext(data) {
 }
 
 function makeFullScreen() {
-	$('#fullscreen').hide();
+	$('#fullscreen, aside').hide();
 	$('#inline').show();
 	$('.generic-content-wrapper').addClass('fullscreen');
-	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 20);
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 23);
 
 }
 
 function makeInline() {
-	$('#fullscreen').show();
+	$('#fullscreen, aside').show();
 	$('#inline').hide();
 	$('.generic-content-wrapper').removeClass('fullscreen');
-	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 40 );
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23);
 }
 
 </script>

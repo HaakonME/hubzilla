@@ -1,5 +1,4 @@
-#chatroom-new,
-#inline {
+#chatroom-new {
 	display: none;
 }
 
@@ -31,7 +30,6 @@ aside {
 }
 
 #chatTopBar {
-	float: left;
 	width: 100%;
 	overflow-y: auto;
 }

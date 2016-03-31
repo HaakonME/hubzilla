@@ -1,8 +1,8 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
-			<button id="fullscreen" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenTopBarHeight();"><i class="icon-resize-full"></i></button>
-			<button id="inline" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false); adjustInlineTopBarHeight();"><i class="icon-resize-small"></i></button>
+			<button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenTopBarHeight();"><i class="icon-resize-full"></i></button>
+			<button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false); adjustInlineTopBarHeight();"><i class="icon-resize-small"></i></button>
 			{{if $is_owner}}
 			<form id="chat-destroy" method="post" action="chat">
 				<input type="hidden" name="room_name" value="{{$room_name}}" />

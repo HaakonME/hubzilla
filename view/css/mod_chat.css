@@ -1,4 +1,5 @@
-#chatroom-new {
+#chatroom-new,
+#inline {
 	display: none;
 }
 
@@ -25,14 +26,23 @@ aside {
 	padding-bottom: 0px;
 }
 
+#chat-destroy {
+	display: inline;
+}
+
 #chatTopBar {
 	float: left;
+	width: 100%;
 	height: 400px;
 	overflow-y: auto;
 }
 
+#chatroom_list,
+#chatroom_members {
+	display: none;
+}
 
-#chatUsers img {
+#chatMembers img {
 	float: left;
 	margin-right: 5px;
 }
@@ -49,11 +59,16 @@ aside {
 
 .chat-item {
 	display: table;
-	table-layout: fixed;
-
+	float: left;
 }
 
-.chat-item-photo {
+.chat-item-self {
+	display: table;
+	float: right;
+}
+
+.chat-item-photo,
+.chat-item-photo-self {
 	display: table-cell;
 	height: 32px;
 	width: 32px;
@@ -66,7 +81,17 @@ aside {
 	padding: 0px 0px 20px 10px;
 }
 
-.chat-item-title {
+.chat-body-self {
+	display: table-cell;
+	vertical-align: top;
+	padding: 0px 10px 20px 0px;
+	text-align: right;
+}
+
+
+
+.chat-item-title,
+.chat-item-title-self {
 	display: inline-block;
 	padding: 3px;
 	margin-bottom: 3px;
@@ -82,5 +107,14 @@ aside {
 
 .leave {
 	color: red;
+}
+
+.generic-content-wrapper.fullscreen {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	z-index: 10000;
 }
 

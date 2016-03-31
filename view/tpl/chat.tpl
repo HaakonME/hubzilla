@@ -1,14 +1,16 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		{{if $is_owner}}
-		<div id="chatDrop" class="pull-right">
+		<div class="pull-right">
+			<button id="fullscreen" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();"><i class="icon-resize-full"></i></button>
+			<button id="inline" type="button" class="btn btn-default btn-xs" onclick="makeInline();"><i class="icon-resize-small"></i></button>
+			{{if $is_owner}}
 			<form id="chat-destroy" method="post" action="chat">
 				<input type="hidden" name="room_name" value="{{$room_name}}" />
 				<input type="hidden" name="action" value="drop" />
 				<button class="btn btn-danger btn-xs" type="submit" name="submit" value="{{$drop}}" onclick="return confirmDelete();"><i class="icon-trash"></i>&nbsp;{{$drop}}</button>
 			</form>
+			{{/if}}
 		</div>
-		{{/if}}
 		<h2>{{$room_name}}</h2>
 		<div class="clear"></div>
 	</div>
@@ -103,10 +105,19 @@ var last_chat = 0;
 var chat_timer = null;
 
 $(document).ready(function() {
+	$('#chatTopBar').spin('small');
 	chat_timer = setTimeout(load_chats,300);
+	$('#chatroom_bookmarks, #vcard').hide();
+	$('#chatroom_list, #chatroom_members').show();
+
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 40 );
 
 });
 
+$(window).resize(function () {
+	var navHeight = $('.generic-content-wrapper').hasClass('fullscreen') ? 0 : $('nav').outerHeight(true)
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - navHeight - 40 );
+});
 
 $('#chat-form').submit(function(ev) {
 	$('body').css('cursor','wait');
@@ -124,6 +135,7 @@ function load_chats() {
 		if(data.success && (! stopped)) {
 			update_inroom(data.inroom);
 			update_chats(data.chats);
+			$('#chatTopBar').spin(false);
 		}
 	});
 	
@@ -136,20 +148,27 @@ function update_inroom(inroom) {
 	var count = inroom.length;
 	$.each( inroom, function(index, item) {
 		var newNode = document.createElement('div');
+		newNode.setAttribute('class', 'member-item');
 		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" /> ' + '<span class="name">' + item.name + '</span><br /><span class="' + item.status_class + '">' + item.status + '</span>');
 		html.appendChild(newNode);
 	});
-	$('#chatUsers').html(html);	
+	$('#chatMembers').html(html);
 }
 
 function update_chats(chats) {
-
 	var count = chats.length;
 	$.each( chats, function(index, item) {
 		last_chat = item.id;
 		var newNode = document.createElement('div');
-		newNode.setAttribute('class', 'chat-item');
-		$(newNode).html('<img class="chat-item-photo" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body"><div class="chat-item-title"><span class="chat-item-name">' + item.name + ' </span><span class="autotime chat-item-time" title="' + item.isotime + '">' + item.localtime + '</span></div><div class="chat-item-text">' + item.text + '</div></div><div class="chat-item-end"></div>');
+
+		if(item.self) {
+			newNode.setAttribute('class', 'chat-item-self clear');
+			$(newNode).html('<div class="chat-body-self"><div class="chat-item-title-self"><span class="chat-item-name-self">' + item.name + ' </span><span class="autotime chat-item-time-self" title="' + item.isotime + '">' + item.localtime + '</span></div><div class="chat-item-text-self">' + item.text + '</div></div><img class="chat-item-photo-self" src="' + item.img + '" alt="' + item.name + '" />');
+		}
+		else {
+			newNode.setAttribute('class', 'chat-item clear');
+			$(newNode).html('<img class="chat-item-photo" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body"><div class="chat-item-title"><span class="chat-item-name">' + item.name + ' </span><span class="autotime chat-item-time" title="' + item.isotime + '">' + item.localtime + '</span></div><div class="chat-item-text">' + item.text + '</div></div>');
+		}
 		$('#chatLineHolder').append(newNode);
 		$(".autotime").timeago();
 
@@ -175,6 +194,22 @@ function addmailtext(data) {
 	var currentText = $("#chatText").val();
 	$("#chatText").val(currentText + data);
 }
+
+function makeFullScreen() {
+	$('#fullscreen').hide();
+	$('#inline').show();
+	$('.generic-content-wrapper').addClass('fullscreen');
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 20);
+
+}
+
+function makeInline() {
+	$('#fullscreen').show();
+	$('#inline').hide();
+	$('.generic-content-wrapper').removeClass('fullscreen');
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 40 );
+}
+
 </script>
 <script>
 function isMobile() {

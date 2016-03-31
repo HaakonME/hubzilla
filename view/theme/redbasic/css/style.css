@@ -1264,7 +1264,8 @@ img.mail-conv-sender-photo {
 .wall-item-content,
 .mail-conv-body,
 .page-body,
-.chat-item-text {
+.chat-item-text,
+.chat-item-text-self {
 	font-size: $font_size;
 	clear: both;
 }
@@ -1363,11 +1364,13 @@ img.mail-conv-sender-photo {
 	cursor: pointer;
 }
 
-.chat-item-photo {
+.chat-item-photo,
+.chat-item-photo-self {
 	border-radius: $radiuspx;
 }
 
-.chat-item-title {
+.chat-item-title,
+.chat-item-title-self {
 	border-radius: $radiuspx;
 	background-color: $item_colour;
 }

@@ -199,10 +199,12 @@ function addmailtext(data) {
 
 function adjustFullscreenTopBarHeight() {
 	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 23);
+	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 }
 
 function adjustInlineTopBarHeight() {
 	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23);
+	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 }
 
 function isMobile() {

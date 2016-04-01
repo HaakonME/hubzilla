@@ -119,7 +119,7 @@ $(window).resize(function () {
 	else {
 		adjustInlineTopBarHeight();
 	}
-	$('#chatTopBar').scrollTop($('#chatTopBar').scrollTop() + $('#chatTopBar').outerHeight(true));
+	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 });
 
 $('#chat-form').submit(function(ev) {
@@ -175,10 +175,9 @@ function update_chats(chats) {
 		$('#chatLineHolder').append(newNode);
 		$(".autotime").timeago();
 
-		});
-	var elem = document.getElementById('chatTopBar');
-	elem.scrollTop = elem.scrollHeight;
-
+		var elem = document.getElementById('chatTopBar');
+		elem.scrollTop = elem.scrollHeight;
+	});
 }
 
 function chatJotGetLink() {
@@ -199,10 +198,12 @@ function addmailtext(data) {
 
 function adjustFullscreenTopBarHeight() {
 	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 23);
+	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 }
 
 function adjustInlineTopBarHeight() {
 	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23);
+	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 }
 
 function isMobile() {

@@ -691,6 +691,8 @@ class App {
 
 	public static  $groups;
 	public static  $language;
+	public static  $langsave;
+	public static  $plugins_admin;
 	public static  $module_loaded = false;
 	public static  $query_string;
 	public static  $config;                       // config cache

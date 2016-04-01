@@ -1,6 +1,7 @@
 <?php
 
 	require_once('boot.php');
+	App::init();
 
 $str = <<< EOT
 	error_reporting(E_ERROR | E_WARNING | E_PARSE );

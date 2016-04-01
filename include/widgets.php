@@ -790,7 +790,7 @@ function widget_chatroom_list($arr) {
 
 	if($r) {
 		return replace_macros(get_markup_template('chatroomlist.tpl'), array(
-			'$header' => t('Chat Rooms'),
+			'$header' => t('Chatrooms'),
 			'$baseurl' => z_root(),
 			'$nickname' => App::$profile['channel_address'],
 			'$items' => $r,

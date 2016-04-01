@@ -1,6 +1,6 @@
 <?php /** @file */
 
-require_once('acl_selectors.php');
+require_once('include/acl_selectors.php');
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/taxonomy.php');

@@ -1,7 +1,7 @@
 <?php
 
 require_once('include/security.php');
-require_once('bbcode.php');
+require_once('include/bbcode.php');
 
 function share_init(&$a) {
 

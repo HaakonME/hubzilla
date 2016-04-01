@@ -11,13 +11,13 @@ require_once('include/attach.php');
 require_once('include/Contact.php');
 
 function widget_profile($args) {
-	$a = get_app();
+
 	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 	return profile_sidebar(App::$profile, $block, true);
 }
 
 function widget_zcard($args) {
-	$a = get_app();
+
 	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
 	$channel = channelx_by_n(App::$profile_uid);
 	return get_zcard($channel,get_observer_hash(),array('width' => 875));
@@ -33,7 +33,7 @@ function widget_tagcloud($args) {
 
 	$o = '';
 	//$tab = 0;
-	$a = get_app();
+
 	$uid = App::$profile_uid;
 	$count = ((x($args,'count')) ? intval($args['count']) : 24);
 	$flags = 0;
@@ -164,8 +164,7 @@ function widget_follow($args) {
 	if(! local_channel())
 		return '';
 
-	$a = get_app();
-	$uid =App::$channel['channel_id'];
+	$uid = App::$channel['channel_id'];
 	$r = q("select count(*) as total from abook where abook_channel = %d and abook_self = 0 ",
 		intval($uid)
 	);
@@ -209,8 +208,6 @@ function widget_notes($arr) {
 function widget_savedsearch($arr) {
 	if((! local_channel()) || (! feature_enabled(local_channel(),'savedsearch')))
 		return '';
-
-	$a = get_app();
 
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
 	
@@ -295,7 +292,6 @@ function widget_filer($arr) {
 	if(! local_channel())
 		return '';
 
-	$a = get_app();
 
 	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
 
@@ -323,7 +319,6 @@ function widget_filer($arr) {
 function widget_archive($arr) {
 
 	$o = '';
-	$a = get_app();
 
 	if(! App::$profile_uid) {
 		return '';
@@ -370,7 +365,7 @@ function widget_archive($arr) {
 
 
 function widget_fullprofile($arr) {
-	$a = get_app();
+
 	if(! App::$profile['profile_uid'])
 		return;
 
@@ -380,7 +375,7 @@ function widget_fullprofile($arr) {
 }
 
 function widget_shortprofile($arr) {
-	$a = get_app();
+
 	if(! App::$profile['profile_uid'])
 		return;
 
@@ -391,7 +386,7 @@ function widget_shortprofile($arr) {
 
 
 function widget_categories($arr) {
-	$a = get_app();
+
 
 	if(App::$profile['profile_uid'] && (! perm_is_allowed(App::$profile['profile_uid'],get_observer_hash(),'view_stream')))
 		return '';
@@ -406,7 +401,7 @@ function widget_categories($arr) {
 }
 
 function widget_tagcloud_wall($arr) {
-	$a = get_app();
+
 
 	if((! App::$profile['profile_uid']) || (! App::$profile['channel_hash']))
 		return '';
@@ -421,7 +416,7 @@ function widget_tagcloud_wall($arr) {
 }
 
 function widget_catcloud_wall($arr) {
-	$a = get_app();
+
 
 	if((! App::$profile['profile_uid']) || (! App::$profile['channel_hash']))
 		return '';
@@ -486,7 +481,7 @@ function widget_settings_menu($arr) {
 	if(! local_channel())
 		return;
 
-	$a = get_app();
+
 	$channel = App::get_channel();
 
 	$abook_self_id = 0;
@@ -602,7 +597,6 @@ function widget_mailmenu($arr) {
 	if (! local_channel())
 		return;
 
-	$a = get_app();
 
 	return replace_macros(get_markup_template('message_side.tpl'), array(
 		'$title' => t('Private Mail Menu'),
@@ -633,8 +627,6 @@ function widget_mailmenu($arr) {
 function widget_conversations($arr) {
 	if (! local_channel())
 		return;
-
-	$a = get_app();
 
 	if(argc() > 1) {
 
@@ -752,7 +744,6 @@ function widget_findpeople($arr) {
 
 
 function widget_photo_albums($arr) {
-	$a = get_app();
 
 	if(! App::$profile['profile_uid'])
 		return '';
@@ -793,7 +784,6 @@ function widget_menu_preview($arr) {
 }
 
 function widget_chatroom_list($arr) {
-	$a = get_app();
 
 	require_once("include/chat.php");
 	$r = chatroom_list(App::$profile['profile_uid']);
@@ -1007,8 +997,6 @@ function widget_cover_photo($arr) {
 
 	require_once('include/identity.php');
 	$o = '';
-
-	$a = get_app();
 	
 	if(App::$module == 'channel' && $_REQUEST['mid'])
 		return '';
@@ -1159,7 +1147,7 @@ function widget_random_block($arr) {
 
 
 function widget_rating($arr) {
-	$a = get_app();
+
 
 	$poco_rating = get_config('system','poco_rating_enable');
 	if((! $poco_rating) && ($poco_rating !== false)) {
@@ -1228,8 +1216,6 @@ function widget_pubsites($arr) {
 
 
 function widget_forums($arr) {
-
-	$a = get_app();
 
 	if(! local_channel())
 		return '';
@@ -1332,8 +1318,6 @@ function widget_admin($arr) {
 		return login(false);
 	}
 
-
-	$a = get_app();
 	$o = '';
 
 	// array( url, name, extra css classes )

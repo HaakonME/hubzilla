@@ -174,7 +174,6 @@ function channel_total() {
  */
 function create_identity($arr) {
 
-	$a = get_app();
 	$ret = array('success' => false);
 
 	if(! $arr['account_id']) {
@@ -914,7 +913,6 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 function profile_edit_menu($uid) {
 
-	$a = get_app();
 	$ret = array();
 
 	$is_owner = (($uid == local_channel()) ? true : false);
@@ -975,8 +973,6 @@ function profile_edit_menu($uid) {
  * Exceptions: Returns empty string if passed $profile is wrong type or not populated
  */
 function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = false) {
-
-	$a = get_app();
 
 	$observer = App::get_observer();
 
@@ -1112,7 +1108,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
  */
 	function get_birthdays() {
 
-		$a = get_app();
 		$o = '';
 
 		if(! local_channel())
@@ -1190,8 +1185,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	function get_events() {
 
 		require_once('include/bbcode.php');
-
-		$a = get_app();
 
 		if(! local_channel())
 			return $o;

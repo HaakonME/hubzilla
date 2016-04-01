@@ -640,6 +640,29 @@ class ZotlabsAutoloader {
 
 
 /**
+ * class miniApp
+ *
+ * this is a transient structure which is needed to convert the $a->config settings
+ * from older (existing) htconfig files which used a global App ($a) into the updated App structure
+ * which is now static (although currently constructed at startup). We are only converting 
+ * 'system' config settings. 
+ */
+
+
+class miniApp {
+	public $config = array('system' => array());
+
+	public function convert() {
+		if($this->config['system']) {
+		    foreach($this->config['system'] as $k => $v)
+		        App::$config['system'][$k] = $v;
+		}
+	}
+}
+
+
+
+/**
  * class: App
  *
  * @brief Our main application structure for the life of this page.

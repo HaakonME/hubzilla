@@ -9,11 +9,18 @@ function cli_startup() {
 	global $a, $db, $default_timezone;
 
 	if(is_null($a)) {
-		$a = new App;
+		$a = new miniApp;
 	}
+
+	if(is_null($app)) {
+		$app = new App;
+	}
+
   
 	if(is_null($db)) {
 	    @include(".htconfig.php");
+
+		$a->convert();
 
 		if(! defined('UNO'))
 			define('UNO', 0);

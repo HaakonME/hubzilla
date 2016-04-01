@@ -14,8 +14,6 @@
  */
 function authenticate_success($user_record, $login_initial = false, $interactive = false, $return = false, $update_lastlog = false) {
 
-	$a = get_app();
-
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
 	$lastlog_updated = false;
@@ -360,10 +358,9 @@ function public_permissions_sql($observer_hash) {
  *    so this mechanism brings in some damage control (the attacker would be able to forge a request to a form of this type, but not to forms of other types).
  */ 
 function get_form_security_token($typename = '') {
-	$a = get_app();
 
 	$timestamp = time();
-	$sec_hash = hash('whirlpool', App::$user['guid'] . App::$user['prvkey'] . session_id() . $timestamp . $typename);
+	$sec_hash = hash('whirlpool', App::$observer['xchan_guid'] . ((local_channel()) ? App::$channel['channel_prvkey'] : '') . session_id() . $timestamp . $typename);
 
 	return $timestamp . '.' . $sec_hash;
 }
@@ -374,12 +371,10 @@ function check_form_security_token($typename = '', $formname = 'form_security_to
 
 	$max_livetime = 10800; // 3 hours
 
-	$a = get_app();
-
 	$x = explode('.', $hash);
 	if (time() > (IntVal($x[0]) + $max_livetime)) return false;
 
-	$sec_hash = hash('whirlpool', App::$user['guid'] . App::$user['prvkey'] . session_id() . $x[0] . $typename);
+	$sec_hash = hash('whirlpool', App::$observer['xchan_guid'] . ((local_channel()) ? App::$channel['channel_prvkey'] : '') . session_id() . $x[0] . $typename);
 
 	return ($sec_hash == $x[1]);
 }
@@ -389,8 +384,7 @@ function check_form_security_std_err_msg() {
 }
 function check_form_security_token_redirectOnErr($err_redirect, $typename = '', $formname = 'form_security_token') {
 	if (!check_form_security_token($typename, $formname)) {
-		$a = get_app();
-		logger('check_form_security_token failed: user ' . App::$user['guid'] . ' - form element ' . $typename);
+		logger('check_form_security_token failed: user ' . App::$observer['xchan_name'] . ' - form element ' . $typename);
 		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
 		notice( check_form_security_std_err_msg() );
 		goaway(z_root() . $err_redirect );
@@ -398,8 +392,7 @@ function check_form_security_token_redirectOnErr($err_redirect, $typename = '', 
 }
 function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'form_security_token') {
 	if (!check_form_security_token($typename, $formname)) {
-		$a = get_app();
-		logger('check_form_security_token failed: user ' . App::$user['guid'] . ' - form element ' . $typename);
+		logger('check_form_security_token failed: user ' . App::$observer['xchan_name'] . ' - form element ' . $typename);
 		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
 		header('HTTP/1.1 403 Forbidden');
 		killme();

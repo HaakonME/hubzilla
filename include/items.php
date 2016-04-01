@@ -4294,7 +4294,6 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 }
 
 function fix_private_photos($s, $uid, $item = null, $cid = 0) {
-	$a = get_app();
 
 	logger('fix_private_photos', LOGGER_DEBUG);
 	$site = substr(z_root(),strpos(z_root(),'://'));
@@ -4576,8 +4575,6 @@ function drop_items($items) {
 // $stage = 2 => perform low level delete at a later stage
 
 function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = false) {
-
-	$a = get_app();
 
 	// locate item to be deleted
 
@@ -5076,8 +5073,6 @@ function zot_feed($uid,$observer_hash,$arr) {
 function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = CLIENT_MODE_NORMAL,$module = 'network') {
 
 	$result = array('success' => false);
-
-	$a = get_app();
 
 	$sql_extra = '';
 	$sql_nets = '';

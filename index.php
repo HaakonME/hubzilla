@@ -16,7 +16,10 @@ if(file_exists('.htsite.php'))
 	include('.htsite.php');
 
 // our global App object
-$a = new App;
+
+$a = new miniApp;
+
+$app = new App;
 
 /*
  * Load the configuration file which contains our DB credentials.
@@ -30,6 +33,8 @@ App::$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? f
 
 if(! defined('UNO'))
 	define('UNO', 0);
+
+$a->convert();
 
 App::$timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
 date_default_timezone_set(App::$timezone);

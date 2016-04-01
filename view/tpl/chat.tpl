@@ -175,10 +175,9 @@ function update_chats(chats) {
 		$('#chatLineHolder').append(newNode);
 		$(".autotime").timeago();
 
-		});
-	var elem = document.getElementById('chatTopBar');
-	elem.scrollTop = elem.scrollHeight;
-
+		var elem = document.getElementById('chatTopBar');
+		elem.scrollTop = elem.scrollHeight;
+	});
 }
 
 function chatJotGetLink() {

@@ -119,7 +119,7 @@ $(window).resize(function () {
 	else {
 		adjustInlineTopBarHeight();
 	}
-	$('#chatTopBar').scrollTop($('#chatTopBar').scrollTop() + $('#chatTopBar').outerHeight(true));
+	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 });
 
 $('#chat-form').submit(function(ev) {

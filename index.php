@@ -19,7 +19,7 @@ if(file_exists('.htsite.php'))
 
 $a = new miniApp;
 
-$app = new App;
+App::init();
 
 /*
  * Load the configuration file which contains our DB credentials.

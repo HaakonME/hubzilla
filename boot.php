@@ -784,7 +784,7 @@ class App {
 	/**
 	 * App constructor.
 	 */
-	function __construct() {
+	function init() {
 		// we'll reset this after we read our config file
 		date_default_timezone_set('UTC');
 

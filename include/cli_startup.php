@@ -12,10 +12,7 @@ function cli_startup() {
 		$a = new miniApp;
 	}
 
-	if(is_null($app)) {
-		$app = new App;
-	}
-
+	App::init();
   
 	if(is_null($db)) {
 	    @include(".htconfig.php");

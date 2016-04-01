@@ -1833,7 +1833,7 @@ function current_theme(){
 	// The default is for channel themes to take precedence over your own on pages belonging
 	// to that channel.
 
-	if($page_theme && local_channel() && local_channel() != App::$profile_url) {
+	if($page_theme && local_channel() && App::$profile_uid && local_channel() != App::$profile_uid) {
 		if(get_pconfig(local_channel(),'system','always_my_theme'))
 			$page_theme = null;
 	}

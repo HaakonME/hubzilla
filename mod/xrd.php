@@ -29,7 +29,7 @@ function xrd_init(&$a) {
 
 	$dspr = replace_macros(get_markup_template('xrd_diaspora.tpl'),array(
 		'$baseurl' => z_root(),
-		'$dspr_guid' => $r[0]['channel_guid'] . str_replace('.','',$a->get_hostname()),
+		'$dspr_guid' => $r[0]['channel_guid'] . str_replace('.','',App::get_hostname()),
 		'$dspr_key' => base64_encode(pemtorsa($r[0]['channel_pubkey']))
 	));
 
@@ -39,7 +39,7 @@ function xrd_init(&$a) {
 	header("Content-type: application/xrd+xml");
 
 
-	$aliases = array('acct:' . $r[0]['channel_address'] . '@' . $a->get_hostname(), z_root() . '/channel/' . $r[0]['channel_address'], z_root() . '/~' . $r[0]['channel_address']);
+	$aliases = array('acct:' . $r[0]['channel_address'] . '@' . App::get_hostname(), z_root() . '/channel/' . $r[0]['channel_address'], z_root() . '/~' . $r[0]['channel_address']);
 
 	for($x = 0; $x < count($aliases); $x ++) {
 		if($aliases[$x] === $resource)

@@ -67,8 +67,8 @@
 		}
 	}
 
-	if(x($a->config,'system') && x($a->config['system'],'php_path'))
-		$phpath = $a->config['system']['php_path'];
+	if(x(App::$config,'system') && x(App::$config['system'],'php_path'))
+		$phpath = App::$config['system']['php_path'];
 	else
 		$phpath = 'php';
 
@@ -76,7 +76,7 @@
 
 	echo 'util/hstrings.php' . "\n";
 	include_once('util/hstrings.php');
-	echo count($a->strings) . ' strings' . "\n";
+	echo count(App::$strings) . ' strings' . "\n";
 
 	$files = glob('view/*/hstrings.php');
 

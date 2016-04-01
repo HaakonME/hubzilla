@@ -8,9 +8,9 @@ function wall_attach_post(&$a) {
 
 	$using_api = false;
 
-	if($a->data['api_info'] && array_key_exists('media',$_FILES)) {
+	if(App::$data['api_info'] && array_key_exists('media',$_FILES)) {
 		$using_api = true;
-		$user_info = $a->data['api_info'];
+		$user_info = App::$data['api_info'];
 		$nick = $user_info['screen_name'];
 		$channel = get_channel_by_nick($user_info['screen_name']);
 	}
@@ -20,7 +20,7 @@ function wall_attach_post(&$a) {
 	if(! $channel)
 		killme();
 
-	$observer = $a->get_observer();
+	$observer = App::get_observer();
 
 
 //	if($_FILES['userfile']['tmp_name']) {

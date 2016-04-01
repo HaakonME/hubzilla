@@ -13,7 +13,7 @@
 
 
 function load_doc_file($s) {
-	$lang = get_app()->language;
+	$lang = App::$language;
 	if(! isset($lang))
 		$lang = 'en';
 	$b = basename($s);
@@ -39,8 +39,8 @@ function search_doc_files($s) {
 	$a = get_app();
 
 	$itemspage = get_pconfig(local_channel(),'system','itemspage');
-	$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-	$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
+	App::set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
+	$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(App::$pager['itemspage']), intval(App::$pager['start']));
 
 	$regexop = db_getfunc('REGEXP');
 
@@ -68,7 +68,7 @@ function search_doc_files($s) {
 			$r[$x]['rank'] ++;
 		$r[$x]['rank'] += substr_count(strtolower($r[$x]['text']),strtolower($s));
 		// bias the results to the observer's native language
-		if($r[$x]['lang'] === $a->language)
+		if($r[$x]['lang'] === App::$language)
 			$r[$x]['rank'] = $r[$x]['rank'] + 10;
 
 	}
@@ -187,30 +187,30 @@ function help_content(&$a) {
 		$title = basename($path);
 
 		$text = load_doc_file('doc/' . $path . '.md');
-		$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
+		App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 
 		if(! $text) {
 			$text = load_doc_file('doc/' . $path . '.bb');
 			if($text)
 				$doctype = 'bbcode';
-			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('_',' ',notags($title)));
+			App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('_',' ',notags($title)));
 		}
 		if(! $text) {
 			$text = load_doc_file('doc/' . $path . '.html');
 			if($text)
 				$doctype = 'html';
-			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
+			App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 		}
 	}
 
 	if(! $text) {
 		$text = load_doc_file('doc/Site.md');
-		$a->page['title'] = t('Help');
+		App::$page['title'] = t('Help');
 	}
 	if(! $text) {
 		$doctype = 'bbcode';
 		$text = load_doc_file('doc/main.bb');
-		$a->page['title'] = t('Help');
+		App::$page['title'] = t('Help');
 	}
 	
 	if(! strlen($text)) {

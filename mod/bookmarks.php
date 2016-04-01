@@ -7,7 +7,7 @@ function bookmarks_init(&$a) {
 	if(! $item_id)
 		return;
 
-	$u = $a->get_channel();
+	$u = App::get_channel();
 
 	$item_normal = item_normal();
 
@@ -53,7 +53,7 @@ function bookmarks_content(&$a) {
 	require_once('include/menu.php');
 	require_once('include/conversation.php');
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	$o = profile_tabs($a,true,$channel['channel_address']);
 

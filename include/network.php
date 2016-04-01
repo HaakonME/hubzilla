@@ -1856,7 +1856,7 @@ function format_and_send_email($sender,$xchan,$item) {
 
 		$sender_name = t('Administrator');
 		
-  		$hostname = get_app()->get_hostname();
+  		$hostname = App::get_hostname();
 	    if(strpos($hostname,':'))
     	    $hostname = substr($hostname,0,strpos($hostname,':'));
 		$sender_email = 'noreply' . '@' . $hostname;
@@ -1930,11 +1930,11 @@ function get_site_info() {
 		$admin = array();
 		foreach($r as $rr) {
 			if($rr['channel_pageflags'] & PAGE_HUBADMIN)
-				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . get_app()->get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . App::get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
 		}
 		if(! $admin) {
 			foreach($r as $rr) {
-				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . get_app()->get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . App::get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
 			}
 		}
 	}
@@ -1949,7 +1949,7 @@ function get_site_info() {
 		$service_class = false;
 
 	$visible_plugins = array();
-	if(is_array($a->plugins) && count($a->plugins)) {
+	if(is_array(App::$plugins) && count(App::$plugins)) {
 		$r = q("select * from addon where hidden = 0");
 		if(count($r))
 			foreach($r as $rr)
@@ -1989,8 +1989,8 @@ function get_site_info() {
 
 	load_config('feature_lock');
 	$locked_features = array();
-	if(is_array($a->config['feature_lock']) && count($a->config['feature_lock'])) {
-		foreach($a->config['feature_lock'] as $k => $v) {
+	if(is_array(App::$config['feature_lock']) && count(App::$config['feature_lock'])) {
+		foreach(App::$config['feature_lock'] as $k => $v) {
 			if($k === 'config_loaded')
 				continue;
 			$locked_features[$k] = intval($v);

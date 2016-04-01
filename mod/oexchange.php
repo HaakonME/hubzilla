@@ -16,7 +16,7 @@ function oexchange_content(&$a) {
 
 	if(! local_channel()) {
 		if(remote_channel()) {
-			$observer = $a->get_observer();
+			$observer = App::get_observer();
 			if($observer && $observer['xchan_url']) {
 				$parsed = @parse_url($observer['xchan_url']);
 				if(! $parsed) {

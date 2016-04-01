@@ -8,11 +8,11 @@ function nav(&$a) {
 	 *
 	 */
 
-	if(!(x($a->page,'nav')))
-		$a->page['nav'] = '';
+	if(!(x(App::$page,'nav')))
+		App::$page['nav'] = '';
 
 	$base = z_root();
-    $a->page['htmlhead'] .= <<< EOT
+    App::$page['htmlhead'] .= <<< EOT
 
 <script>$(document).ready(function() {
 	$("#nav-search-text").search_autocomplete('$base/acl');
@@ -24,8 +24,8 @@ EOT;
 
 
 	if(local_channel()) {
-		$channel = $a->get_channel();
-		$observer = $a->get_observer();
+		$channel = App::get_channel();
+		$observer = App::get_observer();
 		$prof = q("select id from profile where uid = %d and is_default = 1",
 			intval($channel['channel_id'])
 		);
@@ -35,12 +35,12 @@ EOT;
 		);
 	}
 	elseif(remote_channel())
-		$observer = $a->get_observer();
+		$observer = App::get_observer();
 	
 
 	$myident = (($channel) ? $channel['xchan_addr'] : '');
 		
-	$sitelocation = (($myident) ? $myident : $a->get_hostname());
+	$sitelocation = (($myident) ? $myident : App::get_hostname());
 
 
 
@@ -55,7 +55,7 @@ EOT;
 	if($banner === false) 
 		$banner = get_config('system','sitename');
 
-	$a->page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
+	App::$page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
         '$baseurl' => z_root(),
 		'$sitelocation' => $sitelocation,
 		'$banner' =>  $banner
@@ -136,18 +136,18 @@ EOT;
 
 	$homelink = get_my_url();
 	if(! $homelink) {
-		$observer = $a->get_observer();
+		$observer = App::get_observer();
 		$homelink = (($observer) ? $observer['xchan_url'] : '');
 	}
 
-	if(($a->module != 'home') && (! (local_channel()))) 
+	if((App::$module != 'home') && (! (local_channel()))) 
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'),'home_nav_btn');
 
 
-	if(($a->config['system']['register_policy'] == REGISTER_OPEN) && (! local_channel()) && (! remote_channel()))
+	if((App::$config['system']['register_policy'] == REGISTER_OPEN) && (! local_channel()) && (! remote_channel()))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'),'register_nav_btn');
 
-	$help_url = z_root() . '/help?f=&cmd=' . $a->cmd;
+	$help_url = z_root() . '/help?f=&cmd=' . App::$cmd;
 
 	if(! get_config('system','hide_help'))
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'),'help_nav_btn');
@@ -234,7 +234,7 @@ $powered_by = '';
 
 	$tpl = get_markup_template('nav.tpl');
 
-	$a->page['nav'] .= replace_macros($tpl, array(
+	App::$page['nav'] .= replace_macros($tpl, array(
         '$baseurl' => z_root(),
 		'$sitelocation' => $sitelocation,
 		'$nav' => $x['nav'],
@@ -242,13 +242,13 @@ $powered_by = '';
 		'$emptynotifications' => t('Loading...'),
 		'$userinfo' => $x['usermenu'],
 		'$localuser' => local_channel(),
-		'$sel' => 	$a->nav_sel,
+		'$sel' => 	App::$nav_sel,
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...')
 	));
 
-	call_hooks('page_header', $a->page['nav']);
+	call_hooks('page_header', App::$page['nav']);
 }
 
 /*
@@ -257,7 +257,7 @@ $powered_by = '';
  */
 function nav_set_selected($item){
 	$a = get_app();
-    $a->nav_sel = array(
+    App::$nav_sel = array(
 		'community' 	=> null,
 		'network' 		=> null,
 		'home'			=> null,
@@ -271,5 +271,5 @@ function nav_set_selected($item){
 		'manage'        => null,
 		'register'      => null,
 	);
-	$a->nav_sel[$item] = 'active';
+	App::$nav_sel[$item] = 'active';
 }

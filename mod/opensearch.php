@@ -8,7 +8,7 @@ function opensearch_init(&$a) {
 	
 	$o = replace_macros($tpl, array(
 		'$baseurl'  => z_root(),
-		'$nodename' => $a->get_hostname(),
+		'$nodename' => App::get_hostname(),
 	));
 		
 	echo $o;

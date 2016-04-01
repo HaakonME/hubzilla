@@ -62,7 +62,7 @@ function notification($params) {
 	$site_admin = sprintf( t('%s Administrator'), $sitename);
 
 	$sender_name = $product;
-	$hostname = $a->get_hostname();
+	$hostname = App::get_hostname();
 	if(strpos($hostname,':'))
 		$hostname = substr($hostname,0,strpos($hostname,':'));
 
@@ -424,7 +424,7 @@ function notification($params) {
 
 	// wretched hack, but we don't want to duplicate all the preamble variations and we also don't want to screw up a translation
 
-	if (($a->language === 'en' || (! $a->language)) && strpos($msg,', '))
+	if ((App::$language === 'en' || (! App::$language)) && strpos($msg,', '))
 		$msg = substr($msg,strpos($msg,', ')+1);	
 
 	$r = q("update notify set msg = '%s' where id = %d and uid = %d",
@@ -441,7 +441,7 @@ function notification($params) {
 		logger('notification: sending notification email');
 
 		$hn = get_pconfig($recip['channel_id'],'system','email_notify_host');
-		if($hn && (! stristr(get_app()->get_hostname(),$hn))) {
+		if($hn && (! stristr(App::get_hostname(),$hn))) {
 			// this isn't the email notification host
 			pop_lang();
 			return;
@@ -455,7 +455,7 @@ function notification($params) {
 		// use $_SESSION['zid_override'] to force zid() to use 
 		// the recipient address instead of the current observer
 
-		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . get_app()->get_hostname();
+		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . App::get_hostname();
 		$_SESSION['zrl_override'] = z_root() . '/channel/' . $recip['channel_address'];
 		
 		$textversion = zidify_links($textversion);

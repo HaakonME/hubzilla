@@ -32,11 +32,11 @@ function connedit_init(&$a) {
 			intval(argv(1))
 		);
 		if($r) {
-			$a->poi = $r[0];
+			App::$poi = $r[0];
 		}
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	if($channel)
 		head_set_icon($channel['xchan_photo_s']);
 
@@ -55,7 +55,7 @@ function connedit_post(&$a) {
 	if(! $contact_id)
 		return;
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	// TODO if configured for hassle-free permissions, we'll post the form with ajax as soon as the
 	// connection enable is toggled to a special autopost url and set permissions immediately, leaving
@@ -224,8 +224,8 @@ function connedit_post(&$a) {
 	else
 		notice( t('Failed to update connection record.') . EOL);
 
-	if($a->poi && $a->poi['abook_my_perms'] != $abook_my_perms
-		&& (! intval($a->poi['abook_self']))) {
+	if(App::$poi && App::$poi['abook_my_perms'] != $abook_my_perms
+		&& (! intval(App::$poi['abook_self']))) {
 		proc_run('php', 'include/notifier.php', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id);
 	}
 
@@ -235,7 +235,7 @@ function connedit_post(&$a) {
 			require_once('include/group.php');
 			$g = group_rec_byhash(local_channel(),$default_group);
 			if($g)
-				group_add_member(local_channel(),'',$a->poi['abook_xchan'],$g['id']);
+				group_add_member(local_channel(),'',App::$poi['abook_xchan'],$g['id']);
 		}
 
 		// Check if settings permit ("post new friend activity" is allowed, and
@@ -259,19 +259,19 @@ function connedit_post(&$a) {
 			$xarr['item_private'] = (($xarr['allow_cid']||$xarr['allow_gid']||$xarr['deny_cid']||$xarr['deny_gid']) ? 1 : 0);
 			$obj = array(
 				'type' => ACTIVITY_OBJ_PERSON,
-				'title' => $a->poi['xchan_name'],
-				'id' => $a->poi['xchan_hash'],
+				'title' => App::$poi['xchan_name'],
+				'id' => App::$poi['xchan_hash'],
 				'link' => array(
-					array('rel' => 'alternate', 'type' => 'text/html', 'href' => $a->poi['xchan_url']),
-					array('rel' => 'photo', 'type' => $a->poi['xchan_photo_mimetype'], 'href' => $a->poi['xchan_photo_l'])
+					array('rel' => 'alternate', 'type' => 'text/html', 'href' => App::$poi['xchan_url']),
+					array('rel' => 'photo', 'type' => App::$poi['xchan_photo_mimetype'], 'href' => App::$poi['xchan_photo_l'])
        			),
    			);
 			$xarr['object'] = json_encode($obj);
 			$xarr['obj_type'] = ACTIVITY_OBJ_PERSON;
 
-			$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . $a->poi['xchan_url'] . ']' . $a->poi['xchan_name'] . '[/zrl]';
+			$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . App::$poi['xchan_url'] . ']' . App::$poi['xchan_name'] . '[/zrl]';
 
-			$xarr['body'] .= "\n\n\n" . '[zrl=' . $a->poi['xchan_url'] . '][zmg=80x80]' . $a->poi['xchan_photo_m'] . '[/zmg][/zrl]';
+			$xarr['body'] .= "\n\n\n" . '[zrl=' . App::$poi['xchan_url'] . '][zmg=80x80]' . App::$poi['xchan_photo_m'] . '[/zmg][/zrl]';
 
 			post_activity_item($xarr);
 
@@ -292,11 +292,11 @@ function connedit_post(&$a) {
 		intval($contact_id)
 	);
 	if($r) {
-		$a->poi = $r[0];
+		App::$poi = $r[0];
 	}
 
 	if($new_friend) {
-		$arr = array('channel_id' => local_channel(), 'abook' => $a->poi);
+		$arr = array('channel_id' => local_channel(), 'abook' => App::$poi);
 		call_hooks('accept_follow', $arr);
 	}
 
@@ -319,23 +319,23 @@ function connedit_post(&$a) {
 
 function connedit_clone(&$a) {
 
-		if(! $a->poi)
+		if(! App::$poi)
 			return;
 
 
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 		$r = q("SELECT abook.*, xchan.*
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
 			intval(local_channel()),
-			intval($a->poi['abook_id'])
+			intval(App::$poi['abook_id'])
 		);
 		if($r) {
-			$a->poi = $r[0];
+			App::$poi = $r[0];
 		}
 
-		$clone = $a->poi;
+		$clone = App::$poi;
 
 		unset($clone['abook_id']);
 		unset($clone['abook_account']);
@@ -363,7 +363,7 @@ function connedit_content(&$a) {
 		return login();
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	$my_perms = get_channel_default_perms(local_channel());
 	$role = get_pconfig(local_channel(),'system','permissions_role');
 	if($role) {
@@ -417,7 +417,7 @@ function connedit_content(&$a) {
 
 		if($cmd === 'refresh') {
 			if($orig_record[0]['xchan_network'] === 'zot') {
-				if(! zot_refresh($orig_record[0],get_app()->get_channel()))
+				if(! zot_refresh($orig_record[0],App::get_channel()))
 					notice( t('Refresh failed - channel is currently unavailable.') );
 			}
 			else {
@@ -505,10 +505,10 @@ function connedit_content(&$a) {
 		}
 	}
 
-	if($a->poi) {
+	if(App::$poi) {
 
-		$contact_id = $a->poi['abook_id'];
-		$contact = $a->poi;
+		$contact_id = App::$poi['abook_id'];
+		$contact = App::$poi;
 
 		$buttons = array(
 
@@ -645,7 +645,7 @@ function connedit_content(&$a) {
 
 
 		$perms = array();
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 		$global_perms = get_perms();
 		$existing = get_all_perms(local_channel(),$contact['abook_xchan']);

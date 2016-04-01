@@ -25,16 +25,16 @@ function cal_init(&$a) {
 		if(! $channelx)
 			return;
 
-		$a->data['channel'] = $channelx;
+		App::$data['channel'] = $channelx;
 
-		$observer = $a->get_observer();
-		$a->data['observer'] = $observer;
+		$observer = App::get_observer();
+		App::$data['observer'] = $observer;
 
 		$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
-		head_set_icon($a->data['channel']['xchan_photo_s']);
+		head_set_icon(App::$data['channel']['xchan_photo_s']);
 
-		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "'; var profile_uid = " . (($a->data['channel']) ? $a->data['channel']['channel_id'] : 0) . "; </script>" ;
+		App::$page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "'; var profile_uid = " . ((App::$data['channel']) ? App::$data['channel']['channel_id'] : 0) . "; </script>" ;
 
 	}
 
@@ -70,11 +70,11 @@ function cal_content(&$a) {
 	$first_day = (($first_day) ? $first_day : 0);
 
 	$htpl = get_markup_template('event_head.tpl');
-	$a->page['htmlhead'] .= replace_macros($htpl,array(
+	App::$page['htmlhead'] .= replace_macros($htpl,array(
 		'$baseurl' => z_root(),
 		'$module_url' => '/cal/' . $channel['channel_address'],
 		'$modparams' => 2,
-		'$lang' => $a->language,
+		'$lang' => App::$language,
 		'$first_day' => $first_day
 	));
 
@@ -87,7 +87,7 @@ function cal_content(&$a) {
 	$m = 0;
 	$ignored = ((x($_REQUEST,'ignored')) ? " and ignored = " . intval($_REQUEST['ignored']) . " "  : '');
 
-	// logger('args: ' . print_r($a->argv,true));
+	// logger('args: ' . print_r(App::$argv,true));
 
 	if(argc() > 3 && intval(argv(2)) && intval(argv(3))) {
 		$mode = 'view';
@@ -243,7 +243,7 @@ function cal_content(&$a) {
 			foreach($r as $rr) {
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				if(! x($links,$j)) 
-					$links[$j] = z_root() . '/' . $a->cmd . '#link-' . $j;
+					$links[$j] = z_root() . '/' . App::$cmd . '#link-' . $j;
 			}
 		}
 

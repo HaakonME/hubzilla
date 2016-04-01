@@ -27,7 +27,7 @@ function suggest_content(&$a) {
 		return;
 	}
 
-	$_SESSION['return_url'] = z_root() . '/' . $a->cmd;
+	$_SESSION['return_url'] = z_root() . '/' . App::$cmd;
 
 	$r = suggestion_query(local_channel(),get_observer_hash());
 

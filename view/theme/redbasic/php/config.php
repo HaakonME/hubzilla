@@ -98,7 +98,7 @@ if(feature_enabled(local_channel(),'expert'))
 	  $o .= replace_macros($t, array(
 		'$submit' => t('Submit'),
 		'$baseurl' => z_root(),
-		'$theme' => $a->channel['channel_theme'],
+		'$theme' => App::$channel['channel_theme'],
 		'$expert' => $expert,
 		'$title' => t("Theme settings"),
 		'$schema' => array('redbasic_schema', t('Select scheme'), $arr['schema'], '', $scheme_choices),

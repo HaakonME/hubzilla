@@ -44,9 +44,9 @@ function editpost_content(&$a) {
 //	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
-	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
+	App::$page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl' => z_root(),
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext' => '',
@@ -101,7 +101,7 @@ function editpost_content(&$a) {
 		}
 	}
 
-	$cipher = get_pconfig(get_app()->profile['profile_uid'],'system','default_cipher');
+	$cipher = get_pconfig(App::$profile['profile_uid'],'system','default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
 
@@ -148,12 +148,12 @@ function editpost_content(&$a) {
 		'$profile_uid' => $owner_uid,
 		'$preview' => t('Preview'),
 		'$jotplugins' => $jotplugins,
-		'$sourceapp' => t($a->sourcename),
+		'$sourceapp' => t(App::$sourcename),
 		'$catsenabled' => $catsenabled,
 		'$defexpire' => datetime_convert('UTC', date_default_timezone_get(),$itm[0]['expires']),
-		'$feature_expire' => ((feature_enabled(get_app()->profile['profile_uid'],'content_expire') && (! $webpage)) ? true : false),
+		'$feature_expire' => ((feature_enabled(App::$profile['profile_uid'],'content_expire') && (! $webpage)) ? true : false),
 		'$expires' => t('Set expiration date'),
-		'$feature_encrypt' => ((feature_enabled(get_app()->profile['profile_uid'],'content_encrypt') && (! $webpage)) ? true : false),
+		'$feature_encrypt' => ((feature_enabled(App::$profile['profile_uid'],'content_encrypt') && (! $webpage)) ? true : false),
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,
 		'$expiryModalOK' => t('OK'),

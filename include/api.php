@@ -34,7 +34,7 @@ require_once('include/api_auth.php');
 
 	function api_user() {
 		$aid = get_account_id();
-		$channel = get_app()->get_channel();
+		$channel = App::get_channel();
 		
 		if(($aid) && (x($_REQUEST,'channel'))) {
 
@@ -79,7 +79,7 @@ require_once('include/api_auth.php');
 		$type="json";
 
 		foreach ($API as $p=>$info){
-			if (strpos($a->query_string, $p)===0){
+			if (strpos(App::$query_string, $p)===0){
 				$called_api= explode("/",$p);
 				//unset($_SERVER['PHP_AUTH_USER']);
 				if ($info['auth'] === true && api_user() === false) {
@@ -88,18 +88,18 @@ require_once('include/api_auth.php');
 
 				load_contact_links(api_user());
 
-				$channel = $a->get_channel();
+				$channel = App::get_channel();
 
-				logger('API call for ' . $channel['channel_name'] . ': ' . $a->query_string);
+				logger('API call for ' . $channel['channel_name'] . ': ' . App::$query_string);
 				logger('API parameters: ' . print_r($_REQUEST,true));
 
 				$type="json";
 
-				if (strpos($a->query_string, ".xml")>0) $type="xml";
-				if (strpos($a->query_string, ".json")>0) $type="json";
-				if (strpos($a->query_string, ".rss")>0) $type="rss";
-				if (strpos($a->query_string, ".atom")>0) $type="atom";
-				if (strpos($a->query_string, ".as")>0) $type="as";
+				if (strpos(App::$query_string, ".xml")>0) $type="xml";
+				if (strpos(App::$query_string, ".json")>0) $type="json";
+				if (strpos(App::$query_string, ".rss")>0) $type="rss";
+				if (strpos(App::$query_string, ".atom")>0) $type="atom";
+				if (strpos(App::$query_string, ".as")>0) $type="as";
 
 				$r = call_user_func($info['func'], $a, $type);
 				if ($r===false) return;
@@ -141,7 +141,7 @@ require_once('include/api_auth.php');
 			}
 		}
 		header("HTTP/1.1 404 Not Found");
-		logger('API call not implemented: '.$a->query_string." - ".print_r($_REQUEST,true));
+		logger('API call not implemented: '.App::$query_string." - ".print_r($_REQUEST,true));
 		$r = '<status><error>not implemented</error></status>';
 		switch($type){
 			case "xml":
@@ -171,7 +171,7 @@ require_once('include/api_auth.php');
 		$arr['$user'] = $user_info;
 		$arr['$rss'] = array(
 			'alternate' => $user_info['url'],
-			'self' => z_root(). "/". $a->query_string,
+			'self' => z_root(). "/". App::$query_string,
 			'base' => z_root(),
 			'updated' => api_date(null),
 			'atom_updated' => datetime_convert('UTC','UTC','now',ATOM_TIME),
@@ -213,7 +213,7 @@ require_once('include/api_auth.php');
 					$extra_query .= " AND abook_channel = ".intval(api_user());
 			}
 		
-			if (is_null($user) && argc() > (count($called_api)-1) && (strstr($a->cmd,'/users'))){
+			if (is_null($user) && argc() > (count($called_api)-1) && (strstr(App::$cmd,'/users'))){
 				$argid = count($called_api);
 				list($xx, $null) = explode(".",argv($argid));
 				if(is_numeric($xx)){
@@ -326,7 +326,7 @@ require_once('include/api_auth.php');
 			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
 			'statuses_count' => intval($countitms), //#XXX: fix me 
-			'lang' => get_app()->language,
+			'lang' => App::$language,
 			'description' => (($profile) ? $profile[0]['pdesc'] : ''),
 			'followers_count' => intval($countfollowers),
 			'favourites_count' => intval($starred),
@@ -635,13 +635,13 @@ require_once('include/api_auth.php');
 
 
 	function api_albums(&$a,$type) {
-		json_return_and_die(photos_albums_list($a->get_channel(),$a->get_observer()));
+		json_return_and_die(photos_albums_list(App::get_channel(),App::get_observer()));
 	}
 	api_register_func('api/red/albums','api_albums', true);
 
 	function api_photos(&$a,$type) {
 		$album = $_REQUEST['album'];
-		json_return_and_die(photos_list_photos($a->get_channel(),$a->get_observer(),$album));
+		json_return_and_die(photos_list_photos(App::get_channel(),App::get_observer(),$album));
 	}
 	api_register_func('api/red/photos','api_photos', true);
 
@@ -768,7 +768,7 @@ require_once('include/api_auth.php');
 		}
 		$txt = html2bbcode($txt);
 		
-		$a->argv[1] = $user_info['screen_name'];
+		App::$argv[1] = $user_info['screen_name'];
 		
 		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 		$_FILES['userfile'] = $_FILES['media'];
@@ -872,7 +872,7 @@ require_once('include/api_auth.php');
 						// upload each image if we have any
 						$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 						require_once('mod/wall_attach.php');
-						$a->data['api_info'] = $user_info;
+						App::$data['api_info'] = $user_info;
 						$media = wall_attach_post($a);
 
 						if(strlen($media)>0)
@@ -885,7 +885,7 @@ require_once('include/api_auth.php');
 					// upload each image if we have any
 					$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 					require_once('mod/wall_attach.php');
-					$a->data['api_info'] = $user_info;
+					App::$data['api_info'] = $user_info;
 					$media = wall_attach_post($a);
 
 					if(strlen($media)>0)
@@ -960,7 +960,7 @@ require_once('include/api_auth.php');
 		$arr['records'] = 999999;
 		$arr['item_type'] = '*';
 
-		$i = items_fetch($arr,$a->get_channel(),get_observer_hash());
+		$i = items_fetch($arr,App::get_channel(),get_observer_hash());
 
 		if(! $i)
 			json_return_and_die(array());
@@ -1230,7 +1230,7 @@ require_once('include/api_auth.php');
 			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
 		if (api_user() != $user_info['uid']) {
-			$observer = get_app()->get_observer();
+			$observer = App::get_observer();
 			require_once('include/permissions.php');
 			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
 				return '';
@@ -1272,7 +1272,7 @@ require_once('include/api_auth.php');
 				break;
 			case "as":
 				$as = api_format_as($a, $ret, $user_info);
-				$as['title'] = $a->config['sitename']." Home Timeline";
+				$as['title'] = App::$config['sitename']." Home Timeline";
 				$as['link']['url'] = z_root()."/".$user_info["screen_name"]."/all";
 				return($as);
 				break;
@@ -1333,7 +1333,7 @@ require_once('include/api_auth.php');
 				break;
 			case "as":
 				$as = api_format_as($a, $ret, $user_info);
-				$as['title'] = $a->config['sitename']. " " . t('Public Timeline');
+				$as['title'] = App::$config['sitename']. " " . t('Public Timeline');
 				$as['link']['url'] = z_root()."/";
 				return($as);
 				break;
@@ -1409,7 +1409,7 @@ require_once('include/api_auth.php');
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
-		$observer = get_app()->get_observer();
+		$observer = App::get_observer();
 
 		$item_normal = item_normal();
 
@@ -1526,7 +1526,7 @@ require_once('include/api_auth.php');
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
-		$myurl = z_root() . '/channel/'. $a->user['nickname'];
+		$myurl = z_root() . '/channel/'. App::$user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
 		$diasp_url = str_replace('/channel/','/u/',$myurl);
@@ -1561,7 +1561,7 @@ require_once('include/api_auth.php');
 				break;
 			case "as":
 				$as = api_format_as($a, $ret, $user_info);
-				$as["title"] = $a->config['sitename']." Mentions";
+				$as["title"] = App::$config['sitename']." Mentions";
 				$as['link']['url'] = z_root()."/";
 				return($as);
 				break;
@@ -1633,7 +1633,7 @@ require_once('include/api_auth.php');
 			$arr['cid'] = $user_info['id'];
 
 
-		$r = items_fetch($arr,get_app()->get_channel(),get_observer_hash());
+		$r = items_fetch($arr,App::get_channel(),get_observer_hash());
 		
 		$ret = api_format_items($r,$user_info);
 
@@ -1752,7 +1752,7 @@ require_once('include/api_auth.php');
 			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
 		if (api_user() != $user_info['uid']) {
-			$observer = get_app()->get_observer();
+			$observer = App::get_observer();
 			require_once('include/permissions.php');
 			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
 				return '';
@@ -1783,7 +1783,7 @@ require_once('include/api_auth.php');
 				break;
 			case "as":
 				$as = api_format_as($a, $ret, $user_info);
-				$as['title'] = $a->config['sitename']." Home Timeline";
+				$as['title'] = App::$config['sitename']." Home Timeline";
 				$as['link']['url'] = z_root()."/".$user_info["screen_name"]."/all";
 				return($as);
 				break;
@@ -1801,7 +1801,7 @@ require_once('include/api_auth.php');
 	function api_format_as($a, $ret, $user_info) {
 
 		$as = array();
-		$as['title'] = $a->config['sitename']." Public Timeline";
+		$as['title'] = App::$config['sitename']." Public Timeline";
 		$items = array();
 		foreach ($ret as $item) {
 			$singleitem["actor"]["displayName"] = $item["user"]["name"];
@@ -2088,7 +2088,7 @@ require_once('include/api_auth.php');
 		load_config('system');
 
 		$name   = get_config('system','sitename');
-		$server = $a->get_hostname();
+		$server = App::get_hostname();
 		$logo   = z_root() . '/images/rm-64.png';
 		$email  = get_config('system','admin_email');
 		$closed = ((get_config('system','register_policy') == REGISTER_CLOSED) ? 'true' : 'false');
@@ -2270,7 +2270,7 @@ require_once('include/api_auth.php');
 		if ($page<0) $page=0;
 		
 		$start = $page*$count;
-		$channel = $a->get_channel();		
+		$channel = App::get_channel();		
 
 		$profile_url = z_root() . '/channel/' . $channel['channel_address'];
 		if ($box=="sentbox") {

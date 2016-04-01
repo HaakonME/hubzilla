@@ -1477,7 +1477,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	require_once('include/items.php');
 
-	$poster = get_app()->get_observer();
+	$poster = App::get_observer();
 
 	//if we got no object something went wrong
 	if(!$object)
@@ -1696,7 +1696,7 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 	$ret = array();
 	$parent_arr = array();
 	$count_values = array();
-	$poster = get_app()->get_observer();
+	$poster = App::get_observer();
 
 	//turn allow_gid into allow_cid's
 	foreach($arr_allow_gid as $gid) {

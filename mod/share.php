@@ -69,7 +69,7 @@ function share_init(&$a) {
 		killme();
 	}
 
-	$observer = $a->get_observer();
+	$observer = App::get_observer();
 	$parsed = $observer['xchan_url'];
 	if($parsed) {
 		$post_url = $parsed['scheme'] . ':' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '')

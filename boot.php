@@ -76,7 +76,7 @@ define ( 'DIRECTORY_MODE_STANDALONE',  0x0100); // A detached (off the grid) hub
 // point to go out and find the rest of the world.
 
 define ( 'DIRECTORY_REALM',            'RED_GLOBAL');
-define ( 'DIRECTORY_FALLBACK_MASTER',  'https://hubzilla.site');
+define ( 'DIRECTORY_FALLBACK_MASTER',  'https://hub.pixelbits.de');
 
 $DIRECTORY_FALLBACK_SERVERS = array( 
 	'https://hubzilla.site',

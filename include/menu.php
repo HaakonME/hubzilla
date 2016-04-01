@@ -35,11 +35,11 @@ function menu_element($menu) {
 	$arr['edited'] = $menu['menu']['menu_edited'];
 
 	$arr['baseurl'] = z_root();
-	if($menu['menu_flags']) {
+	if($menu['menu']['menu_flags']) {
 		$arr['flags'] = array();
-		if($menu['menu_flags'] & MENU_BOOKMARK)
+		if($menu['menu']['menu_flags'] & MENU_BOOKMARK)
 			$arr['flags'][] = 'bookmark';
-		if($menu['menu_flags'] & MENU_SYSTEM)
+		if($menu['menu']['menu_flags'] & MENU_SYSTEM)
 			$arr['flags'][] = 'system';
 	}
 	if($menu['items']) {

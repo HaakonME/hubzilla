@@ -636,6 +636,7 @@ function sync_events($channel,$events) {
 
 function import_menus($channel,$menus) {
 
+
 	if($channel && $menus) {
 		foreach($menus as $menu) {
 			$m = array();
@@ -681,6 +682,8 @@ function import_menus($channel,$menus) {
 			}
 		}
 	}
+
+
 }
 
 

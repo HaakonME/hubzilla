@@ -1451,18 +1451,3 @@ function zid(s) {
 
 	return s;
 }
-
-function makeFullScreen(full) {
-	if(typeof full=='undefined' || full == true) {
-		$('#fullscreen-btn, header, nav, aside').hide();
-		$('main').css({'width': '100%', 'max-width': 'none'});
-		$('#inline-btn').show();
-		$('.generic-content-wrapper').addClass('fullscreen');
-	}
-	else {
-		$('#fullscreen-btn, header, nav, aside').show();
-		$('main').removeAttr('style');
-		$('#inline-btn').hide();
-		$('.generic-content-wrapper').removeClass('fullscreen');
-	}
-}

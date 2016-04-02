@@ -36,7 +36,7 @@ class Router {
 			 *
 			 */
 
-			if(is_array(\App::$plugins) && in_array(\App::$module,\App::$plugins) && file_exists("addon/{$module}/{\$module}.php")) {
+			if(is_array(\App::$plugins) && in_array($module,\App::$plugins) && file_exists("addon/{$module}/{$module}.php")) {
 				include_once("addon/{$module}/{$module}.php");
 				if(function_exists($module . '_module'))
 					\App::$module_loaded = true;

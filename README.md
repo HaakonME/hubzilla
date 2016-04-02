@@ -3,8 +3,8 @@
 Hubzilla - Community Server
 ===========================
 
-Help us redefine the web - using integrated and united community websites. 
---------------------------------------------------------------------------
+Help us redefine the web - using linked/connected community websites. 
+---------------------------------------------------------------------
 
 <p align="center" markdown="1">
 <em><a href="https://github.com/redmatrix/hubzilla/blob/master/install/INSTALL.txt">Installing Hubzilla</a></em> 

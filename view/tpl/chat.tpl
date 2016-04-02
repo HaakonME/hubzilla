@@ -119,7 +119,6 @@ $(window).resize(function () {
 	else {
 		adjustInlineTopBarHeight();
 	}
-	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 });
 
 $('#chat-form').submit(function(ev) {
@@ -197,7 +196,7 @@ function addmailtext(data) {
 }
 
 function adjustFullscreenTopBarHeight() {
-	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 23);
+	$('#chatTopBar').height($(window).height() - $('#chatBottomBar').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - 16);
 	$('#chatTopBar').scrollTop($('#chatTopBar').prop('scrollHeight'));
 }
 

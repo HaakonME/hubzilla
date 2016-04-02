@@ -1723,9 +1723,7 @@ nav .badge.mail-update:hover {
 	}
 
 	main {
-		-webkit-transition: all 0.25s ease-out;
-		-moz-transition: all 0.25s ease-out;
-		transition: all 0.25s ease-out;
+		transition: all 0.25s ease-in-out;
 	}
 
 	main {

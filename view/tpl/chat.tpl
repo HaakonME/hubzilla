@@ -18,21 +18,16 @@
 		<div id="chatTopBar">
 			<div id="chatLineHolder"></div>
 		</div>
-
-
 		<div class="clear"></div>
-
 		<div id="chatBottomBar" >
-			<div class="tip"></div>
 			<form id="chat-form" method="post" action="#">
 				<input type="hidden" name="room_id" value="{{$room_id}}" />
-					<textarea id="chatText" name="chat_text" class="form-control"></textarea>
 				<div class="form-group">
-
+					<textarea id="chatText" name="chat_text" class="form-control"></textarea>
 				</div>
 				<div id="chat-submit-wrapper">
 					<div id="chat-submit" class="dropup pull-right">
-						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="icon-caret-down"></i></button>
+						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="icon-caret-up"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="chat-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 						<ul class="dropdown-menu">
 							<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online"><i class="icon-circle online"></i>&nbsp;{{$online}}</a></li>
@@ -65,29 +60,27 @@
 						<div class="btn-group hidden-xs">
 							<button id="chat-link-wrapper" class="btn btn-default btn-sm" onclick="chatJotGetLink(); return false;" >
 								<i id="chat-link" class="icon-link jot-icons" title="{{$insert}}" ></i>
-							</button-->
+							</button>
 						</div>
 						{{if $feature_encrypt}}
-						<div class="btn-group hidden-sm hidden-xs">
+						<div class="btn-group hidden-xs">
 							<button id="chat-encrypt-wrapper" class="btn btn-default btn-sm" onclick="red_encrypt('{{$cipher}}', '#chatText', $('#chatText').val()); return false;">
 								<i id="chat-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" ></i>
 							</button>
 						</div>
 						{{/if}}
-						<div class="btn-group visible-xs visible-sm">
+						<div class="btn-group dropup visible-xs">
 							<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-								<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
+								<i id="more-tools-icon" class="icon-caret-up jot-icons"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu">
 								<li class="visible-xs"><a href="#" onclick="chatJotGetLink(); return false;" ><i class="icon-link"></i>&nbsp;{{$insert}}</a></li>
 								{{if $feature_encrypt}}
-								<li class="divider visible-xs"></li>
-								<li class="visible-sm visible-xs"><a href="#" onclick="red_encrypt('{{$cipher}}', '#chatText' ,$('#chatText').val()); return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
+								<li class="divider"></li>
+								<li class="visible-xs"><a href="#" onclick="red_encrypt('{{$cipher}}', '#chatText' ,$('#chatText').val()); return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
 								{{/if}}
 							</ul>
 						</div>
-
-
 					</div>
 					<div id="chat-rotator-wrapper" class="pull-left">
 						<div id="chat-rotator"></div>
@@ -113,7 +106,7 @@ $(document).ready(function() {
 });
 
 $(window).resize(function () {
-	if($('.generic-content-wrapper').hasClass('fullscreen')) {
+	if($('main').hasClass('fullscreen')) {
 		adjustFullscreenTopBarHeight();
 	}
 	else {
@@ -165,11 +158,11 @@ function update_chats(chats) {
 
 		if(item.self) {
 			newNode.setAttribute('class', 'chat-item-self clear');
-			$(newNode).html('<div class="chat-body-self"><div class="chat-item-title-self"><span class="chat-item-name-self">' + item.name + ' </span><span class="autotime chat-item-time-self" title="' + item.isotime + '">' + item.localtime + '</span></div><div class="chat-item-text-self">' + item.text + '</div></div><img class="chat-item-photo-self" src="' + item.img + '" alt="' + item.name + '" />');
+			$(newNode).html('<div class="chat-body-self"><div class="chat-item-title-self wall-item-ago"><span class="chat-item-name-self">' + item.name + ' </span><span class="autotime chat-item-time-self" title="' + item.isotime + '">' + item.localtime + '</span></div><div class="chat-item-text-self">' + item.text + '</div></div><img class="chat-item-photo-self" src="' + item.img + '" alt="' + item.name + '" />');
 		}
 		else {
 			newNode.setAttribute('class', 'chat-item clear');
-			$(newNode).html('<img class="chat-item-photo" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body"><div class="chat-item-title"><span class="chat-item-name">' + item.name + ' </span><span class="autotime chat-item-time" title="' + item.isotime + '">' + item.localtime + '</span></div><div class="chat-item-text">' + item.text + '</div></div>');
+			$(newNode).html('<img class="chat-item-photo" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body"><div class="chat-item-title wall-item-ago"><span class="chat-item-name">' + item.name + ' </span><span class="autotime chat-item-time" title="' + item.isotime + '">' + item.localtime + '</span></div><div class="chat-item-text">' + item.text + '</div></div>');
 		}
 		$('#chatLineHolder').append(newNode);
 		$(".autotime").timeago();

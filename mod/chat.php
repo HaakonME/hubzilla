@@ -240,6 +240,8 @@ function chat_content(&$a) {
 		'$newroom' => t('Create New'),
 		'$is_owner' => ((local_channel() && local_channel() == App::$profile['profile_uid']) ? 1 : 0),
 		'$chatroom_new' => $chatroom_new,
+		'$expire' => t('Expiration'),
+		'$expire_unit' => t('min') //minutes
 	));
  
 	return $o;

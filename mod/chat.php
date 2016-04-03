@@ -208,6 +208,12 @@ function chat_content(&$a) {
 
 	$o = profile_tabs($a,((local_channel() && local_channel() == App::$profile['profile_uid']) ? true : false),App::$profile['channel_address']);
 
+	if(! feature_enabled(App::$profile['profile_uid'],'ajaxchat')) {
+		notice( t('Feature disabled.') . EOL);
+		return $o;
+	}
+
+
 	$acl = new Zotlabs\Access\AccessList($channel);
 	$channel_acl = $acl->get();
 

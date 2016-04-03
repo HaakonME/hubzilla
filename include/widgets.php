@@ -785,6 +785,7 @@ function widget_menu_preview($arr) {
 
 function widget_chatroom_list($arr) {
 
+
 	require_once("include/chat.php");
 	$r = chatroom_list(App::$profile['profile_uid']);
 
@@ -808,6 +809,10 @@ function widget_chatroom_members() {
 }
 
 function widget_bookmarkedchats($arr) {
+
+	if(! feature_enabled(App::$profile['profile_uid'],'ajaxchat'))
+		return '';
+
 	$h = get_observer_hash();
 	if(! $h)
 		return;
@@ -826,6 +831,9 @@ function widget_bookmarkedchats($arr) {
 }
 
 function widget_suggestedchats($arr) {
+
+	if(! feature_enabled(App::$profile['profile_uid'],'ajaxchat'))
+		return '';
 
 	// probably should restrict this to your friends, but then the widget will only work
 	// if you are logged in locally.

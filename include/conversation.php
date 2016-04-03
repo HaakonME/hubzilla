@@ -1592,6 +1592,7 @@ function network_tabs() {
 function profile_tabs($a, $is_owner = false, $nickname = null){
 
 	// Don't provide any profile tabs if we're running as the sys channel
+
 	if (App::$is_sys)
 		return;
 
@@ -1669,7 +1670,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	}
 
 
-	if ($p['chat']) {
+	if ($p['chat'] && feature_enabled($uid,'ajaxchat')) {
 		require_once('include/chat.php');
 		$has_chats = chatroom_list_count($uid);
 		if ($has_chats) {

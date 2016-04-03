@@ -18,17 +18,12 @@
 		<div id="chatTopBar">
 			<div id="chatLineHolder"></div>
 		</div>
-
-
 		<div class="clear"></div>
-
 		<div id="chatBottomBar" >
-			<div class="tip"></div>
 			<form id="chat-form" method="post" action="#">
 				<input type="hidden" name="room_id" value="{{$room_id}}" />
-					<textarea id="chatText" name="chat_text" class="form-control"></textarea>
 				<div class="form-group">
-
+					<textarea id="chatText" name="chat_text" class="form-control"></textarea>
 				</div>
 				<div id="chat-submit-wrapper">
 					<div id="chat-submit" class="dropup pull-right">
@@ -65,7 +60,7 @@
 						<div class="btn-group hidden-xs">
 							<button id="chat-link-wrapper" class="btn btn-default btn-sm" onclick="chatJotGetLink(); return false;" >
 								<i id="chat-link" class="icon-link jot-icons" title="{{$insert}}" ></i>
-							</button-->
+							</button>
 						</div>
 						{{if $feature_encrypt}}
 						<div class="btn-group hidden-xs">
@@ -86,8 +81,6 @@
 								{{/if}}
 							</ul>
 						</div>
-
-
 					</div>
 					<div id="chat-rotator-wrapper" class="pull-left">
 						<div id="chat-rotator"></div>
@@ -113,7 +106,7 @@ $(document).ready(function() {
 });
 
 $(window).resize(function () {
-	if($('.generic-content-wrapper').hasClass('fullscreen')) {
+	if($('main').hasClass('fullscreen')) {
 		adjustFullscreenTopBarHeight();
 	}
 	else {

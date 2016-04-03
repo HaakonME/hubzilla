@@ -454,7 +454,7 @@ define ( 'TERM_OBJ_APP',     7 );
 /**
  * various namespaces we may need to parse
  */
-
+define ( 'PROTOCOL_ZOT',              'http://purl.org/zot/protocol' );
 define ( 'NAMESPACE_ZOT',             'http://purl.org/zot' );
 define ( 'NAMESPACE_DFRN' ,           'http://purl.org/macgirvin/dfrn/1.0' );
 define ( 'NAMESPACE_THREAD' ,         'http://purl.org/syndication/thread/1.0' );

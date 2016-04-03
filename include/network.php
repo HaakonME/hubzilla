@@ -1089,7 +1089,7 @@ function discover_by_webbie($webbie) {
 				// If we discover zot - don't search further; grab the info and get out of
 				// here. 
 
-				if($link['rel'] == 'http://purl.org/zot/protocol') {
+				if($link['rel'] === PROTOCOL_ZOT) {
 					logger('discover_by_webbie: zot found for ' . $webbie, LOGGER_DEBUG);
 					if(array_key_exists('zot',$x) && $x['zot']['success'])
 						$i = import_xchan($x['zot']);

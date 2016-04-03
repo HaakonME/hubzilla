@@ -1521,10 +1521,8 @@ nav .dropdown-menu {
 .generic-content-wrapper.fullscreen {
 	position: absolute;
 	width: 100%;
-	height: 100%;
 	top: 0px;
 	left: 0px;
-	border: 0px;
 	border-radius: 0px;
 }
 

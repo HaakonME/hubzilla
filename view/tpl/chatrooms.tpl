@@ -12,14 +12,16 @@
 	<div class="section-content-wrapper-np">
 		<table id="chatrooms-index">
 			<tr>
-				<th width="98%">{{$name}}</th>
+				<th width="97%">{{$name}}</th>
+				<th width="1%">{{$expire}}</th>
 				<th width="1%" class="chatrooms-index-tool"></th>
 				<th width="1%"></th>
 			</tr>
 			{{foreach $rooms as $room}}
 			<tr class="chatroom-index-row">
 				<td><a href="{{$baseurl}}/chat/{{$nickname}}/{{$room.cr_id}}">{{$room.cr_name}}</a></td>
-				<td class="chatrooms-index-tool dropdown">
+				<td>{{$room.cr_expire}}&nbsp;min</td>
+				<td class="chatrooms-index-tool dropdown pull-right">
 					{{if $room.allow_cid || $room.allow_gid || $room.deny_cid || $room.deny_gid}}
 					<i class="icon-lock lockview dropdown-toggle" data-toggle="dropdown" onclick="lockview('chatroom',{{$room.cr_id}});"></i>
 					<ul id="panel-{{$room.cr_id}}" class="lockview-panel dropdown-menu"></ul>

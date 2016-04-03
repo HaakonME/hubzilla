@@ -32,7 +32,7 @@
 				</div>
 				<div id="chat-submit-wrapper">
 					<div id="chat-submit" class="dropup pull-right">
-						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="icon-caret-down"></i></button>
+						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="icon-caret-up"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="chat-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 						<ul class="dropdown-menu">
 							<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online"><i class="icon-circle online"></i>&nbsp;{{$online}}</a></li>
@@ -68,21 +68,21 @@
 							</button-->
 						</div>
 						{{if $feature_encrypt}}
-						<div class="btn-group hidden-sm hidden-xs">
+						<div class="btn-group hidden-xs">
 							<button id="chat-encrypt-wrapper" class="btn btn-default btn-sm" onclick="red_encrypt('{{$cipher}}', '#chatText', $('#chatText').val()); return false;">
 								<i id="chat-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" ></i>
 							</button>
 						</div>
 						{{/if}}
-						<div class="btn-group visible-xs visible-sm">
+						<div class="btn-group dropup visible-xs">
 							<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-								<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
+								<i id="more-tools-icon" class="icon-caret-up jot-icons"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu">
 								<li class="visible-xs"><a href="#" onclick="chatJotGetLink(); return false;" ><i class="icon-link"></i>&nbsp;{{$insert}}</a></li>
 								{{if $feature_encrypt}}
-								<li class="divider visible-xs"></li>
-								<li class="visible-sm visible-xs"><a href="#" onclick="red_encrypt('{{$cipher}}', '#chatText' ,$('#chatText').val()); return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
+								<li class="divider"></li>
+								<li class="visible-xs"><a href="#" onclick="red_encrypt('{{$cipher}}', '#chatText' ,$('#chatText').val()); return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
 								{{/if}}
 							</ul>
 						</div>

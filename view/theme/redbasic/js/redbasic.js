@@ -55,15 +55,17 @@ $(document).ready(function() {
 
 function makeFullScreen(full) {
 	if(typeof full=='undefined' || full == true) {
-		$('#fullscreen-btn, header, nav, aside').hide();
-		$('main').css({'width': '100%', 'max-width': 'none', 'left': '0px'});
-		$('#inline-btn').show();
+		$('main').css({'transition': 'none', 'left': '0px', 'width': '100%', 'max-width': 'none'});
 		$('.generic-content-wrapper').addClass('fullscreen');
+		$('#fullscreen-btn, header, nav, aside').css({'display': 'none'});
+		$('#inline-btn').show();
+
 	}
 	else {
-		$('#fullscreen-btn, header, nav, aside').show();
-		$('main').removeAttr('style');
-		$('#inline-btn').hide();
+		$('main').css({'left': '', 'width': '', 'max-width': ''});
 		$('.generic-content-wrapper').removeClass('fullscreen');
+		$('#fullscreen-btn, header, nav, aside').css({'display': ''});
+		$('#inline-btn').hide();
+		$('main').css({'transition': ''});
 	}
 }

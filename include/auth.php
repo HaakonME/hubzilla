@@ -246,7 +246,7 @@ else {
 				notice( t('Failed authentication') . EOL);
 			}
 
-			logger('authenticate: ' . print_r(App::$account, true), LOGGER_DEBUG);
+			logger('authenticate: ' . print_r(App::$account, true), LOGGER_ALL);
 		}
 
 		if((! $record) || (! count($record))) {
@@ -274,7 +274,7 @@ else {
 		// (i.e. expire when the browser is closed), even when there's a time expiration
 		// on the cookie
 
-		if($_POST['remember']) {
+		if($_POST['remember_me']) {
 			new_cookie(31449600); // one year
 		}
 		else {

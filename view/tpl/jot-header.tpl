@@ -11,6 +11,7 @@ function initEditor(cb){
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").spin(false).hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
+			$("#profile-jot-text").bbco_autocomplete('bbcode'); // autocomplete bbcode
 			if(typeof channelId === 'undefined')
 				$("#profile-jot-text").editor_autocomplete(baseurl+"/acl");
 			else

@@ -29,7 +29,7 @@ function manage_content(&$a) {
 		$r = change_channel($change_channel);
 
 		if((argc() > 2) && !(argv(2) === 'default')) {
-			goaway(z_root() . '/' . implode('/',array_slice($a->argv,2))); // Go to whatever is after /manage/, but with the new channel
+			goaway(z_root() . '/' . implode('/',array_slice(App::$argv,2))); // Go to whatever is after /manage/, but with the new channel
 		}
 		else {
 			if($r && $r['channel_startpage'])
@@ -45,7 +45,7 @@ function manage_content(&$a) {
 			intval(get_account_id())
 		);
 
-		$account = get_app()->get_account();
+		$account = App::get_account();
 
 		if($r && count($r)) {
 			$channels = $r;
@@ -167,9 +167,7 @@ function manage_content(&$a) {
 		'$intros_format'    => t('%d new introductions'),
 		'$channel_usage_message' => $channel_usage_message,
 		'$delegated_desc'   => t('Delegated Channel'),
-		'$delegates'        => $delegates,
-		'$locs'             => t('Manage locations')
-
+		'$delegates'        => $delegates
 	));
 
 	return $o;

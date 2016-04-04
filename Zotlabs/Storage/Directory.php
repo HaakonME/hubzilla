@@ -53,7 +53,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		logger('directory ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
-		$modulename = get_app()->module; 
+		$modulename = \App::$module; 
 		$this->red_path = ((strpos($ext_path, '/' . $modulename) === 0) ? substr($ext_path, strlen($modulename) + 1) : $ext_path);
 		if (! $this->red_path) {
 			$this->red_path = '/';
@@ -114,7 +114,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		$modulename = get_app()->module;
+		$modulename = \App::$module;
 		if ($this->red_path === '/' && $name === $modulename) {
 			return new Directory('/' . $modulename, $this->auth);
 		}
@@ -332,7 +332,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 			require_once('include/photos.php');
 			$args = array( 'resource_id' => $hash, 'album' => $album, 'os_path' => $f, 'filename' => $name, 'getimagesize' => $x, 'directory' => $direct);
-			$p = photo_upload($c[0],get_app()->get_observer(),$args);
+			$p = photo_upload($c[0],\App::get_observer(),$args);
 		}
 
 	}
@@ -393,7 +393,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	public function childExists($name) {
 		// On /cloud we show a list of available channels.
 		// @todo what happens if no channels are available?
-		$modulename = get_app()->module;
+		$modulename = \App::$module;
 		if ($this->red_path === '/' && $name === $modulename) {
 			//logger('We are at ' $modulename . ' show a channel list', LOGGER_DEBUG);
 			return true;
@@ -417,7 +417,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		logger('GetDir: ' . $this->ext_path, LOGGER_DEBUG);
 		$this->auth->log();
-		$modulename = get_app()->module;
+		$modulename = \App::$module;
 
 		$file = $this->ext_path;
 

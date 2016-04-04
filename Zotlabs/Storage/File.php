@@ -173,7 +173,7 @@ class File extends DAV\Node implements DAV\IFile {
 		if($is_photo) {
 			require_once('include/photos.php');
 			$args = array( 'resource_id' => $this->data['hash'], 'album' => $album, 'os_path' => $f, 'filename' => $r[0]['filename'], 'getimagesize' => $gis, 'directory' => $direct );
-			$p = photo_upload($c[0],get_app()->get_observer(),$args);
+			$p = photo_upload($c[0],\App::get_observer(),$args);
 		}
 
 		// update the folder's lastmodified timestamp

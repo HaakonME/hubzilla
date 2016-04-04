@@ -156,12 +156,12 @@ session_set_save_handler(
 
    // Force cookies to be secure (https only) if this site is SSL enabled. Must be done before session_start().
 
-    if(intval(get_app()->config['system']['ssl_cookie_protection'])) {
+    if(intval(App::$config['system']['ssl_cookie_protection'])) {
         $arr = session_get_cookie_params();
         session_set_cookie_params(
             ((isset($arr['lifetime']))  ? $arr['lifetime'] : 0),
             ((isset($arr['path']))      ? $arr['path']     : '/'),
-            ((isset($arr['domain']))    ? $arr['domain']   : get_app()->get_hostname()),
+            ((isset($arr['domain']))    ? $arr['domain']   : App::get_hostname()),
             ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
             ((isset($arr['httponly']))  ? $arr['httponly'] : true));
     }

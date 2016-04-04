@@ -25,16 +25,7 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 	if(! $verify) {
 		while($msg = openssl_error_string())
 			logger('openssl_verify: ' . $msg,LOGGER_NORMAL,LOG_ERR);
-		logger('openssl_verify: key: ' . $key, LOGGER_DEBUG, LOG_ERR); 
-		// provide a backtrace so that we can debug key issues
-		if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-			if($stack) {
-				foreach($stack as $s) {
-					logger('stack: ' . basename($s['file']) . ':' . $s['line'] . ':' . $s['function'] . '()',LOGGER_DEBUG,LOG_ERR);
-			    }
-			}
-		}
+		btlogger('openssl_verify: key: ' . $key, LOGGER_DEBUG, LOG_ERR); 
 	}
 
 	return $verify;

@@ -490,12 +490,12 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 	$o = '';
 
 	// If we weren't passed an album list, see if the photos module
-	// dropped one for us to find in $a->data['albums']. 
+	// dropped one for us to find in App::$data['albums']. 
 	// If all else fails, load it.
 
 	if(! $albums) {
-		if(array_key_exists('albums', get_app()->data))
-			$albums = get_app()->data['albums'];
+		if(array_key_exists('albums', App::$data))
+			$albums = App::$data['albums'];
 		else
 			$albums = photos_albums_list($channelx,$observer);
 	}

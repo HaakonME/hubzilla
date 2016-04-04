@@ -149,7 +149,7 @@ function import_account(&$a, $account_id) {
 	}
 
 	if(! $channel)
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 	
 	if(! $channel) {
 		logger('mod_import: channel not found. ', print_r($channel,true));
@@ -205,12 +205,12 @@ function import_account(&$a, $account_id) {
 			dbesc($channel['channel_guid']),
 			dbesc($channel['channel_guid_sig']),
 			dbesc($channel['channel_hash']),
-			dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+			dbesc($channel['channel_address'] . '@' . App::get_hostname()),
 			dbesc('zot'),
 			intval(($seize) ? 1 : 0),
 			dbesc(z_root()),
 			dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
-			dbesc(get_app()->get_hostname()),
+			dbesc(App::get_hostname()),
 			dbesc(z_root() . '/post'),
 			dbesc(get_config('system','pubkey'))
 		);
@@ -246,10 +246,10 @@ function import_account(&$a, $account_id) {
 				dbesc($channel['channel_guid']),
 				dbesc($channel['channel_guid_sig']),
 				dbesc($channel['channel_pubkey']),
-				dbesc($a->get_baseurl() . "/photo/profile/l/" . $channel['channel_id']),
-				dbesc($a->get_baseurl() . "/photo/profile/m/" . $channel['channel_id']),
-				dbesc($a->get_baseurl() . "/photo/profile/s/" . $channel['channel_id']),
-				dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+				dbesc(z_root() . "/photo/profile/l/" . $channel['channel_id']),
+				dbesc(z_root() . "/photo/profile/m/" . $channel['channel_id']),
+				dbesc(z_root() . "/photo/profile/s/" . $channel['channel_id']),
+				dbesc($channel['channel_address'] . '@' . App::get_hostname()),
 				dbesc(z_root() . '/channel/' . $channel['channel_address']),
 				dbesc(z_root() . '/follow?f=&url=%s'),
 				dbesc(z_root() . '/poco/' . $channel['channel_address']),

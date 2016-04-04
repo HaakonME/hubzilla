@@ -197,3 +197,43 @@ function submit_form(e) {
 			a.on('textComplete:select', function(e, value, strategy) { onselect(value); });
 	};
 })( jQuery );
+
+(function( $ ) {
+	$.fn.bbco_autocomplete = function(type) {
+
+		if(type=='bbcode') {
+			var open_close_elements = ['b', 'i', 'u', 's', 'quote', 'code', 'spoiler', 'map', 'observer'];
+			var open_elements = ['observer.photo', 'observer.name', 'observer.url'];
+
+			var elements = open_close_elements.concat(open_elements);
+		}
+
+		if(type=='comanche') {
+			var elements = ['region', 'widget', 'var', 'template', 'css', 'js'];
+		}
+
+		bbco = {
+			match: /\[(\w*)$/,
+			search: function (term, callback) {
+				callback($.map(elements, function (element) {
+					return element.indexOf(term) === 0 ? element : null;
+				}));
+			},
+			index: 1,
+			replace: function (element) {
+				if(open_elements.indexOf(element) < 0) {
+					return ['\[' + element + '\]', '\[/' + element + '\]'];
+				}
+				else {
+					return '\[' + element + '\] ';
+				}
+			}
+		};
+
+		this.attr('autocomplete','off');
+		var a = this.textcomplete([bbco], {className:'acpopup', zIndex:1020});
+
+		a.on('textComplete:select', function(e, value, strategy) { value; });
+	};
+})( jQuery );
+

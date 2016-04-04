@@ -15,9 +15,7 @@
 				{{/if}}
 			</div>
 		</div>
-
 		<h2>{{$album}}</h2>
-
 		<div class="clear"></div>
 	</div>
 	{{$upload_form}}

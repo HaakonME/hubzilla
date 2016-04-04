@@ -1265,6 +1265,12 @@ function discover_by_webbie($webbie) {
 				if($feed_meta['author']['author_photo'])
 					$avatar = $feed_meta['author']['author_photo'];
 			}
+
+			// for GNU-social over-ride any url aliases we may have picked up in webfinger
+			// The author.uri element in the feed is likely to be more accurate
+
+			if($gnusoc && $feed_meta['author']['author_uri'])
+				$location = $feed_meta['author']['author_uri'];
 		}
 	}
 	else {

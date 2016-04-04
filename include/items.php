@@ -4118,21 +4118,25 @@ function feed_meta($xml) {
     	$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		logger('rawauthor: ' . print_r($rawauthor,true));
 
-	    if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
-    	    $base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
-        	foreach($base as $link) {
-            	if(!x($author, 'author_photo') || ! $author['author_photo']) {
-                	if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar') {
-                    	$author['author_photo'] = unxmlify($link['attribs']['']['href']);
-						break;
-					}
-            	}
-        	}
+	    if($rawauthor) {
+			if($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
+	    	    $base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+    	    	foreach($base as $link) {
+        	    	if(!x($author, 'author_photo') || ! $author['author_photo']) {
+            	    	if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar') {
+                	    	$author['author_photo'] = unxmlify($link['attribs']['']['href']);
+							break;
+						}
+    	        	}
+        		}
+			}
 			if($rawauthor[0]['child'][NAMESPACE_POCO]['displayName'][0]['data'])
 				$author['full_name'] = unxmlify($rawauthor[0]['child'][NAMESPACE_POCO]['displayName'][0]['data']);
+			if($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data'])
+				$author['author_uri'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
+			
 		}
     }
-
 
     if(substr($author['author_link'],-1,1) == '/')
         $author['author_link'] = substr($author['author_link'],0,-1);

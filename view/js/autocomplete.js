@@ -202,7 +202,7 @@ function submit_form(e) {
 	$.fn.bbco_autocomplete = function(type) {
 
 		if(type=='bbcode') {
-			var open_close_elements = ['b', 'i', 'u', 's', 'quote', 'code', 'spoiler', 'map', 'nobb', 'list', 'ul', 'ol', 'table', 'tr', 'th', 'td', 'center', 'color', 'font', 'size', 'zrl', 'zmg', 'rpost', 'qr', 'observer'];
+			var open_close_elements = ['b', 'i', 'u', 's', 'quote', 'code', 'spoiler', 'map', 'nobb', 'li', 'list', 'ul', 'ol', 'table', 'tr', 'th', 'td', 'center', 'color', 'font', 'size', 'zrl', 'zmg', 'rpost', 'qr', 'observer'];
 			var open_elements = ['observer.baseurl', 'observer.address', 'observer.photo', 'observer.name', 'observer.webname', 'observer.url', '*', 'hr',  ];
 
 			var elements = open_close_elements.concat(open_elements);
@@ -225,7 +225,11 @@ function submit_form(e) {
 			index: 1,
 			replace: function (element) {
 				if(open_elements.indexOf(element) < 0) {
+                                    if(element === 'ol' || element === 'ul') {
+                                        return ['\[' + element + '\]' + '\n\[li\]', '\[/li\]\n' + '\[/' + element + '\]'];
+                                    } else {
 					return ['\[' + element + '\]', '\[/' + element + '\]'];
+                                    }
 				}
 				else {
 					return '\[' + element + '\] ';

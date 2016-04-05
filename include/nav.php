@@ -149,9 +149,19 @@ EOT;
 
 	$help_url = z_root() . '/help?f=&cmd=' . App::$cmd;
 
-	if(! get_config('system','hide_help'))
-		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'),'help_nav_btn');
-
+	if(! get_config('system','hide_help')) {
+		require_once('mod/help.php');
+		$context_help = load_doc_file('doc/context/' . App::$cmd . '/help.html');
+                $parentdir = dirname(App::$cmd);
+		while (! $context_help && $parentdir !== '.') {
+                    $context_help = load_doc_file('doc/context/' . $parentdir . '/help.html');
+                    $parentdir = dirname($parentdir);
+		}	
+                if (! $context_help ) {
+                    $context_help = '';
+		}
+		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'),'help_nav_btn',$context_help);
+	}
 
 	if(! UNO)
 		$nav['apps'] = array('apps', t('Apps'), "", t('Applications, utilities, links, games'),'apps_nav_btn');
@@ -256,7 +266,6 @@ $powered_by = '';
  * 
  */
 function nav_set_selected($item){
-	$a = get_app();
     App::$nav_sel = array(
 		'community' 	=> null,
 		'network' 		=> null,

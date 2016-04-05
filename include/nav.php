@@ -151,8 +151,8 @@ EOT;
 
 	if(! get_config('system','hide_help')) {
 		require_once('mod/help.php');
-		$context_help = load_doc_file('doc/context/' . $a->cmd . '/help.html');
-                $parentdir = dirname($a->cmd);
+		$context_help = load_doc_file('doc/context/' . App::$cmd . '/help.html');
+                $parentdir = dirname(App::$cmd);
 		while (! $context_help && $parentdir !== '.') {
                     $context_help = load_doc_file('doc/context/' . $parentdir . '/help.html');
                     $parentdir = dirname($parentdir);
@@ -266,7 +266,6 @@ $powered_by = '';
  * 
  */
 function nav_set_selected($item){
-	$a = get_app();
     App::$nav_sel = array(
 		'community' 	=> null,
 		'network' 		=> null,

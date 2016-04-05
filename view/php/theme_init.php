@@ -13,7 +13,7 @@ head_add_css('library/justifiedGallery/justifiedGallery.min.css');
 
 head_add_js('jquery.js');
 //head_add_js('jquery-migrate-1.1.1.js');
-head_add_js('library/justifiedGallery/jquery.justifiedGallery.min.js');
+head_add_js('library/justifiedGallery/jquery.justifiedGallery.js');
 head_add_js('library/sprintf.js/dist/sprintf.min.js');
 
 //head_add_js('jquery-compat.js');

@@ -84,11 +84,6 @@ if(! App::$install) {
  *
  */
 
-/* session_set_cookie_params() needs to happen before session_start() */
-
-if($_POST['remember_me'])
-	session_set_cookie_params(31556926);
-
 session_start();
 
 /**

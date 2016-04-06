@@ -67,6 +67,7 @@ function new_cookie($time) {
 		}
 		setcookie('jsAvailable', $_COOKIE['jsAvailable'], $expires);
 	}
+	setcookie(session_name(),session_id(),$expires);
 }
 
 

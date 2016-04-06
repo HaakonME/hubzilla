@@ -1,0 +1,76 @@
+<?php
+
+require_once('include/Contact.php');
+
+function getfile_post(&$a) {
+
+	$hash = $_POST['hash'];
+	$time = $_POST['time'];
+	$sig = $_POST['signature'];
+	$resource = $_POST['resource'];
+	$revision = intval($_POST['revision']);
+
+	if(! $hash)
+		killme();
+
+	$channel = channelx_by_hash($hash);
+
+	if((! $channel) || (! $time) || (! $sig))
+		killme();
+
+	$slop = intval(get_pconfig($channel['channel_id'],'system','getfile_time_slop'));
+	if($slop < 1)
+		$slop = 3;
+
+	$d1 = datetime_convert('UTC','UTC',"now + $slop minutes");
+	$d2 = datetime_convert('UTC','UTC',"now - $slop minutes");	
+
+	if(($time > d1) || ($time < d2)) {
+		logger('time outside allowable range');
+		killme();
+	}
+
+	if(! rsa_verify($hash . '.' . $time,base64url_decode($sig),$channel['channel_pubkey'])) {
+		logger('verify failed.');
+		killme();
+	}
+
+
+	$r = attach_by_hash($resource,$revision);
+
+	if(! $r['success']) {
+		notice( $r['message'] . EOL);
+		return;
+	}
+	
+
+	$unsafe_types = array('text/html','text/css','application/javascript');
+
+	if(in_array($r['data']['filetype'],$unsafe_types)) {
+			header('Content-type: text/plain');
+	}
+	else {
+		header('Content-type: ' . $r['data']['filetype']);
+	}
+
+	header('Content-disposition: attachment; filename="' . $r['data']['filename'] . '"');
+	if(intval($r['data']['os_storage'])) {
+		$fname = dbunescbin($r['data']['data']);
+		if(strpos($fname,'store') !== false)
+			$istream = fopen($fname,'rb');
+		else
+			$istream = fopen('store/' . $channel['channel_address'] . '/' . $fname,'rb');
+		$ostream = fopen('php://output','wb');
+		if($istream && $ostream) {
+			pipe_streams($istream,$ostream);
+			fclose($istream);
+			fclose($ostream);
+		}
+	}
+	else
+		echo dbunescbin($r['data']['data']);
+	killme();
+
+
+
+}

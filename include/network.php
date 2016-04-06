@@ -27,11 +27,12 @@ function get_capath() {
  *  * \b http_auth => username:password
  *  * \b novalidate => do not validate SSL certs, default is to validate using our CA list
  *  * \b nobody => only return the header
+ *  * \b filep => stream resource to write body to. header and body are not returned when using this option.
  *
  * @return array an assoziative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
- *  * \e string \b header => HTTP headers
+ *  * \e string \b header => HTTP headers 
  *  * \e string \b body => fetched content
  */
 function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
@@ -52,6 +53,11 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	$ciphers = @get_config('system','curl_ssl_ciphers');
 	if($ciphers)
 		@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
+
+	if(x($opts,'filep')) {
+		@curl_setopt($ch, CURLOPT_FILE, $opts['filep']);
+		@curl_setopt($ch, CURLOPT_HEADER, $false);
+	}
 
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
@@ -158,6 +164,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  *    'timeout' => int seconds, default system config value or 60 seconds
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
+ *    'filep' => stream resource to write body to. header and body are not returned when using this option.
  * @return array an assoziative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
@@ -184,6 +191,11 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	$ciphers = @get_config('system','curl_ssl_ciphers');
 	if($ciphers)
 		@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
+
+	if(x($opts,'filep')) {
+		@curl_setopt($ch, CURLOPT_FILE, $opts['filep']);
+		@curl_setopt($ch, CURLOPT_HEADER, $false);
+	}
 
 	if(x($opts,'headers')) {
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);

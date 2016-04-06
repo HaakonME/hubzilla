@@ -216,7 +216,7 @@ function submit_form(e) {
 		}
 
 		bbco = {
-			match: /\[(\w*)$/,
+			match: /\[(\w*\**)$/,
 			search: function (term, callback) {
 				callback($.map(elements, function (element) {
 					return element.indexOf(term) === 0 ? element : null;
@@ -225,11 +225,12 @@ function submit_form(e) {
 			index: 1,
 			replace: function (element) {
 				if(open_elements.indexOf(element) < 0) {
-                                    if(element === 'ol' || element === 'ul') {
-                                        return ['\[' + element + '\]' + '\n\[li\]', '\[/li\]\n' + '\[/' + element + '\]'];
-                                    } else {
-					return ['\[' + element + '\]', '\[/' + element + '\]'];
-                                    }
+					if(element === 'list' || element === 'ol' || element === 'ul') {
+						return ['\[' + element + '\]' + '\n\[*\] ', '\n\[/' + element + '\]'];
+					}
+					else {
+						return ['\[' + element + '\]', '\[/' + element + '\]'];
+					}
 				}
 				else {
 					return '\[' + element + '\] ';

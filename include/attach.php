@@ -864,6 +864,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		// This would've been called already with a success result in photos_upload() if it was a photo.
 		call_hooks('photo_upload_end',$ret);
 	}
+
+	$sync = attach_export_data($channel,$hash);
+
+	if($sync) 
+		build_sync_packet(0,array('file' => array($sync)));
+
 	return $ret;
 }
 
@@ -1833,7 +1839,7 @@ function attach_export_data($channel,$resource_id) {
 		if($hash_ptr === $resource_id)
 			$attach_ptr = $r[0];
 
-		$hash_ptr = $r[0]['parent'];
+		$hash_ptr = $r[0]['folder'];
 		$paths[] = $r[0];
 	} while($hash_ptr);
 

@@ -84,7 +84,21 @@ function doc_rank_sort($s1,$s2) {
 }
 
 
+function load_context_help() {
+	
+	$path = App::$cmd;
+	$args = App::$argv;
 
+	while($path) {
+		$context_help = load_doc_file('doc/context/' . $path . '/help.html');
+		if($context_help)
+			break;
+		array_pop($args);
+		$path = implode($args,'/');
+	}
+
+	return $context_help;
+}
 
 
 function store_doc_file($s) {

@@ -1,5 +1,25 @@
 <?php
 
+/**
+ * module: getfile
+ * 
+ * used for synchronising files and photos across clones
+ * 
+ * The site initiating the file operation will send a sync packet to known clones.
+ * They will respond by building the DB structures they require, then will provide a
+ * post request to this site to grab the file data. This is sent as a stream direct to
+ * disk at the other end, avoiding memory issues.
+ *
+ * Since magic-auth cannot easily be used by the CURL process at the other end,
+ * we will require a signed request which includes a timestamp. This should not be 
+ * used without SSL and is potentially vulnerable to replay if an attacker decrypts 
+ * the SSL traffic fast enough. The amount of time slop is configurable but defaults
+ * to 3 minutes.
+ * 
+ */
+
+
+
 require_once('include/Contact.php');
 
 function getfile_post(&$a) {

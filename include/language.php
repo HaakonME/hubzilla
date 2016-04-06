@@ -109,7 +109,7 @@ function pop_lang() {
 	if(App::$language === App::$langsave)
 		return;
 
-	if(isset(App::$stringsave))
+	if(isset(App::$stringsave) && is_array(App::$stringsave))
 		App::$strings = App::$stringsave;
 	else
 		App::$strings = array();

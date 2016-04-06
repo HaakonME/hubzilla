@@ -711,6 +711,7 @@ class App {
 	public static  $module;
 	public static  $pager;
 	public static  $strings;
+	public static  $stringsave;   // used in push_lang() and pop_lang()
 	public static  $hooks;
 	public static  $timezone;
 	public static  $interactive = true;

@@ -889,9 +889,14 @@ function sync_files($channel,$files) {
 			if($f['attach']) {
 				$attachment_stored = false;
 				foreach($f['attach'] as $att) {
+
+					$attach_exists = false;
 					$x = attach_by_hash($att['hash']);
-					if($x && $x['uid'] == $channel['channel_id'])
-						continue;
+
+					if($x) {
+						$attach_exists = true;
+						$attach_id = $x[0]['id'];
+					}
 
 					$newfname = 'store/' . $channel['channel_address'] . '/' . get_attach_binname($att['data']);
 
@@ -946,25 +951,47 @@ function sync_files($channel,$files) {
 
 // @fixme - update attachment structures if they are modified rather than created
 
-					// is this a directory?
+					$att['data'] = $newfname;
 
-					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
-						os_mkdir($newfname, STORAGE_DEFAULT_PERMISSIONS,true);
-						$att['data'] = $newfname;
+					// Note: we use $att['hash'] below after it has been escaped to
+					// fetch the file contents. 
+					// If the hash ever contains any escapable chars this could cause
+					// problems. Currently it does not. 
 
-						dbesc_array($att);
-					
+					dbesc_array($att);
+
+
+					if($attach_exists) {
+					    $str = '';
+    					foreach($att as $k => $v) {
+				        	if($str)
+            					$str .= ",";
+        					$str .= " `" . $k . "` = '" . $v . "' ";
+    					}
+					    $r = dbq("update `attach` set " . $str . " where id = " . intval($attach_id) );
+					}
+					else {
 						$r = dbq("INSERT INTO attach (`" 
 							. implode("`, `", array_keys($att)) 
 							. "`) VALUES ('" 
 							. implode("', '", array_values($att)) 
 							. "')" );
+					}
 
+
+					// is this a directory?
+
+					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
+						os_mkdir($newfname, STORAGE_DEFAULT_PERMISSIONS,true);
 						continue;
 					}
 					else {
 
 						// it's a file
+						// for the sync version of this algorithm (as opposed to 'offline import')
+						// we will fetch the actual file from the source server so it can be 
+						// streamed directly to disk and avoid consuming PHP memory if it's a huge
+						// audio/video file or something. 
 
 						$time = datetime_convert();
 
@@ -979,7 +1006,7 @@ function sync_files($channel,$files) {
 
 						$fp = fopen($newfname,'w');
 						if(! $fp) {
-							logger('failed to open file.');
+							logger('failed to open storage file.',LOGGER_NORMAL,LOG_ERR);
 							continue;
 						}
 						$redirects = 0;
@@ -988,21 +1015,14 @@ function sync_files($channel,$files) {
 
 						if($x['success']) {
 							$attachment_stored = true;
-
-							dbesc_array($att);
-							$r = dbq("INSERT INTO attach (`" 
-								. implode("`, `", array_keys($att)) 
-								. "`) VALUES ('" 
-								. implode("', '", array_values($att)) 
-								. "')" );
 						}
 						continue;
 					}
 				}
 			}
 			if(! $attachment_stored) {
-				// should we queue this and retry or what? 
-				logger('attachment store failed');
+				// @TODO should we queue this and retry or delete everything or what? 
+				logger('attachment store failed',LOGGER_NORMAL,LOG_ERR);
 			}
 			if($f['photo']) {
 				foreach($f['photo'] as $p) {

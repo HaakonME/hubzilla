@@ -278,6 +278,9 @@ function listNewLineAutocomplete(id) {
 					if(element === 'list' || element === 'ol' || element === 'ul') {
 						return ['\[' + element + '\]' + '\n\[*\] ', '\n\[/' + element + '\]'];
 					}
+					else if(element === 'table') {
+						return ['\[' + element + '\]' + '\n\[tr\]', '\[/tr\]\n\[/' + element + '\]'];
+					}
 					else {
 						return ['\[' + element + '\]', '\[/' + element + '\]'];
 					}

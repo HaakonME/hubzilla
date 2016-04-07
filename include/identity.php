@@ -550,7 +550,8 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['config'] = $r;
 
-	$r = q("select type, data, os_storage from photo where scale = 4 and profile = 1 and uid = %d limit 1",
+	$r = q("select type, data, os_storage from photo where scale = 4 and photo_usage = %d and uid = %d limit 1",
+		intval(PHOTO_PROFILE),
 		intval($channel_id)
 	);
 

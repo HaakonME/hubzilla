@@ -100,6 +100,56 @@ function submit_form(e) {
 	$(e).parents('form').submit();
 }
 
+function getWord(text, caretPos) {
+	var index = text.indexOf(caretPos);
+	var postText = text.substring(caretPos, caretPos+8);
+	if ((postText.indexOf("[/list]") > 0) || postText.indexOf("[/ul]") > 0 || postText.indexOf("[/ol]") > 0) {
+		return postText;
+	}
+}
+
+function getCaretPosition(ctrl) {
+	var CaretPos = 0;   // IE Support
+	if (document.selection) {
+		ctrl.focus();
+		var Sel = document.selection.createRange();
+		Sel.moveStart('character', -ctrl.value.length);
+		CaretPos = Sel.text.length;
+	}
+	// Firefox support
+	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
+		CaretPos = ctrl.selectionStart;
+	return (CaretPos);
+}
+
+function setCaretPosition(ctrl, pos){
+	if(ctrl.setSelectionRange) {
+		ctrl.focus();
+		ctrl.setSelectionRange(pos,pos);
+	}
+	else if (ctrl.createTextRange) {
+		var range = ctrl.createTextRange();
+		range.collapse(true);
+		range.moveEnd('character', pos);
+		range.moveStart('character', pos);
+		range.select();
+	}
+}
+
+function listNewLineAutocomplete(id) {
+	var text = document.getElementById(id);
+	var caretPos = getCaretPosition(text)
+	var word = getWord(text.value, caretPos);
+	if (word != null) {
+		var textBefore = text.value.substring(0, caretPos);
+		var textAfter  = text.value.substring(caretPos, text.length);
+		$('#' + id).val(textBefore + '\r\n[*] ' + textAfter);
+		setCaretPosition(text, caretPos + 5);
+		return true;
+	}
+}
+
+
 /**
  * jQuery plugin 'editor_autocomplete'
  */
@@ -216,7 +266,7 @@ function submit_form(e) {
 		}
 
 		bbco = {
-			match: /\[(\w*)$/,
+			match: /\[(\w*\**)$/,
 			search: function (term, callback) {
 				callback($.map(elements, function (element) {
 					return element.indexOf(term) === 0 ? element : null;
@@ -225,11 +275,12 @@ function submit_form(e) {
 			index: 1,
 			replace: function (element) {
 				if(open_elements.indexOf(element) < 0) {
-                                    if(element === 'ol' || element === 'ul') {
-                                        return ['\[' + element + '\]' + '\n\[li\]', '\[/li\]\n' + '\[/' + element + '\]'];
-                                    } else {
-					return ['\[' + element + '\]', '\[/' + element + '\]'];
-                                    }
+					if(element === 'list' || element === 'ol' || element === 'ul') {
+						return ['\[' + element + '\]' + '\n\[*\] ', '\n\[/' + element + '\]'];
+					}
+					else {
+						return ['\[' + element + '\]', '\[/' + element + '\]'];
+					}
 				}
 				else {
 					return '\[' + element + '\] ';
@@ -241,6 +292,13 @@ function submit_form(e) {
 		var a = this.textcomplete([bbco], {className:'acpopup', zIndex:1020});
 
 		a.on('textComplete:select', function(e, value, strategy) { value; });
+		$(this).keypress(function(e){
+			if (e.keyCode == 13) {
+				x = listNewLineAutocomplete(this.id);
+				if(x)
+					e.preventDefault();
+			}
+		});
 	};
 })( jQuery );
 

@@ -205,6 +205,12 @@ class File extends DAV\Node implements DAV\IFile {
 				return;
 			}
 		}
+
+		$sync = attach_export_data($c[0],$this->data['hash']);
+
+		if($sync) 
+			build_sync_packet($c[0]['channel_id'],array('file' => array($sync)));
+
 	}
 
 	/**

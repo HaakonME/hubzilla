@@ -868,7 +868,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$sync = attach_export_data($channel,$hash);
 
 	if($sync) 
-		build_sync_packet(0,array('file' => array($sync)));
+		build_sync_packet($channel['channel_id'],array('file' => array($sync)));
 
 	return $ret;
 }

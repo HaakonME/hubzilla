@@ -335,6 +335,12 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			$p = photo_upload($c[0],\App::get_observer(),$args);
 		}
 
+		$sync = attach_export_data($c[0],$hash);
+
+		if($sync) 
+			build_sync_packet($c[0]['channel_id'],array('file' => array($sync)));
+
+
 	}
 
 	/**

@@ -149,6 +149,16 @@ function listNewLineAutocomplete(id) {
 	}
 }
 
+function string2bb(element) {
+	if(element == 'bold') return 'b';
+	else if(element == 'italic') return 'i';
+	else if(element == 'underline') return 'u';
+	else if(element == 'overline') return 'o';
+	else if(element == 'strike') return 's';
+	else if(element == 'superscript') return 'sup';
+	else if(element == 'subscript') return 'sub';
+	else return element;
+}
 
 /**
  * jQuery plugin 'editor_autocomplete'
@@ -252,7 +262,7 @@ function listNewLineAutocomplete(id) {
 	$.fn.bbco_autocomplete = function(type) {
 
 		if(type=='bbcode') {
-			var open_close_elements = ['b', 'i', 'u', 's', 'quote', 'code', 'spoiler', 'map', 'nobb', 'li', 'list', 'ul', 'ol', 'table', 'tr', 'th', 'td', 'center', 'color', 'font', 'size', 'zrl', 'zmg', 'rpost', 'qr', 'observer'];
+			var open_close_elements = ['bold', 'italic', 'underline', 'overline', 'strike', 'superscript', 'subscript', 'quote', 'code', 'spoiler', 'map', 'nobb', 'list', 'ul', 'ol', 'li', 'table', 'tr', 'th', 'td', 'center', 'color', 'font', 'size', 'zrl', 'zmg', 'rpost', 'qr', 'observer'];
 			var open_elements = ['observer.baseurl', 'observer.address', 'observer.photo', 'observer.name', 'observer.webname', 'observer.url', '*', 'hr',  ];
 
 			var elements = open_close_elements.concat(open_elements);
@@ -274,9 +284,13 @@ function listNewLineAutocomplete(id) {
 			},
 			index: 1,
 			replace: function (element) {
+				element = string2bb(element);
 				if(open_elements.indexOf(element) < 0) {
 					if(element === 'list' || element === 'ol' || element === 'ul') {
 						return ['\[' + element + '\]' + '\n\[*\] ', '\n\[/' + element + '\]'];
+					}
+					else if(element === 'table') {
+						return ['\[' + element + '\]' + '\n\[tr\]', '\[/tr\]\n\[/' + element + '\]'];
 					}
 					else {
 						return ['\[' + element + '\]', '\[/' + element + '\]'];
@@ -292,6 +306,7 @@ function listNewLineAutocomplete(id) {
 		var a = this.textcomplete([bbco], {className:'acpopup', zIndex:1020});
 
 		a.on('textComplete:select', function(e, value, strategy) { value; });
+
 		$(this).keypress(function(e){
 			if (e.keyCode == 13) {
 				x = listNewLineAutocomplete(this.id);

@@ -895,6 +895,10 @@ function sync_files($channel,$files) {
 
 					$newfname = 'store/' . $channel['channel_address'] . '/' . get_attach_binname($att['data']);
 
+ 					unset($att['id']);
+					$att['aid'] = $channel['channel_account_id'];
+					$att['uid'] = $channel['channel_id'];
+
 					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
 						os_mkdir($newfname, STORAGE_DEFAULT_PERMISSIONS,true);
 						$att['data'] = $newfname;

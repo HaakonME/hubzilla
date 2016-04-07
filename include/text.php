@@ -2730,14 +2730,23 @@ function json_url_replace($old,$new,&$s) {
 }
 		
 
-function item_url_replace($channel,&$item,$old,$new) {
+function item_url_replace($channel,&$item,$old,$new,$oldnick = '') {
 	
-	if($item['attach'])
+	if($item['attach']) {
 		json_url_replace($old,$new,$item['attach']);
-	if($item['object'])
+		if($oldnick)
+			json_url_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['attach']);
+	}
+	if($item['object']) {
 		json_url_replace($old,$new,$item['object']);
-	if($item['target'])
+		if($oldnick)
+			json_url_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['object']);
+	}
+	if($item['target']) {
 		json_url_replace($old,$new,$item['target']);
+		if($oldnick)
+			json_url_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['target']);
+	}
 
 	if(string_replace($old,$new,$item['body'])) {
 		$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
@@ -2746,6 +2755,14 @@ function item_url_replace($channel,&$item,$old,$new) {
 	
 	// @fixme item['plink'] and item['llink']
 
+	str_replace($old,$new,$item['plink']);
+	if($oldnick)
+		str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['plink']);
+
+	str_replace($old,$new,$item['llink']);
+	if($oldnick)
+		str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['llink']);
+	
 }
 
 

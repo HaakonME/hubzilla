@@ -312,7 +312,7 @@ function photo_upload($channel, $observer, $args) {
 		'title'   => $title,
 		'created' => $p['created'],
 		'edited'  => $p['edited'],
-		'id'      => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash),
+		'id'      => z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash,
 		'link'    => $link,
 		'body'    => $obj_body
 	);
@@ -320,7 +320,7 @@ function photo_upload($channel, $observer, $args) {
 	$target = array(
 		'type'    => ACTIVITY_OBJ_ALBUM,
 		'title'   => (($album) ? $album : '/'),
-		'id'      => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album))
+		'id'      => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album)
 	);
 
 	// Create item container

@@ -1843,16 +1843,27 @@ function attach_export_data($channel,$resource_id) {
 		$paths[] = $r[0];
 	} while($hash_ptr);
 
+
+	$ret['fetch_url'] = z_root() . '/getfile';
+	$ret['original_channel'] = $channel['channel_address'];
+
+
 	$paths = array_reverse($paths);
 
 	$ret['attach'] = $paths;
+
 
 	if($attach_ptr['is_photo']) {
 		$r = q("select * from photo where resource_id = '%s' and uid = %d order by scale asc",
 			dbesc($resource_id),
 			intval($channel['channel_id'])
 		);
-		$ret['photo'] = $r;
+		if($r) {
+			foreach($r as $rr) {
+				$rr['data'] = base64_encode($rr['data']);
+			}
+			$ret['photo'] = $r;
+		}
 
 		$r = q("select * from item where resource_id = '%s' and resource_type = 'photo' and uid = %d ",
 			dbesc($resource_id),
@@ -1874,4 +1885,16 @@ function attach_export_data($channel,$resource_id) {
 
 	return $ret;
 
+}
+
+
+/* strip off 'store/nickname/' from the provided path */
+
+function get_attach_binname($s) {
+	$p = $s;
+	if(strpos($s,'store/') === 0) {
+		$p = substr($s,6);
+		$p = substr($p,strpos($p,'/')+1);
+	}
+	return $p;
 }

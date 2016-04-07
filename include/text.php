@@ -2753,15 +2753,13 @@ function item_url_replace($channel,&$item,$old,$new,$oldnick = '') {
 		$item['item_verified']  = 1;
 	}
 	
-	// @fixme item['plink'] and item['llink']
-
-	str_replace($old,$new,$item['plink']);
+	$item['plink'] = str_replace($old,$new,$item['plink']);
 	if($oldnick)
-		str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['plink']);
+		$item['plink'] = str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['plink']);
 
-	str_replace($old,$new,$item['llink']);
+	$item['llink'] = str_replace($old,$new,$item['llink']);
 	if($oldnick)
-		str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['llink']);
+		$item['llink'] = str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['llink']);
 	
 }
 

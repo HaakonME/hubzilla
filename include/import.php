@@ -899,10 +899,60 @@ function sync_files($channel,$files) {
 					$att['aid'] = $channel['channel_account_id'];
 					$att['uid'] = $channel['channel_id'];
 
+
+					// check for duplicate folder names with the same parent. 
+					// If we have a duplicate that doesn't match this hash value
+					// change the name so that the contents won't be "covered over" 
+					// by the existing directory. Use the same logic we use for 
+					// duplicate files. 
+
+					if(strpos($att['filename'],'.') !== false) {
+						$basename = substr($att['filename'],0,strrpos($att['filename'],'.'));
+						$ext = substr($att['filename'],strrpos($att['filename'],'.'));
+					}
+					else {
+						$basename = $att['filename'];
+						$ext = '';
+					}
+
+					$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder == '%s' and hash != '%s' ",
+						dbesc($basename . $ext),
+						dbesc($basename . '(%)' . $ext),
+						dbesc($att['folder']),
+						dbesc($att['hash'])
+					);
+
+					if($r) {
+						$x = 1;
+
+						do {
+							$found = false;
+							foreach($r as $rr) {
+								if($rr['filename'] === $basename . '(' . $x . ')' . $ext) {
+									$found = true;
+									break;
+								}
+							}
+							if($found)
+								$x++;
+						}			
+						while($found);
+						$att['filename'] = $basename . '(' . $x . ')' . $ext;
+					}
+					else
+						$att['filename'] = $basename . $ext;
+
+					// end duplicate detection
+
+				
+					// is this a directory?
+
 					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
 						os_mkdir($newfname, STORAGE_DEFAULT_PERMISSIONS,true);
 						$att['data'] = $newfname;
+
 						dbesc_array($att);
+					
 						$r = dbq("INSERT INTO attach (`" 
 							. implode("`, `", array_keys($att)) 
 							. "`) VALUES ('" 
@@ -912,13 +962,16 @@ function sync_files($channel,$files) {
 						continue;
 					}
 					else {
+
+						// it's a file
+
 						$time = datetime_convert();
 
 						$parr = array('hash' => $channel['channel_hash'], 
 							'time' => $time, 
 							'resource' => $att['hash'],
 							'revision' => 0,
-							'sig' => rsa_sign($channel['channel_hash'] . '.' . $time, $channel['channel_prvkey'])
+							'signature' => base64url_encode(rsa_sign($channel['channel_hash'] . '.' . $time, $channel['channel_prvkey']))
 						);
 
 						$store_path = $newfname;
@@ -944,7 +997,6 @@ function sync_files($channel,$files) {
 						}
 						continue;
 					}
-
 				}
 			}
 			if(! $attachment_stored) {

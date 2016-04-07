@@ -194,7 +194,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[0] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-0.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-0.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);
@@ -212,7 +212,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[1] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-1.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-1.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);
@@ -227,7 +227,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[2] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-2.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-2.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);
@@ -242,7 +242,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[3] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-3.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-3.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);

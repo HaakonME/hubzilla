@@ -46,7 +46,7 @@ function getfile_post(&$a) {
 	$d1 = datetime_convert('UTC','UTC',"now + $slop minutes");
 	$d2 = datetime_convert('UTC','UTC',"now - $slop minutes");	
 
-	if(($time > d1) || ($time < d2)) {
+	if(($time > $d1) || ($time < $d2)) {
 		logger('time outside allowable range');
 		killme();
 	}

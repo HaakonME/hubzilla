@@ -944,7 +944,8 @@ function sync_files($channel,$files) {
 
 					// end duplicate detection
 
-				
+// @fixme - update attachment structures if they are modified rather than created
+
 					// is this a directory?
 
 					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
@@ -1009,18 +1010,61 @@ function sync_files($channel,$files) {
 					$p['aid'] = $channel['channel_account_id'];
 					$p['uid'] = $channel['channel_id'];
 
+					// if this is a profile photo, undo the profile photo bit
+					// for any other photo which previously held it.
+
+					if($p['photo_usage'] == PHOTO_PROFILE) {
+						$e = q("update photo set photo_usage = %d where photo_usage = %d
+							and resource_id != '%s' and uid = %d ",
+							intval(PHOTO_NORMAL),
+							intval(PHOTO_PROFILE),
+							dbesc($p['resource_id']),
+							intval($channel['channel_id'])
+						);
+					}
+
+					// same for cover photos
+
+					if($p['photo_usage'] == PHOTO_COVER) {
+						$e = q("update photo set photo_usage = %d where photo_usage = %d
+							and resource_id != '%s' and uid = %d ",
+							intval(PHOTO_NORMAL),
+							intval(PHOTO_COVER),
+							dbesc($p['resource_id']),
+							intval($channel['channel_id'])
+						);
+					}
+
 					if($p['scale'] === 0 && $p['os_storage'])
 						$p['data'] = $store_path;
 					else
 						$p['data'] = base64_decode($p['data']);
 
-					dbesc_array($p);
-					$r = dbq("INSERT INTO photo (`" 
-						. implode("`, `", array_keys($p)) 
-						. "`) VALUES ('" 
-						. implode("', '", array_values($p)) 
-						. "')" );
 
+					$exists = q("select * from photo where resource_id = '%s' and scale = %d and uid = %d limit 1",
+						dbesc($p['resource_id']),
+						intval($p['scale']),
+						intval($channel['channel_id'])
+					);
+
+					dbesc_array($p);
+
+					if($exists) {
+					    $str = '';
+    					foreach($p as $k => $v) {
+				        	if($str)
+            					$str .= ",";
+        					$str .= " `" . $k . "` = '" . $v . "' ";
+    					}
+					    $r = dbq("update `photo` set " . $str . " where id = " . intval($exists[0]['id']) );
+					}
+					else {
+						$r = dbq("INSERT INTO photo (`" 
+							. implode("`, `", array_keys($p)) 
+							. "`) VALUES ('" 
+							. implode("', '", array_values($p)) 
+							. "')" );
+					}
 				}
 			}
 			if($f['item']) {

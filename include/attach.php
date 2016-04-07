@@ -1859,8 +1859,8 @@ function attach_export_data($channel,$resource_id) {
 			intval($channel['channel_id'])
 		);
 		if($r) {
-			foreach($r as $rr) {
-				$rr['data'] = base64_encode($rr['data']);
+			for($x = 0; $x < count($r); $x ++) {
+				$r[$x]['data'] = base64_encode($r[$x]['data']);
 			}
 			$ret['photo'] = $r;
 		}

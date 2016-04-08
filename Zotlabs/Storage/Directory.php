@@ -168,6 +168,14 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			intval($this->auth->owner_id)
 		);
 
+
+		$ch = channelx_by_n($this->auth->owner_id);
+		if($ch) {
+			$sync = attach_export_data($ch,$this->folder_hash);
+			if($sync) 
+				build_sync_packet($ch['channel_id'],array('file' => array($sync)));
+		}
+
 		$this->red_path = $new_path;
 	}
 
@@ -362,7 +370,14 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		if ($r) {
 			$result = attach_mkdir($r[0], $this->auth->observer, array('filename' => $name, 'folder' => $this->folder_hash));
-			if (! $result['success']) {
+
+			if($result['success']) {
+				$sync = attach_export_data($r[0],$ret['data']['hash']);
+				if($sync) {
+					build_sync_packet($r[0]['channel_id'],array('file' => array($sync)));
+				}
+			}
+			else {		
 				logger('error ' . print_r($result, true), LOGGER_DEBUG);
 			}
 		}
@@ -386,6 +401,15 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		}
 
 		attach_delete($this->auth->owner_id, $this->folder_hash);
+
+		$ch = channelx_by_n($this->auth->owner_id);
+		if($ch) {
+			$sync = attach_export_data($ch,$this->folder_hash,true);
+			if($sync) 
+				build_sync_packet($ch['channel_id'],array('file' => array($sync)));
+		}
+
+
 	}
 
 

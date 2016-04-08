@@ -890,6 +890,11 @@ function sync_files($channel,$files) {
 				$attachment_stored = false;
 				foreach($f['attach'] as $att) {
 
+					if($att['deleted']) {
+						attach_delete($channel,$att['hash']);
+						continue;
+					}
+
 					$attach_exists = false;
 					$x = attach_by_hash($att['hash']);
 

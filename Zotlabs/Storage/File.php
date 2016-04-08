@@ -84,6 +84,20 @@ class File extends DAV\Node implements DAV\IFile {
 			dbesc($this->data['hash']),
 			intval($this->data['id'])
 		);
+
+		if($this->data->is_photo) {
+			$r = q("update photo set filename = '%s' where resource_id = '%s' and uid = %d",
+				dbesc($newName),
+				dbesc($this->data['hash']),
+				intval($this->auth->owner_id)
+			);
+		}
+		$ch = channelx_by_n($this->auth->owner_id);
+		if($ch) {
+			$sync = attach_export_data($ch,$this->data['hash']);
+			if($sync) 
+				build_sync_packet($ch['channel_id'],array('file' => array($sync)));
+		}
 	}
 
 	/**
@@ -324,5 +338,12 @@ class File extends DAV\Node implements DAV\IFile {
 		}
 
 		attach_delete($this->auth->owner_id, $this->data['hash']);
+
+		$ch = channelx_by_n($this->auth->owner_id);
+		if($ch) {
+			$sync = attach_export_data($ch,$this->data['hash'],true);
+			if($sync) 
+				build_sync_packet($ch['channel_id'],array('file' => array($sync)));
+		}
 	}
 }

@@ -1820,13 +1820,22 @@ function filepath_macro($s) {
 
 }
 
-function attach_export_data($channel,$resource_id) {
+function attach_export_data($channel, $resource_id, $deleted = false) {
 
 	$ret = array();
 
 	$paths = array();
 
 	$hash_ptr = $resource_id;
+
+	$ret['fetch_url'] = z_root() . '/getfile';
+	$ret['original_channel'] = $channel['channel_address'];
+
+
+	if($deleted) {
+		$ret['attach'] = array(array('hash' => $resource_id, 'deleted' => 1));
+		return $ret;
+	}
 
 	do {
 		$r = q("select * from attach where hash = '%s' and uid = %d limit 1",
@@ -1836,16 +1845,15 @@ function attach_export_data($channel,$resource_id) {
 		if(! $r)
 			break;
 
-		if($hash_ptr === $resource_id)
+		if($hash_ptr === $resource_id) {
 			$attach_ptr = $r[0];
+		}
 
 		$hash_ptr = $r[0]['folder'];
 		$paths[] = $r[0];
 	} while($hash_ptr);
 
 
-	$ret['fetch_url'] = z_root() . '/getfile';
-	$ret['original_channel'] = $channel['channel_address'];
 
 
 	$paths = array_reverse($paths);

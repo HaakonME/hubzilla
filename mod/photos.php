@@ -126,6 +126,34 @@ function photos_post(&$a) {
 
 		if($_REQUEST['dropalbum'] == t('Delete Album')) {
 
+
+			// This is dangerous because we combined file storage and photos into one interface
+			// This function will remove all photos from any directory with the same name since
+			// we have not passed the path value.
+
+			// The correct solution would be to use a full pathname from your storage root for 'album'
+			// We also need to prevent/block removing the storage root folder.
+
+			$folder_hash = '';
+ 
+			$r = q("select * from attach where is_dir = 1 and uid = %d and filename = '%s'",
+				intval($page_owner_uid),
+				dbesc($album)
+			);
+			if(! $r) {
+				notice( t('Album not found.') . EOL);
+				return;
+			}
+			if(count($r) > 1) {
+				notice( t('Multiple storage folders exist with this album name, but within different directories. Please remove the desired folder or folders using the Files manager') . EOL);
+				return;
+			}
+			else {
+				$folder_hash = $r[0]['hash'];
+			}
+
+
+
 			$res = array();
 
 			// get the list of photos we are about to delete
@@ -149,9 +177,6 @@ function photos_post(&$a) {
 			if($r) {
 				foreach($r as $i) {
 					attach_delete($page_owner_uid, $i['resource_id'], 1 );
-		// This is now being done in attach_delete()
-		//			drop_item($i['id'],false,DROPITEM_PHASE1,true /* force removal of linked items */);
-		//			proc_run('php','include/notifier.php','drop',$i['id']);
 				}
 			}
 
@@ -162,6 +187,15 @@ function photos_post(&$a) {
 			);
 
 			// @FIXME do the same for the linked attach
+
+			if($folder_hash) {
+				attach_delete($page_owner_uid,$folder_hash, 1);
+
+				$sync = attach_export_data(App::$data['channel'],$folder_hash, true);
+
+				if($sync) 
+					build_sync_packet($page_owner_uid,array('file' => array($sync)));
+			}
 
 		}
 		
@@ -183,23 +217,11 @@ function photos_post(&$a) {
 		);
 
 		if($r) {
-/*
-			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s'",
-				intval($page_owner_uid),
-				dbesc($r[0]['resource_id'])
-			);
-*/
 			attach_delete($page_owner_uid, $r[0]['resource_id'], 1 );
-/*
-			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND resource_type = 'photo' and `uid` = %d LIMIT 1",
-				dbesc($r[0]['resource_id']),
-				intval($page_owner_uid)
-			);
-			if(count($i)) {
-				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
-				$url = z_root();
-			}
-*/
+			$sync = attach_export_data(App::$data['channel'],$r[0]['resource_id'], true);
+
+			if($sync) 
+				build_sync_packet($page_owner_uid,array('file' => array($sync)));
 		}
 
 		goaway(z_root() . '/photos/' . App::$data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
@@ -218,7 +240,7 @@ function photos_post(&$a) {
 		$acl->set_from_array($_POST);
 		$perm = $acl->get();
 
-		$resource_id = App::$argv[2];
+		$resource_id = argv(2);
 
 		if(! strlen($albname))
 			$albname = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
@@ -443,6 +465,11 @@ function photos_post(&$a) {
 		goaway(z_root() . '/' . $_SESSION['photo_return']);
 		return; // NOTREACHED
 
+		$sync = attach_export_data(App::$data['channel'],$resource_id);
+
+		if($sync) 
+			build_sync_packet($page_owner_uid,array('file' => array($sync)));
+
 	}
 
 
@@ -555,8 +582,8 @@ function photos_content(&$a) {
 
 	$o = "";
 
-		$o .= "<script> var profile_uid = " . App::$profile['profile_uid'] 
-			. "; var netargs = '?f='; var profile_page = " . App::$pager['page'] . "; </script>\r\n";
+	$o .= "<script> var profile_uid = " . App::$profile['profile_uid'] 
+		. "; var netargs = '?f='; var profile_page = " . App::$pager['page'] . "; </script>\r\n";
 
 	// tabs
 

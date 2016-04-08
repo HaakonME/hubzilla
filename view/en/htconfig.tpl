@@ -43,6 +43,7 @@ App::$config['system']['location_hash'] = '{{$site_id}}';
 
 App::$config['system']['transport_security_header'] = 1;
 App::$config['system']['content_security_policy'] = 1;
+App::$config['system']['ssl_cookie_protection'] = 1;
 
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 

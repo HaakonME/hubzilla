@@ -27,7 +27,9 @@ class Session {
 
 		$handler = new \Zotlabs\Web\SessionHandler();
 
-		session_set_save_handler($handler,true);
+		$x = session_set_save_handler($handler,true);
+		if(! $x)
+			logger('Session save handler initialisation failed.',LOGGER_NORMAL,LOG_ERR);
 
 		// Force cookies to be secure (https only) if this site is SSL enabled. 
 		// Must be done before session_start().

@@ -389,7 +389,7 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 	proc_run('php','include/directory.php',$channel_id);
 
 	if($channel_id == local_channel() && $unset_session) {
-		nuke_session();
+		\Zotlabs\Web\Session::nuke();
 		goaway(z_root());
 	}
 

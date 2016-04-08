@@ -62,7 +62,7 @@ if(! App::$install) {
 	load_config('system');
 	load_config('feature');
 
-	require_once('include/session.php');
+	\Zotlabs\Web\Session::init();
 	load_hooks();
 	call_hooks('init_1');
 
@@ -84,7 +84,7 @@ if(! App::$install) {
  *
  */
 
-session_start();
+\Zotlabs\Web\Session::start();
 
 /**
  * Language was set earlier, but we can over-ride it in the session.

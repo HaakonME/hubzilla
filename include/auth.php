@@ -101,7 +101,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 		// process logout request
 		$args = array('channel_id' => local_channel());
 		call_hooks('logging_out', $args);
-		nuke_session();
+		\Zotlabs\Web\Session::nuke();
 		info( t('Logged out.') . EOL);
 		goaway(z_root());
 	}
@@ -117,7 +117,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 				intval(ACCOUNT_ROLE_ADMIN)
 			);
 			if($x) {
-				new_cookie(60 * 60 * 24); // one day
+				\Zotlabs\Web\Session::new_cookie(60 * 60 * 24); // one day
 				$_SESSION['last_login_date'] = datetime_convert();
 				unset($_SESSION['visitor_id']); // no longer a visitor
 				authenticate_success($x[0], true, true);
@@ -172,7 +172,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 					// check any difference at all
 					logger('Session address changed. Paranoid setting in effect, blocking session. '
 					. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
-					nuke_session();
+					\Zotlabs\Web\Session::nuke();
 					goaway(z_root());
 					break;
 			}
@@ -196,7 +196,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 		}
 		else {
 			$_SESSION['account_id'] = 0;
-			nuke_session();
+			\Zotlabs\Web\Session::nuke();
 			goaway(z_root());
 		}
 	} // end logged in user returning
@@ -204,7 +204,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 else {
 
 	if(isset($_SESSION)) {
-		nuke_session();
+		\Zotlabs\Web\Session::nuke();
 	}
 
 	// handle a fresh login request
@@ -275,10 +275,10 @@ else {
 		// on the cookie
 
 		if($_POST['remember_me']) {
-			new_cookie(31449600); // one year
+			\Zotlabs\Web\Session::new_cookie(31449600); // one year
 		}
 		else {
-			new_cookie(0); // 0 means delete on browser exit
+			\Zotlabs\Web\Session::new_cookie(0); // 0 means delete on browser exit
 		}
 
 		// if we haven't failed up this point, log them in.

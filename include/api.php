@@ -486,7 +486,7 @@ require_once('include/api_auth.php');
 
 	function api_account_logout(&$a, $type){
 		require_once('include/auth.php');
-		nuke_session();
+		\Zotlabs\Web\Session::nuke();
 		return api_apply_template("user", $type, array('$user' => null));
 
 	}

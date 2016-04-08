@@ -30,7 +30,7 @@ function cli_startup() {
     	unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
   	};
 
-	require_once('include/session.php');
+	\Zotlabs\Web\Session::init();
 
 	load_config('system');
 

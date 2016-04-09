@@ -133,6 +133,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 				'bang' => '',
 				'visitor' => (($is_owner || $observer) ? true : false),
 				'profile_uid' => App::$profile['profile_uid'],
+				'editor_autocomplete' => true,
 				'bbco_autocomplete' => 'bbcode',
 				'bbcode' => true
         	);

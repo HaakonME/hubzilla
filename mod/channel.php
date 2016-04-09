@@ -124,15 +124,17 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 			$x = array(
 				'is_owner' => $is_owner,
-            	'allow_location' => ((($is_owner || $observer) && (intval(get_pconfig(App::$profile['profile_uid'],'system','use_browser_location')))) ? true : false),
-	            'default_location' => (($is_owner) ? App::$profile['channel_location'] : ''),
-    	        'nickname' => App::$profile['channel_address'],
-        	    'lockstate' => (((strlen(App::$profile['channel_allow_cid'])) || (strlen(App::$profile['channel_allow_gid'])) || (strlen(App::$profile['channel_deny_cid'])) || (strlen(App::$profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
-            	'acl' => (($is_owner) ? populate_acl($channel_acl,true,((App::$profile['channel_r_stream'] & PERMS_PUBLIC) ? t('Public') : '')) : ''),
+				'allow_location' => ((($is_owner || $observer) && (intval(get_pconfig(App::$profile['profile_uid'],'system','use_browser_location')))) ? true : false),
+				'default_location' => (($is_owner) ? App::$profile['channel_location'] : ''),
+				'nickname' => App::$profile['channel_address'],
+				'lockstate' => (((strlen(App::$profile['channel_allow_cid'])) || (strlen(App::$profile['channel_allow_gid'])) || (strlen(App::$profile['channel_deny_cid'])) || (strlen(App::$profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
+				'acl' => (($is_owner) ? populate_acl($channel_acl,true,((App::$profile['channel_r_stream'] & PERMS_PUBLIC) ? t('Public') : '')) : ''),
 				'showacl' => (($is_owner) ? 'yes' : ''),
-	            'bang' => '',
+				'bang' => '',
 				'visitor' => (($is_owner || $observer) ? true : false),
-        	    'profile_uid' => App::$profile['profile_uid']
+				'profile_uid' => App::$profile['profile_uid'],
+				'bbco_autocomplete' => 'bbcode',
+				'bbcode' => true
         	);
 
         	$o .= status_editor($a,$x);

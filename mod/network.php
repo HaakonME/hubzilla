@@ -169,7 +169,10 @@ function network_content(&$a, $update = 0, $load = false) {
 			'acl'              => populate_acl((($private_editing) ? $def_acl : $channel_acl), true, (($channel['channel_r_stream'] & PERMS_PUBLIC) ? t('Public') : '')),
 			'bang'             => (($private_editing) ? '!' : ''),
 			'visitor'          => true,
-			'profile_uid'      => local_channel()
+			'profile_uid'      => local_channel(),
+			'editor_autocomplete' => true,
+			'bbco_autocomplete' => 'bbcode',
+			'bbcode' => true
 		);
 		if($deftag)
 			$x['pretext'] = $deftag;

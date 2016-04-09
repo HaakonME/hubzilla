@@ -1173,7 +1173,9 @@ function status_editor($a, $x, $popup = false) {
 		'$term' => t('Tag term:'),
 		'$fileas' => t('Save to Folder:'),
 		'$whereareu' => t('Where are you right now?'),
-		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
+		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
+		'$editor_autocomplete'=> ((x($x,'editor_autocomplete')) ? $x['editor_autocomplete'] : ''),
+		'$bbco_autocomplete'=> ((x($x,'bbco_autocomplete')) ? $x['bbco_autocomplete'] : ''),
 	));
 
 	$tpl = get_markup_template('jot.tpl');
@@ -1274,6 +1276,7 @@ function status_editor($a, $x, $popup = false) {
 		'$expiryModalOK' => t('OK'),
 		'$expiryModalCANCEL' => t('Cancel'),
 		'$expanded' => ((x($x, 'expanded')) ? $x['expanded'] : false),
+		'$bbcode' => ((x($x, 'bbcode')) ? $x['bbcode'] : false)
 	));
 
 	if ($popup === true) {

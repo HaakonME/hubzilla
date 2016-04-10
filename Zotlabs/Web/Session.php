@@ -13,6 +13,8 @@ namespace Zotlabs\Web;
 
 class Session {
 
+	private static $handler = null;
+
 	function init() {
 
 		$gc_probability = 50;
@@ -26,6 +28,7 @@ class Session {
 		 */
 
 		$handler = new \Zotlabs\Web\SessionHandler();
+		self::$handler = $handler;
 
 		$x = session_set_save_handler($handler,true);
 		if(! $x)
@@ -67,26 +70,28 @@ class Session {
 
 
 
-	function new_cookie($time) {
+	function new_cookie($xtime) {
+
+		$newxtime = (($xtime> 0) ? (time() + $xtime) : 0);
 
 		$old_sid = session_id();
 
 		session_regenerate_id(false);
 
-		q("UPDATE session SET sid = '%s' WHERE sid = '%s'",
-			dbesc(session_id()),
-			dbesc($old_sid)
-		);
+		if(self::$handler) {
+			$v = q("UPDATE session SET sid = '%s' WHERE sid = '%s'",
+				dbesc(session_id()),
+				dbesc($old_sid)
+			);
+		}
+		else 
+			logger('no session handler');
 
 		if (x($_COOKIE, 'jsAvailable')) {
-			if ($time) {
-				$expires = time() + $time;
-			} else {
-				$expires = 0;
-			}
-			setcookie('jsAvailable', $_COOKIE['jsAvailable'], $expires);
+			setcookie('jsAvailable', $_COOKIE['jsAvailable'], $newxtime);
 		}
-		setcookie(session_name(),session_id(),$expires);
+		setcookie(session_name(),session_id(),$newxtime);
+
 	}
 
 

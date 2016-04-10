@@ -45,6 +45,11 @@ function cal_init(&$a) {
 
 function cal_content(&$a) {
 
+	if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		return;
+	}
+
+
 	$channel = null;
 
 	if(argc() > 1) {

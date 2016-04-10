@@ -35,7 +35,12 @@ class SessionHandler implements \SessionHandlerInterface {
 			return false;
 		}
 
-		$expire = time() + $this->session_expire;
+		// Can't just use $data here because we can't be certain of the serialisation algorithm
+
+		if($_SESSION && array_key_exists('remember_me',$_SESSION) && intval($_SESSION['remember_me']))
+			$expire = time() + (60 * 60 * 24 * 365);
+		else
+			$expire = time() + $this->session_expire;
 		$default_expire = time() + 300;
 
 		if($this->session_exists) {

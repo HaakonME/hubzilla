@@ -1542,6 +1542,24 @@ function fix_system_urls($oldurl, $newurl) {
 			proc_run('php', 'include/notifier.php', 'refresh_all', $c[0]['channel_id']);
 		}
 	}
+
+	// now replace any remote xchans whose photos are stored locally (which will be most if not all remote xchans)
+
+	$r = q("select * from xchan where xchan_photo_l like '%s'",
+		dbesc($oldurl . '%')
+	);
+
+	if($r) {
+		foreach($r as $rr) {
+			$x = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s' where xchan_hash = '%s'",
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_s'])),
+				dbesc($rr['xchan_hash'])
+			);
+		}
+	}
+
 }
 
 

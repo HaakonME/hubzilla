@@ -275,9 +275,11 @@ else {
 		// on the cookie
 
 		if($_POST['remember_me']) {
+			$_SESSION['remember_me'] = 1;
 			\Zotlabs\Web\Session::new_cookie(31449600); // one year
 		}
 		else {
+			$_SESSION['remember_me'] = 0;
 			\Zotlabs\Web\Session::new_cookie(0); // 0 means delete on browser exit
 		}
 

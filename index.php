@@ -190,5 +190,4 @@ call_hooks('page_end', App::$page['content']);
 
 construct_page($a);
 
-session_write_close();
 exit;

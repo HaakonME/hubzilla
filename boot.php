@@ -1616,7 +1616,6 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
  * @brief Used to end the current process, after saving session state.
  */
 function killme() {
-	session_write_close();
 	exit;
 }
 

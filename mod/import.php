@@ -165,7 +165,6 @@ function import_account(&$a, $account_id) {
 
 		logger('import step 2');
 		$_SESSION['import_step'] = 2;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -181,7 +180,6 @@ function import_account(&$a, $account_id) {
 
 		logger('import step 3');
 		$_SESSION['import_step'] = 3;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -193,7 +191,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 4');
 		$_SESSION['import_step'] = 4;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if($completed < 5) {
@@ -225,7 +222,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 5');
 		$_SESSION['import_step'] = 5;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
  
 
@@ -262,7 +258,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 6');
 		$_SESSION['import_step'] = 6;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if($completed < 7) {
@@ -323,7 +318,7 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 7');
 		$_SESSION['import_step'] = 7;
-		ref_session_write(session_id(), serialize($_SESSION));
+
 	}
 
 
@@ -399,7 +394,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 8');
 		$_SESSION['import_step'] = 8;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -449,7 +443,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 9');
 		$_SESSION['import_step'] = 9;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if(is_array($data['obj']))

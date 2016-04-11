@@ -115,7 +115,8 @@ function editblock_content(&$a) {
 		'$ispublic'      => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag'        => '',
 		'$nickname'      => $channel['channel_address'],
-		'$confirmdelete' => t('Delete block?')
+		'$confirmdelete' => t('Delete block?'),
+		'$bbco_autocomplete'=> (($mimetype  == 'text/bbcode') ? 'bbcode' : 'comanche-block')
 	));
 
 	$tpl = get_markup_template("jot.tpl");
@@ -174,6 +175,7 @@ function editblock_content(&$a) {
 		'$defexpire'           => '',
 		'$feature_expire'      => false,
 		'$expires'             => t('Set expiration date'),
+		'$bbcode'              => (($mimetype  == 'text/bbcode') ? true : false)
 	));
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(

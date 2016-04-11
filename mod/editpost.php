@@ -54,7 +54,9 @@ function editpost_content(&$a) {
 		'$geotag' => $geotag,
 		'$nickname' => $channel['channel_address'],
 		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
-	    '$confirmdelete' => t('Delete item?'),
+		'$confirmdelete' => t('Delete item?'),
+		'$editor_autocomplete'=> true,
+		'$bbco_autocomplete'=> 'bbcode'
 	));
 
 	if(intval($itm[0]['item_obscured'])) {

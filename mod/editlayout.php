@@ -109,7 +109,8 @@ function editlayout_content(&$a) {
 		'$ispublic'      => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag'        => $geotag,
 		'$nickname'      => $channel['channel_address'],
-		'$confirmdelete' => t('Delete layout?')
+		'$confirmdelete' => t('Delete layout?'),
+		'$bbco_autocomplete'=> 'comanche'
 	));
 
 

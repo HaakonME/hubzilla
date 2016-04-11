@@ -122,7 +122,8 @@ function layouts_content(&$a) {
 		'profile_uid' => intval($owner),
 		'expanded'    => true,
 		'placeholdertitle' => t('Layout Description (Optional)'),
-		'novoting' => true
+		'novoting' => true,
+		'bbco_autocomplete' => 'comanche'
 	);
 
 	if($_REQUEST['title'])

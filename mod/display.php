@@ -65,7 +65,10 @@ function display_content(&$a, $update = 0, $load = false) {
 			'visitor' => true,
 			'profile_uid' => local_channel(),
 			'return_path' => 'channel/' . $channel['channel_address'],
-			'expanded' => true
+			'expanded' => true,
+			'editor_autocomplete' => true,
+			'bbco_autocomplete' => 'bbcode',
+			'bbcode' => true
 		);
 
 		$o = '<div id="jot-popup">';

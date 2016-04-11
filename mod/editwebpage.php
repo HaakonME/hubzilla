@@ -150,7 +150,8 @@ function editwebpage_content(&$a) {
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
 		'$nickname' => $channel['channel_address'],
-		'$confirmdelete' => t('Delete webpage?')
+		'$confirmdelete' => t('Delete webpage?'),
+		'$bbco_autocomplete'=> 'bbcode',
 	));
 
 	$tpl = get_markup_template("jot.tpl");
@@ -215,7 +216,7 @@ function editwebpage_content(&$a) {
 		'$defexpire' => '',
 		'$feature_expire' => false,
 		'$expires' => t('Set expiration date'),
-
+		'$bbco_autocomplete'=> 'bbcode'
 	));
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(

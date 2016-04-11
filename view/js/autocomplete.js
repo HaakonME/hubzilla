@@ -269,7 +269,14 @@ function string2bb(element) {
 		}
 
 		if(type=='comanche') {
-			var open_close_elements = ['region', 'widget', 'var', 'template', 'css', 'js'];
+			var open_close_elements = ['region', 'layout', 'template', 'theme', 'widget', 'block', 'menu', 'var', 'css', 'js', 'authored', 'comment', 'webpage'];
+			var open_elements = [];
+
+			var elements = open_close_elements.concat(open_elements);
+		}
+
+		if(type=='comanche-block') {
+			var open_close_elements = ['menu', 'var'];
 			var open_elements = [];
 
 			var elements = open_close_elements.concat(open_elements);

@@ -114,7 +114,9 @@ function webpages_content(&$a) {
 		'mimetype'    => $mimetype,
 		'layout'      => $layout,
 		'expanded'    => true,
-		'novoting' => true
+		'novoting'=> true,
+		'bbco_autocomplete' => 'bbcode',
+		'bbcode' => true
 	);
 	
 	if($_REQUEST['title'])

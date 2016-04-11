@@ -95,7 +95,9 @@ function blocks_content(&$a) {
 		'ptlabel' => t('Block Name'),
 		'profile_uid' => intval($owner),
 		'expanded' => true,
-		'novoting' => true
+		'novoting' => true,
+		'bbco_autocomplete' => 'bbcode',
+		'bbcode' => true
 	);
 
 	if($_REQUEST['title'])

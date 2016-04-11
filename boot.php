@@ -1069,6 +1069,7 @@ class App {
 			'$local_channel' => local_channel(),
 			'$metas' => self::$meta->get(),
 			'$update_interval' => $interval,
+			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Project\System::get_site_name(), t('$Projectname','opensearch')), 
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),

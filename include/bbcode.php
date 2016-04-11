@@ -243,9 +243,7 @@ function bb_ShareAttributes($match) {
 	if ($matches[1] != "")
 		$message_id = $matches[1];
 
-
-	/** @FIXME - this should really be a wall-item-ago so it will get updated on the client */
-	$reldate = (($posted) ? relative_date($posted) : ''); 
+	$reldate = '<span class="autotime" title="' . datetime_convert('UTC', date_default_timezone_get(), $posted, 'c') . '" >' . datetime_convert('UTC', date_default_timezone_get(), $posted, 'r') . '</span>';
 
 	$headline = '<div class="shared_container"> <div class="shared_header">';
 

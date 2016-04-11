@@ -141,42 +141,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 
 	if(x($_SESSION, 'uid') || x($_SESSION, 'account_id')) {
 
-		// first check if we're enforcing that sessions can't change IP address
-		// @todo what to do with IPv6 addresses
-		if($_SESSION['addr'] && $_SESSION['addr'] != $_SERVER['REMOTE_ADDR']) {
-			logger('SECURITY: Session IP address changed: ' . $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
-
-			$partial1 = substr($_SESSION['addr'], 0, strrpos($_SESSION['addr'], '.')); 
-			$partial2 = substr($_SERVER['REMOTE_ADDR'], 0, strrpos($_SERVER['REMOTE_ADDR'], '.')); 
-
-			$paranoia = intval(get_pconfig($_SESSION['uid'], 'system', 'paranoia'));
-			if(! $paranoia)
-				$paranoia = intval(get_config('system', 'paranoia'));
-
-			switch($paranoia) {
-				case 0:
-					// no IP checking
-					break;
-				case 2:
-					// check 2 octets
-					$partial1 = substr($partial1, 0, strrpos($partial1, '.'));
-					$partial2 = substr($partial2, 0, strrpos($partial2, '.'));
-					if($partial1 == $partial2)
-						break;
-				case 1:
-					// check 3 octets
-					if($partial1 == $partial2)
-						break;
-				case 3:
-				default:
-					// check any difference at all
-					logger('Session address changed. Paranoid setting in effect, blocking session. '
-					. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
-					\Zotlabs\Web\Session::nuke();
-					goaway(z_root());
-					break;
-			}
-		}
+		Zotlabs\Web\Session::return_check();
 
 		$r = q("select * from account where account_id = %d limit 1",
 			intval($_SESSION['account_id'])
@@ -190,6 +155,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 			}
 			if(strcmp(datetime_convert('UTC','UTC','now - 12 hours'), $_SESSION['last_login_date']) > 0 ) {
 				$_SESSION['last_login_date'] = datetime_convert();
+				Zotlabs\Web\Session::extend_cookie();
 				$login_refresh = true;
 			}
 			authenticate_success($r[0], false, false, false, $login_refresh);

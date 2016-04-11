@@ -68,8 +68,6 @@ class Session {
 		}
 	}
 
-
-
 	function new_cookie($xtime) {
 
 		$newxtime = (($xtime> 0) ? (time() + $xtime) : 0);
@@ -94,5 +92,62 @@ class Session {
 
 	}
 
+	function extend_cookie() {
+
+		// if there's a long-term cookie, extend it
+
+		if(intval($_SESSION['remember_me']))
+			setcookie(session_name(),session_id(),(time() + (60 * 60 * 24 * 365)));
+
+	}
+
+
+	function return_check() {
+
+		// check a returning visitor against IP changes.
+		// If the change results in being blocked from re-entry with the current cookie
+		// nuke the session and logout.
+		// Returning at all indicates the session is still valid.
+
+		// first check if we're enforcing that sessions can't change IP address
+		// @todo what to do with IPv6 addresses
+
+		if($_SESSION['addr'] && $_SESSION['addr'] != $_SERVER['REMOTE_ADDR']) {
+			logger('SECURITY: Session IP address changed: ' . $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
+
+			$partial1 = substr($_SESSION['addr'], 0, strrpos($_SESSION['addr'], '.')); 
+			$partial2 = substr($_SERVER['REMOTE_ADDR'], 0, strrpos($_SERVER['REMOTE_ADDR'], '.')); 
+
+			$paranoia = intval(get_pconfig($_SESSION['uid'], 'system', 'paranoia'));
+
+			if(! $paranoia)
+				$paranoia = intval(get_config('system', 'paranoia'));
+
+			switch($paranoia) {
+				case 0:
+					// no IP checking
+					break;
+				case 2:
+					// check 2 octets
+					$partial1 = substr($partial1, 0, strrpos($partial1, '.'));
+					$partial2 = substr($partial2, 0, strrpos($partial2, '.'));
+					if($partial1 == $partial2)
+						break;
+				case 1:
+					// check 3 octets
+					if($partial1 == $partial2)
+						break;
+				case 3:
+				default:
+					// check any difference at all
+					logger('Session address changed. Paranoid setting in effect, blocking session. '
+					. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
+					self::nuke();
+					goaway(z_root());
+					break;
+			}
+		}
+		return true;
+	}
 
 }

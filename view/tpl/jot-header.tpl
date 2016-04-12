@@ -218,20 +218,6 @@ function enableOnUser(){
             }
 	}
 
-	function jotVideoURL() {
-		reply = prompt("{{$vidurl}}");
-		if(reply && reply.length) {
-			addeditortext('[video]' + reply + '[/video]');
-		}
-	}
-
-	function jotAudioURL() {
-		reply = prompt("{{$audurl}}");
-		if(reply && reply.length) {
-			addeditortext('[audio]' + reply + '[/audio]');
-		}
-	}
-
 	function jotGetLocation() {
 		reply = prompt("{{$whereareu}}", $('#jot-location').val());
 		if(reply && reply.length) {

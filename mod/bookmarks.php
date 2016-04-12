@@ -4,6 +4,8 @@ function bookmarks_init(&$a) {
 	if(! local_channel())
 		return;
 	$item_id = intval($_REQUEST['item']);
+	$burl = trim($_REQUEST['burl']);
+
 	if(! $item_id)
 		return;
 
@@ -36,7 +38,14 @@ function bookmarks_init(&$a) {
 			killme();
 		}
 		foreach($terms as $t) {
-			bookmark_add($u,$s[0],$t,$item['item_private']);
+			if($burl) {
+				if($burl == $t['url']) {
+					bookmark_add($u,$s[0],$t,$item['item_private']);
+				}
+			}
+			else
+				bookmark_add($u,$s[0],$t,$item['item_private']);
+
 			info( t('Bookmark added') . EOL);
 		}
 	}

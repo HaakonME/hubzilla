@@ -314,9 +314,10 @@ function string2bb(element) {
 
 		a.on('textComplete:select', function(e, value, strategy) { value; });
 
-		$(this).keypress(function(e){
+		a.keypress(function(e){
+			e.stopImmediatePropagation();
 			if (e.keyCode == 13) {
-				x = listNewLineAutocomplete(this.id);
+				var x = listNewLineAutocomplete(this.id);
 				if(x)
 					e.preventDefault();
 			}

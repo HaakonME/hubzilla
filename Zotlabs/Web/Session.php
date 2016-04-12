@@ -77,10 +77,7 @@ class Session {
 		session_regenerate_id(false);
 
 		if(self::$handler) {
-			$v = q("UPDATE session SET sid = '%s' WHERE sid = '%s'",
-				dbesc(session_id()),
-				dbesc($old_sid)
-			);
+			self::$handler->rename($old_sid,session_id());
 		}
 		else 
 			logger('no session handler');

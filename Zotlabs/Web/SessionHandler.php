@@ -80,4 +80,13 @@ class SessionHandler implements \SessionHandlerInterface {
 	}
 
 
+	// not part of the official interface, used when regenerating the session id
+
+	function rename($old,$new) {
+		$v = q("UPDATE session SET sid = '%s' WHERE sid = '%s'",
+			dbesc($new),
+			dbesc($old)
+		);
+	}
+
 }

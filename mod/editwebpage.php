@@ -151,7 +151,7 @@ function editwebpage_content(&$a) {
 		'$geotag' => $geotag,
 		'$nickname' => $channel['channel_address'],
 		'$confirmdelete' => t('Delete webpage?'),
-		'$bbco_autocomplete'=> 'bbcode',
+		'$bbco_autocomplete'=> (($mimetype  == 'text/bbcode') ? 'bbcode' : '')
 	));
 
 	$tpl = get_markup_template("jot.tpl");
@@ -216,7 +216,7 @@ function editwebpage_content(&$a) {
 		'$defexpire' => '',
 		'$feature_expire' => false,
 		'$expires' => t('Set expiration date'),
-		'$bbco_autocomplete'=> 'bbcode'
+		'$bbcode' => (($mimetype  == 'text/bbcode') ? true : false)
 	));
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(

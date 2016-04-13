@@ -5,24 +5,30 @@ namespace Zotlabs\Web;
 
 class SessionHandler implements \SessionHandlerInterface {
 
-	private $session_exists;
-	private $session_expire;
-
 
 	function open ($s, $n) {
-		$this->session_exists = 0;
-		$this->session_expire = 180000;
 		return true;
 	}
 
+	// IMPORTANT: if we read the session and it doesn't exist, create an empty record.
+	// We rely on this due to differing PHP implementation of session_regenerate_id()
+	// some which call read explicitly and some that do not. So we call it explicitly
+	// just after sid regeneration to force a record to exist.
+
 	function read ($id) {
 
-		if(x($id))
+		if($id) {
 			$r = q("SELECT `data` FROM `session` WHERE `sid`= '%s'", dbesc($id));
 
-		if($r) {
-			$this->session_exists = true;
-			return $r[0]['data'];
+			if($r) {
+				return $r[0]['data'];
+			}
+			else {
+				q("INSERT INTO `session` (sid, expire) values ('%s', '%s')",
+					dbesc($id),
+					dbesc(time() + 300)
+				);
+			}
 		}
 
 		return '';
@@ -35,29 +41,29 @@ class SessionHandler implements \SessionHandlerInterface {
 			return false;
 		}
 
-		// Can't just use $data here because we can't be certain of the serialisation algorithm
+		// Unless we authenticate somehow, only keep a session for 5 minutes
+		// The viewer can extend this by performing any web action using the
+		// original cookie, but this allows us to cleanup the hundreds or 
+		// thousands of empty sessions left around from web crawlers which are
+		// assigned cookies on each page that they never use. 
 
-		if($_SESSION && array_key_exists('remember_me',$_SESSION) && intval($_SESSION['remember_me']))
-			$expire = time() + (60 * 60 * 24 * 365);
-		else
-			$expire = time() + $this->session_expire;
-		$default_expire = time() + 300;
+		$expire = time() + 300;
 
-		if($this->session_exists) {
-			q("UPDATE `session`
-				SET `data` = '%s', `expire` = '%s' WHERE `sid` = '%s'",
-				dbesc($data),
-				dbesc($expire),
-				dbesc($id)
-			);
-		} 
-		else {
-			q("INSERT INTO `session` (sid, expire, data) values ('%s', '%s', '%s')",
-				dbesc($id),
-				dbesc($default_expire),
-				dbesc($data)
-			);
+		if($_SESSION) {
+			if(array_key_exists('remember_me',$_SESSION) && intval($_SESSION['remember_me']))
+				$expire = time() + (60 * 60 * 24 * 365);
+			elseif(local_channel())
+				$expire = time() + (60 * 60 * 24 * 3);
+			elseif(remote_channel())
+				$expire = time() + (60 * 60 * 24 * 1);
 		}
+
+		q("UPDATE `session`
+			SET `data` = '%s', `expire` = '%s' WHERE `sid` = '%s'",
+			dbesc($data),
+			dbesc($expire),
+			dbesc($id)
+		);
 
 		return true;
 	}
@@ -77,16 +83,6 @@ class SessionHandler implements \SessionHandlerInterface {
 	function gc($expire) {
 		q("DELETE FROM session WHERE expire < %d", dbesc(time()));
 		return true;
-	}
-
-
-	// not part of the official interface, used when regenerating the session id
-
-	function rename($old,$new) {
-		$v = q("UPDATE session SET sid = '%s' WHERE sid = '%s'",
-			dbesc($new),
-			dbesc($old)
-		);
 	}
 
 }

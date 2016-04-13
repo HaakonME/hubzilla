@@ -14,6 +14,7 @@ namespace Zotlabs\Web;
 class Session {
 
 	private static $handler = null;
+	private static $session_started = false;
 
 	function init() {
 
@@ -37,20 +38,19 @@ class Session {
 		// Force cookies to be secure (https only) if this site is SSL enabled. 
 		// Must be done before session_start().
 
-		if(intval(\App::$config['system']['ssl_cookie_protection'])) {
-			$arr = session_get_cookie_params();
-			session_set_cookie_params(
-				((isset($arr['lifetime']))  ? $arr['lifetime'] : 0),
-				((isset($arr['path']))      ? $arr['path']     : '/'),
-				((isset($arr['domain']))    ? $arr['domain']   : App::get_hostname()),
-				((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
-				((isset($arr['httponly']))  ? $arr['httponly'] : true)
-			);
-		}
+		$arr = session_get_cookie_params();
+		session_set_cookie_params(
+			((isset($arr['lifetime']))   ? $arr['lifetime'] : 0),
+			((isset($arr['path']))      ? $arr['path']     : '/'),
+			((isset($arr['domain']))    ? $arr['domain']   : App::get_hostname()),
+			((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
+			((isset($arr['httponly']))  ? $arr['httponly'] : true)
+		);
 	}
 
 	function start() {
 		session_start();
+		self::$session_started = true;
 	}
 
 	/**
@@ -74,10 +74,13 @@ class Session {
 
 		$old_sid = session_id();
 
-		session_regenerate_id(false);
+		if(self::$handler && self::$session_started) {
+			session_regenerate_id(true);
 
-		if(self::$handler) {
-			self::$handler->rename($old_sid,session_id());
+			// force SessionHandler record creation with the new session_id
+			// which occurs as a side effect of read()
+
+			self::$handler->read(session_id());
 		}
 		else 
 			logger('no session handler');
@@ -87,14 +90,21 @@ class Session {
 		}
 		setcookie(session_name(),session_id(),$newxtime);
 
+		$arr = array('expire' => $xtime);
+		call_hooks('new_cookie', $arr);
+
 	}
 
 	function extend_cookie() {
 
 		// if there's a long-term cookie, extend it
 
-		if(intval($_SESSION['remember_me']))
-			setcookie(session_name(),session_id(),(time() + (60 * 60 * 24 * 365)));
+		$xtime = (($_SESSION['remember_me']) ? (60 * 60 * 24 * 365) : 0 );
+
+		if($xtime)
+			setcookie(session_name(),session_id(),(time() + $xtime));
+		$arr = array('expire' => $xtime);
+		call_hooks('extend_cookie', $arr);
 
 	}
 

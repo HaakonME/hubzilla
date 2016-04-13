@@ -1065,6 +1065,7 @@ class App {
 		self::$page['htmlhead'] = replace_macros($tpl, array(
 			'$preload_images' => $preload_images,
 			'$user_scalable' => $user_scalable,
+			'$query' => urlencode(self::$query_string),
 			'$baseurl' => self::get_baseurl(),
 			'$local_channel' => local_channel(),
 			'$metas' => self::$meta->get(),

@@ -168,13 +168,13 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = public_permissions_sql($observer_hash);
 
-	if(($update && $load) || ($_COOKIE['jsAvailable'] != 1)) {
+	if(($update && $load) || ($_COOKIE['jsdisabled'] == 1)) {
 
 		$updateable = false;
 
 		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(App::$pager['itemspage']),intval(App::$pager['start']));
 
-		if($load || ($_COOKIE['jsAvailable'] != 1)) {
+		if($load || ($_COOKIE['jsdisabled'] == 1)) {
 			$r = null;
 
 			require_once('include/identity.php');
@@ -290,13 +290,13 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 
-	if ($_COOKIE['jsAvailable'] == 1) {
-		$o .= conversation($a, $items, 'display', $update, 'client');
-	} else {
+	if ($_COOKIE['jsdisabled'] == 1) {
 		$o .= conversation($a, $items, 'display', $update, 'traditional');
 		if ($items[0]['title'])
 			App::$page['title'] = $items[0]['title'] . " - " . App::$page['title'];
-
+	} 
+	else {
+		$o .= conversation($a, $items, 'display', $update, 'client');
 	}
 
 	if($updateable) {

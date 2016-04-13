@@ -85,8 +85,8 @@ class Session {
 		else 
 			logger('no session handler');
 
-		if (x($_COOKIE, 'jsAvailable')) {
-			setcookie('jsAvailable', $_COOKIE['jsAvailable'], $newxtime);
+		if (x($_COOKIE, 'jsdisabled')) {
+			setcookie('jsdisabled', $_COOKIE['jsdisabled'], $newxtime);
 		}
 		setcookie(session_name(),session_id(),$newxtime);
 

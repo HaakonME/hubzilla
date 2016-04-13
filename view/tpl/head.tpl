@@ -1,6 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="{{$baseurl}}/" />
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable={{$user_scalable}}" />
+<noscript><meta http-equiv="refresh" content="0; url=nojs.php&redir={{$query}}"></noscript>
 {{$metas}}
 <!--[if IE]>
 <script src="{{$baseurl}}/library/html5.js"></script>

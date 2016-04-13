@@ -5,6 +5,10 @@ function display_content(&$a, $update = 0, $load = false) {
 
 //	logger("mod-display: update = $update load = $load");
 
+
+	$checkjs = new Zotlabs\Web\CheckJS();
+
+
 	if($load)
 		$_SESSION['loadtime'] = datetime_convert();
 
@@ -168,13 +172,13 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = public_permissions_sql($observer_hash);
 
-	if(($update && $load) || ($_COOKIE['jsdisabled'] == 1)) {
+	if(($update && $load) || ($checkjs->disabled())) {
 
 		$updateable = false;
 
 		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(App::$pager['itemspage']),intval(App::$pager['start']));
 
-		if($load || ($_COOKIE['jsdisabled'] == 1)) {
+		if($load || ($checkjs->disabled())) {
 			$r = null;
 
 			require_once('include/identity.php');
@@ -290,7 +294,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 
-	if ($_COOKIE['jsdisabled'] == 1) {
+	if ($checkjs->disabled()) {
 		$o .= conversation($a, $items, 'display', $update, 'traditional');
 		if ($items[0]['title'])
 			App::$page['title'] = $items[0]['title'] . " - " . App::$page['title'];

@@ -874,9 +874,8 @@ function profile_load(&$a, $nickname, $profile = '') {
 	// fetch user tags if this isn't the default profile
 
 	if(! $p[0]['is_default']) {
-		/** @BUG $profile_uid is undefinded for this query, so should not work. */
 		$x = q("select `keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
-				intval($profile_uid)
+				intval($p[0]['profile_uid'])
 		);
 		if($x && $can_view_profile)
 			$p[0]['keywords'] = $x[0]['keywords'];

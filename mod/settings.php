@@ -4,7 +4,7 @@ require_once('include/zot.php');
 
 function get_theme_config_file($theme){
 
-	$base_theme = get_app()->theme_info['extends'];
+	$base_theme = App::$theme_info['extends'];
 	
 	if (file_exists("view/theme/$theme/php/config.php")){
 		return "view/theme/$theme/php/config.php";
@@ -22,14 +22,14 @@ function settings_init(&$a) {
 	if($_SESSION['delegate'])
 		return;
 
-	$a->profile_uid = local_channel();
+	App::$profile_uid = local_channel();
 
 	// default is channel settings in the absence of other arguments
 
 	if(argc() == 1) {
 		// We are setting these values - don't use the argc(), argv() functions here
-		$a->argc = 2;
-		$a->argv[] = 'channel';
+		App::$argc = 2;
+		App::$argv[] = 'channel';
 	}
 
 
@@ -45,7 +45,7 @@ function settings_post(&$a) {
 	if($_SESSION['delegate'])
 		return;
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	 logger('mod_settings: ' . print_r($_REQUEST,true));
 
@@ -57,7 +57,7 @@ function settings_post(&$a) {
 		q("DELETE FROM tokens WHERE id='%s' AND uid=%d",
 			dbesc($key),
 			local_channel());
-		goaway($a->get_baseurl(true)."/settings/oauth/");
+		goaway(z_root()."/settings/oauth/");
 		return;			
 	}
 
@@ -114,7 +114,7 @@ function settings_post(&$a) {
 				);
 			}
 		}
-		goaway($a->get_baseurl(true)."/settings/oauth/");
+		goaway(z_root()."/settings/oauth/");
 		return;
 	}
 
@@ -153,8 +153,9 @@ function settings_post(&$a) {
 		
 		check_form_security_token_redirectOnErr('/settings/display', 'settings_display');
 
-		$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : $a->channel['channel_theme']);
+		$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : App::$channel['channel_theme']);
 		$mobile_theme = ((x($_POST,'mobile_theme')) ? notags(trim($_POST['mobile_theme']))  : '');
+		$preload_images = ((x($_POST,'preload_images')) ? intval($_POST['preload_images'])  : 0);
 		$user_scalable = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
 		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
 		$title_tosource = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
@@ -184,6 +185,7 @@ function settings_post(&$a) {
 			set_pconfig(local_channel(),'system','mobile_theme',$mobile_theme);
 		}
 
+		set_pconfig(local_channel(),'system','preload_images',$preload_images);
 		set_pconfig(local_channel(),'system','user_scalable',$user_scalable);
 		set_pconfig(local_channel(),'system','update_interval', $browser_update);
 		set_pconfig(local_channel(),'system','itemspage', $itemspage);
@@ -194,7 +196,7 @@ function settings_post(&$a) {
 		set_pconfig(local_channel(),'system','channel_divmore_height', $channel_divmore_height);
 		set_pconfig(local_channel(),'system','network_divmore_height', $network_divmore_height);
 
-		if ($theme == $a->channel['channel_theme']){
+		if ($theme == App::$channel['channel_theme']){
 			// call theme_post only if theme has not been changed
 			if( ($themeconfigfile = get_theme_config_file($theme)) != null){
 				require_once($themeconfigfile);
@@ -209,7 +211,7 @@ function settings_post(&$a) {
 	
 		call_hooks('display_settings_post', $_POST);
 		build_sync_packet();
-		goaway($a->get_baseurl(true) . '/settings/display' );
+		goaway(z_root() . '/settings/display' );
 		return; // NOTREACHED
 	}
 
@@ -223,10 +225,44 @@ function settings_post(&$a) {
 
 		$errs = array();
 
+		$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
+		$account = App::get_account();
+		if($email != $account['account_email']) {
+    	    if(! valid_email($email))
+				$errs[] = t('Not valid email.');
+			$adm = trim(get_config('system','admin_email'));
+			if(($adm) && (strcasecmp($email,$adm) == 0)) {
+				$errs[] = t('Protected email address. Cannot change to that email.');
+				$email = App::$user['email'];
+			}
+			if(! $errs) {
+				$r = q("update account set account_email = '%s' where account_id = %d",
+					dbesc($email),
+					intval($account['account_id'])
+				);
+				if(! $r)
+					$errs[] = t('System failure storing new email. Please try again.');
+			}
+		}
+
+		if($errs) {
+			foreach($errs as $err)
+				notice($err . EOL);
+			$errs = array();
+		}
+
+
 		if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
 
-			$newpass = $_POST['npassword'];
-			$confirm = $_POST['confirm'];
+			$origpass = trim($_POST['origpass']);
+
+			require_once('include/auth.php');
+			if(! account_verify_password($email,$origpass)) {
+				$errs[] = t('Password verification failed.');
+			}
+
+			$newpass = trim($_POST['npassword']);
+			$confirm = trim($_POST['confirm']);
 
 			if($newpass != $confirm ) {
 				$errs[] = t('Passwords do not match. Password unchanged.');
@@ -253,37 +289,12 @@ function settings_post(&$a) {
 			}
 		}
 
-		if($errs) {
-			foreach($errs as $err)
-				notice($err . EOL);
-			$errs = array();
-		}
-
-		$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
-		$account = $a->get_account();
-		if($email != $account['account_email']) {
-    	    if(! valid_email($email))
-				$errs[] = t('Not valid email.');
-			$adm = trim(get_config('system','admin_email'));
-			if(($adm) && (strcasecmp($email,$adm) == 0)) {
-				$errs[] = t('Protected email address. Cannot change to that email.');
-				$email = $a->user['email'];
-			}
-			if(! $errs) {
-				$r = q("update account set account_email = '%s' where account_id = %d",
-					dbesc($email),
-					intval($account['account_id'])
-				);
-				if(! $r)
-					$errs[] = t('System failure storing new email. Please try again.');
-			}
-		}
 
 		if($errs) {
 			foreach($errs as $err)
 				notice($err . EOL);
 		}
-		goaway($a->get_baseurl(true) . '/settings/account' );
+		goaway(z_root() . '/settings/account' );
 	}
 
 
@@ -312,7 +323,7 @@ function settings_post(&$a) {
 			foreach($global_perms as $k => $v) {
 				$set_perms .= ', ' . $v[0] . ' = ' . intval($_POST[$k]) . ' ';
 			}
-			$acl = new AccessList($channel);
+			$acl = new Zotlabs\Access\AccessList($channel);
 			$acl->set_from_array($_POST);
 			$x = $acl->get();
 
@@ -354,7 +365,7 @@ function settings_post(&$a) {
 					);
 				}
 				else {
-					notice( sprintf('Default privacy collection \'%s\' not found. Please create and re-submit permission change.', t('Friends')) . EOL);
+					notice( sprintf('Default privacy group \'%s\' not found. Please create and re-submit permission change.', t('Friends')) . EOL);
 					return;
 				}
 			}
@@ -367,7 +378,7 @@ function settings_post(&$a) {
 			}
 
 			$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and abook_self = 1",
-				intval(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0),
+				intval((array_key_exists('perms_accept',$role_permissions)) ? $role_permissions['perms_accept'] : 0),
 				intval(local_channel())
 			);
 			set_pconfig(local_channel(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
@@ -417,7 +428,7 @@ function settings_post(&$a) {
 
 	$cal_first_day   = (((x($_POST,'first_day')) && (intval($_POST['first_day']) == 1)) ? 1: 0);
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	$pageflags = $channel['channel_pageflags'];
 	$existing_adult = (($pageflags & PAGE_ADULT) ? 1 : 0);
 	if($adult != $existing_adult)
@@ -471,7 +482,7 @@ function settings_post(&$a) {
 
 	$always_show_in_notices = x($_POST,'always_show_in_notices') ? 1 : 0;
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	$err = '';
 
@@ -545,14 +556,14 @@ function settings_post(&$a) {
 
 
 	//$_SESSION['theme'] = $theme;
-	if($email_changed && $a->config['system']['register_policy'] == REGISTER_VERIFY) {
+	if($email_changed && App::$config['system']['register_policy'] == REGISTER_VERIFY) {
 
 		// FIXME - set to un-verified, blocked and redirect to logout
 		// Why? Are we verifying people or email addresses?
 
 	}
 
-	goaway($a->get_baseurl(true) . '/settings' );
+	goaway(z_root() . '/settings' );
 	return; // NOTREACHED
 }
 		
@@ -570,7 +581,7 @@ function settings_content(&$a) {
 	}
 
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	if($channel)
 		head_set_icon($channel['xchan_photo_s']);
 
@@ -600,7 +611,7 @@ function settings_content(&$a) {
 					local_channel());
 			
 			if (!count($r)){
-				notice(t("You can't edit this application."));
+				notice(t('Application not found.'));
 				return;
 			}
 			$app = $r[0];
@@ -626,7 +637,7 @@ function settings_content(&$a) {
 			$r = q("DELETE FROM clients WHERE client_id='%s' AND uid=%d",
 					dbesc(argv(3)),
 					local_channel());
-			goaway($a->get_baseurl(true)."/settings/oauth/");
+			goaway(z_root()."/settings/oauth/");
 			return;			
 		}
 		
@@ -642,7 +653,7 @@ function settings_content(&$a) {
 		$tpl = get_markup_template("settings_oauth.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_oauth"),
-			'$baseurl'	=> $a->get_baseurl(true),
+			'$baseurl'	=> z_root(),
 			'$title'	=> t('Connected Apps'),
 			'$add'		=> t('Add application'),
 			'$edit'		=> t('Edit'),
@@ -686,15 +697,16 @@ function settings_content(&$a) {
 		
 		call_hooks('account_settings', $account_settings);
 
-		$email      = $a->account['account_email'];
+		$email      = App::$account['account_email'];
 		
 		
 		$tpl = get_markup_template("settings_account.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_account"),
 			'$title'	=> t('Account Settings'),
-			'$password1'=> array('npassword', t('Enter New Password:'), '', ''),
-			'$password2'=> array('confirm', t('Confirm New Password:'), '', t('Leave password fields blank unless changing')),
+			'$origpass' => array('origpass', t('Current Password'), ' ',''),
+			'$password1'=> array('npassword', t('Enter New Password'), '', ''),
+			'$password2'=> array('confirm', t('Confirm New Password'), '', t('Leave password fields blank unless changing')),
 			'$submit' 	=> t('Submit'),
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$removeme' => t('Remove Account'),
@@ -803,6 +815,9 @@ function settings_content(&$a) {
 		$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
 		$mobile_theme_selected = (!x($_SESSION,'mobile_theme')? $default_mobile_theme : $_SESSION['mobile_theme']);
 
+		$preload_images = get_pconfig(local_channel(),'system','preload_images');
+		$preload_images = (($preload_images===false)? '0': $preload_images); // default if not set: 0
+
 		$user_scalable = get_pconfig(local_channel(),'system','user_scalable');
 		$user_scalable = (($user_scalable===false)? '1': $user_scalable); // default if not set: 1
 		
@@ -832,11 +847,12 @@ function settings_content(&$a) {
 			'$d_cset'       => t('Content Settings'),
 			'$form_security_token' => get_form_security_token("settings_display"),
 			'$submit' 	=> t('Submit'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 			'$uid' => local_channel(),
 		
 			'$theme'	=> (($themes) ? array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview') : false),
-			'$mobile_theme'	=> (($mobile_themes) ? array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, '') : false),
+			'$mobile_theme' => (($mobile_themes) ? array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, '') : false),
+			'$preload_images' => array('preload_images', t("Preload images before rendering the page"), $preload_images, t("The subjective page load time will be longer but the page will be ready when displayed"), $yes_no),
 			'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, '', $yes_no),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
@@ -846,9 +862,9 @@ function settings_content(&$a) {
 			'$theme_config' => $theme_config,
 			'$expert' => feature_enabled(local_channel(),'expert'),
 			'$channel_list_mode' => array('channel_list_mode', t('Use blog/list mode on channel page'), get_pconfig(local_channel(),'system','channel_list_mode'), t('(comments displayed separately)'), $yes_no),
-			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on matrix page'), get_pconfig(local_channel(),'system','network_list_mode'), t('(comments displayed separately)'), $yes_no),
+			'$network_list_mode' => array('network_list_mode', t('Use blog/list mode on grid page'), get_pconfig(local_channel(),'system','network_list_mode'), t('(comments displayed separately)'), $yes_no),
 			'$channel_divmore_height' => array('channel_divmore_height', t('Channel page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','channel_divmore_height')) ? get_pconfig(local_channel(),'system','channel_divmore_height') : 400), t('click to expand content exceeding this height')),
-			'$network_divmore_height' => array('network_divmore_height', t('Matrix page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','network_divmore_height')) ? get_pconfig(local_channel(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
+			'$network_divmore_height' => array('network_divmore_height', t('Grid page max height of content (in pixels)'), ((get_pconfig(local_channel(),'system','network_divmore_height')) ? get_pconfig(local_channel(),'system','network_divmore_height') : 400) , t('click to expand content exceeding this height')),
 
 
 		));
@@ -874,7 +890,7 @@ function settings_content(&$a) {
 
 		load_pconfig(local_channel(),'expire');
 
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 
 		$global_perms = get_perms();
@@ -917,9 +933,10 @@ function settings_content(&$a) {
 		$maxreq     = $channel['channel_max_friend_req'];
 		$expire     = $channel['channel_expire_days'];
 		$adult_flag = intval($channel['channel_pageflags'] & PAGE_ADULT);
+		$sys_expire = get_config('system','default_expire_days');
 
-//		$unkmail    = $a->user['unkmail'];
-//		$cntunkmail = $a->user['cntunkmail'];
+//		$unkmail    = App::$user['unkmail'];
+//		$cntunkmail = App::$user['cntunkmail'];
 
 		$hide_presence = intval(get_pconfig(local_channel(), 'system','hide_online_status'));
 
@@ -972,7 +989,7 @@ function settings_content(&$a) {
 
 		));
 
-		$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/channel/' . $nickname : '');
+		$subdir = ((strlen(App::get_path())) ? '<br />' . t('or') . ' ' . z_root() . '/channel/' . $nickname : '');
 
 		$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
@@ -980,12 +997,12 @@ function settings_content(&$a) {
 			'$desc' => t('Your channel address is'),
 			'$nickname' => $nickname,
 			'$subdir' => $subdir,
-			'$basepath' => $a->get_hostname()
+			'$basepath' => App::get_hostname()
 		));
 
 		$stpl = get_markup_template('settings.tpl');
 
-		$acl = new AccessList($channel);
+		$acl = new Zotlabs\Access\AccessList($channel);
 		$perm_defaults = $acl->get();
 
 		require_once('include/group.php');
@@ -1012,6 +1029,7 @@ function settings_content(&$a) {
 			$permissions_role = 'custom';
 
 		$permissions_set = (($permissions_role != 'custom') ? true : false);
+
 		$vnotify = get_pconfig(local_channel(),'system','vnotify');
 		$always_show_in_notices = get_pconfig(local_channel(),'system','always_show_in_notices');
 		if($vnotify === false)
@@ -1021,7 +1039,7 @@ function settings_content(&$a) {
 			'$ptitle' 	=> t('Channel Settings'),
 
 			'$submit' 	=> t('Submit'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 			'$uid' => local_channel(),
 			'$form_security_token' => get_form_security_token("settings"),
 			'$nickname_block' => $prof_addr,
@@ -1036,6 +1054,7 @@ function settings_content(&$a) {
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 			'$permissions_set' => $permissions_set,
+			'$server_role' => Zotlabs\Project\System::get_server_role(),
 			'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 
 			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online'), $yes_no),
@@ -1050,7 +1069,7 @@ function settings_content(&$a) {
 
 			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 
-			'$expire' => array('expire',t('Expire other channel content after this many days'),$expire,t('0 or blank prevents expiration')),
+			'$expire' => array('expire',t('Expire other channel content after this many days'),$expire,sprintf( t('0 or blank to use the website limit. The website expires after %d days.'),intval($sys_expire))),
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
 			'$permdesc' => t("\x28click to open/close\x29"),
@@ -1084,7 +1103,7 @@ function settings_content(&$a) {
 
 			'$lbl_vnot' 	=> t('Show visual notifications including:'),
 
-			'$vnotify1'	=> array('vnotify1', t('Unseen matrix activity'), ($vnotify & VNOTIFY_NETWORK), VNOTIFY_NETWORK, '', $yes_no),
+			'$vnotify1'	=> array('vnotify1', t('Unseen grid activity'), ($vnotify & VNOTIFY_NETWORK), VNOTIFY_NETWORK, '', $yes_no),
 			'$vnotify2'	=> array('vnotify2', t('Unseen channel activity'), ($vnotify & VNOTIFY_CHANNEL), VNOTIFY_CHANNEL, '', $yes_no),
 			'$vnotify3'	=> array('vnotify3', t('Unseen private messages'), ($vnotify & VNOTIFY_MAIL), VNOTIFY_MAIL, t('Recommended'), $yes_no),
 			'$vnotify4'	=> array('vnotify4', t('Upcoming events'), ($vnotify & VNOTIFY_EVENT), VNOTIFY_EVENT, '', $yes_no),

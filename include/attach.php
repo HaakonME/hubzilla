@@ -13,6 +13,7 @@
 
 require_once('include/permissions.php');
 require_once('include/security.php');
+require_once('include/group.php');
 
 /**
  * @brief Guess the mimetype from file ending.
@@ -845,7 +846,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	// Caution: This re-uses $sql_options set further above
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
+	$r = q("select * from attach where uid = %d and hash = '%s' $sql_options limit 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
@@ -863,6 +864,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		// This would've been called already with a success result in photos_upload() if it was a photo.
 		call_hooks('photo_upload_end',$ret);
 	}
+
+	$sync = attach_export_data($channel,$hash);
+
+	if($sync) 
+		build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+
 	return $ret;
 }
 
@@ -1242,7 +1249,7 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 	$photo_sql = (($is_photo) ? " and is_photo = 1 " : '');
 
-	$r = q("SELECT hash, flags, is_dir, is_photo, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
+	$r = q("SELECT hash, os_storage, flags, is_dir, is_photo, folder FROM attach WHERE hash = '%s' AND uid = %d $photo_sql limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
@@ -1313,7 +1320,9 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		intval($channel_id)
 	);
 
-	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=0);
+	file_activity($channel_id, $object, $object['allow_cid'], $object['allow_gid'], $object['deny_cid'], $object['deny_gid'], 'update', $notify=1);
+
+	return;
 }
 
 /**
@@ -1468,13 +1477,13 @@ function pipe_streams($in, $out) {
  * @param string $deny_cid
  * @param string $deny_gid
  * @param string $verb
- * @param boolean $no_activity
+ * @param boolean $notify
  */
 function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $verb, $notify) {
 
 	require_once('include/items.php');
 
-	$poster = get_app()->get_observer();
+	$poster = App::get_observer();
 
 	//if we got no object something went wrong
 	if(!$object)
@@ -1514,13 +1523,21 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	$mid = item_message_id();
 
-	$arr = array();
+	$objtype = ACTIVITY_OBJ_FILE;
 
+	$arr = array();
+	$arr['aid']           = get_account_id();
+	$arr['uid']           = $channel_id;
 	$arr['item_wall'] = 1; 
 	$arr['item_origin'] = 1;
 	$arr['item_unseen'] = 1;
-
-	$objtype = ACTIVITY_OBJ_FILE;
+	$arr['author_xchan']  = $poster['xchan_hash'];
+	$arr['owner_xchan']   = $poster['xchan_hash'];
+	$arr['title']         = '';
+	$arr['item_hidden']   = 1;
+	$arr['obj_type']      = $objtype;
+	$arr['resource_id']   = $object['hash'];
+	$arr['resource_type'] = 'attach';
 
 	$private = (($arr_allow_cid[0] || $arr_allow_gid[0] || $arr_deny_cid[0] || $arr_deny_gid[0]) ? 1 : 0);
 
@@ -1548,36 +1565,27 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	}
 
+	//send update activity and create a new one
 	if($update && $verb == 'post' ) {
-		//send update activity and create a new one
-
 		//updates should be sent to everybody with recursive perms and all eventual former allowed members ($object['allow_cid'] etc.).
 		$u_arr_allow_cid = array_unique(array_merge($arr_allow_cid, expand_acl($object['allow_cid'])));
 		$u_arr_allow_gid = array_unique(array_merge($arr_allow_gid, expand_acl($object['allow_gid'])));
 		$u_arr_deny_cid = array_unique(array_merge($arr_deny_cid, expand_acl($object['deny_cid'])));
 		$u_arr_deny_gid = array_unique(array_merge($arr_deny_gid, expand_acl($object['deny_gid'])));
 
+		$private = (($u_arr_allow_cid[0] || $u_arr_allow_gid[0] || $u_arr_deny_cid[0] || $u_arr_deny_gid[0]) ? 1 : 0);
+
 		$u_mid = item_message_id();
 
-		$arr['aid']           = get_account_id();
-		$arr['uid']           = $channel_id;
 		$arr['mid']           = $u_mid;
 		$arr['parent_mid']    = $u_mid;
-		$arr['author_xchan']  = $poster['xchan_hash'];
-		$arr['owner_xchan']   = $poster['xchan_hash'];
-		$arr['title']         = '';
-		//updates should be visible to everybody -> perms may have changed
-		$arr['allow_cid']     = '';
-		$arr['allow_gid']     = '';
-		$arr['deny_cid']      = '';
-		$arr['deny_gid']      = '';
-		$arr['item_hidden']   = 1;
-		$arr['item_private']  = 0;
+		$arr['allow_cid']     = perms2str($u_arr_allow_cid);
+		$arr['allow_gid']     = perms2str($u_arr_allow_gid);
+		$arr['deny_cid']      = perms2str($u_arr_deny_cid);
+		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
+		$arr['item_private']  = $private;
 		$arr['verb']          = ACTIVITY_UPDATE;
-		$arr['obj_type']      = $objtype;
 		$arr['object']        = $u_jsonobject;
-		$arr['resource_id']   = $object['hash'];
-		$arr['resource_type'] = 'attach';
 		$arr['body']          = '';
 
 		$post = item_store($arr);
@@ -1593,32 +1601,25 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		//notice( t('File activity updated') . EOL);
 	}
 
+	//don't create new activity if notify was not enabled
 	if(! $notify) {
 		return;
 	}
 
-	$arr = array();
+	//don't create new activity if we have an update request but there is no item to update
+	//this can e.g. happen when deleting images
+	if(! $y && $verb == 'update') {
+		return;
+	}
 
-	$arr['aid']           = get_account_id();
-	$arr['uid']           = $channel_id;
 	$arr['mid']           = $mid;
 	$arr['parent_mid']    = $mid;
-	$arr['item_wall']     = 1; 
-	$arr['item_origin']   = 1;
-	$arr['item_unseen']   = 1;
-	$arr['author_xchan']  = $poster['xchan_hash'];
-	$arr['owner_xchan']   = $poster['xchan_hash'];
-	$arr['title']         = '';
 	$arr['allow_cid']     = perms2str($arr_allow_cid);
 	$arr['allow_gid']     = perms2str($arr_allow_gid);
 	$arr['deny_cid']      = perms2str($arr_deny_cid);
 	$arr['deny_gid']      = perms2str($arr_deny_gid);
-	$arr['item_hidden']   = 1;
 	$arr['item_private']  = $private;
 	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
-	$arr['obj_type']      = $objtype;
-	$arr['resource_id']   = $object['hash'];
-	$arr['resource_type'] = 'attach';
 	$arr['object']        = (($update) ? $u_jsonobject : $jsonobject);
 	$arr['body']          = '';
 
@@ -1701,11 +1702,11 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 	$ret = array();
 	$parent_arr = array();
 	$count_values = array();
-	$poster = get_app()->get_observer();
+	$poster = App::get_observer();
 
 	//turn allow_gid into allow_cid's
 	foreach($arr_allow_gid as $gid) {
-		$in_group = in_group($gid);
+		$in_group = group_get_members($gid);
 		$arr_allow_cid = array_unique(array_merge($arr_allow_cid, $in_group));
 	}
 
@@ -1727,7 +1728,7 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 			 * */
 			if($parent_arr['allow_gid']) {
 				foreach($parent_arr['allow_gid'][$count] as $gid) {
-					$in_group = in_group($gid);
+					$in_group = group_get_members($gid);
 					$parent_arr['allow_cid'][$count] = array_unique(array_merge($parent_arr['allow_cid'][$count], $in_group));
 				}
 			}
@@ -1808,31 +1809,6 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 	return $ret;
 }
 
-/**
- * @brief Returns members of a group.
- *
- * @param int $group_id id of the group to look up
- */
-function in_group($group_id) {
-	$group_members = array();
-
-	/** @TODO make these two queries one with a join. */
-	$x = q("SELECT id FROM groups WHERE hash = '%s'",
-		dbesc($group_id)
-	);
-
-	$r = q("SELECT xchan FROM group_member WHERE gid = %d",
-		intval($x[0]['id'])
-	);
-
-	foreach($r as $ig) {
-		$group_members[] = $ig['xchan'];
-	}
-
-	return $group_members;
-}
-
-
 function filepath_macro($s) {
 
 	return str_replace(
@@ -1844,3 +1820,89 @@ function filepath_macro($s) {
 
 }
 
+function attach_export_data($channel, $resource_id, $deleted = false) {
+
+	$ret = array();
+
+	$paths = array();
+
+	$hash_ptr = $resource_id;
+
+	$ret['fetch_url'] = z_root() . '/getfile';
+	$ret['original_channel'] = $channel['channel_address'];
+
+
+	if($deleted) {
+		$ret['attach'] = array(array('hash' => $resource_id, 'deleted' => 1));
+		return $ret;
+	}
+
+	do {
+		$r = q("select * from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($hash_ptr),
+			intval($channel['channel_id'])
+		);
+		if(! $r)
+			break;
+
+		if($hash_ptr === $resource_id) {
+			$attach_ptr = $r[0];
+		}
+
+		$hash_ptr = $r[0]['folder'];
+		$paths[] = $r[0];
+	} while($hash_ptr);
+
+
+
+
+	$paths = array_reverse($paths);
+
+	$ret['attach'] = $paths;
+
+
+	if($attach_ptr['is_photo']) {
+		$r = q("select * from photo where resource_id = '%s' and uid = %d order by scale asc",
+			dbesc($resource_id),
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			for($x = 0; $x < count($r); $x ++) {
+				$r[$x]['data'] = base64_encode($r[$x]['data']);
+			}
+			$ret['photo'] = $r;
+		}
+
+		$r = q("select * from item where resource_id = '%s' and resource_type = 'photo' and uid = %d ",
+			dbesc($resource_id),
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			$ret['item'] = array();
+			$items = q("select item.*, item.id as item_id from item where item.parent = %d ",
+				intval($r[0]['id'])
+			);
+			if($items) {
+				xchan_query($items);
+				$items = fetch_post_tags($items,true);
+				foreach($items as $rr)
+					$ret['item'][] = encode_item($rr,true);
+			}
+		}
+	}
+
+	return $ret;
+
+}
+
+
+/* strip off 'store/nickname/' from the provided path */
+
+function get_attach_binname($s) {
+	$p = $s;
+	if(strpos($s,'store/') === 0) {
+		$p = substr($s,6);
+		$p = substr($p,strpos($p,'/')+1);
+	}
+	return $p;
+}

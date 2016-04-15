@@ -69,6 +69,8 @@ abstract class photo_driver {
 
 	abstract function cropImage($max,$x,$y,$w,$h);
 
+	abstract function cropImageRect($maxx,$maxy,$x,$y,$w,$h);
+
 	abstract function imageString();
 
 
@@ -228,6 +230,7 @@ abstract class photo_driver {
 		}
 		$this->doScaleImage($dest_width,$dest_height);
 	}
+
 
 	public function scaleImageSquare($dim) {
 		if(!$this->is_valid())
@@ -676,9 +679,9 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 			if($r === false)
 				$photo_failure = true;
 
-			$photo = $a->get_baseurl() . '/photo/' . $hash . '-4';
-			$thumb = $a->get_baseurl() . '/photo/' . $hash . '-5';
-			$micro = $a->get_baseurl() . '/photo/' . $hash . '-6';
+			$photo = z_root() . '/photo/' . $hash . '-4';
+			$thumb = z_root() . '/photo/' . $hash . '-5';
+			$micro = z_root() . '/photo/' . $hash . '-6';
 		}
 		else {
 			logger('import_xchan_photo: invalid image from ' . $photo);	
@@ -686,9 +689,9 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 		}
 	}
 	if($photo_failure) {
-		$photo = $a->get_baseurl() . '/' . get_default_profile_photo();
-		$thumb = $a->get_baseurl() . '/' . get_default_profile_photo(80);
-		$micro = $a->get_baseurl() . '/' . get_default_profile_photo(48);
+		$photo = z_root() . '/' . get_default_profile_photo();
+		$thumb = z_root() . '/' . get_default_profile_photo(80);
+		$micro = z_root() . '/' . get_default_profile_photo(48);
 		$type = 'image/png';
 	}
 

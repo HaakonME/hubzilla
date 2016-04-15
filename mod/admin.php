@@ -7,7 +7,7 @@
  */
 
 require_once('include/queue_fn.php');
-
+require_once('include/account.php');
 
 /**
  * @param App &$a
@@ -40,7 +40,7 @@ function admin_post(&$a){
 							$func($a);
 						}
 				}
-				goaway($a->get_baseurl(true) . '/admin/plugins/' . argv(2) );
+				goaway(z_root() . '/admin/plugins/' . argv(2) );
 				break;
 			case 'themes':
 				$theme = argv(2);
@@ -54,13 +54,19 @@ function admin_post(&$a){
 				info(t('Theme settings updated.'));
 				if(is_ajax()) return;
 
-				goaway($a->get_baseurl(true) . '/admin/themes/' . $theme );
+				goaway(z_root() . '/admin/themes/' . $theme );
 				break;
 			case 'logs':
 				admin_page_logs_post($a);
 				break;
 			case 'hubloc':
 				admin_page_hubloc_post($a);
+				break;
+			case 'security':
+				admin_page_security_post($a);
+				break;
+			case 'features':
+				admin_page_features_post($a);
 				break;
 			case 'dbsync':
 				admin_page_dbsync_post($a);
@@ -71,7 +77,7 @@ function admin_post(&$a){
 		}
 	}
 
-	goaway($a->get_baseurl(true) . '/admin' );
+	goaway(z_root() . '/admin' );
 }
 
 /**
@@ -113,6 +119,12 @@ function admin_content(&$a) {
 //			case 'hubloc':
 //				$o = admin_page_hubloc($a);
 //				break;
+			case 'security':
+				$o = admin_page_security($a);
+				break;
+			case 'features':
+				$o = admin_page_features($a);
+				break;
 			case 'logs':
 				$o = admin_page_logs($a);
 				break;
@@ -184,7 +196,7 @@ function admin_page_summary(&$a) {
 	$queues = array( 'label' => t('Message queues'), 'queue' => $queue );
 
 	// If no plugins active return 0, otherwise list of plugin names
-	$plugins = (count($a->plugins) == 0) ? count($a->plugins) : $a->plugins;
+	$plugins = (count(App::$plugins) == 0) ? count(App::$plugins) : App::$plugins;
 
 	// Could be extended to provide also other alerts to the admin
 	$alertmsg = '';
@@ -245,7 +257,6 @@ function admin_page_site_post(&$a){
 	$allowed_sites        = ((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
 	$allowed_email        = ((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
 	$not_allowed_email    = ((x($_POST,'not_allowed_email'))	? notags(trim($_POST['not_allowed_email']))		: '');
-	$block_public         = ((x($_POST,'block_public'))		? True	: False);
 	$force_publish        = ((x($_POST,'publish_all'))		? True	: False);
 	$disable_discover_tab = ((x($_POST,'disable_discover_tab'))		? False	:	True);
 	$login_on_homepage    = ((x($_POST,'login_on_homepage'))		? True	:	False);
@@ -310,7 +321,6 @@ function admin_page_site_post(&$a){
 	set_config('system','allowed_sites', $allowed_sites);
 	set_config('system','allowed_email', $allowed_email);
 	set_config('system','not_allowed_email', $not_allowed_email);	
-	set_config('system','block_public', $block_public);
 	set_config('system','publish_all', $force_publish);
 	set_config('system','disable_discover_tab', $disable_discover_tab);
 	if ($global_directory == '') {
@@ -327,7 +337,7 @@ function admin_page_site_post(&$a){
 	set_config('system','curl_timeout', $timeout);
 
 	info( t('Site settings updated.') . EOL);
-	goaway($a->get_baseurl(true) . '/admin/site' );
+	goaway(z_root() . '/admin/site' );
 }
 
 /**
@@ -450,7 +460,7 @@ function admin_page_site(&$a) {
 		'$corporate' => t('Policies'),
 		'$advanced' => t('Advanced'),
 
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		// name, label, value, help string, extra data...
 		'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
@@ -471,7 +481,6 @@ function admin_page_site(&$a) {
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$not_allowed_email'	=> array('not_allowed_email', t("Not allowed email domains"), get_config('system','not_allowed_email'), t("Comma separated list of domains which are not allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains, unless allowed domains have been defined.")),
-		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 		'$disable_discover_tab'	=> array('disable_discover_tab', t('Import Public Streams'), $discover_tab, t('Import and allow access to public content pulled from other sites. Warning: this content is unmoderated.')),
@@ -486,7 +495,7 @@ function admin_page_site(&$a) {
 		'$delivery_batch_count' => array('delivery_batch_count', t('Deliveries per process'),(x(get_config('system','delivery_batch_count'))?get_config('system','delivery_batch_count'):1), t("Number of deliveries to attempt in a single operating system process. Adjust if necessary to tune system performance. Recommend: 1-5.")),
 		'$poll_interval'			=> array('poll_interval', t("Poll interval"), (x(get_config('system','poll_interval'))?get_config('system','poll_interval'):2), t("Delay background polling processes by this many seconds to reduce system load. If 0, use delivery interval.")),
 		'$maxloadavg'			=> array('maxloadavg', t("Maximum Load Average"), ((intval(get_config('system','maxloadavg')) > 0)?get_config('system','maxloadavg'):50), t("Maximum system load before delivery and poll processes are deferred - default 50.")),
-		'$default_expire_days' => array('default_expire_days', t('Expiration period in days for imported (matrix/network) content'), intval(get_config('system','default_expire_days')), t('0 for no expiration of imported content')),
+		'$default_expire_days' => array('default_expire_days', t('Expiration period in days for imported (grid/network) content'), intval(get_config('system','default_expire_days')), t('0 for no expiration of imported content')),
 		'$form_security_token' => get_form_security_token("admin_site"),
 	));
 }
@@ -505,7 +514,7 @@ function admin_page_hubloc_post(&$a){
 		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
 
 		//perform ping
-		$m = zot_build_packet($a->get_channel(),'ping');
+		$m = zot_build_packet(App::get_channel(),'ping');
 		$r = zot_zot($hublocurl,$m);
 		//handle results and set the hubloc flags in db to make results visible
 		$r2 = $r['body'];
@@ -527,15 +536,130 @@ function admin_page_hubloc_post(&$a){
 		//after repair set hubloc flags to 0
 	}
 
-	goaway($a->get_baseurl(true) . '/admin/hubloc' );
+	goaway(z_root() . '/admin/hubloc' );
 }
+
+function trim_array_elems($arr) {
+	$narr = array();
+
+	if($arr && is_array($arr)) {
+		for($x = 0; $x < count($arr); $x ++) {
+			$y = trim($arr[$x]);
+			if($y)
+				$narr[] = $y;
+		}
+	}
+	return $narr;
+}
+
+function admin_page_security_post(&$a){
+	check_form_security_token_redirectOnErr('/admin/security', 'admin_security');
+
+logger('post: ' . print_r($_POST,true));
+
+	$block_public         = ((x($_POST,'block_public'))		? True	: False);
+	set_config('system','block_public',$block_public);
+
+	$ws = trim_array_elems(explode("\n",$_POST['whitelisted_sites']));
+	set_config('system','whitelisted_sites',$ws);
+
+	$bs = trim_array_elems(explode("\n",$_POST['blacklisted_sites']));
+	set_config('system','blacklisted_sites',$bs);
+
+	$wc = trim_array_elems(explode("\n",$_POST['whitelisted_channels']));
+	set_config('system','whitelisted_channels',$wc);
+
+	$bc = trim_array_elems(explode("\n",$_POST['blacklisted_channels']));
+	set_config('system','blacklisted_channels',$bc);
+
+	$embed_coop         = ((x($_POST,'embed_coop'))		? True	: False);
+	set_config('system','embed_coop',$embed_coop);
+
+	$we = trim_array_elems(explode("\n",$_POST['embed_allow']));
+	set_config('system','embed_allow',$we);
+
+	$be = trim_array_elems(explode("\n",$_POST['embed_deny']));
+	set_config('system','embed_deny',$be);
+
+	goaway(z_root() . '/admin/security');
+}
+
+
+
+
+function admin_page_features_post(&$a) {
+
+	check_form_security_token_redirectOnErr('/admin/features', 'admin_manage_features');
+
+	logger('postvars: ' . print_r($_POST,true));
+
+	$arr = array();
+	$features = get_features(false);
+
+	foreach($features as $fname => $fdata) {
+		foreach(array_slice($fdata,1) as $f) {
+			$feature = $f[0];
+
+			if(array_key_exists('feature_' . $feature,$_POST))
+				$val = intval($_POST['feature_' . $feature]);
+			else
+				$val = 0;
+			set_config('feature',$feature,$val);
+
+			if(array_key_exists('featurelock_' . $feature,$_POST))
+				set_config('feature_lock',$feature,$val);
+			else
+				del_config('feature_lock',$feature);
+		}
+	}
+
+	goaway(z_root() . '/admin/features' );
+
+}
+
+function admin_page_features(&$a) {
+	
+	if((argc() > 1) && (argv(1) === 'features')) {
+		$arr = array();
+		$features = get_features(false);
+
+		foreach($features as $fname => $fdata) {
+			$arr[$fname] = array();
+			$arr[$fname][0] = $fdata[0];
+			foreach(array_slice($fdata,1) as $f) {
+
+				$set = get_config('feature',$f[0]);
+				if($set === false)
+					$set = $f[3];
+				$arr[$fname][1][] = array(
+					array('feature_' .$f[0],$f[1],$set,$f[2],array(t('Off'),t('On'))),
+					array('featurelock_' .$f[0],sprintf( t('Lock feature %s'),$f[1]),(($f[4] !== false) ? 1 : 0),'',array(t('Off'),t('On')))
+				);
+			}
+		}
+		
+		$tpl = get_markup_template("admin_settings_features.tpl");
+		$o .= replace_macros($tpl, array(
+			'$form_security_token' => get_form_security_token("admin_manage_features"),
+			'$title'	=> t('Manage Additional Features'),
+			'$features' => $arr,
+			'$submit'   => t('Submit'),
+		));
+
+		return $o;
+	}
+}
+
+
+
+
 
 function admin_page_hubloc(&$a) {
 	$hubloc = q("SELECT hubloc_id, hubloc_addr, hubloc_host, hubloc_status  FROM hubloc");
 
 	if(! $hubloc){
 		notice( t('No server found') . EOL);
-		goaway($a->get_baseurl(true) . '/admin/hubloc');
+		goaway(z_root() . '/admin/hubloc');
 	}
 
 	$t = get_markup_template('admin_hubloc.tpl');
@@ -547,10 +671,58 @@ function admin_page_hubloc(&$a) {
 		'$queues' => $queues,
 		//'$accounts' => $accounts, /*$accounts is empty here*/
 		'$pending' => array( t('Pending registrations'), $pending),
-		'$plugins' => array( t('Active plugins'), $a->plugins ),
+		'$plugins' => array( t('Active plugins'), App::$plugins ),
 		'$form_security_token' => get_form_security_token('admin_hubloc')
 	));
 }
+
+function admin_page_security(&$a) {
+
+	$whitesites = get_config('system','whitelisted_sites');
+	$whitesites_str = ((is_array($whitesites)) ? implode($whitesites,"\n") : '');
+
+	$blacksites = get_config('system','blacklisted_sites');
+	$blacksites_str = ((is_array($blacksites)) ? implode($blacksites,"\n") : '');
+
+
+	$whitechannels = get_config('system','whitelisted_channels');
+	$whitechannels_str = ((is_array($whitechannels)) ? implode($whitechannels,"\n") : '');
+
+	$blackchannels = get_config('system','blacklisted_channels');
+	$blackchannels_str = ((is_array($blackchannels)) ? implode($blackchannels,"\n") : '');
+
+
+	$whiteembeds = get_config('system','embed_allow');
+	$whiteembeds_str = ((is_array($whiteembeds)) ? implode($whiteembeds,"\n") : '');
+
+	$blackembeds = get_config('system','embed_deny');
+	$blackembeds_str = ((is_array($blackembeds)) ? implode($blackembeds,"\n") : '');
+
+	$embed_coop = intval(get_config('system','embed_coop'));
+
+// wait to implement this until we have a co-op in place. 
+//	if((! $whiteembeds) && (! $blackembeds) && (! $embed_coop))
+//		$whiteembeds_str = "youtube.com\nyoutu.be\ntwitter.com\nvimeo.com\nsoundcloud.com\nwikipedia.com";
+
+	$t = get_markup_template('admin_security.tpl');
+	return replace_macros($t, array(
+		'$title' => t('Administration'),
+		'$page' => t('Security'),
+		'$form_security_token' => get_form_security_token('admin_security'),
+        '$block_public'     => array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently authenticated.")),
+		'$whitelisted_sites' => array('whitelisted_sites', t('Allow communications only from these sites'), $whitesites_str, t('One site per line. Leave empty to allow communication from anywhere by default')),
+		'$blacklisted_sites' => array('blacklisted_sites', t('Block communications from these sites'), $blacksites_str, ''),
+		'$whitelisted_channels' => array('whitelisted_channels', t('Allow communications only from these channels'), $whitechannels_str, t('One channel (hash) per line. Leave empty to allow from any channel by default')),
+		'$blacklisted_channels' => array('blacklisted_channels', t('Block communications from these channels'), $blackchannels_str, ''),
+		'$embed_allow' => array('embed_allow', t('Allow embedded HTML content only from these domains'), $whiteembeds_str, t('One site per line. Leave empty to allow from any site by default')),
+		'$embed_deny' => array('embed_deny', t('Block embedded HTML from these domains'), $blackembeds_str, ''),
+
+        '$embed_coop'     => array('embed_coop', t('Cooperative embed security'), $embed_coop, t('Enable to share embed security with other compatible sites/hubs')),
+		'$submit' => t('Submit')
+	));
+}
+
+
 
 
 function admin_page_dbsync(&$a) {
@@ -561,7 +733,7 @@ function admin_page_dbsync(&$a) {
 		if(intval(get_config('system','db_version')) <= intval(argv(3)))
 			set_config('system','db_version',intval(argv(3)) + 1);
 		info( t('Update has been marked successful') . EOL);
-		goaway($a->get_baseurl(true) . '/admin/dbsync');
+		goaway(z_root() . '/admin/dbsync');
 	}
 
 	if(argc() > 2 && intval(argv(2))) {
@@ -599,7 +771,7 @@ function admin_page_dbsync(&$a) {
 		return '<div class="generic-content-wrapper-styled"><h3>' . t('No failed updates.') . '</h3></div>';
 
 	$o = replace_macros(get_markup_template('failed_updates.tpl'),array(
-		'$base' => $a->get_baseurl(true),
+		'$base' => z_root(),
 		'$banner' => t('Failed Updates'),
 		'$desc' => '',
 		'$mark' => t('Mark success (if update was manually applied)'),
@@ -689,17 +861,17 @@ function admin_page_users_post($a) {
 	// registration approved button was submitted
 	if (x($_POST, 'page_users_approve')) {
 		foreach ($pending as $hash) {
-			user_allow($hash);
+			account_allow($hash);
 		}
 	}
 	// registration deny button was submitted
 	if (x($_POST, 'page_users_deny')) {
 		foreach ($pending as $hash) {
-			user_deny($hash);
+			account_deny($hash);
 		}
 	}
 
-	goaway($a->get_baseurl(true) . '/admin/users' );
+	goaway(z_root() . '/admin/users' );
 }
 
 /**
@@ -721,7 +893,7 @@ function admin_page_users(&$a){
 
 		if (! $account) {
 			notice( t('Account not found') . EOL);
-			goaway($a->get_baseurl(true) . '/admin/users' );
+			goaway(z_root() . '/admin/users' );
 		}
 
 		check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
@@ -752,7 +924,7 @@ function admin_page_users(&$a){
 				break;
 		}
 
-		goaway($a->get_baseurl(true) . '/admin/users' );
+		goaway(z_root() . '/admin/users' );
 	}
 
 	/* get pending */
@@ -764,8 +936,8 @@ function admin_page_users(&$a){
 
 	$total = q("SELECT count(*) as total FROM account");
 	if (count($total)) {
-		$a->set_pager_total($total[0]['total']);
-		$a->set_pager_itemspage(100);
+		App::set_pager_total($total[0]['total']);
+		App::set_pager_itemspage(100);
 	}
 
 
@@ -786,8 +958,8 @@ function admin_page_users(&$a){
 		"FROM account as ac where true $serviceclass $order limit %d offset %d ",
 		intval(ACCOUNT_BLOCKED),
 		db_concat('ch.channel_address', ' '),
-		intval($a->pager['itemspage']),
-		intval($a->pager['start'])
+		intval(App::$pager['itemspage']),
+		intval(App::$pager['start'])
 	);
 
 //	function _setup_users($e){
@@ -831,7 +1003,7 @@ function admin_page_users(&$a){
 		'$form_security_token' => get_form_security_token("admin_users"),
 
 		// values //
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 
 		'$pending' => $pending,
 		'$users' => $users,
@@ -881,7 +1053,7 @@ function admin_page_channels_post(&$a) {
 		notice( sprintf( tt("%s channel deleted", "%s channels deleted", count($channels)), count($channels)) );
 	}
 
-	goaway($a->get_baseurl(true) . '/admin/channels' );
+	goaway(z_root() . '/admin/channels' );
 }
 
 /**
@@ -899,7 +1071,7 @@ function admin_page_channels(&$a){
 
 		if (! $channel) {
 			notice( t('Channel not found') . EOL);
-			goaway($a->get_baseurl(true) . '/admin/channels' );
+			goaway(z_root() . '/admin/channels' );
 		}
 
 		switch(argv(2)) {
@@ -938,22 +1110,22 @@ function admin_page_channels(&$a){
 			default: 
 				break;
 		}
-		goaway($a->get_baseurl(true) . '/admin/channels' );
+		goaway(z_root() . '/admin/channels' );
 	}
 
 	/* get channels */
 
 	$total = q("SELECT count(*) as total FROM channel where channel_removed = 0 and channel_system = 0");
 	if($total) {
-		$a->set_pager_total($total[0]['total']);
-		$a->set_pager_itemspage(100);
+		App::set_pager_total($total[0]['total']);
+		App::set_pager_itemspage(100);
 	}
 
 	$order = " order by channel_name asc ";
 
 	$channels = q("SELECT * from channel where channel_removed = 0 and channel_system = 0 $order limit %d offset %d ",
-		intval($a->pager['itemspage']),
-		intval($a->pager['start'])
+		intval(App::$pager['itemspage']),
+		intval(App::$pager['start'])
 	);
 
 	if($channels) {
@@ -991,7 +1163,7 @@ function admin_page_channels(&$a){
 		'$form_security_token' => get_form_security_token("admin_channels"),
 
 		// values //
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$channels' => $channels,
 	));
 	$o .= paginate($a);
@@ -1011,34 +1183,51 @@ function admin_page_plugins(&$a){
 	/*
 	 * Single plugin
 	 */
-	if ($a->argc == 3){
-		$plugin = $a->argv[2];
+	if (App::$argc == 3){
+		$plugin = App::$argv[2];
 		if (!is_file("addon/$plugin/$plugin.php")){
 			notice( t("Item not found.") );
 			return '';
 		}
 
+		$enabled = in_array($plugin,App::$plugins);
+		$info = get_plugin_info($plugin);
+		$x = check_plugin_versions($info);
+
+		// disable plugins which are installed but incompatible versions
+
+		if($enabled && ! $x) {
+			$enabled = false;
+			$idz = array_search($plugin, App::$plugins);
+			if ($idz !== false) {
+				unset(App::$plugins[$idz]);
+				uninstall_plugin($plugin);
+				set_config("system","addon", implode(", ",App::$plugins));
+			}
+		}
+		$info['disabled'] = 1-intval($x);
+
 		if (x($_GET,"a") && $_GET['a']=="t"){
 			check_form_security_token_redirectOnErr('/admin/plugins', 'admin_plugins', 't');
 
 			// Toggle plugin status
-			$idx = array_search($plugin, $a->plugins);
+			$idx = array_search($plugin, App::$plugins);
 			if ($idx !== false){
-				unset($a->plugins[$idx]);
+				unset(App::$plugins[$idx]);
 				uninstall_plugin($plugin);
 				info( sprintf( t("Plugin %s disabled."), $plugin ) );
 			} else {
-				$a->plugins[] = $plugin;
+				App::$plugins[] = $plugin;
 				install_plugin($plugin);
 				info( sprintf( t("Plugin %s enabled."), $plugin ) );
 			}
-			set_config("system","addon", implode(", ",$a->plugins));
-			goaway($a->get_baseurl(true) . '/admin/plugins' );
+			set_config("system","addon", implode(", ",App::$plugins));
+			goaway(z_root() . '/admin/plugins' );
 		}
 		// display plugin details
 		require_once('library/markdown.php');
 
-		if (in_array($plugin, $a->plugins)){
+		if (in_array($plugin, App::$plugins)){
 			$status = 'on';
 			$action = t('Disable');
 		} else {
@@ -1068,20 +1257,26 @@ function admin_page_plugins(&$a){
 			}
 		}
 
+
 		$t = get_markup_template('admin_plugins_details.tpl');
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
 			'$page' => t('Plugins'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 
 			'$plugin' => $plugin,
 			'$status' => $status,
 			'$action' => $action,
-			'$info' => get_plugin_info($plugin),
+			'$info' => $info,
 			'$str_author' => t('Author: '),
 			'$str_maintainer' => t('Maintainer: '),
+			'$str_minversion' => t('Minimum project version: '),
+			'$str_maxversion' => t('Maximum project version: '),
+			'$str_minphpversion' => t('Minimum PHP version: '),
+			'$str_requires' => t('Requires: '),
+			'$disabled' => t('Disabled - version incompatibility'),
 
 			'$admin_form' => $admin_form,
 			'$function' => 'plugins',
@@ -1103,7 +1298,23 @@ function admin_page_plugins(&$a){
 			if (is_dir($file)){
 				list($tmp, $id) = array_map('trim', explode('/', $file));
 				$info = get_plugin_info($id);
-				$plugins[] = array( $id, (in_array($id,  $a->plugins)?"on":"off") , $info);
+				$enabled = in_array($id,App::$plugins);
+				$x = check_plugin_versions($info);
+
+				// disable plugins which are installed but incompatible versions
+
+				if($enabled && ! $x) {
+					$enabled = false;
+					$idz = array_search($id, App::$plugins);
+					if ($idz !== false) {
+						unset(App::$plugins[$idz]);
+						uninstall_plugin($id);
+						set_config("system","addon", implode(", ",App::$plugins));
+					}
+				}
+				$info['disabled'] = 1-intval($x);
+
+				$plugins[] = array( $id, (($enabled)?"on":"off") , $info);
 			}
 		}
 	}
@@ -1113,9 +1324,10 @@ function admin_page_plugins(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Plugins'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$function' => 'plugins',
 		'$plugins' => $plugins,
+		'$disabled' => t('Disabled - version incompatibility'),
 		'$form_security_token' => get_form_security_token('admin_plugins'),
 	));
 }
@@ -1216,8 +1428,8 @@ function admin_page_themes(&$a){
 	 * Single theme
 	 */
 
-	if ($a->argc == 3){
-		$theme = $a->argv[2];
+	if (App::$argc == 3){
+		$theme = App::$argv[2];
 		if(! is_dir("view/theme/$theme")){
 			notice( t("Item not found.") );
 			return '';
@@ -1236,7 +1448,7 @@ function admin_page_themes(&$a){
 				info( sprintf('Theme %s disabled.', $theme));
 
 			set_config('system', 'allowed_themes', $s);
-			goaway($a->get_baseurl(true) . '/admin/themes' );
+			goaway(z_root() . '/admin/themes' );
 		}
 
 		// display theme details
@@ -1274,7 +1486,7 @@ function admin_page_themes(&$a){
 			'$page' => t('Themes'),
 			'$toggle' => t('Toggle'),
 			'$settings' => t('Settings'),
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl' => z_root(),
 		
 			'$plugin' => $theme,
 			'$status' => $status,
@@ -1307,7 +1519,7 @@ function admin_page_themes(&$a){
 		'$title' => t('Administration'),
 		'$page' => t('Themes'),
 		'$submit' => t('Submit'),
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$function' => 'themes',
 		'$plugins' => $xthemes,
 		'$experimental' => t('[Experimental]'),
@@ -1336,7 +1548,7 @@ function admin_page_logs_post(&$a) {
 	}
 
 	info( t('Log settings updated.') );
-	goaway($a->get_baseurl(true) . '/admin/logs' );
+	goaway(z_root() . '/admin/logs' );
 }
 
 /**
@@ -1394,7 +1606,7 @@ readable.");
 		'$submit' => t('Submit'),
 		'$clear' => t('Clear'),
 		'$data' => $data,
-		'$baseurl' => $a->get_baseurl(true),
+		'$baseurl' => z_root(),
 		'$logname' =>  get_config('system','logfile'),
 
 		// name, label, value, help string, extra data...
@@ -1408,25 +1620,46 @@ readable.");
 
 function admin_page_profs_post(&$a) {
 
-	if($_REQUEST['id']) {
-		$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d",
-			dbesc($_REQUEST['field_name']),
-			dbesc($_REQUEST['field_type']),
-			dbesc($_REQUEST['field_desc']),
-			dbesc($_REQUEST['field_help']),
-			dbesc($_REQUEST['field_inputs']),
-			intval($_REQUEST['id'])
-		);
+	if(array_key_exists('basic',$_REQUEST)) {
+		$arr = explode(',',$_REQUEST['basic']);
+		for($x = 0; $x < count($arr); $x ++) 
+			if(trim($arr[$x]))
+				$arr[$x] = trim($arr[$x]);
+		set_config('system','profile_fields_basic',$arr);
+
+		if(array_key_exists('advanced',$_REQUEST)) {
+			$arr = explode(',',$_REQUEST['advanced']);
+			for($x = 0; $x < count($arr); $x ++)
+				if(trim($arr[$x]))
+					$arr[$x] = trim($arr[$x]);
+			set_config('system','profile_fields_advanced',$arr);
+		}
+		goaway(z_root() . '/admin/profs');
 	}
-	else {
-		$r = q("insert into profdef ( field_name, field_type, field_desc, field_help, field_inputs ) values ( '%s' , '%s', '%s', '%s', '%s' )",
-			dbesc($_REQUEST['field_name']),
-			dbesc($_REQUEST['field_type']),
-			dbesc($_REQUEST['field_desc']),
-			dbesc($_REQUEST['field_help']),
-			dbesc($_REQUEST['field_inputs'])
-		);
+
+
+	if(array_key_exists('field_name',$_REQUEST)) {
+		if($_REQUEST['id']) {
+			$r = q("update profdef set field_name = '%s', field_type = '%s', field_desc = '%s' field_help = '%s', field_inputs = '%s' where id = %d",
+				dbesc($_REQUEST['field_name']),
+				dbesc($_REQUEST['field_type']),
+				dbesc($_REQUEST['field_desc']),
+				dbesc($_REQUEST['field_help']),
+				dbesc($_REQUEST['field_inputs']),
+				intval($_REQUEST['id'])
+			);
+		}
+		else {
+			$r = q("insert into profdef ( field_name, field_type, field_desc, field_help, field_inputs ) values ( '%s' , '%s', '%s', '%s', '%s' )",
+				dbesc($_REQUEST['field_name']),
+				dbesc($_REQUEST['field_type']),
+				dbesc($_REQUEST['field_desc']),
+				dbesc($_REQUEST['field_help']),
+				dbesc($_REQUEST['field_inputs'])
+			);
+		}
 	}
+
 
 	// add to chosen array basic or advanced
 
@@ -1474,4 +1707,70 @@ function admin_page_profs(&$a) {
 			'$submit' => t('Save')
 		));
 	}
+
+	$basic = '';
+	$barr = array();
+	$fields = get_profile_fields_basic();
+	if(! $fields)
+		$fields = get_profile_fields_basic(1);
+	if($fields) {
+		foreach($fields as $k => $v) {
+			if($basic)
+				$basic .= ', ';
+			$basic .= trim($k);
+			$barr[] = trim($k);
+		}
+	}
+
+	$advanced = '';
+	$fields = get_profile_fields_advanced();
+	if(! $fields)
+		$fields = get_profile_fields_advanced(1);
+	if($fields) {
+		foreach($fields as $k => $v) {
+			if(in_array(trim($k),$barr))
+				continue;
+			if($advanced)
+				$advanced .= ', ';
+			$advanced .= trim($k);
+		}
+	}
+
+	$all = '';
+	$fields = get_profile_fields_advanced(1);
+	if($fields) {
+		foreach($fields as $k => $v) {
+			if($all)
+				$all .= ', ';
+			$all .= trim($k);
+		}
+	}
+
+	$r = q("select * from profdef where true");
+	if($r) {
+		foreach($r as $rr) {
+			if($all)
+				$all .= ', ';
+			$all .= $rr['field_name'];
+		}
+	}
+
+	
+	$o = replace_macros(get_markup_template('admin_profiles.tpl'),array(
+		'$title' => t('Profile Fields'),
+		'$basic' => array('basic',t('Basic Profile Fields'),$basic,''),
+		'$advanced' => array('advanced',t('Advanced Profile Fields'),$advanced,t('(In addition to basic fields)')),
+		'$all' => $all,
+		'$all_desc' => t('All available fields'),
+		'$cust_field_desc' => t('Custom Fields'),
+		'$cust_fields' => $r,
+		'$edit' => t('Edit'),
+		'$drop' => t('Delete'),
+		'$new' => t('Create Custom Field'),		
+		'$submit' => t('Submit')
+	));
+
+	return $o;
+
+
 }

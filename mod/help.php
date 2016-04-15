@@ -13,7 +13,7 @@
 
 
 function load_doc_file($s) {
-	$lang = get_app()->language;
+	$lang = App::$language;
 	if(! isset($lang))
 		$lang = 'en';
 	$b = basename($s);
@@ -39,8 +39,8 @@ function search_doc_files($s) {
 	$a = get_app();
 
 	$itemspage = get_pconfig(local_channel(),'system','itemspage');
-	$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-	$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']), intval($a->pager['start']));
+	App::set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
+	$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(App::$pager['itemspage']), intval(App::$pager['start']));
 
 	$regexop = db_getfunc('REGEXP');
 
@@ -68,7 +68,7 @@ function search_doc_files($s) {
 			$r[$x]['rank'] ++;
 		$r[$x]['rank'] += substr_count(strtolower($r[$x]['text']),strtolower($s));
 		// bias the results to the observer's native language
-		if($r[$x]['lang'] === $a->language)
+		if($r[$x]['lang'] === App::$language)
 			$r[$x]['rank'] = $r[$x]['rank'] + 10;
 
 	}
@@ -84,7 +84,21 @@ function doc_rank_sort($s1,$s2) {
 }
 
 
+function load_context_help() {
+	
+	$path = App::$cmd;
+	$args = App::$argv;
 
+	while($path) {
+		$context_help = load_doc_file('doc/context/' . $path . '/help.html');
+		if($context_help)
+			break;
+		array_pop($args);
+		$path = implode($args,'/');
+	}
+
+	return $context_help;
+}
 
 
 function store_doc_file($s) {
@@ -145,7 +159,10 @@ function help_content(&$a) {
 	if($_REQUEST['search']) {
 	
 		$o .= '<div id="help-content" class="generic-content-wrapper">';
+		$o .= '<div class="section-title-wrapper">';
 		$o .= '<h2>' . t('Documentation Search') . ' - ' . htmlspecialchars($_REQUEST['search']) . '</h2>';
+		$o .= '</div>';
+		$o .= '<div class="section-content-wrapper">';
 
 		$r = search_doc_files($_REQUEST['search']);
 		if($r) {
@@ -157,10 +174,11 @@ function help_content(&$a) {
 				$path = trim(substr($dirname,4),'/');
 
 				$o .= '<li><a href="help/' . (($path) ? $path . '/' : '') . $fname . '" >' . ucwords(str_replace('_',' ',notags($fname))) . '</a><br />' . 
-				str_replace('$Projectname',PLATFORM_NAME,substr($rr['text'],0,200)) . '...<br /><br /></li>';
+				str_replace('$Projectname',Zotlabs\Project\System::get_platform_name(),substr($rr['text'],0,200)) . '...<br /><br /></li>';
 
 			}
 			$o .= '</ul>';
+			$o .= '</div>';
 			$o .= '</div>';
 		}
 		return $o;
@@ -183,30 +201,30 @@ function help_content(&$a) {
 		$title = basename($path);
 
 		$text = load_doc_file('doc/' . $path . '.md');
-		$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
+		App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 
 		if(! $text) {
 			$text = load_doc_file('doc/' . $path . '.bb');
 			if($text)
 				$doctype = 'bbcode';
-			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('_',' ',notags($title)));
+			App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('_',' ',notags($title)));
 		}
 		if(! $text) {
 			$text = load_doc_file('doc/' . $path . '.html');
 			if($text)
 				$doctype = 'html';
-			$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
+			App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 		}
 	}
 
 	if(! $text) {
 		$text = load_doc_file('doc/Site.md');
-		$a->page['title'] = t('Help');
+		App::$page['title'] = t('Help');
 	}
 	if(! $text) {
 		$doctype = 'bbcode';
 		$text = load_doc_file('doc/main.bb');
-		$a->page['title'] = t('Help');
+		App::$page['title'] = t('Help');
 	}
 	
 	if(! strlen($text)) {
@@ -229,6 +247,8 @@ function help_content(&$a) {
 	if($doctype === 'bbcode') {
 		require_once('include/bbcode.php');
 		$content = bbcode($text);
+		// bbcode retargets external content to new windows. This content is internal.
+		$content = str_replace(' target="_blank"','',$content);		
 	} 
 
 	$content = preg_replace_callback("/#include (.*?)\;/ism", 'preg_callback_help_include', $content);
@@ -248,7 +268,9 @@ function preg_callback_help_include($matches) {
 		if(preg_match('/\.bb$/', $matches[1]) || preg_match('/\.txt$/', $matches[1])) {
 			require_once('include/bbcode.php');
 			$include = bbcode($include);
-		} elseif(preg_match('/\.md$/', $matches[1])) {
+			$include = str_replace(' target="_blank"','',$include);		
+		} 
+		elseif(preg_match('/\.md$/', $matches[1])) {
 			require_once('library/markdown.php');
 			$include = Markdown($include);
 		}

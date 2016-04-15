@@ -20,7 +20,14 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 
 	if(intval(OPENSSL_ALGO_SHA256) && $alg === 'sha256')
 		$alg = OPENSSL_ALGO_SHA256;
-	$verify = openssl_verify($data,$sig,$key,$alg);
+	$verify = @openssl_verify($data,$sig,$key,$alg);
+
+	if(! $verify) {
+		while($msg = openssl_error_string())
+			logger('openssl_verify: ' . $msg,LOGGER_NORMAL,LOG_ERR);
+		btlogger('openssl_verify: key: ' . $key, LOGGER_DEBUG, LOG_ERR); 
+	}
+
 	return $verify;
 }
 
@@ -241,6 +248,7 @@ function pkcs1_encode($Modulus,$PublicExponent) {
 }
 
 
+// http://stackoverflow.com/questions/27568570/how-to-convert-raw-modulus-exponent-to-rsa-public-key-pem-format
 function metopem($m,$e) {
 	$der = pkcs8_encode($m,$e);
 	$key = DerToPem($der,false);
@@ -291,10 +299,32 @@ function metorsa($m,$e) {
 	return $key;
 }	
 
+
+
 function salmon_key($pubkey) {
 	pemtome($pubkey,$m,$e);
 	return 'RSA' . '.' . base64url_encode($m,true) . '.' . base64url_encode($e,true) ;
 }
+
+
+function convert_salmon_key($key) {
+
+	if(strstr($key,','))
+		$rawkey = substr($key,strpos($key,',')+1);
+	else
+		$rawkey = substr($key,5);
+
+	$key_info = explode('.',$rawkey);
+
+	$m = base64url_decode($key_info[1]);
+	$e = base64url_decode($key_info[2]);
+
+	logger('key details: ' . print_r($key_info,true), LOGGER_DATA);
+	$salmon_key = metopem($m,$e);
+	return $salmon_key;
+
+}
+
 
 function z_obscure($s) {
 	return json_encode(crypto_encapsulate($s,get_config('system','pubkey')));
@@ -305,3 +335,4 @@ function z_unobscure($s) {
 		return $s;
 	return crypto_unencapsulate(json_decode($s,true),get_config('system','prvkey'));
 }
+

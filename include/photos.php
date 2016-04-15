@@ -48,7 +48,7 @@ function photo_upload($channel, $observer, $args) {
 	// all other settings. 'allow_cid' being passed from an external source takes priority over channel settings.
 	// ...messy... needs re-factoring once the photos/files integration stabilises
 
-	$acl = new AccessList($channel);
+	$acl = new Zotlabs\Access\AccessList($channel);
 	if(array_key_exists('directory',$args) && $args['directory'])
 		$acl->set($args['directory']);
 	if(array_key_exists('allow_cid',$args))
@@ -194,7 +194,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[0] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-0.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-0.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);
@@ -212,7 +212,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[1] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-1.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-1.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);
@@ -227,7 +227,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[2] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-2.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-2.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);
@@ -242,7 +242,7 @@ function photo_upload($channel, $observer, $args) {
 	$link[3] = array(
 		'rel'  => 'alternate',
 		'type' => 'text/html',
-		'href' => $url = rawurlencode(z_root() . '/photo/' . $photo_hash . '-3.' . $ph->getExt()),
+		'href' => z_root() . '/photo/' . $photo_hash . '-3.' . $ph->getExt(),
 		'width' => $ph->getWidth(),
 		'height' => $ph->getHeight()
 	);
@@ -296,11 +296,11 @@ function photo_upload($channel, $observer, $args) {
 
 	$photo_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' . t('a new photo') . '[/zrl]';
 
-	$album_link = '[zrl=' . z_root() . '/photos/album/' . bin2hex($album) . ']' . $album . '[/zrl]';
+	$album_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album) . ']' . $album . '[/zrl]';
 
 	$activity_format = sprintf(t('%1$s posted %2$s to %3$s','photo_upload'), $author_link, $photo_link, $album_link);
 
-	$summary = $activity_format . "\n\n" . (($args['body']) ? $args['body'] . "\n\n" : ''); 	
+	$summary = (($args['body']) ? $args['body'] : '') . '[footer]' . $activity_format . '[/footer]';
 
 	$obj_body =  '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 		. $tag . z_root() . "/photo/{$photo_hash}-{$scale}." . $ph->getExt() . '[/zmg]' 
@@ -312,7 +312,7 @@ function photo_upload($channel, $observer, $args) {
 		'title'   => $title,
 		'created' => $p['created'],
 		'edited'  => $p['edited'],
-		'id'      => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash),
+		'id'      => z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash,
 		'link'    => $link,
 		'body'    => $obj_body
 	);
@@ -320,7 +320,7 @@ function photo_upload($channel, $observer, $args) {
 	$target = array(
 		'type'    => ACTIVITY_OBJ_ALBUM,
 		'title'   => (($album) ? $album : '/'),
-		'id'      => rawurlencode(z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album))
+		'id'      => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album)
 	);
 
 	// Create item container
@@ -391,8 +391,8 @@ function photo_upload($channel, $observer, $args) {
 		$arr['deny_cid']        = $ac['deny_cid'];
 		$arr['deny_gid']        = $ac['deny_gid'];
 		$arr['verb']            = ACTIVITY_POST;
-		$arr['obj_type']	    = ACTIVITY_OBJ_PHOTO;
-		$arr['object']		    = json_encode($object);
+		$arr['obj_type']	= ACTIVITY_OBJ_PHOTO;
+		$arr['object']		= json_encode($object);
 		$arr['tgt_type']        = ACTIVITY_OBJ_ALBUM;
 		$arr['target']	        = json_encode($target);
 		$arr['item_wall']       = 1;
@@ -400,7 +400,7 @@ function photo_upload($channel, $observer, $args) {
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
 		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
-		$arr['body']		    = $summary; 
+		$arr['body']		= $summary;
 
 
 		// this one is tricky because the item and the photo have the same permissions, those of the photo.
@@ -490,12 +490,12 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 	$o = '';
 
 	// If we weren't passed an album list, see if the photos module
-	// dropped one for us to find in $a->data['albums']. 
+	// dropped one for us to find in App::$data['albums']. 
 	// If all else fails, load it.
 
 	if(! $albums) {
-		if(array_key_exists('albums', get_app()->data))
-			$albums = get_app()->data['albums'];
+		if(array_key_exists('albums', App::$data))
+			$albums = App::$data['albums'];
 		else
 			$albums = photos_albums_list($channelx,$observer);
 	}

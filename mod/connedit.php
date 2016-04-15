@@ -25,18 +25,18 @@ function connedit_init(&$a) {
 		return;
 
 	if((argc() >= 2) && intval(argv(1))) {
-		$r = q("SELECT abook.*, xchan.* 
+		$r = q("SELECT abook.*, xchan.*
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
 			intval(local_channel()),
 			intval(argv(1))
 		);
 		if($r) {
-			$a->poi = $r[0];
+			App::$poi = $r[0];
 		}
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	if($channel)
 		head_set_icon($channel['xchan_photo_s']);
 
@@ -55,17 +55,17 @@ function connedit_post(&$a) {
 	if(! $contact_id)
 		return;
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	// TODO if configured for hassle-free permissions, we'll post the form with ajax as soon as the
-	// connection enable is toggled to a special autopost url and set permissions immediately, leaving 
-	// the other form elements alone pending a manual submit of the form. The downside is that there 
+	// connection enable is toggled to a special autopost url and set permissions immediately, leaving
+	// the other form elements alone pending a manual submit of the form. The downside is that there
 	// will be a window of opportunity when the permissions have been set but before you've had a chance
 	// to review and possibly restrict them. The upside is we won't have to warn you that your connection
-	// can't do anything until you save the bloody form.  
+	// can't do anything until you save the bloody form.
 
 	$autopost = (((argc() > 2) && (argv(2) === 'auto')) ? true : false);
-		
+
 	$orig_record = q("SELECT * FROM abook WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($contact_id),
 		intval(local_channel())
@@ -73,7 +73,7 @@ function connedit_post(&$a) {
 
 	if(! $orig_record) {
 		notice( t('Could not access contact record.') . EOL);
-		goaway($a->get_baseurl(true) . '/connections');
+		goaway(z_root() . '/connections');
 		return; // NOTREACHED
 	}
 
@@ -145,7 +145,7 @@ function connedit_post(&$a) {
 
 		if($z) {
 			$record = $z[0]['xlink_id'];
-			$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s' 
+			$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s'
 				where xlink_id = %d",
 				intval($rating),
 				dbesc($rating_text),
@@ -172,7 +172,7 @@ function connedit_post(&$a) {
 		}
 		if($record) {
 			proc_run('php','include/ratenotif.php','rating',$record);
-		}	
+		}
 	}
 
 	if(($_REQUEST['pending']) && intval($orig_record[0]['abook_pending'])) {
@@ -181,7 +181,7 @@ function connedit_post(&$a) {
 		// @fixme it won't be common, but when you accept a new connection request
 		// the permissions will now be that of your permissions role and ignore
 		// any you may have set manually on the form. We'll probably see a bug if somebody
-		// tries to set the permissions *and* approve the connection in the same 
+		// tries to set the permissions *and* approve the connection in the same
 		// request. The workaround is to approve the connection, then go back and
 		// adjust permissions as desired.
 
@@ -210,7 +210,7 @@ function connedit_post(&$a) {
 		intval(local_channel())
 	);
 
-	if($orig_record[0]['abook_profile'] != $profile_id) { 
+	if($orig_record[0]['abook_profile'] != $profile_id) {
 		//Update profile photo permissions
 
 		logger('A new profile was assigned - updating profile photos');
@@ -224,8 +224,8 @@ function connedit_post(&$a) {
 	else
 		notice( t('Failed to update connection record.') . EOL);
 
-	if($a->poi && $a->poi['abook_my_perms'] != $abook_my_perms 
-		&& (! intval($a->poi['abook_self']))) {
+	if(App::$poi && App::$poi['abook_my_perms'] != $abook_my_perms
+		&& (! intval(App::$poi['abook_self']))) {
 		proc_run('php', 'include/notifier.php', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id);
 	}
 
@@ -235,11 +235,11 @@ function connedit_post(&$a) {
 			require_once('include/group.php');
 			$g = group_rec_byhash(local_channel(),$default_group);
 			if($g)
-				group_add_member(local_channel(),'',$a->poi['abook_xchan'],$g['id']);
+				group_add_member(local_channel(),'',App::$poi['abook_xchan'],$g['id']);
 		}
 
-		// Check if settings permit ("post new friend activity" is allowed, and 
-		// friends in general or this friend in particular aren't hidden) 
+		// Check if settings permit ("post new friend activity" is allowed, and
+		// friends in general or this friend in particular aren't hidden)
 		// and send out a new friend activity
 
 		$pr = q("select * from profile where uid = %d and is_default = 1 and hide_friends = 0",
@@ -259,19 +259,19 @@ function connedit_post(&$a) {
 			$xarr['item_private'] = (($xarr['allow_cid']||$xarr['allow_gid']||$xarr['deny_cid']||$xarr['deny_gid']) ? 1 : 0);
 			$obj = array(
 				'type' => ACTIVITY_OBJ_PERSON,
-				'title' => $a->poi['xchan_name'],
-				'id' => $a->poi['xchan_hash'],
+				'title' => App::$poi['xchan_name'],
+				'id' => App::$poi['xchan_hash'],
 				'link' => array(
-					array('rel' => 'alternate', 'type' => 'text/html', 'href' => $a->poi['xchan_url']),
-					array('rel' => 'photo', 'type' => $a->poi['xchan_photo_mimetype'], 'href' => $a->poi['xchan_photo_l'])
+					array('rel' => 'alternate', 'type' => 'text/html', 'href' => App::$poi['xchan_url']),
+					array('rel' => 'photo', 'type' => App::$poi['xchan_photo_mimetype'], 'href' => App::$poi['xchan_photo_l'])
        			),
    			);
 			$xarr['object'] = json_encode($obj);
 			$xarr['obj_type'] = ACTIVITY_OBJ_PERSON;
 
-			$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . $a->poi['xchan_url'] . ']' . $a->poi['xchan_name'] . '[/zrl]';
+			$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . App::$poi['xchan_url'] . ']' . App::$poi['xchan_name'] . '[/zrl]';
 
-			$xarr['body'] .= "\n\n\n" . '[zrl=' . $a->poi['xchan_url'] . '][zmg=80x80]' . $a->poi['xchan_photo_m'] . '[/zmg][/zrl]';
+			$xarr['body'] .= "\n\n\n" . '[zrl=' . App::$poi['xchan_url'] . '][zmg=80x80]' . App::$poi['xchan_photo_m'] . '[/zmg][/zrl]';
 
 			post_activity_item($xarr);
 
@@ -285,25 +285,28 @@ function connedit_post(&$a) {
 
 	// Refresh the structure in memory with the new data
 
-	$r = q("SELECT abook.*, xchan.* 
+	$r = q("SELECT abook.*, xchan.*
 		FROM abook left join xchan on abook_xchan = xchan_hash
 		WHERE abook_channel = %d and abook_id = %d LIMIT 1",
 		intval(local_channel()),
 		intval($contact_id)
 	);
 	if($r) {
-		$a->poi = $r[0];
+		App::$poi = $r[0];
 	}
 
 	if($new_friend) {
-		$arr = array('channel_id' => local_channel(), 'abook' => $a->poi);
+		$arr = array('channel_id' => local_channel(), 'abook' => App::$poi);
 		call_hooks('accept_follow', $arr);
 	}
 
-	if(! is_null($autoperms)) 
+	if(! is_null($autoperms))
 		set_pconfig(local_channel(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
 
 	connedit_clone($a);
+
+	if(($_REQUEST['pending']) && (!$_REQUEST['done']))
+		goaway(z_root() . '/connections/ifpending');
 
 	return;
 
@@ -316,24 +319,31 @@ function connedit_post(&$a) {
 
 function connedit_clone(&$a) {
 
-		if(! $a->poi)
+		if(! App::$poi)
 			return;
 
-		$r = q("SELECT abook.*, xchan.* 
+
+		$channel = App::get_channel();
+
+		$r = q("SELECT abook.*, xchan.*
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
 			intval(local_channel()),
-			intval($a->poi['abook_id'])
+			intval(App::$poi['abook_id'])
 		);
 		if($r) {
-			$a->poi = $r[0];
+			App::$poi = $r[0];
 		}
 
-		$clone = $a->poi;
+		$clone = App::$poi;
 
 		unset($clone['abook_id']);
 		unset($clone['abook_account']);
 		unset($clone['abook_channel']);
+
+		$abconfig = load_abconfig($channel['channel_hash'],$clone['abook_xchan']);
+		if($abconfig)
+			$clone['abconfig'] = $abconfig;
 
 		build_sync_packet(0 /* use the current local_channel */, array('abook' => array($clone)));
 }
@@ -353,7 +363,7 @@ function connedit_content(&$a) {
 		return login();
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	$my_perms = get_channel_default_perms(local_channel());
 	$role = get_pconfig(local_channel(),'system','permissions_role');
 	if($role) {
@@ -361,6 +371,8 @@ function connedit_content(&$a) {
 		if($x['perms_accept'])
 			$my_perms = $x['perms_accept'];
 	}
+
+	$yes_no = array(t('No'),t('Yes'));
 
 	if($my_perms) {
 		$o .= "<script>function connectDefaultShare() {
@@ -393,21 +405,27 @@ function connedit_content(&$a) {
 
 		if(! count($orig_record)) {
 			notice( t('Could not access address book record.') . EOL);
-			goaway($a->get_baseurl(true) . '/connections');
+			goaway(z_root() . '/connections');
 		}
-		
-		if($cmd === 'update') {
 
+		if($cmd === 'update') {
 			// pull feed and consume it, which should subscribe to the hub.
 			proc_run('php',"include/poller.php","$contact_id");
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 
 		}
 
 		if($cmd === 'refresh') {
-			if(! zot_refresh($orig_record[0],get_app()->get_channel())) 
-				notice( t('Refresh failed - channel is currently unavailable.') );
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			if($orig_record[0]['xchan_network'] === 'zot') {
+				if(! zot_refresh($orig_record[0],App::get_channel()))
+					notice( t('Refresh failed - channel is currently unavailable.') );
+			}
+			else {
+
+				// if you are on a different network we'll force a refresh of the connection basic info
+				proc_run('php','include/notifier.php','permission_update',$contact_id);
+			}
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'block') {
@@ -416,7 +434,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'ignore') {
@@ -425,7 +443,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'archive') {
@@ -434,7 +452,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'hide') {
@@ -443,7 +461,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 		// We'll prevent somebody from unapproving an already approved contact.
@@ -457,7 +475,7 @@ function connedit_content(&$a) {
 				else
 					notice(t('Unable to set address book parameters.') . EOL);
 			}
-			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
+			goaway(z_root() . '/connedit/' . $contact_id);
 		}
 
 
@@ -466,13 +484,13 @@ function connedit_content(&$a) {
 			require_once('include/Contact.php');
 
 // FIXME
-// We need to send either a purge or a refresh packet to the other side (the channel being unfriended). 
+// We need to send either a purge or a refresh packet to the other side (the channel being unfriended).
 // The issue is that the abook DB record _may_ get destroyed when we call contact_remove. As the notifier runs
 // in the background there could be a race condition preventing this packet from being sent in all cases.
 // PLACEHOLDER
 
 			contact_remove(local_channel(), $orig_record[0]['abook_id']);
-			build_sync_packet(0 /* use the current local_channel */, 
+			build_sync_packet(0 /* use the current local_channel */,
 				array('abook' => array(array(
 					'abook_xchan' => $orig_record[0]['abook_xchan'],
 					'entry_deleted' => true))
@@ -481,43 +499,43 @@ function connedit_content(&$a) {
 
 			info( t('Connection has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
-				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
-			goaway($a->get_baseurl(true) . '/contacts');
+				goaway(z_root() . '/' . $_SESSION['return_url']);
+			goaway(z_root() . '/contacts');
 
 		}
 	}
 
-	if($a->poi) {
+	if(App::$poi) {
 
-		$contact_id = $a->poi['abook_id'];
-		$contact = $a->poi;
+		$contact_id = App::$poi['abook_id'];
+		$contact = App::$poi;
 
 		$buttons = array(
 
 			'view' => array(
 				'label' => t('View Profile'),
-				'url'   => chanlink_cid($contact['abook_id']), 
+				'url'   => chanlink_cid($contact['abook_id']),
 				'sel'   => '',
 				'title' => sprintf( t('View %s\'s profile'), $contact['xchan_name']),
 			),
 
 			'refresh' => array(
 				'label' => t('Refresh Permissions'),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/refresh', 
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/refresh',
 				'sel'   => '',
 				'title' => t('Fetch updated permissions'),
 			),
 
 			'recent' => array(
 				'label' => t('Recent Activity'),
-				'url'   => $a->get_baseurl(true) . '/network/?f=&cid=' . $contact['abook_id'], 
+				'url'   => z_root() . '/network/?f=&cid=' . $contact['abook_id'],
 				'sel'   => '',
 				'title' => t('View recent posts and comments'),
 			),
 
 			'block' => array(
 				'label' => (intval($contact['abook_blocked']) ? t('Unblock') : t('Block')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/block',
 				'sel'   => (intval($contact['abook_blocked']) ? 'active' : ''),
 				'title' => t('Block (or Unblock) all communications with this connection'),
 				'info'   => (intval($contact['abook_blocked']) ? t('This connection is blocked!') : ''),
@@ -525,7 +543,7 @@ function connedit_content(&$a) {
 
 			'ignore' => array(
 				'label' => (intval($contact['abook_ignored']) ? t('Unignore') : t('Ignore')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/ignore',
 				'sel'   => (intval($contact['abook_ignored']) ? 'active' : ''),
 				'title' => t('Ignore (or Unignore) all inbound communications from this connection'),
 				'info'   => (intval($contact['abook_ignored']) ? t('This connection is ignored!') : ''),
@@ -533,7 +551,7 @@ function connedit_content(&$a) {
 
 			'archive' => array(
 				'label' => (intval($contact['abook_archived']) ? t('Unarchive') : t('Archive')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/archive',
 				'sel'   => (intval($contact['abook_archived']) ? 'active' : ''),
 				'title' => t('Archive (or Unarchive) this connection - mark channel dead but keep content'),
 				'info'   => (intval($contact['abook_archived']) ? t('This connection is archived!') : ''),
@@ -541,7 +559,7 @@ function connedit_content(&$a) {
 
 			'hide' => array(
 				'label' => (intval($contact['abook_hidden']) ? t('Unhide') : t('Hide')),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/hide',
 				'sel'   => (intval($contact['abook_hidden']) ? 'active' : ''),
 				'title' => t('Hide or Unhide this connection from your other connections'),
 				'info'   => (intval($contact['abook_hidden']) ? t('This connection is hidden!') : ''),
@@ -549,7 +567,7 @@ function connedit_content(&$a) {
 
 			'delete' => array(
 				'label' => t('Delete'),
-				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/drop', 
+				'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/drop',
 				'sel'   => '',
 				'title' => t('Delete this connection'),
 			),
@@ -627,10 +645,10 @@ function connedit_content(&$a) {
 
 
 		$perms = array();
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 		$global_perms = get_perms();
-		$existing = get_all_perms(local_channel(),$contact['abook_xchan']); 
+		$existing = get_all_perms(local_channel(),$contact['abook_xchan']);
 
 		$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'), array(t('No'),('Yes')));
 
@@ -659,7 +677,7 @@ function connedit_content(&$a) {
 
 		$locstr = '';
 
-		$locs = q("select hubloc_addr as location from hubloc left join site on hubloc_url = site_url where hubloc_hash = '%s' 
+		$locs = q("select hubloc_addr as location from hubloc left join site on hubloc_url = site_url where hubloc_hash = '%s'
 			and hubloc_deleted = 0 and site_dead = 0",
 			dbesc($contact['xchan_hash'])
 		);
@@ -681,7 +699,7 @@ function connedit_content(&$a) {
 		$o .= replace_macros($tpl,array(
 
 			'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
-			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), 'Connection requests will be approved without your interaction', array(t('No'),('Yes'))),
+			'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), t('Connection requests will be approved without your interaction'), $yes_no),
 			'$addr'           => $contact['xchan_addr'],
 			'$addr_text'      => t('This connection\'s primary address is'),
 			'$loc_text'       => t('Available locations:'),
@@ -696,8 +714,8 @@ function connedit_content(&$a) {
 			'$lbl_rating_txt' => t('Optionally explain your rating'),
 			'$connfilter'     => feature_enabled(local_channel(),'connfilter'),
 			'$connfilter_label' => t('Custom Filter'),
-			'$incl'           => array('abook_incl',t('Only import posts with this text'), $contact['abook_incl'],t('words one per line or #tags or /patterns/ or lang=xx, leave blank to import all posts')), 
-			'$excl'           => array('abook_excl',t('Do not import posts with this text'), $contact['abook_excl'],t('words one per line or #tags or /patterns/ or lang=xx, leave blank to import all posts')), 
+			'$incl'           => array('abook_incl',t('Only import posts with this text'), $contact['abook_incl'],t('words one per line or #tags or /patterns/ or lang=xx, leave blank to import all posts')),
+			'$excl'           => array('abook_excl',t('Do not import posts with this text'), $contact['abook_excl'],t('words one per line or #tags or /patterns/ or lang=xx, leave blank to import all posts')),
 			'$rating_text'    => array('rating_text', t('Optionally explain your rating'),$rating_text,''),
 			'$rating_info'    => t('This information is public!'),
 			'$rating'         => $rating,
@@ -705,10 +723,6 @@ function connedit_content(&$a) {
 			'$slide'          => $slide,
 			'$affinity'       => $affinity,
 			'$pending_label'  => t('Connection Pending Approval'),
-			'$pending_modal_title' => t('Connection Request'),
-			'$pending_modal_body' => sprintf(t('(%s) would like to connect with you. Please approve this connection to allow communication.'), $contact['xchan_addr']),
-			'$pending_modal_approve' => t('Approve'),
-			'$pending_modal_dismiss' => t('Approve Later'),
 			'$is_pending'     => (intval($contact['abook_pending']) ? 1 : ''),
 			'$unapproved'     => $unapproved,
 			'$inherited'      => t('inherited'),

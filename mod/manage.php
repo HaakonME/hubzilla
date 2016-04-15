@@ -29,7 +29,7 @@ function manage_content(&$a) {
 		$r = change_channel($change_channel);
 
 		if((argc() > 2) && !(argv(2) === 'default')) {
-			goaway(z_root() . '/' . implode('/',array_slice($a->argv,2))); // Go to whatever is after /manage/, but with the new channel
+			goaway(z_root() . '/' . implode('/',array_slice(App::$argv,2))); // Go to whatever is after /manage/, but with the new channel
 		}
 		else {
 			if($r && $r['channel_startpage'])
@@ -45,7 +45,7 @@ function manage_content(&$a) {
 			intval(get_account_id())
 		);
 
-		$account = get_app()->get_account();
+		$account = App::get_account();
 
 		if($r && count($r)) {
 			$channels = $r;
@@ -134,9 +134,7 @@ function manage_content(&$a) {
  		}
 	}
 
-	$links = array(
-		array( 'new_channel', t('Create a new channel'), t('Create a new channel'))
-	);
+	$create = array( 'new_channel', t('Create a new channel'), t('Create New'));
 
 	$delegates = q("select * from abook left join xchan on abook_xchan = xchan_hash where 
 		abook_channel = %d and (abook_their_perms & %d) > 0",
@@ -148,13 +146,13 @@ function manage_content(&$a) {
 		for($x = 0; $x < count($delegates); $x ++) {
 			$delegates[$x]['link'] = 'magic?f=&dest=' . urlencode($delegates[$x]['xchan_url']) 
 			. '&delegate=' . urlencode($delegates[$x]['xchan_addr']);
+			$delegates[$x]['channel_name'] = $delegates[$x]['xchan_name'];
+			$delegates[$x]['delegate'] = 1;
 		}
 	}
 	else {
 		$delegates = null;
 	}
-
-
 
 	$o = replace_macros(get_markup_template('channels.tpl'), array(
 		'$header'           => t('Channel Manager'),
@@ -163,16 +161,14 @@ function manage_content(&$a) {
 		'$desc'             => t('Switch to one of your channels by selecting it.'),
 		'$msg_default'      => t('Default Channel'),
 		'$msg_make_default' => t('Make Default'),
-		'$links'            => $links,
+		'$create'           => $create,
 		'$all_channels'     => $channels,
 		'$mail_format'      => t('%d new messages'),
 		'$intros_format'    => t('%d new introductions'),
 		'$channel_usage_message' => $channel_usage_message,
-		'$delegate_header'  => t('Delegated Channels'),
-		'$delegates'        => $delegates,
-
+		'$delegated_desc'   => t('Delegated Channel'),
+		'$delegates'        => $delegates
 	));
-
 
 	return $o;
 

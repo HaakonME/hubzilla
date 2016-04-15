@@ -5,6 +5,10 @@ function display_content(&$a, $update = 0, $load = false) {
 
 //	logger("mod-display: update = $update load = $load");
 
+
+	$checkjs = new Zotlabs\Web\CheckJS();
+
+
 	if($load)
 		$_SESSION['loadtime'] = datetime_convert();
 
@@ -21,7 +25,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	require_once('include/items.php');
 
 
-	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
+	App::$page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
 
 	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
@@ -32,7 +36,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 	if(! $item_hash) {
-		$a->error = 404;
+		App::$error = 404;
 		notice( t('Item not found.') . EOL);
 		return;
 	}
@@ -42,7 +46,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	if(local_channel() && (! $update)) {
 
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 
 
 		$channel_acl = array(
@@ -65,7 +69,10 @@ function display_content(&$a, $update = 0, $load = false) {
 			'visitor' => true,
 			'profile_uid' => local_channel(),
 			'return_path' => 'channel/' . $channel['channel_address'],
-			'expanded' => true
+			'expanded' => true,
+			'editor_autocomplete' => true,
+			'bbco_autocomplete' => 'bbcode',
+			'bbcode' => true
 		);
 
 		$o = '<div id="jot-popup">';
@@ -116,7 +123,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	$simple_update = (($update) ? " AND item_unseen = 1 " : '');
 		
 	if($update && $_SESSION['loadtime'])
-		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ";
+		$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 	if($load)
 		$simple_update = '';
 
@@ -127,9 +134,9 @@ function display_content(&$a, $update = 0, $load = false) {
 
 		$o .= '<div id="live-display"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = " . ((intval(local_channel())) ? local_channel() : (-1))
-			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+			. "; var netargs = '?f='; var profile_page = " . App::$pager['page'] . "; </script>\r\n";
 
-		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
+		App::$page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
 			'$pgtype' => 'display',
 			'$uid' => '0',
@@ -144,7 +151,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'$fh' => '0',
 			'$nouveau' => '0',
 			'$wall' => '0',
-			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
+			'$page' => ((App::$pager['page'] != 1) ? App::$pager['page'] : 1),
 			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$search' => '',
 			'$order' => '',
@@ -165,13 +172,13 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = public_permissions_sql($observer_hash);
 
-	if(($update && $load) || ($_COOKIE['jsAvailable'] != 1)) {
+	if(($update && $load) || ($checkjs->disabled())) {
 
 		$updateable = false;
 
-		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval($a->pager['itemspage']),intval($a->pager['start']));
+		$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(App::$pager['itemspage']),intval(App::$pager['start']));
 
-		if($load || ($_COOKIE['jsAvailable'] != 1)) {
+		if($load || ($checkjs->disabled())) {
 			$r = null;
 
 			require_once('include/identity.php');
@@ -217,9 +224,54 @@ function display_content(&$a, $update = 0, $load = false) {
 
 			}
 		}
-		else {
-			$r = array();
+	}
+
+	elseif($update && !$load) {
+		$r = null;
+
+		require_once('include/identity.php');
+		$sys = get_sys_channel();
+		$sysid = $sys['channel_id'];
+
+		if(local_channel()) {
+			$r = q("SELECT * from item
+				WHERE uid = %d
+				and mid = '%s'
+				$item_normal
+				$simple_update
+				limit 1",
+				intval(local_channel()),
+				dbesc($target_item['parent_mid'])
+			);
+			if($r) {
+				$updateable = true;
+			}
 		}
+		if($r === null) {
+			// in case somebody turned off public access to sys channel content using permissions
+			// make that content unsearchable by ensuring the owner_xchan can't match
+			if(! perm_is_allowed($sysid,$observer_hash,'view_stream'))
+				$sysid = 0;
+
+			$r = q("SELECT * from item
+				WHERE mid = '%s'
+				AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
+				AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+				and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
+				OR uid = %d )
+				$sql_extra )
+				$item_normal
+				$simple_update
+				limit 1",
+				dbesc($target_item['parent_mid']),
+				intval($sysid)
+			);
+		}
+		$_SESSION['loadtime'] = datetime_convert();
+	}
+
+	else {
+		$r = array();
 	}
 
 	if($r) {
@@ -242,13 +294,13 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 
-	if ($_COOKIE['jsAvailable'] == 1) {
-		$o .= conversation($a, $items, 'display', $update, 'client');
-	} else {
+	if ($checkjs->disabled()) {
 		$o .= conversation($a, $items, 'display', $update, 'traditional');
 		if ($items[0]['title'])
-			$a->page['title'] = $items[0]['title'] . " - " . $a->page['title'];
-
+			App::$page['title'] = $items[0]['title'] . " - " . App::$page['title'];
+	} 
+	else {
+		$o .= conversation($a, $items, 'display', $update, 'client');
 	}
 
 	if($updateable) {
@@ -284,6 +336,5 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	}
 */
-	return $o;
 }
 

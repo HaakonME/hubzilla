@@ -97,7 +97,7 @@ class Item extends BaseObject {
 		$mode = $conv->get_mode();
 
 		if(local_channel() && $observer['xchan_hash'] === $item['author_xchan'])
-			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
+			$edpost = array(z_root()."/editpost/".$item['id'], t("Edit"));
 		else
 			$edpost = false;
 
@@ -241,7 +241,7 @@ class Item extends BaseObject {
 		$has_bookmarks = false;
 		if(is_array($item['term'])) {
 			foreach($item['term'] as $t) {
-				if($t['type'] == TERM_BOOKMARK)
+				if(!UNO && $t['type'] == TERM_BOOKMARK)
 					$has_bookmarks = true;
 			}
 		}
@@ -264,7 +264,7 @@ class Item extends BaseObject {
 		if($keep_reports === 0)
 			$keep_reports = 30;
 
-		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC',"now - $keep_reports days")) > 0)
+		if((! get_config('system','disable_dreport')) && strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC',"now - $keep_reports days")) > 0)
 			$dreport = t('Delivery Report');
 
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
@@ -681,14 +681,20 @@ class Item extends BaseObject {
 		$qc = ((local_channel()) ? get_pconfig(local_channel(),'system','qcomment') : null);
 		$qcomment = (($qc) ? explode("\n",$qc) : null);
 
+		$arr = array('comment_buttons' => '','id' => $this->get_id());
+		call_hooks('comment_buttons',$arr);
+		$comment_buttons = $arr['comment_buttons'];
+
+
 		$comment_box = replace_macros($template,array(
 			'$return_path' => '',
 			'$threaded' => $this->is_threaded(),
-			'$jsreload' => (($conv->get_mode() === 'display') ? $_SESSION['return_url'] : ''),
+			'$jsreload' => '', //(($conv->get_mode() === 'display') ? $_SESSION['return_url'] : ''),
 			'$type' => (($conv->get_mode() === 'channel') ? 'wall-comment' : 'net-comment'),
 			'$id' => $this->get_id(),
 			'$parent' => $this->get_id(),
 			'$qcomment' => $qcomment,
+			'$comment_buttons' => $comment_buttons,
 			'$profile_uid' =>  $conv->get_profile_owner(),
 			'$mylink' => $observer['xchan_url'],
 			'$mytitle' => t('This is you'),
@@ -708,7 +714,7 @@ class Item extends BaseObject {
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
 			'$cipher' => $conv->get_cipher(),
-			'$sourceapp' => get_app()->sourcename
+			'$sourceapp' => App::$sourcename
 
 		));
 

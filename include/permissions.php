@@ -63,7 +63,7 @@ function get_perms() {
  */
 function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
-	$api = get_app()->get_oauth_key();
+	$api = App::get_oauth_key();
 	if($api)
 		return get_all_api_perms($uid,$api);	
 
@@ -151,9 +151,13 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// Check if this $uid is actually the $observer_xchan - if it's your content
 		// you always have permission to do anything
+		// if you've moved elsewhere, you will only have read only access
 
 		if(($observer_xchan) && ($r[0]['channel_hash'] === $observer_xchan)) {
-			$ret[$perm_name] = true;
+			if($r[0]['channel_moved'] && (! $permission[2]))
+				$ret[$perm_name] = false;
+			else
+				$ret[$perm_name] = true;
 			continue;
 		}
 
@@ -266,7 +270,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
  */
 function perm_is_allowed($uid, $observer_xchan, $permission) {
 
-	$api = get_app()->get_oauth_key();
+	$api = App::get_oauth_key();
 	if($api)
 		return api_perm_is_allowed($uid,$api,$permission);
 
@@ -286,7 +290,7 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 
 	$channel_perm = $global_perms[$permission][0];
 
-	$r = q("select %s, channel_pageflags, channel_hash from channel where channel_id = %d limit 1",
+	$r = q("select %s, channel_pageflags, channel_moved, channel_hash from channel where channel_id = %d limit 1",
 		dbesc($channel_perm),
 		intval($uid)
 	);
@@ -325,9 +329,15 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 		return false;
 
 	// Check if this $uid is actually the $observer_xchan
+	// you will have full access unless the channel was moved - 
+	// in which case you will have read_only access
 
-	if($r[0]['channel_hash'] === $observer_xchan)
-		return true;
+	if($r[0]['channel_hash'] === $observer_xchan) {
+		if($r[0]['channel_moved'] && (! $global_perms[$permission][2]))
+			return false;
+		else
+			return true;
+	}
 
 	if($r[0][$channel_perm] & PERMS_PUBLIC)
 		return true;
@@ -626,7 +636,7 @@ function get_role_perms($role) {
 			$ret['channel_w_mail']      = PERMS_SPECIFIC;
 			$ret['channel_w_chat']      = PERMS_SPECIFIC;
 			$ret['channel_a_delegate']  = PERMS_SPECIFIC;
-			$ret['channel_r_storage']   = PERMS_PUBLIC;
+			$ret['channel_r_storage']   = PERMS_SPECIFIC;
 			$ret['channel_w_storage']   = PERMS_SPECIFIC;
 			$ret['channel_r_pages']     = PERMS_PUBLIC;
 			$ret['channel_w_pages']     = PERMS_SPECIFIC;
@@ -641,10 +651,10 @@ function get_role_perms($role) {
 			$ret['directory_publish'] = true;
 			$ret['online'] = false;
 			$ret['perms_follow'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_ABOOK
-				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
 			$ret['perms_accept'] = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_ABOOK
-				|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
+				|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
 				|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_A_REPUBLISH|PERMS_W_LIKE|PERMS_W_TAGWALL;
 			$ret['channel_r_stream']    = PERMS_PUBLIC;
 			$ret['channel_r_profile']   = PERMS_PUBLIC;
@@ -864,10 +874,10 @@ function get_role_perms($role) {
  */
 function get_roles() {
 	$roles = array(
-		t('Social Networking') => array('social' => t('Mostly Public'), 'social_restricted' => t('Restricted'), 'social_private' => t('Private')),
-		t('Community Forum') => array('forum' => t('Mostly Public'), 'forum_restricted' => t('Restricted'), 'forum_private' => t('Private')),
-		t('Feed Republish') => array('feed' => t('Mostly Public'), 'feed_restricted' => t('Restricted')),
-		t('Special Purpose') => array('soapbox' => t('Celebrity/Soapbox'), 'repository' => t('Group Repository')),
+		t('Social Networking') => array('social' => t('Social - Mostly Public'), 'social_restricted' => t('Social - Restricted'), 'social_private' => t('Social - Private')),
+		t('Community Forum') => array('forum' => t('Forum - Mostly Public'), 'forum_restricted' => t('Forum - Restricted'), 'forum_private' => t('Forum - Private')),
+		t('Feed Republish') => array('feed' => t('Feed - Mostly Public'), 'feed_restricted' => t('Feed - Restricted')),
+		t('Special Purpose') => array('soapbox' => t('Special - Celebrity/Soapbox'), 'repository' => t('Special - Group Repository')),
 		t('Other') => array('custom' => t('Custom/Expert Mode'))
 	);
 

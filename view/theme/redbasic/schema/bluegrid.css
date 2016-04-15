@@ -2,13 +2,18 @@ body 	{
     background-size: auto;
 }
 
-.generic-content-wrapper-styled, #profile-jot-wrapper {
+.generic-content-wrapper-styled {
     background-color: rgba(67,72,138,.8);
 	color: #FFF;
 }
 
 .generic-content-wrapper-styled .btn-default:hover, #profile-jot-wrapper .btn-default:hover {
 	border: 1px solid #FFF;
+}
+
+#profile-jot-wrapper {
+	background-color: inherit;
+	border: none;
 }
 
 .generic-content-wrapper-styled a:hover, .generic-content-wrapper-styled a:focus, .generic-content-wrapper-styled .field.checkbox:hover label, .generic-content-wrapper-styled .field.checkbox:focus label, .allcontact-link:hover, .allcontact-link:focus {
@@ -158,6 +163,14 @@ nav .badge:hover, nav .badge:focus {
 
 .widget .field.checkbox:hover label {
     color: rgba(255,255,255,.8);
+}
+
+.widget .conv-participants {
+	color: #BBB;
+}
+
+.widget .active:hover .conv-participants, .widget .active:focus .conv-participants {
+	color: inherit;
 }
 
 .help-block, .comment-icon, .jot-icons, .admin-icons {
@@ -450,3 +463,5 @@ a:hover > .icon-trash {
 		background-color: #43488A !important;
 	}
 }
+
+

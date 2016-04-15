@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper-styled">
 <h1>{{$header}}</h1>
 
 <h2>{{$mname}} {{$module}}</h2>
@@ -17,5 +18,7 @@
 <input type="submit" name="submit" value="{{$submit}}" />
 
 </form>
-
-
+<script>
+	$('textarea').bbco_autocomplete('comanche');
+</script>
+</div>

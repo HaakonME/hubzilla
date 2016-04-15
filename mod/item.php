@@ -119,7 +119,7 @@ function item_post(&$a) {
 		if (!$ret['success']) { 
 			notice( t($ret['message']) . EOL) ;
 			if(x($_REQUEST,'return')) 
-				goaway($a->get_baseurl() . "/" . $return_path );
+				goaway(z_root() . "/" . $return_path );
 			killme();
 		}
 	}
@@ -173,7 +173,7 @@ function item_post(&$a) {
 		if(($r === false) || (! count($r))) {
 			notice( t('Unable to locate original post.') . EOL);
 			if(x($_REQUEST,'return')) 
-				goaway($a->get_baseurl() . "/" . $return_path );
+				goaway(z_root() . "/" . $return_path );
 			killme();
 		}
 
@@ -192,7 +192,7 @@ function item_post(&$a) {
 	}
 
 	if(! $observer)
-		$observer = $a->get_observer();
+		$observer = App::get_observer();
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
@@ -205,15 +205,15 @@ function item_post(&$a) {
 		if(! $can_comment) {
 			notice( t('Permission denied.') . EOL) ;
 			if(x($_REQUEST,'return')) 
-				goaway($a->get_baseurl() . "/" . $return_path );
+				goaway(z_root() . "/" . $return_path );
 			killme();
 		}
 	}
 	else {
-		if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],'post_wall')) {
+		if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],($webpage) ? 'write_pages' : 'post_wall')) {
 			notice( t('Permission denied.') . EOL) ;
 			if(x($_REQUEST,'return')) 
-				goaway($a->get_baseurl() . "/" . $return_path );
+				goaway(z_root() . "/" . $return_path );
 			killme();
 		}
 	}
@@ -233,6 +233,8 @@ function item_post(&$a) {
 			$post_id = $i[0]['iid'];	
 	}
 
+	$iconfig = null;
+
 	if($post_id) {
 		$i = q("SELECT * FROM `item` WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			intval($profile_uid),
@@ -241,12 +243,15 @@ function item_post(&$a) {
 		if(! count($i))
 			killme();
 		$orig_post = $i[0];
+		$iconfig = q("select * from iconfig where iid = %d",
+			intval($post_id)
+		);
 	}
 
 
 	if(! $channel) {
 		if($uid && $uid == $profile_uid) {
-			$channel = $a->get_channel();
+			$channel = App::get_channel();
 		}
 		else {
 			// posting as yourself but not necessarily to a channel you control
@@ -262,7 +267,7 @@ function item_post(&$a) {
 	if(! $channel) {
 		logger("mod_item: no channel.");
 		if(x($_REQUEST,'return')) 
-			goaway($a->get_baseurl() . "/" . $return_path );
+			goaway(z_root() . "/" . $return_path );
 		killme();
 	}
 
@@ -277,7 +282,7 @@ function item_post(&$a) {
 	else {
 		logger("mod_item: no owner.");
 		if(x($_REQUEST,'return')) 
-			goaway($a->get_baseurl() . "/" . $return_path );
+			goaway(z_root() . "/" . $return_path );
 		killme();
 	}
 
@@ -305,7 +310,7 @@ function item_post(&$a) {
 		}
 	}
 
-	$acl = new AccessList($channel);
+	$acl = new Zotlabs\Access\AccessList($channel);
 
 		
 	$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
@@ -417,7 +422,7 @@ function item_post(&$a) {
 				killme();
 			info( t('Empty post discarded.') . EOL );
 			if(x($_REQUEST,'return')) 
-				goaway($a->get_baseurl() . "/" . $return_path );
+				goaway(z_root() . "/" . $return_path );
 			killme();
 		}
 	}
@@ -446,7 +451,7 @@ function item_post(&$a) {
 
 	$execflag = false;
 
-	if($mimetype === 'application/x-php') {
+	if($mimetype !== 'text/bbcode') {
 		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 			intval($profile_uid)
 		);
@@ -457,7 +462,7 @@ function item_post(&$a) {
 			else {
 				notice( t('Executable content type not permitted to this channel.') . EOL);
 				if(x($_REQUEST,'return')) 
-					goaway($a->get_baseurl() . "/" . $return_path );
+					goaway(z_root() . "/" . $return_path );
 				killme();
 			}
 		}
@@ -472,15 +477,28 @@ function item_post(&$a) {
 	if($mimetype === 'text/bbcode') {
 
 		require_once('include/text.php');			
-		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
-			require_once('include/bb2diaspora.php');
-			$body = escape_tags(trim($body));
-			$body = str_replace("\n",'<br />', $body);
 
-			$body = preg_replace_callback('/\[share(.*?)\]/ism','share_shield',$body);			
-			$body = diaspora2bb($body,true);
-			$body = preg_replace_callback('/\[share(.*?)\]/ism','share_unshield',$body);
-		}
+		// Markdown doesn't work correctly. Do not re-enable unless you're willing to fix it and support it.
+
+		// Sample that will probably give you grief - you must preserve the linebreaks
+		// and provide the correct markdown interpretation and you cannot allow unfiltered HTML
+
+		// Markdown
+		// ========
+		//
+		// **bold** abcde
+		// fghijkl
+		// *italic*
+		// <img src="javascript:alert('hacked');" />
+
+//		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
+//			require_once('include/bb2diaspora.php');
+//			$body = escape_tags(trim($body));
+//			$body = str_replace("\n",'<br />', $body);
+//			$body = preg_replace_callback('/\[share(.*?)\]/ism','share_shield',$body);			
+//			$body = diaspora2bb($body,true);
+//			$body = preg_replace_callback('/\[share(.*?)\]/ism','share_unshield',$body);
+//		}
 
 		// BBCODE alert: the following functions assume bbcode input
 		// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
@@ -618,7 +636,7 @@ function item_post(&$a) {
 				$r = attach_by_hash_nodata($hash,$rev);
 				if($r['success']) {
 					$attachments[] = array(
-						'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+						'href'     => z_root() . '/attach/' . $r['data']['hash'],
 						'length'   => $r['data']['filesize'],
 						'type'     => $r['data']['filetype'],
 						'title'    => urlencode($r['data']['filename']),
@@ -720,8 +738,7 @@ function item_post(&$a) {
 
 	$datarray = array();
 
-	$item_thead_top = ((! $parent) ? 1 : 0);
-
+	$item_thread_top = ((! $parent) ? 1 : 0);
 
 	if ((! $plink) && ($item_thread_top)) {
 		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
@@ -793,6 +810,9 @@ function item_post(&$a) {
 	$datarray['plink']          = $plink;
 	$datarray['route']          = $route;
 
+	if($iconfig)
+		$datarray['iconfig'] = $iconfig;
+
 	// preview mode - prepare the body for display and send it via json
 
 	if($preview) {
@@ -809,8 +829,6 @@ function item_post(&$a) {
 	if($orig_post)
 		$datarray['edit'] = true;
 
-
-
 	if(feature_enabled($profile_uid,'suppress_duplicates') && (! $orig_post)) {
 
 		$z = q("select created from item where uid = %d and body = '%s'",
@@ -818,25 +836,26 @@ function item_post(&$a) {
 			dbesc($body)
 		);
 
-		if($z && $z[0]['created'] > datetime_convert('UTC','UTC', 'now - 2 minutes')) {
-			$datarray['cancel'] = 1;
-			notice( t('Duplicate post suppressed.') . EOL);
-			logger('Duplicate post. Faking plugin cancel.');
+		if($z) {
+			foreach($z as $zz) {
+				if($zz['created'] > datetime_convert('UTC','UTC', 'now - 2 minutes')) {
+					$datarray['cancel'] = 1;
+					notice( t('Duplicate post suppressed.') . EOL);
+					logger('Duplicate post. Faking plugin cancel.');
+				}
+			}
 		}
 	}
 
 	call_hooks('post_local',$datarray);
 
 	if(x($datarray,'cancel')) {
-		logger('mod_item: post cancelled by plugin.');
-		if($return_path) {
-			goaway($a->get_baseurl() . "/" . $return_path);
-		}
+		logger('mod_item: post cancelled by plugin or duplicate suppressed.');
+		if($return_path)
+			goaway(z_root() . "/" . $return_path);
 
 		$json = array('cancel' => 1);
-		if(x($_REQUEST,'jsreload') && strlen($_REQUEST['jsreload']))
-			$json['reload'] = $a->get_baseurl() . '/' . $_REQUEST['jsreload'];
-
+		$json['reload'] = z_root() . '/' . $_REQUEST['jsreload'];
 		echo json_encode($json);
 		killme();
 	}
@@ -882,7 +901,7 @@ function item_post(&$a) {
 
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
 			logger('return: ' . $return_path);
-			goaway($a->get_baseurl() . "/" . $return_path );
+			goaway(z_root() . "/" . $return_path );
 		}
 		killme();
 	}
@@ -907,7 +926,7 @@ function item_post(&$a) {
 					'from_xchan'   => $datarray['author_xchan'],
 					'to_xchan'     => $datarray['owner_xchan'],
 					'item'         => $datarray,
-					'link'		   => $a->get_baseurl() . '/display/' . $datarray['mid'],
+					'link'		   => z_root() . '/display/' . $datarray['mid'],
 					'verb'         => ACTIVITY_POST,
 					'otype'        => 'item',
 					'parent'       => $parent,
@@ -919,13 +938,13 @@ function item_post(&$a) {
 		else {
 			$parent = $post_id;
 
-			if($datarray['owner_xchan'] != $datarray['author_xchan']) {
+			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && ($datarray['item_type'] == ITEM_TYPE_POST)) {
 				notification(array(
 					'type'         => NOTIFY_WALL,
 					'from_xchan'   => $datarray['author_xchan'],
 					'to_xchan'     => $datarray['owner_xchan'],
 					'item'         => $datarray,
-					'link'		   => $a->get_baseurl() . '/display/' . $datarray['mid'],
+					'link'		   => z_root() . '/display/' . $datarray['mid'],
 					'verb'         => ACTIVITY_POST,
 					'otype'        => 'item'
 				));
@@ -952,7 +971,7 @@ function item_post(&$a) {
 	else {
 		logger('mod_item: unable to retrieve post that was just stored.');
 		notice( t('System error. Post not saved.') . EOL);
-		goaway($a->get_baseurl() . "/" . $return_path );
+		goaway(z_root() . "/" . $return_path );
 		// NOTREACHED
 	}
 
@@ -980,7 +999,7 @@ function item_post(&$a) {
 	}
 
 	$datarray['id']    = $post_id;
-	$datarray['llink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
+	$datarray['llink'] = z_root() . '/display/' . $channel['channel_address'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
 
@@ -1000,12 +1019,12 @@ function item_post(&$a) {
 		return $post;
 
 	if($return_path) {
-		goaway($a->get_baseurl() . "/" . $return_path);
+		goaway(z_root() . "/" . $return_path);
 	}
 
 	$json = array('success' => 1);
 	if(x($_REQUEST,'jsreload') && strlen($_REQUEST['jsreload']))
-		$json['reload'] = $a->get_baseurl() . '/' . $_REQUEST['jsreload'];
+		$json['reload'] = z_root() . '/' . $_REQUEST['jsreload'];
 
 	logger('post_json: ' . print_r($json,true), LOGGER_DEBUG);
 
@@ -1080,7 +1099,7 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 		$images = $match[2];
 		if($images) {
 			foreach($images as $image) {
-				if(! stristr($image,get_app()->get_baseurl() . '/photo/'))
+				if(! stristr($image,z_root() . '/photo/'))
 					continue;
 				$image_uri = substr($image,strrpos($image,'/') + 1);
 				if(strpos($image_uri,'-') !== false)

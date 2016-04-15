@@ -108,7 +108,9 @@ function import_account(&$a, $account_id) {
 		import_diaspora($data);
 		return;
 	}
-
+	
+	$moving = false;
+	
 	if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
 		$v1 = substr($data['compatibility']['database'],-4);
 		$v2 = substr(DB_UPDATE_VERSION,-4);
@@ -116,14 +118,19 @@ function import_account(&$a, $account_id) {
 			$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 ); 
 			notice($t);
 		}
+		if(array_key_exists('server_role',$data['compatibility']) && $data['compatibility']['server_role'] == 'basic')
+			$moving = true;
 	}
+
+	if($moving)
+		$seize = 1;
 
 	// import channel
 
 	if(array_key_exists('channel',$data)) {
 
 		if($completed < 1) {
-			$channel = import_channel($data['channel'], $account_id);
+			$channel = import_channel($data['channel'], $account_id, $seize);
 
 		}
 		else {
@@ -142,7 +149,7 @@ function import_account(&$a, $account_id) {
 	}
 
 	if(! $channel)
-		$channel = $a->get_channel();
+		$channel = App::get_channel();
 	
 	if(! $channel) {
 		logger('mod_import: channel not found. ', print_r($channel,true));
@@ -158,7 +165,6 @@ function import_account(&$a, $account_id) {
 
 		logger('import step 2');
 		$_SESSION['import_step'] = 2;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -174,19 +180,17 @@ function import_account(&$a, $account_id) {
 
 		logger('import step 3');
 		$_SESSION['import_step'] = 3;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
 	if($completed < 4) {
 
-		if(is_array($data['hubloc'])) {
+		if(is_array($data['hubloc']) && (! $moving)) {
 			import_hublocs($channel,$data['hubloc'],$seize);
 
 		}
 		logger('import step 4');
 		$_SESSION['import_step'] = 4;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if($completed < 5) {
@@ -198,12 +202,12 @@ function import_account(&$a, $account_id) {
 			dbesc($channel['channel_guid']),
 			dbesc($channel['channel_guid_sig']),
 			dbesc($channel['channel_hash']),
-			dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+			dbesc($channel['channel_address'] . '@' . App::get_hostname()),
 			dbesc('zot'),
 			intval(($seize) ? 1 : 0),
 			dbesc(z_root()),
 			dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
-			dbesc(get_app()->get_hostname()),
+			dbesc(App::get_hostname()),
 			dbesc(z_root() . '/post'),
 			dbesc(get_config('system','pubkey'))
 		);
@@ -218,7 +222,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 5');
 		$_SESSION['import_step'] = 5;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
  
 
@@ -239,10 +242,10 @@ function import_account(&$a, $account_id) {
 				dbesc($channel['channel_guid']),
 				dbesc($channel['channel_guid_sig']),
 				dbesc($channel['channel_pubkey']),
-				dbesc($a->get_baseurl() . "/photo/profile/l/" . $channel['channel_id']),
-				dbesc($a->get_baseurl() . "/photo/profile/m/" . $channel['channel_id']),
-				dbesc($a->get_baseurl() . "/photo/profile/s/" . $channel['channel_id']),
-				dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+				dbesc(z_root() . "/photo/profile/l/" . $channel['channel_id']),
+				dbesc(z_root() . "/photo/profile/m/" . $channel['channel_id']),
+				dbesc(z_root() . "/photo/profile/s/" . $channel['channel_id']),
+				dbesc($channel['channel_address'] . '@' . App::get_hostname()),
 				dbesc(z_root() . '/channel/' . $channel['channel_address']),
 				dbesc(z_root() . '/follow?f=&url=%s'),
 				dbesc(z_root() . '/poco/' . $channel['channel_address']),
@@ -255,7 +258,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 6');
 		$_SESSION['import_step'] = 6;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if($completed < 7) {
@@ -316,7 +318,7 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 7');
 		$_SESSION['import_step'] = 7;
-		ref_session_write(session_id(), serialize($_SESSION));
+
 	}
 
 
@@ -331,6 +333,10 @@ function import_account(&$a, $account_id) {
 		$abooks = $data['abook'];
 		if($abooks) {
 			foreach($abooks as $abook) {
+
+				$abconfig = null;
+				if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && count($abook['abconfig']))
+					$abconfig = $abook['abconfig'];
 
 				unset($abook['abook_id']);
 				unset($abook['abook_rating']);
@@ -373,11 +379,21 @@ function import_account(&$a, $account_id) {
 				$friends ++;
 				if(intval($abook['abook_feed']))
 					$feeds ++;
+
+				if($abconfig) {
+					// @fixme does not handle sync of del_abconfig
+					foreach($abconfig as $abc) {
+						if($abc['chan'] === $channel['channel_hash'])
+							set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+					}
+				}
+
+
+
 			}
 		}
 		logger('import step 8');
 		$_SESSION['import_step'] = 8;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 
@@ -427,7 +443,6 @@ function import_account(&$a, $account_id) {
 		}
 		logger('import step 9');
 		$_SESSION['import_step'] = 9;
-		ref_session_write(session_id(), serialize($_SESSION));
 	}
 
 	if(is_array($data['obj']))

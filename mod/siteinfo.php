@@ -12,10 +12,10 @@ function siteinfo_init(&$a) {
 function siteinfo_content(&$a) {
 
 	if(! get_config('system','hidden_version_siteinfo')) {
-		$version = sprintf( t('Version %s'), RED_VERSION );
+		$version = sprintf( t('Version %s'), Zotlabs\Project\System::get_project_version());
 		if(@is_dir('.git') && function_exists('shell_exec')) {
 			$commit = @shell_exec('git log -1 --format="%h"');
-			$tag = get_std_version(); // @shell_exec('git describe --tags --abbrev=0');
+			$tag = Zotlabs\Project\System::get_std_version(); // @shell_exec('git describe --tags --abbrev=0');
 		}
 		if(! isset($commit) || strlen($commit) > 16)
 			$commit = '';
@@ -24,7 +24,7 @@ function siteinfo_content(&$a) {
 	        $version = $commit = '';
 	}
 	$visible_plugins = array();
-	if(is_array($a->plugins) && count($a->plugins)) {
+	if(is_array(App::$plugins) && count(App::$plugins)) {
 		$r = q("select * from addon where hidden = 0");
 		if(count($r))
 			foreach($r as $rr)

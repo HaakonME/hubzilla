@@ -3,6 +3,34 @@ function oembed_replacecb($matches){
 
 	$embedurl=$matches[1];
 
+
+	// site white/black list
+
+	if(($x = get_config('system','embed_deny'))) {
+		$l = explode("\n",$x);
+		if($l) {
+			foreach($l as $ll) {
+				if(trim($ll) && strpos($embedurl,trim($ll)) !== false)
+					return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
+			}
+		}
+	}
+	if(($x = get_config('system','embed_allow'))) {
+		$found = false;
+		$l = explode("\n",$x);
+		if($l) {
+			foreach($l as $ll) {
+				if(trim($ll) && strpos($embedurl,trim($ll)) !== false) {
+					$found = true;
+					break;
+				}
+			}
+		}
+		if(! $found) {
+			return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
+		}
+	}
+
 	// implements a personal embed white/black list for logged in members
 	if(local_channel()) {
 		if(($x = get_pconfig(local_channel(),'system','embed_deny'))) {
@@ -53,7 +81,11 @@ function oembed_fetch_url($embedurl){
 
 	$a = get_app();
 
-	$txt = Cache::get($a->videowidth . $embedurl);
+	$embedurl = str_replace('&amp;','&', $embedurl);
+
+// logger('fetch: ' . $embedurl);
+
+	$txt = Cache::get(App::$videowidth . $embedurl);
 
 	if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
 		$txt = str_replace('http:','https:',$txt);
@@ -78,7 +110,6 @@ function oembed_fetch_url($embedurl){
 		else {
 			// try oembed autodiscovery
 			$redirects = 0;
-
 			$result = z_fetch_url($embedurl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));
 			if($result['success'])
 				$html_text = $result['body'];
@@ -88,12 +119,12 @@ function oembed_fetch_url($embedurl){
 				if ($dom){
 					$xpath = new DOMXPath($dom);
 					$attr = "oembed";
-				
 					$xattr = oe_build_xpath("class","oembed");
+
 					$entries = $xpath->query("//link[@type='application/json+oembed']");
 					foreach($entries as $e){
 						$href = $e->getAttributeNode("href")->nodeValue;
-						$x = z_fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$x = z_fetch_url($href . '&maxwidth=' . App::$videowidth);
 						$txt = $x['body'];
 						break;
 					}
@@ -102,7 +133,7 @@ function oembed_fetch_url($embedurl){
 					$entries = $xpath->query("//link[@type='text/json+oembed']");
 					foreach($entries as $e){
 						$href = $e->getAttributeNode("href")->nodeValue;
-						$x = z_fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$x = z_fetch_url($href . '&maxwidth=' . App::$videowidth);
 						$txt = $x['body'];
 						break;
 					}
@@ -111,7 +142,7 @@ function oembed_fetch_url($embedurl){
 		}
 		
 		if ($txt==false || $txt=="") {
-			$x = array('url' => $embedurl,'videowidth' => $a->videowidth);
+			$x = array('url' => $embedurl,'videowidth' => App::$videowidth);
 			call_hooks('oembed_probe',$x);
 			if(array_key_exists('embed',$x))
 				$txt = $x['embed'];
@@ -121,19 +152,28 @@ function oembed_fetch_url($embedurl){
 		if ($txt[0]!="{") $txt='{"type":"error"}';
 	
 		//save in cache
-		Cache::set($a->videowidth . $embedurl,$txt);
+
+		if(! get_config('system','oembed_cache_disable'))
+			Cache::set(App::$videowidth . $embedurl,$txt);
 
 	}
 
 
 	$j = json_decode($txt);
 	$j->embedurl = $embedurl;
+
+// logger('fetch return: ' . print_r($j,true));
+
 	return $j;
+
+
 }
 	
 function oembed_format_object($j){
 	$a = get_app();
     $embedurl = $j->embedurl;
+
+// logger('format: ' . print_r($j,true));
 
 	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null));
 
@@ -155,7 +195,7 @@ function oembed_format_object($j){
 				
 				}
 				$ret.=replace_macros($tpl, array(
-                    '$baseurl' => $a->get_baseurl(),
+                    '$baseurl' => z_root(),
 					'$embedurl'=>$embedurl,
 					'$escapedhtml'=>base64_encode($jhtml),
 					'$tw'=>$tw,
@@ -173,6 +213,14 @@ function oembed_format_object($j){
 			$ret.="<br>";
 		}; break;  
 		case "link": {
+			if($j->thumbnail_url) {
+				if(is_matrix_url($embedurl)) {
+					$embedurl = zid($embedurl);
+					$j->thumbnail_url = zid($j->thumbnail_url);
+				}
+				$ret = '<a href="' . $embedurl . '" ><img src="' . $j->thumbnail_url . '" alt="thumbnail" /></a><br /><br />';
+			}
+
 			//$ret = "<a href='".$embedurl."'>".$j->title."</a>";
 		}; break;  
 		case "rich": {
@@ -184,23 +232,29 @@ function oembed_format_object($j){
 	// add link to source if not present in "rich" type
 	if (  $j->type!='rich' || !strpos($j->html,$embedurl) ){
 		$embedlink = (isset($j->title))?$j->title:$embedurl;
-		$ret .= '<span class="bookmark-identifier">#^</span>' . "<a href='$embedurl' rel='oembed'>$embedlink</a>";
-		$ret .= "<br>";
+		$ret .= '<br />' . "<a href='$embedurl' rel='oembed'>$embedlink</a>";
+		$ret .= "<br />";
 		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
 		if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
 	} else {
 		// add <a> for html2bbcode conversion
-		$ret .= "<a href='$embedurl' rel='oembed'/>";
+		$ret .= "<br /><a href='$embedurl' rel='oembed'>$embedurl</a>";
 	}
 	$ret.="<br style='clear:left'></span>";
 	return  mb_convert_encoding($ret, 'HTML-ENTITIES', mb_detect_encoding($ret));
 }
 
 function oembed_iframe($src,$width,$height) {
-	if(! $width || strstr($width,'%'))
+	$scroll = ' scrolling="no" ';
+	if(! $width || strstr($width,'%')) {
 		$width = '640';
-	if(! $height || strstr($height,'%'))
+		$scroll = ' scrolling="auto" ';
+	}
+	if(! $height || strstr($height,'%')) {
 		$height = '300';
+		$scroll = ' scrolling="auto" ';
+	}
+
 	// try and leave some room for the description line. 
 	$height = intval($height) + 80;
 	$width  = intval($width) + 40;
@@ -209,7 +263,7 @@ function oembed_iframe($src,$width,$height) {
 
 	// Make sure any children are sandboxed within their own iframe.
 
-	return '<iframe height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' 
+	return '<iframe ' . $scroll . 'height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' 
 		. t('Embedded content') . '</iframe>'; 
 
 }

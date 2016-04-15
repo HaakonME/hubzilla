@@ -5,11 +5,11 @@ function regmod_content(&$a) {
 
 	global $lang;
 
-	$_SESSION['return_url'] = $a->cmd;
+	$_SESSION['return_url'] = App::$cmd;
 
 	if(! local_channel()) {
 		info( t('Please login.') . EOL);
-		$o .= '<br /><br />' . login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
+		$o .= '<br /><br />' . login((App::$config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 		return $o;
 	}
 
@@ -25,10 +25,10 @@ function regmod_content(&$a) {
 	$hash = argv(2);
 
 	if($cmd === 'deny') {
-		if (!user_deny($hash)) killme();
+		if (! account_deny($hash)) killme();
 	}
 
 	if($cmd === 'allow') {
-		if (!user_allow($hash)) killme();
+		if (! account_allow($hash)) killme();
 	}
 }

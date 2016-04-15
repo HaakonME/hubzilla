@@ -8,7 +8,6 @@ function new_channel_init(&$a) {
 
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
-
 	if($cmd === 'autofill.json') {
 		require_once('library/urlify/URLify.php');
 		$result = array('error' => false, 'message' => '');
@@ -59,12 +58,18 @@ function new_channel_init(&$a) {
 
 }
 
-
 function new_channel_post(&$a) {
 
 	$arr = $_POST;
 
-	if(($arr['account_id'] = get_account_id()) === false) {
+	$acc = App::get_account();
+	$arr['account_id'] = get_account_id();
+
+	// prevent execution by delegated channels as well as those not logged in. 
+	// get_account_id() returns the account_id from the session. But App::$account
+	// may point to the original authenticated account. 
+
+	if((! $acc) || ($acc['account_id'] != $arr['account_id'])) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}
@@ -87,38 +92,51 @@ function new_channel_post(&$a) {
 
 }
 
-
-
-
-
-
-
 function new_channel_content(&$a) {
 
-	if(! get_account_id()) {
+	$acc = App::get_account();
+
+	if((! $acc) || $acc['account_id'] != get_account_id()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	$name         = ((x($_REQUEST,'name'))         ? $_REQUEST['name']         :  "" );
-	$nickname     = ((x($_REQUEST,'nickname'))     ? $_REQUEST['nickname']     :  "" );
+	$default_role = '';
+	$aid = get_account_id();
+	if($aid) {
+		$r = q("select count(channel_id) as total from channel where channel_account_id = %d",
+			intval($aid)
+		);
+		if($r && (! intval($r[0]['total']))) {
+			$default_role = get_config('system','default_permissions_role');
+		}
+
+		$limit = account_service_class_fetch(get_account_id(),'total_identities');
+
+		if($r && ($limit !== false)) {
+			$channel_usage_message = sprintf( t("You have created %1$.0f of %2$.0f allowed channels."), $r[0]['total'], $limit);
+		}
+		else {
+			$channel_usage_message = '';
+		}
+	}
+
+	$name = array('name', t('Name or caption'), ((x($_REQUEST,'name')) ? $_REQUEST['name'] : ''), t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group"'));
+	$nickhub = '@' . App::get_hostname();
+	$nickname = array('nickname', t('Choose a short nickname'), ((x($_REQUEST,'nickname')) ? $_REQUEST['nickname'] : ''), sprintf( t('Your nickname will be used to create an easy to remember channel address e.g. nickname%s'), $nickhub));
 	$privacy_role = ((x($_REQUEST,'permissions_role')) ? $_REQUEST['permissions_role'] :  "" );
+	$role = array('permissions_role' , t('Channel role and privacy'), ($privacy_role) ? $privacy_role : 'social', t('Select a channel role with your privacy requirements.') . ' <a href="help/roles" target="_blank">' . t('Read more about roles') . '</a>',get_roles());
 
 	$o = replace_macros(get_markup_template('new_channel.tpl'), array(
-
-		'$title'        => t('Add a Channel'),
-		'$desc'         => t('A channel is your own collection of related web pages. A channel can be used to hold social network profiles, blogs, conversation groups and forums, celebrity pages, and much more. You may create as many channels as your service provider allows.'),
-
-		'$label_name'   => t('Channel Name'),
-		'$help_name'    => t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group" '),
-		'$label_nick'   => t('Choose a short nickname'),
-		'$nick_desc'    => t('Your nickname will be used to create an easily remembered channel address (like an email address) which you can share with others.'),
-		'$label_import' => t('Or <a href="import">import an existing channel</a> from another location'),
+		'$title'        => t('Create Channel'),
+		'$desc'         => t('A channel is your identity on this network. It can represent a person, a blog, or a forum to name a few. Channels can make connections with other channels to share information with highly detailed permissions.'),
+		'$label_import' => t('or <a href="import">import an existing channel</a> from another location.'),
 		'$name'         => $name,
-		'$help_role'    => t('Please choose a channel type (such as social networking or community forum) and privacy requirements so we can select the best permissions for you'),
-		'$role' => array('permissions_role' , t('Channel Type'), ($privacy_role) ? $privacy_role : 'social', '<a href="help/roles" target="_blank">'.t('Read more about roles').'</a>',get_roles()),
+		'$role'		=> $role,
+		'$default_role' => $default_role,
 		'$nickname'     => $nickname,
-		'$submit'       => t('Create')
+		'$submit'       => t('Create'),
+		'$channel_usage_message' => $channel_usage_message
 	));
 
 	return $o;

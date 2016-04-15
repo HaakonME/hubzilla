@@ -54,7 +54,17 @@ class Router {
 			 */
 
 			if(! (\App::$module_loaded)) {
-				if(file_exists("mod/site/{$module}.php")) {
+				$newmod = ucfirst($module);
+logger('0' . "Zotlabs/Module/{$newmod}.php");
+				if(file_exists("Zotlabs/Module/{$newmod}.php")) {
+logger('1' . "Zotlabs/Module/{$newmod}.php");
+					include_once("Zotlabs/Module/{$newmod}.php");
+logger('2');
+					if(class_exists("Zotlabs\\Module\\{$newmod}"))
+						\App::$module_loaded = true;
+logger('3');
+				}
+				elseif(file_exists("mod/site/{$module}.php")) {
 					include_once("mod/site/{$module}.php");
 					\App::$module_loaded = true;
 				}
@@ -122,6 +132,12 @@ class Router {
 		 * Call module functions
 		 */
 
+		$nmod = false;
+
+		$newmod = ucfirst(\App::$module);
+		if(class_exists("Zotlabs\\Module\\{$newmod}"))
+			$nmod = true;
+
 		if(\App::$module_loaded) {
 			\App::$page['page_title'] = \App::$module;
 			$placeholder = '';
@@ -132,6 +148,10 @@ class Router {
 			 * do not provide any presentation details - as themes will not be able
 			 * to over-ride them.
 			 */
+
+			$modname = (($nmod) ? "Zotlabs\\Module\\{$newmod}" : '');
+			if($modname && method_exists($modname,'init'))
+				logger('function_exists: ' . $modname . '->init');
 
 			if(function_exists(\App::$module . '_init')) {
 				$arr = array('init' => true, 'replace' => false);		

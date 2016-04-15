@@ -14,37 +14,38 @@
  */
 function authenticate_success($user_record, $login_initial = false, $interactive = false, $return = false, $update_lastlog = false) {
 
-	$a = get_app();
-
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
+	$lastlog_updated = false;
+
 	if(x($user_record, 'account_id')) {
-		$a->account = $user_record;
+		App::$account = $user_record;
 		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
 
-		if($login_initial || $update_lastlog) {
-			q("update account set account_lastlog = '%s' where account_id = %d",
-				dbesc(datetime_convert()),
-				intval($_SESSION['account_id'])
-			);
-			$a->account['account_lastlog'] = datetime_convert();
-			call_hooks('logged_in', $a->account);
-
-		}
 
 		$uid_to_load = (((x($_SESSION,'uid')) && (intval($_SESSION['uid']))) 
 			? intval($_SESSION['uid']) 
-			: intval($a->account['account_default_channel'])
+			: intval(App::$account['account_default_channel'])
 		);
 
 		if($uid_to_load) {
 			change_channel($uid_to_load);
 		}
 
+		if($login_initial || $update_lastlog) {
+			q("update account set account_lastlog = '%s' where account_id = %d",
+				dbesc(datetime_convert()),
+				intval($_SESSION['account_id'])
+			);
+			App::$account['account_lastlog'] = datetime_convert();
+			$lastlog_updated = true;
+			call_hooks('logged_in', App::$account);
+		}
+
 	}
 
-	if($login_initial) {
+	if(($login_initial) && (! $lastlog_updated)) {
 
 		call_hooks('logged_in', $user_record);
 
@@ -56,7 +57,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		return;
 	}
 
-	if(($a->module !== 'home') && x($_SESSION,'login_return_url') && strlen($_SESSION['login_return_url'])) {
+	if((App::$module !== 'home') && x($_SESSION,'login_return_url') && strlen($_SESSION['login_return_url'])) {
 		$return_url = $_SESSION['login_return_url'];
 
 		// don't let members get redirected to a raw ajax page update - this can happen
@@ -65,14 +66,14 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 			$return_url = '';
 
 		unset($_SESSION['login_return_url']);
-		goaway($a->get_baseurl() . '/' . $return_url);
+		goaway(z_root() . '/' . $return_url);
 	}
 
 	/* This account has never created a channel. Send them to new_channel by default */
 
-	if($a->module === 'login') {
+	if(App::$module === 'login') {
 		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and channel_removed = 0 ",
-			intval($a->account['account_id'])
+			intval(App::$account['account_id'])
 		);
 		if(($r) && (! $r[0]['total']))
 			goaway(z_root() . '/new_channel');
@@ -113,7 +114,7 @@ function change_channel($change_channel) {
 		if($r) {
 			$hash = $r[0]['channel_hash'];
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
-			get_app()->set_channel($r[0]);
+			App::set_channel($r[0]);
 			$_SESSION['theme'] = $r[0]['channel_theme'];
 			$_SESSION['mobile_theme'] = get_pconfig(local_channel(),'system', 'mobile_theme');
 			date_default_timezone_set($r[0]['channel_timezone']);
@@ -124,10 +125,10 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(), strpos(get_app()->get_baseurl(), '://') + 3);
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(z_root(), strpos(z_root(), '://') + 3);
 
-			get_app()->set_observer($x[0]);
-			get_app()->set_perms(get_all_perms(local_channel(), $hash));
+			App::set_observer($x[0]);
+			App::set_perms(get_all_perms(local_channel(), $hash));
 		}
 		if(! is_dir('store/' . $r[0]['channel_address']))
 			@os_mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
@@ -145,7 +146,7 @@ function change_channel($change_channel) {
  * @return string additional SQL where statement
  */
 
-function permissions_sql($owner_id, $remote_observer = null) {
+function permissions_sql($owner_id, $remote_observer = null, $table = '') {
 
 	$local_channel = local_channel();
 
@@ -155,10 +156,14 @@ function permissions_sql($owner_id, $remote_observer = null) {
 	 * default permissions - anonymous user
 	 */
 
-	$sql = " AND allow_cid = '' 
-			 AND allow_gid = '' 
-			 AND deny_cid  = '' 
-			 AND deny_gid  = '' 
+	if($table)
+		$table .= '.';
+
+
+	$sql = " AND {$table}allow_cid = '' 
+			 AND {$table}allow_gid = '' 
+			 AND {$table}deny_cid  = '' 
+			 AND {$table}deny_gid  = '' 
 	";
 
 	/**
@@ -178,7 +183,7 @@ function permissions_sql($owner_id, $remote_observer = null) {
 	 */
 
 	else {
-		$observer = (($remote_observer) ? $remote_observer : get_observer_hash());
+		$observer = ((! is_null($remote_observer)) ? $remote_observer : get_observer_hash());
 		if($observer) {
 			$groups = init_groups_visitor($observer);
 
@@ -190,8 +195,8 @@ function permissions_sql($owner_id, $remote_observer = null) {
 			}
 			$regexop = db_getfunc('REGEXP');
 			$sql = sprintf(
-				" AND ( NOT (deny_cid like '%s' OR deny_gid $regexop '%s')
-				  AND ( allow_cid like '%s' OR allow_gid $regexop '%s' OR ( allow_cid = '' AND allow_gid = '') )
+				" AND ( NOT ({$table}deny_cid like '%s' OR {$table}deny_gid $regexop '%s')
+				  AND ( {$table}allow_cid like '%s' OR {$table}allow_gid $regexop '%s' OR ( {$table}allow_cid = '' AND {$table}allow_gid = '') )
 				  )
 				",
 				dbesc(protect_sprintf( '%<' . $observer . '>%')),
@@ -286,7 +291,7 @@ function scopes_sql($uid,$observer) {
 	if(! is_foreigner($observer))
 		$str .= " or public_policy = 'network: red' ";
 	if(local_channel())
-		$str .= " or public_policy = 'site: " . get_app()->get_hostname() . "' ";
+		$str .= " or public_policy = 'site: " . App::get_hostname() . "' ";
 
 	$ab = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 		dbesc($observer),
@@ -313,7 +318,7 @@ function scopes_sql($uid,$observer) {
  */
 function public_permissions_sql($observer_hash) {
 
-	//$observer = get_app()->get_observer();
+	//$observer = App::get_observer();
 	$groups = init_groups_visitor($observer_hash);
 
 	$gs = '<<>>'; // should be impossible to match
@@ -353,10 +358,9 @@ function public_permissions_sql($observer_hash) {
  *    so this mechanism brings in some damage control (the attacker would be able to forge a request to a form of this type, but not to forms of other types).
  */ 
 function get_form_security_token($typename = '') {
-	$a = get_app();
 
 	$timestamp = time();
-	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $timestamp . $typename);
+	$sec_hash = hash('whirlpool', App::$observer['xchan_guid'] . ((local_channel()) ? App::$channel['channel_prvkey'] : '') . session_id() . $timestamp . $typename);
 
 	return $timestamp . '.' . $sec_hash;
 }
@@ -367,12 +371,10 @@ function check_form_security_token($typename = '', $formname = 'form_security_to
 
 	$max_livetime = 10800; // 3 hours
 
-	$a = get_app();
-
 	$x = explode('.', $hash);
 	if (time() > (IntVal($x[0]) + $max_livetime)) return false;
 
-	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $x[0] . $typename);
+	$sec_hash = hash('whirlpool', App::$observer['xchan_guid'] . ((local_channel()) ? App::$channel['channel_prvkey'] : '') . session_id() . $x[0] . $typename);
 
 	return ($sec_hash == $x[1]);
 }
@@ -382,17 +384,15 @@ function check_form_security_std_err_msg() {
 }
 function check_form_security_token_redirectOnErr($err_redirect, $typename = '', $formname = 'form_security_token') {
 	if (!check_form_security_token($typename, $formname)) {
-		$a = get_app();
-		logger('check_form_security_token failed: user ' . $a->user['guid'] . ' - form element ' . $typename);
+		logger('check_form_security_token failed: user ' . App::$observer['xchan_name'] . ' - form element ' . $typename);
 		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
 		notice( check_form_security_std_err_msg() );
-		goaway($a->get_baseurl() . $err_redirect );
+		goaway(z_root() . $err_redirect );
 	}
 }
 function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'form_security_token') {
 	if (!check_form_security_token($typename, $formname)) {
-		$a = get_app();
-		logger('check_form_security_token failed: user ' . $a->user['guid'] . ' - form element ' . $typename);
+		logger('check_form_security_token failed: user ' . App::$observer['xchan_name'] . ' - form element ' . $typename);
 		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
 		header('HTTP/1.1 403 Forbidden');
 		killme();
@@ -408,7 +408,7 @@ function init_groups_visitor($contact_id) {
 	$r = q("SELECT hash FROM `groups` left join group_member on groups.id = group_member.gid WHERE xchan = '%s' ",
 		dbesc($contact_id)
 	);
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr)
 			$groups[] = $rr['hash'];
 	}

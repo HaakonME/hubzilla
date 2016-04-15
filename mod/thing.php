@@ -14,8 +14,7 @@ function thing_init(&$a) {
 	if(! local_channel())
 		return;
 
-	$account_id = $a->get_account();
-	$channel    = $a->get_channel();
+	$channel    = App::get_channel();
 
 	$term_hash = (($_REQUEST['term_hash']) ? $_REQUEST['term_hash'] : '');
 
@@ -66,7 +65,7 @@ function thing_init(&$a) {
 	if((! $name) || (! $translated_verb))
 		return;
 
-	$acl = new AccessList($channel);
+	$acl = new Zotlabs\Access\AccessList($channel);
 
 	if(array_key_exists('contact_allow',$_REQUEST)
 		|| array_key_exists('group_allow',$_REQUEST)
@@ -265,14 +264,14 @@ function thing_content(&$a) {
 		}
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	if(! (local_channel() && $channel)) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	$acl = new AccessList($channel);
+	$acl = new Zotlabs\Access\AccessList($channel);
 	$channel_acl = $acl->get();
 
 	$lockstate = (($acl->is_private()) ? 'lock' : 'unlock');

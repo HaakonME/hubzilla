@@ -1,7 +1,7 @@
 <?php
 
 require_once('include/security.php');
-require_once('bbcode.php');
+require_once('include/bbcode.php');
 
 function share_init(&$a) {
 
@@ -45,7 +45,7 @@ function share_init(&$a) {
 	$is_photo = (($r[0]['obj_type'] === ACTIVITY_OBJ_PHOTO) ? true : false);
 	if($is_photo) {
 		$object = json_decode($r[0]['object'],true);
-		$photo_bb = $object['bbcode'];
+		$photo_bb = $object['body'];
 	}
 
 	if (strpos($r[0]['body'], "[/share]") !== false) {
@@ -69,7 +69,7 @@ function share_init(&$a) {
 		killme();
 	}
 
-	$observer = $a->get_observer();
+	$observer = App::get_observer();
 	$parsed = $observer['xchan_url'];
 	if($parsed) {
 		$post_url = $parsed['scheme'] . ':' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '')

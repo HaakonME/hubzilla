@@ -11,6 +11,7 @@ require_once('include/attach.php');
 function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='',$expires = ''){ 
 
 	$ret = array('success' => false);
+	$is_reply = false;
 
 	$a = get_app();
 	$observer_hash = get_observer_hash();
@@ -37,7 +38,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			$channel = $r[0];
 	}
 	else {
-		$channel = get_app()->get_channel();
+		$channel = App::get_channel();
 	}
 
 	if(! $channel) {
@@ -51,6 +52,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	$conv_guid = '';
 
 	if(strlen($replyto)) {
+		$is_reply = true;
 		$r = q("select conv_guid from mail where channel_id = %d and ( mid = '%s' or parent_mid = '%s' ) limit 1",
 			intval(local_channel()),
 			dbesc($replyto),
@@ -73,7 +75,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		if($recip)
 			$recip_handle = $recip[0]['xchan_addr'];
 
-		$sender_handle = $channel['channel_address'] . '@' . get_app()->get_hostname();
+		$sender_handle = $channel['channel_address'] . '@' . App::get_hostname();
 
 		$handles = $recip_handle . ';' . $sender_handle;
 
@@ -122,7 +124,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		$dups = false;
 		$hash = random_string();
 
-		$mid = $hash . '@' . get_app()->get_hostname();
+		$mid = $hash . '@' . App::get_hostname();
 
 		$r = q("SELECT id FROM mail WHERE mid = '%s' LIMIT 1",
 			dbesc($mid));
@@ -167,7 +169,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 			$r = attach_by_hash_nodata($hash,$rev);
 			if($r['success']) {
 				$attachments[] = array(
-					'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+					'href'     => z_root() . '/attach/' . $r['data']['hash'],
 					'length'   =>  $r['data']['filesize'],
 					'type'     => $r['data']['filetype'],
 					'title'    => urlencode($r['data']['filename']),
@@ -187,8 +189,8 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	
 
 
-	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
-		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires, mail_isreply )
+		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
 		intval($channel['channel_account_id']),
 		dbesc($conv_guid),
 		intval(1),
@@ -201,7 +203,8 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($mid),
 		dbesc($replyto),
 		dbesc(datetime_convert()),
-		dbescdate($expires)
+		dbescdate($expires),
+		intval($is_reply)
 	);
 
 	// verify the save
@@ -222,7 +225,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	if(count($images)) {
 		foreach($images as $image) {
-			if(! stristr($image,$a->get_baseurl() . '/photo/'))
+			if(! stristr($image,z_root() . '/photo/'))
 				continue;
 			$image_uri = substr($image,strrpos($image,'/') + 1);
 			$image_uri = substr($image_uri,0, strpos($image_uri,'-'));

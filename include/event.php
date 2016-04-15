@@ -67,7 +67,7 @@ function ical_wrapper($ev) {
 	$o .= "BEGIN:VCALENDAR";
 	$o .= "\r\nVERSION:2.0";
 	$o .= "\r\nMETHOD:PUBLISH";
-	$o .= "\r\nPRODID:-//" . get_config('system','sitename') . "//" . PLATFORM_NAME . "//" . strtoupper(get_app()->language). "\r\n";
+	$o .= "\r\nPRODID:-//" . get_config('system','sitename') . "//" . Zotlabs\Project\System::get_platform_name() . "//" . strtoupper(App::$language). "\r\n";
 	if(array_key_exists('start', $ev))
 		$o .= format_event_ical($ev);
 	else {
@@ -361,7 +361,7 @@ function event_store_event($arr) {
 		if(array_key_exists('external_id',$arr))
 			$hash = $arr['external_id'];
 		else
-			$hash = random_string() . '@' . get_app()->get_hostname();
+			$hash = random_string() . '@' . App::get_hostname();
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
 			adjust,nofinish, event_status, event_status_date, event_percent, event_repeat, event_sequence, event_priority, allow_cid,allow_gid,deny_cid,deny_gid)
@@ -438,6 +438,17 @@ function event_addtocal($item_id, $uid) {
 
 		if($item['resource_type'] === 'event') {
 			$ev['event_hash'] = $item['resource_id'];
+		}
+
+		if($ev->private)
+			$ev['allow_cid'] = '<' . $channel['channel_hash'] . '>'; 
+		else {
+			$acl = new Zotlabs\Access\AccessList($channel);
+			$x = $acl->get();
+			$ev['allow_cid'] = $x['allow_cid'];
+			$ev['allow_gid'] = $x['allow_gid'];
+			$ev['deny_cid']  = $x['deny_cid'];
+			$ev['deny_gid']  = $x['deny_gid'];
 		}
 
 		$event = event_store_event($ev);

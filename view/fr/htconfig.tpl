@@ -10,6 +10,9 @@ $db_port = '{{$dbport}}';
 $db_user = '{{$dbuser}}';
 $db_pass = '{{$dbpass}}';
 $db_data = '{{$dbdata}}';
+$db_type = '{{$dbtype}}'; // an integer. 0 or unset for mysql, 1 for postgres
+
+define( 'UNO', {{$uno}} );
 
 /*
  * Note: Plusieurs de ces réglages seront disponibles via le panneau d'administration
@@ -30,9 +33,18 @@ $default_timezone = '{{$timezone}}';
 
 // Quel sera le nom de votre site?
 
-$a->config['system']['baseurl'] = '{{$siteurl}}';
-$a->config['system']['sitename'] = "Hubzilla";
-$a->config['system']['location_hash'] = '{{$site_id}}';
+App::$config['system']['baseurl'] = '{{$siteurl}}';
+App::$config['system']['sitename'] = "Hubzilla";
+App::$config['system']['location_hash'] = '{{$site_id}}';
+
+
+// These lines set additional security headers to be sent with all responses
+// You may wish to set transport_security_header to 0 if your server already sends
+// this header. content_security_policy may need to be disabled if you wish to
+// run the piwik analytics plugin or include other offsite resources on a page
+
+App::$config['system']['transport_security_header'] = 1;
+App::$config['system']['content_security_policy'] = 1;
 
 // Vos choix sont REGISTER_OPEN, REGISTER_APPROVE, ou REGISTER_CLOSED.
 // Soyez certains de créer votre compte personnel avant de déclarer
@@ -41,21 +53,21 @@ $a->config['system']['location_hash'] = '{{$site_id}}';
 // REGISTER_APPROVE requiert la configuration de 'admin_email' avec l'adresse de courriel
 // d'un membre déjà inscrit qui pourra autoriser et/ou approuver/supprimer la demande.
 
-$a->config['system']['register_policy'] = REGISTER_OPEN;
-$a->config['system']['register_text'] = '';
-$a->config['system']['admin_email'] = '{{$adminmail}}';
+App::$config['system']['register_policy'] = REGISTER_OPEN;
+App::$config['system']['register_text'] = '';
+App::$config['system']['admin_email'] = '{{$adminmail}}';
 
 // taille maximale pour l'importation d'un message, 0 est illimité
 
-$a->config['system']['max_import_size'] = 200000;
+App::$config['system']['max_import_size'] = 200000;
 
 // taille maximale pour le téléversement de photos
 
-$a->config['system']['maximagesize'] = 8000000;
+App::$config['system']['maximagesize'] = 8000000;
 
 // Lien absolu vers le compilateur PHP
 
-$a->config['system']['php_path'] = '{{$phpath}}';
+App::$config['system']['php_path'] = '{{$phpath}}';
 
 // configurez la façon dont votre site communique avec les autres serveurs. [Répertoire des membres inscrits à la Matrice]
 // DIRECTORY_MODE_NORMAL     = client du répertoire de membres, nous vous trouverons un répertoire accessible autre serveur.
@@ -63,9 +75,9 @@ $a->config['system']['php_path'] = '{{$phpath}}';
 // DIRECTORY_MODE_PRIMARY    = répertoire des membres principal.
 // DIRECTORY_MODE_STANDALONE = "autonome/déconnecté" ou répertoire de membres privés
 
-$a->config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
+App::$config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
 
 // Thème par défaut
 
-$a->config['system']['theme'] = 'redbasic';
+App::$config['system']['theme'] = 'redbasic';
 

@@ -2,7 +2,10 @@
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
  
     <Subject>{{$accturi}}</Subject>
- 
+	{{if $aliases}}{{foreach $aliases as $a}}
+	<Alias>{{$a}}</Alias>   
+	{{/foreach}}{{/if}}
+
     <Link rel="http://schemas.google.com/g/2010#updates-from" 
           type="application/atom+xml" 
           href="{{$atom}}" />
@@ -17,6 +20,8 @@
     <Link rel="http://microformats.org/profile/hcard"
           type="text/html"
           href="{{$hcard_url}}" />
+    <Link rel="http://ostatus.org/schema/1.0/subscribe"
+          template="{{$subscribe}}" />
 
    <Link rel="magic-public-key"
           href="{{$modexp}}" />

@@ -67,7 +67,7 @@ function profile_photo_init(&$a) {
 		return;
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 	profile_load($a,$channel['channel_address']);
 
 }
@@ -171,7 +171,7 @@ function profile_photo_post(&$a) {
 					return;
 				}
 
-				$channel = $a->get_channel();
+				$channel = App::get_channel();
 
 				// If setting for the default profile, unset the profile photo flag from any other photos I own
 
@@ -189,8 +189,8 @@ function profile_photo_post(&$a) {
 				}
 				else {
 					$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d",
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-4'),
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-5'),
+						dbesc(z_root() . '/photo/' . $base_image['resource_id'] . '-4'),
+						dbesc(z_root() . '/photo/' . $base_image['resource_id'] . '-5'),
 						intval($_REQUEST['profile']),
 						intval(local_channel())
 					);
@@ -225,7 +225,7 @@ function profile_photo_post(&$a) {
 				notice( t('Unable to process image') . EOL);
 		}
 
-		goaway($a->get_baseurl() . '/profiles');
+		goaway(z_root() . '/profiles');
 		return; // NOTREACHED
 	}
 
@@ -236,7 +236,7 @@ function profile_photo_post(&$a) {
 
 	require_once('include/attach.php');
 
-	$res = attach_store($a->get_channel(), get_observer_hash(), '', array('album' => t('Profile Photos'), 'hash' => $hash));
+	$res = attach_store(App::get_channel(), get_observer_hash(), '', array('album' => t('Profile Photos'), 'hash' => $hash));
 
 	logger('attach_store: ' . print_r($res,true));
 
@@ -274,58 +274,6 @@ function profile_photo_post(&$a) {
 	
 }
 
-function send_profile_photo_activity($channel,$photo,$profile) {
-
-	// for now only create activities for the default profile
-
-	if(! intval($profile['is_default']))
-		return;
-
-	$arr = array();
-	$arr['item_thread_top'] = 1;
-	$arr['item_origin'] = 1;
-	$arr['item_wall'] = 1;
-	$arr['obj_type'] = ACTIVITY_OBJ_PHOTO;
-	$arr['verb'] = ACTIVITY_UPDATE;
-
-	$arr['object'] = json_encode(array(
-		'type' => $arr['obj_type'],
-		'id' => z_root() . '/photo/profile/l/' . $channel['channel_id'],
-		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/profile/l/' . $channel['channel_id'])
-	));
-
-	if(stripos($profile['gender'],t('female')) !== false)
-		$t = t('%1$s updated her %2$s');
-	elseif(stripos($profile['gender'],t('male')) !== false)
-		$t = t('%1$s updated his %2$s');
-	else
-		$t = t('%1$s updated their %2$s');
-
-	$ptext = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' . t('profile photo') . '[/zrl]';
-
-	$ltext = '[zrl=' . z_root() . '/profile/' . $channel['channel_address'] . ']' . '[zmg=150x150]' . z_root() . '/photo/' . $photo['resource_id'] . '-4[/zmg][/zrl]'; 
-
-	$arr['body'] = sprintf($t,$channel['channel_name'],$ptext) . "\n\n" . $ltext;
-
-	$acl = new AccessList($channel);
-	$x = $acl->get();
-	$arr['allow_cid'] = $x['allow_cid'];
-
-	$arr['allow_gid'] = $x['allow_gid'];
-	$arr['deny_cid'] = $x['deny_cid'];
-	$arr['deny_gid'] = $x['deny_gid'];
-
-	$arr['uid'] = $channel['channel_id'];
-	$arr['aid'] = $channel['channel_account_id'];
-
-	$arr['owner_xchan'] = $channel['channel_hash'];
-	$arr['author_xchan'] = $channel['channel_hash'];
-
-	post_activity_item($arr);
-
-
-}
-
 
 /* @brief Generate content of profile-photo view
  *
@@ -342,7 +290,7 @@ function profile_photo_content(&$a) {
 		return;
 	}
 
-	$channel = $a->get_channel();
+	$channel = App::get_channel();
 
 	$newuser = false;
 
@@ -397,7 +345,7 @@ function profile_photo_content(&$a) {
 
 			profile_photo_set_profile_perms(); //Reset default photo permissions to public
 			proc_run('php','include/directory.php',local_channel());
-			goaway($a->get_baseurl() . '/profiles');
+			goaway(z_root() . '/profiles');
 		}
 
 		$r = q("SELECT `data`, `type`, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
@@ -441,20 +389,22 @@ function profile_photo_content(&$a) {
 		intval(local_channel())
 	);
 
-	if(! x($a->data,'imagecrop')) {
+	if(! x(App::$data,'imagecrop')) {
 
 		$tpl = get_markup_template('profile_photo.tpl');
 
 		$o .= replace_macros($tpl,array(
-			'$user' => $a->channel['channel_address'],
+			'$user' => App::$channel['channel_address'],
 			'$lbl_upfile' => t('Upload File:'),
 			'$lbl_profiles' => t('Select a profile:'),
 			'$title' => t('Upload Profile Photo'),
 			'$submit' => t('Upload'),
 			'$profiles' => $profiles,
+			'$single' => ((count($profiles) == 1) ? true : false),
+			'$profile0' => $profiles[0],
 			'$form_security_token' => get_form_security_token("profile_photo"),
 // FIXME - yuk  
-			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . $a->get_baseurl() . '">' . t('skip this step') . '</a>' : '<a href="'. $a->get_baseurl() . '/photos/' . $a->channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
+			'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . z_root() . '">' . t('skip this step') . '</a>' : '<a href="'. z_root() . '/photos/' . App::$channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
 		));
 		
 		call_hooks('profile_photo_content_end', $o);
@@ -462,14 +412,14 @@ function profile_photo_content(&$a) {
 		return $o;
 	}
 	else {
-		$filename = $a->data['imagecrop'] . '-' . $a->data['imagecrop_resolution'];
-		$resolution = $a->data['imagecrop_resolution'];
+		$filename = App::$data['imagecrop'] . '-' . App::$data['imagecrop_resolution'];
+		$resolution = App::$data['imagecrop_resolution'];
 		$tpl = get_markup_template("cropbody.tpl");
 		$o .= replace_macros($tpl,array(
 			'$filename' => $filename,
 			'$profile' => intval($_REQUEST['profile']),
-			'$resource' => $a->data['imagecrop'] . '-' . $a->data['imagecrop_resolution'],
-			'$image_url' => $a->get_baseurl() . '/photo/' . $filename,
+			'$resource' => App::$data['imagecrop'] . '-' . App::$data['imagecrop_resolution'],
+			'$image_url' => z_root() . '/photo/' . $filename,
 			'$title' => t('Crop Image'),
 			'$desc' => t('Please adjust the image cropping for optimum viewing.'),
 			'$form_security_token' => get_form_security_token("profile_photo"),
@@ -502,16 +452,16 @@ function profile_photo_crop_ui_head(&$a, $ph, $hash, $smallest){
 	$width  = $ph->getWidth();
 	$height = $ph->getHeight();
 
-	if($width < 300 || $height < 300) {
-		$ph->scaleImageUp(200);
+	if($width < 500 || $height < 500) {
+		$ph->scaleImageUp(400);
 		$width  = $ph->getWidth();
 		$height = $ph->getHeight();
 	}
 
 
-	$a->data['imagecrop'] = $hash;
-	$a->data['imagecrop_resolution'] = $smallest;
-	$a->page['htmlhead'] .= replace_macros(get_markup_template("crophead.tpl"), array());
+	App::$data['imagecrop'] = $hash;
+	App::$data['imagecrop_resolution'] = $smallest;
+	App::$page['htmlhead'] .= replace_macros(get_markup_template("crophead.tpl"), array());
 	return;
 }
 

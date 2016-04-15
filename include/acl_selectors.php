@@ -23,7 +23,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	// e.g. 'network_pre_group_deny', 'profile_pre_group_allow'
 
-	call_hooks($a->module . '_pre_' . $selname, $arr);
+	call_hooks(App::$module . '_pre_' . $selname, $arr);
 
 	if($r) {
 		foreach($r as $rr) {
@@ -39,7 +39,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 	}
 	$o .= "</select>\r\n";
 
-	call_hooks($a->module . '_post_' . $selname, $o);
+	call_hooks(App::$module . '_post_' . $selname, $o);
 
 
 	return $o;
@@ -127,7 +127,7 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 
 	// e.g. 'network_pre_contact_deny', 'profile_pre_contact_allow'
 
-	call_hooks($a->module . '_pre_' . $selname, $arr);
+	call_hooks(App::$module . '_pre_' . $selname, $arr);
 
 	if(count($r)) {
 		foreach($r as $rr) {
@@ -145,7 +145,7 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 
 	$o .= "</select>\r\n";
 
-	call_hooks($a->module . '_post_' . $selname, $o);
+	call_hooks(App::$module . '_post_' . $selname, $o);
 
 	return $o;
 }*/
@@ -182,7 +182,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	// e.g. 'network_pre_contact_deny', 'profile_pre_contact_allow'
 
-	call_hooks($a->module . '_pre_' . $selname, $arr);
+	call_hooks(App::$module . '_pre_' . $selname, $arr);
 
 	if($r) {
 		foreach($r as $rr) {
@@ -200,7 +200,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	$o .= "</select>\r\n";
 
-	call_hooks($a->module . '_post_' . $selname, $o);
+	call_hooks(App::$module . '_post_' . $selname, $o);
 
 	return $o;
 }
@@ -210,9 +210,12 @@ function fixacl(&$item) {
 	$item = str_replace(array('<','>'),array('',''),$item);
 }
 
-function populate_acl($defaults = null,$show_jotnets = true) {
+function populate_acl($defaults = null,$show_jotnets = true, $showall = '') {
 
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
+
+	if(! $showall)
+		$showall = t('Visible to your default audience');
 
 	if(is_array($defaults)) {
 		$allow_cid = ((strlen($defaults['allow_cid'])) 
@@ -231,22 +234,21 @@ function populate_acl($defaults = null,$show_jotnets = true) {
 	
 	$jotnets = '';
 	if($show_jotnets) {
-logger('jot_networks');
 		call_hooks('jot_networks', $jotnets);
 	}
 
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
-		'$showall'=> t("Visible to your default audience"),
-		'$show'		 => t("Show"),
-		'$hide'		 => t("Don't show"),
-		'$allowcid' => json_encode($allow_cid),
-		'$allowgid' => json_encode($allow_gid),
-		'$denycid' => json_encode($deny_cid),
-		'$denygid' => json_encode($deny_gid),
-		'$jnetModalTitle' => t('Other networks and post services'),
-		'$jotnets' => $jotnets,
-		'$aclModalTitle' => t('Permissions'),
+		'$showall'         => $showall,
+		'$show'	           => t("Show"),
+		'$hide'	           => t("Don't show"),
+		'$allowcid'        => json_encode($allow_cid),
+		'$allowgid'        => json_encode($allow_gid),
+		'$denycid'         => json_encode($deny_cid),
+		'$denygid'         => json_encode($deny_gid),
+		'$jnetModalTitle'  => t('Other networks and post services'),
+		'$jotnets'         => $jotnets,
+		'$aclModalTitle'   => t('Permissions'),
 		'$aclModalDismiss' => t('Close')
 	));
 

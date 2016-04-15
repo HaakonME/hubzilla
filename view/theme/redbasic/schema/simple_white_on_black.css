@@ -5,6 +5,7 @@
 
 .vcard, #contact-block, .widget {
 	background-color: transparent;
+	border: none;
 	border-bottom: 1px solid #fff;
 }
 
@@ -69,6 +70,10 @@
 
 .modal-content {
     background-color: #000;
+}
+
+a.btn, aside a {
+	font-weight: 400 !important;
 }
 
 .btn-default {
@@ -257,4 +262,20 @@ pre {
   }
 }
 
+#profile-jot-wrapper {
+	background-color: inherit;
+	border: none;
+}
 
+.nav-tabs.nav-justified {
+	background-color: inherit;
+	border: none;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1), .table-hover > tbody > tr:hover {
+	background-color: #030303;
+}
+
+.table > tbody > tr > td {
+	border-color: #FFF;
+}

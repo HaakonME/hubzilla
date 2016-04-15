@@ -10,6 +10,7 @@ function pdledit_post(&$a) {
 		goaway(z_root() . '/pdledit/' . $_REQUEST['module']);
 	}
 	set_pconfig(local_channel(),'system','mod_' . $_REQUEST['module'] . '.pdl',escape_tags($_REQUEST['content']));
+	build_sync_packet();
 	info( t('Layout updated.') . EOL);
 	goaway(z_root() . '/pdledit/' . $_REQUEST['module']);
 }
@@ -25,6 +26,7 @@ function pdledit_content(&$a) {
 	if(argc() > 1)
 		$module = 'mod_' . argv(1) . '.pdl';
 	else {
+		$o .= '<div class="generic-content-wrapper-styled">';
 		$o .= '<h1>' . t('Edit System Page Description') . '</h1>';
 		$files = glob('mod/*');
 		if($files) {
@@ -37,6 +39,8 @@ function pdledit_content(&$a) {
 			}
 		}
 
+                $o .= '</div>';
+		
 		// list module pdl files
 		return $o;
 	}

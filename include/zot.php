@@ -11,7 +11,6 @@
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
-require_once('include/DReport.php');
 require_once('include/queue_fn.php');
 
 
@@ -142,7 +141,7 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 			$data[$k] = $v;
 	}
 
-	logger('zot_build_packet: ' . print_r($data,true), LOGGER_DATA);
+	logger('zot_build_packet: ' . print_r($data,true), LOGGER_DATA, LOG_DEBUG);
 
 	// Hush-hush ultra top-secret mode
 
@@ -182,7 +181,7 @@ function zot_finger($webbie, $channel = null, $autofallback = true) {
 
 	if (strpos($webbie,'@') === false) {
 		$address = $webbie;
-		$host = get_app()->get_hostname();
+		$host = App::get_hostname();
 	} else {
 		$address = substr($webbie,0,strpos($webbie,'@'));
 		$host = substr($webbie,strpos($webbie,'@')+1);
@@ -194,7 +193,7 @@ function zot_finger($webbie, $channel = null, $autofallback = true) {
 		logger('zot_finger: no address :' . $webbie);
 		return array('success' => false);
 	}
-	logger('using xchan_addr: ' . $xchan_addr, LOGGER_DATA);
+	logger('using xchan_addr: ' . $xchan_addr, LOGGER_DATA, LOG_DEBUG);
 
 	// potential issue here; the xchan_addr points to the primary hub.
 	// The webbie we were called with may not, so it might not be found
@@ -211,7 +210,7 @@ function zot_finger($webbie, $channel = null, $autofallback = true) {
 
 		if ($r[0]['hubloc_network'] && $r[0]['hubloc_network'] !== 'zot') {
 			logger('zot_finger: alternate network: ' . $webbie);
-			logger('url: '.$url.', net: '.var_export($r[0]['hubloc_network'],true), LOGGER_DATA);
+			logger('url: '.$url.', net: '.var_export($r[0]['hubloc_network'],true), LOGGER_DATA, LOG_DEBUG);
 			return array('success' => false);
 		}
 	} else {
@@ -288,9 +287,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 		return true;
 	}
 
-	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA);
+	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA, LOG_DEBUG);
 	if ($channel)
-		logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA);
+		logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA, LOG_DEBUG);
 
 	$url = null;
 
@@ -353,7 +352,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 	$result = z_post_url($url . $rhs,$postvars);
 
-	logger('zot_refresh: zot-info: ' . print_r($result,true), LOGGER_DATA);
+	logger('zot_refresh: zot-info: ' . print_r($result,true), LOGGER_DATA, LOG_DEBUG);
 
 	if ($result['success']) {
 
@@ -381,7 +380,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					$channel['channel_prvkey']);
 				if($permissions)
 					$permissions = json_decode($permissions,true);
-				logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
+				logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA, LOG_DEBUG);
 			}
 			else
 				$permissions = $j['permissions'];
@@ -523,6 +522,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 						unset($new_connection[0]['abook_id']);
 						unset($new_connection[0]['abook_account']);
 						unset($new_connection[0]['abook_channel']);
+
+						$abconfig = load_abconfig($channel['channel_hash'],$new_connection['abook_xchan']);
+						if($abconfig)
+							$new_connection['abconfig'] = $abconfig;
+
 						build_sync_packet($channel['channel_id'], array('abook' => $new_connection));
 					}
 				}
@@ -614,7 +618,7 @@ function zot_register_hub($arr) {
 
 		$x = z_fetch_url($url);
 
-		logger('zot_register_hub: ' . print_r($x,true), LOGGER_DATA);
+		logger('zot_register_hub: ' . print_r($x,true), LOGGER_DATA, LOG_DEBUG);
 
 		if($x['success']) {
 			$record = json_decode($x['body'],true);
@@ -754,8 +758,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 				dbesc($xchan_hash)
 			);
 
-			logger('import_xchan: update: existing: ' . print_r($r[0],true), LOGGER_DATA);
-			logger('import_xchan: update: new: ' . print_r($arr,true), LOGGER_DATA);
+			logger('import_xchan: update: existing: ' . print_r($r[0],true), LOGGER_DATA, LOG_DEBUG);
+			logger('import_xchan: update: new: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
 			$what .= 'xchan ';
 			$changed = true;
 		}
@@ -937,7 +941,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	}
 
 	if(($changed) || ($ud_flags == UPDATE_FLAGS_FORCED)) {
-		$guid = random_string() . '@' . get_app()->get_hostname();
+		$guid = random_string() . '@' . App::get_hostname();
 		update_modtime($xchan_hash,$guid,$address,$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
 	}
@@ -955,7 +959,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		$ret['hash'] = $xchan_hash;
 	}
 
-	logger('import_xchan: result: ' . print_r($ret,true), LOGGER_DATA);
+	logger('import_xchan: result: ' . print_r($ret,true), LOGGER_DATA, LOG_DEBUG);
 	return $ret;
 }
 
@@ -980,7 +984,7 @@ function zot_process_response($hub, $arr, $outq) {
 
 	if (! $x) {
 		logger('zot_process_response: No json from ' . $hub);
-		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA);
+		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA, LOG_DEBUG);
 	}
 
 	if(is_array($x) && array_key_exists('delivery_report',$x) && is_array($x['delivery_report'])) {
@@ -1015,7 +1019,7 @@ function zot_process_response($hub, $arr, $outq) {
 	// async messages remain in the queue until processed.
 
 	if(intval($outq['outq_async']))
-		queue_set_delivered($outq['outq_hash'],$outq['outq_channel']);
+		remove_queue_item($outq['outq_hash'],$outq['outq_channel']);
 
 	logger('zot_process_response: ' . print_r($x,true), LOGGER_DEBUG);
 }
@@ -1037,7 +1041,7 @@ function zot_process_response($hub, $arr, $outq) {
  */
 function zot_fetch($arr) {
 
-	logger('zot_fetch: ' . print_r($arr,true), LOGGER_DATA);
+	logger('zot_fetch: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
 
 	$url = $arr['sender']['url'] . $arr['callback'];
 
@@ -1134,7 +1138,7 @@ function zot_import($arr, $sender_url) {
 				$i['notify'] = json_decode(crypto_unencapsulate($i['notify'],get_config('system','prvkey')),true);
 			}
 
-			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);
+			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA, LOG_DEBUG);
 
 			$hub = zot_gethub($i['notify']['sender']);
 			if((! $hub) || ($hub['hubloc_url'] != $sender_url)) {
@@ -1151,7 +1155,7 @@ function zot_import($arr, $sender_url) {
 
 			if(array_key_exists('message',$i) && array_key_exists('type',$i['message']) && $i['message']['type'] === 'rating') {
 				// rating messages are processed only by directory servers
-				logger('Rating received: ' . print_r($arr,true), LOGGER_DATA);
+				logger('Rating received: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
 				$result = process_rating_delivery($i['notify']['sender'],$i['message']);
 				continue;
 			}
@@ -1261,8 +1265,8 @@ function zot_import($arr, $sender_url) {
 						continue;
 					}
 
-					logger('Activity received: ' . print_r($arr,true), LOGGER_DATA);
-					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					logger('Activity received: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
+					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA, LOG_DEBUG);
 
 					$relay = ((array_key_exists('flags',$i['message']) && in_array('relay',$i['message']['flags'])) ? true : false);
 					$result = process_delivery($i['notify']['sender'],$arr,$deliveries,$relay,false,$message_request);
@@ -1270,16 +1274,16 @@ function zot_import($arr, $sender_url) {
 				elseif($i['message']['type'] === 'mail') {
 					$arr = get_mail_elements($i['message']);
 
-					logger('Mail received: ' . print_r($arr,true), LOGGER_DATA);
-					logger('Mail recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					logger('Mail received: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
+					logger('Mail recipients: ' . print_r($deliveries,true), LOGGER_DATA, LOG_DEBUG);
 
 					$result = process_mail_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
 				elseif($i['message']['type'] === 'profile') {
 					$arr = get_profile_elements($i['message']);
 
-					logger('Profile received: ' . print_r($arr,true), LOGGER_DATA);
-					logger('Profile recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					logger('Profile received: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
+					logger('Profile recipients: ' . print_r($deliveries,true), LOGGER_DATA, LOG_DEBUG);
 
 					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
@@ -1288,16 +1292,16 @@ function zot_import($arr, $sender_url) {
 
 					$arr = $i['message'];
 
-					logger('Channel sync received: ' . print_r($arr,true), LOGGER_DATA);
-					logger('Channel sync recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					logger('Channel sync received: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
+					logger('Channel sync recipients: ' . print_r($deliveries,true), LOGGER_DATA, LOG_DEBUG);
 
 					$result = process_channel_sync_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
 				elseif($i['message']['type'] === 'location') {
 					$arr = $i['message'];
 
-					logger('Location message received: ' . print_r($arr,true), LOGGER_DATA);
-					logger('Location message recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					logger('Location message received: ' . print_r($arr,true), LOGGER_DATA, LOG_DEBUG);
+					logger('Location message recipients: ' . print_r($deliveries,true), LOGGER_DATA, LOG_DEBUG);
 
 					$result = process_location_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
@@ -1483,7 +1487,7 @@ function public_recips($msg) {
 		}
 	}
 
-	logger('public_recips: ' . print_r($r,true), LOGGER_DATA);
+	logger('public_recips: ' . print_r($r,true), LOGGER_DATA, LOG_DEBUG);
 	return $r;
 }
 
@@ -1501,7 +1505,7 @@ function public_recips($msg) {
  */
 function allowed_public_recips($msg) {
 
-	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA);
+	logger('allowed_public_recips: ' . print_r($msg,true),LOGGER_DATA, LOG_DEBUG);
 
 	if(array_key_exists('public_scope',$msg['message']))
 		$scope = $msg['message']['public_scope'];
@@ -1523,7 +1527,7 @@ function allowed_public_recips($msg) {
 		return $recips;
 
 	if(strpos($scope,'site:') === 0) {
-		if(($scope === 'site: ' . get_app()->get_hostname()) && ($msg['notify']['sender']['url'] === z_root()))
+		if(($scope === 'site: ' . App::get_hostname()) && ($msg['notify']['sender']['url'] === z_root()))
 			return $recips;
 		else
 			return array();
@@ -1589,7 +1593,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 	foreach($deliveries as $d) {
 		$local_public = $public;
 
-		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+		$DR = new Zotlabs\Zot\DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
 
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
@@ -1602,7 +1606,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		}
 
 		$channel = $r[0];
-		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . App::get_hostname() . '>');
 
 		/* blacklisted channels get a permission denied, no special message to tip them off */
 
@@ -2068,7 +2072,7 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 
 	foreach($deliveries as $d) {
 
-		$DR = new DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
+		$DR = new Zotlabs\Zot\DReport(z_root(),$sender['hash'],$d['hash'],$arr['mid']);
 
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
@@ -2081,7 +2085,7 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 		}
 
 		$channel = $r[0];
-		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . App::get_hostname() . '>');
 
 		/* blacklisted channels get a permission denied, no special message to tip them off */
 
@@ -2223,11 +2227,67 @@ function process_location_delivery($sender,$arr,$deliveries) {
 		$x = sync_locations($sender,$arr,true);
 		logger('process_location_delivery: results: ' . print_r($x,true), LOGGER_DEBUG);
 		if($x['changed']) {
-			$guid = random_string() . '@' . get_app()->get_hostname();
+			$guid = random_string() . '@' . App::get_hostname();
 			update_modtime($sender['hash'],$sender['guid'],$arr['locations'][0]['address'],UPDATE_FLAGS_UPDATED);
 		}
 	}
 }
+
+/**
+ * @brief checks for a moved UNO channel and sets the channel_moved flag
+ *   
+ * Currently the effect of this flag is to turn the channel into 'read-only' mode.
+ * New content will not be processed (there was still an issue with blocking the 
+ * ability to post comments as of 10-Mar-2016).
+ * We do not physically remove the channel at this time. The hub admin may choose 
+ * to do so, but is encouraged to allow a grace period of several days in case there
+ * are any issues migrating content. This packet will generally be received by the
+ * original site when the basic channel import has been processed.
+ * 
+ * This will only be executed on the UNO system which is the old location
+ * if a new location is reported and there is only one location record.
+ * The rest of the hubloc syncronisation will be handled within
+ * sync_locations
+ */
+
+
+
+function check_location_move($sender_hash,$locations) {
+
+	if(! $locations)
+		return;	
+
+	if(! UNO)
+		return;
+
+	if(count($locations) != 1)
+		return;
+
+	$loc = $locations[0];
+
+	$r = q("select * from channel where channel_hash = '%s' limit 1",
+		dbesc($sender_hash)
+	);
+
+	if(! $r)
+		return;
+
+	if($loc['url'] !== z_root()) {
+		$x = q("update channel set channel_moved = '%s' where channel_hash = '%s' limit 1",
+			dbesc($loc['url']),
+			dbesc($sender_hash)
+		);
+
+		// federation plugins may wish to notify connections 
+		// of the move on singleton networks
+
+		$arr = array('channel' => $r[0],'locations' => $locations);
+		call_hooks('location_move',$arr);
+
+	}		
+
+}
+
 
 /**
  * @brief Synchronises locations.
@@ -2242,6 +2302,10 @@ function sync_locations($sender, $arr, $absolute = false) {
 	$ret = array();
 
 	if($arr['locations']) {
+
+		if($absolute)
+			check_location_move($sender['hash'],$arr['locations']);
+
 
 		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
 			dbesc($sender['hash'])
@@ -2626,7 +2690,7 @@ function import_directory_profile($hash, $profile, $addr, $ud_flags = UPDATE_FLA
 	call_hooks('import_directory_profile', $d);
 
 	if (($d['update']) && (! $suppress_update))
-		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname(), $addr, $ud_flags);
+		update_modtime($arr['xprof_hash'],random_string() . '@' . App::get_hostname(), $addr, $ud_flags);
 
 	return $d['update'];
 }
@@ -2868,12 +2932,15 @@ function import_site($arr, $pubkey) {
  */
 function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
+	if(UNO)
+		return;
+
 	$a = get_app();
 
 	logger('build_sync_packet');
 
 	if($packet)
-		logger('packet: ' . print_r($packet, true),LOGGER_DATA);
+		logger('packet: ' . print_r($packet, true),LOGGER_DATA, LOG_DEBUG);
 
 	if(! $uid)
 		$uid = local_channel();
@@ -2902,7 +2969,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	$synchubs = array();
 
 	foreach($h as $x) {
-		if($x['hubloc_host'] == $a->get_hostname())
+		if($x['hubloc_host'] == App::get_hostname())
 			continue;
 
 		$synchubs[] = $x;
@@ -2924,8 +2991,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	$info['type'] = 'channel_sync';
 	$info['encoding'] = 'red'; // note: not zot, this packet is very red specific
 
-	if(array_key_exists($uid,$a->config) && array_key_exists('transient',$a->config[$uid])) {
-		$settings = $a->config[$uid]['transient'];
+	if(array_key_exists($uid,App::$config) && array_key_exists('transient',App::$config[$uid])) {
+		$settings = App::$config[$uid]['transient'];
 		if($settings) {
 			$info['config'] = $settings;
 		}
@@ -2967,7 +3034,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	$interval = ((get_config('system','delivery_interval') !== false)
 			? intval(get_config('system','delivery_interval')) : 2 );
 
-	logger('build_sync_packet: packet: ' . print_r($info,true), LOGGER_DATA);
+	logger('build_sync_packet: packet: ' . print_r($info,true), LOGGER_DATA, LOG_DEBUG);
+
+	$total = count($synchubs);
 
 	foreach($synchubs as $hub) {
 		$hash = random_string();
@@ -2982,7 +3051,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		));
 
 		proc_run('php', 'include/deliver.php', $hash);
-		if($interval)
+		$total = $total - 1;
+
+		if($interval && $total)
 			@time_sleep_until(microtime(true) + (float) $interval);
 	}
 }
@@ -2996,6 +3067,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
  * @return array
  */
 function process_channel_sync_delivery($sender, $arr, $deliveries) {
+
+	if(UNO)
+		return;
 
 	require_once('include/import.php');
 
@@ -3064,6 +3138,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		if(array_key_exists('menu',$arr) && $arr['menu'])
 			sync_menus($channel,$arr['menu']);
 
+		if(array_key_exists('file',$arr) && $arr['file'])
+			sync_files($channel,$arr['file']);
+
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 
 			if(array_key_exists('channel_pageflags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
@@ -3114,6 +3191,11 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			$disallowed = array('abook_id','abook_account','abook_channel','abook_rating','abook_rating_text');
 
 			foreach($arr['abook'] as $abook) {
+
+				$abconfig = null;
+
+				if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && count($abook['abconfig']))
+					$abconfig = $abook['abconfig'];
 
 				if(! array_key_exists('abook_blocked',$abook)) {
 					// convert from redmatrix
@@ -3186,8 +3268,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						logger('process_channel_sync_delivery: total_feeds service class limit exceeded');
 						continue;
 					}
-					q("insert into abook ( abook_xchan, abook_channel ) values ('%s', %d ) ",
+					q("insert into abook ( abook_xchan, abook_account, abook_channel ) values ('%s', %d, %d ) ",
 						dbesc($clean['abook_xchan']),
+						intval($channel['channel_account_id']),
 						intval($channel['channel_id'])
 					);
 					$total_friends ++;
@@ -3204,8 +3287,13 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					}
 				}
 
-
-
+				if($abconfig) {
+					// @fixme does not handle sync of del_abconfig
+					foreach($abconfig as $abc) {
+						if($abc['chan'] === $channel['channel_hash'])
+							set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+					}
+				}
 			}
 		}
 
@@ -3403,14 +3491,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		// we should probably do this for all items, but usually we only send one.
 
-		require_once('include/DReport.php');
-
 		if(array_key_exists('item',$arr) && is_array($arr['item'][0])) {
-			$DR = new DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
-			$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$DR = new Zotlabs\Zot\DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
+			$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . App::get_hostname() . '>');
 		}
 		else
-			$DR = new DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
+			$DR = new Zotlabs\Zot\DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
 
 		$result[] = $DR->get();
 
@@ -3828,14 +3914,14 @@ function zotinfo($arr) {
 		$ret['site']['channels'] = channel_total();
 
 
-		$ret['site']['version'] = PLATFORM_NAME . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+		$ret['site']['version'] = Zotlabs\Project\System::get_platform_name() . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
 
 		$a = get_app();
 
 		$visible_plugins = array();
-		if(is_array($a->plugins) && count($a->plugins)) {
+		if(is_array(App::$plugins) && count(App::$plugins)) {
 			$r = q("select * from addon where hidden = 0");
 			if($r)
 				foreach($r as $rr)
@@ -3848,7 +3934,7 @@ function zotinfo($arr) {
 		$ret['site']['sellpage'] = get_config('system','sellpage');
 		$ret['site']['location'] = get_config('system','site_location');
 		$ret['site']['realm'] = get_directory_realm();
-		$ret['site']['project'] = PLATFORM_NAME;
+		$ret['site']['project'] = Zotlabs\Project\System::get_platform_name();
 
 	}
 
@@ -3864,7 +3950,7 @@ function zotinfo($arr) {
 function check_zotinfo($channel,$locations,&$ret) {
 
 
-//	logger('locations: ' . print_r($locations,true),LOGGER_DATA);
+//	logger('locations: ' . print_r($locations,true),LOGGER_DATA, LOG_DEBUG);
 
 	// This function will likely expand as we find more things to detect and fix.
 	// 1. Because magic-auth is reliant on it, ensure that the system channel has a valid hubloc
@@ -3900,11 +3986,11 @@ function check_zotinfo($channel,$locations,&$ret) {
 				dbesc($channel['channel_guid']),
 				dbesc($channel['channel_guid_sig']),
 				dbesc($channel['channel_hash']),
-				dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+				dbesc($channel['channel_address'] . '@' . App::get_hostname()),
 				intval(1),
 				dbesc(z_root()),
 				dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
-				dbesc(get_app()->get_hostname()),
+				dbesc(App::get_hostname()),
 				dbesc(z_root() . '/post'),
 				dbesc(get_config('system','pubkey')),
 				dbesc('zot')
@@ -3923,6 +4009,9 @@ function check_zotinfo($channel,$locations,&$ret) {
 }
 
 function delivery_report_is_storable($dr) {
+
+	if(get_config('system','disable_dreport'))
+		return false;
 
 	call_hooks('dreport_is_storable',$dr);
 
@@ -4085,7 +4174,7 @@ function zot_reply_pickup($data) {
 
 		$sitekey = $hubsite['hubloc_sitekey'];
 
-		logger('mod_zot: Checking sitekey: ' . $sitekey, LOGGER_DATA);
+		logger('mod_zot: Checking sitekey: ' . $sitekey, LOGGER_DATA, LOG_DEBUG);
 
 		if(rsa_verify($data['callback'],base64url_decode($data['callback_sig']),$sitekey)) {
 			$forgery = false;
@@ -4200,9 +4289,7 @@ function zot_reply_auth_check($data,$encrypted_packet) {
 	// the web server. We should probably convert this to webserver time rather than DB time so 
 	// that the different clocks won't affect it and allow us to keep the time short. 
 
-	q("delete from verify where type = 'auth' and created < %s - INTERVAL %s",
-		db_utcnow(), db_quoteinterval('30 MINUTE')
-	);
+	Zotlabs\Zot\Verify::purge('auth','30 MINUTE');
 
 	$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 		dbesc($sender_hash)
@@ -4241,19 +4328,13 @@ function zot_reply_auth_check($data,$encrypted_packet) {
 		// This additionally checks for forged sites since we already stored the expected result in meta
 		// and we've already verified that this is them via zot_gethub() and that their key signed our token
 
-		$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' and meta = '%s' limit 1",
-			intval($c[0]['channel_id']),
-			dbesc($data['secret']),
-			dbesc($data['sender']['url'])
-		);
+
+		$z = Zotlabs\Zot\Verify::match('auth',$c[0]['channel_id'],$data['secret'],$data['sender']['url']);
 		if (! $z) {
 			logger('mod_zot: auth_check: verification key not found.');
 			$ret['message'] .= 'verification key not found' . EOL;
 			json_return_and_die($ret);
 		}
-		$r = q("delete from verify where id = %d",
-			intval($z[0]['id'])
-		);
 
 		$u = q("select account_service_class from account where account_id = %d limit 1",
 			intval($c[0]['channel_account_id'])

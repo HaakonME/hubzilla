@@ -56,13 +56,13 @@ function notification($params) {
 
 	$banner     = t('$Projectname Notification');
 	$product    = t('$projectname'); // PLATFORM_NAME;
-	$siteurl    = $a->get_baseurl(true);
+	$siteurl    = z_root();
 	$thanks     = t('Thank You,');
 	$sitename   = get_config('system','sitename');
 	$site_admin = sprintf( t('%s Administrator'), $sitename);
 
 	$sender_name = $product;
-	$hostname = $a->get_hostname();
+	$hostname = App::get_hostname();
 	if(strpos($hostname,':'))
 		$hostname = substr($hostname,0,strpos($hostname,':'));
 
@@ -273,14 +273,14 @@ function notification($params) {
 		$preamble = sprintf( t('%1$s, you\'ve received an new connection request from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
 		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]a new connection request[/zrl] from %3$s.'),
 			$recip['channel_name'],
-			$itemlink,
+			$siteurl . '/connections/ifpending',
 			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
 		$body = sprintf( t('You may visit their profile at %s'),$sender['xchan_url']);
 
 		$sitelink = t('Please visit %s to approve or reject the connection request.');
-		$tsitelink = sprintf( $sitelink, $siteurl );
-		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
-		$itemlink =  $params['link'];
+		$tsitelink = sprintf( $sitelink, $siteurl . '/connections/ifpending');
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/connections/ifpending">' . $sitename . '</a>');
+		$itemlink = $params['link'];
 	}
 
 	if ($params['type'] == NOTIFY_SUGGEST) {
@@ -419,12 +419,12 @@ function notification($params) {
 		return;
 	}
 
-	$itemlink = $a->get_baseurl() . '/notify/view/' . $notify_id;
+	$itemlink = z_root() . '/notify/view/' . $notify_id;
 	$msg = str_replace('$itemlink',$itemlink,$epreamble);
 
 	// wretched hack, but we don't want to duplicate all the preamble variations and we also don't want to screw up a translation
 
-	if (($a->language === 'en' || (! $a->language)) && strpos($msg,', '))
+	if ((App::$language === 'en' || (! App::$language)) && strpos($msg,', '))
 		$msg = substr($msg,strpos($msg,', ')+1);	
 
 	$r = q("update notify set msg = '%s' where id = %d and uid = %d",
@@ -441,7 +441,7 @@ function notification($params) {
 		logger('notification: sending notification email');
 
 		$hn = get_pconfig($recip['channel_id'],'system','email_notify_host');
-		if($hn && (! stristr(get_app()->get_hostname(),$hn))) {
+		if($hn && (! stristr(App::get_hostname(),$hn))) {
 			// this isn't the email notification host
 			pop_lang();
 			return;
@@ -455,7 +455,7 @@ function notification($params) {
 		// use $_SESSION['zid_override'] to force zid() to use 
 		// the recipient address instead of the current observer
 
-		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . get_app()->get_hostname();
+		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . App::get_hostname();
 		$_SESSION['zrl_override'] = z_root() . '/channel/' . $recip['channel_address'];
 		
 		$textversion = zidify_links($textversion);
@@ -529,6 +529,7 @@ function notification($params) {
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
 			'$banner'       => $datarray['banner'],
+			'$notify_icon'  => Zotlabs\Project\System::get_notify_icon(),
 			'$product'      => $datarray['product'],
 			'$preamble'     => $datarray['preamble'],
 			'$sitename'     => $datarray['sitename'],

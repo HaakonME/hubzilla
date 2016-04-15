@@ -17,14 +17,14 @@ function group_post(&$a) {
 		$public = intval($_POST['public']);
 		$r = group_add(local_channel(),$name,$public);
 		if($r) {
-			info( t('Collection created.') . EOL );
+			info( t('Privacy group created.') . EOL );
 			$r = group_byname(local_channel(),$name);
 			if($r)
-				goaway($a->get_baseurl() . '/group/' . $r);
+				goaway(z_root() . '/group/' . $r);
 		}
 		else
-			notice( t('Could not create collection.') . EOL );	
-		goaway($a->get_baseurl() . '/group');
+			notice( t('Could not create privacy group.') . EOL );	
+		goaway(z_root() . '/group');
 
 	}
 	if((argc() == 2) && (intval(argv(1)))) {
@@ -35,8 +35,8 @@ function group_post(&$a) {
 			intval(local_channel())
 		);
 		if(! $r) {
-			notice( t('Collection not found.') . EOL );
-			goaway($a->get_baseurl() . '/connections');
+			notice( t('Privacy group not found.') . EOL );
+			goaway(z_root() . '/connections');
 
 		}
 		$group = $r[0];
@@ -51,7 +51,7 @@ function group_post(&$a) {
 				intval($group['id'])
 			);
 			if($r)
-				info( t('Collection updated.') . EOL );
+				info( t('Privacy group updated.') . EOL );
 		}
 
 		goaway(z_root() . '/group/' . argv(1) . '/' . argv(2));
@@ -62,7 +62,7 @@ function group_post(&$a) {
 function group_content(&$a) {
 	$change = false;
 
-	logger('mod_group: ' . $a->cmd,LOGGER_DEBUG);
+	logger('mod_group: ' . App::$cmd,LOGGER_DEBUG);
 	
 	if(! local_channel()) {
 		notice( t('Permission denied') . EOL);
@@ -83,8 +83,8 @@ function group_content(&$a) {
 	if((argc() == 2) && (argv(1) === 'new')) {
 		
 		return replace_macros($tpl, $context + array(
-			'$title' => t('Create a collection of channels.'),
-			'$gname' => array('groupname',t('Collection Name: '), '', ''),
+			'$title' => t('Create a group of channels.'),
+			'$gname' => array('groupname',t('Privacy group name: '), '', ''),
 			'$gid' => 'new',
 			'$public' => array('public',t('Members are visible to other channels'), false, ''),
 			'$form_security_token' => get_form_security_token("group_edit"),
@@ -104,11 +104,11 @@ function group_content(&$a) {
 			if($r) 
 				$result = group_rmv(local_channel(),$r[0]['name']);
 			if($result)
-				info( t('Collection removed.') . EOL);
+				info( t('Privacy group removed.') . EOL);
 			else
-				notice( t('Unable to remove collection.') . EOL);
+				notice( t('Unable to remove privacy group.') . EOL);
 		}
-		goaway($a->get_baseurl() . '/group');
+		goaway(z_root() . '/group');
 		// NOTREACHED
 	}
 
@@ -117,7 +117,7 @@ function group_content(&$a) {
 
 		check_form_security_token_ForbiddenOnErr('group_member_change', 't');
 
-		$r = q("SELECT abook_xchan from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and xchan_deleted = 0 and abook_blocked = 0 and abook_pending = 0 limit 1",
+		$r = q("SELECT abook_xchan from abook left join xchan on abook_xchan = xchan_hash where abook_xchan = '%s' and abook_channel = %d and xchan_deleted = 0 and abook_self = 0 and abook_blocked = 0 and abook_pending = 0 limit 1",
 			dbesc(base64url_decode(argv(2))),
 			intval(local_channel())
 		);
@@ -134,8 +134,8 @@ function group_content(&$a) {
 			intval(local_channel())
 		);
 		if(! $r) {
-			notice( t('Collection not found.') . EOL );
-			goaway($a->get_baseurl() . '/connections');
+			notice( t('Privacy group not found.') . EOL );
+			goaway(z_root() . '/connections');
 		}
 		$group = $r[0];
 
@@ -176,8 +176,8 @@ function group_content(&$a) {
 
 		
 		$context = $context + array(
-			'$title' => t('Collection Editor'),
-			'$gname' => array('groupname',t('Collection Name: '),$group['name'], ''),
+			'$title' => t('Privacy group editor'),
+			'$gname' => array('groupname',t('Privacy group name: '),$group['name'], ''),
 			'$gid' => $group['id'],
 			'$drop' => $drop_txt,
 			'$public' => array('public',t('Members are visible to other channels'), $group['visible'], ''),
@@ -208,7 +208,7 @@ function group_content(&$a) {
 			group_rmv_member(local_channel(),$group['name'],$member['xchan_hash']);
 	}
 
-	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND  abook_blocked = 0 and abook_pending = 0 and xchan_deleted = 0 order by xchan_name asc",
+	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND abook_self = 0 and abook_blocked = 0 and abook_pending = 0 and xchan_deleted = 0 order by xchan_name asc",
 		intval(local_channel())
 	);
 

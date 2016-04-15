@@ -135,13 +135,9 @@ function magic_init(&$a) {
  
 		$channel['token'] = $token;
 		$channel['token_sig'] = $token_sig;
-		$r = q("insert into verify ( type, channel, token, meta, created) values ('%s','%d','%s','%s','%s')",
-			dbesc('auth'),
-			intval($channel['channel_id']),
-			dbesc($token),
-			dbesc($x[0]['hubloc_url']),
-			dbesc(datetime_convert())
-		);
+
+		Zotlabs\Zot\Verify::create('auth',$channel['channel_id'],$token,$x[0]['hubloc_url']);
+
 		$target_url = $x[0]['hubloc_callback'] . '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . App::get_hostname())
 			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION;
 

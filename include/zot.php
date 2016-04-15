@@ -4289,9 +4289,7 @@ function zot_reply_auth_check($data,$encrypted_packet) {
 	// the web server. We should probably convert this to webserver time rather than DB time so 
 	// that the different clocks won't affect it and allow us to keep the time short. 
 
-	q("delete from verify where type = 'auth' and created < %s - INTERVAL %s",
-		db_utcnow(), db_quoteinterval('30 MINUTE')
-	);
+	Zotlabs\Zot\Verify::purge('auth','30 MINUTE');
 
 	$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 		dbesc($sender_hash)
@@ -4330,19 +4328,13 @@ function zot_reply_auth_check($data,$encrypted_packet) {
 		// This additionally checks for forged sites since we already stored the expected result in meta
 		// and we've already verified that this is them via zot_gethub() and that their key signed our token
 
-		$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' and meta = '%s' limit 1",
-			intval($c[0]['channel_id']),
-			dbesc($data['secret']),
-			dbesc($data['sender']['url'])
-		);
+
+		$z = Zotlabs\Zot\Verify::match('auth',$c[0]['channel_id'],$data['secret'],$data['sender']['url']);
 		if (! $z) {
 			logger('mod_zot: auth_check: verification key not found.');
 			$ret['message'] .= 'verification key not found' . EOL;
 			json_return_and_die($ret);
 		}
-		$r = q("delete from verify where id = %d",
-			intval($z[0]['id'])
-		);
 
 		$u = q("select account_service_class from account where account_id = %d limit 1",
 			intval($c[0]['channel_account_id'])

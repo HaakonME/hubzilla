@@ -133,10 +133,14 @@ logger('3');
 		 */
 
 		$nmod = false;
+		$modname = '';
 
 		$newmod = ucfirst(\App::$module);
-		if(class_exists("Zotlabs\\Module\\{$newmod}"))
+
+		if(class_exists("Zotlabs\\Module\\{$newmod}")) {
 			$nmod = true;
+			$modname = "Zotlabs\\Module\\{$newmod}";
+		}
 
 		if(\App::$module_loaded) {
 			\App::$page['page_title'] = \App::$module;
@@ -149,14 +153,15 @@ logger('3');
 			 * to over-ride them.
 			 */
 
-			$modname = (($nmod) ? "Zotlabs\\Module\\{$newmod}" : '');
-			if($modname && method_exists($modname,'init'))
-				logger('function_exists: ' . $modname . '->init');
-
-			if(function_exists(\App::$module . '_init')) {
-				$arr = array('init' => true, 'replace' => false);		
-				call_hooks(\App::$module . '_mod_init', $arr);
-				if(! $arr['replace']) {
+			$arr = array('init' => true, 'replace' => false);		
+			call_hooks(\App::$module . '_mod_init', $arr);
+			if(! $arr['replace']) {
+				if($modname && method_exists($modname,'init')) {
+					logger('function_exists: ' . $modname . '->init');
+					$modclass = new $modname;
+					$modclass->init();
+				}
+				elseif(function_exists(\App::$module . '_init')) {
 					$func = \App::$module . '_init';
 					$func($a);
 				}
@@ -198,6 +203,7 @@ logger('3');
 					$func($a);
 				}
 			}
+
 
 			if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! \App::$error)
 				&& (function_exists(\App::$module . '_post'))

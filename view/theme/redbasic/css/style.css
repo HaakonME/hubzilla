@@ -1108,22 +1108,15 @@ img.mail-conv-sender-photo {
 }
 
 #profile-jot-text {
-	resize: none;
-	border-width: 0px;
 	border-radius: $radiuspx;
 }
 
-#profile-jot-text:focus {
-	resize: vertical;
-}
-
-
 #profile-jot-text::-webkit-input-placeholder {
-	font-size:16px;
+	font-size: 16px;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size:16px;
+	font-size: 16px;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -1815,7 +1808,10 @@ nav .badge.mail-update:hover {
 }
 
 /* Abusing theme-green is less work than makeing a new new one */
-.theme-green .back-bar .selected-bar { background-color: #000000; background-image: none; !important }
+.theme-green .back-bar .selected-bar {
+	background-color: #000000;
+	background-image: none !important;
+}
 
 
 /* Turn checkboxes into switches */

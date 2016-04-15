@@ -10,7 +10,7 @@ function initEditor(cb){
 		$("#profile-jot-text-loading").spin('small').show();
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").spin(false).hide();
-			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
+			$("#profile-jot-text").css({ 'height': 200, 'color': '#000', 'line-height': 'inherit' });
 			{{if $bbco_autocomplete}}
 			$("#profile-jot-text").bbco_autocomplete('{{$bbco_autocomplete}}'); // autocomplete bbcode
 			{{/if}}

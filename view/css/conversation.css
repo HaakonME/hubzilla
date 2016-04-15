@@ -34,10 +34,18 @@ code {
 	padding: 10px;
 }
 
-.profile-jot-text {
+#profile-jot-text {
+	resize: none;
+	border-width: 0px;
 	height: 39px;
+	line-height: 19px;
 	padding: 10px;
 	width: 100%;
+	display: inherit;
+}
+
+#profile-jot-text:focus {
+	resize: vertical;
 }
 
 .jot-attachment {
@@ -58,10 +66,6 @@ code {
 
 #profile-jot-perms-end {
 	height: 30px;
-}
-
-#profile-jot-form {
-	line-height: initial;
 }
 
 #profile-jot-wrapper {

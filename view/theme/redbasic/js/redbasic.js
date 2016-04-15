@@ -67,3 +67,15 @@ function makeFullScreen(full) {
 		$('main').css({'transition': ''});
 	}
 }
+
+/* contextual help */
+$(document).mouseup(function (e) {
+        var container = $("#help-content");
+
+        if (!container.is(e.target) // if the target of the click isn't the container...
+                && container.has(e.target).length === 0 // ... nor a descendant of the container
+                && container.hasClass('help-content-open'))
+        {
+            container.removeClass('help-content-open');
+        }
+});

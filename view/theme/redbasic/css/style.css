@@ -1674,7 +1674,8 @@ nav .badge.mail-update:hover {
 }
 
 #expand-aside,
-#expand-tabs {
+#expand-tabs,
+#help-btn {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
 }
@@ -1887,10 +1888,6 @@ nav .badge.mail-update:hover {
     background-color: #337AB7;
 }
 
-/*.channels_ckbx, .pending_ckbx, .users_ckbx {
-	margin-top: -5px !important;
-}*/
-
 .help-searchlist {
 	list-style-type: none;
 }
@@ -1898,3 +1895,31 @@ nav .badge.mail-update:hover {
 .help-searchlist a {
 	font-size: 130%;
 }
+
+/* contextual help */
+.help-content {
+	background: rgba(255, 255, 255, 0.9);
+	color: #333333;
+	position: fixed;
+	top: 50px;
+	left: -80%;
+	width: 80%;
+        height: 60%;
+	padding: 20px;
+	transition: left 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+	box-sizing: border-box;
+	border: #CCC thin solid;
+        overflow: auto;
+}
+
+.help-content-open {
+	left: 0px;
+	-moz-box-shadow: 3px 3px 3px #ccc;
+	-webkit-box-shadow: 3px 3px 3px #ccc;
+	box-shadow: 3px 3px 3px #ccc;
+}
+
+.help-content dd {
+	margin-bottom: 1em;
+}
+/* contextual help end */

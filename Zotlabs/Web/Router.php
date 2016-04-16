@@ -5,6 +5,9 @@ namespace Zotlabs\Web;
 
 class Router {
 
+	private $modname = '';
+	private $controller = null;
+
 	function __construct(&$a) {
 
 		/**
@@ -54,25 +57,26 @@ class Router {
 			 */
 
 			if(! (\App::$module_loaded)) {
-				$newmod = ucfirst($module);
-logger('0' . "Zotlabs/Module/{$newmod}.php");
-				if(file_exists("Zotlabs/Module/{$newmod}.php")) {
-logger('1' . "Zotlabs/Module/{$newmod}.php");
-					include_once("Zotlabs/Module/{$newmod}.php");
-logger('2');
-					if(class_exists("Zotlabs\\Module\\{$newmod}"))
+				try {
+					$modname = "Zotlabs\\Module\\" . ucfirst($module);
+					$filename = 'Zotlabs/Module/'. ucfirst($module). '.php';
+					if(file_exists($filename)) {
+						$this->controller = new $modname;
 						\App::$module_loaded = true;
-logger('3');
+					}
+					else throw new \Exception('Module not found');
 				}
-				elseif(file_exists("mod/site/{$module}.php")) {
-					include_once("mod/site/{$module}.php");
-					\App::$module_loaded = true;
+				catch(\Exception $e) {
+					if(file_exists("mod/site/{$module}.php")) {
+						include_once("mod/site/{$module}.php");
+						\App::$module_loaded = true;
+					}
+					elseif(file_exists("mod/{$module}.php")) {
+						include_once("mod/{$module}.php");
+						\App::$module_loaded = true;
+					}
+					else logger("mod/{$module}.php not found.");
 				}
-				elseif(file_exists("mod/{$module}.php")) {
-					include_once("mod/{$module}.php");
-					\App::$module_loaded = true;
-				}
-				else logger("mod/{$module}.php not found.");
 			}
 
 
@@ -132,16 +136,6 @@ logger('3');
 		 * Call module functions
 		 */
 
-		$nmod = false;
-		$modname = '';
-
-		$newmod = ucfirst(\App::$module);
-
-		if(class_exists("Zotlabs\\Module\\{$newmod}")) {
-			$nmod = true;
-			$modname = "Zotlabs\\Module\\{$newmod}";
-		}
-
 		if(\App::$module_loaded) {
 			\App::$page['page_title'] = \App::$module;
 			$placeholder = '';
@@ -156,10 +150,8 @@ logger('3');
 			$arr = array('init' => true, 'replace' => false);		
 			call_hooks(\App::$module . '_mod_init', $arr);
 			if(! $arr['replace']) {
-				if($modname && method_exists($modname,'init')) {
-					logger('function_exists: ' . $modname . '->init');
-					$modclass = new $modname;
-					$modclass->init();
+				if($this->controller && method_exists($this->controller,'init')) {
+					$this->controller->init();
 				}
 				elseif(function_exists(\App::$module . '_init')) {
 					$func = \App::$module . '_init';
@@ -204,22 +196,30 @@ logger('3');
 				}
 			}
 
-
-			if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! \App::$error)
-				&& (function_exists(\App::$module . '_post'))
-				&& (! x($_POST, 'auth-params'))) {		
+			if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! \App::$error) && (! x($_POST, 'auth-params'))) {		
 				call_hooks(\App::$module . '_mod_post', $_POST);
-				$func = \App::$module . '_post';
-				$func($a);
+
+				if($this->controller && method_exists($this->controller,'post')) {
+					$this->controller->post();
+				}
+				elseif(function_exists(\App::$module . '_post')) {
+					$func = \App::$module . '_post';
+					$func($a);
+				}
 			}
 
-			if((! \App::$error) && (function_exists(\App::$module . '_content'))) {
+			if(! \App::$error)  {
 				$arr = array('content' => \App::$page['content'], 'replace' => false);
 				call_hooks(\App::$module . '_mod_content', $arr);
 				\App::$page['content'] = $arr['content'];
 				if(! $arr['replace']) {
-					$func = \App::$module . '_content';
-					$arr = array('content' => $func($a));
+					if($this->controller && method_exists($this->controller,'get')) {
+						$arr = array('content' => $this->controller->get());
+					}
+					elseif(function_exists(\App::$module . '_content')) {
+						$func = \App::$module . '_content';
+						$arr = array('content' => $func($a));
+					}
 				}
 				call_hooks(\App::$module . '_mod_aftercontent', $arr);
 				\App::$page['content'] .= $arr['content'];

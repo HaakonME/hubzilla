@@ -198,21 +198,21 @@ cd ${OPENSHIFT_REPO_DIR}
 util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git HubzillaAddons 
 
 # Hubzilla themes
-echo "Try to add or update Hubzilla themes"
-cd ${OPENSHIFT_REPO_DIR}
-util/add_theme_repo https://github.com/DeadSuperHero/hubzilla-themes.git DeadSuperHeroThemes 
+#echo "Try to add or update Hubzilla themes"
+#cd ${OPENSHIFT_REPO_DIR}
+#util/add_theme_repo https://github.com/DeadSuperHero/hubzilla-themes.git DeadSuperHeroThemes 
 
 # Hubzilla ownMapp
-echo "Try to add or update Hubzilla ownMapp"
-cd ${OPENSHIFT_REPO_DIR}
-util/add_addon_repo https://gitlab.com/zot/ownmapp.git ownMapp
+#echo "Try to add or update Hubzilla ownMapp"
+#cd ${OPENSHIFT_REPO_DIR}
+#util/add_addon_repo https://gitlab.com/zot/ownmapp.git ownMapp
 
 # Hubzilla Chess
-echo "Try to add or update Hubzilla chess "
-cd ${OPENSHIFT_REPO_DIR}
-util/add_addon_repo https://gitlab.com/zot/hubzilla-chess.git Chess
+#echo "Try to add or update Hubzilla chess "
+#cd ${OPENSHIFT_REPO_DIR}
+#util/add_addon_repo https://gitlab.com/zot/hubzilla-chess.git Chess
 
 # Hubzilla Hubsites
-echo "Try to add or update Hubzilla Hubsites"
-cd ${OPENSHIFT_REPO_DIR}
-util/add_addon_repo https://gitlab.com/zot/hubsites.git Hubsites
+#echo "Try to add or update Hubzilla Hubsites"
+#cd ${OPENSHIFT_REPO_DIR}
+#util/add_addon_repo https://gitlab.com/zot/hubsites.git Hubsites

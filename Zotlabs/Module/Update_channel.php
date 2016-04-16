@@ -1,5 +1,7 @@
 <?php
 
+namespace Zotlabs\Module;
+
 /**
  * Module: update_profile
  * Purpose: AJAX synchronisation of profile page
@@ -7,9 +9,9 @@
  */
 
 
-require_once('mod/channel.php');
+class Update_channel extends \Zotlabs\Web\Controller {
 
-function update_channel_content(&$a) {
+function get() {
 
 	$profile_uid = intval($_GET['p']);
 	$load = (((argc() > 1) && (argv(1) == 'load')) ? 1 : 0);
@@ -33,7 +35,9 @@ function update_channel_content(&$a) {
 	 *
 	 */
 
-	$text = channel_content($a,$profile_uid,$load);
+	$mod = new Channel();
+
+	$text = $mod->get($profile_uid,$load);
 
 	$pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
 	$replace = "<img\${1} dst=\"\${2}\"";
@@ -62,4 +66,5 @@ function update_channel_content(&$a) {
 	echo "</body></html>\r\n";
 	killme();
 
+}
 }

@@ -1898,8 +1898,8 @@ nav .badge.mail-update:hover {
 
 /* contextual help */
 .help-content {
-  background: rgba(255, 255, 255, 0.9);
-  color: #333333;
+  background: $bgcolour;
+  color: $font_colour;
   position: fixed;
   top: -1000px;
   left: 0%;
@@ -1909,15 +1909,15 @@ nav .badge.mail-update:hover {
   padding: 20px;
   transition: top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
   box-sizing: border-box;
-  border: #CCC thin solid;
+  border-bottom: #CCC thin solid;
   overflow: auto;
 }
 
 .help-content-open {
   top: 50px;
-  -moz-box-shadow: 3px 3px 3px #ccc;
-  -webkit-box-shadow: 3px 3px 3px #ccc;
-  box-shadow: 3px 3px 3px #ccc;
+  -moz-box-shadow: 0px 3px 3px #ccc;
+  -webkit-box-shadow: 0px 3px 3px #ccc;
+  box-shadow: 0px 3px 3px #ccc;
 }
 main {
   top: auto;

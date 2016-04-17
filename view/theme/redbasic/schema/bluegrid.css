@@ -464,4 +464,19 @@ a:hover > .icon-trash {
 	}
 }
 
+.help-content {
+	color: #FFF;
+	border: none;
+}
+
+.help-content a {
+	color: #FFF;
+	font-weight: 600;
+}
+
+.help-content-open {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 

@@ -860,6 +860,8 @@ class App {
 		if ((array_key_exists('0', self::$argv)) && strlen(self::$argv[0])) {
 			self::$module = str_replace(".", "_", self::$argv[0]);
 			self::$module = str_replace("-", "_", self::$module);
+			if(strpos(self::$module,'_') === 0)
+				self::$module = substr(self::$module,1);
 		} else {
 			self::$argc = 1;
 			self::$argv = array('home');

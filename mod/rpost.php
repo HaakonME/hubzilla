@@ -119,7 +119,9 @@ function rpost_content(&$a) {
 		'body' => $_REQUEST['body'],
 		'attachment' => $_REQUEST['attachment'],
 		'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
-		'return_path' => 'rpost/return'
+		'return_path' => 'rpost/return',
+		'bbco_autocomplete' => 'bbcode',
+		'bbcode' => true
 	);
 
 	$editor = status_editor($a,$x);

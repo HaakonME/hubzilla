@@ -14,14 +14,23 @@ class Router {
 		 *
 		 * We have already parsed the server path into App::$argc and App::$argv
 		 *
-		 * App::$argv[0] is our module name. We will load the file mod/{App::$argv[0]}.php
+		 * App::$argv[0] is our module name. Let's call it 'foo'. We will load the
+		 * Zotlabs/Module/Foo.php (object) or file mod/foo.php (procedural)
 		 * and use it for handling our URL request.
 		 * The module file contains a few functions that we call in various circumstances
 		 * and in the following order:
 		 *
-		 * "module"_init
-		 * "module"_post (only called if there are $_POST variables)
-		 * "module"_content - the string return of this function contains our page body
+		 * Object:
+		 *    class Foo extends Zotlabs\Web\Controller {
+		 *        function init() { init function }
+		 *        function post() { post function }
+		 *        function get()  { nomral page function }
+		 *    }
+		 *
+		 * Procedual interface:
+		 *        foo_init()
+		 *        foo_post() (only called if there are $_POST variables)
+		 *        foo_content() - the string return of this function contains our page body
 		 *
 		 * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do
 		 * so within the module init and/or post functions and then invoke killme() to terminate
@@ -160,7 +169,7 @@ class Router {
 			}
 
 			/**
-			 * Do all theme initialiasion here before calling any additional module functions.
+			 * Do all theme initialisation here before calling any additional module functions.
 			 * The module_init function may have changed the theme.
 			 * Additionally any page with a Comanche template may alter the theme.
 			 * So we'll check for those now.

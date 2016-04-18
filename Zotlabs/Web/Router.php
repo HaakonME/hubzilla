@@ -5,6 +5,9 @@ namespace Zotlabs\Web;
 
 class Router {
 
+	private $modname = '';
+	private $controller = null;
+
 	function __construct(&$a) {
 
 		/**
@@ -54,15 +57,26 @@ class Router {
 			 */
 
 			if(! (\App::$module_loaded)) {
-				if(file_exists("mod/site/{$module}.php")) {
-					include_once("mod/site/{$module}.php");
-					\App::$module_loaded = true;
+				try {
+					$modname = "Zotlabs\\Module\\" . ucfirst($module);
+					$filename = 'Zotlabs/Module/'. ucfirst($module). '.php';
+					if(file_exists($filename)) {
+						$this->controller = new $modname;
+						\App::$module_loaded = true;
+					}
+					else throw new \Exception('Module not found');
 				}
-				elseif(file_exists("mod/{$module}.php")) {
-					include_once("mod/{$module}.php");
-					\App::$module_loaded = true;
+				catch(\Exception $e) {
+					if(file_exists("mod/site/{$module}.php")) {
+						include_once("mod/site/{$module}.php");
+						\App::$module_loaded = true;
+					}
+					elseif(file_exists("mod/{$module}.php")) {
+						include_once("mod/{$module}.php");
+						\App::$module_loaded = true;
+					}
+					else logger("mod/{$module}.php not found.");
 				}
-				else logger("mod/{$module}.php not found.");
 			}
 
 
@@ -133,10 +147,13 @@ class Router {
 			 * to over-ride them.
 			 */
 
-			if(function_exists(\App::$module . '_init')) {
-				$arr = array('init' => true, 'replace' => false);		
-				call_hooks(\App::$module . '_mod_init', $arr);
-				if(! $arr['replace']) {
+			$arr = array('init' => true, 'replace' => false);		
+			call_hooks(\App::$module . '_mod_init', $arr);
+			if(! $arr['replace']) {
+				if($this->controller && method_exists($this->controller,'init')) {
+					$this->controller->init();
+				}
+				elseif(function_exists(\App::$module . '_init')) {
 					$func = \App::$module . '_init';
 					$func($a);
 				}
@@ -179,21 +196,30 @@ class Router {
 				}
 			}
 
-			if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! \App::$error)
-				&& (function_exists(\App::$module . '_post'))
-				&& (! x($_POST, 'auth-params'))) {		
+			if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! \App::$error) && (! x($_POST, 'auth-params'))) {		
 				call_hooks(\App::$module . '_mod_post', $_POST);
-				$func = \App::$module . '_post';
-				$func($a);
+
+				if($this->controller && method_exists($this->controller,'post')) {
+					$this->controller->post();
+				}
+				elseif(function_exists(\App::$module . '_post')) {
+					$func = \App::$module . '_post';
+					$func($a);
+				}
 			}
 
-			if((! \App::$error) && (function_exists(\App::$module . '_content'))) {
+			if(! \App::$error)  {
 				$arr = array('content' => \App::$page['content'], 'replace' => false);
 				call_hooks(\App::$module . '_mod_content', $arr);
 				\App::$page['content'] = $arr['content'];
 				if(! $arr['replace']) {
-					$func = \App::$module . '_content';
-					$arr = array('content' => $func($a));
+					if($this->controller && method_exists($this->controller,'get')) {
+						$arr = array('content' => $this->controller->get());
+					}
+					elseif(function_exists(\App::$module . '_content')) {
+						$func = \App::$module . '_content';
+						$arr = array('content' => $func($a));
+					}
 				}
 				call_hooks(\App::$module . '_mod_aftercontent', $arr);
 				\App::$page['content'] .= $arr['content'];

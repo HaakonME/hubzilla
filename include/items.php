@@ -555,8 +555,8 @@ function get_public_feed($channel, $params) {
 
 	// put a sane lower limit on feed requests if not specified
 
-	if($params['begin'] === NULL_DATE)
-		$params['begin'] = datetime_convert('UTC','UTC','now - 1 month');
+//	if($params['begin'] === NULL_DATE)
+//		$params['begin'] = datetime_convert('UTC','UTC','now - 1 month');
 
 	switch($params['type']) {
 		case 'json':

@@ -88,9 +88,17 @@ function load_context_help() {
 	
 	$path = App::$cmd;
 	$args = App::$argv;
-
+	$lang = App::$language;
+        
+	if(! isset($lang) || !is_dir('doc/context/' . $lang . '/')) {
+                $lang = 'en';
+        }
 	while($path) {
-		$context_help = load_doc_file('doc/context/' . $path . '/help.html');
+		$context_help = load_doc_file('doc/context/' . $lang . '/' . $path . '/help.html');
+                if(!$context_help) {
+                  // Fallback to English if the translation is absent
+                  $context_help = load_doc_file('doc/context/en/' . $path . '/help.html');
+                }
 		if($context_help)
 			break;
 		array_pop($args);

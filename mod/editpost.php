@@ -160,6 +160,7 @@ function editpost_content(&$a) {
 		'$cipher' => $cipher,
 		'$expiryModalOK' => t('OK'),
 		'$expiryModalCANCEL' => t('Cancel'),
+		'$bbcode' => true
 	));
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(

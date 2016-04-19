@@ -152,7 +152,8 @@ EOT;
 	if(! get_config('system','hide_help')) {
 		require_once('mod/help.php');
 		$context_help = load_context_help();
-		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'),'help_nav_btn',$context_help);
+		$enable_context_help = get_config('system','enable_context_help') || 0;
+		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'),'help_nav_btn',$context_help,$enable_context_help);
 	}
 
 	if(! UNO)
@@ -248,7 +249,7 @@ $powered_by = '';
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...')
-	));
+		));
 
 	call_hooks('page_header', App::$page['nav']);
 }

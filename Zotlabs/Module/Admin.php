@@ -264,6 +264,7 @@ class Admin extends \Zotlabs\Web\Controller {
 		$force_publish        = ((x($_POST,'publish_all'))		? True	: False);
 		$disable_discover_tab = ((x($_POST,'disable_discover_tab'))		? False	:	True);
 		$login_on_homepage    = ((x($_POST,'login_on_homepage'))		? True	:	False);
+		$enable_context_help    = ((x($_POST,'enable_context_help'))		? True	:	False);
 		$global_directory     = ((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 		$no_community_page    = !((x($_POST,'no_community_page'))	? True	:	False);
 		$default_expire_days  = ((array_key_exists('default_expire_days',$_POST)) ? intval($_POST['default_expire_days']) : 0);
@@ -288,6 +289,7 @@ class Admin extends \Zotlabs\Web\Controller {
 		set_config('system', 'mirror_frontpage', $mirror_frontpage);
 		set_config('system', 'sitename', $sitename);
 		set_config('system', 'login_on_homepage', $login_on_homepage);
+		set_config('system', 'enable_context_help', $enable_context_help);
 		set_config('system', 'verify_email', $verify_email);
 		set_config('system', 'default_expire_days', $default_expire_days);
 	
@@ -488,7 +490,8 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 			'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 			'$disable_discover_tab'	=> array('disable_discover_tab', t('Import Public Streams'), $discover_tab, t('Import and allow access to public content pulled from other sites. Warning: this content is unmoderated.')),
-			'$login_on_homepage'	=> array('login_on_homepage', t("login on Homepage"),((intval($homelogin) || $homelogin === false) ? 1 : '') , t("Present a login box to visitors on the home page if no other content has been configured.")),
+			'$login_on_homepage'	=> array('login_on_homepage', t("Login on Homepage"),((intval($homelogin) || $homelogin === false) ? 1 : '') , t("Present a login box to visitors on the home page if no other content has been configured.")),
+			'$enable_context_help'	=> array('\enable_context_help', t("Enable context help"),((intval($enable_context_help) === 1 || $enable_context_help === false) ? 1 : 0) , t("Display contextual help for the current page when the help button is pressed.")),
 	
 			'$directory_server' => (($dir_choices) ? array('directory_server', t("Directory Server URL"), get_config('system','directory_server'), t("Default directory server"), $dir_choices) : null),
 	

@@ -189,7 +189,7 @@
 
 			{{if $nav.help}}
 				<li class="{{$sel.help}}">
-                                  <a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}" onclick="return false;"><i class="icon-question"></i></a>
+                                  <a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}" onclick="{{if $nav.help.6}}return false;{{/if}}"><i class="icon-question"></i></a>
 				</li>
                                 
 			<div id="help-content" class="help-content">

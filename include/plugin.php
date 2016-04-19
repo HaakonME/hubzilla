@@ -535,8 +535,11 @@ function format_css_if_exists($source) {
 	else
 		$path = theme_include($source[0]);
 
-	if($path)
-		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
+	if($path) {
+		$path =  script_path() . '/' . $path;
+		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
+		return '<link rel="stylesheet" href="' . $path . $qstring . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
+	}
 }
 
 /*
@@ -612,8 +615,11 @@ function format_js_if_exists($source) {
 		$path = $source;
 	else
 		$path = theme_include($source);
-	if($path)
-		return '<script src="' . script_path() . '/' . $path . '" ></script>' . "\r\n" ;
+	if($path) {
+		$path =  script_path() . '/' . $path;
+		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
+		return '<script src="' . $path . $qstring . '" ></script>' . "\r\n" ;
+	}
 }
 
 

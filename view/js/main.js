@@ -372,11 +372,11 @@ function NavUpdate() {
 			if(! updateCountsOnly) {
 				// start live update
 
-				if($('#live-network').length) { src = 'network'; liveUpdate(); }
-				if($('#live-channel').length) { src = 'channel'; liveUpdate(); }
-				if($('#live-public').length)  { src = 'public'; liveUpdate(); }
-				if($('#live-display').length) { src = 'display'; liveUpdate(); }
-				if($('#live-search').length)  { src = 'search'; liveUpdate(); }
+				if($('#live-network').length)    { src = 'network'; liveUpdate(); }
+				if($('#live-channel').length)    { src = 'channel'; liveUpdate(); }
+				if($('#live-pubstream').length)  { src = 'pubstream'; liveUpdate(); }
+				if($('#live-display').length)    { src = 'display'; liveUpdate(); }
+				if($('#live-search').length)     { src = 'search'; liveUpdate(); }
 
 				if($('#live-photos').length) {
 					if(liking) {

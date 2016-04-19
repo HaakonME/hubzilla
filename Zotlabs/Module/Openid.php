@@ -121,7 +121,7 @@ class Openid extends \Zotlabs\Web\Controller {
 				}
 	
 				require_once('library/urlify/URLify.php');
-				$x = strtolower(URLify::transliterate($nick));
+				$x = strtolower(\URLify::transliterate($nick));
 				if($nick & $host)
 					$addr = $nick . '@' . $host;
 				$network = 'unknown';

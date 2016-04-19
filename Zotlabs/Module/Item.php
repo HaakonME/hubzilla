@@ -130,7 +130,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if($pagetitle) {
 			require_once('library/urlify/URLify.php');
-			$pagetitle = strtolower(URLify::transliterate($pagetitle));
+			$pagetitle = strtolower(\URLify::transliterate($pagetitle));
 		}
 	
 	

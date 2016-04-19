@@ -17,7 +17,7 @@ class New_channel extends \Zotlabs\Web\Controller {
 			$result = array('error' => false, 'message' => '');
 			$n = trim($_REQUEST['name']);
 	
-			$x = strtolower(URLify::transliterate($n));
+			$x = strtolower(\URLify::transliterate($n));
 	
 			$test = array();
 	
@@ -43,7 +43,7 @@ class New_channel extends \Zotlabs\Web\Controller {
 			$result = array('error' => false, 'message' => '');
 			$n = trim($_REQUEST['nick']);
 	
-			$x = strtolower(URLify::transliterate($n));
+			$x = strtolower(\URLify::transliterate($n));
 	
 			$test = array();
 	

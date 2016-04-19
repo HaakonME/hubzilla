@@ -7,7 +7,7 @@ namespace Zotlabs\Module;
  * Module for accessing the DAV storage area.
  */
 
-use Sabre\DAV;
+use Sabre\DAV as SDAV;
 use \Zotlabs\Storage;
 
 // composer autoloader for SabreDAV
@@ -70,10 +70,10 @@ class Cloud extends \Zotlabs\Web\Controller {
 		$rootDirectory = new \Zotlabs\Storage\Directory('/', $auth);
 	
 		// A SabreDAV server-object
-		$server = new DAV\Server($rootDirectory);
+		$server = new SDAV\Server($rootDirectory);
 		// prevent overwriting changes each other with a lock backend
-		$lockBackend = new DAV\Locks\Backend\File('store/[data]/locks');
-		$lockPlugin = new DAV\Locks\Plugin($lockBackend);
+		$lockBackend = new SDAV\Locks\Backend\File('store/[data]/locks');
+		$lockPlugin = new SDAV\Locks\Plugin($lockBackend);
 	
 		$server->addPlugin($lockPlugin);
 	

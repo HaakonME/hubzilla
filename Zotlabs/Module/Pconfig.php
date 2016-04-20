@@ -55,7 +55,7 @@ class Pconfig extends \Zotlabs\Web\Controller {
 			$content .= '<a href="pconfig/' . escape_tags(argv(1)) . '">pconfig[' . local_channel() . '][' . escape_tags(argv(1)) . ']</a>' . EOL . EOL;
 			$content .= '<a href="pconfig/' . escape_tags(argv(1)) . '/' . escape_tags(argv(2)) . '" >pconfig[' . local_channel() . '][' . escape_tags(argv(1)) . '][' . escape_tags(argv(2)) . ']</a> = ' . get_pconfig(local_channel(),escape_tags(argv(1)),escape_tags(argv(2))) . EOL;
 	
-			if(in_array(argv(2),disallowed_pconfig())) {
+			if(in_array(argv(2),$this->disallowed_pconfig())) {
 				notice( t('This setting requires special processing and editing has been blocked.') . EOL);
 				return $content;
 			}

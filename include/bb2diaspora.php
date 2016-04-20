@@ -268,7 +268,7 @@ function bb2dmention_callback($match) {
 }
 
 
-function bb2diaspora_itemwallwall(&$item, $newpost = false) {
+function bb2diaspora_itemwallwall(&$item) {
 
 	// We will provide wallwall (embedded author on the Diaspora side) if
 	//  1. It is a wall-to-wall post
@@ -289,7 +289,7 @@ function bb2diaspora_itemwallwall(&$item, $newpost = false) {
 	}
 
 	$has_meta = false;
-	if((! $newpost) && ($item['diaspora_meta'] || get_iconfig($item,'diaspora','fields')))
+	if($item['diaspora_meta'] || get_iconfig($item,'diaspora','fields'))
 		$has_meta = true;
 
 	if($item['author_xchan'] != $item['owner_xchan']) {
@@ -318,7 +318,7 @@ function bb2diaspora_itemwallwall(&$item, $newpost = false) {
 }
 
 
-function bb2diaspora_itembody($item, $force_update = false, $newpost = false) {
+function bb2diaspora_itembody($item, $force_update = false, $have_channel = false) {
 
 
 	if(! get_iconfig($item,'diaspora','fields')) {
@@ -361,8 +361,8 @@ function bb2diaspora_itembody($item, $force_update = false, $newpost = false) {
 		}
 	}
 
-
-	bb2diaspora_itemwallwall($newitem, $newpost);
+	if(! $have_channel)
+		bb2diaspora_itemwallwall($newitem, $newpost);
 
 	$title = $newitem['title'];
 	$body  = preg_replace('/\#\^http/i', 'http', $newitem['body']);

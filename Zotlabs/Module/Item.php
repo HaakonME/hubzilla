@@ -748,10 +748,7 @@ class Item extends \Zotlabs\Web\Controller {
 			$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
 		}
 		
-	
-	
-	
-	
+		
 		$datarray['aid']            = $channel['channel_account_id'];
 		$datarray['uid']            = $profile_uid;
 		
@@ -971,6 +968,20 @@ class Item extends \Zotlabs\Web\Controller {
 					intval($parent_item['id'])
 				);
 			}
+
+			// send a sync packet to any channel clones
+
+			$r = q("select * from item where id = %d",
+				intval($post_id)
+			);
+			if($r) {
+				xchan_query($r);
+				$sync_item = fetch_post_tags($r);
+				$rid = q("select * from item_id where iid = %d",
+					intval($post_id)
+				);
+				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+			}
 		}
 		else {
 			logger('mod_item: unable to retrieve post that was just stored.');
@@ -987,19 +998,6 @@ class Item extends \Zotlabs\Web\Controller {
 			$ditem = $datarray;
 			$ditem['author'] = $observer;
 			store_diaspora_comment_sig($ditem,$channel,$parent_item, $post_id, (($walltowall_comment) ? 1 : 0));
-		}
-		else {
-			$r = q("select * from item where id = %d",
-				intval($post_id)
-			);
-			if($r) {
-				xchan_query($r);
-				$sync_item = fetch_post_tags($r);
-				$rid = q("select * from item_id where iid = %d",
-					intval($post_id)
-				);
-				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
-			}
 		}
 	
 		$datarray['id']    = $post_id;

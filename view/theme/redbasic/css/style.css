@@ -202,7 +202,7 @@ header #banner #logo-text {
 
 /* contextual help */
 .help-content {
-	background: $item_colour;
+	background: $comment_item_colour;
 	color: $font_colour;
 	position: fixed;
 	top: -50%;
@@ -225,6 +225,10 @@ header #banner #logo-text {
 
 .help-content dd {
 	margin-bottom: 1em;
+}
+
+.contextual-help-btn {
+	text-decoration: underline;
 }
 /* contextual help end */
 

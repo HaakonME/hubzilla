@@ -84,11 +84,9 @@ class Router {
 						include_once("mod/{$module}.php");
 						\App::$module_loaded = true;
 					}
-					else logger("mod/{$module}.php not found.");
 				}
 			}
-
-
+				
 			/**
 			 * This provides a place for plugins to register module handlers which don't otherwise exist on the system.
 			 * If the plugin sets 'installed' to true we won't throw a 404 error for the specified module even if
@@ -96,10 +94,11 @@ class Router {
 			 * The plugin should catch at least one of the module hooks for this URL. 
 			 */
 
-			$x = array('module' => $module, 'installed' => false);
+			$x = array('module' => $module, 'installed' => \App::$module_loaded);
 			call_hooks('module_loaded', $x);
 			if($x['installed'])
 				\App::$module_loaded = true;
+
 
 			/**
 			 * The URL provided does not resolve to a valid module.
@@ -118,6 +117,8 @@ class Router {
 				if((x($_SERVER, 'QUERY_STRING')) && preg_match('/{[0-9]}/', $_SERVER['QUERY_STRING']) !== 0) {
 					killme();
 				}
+
+				logger("Module {$module} not found.", LOGGER_DEBUG, LOG_WARNING);
 
 				if((x($_SERVER, 'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && \App::$config['system']['dreamhost_error_hack']) {
 					logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);

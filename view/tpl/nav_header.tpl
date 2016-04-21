@@ -18,18 +18,18 @@
                     )) {
       container.removeClass('help-content-open');
       $('main').removeClass('help-content-open');
-      $('main').css('top', 'auto')
+      $('main').css('top', '')
     }
     else if (($('#help_nav_btn').is(e.target) || $('#help_nav_btn').has(e.target).length !== 0)
             && !container.hasClass('help-content-open')) {
       $('#help-content').addClass('help-content-open');
       $('main').removeClass('help-content-open');
       var mainTop = $('#navbar-collapse-1').height();
-      if ($('#navbar-collapse-1').height() < $('#help-content').height()) {
-        mainTop = $('#help-content').height();
+      if ($('#navbar-collapse-1').outerHeight(true) < $('#help-content').height()) {
+        mainTop = $('#help-content').outerHeight(true);
       }
 
-      $('main').css('top', +mainTop + +50 + 'px');
+      $('main').css('top', mainTop + 'px');
     }
 
   });

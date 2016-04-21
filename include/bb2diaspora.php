@@ -362,7 +362,7 @@ function bb2diaspora_itembody($item, $force_update = false, $have_channel = fals
 	}
 
 	if(! $have_channel)
-		bb2diaspora_itemwallwall($newitem, $newpost);
+		bb2diaspora_itemwallwall($newitem);
 
 	$title = $newitem['title'];
 	$body  = preg_replace('/\#\^http/i', 'http', $newitem['body']);

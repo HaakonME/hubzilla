@@ -10,7 +10,7 @@ class Display extends \Zotlabs\Web\Controller {
 	//	logger("mod-display: update = $update load = $load");
 	
 	
-		$checkjs = new \Zotlabs\Web\CheckJS();
+		$checkjs = new \Zotlabs\Web\CheckJS(1);
 	
 	
 		if($load)

@@ -57,7 +57,7 @@ function get($update = 0, $load = false) {
 	if($load)
 		$_SESSION['loadtime'] = datetime_convert();
 
-	$checkjs = new \Zotlabs\Web\CheckJS();
+	$checkjs = new \Zotlabs\Web\CheckJS(1);
 
 	$category = $datequery = $datequery2 = '';
 

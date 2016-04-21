@@ -5,11 +5,11 @@ namespace Zotlabs\Module;
 class Nojs extends \Zotlabs\Web\Controller {
 
 	function init() {
-	
-		setcookie('jsdisabled', 1, 0);
-		$p = $_GET['query'];
+		$n = ((argc() > 1) ? intval(argv(1)) : 1);
+		setcookie('jsdisabled', $n, 0, '/');
+		$p = $_GET['redir'];
 		$hasq = strpos($p,'?');
-		goaway(z_root() . (($p) ? '/' . $p : '') . (($hasq) ? '' : '?f=' ) . '&jsdisabled=1');
+		goaway(z_root() . (($p) ? '/' . $p : '') . (($hasq) ? '' : '?f=' ) . '&jsdisabled=' . $n);
 	
 	}
 }

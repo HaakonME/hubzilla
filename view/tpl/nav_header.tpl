@@ -13,14 +13,14 @@
             && container.hasClass('help-content-open'))
             ||
             (
-                    ($('#help_nav_btn').is(e.target) || $('#help_nav_btn').has(e.target).length !== 0)
+                    ($('#help_nav_btn, #help_nav_btn_collapsed').is(e.target) || $('#help_nav_btn, #help_nav_btn_collapsed').has(e.target).length !== 0)
                     && container.hasClass('help-content-open')
                     )) {
       container.removeClass('help-content-open');
       $('main').removeClass('help-content-open');
       $('main').css('top', '')
     }
-    else if (($('#help_nav_btn').is(e.target) || $('#help_nav_btn').has(e.target).length !== 0)
+    else if (($('#help_nav_btn, #help_nav_btn_collapsed').is(e.target) || $('#help_nav_btn, #help_nav_btn_collapsed').has(e.target).length !== 0)
             && !container.hasClass('help-content-open')) {
       $('#help-content').addClass('help-content-open');
       $('main').removeClass('help-content-open');

@@ -11,7 +11,7 @@
 			<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
 				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
 			</button>
-			<a class="navbar-toggle" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="help-btn"{{if $nav.help.6}} onclick="return false;"{{/if}}>
+			<a class="navbar-toggle" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}_collapsed"{{if $nav.help.6}} onclick="return false;"{{/if}}>
 				<i class="icon-question"></i>
 			</a>
 			{{if $userinfo}}
@@ -191,7 +191,7 @@
 			{{/if}}
 
 			{{if $nav.help}}
-				<li class="{{$sel.help}}" class="hidden-xs">
+				<li class="{{$sel.help}} hidden-xs">
 					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="return false;"{{/if}}><i class="icon-question"></i></a>
 				</li>
 			{{/if}}

@@ -1703,9 +1703,10 @@ nav .badge.mail-update:hover {
 
 #expand-aside,
 #expand-tabs,
-#help-btn {
+#help_nav_btn_collapsed {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
+	text-decoration: none;
 }
 
 .nav-tabs.nav-justified {

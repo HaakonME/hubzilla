@@ -16,7 +16,7 @@ class Router {
 		 *
 		 * App::$argv[0] is our module name. Let's call it 'foo'. We will load the
 		 * Zotlabs/Module/Foo.php (object) or file mod/foo.php (procedural)
-		 * and use it for handling our URL request.
+		 * and use it for handling our URL request to 'https://ourgreatwebsite.something/foo' .
 		 * The module file contains a few functions that we call in various circumstances
 		 * and in the following order:
 		 *
@@ -24,7 +24,7 @@ class Router {
 		 *    class Foo extends Zotlabs\Web\Controller {
 		 *        function init() { init function }
 		 *        function post() { post function }
-		 *        function get()  { nomral page function }
+		 *        function get()  { normal page function }
 		 *    }
 		 *
 		 * Procedual interface:
@@ -38,6 +38,7 @@ class Router {
 		 */
 
 		$module = \App::$module;
+		$modname = "Zotlabs\\Module\\" . ucfirst($module);
 
 		if(strlen($module)) {
 
@@ -50,8 +51,13 @@ class Router {
 
 			if(is_array(\App::$plugins) && in_array($module,\App::$plugins) && file_exists("addon/{$module}/{$module}.php")) {
 				include_once("addon/{$module}/{$module}.php");
-				if(function_exists($module . '_module'))
+				if(class_exists($modname)) {
+					$this->controller = new $modname;
 					\App::$module_loaded = true;
+				}
+				elseif(function_exists($module . '_module')) {
+					\App::$module_loaded = true;
+				}
 			}
 
 			if((strpos($module,'admin') === 0) && (! is_site_admin())) {
@@ -62,18 +68,27 @@ class Router {
 
 			/**
 			 * If the site has a custom module to over-ride the standard module, use it.
-			 * Otherwise, look for the standard program module in the 'mod' directory
+			 * Otherwise, look for the standard program module
 			 */
 
 			if(! (\App::$module_loaded)) {
 				try {
-					$modname = "Zotlabs\\Module\\" . ucfirst($module);
-					$filename = 'Zotlabs/Module/'. ucfirst($module). '.php';
+					$filename = 'Zotlabs/SiteModule/'. ucfirst($module). '.php';
 					if(file_exists($filename)) {
+						// This won't be picked up by the autoloader, so load it explicitly
+						require_once($filename);
 						$this->controller = new $modname;
 						\App::$module_loaded = true;
 					}
-					else throw new \Exception('Module not found');
+					else {
+						$filename = 'Zotlabs/Module/'. ucfirst($module). '.php';
+						if(file_exists($filename)) {
+							$this->controller = new $modname;
+							\App::$module_loaded = true;
+						}
+					}
+					if(! \App::$module_loaded)
+						throw new \Exception('Module not found');
 				}
 				catch(\Exception $e) {
 					if(file_exists("mod/site/{$module}.php")) {
@@ -88,17 +103,19 @@ class Router {
 			}
 				
 			/**
-			 * This provides a place for plugins to register module handlers which don't otherwise exist on the system.
+			 * This provides a place for plugins to register module handlers which don't otherwise exist 
+			 * on the system, or to completely over-ride an existing module. 
 			 * If the plugin sets 'installed' to true we won't throw a 404 error for the specified module even if
 			 * there is no specific module file or matching plugin name.
 			 * The plugin should catch at least one of the module hooks for this URL. 
 			 */
 
-			$x = array('module' => $module, 'installed' => \App::$module_loaded);
+			$x = array('module' => $module, 'installed' => \App::$module_loaded, 'controller' => $this->controller);
 			call_hooks('module_loaded', $x);
-			if($x['installed'])
+			if($x['installed']) {
 				\App::$module_loaded = true;
-
+				$this->controller = $x['controller'];
+			}
 
 			/**
 			 * The URL provided does not resolve to a valid module.

@@ -22,13 +22,11 @@ class CheckJS {
 
 			if($test) {
 
-				logger('page=' . $page);
-
-    			if($_COOKIE['jsdisabled'] == 0) {
+    			if(! array_key_exists('jsdisabled',$_COOKIE)) {
 			        \App::$page['htmlhead'] .= "\r\n" . '<script>document.cookie="jsdisabled=0; path=/"; var jsMatch = /\&jsdisabled=0/; if (!jsMatch.exec(location.href)) { location.href = "' . z_root() . '/nojs/0?f=&redir=' . $page . '" ; }</script>' . "\r\n";
 			        /* emulate JS cookie if cookies are not accepted */
-			        if ($_GET['jsdisabled'] == 0) {
-            			$_COOKIE['jsdisabled'] = 0;
+			        if (array_key_exists('jsdisabled',$_GET)) {
+            			$_COOKIE['jsdisabled'] = $_GET['jsdisabled'];
         			}
 				}
 			}

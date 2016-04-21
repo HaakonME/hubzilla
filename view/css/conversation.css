@@ -196,8 +196,10 @@ a.wall-item-name-link {
 
 /* comment_item */
 
-.comment-edit-text-empty, .comment-edit-text-full {
+.comment-edit-text-empty,
+.comment-edit-text-full {
 	width: 100%;
+	display: inherit;
 }
 
 .comment-edit-text-empty {

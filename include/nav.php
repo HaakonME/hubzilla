@@ -150,7 +150,7 @@ EOT;
 	$help_url = z_root() . '/help?f=&cmd=' . App::$cmd;
 
 	if(! get_config('system','hide_help')) {
-		require_once('mod/help.php');
+		require_once('include/help.php');
 		$context_help = load_context_help();
 		$enable_context_help = get_config('system','enable_context_help') || 0;
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'),'help_nav_btn',$context_help,$enable_context_help);

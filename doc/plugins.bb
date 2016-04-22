@@ -1,6 +1,6 @@
 [b]Plugins[/b]
 
-So you want to make the $Projectname do something it doesn't already do. There are lots of ways. But let's learn how to write a plugin or addon. 
+So you want to make $Projectname do something it doesn't already do. There are lots of ways. But let's learn how to write a plugin or addon. 
 
 
 In your $Projectname folder/directory, you will probably see a sub-directory called 'addon'. If you don't have one already, go ahead and create it. 
@@ -71,7 +71,7 @@ Next we'll create an unload function. This is easy, as it just unregisters our h
 	}
 [/code]
 
-Hooks are always called with one argument which is specific to the hook you're calling. It contains information relevant to that particular place in the program, and often allows you to look at, and even change it. In order to change it, you need to add '&amp;' to the variable name so it is passed to your function by reference. Otherwise it will create a copy and any changes you make will be lost when the hook process returns. Usually (but not always) the second argument is a named array of data structures. Please see the &quot;hook reference&quot; (not yet written as of this date) for details on any specific hook. Occasionally you may need to view the program source to see precisely how a given hook is called and how the results are processed. 
+Hooks are always called with one argument which is specific to the hook you're calling. It contains information relevant to that particular place in the program, and often allows you to look at, and even change it. In order to change it, you need to add '&amp;' to the variable name so it is passed to your function by reference. Otherwise it will create a copy and any changes you make will be lost when the hook process returns. Usually (but not always) the passed data is a named array of data structures. Please see the &quot;hook reference&quot; (not yet written as of this date) for details on any specific hook. Occasionally you may need to view the program source to see precisely how a given hook is called and how the results are processed. 
 
 Let's go ahead and add some code to implement our post_local hook handler. 
 [code]
@@ -238,7 +238,7 @@ can be used inside your addon file without causing a namespace conflict, as the 
 [code]
 	function randplace_module() { return; }
 [/code]
-Once this function exists, the URL #^[url=https://yoursite/randplace]https://yoursite/randplace[/url] will access your plugin as a module. Then you can define functions which are called at various points to build a webpage just like the modules in the mod/ directory. The typical functions and the order which they are called is
+Once this function exists, the URL #^[url=https://yoursite/randplace]https://yoursite/randplace[/url] will access your plugin as a module. Then you can define functions which are called at various points to return or process a structured webpage just like system modules. The typical functions and the order which they are called is
 [code]
 	modulename_init($a)    // (e.g. randplace_init($a);) called first - if you wish to emit json or xml, 
 	                       // you should do it here, followed by killme() which will avoid the default action of building a webpage
@@ -283,6 +283,6 @@ The $Projectname has _install and _uninstall functions but these are used differ
 
 [li] Friendica's &quot;plugin_settings_post&quot; hook is called &quot;feature_settings_post&quot;[/li]
 
-Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the $Projectname. Many structured data names (especially DB schema columns) are also quite different.
+Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in $Projectname. Many structured data names (especially DB schema columns) are also quite different.
 
 #include doc/macros/main_footer.bb;

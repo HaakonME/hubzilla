@@ -1,4 +1,4 @@
-<div class="container-fluid">
+	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
 				<span class="icon-bar"></span>
@@ -11,6 +11,9 @@
 			<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
 				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
 			</button>
+			<a class="navbar-toggle" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}_collapsed"{{if $nav.help.6}} onclick="return false;"{{/if}}>
+				{{if $nav.help.6}}<i class="icon-caret-down"></i>&nbsp;{{/if}}<i class="icon-question"></i>
+			</a>
 			{{if $userinfo}}
 				<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret" id="usermenu-caret"></span>
 				{{if $localuser}}
@@ -188,15 +191,16 @@
 			{{/if}}
 
 			{{if $nav.help}}
-				<li class="{{$sel.help}}">
-                                  <a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}" onclick="return false;"><i class="icon-question"></i></a>
+				<li class="{{$sel.help}} hidden-xs">
+					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="return false;"{{/if}}>{{if $nav.help.6}}<i class="icon-caret-down"></i>&nbsp;{{/if}}<i class="icon-question"></i></a>
 				</li>
-                                
-			<div id="help-content" class="help-content">
-                            {{$nav.help.5}}
-                            <p class="pull-right"><a href="{{$nav.help.0}}">Click here for more documentation...</a></p>
-			</div>
 			{{/if}}
 			</ul>
 		</div>
 	</div>
+	{{if $nav.help.6}}
+	<div id="help-content" class="help-content">
+		{{$nav.help.5}}
+		<p class="pull-right"><a href="{{$nav.help.0}}">Click here for more documentation...</a></p>
+	</div>
+	{{/if}}

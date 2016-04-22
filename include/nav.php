@@ -150,9 +150,15 @@ EOT;
 	$help_url = z_root() . '/help?f=&cmd=' . App::$cmd;
 
 	if(! get_config('system','hide_help')) {
-		require_once('include/help.php');
-		$context_help = load_context_help();
-		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'),'help_nav_btn',$context_help);
+		$context_help = '';
+		$enable_context_help = ((intval(get_config('system','enable_context_help')) === 1 || get_config('system','enable_context_help') === false) ? true : false);
+		if($enable_context_help === true) {
+			require_once('include/help.php');
+			$context_help = load_context_help();
+			//direct directly to /help if $context_help is empty - this can be removed once we have context help for all modules
+			$enable_context_help = (($context_help) ? true : false);
+		}
+		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'), 'help_nav_btn', $context_help, $enable_context_help);
 	}
 
 	if(! UNO)
@@ -234,6 +240,12 @@ $powered_by = '';
 
 //	$powered_by = '<strong>red<img class="smiley" src="' . z_root() . '/images/rm-16.png" alt="r#" />matrix</strong>';
 
+	$tpl = get_markup_template('nav_header.tpl');
+	
+	App::$page['htmlhead'] .= replace_macros($tpl, array(
+		'$enable_context_help' => $enable_context_help
+	));
+	
 	$tpl = get_markup_template('nav.tpl');
 
 	App::$page['nav'] .= replace_macros($tpl, array(
@@ -248,7 +260,7 @@ $powered_by = '';
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...')
-	));
+		));
 
 	call_hooks('page_header', App::$page['nav']);
 }

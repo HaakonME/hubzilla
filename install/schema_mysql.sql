@@ -517,8 +517,10 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `file` char(255) NOT NULL DEFAULT '',
   `function` char(255) NOT NULL DEFAULT '',
   `priority` int(11) unsigned NOT NULL DEFAULT '0',
+  `hook_version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `hook` (`hook`)
+  KEY `hook` (`hook`),
+  KEY `hook_version` (`hook_version`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `hubloc` (

@@ -185,7 +185,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
 		dbesc($file),
 		dbesc($function)
 	);
-	if(count($r))
+	if($r)
 		return true;
 
 	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`, `priority`) VALUES ( '%s', '%s', '%s', '%s' )",
@@ -226,9 +226,8 @@ function unregister_hook($hook, $file, $function) {
 
 
 function load_hooks() {
-	$a = get_app();
-//	if(! is_array(App::$hooks))
-		App::$hooks = array();
+
+	App::$hooks = array();
 
 	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
 	if($r) {
@@ -236,10 +235,10 @@ function load_hooks() {
 			if(! array_key_exists($rr['hook'],App::$hooks))
 				App::$hooks[$rr['hook']] = array();
 
-			App::$hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
+			App::$hooks[$rr['hook']][] = array($rr['file'],$rr['function'],$rr['priority'],$rr['hook_version']);
 		}
 	}
-//logger('hooks: ' . print_r(App::$hooks,true));
+	//logger('hooks: ' . print_r(App::$hooks,true));
 }
 
 /**
@@ -259,15 +258,15 @@ function load_hooks() {
  * @param string $fn
  *     function name of callback handler
  */ 
-function insert_hook($hook, $fn) {
-	$a = get_app();
+function insert_hook($hook, $fn, $version = 0, $priority = 0) {
+
 	if(! is_array(App::$hooks))
 		App::$hooks = array();
 
 	if(! array_key_exists($hook, App::$hooks))
 		App::$hooks[$hook] = array();
 
-	App::$hooks[$hook][] = array('', $fn);
+	App::$hooks[$hook][] = array('', $fn, $priority, $version);
 }
 
 /**
@@ -280,8 +279,7 @@ function insert_hook($hook, $fn) {
  * @param string|array &$data to transmit to the callback handler
  */
 function call_hooks($name, &$data = null) {
-	$a = get_app();
-
+	$a = 0;
 	if((is_array(App::$hooks)) && (array_key_exists($name, App::$hooks))) {
 		foreach(App::$hooks[$name] as $hook) {
 			if($hook[0])
@@ -289,9 +287,11 @@ function call_hooks($name, &$data = null) {
 
 			if(function_exists($hook[1])) {
 				$func = $hook[1];
-				$func($a, $data);
+				if($hook[3])
+					$func($data);
+				else
+					$func($a, $data);
 			} else {
-
 				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND function = '%s'",
 					dbesc($name),
 					dbesc($hook[0]),

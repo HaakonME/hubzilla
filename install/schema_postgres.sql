@@ -512,10 +512,12 @@ CREATE TABLE "hook" (
   "file" text NOT NULL,
   "function" text NOT NULL,
   "priority" bigint  NOT NULL DEFAULT '0',
+  "hook_version" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("id")
 
 );
 create index "hook_idx" on hook ("hook");
+create index "hook_version_idx" on hook ("hook_version");
 CREATE TABLE "hubloc" (
   "hubloc_id" serial  NOT NULL,
   "hubloc_guid" text NOT NULL DEFAULT '',

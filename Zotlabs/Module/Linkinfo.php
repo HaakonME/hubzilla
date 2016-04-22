@@ -111,7 +111,7 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
-		$siteinfo = parseurl_getsiteinfo($url);
+		$siteinfo = self::parseurl_getsiteinfo($url);
 	
 		// If this is a Red site, use zrl rather than url so they get zids sent to them by default
 	
@@ -172,14 +172,14 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 	}
 	
 	
-	function deletexnode(&$doc, $node) {
-		$xpath = new DomXPath($doc);
+	public static function deletexnode(&$doc, $node) {
+		$xpath = new \DomXPath($doc);
 		$list = $xpath->query("//".$node);
 		foreach ($list as $child)
 			$child->parentNode->removeChild($child);
 	}
 	
-	function completeurl($url, $scheme) {
+	public static function completeurl($url, $scheme) {
 	        $urlarr = parse_url($url);
 	
 	        if (isset($urlarr["scheme"]))
@@ -207,7 +207,7 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 	}
 	
 	
-	function parseurl_getsiteinfo($url) {
+	public static function parseurl_getsiteinfo($url) {
 		$siteinfo = array();
 	
 	
@@ -221,22 +221,22 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 		$body   = mb_convert_encoding($body, 'UTF-8', 'UTF-8');
 		$body   = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
 	
-		$doc    = new DOMDocument();
+		$doc    = new \DOMDocument();
 		@$doc->loadHTML($body);
 	
-		$this->deletexnode($doc, 'style');
-		$this->deletexnode($doc, 'script');
-		$this->deletexnode($doc, 'option');
-		$this->deletexnode($doc, 'h1');
-		$this->deletexnode($doc, 'h2');
-		$this->deletexnode($doc, 'h3');
-		$this->deletexnode($doc, 'h4');
-		$this->deletexnode($doc, 'h5');
-		$this->deletexnode($doc, 'h6');
-		$this->deletexnode($doc, 'ol');
-		$this->deletexnode($doc, 'ul');
+		self::deletexnode($doc, 'style');
+		self::deletexnode($doc, 'script');
+		self::deletexnode($doc, 'option');
+		self::deletexnode($doc, 'h1');
+		self::deletexnode($doc, 'h2');
+		self::deletexnode($doc, 'h3');
+		self::deletexnode($doc, 'h4');
+		self::deletexnode($doc, 'h5');
+		self::deletexnode($doc, 'h6');
+		self::deletexnode($doc, 'ol');
+		self::deletexnode($doc, 'ul');
 	
-		$xpath = new DomXPath($doc);
+		$xpath = new \DomXPath($doc);
 	
 		//$list = $xpath->query("head/title");
 		$list = $xpath->query("//title");
@@ -303,7 +303,7 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 	                    foreach ($node->attributes as $attribute)
 	                        $attr[$attribute->name] = $attribute->value;
 	
-				$src = $this->completeurl($attr["src"], $url);
+				$src = self::completeurl($attr["src"], $url);
 				$photodata = @getimagesize($src);
 	
 				if (($photodata) && ($photodata[0] > 150) and ($photodata[1] > 150)) {
@@ -322,7 +322,7 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 	
 	 		}
 	    } else {
-			$src = $this->completeurl($siteinfo["image"], $url);
+			$src = self::completeurl($siteinfo["image"], $url);
 	
 			unset($siteinfo["image"]);
 	

@@ -208,10 +208,16 @@ Sometimes your plugins want to provide a range of new functionality which isn't 
 
 There are two ways to accomplish this. To create a module object use the following model:
 [code]
+<?php     /* file: addon/randplace/Mod_Randplace.php */
+namespace Zotlabs\Module;
 
 	// Your module will consist of the name of your addon with an uppercase first character, within the Zotlabs\Module namespace
-
-	class Zotlabs\Module\Randplace extends Zotlabs\Web\Controller {
+	// To avoid namespace conflicts with your plugin, the convention we're using is to name the module file Mod_Addonname.php
+	// In this case 'Mod_Randplace.php' and then include it from within your main plugin file 'randplace.php' with the line:
+	//
+	// require_once('addon/randplace/Mod_Randplace.php');
+	
+	class Randplace extends \Zotlabs\Web\Controller {
 		function init() { 
 			// init method is always called first if it exists 
 		}
@@ -226,7 +232,9 @@ There are two ways to accomplish this. To create a module object use the followi
 [/code]
 
 The other option is to use a procedural interface. The $a argument to these function is obsolete, but must be present. 
-The key to this is to create a simple function named pluginname_module() which does nothing. 
+The key to this is to create a simple function named pluginname_module() which does nothing. These lines and this interface
+can be used inside your addon file without causing a namespace conflict, as the object method will. 
+
 [code]
 	function randplace_module() { return; }
 [/code]

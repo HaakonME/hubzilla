@@ -12,7 +12,7 @@
 				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
 			</button>
 			<a class="navbar-toggle" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}_collapsed"{{if $nav.help.6}} onclick="return false;"{{/if}}>
-				{{if $nav.help.6}}<i class="icon-caret-down"></i>&nbsp;{{/if}}<i class="icon-question"></i>
+				{{if $nav.help.6}}<i class="icon-question-sign"></i>{{else}}<i class="icon-question"></i>{{/if}}
 			</a>
 			{{if $userinfo}}
 				<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret" id="usermenu-caret"></span>
@@ -192,7 +192,7 @@
 
 			{{if $nav.help}}
 				<li class="{{$sel.help}} hidden-xs">
-					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="return false;"{{/if}}>{{if $nav.help.6}}<i class="icon-caret-down"></i>&nbsp;{{/if}}<i class="icon-question"></i></a>
+					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="return false;"{{/if}}>{{if $nav.help.6}}<i class="icon-question-sign"></i>{{else}}<i class="icon-question"></i>{{/if}}</a>
 				</li>
 			{{/if}}
 			</ul>

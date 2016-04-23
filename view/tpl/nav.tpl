@@ -12,9 +12,9 @@
 				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
 			</button>
 			{{if $nav.help.6}}
-			<a class="navbar-toggle" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}_collapsed"{{if $nav.help.6}} onclick="return false;"{{/if}}>
+			<button id="context-help-btn"class="navbar-toggle" type="button" onclick="contextualHelp(); return false;">
 				<i class="icon-question-sign"></i>
-			</a>
+			</button>
 			{{/if}}
 			{{if $userinfo}}
 				<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret" id="usermenu-caret"></span>
@@ -35,6 +35,10 @@
 						{{if $nav.admin}}
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a></li>
+						{{/if}}
+						{{if $nav.help}}
+						<li role="presentation" class="divider"></li>
+						<li role="presentation"><a href="{{$nav.help.0}}" title="{{$nav.help.3}}" role="menuitem" id="{{$nav.help.4}}">{{$nav.help.1}}</a></li>
 						{{/if}}
 						{{if $nav.logout}}
 						<li role="presentation" class="divider"></li>
@@ -194,15 +198,15 @@
 
 			{{if $nav.help}}
 				<li class="{{$sel.help}}{{if $nav.help.6}} hidden-xs{{/if}}">
-					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="return false;"{{/if}}>{{if $nav.help.6}}<i class="icon-question-sign"></i>{{else}}<i class="icon-question"></i>{{/if}}</a>
+					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="contextualHelp(); return false;"{{/if}}>{{if $nav.help.6}}<i class="icon-question-sign"></i>{{else}}<i class="icon-question"></i>{{/if}}</a>
 				</li>
 			{{/if}}
 			</ul>
 		</div>
 	</div>
 	{{if $nav.help.6}}
-	<div id="help-content" class="help-content">
+	<div id="contextual-help-content" class="contextual-help-content">
 		{{$nav.help.5}}
-		<p class="pull-right"><a href="{{$nav.help.0}}">Click here for more documentation...</a></p>
+		<button type="button" class="close pull-right" onclick="contextualHelp();">×</button>
 	</div>
 	{{/if}}

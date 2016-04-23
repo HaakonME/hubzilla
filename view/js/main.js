@@ -443,6 +443,32 @@ function NavUpdate() {
 	timer = setTimeout(NavUpdate, updateInterval);
 }
 
+function contextualHelp() {
+	var container = $("#contextual-help-content");
+
+	if(container.hasClass('contextual-help-content-open')) {
+		container.removeClass('contextual-help-content-open');
+		$('main').css('top', '')
+	}
+	else {
+		container.addClass('contextual-help-content-open');
+		var mainTop = container.outerHeight(true);
+		$('main').css('top', mainTop + 'px');
+	}
+}
+
+function contextualHelpFocus(target, openSidePanel) {
+	if (openSidePanel) {
+		$("main").addClass('region_1-on');  // Open the side panel to highlight element
+	}
+	else {
+		$("main").removeClass('region_1-on');
+	}
+	$('html,body').animate({ scrollTop: $(target).offset().top - $('nav').outerHeight(true) - $('#contextual-help-content').outerHeight(true)}, 'slow');
+	for (i = 0; i < 3; i++) {
+		$(target).fadeTo('slow', 0.1).fadeTo('slow', 1.0);
+	}
+}
 
 function updatePageItems(mode, data) {
 

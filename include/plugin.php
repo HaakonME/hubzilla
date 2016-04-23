@@ -284,8 +284,9 @@ function call_hooks($name, &$data = null) {
 		foreach(App::$hooks[$name] as $hook) {
 			if($hook[0])
 				@include_once($hook[0]);
-
-			if(function_exists($hook[1])) {
+			if(preg_match('|^a:[0-9]+:{.*}$|s', $hook[1]))
+				$hook[1] = unserialize($hook[1]);
+			if(is_callable($hook[1])) {
 				$func = $hook[1];
 				if($hook[3])
 					$func($data);

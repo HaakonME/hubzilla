@@ -207,6 +207,6 @@
 	{{if $nav.help.6}}
 	<div id="contextual-help-content" class="contextual-help-content">
 		{{$nav.help.5}}
-		<button type="button" class="close pull-right" onclick="contextualHelp();">×</button>
+		<button type="button" class="close" onclick="contextualHelp();">×</button>
 	</div>
 	{{/if}}

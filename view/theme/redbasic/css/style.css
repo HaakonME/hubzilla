@@ -201,29 +201,26 @@ header #banner #logo-text {
 }
 
 /* contextual help */
-.help-content {
-	background: $comment_item_colour;
-	color: $font_colour;
-	position: fixed;
-	top: -50%;
-	left: 0px;
-	width: 100%;
-	max-height: 50%;
-	padding: 20px;
-	/*transition: top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);*/
-	border-bottom: #CCC 1px solid;
-	overflow: auto;
+.contextual-help-content {
+	display: none;
+
 }
 
-.help-content-open {
+.contextual-help-content-open {
+	display: block;
+	position: fixed;
 	top: 51px;
+	max-height: 50%;
+	background: $comment_item_colour;
+	padding: 20px;
+	border-bottom: #ccc 1px solid;
+	overflow: auto;
 	-moz-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
 	-webkit-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
 	box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
-	/*transition: top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);*/
 }
 
-.help-content dd {
+.contextual-help-content dd {
 	margin-bottom: 1em;
 }
 /* contextual help end */
@@ -1608,6 +1605,7 @@ nav ul li .notify-unseen
 }
 
 blockquote {
+	display: inline-block;
 	font-size: $font_size;
 	font-style: italic;
 	border-left: 3px solid #ccc;
@@ -1703,10 +1701,9 @@ nav .badge.mail-update:hover {
 
 #expand-aside,
 #expand-tabs,
-#help_nav_btn_collapsed {
+#context-help-btn {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
-	text-decoration: none;
 }
 
 .nav-tabs.nav-justified {

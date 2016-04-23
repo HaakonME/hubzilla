@@ -56,4 +56,8 @@
 		top: 30px;
 		right: 15px;
 	}
+
+	.contextual-help-content-open {
+		top: 32px;
+	}
 }

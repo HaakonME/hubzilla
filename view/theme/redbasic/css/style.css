@@ -1605,6 +1605,7 @@ nav ul li .notify-unseen
 }
 
 blockquote {
+	display: inline-block;
 	font-size: $font_size;
 	font-style: italic;
 	border-left: 3px solid #ccc;

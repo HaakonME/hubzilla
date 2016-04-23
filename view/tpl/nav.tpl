@@ -36,7 +36,7 @@
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a></li>
 						{{/if}}
-						{{if $nav.help}}
+						{{if $nav.help.6}}
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a href="{{$nav.help.0}}" title="{{$nav.help.3}}" role="menuitem" id="{{$nav.help.4}}">{{$nav.help.1}}</a></li>
 						{{/if}}

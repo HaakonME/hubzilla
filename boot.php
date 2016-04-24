@@ -1797,7 +1797,7 @@ function proc_run($cmd){
 
 	$arr = array('args' => $args, 'run_cmd' => true);
 
-	call_hooks("proc_run", $arr);
+	call_hooks('proc_run', $arr);
 	if(! $arr['run_cmd'])
 		return;
 

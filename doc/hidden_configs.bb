@@ -4,9 +4,13 @@ $Projectname contains many configuration options hidden from the main admin pane
 
 These are generally options considered too niche, confusing, or advanced for 
 the average member.  These settings can be activated from the the top level web 
-directory with the syntax [code]util/config cat key value[/code] for a site
-configuration, or [code]util/pconfig channel_id cat key value[/code] for a 
-member configuration.
+directory with the syntax
+
+[code]util/config cat key value[/code] 
+for a site configuration, or 
+
+[code]util/pconfig channel_id cat key value[/code] 
+for a member configuration.
 
 This document assumes you're an administrator.
 
@@ -83,9 +87,8 @@ This document assumes you're an administrator.
         'forum', 'forum_restricted' and 'forum_private'. 
         Read more about permissions roles [zrl=[baseurl]/help/roles]here[/zrl].
     [b]system.default_photo_profile[/b]
-        Set the profile photo that new channels start with. This should contain the name of a directory 
-        under [font=courier]images/default_profile_photos/[/font] or be left unset. If not set then 'rainbow_man' 
-        is assumed.
+        Set the profile photo that new channels start with. This should contain the name of a directory located
+        under [font=courier]images/default_profile_photos/[/font], or be left unset. If not set then 'rainbow_man' is assumed.
     [b]system.workflow_channel_next[/b]
         The page to direct new members to immediately after creating a channel.
     [b]system.workflow_register_next[/b]
@@ -111,8 +114,9 @@ This document assumes you're an administrator.
     [b]system.poke_basic[/b]
         Reduce the number of poke verbs to exactly 1 ("poke"). Disable other verbs. 
     [b]system.openssl_conf_file[/b]
-        Specify a file containing OpenSSL configuration.  Read the code first.
-        If you can't read the code, don't play with it.
+        Specify a file containing OpenSSL configuration. Needed in some Windows installations to 
+        locate the openssl configuration file on the system. 
+        Read the code first. If you can't read the code, don't play with it.
     [b]system.optimize_items[/b]
         Runs optimise_table during some tasks to keep your database nice and 
         defragmented.  This comes at a performance cost while the operations
@@ -192,8 +196,6 @@ This document assumes you're an administrator.
 	[b]system.max_tagged_forums[/b]
 		Spam prevention. Limits the number of tagged forums which are recognised in any post. 
 		Default is 2. Only the first 'n' tags will be delivered as forums, the others will not cause any delivery. 
-	[b]system.openssl_conf_file[/b]
-		Needed in some Windows installations to locate the openssl configuration file on the system.
  	[b]system.hide_help[/b]
 		Don't display help documentation link in nav bar
  	[b]system.expire_delivery_reports[/b]

@@ -60,28 +60,32 @@ This document assumes you're an administrator.
         Allow the @mention tagging of anyone whether you are connected or not.
     [b]system.directorytags[/b]
         Set the number of keyword tags displayed on the directory page. Default is 50 unless set to a 
-		positive integer.
-	[b]system.disable_directory_keywords[/b]
-		If '1', do not show directory keywords. If the hub is a directory server, prevent returning
-		tags to any directory clients. Please do not set this for directory servers in the RED_GLOBAL realm. 
-	[b]system.disable_dreport[/b]
-		If '1', don't store or link to delivery reports
+        positive integer.
+    [b]system.disable_directory_keywords[/b]
+        If '1', do not show directory keywords. If the hub is a directory server, prevent returning
+        tags to any directory clients. Please do not set this for directory servers in the RED_GLOBAL realm. 
+    [b]system.disable_dreport[/b]
+        If '1', don't store or link to delivery reports
     [b]system.startpage[/b]
         Set the default page to be taken to after a login for all channels at
         this website.  Can be overwritten by user settings.
     [b]system.projecthome[/b]
         Set the project homepage as the homepage of your hub. (Obsolete)
-	[b]system.auto_channel_create[/b]
-		Add the necessary form elements to create the first channel on the account registration page, and create it
-		(possibly following email validation or administrator approval). This precludes the ability to import a channel
-		from another site as the first channel created on this site for a new account. 
-		Use with system.default_permissions_role to streamline registration. 
-	[b]system.default_permissions_role[/b]
-		If set to a valid permissions role name, use that role for
-		the first channel created by a new account and don't ask for the "Channel Type" on
-		the channel creation form. Examples of valid names are: 'social', 'social_restricted', 'social_private', 
-		'forum', 'forum_restricted' and 'forum_private'. 
-		Read more about permissions roles [zrl=[baseurl]/help/roles]here[/zrl].
+    [b]system.auto_channel_create[/b]
+        Add the necessary form elements to create the first channel on the account registration page, and create it
+        (possibly following email validation or administrator approval). This precludes the ability to import a channel
+        from another site as the first channel created on this site for a new account. 
+        Use with system.default_permissions_role to streamline registration. 
+    [b]system.default_permissions_role[/b]
+        If set to a valid permissions role name, use that role for
+        the first channel created by a new account and don't ask for the "Channel Type" on
+        the channel creation form. Examples of valid names are: 'social', 'social_restricted', 'social_private', 
+        'forum', 'forum_restricted' and 'forum_private'. 
+        Read more about permissions roles [zrl=[baseurl]/help/roles]here[/zrl].
+    [b]system.default_photo_profile[/b]
+        Set the profile photo that new channels start with. This should contain the name of a directory 
+        under [font=courier]images/default_profile_photos/[/font] or be left unset. If not set then 'rainbow_man' 
+        is assumed.
     [b]system.workflow_channel_next[/b]
         The page to direct new members to immediately after creating a channel.
     [b]system.workflow_register_next[/b]
@@ -96,16 +100,16 @@ This document assumes you're an administrator.
         Similar to block_public, except only blocks public access to 
         search features.  Useful for sites that want to be public, but
         keep getting hammered by search engines.
-	[b]system.proc_run_use_exec
-		If 1, use the exec system call in proc_run to run background tasks. By default
-		we use proc_open and proc_close. On some (currently rare) systems this does not work well.
+    [b]system.proc_run_use_exec[/b]
+        If 1, use the exec system call in proc_run to run background tasks. By default
+        we use proc_open and proc_close. On some (currently rare) systems this does not work well.
     [b]system.paranoia[/b]
         As the pconfig, but on a site-wide basis.  Can be overwritten
         by member settings.
-	[b]system.transport_security_header[/b]
-		if non-zero and SSL is being used, include a strict-transport-security header on webpages
-	[b]system.poke_basic[/b]
-		Reduce the number of poke verbs to exactly 1 ("poke"). Disable other verbs. 
+    [b]system.transport_security_header[/b]
+        if non-zero and SSL is being used, include a strict-transport-security header on webpages
+    [b]system.poke_basic[/b]
+        Reduce the number of poke verbs to exactly 1 ("poke"). Disable other verbs. 
     [b]system.openssl_conf_file[/b]
         Specify a file containing OpenSSL configuration.  Read the code first.
         If you can't read the code, don't play with it.
@@ -115,9 +119,9 @@ This document assumes you're an administrator.
         are running, but also keeps things a bit faster while it's not.  
         There also exist CLI utilities for performing this operation, which you
         may prefer, especially if you're a large site.
-	[b]system.expire_limit
-		Don't expire any more than this number of posts per channel per
-		expiration run to keep from exhausting memory. Default 5000.
+    [b]system.expire_limit[/b]
+        Don't expire any more than this number of posts per channel per
+        expiration run to keep from exhausting memory. Default 5000.
     [b]system.dlogfile[/b]
         Logfile to use for logging development errors.  Exactly the same as
         logger otherwise.  This isn't magic, and requires your own logging
@@ -138,13 +142,17 @@ This document assumes you're an administrator.
     [b]system.cron_hour[/b]
         Specify an hour in which to run cron_daily.  By default with no config, this will run at midnight UTC.
     [b]system.minimum_feedcheck_minutes[/b]
-        The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds will be polled with each cronjob. Defaults to 60 if not set. The site setting can also be over-ridden on a channel by channel basis by a service class setting aptly named 'minimum_feedcheck_minutes'.
+        The minimum interval between polling RSS feeds.  If this is lower than the cron interval, feeds
+        will be polled with each cronjob. Defaults to 60 if not set. The site setting can also be over-ridden
+        on a channel by channel basis by a service class setting aptly named 'minimum_feedcheck_minutes'.
     [b]system.blacklisted_sites[/b]
         An array of specific hubs to block from this hub completely.
     [b]system.ignore_imagick[/b]
         Ignore imagick and use GD, even if imagick is installed on the server. Prevents some issues with PNG files in older versions of imagick.
     [b]system.no_age_restriction[/b]
-        Do not restrict registration to people over the age of 13. This carries legal responsibilities in many countries to require that age be provided and to block all personal information from minors, so please check your local laws before changing.  
+        Do not restrict registration to people over the age of 13. This carries legal responsibilities in 
+        many countries to require that age be provided and to block all personal information from minors, 
+        so please check your local laws before changing.  
     [b]system.override_poll_lockfile[/b]
         Ignore the lock file in the poller process to allow more than one process to run at a time.
     [b]system.projecthome[/b]
@@ -158,16 +166,23 @@ This document assumes you're an administrator.
     [b]system.photo_cache_time[/b]
         How long to cache photos, in seconds. Default is 86400 (1 day).
         Longer time increases performance, but it also means it takes longer for changed permissions to apply.
-	[b]system.poco_rating_enable[/b]
-		Distributed reputation reporting and data collection may be disabled. If your site does not participate in distributed reputation you will also not be able to make use of the data from your connections on other sites. By default and in the absence of any setting it is enabled. Individual members can opt out by restricting who can see their connections or by not providing any reputation information for their connections.
-	[b]system.register_link[/b]
-		path to direct to from the "register" link on the login form. On closed sites this will direct to 'pubsites'. For open sites it will normally redirect to 'register' but you may change this to a custom site page offering subscriptions or whatever. 
-	[b]system.max_import_size[/b]
-		If configured, the maximum length of an imported text message. This is normally left at 200Kbytes or more to accomodate Friendica private photos, which are embedded.
-	[b]system.tempdir[/b]
-		Place to store temporary files (currently unused), default is defined in the PHP configuration  
-	[b]system.uploaddir[/b]
-		Location to upload files (default is system.tempdir, currently used only by js_upload plugin)
+    [b]system.poco_rating_enable[/b]
+        Distributed reputation reporting and data collection may be disabled. If your site does not participate 
+        in distributed reputation you will also not be able to make use of the data from your connections on 
+        other sites. By default and in the absence of any setting it is enabled. Individual members can opt out 
+        by restricting who can see their connections or by not providing any reputation information for their 
+        connections.
+    [b]system.register_link[/b]
+        path to direct to from the "register" link on the login form. On closed sites this will direct to 
+        'pubsites'. For open sites it will normally redirect to 'register' but you may change this to a 
+        custom site page offering subscriptions or whatever. 
+    [b]system.max_import_size[/b]
+        If configured, the maximum length of an imported text message. This is normally left at 200Kbytes 
+        or more to accomodate Friendica private photos, which are embedded.
+    [b]system.tempdir[/b]
+        Place to store temporary files (currently unused), default is defined in the PHP configuration  
+    [b]system.uploaddir[/b]
+        Location to upload files (default is system.tempdir, currently used only by js_upload plugin)
 	[b]system.disable_discover_tab[/b]
 		This allows you to completely disable the ability to discover public content from external sites.
 	[b]system.sys_expire_days[/b]
@@ -175,7 +190,8 @@ This document assumes you're an administrator.
 	[b]system.openssl_encrypt[/b]
 		Use openssl encryption engine, default is false (uses mcrypt for AES encryption)
 	[b]system.max_tagged_forums[/b]
-		Spam prevention. Limits the number of tagged forums which are recognised in any post. Default is 2. Only the first 'n' tags will be delivered as forums, the others will not cause any delivery. 
+		Spam prevention. Limits the number of tagged forums which are recognised in any post. 
+		Default is 2. Only the first 'n' tags will be delivered as forums, the others will not cause any delivery. 
 	[b]system.openssl_conf_file[/b]
 		Needed in some Windows installations to locate the openssl configuration file on the system.
  	[b]system.hide_help[/b]
@@ -187,7 +203,8 @@ This document assumes you're an administrator.
 	[b]system.hide_version[/b] *
 		If true, do not report the software version on webpages and tools. (*) Must be set in .htconfig.php
 	[b]system.hidden_version_siteinfo[/b]
-		If true, do not report the software version on siteinfo pages (system.hide_version also hides the version on these pages, this setting *only* hides the version on siteinfo pages).
+		If true, do not report the software version on siteinfo pages (system.hide_version also hides 
+		the version on these pages, this setting *only* hides the version on siteinfo pages).
 	[b]system.email_notify_icon_url[/b]
 		URL of image (32x32) to display in email notifications (HTML bodies).
 

@@ -691,6 +691,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'$submit'       => t('Submit'),
 				'$viewprof'     => t('View this profile'),
 				'$editvis' 	=> t('Edit visibility'),
+				'$tools_label'  => t('Profile Tools'),
 				'$coverpic'     => t('Change cover photo'),
 				'$profpic'      => t('Change profile photo'),
 				'$cr_prof'      => t('Create a new profile using these settings'),

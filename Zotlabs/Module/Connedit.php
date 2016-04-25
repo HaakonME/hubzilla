@@ -514,7 +514,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$contact_id = \App::$poi['abook_id'];
 			$contact = \App::$poi;
 	
-			$buttons = array(
+			$tools = array(
 	
 				'view' => array(
 					'label' => t('View Profile'),
@@ -711,7 +711,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$notself'        => (($self) ? '' : '1'),
 				'$self'           => (($self) ? '1' : ''),
 				'$autolbl'        => t('The permissions indicated on this page will be applied to all new connections.'),
-				'$buttons'        => (($self) ? '' : $buttons),
+				'$tools_label'    => t('Connection Tools'),
+				'$tools'          => (($self) ? '' : $tools),
 				'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 				'$lbl_rating'     => t('Rating'),
 				'$lbl_rating_label' => t('Slide to adjust your rating'),

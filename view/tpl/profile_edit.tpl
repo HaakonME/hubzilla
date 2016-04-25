@@ -2,7 +2,7 @@
 	<div class="section-title-wrapper">
 		<div class="dropdown pull-right" id="profile-edit-links">
 			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<i class="icon-caret-down"></i>
+				<i class="icon-caret-down"></i>&nbsp;{{$tools_label}}
 			</button>
 			<ul class="dropdown-menu">
 				<li class="nav-item">

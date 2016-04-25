@@ -13,10 +13,14 @@ if (count($helpArgs) === 1) {
 	echo <<<'EndOfOutput'
 Gets, sets, or lists personal (per channel) configuration settings.
 
-Usage: util/pconfig <channel_id>
+Usage: util/pconfig
+       util/pconfig <channel_id>
        util/pconfig <channel_id> <family>
        util/pconfig <channel_id> <family> <key>
        util/pconfig <channel_id> <family> <key> <value>
+
+  util/pconfig
+	List all channel IDs
 
   util/pconfig <channel_id>
 	Displays all of the the channel's config entries
@@ -68,3 +72,11 @@ if($argc == 2) {
 	}
 }
 
+if($argc == 1) {
+	$r = q("select channel_id, channel_name from channel");
+	if($r) {
+		foreach($r as $rr) {
+			echo sprintf('%4u %s', $rr['channel_id'], $rr['channel_name']) . PHP_EOL;
+		}
+	}
+}

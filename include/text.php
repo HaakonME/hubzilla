@@ -540,11 +540,11 @@ function attribute_contains($attr, $s) {
  */
 
 function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
+	require_once('include/dba/dba_driver.php');
+
+	// turn off logger in install mode
+	if((App::$module == 'install') || (! (DBA::$dba && DBA::$dba->connected)))
 		return;
 
 	$debugging = get_config('system', 'debugging');
@@ -621,11 +621,11 @@ function log_priority_str($priority) {
  * @param int $level A log level.
  */
 function dlogger($msg, $level = 0) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
+	require_once('include/dba/dba_driver.php');
+
+	// turn off logger in install mode
+	if((App::$module == 'install') || (! (DBA::$dba && DBA::$dba->connected)))
 		return;
 
 	$debugging = get_config('system','debugging');

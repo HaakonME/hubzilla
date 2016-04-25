@@ -2035,7 +2035,7 @@ function get_site_info() {
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
 		'platform' => Zotlabs\Project\System::get_platform_name(),
-		'dbdriver' => $db->getdriver(),
+		'dbdriver' => \DBA::$dba->getdriver(),
 		'lastpoll' => get_config('system','lastpoll'),
 		'info' => (($site_info) ? $site_info : ''),
 		'channels_total' => $channels_total_stat,

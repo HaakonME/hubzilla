@@ -7,44 +7,57 @@
  * functions for working with databases.
  */
 
-/**
- * @brief Returns the database driver object.
- *
- * If available it will use PHP's mysqli otherwise mysql driver.
- *
- * @param string $server DB server name
- * @param string $port DB port
- * @param string $user DB username
- * @param string $pass DB password
- * @param string $db database name
- * @param string $dbtype 0 for mysql, 1 for postgres
- * @param bool $install Defaults to false
- * @return null|dba_driver A database driver object (dba_mysql|dba_mysqli) or null if no driver found.
- */
-function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
-	$dba = null;
 
-	$dbtype = intval($dbtype);
+class DBA {
 
-	if($dbtype == DBTYPE_POSTGRES) {
-		require_once('include/dba/dba_postgres.php');
-		if(is_null($port)) $port = 5432;
-		$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
-	} else {
-		if(class_exists('mysqli')) {
-			if (is_null($port)) $port = ini_get("mysqli.default_port");
-			require_once('include/dba/dba_mysqli.php');
-			$dba = new dba_mysqli($server, $port,$user,$pass,$db,$install);
-		} else {
-			if (is_null($port)) $port = "3306";
-			require_once('include/dba/dba_mysql.php');
-			$dba = new dba_mysql($server, $port,$user,$pass,$db,$install);
+	static public $dba = null;
+	static public $dbtype = null;
+
+
+	/**
+	 * @brief Returns the database driver object.
+	 *
+	 * If available it will use PHP's mysqli otherwise mysql driver.
+	 *
+	 * @param string $server DB server name
+	 * @param string $port DB port
+	 * @param string $user DB username
+	 * @param string $pass DB password
+	 * @param string $db database name
+	 * @param string $dbtype 0 for mysql, 1 for postgres
+	 * @param bool $install Defaults to false
+	 * @return null|dba_driver A database driver object (dba_mysql|dba_mysqli) or null if no driver found.
+	 */
+	
+	function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
+	
+		self::$dba = null;
+
+		self::$dbtype = intval($dbtype);
+
+		if(self::$dbtype == DBTYPE_POSTGRES) {
+			require_once('include/dba/dba_postgres.php');
+			if(is_null($port)) $port = 5432;
+			self::$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
+		} 
+		else {
+			if(class_exists('mysqli')) {
+				if (is_null($port)) $port = ini_get("mysqli.default_port");
+				require_once('include/dba/dba_mysqli.php');
+				self::$dba = new dba_mysqli($server, $port,$user,$pass,$db,$install);
+			} 
+			else {
+				// UNSUPPORTED, OBSOLETE
+				if (is_null($port)) $port = "3306";
+				require_once('include/dba/dba_mysql.php');
+				self::$dba = new dba_mysql($server, $port,$user,$pass,$db,$install);
+			}
 		}
-	}
 
-	define('NULL_DATE', $dba->get_null_date());
-	define('ACTIVE_DBTYPE', $dbtype);
-	return $dba;
+		define('NULL_DATE', self::$dba->get_null_date());
+		define('ACTIVE_DBTYPE', self::$dbtype);
+		return self::$dba;
+	}
 }
 
 /**
@@ -53,6 +66,7 @@ function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
  * This class gets extended by the real database driver classes, e.g. dba_mysql,
  * dba_mysqli.
  */
+
 abstract class dba_driver {
 	// legacy behavior
 	const INSTALL_SCRIPT='install/schema_mysql.sql';
@@ -203,10 +217,10 @@ function printable($s) {
  * @param int $state 0 to disable debugging
  */
 function dbg($state) {
-	global $db;
+//	global $db;
 
-	if($db)
-		$db->dbg($state);
+	if(DBA::$dba)
+		DBA::$dba->dbg($state);
 }
 
 /**
@@ -220,21 +234,20 @@ function dbg($state) {
  * @return Return an escaped string of the value to pass to a DB query.
  */
 function dbesc($str) {
-	global $db;
-
-	if($db && $db->connected)
-		return($db->escape($str));
+	if(DBA::$dba && DBA::$dba->connected)
+		return(DBA::$dba->escape($str));
 	else
 		return(str_replace("'", "\\'", $str));
 }
+
 function dbescbin($str) {
 	global $db;
-	return $db->escapebin($str);
+	return DBA::$dba->escapebin($str);
 }
 
 function dbunescbin($str) {
 	global $db;
-	return $db->unescapebin($str);
+	return DBA::$dba->unescapebin($str);
 }
 
 function dbescdate($date) {
@@ -248,27 +261,27 @@ function dbescdate($date) {
 
 function db_quoteinterval($txt) {
 	global $db;
-	return $db->quote_interval($txt);
+	return DBA::$dba->quote_interval($txt);
 }
 
 function dbesc_identifier($str) {
 	global $db;
-	return $db->escape_identifier($str);
+	return DBA::$dba->escape_identifier($str);
 }
 
 function db_utcnow() {
 	global $db;
-	return $db->utcnow();
+	return DBA::$dba->utcnow();
 }
 
 function db_optimizetable($table) {
 	global $db;
-	$db->optimize_table($table);
+	DBA::$dba->optimize_table($table);
 }
 
 function db_concat($fld, $sep) {
 	global $db;
-	return $db->concat($fld, $sep);
+	return DBA::$dba->concat($fld, $sep);
 }
 
 // Function: q($sql,$args);
@@ -298,7 +311,7 @@ function q($sql) {
 	$args = func_get_args();
 	unset($args[0]);
 
-	if($db && $db->connected) {
+	if(DBA::$dba && DBA::$dba->connected) {
 		$stmt = vsprintf($sql, $args);
 		if($stmt === false) {
 			if(version_compare(PHP_VERSION, '5.4.0') >= 0)
@@ -307,7 +320,7 @@ function q($sql) {
 			else
 				logger('dba: vsprintf error: ' . print_r(debug_backtrace(), true),LOGGER_NORMAL,LOG_CRIT);
 		}
-		return $db->q($stmt);
+		return DBA::$dba->q($stmt);
 	}
 
 	/*
@@ -329,8 +342,8 @@ function q($sql) {
 function dbq($sql) {
 	global $db;
 
-	if($db && $db->connected)
-		$ret = $db->q($sql);
+	if(DBA::$dba && DBA::$dba->connected)
+		$ret = DBA::$dba->q($sql);
 	else
 		$ret = false;
 

@@ -57,7 +57,7 @@ class Setup extends \Zotlabs\Web\Controller {
 	 * @param[in,out] App &$a
 	 */
 		function post() {
-		global $db;
+
 	
 		switch($this->install_wizard_pass) {
 			case 1:
@@ -82,37 +82,14 @@ class Setup extends \Zotlabs\Web\Controller {
 				$siteurl = rtrim($siteurl,'/');
 	
 				require_once('include/dba/dba_driver.php');
-				unset($db);
-				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
+				$db = null;
+				$db = \DBA::dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
 	
 				if(! $db->connected) {
 					echo 'Database Connect failed: ' . $db->error;
 					killme();
 					\App::$data['db_conn_failed']=true;
 				}
-				/*if(get_db_errno()) {
-					unset($db);
-					$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, '', true);
-	
-					if(! get_db_errno()) {
-						$r = q("CREATE DATABASE '%s'",
-								dbesc($dbdata)
-						);
-						if($r) {
-							unset($db);
-							$db = new dba($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
-						} else {
-							\App::$data['db_create_failed']=true;
-						}
-					} else {
-						\App::$data['db_conn_failed']=true;
-						return;
-					}
-				}*/
-				//if(get_db_errno()) {
-	
-				//}
-	
 				return;
 				break;
 			case 4:
@@ -139,7 +116,7 @@ class Setup extends \Zotlabs\Web\Controller {
 				}
 	
 				// connect to db
-				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
+				$db = \DBA::dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
 	
 				if(! $db->connected) {
 					echo 'CRITICAL: DB not connected.';
@@ -195,7 +172,6 @@ class Setup extends \Zotlabs\Web\Controller {
 	 * @return string parsed HTML output
 	 */
 		function get() {
-		global $db;
 	
 		$o = '';
 		$wizard_status = '';
@@ -228,7 +204,7 @@ class Setup extends \Zotlabs\Web\Controller {
 			$txt .= "<pre>".\App::$data['db_failed'] . "</pre>". EOL ;
 			$db_return_text .= $txt;
 		}
-		if($db && $db->connected) {
+		if(\DBA::$dba && \DBA::$dba->connected) {
 			$r = q("SELECT COUNT(*) as `total` FROM `account`");
 			if($r && count($r) && $r[0]['total']) {
 				$tpl = get_markup_template('install.tpl');
@@ -693,12 +669,12 @@ class Setup extends \Zotlabs\Web\Controller {
 	
 	
 	function load_database($db) {
-		$str = file_get_contents($db->get_install_script());
+		$str = file_get_contents(\DBA::$dba->get_install_script());
 		$arr = explode(';',$str);
 		$errors = false;
 		foreach($arr as $a) {
 			if(strlen(trim($a))) {
-				$r = @$db->q(trim($a));
+				$r = @\DBA::$dba->q(trim($a));
 				if(! $r) {
 					$errors .=  t('Errors encountered creating database tables.') . $a . EOL;
 				}

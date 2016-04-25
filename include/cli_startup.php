@@ -1,6 +1,7 @@
 <?php /** @file */
 
 require_once('boot.php');
+require_once('include/dba/dba_driver.php');
 
 // Everything we need to boot standalone 'background' processes
 
@@ -14,7 +15,7 @@ function cli_startup() {
 
 	App::init();
   
-	if(is_null($db)) {
+	if(! DBA::$dba) {
 	    @include(".htconfig.php");
 
 		$a->convert();
@@ -25,8 +26,7 @@ function cli_startup() {
 		App::$timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
 		date_default_timezone_set(App::$timezone);
 
-    	require_once('include/dba/dba_driver.php');
-	    $db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
+	    $db = DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
     	unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
   	};
 

@@ -6,6 +6,10 @@ namespace Zotlabs\Extend;
 class Hook {
 
 	static public function register($hook,$file,$function,$version = 1,$priority = 0) {
+		if(is_array($function)) {
+			$function = serialize($function);
+		}
+
 		$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' and priority = %d and hook_version = %d LIMIT 1",
 			dbesc($hook),
 			dbesc($file),
@@ -28,6 +32,9 @@ class Hook {
 	}
 
 	static public function unregister($hook,$file,$function,$version = 1,$priority = 0) {
+		if(is_array($function)) {
+			$function = serialize($function);
+		}
 		$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `function` = '%s' and priority = %d and hook_version = %d",
 			dbesc($hook),
 			dbesc($file),
@@ -63,6 +70,9 @@ class Hook {
 	 */
 
 	static public function insert($hook, $fn, $version = 0, $priority = 0) {
+		if(is_array($fn)) {
+			$fn = serialize($fn);
+		}
 
 		if(! is_array(App::$hooks))
 			App::$hooks = array();

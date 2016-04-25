@@ -264,6 +264,30 @@ we will create an argc/argv list for use by your module functions
 	3 whatever
 [/code]
 
+[h3]Using class methods as hook handler functions[/h3]
+
+To register a hook using a class method as a callback, a couple of things need to be considered. The first is that the functions need to be declared static public so that they are available from all contexts, and they need to have a namespace attached because they can be called from within multiple namespaces. You can then register them as strings or arrays (using the PHP internal calling method). 
+
+[code]
+<?php
+/*
+ * plugin info block goes here
+ */
+
+function myplugin_load() {
+	Zotlabs\Extend\Hook::register('hook_name','addon/myplugin/myplugin.php','\\Myplugin::foo');
+[b]or[/b]
+	Zotlabs\Extend\Hook::register('hook_name','addon/myplugin/myplugin.php',array('\\Myplugin','foo'));
+}
+ 
+class Myplugin {
+
+	public static function foo($params) {
+		// handler for 'hook_name'
+	}
+}
+[/code]
+
 If you want to keep your plugin hidden from the siteinfo page, simply create a file called '.hidden' in your addon directory
 [code]
 	touch addon/<addon name>/.hidden

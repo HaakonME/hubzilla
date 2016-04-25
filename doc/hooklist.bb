@@ -34,11 +34,17 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/activity_received]activity_received[/zrl]
 	Called when an activity (post, comment, like, etc.) has been received from a zot source
 
+[zrl=[baseurl]/help/hook/admin_aside]admin_aside[/zrl]
+	Called when generating the admin page sidebar widget
+
 [zrl=[baseurl]/help/hook/affinity_labels]affinity_labels[/zrl]
 	Used to generate alternate labels for the affinity slider.
 
 [zrl=[baseurl]/help/hook/api_perm_is_allowed]api_perm_is_allowed[/zrl]
 	Called when perm_is_allowed() is executed from an API call.
+
+[zrl=[baseurl]/help/hook/app_menu]app_menu[/zrl]
+	Called when generating the app_menu dropdown (may be obsolete)
 
 [zrl=[baseurl]/help/hook/atom_author]atom_author[/zrl]
 	Called when generating an author or owner element for an Atom ActivityStream feed
@@ -88,6 +94,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/check_siteallowed]check_siteallowed[/zrl]
 	Used to over-ride or bypass the site black/white block lists
 
+[zrl=[baseurl]/help/hook/comment_buttons]comment_buttons[/zrl]
+	Called when rendering the edit buttons for comments
+
 [zrl=[baseurl]/help/hook/connect_premium]connect_premium[/zrl]
 	Called when connecting to a premium channel
 
@@ -111,6 +120,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/conversation_start]conversation_start[/zrl]
 	Called in the beginning of rendering a conversation (message or message collection or stream)	
+
+[zrl=[baseurl]/help/hook/cover_photo_content_end]cover_photo_content_end[/zrl]
+	Called after a cover photo has been uplaoded
 
 [zrl=[baseurl]/help/hook/create_identity]create_identity[/zrl]
 	Called when creating a channel
@@ -184,6 +196,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/follow]follow[/zrl]
 	called when a follow operation takes place
 
+[zrl=[baseurl]/help/hook/follow_from_feed]follow_from_feed[/zrl]
+	called when a follow operation takes place on an RSS feed
+
 [zrl=[baseurl]/help/hook/follow_allow]follow_allow[/zrl]
 	called before storing the results of a follow operation
 
@@ -205,6 +220,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/get_all_perms]get_all_perms[/zrl]
 	called when get_all_perms() is used
+
+[zrl=[baseurl]/help/hook/get_best_language]get_best_language[/zrl]
+	called when choosing the preferred language for the page
 
 [zrl=[baseurl]/help/hook/get_features]get_features[/zrl]
 	Called when get_features() is called
@@ -266,6 +284,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/local_dir_update]local_dir_update[/zrl]
 	Called when processing a directory update from a channel on the directory server
 
+[zrl=[baseurl]/help/hook/location_move]location_move[/zrl]
+	Called when a new location has been provided to a UNO channel (indicating a move rather than a clone)
+
 [zrl=[baseurl]/help/hook/logged_in]logged_in[/zrl]
 	Called when authentication by any means has succeeeded
 
@@ -280,6 +301,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/magic_auth]magic_auth[/zrl]
 	Called when processing a magic-auth sequence
+
+[zrl=[baseurl]/help/hook/match_webfinger_location]match_webfinger_location[/zrl]
+	Called when processing webfinger requests
 
 [zrl=[baseurl]/help/hook/magic_auth_openid_success]magic_auth_openid_success[/zrl]
 	Called when a magic-auth was successful due to openid credentials
@@ -324,7 +348,10 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 	Called when a hub is delivered
 
 [zrl=[baseurl]/help/hook/notifier_normal]notifier_normal[/zrl]
-	Called when the notofoer is invoked for a 'normal' delivery
+	Called when the notifier is invoked for a 'normal' delivery
+
+[zrl=[baseurl]/help/hook/notifier_process]notifier_process[/zrl]
+	Called when the notifier is processing a message/event
 
 [zrl=[baseurl]/help/hook/obj_verbs]obj_verbs[/zrl]
 	Called when creating the list of verbs available for profile "things".
@@ -445,6 +472,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/profile_tabs]profile_tabs[/zrl]
 	Called when generating the tabs for channel related pages (channel,profile,files,etc.)
+
+[zrl=[baseurl]/help/hook/queue_deliver]queue_deliver[/zrl]
+	Called when delivering a queued message
  
 [zrl=[baseurl]/help/hook/register_account]register_account[/zrl]
 	Called when an account has been created
@@ -457,6 +487,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/reverse_magic_auth]reverse_magic_auth[/zrl]
 	Called before invoking reverse magic auth to send you to your own site to authenticate on this site
+
+[zrl=[baseurl]/help/hook/settings_account]settings_account[/zrl]
+	Called when generating the account settings form
 
 [zrl=[baseurl]/help/hook/settings_form]settings_form[/zrl]
 	Called when generating the channel settings form

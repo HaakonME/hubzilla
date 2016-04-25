@@ -47,7 +47,7 @@ require_once('include/account.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
-define ( 'STD_VERSION',             '1.4.2' );
+define ( 'STD_VERSION',             '1.4.3' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1166  );
@@ -1797,7 +1797,7 @@ function proc_run($cmd){
 
 	$arr = array('args' => $args, 'run_cmd' => true);
 
-	call_hooks("proc_run", $arr);
+	call_hooks('proc_run', $arr);
 	if(! $arr['run_cmd'])
 		return;
 

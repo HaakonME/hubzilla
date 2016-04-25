@@ -282,10 +282,21 @@ function call_hooks($name, &$data = null) {
 	$a = 0;
 	if((is_array(App::$hooks)) && (array_key_exists($name, App::$hooks))) {
 		foreach(App::$hooks[$name] as $hook) {
+			$origfn = $hook[1];
 			if($hook[0])
 				@include_once($hook[0]);
+			if(preg_match('|^a:[0-9]+:{.*}$|s', $hook[1])) {
+				$hook[1] = unserialize($hook[1]);
+			}
+			elseif(strpos($hook[1],'::')) {
+				// We shouldn't need to do this, but it appears that PHP 
+				// isn't able to directly execute a string variable with a class
+				// method in the manner we are attempting it, so we'll
+				// turn it into an array.
+				$hook[1] = explode('::',$hook[1]);
+			}
 
-			if(function_exists($hook[1])) {
+			if(is_callable($hook[1])) {
 				$func = $hook[1];
 				if($hook[3])
 					$func($data);
@@ -295,7 +306,7 @@ function call_hooks($name, &$data = null) {
 				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND function = '%s'",
 					dbesc($name),
 					dbesc($hook[0]),
-					dbesc($hook[1])
+					dbesc($origfn)
 				);
 			}
 		}

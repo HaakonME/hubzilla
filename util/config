@@ -3,6 +3,11 @@
 
 // Red config utility
 
+if(!file_exists('include/cli_startup.php')) {
+	echo 'Run config from the top level Hubzilla web directory, as util/config <args>' . PHP_EOL;
+	exit(1);
+}
+
 require_once('include/cli_startup.php');
 
 cli_startup();

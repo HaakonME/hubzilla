@@ -482,7 +482,7 @@ function sync_chatrooms($channel,$chatrooms) {
 
 
 
-function import_items($channel,$items) {
+function import_items($channel,$items,$sync = false) {
 
 	if($channel && $items) {
 		$allow_code = false;
@@ -520,13 +520,16 @@ function import_items($channel,$items) {
 				$item['uid'] = $channel['channel_id'];
 				$item_result = item_store($item,$allow_code,$deliver);
 			}
+			if($sync) {
+				// deliver singletons if we have any
+			}
 		}
 	}
 }
 
 
 function sync_items($channel,$items) {
-	import_items($channel,$items);
+	import_items($channel,$items,true);
 }
 
 

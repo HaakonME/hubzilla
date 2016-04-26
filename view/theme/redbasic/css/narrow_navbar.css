@@ -1,4 +1,13 @@
 @media screen and (min-width: 760px) {
+
+	aside {
+		padding: 52px 7px 0px 7px;
+	}
+
+	section {
+		padding: 52px 7px 200px 7px;
+	}
+
 	.navbar-nav > li > a {
 		padding-top:7px !important;
 		padding-bottom:3px !important;

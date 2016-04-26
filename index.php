@@ -47,7 +47,7 @@ date_default_timezone_set(App::$timezone);
 require_once('include/dba/dba_driver.php');
 
 if(! App::$install) {
-	$db = DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, App::$install);
+	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, App::$install);
 	if(! $db->connected) {
 		system_unavailable();
 	}

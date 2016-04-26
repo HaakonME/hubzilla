@@ -5,7 +5,7 @@
 			{{if $tools || $map || $edit}}
 			<div class="btn-group">
 				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-					<i class="icon-caret-down"></i>
+					<i class="icon-caret-down"></i>&nbsp;{{$tools_label}}
 				</button>
 				<ul class="dropdown-menu">
 					{{if $tools}}

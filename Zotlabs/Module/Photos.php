@@ -1231,6 +1231,7 @@ class Photos extends \Zotlabs\Web\Controller {
 			$o .= replace_macros($photo_tpl, array(
 				'$id' => $ph[0]['id'],
 				'$album' => $album_e,
+				'$tools_label' => t('Photo Tools'),
 				'$tools' => $tools,
 				'$lock' => $lockstate[1],
 				'$photo' => $photo,

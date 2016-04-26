@@ -115,17 +115,19 @@
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
 					</button>
-					<ul class="dropdown-menu dropdown-menu-right" role="menu">
+					<ul class="dropdown-menu dropdown-menu" role="menu">
 						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
 						{{if $visitor}}
 						<li class="divider visible-xs"></li>
-						{{if $writefiles}}<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>{{/if}}
-						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
+						{{if $writefiles}}
+						<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>
 						{{/if}}
+						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
 						<li class="divider visible-xs"></li>
 						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetLocation(); return false;"><i class="icon-globe"></i>&nbsp;{{$setloc}}</a></li>
 						{{if $noloc}}
 						<li class="visible-xs visible-sm"><a href="#" onclick="jotClearLocation(); return false;"><i class="icon-circle-blank"></i>&nbsp;{{$noloc}}</a></li>
+						{{/if}}
 						{{/if}}
 						{{if $feature_expire}}
 						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>

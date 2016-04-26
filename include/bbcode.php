@@ -330,8 +330,19 @@ function bb_map_location($match) {
 }
 
 function bb_opentag($match) {
+	$openclose = (($match[2]) ? '<span class="bb-open" title="' . t('Click to open/close') . '">' . $match[1] . '</span>' : t('Click to open/close'));
+	$text = (($match[2]) ? $match[2] : $match[1]);
 	$rnd = mt_rand();
-	return "<br /><div onclick=\"openClose('opendiv-" . $rnd . "');return false;\" class=\"fakelink\">" . $match[1] . "</div><div id=\"opendiv-" . $rnd . "\" style=\"display: none;\">" . $match[2] . "</div>";
+
+	return '<div onclick="openClose(\'opendiv-' . $rnd . '\'); return false;" class="fakelink">' . $openclose . '</div><div id="opendiv-' . $rnd . '" style="display: none;">' . $text . '</div>';
+}
+
+function bb_spoilertag($match) {
+	$openclose = (($match[2]) ? '<span class="bb-spoiler" title="' . t('Click to open/close') . '">' . $match[1] . ' ' . t('spoiler') . '</span>' : t('Click to open/close'));
+	$text = (($match[2]) ? $match[2] : $match[1]);
+	$rnd = mt_rand();
+
+	return '<div onclick="openClose(\'opendiv-' . $rnd . '\'); return false;" class="fakelink">' . $openclose . '</div><blockquote id="opendiv-' . $rnd . '" style="display: none;">' . $text . '</blockquote>';
 }
 
 /**
@@ -748,31 +759,32 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[code\](.*?)\[\/code\]/ism", "$CodeLayout", $Text);
 	}
 
-	// Declare the format for [spoiler] layout
-	$SpoilerLayout = '<blockquote class="spoiler">$1</blockquote>';
-
 	// Check for [spoiler] text
-	// handle nested quotes
 	$endlessloop = 0;
-	while ((strpos($Text, "[/spoiler]") !== false) and (strpos($Text, "[spoiler]") !== false) and (++$endlessloop < 20))
-		$Text = preg_replace("/\[spoiler\](.*?)\[\/spoiler\]/ism", "$SpoilerLayout", $Text);
+	while ((strpos($Text, "[/spoiler]")!== false) and (strpos($Text, "[spoiler]") !== false) and (++$endlessloop < 20)) {
+		$Text = preg_replace_callback("/\[spoiler\](.*?)\[\/spoiler\]/ism", 'bb_spoilertag', $Text);
+	}
 
 	// Check for [spoiler=Author] text
-
-	$t_wrote = t('$1 spoiler');
-
-	// handle nested quotes
 	$endlessloop = 0;
-	while ((strpos($Text, "[/spoiler]")!== false)  and (strpos($Text, "[spoiler=") !== false) and (++$endlessloop < 20))
-		$Text = preg_replace("/\[spoiler=[\"\']*(.*?)[\"\']*\](.*?)\[\/spoiler\]/ism",
-			"<br /><strong class=".'"spoiler"'.">" . $t_wrote . "</strong><blockquote class=".'"spoiler"'.">$2</blockquote>",
-			$Text);
+	while ((strpos($Text, "[/spoiler]")!== false) and (strpos($Text, "[spoiler=") !== false) and (++$endlessloop < 20)) {
+		$Text = preg_replace_callback("/\[spoiler=(.*?)\](.*?)\[\/spoiler\]/ism", 'bb_spoilertag', $Text);
+	}
 
+	// Check for [open] text
+	$endlessloop = 0;
+	while ((strpos($Text, "[/open]")!== false)  and (strpos($Text, "[open]") !== false) and (++$endlessloop < 20)) {
+		$Text = preg_replace_callback("/\[open\](.*?)\[\/open\]/ism", 'bb_opentag', $Text);
+	}
 
+	// Check for [open=Title] text
 	$endlessloop = 0;
 	while ((strpos($Text, "[/open]")!== false)  and (strpos($Text, "[open=") !== false) and (++$endlessloop < 20)) {
 		$Text = preg_replace_callback("/\[open=(.*?)\](.*?)\[\/open\]/ism", 'bb_opentag', $Text);
 	}
+
+
+
 
 
 	// Declare the format for [quote] layout
@@ -792,7 +804,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	$endlessloop = 0;
 	while ((strpos($Text, "[/quote]")!== false)  and (strpos($Text, "[quote=") !== false) and (++$endlessloop < 20))
 		$Text = preg_replace("/\[quote=[\"\']*(.*?)[\"\']*\](.*?)\[\/quote\]/ism",
-			"<br /><strong class=".'"author"'.">" . $t_wrote . "</strong><blockquote>$2</blockquote>",
+			"<span class=".'"bb-quote"'.">" . $t_wrote . "</span><blockquote>$2</blockquote>",
 			$Text);
 
 	// Images

@@ -47,7 +47,7 @@ require_once('include/account.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
-define ( 'STD_VERSION',             '1.4.3' );
+define ( 'STD_VERSION',             '1.4.4' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1166  );
@@ -1542,6 +1542,19 @@ function fix_system_urls($oldurl, $newurl) {
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
 				intval($c[0]['channel_id'])
 			);
+
+			$m = q("select abook_id, abook_instance from abook where abook_instance like '%s' and abook_channel = %d",
+				dbesc('%' . $oldurl . '%'),
+				intval($c[0]['channel_id'])
+			);
+			if($m) {
+				foreach($m as $mm) {
+					q("update abook set abook_instance = '%s' where abook_id = %d",
+						dbesc(str_replace($oldurl,$newurl,$mm['abook_instance'])),
+						intval($mm['abook_id'])
+					);
+				}
+			}
 
 			proc_run('php', 'include/notifier.php', 'refresh_all', $c[0]['channel_id']);
 		}

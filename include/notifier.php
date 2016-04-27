@@ -118,7 +118,7 @@ function notifier_run($argv, $argc){
 	$normal_mode = true;
 	$packet_type = 'undefined';
 
-	if($cmd === 'mail') {
+	if($cmd === 'mail' || $cmd === 'single_mail') {
 		$normal_mode = false;
 		$mail = true;
 		$private = true;
@@ -280,7 +280,7 @@ function notifier_run($argv, $argc){
 			logger('notifier: target item not forwardable: type ' . $target_item['item_type'], LOGGER_DEBUG);
 			return;
 		}
-		if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed'])) {
+		if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed']) || intval($target_item['item_hidden'])) {
 			logger('notifier: target item not published, so not forwardable', LOGGER_DEBUG);
 			return;
 		}
@@ -454,6 +454,7 @@ function notifier_run($argv, $argc){
 		'uplink' => $uplink,
 		'cmd' => $cmd,
 		'mail' => $mail,
+		'single' => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
 		'location' => $location,
 		'request' => $request,
 		'normal_mode' => $normal_mode,
@@ -550,6 +551,7 @@ function notifier_run($argv, $argc){
 				'uplink' => $uplink,
 				'cmd' => $cmd,
 				'mail' => $mail,
+				'single' => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
 				'location' => $location,
 				'request' => $request,
 				'normal_mode' => $normal_mode,
@@ -566,6 +568,19 @@ function notifier_run($argv, $argc){
 			}
 			continue;
 
+		}
+
+		// singleton deliveries by definition 'not got zot'.
+		// Single deliveries are other federated networks (plugins) and we're essentially 
+		// delivering only to those that have this site url in their abook_instance
+		// and only from within a sync operation. This means if you post from a clone,
+		// and a connection is connected to one of your other clones; assuming that hub
+		// is running it will receive a sync packet. On receipt of this sync packet it
+		// will invoke a delivery to those connections which are connected to just that
+		// hub instance. 
+
+		if($cmd === 'single_mail' || $cmd === 'single_activity') {
+			continue;
 		}
 
 		// default: zot protocol

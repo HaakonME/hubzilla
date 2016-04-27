@@ -2114,8 +2114,9 @@ function check_channelallowed($hash) {
 	return $retvalue;
 }
 
-function deliverable_singleton($xchan) {
-	$r = q("select abook_instance from abook where abook_xchan = '%s' limit 1",
+function deliverable_singleton($channel_id,$xchan) {
+	$r = q("select abook_instance from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+		intval($channel_id),
 		dbesc($xchan['xchan_hash'])
 	);
 	if($r) {

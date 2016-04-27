@@ -68,27 +68,31 @@
 				</div>
 				{{/if}}
 				{{if $visitor}}
-				<div class="btn-group hidden-xs">
+				<div class="btn-group hidden-xs hidden-sm">
 					{{if $writefiles}}
 					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
 						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
 					</button>
 					{{/if}}
+					{{if $weblink}}
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="icon-link jot-icons"></i>
 					</button>
+					{{/if}}
 				</div>
 				<div class="btn-group hidden-xs hidden-sm">
+					{{if $setloc}}
 					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
 						<i id="profile-location" class="icon-globe jot-icons"></i>
 					</button>
+					{{/if}}
 					{{if $noloc}}
 					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
 						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
 					</button>
 					{{/if}}
 				{{else}}
-				<div class="btn-group hidden-xs">
+				<div class="btn-group hidden-xs hidden-sm">
 				{{/if}}
 				{{if $feature_expire}}
 					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
@@ -111,42 +115,45 @@
 					</button>
 				{{/if}}
 				</div>
+				{{if $writefiles || $weblink || $setloc || $noloc || $feature_expire || $feature_encrypt || $feature_voting}}
 				<div class="btn-group visible-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu dropdown-menu" role="menu">
-						<li class="visible-xs"><a href="#" onclick="preview_post();return false;"><i class="icon-eye-open"></i>&nbsp;{{$preview}}</a></li>
 						{{if $visitor}}
-						<li class="divider visible-xs"></li>
 						{{if $writefiles}}
-						<li class="visible-xs"><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>
+						<li><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>
 						{{/if}}
-						<li class="visible-xs"><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
-						<li class="divider visible-xs"></li>
-						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetLocation(); return false;"><i class="icon-globe"></i>&nbsp;{{$setloc}}</a></li>
+						{{if $weblink}}
+						<li><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
+						{{/if}}
+i						{{if $setloc}}
+						<li><a href="#" onclick="jotGetLocation(); return false;"><i class="icon-globe"></i>&nbsp;{{$setloc}}</a></li>
+						{{/if}}
 						{{if $noloc}}
-						<li class="visible-xs visible-sm"><a href="#" onclick="jotClearLocation(); return false;"><i class="icon-circle-blank"></i>&nbsp;{{$noloc}}</a></li>
+						<li><a href="#" onclick="jotClearLocation(); return false;"><i class="icon-circle-blank"></i>&nbsp;{{$noloc}}</a></li>
 						{{/if}}
 						{{/if}}
 						{{if $feature_expire}}
-						<li class="visible-xs visible-sm"><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>
+						<li><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>
 						{{/if}}
 						{{if $feature_encrypt}}
-						<li class="visible-xs visible-sm"><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
+						<li><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
 						{{/if}}
 						{{if $feature_voting}}
-						<li class="visible-xs visible-sm"><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>
+						<li><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>
 						{{/if}}
 					</ul>
 				</div>
+				{{/if}}
 			</div>
 			<div id="profile-rotator-wrapper">
 				<div id="profile-rotator"></div>
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $preview}}
-				<button class="btn btn-default btn-sm hidden-xs" onclick="preview_post();return false;" title="{{$preview}}">
+				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}

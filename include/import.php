@@ -499,6 +499,7 @@ function import_items($channel,$items,$sync = false) {
 		$deliver = false;  // Don't deliver any messages or notifications when importing
 
 		foreach($items as $i) {
+			$item_result = false;
 			$item = get_item_elements($i,$allow_code);
 			if(! $item)
 				continue;
@@ -511,7 +512,13 @@ function import_items($channel,$items,$sync = false) {
 				if($item['edited'] > $r[0]['edited']) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
-					item_store_update($item,$allow_code,$deliver);
+					$item_result = item_store_update($item,$allow_code,$deliver);
+					if($sync && $item['item_wall']) {
+						// deliver singletons if we have any
+						if($item_result && $item_result['success']) {
+							proc_run('php','include/notifier.php','single_activity',$item_result['item_id']);
+						}
+					}
 					continue;
 				}	
 			}
@@ -520,8 +527,11 @@ function import_items($channel,$items,$sync = false) {
 				$item['uid'] = $channel['channel_id'];
 				$item_result = item_store($item,$allow_code,$deliver);
 			}
-			if($sync) {
+			if($sync && $item['item_wall']) {
 				// deliver singletons if we have any
+				if($item_result && $item_result['success']) {
+					proc_run('php','include/notifier.php','single_activity',$item_result['item_id']);
+				}
 			}
 		}
 	}
@@ -842,7 +852,7 @@ function import_conv($channel,$convs) {
 
 
 
-function import_mail($channel,$mails) {
+function import_mail($channel,$mails,$sync = false) {
 	if($channel && $mails) {
 		foreach($mails as $mail) {
 			if(array_key_exists('flags',$mail) && in_array('deleted',$mail['flags'])) {
@@ -866,12 +876,17 @@ function import_mail($channel,$mails) {
 
 			$m['aid'] = $channel['channel_account_id'];
 			$m['uid'] = $channel['channel_id'];
-			mail_store($m);
+			$mail_id = mail_store($m);
+			if($sync && $mail_id) {
+				proc_run('php','include/notifier.php','single_mail',$mail_id);
+			}
  		}
 	}	
 }
 
-
+function sync_mail($channel,$mails) {
+	import_mail($channel,$mails,true);
+}
 
 function sync_files($channel,$files) {
 

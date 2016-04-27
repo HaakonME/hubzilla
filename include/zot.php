@@ -3121,7 +3121,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			import_conv($channel,$arr['conv']);
 
 		if(array_key_exists('mail',$arr) && $arr['mail'])
-			import_mail($channel,$arr['mail']);
+			sync_mail($channel,$arr['mail']);
 
 		if(array_key_exists('event',$arr) && $arr['event'])
 			sync_events($channel,$arr['event']);

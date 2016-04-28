@@ -224,6 +224,24 @@ header #banner #logo-text {
 .contextual-help-content dd {
 	margin-bottom: 1em;
 }
+
+.contextual-help-tool {
+	padding: 7px;
+	filter: alpha(opacity=20);
+	opacity: .2;
+}
+
+.contextual-help-tool:hover {
+	filter: alpha(opacity=50);
+	opacity: .5;
+	text-decoration: none;
+}
+
+.contextual-help-tool i {
+	color: #000;
+	font-size: 16px;
+}
+
 /* contextual help end */
 
 /* footer */

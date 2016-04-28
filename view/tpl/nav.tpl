@@ -36,10 +36,6 @@
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a></li>
 						{{/if}}
-						{{if $nav.help.6}}
-						<li role="presentation" class="divider"></li>
-						<li role="presentation"><a href="{{$nav.help.0}}" title="{{$nav.help.3}}" role="menuitem" id="{{$nav.help.4}}">{{$nav.help.1}}</a></li>
-						{{/if}}
 						{{if $nav.logout}}
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a href="{{$nav.logout.0}}" title="{{$nav.logout.3}}" role="menuitem" id="{{$nav.logout.4}}">{{$nav.logout.1}}</a></li>
@@ -207,6 +203,9 @@
 	{{if $nav.help.6}}
 	<div id="contextual-help-content" class="contextual-help-content">
 		{{$nav.help.5}}
-		<button type="button" class="close" onclick="contextualHelp();">×</button>
+		<div class="pull-right">
+			<a class="contextual-help-tool" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}"><i class="icon-question"></i></a>
+			<a class="contextual-help-tool" href="#" onclick="contextualHelp(); return false;"><i class="icon-remove"></i></a>
+		</div>
 	</div>
 	{{/if}}

@@ -20,6 +20,15 @@ class Hook {
 		if($r)
 			return true;
 
+		// To aid in upgrade and transition, remove old settings for any registered hooks that match in all respects except
+		// for priority or hook_version
+
+		$r = q("DELETE FROM `hook` where `hook` = '%s' and `file` = '%s' and `function` = '%s'",
+			dbesc($hook),
+			dbesc($file),
+			dbesc($function),
+		);
+
 		$r = q("INSERT INTO `hook` (`hook`, `file`, `function`, `priority`, `hook_version`) VALUES ( '%s', '%s', '%s', %d, %d )",
 			dbesc($hook),
 			dbesc($file),
@@ -41,6 +50,18 @@ class Hook {
 			dbesc($function),
 			intval($priority),
 			intval($version)
+		);
+
+		return $r;
+	}
+
+	// unregister all hooks with this file component. 
+	// Useful for addon upgrades where you want to clean out old interfaces.
+
+	static public function unregister_by_file($file) {
+
+		$r = q("DELETE FROM hook WHERE `file` = '%s' ",
+			dbesc($file),
 		);
 
 		return $r;

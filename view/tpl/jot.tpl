@@ -86,8 +86,8 @@
 						<i id="profile-location" class="icon-globe jot-icons"></i>
 					</button>
 					{{/if}}
-					{{if $noloc}}
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
+					{{if $clearloc}}
+					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$clearloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
 						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
 					</button>
 					{{/if}}
@@ -115,7 +115,7 @@
 					</button>
 				{{/if}}
 				</div>
-				{{if $writefiles || $weblink || $setloc || $noloc || $feature_expire || $feature_encrypt || $feature_voting}}
+				{{if $writefiles || $weblink || $setloc || $clearloc || $feature_expire || $feature_encrypt || $feature_voting}}
 				<div class="btn-group visible-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
@@ -131,8 +131,8 @@
 i						{{if $setloc}}
 						<li><a href="#" onclick="jotGetLocation(); return false;"><i class="icon-globe"></i>&nbsp;{{$setloc}}</a></li>
 						{{/if}}
-						{{if $noloc}}
-						<li><a href="#" onclick="jotClearLocation(); return false;"><i class="icon-circle-blank"></i>&nbsp;{{$noloc}}</a></li>
+						{{if $clearloc}}
+						<li><a href="#" onclick="jotClearLocation(); return false;"><i class="icon-circle-blank"></i>&nbsp;{{$clearloc}}</a></li>
 						{{/if}}
 						{{/if}}
 						{{if $feature_expire}}

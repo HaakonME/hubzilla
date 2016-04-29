@@ -1115,16 +1115,28 @@ function status_editor($a, $x, $popup = false) {
 	if($c && $c['channel_moved'])
 		return $o;
 
-	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
-
 	$plaintext = true;
 
 //	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
-	$voting = feature_enabled(local_channel(), 'consensus_tools');
-	if(x($x, 'novoting'))
-		$voting = false;
+	$feature_voting = feature_enabled($x['profile_uid'], 'consensus_tools');
+	if(x($x, 'hide_voting'))
+		$feature_voting = false;
+
+	$feature_expire = ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false);
+	if(x($x, 'hide_expire'))
+		$feature_expire = false;
+
+	$feature_future = ((feature_enabled($x['profile_uid'], 'delayed_posting') && (! $webpage)) ? true : false);
+	if(x($x, 'hide_future'))
+		$feature_future = false;
+
+	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
+	$setloc = t('Set your location');
+	$clearloc = ((get_pconfig($x['profile_uid'], 'system', 'use_browser_location')) ? t('Clear browser location') : '');
+	if(x($x, 'hide_location'))
+		$geotag = $setloc = $clearloc = '';
 
 	$mimeselect = '';
 	if(array_key_exists('mimetype', $x) && $x['mimetype']) {
@@ -1146,14 +1158,12 @@ function status_editor($a, $x, $popup = false) {
 			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />';
 	}
 
-
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
 		require_once('include/identity.php');
 		$id_select = identity_selector();
 	}
 	else
 		$id_select = '';
-
 
 	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
@@ -1165,7 +1175,7 @@ function status_editor($a, $x, $popup = false) {
 		'$pretext' => ((x($x,'pretext')) ? $x['pretext'] : ''),
 		'$geotag' => $geotag,
 		'$nickname' => $x['nickname'],
-		'$ispublic' => t('Visible to <strong>everybody</strong>'),
+		'$ispublic' => ((x($x,'ispublic')) ? $x['ispublic'] : t('Visible to <strong>everybody</strong>')),
 		'$linkurl' => t('Please enter a link URL:'),
 		'$term' => t('Tag term:'),
 		'$whereareu' => t('Where are you right now?'),
@@ -1212,21 +1222,21 @@ function status_editor($a, $x, $popup = false) {
 		'$code' => t('Code'),
 		'$attach' => t('Attach file'),
 		'$weblink' => t('Insert web link'),
-		'$setloc' => t('Set your location'),
+		'$setloc' => $setloc,
 		'$voting' => t('Toggle voting'),
-		'$feature_voting' => $voting,
+		'$feature_voting' => $feature_voting,
 		'$consensus' => 0,
-		'$noloc' => ((get_pconfig($x['profile_uid'], 'system', 'use_browser_location')) ? t('Clear browser location') : ''),
+		'$clearloc' => $clearloc,
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => ((x($x, 'placeholdertitle')) ? $x['placeholdertitle'] : t('Title (optional)')),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
-		'$category' => "",
+		'$category' => ((x($x, 'category')) ? $x['category'] : ''),
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
 		'$permset' => t('Permission settings'),
-		'$ptyp' => '',
+		'$ptyp' => ((x($x, 'ptyp')) ? $x['ptyp'] : ''),
 		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8') : ''),
 		'$attachment' => ((x($x, 'attachment')) ? $x['attachment'] : ''),
-		'$post_id' => '',
+		'$post_id' => ((x($x, 'post_id')) ? $x['post_id'] : ''),
 		'$defloc' => $x['default_location'],
 		'$visitor' => $x['visitor'],
 		'$lockstate' => $x['lockstate'],
@@ -1240,10 +1250,10 @@ function status_editor($a, $x, $popup = false) {
 		'$source' => ((x($x, 'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
 		'$defexpire' => $defexpire,
-		'$feature_expire' => ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false),
+		'$feature_expire' => $feature_expire,
 		'$expires' => t('Set expiration date'),
 		'$defpublish' => $defpublish,
-		'$feature_future' => ((feature_enabled($x['profile_uid'], 'delayed_posting') && (! $webpage)) ? true : false),
+		'$feature_future' => $feature_future,
 		'$future_txt' => t('Set publish date'),
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'], 'content_encrypt') && (! $webpage)) ? true : false),
 		'$encrypt' => t('Encrypt text'),

@@ -1,10 +1,6 @@
 /**
  * JavaScript used by mod/photos
  */
-
-// is this variable used anywhere?
-var ispublic = aStr.everybody;
-
 $(document).ready(function() {
 
 	$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'p', false, function(data) {

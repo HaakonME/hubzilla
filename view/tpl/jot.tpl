@@ -128,7 +128,7 @@
 						{{if $weblink}}
 						<li><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
 						{{/if}}
-i						{{if $setloc}}
+						{{if $setloc}}
 						<li><a href="#" onclick="jotGetLocation(); return false;"><i class="icon-globe"></i>&nbsp;{{$setloc}}</a></li>
 						{{/if}}
 						{{if $clearloc}}

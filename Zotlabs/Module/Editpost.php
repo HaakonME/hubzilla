@@ -83,7 +83,6 @@ class Editpost extends \Zotlabs\Web\Controller {
 		}
 
 		$x = array(
-			'ispublic' => '&nbsp;',
 			'nickname' => $channel['channel_address'],
 			'editor_autocomplete'=> true,
 			'bbco_autocomplete'=> 'bbcode',

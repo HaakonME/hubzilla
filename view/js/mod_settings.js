@@ -2,9 +2,6 @@
  * JavaScript used by mod/settings
  */
 
-// is this used anywhere?
-var ispublic = aStr.everybody;
-
 $(document).ready(function() {
 	$('form').areYouSure({'addRemoveFieldsMarksDirty':true, 'message': aStr['leavethispage'] }); // Warn user about unsaved settings
 

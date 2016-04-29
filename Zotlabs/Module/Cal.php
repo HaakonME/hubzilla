@@ -38,7 +38,7 @@ class Cal extends \Zotlabs\Web\Controller {
 	
 			head_set_icon(\App::$data['channel']['xchan_photo_s']);
 	
-			\App::$page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "'; var profile_uid = " . ((\App::$data['channel']) ? \App::$data['channel']['channel_id'] : 0) . "; </script>" ;
+			\App::$page['htmlhead'] .= "<script> var profile_uid = " . ((\App::$data['channel']) ? \App::$data['channel']['channel_id'] : 0) . "; </script>" ;
 	
 		}
 	

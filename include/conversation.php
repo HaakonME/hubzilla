@@ -1175,7 +1175,6 @@ function status_editor($a, $x, $popup = false) {
 		'$pretext' => ((x($x,'pretext')) ? $x['pretext'] : ''),
 		'$geotag' => $geotag,
 		'$nickname' => $x['nickname'],
-		'$ispublic' => ((x($x,'ispublic')) ? $x['ispublic'] : t('Visible to <strong>everybody</strong>')),
 		'$linkurl' => t('Please enter a link URL:'),
 		'$term' => t('Tag term:'),
 		'$whereareu' => t('Where are you right now?'),

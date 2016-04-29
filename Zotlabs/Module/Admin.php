@@ -725,7 +725,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$embed_allow' => array('embed_allow', t('Allow embedded HTML content only from these domains'), $whiteembeds_str, t('One site per line. Leave empty to allow from any site by default')),
 			'$embed_deny' => array('embed_deny', t('Block embedded HTML from these domains'), $blackembeds_str, ''),
 	
-	        '$embed_coop'     => array('embed_coop', t('Cooperative embed security'), $embed_coop, t('Enable to share embed security with other compatible sites/hubs')),
+//	        '$embed_coop'     => array('embed_coop', t('Cooperative embed security'), $embed_coop, t('Enable to share embed security with other compatible sites/hubs')),
 			'$submit' => t('Submit')
 		));
 	}

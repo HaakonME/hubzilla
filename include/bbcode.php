@@ -360,14 +360,16 @@ function bb_definitionList($match) {
 
 	// The bbcode transformation will be:
 	// [*=term-text] description-text   =>   </dd> <dt>term-text<dt><dd> description-text
-	// then after all replacements have been made, the </dd> remaining the start of the 
-	// string can be removed. HTML5 allows the missing end tag.
+	// then after all replacements have been made, the extra </dd> at the start of the 
+	// first line can be removed. HTML5 allows the tag to be missing from the end of the last line.
 	// Using '(?<!\\\)' to allow backslash-escaped closing braces to appear in the term-text.
 	$closeDescriptionTag = "</dd>\n";
+	$eatLeadingSpaces = '(?:&nbsp;|[ \t])*'; // prevent spaces infront of [*= from adding another line to the previous element
+	$listElements = preg_replace('/^(\n|<br \/>)/', '', $match[2]); // ltrim the first newline
 	$listElements = preg_replace(
-		'/\[\*=([[:print:]]*?)(?<!\\\)\]/ism', 
+		'/' . $eatLeadingSpaces . '\[\*=([[:print:]]*?)(?<!\\\)\]/ism', 
 		$closeDescriptionTag . '<dt>$1</dt><dd>', 
-		$match[2]
+		$listElements
 	);
 	// Unescape any \] inside the <dt> tags
 	$listElements = preg_replace_callback('/<dt>(.*?)<\/dt>/ism', 'bb_definitionList_unescapeBraces', $listElements);

@@ -21,7 +21,7 @@ nav .badge {
 	}
 }
 
-nav i {
+#navbar-collapse-1 i {
 	font-size: 14px;
 }
 
@@ -48,10 +48,6 @@ nav .navbar-collapse .navbar-left {
 
 nav .navbar-collapse .navbar-right {
 	float: right;
-}
-
-nav .navbar-toggle {
-	margin-bottom: 7px;
 }
 
 /* nav overrides end */

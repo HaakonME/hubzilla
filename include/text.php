@@ -1825,7 +1825,7 @@ function lang_selector() {
 }
 
 
-function return_bytes ($size_str) {
+function engr_units_to_bytes ($size_str) {
 	switch (substr ($size_str, -1)) {
 		case 'M': case 'm': return (int)$size_str * 1048576;
 		case 'K': case 'k': return (int)$size_str * 1024;

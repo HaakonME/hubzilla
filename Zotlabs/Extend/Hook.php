@@ -26,7 +26,7 @@ class Hook {
 		$r = q("DELETE FROM `hook` where `hook` = '%s' and `file` = '%s' and `function` = '%s'",
 			dbesc($hook),
 			dbesc($file),
-			dbesc($function),
+			dbesc($function)
 		);
 
 		$r = q("INSERT INTO `hook` (`hook`, `file`, `function`, `priority`, `hook_version`) VALUES ( '%s', '%s', '%s', %d, %d )",
@@ -61,7 +61,7 @@ class Hook {
 	static public function unregister_by_file($file) {
 
 		$r = q("DELETE FROM hook WHERE `file` = '%s' ",
-			dbesc($file),
+			dbesc($file)
 		);
 
 		return $r;

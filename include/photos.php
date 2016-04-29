@@ -131,7 +131,7 @@ function photo_upload($channel, $observer, $args) {
 		intval($account_id)
 	);
 
-	$limit = service_class_fetch($channel_id,'photo_upload_limit');
+	$limit = engr_units_to_bytes(service_class_fetch($channel_id,'photo_upload_limit'));
 
 	if (($r) && ($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
 		$ret['message'] = upgrade_message();

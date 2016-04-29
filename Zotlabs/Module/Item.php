@@ -1243,14 +1243,14 @@ class Item extends \Zotlabs\Web\Controller {
 		} 
 	
 		if (!$iswebpage) {
-			$max = service_class_fetch($channel_id,'total_items');
+			$max = engr_units_to_bytes(service_class_fetch($channel_id,'total_items'));
 			if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
 				$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f top level posts.'),$max);
 				return $result;
 			}
 		}
 		else {
-			$max = service_class_fetch($channel_id,'total_pages');
+			$max = engr_units_to_bytes(service_class_fetch($channel_id,'total_pages'));
 			if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
 				$result['message'] .= upgrade_message() . sprintf( t('You have reached your limit of %1$.0f webpages.'),$max);
 				return $result;

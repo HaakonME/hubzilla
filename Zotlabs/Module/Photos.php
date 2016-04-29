@@ -615,7 +615,7 @@ class Photos extends \Zotlabs\Web\Controller {
 			);
 	
 	
-			$limit = service_class_fetch(\App::$data['channel']['channel_id'],'photo_upload_limit');
+			$limit = engr_units_to_bytes(service_class_fetch(\App::$data['channel']['channel_id'],'photo_upload_limit'));
 			if($limit !== false) {
 				$usage_message = sprintf( t("%1$.2f MB of %2$.2f MB photo storage used."), $r[0]['total'] / 1024000, $limit / 1024000 );
 			}

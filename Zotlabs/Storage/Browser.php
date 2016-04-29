@@ -273,7 +273,7 @@ class Browser extends DAV\Browser\Plugin {
 			return;
 
 		// Storage and quota for the account (all channels of the owner of this directory)!
-		$limit = service_class_fetch($owner, 'attach_upload_limit');
+		$limit = engr_units_to_bytes(service_class_fetch($owner, 'attach_upload_limit'));
 		$r = q("SELECT SUM(filesize) AS total FROM attach WHERE aid = %d",
 			intval($this->auth->channel_account_id)
 		);

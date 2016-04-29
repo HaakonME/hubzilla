@@ -1160,7 +1160,6 @@ function status_editor($a, $x, $popup = false) {
 	$tpl = get_markup_template('jot-header.tpl');
 
 	App::$page['htmlhead'] .= replace_macros($tpl, array(
-		'$newpost' => 'true',
 		'$baseurl' => z_root(),
 		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext' => ((x($x,'pretext')) ? $x['pretext'] : ''),
@@ -1168,12 +1167,8 @@ function status_editor($a, $x, $popup = false) {
 		'$nickname' => $x['nickname'],
 		'$ispublic' => t('Visible to <strong>everybody</strong>'),
 		'$linkurl' => t('Please enter a link URL:'),
-		'$vidurl' => t('Please enter a video link/URL:'),
-		'$audurl' => t('Please enter an audio link/URL:'),
 		'$term' => t('Tag term:'),
-		'$fileas' => t('Save to Folder:'),
 		'$whereareu' => t('Where are you right now?'),
-		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
 		'$editor_autocomplete'=> ((x($x,'editor_autocomplete')) ? $x['editor_autocomplete'] : ''),
 		'$bbco_autocomplete'=> ((x($x,'bbco_autocomplete')) ? $x['bbco_autocomplete'] : ''),
 	));
@@ -1181,10 +1176,8 @@ function status_editor($a, $x, $popup = false) {
 	$tpl = get_markup_template('jot.tpl');
 
 	$jotplugins = '';
-	$jotnets = '';
 
 	$preview = t('Preview');
-//	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
 	if(x($x, 'nopreview'))
 		$preview = '';
 
@@ -1201,7 +1194,6 @@ function status_editor($a, $x, $popup = false) {
 		$cipher = 'aes256';
 
 	call_hooks('jot_tool', $jotplugins);
-	call_hooks('jot_networks', $jotnets);
 
 	$o .= replace_macros($tpl, array(
 		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : App::$query_string),
@@ -1218,42 +1210,25 @@ function status_editor($a, $x, $popup = false) {
 		'$underline' => t('Underline'),
 		'$quote' => t('Quote'),
 		'$code' => t('Code'),
-		'$upload' => t('Upload photo'),
-		'$shortupload' => t('upload photo'),
 		'$attach' => t('Attach file'),
-		'$shortattach' => t('attach file'),
 		'$weblink' => t('Insert web link'),
-		'$shortweblink' => t('web link'),
-		'$video' => t('Insert video link'),
-		'$shortvideo' => t('video link'),
-		'$audio' => t('Insert audio link'),
-		'$shortaudio' => t('audio link'),
 		'$setloc' => t('Set your location'),
-		'$shortsetloc' => t('set location'),
 		'$voting' => t('Toggle voting'),
 		'$feature_voting' => $voting,
 		'$consensus' => 0,
 		'$noloc' => ((get_pconfig($x['profile_uid'], 'system', 'use_browser_location')) ? t('Clear browser location') : ''),
-		'$shortnoloc' => t('clear location'),
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => ((x($x, 'placeholdertitle')) ? $x['placeholdertitle'] : t('Title (optional)')),
-		'$hidetitle' => ((x($x, 'hidetitle')) ? $x['hidetitle'] : false),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
-		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
-		'$shortpermset' => t('permissions'),
 		'$ptyp' => '',
 		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8') : ''),
 		'$attachment' => ((x($x, 'attachment')) ? $x['attachment'] : ''),
 		'$post_id' => '',
-		'$baseurl' => z_root(),
 		'$defloc' => $x['default_location'],
 		'$visitor' => $x['visitor'],
-		'$public' => t('Public post'),
-		'$jotnets' => $jotnets,
-		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
 		'$mimeselect' => $mimeselect,

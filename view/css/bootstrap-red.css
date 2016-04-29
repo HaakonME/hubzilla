@@ -21,7 +21,8 @@ nav .badge {
 	}
 }
 
-#navbar-collapse-1 i {
+#navbar-collapse-1 i,
+.navbar-header i {
 	font-size: 14px;
 }
 

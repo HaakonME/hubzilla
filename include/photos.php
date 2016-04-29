@@ -131,7 +131,7 @@ function photo_upload($channel, $observer, $args) {
 		intval($account_id)
 	);
 
-	$limit = service_class_fetch($channel_id,'photo_upload_limit');
+	$limit = engr_units_to_bytes(service_class_fetch($channel_id,'photo_upload_limit'));
 
 	if (($r) && ($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
 		$ret['message'] = upgrade_message();
@@ -296,7 +296,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$photo_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' . t('a new photo') . '[/zrl]';
 
-	$album_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album) . ']' . $album . '[/zrl]';
+	$album_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album) . ']' . ((strlen($album)) ? $album : '/') . '[/zrl]';
 
 	$activity_format = sprintf(t('%1$s posted %2$s to %3$s','photo_upload'), $author_link, $photo_link, $album_link);
 

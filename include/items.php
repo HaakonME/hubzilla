@@ -5616,3 +5616,18 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 
 }
 
+
+function sync_an_item($channel_id,$item_id) {
+
+	$r = q("select * from item where id = %d",
+		intval($item_id)
+	);
+	if($r) {
+		xchan_query($r);
+		$sync_item = fetch_post_tags($r);
+		$rid = q("select * from item_id where iid = %d",
+			intval($item_id)
+		);
+		build_sync_packet($channel_d,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+	}
+}

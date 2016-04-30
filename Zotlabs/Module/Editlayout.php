@@ -113,17 +113,17 @@ class Editlayout extends \Zotlabs\Web\Controller {
 			'button' => t('Edit'),
 			'hide_voting' => true,
 			'hide_future' => true,
-			'hide_location' => true,
+			'hide_expire' => true,
 			'hide_preview' => true,
 			'ptyp' => $itm[0]['obj_type'],
 			'body' => undo_post_tagging($itm[0]['body']),
 			'post_id' => $post_id,
 			'title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 			'pagetitle' => $layout_title,
+			'ptlabel' => t('Layout Name'),
+			'placeholdertitle' => t('Layout Description (Optional)'),
 			'showacl' => false,
 			'profile_uid' => intval($owner),
-			'catsenabled' => $catsenabled,
-			'hide_expire' => true,
 		);
 
 		$editor = status_editor($a, $x);

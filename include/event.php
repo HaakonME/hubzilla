@@ -25,7 +25,7 @@ function format_event_html($ev) {
 
 	$o = '<div class="vevent">' . "\r\n";
 
-	$o .= '<div class="event-title"><h3><i class="icon-calendar"></i>&nbsp;' . bbcode($ev['summary']) .  '</h3></div>' . "\r\n";
+	$o .= '<div class="event-title"><h3><i class="fa fa-calendar"></i>&nbsp;' . bbcode($ev['summary']) .  '</h3></div>' . "\r\n";
 
 	$o .= '<div class="event-start"><span class="event-label">' . t('Starts:') . '</span>&nbsp;<span class="dtstart" title="'
 		. datetime_convert('UTC', 'UTC', $ev['start'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))

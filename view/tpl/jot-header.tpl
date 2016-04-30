@@ -341,11 +341,11 @@ function enableOnUser(){
 	function toggleVoting() {
 		if($('#jot-consensus').val() > 0) {
 			$('#jot-consensus').val(0);
-			$('#profile-voting, #profile-voting-sub').removeClass('icon-check').addClass('icon-check-empty');
+			$('#profile-voting, #profile-voting-sub').removeClass('fa-check-square-o').addClass('fa-square-o');
 		}
 		else {
 			$('#jot-consensus').val(1);
-			$('#profile-voting, #profile-voting-sub').removeClass('icon-check-empty').addClass('icon-check');
+			$('#profile-voting, #profile-voting-sub').removeClass('fa-square-o').addClass('fa-check-square-o');
 		}
 	}
 

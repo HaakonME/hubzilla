@@ -1848,7 +1848,7 @@ dl.bb-dl > dd > li {
 }
 
 .bootstrap-tagsinput .tag:before {
-	/* Copied from icon-asterisk, is there a better way to do it? */
+	/* Copied from fa-asterisk, is there a better way to do it? */
 	font-family: FontAwesome;
 	font-weight: normal;
 	font-style: normal;

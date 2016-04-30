@@ -197,7 +197,7 @@ class Browser extends DAV\Browser\Plugin {
 				}
 			}
 
-			$attachIcon = ""; // "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"icon-download\"></i></a>";
+			$attachIcon = ""; // "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"fa fa-arrow-circle-o-down\"></i></a>";
 
 			// put the array for this file together
 			$ft['attachId'] = $this->findAttachIdByHash($attachHash);

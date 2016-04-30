@@ -103,7 +103,7 @@ function submit_form(e) {
 function getWord(text, caretPos) {
 	var index = text.indexOf(caretPos);
 	var postText = text.substring(caretPos, caretPos+8);
-	if ((postText.indexOf("[/list]") > 0) || postText.indexOf("[/ul]") > 0 || postText.indexOf("[/ol]") > 0) {
+	if ((postText.indexOf('[/list]') > 0) || postText.indexOf('[/ul]') > 0 || postText.indexOf('[/ol]') > 0 || postText.indexOf('[/dl]') > 0) {
 		return postText;
 	}
 }
@@ -296,7 +296,7 @@ function string2bb(element) {
 			replace: function (element) {
 				element = string2bb(element);
 				if(open_elements.indexOf(element) < 0) {
-					if(element === 'list' || element === 'ol' || element === 'ul') {
+					if(element === 'list' || element === 'ol' || element === 'ul' || element === 'dl') {
 						return ['\[' + element + '\]' + '\n\[*\] ', '\n\[/' + element + '\]'];
 					}
 					else if(element === 'table') {

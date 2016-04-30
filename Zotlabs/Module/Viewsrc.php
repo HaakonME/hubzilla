@@ -41,7 +41,7 @@ class Viewsrc extends \Zotlabs\Web\Controller {
 		}
 	
 		if(is_ajax()) {
-			print '<div><i class="icon-pencil"> ' . t('Source of Item') . ' ' . $r[0]['id'] . '</i></div>';
+			print '<div><i class="fa fa-pencil"> ' . t('Source of Item') . ' ' . $r[0]['id'] . '</i></div>';
 			echo $o;
 			killme();
 		} 

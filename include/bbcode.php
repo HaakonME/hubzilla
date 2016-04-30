@@ -345,6 +345,48 @@ function bb_spoilertag($match) {
 	return '<div onclick="openClose(\'opendiv-' . $rnd . '\'); return false;" class="fakelink">' . $openclose . '</div><blockquote id="opendiv-' . $rnd . '" style="display: none;">' . $text . '</blockquote>';
 }
 
+function bb_definitionList($match) {
+	// $match[1] is the markup styles for the "terms" in the definition list.
+	// $match[2] is the content between the [dl]...[/dl] tags
+
+	$classes = '';
+	if (stripos($match[1], "b") !== false) $classes .= 'dl-terms-bold ';
+	if (stripos($match[1], "i") !== false) $classes .= 'dl-terms-italic ';
+	if (stripos($match[1], "u") !== false) $classes .= 'dl-terms-underline ';
+	if (stripos($match[1], "l") !== false) $classes .= 'dl-terms-large ';
+	if (stripos($match[1], "m") !== false) $classes .= 'dl-terms-monospace ';
+	if (stripos($match[1], "h") !== false) $classes .= 'dl-horizontal '; // dl-horizontal is already provided by bootstrap
+	if (strlen($classes) === 0) $classes = "dl-terms-plain";
+
+	// The bbcode transformation will be:
+	// [*=term-text] description-text   =>   </dd> <dt>term-text<dt><dd> description-text
+	// then after all replacements have been made, the extra </dd> at the start of the 
+	// first line can be removed. HTML5 allows the tag to be missing from the end of the last line.
+	// Using '(?<!\\\)' to allow backslash-escaped closing braces to appear in the term-text.
+	$closeDescriptionTag = "</dd>\n";
+	$eatLeadingSpaces = '(?:&nbsp;|[ \t])*'; // prevent spaces infront of [*= from adding another line to the previous element
+	$listElements = preg_replace('/^(\n|<br \/>)/', '', $match[2]); // ltrim the first newline
+	$listElements = preg_replace(
+		'/' . $eatLeadingSpaces . '\[\*=([[:print:]]*?)(?<!\\\)\]/ism', 
+		$closeDescriptionTag . '<dt>$1</dt><dd>', 
+		$listElements
+	);
+	// Unescape any \] inside the <dt> tags
+	$listElements = preg_replace_callback('/<dt>(.*?)<\/dt>/ism', 'bb_definitionList_unescapeBraces', $listElements);
+	
+	// Remove the extra </dd> at the start of the string, if there is one.
+	$firstOpenTag  = strpos($listElements, '<dd>');
+	$firstCloseTag = strpos($listElements, $closeDescriptionTag);
+	if ($firstCloseTag !== false && ($firstOpenTag === false || ($firstCloseTag < $firstOpenTag))) {		
+		$listElements = preg_replace( '/<\/dd>/ism', '', $listElements, 1);
+	}
+
+	return '<dl class="bb-dl ' . rtrim($classes) . '">' . $listElements . '</dl>';;
+}
+function bb_definitionList_unescapeBraces($match) {
+	return '<dt>' . str_replace('\]', ']', $match[1]) . '</dt>';
+}
+
 /**
  * @brief Sanitize style properties from BBCode to HTML.
  *
@@ -713,6 +755,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	while ((((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false)) ||
 			((strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false)) ||
 			((strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false)) ||
+			((strpos($Text, "[/dl]") !== false) && (strpos($Text, "[dl")  !== false)) ||
 			((strpos($Text, "[/li]") !== false) && (strpos($Text, "[li]") !== false))) && (++$endlessloop < 20)) {
 		$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>', $Text);
 		$Text = preg_replace("/\[list=\](.*?)\[\/list\]/ism", '<ul class="listnone" style="list-style-type: none;">$1</ul>', $Text);
@@ -724,6 +767,13 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>', $Text);
 		$Text = preg_replace("/\[ol\](.*?)\[\/ol\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>', $Text);
 		$Text = preg_replace("/\[li\](.*?)\[\/li\]/ism", '<li>$1</li>', $Text);
+
+		// [dl] tags have an optional [dl terms="bi"] form where bold/italic/underline/mono/large
+		// etc. style may be specified for the "terms" in the definition list. The quotation marks 
+		// are also optional. The regex looks intimidating, but breaks down as: 
+		//   "[dl" <optional-whitespace> <optional-termStyles> "]" <matchGroup2> "[/dl]"
+		// where optional-termStyles are: "terms=" <optional-quote> <matchGroup1> <optional-quote>
+		$Text = preg_replace_callback('/\[dl[[:space:]]*(?:terms=(?:&quot;|")?([a-zA-Z]+)(?:&quot;|")?)?\](.*?)\[\/dl\]/ism', 'bb_definitionList', $Text);
 	}
 	if (strpos($Text,'[th]') !== false) {
 		$Text = preg_replace("/\[th\](.*?)\[\/th\]/sm", '<th>$1</th>', $Text);

@@ -51,19 +51,19 @@
 				{{if $bbcode}}
 				<div class="btn-group">
 					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
-						<i class="icon-bold jot-icons"></i>
+						<i class="fa fa-bold jot-icons"></i>
 					</button>
 					<button id="main-editor-italic" class="btn btn-default btn-sm" title="{{$italic}}" onclick="inserteditortag('i', 'profile-jot-text'); return false;">
-						<i class="icon-italic jot-icons"></i>
+						<i class="fa fa-italic jot-icons"></i>
 					</button>
 					<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u', 'profile-jot-text'); return false;">
-						<i class="icon-underline jot-icons"></i>
+						<i class="fa fa-underline jot-icons"></i>
 					</button>
 					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
-						<i class="icon-quote-left jot-icons"></i>
+						<i class="fa fa-quote-left jot-icons"></i>
 					</button>
 					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
-						<i class="icon-terminal jot-icons"></i>
+						<i class="fa fa-terminal jot-icons"></i>
 					</button>
 				</div>
 				{{/if}}
@@ -71,24 +71,24 @@
 				<div class="btn-group hidden-xs hidden-sm">
 					{{if $writefiles}}
 					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
-						<i id="wall-file-upload-icon" class="icon-paper-clip jot-icons"></i>
+						<i id="wall-file-upload-icon" class="fa fa-paperclip jot-icons"></i>
 					</button>
 					{{/if}}
 					{{if $weblink}}
 					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
-						<i id="profile-link" class="icon-link jot-icons"></i>
+						<i id="profile-link" class="fa fa-link jot-icons"></i>
 					</button>
 					{{/if}}
 				</div>
 				<div class="btn-group hidden-xs hidden-sm">
 					{{if $setloc}}
 					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
-						<i id="profile-location" class="icon-globe jot-icons"></i>
+						<i id="profile-location" class="fa fa-globe jot-icons"></i>
 					</button>
 					{{/if}}
-					{{if $noloc}}
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$noloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
-						<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
+					{{if $clearloc}}
+					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$clearloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
+						<i id="profile-nolocation" class="fa fa-circle-o jot-icons"></i>
 					</button>
 					{{/if}}
 				{{else}}
@@ -96,53 +96,53 @@
 				{{/if}}
 				{{if $feature_expire}}
 					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
-						<i id="profile-expires" class="icon-eraser jot-icons"></i>
+						<i id="profile-expires" class="fa fa-eraser jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_future}}
 					<button id="profile-future-wrapper" class="btn btn-default btn-sm" title="{{$future_txt}}" onclick="jotGetPubDate();return false;">
-						<i id="profile-future" class="icon-time jot-icons"></i>
+						<i id="profile-future" class="fa fa-clock-o jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_encrypt}}
 					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
-						<i id="profile-encrypt" class="icon-key jot-icons"></i>
+						<i id="profile-encrypt" class="fa fa-key jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_voting}}
 					<button id="profile-voting-wrapper" class="btn btn-default btn-sm" title="{{$voting}}" onclick="toggleVoting();return false;">
-						<i id="profile-voting" class="icon-check-empty jot-icons"></i>
+						<i id="profile-voting" class="fa fa-square-o jot-icons"></i>
 					</button>
 				{{/if}}
 				</div>
-				{{if $writefiles || $weblink || $setloc || $noloc || $feature_expire || $feature_encrypt || $feature_voting}}
+				{{if $writefiles || $weblink || $setloc || $clearloc || $feature_expire || $feature_encrypt || $feature_voting}}
 				<div class="btn-group visible-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-						<i id="more-tools-icon" class="icon-caret-down jot-icons"></i>
+						<i id="more-tools-icon" class="fa fa-caret-down jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu dropdown-menu" role="menu">
 						{{if $visitor}}
 						{{if $writefiles}}
-						<li><a id="wall-file-upload-sub" href="#" ><i class="icon-paper-clip"></i>&nbsp;{{$attach}}</a></li>
+						<li><a id="wall-file-upload-sub" href="#" ><i class="fa fa-paperclip"></i>&nbsp;{{$attach}}</a></li>
 						{{/if}}
 						{{if $weblink}}
-						<li><a href="#" onclick="jotGetLink(); return false;"><i class="icon-link"></i>&nbsp;{{$weblink}}</a></li>
+						<li><a href="#" onclick="jotGetLink(); return false;"><i class="fa fa-link"></i>&nbsp;{{$weblink}}</a></li>
 						{{/if}}
-i						{{if $setloc}}
-						<li><a href="#" onclick="jotGetLocation(); return false;"><i class="icon-globe"></i>&nbsp;{{$setloc}}</a></li>
+						{{if $setloc}}
+						<li><a href="#" onclick="jotGetLocation(); return false;"><i class="fa fa-globe"></i>&nbsp;{{$setloc}}</a></li>
 						{{/if}}
-						{{if $noloc}}
-						<li><a href="#" onclick="jotClearLocation(); return false;"><i class="icon-circle-blank"></i>&nbsp;{{$noloc}}</a></li>
+						{{if $clearloc}}
+						<li><a href="#" onclick="jotClearLocation(); return false;"><i class="fa fa-circle-o"></i>&nbsp;{{$clearloc}}</a></li>
 						{{/if}}
 						{{/if}}
 						{{if $feature_expire}}
-						<li><a href="#" onclick="jotGetExpiry(); return false;"><i class="icon-eraser"></i>&nbsp;{{$expires}}</a></li>
+						<li><a href="#" onclick="jotGetExpiry(); return false;"><i class="fa fa-eraser"></i>&nbsp;{{$expires}}</a></li>
 						{{/if}}
 						{{if $feature_encrypt}}
-						<li><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="icon-key"></i>&nbsp;{{$encrypt}}</a></li>
+						<li><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a></li>
 						{{/if}}
 						{{if $feature_voting}}
-						<li><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="icon-check-empty"></i>&nbsp;{{$voting}}</a></li>
+						<li><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="fa fa-square-o"></i>&nbsp;{{$voting}}</a></li>
 						{{/if}}
 					</ul>
 				</div>
@@ -154,12 +154,12 @@ i						{{if $setloc}}
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $preview}}
 				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
-					<i class="icon-eye-open jot-icons" ></i>
+					<i class="fa fa-eye jot-icons" ></i>
 				</button>
 				{{/if}}
 				{{if $showacl}}
 				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
-					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="icon-exclamation jot-icons"></i>{{/if}}
+					<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="fa fa-exclamation jot-icons"></i>{{/if}}
 				</button>
 				{{/if}}
 				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" tabindex=3 name="button-submit" >{{$share}}</button>

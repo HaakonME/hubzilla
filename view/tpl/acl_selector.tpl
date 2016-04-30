@@ -16,7 +16,7 @@
 				</div>
 				{{/if}}
 				<div id="acl-wrapper">
-					<button id="acl-showall" class="btn btn-block btn-default"><i class="icon-globe"></i> {{$showall}}</button>
+					<button id="acl-showall" class="btn btn-block btn-default"><i class="fa fa-globe"></i> {{$showall}}</button>
 					<input type="text" id="acl-search" placeholder="&#xf002;">
 					<div id="acl-list">
 						<div id="acl-list-content"></div>
@@ -26,8 +26,8 @@
 
 				<div class="acl-list-item" rel="acl-template" style="display:none">
 					<img data-src="{0}"><p>{1}</p>
-					<button class="acl-button-hide btn btn-xs btn-default"><i class="icon-remove"></i> {{$hide}}</button>
-					<button class="acl-button-show btn btn-xs btn-default"><i class="icon-ok"></i> {{$show}}</button>
+					<button class="acl-button-hide btn btn-xs btn-default"><i class="fa fa-times"></i> {{$hide}}</button>
+					<button class="acl-button-show btn btn-xs btn-default"><i class="fa fa-check"></i> {{$show}}</button>
 				</div>
 			</div>
 			<div class="modal-footer clear">

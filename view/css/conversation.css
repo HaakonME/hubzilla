@@ -124,7 +124,7 @@ a.wall-item-name-link {
 	text-overflow: ellipsis;
 }
 
-.wall-item-ago .icon-ok {
+.wall-item-ago .fa-check {
 	cursor: pointer;
 }
 

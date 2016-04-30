@@ -3,7 +3,7 @@
 		{{if $notself}}
 		<div class="dropdown pull-right">
 			<button id="connection-dropdown" class="btn btn-default btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<i class="icon-caret-down"></i>&nbsp;{{$tools_label}}
+				<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
 			</button>
 			<ul class="dropdown-menu" aria-labelledby="dLabel">
 				<li><a  href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a></li>

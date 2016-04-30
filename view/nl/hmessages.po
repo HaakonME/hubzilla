@@ -1995,7 +1995,7 @@ msgstr "Permissies die op deze pagina staan vermeld worden op alle nieuwe connec
 
 #: ../../Zotlabs/Module/Connedit.php:714
 msgid "Connection Tools"
-msgstr "Connectiehulpmiddelen"
+msgstr "Hulpmiddelen"
 
 #: ../../Zotlabs/Module/Connedit.php:716
 msgid "Slide to adjust your degree of friendship"
@@ -4252,7 +4252,7 @@ msgstr[1] "vinden dit niet leuk"
 
 #: ../../Zotlabs/Module/Photos.php:1234
 msgid "Photo Tools"
-msgstr "Fotohulpmiddelen"
+msgstr "Hulpmiddelen"
 
 #: ../../Zotlabs/Module/Photos.php:1243
 msgid "In This Photo:"
@@ -4444,7 +4444,7 @@ msgstr "Zichtbaarheid bewerken"
 
 #: ../../Zotlabs/Module/Profiles.php:694
 msgid "Profile Tools"
-msgstr "Profielhulpmiddelen"
+msgstr "Hulpmiddelen"
 
 #: ../../Zotlabs/Module/Profiles.php:695
 msgid "Change cover photo"
@@ -7307,6 +7307,7 @@ msgstr "activiteit"
 #: ../../include/text.php:2248
 msgid "Design Tools"
 msgstr "Ontwerp-hulpmiddelen"
+
 
 #: ../../include/text.php:2254
 msgid "Pages"

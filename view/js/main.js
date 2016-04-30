@@ -984,16 +984,16 @@ function dostar(ident) {
 		if(data.result == 1) {
 			$('#starred-' + ident).addClass('starred');
 			$('#starred-' + ident).removeClass('unstarred');
-			$('#starred-' + ident).addClass('icon-star-full');
-			$('#starred-' + ident).removeClass('icon-star-empty');
+			$('#starred-' + ident).addClass('fa-star-full');
+			$('#starred-' + ident).removeClass('fa-star-o');
 			$('#star-' + ident).addClass('hidden');
 			$('#unstar-' + ident).removeClass('hidden');
 		}
 		else {
 			$('#starred-' + ident).addClass('unstarred');
 			$('#starred-' + ident).removeClass('starred');
-			$('#starred-' + ident).addClass('icon-star-empty');
-			$('#starred-' + ident).removeClass('icon-star-full');
+			$('#starred-' + ident).addClass('fa-star-o');
+			$('#starred-' + ident).removeClass('fa-star-full');
 			$('#star-' + ident).removeClass('hidden');
 			$('#unstar-' + ident).addClass('hidden');
 		}
@@ -1179,7 +1179,7 @@ function contactgroupChangeMember(gid, cid) {
 	$('body').css('cursor', 'wait');
 	$.get('contactgroup/' + gid + '/' + cid, function(data) {
 		$('body').css('cursor', 'auto');
-		$('#group-' + gid).toggleClass('icon-check icon-check-empty');
+		$('#group-' + gid).toggleClass('fa-check-square-o fa-square-o');
 	});
 }
 

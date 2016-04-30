@@ -10,44 +10,38 @@ require_once('include/conversation.php');
 class Editpost extends \Zotlabs\Web\Controller {
 
 	function get() {
-	
+
 		$o = '';
-	
+
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
+
 		$post_id = ((argc() > 1) ? intval(argv(1)) : 0);
-	
+
 		if(! $post_id) {
 			notice( t('Item not found') . EOL);
 			return;
 		}
-	
+
 		$itm = q("SELECT * FROM `item` WHERE `id` = %d AND ( owner_xchan = '%s' OR author_xchan = '%s' ) LIMIT 1",
 			intval($post_id),
 			dbesc(get_observer_hash()),
 			dbesc(get_observer_hash())
 		);
-	
+
 		if(! count($itm)) {
 			notice( t('Item is not editable') . EOL);
 			return;
 		}
-	
+
 		if($itm[0]['resource_type'] === 'event' && $itm[0]['resource_id']) {
 			goaway(z_root() . '/events/' . $itm[0]['resource_id'] . '?expandform=1');
 		}
-	
-	
+
 		$owner_uid = $itm[0]['uid'];
-	
-	
-		$plaintext = true;
-	//	if(feature_enabled(local_channel(),'richtext'))
-	//		$plaintext = false;
-	
+
 		$channel = \App::get_channel();
 
 		if(intval($itm[0]['item_obscured'])) {
@@ -57,10 +51,10 @@ class Editpost extends \Zotlabs\Web\Controller {
 			if($itm[0]['body'])
 				$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
 		}
-	
+
 		$category = '';
 		$catsenabled = ((feature_enabled($owner_uid,'categories')) ? 'categories' : '');
-	
+
 		if ($catsenabled){
 		        $itm = fetch_post_tags($itm);
 	
@@ -72,7 +66,7 @@ class Editpost extends \Zotlabs\Web\Controller {
 		                $category .= $cat['term'];
 		        }
 		}
-	
+
 		if($itm[0]['attach']) {
 			$j = json_decode($itm[0]['attach'],true);
 			if($j) {
@@ -106,16 +100,14 @@ class Editpost extends \Zotlabs\Web\Controller {
 		);
 
 		$editor = status_editor($a, $x);
-	
+
 		$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 			'$title' => t('Edit post'),
 			'$editor' => $editor
 		));
-	
+
 		return $o;
-	
+
 	}
-	
-	
-	
+
 }

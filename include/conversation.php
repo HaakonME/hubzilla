@@ -1187,7 +1187,7 @@ function status_editor($a, $x, $popup = false) {
 	$jotplugins = '';
 
 	$preview = t('Preview');
-	if(x($x, 'nopreview'))
+	if(x($x, 'hide_preview'))
 		$preview = '';
 
 	$defexpire = ((($z = get_pconfig($x['profile_uid'], 'system', 'default_post_expire')) && (! $webpage)) ? $z : '');

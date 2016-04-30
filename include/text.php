@@ -2601,41 +2601,41 @@ function linkify_tags($a, &$body, $uid, $diaspora = false) {
 function getIconFromType($type) {
 	$iconMap = array(
 		//Folder
-		t('Collection') => 'icon-folder-close',
-		'multipart/mixed' => 'icon-folder-close', //dirs in attach use this mime type
+		t('Collection') => 'fa-folder',
+		'multipart/mixed' => 'fa-folder', //dirs in attach use this mime type
 		//Common file
-		'application/octet-stream' => 'icon-file-alt',
+		'application/octet-stream' => 'fa-file-o',
 		//Text
-		'text/plain' => 'icon-file-text-alt',
-		'application/msword' => 'icon-file-text-alt',
-		'application/pdf' => 'icon-file-text-alt',
-		'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
-		'application/epub+zip' => 'icon-book',
+		'text/plain' => 'fa-file-text-o',
+		'application/msword' => 'fa-file-text-o',
+		'application/pdf' => 'fa-file-text-o',
+		'application/vnd.oasis.opendocument.text' => 'fa-file-text-o',
+		'application/epub+zip' => 'fa-book',
 		//Spreadsheet
-		'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
-		'application/vnd.ms-excel' => 'icon-table',
+		'application/vnd.oasis.opendocument.spreadsheet' => 'fa-table',
+		'application/vnd.ms-excel' => 'fa-table',
 		//Image
-		'image/jpeg' => 'icon-picture',
-		'image/png' => 'icon-picture',
-		'image/gif' => 'icon-picture',
-		'image/svg+xml' => 'icon-picture',
+		'image/jpeg' => 'fa-picture-o',
+		'image/png' => 'fa-picture-o',
+		'image/gif' => 'fa-picture-o',
+		'image/svg+xml' => 'fa-picture-o',
 		//Archive
-		'application/zip' => 'icon-archive',
-		'application/x-rar-compressed' => 'icon-archive',
+		'application/zip' => 'fa-archive',
+		'application/x-rar-compressed' => 'fa-archive',
 		//Audio
-		'audio/mpeg' => 'icon-music',
-		'audio/wav' => 'icon-music',
-		'application/ogg' => 'icon-music',
-		'audio/ogg' => 'icon-music',
-		'audio/webm' => 'icon-music',
-		'audio/mp4' => 'icon-music',
+		'audio/mpeg' => 'fa-music',
+		'audio/wav' => 'fa-music',
+		'application/ogg' => 'fa-music',
+		'audio/ogg' => 'fa-music',
+		'audio/webm' => 'fa-music',
+		'audio/mp4' => 'fa-music',
 		//Video
-		'video/quicktime' => 'icon-film',
-		'video/webm' => 'icon-film',
-		'video/mp4' => 'icon-film'
+		'video/quicktime' => 'fa-film',
+		'video/webm' => 'fa-film',
+		'video/mp4' => 'fa-film'
 	);
 
-	$iconFromType = 'icon-file-alt';
+	$iconFromType = 'fa-file-o';
 
 	if (array_key_exists($type, $iconMap)) {
 		$iconFromType = $iconMap[$type];

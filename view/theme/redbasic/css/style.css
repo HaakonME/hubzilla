@@ -1681,9 +1681,7 @@ nav .badge.mail-update:hover {
 
 
 .navbar-inverse .navbar-nav > li > a {
-	font-size: 12px;
 	color: $nav_icon_colour;
-	text-shadow: 0px 0px 0px;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover,

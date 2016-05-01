@@ -143,8 +143,10 @@ function listNewLineAutocomplete(id) {
 	if (word != null) {
 		var textBefore = text.value.substring(0, caretPos);
 		var textAfter  = text.value.substring(caretPos, text.length);
-		$('#' + id).val(textBefore + '\r\n[*] ' + textAfter);
-		setCaretPosition(text, caretPos + 5);
+		var textInsert = (word.indexOf('[/dl]') > 0) ? '\r\n[*= ' : '\r\n[*] ';
+
+		$('#' + id).val(textBefore + textInsert + textAfter);
+		setCaretPosition(text, caretPos + (textInsert.length - 1));
 		return true;
 	}
 	else {
@@ -296,10 +298,11 @@ function string2bb(element) {
 			replace: function (element) {
 				element = string2bb(element);
 				if(open_elements.indexOf(element) < 0) {
-					if(element === 'list' || element === 'ol' || element === 'ul' || element === 'dl') {
-						return ['\[' + element + '\]' + '\n\[*\] ', '\n\[/' + element + '\]'];
-					}
-					else if(element === 'table') {
+					if(element === 'list' || element === 'ol' || element === 'ul') {
+						return ['\[' + element + '\]' + '\n\[*\] ',            '\n\[/' + element + '\]'];
+					} else if (element === 'dl') {
+						return ['\[' + element + '\]' + '\n\[*= Item name\] ', '\n\[/' + element + '\]'];
+					} else if(element === 'table') {
 						return ['\[' + element + '\]' + '\n\[tr\]', '\[/tr\]\n\[/' + element + '\]'];
 					}
 					else {

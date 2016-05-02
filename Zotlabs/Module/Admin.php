@@ -1346,7 +1346,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$plugins' => $plugins,
 			'$disabled' => t('Disabled - version incompatibility'),
 			'$form_security_token' => get_form_security_token('admin_plugins'),
-			'$addclone' => t('Add Plugin Repo'),
+			'$addrepo' => t('Add Plugin Repo'),
 			'$expandform' => false,
 			'$form' => $admin_plugins_add_repo_form
 		));

@@ -6,14 +6,14 @@
 				<span class="icon-bar"></span>
 			</button>
 			<button id="expand-tabs" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#tabs-collapse-1">
-				<i class="icon-circle-arrow-down" id="expand-tabs-icon"></i>
+				<i class="fa fa-arrow-circle-down" id="expand-tabs-icon"></i>
 			</button>
 			<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
-				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
+				<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 			</button>
 			{{if $nav.help.6}}
 			<button id="context-help-btn"class="navbar-toggle" type="button" onclick="contextualHelp(); return false;">
-				<i class="icon-question-sign"></i>
+				<i class="fa fa-question-circle"></i>
 			</button>
 			{{/if}}
 			{{if $userinfo}}
@@ -73,7 +73,7 @@
 
 			{{if $nav.network}}
 				<li class="{{$sel.network}} hidden-xs">
-					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" id="{{$nav.network.4}}"><i class="icon-th"></i></a>
+					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" id="{{$nav.network.4}}"><i class="fa fa-th"></i></a>
 					<span class="net-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-network-menu"></span>
 					<ul id="nav-network-menu" role="menu" class="dropdown-menu" rel="network">
 						{{* <li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li> *}}
@@ -82,14 +82,14 @@
 					</ul>
 				</li>
 				<li class="{{$sel.network}} visible-xs">
-					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="icon-th"></i></a>
+					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="fa fa-th"></i></a>
 					<span class="net-update badge" rel="#nav-network-menu"></span>
 				</li>
 			{{/if}}
 
 			{{if $nav.home}}
 				<li class="{{$sel.home}} hidden-xs">
-					<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" id="{{$nav.home.4}}"><i class="icon-home"></i></a>
+					<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" id="{{$nav.home.4}}"><i class="fa fa-home"></i></a>
 					<span class="home-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-home-menu"></span>
 					<ul id="nav-home-menu" class="dropdown-menu" rel="home">
 						{{* <li id="nav-home-see-all"><a href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a></li> *}}
@@ -98,7 +98,7 @@
 					</ul>
 				</li>
 				<li class="{{$sel.home}} visible-xs">
-					<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" ><i class="icon-home"></i></a>
+					<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" ><i class="fa fa-home"></i></a>
 					<span class="home-update badge" rel="#nav-home-menu"></span>
 				</li>
 			{{/if}}
@@ -106,7 +106,7 @@
 
 			{{if $nav.messages}}
 				<li class="{{$sel.messages}} hidden-xs">
-					<a class="{{$nav.messages.2}}" href="{{$nav.messages.0}}" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}"><i class="icon-envelope"></i></a>
+					<a class="{{$nav.messages.2}}" href="{{$nav.messages.0}}" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}"><i class="fa fa-envelope"></i></a>
 					<span class="mail-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-messages-menu"></span>
 					<ul id="nav-messages-menu" class="dropdown-menu" rel="messages">
 						<li id="nav-messages-see-all"><a href="{{$nav.messages.all.0}}">{{$nav.messages.all.1}}</a></li>
@@ -115,14 +115,14 @@
 					</ul>
 				</li>
 				<li class="{{$sel.messages}} visible-xs">
-					<a class="{{$nav.messages.2}}" href="{{$nav.messages.0}}" title="{{$nav.messages.3}}" ><i class="icon-envelope"></i></a>
+					<a class="{{$nav.messages.2}}" href="{{$nav.messages.0}}" title="{{$nav.messages.3}}" ><i class="fa fa-envelope"></i></a>
 					<span class="mail-update badge" rel="#nav-messages-menu"></span>
 				</li>
 			{{/if}}
 
 			{{if $nav.all_events}}
 				<li class="{{$sel.all_events}} hidden-xs">
-					<a class="{{$nav.all_events.2}}" href="{{$nav.all_events.0}}" title="{{$nav.all_events.3}}" id='{{$nav.all_events.4}}'><i class="icon-calendar"></i></a>
+					<a class="{{$nav.all_events.2}}" href="{{$nav.all_events.0}}" title="{{$nav.all_events.3}}" id='{{$nav.all_events.4}}'><i class="fa fa-calendar"></i></a>
 					<span class="all_events-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-all_events-menu"></span>
 					<ul id="nav-all_events-menu" class="dropdown-menu" rel="all_events">
 						<li id="nav-all_events-see-all"><a href="{{$nav.all_events.all.0}}">{{$nav.all_events.all.1}}</a></li>
@@ -131,14 +131,14 @@
 					</ul>
 				</li>
 				<li class="{{$sel.all_events}} visible-xs">
-					<a class="{{$nav.all_events.2}}" href="{{$nav.all_events.0}}" title="{{$nav.all_events.3}}" ><i class="icon-calendar"></i></a>
+					<a class="{{$nav.all_events.2}}" href="{{$nav.all_events.0}}" title="{{$nav.all_events.3}}" ><i class="fa fa-calendar"></i></a>
 					<span class="all_events-update badge" rel="#nav-all_events-menu"></span>
 				</li>
 			{{/if}}
 
 			{{if $nav.intros}}
 				<li class="{{$sel.intros}} hidden-xs">
-					<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}"><i class="icon-user"></i></a>
+					<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}"><i class="fa fa-user"></i></a>
 					<span class="intro-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-intros-menu"></span>
 					<ul id="nav-intros-menu" class="dropdown-menu" rel="intros">
 						<li id="nav-intros-see-all"><a href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a></li>
@@ -146,14 +146,14 @@
 					</ul>
 				</li>
 				<li class="{{$sel.intros}} visible-xs">
-					<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" ><i class="icon-user"></i></a>
+					<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" ><i class="fa fa-user"></i></a>
 					<span class="intro-update badge" rel="#nav-intros-menu"></span>
 				</li>
 			{{/if}}
 		
 			{{if $nav.notifications}}
 				<li class="{{$sel.notifications}} hidden-xs">
-					<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}"><i class="icon-exclamation"></i></a>
+					<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}"><i class="fa fa-exclamation"></i></a>
 					<span class="notify-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-notify-menu"></span>
 					<ul id="nav-notify-menu" class="dropdown-menu" rel="notify">
 						<li id="nav-notify-see-all"><a href="{{$nav.notifications.all.0}}">{{$nav.notifications.all.1}}</a></li>
@@ -162,7 +162,7 @@
 					</ul>
 				</li>
 				<li class="{{$sel.notifications}} visible-xs">
-					<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}"><i class="icon-exclamation"></i></a>
+					<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}"><i class="fa fa-exclamation"></i></a>
 					<span class="notify-update badge" rel="#nav-notify-menu"></span>
 				</li>
 			{{/if}}
@@ -170,11 +170,11 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li class="hidden-xs">
 					<form method="get" action="search" role="search">
-						<div id="nav-search-spinner"></div><input class="icon-search" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();"/>
+						<div id="nav-search-spinner"></div><input class="fa-search" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();"/>
 					</form>
 				</li>
 				<li class="visible-xs">
-					<a href="/search" title="{{$nav.search.3}}"><i class="icon-search"></i></a>
+					<a href="/search" title="{{$nav.search.3}}"><i class="fa fa-search"></i></a>
 				</li>
 
 			{{if $powered_by}}
@@ -182,19 +182,19 @@
 			{{/if}}
 			{{if $nav.directory}}
 				<li class="{{$sel.directory}}">
-					<a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}" id="{{$nav.directory.4}}"><i class="icon-sitemap"></i></a>
+					<a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}" id="{{$nav.directory.4}}"><i class="fa fa-sitemap"></i></a>
 				</li>
 			{{/if}}
 
 			{{if $nav.apps}}
 				<li class="{{$sel.apps}}">
-					<a class="{{$nav.apps.2}}" href="{{$nav.apps.0}}" title="{{$nav.apps.3}}" id="{{$nav.apps.4}}"><i class="icon-cogs"></i></a>
+					<a class="{{$nav.apps.2}}" href="{{$nav.apps.0}}" title="{{$nav.apps.3}}" id="{{$nav.apps.4}}"><i class="fa fa-cogs"></i></a>
 				</li>
 			{{/if}}
 
 			{{if $nav.help}}
 				<li class="{{$sel.help}}{{if $nav.help.6}} hidden-xs{{/if}}">
-					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="contextualHelp(); return false;"{{/if}}>{{if $nav.help.6}}<i class="icon-question-sign"></i>{{else}}<i class="icon-question"></i>{{/if}}</a>
+					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="contextualHelp(); return false;"{{/if}}>{{if $nav.help.6}}<i class="fa fa-question-circle"></i>{{else}}<i class="fa fa-question"></i>{{/if}}</a>
 				</li>
 			{{/if}}
 			</ul>
@@ -204,8 +204,8 @@
 	<div id="contextual-help-content" class="contextual-help-content">
 		{{$nav.help.5}}
 		<div class="pull-right">
-			<a class="contextual-help-tool" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}"><i class="icon-question"></i></a>
-			<a class="contextual-help-tool" href="#" onclick="contextualHelp(); return false;"><i class="icon-remove"></i></a>
+			<a class="contextual-help-tool" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}"><i class="fa fa-question"></i></a>
+			<a class="contextual-help-tool" href="#" onclick="contextualHelp(); return false;"><i class="fa fa-times"></i></a>
 		</div>
 	</div>
 	{{/if}}

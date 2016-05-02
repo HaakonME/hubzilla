@@ -5,9 +5,9 @@
 		{{foreach $plugins as $p}}
 			<li class='plugin {{$p.1}}'>
 				{{if ! $p.2.disabled}}				
-				<a class='toggleplugin' href='{{$baseurl}}/admin/{{$function}}/{{$p.0}}?a=t&amp;t={{$form_security_token}}' title="{{if $p.1==on}}Disable{{else}}Enable{{/if}}" ><i class='{{if $p.1==on}}icon-check{{else}}icon-check-empty{{/if}} admin-icons'></i></a>
+				<a class='toggleplugin' href='{{$baseurl}}/admin/{{$function}}/{{$p.0}}?a=t&amp;t={{$form_security_token}}' title="{{if $p.1==on}}Disable{{else}}Enable{{/if}}" ><i class='fa {{if $p.1==on}}fa-check-square-o{{else}}fa-square-o{{/if}} admin-icons'></i></a>
 				{{else}}
-				<i class='icon-stop admin-icons'></i>
+				<i class='fa fa-stop admin-icons'></i>
 				{{/if}}
 				<a href='{{$baseurl}}/admin/{{$function}}/{{$p.0}}'><span class='name'>{{$p.2.name}}</span></a> - <span class="version">{{$p.2.version}}</span>{{if $p.2.disabled}} {{$disabled}}{{/if}}
 				{{if $p.2.experimental}} {{$experimental}} {{/if}}{{if $p.2.unsupported}} {{$unsupported}} {{/if}}

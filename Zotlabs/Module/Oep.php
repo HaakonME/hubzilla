@@ -220,7 +220,7 @@ class Oep extends \Zotlabs\Web\Controller {
 		$ret['width'] = intval($width);
 		$ret['height'] = intval($height);
 	
-		$ret['html'] = get_zcard($c,get_observer_hash(),array('width' => $width, 'height' => $height));
+		$ret['html'] = get_zcard_embed($c,get_observer_hash(),array('width' => $width, 'height' => $height));
 	
 		return $ret;
 	

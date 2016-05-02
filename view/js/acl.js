@@ -193,19 +193,16 @@ ACL.prototype.update_view = function() {
 		that.deny_gid.length === 0 && that.deny_cid.length === 0) {
 			that.showall.removeClass("btn-default").addClass("btn-warning");
 			/* jot acl */
-			$('#jot-perms-icon').removeClass('icon-lock').addClass('icon-unlock');
+			$('#jot-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
 			$('#jot-public').show();
 			$('.profile-jot-net input').attr('disabled', false);
-			if(typeof editor !== 'undefined' && editor !== false) {
-				$('#profile-jot-desc').html(ispublic);
-			}
 	} else {
 		that.showall.removeClass("btn-warning").addClass("btn-default");
 		/* jot acl */
-		$('#jot-perms-icon').removeClass('icon-unlock').addClass('icon-lock');
+		$('#jot-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
 		$('#jot-public').hide();
 		$('.profile-jot-net input').attr('disabled', 'disabled');
-		$('#profile-jot-desc').html('&nbsp;');
+
 	}
 	$("#acl-list-content .acl-list-item").each(function() {
 		$(this).removeClass("groupshow grouphide");

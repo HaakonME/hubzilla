@@ -1383,9 +1383,8 @@ img.mail-conv-sender-photo {
 	-moz-border-radius: $radiuspx;
 }
 
-.profile-thing-list img, .thing-show img, .thing-edit-links a {
-	margin-top: 8px;
-	margin-right: 15px;
+.thing-show img {
+	margin: 10px;
 }
 
 .abook-self {
@@ -1682,9 +1681,7 @@ nav .badge.mail-update:hover {
 
 
 .navbar-inverse .navbar-nav > li > a {
-	font-size: 12px;
 	color: $nav_icon_colour;
-	text-shadow: 0px 0px 0px;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover,
@@ -1827,8 +1824,29 @@ nav .badge.mail-update:hover {
 	margin-top:-3px;
 }
 
+dl.bb-dl > dt { 
+	/* overriding the default dl style from bootstrap, as bootstrap's
+	   style of a bold unindented line followed by a plain unindented
+	   line is already acheivable in bbcode without dl */
+	font-weight: normal; 
+} 
+dl.dl-terms-monospace > dt { font-family:     monospace; }
+dl.dl-terms-bold      > dt { font-weight:     bold; }
+dl.dl-terms-italic    > dt { font-style:      italic; }
+dl.dl-terms-underline > dt { text-decoration: underline; }
+dl.dl-terms-large     > dt { font-size:       120%; }
+dl.bb-dl:not(.dl-horizontal) > dd {
+	display: block;
+	margin-left: 2em;
+}
+dl.bb-dl > dd > li {
+	/* adding some indent so bullet-list items will line up better with 
+	   dl descriptions if someone wants to be impure and combine them */
+	margin-left: 1em;
+}
+
 .bootstrap-tagsinput .tag:before {
-	/* Copied from icon-asterisk, is there a better way to do it? */
+	/* Copied from fa-asterisk, is there a better way to do it? */
 	font-family: FontAwesome;
 	font-weight: normal;
 	font-style: normal;

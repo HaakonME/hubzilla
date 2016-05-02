@@ -34,16 +34,16 @@ class Pubsites extends \Zotlabs\Web\Controller {
 						if($jj['project'] !== \Zotlabs\Project\System::get_platform_name())
 							continue;
 						$host = strtolower(substr($jj['url'],strpos($jj['url'],'://')+3));
-						$rate_links = ((local_channel()) ? '<td><a href="rate?f=&target=' . $host . '" class="btn-btn-default"><i class="icon-check"></i> ' . t('Rate') . '</a></td>' : '');
+						$rate_links = ((local_channel()) ? '<td><a href="rate?f=&target=' . $host . '" class="btn-btn-default"><i class="fa fa-check-square-o"></i> ' . t('Rate') . '</a></td>' : '');
 						$location = '';
 						if(!empty($jj['location'])) { 
-							$location = '<p title="' . t('Location') . '" style="margin: 5px 5px 0 0; text-align: right"><i class="icon-globe"></i> ' . $jj['location'] . '</p>'; 
+							$location = '<p title="' . t('Location') . '" style="margin: 5px 5px 0 0; text-align: right"><i class="fa fa-globe"></i> ' . $jj['location'] . '</p>'; 
 							}
 						else {
 							$location = '<br />&nbsp;';
 							}
 						$urltext = str_replace(array('https://'), '', $jj['url']);
-						$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="icon-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="icon-eye-open"></i> ' . t('View') . '</a></td>' . $rate_links . '</tr>';
+						$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="fa fa-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="fa fa-eye"></i> ' . t('View') . '</a></td>' . $rate_links . '</tr>';
 					}
 				}
 		

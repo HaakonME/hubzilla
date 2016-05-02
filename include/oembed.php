@@ -49,11 +49,7 @@ function oembed_action($embedurl) {
 		if($x) {
 			foreach($x as $ll) {
 				$t = trim($ll);
-
-				// don't allow somebody to provide a url like https://foobar.com/something/youtube 
-				// to bypass a block or allow of youtube
-
-				if($t && (strpos($embedurl,$t) !== false || strpos($t,$host) !== false)) {
+				if(($t) && (strpos($embedurl,$t) !== false)) {
 					$action = 'block';
 					break;
 				}
@@ -69,14 +65,26 @@ function oembed_action($embedurl) {
 		if($x) {
 			foreach($x as $ll) {
 				$t = trim($ll);
+				$has_slash = ((strpos($t,'/') !== false) ? true : false);
 
 				// don't allow somebody to provide a url like https://foobar.com/something/youtube 
-				// to bypass a block or allow of youtube
+				// to bypass an allow of youtube. Note they could still get through this
+				// with something like https://youtube.com.foobar.com/something so this is tagged with
+				// @FIXME, otherwise to fully secure a site will require every possible variation
+				// of every allowed service base URL. http vs. https, www. vs nothing, 
+				// youtube.[com|org|whatever], youtu.be, and this is just for one service. 
 
-				if($t && (strpos($embedurl,$t) !== false || strpos($t,$host) !== false)) {
-					$found = true;
-					$action = 'allow';
-					break;
+				if($t) {
+					if(strpos($t,$host) !== false) {
+						$found = true;
+						$action = 'allow';
+						break;
+					}
+					elseif(($has_slash) && (strpos($embedurl,$t) !== false)) {
+						$found = true;
+						$action = 'allow';
+						break;
+					}
 				}
 			}
 		}
@@ -96,11 +104,7 @@ function oembed_action($embedurl) {
 			if($x) {
 				foreach($x as $ll) {
 					$t = trim($ll);
-
-					// don't allow somebody to provide a url like https://foobar.com/something/youtube 
-					// to bypass a block or allow of youtube
-
-					if($t && (strpos($embedurl,$t) !== false || strpos($t,$host) !== false)) {
+					if(($t) && (strpos($embedurl,$t) !== false)) {
 						$action = 'block';
 						break;
 					}

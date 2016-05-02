@@ -122,7 +122,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 
 
 
-function purify_html($s, $allow_position) {
+function purify_html($s, $allow_position = false) {
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
 

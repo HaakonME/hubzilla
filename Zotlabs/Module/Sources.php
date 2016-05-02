@@ -7,7 +7,7 @@ class Sources extends \Zotlabs\Web\Controller {
 	function post() {
 		if(! local_channel())
 			return;
-	
+
 		if(! feature_enabled(local_channel(),'channel_sources'))
 			return '';
 	
@@ -17,6 +17,7 @@ class Sources extends \Zotlabs\Web\Controller {
 		$words = $_REQUEST['words'];
 		$frequency = $_REQUEST['frequency'];
 		$name = $_REQUEST['name'];
+		$tags = $_REQUEST['tags'];
 	
 		$channel = \App::get_channel();
 	
@@ -36,14 +37,15 @@ class Sources extends \Zotlabs\Web\Controller {
 			notice ( t('Failed to create source. No channel selected.') . EOL);
 			return;
 		}
-	
+
 		if(! $source) {
-			$r = q("insert into source ( src_channel_id, src_channel_xchan, src_xchan, src_patt )
-				values ( %d, '%s', '%s', '%s' ) ",
+			$r = q("insert into source ( src_channel_id, src_channel_xchan, src_xchan, src_patt, src_tag )
+				values ( %d, '%s', '%s', '%s', '%s' ) ",
 				intval(local_channel()),
 				dbesc($channel['channel_hash']),
 				dbesc($xchan),
-				dbesc($words)
+				dbesc($words),
+				dbesc($tags)
 			);
 			if($r) {
 				info( t('Source created.') . EOL);
@@ -51,9 +53,10 @@ class Sources extends \Zotlabs\Web\Controller {
 			goaway(z_root() . '/sources');
 		}
 		else {
-			$r = q("update source set src_xchan = '%s', src_patt = '%s' where src_channel_id = %d and src_id = %d",
+			$r = q("update source set src_xchan = '%s', src_patt = '%s', src_tag = '%s' where src_channel_id = %d and src_id = %d",
 				dbesc($xchan),
 				dbesc($words),
+				dbesc($tags),
 				intval(local_channel()),
 				intval($source)
 			);
@@ -62,6 +65,7 @@ class Sources extends \Zotlabs\Web\Controller {
 			}
 			
 		}
+
 	}
 	
 	
@@ -105,6 +109,8 @@ class Sources extends \Zotlabs\Web\Controller {
 				'$desc' => t('Import all or selected content from the following channel into this channel and distribute it according to your channel settings.'),
 				'$words' => array( 'words', t('Only import content with these words (one per line)'),'',t('Leave blank to import all public content')),
 				'$name' => array( 'name', t('Channel Name'), '', ''),
+				'$tags' => array('tags', t('Add the following tags to posts imported from this source (comma separated)','','')),
+
 				'$submit' => t('Submit')
 			));
 			return $o;
@@ -138,6 +144,7 @@ class Sources extends \Zotlabs\Web\Controller {
 				'$words' => array( 'words', t('Only import content with these words (one per line)'),$r[0]['src_patt'],t('Leave blank to import all public content')),
 				'$xchan' => $r[0]['src_xchan'],
 				'$abook' => $x[0]['abook_id'],
+				'$tags' => array('tags', t('Add the following tags to posts imported from this source (comma separated)'),$r[0]['src_tag'],''),
 				'$name' => array( 'name', t('Channel Name'), $r[0]['xchan_name'], ''),
 				'$submit' => t('Submit')
 			));

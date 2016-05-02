@@ -3400,6 +3400,37 @@ function tgroup_check($uid,$item) {
  */
 function start_delivery_chain($channel, $item, $item_id, $parent) {
 
+	$sourced = check_item_source($channel['channel_id'],$item);
+
+	if($sourced) {
+		$r = q("select * from source where src_channel_id = %d and ( src_xchan = '%s' or src_xchan = '*' ) limit 1",
+			intval($channel['channel_id']),
+	        dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
+    	);
+		if($r) {
+			$t = trim($r[0]['src_tag']);
+			if($t) {
+				$tags = explode(',',$t);
+				if($tags) {
+					foreach($tags as $tt) {
+						$tt = trim($tt);
+						if($tt) {
+            				q("insert into term (uid,oid,otype,type,term,url)
+                				values(%d,%d,%d,%d,'%s','%s') ",
+                				intval($channel['channel_id']),
+				                intval($item_id),
+                				intval(TERM_OBJ_POST),
+				                intval(TERM_UNKNOWN),
+                				dbesc($tt),
+				                dbesc(z_root() . '/search?f=&tag=' . urlencode($tt))
+            				);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// Change this copy of the post to a forum head message and deliver to all the tgroup members
 	// also reset all the privacy bits to the forum default permissions
 
@@ -3458,6 +3489,9 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 		intval($item_origin),
 		intval($item_id)
 	);
+
+
+
 
 	if($r)
 		proc_run('php','include/notifier.php','tgroup',$item_id);

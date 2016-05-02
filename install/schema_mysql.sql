@@ -1181,6 +1181,7 @@ CREATE TABLE IF NOT EXISTS `source` (
   `src_channel_xchan` char(255) NOT NULL DEFAULT '',
   `src_xchan` char(255) NOT NULL DEFAULT '',
   `src_patt` mediumtext NOT NULL,
+  `src_tag` mediumtext NOT NULL,
   PRIMARY KEY (`src_id`),
   KEY `src_channel_id` (`src_channel_id`),
   KEY `src_channel_xchan` (`src_channel_xchan`),

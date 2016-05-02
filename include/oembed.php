@@ -3,60 +3,9 @@ function oembed_replacecb($matches){
 
 	$embedurl=$matches[1];
 
-
-	// site white/black list
-
-	if(($x = get_config('system','embed_deny'))) {
-		$l = explode("\n",$x);
-		if($l) {
-			foreach($l as $ll) {
-				if(trim($ll) && strpos($embedurl,trim($ll)) !== false)
-					return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
-			}
-		}
-	}
-	if(($x = get_config('system','embed_allow'))) {
-		$found = false;
-		$l = explode("\n",$x);
-		if($l) {
-			foreach($l as $ll) {
-				if(trim($ll) && strpos($embedurl,trim($ll)) !== false) {
-					$found = true;
-					break;
-				}
-			}
-		}
-		if(! $found) {
-			return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
-		}
-	}
-
-	// implements a personal embed white/black list for logged in members
-	if(local_channel()) {
-		if(($x = get_pconfig(local_channel(),'system','embed_deny'))) {
-			$l = explode("\n",$x);
-			if($l) {
-				foreach($l as $ll) {
-					if(trim($ll) && strpos($embedurl,trim($ll)) !== false)
-						return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
-				}
-			}
-		}
-		if(($x = get_pconfig(local_channel(),'system','embed_allow'))) {
-			$found = false;
-			$l = explode("\n",$x);
-			if($l) {
-				foreach($l as $ll) {
-					if(trim($ll) && strpos($embedurl,trim($ll)) !== false) {
-						$found = true;
-						break;
-					}
-				}
-			}
-			if(! $found) {
-				return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
-			}
-		}
+	$action = oembed_action($embedurl);
+	if($action === 'block') {
+		return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
 	}
 
 	$j = oembed_fetch_url($embedurl);
@@ -64,6 +13,107 @@ function oembed_replacecb($matches){
 	return $s;  
 }
 
+
+function oembed_action($embedurl) {
+
+	$host = '';
+
+	$action = 'allow';
+
+	// The default action is 'allow'. This is insecure. We might want to 
+	// change this to 'filter' except it will be a support burden because
+	// then youtube videos won't work out of the box and will need to be
+	// explicitly enabled.
+
+	$embedurl = str_replace('&amp;','&', $embedurl);
+
+	logger('oembed_action: ' . $embedurl);
+
+	$p = parse_url($embedurl);
+
+	if($p)
+		$host = $p['host'];
+
+	// These media files should now be caught in bbcode.php
+	// left here as a fallback in case this is called from another source
+
+	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
+	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
+
+
+	// site white/black list
+
+	if(($x = get_config('system','embed_deny'))) {
+		if(($x) && (! is_array($x)))
+			$x = explode("\n",$x);
+		if($x) {
+			foreach($x as $ll) {
+				$t = trim($ll);
+
+				// don't allow somebody to provide a url like https://foobar.com/something/youtube 
+				// to bypass a block or allow of youtube
+
+				if($t && (strpos($embedurl,$t) !== false || strpos($t,$host) !== false)) {
+					$action = 'block';
+					break;
+				}
+			}
+		}
+	}
+	
+	$found = false;
+
+	if(($x = get_config('system','embed_allow'))) {
+		if(($x) && (! is_array($x)))
+			$x = explode("\n",$x);
+		if($x) {
+			foreach($x as $ll) {
+				$t = trim($ll);
+
+				// don't allow somebody to provide a url like https://foobar.com/something/youtube 
+				// to bypass a block or allow of youtube
+
+				if($t && (strpos($embedurl,$t) !== false || strpos($t,$host) !== false)) {
+					$found = true;
+					$action = 'allow';
+					break;
+				}
+			}
+		}
+		if((! $found) && ($action !== 'block')) {
+			$action = 'filter';
+		}
+	}
+
+	// allow individual members to block something that wasn't blocked already.
+	// They cannot over-ride the site to allow or change the filtering on an 
+	// embed that is not allowed by the site.
+
+	if(local_channel()) {
+		if(($x = get_pconfig(local_channel(),'system','embed_deny'))) {
+			if(($x) && (! is_array($x)))
+				$x = explode("\n",$x);
+			if($x) {
+				foreach($x as $ll) {
+					$t = trim($ll);
+
+					// don't allow somebody to provide a url like https://foobar.com/something/youtube 
+					// to bypass a block or allow of youtube
+
+					if($t && (strpos($embedurl,$t) !== false || strpos($t,$host) !== false)) {
+						$action = 'block';
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	logger('action: ' . $action . ' url: ' . $embedurl, LOGGER_DEBUG,LOG_DEBUG); 
+
+	return $action;
+
+}
 
 // if the url is embeddable with oembed, return the bbcode link.
 
@@ -79,42 +129,48 @@ function oembed_process($url) {
 
 function oembed_fetch_url($embedurl){
 
-	$a = get_app();
-
-	$embedurl = str_replace('&amp;','&', $embedurl);
-
-// logger('fetch: ' . $embedurl);
-
-	$txt = Cache::get(App::$videowidth . $embedurl);
-
-	if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
-		$txt = str_replace('http:','https:',$txt);
-	}
-
 	// These media files should now be caught in bbcode.php
 	// left here as a fallback in case this is called from another source
 
 	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
 	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
-	
-				
-	if(is_null($txt)){
-		$txt = "";
-		
-		if (in_array($ext, $noexts)) {
-			require_once('include/hubloc.php');
-			$zrl = is_matrix_url($embedurl);
-			if($zrl) 
-				$embedurl = zid($embedurl);	
+
+	$action = oembed_action($embedurl); 
+
+	$embedurl = str_replace('&amp;','&', $embedurl);
+
+	$txt = null;
+
+	if($action !== 'block') {
+		$txt = Cache::get(App::$videowidth . $embedurl);
+
+		if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
+			$txt = str_replace('http:','https:',$txt);
 		}
-		else {
+	}
+		
+	if(is_null($txt)) {
+
+		$txt = "";
+		$furl = $embedurl;
+		$zrl = false;
+
+		if(local_channel()) {
+			require_once('include/hubloc.php');
+			$zrl = is_matrix_url($furl);
+			if($zrl) 
+				$furl = zid($furl);	
+		}
+
+
+		if (! in_array($ext, $noexts) && $action !== 'block') {
 			// try oembed autodiscovery
 			$redirects = 0;
-			$result = z_fetch_url($embedurl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));
+			$result = z_fetch_url($furl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));
 			if($result['success'])
 				$html_text = $result['body'];
 
-			if($html_text){
+			if($html_text) {
 				$dom = @DOMDocument::loadHTML($html_text);
 				if ($dom){
 					$xpath = new DOMXPath($dom);
@@ -149,6 +205,7 @@ function oembed_fetch_url($embedurl){
 		}
 		
 		$txt=trim($txt);
+
 		if ($txt[0]!="{") $txt='{"type":"error"}';
 	
 		//save in cache
@@ -160,6 +217,16 @@ function oembed_fetch_url($embedurl){
 
 
 	$j = json_decode($txt);
+
+	if($j->html && $action === 'filter') {
+		$orig = $j->html;
+		$allow_position = (($zrl) ? true : false);
+		$j->html = purify_html($j->html,$allow_position);
+		if($j->html != $orig) {
+			logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j->html, LOGGER_DEBUG, LOG_INFO); 
+		}
+	}
+
 	$j->embedurl = $embedurl;
 
 // logger('fetch return: ' . print_r($j,true));

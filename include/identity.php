@@ -1878,3 +1878,65 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 	return $o;
 		
 }
+
+
+function get_zcard_embed($channel,$observer_hash = '',$args = array()) {
+
+	logger('get_zcard_embed');
+
+	$maxwidth = (($args['width']) ? intval($args['width']) : 0);
+	$maxheight = (($args['height']) ? intval($args['height']) : 0);
+
+
+	if(($maxwidth > 1200) || ($maxwidth < 1))
+		$maxwidth = 1200;
+
+	if($maxwidth <= 425) {
+		$width = 425;
+		$size = 'hz_small';
+		$cover_size = PHOTO_RES_COVER_425;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
+	}
+	elseif($maxwidth <= 900) {
+		$width = 900;
+		$size = 'hz_medium';
+		$cover_size = PHOTO_RES_COVER_850;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
+	}
+	elseif($maxwidth <= 1200) {
+		$width = 1200;
+		$size = 'hz_large';
+		$cover_size = PHOTO_RES_COVER_1200;
+		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
+	}
+
+	$channel['channel_addr'] = $channel['channel_address'] . '@' . App::get_hostname();
+	$zcard = array('chan' => $channel);
+
+	$r = q("select height, width, resource_id, scale, type from photo where uid = %d and scale = %d and photo_usage = %d",
+		intval($channel['channel_id']),
+		intval($cover_size),
+		intval(PHOTO_COVER)
+	);
+
+	if($r) {
+		$cover = $r[0];
+		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
+	}		
+	else {
+		$cover = $pphoto;
+	}
+	
+	$o .= replace_macros(get_markup_template('zcard_embed.tpl'),array(
+		'$maxwidth' => $maxwidth,
+		'$scale' => $scale,
+		'$translate' => $translate,
+		'$size' => $size,
+		'$cover' => $cover,
+		'$pphoto' => $pphoto,
+		'$zcard' => $zcard
+	));		
+	
+	return $o;
+		
+}

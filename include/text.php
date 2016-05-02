@@ -122,7 +122,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 
 
 
-function purify_html($s) {
+function purify_html($s, $allow_position) {
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
 
@@ -201,6 +201,35 @@ function purify_html($s) {
 	$def->addElement('aside',   'Block', 'Flow', 'Common');
 	$def->addElement('header',  'Block', 'Flow', 'Common');
 	$def->addElement('footer',  'Block', 'Flow', 'Common');
+
+
+	if($allow_position) {
+		$cssDefinition = $config->getCSSDefinition();
+
+		$cssDefinition->info['position'] = new HTMLPurifier_AttrDef_Enum(array('absolute', 'fixed', 'relative', 'static', 'inherit'), false);
+
+		$cssDefinition->info['left'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+		$cssDefinition->info['right'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+		$cssDefinition->info['top'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+		$cssDefinition->info['bottom'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+	}
+
 
 	$purifier = new HTMLPurifier($config);
 

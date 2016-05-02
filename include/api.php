@@ -2108,7 +2108,7 @@ require_once('include/api_auth.php');
 			'shorturllength' => '30',
         	'hubzilla' => array(
 				'PLATFORM_NAME' => Zotlabs\Project\System::get_platform_name(),
-				'RED_VERSION' => Zotlabs\Project\System::get_project_version(),
+				'STD_VERSION' => Zotlabs\Project\System::get_project_version(),
 				'ZOT_REVISION' => ZOT_REVISION,
 				'DB_UPDATE_VERSION' => Zotlabs\Project\System::get_update_version()
 			)

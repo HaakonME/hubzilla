@@ -3914,7 +3914,7 @@ function zotinfo($arr) {
 		$ret['site']['channels'] = channel_total();
 
 
-		$ret['site']['version'] = Zotlabs\Project\System::get_platform_name() . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+		$ret['site']['version'] = Zotlabs\Project\System::get_platform_name() . ' ' . STD_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
 

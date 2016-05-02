@@ -221,7 +221,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$pending' => array( t('Pending registrations'), $pending),
 			'$channels' => array( t('Registered channels'), $channels),
 			'$plugins' => array( t('Active plugins'), $plugins ),
-			'$version' => array( t('Version'), RED_VERSION),
+			'$version' => array( t('Version'), STD_VERSION),
 			'$build' => get_config('system', 'db_version')
 		));
 	}

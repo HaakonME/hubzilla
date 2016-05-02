@@ -1,5 +1,8 @@
 <?php
 namespace Zotlabs\Module;
+
+use PHPGit\Git as Git;
+
 /**
  * @file mod/admin.php
  * @brief Hubzilla's admin controller.
@@ -36,6 +39,10 @@ class Admin extends \Zotlabs\Web\Controller {
 					$this->admin_page_channels_post($a);
 					break;
 				case 'plugins':
+					if (argc() > 2 && argv(2) === 'addrepo') {
+						$this->admin_page_plugins_post('addrepo');
+						break;
+					}
 					if (argc() > 2 && 
 						is_file("addon/" . argv(2) . "/" . argv(2) . ".php")){
 							@include_once("addon/" . argv(2) . "/" . argv(2) . ".php");
@@ -1329,7 +1336,7 @@ class Admin extends \Zotlabs\Web\Controller {
 		
 		$admin_plugins_add_repo_form= replace_macros(
 			get_markup_template('admin_plugins_addrepo.tpl'), array(
-				'$post' => 'admin/plugins',
+				'$post' => 'admin/plugins/addrepo',
 				'$desc' => t('Enter the public git repository URL of the plugin repo.'),
 				'$repoURL' => array('repoURL', t('Plugin repo git URL'), '', ''),
 				'$submit' => t('Download Plugin Repo')
@@ -1636,6 +1643,55 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 			'$form_security_token' => get_form_security_token('admin_logs'),
 		));
+	}
+	
+	function admin_page_plugins_post($action) {
+		switch($action) {
+			case 'addrepo':
+				
+				if(array_key_exists('repoURL',$_REQUEST)) {
+					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies
+					info('Repo URL submitted: ' . $_REQUEST['repoURL']);
+					//$git = new Git();
+					$repoURL = $_REQUEST['repoURL'];
+          //logger('hubsites: new git object created: ' . json_encode($git));
+					$urlpath = parse_url($repoURL, PHP_URL_PATH);
+					$lastslash = strrpos($urlpath, '/') + 1;
+					$gitext = strrpos($urlpath, '.');
+					if ($gitext) {
+							$reponame = substr($urlpath, $lastslash, $gitext - $lastslash);
+					} else {
+							logger('invalid git repo URL');
+							notice('Invalid git repo URL');
+							break;
+					}
+					$storepath = realpath(__DIR__ . '/../../store/');
+					logger('storepath: ' . $storepath);
+					$repopath = $storepath . '/pluginrepos/' . $reponame;
+
+					if (!file_exists($repopath)) {
+							logger('epopath does not exist');
+							if (mkdir($repopath, 0770, true)) {
+									logger('repopath created');
+									$git = new Git();
+									logger('new git object created');
+									$cloned = $git->clone($repoURL, $repopath);
+									if (!$cloned) {
+											logger('git clone failed');
+											notice('Repo coule not be cloned. Filesystem path error.');
+											return null;
+									}
+							} else {
+									logger('repopath could not be created');
+									notice('Repo coule not be cloned. Filesystem path error.');
+									return null;
+							}
+					} 
+				}
+				break;
+			default:
+				break;
+		}
 	}
 	
 	function admin_page_profs_post(&$a) {

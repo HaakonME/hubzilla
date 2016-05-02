@@ -1336,6 +1336,8 @@ class Admin extends \Zotlabs\Web\Controller {
 			}
 		}
 	
+		usort($plugins,'self::plugin_sort');
+
 		$t = get_markup_template('admin_plugins.tpl');
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -1349,6 +1351,11 @@ class Admin extends \Zotlabs\Web\Controller {
 		));
 	}
 	
+	static public function plugin_sort($a,$b) {
+		return(strcmp(strtolower($a[2]['name']),strtolower($b[2]['name'])));
+	}
+
+
 	/**
 	 * @param array $themes
 	 * @param string $th

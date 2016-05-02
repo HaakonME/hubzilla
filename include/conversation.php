@@ -1138,6 +1138,14 @@ function status_editor($a, $x, $popup = false) {
 	if(x($x, 'hide_location'))
 		$geotag = $setloc = $clearloc = '';
 
+	$weblink = t('Insert web link');
+	if(x($x, 'hide_weblink'))
+		$weblink = '';
+
+	$writefiles = perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage');
+	if(x($x, 'hide_attach'))
+		$writefiles = false;
+
 	$mimeselect = '';
 	if(array_key_exists('mimetype', $x) && $x['mimetype']) {
 		if($x['mimetype'] != 'text/bbcode')
@@ -1213,14 +1221,14 @@ function status_editor($a, $x, $popup = false) {
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),
 		'$id_select' => $id_select,
 		'$id_seltext' => t('Post as'),
-		'$writefiles' => perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage'),
+		'$writefiles' => $writefiles,
 		'$bold' => t('Bold'),
 		'$italic' => t('Italic'),
 		'$underline' => t('Underline'),
 		'$quote' => t('Quote'),
 		'$code' => t('Code'),
 		'$attach' => t('Attach file'),
-		'$weblink' => t('Insert web link'),
+		'$weblink' => $weblink,
 		'$setloc' => $setloc,
 		'$voting' => t('Toggle voting'),
 		'$feature_voting' => $feature_voting,

@@ -138,6 +138,9 @@
 						{{if $feature_expire}}
 						<li><a href="#" onclick="jotGetExpiry(); return false;"><i class="fa fa-eraser"></i>&nbsp;{{$expires}}</a></li>
 						{{/if}}
+						{{if $feature_future}}
+						<li><a href="#" onclick="jotGetPubDate();return false;"><i class="fa fa-clock-o"></i>&nbsp;{{$future_txt}}</a></li>
+						{{/if}}
 						{{if $feature_encrypt}}
 						<li><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a></li>
 						{{/if}}
@@ -176,6 +179,7 @@
 
 <div id="jot-preview-content" style="display:none;"></div>
 
+{{if $feature_expire}}
 <!-- Modal for item expiry-->
 <div class="modal" id="expiryModal" tabindex="-1" role="dialog" aria-labelledby="expiryModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -196,7 +200,9 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+{{/if}}
 
+{{if $feature_future}}
 <!-- Modal for item created-->
 <div class="modal" id="createdModal" tabindex="-1" role="dialog" aria-labelledby="createdModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -217,7 +223,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+{{/if}}
 
 {{if $content || $attachment || $expanded}}
 <script>initEditor();</script>

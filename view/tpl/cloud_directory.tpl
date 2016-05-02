@@ -20,7 +20,7 @@
 	{{/if}}
 	{{foreach $entries as $item}}
 		<tr id="cloud-index-{{$item.attachId}}">
-			<td><i class="{{$item.iconFromType}}" title="{{$item.type}}"></i></td>
+			<td><i class="fa {{$item.iconFromType}}" title="{{$item.type}}"></i></td>
 			<td><a href="{{$item.fullPath}}">{{$item.displayName}}</a></td>
 	{{if $item.is_owner}}
 			<td class="cloud-index-tool">{{$item.attachIcon}}</td>

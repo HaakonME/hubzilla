@@ -109,7 +109,7 @@ class Sources extends \Zotlabs\Web\Controller {
 				'$desc' => t('Import all or selected content from the following channel into this channel and distribute it according to your channel settings.'),
 				'$words' => array( 'words', t('Only import content with these words (one per line)'),'',t('Leave blank to import all public content')),
 				'$name' => array( 'name', t('Channel Name'), '', ''),
-				'$tags' => array('tags', t('Add the following tags to posts imported from this source (comma separated)','','')),
+				'$tags' => array('tags', t('Add the following categories to posts imported from this source (comma separated)'),'',t('Optional')),
 
 				'$submit' => t('Submit')
 			));
@@ -144,7 +144,7 @@ class Sources extends \Zotlabs\Web\Controller {
 				'$words' => array( 'words', t('Only import content with these words (one per line)'),$r[0]['src_patt'],t('Leave blank to import all public content')),
 				'$xchan' => $r[0]['src_xchan'],
 				'$abook' => $x[0]['abook_id'],
-				'$tags' => array('tags', t('Add the following tags to posts imported from this source (comma separated)'),$r[0]['src_tag'],''),
+				'$tags' => array('tags', t('Add the following categories to posts imported from this source (comma separated)'),$r[0]['src_tag'],t('Optional')),
 				'$name' => array( 'name', t('Channel Name'), $r[0]['xchan_name'], ''),
 				'$submit' => t('Submit')
 			));

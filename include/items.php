@@ -3420,9 +3420,9 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
                 				intval($channel['channel_id']),
 				                intval($item_id),
                 				intval(TERM_OBJ_POST),
-				                intval(TERM_UNKNOWN),
+				                intval(TERM_CATEGORY),
                 				dbesc($tt),
-				                dbesc(z_root() . '/search?f=&tag=' . urlencode($tt))
+								dbesc(z_root() . '/channel/' . $channel['channel_address'] . '?f=&cat=' . urlencode($tt))
             				);
 						}
 					}

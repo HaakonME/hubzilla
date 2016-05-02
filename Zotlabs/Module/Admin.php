@@ -1326,7 +1326,16 @@ class Admin extends \Zotlabs\Web\Controller {
 				}
 			}
 		}
-	
+		
+		$admin_plugins_add_repo_form= replace_macros(
+			get_markup_template('admin_plugins_addrepo.tpl'), array(
+				'$post' => 'admin/plugins',
+				'$desc' => t('Enter the public git repository URL of the plugin repo.'),
+				'$repoURL' => array('repoURL', t('Plugin repo git URL'), '', ''),
+				'$submit' => t('Download Plugin Repo')
+			)
+		);
+			
 		$t = get_markup_template('admin_plugins.tpl');
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -1337,6 +1346,9 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$plugins' => $plugins,
 			'$disabled' => t('Disabled - version incompatibility'),
 			'$form_security_token' => get_form_security_token('admin_plugins'),
+			'$addclone' => t('Add Plugin Repo'),
+			'$expandform' => false,
+			'$form' => $admin_plugins_add_repo_form
 		));
 	}
 	

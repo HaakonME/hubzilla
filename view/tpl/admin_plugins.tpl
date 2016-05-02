@@ -1,6 +1,16 @@
-<div class="generic-content-wrapper-styled" id='adminpage'>
-	<h1>{{$title}} - {{$page}}</h1>
-	
+<div class="generic-content-wrapper">
+	<div class="section-title-wrapper">
+		<div class="pull-right">
+			<button class="btn btn-success btn-xs" onclick="openClose('form');">{{$addrepo}}</button>
+		</div>
+		<h2 id="title">{{$title}} - {{$page}}</h2>
+		<div class="clear"></div>
+	</div>
+	<div id="form" class="section-content-tools-wrapper"{{if !$expandform}} style="display:none;"{{/if}}>
+		{{$form}}
+	</div>
+	<div class="clear"></div>
+	<div class="section-content-wrapper-np">
 		<ul id='pluginslist'>
 		{{foreach $plugins as $p}}
 			<li class='plugin {{$p.1}}'>
@@ -16,4 +26,5 @@
 			</li>
 		{{/foreach}}
 		</ul>
+	</div>
 </div>

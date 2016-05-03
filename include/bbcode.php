@@ -629,7 +629,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	}
 	if($tryoembed) {
 		if (strpos($Text,'[/url]') !== false) {
-			$Text = preg_replace_callback("/\[url\]([$URLSearchString]*)\[\/url\]/ism", 'tryoembed', $Text);
+			$Text = preg_replace_callback("/[^\^]\[url\]([$URLSearchString]*)\[\/url\]/ism", 'tryoembed', $Text);
 		}
 	}
 	if (strpos($Text,'[/url]') !== false) {

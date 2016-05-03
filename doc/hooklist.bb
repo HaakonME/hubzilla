@@ -356,6 +356,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/obj_verbs]obj_verbs[/zrl]
 	Called when creating the list of verbs available for profile "things".
 
+[zrl=[baseurl]/help/hook/oembed_action]oembed_action[/zrl]
+	Called when deciding if an oembed url is to be filter, blocked, or approved
+
 [zrl=[baseurl]/help/hook/oembed_probe]oembed_probe[/zrl]
 	Called when performing an oembed content lookup
 

@@ -14,7 +14,7 @@
 			</tr>
 		{{foreach $items as $item}}
 			<tr id="cloud-index-{{$item.id}}">
-				<td><i class="{{$item.objfiletypeclass}}" title="{{$item.objfiletype}}"></i></td>
+				<td><i class="fa {{$item.objfiletypeclass}}" title="{{$item.objfiletype}}"></i></td>
 				<td><a href="{{$item.objurl}}">{{$item.objfilename}}</a>{{if $item.unseen}}&nbsp;<span class="label label-success">{{$label_new}}</span>{{/if}}</td>
 				<td class="cloud-index-tool"><a href="#" title="{{$drop}}" onclick="dropItem('/sharedwithme/{{$item.id}}/drop', '#cloud-index-{{$item.id}}'); return false;"><i class="fa fa-trash-o drop-icons"></i></a></td>
 				<td class="hidden-xs">{{$item.objfilesize}}</td>

@@ -1,14 +1,16 @@
 <?php /** @file */
+
+
 function oembed_replacecb($matches){
 
 	$embedurl=$matches[1];
 
-	$action = oembed_action($embedurl);
-	if($action === 'block') {
-		return '<a href="' . $embedurl . '">' . $embedurl . '</a>';
+	$result = oembed_action($embedurl);
+	if($result['action'] === 'block') {
+		return '<a href="' . $result['url'] . '">' . $result['url'] . '</a>';
 	}
 
-	$j = oembed_fetch_url($embedurl);
+	$j = oembed_fetch_url($result['url']);
 	$s = oembed_format_object($j);
 	return $s;  
 }
@@ -17,22 +19,11 @@ function oembed_replacecb($matches){
 function oembed_action($embedurl) {
 
 	$host = '';
+	$action = 'filter';
 
-	$action = 'allow';
+	$embedurl = trim(str_replace('&amp;','&', $embedurl));
 
-	// The default action is 'allow'. This is insecure. We might want to 
-	// change this to 'filter' except it will be a support burden because
-	// then youtube videos won't work out of the box and will need to be
-	// explicitly enabled.
-
-	$embedurl = str_replace('&amp;','&', $embedurl);
-
-	logger('oembed_action: ' . $embedurl);
-
-	$p = parse_url($embedurl);
-
-	if($p)
-		$host = $p['host'];
+	logger('oembed_action: ' . $embedurl, LOGGER_DEBUG, LOG_INFO);
 
 	// These media files should now be caught in bbcode.php
 	// left here as a fallback in case this is called from another source
@@ -40,6 +31,11 @@ function oembed_action($embedurl) {
 	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
 	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
 
+	if(strpos($embedurl,'http://') === 0) {
+		if(intval(get_config('system','embed_sslonly'))) {
+			$action = 'block';
+		}
+	}
 
 	// site white/black list
 
@@ -65,26 +61,10 @@ function oembed_action($embedurl) {
 		if($x) {
 			foreach($x as $ll) {
 				$t = trim($ll);
-				$has_slash = ((strpos($t,'/') !== false) ? true : false);
-
-				// don't allow somebody to provide a url like https://foobar.com/something/youtube 
-				// to bypass an allow of youtube. Note they could still get through this
-				// with something like https://youtube.com.foobar.com/something so this is tagged with
-				// @FIXME, otherwise to fully secure a site will require every possible variation
-				// of every allowed service base URL. http vs. https, www. vs nothing, 
-				// youtube.[com|org|whatever], youtu.be, and this is just for one service. 
-
-				if($t) {
-					if(strpos($t,$host) !== false) {
-						$found = true;
-						$action = 'allow';
-						break;
-					}
-					elseif(($has_slash) && (strpos($embedurl,$t) !== false)) {
-						$found = true;
-						$action = 'allow';
-						break;
-					}
+				if(($t) && (strpos($embedurl,$t) !== false) && ($action !== 'block')) {
+					$found = true;
+					$action = 'allow';
+					break;
 				}
 			}
 		}
@@ -95,7 +75,7 @@ function oembed_action($embedurl) {
 
 	// allow individual members to block something that wasn't blocked already.
 	// They cannot over-ride the site to allow or change the filtering on an 
-	// embed that is not allowed by the site.
+	// embed that is not allowed by the site admin.
 
 	if(local_channel()) {
 		if(($x = get_pconfig(local_channel(),'system','embed_deny'))) {
@@ -113,9 +93,12 @@ function oembed_action($embedurl) {
 		}
 	}
 
-	logger('action: ' . $action . ' url: ' . $embedurl, LOGGER_DEBUG,LOG_DEBUG); 
+	$arr = array('url' => $embedurl, 'action' => $action);
+	call_hooks('oembed_action',$arr);
 
-	return $action;
+	logger('action: ' . $arr['action'] . ' url: ' . $arr['url'], LOGGER_DEBUG,LOG_DEBUG); 
+
+	return $arr;
 
 }
 
@@ -139,9 +122,10 @@ function oembed_fetch_url($embedurl){
 	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
 	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
 
-	$action = oembed_action($embedurl); 
+	$result = oembed_action($embedurl); 
 
-	$embedurl = str_replace('&amp;','&', $embedurl);
+	$embedurl = $result['url'];
+	$action = $result['action'];
 
 	$txt = null;
 
@@ -222,12 +206,14 @@ function oembed_fetch_url($embedurl){
 
 	$j = json_decode($txt);
 
-	if($j->html && $action === 'filter') {
-		$orig = $j->html;
-		$allow_position = (($zrl) ? true : false);
-		$j->html = purify_html($j->html,$allow_position);
-		if($j->html != $orig) {
-			logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j->html, LOGGER_DEBUG, LOG_INFO); 
+	if($action === 'filter') {
+		if($j->html) {
+			$orig = $j->html;
+			$allow_position = (($zrl) ? true : false);
+			$j->html = purify_html($j->html,$allow_position);
+			if($j->html != $orig) {
+				logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j->html, LOGGER_DEBUG, LOG_INFO); 
+			}
 		}
 	}
 

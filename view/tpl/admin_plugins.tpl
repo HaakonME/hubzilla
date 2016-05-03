@@ -10,6 +10,11 @@
 		{{$form}}
 	</div>
 	<div class="clear"></div>
+    <div id="chat-rotator-wrapper" class="center-block">
+        <div id="chat-rotator"></div>
+    </div>
+    <div class="clear"></div>
+    <div id="new-repo-info" class="section-content-wrapper"></div>
 	<div class="section-content-wrapper-np">
       {{foreach $plugins as $p}}
       <div class="section-content-tools-wrapper" id="pluginslist">		
@@ -29,3 +34,22 @@
       
 	</div>
 </div>
+
+<script>
+  function adminPluginsAddRepo() {
+      var repoURL = $('#id_repoURL').val();
+      $('#chat-rotator').spin('tiny');
+      $.post(
+        "/admin/plugins/addrepo", {repoURL: repoURL}, 
+            function(response) {
+                $('#chat-rotator').spin(false);
+                if (response.success) {
+                  $('#new-repo-info').html('<h3>Repo Info</h3><p>The repo was cloned to<br>' + response.message + '</p>');
+                } else {
+                    window.console.log('Error adding repo :' + response['message']);
+                }
+                return false;
+            },
+        'json');
+  }
+</script>

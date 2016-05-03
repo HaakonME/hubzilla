@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1166 );
+define( 'UPDATE_VERSION' , 1167 );
 
 /**
  *
@@ -2070,4 +2070,13 @@ function update_r1165() {
         return UPDATE_SUCCESS;
     return UPDATE_FAILED;
 }
+
+function update_r1166() {
+
+	$r = q("alter table source add src_tag text not null default '' ");
+    if($r)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+}
+
 

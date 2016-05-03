@@ -228,7 +228,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$pending' => array( t('Pending registrations'), $pending),
 			'$channels' => array( t('Registered channels'), $channels),
 			'$plugins' => array( t('Active plugins'), $plugins ),
-			'$version' => array( t('Version'), RED_VERSION),
+			'$version' => array( t('Version'), STD_VERSION),
 			'$build' => get_config('system', 'db_version')
 		));
 	}
@@ -575,27 +575,33 @@ class Admin extends \Zotlabs\Web\Controller {
 		$block_public         = ((x($_POST,'block_public'))		? True	: False);
 		set_config('system','block_public',$block_public);
 	
-		$ws = trim_array_elems(explode("\n",$_POST['whitelisted_sites']));
+		$ws = $this->trim_array_elems(explode("\n",$_POST['whitelisted_sites']));
 		set_config('system','whitelisted_sites',$ws);
 	
-		$bs = trim_array_elems(explode("\n",$_POST['blacklisted_sites']));
+		$bs = $this->trim_array_elems(explode("\n",$_POST['blacklisted_sites']));
 		set_config('system','blacklisted_sites',$bs);
 	
-		$wc = trim_array_elems(explode("\n",$_POST['whitelisted_channels']));
+		$wc = $this->trim_array_elems(explode("\n",$_POST['whitelisted_channels']));
 		set_config('system','whitelisted_channels',$wc);
 	
-		$bc = trim_array_elems(explode("\n",$_POST['blacklisted_channels']));
+		$bc = $this->trim_array_elems(explode("\n",$_POST['blacklisted_channels']));
 		set_config('system','blacklisted_channels',$bc);
 	
-		$embed_coop         = ((x($_POST,'embed_coop'))		? True	: False);
-		set_config('system','embed_coop',$embed_coop);
+		$embed_sslonly         = ((x($_POST,'embed_sslonly'))		? True	: False);
+		set_config('system','embed_sslonly',$embed_sslonly);
 	
-		$we = trim_array_elems(explode("\n",$_POST['embed_allow']));
+		$we = $this->trim_array_elems(explode("\n",$_POST['embed_allow']));
 		set_config('system','embed_allow',$we);
 	
-		$be = trim_array_elems(explode("\n",$_POST['embed_deny']));
+		$be = $this->trim_array_elems(explode("\n",$_POST['embed_deny']));
 		set_config('system','embed_deny',$be);
 	
+		$ts = ((x($_POST,'transport_security')) ? True : False);
+		set_config('system','transport_security_header',$ts);
+
+		$cs = ((x($_POST,'content_security')) ? True : False);
+		set_config('system','content_security_policy',$cs);
+
 		goaway(z_root() . '/admin/security');
 	}
 	
@@ -715,9 +721,13 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 		$embed_coop = intval(get_config('system','embed_coop'));
 	
-	// wait to implement this until we have a co-op in place. 
-	//	if((! $whiteembeds) && (! $blackembeds) && (! $embed_coop))
-	//		$whiteembeds_str = "youtube.com\nyoutu.be\ntwitter.com\nvimeo.com\nsoundcloud.com\nwikipedia.com";
+		if((! $whiteembeds) && (! $blackembeds)) {
+			$embedhelp1 = t("By default, unfiltered HTML is allowed in embedded media. This is inherently insecure.");
+		}
+
+		$embedhelp2 = t("The recommended setting is to only allow unfiltered HTML from the following sites:"); 
+		$embedhelp3 = t("https://youtube.com/<br />https://www.youtube.com/<br />https://youtu.be/<br />https://vimeo.com/<br />https://soundcloud.com/<br />");
+		$embedhelp4 = t("All other embedded content will be filtered, <strong>unless</strong> embedded content from that site is explicitly blocked.");
 	
 		$t = get_markup_template('admin_security.tpl');
 		return replace_macros($t, array(
@@ -725,14 +735,18 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$page' => t('Security'),
 			'$form_security_token' => get_form_security_token('admin_security'),
 	        '$block_public'     => array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently authenticated.")),
+			'$transport_security' => array('transport_security', t('Set "Transport Security" HTTP header'),intval(get_config('system','transport_security_header')),''),
+			'$content_security' => array('content_security', t('Set "Content Security Policy" HTTP header'),intval(get_config('system','content_security_policy')),''),
 			'$whitelisted_sites' => array('whitelisted_sites', t('Allow communications only from these sites'), $whitesites_str, t('One site per line. Leave empty to allow communication from anywhere by default')),
 			'$blacklisted_sites' => array('blacklisted_sites', t('Block communications from these sites'), $blacksites_str, ''),
 			'$whitelisted_channels' => array('whitelisted_channels', t('Allow communications only from these channels'), $whitechannels_str, t('One channel (hash) per line. Leave empty to allow from any channel by default')),
 			'$blacklisted_channels' => array('blacklisted_channels', t('Block communications from these channels'), $blackchannels_str, ''),
-			'$embed_allow' => array('embed_allow', t('Allow embedded HTML content only from these domains'), $whiteembeds_str, t('One site per line. Leave empty to allow from any site by default')),
+			'$embed_sslonly' => array('embed_sslonly',t('Only allow embeds from secure (SSL) websites and links.'), intval(get_config('system','embed_sslonly')),''),
+			'$embed_allow' => array('embed_allow', t('Allow unfiltered embedded HTML content only from these domains'), $whiteembeds_str, t('One site per line. By default embedded content is filtered.')),
 			'$embed_deny' => array('embed_deny', t('Block embedded HTML from these domains'), $blackembeds_str, ''),
 	
 //	        '$embed_coop'     => array('embed_coop', t('Cooperative embed security'), $embed_coop, t('Enable to share embed security with other compatible sites/hubs')),
+
 			'$submit' => t('Submit')
 		));
 	}
@@ -1333,6 +1347,9 @@ class Admin extends \Zotlabs\Web\Controller {
 				}
 			}
 		}
+	
+		usort($plugins,'self::plugin_sort');
+
 		
 		$admin_plugins_add_repo_form= replace_macros(
 			get_markup_template('admin_plugins_addrepo.tpl'), array(
@@ -1359,6 +1376,11 @@ class Admin extends \Zotlabs\Web\Controller {
 		));
 	}
 	
+	static public function plugin_sort($a,$b) {
+		return(strcmp(strtolower($a[2]['name']),strtolower($b[2]['name'])));
+	}
+
+
 	/**
 	 * @param array $themes
 	 * @param string $th

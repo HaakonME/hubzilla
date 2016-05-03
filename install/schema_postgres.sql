@@ -1166,7 +1166,8 @@ CREATE TABLE "source" (
   "src_channel_id" bigint  NOT NULL DEFAULT '0',
   "src_channel_xchan" text NOT NULL DEFAULT '',
   "src_xchan" text NOT NULL DEFAULT '',
-  "src_patt" text NOT NULL,
+  "src_patt" text NOT NULL DEFAULT '',
+  "src_tag" text NOT NULL DEFAULT '',
   PRIMARY KEY ("src_id")
 );
 create index "src_channel_id" on "source" ("src_channel_id");

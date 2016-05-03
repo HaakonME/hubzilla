@@ -7,7 +7,9 @@
 
 
 	{{include file="field_checkbox.tpl" field=$block_public}}
-
+	{{include file="field_checkbox.tpl" field=$transport_security}}
+	{{include file="field_checkbox.tpl" field=$content_security}}
+	{{include file="field_checkbox.tpl" field=$embed_sslonly}}
 
 	{{include file="field_textarea.tpl" field=$whitelisted_sites}}
 	{{include file="field_textarea.tpl" field=$blacklisted_sites}}

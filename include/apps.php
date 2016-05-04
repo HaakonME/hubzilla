@@ -316,8 +316,13 @@ function app_installed($uid,$app) {
 }
 
 
-function app_list($uid) {
-	$r = q("select * from app where app_channel = %d order by app_name asc",
+function app_list($uid, $deleted = false) {
+	if($deleted) 
+		$sql_extra = " and app_deleted = 1 ";
+	else
+		$sql_extra = " and app_deleted = 0 ";
+
+	$r = q("select * from app where app_channel = %d $sql_extra order by app_name asc",
 		intval($uid)
 	);
 	if($r) {

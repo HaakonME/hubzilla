@@ -912,19 +912,43 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	clear: both;
 }
 
+.modal-header .contextual-help-tool {
+	/* Mostly duplicating ".modal-header .close" and ".close" layout settings from bootstrap */
+	float: right;
+	font-size: 21px;
+	padding: 0;
+	margin-top: -4px;
+	margin-right: 15px;
+	line-height: 1;
+}
+
 #acl-search {
-	margin-top: 20px;
-	padding: 8px;
+	padding: 4px;
 	border: 1px solid #ccc;
-	width: 100%;
+	width: 90%; /* fallback if browser does not support calc() */
+	width: calc(100% - 10px);
+	margin: 0px 0px 10px 10px;
 }
 
 #acl-search::-webkit-input-placeholder {
-	font-family: FontAwesome;
+	/* non-fontawesome fonts set a fallback for text parts of the placeholder*/
+	font-family: FontAwesome, sans-serif, arial, freesans;
 }
 
 #acl-search::-moz-placeholder {
-	font-family: FontAwesome;
+	/* non-fontawesome fonts set a fallback for text parts of the placeholder*/
+	font-family: FontAwesome, sans-serif, arial, freesans;
+}
+
+#acl-dialog-description {
+	font-size: 90%;
+	color: #888;
+}
+#acl-showlimited-description {
+	font-size: 90%;
+	color: #888;
+	margin-left: 10px;
+	margin-bottom: 4px;
 }
 
 #acl-list {
@@ -933,11 +957,11 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	overflow: auto;
 	clear: both;
 	min-height: 62px;
-	margin-top: 20px;
 	padding: 10px 10px 0px 0px;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
+	background-color: rgb(238,238,238);
 }
 
 #jotnets-wrapper, #jotnets-collapse {
@@ -957,6 +981,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
+	background-color: white;
 }
 
 .acl-list-item.grouphide {
@@ -993,6 +1018,26 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .acl-button-hide {
 	float: right;
 	margin-left: 5px;
+}
+
+#acl-showlimited-caption,
+#acl-showall-caption {
+	font-size: 115%;
+}
+
+#acl-radiowrapper-showall {
+	margin-bottom: 20px;
+}
+#acl-radiowrapper-showlimited {
+	margin-bottom: 0;
+}
+
+#acl-showall + i {
+	font-size: 140%;
+}
+
+#acl-showall-caption {
+	margin-left: 0.35em;
 }
 
 .contact-block-content {

@@ -24,7 +24,7 @@ class Editblock extends \Zotlabs\Web\Controller {
 
 	}
 
-        function get() {
+	function get() {
 
 		if(! \App::$profile) {
 			notice( t('Requested profile is not available.') . EOL );
@@ -104,7 +104,7 @@ class Editblock extends \Zotlabs\Web\Controller {
 			$plaintext = true;
 
 		if(get_config('system','page_mimetype'))
-		    $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
+			$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
 		else
 			$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 

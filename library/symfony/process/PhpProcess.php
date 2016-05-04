@@ -33,7 +33,7 @@ class PhpProcess extends Process
      * @param int         $timeout The timeout in seconds
      * @param array       $options An array of options for proc_open
      */
-    public function __construct($script, $cwd = null, array $env = null, $timeout = 60, array $options = array())
+    public function __construct($script, $cwd = null, array $env = null, $timeout = 120, array $options = array())
     {
         $executableFinder = new PhpExecutableFinder();
         if (false === $php = $executableFinder->find()) {

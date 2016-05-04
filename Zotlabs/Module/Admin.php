@@ -1671,6 +1671,7 @@ class Admin extends \Zotlabs\Web\Controller {
 		switch($action) {
 			case 'addrepo':
 				
+				require_once('library/markdown.php');
 				if(array_key_exists('repoURL',$_REQUEST)) {
 					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies
 					logger('Repo URL submitted: ' . $_REQUEST['repoURL']);
@@ -1688,28 +1689,39 @@ class Admin extends \Zotlabs\Web\Controller {
 					$storepath = realpath(__DIR__ . '/../../store/');
 					//logger('storepath: ' . $storepath);
 					$repopath = $storepath . '/pluginrepos/' . $reponame;
-
+					$git = new Git();
 					if (!file_exists($repopath)) {
 							//logger('repopath does not exist');
 							if (mkdir($repopath, 0770, true)) {
-									//logger('repopath created');
-									$git = new Git();
-									//logger('new git object created');
 									$cloned = $git->clone($repoURL, $repopath);
 									if (!$cloned) {
 											logger('git clone failed');
 											notice('Repo coule not be cloned. Filesystem path error.');
-											json_return_and_die(array('message' => 'Repo coule not be cloned. Filesystem path error.', 'success' => false));
+											json_return_and_die(array('message' => 'Repo could not be cloned. Filesystem path error.', 'success' => false));
 									}
-									json_return_and_die(array('message' => 'Successfully cloned to: ' . $repopath , 'success' => true));
+									//json_return_and_die(array('repo'=> $repo, 'message' => 'Successfully cloned to: ' . $repopath , 'success' => true));
 							} else {
 									logger('repopath could not be created');
 									notice('Repo coule not be cloned. Filesystem path error.');
-									json_return_and_die(array('message' => 'Repo coule not be cloned. Filesystem path error', 'success' => false));
+									json_return_and_die(array('message' => 'Repo could not be cloned. Filesystem path error', 'success' => false));
 							}
-					} else {
-						json_return_and_die(array('message' => 'Repo already exists at: ' . $repopath, 'success' => true));
+					} 
+					$git->setRepository($repopath);
+					$repo = array();
+					$repo['url'] = $repoURL;
+					$repo['branches'] = $git->branch(['all' => true]);
+					$repo['objects'] = array();
+					$repo['readme'] = $repo['manifest'] = null;
+					foreach ($git->tree('master') as $object) {
+							if ($object['type'] == 'blob' && (strtolower($object['file']) === 'readme.md' || strtolower($object['file']) === 'readme')) {
+									$repo['readme'] =  Markdown($git->cat->blob($object['hash']));
+							} else if ($object['type'] == 'blob' && strtolower($object['file']) === 'manifest.json') {
+									$repo['manifest'] =  $git->cat->blob($object['hash']);
+							}
 					}
+					//logger('repo: ' . json_encode($repo));
+					json_return_and_die(array('repo'=> $repo, 'message' => '', 'success' => true));
+					
 				} else {
 					json_return_and_die(array('message' => 'No repo URL provided', 'success' => false));
 				}

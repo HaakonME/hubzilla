@@ -44,7 +44,16 @@
             function(response) {
                 $('#chat-rotator').spin(false);
                 if (response.success) {
-                  $('#new-repo-info').html('<h3>Repo Info</h3><p>The repo was cloned to<br>' + response.message + '</p>');
+                  $('#new-repo-info').html('<h3>Repo Info</h3><p>' + response.message + '</p>');
+                  
+                  $('#new-repo-info').append('<h4>Branches</h4><p>'+JSON.stringify(response.repo.branches)+'</p>');
+                  $('#new-repo-info').append('<h4>URL</h4><p>'+response.repo.url+'</p>');
+                  $('#new-repo-info').append('<h4>Objects</h4><ul>');
+                  for(var i = 0; i<response.repo.objects.length; i++) {
+                    $('#new-repo-info').append('<li>'+response.repo.objects[i]+'</li>');
+                  }
+                  $('#new-repo-info').append('</ul>');
+                  $('#new-repo-info').append('<h4>Readme</h4><p>'+response.repo.readme+'</p>');
                 } else {
                     window.console.log('Error adding repo :' + response['message']);
                 }

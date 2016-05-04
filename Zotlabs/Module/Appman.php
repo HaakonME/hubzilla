@@ -23,6 +23,8 @@ class Appman extends \Zotlabs\Web\Controller {
 				'photo' => escape_tags($_REQUEST['photo']),
 				'version' => escape_tags($_REQUEST['version']),
 				'price' => escape_tags($_REQUEST['price']),
+				'requires' => escape_tags($_REQUEST['requires']),
+				'system' => intval($_REQUEST['system']),
 				'sig' => escape_tags($_REQUEST['sig'])
 			);
 	
@@ -64,7 +66,7 @@ class Appman extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);
@@ -99,6 +101,8 @@ class Appman extends \Zotlabs\Web\Controller {
 			'$version' => array('version', t('Version ID'),(($app) ? $app['app_version'] : ''), ''),
 			'$price' => array('price', t('Price of app'),(($app) ? $app['app_price'] : ''), ''),
 			'$page' => array('page', t('Location (URL) to purchase app'),(($app) ? $app['app_page'] : ''), ''),
+			'$system' => (($app) ? intval($app['app_system']) : 0),
+			'$requires' => (($app) ? $app['app_requires'] : ''),
 			'$embed' => $embed,
 			'$submit' => t('Submit')
 		));

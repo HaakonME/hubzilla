@@ -12,6 +12,10 @@
 <input type="hidden" name="addr" value="{{$addr}}" />
 {{/if}}
 
+<input type="hidden" name="requires" value="{{$requires}}" />
+<input type="hidden" name="system" value="{{$system}}" />
+
+
 {{include file="field_input.tpl" field=$name}}
 {{include file="field_input.tpl" field=$url}}
 {{include file="field_textarea.tpl" field=$desc}}

@@ -4,46 +4,43 @@ namespace Zotlabs\Module;
 require_once('include/identity.php');
 require_once('include/acl_selectors.php');
 
-
 class Editblock extends \Zotlabs\Web\Controller {
 
 	function init() {
-	
+
 		if(argc() > 1 && argv(1) === 'sys' && is_site_admin()) {
 			$sys = get_sys_channel();
 			if($sys && intval($sys['channel_id'])) {
 				\App::$is_sys = true;
 			}
 		}
-	
+
 		if(argc() > 1)
 			$which = argv(1);
 		else
 			return;
-	
+
 		profile_load($a,$which);
-	
+
 	}
-	
-	
-	
-		function get() {
-	
+
+        function get() {
+
 		if(! \App::$profile) {
 			notice( t('Requested profile is not available.') . EOL );
 			\App::$error = 404;
 			return;
 		}
-	
+
 		$which = argv(1);
-	
+
 		$uid = local_channel();
 		$owner = 0;
 		$channel = null;
 		$observer = \App::get_observer();
-	
+
 		$channel = \App::get_channel();
-	
+
 		if(\App::$is_sys && is_site_admin()) {
 			$sys = get_sys_channel();
 			if($sys && intval($sys['channel_id'])) {
@@ -52,7 +49,7 @@ class Editblock extends \Zotlabs\Web\Controller {
 				$observer = $sys;
 			}
 		}
-	
+
 		if(! $owner) {
 			// Figure out who the page owner is.
 			$r = q("select channel_id from channel where channel_address = '%s'",
@@ -62,27 +59,26 @@ class Editblock extends \Zotlabs\Web\Controller {
 				$owner = intval($r[0]['channel_id']);
 			}
 		}
-	
+
 		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
-	
+
 		if(! perm_is_allowed($owner,$ob_hash,'write_pages')) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
+
 		$is_owner = (($uid && $uid == $owner) ? true : false);
-				
+
 		$o = '';
-	
+
 		// Figure out which post we're editing
 		$post_id = ((argc() > 2) ? intval(argv(2)) : 0);
-	
-	
+
 		if(! ($post_id && $owner)) {
 			notice( t('Item not found') . EOL);
 			return;
 		}
-	
+
 		$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
 			intval($post_id),
 			intval($owner)
@@ -98,20 +94,20 @@ class Editblock extends \Zotlabs\Web\Controller {
 			notice( t('Item not found') . EOL);
 			return;
 		}
-	
+
 		$plaintext = true;
-	
+
 		$mimeselect = '';
 		$mimetype = $itm[0]['mimetype'];
-	
+
 		if($mimetype != 'text/bbcode')
 			$plaintext = true;
-	
+
 		if(get_config('system','page_mimetype'))
 		    $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
 		else
 			$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
-	
+
 		\App::$page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 			'$baseurl'       => z_root(),
 			'$editselect'    => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
@@ -122,17 +118,17 @@ class Editblock extends \Zotlabs\Web\Controller {
 			'$confirmdelete' => t('Delete block?'),
 			'$bbco_autocomplete'=> (($mimetype  == 'text/bbcode') ? 'bbcode' : 'comanche-block')
 		));
-	
+
 		$tpl = get_markup_template("jot.tpl");
-			
+
 		$jotplugins = '';
 		$jotnets = '';
-	
+
 		call_hooks('jot_tool', $jotplugins);
 		call_hooks('jot_networks', $jotnets);
-	
+
 		$rp = 'blocks/' . $channel['channel_address'];
-	
+
 		$editor = replace_macros($tpl,array(
 			'$return_path'         => $rp,
 			'$action'              => 'item',
@@ -174,18 +170,16 @@ class Editblock extends \Zotlabs\Web\Controller {
 			'$defexpire'           => '',
 			'$bbcode'              => (($mimetype  == 'text/bbcode') ? true : false)
 		));
-	
+
 		$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 			'$title' => t('Edit Block'),
 			'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
 			'$id' => $itm[0]['id'],
 			'$editor' => $editor
 		));
-	
+
 		return $o;
-	
+
 	}
-	
-	
-	
+
 }

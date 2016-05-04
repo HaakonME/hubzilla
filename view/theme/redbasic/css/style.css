@@ -940,10 +940,19 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	font-family: FontAwesome, sans-serif, arial, freesans;
 }
 
+#aclModal .modal-body {
+	padding-top: 10px;
+}
+
 #acl-dialog-description {
 	font-size: 90%;
 	color: #888;
+	padding-bottom: 4px;
 }
+#acl-dialog-description b {
+	color: black;
+}
+
 #acl-showlimited-description {
 	font-size: 90%;
 	color: #888;
@@ -1026,6 +1035,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 }
 
 #acl-radiowrapper-showall {
+	margin-top: 20px;
 	margin-bottom: 20px;
 }
 #acl-radiowrapper-showlimited {

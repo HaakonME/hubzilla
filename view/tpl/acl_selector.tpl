@@ -4,12 +4,14 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				{{if $helpUrl}}
-				<a type="button" target="hubzilla-help" href="{{$helpUrl}}" class="contextual-help-tool" title="Help and documentation"><i class="fa fa-question-circle-o"></i></a>
+				<a type="button" target="hubzilla-help" href="{{$helpUrl}}" class="contextual-help-tool" title="Help and documentation"><i class="fa fa-question"></i></a>
 				{{/if}}
 				<h4 class="modal-title"><i id="dialog-perms-icon" class="fa fa-fw"></i> {{$aclModalTitle}}</h4>
 			</div>
 			<div class="modal-body">
-				<div id="acl-dialog-description">{{$aclModalDesc}}</div>
+				{{if $aclModalDesc}}
+					<div id="acl-dialog-description">{{$aclModalDesc}}</div>
+				{{/if}}
 				{{if $jotnets}}
 				<div class="jotnets-wrapper" role="tab" id="jotnets-wrapper">
 					<a data-toggle="collapse" class="btn btn-block btn-default" href="#jotnets-collapse" aria-expanded="false" aria-controls="jotnets-collapse">{{$jnetModalTitle}} <span class="caret"></span></a>

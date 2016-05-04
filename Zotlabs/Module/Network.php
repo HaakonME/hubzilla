@@ -161,7 +161,7 @@ class Network extends \Zotlabs\Web\Controller {
 			// the "Show"  button on a group does not post it to the feed of people in that group, it
 			// mearly allows those people to view the post if they are viewing/following this channel.
 			$aclDesc = t('Post permissions <b>cannot be changed</b> after a post is sent.</br />These permissions set who is allowed to view the post.');
-			$aclContextHelpCmd = '';
+			$aclContextHelpCmd = 'acl_dialog_post';
 	
 			$channel_acl = array(
 				'allow_cid' => $channel['channel_allow_cid'], 

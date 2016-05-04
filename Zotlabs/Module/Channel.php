@@ -132,7 +132,7 @@ function get($update = 0, $load = false) {
 			// the "Show"  button on a group does not post it to the feed of people in that group, it
 			// mearly allows those people to view the post if they are viewing/following this channel.
 			$aclDesc = t('Post permissions <b>cannot be changed</b> after a post is sent.</br />These permissions set who is allowed to view the post.');
-			$aclContextHelpCmd = '';
+			$aclContextHelpCmd = 'acl_dialog_post';
 
 			$x = array(
 				'is_owner' => $is_owner,

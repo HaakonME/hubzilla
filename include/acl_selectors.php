@@ -217,7 +217,7 @@ function fixacl(&$item) {
 * @param boolean $show_jotnets Whether plugins for federated networks should be included in the permissions dialog
 * @param string $showall_caption An optional caption to describe the scope of an unrestricted post. e.g. "Public"
 * @param string $dialog_description Optional message to include at the top of the dialog. E.g. "Warning: Post permissions cannot be changed once sent".
-* @param string $context_help Allows the dialog to present a context sensitive help icon. E.g. "photos/permissions"
+* @param string $context_help Allows the dialog to present a help icon. E.g. "acl_dialog_post"
 * @param boolean $readonly Not implemented yet. When implemented, the dialog will use acl_readonly.tpl instead, so that permissions may be viewed for posts that can no longer have their permissions changed.
 *
 * @return string html modal dialog build from acl_selector.tpl
@@ -253,7 +253,7 @@ function populate_acl($defaults = null,$show_jotnets = true, $showall_caption = 
 	$o = replace_macros($tpl, array(
 		'$showall'         => $showall_caption,
 		'$showlimited'     => t("Limit access:"),
-		'$showlimitedDesc' => t('Select "Show" to allow access. "Don\'t show" lets you override and limit the scope of "Show".'),
+		'$showlimitedDesc' => t('Select "Show" to allow viewing. "Don\'t show" lets you override and limit the scope of "Show".'),
 		'$show'	           => t("Show"),
 		'$hide'	           => t("Don't show"),
 		'$search'          => t("Search"),
@@ -266,7 +266,7 @@ function populate_acl($defaults = null,$show_jotnets = true, $showall_caption = 
 		'$aclModalTitle'   => t('Permissions'),
 		'$aclModalDesc'    => $dialog_description,
 		'$aclModalDismiss' => t('Close'),
-		'$helpUrl'         => (($context_help == '') ? '' : (z_root() . '/help?f=&cmd=' . $context_help))
+		'$helpUrl'         => (($context_help == '') ? '' : (z_root() . '/help/' . $context_help))
 	));
 
 	return $o;

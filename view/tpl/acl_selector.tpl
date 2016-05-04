@@ -3,9 +3,15 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">{{$aclModalTitle}}</h4>
+				{{if $helpUrl}}
+				<a type="button" target="hubzilla-help" href="{{$helpUrl}}" class="contextual-help-tool" title="Help and documentation"><i class="fa fa-question"></i></a>
+				{{/if}}
+				<h4 class="modal-title"><i id="dialog-perms-icon" class="fa fa-fw"></i> {{$aclModalTitle}}</h4>
 			</div>
 			<div class="modal-body">
+				{{if $aclModalDesc}}
+					<div id="acl-dialog-description">{{$aclModalDesc}}</div>
+				{{/if}}
 				{{if $jotnets}}
 				<div class="jotnets-wrapper" role="tab" id="jotnets-wrapper">
 					<a data-toggle="collapse" class="btn btn-block btn-default" href="#jotnets-collapse" aria-expanded="false" aria-controls="jotnets-collapse">{{$jnetModalTitle}} <span class="caret"></span></a>
@@ -16,11 +22,24 @@
 				</div>
 				{{/if}}
 				<div id="acl-wrapper">
-					<button id="acl-showall" class="btn btn-block btn-default"><i class="fa fa-globe"></i> {{$showall}}</button>
-					<input type="text" id="acl-search" placeholder="&#xf002;">
-					<div id="acl-list">
-						<div id="acl-list-content"></div>
+					<div id="acl-radiowrapper-showall" class="radio">
+					  <label>
+					    <input id="acl-showall" type="radio" name="optionsRadios" value="option1" checked>
+					    <i class="fa fa-globe"></i><span id=acl-showall-caption>{{$showall}}</span>
+					  </label>
 					</div>
+					<div id="acl-radiowrapper-showlimited" class="radio">
+						<label>
+							<input id="acl-showlimited" type="radio" name="optionsRadios" style="readonly" value="option2">
+							<span id=acl-showlimited-caption>{{$showlimited}}</span>
+					    </label>
+						<div id="acl-list">
+							<input type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
+							<div id=acl-showlimited-description>{{$showlimitedDesc}}</div>
+							<div id="acl-list-content"></div>
+						</div>
+					</div>
+
 					<span id="acl-fields"></span>
 				</div>
 

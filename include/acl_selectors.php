@@ -210,12 +210,24 @@ function fixacl(&$item) {
 	$item = str_replace(array('<','>'),array('',''),$item);
 }
 
-function populate_acl($defaults = null,$show_jotnets = true, $showall = '') {
+/**
+* Builds a modal dialog for editing permissions, using acl_selector.tpl as the template.
+*
+* @param array $default Optional access control list for the initial state of the dialog.
+* @param boolean $show_jotnets Whether plugins for federated networks should be included in the permissions dialog
+* @param string $showall_caption An optional caption to describe the scope of an unrestricted post. e.g. "Public"
+* @param string $dialog_description Optional message to include at the top of the dialog. E.g. "Warning: Post permissions cannot be changed once sent".
+* @param string $context_help Allows the dialog to present a help icon. E.g. "acl_dialog_post"
+* @param boolean $readonly Not implemented yet. When implemented, the dialog will use acl_readonly.tpl instead, so that permissions may be viewed for posts that can no longer have their permissions changed.
+*
+* @return string html modal dialog build from acl_selector.tpl
+*/
+function populate_acl($defaults = null,$show_jotnets = true, $showall_caption = '', $dialog_description = '', $context_help = '', $readonly = false) {
 
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 
-	if(! $showall)
-		$showall = t('Visible to your default audience');
+	if(! $showall_caption)
+		$showall_caption = t('Visible to your default audience');
 
 	if(is_array($defaults)) {
 		$allow_cid = ((strlen($defaults['allow_cid'])) 
@@ -239,9 +251,12 @@ function populate_acl($defaults = null,$show_jotnets = true, $showall = '') {
 
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
-		'$showall'         => $showall,
+		'$showall'         => $showall_caption,
+		'$showlimited'     => t("Limit access:"),
+		'$showlimitedDesc' => t('Select "Show" to allow viewing. "Don\'t show" lets you override and limit the scope of "Show".'),
 		'$show'	           => t("Show"),
 		'$hide'	           => t("Don't show"),
+		'$search'          => t("Search"),
 		'$allowcid'        => json_encode($allow_cid),
 		'$allowgid'        => json_encode($allow_gid),
 		'$denycid'         => json_encode($deny_cid),
@@ -249,7 +264,9 @@ function populate_acl($defaults = null,$show_jotnets = true, $showall = '') {
 		'$jnetModalTitle'  => t('Other networks and post services'),
 		'$jotnets'         => $jotnets,
 		'$aclModalTitle'   => t('Permissions'),
-		'$aclModalDismiss' => t('Close')
+		'$aclModalDesc'    => $dialog_description,
+		'$aclModalDismiss' => t('Close'),
+		'$helpUrl'         => (($context_help == '') ? '' : (z_root() . '/help/' . $context_help))
 	));
 
 	return $o;

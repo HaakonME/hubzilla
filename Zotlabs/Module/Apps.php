@@ -17,16 +17,21 @@ class Apps extends \Zotlabs\Web\Controller {
 	
 		$apps = array();
 	
-		$syslist = get_system_apps();
 	
 		if(local_channel()) {
+			import_system_apps();
+			$syslist = array();
 			$list = app_list(local_channel());
 			if($list) {
 				foreach($list as $x) {
 					$syslist[] = app_encode($x);
 				}
 			}
+			translate_system_apps($syslist);
 		}
+		else
+			$syslist = get_system_apps(true);
+
 		usort($syslist,'app_name_compare');
 	
 	//	logger('apps: ' . print_r($syslist,true));

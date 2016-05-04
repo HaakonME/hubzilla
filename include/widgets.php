@@ -103,8 +103,8 @@ function widget_appselect($arr) {
 		'$system' => t('System'),
 		'$authed' => ((local_channel()) ? true : false),
 		'$personal' => t('Personal'),
-		'$new' => t('Create Personal App'),
-		'$edit' => t('Edit Personal App')
+		'$new' => t('New App'),
+		'$edit' => t('Edit App')
 	));
 }
 

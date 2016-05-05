@@ -126,13 +126,21 @@ function get($update = 0, $load = false) {
 
 		if($perms['post_wall']) {
 
+			// I'm trying to make two points in this description text - warn about finality of wall
+			// post permissions, and try to clear up confusion that these permissions set who is
+			// *shown* the post, istead of who is able to see the post, i.e. make it clear that clicking
+			// the "Show"  button on a group does not post it to the feed of people in that group, it
+			// mearly allows those people to view the post if they are viewing/following this channel.
+			$aclDesc = t('Post permissions <b>cannot be changed</b> after a post is sent.</br />These permissions set who is allowed to view the post.');
+			$aclContextHelpCmd = 'acl_dialog_post';
+
 			$x = array(
 				'is_owner' => $is_owner,
 				'allow_location' => ((($is_owner || $observer) && (intval(get_pconfig(\App::$profile['profile_uid'],'system','use_browser_location')))) ? true : false),
 				'default_location' => (($is_owner) ? \App::$profile['channel_location'] : ''),
 				'nickname' => \App::$profile['channel_address'],
 				'lockstate' => (((strlen(\App::$profile['channel_allow_cid'])) || (strlen(\App::$profile['channel_allow_gid'])) || (strlen(\App::$profile['channel_deny_cid'])) || (strlen(\App::$profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
-				'acl' => (($is_owner) ? populate_acl($channel_acl,true,((\App::$profile['channel_r_stream'] & PERMS_PUBLIC) ? t('Public') : '')) : ''),
+				'acl' => (($is_owner) ? populate_acl($channel_acl,true,((\App::$profile['channel_r_stream'] & PERMS_PUBLIC) ? t('Public') : ''), $aclDesc, $aclContextHelpCmd) : ''),
 				'showacl' => (($is_owner) ? 'yes' : ''),
 				'bang' => '',
 				'visitor' => (($is_owner || $observer) ? true : false),

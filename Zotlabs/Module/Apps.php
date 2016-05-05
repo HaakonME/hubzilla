@@ -17,16 +17,21 @@ class Apps extends \Zotlabs\Web\Controller {
 	
 		$apps = array();
 	
-		$syslist = get_system_apps();
 	
 		if(local_channel()) {
-			$list = app_list(local_channel());
+			import_system_apps();
+			$syslist = array();
+			$list = app_list(local_channel(), false, $_GET['cat']);
 			if($list) {
 				foreach($list as $x) {
 					$syslist[] = app_encode($x);
 				}
 			}
+			translate_system_apps($syslist);
 		}
+		else
+			$syslist = get_system_apps(true);
+
 		usort($syslist,'app_name_compare');
 	
 	//	logger('apps: ' . print_r($syslist,true));
@@ -37,6 +42,7 @@ class Apps extends \Zotlabs\Web\Controller {
 	
 		return replace_macros(get_markup_template('myapps.tpl'), array(
 			'$sitename' => get_config('system','sitename'),
+			'$cat' => ((array_key_exists('cat',$_GET) && $_GET['cat']) ? ' - ' . escape_tags($_GET['cat']) : ''),
 			'$title' => t('Apps'),
 			'$apps' => $apps,
 		));

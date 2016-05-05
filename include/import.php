@@ -297,8 +297,11 @@ function import_apps($channel,$apps) {
 	if($channel && $apps) {
 		foreach($apps as $app) {
 
+			$term = ((array_key_exists('term',$app) && is_array($app['term'])) ? $app['term'] : null); 
+
 			unset($app['id']);
 			unset($app['app_channel']);
+			unset($app['term']);
 
 			$app['app_channel'] = $channel['channel_id'];
 
@@ -307,6 +310,8 @@ function import_apps($channel,$apps) {
 				$app['app_photo'] = $x[0];
 			}
 
+			$hash = $app['app_id'];
+
 			dbesc_array($app);
 			$r = dbq("INSERT INTO app (`" 
 				. implode("`, `", array_keys($app)) 
@@ -314,6 +319,21 @@ function import_apps($channel,$apps) {
 				. implode("', '", array_values($app)) 
 				. "')" 
 			);
+
+			if($term) {
+				$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+					dbesc($hash),
+					intval($channel['channel_id'])
+				);
+				if($x) {
+					foreach($term as $t) {
+						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+					}
+				}
+			}
+
+
+
 		}
 	}
 }
@@ -325,16 +345,41 @@ function sync_apps($channel,$apps) {
 	if($channel && $apps) {
 		foreach($apps as $app) {
 
-           if(array_key_exists('app_deleted',$app) && $app['app_deleted'] && $app['app_id']) {
+			$exists = false;
+			$term = ((array_key_exists('term',$app)) ? $app['term'] : null);
+
+			$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+				dbesc($app['app_id']),
+				intval($channel['channel_id'])
+			);
+			if($x) {
+				$exists = $x[0];
+			}
+			
+			if(array_key_exists('app_deleted',$app) && $app['app_deleted'] && $app['app_id']) {
                 q("delete from app where app_id = '%s' and app_channel = %d limit 1",
                     dbesc($app['app_id']),
                     intval($channel['channel_id'])
                 );
+				if($exists) {
+					q("delete from term where otype = %d and oid = %d",
+						intval(TERM_OBJ_APP),
+						intval($exists['id'])
+            		);
+				}
                 continue;
             }
 
 			unset($app['id']);
 			unset($app['app_channel']);
+			unset($app['term']);
+
+			if($exists) {
+				q("delete from term where otype = %d and oid = %d",
+					intval(TERM_OBJ_APP),
+					intval($exists['id'])
+            	);
+			}
 
 			if(! $app['app_created'] || $app['app_created'] === NULL_DATE)
 				$app['app_created'] = datetime_convert();
@@ -348,16 +393,15 @@ function sync_apps($channel,$apps) {
 				$app['app_photo'] = $x[0];
 			}
 
-			$exists = false;
+			if($exists && $term) {
+				foreach($term as $t) {
+					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+				}
+			}
 
-			$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
-				dbesc($app['app_id']),
-				intval($channel['channel_id'])
-			);
-			if($x) {
-				if($x[0]['app_edited'] >= $app['app_edited'])
+			if($exists) {
+				if($exists['app_edited'] >= $app['app_edited'])
 					continue;
-				$exists = true;
 			}
 			$hash = $app['app_id'];
 
@@ -380,6 +424,17 @@ function sync_apps($channel,$apps) {
 					. implode("', '", array_values($app)) 
 					. "')" 
 				);
+				if($term) {
+					$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+						dbesc($hash),
+						intval($channel['channel_id'])
+					);
+					if($x) {
+						foreach($term as $t) {
+							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+						}
+					}
+				}
 			}
 		}
 	}

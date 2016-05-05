@@ -183,6 +183,10 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 }
 
 
+
+
+
+
 function tags_sort($a,$b) {
 	if(strtolower($a[0]) == strtolower($b[0]))
 		return 0;
@@ -229,6 +233,71 @@ function dir_tagadelic($count = 0) {
 
 	return $tags;
 }
+
+
+function app_tagblock($link,$count = 0) {
+	$o = '';
+
+	$r = app_tagadelic($count);
+
+	if($r) {
+		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+		  $o .= '<a href="'.$link .'/' . '?f=&cat=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
+	}
+
+	return $o;
+}
+
+function app_tagadelic($count = 0) {
+
+	if(! local_channel())
+		return '';
+
+	$count = intval($count);
+
+
+	// Fetch tags
+	$r = q("select term, count(term) as total from term left join app on term.uid = app_channel where term.uid = %d
+		and term.otype = %d group by term order by total desc %s",
+		intval(local_channel()),
+		intval(TERM_OBJ_APP),
+		((intval($count)) ? "limit $count" : '')
+	);
+
+	if(! $r)
+		return array();
+
+	// Find minimum and maximum log-count.
+	$tags = array();
+	$min = 1e9;
+	$max = -1e9;
+
+	$x = 0;
+	foreach($r as $rr) {
+		$tags[$x][0] = $rr['term'];
+		$tags[$x][1] = log($rr['total']);
+		$tags[$x][2] = 0;
+		$min = min($min,$tags[$x][1]);
+		$max = max($max,$tags[$x][1]);
+		$x ++;
+	}
+
+	usort($tags,'tags_sort');
+
+	$range = max(.01, $max - $min) * 1.0001;
+
+	for($x = 0; $x < count($tags); $x ++) {
+		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
+	}
+
+	return $tags;
+}
+
+
+
 
 
 function tagblock($link,$uid,$count = 0,$authors = '',$owner = '', $flags = 0,$restrict = 0,$type = TERM_HASHTAG) {

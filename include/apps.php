@@ -370,11 +370,28 @@ function app_installed($uid,$app) {
 }
 
 
-function app_list($uid, $deleted = false) {
+function app_list($uid, $deleted = false, $cat = '') {
 	if($deleted) 
 		$sql_extra = " and app_deleted = 1 ";
 	else
 		$sql_extra = " and app_deleted = 0 ";
+
+	if($cat) {
+		$r = q("select oid from term where otype = %d and term = '%s'",
+			intval(TERM_OBJ_APP),
+			dbesc($cat)
+		);
+		if(! $r)
+			return $r;
+		$sql_extra .= " and app.id in ( ";
+		$s = '';
+		foreach($r as $rr) {
+			if($s)
+				$s .= ',';
+			$s .= intval($rr['oid']);
+		}
+		$sql_extra .= $s . ') ';
+	}
 
 	$r = q("select * from app where app_channel = %d $sql_extra order by app_name asc",
 		intval($uid)

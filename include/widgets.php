@@ -400,6 +400,13 @@ function widget_categories($arr) {
 
 }
 
+function widget_appcloud($arr) {
+	if(! local_channel())
+		return '';
+	return app_tagblock(z_root() . '/apps');
+}
+
+
 function widget_tagcloud_wall($arr) {
 
 

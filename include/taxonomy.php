@@ -156,51 +156,16 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 	if(! $r)
 		return array();
 
-	// Find minimum and maximum log-count.
-	$tags = array();
-	$min = 1e9;
-	$max = -1e9;
+	return Zotlabs\Text\Tagadelic::calc($r);
 
-	$x = 0;
-	foreach($r as $rr) {
-		$tags[$x][0] = $rr['term'];
-		$tags[$x][1] = log($rr['total']);
-		$tags[$x][2] = 0;
-		$min = min($min,$tags[$x][1]);
-		$max = max($max,$tags[$x][1]);
-		$x ++;
-	}
-
-	usort($tags,'tags_sort');
-
-	$range = max(.01, $max - $min) * 1.0001;
-
-	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
-	}
-
-	return $tags;
 }
-
-
-
-
-
-
-function tags_sort($a,$b) {
-	if(strtolower($a[0]) == strtolower($b[0]))
-		return 0;
-
-	return((strtolower($a[0]) < strtolower($b[0])) ? -1 : 1);
-}
-
 
 function dir_tagadelic($count = 0) {
 
 	$count = intval($count);
 
 	// Fetch tags
-	$r = q("select xtag_term, count(xtag_term) as total from xtag where xtag_flags = 0
+	$r = q("select xtag_term as term, count(xtag_term) as total from xtag where xtag_flags = 0
 		group by xtag_term order by total desc %s",
 		((intval($count)) ? "limit $count" : '')
 	);
@@ -208,30 +173,9 @@ function dir_tagadelic($count = 0) {
 	if(! $r)
 		return array();
 
-	// Find minimum and maximum log-count.
-	$tags = array();
-	$min = 1e9;
-	$max = -1e9;
 
-	$x = 0;
-	foreach($r as $rr) {
-		$tags[$x][0] = $rr['xtag_term'];
-		$tags[$x][1] = log($rr['total']);
-		$tags[$x][2] = 0;
-		$min = min($min,$tags[$x][1]);
-		$max = max($max,$tags[$x][1]);
-		$x ++;
-	}
+	return Zotlabs\Text\Tagadelic::calc($r);
 
-	usort($tags,'tags_sort');
-
-	$range = max(.01, $max - $min) * 1.0001;
-
-	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
-	}
-
-	return $tags;
 }
 
 
@@ -270,34 +214,9 @@ function app_tagadelic($count = 0) {
 	if(! $r)
 		return array();
 
-	// Find minimum and maximum log-count.
-	$tags = array();
-	$min = 1e9;
-	$max = -1e9;
+	return Zotlabs\Text\Tagadelic::calc($r);
 
-	$x = 0;
-	foreach($r as $rr) {
-		$tags[$x][0] = $rr['term'];
-		$tags[$x][1] = log($rr['total']);
-		$tags[$x][2] = 0;
-		$min = min($min,$tags[$x][1]);
-		$max = max($max,$tags[$x][1]);
-		$x ++;
-	}
-
-	usort($tags,'tags_sort');
-
-	$range = max(.01, $max - $min) * 1.0001;
-
-	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
-	}
-
-	return $tags;
 }
-
-
-
 
 
 function tagblock($link,$uid,$count = 0,$authors = '',$owner = '', $flags = 0,$restrict = 0,$type = TERM_HASHTAG) {

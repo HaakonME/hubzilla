@@ -8,7 +8,7 @@
 require_once('include/plugin.php');
 require_once('include/identity.php');
 
-function get_system_apps() {
+function get_system_apps($translate = true) {
 
 	$ret = array();
 	if(is_dir('apps'))
@@ -17,7 +17,7 @@ function get_system_apps() {
 		$files = glob('app/*.apd');
 	if($files) {
 		foreach($files as $f) {
-			$x = parse_app_description($f);
+			$x = parse_app_description($f,$translate);
 			if($x) {
 				$ret[] = $x;
 			}
@@ -28,7 +28,7 @@ function get_system_apps() {
 		foreach($files as $f) {
 			$n = basename($f,'.apd');
 			if(plugin_is_installed($n)) {
-				$x = parse_app_description($f);
+				$x = parse_app_description($f,$translate);
 				if($x) {
 					$ret[] = $x;
 				}
@@ -40,11 +40,36 @@ function get_system_apps() {
 
 }
 
+
+function import_system_apps() {
+	if(! local_channel())
+		return;
+
+	// Eventually we want to look at modification dates and update system apps.
+
+	$installed = get_pconfig(local_channel(),'system','apps_installed');
+	if($installed)
+		return;
+	$apps = get_system_apps(false);
+	if($apps) {
+		foreach($apps as $app) {
+			$app['uid'] = local_channel();
+			$app['guid'] = hash('whirlpool',$app['name']);
+			$app['system'] = 1;
+			app_install(local_channel(),$app);			
+		}
+	}					
+	set_pconfig(local_channel(),'system','apps_installed',1);
+}
+
+
+
+
 function app_name_compare($a,$b) {
 	return strcmp($a['name'],$b['name']);
 }
 
-function parse_app_description($f) {
+function parse_app_description($f,$translate = true) {
 	$ret = array();
 
 	$baseurl = z_root();
@@ -116,7 +141,8 @@ function parse_app_description($f) {
 		}
 	}
 	if($ret) {
-		translate_system_apps($ret);
+		if($translate)
+			translate_system_apps($ret);
 		return $ret;
 	}
 	return false;
@@ -126,8 +152,13 @@ function parse_app_description($f) {
 function translate_system_apps(&$arr) {
 	$apps = array(
 		'Site Admin' => t('Site Admin'),
-		'Bookmarks' => t('Bookmarks'),
-		'Address Book' => t('Address Book'),
+		'Bug Report' => t('Bug Report'),
+		'View Bookmarks' => t('View Bookmarks'),
+		'My Chatrooms' => t('My Chatrooms'),
+		'Connections' => t('Connections'),
+		'Firefox Share' => t('Firefox Share'),
+		'Remote Diagnostics' => t('Remote Diagnostics'),
+		'Suggest Channels' => t('Suggest Channels'),
 		'Login' => t('Login'),
 		'Channel Manager' => t('Channel Manager'), 
 		'Grid' => t('Grid'), 
@@ -135,7 +166,7 @@ function translate_system_apps(&$arr) {
 		'Files' => t('Files'),
 		'Webpages' => t('Webpages'),
 		'Channel Home' => t('Channel Home'), 
-		'Profile' => t('Profile'),
+		'View Profile' => t('View Profile'),
 		'Photos' => t('Photos'), 
 		'Events' => t('Events'), 
 		'Directory' => t('Directory'), 
@@ -293,11 +324,18 @@ function app_destroy($uid,$app) {
 		);
 		$x[0]['app_deleted'] = 1;
 
-
-		$r = q("delete from app where app_id = '%s' and app_channel = %d",
-			dbesc($app['guid']),
-			intval($uid)
-		);
+		if($x[0]['app_system']) {
+			$r = q("update app set app_deleted = 1 where app_id = '%s' and app_channel = %d",
+				dbesc($app['guid']),
+				intval($uid)
+			);
+		}
+		else {
+			$r = q("delete from app where app_id = '%s' and app_channel = %d",
+				dbesc($app['guid']),
+				intval($uid)
+			);
+		}
 
 		build_sync_packet($uid,array('app' => $x));
 	}
@@ -370,10 +408,12 @@ function app_store($arr) {
 	$darray['app_price']    = ((x($arr,'price'))    ? escape_tags($arr['price']) : '');
 	$darray['app_page']     = ((x($arr,'page'))     ? escape_tags($arr['page']) : '');
 	$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
+	$darray['app_system']   = ((x($arr,'system'))   ? intval($arr['system']) : 0);
+	$darray['app_deleted']  = ((x($arr,'deleted'))  ? intval($arr['deleted']) : 0);
 
 	$created = datetime_convert();
 
-	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page, app_requires, app_created, app_edited ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
+	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page, app_requires, app_created, app_edited, app_system, app_deleted ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
 		dbesc($darray['app_id']),
 		dbesc($darray['app_sig']),
 		dbesc($darray['app_author']),
@@ -388,7 +428,9 @@ function app_store($arr) {
 		dbesc($darray['app_page']),
 		dbesc($darray['app_requires']),
 		dbesc($created),
-		dbesc($created)
+		dbesc($created),
+		intval($darray['app_system']),
+		intval($darray['app_deleted'])
 	);
 	if($r) {
 		$ret['success'] = true;
@@ -425,10 +467,12 @@ function app_update($arr) {
 	$darray['app_price']    = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
 	$darray['app_page']     = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
 	$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
+	$darray['app_system']   = ((x($arr,'system'))   ? intval($arr['system']) : 0);
+	$darray['app_deleted']  = ((x($arr,'deleted'))  ? intval($arr['deleted']) : 0);
 
 	$edited = datetime_convert();
 
-	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s', app_edited = '%s' where app_id = '%s' and app_channel = %d",
+	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s', app_edited = '%s', app_system = %d, app_deleted = %d where app_id = '%s' and app_channel = %d",
 		dbesc($darray['app_sig']),
 		dbesc($darray['app_author']),
 		dbesc($darray['app_name']),
@@ -441,6 +485,8 @@ function app_update($arr) {
 		dbesc($darray['app_page']),
 		dbesc($darray['app_requires']),
 		dbesc($edited),
+		intval($darray['app_system']),
+		intval($darray['app_deleted']),
 		dbesc($darray['app_id']),
 		intval($darray['app_channel'])
 	);
@@ -498,6 +544,12 @@ function app_encode($app,$embed = false) {
 
 	if($app['app_requires'])
 		$ret['requires'] = $app['app_requires'];
+
+	if($app['app_system'])
+		$ret['system'] = $app['app_system'];
+
+	if($app['app_deleted'])
+		$ret['deleted'] = $app['app_deleted'];
 
 	if(! $embed)
 		return $ret;

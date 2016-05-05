@@ -154,6 +154,14 @@ class Network extends \Zotlabs\Web\Controller {
 			}
 	
 			nav_set_selected('network');
+
+			// I'm trying to make two points in this description text - warn about finality of wall
+			// post permissions, and try to clear up confusion that these permissions set who is
+			// *shown* the post, istead of who is able to see the post, i.e. make it clear that clicking
+			// the "Show"  button on a group does not post it to the feed of people in that group, it
+			// mearly allows those people to view the post if they are viewing/following this channel.
+			$aclDesc = t('Post permissions <b>cannot be changed</b> after a post is sent.</br />These permissions set who is allowed to view the post.');
+			$aclContextHelpCmd = 'acl_dialog_post';
 	
 			$channel_acl = array(
 				'allow_cid' => $channel['channel_allow_cid'], 
@@ -161,7 +169,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'deny_cid'  => $channel['channel_deny_cid'], 
 				'deny_gid'  => $channel['channel_deny_gid']
 			); 
-	
+
 			$private_editing = ((($group || $cid) && (! intval($_GET['pf']))) ? true : false);
 	
 			$x = array(
@@ -170,7 +178,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'default_location' => $channel['channel_location'],
 				'nickname'         => $channel['channel_address'],
 				'lockstate'        => (($private_editing || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-				'acl'              => populate_acl((($private_editing) ? $def_acl : $channel_acl), true, (($channel['channel_r_stream'] & PERMS_PUBLIC) ? t('Public') : '')),
+				'acl'              => populate_acl((($private_editing) ? $def_acl : $channel_acl), true, (($channel['channel_r_stream'] & PERMS_PUBLIC) ? t('Public') : ''), $aclDesc, $aclContextHelpCmd),
 				'bang'             => (($private_editing) ? '!' : ''),
 				'visitor'          => true,
 				'profile_uid'      => local_channel(),

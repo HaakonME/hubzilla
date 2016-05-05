@@ -1,5 +1,6 @@
-<?php
-namespace Zotlabs\Module; /** @file */
+<?php /** @file */
+
+namespace Zotlabs\Module; 
 
 require_once('include/apps.php');
 
@@ -25,7 +26,8 @@ class Appman extends \Zotlabs\Web\Controller {
 				'price' => escape_tags($_REQUEST['price']),
 				'requires' => escape_tags($_REQUEST['requires']),
 				'system' => intval($_REQUEST['system']),
-				'sig' => escape_tags($_REQUEST['sig'])
+				'sig' => escape_tags($_REQUEST['sig']),
+				'categories' => escape_tags($_REQUEST['categories'])
 			);
 	
 			$_REQUEST['appid'] = app_install(local_channel(),$arr);
@@ -81,8 +83,23 @@ class Appman extends \Zotlabs\Web\Controller {
 				dbesc($_REQUEST['appid']),
 				dbesc(local_channel())
 			);
-			if($r)
+			if($r) {
 				$app = $r[0];
+
+				$term = q("select * from term where otype = %d and oid = %d",
+					intval(TERM_OBJ_APP),
+					intval($r[0]['id'])
+				);
+				if($term) {
+					$app['categories'] = '';
+					foreach($term as $t) {
+						if($app['categories'])
+							$app['categories'] .= ',';
+						$app['categories'] .= $t['term'];
+					}
+				}
+			}
+
 			$embed = array('embed', t('Embed code'), app_encode($app,true),'', 'onclick="this.select();"');
 	
 		}
@@ -98,6 +115,7 @@ class Appman extends \Zotlabs\Web\Controller {
 			'$url' => array('url', t('Location (URL) of app'),(($app) ? $app['app_url'] : ''), t('Required')),
 	 		'$desc' => array('desc', t('Description'),(($app) ? $app['app_desc'] : ''), ''),
 			'$photo' => array('photo', t('Photo icon URL'),(($app) ? $app['app_photo'] : ''), t('80 x 80 pixels - optional')),
+			'$categories' => array('categories',t('Categories (optional, comma separated list)'),(($app) ? $app['categories'] : ''),''),
 			'$version' => array('version', t('Version ID'),(($app) ? $app['app_version'] : ''), ''),
 			'$price' => array('price', t('Price of app'),(($app) ? $app['app_price'] : ''), ''),
 			'$page' => array('page', t('Location (URL) to purchase app'),(($app) ? $app['app_page'] : ''), ''),

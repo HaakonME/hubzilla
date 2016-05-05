@@ -69,6 +69,7 @@ function app_name_compare($a,$b) {
 	return strcmp($a['name'],$b['name']);
 }
 
+
 function parse_app_description($f,$translate = true) {
 	$ret = array();
 
@@ -295,6 +296,7 @@ function app_render($papp,$mode = 'view') {
 
 function app_install($uid,$app) {
 	$app['uid'] = $uid;
+
 	if(app_installed($uid,$app))
 		$x = app_update($app);
 	else
@@ -305,9 +307,17 @@ function app_install($uid,$app) {
 			dbesc($x['app_id']),
 			intval($uid)
 		);
-		if($r)
-			build_sync_packet($uid,array('app' => $r[0]));
-
+		if($r) {
+			if(! $r[0]['app_system']) {
+				if($app['categories'] && (! $app['term'])) {
+					$r[0]['term'] = q("select * from term where otype = %d and oid = d",
+						intval(TERM_OBJ_APP),
+						intval($r[0]['id'])
+					);
+					build_sync_packet($uid,array('app' => $r[0]));
+				}
+			}
+		}
 		return $x['app_id'];
 	}
 	return false;
@@ -322,22 +332,28 @@ function app_destroy($uid,$app) {
 			dbesc($app['guid']),
 			intval($uid)
 		);
-		$x[0]['app_deleted'] = 1;
-
-		if($x[0]['app_system']) {
-			$r = q("update app set app_deleted = 1 where app_id = '%s' and app_channel = %d",
-				dbesc($app['guid']),
-				intval($uid)
+		if($x) {
+			$x[0]['app_deleted'] = 1;
+			q("delete from term where otype = %d and oid = %d",
+				intval(TERM_OBJ_APP),
+				intval($x[0]['id'])
 			);
-		}
-		else {
-			$r = q("delete from app where app_id = '%s' and app_channel = %d",
-				dbesc($app['guid']),
-				intval($uid)
-			);
-		}
+			if($x[0]['app_system']) {
+				$r = q("update app set app_deleted = 1 where app_id = '%s' and app_channel = %d",
+					dbesc($app['guid']),
+					intval($uid)
+				);
+			}
+			else {
+				$r = q("delete from app where app_id = '%s' and app_channel = %d",
+					dbesc($app['guid']),
+					intval($uid)
+				);
 
-		build_sync_packet($uid,array('app' => $x));
+				// we don't sync system apps - they may be completely different on the other system
+				build_sync_packet($uid,array('app' => $x));
+			}
+		}
 	}
 }
 
@@ -365,7 +381,12 @@ function app_list($uid, $deleted = false) {
 	);
 	if($r) {
 		for($x = 0; $x < count($r); $x ++) {
-			$r[$x]['type'] = 'personal';
+			if(! $r[$x]['app_system'])
+				$r[$x]['type'] = 'personal';
+			$r[$x]['term'] = q("select * from term where otype = %d and oid = %d",
+				intval(TERM_OBJ_APP),
+				intval($r[$x]['id'])
+			);
 		}
 	}
 	return($r);
@@ -436,6 +457,22 @@ function app_store($arr) {
 		$ret['success'] = true;
 		$ret['app_id'] = $darray['app_id'];
 	}
+	if($arr['categories']) {
+		$x = q("select id from app where app_id = '%s' and app_channel = %d limit 1",
+			dbesc($darray['app_id']),
+			intval($darray['app_channel'])
+		);
+		$y = explode(',',$arr['categories']);
+		if($y) {
+			foreach($y as $t) {
+				$t = trim($t);
+				if($t) {
+					store_item_tag($darray['app_channel'],$x[0]['id'],TERM_OBJ_APP,TERM_CATEGORY,escape_tags($t),escape_tags(z_root() . '/apps/?f=&cat=' . escape_tags($t)));
+				}
+			}
+		}
+	}
+
 	return $ret;
 }
 
@@ -495,6 +532,28 @@ function app_update($arr) {
 		$ret['app_id'] = $darray['app_id'];
 	}
 
+	$x = q("select id from app where app_id = '%s' and app_channel = %d limit 1",
+		dbesc($darray['app_id']),
+		intval($darray['app_channel'])
+	);
+	if($x) {
+		q("delete from term where otype = %d and oid = %d",
+			intval(TERM_OBJ_APP),
+			intval($x[0]['id'])
+		);
+		if($arr['categories']) {
+			$y = explode(',',$arr['categories']);
+			if($y) {
+				foreach($y as $t) {
+					$t = trim($t);
+					if($t) {
+						store_item_tag($darray['app_channel'],$x[0]['id'],TERM_OBJ_APP,TERM_CATEGORY,escape_tags($t),escape_tags(z_root() . '/apps/?f=&cat=' . escape_tags($t)));
+					}
+				}
+			}
+		}
+	}
+
 	return $ret;
 
 }
@@ -551,9 +610,23 @@ function app_encode($app,$embed = false) {
 	if($app['app_deleted'])
 		$ret['deleted'] = $app['app_deleted'];
 
+	if($app['term']) {
+		$s = '';
+		foreach($app['term'] as $t) {
+			if($s)
+				$s .= ',';
+			$s .= $t['term'];
+		}
+		$ret['categories'] = $s;
+	}
+
+
 	if(! $embed)
 		return $ret;
 
+	if(array_key_exists('categories',$ret))
+		unset($ret['categories']);
+	
 	$j = json_encode($ret);
 	return '[app]' . chunk_split(base64_encode($j),72,"\n") . '[/app]';
 

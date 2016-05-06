@@ -34,9 +34,13 @@
 							<span id=acl-showlimited-caption>{{$showlimited}}</span>
 					    </label>
 						<div id="acl-list">
-							<input type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
-							<div id=acl-showlimited-description>{{$showlimitedDesc}}</div>
-							<div id="acl-list-content"></div>
+							<div id="acl-search-wrapper">
+								<input type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
+							</div>
+							<div id="acl-list-content-wrapper">
+								<div id=acl-showlimited-description>{{$showlimitedDesc}}</div>
+								<div id="acl-list-content"></div>
+							</div>
 						</div>
 					</div>
 

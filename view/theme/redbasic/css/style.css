@@ -925,9 +925,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 #acl-search {
 	padding: 4px;
 	border: 1px solid #ccc;
-	width: 90%; /* fallback if browser does not support calc() */
-	width: calc(100% - 10px);
-	margin: 0px 0px 10px 10px;
+	width: 100%;
 }
 
 #acl-search::-webkit-input-placeholder {
@@ -944,15 +942,6 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	padding-top: 10px;
 }
 
-#acl-dialog-description {
-	font-size: 90%;
-	color: #888;
-	padding-bottom: 4px;
-}
-#acl-dialog-description b {
-	color: black;
-}
-
 #acl-showlimited-description {
 	font-size: 90%;
 	color: #888;
@@ -961,16 +950,27 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 }
 
 #acl-list {
-	display: block;
 	border: 1px solid #ccc;
+	-webkit-border-radius: $radiuspx ;
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+}
+
+#acl-search-wrapper {
+	padding: 7px 10px;
+	background-color: $item_colour;
+	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radiuspx;
+	border-bottom: 1px solid #ccc;
+}
+
+#acl-list-content-wrapper {
+	display: block;
 	overflow: auto;
 	clear: both;
 	min-height: 62px;
 	padding: 10px 10px 0px 0px;
-	-webkit-border-radius: $radiuspx ;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-	background-color: rgb(238,238,238);
+
 }
 
 #jotnets-wrapper, #jotnets-collapse {

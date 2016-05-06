@@ -2824,3 +2824,42 @@ function expand_acl($s) {
 
 	return $ret;
 }
+
+
+// When editing a webpage - a dropdown is needed to select a page layout
+// On submit, the pdl_select value (which is the mid of an item with item_type = ITEM_TYPE_PDL) is stored in 
+// the webpage's resource_id, with resource_type 'pdl'.
+
+// Then when displaying a webpage, we can see if it has a pdl attached. If not we'll 
+// use the default site/page layout.
+
+// If it has a pdl we'll load it as we know the mid and pass the body through comanche_parser() which will generate the 
+// page layout from the given description
+
+
+function pdl_selector($uid, $current="") {
+	$o = '';
+
+	$sql_extra = item_permissions_sql($uid);
+
+	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' $sql_extra order by sid asc",
+		intval($uid)
+	);
+
+	$arr = array('channel_id' => $uid, 'current' => $current, 'entries' => $r);
+	call_hooks('pdl_selector',$arr);
+
+	$entries = $arr['entries'];
+	$current = $arr['current'];
+
+	$o .= '<select name="pdl_select" id="pdl_select" size="1">';
+	$entries[] = array('title' => t('Default'), 'mid' => '');
+	foreach($entries as $selection) {
+		$selected = (($selection == $current) ? ' selected="selected" ' : '');
+		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['sid']}</option>";
+	}
+
+	$o .= '</select>';
+	return $o;
+}
+

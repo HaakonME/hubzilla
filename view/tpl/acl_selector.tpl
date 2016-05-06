@@ -8,9 +8,9 @@
 				{{/if}}
 				<h4 class="modal-title"><i id="dialog-perms-icon" class="fa fa-fw"></i> {{$aclModalTitle}}</h4>
 			</div>
-			<div class="modal-body">
+			<div class="section-content-wrapper">
 				{{if $aclModalDesc}}
-					<div id="acl-dialog-description">{{$aclModalDesc}}</div>
+					<div id="acl-dialog-description" class="section-content-info-wrapper">{{$aclModalDesc}}</div>
 				{{/if}}
 				{{if $jotnets}}
 				<div class="jotnets-wrapper" role="tab" id="jotnets-wrapper">

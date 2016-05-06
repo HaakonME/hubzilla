@@ -53,6 +53,31 @@ function comanche_parser(&$a, $s, $pass = 0) {
 		}
 	}
 
+	$cnt = preg_match_all("/\[if (.*?)\](.*?)\[else\](.*?)\[\/if\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			if(comanche_test_condition($mtch[1])) {
+				$s = str_replace($mtch[0], $mtch[2], $s);
+			}
+			else {
+				$s = str_replace($mtch[0], $mtch[3], $s);
+			}
+		}
+	}
+	else {
+		$cnt = preg_match_all("/\[if (.*?)\](.*?)\[\/if\]/ism", $s, $matches, PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				if(comanche_test_condition($mtch[1])) {
+					$s = str_replace($mtch[0], $mtch[2], $s);
+				}
+				else {
+					$s = str_replace($mtch[0], '', $s);
+				}
+			}
+		}
+	}
+
 	if($pass == 0) {
 		$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
 		if($cnt)
@@ -86,7 +111,6 @@ function comanche_parser(&$a, $s, $pass = 0) {
 				App::$layout['webpage'] = comanche_webpage($a,$mtch[1]);
 			}
 		}
-
 	}
 	else {
 		$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
@@ -97,6 +121,17 @@ function comanche_parser(&$a, $s, $pass = 0) {
 		}
 
 	}
+
+}
+
+function comanche_test_condition($s) {
+
+	if(preg_match("/[\$]config[\.](.*?)/",$s,$matches)) {
+		$x = explode('.',$s);
+		if(get_config($x[1],$x[2]))
+			return true;
+	}
+	return false;
 
 }
 

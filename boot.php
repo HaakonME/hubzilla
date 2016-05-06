@@ -724,6 +724,7 @@ class App {
 	public static  $nav_sel;
 	public static $is_mobile = false;
 	public static $is_tablet = false;
+	public static $comanche;
 
 	public static  $category;
 
@@ -2111,7 +2112,10 @@ function get_custom_nav(&$a, $navname) {
  * @param App &$a global application object
  */
 function load_pdl(&$a) {
-	require_once('include/comanche.php');
+
+	App::$comanche = new Zotlabs\Render\Comanche();
+
+	//	require_once('include/comanche.php');
 
 	if (! count(App::$layout)) {
 
@@ -2120,7 +2124,7 @@ function load_pdl(&$a) {
 		$layout = $arr['layout'];
 
 		$n = 'mod_' . App::$module . '.pdl' ;
-		$u = comanche_get_channel_id();
+		$u = App::$comanche->get_channel_id();
 		if($u)
 			$s = get_pconfig($u, 'system', $n);
 		if(! $s)
@@ -2129,7 +2133,7 @@ function load_pdl(&$a) {
 		if((! $s) && (($p = theme_include($n)) != ''))
 			$s = @file_get_contents($p);
 		if($s) {
-			comanche_parser($a, $s);
+			App::$comanche->parse($s);
 			App::$pdl = $s;
 		}
 	}
@@ -2138,10 +2142,10 @@ function load_pdl(&$a) {
 
 
 function exec_pdl(&$a) {
-	require_once('include/comanche.php');
+//	require_once('include/comanche.php');
 
 	if(App::$pdl) {
-		comanche_parser($a, App::$pdl,1);
+		App::$comanche->parse(App::$pdl,1);
 	}
 }
 
@@ -2196,7 +2200,7 @@ function construct_page(&$a) {
 	App::build_pagehead();
 
 	if(App::$page['pdl_content']) {
-		App::$page['content'] = comanche_region($a,App::$page['content']);
+		App::$page['content'] = App::$comanche->region(App::$page['content']);
 	}
 
 	// Let's say we have a comanche declaration '[region=nav][/region][region=content]$nav $content[/region]'.
@@ -2217,7 +2221,7 @@ function construct_page(&$a) {
 		foreach(App::$layout as $k => $v) {
 			if((strpos($k, 'region_') === 0) && strlen($v)) {
 				if(strpos($v, '$region_') !== false) {
-					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism', 'comanche_replace_region', $v);
+					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism', array(App::$comanche,'replace_region'), $v);
 				}
 
 				// And a couple of convenience macros

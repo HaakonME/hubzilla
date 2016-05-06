@@ -126,6 +126,10 @@ function comanche_parser(&$a, $s, $pass = 0) {
 
 function comanche_test_condition($s) {
 
+	// This is extensible. The first version of variable testing supports tests of the form
+	// [if $config.system.foo] which will check for a return of a true condition for get_config('system','foo');
+	// The values 0, '', an empty array, and an unset value will all evaluate to false.
+
 	if(preg_match("/[\$]config[\.](.*?)/",$s,$matches)) {
 		$x = explode('.',$s);
 		if(get_config($x[1],$x[2]))

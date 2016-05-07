@@ -1138,24 +1138,21 @@ function status_editor($a, $x, $popup = false) {
 	if(x($x, 'hide_location'))
 		$geotag = $setloc = $clearloc = '';
 
-	$weblink = t('Insert web link');
-	if(x($x, 'hide_weblink'))
-		$weblink = '';
+	$mimetype = ((x($x,'mimetype')) ? $x['mimetype'] : 'text/bbcode');
 
-	$writefiles = perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage');
+	$mimeselect = ((x($x,'mimeselect')) ? $x['mimeselect'] : false);
+	if($mimeselect)
+		$mimeselect = mimetype_select($x['profile_uid'], $mimetype);
+	else
+		$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />';
+
+	$weblink = (($mimetype === 'text/bbcode') ? t('Insert web link') : false);
+	if(x($x, 'hide_weblink'))
+		$weblink = false;
+
+	$writefiles = (($mimetype === 'text/bbcode') ? perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage') : false);
 	if(x($x, 'hide_attach'))
 		$writefiles = false;
-
-	$mimeselect = '';
-	if(array_key_exists('mimetype', $x) && $x['mimetype']) {
-		if($x['mimetype'] != 'text/bbcode')
-			$plaintext = true;
-		if($x['mimetype'] === 'choose') {
-			$mimeselect = mimetype_select($x['profile_uid']);
-		}
-		else
-			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />';
-	}
 
 	$layoutselect = '';
 	if(array_key_exists('layout', $x) && $x['layout']) {

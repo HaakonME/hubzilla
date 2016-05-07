@@ -3,6 +3,7 @@ namespace Zotlabs\Module;
 
 require_once('include/identity.php');
 require_once('include/acl_selectors.php');
+require_once('include/conversation.php');
 
 class Editblock extends \Zotlabs\Web\Controller {
 
@@ -95,81 +96,38 @@ class Editblock extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		$plaintext = true;
-
-		$mimeselect = '';
 		$mimetype = $itm[0]['mimetype'];
-
-		if($mimetype != 'text/bbcode')
-			$plaintext = true;
-
-		if(get_config('system','page_mimetype'))
-			$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
-		else
-			$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
-
-		\App::$page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
-			'$baseurl'       => z_root(),
-			'$editselect'    => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-			'$pretext'       => '',
-			'$ispublic'      => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
-			'$geotag'        => '',
-			'$nickname'      => $channel['channel_address'],
-			'$confirmdelete' => t('Delete block?'),
-			'$bbco_autocomplete'=> (($mimetype  == 'text/bbcode') ? 'bbcode' : 'comanche-block')
-		));
-
-		$tpl = get_markup_template("jot.tpl");
-
-		$jotplugins = '';
-		$jotnets = '';
-
-		call_hooks('jot_tool', $jotplugins);
-		call_hooks('jot_networks', $jotnets);
 
 		$rp = 'blocks/' . $channel['channel_address'];
 
-		$editor = replace_macros($tpl,array(
-			'$return_path'         => $rp,
-			'$action'              => 'item',
-			'$webpage'             => ITEM_TYPE_BLOCK,
-			'$share'               => t('Edit'),
-			'$bold'                => t('Bold'),
-			'$italic'              => t('Italic'),
-			'$underline'           => t('Underline'),
-			'$quote'               => t('Quote'),
-			'$code'                => t('Code'),
-			'$writefiles'          => (($mimetype  == 'text/bbcode') ? perm_is_allowed($owner, get_observer_hash(), 'write_storage') : false),
-			'$attach'              => t('Attach file'),
-			'$weblink'             => (($mimetype  == 'text/bbcode') ? t('Insert web link') : false),
-			'$setloc'              => false,
-			'$noloc'               => false,
-			'$permset'             => t('Permission settings'),
-			'$ptyp'                => $itm[0]['type'],
-			'$mimeselect'          => $mimeselect,
-			'$content'             => undo_post_tagging($itm[0]['body']),
-			'$post_id'             => $post_id,
-			'$baseurl'             => z_root(),
-			'$defloc'              => $channel['channel_location'],
-			'$visitor'             => true,
-			'$public'              => t('Public post'),
-			'$jotnets'             => $jotnets,
-			'$title'               => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
-			'$placeholdertitle'    => t('Title (optional)'),
-			'$pagetitle'           => $block_title,
-			'$category'            => '',
-			'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
-			'$emtitle'             => t('Example: bob@example.com, mary@example.com'),
-			'$lockstate'           => $lockstate,
-			'$acl'                 => '', 
-			'$bang'                => '',
-			'$profile_uid'         => (intval($channel['channel_id'])),
-			'$preview'             => t('Preview'),
-			'$jotplugins'          => $jotplugins,
-			'$sourceapp'           => $itm[0]['app'],
-			'$defexpire'           => '',
-			'$bbcode'              => (($mimetype  == 'text/bbcode') ? true : false)
-		));
+		$x = array(
+			'nickname' => $channel['channel_address'],
+			'bbco_autocomplete'=> (($mimetype  == 'text/bbcode') ? 'bbcode' : 'comanche-block'),
+			'return_path' => $rp,
+			'webpage' => ITEM_TYPE_BLOCK,
+			'ptlabel' => t('Block Name'),
+			'button' => t('Edit'),
+			'writefiles' => (($mimetype  == 'text/bbcode') ? perm_is_allowed($owner, get_observer_hash(), 'write_storage') : false),
+			'weblink' => (($mimetype  == 'text/bbcode') ? t('Insert web link') : false),
+			'hide_voting' => true,
+			'hide_future' => true,
+			'hide_location' => true,
+			'hide_expire' => true,
+			'showacl' => false,
+			'ptyp' => $itm[0]['type'],
+			'mimeselect' => true,
+			'mimetype' => $itm[0]['mimetype'],
+			'body' => undo_post_tagging($itm[0]['body']),
+			'post_id' => $post_id,
+			'visitor' => true,
+			'title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
+			'placeholdertitle' => t('Title (optional)'),
+			'pagetitle' => $block_title,
+			'profile_uid' => (intval($channel['channel_id'])),
+			'bbcode' => (($mimetype  == 'text/bbcode') ? true : false)
+		);
+
+		$editor = status_editor($a, $x);
 
 		$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 			'$title' => t('Edit Block'),

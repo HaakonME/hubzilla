@@ -1,7 +1,7 @@
 <?php
 namespace Zotlabs\Module;
 
-use PHPGit\Git as Git;
+use \Zotlabs\Storage\GitRepo as GitRepo;
 
 /**
  * @file mod/admin.php
@@ -1359,6 +1359,15 @@ class Admin extends \Zotlabs\Web\Controller {
 				'$submit' => t('Download Plugin Repo')
 			)
 		);
+		$newRepoModalID = random_string(3);
+		$newRepoModal = replace_macros(
+			get_markup_template('generic_modal.tpl'), array(
+				'$id' => $newRepoModalID,
+				'$title' => t('Install new repo'),
+				'$ok' => t('OK'),
+				'$cancel' => t('Cancel')
+			)
+		);
 			
 		$t = get_markup_template('admin_plugins.tpl');
 		return replace_macros($t, array(
@@ -1372,7 +1381,9 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$form_security_token' => get_form_security_token('admin_plugins'),
 			'$addrepo' => t('Add Plugin Repo'),
 			'$expandform' => false,
-			'$form' => $admin_plugins_add_repo_form
+			'$form' => $admin_plugins_add_repo_form,
+			'$newRepoModal' => $newRepoModal,
+			'$newRepoModalID' => $newRepoModalID
 		));
 	}
 	
@@ -1669,57 +1680,23 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 	function admin_page_plugins_post($action) {
 		switch($action) {
-			case 'addrepo':
-				
+			case 'addrepo':				
 				require_once('library/markdown.php');
 				if(array_key_exists('repoURL',$_REQUEST)) {
 					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies
 					logger('Repo URL submitted: ' . $_REQUEST['repoURL']);
 					$repoURL = $_REQUEST['repoURL'];
-					$urlpath = parse_url($repoURL, PHP_URL_PATH);
-					$lastslash = strrpos($urlpath, '/') + 1;
-					$gitext = strrpos($urlpath, '.');
-					if ($gitext) {
-							$reponame = substr($urlpath, $lastslash, $gitext - $lastslash);
-					} else {
-							logger('invalid git repo URL');
-							notice('Invalid git repo URL');
-							break;
-					}
-					$storepath = realpath(__DIR__ . '/../../store/');
-					//logger('storepath: ' . $storepath);
-					$repopath = $storepath . '/pluginrepos/' . $reponame;
-					$git = new Git();
-					if (!file_exists($repopath)) {
-							//logger('repopath does not exist');
-							if (mkdir($repopath, 0770, true)) {
-									$cloned = $git->clone($repoURL, $repopath);
-									if (!$cloned) {
-											logger('git clone failed');
-											notice('Repo coule not be cloned. Filesystem path error.');
-											json_return_and_die(array('message' => 'Repo could not be cloned. Filesystem path error.', 'success' => false));
-									}
-									//json_return_and_die(array('repo'=> $repo, 'message' => 'Successfully cloned to: ' . $repopath , 'success' => true));
-							} else {
-									logger('repopath could not be created');
-									notice('Repo coule not be cloned. Filesystem path error.');
-									json_return_and_die(array('message' => 'Repo could not be cloned. Filesystem path error', 'success' => false));
-							}
-					} 
-					$git->setRepository($repopath);
-					$repo = array();
-					$repo['url'] = $repoURL;
-					$repo['branches'] = $git->branch(['all' => true]);
-					$repo['objects'] = array();
+					$git = new GitRepo('sys', $repoURL, true);
+					
+					$repo = $git->probeRepo($git->path);
 					$repo['readme'] = $repo['manifest'] = null;
-					foreach ($git->tree('master') as $object) {
+					foreach ($git->git->tree('master') as $object) {
 							if ($object['type'] == 'blob' && (strtolower($object['file']) === 'readme.md' || strtolower($object['file']) === 'readme')) {
-									$repo['readme'] =  Markdown($git->cat->blob($object['hash']));
+									$repo['readme'] =  Markdown($git->git->cat->blob($object['hash']));
 							} else if ($object['type'] == 'blob' && strtolower($object['file']) === 'manifest.json') {
-									$repo['manifest'] =  $git->cat->blob($object['hash']);
+									$repo['manifest'] =  $git->git->cat->blob($object['hash']);
 							}
 					}
-					//logger('repo: ' . json_encode($repo));
 					json_return_and_die(array('repo'=> $repo, 'message' => '', 'success' => true));
 					
 				} else {

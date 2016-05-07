@@ -116,7 +116,7 @@
 	<div class="btn-group pull-right">
 		<button id="event-edit-preview-btn" class="btn btn-default" type="button" title="{{$preview}}" onclick="doEventPreview();"><i class="fa fa-eye" ></i></button>
 		{{if ! $eid}}
-		<button id="dbtn-acl" class="btn btn-default" type="button" data-toggle="modal" data-target="#aclModal" title="{{$permissions}}"><i id="jot-perms-icon"></i></button>
+		<button id="dbtn-acl" class="btn btn-default" type="button" data-toggle="modal" data-target="#aclModal" title="{{$permissions}}"><i id="jot-perms-icon" class="fa"></i></button>
 		{{/if}}
 		<button id="event-submit" class="btn btn-primary" type="submit" name="submit">{{$submit}}</button>
 	</div>

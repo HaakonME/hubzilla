@@ -15,16 +15,39 @@ class GitRepo {
 
 	public $url = null;
 	public $name = null;
-	public $path = null;
+	private $path = null;
 	private $repoID = null;
 	private $channel = null;
 	public $git = null;
 	private $repoBasePath = null;
 
-	function __construct($channel = 'sys', $url = null, $clone = false, $name = null) {
+	function __construct($channel = 'sys', $url = null, $clone = false, $name = null, $path = null) {
+			
+		if($channel === 'sys' && ! is_site_admin()) {
+			logger('Only admin can use channel sys');
+			return null;
+		}
+		
 		$this->repoBasePath = __DIR__ . '/../../store/git';
 		$this->channel = $channel;
 		$this->git = new PHPGit();
+		
+		// Allow custom path for repo in the case of , for example
+		if($path) {
+			//if(mkdir($path, 0770, true)) {
+				$this->path = $path;
+			//} else {
+			//	logger('Error creating GitRepo. Path not created.');
+			//	return null;
+			//}
+		} else {
+			$this->path = $this->repoBasePath . "/" . $this->channel . "/" . $this->name;
+		}
+		
+		if ($this->isValidGitRepoURL($url)) {
+			$this->url = $url;
+		}
+		
 		if ($name) {
 			$this->name = $name;
 		} else {
@@ -34,14 +57,17 @@ class GitRepo {
 			logger('Error creating GitRepo. No repo name found.');
 			return null;
 		}
-		$this->path = $this->repoBasePath . "/" . $this->channel . "/" . $this->name;
-		if (file_exists($this->path)) {
+		
+		if (is_dir($this->path)) {
 			// ignore the $url input if it exists
+			// TODO: Check if the path is either empty or is a valid git repo and error if not
 			$this->git->setRepository($this->path);
 			// TODO: get repo metadata 
-		} else if ($url && validate_url($url) && $this->isValidGitRepoURL($url)) {
-			$this->url = $url;
-			$this->repoID = random_string();
+			return;
+		}
+		
+		if ($this->url) {
+			//$this->repoID = random_string();
 			// create the folder and clone the repo at url to that folder if $clone is true
 			if ($clone) {
 				if (mkdir($this->path, 0770, true)) {
@@ -69,7 +95,7 @@ class GitRepo {
 	}
 
 	public function setRepoPath($directory) {
-		if (file_exists($directory)) {
+		if (is_dir($directory)) {
 			$this->path->$directory;
 			$this->git->setRepository($directory);
 			return true;
@@ -88,17 +114,14 @@ class GitRepo {
 	}
 
 	public function cloneRepo() {
-		if (validate_url($this->url) && $this->isValidGitRepoURL($this->url) && file_exists($this->path)) {
+		if (validate_url($this->url) && $this->isValidGitRepoURL($this->url) && is_dir($this->path)) {
 			return $this->git->clone($this->url, $this->path);
 		}
 	}
 
-	public static function probeRepo($dir) {
-		if (!file_exists($dir)) {
-			return null;
-		}
-		$git = new PHPGit();
-		$git->setRepository($dir);
+	public function probeRepo() {
+		$git = $this->git;
+		logger('probeRepo path: ' . $this->path);
 		$repo = array();
 		$repo['remote'] = $git->remote();
 		$repo['branches'] = $git->branch(['all' => true]);
@@ -107,7 +130,7 @@ class GitRepo {
 	}
 
 	public static function isValidGitRepoURL($url) {
-		if (strrpos(parse_url($url, PHP_URL_PATH), '.')) {
+		if (validate_url($url) && strrpos(parse_url($url, PHP_URL_PATH), '.')) {
 			return true;
 		} else {
 			return false;

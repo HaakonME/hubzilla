@@ -54,9 +54,10 @@
   
   function adminPluginsAddRepo() {
       var repoURL = $('#id_repoURL').val();
+      var repoName = $('#id_repoName').val();
       $('#chat-rotator').spin('tiny');
       $.post(
-        "/admin/plugins/addrepo", {repoURL: repoURL}, 
+        "/admin/plugins/addrepo", {repoURL: repoURL, repoName: repoName}, 
             function(response) {
                 $('#chat-rotator').spin(false);
                 if (response.success) {

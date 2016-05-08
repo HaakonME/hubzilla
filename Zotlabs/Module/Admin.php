@@ -1356,6 +1356,7 @@ class Admin extends \Zotlabs\Web\Controller {
 				'$post' => 'admin/plugins/addrepo',
 				'$desc' => t('Enter the public git repository URL of the plugin repo.'),
 				'$repoURL' => array('repoURL', t('Plugin repo git URL'), '', ''),
+				'$repoName' => array('repoName', t('Custom repo name'), '', '', t('(optional)')),
 				'$submit' => t('Download Plugin Repo')
 			)
 		);
@@ -1708,12 +1709,37 @@ class Admin extends \Zotlabs\Web\Controller {
 			case 'addrepo':				
 				require_once('library/markdown.php');
 				if(array_key_exists('repoURL',$_REQUEST)) {
-					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies
-					logger('Repo URL submitted: ' . $_REQUEST['repoURL']);
+					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies					
 					$repoURL = $_REQUEST['repoURL'];
-					$git = new GitRepo('sys', $repoURL, true);
+					$extendDir = __DIR__ . '/../../store/git/sys/extend';
+					$addonDir = $extendDir.'/addon';
+					if(!file_exists($extendDir)) {
+						if(!mkdir($extendDir, 0770, true)) {
+							logger('Error creating extend folder: ' . $extendDir);
+							json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
+						} else {
+							if(!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
+								logger('Error creating symlink to addon folder: ' . $addonDir);
+								json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
+							}
+						}
+					}
+					$repoName = null;
+					if(array_key_exists('repoName',$_REQUEST)) {
+						$repoName = $_REQUEST['repoName'];	
+						logger('repoName: ' . $repoName);
+					} else {
+						$repoName = GitRepo::getRepoNameFromURL($repoURL);
+					}			
+					if(!$repoName) {
+						logger('Invalid git repo');
+						json_return_and_die(array('message' => 'Invalid git repo', 'success' => false));
+					}
+					$repoDir = $addonDir.'/'.$repoName;
+					// clone the repo if new automatically
+					$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir); 
 					
-					$repo = $git->probeRepo($git->path);
+					$repo = $git->probeRepo();
 					$repo['readme'] = $repo['manifest'] = null;
 					foreach ($git->git->tree('master') as $object) {
 							if ($object['type'] == 'blob' && (strtolower($object['file']) === 'readme.md' || strtolower($object['file']) === 'readme')) {

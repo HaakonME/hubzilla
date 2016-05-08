@@ -313,15 +313,14 @@ define ( 'PERMS_A_REPUBLISH',      0x10000);
 define ( 'PERMS_W_LIKE',           0x20000);
 
 // General channel permissions
-
-define ( 'PERMS_PUBLIC'     , 0x0001 );
-define ( 'PERMS_NETWORK'    , 0x0002 );
-define ( 'PERMS_SITE'       , 0x0004 );
-define ( 'PERMS_CONTACTS'   , 0x0008 );
-define ( 'PERMS_SPECIFIC'   , 0x0080 );
-define ( 'PERMS_AUTHED'     , 0x0100 );
-define ( 'PERMS_PENDING'    , 0x0200 );
-
+                                        // 0 = Only you
+define ( 'PERMS_PUBLIC'     , 0x0001 ); // anybody
+define ( 'PERMS_NETWORK'    , 0x0002 ); // anybody in this network
+define ( 'PERMS_SITE'       , 0x0004 ); // anybody on this site
+define ( 'PERMS_CONTACTS'   , 0x0008 ); // any of my connections
+define ( 'PERMS_SPECIFIC'   , 0x0080 ); // only specific connections
+define ( 'PERMS_AUTHED'     , 0x0100 ); // anybody authenticated (could include visitors from other networks)
+define ( 'PERMS_PENDING'    , 0x0200 ); // any connections including those who haven't yet been approved
 
 // Address book flags
 

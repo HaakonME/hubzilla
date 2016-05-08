@@ -3,6 +3,7 @@ namespace Zotlabs\Module;
 
 require_once('include/identity.php');
 require_once('include/acl_selectors.php');
+require_once('include/PermissionDescription.php');
 
 
 class Editwebpage extends \Zotlabs\Web\Controller {
@@ -195,7 +196,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			'$baseurl' => z_root(),
 			'$defloc' => $itm[0]['location'],
 			'$visitor' => ($is_owner) ? true : false,
-			'$acl' => populate_acl($itm[0],false),
+			'$acl' => populate_acl($itm[0],false,\PermissionDescription::fromGlobalPermission('view_pages')),
 			'$showacl' => ($is_owner) ? true : false,
 			'$public' => t('Public post'),
 			'$jotnets' => $jotnets,

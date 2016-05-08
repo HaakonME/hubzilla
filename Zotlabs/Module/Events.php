@@ -6,6 +6,7 @@ require_once('include/bbcode.php');
 require_once('include/datetime.php');
 require_once('include/event.php');
 require_once('include/items.php');
+require_once('include/PermissionDescription.php');
 
 
 class Events extends \Zotlabs\Web\Controller {
@@ -237,7 +238,7 @@ class Events extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		if(argc() > 2 && argv(1) == 'ical') {
 			$event_id = argv(2);
@@ -468,7 +469,9 @@ class Events extends \Zotlabs\Web\Controller {
 				'$share' => array('share', t('Share this event'), $sh_checked, '', array(t('No'),t('Yes'))),
 				'$preview' => t('Preview'),
 				'$permissions' => t('Permission settings'),
-				'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults),false)),
+				// populating the acl dialog was a permission description from view_stream because Cal.php, which
+				// displays events, says "since we don't currently have an event permission - use the stream permission"
+				'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults), false, \PermissionDescription::fromGlobalPermission('view_stream'))),
 				'$submit' => t('Submit'),
 				'$advanced' => t('Advanced Options')
 	

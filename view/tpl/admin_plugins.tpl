@@ -14,7 +14,20 @@
         <div id="chat-rotator"></div>
     </div>
     <div class="clear"></div>
-    <div id="new-repo-info" class="section-content-wrapper"></div>
+    <div class="section-content-wrapper">
+      <h1>Installed Addon Repositories</h1>
+      {{foreach $addonrepos as $repo}}
+      <div class="section-content-tools-wrapper">	
+		<div>
+          <h2>{{$repo.name}}</h2>
+          <div class='desc'>{{$repo.description}}</div>
+          <button class="btn btn-success" onclick="updateAddonRepo('{{$repo.name}}'); return false;">{{$repoUpdateButton}}</button>
+          <button class="btn btn-primary" onclick="switchAddonRepoBranch('{{$repo.name}}'); return false;">{{$repoBranchButton}}</button>
+          <button class="btn btn-danger" onclick="removeAddonRepo('{{$repo.name}}'); return false;">{{$repoRemoveButton}}</button>
+		</div>
+      </div>
+      {{/foreach}}
+    </div>
 	<div class="section-content-wrapper-np">
       {{foreach $plugins as $p}}
       <div class="section-content-tools-wrapper" id="pluginslist">		
@@ -36,6 +49,9 @@
 </div>
 {{$newRepoModal}}
 <script>
+  
+  $("#generic-modal-ok-{{$id}}").click(installAddonRepo());
+  
   function adminPluginsAddRepo() {
       var repoURL = $('#id_repoURL').val();
       $('#chat-rotator').spin('tiny');
@@ -57,5 +73,21 @@
                 return false;
             },
         'json');
+  }
+  
+  function installAddonRepo() {
+    // TODO: Link store/git/sys/reponame to /extend/addon/ and run util/add_addon_repo script
+  }
+  function updateAddonRepo(repoName) {
+    window.console.log('updateAddonRepo; ' + repoName);
+    // TODO: Update an existing repo
+  }
+  function switchAddonRepoBranch(repoName) {
+    window.console.log('switchAddonRepoBranch; ' + repoName);
+    // TODO: Discover the available branches and create an interface to switch between them
+  }
+  function removeAddonRepo(repoName) {
+    window.console.log('removeAddonRepo; ' + repoName);
+    // TODO: Unlink the addons and delete the addon repo
   }
 </script>

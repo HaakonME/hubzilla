@@ -1364,11 +1364,18 @@ class Admin extends \Zotlabs\Web\Controller {
 			get_markup_template('generic_modal.tpl'), array(
 				'$id' => $newRepoModalID,
 				'$title' => t('Install new repo'),
-				'$ok' => t('OK'),
+				'$ok' => t('Install'),
 				'$cancel' => t('Cancel')
 			)
 		);
 			
+		$reponames = $this->listAddonRepos();
+		$addonrepos = [];
+		foreach($reponames as $repo) {
+			$addonrepos[] = array('name' => $repo, 'description' => '');
+			// TODO: Parse repo info to provide more information about repos
+		}
+		
 		$t = get_markup_template('admin_plugins.tpl');
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -1383,10 +1390,28 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$expandform' => false,
 			'$form' => $admin_plugins_add_repo_form,
 			'$newRepoModal' => $newRepoModal,
-			'$newRepoModalID' => $newRepoModalID
+			'$newRepoModalID' => $newRepoModalID,
+			'$addonrepos' => $addonrepos,
+			'$repoUpdateButton' => t('Update'),
+			'$repoBranchButton' => t('Switch branch'),
+			'$repoRemoveButton' => t('Remove')
 		));
 	}
-	
+
+	function listAddonRepos() {
+		$addonrepos = [];
+		$addonDir = __DIR__ . '/../../extend/addon/';
+		if ($handle = opendir($addonDir)) {
+			while (false !== ($entry = readdir($handle))) {
+				if ($entry != "." && $entry != "..") {
+					$addonrepos[] = $entry;
+				}
+			}
+			closedir($handle);
+		}
+		return $addonrepos;
+	}
+
 	static public function plugin_sort($a,$b) {
 		return(strcmp(strtolower($a[2]['name']),strtolower($b[2]['name'])));
 	}

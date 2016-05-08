@@ -1046,6 +1046,13 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	font-size: 140%;
 }
 
+#acl-info-icon,
+#acl-info-icon:active {
+	font-size: 110%;
+	color: $link_colour;
+	text-decoration: none;
+}
+
 #acl-showall-caption {
 	margin-left: 0.35em;
 }

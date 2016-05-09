@@ -71,7 +71,7 @@
 							</div><!-- /.modal -->
 							{{/if}}
 							<div id="settings-default-perms" class="form-group" >
-								<button type="button" class="btn btn-default" data-toggle="modal" data-target="#aclModal"><i id="jot-perms-icon"></i>&nbsp;{{$permissions}}</button>
+								<button type="button" class="btn btn-default" data-toggle="modal" data-target="#aclModal"><i id="jot-perms-icon" class="fa"></i>&nbsp;{{$permissions}}</button>
 								{{$aclselect}}
 							</div>
 							{{$group_select}}

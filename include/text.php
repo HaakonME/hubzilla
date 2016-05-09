@@ -1895,32 +1895,15 @@ function cleardiv() {
 
 
 function bb_translate_video($s) {
-
-	$matches = null;
-	$r = preg_match_all("/\[video\](.*?)\[\/video\]/ism",$s,$matches,PREG_SET_ORDER);
-	if($r) {
-		foreach($matches as $mtch) {
-			if((stristr($mtch[1],'youtube')) || (stristr($mtch[1],'youtu.be')))
-				$s = str_replace($mtch[0],'[youtube]' . $mtch[1] . '[/youtube]',$s);
-			elseif(stristr($mtch[1],'vimeo'))
-				$s = str_replace($mtch[0],'[vimeo]' . $mtch[1] . '[/vimeo]',$s);
-		}
-	}
-	return $s;
+	$arr = array('string' => $s);
+	call_hooks('bb_translate_video',$arr);
+	return $arr['string'];
 }
 
 function html2bb_video($s) {
-
-	$s = preg_replace('#<object[^>]+>(.*?)https?://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+)(.*?)</object>#ism',
-			'[youtube]$2[/youtube]', $s);
-
-	$s = preg_replace('#<iframe[^>](.*?)https?://www.youtube.com/embed/([A-Za-z0-9\-_=]+)(.*?)</iframe>#ism',
-			'[youtube]$2[/youtube]', $s);
-
-	$s = preg_replace('#<iframe[^>](.*?)https?://player.vimeo.com/video/([0-9]+)(.*?)</iframe>#ism',
-			'[vimeo]$2[/vimeo]', $s);
-
-	return $s;
+	$arr = array('string' => $s);
+	call_hooks('html2bb_video',$arr);
+	return $arr['string'];
 }
 
 /**
@@ -2824,3 +2807,42 @@ function expand_acl($s) {
 
 	return $ret;
 }
+
+
+// When editing a webpage - a dropdown is needed to select a page layout
+// On submit, the pdl_select value (which is the mid of an item with item_type = ITEM_TYPE_PDL) is stored in 
+// the webpage's resource_id, with resource_type 'pdl'.
+
+// Then when displaying a webpage, we can see if it has a pdl attached. If not we'll 
+// use the default site/page layout.
+
+// If it has a pdl we'll load it as we know the mid and pass the body through comanche_parser() which will generate the 
+// page layout from the given description
+
+
+function pdl_selector($uid, $current="") {
+	$o = '';
+
+	$sql_extra = item_permissions_sql($uid);
+
+	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' $sql_extra order by sid asc",
+		intval($uid)
+	);
+
+	$arr = array('channel_id' => $uid, 'current' => $current, 'entries' => $r);
+	call_hooks('pdl_selector',$arr);
+
+	$entries = $arr['entries'];
+	$current = $arr['current'];
+
+	$o .= '<select name="pdl_select" id="pdl_select" size="1">';
+	$entries[] = array('title' => t('Default'), 'mid' => '');
+	foreach($entries as $selection) {
+		$selected = (($selection == $current) ? ' selected="selected" ' : '');
+		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['sid']}</option>";
+	}
+
+	$o .= '</select>';
+	return $o;
+}
+

@@ -492,18 +492,6 @@ function bb_observer($Text) {
 
 function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) {
 
-	$a = get_app();
-
-	// Move all spaces out of the tags
-	// ....Uhm why?
-	// This is basically doing a trim() on the stuff in between tags, but it messes up
-	// carefully crafted bbcode and especially other pre-formatted code. 
-	// Commenting out until we come up with a use case where it's needed. Then let's try and
-	// special case rather than a heavy-handed approach like this. 
-
-//	$Text = preg_replace("/\[(\w*)\](\s*)/ism", '$2[$1]', $Text);
-//	$Text = preg_replace("/(\s*)\[\/(\w*)\]/ism", '[/$2]$1', $Text);
-
 	// Hide all [noparse] contained bbtags by spacefying them
 	if (strpos($Text,'[noparse]') !== false) {
 		$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_spacefy',$Text);
@@ -834,9 +822,6 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	}
 
 
-
-
-
 	// Declare the format for [quote] layout
 	$QuoteLayout = '<blockquote>$1</blockquote>';
 
@@ -977,37 +962,6 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 			$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<a href="$1" target="_blank" >$1</a>', $Text);
 		}
 	}
-
-	// Youtube extensions
-//	if (strpos($Text,'[youtube]') !== false) {
-//		if ($tryoembed) {
-//			$Text = preg_replace_callback("/\[youtube\](https?:\/\/www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);
-//			$Text = preg_replace_callback("/\[youtube\](www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);
-//			$Text = preg_replace_callback("/\[youtube\](https?:\/\/youtu.be\/.*?)\[\/youtube\]/ism", 'tryoembed', $Text);
-//		}
-//			$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/youtube\]/ism", '[youtube]$1[/youtube]', $Text);
-//			$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/embed\/(.*?)\[\/youtube\]/ism", '[youtube]$1[/youtube]', $Text);
-//			$Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/ism", '[youtube]$1[/youtube]', $Text);
-
-//		if ($tryoembed)
-//			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . App::$videowidth . '" height="' . App::$videoheight . '" src="http://www.youtube.com/embed/$1" frameborder="0"></iframe>', $Text);
-//		else
-//			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", "http://www.youtube.com/watch?v=$1", $Text);
-//	}
-//	if (strpos($Text,'[vimeo]') !== false) {
-//		if ($tryoembed) {
-//			$Text = preg_replace_callback("/\[vimeo\](https?:\/\/player.vimeo.com\/video\/[0-9]+).*?\[\/vimeo\]/ism", 'tryoembed', $Text);
-//			$Text = preg_replace_callback("/\[vimeo\](https?:\/\/vimeo.com\/[0-9]+).*?\[\/vimeo\]/ism", 'tryoembed', $Text);
-//		}
-
-//		$Text = preg_replace("/\[vimeo\]https?:\/\/player.vimeo.com\/video\/([0-9]+)(.*?)\[\/vimeo\]/ism", '[vimeo]$1[/vimeo]', $Text);
-//		$Text = preg_replace("/\[vimeo\]https?:\/\/vimeo.com\/([0-9]+)(.*?)\[\/vimeo\]/ism", '[vimeo]$1[/vimeo]', $Text);
-
-//		if ($tryoembed)
-//			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . App::$videowidth . '" height="' . App::$videoheight . '" src="http://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $Text);
-//		else
-//			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", "http://vimeo.com/$1", $Text);
-//	}
 
 	// oembed tag
 	$Text = oembed_bbcode2html($Text);

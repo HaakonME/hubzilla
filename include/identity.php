@@ -1070,8 +1070,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	}
 	$menublock = get_pconfig($profile['uid'],'system','channel_menublock');
 	if ($menublock && (! $block)) {
-		require_once('include/comanche.php');
-		$channel_menu .= comanche_block($menublock);
+		$comanche = new Zotlabs\Render\Comanche();
+		$channel_menu .= $comanche->block($menublock);
 	}
 
 	if($zcard)

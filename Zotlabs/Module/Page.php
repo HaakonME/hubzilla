@@ -99,9 +99,9 @@ class Page extends \Zotlabs\Web\Controller {
 			\App::$page['title'] = escape_tags($r[0]['title']);
 	
 		if($r[0]['item_type'] == ITEM_TYPE_PDL) {
-			require_once('include/comanche.php');
-			comanche_parser(get_app(),$r[0]['body']);
-				\App::$pdl = $r[0]['body'];
+			\App::$comanche = new \Zotlabs\Render\Comanche();
+			\App::$comanche->parse($r[0]['body']);
+			\App::$pdl = $r[0]['body'];
 		}
 		elseif($r[0]['layout_mid']) {
 			$l = q("select body from item where mid = '%s' and uid = %d limit 1",
@@ -110,8 +110,8 @@ class Page extends \Zotlabs\Web\Controller {
 			);
 	
 			if($l) {
-				require_once('include/comanche.php');
-				comanche_parser(get_app(),$l[0]['body']);
+				\App::$comanche = new \Zotlabs\Render\Comanche();
+				\App::$comanche->parse($l[0]['body']);
 				\App::$pdl = $l[0]['body'];
 			}
 		}

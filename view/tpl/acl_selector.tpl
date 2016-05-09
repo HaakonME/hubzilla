@@ -8,9 +8,9 @@
 				{{/if}}
 				<h4 class="modal-title"><i id="dialog-perms-icon" class="fa fa-fw"></i> {{$aclModalTitle}}</h4>
 			</div>
-			<div class="modal-body">
+			<div class="section-content-wrapper">
 				{{if $aclModalDesc}}
-					<div id="acl-dialog-description">{{$aclModalDesc}}</div>
+					<div id="acl-dialog-description" class="section-content-info-wrapper">{{$aclModalDesc}}</div>
 				{{/if}}
 				{{if $jotnets}}
 				<div class="jotnets-wrapper" role="tab" id="jotnets-wrapper">
@@ -25,8 +25,12 @@
 					<div id="acl-radiowrapper-showall" class="radio">
 					  <label>
 					    <input id="acl-showall" type="radio" name="optionsRadios" value="option1" checked>
-					    <i class="fa fa-globe"></i><span id=acl-showall-caption>{{$showall}}</span>
+					    {{if $showallIcon}}<i class="fa {{$showallIcon}}"></i>{{/if}}
+					    <span id="acl-showall-caption">{{$showall}}</span>
 					  </label>
+					  {{if $showallOrigin}}
+					    &nbsp;<a id="acl-info-icon" role="button" tabindex="0" class="fa fa-info-circle" data-trigger="focus" data-toggle="popover" data-placement="top" data-content="{{$showallOrigin}}"></a>
+					  {{/if}}
 					</div>
 					<div id="acl-radiowrapper-showlimited" class="radio">
 						<label>
@@ -34,9 +38,13 @@
 							<span id=acl-showlimited-caption>{{$showlimited}}</span>
 					    </label>
 						<div id="acl-list">
-							<input type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
-							<div id=acl-showlimited-description>{{$showlimitedDesc}}</div>
-							<div id="acl-list-content"></div>
+							<div id="acl-search-wrapper">
+								<input type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
+							</div>
+							<div id="acl-list-content-wrapper">
+								<div id=acl-showlimited-description>{{$showlimitedDesc}}</div>
+								<div id="acl-list-content"></div>
+							</div>
 						</div>
 					</div>
 
@@ -57,6 +65,8 @@
 </div><!-- /.modal -->
 
 <script>
+	$('[data-toggle="popover"]').popover(); // Init the popover, if present
+
 	if(typeof acl=="undefined"){
 		acl = new ACL(
 			baseurl+"/acl",

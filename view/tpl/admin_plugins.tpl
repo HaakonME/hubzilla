@@ -50,8 +50,6 @@
 {{$newRepoModal}}
 <script>
   
-  $("#generic-modal-ok-{{$id}}").click(installAddonRepo());
-  
   function adminPluginsAddRepo() {
       var repoURL = $('#id_repoURL').val();
       var repoName = $('#id_repoName').val();
@@ -67,6 +65,9 @@
                   modalBody.append('<h4>Branches</h4><p>'+JSON.stringify(response.repo.branches)+'</p>');
                   modalBody.append('<h4>Remotes</h4><p>'+JSON.stringify(response.repo.remote)+'</p>');
                   $('.modal-dialog').width('80%');
+                  $("#generic-modal-ok-{{$newRepoModalID}}").click(function () {
+                    installAddonRepo();
+                  });
                   $('#generic-modal-{{$newRepoModalID}}').modal();
                 } else {
                     window.console.log('Error adding repo :' + response['message']);
@@ -78,17 +79,59 @@
   
   function installAddonRepo() {
     // TODO: Link store/git/sys/reponame to /extend/addon/ and run util/add_addon_repo script
+      var repoURL = $('#id_repoURL').val();
+      var repoName = $('#id_repoName').val();
+      $.post(
+        "/admin/plugins/installrepo", {repoURL: repoURL, repoName: repoName}, 
+            function(response) {
+                if (response.success) {
+                  $('#generic-modal-title-{{$newRepoModalID}}').html('Addon repo installed');
+                  var modalBody = $('#generic-modal-body-{{$newRepoModalID}}');
+                  modalBody.html('<h2>Repo Info</h2><p>Message: ' + response.message + '</p>');
+                  modalBody.append('<h4>Branches</h4><p>'+JSON.stringify(response.repo.branches)+'</p>');
+                  modalBody.append('<h4>Remotes</h4><p>'+JSON.stringify(response.repo.remote)+'</p>');
+                  $('.modal-dialog').width('80%');
+                  //$("#generic-modal-cancel-{{$newRepoModalID}}").hide();
+                  $("#generic-modal-ok-{{$newRepoModalID}}").html('OK');
+                  $("#generic-modal-ok-{{$newRepoModalID}}").off('click');
+                  $("#generic-modal-ok-{{$newRepoModalID}}").click(function () {
+                    $('#generic-modal-{{$newRepoModalID}}').modal('hide');
+                    location.reload();
+                  });
+                  $('#generic-modal-{{$newRepoModalID}}').modal();
+              
+                } else {
+                    window.console.log('Error installing repo :' + response['message']);
+                }
+                return false;
+            },
+        'json');
   }
   function updateAddonRepo(repoName) {
-    window.console.log('updateAddonRepo; ' + repoName);
+    window.console.log('updateAddonRep:; ' + repoName);
     // TODO: Update an existing repo
   }
   function switchAddonRepoBranch(repoName) {
-    window.console.log('switchAddonRepoBranch; ' + repoName);
+    window.console.log('switchAddonRepoBranch: ' + repoName);
     // TODO: Discover the available branches and create an interface to switch between them
   }
   function removeAddonRepo(repoName) {
-    window.console.log('removeAddonRepo; ' + repoName);
+    window.console.log('removeAddonRepo: ' + repoName);
     // TODO: Unlink the addons and delete the addon repo
-  }
+    if(confirm('Are you sure you want to remove the addon repo ' + repoName + '?')) {
+      $.post(
+        "/admin/plugins/removerepo", {repoName: repoName}, 
+            function(response) {
+                if (response.success) {
+                  window.console.log('Addon repo'+repoName+'successfully removed :' + response['message']);
+                } else {
+                  window.console.log('Error installing repo :' + response['message']);
+                }
+                return false;
+            },
+        'json');
+      //alert('Deleted');
+    }
+  }  
+  
 </script>

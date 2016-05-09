@@ -43,6 +43,14 @@ class Admin extends \Zotlabs\Web\Controller {
 						$this->admin_page_plugins_post('addrepo');
 						break;
 					}
+					if (argc() > 2 && argv(2) === 'installrepo') {
+						$this->admin_page_plugins_post('installrepo');
+						break;
+					}
+					if (argc() > 2 && argv(2) === 'removerepo') {
+						$this->admin_page_plugins_post('removerepo');
+						break;
+					}
 					if (argc() > 2 && 
 						is_file("addon/" . argv(2) . "/" . argv(2) . ".php")){
 							@include_once("addon/" . argv(2) . "/" . argv(2) . ".php");
@@ -1706,6 +1714,57 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 	function admin_page_plugins_post($action) {
 		switch($action) {
+			case 'removerepo':
+				if(array_key_exists('repoName', $_REQUEST)) {
+					$repoName = $_REQUEST['repoName'];
+				} else {
+					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
+				}
+				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/'.$repoName;
+				if(!is_dir($repoDir)) {
+					json_return_and_die(array('message' => 'Invalid addon repo.', 'success' => false));
+				}
+				// TODO: remove directory and unlink /addon/files
+				if(rrmdir($repoDir)) {
+					json_return_and_die(array('message' => 'Repo deleted.', 'success' => true));
+				} else {
+					json_return_and_die(array('message' => 'Error deleting addon repo.', 'success' => false));
+				}
+			case 'installrepo':	
+				require_once('library/markdown.php');
+				if(array_key_exists('repoURL',$_REQUEST)) {
+					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies					
+					$repoURL = $_REQUEST['repoURL'];
+					$extendDir = __DIR__ . '/../../store/git/sys/extend';
+					$addonDir = $extendDir.'/addon';
+					if(!file_exists($extendDir)) {
+						if(!mkdir($extendDir, 0770, true)) {
+							logger('Error creating extend folder: ' . $extendDir);
+							json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
+						} else {
+							if(!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
+								logger('Error creating symlink to addon folder: ' . $addonDir);
+								json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
+							}
+						}
+					}
+					$repoName = null;
+					if(array_key_exists('repoName',$_REQUEST)) {
+						$repoName = $_REQUEST['repoName'];	
+					} else {
+						$repoName = GitRepo::getRepoNameFromURL($repoURL);
+					}			
+					if(!$repoName) {
+						logger('Invalid git repo');
+						json_return_and_die(array('message' => 'Invalid git repo', 'success' => false));
+					}
+					$repoDir = $addonDir.'/'.$repoName;
+					$tempAddonDir = __DIR__ . '/../../store/git/sys/temp/' . $repoName;
+					rename($tempAddonDir, $repoDir);
+					$git = new GitRepo('sys', $repoURL, false, $repoName, $repoDir); 
+					$repo = $git->probeRepo();
+					json_return_and_die(array('repo'=> $repo, 'message' => '', 'success' => true));
+				}
 			case 'addrepo':				
 				require_once('library/markdown.php');
 				if(array_key_exists('repoURL',$_REQUEST)) {
@@ -1713,6 +1772,7 @@ class Admin extends \Zotlabs\Web\Controller {
 					$repoURL = $_REQUEST['repoURL'];
 					$extendDir = __DIR__ . '/../../store/git/sys/extend';
 					$addonDir = $extendDir.'/addon';
+					$tempAddonDir = __DIR__ . '/../../store/git/sys/temp';
 					if(!file_exists($extendDir)) {
 						if(!mkdir($extendDir, 0770, true)) {
 							logger('Error creating extend folder: ' . $extendDir);
@@ -1735,7 +1795,7 @@ class Admin extends \Zotlabs\Web\Controller {
 						logger('Invalid git repo');
 						json_return_and_die(array('message' => 'Invalid git repo', 'success' => false));
 					}
-					$repoDir = $addonDir.'/'.$repoName;
+					$repoDir = $tempAddonDir.'/'.$repoName;
 					// clone the repo if new automatically
 					$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir); 
 					

@@ -70,6 +70,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/bbcode]bbcode[/zrl]
 	Called when converting bbcode to HTML
 
+[zrl=[baseurl]/help/hook/bb_translate_video]bb_translate_video[/zrl]
+	Called when extracting embedded services from bbcode video elements (rarely used)
+
 [zrl=[baseurl]/help/hook/channel_remove]channel_remove[/zrl]
 	Called when removing a channel
 
@@ -242,8 +245,11 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/hostxrd]hostxrd[/zrl]
 	Called when generating .well-known/hosts-meta for "old webfinger" (used by Diaspora protocol)
 
+[zrl=[baseurl]/help/hook/html2bb_video]html2bb_video[/zrl]
+	Called when using the html2bbcode translation to handle embedded media
+
 [zrl=[baseurl]/help/hook/html2bbcode]html2bbcode[/zrl]
-	Called when using the html2bbcode tranlsation
+	Called when using the html2bbcode translation
 
 [zrl=[baseurl]/help/hook/identity_basic_export]identity_basic_export[/zrl]
 	Called when exporting a channel's basic information for backup or transfer

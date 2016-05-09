@@ -446,7 +446,7 @@ class Network extends \Zotlabs\Web\Controller {
 					$ordering = "commented";
 	
 			if($load) {
-	
+
 				// Fetch a page full of parent items for this page
 	
 				$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
@@ -469,7 +469,7 @@ class Network extends \Zotlabs\Web\Controller {
 				);
 				$_SESSION['loadtime'] = datetime_convert();
 			}
-	
+
 			// Then fetch all the children of the parents that are on this page
 			$parents_str = '';
 			$update_unseen = '';

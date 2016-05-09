@@ -1144,7 +1144,7 @@ function status_editor($a, $x, $popup = false) {
 	if($mimeselect)
 		$mimeselect = mimetype_select($x['profile_uid'], $mimetype);
 	else
-		$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />';
+		$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
 
 	$weblink = (($mimetype === 'text/bbcode') ? t('Insert web link') : false);
 	if(x($x, 'hide_weblink'))
@@ -1154,6 +1154,15 @@ function status_editor($a, $x, $popup = false) {
 	if(x($x, 'hide_attach'))
 		$writefiles = false;
 
+	$layout = ((x($x,'layout')) ? $x['layout'] : 'default');
+
+	$layoutselect = ((x($x,'layoutselect')) ? $x['layoutselect'] : false);
+	if($layoutselect)
+		$layoutselect = layout_select($x['profile_uid'], $layout);
+	else
+		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />';
+
+/*
 	$layoutselect = '';
 	if(array_key_exists('layout', $x) && $x['layout']) {
  		if($x['layout'] === 'choose') {
@@ -1162,7 +1171,7 @@ function status_editor($a, $x, $popup = false) {
 		else
 			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />';
 	}
-
+*/
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
 		require_once('include/identity.php');
 		$id_select = identity_selector();

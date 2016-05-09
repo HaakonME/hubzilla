@@ -1154,7 +1154,7 @@ function status_editor($a, $x, $popup = false) {
 	if(x($x, 'hide_attach'))
 		$writefiles = false;
 
-	$layout = ((x($x,'layout')) ? $x['layout'] : 'default');
+	$layout = ((x($x,'layout')) ? $x['layout'] : '');
 
 	$layoutselect = ((x($x,'layoutselect')) ? $x['layoutselect'] : false);
 	if($layoutselect)

@@ -91,10 +91,10 @@ class Dav extends \Zotlabs\Web\Controller {
 		$rootDirectory = new \Zotlabs\Storage\Directory('/', $auth);
 	
 		// A SabreDAV server-object
-		$server = new \SDAV\Server($rootDirectory);
+		$server = new SDAV\Server($rootDirectory);
 		// prevent overwriting changes each other with a lock backend
-		$lockBackend = new \SDAV\Locks\Backend\File('store/[data]/locks');
-		$lockPlugin = new \SDAV\Locks\Plugin($lockBackend);
+		$lockBackend = new SDAV\Locks\Backend\File('store/[data]/locks');
+		$lockPlugin = new SDAV\Locks\Plugin($lockBackend);
 	
 		$server->addPlugin($lockPlugin);
 	

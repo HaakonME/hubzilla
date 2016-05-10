@@ -1822,6 +1822,15 @@ class Admin extends \Zotlabs\Web\Controller {
 					// clone the repo if new automatically
 					$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir); 
 					
+					$remotes = $git->git->remote();
+					$fetchURL = $remotes['origin']['fetch'];
+					if($fetchURL !== $git->url) {
+						if(rrmdir($repoDir)) {
+							$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir); 
+						} else {
+							json_return_and_die(array('message' => 'Error deleting existing addon repo.', 'success' => false));
+						}
+					}
 					$repo = $git->probeRepo();
 					$repo['readme'] = $repo['manifest'] = null;
 					foreach ($git->git->tree('master') as $object) {

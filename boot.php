@@ -1633,7 +1633,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
  * @brief Used to end the current process, after saving session state.
  */
 function killme() {
-	register_shutdown_function('shutdown');
+//	register_shutdown_function('shutdown');
 	exit;
 }
 

@@ -82,7 +82,9 @@ class GitRepo {
 			}
 		} 
 	}
-
+	public function pull() {
+		return $this->git->pull();
+	}
 	/**
 	 * delete repository from disk
 	 */

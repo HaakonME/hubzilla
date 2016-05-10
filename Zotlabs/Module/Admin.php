@@ -51,6 +51,10 @@ class Admin extends \Zotlabs\Web\Controller {
 						$this->admin_page_plugins_post('removerepo');
 						break;
 					}
+					if (argc() > 2 && argv(2) === 'updaterepo') {
+						$this->admin_page_plugins_post('updaterepo');
+						break;
+					}
 					if (argc() > 2 && 
 						is_file("addon/" . argv(2) . "/" . argv(2) . ".php")){
 							@include_once("addon/" . argv(2) . "/" . argv(2) . ".php");
@@ -1714,6 +1718,22 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 	function admin_page_plugins_post($action) {
 		switch($action) {
+			case 'updaterepo':
+				if(array_key_exists('repoName', $_REQUEST)) {
+					$repoName = $_REQUEST['repoName'];
+				} else {
+					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
+				}
+				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/'.$repoName;
+				if(!is_dir($repoDir)) {
+					json_return_and_die(array('message' => 'Invalid addon repo.', 'success' => false));
+				}				
+				$git = new GitRepo('sys', null, false, $repoName, $repoDir);
+				if($git->pull()) {
+					json_return_and_die(array('message' => 'Repo updated.', 'success' => true));
+				} else {
+					json_return_and_die(array('message' => 'Error updating addon repo.', 'success' => false));
+				}
 			case 'removerepo':
 				if(array_key_exists('repoName', $_REQUEST)) {
 					$repoName = $_REQUEST['repoName'];

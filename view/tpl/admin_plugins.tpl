@@ -14,18 +14,19 @@
         <div id="chat-rotator"></div>
     </div>
     <div class="clear"></div>
-    <div class="section-content-wrapper">
-      <h1>Installed Addon Repositories</h1>
+    <div class="section-content-info-wrapper">
+      <h3>Installed Addon Repositories</h3>
       {{foreach $addonrepos as $repo}}
       <div class="section-content-tools-wrapper">	
 		<div>
-          <h2>{{$repo.name}}</h2>
-          <div class='desc'>{{$repo.description}}</div>
-          <button class="btn btn-success" onclick="updateAddonRepo('{{$repo.name}}'); return false;">{{$repoUpdateButton}}</button>
-          <button class="btn btn-primary" onclick="switchAddonRepoBranch('{{$repo.name}}'); return false;">{{$repoBranchButton}}</button>
-          <button class="btn btn-danger" onclick="removeAddonRepo('{{$repo.name}}'); return false;">{{$repoRemoveButton}}</button>
+          <div class="pull-left">{{$repo.name}}</div>
+          <!--<button class="btn btn-xs btn-primary pull-right" onclick="switchAddonRepoBranch('{{$repo.name}}'); return false;">{{$repoBranchButton}}</button>-->
+          <button class="btn btn-xs btn-danger pull-right" onclick="removeAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-trash-o'></i>&nbsp;{{$repoRemoveButton}}</button>
+          &nbsp;
+          <button class="btn btn-xs btn-success pull-right" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
 		</div>
       </div>
+      <div class="clear"></div>
       {{/foreach}}
     </div>
 	<div class="section-content-wrapper-np">
@@ -110,6 +111,20 @@
   function updateAddonRepo(repoName) {
     window.console.log('updateAddonRep:; ' + repoName);
     // TODO: Update an existing repo
+    if(confirm('Are you sure you want to update the addon repo ' + repoName + '?')) {
+      $.post(
+        "/admin/plugins/updaterepo", {repoName: repoName}, 
+            function(response) {
+                if (response.success) {
+                  window.console.log('Addon repo'+repoName+'successfully updated :' + response['message']);
+                  alert('Repo updated');
+                } else {
+                  window.console.log('Error installing repo :' + response['message']);
+                }
+                return false;
+            },
+        'json');
+    }
   }
   function switchAddonRepoBranch(repoName) {
     window.console.log('switchAddonRepoBranch: ' + repoName);
@@ -117,20 +132,20 @@
   }
   function removeAddonRepo(repoName) {
     window.console.log('removeAddonRepo: ' + repoName);
-    // TODO: Unlink the addons and delete the addon repo
+    // TODO: Unlink the addons
     if(confirm('Are you sure you want to remove the addon repo ' + repoName + '?')) {
       $.post(
         "/admin/plugins/removerepo", {repoName: repoName}, 
             function(response) {
                 if (response.success) {
                   window.console.log('Addon repo'+repoName+'successfully removed :' + response['message']);
+                  alert('Repo deleted');
                 } else {
                   window.console.log('Error installing repo :' + response['message']);
                 }
                 return false;
             },
         'json');
-      //alert('Deleted');
     }
   }  
   

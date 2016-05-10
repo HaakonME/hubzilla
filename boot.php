@@ -904,6 +904,7 @@ class App {
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
 		self::$meta= new Zotlabs\Web\HttpMeta();
+
 	}
 
 	public static function get_baseurl($ssl = false) {
@@ -1632,6 +1633,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
  * @brief Used to end the current process, after saving session state.
  */
 function killme() {
+	register_shutdown_function('shutdown');
 	exit;
 }
 
@@ -1641,6 +1643,11 @@ function killme() {
 function goaway($s) {
 	header("Location: $s");
 	killme();
+}
+
+function shutdown() {
+	global $db;
+	$db->close();
 }
 
 /**

@@ -50,7 +50,12 @@
 {{$newRepoModal}}
 <script>
   
+  // TODO: Implement a simple interface controller that reconfigures the modal dialog
+  // for each action in a more organized way
+  
   function adminPluginsAddRepo() {
+      $("#generic-modal-ok-{{$newRepoModalID}}").removeClass('btn-success');
+      $("#generic-modal-ok-{{$newRepoModalID}}").addClass('btn-primary');
       var repoURL = $('#id_repoURL').val();
       var repoName = $('#id_repoName').val();
       $('#chat-rotator').spin('tiny');
@@ -65,6 +70,7 @@
                   modalBody.append('<h4>Branches</h4><p>'+JSON.stringify(response.repo.branches)+'</p>');
                   modalBody.append('<h4>Remotes</h4><p>'+JSON.stringify(response.repo.remote)+'</p>');
                   $('.modal-dialog').width('80%');
+                  $("#generic-modal-ok-{{$newRepoModalID}}").off('click');
                   $("#generic-modal-ok-{{$newRepoModalID}}").click(function () {
                     installAddonRepo();
                   });
@@ -78,7 +84,6 @@
   }
   
   function installAddonRepo() {
-    // TODO: Link store/git/sys/reponame to /extend/addon/ and run util/add_addon_repo script
       var repoURL = $('#id_repoURL').val();
       var repoName = $('#id_repoName').val();
       $.post(
@@ -93,6 +98,8 @@
                   $('.modal-dialog').width('80%');
                   //$("#generic-modal-cancel-{{$newRepoModalID}}").hide();
                   $("#generic-modal-ok-{{$newRepoModalID}}").html('OK');
+                  $("#generic-modal-ok-{{$newRepoModalID}}").removeClass('btn-primary');
+                  $("#generic-modal-ok-{{$newRepoModalID}}").addClass('btn-success');
                   $("#generic-modal-ok-{{$newRepoModalID}}").off('click');
                   $("#generic-modal-ok-{{$newRepoModalID}}").click(function () {
                     $('#generic-modal-{{$newRepoModalID}}').modal('hide');
@@ -111,8 +118,6 @@
         'json');
   }
   function updateAddonRepo(repoName) {
-    window.console.log('updateAddonRep:; ' + repoName);
-    // TODO: Update an existing repo
     if(confirm('Are you sure you want to update the addon repo ' + repoName + '?')) {
       $.post(
         "/admin/plugins/updaterepo", {repoName: repoName}, 
@@ -135,7 +140,6 @@
   }
   
   function removeAddonRepo(repoName) {
-    window.console.log('removeAddonRepo: ' + repoName);
     // TODO: Unlink the addons
     if(confirm('Are you sure you want to remove the addon repo ' + repoName + '?')) {
       $.post(

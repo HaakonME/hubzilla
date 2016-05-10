@@ -66,7 +66,7 @@ class Page extends \Zotlabs\Web\Controller {
 		$sql_options = item_permissions_sql($u[0]['channel_id']);
 	
 		$r = q("select item.* from item left join item_id on item.id = item_id.iid
-			where item.uid = %d and sid = '%s' and (( service = 'WEBPAGE' and item_type = %d ) 
+			where item.uid = %d and sid = '%s' and item.item_delayed = 0 and (( service = 'WEBPAGE' and item_type = %d ) 
 			OR ( service = 'PDL' AND item_type = %d )) $sql_options $revision limit 1",
 			intval($u[0]['channel_id']),
 			dbesc($page_id),
@@ -78,7 +78,7 @@ class Page extends \Zotlabs\Web\Controller {
 			// Check again with no permissions clause to see if it is a permissions issue
 	
 			$x = q("select item.* from item left join item_id on item.id = item_id.iid
-			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
+			where item.uid = %d and sid = '%s' and item.item_delayed = 0 and service = 'WEBPAGE' and 
 			item_type = %d $revision limit 1",
 				intval($u[0]['channel_id']),
 				dbesc($page_id),

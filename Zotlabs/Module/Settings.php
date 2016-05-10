@@ -2,6 +2,8 @@
 namespace Zotlabs\Module; /** @file */
 
 require_once('include/zot.php');
+require_once('include/PermissionDescription.php');
+
 
 
 class Settings extends \Zotlabs\Web\Controller {
@@ -1064,7 +1066,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 				'$permissions' => t('Default Post Permissions'),
 				'$permdesc' => t("\x28click to open/close\x29"),
-				'$aclselect' => populate_acl($perm_defaults,false),
+				'$aclselect' => populate_acl($perm_defaults, false, \PermissionDescription::fromDescription(t('Use my default audience setting for the type of post'))),
 				'$suggestme' => $suggestme,
 				'$group_select' => $group_select,
 				'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),

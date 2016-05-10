@@ -8,7 +8,7 @@
 	{{/if}}
 	<div id="profile-jot-wrapper">
 		{{if $parent}}
-			<input type="hidden" name="parent" value="{{$parent}}" />
+		<input type="hidden" name="parent" value="{{$parent}}" />
 		{{/if}}
 		<input type="hidden" name="obj_type" value="{{$ptyp}}" />
 		<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />

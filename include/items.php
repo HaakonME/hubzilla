@@ -2223,7 +2223,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 			dbesc($arr['layout_mid']),
 			intval($arr['uid'])
 		);
-		if((! $l) || (! ($l[0]['item_type'] != ITEM_TYPE_PDL)))
+		if((! $l) || ($l[0]['item_type'] != ITEM_TYPE_PDL))
 			unset($arr['layout_mid']);
 	}
 

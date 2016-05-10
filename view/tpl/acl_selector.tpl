@@ -25,8 +25,12 @@
 					<div id="acl-radiowrapper-showall" class="radio">
 					  <label>
 					    <input id="acl-showall" type="radio" name="optionsRadios" value="option1" checked>
-					    <i class="fa fa-globe"></i><span id=acl-showall-caption>{{$showall}}</span>
+					    {{if $showallIcon}}<i class="fa {{$showallIcon}}"></i>{{/if}}
+					    <span id="acl-showall-caption">{{$showall}}</span>
 					  </label>
+					  {{if $showallOrigin}}
+					    &nbsp;<a id="acl-info-icon" role="button" tabindex="0" class="fa fa-info-circle" data-trigger="focus" data-toggle="popover" data-placement="top" data-content="{{$showallOrigin}}"></a>
+					  {{/if}}
 					</div>
 					<div id="acl-radiowrapper-showlimited" class="radio">
 						<label>
@@ -61,6 +65,8 @@
 </div><!-- /.modal -->
 
 <script>
+	$('[data-toggle="popover"]').popover(); // Init the popover, if present
+
 	if(typeof acl=="undefined"){
 		acl = new ACL(
 			baseurl+"/acl",

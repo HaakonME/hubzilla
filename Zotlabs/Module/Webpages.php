@@ -4,6 +4,7 @@ namespace Zotlabs\Module;
 require_once('include/identity.php');
 require_once('include/conversation.php');
 require_once('include/acl_selectors.php');
+require_once('include/PermissionDescription.php');
 
 
 class Webpages extends \Zotlabs\Web\Controller {
@@ -76,13 +77,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 	
 		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
 	
-		if(! $mimetype) {
-			$mimetype = 'choose';
-		}
-	
 		$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_pconfig($owner,'system','page_layout'));
-		if(! $layout)
-			$layout = 'choose';
 	
 		// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 		// Nickname is set to the observers xchan, and profile_uid to the owner's.  
@@ -106,18 +101,21 @@ class Webpages extends \Zotlabs\Web\Controller {
 		$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 	
 		$x = array(
-			'webpage'     => ITEM_TYPE_WEBPAGE,
-			'is_owner'    => true,
-			'nickname'    => \App::$profile['channel_address'],
-			'lockstate'   => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-			'bang'        => '',
-			'acl'         => (($is_owner) ? populate_acl($channel_acl,false) : ''),
-			'showacl'     => (($is_owner) ? true : false),
-			'visitor'     => true,
+			'webpage' => ITEM_TYPE_WEBPAGE,
+			'is_owner' => true,
+			'nickname' => \App::$profile['channel_address'],
+			'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+			'acl' => (($is_owner) ? populate_acl($channel_acl,false, \PermissionDescription::fromGlobalPermission('view_pages')) : ''),
+			'showacl' => (($is_owner) ? true : false),
+			'visitor' => true,
+			'hide_location' => true,
+			'hide_voting' => true,
 			'profile_uid' => intval($owner),
-			'mimetype'    => $mimetype,
-			'layout'      => $layout,
-			'expanded'    => true,
+			'mimetype' => $mimetype,
+			'mimeselect' => true,
+			'layout' => $layout,
+			'layoutselect' => true,
+			'expanded' => true,
 			'novoting'=> true,
 			'bbco_autocomplete' => 'bbcode',
 			'bbcode' => true

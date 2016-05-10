@@ -85,6 +85,7 @@ class Editpost extends \Zotlabs\Web\Controller {
 			'hide_voting' => true,
 			'hide_future' => true,
 			'hide_location' => true,
+			'mimetype' => $itm[0]['mimetype'],
 			'ptyp' => $itm[0]['obj_type'],
 			'body' => undo_post_tagging($itm[0]['body']),
 			'post_id' => $post_id,

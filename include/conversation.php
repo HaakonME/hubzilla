@@ -1138,33 +1138,29 @@ function status_editor($a, $x, $popup = false) {
 	if(x($x, 'hide_location'))
 		$geotag = $setloc = $clearloc = '';
 
-	$weblink = t('Insert web link');
-	if(x($x, 'hide_weblink'))
-		$weblink = '';
+	$mimetype = ((x($x,'mimetype')) ? $x['mimetype'] : 'text/bbcode');
 
-	$writefiles = perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage');
+	$mimeselect = ((x($x,'mimeselect')) ? $x['mimeselect'] : false);
+	if($mimeselect)
+		$mimeselect = mimetype_select($x['profile_uid'], $mimetype);
+	else
+		$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
+
+	$weblink = (($mimetype === 'text/bbcode') ? t('Insert web link') : false);
+	if(x($x, 'hide_weblink'))
+		$weblink = false;
+
+	$writefiles = (($mimetype === 'text/bbcode') ? perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage') : false);
 	if(x($x, 'hide_attach'))
 		$writefiles = false;
 
-	$mimeselect = '';
-	if(array_key_exists('mimetype', $x) && $x['mimetype']) {
-		if($x['mimetype'] != 'text/bbcode')
-			$plaintext = true;
-		if($x['mimetype'] === 'choose') {
-			$mimeselect = mimetype_select($x['profile_uid']);
-		}
-		else
-			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />';
-	}
+	$layout = ((x($x,'layout')) ? $x['layout'] : '');
 
-	$layoutselect = '';
-	if(array_key_exists('layout', $x) && $x['layout']) {
- 		if($x['layout'] === 'choose') {
-			$layoutselect = layout_select($x['profile_uid']);
-		}
-		else
-			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />';
-	}
+	$layoutselect = ((x($x,'layoutselect')) ? $x['layoutselect'] : false);
+	if($layoutselect)
+		$layoutselect = layout_select($x['profile_uid'], $layout);
+	else
+		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />';
 
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
 		require_once('include/identity.php');

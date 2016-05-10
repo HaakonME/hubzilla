@@ -7,7 +7,7 @@ use PHPGit\Git as PHPGit;
 require __DIR__ . '/../../library/PHPGit.autoload.php'; // Load PHPGit dependencies
 
 /**
- * Description of Git
+ * Wrapper class for PHPGit class for git repositories managed by Hubzilla
  *
  * @author Andrew Manning <andrewmanning@grid.reticu.li>
  */
@@ -16,48 +16,42 @@ class GitRepo {
 	public $url = null;
 	public $name = null;
 	private $path = null;
-	private $repoID = null;
 	private $channel = null;
 	public $git = null;
 	private $repoBasePath = null;
 
 	function __construct($channel = 'sys', $url = null, $clone = false, $name = null, $path = null) {
-			
-		if($channel === 'sys' && ! is_site_admin()) {
+
+		if ($channel === 'sys' && !is_site_admin()) {
 			logger('Only admin can use channel sys');
 			return null;
 		}
-		
+
 		$this->repoBasePath = __DIR__ . '/../../store/git';
 		$this->channel = $channel;
 		$this->git = new PHPGit();
-		
+
 		// Allow custom path for repo in the case of , for example
-		if($path) {
-			//if(mkdir($path, 0770, true)) {
-				$this->path = $path;
-			//} else {
-			//	logger('Error creating GitRepo. Path not created.');
-			//	return null;
-			//}
+		if ($path) {
+			$this->path = $path;
 		} else {
 			$this->path = $this->repoBasePath . "/" . $this->channel . "/" . $this->name;
 		}
-		
+
 		if ($this->isValidGitRepoURL($url)) {
 			$this->url = $url;
 		}
-		
+
 		if ($name) {
 			$this->name = $name;
 		} else {
 			$this->name = $this->getRepoNameFromURL($url);
-		}			
+		}
 		if (!$this->name) {
 			logger('Error creating GitRepo. No repo name found.');
 			return null;
 		}
-		
+
 		if (is_dir($this->path)) {
 			// ignore the $url input if it exists
 			// TODO: Check if the path is either empty or is a valid git repo and error if not
@@ -65,9 +59,8 @@ class GitRepo {
 			// TODO: get repo metadata 
 			return;
 		}
-		
+
 		if ($this->url) {
-			//$this->repoID = random_string();
 			// create the folder and clone the repo at url to that folder if $clone is true
 			if ($clone) {
 				if (mkdir($this->path, 0770, true)) {
@@ -80,16 +73,16 @@ class GitRepo {
 					logger('git repo path could not be created: ' . json_encode($this->git));
 				}
 			}
-		} 
+		}
 	}
+
 	public function pull() {
-		return $this->git->pull();
-	}
-	/**
-	 * delete repository from disk
-	 */
-	public function delete() {
-		return $this->delTree($this->getRepoPath());
+		try {
+			$success = $this->git->pull();
+		} catch (\PHPGit\Exception\GitException $ex) {
+			return false;
+		}
+		return $success;
 	}
 
 	public function getRepoPath() {
@@ -103,10 +96,6 @@ class GitRepo {
 			return true;
 		}
 		return false;
-	}
-
-	public function getRepoID() {
-		return $this->repoID;
 	}
 
 	public function setIdentity($user_name, $user_email) {
@@ -123,11 +112,10 @@ class GitRepo {
 
 	public function probeRepo() {
 		$git = $this->git;
-		logger('probeRepo path: ' . $this->path);
 		$repo = array();
 		$repo['remote'] = $git->remote();
 		$repo['branches'] = $git->branch(['all' => true]);
-		$repo['logs'] = $git->log(array('limit' => 50));		
+		$repo['logs'] = $git->log(array('limit' => 50));
 		return $repo;
 	}
 
@@ -138,7 +126,7 @@ class GitRepo {
 			return false;
 		}
 	}
-	
+
 	public static function getRepoNameFromURL($url) {
 		$urlpath = parse_url($url, PHP_URL_PATH);
 		$lastslash = strrpos($urlpath, '/') + 1;
@@ -149,4 +137,5 @@ class GitRepo {
 			return null;
 		}
 	}
+
 }

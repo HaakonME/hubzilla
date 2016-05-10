@@ -17,15 +17,14 @@
     <div class="section-content-info-wrapper">
       <h3>Installed Addon Repositories</h3>
       {{foreach $addonrepos as $repo}}
-      <div class="section-content-tools-wrapper">	
-		<div>
-          <div class="pull-left">{{$repo.name}}</div>
+<!--      <div class="section-content-tools-wrapper">	-->
+		<div style="margin-left: 30%; margin-right: 30%;">
+          <span class="pull-left">{{$repo.name}}</span>
           <!--<button class="btn btn-xs btn-primary pull-right" onclick="switchAddonRepoBranch('{{$repo.name}}'); return false;">{{$repoBranchButton}}</button>-->
-          <button class="btn btn-xs btn-danger pull-right" onclick="removeAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-trash-o'></i>&nbsp;{{$repoRemoveButton}}</button>
-          &nbsp;
-          <button class="btn btn-xs btn-success pull-right" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
+          <button class="btn btn-xs btn-danger pull-right" style="margin-left: 10px; margin-right: 0px;" onclick="removeAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-trash-o'></i>&nbsp;{{$repoRemoveButton}}</button>
+          <button class="btn btn-xs btn-primary pull-right" style="margin-left: 10px; margin-right: 10px;" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
 		</div>
-      </div>
+<!--      </div>-->
       <div class="clear"></div>
       {{/foreach}}
     </div>
@@ -97,12 +96,15 @@
                   $("#generic-modal-ok-{{$newRepoModalID}}").off('click');
                   $("#generic-modal-ok-{{$newRepoModalID}}").click(function () {
                     $('#generic-modal-{{$newRepoModalID}}').modal('hide');
-                    location.reload();
+                    if(confirm('Repo installed. Click OK to refresh page.')) {
+                      location.reload();
+                    }
                   });
                   $('#generic-modal-{{$newRepoModalID}}').modal();
               
                 } else {
                     window.console.log('Error installing repo :' + response['message']);
+                    alert('Error installing addon repo!');
                 }
                 return false;
             },
@@ -117,9 +119,10 @@
             function(response) {
                 if (response.success) {
                   window.console.log('Addon repo'+repoName+'successfully updated :' + response['message']);
-                  alert('Repo updated');
+                  alert('Addon repo updated.');
                 } else {
-                  window.console.log('Error installing repo :' + response['message']);
+                  window.console.log('Error updating repo :' + response['message']);
+                  alert('Error updating addon repo!');
                 }
                 return false;
             },
@@ -130,6 +133,7 @@
     window.console.log('switchAddonRepoBranch: ' + repoName);
     // TODO: Discover the available branches and create an interface to switch between them
   }
+  
   function removeAddonRepo(repoName) {
     window.console.log('removeAddonRepo: ' + repoName);
     // TODO: Unlink the addons
@@ -139,9 +143,12 @@
             function(response) {
                 if (response.success) {
                   window.console.log('Addon repo'+repoName+'successfully removed :' + response['message']);
-                  alert('Repo deleted');
+                  if(confirm('Repo deleted. Click OK to refresh page.')) {
+                    location.reload();
+                  }
                 } else {
-                  window.console.log('Error installing repo :' + response['message']);
+                  window.console.log('Error removing repo :' + response['message']);
+                  alert('Error removing addon repo!');
                 }
                 return false;
             },

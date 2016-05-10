@@ -1729,9 +1729,13 @@ class Admin extends \Zotlabs\Web\Controller {
 					json_return_and_die(array('message' => 'Invalid addon repo.', 'success' => false));
 				}				
 				$git = new GitRepo('sys', null, false, $repoName, $repoDir);
-				if($git->pull()) {
-					json_return_and_die(array('message' => 'Repo updated.', 'success' => true));
-				} else {
+				try {
+					if($git->pull()) {
+						json_return_and_die(array('message' => 'Repo updated.', 'success' => true));
+					} else {
+						json_return_and_die(array('message' => 'Error updating addon repo.', 'success' => false));
+					}
+				} catch(\PHPGit\Exception\GitException $e) {
 					json_return_and_die(array('message' => 'Error updating addon repo.', 'success' => false));
 				}
 			case 'removerepo':
@@ -1769,7 +1773,7 @@ class Admin extends \Zotlabs\Web\Controller {
 						}
 					}
 					$repoName = null;
-					if(array_key_exists('repoName',$_REQUEST)) {
+					if(array_key_exists('repoName',$_REQUEST) && $_REQUEST['repoName'] !== '') {
 						$repoName = $_REQUEST['repoName'];	
 					} else {
 						$repoName = GitRepo::getRepoNameFromURL($repoURL);
@@ -1805,15 +1809,14 @@ class Admin extends \Zotlabs\Web\Controller {
 						}
 					}
 					$repoName = null;
-					if(array_key_exists('repoName',$_REQUEST)) {
+					if(array_key_exists('repoName',$_REQUEST) && $_REQUEST['repoName'] !== '') {
 						$repoName = $_REQUEST['repoName'];	
-						logger('repoName: ' . $repoName);
 					} else {
 						$repoName = GitRepo::getRepoNameFromURL($repoURL);
 					}			
 					if(!$repoName) {
 						logger('Invalid git repo');
-						json_return_and_die(array('message' => 'Invalid git repo', 'success' => false));
+						json_return_and_die(array('message' => 'Invalid git repo: ' . $repoName, 'success' => false));
 					}
 					$repoDir = $tempAddonDir.'/'.$repoName;
 					// clone the repo if new automatically

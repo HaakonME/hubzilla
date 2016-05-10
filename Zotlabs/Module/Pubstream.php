@@ -35,7 +35,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 	
 			\App::$page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 				'$baseurl' => z_root(),
-				'$pgtype'  => 'public',
+				'$pgtype'  => 'pubstream',
 				'$uid'     => ((local_channel()) ? local_channel() : '0'),
 				'$gid'     => '0',
 				'$cid'     => '0',

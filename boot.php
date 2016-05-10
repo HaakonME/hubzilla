@@ -1633,7 +1633,16 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
  * @brief Used to end the current process, after saving session state.
  */
 function killme() {
-//	register_shutdown_function('shutdown');
+
+	// Ensure that closing the database is the last function on the shutdown stack.
+	// If it is closed prematurely sessions might not get saved correctly.
+	// Note the second arg to PHP's session_set_save_handler() seems to order that shutdown 
+	// procedure last despite our best efforts, so we don't use that and implictly
+	// call register_shutdown_function('session_write_close'); within Zotlabs\Web\Session::init()
+	// and then register the database close function here where nothing else can register
+	// after it.
+
+	register_shutdown_function('shutdown');
 	exit;
 }
 

@@ -107,7 +107,7 @@ class Admin extends \Zotlabs\Web\Controller {
 	 * @param App &$a
 	 * @return string
 	 */
-		function get() {
+	function get() {
 	
 		logger('admin_content', LOGGER_DEBUG);
 	
@@ -229,18 +229,27 @@ class Admin extends \Zotlabs\Web\Controller {
 				. '<br>PHP 5.3 has reached its <a href="http://php.net/eol.php" class="alert-link">End of Life (EOL)</a> in August 2014.'
 				. ' A list about current PHP versions can be found <a href="http://php.net/supported-versions.php" class="alert-link">here</a>.';
 		}
-	
+
+		$vmaster = get_repository_version('master');
+		$vdev = get_repository_version('dev');
+
+		$upgrade = ((version_compare(STD_VERSION,$vmaster) < 0) ? t('Your software should be updated') : '');
+
+
 		$t = get_markup_template('admin_summary.tpl');
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
 			'$page' => t('Summary'),
 			'$adminalertmsg' => $alertmsg,
-			'$queues' => $queues,
+			'$queues'   => $queues,
 			'$accounts' => array( t('Registered accounts'), $accounts),
-			'$pending' => array( t('Pending registrations'), $pending),
+			'$pending'  => array( t('Pending registrations'), $pending),
 			'$channels' => array( t('Registered channels'), $channels),
-			'$plugins' => array( t('Active plugins'), $plugins ),
-			'$version' => array( t('Version'), STD_VERSION),
+			'$plugins'  => array( t('Active plugins'), $plugins ),
+			'$version'  => array( t('Version'), STD_VERSION),
+			'$vmaster'  => array( t('Repository version (master)'), $vmaster),
+			'$vdev'     => array( t('Repository version (dev)'), $vdev),
+			'$upgrade'  => $upgrade,
 			'$build' => get_config('system', 'db_version')
 		));
 	}

@@ -60,38 +60,53 @@ class Dav extends \Zotlabs\Web\Controller {
 		if ($which)
 			profile_load($a, $which, $profile);
 	
+
+
+
 		$auth = new \Zotlabs\Storage\BasicAuth();
+
+//		$authBackend = new \Sabre\DAV\Auth\Backend\BasicCallBack(function($userName,$password) {
+//			if(account_verify_password($userName,$password))
+//				return true;
+//			return false;
+//		});
+
+//		$ob_hash = get_observer_hash();
 	
-		$ob_hash = get_observer_hash();
+//		if ($ob_hash) {
+//			if (local_channel()) {
+//				$channel = \App::get_channel();
+//				$auth->setCurrentUser($channel['channel_address']);
+//				$auth->channel_id = $channel['channel_id'];
+//				$auth->channel_hash = $channel['channel_hash'];
+//				$auth->channel_account_id = $channel['channel_account_id'];
+//				if($channel['channel_timezone'])
+//					$auth->setTimezone($channel['channel_timezone']);
+//			}
+//			$auth->observer = $ob_hash;
+//		}
 	
-		if ($ob_hash) {
-			if (local_channel()) {
-				$channel = \App::get_channel();
-				$auth->setCurrentUser($channel['channel_address']);
-				$auth->channel_id = $channel['channel_id'];
-				$auth->channel_hash = $channel['channel_hash'];
-				$auth->channel_account_id = $channel['channel_account_id'];
-				if($channel['channel_timezone'])
-					$auth->setTimezone($channel['channel_timezone']);
-			}
-			$auth->observer = $ob_hash;
-		}
+//		if ($_GET['davguest'])
+//			$_SESSION['davguest'] = true;
 	
-		if ($_GET['davguest'])
-			$_SESSION['davguest'] = true;
-	
-		$_SERVER['QUERY_STRING'] = str_replace(array('?f=', '&f='), array('', ''), $_SERVER['QUERY_STRING']);
-		$_SERVER['QUERY_STRING'] = strip_zids($_SERVER['QUERY_STRING']);
-		$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism', '', $_SERVER['QUERY_STRING']);
-	
-		$_SERVER['REQUEST_URI'] = str_replace(array('?f=', '&f='), array('', ''), $_SERVER['REQUEST_URI']);
-		$_SERVER['REQUEST_URI'] = strip_zids($_SERVER['REQUEST_URI']);
-		$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism', '', $_SERVER['REQUEST_URI']);
+//		$_SERVER['QUERY_STRING'] = str_replace(array('?f=', '&f='), array('', ''), $_SERVER['QUERY_STRING']);
+//		$_SERVER['QUERY_STRING'] = strip_zids($_SERVER['QUERY_STRING']);
+//		$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism', '', $_SERVER['QUERY_STRING']);
+//	
+//		$_SERVER['REQUEST_URI'] = str_replace(array('?f=', '&f='), array('', ''), $_SERVER['REQUEST_URI']);
+//		$_SERVER['REQUEST_URI'] = strip_zids($_SERVER['REQUEST_URI']);
+//		$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism', '', $_SERVER['REQUEST_URI']);
 	
 		$rootDirectory = new \Zotlabs\Storage\Directory('/', $auth);
 	
 		// A SabreDAV server-object
 		$server = new SDAV\Server($rootDirectory);
+
+
+		$authPlugin = new \Sabre\DAV\Auth\Plugin($auth);
+		$server->addPlugin($authPlugin);
+
+
 		// prevent overwriting changes each other with a lock backend
 		$lockBackend = new SDAV\Locks\Backend\File('store/[data]/locks');
 		$lockPlugin = new SDAV\Locks\Plugin($lockBackend);
@@ -108,29 +123,29 @@ class Dav extends \Zotlabs\Web\Controller {
 		// In order to avoid prompting for passwords for viewing a DIRECTORY, add
 		// the URL query parameter 'davguest=1'.
 	
-		$isapublic_file = false;
-		$davguest = ((x($_SESSION, 'davguest')) ? true : false);
+//		$isapublic_file = false;
+//		$davguest = ((x($_SESSION, 'davguest')) ? true : false);
 	
-		if ((! $auth->observer) && ($_SERVER['REQUEST_METHOD'] === 'GET')) {
-			try { 
-				$x = RedFileData('/' . \App::$cmd, $auth);
-				if($x instanceof \Zotlabs\Storage\File)
-					$isapublic_file = true;
-			}
-			catch (Exception $e) {
-				$isapublic_file = false;
-			}
-		}
+//		if ((! $auth->observer) && ($_SERVER['REQUEST_METHOD'] === 'GET')) {
+//			try { 
+//				$x = RedFileData('/' . \App::$cmd, $auth);
+//				if($x instanceof \Zotlabs\Storage\File)
+//					$isapublic_file = true;
+//			}
+//			catch (Exception $e) {
+//				$isapublic_file = false;
+//			}
+//		}
 	
-		if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
-			try {
-				$auth->Authenticate($server, t('$Projectname channel'));
-			}
-			catch (Exception $e) {
-				logger('mod_cloud: auth exception' . $e->getMessage());
-				http_status_exit($e->getHTTPCode(), $e->getMessage());
-			}
-		}
+//		if ((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
+//			try {
+//				$auth->Authenticate($server, t('$Projectname channel'));
+//			}
+//			catch (Exception $e) {
+//				logger('mod_cloud: auth exception' . $e->getMessage());
+//				http_status_exit($e->getHTTPCode(), $e->getMessage());
+//			}
+//		}
 	
 	//	require_once('Zotlabs/Storage/Browser.php');
 		// provide a directory view for the cloud in Hubzilla

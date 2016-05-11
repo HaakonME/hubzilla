@@ -13,7 +13,7 @@ class Siteinfo extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		if(! get_config('system','hidden_version_siteinfo')) {
 			$version = sprintf( t('Version %s'), \Zotlabs\Project\System::get_project_version());

@@ -1791,12 +1791,8 @@ class Admin extends \Zotlabs\Web\Controller {
 					foreach ($files as $file)
 					{
 							if(is_dir($repoDir.'/'.$file) && $file !== '.git') {
-								$source = realpath(__DIR__ . '/../../extend/addon/'.$repoName.'/'.$file.'/');
 								$source = '../extend/addon/'.$repoName.'/'.$file;
 								$target = realpath(__DIR__ . '/../../addon/').'/'.$file;
-								logger('file: ' . json_encode($file));
-								logger('source: ' . $source);
-								logger('target: ' . $target);
 								unlink($target);
 								if(!symlink($source, $target)) {
 									logger('Error linking addons to /addon');

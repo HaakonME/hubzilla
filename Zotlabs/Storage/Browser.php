@@ -101,8 +101,8 @@ class Browser extends DAV\Browser\Plugin {
 		$parentpath = array();
 		// only show parent if not leaving /cloud/; TODO how to improve this? 
 		if ($path && $path != "cloud") {
-			list($parentUri) = DAV\URLUtil::splitPath($path);
-			$fullPath = DAV\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
+			list($parentUri) = \Sabre\HTTP\URLUtil::splitPath($path);
+			$fullPath = \Sabre\HTTP\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
 
 			$parentpath['icon'] = $this->enableAssets ? '<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl('icons/parent' . $this->iconExtension) . '" width="24" alt="' . t('parent') . '"></a>' : '';
 			$parentpath['path'] = $fullPath;
@@ -116,7 +116,7 @@ class Browser extends DAV\Browser\Plugin {
 			// This is the current directory, we can skip it
 			if (rtrim($file['href'],'/') == $path) continue;
 
-			list(, $name) = DAV\URLUtil::splitPath($file['href']);
+			list(, $name) = \Sabre\HTTP\URLUtil::splitPath($file['href']);
 
 			if (isset($file[200]['{DAV:}resourcetype'])) {
 				$type = $file[200]['{DAV:}resourcetype']->getValue();
@@ -166,7 +166,7 @@ class Browser extends DAV\Browser\Plugin {
 			$size = isset($file[200]['{DAV:}getcontentlength']) ? (int)$file[200]['{DAV:}getcontentlength'] : '';
 			$lastmodified = ((isset($file[200]['{DAV:}getlastmodified'])) ? $file[200]['{DAV:}getlastmodified']->getTime()->format('Y-m-d H:i:s') : '');
 
-			$fullPath = DAV\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path ? $path . '/' : '') . $name, '/'));
+			$fullPath = \Sabre\HTTP\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path ? $path . '/' : '') . $name, '/'));
 
 
 			$displayName = isset($file[200]['{DAV:}displayname']) ? $file[200]['{DAV:}displayname'] : $name;
@@ -219,7 +219,7 @@ class Browser extends DAV\Browser\Plugin {
 
 		$output = '';
 		if ($this->enablePost) {
-			$this->server->broadcastEvent('onHTMLActionsPanel', array($parent, &$output));
+			$this->server->emit('onHTMLActionsPanel', array($parent, &$output));
 		}
 
 		$html .= replace_macros(get_markup_template('cloud.tpl'), array(

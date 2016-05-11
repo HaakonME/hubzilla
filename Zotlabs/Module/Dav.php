@@ -60,8 +60,16 @@ class Dav extends \Zotlabs\Web\Controller {
 		if ($which)
 			profile_load($a, $which, $profile);
 	
+
+
 		$auth = new \Zotlabs\Storage\BasicAuth();
-	
+
+		$authBackend = new \Sabre\DAV\Auth\Backend\BasicCallBack(function($userName,$password) {
+			if(account_verify_password($userName,$password))
+				return true;
+			return false;
+		});
+
 		$ob_hash = get_observer_hash();
 	
 		if ($ob_hash) {
@@ -92,6 +100,12 @@ class Dav extends \Zotlabs\Web\Controller {
 	
 		// A SabreDAV server-object
 		$server = new SDAV\Server($rootDirectory);
+
+
+		$authPlugin = new \Sabre\DAV\Auth\Plugin($authBackend);
+		$server->addPlugin($authPlugin);
+
+
 		// prevent overwriting changes each other with a lock backend
 		$lockBackend = new SDAV\Locks\Backend\File('store/[data]/locks');
 		$lockPlugin = new SDAV\Locks\Plugin($lockBackend);

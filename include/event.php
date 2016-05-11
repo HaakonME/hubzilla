@@ -539,16 +539,16 @@ function event_import_ical($ical, $uid) {
 
 //	logger('dtstart: ' . var_export($dtstart,true));
 
-
-	switch($dtstart->timezone_type) {
-		case VObject\Property\DateTime::UTC :
-			$ev['adjust'] = 0;
-			break;
-		case VObject\Property\DateTime::LOCALTZ :
-		default:
-			$ev['adjust'] = 1;
-			break;
-	}
+// @FIXME - convert/upgrade to vobject [3|4]
+//	switch($dtstart->timezone_type) {
+//		case VObject\Property\DateTime::UTC :
+//			$ev['adjust'] = 0;
+//			break;
+//		case VObject\Property\DateTime::LOCALTZ :
+//		default:
+//			$ev['adjust'] = 1;
+//			break;
+//	}
 
 	$ev['start'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
 		$dtstart->format(\DateTime::W3C));

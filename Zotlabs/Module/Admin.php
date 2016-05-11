@@ -1785,6 +1785,21 @@ class Admin extends \Zotlabs\Web\Controller {
 					$repoDir = $addonDir.'/'.$repoName;
 					$tempAddonDir = __DIR__ . '/../../store/git/sys/temp/' . $repoName;
 					rename($tempAddonDir, $repoDir);
+					
+					$files = array_diff(scandir($repoDir), array('.', '..'));
+					logger('files: ' . json_encode($files));
+					foreach ($files as $file)
+					{
+							if(is_dir($repoDir.'/'.$file) && $file !== '.git') {
+								$source = '../extend/addon/'.$repoName.'/'.$file;
+								$target = realpath(__DIR__ . '/../../addon/').'/'.$file;
+								unlink($target);
+								if(!symlink($source, $target)) {
+									logger('Error linking addons to /addon');
+									json_return_and_die(array('message' => 'Error linking addons to /addon', 'success' => false));									
+								}
+							}
+					}
 					$git = new GitRepo('sys', $repoURL, false, $repoName, $repoDir); 
 					$repo = $git->probeRepo();
 					json_return_and_die(array('repo'=> $repo, 'message' => '', 'success' => true));

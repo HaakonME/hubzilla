@@ -1953,6 +1953,16 @@ function remove_community_tag($sender, $arr, $uid) {
  */
 function update_imported_item($sender, $item, $orig, $uid) {
 
+	// If this is a comment being updated, remove any privacy information
+	// so that item_store_update will set it from the original.
+
+	if($item['mid'] !== $item['parent_mid']) {
+		unset($item['allow_cid']);
+		unset($item['allow_gid']);
+		unset($item['deny_cid']);
+		unset($item['deny_gid']);
+		unset($item['item_private']);
+	}
 
 	$x = item_store_update($item);
 

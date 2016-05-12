@@ -1733,6 +1733,19 @@ class Admin extends \Zotlabs\Web\Controller {
 				} else {
 					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
 				}
+				$extendDir = __DIR__ . '/../../store/git/sys/extend';
+				$addonDir = $extendDir . '/addon';
+				if (!file_exists($extendDir)) {
+					if (!mkdir($extendDir, 0770, true)) {
+						logger('Error creating extend folder: ' . $extendDir);
+						json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
+					} else {
+						if (!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
+							logger('Error creating symlink to addon folder: ' . $addonDir);
+							json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
+						}
+					}
+				}
 				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/' . $repoName;
 				if (!is_dir($repoDir)) {
 					logger('Repo directory does not exist: ' . $repoDir);
@@ -1757,6 +1770,19 @@ class Admin extends \Zotlabs\Web\Controller {
 					$repoName = $_REQUEST['repoName'];
 				} else {
 					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
+				}
+				$extendDir = __DIR__ . '/../../store/git/sys/extend';
+				$addonDir = $extendDir . '/addon';
+				if (!file_exists($extendDir)) {
+					if (!mkdir($extendDir, 0770, true)) {
+						logger('Error creating extend folder: ' . $extendDir);
+						json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
+					} else {
+						if (!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
+							logger('Error creating symlink to addon folder: ' . $addonDir);
+							json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
+						}
+					}
 				}
 				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/' . $repoName;
 				if (!is_dir($repoDir)) {

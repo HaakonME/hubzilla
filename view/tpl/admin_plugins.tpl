@@ -15,7 +15,7 @@
     </div>
     <div class="clear"></div>
     <div class="section-content-info-wrapper">
-      <h3>Installed Addon Repositories</h3>
+      <h3>Installed Plugin Repositories</h3>
       {{foreach $addonrepos as $repo}}
 <!--      <div class="section-content-tools-wrapper">	-->
 		<div style="margin-left: 30%; margin-right: 30%;">
@@ -123,7 +123,7 @@
         "/admin/plugins/updaterepo", {repoName: repoName}, 
             function(response) {
                 if (response.success) {
-                  window.console.log('Addon repo'+repoName+'successfully updated :' + response['message']);
+                  window.console.log('Addon repo '+repoName+' successfully updated :' + response['message']);
                   alert('Addon repo updated.');
                 } else {
                   window.console.log('Error updating repo :' + response['message']);
@@ -146,7 +146,7 @@
         "/admin/plugins/removerepo", {repoName: repoName}, 
             function(response) {
                 if (response.success) {
-                  window.console.log('Addon repo'+repoName+'successfully removed :' + response['message']);
+                  window.console.log('Addon repo '+repoName+' successfully removed :' + response['message']);
                   if(confirm('Repo deleted. Click OK to refresh page.')) {
                     location.reload();
                   }

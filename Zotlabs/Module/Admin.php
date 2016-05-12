@@ -1726,131 +1726,157 @@ class Admin extends \Zotlabs\Web\Controller {
 	}
 	
 	function admin_page_plugins_post($action) {
-		switch($action) {
+		switch ($action) {
 			case 'updaterepo':
-				if(array_key_exists('repoName', $_REQUEST)) {
+				if (array_key_exists('repoName', $_REQUEST)) {
 					$repoName = $_REQUEST['repoName'];
 				} else {
 					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
 				}
-				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/'.$repoName;
-				if(!is_dir($repoDir)) {
+				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/' . $repoName;
+				if (!is_dir($repoDir)) {
+					logger('Repo directory does not exist: ' . $repoDir);
 					json_return_and_die(array('message' => 'Invalid addon repo.', 'success' => false));
-				}				
+				}
+				if (!is_writable($repoDir)) {
+					logger('Repo directory not writable to web server: ' . $repoDir);
+					json_return_and_die(array('message' => 'Repo directory not writable to web server.', 'success' => false));
+				}
 				$git = new GitRepo('sys', null, false, $repoName, $repoDir);
 				try {
-					if($git->pull()) {
+					if ($git->pull()) {
 						json_return_and_die(array('message' => 'Repo updated.', 'success' => true));
 					} else {
 						json_return_and_die(array('message' => 'Error updating addon repo.', 'success' => false));
 					}
-				} catch(\PHPGit\Exception\GitException $e) {
+				} catch (\PHPGit\Exception\GitException $e) {
 					json_return_and_die(array('message' => 'Error updating addon repo.', 'success' => false));
 				}
 			case 'removerepo':
-				if(array_key_exists('repoName', $_REQUEST)) {
+				if (array_key_exists('repoName', $_REQUEST)) {
 					$repoName = $_REQUEST['repoName'];
 				} else {
 					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
 				}
-				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/'.$repoName;
-				if(!is_dir($repoDir)) {
+				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/' . $repoName;
+				if (!is_dir($repoDir)) {
+					logger('Repo directory does not exist: ' . $repoDir);
 					json_return_and_die(array('message' => 'Invalid addon repo.', 'success' => false));
 				}
+				if (!is_writable($repoDir)) {
+					logger('Repo directory not writable to web server: ' . $repoDir);
+					json_return_and_die(array('message' => 'Repo directory not writable to web server.', 'success' => false));
+				}
 				// TODO: remove directory and unlink /addon/files
-				if(rrmdir($repoDir)) {
+				if (rrmdir($repoDir)) {
 					json_return_and_die(array('message' => 'Repo deleted.', 'success' => true));
 				} else {
 					json_return_and_die(array('message' => 'Error deleting addon repo.', 'success' => false));
 				}
-			case 'installrepo':	
+			case 'installrepo':
 				require_once('library/markdown.php');
-				if(array_key_exists('repoURL',$_REQUEST)) {
-					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies					
+				if (array_key_exists('repoURL', $_REQUEST)) {
+					require __DIR__ . '/../../library/PHPGit.autoload.php';			 // Load PHPGit dependencies					
 					$repoURL = $_REQUEST['repoURL'];
 					$extendDir = __DIR__ . '/../../store/git/sys/extend';
-					$addonDir = $extendDir.'/addon';
-					if(!file_exists($extendDir)) {
-						if(!mkdir($extendDir, 0770, true)) {
+					$addonDir = $extendDir . '/addon';
+					if (!file_exists($extendDir)) {
+						if (!mkdir($extendDir, 0770, true)) {
 							logger('Error creating extend folder: ' . $extendDir);
 							json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
 						} else {
-							if(!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
+							if (!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
 								logger('Error creating symlink to addon folder: ' . $addonDir);
 								json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
 							}
 						}
 					}
+					if (!is_writable($extendDir)) {
+						logger('Directory not writable to web server: ' . $extendDir);
+						json_return_and_die(array('message' => 'Directory not writable to web server.', 'success' => false));
+					}
 					$repoName = null;
-					if(array_key_exists('repoName',$_REQUEST) && $_REQUEST['repoName'] !== '') {
-						$repoName = $_REQUEST['repoName'];	
+					if (array_key_exists('repoName', $_REQUEST) && $_REQUEST['repoName'] !== '') {
+						$repoName = $_REQUEST['repoName'];
 					} else {
 						$repoName = GitRepo::getRepoNameFromURL($repoURL);
-					}			
-					if(!$repoName) {
+					}
+					if (!$repoName) {
 						logger('Invalid git repo');
 						json_return_and_die(array('message' => 'Invalid git repo', 'success' => false));
 					}
-					$repoDir = $addonDir.'/'.$repoName;
-					$tempAddonDir = __DIR__ . '/../../store/git/sys/temp/' . $repoName;
-					rename($tempAddonDir, $repoDir);
-					
-					$files = array_diff(scandir($repoDir), array('.', '..'));
-					logger('files: ' . json_encode($files));
-					foreach ($files as $file)
-					{
-							if(is_dir($repoDir.'/'.$file) && $file !== '.git') {
-								$source = '../extend/addon/'.$repoName.'/'.$file;
-								$target = realpath(__DIR__ . '/../../addon/').'/'.$file;
-								unlink($target);
-								if(!symlink($source, $target)) {
-									logger('Error linking addons to /addon');
-									json_return_and_die(array('message' => 'Error linking addons to /addon', 'success' => false));									
-								}
-							}
+					$repoDir = $addonDir . '/' . $repoName;
+					$tempRepoBaseDir = __DIR__ . '/../../store/git/sys/temp/';
+					$tempAddonDir = $tempRepoBaseDir . $repoName;
+
+					if (!is_writable($addonDir) || !is_writable($tempAddonDir)) {
+						logger('Temp repo directory or /extend/addon not writable to web server: ' . $tempAddonDir);
+						json_return_and_die(array('message' => 'Temp repo directory not writable to web server.', 'success' => false));
 					}
-					$git = new GitRepo('sys', $repoURL, false, $repoName, $repoDir); 
+					rename($tempAddonDir, $repoDir);
+
+					if (!is_writable(realpath(__DIR__ . '/../../addon/'))) {
+						logger('/addon directory not writable to web server: ' . $tempAddonDir);
+						json_return_and_die(array('message' => '/addon directory not writable to web server.', 'success' => false));
+					}
+					$files = array_diff(scandir($repoDir), array('.', '..'));
+					foreach ($files as $file) {
+						if (is_dir($repoDir . '/' . $file) && $file !== '.git') {
+							$source = '../extend/addon/' . $repoName . '/' . $file;
+							$target = realpath(__DIR__ . '/../../addon/') . '/' . $file;
+							unlink($target);
+							if (!symlink($source, $target)) {
+								logger('Error linking addons to /addon');
+								json_return_and_die(array('message' => 'Error linking addons to /addon', 'success' => false));
+							}
+						}
+					}
+					$git = new GitRepo('sys', $repoURL, false, $repoName, $repoDir);
 					$repo = $git->probeRepo();
-					json_return_and_die(array('repo'=> $repo, 'message' => '', 'success' => true));
+					json_return_and_die(array('repo' => $repo, 'message' => '', 'success' => true));
 				}
-			case 'addrepo':				
+			case 'addrepo':
 				require_once('library/markdown.php');
-				if(array_key_exists('repoURL',$_REQUEST)) {
-					require __DIR__ . '/../../library/PHPGit.autoload.php';       // Load PHPGit dependencies					
+				if (array_key_exists('repoURL', $_REQUEST)) {
+					require __DIR__ . '/../../library/PHPGit.autoload.php';			 // Load PHPGit dependencies					
 					$repoURL = $_REQUEST['repoURL'];
 					$extendDir = __DIR__ . '/../../store/git/sys/extend';
-					$addonDir = $extendDir.'/addon';
+					$addonDir = $extendDir . '/addon';
 					$tempAddonDir = __DIR__ . '/../../store/git/sys/temp';
-					if(!file_exists($extendDir)) {
-						if(!mkdir($extendDir, 0770, true)) {
+					if (!file_exists($extendDir)) {
+						if (!mkdir($extendDir, 0770, true)) {
 							logger('Error creating extend folder: ' . $extendDir);
 							json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
 						} else {
-							if(!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
+							if (!symlink(__DIR__ . '/../../extend/addon', $addonDir)) {
 								logger('Error creating symlink to addon folder: ' . $addonDir);
 								json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
 							}
 						}
 					}
 					$repoName = null;
-					if(array_key_exists('repoName',$_REQUEST) && $_REQUEST['repoName'] !== '') {
-						$repoName = $_REQUEST['repoName'];	
+					if (array_key_exists('repoName', $_REQUEST) && $_REQUEST['repoName'] !== '') {
+						$repoName = $_REQUEST['repoName'];
 					} else {
 						$repoName = GitRepo::getRepoNameFromURL($repoURL);
-					}			
-					if(!$repoName) {
+					}
+					if (!$repoName) {
 						logger('Invalid git repo');
 						json_return_and_die(array('message' => 'Invalid git repo: ' . $repoName, 'success' => false));
 					}
-					$repoDir = $tempAddonDir.'/'.$repoName;
+					$repoDir = $tempAddonDir . '/' . $repoName;
+					if (!is_writable($tempAddonDir)) {
+						logger('Temporary directory for new addon repo is not writable to web server: ' . $tempAddonDir);
+						json_return_and_die(array('message' => 'Temporary directory for new addon repo is not writable to web server.', 'success' => false));
+					}
 					// clone the repo if new automatically
-					$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir); 
-					
+					$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir);
+
 					$remotes = $git->git->remote();
 					$fetchURL = $remotes['origin']['fetch'];
-					if($fetchURL !== $git->url) {
-						if(rrmdir($repoDir)) {
-							$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir); 
+					if ($fetchURL !== $git->url) {
+						if (rrmdir($repoDir)) {
+							$git = new GitRepo('sys', $repoURL, true, $repoName, $repoDir);
 						} else {
 							json_return_and_die(array('message' => 'Error deleting existing addon repo.', 'success' => false));
 						}
@@ -1858,14 +1884,13 @@ class Admin extends \Zotlabs\Web\Controller {
 					$repo = $git->probeRepo();
 					$repo['readme'] = $repo['manifest'] = null;
 					foreach ($git->git->tree('master') as $object) {
-							if ($object['type'] == 'blob' && (strtolower($object['file']) === 'readme.md' || strtolower($object['file']) === 'readme')) {
-									$repo['readme'] =  Markdown($git->git->cat->blob($object['hash']));
-							} else if ($object['type'] == 'blob' && strtolower($object['file']) === 'manifest.json') {
-									$repo['manifest'] =  $git->git->cat->blob($object['hash']);
-							}
+						if ($object['type'] == 'blob' && (strtolower($object['file']) === 'readme.md' || strtolower($object['file']) === 'readme')) {
+							$repo['readme'] = Markdown($git->git->cat->blob($object['hash']));
+						} else if ($object['type'] == 'blob' && strtolower($object['file']) === 'manifest.json') {
+							$repo['manifest'] = $git->git->cat->blob($object['hash']);
+						}
 					}
-					json_return_and_die(array('repo'=> $repo, 'message' => '', 'success' => true));
-					
+					json_return_and_die(array('repo' => $repo, 'message' => '', 'success' => true));
 				} else {
 					json_return_and_die(array('message' => 'No repo URL provided', 'success' => false));
 				}
@@ -1874,7 +1899,7 @@ class Admin extends \Zotlabs\Web\Controller {
 				break;
 		}
 	}
-	
+
 	function admin_page_profs_post(&$a) {
 	
 		if(array_key_exists('basic',$_REQUEST)) {

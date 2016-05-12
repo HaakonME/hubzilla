@@ -28,10 +28,12 @@ class Manage extends \Zotlabs\Web\Controller {
 			}
 			goaway(z_root() . '/manage');
 		}
+
 	
 		if($change_channel) {
+
 			$r = change_channel($change_channel);
-	
+
 			if((argc() > 2) && !(argv(2) === 'default')) {
 				goaway(z_root() . '/' . implode('/',array_slice(\App::$argv,2))); // Go to whatever is after /manage/, but with the new channel
 			}

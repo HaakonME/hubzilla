@@ -469,6 +469,11 @@ function notifier_run($argv, $argc){
 			$deliveries[] = $pq;
 	}
 
+	// notifier_process can alter the recipient list
+
+	$recipients    = $narr['recipients'];
+	$env_recips    = $narr['env_recips'];
+	$packet_recips = $narr['packet_recips'];
 
 	if(($private) && (! $env_recips)) {
 		// shouldn't happen

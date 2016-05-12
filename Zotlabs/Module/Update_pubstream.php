@@ -7,7 +7,7 @@ namespace Zotlabs\Module;
 class Update_pubstream extends \Zotlabs\Web\Controller {
 
 	function get() {
-	
+
 		$profile_uid = ((intval($_GET['p'])) ? intval($_GET['p']) : (-1));
 		$load = (((argc() > 1) && (argv(1) == 'load')) ? 1 : 0);
 		header("Content-type: text/html");

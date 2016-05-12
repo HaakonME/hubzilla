@@ -3,47 +3,47 @@ namespace Zotlabs\Module;
 
 require_once('include/identity.php');
 require_once('include/acl_selectors.php');
+require_once('include/conversation.php');
 require_once('include/PermissionDescription.php');
 
 
 class Editwebpage extends \Zotlabs\Web\Controller {
 
 	function init() {
-	
+
 		if(argc() > 1 && argv(1) === 'sys' && is_site_admin()) {
 			$sys = get_sys_channel();
 			if($sys && intval($sys['channel_id'])) {
 				\App::$is_sys = true;
 			}
 		}
-	
+
 		if(argc() > 1)
 			$which = argv(1);
 		else
 			return;
-	
+
 		profile_load($a,$which);
-	
+
 	}
-	
-	
-		function get() {
-	
+
+	function get() {
+
 		if(! \App::$profile) {
 			notice( t('Requested profile is not available.') . EOL );
 			\App::$error = 404;
 			return;
 		}
-	
+
 		$which = argv(1);
-	
+
 		$uid = local_channel();
 		$owner = 0;
 		$channel = null;
 		$observer = \App::get_observer();
-	
+
 		$channel = \App::get_channel();
-	
+
 		if(\App::$is_sys && is_site_admin()) {
 			$sys = get_sys_channel();
 			if($sys && intval($sys['channel_id'])) {
@@ -52,7 +52,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 				$observer = $sys;
 			}
 		}
-	
+
 		if(! $owner) {
 			// Figure out who the page owner is.
 			$r = q("select channel_id from channel where channel_address = '%s'",
@@ -62,51 +62,50 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 				$owner = intval($r[0]['channel_id']);
 			}
 		}
-	
+
 		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
-	
+
 		if(! perm_is_allowed($owner,$ob_hash,'write_pages')) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
+
 		$is_owner = (($uid && $uid == $owner) ? true : false);
-				
+
 		$o = '';
-	
+
 		// Figure out which post we're editing
 		$post_id = ((argc() > 2) ? intval(argv(2)) : 0);
-	
 	
 		if(! $post_id) {
 			notice( t('Item not found') . EOL);
 			return;
 		}
-	
+
 		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
-	
+
 		$perms = get_all_perms($owner,$ob_hash);
-	
+
 		if(! $perms['write_pages']) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
+
 		// We've already figured out which item we want and whose copy we need, 
 		// so we don't need anything fancy here
-	
+
 		$sql_extra = item_permissions_sql($owner);
-	
+
 		$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s $sql_extra LIMIT 1",
 			intval($post_id),
 			intval($owner)
 		);
-	
+
 		if(! $itm) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
+
 		if(intval($itm[0]['item_obscured'])) {
 			$key = get_config('system','prvkey');
 			if($itm[0]['title'])
@@ -114,120 +113,67 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			if($itm[0]['body'])
 				$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
 		}
-	
+
 		$item_id = q("select * from item_id where service = 'WEBPAGE' and iid = %d limit 1",
 			intval($itm[0]['id'])
 		);
 		if($item_id)
 			$page_title = $item_id[0]['sid'];
-	
-		$plaintext = true;
-	
+
 		$mimetype = $itm[0]['mimetype'];
-	
+
 		if($mimetype === 'application/x-php') {
 			if((! $uid) || ($uid != $itm[0]['uid'])) {
 				notice( t('Permission denied.') . EOL);
 				return;
 			}
 		}
-		
-		$mimeselect = '';
 	
-		if($mimetype != 'text/bbcode')
-			$plaintext = true;
-	
-		if(get_config('system','page_mimetype'))
-			$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
-		else
-			$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
-	
-		$layout = get_config('system','page_layout');
-		if($layout)
-			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />'; 			
-		else
-			$layoutselect = layout_select($itm[0]['uid'],$itm[0]['layout_mid']);
-	
-		\App::$page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
-			'$baseurl' => z_root(),
-			'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-			'$pretext'  => '',
-			'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
-			'$geotag' => $geotag,
-			'$nickname' => $channel['channel_address'],
-			'$confirmdelete' => t('Delete webpage?'),
-			'$bbco_autocomplete'=> (($mimetype  == 'text/bbcode') ? 'bbcode' : '')
-		));
+		$layout = $itm[0]['layout_mid'];
 	
 		$tpl = get_markup_template("jot.tpl");
-			
-		$jotplugins = '';
-		$jotnets = '';
-	
-		call_hooks('jot_tool', $jotplugins);
-		call_hooks('jot_networks', $jotnets);
-		
-		// FIXME A return path with $_SESSION doesn't always work for observer - it may WSoD 
-		// instead of loading a sensible page.  So, send folk to the webpage list.
-	
+
 		$rp = 'webpages/' . $which;
-	
-		$editor = replace_macros($tpl,array(
-			'$return_path' => $rp,
-			'$webpage' => ITEM_TYPE_WEBPAGE,
-			'$placeholdpagetitle' => t('Page link title'),
-			'$pagetitle' => $page_title,
-			'$writefiles' => (($mimetype  == 'text/bbcode') ? perm_is_allowed($owner, get_observer_hash(), 'write_storage') : false),
-			'$action' => 'item',
-			'$share' => t('Edit'),
-			'$bold' => t('Bold'),
-			'$italic' => t('Italic'),
-			'$underline' => t('Underline'),
-			'$quote' => t('Quote'),
-			'$code' => t('Code'),
-			'$attach' => t('Attach file'),
-			'$weblink' => (($mimetype  == 'text/bbcode') ? t('Insert web link') : false),
-			'$setloc' => false, //t('Set your location'),
-			'$noloc' => false, //((get_pconfig($uid, 'system', 'use_browser_location')) ? t('Clear browser location') : ''),
-			'$permset' => t('Permission settings'),
-			'$ptyp' => $itm[0]['type'],
-			'$content' => undo_post_tagging($itm[0]['body']),
-			'$post_id' => $post_id,
-			'$baseurl' => z_root(),
-			'$defloc' => $itm[0]['location'],
-			'$visitor' => ($is_owner) ? true : false,
-			'$acl' => populate_acl($itm[0],false,\PermissionDescription::fromGlobalPermission('view_pages')),
-			'$showacl' => ($is_owner) ? true : false,
-			'$public' => t('Public post'),
-			'$jotnets' => $jotnets,
-			'$mimeselect' => $mimeselect,
-			'$layoutselect' => $layoutselect,
-			'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
-			'$placeholdertitle' => t('Title (optional)'),
-			'$category' => '',
-			'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
-			'$emtitle' => t('Example: bob@example.com, mary@example.com'),
+
+		$x = array(
+			'nickname' => $channel['channel_address'],
+			'bbco_autocomplete'=> (($mimetype  == 'text/bbcode') ? 'bbcode' : ''),
+			'return_path' => $rp,
+			'webpage' => ITEM_TYPE_WEBPAGE,
+			'ptlabel' => t('Page link'),
+			'pagetitle' => $page_title,
+			'writefiles' => (($mimetype  == 'text/bbcode') ? perm_is_allowed($owner, get_observer_hash(), 'write_storage') : false),
+			'button' => t('Edit'),
+			'weblink' => (($mimetype  == 'text/bbcode') ? t('Insert web link') : false),
+			'hide_location' => true,
+			'hide_voting' => true,
+			'ptyp' => $itm[0]['type'],
+			'body' => undo_post_tagging($itm[0]['body']),
+			'post_id' => $post_id,
+			'visitor' => ($is_owner) ? true : false,
+			'acl' => populate_acl($itm[0],false,\PermissionDescription::fromGlobalPermission('view_pages')),
+			'showacl' => ($is_owner) ? true : false,
+			'mimetype' => $mimetype,
+			'mimeselect' => true,
+			'layout' => $layout,
+			'layoutselect' => true,
+			'title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 			'lockstate' => (((strlen($itm[0]['allow_cid'])) || (strlen($itm[0]['allow_gid'])) || (strlen($itm[0]['deny_cid'])) || (strlen($itm[0]['deny_gid']))) ? 'lock' : 'unlock'),
-			'$bang' => '',
-			'$profile_uid' => (intval($owner)),
-			'$preview' => t('Preview'),
-			'$jotplugins' => $jotplugins,
-			'$sourceapp' => \App::$sourcename,
-			'$defexpire' => '',
-			'$bbcode' => (($mimetype  == 'text/bbcode') ? true : false)
-		));
-	
+			'profile_uid' => (intval($owner)),
+			'bbcode' => (($mimetype  == 'text/bbcode') ? true : false)
+		);
+
+		$editor = status_editor($a, $x);
+
 		$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 			'$title' => t('Edit Webpage'),
 			'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
 			'$editor' => $editor,
 			'$id' => $itm[0]['id']
 		));
-	
+
 		return $o;
-	
+
 	}
-	
-	
-	
+
 }

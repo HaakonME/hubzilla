@@ -28,14 +28,14 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			if(! $maxheight)
 				$maxheight = 400;
 	
-			$o .= '<div id="live-public"></div>' . "\r\n";
+			$o .= '<div id="live-pubstream"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . ((intval(local_channel())) ? local_channel() : (-1)) 
 				. "; var profile_page = " . \App::$pager['page'] 
 				. "; divmore_height = " . intval($maxheight) . "; </script>\r\n";
 	
 			\App::$page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 				'$baseurl' => z_root(),
-				'$pgtype'  => 'public',
+				'$pgtype'  => 'pubstream',
 				'$uid'     => ((local_channel()) ? local_channel() : '0'),
 				'$gid'     => '0',
 				'$cid'     => '0',
@@ -161,7 +161,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 	
 		if(($items) && (! $update))
 			$o .= alt_pager($a,count($items));
-	
+
 		return $o;
 	
 	}

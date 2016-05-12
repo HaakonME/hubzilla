@@ -46,7 +46,7 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.4.4' );
+define ( 'STD_VERSION',             '1.7' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1168  );
@@ -904,6 +904,7 @@ class App {
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
 		self::$meta= new Zotlabs\Web\HttpMeta();
+
 	}
 
 	public static function get_baseurl($ssl = false) {
@@ -1632,6 +1633,16 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
  * @brief Used to end the current process, after saving session state.
  */
 function killme() {
+
+	// Ensure that closing the database is the last function on the shutdown stack.
+	// If it is closed prematurely sessions might not get saved correctly.
+	// Note the second arg to PHP's session_set_save_handler() seems to order that shutdown 
+	// procedure last despite our best efforts, so we don't use that and implictly
+	// call register_shutdown_function('session_write_close'); within Zotlabs\Web\Session::init()
+	// and then register the database close function here where nothing else can register
+	// after it.
+
+	register_shutdown_function('shutdown');
 	exit;
 }
 
@@ -1641,6 +1652,11 @@ function killme() {
 function goaway($s) {
 	header("Location: $s");
 	killme();
+}
+
+function shutdown() {
+	global $db;
+	$db->close();
 }
 
 /**

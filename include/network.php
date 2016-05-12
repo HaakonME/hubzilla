@@ -2128,3 +2128,18 @@ function deliverable_singleton($channel_id,$xchan) {
 	return false;
 }
 
+
+
+function get_repository_version($branch = 'master') {
+
+	$path = "https://raw.githubusercontent.com/redmatrix/hubzilla/$branch/boot.php";
+	
+	$x = z_fetch_url($path);
+	if($x['success']) {
+		$y = preg_match('/define(.*?)STD_VERSION(.*?)([0-9.].*)\'/',$x['body'],$matches);
+		if($y)
+			return $matches[3];
+	}
+	return '?.?';
+
+}		

@@ -32,10 +32,11 @@ class PermissionDescription  {
 	}
 
 	/**
-	 * If the interpretation of an empty ACL can't be summarised with a global default permission 
+	 * If the interpretation of an empty ACL can't be summarised with a global default permission
 	 * or a specific permission setting then use this method and describe what it means instead.
+	 * Remember to localize the description first.
 	 *
-	 * @param  string $description - the caption for the no-ACL option in the ACL dialog.
+	 * @param  string $description - the localized caption for the no-ACL option in the ACL dialog.
 	 * @return a new instance of PermissionDescription
 	 */
 	public static function fromDescription($description) {
@@ -44,8 +45,9 @@ class PermissionDescription  {
 
 
 	/**
-	 * Use this method only if the interpretation of an empty ACL doesn't fall back to a global 
-	 * default permission. You should pass one of the constants from boot.php - PERMS_PUBLIC, PERMS_NETWORK etc.
+	 * Use this method only if the interpretation of an empty ACL doesn't fall back to a global
+	 * default permission. You should pass one of the constants from boot.php - PERMS_PUBLIC,
+	 * PERMS_NETWORK etc.
 	 * 
 	 * @param  integer $perm - a single enumerated constant permission - PERMS_PUBLIC, PERMS_NETWORK etc.
 	 * @return a new instance of PermissionDescription
@@ -81,6 +83,15 @@ class PermissionDescription  {
 		if (array_key_exists($permname, $global_perms)) {
 
 			$permDetails = $global_perms[$permname];
+
+			// It should be OK to always just read the permissions from App::$channel
+			//
+			// App::$profile is a union of channel and profile fields.
+			// The distinction is basically that App::$profile is pointing to the resource
+			// being observed. App::$channel is referring to the current logged-in channel
+			// member (if this is a local channel) e.g. the observer. We only show the ACL
+			// widget to the page owner (observer and observed are the same) so in that case
+			// I believe either may be safely used here.
 			$channelPerm = \App::$channel[$permDetails[0]];
 			$result = new PermissionDescription($permDetails[1], $channelPerm);
 		} else {

@@ -82,11 +82,7 @@ class Blocks extends \Zotlabs\Web\Controller {
 		}
 	
 		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
-	
-		if(! $mimetype) {
-			$mimetype = 'choose';
-		}
-	
+
 		$x = array(
 			'webpage' => ITEM_TYPE_BLOCK,
 			'is_owner' => true,
@@ -96,6 +92,8 @@ class Blocks extends \Zotlabs\Web\Controller {
 			'showacl' => false,
 			'visitor' => true,
 			'mimetype' => $mimetype,
+			'mimeselect' => true,
+			'hide_location' => true,
 			'ptlabel' => t('Block Name'),
 			'profile_uid' => intval($owner),
 			'expanded' => true,

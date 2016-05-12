@@ -9,15 +9,19 @@ function import_channel($channel, $account_id, $seize) {
 		$channel['channel_removed'] = (($channel['channel_pageflags'] & 0x8000) ? 1 : 0);
 	}
 
+	// Ignore the hash provided and re-calculate
+
+	$channel['channel_hash'] = make_xchan_hash($channel['channel_guid'],$channel['channel_guid_sig']);
+
+	// Check for duplicate channels
+
 	$r = q("select * from channel where (channel_guid = '%s' or channel_hash = '%s' or channel_address = '%s' ) limit 1",
 		dbesc($channel['channel_guid']),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_address'])
 	);
 
-	// We should probably also verify the hash 
-	
-	if($r) {
+	if(($r) || (check_webbie(array($channel['channel_hash'])) !== $channel['channel_hash'])) {
 		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
 			logger('mod_import: duplicate channel. ', print_r($channel,true));
 			notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);

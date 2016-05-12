@@ -2025,7 +2025,7 @@ function check_webbie($arr) {
 	if(strlen($reservechan))
 		$taken = explode(',', $reservechan);
 	else
-		$taken = array();
+		$taken = array('principals','addressbooks','calendars');
 
 	$str = '';
 	if(count($arr)) {
@@ -2056,6 +2056,20 @@ function check_webbie($arr) {
 
 	return '';
 }
+
+function ids_to_array($arr,$idx = 'id') {
+	$t = array();
+	if($arr) {
+		foreach($arr as $x) {
+			if(! in_array($x[$idx],$t)) {
+				$t[] = $x[$idx];
+			}
+		}
+	}
+	return($t);
+}
+
+
 
 
 function ids_to_querystr($arr,$idx = 'id') {

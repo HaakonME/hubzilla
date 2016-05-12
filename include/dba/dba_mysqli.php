@@ -38,7 +38,7 @@ class dba_mysqli extends dba_driver {
 
 
 		if($this->error) {
-			logger('dba_mysqli: ERROR: ' . printable($sql) . "\n" . $this->error, LOGGER_NORMAL, LOG_ERR);
+			db_logger('dba_mysqli: ERROR: ' . printable($sql) . "\n" . $this->error, LOGGER_NORMAL, LOG_ERR);
 			if(file_exists('dbfail.out')) {
 				file_put_contents('dbfail.out', datetime_convert() . "\n" . printable($sql) . "\n" . $this->error . "\n", FILE_APPEND);
 			}
@@ -46,13 +46,13 @@ class dba_mysqli extends dba_driver {
 
 		if(($result === true) || ($result === false)) {
 			if($this->debug) {
-				logger('dba_mysqli: DEBUG: ' . printable($sql) . ' returns ' . (($result) ? 'true' : 'false'), LOGGER_NORMAL,(($result) ? LOG_INFO : LOG_ERR));
+				db_logger('dba_mysqli: DEBUG: ' . printable($sql) . ' returns ' . (($result) ? 'true' : 'false'), LOGGER_NORMAL,(($result) ? LOG_INFO : LOG_ERR));
 			}
 			return $result;
 		}
 
 		if($this->debug) {
-			logger('dba_mysqli: DEBUG: ' . printable($sql) . ' returned ' . $result->num_rows . ' results.', LOGGER_NORMAL, LOG_INFO); 
+			db_logger('dba_mysqli: DEBUG: ' . printable($sql) . ' returned ' . $result->num_rows . ' results.', LOGGER_NORMAL, LOG_INFO); 
 		}
 
 		$r = array();
@@ -61,7 +61,7 @@ class dba_mysqli extends dba_driver {
 				$r[] = $x;
 			$result->free_result();
 			if($this->debug) {
-				logger('dba_mysqli: ' . printable(print_r($r,true)), LOGGER_NORMAL, LOG_INFO);
+				db_logger('dba_mysqli: ' . printable(print_r($r,true)), LOGGER_NORMAL, LOG_INFO);
 			}
 		}
 		return $r;

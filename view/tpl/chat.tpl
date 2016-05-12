@@ -103,6 +103,7 @@ $(document).ready(function() {
 	$('#chatroom_bookmarks, #vcard').hide();
 	$('#chatroom_list, #chatroom_members').show();
 	adjustInlineTopBarHeight();
+    chatNotificationInit();
 });
 
 $(window).resize(function () {
@@ -138,6 +139,8 @@ function load_chats() {
 
 }
 
+var previousChatRoomMembers = null; // initialize chat room member change register
+var currentChatRoomMembers = null; // initialize chat room member change register
 function update_inroom(inroom) {
 	var html = document.createElement('div');
 	var count = inroom.length;
@@ -147,7 +150,35 @@ function update_inroom(inroom) {
 		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" /> ' + '<span class="name">' + item.name + '</span><br /><span class="' + item.status_class + '">' + item.status + '</span>');
 		html.appendChild(newNode);
 	});
+    memberChange = chatRoomMembersChange(inroom); // get list of arrivals and departures
+    if(memberChange.membersArriving.length > 0) {
+      // Issue pop-up notification if anyone enters the room.
+      chat_issue_notification(JSON.stringify(memberChange.membersArriving.pop().name) + ' entered the room', 'Hubzilla Chat');
+    }
 	$('#chatMembers').html(html);
+}
+
+// Determine if the new list of chat room members has any new members or if any have left
+function chatRoomMembersChange(inroom) {
+    previousChatRoomMembers = currentChatRoomMembers;
+    currentChatRoomMembers = inroom;
+      var membersArriving = [];
+      var membersLeaving = [];
+    if(previousChatRoomMembers !== null) {
+      var newMember = false;
+      $.each( currentChatRoomMembers, function(index, currMember) {
+        newMember = true;
+        $.each( previousChatRoomMembers, function(index, prevMember) {
+          if (prevMember.name === currMember.name) {
+              newMember = false;
+          }
+        });
+        if (newMember === true) {
+          membersArriving.push(currMember);
+        }
+      });
+    }
+    return {membersArriving: membersArriving, membersLeaving: membersLeaving};
 }
 
 function update_chats(chats) {
@@ -170,6 +201,51 @@ function update_chats(chats) {
 		var elem = document.getElementById('chatTopBar');
 		elem.scrollTop = elem.scrollHeight;
 	});
+}
+
+var chat_notify_granted = false; // Initialize notification permission to denied
+// Request notification access from the user
+// TODO: Check Hubzilla member config setting before requesting permission
+function chatNotificationInit() {
+  
+    if (!("Notification" in window)) {
+        window.console.log("This browser does not support system notifications");
+    }
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        chat_notify_granted = true; //var notification = new Notification("Hi there!");
+    }
+
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== 'denied') {
+        Notification.requestPermission(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted") {
+                chat_notify_granted = true; //var notification = new Notification("Hi there!");
+            }
+        });
+    }
+}
+
+// Issue a pop-up notification using the web standard Notification API
+// https://developer.mozilla.org/docs/Web/API/notification
+var chat_issue_notification = function (theBody,theTitle) {
+    if ( !chat_notify_granted ) {
+        return;
+    }
+    var nIcon = "/images/icons/48/group.png";
+    var options = {
+        body: theBody,
+        icon: nIcon,
+        silent: false
+    }
+    var n = new Notification(theTitle,options);
+    n.onclick = function (event) {
+        setTimeout(n.close.bind(n), 300); 
+    } 
+    // TODO: Allow audio notification option
+    //chat_notify_audio.play();
 }
 
 function chatJotGetLink() {

@@ -33,7 +33,6 @@ function collect_recipients($item, &$private_envelope) {
 		$allow_people = expand_acl($item['allow_cid']);
 
 		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
-		$allow_groups = filter_insecure($item['uid'],$allow_groups);
 
 		$recipients = array_unique(array_merge($allow_people,$allow_groups));
 
@@ -139,46 +138,6 @@ function collect_recipients($item, &$private_envelope) {
 
 	return $recipients;
 }
-
-/**
- * If channel is configured to filter insecure members of privacy groups
- * (those whose networks leak privacy via email notifications or other criteria)
- * remove them from any privacy groups (collections) that were included in a post.
- * They can still be addressed individually.
- * Networks may need to be added or removed from this list as circumstances change.
- *
- * Update: this may need to be the default, which will force people to opt-in to
- * sending stuff privately to insecure platforms.
- *
- * @param int $channel_id
- * @param array $arr
- * @return array containing the sane xchan_hashes
- */
-function filter_insecure($channel_id, $arr) {
-	$insecure_nets = " and not xchan_network in ('diaspora', 'friendica-over-diaspora') ";
-
-	$ret = array();
-
-	if((! intval(get_pconfig($channel_id, 'system', 'filter_insecure_privacy_groups'))) || (! $arr))
-		return $arr;
-
-	$str = '';
-	foreach($arr as $rr) {
-		if(strlen($str))
-			$str .= ',';
-
-		$str .= "'" . dbesc($rr) . "'";
-	}
-	$r = q("select xchan_hash from xchan where xchan_hash in ($str) $insecure_nets");
-	if($r) {
-		foreach($r as $rr) {
-			$ret[] = $rr['xchan_hash'];
-		}
-	}
-
-	return $ret;
-}
-
 
 function comments_are_now_closed($item) {
 	if($item['comments_closed'] !== NULL_DATE) {

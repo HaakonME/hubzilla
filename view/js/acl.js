@@ -11,30 +11,44 @@ function ACL(backend_url, preset) {
 	that.deny_cid  = (preset[2] || []);
 	that.deny_gid  = (preset[3] || []);
 	that.group_uids = [];
-	that.nw = 4; //items per row. should be calulated from #acl-list.width
 
+	that.info         = $("#acl-info");
+	that.list         = $("#acl-list");
 	that.list_content = $("#acl-list-content");
 	that.item_tpl     = unescape($(".acl-list-item[rel=acl-template]").html());
 	that.showall      = $("#acl-showall");
 	that.showlimited  = $("#acl-showlimited");
+	that.acl_select   = $("#acl-select");
+
+	that.preset = preset;
+	that.self = [];
 
 	// set the initial ACL lists in case the enclosing form gets submitted before the ajax loader completes. 
 	that.on_submit();
 
-	if (preset.length === 0) that.showall.removeClass("btn-default").addClass("btn-warning");
-
 	/*events*/
 
 	$(document).ready(function() {
-			that.showall.click(that.on_showall);
-			that.showlimited.click(that.on_showlimited);
-			$(document).on('click','.acl-button-show',that.on_button_show);
-			$(document).on('click','.acl-button-hide',that.on_button_hide);
-			$("#acl-search").keypress(that.on_search);
 
-			/* startup! */
-			that.get(0,15000);
-			that.on_submit();
+		that.acl_select.change(function(event) {
+			var option = that.acl_select.val();
+
+			if(option == 'option1') { // public
+				that.on_showall(event);
+			}
+
+			if(option == 'option2') { // restricted
+				that.on_showlimited(event);
+			}
+		});
+
+		$(document).on('click','.acl-button-show',that.on_button_show);
+		$(document).on('click','.acl-button-hide',that.on_button_hide);
+		$("#acl-search").keypress(that.on_search);
+
+		/* startup! */
+		that.get(0,15000);
+		that.on_submit();
 	});
 }
 
@@ -73,14 +87,8 @@ ACL.prototype.on_search = function(event) {
 };
 
 ACL.prototype.on_showall = function(event) {
-
 	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
 	event.stopPropagation();
-
-	if (that.showall.hasClass("btn-warning")) {
-		return false;
-	}
-	that.showall.removeClass("btn-default").addClass("btn-warning");
 
 	that.allow_cid = [];
 	that.allow_gid = [];
@@ -94,11 +102,22 @@ ACL.prototype.on_showall = function(event) {
 };
 
 ACL.prototype.on_showlimited = function(event) {
-	// Prevent the radiobutton from being selected, as the showlimited radiobutton
-	// option is selected only by selecting show or hide options on channels or groups.
-	event.preventDefault();
+	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
 	event.stopPropagation();
-	return false;
+
+	if(that.preset[0].length === 0 && that.preset[1].length === 0 && that.preset[2].length === 0 && that.preset[3].length === 0) {
+		that.preset[0] = [that.self[0]];
+	}
+
+	that.allow_cid = (that.preset[0] || []);
+	that.allow_gid = (that.preset[1] || []);
+	that.deny_cid  = (that.preset[2] || []);
+	that.deny_gid  = (that.preset[3] || []);
+
+	that.update_view();
+	that.on_submit();
+
+	return true; // return true so that state changes from update_view() will be applied
 }
 
 ACL.prototype.on_selectall = function(event) {
@@ -199,29 +218,26 @@ ACL.prototype.set_deny = function(itemid) {
 	that.update_view();
 };
 
-ACL.prototype.update_radiobuttons = function(isPublic) {
-
-	that.showall.prop('checked', isPublic);
-	that.showlimited.prop('checked', !isPublic);
-	that.showlimited.prop('disabled', isPublic);
+ACL.prototype.update_select = function(isPublic) {
+	that.showall.prop('selected', isPublic);
+	that.showlimited.prop('selected', !isPublic);
 };
 
 ACL.prototype.update_view = function() {
-	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 &&
-		that.deny_gid.length === 0 && that.deny_cid.length === 0) {
-			// btn-warning indicates that the permissions are public, it was chosen because
-			// that.showall used to be a normal button, which btn-warning is a bootstrap style for.
-			that.showall.removeClass("btn-default").addClass("btn-warning");
-			that.update_radiobuttons(true);
+	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0) {
+		that.list.hide(); //hide acl-list
+		that.info.show(); //show acl-info
+		that.update_select(true);
 
-			/* jot acl */
-			$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
-			$('#jot-public').show();
-			$('.profile-jot-net input').attr('disabled', false);
+		/* jot acl */
+		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
+		$('#jot-public').show();
+		$('.profile-jot-net input').attr('disabled', false);
 
 	} else {
-		that.showall.removeClass("btn-warning").addClass("btn-default");
-		that.update_radiobuttons(false);
+		that.list.show(); //show acl-list
+		that.info.hide(); //hide acl-info
+		that.update_select(false);
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
@@ -300,12 +316,11 @@ ACL.prototype.get = function(start, count, search) {
 };
 
 ACL.prototype.populate = function(data) {
-	var height = Math.ceil(data.items.length / that.nw) * 42;
-	that.list_content.height(height);
 	$(data.items).each(function(){
 		html = "<div class='acl-list-item {4} {7} {5}' title='{6}' id='{2}{3}'>"+that.item_tpl+"</div>";
 		html = html.format(this.photo, this.name, this.type, this.xid, '', this.self, this.link, this.taggable);
 		if (this.uids !== undefined) that.group_uids[this.xid] = this.uids;
+		if (this.self === 'abook-self') that.self[0] = this.xid;
 		//console.log(html);
 		that.list_content.append(html);
 	});

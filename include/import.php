@@ -90,7 +90,6 @@ function import_channel($channel, $account_id, $seize) {
 	set_default_login_identity($account_id,$channel['channel_id'],false);
 	logger('import step 1');
 	$_SESSION['import_step'] = 1;
-	ref_session_write(session_id(), serialize($_SESSION));
 	return $channel;	
 
 }

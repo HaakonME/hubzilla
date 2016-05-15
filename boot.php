@@ -636,7 +636,7 @@ class ZotlabsAutoloader {
 		if($arr && count($arr) > 1) {
 			if(! $arr[0])
 				$arr = array_shift($arr);
-	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . ucfirst($arr[1]) . ((count($arr) === 2) ? '.php' : '/' . ucfirst($arr[2]) . ".php");
+	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . $arr[1] . ((count($arr) === 2) ? '.php' : '/' . $arr[2] . ".php");
     	    if (file_exists($filename)) {
         	    include($filename);
             	if (class_exists($className)) {

@@ -632,6 +632,17 @@ class ZotlabsAutoloader {
                 return TRUE;
             }
         }
+		$arr = explode('\\',$className);
+		if($arr && count($arr) > 1) {
+	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . ucfirst($arr[1]) . ((count($arr) === 2) ? '.php' : '/' . ucfirst($arr[2]) . ".php");
+    	    if (file_exists($filename)) {
+        	    include($filename);
+            	if (class_exists($className)) {
+                	return TRUE;
+	            }
+    	    }
+		}
+
         return FALSE;
     }
 }

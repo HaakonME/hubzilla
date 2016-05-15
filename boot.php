@@ -1669,7 +1669,8 @@ function goaway($s) {
 
 function shutdown() {
 	global $db;
-	$db->close();
+	if($db)
+		$db->close();
 }
 
 /**

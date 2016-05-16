@@ -1656,7 +1656,7 @@ function goaway($s) {
 
 function shutdown() {
 	global $db;
-	if($db)
+	if(is_object($db) && $db->connected)
 		$db->close();
 }
 

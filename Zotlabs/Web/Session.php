@@ -16,7 +16,7 @@ class Session {
 	private static $handler = null;
 	private static $session_started = false;
 
-	function init() {
+	static public function init() {
 
 		$gc_probability = 50;
 
@@ -51,7 +51,7 @@ class Session {
 
 	}
 
-	function start() {
+	static public function start() {
 		session_start();
 		self::$session_started = true;
 	}
@@ -62,7 +62,7 @@ class Session {
 	 * @return void
 	 */
 
-	function nuke() {
+	static public function nuke() {
 		self::new_cookie(0); // 0 means delete on browser exit
 		if($_SESSION && count($_SESSION)) {
 			foreach($_SESSION as $k => $v) {
@@ -71,7 +71,7 @@ class Session {
 		}
 	}
 
-	function new_cookie($xtime) {
+	static public function new_cookie($xtime) {
 
 		$newxtime = (($xtime> 0) ? (time() + $xtime) : 0);
 
@@ -98,7 +98,7 @@ class Session {
 
 	}
 
-	function extend_cookie() {
+	static public function extend_cookie() {
 
 		// if there's a long-term cookie, extend it
 
@@ -112,7 +112,7 @@ class Session {
 	}
 
 
-	function return_check() {
+	static public function return_check() {
 
 		// check a returning visitor against IP changes.
 		// If the change results in being blocked from re-entry with the current cookie

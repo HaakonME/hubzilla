@@ -16,7 +16,7 @@ class Session {
 	private static $handler = null;
 	private static $session_started = false;
 
-	static public function init() {
+	public function init() {
 
 		$gc_probability = 50;
 
@@ -51,7 +51,7 @@ class Session {
 
 	}
 
-	static public function start() {
+	public function start() {
 		session_start();
 		self::$session_started = true;
 	}
@@ -71,7 +71,7 @@ class Session {
 		}
 	}
 
-	static public function new_cookie($xtime) {
+	public function new_cookie($xtime) {
 
 		$newxtime = (($xtime> 0) ? (time() + $xtime) : 0);
 
@@ -98,7 +98,7 @@ class Session {
 
 	}
 
-	static public function extend_cookie() {
+	public function extend_cookie() {
 
 		// if there's a long-term cookie, extend it
 
@@ -112,7 +112,7 @@ class Session {
 	}
 
 
-	static public function return_check() {
+	public function return_check() {
 
 		// check a returning visitor against IP changes.
 		// If the change results in being blocked from re-entry with the current cookie

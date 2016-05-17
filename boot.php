@@ -632,6 +632,19 @@ class ZotlabsAutoloader {
                 return TRUE;
             }
         }
+		$arr = explode('\\',$className);
+		if($arr && count($arr) > 1) {
+			if(! $arr[0])
+				$arr = array_shift($arr);
+	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . $arr[1] . ((count($arr) === 2) ? '.php' : '/' . $arr[2] . ".php");
+    	    if (file_exists($filename)) {
+        	    include($filename);
+            	if (class_exists($className)) {
+                	return TRUE;
+	            }
+    	    }
+		}
+
         return FALSE;
     }
 }
@@ -687,6 +700,7 @@ class App {
 	private static $perms      = null;            // observer permissions
 	private static $widgets    = array();         // widgets for this page
 
+	public static  $session    = null;
 	public static  $groups;
 	public static  $language;
 	public static  $langsave;
@@ -1656,7 +1670,8 @@ function goaway($s) {
 
 function shutdown() {
 	global $db;
-	$db->close();
+	if(is_object($db) && $db->connected)
+		$db->close();
 }
 
 /**

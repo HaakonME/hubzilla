@@ -21,7 +21,7 @@ function import_channel($channel, $account_id, $seize) {
 		dbesc($channel['channel_address'])
 	);
 
-	if(($r) || (check_webbie(array($channel['channel_hash'])) !== $channel['channel_hash'])) {
+	if(($r) || (check_webbie(array($channel['channel_address'])) !== $channel['channel_address'])) {
 		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
 			logger('mod_import: duplicate channel. ', print_r($channel,true));
 			notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
@@ -90,7 +90,6 @@ function import_channel($channel, $account_id, $seize) {
 	set_default_login_identity($account_id,$channel['channel_id'],false);
 	logger('import step 1');
 	$_SESSION['import_step'] = 1;
-	ref_session_write(session_id(), serialize($_SESSION));
 	return $channel;	
 
 }

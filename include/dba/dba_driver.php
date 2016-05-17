@@ -25,21 +25,29 @@ function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 	$dba = null;
 
 	$dbtype = intval($dbtype);
+	$set_port = $port;
 
 	if($dbtype == DBTYPE_POSTGRES) {
 		require_once('include/dba/dba_postgres.php');
-		if(is_null($port)) $port = 5432;
-		$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
+		if(is_null($port)) $set_port = 5432;
+		$dba = new dba_postgres($server, $set_port, $user, $pass, $db, $install);
 	} else {
 		if(class_exists('mysqli')) {
-			if (is_null($port)) $port = ini_get("mysqli.default_port");
+			if (is_null($port)) $set_port = ini_get("mysqli.default_port");
 			require_once('include/dba/dba_mysqli.php');
-			$dba = new dba_mysqli($server, $port,$user,$pass,$db,$install);
+			$dba = new dba_mysqli($server, $set_port,$user,$pass,$db,$install);
 		} else {
-			if (is_null($port)) $port = "3306";
+			if (is_null($port)) $set_port = "3306";
 			require_once('include/dba/dba_mysql.php');
-			$dba = new dba_mysql($server, $port,$user,$pass,$db,$install);
+			$dba = new dba_mysql($server, $set_port,$user,$pass,$db,$install);
 		}
+	}
+
+	if(is_object($dba) && $dba->connected) {
+		$dns = (($dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql')
+		. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
+		. ';dbname=' . $db;
+		$dba->pdo_set(array($dns,$user,$pass));
 	}
 
 	define('NULL_DATE', $dba->get_null_date());
@@ -60,6 +68,7 @@ abstract class dba_driver {
 	const UTC_NOW = 'UTC_TIMESTAMP()';
 
 	protected $db;
+	protected $pdo = array();
 
 	public $debug = 0;
 	public  $connected = false;
@@ -183,6 +192,15 @@ abstract class dba_driver {
 	function unescapebin($str) {
 		return $str;
 	}
+
+	function pdo_set($x) {
+		$this->pdo = $x;
+	}
+
+	function pdo_get() {
+		return $this->pdo;
+	}
+
 } // end abstract dba_driver class
 
 

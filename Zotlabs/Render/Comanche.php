@@ -8,7 +8,6 @@ require_once('include/widgets.php');
 
 
 
-
 class Comanche {
 
 
@@ -95,7 +94,7 @@ class Comanche {
 		$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
 		if($cnt) {
 			foreach($matches as $mtch) {
-				\App::$layout['region_' . $mtch[1]] = $this->region($mtch[2]);
+				\App::$layout['region_' . $mtch[1]] = $this->region($mtch[2],$mtch[1]);
 			}
 		}
 	}
@@ -320,7 +319,9 @@ class Comanche {
 	}
 
 
-	function region($s) {
+	function region($s,$region_name) {
+
+		$s = str_replace('$region',$region_name,$s);
 
 		$matches = array();
 

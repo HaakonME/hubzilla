@@ -143,12 +143,6 @@ else
 
 nav_set_selected('nothing');
 
-$arr = array('app_menu' => App::get_apps());
-
-call_hooks('app_menu', $arr);
-
-App::set_apps($arr['app_menu']);
-
 $Router = new Zotlabs\Web\Router($a);
 
 /* initialise content region */

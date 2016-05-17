@@ -1168,6 +1168,10 @@ function discover_by_webbie($webbie) {
 	if(! $x)
 		$probe_old = true;
 
+
+	if((! $dfrn) && (! $has_salmon)) 
+		$probe_old = true;
+
 	if($probe_old) {
 		$y = old_webfinger($webbie);			
 		if($y) {

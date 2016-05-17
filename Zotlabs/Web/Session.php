@@ -29,6 +29,7 @@ class Session {
 		 */
 
 		$handler = new \Zotlabs\Web\SessionHandler();
+
 		$this->handler = $handler;
 
 		$x = session_set_save_handler($handler,false);

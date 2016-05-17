@@ -973,8 +973,11 @@ function sync_files($channel,$files) {
 
 					$attach_exists = false;
 					$x = attach_by_hash($att['hash']);
+					logger('sync_files duplicate check: attach_exists=' . $attach_exists, LOGGER_DEBUG);
+					logger('sync_files duplicate check: att=' . print_r($att,true), LOGGER_DEBUG);
+					logger('sync_files duplicate check: attach_by_hash() returned ' . print_r($x,true), LOGGER_DEBUG);
 
-					if($x) {
+					if($x['success']) {
 						$attach_exists = true;
 						$attach_id = $x[0]['id'];
 					}
@@ -1043,15 +1046,17 @@ function sync_files($channel,$files) {
 
 
 					if($attach_exists) {
-					    $str = '';
-    					foreach($att as $k => $v) {
-				        	if($str)
-            					$str .= ",";
-        					$str .= " `" . $k . "` = '" . $v . "' ";
-    					}
-					    $r = dbq("update `attach` set " . $str . " where id = " . intval($attach_id) );
+						logger('sync_files attach exists: ' . print_r($att,true), LOGGER_DEBUG);
+						$str = '';
+    						foreach($att as $k => $v) {
+				        		if($str)
+            							$str .= ",";
+        						$str .= " `" . $k . "` = '" . $v . "' ";
+    						}
+						$r = dbq("update `attach` set " . $str . " where id = " . intval($attach_id) );
 					}
 					else {
+						logger('sync_files attach does not exists: ' . print_r($att,true), LOGGER_DEBUG);
 						$r = dbq("INSERT INTO attach (`" 
 							. implode("`, `", array_keys($att)) 
 							. "`) VALUES ('" 
@@ -1064,6 +1069,7 @@ function sync_files($channel,$files) {
 
 					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
 						os_mkdir($newfname, STORAGE_DEFAULT_PERMISSIONS,true);
+						$attachment_stored = true;
 						continue;
 					}
 					else {

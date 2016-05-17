@@ -700,6 +700,7 @@ class App {
 	private static $perms      = null;            // observer permissions
 	private static $widgets    = array();         // widgets for this page
 
+	public static  $session    = null;
 	public static  $groups;
 	public static  $language;
 	public static  $langsave;

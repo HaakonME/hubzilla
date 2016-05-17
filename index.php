@@ -62,7 +62,8 @@ if(! App::$install) {
 	load_config('system');
 	load_config('feature');
 
-	\Zotlabs\Web\Session::init();
+	App::$session = new \Zotlabs\Web\Session();
+	App::$session->init();
 	load_hooks();
 	call_hooks('init_1');
 
@@ -84,7 +85,13 @@ if(! App::$install) {
  *
  */
 
-\Zotlabs\Web\Session::start();
+  if(App::$session) {
+	App::$session->start();
+  }
+  else {
+	session_start();
+	register_shutdown_function('session_write_close');
+  }
 
 /**
  * Language was set earlier, but we can over-ride it in the session.

@@ -30,7 +30,8 @@ function cli_startup() {
     	unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
   	};
 
-	\Zotlabs\Web\Session::init();
+	App::$session = new Zotlabs\Web\Session();
+	App::$session->init();
 
 	load_config('system');
 

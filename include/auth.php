@@ -101,7 +101,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 		// process logout request
 		$args = array('channel_id' => local_channel());
 		call_hooks('logging_out', $args);
-		\Zotlabs\Web\Session::nuke();
+		App::$session->nuke();
 		info( t('Logged out.') . EOL);
 		goaway(z_root());
 	}
@@ -117,7 +117,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 				intval(ACCOUNT_ROLE_ADMIN)
 			);
 			if($x) {
-				\Zotlabs\Web\Session::new_cookie(60 * 60 * 24); // one day
+				App::$session->new_cookie(60 * 60 * 24); // one day
 				$_SESSION['last_login_date'] = datetime_convert();
 				unset($_SESSION['visitor_id']); // no longer a visitor
 				authenticate_success($x[0], true, true);
@@ -141,7 +141,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 
 	if(x($_SESSION, 'uid') || x($_SESSION, 'account_id')) {
 
-		Zotlabs\Web\Session::return_check();
+		App::$session->return_check();
 
 		$r = q("select * from account where account_id = %d limit 1",
 			intval($_SESSION['account_id'])
@@ -155,14 +155,14 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 			}
 			if(strcmp(datetime_convert('UTC','UTC','now - 12 hours'), $_SESSION['last_login_date']) > 0 ) {
 				$_SESSION['last_login_date'] = datetime_convert();
-				Zotlabs\Web\Session::extend_cookie();
+				App::$session->extend_cookie();
 				$login_refresh = true;
 			}
 			authenticate_success($r[0], false, false, false, $login_refresh);
 		}
 		else {
 			$_SESSION['account_id'] = 0;
-			\Zotlabs\Web\Session::nuke();
+			App::$session->nuke();
 			goaway(z_root());
 		}
 	} // end logged in user returning
@@ -170,7 +170,7 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 else {
 
 	if(isset($_SESSION)) {
-		\Zotlabs\Web\Session::nuke();
+		App::$session->nuke();
 	}
 
 	// handle a fresh login request
@@ -242,11 +242,11 @@ else {
 
 		if($_POST['remember_me']) {
 			$_SESSION['remember_me'] = 1;
-			\Zotlabs\Web\Session::new_cookie(31449600); // one year
+			App::$session->new_cookie(31449600); // one year
 		}
 		else {
 			$_SESSION['remember_me'] = 0;
-			\Zotlabs\Web\Session::new_cookie(0); // 0 means delete on browser exit
+			App::$session->new_cookie(0); // 0 means delete on browser exit
 		}
 
 		// if we haven't failed up this point, log them in.

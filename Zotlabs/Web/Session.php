@@ -13,8 +13,8 @@ namespace Zotlabs\Web;
 
 class Session {
 
-	private static $handler = null;
-	private static $session_started = false;
+	static private $handler = null;
+	static private $session_started = false;
 
 	public function init() {
 
@@ -29,7 +29,7 @@ class Session {
 		 */
 
 		$handler = new \Zotlabs\Web\SessionHandler();
-		self::$handler = $handler;
+		$this->handler = $handler;
 
 		$x = session_set_save_handler($handler,false);
 		if(! $x)
@@ -38,11 +38,12 @@ class Session {
 		// Force cookies to be secure (https only) if this site is SSL enabled. 
 		// Must be done before session_start().
 
+
 		$arr = session_get_cookie_params();
 		session_set_cookie_params(
 			((isset($arr['lifetime']))   ? $arr['lifetime'] : 0),
 			((isset($arr['path']))      ? $arr['path']     : '/'),
-			((isset($arr['domain']))    ? $arr['domain']   : App::get_hostname()),
+			(($arr['domain'])    ? $arr['domain']   : \App::get_hostname()),
 			((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
 			((isset($arr['httponly']))  ? $arr['httponly'] : true)
 		);
@@ -53,7 +54,7 @@ class Session {
 
 	public function start() {
 		session_start();
-		self::$session_started = true;
+		$this->session_started = true;
 	}
 
 	/**
@@ -62,8 +63,8 @@ class Session {
 	 * @return void
 	 */
 
-	static public function nuke() {
-		self::new_cookie(0); // 0 means delete on browser exit
+	public function nuke() {
+		$this->new_cookie(0); // 0 means delete on browser exit
 		if($_SESSION && count($_SESSION)) {
 			foreach($_SESSION as $k => $v) {
 				unset($_SESSION[$k]);
@@ -77,21 +78,23 @@ class Session {
 
 		$old_sid = session_id();
 
-		if(self::$handler && self::$session_started) {
+		$arr = session_get_cookie_params();
+
+		if($this->handler && $this->session_started) {
 			session_regenerate_id(true);
 
 			// force SessionHandler record creation with the new session_id
 			// which occurs as a side effect of read()
 
-			self::$handler->read(session_id());
+			$this->handler->read(session_id());
 		}
 		else 
 			logger('no session handler');
 
 		if (x($_COOKIE, 'jsdisabled')) {
-			setcookie('jsdisabled', $_COOKIE['jsdisabled'], $newxtime);
+			setcookie('jsdisabled', $_COOKIE['jsdisabled'], $newxtime, '/', \App::get_hostname(),((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),((isset($arr['httponly']))  ? $arr['httponly'] : true));
 		}
-		setcookie(session_name(),session_id(),$newxtime);
+		setcookie(session_name(),session_id(),$newxtime, '/', \App::get_hostname(),((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),((isset($arr['httponly']))  ? $arr['httponly'] : true));
 
 		$arr = array('expire' => $xtime);
 		call_hooks('new_cookie', $arr);
@@ -100,12 +103,14 @@ class Session {
 
 	public function extend_cookie() {
 
+		$arr = session_get_cookie_params();
+
 		// if there's a long-term cookie, extend it
 
 		$xtime = (($_SESSION['remember_me']) ? (60 * 60 * 24 * 365) : 0 );
 
 		if($xtime)
-			setcookie(session_name(),session_id(),(time() + $xtime));
+			setcookie(session_name(),session_id(),(time() + $xtime), '/', \App::get_hostname(),((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),((isset($arr['httponly']))  ? $arr['httponly'] : true));
 		$arr = array('expire' => $xtime);
 		call_hooks('extend_cookie', $arr);
 
@@ -152,7 +157,7 @@ class Session {
 					// check any difference at all
 					logger('Session address changed. Paranoid setting in effect, blocking session. '
 					. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
-					self::nuke();
+					$this->nuke();
 					goaway(z_root());
 					break;
 			}

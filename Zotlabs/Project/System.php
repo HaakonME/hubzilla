@@ -45,7 +45,7 @@ class System {
 	static public function get_server_role() {
 		if(UNO)
 			return 'basic';
-		return 'advanced';
+		return 'pro';
 	}
 
 	static public function get_std_version() {

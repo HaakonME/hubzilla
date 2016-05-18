@@ -5,7 +5,7 @@ require_once('include/cli_startup.php');
 require_once('include/zot.php');
 
 
-function deliver_hooks_run($argv, $argc) {
+function deliver_hooks_run($argc,$argv) {
 
 	cli_startup();
 
@@ -24,6 +24,6 @@ function deliver_hooks_run($argv, $argc) {
 }
 
 if (array_search(__file__,get_included_files())===0){
-  deliver_hooks_run($argv,$argc);
+  deliver_hooks_run($argc,$argv);
   killme();
 }

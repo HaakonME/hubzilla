@@ -1,7 +1,7 @@
 <?php
 
 
-function po2php_run($argv, $argc) {
+function po2php_run($argc,$argv) {
 
 	if ($argc!=2) {
 		print "Usage: ".$argv[0]." <file.po>\n\n";
@@ -140,5 +140,5 @@ function trim_message($str) {
 }
 
 if (array_search(__file__,get_included_files())===0){
-  po2php_run($argv,$argc);
+  po2php_run($argc,$argv);
 }

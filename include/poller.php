@@ -4,7 +4,7 @@ require_once('boot.php');
 require_once('include/cli_startup.php');
 
 
-function poller_run($argv, $argc){
+function poller_run($argc,$argv){
 
 	cli_startup();
 
@@ -440,6 +440,6 @@ function poller_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  poller_run($argv,$argc);
+  poller_run($argc,$argv);
   killme();
 }

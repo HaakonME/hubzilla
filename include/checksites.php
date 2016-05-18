@@ -7,7 +7,7 @@ require_once('include/hubloc.php');
 
 
 
-function checksites_run($argv, $argc){
+function checksites_run($argc,$argv){
 
 
 	cli_startup();
@@ -57,6 +57,6 @@ function checksites_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  checksites_run($argv,$argc);
+  checksites_run($argc,$argv);
   killme();
 }

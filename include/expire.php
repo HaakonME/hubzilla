@@ -6,7 +6,7 @@
 require_once('boot.php');
 require_once('include/cli_startup.php');
 
-function expire_run($argv, $argc){
+function expire_run($argc,$argv){
 
 	cli_startup();
 
@@ -93,6 +93,6 @@ function expire_run($argv, $argc){
 }
 
 if (array_search(__file__, get_included_files()) === 0){
-	expire_run($argv, $argc);
+	expire_run($argc,$argv);
 	killme();
 }

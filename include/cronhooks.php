@@ -4,7 +4,7 @@ require_once('boot.php');
 require_once('include/cli_startup.php');
 
 
-function cronhooks_run($argv, $argc){
+function cronhooks_run($argc,$argv){
 
 	cli_startup();
 
@@ -18,6 +18,6 @@ function cronhooks_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  cronhooks_run($argv,$argc);
+  cronhooks_run($argc,$argv);
   killme();
 }

@@ -5,7 +5,7 @@ require_once('include/zot.php');
 require_once('include/queue_fn.php');
 
 
-function ratenotif_run($argv, $argc){
+function ratenotif_run($argc,$argv){
 
 	cli_startup();
 
@@ -114,6 +114,6 @@ function ratenotif_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  ratenotif_run($argv,$argc);
+  ratenotif_run($argc,$argv);
   killme();
 }

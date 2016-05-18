@@ -5,7 +5,7 @@
 require_once('include/cli_startup.php');
 
 
-function importdoc_run($argv, $argc){
+function importdoc_run($argc,$argv){
 
 	cli_startup();
 
@@ -16,7 +16,7 @@ function importdoc_run($argv, $argc){
 
 }
 if (array_search(__file__,get_included_files())===0){
-  importdoc_run($argv,$argc);
+  importdoc_run($argc,$argv);
   killme();
 }
 

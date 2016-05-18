@@ -5,7 +5,7 @@ namespace Zotlabs\Project;
 class System {
 
 	static public function get_platform_name() {
-		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['platform_name'])
+		if(is_array(\App::$config) && is_array(\App::$config['system']) && array_key_exists('platform_name',\App::$config['system']))
 			return \App::$config['system']['platform_name'];
 		return PLATFORM_NAME;
 	}

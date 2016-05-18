@@ -6,7 +6,7 @@ require_once('include/zot.php');
 require_once('include/dir_fns.php');
 
 
-function onedirsync_run($argv, $argc){
+function onedirsync_run($argc,$argv){
 
 
 	cli_startup();
@@ -77,6 +77,6 @@ function onedirsync_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  onedirsync_run($argv,$argc);
+  onedirsync_run($argc,$argv);
   killme();
 }

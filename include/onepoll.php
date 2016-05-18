@@ -7,7 +7,7 @@ require_once('include/socgraph.php');
 require_once('include/Contact.php');
 
 
-function onepoll_run($argv, $argc){
+function onepoll_run($argc,$argv){
 
 
 	cli_startup();
@@ -154,6 +154,6 @@ function onepoll_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  onepoll_run($argv,$argc);
+  onepoll_run($argc,$argv);
   killme();
 }

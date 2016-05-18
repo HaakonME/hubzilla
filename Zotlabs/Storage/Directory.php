@@ -194,7 +194,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @return null|string ETag
 	 */
 	public function createFile($name, $data = null) {
-		logger($name, LOGGER_DEBUG);
+		logger('create file in directory ' . $name, LOGGER_DEBUG);
 
 		if (! $this->auth->owner_id) {
 			logger('permission denied ' . $name);
@@ -358,7 +358,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @return void
 	 */
 	public function createDirectory($name) {
-		logger($name, LOGGER_DEBUG);
+		logger('create directory ' . $name, LOGGER_DEBUG);
 
 		if ((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -372,7 +372,9 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			$result = attach_mkdir($r[0], $this->auth->observer, array('filename' => $name, 'folder' => $this->folder_hash));
 
 			if($result['success']) {
-				$sync = attach_export_data($r[0],$ret['data']['hash']);
+				$sync = attach_export_data($r[0],$result['data']['hash']);
+				logger('createDirectory: attach_export_data returns $sync:' . print_r($sync, true), LOGGER_DEBUG);
+
 				if($sync) {
 					build_sync_packet($r[0]['channel_id'],array('file' => array($sync)));
 				}

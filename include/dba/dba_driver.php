@@ -32,16 +32,23 @@ function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 		if(is_null($port)) $set_port = 5432;
 		$dba = new dba_postgres($server, $set_port, $user, $pass, $db, $install);
 	} else {
+//		require_once('include/dba/dba_pdo.php');
+//		$dba = new dba_pdo($server, $set_port,$user,$pass,$db,$install);
+//	}
+
 		if(class_exists('mysqli')) {
 			if (is_null($port)) $set_port = ini_get("mysqli.default_port");
 			require_once('include/dba/dba_mysqli.php');
 			$dba = new dba_mysqli($server, $set_port,$user,$pass,$db,$install);
-		} else {
-			if (is_null($port)) $set_port = "3306";
-			require_once('include/dba/dba_mysql.php');
-			$dba = new dba_mysql($server, $set_port,$user,$pass,$db,$install);
 		}
 	}
+ 
+//		else {
+//			if (is_null($port)) $set_port = "3306";
+//			require_once('include/dba/dba_mysql.php');
+//			$dba = new dba_mysql($server, $set_port,$user,$pass,$db,$install);
+//		}
+//	}
 
 	if(is_object($dba) && $dba->connected) {
 		$dns = (($dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql')

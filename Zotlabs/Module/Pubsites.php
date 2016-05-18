@@ -43,7 +43,7 @@ class Pubsites extends \Zotlabs\Web\Controller {
 							$location = '<br />&nbsp;';
 							}
 						$urltext = str_replace(array('https://'), '', $jj['url']);
-						$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="fa fa-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><td' . ucwords($jj['project']) . '</td><td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="fa fa-eye"></i> ' . t('View') . '</a></td>' . $rate_links . '</tr>';
+						$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="fa fa-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><td>' . ucwords($jj['project']) . '</td><td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="fa fa-eye"></i> ' . t('View') . '</a></td>' . $rate_links . '</tr>';
 					}
 				}
 		

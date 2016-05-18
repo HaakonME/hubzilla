@@ -648,12 +648,13 @@ function theme_include($file, $root = '') {
 	else
 		$parent = 'NOPATH';
 
-	$theme = current_theme();
+	$theme = Zotlabs\Render\Theme::current();
+	$thname = $theme[0];
 
 	$ext = substr($file,strrpos($file,'.')+1);
 
 	$paths = array(
-		"{$root}view/theme/$theme/$ext/$file",
+		"{$root}view/theme/$thname/$ext/$file",
 		"{$root}view/theme/$parent/$ext/$file",
 		"{$root}view/site/$ext/$file",
 		"{$root}view/$ext/$file",

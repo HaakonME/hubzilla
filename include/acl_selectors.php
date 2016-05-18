@@ -230,14 +230,14 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 	$showall_origin = '';
 	$showall_icon   = 'fa-globe';
-
+	$role = get_pconfig(local_channel(),'system','permissions_role');
 
 	if(! $emptyACL_description) {
 		$showall_caption = t('Visible to your default audience');
 
 	} else if (is_a($emptyACL_description, 'PermissionDescription')) {
 		$showall_caption = $emptyACL_description->get_permission_description();
-		$showall_origin  = $emptyACL_description->get_permission_origin_description();
+		$showall_origin  = (($role === 'custom') ? $emptyACL_description->get_permission_origin_description() : '');
 		$showall_icon    = $emptyACL_description->get_permission_icon();
 
 	} else {
@@ -271,7 +271,7 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		'$showall'         => $showall_caption,
 		'$showallOrigin'   => $showall_origin,
 		'$showallIcon'     => $showall_icon,
-		'$select_label'    => t('Who can see this'),
+		'$select_label'    => t('Who can see this?'),
 		'$showlimited'     => t('Custom selection'),
 		'$showlimitedDesc' => t('Select "Show" to allow viewing. "Don\'t show" lets you override and limit the scope of "Show".'),
 		'$show'	           => t("Show"),

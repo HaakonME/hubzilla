@@ -270,7 +270,7 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	$o = replace_macros($tpl, array(
 		'$showall'         => $showall_caption,
 		'$onlyme'          => t('Only me'),
-		'$add_others'          => t('Add others'),
+		'$add_others'      => t('Add others'),
 		'$showallOrigin'   => $showall_origin,
 		'$showallIcon'     => $showall_icon,
 		'$select_label'    => t('Who can see this?'),

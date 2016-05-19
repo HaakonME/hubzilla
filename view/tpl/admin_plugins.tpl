@@ -1,33 +1,48 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
-			<button class="btn btn-success btn-xs" onclick="openClose('form');">{{$addrepo}}</button>
+			<button class="btn btn-success btn-xs" onclick="openClose('form');">{{$managerepos}}</button>
 		</div>
 		<h2 id="title">{{$title}} - {{$page}}</h2>
 		<div class="clear"></div>
 	</div>
 	<div id="form" class="section-content-tools-wrapper"{{if !$expandform}} style="display:none;"{{/if}}>
+         
+        <div class="clear"></div>
+        <div class="section-title-wrapper" style="margin-top: 20px;">
+          <h2>{{$installedtitle}}</h2>
+          <div class="clear"></div>
+        </div>
+      <div class="table-responsive section-content-tools-wrapper">
+      <table class="table table-responsive table-striped table-hover">
+        {{foreach $addonrepos as $repo}}
+        <tr>
+            <td style="width: 70%;">
+              <span class="pull-left">{{$repo.name}}</span>
+            </td>
+            <td style="width: 15%;">
+              <button class="btn btn-xs btn-primary pull-right" style="margin-left: 10px; margin-right: 10px;" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
+            </td>
+            <td style="width: 15%;">
+              <button class="btn btn-xs btn-danger pull-right" style="margin-left: 10px; margin-right: 0px;" onclick="removeAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-trash-o'></i>&nbsp;{{$repoRemoveButton}}</button>
+            </td>
+        <div class="clear"></div>
+        </td></tr>
+        {{/foreach}}
+        </table>
+      </div>
+      <div class="clear"></div>
+         <div class="section-title-wrapper">
+          <h2>{{$addnewrepotitle}}</h2>
+          <div class="clear"></div>
+        </div>
 		{{$form}}
-	</div>
-	<div class="clear"></div>
+    </div>
+      <div class="clear"></div>
     <div id="chat-rotator-wrapper" class="center-block">
         <div id="chat-rotator"></div>
     </div>
     <div class="clear"></div>
-    <div class="section-content-info-wrapper">
-      <h3>Installed Plugin Repositories</h3>
-      {{foreach $addonrepos as $repo}}
-<!--      <div class="section-content-tools-wrapper">	-->
-		<div style="margin-left: 30%; margin-right: 30%;">
-          <span class="pull-left">{{$repo.name}}</span>
-          <!--<button class="btn btn-xs btn-primary pull-right" onclick="switchAddonRepoBranch('{{$repo.name}}'); return false;">{{$repoBranchButton}}</button>-->
-          <button class="btn btn-xs btn-danger pull-right" style="margin-left: 10px; margin-right: 0px;" onclick="removeAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-trash-o'></i>&nbsp;{{$repoRemoveButton}}</button>
-          <button class="btn btn-xs btn-primary pull-right" style="margin-left: 10px; margin-right: 10px;" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
-		</div>
-<!--      </div>-->
-      <div class="clear"></div>
-      {{/foreach}}
-    </div>
 	<div class="section-content-wrapper-np">
       {{foreach $plugins as $p}}
       <div class="section-content-tools-wrapper" id="pluginslist">		

@@ -3,6 +3,9 @@
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
 
+// CLI utility
+// performs zot_finger on $argv[1], which is a hex_encoded webbie/reddress
+
 function gprobe_run($argc,$argv){
 
 	cli_startup();

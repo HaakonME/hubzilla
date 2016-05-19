@@ -1758,6 +1758,18 @@ class Admin extends \Zotlabs\Web\Controller {
 				$git = new GitRepo('sys', null, false, $repoName, $repoDir);
 				try {
 					if ($git->pull()) {
+						$files = array_diff(scandir($repoDir), array('.', '..'));
+						foreach ($files as $file) {
+							if (is_dir($repoDir . '/' . $file) && $file !== '.git') {
+								$source = '../extend/addon/' . $repoName . '/' . $file;
+								$target = realpath(__DIR__ . '/../../addon/') . '/' . $file;
+								unlink($target);
+								if (!symlink($source, $target)) {
+									logger('Error linking addons to /addon');
+									json_return_and_die(array('message' => 'Error linking addons to /addon', 'success' => false));
+								}
+							}
+						}
 						json_return_and_die(array('message' => 'Repo updated.', 'success' => true));
 					} else {
 						json_return_and_die(array('message' => 'Error updating addon repo.', 'success' => false));

@@ -82,7 +82,7 @@ class Session {
 		$arr = session_get_cookie_params();
 
 		if($this->handler && $this->session_started) {
-			session_regenerate_id(true);
+			// session_regenerate_id(true);
 
 			// force SessionHandler record creation with the new session_id
 			// which occurs as a side effect of read()

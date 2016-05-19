@@ -14,9 +14,14 @@
 				{{/if}}
 				<label for="acl-select">{{$select_label}}</label>
 				<select id="acl-select" name="optionsRadios" class="form-control form-group">
-					<option id="acl-showall" value="option1" selected>{{$showall}}</option>
-					<option id="acl-showlimited" value="option2">{{$showlimited}}</option>
+					<option id="acl-showall" value="public" selected>{{$showall}}</option>
+					<option id="acl-onlyme" value="onlyme">{{$onlyme}}</option>
+					<option id="acl-showlimited" value="limited">{{$showlimited}}</option>
 				</select>
+
+				<div id="show-acl" class="form-group">
+					<button type="button" class="btn btn-success form-group" onclick="openClose('acl-list'); closeOpen('show-acl');"><i class="fa fa-user-plus"></i>&nbsp;{{$add_others}}</button>
+				</div>
 
 				{{if $showallOrigin}}
 				<div id="acl-info" class="form-group">

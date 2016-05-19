@@ -79,7 +79,6 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	/**
 	 * @brief Validates a username and password.
 	 *
-	 * Guest access is granted with the password "+++".
 	 *
 	 * @see \Sabre\DAV\Auth\Backend\AbstractBasic::validateUserPass
 	 * @param string $username

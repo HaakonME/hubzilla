@@ -74,7 +74,7 @@ require_once('include/bbcode.php');
 require_once('include/identity.php');
 require_once('include/Contact.php');
 
-function notifier_run($argv, $argc){
+function notifier_run($argc,$argv){
 
 	cli_startup();
 
@@ -659,6 +659,6 @@ function notifier_run($argv, $argc){
 
 
 if (array_search(__file__,get_included_files())===0){
-  notifier_run($argv,$argc);
+  notifier_run($argc,$argv);
   killme();
 }

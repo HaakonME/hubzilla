@@ -3,7 +3,7 @@
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
 
-function gprobe_run($argv, $argc){
+function gprobe_run($argc,$argv){
 
 	cli_startup();
 
@@ -33,6 +33,6 @@ function gprobe_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  gprobe_run($argv,$argc);
+  gprobe_run($argc,$argv);
   killme();
 }

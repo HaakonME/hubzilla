@@ -4,7 +4,7 @@ require_once('include/cli_startup.php');
 require_once('include/queue_fn.php');
 require_once('include/zot.php');
 
-function queue_run($argv, $argc){
+function queue_run($argc,$argv){
 
 	cli_startup();
 
@@ -90,6 +90,6 @@ function queue_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  queue_run($argv,$argc);
+  queue_run($argc,$argv);
   killme();
 }

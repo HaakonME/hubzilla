@@ -5,7 +5,7 @@ require_once('include/cli_startup.php');
 require_once('include/zot.php');
 require_once('include/identity.php');
 
-function externals_run($argv, $argc){
+function externals_run($argc,$argv){
 
 	cli_startup();
 	$a = get_app();
@@ -98,6 +98,6 @@ function externals_run($argv, $argc){
 }
 
 if (array_search(__file__,get_included_files())===0){
-  externals_run($argv,$argc);
+  externals_run($argc,$argv);
   killme();
 }

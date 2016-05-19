@@ -16,7 +16,7 @@ require_once('include/queue_fn.php');
  * @param array $argv
  * @param array $argc
  */
-function directory_run($argv, $argc){
+function directory_run($argc,$argv){
 
 	cli_startup();
 
@@ -108,6 +108,6 @@ function directory_run($argv, $argc){
 }
 
 if (array_search(__file__, get_included_files()) === 0) {
-	directory_run($argv, $argc);
+	directory_run($argc,$argv);
 	killme();
 }

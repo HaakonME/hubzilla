@@ -11,13 +11,14 @@ class FriendicaSmarty extends Smarty {
 		parent::__construct();
 
 		$a = get_app();
-		$theme = current_theme();
+		$theme = Zotlabs\Render\Theme::current();
+		$thname = $theme[0];
 
 		// setTemplateDir can be set to an array, which Smarty will parse in order.
 		// The order is thus very important here
-		$template_dirs = array('theme' => "view/theme/$theme/tpl/");
+		$template_dirs = array('theme' => "view/theme/$thname/tpl/");
 		if( x(App::$theme_info,"extends") )
-			$template_dirs = $template_dirs + array('extends' => "view/theme/".App::$theme_info["extends"]."/tpl/");
+			$template_dirs = $template_dirs + array('extends' => "view/theme/" . App::$theme_info["extends"] . "/tpl/");
 		$template_dirs = $template_dirs + array('base' => 'view/tpl/');
 		$this->setTemplateDir($template_dirs);
 

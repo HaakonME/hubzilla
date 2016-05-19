@@ -1874,105 +1874,6 @@ function is_windows() {
 	return ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? true : false);
 }
 
-
-function current_theme(){
-	$app_base_themes = array('redbasic');
-
-	$a = get_app();
-	$page_theme = null;
-
-	// Find the theme that belongs to the channel whose stuff we are looking at
-
-	if(App::$profile_uid && App::$profile_uid != local_channel()) {
-		$r = q("select channel_theme from channel where channel_id = %d limit 1",
-			intval(App::$profile_uid)
-		);
-		if($r)
-			$page_theme = $r[0]['channel_theme'];
-	}
-
-	if(array_key_exists('theme', App::$layout) && App::$layout['theme'])
-		$page_theme = App::$layout['theme'];
-
-	// Allow folks to over-rule channel themes and always use their own on their own site.
-	// The default is for channel themes to take precedence over your own on pages belonging
-	// to that channel.
-
-	if($page_theme && local_channel() && App::$profile_uid && local_channel() != App::$profile_uid) {
-		if(get_pconfig(local_channel(),'system','always_my_theme'))
-			$page_theme = null;
-	}
-
-	$is_mobile = App::$is_mobile || App::$is_tablet;
-
-	$standard_system_theme = ((isset(App::$config['system']['theme'])) ? App::$config['system']['theme'] : '');
-	$standard_theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $standard_system_theme);
-
-	if($is_mobile) {
-		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
-			$system_theme = $standard_system_theme;
-			$theme_name = $standard_theme_name;
-		}
-		else {
-			$system_theme = ((isset(App::$config['system']['mobile_theme'])) ? App::$config['system']['mobile_theme'] : '');
-			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
-
-			if($theme_name === '' || $theme_name === '---' ) {
-				// user has selected to have the mobile theme be the same as the normal one
-				$system_theme = $standard_system_theme;
-				$theme_name = $standard_theme_name;
-			}
-		}
-	}
-	else {
-		$system_theme = $standard_system_theme;
-		$theme_name = $standard_theme_name;
-
-		if($page_theme)
-			$theme_name = $page_theme;
-	}
-
-	if($theme_name &&
-			(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
-					file_exists('view/theme/' . $theme_name . '/php/style.php')))
-		return($theme_name);
-
-	foreach($app_base_themes as $t) {
-		if(file_exists('view/theme/' . $t . '/css/style.css') ||
-			file_exists('view/theme/' . $t . '/php/style.php'))
-			return($t);
-	}
-
-	$fallback = array_merge(glob('view/theme/*/css/style.css'),glob('view/theme/*/php/style.php'));
-	if(count($fallback))
-		return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
-
-}
-
-
-/**
- * @brief Return full URL to theme which is currently in effect.
- *
- * Provide a sane default if nothing is chosen or the specified theme does not exist.
- *
- * @param bool $installing default false
- *
- * @return string
- */
-function current_theme_url($installing = false) {
-	global $a;
-
-	$t = current_theme();
-
-	$opts = '';
-	$opts = ((App::$profile_uid) ? '?f=&puid=' . App::$profile_uid : '');
-	$opts .= ((x(App::$layout,'schema')) ? '&schema=' . App::$layout['schema'] : '');
-	if(file_exists('view/theme/' . $t . '/php/style.php'))
-		return('view/theme/' . $t . '/php/style.pcss' . $opts);
-
-	return('view/theme/' . $t . '/css/style.css');
-}
-
 /**
  * @brief Check if current user has admin role.
  *
@@ -1980,6 +1881,7 @@ function current_theme_url($installing = false) {
  *
  * @return bool true if user is an admin
  */
+
 function is_site_admin() {
 	$a = get_app();
 
@@ -2209,7 +2111,9 @@ function construct_page(&$a) {
 		}
 	}
 
-	if (($p = theme_include(current_theme() . '.js')) != '')
+	$current_theme = Zotlabs\Render\Theme::current();
+
+	if (($p = theme_include($current_theme[0] . '.js')) != '')
 		head_add_js($p);
 
 	if (($p = theme_include('mod_' . App::$module . '.php')) != '')
@@ -2223,7 +2127,7 @@ function construct_page(&$a) {
 		head_add_css(((x(App::$page, 'template')) ? App::$page['template'] : 'default' ) . '.css');
 
 	head_add_css('mod_' . App::$module . '.css');
-	head_add_css(current_theme_url($installing));
+	head_add_css(Zotlabs\Render\Theme::url($installing));
 
 	head_add_js('mod_' . App::$module . '.js');
 

@@ -73,6 +73,9 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	protected $timezone = '';
 
 
+	public $module_disabled = false;
+
+
 	/**
 	 * @brief Validates a username and password.
 	 *
@@ -92,7 +95,7 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 				intval($record['account_id']),
 				intval($record['account_default_channel'])
 			);
-			if ($r) {
+			if($r && $this->check_module_access($r[0]['channel_id'])) {
 				return $this->setAuthenticated($r[0]);
 			}
 		}
@@ -109,13 +112,17 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 					if ((($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED))
 					&& (hash('whirlpool', $record['account_salt'] . $password) === $record['account_password'])) {
 						logger('password verified for ' . $username);
-						return $this->setAuthenticated($r[0]);
+						if($this->check_module_access($r[0]['channel_id']))
+							return $this->setAuthenticated($r[0]);
 					}
 				}
 			}
 		}
 
-		$error = 'password failed for ' . $username;
+		if($this->module_disabled)
+			$error = 'module not enabled for ' . $username;
+		else
+			$error = 'password failed for ' . $username;
 		logger($error);
 		log_failed_login($error);
 
@@ -136,6 +143,17 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 		$_SESSION['uid'] = $r['channel_id'];
 		$_SESSION['account_id'] = $r['channel_account_id'];
 		$_SESSION['authenticated'] = true;
+		return true;
+	}
+
+	protected function check_module_access($channel_id) {
+		if($channel_id && \App::$module === 'cdav') {
+			$x = get_pconfig($channel_id,'cdav','enabled');
+			if(! $x) {
+				$this->module_disabled = true;
+				return false;
+			}
+		}
 		return true;
 	}
 

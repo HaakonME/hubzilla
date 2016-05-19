@@ -13,8 +13,8 @@ namespace Zotlabs\Web;
 
 class Session {
 
-	static private $handler = null;
-	static private $session_started = false;
+	private $handler = null;
+	private $session_started = false;
 
 	public function init() {
 

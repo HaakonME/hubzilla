@@ -82,6 +82,19 @@ class Session {
 		$arr = session_get_cookie_params();
 
 		if($this->handler && $this->session_started) {
+
+			// The session should be regenerated to prevent session fixation attacks.
+			// Traditionally this has been working well, but stopped working in Firefox
+			// recently (~46.0). It works well in other browsers. FF takes time for the
+			// new cookie to propagate and it appears to still use the old cookie for the
+			// next several requests. We don't have an easy way to flush the cookies and
+			// ensure the browser is using the right one. I've tried several methods including
+			// delayed cookie deletion and issuing a page reload just after authentication
+			// and none have been successful and all are hacks to work around what looks to be
+			// a browser issue. This is an important @FIXME. We should enable by default and let
+			// folks disable it if they have issues, except they can't login to change it if 
+			// their sessions aren't working.  
+
 			// session_regenerate_id(true);
 
 			// force SessionHandler record creation with the new session_id

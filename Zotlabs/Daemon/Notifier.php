@@ -32,7 +32,7 @@ require_once('include/html2plain.php');
 /*
  * The notifier is typically called with:
  *
- *		proc_run('php', "include/notifier.php", COMMAND, ITEM_ID);
+ *		Zotlabs\Daemon\Master::Summon(array('Notifier', COMMAND, ITEM_ID));
  *
  * where COMMAND is one of the following:
  *

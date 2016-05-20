@@ -1829,7 +1829,14 @@ function proc_run(){
 	foreach($args as $arg) {
 		if(is_array($arg)) {
 			foreach($arg as $n) {
-				$newargs[] = $n;
+				if(is_array($n)) {
+					foreach($n as $w) {
+						$newargs[] = $w;
+					}
+				}
+				else {
+					$newargs[] = $n;
+				}
 			}
 		}
 		else

@@ -5,8 +5,7 @@ require_once('include/cli_startup.php');
 function poller_run($argc,$argv){
 
 	cli_startup();
-
-	\Zotlabs\Daemon\Master::Summon('Poller');
+	\Zotlabs\Daemon\Master::Summon('Cron');
 
 }
 

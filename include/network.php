@@ -1916,6 +1916,9 @@ function do_delivery($deliveries) {
 	$deliver = array();
 	foreach($deliveries as $d) {
 
+		if(! $d)
+			continue;
+
 		$deliver[] = $d;
 
 		if(count($deliver) >= $deliveries_per_process) {

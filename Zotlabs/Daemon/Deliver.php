@@ -17,6 +17,9 @@ class Deliver {
 
 		for($x = 1; $x < $argc; $x ++) {
 
+			if(! $argv[$x])
+				continue;
+
 			$dresult = null;
 			$r = q("select * from outq where outq_hash = '%s' limit 1",
 				dbesc($argv[$x])

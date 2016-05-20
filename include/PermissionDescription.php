@@ -117,11 +117,7 @@ class PermissionDescription  {
 			case PERMS_NETWORK:  return t('Anybody in the $Projectname network');
 			case PERMS_SITE:     return sprintf(t('Any account on %s'), \App::get_hostname());
 			case PERMS_CONTACTS: return t('Any of my connections');
-			case PERMS_SPECIFIC: 
-				// Because we're describing the permissions of an item with an empty ACL,
-				// the owner will be the only person able to see it if the permissions are 
-				// set to "only specified connections".
-				return t('Only me (only specified contacts and me)'); 
+			case PERMS_SPECIFIC: return t('Only connections I specifically allow');
 			case PERMS_AUTHED:   return t('Anybody authenticated (could include visitors from other networks)');
 			case PERMS_PENDING:  return t('Any connections including those who haven\'t yet been approved');
 			default:             return $this->fallback_description;
@@ -143,11 +139,7 @@ class PermissionDescription  {
 			case PERMS_NETWORK:  return 'fa-share-alt-square'; // fa-share-alt-square is very similiar to the hubzilla logo, but we should create our own logo class to use
 			case PERMS_SITE:     return 'fa-sitemap'; 
 			case PERMS_CONTACTS: return 'fa-group'; 
-			case PERMS_SPECIFIC: 
-				// Because we're describing the permissions of an item with an empty ACL,
-				// the owner will be the only person able to see it if the permissions are 
-				// set to "only specified connections".
-				return 'fa-eye-slash'; 
+			case PERMS_SPECIFIC: return 'fa-list';
 			case PERMS_AUTHED:   return '';
 			case PERMS_PENDING:  return '';
 			default:             return '';

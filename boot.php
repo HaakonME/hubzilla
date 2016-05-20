@@ -1814,7 +1814,7 @@ function get_max_import_size() {
  *
  * $cmd and string args are surrounded with ""
  */
-function proc_run($cmd){
+function proc_run(){
 
 	$a = get_app();
 

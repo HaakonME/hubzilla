@@ -1864,8 +1864,13 @@ function proc_run(){
 		}
 	}
 
-	for($x = 0; $x < count($args); $x++)
+	for($x = 0; $x < count($args); $x++) {
+		if(is_array($args[$x])) {
+			logger('ERROR: shell args is array . ' . print_r($args,true));
+			btlogger('args:');
+		}
 		$args[$x] = escapeshellarg($args[$x]);
+	}
 
 	$cmdline = implode($args," ");
 

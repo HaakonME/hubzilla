@@ -89,7 +89,7 @@ function profile_activity($changed, $value) {
 
 	if($i) {
 		// FIXME - limit delivery in notifier.php to those specificed in the perms argument
-	   	Zotlabs\Daemon\Master::Summon(array('Notifier','activity', $i, 'PERMS_R_PROFILE');
+	   	Zotlabs\Daemon\Master::Summon(array('Notifier','activity', $i, 'PERMS_R_PROFILE'));
 	}
 
 }

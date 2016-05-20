@@ -574,7 +574,7 @@ function import_items($channel,$items,$sync = false) {
 					if($sync && $item['item_wall']) {
 						// deliver singletons if we have any
 						if($item_result && $item_result['success']) {
-							proc_run('php','include/notifier.php','single_activity',$item_result['item_id']);
+							Zotlabs\Daemon\Master::Summon(array('Notifier','single_activity',$item_result['item_id']));
 						}
 					}
 					continue;
@@ -588,7 +588,7 @@ function import_items($channel,$items,$sync = false) {
 			if($sync && $item['item_wall']) {
 				// deliver singletons if we have any
 				if($item_result && $item_result['success']) {
-					proc_run('php','include/notifier.php','single_activity',$item_result['item_id']);
+					Zotlabs\Daemon\Master::Summon(array('Notifier','single_activity',$item_result['item_id']));
 				}
 			}
 		}
@@ -936,7 +936,7 @@ function import_mail($channel,$mails,$sync = false) {
 			$m['uid'] = $channel['channel_id'];
 			$mail_id = mail_store($m);
 			if($sync && $mail_id) {
-				proc_run('php','include/notifier.php','single_mail',$mail_id);
+				Zotlabs\Daemon\Master::Summon(array('Notifier','single_mail',$mail_id));
 			}
  		}
 	}	

@@ -1570,7 +1570,7 @@ function fix_system_urls($oldurl, $newurl) {
 				}
 			}
 
-			proc_run('php', 'include/notifier.php', 'refresh_all', $c[0]['channel_id']);
+			Zotlabs\Daemon\Master::Summon(array('Notifier', 'refresh_all', $c[0]['channel_id']));
 		}
 	}
 

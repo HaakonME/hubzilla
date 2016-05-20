@@ -543,7 +543,7 @@ class Settings extends \Zotlabs\Web\Controller {
 			);
 		}
 	
-		proc_run('php','include/directory.php',local_channel());
+		\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 	
 		build_sync_packet();
 	

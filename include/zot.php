@@ -453,7 +453,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 				else {
 					// if we were just granted read stream permission and didn't have it before, try to pull in some posts
 					if((! ($r[0]['abook_their_perms'] & PERMS_R_STREAM)) && ($their_perms & PERMS_R_STREAM))
-						proc_run('php','include/onepoll.php',$r[0]['abook_id']);
+						Zotlabs\Daemon\Master::Summon(array('Onepoll',$r[0]['abook_id']));
 				}
 			}
 			else {
@@ -504,7 +504,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 					if($new_connection) {
 						if($new_perms != $previous_perms)
-							proc_run('php','include/notifier.php','permission_create',$new_connection[0]['abook_id']);
+							Zotlabs\Daemon\Master::Summon(array('Notifier','permission_create',$new_connection[0]['abook_id']));
 						require_once('include/enotify.php');
 						notification(array(
 							'type'       => NOTIFY_INTRO,
@@ -516,7 +516,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 						if($their_perms & PERMS_R_STREAM) {
 							if(($channel['channel_w_stream'] & PERMS_PENDING)
 								|| (! intval($new_connection[0]['abook_pending'])) )
-								proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
+								Zotlabs\Daemon\Master::Summon(array('Onepoll',$new_connection[0]['abook_id']));
 						}
 
 						unset($new_connection[0]['abook_id']);
@@ -1703,7 +1703,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 				if((! $relay) && (! $request) && (! $local_public)
 					&& perm_is_allowed($channel['channel_id'],$sender['hash'],'send_stream')) {
-					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
+					Zotlabs\Daemon\Master::Summon(array('Notifier', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']));
 				}
 				continue;
 			}
@@ -1775,7 +1775,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
-				proc_run('php','include/notifier.php','relay',intval($item_id));
+				Zotlabs\Daemon\Master::Summon(array('Notifier','relay',intval($item_id)));
 				$DR->update('relayed');
 				$result[] = $DR->get();
 			}
@@ -1858,7 +1858,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
-			proc_run('php','include/notifier.php','relay',intval($item_id));
+			Zotlabs\Daemon\Master::Summon(array('Notifier','relay',intval($item_id)));
 			$DR->addto_update('relayed');
 			$result[] = $DR->get();
 		}
@@ -3060,7 +3060,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 			'msg'        => json_encode($info)
 		));
 
-		proc_run('php', 'include/deliver.php', $hash);
+		Zotlabs\Daemon\Master::Summon(array('Deliver', $hash));
 		$total = $total - 1;
 
 		if($interval && $total)
@@ -3652,7 +3652,7 @@ function zot_reply_message_request($data) {
 			 * invoke delivery to send out the notify packet
 			 */
 
-			proc_run('php', 'include/deliver.php', $hash);
+			Zotlabs\Daemon\Master::Summon(array('Deliver', $hash));
 		}
 	}
 	$ret['success'] = true;

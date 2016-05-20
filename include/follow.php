@@ -269,7 +269,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	if($r) {
 		$result['abook'] = $r[0];
-		proc_run('php', 'include/notifier.php', 'permission_create', $result['abook']['abook_id']);
+		Zotlabs\Daemon\Master::Summon(array('Notifier', 'permission_create', $result['abook']['abook_id']));
 	}
 
 	$arr = array('channel_id' => $uid, 'channel' => $channel, 'abook' => $result['abook']);

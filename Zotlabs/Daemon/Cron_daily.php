@@ -22,7 +22,7 @@ class Cron_daily {
  
 		$d3 = intval(datetime_convert('UTC','UTC','now','N'));
 		if($d3 == 7) {
-			Master::Summon('Cron_weekly');
+			Master::Summon(array('Cron_weekly'));
 		}
 
 		// once daily run birthday_updates and then expire in background

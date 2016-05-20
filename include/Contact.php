@@ -303,8 +303,7 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 			dbesc($channel['channel_hash'])
 		);
 
-		proc_run('php','include/notifier.php','purge_all',$channel_id);
-
+		Zotlabs\Daemon\Master::Summon(array('Notifier','purge_all',$channel_id));
 	}
 
 	q("DELETE FROM `groups` WHERE `uid` = %d", intval($channel_id));
@@ -386,7 +385,7 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 				@rrmdir($f);
 	}
 
-	proc_run('php','include/directory.php',$channel_id);
+	Zotlabs\Daemon\Master::Summon(array('Directory',$channel_id));
 
 	if($channel_id == local_channel() && $unset_session) {
 		App::$session->nuke();

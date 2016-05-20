@@ -436,7 +436,7 @@ function create_identity($arr) {
 
 		call_hooks('create_identity', $newuid);
 
-		proc_run('php','include/directory.php', $ret['channel']['channel_id']);
+		Zotlabs\Daemon\Master::Summon(array('Directory', $ret['channel']['channel_id']));
 	}
 
 	$ret['success'] = true;
@@ -1439,7 +1439,7 @@ function get_my_address() {
 function zid_init(&$a) {
 	$tmp_str = get_my_address();
 	if(validate_email($tmp_str)) {
-		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
+		Zotlabs\Daemon\Master::Summon(array('Gprobe',bin2hex($tmp_str)));
 		$arr = array('zid' => $tmp_str, 'url' => App::$cmd);
 		call_hooks('zid_init',$arr);
 		if(! local_channel()) {

@@ -119,7 +119,7 @@ class Cron {
 
 
 		if(($d2 != $d1) && ($h1 == $h2)) {
-			Master::Summon('Cron_daily');
+			Master::Summon(array('Cron_daily'));
 		}
 
 		// update any photos which didn't get imported properly

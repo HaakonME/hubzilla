@@ -1082,7 +1082,7 @@ class Admin extends \Zotlabs\Web\Controller {
 					intval(PAGE_CENSORED),
 					intval( $uid )
 				);
-				proc_run('php','include/directory.php',$uid,'nopush');
+				\Zotlabs\Daemon\Master::Summon(array('Directory',$uid,'nopush'));
 			}
 			notice( sprintf( tt("%s channel censored/uncensored", "%s channels censored/uncensored", count($channels)), count($channels)) );
 		}
@@ -1141,7 +1141,7 @@ class Admin extends \Zotlabs\Web\Controller {
 						intval($pflags),
 						intval( $uid )
 					);
-					proc_run('php','include/directory.php',$uid,'nopush');
+					\Zotlabs\Daemon\Master::Summon(array('Directory',$uid,'nopush'));
 	
 					notice( sprintf( (($pflags & PAGE_CENSORED) ? t("Channel '%s' censored"): t("Channel '%s' uncensored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
 				}; break;

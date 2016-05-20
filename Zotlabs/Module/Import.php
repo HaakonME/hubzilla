@@ -496,11 +496,11 @@ class Import extends \Zotlabs\Web\Controller {
 		// send out refresh requests
 		// notify old server that it may no longer be primary.
 	
-		proc_run('php','include/notifier.php','location',$channel['channel_id']);
+		\Zotlabs\Daemon\Master::Summon(array('Notifier','location',$channel['channel_id']));
 	
 		// This will indirectly perform a refresh_all *and* update the directory
 	
-		proc_run('php', 'include/directory.php', $channel['channel_id']);
+		\Zotlabs\Daemon\Master::Summon(array('Directory', $channel['channel_id']));
 	
 	
 		notice( t('Import completed.') . EOL);

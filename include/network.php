@@ -1922,7 +1922,7 @@ function do_delivery($deliveries) {
 		$deliver[] = $d;
 
 		if(count($deliver) >= $deliveries_per_process) {
-			proc_run('php','include/deliver.php',$deliver);
+			Zotlabs\Daemon\Master::summon(array('Deliver',$deliver));
 			$deliver = array();
 			if($interval)
 				@time_sleep_until(microtime(true) + (float) $interval);
@@ -1932,7 +1932,7 @@ function do_delivery($deliveries) {
 	// catch any stragglers
 
 	if($deliver)
-		proc_run('php','include/deliver.php',$deliver);
+		Zotlabs\Daemon\Master::summon(array('Deliver',$deliver));
 	
 
 }

@@ -173,7 +173,7 @@ class Mail extends \Zotlabs\Web\Controller {
 				build_sync_packet(local_channel(),array('mail' => encode_mail($x[0],true)));
 			}
 	
-			proc_run('php','include/notifier.php','mail',intval(argv(3)));
+			\Zotlabs\Daemon\Master::Summon(array('Notifier','mail',intval(argv(3))));
 	
 			if($r) {
 					info( t('Message recalled.') . EOL );

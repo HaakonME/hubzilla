@@ -445,7 +445,7 @@ function post_activity_item($arr) {
 	if($post_id) {
 		$arr['id'] = $post_id;
 		call_hooks('post_local_end', $arr);
-		proc_run('php','include/notifier.php','activity',$post_id);
+		Zotlabs\Daemon\Master::Summon(array('Notifier','activity',$post_id));
 		$ret['success'] = true;
 		$r = q("select * from item where id = %d limit 1",
 			intval($post_id)
@@ -2427,7 +2427,7 @@ function tag_deliver($uid, $item_id) {
 							dbesc($j_tgt['id']),
 							intval($u[0]['channel_id'])
 						);
-						proc_run('php','include/notifier.php','edit_post',$p[0]['id']);
+						Zotlabs\Daemon\Master::Summon(array('Notifier','edit_post',$p[0]['id']));
 					}
 				}
 			}
@@ -2799,7 +2799,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 
 
 	if($r)
-		proc_run('php','include/notifier.php','tgroup',$item_id);
+		Zotlabs\Daemon\Master::Summon(array('Notifier','tgroup',$item_id));
 	else {
 		logger('start_delivery_chain: failed to update item');
 		// reset the source xchan to prevent loops
@@ -3307,7 +3307,7 @@ function item_expire($uid,$days) {
 		drop_item($item['id'],false);
 	}
 
-//	proc_run('php',"include/notifier.php","expire","$uid");
+//	Zotlabs\Daemon\Master::Summon(array('Notifier','expire',$uid));
 }
 
 function retain_item($id) {
@@ -3333,7 +3333,7 @@ function drop_items($items) {
 	// multiple threads may have been deleted, send an expire notification
 
 	if($uid)
-		proc_run('php',"include/notifier.php","expire","$uid");
+		Zotlabs\Daemon\Master::Summon(array('Notifier','expire',$uid));
 }
 
 
@@ -3429,7 +3429,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 		// set if we know we're going to send delete notifications out to others.
 
 		if((intval($item['item_wall']) && ($stage != DROPITEM_PHASE2)) || ($stage == DROPITEM_PHASE1))
-			proc_run('php','include/notifier.php','drop',$notify_id);
+			Zotlabs\Daemon\Master::Summon(array('Notifier','drop',$notify_id));
 
 		goaway(z_root() . '/' . $_SESSION['return_url']);
 	}

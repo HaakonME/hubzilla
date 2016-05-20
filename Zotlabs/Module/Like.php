@@ -346,7 +346,7 @@ class Like extends \Zotlabs\Web\Controller {
 					// drop_item was not done interactively, so we need to invoke the notifier
 					// in order to push the changes to connections
 	
-					proc_run('php','include/notifier.php','drop',$rr['id']);
+					\Zotlabs\Daemon\Master::Summon(array('Notifier','drop',$rr['id']));
 	
 				}
 	
@@ -531,7 +531,7 @@ class Like extends \Zotlabs\Web\Controller {
 		}
 	
 	
-		proc_run('php',"include/notifier.php","like","$post_id");
+		\Zotlabs\Daemon\Master::Summon(array('Notifier','like',$post_id));
 	
 		if($interactive) {
 			notice( t('Action completed.') . EOL);

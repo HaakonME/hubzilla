@@ -179,7 +179,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
 	
 					// Update directory in background
-					proc_run('php',"include/directory.php",$channel['channel_id']);
+					\Zotlabs\Daemon\Master::Summon(array('Directory',$channel['channel_id']));
 	
 					// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
 	
@@ -311,7 +311,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				);
 	
 				profile_photo_set_profile_perms(); //Reset default photo permissions to public
-				proc_run('php','include/directory.php',local_channel());
+				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 				goaway(z_root() . '/profiles');
 			}
 	

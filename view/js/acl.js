@@ -17,8 +17,10 @@ function ACL(backend_url, preset) {
 	that.list_content = $("#acl-list-content");
 	that.item_tpl     = unescape($(".acl-list-item[rel=acl-template]").html());
 	that.showall      = $("#acl-showall");
+	that.onlyme       = $("#acl-onlyme");
 	that.showlimited  = $("#acl-showlimited");
 	that.acl_select   = $("#acl-select");
+	that.showacl      = $("#show-acl");
 
 	that.preset = preset;
 	that.self = [];
@@ -33,17 +35,22 @@ function ACL(backend_url, preset) {
 		that.acl_select.change(function(event) {
 			var option = that.acl_select.val();
 
-			if(option == 'option1') { // public
+			if(option == 'public') { // public
 				that.on_showall(event);
 			}
 
-			if(option == 'option2') { // restricted
+			if(option == 'onlyme') { // limited to one self
+				that.on_onlyme(event);
+			}
+
+			if(option == 'limited') { // limited to custom selection
 				that.on_showlimited(event);
 			}
 		});
 
 		$(document).on('click','.acl-button-show',that.on_button_show);
 		$(document).on('click','.acl-button-hide',that.on_button_hide);
+
 		$("#acl-search").keypress(that.on_search);
 
 		/* startup! */
@@ -86,6 +93,21 @@ ACL.prototype.on_search = function(event) {
 	that.kp_timer = setTimeout( that.search, 1000);
 };
 
+ACL.prototype.on_onlyme = function(event) {
+	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
+	event.stopPropagation();
+
+	that.allow_cid = [that.self[0]];
+	that.allow_gid = [];
+	that.deny_cid  = [];
+	that.deny_gid  = [];
+
+	that.update_view(event.target.value);
+	that.on_submit();
+
+	return true; // return true so that state changes from update_view() will be applied
+};
+
 ACL.prototype.on_showall = function(event) {
 	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
 	event.stopPropagation();
@@ -95,7 +117,7 @@ ACL.prototype.on_showall = function(event) {
 	that.deny_cid  = [];
 	that.deny_gid  = [];
 
-	that.update_view();
+	that.update_view(event.target.value);
 	that.on_submit();
 
 	return true; // return true so that state changes from update_view() will be applied
@@ -114,7 +136,7 @@ ACL.prototype.on_showlimited = function(event) {
 	that.deny_cid  = (that.preset[2] || []);
 	that.deny_gid  = (that.preset[3] || []);
 
-	that.update_view();
+	that.update_view(event.target.value);
 	that.on_submit();
 
 	return true; // return true so that state changes from update_view() will be applied
@@ -218,30 +240,46 @@ ACL.prototype.set_deny = function(itemid) {
 	that.update_view();
 };
 
-ACL.prototype.update_select = function(isPublic) {
-	that.showall.prop('selected', isPublic);
-	that.showlimited.prop('selected', !isPublic);
+ACL.prototype.update_select = function(preset) {
+	that.showall.prop('selected', preset === 'public');
+	that.onlyme.prop('selected', preset === 'onlyme');
+	that.showlimited.prop('selected', preset === 'limited');
 };
 
-ACL.prototype.update_view = function() {
+ACL.prototype.update_view = function(value) {
+
 	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0) {
 		that.list.hide(); //hide acl-list
+		that.showacl.hide(); //hide showacl button
 		that.info.show(); //show acl-info
-		that.update_select(true);
+		that.update_select('public');
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
-		$('#jot-public').show();
 		$('.profile-jot-net input').attr('disabled', false);
 
-	} else {
-		that.list.show(); //show acl-list
-		that.info.hide(); //hide acl-info
-		that.update_select(false);
+	}
+
+	// if value != 'onlyme' we should fall through this one
+	else if (that.allow_gid.length === 0 && that.allow_cid.length === 1 && that.allow_cid[0] === that.self[0] && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value === 'onlyme') {
+		that.list.hide(); //hide acl-list if
+		that.showacl.show(); //show showacl button
+		that.info.hide(); //show acl-info
+		that.update_select('onlyme');
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
-		$('#jot-public').hide();
+		$('.profile-jot-net input').attr('disabled', 'disabled');
+	}
+
+	else {
+		that.list.show(); //show acl-list
+		that.showacl.hide(); //hide showacl button
+		that.info.hide(); //hide acl-info
+		that.update_select('limited');
+
+		/* jot acl */
+		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
 		$('.profile-jot-net input').attr('disabled', 'disabled');
 
 	}

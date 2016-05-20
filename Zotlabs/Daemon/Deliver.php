@@ -8,7 +8,7 @@ require_once('include/queue_fn.php');
 
 class Deliver {
 	
-	static public function function run($argc,$argv) {
+	static public function run($argc,$argv) {
 
 		if($argc < 2)
 			return;

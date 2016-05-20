@@ -23,6 +23,7 @@ class Master {
 
 	static public function Release($argc,$argv) {
 		cli_startup();
+		logger('Master: release: ' . print_r($argv,true));
 		require_once('Zotlabs/Daemon/' . $argv[0] . '.php');
 		$cls = '\\Zotlabs\\Daemon\\' . $argv[0];
 		$cls::run($argc,$argv);

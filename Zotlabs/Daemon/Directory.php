@@ -51,7 +51,7 @@ class Directory {
 
 			// Now update all the connections
 			if($pushall) 
-				proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+				Master::Summon(array('Notifier','refresh_all',$channel['channel_id']));
 
 			return;
 		}
@@ -94,7 +94,7 @@ class Directory {
 
 		// Now update all the connections
 		if($pushall)
-			proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+			Master::Summon(array('Notifier','refresh_all',$channel['channel_id']));
 
 	}
 }

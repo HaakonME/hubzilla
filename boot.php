@@ -1847,6 +1847,18 @@ function proc_run($cmd){
 	if(count($args) && $args[0] === 'php')
 		$args[0] = ((x(App::$config,'system')) && (x(App::$config['system'],'php_path')) && (strlen(App::$config['system']['php_path'])) ? App::$config['system']['php_path'] : 'php');
 
+	if(strstr($args[1],'include/')) {
+		$orig = substr(ucfirst(substr($args[1],8)),0,-4);
+		logger('proc_run_redirect: ' . $orig);
+		if(file_exists('Zotlabs/Daemon/' . $orig . '.php')) {
+			array_shift($args);
+			$args[0] = $orig;
+			logger('Redirecting old proc_run interface: ' . print_r($args,true));
+			\Zotlabs\Daemon\Master::Summon($args);
+			return;
+		}
+	}
+
 	for($x = 0; $x < count($args); $x++)
 		$args[$x] = escapeshellarg($args[$x]);
 

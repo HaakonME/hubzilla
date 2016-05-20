@@ -36,7 +36,7 @@ class Poller {
 	
 		// run queue delivery process in the background
 
-		proc_run('php',"include/queue.php");
+		Master::Summon(array('Queue'));
 
 
 		// maintenance for mod sharedwithme - check for updated items and remove them
@@ -76,7 +76,7 @@ class Poller {
 		);
 		if($r) {
 			foreach($r as $rr) {
-				proc_run('php','include/directory.php',$rr['channel_id'],'force');
+				Master::Summon(array('Directory',$rr['channel_id'],'force'));
 				if($interval)
 					@time_sleep_until(microtime(true) + (float) $interval);
 			}
@@ -96,7 +96,7 @@ class Poller {
 					intval($rr['id'])
 				);
 				if($x) {
-					proc_run('php','include/notifier.php','wall-new',$rr['id']);
+					Master::Summon(array('Notifier','wall-new',$rr['id']));
 				}
 			}
 		}
@@ -172,10 +172,10 @@ class Poller {
 				}
 
 				// Check for dead sites
-				proc_run('php', 'include/checksites.php');
+				Master::Summon(array('Checksites'));
 			
 				// update searchable doc indexes
-				proc_run('php', 'include/importdoc.php');
+				Master::Summon(array('Importdoc'));
 
 				/**
 				 * End Cron Weekly
@@ -223,8 +223,8 @@ class Poller {
 
 			set_config('system','last_expire_day',$d2);
 
-			proc_run('php','include/expire.php');
-			proc_run('php','include/cli_suggest.php');
+			Master::Summon(array('Expire'));
+			Master::Summon(array('Cli_suggest'));
 
 			require_once('include/hubloc.php');
 			remove_obsolete_hublocs();
@@ -261,7 +261,7 @@ class Poller {
 		// pull in some public posts
 
 		if(! get_config('system','disable_discover_tab'))
-			proc_run('php','include/externals.php');
+			Master::Summon(array('Externals'));
 
 
 		$manual_id  = 0;
@@ -295,7 +295,7 @@ class Poller {
 		// TODO check to see if there are any cronhooks before wasting a process
 
 		if(! $restart)
-			proc_run('php','include/cronhooks.php');
+			Master::Summon(array('Cronhooks'));
 
 		// Only poll from those with suitable relationships
 
@@ -333,7 +333,7 @@ class Poller {
 						$min = 60;
 					$x = datetime_convert('UTC','UTC',"now - $min minutes");
 					if($c < $x) {
-						proc_run('php','include/onepoll.php',$contact['abook_id']);
+						Master::Summon(array('Onepoll',$contact['abook_id']));
 						if($interval)
 							@time_sleep_until(microtime(true) + (float) $interval);
 					}
@@ -398,7 +398,7 @@ class Poller {
 				if((! $update) && (! $force))
 						continue;
 
-				proc_run('php','include/onepoll.php',$contact['abook_id']);
+				Master::Summon(array('Onepoll',$contact['abook_id']));
 				if($interval)
 					@time_sleep_until(microtime(true) + (float) $interval);
 
@@ -420,7 +420,7 @@ class Poller {
 					if($rr['ud_last'] != NULL_DATE)
 						if($rr['ud_last'] > datetime_convert('UTC','UTC', 'now - 1 day'))
 							continue;
-					proc_run('php','include/onedirsync.php',$rr['ud_id']);
+					Master::Summon(array('Onedirsync',$rr['ud_id']));
 					if($interval)
 						@time_sleep_until(microtime(true) + (float) $interval);
 				}

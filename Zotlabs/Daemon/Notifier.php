@@ -381,7 +381,7 @@ class Notifier {
 					// don't uplink a relayed post to the relay owner
 					if($parent_item['source_xchan'] !== $parent_item['owner_xchan']) {
 						logger('notifier: uplinking this item');
-						proc_run('php','include/notifier.php','uplink',$item_id);
+						Master::Summon(array('Notifier','uplink',$item_id));
 					}
 				}
 
@@ -641,7 +641,8 @@ class Notifier {
 		if($normal_mode) {
 			$x = q("select * from hook where hook = 'notifier_normal'");
 			if($x)
-				proc_run('php','include/deliver_hooks.php', $target_item['id']);
+				Master::Summon(array('Deliver_hooks',$target_item['id']));
+
 		}
 
 		if($deliveries)

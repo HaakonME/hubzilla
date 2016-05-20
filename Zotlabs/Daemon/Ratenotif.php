@@ -92,7 +92,7 @@ class Ratenotif {
 					$deliver[] = $hash;
 	
 					if(count($deliver) >= $deliveries_per_process) {
-						proc_run('php','include/deliver.php',$deliver);
+						Master::Summon(array('Deliver',$deliver));
 						$deliver = array();
 						if($interval)
 							@time_sleep_until(microtime(true) + (float) $interval);
@@ -102,7 +102,7 @@ class Ratenotif {
 				// catch any stragglers
 	
 				if(count($deliver)) {
-					proc_run('php','include/deliver.php',$deliver);
+					Master::Summon(array('Deliver',$deliver));
 				}
 			}
 		}

@@ -857,6 +857,33 @@ function widget_chatroom_members() {
 	return $o;
 }
 
+function widget_wiki_list($arr) {
+
+	require_once("include/wiki.php");
+	$r = wiki_list(App::$profile['channel_hash']);
+
+	if($r) {
+		return replace_macros(get_markup_template('wikilist.tpl'), array(
+			'$header' => t('Wiki List'),
+			'$read' => $r['read'],
+			'$write' => $r['write']
+		));
+	}
+}
+
+function widget_wiki_pages($arr) {
+
+	require_once("include/wiki.php");
+	$r = wiki_pages(App::$profile['channel_hash']);
+
+	if($r) {
+		return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
+			'$header' => t('Wiki Pages'),
+			'$pages' => $r['pages']
+		));
+	}
+}
+
 function widget_bookmarkedchats($arr) {
 
 	if(! feature_enabled(App::$profile['profile_uid'],'ajaxchat'))

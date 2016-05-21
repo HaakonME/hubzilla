@@ -1,9 +1,11 @@
 <?php
-require_once 'include/ITemplateEngine.php';
+
+namespace Zotlabs\Render;
 
 define ("KEY_NOT_EXISTS", '^R_key_not_Exists^');
 
-class Template implements ITemplateEngine {
+class SimpleTemplate implements TemplateEngine {
+
 	static $name ="internal";
 
 	var $r;
@@ -261,6 +263,7 @@ class Template implements ITemplateEngine {
 	}
 
 	// TemplateEngine interface
+
 	public function replace_macros($s, $r) {
 		$this->r = $r;
 

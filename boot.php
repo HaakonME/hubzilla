@@ -908,16 +908,24 @@ class App {
 		/*
 		 * register template engines
 		 */
-		$dc = get_declared_classes();
-		foreach ($dc as $k) {
-			if (in_array("ITemplateEngine", class_implements($k))){
-				self::register_template_engine($k);
-			}
-		}
+
 
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
 		self::$meta= new Zotlabs\Web\HttpMeta();
+		$smarty = new Zotlabs\Render\SmartyTemplate();
+
+		$dc = get_declared_classes();
+//		logger('classes: ' . print_r($dc,true));
+
+		foreach ($dc as $k) {
+
+			if (in_array('Zotlabs\\Render\\TemplateEngine', class_implements($k))){
+				self::register_template_engine($k);
+			}
+		}
+
+
 
 	}
 

@@ -3,8 +3,6 @@
  * @file include/text.php
  */
 
-require_once("include/template_processor.php");
-require_once("include/smarty.php");
 require_once("include/bbcode.php");
 
 // random string, there are 86 characters max in text mode, 128 for hex
@@ -16,8 +14,8 @@ define('RANDOM_STRING_TEXT', 0x01 );
 /**
  * @brief This is our template processor.
  *
- * @param string|FriendicaSmarty $s the string requiring macro substitution,
- *   or an instance of FriendicaSmarty
+ * @param string|SmartyEngine $s the string requiring macro substitution,
+ *   or an instance of SmartyEngine
  * @param array $r key value pairs (search => replace)
  * @return string substituted string
  */

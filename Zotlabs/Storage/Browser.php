@@ -256,7 +256,6 @@ class Browser extends DAV\Browser\Plugin {
 				$func($a);
 			}
 		}
-		ob_start();
 		construct_page($a);
 	}
 

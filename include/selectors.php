@@ -1,6 +1,49 @@
 <?php /** @file */
 
 
+function contact_profile_assign($current) {
+
+	$o = '';
+
+	$o .= "<select id=\"contact-profile-selector\" name=\"profile_assign\" class=\"form-control\"/>\r\n";
+
+	$r = q("SELECT profile_guid, profile_name FROM `profile` WHERE `uid` = %d",
+		intval($_SESSION['uid']));
+
+	if($r) {
+		foreach($r as $rr) {
+			$selected = (($rr['profile_guid'] == $current) ? " selected=\"selected\" " : "");
+			$o .= "<option value=\"{$rr['profile_guid']}\" $selected >{$rr['profile_name']}</option>\r\n";
+		}
+	}
+	$o .= "</select>\r\n";
+	return $o;
+}
+
+function contact_poll_interval($current, $disabled = false) {
+
+	$dis = (($disabled) ? ' disabled="disabled" ' : '');
+	$o = '';
+	$o .= "<select id=\"contact-poll-interval\" name=\"poll\" $dis />" . "\r\n";
+
+	$rep = array(
+		0 => t('Frequently'),
+		1 => t('Hourly'),
+		2 => t('Twice daily'),
+		3 => t('Daily'),
+		4 => t('Weekly'),
+		5 => t('Monthly')
+	);
+
+	foreach($rep as $k => $v) {
+		$selected = (($k == $current) ? " selected=\"selected\" " : "");
+		$o .= "<option value=\"$k\" $selected >$v</option>\r\n";
+	}
+	$o .= "</select>\r\n";
+	return $o;
+}
+
+
 function gender_selector($current="",$suffix="") {
 	$o = '';
 	$select = array('', t('Male'), t('Female'), t('Currently Male'), t('Currently Female'), t('Mostly Male'), t('Mostly Female'), t('Transgender'), t('Intersex'), t('Transsexual'), t('Hermaphrodite'), t('Neuter'), t('Non-specific'), t('Other'), t('Undecided'));
@@ -108,3 +151,4 @@ function marital_selector_min($current="",$suffix="") {
 	$o .= '</select>';
 	return $o;
 }	
+

@@ -2,6 +2,7 @@
 namespace Zotlabs\Module;
 
 require_once('include/identity.php');
+require_once('include/selectors.php');
 
 
 class Profiles extends \Zotlabs\Web\Controller {
@@ -625,7 +626,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				return;
 			}
 	
-			require_once('include/profile_selectors.php');
+			require_once('include/selectors.php');
 	
 	
 			$editselect = 'none';

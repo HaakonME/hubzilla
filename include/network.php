@@ -2150,3 +2150,29 @@ function get_repository_version($branch = 'master') {
 	return '?.?';
 
 }		
+
+function network_to_name($s) {
+
+	$nets = array(
+		NETWORK_DFRN      => t('Friendica'),
+		NETWORK_FRND      => t('Friendica'),
+		NETWORK_OSTATUS   => t('OStatus'),
+		NETWORK_GNUSOCIAL => t('GNU-Social'),
+		NETWORK_FEED      => t('RSS/Atom'),
+		NETWORK_MAIL      => t('Email'),
+		NETWORK_DIASPORA  => t('Diaspora'),
+		NETWORK_FACEBOOK  => t('Facebook'),
+		NETWORK_ZOT       => t('Zot'),
+		NETWORK_LINKEDIN  => t('LinkedIn'),
+		NETWORK_XMPP      => t('XMPP/IM'),
+		NETWORK_MYSPACE   => t('MySpace'),
+	);
+
+	call_hooks('network_to_name', $nets);
+
+	$search  = array_keys($nets);
+	$replace = array_values($nets);
+
+	return str_replace($search,$replace,$s);
+
+}

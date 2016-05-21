@@ -626,9 +626,6 @@ class Profiles extends \Zotlabs\Web\Controller {
 				return;
 			}
 	
-			require_once('include/selectors.php');
-	
-	
 			$editselect = 'none';
 	//		if(feature_enabled(local_channel(),'richtext'))
 	//			$editselect = 'textareas';

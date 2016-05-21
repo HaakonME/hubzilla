@@ -37,7 +37,6 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
-require_once('include/BaseObject.php');
 require_once('include/features.php');
 require_once('include/taxonomy.php');
 require_once('include/identity.php');
@@ -903,12 +902,9 @@ class App {
 
 		self::head_set_icon('/images/hz-32.png');
 
-		BaseObject::set_app($this);
-
 		/*
 		 * register template engines
 		 */
-
 
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
@@ -1080,7 +1076,7 @@ class App {
 		if(! self::$meta->get_field('og:title'))
 			self::$meta->set('og:title',self::$page['title']);
 
-		self::$meta->set('generator', Zotlabs\Project\System::get_platform_name());
+		self::$meta->set('generator', Zotlabs\Lib\System::get_platform_name());
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
@@ -1095,7 +1091,7 @@ class App {
 			'$local_channel' => local_channel(),
 			'$metas' => self::$meta->get(),
 			'$update_interval' => $interval,
-			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Project\System::get_site_name(), t('$Projectname','opensearch')), 
+			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Lib\System::get_site_name(), t('$Projectname','opensearch')), 
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),

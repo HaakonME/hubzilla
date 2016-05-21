@@ -754,10 +754,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
-			require_once('include/ConversationObject.php');
-			require_once('include/ItemObject.php');
-
-			$conv = new Conversation($mode, $preview, $prepared_item);
+			$conv = new Zotlabs\Lib\ThreadStream($mode, $preview, $prepared_item);
 
 			// In the display mode we don't have a profile owner. 
 
@@ -806,7 +803,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				if($item['id'] == $item['parent']) {
 
-					$item_object = new Item($item);
+					$item_object = new Zotlabs\Lib\ThreadItem($item);
 					$conv->add_thread($item_object);
 					if($page_mode === 'list') {
 						$item_object->set_template('conv_list.tpl');

@@ -1,11 +1,8 @@
 <?php /** @file */
 
-if(class_exists('Conversation'))
-	return;
+namespace Zotlabs\Lib;
 
 require_once('boot.php');
-require_once('include/BaseObject.php');
-require_once('include/ItemObject.php');
 require_once('include/text.php');
 require_once('include/items.php');
 
@@ -14,7 +11,7 @@ require_once('include/items.php');
  *
  */
 
-class Conversation extends BaseObject {
+class ThreadStream {
 
 	private $threads = array();
 	private $mode = null;
@@ -46,9 +43,7 @@ class Conversation extends BaseObject {
 		if($this->get_mode() == $mode)
 			return;
 
-		$a = $this->get_app();
-
-		$this->observer = App::get_observer();
+		$this->observer = \App::get_observer();
 		$ob_hash = (($this->observer) ? $this->observer['xchan_hash'] : '');
 
 		switch($mode) {
@@ -57,7 +52,7 @@ class Conversation extends BaseObject {
 				$this->writable = true;
 				break;
 			case 'channel':
-				$this->profile_owner = App::$profile['profile_uid'];
+				$this->profile_owner = \App::$profile['profile_uid'];
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			case 'display':
@@ -67,7 +62,7 @@ class Conversation extends BaseObject {
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			case 'page':
-				$this->profile_owner = App::$profile['uid'];
+				$this->profile_owner = \App::$profile['uid'];
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			default:

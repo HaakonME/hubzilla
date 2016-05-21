@@ -1,6 +1,6 @@
 <?php
 
-namespace Zotlabs\Project;
+namespace Zotlabs\Lib;
 
 class System {
 

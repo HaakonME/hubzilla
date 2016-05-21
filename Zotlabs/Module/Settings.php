@@ -1047,7 +1047,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 				'$h_prv' 	=> t('Security and Privacy Settings'),
 				'$permissions_set' => $permissions_set,
-				'$server_role' => \Zotlabs\Project\System::get_server_role(),
+				'$server_role' => \Zotlabs\Lib\System::get_server_role(),
 				'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 	
 				'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online'), $yes_no),

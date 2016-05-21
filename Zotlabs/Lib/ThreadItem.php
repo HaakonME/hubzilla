@@ -1,17 +1,15 @@
 <?php /** @file */
 
-if(class_exists('Item'))
-	return;
+namespace Zotlabs\Lib;
 
-require_once('include/BaseObject.php');
 require_once('include/text.php');
-require_once('boot.php');
 
 /**
- * An item
+ * A thread item
  */
 
-class Item extends BaseObject {
+class ThreadItem {
+
 	public  $data = array();
 	private $template = 'conv_item.tpl';
 	private $comment_box_template = 'comment_item.tpl';
@@ -32,7 +30,6 @@ class Item extends BaseObject {
 
 
 	public function __construct($data) {
-		$a = $this->get_app();
 				
 		$this->data = $data;
 		$this->toplevel = ($this->get_id() == $this->get_data_value('parent'));
@@ -49,7 +46,7 @@ class Item extends BaseObject {
 					continue;
 				}
 
-				$child = new Item($item);
+				$child = new ThreadItem($item);
 				$this->add_child($child);
 			}
 		}
@@ -67,7 +64,6 @@ class Item extends BaseObject {
 	
 		$result = array();
 
-		$a        = $this->get_app();
 		$item     = $this->get_data();
 
 		$commentww = '';
@@ -219,7 +215,8 @@ class Item extends BaseObject {
 				);
 
 			}
-		} else {
+		} 
+		else {
 			$indent = 'comment';
 		}
 
@@ -675,7 +672,6 @@ class Item extends BaseObject {
 
 		$template = get_markup_template($this->get_comment_box_template());
 
-		$a = $this->get_app();
 		$observer = $conv->get_observer();
 
 		$qc = ((local_channel()) ? get_pconfig(local_channel(),'system','qcomment') : null);
@@ -714,7 +710,7 @@ class Item extends BaseObject {
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
 			'$cipher' => $conv->get_cipher(),
-			'$sourceapp' => App::$sourcename
+			'$sourceapp' => \App::$sourcename
 
 		));
 

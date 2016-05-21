@@ -16,10 +16,10 @@ class Siteinfo extends \Zotlabs\Web\Controller {
 	function get() {
 	
 		if(! get_config('system','hidden_version_siteinfo')) {
-			$version = sprintf( t('Version %s'), \Zotlabs\Project\System::get_project_version());
+			$version = sprintf( t('Version %s'), \Zotlabs\Lib\System::get_project_version());
 			if(@is_dir('.git') && function_exists('shell_exec')) {
 				$commit = @shell_exec('git log -1 --format="%h"');
-				$tag = \Zotlabs\Project\System::get_std_version(); // @shell_exec('git describe --tags --abbrev=0');
+				$tag = \Zotlabs\Lib\System::get_std_version(); // @shell_exec('git describe --tags --abbrev=0');
 			}
 			if(! isset($commit) || strlen($commit) > 16)
 				$commit = '';

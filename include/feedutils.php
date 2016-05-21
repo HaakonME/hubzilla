@@ -88,8 +88,8 @@ function get_feed_for($channel, $observer_hash, $params) {
 	$atom = '';
 
 	$atom .= replace_macros($feed_template, array(
-		'$version'      => xmlify(Zotlabs\Project\System::get_project_version()),
-		'$red'          => xmlify(Zotlabs\Project\System::get_platform_name()),
+		'$version'      => xmlify(Zotlabs\Lib\System::get_project_version()),
+		'$red'          => xmlify(Zotlabs\Lib\System::get_platform_name()),
 		'$feed_id'      => xmlify($channel['xchan_url']),
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,

@@ -100,12 +100,8 @@ class Cloud extends \Zotlabs\Web\Controller {
 	//	require_once('\Zotlabs\Storage/QuotaPlugin.php');
 	//	$server->addPlugin(new \Zotlabs\Storage\\QuotaPlugin($auth));
 	
-		ob_start();
-
 		// All we need to do now, is to fire up the server
 		$server->exec();
-
-		ob_end_flush();
 
 		killme();
 	}

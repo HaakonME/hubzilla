@@ -913,14 +913,15 @@ class App {
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
 		self::$meta= new Zotlabs\Web\HttpMeta();
+
+		// create an instance of the smarty template engine so we can register it.
+
 		$smarty = new Zotlabs\Render\SmartyTemplate();
 
 		$dc = get_declared_classes();
-//		logger('classes: ' . print_r($dc,true));
 
 		foreach ($dc as $k) {
-
-			if (in_array('Zotlabs\\Render\\TemplateEngine', class_implements($k))){
+			if(in_array('Zotlabs\\Render\\TemplateEngine', class_implements($k))) {
 				self::register_template_engine($k);
 			}
 		}

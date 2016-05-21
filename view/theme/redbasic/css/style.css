@@ -526,6 +526,10 @@ footer {
 	clear: both;
 }
 
+#nav-notifications-template {
+	display: none;
+}
+
 #nav-searchbar {
 	float: right;
 	margin-top: 2px;

@@ -75,6 +75,15 @@ class GitRepo {
 			}
 		}
 	}
+	
+	public function initRepo() {
+		if(!$this->path) return false;
+		try {
+			return $this->git->init($this->path);
+		} catch (\PHPGit\Exception\GitException $ex) {
+			return false;
+		}
+	}
 
 	public function pull() {
 		try {

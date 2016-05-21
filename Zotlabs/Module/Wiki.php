@@ -62,6 +62,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 	}
 
 	function post() {
+		require_once('include/wiki.php');
 		
 		// TODO: Implement wiki API
 		
@@ -77,37 +78,39 @@ class Wiki extends \Zotlabs\Web\Controller {
 		
 		// Create a new wiki
 		if ((argc() > 3) && (argv(2) === 'create') && (argv(3) === 'wiki')) {
+			$which = argv(1);
 			// Determine if observer has permission to create wiki
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
-				$which = argv(1);
 				$channel = get_channel_by_nick($which);
+				$observer_hash = get_observer_hash();
 				// Figure out who the page owner is.
-				$perms = get_all_perms(intval($channel['channel_id']), get_observer_hash());
+				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
 
 				if (!$perms['write_wiki']) {
 					notice(t('Permission denied.') . EOL);
 					json_return_and_die(array('success' => false));
 				}
 			}
-			$name = escape_tags(urlencode($_REQUEST['name'])); //Get new wiki name
+			$name = escape_tags(urlencode($_REQUEST['wikiName'])); //Get new wiki name
+			if($name === '') {				
+				notice('Error creating wiki. Invalid name.');
+				goaway('/wiki');
+			}
 			// Get ACL for permissions
-			$acl = new Zotlabs\Access\AccessList($channel);
+			$acl = new \Zotlabs\Access\AccessList($channel);
 			$acl->set_from_array($_REQUEST);
-			
-			$r = wiki_create_wiki($channel, $name, $acl);
+			$r = wiki_create_wiki($channel, $observer_hash, $name, $acl);
 			if ($r['success']) {
-				json_return_and_die(array('success' => true));
+				goaway('/wiki/'.$which.'/'.$name);
 			} else {
-				json_return_and_die(array('success' => false));
+				notice('Error creating wiki');
+				goaway('/wiki');
 			}
 		}
 
-
 		json_return_and_die(array('success' => false));
-		
-		
 		
 	}
 }

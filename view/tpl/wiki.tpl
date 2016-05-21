@@ -19,20 +19,19 @@
     <div class="clear"></div>
   </div>
 	<div id="new-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="new-wiki-form" action="wiki/create/wiki" method="post" >
+      <form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" >
         <div class="clear"></div>
         {{include file="field_input.tpl" field=$wikiName}}
         <div class="btn-group pull-right">
-          <div id="acl-container">
             <div id="profile-jot-submit-right" class="btn-group">
                 <button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="Permission settings" onclick="return false;">
-                    <i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons">{{$bang}}</i>
+                    <i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons">{{$bang}}</i>
                 </button>
             </div>
-          </div>  
             <button id="new-wiki-submit" class="btn btn-primary" type="submit" name="submit" >Create Wiki</button>
         </div>
-      </form>        <div class="clear"></div>
+      </form>        
+      <div class="clear"></div>
       <hr>
     </div>
   
@@ -90,18 +89,6 @@
 
   $('#wiki-get-preview').click(function (ev) {
     $.post("wiki/{{$channel}}/preview", {content: editor.getValue()}, function (data) {
-      if (data.success) {
-        $('#wiki-preview').html(data.html);
-      } else {
-        window.console.log('Error previewing page.');
-      }
-    }, 'json');
-    ev.preventDefault();
-  });
-
-  $('#new-wiki-submit').click(function (ev) {
-    var wikiName = $('#id_wikiName').val();
-    $.post("wiki/{{$channel}}/create/wiki", {name: wikiName}, function (data) {
       if (data.success) {
         $('#wiki-preview').html(data.html);
       } else {

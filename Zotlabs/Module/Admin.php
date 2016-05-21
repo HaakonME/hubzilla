@@ -1896,8 +1896,8 @@ class Admin extends \Zotlabs\Web\Controller {
 					}
 					if (!is_dir($tempAddonDir)) {
 						if (!mkdir($tempAddonDir, 0770, true)) {
-							logger('Error creating temp plugin repo folder: ' . $extendDir);
-							json_return_and_die(array('message' => 'Error creating temp plugin repo folder: ' . $extendDir, 'success' => false));
+							logger('Error creating temp plugin repo folder: ' . $tempAddonDir);
+							json_return_and_die(array('message' => 'Error creating temp plugin repo folder: ' . $tempAddonDir, 'success' => false));
 						}
 					}
 					$repoName = null;

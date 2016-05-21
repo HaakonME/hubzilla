@@ -2860,3 +2860,32 @@ function pdl_selector($uid, $current="") {
 	return $o;
 }
 
+/* 
+ * array flatten_array_recursive(array);
+ * returns a one-dimensional array from a multi-dimensional array 
+ * empty values are discarded
+ * example: print_r(flatten_array_recursive(array('foo','bar',array('baz','blip',array('zob','glob')),'','grip')));
+ *
+ * Array ( [0] => foo [1] => bar [2] => baz [3] => blip [4] => zob [5] => glob [6] => grip ) 
+ *
+ */
+
+function flatten_array_recursive($arr) {
+	$ret = array();
+
+	if(! $arr)
+		return $ret;
+
+	foreach($arr as $a) {
+		if(is_array($a)) {
+			$tmp = flatten_array_recursive($a);
+			if($tmp) {
+				$ret = array_merge($ret,$tmp);
+			}
+		}
+		elseif($a) {
+			$ret[] = $a;
+		}
+	}
+	return($ret);
+}			

@@ -1816,38 +1816,19 @@ function get_max_import_size() {
  */
 function proc_run(){
 
-	$a = get_app();
-
 	$args = func_get_args();
 
 	$newargs = array();
+
 	if(! count($args))
 		return;
 
-	// expand any arrays
-
-	foreach($args as $arg) {
-		if(is_array($arg)) {
-			foreach($arg as $n) {
-				if(is_array($n)) {
-					foreach($n as $w) {
-						$newargs[] = $w;
-					}
-				}
-				else {
-					$newargs[] = $n;
-				}
-			}
-		}
-		else
-			$newargs[] = $arg;
-	}
-
-	$args = $newargs;
+	$args = flatten_array_recursive($args);
 
 	$arr = array('args' => $args, 'run_cmd' => true);
 
 	call_hooks('proc_run', $arr);
+
 	if(! $arr['run_cmd'])
 		return;
 
@@ -1855,8 +1836,8 @@ function proc_run(){
 		$args[0] = ((x(App::$config,'system')) && (x(App::$config['system'],'php_path')) && (strlen(App::$config['system']['php_path'])) ? App::$config['system']['php_path'] : 'php');
 
 
-	// redirect proc_run statements of legacy daemon processes to the new Daemon Master object class
-	// We will keep this interface until everybody has transitioned.
+	// redirect proc_run statements of legacy daemon processes to the newer Daemon Master object class
+	// We will keep this interface until everybody has transitioned. (2016-05-20)
 
 	if(strstr($args[1],'include/')) {
 		// convert 'include/foo.php' to 'Foo'
@@ -1871,14 +1852,7 @@ function proc_run(){
 		}
 	}
 
-	for($x = 0; $x < count($args); $x++) {
-		if(is_array($args[$x])) {
-			logger('ERROR: shell args is array . ' . print_r($args,true));
-			btlogger('args:');
-		}
-		$args[$x] = escapeshellarg($args[$x]);
-	}
-
+	$args = array_map('escapeshellarg',$args);
 	$cmdline = implode($args," ");
 
 	if(is_windows()) {

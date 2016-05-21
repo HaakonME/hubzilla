@@ -1,6 +1,7 @@
 <?php /** @file */
-require_once 'include/ITemplateEngine.php';
-require_once("library/Smarty/libs/Smarty.class.php");
+
+require_once('include/ITemplateEngine.php');
+require_once('library/Smarty/libs/Smarty.class.php');
 
 
 class FriendicaSmarty extends Smarty {

@@ -71,7 +71,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(\App::$pager['itemspage']), intval(\App::$pager['start']));
 		}
 	
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		require_once('include/security.php');
 	
 		if(get_config('system','site_firehose')) {

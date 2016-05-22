@@ -6,7 +6,7 @@
  */
 
 require_once('include/plugin.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 function get_system_apps($translate = true) {
 

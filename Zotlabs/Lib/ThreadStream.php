@@ -165,7 +165,7 @@ class ThreadStream {
 					$item->set_commentable(can_comment_on_post($this->observer['xchan_hash'],$item->data));
 			}
 		}
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 
 		$item->set_conversation($this);
 		$this->threads[] = $item;

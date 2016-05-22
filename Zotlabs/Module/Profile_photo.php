@@ -9,7 +9,7 @@ namespace Zotlabs\Module;
 
 require_once('include/photo/photo_driver.php');
 require_once('include/photos.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 /* @brief Function for sync'ing  permissions of profile-photos and their profile
 *

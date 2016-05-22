@@ -1332,7 +1332,7 @@ function zot_import($arr, $sender_url) {
  */
 function public_recips($msg) {
 
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 
 	$check_mentions = false;
 	$include_sys = false;
@@ -3222,7 +3222,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
-					require_once('include/Contact.php');
 
 					$r = q("select abook_id, abook_feed from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 						dbesc($abook['abook_xchan']),
@@ -3926,7 +3925,7 @@ function zotinfo($arr) {
 
 		$ret['site']['accounts'] = account_total();
 	
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$ret['site']['channels'] = channel_total();
 
 
@@ -4421,7 +4420,6 @@ function zot_reply_purge($sender,$recipients) {
 		$arr = $sender;
 		$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
-		require_once('include/Contact.php');
 		remove_all_xchan_resources($sender_hash);	
 
 		$ret['success'] = true;

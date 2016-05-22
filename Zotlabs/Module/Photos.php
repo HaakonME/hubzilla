@@ -1,12 +1,12 @@
 <?php
 namespace Zotlabs\Module;
+
 require_once('include/photo/photo_driver.php');
 require_once('include/photos.php');
 require_once('include/items.php');
 require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
 require_once('include/security.php');
-require_once('include/Contact.php');
 require_once('include/attach.php');
 require_once('include/text.php');
 require_once('include/PermissionDescription.php');

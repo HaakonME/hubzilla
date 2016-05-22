@@ -514,7 +514,7 @@ require_once('include/api_auth.php');
 			return false;
 		}
 
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		
 		json_return_and_die(identity_basic_export(api_user(),(($_REQUEST['posts']) ? intval($_REQUEST['posts']) : 0 )));	
 	}

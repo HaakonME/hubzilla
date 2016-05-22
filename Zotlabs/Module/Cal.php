@@ -6,8 +6,6 @@ require_once('include/bbcode.php');
 require_once('include/datetime.php');
 require_once('include/event.php');
 require_once('include/items.php');
-require_once('include/Contact.php');
-
 
 
 class Cal extends \Zotlabs\Web\Controller {

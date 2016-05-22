@@ -181,8 +181,8 @@ class Oep extends \Zotlabs\Web\Controller {
 	function oep_profile_reply($args) {
 	
 		
-		require_once('include/identity.php');
-		require_once('include/Contact.php');
+		require_once('include/channel.php');
+
 		$url = $args['url'];
 	
 		if(preg_match('#//(.*?)/(.*?)/(.*?)(/|\?|&|$)#',$url,$matches)) {

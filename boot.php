@@ -39,14 +39,14 @@ require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/features.php');
 require_once('include/taxonomy.php');
-require_once('include/identity.php');
-require_once('include/Contact.php');
+require_once('include/channel.php');
+require_once('include/connections.php');
 require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'STD_VERSION',             '1.7.1' );
-define ( 'ZOT_REVISION',            1     );
+define ( 'ZOT_REVISION',            1.1     );
 
 define ( 'DB_UPDATE_VERSION',       1168  );
 

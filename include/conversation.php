@@ -1107,7 +1107,6 @@ function status_editor($a, $x, $popup = false) {
 
 	$o = '';
 
-	require_once('include/Contact.php');
 	$c = channelx_by_n($x['profile_uid']);
 	if($c && $c['channel_moved'])
 		return $o;
@@ -1160,7 +1159,7 @@ function status_editor($a, $x, $popup = false) {
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />';
 
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$id_select = identity_selector();
 	}
 	else

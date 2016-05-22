@@ -185,7 +185,7 @@ class Display extends \Zotlabs\Web\Controller {
 			if($load || ($checkjs->disabled())) {
 				$r = null;
 	
-				require_once('include/identity.php');
+				require_once('include/channel.php');
 				$sys = get_sys_channel();
 				$sysid = $sys['channel_id'];
 	
@@ -233,7 +233,7 @@ class Display extends \Zotlabs\Web\Controller {
 		elseif($update && !$load) {
 			$r = null;
 	
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			$sys = get_sys_channel();
 			$sysid = $sys['channel_id'];
 	

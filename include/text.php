@@ -1319,7 +1319,7 @@ function theme_attachments(&$item) {
  			
 			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			if(is_foreigner($item['author_xchan']))
 				$url = $r['href'];
 			else
@@ -1486,7 +1486,7 @@ function format_event($jobject) {
 }
 
 function prepare_body(&$item,$attach = false) {
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 
 	call_hooks('prepare_body_init', $item); 
 
@@ -2261,7 +2261,7 @@ function design_tools() {
 	$sys = false;
 
 	if(App::$is_sys && is_site_admin()) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$channel = get_sys_channel();
 		$sys = true;
 	}

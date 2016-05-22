@@ -5,7 +5,7 @@ require_once('include/acl_selectors.php');
 require_once('include/message.php');
 require_once('include/zot.php');
 require_once("include/bbcode.php");
-require_once('include/Contact.php');
+
 
 
 
@@ -304,11 +304,6 @@ class Mail extends \Zotlabs\Web\Controller {
 			\App::$poi = $messages[0]['from'];
 		else
 			\App::$poi = $messages[0]['to'];
-	
-	//	require_once('include/Contact.php');
-	
-	//	\App::set_widget('mail_conversant',vcard_from_xchan(\App::$poi,$get_observer_hash,'mail'));
-	
 	
 		$tpl = get_markup_template('msg-header.tpl');
 		

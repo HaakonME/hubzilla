@@ -56,7 +56,7 @@ class Item extends \Zotlabs\Web\Controller {
 			$remote_xchan = $remote_observer = false;
 	
 		$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$sys = get_sys_channel();
 		if($sys && $profile_uid && ($sys['channel_id'] == $profile_uid) && is_site_admin()) {
 			$uid = intval($sys['channel_id']);

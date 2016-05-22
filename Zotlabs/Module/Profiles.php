@@ -1,7 +1,7 @@
 <?php
 namespace Zotlabs\Module;
 
-require_once('include/identity.php');
+require_once('include/channel.php');
 require_once('include/selectors.php');
 
 
@@ -602,7 +602,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 	
 		$profile_fields_basic    = get_profile_fields_basic();
 		$profile_fields_advanced = get_profile_fields_advanced();

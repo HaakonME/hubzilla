@@ -3,7 +3,7 @@
 namespace Zotlabs\Daemon;
 
 require_once('include/zot.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 
 class Externals {

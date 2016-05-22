@@ -1,6 +1,6 @@
 <?php
 /**
- * @file include/identity.php
+ * @file include/channel.php
  */
 
 require_once('include/zot.php');
@@ -847,7 +847,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 		$extra_fields = array();
 
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$profile_fields_basic    = get_profile_fields_basic();
 		$profile_fields_advanced = get_profile_fields_advanced();
 
@@ -1003,8 +1003,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	$profile['picdate'] = urlencode($profile['picdate']);
 
 	call_hooks('profile_sidebar_enter', $profile);
-
-	require_once('include/Contact.php');
 
 	if($show_connect) {
 

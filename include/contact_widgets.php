@@ -3,9 +3,6 @@
 
 
 function findpeople_widget() {
-	require_once('include/Contact.php');
-
-	$a = get_app();
 
 	if(get_config('system','invitation_only')) {
 		$x = get_pconfig(local_channel(),'system','invites_remaining');
@@ -37,7 +34,6 @@ function findpeople_widget() {
 
 
 function fileas_widget($baseurl,$selected = '') {
-	$a = get_app();
 
 	if(! local_channel())
 		return '';
@@ -65,8 +61,6 @@ function fileas_widget($baseurl,$selected = '') {
 }
 
 function categories_widget($baseurl,$selected = '') {
-
-	$a = get_app();
 	
 	if(! feature_enabled(App::$profile['profile_uid'],'categories'))
 		return '';
@@ -107,8 +101,6 @@ function categories_widget($baseurl,$selected = '') {
 }
 
 function common_friends_visitor_widget($profile_uid) {
-
-	$a = get_app();
 
 	if(local_channel() == $profile_uid)
 		return;

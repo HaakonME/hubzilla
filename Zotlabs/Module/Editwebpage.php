@@ -1,7 +1,7 @@
 <?php
 namespace Zotlabs\Module;
 
-require_once('include/identity.php');
+require_once('include/channel.php');
 require_once('include/acl_selectors.php');
 require_once('include/conversation.php');
 require_once('include/PermissionDescription.php');

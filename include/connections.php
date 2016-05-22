@@ -198,7 +198,7 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 
 	// Don't let anybody nuke the only admin account.
 
-	$r = q("select account_id from account where (account_roles & %d)>0",
+	$r = q("select account_id from account where (account_roles & %d) > 0",
 		intval(ACCOUNT_ROLE_ADMIN)
 	);
 

@@ -734,7 +734,7 @@ class Setup extends \Zotlabs\Web\Controller {
 			set_config('system','curl_ssl_ciphers','ALL:!eNULL');
 	
 		// Create a system channel
-		require_once ('include/identity.php');
+		require_once ('include/channel.php');
 		create_sys_channel();
 	
 		$baseurl = z_root();

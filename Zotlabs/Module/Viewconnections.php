@@ -2,8 +2,6 @@
 namespace Zotlabs\Module;
 
 require_once('include/selectors.php');
-require_once('include/Contact.php');
-
 
 class Viewconnections extends \Zotlabs\Web\Controller {
 
@@ -16,7 +14,7 @@ class Viewconnections extends \Zotlabs\Web\Controller {
 			profile_load($a,argv(1));
 	}
 	
-		function get() {
+	function get() {
 	
 		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
 			notice( t('Public access denied.') . EOL);

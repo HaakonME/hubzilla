@@ -1087,7 +1087,6 @@ function update_feed_item($uid,$datarray) {
 
 function handle_feed($uid,$abook_id,$url) {
 
-	require_once('include/Contact.php');
 	$channel = channelx_by_n($uid);
 	if(! $channel)
 		return;

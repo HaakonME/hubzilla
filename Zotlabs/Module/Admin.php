@@ -902,7 +902,6 @@ class Admin extends \Zotlabs\Web\Controller {
 		}
 		// account delete button was submitted
 		if (x($_POST, 'page_users_delete')) {
-			require_once('include/Contact.php');
 			foreach ($users as $uid){
 				account_remove($uid, true, false);
 			}
@@ -951,7 +950,6 @@ class Admin extends \Zotlabs\Web\Controller {
 			switch (argv(2)){
 				case 'delete':
 					// delete user
-					require_once('include/Contact.php');
 					account_remove($uid,true,false);
 	
 					notice( sprintf(t("Account '%s' deleted"), $account[0]['account_email']) . EOL);
@@ -1096,7 +1094,6 @@ class Admin extends \Zotlabs\Web\Controller {
 			notice( sprintf( tt("%s channel code allowed/disallowed", "%s channels code allowed/disallowed", count($channels)), count($channels)) );
 		}
 		if (x($_POST,'page_channels_delete')){
-			require_once("include/Contact.php");
 			foreach($channels as $uid){
 				channel_remove($uid,true);
 			}
@@ -1128,7 +1125,6 @@ class Admin extends \Zotlabs\Web\Controller {
 				case "delete":{
 					check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
 					// delete channel
-					require_once("include/Contact.php");
 					channel_remove($uid,true);
 					
 					notice( sprintf(t("Channel '%s' deleted"), $channel[0]['channel_name']) . EOL);

@@ -111,8 +111,8 @@ msgstr ""
 #: ../../Zotlabs/Module/Editwebpage.php:146
 #: ../../Zotlabs/Module/Layouts.php:190 ../../Zotlabs/Module/Menu.php:112
 #: ../../Zotlabs/Module/Settings.php:652 ../../Zotlabs/Module/Thing.php:260
-#: ../../Zotlabs/Module/Webpages.php:187 ../../include/identity.php:937
-#: ../../include/identity.php:941 ../../include/ItemObject.php:100
+#: ../../Zotlabs/Module/Webpages.php:187 ../../include/channel.php:937
+#: ../../include/channel.php:941 ../../include/ItemObject.php:100
 #: ../../include/menu.php:108 ../../include/page_widgets.php:8
 #: ../../include/page_widgets.php:36 ../../include/apps.php:291
 msgid "Edit"
@@ -247,7 +247,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Editwebpage.php:33
 #: ../../Zotlabs/Module/Filestorage.php:60 ../../Zotlabs/Module/Hcard.php:12
 #: ../../Zotlabs/Module/Layouts.php:31 ../../Zotlabs/Module/Profile.php:20
-#: ../../Zotlabs/Module/Webpages.php:34 ../../include/identity.php:837
+#: ../../Zotlabs/Module/Webpages.php:34 ../../include/channel.php:837
 msgid "Requested profile is not available."
 msgstr ""
 
@@ -2030,8 +2030,8 @@ msgstr ""
 #: ../../Zotlabs/Module/Settings.php:346 ../../Zotlabs/Module/Settings.php:347
 #: ../../Zotlabs/Module/Settings.php:350 ../../Zotlabs/Module/Settings.php:361
 #: ../../include/profile_selectors.php:80 ../../include/widgets.php:495
-#: ../../include/identity.php:389 ../../include/identity.php:390
-#: ../../include/identity.php:397
+#: ../../include/channel.php:389 ../../include/channel.php:390
+#: ../../include/channel.php:397
 msgid "Friends"
 msgstr ""
 
@@ -2236,7 +2236,7 @@ msgstr ""
 msgid "%1$s updated their %2$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Cover_photo.php:240 ../../include/identity.php:1807
+#: ../../Zotlabs/Module/Cover_photo.php:240 ../../include/channel.php:1807
 msgid "cover photo"
 msgstr ""
 
@@ -2318,12 +2318,12 @@ msgstr ""
 msgid "Homepage: "
 msgstr ""
 
-#: ../../Zotlabs/Module/Directory.php:306 ../../include/identity.php:1329
+#: ../../Zotlabs/Module/Directory.php:306 ../../include/channel.php:1329
 msgid "Age:"
 msgstr ""
 
 #: ../../Zotlabs/Module/Directory.php:311 ../../include/event.php:52
-#: ../../include/identity.php:1029 ../../include/text.php:1481
+#: ../../include/channel.php:1029 ../../include/text.php:1481
 #: ../../include/bb2diaspora.php:509
 msgid "Location:"
 msgstr ""
@@ -2332,18 +2332,18 @@ msgstr ""
 msgid "Description:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Directory.php:322 ../../include/identity.php:1345
+#: ../../Zotlabs/Module/Directory.php:322 ../../include/channel.php:1345
 msgid "Hometown:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Directory.php:324 ../../include/identity.php:1353
+#: ../../Zotlabs/Module/Directory.php:324 ../../include/channel.php:1353
 msgid "About:"
 msgstr ""
 
 #: ../../Zotlabs/Module/Directory.php:325 ../../Zotlabs/Module/Match.php:68
 #: ../../Zotlabs/Module/Suggest.php:56 ../../include/Contact.php:101
 #: ../../include/widgets.php:147 ../../include/widgets.php:184
-#: ../../include/identity.php:1014 ../../include/conversation.php:961
+#: ../../include/channel.php:1014 ../../include/conversation.php:961
 msgid "Connect"
 msgstr ""
 
@@ -4182,7 +4182,7 @@ msgstr ""
 msgid "View all"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1130 ../../include/identity.php:1304
+#: ../../Zotlabs/Module/Photos.php:1130 ../../include/channel.php:1304
 #: ../../include/ItemObject.php:179 ../../include/conversation.php:1748
 #: ../../include/taxonomy.php:403
 msgctxt "noun"
@@ -4243,13 +4243,13 @@ msgstr ""
 msgid "added your channel"
 msgstr ""
 
-#: ../../Zotlabs/Module/Ping.php:322 ../../include/identity.php:1123
-#: ../../include/identity.php:1199
+#: ../../Zotlabs/Module/Ping.php:322 ../../include/channel.php:1123
+#: ../../include/channel.php:1199
 msgid "g A l F d"
 msgstr ""
 
-#: ../../Zotlabs/Module/Ping.php:345 ../../include/identity.php:1169
-#: ../../include/identity.php:1239
+#: ../../Zotlabs/Module/Ping.php:345 ../../include/channel.php:1169
+#: ../../include/channel.php:1239
 msgid "[today]"
 msgstr ""
 
@@ -4387,7 +4387,7 @@ msgid "View this profile"
 msgstr ""
 
 #: ../../Zotlabs/Module/Profiles.php:693 ../../Zotlabs/Module/Profiles.php:775
-#: ../../include/identity.php:959
+#: ../../include/channel.php:959
 msgid "Edit visibility"
 msgstr ""
 
@@ -4399,7 +4399,7 @@ msgstr ""
 msgid "Change cover photo"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profiles.php:696 ../../include/identity.php:930
+#: ../../Zotlabs/Module/Profiles.php:696 ../../include/channel.php:930
 msgid "Change profile photo"
 msgstr ""
 
@@ -4560,11 +4560,11 @@ msgstr ""
 msgid "My other channels"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profiles.php:771 ../../include/identity.php:955
+#: ../../Zotlabs/Module/Profiles.php:771 ../../include/channel.php:955
 msgid "Profile Image"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profiles.php:781 ../../include/identity.php:937
+#: ../../Zotlabs/Module/Profiles.php:781 ../../include/channel.php:937
 #: ../../include/nav.php:88
 msgid "Edit Profiles"
 msgstr ""
@@ -4577,7 +4577,7 @@ msgstr ""
 msgid "Profile Visibility Editor"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profperm.php:117 ../../include/identity.php:1395
+#: ../../Zotlabs/Module/Profperm.php:117 ../../include/channel.php:1395
 msgid "Profile"
 msgstr ""
 
@@ -5190,7 +5190,7 @@ msgstr ""
 msgid "Basic Settings"
 msgstr ""
 
-#: ../../Zotlabs/Module/Settings.php:1040 ../../include/identity.php:1286
+#: ../../Zotlabs/Module/Settings.php:1040 ../../include/channel.php:1286
 msgid "Full Name:"
 msgstr ""
 
@@ -6952,185 +6952,185 @@ msgstr ""
 msgid "Room is full"
 msgstr ""
 
-#: ../../include/identity.php:32
+#: ../../include/channel.php:32
 msgid "Unable to obtain identity information from database"
 msgstr ""
 
-#: ../../include/identity.php:66
+#: ../../include/channel.php:66
 msgid "Empty name"
 msgstr ""
 
-#: ../../include/identity.php:69
+#: ../../include/channel.php:69
 msgid "Name too long"
 msgstr ""
 
-#: ../../include/identity.php:180
+#: ../../include/channel.php:180
 msgid "No account identifier"
 msgstr ""
 
-#: ../../include/identity.php:192
+#: ../../include/channel.php:192
 msgid "Nickname is required."
 msgstr ""
 
-#: ../../include/identity.php:206
+#: ../../include/channel.php:206
 msgid "Reserved nickname. Please choose another."
 msgstr ""
 
-#: ../../include/identity.php:211
+#: ../../include/channel.php:211
 msgid ""
 "Nickname has unsupported characters or is already being used on this site."
 msgstr ""
 
-#: ../../include/identity.php:287
+#: ../../include/channel.php:287
 msgid "Unable to retrieve created identity"
 msgstr ""
 
-#: ../../include/identity.php:345
+#: ../../include/channel.php:345
 msgid "Default Profile"
 msgstr ""
 
-#: ../../include/identity.php:791
+#: ../../include/channel.php:791
 msgid "Requested channel is not available."
 msgstr ""
 
-#: ../../include/identity.php:938
+#: ../../include/channel.php:938
 msgid "Create New Profile"
 msgstr ""
 
-#: ../../include/identity.php:941 ../../include/nav.php:90
+#: ../../include/channel.php:941 ../../include/nav.php:90
 msgid "Edit Profile"
 msgstr ""
 
-#: ../../include/identity.php:958
+#: ../../include/channel.php:958
 msgid "Visible to everybody"
 msgstr ""
 
-#: ../../include/identity.php:1033 ../../include/identity.php:1288
+#: ../../include/channel.php:1033 ../../include/channel.php:1288
 msgid "Gender:"
 msgstr ""
 
-#: ../../include/identity.php:1034 ../../include/identity.php:1332
+#: ../../include/channel.php:1034 ../../include/channel.php:1332
 msgid "Status:"
 msgstr ""
 
-#: ../../include/identity.php:1035 ../../include/identity.php:1343
+#: ../../include/channel.php:1035 ../../include/channel.php:1343
 msgid "Homepage:"
 msgstr ""
 
-#: ../../include/identity.php:1036
+#: ../../include/channel.php:1036
 msgid "Online Now"
 msgstr ""
 
-#: ../../include/identity.php:1124 ../../include/identity.php:1200
+#: ../../include/channel.php:1124 ../../include/channel.php:1200
 msgid "F d"
 msgstr ""
 
-#: ../../include/identity.php:1180
+#: ../../include/channel.php:1180
 msgid "Birthday Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1181
+#: ../../include/channel.php:1181
 msgid "Birthdays this week:"
 msgstr ""
 
-#: ../../include/identity.php:1232
+#: ../../include/channel.php:1232
 msgid "[No description]"
 msgstr ""
 
-#: ../../include/identity.php:1250
+#: ../../include/channel.php:1250
 msgid "Event Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1251
+#: ../../include/channel.php:1251
 msgid "Events this week:"
 msgstr ""
 
-#: ../../include/identity.php:1293
+#: ../../include/channel.php:1293
 msgid "Like this channel"
 msgstr ""
 
-#: ../../include/identity.php:1317
+#: ../../include/channel.php:1317
 msgid "j F, Y"
 msgstr ""
 
-#: ../../include/identity.php:1318
+#: ../../include/channel.php:1318
 msgid "j F"
 msgstr ""
 
-#: ../../include/identity.php:1325
+#: ../../include/channel.php:1325
 msgid "Birthday:"
 msgstr ""
 
-#: ../../include/identity.php:1338
+#: ../../include/channel.php:1338
 #, php-format
 msgid "for %1$d %2$s"
 msgstr ""
 
-#: ../../include/identity.php:1341
+#: ../../include/channel.php:1341
 msgid "Sexual Preference:"
 msgstr ""
 
-#: ../../include/identity.php:1347
+#: ../../include/channel.php:1347
 msgid "Tags:"
 msgstr ""
 
-#: ../../include/identity.php:1349
+#: ../../include/channel.php:1349
 msgid "Political Views:"
 msgstr ""
 
-#: ../../include/identity.php:1351
+#: ../../include/channel.php:1351
 msgid "Religion:"
 msgstr ""
 
-#: ../../include/identity.php:1355
+#: ../../include/channel.php:1355
 msgid "Hobbies/Interests:"
 msgstr ""
 
-#: ../../include/identity.php:1357
+#: ../../include/channel.php:1357
 msgid "Likes:"
 msgstr ""
 
-#: ../../include/identity.php:1359
+#: ../../include/channel.php:1359
 msgid "Dislikes:"
 msgstr ""
 
-#: ../../include/identity.php:1361
+#: ../../include/channel.php:1361
 msgid "Contact information and Social Networks:"
 msgstr ""
 
-#: ../../include/identity.php:1363
+#: ../../include/channel.php:1363
 msgid "My other channels:"
 msgstr ""
 
-#: ../../include/identity.php:1365
+#: ../../include/channel.php:1365
 msgid "Musical interests:"
 msgstr ""
 
-#: ../../include/identity.php:1367
+#: ../../include/channel.php:1367
 msgid "Books, literature:"
 msgstr ""
 
-#: ../../include/identity.php:1369
+#: ../../include/channel.php:1369
 msgid "Television:"
 msgstr ""
 
-#: ../../include/identity.php:1371
+#: ../../include/channel.php:1371
 msgid "Film/dance/culture/entertainment:"
 msgstr ""
 
-#: ../../include/identity.php:1373
+#: ../../include/channel.php:1373
 msgid "Love/Romance:"
 msgstr ""
 
-#: ../../include/identity.php:1375
+#: ../../include/channel.php:1375
 msgid "Work/employment:"
 msgstr ""
 
-#: ../../include/identity.php:1377
+#: ../../include/channel.php:1377
 msgid "School/education:"
 msgstr ""
 
-#: ../../include/identity.php:1397
+#: ../../include/channel.php:1397
 msgid "Like this thing"
 msgstr ""
 

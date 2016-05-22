@@ -483,7 +483,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 		if($username != $channel['channel_name']) {
 			$name_change = true;
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			$err = validate_channelname($username);
 			if($err) {
 				notice($err);

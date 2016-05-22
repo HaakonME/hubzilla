@@ -8,7 +8,7 @@
 require_once('include/dir_fns.php');
 require_once('include/contact_widgets.php');
 require_once('include/attach.php');
-require_once('include/Contact.php');
+
 
 function widget_profile($args) {
 
@@ -806,7 +806,6 @@ function widget_photo_albums($arr) {
 
 
 function widget_vcard($arr) {
-	require_once ('include/Contact.php');
 	return vcard_from_xchan('', App::get_observer());
 }
 
@@ -1052,7 +1051,7 @@ function widget_photo($arr) {
 
 function widget_cover_photo($arr) {
 
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 	$o = '';
 	
 	if(App::$module == 'channel' && $_REQUEST['mid'])

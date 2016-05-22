@@ -77,7 +77,7 @@ function collect_recipients($item, &$private_envelope) {
 		// by the directives in $item['public_policy'].
 
 		$private_envelope = false;
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		//$sys = get_sys_channel();
 
 		if(array_key_exists('public_policy',$item) && $item['public_policy'] !== 'self') {

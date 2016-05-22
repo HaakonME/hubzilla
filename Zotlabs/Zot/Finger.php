@@ -17,7 +17,7 @@ class Finger {
 	 * @param boolean $autofallback
 	 *   fallback/failover to http if https connection cannot be established. Default is true.
 	 *
-	 * @return array see z_post_url() and \ref mod/zfinger.php
+	 * @return zotinfo array (with 'success' => true) or array('success' => false);
 	 */
 
 	static public function run($webbie, $channel = null, $autofallback = true) {
@@ -108,7 +108,7 @@ class Finger {
 
 		$x = json_decode($result['body'],true);
 		if($x) {
-			$signed_token = $x['signed_token'];
+			$signed_token = ((is_array($x) && array_key_exists('signed_token',$x)) ? $x['signed_token'] : null);
 			if($signed_token) {
 				$valid = rsa_verify(self::$token,base64url_decode($signed_token),$x['key']);
 				if(! $valid) {

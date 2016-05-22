@@ -48,7 +48,22 @@ class Wiki extends \Zotlabs\Web\Controller {
         'acl' => populate_acl($channel_acl),
         'bang' => ''
     );
+//		$wikiheader = t('Wiki Sandbox');
+//		$hide_editor = false;
+		if(argc()<3) {
+			$wikiheader = t('Wiki Sandbox');
+			$hide_editor = false;
+		} elseif (argc()<4) {
+			$wikiheader = 'Empty wiki: ' . rawurldecode(argv(2)); // show wiki name
+			$hide_editor = true;
+		} elseif (argc()<5) {
+			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode(argv(3));	// show wiki name and page
+			$hide_editor = false;
+		}
+		
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
+			'$wikiheader' => $wikiheader,
+			'$hideEditor' => $hide_editor,
 			'$channel' => $channel['channel_address'],
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],

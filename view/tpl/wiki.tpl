@@ -15,7 +15,7 @@
       <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);
           adjustInlineTopBarHeight();"><i class="fa fa-compress"></i></button>
     </div>
-    <h2>Wiki</h2>
+    <h2>{{$wikiheader}}</h2>
     <div class="clear"></div>
   </div>
 	<div id="new-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
@@ -46,7 +46,7 @@
       <hr>
     </div>
   
-  <div id="wiki-content-container" class="section-content-wrapper">
+  <div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
       <li class="active"><a data-toggle="tab" href="#edit-pane">Edit</a></li>
       <li><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>

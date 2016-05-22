@@ -15,9 +15,17 @@ function wiki_delete() {
 	
 }
 
-function wiki_list($observer_hash) {
+function wiki_list($nick, $observer_hash) {
+	if (local_channel() || remote_channel()) {
+		$sql_extra = item_permissions_sql(get_channel_by_nick($nick)['channel_id'], $observer_hash);
+	} else {
+		$sql_extra = " AND item_private = 0 ";
+	}
+	$wikis = q("SELECT * FROM item WHERE resource_type = '%s' AND mid = parent_mid AND item_deleted = 0 $sql_extra", 
+			dbesc(WIKI_ITEM_RESOURCE_TYPE)
+	);
 	// TODO: query db for wikis the observer can access. Return with two lists, for read and write access
-	return array('write' => array('wiki1'), 'read' => array('wiki1', 'wiki2'));
+	return array('wikis' => $wikis);
 }
 
 function wiki_pages() {

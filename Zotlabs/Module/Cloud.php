@@ -102,7 +102,7 @@ class Cloud extends \Zotlabs\Web\Controller {
 	
 		// All we need to do now, is to fire up the server
 		$server->exec();
-	
+
 		killme();
 	}
 	

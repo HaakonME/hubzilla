@@ -1735,7 +1735,7 @@ class Admin extends \Zotlabs\Web\Controller {
 				} else {
 					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
 				}
-				$extendDir = __DIR__ . '/../../store/git/sys/extend';
+				$extendDir = __DIR__ . '/../../store/[data]/git/sys/extend';
 				$addonDir = $extendDir . '/addon';
 				if (!file_exists($extendDir)) {
 					if (!mkdir($extendDir, 0770, true)) {
@@ -1748,7 +1748,7 @@ class Admin extends \Zotlabs\Web\Controller {
 						}
 					}
 				}
-				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/' . $repoName;
+				$repoDir = __DIR__ . '/../../store/[data]/git/sys/extend/addon/' . $repoName;
 				if (!is_dir($repoDir)) {
 					logger('Repo directory does not exist: ' . $repoDir);
 					json_return_and_die(array('message' => 'Invalid addon repo.', 'success' => false));
@@ -1785,7 +1785,7 @@ class Admin extends \Zotlabs\Web\Controller {
 				} else {
 					json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
 				}
-				$extendDir = __DIR__ . '/../../store/git/sys/extend';
+				$extendDir = __DIR__ . '/../../store/[data]/git/sys/extend';
 				$addonDir = $extendDir . '/addon';
 				if (!file_exists($extendDir)) {
 					if (!mkdir($extendDir, 0770, true)) {
@@ -1798,7 +1798,7 @@ class Admin extends \Zotlabs\Web\Controller {
 						}
 					}
 				}
-				$repoDir = __DIR__ . '/../../store/git/sys/extend/addon/' . $repoName;
+				$repoDir = __DIR__ . '/../../store/[data]/git/sys/extend/addon/' . $repoName;
 				if (!is_dir($repoDir)) {
 					logger('Repo directory does not exist: ' . $repoDir);
 					json_return_and_die(array('message' => 'Invalid addon repo.', 'success' => false));
@@ -1818,7 +1818,7 @@ class Admin extends \Zotlabs\Web\Controller {
 				if (array_key_exists('repoURL', $_REQUEST)) {
 					require __DIR__ . '/../../library/PHPGit.autoload.php';			 // Load PHPGit dependencies					
 					$repoURL = $_REQUEST['repoURL'];
-					$extendDir = __DIR__ . '/../../store/git/sys/extend';
+					$extendDir = __DIR__ . '/../../store/[data]/git/sys/extend';
 					$addonDir = $extendDir . '/addon';
 					if (!file_exists($extendDir)) {
 						if (!mkdir($extendDir, 0770, true)) {
@@ -1846,7 +1846,7 @@ class Admin extends \Zotlabs\Web\Controller {
 						json_return_and_die(array('message' => 'Invalid git repo', 'success' => false));
 					}
 					$repoDir = $addonDir . '/' . $repoName;
-					$tempRepoBaseDir = __DIR__ . '/../../store/git/sys/temp/';
+					$tempRepoBaseDir = __DIR__ . '/../../store/[data]/git/sys/temp/';
 					$tempAddonDir = $tempRepoBaseDir . $repoName;
 
 					if (!is_writable($addonDir) || !is_writable($tempAddonDir)) {
@@ -1880,9 +1880,9 @@ class Admin extends \Zotlabs\Web\Controller {
 				if (array_key_exists('repoURL', $_REQUEST)) {
 					require __DIR__ . '/../../library/PHPGit.autoload.php';			 // Load PHPGit dependencies					
 					$repoURL = $_REQUEST['repoURL'];
-					$extendDir = __DIR__ . '/../../store/git/sys/extend';
+					$extendDir = __DIR__ . '/../../store/[data]/git/sys/extend';
 					$addonDir = $extendDir . '/addon';
-					$tempAddonDir = __DIR__ . '/../../store/git/sys/temp';
+					$tempAddonDir = __DIR__ . '/../../store/[data]/git/sys/temp';
 					if (!file_exists($extendDir)) {
 						if (!mkdir($extendDir, 0770, true)) {
 							logger('Error creating extend folder: ' . $extendDir);
@@ -1892,6 +1892,12 @@ class Admin extends \Zotlabs\Web\Controller {
 								logger('Error creating symlink to addon folder: ' . $addonDir);
 								json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
 							}
+						}
+					}
+					if (!is_dir($tempAddonDir)) {
+						if (!mkdir($tempAddonDir, 0770, true)) {
+							logger('Error creating temp plugin repo folder: ' . $tempAddonDir);
+							json_return_and_die(array('message' => 'Error creating temp plugin repo folder: ' . $tempAddonDir, 'success' => false));
 						}
 					}
 					$repoName = null;

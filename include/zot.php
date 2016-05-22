@@ -3672,6 +3672,8 @@ function zotinfo($arr) {
 	$zsig      = ((x($arr,'target_sig')) ? $arr['target_sig']  : '');
 	$zkey      = ((x($arr,'key'))        ? $arr['key']         : '');
 	$mindate   = ((x($arr,'mindate'))    ? $arr['mindate']     : '');
+	$token     = ((x($arr,'token'))      ? $arr['token']   : '');
+
 	$feed      = ((x($arr,'feed'))       ? intval($arr['feed']) : 0);
 
 	if($ztarget) {
@@ -3815,6 +3817,10 @@ function zotinfo($arr) {
 	$ret['success'] = true;
 
 	// Communication details
+
+	if($token)
+		$ret['signed_token'] = base64url_encode(rsa_sign($token,$e['channel_prvkey']));
+
 
 	$ret['guid']           = $e['xchan_guid'];
 	$ret['guid_sig']       = $e['xchan_guid_sig'];

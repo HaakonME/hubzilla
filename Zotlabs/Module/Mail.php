@@ -32,17 +32,16 @@ class Mail extends \Zotlabs\Web\Controller {
 		if(! $recipient) {
 			$channel = \App::get_channel();
 	
-			$ret = zot_finger($rstr,$channel);
+			$j = \Zotlabs\Zot\Finger::run($rstr,$channel);
 	
-			if(! $ret['success']) {
+			if(! $j['success']) {
 				notice( t('Unable to lookup recipient.') . EOL);
 				return;
 			} 
-			$j = json_decode($ret['body'],true);
 	
 			logger('message_post: lookup: ' . $url . ' ' . print_r($j,true));
 	
-			if(! ($j['success'] && $j['guid'])) {
+			if(! $j['guid']) {
 				notice( t('Unable to communicate with requested channel.'));
 				return;
 			}

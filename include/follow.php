@@ -56,11 +56,11 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
 	elseif(! $is_http)
-		$ret = zot_finger($url,$channel);
+		$ret = Zotlabs\Zot\Finger::run($url,$channel);
 
-	if($ret && $ret['success']) {
+	if($ret && is_array($ret) && $ret['success']) {
 		$is_red = true;
-		$j = json_decode($ret['body'],true);
+		$j = $ret;
 	}
 
 	$my_perms = get_channel_default_perms($uid);

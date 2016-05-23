@@ -140,6 +140,8 @@ target_sig => an RSA signature (base64url encoded) of the guid
 
 key        => The public key needed to verify the signature
 
+token      => a string (possibly random) chosen by the requesting service. If provided, an entry in the discovered packet will be provided called 'signed_token' which consists of the base64url_encoded RSA signature of the concatenation of the string 'token.' and the provided token using the private key of the discovered channel. This can be verified using the provided 'key' entry, and provides assurance that the server is in possession of the private key for the discovered identity. After 2017-01-01 it is **required** that a server provide a signed_token *if* a token was provided in the request.  
+
 With no target provided, the permissions returned will be generic permissions 
 for unknown or unauthenticated observers
 
@@ -148,6 +150,7 @@ Example of discovery packet for 'mike@zothub.com'
 	{
 
     "success": true,
+	"signed_token": "KBJrKTq1qrctNuxF3GwVh3GAGRqmgkirlXANPcJZAeWlvSt_9TMV097slR4AYnYCBEushbVqHEJ9Rb5wHTa0HzMbfRo8cRdl2yAirvvv5d98dtwHddQgX1jB0xEypXtmIYMdPGDLvhI1RNdIBhHkkrRcNreRzoy4xD--HM6m1W0-A8PJJJ9BcNxmGPcBtLzW08wzoP9trJ3M7DQ6Gkk6j7iwVsyApw1ZBaDvabGTdc_SFV-Iegtqw3rjzT_xXWsfzMlKBy-019MYn_KS-gu23YzjvGu5tS_zDfkQb8DMUlPLz5yyxM0yOMlUDtG2qQgIJAU2O0X6T5xDdJ6mtolNyhepg845PvFDEqBQGMIH1nc47CNumeudDi8IWymEALhjG_U8KAK7JVlQTJj2EKUb0au1g6fpiBFab5mmxCMtZEX3Jreyak5GOcFFz-WpxuXJD9TdSoIvaBfBFOoJnXkg2zE4RHXeQzZ2FotmrbBG5dm8B-_6byYGoHBc08ZsWze1K96JIeRnLpBaj6ifUDcVHxZMPcGHHT27dvU2PNbgLiBjlAsxhYqkhN5qOHN8XBcg2KRjcMBaI3V0YMxlzXz5MztmZq3fcB1p-ccIoIyMPMzSj3yMB7J9CEU2LYPSTHMdPkIeDE6GaCkQKviaQQJQde346tK_YjA2k7_SOBmvPYE",
     "guid": "sebQ-IC4rmFn9d9iu17m4BXO-kHuNutWo2ySjeV2SIW1LzksUkss12xVo3m3fykYxN5HMcc7gUZVYv26asx-Pg",
     "guid_sig": "Llenlbl4zHo6-g4sa63MlQmTP5dRCrsPmXHHFmoCHG63BLq5CUZJRLS1vRrrr_MNxr7zob_Ykt_m5xPKe5H0_i4pDj-UdP8dPZqH2fqhhx00kuYL4YUMJ8gRr5eO17vsZQ3XxTcyKewtgeW0j7ytwMp6-hFVUx_Cq08MrXas429ZrjzaEwgTfxGnbgeQYQ0R5EXpHpEmoERnZx77VaEahftmdjAUx9R4YKAp13pGYadJOX5xnLfqofHQD8DyRHWeMJ4G1OfWPSOlXfRayrV_jhnFlZjMU7vOdQwHoCMoR5TFsRsHuzd-qepbvo3pzvQZRWnTNu6oPucgbf94p13QbalYRpBXKOxdTXJrGdESNhGvhtaZnpT9c1QVqC46jdfP0LOX2xrVdbvvG2JMWFv7XJUVjLSk_yjzY6or2VD4V6ztYcjpCi9d_WoNHruoxro_br1YO3KatySxJs-LQ7SOkQI60FpysfbphNyvYMkotwUFI59G08IGKTMu3-GPnV1wp7NOQD1yzJbGGEGSEEysmEP0SO9vnN45kp3MiqbffBGc1r4_YM4e7DPmqOGM94qksOcLOJk1HNESw2dQYWxWQTBXPfOJT6jW9_crGLMEOsZ3Jcss0XS9KzBUA2p_9osvvhUKuKXbNztqH0oZIWlg37FEVsDs_hUwUJpv2Ar09k4",
     "key": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7QCwvuEIwCHjhjbpz3Oc\ntyei/Pz9nDksNbsc44Cm8jxYGMXsTPFXDZYCcCB5rcAhPPdZSlzaPkv4vPVcMIrw\n5cdX0tvbwa3rNTng6uFE7qkt15D3YCTkwF0Y9FVZiZ2Ko+G23QeBt9wqb9dlDN1d\nuPmu9BLYXIT/JXoBwf0vjIPFM9WBi5W/EHGaiuqw7lt0qI7zDGw77yO5yehKE4cu\n7dt3SakrXphL70LGiZh2XGoLg9Gmpz98t+gvPAUEotAJxIUqnoiTA8jlxoiQjeRK\nHlJkwMOGmRNPS33awPos0kcSxAywuBbh2X3aSqUMjcbE4cGJ++/13zoa6RUZRObC\nZnaLYJxqYBh13/N8SfH7d005hecDxWnoYXeYuuMeT3a2hV0J84ztkJX5OoxIwk7S\nWmvBq4+m66usn6LNL+p5IAcs93KbvOxxrjtQrzohBXc6+elfLVSQ1Rr9g5xbgpub\npSc+hvzbB6p0tleDRzwAy9X16NI4DYiTj4nkmVjigNo9v2VPnAle5zSam86eiYLO\nt2u9YRqysMLPKevNdj3CIvst+BaGGQONlQalRdIcq8Lin+BhuX+1TBgqyav4XD9K\nd+JHMb1aBk/rFLI9/f2S3BJ1XqpbjXz7AbYlaCwKiJ836+HS8PmLKxwVOnpLMbfH\nPYM8k83Lip4bEKIyAuf02qkCAwEAAQ==\n-----END PUBLIC KEY-----\n",
@@ -216,6 +219,8 @@ Example of discovery packet for 'mike@zothub.com'
 Discovery returns a JSON array with the following components:
 
 'success' => ('1' or '')  Operation was successful if '1'. Otherwise an optional 'message' may be present indicating the source of error.
+
+'signed_token' => If a token parameter was provided in the request, it is prepended with the text 'token.' and then RSA signed with the channel private key and base64url encoded and returned as 'signed_token'.
 
 'guid' => the guid of the address on the target system
 

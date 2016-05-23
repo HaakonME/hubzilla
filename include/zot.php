@@ -3818,7 +3818,7 @@ function zotinfo($arr) {
 	// Communication details
 
 	if($token)
-		$ret['signed_token'] = base64url_encode(rsa_sign($token,$e['channel_prvkey']));
+		$ret['signed_token'] = base64url_encode(rsa_sign('token.' . $token,$e['channel_prvkey']));
 
 
 	$ret['guid']           = $e['xchan_guid'];

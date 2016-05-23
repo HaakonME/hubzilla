@@ -12,13 +12,13 @@ require_once('include/attach.php');
 
 function widget_profile($args) {
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 	return profile_sidebar(App::$profile, $block, true);
 }
 
 function widget_zcard($args) {
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 	$channel = channelx_by_n(App::$profile_uid);
 	return get_zcard($channel,get_observer_hash(),array('width' => 875));
 }
@@ -369,7 +369,7 @@ function widget_fullprofile($arr) {
 	if(! App::$profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 
 	return profile_sidebar(App::$profile, $block);
 }
@@ -379,7 +379,7 @@ function widget_shortprofile($arr) {
 	if(! App::$profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 
 	return profile_sidebar(App::$profile, $block, true, true);
 }

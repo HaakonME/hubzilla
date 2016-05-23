@@ -7,7 +7,7 @@ class Viewconnections extends \Zotlabs\Web\Controller {
 
 	function init() {
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			return;
 		}
 		if(argc() > 1)
@@ -16,7 +16,7 @@ class Viewconnections extends \Zotlabs\Web\Controller {
 	
 	function get() {
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			notice( t('Public access denied.') . EOL);
 			return;
 		}

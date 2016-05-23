@@ -11,7 +11,7 @@ require_once('include/items.php');
 class Cal extends \Zotlabs\Web\Controller {
 
 	function init() {
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			return;
 		}
 	
@@ -45,13 +45,12 @@ class Cal extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			return;
 		}
-	
-	
+		
 		$channel = null;
 	
 		if(argc() > 1) {

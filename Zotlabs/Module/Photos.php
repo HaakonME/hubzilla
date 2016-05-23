@@ -18,7 +18,7 @@ class Photos extends \Zotlabs\Web\Controller {
 	function init() {
 	
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			return;
 		}
 	
@@ -518,7 +518,7 @@ class Photos extends \Zotlabs\Web\Controller {
 		// photos/name/image/xxxxx
 	
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			notice( t('Public access denied.') . EOL);
 			return;
 		}

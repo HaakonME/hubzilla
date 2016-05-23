@@ -402,7 +402,7 @@ function poco($a,$extended = false) {
 
 	$system_mode = false;
 
-	if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+	if(observer_prohibited()) {
 		logger('mod_poco: block_public');
 		http_status_exit(401);
 	}

@@ -12,7 +12,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			$_SESSION['loadtime'] = datetime_convert();
 	
 	
-		if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
+		if(observer_prohibited(true)) {
 				return login();
 		}
 	

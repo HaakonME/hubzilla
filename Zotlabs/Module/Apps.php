@@ -33,7 +33,7 @@ class Apps extends \Zotlabs\Web\Controller {
 		else
 			$syslist = Zlib\Apps::get_system_apps(true);
 
-		usort($syslist,'Zlib\\Apps::app_name_compare');
+		usort($syslist,'Zotlabs\\Lib\\Apps::app_name_compare');
 	
 	//	logger('apps: ' . print_r($syslist,true));
 	

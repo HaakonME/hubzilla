@@ -5,8 +5,6 @@
  * @brief Some functions to handle addons and themes.
  */
 
-require_once("include/smarty.php");
-
 
 /**
  * @brief unloads an addon.

@@ -37,17 +37,16 @@ require_once('include/nav.php');
 require_once('include/cache.php');
 require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
-require_once('include/BaseObject.php');
 require_once('include/features.php');
 require_once('include/taxonomy.php');
-require_once('include/identity.php');
-require_once('include/Contact.php');
+require_once('include/channel.php');
+require_once('include/connections.php');
 require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.7' );
-define ( 'ZOT_REVISION',            1     );
+define ( 'STD_VERSION',             '1.7.1' );
+define ( 'ZOT_REVISION',            1.1     );
 
 define ( 'DB_UPDATE_VERSION',       1168  );
 
@@ -903,21 +902,27 @@ class App {
 
 		self::head_set_icon('/images/hz-32.png');
 
-		BaseObject::set_app($this);
-
 		/*
 		 * register template engines
 		 */
-		$dc = get_declared_classes();
-		foreach ($dc as $k) {
-			if (in_array("ITemplateEngine", class_implements($k))){
-				self::register_template_engine($k);
-			}
-		}
 
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
 		self::$meta= new Zotlabs\Web\HttpMeta();
+
+		// create an instance of the smarty template engine so we can register it.
+
+		$smarty = new Zotlabs\Render\SmartyTemplate();
+
+		$dc = get_declared_classes();
+
+		foreach ($dc as $k) {
+			if(in_array('Zotlabs\\Render\\TemplateEngine', class_implements($k))) {
+				self::register_template_engine($k);
+			}
+		}
+
+
 
 	}
 
@@ -1071,7 +1076,7 @@ class App {
 		if(! self::$meta->get_field('og:title'))
 			self::$meta->set('og:title',self::$page['title']);
 
-		self::$meta->set('generator', Zotlabs\Project\System::get_platform_name());
+		self::$meta->set('generator', Zotlabs\Lib\System::get_platform_name());
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
@@ -1086,7 +1091,7 @@ class App {
 			'$local_channel' => local_channel(),
 			'$metas' => self::$meta->get(),
 			'$update_interval' => $interval,
-			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Project\System::get_site_name(), t('$Projectname','opensearch')), 
+			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Lib\System::get_site_name(), t('$Projectname','opensearch')), 
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
@@ -1570,7 +1575,7 @@ function fix_system_urls($oldurl, $newurl) {
 				}
 			}
 
-			proc_run('php', 'include/notifier.php', 'refresh_all', $c[0]['channel_id']);
+			Zotlabs\Daemon\Master::Summon(array('Notifier', 'refresh_all', $c[0]['channel_id']));
 		}
 	}
 
@@ -1814,42 +1819,45 @@ function get_max_import_size() {
  *
  * $cmd and string args are surrounded with ""
  */
-function proc_run($cmd){
-
-	$a = get_app();
+function proc_run(){
 
 	$args = func_get_args();
 
 	$newargs = array();
+
 	if(! count($args))
 		return;
 
-	// expand any arrays
-
-	foreach($args as $arg) {
-		if(is_array($arg)) {
-			foreach($arg as $n) {
-				$newargs[] = $n;
-			}
-		}
-		else
-			$newargs[] = $arg;
-	}
-
-	$args = $newargs;
+	$args = flatten_array_recursive($args);
 
 	$arr = array('args' => $args, 'run_cmd' => true);
 
 	call_hooks('proc_run', $arr);
+
 	if(! $arr['run_cmd'])
 		return;
 
 	if(count($args) && $args[0] === 'php')
 		$args[0] = ((x(App::$config,'system')) && (x(App::$config['system'],'php_path')) && (strlen(App::$config['system']['php_path'])) ? App::$config['system']['php_path'] : 'php');
 
-	for($x = 0; $x < count($args); $x++)
-		$args[$x] = escapeshellarg($args[$x]);
 
+	// redirect proc_run statements of legacy daemon processes to the newer Daemon Master object class
+	// We will keep this interface until everybody has transitioned. (2016-05-20)
+
+	if(strstr($args[1],'include/')) {
+		// convert 'include/foo.php' to 'Foo'
+		$orig = substr(ucfirst(substr($args[1],8)),0,-4);
+		logger('proc_run_redirect: ' . $orig);
+		if(file_exists('Zotlabs/Daemon/' . $orig . '.php')) {
+			array_shift($args); // daemons are all run by php, pop it off the top of the array
+			$args[0] = $orig;   // replace with the new daemon name
+			logger('Redirecting old proc_run interface: ' . print_r($args,true), LOGGER_DEBUG, LOG_DEBUG);
+			\Zotlabs\Daemon\Master::Summon($args); // summon the daemon
+			return;
+		}
+	}
+
+	$args = array_map('escapeshellarg',$args);
 	$cmdline = implode($args," ");
 
 	if(is_windows()) {
@@ -2391,4 +2399,13 @@ function check_cron_broken() {
 	return;
 }
 
+
+
+function observer_prohibited($allow_account = false) {
+
+	if($allow_account) 
+		return (((get_config('system','block_public')) && (! get_account_id()) && (! remote_channel())) ? true : false );
+	return (((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) ? true : false );
+
+}
 

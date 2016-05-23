@@ -131,7 +131,7 @@ class Tagger extends \Zotlabs\Web\Controller {
 		$ret = post_activity_item($arr);
 	
 		if($ret['success'])
-			proc_run('php','include/notifier.php','tag',$ret['activity']['id']);
+			\Zotlabs\Daemon\Master::Summon(array('Notifier','tag',$ret['activity']['id']));
 	
 		killme();
 	

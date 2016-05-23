@@ -7,7 +7,7 @@ namespace Zotlabs\Module;
 
 require_once('include/items.php');
 require_once('include/security.php');
-require_once('include/contact_selectors.php');
+require_once('include/selectors.php');
 require_once('include/acl_selectors.php');
 
 

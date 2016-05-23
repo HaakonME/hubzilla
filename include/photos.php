@@ -420,7 +420,7 @@ function photo_upload($channel, $observer, $args) {
 		$item_id = $result['item_id'];
 
 		if($visible) 
-			proc_run('php', "include/notifier.php", 'wall-new', $item_id);
+			Zotlabs\Daemon\Master::Summon(array('Notifier', 'wall-new', $item_id));
 	}
 
 	$ret['success'] = true;

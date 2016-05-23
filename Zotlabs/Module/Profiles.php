@@ -1,7 +1,8 @@
 <?php
 namespace Zotlabs\Module;
 
-require_once('include/identity.php');
+require_once('include/channel.php');
+require_once('include/selectors.php');
 
 
 class Profiles extends \Zotlabs\Web\Controller {
@@ -584,7 +585,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 			if($is_default) {
 				// reload the info for the sidebar widget - why does this not work?
 				profile_load($a,$channel['channel_address']);
-				proc_run('php','include/directory.php',local_channel());
+				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 			}
 		}
 	}
@@ -601,7 +602,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 	
 		$profile_fields_basic    = get_profile_fields_basic();
 		$profile_fields_advanced = get_profile_fields_advanced();
@@ -624,9 +625,6 @@ class Profiles extends \Zotlabs\Web\Controller {
 				notice( t('Profile not found.') . EOL);
 				return;
 			}
-	
-			require_once('include/profile_selectors.php');
-	
 	
 			$editselect = 'none';
 	//		if(feature_enabled(local_channel(),'richtext'))

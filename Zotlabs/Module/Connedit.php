@@ -7,9 +7,9 @@ namespace Zotlabs\Module;
  *
  */
 
-require_once('include/Contact.php');
+
 require_once('include/socgraph.php');
-require_once('include/contact_selectors.php');
+require_once('include/selectors.php');
 require_once('include/group.php');
 require_once('include/contact_widgets.php');
 require_once('include/zot.php');
@@ -176,7 +176,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 					$record = $z[0]['xlink_id'];
 			}
 			if($record) {
-				proc_run('php','include/ratenotif.php','rating',$record);
+				\Zotlabs\Daemon\Master::Summon(array('Ratenotif','rating',$record));
 			}
 		}
 	
@@ -230,7 +230,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		if(\App::$poi && \App::$poi['abook_my_perms'] != $abook_my_perms
 			&& (! intval(\App::$poi['abook_self']))) {
-			proc_run('php', 'include/notifier.php', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id);
+			\Zotlabs\Daemon\Master(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));
 		}
 	
 		if($new_friend) {
@@ -283,7 +283,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 	
 			// pull in a bit of content if there is any to pull in
-			proc_run('php','include/onepoll.php',$contact_id);
+			\Zotlabs\Daemon\Master::Summon(array('Onepoll',$contact_id));
 	
 		}
 	
@@ -414,7 +414,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			if($cmd === 'update') {
 				// pull feed and consume it, which should subscribe to the hub.
-				proc_run('php',"include/poller.php","$contact_id");
+				\Zotlabs\Daemon\Master::Summon(array('Poller',$contact_id));
 				goaway(z_root() . '/connedit/' . $contact_id);
 	
 			}
@@ -427,7 +427,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				else {
 	
 					// if you are on a different network we'll force a refresh of the connection basic info
-					proc_run('php','include/notifier.php','permission_update',$contact_id);
+					Zotlabs\Daemon\Master::Summon(array('Notifier','permission_update',$contact_id));
 				}
 				goaway(z_root() . '/connedit/' . $contact_id);
 			}
@@ -485,7 +485,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			if($cmd === 'drop') {
 	
-				require_once('include/Contact.php');
 	
 	// FIXME
 	// We need to send either a purge or a refresh packet to the other side (the channel being unfriended).
@@ -582,8 +581,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			if(intval($contact['abook_self']))
 				$self = true;
-	
-			require_once('include/contact_selectors.php');
 	
 			$tpl = get_markup_template("abook_edit.tpl");
 	

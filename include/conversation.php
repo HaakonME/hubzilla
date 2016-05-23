@@ -754,10 +754,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
-			require_once('include/ConversationObject.php');
-			require_once('include/ItemObject.php');
-
-			$conv = new Conversation($mode, $preview, $prepared_item);
+			$conv = new Zotlabs\Lib\ThreadStream($mode, $preview, $prepared_item);
 
 			// In the display mode we don't have a profile owner. 
 
@@ -806,7 +803,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				if($item['id'] == $item['parent']) {
 
-					$item_object = new Item($item);
+					$item_object = new Zotlabs\Lib\ThreadItem($item);
 					$conv->add_thread($item_object);
 					if($page_mode === 'list') {
 						$item_object->set_template('conv_list.tpl');
@@ -1110,7 +1107,6 @@ function status_editor($a, $x, $popup = false) {
 
 	$o = '';
 
-	require_once('include/Contact.php');
 	$c = channelx_by_n($x['profile_uid']);
 	if($c && $c['channel_moved'])
 		return $o;
@@ -1163,7 +1159,7 @@ function status_editor($a, $x, $popup = false) {
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />';
 
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$id_select = identity_selector();
 	}
 	else
@@ -1662,8 +1658,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 
 	if ($p['chat'] && feature_enabled($uid,'ajaxchat')) {
-		require_once('include/chat.php');
-		$has_chats = chatroom_list_count($uid);
+		$has_chats = Zotlabs\Lib\Chatroom::list_count($uid);
 		if ($has_chats) {
 			$tabs[] = array(
 				'label' => t('Chatrooms'),

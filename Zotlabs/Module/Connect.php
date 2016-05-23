@@ -2,7 +2,7 @@
 namespace Zotlabs\Module; /** @file */
 
 
-require_once('include/Contact.php');
+
 require_once('include/contact_widgets.php');
 require_once('include/items.php');
 
@@ -47,7 +47,8 @@ class Connect extends \Zotlabs\Web\Controller {
 					intval(PAGE_PREMIUM),
 					intval(local_channel()) 
 				);
-				proc_run('php','include/notifier.php','refresh_all',\App::$data['channel']['channel_id']);
+				
+				\Zotlabs\Daemon\Master::Summon(array('Notifier','refresh_all',\App::$data['channel']['channel_id']));
 			}
 			set_pconfig(\App::$data['channel']['channel_id'],'system','selltext',$text);
 			// reload the page completely to get fresh data

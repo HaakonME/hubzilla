@@ -232,7 +232,7 @@ class Events extends \Zotlabs\Web\Controller {
 		}
 	
 		if($share)
-			proc_run('php',"include/notifier.php","event","$item_id");
+			\Zotlabs\Daemon\Master(array('Notifier','event',$item_id));
 	
 	}
 	

@@ -31,7 +31,7 @@ class Pubsites extends \Zotlabs\Web\Controller {
 				$o .= '<table class="table table-striped table-hover"><tr><td>' . t('Hub URL') . '</td><td>' . t('Access Type') . '</td><td>' . t('Registration Policy') . '</td><td>' . t('Software') . '</td><td colspan="2">' . t('Ratings') . '</td></tr>';
 				if($j['sites']) {
 					foreach($j['sites'] as $jj) {
-						if(strpos($jj['project'],\Zotlabs\Project\System::get_platform_name()) === false)
+						if(strpos($jj['project'],\Zotlabs\Lib\System::get_platform_name()) === false)
 							continue;
 						$host = strtolower(substr($jj['url'],strpos($jj['url'],'://')+3));
 						$rate_links = ((local_channel()) ? '<td><a href="rate?f=&target=' . $host . '" class="btn-btn-default"><i class="fa fa-check-square-o"></i> ' . t('Rate') . '</a></td>' : '');

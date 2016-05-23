@@ -1839,7 +1839,7 @@ function format_and_send_email($sender,$xchan,$item) {
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
 			'$banner'	    => $banner,
-			'$notify_icon'  => Zotlabs\Project\System::get_notify_icon(),
+			'$notify_icon'  => Zotlabs\Lib\System::get_notify_icon(),
 			'$product'	    => $product,
 			'$preamble'	    => '',
 			'$sitename'	    => $sitename,
@@ -1916,10 +1916,13 @@ function do_delivery($deliveries) {
 	$deliver = array();
 	foreach($deliveries as $d) {
 
+		if(! $d)
+			continue;
+
 		$deliver[] = $d;
 
 		if(count($deliver) >= $deliveries_per_process) {
-			proc_run('php','include/deliver.php',$deliver);
+			Zotlabs\Daemon\Master::Summon(array('Deliver',$deliver));
 			$deliver = array();
 			if($interval)
 				@time_sleep_until(microtime(true) + (float) $interval);
@@ -1929,7 +1932,7 @@ function do_delivery($deliveries) {
 	// catch any stragglers
 
 	if($deliver)
-		proc_run('php','include/deliver.php',$deliver);
+		Zotlabs\Daemon\Master::Summon(array('Deliver',$deliver));
 	
 
 }
@@ -1987,8 +1990,8 @@ function get_site_info() {
 	$site_info = get_config('system','info');
 	$site_name = get_config('system','sitename');
 	if(! get_config('system','hidden_version_siteinfo')) {
-		$version = Zotlabs\Project\System::get_project_version();
-		$tag = Zotlabs\Project\System::get_std_version();
+		$version = Zotlabs\Lib\System::get_project_version();
+		$tag = Zotlabs\Lib\System::get_std_version();
 
 		if(@is_dir('.git') && function_exists('shell_exec')) {
 			$commit = trim( @shell_exec('git log -1 --format="%h"'));
@@ -2024,7 +2027,7 @@ function get_site_info() {
 	$data = Array(
 		'version' => $version,
 		'version_tag' => $tag,
-		'server_role' => Zotlabs\Project\System::get_server_role(),
+		'server_role' => Zotlabs\Lib\System::get_server_role(),
 		'commit' => $commit,
 		'url' => z_root(),
 		'plugins' => $visible_plugins,
@@ -2038,7 +2041,7 @@ function get_site_info() {
 		'locked_features' => $locked_features,
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
-		'platform' => Zotlabs\Project\System::get_platform_name(),
+		'platform' => Zotlabs\Lib\System::get_platform_name(),
 		'dbdriver' => $db->getdriver(),
 		'lastpoll' => get_config('system','lastpoll'),
 		'info' => (($site_info) ? $site_info : ''),
@@ -2147,3 +2150,29 @@ function get_repository_version($branch = 'master') {
 	return '?.?';
 
 }		
+
+function network_to_name($s) {
+
+	$nets = array(
+		NETWORK_DFRN      => t('Friendica'),
+		NETWORK_FRND      => t('Friendica'),
+		NETWORK_OSTATUS   => t('OStatus'),
+		NETWORK_GNUSOCIAL => t('GNU-Social'),
+		NETWORK_FEED      => t('RSS/Atom'),
+		NETWORK_MAIL      => t('Email'),
+		NETWORK_DIASPORA  => t('Diaspora'),
+		NETWORK_FACEBOOK  => t('Facebook'),
+		NETWORK_ZOT       => t('Zot'),
+		NETWORK_LINKEDIN  => t('LinkedIn'),
+		NETWORK_XMPP      => t('XMPP/IM'),
+		NETWORK_MYSPACE   => t('MySpace'),
+	);
+
+	call_hooks('network_to_name', $nets);
+
+	$search  = array_keys($nets);
+	$replace = array_values($nets);
+
+	return str_replace($search,$replace,$s);
+
+}

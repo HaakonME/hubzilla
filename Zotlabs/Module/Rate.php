@@ -102,14 +102,12 @@ class Rate extends \Zotlabs\Web\Controller {
 		}
 	
 		if($record) {
-			proc_run('php','include/ratenotif.php','rating',$record);
+			\Zotlabs\Daemon\Master::Summon(array('Ratenotif','rating',$record));
 		}
 	
 	}
 	
-	
-	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);

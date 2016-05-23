@@ -56,7 +56,7 @@ class Item extends \Zotlabs\Web\Controller {
 			$remote_xchan = $remote_observer = false;
 	
 		$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$sys = get_sys_channel();
 		if($sys && $profile_uid && ($sys['channel_id'] == $profile_uid) && is_site_admin()) {
 			$uid = intval($sys['channel_id']);
@@ -901,7 +901,7 @@ class Item extends \Zotlabs\Web\Controller {
 				}
 			}
 			if(! $nopush)
-				proc_run('php', "include/notifier.php", 'edit_post', $post_id);
+				\Zotlabs\Daemon\Master::Summon(array('Notifier', 'edit_post', $post_id));
 	
 			if((x($_REQUEST,'return')) && strlen($return_path)) {
 				logger('return: ' . $return_path);
@@ -1008,7 +1008,7 @@ class Item extends \Zotlabs\Web\Controller {
 		call_hooks('post_local_end', $datarray);
 	
 		if(! $nopush)
-			proc_run('php', 'include/notifier.php', $notify_type, $post_id);
+			\Zotlabs\Daemon\Master::Summon(array('Notifier', $notify_type, $post_id));
 	
 		logger('post_complete');
 	

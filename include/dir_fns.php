@@ -69,9 +69,8 @@ function check_upstream_directory() {
 	if ($directory) {
 		$h = parse_url($directory);
 		if ($h) {
-			$x = zot_finger('[system]@' . $h['host']);
-			if ($x['success']) {
-				$j = json_decode($x['body'], true);
+			$j = Zotlabs\Zot\Finger::run('[system]@' . $h['host']);
+			if ($j['success']) {
 				if (array_key_exists('site', $j) && array_key_exists('directory_mode', $j['site'])) {
 					if ($j['site']['directory_mode'] === 'normal') {
 						$isadir = false;

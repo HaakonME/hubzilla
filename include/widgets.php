@@ -8,17 +8,17 @@
 require_once('include/dir_fns.php');
 require_once('include/contact_widgets.php');
 require_once('include/attach.php');
-require_once('include/Contact.php');
+
 
 function widget_profile($args) {
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 	return profile_sidebar(App::$profile, $block, true);
 }
 
 function widget_zcard($args) {
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 	$channel = channelx_by_n(App::$profile_uid);
 	return get_zcard($channel,get_observer_hash(),array('width' => 875));
 }
@@ -369,7 +369,7 @@ function widget_fullprofile($arr) {
 	if(! App::$profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 
 	return profile_sidebar(App::$profile, $block);
 }
@@ -379,7 +379,7 @@ function widget_shortprofile($arr) {
 	if(! App::$profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 
 	return profile_sidebar(App::$profile, $block, true, true);
 }
@@ -806,7 +806,6 @@ function widget_photo_albums($arr) {
 
 
 function widget_vcard($arr) {
-	require_once ('include/Contact.php');
 	return vcard_from_xchan('', App::get_observer());
 }
 
@@ -835,8 +834,7 @@ function widget_menu_preview($arr) {
 function widget_chatroom_list($arr) {
 
 
-	require_once("include/chat.php");
-	$r = chatroom_list(App::$profile['profile_uid']);
+	$r = Zotlabs\Lib\Chatroom::roomlist(App::$profile['profile_uid']);
 
 	if($r) {
 		return replace_macros(get_markup_template('chatroomlist.tpl'), array(
@@ -1052,7 +1050,7 @@ function widget_photo($arr) {
 
 function widget_cover_photo($arr) {
 
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 	$o = '';
 	
 	if(App::$module == 'channel' && $_REQUEST['mid'])

@@ -106,7 +106,7 @@ function remove_obsolete_hublocs() {
 			dbesc($rr['hubloc_hash']) 
 		);
 		if($x) {
-			proc_run('php','include/notifier.php','location',$x[0]['channel_id']);
+			Zotlabs\Daemon\Master::Summon(array('Notifier','location',$x[0]['channel_id']));
 			if($interval)
 				@time_sleep_until(microtime(true) + (float) $interval);
 		}

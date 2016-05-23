@@ -3,8 +3,6 @@
  * @file include/text.php
  */
 
-require_once("include/template_processor.php");
-require_once("include/smarty.php");
 require_once("include/bbcode.php");
 
 // random string, there are 86 characters max in text mode, 128 for hex
@@ -16,8 +14,8 @@ define('RANDOM_STRING_TEXT', 0x01 );
 /**
  * @brief This is our template processor.
  *
- * @param string|FriendicaSmarty $s the string requiring macro substitution,
- *   or an instance of FriendicaSmarty
+ * @param string|SmartyEngine $s the string requiring macro substitution,
+ *   or an instance of SmartyEngine
  * @param array $r key value pairs (search => replace)
  * @return string substituted string
  */
@@ -1321,7 +1319,7 @@ function theme_attachments(&$item) {
  			
 			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			if(is_foreigner($item['author_xchan']))
 				$url = $r['href'];
 			else
@@ -1488,7 +1486,7 @@ function format_event($jobject) {
 }
 
 function prepare_body(&$item,$attach = false) {
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 
 	call_hooks('prepare_body_init', $item); 
 
@@ -2263,7 +2261,7 @@ function design_tools() {
 	$sys = false;
 
 	if(App::$is_sys && is_site_admin()) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$channel = get_sys_channel();
 		$sys = true;
 	}
@@ -2860,3 +2858,32 @@ function pdl_selector($uid, $current="") {
 	return $o;
 }
 
+/* 
+ * array flatten_array_recursive(array);
+ * returns a one-dimensional array from a multi-dimensional array 
+ * empty values are discarded
+ * example: print_r(flatten_array_recursive(array('foo','bar',array('baz','blip',array('zob','glob')),'','grip')));
+ *
+ * Array ( [0] => foo [1] => bar [2] => baz [3] => blip [4] => zob [5] => glob [6] => grip ) 
+ *
+ */
+
+function flatten_array_recursive($arr) {
+	$ret = array();
+
+	if(! $arr)
+		return $ret;
+
+	foreach($arr as $a) {
+		if(is_array($a)) {
+			$tmp = flatten_array_recursive($a);
+			if($tmp) {
+				$ret = array_merge($ret,$tmp);
+			}
+		}
+		elseif($a) {
+			$ret[] = $a;
+		}
+	}
+	return($ret);
+}			

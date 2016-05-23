@@ -453,7 +453,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 				else {
 					// if we were just granted read stream permission and didn't have it before, try to pull in some posts
 					if((! ($r[0]['abook_their_perms'] & PERMS_R_STREAM)) && ($their_perms & PERMS_R_STREAM))
-						proc_run('php','include/onepoll.php',$r[0]['abook_id']);
+						Zotlabs\Daemon\Master::Summon(array('Onepoll',$r[0]['abook_id']));
 				}
 			}
 			else {
@@ -504,7 +504,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 					if($new_connection) {
 						if($new_perms != $previous_perms)
-							proc_run('php','include/notifier.php','permission_create',$new_connection[0]['abook_id']);
+							Zotlabs\Daemon\Master::Summon(array('Notifier','permission_create',$new_connection[0]['abook_id']));
 						require_once('include/enotify.php');
 						notification(array(
 							'type'       => NOTIFY_INTRO,
@@ -516,7 +516,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 						if($their_perms & PERMS_R_STREAM) {
 							if(($channel['channel_w_stream'] & PERMS_PENDING)
 								|| (! intval($new_connection[0]['abook_pending'])) )
-								proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
+								Zotlabs\Daemon\Master::Summon(array('Onepoll',$new_connection[0]['abook_id']));
 						}
 
 						unset($new_connection[0]['abook_id']);
@@ -1332,7 +1332,7 @@ function zot_import($arr, $sender_url) {
  */
 function public_recips($msg) {
 
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 
 	$check_mentions = false;
 	$include_sys = false;
@@ -1703,7 +1703,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 				if((! $relay) && (! $request) && (! $local_public)
 					&& perm_is_allowed($channel['channel_id'],$sender['hash'],'send_stream')) {
-					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
+					Zotlabs\Daemon\Master::Summon(array('Notifier', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']));
 				}
 				continue;
 			}
@@ -1775,7 +1775,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
-				proc_run('php','include/notifier.php','relay',intval($item_id));
+				Zotlabs\Daemon\Master::Summon(array('Notifier','relay',intval($item_id)));
 				$DR->update('relayed');
 				$result[] = $DR->get();
 			}
@@ -1858,7 +1858,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
-			proc_run('php','include/notifier.php','relay',intval($item_id));
+			Zotlabs\Daemon\Master::Summon(array('Notifier','relay',intval($item_id)));
 			$DR->addto_update('relayed');
 			$result[] = $DR->get();
 		}
@@ -3060,7 +3060,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 			'msg'        => json_encode($info)
 		));
 
-		proc_run('php', 'include/deliver.php', $hash);
+		Zotlabs\Daemon\Master::Summon(array('Deliver', $hash));
 		$total = $total - 1;
 
 		if($interval && $total)
@@ -3222,7 +3222,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
-					require_once('include/Contact.php');
 
 					$r = q("select abook_id, abook_feed from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 						dbesc($abook['abook_xchan']),
@@ -3652,7 +3651,7 @@ function zot_reply_message_request($data) {
 			 * invoke delivery to send out the notify packet
 			 */
 
-			proc_run('php', 'include/deliver.php', $hash);
+			Zotlabs\Daemon\Master::Summon(array('Deliver', $hash));
 		}
 	}
 	$ret['success'] = true;
@@ -3672,6 +3671,8 @@ function zotinfo($arr) {
 	$zsig      = ((x($arr,'target_sig')) ? $arr['target_sig']  : '');
 	$zkey      = ((x($arr,'key'))        ? $arr['key']         : '');
 	$mindate   = ((x($arr,'mindate'))    ? $arr['mindate']     : '');
+	$token     = ((x($arr,'token'))      ? $arr['token']   : '');
+
 	$feed      = ((x($arr,'feed'))       ? intval($arr['feed']) : 0);
 
 	if($ztarget) {
@@ -3816,6 +3817,10 @@ function zotinfo($arr) {
 
 	// Communication details
 
+	if($token)
+		$ret['signed_token'] = base64url_encode(rsa_sign('token.' . $token,$e['channel_prvkey']));
+
+
 	$ret['guid']           = $e['xchan_guid'];
 	$ret['guid_sig']       = $e['xchan_guid_sig'];
 	$ret['key']            = $e['xchan_pubkey'];
@@ -3920,11 +3925,11 @@ function zotinfo($arr) {
 
 		$ret['site']['accounts'] = account_total();
 	
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$ret['site']['channels'] = channel_total();
 
 
-		$ret['site']['version'] = Zotlabs\Project\System::get_platform_name() . ' ' . STD_VERSION . '[' . DB_UPDATE_VERSION . ']';
+		$ret['site']['version'] = Zotlabs\Lib\System::get_platform_name() . ' ' . STD_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
 
@@ -3944,7 +3949,7 @@ function zotinfo($arr) {
 		$ret['site']['sellpage'] = get_config('system','sellpage');
 		$ret['site']['location'] = get_config('system','site_location');
 		$ret['site']['realm'] = get_directory_realm();
-		$ret['site']['project'] = Zotlabs\Project\System::get_platform_name() . Zotlabs\Project\System::get_server_role();
+		$ret['site']['project'] = Zotlabs\Lib\System::get_platform_name() . Zotlabs\Lib\System::get_server_role();
 
 	}
 
@@ -4415,7 +4420,6 @@ function zot_reply_purge($sender,$recipients) {
 		$arr = $sender;
 		$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
-		require_once('include/Contact.php');
 		remove_all_xchan_resources($sender_hash);	
 
 		$ret['success'] = true;

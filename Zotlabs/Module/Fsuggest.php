@@ -61,7 +61,7 @@ class Fsuggest extends \Zotlabs\Web\Controller {
 						intval($fsuggest_id),
 						intval(local_channel())
 					);
-					proc_run('php', 'include/notifier.php', 'suggest' , $fsuggest_id);
+					\Zotlabs\Daemon\Master::Summon(array('Notifier', 'suggest' , $fsuggest_id));
 				}
 	
 				info( t('Friend suggestion sent.') . EOL);

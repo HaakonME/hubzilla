@@ -1658,8 +1658,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 
 	if ($p['chat'] && feature_enabled($uid,'ajaxchat')) {
-		require_once('include/chat.php');
-		$has_chats = chatroom_list_count($uid);
+		$has_chats = Zotlabs\Lib\Chatroom::list_count($uid);
 		if ($has_chats) {
 			$tabs[] = array(
 				'label' => t('Chatrooms'),

@@ -834,8 +834,7 @@ function widget_menu_preview($arr) {
 function widget_chatroom_list($arr) {
 
 
-	require_once("include/chat.php");
-	$r = chatroom_list(App::$profile['profile_uid']);
+	$r = Zotlabs\Lib\Chatroom::roomlist(App::$profile['profile_uid']);
 
 	if($r) {
 		return replace_macros(get_markup_template('chatroomlist.tpl'), array(

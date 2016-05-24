@@ -1,95 +1,99 @@
 <?php
-/**
- * @file include/enotify.php
- *
- * @brief File with functions and a class for email notifications.
- */
+
+namespace Zotlabs\Lib;
 
 /**
- * @brief
- *
- * @param array $params an assoziative array with:
- *  * \e string \b from_xchan sender xchan hash
- *  * \e string \b to_xchan recipient xchan hash
- *  * \e array \b item an assoziative array
- *  * \e int \b type one of the NOTIFY_* constants from boot.php
- *  * \e string \b link
- *  * \e string \b parent_mid
- *  * \e string \b otype
- *  * \e string \b verb
- *  * \e string \b activity
+ * @brief File with functions and a class for generating system and email notifications.
  */
-function notification($params) {
-
-	logger('notification: entry', LOGGER_DEBUG);
-
-	// throw a small amount of entropy into the system to breakup duplicates arriving at the same precise instant.
-	usleep(mt_rand(0, 10000));
-
-	$a = get_app();
 
 
-	if ($params['from_xchan']) {
-		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
-			dbesc($params['from_xchan'])
-		);
-	}
-	if ($params['to_xchan']) {
-		$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
-			where channel_hash = '%s' and channel_removed = 0 limit 1",
-			dbesc($params['to_xchan'])
-		);
-	}
-	if ($x & $y) {
-		$sender = $x[0];
-		$recip = $y[0];
-	} else {
-		logger('notification: no sender or recipient.');
-		logger('sender: ' . $params['from_xchan']);
-		logger('recip: ' . $params['to_xchan']);
-		return;
-	}
+class Enotify {
 
-	// from here on everything is in the recipients language
+	/**
+	 * @brief
+	 *
+	 * @param array $params an assoziative array with:
+	 *  * \e string \b from_xchan sender xchan hash
+	 *  * \e string \b to_xchan recipient xchan hash
+	 *  * \e array \b item an assoziative array
+	 *  * \e int \b type one of the NOTIFY_* constants from boot.php
+	 *  * \e string \b link
+	 *  * \e string \b parent_mid
+	 *  * \e string \b otype
+	 *  * \e string \b verb
+	 *  * \e string \b activity
+	 */
 
-	push_lang($recip['account_language']); // should probably have a channel language
 
-	$banner     = t('$Projectname Notification');
-	$product    = t('$projectname'); // PLATFORM_NAME;
-	$siteurl    = z_root();
-	$thanks     = t('Thank You,');
-	$sitename   = get_config('system','sitename');
-	$site_admin = sprintf( t('%s Administrator'), $sitename);
+	static public function submit($params) {
 
-	$sender_name = $product;
-	$hostname = App::get_hostname();
-	if(strpos($hostname,':'))
+		logger('notification: entry', LOGGER_DEBUG);
+
+		// throw a small amount of entropy into the system to breakup duplicates arriving at the same precise instant.
+		usleep(mt_rand(0, 10000));
+
+		if ($params['from_xchan']) {
+			$x = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($params['from_xchan'])
+			);
+		}
+		if ($params['to_xchan']) {
+			$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
+				where channel_hash = '%s' and channel_removed = 0 limit 1",
+				dbesc($params['to_xchan'])
+			);
+		}
+		if ($x & $y) {
+			$sender = $x[0];
+			$recip = $y[0];
+		} else {
+			logger('notification: no sender or recipient.');
+			logger('sender: ' . $params['from_xchan']);
+			logger('recip: ' . $params['to_xchan']);
+			return;
+		}
+
+		// from here on everything is in the recipients language
+
+		push_lang($recip['account_language']); // should probably have a channel language
+
+		$banner     = t('$Projectname Notification');
+		$product    = t('$projectname'); // PLATFORM_NAME;
+		$siteurl    = z_root();
+		$thanks     = t('Thank You,');
+		$sitename   = get_config('system','sitename');
+		$site_admin = sprintf( t('%s Administrator'), $sitename);
+
+		$sender_name = $product;
+		$hostname = \App::get_hostname();
+		if(strpos($hostname,':'))
 		$hostname = substr($hostname,0,strpos($hostname,':'));
 
-	// Do not translate 'noreply' as it must be a legal 7-bit email address
-	$sender_email = 'noreply' . '@' . $hostname;
+		// Do not translate 'noreply' as it must be a legal 7-bit email address
+		$sender_email = 'noreply' . '@' . $hostname;
 
-	$additional_mail_header = "";
+		$additional_mail_header = "";
 
-	if (array_key_exists('item', $params)) {
-		require_once('include/conversation.php');
-		// if it's a normal item...
-		if (array_key_exists('verb', $params['item'])) {
-			// localize_item() alters the original item so make a copy first
-			$i = $params['item'];
-			logger('calling localize');
-			localize_item($i);
-			$title = $i['title'];
-			$body = $i['body'];
-			$private = (($i['item_private']) || intval($i['item_obscured']));
-		}
+		if(array_key_exists('item', $params)) {
+			require_once('include/conversation.php');
+			// if it's a normal item...
+			if (array_key_exists('verb', $params['item'])) {
+				// localize_item() alters the original item so make a copy first
+				$i = $params['item'];
+				logger('calling localize');
+				localize_item($i);
+				$title = $i['title'];
+				$body = $i['body'];
+				$private = (($i['item_private']) || intval($i['item_obscured']));
+			}
+			else {
+				$title = $params['item']['title'];
+				$body = $params['item']['body'];
+			}
+		} 
 		else {
-			$title = $params['item']['title'];
-			$body = $params['item']['body'];
+			$title = $body = '';
 		}
-	} else {
-		$title = $body = '';
-	}
 
 
 	// e.g. "your post", "David's photo", etc.
@@ -424,7 +428,7 @@ function notification($params) {
 
 	// wretched hack, but we don't want to duplicate all the preamble variations and we also don't want to screw up a translation
 
-	if ((App::$language === 'en' || (! App::$language)) && strpos($msg,', '))
+	if ((\App::$language === 'en' || (! \App::$language)) && strpos($msg,', '))
 		$msg = substr($msg,strpos($msg,', ')+1);	
 
 	$r = q("update notify set msg = '%s' where id = %d and uid = %d",
@@ -441,7 +445,7 @@ function notification($params) {
 		logger('notification: sending notification email');
 
 		$hn = get_pconfig($recip['channel_id'],'system','email_notify_host');
-		if($hn && (! stristr(App::get_hostname(),$hn))) {
+		if($hn && (! stristr(\App::get_hostname(),$hn))) {
 			// this isn't the email notification host
 			pop_lang();
 			return;
@@ -455,7 +459,7 @@ function notification($params) {
 		// use $_SESSION['zid_override'] to force zid() to use 
 		// the recipient address instead of the current observer
 
-		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . App::get_hostname();
+		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . \App::get_hostname();
 		$_SESSION['zrl_override'] = z_root() . '/channel/' . $recip['channel_address'];
 		
 		$textversion = zidify_links($textversion);
@@ -529,7 +533,7 @@ function notification($params) {
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
 			'$banner'       => $datarray['banner'],
-			'$notify_icon'  => Zotlabs\Lib\System::get_notify_icon(),
+			'$notify_icon'  => \Zotlabs\Lib\System::get_notify_icon(),
 			'$product'      => $datarray['product'],
 			'$preamble'     => $datarray['preamble'],
 			'$sitename'     => $datarray['sitename'],
@@ -570,7 +574,7 @@ function notification($params) {
 
 		// use the EmailNotification library to send the message
 
-		enotify::send(array(
+		self::send(array(
 			'fromName'             => $sender_name,
 			'fromEmail'            => $sender_email,
 			'replyTo'              => $sender_email,
@@ -587,12 +591,6 @@ function notification($params) {
 }
 
 
-/**
- * @brief A class for sending email notifications.
- *
- * @fixme Class names start mostly with capital letter to distinguish them easier.
- */
-class enotify {
 	/**
 	 * @brief Send a multipart/alternative message with Text and HTML versions.
 	 *
@@ -649,4 +647,39 @@ class enotify {
 		);
 		logger("notification: enotify::send returns " . $res, LOGGER_DEBUG);
 	}
+
+	static public function forma($item) {
+
+		$ret = '';
+
+		require_once('include/conversation.php');
+
+		// Call localize_item with the "brief" flag to get a one line status for activities. 
+		// This should set $item['localized'] to indicate we have a brief summary.
+
+		localize_item($item);
+
+		if($item_localize) {
+			$itemem_text = $item['localize'];
+		}
+		else {
+			$itemem_text = (($item['item_thread_top'])
+				? t('created a new post')
+				: sprintf( t('commented on %s\'s post'), $item['owner']['xchan_name']));
+		}
+
+		// convert this logic into a json array just like the system notifications
+
+		return array(
+			'notify_link' => $item['llink'], 
+			'name' => $item['author']['xchan_name'],
+			'url' => $item['author']['xchan_url'],
+			'photo' => $item['author']['xchan_photo_s'],
+			'when' => relative_date($item['created']), 
+			'class' => (intval($item['item_unseen']) ? 'notify-unseen' : 'notify-seen'), 
+			'message' => strip_tags(bbcode($itemem_text))
+		);
+
+	}
+
 }

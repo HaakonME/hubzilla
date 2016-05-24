@@ -1,12 +1,13 @@
 <?php
 namespace Zotlabs\Module;
+
 /**
  * @file mod/ping.php
  *
  */
 
 require_once('include/bbcode.php');
-require_once('include/notify.php');
+
 
 /**
  * @brief do several updates when pinged.
@@ -285,7 +286,7 @@ class Ping extends \Zotlabs\Web\Controller {
 				foreach($r as $item) {
 					if((argv(1) === 'home') && (! intval($item['item_wall'])))
 						continue;
-					$result[] = format_notification($item);
+					$result[] = \Zotlbas\Lib\Enotify::format($item);
 				}
 			}
 	//		logger('ping (network||home): ' . print_r($result, true), LOGGER_DATA);

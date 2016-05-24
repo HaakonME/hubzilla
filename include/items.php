@@ -6,6 +6,8 @@
 // uncertain if this line is needed and why
 use Sabre\HTTP\URLUtil;
 
+use Zotlabs\Lib as Zlib;
+
 require_once('include/bbcode.php');
 require_once('include/oembed.php');
 require_once('include/crypto.php');
@@ -2284,8 +2286,8 @@ function send_status_notifications($post_id,$item) {
 	if(! $notify)
 		return;
 
-	require_once('include/enotify.php');
-	notification(array(
+
+	Zlib\Enotify::submit(array(
 		'type'         => NOTIFY_COMMENT,
 		'from_xchan'   => $item['author_xchan'],
 		'to_xchan'     => $r[0]['channel_hash'],
@@ -2378,8 +2380,7 @@ function tag_deliver($uid, $item_id) {
 
 		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
 		if($poke_notify) {
-			require_once('include/enotify.php');
-			notification(array(
+			Zlib\Enotify::submit(array(
 				'to_xchan'     => $u[0]['channel_hash'],
 				'from_xchan'   => $item['author_xchan'],
 				'type'         => NOTIFY_POKE,
@@ -2544,8 +2545,7 @@ function tag_deliver($uid, $item_id) {
 		 * Kill two birds with one stone. As long as we're here, send a mention notification.
 		 */
 
-		require_once('include/enotify.php');
-		notification(array(
+		Zlib\Enotify::submit(array(
 			'to_xchan'     => $u[0]['channel_hash'],
 			'from_xchan'   => $item['author_xchan'],
 			'type'         => NOTIFY_TAGSELF,
@@ -3046,7 +3046,6 @@ function mail_store($arr) {
 		);
 	}
 	else {
-		require_once('include/enotify.php');
 
 		$notif_params = array(
 			'from_xchan' => $arr['from_xchan'],
@@ -3057,7 +3056,7 @@ function mail_store($arr) {
 			'otype'      => 'mail'
 		);
 
-		notification($notif_params);
+		Zlib\Enotify::submit($notif_params);
 	}
 
 	call_hooks('post_mail_end',$arr);

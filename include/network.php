@@ -1819,8 +1819,6 @@ function service_plink($contact, $guid) {
 
 function format_and_send_email($sender,$xchan,$item) {
 
-	require_once('include/enotify.php');
-
 	$title = $item['title'];
 	$body = $item['body'];
 
@@ -1885,7 +1883,7 @@ function format_and_send_email($sender,$xchan,$item) {
 
 		// use the EmailNotification library to send the message
 
-		enotify::send(array(
+		Zotlabs\Lib\Enotify::send(array(
 			'fromName'             => $product,
 			'fromEmail'            => $sender_email,
 			'replyTo'              => $sender_email,

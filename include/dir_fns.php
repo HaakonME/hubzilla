@@ -94,6 +94,9 @@ function get_directory_setting($observer, $setting) {
 	if($ret === false)
 		$ret = get_config('directory', $setting);
 
+
+	// 'safemode' is the default if there is no observer or no established preference. 
+
 	if($setting == 'safemode' && $ret === false)
 		$ret = 1;
 

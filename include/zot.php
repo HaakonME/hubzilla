@@ -505,8 +505,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					if($new_connection) {
 						if($new_perms != $previous_perms)
 							Zotlabs\Daemon\Master::Summon(array('Notifier','permission_create',$new_connection[0]['abook_id']));
-						require_once('include/enotify.php');
-						notification(array(
+						Zotlabs\Lib\Enotify::submit(array(
 							'type'       => NOTIFY_INTRO,
 							'from_xchan' => $x['hash'],
 							'to_xchan'   => $channel['channel_hash'],

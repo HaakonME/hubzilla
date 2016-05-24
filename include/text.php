@@ -571,7 +571,7 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	global $a;
 	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
+	if((App::$module == 'install') || (! (DBA::$dba && DBA::$dba->connected)))
 		return;
 
 	$debugging = get_config('system', 'debugging');
@@ -652,7 +652,7 @@ function dlogger($msg, $level = 0) {
 	global $a;
 	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
+	if((App::$module == 'install') || (! (DBA::$dba && DBA::$dba->connected)))
 		return;
 
 	$debugging = get_config('system','debugging');

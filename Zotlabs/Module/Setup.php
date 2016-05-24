@@ -82,11 +82,11 @@ class Setup extends \Zotlabs\Web\Controller {
 				$siteurl = rtrim($siteurl,'/');
 	
 				require_once('include/dba/dba_driver.php');
-				unset($db);
-				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
+
+				$db = \DBA::dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
 	
-				if(! $db->connected) {
-					echo 'Database Connect failed: ' . $db->error;
+				if(! \DBA::$dba->connected) {
+					echo 'Database Connect failed: ' . DBA::$dba->error;
 					killme();
 					\App::$data['db_conn_failed']=true;
 				}
@@ -138,10 +138,12 @@ class Setup extends \Zotlabs\Web\Controller {
 					}
 				}
 	
-				// connect to db
-				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
-	
-				if(! $db->connected) {
+				if(! \DBA::$dba->connected) {
+					// connect to db
+					$db = \DBA::dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
+				}
+
+				if(! \DBA::$dba->connected) {
 					echo 'CRITICAL: DB not connected.';
 					killme();
 				}
@@ -228,7 +230,7 @@ class Setup extends \Zotlabs\Web\Controller {
 			$txt .= "<pre>".\App::$data['db_failed'] . "</pre>". EOL ;
 			$db_return_text .= $txt;
 		}
-		if($db && $db->connected) {
+		if(\DBA::$dba && \DBA::$dba->connected) {
 			$r = q("SELECT COUNT(*) as `total` FROM `account`");
 			if($r && count($r) && $r[0]['total']) {
 				$tpl = get_markup_template('install.tpl');
@@ -598,7 +600,7 @@ class Setup extends \Zotlabs\Web\Controller {
 		if(! is_writable(TEMPLATE_BUILD_PATH) ) {
 			$status = false;
 			$help = t('Red uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
-			$help .= sprintf( t('In order to store these compiled templates, the web server needs to have write access to the directory %s under the Red top level folder.'), TEMPLATE_BUILD_PATH) . EOL;
+			$help .= sprintf( t('In order to store these compiled templates, the web server needs to have write access to the directory %s under the top level web folder.'), TEMPLATE_BUILD_PATH) . EOL;
 			$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
 			$help .= sprintf( t('Note: as a security measure, you should give the web server write access to %s only--not the template files (.tpl) that it contains.'), TEMPLATE_BUILD_PATH) . EOL;
 		}
@@ -698,12 +700,12 @@ class Setup extends \Zotlabs\Web\Controller {
 	
 	
 	function load_database($db) {
-		$str = file_get_contents($db->get_install_script());
+		$str = file_get_contents(\DBA::$dba->get_install_script());
 		$arr = explode(';',$str);
 		$errors = false;
 		foreach($arr as $a) {
 			if(strlen(trim($a))) {
-				$r = @$db->q(trim($a));
+				$r = dbq(trim($a));
 				if(! $r) {
 					$errors .=  t('Errors encountered creating database tables.') . $a . EOL;
 				}

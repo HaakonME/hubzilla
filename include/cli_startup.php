@@ -14,7 +14,7 @@ function cli_startup() {
 
 	App::init();
   
-	if(is_null($db)) {
+	if(! DBA::$connected) {
 	    @include(".htconfig.php");
 
 		$a->convert();
@@ -26,7 +26,7 @@ function cli_startup() {
 		date_default_timezone_set(App::$timezone);
 
     	require_once('include/dba/dba_driver.php');
-	    $db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
+	    $db = DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
     	unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
   	};
 

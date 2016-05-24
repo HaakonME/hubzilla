@@ -7,14 +7,6 @@
 use \Zotlabs\Storage\GitRepo as GitRepo;
 define ( 'WIKI_ITEM_RESOURCE_TYPE', 'wiki' );
 
-function wiki_create() {
-	
-}
-
-function wiki_delete() {
-	
-}
-
 function wiki_list($nick, $observer_hash) {
 	if (local_channel() || remote_channel()) {
 		$sql_extra = item_permissions_sql(get_channel_by_nick($nick)['channel_id'], $observer_hash);
@@ -36,7 +28,7 @@ function wiki_pages() {
 function wiki_init_wiki($channel, $name) {
 	// Store the path as a relative path, but pass absolute path to mkdir
 	$path = 'store/[data]/git/'.$channel['channel_address'].'/wiki/'.$name;
-	if (!mkdir(__DIR__ . '/../' . $path, 0770, true)) {
+	if (!os_mkdir(__DIR__ . '/../' . $path, 0770, true)) {
 		logger('Error creating wiki path: ' . $name);
 		return null;
 	}
@@ -108,4 +100,23 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 	} else {
 		return array('item' => null, 'success' => false);
 	}
+}
+
+function wiki_delete_wiki($resource_id) {
+		$item = q("SELECT id FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1",
+            dbesc(WIKI_ITEM_RESOURCE_TYPE),
+            dbesc($resource_id)
+    );
+    if (!$item) {
+        return array('items' => null, 'success' => false);   
+    } else {
+        $drop = drop_item($item[0]['id'],false,DROPITEM_NORMAL,true);
+				$object = json_decode($item[0]['object'], true);
+				$abs_path = __DIR__ . '/../' . $object['path'];
+				logger('path to delete: ' . $abs_path);
+				$pathdel = true;
+				//$pathdel = rrmdir($abs_path);
+				
+        return array('item' => $item, 'success' => (($drop === 1 && $pathdel) ? true : false));   
+    }
 }

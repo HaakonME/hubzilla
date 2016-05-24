@@ -30,6 +30,7 @@
             </div>
             <button id="new-wiki-submit" class="btn btn-primary" type="submit" name="submit" >Create Wiki</button>
         </div>
+        <div>{{$acl}}</div>
       </form>        
       <div class="clear"></div>
       <hr>
@@ -74,8 +75,6 @@
   </div>
 </div>
 
-<div>{{$acl}}</div>
-
 <script>
   $(document).ready(function () {
     // Show Edit tab first. Otherwise the Ace editor does not load.
@@ -98,4 +97,17 @@
     ev.preventDefault();
   });
 
+function wiki_delete_wiki(wikiName, resource_id) {
+  if(!confirm('Are you sure you want to delete the entire wiki: ' + JSON.stringify(wikiName))) {
+    return;
+  }
+  $.post("wiki/{{$channel}}/delete/wiki", {resource_id: resource_id}, function (data) {
+      if (data.success) {
+        window.console.log('Wiki deleted');
+        // Refresh list and redirect page as necessary
+      } else {
+        window.console.log('Error deleting wiki.');
+      }
+    }, 'json');
+}
 </script>

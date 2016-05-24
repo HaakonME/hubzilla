@@ -21,7 +21,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		}
 		if(! $which) {
 			notice( t('You must be logged in to see this page.') . EOL );
-			return;
+			goaway('/login');
 		}
 	}
 
@@ -91,6 +91,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}
 		
+		// Check if specified wiki exists and redirect if not
+		if((argc() > 2)) {
+			$wikiname = argv(2);
+			// TODO: Check if specified wiki exists and redirect if not
+		}
+		
 		// Create a new wiki
 		if ((argc() > 3) && (argv(2) === 'create') && (argv(3) === 'wiki')) {
 			$which = argv(1);
@@ -102,20 +108,23 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$observer_hash = get_observer_hash();
 				// Figure out who the page owner is.
 				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
-
-				if (!$perms['write_wiki']) {
+				// TODO: Create a new permission setting for wiki analogous to webpages. Until
+				// then, use webpage permissions
+				if (!$perms['write_pages']) {
 					notice(t('Permission denied.') . EOL);
-					json_return_and_die(array('success' => false));
+					goaway(argv(0).'/'.argv(1).'/'.argv(2));
 				}
 			}
-			$name = escape_tags(urlencode($_REQUEST['wikiName'])); //Get new wiki name
+			$name = escape_tags(urlencode($_POST['wikiName'])); //Get new wiki name
 			if($name === '') {				
 				notice('Error creating wiki. Invalid name.');
 				goaway('/wiki');
 			}
 			// Get ACL for permissions
 			$acl = new \Zotlabs\Access\AccessList($channel);
-			$acl->set_from_array($_REQUEST);
+			logger('POST: ' . json_encode($_POST));
+			$acl->set_from_array($_POST);
+			logger('acl: ' . json_encode($acl));
 			$r = wiki_create_wiki($channel, $observer_hash, $name, $acl);
 			if ($r['success']) {
 				goaway('/wiki/'.$which.'/'.$name);
@@ -125,7 +134,36 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 		}
 
-		json_return_and_die(array('success' => false));
+		// Delete a wiki
+		if ((argc() > 3) && (argv(2) === 'delete') && (argv(3) === 'wiki')) {
+			$which = argv(1);
+			// Determine if observer has permission to create wiki
+			if (local_channel()) {
+				$channel = \App::get_channel();
+			} else {
+				$channel = get_channel_by_nick($which);
+				$observer_hash = get_observer_hash();
+				// Figure out who the page owner is.
+				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
+				// TODO: Create a new permission setting for wiki analogous to webpages. Until
+				// then, use webpage permissions
+				if (!$perms['write_pages']) {
+					logger('Wiki delete permission denied.' . EOL);
+					json_return_and_die(array('success' => false));
+				}
+			}
+			$resource_id = $_POST['resource_id']; 
+			$deleted = wiki_delete_wiki($resource_id);
+			if ($deleted['success']) {
+				json_return_and_die(array('success' => true));
+			} else {
+				logger('Error deleting wiki: ' . $resource_id);
+				json_return_and_die(array('success' => false));
+			}
+		}
+		
+		notice('You must be authenticated.');
+		goaway('/wiki');
 		
 	}
 }

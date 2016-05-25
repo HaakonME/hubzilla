@@ -451,8 +451,6 @@ require_once('include/api_auth.php');
 	 */
 	function api_apply_template($templatename, $type, $data){
 
-		$a = get_app();
-
 		switch($type){
 			case "atom":
 			case "rss":
@@ -1904,7 +1902,6 @@ require_once('include/api_auth.php');
 
 		//logger('api_format_items: ' . print_r($user_info,true));
 
-		$a = get_app();
 		$ret = array();
 
 		if(! $r)

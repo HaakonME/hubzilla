@@ -656,7 +656,8 @@ function account_service_class_allows($aid, $property, $usage = false) {
  * @todo Should we merge this with account_service_class_fetch()?
  */
 function service_class_fetch($uid, $property) {
-	$a = get_app();
+
+
 	if($uid == local_channel()) {
 		$service_class = App::$account['account_service_class'];
 	}

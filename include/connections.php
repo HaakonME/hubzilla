@@ -72,8 +72,6 @@ function channelx_by_n($id) {
 
 function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
-	$a = get_app();
-
 	if(! $xchan) {
 		if(App::$poi) {
 			$xchan = App::$poi;
@@ -267,7 +265,7 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 
 	if(! $channel_id)
 		return;
-	$a = get_app();
+
 	logger('Removing channel: ' . $channel_id);
 	logger('channel_remove: local only: ' . intval($local));
 

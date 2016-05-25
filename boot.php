@@ -1197,7 +1197,6 @@ class App {
  * @return App
  */
 function get_app() {
-	global $a;
 	return $a;
 }
 
@@ -1247,7 +1246,6 @@ function system_unavailable() {
 
 
 function clean_urls() {
-	global $a;
 
 	//	if(App::$config['system']['clean_urls'])
 	return true;
@@ -1255,8 +1253,6 @@ function clean_urls() {
 }
 
 function z_path() {
-	global $a;
-
 	$base = z_root();
 	if(! clean_urls())
 		$base .= '/?q=';
@@ -1272,7 +1268,6 @@ function z_path() {
  * @return string
  */
 function z_root() {
-	global $a;
 	return App::get_baseurl();
 }
 
@@ -1604,7 +1599,6 @@ function fix_system_urls($oldurl, $newurl) {
 // returns the complete html for inserting into the page
 
 function login($register = false, $form_id = 'main-login', $hiddens=false) {
-	$a = get_app();
 	$o = '';
 	$reg = false;
 	$reglink = get_config('system', 'register_link');
@@ -1674,9 +1668,7 @@ function goaway($s) {
 }
 
 function shutdown() {
-	global $db;
-	if(is_object($db) && $db->connected)
-		$db->close();
+
 }
 
 /**
@@ -1766,7 +1758,6 @@ function remote_user() {
  * @param string $s Text to display
  */
 function notice($s) {
-	$a = get_app();
 	if(! x($_SESSION, 'sysmsg')) $_SESSION['sysmsg'] = array();
 
 	// ignore duplicated error messages which haven't yet been displayed 
@@ -1790,7 +1781,6 @@ function notice($s) {
  * @param string $s Text to display
  */
 function info($s) {
-	$a = get_app();
 	if(! x($_SESSION, 'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
 	if(App::$interactive)
 		$_SESSION['sysmsg_info'][] = $s;
@@ -1891,7 +1881,6 @@ function is_windows() {
  */
 
 function is_site_admin() {
-	$a = get_app();
 
 	if($_SESSION['delegate'])
 		return false;
@@ -1912,7 +1901,7 @@ function is_site_admin() {
  * @return bool true if user is a developer
  */
 function is_developer() {
-	$a = get_app();
+
 	if((intval($_SESSION['authenticated']))
 		&& (is_array(App::$account))
 		&& (App::$account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
@@ -1923,7 +1912,6 @@ function is_developer() {
 
 
 function load_contact_links($uid) {
-	$a = get_app();
 
 	$ret = array();
 
@@ -2241,7 +2229,6 @@ function appdirpath() {
  * @param string $icon
  */
 function head_set_icon($icon) {
-	global $a;
 
 	App::$data['pageicon'] = $icon;
 //	logger('head_set_icon: ' . $icon);
@@ -2253,7 +2240,6 @@ function head_set_icon($icon) {
  * @return string absolut path to pageicon
  */
 function head_get_icon() {
-	global $a;
 
 	$icon = App::$data['pageicon'];
 	if(! strpos($icon, '://'))
@@ -2319,7 +2305,7 @@ function z_get_temp_dir() {
 }
 
 function z_check_cert() {
-	$a = get_app();
+
 	if(strpos(z_root(),'https://') !== false) {
 		$x = z_fetch_url(z_root() . '/siteinfo/json');
 		if(! $x['success']) {
@@ -2339,8 +2325,6 @@ function z_check_cert() {
  * certificate.
  */
 function cert_bad_email() {
-
-	$a = get_app();
 
 	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
@@ -2379,8 +2363,6 @@ function check_cron_broken() {
 		set_config('system','lastpollcheck',datetime_convert());
 		return;
 	}
-
-	$a = get_app();
 
 	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(

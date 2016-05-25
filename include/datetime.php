@@ -119,7 +119,6 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
  * @return string
  */
 function dob($dob) {
-	$a = get_app();
 
 	list($year, $month, $day) = sscanf($dob, '%4d-%2d-%2d');
 	$f = get_config('system', 'birthday_input_format');

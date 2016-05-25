@@ -595,8 +595,6 @@ function parse_xml_string($s,$strict = true) {
 
 function scale_external_images($s, $include_link = true, $scale_replace = false) {
 
-	$a = get_app();
-
 	// Picture addresses can contain special characters
 	$s = htmlspecialchars_decode($s, ENT_COMPAT);
 
@@ -1618,8 +1616,6 @@ function fetch_xrd_links($url) {
 
 function scrape_vcard($url) {
 
-	$a = get_app();
-
 	$ret = array();
 
 	logger('scrape_vcard: url=' . $url);
@@ -1698,8 +1694,6 @@ function scrape_vcard($url) {
 
 
 function scrape_feed($url) {
-
-	$a = get_app();
 
 	$ret = array();
 	$level = 0;
@@ -1937,9 +1931,6 @@ function do_delivery($deliveries) {
 
 
 function get_site_info() {
-
-	global $db;
-	global $a;
 
 	$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
 	$directory_mode = Array('DIRECTORY_MODE_NORMAL', 'DIRECTORY_MODE_PRIMARY', 'DIRECTORY_MODE_SECONDARY', 256 => 'DIRECTORY_MODE_STANDALONE');

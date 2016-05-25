@@ -11,8 +11,6 @@ require_once("include/PermissionDescription.php");
 
 function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
-	$a = get_app();
-
 	$o = '';
 
 	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
@@ -51,7 +49,6 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 /* MicMee 20130114 function contact_selector no longer in use, sql table contact does no longer exist
 function contact_selector($selname, $selclass, $preselected = false, $options) {
 
-	$a = get_app();
 
 	$mutual = false;
 	$networks = null;
@@ -157,7 +154,6 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 
 function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false, $celeb = false, $privatenet = false, $tabindex = null) {
 
-	$a = get_app();
 
 	$o = '';
 

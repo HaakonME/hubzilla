@@ -858,8 +858,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 function best_link_url($item) {
 
-	$a = get_app();
-
 	$best_url = '';
 	$sparkle  = false;
 
@@ -888,7 +886,7 @@ function best_link_url($item) {
 
 
 function item_photo_menu($item){
-	$a = get_app();
+
 	$contact = null;
 
 	$ssl_state = false;
@@ -1408,7 +1406,7 @@ function render_location_default($item) {
 
 
 function prepare_page($item) {
-	$a = get_app();
+
 	$naked = 1;
 //	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = App::get_observer();
@@ -1442,7 +1440,7 @@ function prepare_page($item) {
 
 
 function network_tabs() {
-	$a = get_app();
+
 	$no_active='';
 	$starred_active = '';
 	$new_active = '';

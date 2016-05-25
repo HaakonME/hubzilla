@@ -2944,8 +2944,6 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	if(UNO)
 		return;
 
-	$a = get_app();
-
 	logger('build_sync_packet');
 
 	if($packet)
@@ -3931,8 +3929,6 @@ function zotinfo($arr) {
 		$ret['site']['version'] = Zotlabs\Lib\System::get_platform_name() . ' ' . STD_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
-
-		$a = get_app();
 
 		$visible_plugins = array();
 		if(is_array(App::$plugins) && count(App::$plugins)) {

@@ -275,7 +275,6 @@ function bb_location($match) {
  * @return string HTML iframe with content of $match[1]
  */
 function bb_iframe($match) {
-	$a = get_app();
 
 	$sandbox = ((strpos($match[1], App::get_hostname())) ? ' sandbox="allow-scripts" ' : '');
 
@@ -448,8 +447,6 @@ function bb_sanitize_style($input) {
 }
 
 function bb_observer($Text) {
-
-	$a = get_app();
 
 	$observer = App::get_observer();
 

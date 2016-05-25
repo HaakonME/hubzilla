@@ -17,7 +17,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	$result = array('success' => false,'message' => '');
 
-	$a = get_app();
 	$is_red = false;
 	$is_http = ((strpos($url,'://') !== false) ? true : false);
 

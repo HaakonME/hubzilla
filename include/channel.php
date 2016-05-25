@@ -1945,3 +1945,26 @@ function get_zcard_embed($channel,$observer_hash = '',$args = array()) {
 	return $o;
 		
 }
+
+
+function channelx_by_nick($nick) {
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and channel_removed = 0 LIMIT 1",
+		dbesc($nick)
+	);
+	return(($r) ? $r[0] : false);
+}
+
+function channelx_by_hash($hash) {
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and channel_removed = 0 LIMIT 1",
+		dbesc($hash)
+	);
+	return(($r) ? $r[0] : false);
+}
+
+function channelx_by_n($id) {
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and channel_removed = 0 LIMIT 1",
+		dbesc($id)
+	);
+	return(($r) ? $r[0] : false);
+}
+

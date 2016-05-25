@@ -329,7 +329,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 		return false;
 	}
 
+	$token = random_string();
+
 	$postvars = array();
+
+	$postvars['token'] = $token;
 
 	if($channel) {
 		$postvars['target']     = $channel['channel_guid'];
@@ -343,10 +347,12 @@ function zot_refresh($them, $channel = null, $force = false) {
 		$postvars['guid_hash'] = $them['xchan_hash'];
 	if (array_key_exists('xchan_guid',$them) && $them['xchan_guid']
 		&& array_key_exists('xchan_guid_sig',$them) && $them['xchan_guid_sig']) {
-
 		$postvars['guid'] = $them['xchan_guid'];
 		$postvars['guid_sig'] = $them['xchan_guid_sig'];
+
 	}
+
+	$token = random_string();
 
 	$rhs = '/.well-known/zot-info';
 
@@ -361,6 +367,22 @@ function zot_refresh($them, $channel = null, $force = false) {
 		if (! (($j) && ($j['success']))) {
 			logger('zot_refresh: result not decodable');
 			return false;
+		}
+
+		$signed_token = ((is_array($j) && array_key_exists('signed_token',$j)) ? $j['signed_token'] : null);
+		if($signed_token) {
+			$valid = rsa_verify('token.' . $token,base64url_decode($signed_token),$j['key']);
+			if(! $valid) {
+				logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_WARN);
+				return false;
+			}
+		}
+		else {
+			logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARN);
+			// after 2017-01-01 this will be a hard error unless you over-ride it.
+			if((time() > 1483228800) && (! get_config('system','allow_unsigned_zotfinger'))) {
+				return false;
+			}
 		}
 
 		$x = import_xchan($j, (($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
@@ -1493,7 +1515,7 @@ function public_recips($msg) {
 /**
  * @brief
  *
- * This is the second part of public_recipes().
+ * This is the second part of public_recips().
  * We'll find all the channels willing to accept public posts from us, then
  * match them against the sender privacy scope and see who in that list that
  * the sender is allowing.

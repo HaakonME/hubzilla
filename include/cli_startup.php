@@ -8,9 +8,7 @@ function cli_startup() {
 
 	global $default_timezone;
 
-	if(is_null($a)) {
-		$a = new miniApp;
-	}
+	$a = new miniApp;
 
 	App::init();
   

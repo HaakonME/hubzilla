@@ -3948,7 +3948,7 @@ function zotinfo($arr) {
 		$ret['site']['sellpage'] = get_config('system','sellpage');
 		$ret['site']['location'] = get_config('system','site_location');
 		$ret['site']['realm'] = get_directory_realm();
-		$ret['site']['project'] = Zotlabs\Lib\System::get_platform_name() . Zotlabs\Lib\System::get_server_role();
+		$ret['site']['project'] = Zotlabs\Lib\System::get_platform_name() . ' ' . Zotlabs\Lib\System::get_server_role();
 
 	}
 

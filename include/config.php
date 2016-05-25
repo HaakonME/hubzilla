@@ -44,7 +44,6 @@
  *  The category of the configuration value
  */
 function load_config($family) {
-	global $a;
 
 	if(! array_key_exists($family, App::$config))
 		App::$config[$family] = array();
@@ -110,6 +109,7 @@ function get_config($family, $key) {
  *  The configuration key to query
  * @return mixed
  */
+
 function get_config_from_storage($family, $key) {
 	$ret = q("SELECT * FROM config WHERE cat = '%s' AND k = '%s' LIMIT 1",
 		dbesc($family),

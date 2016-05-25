@@ -62,11 +62,6 @@ class Poller {
 
 		$d = datetime_convert();
 
-		// TODO check to see if there are any cronhooks before wasting a process
-
-		if(! $restart)
-			Master::Summon(array('Cronhooks'));
-
 		// Only poll from those with suitable relationships
 
 		$abandon_sql = (($abandon_days) 

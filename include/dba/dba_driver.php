@@ -1,74 +1,77 @@
 <?php
 
 class DBA {
-/**
- * @file dba_driver.php
- * @brief some database related functions and abstract driver class.
- *
- * This file contains the abstract database driver class dba_driver and some
- * functions for working with databases.
- */
 
-static public $dba = null;
-static public $dbtype = null;
+	/**
+	 * @file dba_driver.php
+	 * @brief some database related functions and abstract driver class.
+	 *
+	 * This file contains the abstract database driver class dba_driver and some
+	 * functions for working with databases.
+	 */
+
+	static public $dba = null;
+	static public $dbtype = null;
 
 
-/**
- * @brief Returns the database driver object.
- *
- * If available it will use PHP's mysqli otherwise mysql driver.
- *
- * @param string $server DB server name
- * @param string $port DB port
- * @param string $user DB username
- * @param string $pass DB password
- * @param string $db database name
- * @param string $dbtype 0 for mysql, 1 for postgres
- * @param bool $install Defaults to false
- * @return null|dba_driver A database driver object (dba_mysql|dba_mysqli) or null if no driver found.
- */
-static public function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
+	/**
+	 * @brief Returns the database driver object.
+	 *
+	 * If available it will use PHP's mysqli otherwise mysql driver.
+	 *
+	 * @param string $server DB server name
+	 * @param string $port DB port
+	 * @param string $user DB username
+	 * @param string $pass DB password
+	 * @param string $db database name
+	 * @param string $dbtype 0 for mysql, 1 for postgres
+	 * @param bool $install Defaults to false
+	 * @return null|dba_driver A database driver object (dba_mysql|dba_mysqli) or null if no driver found.
+	 */
 
-	self::$dba = null;
+	static public function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
 
-	self::$dbtype = intval($dbtype);
-	$set_port = $port;
+		self::$dba = null;
 
-	if(self::$dbtype == DBTYPE_POSTGRES) {
-		require_once('include/dba/dba_postgres.php');
-		if(is_null($port)) $set_port = 5432;
-		self::$dba = new dba_postgres($server, $set_port, $user, $pass, $db, $install);
-	} else {
+		self::$dbtype = intval($dbtype);
+		$set_port = $port;
 
-//		Highly experimental at the present time.
-//		require_once('include/dba/dba_pdo.php');
-//		self::$dba = new dba_pdo($server, $set_port,$user,$pass,$db,$install);
-//	}
-
-		if(class_exists('mysqli')) {
-			if (is_null($port)) $set_port = ini_get("mysqli.default_port");
-			require_once('include/dba/dba_mysqli.php');
-			self::$dba = new dba_mysqli($server, $set_port,$user,$pass,$db,$install);
+		if(self::$dbtype == DBTYPE_POSTGRES) {
+			require_once('include/dba/dba_postgres.php');
+			if(is_null($port)) $set_port = 5432;
+			self::$dba = new dba_postgres($server, $set_port, $user, $pass, $db, $install);
 		}
-	}
+		else {
 
-	// Until we have a proper PDO driver, store the DB connection parameters for
-	// plugins/addons which use PDO natively (such as cdav). This is wasteful as
-	// it opens a separate connection to the DB, but saves a lot of effort re-writing
-	// third-party interfaces that are working and well tested. 
+//			Highly experimental at the present time.
+//			require_once('include/dba/dba_pdo.php');
+//			self::$dba = new dba_pdo($server, $set_port,$user,$pass,$db,$install);
+//		}
+
+			if(class_exists('mysqli')) {
+				if (is_null($port)) $set_port = ini_get("mysqli.default_port");
+				require_once('include/dba/dba_mysqli.php');
+				self::$dba = new dba_mysqli($server, $set_port,$user,$pass,$db,$install);
+			}
+		}
+
+		// Until we have a proper PDO driver, store the DB connection parameters for
+		// plugins/addons which use PDO natively (such as cdav). This is wasteful as
+		// it opens a separate connection to the DB, but saves a lot of effort re-writing
+		// third-party interfaces that are working and well tested. 
  
 
-	if(is_object(self::$dba) && self::$dba->connected) {
-		$dns = ((self::$dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql')
-		. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
-		. ';dbname=' . $db;
-		self::$dba->pdo_set(array($dns,$user,$pass));
-	}
+		if(is_object(self::$dba) && self::$dba->connected) {
+			$dns = ((self::$dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql')
+			. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
+			. ';dbname=' . $db;
+			self::$dba->pdo_set(array($dns,$user,$pass));
+		}
 
-	define('NULL_DATE', self::$dba->get_null_date());
-	define('ACTIVE_DBTYPE', self::$dbtype);
-	return self::$dba;
-}
+		define('NULL_DATE', self::$dba->get_null_date());
+		define('ACTIVE_DBTYPE', self::$dbtype);
+		return self::$dba;
+	}
 
 }
 
@@ -256,7 +259,6 @@ function dbg($state) {
  * @return Return an escaped string of the value to pass to a DB query.
  */
 function dbesc($str) {
-	global $db;
 
 	if(\DBA::$dba && \DBA::$dba->connected)
 		return(\DBA::$dba->escape($str));
@@ -264,12 +266,10 @@ function dbesc($str) {
 		return(str_replace("'", "\\'", $str));
 }
 function dbescbin($str) {
-	global $db;
 	return \DBA::$dba->escapebin($str);
 }
 
 function dbunescbin($str) {
-	global $db;
 	return \DBA::$dba->unescapebin($str);
 }
 
@@ -283,35 +283,24 @@ function dbescdate($date) {
 }
 
 function db_quoteinterval($txt) {
-	global $db;
 	return \DBA::$dba->quote_interval($txt);
 }
 
 function dbesc_identifier($str) {
-	global $db;
 	return \DBA::$dba->escape_identifier($str);
 }
 
 function db_utcnow() {
-	global $db;
 	return \DBA::$dba->utcnow();
 }
 
 function db_optimizetable($table) {
-	global $db;
 	\DBA::$dba->optimize_table($table);
 }
 
 function db_concat($fld, $sep) {
-	global $db;
 	return \DBA::$dba->concat($fld, $sep);
 }
-
-// Function: q($sql,$args);
-// Description: execute SQL query with printf style args.
-// Example: $r = q("SELECT * FROM `%s` WHERE `uid` = %d",
-//                   'user', 1);
-
 
 /**
  * @brief Execute a SQL query with printf style args.
@@ -328,8 +317,8 @@ function db_concat($fld, $sep) {
  * @param string $sql The SQL query to execute
  * @return bool|array
  */
+
 function q($sql) {
-	global $db;
 
 	$args = func_get_args();
 	unset($args[0]);
@@ -343,13 +332,14 @@ function q($sql) {
 			else
 				db_logger('dba: vsprintf error: ' . print_r(debug_backtrace(), true),LOGGER_NORMAL,LOG_CRIT);
 		}
-		return $db->q($stmt);
+		return \DBA::$dba->q($stmt);
 	}
 
 	/*
 	 * This will happen occasionally trying to store the 
 	 * session data after abnormal program termination 
 	 */
+
 	db_logger('dba: no database: ' . print_r($args,true),LOGGER_NORMAL,LOG_CRIT);
 
 	return false;
@@ -363,7 +353,6 @@ function q($sql) {
  * @param string $sql The SQL query to execute
  */
 function dbq($sql) {
-	global $db;
 
 	if(\DBA::$dba && \DBA::$dba->connected)
 		$ret = \DBA::$dba->q($sql);
@@ -427,11 +416,11 @@ function db_getfunc($f) {
 
 // The logger function may make DB calls internally to query the system logging parameters.
 // This can cause a recursion if database debugging is enabled.
-// So this function preserves the current database debugging state and then turns it off while 
-// doing the logger() call
+// So this function preserves the current database debugging state and then turns it off
+// temporarily while doing the logger() call
 
 function db_logger($s,$level = LOGGER_NORMAL,$syslog = LOG_INFO) {
-	global $db;
+
 	$saved = \DBA::$dba->debug;
 	\DBA::$dba->debug = false;
 	logger($s,$level,$syslog);

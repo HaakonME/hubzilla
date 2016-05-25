@@ -1,17 +1,14 @@
 <?php /** @file */
 
+namespace Zotlabs\Web;
+
 class WebServer {
 
 	public function run() {
 
-		global $db;
 
 		/*
 		 * Bootstrap the application, load configuration, load modules, load theme, etc.
-		 */
-
-		/*
-		 * bootstrap the application
 		 */
 
 		require_once('boot.php');
@@ -54,8 +51,8 @@ class WebServer {
 		require_once('include/dba/dba_driver.php');
 
 		if(! \App::$install) {
-			$db = DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, \App::$install);
-			if(! $db->connected) {
+			\DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, \App::$install);
+			if(! \DBA::$dba->connected) {
 				system_unavailable();
 			}
 
@@ -69,7 +66,7 @@ class WebServer {
 			load_config('system');
 			load_config('feature');
 
-			\App::$session = new Zotlabs\Web\Session();
+			\App::$session = new Session();
 			\App::$session->init();
 			load_hooks();
 			call_hooks('init_1');
@@ -150,7 +147,7 @@ class WebServer {
 
 		nav_set_selected('nothing');
 
-		$Router = new Zotlabs\Web\Router($a);
+		$Router = new Router($a);
 
 		/* initialise content region */
 

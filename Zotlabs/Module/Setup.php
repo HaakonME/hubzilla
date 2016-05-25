@@ -12,7 +12,6 @@ namespace Zotlabs\Module;
 /**
  * @brief Initialisation for the setup module.
  *
- * @param[in,out] App &$a
  */
 
 class Setup extends \Zotlabs\Web\Controller {
@@ -54,16 +53,15 @@ class Setup extends \Zotlabs\Web\Controller {
 	/**
 	 * @brief Handle the actions of the different setup steps.
 	 *
-	 * @param[in,out] App &$a
 	 */
-		function post() {
-		global $db;
+
+	function post() {
 	
 		switch($this->install_wizard_pass) {
 			case 1:
 			case 2:
 				return;
-				break; // just in case return don't return :)
+				// implied break;
 			case 3:
 				$urlpath = \App::get_path();
 				$dbhost = trim($_POST['dbhost']);
@@ -88,33 +86,9 @@ class Setup extends \Zotlabs\Web\Controller {
 				if(! \DBA::$dba->connected) {
 					echo 'Database Connect failed: ' . DBA::$dba->error;
 					killme();
-					\App::$data['db_conn_failed']=true;
 				}
-				/*if(get_db_errno()) {
-					unset($db);
-					$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, '', true);
-	
-					if(! get_db_errno()) {
-						$r = q("CREATE DATABASE '%s'",
-								dbesc($dbdata)
-						);
-						if($r) {
-							unset($db);
-							$db = new dba($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
-						} else {
-							\App::$data['db_create_failed']=true;
-						}
-					} else {
-						\App::$data['db_conn_failed']=true;
-						return;
-					}
-				}*/
-				//if(get_db_errno()) {
-	
-				//}
-	
 				return;
-				break;
+				// implied break;
 			case 4:
 				$urlpath = \App::get_path();
 				$dbhost = notags(trim($_POST['dbhost']));
@@ -177,6 +151,8 @@ class Setup extends \Zotlabs\Web\Controller {
 					\App::$data['db_installed'] = true;
 	
 				return;
+				// implied break;
+			default:
 				break;
 		}
 	}
@@ -193,11 +169,10 @@ class Setup extends \Zotlabs\Web\Controller {
 	 *
 	 * Depending on the state we are currently in it returns different content.
 	 *
-	 * @param App &$a
 	 * @return string parsed HTML output
 	 */
-		function get() {
-		global $db;
+
+	function get() {
 	
 		$o = '';
 		$wizard_status = '';

@@ -567,21 +567,25 @@ function attribute_contains($attr, $s) {
  */
 
 function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if((App::$module == 'install') || (! (DBA::$dba && DBA::$dba->connected)))
-		return;
-
-	$debugging = get_config('system', 'debugging');
-	$loglevel  = intval(get_config('system', 'loglevel'));
-	$logfile   = get_config('system', 'logfile');
+	if(App::$module == 'setup' && is_writable('install.log')) {
+		$debugging = true;
+		$logfile = 'install.log';
+		$loglevel = LOGGER_ALL;
+	}
+	else {
+		$debugging = get_config('system', 'debugging');
+		$loglevel  = intval(get_config('system', 'loglevel'));
+		$logfile   = get_config('system', 'logfile');
+	}
 
 	if((! $debugging) || (! $logfile) || ($level > $loglevel))
 		return;
 
 	$where = '';
+	
+	// We require > 5.4 but leave the version check so that install issues (including version) can be logged
+
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
 		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
@@ -590,7 +594,8 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
 
-	call_hooks('logger',$pluginfo);
+	if(! (App::$module == 'setup'))
+		call_hooks('logger',$pluginfo);
 
 	if(! $pluginfo['logged'])
 		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);

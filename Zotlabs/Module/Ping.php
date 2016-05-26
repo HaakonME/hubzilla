@@ -286,7 +286,7 @@ class Ping extends \Zotlabs\Web\Controller {
 				foreach($r as $item) {
 					if((argv(1) === 'home') && (! intval($item['item_wall'])))
 						continue;
-					$result[] = \Zotlbas\Lib\Enotify::format($item);
+					$result[] = \Zotlabs\Lib\Enotify::format($item);
 				}
 			}
 	//		logger('ping (network||home): ' . print_r($result, true), LOGGER_DATA);

@@ -2346,21 +2346,27 @@ function cert_bad_email() {
  */
 function check_cron_broken() {
 
-	$t = get_config('system','lastpollcheck');
+	$d = get_config('system','lastcron');
+	
+	if((! $d) || ($d < datetime_convert('UTC','UTC','now - 4 hours'))) {
+		Zotlabs\Daemon\Master::Summon(array('Cron'));
+	}
+
+	$t = get_config('system','lastcroncheck');
 	if(! $t) {
 		// never checked before. Start the timer.
-		set_config('system','lastpollcheck',datetime_convert());
+		set_config('system','lastcroncheck',datetime_convert());
 		return;
 	}
+
 	if($t > datetime_convert('UTC','UTC','now - 3 days')) {
 		// Wait for 3 days before we do anything so as not to swamp the admin with messages
 		return;
 	}
 
-	$d = get_config('system','lastpoll');
 	if(($d) && ($d > datetime_convert('UTC','UTC','now - 3 days'))) {
 		// Scheduled tasks have run successfully in the last 3 days.
-		set_config('system','lastpollcheck',datetime_convert());
+		set_config('system','lastcroncheck',datetime_convert());
 		return;
 	}
 
@@ -2377,7 +2383,6 @@ function check_cron_broken() {
 		'From: Administrator' . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' );
-	set_config('system','lastpollcheck',datetime_convert());
 	return;
 }
 

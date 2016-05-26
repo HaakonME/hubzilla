@@ -46,27 +46,29 @@ function pkcs5_unpad($text)
 } 
 
 function AES256CBC_encrypt($data,$key,$iv) {
-	if(get_config('system','openssl_encrypt')) {
-		return openssl_encrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
-	}
+
+	return openssl_encrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+
+/* deprecated in php 7.1
 	return mcrypt_encrypt(
 		MCRYPT_RIJNDAEL_128, 
 		str_pad($key,32,"\0"), 
 		pkcs5_pad($data,16), 
 		MCRYPT_MODE_CBC, 
 		str_pad($iv,16,"\0"));
+*/
 }
 
 function AES256CBC_decrypt($data,$key,$iv) {
-	if(get_config('system','openssl_encrypt')) {
-		return openssl_decrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
-	}
+	return openssl_decrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+/* deprecated in php 7.1
 	return pkcs5_unpad(mcrypt_decrypt(
 		MCRYPT_RIJNDAEL_128, 
 		str_pad($key,32,"\0"), 
 		$data, 
 		MCRYPT_MODE_CBC, 
 		str_pad($iv,16,"\0")));
+*/
 }
 
 function crypto_encapsulate($data,$pubkey,$alg='aes256cbc') {

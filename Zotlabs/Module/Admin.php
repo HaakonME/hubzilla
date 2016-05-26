@@ -1421,13 +1421,15 @@ class Admin extends \Zotlabs\Web\Controller {
 	function listAddonRepos() {
 		$addonrepos = [];
 		$addonDir = __DIR__ . '/../../extend/addon/';
-		if ($handle = opendir($addonDir)) {
-			while (false !== ($entry = readdir($handle))) {
-				if ($entry != "." && $entry != "..") {
-					$addonrepos[] = $entry;
+		if(is_dir($addonDir)) {
+			if ($handle = opendir($addonDir)) {
+				while (false !== ($entry = readdir($handle))) {
+					if ($entry != "." && $entry != "..") {
+						$addonrepos[] = $entry;
+					}
 				}
+				closedir($handle);
 			}
-			closedir($handle);
 		}
 		return $addonrepos;
 	}

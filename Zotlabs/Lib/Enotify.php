@@ -648,7 +648,7 @@ class Enotify {
 		logger("notification: enotify::send returns " . $res, LOGGER_DEBUG);
 	}
 
-	static public function forma($item) {
+	static public function format($item) {
 
 		$ret = '';
 

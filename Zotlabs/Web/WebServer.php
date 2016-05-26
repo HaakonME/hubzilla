@@ -13,65 +13,7 @@ class WebServer {
 
 		require_once('boot.php');
 
-		if(file_exists('.htsite.php'))
-			include('.htsite.php');
-
-
-		// miniApp is a conversion object from old style .htconfig.php files
-
-		$a = new \miniApp;
-
-		// our central App object
-
-		\App::init();
-
-		/*
-		 * Load the configuration file which contains our DB credentials.
-		 * Ignore errors. If the file doesn't exist or is empty, we are running in
-		 * installation mode.
-		 */
-
-		\App::$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
-
-		@include('.htconfig.php');
-
-		if(! defined('UNO'))
-			define('UNO', 0);
-
-		$a->convert();
-
-		\App::$timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
-		date_default_timezone_set(\App::$timezone);
-
-
-		/*
-		 * Try to open the database;
-		 */
-
-		require_once('include/dba/dba_driver.php');
-
-		if(! \App::$install) {
-			\DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, \App::$install);
-			if(! \DBA::$dba->connected) {
-				system_unavailable();
-			}
-
-			unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
-
-			/**
-			 * Load configs from db. Overwrite configs from .htconfig.php
-			 */
-
-			load_config('config');
-			load_config('system');
-			load_config('feature');
-
-			\App::$session = new Session();
-			\App::$session->init();
-			load_hooks();
-			call_hooks('init_1');
-
-		}
+		sys_boot();
 
 
 		\App::$language = get_best_language();

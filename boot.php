@@ -579,6 +579,72 @@ define ( 'ITEM_IS_STICKY',       1000 );
 define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );
 
+
+function sys_boot() {
+
+	// our central App object
+
+	\App::init();
+
+	/*
+	 * Load the configuration file which contains our DB credentials.
+	 * Ignore errors. If the file doesn't exist or is empty, we are running in
+	 * installation mode.
+	 */
+
+	// miniApp is a conversion object from old style .htconfig.php files
+
+	$a = new \miniApp;
+
+
+	\App::$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
+
+	@include('.htconfig.php');
+
+	if(! defined('UNO'))
+		define('UNO', 0);
+
+	if(array_key_exists('default_timezone',get_defined_vars())) {
+		\App::$config['system']['timezone'] = $default_timezone;
+	}
+
+	$a->convert();
+
+	\App::$timezone = ((\App::$config['system']['timezone']) ? \App::$config['system']['timezone'] : 'UTC');
+	date_default_timezone_set(\App::$timezone);
+
+
+	/*
+	 * Try to open the database;
+	 */
+
+	require_once('include/dba/dba_driver.php');
+
+	if(! \App::$install) {
+		\DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, \App::$install);
+		if(! \DBA::$dba->connected) {
+			system_unavailable();
+		}
+
+		unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
+
+		/**
+		 * Load configs from db. Overwrite configs from .htconfig.php
+		 */
+
+		load_config('config');
+		load_config('system');
+		load_config('feature');
+
+		\App::$session = new \Zotlabs\Web\Session();
+		\App::$session->init();
+		load_hooks();
+		call_hooks('init_1');
+	}
+
+}
+
+
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.

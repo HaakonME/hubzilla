@@ -112,12 +112,12 @@ class Finger {
 			if($signed_token) {
 				$valid = rsa_verify('token.' . self::$token,base64url_decode($signed_token),$x['key']);
 				if(! $valid) {
-					logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_WARN);
+					logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_ERR);
 					return $ret;
 				}
 			}
 			else {
-				logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARN);
+				logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARNING);
 				// after 2017-01-01 this will be a hard error unless you over-ride it.
 				if((time() > 1483228800) && (! get_config('system','allow_unsigned_zotfinger')))
 					return $ret;

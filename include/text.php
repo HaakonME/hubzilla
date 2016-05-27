@@ -322,6 +322,15 @@ function autoname($len) {
 function xmlify($str) {
 	$buffer = '';
 
+	if(is_array($str)) {
+
+		// allow to fall through so we ge a PHP error, as the log statement will 
+		// probably get lost in the noise unless we're specifically looking for it. 
+
+		btlogger('xmlify called with array: ' . print_r($str,true), LOGGER_NORMAL, LOG_WARNING);
+	}
+
+
 	$len = mb_strlen($str);
 	for($x = 0; $x < $len; $x ++) {
 		$char = mb_substr($str,$x,1);

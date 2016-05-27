@@ -373,12 +373,12 @@ function zot_refresh($them, $channel = null, $force = false) {
 		if($signed_token) {
 			$valid = rsa_verify('token.' . $token,base64url_decode($signed_token),$j['key']);
 			if(! $valid) {
-				logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_WARN);
+				logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_ERR);
 				return false;
 			}
 		}
 		else {
-			logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARN);
+			logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARNING);
 			// after 2017-01-01 this will be a hard error unless you over-ride it.
 			if((time() > 1483228800) && (! get_config('system','allow_unsigned_zotfinger'))) {
 				return false;

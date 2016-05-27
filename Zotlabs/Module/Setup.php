@@ -12,7 +12,6 @@ namespace Zotlabs\Module;
 /**
  * @brief Initialisation for the setup module.
  *
- * @param[in,out] App &$a
  */
 
 class Setup extends \Zotlabs\Web\Controller {
@@ -54,16 +53,15 @@ class Setup extends \Zotlabs\Web\Controller {
 	/**
 	 * @brief Handle the actions of the different setup steps.
 	 *
-	 * @param[in,out] App &$a
 	 */
-		function post() {
-		global $db;
+
+	function post() {
 	
 		switch($this->install_wizard_pass) {
 			case 1:
 			case 2:
 				return;
-				break; // just in case return don't return :)
+				// implied break;
 			case 3:
 				$urlpath = \App::get_path();
 				$dbhost = trim($_POST['dbhost']);
@@ -82,39 +80,15 @@ class Setup extends \Zotlabs\Web\Controller {
 				$siteurl = rtrim($siteurl,'/');
 	
 				require_once('include/dba/dba_driver.php');
-				unset($db);
-				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
+
+				$db = \DBA::dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
 	
-				if(! $db->connected) {
-					echo 'Database Connect failed: ' . $db->error;
+				if(! \DBA::$dba->connected) {
+					echo 'Database Connect failed: ' . DBA::$dba->error;
 					killme();
-					\App::$data['db_conn_failed']=true;
 				}
-				/*if(get_db_errno()) {
-					unset($db);
-					$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, '', true);
-	
-					if(! get_db_errno()) {
-						$r = q("CREATE DATABASE '%s'",
-								dbesc($dbdata)
-						);
-						if($r) {
-							unset($db);
-							$db = new dba($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
-						} else {
-							\App::$data['db_create_failed']=true;
-						}
-					} else {
-						\App::$data['db_conn_failed']=true;
-						return;
-					}
-				}*/
-				//if(get_db_errno()) {
-	
-				//}
-	
 				return;
-				break;
+				// implied break;
 			case 4:
 				$urlpath = \App::get_path();
 				$dbhost = notags(trim($_POST['dbhost']));
@@ -138,10 +112,12 @@ class Setup extends \Zotlabs\Web\Controller {
 					}
 				}
 	
-				// connect to db
-				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
-	
-				if(! $db->connected) {
+				if(! \DBA::$dba->connected) {
+					// connect to db
+					$db = \DBA::dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
+				}
+
+				if(! \DBA::$dba->connected) {
 					echo 'CRITICAL: DB not connected.';
 					killme();
 				}
@@ -175,6 +151,8 @@ class Setup extends \Zotlabs\Web\Controller {
 					\App::$data['db_installed'] = true;
 	
 				return;
+				// implied break;
+			default:
 				break;
 		}
 	}
@@ -191,11 +169,10 @@ class Setup extends \Zotlabs\Web\Controller {
 	 *
 	 * Depending on the state we are currently in it returns different content.
 	 *
-	 * @param App &$a
 	 * @return string parsed HTML output
 	 */
-		function get() {
-		global $db;
+
+	function get() {
 	
 		$o = '';
 		$wizard_status = '';
@@ -228,7 +205,7 @@ class Setup extends \Zotlabs\Web\Controller {
 			$txt .= "<pre>".\App::$data['db_failed'] . "</pre>". EOL ;
 			$db_return_text .= $txt;
 		}
-		if($db && $db->connected) {
+		if(\DBA::$dba && \DBA::$dba->connected) {
 			$r = q("SELECT COUNT(*) as `total` FROM `account`");
 			if($r && count($r) && $r[0]['total']) {
 				$tpl = get_markup_template('install.tpl');
@@ -598,7 +575,7 @@ class Setup extends \Zotlabs\Web\Controller {
 		if(! is_writable(TEMPLATE_BUILD_PATH) ) {
 			$status = false;
 			$help = t('Red uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
-			$help .= sprintf( t('In order to store these compiled templates, the web server needs to have write access to the directory %s under the Red top level folder.'), TEMPLATE_BUILD_PATH) . EOL;
+			$help .= sprintf( t('In order to store these compiled templates, the web server needs to have write access to the directory %s under the top level web folder.'), TEMPLATE_BUILD_PATH) . EOL;
 			$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
 			$help .= sprintf( t('Note: as a security measure, you should give the web server write access to %s only--not the template files (.tpl) that it contains.'), TEMPLATE_BUILD_PATH) . EOL;
 		}
@@ -698,12 +675,12 @@ class Setup extends \Zotlabs\Web\Controller {
 	
 	
 	function load_database($db) {
-		$str = file_get_contents($db->get_install_script());
+		$str = file_get_contents(\DBA::$dba->get_install_script());
 		$arr = explode(';',$str);
 		$errors = false;
 		foreach($arr as $a) {
 			if(strlen(trim($a))) {
-				$r = @$db->q(trim($a));
+				$r = dbq(trim($a));
 				if(! $r) {
 					$errors .=  t('Errors encountered creating database tables.') . $a . EOL;
 				}
@@ -734,7 +711,7 @@ class Setup extends \Zotlabs\Web\Controller {
 			set_config('system','curl_ssl_ciphers','ALL:!eNULL');
 	
 		// Create a system channel
-		require_once ('include/identity.php');
+		require_once ('include/channel.php');
 		create_sys_channel();
 	
 		$baseurl = z_root();

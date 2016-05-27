@@ -232,7 +232,7 @@ class Events extends \Zotlabs\Web\Controller {
 		}
 	
 		if($share)
-			\Zotlabs\Daemon\Master(array('Notifier','event',$item_id));
+			\Zotlabs\Daemon\Master::Summon(array('Notifier','event',$item_id));
 	
 	}
 	

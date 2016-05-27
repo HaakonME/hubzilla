@@ -500,7 +500,7 @@ function get_theme_info($theme){
  * @return string
  */
 function get_theme_screenshot($theme) {
-	$a = get_app();
+
 	$exts = array('.png', '.jpg');
 	foreach($exts as $ext) {
 		if(file_exists('view/theme/' . $theme . '/img/screenshot' . $ext))
@@ -521,7 +521,7 @@ function head_add_css($src, $media = 'screen') {
 }
 
 function head_remove_css($src, $media = 'screen') {
-	$a = get_app();
+
 	$index = array_search(array($src, $media), App::$css_sources);
 	if ($index !== false)
 		unset(App::$css_sources[$index]);
@@ -592,7 +592,7 @@ function head_add_js($src) {
 }
 
 function head_remove_js($src) {
-	$a = get_app();
+
 	$index = array_search($src, App::$js_sources);
 	if($index !== false)
 		unset(App::$js_sources[$index]);
@@ -633,7 +633,6 @@ function format_js_if_exists($source) {
 
 
 function theme_include($file, $root = '') {
-	$a = get_app();
 
 	// Make sure $root ends with a slash / if it's not blank
 	if($root !== '' && $root[strlen($root)-1] !== '/')
@@ -671,7 +670,7 @@ function theme_include($file, $root = '') {
 
 
 function get_intltext_template($s, $root = '') {
-	$a = get_app();
+
 	$t = App::template_engine();
 
 	$template = $t->get_intltext_template($s, $root);
@@ -680,7 +679,7 @@ function get_intltext_template($s, $root = '') {
 
 
 function get_markup_template($s, $root = '') {
-	$a = get_app();
+
 	$t = App::template_engine();
 	$template = $t->get_markup_template($s, $root);
 	return $template;

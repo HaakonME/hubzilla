@@ -22,9 +22,8 @@ class Gprobe {
 		);
 
 		if(! $r) {
-			$x = zot_finger($url,null);
-			if($x['success']) {
-				$j = json_decode($x['body'],true);
+			$j = \Zotlabs\Zot\Finger::run($url,null);
+			if($j['success']) {
 				$y = import_xchan($j);
 			}
 		}

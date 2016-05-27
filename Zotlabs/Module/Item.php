@@ -17,10 +17,10 @@ namespace Zotlabs\Module;
  */  
 
 require_once('include/crypto.php');
-require_once('include/enotify.php');
 require_once('include/items.php');
 require_once('include/attach.php');
 
+use \Zotlabs\Lib as Zlib;
 
 class Item extends \Zotlabs\Web\Controller {
 
@@ -56,7 +56,7 @@ class Item extends \Zotlabs\Web\Controller {
 			$remote_xchan = $remote_observer = false;
 	
 		$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$sys = get_sys_channel();
 		if($sys && $profile_uid && ($sys['channel_id'] == $profile_uid) && is_site_admin()) {
 			$uid = intval($sys['channel_id']);
@@ -925,7 +925,7 @@ class Item extends \Zotlabs\Web\Controller {
 				// otherwise it will happen during delivery
 	
 				if(($datarray['owner_xchan'] != $datarray['author_xchan']) && (intval($parent_item['item_wall']))) {
-					notification(array(
+					Zlib\Enotify::submit(array(
 						'type'         => NOTIFY_COMMENT,
 						'from_xchan'   => $datarray['author_xchan'],
 						'to_xchan'     => $datarray['owner_xchan'],
@@ -943,7 +943,7 @@ class Item extends \Zotlabs\Web\Controller {
 				$parent = $post_id;
 	
 				if(($datarray['owner_xchan'] != $datarray['author_xchan']) && ($datarray['item_type'] == ITEM_TYPE_POST)) {
-					notification(array(
+					Zlib\Enotify::submit(array(
 						'type'         => NOTIFY_WALL,
 						'from_xchan'   => $datarray['author_xchan'],
 						'to_xchan'     => $datarray['owner_xchan'],

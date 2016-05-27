@@ -7,17 +7,13 @@ class Display extends \Zotlabs\Web\Controller {
 
 	function get($update = 0, $load = false) {
 	
-	//	logger("mod-display: update = $update load = $load");
-	
-	
 		$checkjs = new \Zotlabs\Web\CheckJS(1);
-	
 	
 		if($load)
 			$_SESSION['loadtime'] = datetime_convert();
 	
 	
-		if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			notice( t('Public access denied.') . EOL);
 			return;
 		}
@@ -185,7 +181,7 @@ class Display extends \Zotlabs\Web\Controller {
 			if($load || ($checkjs->disabled())) {
 				$r = null;
 	
-				require_once('include/identity.php');
+				require_once('include/channel.php');
 				$sys = get_sys_channel();
 				$sysid = $sys['channel_id'];
 	
@@ -233,7 +229,7 @@ class Display extends \Zotlabs\Web\Controller {
 		elseif($update && !$load) {
 			$r = null;
 	
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			$sys = get_sys_channel();
 			$sysid = $sys['channel_id'];
 	

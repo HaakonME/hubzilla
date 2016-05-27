@@ -83,10 +83,9 @@ but may be an issue with nginx or other web server platforms.
     php.ini file - and with no hosting provider restrictions on the use of 
     exec() and proc_open().
 
-    - curl, gd (with at least jpeg and png support), mysqli, mbstring, mcrypt, 
-    and openssl extensions. The imagick extension is not required but desirable.
-
-    - xml extension is required if you want webdav to work.
+    - curl, gd (with at least jpeg and png support), mysqli, mbstring, xml,
+    and openssl extensions. The imagick extension MAY be used instead of gd,
+	but is not required and MAY also be disabled via configuration option. 
 
     - some form of email server or email gateway such that PHP mail() works.
 

@@ -1,7 +1,7 @@
 <?php
 namespace Zotlabs\Module;
 
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 
 class Register extends \Zotlabs\Web\Controller {

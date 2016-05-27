@@ -12,7 +12,6 @@ class Ratenotif {
 
 		require_once("datetime.php");
 		require_once('include/items.php');
-		require_once('include/Contact.php');
 
 		if($argc < 3)
 			return;

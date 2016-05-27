@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-13 00:02-0700\n"
-"PO-Revision-Date: 2016-05-16 12:37+0000\n"
+"POT-Creation-Date: 2016-05-20 00:02-0700\n"
+"PO-Revision-Date: 2016-05-22 21:10+0000\n"
 "Last-Translator: jeroenpraat <jeroenpraat@xs4all.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/Friendica/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -67,14 +67,14 @@ msgstr "Totaal"
 msgid "Shared"
 msgstr "Gedeeld"
 
-#: ../../Zotlabs/Storage/Browser.php:230 ../../Zotlabs/Storage/Browser.php:303
+#: ../../Zotlabs/Storage/Browser.php:230 ../../Zotlabs/Storage/Browser.php:305
 #: ../../Zotlabs/Module/Blocks.php:156 ../../Zotlabs/Module/Layouts.php:182
 #: ../../Zotlabs/Module/Menu.php:118 ../../Zotlabs/Module/New_channel.php:142
 #: ../../Zotlabs/Module/Webpages.php:186
 msgid "Create"
 msgstr "Aanmaken"
 
-#: ../../Zotlabs/Storage/Browser.php:231 ../../Zotlabs/Storage/Browser.php:305
+#: ../../Zotlabs/Storage/Browser.php:231 ../../Zotlabs/Storage/Browser.php:307
 #: ../../Zotlabs/Module/Cover_photo.php:357
 #: ../../Zotlabs/Module/Photos.php:825 ../../Zotlabs/Module/Photos.php:1367
 #: ../../Zotlabs/Module/Profile_photo.php:368 ../../include/widgets.php:1519
@@ -102,7 +102,7 @@ msgstr "Grootte"
 msgid "Last Modified"
 msgstr "Laatst gewijzigd"
 
-#: ../../Zotlabs/Storage/Browser.php:240 ../../Zotlabs/Module/Admin.php:2075
+#: ../../Zotlabs/Storage/Browser.php:240 ../../Zotlabs/Module/Admin.php:2089
 #: ../../Zotlabs/Module/Blocks.php:157
 #: ../../Zotlabs/Module/Connections.php:290
 #: ../../Zotlabs/Module/Connections.php:310
@@ -120,7 +120,7 @@ msgid "Edit"
 msgstr "Bewerken"
 
 #: ../../Zotlabs/Storage/Browser.php:241 ../../Zotlabs/Module/Admin.php:1043
-#: ../../Zotlabs/Module/Admin.php:1202 ../../Zotlabs/Module/Admin.php:2076
+#: ../../Zotlabs/Module/Admin.php:1202 ../../Zotlabs/Module/Admin.php:2090
 #: ../../Zotlabs/Module/Blocks.php:159
 #: ../../Zotlabs/Module/Connections.php:263
 #: ../../Zotlabs/Module/Connedit.php:573
@@ -134,25 +134,25 @@ msgstr "Bewerken"
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: ../../Zotlabs/Storage/Browser.php:282
+#: ../../Zotlabs/Storage/Browser.php:284
 #, php-format
 msgid "You are using %1$s of your available file storage."
 msgstr "Je gebruikt %1$s van de beschikbare bestandsopslag."
 
-#: ../../Zotlabs/Storage/Browser.php:287
+#: ../../Zotlabs/Storage/Browser.php:289
 #, php-format
 msgid "You are using %1$s of %2$s available file storage. (%3$s&#37;)"
 msgstr "Je gebruikt %1$s van totaal %2$s beschikbare bestandsopslag. (%3$s&#37;)"
 
-#: ../../Zotlabs/Storage/Browser.php:299
+#: ../../Zotlabs/Storage/Browser.php:301
 msgid "WARNING:"
 msgstr "WAARSCHUWING:"
 
-#: ../../Zotlabs/Storage/Browser.php:302
+#: ../../Zotlabs/Storage/Browser.php:304
 msgid "Create new folder"
 msgstr "Nieuwe map aanmaken"
 
-#: ../../Zotlabs/Storage/Browser.php:304
+#: ../../Zotlabs/Storage/Browser.php:306
 msgid "Upload file"
 msgstr "Bestand uploaden"
 
@@ -198,7 +198,7 @@ msgstr "Bestand uploaden"
 #: ../../Zotlabs/Module/Profile_photo.php:256
 #: ../../Zotlabs/Module/Profile_photo.php:269
 #: ../../Zotlabs/Module/Profiles.php:202 ../../Zotlabs/Module/Profiles.php:600
-#: ../../Zotlabs/Module/Rate.php:115 ../../Zotlabs/Module/Register.php:77
+#: ../../Zotlabs/Module/Rate.php:113 ../../Zotlabs/Module/Register.php:77
 #: ../../Zotlabs/Module/Regmod.php:21
 #: ../../Zotlabs/Module/Service_limits.php:11
 #: ../../Zotlabs/Module/Settings.php:572 ../../Zotlabs/Module/Setup.php:238
@@ -209,14 +209,14 @@ msgstr "Bestand uploaden"
 #: ../../Zotlabs/Module/Viewconnections.php:26
 #: ../../Zotlabs/Module/Viewconnections.php:31
 #: ../../Zotlabs/Module/Viewsrc.php:18 ../../Zotlabs/Module/Webpages.php:74
-#: ../../include/photos.php:29 ../../include/chat.php:133
-#: ../../include/items.php:3439 ../../include/attach.php:141
-#: ../../include/attach.php:189 ../../include/attach.php:252
-#: ../../include/attach.php:266 ../../include/attach.php:273
-#: ../../include/attach.php:338 ../../include/attach.php:352
-#: ../../include/attach.php:359 ../../include/attach.php:437
-#: ../../include/attach.php:895 ../../include/attach.php:966
-#: ../../include/attach.php:1118 ../../index.php:174
+#: ../../include/chat.php:133 ../../include/photos.php:29
+#: ../../include/attach.php:141 ../../include/attach.php:189
+#: ../../include/attach.php:252 ../../include/attach.php:266
+#: ../../include/attach.php:273 ../../include/attach.php:338
+#: ../../include/attach.php:352 ../../include/attach.php:359
+#: ../../include/attach.php:437 ../../include/attach.php:895
+#: ../../include/attach.php:966 ../../include/attach.php:1118
+#: ../../include/items.php:3439 ../../index.php:175
 msgid "Permission denied."
 msgstr "Toegang geweigerd."
 
@@ -269,7 +269,7 @@ msgid "Theme settings updated."
 msgstr "Thema-instellingen bijgewerkt."
 
 #: ../../Zotlabs/Module/Admin.php:164 ../../Zotlabs/Module/Admin.php:1239
-#: ../../Zotlabs/Module/Admin.php:1541 ../../Zotlabs/Module/Display.php:44
+#: ../../Zotlabs/Module/Admin.php:1543 ../../Zotlabs/Module/Display.php:44
 #: ../../Zotlabs/Module/Filestorage.php:33 ../../Zotlabs/Module/Thing.php:89
 #: ../../Zotlabs/Module/Viewsrc.php:24 ../../include/items.php:3360
 msgid "Item not found."
@@ -315,8 +315,8 @@ msgstr "Jouw software moet worden bijgewerkt "
 #: ../../Zotlabs/Module/Admin.php:711 ../../Zotlabs/Module/Admin.php:755
 #: ../../Zotlabs/Module/Admin.php:1034 ../../Zotlabs/Module/Admin.php:1198
 #: ../../Zotlabs/Module/Admin.php:1313 ../../Zotlabs/Module/Admin.php:1403
-#: ../../Zotlabs/Module/Admin.php:1592 ../../Zotlabs/Module/Admin.php:1626
-#: ../../Zotlabs/Module/Admin.php:1711
+#: ../../Zotlabs/Module/Admin.php:1594 ../../Zotlabs/Module/Admin.php:1628
+#: ../../Zotlabs/Module/Admin.php:1713
 msgid "Administration"
 msgstr "Beheer"
 
@@ -385,7 +385,7 @@ msgstr "Niet ondersteund"
 #: ../../Zotlabs/Module/Settings.php:581 ../../include/dir_fns.php:141
 #: ../../include/dir_fns.php:142 ../../include/dir_fns.php:143
 #: ../../view/theme/redbasic/php/config.php:105
-#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1619
+#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1633
 msgid "No"
 msgstr "Nee"
 
@@ -405,7 +405,7 @@ msgstr "Ja - met goedkeuring"
 #: ../../Zotlabs/Module/Settings.php:581 ../../include/dir_fns.php:141
 #: ../../include/dir_fns.php:142 ../../include/dir_fns.php:143
 #: ../../view/theme/redbasic/php/config.php:105
-#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1619
+#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1633
 msgid "Yes"
 msgstr "Ja"
 
@@ -432,10 +432,10 @@ msgstr "Hub-instellingen"
 #: ../../Zotlabs/Module/Admin.php:492 ../../Zotlabs/Module/Admin.php:688
 #: ../../Zotlabs/Module/Admin.php:771 ../../Zotlabs/Module/Admin.php:1036
 #: ../../Zotlabs/Module/Admin.php:1200 ../../Zotlabs/Module/Admin.php:1405
-#: ../../Zotlabs/Module/Admin.php:1628 ../../Zotlabs/Module/Admin.php:1713
-#: ../../Zotlabs/Module/Admin.php:2078 ../../Zotlabs/Module/Appman.php:125
+#: ../../Zotlabs/Module/Admin.php:1630 ../../Zotlabs/Module/Admin.php:1715
+#: ../../Zotlabs/Module/Admin.php:2092 ../../Zotlabs/Module/Appman.php:125
 #: ../../Zotlabs/Module/Cal.php:341 ../../Zotlabs/Module/Chat.php:194
-#: ../../Zotlabs/Module/Chat.php:236 ../../Zotlabs/Module/Connect.php:97
+#: ../../Zotlabs/Module/Chat.php:236 ../../Zotlabs/Module/Connect.php:98
 #: ../../Zotlabs/Module/Connedit.php:734 ../../Zotlabs/Module/Events.php:475
 #: ../../Zotlabs/Module/Events.php:672
 #: ../../Zotlabs/Module/Filestorage.php:162
@@ -448,7 +448,7 @@ msgstr "Hub-instellingen"
 #: ../../Zotlabs/Module/Pdledit.php:66 ../../Zotlabs/Module/Photos.php:677
 #: ../../Zotlabs/Module/Photos.php:1052 ../../Zotlabs/Module/Photos.php:1092
 #: ../../Zotlabs/Module/Photos.php:1210 ../../Zotlabs/Module/Poke.php:186
-#: ../../Zotlabs/Module/Profiles.php:691 ../../Zotlabs/Module/Rate.php:172
+#: ../../Zotlabs/Module/Profiles.php:691 ../../Zotlabs/Module/Rate.php:170
 #: ../../Zotlabs/Module/Settings.php:590 ../../Zotlabs/Module/Settings.php:703
 #: ../../Zotlabs/Module/Settings.php:731 ../../Zotlabs/Module/Settings.php:754
 #: ../../Zotlabs/Module/Settings.php:842
@@ -997,7 +997,7 @@ msgstr "Tijd/datum verzoek"
 
 #: ../../Zotlabs/Module/Admin.php:1039 ../../Zotlabs/Module/Admin.php:1048
 #: ../../Zotlabs/Module/Id.php:17 ../../Zotlabs/Module/Id.php:18
-#: ../../include/contact_selectors.php:81 ../../boot.php:1617
+#: ../../include/contact_selectors.php:81 ../../boot.php:1631
 msgid "Email"
 msgstr "E-mail"
 
@@ -1159,11 +1159,11 @@ msgstr "Plugin %s uitgeschakeld."
 msgid "Plugin %s enabled."
 msgstr "Plugin %s ingeschakeld"
 
-#: ../../Zotlabs/Module/Admin.php:1282 ../../Zotlabs/Module/Admin.php:1565
+#: ../../Zotlabs/Module/Admin.php:1282 ../../Zotlabs/Module/Admin.php:1567
 msgid "Disable"
 msgstr "Uitschakelen"
 
-#: ../../Zotlabs/Module/Admin.php:1285 ../../Zotlabs/Module/Admin.php:1567
+#: ../../Zotlabs/Module/Admin.php:1285 ../../Zotlabs/Module/Admin.php:1569
 msgid "Enable"
 msgstr "Inschakelen"
 
@@ -1172,21 +1172,21 @@ msgstr "Inschakelen"
 msgid "Plugins"
 msgstr "Plugins"
 
-#: ../../Zotlabs/Module/Admin.php:1315 ../../Zotlabs/Module/Admin.php:1594
+#: ../../Zotlabs/Module/Admin.php:1315 ../../Zotlabs/Module/Admin.php:1596
 msgid "Toggle"
 msgstr "Omschakelen"
 
-#: ../../Zotlabs/Module/Admin.php:1316 ../../Zotlabs/Module/Admin.php:1595
+#: ../../Zotlabs/Module/Admin.php:1316 ../../Zotlabs/Module/Admin.php:1597
 #: ../../include/widgets.php:638 ../../include/nav.php:208
 #: ../../include/apps.php:166
 msgid "Settings"
 msgstr "Instellingen"
 
-#: ../../Zotlabs/Module/Admin.php:1323 ../../Zotlabs/Module/Admin.php:1604
+#: ../../Zotlabs/Module/Admin.php:1323 ../../Zotlabs/Module/Admin.php:1606
 msgid "Author: "
 msgstr "Auteur: "
 
-#: ../../Zotlabs/Module/Admin.php:1324 ../../Zotlabs/Module/Admin.php:1605
+#: ../../Zotlabs/Module/Admin.php:1324 ../../Zotlabs/Module/Admin.php:1607
 msgid "Maintainer: "
 msgstr "Beheerder: "
 
@@ -1246,146 +1246,154 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: ../../Zotlabs/Module/Admin.php:1411
-msgid "Add Plugin Repo"
-msgstr "Plugin-repository toevoegen"
+msgid "Manage Repos"
+msgstr "Repositories beheren"
 
-#: ../../Zotlabs/Module/Admin.php:1417 ../../Zotlabs/Module/Settings.php:77
+#: ../../Zotlabs/Module/Admin.php:1412
+msgid "Installed Plugin Repositories"
+msgstr "Toegevoegde plugin-repositories"
+
+#: ../../Zotlabs/Module/Admin.php:1413
+msgid "Install a New Plugin Repository"
+msgstr "Nieuwe plugin-repository toevoegen"
+
+#: ../../Zotlabs/Module/Admin.php:1419 ../../Zotlabs/Module/Settings.php:77
 #: ../../Zotlabs/Module/Settings.php:616 ../../include/apps.php:284
 msgid "Update"
 msgstr "Bijwerken"
 
-#: ../../Zotlabs/Module/Admin.php:1418
+#: ../../Zotlabs/Module/Admin.php:1420
 msgid "Switch branch"
 msgstr "Branch veranderen"
 
-#: ../../Zotlabs/Module/Admin.php:1419 ../../Zotlabs/Module/Photos.php:998
+#: ../../Zotlabs/Module/Admin.php:1421 ../../Zotlabs/Module/Photos.php:998
 #: ../../Zotlabs/Module/Tagrm.php:137
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: ../../Zotlabs/Module/Admin.php:1530
+#: ../../Zotlabs/Module/Admin.php:1532
 msgid "No themes found."
 msgstr "Geen thema's gevonden"
 
-#: ../../Zotlabs/Module/Admin.php:1586
+#: ../../Zotlabs/Module/Admin.php:1588
 msgid "Screenshot"
 msgstr "Schermafdruk"
 
-#: ../../Zotlabs/Module/Admin.php:1593 ../../Zotlabs/Module/Admin.php:1627
+#: ../../Zotlabs/Module/Admin.php:1595 ../../Zotlabs/Module/Admin.php:1629
 #: ../../include/widgets.php:1389
 msgid "Themes"
 msgstr "Thema's"
 
-#: ../../Zotlabs/Module/Admin.php:1632
+#: ../../Zotlabs/Module/Admin.php:1634
 msgid "[Experimental]"
 msgstr "[Experimenteel]"
 
-#: ../../Zotlabs/Module/Admin.php:1633
+#: ../../Zotlabs/Module/Admin.php:1635
 msgid "[Unsupported]"
 msgstr "[Niet ondersteund]"
 
-#: ../../Zotlabs/Module/Admin.php:1657
+#: ../../Zotlabs/Module/Admin.php:1659
 msgid "Log settings updated."
 msgstr "Logboek-instellingen bijgewerkt."
 
-#: ../../Zotlabs/Module/Admin.php:1712 ../../include/widgets.php:1410
+#: ../../Zotlabs/Module/Admin.php:1714 ../../include/widgets.php:1410
 #: ../../include/widgets.php:1420
 msgid "Logs"
 msgstr "Logboeken"
 
-#: ../../Zotlabs/Module/Admin.php:1714
+#: ../../Zotlabs/Module/Admin.php:1716
 msgid "Clear"
 msgstr "Leegmaken"
 
-#: ../../Zotlabs/Module/Admin.php:1720
+#: ../../Zotlabs/Module/Admin.php:1722
 msgid "Debugging"
 msgstr "Debuggen"
 
-#: ../../Zotlabs/Module/Admin.php:1721
+#: ../../Zotlabs/Module/Admin.php:1723
 msgid "Log file"
 msgstr "Logbestand"
 
-#: ../../Zotlabs/Module/Admin.php:1721
+#: ../../Zotlabs/Module/Admin.php:1723
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
 msgstr "Moet door de webserver beschrijfbaar zijn. Relatief ten opzichte van de bovenste map van je $Projectname-installatie."
 
-#: ../../Zotlabs/Module/Admin.php:1722
+#: ../../Zotlabs/Module/Admin.php:1724
 msgid "Log level"
 msgstr "Logniveau"
 
-#: ../../Zotlabs/Module/Admin.php:1990
+#: ../../Zotlabs/Module/Admin.php:2004
 msgid "New Profile Field"
 msgstr "Nieuw profielveld"
 
-#: ../../Zotlabs/Module/Admin.php:1991 ../../Zotlabs/Module/Admin.php:2011
+#: ../../Zotlabs/Module/Admin.php:2005 ../../Zotlabs/Module/Admin.php:2025
 msgid "Field nickname"
 msgstr "Bijnaam voor veld"
 
-#: ../../Zotlabs/Module/Admin.php:1991 ../../Zotlabs/Module/Admin.php:2011
+#: ../../Zotlabs/Module/Admin.php:2005 ../../Zotlabs/Module/Admin.php:2025
 msgid "System name of field"
 msgstr "Systeemnaam voor veld"
 
-#: ../../Zotlabs/Module/Admin.php:1992 ../../Zotlabs/Module/Admin.php:2012
+#: ../../Zotlabs/Module/Admin.php:2006 ../../Zotlabs/Module/Admin.php:2026
 msgid "Input type"
 msgstr "Invoertype"
 
-#: ../../Zotlabs/Module/Admin.php:1993 ../../Zotlabs/Module/Admin.php:2013
+#: ../../Zotlabs/Module/Admin.php:2007 ../../Zotlabs/Module/Admin.php:2027
 msgid "Field Name"
 msgstr "Veldnaam"
 
-#: ../../Zotlabs/Module/Admin.php:1993 ../../Zotlabs/Module/Admin.php:2013
+#: ../../Zotlabs/Module/Admin.php:2007 ../../Zotlabs/Module/Admin.php:2027
 msgid "Label on profile pages"
 msgstr "Tekstlabel voor op profielpagina's"
 
-#: ../../Zotlabs/Module/Admin.php:1994 ../../Zotlabs/Module/Admin.php:2014
+#: ../../Zotlabs/Module/Admin.php:2008 ../../Zotlabs/Module/Admin.php:2028
 msgid "Help text"
 msgstr "Helptekst"
 
-#: ../../Zotlabs/Module/Admin.php:1994 ../../Zotlabs/Module/Admin.php:2014
+#: ../../Zotlabs/Module/Admin.php:2008 ../../Zotlabs/Module/Admin.php:2028
 msgid "Additional info (optional)"
 msgstr "Extra informatie (optioneel)"
 
-#: ../../Zotlabs/Module/Admin.php:1995 ../../Zotlabs/Module/Admin.php:2015
+#: ../../Zotlabs/Module/Admin.php:2009 ../../Zotlabs/Module/Admin.php:2029
 #: ../../Zotlabs/Module/Filer.php:53 ../../Zotlabs/Module/Rbmark.php:32
 #: ../../Zotlabs/Module/Rbmark.php:104 ../../include/widgets.php:201
 #: ../../include/text.php:934 ../../include/text.php:946
 msgid "Save"
 msgstr "Opslaan"
 
-#: ../../Zotlabs/Module/Admin.php:2004
+#: ../../Zotlabs/Module/Admin.php:2018
 msgid "Field definition not found"
 msgstr "Velddefinitie niet gevonden"
 
-#: ../../Zotlabs/Module/Admin.php:2010
+#: ../../Zotlabs/Module/Admin.php:2024
 msgid "Edit Profile Field"
 msgstr "Profielveld bewerken"
 
-#: ../../Zotlabs/Module/Admin.php:2068 ../../include/widgets.php:1391
+#: ../../Zotlabs/Module/Admin.php:2082 ../../include/widgets.php:1391
 msgid "Profile Fields"
 msgstr "Profielvelden"
 
-#: ../../Zotlabs/Module/Admin.php:2069
+#: ../../Zotlabs/Module/Admin.php:2083
 msgid "Basic Profile Fields"
 msgstr "Standaard profielvelden"
 
-#: ../../Zotlabs/Module/Admin.php:2070
+#: ../../Zotlabs/Module/Admin.php:2084
 msgid "Advanced Profile Fields"
 msgstr "Geavanceerde profielvelden"
 
-#: ../../Zotlabs/Module/Admin.php:2070
+#: ../../Zotlabs/Module/Admin.php:2084
 msgid "(In addition to basic fields)"
 msgstr "(als toevoeging op de standaard velden)"
 
-#: ../../Zotlabs/Module/Admin.php:2072
+#: ../../Zotlabs/Module/Admin.php:2086
 msgid "All available fields"
 msgstr "Alle beschikbare velden"
 
-#: ../../Zotlabs/Module/Admin.php:2073
+#: ../../Zotlabs/Module/Admin.php:2087
 msgid "Custom Fields"
 msgstr "Extra (handmatig toegevoegde) velden"
 
-#: ../../Zotlabs/Module/Admin.php:2077
+#: ../../Zotlabs/Module/Admin.php:2091
 msgid "Create Custom Field"
 msgstr "Extra velden aanmaken"
 
@@ -1661,7 +1669,7 @@ msgstr "Aantal minuten voordat chatberichten worden verwijderd"
 #: ../../Zotlabs/Module/Chat.php:233 ../../Zotlabs/Module/Filestorage.php:153
 #: ../../Zotlabs/Module/Photos.php:671 ../../Zotlabs/Module/Photos.php:1045
 #: ../../Zotlabs/Module/Thing.php:313 ../../Zotlabs/Module/Thing.php:359
-#: ../../include/acl_selectors.php:285
+#: ../../include/acl_selectors.php:288
 msgid "Permissions"
 msgstr "Permissies"
 
@@ -1707,46 +1715,46 @@ msgstr "Veel voorkomende connecties"
 msgid "No connections in common."
 msgstr "Geen gemeenschappelijke connecties."
 
-#: ../../Zotlabs/Module/Connect.php:60 ../../Zotlabs/Module/Connect.php:108
+#: ../../Zotlabs/Module/Connect.php:61 ../../Zotlabs/Module/Connect.php:109
 msgid "Continue"
 msgstr "Ga verder"
 
-#: ../../Zotlabs/Module/Connect.php:89
+#: ../../Zotlabs/Module/Connect.php:90
 msgid "Premium Channel Setup"
 msgstr "Instellen premiumkanaal "
 
-#: ../../Zotlabs/Module/Connect.php:91
+#: ../../Zotlabs/Module/Connect.php:92
 msgid "Enable premium channel connection restrictions"
 msgstr "Restricties voor connecties van premiumkanaal toestaan"
 
-#: ../../Zotlabs/Module/Connect.php:92
+#: ../../Zotlabs/Module/Connect.php:93
 msgid ""
 "Please enter your restrictions or conditions, such as paypal receipt, usage "
 "guidelines, etc."
 msgstr "Vul je restricties of voorwaarden in, zoals een paypal-afschrift, voorschriften voor leden, enz."
 
-#: ../../Zotlabs/Module/Connect.php:94 ../../Zotlabs/Module/Connect.php:114
+#: ../../Zotlabs/Module/Connect.php:95 ../../Zotlabs/Module/Connect.php:115
 msgid ""
 "This channel may require additional steps or acknowledgement of the "
 "following conditions prior to connecting:"
 msgstr "Dit kanaal kan extra stappen of het accepteren van de volgende voorwaarden vereisen, voordat de connectie wordt geaccepteerd:"
 
-#: ../../Zotlabs/Module/Connect.php:95
+#: ../../Zotlabs/Module/Connect.php:96
 msgid ""
 "Potential connections will then see the following text before proceeding:"
 msgstr "Mogelijke connecties zullen dan de volgende tekst zien voordat ze verder kunnen:"
 
-#: ../../Zotlabs/Module/Connect.php:96 ../../Zotlabs/Module/Connect.php:117
+#: ../../Zotlabs/Module/Connect.php:97 ../../Zotlabs/Module/Connect.php:118
 msgid ""
 "By continuing, I certify that I have complied with any instructions provided"
 " on this page."
 msgstr "Door verder te gaan ga ik automatisch akkoord met alle voorwaarden en aanwijzingen op deze pagina."
 
-#: ../../Zotlabs/Module/Connect.php:105
+#: ../../Zotlabs/Module/Connect.php:106
 msgid "(No specific instructions have been provided by the channel owner.)"
 msgstr "(Er zijn geen speciale voorwaarden en aanwijzingen door de kanaal-eigenaar verstrekt) "
 
-#: ../../Zotlabs/Module/Connect.php:113
+#: ../../Zotlabs/Module/Connect.php:114
 msgid "Restricted or Premium Channel"
 msgstr "Beperkt of premiumkanaal"
 
@@ -1872,9 +1880,9 @@ msgid "Connections"
 msgstr "Connecties"
 
 #: ../../Zotlabs/Module/Connections.php:306 ../../Zotlabs/Module/Search.php:44
-#: ../../include/acl_selectors.php:278 ../../include/nav.php:165
-#: ../../include/text.php:933 ../../include/text.php:945
-#: ../../include/apps.php:179
+#: ../../include/nav.php:165 ../../include/text.php:933
+#: ../../include/text.php:945 ../../include/apps.php:179
+#: ../../include/acl_selectors.php:281
 msgid "Search"
 msgstr "Zoeken"
 
@@ -2024,9 +2032,9 @@ msgstr "Familie"
 #: ../../Zotlabs/Module/Connedit.php:595 ../../Zotlabs/Module/Settings.php:342
 #: ../../Zotlabs/Module/Settings.php:346 ../../Zotlabs/Module/Settings.php:347
 #: ../../Zotlabs/Module/Settings.php:350 ../../Zotlabs/Module/Settings.php:361
+#: ../../include/profile_selectors.php:80 ../../include/widgets.php:495
 #: ../../include/identity.php:389 ../../include/identity.php:390
-#: ../../include/identity.php:397 ../../include/profile_selectors.php:80
-#: ../../include/widgets.php:495
+#: ../../include/identity.php:397
 msgid "Friends"
 msgstr "Vrienden"
 
@@ -2097,7 +2105,7 @@ msgstr "Hulpmiddelen"
 msgid "Slide to adjust your degree of friendship"
 msgstr "Schuif om te bepalen hoe goed je iemand kent en/of mag"
 
-#: ../../Zotlabs/Module/Connedit.php:717 ../../Zotlabs/Module/Rate.php:161
+#: ../../Zotlabs/Module/Connedit.php:717 ../../Zotlabs/Module/Rate.php:159
 #: ../../include/js_strings.php:20
 msgid "Rating"
 msgstr "Beoordeling"
@@ -2318,8 +2326,8 @@ msgstr "Homepage: "
 msgid "Age:"
 msgstr "Leeftijd:"
 
-#: ../../Zotlabs/Module/Directory.php:311 ../../include/identity.php:1029
-#: ../../include/event.php:52 ../../include/text.php:1481
+#: ../../Zotlabs/Module/Directory.php:311 ../../include/event.php:52
+#: ../../include/identity.php:1029 ../../include/text.php:1481
 #: ../../include/bb2diaspora.php:509
 msgid "Location:"
 msgstr "Plaats:"
@@ -2337,9 +2345,9 @@ msgid "About:"
 msgstr "Over:"
 
 #: ../../Zotlabs/Module/Directory.php:325 ../../Zotlabs/Module/Match.php:68
-#: ../../Zotlabs/Module/Suggest.php:56 ../../include/identity.php:1014
+#: ../../Zotlabs/Module/Suggest.php:56 ../../include/Contact.php:101
 #: ../../include/widgets.php:147 ../../include/widgets.php:184
-#: ../../include/Contact.php:101 ../../include/conversation.php:961
+#: ../../include/identity.php:1014 ../../include/conversation.php:961
 msgid "Connect"
 msgstr "Verbinden"
 
@@ -2420,7 +2428,7 @@ msgstr "Deze kanalengidshub (directoryserver) heeft een toegangs-token nodig"
 #: ../../Zotlabs/Module/Group.php:72 ../../Zotlabs/Module/Import_items.php:112
 #: ../../Zotlabs/Module/Like.php:284 ../../Zotlabs/Module/Profperm.php:28
 #: ../../Zotlabs/Module/Subthread.php:62 ../../include/items.php:383
-#: ../../index.php:173
+#: ../../index.php:174
 msgid "Permission denied"
 msgstr "Toegang geweigerd"
 
@@ -3347,7 +3355,7 @@ msgid ""
 "Password reset failed."
 msgstr "Het verzoek kon niet worden geverifieerd. (Mogelijk heb je al eerder een verzoek ingediend.) Opnieuw instellen van wachtwoord is mislukt."
 
-#: ../../Zotlabs/Module/Lostpass.php:90 ../../boot.php:1623
+#: ../../Zotlabs/Module/Lostpass.php:90 ../../boot.php:1637
 msgid "Password Reset"
 msgstr "Wachtwoord vergeten?"
 
@@ -4218,8 +4226,8 @@ msgctxt "noun"
 msgid "Dislikes"
 msgstr "vinden dit niet leuk"
 
-#: ../../Zotlabs/Module/Photos.php:1263 ../../include/acl_selectors.php:287
-#: ../../include/ItemObject.php:384
+#: ../../Zotlabs/Module/Photos.php:1263 ../../include/ItemObject.php:384
+#: ../../include/acl_selectors.php:290
 msgid "Close"
 msgstr "Sluiten"
 
@@ -4611,6 +4619,10 @@ msgstr "Toegangs-<br/>&nbsp;type"
 msgid "Registration Policy"
 msgstr "Registratie-<br/>&nbsp;beleid"
 
+#: ../../Zotlabs/Module/Pubsites.php:31
+msgid "Software"
+msgstr "Software"
+
 #: ../../Zotlabs/Module/Pubsites.php:31 ../../Zotlabs/Module/Ratings.php:103
 #: ../../include/conversation.php:964
 msgid "Ratings"
@@ -4620,20 +4632,20 @@ msgstr "Beoordelingen"
 msgid "Rate"
 msgstr "Beoordeel"
 
-#: ../../Zotlabs/Module/Rate.php:162
+#: ../../Zotlabs/Module/Rate.php:160
 msgid "Website:"
 msgstr "Website:"
 
-#: ../../Zotlabs/Module/Rate.php:165
+#: ../../Zotlabs/Module/Rate.php:163
 #, php-format
 msgid "Remote Channel [%s] (not yet known on this site)"
 msgstr "Kanaal op afstand [%s] (nog niet op deze hub bekend)"
 
-#: ../../Zotlabs/Module/Rate.php:166
+#: ../../Zotlabs/Module/Rate.php:164
 msgid "Rating (this information is public)"
 msgstr "Beoordeling (deze informatie is openbaar)"
 
-#: ../../Zotlabs/Module/Rate.php:167
+#: ../../Zotlabs/Module/Rate.php:165
 msgid "Optionally explain your rating (this information is public)"
 msgstr "Verklaar jouw beoordeling (niet verplicht, deze informatie is openbaar)"
 
@@ -4757,7 +4769,7 @@ msgid "Membership on this site is by invitation only."
 msgstr "Registreren op deze $Projectname-hub kan alleen op uitnodiging."
 
 #: ../../Zotlabs/Module/Register.php:262 ../../include/nav.php:147
-#: ../../boot.php:1597
+#: ../../boot.php:1611
 msgid "Register"
 msgstr "Registreren"
 
@@ -5272,10 +5284,21 @@ msgid "Expire other channel content after this many days"
 msgstr "Inhoud van andere kanalen na zoveel aantal dagen laten verlopen:"
 
 #: ../../Zotlabs/Module/Settings.php:1065
+msgid "0 or blank to use the website limit."
+msgstr "0 of leeg om het standaard aantal dagen van deze hub te gebruiken."
+
+#: ../../Zotlabs/Module/Settings.php:1065
 #, php-format
-msgid ""
-"0 or blank to use the website limit. The website expires after %d days."
-msgstr "0 of leeg om het standaard aantal dagen van deze hub te gebruiken. Deze hub laat de inhoud van andere kanalen na %d dagen verlopen."
+msgid "This website expires after %d days."
+msgstr "Deze hub laat de inhoud van andere kanalen na %d dagen verlopen."
+
+#: ../../Zotlabs/Module/Settings.php:1065
+msgid "This website does not expire imported content."
+msgstr "Deze hub laat de inhoud van andere kanalen niet verlopen."
+
+#: ../../Zotlabs/Module/Settings.php:1065
+msgid "The website limit takes precedence if lower than your limit."
+msgstr "Wanneer de standaard aantal dagen van deze hub lager ligt dan jouw aantal, dan heeft de limiet van deze hub voorrang."
 
 #: ../../Zotlabs/Module/Settings.php:1066
 msgid "Maximum Friend Requests/Day:"
@@ -5286,12 +5309,12 @@ msgid "May reduce spam activity"
 msgstr "Kan eventuele spam verminderen"
 
 #: ../../Zotlabs/Module/Settings.php:1067
-msgid "Default Post Permissions"
-msgstr "Standaard permissies voor nieuwe berichten"
+msgid "Default Post and Publish Permissions"
+msgstr "Standaard permissies voor nieuwe berichten en publicaties"
 
 #: ../../Zotlabs/Module/Settings.php:1069
-msgid "Use my default audience setting for the type of post"
-msgstr "Gebruik van mijn standaard privacy-instelling voor berichten"
+msgid "Use my default audience setting for the type of object published"
+msgstr "Gebruik mijn standaard privacy-instelling voor dit type publicatie"
 
 #: ../../Zotlabs/Module/Settings.php:1072
 msgid "Channel permissions category:"
@@ -6266,192 +6289,14 @@ msgstr "Geen gebruikersnaam in het importbestand gevonden."
 msgid "Unable to create a unique channel address. Import failed."
 msgstr "Niet in staat om een uniek kanaaladres aan te maken. Importeren is mislukt."
 
-#: ../../include/dba/dba_driver.php:142
+#: ../../include/dba/dba_driver.php:159
 #, php-format
 msgid "Cannot locate DNS info for database server '%s'"
 msgstr "Kan DNS-informatie voor databaseserver '%s' niet vinden"
 
-#: ../../include/identity.php:32
-msgid "Unable to obtain identity information from database"
-msgstr "Niet in staat om identiteitsinformatie uit de database te verkrijgen"
-
-#: ../../include/identity.php:66
-msgid "Empty name"
-msgstr "Ontbrekende naam"
-
-#: ../../include/identity.php:69
-msgid "Name too long"
-msgstr "Naam te lang"
-
-#: ../../include/identity.php:180
-msgid "No account identifier"
-msgstr "Geen account-identificator"
-
-#: ../../include/identity.php:192
-msgid "Nickname is required."
-msgstr "Bijnaam is verplicht"
-
-#: ../../include/identity.php:206
-msgid "Reserved nickname. Please choose another."
-msgstr "Deze naam is gereserveerd. Kies een andere."
-
-#: ../../include/identity.php:211
-msgid ""
-"Nickname has unsupported characters or is already being used on this site."
-msgstr "Deze naam heeft niet ondersteunde karakters of is al op deze hub in gebruik."
-
-#: ../../include/identity.php:287
-msgid "Unable to retrieve created identity"
-msgstr "Niet in staat om aangemaakte identiteit te vinden"
-
-#: ../../include/identity.php:345
-msgid "Default Profile"
-msgstr "Standaardprofiel"
-
-#: ../../include/identity.php:791
-msgid "Requested channel is not available."
-msgstr "Opgevraagd kanaal is niet beschikbaar."
-
-#: ../../include/identity.php:938
-msgid "Create New Profile"
-msgstr "Nieuw profiel aanmaken"
-
-#: ../../include/identity.php:941 ../../include/nav.php:90
-msgid "Edit Profile"
-msgstr "Profiel bewerken"
-
-#: ../../include/identity.php:958
-msgid "Visible to everybody"
-msgstr "Voor iedereen zichtbaar"
-
-#: ../../include/identity.php:1033 ../../include/identity.php:1288
-msgid "Gender:"
-msgstr "Geslacht:"
-
-#: ../../include/identity.php:1034 ../../include/identity.php:1332
-msgid "Status:"
-msgstr "Status:"
-
-#: ../../include/identity.php:1035 ../../include/identity.php:1343
-msgid "Homepage:"
-msgstr "Homepagina:"
-
-#: ../../include/identity.php:1036
-msgid "Online Now"
-msgstr "Nu online"
-
-#: ../../include/identity.php:1124 ../../include/identity.php:1200
-msgid "F d"
-msgstr "d F"
-
-#: ../../include/identity.php:1180
-msgid "Birthday Reminders"
-msgstr "Verjaardagsherinneringen"
-
-#: ../../include/identity.php:1181
-msgid "Birthdays this week:"
-msgstr "Verjaardagen deze week:"
-
-#: ../../include/identity.php:1232
-msgid "[No description]"
-msgstr "[Geen omschrijving]"
-
-#: ../../include/identity.php:1250
-msgid "Event Reminders"
-msgstr "Herinneringen"
-
-#: ../../include/identity.php:1251
-msgid "Events this week:"
-msgstr "Gebeurtenissen deze week:"
-
-#: ../../include/identity.php:1293
-msgid "Like this channel"
-msgstr "Vind dit kanaal leuk"
-
-#: ../../include/identity.php:1317
-msgid "j F, Y"
-msgstr "F j Y"
-
-#: ../../include/identity.php:1318
-msgid "j F"
-msgstr "F j"
-
-#: ../../include/identity.php:1325
-msgid "Birthday:"
-msgstr "Geboortedatum:"
-
-#: ../../include/identity.php:1338
-#, php-format
-msgid "for %1$d %2$s"
-msgstr "voor %1$d %2$s"
-
-#: ../../include/identity.php:1341
-msgid "Sexual Preference:"
-msgstr "Seksuele voorkeur:"
-
-#: ../../include/identity.php:1347
-msgid "Tags:"
-msgstr "Tags:"
-
-#: ../../include/identity.php:1349
-msgid "Political Views:"
-msgstr "Politieke overtuigingen:"
-
-#: ../../include/identity.php:1351
-msgid "Religion:"
-msgstr "Religie:"
-
-#: ../../include/identity.php:1355
-msgid "Hobbies/Interests:"
-msgstr "Hobby's/interesses:"
-
-#: ../../include/identity.php:1357
-msgid "Likes:"
-msgstr "Houdt van:"
-
-#: ../../include/identity.php:1359
-msgid "Dislikes:"
-msgstr "Houdt niet van:"
-
-#: ../../include/identity.php:1361
-msgid "Contact information and Social Networks:"
-msgstr "Contactinformatie en sociale netwerken:"
-
-#: ../../include/identity.php:1363
-msgid "My other channels:"
-msgstr "Mijn andere kanalen"
-
-#: ../../include/identity.php:1365
-msgid "Musical interests:"
-msgstr "Muzikale interesses:"
-
-#: ../../include/identity.php:1367
-msgid "Books, literature:"
-msgstr "Boeken, literatuur:"
-
-#: ../../include/identity.php:1369
-msgid "Television:"
-msgstr "Televisie:"
-
-#: ../../include/identity.php:1371
-msgid "Film/dance/culture/entertainment:"
-msgstr "Films/dansen/cultuur/vermaak:"
-
-#: ../../include/identity.php:1373
-msgid "Love/Romance:"
-msgstr "Liefde/romantiek:"
-
-#: ../../include/identity.php:1375
-msgid "Work/employment:"
-msgstr "Werk/beroep:"
-
-#: ../../include/identity.php:1377
-msgid "School/education:"
-msgstr "School/opleiding:"
-
-#: ../../include/identity.php:1397
-msgid "Like this thing"
-msgstr "Vind dit ding leuk"
+#: ../../include/api.php:1338
+msgid "Public Timeline"
+msgstr "Openbare tijdlijn"
 
 #: ../../include/notify.php:20
 msgid "created a new post"
@@ -6469,40 +6314,6 @@ msgstr "Ingesloten (embedded) inhoud"
 #: ../../include/oembed.php:333
 msgid "Embedding disabled"
 msgstr "Insluiten (embedding) uitgeschakeld"
-
-#: ../../include/acl_selectors.php:236
-#: ../../include/PermissionDescription.php:31
-msgid "Visible to your default audience"
-msgstr "Voor iedereen zichtbaar, mits niet anders ingesteld"
-
-#: ../../include/acl_selectors.php:274
-msgid "Limit access:"
-msgstr "Toegang beperken:"
-
-#: ../../include/acl_selectors.php:275
-msgid ""
-"Select \"Show\" to allow viewing. \"Don't show\" lets you override and limit"
-" the scope of \"Show\"."
-msgstr "Kies \"Tonen\" om weergave toe te staan.  Met \"Niet tonen\" kan je uitzonderingen maken op \"Tonen\"."
-
-#: ../../include/acl_selectors.php:276
-msgid "Show"
-msgstr "Tonen"
-
-#: ../../include/acl_selectors.php:277
-msgid "Don't show"
-msgstr "Niet tonen"
-
-#: ../../include/acl_selectors.php:283
-msgid "Other networks and post services"
-msgstr "Andere netwerken en diensten"
-
-#: ../../include/acl_selectors.php:313
-#, php-format
-msgid ""
-"Post permissions %s cannot be changed %s after a post is shared.</br />These"
-" permissions set who is allowed to view the post."
-msgstr "Permissies van berichten %s zijn niet meer te veranderen %s nadat een bericht is gedeeld.</br />Met deze permissies bepaal je wie het bericht kan zien."
 
 #: ../../include/profile_selectors.php:6
 msgid "Currently Male"
@@ -6737,28 +6548,35 @@ msgstr "Maakt mij niks uit"
 msgid "Ask me"
 msgstr "Vraag het me"
 
-#: ../../include/activities.php:42
-msgid " and "
-msgstr " en "
+#: ../../include/Contact.php:118
+msgid "New window"
+msgstr "Nieuw venster"
 
-#: ../../include/activities.php:50
-msgid "public profile"
-msgstr "openbaar profiel"
+#: ../../include/Contact.php:119
+msgid "Open the selected location in a different window or browser tab"
+msgstr "Open de geselecteerde locatie in een ander venster of tab"
 
-#: ../../include/activities.php:59
+#: ../../include/Contact.php:237
 #, php-format
-msgid "%1$s changed %2$s to &ldquo;%3$s&rdquo;"
-msgstr "%1$s veranderde %2$s naar &ldquo;%3$s&rdquo;"
+msgid "User '%s' deleted"
+msgstr "Account '%s' verwijderd"
 
-#: ../../include/activities.php:60
-#, php-format
-msgid "Visit %1$s's %2$s"
-msgstr "Bezoek het %2$s van %1$s"
+#: ../../include/zot.php:680
+msgid "Invalid data packet"
+msgstr "Datapakket ongeldig"
 
-#: ../../include/activities.php:63
+#: ../../include/zot.php:696
+msgid "Unable to verify channel signature"
+msgstr "Kanaalkenmerk kon niet worden geverifieerd.  "
+
+#: ../../include/zot.php:2342
 #, php-format
-msgid "%1$s has an updated %2$s, changing %3$s."
-msgstr "%1$s heeft een aangepaste %2$s, %3$s veranderd."
+msgid "Unable to verify site signature for %s"
+msgstr "Hubkenmerk voor %s kon niet worden geverifieerd"
+
+#: ../../include/zot.php:3680
+msgid "invalid target signature"
+msgstr "ongeldig doelkenmerk"
 
 #: ../../include/contact_widgets.php:14
 #, php-format
@@ -6860,63 +6678,6 @@ msgstr "In behandeling"
 #: ../../include/event.php:972
 msgid "Cancelled"
 msgstr "Geannuleerd"
-
-#: ../../include/photos.php:112
-#, php-format
-msgid "Image exceeds website size limit of %lu bytes"
-msgstr "Afbeelding is groter dan op deze hub toegestane limiet van %lu bytes"
-
-#: ../../include/photos.php:119
-msgid "Image file is empty."
-msgstr "Afbeeldingsbestand is leeg"
-
-#: ../../include/photos.php:257
-msgid "Photo storage failed."
-msgstr "Foto kan niet worden opgeslagen"
-
-#: ../../include/photos.php:297
-msgid "a new photo"
-msgstr "een nieuwe foto"
-
-#: ../../include/photos.php:301
-#, php-format
-msgctxt "photo_upload"
-msgid "%1$s posted %2$s to %3$s"
-msgstr "%1$s plaatste %2$s op %3$s"
-
-#: ../../include/photos.php:506 ../../include/conversation.php:1641
-msgid "Photo Albums"
-msgstr "Fotoalbums"
-
-#: ../../include/photos.php:510
-msgid "Upload New Photos"
-msgstr "Nieuwe foto's uploaden"
-
-#: ../../include/import.php:27
-msgid ""
-"Cannot create a duplicate channel identifier on this system. Import failed."
-msgstr "Kan geen dubbele kanaal-identificator op deze hub aanmaken. Importeren mislukt."
-
-#: ../../include/import.php:74
-msgid "Channel clone failed. Import failed."
-msgstr "Het klonen van het kanaal is mislukt. Importeren mislukt."
-
-#: ../../include/zot.php:680
-msgid "Invalid data packet"
-msgstr "Datapakket ongeldig"
-
-#: ../../include/zot.php:696
-msgid "Unable to verify channel signature"
-msgstr "Kanaalkenmerk kon niet worden geverifieerd.  "
-
-#: ../../include/zot.php:2342
-#, php-format
-msgid "Unable to verify site signature for %s"
-msgstr "Hubkenmerk voor %s kon niet worden geverifieerd"
-
-#: ../../include/zot.php:3680
-msgid "invalid target signature"
-msgstr "ongeldig doelkenmerk"
 
 #: ../../include/widgets.php:103
 msgid "System"
@@ -7201,26 +6962,187 @@ msgstr "Chatkanaal niet gevonden"
 msgid "Room is full"
 msgstr "Chatkanaal is vol"
 
-#: ../../include/Contact.php:118
-msgid "New window"
-msgstr "Nieuw venster"
+#: ../../include/identity.php:32
+msgid "Unable to obtain identity information from database"
+msgstr "Niet in staat om identiteitsinformatie uit de database te verkrijgen"
 
-#: ../../include/Contact.php:119
-msgid "Open the selected location in a different window or browser tab"
-msgstr "Open de geselecteerde locatie in een ander venster of tab"
+#: ../../include/identity.php:66
+msgid "Empty name"
+msgstr "Ontbrekende naam"
 
-#: ../../include/Contact.php:237
+#: ../../include/identity.php:69
+msgid "Name too long"
+msgstr "Naam te lang"
+
+#: ../../include/identity.php:180
+msgid "No account identifier"
+msgstr "Geen account-identificator"
+
+#: ../../include/identity.php:192
+msgid "Nickname is required."
+msgstr "Bijnaam is verplicht"
+
+#: ../../include/identity.php:206
+msgid "Reserved nickname. Please choose another."
+msgstr "Deze naam is gereserveerd. Kies een andere."
+
+#: ../../include/identity.php:211
+msgid ""
+"Nickname has unsupported characters or is already being used on this site."
+msgstr "Deze naam heeft niet ondersteunde karakters of is al op deze hub in gebruik."
+
+#: ../../include/identity.php:287
+msgid "Unable to retrieve created identity"
+msgstr "Niet in staat om aangemaakte identiteit te vinden"
+
+#: ../../include/identity.php:345
+msgid "Default Profile"
+msgstr "Standaardprofiel"
+
+#: ../../include/identity.php:791
+msgid "Requested channel is not available."
+msgstr "Opgevraagd kanaal is niet beschikbaar."
+
+#: ../../include/identity.php:938
+msgid "Create New Profile"
+msgstr "Nieuw profiel aanmaken"
+
+#: ../../include/identity.php:941 ../../include/nav.php:90
+msgid "Edit Profile"
+msgstr "Profiel bewerken"
+
+#: ../../include/identity.php:958
+msgid "Visible to everybody"
+msgstr "Voor iedereen zichtbaar"
+
+#: ../../include/identity.php:1033 ../../include/identity.php:1288
+msgid "Gender:"
+msgstr "Geslacht:"
+
+#: ../../include/identity.php:1034 ../../include/identity.php:1332
+msgid "Status:"
+msgstr "Status:"
+
+#: ../../include/identity.php:1035 ../../include/identity.php:1343
+msgid "Homepage:"
+msgstr "Homepagina:"
+
+#: ../../include/identity.php:1036
+msgid "Online Now"
+msgstr "Nu online"
+
+#: ../../include/identity.php:1124 ../../include/identity.php:1200
+msgid "F d"
+msgstr "d F"
+
+#: ../../include/identity.php:1180
+msgid "Birthday Reminders"
+msgstr "Verjaardagsherinneringen"
+
+#: ../../include/identity.php:1181
+msgid "Birthdays this week:"
+msgstr "Verjaardagen deze week:"
+
+#: ../../include/identity.php:1232
+msgid "[No description]"
+msgstr "[Geen omschrijving]"
+
+#: ../../include/identity.php:1250
+msgid "Event Reminders"
+msgstr "Herinneringen"
+
+#: ../../include/identity.php:1251
+msgid "Events this week:"
+msgstr "Gebeurtenissen deze week:"
+
+#: ../../include/identity.php:1293
+msgid "Like this channel"
+msgstr "Vind dit kanaal leuk"
+
+#: ../../include/identity.php:1317
+msgid "j F, Y"
+msgstr "F j Y"
+
+#: ../../include/identity.php:1318
+msgid "j F"
+msgstr "F j"
+
+#: ../../include/identity.php:1325
+msgid "Birthday:"
+msgstr "Geboortedatum:"
+
+#: ../../include/identity.php:1338
 #, php-format
-msgid "User '%s' deleted"
-msgstr "Account '%s' verwijderd"
+msgid "for %1$d %2$s"
+msgstr "voor %1$d %2$s"
 
-#: ../../include/auth.php:105
-msgid "Logged out."
-msgstr "Uitgelogd."
+#: ../../include/identity.php:1341
+msgid "Sexual Preference:"
+msgstr "Seksuele voorkeur:"
 
-#: ../../include/auth.php:212
-msgid "Failed authentication"
-msgstr "Mislukte authenticatie"
+#: ../../include/identity.php:1347
+msgid "Tags:"
+msgstr "Tags:"
+
+#: ../../include/identity.php:1349
+msgid "Political Views:"
+msgstr "Politieke overtuigingen:"
+
+#: ../../include/identity.php:1351
+msgid "Religion:"
+msgstr "Religie:"
+
+#: ../../include/identity.php:1355
+msgid "Hobbies/Interests:"
+msgstr "Hobby's/interesses:"
+
+#: ../../include/identity.php:1357
+msgid "Likes:"
+msgstr "Houdt van:"
+
+#: ../../include/identity.php:1359
+msgid "Dislikes:"
+msgstr "Houdt niet van:"
+
+#: ../../include/identity.php:1361
+msgid "Contact information and Social Networks:"
+msgstr "Contactinformatie en sociale netwerken:"
+
+#: ../../include/identity.php:1363
+msgid "My other channels:"
+msgstr "Mijn andere kanalen"
+
+#: ../../include/identity.php:1365
+msgid "Musical interests:"
+msgstr "Muzikale interesses:"
+
+#: ../../include/identity.php:1367
+msgid "Books, literature:"
+msgstr "Boeken, literatuur:"
+
+#: ../../include/identity.php:1369
+msgid "Television:"
+msgstr "Televisie:"
+
+#: ../../include/identity.php:1371
+msgid "Film/dance/culture/entertainment:"
+msgstr "Films/dansen/cultuur/vermaak:"
+
+#: ../../include/identity.php:1373
+msgid "Love/Romance:"
+msgstr "Liefde/romantiek:"
+
+#: ../../include/identity.php:1375
+msgid "Work/employment:"
+msgstr "Werk/beroep:"
+
+#: ../../include/identity.php:1377
+msgid "School/education:"
+msgstr "School/opleiding:"
+
+#: ../../include/identity.php:1397
+msgid "Like this thing"
+msgstr "Vind dit ding leuk"
 
 #: ../../include/security.php:383
 msgid ""
@@ -7228,61 +7150,38 @@ msgid ""
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr "De beveiligings-token van het tekstvak was ongeldig. Dit is mogelijk het gevolg van dat er te lang (meer dan 3 uur) gewacht is om de tekst op te slaan. "
 
-#: ../../include/items.php:890 ../../include/items.php:935
-msgid "(Unknown)"
-msgstr "(Onbekend)"
-
-#: ../../include/items.php:1134
-msgid "Visible to anybody on the internet."
-msgstr "Voor iedereen op het internet zichtbaar."
-
-#: ../../include/items.php:1136
-msgid "Visible to you only."
-msgstr "Alleen voor jou zichtbaar."
-
-#: ../../include/items.php:1138
-msgid "Visible to anybody in this network."
-msgstr "Voor iedereen in dit netwerk zichtbaar."
-
-#: ../../include/items.php:1140
-msgid "Visible to anybody authenticated."
-msgstr "Voor iedereen die geauthenticeerd is zichtbaar."
-
-#: ../../include/items.php:1142
+#: ../../include/photos.php:112
 #, php-format
-msgid "Visible to anybody on %s."
-msgstr "Voor iedereen op %s zichtbaar."
+msgid "Image exceeds website size limit of %lu bytes"
+msgstr "Afbeelding is groter dan op deze hub toegestane limiet van %lu bytes"
 
-#: ../../include/items.php:1144
-msgid "Visible to all connections."
-msgstr "Voor alle connecties zichtbaar."
+#: ../../include/photos.php:119
+msgid "Image file is empty."
+msgstr "Afbeeldingsbestand is leeg"
 
-#: ../../include/items.php:1146
-msgid "Visible to approved connections."
-msgstr "Voor alle geaccepteerde connecties zichtbaar."
+#: ../../include/photos.php:257
+msgid "Photo storage failed."
+msgstr "Foto kan niet worden opgeslagen"
 
-#: ../../include/items.php:1148
-msgid "Visible to specific connections."
-msgstr "Voor specifieke connecties zichtbaar."
+#: ../../include/photos.php:297
+msgid "a new photo"
+msgstr "een nieuwe foto"
 
-#: ../../include/items.php:3910
-msgid "Privacy group is empty."
-msgstr "Privacygroep is leeg"
-
-#: ../../include/items.php:3917
+#: ../../include/photos.php:301
 #, php-format
-msgid "Privacy group: %s"
-msgstr "Privacygroep: %s"
+msgctxt "photo_upload"
+msgid "%1$s posted %2$s to %3$s"
+msgstr "%1$s plaatste %2$s op %3$s"
 
-#: ../../include/items.php:3929
-msgid "Connection not found."
-msgstr "Connectie niet gevonden."
+#: ../../include/photos.php:506 ../../include/conversation.php:1641
+msgid "Photo Albums"
+msgstr "Fotoalbums"
 
-#: ../../include/items.php:4278
-msgid "profile photo"
-msgstr "profielfoto"
+#: ../../include/photos.php:510
+msgid "Upload New Photos"
+msgstr "Nieuwe foto's uploaden"
 
-#: ../../include/nav.php:82 ../../include/nav.php:113 ../../boot.php:1614
+#: ../../include/nav.php:82 ../../include/nav.php:113 ../../boot.php:1628
 msgid "Logout"
 msgstr "Uitloggen"
 
@@ -7338,7 +7237,7 @@ msgstr "Jouw bladwijzers"
 msgid "Your webpages"
 msgstr "Jouw webpagina's"
 
-#: ../../include/nav.php:110 ../../include/apps.php:163 ../../boot.php:1615
+#: ../../include/nav.php:110 ../../include/apps.php:163 ../../boot.php:1629
 msgid "Login"
 msgstr "Inloggen"
 
@@ -7480,36 +7379,6 @@ msgstr "@kanaal, #tag, inhoud, ?hulp"
 msgid "Please wait..."
 msgstr "Wachten aub..."
 
-#: ../../include/network.php:659
-msgid "view full size"
-msgstr "volledige grootte tonen"
-
-#: ../../include/network.php:1827 ../../include/enotify.php:57
-msgid "$Projectname Notification"
-msgstr "$Projectname-notificatie"
-
-#: ../../include/network.php:1828 ../../include/enotify.php:58
-msgid "$projectname"
-msgstr "$projectname"
-
-#: ../../include/network.php:1830 ../../include/enotify.php:60
-msgid "Thank You,"
-msgstr "Bedankt,"
-
-#: ../../include/network.php:1832 ../../include/enotify.php:62
-#, php-format
-msgid "%s Administrator"
-msgstr "Beheerder %s"
-
-#: ../../include/network.php:1875 ../../include/account.php:317
-#: ../../include/account.php:344 ../../include/account.php:404
-msgid "Administrator"
-msgstr "Beheerder"
-
-#: ../../include/network.php:1889
-msgid "No Subject"
-msgstr "Geen onderwerp"
-
 #: ../../include/contact_selectors.php:56
 msgid "Frequently"
 msgstr "Regelmatig"
@@ -7574,6 +7443,14 @@ msgstr "XMPP/IM"
 #: ../../include/contact_selectors.php:87
 msgid "MySpace"
 msgstr "MySpace"
+
+#: ../../include/auth.php:105
+msgid "Logged out."
+msgstr "Uitgelogd."
+
+#: ../../include/auth.php:212
+msgid "Failed authentication"
+msgstr "Mislukte authenticatie"
 
 #: ../../include/attach.php:247 ../../include/attach.php:333
 msgid "Item was not found."
@@ -7649,7 +7526,7 @@ msgstr "Leeftijd:"
 msgid "YYYY-MM-DD or MM-DD"
 msgstr "JJJJ-MM-DD of MM-DD"
 
-#: ../../include/datetime.php:273 ../../boot.php:2463
+#: ../../include/datetime.php:273 ../../boot.php:2399
 msgid "never"
 msgstr "nooit"
 
@@ -7737,6 +7614,23 @@ msgstr "Alleen openbare forums"
 #: ../../include/dir_fns.php:143
 msgid "This Website Only"
 msgstr "Alleen deze hub"
+
+#: ../../include/enotify.php:57 ../../include/network.php:1831
+msgid "$Projectname Notification"
+msgstr "$Projectname-notificatie"
+
+#: ../../include/enotify.php:58 ../../include/network.php:1832
+msgid "$projectname"
+msgstr "$projectname"
+
+#: ../../include/enotify.php:60 ../../include/network.php:1834
+msgid "Thank You,"
+msgstr "Bedankt,"
+
+#: ../../include/enotify.php:62 ../../include/network.php:1836
+#, php-format
+msgid "%s Administrator"
+msgstr "Beheerder %s"
 
 #: ../../include/enotify.php:96
 #, php-format
@@ -8092,6 +7986,57 @@ msgstr "Link invoegen"
 msgid "Video"
 msgstr "Video"
 
+#: ../../include/activities.php:42
+msgid " and "
+msgstr " en "
+
+#: ../../include/activities.php:50
+msgid "public profile"
+msgstr "openbaar profiel"
+
+#: ../../include/activities.php:59
+#, php-format
+msgid "%1$s changed %2$s to &ldquo;%3$s&rdquo;"
+msgstr "%1$s veranderde %2$s naar &ldquo;%3$s&rdquo;"
+
+#: ../../include/activities.php:60
+#, php-format
+msgid "Visit %1$s's %2$s"
+msgstr "Bezoek het %2$s van %1$s"
+
+#: ../../include/activities.php:63
+#, php-format
+msgid "%1$s has an updated %2$s, changing %3$s."
+msgstr "%1$s heeft een aangepaste %2$s, %3$s veranderd."
+
+#: ../../include/follow.php:28
+msgid "Channel is blocked on this site."
+msgstr "Kanaal is op deze hub geblokkeerd."
+
+#: ../../include/follow.php:33
+msgid "Channel location missing."
+msgstr "Ontbrekende kanaallocatie."
+
+#: ../../include/follow.php:82
+msgid "Response from remote channel was incomplete."
+msgstr "Antwoord van het kanaal op afstand was niet volledig."
+
+#: ../../include/follow.php:99
+msgid "Channel was deleted and no longer exists."
+msgstr "Kanaal is verwijderd en bestaat niet meer."
+
+#: ../../include/follow.php:155 ../../include/follow.php:191
+msgid "Protocol disabled."
+msgstr "Protocol uitgeschakeld."
+
+#: ../../include/follow.php:179
+msgid "Channel discovery failed."
+msgstr "Kanaal ontdekken mislukt."
+
+#: ../../include/follow.php:217
+msgid "Cannot connect to yourself."
+msgstr "Kan niet met jezelf verbinden"
+
 #: ../../include/features.php:48
 msgid "General Features"
 msgstr "Algemene functies"
@@ -8371,33 +8316,34 @@ msgstr "Tagwolk"
 msgid "Provide a personal tag cloud on your channel page"
 msgstr "Zorgt voor een persoonlijke wolk met tags op jouw kanaalpagina"
 
-#: ../../include/follow.php:28
-msgid "Channel is blocked on this site."
-msgstr "Kanaal is op deze hub geblokkeerd."
+#: ../../include/message.php:20
+msgid "No recipient provided."
+msgstr "Geen ontvanger opgegeven."
 
-#: ../../include/follow.php:33
-msgid "Channel location missing."
-msgstr "Ontbrekende kanaallocatie."
+#: ../../include/message.php:25
+msgid "[no subject]"
+msgstr "[geen onderwerp]"
 
-#: ../../include/follow.php:82
-msgid "Response from remote channel was incomplete."
-msgstr "Antwoord van het kanaal op afstand was niet volledig."
+#: ../../include/message.php:45
+msgid "Unable to determine sender."
+msgstr "Afzender kan niet bepaald worden."
 
-#: ../../include/follow.php:99
-msgid "Channel was deleted and no longer exists."
-msgstr "Kanaal is verwijderd en bestaat niet meer."
+#: ../../include/message.php:222
+msgid "Stored post could not be verified."
+msgstr "Opgeslagen bericht kon niet worden geverifieerd."
 
-#: ../../include/follow.php:155 ../../include/follow.php:191
-msgid "Protocol disabled."
-msgstr "Protocol uitgeschakeld."
+#: ../../include/network.php:659
+msgid "view full size"
+msgstr "volledige grootte tonen"
 
-#: ../../include/follow.php:179
-msgid "Channel discovery failed."
-msgstr "Kanaal ontdekken mislukt."
+#: ../../include/network.php:1879 ../../include/account.php:317
+#: ../../include/account.php:344 ../../include/account.php:404
+msgid "Administrator"
+msgstr "Beheerder"
 
-#: ../../include/follow.php:217
-msgid "Cannot connect to yourself."
-msgstr "Kan niet met jezelf verbinden"
+#: ../../include/network.php:1893
+msgid "No Subject"
+msgstr "Geen onderwerp"
 
 #: ../../include/group.php:26
 msgid ""
@@ -9125,7 +9071,13 @@ msgstr "vindt dit leuk"
 msgid "dislikes"
 msgstr "vindt dit niet leuk"
 
+#: ../../include/PermissionDescription.php:31
+#: ../../include/acl_selectors.php:236
+msgid "Visible to your default audience"
+msgstr "Voor iedereen zichtbaar, mits niet anders ingesteld"
+
 #: ../../include/PermissionDescription.php:115
+#: ../../include/acl_selectors.php:272
 msgid "Only me"
 msgstr "Alleen ik"
 
@@ -9146,39 +9098,39 @@ msgstr "Iedereen op %s"
 msgid "Any of my connections"
 msgstr "Al mijn geaccepteerde connecties"
 
-#: ../../include/PermissionDescription.php:124
-msgid "Only me (only specified contacts and me)"
-msgstr "Alleen ik en specifieke connecties"
+#: ../../include/PermissionDescription.php:120
+msgid "Only connections I specifically allow"
+msgstr "Alleen connecties die uitdrukkelijk door jou zijn toegestaan"
 
-#: ../../include/PermissionDescription.php:125
+#: ../../include/PermissionDescription.php:121
 msgid "Anybody authenticated (could include visitors from other networks)"
 msgstr "Geauthenticeerde leden  (kan bezoekers van andere netwerken bevatten)"
 
-#: ../../include/PermissionDescription.php:126
+#: ../../include/PermissionDescription.php:122
 msgid "Any connections including those who haven't yet been approved"
 msgstr "Al mijn geaccepteerde en nog niet geaccepteerde connecties"
 
-#: ../../include/PermissionDescription.php:169
+#: ../../include/PermissionDescription.php:161
 msgid ""
 "This is your default setting for the audience of your normal stream, and "
 "posts."
 msgstr "Dit is de standaard privacy-instelling voor wie jouw berichten kan bekijken"
 
-#: ../../include/PermissionDescription.php:170
+#: ../../include/PermissionDescription.php:162
 msgid ""
 "This is your default setting for who can view your default channel profile"
 msgstr "Dit is de standaard privacy-instelling voor wie jouw standaardprofiel kan bekijken"
 
-#: ../../include/PermissionDescription.php:171
+#: ../../include/PermissionDescription.php:163
 msgid "This is your default setting for who can view your connections"
 msgstr "Dit is de standaard privacy-instelling voor wie een lijst met jouw connecties kan bekijken"
 
-#: ../../include/PermissionDescription.php:172
+#: ../../include/PermissionDescription.php:164
 msgid ""
 "This is your default setting for who can view your file storage and photos"
 msgstr "Dit is de standaard privacy-instelling voor wie jouw bestanden en foto's kan bekijken"
 
-#: ../../include/PermissionDescription.php:173
+#: ../../include/PermissionDescription.php:165
 msgid "This is your default setting for the audience of your webpages"
 msgstr "Dit is de standaard privacy-instelling voor wie jouw webpagina's kan bekijken"
 
@@ -9426,25 +9378,68 @@ msgctxt "calendar"
 msgid "All day"
 msgstr "hele dag"
 
-#: ../../include/message.php:20
-msgid "No recipient provided."
-msgstr "Geen ontvanger opgegeven."
+#: ../../include/import.php:27
+msgid ""
+"Cannot create a duplicate channel identifier on this system. Import failed."
+msgstr "Kan geen dubbele kanaal-identificator op deze hub aanmaken. Importeren mislukt."
 
-#: ../../include/message.php:25
-msgid "[no subject]"
-msgstr "[geen onderwerp]"
+#: ../../include/import.php:74
+msgid "Channel clone failed. Import failed."
+msgstr "Het klonen van het kanaal is mislukt. Importeren mislukt."
 
-#: ../../include/message.php:45
-msgid "Unable to determine sender."
-msgstr "Afzender kan niet bepaald worden."
+#: ../../include/items.php:890 ../../include/items.php:935
+msgid "(Unknown)"
+msgstr "(Onbekend)"
 
-#: ../../include/message.php:222
-msgid "Stored post could not be verified."
-msgstr "Opgeslagen bericht kon niet worden geverifieerd."
+#: ../../include/items.php:1134
+msgid "Visible to anybody on the internet."
+msgstr "Voor iedereen op het internet zichtbaar."
 
-#: ../../include/api.php:1338
-msgid "Public Timeline"
-msgstr "Openbare tijdlijn"
+#: ../../include/items.php:1136
+msgid "Visible to you only."
+msgstr "Alleen voor jou zichtbaar."
+
+#: ../../include/items.php:1138
+msgid "Visible to anybody in this network."
+msgstr "Voor iedereen in dit netwerk zichtbaar."
+
+#: ../../include/items.php:1140
+msgid "Visible to anybody authenticated."
+msgstr "Voor iedereen die geauthenticeerd is zichtbaar."
+
+#: ../../include/items.php:1142
+#, php-format
+msgid "Visible to anybody on %s."
+msgstr "Voor iedereen op %s zichtbaar."
+
+#: ../../include/items.php:1144
+msgid "Visible to all connections."
+msgstr "Voor alle connecties zichtbaar."
+
+#: ../../include/items.php:1146
+msgid "Visible to approved connections."
+msgstr "Voor alle geaccepteerde connecties zichtbaar."
+
+#: ../../include/items.php:1148
+msgid "Visible to specific connections."
+msgstr "Voor specifieke connecties zichtbaar."
+
+#: ../../include/items.php:3910
+msgid "Privacy group is empty."
+msgstr "Privacygroep is leeg"
+
+#: ../../include/items.php:3917
+#, php-format
+msgid "Privacy group: %s"
+msgstr "Privacygroep: %s"
+
+#: ../../include/items.php:3929
+msgid "Connection not found."
+msgstr "Connectie niet gevonden."
+
+#: ../../include/items.php:4278
+msgid "profile photo"
+msgstr "profielfoto"
 
 #: ../../include/page_widgets.php:6
 msgid "New Page"
@@ -9651,6 +9646,43 @@ msgstr "Bijlagen:"
 msgid "$Projectname event notification:"
 msgstr "Notificatie $Projectname-gebeurtenis:"
 
+#: ../../include/acl_selectors.php:273
+msgid "Add others"
+msgstr "Meer toevoegen"
+
+#: ../../include/acl_selectors.php:276
+msgid "Who can see this?"
+msgstr "Wie kan dit zien?"
+
+#: ../../include/acl_selectors.php:277
+msgid "Custom selection"
+msgstr "Handmatige selectie"
+
+#: ../../include/acl_selectors.php:278
+msgid ""
+"Select \"Show\" to allow viewing. \"Don't show\" lets you override and limit"
+" the scope of \"Show\"."
+msgstr "Kies \"Tonen\" om weergave toe te staan.  Met \"Niet tonen\" kan je uitzonderingen maken op \"Tonen\"."
+
+#: ../../include/acl_selectors.php:279
+msgid "Show"
+msgstr "Tonen"
+
+#: ../../include/acl_selectors.php:280
+msgid "Don't show"
+msgstr "Niet tonen"
+
+#: ../../include/acl_selectors.php:286
+msgid "Other networks and post services"
+msgstr "Andere netwerken en diensten"
+
+#: ../../include/acl_selectors.php:316
+#, php-format
+msgid ""
+"Post permissions %s cannot be changed %s after a post is shared.</br />These"
+" permissions set who is allowed to view the post."
+msgstr "Permissies van berichten %s zijn niet meer te veranderen %s nadat een bericht is gedeeld.</br />Met deze permissies bepaal je wie het bericht kan zien."
+
 #: ../../view/theme/redbasic/php/config.php:82
 msgid "Focus (Hubzilla default)"
 msgstr "Focus (Hubzilla-standaard)"
@@ -9787,62 +9819,62 @@ msgstr "Grootte profielfoto's van berichten instellen"
 msgid "Set size of followup author photos"
 msgstr "Grootte profielfoto's van reacties instellen"
 
-#: ../../boot.php:1075
+#: ../../boot.php:1089
 #, php-format
 msgctxt "opensearch"
 msgid "Search %1$s (%2$s)"
 msgstr "Zoek %1$s (%2$s)"
 
-#: ../../boot.php:1075
+#: ../../boot.php:1089
 msgctxt "opensearch"
 msgid "$Projectname"
 msgstr "$Projectname"
 
-#: ../../boot.php:1392
+#: ../../boot.php:1406
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr "Update %s mislukt. Zie foutenlogboek."
 
-#: ../../boot.php:1395
+#: ../../boot.php:1409
 #, php-format
 msgid "Update Error at %s"
 msgstr "Update-fout op %s"
 
-#: ../../boot.php:1596
+#: ../../boot.php:1610
 msgid ""
 "Create an account to access services and applications within the Hubzilla"
 msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van Hubzilla"
 
-#: ../../boot.php:1618
+#: ../../boot.php:1632
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: ../../boot.php:1619
+#: ../../boot.php:1633
 msgid "Remember me"
 msgstr "Aangemeld blijven"
 
-#: ../../boot.php:1622
+#: ../../boot.php:1636
 msgid "Forgot your password?"
 msgstr "Wachtwoord vergeten?"
 
-#: ../../boot.php:2269
+#: ../../boot.php:2205
 msgid "toggle mobile"
 msgstr "mobiele weergave omschakelen"
 
-#: ../../boot.php:2422
+#: ../../boot.php:2358
 msgid "Website SSL certificate is not valid. Please correct."
 msgstr "Het SSL-certificaat van deze website is ongeldig. Corrigeer dit a.u.b."
 
-#: ../../boot.php:2425
+#: ../../boot.php:2361
 #, php-format
 msgid "[hubzilla] Website SSL error for %s"
 msgstr "[hubzilla] Probleem met SSL-certificaat voor %s"
 
-#: ../../boot.php:2462
+#: ../../boot.php:2398
 msgid "Cron/Scheduled tasks not running."
 msgstr "Cron is niet actief"
 
-#: ../../boot.php:2466
+#: ../../boot.php:2402
 #, php-format
 msgid "[hubzilla] Cron tasks not running on %s"
 msgstr "[hubzilla] Cron-taken zijn niet actief op %s"

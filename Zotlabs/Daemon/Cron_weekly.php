@@ -21,7 +21,6 @@ class Cron_weekly {
 		require_once('include/hubloc.php');
 		prune_hub_reinstalls();
 	
-		require_once('include/Contact.php');
 		mark_orphan_hubsxchans();
 
 

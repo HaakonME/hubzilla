@@ -175,6 +175,9 @@ function format_event_bbcode($ev) {
 	if($ev['location'])
 		$o .= '[event-location]' . $ev['location'] . '[/event-location]';
 
+	if($ev['event_hash'])
+		$o .= '[event-id]' . $ev['event_hash'] . '[/event-id]';
+
 	if($ev['adjust'])
 		$o .= '[event-adjust]' . $ev['adjust'] . '[/event-adjust]';
 
@@ -211,6 +214,9 @@ function bbtoevent($s) {
 	$match = '';
 	if(preg_match("/\[event\-location\](.*?)\[\/event\-location\]/is",$s,$match))
 		$ev['location'] = $match[1];
+	$match = '';
+	if(preg_match("/\[event\-id\](.*?)\[\/event\-id\]/is",$s,$match))
+		$ev['event_hash'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",$s,$match))
 		$ev['adjust'] = $match[1];
@@ -278,34 +284,41 @@ function event_store_event($arr) {
 	else
 		$arr['event_status_date'] = NULL_DATE;
 
-	// Existing event being modified
 
-	if($arr['id'] || $arr['event_hash']) {
+	$existing_event = null;
 
-		// has the event actually changed?
+	if($arr['event_hash']) {
+		$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+			dbesc($arr['event_hash']),
+			intval($arr['uid'])
+		);
+		if($r) {
+			$existing_event = $r[0];
+		}
+	}
 
-		if($arr['event_hash']) {
-			$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
-				dbesc($arr['event_hash']),
-				intval($arr['uid'])
-			);
+	if($arr['id']) {
+		$r = q("SELECT * FROM event WHERE id = %d AND uid = %d LIMIT 1",
+			intval($arr['id']),
+			intval($arr['uid'])
+		);
+		if($r) {
+			$existing_event = $r[0];
 		}
 		else {
-			$r = q("SELECT * FROM event WHERE id = %d AND uid = %d LIMIT 1",
-				intval($arr['id']),
-				intval($arr['uid'])
-			);
-		}
-
-		if(! $r)
 			return false;
+		}
+	}
 
-		if($r[0]['edited'] === $arr['edited']) {
-			// Nothing has changed. Return the ID.
-			return $r[0];
+
+	if($existing_event) {
+
+		if($existing_event['edited'] >= $arr['edited']) {
+			// Nothing has changed. 
+			return $existing_event;
 		}
 
-		$hash = $r[0]['event_hash'];
+		$hash = $existing_event['event_hash'];
 
 		// The event changed. Update it.
 
@@ -350,7 +363,7 @@ function event_store_event($arr) {
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
 			dbesc($arr['deny_gid']),
-			intval($r[0]['id']),
+			intval($existing_event['id']),
 			intval($arr['uid'])
 		);
 	} else {
@@ -360,6 +373,8 @@ function event_store_event($arr) {
 
 		if(array_key_exists('external_id',$arr))
 			$hash = $arr['external_id'];
+		elseif(array_key_exists('event_hash',$arr))
+			$hash = $arr['event_hash'];
 		else
 			$hash = random_string() . '@' . App::get_hostname();
 
@@ -436,7 +451,7 @@ function event_addtocal($item_id, $uid) {
 
 		// is this an edit?
 
-		if($item['resource_type'] === 'event') {
+		if($item['resource_type'] === 'event' && (! $ev['event_hash'])) {
 			$ev['event_hash'] = $item['resource_id'];
 		}
 
@@ -472,7 +487,6 @@ function event_addtocal($item_id, $uid) {
 			if($z) {
 				build_sync_packet($channel['channel_id'],array('event_item' => array(encode_item($sync_item[0],true)),'event' => $z));
 			}
-
 			return true;
 		}
 	}
@@ -763,6 +777,9 @@ function event_store_item($arr, $event) {
 	$item_arr = array();
 	$prefix = '';
 //	$birthday = false;
+
+	if(($event) && array_key_exists('event_hash',$event) && (! array_key_exists('event_hash',$arr)))
+		$arr['event_hash'] = $event['event_hash'];
 
 	if($event['type'] === 'birthday') {
 		if(! is_sys_channel($arr['uid']))

@@ -8,7 +8,7 @@ namespace Zotlabs\Module;
 */
 
 require_once('include/photo/photo_driver.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 
 

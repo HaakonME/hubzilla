@@ -5,11 +5,6 @@
 
 Hubzilla Community Server is open source software which is maintained by "the community" - essentially unpaid volunteers.
 
-[b]Hubzilla Enterprise Server[/b]
-
-Hubzilla Enterprise Server is commercial software with a variety of support plans depending on the specific license terms.
-
- 
 The first thing you need to do is talk to your hub administrator - the person who runs and manages your site. They are in the unique position of having access to the internal software and database and [b]logfiles[/b] and will need to be involved in fixing your problem. Other people "on the net" can't really help with this. The first thing the hub administrator needs to do is look at their logs and/or try to reproduce the problem. So try to be as helpful and courteous as possible in helping them look into the problem. 
 
 To find your hub administrator (if you don't know who they are) please look at [url=[baseurl]/siteinfo]this page[/url]. If they have not provided any contact info on that page or provided an "Impressum" there, see [url=[baseurl]/siteinfo/json]this site info summary[/url] under the heading "admin:".
@@ -24,13 +19,6 @@ If you get a blank white screen when doing something, this is almost always a co
 
 [h3]I'm stumped. I can't figure out what is wrong.[/h3]
 
-[b]Hubzilla Enterprise Server[/b]
-
-Please make contact with the vendor - who will have provided you with support contact details. Preferably this contact will be made by the hub administrator so that he/she can assist us in collecting the necessary issue details. We will assign a ticket and notify you of progress. 
-
-
-[b]Hubzilla Community Server[/b]
-
 At this point it might be worthwhile discussing the issue on one of the online forums. There may be several of these and some may be more suited to your spoken language. As a last resort, try "Channel One", which is in English.
 
 If the community developers can't help you right away, understand that they are volunteers and may have a lot of other work and demands on their time. At this point you need to file a bug report. You will need an account on github.com to do this. So register, and then visit https://github.com/redmatrix/hubzilla/issues
@@ -39,7 +27,5 @@ If the community developers can't help you right away, understand that they are 
 Then you wait. If it's a high profile issue, it may get fixed quickly. But nobody is in charge of fixing bugs. If it lingers without resolution, please spend some more time investigating the problem. Ask about anything you don't understand related to the behaviour. You will learn more about how the software works and quite possibly figure out why it isn't working now. Ultimately it is somebody in the community who is going to fix this and you are a member of the community; and this is how the open source process works.
 
 
-[b]In either case[/b]
-
-Other developers working to fix the problem may need to find out more, so do your homework and document what is happening and everything you've tried. Don't say "I did xyz and it didn't work." That doesn't tell us anything. Tell us precisely what steps you took and what you expected the result to be, and precisely what happened as a result. If there were any error messages, don't say "there was an error message". Tell us exactly what the message said.
+Other developers working to fix the problem may need to find out more, so do your homework and document what is happening and everything you've tried. Don't say "I did xyz and it didn't work." That doesn't tell us anything. Tell us precisely what steps you took and what you expected the result to be, and precisely what happened as a result. If there were any error messages, don't say "there was an error message". Tell us exactly what the message said. Tell us what version you're running and any other details that may be unique about your site configuration. 
        

@@ -1,7 +1,7 @@
 <?php
 namespace Zotlabs\Module;
 
-require_once('include/Contact.php');
+
 require_once('include/photos.php');
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @file include/identity.php
+ * @file include/channel.php
  */
 
 require_once('include/zot.php');
@@ -847,7 +847,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 		$extra_fields = array();
 
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$profile_fields_basic    = get_profile_fields_basic();
 		$profile_fields_advanced = get_profile_fields_advanced();
 
@@ -1003,8 +1003,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	$profile['picdate'] = urlencode($profile['picdate']);
 
 	call_hooks('profile_sidebar_enter', $profile);
-
-	require_once('include/Contact.php');
 
 	if($show_connect) {
 
@@ -1569,7 +1567,7 @@ function get_online_status($nick) {
 
 	$ret = array('result' => false);
 
-	if(get_config('system','block_public') && ! local_channel() && ! remote_channel())
+	if(observer_prohibited())
 		return $ret;
 
 	$r = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",
@@ -1947,3 +1945,26 @@ function get_zcard_embed($channel,$observer_hash = '',$args = array()) {
 	return $o;
 		
 }
+
+
+function channelx_by_nick($nick) {
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and channel_removed = 0 LIMIT 1",
+		dbesc($nick)
+	);
+	return(($r) ? $r[0] : false);
+}
+
+function channelx_by_hash($hash) {
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and channel_removed = 0 LIMIT 1",
+		dbesc($hash)
+	);
+	return(($r) ? $r[0] : false);
+}
+
+function channelx_by_n($id) {
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and channel_removed = 0 LIMIT 1",
+		dbesc($id)
+	);
+	return(($r) ? $r[0] : false);
+}
+

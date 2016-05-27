@@ -7,7 +7,7 @@ namespace Zotlabs\Module;
  *
  */
 
-require_once('include/Contact.php');
+
 require_once('include/socgraph.php');
 require_once('include/selectors.php');
 require_once('include/group.php');
@@ -230,7 +230,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		if(\App::$poi && \App::$poi['abook_my_perms'] != $abook_my_perms
 			&& (! intval(\App::$poi['abook_self']))) {
-			\Zotlabs\Daemon\Master(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));
+			\Zotlabs\Daemon\Master::Summon(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));
 		}
 	
 		if($new_friend) {
@@ -485,7 +485,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			if($cmd === 'drop') {
 	
-				require_once('include/Contact.php');
 	
 	// FIXME
 	// We need to send either a purge or a refresh packet to the other side (the channel being unfriended).

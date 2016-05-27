@@ -8,7 +8,7 @@ class Ratings extends \Zotlabs\Web\Controller {
 
 	function init() {
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			return;
 		}
 	
@@ -80,9 +80,9 @@ class Ratings extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			notice( t('Public access denied.') . EOL);
 			return;
 		}

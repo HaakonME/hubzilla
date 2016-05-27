@@ -19,8 +19,6 @@ require_once('include/text.php');
  */
 function photo_upload($channel, $observer, $args) {
 
-	$a = get_app();
-
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
 	$account_id = $channel['channel_account_id'];

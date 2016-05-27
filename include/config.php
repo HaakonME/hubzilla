@@ -44,7 +44,6 @@
  *  The category of the configuration value
  */
 function load_config($family) {
-	global $a;
 
 	if(! array_key_exists($family, App::$config))
 		App::$config[$family] = array();
@@ -81,7 +80,6 @@ function load_config($family) {
  * @return mixed Return value or false on error or if not set
  */
 function get_config($family, $key) {
-	global $a;
 
 	if((! array_key_exists($family, App::$config)) || (! array_key_exists('config_loaded', App::$config[$family])))
 		load_config($family);
@@ -110,6 +108,7 @@ function get_config($family, $key) {
  *  The configuration key to query
  * @return mixed
  */
+
 function get_config_from_storage($family, $key) {
 	$ret = q("SELECT * FROM config WHERE cat = '%s' AND k = '%s' LIMIT 1",
 		dbesc($family),
@@ -135,7 +134,6 @@ function get_config_from_storage($family, $key) {
  *  Return the set value, or false if the database update failed
  */
 function set_config($family, $key, $value) {
-	global $a;
 
 	// manage array value
 	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
@@ -180,7 +178,7 @@ function set_config($family, $key, $value) {
  * @return mixed
  */
 function del_config($family, $key) {
-	global $a;
+
 	$ret = false;
 
 	if(array_key_exists($family, App::$config) && array_key_exists($key, App::$config[$family]))
@@ -204,7 +202,6 @@ function del_config($family, $key) {
  * @return void|false Nothing or false if $uid is false
  */
 function load_pconfig($uid) {
-	global $a;
 
 	if($uid === false)
 		return false;
@@ -249,7 +246,6 @@ function load_pconfig($uid) {
  */
 function get_pconfig($uid, $family, $key, $instore = false) {
 //	logger('include/config.php: get_pconfig() deprecated instore param used', LOGGER_DEBUG);
-	global $a;
 
 	if($uid === false)
 		return false;
@@ -285,7 +281,6 @@ function get_pconfig($uid, $family, $key, $instore = false) {
  * @return mixed Stored $value or false
  */
 function set_pconfig($uid, $family, $key, $value) {
-	global $a;
 
 	// this catches subtle errors where this function has been called 
 	// with local_channel() when not logged in (which returns false)
@@ -372,7 +367,7 @@ function set_pconfig($uid, $family, $key, $value) {
  * @return mixed
  */
 function del_pconfig($uid, $family, $key) {
-	global $a;
+
 	$ret = false;
 
 	if (x(App::$config[$uid][$family], $key))
@@ -398,7 +393,6 @@ function del_pconfig($uid, $family, $key) {
  * @return void|false Returns false if xchan is not set
  */
 function load_xconfig($xchan) {
-	global $a;
 
 	if(! $xchan)
 		return false;
@@ -441,7 +435,6 @@ function load_xconfig($xchan) {
  * @return mixed Stored $value or false if it does not exist
  */
 function get_xconfig($xchan, $family, $key) {
-	global $a;
 
 	if(! $xchan)
 		return false;
@@ -477,7 +470,6 @@ function get_xconfig($xchan, $family, $key) {
  * @return mixed Stored $value or false
  */
 function set_xconfig($xchan, $family, $key, $value) {
-	global $a;
 
 	// manage array value
 	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
@@ -530,7 +522,7 @@ function set_xconfig($xchan, $family, $key, $value) {
  * @return mixed
  */
 function del_xconfig($xchan, $family, $key) {
-	global $a;
+
 	$ret = false;
 
 	if(x(App::$config[$xchan][$family], $key))

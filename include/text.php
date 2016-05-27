@@ -20,7 +20,6 @@ define('RANDOM_STRING_TEXT', 0x01 );
  * @return string substituted string
  */
 function replace_macros($s, $r) {
-	$a = get_app();
 
 	$arr = array('template' => $s, 'params' => $r);
 	call_hooks('replace_macros', $arr);
@@ -96,7 +95,6 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 	if($type == 'application/x-pdl')
 		return escape_tags($s);
 
-	$a = get_app();
 	if(App::$is_sys) {
 		return $s;
 	}
@@ -323,6 +321,15 @@ function autoname($len) {
  */
 function xmlify($str) {
 	$buffer = '';
+
+	if(is_array($str)) {
+
+		// allow to fall through so we ge a PHP error, as the log statement will 
+		// probably get lost in the noise unless we're specifically looking for it. 
+
+		btlogger('xmlify called with array: ' . print_r($str,true), LOGGER_NORMAL, LOG_WARNING);
+	}
+
 
 	$len = mb_strlen($str);
 	for($x = 0; $x < $len; $x ++) {
@@ -567,21 +574,25 @@ function attribute_contains($attr, $s) {
  */
 
 function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
-		return;
-
-	$debugging = get_config('system', 'debugging');
-	$loglevel  = intval(get_config('system', 'loglevel'));
-	$logfile   = get_config('system', 'logfile');
+	if(App::$module == 'setup' && is_writable('install.log')) {
+		$debugging = true;
+		$logfile = 'install.log';
+		$loglevel = LOGGER_ALL;
+	}
+	else {
+		$debugging = get_config('system', 'debugging');
+		$loglevel  = intval(get_config('system', 'loglevel'));
+		$logfile   = get_config('system', 'logfile');
+	}
 
 	if((! $debugging) || (! $logfile) || ($level > $loglevel))
 		return;
 
 	$where = '';
+	
+	// We require > 5.4 but leave the version check so that install issues (including version) can be logged
+
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
 		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
@@ -590,7 +601,8 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
 
-	call_hooks('logger',$pluginfo);
+	if(! (App::$module == 'setup'))
+		call_hooks('logger',$pluginfo);
 
 	if(! $pluginfo['logged'])
 		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
@@ -648,11 +660,10 @@ function log_priority_str($priority) {
  * @param int $level A log level.
  */
 function dlogger($msg, $level = 0) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
+	// turn off logger in install mode
+
+	if(App::$module == 'setup')
 		return;
 
 	$debugging = get_config('system','debugging');
@@ -810,7 +821,6 @@ function get_mentions($item,$tags) {
 
 function contact_block() {
 	$o = '';
-	$a = get_app();
 
 	if(! App::$profile['uid'])
 		return;
@@ -923,7 +933,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 
 function search($s,$id='search-box',$url='/search',$save = false) {
-	$a = get_app();
+
 	return replace_macros(get_markup_template('searchbox.tpl'),array(
 		'$s' => $s,
 		'$id' => $id,
@@ -1068,7 +1078,7 @@ function get_mood_verbs() {
 // Function to list all smilies, both internal and from addons
 // Returns array with keys 'texts' and 'icons'
 function list_smilies() {
-	$a = get_app();
+
 	$texts =  array( 
 		'&lt;3', 
 		'&lt;/3', 
@@ -1101,10 +1111,8 @@ function list_smilies() {
 		':coffee', 
 		':facepalm',
 		':like',
-		':dislike',
-		'red#matrix',
-		'red#',
-		'r#'
+		':dislike'
+
 	);
 
 	$icons = array(
@@ -1140,9 +1148,6 @@ function list_smilies() {
 		'<img class="smiley" src="' . z_root() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . z_root() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . z_root() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
 
 	);
 
@@ -1213,7 +1218,7 @@ function smile_unshield($m) {
  * @param array $x
  */
 function preg_heart($x) {
-	$a = get_app();
+
 	if (strlen($x[1]) == 1)
 		return $x[0];
 
@@ -1319,7 +1324,7 @@ function theme_attachments(&$item) {
  			
 			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			if(is_foreigner($item['author_xchan']))
 				$url = $r['href'];
 			else
@@ -1486,7 +1491,6 @@ function format_event($jobject) {
 }
 
 function prepare_body(&$item,$attach = false) {
-	require_once('include/identity.php');
 
 	call_hooks('prepare_body_init', $item); 
 
@@ -1716,7 +1720,6 @@ function feed_hublinks() {
 /* return atom link elements for salmon endpoints */
 
 function feed_salmonlinks($nick) {
-	$a = get_app();
 
 	$salmon  = '<link rel="salmon" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ;
 
@@ -1784,7 +1787,7 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'application/x-pdl'
 	);
 
-	$a = get_app();
+
 	if(App::$is_sys) {
 		$x[] = 'application/x-php';
 	}
@@ -1817,7 +1820,6 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 
 
 function lang_selector() {
-	global $a;
 
 	$langs = glob('view/*/hstrings.php');
 
@@ -2261,7 +2263,7 @@ function design_tools() {
 	$sys = false;
 
 	if(App::$is_sys && is_site_admin()) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$channel = get_sys_channel();
 		$sys = true;
 	}

@@ -19,10 +19,6 @@
 					<option id="acl-showlimited" value="limited">{{$showlimited}}</option>
 				</select>
 
-				<div id="show-acl" class="form-group">
-					<button type="button" class="btn btn-success form-group" onclick="openClose('acl-list'); closeOpen('show-acl');"><i class="fa fa-user-plus"></i>&nbsp;{{$add_others}}</button>
-				</div>
-
 				{{if $showallOrigin}}
 				<div id="acl-info" class="form-group">
 					<i class="fa fa-info-circle"></i>&nbsp;{{$showallOrigin}}

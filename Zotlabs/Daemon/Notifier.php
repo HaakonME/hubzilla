@@ -72,8 +72,7 @@ require_once('include/queue_fn.php');
 require_once('include/datetime.php');
 require_once('include/items.php');
 require_once('include/bbcode.php');
-require_once('include/identity.php');
-require_once('include/Contact.php');
+require_once('include/channel.php');
 
 
 class Notifier {

@@ -4,9 +4,9 @@ namespace Zotlabs\Module;
 // Import a channel, either by direct file upload or via
 // connection to original server. 
 
-require_once('include/Contact.php');
+
 require_once('include/zot.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 require_once('include/import.php');
 
 

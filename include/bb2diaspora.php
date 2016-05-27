@@ -479,8 +479,6 @@ function unescape_underscores_in_links($m) {
 
 function format_event_diaspora($ev) {
 
-	$a = get_app();
-
 	if(! ((is_array($ev)) && count($ev)))
 		return '';
 

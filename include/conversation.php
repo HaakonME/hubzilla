@@ -858,8 +858,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 function best_link_url($item) {
 
-	$a = get_app();
-
 	$best_url = '';
 	$sparkle  = false;
 
@@ -888,7 +886,7 @@ function best_link_url($item) {
 
 
 function item_photo_menu($item){
-	$a = get_app();
+
 	$contact = null;
 
 	$ssl_state = false;
@@ -1107,7 +1105,6 @@ function status_editor($a, $x, $popup = false) {
 
 	$o = '';
 
-	require_once('include/Contact.php');
 	$c = channelx_by_n($x['profile_uid']);
 	if($c && $c['channel_moved'])
 		return $o;
@@ -1160,7 +1157,7 @@ function status_editor($a, $x, $popup = false) {
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />';
 
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$id_select = identity_selector();
 	}
 	else
@@ -1409,7 +1406,7 @@ function render_location_default($item) {
 
 
 function prepare_page($item) {
-	$a = get_app();
+
 	$naked = 1;
 //	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = App::get_observer();
@@ -1443,7 +1440,7 @@ function prepare_page($item) {
 
 
 function network_tabs() {
-	$a = get_app();
+
 	$no_active='';
 	$starred_active = '';
 	$new_active = '';
@@ -1659,8 +1656,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 
 	if ($p['chat'] && feature_enabled($uid,'ajaxchat')) {
-		require_once('include/chat.php');
-		$has_chats = chatroom_list_count($uid);
+		$has_chats = Zotlabs\Lib\Chatroom::list_count($uid);
 		if ($has_chats) {
 			$tabs[] = array(
 				'label' => t('Chatrooms'),

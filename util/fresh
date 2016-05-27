@@ -68,9 +68,9 @@ function process_command($line) {
 
 		case 'finger':
 			if(argv(1)) {
-				$x = zot_finger(argv(1),$channel);
+				$x = Zotlabs\Zot\Finger::run(argv(1),$channel);
 				if($x['success'])
-					echo jindent($x['body']);
+					echo jindent($x);
 			}
 			break;
 

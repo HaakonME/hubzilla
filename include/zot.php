@@ -329,7 +329,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 		return false;
 	}
 
+	$token = random_string();
+
 	$postvars = array();
+
+	$postvars['token'] = $token;
 
 	if($channel) {
 		$postvars['target']     = $channel['channel_guid'];
@@ -343,10 +347,12 @@ function zot_refresh($them, $channel = null, $force = false) {
 		$postvars['guid_hash'] = $them['xchan_hash'];
 	if (array_key_exists('xchan_guid',$them) && $them['xchan_guid']
 		&& array_key_exists('xchan_guid_sig',$them) && $them['xchan_guid_sig']) {
-
 		$postvars['guid'] = $them['xchan_guid'];
 		$postvars['guid_sig'] = $them['xchan_guid_sig'];
+
 	}
+
+	$token = random_string();
 
 	$rhs = '/.well-known/zot-info';
 
@@ -361,6 +367,22 @@ function zot_refresh($them, $channel = null, $force = false) {
 		if (! (($j) && ($j['success']))) {
 			logger('zot_refresh: result not decodable');
 			return false;
+		}
+
+		$signed_token = ((is_array($j) && array_key_exists('signed_token',$j)) ? $j['signed_token'] : null);
+		if($signed_token) {
+			$valid = rsa_verify('token.' . $token,base64url_decode($signed_token),$j['key']);
+			if(! $valid) {
+				logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_ERR);
+				return false;
+			}
+		}
+		else {
+			logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARNING);
+			// after 2017-01-01 this will be a hard error unless you over-ride it.
+			if((time() > 1483228800) && (! get_config('system','allow_unsigned_zotfinger'))) {
+				return false;
+			}
 		}
 
 		$x = import_xchan($j, (($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
@@ -505,8 +527,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					if($new_connection) {
 						if($new_perms != $previous_perms)
 							Zotlabs\Daemon\Master::Summon(array('Notifier','permission_create',$new_connection[0]['abook_id']));
-						require_once('include/enotify.php');
-						notification(array(
+						Zotlabs\Lib\Enotify::submit(array(
 							'type'       => NOTIFY_INTRO,
 							'from_xchan' => $x['hash'],
 							'to_xchan'   => $channel['channel_hash'],
@@ -1332,7 +1353,7 @@ function zot_import($arr, $sender_url) {
  */
 function public_recips($msg) {
 
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 
 	$check_mentions = false;
 	$include_sys = false;
@@ -1494,7 +1515,7 @@ function public_recips($msg) {
 /**
  * @brief
  *
- * This is the second part of public_recipes().
+ * This is the second part of public_recips().
  * We'll find all the channels willing to accept public posts from us, then
  * match them against the sender privacy scope and see who in that list that
  * the sender is allowing.
@@ -2945,8 +2966,6 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	if(UNO)
 		return;
 
-	$a = get_app();
-
 	logger('build_sync_packet');
 
 	if($packet)
@@ -3222,7 +3241,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
-					require_once('include/Contact.php');
 
 					$r = q("select abook_id, abook_feed from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 						dbesc($abook['abook_xchan']),
@@ -3672,6 +3690,8 @@ function zotinfo($arr) {
 	$zsig      = ((x($arr,'target_sig')) ? $arr['target_sig']  : '');
 	$zkey      = ((x($arr,'key'))        ? $arr['key']         : '');
 	$mindate   = ((x($arr,'mindate'))    ? $arr['mindate']     : '');
+	$token     = ((x($arr,'token'))      ? $arr['token']   : '');
+
 	$feed      = ((x($arr,'feed'))       ? intval($arr['feed']) : 0);
 
 	if($ztarget) {
@@ -3816,6 +3836,10 @@ function zotinfo($arr) {
 
 	// Communication details
 
+	if($token)
+		$ret['signed_token'] = base64url_encode(rsa_sign('token.' . $token,$e['channel_prvkey']));
+
+
 	$ret['guid']           = $e['xchan_guid'];
 	$ret['guid_sig']       = $e['xchan_guid_sig'];
 	$ret['key']            = $e['xchan_pubkey'];
@@ -3920,15 +3944,13 @@ function zotinfo($arr) {
 
 		$ret['site']['accounts'] = account_total();
 	
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$ret['site']['channels'] = channel_total();
 
 
 		$ret['site']['version'] = Zotlabs\Lib\System::get_platform_name() . ' ' . STD_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
-
-		$a = get_app();
 
 		$visible_plugins = array();
 		if(is_array(App::$plugins) && count(App::$plugins)) {
@@ -3944,7 +3966,7 @@ function zotinfo($arr) {
 		$ret['site']['sellpage'] = get_config('system','sellpage');
 		$ret['site']['location'] = get_config('system','site_location');
 		$ret['site']['realm'] = get_directory_realm();
-		$ret['site']['project'] = Zotlabs\Lib\System::get_platform_name() . Zotlabs\Lib\System::get_server_role();
+		$ret['site']['project'] = Zotlabs\Lib\System::get_platform_name() . ' ' . Zotlabs\Lib\System::get_server_role();
 
 	}
 
@@ -4415,7 +4437,6 @@ function zot_reply_purge($sender,$recipients) {
 		$arr = $sender;
 		$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
-		require_once('include/Contact.php');
 		remove_all_xchan_resources($sender_hash);	
 
 		$ret['success'] = true;

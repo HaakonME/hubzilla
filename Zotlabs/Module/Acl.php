@@ -260,7 +260,7 @@ class Acl extends \Zotlabs\Web\Controller {
 	
 	//	logger('navbar_complete');
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			return;
 		}
 	

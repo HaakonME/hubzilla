@@ -584,7 +584,7 @@ function sys_boot() {
 
 	// our central App object
 
-	\App::init();
+	App::init();
 
 	/*
 	 * Load the configuration file which contains our DB credentials.
@@ -594,10 +594,10 @@ function sys_boot() {
 
 	// miniApp is a conversion object from old style .htconfig.php files
 
-	$a = new \miniApp;
+	$a = new miniApp;
 
 
-	\App::$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
+	App::$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
 
 	@include('.htconfig.php');
 
@@ -605,13 +605,13 @@ function sys_boot() {
 		define('UNO', 0);
 
 	if(array_key_exists('default_timezone',get_defined_vars())) {
-		\App::$config['system']['timezone'] = $default_timezone;
+		App::$config['system']['timezone'] = $default_timezone;
 	}
 
 	$a->convert();
 
-	\App::$timezone = ((\App::$config['system']['timezone']) ? \App::$config['system']['timezone'] : 'UTC');
-	date_default_timezone_set(\App::$timezone);
+	App::$timezone = ((App::$config['system']['timezone']) ? App::$config['system']['timezone'] : 'UTC');
+	date_default_timezone_set(App::$timezone);
 
 
 	/*
@@ -620,9 +620,9 @@ function sys_boot() {
 
 	require_once('include/dba/dba_driver.php');
 
-	if(! \App::$install) {
-		\DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, \App::$install);
-		if(! \DBA::$dba->connected) {
+	if(! App::$install) {
+		DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, App::$install);
+		if(! DBA::$dba->connected) {
 			system_unavailable();
 		}
 
@@ -636,8 +636,8 @@ function sys_boot() {
 		load_config('system');
 		load_config('feature');
 
-		\App::$session = new \Zotlabs\Web\Session();
-		\App::$session->init();
+		App::$session = new Zotlabs\Web\Session();
+		App::$session->init();
 		load_hooks();
 		call_hooks('init_1');
 	}

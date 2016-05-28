@@ -124,3 +124,16 @@ function wiki_delete_wiki($resource_id) {
         return array('item' => $item, 'success' => (($drop === 1 && $pathdel) ? true : false));   
     }
 }
+
+function wiki_exists_by_name($name) {
+		$item = q("SELECT id FROM item WHERE resource_type = '%s' AND title = '%s' AND item_deleted = 0 limit 1",
+            dbesc(WIKI_ITEM_RESOURCE_TYPE),
+            dbesc($name)
+    );
+    if (!$item) {
+        return array('id' => null);   
+    } else {
+			return array('id' => $item[0]['id']);   
+		}
+	
+}

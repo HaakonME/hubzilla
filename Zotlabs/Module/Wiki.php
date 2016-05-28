@@ -26,6 +26,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 	}
 
 	function get() {
+		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
 		if(local_channel()) {
 			$channel = \App::get_channel();
@@ -56,6 +57,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 		} elseif (argc()<4) {
 			$wikiheader = 'Empty wiki: ' . rawurldecode(argv(2)); // show wiki name
 			$hide_editor = true;
+			// Check if wiki exists andr redirect if it does not
+			if(!wiki_exists_by_name(argv(2))['id']) {
+				goaway('/'.argv(0).'/'.argv(1));
+			}
 		} elseif (argc()<5) {
 			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode(argv(3));	// show wiki name and page
 			$hide_editor = false;
@@ -112,7 +117,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				// then, use webpage permissions
 				if (!$perms['write_pages']) {
 					notice(t('Permission denied.') . EOL);
-					goaway(argv(0).'/'.argv(1).'/'.argv(2));
+					goaway('/'.argv(0).'/'.argv(1).'/'.argv(2));
 				}
 			}
 			$name = escape_tags(urlencode($_POST['wikiName'])); //Get new wiki name

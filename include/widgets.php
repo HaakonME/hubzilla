@@ -877,7 +877,13 @@ function widget_wiki_list($arr) {
 function widget_wiki_pages($arr) {
 
 	require_once("include/wiki.php");
-
+	$channelname = ((array_key_exists('channel',$arr)) ? $arr['channel'] : '');
+	$wikiname = '';
+	if (array_key_exists('refresh', $arr)) {
+		$not_refresh = (($arr['refresh']=== true) ? false : true);
+	} else {
+		$not_refresh = true;
+	}
 	$pages = array();
 	if (!array_key_exists('resource_id', $arr)) {
 		$hide = true;
@@ -885,11 +891,19 @@ function widget_wiki_pages($arr) {
 		$p = wiki_page_list($arr['resource_id']);
 		if ($p['pages']) {
 			$pages = $p['pages'];
+			$w = wiki_get_wiki($arr['resource_id']);
+			$wikiname = $w['wiki']['title'];
+			if (!$wikiname) {
+				$wikiname = '';
+			}
 		}
 	}
 	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
 			'$hide' => $hide,
+			'$not_refresh' => $not_refresh,
 			'$header' => t('Wiki Pages'),
+			'$channel' => $channelname,
+			'$wikiname' => $wikiname,
 			'$pages' => $pages
 	));
 }

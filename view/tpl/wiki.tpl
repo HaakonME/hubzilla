@@ -139,8 +139,8 @@ function wiki_delete_wiki(wikiName, resource_id) {
     }
   $.post("wiki/{{$channel}}/get/page/list/", {resource_id: window.wiki_resource_id}, function (data) {
       if (data.success) {
-        $('#wiki_page_list').html(data.pages);
-        $('#wiki_page_list').show();
+        $('#wiki_page_list_container').html(data.pages);
+        $('#wiki_page_list_container').show();
       } else {
         alert('Error fetching page list!');
         window.console.log('Error fetching page list!');

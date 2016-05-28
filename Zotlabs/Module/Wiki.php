@@ -55,7 +55,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// Check if wiki exists andr redirect if it does not
 			$channel = get_channel_by_nick(argv(1));
 			$w = wiki_exists_by_name($channel['channel_id'], argv(2));
-			logger('wiki_Exists: ' . json_encode($w));
 			if(!$w['id']) {
 				goaway('/'.argv(0).'/'.argv(1));
 			} else {
@@ -95,8 +94,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Render mardown-formatted text in HTML
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
-			logger('preview content: ' . $content);
-			//require_once('library/parsedown/Parsedown.php');
 			$parsedown = new Parsedown();
 			$html = $parsedown->text($content);
 			json_return_and_die(array('html' => $html, 'success' => true));
@@ -133,9 +130,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			// Get ACL for permissions
 			$acl = new \Zotlabs\Access\AccessList($channel);
-			logger('POST: ' . json_encode($_POST));
 			$acl->set_from_array($_POST);
-			logger('acl: ' . json_encode($acl));
 			$r = wiki_create_wiki($channel, $observer_hash, $name, $acl);
 			if ($r['success']) {
 				goaway('/wiki/'.$which.'/'.$name);
@@ -220,7 +215,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 				logger('Wiki read permission denied.' . EOL);
 				json_return_and_die(array('pages' => null, 'message' => 'Permission denied.', 'success' => false));					
 			}
-			$page_list_html = widget_wiki_pages(array('resource_id' => $resource_id));
+			$page_list_html = widget_wiki_pages(array(
+					'resource_id' => $resource_id, 
+					'refresh' => true, 
+					'channel' => argv(1)));
 			json_return_and_die(array('pages' => $page_list_html, 'message' => '', 'success' => true));					
 		}
 		

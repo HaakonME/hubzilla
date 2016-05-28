@@ -103,7 +103,7 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 }
 
 function wiki_delete_wiki($resource_id) {
-		$item = q("SELECT id FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1",
+		$item = q("SELECT id, object FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1",
             dbesc(WIKI_ITEM_RESOURCE_TYPE),
             dbesc($resource_id)
     );
@@ -112,11 +112,15 @@ function wiki_delete_wiki($resource_id) {
     } else {
         $drop = drop_item($item[0]['id'],false,DROPITEM_NORMAL,true);
 				$object = json_decode($item[0]['object'], true);
-				$abs_path = __DIR__ . '/../' . $object['path'];
-				logger('path to delete: ' . $abs_path);
-				$pathdel = true;
-				//$pathdel = rrmdir($abs_path);
-				
+				if(!realpath(__DIR__ . '/../' . $object['path'])) {
+					return array('items' => null, 'success' => false); 
+				}
+				// Path to wiki exists
+				$abs_path = realpath(__DIR__ . '/../' . $object['path']);
+				$pathdel = rrmdir($abs_path);
+				if($pathdel) {
+					info('Wiki deleted successfully');
+				}
         return array('item' => $item, 'success' => (($drop === 1 && $pathdel) ? true : false));   
     }
 }

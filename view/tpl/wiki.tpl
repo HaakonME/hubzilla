@@ -105,7 +105,9 @@ function wiki_delete_wiki(wikiName, resource_id) {
       if (data.success) {
         window.console.log('Wiki deleted');
         // Refresh list and redirect page as necessary
+        window.location = 'wiki/{{$channel}}';
       } else {
+        alert('Error deleting wiki!');
         window.console.log('Error deleting wiki.');
       }
     }, 'json');

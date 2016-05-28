@@ -49,8 +49,9 @@
   
   <div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#edit-pane">Edit</a></li>
-      <li><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
+      <li><a data-toggle="tab" href="#edit-pane">Edit</a></li>
+      <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
+      {{if $showPageControls}}
       <li class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">Page <b class="caret"></b></a>
         <ul class="dropdown-menu">
@@ -58,15 +59,16 @@
           <li><a data-toggle="tab" href="#delete">Delete</a></li>
         </ul>
       </li>
+      {{/if}}
     </ul>
     <div class="tab-content" id="myTabContent">
 
-      <div id="edit-pane" class="tab-pane fade in active">
+      <div id="edit-pane" class="tab-pane fade">
         <div id="ace-editor"></div>
       </div>      
-      <div id="preview-pane" class="tab-pane fade">
+      <div id="preview-pane" class="tab-pane fade in active">
         <div id="wiki-preview" class="section-content-wrapper">
-
+          {{$renderedContent}}
         </div>
       </div>
 
@@ -80,7 +82,7 @@
   $(document).ready(function () {
     wiki_refresh_page_list();
     // Show Edit tab first. Otherwise the Ace editor does not load.
-    $("#wiki-nav-tabs li:eq(0) a").tab('show');
+    $("#wiki-nav-tabs li:eq(1) a").tab('show');
   });
 
   var editor = ace.edit("ace-editor");

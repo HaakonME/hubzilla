@@ -63,12 +63,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 		}
 		if(argc()<3) {
 			$wikiheader = t('Wiki Sandbox');
-			$content = '# Wiki Sandbox\nContent you **edit** and **preview** here *will not be saved*.';
+			$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
 			$hide_editor = false;
+			$showPageControls = false;
 		} elseif (argc()<4) {
 			$wikiheader = rawurldecode(argv(2)); // show wiki name
 			$content = '';
-			$hide_editor = true;			
+			$hide_editor = true;	
+			$showPageControls = true;
 		} elseif (argc()<5) {
 			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode(argv(3));	// show wiki name and page			
 			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => argv(3)));
@@ -78,17 +80,23 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			$content = $p['content'];
 			$hide_editor = false;
+			$showPageControls = true;
 		}
+		
+		$parsedown = new Parsedown();
+		$renderedContent = $parsedown->text(json_decode($content));
 		
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheader' => $wikiheader,
 			'$hideEditor' => $hide_editor,
+			'$showPageControls' => $showPageControls,
 			'$channel' => $channel['channel_address'],
 			'$resource_id' => $resource_id,
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
 			'$content' => $content,
+			'$renderedContent' => $renderedContent,
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', '')
 		));

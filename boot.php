@@ -48,7 +48,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'STD_VERSION',             '1.7.1' );
 define ( 'ZOT_REVISION',            1.1     );
 
-define ( 'DB_UPDATE_VERSION',       1168  );
+define ( 'DB_UPDATE_VERSION',       1169  );
 
 
 /**
@@ -691,7 +691,7 @@ function startup() {
 class ZotlabsAutoloader {
     static public function loader($className) {
         $filename = str_replace('\\', '/', $className) . ".php";
-        if (file_exists($filename)) {
+        if(file_exists($filename)) {
             include($filename);
             if (class_exists($className)) {
                 return TRUE;
@@ -702,7 +702,7 @@ class ZotlabsAutoloader {
 			if(! $arr[0])
 				$arr = array_shift($arr);
 	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . $arr[1] . ((count($arr) === 2) ? '.php' : '/' . $arr[2] . ".php");
-    	    if (file_exists($filename)) {
+    	    if(file_exists($filename)) {
         	    include($filename);
             	if (class_exists($className)) {
                 	return TRUE;

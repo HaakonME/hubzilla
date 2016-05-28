@@ -883,6 +883,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   `obj_imgurl` char(255) NOT NULL DEFAULT '',
   `obj_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `obj_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `obj_quantity` int(11) NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -897,6 +898,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   KEY `obj_imgurl` (`obj_imgurl`),
   KEY `obj_created` (`obj_created`),
   KEY `obj_edited` (`obj_edited`),
+  KEY `obj_quantity` (`obj_quantity`),
   KEY `obj_obj` (`obj_obj`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

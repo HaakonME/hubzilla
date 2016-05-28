@@ -51,6 +51,7 @@ class Wiki extends \Zotlabs\Web\Controller {
     );
 
 		$resource_id = '';
+		$pagename = '';
 		if(argc()>2) {
 			// Check if wiki exists andr redirect if it does not
 			$channel = get_channel_by_nick(argv(1));
@@ -68,12 +69,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$showPageControls = false;
 		} elseif (argc()<4) {
 			$wikiheader = rawurldecode(argv(2)); // show wiki name
-			$content = '';
+			$content = '""';
 			$hide_editor = true;	
 			$showPageControls = true;
 		} elseif (argc()<5) {
-			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode(argv(3));	// show wiki name and page			
-			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => argv(3)));
+			$pagename = argv(3);
+			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode($pagename);	// show wiki name and page			
+			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => $pagename));
 			if(!$p['success']) {
 				logger('Error getting page content');
 				$content = 'Error retrieving page content. Try again.';
@@ -82,7 +84,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$hide_editor = false;
 			$showPageControls = true;
 		}
-		
 		$parsedown = new Parsedown();
 		$renderedContent = $parsedown->text(json_decode($content));
 		
@@ -92,6 +93,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$showPageControls' => $showPageControls,
 			'$channel' => $channel['channel_address'],
 			'$resource_id' => $resource_id,
+			'$page' => $pagename,
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
@@ -236,6 +238,40 @@ class Wiki extends \Zotlabs\Web\Controller {
 					'refresh' => true, 
 					'channel' => argv(1)));
 			json_return_and_die(array('pages' => $page_list_html, 'message' => '', 'success' => true));					
+		}
+		
+		// Save a page
+		if ((argc() === 4) && (argv(2) === 'save') && (argv(3) === 'page')) {
+			$which = argv(1);
+			$resource_id = $_POST['resource_id']; 
+			$pagename = escape_tags(urlencode($_POST['name'])); 
+			$content = escape_tags($_POST['content']); //Get new content
+			// Determine if observer has permission to create wiki
+			if (local_channel()) {
+				$channel = \App::get_channel();
+			} else {
+				$channel = get_channel_by_nick($which);
+				$observer_hash = get_observer_hash();
+				// Figure out who the page owner is.
+				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
+				// TODO: Create a new permission setting for wiki analogous to webpages. Until
+				// then, use webpage permissions
+				if (!$perms['write_pages']) {
+					logger('Wiki editing permission denied.' . EOL);
+					json_return_and_die(array('success' => false));
+				}
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['write']) {
+					logger('Wiki write permission denied. Read only.' . EOL);
+					json_return_and_die(array('success' => false));					
+				}
+			}
+			$saved = wiki_save_page(array('resource_id' => $resource_id, 'name' => $pagename, 'content' => $content));
+			if($saved['success']) {
+				json_return_and_die(array('success' => true));					
+			} else {
+				json_return_and_die(array('success' => false));					
+			}
 		}
 		
 		//notice('You must be authenticated.');

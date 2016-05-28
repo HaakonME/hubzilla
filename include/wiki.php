@@ -233,3 +233,25 @@ function wiki_get_page_content($arr) {
 		return array('content' => json_encode($content), 'message' => '', 'success' => true);
 	}
 }
+
+
+function wiki_save_page($arr) {
+	$pagename = ((array_key_exists('name',$arr)) ? $arr['name'] : '');
+	$content = ((array_key_exists('content',$arr)) ? $arr['content'] : '');
+	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('message' => 'Error reading wiki', 'success' => false);
+	}
+	$page_path = $w['path'].'/'.$pagename;
+	if (is_writable($page_path) === true) {
+		if(!file_put_contents($page_path, $content)) {
+			return array('message' => 'Error writing to page file', 'success' => false);
+		}
+		return array('message' => '', 'success' => true);
+	} else {
+		return array('message' => 'Page file not writable', 'success' => false);
+	}
+	
+	
+}

@@ -55,8 +55,8 @@
       <li class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">Page <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a data-toggle="tab" href="#save">Save</a></li>
-          <li><a data-toggle="tab" href="#delete">Delete</a></li>
+          <li><a id="save-page" data-toggle="tab" href="#">Save</a></li>
+          <li><a id="delete-page" data-toggle="tab" href="#">Delete</a></li>
         </ul>
       </li>
       {{/if}}
@@ -79,6 +79,7 @@
 
 <script>
   window.wiki_resource_id = '{{$resource_id}}';
+  window.wiki_page_name = '{{$page}}';
   $(document).ready(function () {
     wiki_refresh_page_list();
     // Show Edit tab first. Otherwise the Ace editor does not load.
@@ -150,4 +151,22 @@ function wiki_delete_wiki(wikiName, resource_id) {
     }, 'json');
     return false;
   }
+  
+    $('#save-page').click(function (ev) {
+    if (window.wiki_resource_id === '' || window.wiki_page_name === '') {
+      window.console.log('You must have a wiki page open in order to edit pages.');
+      ev.preventDefault();
+      return false;
+    }
+    $.post("wiki/{{$channel}}/save/page", {content: editor.getValue(), name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
+      function (data) {
+        if (data.success) {
+          window.console.log('Page saved successfully.');
+        } else {
+          alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 
+          window.console.log('Error saving page.');
+        }
+      }, 'json');
+    ev.preventDefault();
+  });
 </script>

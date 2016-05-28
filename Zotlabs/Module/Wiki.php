@@ -92,8 +92,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 	function post() {
 		require_once('include/wiki.php');
 		
-		// TODO: Implement wiki API
-		
 		// Render mardown-formatted text in HTML
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
@@ -212,8 +210,22 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 		}		
 		
-		notice('You must be authenticated.');
-		goaway('/wiki');
+		// Fetch page list for a wiki
+		if ((argc() === 5) && (argv(2) === 'get') && (argv(3) === 'page') && (argv(4) === 'list')) {
+			$resource_id = $_POST['resource_id']; // resource_id for wiki in db
+			$channel = get_channel_by_nick(argv(1));
+			$observer_hash = get_observer_hash();
+			$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+			if(!$perms['read']) {
+				logger('Wiki read permission denied.' . EOL);
+				json_return_and_die(array('pages' => null, 'message' => 'Permission denied.', 'success' => false));					
+			}
+			$page_list_html = widget_wiki_pages(array('resource_id' => $resource_id));
+			json_return_and_die(array('pages' => $page_list_html, 'message' => '', 'success' => true));					
+		}
+		
+		//notice('You must be authenticated.');
+		json_return_and_die(array('message' => 'You must be authenticated.', 'success' => false));
 		
 	}
 }

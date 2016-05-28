@@ -78,6 +78,7 @@
 <script>
   window.wiki_resource_id = '{{$resource_id}}';
   $(document).ready(function () {
+    wiki_refresh_page_list();
     // Show Edit tab first. Otherwise the Ace editor does not load.
     $("#wiki-nav-tabs li:eq(0) a").tab('show');
   });
@@ -131,4 +132,20 @@ function wiki_delete_wiki(wikiName, resource_id) {
       }, 'json');
     ev.preventDefault();
   });
+  
+  function wiki_refresh_page_list() {
+    if (window.wiki_resource_id === '') {
+      return false;
+    }
+  $.post("wiki/{{$channel}}/get/page/list/", {resource_id: window.wiki_resource_id}, function (data) {
+      if (data.success) {
+        $('#wiki_page_list').html(data.pages);
+        $('#wiki_page_list').show();
+      } else {
+        alert('Error fetching page list!');
+        window.console.log('Error fetching page list!');
+      }
+    }, 'json');
+    return false;
+  }
 </script>

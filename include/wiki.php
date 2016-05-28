@@ -20,9 +20,20 @@ function wiki_list($nick, $observer_hash) {
 	return array('wikis' => $wikis);
 }
 
-function wiki_pages() {
-	// TODO: scan wiki folder for pages
-	return array('pages' => array('page1.md', 'page2.md'));
+function wiki_page_list($resource_id) {
+	// TODO: Create item table records for pages so that metadata like title can be applied
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('pages' => null);
+	}
+	$pages = array();
+	if (is_dir($w['path']) === true) {
+		$files = array_diff(scandir($w['path']), array('.', '..', '.git'));
+		// TODO: Check that the files are all text files
+		$pages = $files;
+	}
+
+	return array('pages' => $pages);
 }
 
 function wiki_init_wiki($channel, $name) {
@@ -125,6 +136,25 @@ function wiki_delete_wiki($resource_id) {
     }
 }
 
+function wiki_get_wiki($resource_id) {
+	$item = q("SELECT * FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1", 
+						dbesc(WIKI_ITEM_RESOURCE_TYPE), 
+						dbesc($resource_id)
+	);
+	if (!$item) {
+		return array('wiki' => null, 'path' => null);
+	} else {
+		$w = $item[0];
+		$object = json_decode($w['object'], true);
+		if (!realpath(__DIR__ . '/../' . $object['path'])) {
+			return array('wiki' => null, 'path' => null);
+		}
+		// Path to wiki exists
+		$abs_path = realpath(__DIR__ . '/../' . $object['path']);
+		return array('wiki' => $w, 'path' => $abs_path);
+	}
+}
+
 function wiki_exists_by_name($uid, $name) {
 		$item = q("SELECT id,resource_id FROM item WHERE resource_type = '%s' AND title = '%s' AND uid = '%s' AND item_deleted = 0 limit 1",
             dbesc(WIKI_ITEM_RESOURCE_TYPE),
@@ -147,7 +177,7 @@ function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
         dbesc($resource_id)
     );
 	if(!$r) {
-		return array('read' => false, 'write' => false, 'success' => false);
+		return array('read' => false, 'write' => false, 'success' => true);
 	} else {
 		return array('read' => true, 'write' => false, 'success' => true);
 	}

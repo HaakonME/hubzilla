@@ -877,14 +877,21 @@ function widget_wiki_list($arr) {
 function widget_wiki_pages($arr) {
 
 	require_once("include/wiki.php");
-	$r = wiki_pages(App::$profile['channel_hash']);
 
-	if($r) {
-		return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
-			'$header' => t('Wiki Pages'),
-			'$pages' => $r['pages']
-		));
+	$pages = array();
+	if (!array_key_exists('resource_id', $arr)) {
+		$hide = true;
+	} else {
+		$p = wiki_page_list($arr['resource_id']);
+		if ($p['pages']) {
+			$pages = $p['pages'];
+		}
 	}
+	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
+			'$hide' => $hide,
+			'$header' => t('Wiki Pages'),
+			'$pages' => $pages
+	));
 }
 
 function widget_bookmarkedchats($arr) {

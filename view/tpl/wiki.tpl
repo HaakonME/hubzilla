@@ -86,7 +86,7 @@
   var editor = ace.edit("ace-editor");
   editor.setTheme("ace/theme/github");
   editor.getSession().setMode("ace/mode/markdown");
-  editor.getSession().setValue('{{$content}}');
+  editor.getSession().setValue({{$content}});
 
   $('#wiki-get-preview').click(function (ev) {
     $.post("wiki/{{$channel}}/preview", {content: editor.getValue()}, function (data) {

@@ -210,3 +210,26 @@ function wiki_create_page($name, $resource_id) {
 	}
 	
 }
+
+function wiki_get_page_content($arr) {
+	$page = ((array_key_exists('page',$arr)) ? $arr['page'] : '');
+	// TODO: look for page resource_id and retrieve that way alternatively
+	$wiki_resource_id = ((array_key_exists('wiki_resource_id',$arr)) ? $arr['wiki_resource_id'] : '');
+	$w = wiki_get_wiki($wiki_resource_id);
+	if (!$w['path']) {
+		return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
+	}
+	$page_path = $w['path'].'/'.$page;
+	if (is_readable($page_path) === true) {
+		if(filesize($page_path) === 0) {
+			$content = '';
+		} else {
+			$content = file_get_contents($page_path);
+			if(!$content) {
+				return array('content' => null, 'message' => 'Error reading page content', 'success' => false);
+			}
+		}		
+		// TODO: Check that the files are all text files
+		return array('content' => json_encode($content), 'message' => '', 'success' => true);
+	}
+}

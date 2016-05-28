@@ -63,12 +63,20 @@ class Wiki extends \Zotlabs\Web\Controller {
 		}
 		if(argc()<3) {
 			$wikiheader = t('Wiki Sandbox');
+			$content = '# Wiki Sandbox\nContent you **edit** and **preview** here *will not be saved*.';
 			$hide_editor = false;
 		} elseif (argc()<4) {
-			$wikiheader = 'Empty wiki: ' . rawurldecode(argv(2)); // show wiki name
+			$wikiheader = rawurldecode(argv(2)); // show wiki name
+			$content = '';
 			$hide_editor = true;			
 		} elseif (argc()<5) {
-			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode(argv(3));	// show wiki name and page
+			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode(argv(3));	// show wiki name and page			
+			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => argv(3)));
+			if(!$p['success']) {
+				logger('Error getting page content');
+				$content = 'Error retrieving page content. Try again.';
+			}
+			$content = $p['content'];
 			$hide_editor = false;
 		}
 		
@@ -80,7 +88,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
-			'$content' => '# Start your wiki',
+			'$content' => $content,
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', '')
 		));

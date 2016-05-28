@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1168 );
+define( 'UPDATE_VERSION' , 1169 );
 
 /**
  *
@@ -2097,3 +2097,20 @@ function update_r1167() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1168() {
+
+	$r1 = q("alter table obj add obj_quantity int not null default '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r2 = q("create index \"obj_quantity_idx\" on obj (\"obj_quantity\") "); 
+	}
+	else { 
+		$r2 = q("alter table obj add index ( obj_quantity ) ");
+	}
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

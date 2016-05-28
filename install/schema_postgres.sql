@@ -873,6 +873,7 @@ CREATE TABLE "obj" (
   "obj_imgurl" char(255) NOT NULL DEFAULT '',
   "obj_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "obj_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "obj_quantity" int(11) NOT NULL DEFAUL '0'.
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
@@ -890,6 +891,7 @@ create index "obj_url" on obj ("obj_url");
 create index "obj_imgurl" on obj ("obj_imgurl");
 create index "obj_created" on obj ("obj_created");
 create index "obj_edited" on obj ("obj_edited");
+create index "obj_quantity" on obj ("obj_quantity");
 
 CREATE TABLE "outq" (
   "outq_hash" text NOT NULL,

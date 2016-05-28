@@ -125,15 +125,58 @@ function wiki_delete_wiki($resource_id) {
     }
 }
 
-function wiki_exists_by_name($name) {
-		$item = q("SELECT id FROM item WHERE resource_type = '%s' AND title = '%s' AND item_deleted = 0 limit 1",
+function wiki_exists_by_name($uid, $name) {
+		$item = q("SELECT id,resource_id FROM item WHERE resource_type = '%s' AND title = '%s' AND uid = '%s' AND item_deleted = 0 limit 1",
             dbesc(WIKI_ITEM_RESOURCE_TYPE),
-            dbesc($name)
+            dbesc($name),
+						dbesc($uid)
     );
     if (!$item) {
-        return array('id' => null);   
+        return array('id' => null, 'resource_id' => null);   
     } else {
-			return array('id' => $item[0]['id']);   
+			return array('id' => $item[0]['id'], 'resource_id' => $item[0]['resource_id']);   
 		}
+	
+}
+
+function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
+	// TODO: For now, only the owner can edit
+	$sql_extra = item_permissions_sql($owner_id, $observer_hash);
+	$r = q("SELECT * FROM item WHERE resource_type = '%s' AND resource_id = '%s' $sql_extra LIMIT 1",
+				dbesc(WIKI_ITEM_RESOURCE_TYPE), 
+        dbesc($resource_id)
+    );
+	if(!$r) {
+		return array('read' => false, 'write' => false, 'success' => false);
+	} else {
+		return array('read' => true, 'write' => false, 'success' => true);
+	}
+}
+
+function wiki_create_page($name, $resource_id) {
+	$item = q("SELECT id,title,object FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1", 
+		dbesc(WIKI_ITEM_RESOURCE_TYPE), 
+		dbesc($resource_id)
+	);
+	if (!$item) {
+		return array('page' => null, 'message' => 'Wiki item not found.', 'success' => false);
+	}
+	$object = json_decode($item[0]['object'], true);
+	$wikiname = $item[0]['title'];
+	if (!realpath(__DIR__ . '/../' . $object['path'])) {
+		return array('page' => null, 'message' => 'Wiki directory does not exist.', 'success' => false);
+	}
+	// Path to wiki exists
+	$abs_path = realpath(__DIR__ . '/../' . $object['path']);
+	$page_path = $abs_path . '/' . $name;
+	if (is_file($page_path)) {
+		return array('page' => null, 'message' => 'Page already exists.', 'success' => false);
+	}
+	// Create file called $name in the path
+	if(!touch($page_path)) {
+		return array('page' => null, 'message' => 'Page file cannot be created.', 'success' => false);
+	} else {
+		return array('wiki' => $wikiname, 'message' => '', 'success' => true);
+	}
 	
 }

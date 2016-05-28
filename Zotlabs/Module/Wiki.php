@@ -49,18 +49,25 @@ class Wiki extends \Zotlabs\Web\Controller {
         'acl' => populate_acl($channel_acl),
         'bang' => ''
     );
-//		$wikiheader = t('Wiki Sandbox');
-//		$hide_editor = false;
+
+		$resource_id = '';
+		if(argc()>2) {
+			// Check if wiki exists andr redirect if it does not
+			$channel = get_channel_by_nick(argv(1));
+			$w = wiki_exists_by_name($channel['channel_id'], argv(2));
+			logger('wiki_Exists: ' . json_encode($w));
+			if(!$w['id']) {
+				goaway('/'.argv(0).'/'.argv(1));
+			} else {
+				$resource_id = $w['resource_id'];
+			}
+		}
 		if(argc()<3) {
 			$wikiheader = t('Wiki Sandbox');
 			$hide_editor = false;
 		} elseif (argc()<4) {
 			$wikiheader = 'Empty wiki: ' . rawurldecode(argv(2)); // show wiki name
-			$hide_editor = true;
-			// Check if wiki exists andr redirect if it does not
-			if(!wiki_exists_by_name(argv(2))['id']) {
-				goaway('/'.argv(0).'/'.argv(1));
-			}
+			$hide_editor = true;			
 		} elseif (argc()<5) {
 			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode(argv(3));	// show wiki name and page
 			$hide_editor = false;
@@ -70,6 +77,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$wikiheader' => $wikiheader,
 			'$hideEditor' => $hide_editor,
 			'$channel' => $channel['channel_address'],
+			'$resource_id' => $resource_id,
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
@@ -166,6 +174,43 @@ class Wiki extends \Zotlabs\Web\Controller {
 				json_return_and_die(array('success' => false));
 			}
 		}
+
+		// Create a page
+		if ((argc() === 4) && (argv(2) === 'create') && (argv(3) === 'page')) {
+			$which = argv(1);
+			$resource_id = $_POST['resource_id']; 
+			// Determine if observer has permission to create wiki
+			if (local_channel()) {
+				$channel = \App::get_channel();
+			} else {
+				$channel = get_channel_by_nick($which);
+				$observer_hash = get_observer_hash();
+				// Figure out who the page owner is.
+				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
+				// TODO: Create a new permission setting for wiki analogous to webpages. Until
+				// then, use webpage permissions
+				if (!$perms['write_pages']) {
+					logger('Wiki editing permission denied.' . EOL);
+					json_return_and_die(array('success' => false));
+				}
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['write']) {
+					logger('Wiki write permission denied. Read only.' . EOL);
+					json_return_and_die(array('success' => false));					
+				}
+			}
+			$name = escape_tags(urlencode($_POST['name'])); //Get new wiki name
+			if($name === '') {				
+				json_return_and_die(array('message' => 'Error creating page. Invalid name.', 'success' => false));
+			}
+			$page = wiki_create_page($name . '.md', $resource_id);
+			if ($page['success']) {
+				json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki'].'/'.$name, 'success' => true));
+			} else {
+				logger('Error creating page');
+				json_return_and_die(array('message' => 'Error creating page.', 'success' => false));
+			}
+		}		
 		
 		notice('You must be authenticated.');
 		goaway('/wiki');

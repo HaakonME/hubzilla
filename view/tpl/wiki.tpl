@@ -76,6 +76,7 @@
 </div>
 
 <script>
+  window.wiki_resource_id = '{{$resource_id}}';
   $(document).ready(function () {
     // Show Edit tab first. Otherwise the Ace editor does not load.
     $("#wiki-nav-tabs li:eq(0) a").tab('show');
@@ -112,4 +113,22 @@ function wiki_delete_wiki(wikiName, resource_id) {
       }
     }, 'json');
 }
+
+
+  $('#new-page-submit').click(function (ev) {
+    if (window.wiki_resource_id === '') {
+      window.console.log('You must have a wiki open in order to create pages.');
+      ev.preventDefault();
+      return false;
+    }
+    $.post("wiki/{{$channel}}/create/page", {name: $('#id_pageName').val(), resource_id: window.wiki_resource_id}, 
+      function (data) {
+        if (data.success) {
+          window.location = data.url;
+        } else {
+          window.console.log('Error creating page.');
+        }
+      }, 'json');
+    ev.preventDefault();
+  });
 </script>

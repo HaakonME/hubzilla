@@ -219,7 +219,7 @@ function wiki_get_page_content($arr) {
 	if (!$w['path']) {
 		return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$page;
+	$page_path = $w['path'].'/'.escape_tags(urlencode($page));
 	if (is_readable($page_path) === true) {
 		if(filesize($page_path) === 0) {
 			$content = '';

@@ -4,6 +4,12 @@
     width: 100%;
     height: 500px;
   }
+  .fade.in {
+    -webkit-transition: opacity 2s 1s ease;
+    -moz-transition: opacity 2s 1s ease;
+    -o-transition: opacity 2s 1s ease;
+    transition: opacity 2s 1s ease;
+  }
 </style>
 <div class="generic-content-wrapper">
   <div class="section-title-wrapper">

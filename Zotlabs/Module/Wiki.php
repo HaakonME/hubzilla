@@ -93,8 +93,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$hide_editor = false;
 			$showPageControls = true;
 		}
-		$parsedown = new Parsedown();
-		$renderedContent = $parsedown->text(json_decode($content));
+		//$parsedown = new Parsedown();
+		//$renderedContent = $parsedown->text(json_decode($content));
+		require_once('library/markdown.php');
+		$renderedContent = Markdown(json_decode($content));
 		
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheader' => $wikiheader,
@@ -121,8 +123,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Render mardown-formatted text in HTML
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
-			$parsedown = new Parsedown();
-			$html = $parsedown->text($content);
+			//$parsedown = new Parsedown();
+			//$html = $parsedown->text($content);
+			require_once('library/markdown.php');
+			$html = Markdown($content);
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}
 		
@@ -230,7 +234,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			$page = wiki_create_page($name . '.md', $resource_id);
 			if ($page['success']) {
-				json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki'].'/'.$name, 'success' => true));
+				json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki'].'/'.$name.'.md', 'success' => true));
 			} else {
 				logger('Error creating page');
 				json_return_and_die(array('message' => 'Error creating page.', 'success' => false));

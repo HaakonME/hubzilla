@@ -268,9 +268,20 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			$saved = wiki_save_page(array('resource_id' => $resource_id, 'name' => $pagename, 'content' => $content));
 			if($saved['success']) {
-				json_return_and_die(array('success' => true));					
+				$ob = \App::get_observer();
+				$commit = wiki_git_commit(array(
+						'commit_msg' => 'Updated ' . $pagename, 
+						'resource_id' => $resource_id, 
+						'observer' => $ob,
+						'files' => array($pagename)
+						));
+				if($commit['success']) {
+					json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
+				} else {
+					json_return_and_die(array('message' => 'Error making git commit','success' => false));					
+				}
 			} else {
-				json_return_and_die(array('success' => false));					
+				json_return_and_die(array('message' => 'Error saving page', 'success' => false));					
 			}
 		}
 		

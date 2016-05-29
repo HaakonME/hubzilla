@@ -127,6 +127,15 @@ class GitRepo {
 		$repo['logs'] = $git->log(array('limit' => 50));
 		return $repo;
 	}
+	
+	// Commit changes to the repo. Default is to stage all changes and commit everything.
+	public function commit($msg, $options = array()) {
+		try {
+			return $this->git->commit($msg, $options);
+		} catch (\PHPGit\Exception\GitException $ex) {
+			return false;
+		}		
+	}
 
 	public static function isValidGitRepoURL($url) {
 		if (validate_url($url) && strrpos(parse_url($url, PHP_URL_PATH), '.')) {

@@ -251,7 +251,44 @@ function wiki_save_page($arr) {
 		return array('message' => '', 'success' => true);
 	} else {
 		return array('message' => 'Page file not writable', 'success' => false);
+	}	
+}
+
+function wiki_git_commit($arr) {
+	$files = ((array_key_exists('files', $arr)) ? $arr['files'] : null);
+	$commit_msg = ((array_key_exists('commit_msg', $arr)) ? $arr['commit_msg'] : 'Repo updated');
+	$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : json_return_and_die(array('message' => 'Wiki resource_id required for git commit', 'success' => false)));
+	$observer = ((array_key_exists('observer', $arr)) ? $arr['observer'] : json_return_and_die(array('message' => 'Observer required for git commit', 'success' => false)));
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('message' => 'Error reading wiki', 'success' => false);
 	}
-	
-	
+	$reponame = ((array_key_exists('title', $w['wiki'])) ? $w['wiki']['title'] : 'repo');
+	if($reponame === '') {
+		$reponame = 'repo';
+	}
+	$git = new GitRepo('sys', null, false, $w['wiki']['title'], $w['path']);
+	try {
+		$git->setIdentity($observer['xchan_name'], $observer['xchan_addr']);
+		if ($files === null) {
+			$options = array('all' => true); // git commit option to include all changes
+		} else {
+			$options = array(); // git commit options
+			foreach ($files as $file) {
+				if (!$git->git->add($file)) {	// add specified files to the git repo stage
+					if (!$git->git->reset->hard()) {
+						json_return_and_die(array('message' => 'Error adding file to git stage: ' . $file . '. Error resetting git repo.', 'success' => false));
+					}
+					json_return_and_die(array('message' => 'Error adding file to git stage: ' . $file, 'success' => false));
+				}
+			}
+		}
+		if ($git->commit($commit_msg, $options)) {
+			json_return_and_die(array('message' => 'Wiki repo commit succeeded', 'success' => true));
+		} else {
+			json_return_and_die(array('message' => 'Wiki repo commit failed', 'success' => false));
+		}
+	} catch (\PHPGit\Exception\GitException $e) {
+		json_return_and_die(array('message' => 'GitRepo error thrown', 'success' => false));
+	}
 }

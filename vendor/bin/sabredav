@@ -1,2 +1,1 @@
-#!/bin/sh
-php -S 0.0.0.0:8080 `dirname $0`/sabredav.php
+../sabre/dav/bin/sabredav

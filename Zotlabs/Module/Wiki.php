@@ -52,7 +52,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 		$resource_id = '';
 		$pagename = '';
-		if(argc()>2) {
+		
+		// GET https://hubzilla.hub/argv(0)/argv(1)/argv(2)/argv(3)/argv(4)/...
+		if(argc() > 2) {
+			// GET /wiki/channel/wiki
 			// Check if wiki exists andr redirect if it does not
 			$channel = get_channel_by_nick(argv(1));
 			$w = wiki_exists_by_name($channel['channel_id'], argv(2));
@@ -62,17 +65,23 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$resource_id = $w['resource_id'];
 			}
 		}
+		
 		if(argc()<3) {
+			// GET /wiki/channel
 			$wikiheader = t('Wiki Sandbox');
 			$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
 			$hide_editor = false;
 			$showPageControls = false;
 		} elseif (argc()<4) {
+			// GET /wiki/channel/wiki
+			// No page was specified, so redirect to Home.md
+			goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/Home.md');
 			$wikiheader = rawurldecode(argv(2)); // show wiki name
 			$content = '""';
 			$hide_editor = true;	
 			$showPageControls = true;
 		} elseif (argc()<5) {
+			// GET /wiki/channel/wiki/page
 			$pagename = argv(3);
 			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode($pagename);	// show wiki name and page			
 			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => $pagename));
@@ -127,11 +136,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if ((argc() > 3) && (argv(2) === 'create') && (argv(3) === 'wiki')) {
 			$which = argv(1);
 			// Determine if observer has permission to create wiki
+			$observer_hash = get_observer_hash();
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
 				$channel = get_channel_by_nick($which);
-				$observer_hash = get_observer_hash();
 				// Figure out who the page owner is.
 				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
 				// TODO: Create a new permission setting for wiki analogous to webpages. Until
@@ -151,7 +160,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$acl->set_from_array($_POST);
 			$r = wiki_create_wiki($channel, $observer_hash, $name, $acl);
 			if ($r['success']) {
-				goaway('/wiki/'.$which.'/'.$name);
+				$homePage = wiki_create_page('Home.md', $r['item']['resource_id']);
+				if(!$homePage['success']) {
+					notice('Wiki created, but error creating Home page.');
+					goaway('/wiki/'.$which.'/'.$name);
+				}
+				goaway('/wiki/'.$which.'/'.$name.'/Home.md');
 			} else {
 				notice('Error creating wiki');
 				goaway('/wiki');

@@ -28,13 +28,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 	function get() {
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
+		$wiki_owner = false;
 		if(local_channel()) {
 			$channel = \App::get_channel();
 		}
-		
-		// TODO: check observer permissions
-		//$ob = \App::get_observer();
-		//$observer = get_observer_hash();
 		
 		// Obtain the default permission settings of the channel
     $channel_acl = array(
@@ -58,13 +55,26 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// GET /wiki/channel/wiki
 			// Check if wiki exists andr redirect if it does not
 			$channel = get_channel_by_nick(argv(1));
+			if(local_channel() === intval($channel['channel_id'])) {
+				$wiki_owner = true;
+			}
 			$w = wiki_exists_by_name($channel['channel_id'], argv(2));
-			if(!$w['id']) {
+			if(!$w['resource_id']) {
+				notice('Wiki not found' . EOL);
 				goaway('/'.argv(0).'/'.argv(1));
-			} else {
+			} else {				
 				$resource_id = $w['resource_id'];
 			}
-		}
+			if (!$wiki_owner) {
+				// Check for observer permissionswhich);
+				$observer_hash = get_observer_hash();
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['read']) {
+					notice('Permission denied.' . EOL);
+					goaway('/'.argv(0).'/'.argv(1));
+				}
+			}
+		}		
 		
 		if(argc()<3) {
 			// GET /wiki/channel
@@ -79,22 +89,23 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$wikiheader = rawurldecode(argv(2)); // show wiki name
 			$content = '""';
 			$hide_editor = true;	
-			$showPageControls = true;
+			// Until separate read and write permissions are implemented, only allow 
+			// the wiki owner to see page controls
+			$showPageControls = $wiki_owner;  
 		} elseif (argc()<5) {
 			// GET /wiki/channel/wiki/page
 			$pagename = argv(3);
 			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode($pagename);	// show wiki name and page			
 			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => $pagename));
 			if(!$p['success']) {
-				logger('Error getting page content');
+				logger('wiki_get_page_content: ' . $p['message']);
 				$content = 'Error retrieving page content. Try again.';
 			}
-			$content = $p['content'];
+			logger('content: ' . $content);
+			$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
 			$hide_editor = false;
-			$showPageControls = true;
+			$showPageControls = $wiki_owner;
 		}
-		//$parsedown = new Parsedown();
-		//$renderedContent = $parsedown->text(json_decode($content));
 		require_once('library/markdown.php');
 		$renderedContent = Markdown(json_decode($content));
 		
@@ -120,23 +131,17 @@ class Wiki extends \Zotlabs\Web\Controller {
 	function post() {
 		require_once('include/wiki.php');
 		
-		// Render mardown-formatted text in HTML
+		// /wiki/channel/preview
+		// Render mardown-formatted text in HTML for preview
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
-			//$parsedown = new Parsedown();
-			//$html = $parsedown->text($content);
 			require_once('library/markdown.php');
 			$html = Markdown($content);
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}
 		
-		// Check if specified wiki exists and redirect if not
-		if((argc() > 2)) {
-			$wikiname = argv(2);
-			// TODO: Check if specified wiki exists and redirect if not
-		}
-		
 		// Create a new wiki
+		// /wiki/channel/create/wiki
 		if ((argc() > 3) && (argv(2) === 'create') && (argv(3) === 'wiki')) {
 			$which = argv(1);
 			// Determine if observer has permission to create wiki

@@ -7,9 +7,9 @@
 use \Zotlabs\Storage\GitRepo as GitRepo;
 define ( 'WIKI_ITEM_RESOURCE_TYPE', 'wiki' );
 
-function wiki_list($nick, $observer_hash) {
+function wiki_list($channel, $observer_hash) {
 	if (local_channel() || remote_channel()) {
-		$sql_extra = item_permissions_sql(get_channel_by_nick($nick)['channel_id'], $observer_hash);
+		$sql_extra = item_permissions_sql($channel['channel_id'], $observer_hash);
 	} else {
 		$sql_extra = " AND item_private = 0 ";
 	}

@@ -8,8 +8,10 @@
             </a>  
             <ul class="dropdown-menu  pull-right">  
               <li><a href="/wiki/{{$channel}}/{{$wiki.title}}/Home.md" title="View  {{$wiki.title}}">View</a></li>
+              {{if $showControls}}
               <li class="divider"></li>  
               <li><a href="#" onclick="wiki_delete_wiki('{{$wiki.title}}','{{$wiki.resource_id}}'); return false;" title="Delete {{$wiki.title}}">Delete wiki</a></li>                                
+              {{/if}}
             </ul>  
         </li>  
 		{{/foreach}}

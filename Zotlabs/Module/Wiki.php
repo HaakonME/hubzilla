@@ -78,6 +78,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		
 		if(argc()<3) {
 			// GET /wiki/channel
+			$channel = get_channel_by_nick(argv(1));
 			$wikiheader = t('Wiki Sandbox');
 			$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
 			$hide_editor = false;

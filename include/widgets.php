@@ -857,19 +857,25 @@ function widget_chatroom_members() {
 function widget_wiki_list($arr) {
 
 	require_once("include/wiki.php");
-	if(argc()>1) {
+	if (argc() > 1) {
 		$nick = argv(1);
+		$channel = get_channel_by_nick($nick);
 	} else {
 		$channel = \App::get_channel();
 		$nick = $channel['channel_address'];
 	}
-	$wikis = wiki_list($nick, get_observer_hash());
-
-	if($wikis) {
+	$wikis = wiki_list($channel, get_observer_hash());
+	if (local_channel() === intval($channel['channel_id'])) {
+		$showControls = true;
+	} else {
+		$showControls = false;
+	}
+	if ($wikis) {
 		return replace_macros(get_markup_template('wikilist.tpl'), array(
 			'$header' => t('Wiki List'),
 			'$channel' => $nick,
-			'$wikis' => $wikis['wikis']
+			'$wikis' => $wikis['wikis'],
+			'$showControls' => $showControls
 		));
 	}
 }

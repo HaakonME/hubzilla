@@ -477,9 +477,12 @@ function bb_observer($Text) {
 	return $Text;
 }
 
-
-
-
+function bb_code($match) {
+	if(strpos($match[0], "<br />"))
+		return '<code>' . trim($match[1]) . '</code>';
+	else
+		return '<code class="inline-code">' . trim($match[1]) . '</code>';
+}
 
 
 
@@ -785,12 +788,9 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/sm", "<span style=\"font-family: $1;\">$2</span>", $Text);
 	}
 
-	// Declare the format for [code] layout
-	$CodeLayout = '<code>$1</code>';
-
 	// Check for [code] text
 	if (strpos($Text,'[code]') !== false) {
-		$Text = preg_replace("/\[code\](.*?)\[\/code\]/ism", "$CodeLayout", $Text);
+		$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/ism", 'bb_code', $Text);
 	}
 
 	// Check for [spoiler] text

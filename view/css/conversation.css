@@ -1,11 +1,3 @@
-/* common */
-
-code {
-	font-family: Courier, monospace;
-	display: block;
-	overflow: auto;
-}
-
 /* jot */
 
 .jothidden input {
@@ -304,6 +296,18 @@ a.wall-item-name-link {
 }
 
 /* bb-code */
+
+code {
+	font-family: Courier, monospace;
+	font-size: 1em;
+	padding: 1em 1.5em;
+	display: block;
+}
+
+code.inline-code {
+	padding: 0px 4px;
+	display: inline;
+}
 
 .overline {
 	text-decoration: overline;

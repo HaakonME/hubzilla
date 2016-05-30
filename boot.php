@@ -1804,7 +1804,7 @@ function local_user() {
 function remote_channel() {
 	if(session_id() 
 		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated'] 
-		&& array_key_exists('visitor_id',$_SESSION) && intval($_SESSION['visitor_id']))
+		&& array_key_exists('visitor_id',$_SESSION) && $_SESSION['visitor_id'])
 		return $_SESSION['visitor_id'];
 
 	return false;

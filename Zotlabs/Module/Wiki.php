@@ -2,8 +2,6 @@
 
 namespace Zotlabs\Module;/** @file */
 
-use \library\parsedown\Parsedown as Parsedown;
-
 class Wiki extends \Zotlabs\Web\Controller {
 
 	function init() {

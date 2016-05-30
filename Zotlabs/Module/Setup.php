@@ -384,8 +384,8 @@ class Setup extends \Zotlabs\Web\Controller {
 	function check_php(&$phpath, &$checks) {
 		$help = '';
 	
-		if(version_compare(PHP_VERSION, '5.4') < 0) {
-			$help .= t('PHP version 5.4 or greater is required.');
+		if(version_compare(PHP_VERSION, '5.5') < 0) {
+			$help .= t('PHP version 5.5 or greater is required.');
 			$this->check_add($checks, t('PHP version'), false, false, $help);
 		}
 

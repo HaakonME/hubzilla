@@ -20,6 +20,8 @@ function import_channel($channel, $account_id, $seize) {
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_address'])
 	);
+	if($r && $r[0]['channel_guid'] == $channel['channel_guid'] && $r[0]['channel_pubkey'] === $channel['channel_pubkey'] && $r[0]['channel_hash'] === $channel['channel_hash'])
+		return $r[0];
 
 	if(($r) || (check_webbie(array($channel['channel_address'])) !== $channel['channel_address'])) {
 		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {

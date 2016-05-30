@@ -352,8 +352,6 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 	}
 
-	$token = random_string();
-
 	$rhs = '/.well-known/zot-info';
 
 	$result = z_post_url($url . $rhs,$postvars);
@@ -1048,8 +1046,9 @@ function zot_process_response($hub, $arr, $outq) {
 /**
  * @brief
  *
- * We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
- * Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign with our site private key.
+ * We received a notification packet (in mod_post) that a message is waiting for us, and we've verified the sender.
+ * Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign with our site
+ * private key.
  * The entire pickup message is encrypted with the remote site's public key.
  * If everything checks out on the remote end, we will receive back a packet containing one or more messages,
  * which will be processed and delivered before this function ultimately returns.
@@ -1123,6 +1122,7 @@ function zot_fetch($arr) {
  *  * [1] => \e string $delivery_status
  *  * [2] => \e string $address
  */
+
 function zot_import($arr, $sender_url) {
 
 	$data = json_decode($arr['body'], true);

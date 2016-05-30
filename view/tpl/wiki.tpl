@@ -14,7 +14,7 @@
 <div class="generic-content-wrapper">
   <div class="section-title-wrapper">
     <div class="pull-right">
-      {{if $showPageControls}}
+      {{if $showNewWikiButton}}
       <button class="btn btn-primary btn-xs" onclick="$('#new-page-form-wrapper').hide(); openClose('new-wiki-form-wrapper');">New Wiki</button>
       <button class="btn btn-success btn-xs" onclick="$('#new-wiki-form-wrapper').hide(); openClose('new-page-form-wrapper');">New Page</button>
       {{/if}}

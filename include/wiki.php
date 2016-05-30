@@ -95,9 +95,17 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 	$arr['item_private'] = intval($acl->is_private());
 	$arr['verb'] = ACTIVITY_CREATE;
 	$arr['obj_type'] = ACTIVITY_OBJ_WIKI;
-	$arr['object'] = array('path' => $path);
+	$arr['object'] = json_encode(array(
+        'type' => $arr['obj_type'], 
+        'title' => $arr['title'], 
+        'id' => $arr['resource_id'], 
+        'url' => $wiki_url
+    ));
 	$arr['body'] = '[table][tr][td][h1]New Wiki[/h1][/td][/tr][tr][td][zrl=' . $wiki_url . ']' . $name . '[/zrl][/td][/tr][/table]';
-
+	// Save the path using iconfig. The file path should not be shared with other hubs
+	if (!set_iconfig($arr, 'wiki', 'path', $path, false)) {
+		return array('item' => null, 'success' => false);
+	}
 	$post = item_store($arr);
 	$item_id = $post['item_id'];
 
@@ -110,26 +118,19 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 }
 
 function wiki_delete_wiki($resource_id) {
-		$item = q("SELECT id, object FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1",
-            dbesc(WIKI_ITEM_RESOURCE_TYPE),
-            dbesc($resource_id)
-    );
-    if (!$item) {
-        return array('items' => null, 'success' => false);   
-    } else {
-        $drop = drop_item($item[0]['id'],false,DROPITEM_NORMAL,true);
-				$object = json_decode($item[0]['object'], true);
-				if(!realpath(__DIR__ . '/../' . $object['path'])) {
-					return array('items' => null, 'success' => false); 
-				}
-				// Path to wiki exists
-				$abs_path = realpath(__DIR__ . '/../' . $object['path']);
-				$pathdel = rrmdir($abs_path);
-				if($pathdel) {
-					info('Wiki deleted successfully');
-				}
-        return array('item' => $item, 'success' => (($drop === 1 && $pathdel) ? true : false));   
-    }
+
+	$w = wiki_get_wiki($resource_id);
+	$item = $w['wiki'];
+	if (!$item || !$w['path']) {
+		return array('item' => null, 'success' => false);
+	} else {
+		$drop = drop_item($item['id'], false, DROPITEM_NORMAL, true);
+		$pathdel = rrmdir($w['path']);
+		if ($pathdel) {
+			info('Wiki files deleted successfully');
+		}
+		return array('item' => $item, 'success' => (($drop === 1 && $pathdel) ? true : false));
+	}
 }
 
 function wiki_get_wiki($resource_id) {
@@ -141,28 +142,28 @@ function wiki_get_wiki($resource_id) {
 		return array('wiki' => null, 'path' => null);
 	} else {
 		$w = $item[0];
-		$object = json_decode($w['object'], true);
-		if (!realpath(__DIR__ . '/../' . $object['path'])) {
+		//$object = json_decode($w['object'], true);
+		$path = get_iconfig($w, 'wiki', 'path');
+		if (!realpath(__DIR__ . '/../' . $path)) {
 			return array('wiki' => null, 'path' => null);
 		}
 		// Path to wiki exists
-		$abs_path = realpath(__DIR__ . '/../' . $object['path']);
+		$abs_path = realpath(__DIR__ . '/../' . $path);
 		return array('wiki' => $w, 'path' => $abs_path);
 	}
 }
 
 function wiki_exists_by_name($uid, $name) {
-		$item = q("SELECT id,resource_id FROM item WHERE resource_type = '%s' AND title = '%s' AND uid = '%s' AND item_deleted = 0 limit 1",
-            dbesc(WIKI_ITEM_RESOURCE_TYPE),
-            dbesc($name),
+	$item = q("SELECT id,resource_id FROM item WHERE resource_type = '%s' AND title = '%s' AND uid = '%s' AND item_deleted = 0 limit 1", 
+						dbesc(WIKI_ITEM_RESOURCE_TYPE), 
+						dbesc($name), 
 						dbesc($uid)
-    );
-    if (!$item) {
-        return array('id' => null, 'resource_id' => null);   
-    } else {
-			return array('id' => $item[0]['id'], 'resource_id' => $item[0]['resource_id']);   
-		}
-	
+					);
+	if (!$item) {
+		return array('id' => null, 'resource_id' => null);
+	} else {
+		return array('id' => $item[0]['id'], 'resource_id' => $item[0]['resource_id']);
+	}
 }
 
 function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
@@ -180,21 +181,11 @@ function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
 }
 
 function wiki_create_page($name, $resource_id) {
-	$item = q("SELECT id,title,object FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1", 
-		dbesc(WIKI_ITEM_RESOURCE_TYPE), 
-		dbesc($resource_id)
-	);
-	if (!$item) {
-		return array('page' => null, 'message' => 'Wiki item not found.', 'success' => false);
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('page' => null, 'message' => 'Wiki not found.', 'success' => false);
 	}
-	$object = json_decode($item[0]['object'], true);
-	$wikiname = $item[0]['title'];
-	if (!realpath(__DIR__ . '/../' . $object['path'])) {
-		return array('page' => null, 'message' => 'Wiki directory does not exist.', 'success' => false);
-	}
-	// Path to wiki exists
-	$abs_path = realpath(__DIR__ . '/../' . $object['path']);
-	$page_path = $abs_path . '/' . $name;
+	$page_path = $w['path'] . '/' . $name;
 	if (is_file($page_path)) {
 		return array('page' => null, 'message' => 'Page already exists.', 'success' => false);
 	}

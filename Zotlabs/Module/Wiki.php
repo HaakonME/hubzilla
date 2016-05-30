@@ -27,6 +27,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
 		$wiki_owner = false;
+		$showNewWikiButton = false;
 		if(local_channel()) {
 			$channel = \App::get_channel();
 		}
@@ -47,15 +48,16 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 		$resource_id = '';
 		$pagename = '';
-		
+		if(argc() > 1) {
+			$channel = get_channel_by_nick(argv(1));
+			if(local_channel() === intval($channel['channel_id'])) {
+				$wiki_owner = true;
+			}			
+		}
 		// GET https://hubzilla.hub/argv(0)/argv(1)/argv(2)/argv(3)/argv(4)/...
 		if(argc() > 2) {
 			// GET /wiki/channel/wiki
 			// Check if wiki exists andr redirect if it does not
-			$channel = get_channel_by_nick(argv(1));
-			if(local_channel() === intval($channel['channel_id'])) {
-				$wiki_owner = true;
-			}
 			$w = wiki_exists_by_name($channel['channel_id'], argv(2));
 			if(!$w['resource_id']) {
 				notice('Wiki not found' . EOL);
@@ -81,6 +83,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
 			$hide_editor = false;
 			$showPageControls = false;
+			$showNewWikiButton = $wiki_owner;
 		} elseif (argc()<4) {
 			// GET /wiki/channel/wiki
 			// No page was specified, so redirect to Home.md
@@ -90,7 +93,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$hide_editor = true;	
 			// Until separate read and write permissions are implemented, only allow 
 			// the wiki owner to see page controls
-			$showPageControls = $wiki_owner;  
+			$showPageControls = $wiki_owner;
+			$showNewWikiButton = $wiki_owner;  
 		} elseif (argc()<5) {
 			// GET /wiki/channel/wiki/page
 			$pagename = argv(3);
@@ -102,6 +106,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
 			$hide_editor = false;
 			$showPageControls = $wiki_owner;
+			$showNewWikiButton = $wiki_owner;
 		}
 		require_once('library/markdown.php');
 		$renderedContent = Markdown(json_decode($content));
@@ -110,6 +115,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$wikiheader' => $wikiheader,
 			'$hideEditor' => $hide_editor,
 			'$showPageControls' => $showPageControls,
+			'$showNewWikiButton'=> $showNewWikiButton,
 			'$channel' => $channel['channel_address'],
 			'$resource_id' => $resource_id,
 			'$page' => $pagename,

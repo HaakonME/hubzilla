@@ -8,11 +8,7 @@ use \Zotlabs\Storage\GitRepo as GitRepo;
 define ( 'WIKI_ITEM_RESOURCE_TYPE', 'wiki' );
 
 function wiki_list($channel, $observer_hash) {
-	if (local_channel() || remote_channel()) {
-		$sql_extra = item_permissions_sql($channel['channel_id'], $observer_hash);
-	} else {
-		$sql_extra = " AND item_private = 0 ";
-	}
+	$sql_extra = item_permissions_sql($channel['channel_id'], $observer_hash);
 	$wikis = q("SELECT * FROM item WHERE resource_type = '%s' AND mid = parent_mid AND item_deleted = 0 $sql_extra", 
 			dbesc(WIKI_ITEM_RESOURCE_TYPE)
 	);

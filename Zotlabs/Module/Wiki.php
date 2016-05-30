@@ -97,10 +97,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode($pagename);	// show wiki name and page			
 			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => $pagename));
 			if(!$p['success']) {
-				logger('wiki_get_page_content: ' . $p['message']);
 				$content = 'Error retrieving page content. Try again.';
 			}
-			logger('content: ' . $content);
 			$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
 			$hide_editor = false;
 			$showPageControls = $wiki_owner;

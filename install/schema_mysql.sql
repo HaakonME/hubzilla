@@ -96,15 +96,15 @@ CREATE TABLE IF NOT EXISTS `account` (
 
 CREATE TABLE IF NOT EXISTS `addon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(255) NOT NULL DEFAULT '',
+  `aname` char(255) NOT NULL DEFAULT '',
   `version` char(255) NOT NULL DEFAULT '',
   `installed` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
-  `timestamp` bigint(20) NOT NULL DEFAULT '0',
+  `tstamp` bigint(20) NOT NULL DEFAULT '0',
   `plugin_admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `hidden` (`hidden`),
-  KEY `name` (`name`),
+  KEY `aname` (`aname`),
   KEY `installed` (`installed`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -519,7 +519,7 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hook` char(255) NOT NULL DEFAULT '',
   `file` char(255) NOT NULL DEFAULT '',
-  `function` char(255) NOT NULL DEFAULT '',
+  `fn` char(255) NOT NULL DEFAULT '',
   `priority` int(11) unsigned NOT NULL DEFAULT '0',
   `hook_version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),

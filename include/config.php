@@ -1,17 +1,13 @@
 <?php
+
 /**
  * @file include/config.php
  * @brief Arbitrary configuration storage.
  *
- * @note Please do not store booleans - convert to 0/1 integer values.
- * The get_?config() functions return boolean false for keys that are unset,
- * and this could lead to subtle bugs.
+ * Arrays get stored as serialized strings.
+ * Booleans are stored as integer 0/1.
  *
- * Arrays get stored as serialize strings.
- *
- * @todo There are a few places in the code (such as the admin panel) where
- * boolean configurations need to be fixed as of 10/08/2011.
- *
+
  * - <b>config</b> is used for hub specific configurations. It overrides the
  * configurations from .htconfig file. The storage is of size TEXT.
  * - <b>pconfig</b> is used for channel specific configurations and takes a
@@ -34,161 +30,37 @@
  *
  */
 
-/**
- * @brief Loads the hub's configuration from database to a cached storage.
- *
- * Retrieve a category ($family) of config variables from database to a cached
- * storage in the global App::$config[$family].
- *
- * @param string $family
- *  The category of the configuration value
- */
+
+use Zotlabs\Lib as Zlib;
+
+
+
 function load_config($family) {
 
-	if(! array_key_exists($family, App::$config))
-		App::$config[$family] = array();
+	Zlib\Config::Load($family);
 
-	if(! array_key_exists('config_loaded', App::$config[$family])) {
-		$r = q("SELECT * FROM config WHERE cat = '%s'", dbesc($family));
-		if($r !== false) {
-			if($r) {
-				foreach($r as $rr) {
-					$k = $rr['k'];
-					App::$config[$family][$k] = $rr['v'];
-				}
-			}
-			App::$config[$family]['config_loaded'] = true;
-		}
-	} 
 }
 
-/**
- * @brief Get a particular config variable given the category name ($family)
- * and a key.
- *
- * Get a particular config variable from the given category ($family) and the
- * $key from a cached storage in App::$config[$family]. If a key is found in the
- * DB but does not exist in local config cache, pull it into the cache so we
- * do not have to hit the DB again for this item.
- * 
- * Returns false if not set.
- *
- * @param string $family
- *  The category of the configuration value
- * @param string $key
- *  The configuration key to query
- * @return mixed Return value or false on error or if not set
- */
 function get_config($family, $key) {
 
-	if((! array_key_exists($family, App::$config)) || (! array_key_exists('config_loaded', App::$config[$family])))
-		load_config($family);
+	return Zlib\Config::Get($family,$key);
 
-	if(array_key_exists('config_loaded', App::$config[$family])) {
-		if(! array_key_exists($key, App::$config[$family])) {
-			return false;		
-		}
-		return ((! is_array(App::$config[$family][$key])) && (preg_match('|^a:[0-9]+:{.*}$|s', App::$config[$family][$key])) 
-			? unserialize(App::$config[$family][$key])
-			: App::$config[$family][$key]
-		);
-	}
-	return false;
 }
 
-/**
- * @brief Returns a value directly from the database configuration storage.
- *
- * This function queries directly the database and bypasses the chached storage
- * from get_config($family, $key).
- *
- * @param string $family
- *  The category of the configuration value
- * @param string $key
- *  The configuration key to query
- * @return mixed
- */
-
-function get_config_from_storage($family, $key) {
-	$ret = q("SELECT * FROM config WHERE cat = '%s' AND k = '%s' LIMIT 1",
-		dbesc($family),
-		dbesc($key)
-	);
-	return $ret;
-}
-
-/**
- * @brief Sets a configuration value for the hub.
- *
- * Stores a config value ($value) in the category ($family) under the key ($key).
- *
- * @note Please do not store booleans - convert to 0/1 integer values!
- *
- * @param string $family
- *  The category of the configuration value
- * @param string $key
- *  The configuration key to set
- * @param mixed $value
- *  The value to store in the configuration
- * @return mixed
- *  Return the set value, or false if the database update failed
- */
 function set_config($family, $key, $value) {
 
-	// manage array value
-	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
-	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
+	return Zlib\Config::Set($family,$key,$value);
 
-	if(get_config($family, $key) === false || (! get_config_from_storage($family, $key))) {
-		$ret = q("INSERT INTO config ( cat, k, v ) VALUES ( '%s', '%s', '%s' ) ",
-			dbesc($family),
-			dbesc($key),
-			dbesc($dbvalue)
-		);
-		if($ret) {
-			App::$config[$family][$key] = $value;
-			$ret = $value;
-		}
-		return $ret;
-	}
-
-	$ret = q("UPDATE config SET v = '%s' WHERE cat = '%s' AND k = '%s'",
-		dbesc($dbvalue),
-		dbesc($family),
-		dbesc($key)
-	);
-
-	if($ret) {
-		App::$config[$family][$key] = $value;
-		$ret = $value;
-	}
-	return $ret;
 }
 
-/**
- * @brief Deletes the given key from the hub's configuration database.
- *
- * Removes the configured value from the stored cache in App::$config[$family]
- * and removes it from the database.
- *
- * @param string $family
- *  The category of the configuration value
- * @param string $key
- *  The configuration key to delete
- * @return mixed
- */
 function del_config($family, $key) {
 
-	$ret = false;
+	return Zlib\Config::Delete($family,$key);
 
-	if(array_key_exists($family, App::$config) && array_key_exists($key, App::$config[$family]))
-		unset(App::$config[$family][$key]);
-		$ret = q("DELETE FROM config WHERE cat = '%s' AND k = '%s'",
-		dbesc($family),
-		dbesc($key)
-	);
-	return $ret;
 }
+
+
+
 
 
 /**
@@ -201,6 +73,7 @@ function del_config($family, $key) {
  *  The channel_id
  * @return void|false Nothing or false if $uid is false
  */
+
 function load_pconfig($uid) {
 
 	if($uid === false)

@@ -1967,7 +1967,7 @@ function get_site_info() {
 		$r = q("select * from addon where hidden = 0");
 		if(count($r))
 			foreach($r as $rr)
-				$visible_plugins[] = $rr['name'];
+				$visible_plugins[] = $rr['aname'];
 	}
 	sort($visible_plugins);
 

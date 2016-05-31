@@ -95,12 +95,6 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 	$arr['item_private'] = intval($acl->is_private());
 	$arr['verb'] = ACTIVITY_CREATE;
 	$arr['obj_type'] = ACTIVITY_OBJ_WIKI;
-	$arr['object'] = json_encode(array(
-        'type' => $arr['obj_type'], 
-        'title' => $arr['title'], 
-        'id' => $arr['resource_id'], 
-        'url' => $wiki_url
-    ));
 	$arr['body'] = '[table][tr][td][h1]New Wiki[/h1][/td][/tr][tr][td][zrl=' . $wiki_url . ']' . $name . '[/zrl][/td][/tr][/table]';
 	// Save the path using iconfig. The file path should not be shared with other hubs
 	if (!set_iconfig($arr, 'wiki', 'path', $path, false)) {
@@ -221,6 +215,30 @@ function wiki_get_page_content($arr) {
 	}
 }
 
+function wiki_page_history($arr) {
+	$pagename = ((array_key_exists('page',$arr)) ? $arr['page'] : '');
+	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('history' => null, 'message' => 'Error reading wiki', 'success' => false);
+	}
+	$page_path = $w['path'].'/'.$pagename;
+	if (!is_readable($page_path) === true) {
+		return array('history' => null, 'message' => 'Cannot read wiki page: ' . $page_path, 'success' => false);
+	}
+	$reponame = ((array_key_exists('title', $w['wiki'])) ? $w['wiki']['title'] : 'repo');
+	if($reponame === '') {
+		$reponame = 'repo';
+	}
+	$git = new GitRepo('sys', null, false, $w['wiki']['title'], $w['path']);
+	try {
+		$gitlog = $git->git->log('', $page_path , array('limit' => 50));
+		logger('gitlog: ' . json_encode($gitlog));
+		return array('history' => $gitlog, 'message' => '', 'success' => true);
+	} catch (\PHPGit\Exception\GitException $e) {
+		 return array('history' => null, 'message' => 'GitRepo error thrown', 'success' => false);
+	}	
+}
 
 function wiki_save_page($arr) {
 	$pagename = ((array_key_exists('name',$arr)) ? $arr['name'] : '');

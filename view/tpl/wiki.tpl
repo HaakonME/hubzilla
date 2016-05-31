@@ -59,6 +59,7 @@
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
       <li><a data-toggle="tab" href="#edit-pane">Edit</a></li>
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
+      <li><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
       {{if $showPageControls}}
       <li class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">Page <b class="caret"></b></a>
@@ -69,7 +70,7 @@
       </li>
       {{/if}}
     </ul>
-    <div class="tab-content" id="myTabContent">
+    <div class="tab-content" id="wiki-page-tabs">
 
       <div id="edit-pane" class="tab-pane fade">
         <div id="ace-editor"></div>
@@ -79,6 +80,21 @@
           {{$renderedContent}}
         </div>
       </div>
+      <div id="page-history-pane" class="tab-pane fade">
+        <div id="page-history-list" class="section-content-wrapper">
+          <table class="table-striped table-responsive table-hover" style="width: 100%;">
+          {{foreach $pageHistory as $commit}}
+            <tr><td>
+            <table>
+              <tr><td>Date</td><td>{{$commit.date}}</td></tr>
+              <tr><td>Name</td><td>{{$commit.name}}</td></tr>
+              <tr><td>Message</td><td>{{$commit.title}}</td></tr>
+            </table>
+            </td></tr>
+          {{/foreach}}          
+          </table>
+        </div>
+      </div>     
 
 
     </div>
@@ -110,6 +126,17 @@
     ev.preventDefault();
   });
 
+  $('#wiki-get-history').click(function (ev) {
+    $.post("wiki/{{$channel}}/history/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, function (data) {
+      if (data.success) {
+        $('#page-history-list').html(data.historyHTML);
+      } else {
+        window.console.log('Error getting page history.');
+      }
+    }, 'json');
+    ev.preventDefault();
+  });
+  
 function wiki_delete_wiki(wikiName, resource_id) {
   if(!confirm('Are you sure you want to delete the entire wiki: ' + JSON.stringify(wikiName))) {
     return;

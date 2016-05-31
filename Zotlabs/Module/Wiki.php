@@ -26,8 +26,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 	function get() {
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
+		// TODO: Combine the interface configuration into a unified object
+		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
 		$wiki_owner = false;
 		$showNewWikiButton = false;
+		$pageHistory = array();
 		if(local_channel()) {
 			$channel = \App::get_channel();
 		}
@@ -107,6 +110,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$hide_editor = false;
 			$showPageControls = $wiki_owner;
 			$showNewWikiButton = $wiki_owner;
+			$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'page' => $pagename));
 		}
 		require_once('library/markdown.php');
 		$renderedContent = Markdown(json_decode($content));
@@ -125,7 +129,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$content' => $content,
 			'$renderedContent' => $renderedContent,
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
-			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', '')
+			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
+			'$pageHistory' => $pageHistory['history']
 		));
 		head_add_js('library/ace/ace.js');
 		return $o;
@@ -236,7 +241,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					json_return_and_die(array('success' => false));					
 				}
 			}
-			$name = escape_tags(urlencode($_POST['name'])); //Get new wiki name
+			$name = escape_tags(urlencode($_POST['name'])); //Get new page name
 			if($name === '') {				
 				json_return_and_die(array('message' => 'Error creating page. Invalid name.', 'success' => false));
 			}
@@ -272,7 +277,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$resource_id = $_POST['resource_id']; 
 			$pagename = escape_tags(urlencode($_POST['name'])); 
 			$content = escape_tags($_POST['content']); //Get new content
-			// Determine if observer has permission to create wiki
+			// Determine if observer has permission to save content
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
@@ -311,6 +316,31 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 		}
 		
+		// Update page history
+		// /wiki/channel/history/page
+		if ((argc() === 4) && (argv(2) === 'history') && (argv(3) === 'page')) {
+			$which = argv(1);
+			$resource_id = $_POST['resource_id'];
+			$pagename = escape_tags(urlencode($_POST['name']));
+			// Determine if observer has permission to view content
+			if (local_channel()) {
+				$channel = \App::get_channel();
+			} else {
+				$channel = get_channel_by_nick($which);
+				$observer_hash = get_observer_hash();
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if (!$perms['read']) {
+					logger('Wiki read permission denied.' . EOL);
+					json_return_and_die(array('historyHTML' => '', 'message' => 'Permission denied.', 'success' => false));
+				}
+			}
+			$historyHTML = widget_wiki_page_history(array(
+					'resource_id' => $resource_id,
+					'page' => $pagename
+			));
+			json_return_and_die(array('historyHTML' => $historyHTML, 'message' => '', 'success' => true));
+		}
+
 		//notice('You must be authenticated.');
 		json_return_and_die(array('message' => 'You must be authenticated.', 'success' => false));
 		

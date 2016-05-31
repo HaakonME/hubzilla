@@ -914,6 +914,17 @@ function widget_wiki_pages($arr) {
 	));
 }
 
+function widget_wiki_page_history($arr) {
+	require_once("include/wiki.php");
+	$pagename = ((array_key_exists('page', $arr)) ? $arr['page'] : '');
+	$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : '');
+	$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'page' => $pagename));
+
+	return replace_macros(get_markup_template('wiki_page_history.tpl'), array(
+			'$pageHistory' => $pageHistory['history']
+	));
+}
+
 function widget_bookmarkedchats($arr) {
 
 	if(! feature_enabled(App::$profile['profile_uid'],'ajaxchat'))

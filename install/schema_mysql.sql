@@ -434,62 +434,6 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `event_priority` (`event_priority`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `fcontact` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `url` char(255) NOT NULL,
-  `name` char(255) NOT NULL,
-  `photo` char(255) NOT NULL,
-  `request` char(255) NOT NULL,
-  `nick` char(255) NOT NULL,
-  `addr` char(255) NOT NULL,
-  `batch` char(255) NOT NULL,
-  `notify` char(255) NOT NULL,
-  `poll` char(255) NOT NULL,
-  `confirm` char(255) NOT NULL,
-  `priority` tinyint(1) NOT NULL,
-  `network` char(32) NOT NULL,
-  `alias` char(255) NOT NULL,
-  `pubkey` text NOT NULL,
-  `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `addr` (`addr`),
-  KEY `network` (`network`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `ffinder` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` int(10) unsigned NOT NULL,
-  `cid` int(10) unsigned NOT NULL,
-  `fid` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `cid` (`cid`),
-  KEY `fid` (`fid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `fserver` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `server` char(255) NOT NULL DEFAULT '',
-  `posturl` char(255) NOT NULL DEFAULT '',
-  `key` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `server` (`server`),
-  KEY `posturl` (`posturl`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `fsuggest` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL DEFAULT '0',
-  `cid` int(11) NOT NULL DEFAULT '0',
-  `name` char(255) NOT NULL DEFAULT '',
-  `url` char(255) NOT NULL DEFAULT '',
-  `request` char(255) NOT NULL DEFAULT '',
-  `photo` char(255) NOT NULL DEFAULT '',
-  `note` text NOT NULL,
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `groups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hash` char(255) NOT NULL DEFAULT '',
@@ -1192,20 +1136,6 @@ CREATE TABLE IF NOT EXISTS `source` (
   KEY `src_channel_id` (`src_channel_id`),
   KEY `src_channel_xchan` (`src_channel_xchan`),
   KEY `src_xchan` (`src_xchan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `spam` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL DEFAULT '0',
-  `spam` int(11) NOT NULL DEFAULT '0',
-  `ham` int(11) NOT NULL DEFAULT '0',
-  `term` char(255) NOT NULL DEFAULT '',
-  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `spam` (`spam`),
-  KEY `ham` (`ham`),
-  KEY `term` (`term`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sys_perms` (

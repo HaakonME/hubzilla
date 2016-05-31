@@ -428,62 +428,6 @@ create index "event_status_idx" on event ("event_status");
 create index "event_sequence_idx" on event ("event_sequence");
 create index "event_priority_idx" on event ("event_priority");
 
-
-CREATE TABLE "fcontact" (
-  "id" serial  NOT NULL,
-  "url" text NOT NULL,
-  "name" text NOT NULL,
-  "photo" text NOT NULL,
-  "request" text NOT NULL,
-  "nick" text NOT NULL,
-  "addr" text NOT NULL,
-  "batch" text NOT NULL,
-  "notify" text NOT NULL,
-  "poll" text NOT NULL,
-  "confirm" text NOT NULL,
-  "priority" numeric(1) NOT NULL,
-  "network" varchar(32) NOT NULL DEFAULT '',
-  "alias" text NOT NULL,
-  "pubkey" text NOT NULL,
-  "updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  PRIMARY KEY ("id")
-);
-create index "fcontact_addr_idx" on fcontact ("addr");
-create index "fcontact_network_idx" on fcontact ("network");
-
-CREATE TABLE "ffinder" (
-  "id" serial  NOT NULL,
-  "uid" bigint  NOT NULL,
-  "cid" bigint  NOT NULL,
-  "fid" bigint  NOT NULL,
-  PRIMARY KEY ("id")
-);
-create index "ffinder_uid_idx" on ffinder ("uid");
-create index "ffinder_cid_idx" on ffinder ("cid");
-create index "ffinder_fid_idx" on ffinder ("fid");
-
-CREATE TABLE "fserver" (
-  "id" serial NOT NULL,
-  "server" text NOT NULL,
-  "posturl" text NOT NULL,
-  "key" text NOT NULL,
-  PRIMARY KEY ("id")
-);
-create index "fserver_server_idx" on fserver ("server");
-create index "fserver_posturl_idx" on fserver ("posturl");
-
-CREATE TABLE "fsuggest" (
-  "id" serial NOT NULL,
-  "uid" bigint NOT NULL,
-  "cid" bigint NOT NULL,
-  "name" text NOT NULL,
-  "url" text NOT NULL,
-  "request" text NOT NULL,
-  "photo" text NOT NULL,
-  "note" text NOT NULL,
-  "created" timestamp NOT NULL,
-  PRIMARY KEY ("id")
-);
 CREATE TABLE "group_member" (
   "id" serial  NOT NULL,
   "uid" bigint  NOT NULL,
@@ -1179,19 +1123,6 @@ CREATE TABLE "source" (
 create index "src_channel_id" on "source" ("src_channel_id");
 create index "src_channel_xchan" on "source"  ("src_channel_xchan");
 create index "src_xchan" on "source" ("src_xchan");
-CREATE TABLE "spam" (
-  "id" serial NOT NULL,
-  "uid" bigint NOT NULL,
-  "spam" bigint NOT NULL DEFAULT '0',
-  "ham" bigint NOT NULL DEFAULT '0',
-  "term" text NOT NULL,
-  "date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  PRIMARY KEY ("id")
-);
-create index "spam_uid" on spam ("uid");
-create index "spam_spam" on spam ("spam");
-create index "spam_ham" on spam ("ham");
-create index "spam_term" on spam ("term");
 CREATE TABLE "sys_perms" (
   "id" serial  NOT NULL,
   "cat" text NOT NULL,

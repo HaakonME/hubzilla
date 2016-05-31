@@ -132,10 +132,10 @@ function load_translation_table($lang, $install = false) {
 	}
 
 	if(! $install) {
-		$plugins = q("SELECT name FROM addon WHERE installed=1;");
+		$plugins = q("SELECT aname FROM addon WHERE installed=1;");
 		if ($plugins !== false) {
 			foreach($plugins as $p) {
-				$name = $p['name'];
+				$name = $p['aname'];
 				if(file_exists("addon/$name/lang/$lang/hstrings.php")) {
 					include("addon/$name/lang/$lang/hstrings.php");
 				}

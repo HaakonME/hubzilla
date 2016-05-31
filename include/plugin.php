@@ -41,7 +41,7 @@ function uninstall_plugin($plugin) {
 		$func();
 	}
 
-	q("DELETE FROM `addon` WHERE `name` = '%s' ",
+	q("DELETE FROM `addon` WHERE `aname` = '%s' ",
 		dbesc($plugin)
 	);
 }
@@ -66,7 +66,7 @@ function install_plugin($plugin) {
 
 	$plugin_admin = (function_exists($plugin . '_plugin_admin') ? 1 : 0);
 
-	q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
+	q("INSERT INTO `addon` (`aname`, `installed`, `tstamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 		dbesc($plugin),
 		intval($t),
 		$plugin_admin
@@ -111,7 +111,7 @@ function load_plugin($plugin) {
 }
 
 function plugin_is_installed($name) {
-	$r = q("select name from addon where name = '%s' and installed = 1 limit 1",
+	$r = q("select aname from addon where aname = '%s' and installed = 1 limit 1",
 		dbesc($name)
 	);
 	if($r)
@@ -143,8 +143,8 @@ function reload_plugins() {
 				if(file_exists($fname)) {
 					$t = @filemtime($fname);
 					foreach($installed as $i) {
-						if(($i['name'] == $pl) && ($i['timestamp'] != $t)) {	
-							logger('Reloading plugin: ' . $i['name']);
+						if(($i['aname'] == $pl) && ($i['tstamp'] != $t)) {	
+							logger('Reloading plugin: ' . $i['aname']);
 							@include_once($fname);
 
 							if(function_exists($pl . '_unload')) {
@@ -155,7 +155,7 @@ function reload_plugins() {
 								$func = $pl . '_load';
 								$func();
 							}
-							q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d",
+							q("UPDATE `addon` SET `tstamp` = %d WHERE `id` = %d",
 								intval($t),
 								intval($i['id'])
 							);
@@ -178,7 +178,7 @@ function reload_plugins() {
  * @return mixed|bool
  */
 function register_hook($hook, $file, $function, $priority = 0) {
-	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `fn` = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
@@ -186,7 +186,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
 	if($r)
 		return true;
 
-	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`, `priority`) VALUES ( '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO `hook` (`hook`, `file`, `fn`, `priority`) VALUES ( '%s', '%s', '%s', '%s' )",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function),
@@ -206,7 +206,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
  * @return array
  */
 function unregister_hook($hook, $file, $function) {
-	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `function` = '%s'",
+	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `fn` = '%s'",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
@@ -233,7 +233,7 @@ function load_hooks() {
 			if(! array_key_exists($rr['hook'],App::$hooks))
 				App::$hooks[$rr['hook']] = array();
 
-			App::$hooks[$rr['hook']][] = array($rr['file'],$rr['function'],$rr['priority'],$rr['hook_version']);
+			App::$hooks[$rr['hook']][] = array($rr['file'],$rr['fn'],$rr['priority'],$rr['hook_version']);
 		}
 	}
 	//logger('hooks: ' . print_r(App::$hooks,true));
@@ -301,7 +301,7 @@ function call_hooks($name, &$data = null) {
 				else
 					$func($a, $data);
 			} else {
-				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND function = '%s'",
+				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND fn = '%s'",
 					dbesc($name),
 					dbesc($hook[0]),
 					dbesc($origfn)

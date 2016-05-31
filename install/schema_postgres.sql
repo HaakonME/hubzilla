@@ -94,16 +94,16 @@ create index "account_level"  on account ("account_level");
 create index "account_password_changed"  on account ("account_password_changed");
 CREATE TABLE "addon" (
   "id" serial NOT NULL,
-  "name" text NOT NULL,
+  "aname" text NOT NULL,
   "version" text NOT NULL DEFAULT '0',
   "installed" numeric(1) NOT NULL DEFAULT '0',
   "hidden" numeric(1) NOT NULL DEFAULT '0',
-  "timestamp" numeric(20) NOT NULL DEFAULT '0',
+  "tstamp" numeric(20) NOT NULL DEFAULT '0',
   "plugin_admin" numeric(1) NOT NULL DEFAULT '0',
   PRIMARY KEY ("id")
 );
 create index "addon_hidden_idx" on addon ("hidden");
-create index "addon_name_idx" on addon ("name");
+create index "addon_name_idx" on addon ("aname");
 create index "addon_installed_idx" on addon ("installed");
 CREATE TABLE "app" (
   "id" serial NOT NULL,
@@ -514,7 +514,7 @@ CREATE TABLE "hook" (
   "id" serial NOT NULL,
   "hook" text NOT NULL,
   "file" text NOT NULL,
-  "function" text NOT NULL,
+  "fn" text NOT NULL,
   "priority" bigint  NOT NULL DEFAULT '0',
   "hook_version" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("id")

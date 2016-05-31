@@ -1397,7 +1397,7 @@ function widget_admin($arr) {
 	$plugins = array();
 	if($r) {
 		foreach ($r as $h){
-			$plugin = $h['name'];
+			$plugin = $h['aname'];
 			$plugins[] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
 			// temp plugins with admin
 			App::$plugins_admin[] = $plugin;

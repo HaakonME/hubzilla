@@ -1291,7 +1291,7 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 			$admin_form = '';
 	
-			$r = q("select * from addon where plugin_admin = 1 and name = '%s' limit 1",
+			$r = q("select * from addon where plugin_admin = 1 and aname = '%s' limit 1",
 				dbesc($plugin)
 			);
 	

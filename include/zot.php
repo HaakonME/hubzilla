@@ -2402,11 +2402,14 @@ function sync_locations($sender, $arr, $absolute = false) {
 
 				$current_site = false;
 
+				$t = datetime_convert('UTC','UTC','now - 15 minutes');
+
 				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
-					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d",
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d and hubloc_connected < '%s'",
 						dbesc(datetime_convert()),
 						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
+						intval($r[0]['hubloc_id']),
+						dbesc($t)
 					);
 					$current_site = true;
 				}
@@ -4125,7 +4128,7 @@ function update_hub_connected($hub,$sitekey = '') {
 		$sitekey = $hub['sitekey'];
 	}
 
-	// $sender['sitekey'] is a new addition to the protcol to distinguish 
+	// $sender['sitekey'] is a new addition to the protocol to distinguish 
 	// hublocs coming from re-installed sites. Older sites will not provide
 	// this field and we have to still mark them valid, since we can't tell
 	// if this hubloc has the same sitekey as the packet we received.
@@ -4134,10 +4137,13 @@ function update_hub_connected($hub,$sitekey = '') {
 	// Update our DB to show when we last communicated successfully with this hub
 	// This will allow us to prune dead hubs from using up resources
 
-	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d and hubloc_sitekey = '%s' ",
+	$t = datetime_convert('UTC','UTC','now - 15 minutes');
+
+	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d and hubloc_sitekey = '%s' and hubloc_connected < '%s' ",
 		dbesc(datetime_convert()),
 		intval($hub['hubloc_id']),
-		dbesc($sitekey)
+		dbesc($sitekey),
+		dbesc($t)
 	);
 
 	// a dead hub came back to life - reset any tombstones we might have

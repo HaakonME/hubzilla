@@ -20,7 +20,7 @@ function file_tag_file_query($table,$s,$type = 'file') {
 	else
 		$termtype = TERM_CATEGORY;
 
-	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.ttype = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
 		intval($termtype),
 		protect_sprintf(dbesc($s))
 	);
@@ -29,14 +29,14 @@ function file_tag_file_query($table,$s,$type = 'file') {
 function term_query($table,$s,$type = TERM_UNKNOWN, $type2 = '') {
 
 	if($type2) {
-		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type in (%d, %d) and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.ttype in (%d, %d) and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
 			intval($type),
 			intval($type2),
 			protect_sprintf(dbesc($s))
 		);
 	}
 	else {
-		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.ttype = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
 			intval($type),
 			protect_sprintf(dbesc($s))
 		);
@@ -49,7 +49,7 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 		return false;
 
 	$r = q("select * from term 
-		where uid = %d and oid = %d and otype = %d and type = %d 
+		where uid = %d and oid = %d and otype = %d and ttype = %d 
 		and term = '%s' and url = '%s' ",
 		intval($uid),
 		intval($iid),
@@ -61,7 +61,7 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 	if($r)
 		return false;
 
-	$r = q("insert into term (uid, oid, otype, type, term, url)
+	$r = q("insert into term (uid, oid, otype, ttype, term, url)
 		values( %d, %d, %d, %d, '%s', '%s') ",
 		intval($uid),
 		intval($iid),
@@ -85,7 +85,7 @@ function get_terms_oftype($arr,$type) {
 
 	foreach($type as $t)
 		foreach($arr as $x)
-			if($x['type'] == $t)
+			if($x['ttype'] == $t)
 				$ret[] = $x;
 
 	return $ret;
@@ -93,9 +93,9 @@ function get_terms_oftype($arr,$type) {
 
 function format_term_for_display($term) {
 	$s = '';
-	if(($term['type'] == TERM_HASHTAG) || ($term['type'] == TERM_COMMUNITYTAG))
+	if(($term['ttype'] == TERM_HASHTAG) || ($term['ttype'] == TERM_COMMUNITYTAG))
 		$s .= '#';
-	elseif($term['type'] == TERM_MENTION)
+	elseif($term['ttype'] == TERM_MENTION)
 		$s .= '@';
 	else
 		return $s;
@@ -142,7 +142,7 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 
 	// Fetch tags
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
-		where term.uid = %d and term.type = %d 
+		where term.uid = %d and term.ttype = %d 
 		and otype = %d and item_type = %d and item_private = 0
 		$sql_options $item_normal
 		group by term order by total desc %s",

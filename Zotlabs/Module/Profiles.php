@@ -67,16 +67,16 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			$name = t('Profile-') . ($num_profiles + 1);
 	
-			$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
+			$r1 = q("SELECT `fullname`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
 				intval(local_channel()));
 			
-			$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `name`, `photo`, `thumb`)
+			$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `fullname`, `photo`, `thumb`)
 				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval(get_account_id()),
 				intval(local_channel()),
 				dbesc(random_string()),
 				dbesc($name),
-				dbesc($r1[0]['name']),
+				dbesc($r1[0]['fullname']),
 				dbesc($r1[0]['photo']),
 				dbesc($r1[0]['thumb'])
 			);
@@ -277,14 +277,14 @@ class Profiles extends \Zotlabs\Web\Controller {
 				
 			$name = escape_tags(trim($_POST['name']));
 	
-			if($orig[0]['name'] != $name) {
+			if($orig[0]['fullname'] != $name) {
 				$namechanged = true;
 	
 				$v = validate_channelname($name);
 				if($v) {
 					notice($v);
 					$namechanged = false;
-					$name = $orig[0]['name'];
+					$name = $orig[0]['fullname'];
 				}
 			}
 	
@@ -350,7 +350,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 			$withchanged = false;
 	
 			if(strlen($with)) {
-				if($with != strip_tags($orig[0]['with'])) {
+				if($with != strip_tags($orig[0]['partner'])) {
 					$withchanged = true;
 					$prf = '';
 					$lookup = $with;
@@ -382,7 +382,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 					}
 				}
 				else
-					$with = $orig[0]['with'];
+					$with = $orig[0]['partner'];
 			}
 	
 			$profile_fields_basic    = get_profile_fields_basic();
@@ -439,7 +439,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 					$changes[] = t('Dislikes');
 					$value = $dislikes;
 				}
-				if($work != $orig[0]['work']) {
+				if($work != $orig[0]['employment']) {
 					$changes[] = t('Work/Employment');
 				}
 				if($religion != $orig[0]['religion']) {
@@ -486,7 +486,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				
 			$r = q("UPDATE `profile` 
 				SET `profile_name` = '%s',
-				`name` = '%s',
+				`fullname` = '%s',
 				`pdesc` = '%s',
 				`gender` = '%s',
 				`dob` = '%s',
@@ -496,7 +496,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				`postal_code` = '%s',
 				`country_name` = '%s',
 				`marital` = '%s',
-				`with` = '%s',
+				`partner` = '%s',
 				`howlong` = '%s',
 				`sexual` = '%s',
 				`homepage` = '%s',
@@ -515,7 +515,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				`tv` = '%s',
 				`film` = '%s',
 				`romance` = '%s',
-				`work` = '%s',
+				`employment` = '%s',
 				`education` = '%s',
 				`hide_friends` = %d
 				WHERE `id` = %d AND `uid` = %d",
@@ -591,7 +591,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function get() {
+	function get() {
 	
 		$o = '';
 	
@@ -627,8 +627,6 @@ class Profiles extends \Zotlabs\Web\Controller {
 			}
 	
 			$editselect = 'none';
-	//		if(feature_enabled(local_channel(),'richtext'))
-	//			$editselect = 'textareas';
 	
 			\App::$page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
 				'$baseurl'    => z_root(),
@@ -712,7 +710,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'$is_default'   => $is_default,
 				'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope($channel['channel_r_profile'])),
 				'$advanced'     => $advanced,
-				'$name'         => array('name', t('Your full name'), $r[0]['name'], t('Required'), '*'),
+				'$name'         => array('name', t('Your full name'), $r[0]['fullname'], t('Required'), '*'),
 				'$pdesc'        => array('pdesc', t('Title/Description'), $r[0]['pdesc']),
 				'$dob'          => dob($r[0]['dob']),
 				'$hide_friends' => $hide_friends,
@@ -725,7 +723,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'$gender_min'   => gender_selector_min($r[0]['gender']),
 				'$marital'      => marital_selector($r[0]['marital']),
 				'$marital_min'  => marital_selector_min($r[0]['marital']),
-				'$with'         => array('with', t("Who (if applicable)"), $r[0]['with'], t('Examples: cathy123, Cathy Williams, cathy@example.com')),
+				'$with'         => array('with', t("Who (if applicable)"), $r[0]['partner'], t('Examples: cathy123, Cathy Williams, cathy@example.com')),
 				'$howlong'      => array('howlong', t('Since (date)'), ($r[0]['howlong'] === NULL_DATE ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong']))),
 				'$sexual'       => sexpref_selector($r[0]['sexual']),
 				'$sexual_min'   => sexpref_selector_min($r[0]['sexual']),
@@ -743,7 +741,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'$film'         => array('film', t('Film/Dance/Culture/Entertainment'), $r[0]['film']),
 				'$interest'     => array('interest', t('Hobbies/Interests'), $r[0]['interest']),
 				'$romance'      => array('romance',t('Love/Romance'), $r[0]['romance']),
-				'$work'         => array('work', t('Work/Employment'), $r[0]['work']),
+				'$work'         => array('work', t('Work/Employment'), $r[0]['employment']),
 				'$education'    => array('education', t('School/Education'), $r[0]['education']),
 				'$contact'      => array('contact', t('Contact information and social networks'), $r[0]['contact']),
 				'$channels'     => array('channels', t('My other channels'), $r[0]['channels']),
@@ -759,7 +757,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
 				local_channel());
-			if(count($r)) {
+			if($r) {
 	
 				$tpl = get_markup_template('profile_entry.tpl');
 				foreach($r as $rr) {
@@ -780,10 +778,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 					'$cr_new' => t('Create New'),
 					'$cr_new_link' => 'profiles/new?t=' . get_form_security_token("profile_new"),
 					'$profiles' => $profiles
-				));
-	
-	
-	
+				));	
 				
 			}
 			return $o;

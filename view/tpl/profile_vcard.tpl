@@ -1,6 +1,6 @@
 <div class="vcard">
 	{{if ! $zcard}}
-	<div id="profile-photo-wrapper"><img class="photo" src="{{$profile.photo}}?rev={{$profile.picdate}}" alt="{{$profile.name}}"></div>
+	<div id="profile-photo-wrapper"><img class="photo" src="{{$profile.photo}}?rev={{$profile.picdate}}" alt="{{$profile.fullname}}"></div>
 	{{/if}}
 	{{if $connect}}
 	<div class="connect-btn-wrapper"><a href="{{$connect_url}}" class="btn btn-block btn-success btn-sm"><i class="fa fa-plus"></i> {{$connect}}</a></div>
@@ -25,7 +25,7 @@
 	{{/if}}
 
 	{{if ! $zcard}}
-	<div class="fn">{{$profile.name}}{{if $profile.online}} <i class="fa fa-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
+	<div class="fn">{{$profile.fullname}}{{if $profile.online}} <i class="fa fa-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
 	{{if $reddress}}<div class="reddress" oncopy="return false;">{{$profile.reddress}}</div>{{/if}}		
 	{{/if}}
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}

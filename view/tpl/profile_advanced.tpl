@@ -33,7 +33,15 @@
 	<div class="section-content-wrapper">
 
 	{{foreach $fields as $f}}
+
 		{{if $f == 'name'}}
+			<dl id="aprofile-fullname" class="aprofile">
+			 <dt>{{$profile.fullname.0}}</dt>
+			 <dd>{{$profile.fullname.1}}</dd>
+			</dl>
+		{{/if}}
+
+		{{if $f == 'fullname'}}
 			<dl id="aprofile-fullname" class="aprofile">
 			 <dt>{{$profile.fullname.0}}</dt>
 			 <dd>{{$profile.fullname.1}}</dd>
@@ -72,7 +80,7 @@
 		{{if $profile.marital}}
 		<dl id="aprofile-marital" class="aprofile">
 		 <dt><span class="heart"><i class="fa fa-heart"></i>&nbsp;</span>{{$profile.marital.0}}</dt>
-		 <dd>{{$profile.marital.1}}{{if in_array('with',$fields)}}{{if $profile.marital.with}} ({{$profile.marital.with}}){{/if}}{{/if}}{{if in_array('howlong',$fields)}}{{if $profile.howlong}} {{$profile.howlong}}{{/if}}{{/if}}</dd>
+		 <dd>{{$profile.marital.1}}{{if in_array('partner',$fields)}}{{if $profile.marital.partner}} ({{$profile.marital.partner}}){{/if}}{{/if}}{{if in_array('howlong',$fields)}}{{if $profile.howlong}} {{$profile.howlong}}{{/if}}{{/if}}</dd>
 		</dl>
 		{{/if}}
 		{{/if}}
@@ -237,11 +245,11 @@
 		{{/if}}
 
 
-		{{if $f == 'work'}}
-		{{if $profile.work}}
+		{{if $f == 'employment'}}
+		{{if $profile.employment}}
 		<dl id="aprofile-work" class="aprofile">
-		 <dt>{{$profile.work.0}}</dt>
-		 <dd>{{$profile.work.1}}</dd>
+		 <dt>{{$profile.employment.0}}</dt>
+		 <dd>{{$profile.employment.1}}</dd>
 		</dl>
 		{{/if}}
 		{{/if}}

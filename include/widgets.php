@@ -212,13 +212,13 @@ function widget_savedsearch($arr) {
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
 	
 	if(x($_GET,'searchsave') && $search) {
-		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
+		$r = q("select * from `term` where `uid` = %d and `ttype` = %d and `term` = '%s' limit 1",
 			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
 		);
 		if(! $r) {
-			q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
+			q("insert into `term` ( `uid`,`ttype`,`term` ) values ( %d, %d, '%s') ",
 				intval(local_channel()),
 				intval(TERM_SAVEDSEARCH),
 				dbesc($search)
@@ -227,7 +227,7 @@ function widget_savedsearch($arr) {
 	}
 
 	if(x($_GET,'searchremove') && $search) {
-		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s'",
+		q("delete from `term` where `uid` = %d and `ttype` = %d and `term` = '%s'",
 			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
@@ -254,7 +254,7 @@ function widget_savedsearch($arr) {
 
 	$o = '';
 
-	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
+	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `ttype` = %d ",
 		intval(local_channel()),
 		intval(TERM_SAVEDSEARCH)
 	);
@@ -296,7 +296,7 @@ function widget_filer($arr) {
 	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);

@@ -854,12 +854,12 @@ function event_store_item($arr, $event) {
 
 		if(($arr['term']) && (is_array($arr['term']))) {
 			foreach($arr['term'] as $t) {
-				q("insert into term (uid,oid,otype,type,term,url)
+				q("insert into term (uid,oid,otype,ttype,term,url)
 					values(%d,%d,%d,%d,'%s','%s') ",
 					intval($arr['uid']),
 					intval($r[0]['id']),
 					intval(TERM_OBJ_POST),
-					intval($t['type']),
+					intval($t['ttype']),
 					dbesc($t['term']),
 					dbesc($t['url'])
 				);

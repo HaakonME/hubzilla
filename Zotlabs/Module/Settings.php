@@ -337,7 +337,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				}
 				$hide_presence    = 1 - (intval($role_permissions['online']));
 				if($role_permissions['default_collection']) {
-					$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+					$r = q("select hash from groups where uid = %d and gname = '%s' limit 1",
 						intval(local_channel()),
 						dbesc( t('Friends') )
 					);
@@ -345,7 +345,7 @@ class Settings extends \Zotlabs\Web\Controller {
 						require_once('include/group.php');
 						group_add(local_channel(), t('Friends'));
 						group_add_member(local_channel(),t('Friends'),$channel['channel_hash']);
-						$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+						$r = q("select hash from groups where uid = %d and gname = '%s' limit 1",
 							intval(local_channel()),
 							dbesc( t('Friends') )
 						);
@@ -537,7 +537,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				dbesc(datetime_convert()),
 				dbesc($channel['channel_hash'])
 			);
-			$r = q("update profile set name = '%s' where uid = %d and is_default = 1",
+			$r = q("update profile set fullname = '%s' where uid = %d and is_default = 1",
 				dbesc($username),
 				intval($channel['channel_id'])
 			);
@@ -562,7 +562,7 @@ class Settings extends \Zotlabs\Web\Controller {
 			
 	
 	
-		function get() {
+	function get() {
 	
 		$o = '';
 		nav_set_selected('settings');

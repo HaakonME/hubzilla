@@ -1953,7 +1953,7 @@ function remove_community_tag($sender, $arr, $uid) {
 		return;
 	}
 
-	q("delete from term where uid = %d and oid = %d and otype = %d and type in  ( %d, %d ) and term = '%s' and url = '%s'",
+	q("delete from term where uid = %d and oid = %d and otype = %d and ttype in  ( %d, %d ) and term = '%s' and url = '%s'",
 		intval($uid),
 		intval($r[0]['id']),
 		intval(TERM_OBJ_POST),
@@ -3051,7 +3051,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	}
 
 	if($groups_changed) {
-		$r = q("select hash as collection, visible, deleted, name from groups where uid = %d",
+		$r = q("select hash as collection, visible, deleted, gname as name from groups where uid = %d",
 			intval($uid)
 		);
 		if($r)
@@ -3344,10 +3344,10 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						}
 					}
 					if($found) {
-						if(($y['name'] != $cl['name'])
+						if(($y['gname'] != $cl['name'])
 							|| ($y['visible'] != $cl['visible'])
 							|| ($y['deleted'] != $cl['deleted'])) {
-							q("update groups set name = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d",
+							q("update groups set gname = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d",
 								dbesc($cl['name']),
 								intval($cl['visible']),
 								intval($cl['deleted']),
@@ -3363,7 +3363,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					}
 				}
 				if(! $found) {
-					$r = q("INSERT INTO `groups` ( hash, uid, visible, deleted, name )
+					$r = q("INSERT INTO `groups` ( hash, uid, visible, deleted, gname )
 						VALUES( '%s', %d, %d, %d, '%s' ) ",
 						dbesc($cl['collection']),
 						intval($channel['channel_id']),
@@ -3470,7 +3470,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('profile',$arr) && is_array($arr['profile']) && count($arr['profile'])) {
 
-			$disallowed = array('id','aid','uid');
+			$disallowed = array('id','aid','uid','guid');
 
 			foreach($arr['profile'] as $profile) {
 				$x = q("select * from profile where profile_guid = '%s' and uid = %d limit 1",
@@ -3494,13 +3494,22 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				foreach($profile as $k => $v) {
 					if(in_array($k,$disallowed))
 						continue;
+					
+					if($k === 'name')
+						$clean['fullname'] = $v;
+					elseif($k === 'with')
+						$clean['partner'] = $v;
+					elseif($k === 'work')
+						$clean['employment'] = $v;
+					elseif(array_key_exists($k,$x[0]))
+						$clean[$k] = $v;
 
-					$clean[$k] = $v;
 					/**
-					 * @TODO check if these are allowed, otherwise we'll error
+					 * @TODO 
 					 * We also need to import local photos if a custom photo is selected
 					 */
 				}
+
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
 						$r = dbq("UPDATE profile set `" . dbesc($k) . "` = '" . dbesc($v)

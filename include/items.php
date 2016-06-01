@@ -1182,8 +1182,8 @@ function encode_item_terms($terms,$mirror = false) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if(in_array($term['type'],$allowed_export_terms))
-				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['type']));
+			if(in_array($term['ttype'],$allowed_export_terms))
+				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'ttype' => termtype($term['type']));
 		}
 	}
 
@@ -1240,39 +1240,41 @@ function decode_tags($t) {
 		$ret = array();
 		foreach($t as $x) {
 			$tag = array();
+			if(array_key_exists('type',$x))
+				$x['ttype'] = $x['type'];
 			$tag['term'] = htmlspecialchars($x['tag'], ENT_COMPAT, 'UTF-8', false);
 			$tag['url']  = htmlspecialchars($x['url'], ENT_COMPAT, 'UTF-8', false);
-			switch($x['type']) {
+			switch($x['ttype']) {
 				case 'hashtag':
-					$tag['type'] = TERM_HASHTAG;
+					$tag['ttype'] = TERM_HASHTAG;
 					break;
 				case 'mention':
-					$tag['type'] = TERM_MENTION;
+					$tag['ttype'] = TERM_MENTION;
 					break;
 				case 'category':
-					$tag['type'] = TERM_CATEGORY;
+					$tag['ttype'] = TERM_CATEGORY;
 					break;
 				case 'private_category':
-					$tag['type'] = TERM_PCATEGORY;
+					$tag['ttype'] = TERM_PCATEGORY;
 					break;
 				case 'file':
-					$tag['type'] = TERM_FILE;
+					$tag['ttype'] = TERM_FILE;
 					break;
 				case 'search':
-					$tag['type'] = TERM_SEARCH;
+					$tag['ttype'] = TERM_SEARCH;
 					break;
 				case 'thing':
-					$tag['type'] = TERM_THING;
+					$tag['ttype'] = TERM_THING;
 					break;
 				case 'bookmark':
-					$tag['type'] = TERM_BOOKMARK;
+					$tag['ttype'] = TERM_BOOKMARK;
 					break;
 				case 'communitytag':
-					$tag['type'] = TERM_COMMUNITYTAG;
+					$tag['ttype'] = TERM_COMMUNITYTAG;
 					break;
 				default:
 				case 'unknown':
-					$tag['type'] = TERM_UNKNOWN;
+					$tag['ttype'] = TERM_UNKNOWN;
 					break;
 			}
 			$ret[] = $tag;
@@ -1855,12 +1857,12 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	if(($terms) && (is_array($terms))) {
 		foreach($terms as $t) {
-			q("insert into term (uid,oid,otype,type,term,url)
+			q("insert into term (uid,oid,otype,ttype,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
 				intval($arr['uid']),
 				intval($current_post),
 				intval(TERM_OBJ_POST),
-				intval($t['type']),
+				intval($t['ttype']),
 				dbesc($t['term']),
 				dbesc($t['url'])
 			);
@@ -2134,12 +2136,12 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	if(is_array($terms)) {
 		foreach($terms as $t) {
-			q("insert into term (uid,oid,otype,type,term,url)
+			q("insert into term (uid,oid,otype,ttype,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
 				intval($uid),
 				intval($orig_post_id),
 				intval(TERM_OBJ_POST),
-				intval($t['type']),
+				intval($t['ttype']),
 				dbesc($t['term']),
 				dbesc($t['url'])
 			);
@@ -2720,7 +2722,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 					foreach($tags as $tt) {
 						$tt = trim($tt);
 						if($tt) {
-            				q("insert into term (uid,oid,otype,type,term,url)
+            				q("insert into term (uid,oid,otype,ttype,term,url)
                 				values(%d,%d,%d,%d,'%s','%s') ",
                 				intval($channel['channel_id']),
 				                intval($item_id),
@@ -2863,7 +2865,7 @@ function check_item_source($uid, $item) {
 		foreach($words as $word) {
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['ttype'] == TERM_HASHTAG) || ($t['ttype'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -2916,7 +2918,7 @@ function post_is_importable($item,$abook) {
 				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['ttype'] == TERM_HASHTAG) || ($t['ttype'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return false;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -2937,7 +2939,7 @@ function post_is_importable($item,$abook) {
 				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['ttype'] == TERM_HASHTAG) || ($t['ttype'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -3214,7 +3216,7 @@ function item_getfeedtags($item) {
 
 	if(count($terms)) {
 		foreach($terms as $term) {
-			if(($term['type'] == TERM_HASHTAG) || ($term['type'] == TERM_COMMUNITYTAG))
+			if(($term['ttype'] == TERM_HASHTAG) || ($term['ttype'] == TERM_COMMUNITYTAG))
 				$ret[] = array('#',$term['url'],$term['term']);
 			else
 				$ret[] = array('@',$term['url'],$term['term']);
@@ -3685,7 +3687,7 @@ function fetch_post_tags($items,$link = false) {
 	for($x = 0; $x < count($items); $x ++) {
 		if($tags) {
 			foreach($tags as $t) {
-				if(($link) && ($t['type'] == TERM_MENTION))
+				if(($link) && ($t['ttype'] == TERM_MENTION))
 					$t['url'] = chanlink_url($t['url']);
 				if(array_key_exists('item_id',$items[$x])) {
 					if($t['oid'] == $items[$x]['item_id']) {
@@ -3895,8 +3897,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		}
 
 		$contact_str = '';
-		/** @FIXME $group is undefined */
-		$contacts = group_get_members($group);
+
+		$contacts = group_get_members($r[0]['id']);
 		if ($contacts) {
 			foreach($contacts as $c) {
 				if($contact_str)
@@ -3913,7 +3915,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent $item_normal ) ";
 
 		$x = group_rec_byhash($uid,$r[0]['hash']);
-		$result['headline'] = sprintf( t('Privacy group: %s'),$x['name']);
+		$result['headline'] = sprintf( t('Privacy group: %s'),$x['gname']);
 	}
 	elseif($arr['cid'] && $uid) {
 

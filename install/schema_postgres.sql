@@ -445,7 +445,7 @@ CREATE TABLE "groups" (
   "uid" bigint  NOT NULL,
   "visible" numeric(1) NOT NULL DEFAULT '0',
   "deleted" numeric(1) NOT NULL DEFAULT '0',
-  "name" text NOT NULL,
+  "gname" text NOT NULL,
   PRIMARY KEY ("id")
 
 );
@@ -968,7 +968,7 @@ CREATE TABLE "profile" (
   "profile_name" text NOT NULL,
   "is_default" numeric(1) NOT NULL DEFAULT '0',
   "hide_friends" numeric(1) NOT NULL DEFAULT '0',
-  "name" text NOT NULL,
+  "fullname" text NOT NULL,
   "pdesc" text NOT NULL DEFAULT '',
   "chandesc" text NOT NULL DEFAULT '',
   "dob" varchar(32) NOT NULL DEFAULT '',
@@ -981,7 +981,7 @@ CREATE TABLE "profile" (
   "hometown" text NOT NULL DEFAULT '',
   "gender" varchar(32) NOT NULL DEFAULT '',
   "marital" text NOT NULL DEFAULT '',
-  "with" text NOT NULL DEFAULT '',
+  "partner" text NOT NULL DEFAULT '',
   "howlong" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "sexual" text NOT NULL DEFAULT '',
   "politic" text NOT NULL DEFAULT '',
@@ -997,7 +997,7 @@ CREATE TABLE "profile" (
   "film" text NOT NULL DEFAULT '',
   "interest" text NOT NULL DEFAULT '',
   "romance" text NOT NULL DEFAULT '',
-  "work" text NOT NULL DEFAULT '',
+  "employment" text NOT NULL DEFAULT '',
   "education" text NOT NULL DEFAULT '',
   "contact" text NOT NULL DEFAULT '',
   "channels" text NOT NULL DEFAULT '',
@@ -1137,7 +1137,7 @@ CREATE TABLE "term" (
   "uid" bigint  NOT NULL DEFAULT '0',
   "oid" bigint  NOT NULL,
   "otype" numeric(3)  NOT NULL,
-  "type" numeric(3)  NOT NULL,
+  "ttype" numeric(3)  NOT NULL,
   "term" text NOT NULL,
   "url" text NOT NULL,
   "imgurl" text NOT NULL DEFAULT '',
@@ -1147,7 +1147,7 @@ CREATE TABLE "term" (
 );
 create index "term_oid" on term ("oid");
 create index "term_otype" on term ("otype");
-create index "term_type" on term ("type");
+create index "term_ttype" on term ("ttype");
 create index "term_term" on term ("term");
 create index "term_uid" on term ("uid");
 create index "term_aid" on term ("aid");

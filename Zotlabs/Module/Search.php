@@ -79,7 +79,7 @@ class Search extends \Zotlabs\Web\Controller {
 			return $o;
 	
 		if($tag) {
-			$sql_extra = sprintf(" AND `item`.`id` IN (select `oid` from term where otype = %d and type in ( %d , %d) and term = '%s') ",
+			$sql_extra = sprintf(" AND `item`.`id` IN (select `oid` from term where otype = %d and ttype in ( %d , %d) and term = '%s') ",
 				intval(TERM_OBJ_POST),
 				intval(TERM_HASHTAG),
 				intval(TERM_COMMUNITYTAG),

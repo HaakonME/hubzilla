@@ -20,7 +20,6 @@ function ACL(backend_url, preset) {
 	that.onlyme       = $("#acl-onlyme");
 	that.showlimited  = $("#acl-showlimited");
 	that.acl_select   = $("#acl-select");
-	that.showacl      = $("#show-acl");
 
 	that.preset = preset;
 	that.self = [];
@@ -250,7 +249,6 @@ ACL.prototype.update_view = function(value) {
 
 	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0) {
 		that.list.hide(); //hide acl-list
-		that.showacl.hide(); //hide showacl button
 		that.info.show(); //show acl-info
 		that.update_select('public');
 
@@ -263,7 +261,6 @@ ACL.prototype.update_view = function(value) {
 	// if value != 'onlyme' we should fall through this one
 	else if (that.allow_gid.length === 0 && that.allow_cid.length === 1 && that.allow_cid[0] === that.self[0] && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value === 'onlyme') {
 		that.list.hide(); //hide acl-list if
-		that.showacl.show(); //show showacl button
 		that.info.hide(); //show acl-info
 		that.update_select('onlyme');
 
@@ -274,7 +271,6 @@ ACL.prototype.update_view = function(value) {
 
 	else {
 		that.list.show(); //show acl-list
-		that.showacl.hide(); //hide showacl button
 		that.info.hide(); //hide acl-info
 		that.update_select('limited');
 

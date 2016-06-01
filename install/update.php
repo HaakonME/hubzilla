@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1168 );
+define( 'UPDATE_VERSION' , 1173 );
 
 /**
  *
@@ -2096,4 +2096,93 @@ function update_r1167() {
 	if($r1 && $r2 && $r3 && $r4)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+function update_r1168() {
+
+	$r1 = q("alter table obj add obj_quantity int not null default '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r2 = q("create index \"obj_quantity_idx\" on obj (\"obj_quantity\") "); 
+	}
+	else { 
+		$r2 = q("alter table obj add index ( obj_quantity ) ");
+	}
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1169() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("ALTER TABLE `addon` CHANGE `timestamp` `tstamp` numeric( 20 ) UNSIGNED NOT NULL DEFAULT '0' ");
+		$r2 = q("ALTER TABLE `addon` CHANGE `name` `aname` text NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE `hook` CHANGE `function` `fn` text NOT NULL DEFAULT '' ");
+
+	}
+	else {
+		$r1 = q("ALTER TABLE `addon` CHANGE `timestamp` `tstamp` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' ");
+		$r2 = q("ALTER TABLE `addon` CHANGE `name` `aname` CHAR(255) NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE `hook` CHANGE `function` `fn` CHAR(255) NOT NULL DEFAULT '' ");
+	}
+
+	if($r1 && $r2 && $r3)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1170() {
+
+	$r1 = q("drop table fcontact");	
+	$r2 = q("drop table ffinder");	
+	$r3 = q("drop table fserver");	
+	$r4 = q("drop table fsuggest");	
+	$r5 = q("drop table spam");	
+
+	if($r1 && $r2 && $r3 && $r4 && $r5)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1171() {
+
+		$r1 = q("ALTER TABLE verify CHANGE `type` `vtype` varchar(32) NOT NULL DEFAULT '' ");
+		$r2 = q("ALTER TABLE tokens CHANGE `scope` `auth_scope` varchar(512) NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE auth_codes CHANGE `scope` `auth_scope` varchar(512) NOT NULL DEFAULT '' ");
+		$r4 = q("ALTER TABLE clients CHANGE `name` `clname` TEXT ");
+		$r5 = q("ALTER TABLE session CHANGE `data` `sess_data` TEXT NOT NULL ");
+		$r6 = q("ALTER TABLE register CHANGE `language` `lang` varchar(16) NOT NULL DEFAULT '' ");
+
+	if($r1 && $r2 && $r3 && $r4 && $r5 && $r6)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+
+
+}
+
+function update_r1172() {
+
+	$r1 = q("ALTER TABLE term CHANGE `type` `ttype` int(3) NOT NULL DEFAULT '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r2 = q("ALTER TABLE groups CHANGE `name` `gname` TEXT NOT NULL ");
+		$r3 = q("ALTER TABLE profile CHANGE `name` `fullname` TEXT NOT NULL ");
+		$r4 = q("ALTER TABLE profile CHANGE `with` `partner` TEXT NOT NULL ");
+		$r5 = q("ALTER TABLE profile CHANGE `work` `employment` TEXT NOT NULL ");
+	}
+	else {
+		$r2 = q("ALTER TABLE groups CHANGE `name` `gname` char(255) NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE profile CHANGE `name` `fullname` char(255) NOT NULL DEFAULT '' ");
+		$r4 = q("ALTER TABLE profile CHANGE `with` `partner` char(255) NOT NULL DEFAULT '' ");
+		$r5 = q("ALTER TABLE profile CHANGE `work` `employment` TEXT NOT NULL ");
+	}
+	if($r1 && $r2 && $r3 && $r4 && $r5)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
 }

@@ -41,10 +41,10 @@ class Contactgroup extends \Zotlabs\Web\Controller {
 	
 			if($change) {
 				if(in_array($change,$preselected)) {
-					group_rmv_member(local_channel(),$group['name'],$change);
+					group_rmv_member(local_channel(),$group['gname'],$change);
 				}
 				else {
-					group_add_member(local_channel(),$group['name'],$change);
+					group_add_member(local_channel(),$group['gname'],$change);
 				}
 			}
 		}

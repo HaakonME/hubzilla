@@ -229,7 +229,7 @@ function verify_email_address($arr) {
 
 	$hash = random_string();
 
-	$r = q("INSERT INTO register ( hash, created, uid, password, language ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
+	$r = q("INSERT INTO register ( hash, created, uid, password, lang ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
 		dbesc($hash),
 		dbesc(datetime_convert()),
 		intval($arr['account']['account_id']),
@@ -283,7 +283,7 @@ function send_reg_approval_email($arr) {
 
 	$hash = random_string();
 
-	$r = q("INSERT INTO register ( hash, created, uid, password, language ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
+	$r = q("INSERT INTO register ( hash, created, uid, password, lang ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
 		dbesc($hash),
 		dbesc(datetime_convert()),
 		intval($arr['account']['account_id']),
@@ -387,7 +387,7 @@ function account_allow($hash) {
 		intval($register[0]['uid'])
 	);
 
-	push_lang($register[0]['language']);
+	push_lang($register[0]['lang']);
 
 	$email_tpl = get_intltext_template("register_open_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
@@ -656,7 +656,8 @@ function account_service_class_allows($aid, $property, $usage = false) {
  * @todo Should we merge this with account_service_class_fetch()?
  */
 function service_class_fetch($uid, $property) {
-	$a = get_app();
+
+
 	if($uid == local_channel()) {
 		$service_class = App::$account['account_service_class'];
 	}

@@ -45,10 +45,10 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.7.1' );
+define ( 'STD_VERSION',             '1.7.2' );
 define ( 'ZOT_REVISION',            1.1     );
 
-define ( 'DB_UPDATE_VERSION',       1168  );
+define ( 'DB_UPDATE_VERSION',       1173  );
 
 
 /**
@@ -579,6 +579,72 @@ define ( 'ITEM_IS_STICKY',       1000 );
 define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );
 
+
+function sys_boot() {
+
+	// our central App object
+
+	App::init();
+
+	/*
+	 * Load the configuration file which contains our DB credentials.
+	 * Ignore errors. If the file doesn't exist or is empty, we are running in
+	 * installation mode.
+	 */
+
+	// miniApp is a conversion object from old style .htconfig.php files
+
+	$a = new miniApp;
+
+
+	App::$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
+
+	@include('.htconfig.php');
+
+	if(! defined('UNO'))
+		define('UNO', 0);
+
+	if(array_key_exists('default_timezone',get_defined_vars())) {
+		App::$config['system']['timezone'] = $default_timezone;
+	}
+
+	$a->convert();
+
+	App::$timezone = ((App::$config['system']['timezone']) ? App::$config['system']['timezone'] : 'UTC');
+	date_default_timezone_set(App::$timezone);
+
+
+	/*
+	 * Try to open the database;
+	 */
+
+	require_once('include/dba/dba_driver.php');
+
+	if(! App::$install) {
+		DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, App::$install);
+		if(! DBA::$dba->connected) {
+			system_unavailable();
+		}
+
+		unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
+
+		/**
+		 * Load configs from db. Overwrite configs from .htconfig.php
+		 */
+
+		load_config('config');
+		load_config('system');
+		load_config('feature');
+
+		App::$session = new Zotlabs\Web\Session();
+		App::$session->init();
+		load_hooks();
+		call_hooks('init_1');
+	}
+
+}
+
+
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
@@ -625,7 +691,7 @@ function startup() {
 class ZotlabsAutoloader {
     static public function loader($className) {
         $filename = str_replace('\\', '/', $className) . ".php";
-        if (file_exists($filename)) {
+        if(file_exists($filename)) {
             include($filename);
             if (class_exists($className)) {
                 return TRUE;
@@ -636,7 +702,7 @@ class ZotlabsAutoloader {
 			if(! $arr[0])
 				$arr = array_shift($arr);
 	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . $arr[1] . ((count($arr) === 2) ? '.php' : '/' . $arr[2] . ".php");
-    	    if (file_exists($filename)) {
+    	    if(file_exists($filename)) {
         	    include($filename);
             	if (class_exists($className)) {
                 	return TRUE;
@@ -1197,7 +1263,6 @@ class App {
  * @return App
  */
 function get_app() {
-	global $a;
 	return $a;
 }
 
@@ -1247,7 +1312,6 @@ function system_unavailable() {
 
 
 function clean_urls() {
-	global $a;
 
 	//	if(App::$config['system']['clean_urls'])
 	return true;
@@ -1255,8 +1319,6 @@ function clean_urls() {
 }
 
 function z_path() {
-	global $a;
-
 	$base = z_root();
 	if(! clean_urls())
 		$base .= '/?q=';
@@ -1272,7 +1334,6 @@ function z_path() {
  * @return string
  */
 function z_root() {
-	global $a;
 	return App::get_baseurl();
 }
 
@@ -1461,11 +1522,11 @@ function check_config(&$a) {
 
 	if(count($installed)) {
 		foreach($installed as $i) {
-			if(! in_array($i['name'], $plugins_arr)) {
-				unload_plugin($i['name']);
+			if(! in_array($i['aname'], $plugins_arr)) {
+				unload_plugin($i['aname']);
 			}
 			else {
-				$installed_arr[] = $i['name'];
+				$installed_arr[] = $i['aname'];
 			}
 		}
 	}
@@ -1604,7 +1665,6 @@ function fix_system_urls($oldurl, $newurl) {
 // returns the complete html for inserting into the page
 
 function login($register = false, $form_id = 'main-login', $hiddens=false) {
-	$a = get_app();
 	$o = '';
 	$reg = false;
 	$reglink = get_config('system', 'register_link');
@@ -1674,9 +1734,7 @@ function goaway($s) {
 }
 
 function shutdown() {
-	global $db;
-	if(is_object($db) && $db->connected)
-		$db->close();
+
 }
 
 /**
@@ -1710,7 +1768,9 @@ function get_account_id() {
  * @return int|bool channel_id or false
  */
 function local_channel() {
-	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'uid')))
+	if(session_id() 
+		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated'] 
+		&& array_key_exists('uid',$_SESSION) && intval($_SESSION['uid']))
 		return intval($_SESSION['uid']);
 
 	return false;
@@ -1741,7 +1801,9 @@ function local_user() {
  * @return string|bool visitor_id or false
  */
 function remote_channel() {
-	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'visitor_id')))
+	if(session_id() 
+		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated'] 
+		&& array_key_exists('visitor_id',$_SESSION) && $_SESSION['visitor_id'])
 		return $_SESSION['visitor_id'];
 
 	return false;
@@ -1766,7 +1828,9 @@ function remote_user() {
  * @param string $s Text to display
  */
 function notice($s) {
-	$a = get_app();
+	if(! session_id())
+		return;
+
 	if(! x($_SESSION, 'sysmsg')) $_SESSION['sysmsg'] = array();
 
 	// ignore duplicated error messages which haven't yet been displayed 
@@ -1790,8 +1854,10 @@ function notice($s) {
  * @param string $s Text to display
  */
 function info($s) {
-	$a = get_app();
-	if(! x($_SESSION, 'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
+	if(! session_id())
+		return;
+	if(! x($_SESSION, 'sysmsg_info')) 
+		$_SESSION['sysmsg_info'] = array();
 	if(App::$interactive)
 		$_SESSION['sysmsg_info'][] = $s;
 }
@@ -1877,6 +1943,10 @@ function proc_run(){
  * @brief Checks if we are running on M$ Windows.
  *
  * @return bool true if we run on M$ Windows
+ *
+ * It's possible you might be able to run on WAMP or XAMPP, and this
+ * has been accomplished, but is not officially supported. Good luck. 
+ * 
  */
 function is_windows() {
 	return ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? true : false);
@@ -1891,7 +1961,9 @@ function is_windows() {
  */
 
 function is_site_admin() {
-	$a = get_app();
+
+	if(! session_id())
+		return false;
 
 	if($_SESSION['delegate'])
 		return false;
@@ -1912,7 +1984,10 @@ function is_site_admin() {
  * @return bool true if user is a developer
  */
 function is_developer() {
-	$a = get_app();
+
+	if(! session_id())
+		return false;
+
 	if((intval($_SESSION['authenticated']))
 		&& (is_array(App::$account))
 		&& (App::$account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
@@ -1923,7 +1998,6 @@ function is_developer() {
 
 
 function load_contact_links($uid) {
-	$a = get_app();
 
 	$ret = array();
 
@@ -1932,7 +2006,7 @@ function load_contact_links($uid) {
 
 //	logger('load_contact_links');
 
-	$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d ",
+	$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d ",
 		intval($uid)
 	);
 	if($r) {
@@ -1955,6 +2029,7 @@ function load_contact_links($uid) {
  *
  * @return string
  */
+
 function build_querystring($params, $name = null) {
 	$ret = '';
 	foreach($params as $key => $val) {
@@ -1997,8 +2072,9 @@ function dba_timer() {
 /**
  * @brief Returns xchan_hash from the observer.
  *
- * @return string Empty if no observer, otherwise xchan_hash from observer
+ * @return empty string if no observer, otherwise xchan_hash from observer
  */
+
 function get_observer_hash() {
 	$observer = App::get_observer();
 	if(is_array($observer))
@@ -2055,8 +2131,6 @@ function load_pdl(&$a) {
 
 	App::$comanche = new Zotlabs\Render\Comanche();
 
-	//	require_once('include/comanche.php');
-
 	if (! count(App::$layout)) {
 
 		$arr = array('module' => App::$module, 'layout' => '');
@@ -2077,13 +2151,10 @@ function load_pdl(&$a) {
 			App::$pdl = $s;
 		}
 	}
-
 }
 
 
 function exec_pdl(&$a) {
-//	require_once('include/comanche.php');
-
 	if(App::$pdl) {
 		App::$comanche->parse(App::$pdl,1);
 	}
@@ -2241,7 +2312,6 @@ function appdirpath() {
  * @param string $icon
  */
 function head_set_icon($icon) {
-	global $a;
 
 	App::$data['pageicon'] = $icon;
 //	logger('head_set_icon: ' . $icon);
@@ -2253,7 +2323,6 @@ function head_set_icon($icon) {
  * @return string absolut path to pageicon
  */
 function head_get_icon() {
-	global $a;
 
 	$icon = App::$data['pageicon'];
 	if(! strpos($icon, '://'))
@@ -2319,7 +2388,7 @@ function z_get_temp_dir() {
 }
 
 function z_check_cert() {
-	$a = get_app();
+
 	if(strpos(z_root(),'https://') !== false) {
 		$x = z_fetch_url(z_root() . '/siteinfo/json');
 		if(! $x['success']) {
@@ -2339,8 +2408,6 @@ function z_check_cert() {
  * certificate.
  */
 function cert_bad_email() {
-
-	$a = get_app();
 
 	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
@@ -2362,25 +2429,29 @@ function cert_bad_email() {
  */
 function check_cron_broken() {
 
-	$t = get_config('system','lastpollcheck');
+	$d = get_config('system','lastcron');
+	
+	if((! $d) || ($d < datetime_convert('UTC','UTC','now - 4 hours'))) {
+		Zotlabs\Daemon\Master::Summon(array('Cron'));
+	}
+
+	$t = get_config('system','lastcroncheck');
 	if(! $t) {
 		// never checked before. Start the timer.
-		set_config('system','lastpollcheck',datetime_convert());
+		set_config('system','lastcroncheck',datetime_convert());
 		return;
 	}
+
 	if($t > datetime_convert('UTC','UTC','now - 3 days')) {
 		// Wait for 3 days before we do anything so as not to swamp the admin with messages
 		return;
 	}
 
-	$d = get_config('system','lastpoll');
 	if(($d) && ($d > datetime_convert('UTC','UTC','now - 3 days'))) {
 		// Scheduled tasks have run successfully in the last 3 days.
-		set_config('system','lastpollcheck',datetime_convert());
+		set_config('system','lastcroncheck',datetime_convert());
 		return;
 	}
-
-	$a = get_app();
 
 	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
@@ -2395,7 +2466,6 @@ function check_cron_broken() {
 		'From: Administrator' . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' );
-	set_config('system','lastpollcheck',datetime_convert());
 	return;
 }
 

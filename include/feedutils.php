@@ -515,7 +515,7 @@ function get_atom_elements($feed, $item, &$author) {
 			if($termterm) {
 				$terms[] = array(
 					'otype' => TERM_OBJ_POST,
-					'type'  => $termtype,
+					'ttype'  => $termtype,
 					'url'   => $termurl,
 					'term'  => $termterm,
 				);

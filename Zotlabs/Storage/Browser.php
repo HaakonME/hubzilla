@@ -256,6 +256,7 @@ class Browser extends DAV\Browser\Plugin {
 				$func($a);
 			}
 		}
+		$this->server->httpResponse->setHeader('Content-Security-Policy', "script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'");
 		construct_page($a);
 	}
 

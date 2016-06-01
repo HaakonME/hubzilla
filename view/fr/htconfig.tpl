@@ -29,7 +29,7 @@ define( 'UNO', {{$uno}} );
 // Choisissez votre emplacement géographique. Si vous n'êtes pas certain, utilisez "America/Los_Angeles".
 // Vous pourrez le changer plus tard et ce réglage n'affecte que les visiteurs anonymes.
 
-$default_timezone = '{{$timezone}}';
+App::$config['system']['timezone'] = '{{$timezone}}';
 
 // Quel sera le nom de votre site?
 

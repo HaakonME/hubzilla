@@ -26,9 +26,6 @@
 [zrl=[baseurl]/help/git_for_non_developers]Git per a No-Desenvolupadors[/zrl]
 [zrl=[baseurl]/help/dev_beginner]Manual pas-a-pas per a desenvolupadors principiants[/zrl]
 
-[h3]Preguntes Més Freqüents (FAQ) Per Desenvolupadors[/h3]
-[zrl=[baseurl]/help/faq_developers]FAQ Per Desenvoupadors[/zrl]
-
 [h3]Recursos Externs[/h3]
 [url=https://zothub.com/channel/one]Development Channel[/url]
 [url=https://federated.social/channel/postgres]Postgres-specific $Projectname Admin Support Channel[/url]

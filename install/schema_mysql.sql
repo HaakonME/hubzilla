@@ -96,15 +96,15 @@ CREATE TABLE IF NOT EXISTS `account` (
 
 CREATE TABLE IF NOT EXISTS `addon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(255) NOT NULL DEFAULT '',
+  `aname` char(255) NOT NULL DEFAULT '',
   `version` char(255) NOT NULL DEFAULT '',
   `installed` tinyint(1) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
-  `timestamp` bigint(20) NOT NULL DEFAULT '0',
+  `tstamp` bigint(20) NOT NULL DEFAULT '0',
   `plugin_admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `hidden` (`hidden`),
-  KEY `name` (`name`),
+  KEY `aname` (`aname`),
   KEY `installed` (`installed`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `auth_codes` (
   `client_id` varchar(20) NOT NULL DEFAULT '',
   `redirect_uri` varchar(200) NOT NULL DEFAULT '',
   `expires` int(11) NOT NULL DEFAULT '0',
-  `scope` varchar(250) NOT NULL DEFAULT '',
+  `auth_scope` varchar(512) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `client_id` varchar(20) NOT NULL DEFAULT '',
   `pw` varchar(20) NOT NULL DEFAULT '',
   `redirect_uri` varchar(200) NOT NULL DEFAULT '',
-  `name` text,
+  `clname` text,
   `icon` text,
   `uid` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`client_id`)
@@ -434,74 +434,19 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `event_priority` (`event_priority`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `fcontact` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `url` char(255) NOT NULL,
-  `name` char(255) NOT NULL,
-  `photo` char(255) NOT NULL,
-  `request` char(255) NOT NULL,
-  `nick` char(255) NOT NULL,
-  `addr` char(255) NOT NULL,
-  `batch` char(255) NOT NULL,
-  `notify` char(255) NOT NULL,
-  `poll` char(255) NOT NULL,
-  `confirm` char(255) NOT NULL,
-  `priority` tinyint(1) NOT NULL,
-  `network` char(32) NOT NULL,
-  `alias` char(255) NOT NULL,
-  `pubkey` text NOT NULL,
-  `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `addr` (`addr`),
-  KEY `network` (`network`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `ffinder` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` int(10) unsigned NOT NULL,
-  `cid` int(10) unsigned NOT NULL,
-  `fid` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `cid` (`cid`),
-  KEY `fid` (`fid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `fserver` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `server` char(255) NOT NULL DEFAULT '',
-  `posturl` char(255) NOT NULL DEFAULT '',
-  `key` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `server` (`server`),
-  KEY `posturl` (`posturl`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `fsuggest` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL DEFAULT '0',
-  `cid` int(11) NOT NULL DEFAULT '0',
-  `name` char(255) NOT NULL DEFAULT '',
-  `url` char(255) NOT NULL DEFAULT '',
-  `request` char(255) NOT NULL DEFAULT '',
-  `photo` char(255) NOT NULL DEFAULT '',
-  `note` text NOT NULL,
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `groups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hash` char(255) NOT NULL DEFAULT '',
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  `name` char(255) NOT NULL DEFAULT '',
+  `gname` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `visible` (`visible`),
   KEY `deleted` (`deleted`),
-  KEY `hash` (`hash`)
+  KEY `hash` (`hash`),
+  KEY `gname` (`gname`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `group_member` (
@@ -519,7 +464,7 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hook` char(255) NOT NULL DEFAULT '',
   `file` char(255) NOT NULL DEFAULT '',
-  `function` char(255) NOT NULL DEFAULT '',
+  `fn` char(255) NOT NULL DEFAULT '',
   `priority` int(11) unsigned NOT NULL DEFAULT '0',
   `hook_version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -883,6 +828,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   `obj_imgurl` char(255) NOT NULL DEFAULT '',
   `obj_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `obj_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `obj_quantity` int(11) NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -897,6 +843,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   KEY `obj_imgurl` (`obj_imgurl`),
   KEY `obj_created` (`obj_created`),
   KEY `obj_edited` (`obj_edited`),
+  KEY `obj_quantity` (`obj_quantity`),
   KEY `obj_obj` (`obj_obj`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1033,7 +980,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `profile_name` char(255) NOT NULL DEFAULT '',
   `is_default` tinyint(1) NOT NULL DEFAULT '0',
   `hide_friends` tinyint(1) NOT NULL DEFAULT '0',
-  `name` char(255) NOT NULL DEFAULT '',
+  `fullname` char(255) NOT NULL DEFAULT '',
   `pdesc` char(255) NOT NULL DEFAULT '',
   `chandesc` text NOT NULL,
   `dob` char(32) NOT NULL DEFAULT '0000-00-00',
@@ -1046,7 +993,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `hometown` char(255) NOT NULL DEFAULT '',
   `gender` char(32) NOT NULL DEFAULT '',
   `marital` char(255) NOT NULL DEFAULT '',
-  `with` text NOT NULL,
+  `partner` text NOT NULL,
   `howlong` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `sexual` char(255) NOT NULL DEFAULT '',
   `politic` char(255) NOT NULL DEFAULT '',
@@ -1062,7 +1009,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `film` text NOT NULL,
   `interest` text NOT NULL,
   `romance` text NOT NULL,
-  `work` text NOT NULL,
+  `employment` text NOT NULL,
   `education` text NOT NULL,
   `contact` text NOT NULL,
   `channels` text NOT NULL,
@@ -1108,7 +1055,7 @@ CREATE TABLE IF NOT EXISTS `register` (
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `password` char(255) NOT NULL DEFAULT '',
-  `language` char(16) NOT NULL DEFAULT '',
+  `lang` char(16) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `hash` (`hash`),
   KEY `created` (`created`),
@@ -1118,7 +1065,7 @@ CREATE TABLE IF NOT EXISTS `register` (
 CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `sid` char(255) NOT NULL DEFAULT '',
-  `data` text NOT NULL,
+  `sess_data` text NOT NULL,
   `expire` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`),
@@ -1192,20 +1139,6 @@ CREATE TABLE IF NOT EXISTS `source` (
   KEY `src_xchan` (`src_xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `spam` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL DEFAULT '0',
-  `spam` int(11) NOT NULL DEFAULT '0',
-  `ham` int(11) NOT NULL DEFAULT '0',
-  `term` char(255) NOT NULL DEFAULT '',
-  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `spam` (`spam`),
-  KEY `ham` (`ham`),
-  KEY `term` (`term`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `sys_perms` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cat` char(255) NOT NULL DEFAULT '',
@@ -1221,7 +1154,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `oid` int(10) unsigned NOT NULL DEFAULT '0',
   `otype` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `ttype` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `term` char(255) NOT NULL DEFAULT '',
   `url` char(255) NOT NULL DEFAULT '',
   `imgurl` char(255) NOT NULL DEFAULT '',
@@ -1230,7 +1163,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   PRIMARY KEY (`tid`),
   KEY `oid` (`oid`),
   KEY `otype` (`otype`),
-  KEY `type` (`type`),
+  KEY `ttype` (`ttype`),
   KEY `term` (`term`),
   KEY `uid` (`uid`),
   KEY `aid` (`aid`),
@@ -1244,7 +1177,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `secret` text NOT NULL,
   `client_id` varchar(20) NOT NULL DEFAULT '',
   `expires` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `scope` varchar(200) NOT NULL DEFAULT '',
+  `auth_scope` varchar(512) NOT NULL DEFAULT '',
   `uid` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `client_id` (`client_id`),
@@ -1272,13 +1205,13 @@ CREATE TABLE IF NOT EXISTS `updates` (
 CREATE TABLE IF NOT EXISTS `verify` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel` int(10) unsigned NOT NULL DEFAULT '0',
-  `type` char(32) NOT NULL DEFAULT '',
+  `vtype` char(32) NOT NULL DEFAULT '',
   `token` char(255) NOT NULL DEFAULT '',
   `meta` char(255) NOT NULL DEFAULT '',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `channel` (`channel`),
-  KEY `type` (`type`),
+  KEY `vtype` (`vtype`),
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)

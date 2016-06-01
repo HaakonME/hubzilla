@@ -368,7 +368,7 @@ require_once('include/api_auth.php');
 		else
 			$redirect = trim($_REQUEST['redirect_uris']);
 		$icon = trim($_REQUEST['logo_uri']);
-		$r = q("INSERT INTO clients (client_id, pw, name, redirect_uri, icon, uid)
+		$r = q("INSERT INTO clients (client_id, pw, clname, redirect_uri, icon, uid)
 			VALUES ('%s','%s','%s','%s','%s',%d)",
 			dbesc($key),
 			dbesc($secret),
@@ -450,8 +450,6 @@ require_once('include/api_auth.php');
 	 *  load api $templatename for $type and replace $data array
 	 */
 	function api_apply_template($templatename, $type, $data){
-
-		$a = get_app();
 
 		switch($type){
 			case "atom":
@@ -1904,7 +1902,6 @@ require_once('include/api_auth.php');
 
 		//logger('api_format_items: ' . print_r($user_info,true));
 
-		$a = get_app();
 		$ret = array();
 
 		if(! $r)

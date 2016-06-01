@@ -521,7 +521,7 @@ function guess_image_type($filename, $headers = '') {
 	logger('Photo: guess_image_type: '.$filename . ($headers?' from curl headers':''), LOGGER_DEBUG);
 	$type = null;
 	if ($headers) {
-		$a = get_app();
+
 		$hdrs=array();
 		$h = explode("\n",$headers);
 		foreach ($h as $l) {
@@ -579,8 +579,6 @@ function guess_image_type($filename, $headers = '') {
 }
 
 function import_xchan_photo($photo,$xchan,$thing = false) {
-
-	$a = get_app();
 
 	$flags = (($thing) ? PHOTO_THING : PHOTO_XCHAN);
 	$album = (($thing) ? 'Things' : 'Contact Photos');
@@ -702,8 +700,6 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 
 
 function import_channel_photo($photo,$type,$aid,$uid) {
-
-	$a = get_app();
 
 	logger('import_channel_photo: importing channel photo for ' . $uid, LOGGER_DEBUG);
 

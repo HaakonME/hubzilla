@@ -243,7 +243,7 @@ class Chat extends \Zotlabs\Web\Controller {
 		$rooms = Zlib\Chatroom::roomlist(\App::$profile['profile_uid']);
 	
 		$o .= replace_macros(get_markup_template('chatrooms.tpl'), array(
-			'$header' => sprintf( t('%1$s\'s Chatrooms'), \App::$profile['name']),
+			'$header' => sprintf( t('%1$s\'s Chatrooms'), \App::$profile['fullname']),
 			'$name' => t('Name'),
 			'$baseurl' => z_root(),
 			'$nickname' => \App::$profile['channel_address'],

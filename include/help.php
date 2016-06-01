@@ -24,8 +24,6 @@ function find_doc_file($s) {
 
 function search_doc_files($s) {
 
-	$a = get_app();
-
 	$itemspage = get_pconfig(local_channel(),'system','itemspage');
 	\App::set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 	$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(\App::$pager['itemspage']), intval(\App::$pager['start']));

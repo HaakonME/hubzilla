@@ -595,8 +595,6 @@ function parse_xml_string($s,$strict = true) {
 
 function scale_external_images($s, $include_link = true, $scale_replace = false) {
 
-	$a = get_app();
-
 	// Picture addresses can contain special characters
 	$s = htmlspecialchars_decode($s, ENT_COMPAT);
 
@@ -1618,8 +1616,6 @@ function fetch_xrd_links($url) {
 
 function scrape_vcard($url) {
 
-	$a = get_app();
-
 	$ret = array();
 
 	logger('scrape_vcard: url=' . $url);
@@ -1698,8 +1694,6 @@ function scrape_vcard($url) {
 
 
 function scrape_feed($url) {
-
-	$a = get_app();
 
 	$ret = array();
 	$level = 0;
@@ -1819,8 +1813,6 @@ function service_plink($contact, $guid) {
 
 function format_and_send_email($sender,$xchan,$item) {
 
-	require_once('include/enotify.php');
-
 	$title = $item['title'];
 	$body = $item['body'];
 
@@ -1885,7 +1877,7 @@ function format_and_send_email($sender,$xchan,$item) {
 
 		// use the EmailNotification library to send the message
 
-		enotify::send(array(
+		Zotlabs\Lib\Enotify::send(array(
 			'fromName'             => $product,
 			'fromEmail'            => $sender_email,
 			'replyTo'              => $sender_email,
@@ -1940,9 +1932,6 @@ function do_delivery($deliveries) {
 
 function get_site_info() {
 
-	global $db;
-	global $a;
-
 	$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
 	$directory_mode = Array('DIRECTORY_MODE_NORMAL', 'DIRECTORY_MODE_PRIMARY', 'DIRECTORY_MODE_SECONDARY', 256 => 'DIRECTORY_MODE_STANDALONE');
 		
@@ -1978,7 +1967,7 @@ function get_site_info() {
 		$r = q("select * from addon where hidden = 0");
 		if(count($r))
 			foreach($r as $rr)
-				$visible_plugins[] = $rr['name'];
+				$visible_plugins[] = $rr['aname'];
 	}
 	sort($visible_plugins);
 
@@ -2042,7 +2031,7 @@ function get_site_info() {
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
 		'platform' => Zotlabs\Lib\System::get_platform_name(),
-		'dbdriver' => $db->getdriver(),
+		'dbdriver' => DBA::$dba->getdriver(),
 		'lastpoll' => get_config('system','lastpoll'),
 		'info' => (($site_info) ? $site_info : ''),
 		'channels_total' => $channels_total_stat,

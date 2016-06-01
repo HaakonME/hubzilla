@@ -230,7 +230,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		if(\App::$poi && \App::$poi['abook_my_perms'] != $abook_my_perms
 			&& (! intval(\App::$poi['abook_self']))) {
-			\Zotlabs\Daemon\Master(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));
+			\Zotlabs\Daemon\Master::Summon(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));
 		}
 	
 		if($new_friend) {

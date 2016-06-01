@@ -78,7 +78,7 @@ class Settings extends \Zotlabs\Web\Controller {
 					$r = q("UPDATE clients SET
 								client_id='%s',
 								pw='%s',
-								name='%s',
+								clname='%s',
 								redirect_uri='%s',
 								icon='%s',
 								uid=%d
@@ -91,7 +91,7 @@ class Settings extends \Zotlabs\Web\Controller {
 							intval(local_channel()),
 							dbesc($key));
 				} else {
-					$r = q("INSERT INTO clients (client_id, pw, name, redirect_uri, icon, uid)
+					$r = q("INSERT INTO clients (client_id, pw, clname, redirect_uri, icon, uid)
 						VALUES ('%s','%s','%s','%s','%s',%d)",
 						dbesc($key),
 						dbesc($secret),
@@ -615,7 +615,7 @@ class Settings extends \Zotlabs\Web\Controller {
 					'$title'	=> t('Add application'),
 					'$submit'	=> t('Update'),
 					'$cancel'	=> t('Cancel'),
-					'$name'		=> array('name', t('Name'), $app['name'] , ''),
+					'$name'		=> array('name', t('Name'), $app['clname'] , ''),
 					'$key'		=> array('key', t('Consumer Key'), $app['client_id'], ''),
 					'$secret'	=> array('secret', t('Consumer Secret'), $app['pw'], ''),
 					'$redirect'	=> array('redirect', t('Redirect'), $app['redirect_uri'], ''),

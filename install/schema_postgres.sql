@@ -184,7 +184,7 @@ CREATE TABLE "auth_codes" (
   "client_id" varchar(20) NOT NULL,
   "redirect_uri" varchar(200) NOT NULL,
   "expires" bigint NOT NULL,
-  "scope" varchar(250) NOT NULL,
+  "auth_scope" varchar(512) NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE TABLE "cache" (
@@ -333,7 +333,7 @@ CREATE TABLE "clients" (
   "client_id" varchar(20) NOT NULL,
   "pw" varchar(20) NOT NULL,
   "redirect_uri" varchar(200) NOT NULL,
-  "name" text,
+  "clname" text,
   "icon" text,
   "uid" bigint NOT NULL DEFAULT '0',
   PRIMARY KEY ("client_id")
@@ -1043,7 +1043,7 @@ CREATE TABLE "register" (
   "created" timestamp NOT NULL,
   "uid" bigint  NOT NULL,
   "password" text NOT NULL,
-  "language" varchar(16) NOT NULL,
+  "lang" varchar(16) NOT NULL,
   PRIMARY KEY ("id")
 );
 create index "reg_hash" on register ("hash");
@@ -1052,7 +1052,7 @@ create index "reg_uid" on register ("uid");
 CREATE TABLE "session" (
   "id" serial,
   "sid" text NOT NULL,
-  "data" text NOT NULL,
+  "sess_data" text NOT NULL,
   "expire" numeric(20)  NOT NULL,
   PRIMARY KEY ("id")
 );
@@ -1159,7 +1159,7 @@ CREATE TABLE "tokens" (
   "secret" text NOT NULL,
   "client_id" varchar(20) NOT NULL,
   "expires" numeric(20)  NOT NULL,
-  "scope" varchar(200) NOT NULL,
+  "auth_scope" varchar(512) NOT NULL,
   "uid" bigint NOT NULL,
   PRIMARY KEY ("id")
 );
@@ -1186,14 +1186,14 @@ create index "ud_last" on updates ("ud_last");
 CREATE TABLE "verify" (
   "id" serial  NOT NULL,
   "channel" bigint  NOT NULL DEFAULT '0',
-  "type" varchar(32) NOT NULL DEFAULT '',
+  "vtype" varchar(32) NOT NULL DEFAULT '',
   "token" text NOT NULL DEFAULT '',
   "meta" text NOT NULL DEFAULT '',
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("id")
 );
 create index "verify_channel" on verify ("channel");
-create index "verify_type" on verify ("type");
+create index "verify_vtype" on verify ("vtype");
 create index "verify_token" on verify ("token");
 create index "verify_meta" on verify ("meta");
 create index "verify_created" on verify ("created");

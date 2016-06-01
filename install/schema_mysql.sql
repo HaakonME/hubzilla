@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `auth_codes` (
   `client_id` varchar(20) NOT NULL DEFAULT '',
   `redirect_uri` varchar(200) NOT NULL DEFAULT '',
   `expires` int(11) NOT NULL DEFAULT '0',
-  `scope` varchar(250) NOT NULL DEFAULT '',
+  `auth_scope` varchar(512) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `client_id` varchar(20) NOT NULL DEFAULT '',
   `pw` varchar(20) NOT NULL DEFAULT '',
   `redirect_uri` varchar(200) NOT NULL DEFAULT '',
-  `name` text,
+  `clname` text,
   `icon` text,
   `uid` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`client_id`)
@@ -1054,7 +1054,7 @@ CREATE TABLE IF NOT EXISTS `register` (
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `password` char(255) NOT NULL DEFAULT '',
-  `language` char(16) NOT NULL DEFAULT '',
+  `lang` char(16) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `hash` (`hash`),
   KEY `created` (`created`),
@@ -1064,7 +1064,7 @@ CREATE TABLE IF NOT EXISTS `register` (
 CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `sid` char(255) NOT NULL DEFAULT '',
-  `data` text NOT NULL,
+  `sess_data` text NOT NULL,
   `expire` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`),
@@ -1176,7 +1176,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `secret` text NOT NULL,
   `client_id` varchar(20) NOT NULL DEFAULT '',
   `expires` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `scope` varchar(200) NOT NULL DEFAULT '',
+  `auth_scope` varchar(512) NOT NULL DEFAULT '',
   `uid` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `client_id` (`client_id`),
@@ -1204,13 +1204,13 @@ CREATE TABLE IF NOT EXISTS `updates` (
 CREATE TABLE IF NOT EXISTS `verify` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel` int(10) unsigned NOT NULL DEFAULT '0',
-  `type` char(32) NOT NULL DEFAULT '',
+  `vtype` char(32) NOT NULL DEFAULT '',
   `token` char(255) NOT NULL DEFAULT '',
   `meta` char(255) NOT NULL DEFAULT '',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `channel` (`channel`),
-  KEY `type` (`type`),
+  KEY `vtype` (`vtype`),
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)

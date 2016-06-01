@@ -12,7 +12,7 @@ class DBA {
 
 	static public $dba = null;
 	static public $dbtype = null;
-
+	static public $logging = false;
 
 	/**
 	 * @brief Returns the database driver object.
@@ -421,8 +421,13 @@ function db_getfunc($f) {
 
 function db_logger($s,$level = LOGGER_NORMAL,$syslog = LOG_INFO) {
 
+	if(\DBA::$logging)
+		return;
+
 	$saved = \DBA::$dba->debug;
 	\DBA::$dba->debug = false;
+	\DBA::$logging = true;
 	logger($s,$level,$syslog);
+	\DBA::$logging = false;
 	\DBA::$dba->debug = $saved;
 }

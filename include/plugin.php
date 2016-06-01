@@ -300,12 +300,18 @@ function call_hooks($name, &$data = null) {
 					$func($data);
 				else
 					$func($a, $data);
-			} else {
-				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND fn = '%s'",
-					dbesc($name),
-					dbesc($hook[0]),
-					dbesc($origfn)
-				);
+			} 
+			else {
+
+				// Don't do any DB write calls if we're currently logging a possibly failed DB call. 
+				if(! DBA::$logging) {
+					// The hook should be removed so we don't process it.
+					q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND fn = '%s'",
+						dbesc($name),
+						dbesc($hook[0]),
+						dbesc($origfn)
+					);
+				}
 			}
 		}
 	}

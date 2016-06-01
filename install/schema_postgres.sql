@@ -184,7 +184,7 @@ CREATE TABLE "auth_codes" (
   "client_id" varchar(20) NOT NULL,
   "redirect_uri" varchar(200) NOT NULL,
   "expires" bigint NOT NULL,
-  "scope" varchar(250) NOT NULL,
+  "auth_scope" varchar(512) NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE TABLE "cache" (
@@ -333,7 +333,7 @@ CREATE TABLE "clients" (
   "client_id" varchar(20) NOT NULL,
   "pw" varchar(20) NOT NULL,
   "redirect_uri" varchar(200) NOT NULL,
-  "name" text,
+  "clname" text,
   "icon" text,
   "uid" bigint NOT NULL DEFAULT '0',
   PRIMARY KEY ("client_id")
@@ -428,62 +428,6 @@ create index "event_status_idx" on event ("event_status");
 create index "event_sequence_idx" on event ("event_sequence");
 create index "event_priority_idx" on event ("event_priority");
 
-
-CREATE TABLE "fcontact" (
-  "id" serial  NOT NULL,
-  "url" text NOT NULL,
-  "name" text NOT NULL,
-  "photo" text NOT NULL,
-  "request" text NOT NULL,
-  "nick" text NOT NULL,
-  "addr" text NOT NULL,
-  "batch" text NOT NULL,
-  "notify" text NOT NULL,
-  "poll" text NOT NULL,
-  "confirm" text NOT NULL,
-  "priority" numeric(1) NOT NULL,
-  "network" varchar(32) NOT NULL DEFAULT '',
-  "alias" text NOT NULL,
-  "pubkey" text NOT NULL,
-  "updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  PRIMARY KEY ("id")
-);
-create index "fcontact_addr_idx" on fcontact ("addr");
-create index "fcontact_network_idx" on fcontact ("network");
-
-CREATE TABLE "ffinder" (
-  "id" serial  NOT NULL,
-  "uid" bigint  NOT NULL,
-  "cid" bigint  NOT NULL,
-  "fid" bigint  NOT NULL,
-  PRIMARY KEY ("id")
-);
-create index "ffinder_uid_idx" on ffinder ("uid");
-create index "ffinder_cid_idx" on ffinder ("cid");
-create index "ffinder_fid_idx" on ffinder ("fid");
-
-CREATE TABLE "fserver" (
-  "id" serial NOT NULL,
-  "server" text NOT NULL,
-  "posturl" text NOT NULL,
-  "key" text NOT NULL,
-  PRIMARY KEY ("id")
-);
-create index "fserver_server_idx" on fserver ("server");
-create index "fserver_posturl_idx" on fserver ("posturl");
-
-CREATE TABLE "fsuggest" (
-  "id" serial NOT NULL,
-  "uid" bigint NOT NULL,
-  "cid" bigint NOT NULL,
-  "name" text NOT NULL,
-  "url" text NOT NULL,
-  "request" text NOT NULL,
-  "photo" text NOT NULL,
-  "note" text NOT NULL,
-  "created" timestamp NOT NULL,
-  PRIMARY KEY ("id")
-);
 CREATE TABLE "group_member" (
   "id" serial  NOT NULL,
   "uid" bigint  NOT NULL,
@@ -501,7 +445,7 @@ CREATE TABLE "groups" (
   "uid" bigint  NOT NULL,
   "visible" numeric(1) NOT NULL DEFAULT '0',
   "deleted" numeric(1) NOT NULL DEFAULT '0',
-  "name" text NOT NULL,
+  "gname" text NOT NULL,
   PRIMARY KEY ("id")
 
 );
@@ -1024,7 +968,7 @@ CREATE TABLE "profile" (
   "profile_name" text NOT NULL,
   "is_default" numeric(1) NOT NULL DEFAULT '0',
   "hide_friends" numeric(1) NOT NULL DEFAULT '0',
-  "name" text NOT NULL,
+  "fullname" text NOT NULL,
   "pdesc" text NOT NULL DEFAULT '',
   "chandesc" text NOT NULL DEFAULT '',
   "dob" varchar(32) NOT NULL DEFAULT '',
@@ -1037,7 +981,7 @@ CREATE TABLE "profile" (
   "hometown" text NOT NULL DEFAULT '',
   "gender" varchar(32) NOT NULL DEFAULT '',
   "marital" text NOT NULL DEFAULT '',
-  "with" text NOT NULL DEFAULT '',
+  "partner" text NOT NULL DEFAULT '',
   "howlong" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "sexual" text NOT NULL DEFAULT '',
   "politic" text NOT NULL DEFAULT '',
@@ -1053,7 +997,7 @@ CREATE TABLE "profile" (
   "film" text NOT NULL DEFAULT '',
   "interest" text NOT NULL DEFAULT '',
   "romance" text NOT NULL DEFAULT '',
-  "work" text NOT NULL DEFAULT '',
+  "employment" text NOT NULL DEFAULT '',
   "education" text NOT NULL DEFAULT '',
   "contact" text NOT NULL DEFAULT '',
   "channels" text NOT NULL DEFAULT '',
@@ -1099,7 +1043,7 @@ CREATE TABLE "register" (
   "created" timestamp NOT NULL,
   "uid" bigint  NOT NULL,
   "password" text NOT NULL,
-  "language" varchar(16) NOT NULL,
+  "lang" varchar(16) NOT NULL,
   PRIMARY KEY ("id")
 );
 create index "reg_hash" on register ("hash");
@@ -1108,7 +1052,7 @@ create index "reg_uid" on register ("uid");
 CREATE TABLE "session" (
   "id" serial,
   "sid" text NOT NULL,
-  "data" text NOT NULL,
+  "sess_data" text NOT NULL,
   "expire" numeric(20)  NOT NULL,
   PRIMARY KEY ("id")
 );
@@ -1179,19 +1123,6 @@ CREATE TABLE "source" (
 create index "src_channel_id" on "source" ("src_channel_id");
 create index "src_channel_xchan" on "source"  ("src_channel_xchan");
 create index "src_xchan" on "source" ("src_xchan");
-CREATE TABLE "spam" (
-  "id" serial NOT NULL,
-  "uid" bigint NOT NULL,
-  "spam" bigint NOT NULL DEFAULT '0',
-  "ham" bigint NOT NULL DEFAULT '0',
-  "term" text NOT NULL,
-  "date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  PRIMARY KEY ("id")
-);
-create index "spam_uid" on spam ("uid");
-create index "spam_spam" on spam ("spam");
-create index "spam_ham" on spam ("ham");
-create index "spam_term" on spam ("term");
 CREATE TABLE "sys_perms" (
   "id" serial  NOT NULL,
   "cat" text NOT NULL,
@@ -1206,7 +1137,7 @@ CREATE TABLE "term" (
   "uid" bigint  NOT NULL DEFAULT '0',
   "oid" bigint  NOT NULL,
   "otype" numeric(3)  NOT NULL,
-  "type" numeric(3)  NOT NULL,
+  "ttype" numeric(3)  NOT NULL,
   "term" text NOT NULL,
   "url" text NOT NULL,
   "imgurl" text NOT NULL DEFAULT '',
@@ -1216,7 +1147,7 @@ CREATE TABLE "term" (
 );
 create index "term_oid" on term ("oid");
 create index "term_otype" on term ("otype");
-create index "term_type" on term ("type");
+create index "term_ttype" on term ("ttype");
 create index "term_term" on term ("term");
 create index "term_uid" on term ("uid");
 create index "term_aid" on term ("aid");
@@ -1228,7 +1159,7 @@ CREATE TABLE "tokens" (
   "secret" text NOT NULL,
   "client_id" varchar(20) NOT NULL,
   "expires" numeric(20)  NOT NULL,
-  "scope" varchar(200) NOT NULL,
+  "auth_scope" varchar(512) NOT NULL,
   "uid" bigint NOT NULL,
   PRIMARY KEY ("id")
 );
@@ -1255,14 +1186,14 @@ create index "ud_last" on updates ("ud_last");
 CREATE TABLE "verify" (
   "id" serial  NOT NULL,
   "channel" bigint  NOT NULL DEFAULT '0',
-  "type" varchar(32) NOT NULL DEFAULT '',
+  "vtype" varchar(32) NOT NULL DEFAULT '',
   "token" text NOT NULL DEFAULT '',
   "meta" text NOT NULL DEFAULT '',
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("id")
 );
 create index "verify_channel" on verify ("channel");
-create index "verify_type" on verify ("type");
+create index "verify_vtype" on verify ("vtype");
 create index "verify_token" on verify ("token");
 create index "verify_meta" on verify ("meta");
 create index "verify_created" on verify ("created");

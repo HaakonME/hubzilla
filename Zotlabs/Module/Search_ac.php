@@ -46,7 +46,7 @@ class Search_ac extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		$r = q("select distinct term, tid, url from term where type in ( %d, %d ) $tag_sql_extra group by term order by term asc",
+		$r = q("select distinct term, tid, url from term where ttype in ( %d, %d ) $tag_sql_extra group by term order by term asc",
 			intval(TERM_HASHTAG),
 			intval(TERM_COMMUNITYTAG)
 		);

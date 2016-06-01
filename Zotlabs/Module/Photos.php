@@ -440,7 +440,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					if($success['replaced']) {
 						$post_tags[] = array(
 							'uid'   => $profile_uid, 
-							'type'  => $success['termtype'],
+							'ttype'  => $success['termtype'],
 							'otype' => TERM_OBJ_POST,
 							'term'  => $success['term'],
 							'url'   => $success['url']

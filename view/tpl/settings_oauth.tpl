@@ -18,7 +18,7 @@
 	{{foreach $apps as $app}}
 	<div class='oauthapp'>
 		<img src='{{$app.icon}}' class="{{if $app.icon}} {{else}}noicon{{/if}}">
-		{{if $app.name}}<h4>{{$app.name}}</h4>{{else}}<h4>{{$noname}}</h4>{{/if}}
+		{{if $app.clname}}<h4>{{$app.clname}}</h4>{{else}}<h4>{{$noname}}</h4>{{/if}}
 		{{if $app.my}}
 			{{if $app.oauth_token}}
 			<div class="settings-submit-wrapper" ><button class="settings-submit"  type="submit" name="remove" value="{{$app.oauth_token}}">{{$remove}}</button></div>

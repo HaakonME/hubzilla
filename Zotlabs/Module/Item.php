@@ -581,7 +581,7 @@ class Item extends \Zotlabs\Web\Controller {
 					if($success['replaced']) {
 						$post_tags[] = array(
 							'uid'   => $profile_uid, 
-							'type'  => $success['termtype'],
+							'ttype' => $success['termtype'],
 							'otype' => TERM_OBJ_POST,
 							'term'  => $success['term'],
 							'url'   => $success['url']
@@ -666,7 +666,7 @@ class Item extends \Zotlabs\Web\Controller {
 			foreach($cats as $cat) {
 				$post_tags[] = array(
 					'uid'   => $profile_uid, 
-					'type'  => TERM_CATEGORY,
+					'ttype' => TERM_CATEGORY,
 					'otype' => TERM_OBJ_POST,
 					'term'  => trim($cat),
 					'url'   => $owner_xchan['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
@@ -676,7 +676,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if($orig_post) {
 			// preserve original tags
-			$t = q("select * from term where oid = %d and otype = %d and uid = %d and type in ( %d, %d, %d )",
+			$t = q("select * from term where oid = %d and otype = %d and uid = %d and ttype in ( %d, %d, %d )",
 				intval($orig_post['id']),
 				intval(TERM_OBJ_POST),
 				intval($profile_uid),
@@ -688,7 +688,7 @@ class Item extends \Zotlabs\Web\Controller {
 				foreach($t as $t1) {
 					$post_tags[] = array(
 						'uid'   => $profile_uid, 
-						'type'  => $t1['type'],
+						'ttype' => $t1['type'],
 						'otype' => TERM_OBJ_POST,
 						'term'  => $t1['term'],
 						'url'   => $t1['url'],

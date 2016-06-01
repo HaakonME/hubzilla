@@ -173,7 +173,7 @@
 							</div>
 							<div class="clear"></div>
 
-							{{if $fields.with}}
+							{{if $fields.partner}}
 							{{include file="field_input.tpl" field=$with}}
 							{{/if}}
 
@@ -198,7 +198,7 @@
 					</div>
 				</div>
 				{{/if}}
-				{{if $fields.keywords || $fields.politic || $fields.religion || $fields.about || $fields.contact || $fields.homepage || $fields.interest || $fields.likes || $fields.dislikes || $fields.channels || $fields.music || $fields.book || $fields.tv || $fields.romance || $fields.education || $extra_fields}}
+				{{if $fields.keywords || $fields.politic || $fields.religion || $fields.about || $fields.contact || $fields.homepage || $fields.interest || $fields.likes || $fields.dislikes || $fields.channels || $fields.music || $fields.book || $fields.tv || $fields.film || $fields.romance || $fields.employment || $fields.education || $extra_fields}}
 				<div class="panel">
 					<div class="section-subtitle-wrapper" role="tab" id="miscellaneous">
 						<h3>
@@ -269,7 +269,7 @@
 							{{include file="field_textarea.tpl" field=$romance}}
 							{{/if}}
 
-							{{if $fields.work}}
+							{{if $fields.employment}}
 							{{include file="field_textarea.tpl" field=$work}}
 							{{/if}}
 

@@ -171,7 +171,7 @@ class Events extends \Zotlabs\Web\Controller {
 			foreach($cats as $cat) {
 				$post_tags[] = array(
 					'uid'   => $profile_uid, 
-					'type'  => TERM_CATEGORY,
+					'ttype' => TERM_CATEGORY,
 					'otype' => TERM_OBJ_POST,
 					'term'  => trim($cat),
 					'url'   => $channel['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))

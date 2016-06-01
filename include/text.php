@@ -810,7 +810,7 @@ function get_mentions($item,$tags) {
 		return $o;
 
 	foreach($tags as $x) {
-		if($x['type'] == TERM_MENTION) {
+		if($x['ttype'] == TERM_MENTION) {
 			$o .= "\t\t" . '<link rel="mentioned" href="' . $x['url'] . '" />' . "\r\n";
 			$o .= "\t\t" . '<link rel="ostatus:attention" href="' . $x['url'] . '" />' . "\r\n";
 		}

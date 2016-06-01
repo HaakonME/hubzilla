@@ -15,7 +15,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
-	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `gname` ASC",
 		intval(local_channel())
 	);
 
@@ -32,7 +32,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
-			$trimmed = mb_substr($rr['name'],0,12);
+			$trimmed = mb_substr($rr['gname'],0,12);
 
 			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}\" >$trimmed</option>\r\n";
 		}

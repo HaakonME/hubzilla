@@ -408,8 +408,12 @@ class Import extends \Zotlabs\Web\Controller {
 				$saved = array();
 				foreach($groups as $group) {
 					$saved[$group['hash']] = array('old' => $group['id']);
+					if(array_key_exists('name',$group)) {
+						$group['gname'] = $group['name'];
+						unset($group['name']);
+					}
 					unset($group['id']);
-					$group['uid'] = $channel['channel_id'];
+					$group['uid'] = $channel['channel_id'];					
 					dbesc_array($group);
 					$r = dbq("INSERT INTO groups (`" 
 						. implode("`, `", array_keys($group)) 

@@ -18,10 +18,10 @@ class SessionHandler implements \SessionHandlerInterface {
 	function read ($id) {
 
 		if($id) {
-			$r = q("SELECT `data` FROM `session` WHERE `sid`= '%s'", dbesc($id));
+			$r = q("SELECT `sess_data` FROM `session` WHERE `sid`= '%s'", dbesc($id));
 
 			if($r) {
-				return $r[0]['data'];
+				return $r[0]['sess_data'];
 			}
 			else {
 				q("INSERT INTO `session` (sid, expire) values ('%s', '%s')",
@@ -59,7 +59,7 @@ class SessionHandler implements \SessionHandlerInterface {
 		}
 
 		q("UPDATE `session`
-			SET `data` = '%s', `expire` = '%s' WHERE `sid` = '%s'",
+			SET `sess_data` = '%s', `expire` = '%s' WHERE `sid` = '%s'",
 			dbesc($data),
 			dbesc($expire),
 			dbesc($id)

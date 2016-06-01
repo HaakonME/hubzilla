@@ -54,7 +54,7 @@ class Tagrm extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			goaway(z_root() . '/' . $_SESSION['photo_return']);

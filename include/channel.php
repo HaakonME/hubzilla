@@ -337,7 +337,7 @@ function create_identity($arr) {
 	// Not checking return value.
 	// It's ok for this to fail if it's an imported channel, and therefore the hash is a duplicate
 
-	$r = q("INSERT INTO profile ( aid, uid, profile_guid, profile_name, is_default, publish, name, photo, thumb)
+	$r = q("INSERT INTO profile ( aid, uid, profile_guid, profile_name, is_default, publish, fullname, photo, thumb)
 		VALUES ( %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s') ",
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
@@ -392,7 +392,7 @@ function create_identity($arr) {
 		// if our role_permissions indicate that we're using a default collection ACL, add it.
 
 		if(is_array($role_permissions) && $role_permissions['default_collection']) {
-			$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+			$r = q("select hash from groups where uid = %d and gname = '%s' limit 1",
 				intval($newuid),
 				dbesc( t('Friends') )
 			);
@@ -561,7 +561,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 	// All other term types will be included in items, if requested.
 
-	$r = q("select * from term where type in (%d,%d) and uid = %d",
+	$r = q("select * from term where ttype in (%d,%d) and uid = %d",
 		intval(TERM_SAVEDSEARCH),
 		intval(TERM_THING),
 		intval($channel_id)
@@ -1257,7 +1257,7 @@ function advanced_profile(&$a) {
 	if(! perm_is_allowed(App::$profile['profile_uid'],get_observer_hash(),'view_profile'))
 		return '';
 
-	if(App::$profile['name']) {
+	if(App::$profile['fullname']) {
 
 		$profile_fields_basic    = get_profile_fields_basic();
 		$profile_fields_advanced = get_profile_fields_advanced();
@@ -1281,7 +1281,7 @@ function advanced_profile(&$a) {
 
 		$profile = array();
 
-		$profile['fullname'] = array( t('Full Name:'), App::$profile['name'] ) ;
+		$profile['fullname'] = array( t('Full Name:'), App::$profile['fullname'] ) ;
 
 		if(App::$profile['gender']) $profile['gender'] = array( t('Gender:'),  App::$profile['gender'] );
 
@@ -1329,8 +1329,8 @@ function advanced_profile(&$a) {
 		if(App::$profile['marital'])
 			$profile['marital'] = array( t('Status:'), App::$profile['marital']);
 
-		if(App::$profile['with'])
-			$profile['marital']['with'] = bbcode(App::$profile['with']);
+		if(App::$profile['partner'])
+			$profile['marital']['partner'] = bbcode(App::$profile['partner']);
 
 		if(strlen(App::$profile['howlong']) && App::$profile['howlong'] !== NULL_DATE) {
 			$profile['howlong'] = relative_date(App::$profile['howlong'], t('for %1$d %2$s'));
@@ -1370,7 +1370,7 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text(App::$profile['romance'])) $profile['romance'] = array( t('Love/Romance:'), $txt);
 		
-		if($txt = prepare_text(App::$profile['work'])) $profile['work'] = array( t('Work/employment:'), $txt);
+		if($txt = prepare_text(App::$profile['employment'])) $profile['employment'] = array( t('Work/employment:'), $txt);
 
 		if($txt = prepare_text(App::$profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
 
@@ -1658,7 +1658,7 @@ function get_profile_fields_basic($filter = 0) {
 
 	$profile_fields_basic = (($filter == 0) ? get_config('system','profile_fields_basic') : null);
 	if(! $profile_fields_basic)
-		$profile_fields_basic = array('name','pdesc','chandesc','gender','dob','dob_tz','address','locality','region','postal_code','country_name','marital','sexual','homepage','hometown','keywords','about','contact');
+		$profile_fields_basic = array('fullname','pdesc','chandesc','gender','dob','dob_tz','address','locality','region','postal_code','country_name','marital','sexual','homepage','hometown','keywords','about','contact');
 
 	$x = array();
 	if($profile_fields_basic)
@@ -1673,7 +1673,7 @@ function get_profile_fields_advanced($filter = 0) {
 	$basic = get_profile_fields_basic($filter);
 	$profile_fields_advanced = (($filter == 0) ? get_config('system','profile_fields_advanced') : null);
 	if(! $profile_fields_advanced)
-		$profile_fields_advanced = array('with','howlong','politic','religion','likes','dislikes','interest','channels','music','book','film','tv','romance','work','education');
+		$profile_fields_advanced = array('partner','howlong','politic','religion','likes','dislikes','interest','channels','music','book','film','tv','romance','employment','education');
 
 	$x = array();
 	if($basic)

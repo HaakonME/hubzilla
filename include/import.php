@@ -332,7 +332,9 @@ function import_apps($channel,$apps) {
 				);
 				if($x) {
 					foreach($term as $t) {
-						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+						if(array_key_exists('type',$t))
+							$t['ttype'] = $t['type'];
+						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 					}
 				}
 			}
@@ -400,7 +402,9 @@ function sync_apps($channel,$apps) {
 
 			if($exists && $term) {
 				foreach($term as $t) {
-					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+					if(array_key_exists('type',$t))
+						$t['ttype'] = $t['type'];
+					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 				}
 			}
 
@@ -436,7 +440,9 @@ function sync_apps($channel,$apps) {
 					);
 					if($x) {
 						foreach($term as $t) {
-							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+							if(array_key_exists('type',$t))
+								$t['ttype'] = $t['type'];
+							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 						}
 					}
 				}

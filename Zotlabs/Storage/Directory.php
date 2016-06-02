@@ -246,7 +246,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			$deny_gid = $c[0]['channel_deny_gid'];
 		}
 
-		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, os_storage, filetype, filesize, revision, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, os_storage, filetype, filesize, revision, is_photo, content, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($c[0]['channel_account_id']),
 			intval($c[0]['channel_id']),

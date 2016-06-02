@@ -348,7 +348,7 @@ class Enotify {
 		$hash = random_string();
 		$r = q("SELECT `id` FROM `notify` WHERE `hash` = '%s' LIMIT 1",
 			dbesc($hash));
-		if (count($r))
+		if ($r)
 			$dups = true;
 	} while ($dups === true);
 
@@ -356,16 +356,16 @@ class Enotify {
 	$datarray = array();
 	$datarray['hash']   = $hash;
 	$datarray['sender_hash'] = $sender['xchan_hash'];
-	$datarray['name']   = $sender['xchan_name'];
+	$datarray['xname']   = $sender['xchan_name'];
 	$datarray['url']    = $sender['xchan_url'];
 	$datarray['photo']  = $sender['xchan_photo_s'];
-	$datarray['date']   = datetime_convert();
+	$datarray['created']   = datetime_convert();
 	$datarray['aid']    = $recip['channel_account_id'];
 	$datarray['uid']    = $recip['channel_id'];
 	$datarray['link']   = $itemlink;
 	$datarray['parent'] = $parent_mid;
 	$datarray['parent_item'] = $parent_item;
-	$datarray['type']   = $params['type'];
+	$datarray['ntype']   = $params['type'];
 	$datarray['verb']   = $params['verb'];
 	$datarray['otype']  = $params['otype'];
  	$datarray['abort']  = false;
@@ -394,19 +394,19 @@ class Enotify {
 		}
 	}
 
-	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,seen,type,verb,otype)
+	$r = q("insert into notify (hash,xname,url,photo,created,aid,uid,link,parent,seen,ntype,verb,otype)
 		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,%d,'%s','%s')",
 		dbesc($datarray['hash']),
-		dbesc($datarray['name']),
+		dbesc($datarray['xname']),
 		dbesc($datarray['url']),
 		dbesc($datarray['photo']),
-		dbesc($datarray['date']),
+		dbesc($datarray['created']),
 		intval($datarray['aid']),
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
 		dbesc($datarray['parent']),
 		intval($seen),
-		intval($datarray['type']),
+		intval($datarray['ntype']),
 		dbesc($datarray['verb']),
 		dbesc($datarray['otype'])
 	);

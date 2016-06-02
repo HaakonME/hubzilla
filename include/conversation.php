@@ -93,15 +93,15 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 	
-		if(! $item['object'])
+		if(! $item['obj'])
 			return;
 
 		if(intval($item['item_thread_top']))
 			return;	
 
-		$obj = json_decode_plus($item['object']);
-		if((! $obj) && ($item['object'])) {
-			logger('localize_item: failed to decode object: ' . print_r($item['object'],true));
+		$obj = json_decode_plus($item['obj']);
+		if((! $obj) && ($item['obj'])) {
+			logger('localize_item: failed to decode object: ' . print_r($item['obj'],true));
 		}
 		
 		if($obj['author'] && $obj['author']['link'])
@@ -186,7 +186,7 @@ function localize_item(&$item){
 		$Alink = $item['author']['xchan_url'];
 
 
-		$obj= json_decode_plus($item['object']);
+		$obj= json_decode_plus($item['obj']);
 		
 		$Blink = $Bphoto = '';
 
@@ -219,7 +219,7 @@ function localize_item(&$item){
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
 
-		$obj= json_decode_plus($item['object']);
+		$obj= json_decode_plus($item['obj']);
 
 		$Blink = $Bphoto = '';
 
@@ -299,7 +299,7 @@ function localize_item(&$item){
 		}
 		$plink = '[zrl=' . $obj['plink'] . ']' . $post_type . '[/zrl]';
 
-		$parsedobj = parse_xml_string($xmlhead.$item['object']);
+		$parsedobj = parse_xml_string($xmlhead.$item['obj']);
 
 		$tag = sprintf('#[zrl=%s]%s[/zrl]', $parsedobj->id, $parsedobj->content);
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
@@ -316,7 +316,7 @@ function localize_item(&$item){
 
 		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 
-		$obj = parse_xml_string($xmlhead.$item['object']);
+		$obj = parse_xml_string($xmlhead.$item['obj']);
 		if(strlen($obj->id)) {
 			$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($obj->id),

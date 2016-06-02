@@ -13,6 +13,8 @@ require_once('include/channel.php');
 
 class Apps {
 
+	static public $installed_system_apps = null;
+
 	static public function get_system_apps($translate = true) {
 
 		$ret = array();
@@ -49,22 +51,35 @@ class Apps {
 	static public function import_system_apps() {
 		if(! local_channel())
 			return;
-
-		// Eventually we want to look at modification dates and update system apps.
-
-		$installed = get_pconfig(local_channel(),'system','apps_installed');
-		if($installed)
-			return;
 		$apps = self::get_system_apps(false);
+
+
+		self::$installed_system_apps = q("select * from app where app_system = 1 and app_channel = %d",
+			intval(local_channel())
+		);
+
 		if($apps) {
 			foreach($apps as $app) {
-				$app['uid'] = local_channel();
-				$app['guid'] = hash('whirlpool',$app['name']);
-				$app['system'] = 1;
-				self::app_install(local_channel(),$app);			
+				if(self::check_install_system_app($app)) {				
+					$app['uid'] = local_channel();
+					$app['guid'] = hash('whirlpool',$app['name']);
+					$app['system'] = 1;
+					self::app_install(local_channel(),$app);
+				}			
 			}
 		}					
-		set_pconfig(local_channel(),'system','apps_installed',1);
+	}
+
+	static public function check_install_system_app($app) {
+		if((! is_array(self::$installed_system_apps)) || (! count(self::$installed_system_apps))) {
+			return true;
+		}
+		foreach(self::$installed_system_apps as $iapp) {
+			if(($iapp['app_id'] == hash('whirlpool',$app['name'])) && ($iapp['app_version'] != $app['version'])) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -110,6 +125,10 @@ class Apps {
 
 		if(array_key_exists('target',$ret))
 			$ret['target'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['target']);
+
+		if(array_key_exists('version',$ret))
+			$ret['version'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['version']);
+
 
 		if(array_key_exists('requires',$ret)) {
 			$requires = explode(',',$ret['requires']);

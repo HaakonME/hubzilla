@@ -2249,7 +2249,7 @@ function update_r1175() {
 
 	}
 
-	if($r1)
+	if($r1 && $r2 && $r3 && $r4)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 

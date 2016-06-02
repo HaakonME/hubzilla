@@ -483,7 +483,7 @@ class Like extends \Zotlabs\Web\Controller {
 	
 		$arr['verb']          = $activity;
 		$arr['obj_type']      = $objtype;
-		$arr['object']        = $object;
+		$arr['obj']           = $object;
 	
 		if($target) {
 			$arr['tgt_type']  = $tgttype;

@@ -3,7 +3,7 @@
 function apply_updates() {
 
 	//check for updated items and remove them
-	$x = q("SELECT mid, max(object) AS object FROM item WHERE verb = '%s' AND obj_type = '%s' GROUP BY mid",
+	$x = q("SELECT mid, max(obj) AS obj FROM item WHERE verb = '%s' AND obj_type = '%s' GROUP BY mid",
 		dbesc(ACTIVITY_UPDATE),
 		dbesc(ACTIVITY_OBJ_FILE)
 	);
@@ -12,7 +12,7 @@ function apply_updates() {
 
 		foreach($x as $xx) {
 
-			$object = json_decode($xx['object'],true);
+			$object = json_decode($xx['obj'],true);
 
 			$d_mid = $object['d_mid'];
 			$u_mid = $xx['mid'];

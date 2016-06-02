@@ -57,14 +57,14 @@ class Photo extends \Zotlabs\Web\Controller {
 	
 			$uid = $person;
 	
-			$r = q("SELECT * FROM photo WHERE scale = %d AND uid = %d AND photo_usage = %d LIMIT 1",
+			$r = q("SELECT * FROM photo WHERE imgscale = %d AND uid = %d AND photo_usage = %d LIMIT 1",
 				intval($resolution),
 				intval($uid),
 				intval(PHOTO_PROFILE)
 			);
 			if(count($r)) {
-				$data = dbunescbin($r[0]['data']);
-				$mimetype = $r[0]['type'];
+				$data = dbunescbin($r[0]['content']);
+				$mimetype = $r[0]['mimetype'];
 			}
 			if(intval($r[0]['os_storage']))
 				$data = file_get_contents($data);
@@ -113,7 +113,7 @@ class Photo extends \Zotlabs\Web\Controller {
 			// If using resolution 1, make sure it exists before proceeding:
 			if ($resolution == 1)
 			  {
-			    $r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND scale = %d LIMIT 1",
+			    $r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND imgscale = %d LIMIT 1",
 				   dbesc($photo),
 				   intval($resolution)
 				   );
@@ -121,7 +121,7 @@ class Photo extends \Zotlabs\Web\Controller {
 			      $resolution = 2;
 			  }
 	
-			$r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND scale = %d LIMIT 1",
+			$r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND imgscale = %d LIMIT 1",
 				dbesc($photo),
 				intval($resolution)
 			);
@@ -133,14 +133,14 @@ class Photo extends \Zotlabs\Web\Controller {
 	
 				// Now we'll see if we can access the photo
 	
-				$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND scale = %d $sql_extra LIMIT 1",
+				$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND imgscale = %d $sql_extra LIMIT 1",
 					dbesc($photo),
 					intval($resolution)
 				);
 	
 				if($r && $allowed) {
-					$data = dbunescbin($r[0]['data']);
-					$mimetype = $r[0]['type'];
+					$data = dbunescbin($r[0]['content']);
+					$mimetype = $r[0]['mimetype'];
 					if(intval($r[0]['os_storage']))
 						$data = file_get_contents($data);
 				}
@@ -154,7 +154,7 @@ class Photo extends \Zotlabs\Web\Controller {
 					// they won't have the photo link, so there's a reasonable chance that the person
 					// might be able to obtain permission to view it.
 	
-					$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d LIMIT 1",
+					$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `imgscale` = %d LIMIT 1",
 						dbesc($photo),
 						intval($resolution)
 					);

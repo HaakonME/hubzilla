@@ -270,7 +270,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 						array('rel' => 'photo', 'type' => \App::$poi['xchan_photo_mimetype'], 'href' => \App::$poi['xchan_photo_l'])
 	       			),
 	   			);
-				$xarr['object'] = json_encode($obj);
+				$xarr['obj'] = json_encode($obj);
 				$xarr['obj_type'] = ACTIVITY_OBJ_PERSON;
 	
 				$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . \App::$poi['xchan_url'] . ']' . \App::$poi['xchan_name'] . '[/zrl]';

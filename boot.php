@@ -45,10 +45,10 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.7.2' );
+define ( 'STD_VERSION',             '1.7.3' );
 define ( 'ZOT_REVISION',            1.1     );
 
-define ( 'DB_UPDATE_VERSION',       1173  );
+define ( 'DB_UPDATE_VERSION',       1176  );
 
 
 /**

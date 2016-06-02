@@ -554,7 +554,7 @@ require_once('include/api_auth.php');
 			dbesc($_REQUEST['file_id'])
 		);
 		if($r) {
-			unset($r[0]['data']);				
+			unset($r[0]['content']);				
 			$ret = array('attach' => $r[0]);
 			json_return_and_die($ret);
 		}
@@ -580,21 +580,21 @@ require_once('include/api_auth.php');
 				$length = intval($ptr['filesize']);
 
 			if($ptr['is_dir'])
-				$ptr['data'] = '';
+				$ptr['content'] = '';
 			elseif(! intval($r[0]['os_storage'])) {
 				$ptr['start'] = $start;
-				$x = substr(dbunescbin($ptr['data'],$start,$length));
+				$x = substr(dbunescbin($ptr['content'],$start,$length));
 				$ptr['length'] = strlen($x);
-				$ptr['data'] = base64_encode($x);
+				$ptr['content'] = base64_encode($x);
 			}
 			else {
-				$fp = fopen(dbunescbin($ptr['data']),'r');
+				$fp = fopen(dbunescbin($ptr['content']),'r');
 				if($fp) {
 					$seek = fseek($fp,$start,SEEK_SET);
 					$x = fread($fp,$length);
 					$ptr['start'] = $start;
 					$ptr['length'] = strlen($x);
-					$ptr['data'] = base64_encode($x);
+					$ptr['content'] = base64_encode($x);
 				}
 			}
 				
@@ -617,11 +617,11 @@ require_once('include/api_auth.php');
 		);
 		if($r) {
 			if($r[0]['is_dir'])
-				$r[0]['data'] = '';
+				$r[0]['content'] = '';
 			elseif(intval($r[0]['os_storage'])) 
-				$r[0]['data'] = base64_encode(file_get_contents(dbunescbin($r[0]['data'])));
+				$r[0]['content'] = base64_encode(file_get_contents(dbunescbin($r[0]['content'])));
 			else
-				$r[0]['data'] = base64_encode(dbunescbin($r[0]['data']));
+				$r[0]['content'] = base64_encode(dbunescbin($r[0]['content']));
 				
 			$ret = array('attach' => $r[0]);
 			json_return_and_die($ret);
@@ -647,16 +647,16 @@ require_once('include/api_auth.php');
 		if (api_user()===false) return false;
 		if(! $_REQUEST['photo_id']) return false;
 		$scale = ((array_key_exists('scale',$_REQUEST)) ? intval($_REQUEST['scale']) : 0);
-		$r = q("select * from photo where uid = %d and resource_id = '%s' and scale = %d limit 1",
+		$r = q("select * from photo where uid = %d and resource_id = '%s' and imgscale = %d limit 1",
 			intval(local_channel()),
 			dbesc($_REQUEST['photo_id']),
 			intval($scale)
 		);
 		if($r) {
-            $data = dbunescbin($r[0]['data']);
+            $data = dbunescbin($r[0]['content']);
 			if(array_key_exists('os_storage',$r[0]) && intval($r[0]['os_storage']))
 				$data = file_get_contents($data);
-			$r[0]['data'] = base64_encode($data);
+			$r[0]['content'] = base64_encode($data);
 			$ret = array('photo' => $r[0]);
 			$i = q("select id from item where uid = %d and resource_type = 'photo' and resource_id = '%s' limit 1",
 				intval(local_channel()),

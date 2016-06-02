@@ -70,16 +70,25 @@ class Apps {
 		}					
 	}
 
+	/**
+	 * Install the system app if no system apps have been installed, or if a new system app 
+	 * is discovered, or if the version of a system app changes.
+	 */
+
 	static public function check_install_system_app($app) {
 		if((! is_array(self::$installed_system_apps)) || (! count(self::$installed_system_apps))) {
 			return true;
 		}
+		$notfound = true;
 		foreach(self::$installed_system_apps as $iapp) {
-			if(($iapp['app_id'] == hash('whirlpool',$app['name'])) && ($iapp['app_version'] != $app['version'])) {
-				return true;
+			if($iapp['app_id'] == hash('whirlpool',$app['name'])) {
+				$notfound = false;
+				if($iapp['app_version'] != $app['version']) {
+					return true;
+				}
 			}
 		}
-		return false;
+		return $notfound;
 	}
 
 

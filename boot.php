@@ -473,6 +473,7 @@ define ( 'NAMESPACE_YMEDIA',          'http://search.yahoo.com/mrss/' );
  * activity stream defines
  */
 
+define ( 'ACTIVITY_REACT',       NAMESPACE_ZOT   . '/activity/react' );
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_ZOT   . '/activity/dislike' );
 define ( 'ACTIVITY_AGREE',       NAMESPACE_ZOT   . '/activity/agree' );

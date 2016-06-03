@@ -734,6 +734,10 @@ function get_tags($s) {
 	// '=' needs to be avoided because when the replacement is made (in handle_tag()) it has to be ignored there
 	// Feel free to allow '=' if the issue with '=' is solved in handle_tag()
 	// added / ? and [ to avoid issues with hashchars in url paths
+
+	// added ; to single word tags to allow emojis and other unicode character constructs in bbcode
+	// (this would actually be &#xnnnnn; but the ampersand will have been escaped to &amp; by the time we see it.)
+
 	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
@@ -746,7 +750,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);

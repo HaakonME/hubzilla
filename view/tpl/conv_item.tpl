@@ -113,6 +113,7 @@
 						</button>
 						{{/if}}
 
+						{{if $item.toplevel}}
 						{{if $item.like}}
 						<span class="dropdown">
  						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-react-{{$item.id}}">
@@ -134,6 +135,7 @@
 
 						</ul>
 						</span>
+						{{/if}}
 						{{/if}}
 
 

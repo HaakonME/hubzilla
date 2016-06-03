@@ -71,17 +71,17 @@ function photo_upload($channel, $observer, $args) {
 		$type = $args['getimagesize']['mime'];
 		$os_storage = 1;
 	}
-	elseif ($args['data']) {
+	elseif ($args['data'] || $args['content']) {
 
 		// allow an import from a binary string representing the image.
 		// This bypasses the upload step and max size limit checking
 
-		$imagedata = $args['data'];
+		$imagedata = (($args['content']) ? $args['content'] : $args['data']);
 		$filename = $args['filename'];
 		$filesize = strlen($imagedata);
 		// this is going to be deleted if it exists
 		$src = '/tmp/deletemenow';
-		$type = $args['type'];
+		$type = (($args['mimetype']) ? $args['mimetype'] : $args['type']);
 	} else {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
 
@@ -125,7 +125,7 @@ function photo_upload($channel, $observer, $args) {
 		$imagedata = @file_get_contents($src);
 	}
 
-	$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
+	$r = q("select sum(filesize) as total from photo where aid = %d and imgscale = 0 ",
 		intval($account_id)
 	);
 
@@ -172,7 +172,7 @@ function photo_upload($channel, $observer, $args) {
 	$errors = false;
 
 	$p = array('aid' => $account_id, 'uid' => $channel_id, 'xchan' => $visitor, 'resource_id' => $photo_hash,
-		'filename' => $filename, 'album' => $album, 'scale' => 0, 'photo_usage' => PHOTO_NORMAL, 
+		'filename' => $filename, 'album' => $album, 'imgscale' => 0, 'photo_usage' => PHOTO_NORMAL, 
 		'allow_cid' => $ac['allow_cid'], 'allow_gid' => $ac['allow_gid'],
 		'deny_cid' => $ac['deny_cid'], 'deny_gid' => $ac['deny_gid'],
 		'os_storage' => $os_storage, 'os_path' => $args['os_path']
@@ -205,7 +205,7 @@ function photo_upload($channel, $observer, $args) {
 	if(($width > 1024 || $height > 1024) && (! $errors))
 		$ph->scaleImage(1024);
 
-	$p['scale'] = 1;
+	$p['imgscale'] = 1;
 	$r1 = $ph->save($p);
 	$link[1] = array(
 		'rel'  => 'alternate',
@@ -220,7 +220,7 @@ function photo_upload($channel, $observer, $args) {
 	if(($width > 640 || $height > 640) && (! $errors)) 
 		$ph->scaleImage(640);
 
-	$p['scale'] = 2;
+	$p['imgscale'] = 2;
 	$r2 = $ph->save($p);
 	$link[2] = array(
 		'rel'  => 'alternate',
@@ -235,7 +235,7 @@ function photo_upload($channel, $observer, $args) {
 	if(($width > 320 || $height > 320) && (! $errors)) 
 		$ph->scaleImage(320);
 
-	$p['scale'] = 3;
+	$p['imgscale'] = 3;
 	$r3 = $ph->save($p);
 	$link[3] = array(
 		'rel'  => 'alternate',
@@ -332,7 +332,7 @@ function photo_upload($channel, $observer, $args) {
 
 				$item['body'] = $args['body'];
 				$item['obj_type'] = ACTIVITY_OBJ_PHOTO;
-				$item['object']	= json_encode($object);
+				$item['obj']	= json_encode($object);
 
 				$item['tgt_type'] = ACTIVITY_OBJ_ALBUM;
 				$item['target']	= json_encode($target);
@@ -389,8 +389,8 @@ function photo_upload($channel, $observer, $args) {
 		$arr['deny_cid']        = $ac['deny_cid'];
 		$arr['deny_gid']        = $ac['deny_gid'];
 		$arr['verb']            = ACTIVITY_POST;
-		$arr['obj_type']	= ACTIVITY_OBJ_PHOTO;
-		$arr['object']		= json_encode($object);
+		$arr['obj_type']	    = ACTIVITY_OBJ_PHOTO;
+		$arr['obj']		        = json_encode($object);
 		$arr['tgt_type']        = ACTIVITY_OBJ_ALBUM;
 		$arr['target']	        = json_encode($target);
 		$arr['item_wall']       = 1;
@@ -535,7 +535,7 @@ function photos_list_photos($channel, $observer, $album = '') {
 
 	$ret = array('success' => false);
 
-	$r = q("select resource_id, created, edited, title, description, album, filename, type, height, width, size, scale, photo_usage, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and photo_usage in ( %d, %d ) $sql_extra ",
+	$r = q("select resource_id, created, edited, title, description, album, filename, mimetype, height, width, filesize, imgscale, photo_usage, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and photo_usage in ( %d, %d ) $sql_extra ",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
@@ -543,7 +543,7 @@ function photos_list_photos($channel, $observer, $album = '') {
 
 	if($r) {
 		for($x = 0; $x < count($r); $x ++) {
-			$r[$x]['src'] = z_root() . '/photo/' . $r[$x]['resource_id'] . '-' . $r[$x]['scale'];
+			$r[$x]['src'] = z_root() . '/photo/' . $r[$x]['resource_id'] . '-' . $r[$x]['imgscale'];
 		}
 		$ret['success'] = true;
 		$ret['photos'] = $r;
@@ -661,7 +661,7 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 			
 	$arr['body']            = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
-		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 
+		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['imgscale'] . '[/zmg]' 
 		. '[/zrl]';
 
 	$result = item_store($arr);

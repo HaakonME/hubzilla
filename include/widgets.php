@@ -1126,7 +1126,7 @@ function widget_photo_rand($arr) {
 	$filtered = array();
 	if($ret['success'] && $ret['photos'])
 	foreach($ret['photos'] as $p)
-		if($p['scale'] == $scale)
+		if($p['imgscale'] == $scale)
 			$filtered[] = $p['src'];
 
 	if($filtered) {
@@ -1459,9 +1459,9 @@ function widget_album($args) {
 
 	$order = 'DESC';
 
-	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
-		(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
-		ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
+	$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.imgscale, p.description, p.created FROM photo p INNER JOIN
+		(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
+		ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)
 		ORDER BY created $order ",
 		intval($owner_uid),
 		dbesc($album),
@@ -1482,7 +1482,7 @@ function widget_album($args) {
 			else
 				$twist = 'rotright';
 				
-			$ext = $phototypes[$rr['type']];
+			$ext = $phototypes[$rr['mimetype']];
 
 			$imgalt_e = $rr['filename'];
 			$desc_e = $rr['description'];
@@ -1495,7 +1495,7 @@ function widget_album($args) {
 				'twist' => ' ' . $twist . rand(2,4),
 				'link' => $imagelink,
 				'title' => t('View Photo'),
-				'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
+				'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['imgscale'] . '.' .$ext,
 				'alt' => $imgalt_e,
 				'desc'=> $desc_e,
 				'ext' => $ext,

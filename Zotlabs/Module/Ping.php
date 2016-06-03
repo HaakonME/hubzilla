@@ -173,7 +173,7 @@ class Ping extends \Zotlabs\Web\Controller {
 					);
 					break;
 				case 'all_events':
-					$r = q("update event set `ignore` = 1 where `ignore` = 0 and uid = %d AND start < '%s' AND start > '%s' ",
+					$r = q("update event set `dimissed` = 1 where `dismissed` = 0 and uid = %d AND dtstart < '%s' AND dtstart > '%s' ",
 						intval(local_channel()),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
@@ -209,17 +209,17 @@ class Ping extends \Zotlabs\Web\Controller {
 			);
 			if($t && intval($t[0]['total']) > 49) {
 				$z = q("select * from notify where uid = %d
-					and seen = 0 order by date desc limit 50",
+					and seen = 0 order by created desc limit 50",
 					intval(local_channel())
 				);
 			}
 			else {
 				$z1 = q("select * from notify where uid = %d
-					and seen = 0 order by date desc limit 50",
+					and seen = 0 order by created desc limit 50",
 					intval(local_channel())
 				);
 				$z2 = q("select * from notify where uid = %d
-					and seen = 1 order by date desc limit %d",
+					and seen = 1 order by created desc limit %d",
 					intval(local_channel()),
 					intval(50 - intval($t[0]['total']))
 				);
@@ -230,10 +230,10 @@ class Ping extends \Zotlabs\Web\Controller {
 				foreach($z as $zz) {
 					$notifs[] = array(
 						'notify_link' => z_root() . '/notify/view/' . $zz['id'], 
-						'name' => $zz['name'],
+						'name' => $zz['xname'],
 						'url' => $zz['url'],
 						'photo' => $zz['photo'],
-						'when' => relative_date($zz['date']), 
+						'when' => relative_date($zz['created']), 
 						'hclass' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
 						'message' => strip_tags(bbcode($zz['msg']))
 					);
@@ -325,9 +325,9 @@ class Ping extends \Zotlabs\Web\Controller {
 			$result = array();
 	
 			$r = q("SELECT * FROM event left join xchan on event_xchan = xchan_hash
-				WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
-				and type in ( 'event', 'birthday' )
-				ORDER BY `start` DESC LIMIT 1000",
+				WHERE `event`.`uid` = %d AND dtstart < '%s' AND dtstart > '%s' and `dismissed` = 0
+				and etype in ( 'event', 'birthday' )
+				ORDER BY `dtstart` DESC LIMIT 1000",
 				intval(local_channel()),
 				dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
 				dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
@@ -336,14 +336,14 @@ class Ping extends \Zotlabs\Web\Controller {
 			if($r) {
 				foreach($r as $rr) {
 					if($rr['adjust'])
-						$md = datetime_convert('UTC', date_default_timezone_get(), $rr['start'], 'Y/m');
+						$md = datetime_convert('UTC', date_default_timezone_get(), $rr['dtstart'], 'Y/m');
 					else
-						$md = datetime_convert('UTC', 'UTC', $rr['start'], 'Y/m');
+						$md = datetime_convert('UTC', 'UTC', $rr['dtstart'], 'Y/m');
 	
-					$strt = datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['start']);
+					$strt = datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['dtstart']);
 					$today = ((substr($strt, 0, 10) === datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d')) ? true : false);
 					
-					$when = day_translate(datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
+					$when = day_translate(datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['dtstart'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
 	
 					$result[] = array(
 						'notify_link' => z_root() . '/events', // FIXME this takes you to an edit page and it may not be yours, we really want to just view the single event  --> '/events/event/' . $rr['event_hash'],
@@ -443,10 +443,10 @@ class Ping extends \Zotlabs\Web\Controller {
 		$t5 = dba_timer();
 	
 		if($vnotify & (VNOTIFY_EVENT|VNOTIFY_EVENTTODAY|VNOTIFY_BIRTHDAY)) {
-			$events = q("SELECT type, start, adjust FROM `event`
-				WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
-				and type in ( 'event', 'birthday' )
-				ORDER BY `start` ASC ",
+			$events = q("SELECT etype, dtstart, adjust FROM `event`
+				WHERE `event`.`uid` = %d AND dtstart < '%s' AND dtstart > '%s' and `dismissed` = 0
+				and etype in ( 'event', 'birthday' )
+				ORDER BY `dtstart` ASC ",
 					intval(local_channel()),
 					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
 					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
@@ -459,14 +459,14 @@ class Ping extends \Zotlabs\Web\Controller {
 					$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
 					foreach($events as $x) {
 						$bd = false;
-						if($x['type'] === 'birthday') {
+						if($x['etype'] === 'birthday') {
 							$result['birthdays'] ++;
 							$bd = true;
 						}
 						else {
 							$result['events'] ++;
 						}
-						if(datetime_convert('UTC', ((intval($x['adjust'])) ? date_default_timezone_get() : 'UTC'), $x['start'], 'Y-m-d') === $str_now) {
+						if(datetime_convert('UTC', ((intval($x['adjust'])) ? date_default_timezone_get() : 'UTC'), $x['dtstart'], 'Y-m-d') === $str_now) {
 							$result['all_events_today'] ++;
 							if($bd)
 								$result['birthdays_today'] ++;

@@ -59,6 +59,10 @@ aside .nav-pills > li > a,
 	padding: 6px 10px;
 }
 
+.dropdown-menu {
+	min-width: auto;
+}
+
 .dropdown-menu li a {
 	overflow: hidden;
 	text-overflow: ellipsis;

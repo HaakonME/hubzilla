@@ -212,7 +212,7 @@ class Thing extends \Zotlabs\Web\Controller {
 	
 			$arr['verb'] = $verb;
 			$arr['obj_type'] = $objtype;
-			$arr['object'] = $obj;
+			$arr['obj'] = $obj;
 	
 			if(! $profile['is_default']) {
 				$arr['item_private'] = true;

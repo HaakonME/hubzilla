@@ -113,6 +113,31 @@
 						</button>
 						{{/if}}
 
+						{{if $item.like}}
+						<span class="dropdown">
+ 						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-react-{{$item.id}}">
+							<img class="dropdown-menu-img-xs" style="margin-right: 0;" src="/images/emoji/1f60a.png" alt="1f60a" />
+						</button>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-react-{{$item.id}}">
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f60a'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f60a.png" alt="1f60a" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f44f'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f44f.png" alt="1f44f" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f37e'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f37e.png" alt="1f37e" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f48b'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f48b.png" alt="1f48b" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f61e'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f61e.png" alt="1f61e" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'2665'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/2665.png" alt="2665" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f622'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f622.png" alt="1f622" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f62e'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f62e.png" alt="1f62e" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f634'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f634.png" alt="1f634" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f61c'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f61c.png" alt="1f61c" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f607'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f607.png" alt="1f607" /></a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'1f608'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/1f608.png" alt="1f608" /></a></li>
+
+						</ul>
+						</span>
+						{{/if}}
+
+
+
 						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
 							<i class="fa fa-caret-down"></i>
 						</button>

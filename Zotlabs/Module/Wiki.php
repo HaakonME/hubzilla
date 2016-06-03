@@ -6,19 +6,18 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 	function init() {
 		// Determine which channel's wikis to display to the observer
-		$which = null;
-		if(argc() > 1)
-			$which = argv(1); // if the channel name is in the URL, use that
-		if(! $which) { // if no channel name was provided, assume the current logged in channel
-			if(local_channel()) {
-				$channel = \App::get_channel();
-				if($channel && $channel['channel_address'])
-				$which = $channel['channel_address'];
-				goaway(z_root().'/wiki/'.$which);
+		$nick = null;
+		if (argc() > 1)
+			$nick = argv(1); // if the channel name is in the URL, use that
+		if (!$nick && local_channel()) { // if no channel name was provided, assume the current logged in channel
+			$channel = \App::get_channel();
+			if ($channel && $channel['channel_address']) {
+				$nick = $channel['channel_address'];
+				goaway(z_root() . '/wiki/' . $nick);
 			}
 		}
-		if(! $which) {
-			notice( t('You must be logged in to see this page.') . EOL );
+		if (!$nick) {
+			notice(t('You must be logged in to see this page.') . EOL);
 			goaway('/login');
 		}
 	}
@@ -31,95 +30,103 @@ class Wiki extends \Zotlabs\Web\Controller {
 		$wiki_owner = false;
 		$showNewWikiButton = false;
 		$pageHistory = array();
-		if(local_channel()) {
-			$channel = \App::get_channel();
-		}
-		
-		// Obtain the default permission settings of the channel
-    $channel_acl = array(
-            'allow_cid' => $channel['channel_allow_cid'],
-            'allow_gid' => $channel['channel_allow_gid'],
-            'deny_cid'  => $channel['channel_deny_cid'],
-            'deny_gid'  => $channel['channel_deny_gid']
-    );
-		// Initialize the ACL to the channel default permissions
-    $x = array(
-        'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-        'acl' => populate_acl($channel_acl),
-        'bang' => ''
-    );
-
+		$local_observer = null;
 		$resource_id = '';
 		$pagename = '';
-		if(argc() > 1) {
-			$channel = get_channel_by_nick(argv(1));
-			if(local_channel() === intval($channel['channel_id'])) {
-				$wiki_owner = true;
-			}			
-		}
-		// GET https://hubzilla.hub/argv(0)/argv(1)/argv(2)/argv(3)/argv(4)/...
-		if(argc() > 2) {
-			// GET /wiki/channel/wiki
-			// Check if wiki exists andr redirect if it does not
-			$w = wiki_exists_by_name($channel['channel_id'], argv(2));
-			if(!$w['resource_id']) {
-				notice('Wiki not found' . EOL);
-				goaway('/'.argv(0).'/'.argv(1));
-			} else {				
-				$resource_id = $w['resource_id'];
-			}
-			if (!$wiki_owner) {
-				// Check for observer permissionswhich);
-				$observer_hash = get_observer_hash();
-				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
-				if(!$perms['read']) {
-					notice('Permission denied.' . EOL);
-					goaway('/'.argv(0).'/'.argv(1));
-				}
-			}
-		}		
 		
-		if(argc()<3) {
-			// GET /wiki/channel
-			$channel = get_channel_by_nick(argv(1));
-			$wikiheader = t('Wiki Sandbox');
-			$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
-			$hide_editor = false;
-			$showPageControls = false;
-			$showNewWikiButton = $wiki_owner;
-		} elseif (argc()<4) {
-			// GET /wiki/channel/wiki
-			// No page was specified, so redirect to Home.md
-			goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/Home.md');
-			$wikiheader = rawurldecode(argv(2)); // show wiki name
-			$content = '""';
-			$hide_editor = true;	
-			// Until separate read and write permissions are implemented, only allow 
-			// the wiki owner to see page controls
-			$showPageControls = $wiki_owner;
-			$showNewWikiButton = $wiki_owner;  
-		} elseif (argc()<5) {
-			// GET /wiki/channel/wiki/page
-			$pagename = argv(3);
-			$wikiheader = rawurldecode(argv(2)) . ': ' . rawurldecode($pagename);	// show wiki name and page			
-			$p = wiki_get_page_content(array('wiki_resource_id' => $resource_id, 'page' => $pagename));
-			if(!$p['success']) {
-				$content = 'Error retrieving page content. Try again.';
-			}
-			$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
-			$hide_editor = false;
-			$showPageControls = $wiki_owner;
-			$showNewWikiButton = $wiki_owner;
-			$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'page' => $pagename));
+		// init() should have forced the URL to redirect to /wiki/channel so assume argc() > 1
+		$nick = argv(1);
+		$channel = get_channel_by_nick($nick);  // The channel who owns the wikis being viewed
+		if(! $channel) {
+			notice('Invalid channel' . EOL);
+			goaway('/' . argv(0));
 		}
-		require_once('library/markdown.php');
-		$renderedContent = Markdown(json_decode($content));
+		// Determine if the observer is the channel owner so the ACL dialog can be populated
+		if (local_channel() === intval($channel['channel_id'])) {
+			$local_observer = \App::get_channel();
+			$wiki_owner = true;
+
+			// Obtain the default permission settings of the channel
+			$channel_acl = array(
+					'allow_cid' => $local_observer['channel_allow_cid'],
+					'allow_gid' => $local_observer['channel_allow_gid'],
+					'deny_cid' => $local_observer['channel_deny_cid'],
+					'deny_gid' => $local_observer['channel_deny_gid']
+			);
+			// Initialize the ACL to the channel default permissions
+			$x = array(
+					'lockstate' => (( $local_observer['channel_allow_cid'] || 
+														$local_observer['channel_allow_gid'] || 
+														$local_observer['channel_deny_cid'] || 
+														$local_observer['channel_deny_gid']) 
+														? 'lock' : 'unlock'),
+					'acl' => populate_acl($channel_acl),
+					'bang' => ''
+			);
+		} else {
+			// Not the channel owner 
+			$channel_acl = $x = array();
+		}
+
+		switch (argc()) {
+			case 2:
+				// Configure page template
+				$wikiheader = t('Wiki Sandbox');
+				$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
+				$hide_editor = false;
+				$showPageControls = false;
+				$showNewWikiButton = $wiki_owner;
+				$showNewPageButton = false;
+				break;
+			case 3:
+				// /wiki/channel/wiki -> No page was specified, so redirect to Home.md
+				goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/Home.md');
+			case 4:
+				// GET /wiki/channel/wiki/page
+				// Fetch the wiki info and determine observer permissions
+				$wikiname = argv(2);
+				$pagename = argv(3);
+				$w = wiki_exists_by_name($channel['channel_id'], $wikiname);
+				if(!$w['resource_id']) {
+					notice('Wiki not found' . EOL);
+					goaway('/'.argv(0).'/'.argv(1));
+				}				
+				$resource_id = $w['resource_id'];
+				
+				if (!$wiki_owner) {
+					// Check for observer permissions
+					$observer_hash = get_observer_hash();
+					$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+					if(!$perms['read']) {
+						notice('Permission denied.' . EOL);
+						goaway('/'.argv(0).'/'.argv(1));
+					}
+				}
+				$wikiheader = rawurldecode($wikiname) . ': ' . rawurldecode($pagename);	// show wiki name and page			
+				$p = wiki_get_page_content(array('resource_id' => $resource_id, 'page' => $pagename));
+				if(!$p['success']) {
+					notice('Error retrieving page content' . EOL);
+					goaway('/'.argv(0).'/'.argv(1).'/'.argv(2));
+				}
+				$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
+				$hide_editor = false;
+				$showPageControls = $wiki_owner;
+				$showNewWikiButton = $wiki_owner;
+				$showNewPageButton = $wiki_owner;
+				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'page' => $pagename));
+				break;
+			default:	// Strip the extraneous URL components
+				goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/'.argv(3));
+		}
+		// Render the Markdown-formatted page content in HTML
+		require_once('library/markdown.php');	
 		
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheader' => $wikiheader,
 			'$hideEditor' => $hide_editor,
 			'$showPageControls' => $showPageControls,
 			'$showNewWikiButton'=> $showNewWikiButton,
+			'$showNewPageButton'=> $showNewPageButton,
 			'$channel' => $channel['channel_address'],
 			'$resource_id' => $resource_id,
 			'$page' => $pagename,
@@ -127,12 +134,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
 			'$content' => $content,
-			'$renderedContent' => $renderedContent,
+			'$renderedContent' => Markdown(json_decode($content)),
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
 			'$pageHistory' => $pageHistory['history']
 		));
-		head_add_js('library/ace/ace.js');
+		head_add_js('library/ace/ace.js');	// Ace Code Editor
 		return $o;
 	}
 
@@ -151,13 +158,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Create a new wiki
 		// /wiki/channel/create/wiki
 		if ((argc() > 3) && (argv(2) === 'create') && (argv(3) === 'wiki')) {
-			$which = argv(1);
+			$nick = argv(1);
 			// Determine if observer has permission to create wiki
 			$observer_hash = get_observer_hash();
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
-				$channel = get_channel_by_nick($which);
+				$channel = get_channel_by_nick($nick);
 				// Figure out who the page owner is.
 				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
 				// TODO: Create a new permission setting for wiki analogous to webpages. Until
@@ -180,9 +187,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$homePage = wiki_create_page('Home.md', $r['item']['resource_id']);
 				if(!$homePage['success']) {
 					notice('Wiki created, but error creating Home page.');
-					goaway('/wiki/'.$which.'/'.$name);
+					goaway('/wiki/'.$nick.'/'.$name);
 				}
-				goaway('/wiki/'.$which.'/'.$name.'/Home.md');
+				goaway('/wiki/'.$nick.'/'.$name.'/Home.md');
 			} else {
 				notice('Error creating wiki');
 				goaway('/wiki');
@@ -191,12 +198,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 		// Delete a wiki
 		if ((argc() > 3) && (argv(2) === 'delete') && (argv(3) === 'wiki')) {
-			$which = argv(1);
+			$nick = argv(1);
 			// Determine if observer has permission to create wiki
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
-				$channel = get_channel_by_nick($which);
+				$channel = get_channel_by_nick($nick);
 				$observer_hash = get_observer_hash();
 				// Figure out who the page owner is.
 				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
@@ -219,13 +226,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 		// Create a page
 		if ((argc() === 4) && (argv(2) === 'create') && (argv(3) === 'page')) {
-			$which = argv(1);
+			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
 			// Determine if observer has permission to create wiki
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
-				$channel = get_channel_by_nick($which);
+				$channel = get_channel_by_nick($nick);
 				$observer_hash = get_observer_hash();
 				// Figure out who the page owner is.
 				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
@@ -273,7 +280,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		
 		// Save a page
 		if ((argc() === 4) && (argv(2) === 'save') && (argv(3) === 'page')) {
-			$which = argv(1);
+			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
 			$pagename = escape_tags(urlencode($_POST['name'])); 
 			$content = escape_tags($_POST['content']); //Get new content
@@ -281,7 +288,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
-				$channel = get_channel_by_nick($which);
+				$channel = get_channel_by_nick($nick);
 				$observer_hash = get_observer_hash();
 				// Figure out who the page owner is.
 				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
@@ -319,14 +326,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Update page history
 		// /wiki/channel/history/page
 		if ((argc() === 4) && (argv(2) === 'history') && (argv(3) === 'page')) {
-			$which = argv(1);
+			$nick = argv(1);
 			$resource_id = $_POST['resource_id'];
 			$pagename = escape_tags(urlencode($_POST['name']));
 			// Determine if observer has permission to view content
 			if (local_channel()) {
 				$channel = \App::get_channel();
 			} else {
-				$channel = get_channel_by_nick($which);
+				$channel = get_channel_by_nick($nick);
 				$observer_hash = get_observer_hash();
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
 				if (!$perms['read']) {

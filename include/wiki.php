@@ -9,8 +9,9 @@ define ( 'WIKI_ITEM_RESOURCE_TYPE', 'wiki' );
 
 function wiki_list($channel, $observer_hash) {
 	$sql_extra = item_permissions_sql($channel['channel_id'], $observer_hash);
-	$wikis = q("SELECT * FROM item WHERE resource_type = '%s' AND mid = parent_mid AND item_deleted = 0 $sql_extra", 
-			dbesc(WIKI_ITEM_RESOURCE_TYPE)
+	$wikis = q("SELECT * FROM item WHERE resource_type = '%s' AND mid = parent_mid AND uid = %d AND item_deleted = 0 $sql_extra", 
+			dbesc(WIKI_ITEM_RESOURCE_TYPE),
+			intval($channel['channel_id'])
 	);
 	// TODO: query db for wikis the observer can access. Return with two lists, for read and write access
 	return array('wikis' => $wikis);
@@ -195,8 +196,8 @@ function wiki_create_page($name, $resource_id) {
 function wiki_get_page_content($arr) {
 	$page = ((array_key_exists('page',$arr)) ? $arr['page'] : '');
 	// TODO: look for page resource_id and retrieve that way alternatively
-	$wiki_resource_id = ((array_key_exists('wiki_resource_id',$arr)) ? $arr['wiki_resource_id'] : '');
-	$w = wiki_get_wiki($wiki_resource_id);
+	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
+	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
 		return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
 	}
@@ -230,7 +231,7 @@ function wiki_page_history($arr) {
 	if($reponame === '') {
 		$reponame = 'repo';
 	}
-	$git = new GitRepo('sys', null, false, $w['wiki']['title'], $w['path']);
+	$git = new GitRepo('', null, false, $w['wiki']['title'], $w['path']);
 	try {
 		$gitlog = $git->git->log('', $page_path , array('limit' => 50));
 		logger('gitlog: ' . json_encode($gitlog));
@@ -272,7 +273,7 @@ function wiki_git_commit($arr) {
 	if($reponame === '') {
 		$reponame = 'repo';
 	}
-	$git = new GitRepo('sys', null, false, $w['wiki']['title'], $w['path']);
+	$git = new GitRepo($observer['xchan_addr'], null, false, $w['wiki']['title'], $w['path']);
 	try {
 		$git->setIdentity($observer['xchan_name'], $observer['xchan_addr']);
 		if ($files === null) {

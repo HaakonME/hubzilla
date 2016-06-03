@@ -857,27 +857,27 @@ function widget_chatroom_members() {
 function widget_wiki_list($arr) {
 
 	require_once("include/wiki.php");
-	if (argc() > 1) {
-		$nick = argv(1);
-		$channel = get_channel_by_nick($nick);
-	} else {
+	$channel = null;
+	if (argc() < 2 && local_channel()) { 
+		// This should not occur because /wiki should redirect to /wiki/channel ...
 		$channel = \App::get_channel();
-		$nick = $channel['channel_address'];
+	} else {
+		$channel = get_channel_by_nick(argv(1));	// Channel being viewed by observer
+	}
+	if (!$channel) {
+		return '';
 	}
 	$wikis = wiki_list($channel, get_observer_hash());
-	if (local_channel() === intval($channel['channel_id'])) {
-		$showControls = true;
-	} else {
-		$showControls = false;
-	}
 	if ($wikis) {
 		return replace_macros(get_markup_template('wikilist.tpl'), array(
 			'$header' => t('Wiki List'),
-			'$channel' => $nick,
+			'$channel' => $channel['channel_address'],
 			'$wikis' => $wikis['wikis'],
-			'$showControls' => $showControls
+			// If the observer is the local channel owner, show the wiki controls
+			'$showControls' => ((local_channel() === intval($channel['channel_id'])) ? true : false)
 		));
 	}
+	return '';
 }
 
 function widget_wiki_pages($arr) {

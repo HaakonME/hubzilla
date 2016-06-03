@@ -16,6 +16,8 @@
     <div class="pull-right">
       {{if $showNewWikiButton}}
       <button class="btn btn-primary btn-xs" onclick="$('#new-page-form-wrapper').hide(); openClose('new-wiki-form-wrapper');">New Wiki</button>
+      {{/if}}
+      {{if $showNewPageButton}}
       <button class="btn btn-success btn-xs" onclick="$('#new-wiki-form-wrapper').hide(); openClose('new-page-form-wrapper');">New Page</button>
       {{/if}}
       <button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();

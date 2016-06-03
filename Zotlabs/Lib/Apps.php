@@ -169,6 +169,7 @@ class Apps {
 			'Settings' => t('Settings'),
 			'Files' => t('Files'),
 			'Webpages' => t('Webpages'),
+			'Wiki' => t('Wiki'),
 			'Channel Home' => t('Channel Home'), 
 			'View Profile' => t('View Profile'),
 			'Photos' => t('Photos'), 

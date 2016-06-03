@@ -347,6 +347,7 @@ class ThreadItem {
 			'has_tags' => $has_tags,
 
 // Item toolbar buttons
+			'emojis'   => (($this->is_toplevel() && $this->is_commentable() && feature_enabled($conv->get_profile_owner(),'emojis')) ? '1' : ''),
 			'like'      => $like,
 			'dislike'   => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike : ''),
 			'share'     => $share,

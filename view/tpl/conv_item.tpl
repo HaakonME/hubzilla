@@ -79,7 +79,7 @@
 				{{/if}}
 				<div class="wall-item-tools">
 					<div class="wall-item-tools-right pull-right">
-						{{if $item.toplevel && $item.like}}
+						{{if $item.toplevel && $item.emojis}}
 						<div class="btn-group dropdown">
 							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-react-{{$item.id}}">
 								<i class="fa fa-smile-o"></i>

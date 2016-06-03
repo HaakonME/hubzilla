@@ -666,7 +666,7 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? $x['diaspora_signature'] : '');
 
-	$arr['object']       = activity_sanitise($x['object']);
+	$arr['obj']          = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
 	$arr['attach']       = activity_sanitise($x['attach']);
@@ -1055,8 +1055,8 @@ function encode_item($item,$mirror = false) {
 
 	$x['owner']           = encode_item_xchan($item['owner']);
 	$x['author']          = encode_item_xchan($item['author']);
-	if($item['object'])
-		$x['object']      = json_decode_plus($item['object']);
+	if($item['obj'])
+		$x['object']      = json_decode_plus($item['obj']);
 	if($item['target'])
 		$x['target']      = json_decode_plus($item['target']);
 	if($item['attach'])
@@ -1182,8 +1182,8 @@ function encode_item_terms($terms,$mirror = false) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if(in_array($term['type'],$allowed_export_terms))
-				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['type']));
+			if(in_array($term['ttype'],$allowed_export_terms))
+				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'ttype' => termtype($term['type']));
 		}
 	}
 
@@ -1240,39 +1240,41 @@ function decode_tags($t) {
 		$ret = array();
 		foreach($t as $x) {
 			$tag = array();
+			if(array_key_exists('type',$x))
+				$x['ttype'] = $x['type'];
 			$tag['term'] = htmlspecialchars($x['tag'], ENT_COMPAT, 'UTF-8', false);
 			$tag['url']  = htmlspecialchars($x['url'], ENT_COMPAT, 'UTF-8', false);
-			switch($x['type']) {
+			switch($x['ttype']) {
 				case 'hashtag':
-					$tag['type'] = TERM_HASHTAG;
+					$tag['ttype'] = TERM_HASHTAG;
 					break;
 				case 'mention':
-					$tag['type'] = TERM_MENTION;
+					$tag['ttype'] = TERM_MENTION;
 					break;
 				case 'category':
-					$tag['type'] = TERM_CATEGORY;
+					$tag['ttype'] = TERM_CATEGORY;
 					break;
 				case 'private_category':
-					$tag['type'] = TERM_PCATEGORY;
+					$tag['ttype'] = TERM_PCATEGORY;
 					break;
 				case 'file':
-					$tag['type'] = TERM_FILE;
+					$tag['ttype'] = TERM_FILE;
 					break;
 				case 'search':
-					$tag['type'] = TERM_SEARCH;
+					$tag['ttype'] = TERM_SEARCH;
 					break;
 				case 'thing':
-					$tag['type'] = TERM_THING;
+					$tag['ttype'] = TERM_THING;
 					break;
 				case 'bookmark':
-					$tag['type'] = TERM_BOOKMARK;
+					$tag['ttype'] = TERM_BOOKMARK;
 					break;
 				case 'communitytag':
-					$tag['type'] = TERM_COMMUNITYTAG;
+					$tag['ttype'] = TERM_COMMUNITYTAG;
 					break;
 				default:
 				case 'unknown':
-					$tag['type'] = TERM_UNKNOWN;
+					$tag['ttype'] = TERM_UNKNOWN;
 					break;
 			}
 			$ret[] = $tag;
@@ -1593,9 +1595,9 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		}
 	}
 
-	if((x($arr,'object')) && is_array($arr['object'])) {
-		activity_sanitise($arr['object']);
-		$arr['object'] = json_encode($arr['object']);
+	if((x($arr,'obj')) && is_array($arr['obj'])) {
+		activity_sanitise($arr['obj']);
+		$arr['obj'] = json_encode($arr['obj']);
 	}
 
 	if((x($arr,'target')) && is_array($arr['target'])) {
@@ -1626,7 +1628,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['thr_parent']    = ((x($arr,'thr_parent'))    ? notags(trim($arr['thr_parent']))    : $arr['parent_mid']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : ACTIVITY_POST);
 	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : ACTIVITY_OBJ_NOTE);
-	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
+	$arr['obj']           = ((x($arr,'obj'))           ? trim($arr['obj'])                   : '');
 	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
@@ -1695,7 +1697,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 				return $ret;
 			}
 
-			if(($arr['obj_type'] == ACTIVITY_OBJ_NOTE) && (! $arr['object']))
+			if(($arr['obj_type'] == ACTIVITY_OBJ_NOTE) && (! $arr['obj']))
 				$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
 			// is the new message multi-level threaded?
@@ -1855,12 +1857,12 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	if(($terms) && (is_array($terms))) {
 		foreach($terms as $t) {
-			q("insert into term (uid,oid,otype,type,term,url)
+			q("insert into term (uid,oid,otype,ttype,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
 				intval($arr['uid']),
 				intval($current_post),
 				intval(TERM_OBJ_POST),
-				intval($t['type']),
+				intval($t['ttype']),
 				dbesc($t['term']),
 				dbesc($t['url'])
 			);
@@ -1989,9 +1991,9 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		}
 	}
 
-	if((x($arr,'object')) && is_array($arr['object'])) {
-		activity_sanitise($arr['object']);
-		$arr['object'] = json_encode($arr['object']);
+	if((x($arr,'obj')) && is_array($arr['obj'])) {
+		activity_sanitise($arr['obj']);
+		$arr['obj'] = json_encode($arr['obj']);
 	}
 
 	if((x($arr,'target')) && is_array($arr['target'])) {
@@ -2033,7 +2035,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : $orig[0]['verb']);
 	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : $orig[0]['obj_type']);
-	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : $orig[0]['object']);
+	$arr['obj']           = ((x($arr,'obj'))           ? trim($arr['obj'])                   : $orig[0]['obj']);
 	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : $orig[0]['tgt_type']);
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : $orig[0]['target']);
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : $orig[0]['plink']);
@@ -2134,12 +2136,12 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	if(is_array($terms)) {
 		foreach($terms as $t) {
-			q("insert into term (uid,oid,otype,type,term,url)
+			q("insert into term (uid,oid,otype,ttype,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
 				intval($uid),
 				intval($orig_post_id),
 				intval(TERM_OBJ_POST),
-				intval($t['type']),
+				intval($t['ttype']),
 				dbesc($t['term']),
 				dbesc($t['url'])
 			);
@@ -2367,10 +2369,10 @@ function tag_deliver($uid, $item_id) {
 	if (stristr($item['verb'],ACTIVITY_POKE)) {
 		$poke_notify = true;
 
-		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['object']))
+		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['obj']))
 			$poke_notify = false;
 
-		$obj = json_decode_plus($item['object']);
+		$obj = json_decode_plus($item['obj']);
 		if($obj) {
 			if($obj['id'] !== $u[0]['channel_hash'])
 				$poke_notify = false;
@@ -2414,7 +2416,7 @@ function tag_deliver($uid, $item_id) {
 					intval($u[0]['channel_id'])
 				);
 				if($p) {
-					$j_obj = json_decode_plus($item['object']);
+					$j_obj = json_decode_plus($item['obj']);
 					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
 						if(is_array($j_obj['link']))
@@ -2720,7 +2722,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 					foreach($tags as $tt) {
 						$tt = trim($tt);
 						if($tt) {
-            				q("insert into term (uid,oid,otype,type,term,url)
+            				q("insert into term (uid,oid,otype,ttype,term,url)
                 				values(%d,%d,%d,%d,'%s','%s') ",
                 				intval($channel['channel_id']),
 				                intval($item_id),
@@ -2863,7 +2865,7 @@ function check_item_source($uid, $item) {
 		foreach($words as $word) {
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['ttype'] == TERM_HASHTAG) || ($t['ttype'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -2916,7 +2918,7 @@ function post_is_importable($item,$abook) {
 				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['ttype'] == TERM_HASHTAG) || ($t['ttype'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return false;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -2937,7 +2939,7 @@ function post_is_importable($item,$abook) {
 				continue;
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if((($t['type'] == TERM_HASHTAG) || ($t['type'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
+					if((($t['ttype'] == TERM_HASHTAG) || ($t['ttype'] == TERM_COMMUNITYTAG)) && (($t['term'] === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			elseif((strpos($word,'/') === 0) && preg_match($word,$text))
@@ -3091,7 +3093,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 			if($x) {
 				$res = substr($i,$x+1);
 				$i = substr($i,0,$x);
-				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d AND `uid` = %d",
+				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `imgscale` = %d AND `uid` = %d",
 					dbesc($i),
 					intval($res),
 					intval($uid)
@@ -3214,7 +3216,7 @@ function item_getfeedtags($item) {
 
 	if(count($terms)) {
 		foreach($terms as $term) {
-			if(($term['type'] == TERM_HASHTAG) || ($term['type'] == TERM_COMMUNITYTAG))
+			if(($term['ttype'] == TERM_HASHTAG) || ($term['ttype'] == TERM_COMMUNITYTAG))
 				$ret[] = array('#',$term['url'],$term['term']);
 			else
 				$ret[] = array('@',$term['url'],$term['term']);
@@ -3685,7 +3687,7 @@ function fetch_post_tags($items,$link = false) {
 	for($x = 0; $x < count($items); $x ++) {
 		if($tags) {
 			foreach($tags as $t) {
-				if(($link) && ($t['type'] == TERM_MENTION))
+				if(($link) && ($t['ttype'] == TERM_MENTION))
 					$t['url'] = chanlink_url($t['url']);
 				if(array_key_exists('item_id',$items[$x])) {
 					if($t['oid'] == $items[$x]['item_id']) {
@@ -3895,8 +3897,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		}
 
 		$contact_str = '';
-		/** @FIXME $group is undefined */
-		$contacts = group_get_members($group);
+
+		$contacts = group_get_members($r[0]['id']);
 		if ($contacts) {
 			foreach($contacts as $c) {
 				if($contact_str)
@@ -3913,7 +3915,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent $item_normal ) ";
 
 		$x = group_rec_byhash($uid,$r[0]['hash']);
-		$result['headline'] = sprintf( t('Privacy group: %s'),$x['name']);
+		$result['headline'] = sprintf( t('Privacy group: %s'),$x['gname']);
 	}
 	elseif($arr['cid'] && $uid) {
 
@@ -4261,7 +4263,7 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 	$arr['obj_type'] = ACTIVITY_OBJ_PHOTO;
 	$arr['verb'] = ACTIVITY_UPDATE;
 
-	$arr['object'] = json_encode(array(
+	$arr['obj'] = json_encode(array(
 		'type' => $arr['obj_type'],
 		'id' => z_root() . '/photo/profile/l/' . $channel['channel_id'],
 		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/profile/l/' . $channel['channel_id'])

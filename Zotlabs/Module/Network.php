@@ -223,7 +223,7 @@ class Network extends \Zotlabs\Web\Controller {
 	
 			if($x) {
 				$title = replace_macros(get_markup_template("section_title.tpl"),array(
-					'$title' => t('Privacy group: ') . $x['name']
+					'$title' => t('Privacy group: ') . $x['gname']
 				));
 			}
 	

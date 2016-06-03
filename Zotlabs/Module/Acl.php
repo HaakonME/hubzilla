@@ -53,13 +53,13 @@ class Acl extends \Zotlabs\Web\Controller {
 		
 		if ($type=='' || $type=='g'){
 	
-			$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`
+			$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`gname`
 					FROM `groups`,`group_member` 
 					WHERE `groups`.`deleted` = 0 AND `groups`.`uid` = %d 
 					AND `group_member`.`gid`=`groups`.`id`
 					$sql_extra
 					GROUP BY `groups`.`id`
-					ORDER BY `groups`.`name` 
+					ORDER BY `groups`.`gname` 
 					LIMIT %d OFFSET %d",
 				intval(local_channel()),
 				intval($count),
@@ -67,11 +67,11 @@ class Acl extends \Zotlabs\Web\Controller {
 			);
 	
 			foreach($r as $g){
-	//		logger('acl: group: ' . $g['name'] . ' members: ' . group_get_members_xchan($g['id']));
+	//		logger('acl: group: ' . $g['gname'] . ' members: ' . group_get_members_xchan($g['id']));
 				$groups[] = array(
 					"type"  => "g",
 					"photo" => "images/twopeople.png",
-					"name"  => $g['name'],
+					"name"  => $g['gname'],
 					"id"	=> $g['id'],
 					"xid"   => $g['hash'],
 					"uids"  => group_get_members_xchan($g['id']),

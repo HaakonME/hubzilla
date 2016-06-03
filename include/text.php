@@ -734,6 +734,10 @@ function get_tags($s) {
 	// '=' needs to be avoided because when the replacement is made (in handle_tag()) it has to be ignored there
 	// Feel free to allow '=' if the issue with '=' is solved in handle_tag()
 	// added / ? and [ to avoid issues with hashchars in url paths
+
+	// added ; to single word tags to allow emojis and other unicode character constructs in bbcode
+	// (this would actually be &#xnnnnn; but the ampersand will have been escaped to &amp; by the time we see it.)
+
 	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
@@ -746,7 +750,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
@@ -810,7 +814,7 @@ function get_mentions($item,$tags) {
 		return $o;
 
 	foreach($tags as $x) {
-		if($x['type'] == TERM_MENTION) {
+		if($x['ttype'] == TERM_MENTION) {
 			$o .= "\t\t" . '<link rel="mentioned" href="' . $x['url'] . '" />' . "\r\n";
 			$o .= "\t\t" . '<link rel="ostatus:attention" href="' . $x['url'] . '" />' . "\r\n";
 		}
@@ -1458,37 +1462,6 @@ function generate_named_map($location) {
 	return (($arr['html']) ? $arr['html'] : $location);
 }
 
-function format_event($jobject) {
-	$event = array();
-
-	$object = json_decode($jobject,true);
-
-	//ensure compatibility with older items - this check can be removed at a later point
-	if(array_key_exists('description', $object)) {
-
-		$bd_format = t('l F d, Y \@ g:i A'); // Friday January 18, 2011 @ 8:01 AM
-
-		$event['header'] = replace_macros(get_markup_template('event_item_header.tpl'),array(
-			'$title'	 => bbcode($object['title']),
-			'$dtstart_label' => t('Starts:'),
-			'$dtstart_title' => datetime_convert('UTC', 'UTC', $object['start'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
-			'$dtstart_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['start'] , $bd_format )) : day_translate(datetime_convert('UTC', 'UTC', $object['start'] , $bd_format))),
-			'$finish'	 => (($object['nofinish']) ? false : true),
-			'$dtend_label'	 => t('Finishes:'),
-			'$dtend_title'	 => datetime_convert('UTC','UTC',$object['finish'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
-			'$dtend_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['finish'] , $bd_format )) :  day_translate(datetime_convert('UTC', 'UTC', $object['finish'] , $bd_format )))
-		));
-
-		$event['content'] = replace_macros(get_markup_template('event_item_content.tpl'),array(
-			'$description'	  => bbcode($object['description']),
-			'$location_label' => t('Location:'),
-			'$location'	  => bbcode($object['location'])
-		));
-
-	}
-
-	return $event;
-}
 
 function prepare_body(&$item,$attach = false) {
 
@@ -1516,7 +1489,7 @@ function prepare_body(&$item,$attach = false) {
 
 	$s .= prepare_text($item['body'],$item['mimetype'], false);
 
-	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event($item['object']) : false);
+	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event_obj($item['obj']) : false);
 
 	$prep_arr = array(
 		'item' => $item,

@@ -255,13 +255,13 @@ class Photos extends \Zotlabs\Web\Controller {
 			   ( (intval($_POST['rotate']) == 1) || (intval($_POST['rotate']) == 2) )) {
 				logger('rotate');
 	
-				$r = q("select * from photo where `resource_id` = '%s' and uid = %d and scale = 0 limit 1",
+				$r = q("select * from photo where `resource_id` = '%s' and uid = %d and imgscale = 0 limit 1",
 					dbesc($resource_id),
 					intval($page_owner_uid)
 				);
 				if(count($r)) {
-					$d = (($r[0]['os_storage']) ? @file_get_contents($r[0]['data']) : dbunescbin($r[0]['data']));
-					$ph = photo_factory($d, $r[0]['type']);
+					$d = (($r[0]['os_storage']) ? @file_get_contents($r[0]['content']) : dbunescbin($r[0]['content']));
+					$ph = photo_factory($d, $r[0]['mimetype']);
 					if($ph->is_valid()) {
 						$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );
 						$ph->rotate($rotate_deg);
@@ -270,9 +270,9 @@ class Photos extends \Zotlabs\Web\Controller {
 						$height = $ph->getHeight();
 						
 						if(intval($r[0]['os_storage'])) {
-							@file_put_contents($r[0]['data'],$ph->imageString());
-							$data = $r[0]['data'];
-							$fsize = @filesize($r[0]['data']);
+							@file_put_contents($r[0]['content'],$ph->imageString());
+							$data = $r[0]['content'];
+							$fsize = @filesize($r[0]['content']);
 							q("update attach set filesize = %d where hash = '%s' and uid = %d limit 1",
 								intval($fsize),
 								dbesc($resource_id),
@@ -284,7 +284,7 @@ class Photos extends \Zotlabs\Web\Controller {
 							$fsize = strlen($data);
 						}
 	
-						$x = q("update photo set data = '%s', `size` = %d, height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0",
+						$x = q("update photo set content = '%s', filesize = %d, height = %d, width = %d where `resource_id` = '%s' and uid = %d and imgscale = 0",
 							dbescbin($data),
 							intval($fsize),
 							intval($height),
@@ -299,7 +299,7 @@ class Photos extends \Zotlabs\Web\Controller {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 	
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1",
+						$x = q("update photo set content = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and imgscale = 1",
 							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
@@ -314,7 +314,7 @@ class Photos extends \Zotlabs\Web\Controller {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 	
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2",
+						$x = q("update photo set content = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and imgscale = 2",
 							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
@@ -329,7 +329,7 @@ class Photos extends \Zotlabs\Web\Controller {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 	
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 3",
+						$x = q("update photo set content = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and imgscale = 3",
 							dbescbin($ph->imageString()),
 							intval($height),
 							intval($width),
@@ -340,12 +340,12 @@ class Photos extends \Zotlabs\Web\Controller {
 				}
 			}
 	
-			$p = q("SELECT type, is_nsfw, description, resource_id, scale, allow_cid, allow_gid, deny_cid, deny_gid FROM photo WHERE resource_id = '%s' AND uid = %d ORDER BY scale DESC",
+			$p = q("SELECT mimetype, is_nsfw, description, resource_id, imgscale, allow_cid, allow_gid, deny_cid, deny_gid FROM photo WHERE resource_id = '%s' AND uid = %d ORDER BY imgscale DESC",
 				dbesc($resource_id),
 				intval($page_owner_uid)
 			);
 			if($p) {
-				$ext = $phototypes[$p[0]['type']];
+				$ext = $phototypes[$p[0]['mimetype']];
 	
 				$r = q("UPDATE `photo` SET `description` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
 					dbesc($desc),
@@ -440,7 +440,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					if($success['replaced']) {
 						$post_tags[] = array(
 							'uid'   => $profile_uid, 
-							'type'  => $success['termtype'],
+							'ttype'  => $success['termtype'],
 							'otype' => TERM_OBJ_POST,
 							'term'  => $success['term'],
 							'url'   => $success['url']
@@ -611,7 +611,7 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 			/* Show space usage */
 	
-			$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
+			$r = q("select sum(filesize) as total from photo where aid = %d and imgscale = 0 ",
 				intval(\App::$data['channel']['channel_account_id'])
 			);
 	
@@ -704,8 +704,8 @@ class Photos extends \Zotlabs\Web\Controller {
 			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$cmd) . '" title="oembed" />' . "\r\n";
 	
 	
-			$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-				AND `scale` <= 4 and photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
+			$r = q("SELECT `resource_id`, max(`imgscale`) AS `imgscale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+				AND `imgscale` <= 4 and photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
 				intval($owner_uid),
 				dbesc($album),
 				intval(PHOTO_NORMAL),
@@ -725,9 +725,9 @@ class Photos extends \Zotlabs\Web\Controller {
 				$order = 'DESC';
 	
 				
-			$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
-					(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id) ph 
-					ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
+			$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.imgscale, p.description, p.created FROM photo p INNER JOIN
+					(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id) ph 
+					ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)
 				ORDER BY created $order LIMIT %d OFFSET %d",
 				intval($owner_uid),
 				dbesc($album),
@@ -777,7 +777,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					else
 						$twist = 'rotright';
 					
-					$ext = $phototypes[$rr['type']];
+					$ext = $phototypes[$rr['mimetype']];
 	
 					$imgalt_e = $rr['filename'];
 					$desc_e = $rr['description'];
@@ -790,7 +790,7 @@ class Photos extends \Zotlabs\Web\Controller {
 						'twist' => ' ' . $twist . rand(2,4),
 						'link' => $imagelink,
 						'title' => t('View Photo'),
-						'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
+						'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['imgscale'] . '.' .$ext,
 						'alt' => $imgalt_e,
 						'desc'=> $desc_e,
 						'ext' => $ext,
@@ -852,8 +852,8 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 			// fetch image, item containing image, then comments
 	
-			$ph = q("SELECT id,aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,photo_usage,is_nsfw,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
-				$sql_extra ORDER BY `scale` ASC ",
+			$ph = q("SELECT id,aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,mimetype,height,width,filesize,imgscale,photo_usage,is_nsfw,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+				$sql_extra ORDER BY `imgscale` ASC ",
 				intval($owner_uid),
 				dbesc($datum)
 			);
@@ -884,7 +884,7 @@ class Photos extends \Zotlabs\Web\Controller {
 				$order = 'DESC';
 	
 	
-			$prvnxt = q("SELECT `resource_id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
+			$prvnxt = q("SELECT `resource_id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `imgscale` = 0 
 				$sql_extra ORDER BY `created` $order ",
 				dbesc($ph[0]['album']),
 				intval($owner_uid)
@@ -911,7 +911,7 @@ class Photos extends \Zotlabs\Web\Controller {
 			if(count($ph) == 1)
 				$hires = $lores = $ph[0];
 			if(count($ph) > 1) {
-				if($ph[1]['scale'] == 2) {
+				if($ph[1]['imgscale'] == 2) {
 					// original is 640 or less, we can display it directly
 					$hires = $lores = $ph[0];
 				}
@@ -949,9 +949,9 @@ class Photos extends \Zotlabs\Web\Controller {
 				$prevlink = array($prevlink, t('Previous'));
 	
 			$photo = array(
-				'href' => z_root() . '/photo/' . $hires['resource_id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
+				'href' => z_root() . '/photo/' . $hires['resource_id'] . '-' . $hires['imgscale'] . '.' . $phototypes[$hires['mimetype']],
 				'title'=> t('View Full Size'),
-				'src'  => z_root() . '/photo/' . $lores['resource_id'] . '-' . $lores['scale'] . '.' . $phototypes[$lores['type']] . '?f=&_u=' . datetime_convert('','','','ymdhis')
+				'src'  => z_root() . '/photo/' . $lores['resource_id'] . '-' . $lores['imgscale'] . '.' . $phototypes[$lores['mimetype']] . '?f=&_u=' . datetime_convert('','','','ymdhis')
 			);
 	
 			if($nextlink)
@@ -1277,7 +1277,7 @@ class Photos extends \Zotlabs\Web\Controller {
 			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$cmd) . '" title="oembed" />' . "\r\n";
 	
 	
-		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
+		$r = q("SELECT `resource_id`, max(`imgscale`) AS `imgscale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
 			and photo_usage in ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
 			intval(\App::$data['channel']['channel_id']),
 			dbesc('Contact Photos'),
@@ -1286,16 +1286,17 @@ class Photos extends \Zotlabs\Web\Controller {
 			intval(PHOTO_PROFILE),
 			intval($unsafe)
 		);
-		if(count($r)) {
+		if($r) {
 			\App::set_pager_total(count($r));
 			\App::set_pager_itemspage(60);
 		}
 		
-		$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.album, p.scale, p.created FROM photo p INNER JOIN 
-			(SELECT resource_id, max(scale) scale FROM photo 
-				WHERE uid=%d AND album != '%s' AND album != '%s' 
-				AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra group by resource_id) ph 
-			ON (p.resource_id = ph.resource_id and p.scale = ph.scale) ORDER by p.created DESC LIMIT %d OFFSET %d",
+		$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.album, p.imgscale, p.created FROM photo as p 
+			INNER JOIN ( SELECT resource_id, max(imgscale) as imgscale FROM photo 
+				WHERE uid = %d AND photo_usage IN ( %d, %d ) 
+				AND is_nsfw = %d $sql_extra group by resource_id ) as ph 
+			ON (p.resource_id = ph.resource_id and p.imgscale = ph.imgscale) 
+			ORDER by p.created DESC LIMIT %d OFFSET %d",
 			intval(\App::$data['channel']['channel_id']),
 			dbesc('Contact Photos'),
 			dbesc( t('Contact Photos')),
@@ -1309,14 +1310,14 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 	
 		$photos = array();
-		if(count($r)) {
+		if($r) {
 			$twist = 'rotright';
 			foreach($r as $rr) {
 				if($twist == 'rotright')
 					$twist = 'rotleft';
 				else
 					$twist = 'rotright';
-				$ext = $phototypes[$rr['type']];
+				$ext = $phototypes[$rr['mimetype']];
 				
 				if(\App::get_template_engine() === 'internal') {
 					$alt_e = template_escape($rr['filename']);
@@ -1332,7 +1333,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					'twist'    => ' ' . $twist . rand(2,4),
 					'link'  	=> z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/image/' . $rr['resource_id'],
 					'title' 	=> t('View Photo'),
-					'src'     	=> z_root() . '/photo/' . $rr['resource_id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.' . $ext,
+					'src'     	=> z_root() . '/photo/' . $rr['resource_id'] . '-' . ((($rr['imgscale']) == 6) ? 4 : $rr['imgscale']) . '.' . $ext,
 					'alt'     	=> $alt_e,
 					'album'	=> array(
 						'link'  => z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/album/' . bin2hex($rr['album']),

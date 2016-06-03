@@ -45,10 +45,10 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.7.1' );
+define ( 'STD_VERSION',             '1.7.3' );
 define ( 'ZOT_REVISION',            1.1     );
 
-define ( 'DB_UPDATE_VERSION',       1169  );
+define ( 'DB_UPDATE_VERSION',       1176  );
 
 
 /**
@@ -473,6 +473,7 @@ define ( 'NAMESPACE_YMEDIA',          'http://search.yahoo.com/mrss/' );
  * activity stream defines
  */
 
+define ( 'ACTIVITY_REACT',       NAMESPACE_ZOT   . '/activity/react' );
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_ZOT   . '/activity/dislike' );
 define ( 'ACTIVITY_AGREE',       NAMESPACE_ZOT   . '/activity/agree' );
@@ -1523,11 +1524,11 @@ function check_config(&$a) {
 
 	if(count($installed)) {
 		foreach($installed as $i) {
-			if(! in_array($i['name'], $plugins_arr)) {
-				unload_plugin($i['name']);
+			if(! in_array($i['aname'], $plugins_arr)) {
+				unload_plugin($i['aname']);
 			}
 			else {
-				$installed_arr[] = $i['name'];
+				$installed_arr[] = $i['aname'];
 			}
 		}
 	}

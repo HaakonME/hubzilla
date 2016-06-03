@@ -45,10 +45,10 @@ class Fbrowser extends \Zotlabs\Web\Controller {
 					$album = hex2bin(\App::$argv[2]);
 					$sql_extra = sprintf("AND `album` = '%s' ",dbesc($album));
 					$sql_extra2 = "";
-					$path[]=array(z_root()."/fbrowser/image/".\App::$argv[2]."/", $album);
+					$path[]=array(z_root() . "/fbrowser/image/" . \App::$argv[2] . "/", $album);
 				}
 					
-				$r = q("SELECT `resource_id`, `id`, `filename`, type, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `description`  
+				$r = q("SELECT `resource_id`, `id`, `filename`, type, min(`imgscale`) AS `hiq`,max(`imgscale`) AS `loq`, `description`  
 						FROM `photo` WHERE `uid` = %d $sql_extra
 						GROUP BY `resource_id` $sql_extra2",
 					intval(local_channel())					

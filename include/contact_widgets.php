@@ -39,7 +39,7 @@ function fileas_widget($baseurl,$selected = '') {
 		return '';
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);
@@ -72,7 +72,7 @@ function categories_widget($baseurl,$selected = '') {
                 from term join item on term.oid = item.id
                 where item.uid = %d
                 and term.uid = item.uid
-                and term.type = %d
+                and term.ttype = %d
 				and term.otype = %d
                 and item.owner_xchan = '%s'
 				and item.item_wall = 1

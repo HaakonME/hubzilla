@@ -113,9 +113,6 @@ pre code {
 }
 
 code {
-	font-size: 1em;
-	padding: 1em 1.5em;
-	border: 1px solid #ccc;
 	background: #ccc;
 	color: #000;
 }

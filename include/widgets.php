@@ -212,13 +212,13 @@ function widget_savedsearch($arr) {
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
 	
 	if(x($_GET,'searchsave') && $search) {
-		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
+		$r = q("select * from `term` where `uid` = %d and `ttype` = %d and `term` = '%s' limit 1",
 			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
 		);
 		if(! $r) {
-			q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
+			q("insert into `term` ( `uid`,`ttype`,`term` ) values ( %d, %d, '%s') ",
 				intval(local_channel()),
 				intval(TERM_SAVEDSEARCH),
 				dbesc($search)
@@ -227,7 +227,7 @@ function widget_savedsearch($arr) {
 	}
 
 	if(x($_GET,'searchremove') && $search) {
-		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s'",
+		q("delete from `term` where `uid` = %d and `ttype` = %d and `term` = '%s'",
 			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
@@ -254,7 +254,7 @@ function widget_savedsearch($arr) {
 
 	$o = '';
 
-	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
+	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `ttype` = %d ",
 		intval(local_channel()),
 		intval(TERM_SAVEDSEARCH)
 	);
@@ -296,7 +296,7 @@ function widget_filer($arr) {
 	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);
@@ -1197,7 +1197,7 @@ function widget_photo_rand($arr) {
 	$filtered = array();
 	if($ret['success'] && $ret['photos'])
 	foreach($ret['photos'] as $p)
-		if($p['scale'] == $scale)
+		if($p['imgscale'] == $scale)
 			$filtered[] = $p['src'];
 
 	if($filtered) {
@@ -1468,7 +1468,7 @@ function widget_admin($arr) {
 	$plugins = array();
 	if($r) {
 		foreach ($r as $h){
-			$plugin = $h['name'];
+			$plugin = $h['aname'];
 			$plugins[] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
 			// temp plugins with admin
 			App::$plugins_admin[] = $plugin;
@@ -1530,9 +1530,9 @@ function widget_album($args) {
 
 	$order = 'DESC';
 
-	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
-		(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
-		ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
+	$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.imgscale, p.description, p.created FROM photo p INNER JOIN
+		(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
+		ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)
 		ORDER BY created $order ",
 		intval($owner_uid),
 		dbesc($album),
@@ -1553,7 +1553,7 @@ function widget_album($args) {
 			else
 				$twist = 'rotright';
 				
-			$ext = $phototypes[$rr['type']];
+			$ext = $phototypes[$rr['mimetype']];
 
 			$imgalt_e = $rr['filename'];
 			$desc_e = $rr['description'];
@@ -1566,7 +1566,7 @@ function widget_album($args) {
 				'twist' => ' ' . $twist . rand(2,4),
 				'link' => $imagelink,
 				'title' => t('View Photo'),
-				'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
+				'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['imgscale'] . '.' .$ext,
 				'alt' => $imgalt_e,
 				'desc'=> $desc_e,
 				'ext' => $ext,

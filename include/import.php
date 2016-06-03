@@ -332,7 +332,9 @@ function import_apps($channel,$apps) {
 				);
 				if($x) {
 					foreach($term as $t) {
-						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+						if(array_key_exists('type',$t))
+							$t['ttype'] = $t['type'];
+						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 					}
 				}
 			}
@@ -400,7 +402,9 @@ function sync_apps($channel,$apps) {
 
 			if($exists && $term) {
 				foreach($term as $t) {
-					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+					if(array_key_exists('type',$t))
+						$t['ttype'] = $t['type'];
+					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 				}
 			}
 
@@ -436,7 +440,9 @@ function sync_apps($channel,$apps) {
 					);
 					if($x) {
 						foreach($term as $t) {
-							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+							if(array_key_exists('type',$t))
+								$t['ttype'] = $t['type'];
+							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 						}
 					}
 				}
@@ -968,6 +974,11 @@ function sync_files($channel,$files) {
 				$attachment_stored = false;
 				foreach($f['attach'] as $att) {
 
+					if(array_key_exists('data',$att)) {
+						$att['content'] = $att['data'];
+						unset($att['data']);
+					}
+
 					if($att['deleted']) {
 						attach_delete($channel,$att['hash']);
 						continue;
@@ -1037,7 +1048,7 @@ function sync_files($channel,$files) {
 
 // @fixme - update attachment structures if they are modified rather than created
 
-					$att['data'] = $newfname;
+					$att['content'] = $newfname;
 
 					// Note: we use $att['hash'] below after it has been escaped to
 					// fetch the file contents. 
@@ -1119,6 +1130,15 @@ function sync_files($channel,$files) {
 					$p['aid'] = $channel['channel_account_id'];
 					$p['uid'] = $channel['channel_id'];
 
+					if(array_key_exists('data',$p)) {
+						$p['content'] = $p['data'];
+						unset($p['data']);
+					}
+					if(array_key_exists('scale',$p)) {
+						$p['imgscale'] = $p['scale'];
+						unset($p['scale']);
+					}
+
 					// if this is a profile photo, undo the profile photo bit
 					// for any other photo which previously held it.
 
@@ -1144,15 +1164,15 @@ function sync_files($channel,$files) {
 						);
 					}
 
-					if($p['scale'] === 0 && $p['os_storage'])
-						$p['data'] = $store_path;
+					if($p['imgscale'] === 0 && $p['os_storage'])
+						$p['content'] = $store_path;
 					else
-						$p['data'] = base64_decode($p['data']);
+						$p['content'] = base64_decode($p['content']);
 
 
-					$exists = q("select * from photo where resource_id = '%s' and scale = %d and uid = %d limit 1",
+					$exists = q("select * from photo where resource_id = '%s' and imgscale = %d and uid = %d limit 1",
 						dbesc($p['resource_id']),
-						intval($p['scale']),
+						intval($p['imgscale']),
 						intval($channel['channel_id'])
 					);
 

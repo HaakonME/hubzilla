@@ -60,12 +60,30 @@ class Apps {
 
 		if($apps) {
 			foreach($apps as $app) {
-				if(self::check_install_system_app($app)) {				
-					$app['uid'] = local_channel();
-					$app['guid'] = hash('whirlpool',$app['name']);
-					$app['system'] = 1;
-					self::app_install(local_channel(),$app);
-				}			
+				$id = self::check_install_system_app($app);
+				// $id will be boolean true or false to install an app, or an integer id to update an existing app
+				if($id === false)
+					continue;
+				if($id !== true) {
+					// if we already installed this app, but it changed, preserve any categories we created
+					$s = '';
+					$r = q("select * from term where otype = %d and oid = d",
+						intval(TERM_OBJ_APP),
+						intval($id)
+					);
+					if($r) {
+						foreach($r as $t) {
+							if($s)
+								$s .= ',';
+							$s .= $t['term'];
+						}
+						$app['categories'] = $s;
+					}
+				}
+				$app['uid'] = local_channel();
+				$app['guid'] = hash('whirlpool',$app['name']);
+				$app['system'] = 1;
+				self::app_install(local_channel(),$app);
 			}
 		}					
 	}
@@ -84,7 +102,7 @@ class Apps {
 			if($iapp['app_id'] == hash('whirlpool',$app['name'])) {
 				$notfound = false;
 				if($iapp['app_version'] != $app['version']) {
-					return true;
+					return intval($iapp['app_id']);
 				}
 			}
 		}

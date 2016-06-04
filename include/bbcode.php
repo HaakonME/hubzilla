@@ -66,6 +66,19 @@ function bb_unspacefy_and_trim($st) {
 }
 
 
+function bb_emoji($mtch) {
+	$s = strtolower($mtch[1]);
+	if(strpos($s,'x')) {
+		$e = substr($s,strpos($s,'x')+1);
+		if(file_exists('images/emoji/' . $e . '.png')) {
+			return '<img width="24" height="24" src="' . z_root() . '/images/emoji/' . $e . '.png" alt="emoji" />';
+		}
+		else {
+			return $mtch[0];
+		}
+	}
+}
+
 function bb_extract_images($body) {
 
 	$saved_image = array();
@@ -1001,6 +1014,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_unspacefy_and_trim', $Text);
 	}
 
+	$Text = preg_replace_callback('/\[\&amp\;([#a-z0-9]+)\;\]/', 'bb_emoji', $Text);
 	$Text = preg_replace('/\[\&amp\;([#a-z0-9]+)\;\]/', '&$1;', $Text);
 
 	// fix any escaped ampersands that may have been converted into links

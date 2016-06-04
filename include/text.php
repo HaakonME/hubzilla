@@ -1473,7 +1473,7 @@ function prepare_body(&$item,$attach = false) {
 
 	if($is_photo) {
 
-		$object = json_decode($item['object'],true);
+		$object = json_decode($item['obj'],true);
 
 		// if original photo width is <= 640px prepend it to item body
 		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {

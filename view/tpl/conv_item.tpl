@@ -78,82 +78,95 @@
 				</div>
 				{{/if}}
 				<div class="wall-item-tools">
-					<div class="wall-item-tools-right btn-group pull-right">
-						{{if $item.like}}
-						<button type="button" title="{{$item.like.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false;">
-							<i class="fa fa-thumbs-o-up" ></i>
-						</button>
+					<div class="wall-item-tools-right pull-right">
+						{{if $item.toplevel && $item.emojis && $item.reactions}}
+						<div class="btn-group dropdown">
+							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-react-{{$item.id}}">
+								<i class="fa fa-smile-o"></i>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="wall-item-react-{{$item.id}}">
+							{{foreach $item.reactions as $react}}
+								<li role="presentation"><a role="menuitem" href="#" onclick="jotReact({{$item.id}},'{{$react}}'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/{{$react}}.png" alt="{{$react}}" /></a></li>
+							{{/foreach}}
+							</ul>
+						</div>
 						{{/if}}
-						{{if $item.dislike}}
-						<button type="button" title="{{$item.dislike.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false;">
-							<i class="fa fa-thumbs-o-down" ></i>
-						</button>
-						{{/if}}
-						{{if $item.isevent}}
-						<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
-							<i class="fa fa-check" ></i>
-						</button>
-						<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
-							<i class="fa fa-times" ></i>
-						</button>
-						<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
-							<i class="fa fa-question" ></i>
-						</button>
-						{{/if}}
-
-						{{if $item.canvote}}
-						<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
-							<i class="fa fa-check" ></i>
-						</button>
-						<button type="button" title="{{$item.conlabels.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'disagree'); return false;">
-							<i class="fa fa-times" ></i>
-						</button>
-						<button type="button" title="{{$item.conlabels.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'abstain'); return false;">
-							<i class="fa fa-question" ></i>
-						</button>
-						{{/if}}
-
-						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
-							<i class="fa fa-caret-down"></i>
-						</button>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-menu-{{$item.id}}">
-							{{if $item.share}}
-							<li role="presentation"><a role="menuitem" href="#" onclick="jotShare({{$item.id}}); return false"><i class="fa fa-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
+						<div class="btn-group dropdown">
+							{{if $item.like}}
+							<button type="button" title="{{$item.like.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false;">
+								<i class="fa fa-thumbs-o-up" ></i>
+							</button>
 							{{/if}}
-							{{if $item.plink}}
-							<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="fa fa-external-link"></i> {{$item.plink.title}}</a></li>
+							{{if $item.dislike}}
+							<button type="button" title="{{$item.dislike.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false;">
+								<i class="fa fa-thumbs-o-down" ></i>
+							</button>
 							{{/if}}
-							{{if $item.edpost}}
-							<li role="presentation"><a role="menuitem" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost fa fa-pencil"></i> {{$item.edpost.1}}</a></li>
-							{{/if}}
-							{{if $item.tagger}}
-							<li role="presentation"><a role="menuitem" href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="fa fa-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a></li>
-							{{/if}}
-							{{if $item.filer}}
-							<li role="presentation"><a role="menuitem" href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="fa fa-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a></li>
-							{{/if}}
-							{{if $item.bookmark}}
-							<li role="presentation"><a role="menuitem" href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="fa fa-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
-							{{/if}}
-							{{if $item.addtocal}}
-							<li role="presentation"><a role="menuitem" href="#" onclick="itemAddToCal({{$item.id}}); return false;"><i id="addtocal-{{$item.id}}" class="fa fa-calendar" title="{{$item.addtocal}}"></i> {{$item.addtocal}}</a></li>
-							{{/if}}
-							{{if $item.star}}
-							<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="fa fa-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
-							{{/if}}
-							{{if $item.drop.dropping}}
-							<li role="presentation"><a role="menuitem" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="fa fa-trash-o"></i> {{$item.drop.delete}}</a></li>
-							{{/if}}
-							{{if $item.item_photo_menu}}
-							<li role="presentation" class="divider"></li>
-							{{$item.item_photo_menu}}
-
-							{{if $item.edpost && $item.dreport}}
-							<li role="presentation"><a role="menuitem" href="dreport/{{$item.mid}}">{{$item.dreport}}</a></li>
+							{{if $item.isevent}}
+							<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
+								<i class="fa fa-check" ></i>
+							</button>
+							<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
+								<i class="fa fa-times" ></i>
+							</button>
+							<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
+								<i class="fa fa-question" ></i>
+							</button>
 							{{/if}}
 
+							{{if $item.canvote}}
+							<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
+								<i class="fa fa-check" ></i>
+							</button>
+							<button type="button" title="{{$item.conlabels.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'disagree'); return false;">
+								<i class="fa fa-times" ></i>
+							</button>
+							<button type="button" title="{{$item.conlabels.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'abstain'); return false;">
+								<i class="fa fa-question" ></i>
+							</button>
 							{{/if}}
-						</ul>
+							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
+								<i class="fa fa-caret-down"></i>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="wall-item-menu-{{$item.id}}">
+								{{if $item.share}}
+								<li role="presentation"><a role="menuitem" href="#" onclick="jotShare({{$item.id}}); return false"><i class="fa fa-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
+								{{/if}}
+								{{if $item.plink}}
+								<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="fa fa-external-link"></i> {{$item.plink.title}}</a></li>
+								{{/if}}
+								{{if $item.edpost}}
+								<li role="presentation"><a role="menuitem" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost fa fa-pencil"></i> {{$item.edpost.1}}</a></li>
+								{{/if}}
+								{{if $item.tagger}}
+								<li role="presentation"><a role="menuitem" href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="fa fa-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a></li>
+								{{/if}}
+								{{if $item.filer}}
+								<li role="presentation"><a role="menuitem" href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="fa fa-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a></li>
+								{{/if}}
+								{{if $item.bookmark}}
+								<li role="presentation"><a role="menuitem" href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="fa fa-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
+								{{/if}}
+								{{if $item.addtocal}}
+								<li role="presentation"><a role="menuitem" href="#" onclick="itemAddToCal({{$item.id}}); return false;"><i id="addtocal-{{$item.id}}" class="fa fa-calendar" title="{{$item.addtocal}}"></i> {{$item.addtocal}}</a></li>
+								{{/if}}
+								{{if $item.star}}
+								<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="fa fa-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
+								{{/if}}
+								{{if $item.drop.dropping}}
+								<li role="presentation"><a role="menuitem" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="fa fa-trash-o"></i> {{$item.drop.delete}}</a></li>
+								{{/if}}
+								{{if $item.item_photo_menu}}
+								<li role="presentation" class="divider"></li>
+								{{$item.item_photo_menu}}
+
+								{{if $item.edpost && $item.dreport}}
+								<li role="presentation"><a role="menuitem" href="dreport/{{$item.mid}}">{{$item.dreport}}</a></li>
+								{{/if}}
+
+								{{/if}}
+							</ul>
+						</div>
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 

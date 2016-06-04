@@ -93,9 +93,9 @@ class Manage extends \Zotlabs\Web\Controller {
 						$channels[$x]['mail'] = intval($mails[0]['total']);
 			
 	
-					$events = q("SELECT type, start, adjust FROM `event`
-						WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
-						ORDER BY `start` ASC ",
+					$events = q("SELECT etype, dtstart, adjust FROM `event`
+						WHERE `event`.`uid` = %d AND dtstart < '%s' AND dtstart > '%s' and `dismissed` = 0
+						ORDER BY `dtstart` ASC ",
 						intval($channels[$x]['channel_id']),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
@@ -108,14 +108,14 @@ class Manage extends \Zotlabs\Web\Controller {
 							$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
 							foreach($events as $e) {
 								$bd = false;
-								if($e['type'] === 'birthday') {
+								if($e['etype'] === 'birthday') {
 									$channels[$x]['birthdays'] ++;
 									$bd = true;
 								}
 								else {
 									$channels[$x]['events'] ++;
 								}
-								if(datetime_convert('UTC', ((intval($e['adjust'])) ? date_default_timezone_get() : 'UTC'), $e['start'], 'Y-m-d') === $str_now) {
+								if(datetime_convert('UTC', ((intval($e['adjust'])) ? date_default_timezone_get() : 'UTC'), $e['dtstart'], 'Y-m-d') === $str_now) {
 									$channels[$x]['all_events_today'] ++;
 									if($bd)
 										$channels[$x]['birthdays_today'] ++;

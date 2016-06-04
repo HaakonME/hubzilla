@@ -46,7 +46,7 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.6.5' );
+define ( 'STD_VERSION',             '1.6.6' );
 define ( 'ZOT_REVISION',            1     );
 
 define ( 'DB_UPDATE_VERSION',       1168  );
@@ -786,7 +786,7 @@ class App {
 	/**
 	 * App constructor.
 	 */
-	function init() {
+	public static function init() {
 		// we'll reset this after we read our config file
 		date_default_timezone_set('UTC');
 

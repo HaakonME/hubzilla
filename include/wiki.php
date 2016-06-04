@@ -289,6 +289,24 @@ function wiki_save_page($arr) {
 	}	
 }
 
+function wiki_delete_page($arr) {
+	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
+	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('message' => 'Error reading wiki', 'success' => false);
+	}
+	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	if (is_writable($page_path) === true) {
+		if(!unlink($page_path)) {
+			return array('message' => 'Error deleting page file', 'success' => false);
+		}
+		return array('message' => '', 'success' => true);
+	} else {
+		return array('message' => 'Page file not writable', 'success' => false);
+	}	
+}
+
 function wiki_git_commit($arr) {
 	$files = ((array_key_exists('files', $arr)) ? $arr['files'] : null);
 	$commit_msg = ((array_key_exists('commit_msg', $arr)) ? $arr['commit_msg'] : 'Repo updated');

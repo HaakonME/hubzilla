@@ -80,7 +80,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				break;
 			case 3:
 				// /wiki/channel/wiki -> No page was specified, so redirect to Home.md
-				goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/Home');
+				$wikiUrlName = urlencode(argv(2));
+				goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName.'/Home');
 			case 4:
 				// GET /wiki/channel/wiki/page
 				// Fetch the wiki info and determine observer permissions
@@ -106,7 +107,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$p = wiki_get_page_content(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				if(!$p['success']) {
 					notice('Error retrieving page content' . EOL);
-					goaway('/'.argv(0).'/'.argv(1).'/'.argv(2));
+					goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				}
 				$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
 				$hide_editor = false;
@@ -116,7 +117,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				break;
 			default:	// Strip the extraneous URL components
-				goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/'.argv(3));
+				goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName.'/'.$pageUrlName);
 		}
 		// Render the Markdown-formatted page content in HTML
 		require_once('library/markdown.php');	
@@ -287,7 +288,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
 			$pageUrlName = $_POST['name'];
-			logger('pageURLname: ' . $pageUrlName);
 			$pageHtmlName = escape_tags($_POST['name']);
 			$content = escape_tags($_POST['content']); //Get new content
 			// Determine if observer has permission to save content
@@ -354,6 +354,53 @@ class Wiki extends \Zotlabs\Web\Controller {
 			json_return_and_die(array('historyHTML' => $historyHTML, 'message' => '', 'success' => true));
 		}
 
+		// Delete a page
+		if ((argc() === 4) && (argv(2) === 'delete') && (argv(3) === 'page')) {
+			$nick = argv(1);
+			$resource_id = $_POST['resource_id']; 
+			$pageUrlName = $_POST['name'];
+			if ($pageUrlName === 'Home') {
+				json_return_and_die(array('message' => 'Cannot delete Home','success' => false));
+			}
+			// Determine if observer has permission to delete pages
+			if (local_channel()) {
+				$channel = \App::get_channel();
+			} else {
+				$channel = get_channel_by_nick($nick);
+				$observer_hash = get_observer_hash();
+				// Figure out who the page owner is.
+				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
+				// TODO: Create a new permission setting for wiki analogous to webpages. Until
+				// then, use webpage permissions
+				if (!$perms['write_pages']) {
+					logger('Wiki editing permission denied.' . EOL);
+					json_return_and_die(array('success' => false));
+				}
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['write']) {
+					logger('Wiki write permission denied. Read only.' . EOL);
+					json_return_and_die(array('success' => false));					
+				}
+			}
+			$deleted = wiki_delete_page(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
+			if($deleted['success']) {
+				$ob = \App::get_observer();
+				$commit = wiki_git_commit(array(
+						'commit_msg' => 'Deleted ' . $pageHtmlName, 
+						'resource_id' => $resource_id, 
+						'observer' => $ob,
+						'files' => null
+						));
+				if($commit['success']) {
+					json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
+				} else {
+					json_return_and_die(array('message' => 'Error making git commit','success' => false));					
+				}
+			} else {
+				json_return_and_die(array('message' => 'Error deleting page', 'success' => false));					
+			}
+		}
+		
 		//notice('You must be authenticated.');
 		json_return_and_die(array('message' => 'You must be authenticated.', 'success' => false));
 		

@@ -5,10 +5,10 @@
     height: 500px;
   }
   .fade.in {
-    -webkit-transition: opacity 2s 1s ease;
-    -moz-transition: opacity 2s 1s ease;
-    -o-transition: opacity 2s 1s ease;
-    transition: opacity 2s 1s ease;
+    -webkit-transition: opacity 0.5s 0.5s ease;
+    -moz-transition: opacity 0.5s 0.5s ease;
+    -o-transition: opacity 0.5s 0.5s ease;
+    transition: opacity 0.5s 0.5s ease;
   }
 </style>
 <div class="generic-content-wrapper">
@@ -106,6 +106,9 @@
 <script>
   window.wiki_resource_id = '{{$resource_id}}';
   window.wiki_page_name = '{{$page}}';
+  if (window.wiki_page_name === 'Home') {
+    $('#delete-page').hide();
+  }
   $(document).ready(function () {
     wiki_refresh_page_list();
     // Show Edit tab first. Otherwise the Ace editor does not load.
@@ -202,6 +205,29 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
         } else {
           alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 
           window.console.log('Error saving page.');
+        }
+      }, 'json');
+    ev.preventDefault();
+  });
+  
+    $('#delete-page').click(function (ev) {
+    if (window.wiki_resource_id === '' || window.wiki_page_name === '' || window.wiki_page_name === 'Home') {
+      window.console.log('You must have a wiki page open in order to delete pages.');
+      ev.preventDefault();
+      return false;
+    }
+    $.post("wiki/{{$channel}}/delete/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
+      function (data) {
+        if (data.success) {
+          window.console.log('Page deleted successfully.');
+          var url = window.location.href;
+          if (url.substr(-1) == '/') url = url.substr(0, url.length - 2);
+          url = url.split('/');
+          url.pop();
+          window.location = url.join('/');
+        } else {
+          alert('Error deleting page.'); // TODO: Replace alerts with auto-timeout popups 
+          window.console.log('Error deleting page.');
         }
       }, 'json');
     ev.preventDefault();

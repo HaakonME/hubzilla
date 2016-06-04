@@ -550,13 +550,13 @@ function identity_basic_export($channel_id, $items = false) {
 	if($r)
 		$ret['config'] = $r;
 
-	$r = q("select type, data, os_storage from photo where scale = 4 and photo_usage = %d and uid = %d limit 1",
+	$r = q("select mimetype, content, os_storage from photo where imgscale = 4 and photo_usage = %d and uid = %d limit 1",
 		intval(PHOTO_PROFILE),
 		intval($channel_id)
 	);
 
 	if($r) {
-		$ret['photo'] = array('type' => $r[0]['type'], 'data' => (($r[0]['os_storage']) ? base64url_encode(file_get_contents($r[0]['data'])) : base64url_encode($r[0]['data'])));
+		$ret['photo'] = array('type' => $r[0]['mimetype'], 'data' => (($r[0]['os_storage']) ? base64url_encode(file_get_contents($r[0]['content'])) : base64url_encode($r[0]['content'])));
 	}
 
 	// All other term types will be included in items, if requested.
@@ -1108,150 +1108,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 }
 
 
-/**
- * @FIXME or remove
- */
-	function get_birthdays() {
-
-		$o = '';
-
-		if(! local_channel())
-			return $o;
-
-		$bd_format = t('g A l F d') ; // 8 AM Friday January 18
-		$bd_short = t('F d');
-
-		$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event`
-				LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid`
-				WHERE `event`.`uid` = %d AND `type` = 'birthday' AND `start` < '%s' AND `finish` > '%s'
-				ORDER BY `start` ASC ",
-				intval(local_channel()),
-				dbesc(datetime_convert('UTC','UTC','now + 6 days')),
-				dbesc(datetime_convert('UTC','UTC','now'))
-		);
-
-		if($r && count($r)) {
-			$total = 0;
-			$now = strtotime('now');
-			$cids = array();
-
-			$istoday = false;
-			foreach($r as $rr) {
-				if(strlen($rr['name']))
-					$total ++;
-				if((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now))
-					$istoday = true;
-			}
-			$classtoday = $istoday ? ' birthday-today ' : '';
-			if($total) {
-				foreach($r as &$rr) {
-					if(! strlen($rr['name']))
-						continue;
-
-					// avoid duplicates
-
-					if(in_array($rr['cid'],$cids))
-						continue;
-					$cids[] = $rr['cid'];
-
-					$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false);
-					$sparkle = '';
-					$url = $rr['url'];
-					if($rr['network'] === NETWORK_DFRN) {
-						$sparkle = " sparkle";
-						$url = z_root() . '/redir/'  . $rr['cid'];
-					}
-	
-					$rr['link'] = $url;
-					$rr['title'] = $rr['name'];
-					$rr['date'] = day_translate(datetime_convert('UTC', App::$timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '');
-					$rr['startime'] = Null;
-					$rr['today'] = $today;
-				}
-			}
-		}
-		$tpl = get_markup_template("birthdays_reminder.tpl");
-		return replace_macros($tpl, array(
-			'$baseurl' => z_root(),
-			'$classtoday' => $classtoday,
-			'$count' => $total,
-			'$event_reminders' => t('Birthday Reminders'),
-			'$event_title' => t('Birthdays this week:'),
-			'$events' => $r,
-			'$lbr' => '{',  // raw brackets mess up if/endif macro processing
-			'$rbr' => '}'
-		));
-	}
-
-
-/**
- * @FIXME
- */
-	function get_events() {
-
-		require_once('include/bbcode.php');
-
-		if(! local_channel())
-			return $o;
-
-		$bd_format = t('g A l F d') ; // 8 AM Friday January 18
-		$bd_short = t('F d');
-
-		$r = q("SELECT `event`.* FROM `event`
-				WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' AND `start` > '%s'
-				ORDER BY `start` ASC ",
-				intval(local_channel()),
-				dbesc(datetime_convert('UTC','UTC','now + 6 days')),
-				dbesc(datetime_convert('UTC','UTC','now - 1 days'))
-		);
-
-		if($r && count($r)) {
-			$now = strtotime('now');
-			$istoday = false;
-			foreach($r as $rr) {
-				if(strlen($rr['name']))
-					$total ++;
-
-				$strt = datetime_convert('UTC',$rr['convert'] ? App::$timezone : 'UTC',$rr['start'],'Y-m-d');
-				if($strt === datetime_convert('UTC',App::$timezone,'now','Y-m-d'))
-					$istoday = true;
-			}
-			$classtoday = (($istoday) ? 'event-today' : '');
-
-			foreach($r as &$rr) {
-				if($rr['adjust'])
-					$md = datetime_convert('UTC',App::$timezone,$rr['start'],'Y/m');
-				else
-					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
-				$md .= "/#link-".$rr['id'];
-
-				$title = substr(strip_tags(bbcode($rr['desc'])),0,32) . '... ';
-				if(! $title)
-					$title = t('[No description]');
-
-				$strt = datetime_convert('UTC',$rr['convert'] ? App::$timezone : 'UTC',$rr['start']);
-				$today = ((substr($strt,0,10) === datetime_convert('UTC',App::$timezone,'now','Y-m-d')) ? true : false);
-				
-				$rr['link'] = $md;
-				$rr['title'] = $title;
-				$rr['date'] = day_translate(datetime_convert('UTC', $rr['adjust'] ? App::$timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
-				$rr['startime'] = $strt;
-				$rr['today'] = $today;
-			}
-		}
-
-		$tpl = get_markup_template("events_reminder.tpl");
-		return replace_macros($tpl, array(
-			'$baseurl' => z_root(),
-			'$classtoday' => $classtoday,
-			'$count' => count($r),
-			'$event_reminders' => t('Event Reminders'),
-			'$event_title' => t('Events this week:'),
-			'$events' => $r,
-		));
-	}
-
-
 function advanced_profile(&$a) {
 	require_once('include/text.php');
 	if(! perm_is_allowed(App::$profile['profile_uid'],get_observer_hash(),'view_profile'))
@@ -1785,7 +1641,7 @@ function auto_channel_create($account_id) {
 
 function get_cover_photo($channel_id,$format = 'bbcode', $res = PHOTO_RES_COVER_1200) {
 
-	$r = q("select height, width, resource_id, type from photo where uid = %d and scale = %d and photo_usage = %d",
+	$r = q("select height, width, resource_id, mimetype from photo where uid = %d and imgscale = %d and photo_usage = %d",
 		intval($channel_id),
 		intval($res),
 		intval(PHOTO_COVER)
@@ -1808,8 +1664,8 @@ function get_cover_photo($channel_id,$format = 'bbcode', $res = PHOTO_RES_COVER_
 		default:
 			$output = array(
 				'width' => $r[0]['width'],
-				'height' => $r[0]['type'],
-				'type' => $r[0]['type'],
+				'height' => $r[0]['height'],
+				'type' => $r[0]['mimetype'],
 				'url' => $url
 			);
 			break;
@@ -1834,19 +1690,19 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 		$width = 425;
 		$size = 'hz_small';
 		$cover_size = PHOTO_RES_COVER_425;
-		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
+		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
 	}
 	elseif($maxwidth <= 900) {
 		$width = 900;
 		$size = 'hz_medium';
 		$cover_size = PHOTO_RES_COVER_850;
-		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
+		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
 	}
 	elseif($maxwidth <= 1200) {
 		$width = 1200;
 		$size = 'hz_large';
 		$cover_size = PHOTO_RES_COVER_1200;
-		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
+		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
 	}
 
 //	$scale = (float) $maxwidth / $width;
@@ -1856,7 +1712,7 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 	$channel['channel_addr'] = $channel['channel_address'] . '@' . App::get_hostname();
 	$zcard = array('chan' => $channel);
 
-	$r = q("select height, width, resource_id, scale, type from photo where uid = %d and scale = %d and photo_usage = %d",
+	$r = q("select height, width, resource_id, imgscale, mimetype from photo where uid = %d and imgscale = %d and photo_usage = %d",
 		intval($channel['channel_id']),
 		intval($cover_size),
 		intval(PHOTO_COVER)
@@ -1864,7 +1720,7 @@ function get_zcard($channel,$observer_hash = '',$args = array()) {
 
 	if($r) {
 		$cover = $r[0];
-		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
+		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['imgscale'];
 	}		
 	else {
 		$cover = $pphoto;
@@ -1900,25 +1756,25 @@ function get_zcard_embed($channel,$observer_hash = '',$args = array()) {
 		$width = 425;
 		$size = 'hz_small';
 		$cover_size = PHOTO_RES_COVER_425;
-		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
+		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
 	}
 	elseif($maxwidth <= 900) {
 		$width = 900;
 		$size = 'hz_medium';
 		$cover_size = PHOTO_RES_COVER_850;
-		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
+		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
 	}
 	elseif($maxwidth <= 1200) {
 		$width = 1200;
 		$size = 'hz_large';
 		$cover_size = PHOTO_RES_COVER_1200;
-		$pphoto = array('type' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
+		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
 	}
 
 	$channel['channel_addr'] = $channel['channel_address'] . '@' . App::get_hostname();
 	$zcard = array('chan' => $channel);
 
-	$r = q("select height, width, resource_id, scale, type from photo where uid = %d and scale = %d and photo_usage = %d",
+	$r = q("select height, width, resource_id, imgscale, mimetype from photo where uid = %d and imgscale = %d and photo_usage = %d",
 		intval($channel['channel_id']),
 		intval($cover_size),
 		intval(PHOTO_COVER)
@@ -1926,7 +1782,7 @@ function get_zcard_embed($channel,$observer_hash = '',$args = array()) {
 
 	if($r) {
 		$cover = $r[0];
-		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['scale'];
+		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['imgscale'];
 	}		
 	else {
 		$cover = $pphoto;

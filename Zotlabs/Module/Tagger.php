@@ -124,7 +124,7 @@ class Tagger extends \Zotlabs\Web\Controller {
 		$arr['tgt_type'] = $targettype;
 		$arr['target'] = $target;
 		$arr['obj_type'] = $objtype;
-		$arr['object'] = $obj;
+		$arr['obj'] = $obj;
 		$arr['parent_mid'] = $item['mid'];
 		
 		store_item_tag($item['uid'],$item['id'],TERM_OBJ_POST,TERM_COMMUNITYTAG,$term,$tagid);

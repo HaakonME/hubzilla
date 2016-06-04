@@ -154,7 +154,7 @@ CREATE TABLE "attach" (
   "os_storage" smallint NOT NULL DEFAULT '0',
   "os_path" text NOT NULL,
   "display_path" text NOT NULL,
-  "data" bytea NOT NULL,
+  "content" bytea NOT NULL,
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "allow_cid" text NOT NULL,
@@ -390,17 +390,17 @@ CREATE TABLE "event" (
   "uid" bigint NOT NULL,
   "event_xchan" text NOT NULL DEFAULT '',
   "event_hash" text NOT NULL DEFAULT '',
-  "created" timestamp NOT NULL,
-  "edited" timestamp NOT NULL,
-  "start" timestamp NOT NULL,
-  "finish" timestamp NOT NULL,
+  "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "dtstart" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "dtend" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "summary" text NOT NULL,
   "description" text NOT NULL,
   "location" text NOT NULL,
-  "type" text NOT NULL,
+  "etype" text NOT NULL,
   "nofinish" numeric(1) NOT NULL DEFAULT '0',
   "adjust" numeric(1) NOT NULL DEFAULT '1',
-  "ignore" numeric(1) NOT NULL DEFAULT '0',
+  "dismissed" numeric(1) NOT NULL DEFAULT '0',
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
@@ -415,12 +415,12 @@ CREATE TABLE "event" (
   PRIMARY KEY ("id")
 );
 create index "event_uid_idx" on event ("uid");
-create index "event_type_idx" on event ("type");
-create index "event_start_idx" on event ("start");
-create index "event_finish_idx" on event ("finish");
+create index "event_etype_idx" on event ("etype");
+create index "event_dtstart_idx" on event ("dtstart");
+create index "event_dtend_idx" on event ("dtend");
 create index "event_adjust_idx" on event ("adjust");
 create index "event_nofinish_idx" on event ("nofinish");
-create index "event_ignore_idx" on event ("ignore");
+create index "event_dismissed_idx" on event ("dismissed");
 create index "event_aid_idx" on event ("aid");
 create index "event_hash_idx" on event ("event_hash");
 create index "event_xchan_idx" on event ("event_xchan");
@@ -560,7 +560,7 @@ CREATE TABLE "item" (
   "revision" bigint  NOT NULL DEFAULT '0',
   "verb" text NOT NULL DEFAULT '',
   "obj_type" text NOT NULL DEFAULT '',
-  "object" text NOT NULL,
+  "obj" text NOT NULL,
   "tgt_type" text NOT NULL DEFAULT '',
   "target" text NOT NULL,
   "layout_mid" text NOT NULL DEFAULT '',
@@ -781,25 +781,25 @@ create index "mitem_flags" on menu_item ("mitem_flags");
 CREATE TABLE "notify" (
   "id" serial NOT NULL,
   "hash" char(64) NOT NULL,
-  "name" text NOT NULL,
+  "xname" text NOT NULL,
   "url" text NOT NULL,
   "photo" text NOT NULL,
-  "date" timestamp NOT NULL,
+  "created" timestamp NOT NULL,
   "msg" text NOT NULL DEFAULT '',
   "aid" bigint NOT NULL,
   "uid" bigint NOT NULL,
   "link" text NOT NULL,
   "parent" text NOT NULL DEFAULT '',
   "seen" numeric(1) NOT NULL DEFAULT '0',
-  "type" bigint NOT NULL,
+  "ntype" bigint NOT NULL,
   "verb" text NOT NULL,
   "otype" varchar(16) NOT NULL,
   PRIMARY KEY ("id")
 );
-create index "notify_type" on notify ("type");
+create index "notify_ntype" on notify ("ntype");
 create index "notify_seen" on notify ("seen");
 create index "notify_uid" on notify ("uid");
-create index "notify_date" on notify ("date");
+create index "notify_created" on notify ("created");
 create index "notify_hash" on notify ("hash");
 create index "notify_parent" on notify ("parent");
 create index "notify_link" on notify ("link");
@@ -882,12 +882,12 @@ CREATE TABLE "photo" (
   "description" text NOT NULL,
   "album" text NOT NULL,
   "filename" text NOT NULL,
-  "type" varchar(128) NOT NULL DEFAULT 'image/jpeg',
+  "mimetype" varchar(128) NOT NULL DEFAULT 'image/jpeg',
   "height" numeric(6) NOT NULL,
   "width" numeric(6) NOT NULL,
-  "size" bigint  NOT NULL DEFAULT '0',
-  "data" bytea NOT NULL,
-  "scale" numeric(3) NOT NULL,
+  "filesize" bigint  NOT NULL DEFAULT '0',
+  "content" bytea NOT NULL,
+  "imgscale" numeric(3) NOT NULL DEFAULT '0',
   "profile" numeric(1) NOT NULL DEFAULT '0',
   "photo_usage" smallint NOT NULL DEFAULT '0',
   "is_nsfw" smallint NOT NULL DEFAULT '0',
@@ -903,13 +903,13 @@ CREATE TABLE "photo" (
 );
 create index "photo_uid" on photo ("uid");
 create index "photo_album" on photo ("album");
-create index "photo_scale" on photo ("scale");
+create index "photo_imgscale" on photo ("imgscale");
 create index "photo_profile" on photo ("profile");
 create index "photo_flags" on photo ("photo_flags");
 create index "photo_type" on photo ("type");
 create index "photo_aid" on photo ("aid");
 create index "photo_xchan" on photo ("xchan");
-create index "photo_size" on photo ("size");
+create index "photo_filesize" on photo ("filesize");
 create index "photo_resource_id" on photo ("resource_id");
 create index "photo_usage" on photo ("photo_usage");
 create index "photo_is_nsfw" on photo ("is_nsfw");

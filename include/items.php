@@ -666,7 +666,7 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? $x['diaspora_signature'] : '');
 
-	$arr['object']       = activity_sanitise($x['object']);
+	$arr['obj']          = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
 	$arr['attach']       = activity_sanitise($x['attach']);
@@ -1055,8 +1055,8 @@ function encode_item($item,$mirror = false) {
 
 	$x['owner']           = encode_item_xchan($item['owner']);
 	$x['author']          = encode_item_xchan($item['author']);
-	if($item['object'])
-		$x['object']      = json_decode_plus($item['object']);
+	if($item['obj'])
+		$x['object']      = json_decode_plus($item['obj']);
 	if($item['target'])
 		$x['target']      = json_decode_plus($item['target']);
 	if($item['attach'])
@@ -1595,9 +1595,9 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		}
 	}
 
-	if((x($arr,'object')) && is_array($arr['object'])) {
-		activity_sanitise($arr['object']);
-		$arr['object'] = json_encode($arr['object']);
+	if((x($arr,'obj')) && is_array($arr['obj'])) {
+		activity_sanitise($arr['obj']);
+		$arr['obj'] = json_encode($arr['obj']);
 	}
 
 	if((x($arr,'target')) && is_array($arr['target'])) {
@@ -1628,7 +1628,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['thr_parent']    = ((x($arr,'thr_parent'))    ? notags(trim($arr['thr_parent']))    : $arr['parent_mid']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : ACTIVITY_POST);
 	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : ACTIVITY_OBJ_NOTE);
-	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
+	$arr['obj']           = ((x($arr,'obj'))           ? trim($arr['obj'])                   : '');
 	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
@@ -1697,7 +1697,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 				return $ret;
 			}
 
-			if(($arr['obj_type'] == ACTIVITY_OBJ_NOTE) && (! $arr['object']))
+			if(($arr['obj_type'] == ACTIVITY_OBJ_NOTE) && (! $arr['obj']))
 				$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
 			// is the new message multi-level threaded?
@@ -1991,9 +1991,9 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		}
 	}
 
-	if((x($arr,'object')) && is_array($arr['object'])) {
-		activity_sanitise($arr['object']);
-		$arr['object'] = json_encode($arr['object']);
+	if((x($arr,'obj')) && is_array($arr['obj'])) {
+		activity_sanitise($arr['obj']);
+		$arr['obj'] = json_encode($arr['obj']);
 	}
 
 	if((x($arr,'target')) && is_array($arr['target'])) {
@@ -2035,7 +2035,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : $orig[0]['verb']);
 	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : $orig[0]['obj_type']);
-	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : $orig[0]['object']);
+	$arr['obj']           = ((x($arr,'obj'))           ? trim($arr['obj'])                   : $orig[0]['obj']);
 	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : $orig[0]['tgt_type']);
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : $orig[0]['target']);
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : $orig[0]['plink']);
@@ -2369,10 +2369,10 @@ function tag_deliver($uid, $item_id) {
 	if (stristr($item['verb'],ACTIVITY_POKE)) {
 		$poke_notify = true;
 
-		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['object']))
+		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['obj']))
 			$poke_notify = false;
 
-		$obj = json_decode_plus($item['object']);
+		$obj = json_decode_plus($item['obj']);
 		if($obj) {
 			if($obj['id'] !== $u[0]['channel_hash'])
 				$poke_notify = false;
@@ -2416,7 +2416,7 @@ function tag_deliver($uid, $item_id) {
 					intval($u[0]['channel_id'])
 				);
 				if($p) {
-					$j_obj = json_decode_plus($item['object']);
+					$j_obj = json_decode_plus($item['obj']);
 					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
 						if(is_array($j_obj['link']))
@@ -3093,7 +3093,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 			if($x) {
 				$res = substr($i,$x+1);
 				$i = substr($i,0,$x);
-				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d AND `uid` = %d",
+				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `imgscale` = %d AND `uid` = %d",
 					dbesc($i),
 					intval($res),
 					intval($uid)
@@ -4263,7 +4263,7 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 	$arr['obj_type'] = ACTIVITY_OBJ_PHOTO;
 	$arr['verb'] = ACTIVITY_UPDATE;
 
-	$arr['object'] = json_encode(array(
+	$arr['obj'] = json_encode(array(
 		'type' => $arr['obj_type'],
 		'id' => z_root() . '/photo/profile/l/' . $channel['channel_id'],
 		'link' => array('rel' => 'photo', 'type' => $photo['type'], 'href' => z_root() . '/photo/profile/l/' . $channel['channel_id'])

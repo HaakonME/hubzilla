@@ -124,7 +124,7 @@ class File extends DAV\Node implements DAV\IFile {
 		);
 		if ($r) {
 			if (intval($r[0]['os_storage'])) {
-				$d = q("select folder, data from attach where hash = '%s' and uid = %d limit 1",
+				$d = q("select folder, content from attach where hash = '%s' and uid = %d limit 1",
 					dbesc($this->data['hash']),
 					intval($c[0]['channel_id'])
 				);
@@ -139,7 +139,7 @@ class File extends DAV\Node implements DAV\IFile {
 							$direct = $f1[0];
 						}
 					}	
-					$fname = dbunescbin($d[0]['data']);
+					$fname = dbunescbin($d[0]['content']);
 					if(strpos($fname,'store') === false)
 						$f = 'store/' . $this->auth->owner_nick . '/' . $fname ;
 					else
@@ -158,12 +158,12 @@ class File extends DAV\Node implements DAV\IFile {
 			} 
 			else {
 				// this shouldn't happen any more
-				$r = q("UPDATE attach SET data = '%s' WHERE hash = '%s' AND uid = %d",
+				$r = q("UPDATE attach SET content = '%s' WHERE hash = '%s' AND uid = %d",
 					dbescbin(stream_get_contents($data)),
 					dbesc($this->data['hash']),
 					intval($this->data['uid'])
 				);
-				$r = q("SELECT length(data) AS fsize FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+				$r = q("SELECT length(content) AS fsize FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 					dbesc($this->data['hash']),
 					intval($this->data['uid'])
 				);
@@ -236,7 +236,7 @@ class File extends DAV\Node implements DAV\IFile {
 		logger('get file ' . basename($this->name), LOGGER_DEBUG);
 		logger('os_path: ' . $this->os_path, LOGGER_DATA);
 
-		$r = q("SELECT data, flags, os_storage, filename, filetype FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$r = q("SELECT content, flags, os_storage, filename, filetype FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($this->data['hash']),
 			intval($this->data['uid'])
 		);
@@ -250,14 +250,14 @@ class File extends DAV\Node implements DAV\IFile {
 			}
 
 			if (intval($r[0]['os_storage'])) {
-				$x = dbunescbin($r[0]['data']);
+				$x = dbunescbin($r[0]['content']);
 				if(strpos($x,'store') === false)
 					$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $x;
 				else
 					$f = $x;
 				return fopen($f, 'rb');
 			}
-			return dbunescbin($r[0]['data']);
+			return dbunescbin($r[0]['content']);
 		}
 	}
 

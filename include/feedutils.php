@@ -144,9 +144,9 @@ function construct_verb($item) {
 
 function construct_activity_object($item) {
 
-	if($item['object']) {
+	if($item['obj']) {
 		$o = '<as:object>' . "\r\n";
-		$r = json_decode($item['object'],false);
+		$r = json_decode($item['obj'],false);
 
 		if(! $r)
 			return '';
@@ -582,7 +582,7 @@ function get_atom_elements($feed, $item, &$author) {
 			$obj['content'] = $body;
 		}
 
-		$res['object'] = $obj;
+		$res['obj'] = $obj;
 	}
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'target');
@@ -1163,12 +1163,12 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	}
 
 	if(activity_match($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_match($item['verb'],ACTIVITY_POST)) {
-		$obj = ((is_array($item['obj'])) ? $item['object'] : json_decode($item['object'],true));
+		$obj = ((is_array($item['obj'])) ? $item['obj'] : json_decode($item['obj'],true));
  
 		$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 		$o .= '<summary xmlns="urn:ietf:params:xml:ns:xcal">' . xmlify(bbcode($obj['title'])) . '</summary>' . "\r\n";
-		$o .= '<dtstart xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['start'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtstart>' . "\r\n";
-		$o .= '<dtend xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['finish'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtend>' . "\r\n";
+		$o .= '<dtstart xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['dtstart'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtstart>' . "\r\n";
+		$o .= '<dtend xmlns="urn:ietf:params:xml:ns:xcal">' . datetime_convert('UTC','UTC', $obj['dtend'],'Ymd\\THis' . (($obj['adjust']) ? '\\Z' : '')) .  '</dtend>' . "\r\n";
 		$o .= '<location xmlns="urn:ietf:params:xml:ns:xcal">' . xmlify(bbcode($obj['location'])) . '</location>' . "\r\n";
 		$o .= '<content type="' . $type . '" >' . xmlify(bbcode($obj['description'])) . '</content>' . "\r\n";
 	}

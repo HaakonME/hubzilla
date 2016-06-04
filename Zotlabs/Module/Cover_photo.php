@@ -341,7 +341,7 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 	            }
 	        }
 	 
-			cover_photo_crop_ui_head($a, $ph, $hash, $smallest);
+			$this->cover_photo_crop_ui_head($a, $ph, $hash, $smallest);
 		}
 	
 	

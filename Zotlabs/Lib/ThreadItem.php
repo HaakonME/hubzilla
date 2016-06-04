@@ -14,6 +14,8 @@ class ThreadItem {
 	private $template = 'conv_item.tpl';
 	private $comment_box_template = 'comment_item.tpl';
 	private $commentable = false;
+	// list of supported reaction emojis - a site can over-ride this via config system.reactions
+	private $reactions = ['1f60a','1f44f','1f37e','1f48b','1f61e','2665','1f622','1f62e','1f634','1f61c','1f607','1f608'];
 	private $toplevel = false;
 	private $children = array();
 	private $parent = null;
@@ -48,6 +50,14 @@ class ThreadItem {
 
 				$child = new ThreadItem($item);
 				$this->add_child($child);
+			}
+		}
+
+		// allow a site to configure the order and content of the reaction emoji list
+		if($this->toplevel) {
+			$x = get_config('system','reactions');
+			if($x && is_array($x) && count($x)) {
+				$this->reactions = $x;
 			}
 		}
 	}
@@ -345,7 +355,7 @@ class ThreadItem {
 			'photo' => $body['photo'],
 			'event' => $body['event'],
 			'has_tags' => $has_tags,
-
+			'reactions' => $this->reactions,
 // Item toolbar buttons
 			'emojis'   => (($this->is_toplevel() && $this->is_commentable() && feature_enabled($conv->get_profile_owner(),'emojis')) ? '1' : ''),
 			'like'      => $like,

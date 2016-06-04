@@ -1547,8 +1547,8 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 				// Toggle theme status
 	
-				toggle_theme($themes, $theme, $result);
-				$s = rebuild_theme_table($themes);
+				$this->toggle_theme($themes, $theme, $result);
+				$s = $this->rebuild_theme_table($themes);
 				if($result)
 					info( sprintf('Theme %s enabled.', $theme));
 				else
@@ -1561,7 +1561,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			// display theme details
 			require_once('library/markdown.php');
 	
-			if (theme_status($themes,$theme)) {
+			if ($this->theme_status($themes,$theme)) {
 				$status="on"; $action= t("Disable");
 			} else {
 				$status="off"; $action= t("Enable");

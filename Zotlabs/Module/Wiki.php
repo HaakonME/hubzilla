@@ -80,13 +80,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 				break;
 			case 3:
 				// /wiki/channel/wiki -> No page was specified, so redirect to Home.md
-				goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/Home.md');
+				goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/Home');
 			case 4:
 				// GET /wiki/channel/wiki/page
 				// Fetch the wiki info and determine observer permissions
-				$wikiname = argv(2);
-				$pagename = argv(3);
-				$w = wiki_exists_by_name($channel['channel_id'], $wikiname);
+				$wikiUrlName = urlencode(argv(2));
+				$pageUrlName = urlencode(argv(3));
+				$w = wiki_exists_by_name($channel['channel_id'], $wikiUrlName);
 				if(!$w['resource_id']) {
 					notice('Wiki not found' . EOL);
 					goaway('/'.argv(0).'/'.argv(1));
@@ -102,8 +102,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 						goaway('/'.argv(0).'/'.argv(1));
 					}
 				}
-				$wikiheader = rawurldecode($wikiname) . ': ' . rawurldecode($pagename);	// show wiki name and page			
-				$p = wiki_get_page_content(array('resource_id' => $resource_id, 'page' => $pagename));
+				$wikiheader = urldecode($wikiUrlName) . ': ' . urldecode($pageUrlName);	// show wiki name and page			
+				$p = wiki_get_page_content(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				if(!$p['success']) {
 					notice('Error retrieving page content' . EOL);
 					goaway('/'.argv(0).'/'.argv(1).'/'.argv(2));
@@ -113,7 +113,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$showPageControls = $wiki_owner;
 				$showNewWikiButton = $wiki_owner;
 				$showNewPageButton = $wiki_owner;
-				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'page' => $pagename));
+				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				break;
 			default:	// Strip the extraneous URL components
 				goaway('/'.argv(0).'/'.argv(1).'/'.argv(2).'/'.argv(3));
@@ -129,7 +129,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$showNewPageButton'=> $showNewPageButton,
 			'$channel' => $channel['channel_address'],
 			'$resource_id' => $resource_id,
-			'$page' => $pagename,
+			'$page' => $pageUrlName,
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
@@ -178,7 +178,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// Generate new wiki info from input name
 			$wiki['rawName'] = $_POST['wikiName'];
 			$wiki['htmlName'] = escape_tags($_POST['wikiName']);
-			$wiki['urlName'] = urlencode(escape_tags($_POST['wikiName'])); 
+			$wiki['urlName'] = urlencode($_POST['wikiName']); 
 			if($wiki['urlName'] === '') {				
 				notice('Error creating wiki. Invalid name.');
 				goaway('/wiki');
@@ -193,7 +193,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					notice('Wiki created, but error creating Home page.');
 					goaway('/wiki/'.$nick.'/'.$wiki['urlName']);
 				}
-				goaway('/wiki/'.$nick.'/'.$wiki['urlName'].'/'.$homePage['urlName']);
+				goaway('/wiki/'.$nick.'/'.$wiki['urlName'].'/'.$homePage['page']['urlName']);
 			} else {
 				notice('Error creating wiki');
 				goaway('/wiki');
@@ -252,13 +252,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 					json_return_and_die(array('success' => false));					
 				}
 			}
-			$name = escape_tags(urlencode($_POST['name'])); //Get new page name
-			if($name === '') {				
+			$name = $_POST['name']; //Get new page name
+			if(urlencode(escape_tags($_POST['name'])) === '') {				
 				json_return_and_die(array('message' => 'Error creating page. Invalid name.', 'success' => false));
 			}
-			$page = wiki_create_page($name . '.md', $resource_id);
+			$page = wiki_create_page($name, $resource_id);
 			if ($page['success']) {
-				json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki'].'/'.$name.'.md', 'success' => true));
+				json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.urlencode($page['page']['urlName']), 'success' => true));
 			} else {
 				logger('Error creating page');
 				json_return_and_die(array('message' => 'Error creating page.', 'success' => false));
@@ -286,7 +286,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if ((argc() === 4) && (argv(2) === 'save') && (argv(3) === 'page')) {
 			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
-			$pagename = escape_tags(urlencode($_POST['name'])); 
+			$pageUrlName = $_POST['name'];
+			logger('pageURLname: ' . $pageUrlName);
+			$pageHtmlName = escape_tags($_POST['name']);
 			$content = escape_tags($_POST['content']); //Get new content
 			// Determine if observer has permission to save content
 			if (local_channel()) {
@@ -308,14 +310,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 					json_return_and_die(array('success' => false));					
 				}
 			}
-			$saved = wiki_save_page(array('resource_id' => $resource_id, 'name' => $pagename, 'content' => $content));
+			$saved = wiki_save_page(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName, 'content' => $content));
 			if($saved['success']) {
 				$ob = \App::get_observer();
 				$commit = wiki_git_commit(array(
-						'commit_msg' => 'Updated ' . $pagename, 
+						'commit_msg' => 'Updated ' . $pageHtmlName, 
 						'resource_id' => $resource_id, 
 						'observer' => $ob,
-						'files' => array($pagename)
+						'files' => array($pageUrlName.'.md')
 						));
 				if($commit['success']) {
 					json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
@@ -332,7 +334,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if ((argc() === 4) && (argv(2) === 'history') && (argv(3) === 'page')) {
 			$nick = argv(1);
 			$resource_id = $_POST['resource_id'];
-			$pagename = escape_tags(urlencode($_POST['name']));
+			$pageUrlName = $_POST['name'];
 			// Determine if observer has permission to view content
 			if (local_channel()) {
 				$channel = \App::get_channel();
@@ -347,7 +349,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			$historyHTML = widget_wiki_page_history(array(
 					'resource_id' => $resource_id,
-					'page' => $pagename
+					'pageUrlName' => $pageUrlName
 			));
 			json_return_and_die(array('historyHTML' => $historyHTML, 'message' => '', 'success' => true));
 		}

@@ -13,6 +13,12 @@ function wiki_list($channel, $observer_hash) {
 			dbesc(WIKI_ITEM_RESOURCE_TYPE),
 			intval($channel['channel_id'])
 	);
+	foreach($wikis as &$w) {		
+		$w['rawName'] = get_iconfig($w, 'wiki', 'rawName');
+		$w['htmlName'] = get_iconfig($w, 'wiki', 'htmlName');
+		$w['urlName'] = get_iconfig($w, 'wiki', 'urlName');
+		$w['path'] = get_iconfig($w, 'wiki', 'path');
+	}
 	// TODO: query db for wikis the observer can access. Return with two lists, for read and write access
 	return array('wikis' => $wikis);
 }
@@ -21,16 +27,20 @@ function wiki_page_list($resource_id) {
 	// TODO: Create item table records for pages so that metadata like title can be applied
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
-		return array('pages' => null);
+		return array('pages' => null, 'wiki' => null);
 	}
 	$pages = array();
 	if (is_dir($w['path']) === true) {
 		$files = array_diff(scandir($w['path']), array('.', '..', '.git'));
 		// TODO: Check that the files are all text files
-		$pages = $files;
+		
+		foreach($files as $file) {
+			// strip the .md file extension and unwrap URL encoding to leave HTML encoded name
+			$pages[] = array('title' => urldecode(substr($file, 0, -3)), 'url' => urlencode(substr($file, 0, -3)));
+		}
 	}
 
-	return array('pages' => $pages);
+	return array('pages' => $pages, 'wiki' => $w);
 }
 
 function wiki_init_wiki($channel, $wiki) {
@@ -166,10 +176,10 @@ function wiki_get_wiki($resource_id) {
 	}
 }
 
-function wiki_exists_by_name($uid, $name) {
+function wiki_exists_by_name($uid, $urlName) {
 	$item = q("SELECT id,resource_id FROM item WHERE resource_type = '%s' AND title = '%s' AND uid = '%s' AND item_deleted = 0 limit 1", 
 						dbesc(WIKI_ITEM_RESOURCE_TYPE), 
-						dbesc($name), 
+						dbesc(escape_tags(urldecode($urlName))), 
 						dbesc($uid)
 					);
 	if (!$item) {
@@ -196,31 +206,31 @@ function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
 function wiki_create_page($name, $resource_id) {
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
-		return array('page' => null, 'message' => 'Wiki not found.', 'success' => false);
+		return array('page' => null, 'wiki' => null, 'message' => 'Wiki not found.', 'success' => false);
 	}
-	$page = array('rawName' => $name, 'htmlName' => escape_tags($name), 'urlName' => urlencode(escape_tags($name)), 'fileName' => wiki_generate_page_filename($name));
-	$page_path = $w['path'] . '/' . $page['urlName'];
+	$page = array('rawName' => $name, 'htmlName' => escape_tags($name), 'urlName' => urlencode(escape_tags($name)), 'fileName' => urlencode(escape_tags($name)).'.md');
+	$page_path = $w['path'] . '/' . $page['fileName'];
 	if (is_file($page_path)) {
-		return array('page' => null, 'message' => 'Page already exists.', 'success' => false);
+		return array('page' => null, 'wiki' => null, 'message' => 'Page already exists.', 'success' => false);
 	}
 	// Create the page file in the wiki repo
 	if(!touch($page_path)) {
-		return array('page' => null, 'message' => 'Page file cannot be created.', 'success' => false);
+		return array('page' => null, 'wiki' => null, 'message' => 'Page file cannot be created.', 'success' => false);
 	} else {
-		return array('page' => $page, 'message' => '', 'success' => true);
+		return array('page' => $page, 'wiki' => $w, 'message' => '', 'success' => true);
 	}
 	
 }
 
 function wiki_get_page_content($arr) {
-	$page = ((array_key_exists('page',$arr)) ? $arr['page'] : '');
-	// TODO: look for page resource_id and retrieve that way alternatively
+	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
 	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
 		return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.escape_tags(urlencode($page));
+	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	logger('$page_path: ' . $page_path);
 	if (is_readable($page_path) === true) {
 		if(filesize($page_path) === 0) {
 			$content = '';
@@ -236,13 +246,13 @@ function wiki_get_page_content($arr) {
 }
 
 function wiki_page_history($arr) {
-	$pagename = ((array_key_exists('page',$arr)) ? $arr['page'] : '');
+	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
 	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
 		return array('history' => null, 'message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pagename;
+	$page_path = $w['path'].'/'.$pageUrlName.'.md';
 	if (!is_readable($page_path) === true) {
 		return array('history' => null, 'message' => 'Cannot read wiki page: ' . $page_path, 'success' => false);
 	}
@@ -252,7 +262,7 @@ function wiki_page_history($arr) {
 	}
 	$git = new GitRepo('', null, false, $w['wiki']['title'], $w['path']);
 	try {
-		$gitlog = $git->git->log('', $page_path , array('limit' => 50));
+		$gitlog = $git->git->log('', $page_path , array('limit' => 500));
 		logger('gitlog: ' . json_encode($gitlog));
 		return array('history' => $gitlog, 'message' => '', 'success' => true);
 	} catch (\PHPGit\Exception\GitException $e) {
@@ -261,14 +271,14 @@ function wiki_page_history($arr) {
 }
 
 function wiki_save_page($arr) {
-	$pagename = ((array_key_exists('name',$arr)) ? $arr['name'] : '');
+	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
 	$content = ((array_key_exists('content',$arr)) ? $arr['content'] : '');
 	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
 		return array('message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pagename;
+	$page_path = $w['path'].'/'.$pageUrlName.'.md';
 	if (is_writable($page_path) === true) {
 		if(!file_put_contents($page_path, $content)) {
 			return array('message' => 'Error writing to page file', 'success' => false);
@@ -288,7 +298,7 @@ function wiki_git_commit($arr) {
 	if (!$w['path']) {
 		return array('message' => 'Error reading wiki', 'success' => false);
 	}
-	$reponame = ((array_key_exists('title', $w['wiki'])) ? $w['wiki']['title'] : 'repo');
+	$reponame = ((array_key_exists('title', $w['wiki'])) ? urlencode($w['wiki']['title']) : 'repo');
 	if($reponame === '') {
 		$reponame = 'repo';
 	}

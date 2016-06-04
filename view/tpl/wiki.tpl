@@ -139,8 +139,8 @@
     ev.preventDefault();
   });
   
-function wiki_delete_wiki(wikiName, resource_id) {
-  if(!confirm('Are you sure you want to delete the entire wiki: ' + JSON.stringify(wikiName))) {
+function wiki_delete_wiki(wikiHtmlName, resource_id) {
+  if(!confirm('Are you sure you want to delete the entire wiki: ' + JSON.stringify(wikiHtmlName))) {
     return;
   }
   $.post("wiki/{{$channel}}/delete/wiki", {resource_id: resource_id}, function (data) {

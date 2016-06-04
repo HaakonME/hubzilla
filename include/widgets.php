@@ -897,13 +897,15 @@ function widget_wiki_pages($arr) {
 		$p = wiki_page_list($arr['resource_id']);
 		if ($p['pages']) {
 			$pages = $p['pages'];
-			$w = wiki_get_wiki($arr['resource_id']);
-			$wikiname = $w['wiki']['title'];
+			$w = $p['wiki'];
+			// Wiki item record is $w['wiki']
+			$wikiname = $w['urlName'];
 			if (!$wikiname) {
 				$wikiname = '';
 			}
 		}
 	}
+	logger('pages: ' . json_encode($pages));
 	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
 			'$hide' => $hide,
 			'$not_refresh' => $not_refresh,
@@ -916,9 +918,9 @@ function widget_wiki_pages($arr) {
 
 function widget_wiki_page_history($arr) {
 	require_once("include/wiki.php");
-	$pagename = ((array_key_exists('page', $arr)) ? $arr['page'] : '');
+	$pageUrlName = ((array_key_exists('pageUrlName', $arr)) ? $arr['pageUrlName'] : '');
 	$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : '');
-	$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'page' => $pagename));
+	$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 
 	return replace_macros(get_markup_template('wiki_page_history.tpl'), array(
 			'$pageHistory' => $pageHistory['history']

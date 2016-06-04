@@ -174,22 +174,26 @@ class Wiki extends \Zotlabs\Web\Controller {
 					goaway('/'.argv(0).'/'.argv(1).'/'.argv(2));
 				}
 			}
-			$name = escape_tags(urlencode($_POST['wikiName'])); //Get new wiki name
-			if($name === '') {				
+			$wiki = array(); 
+			// Generate new wiki info from input name
+			$wiki['rawName'] = $_POST['wikiName'];
+			$wiki['htmlName'] = escape_tags($_POST['wikiName']);
+			$wiki['urlName'] = urlencode(escape_tags($_POST['wikiName'])); 
+			if($wiki['urlName'] === '') {				
 				notice('Error creating wiki. Invalid name.');
 				goaway('/wiki');
 			}
 			// Get ACL for permissions
 			$acl = new \Zotlabs\Access\AccessList($channel);
 			$acl->set_from_array($_POST);
-			$r = wiki_create_wiki($channel, $observer_hash, $name, $acl);
+			$r = wiki_create_wiki($channel, $observer_hash, $wiki, $acl);
 			if ($r['success']) {
-				$homePage = wiki_create_page('Home.md', $r['item']['resource_id']);
+				$homePage = wiki_create_page('Home', $r['item']['resource_id']);
 				if(!$homePage['success']) {
 					notice('Wiki created, but error creating Home page.');
-					goaway('/wiki/'.$nick.'/'.$name);
+					goaway('/wiki/'.$nick.'/'.$wiki['urlName']);
 				}
-				goaway('/wiki/'.$nick.'/'.$name.'/Home.md');
+				goaway('/wiki/'.$nick.'/'.$wiki['urlName'].'/'.$homePage['urlName']);
 			} else {
 				notice('Error creating wiki');
 				goaway('/wiki');

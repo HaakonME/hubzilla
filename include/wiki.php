@@ -33,11 +33,11 @@ function wiki_page_list($resource_id) {
 	return array('pages' => $pages);
 }
 
-function wiki_init_wiki($channel, $name) {
+function wiki_init_wiki($channel, $wiki) {
 	// Store the path as a relative path, but pass absolute path to mkdir
-	$path = 'store/[data]/git/'.$channel['channel_address'].'/wiki/'.$name;
+	$path = 'store/[data]/git/'.$channel['channel_address'].'/wiki/'.$wiki['urlName'];
 	if (!os_mkdir(__DIR__ . '/../' . $path, 0770, true)) {
-		logger('Error creating wiki path: ' . $name);
+		logger('Error creating wiki path: ' . $path);
 		return null;
 	}
 	// Create GitRepo object 	
@@ -50,8 +50,8 @@ function wiki_init_wiki($channel, $name) {
 	return array('path' => $path);
 }
 
-function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
-	$wikiinit = wiki_init_wiki($channel, $name);	
+function wiki_create_wiki($channel, $observer_hash, $wiki, $acl) {
+	$wikiinit = wiki_init_wiki($channel, $wiki);	
 	if (!$wikiinit['path']) {
 		notice('Error creating wiki');
 		return array('item' => null, 'success' => false);
@@ -73,7 +73,7 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 	$mid = item_message_id();
 	$arr = array();	// Initialize the array of parameters for the post
 	$item_hidden = 0; // TODO: Allow form creator to send post to ACL about new game automatically
-	$wiki_url = z_root() . '/wiki/' . $channel['channel_address'] . '/' . $name;
+	$wiki_url = z_root() . '/wiki/' . $channel['channel_address'] . '/' . $wiki['urlName'];
 	$arr['aid'] = $channel['channel_account_id'];
 	$arr['uid'] = $channel['channel_id'];
 	$arr['mid'] = $mid;
@@ -85,7 +85,7 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 	$arr['author_xchan'] = $observer_hash;
 	$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 	$arr['llink'] = $arr['plink'];
-	$arr['title'] = $name;		 // name of new wiki;
+	$arr['title'] = $wiki['htmlName'];		 // name of new wiki;
 	$arr['allow_cid'] = $ac['allow_cid'];
 	$arr['allow_gid'] = $ac['allow_gid'];
 	$arr['deny_cid'] = $ac['deny_cid'];
@@ -96,9 +96,19 @@ function wiki_create_wiki($channel, $observer_hash, $name, $acl) {
 	$arr['item_private'] = intval($acl->is_private());
 	$arr['verb'] = ACTIVITY_CREATE;
 	$arr['obj_type'] = ACTIVITY_OBJ_WIKI;
-	$arr['body'] = '[table][tr][td][h1]New Wiki[/h1][/td][/tr][tr][td][zrl=' . $wiki_url . ']' . $name . '[/zrl][/td][/tr][/table]';
+	$arr['body'] = '[table][tr][td][h1]New Wiki[/h1][/td][/tr][tr][td][zrl=' . $wiki_url . ']' . $wiki['htmlName'] . '[/zrl][/td][/tr][/table]';
 	// Save the path using iconfig. The file path should not be shared with other hubs
 	if (!set_iconfig($arr, 'wiki', 'path', $path, false)) {
+		return array('item' => null, 'success' => false);
+	}
+	// Save the wiki name information using iconfig. This is shareable.
+	if (!set_iconfig($arr, 'wiki', 'rawName', $wiki['rawName'], true)) {
+		return array('item' => null, 'success' => false);
+	}
+	if (!set_iconfig($arr, 'wiki', 'htmlName', $wiki['htmlName'], true)) {
+		return array('item' => null, 'success' => false);
+	}
+	if (!set_iconfig($arr, 'wiki', 'urlName', $wiki['urlName'], true)) {
 		return array('item' => null, 'success' => false);
 	}
 	$post = item_store($arr);
@@ -136,15 +146,23 @@ function wiki_get_wiki($resource_id) {
 	if (!$item) {
 		return array('wiki' => null, 'path' => null);
 	} else {
-		$w = $item[0];
-		//$object = json_decode($w['object'], true);
+		$w = $item[0];	// wiki item table record
+		// Get wiki metadata
+		$rawName = get_iconfig($w, 'wiki', 'rawName');
+		$htmlName = get_iconfig($w, 'wiki', 'htmlName');
+		$urlName = get_iconfig($w, 'wiki', 'urlName');
 		$path = get_iconfig($w, 'wiki', 'path');
 		if (!realpath(__DIR__ . '/../' . $path)) {
 			return array('wiki' => null, 'path' => null);
 		}
 		// Path to wiki exists
 		$abs_path = realpath(__DIR__ . '/../' . $path);
-		return array('wiki' => $w, 'path' => $abs_path);
+		return array( 'wiki' => $w, 
+									'path' => $abs_path, 
+									'rawName' => $rawName, 
+									'htmlName' => $htmlName, 
+									'urlName' => $urlName
+		);
 	}
 }
 
@@ -180,15 +198,16 @@ function wiki_create_page($name, $resource_id) {
 	if (!$w['path']) {
 		return array('page' => null, 'message' => 'Wiki not found.', 'success' => false);
 	}
-	$page_path = $w['path'] . '/' . $name;
+	$page = array('rawName' => $name, 'htmlName' => escape_tags($name), 'urlName' => urlencode(escape_tags($name)), 'fileName' => wiki_generate_page_filename($name));
+	$page_path = $w['path'] . '/' . $page['urlName'];
 	if (is_file($page_path)) {
 		return array('page' => null, 'message' => 'Page already exists.', 'success' => false);
 	}
-	// Create file called $name in the path
+	// Create the page file in the wiki repo
 	if(!touch($page_path)) {
 		return array('page' => null, 'message' => 'Page file cannot be created.', 'success' => false);
 	} else {
-		return array('wiki' => $wikiname, 'message' => '', 'success' => true);
+		return array('page' => $page, 'message' => '', 'success' => true);
 	}
 	
 }
@@ -297,4 +316,13 @@ function wiki_git_commit($arr) {
 	} catch (\PHPGit\Exception\GitException $e) {
 		json_return_and_die(array('message' => 'GitRepo error thrown', 'success' => false));
 	}
+}
+
+function wiki_generate_page_filename($name) {
+	$file = urlencode(escape_tags($name));
+	if( $file === '') {
+		return null;
+	} else {
+		return $file . '.md';
+	}	
 }

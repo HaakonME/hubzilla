@@ -35,7 +35,7 @@ class React extends \Zotlabs\Web\Controller {
 			$n['parent_mid'] = $i[0]['mid'];
 			$n['mid'] = item_message_id();
 			$n['verb'] = ACTIVITY_REACT . '#' . $emoji;
-			$n['body'] = "\n\n[zmg]" . z_root() . '/images/emoji/' . $emoji . '.png[/zmg]' . "\n\n";
+			$n['body'] = "\n\n[zmg=32x32]" . z_root() . '/images/emoji/' . $emoji . '.png[/zmg]' . "\n\n";
 			$n['author_xchan'] = $channel['channel_hash'];
 
 			$x = item_store($n); 

@@ -1183,7 +1183,7 @@ function encode_item_terms($terms,$mirror = false) {
 	if($terms) {
 		foreach($terms as $term) {
 			if(in_array($term['ttype'],$allowed_export_terms))
-				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'ttype' => termtype($term['type']));
+				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['ttype']));
 		}
 	}
 
@@ -1240,11 +1240,9 @@ function decode_tags($t) {
 		$ret = array();
 		foreach($t as $x) {
 			$tag = array();
-			if(array_key_exists('type',$x))
-				$x['ttype'] = $x['type'];
 			$tag['term'] = htmlspecialchars($x['tag'], ENT_COMPAT, 'UTF-8', false);
 			$tag['url']  = htmlspecialchars($x['url'], ENT_COMPAT, 'UTF-8', false);
-			switch($x['ttype']) {
+			switch($x['type']) {
 				case 'hashtag':
 					$tag['ttype'] = TERM_HASHTAG;
 					break;

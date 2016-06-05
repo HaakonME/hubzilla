@@ -1163,6 +1163,8 @@ function list_smilies() {
 		if(! App::$emojitab)
 			App::$emojitab = json_decode(file_get_contents('library/emoji.json'),true);
 		foreach(App::$emojitab as $e) {
+			if(strpos($e['shortname'],':tone') === 0)
+				continue;
 			$texts[] = $e['shortname'];
 			$icons[] = '<img height="16" width="16" src="images/emoji/' . $e['unicode'] . '.png' . '" alt="' . $e['name'] . '" />';
 		}

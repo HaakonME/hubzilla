@@ -1115,8 +1115,8 @@ function list_smilies() {
 		':coffee', 
 		':facepalm',
 		':like',
-		':dislike'
-
+		':dislike',
+		':hubzilla'
 	);
 
 	$icons = array(
@@ -1152,8 +1152,23 @@ function list_smilies() {
 		'<img class="smiley" src="' . z_root() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . z_root() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . z_root() . '/images/dislike.gif" alt=":dislike" />',
+		'<img class="smiley" src="' . z_root() . '/images/hz-16.png" alt=":hubzilla" />',
 
 	);
+
+	$x = get_config('feature','emoji');
+	if($x === false)
+		$x = 1;
+	if($x) {
+		if(! App::$emojitab)
+			App::$emojitab = json_decode(file_get_contents('library/emoji.json'),true);
+		foreach(App::$emojitab as $e) {
+			if(strpos($e['shortname'],':tone') === 0)
+				continue;
+			$texts[] = $e['shortname'];
+			$icons[] = '<img class="smiley emoji" height="16" width="16" src="images/emoji/' . $e['unicode'] . '.png' . '" alt="' . $e['name'] . '" />';
+		}
+	}
 
 	$params = array('texts' => $texts, 'icons' => $icons);
 	call_hooks('smilie', $params);
@@ -1473,7 +1488,7 @@ function prepare_body(&$item,$attach = false) {
 
 	if($is_photo) {
 
-		$object = json_decode($item['object'],true);
+		$object = json_decode($item['obj'],true);
 
 		// if original photo width is <= 640px prepend it to item body
 		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {

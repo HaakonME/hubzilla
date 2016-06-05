@@ -1183,7 +1183,7 @@ function encode_item_terms($terms,$mirror = false) {
 	if($terms) {
 		foreach($terms as $term) {
 			if(in_array($term['ttype'],$allowed_export_terms))
-				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['type']));
+				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['ttype']));
 		}
 	}
 

@@ -263,7 +263,6 @@ function wiki_page_history($arr) {
 	$git = new GitRepo('', null, false, $w['wiki']['title'], $w['path']);
 	try {
 		$gitlog = $git->git->log('', $page_path , array('limit' => 500));
-		logger('gitlog: ' . json_encode($gitlog));
 		return array('history' => $gitlog, 'message' => '', 'success' => true);
 	} catch (\PHPGit\Exception\GitException $e) {
 		 return array('history' => null, 'message' => 'GitRepo error thrown', 'success' => false);
@@ -305,6 +304,44 @@ function wiki_delete_page($arr) {
 	} else {
 		return array('message' => 'Page file not writable', 'success' => false);
 	}	
+}
+
+function wiki_revert_page($arr) {
+	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
+	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
+	$commitHash = ((array_key_exists('commitHash',$arr)) ? $arr['commitHash'] : null);
+	if (! $commitHash) {
+		return array('content' => $content, 'message' => 'No commit has provided', 'success' => false);
+	}
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('content' => $content, 'message' => 'Error reading wiki', 'success' => false);
+	}
+	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	if (is_writable($page_path) === true) {
+		
+		$reponame = ((array_key_exists('title', $w['wiki'])) ? urlencode($w['wiki']['title']) : 'repo');
+		if($reponame === '') {
+			$reponame = 'repo';
+		}
+		$git = new GitRepo($observer['xchan_addr'], null, false, $w['wiki']['title'], $w['path']);
+		$content = null;
+		try {
+			$git->setIdentity($observer['xchan_name'], $observer['xchan_addr']);
+			foreach ($git->git->tree($commitHash) as $object) {
+				logger('tree object: ' . json_encode($object));
+				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName.'.md' ) {
+						$content = $git->git->cat->blob($object['hash']);						
+						logger('content: ' . json_encode($content));
+				}
+			}
+		} catch (\PHPGit\Exception\GitException $e) {
+			json_return_and_die(array('content' => $content, 'message' => 'GitRepo error thrown', 'success' => false));
+		}
+		return array('content' => $content, 'message' => '', 'success' => true);
+	} else {
+		return array('content' => $content, 'message' => 'Page file not writable', 'success' => false);
+	}
 }
 
 function wiki_git_commit($arr) {

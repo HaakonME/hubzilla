@@ -401,6 +401,41 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 		}
 		
+		// Revert a page
+		if ((argc() === 4) && (argv(2) === 'revert') && (argv(3) === 'page')) {
+			$nick = argv(1);
+			$resource_id = $_POST['resource_id']; 
+			$pageUrlName = $_POST['name'];
+			$commitHash = $_POST['commitHash'];
+			// Determine if observer has permission to revert pages
+			if (local_channel()) {
+				$channel = \App::get_channel();
+			} else {
+				$channel = get_channel_by_nick($nick);
+				$observer_hash = get_observer_hash();
+				// Figure out who the page owner is.
+				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
+				// TODO: Create a new permission setting for wiki analogous to webpages. Until
+				// then, use webpage permissions
+				if (!$perms['write_pages']) {
+					logger('Wiki editing permission denied.' . EOL);
+					json_return_and_die(array('success' => false));
+				}
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['write']) {
+					logger('Wiki write permission denied. Read only.' . EOL);
+					json_return_and_die(array('success' => false));					
+				}
+			}
+			$reverted = wiki_revert_page(array('commitHash' => $commitHash, 'observer' => \App::get_observer(), 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
+			if($reverted['success']) {
+				json_return_and_die(array('content' => $reverted['content'], 'message' => '', 'success' => true));					
+			} else {
+				json_return_and_die(array('content' => '', 'message' => 'Error reverting page', 'success' => false));					
+			}
+		}
+		
+
 		//notice('You must be authenticated.');
 		json_return_and_die(array('message' => 'You must be authenticated.', 'success' => false));
 		

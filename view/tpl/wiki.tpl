@@ -232,4 +232,21 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
       }, 'json');
     ev.preventDefault();
   });
+  
+  function wiki_revert_page(commitHash) {
+    if (window.wiki_resource_id === '' || window.wiki_page_name === '') {
+      window.console.log('You must have a wiki page open in order to revert pages.');
+      return false;
+    }
+    $.post("wiki/{{$channel}}/revert/page", {commitHash: commitHash, name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
+      function (data) {
+        if (data.success) {
+          window.console.log('Reverted content: ' + data.content);
+          // put contents in editor
+          editor.getSession().setValue(data.content);
+        } else {
+          window.console.log('Error reverting page.');
+        }
+      }, 'json');
+  }
 </script>

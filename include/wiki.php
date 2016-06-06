@@ -230,7 +230,6 @@ function wiki_get_page_content($arr) {
 		return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
 	}
 	$page_path = $w['path'].'/'.$pageUrlName.'.md';
-	logger('$page_path: ' . $page_path);
 	if (is_readable($page_path) === true) {
 		if(filesize($page_path) === 0) {
 			$content = '';
@@ -329,10 +328,8 @@ function wiki_revert_page($arr) {
 		try {
 			$git->setIdentity($observer['xchan_name'], $observer['xchan_addr']);
 			foreach ($git->git->tree($commitHash) as $object) {
-				logger('tree object: ' . json_encode($object));
 				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName.'.md' ) {
 						$content = $git->git->cat->blob($object['hash']);						
-						logger('content: ' . json_encode($content));
 				}
 			}
 		} catch (\PHPGit\Exception\GitException $e) {

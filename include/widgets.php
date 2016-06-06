@@ -905,7 +905,6 @@ function widget_wiki_pages($arr) {
 			}
 		}
 	}
-	logger('pages: ' . json_encode($pages));
 	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
 			'$hide' => $hide,
 			'$not_refresh' => $not_refresh,

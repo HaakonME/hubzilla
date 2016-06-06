@@ -783,6 +783,7 @@ class App {
 	public static  $content;
 	public static  $data = array();
 	public static  $error = false;
+	public static  $emojitab = false;
 	public static  $cmd;
 	public static  $argv;
 	public static  $argc;
@@ -866,7 +867,7 @@ class App {
 	/**
 	 * App constructor.
 	 */
-	function init() {
+	public static function init() {
 		// we'll reset this after we read our config file
 		date_default_timezone_set('UTC');
 

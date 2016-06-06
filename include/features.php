@@ -94,6 +94,7 @@ function get_features($filtered = true) {
 			t('Post/Comment Tools'),
 			array('commtag',        t('Community Tagging'),					t('Ability to tag existing posts'),false,get_config('feature_lock','commtag')),
 			array('categories',     t('Post Categories'),			t('Add categories to your posts'),false,get_config('feature_lock','categories')),
+			array('emojis',     t('Emoji Reactions'),			t('Add emoji reaction ability to posts'),true,get_config('feature_lock','emojis')),
 			array('filing',         t('Saved Folders'),				t('Ability to file posts under folders'),false,get_config('feature_lock','filing')),
 			array('dislike',        t('Dislike Posts'),				t('Ability to dislike posts/comments'),false,get_config('feature_lock','dislike')),
 			array('star_posts',     t('Star Posts'),				t('Ability to mark special posts with a star indicator'),false,get_config('feature_lock','star_posts')),

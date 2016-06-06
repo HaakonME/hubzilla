@@ -183,7 +183,7 @@ function string2bb(element) {
 		};
 
 		smilies = {
-			match: /(^|\s)(:[a-z]{2,})$/,
+			match: /(^|\s)(:[a-z_:]{2,})$/,
 			index: 2,
 			search: function(term, callback) { $.getJSON('/smilies/json').done(function(data) { callback($.map(data, function(entry) { return entry.text.indexOf(term) === 0 ? entry : null; })); }); },
 			template: function(item) { return item.icon + item.text; },

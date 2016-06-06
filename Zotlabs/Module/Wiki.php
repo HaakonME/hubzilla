@@ -30,10 +30,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 		$wiki_owner = false;
 		$showNewWikiButton = false;
 		$showCommitMsg = false;
+		$hidePageHistory = false;
 		$pageHistory = array();
 		$local_observer = null;
 		$resource_id = '';
-		$pagename = '';
 		
 		// init() should have forced the URL to redirect to /wiki/channel so assume argc() > 1
 		$nick = argv(1);
@@ -78,6 +78,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$showPageControls = false;
 				$showNewWikiButton = $wiki_owner;
 				$showNewPageButton = false;
+				$hidePageHistory = true;
 				$showCommitMsg = false;
 				break;
 			case 3:
@@ -116,6 +117,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$showPageControls = $wiki_owner;
 				$showNewWikiButton = $wiki_owner;
 				$showNewPageButton = $wiki_owner;
+				$hidePageHistory = false;
 				$showCommitMsg = true;
 				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				break;
@@ -131,6 +133,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$showPageControls' => $showPageControls,
 			'$showNewWikiButton'=> $showNewWikiButton,
 			'$showNewPageButton'=> $showNewPageButton,
+			'$hidePageHistory' => $hidePageHistory,
 			'$showCommitMsg' => $showCommitMsg,
 			'$channel' => $channel['channel_address'],
 			'$resource_id' => $resource_id,

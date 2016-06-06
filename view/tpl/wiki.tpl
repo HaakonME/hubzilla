@@ -61,7 +61,7 @@
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
       <li><a data-toggle="tab" href="#edit-pane">Edit</a></li>
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
-      <li><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
+      <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
       {{if $showPageControls}}
       <li class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">Page <b class="caret"></b></a>
@@ -82,7 +82,7 @@
           {{$renderedContent}}
         </div>
       </div>
-      <div id="page-history-pane" class="tab-pane fade">
+      <div id="page-history-pane" class="tab-pane fade" {{if $hidePageHistory}}style="display: none;"{{/if}}>
         <div id="page-history-list" class="section-content-wrapper">
           <table class="table-striped table-responsive table-hover" style="width: 100%;">
           {{foreach $pageHistory as $commit}}

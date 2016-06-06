@@ -86,6 +86,13 @@
 
 [h3]Addon Repositories[/h3]
 
+We [b]strongly recommend[/b] that authors of addons publish/submit them to the project addon repository. This has several advantages. Project developers can easily fix security flaws and make changes to comply with recent changes in core code. Addons provided in third-party repositories are considered untrusted. If the project core code changes in an incompatible way, there may be no alternative but to physically remove or rename the addon files in order to get your site working again. Often only the plugin/addon author can help you regain control of your website, and project developers are unable to assist you; because by definition your site configuration has been modified in ways that we cannot easily test or verify. 
+
+For these reasons we [b]strongly recommend[/b] that you do NOT install addons from third-party repositories.
+
+We also recognise that some developers prefer working on their own and do not wish their code to be mingled with the project repository for a variety of reasons. These developers can ease troubleshooting and debugging by providing a README file in their respective code repository outlining the process for submitting patches and bug fixes. It is also recommended that these projects provide both a 'dev' (development) and 'master' (production) branch which tracks the current project branches of those names. This is because dev and master are often not compatible from the viewpoint of library interfaces. It is also highly recommended that your repository versions are tagged and moved forward within 24 hours of project releases. This is a major inconvenience for everybdy involved, and can present downtime for production sites while this process is being carried out; which is one more reason why we [b]strongly recommend[/b] that addons be submitted to the project addon repository and that you do NOT install such third-party addons. 
+
+
 [url=https://github.com/redmatrix/hubzilla-addons]https://github.com/redmatrix/hubzilla-addons[/url] Main project addon repository
 
 [url=https://github.com/23n/red-addons]https://github.com/23n/red-addons[/url] Oliver's repository (mayan_places and flip)

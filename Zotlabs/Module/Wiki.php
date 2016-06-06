@@ -29,6 +29,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
 		$wiki_owner = false;
 		$showNewWikiButton = false;
+		$showCommitMsg = false;
 		$pageHistory = array();
 		$local_observer = null;
 		$resource_id = '';
@@ -77,6 +78,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$showPageControls = false;
 				$showNewWikiButton = $wiki_owner;
 				$showNewPageButton = false;
+				$showCommitMsg = false;
 				break;
 			case 3:
 				// /wiki/channel/wiki -> No page was specified, so redirect to Home.md
@@ -114,6 +116,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$showPageControls = $wiki_owner;
 				$showNewWikiButton = $wiki_owner;
 				$showNewPageButton = $wiki_owner;
+				$showCommitMsg = true;
 				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				break;
 			default:	// Strip the extraneous URL components
@@ -128,6 +131,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$showPageControls' => $showPageControls,
 			'$showNewWikiButton'=> $showNewWikiButton,
 			'$showNewPageButton'=> $showNewPageButton,
+			'$showCommitMsg' => $showCommitMsg,
 			'$channel' => $channel['channel_address'],
 			'$resource_id' => $resource_id,
 			'$page' => $pageUrlName,
@@ -138,6 +142,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$renderedContent' => Markdown(json_decode($content)),
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
+			'$commitMsg' => array('commitMsg', '', '', '', '', 'placeholder="(optional) Enter a custom message when saving the page..."'),
 			'$pageHistory' => $pageHistory['history']
 		));
 		head_add_js('library/ace/ace.js');	// Ace Code Editor
@@ -290,6 +295,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$pageUrlName = $_POST['name'];
 			$pageHtmlName = escape_tags($_POST['name']);
 			$content = escape_tags($_POST['content']); //Get new content
+			$commitMsg = $_POST['commitMsg']; 
+			if ($commitMsg === '') {
+				$commitMsg = 'Updated ' . $pageHtmlName;
+			}
 			// Determine if observer has permission to save content
 			if (local_channel()) {
 				$channel = \App::get_channel();
@@ -314,7 +323,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if($saved['success']) {
 				$ob = \App::get_observer();
 				$commit = wiki_git_commit(array(
-						'commit_msg' => 'Updated ' . $pageHtmlName, 
+						'commit_msg' => $commitMsg, 
 						'resource_id' => $resource_id, 
 						'observer' => $ob,
 						'files' => array($pageUrlName.'.md')

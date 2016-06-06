@@ -101,6 +101,11 @@
 
     </div>
   </div>
+  {{if $showCommitMsg}}
+  <div class="section-content-wrapper">
+    {{include file="field_input.tpl" field=$commitMsg}}    
+  </div>
+  {{/if}}
 </div>
 
 <script>
@@ -198,10 +203,16 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
       ev.preventDefault();
       return false;
     }
-    $.post("wiki/{{$channel}}/save/page", {content: editor.getValue(), name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
+    $.post("wiki/{{$channel}}/save/page", 
+      { content: editor.getValue(), 
+        commitMsg: $('#id_commitMsg').val(),
+        name: window.wiki_page_name, 
+        resource_id: window.wiki_resource_id
+      }, 
       function (data) {
         if (data.success) {
           window.console.log('Page saved successfully.');
+          $('#id_commitMsg').val(''); // Clear the commit message box
         } else {
           alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 
           window.console.log('Error saving page.');
@@ -241,7 +252,12 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
     $.post("wiki/{{$channel}}/revert/page", {commitHash: commitHash, name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
       function (data) {
         if (data.success) {
-          window.console.log('Reverted content: ' + data.content);
+          $('button[id^=revert-]').removeClass('btn-success');
+          $('button[id^=revert-]').addClass('btn-danger');
+          $('button[id^=revert-]').html('Revert');
+          $('#revert-'+commitHash).removeClass('btn-danger');
+          $('#revert-'+commitHash).addClass('btn-success');
+          $('#revert-'+commitHash).html('Page reverted<br>but not saved');
           // put contents in editor
           editor.getSession().setValue(data.content);
         } else {

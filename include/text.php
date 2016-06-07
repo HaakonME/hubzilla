@@ -1166,7 +1166,7 @@ function list_smilies() {
 			if(strpos($e['shortname'],':tone') === 0)
 				continue;
 			$texts[] = $e['shortname'];
-			$icons[] = '<img height="16" width="16" src="images/emoji/' . $e['unicode'] . '.png' . '" alt="' . $e['name'] . '" />';
+			$icons[] = '<img class="smiley emoji" height="16" width="16" src="images/emoji/' . $e['unicode'] . '.png' . '" alt="' . $e['name'] . '" />';
 		}
 	}
 

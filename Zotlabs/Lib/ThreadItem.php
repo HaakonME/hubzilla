@@ -15,7 +15,7 @@ class ThreadItem {
 	private $comment_box_template = 'comment_item.tpl';
 	private $commentable = false;
 	// list of supported reaction emojis - a site can over-ride this via config system.reactions
-	private $reactions = ['1f60a','1f44f','1f37e','1f48b','1f61e','2665','1f622','1f62e','1f634','1f61c','1f607','1f608'];
+	private $reactions = ['1f60a','1f44f','1f37e','1f48b','1f61e','2665','1f606','1f62e','1f634','1f61c','1f607','1f608'];
 	private $toplevel = false;
 	private $children = array();
 	private $parent = null;

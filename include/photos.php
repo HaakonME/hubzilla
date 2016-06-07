@@ -443,7 +443,7 @@ function photo_upload($channel, $observer, $args) {
  *   * success (bool)
  *   * albums (array)
  */
-function photos_albums_list($channel, $observer) {
+function photos_albums_list($channel, $observer, $sort_key = 'album', $direction = 'asc') {
 
 	$channel_id     = $channel['channel_id'];
 	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
@@ -451,11 +451,15 @@ function photos_albums_list($channel, $observer) {
 	if(! perm_is_allowed($channel_id, $observer_xchan, 'view_storage'))
 		return false;
 
-	/** @FIXME create a permissions SQL which works on arbitrary observers and channels, regardless of login or web status */
 
-	$sql_extra = permissions_sql($channel_id);
+	$sql_extra = permissions_sql($channel_id,$observer_xchan);
 
-	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by max(created) desc",
+	$sort_key = dbesc($sort_key);
+	$direction = dbesc($direction);
+
+
+
+	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by $sort_key $direction",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
@@ -483,20 +487,14 @@ function photos_albums_list($channel, $observer) {
 	return $ret;
 }
 
-function photos_album_widget($channelx,$observer,$albums = null) {
+function photos_album_widget($channelx,$observer,$sortkey = 'album',$direction = 'asc') {
 
 	$o = '';
 
-	// If we weren't passed an album list, see if the photos module
-	// dropped one for us to find in App::$data['albums']. 
-	// If all else fails, load it.
-
-	if(! $albums) {
-		if(array_key_exists('albums', App::$data))
-			$albums = App::$data['albums'];
-		else
-			$albums = photos_albums_list($channelx,$observer);
-	}
+	if(array_key_exists('albums', App::$data))
+		$albums = App::$data['albums'];
+	else
+		$albums = photos_albums_list($channelx,$observer,$sortkey,$direction);
 
 	if($albums['success']) {
 		$o = replace_macros(get_markup_template('photo_albums.tpl'),array(

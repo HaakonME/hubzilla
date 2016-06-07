@@ -510,7 +510,7 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		// URLs:
 		// photos/name
@@ -1277,11 +1277,9 @@ class Photos extends \Zotlabs\Web\Controller {
 			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$cmd) . '" title="oembed" />' . "\r\n";
 	
 	
-		$r = q("SELECT `resource_id`, max(`imgscale`) AS `imgscale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
+		$r = q("SELECT `resource_id`, max(`imgscale`) AS `imgscale` FROM `photo` WHERE `uid` = %d 
 			and photo_usage in ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY `resource_id`",
 			intval(\App::$data['channel']['channel_id']),
-			dbesc('Contact Photos'),
-			dbesc( t('Contact Photos')),
 			intval(PHOTO_NORMAL),
 			intval(PHOTO_PROFILE),
 			intval($unsafe)
@@ -1291,15 +1289,13 @@ class Photos extends \Zotlabs\Web\Controller {
 			\App::set_pager_itemspage(60);
 		}
 		
-		$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.album, p.imgscale, p.created FROM photo as p 
-			INNER JOIN ( SELECT resource_id, max(imgscale) as imgscale FROM photo 
+		$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.album, p.imgscale, p.created FROM photo p 
+			INNER JOIN ( SELECT resource_id, max(imgscale) imgscale FROM photo 
 				WHERE uid = %d AND photo_usage IN ( %d, %d ) 
-				AND is_nsfw = %d $sql_extra group by resource_id ) as ph 
+				AND is_nsfw = %d $sql_extra group by resource_id ) ph 
 			ON (p.resource_id = ph.resource_id and p.imgscale = ph.imgscale) 
 			ORDER by p.created DESC LIMIT %d OFFSET %d",
 			intval(\App::$data['channel']['channel_id']),
-			dbesc('Contact Photos'),
-			dbesc( t('Contact Photos')),
 			intval(PHOTO_NORMAL),
 			intval(PHOTO_PROFILE),
 			intval($unsafe),

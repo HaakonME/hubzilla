@@ -32,8 +32,8 @@ class Admin extends \Zotlabs\Web\Controller {
 				case 'site':
 					$this->admin_page_site_post($a);
 					break;
-				case 'users':
-					$this->admin_page_users_post($a);
+				case 'accounts':
+					$this->admin_page_accounts_post($a);
 					break;
 				case 'channels':
 					$this->admin_page_channels_post($a);
@@ -127,8 +127,8 @@ class Admin extends \Zotlabs\Web\Controller {
 				case 'site':
 					$o = $this->admin_page_site($a);
 					break;
-				case 'users':
-					$o = $this->admin_page_users($a);
+				case 'accounts':
+					$o = $this->admin_page_accounts($a);
 					break;
 				case 'channels':
 					$o = $this->admin_page_channels($a);
@@ -872,20 +872,20 @@ class Admin extends \Zotlabs\Web\Controller {
 	}
 	
 	/**
-	 * @brief Handle POST actions on users admin page.
+	 * @brief Handle POST actions on accounts admin page.
 	 *
 	 * This function is called when on the admin user/account page the form was
 	 * submitted to handle multiple operations at once. If one of the icons next
-	 * to an entry are pressed the function admin_page_users() will handle this.
+	 * to an entry are pressed the function admin_page_accounts() will handle this.
 	 *
 	 * @param App $a
 	 */
-	function admin_page_users_post($a) {
+	function admin_page_accounts_post($a) {
 		$pending = ( x($_POST, 'pending') ? $_POST['pending'] : array() );
 		$users   = ( x($_POST, 'user')    ? $_POST['user']    : array() );
 		$blocked = ( x($_POST, 'blocked') ? $_POST['blocked'] : array() );
 	
-		check_form_security_token_redirectOnErr('/admin/users', 'admin_users');
+		check_form_security_token_redirectOnErr('/admin/accounts', 'admin_accounts');
 	
 		// change to switch structure?
 		// account block/unblock button was submitted
@@ -901,7 +901,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			notice( sprintf( tt("%s account blocked/unblocked", "%s account blocked/unblocked", count($users)), count($users)) );
 		}
 		// account delete button was submitted
-		if (x($_POST, 'page_users_delete')) {
+		if (x($_POST, 'page_accounts_delete')) {
 			foreach ($users as $uid){
 				account_remove($uid, true, false);
 			}
@@ -920,20 +920,20 @@ class Admin extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		goaway(z_root() . '/admin/users' );
+		goaway(z_root() . '/admin/accounts' );
 	}
 	
 	/**
-	 * @brief Generate users admin page and handle single item operations.
+	 * @brief Generate accounts admin page and handle single item operations.
 	 *
-	 * This function generates the users/account admin page and handles the actions
+	 * This function generates the accounts/account admin page and handles the actions
 	 * if an icon next to an entry was clicked. If several items were selected and
-	 * the form was submitted it is handled by the function admin_page_users_post().
+	 * the form was submitted it is handled by the function admin_page_accounts_post().
 	 *
 	 * @param App &$a
 	 * @return string
 	 */
-	function admin_page_users(&$a){
+	function admin_page_accounts(&$a){
 		if (argc() > 2) {
 			$uid = argv(3);
 			$account = q("SELECT * FROM account WHERE account_id = %d",
@@ -942,10 +942,10 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 			if (! $account) {
 				notice( t('Account not found') . EOL);
-				goaway(z_root() . '/admin/users' );
+				goaway(z_root() . '/admin/accounts' );
 			}
 	
-			check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
+			check_form_security_token_redirectOnErr('/admin/accounts', 'admin_accounts', 't');
 	
 			switch (argv(2)){
 				case 'delete':
@@ -972,7 +972,7 @@ class Admin extends \Zotlabs\Web\Controller {
 					break;
 			}
 	
-			goaway(z_root() . '/admin/users' );
+			goaway(z_root() . '/admin/accounts' );
 		}
 	
 		/* get pending */
@@ -980,7 +980,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			intval(ACCOUNT_PENDING)
 		);
 	
-		/* get users */
+		/* get accounts */
 	
 		$total = q("SELECT count(*) as total FROM account");
 		if (count($total)) {
@@ -988,22 +988,20 @@ class Admin extends \Zotlabs\Web\Controller {
 			\App::set_pager_itemspage(100);
 		}
 	
-	
-	//	We'll still need to link email addresses to admin/users/channels or some such, but this bit doesn't exist yet.
-	//	That's where we need to be doing last post/channel flags/etc, not here.
-	
 		$serviceclass = (($_REQUEST['class']) ? " and account_service_class = '" . dbesc($_REQUEST['class']) . "' " : '');
+
+		$key = (($_REQUEST['key']) ? dbesc($_REQUEST['key']) : 'account_id');
+		$dir = 'asc';
+		if(array_key_exists('dir',$_REQUEST))
+			$dir = ((intval($_REQUEST['dir'])) ? 'asc' : 'desc');
+
+		$base = z_root() . '/admin/accounts?f=';
+		$odir = (($dir === 'asc') ? '0' : '1');
 	
-		$order = " order by account_email asc ";
-		if($_REQUEST['order'] === 'expires')
-			$order = " order by account_expires desc ";
-		if($_REQUEST['order'] === 'created')
-			$order = " order by account_created desc ";
-	
-		$users = q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d )>0 as `blocked`, " .
+		$users = q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
 				"(SELECT %s FROM channel as ch " .
 				"WHERE ch.channel_account_id = ac.account_id and ch.channel_removed = 0 ) as `channels` " .
-			"FROM account as ac where true $serviceclass $order limit %d offset %d ",
+			"FROM account as ac where true $serviceclass order by $key $dir limit %d offset %d ",
 			intval(ACCOUNT_BLOCKED),
 			db_concat('ch.channel_address', ' '),
 			intval(\App::$pager['itemspage']),
@@ -1026,14 +1024,14 @@ class Admin extends \Zotlabs\Web\Controller {
 	//	}
 	//	$users = array_map("_setup_users", $users);
 	
-		$t = get_markup_template('admin_users.tpl');
+		$t = get_markup_template('admin_accounts.tpl');
 		$o = replace_macros($t, array(
 			// strings //
 			'$title' => t('Administration'),
-			'$page' => t('Users'),
+			'$page' => t('Accounts'),
 			'$submit' => t('Submit'),
 			'$select_all' => t('select all'),
-			'$h_pending' => t('User registrations waiting for confirm'),
+			'$h_pending' => t('Registrations waiting for confirm'),
 			'$th_pending' => array( t('Request date'), t('Email') ),
 			'$no_pending' =>  t('No registrations.'),
 			'$approve' => t('Approve'),
@@ -1041,14 +1039,22 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$delete' => t('Delete'),
 			'$block' => t('Block'),
 			'$unblock' => t('Unblock'),
-	
-			'$h_users' => t('Users'),
-			'$th_users' => array( t('ID'), t('Email'), t('All Channels'), t('Register date'), t('Last login'), t('Expires'), t('Service Class')),
+			'$odir' => $odir,
+			'$base' => $base,
+			'$h_users' => t('Accounts'),
+			'$th_users' => array( 
+				[ t('ID'), 'account_id' ],
+				[ t('Email'), 'account_email' ],
+				[ t('All Channels'), 'channels' ],
+				[ t('Register date'), 'account_created' ],
+				[ t('Last login'), 'account_lastlog' ],
+				[ t('Expires'), 'account_expires' ],
+				[ t('Service Class'), 'account_service_class'] ),
 	
 			'$confirm_delete_multi' => t('Selected accounts will be deleted!\n\nEverything these accounts had posted on this site will be permanently deleted!\n\nAre you sure?'),
 			'$confirm_delete' => t('The account {0} will be deleted!\n\nEverything this account has posted on this site will be permanently deleted!\n\nAre you sure?'),
 	
-			'$form_security_token' => get_form_security_token("admin_users"),
+			'$form_security_token' => get_form_security_token("admin_accounts"),
 	
 			// values //
 			'$baseurl' => z_root(),
@@ -1158,6 +1164,17 @@ class Admin extends \Zotlabs\Web\Controller {
 			}
 			goaway(z_root() . '/admin/channels' );
 		}
+
+
+		$key = (($_REQUEST['key']) ? dbesc($_REQUEST['key']) : 'channel_id');
+		$dir = 'asc';
+		if(array_key_exists('dir',$_REQUEST))
+			$dir = ((intval($_REQUEST['dir'])) ? 'asc' : 'desc');
+
+		$base = z_root() . '/admin/channels?f=';
+		$odir = (($dir === 'asc') ? '0' : '1');
+
+
 	
 		/* get channels */
 	
@@ -1166,14 +1183,12 @@ class Admin extends \Zotlabs\Web\Controller {
 			\App::set_pager_total($total[0]['total']);
 			\App::set_pager_itemspage(100);
 		}
-	
-		$order = " order by channel_name asc ";
-	
-		$channels = q("SELECT * from channel where channel_removed = 0 and channel_system = 0 $order limit %d offset %d ",
+
+		$channels = q("SELECT * from channel where channel_removed = 0 and channel_system = 0 order by $key $dir limit %d offset %d ",
 			intval(\App::$pager['itemspage']),
 			intval(\App::$pager['start'])
 		);
-	
+
 		if($channels) {
 			for($x = 0; $x < count($channels); $x ++) {
 				if($channels[$x]['channel_pageflags'] & PAGE_CENSORED)
@@ -1201,7 +1216,12 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$code' => t('Allow Code'),
 			'$uncode' => t('Disallow Code'),
 			'$h_channels' => t('Channel'),
-			'$th_channels' => array( t('UID'), t('Name'), t('Address')),
+			'$base' => $base,
+			'$odir' => $odir,
+			'$th_channels' => array( 
+					[ t('UID'), 'channel_id' ],
+					[ t('Name'), 'channel_name' ],
+					[ t('Address'), 'channel_address' ]),
 	
 			'$confirm_delete_multi' => t('Selected channels will be deleted!\n\nEverything that was posted in these channels on this site will be permanently deleted!\n\nAre you sure?'),
 			'$confirm_delete' => t('The channel {0} will be deleted!\n\nEverything that was posted in this channel on this site will be permanently deleted!\n\nAre you sure?'),

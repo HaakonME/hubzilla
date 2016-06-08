@@ -799,8 +799,10 @@ function widget_photo_albums($arr) {
 	if((! $channelx) || (! perm_is_allowed(App::$profile['profile_uid'], get_observer_hash(), 'view_storage')))
 		return '';
 	require_once('include/photos.php');
+	$sortkey = ((array_key_exists('sortkey',$arr)) ? $arr['sortkey'] : 'album');
+	$direction = ((array_key_exists('direction',$arr)) ? $arr['direction'] : 'asc');	
 
-	return photos_album_widget($channelx, App::get_observer());
+	return photos_album_widget($channelx, App::get_observer(),$sortkey,$direction);
 }
 
 
@@ -1450,7 +1452,7 @@ function widget_admin($arr) {
 
 	$aside = array(
 		'site'      => array(z_root() . '/admin/site/',     t('Site'),           'site'),
-		'users'     => array(z_root() . '/admin/users/',    t('Accounts'),       'users', 'pending-update', t('Member registrations waiting for confirmation')),
+		'accounts'  => array(z_root() . '/admin/accounts/', t('Accounts'),       'accounts', 'pending-update', t('Member registrations waiting for confirmation')),
 		'channels'  => array(z_root() . '/admin/channels/', t('Channels'),       'channels'),
 		'security'  => array(z_root() . '/admin/security/', t('Security'),       'security'),
 		'features'  => array(z_root() . '/admin/features/', t('Features'),       'features'),

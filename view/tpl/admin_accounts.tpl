@@ -13,7 +13,7 @@
 <div class="generic-content-wrapper-styled" id="adminpage">
 	<h1>{{$title}} - {{$page}}</h1>
 
-	<form action="{{$baseurl}}/admin/users" method="post">
+	<form action="{{$baseurl}}/admin/accounts" method="post">
 		<input type="hidden" name="form_security_token" value="{{$form_security_token}}">
 
 		<h3>{{$h_pending}}</h3>
@@ -52,7 +52,7 @@
 			<table id="users">
 				<thead>
 				<tr>
-					{{foreach $th_users as $th}}<th>{{$th}}</th>{{/foreach}}
+					{{foreach $th_users as $th}}<th><a href="{{$base}}&key={{$th.1}}&dir={{$odir}}">{{$th.0}}</a></th>{{/foreach}}
 					<th></th>
 					<th></th>
 				</tr>
@@ -73,7 +73,7 @@
 						<td class="service_class">{{$u.account_service_class}}</td>
 						<td class="checkbox_bulkedit"><input type="checkbox" class="users_ckbx" id="id_user_{{$u.account_id}}" name="user[]" value="{{$u.account_id}}"><input type="hidden" name="blocked[]" value="{{$u.blocked}}"></td>
 						<td class="tools">
-							<a href="{{$baseurl}}/admin/users/{{if ($u.blocked)}}un{{/if}}block/{{$u.account_id}}?t={{$form_security_token}}"  class="btn btn-default btn-xs" title='{{if ($u.blocked)}}{{$unblock}}{{else}}{{$block}}{{/if}}'><i class="fa fa-ban admin-icons{{if ($u.blocked)}} dim{{/if}}"></i></a><a href="{{$baseurl}}/admin/users/delete/{{$u.account_id}}?t={{$form_security_token}}" class="btn btn-default btn-xs" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><i class="fa fa-trash-o admin-icons"></i></a>
+							<a href="{{$baseurl}}/admin/accounts/{{if ($u.blocked)}}un{{/if}}block/{{$u.account_id}}?t={{$form_security_token}}"  class="btn btn-default btn-xs" title='{{if ($u.blocked)}}{{$unblock}}{{else}}{{$block}}{{/if}}'><i class="fa fa-ban admin-icons{{if ($u.blocked)}} dim{{/if}}"></i></a><a href="{{$baseurl}}/admin/accounts/delete/{{$u.account_id}}?t={{$form_security_token}}" class="btn btn-default btn-xs" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><i class="fa fa-trash-o admin-icons"></i></a>
 						</td>
 					</tr>
 				{{/foreach}}

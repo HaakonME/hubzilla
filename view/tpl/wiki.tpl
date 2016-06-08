@@ -111,6 +111,8 @@
 <script>
   window.wiki_resource_id = '{{$resource_id}}';
   window.wiki_page_name = '{{$page}}';
+  window.wiki_page_content = {{$content}};
+  
   if (window.wiki_page_name === 'Home') {
     $('#delete-page').hide();
   }
@@ -123,7 +125,7 @@
   var editor = ace.edit("ace-editor");
   editor.setTheme("ace/theme/github");
   editor.getSession().setMode("ace/mode/markdown");
-  editor.getSession().setValue({{$content}});
+  editor.getSession().setValue(window.wiki_page_content);
 
   $('#wiki-get-preview').click(function (ev) {
     $.post("wiki/{{$channel}}/preview", {content: editor.getValue()}, function (data) {
@@ -203,8 +205,14 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
       ev.preventDefault();
       return false;
     }
+    var currentContent = editor.getValue();
+    if (window.wiki_page_content === currentContent) {
+      window.console.log('No edits to save.');
+      ev.preventDefault();
+      return false;
+    }
     $.post("wiki/{{$channel}}/save/page", 
-      { content: editor.getValue(), 
+      { content: currentContent, 
         commitMsg: $('#id_commitMsg').val(),
         name: window.wiki_page_name, 
         resource_id: window.wiki_resource_id
@@ -212,6 +220,7 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
       function (data) {
         if (data.success) {
           window.console.log('Page saved successfully.');
+          window.wiki_page_content = currentContent;
           $('#id_commitMsg').val(''); // Clear the commit message box
         } else {
           alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 

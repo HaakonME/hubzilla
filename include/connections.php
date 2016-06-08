@@ -590,7 +590,8 @@ function random_profile() {
 
 	for($i = 0; $i < $retryrandom; $i++) {
 
-		$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > %s - interval %s order by $randfunc limit 1",
+		$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where xchan_addr not like '%s' and hubloc_connected > %s - interval %s order by $randfunc limit 1",
+			dbesc('sys@%'),
 			db_utcnow(), db_quoteinterval('30 day')
 		);
 

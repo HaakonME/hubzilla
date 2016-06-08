@@ -105,6 +105,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 						notice('Permission denied.' . EOL);
 						goaway('/'.argv(0).'/'.argv(1));
 					}
+					if($perms['write']) {
+						$wiki_editor = true;
+					} else {
+						$wiki_editor = false;
+					}
+				} else {
+					$wiki_editor = true;
 				}
 				$wikiheader = urldecode($wikiUrlName) . ': ' . urldecode($pageUrlName);	// show wiki name and page			
 				$p = wiki_get_page_content(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
@@ -114,9 +121,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 				$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
 				$hide_editor = false;
-				$showPageControls = $wiki_owner;
+				$showPageControls = $wiki_editor;
 				$showNewWikiButton = $wiki_owner;
-				$showNewPageButton = $wiki_owner;
+				$showNewPageButton = $wiki_editor;
 				$hidePageHistory = false;
 				$showCommitMsg = true;
 				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
@@ -168,11 +175,15 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// /wiki/channel/create/wiki
 		if ((argc() > 3) && (argv(2) === 'create') && (argv(3) === 'wiki')) {
 			$nick = argv(1);
+			$channel = get_channel_by_nick($nick);
 			// Determine if observer has permission to create wiki
 			$observer_hash = get_observer_hash();
-			if (local_channel()) {
-				$channel = \App::get_channel();
-			} else {
+			// Only the channel owner can create a wiki, at least until we create a 
+			// more detail permissions framework
+			if (local_channel() !== intval($channel['channel_id'])) {
+				goaway('/'.argv(0).'/'.$nick.'/');
+			} else {				
+				/*
 				$channel = get_channel_by_nick($nick);
 				// Figure out who the page owner is.
 				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
@@ -180,8 +191,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 				// then, use webpage permissions
 				if (!$perms['write_pages']) {
 					notice(t('Permission denied.') . EOL);
-					goaway('/'.argv(0).'/'.argv(1).'/'.argv(2));
+					goaway('/'.argv(0).'/'.argv(1).'/');
 				}
+				*/
 			}
 			$wiki = array(); 
 			// Generate new wiki info from input name
@@ -212,10 +224,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Delete a wiki
 		if ((argc() > 3) && (argv(2) === 'delete') && (argv(3) === 'wiki')) {
 			$nick = argv(1);
-			// Determine if observer has permission to create wiki
-			if (local_channel()) {
-				$channel = \App::get_channel();
-			} else {
+			$channel = get_channel_by_nick($nick);
+			// Only the channel owner can delete a wiki, at least until we create a 
+			// more detail permissions framework
+			if (local_channel() !== intval($channel['channel_id'])) {
+				logger('Wiki delete permission denied.' . EOL);
+				json_return_and_die(array('message' => 'Wiki delete permission denied.', 'success' => false));
+			} else {				
+				/*
 				$channel = get_channel_by_nick($nick);
 				$observer_hash = get_observer_hash();
 				// Figure out who the page owner is.
@@ -226,14 +242,15 @@ class Wiki extends \Zotlabs\Web\Controller {
 					logger('Wiki delete permission denied.' . EOL);
 					json_return_and_die(array('success' => false));
 				}
+				*/
 			}
 			$resource_id = $_POST['resource_id']; 
 			$deleted = wiki_delete_wiki($resource_id);
 			if ($deleted['success']) {
-				json_return_and_die(array('success' => true));
+				json_return_and_die(array('message' => '', 'success' => true));
 			} else {
 				logger('Error deleting wiki: ' . $resource_id);
-				json_return_and_die(array('success' => false));
+				json_return_and_die(array('message' => 'Error deleting wiki', 'success' => false));
 			}
 		}
 
@@ -241,23 +258,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if ((argc() === 4) && (argv(2) === 'create') && (argv(3) === 'page')) {
 			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
-			// Determine if observer has permission to create wiki
-			if (local_channel()) {
-				$channel = \App::get_channel();
-			} else {
-				$channel = get_channel_by_nick($nick);
+			// Determine if observer has permission to create a page
+			$channel = get_channel_by_nick($nick);
+			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
-				// Figure out who the page owner is.
-				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
-				// TODO: Create a new permission setting for wiki analogous to webpages. Until
-				// then, use webpage permissions
-				if (!$perms['write_pages']) {
-					logger('Wiki editing permission denied.' . EOL);
-					json_return_and_die(array('success' => false));
-				}
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
 				if(!$perms['write']) {
-					logger('Wiki write permission denied. Read only.' . EOL);
+					logger('Wiki write permission denied. ' . EOL);
 					json_return_and_die(array('success' => false));					
 				}
 			}
@@ -279,10 +286,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$resource_id = $_POST['resource_id']; // resource_id for wiki in db
 			$channel = get_channel_by_nick(argv(1));
 			$observer_hash = get_observer_hash();
-			$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
-			if(!$perms['read']) {
-				logger('Wiki read permission denied.' . EOL);
-				json_return_and_die(array('pages' => null, 'message' => 'Permission denied.', 'success' => false));					
+			if (local_channel() !== intval($channel['channel_id'])) {
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['read']) {
+					logger('Wiki read permission denied.' . EOL);
+					json_return_and_die(array('pages' => null, 'message' => 'Permission denied.', 'success' => false));					
+				}
 			}
 			$page_list_html = widget_wiki_pages(array(
 					'resource_id' => $resource_id, 
@@ -293,7 +302,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		
 		// Save a page
 		if ((argc() === 4) && (argv(2) === 'save') && (argv(3) === 'page')) {
-			$nick = argv(1);
+			
 			$resource_id = $_POST['resource_id']; 
 			$pageUrlName = $_POST['name'];
 			$pageHtmlName = escape_tags($_POST['name']);
@@ -302,26 +311,18 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if ($commitMsg === '') {
 				$commitMsg = 'Updated ' . $pageHtmlName;
 			}
+			$nick = argv(1);
+			$channel = get_channel_by_nick($nick);
 			// Determine if observer has permission to save content
-			if (local_channel()) {
-				$channel = \App::get_channel();
-			} else {
-				$channel = get_channel_by_nick($nick);
+			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
-				// Figure out who the page owner is.
-				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
-				// TODO: Create a new permission setting for wiki analogous to webpages. Until
-				// then, use webpage permissions
-				if (!$perms['write_pages']) {
-					logger('Wiki editing permission denied.' . EOL);
-					json_return_and_die(array('success' => false));
-				}
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
 				if(!$perms['write']) {
-					logger('Wiki write permission denied. Read only.' . EOL);
+					logger('Wiki write permission denied. ' . EOL);
 					json_return_and_die(array('success' => false));					
 				}
 			}
+			
 			$saved = wiki_save_page(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName, 'content' => $content));
 			if($saved['success']) {
 				$ob = \App::get_observer();
@@ -344,17 +345,17 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Update page history
 		// /wiki/channel/history/page
 		if ((argc() === 4) && (argv(2) === 'history') && (argv(3) === 'page')) {
-			$nick = argv(1);
+			
 			$resource_id = $_POST['resource_id'];
 			$pageUrlName = $_POST['name'];
-			// Determine if observer has permission to view content
-			if (local_channel()) {
-				$channel = \App::get_channel();
-			} else {
-				$channel = get_channel_by_nick($nick);
+			
+			$nick = argv(1);
+			$channel = get_channel_by_nick($nick);
+			// Determine if observer has permission to read content
+			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
-				if (!$perms['read']) {
+				if(!$perms['read']) {
 					logger('Wiki read permission denied.' . EOL);
 					json_return_and_die(array('historyHTML' => '', 'message' => 'Permission denied.', 'success' => false));
 				}
@@ -368,29 +369,19 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 		// Delete a page
 		if ((argc() === 4) && (argv(2) === 'delete') && (argv(3) === 'page')) {
-			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
 			$pageUrlName = $_POST['name'];
 			if ($pageUrlName === 'Home') {
 				json_return_and_die(array('message' => 'Cannot delete Home','success' => false));
 			}
 			// Determine if observer has permission to delete pages
-			if (local_channel()) {
-				$channel = \App::get_channel();
-			} else {
-				$channel = get_channel_by_nick($nick);
+			$nick = argv(1);
+			$channel = get_channel_by_nick($nick);			
+			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
-				// Figure out who the page owner is.
-				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
-				// TODO: Create a new permission setting for wiki analogous to webpages. Until
-				// then, use webpage permissions
-				if (!$perms['write_pages']) {
-					logger('Wiki editing permission denied.' . EOL);
-					json_return_and_die(array('success' => false));
-				}
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
 				if(!$perms['write']) {
-					logger('Wiki write permission denied. Read only.' . EOL);
+					logger('Wiki write permission denied. ' . EOL);
 					json_return_and_die(array('success' => false));					
 				}
 			}
@@ -415,27 +406,17 @@ class Wiki extends \Zotlabs\Web\Controller {
 		
 		// Revert a page
 		if ((argc() === 4) && (argv(2) === 'revert') && (argv(3) === 'page')) {
-			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
 			$pageUrlName = $_POST['name'];
 			$commitHash = $_POST['commitHash'];
 			// Determine if observer has permission to revert pages
-			if (local_channel()) {
-				$channel = \App::get_channel();
-			} else {
-				$channel = get_channel_by_nick($nick);
+			$nick = argv(1);
+			$channel = get_channel_by_nick($nick);			
+			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
-				// Figure out who the page owner is.
-				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
-				// TODO: Create a new permission setting for wiki analogous to webpages. Until
-				// then, use webpage permissions
-				if (!$perms['write_pages']) {
-					logger('Wiki editing permission denied.' . EOL);
-					json_return_and_die(array('success' => false));
-				}
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
 				if(!$perms['write']) {
-					logger('Wiki write permission denied. Read only.' . EOL);
+					logger('Wiki write permission denied.' . EOL);
 					json_return_and_die(array('success' => false));					
 				}
 			}

@@ -196,10 +196,19 @@ function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
 				dbesc(WIKI_ITEM_RESOURCE_TYPE), 
         dbesc($resource_id)
     );
-	if(!$r) {
+	
+	if (!$r) {
 		return array('read' => false, 'write' => false, 'success' => true);
 	} else {
-		return array('read' => true, 'write' => false, 'success' => true);
+		$perms = get_all_perms($owner_id, $observer_hash);
+		// TODO: Create a new permission setting for wiki analogous to webpages. Until
+		// then, use webpage permissions
+		if (!$perms['write_pages']) {
+			$write = false;
+		} else {
+			$write = true;
+		}
+		return array('read' => true, 'write' => $write, 'success' => true);
 	}
 }
 

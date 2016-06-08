@@ -65,7 +65,7 @@ class PConfig {
 			return false;
 
 		if(! array_key_exists($uid, \App::$config))
-			load_pconfig($uid);
+			self::Load($uid);
 
 		if((! array_key_exists($family, \App::$config[$uid])) || (! array_key_exists($key, \App::$config[$uid][$family])))
 			return false;

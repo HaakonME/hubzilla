@@ -3,8 +3,11 @@
 Hubzilla - Community Server
 ===========================
 
-Groupware re-imagined and re-invented. Connect and link decentralised web communities. 
---------------------------------------------------------------------------------------
+Groupware re-imagined and re-invented. 
+--------------------------------------
+
+Connect and link decentralised web communities. 
+-----------------------------------------------
 
 <p align="center" markdown="1">
 <em><a href="https://github.com/redmatrix/hubzilla/blob/master/install/INSTALL.txt">Installing Hubzilla</a></em> 

@@ -21,7 +21,7 @@
 			<table id='channels'>
 				<thead>
 				<tr>
-					{{foreach $th_channels as $th}}<th>{{$th}}</th>{{/foreach}}
+					{{foreach $th_channels as $th}}<th><a href="{{$base}}&key={{$th.1}}&dir={{$odir}}">{{$th.0}}</a></th>{{/foreach}}
 					<th></th>
 					<th></th>
 				</tr>

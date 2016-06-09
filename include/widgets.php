@@ -799,8 +799,10 @@ function widget_photo_albums($arr) {
 	if((! $channelx) || (! perm_is_allowed(App::$profile['profile_uid'], get_observer_hash(), 'view_storage')))
 		return '';
 	require_once('include/photos.php');
+	$sortkey = ((array_key_exists('sortkey',$arr)) ? $arr['sortkey'] : 'album');
+	$direction = ((array_key_exists('direction',$arr)) ? $arr['direction'] : 'asc');	
 
-	return photos_album_widget($channelx, App::get_observer());
+	return photos_album_widget($channelx, App::get_observer(),$sortkey,$direction);
 }
 
 

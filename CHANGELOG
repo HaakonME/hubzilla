@@ -17,6 +17,8 @@ Hubzilla 1.8
 		Show server role (identify UNO or basic sites as opposed to hubzilla pro) and link to statistics
 	Documentation:
 		Clarify privacy rights of commenters w/r/t conversation owners, as this policy is network dependent.
+	Wiki (Git backed):
+		Brand new feature. We'll call it experimental until it has undergone a bit more testing. 
 	Account Cloning:
 		Regression on clone channel creation created a new channel name each time.
 		New issue (fixed) with directory creation on cloned file content

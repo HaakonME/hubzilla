@@ -3,6 +3,7 @@ Hubzilla 1.8
 		Cleanup and resolve some edge cases with addon repository manager
 		Provide sort field and direction on all fields of account and channel administration tables
 		Rename 'user' administration to account administration to reflect its true purpose
+		'safemode' tool to quickly disable and re-enable addons during a hypothetical upgrade crisis
 	Security:
 		Edited comments to private posts could lose their privacy settings under some circumstances
 		Provide zot-finger signatures to prevent a possible but rare exploit involving DNS spoofing and phishing

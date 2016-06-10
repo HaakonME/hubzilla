@@ -9,20 +9,20 @@ Goals/Highlights:
 
 Focus on visual website design tools, widgets, and sharing mechanisms
 
-App organisation.
+[x] App organisation.
 
-Conversion of core application to a composer format living under the namespace "Zotlabs"
+[x] Conversion of core application to a composer format living under the namespace "Zotlabs"
 
-Conversion of Modules to a more general purpose Controllers layout with DB/memory based
+[x] Conversion of Modules to a more general purpose Controllers layout with DB/memory based
 controller routing as opposed to filesystem routing.
 
-Conversion of core Zot Protocol to a class library
+[x] (partial) Conversion of core Zot Protocol to a class library
  
-Abstraction of nomadic identity so that sending/receiving to/from singleton networks to/from any clone works flawlessly - [b]provided[/b] the clone physically connected to that singleton identity is up. 
+[x] Abstraction of nomadic identity so that sending/receiving to/from singleton networks to/from any clone works flawlessly - [b]provided[/b] the clone physically connected to that singleton identity is up. 
 
 [h3]Community Development[/h3]
 
-CalDAV/CardDAV
+[x] CalDAV/CardDAV
 
 E-Commerce
 

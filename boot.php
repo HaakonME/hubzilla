@@ -1466,6 +1466,12 @@ function check_config(&$a) {
 							@unlink($lockfile);
 							//send the administrator an e-mail
 							file_put_contents($lockfile, $x);
+							
+							$r = q("select account_language from account where account_email = '%s' limit 1",
+								dbesc(App::$config['system']['admin_email'])
+							);
+							push_lang(($r) ? $r[0]['account_language'] : 'en');
+
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
@@ -1483,6 +1489,7 @@ function check_config(&$a) {
 								. 'Content-transfer-encoding: 8bit' );
 							//try the logger
 							logger('CRITICAL: Update Failed: ' . $x);
+							pop_lang();
 						}
 						else
 							set_config('database','update_r' . $x, 'success');

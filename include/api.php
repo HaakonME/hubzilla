@@ -1904,10 +1904,15 @@ require_once('include/api_auth.php');
 
 		$ret = array();
 
+		$x = array('items' => $r,'api_user' => api_user(),'user_info' => $user_info);
+		call_hooks('api_format_items',$x);
+		$r = $x['items'];
+
 		if(! $r)
 			return $ret;
 
 		foreach($r as $item) {
+
 			localize_item($item);
 
 			$status_user = (($item['author_xchan']==$user_info['guid'])?$user_info: api_item_get_user($a,$item));

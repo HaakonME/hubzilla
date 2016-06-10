@@ -1,3 +1,72 @@
+Hubzilla 1.8
+	Administration:
+		Cleanup and resolve some edge cases with addon repository manager
+		Provide sort field and direction on all fields of account and channel administration tables
+		Rename 'user' administration to account administration to reflect its true purpose
+	Security:
+		Edited comments to private posts could lose their privacy settings under some circumstances
+		Provide zot-finger signatures to prevent a possible but rare exploit involving DNS spoofing and phishing
+	ACL selections:
+		Various improvements to the ACL editor to further simplify the concepts and make it more intuitive
+	Chat:
+		Notifications of chatroom activity using standard browser notification interfaces.
+	Themes:
+		Allow a theme:schema string to represent a valid theme name. This fixes issues with setting schemas on site themes.
+	Pubsites:
+		Show server role (identify UNO or basic sites as opposed to hubzilla pro) and link to statistics
+	Documentation:
+		Clarify privacy rights of commenters w/r/t conversation owners, as this policy is network dependent.
+	Account Cloning:
+		Regression on clone channel creation created a new channel name each time.
+		New issue (fixed) with directory creation on cloned file content
+	Content Rendering:
+		Add inline code (in addition to the existing code blocks) to BBcode
+		Add emoji reactions
+		Add emojis as extended smilies with auto-complete support
+		Emoji added as feature so it can be enabled/disabled and locked
+		Ability to configure the standard reactions available on a site basis
+		Disable 'convenience' ajax autoload on pgdn key, as it could lead to premature memory exhaustion
+	Photos:
+		Change album sort ordering, allow widgets and plugins to define other orderings
+	Apps:
+		Synchronise app list with changes to system apps
+		Preserve existing app categories on app updates/edits
+	Architecture:
+		Provide autoloaded class files and libraries for plugins.
+		Further refactoring of session driver to sort out some cookie anomolies
+		Experimental PDO database driver
+		Creation of Daemon Master class and port all daemon (background task) interfaces to use it
+		Create separate class for each of 'Cron', 'Cron daily', and 'Cron weekly'.
+		Always run a Cron maintenance task if not run in the last four hours 
+		Refactor the template classes
+		Refactor the ConversationItem mess into ThreadItem and ThreadStream
+		Refactor Apps, Enotify, and Chat library code
+		Refactor the various Config libraries (Config, PConfig, XConfig, AConfig, AbConfig, and IConfig)
+		Created WebServer class for top level
+		Remove mcrypt dependencies (deprecated in PHP 7.1)
+		Remove all reserved (including merely 'not recommended') words as DB table column names
+		Provide mutex lock on DB logging to prevent recursion under rare failure modes. 
+	Bugfixes:
+		Remove db_close function on page end - not needed and will not work with persistent DB connections.
+		Undefined ref_session_write
+		Some session functions needed to be static to work with CalDAV/CardDAV
+		CLI interface: argc and argv were reversed
+		HTML entities double encoded in edited titles
+		Prevent delivering to empty recipients
+		Sabre library setting some security headers for SAML after we've emitted HTML content
+		Always initialise miniApp (caused obscure warning message if not set)
+		Block 'sys' channels from being 'random profile' candidates
+		DB update failed email could be sent in the wrong language under rare circumstances
+		Openid remote authentication used incorrect namespace
+	Plugins:
+		CalDAV/CardDAV plugin provided
+		Issue sending Diaspora 'like' activities from sources that did not propagate the DCV
+		Allow 'superblock' to work across API calls from third party clients
+		statistics.json: use 'zot' as protocol 
+		Ability to follow Diaspora tags
+		Parse issue with Diaspora reshare content
+		Chess: moved to main repo, ported to 1.8
+
 Hubzilla 1.6
 	Cleanup and standardise the interfaces to the "jot" editor
 	Router re-written to support calling class object methods as controllers

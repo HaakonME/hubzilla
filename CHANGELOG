@@ -64,7 +64,7 @@ Hubzilla 1.8
 		Issue sending Diaspora 'like' activities from sources that did not propagate the DCV
 		Allow 'superblock' to work across API calls from third party clients
 		statistics.json: use 'zot' as protocol 
-		Ability to follow Diaspora tags
+		Issues fixed during testing of ability to follow Diaspora tags
 		Parse issue with Diaspora reshare content
 		Chess: moved to main repo, ported to 1.8
 

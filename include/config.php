@@ -123,7 +123,7 @@ function get_iconfig(&$item, $family, $key) {
 }
 
 function set_iconfig(&$item, $family, $key, $value, $sharing = false) {
-	return Zlib\IConfig::Set($item, $family, $key, $value, $sharing = false);
+	return Zlib\IConfig::Set($item, $family, $key, $value, $sharing);
 }
 
 function del_iconfig(&$item, $family, $key) {

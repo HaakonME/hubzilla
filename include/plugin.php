@@ -612,7 +612,6 @@ function head_remove_js($src, $priority = 0) {
 
 function head_get_js() {
 
-logger('sources:' . print_r(App::$js_sources,true));
 	$str = '';
 	if(App::$js_sources) {
 		foreach(App::$js_sources as $sources) {

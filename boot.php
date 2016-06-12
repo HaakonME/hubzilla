@@ -45,7 +45,7 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.7.3' );
+define ( 'STD_VERSION',             '1.9' );
 define ( 'ZOT_REVISION',            1.1     );
 
 define ( 'DB_UPDATE_VERSION',       1176  );
@@ -514,6 +514,7 @@ define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
 define ( 'ACTIVITY_OBJ_GROUP',   NAMESPACE_ACTIVITY_SCHEMA . 'group' );
 define ( 'ACTIVITY_OBJ_GAME',    NAMESPACE_ACTIVITY_SCHEMA . 'game' );
+define ( 'ACTIVITY_OBJ_WIKI',    NAMESPACE_ACTIVITY_SCHEMA . 'wiki' );
 define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_ZOT  . '/activity/tagterm' );
 define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_ZOT  . '/activity/profile' );
 define ( 'ACTIVITY_OBJ_THING',   NAMESPACE_ZOT  . '/activity/thing' );
@@ -1465,6 +1466,12 @@ function check_config(&$a) {
 							@unlink($lockfile);
 							//send the administrator an e-mail
 							file_put_contents($lockfile, $x);
+							
+							$r = q("select account_language from account where account_email = '%s' limit 1",
+								dbesc(App::$config['system']['admin_email'])
+							);
+							push_lang(($r) ? $r[0]['account_language'] : 'en');
+
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
@@ -1482,6 +1489,7 @@ function check_config(&$a) {
 								. 'Content-transfer-encoding: 8bit' );
 							//try the logger
 							logger('CRITICAL: Update Failed: ' . $x);
+							pop_lang();
 						}
 						else
 							set_config('database','update_r' . $x, 'success');

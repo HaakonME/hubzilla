@@ -231,7 +231,7 @@
 {{/if}}
 
 {{if $embedPhotos}}
-<div class="modal" id="embedPhotoModal" tabindex="-1" role="dialog" aria-labelledby="expiryModalLabel" aria-hidden="true">
+<div class="modal" id="embedPhotoModal" tabindex="-1" role="dialog" aria-labelledby="embedPhotoLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

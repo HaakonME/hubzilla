@@ -122,6 +122,11 @@ function import_profiles($channel,$profiles) {
 			$profile['aid'] = get_account_id();
 			$profile['uid'] = $channel['channel_id'];
 
+			convert_oldfields($profile,'name','fullname');
+			convert_oldfields($profile,'with','partner');
+			convert_oldfields($profile,'work','employment');
+
+
 			// we are going to reset all profile photos to the original
 			// somebody will have to fix this later and put all the applicable photos into the export
 	
@@ -644,6 +649,10 @@ function import_events($channel,$events) {
 			unset($event['id']);
 			$event['aid'] = $channel['channel_account_id'];
 			$event['uid'] = $channel['channel_id'];
+			convert_oldfields($event,'start','dtstart');
+			convert_oldfields($event,'finish','dtend');
+			convert_oldfields($event,'type','etype');
+			convert_oldfields($event,'ignore','dismissed');
 
 			dbesc_array($event);
 			$r = dbq("INSERT INTO event (`" 
@@ -676,6 +685,12 @@ function sync_events($channel,$events) {
 			unset($event['id']);
 			$event['aid'] = $channel['channel_account_id'];
 			$event['uid'] = $channel['channel_id'];
+
+			convert_oldfields($event,'start','dtstart');
+			convert_oldfields($event,'finish','dtend');
+			convert_oldfields($event,'type','etype');
+			convert_oldfields($event,'ignore','dismissed');
+
 
 			$exists = false;
 
@@ -974,10 +989,7 @@ function sync_files($channel,$files) {
 				$attachment_stored = false;
 				foreach($f['attach'] as $att) {
 
-					if(array_key_exists('data',$att)) {
-						$att['content'] = $att['data'];
-						unset($att['data']);
-					}
+					convert_oldfields($att,'data','content');
 
 					if($att['deleted']) {
 						attach_delete($channel,$att['hash']);
@@ -1130,14 +1142,10 @@ function sync_files($channel,$files) {
 					$p['aid'] = $channel['channel_account_id'];
 					$p['uid'] = $channel['channel_id'];
 
-					if(array_key_exists('data',$p)) {
-						$p['content'] = $p['data'];
-						unset($p['data']);
-					}
-					if(array_key_exists('scale',$p)) {
-						$p['imgscale'] = $p['scale'];
-						unset($p['scale']);
-					}
+					convert_oldfields($p,'data','content');
+					convert_oldfields($p,'scale','imgscale');
+					convert_oldfields($p,'size','filesize');
+					convert_oldfields($p,'type','mimetype');
 
 					// if this is a profile photo, undo the profile photo bit
 					// for any other photo which previously held it.
@@ -1228,3 +1236,9 @@ function sync_files($channel,$files) {
 }
 
 
+function convert_oldfields(&$arr,$old,$new) {
+	if(array_key_exists($old,$arr)) {
+		$arr[$new] = $arr[$old];
+		unset($arr[$old]);
+	}
+}

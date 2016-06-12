@@ -167,7 +167,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
 			require_once('library/markdown.php');
-			$html = Markdown($content);
+			$html = purify_html(Markdown($content));
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}
 		
@@ -182,19 +182,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// more detail permissions framework
 			if (local_channel() !== intval($channel['channel_id'])) {
 				goaway('/'.argv(0).'/'.$nick.'/');
-			} else {				
-				/*
-				$channel = get_channel_by_nick($nick);
-				// Figure out who the page owner is.
-				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
-				// TODO: Create a new permission setting for wiki analogous to webpages. Until
-				// then, use webpage permissions
-				if (!$perms['write_pages']) {
-					notice(t('Permission denied.') . EOL);
-					goaway('/'.argv(0).'/'.argv(1).'/');
-				}
-				*/
-			}
+			} 
 			$wiki = array(); 
 			// Generate new wiki info from input name
 			$wiki['rawName'] = $_POST['wikiName'];
@@ -306,7 +294,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$resource_id = $_POST['resource_id']; 
 			$pageUrlName = $_POST['name'];
 			$pageHtmlName = escape_tags($_POST['name']);
-			$content = escape_tags($_POST['content']); //Get new content
+			$content = $_POST['content']; //Get new content
 			$commitMsg = $_POST['commitMsg']; 
 			if ($commitMsg === '') {
 				$commitMsg = 'Updated ' . $pageHtmlName;

@@ -79,6 +79,11 @@
 						<i id="profile-link" class="fa fa-link jot-icons"></i>
 					</button>
 					{{/if}}
+					{{if $embedPhotos}}
+                    <button id="embed-photo-wrapper" class="btn btn-default btn-sm" title="{{$embedPhotos}}" onclick="initializeEmbedPhotoDialog();return false;">
+                        <i id="embed-photo" class="fa fa-file-image-o jot-icons"></i>
+                    </button>
+                    {{/if}}
 				</div>
 				<div class="btn-group hidden-xs hidden-sm">
 					{{if $setloc}}
@@ -219,6 +224,30 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
         <button id="created-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{{/if}}
+
+{{if $embedPhotos}}
+<div class="modal" id="embedPhotoModal" tabindex="-1" role="dialog" aria-labelledby="embedPhotoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
+      </div>
+     <div class="modal-body" id="embedPhotoModalBody" >
+         <div id="embedPhotoModalBodyAlbumListDialog" class="hide">
+            <div id="embedPhotoModalBodyAlbumList"></div>
+         </div>
+         <div id="embedPhotoModalBodyAlbumDialog" class="hide">
+         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
+        <button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

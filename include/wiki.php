@@ -279,7 +279,7 @@ function wiki_page_history($arr) {
 
 function wiki_save_page($arr) {
 	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
-	$content = ((array_key_exists('content',$arr)) ? $arr['content'] : '');
+	$content = ((array_key_exists('content',$arr)) ? purify_html($arr['content']) : '');
 	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {

@@ -593,26 +593,37 @@ function script_path() {
 	return $scheme . '://' . $hostname;
 }
 
-function head_add_js($src) {
-	App::$js_sources[] = $src;
+function head_add_js($src, $priority = 0) {
+	if(! is_array(App::$js_sources[$priority]))
+		App::$js_sources[$priority] = array();
+	App::$js_sources[$priority][] = $src;
 }
 
-function head_remove_js($src) {
+function head_remove_js($src, $priority = 0) {
 
-	$index = array_search($src, App::$js_sources);
+	$index = array_search($src, App::$js_sources[$priority]);
 	if($index !== false)
-		unset(App::$js_sources[$index]);
+		unset(App::$js_sources[$priority][$index]);
 }
+
+// We should probably try to register main.js with a high priority, but currently we handle it
+// separately and put it at the end of the html head block in case any other javascript is 
+// added outside the head_add_js construct.
 
 function head_get_js() {
+
 	$str = '';
-	$sources = App::$js_sources;
-	if(count($sources)) 
-		foreach($sources as $source) {
-			if($source === 'main.js')
-				continue;
-			$str .= format_js_if_exists($source);
+	if(App::$js_sources) {
+		foreach(App::$js_sources as $sources) {
+			if(count($sources)) { 
+				foreach($sources as $source) {
+					if($src === 'main.js')
+						continue;
+					$str .= format_js_if_exists($source);
+				}
+			}
 		}
+	}
 	return $str;
 }
 

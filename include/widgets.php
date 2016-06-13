@@ -856,6 +856,78 @@ function widget_chatroom_members() {
 	return $o;
 }
 
+function widget_wiki_list($arr) {
+
+	require_once("include/wiki.php");
+	$channel = null;
+	if (argc() < 2 && local_channel()) { 
+		// This should not occur because /wiki should redirect to /wiki/channel ...
+		$channel = \App::get_channel();
+	} else {
+		$channel = get_channel_by_nick(argv(1));	// Channel being viewed by observer
+	}
+	if (!$channel) {
+		return '';
+	}
+	$wikis = wiki_list($channel, get_observer_hash());
+	if ($wikis) {
+		return replace_macros(get_markup_template('wikilist.tpl'), array(
+			'$header' => t('Wiki List'),
+			'$channel' => $channel['channel_address'],
+			'$wikis' => $wikis['wikis'],
+			// If the observer is the local channel owner, show the wiki controls
+			'$showControls' => ((local_channel() === intval($channel['channel_id'])) ? true : false)
+		));
+	}
+	return '';
+}
+
+function widget_wiki_pages($arr) {
+
+	require_once("include/wiki.php");
+	$channelname = ((array_key_exists('channel',$arr)) ? $arr['channel'] : '');
+	$wikiname = '';
+	if (array_key_exists('refresh', $arr)) {
+		$not_refresh = (($arr['refresh']=== true) ? false : true);
+	} else {
+		$not_refresh = true;
+	}
+	$pages = array();
+	if (!array_key_exists('resource_id', $arr)) {
+		$hide = true;
+	} else {
+		$p = wiki_page_list($arr['resource_id']);
+		if ($p['pages']) {
+			$pages = $p['pages'];
+			$w = $p['wiki'];
+			// Wiki item record is $w['wiki']
+			$wikiname = $w['urlName'];
+			if (!$wikiname) {
+				$wikiname = '';
+			}
+		}
+	}
+	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
+			'$hide' => $hide,
+			'$not_refresh' => $not_refresh,
+			'$header' => t('Wiki Pages'),
+			'$channel' => $channelname,
+			'$wikiname' => $wikiname,
+			'$pages' => $pages
+	));
+}
+
+function widget_wiki_page_history($arr) {
+	require_once("include/wiki.php");
+	$pageUrlName = ((array_key_exists('pageUrlName', $arr)) ? $arr['pageUrlName'] : '');
+	$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : '');
+	$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
+
+	return replace_macros(get_markup_template('wiki_page_history.tpl'), array(
+			'$pageHistory' => $pageHistory['history']
+	));
+}
+
 function widget_bookmarkedchats($arr) {
 
 	if(! feature_enabled(App::$profile['profile_uid'],'ajaxchat'))

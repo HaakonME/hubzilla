@@ -65,18 +65,20 @@ class Acl extends \Zotlabs\Web\Controller {
 				intval($count),
 				intval($start)
 			);
-	
-			foreach($r as $g){
-	//		logger('acl: group: ' . $g['gname'] . ' members: ' . group_get_members_xchan($g['id']));
-				$groups[] = array(
-					"type"  => "g",
-					"photo" => "images/twopeople.png",
-					"name"  => $g['gname'],
-					"id"	=> $g['id'],
-					"xid"   => $g['hash'],
-					"uids"  => group_get_members_xchan($g['id']),
-					"link"  => ''
-				);
+
+			if($r) {	
+				foreach($r as $g){
+		//		logger('acl: group: ' . $g['gname'] . ' members: ' . group_get_members_xchan($g['id']));
+					$groups[] = array(
+						"type"  => "g",
+						"photo" => "images/twopeople.png",
+						"name"  => $g['gname'],
+						"id"	=> $g['id'],
+						"xid"   => $g['hash'],
+						"uids"  => group_get_members_xchan($g['id']),
+						"link"  => ''
+					);
+				}
 			}
 		}
 	
@@ -204,7 +206,7 @@ class Acl extends \Zotlabs\Web\Controller {
 		else
 			$r = array();
 	
-		if(count($r)) {
+		if($r) {
 			foreach($r as $g){
 	
 				// remove RSS feeds from ACLs - they are inaccessible

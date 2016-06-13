@@ -321,22 +321,6 @@ $(function() {
 				return false;
 			}
 		}
-		if(event.keyCode == '34') {
-			if((pageHasMoreContent) && (! loadingPage)) {
-				$('#more').hide();
-				$('#no-more').hide();
-
-				next_page++;
-				scroll_next = true;
-				loadingPage = true;
-
-				if(($('.directory-end').length == 0) && ($('.photos-end').length == 0))
-					liveUpdate();
-				else
-					pageUpdate();
-				return true;
-			}
-		}
 
 		if(event.keyCode == '19' || (event.ctrlKey && event.which == '32')) {
 			event.preventDefault();

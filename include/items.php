@@ -3537,9 +3537,8 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 		intval($item['id'])
 	);
 
-	q("delete from item_id where iid = %d and uid = %d",
-		intval($item['id']),
-		intval($item['uid'])
+	q("delete from iconfig where iid = %d",
+		intval($item['id'])
 	);
 
 	q("delete from term where oid = %d and otype = %d",
@@ -4104,6 +4103,23 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	return $items;
 }
+
+function webpage_to_namespace($webpage) {
+
+	if($webpage == ITEM_TYPE_WEBPAGE)
+		$page_type = 'WEBPAGE';
+	elseif($webpage == ITEM_TYPE_BLOCK)
+		$page_type = 'BUILDBLOCK';
+	elseif($webpage == ITEM_TYPE_PDL)
+		$page_type = 'PDL';
+	elseif($webpage == ITEM_TYPE_DOC)
+		$page_type = 'docfile';
+	else
+		$page_type = 'unknown';
+	return $page_type;
+
+}
+
 
 
 function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid) {

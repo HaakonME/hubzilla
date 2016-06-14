@@ -1743,7 +1743,8 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and item_type = %d ",
+	$r = q("select mid, v from item left join iconfig on iconfig.iid = item.id 
+		where iconfig.cat = 'system' and iconfig.k = 'PDL' and item_id.uid = %d and item_type = %d ",
 		intval($channel_id),
 		intval(ITEM_TYPE_PDL)
 	);
@@ -1753,7 +1754,7 @@ function layout_select($channel_id, $current = '') {
 		$options .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
 		foreach($r as $rr) {
 			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
-			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['v'] . '</option>';
 		}
 	}
 

@@ -1143,6 +1143,8 @@ function status_editor($a, $x, $popup = false) {
 	$weblink = (($mimetype === 'text/bbcode') ? t('Insert web link') : false);
 	if(x($x, 'hide_weblink'))
 		$weblink = false;
+	
+	$embedPhotos = t('Embed image from photo albums');
 
 	$writefiles = (($mimetype === 'text/bbcode') ? perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage') : false);
 	if(x($x, 'hide_attach'))
@@ -1178,6 +1180,12 @@ function status_editor($a, $x, $popup = false) {
 		'$whereareu' => t('Where are you right now?'),
 		'$editor_autocomplete'=> ((x($x,'editor_autocomplete')) ? $x['editor_autocomplete'] : ''),
 		'$bbco_autocomplete'=> ((x($x,'bbco_autocomplete')) ? $x['bbco_autocomplete'] : ''),
+		'$modalchooseimages' => t('Choose images to embed'),
+		'$modalchoosealbum' => t('Choose an album'),
+		'$modaldiffalbum' => t('Choose a different album...'),
+		'$modalerrorlist' => t('Error getting album list'),
+		'$modalerrorlink' => t('Error getting photo link'),
+		'$modalerroralbum' => t('Error getting album'),
 	));
 
 	$tpl = get_markup_template('jot.tpl');
@@ -1219,6 +1227,10 @@ function status_editor($a, $x, $popup = false) {
 		'$code' => t('Code'),
 		'$attach' => t('Attach file'),
 		'$weblink' => $weblink,
+		'$embedPhotos' => $embedPhotos,
+		'$embedPhotosModalTitle' => t('Embed an image from your albums'),
+		'$embedPhotosModalCancel' => t('Cancel'),
+		'$embedPhotosModalOK' => t('OK'),
 		'$setloc' => $setloc,
 		'$voting' => t('Toggle voting'),
 		'$feature_voting' => $feature_voting,

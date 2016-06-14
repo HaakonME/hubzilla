@@ -1,4 +1,5 @@
 <?php
+
 namespace Zotlabs\Module;
 
 /**
@@ -229,7 +230,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if($namespace && $remote_id) {
 			// It wasn't an internally generated post - see if we've got an item matching this remote service id
-			$i = q("select iid from item_id where service = '%s' and sid = '%s' limit 1",
+			$i = q("select iid from iconfig where cat = 'system' and k = '%s' and v = '%s' limit 1",
 				dbesc($namespace),
 				dbesc($remote_id) 
 			);
@@ -880,12 +881,20 @@ class Item extends \Zotlabs\Web\Controller {
 			}
 		}
 	
+		if($webpage) {
+			Zlib\IConfig::Set($datarray,'system', webpage_to_namespace($webpage),
+				(($pagetitle) ? $pagetitle : substr($datarray['mid'],0,16)),true);
+		}
+		elseif($namespace) {
+			Zlib\IConfig::Set($datarray,'system', $namespace,
+				(($remote_id) ? $remote_id : substr($datarray['mid'],0,16)),true);
+		}
+
+
 		if($orig_post) {
 			$datarray['id'] = $post_id;
 	
 			item_store_update($datarray,$execflag);
-	
-			update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
 	
 			if(! $parent) {
 				$r = q("select * from item where id = %d",
@@ -894,10 +903,7 @@ class Item extends \Zotlabs\Web\Controller {
 				if($r) {
 					xchan_query($r);
 					$sync_item = fetch_post_tags($r);
-					$rid = q("select * from item_id where iid = %d",
-						intval($post_id)
-					);
-					build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+					build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true))));
 				}
 			}
 			if(! $nopush)
@@ -978,10 +984,7 @@ class Item extends \Zotlabs\Web\Controller {
 			goaway(z_root() . "/" . $return_path );
 			// NOTREACHED
 		}
-	
-	
-		update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
-	
+		
 		if(($parent) && ($parent != $post_id)) {
 			// Store the comment signature information in case we need to relay to Diaspora
 			//$ditem = $datarray;
@@ -995,10 +998,7 @@ class Item extends \Zotlabs\Web\Controller {
 			if($r) {
 				xchan_query($r);
 				$sync_item = fetch_post_tags($r);
-				$rid = q("select * from item_id where iid = %d",
-					intval($post_id)
-				);
-				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true))));
 			}
 		}
 	

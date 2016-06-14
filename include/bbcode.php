@@ -242,6 +242,13 @@ function bb_ShareAttributes($match) {
 	if ($matches[1] != "")
 		$message_id = $matches[1];
 
+	if(! $message_id) {
+		preg_match("/guid='(.*?)'/ism", $attributes, $matches);
+		if ($matches[1] != "")
+			$message_id = $matches[1];
+	}
+
+
 	$reldate = '<span class="autotime" title="' . datetime_convert('UTC', date_default_timezone_get(), $posted, 'c') . '" >' . datetime_convert('UTC', date_default_timezone_get(), $posted, 'r') . '</span>';
 
 	$headline = '<div class="shared_container"> <div class="shared_header">';

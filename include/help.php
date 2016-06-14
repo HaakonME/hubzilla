@@ -30,7 +30,8 @@ function search_doc_files($s) {
 
 	$regexop = db_getfunc('REGEXP');
 
-	$r = q("select item_id.sid, item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
+	$r = q("select iconfig.v, item.* from item left join iconfig on item.id = iconfig.iid 
+		where iconfig.cat = 'system' and iconfig.k = 'docfile' and
 		body $regexop '%s' and item_type = %d $pager_sql",
 		dbesc($s),
 		intval(ITEM_TYPE_DOC)
@@ -50,7 +51,7 @@ function search_doc_files($s) {
 				}
 			}
 		}
-		if(stristr($r[$x]['sid'],$s))
+		if(stristr($r[$x]['v'],$s))
 			$r[$x]['rank'] ++;
 		$r[$x]['rank'] += substr_count(strtolower($r[$x]['text']),strtolower($s));
 		// bias the results to the observer's native language
@@ -123,11 +124,14 @@ function store_doc_file($s) {
 	$item['owner_xchan'] = $item['author_xchan'] = $sys['channel_hash'];
 	$item['item_type'] = ITEM_TYPE_DOC;
 
-	$r = q("select item.* from item left join item_id on item.id = item_id.iid where service = 'docfile' and
-		sid = '%s' and item_type = %d limit 1",
+	$r = q("select item.* from item left join iconfig on item.id = iconfig.iid 
+		where iconfig.cat = 'system' and iconfig.k = 'docfile' and
+		iconfig.v = '%s' and item_type = %d limit 1",
 		dbesc($s),
 		intval(ITEM_TYPE_DOC)
 	);
+
+	\Zotlabs\Lib\IConfig::Set($item,'system','docfile',$s);
 
 	if($r) {
 		$item['id'] = $r[0]['id'];
@@ -139,10 +143,7 @@ function store_doc_file($s) {
 		$x = item_store($item);
 	}
 
-	if($x['success']) {
-		update_remote_id($sys,$x['item_id'],ITEM_TYPE_DOC,$s,'docfile',0,$item['mid']);
-	}
-
+	return $x;
 
 }
 

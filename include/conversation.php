@@ -403,9 +403,12 @@ function count_descendants($item) {
  * @return boolean
  */
 function visible_activity($item) {
-	$hidden_activities = array(ACTIVITY_LIKE, ACTIVITY_DISLIKE, ACTIVITY_AGREE, ACTIVITY_DISAGREE, ACTIVITY_ABSTAIN, ACTIVITY_ATTEND, ACTIVITY_ATTENDNO, ACTIVITY_ATTENDMAYBE);
+	$hidden_activities = [ ACTIVITY_LIKE, ACTIVITY_DISLIKE, ACTIVITY_AGREE, ACTIVITY_DISAGREE, ACTIVITY_ABSTAIN, ACTIVITY_ATTEND, ACTIVITY_ATTENDNO, ACTIVITY_ATTENDMAYBE ];
 
-	$post_types = array(ACTIVITY_OBJ_NOTE,ACTIVITY_OBJ_COMMENT,basename(ACTIVITY_OBJ_NOTE),basename(ACTIVITY_OBJ_COMMENT)); 
+	$post_types = [ ACTIVITY_OBJ_NOTE, ACTIVITY_OBJ_COMMENT, basename(ACTIVITY_OBJ_NOTE), basename(ACTIVITY_OBJ_COMMENT)]; 
+
+	if(intval($item['item_notshown']))
+		return false;
 
 	foreach ($hidden_activities as $act) {
 		if ((activity_match($item['verb'], $act)) && ($item['mid'] != $item['parent_mid'])) {

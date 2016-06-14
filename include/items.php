@@ -677,13 +677,23 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['item_flags'] = 0;
 
-	if(array_key_exists('flags',$x) && in_array('consensus',$x['flags']))
-		$arr['item_consensus'] = 1;
+	if(array_key_exists('flags',$x)) {
 
-	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
-		$arr['item_deleted'] = 1;
-	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
-		$arr['item_hidden'] = 1;
+		if(in_array('consensus',$x['flags']))
+			$arr['item_consensus'] = 1;
+
+		if(in_array('deleted',$x['flags']))
+			$arr['item_deleted'] = 1;
+
+		if(in_array('notshown',$x['flags']))
+			$arr['item_notshown'] = 1;
+
+		// hidden item are no longer propagated - notshown may be a suitable alternative
+
+		if(in_array('hidden',$x['flags']))
+			$arr['item_hidden'] = 1;
+
+	}
 
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
@@ -1339,6 +1349,8 @@ function encode_item_flags($item) {
 		$ret[] = 'deleted';
 	if(intval($item['item_hidden']))
 		$ret[] = 'hidden';
+	if(intval($item['item_notshown']))
+		$ret[] = 'notshown';
 	if(intval($item['item_thread_top']))
 		$ret[] = 'thread_parent';
 	if(intval($item['item_nsfw']))

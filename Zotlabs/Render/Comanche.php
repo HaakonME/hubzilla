@@ -179,7 +179,8 @@ class Comanche {
 		$channel_id = $this->get_channel_id();
 
 		if($channel_id) {
-			$r = q("select * from item inner join item_id on iid = item.id and item_id.uid = item.uid and item.uid = %d and service = 'BUILDBLOCK' and sid = '%s' limit 1",
+			$r = q("select * from item inner join iconfig on iconfig.iid = item.id and item.uid = %d 
+				and iconfig.cat = 'system' and iconfig.k = 'BUILDBLOCK' and iconfig.v = '%s' limit 1",
 				intval($channel_id),
 				dbesc($name)
 			);
@@ -282,12 +283,12 @@ class Comanche {
 
 
 	/**
-	 * Widgets will have to get any operational arguments from the session, the
-	 * global app environment, or config storage until we implement argument passing
+	 * Render a widget
 	 *
 	 * @param string $name
 	 * @param string $text
 	 */
+
 	function widget($name, $text) {
 		$vars = array();
 		$matches = array();
@@ -314,7 +315,7 @@ class Comanche {
 				require_once(theme_include($theme_widget));
 		}
 
-		if (function_exists($func))
+		if(function_exists($func))
 			return $func($vars);
 	}
 

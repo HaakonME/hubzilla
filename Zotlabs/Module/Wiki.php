@@ -1,6 +1,6 @@
-<?php
+<?php /** @file */
 
-namespace Zotlabs\Module;/** @file */
+namespace Zotlabs\Module;
 
 class Wiki extends \Zotlabs\Web\Controller {
 

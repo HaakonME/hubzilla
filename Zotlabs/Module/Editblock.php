@@ -85,11 +85,11 @@ class Editblock extends \Zotlabs\Web\Controller {
 			intval($owner)
 		);
 		if($itm) {
-			$item_id = q("select * from item_id where service = 'BUILDBLOCK' and iid = %d limit 1",
+			$item_id = q("select * from iconfig where cat = 'system' and k = 'BUILDBLOCK' and iid = %d limit 1",
 				intval($itm[0]['id'])
 			);
 			if($item_id)
-				$block_title = $item_id[0]['sid'];
+				$block_title = $item_id[0]['v'];
 		}
 		else {
 			notice( t('Item not found') . EOL);

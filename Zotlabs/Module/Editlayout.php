@@ -96,11 +96,12 @@ class Editlayout extends \Zotlabs\Web\Controller {
 			intval($owner)
 		);
 
-		$item_id = q("select * from item_id where service = 'PDL' and iid = %d limit 1",
+		$item_id = q("select * from iconfig where cat = 'system' and k = 'PDL' and iid = %d limit 1",
 			intval($itm[0]['id'])
 		);
 		if($item_id)
-			$layout_title = $item_id[0]['sid'];
+			$layout_title = $item_id[0]['v'];
+
 
 		$rp = 'layouts/' . $which;
 

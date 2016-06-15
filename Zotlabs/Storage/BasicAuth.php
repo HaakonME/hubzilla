@@ -3,6 +3,8 @@
 namespace Zotlabs\Storage;
 
 use Sabre\DAV;
+use Sabre\HTTP\RequestInterface;
+use Sabre\HTTP\ResponseInterface;
 
 /**
  * @brief Authentication backend class for DAV.
@@ -144,6 +146,57 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 		$_SESSION['authenticated'] = true;
 		return true;
 	}
+
+    /**
+     * When this method is called, the backend must check if authentication was
+     * successful.
+     *
+     * The returned value must be one of the following
+     *
+     * [true, "principals/username"]
+     * [false, "reason for failure"]
+     *
+     * If authentication was successful, it's expected that the authentication
+     * backend returns a so-called principal url.
+     *
+     * Examples of a principal url:
+     *
+     * principals/admin
+     * principals/user1
+     * principals/users/joe
+     * principals/uid/123457
+     *
+     * If you don't use WebDAV ACL (RFC3744) we recommend that you simply
+     * return a string such as:
+     *
+     * principals/users/[username]
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return array
+     */
+    function check(RequestInterface $request, ResponseInterface $response) {
+
+		if(local_channel()) {
+			return [ true, $this->principalPrefix . $this->channel_name ];
+		}
+
+        $auth = new \Sabre\HTTP\Auth\Basic(
+            $this->realm,
+            $request,
+            $response
+        );
+
+        $userpass = $auth->getCredentials();
+        if (!$userpass) {
+            return [false, "No 'Authorization: Basic' header found. Either the client didn't send one, or the server is misconfigured"];
+        }
+        if (!$this->validateUserPass($userpass[0], $userpass[1])) {
+            return [false, "Username or password was incorrect"];
+        }
+        return [true, $this->principalPrefix . $userpass[0]];
+
+    }
 
 	protected function check_module_access($channel_id) {
 		if($channel_id && \App::$module === 'cdav') {

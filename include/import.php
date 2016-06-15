@@ -624,19 +624,14 @@ function import_item_ids($channel,$itemids) {
 			);
 			if(! $r)
 				continue;
-			$z = q("select * from item_id where service = '%s' and sid = '%s' and iid = %d and uid = %d limit 1",
+			$z = q("select * from iconfig where iconfig.cat = 'system' and iconfig.k = '%s' 
+				and iconfig.v = '%s' and iid = %d limit 1",
 				dbesc($i['service']),
 				dbesc($i['sid']),
-				intval($r[0]['id']),
-				intval($channel['channel_id'])
+				intval($r[0]['id'])
 			);
 			if(! $z) {
-				q("insert into item_id (iid,uid,sid,service) values(%d,%d,'%s','%s')",
-					intval($r[0]['id']),
-					intval($channel['channel_id']),
-					dbesc($i['sid']),
-					dbesc($i['service'])
-				);
+				\Zotlabs\Lib\IConfig::Set($r[0]['id'],'system',$i['service'],$i['sid'],true);
 			}
 		}
 	}

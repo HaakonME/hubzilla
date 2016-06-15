@@ -25,7 +25,7 @@
       <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);
           adjustInlineTopBarHeight();"><i class="fa fa-compress"></i></button>
     </div>
-    <h2>{{$wikiheader}}</h2>
+    <h2><span id="wiki-header-name">{{$wikiheaderName}}</span>: <span id="wiki-header-page">{{$wikiheaderPage}}</span></h2>
     <div class="clear"></div>
   </div>
 	<div id="new-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
@@ -57,6 +57,17 @@
       <hr>
     </div>
   
+    <div id="rename-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
+      <form id="rename-page-form" action="wiki/rename/page" method="post" >
+        <div class="clear"></div>
+        {{include file="field_input.tpl" field=$pageRename}}
+        <div class="btn-group pull-right">
+            <button id="rename-page-submit" class="btn btn-warning" type="submit" name="submit" >Rename Page</button>
+        </div>
+      </form>        <div class="clear"></div>
+      <hr>
+    </div>
+
   <div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
       <li><a data-toggle="tab" href="#edit-pane">Edit</a></li>
@@ -67,6 +78,7 @@
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">Page <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li><a id="save-page" data-toggle="tab" href="#">Save</a></li>
+          <li><a id="rename-page" data-toggle="tab" href="#">Rename</a></li>
           <li><a id="delete-page" data-toggle="tab" href="#">Delete</a></li>
         </ul>
       </li>
@@ -115,7 +127,34 @@
   
   if (window.wiki_page_name === 'Home') {
     $('#delete-page').hide();
+    $('#rename-page').hide();
   }
+  
+  $('#rename-page').click(function (ev) {
+    $('#rename-page-form-wrapper').show();
+  });
+  
+  $( "#rename-page-form" ).submit(function( event ) {
+    $.post("wiki/{{$channel}}/rename/page", 
+      {
+        oldName: window.wiki_page_name, 
+        newName: $('#id_pageRename').val(), 
+        resource_id: window.wiki_resource_id
+      }, 
+      function (data) {
+      if (data.success) {
+        $('#rename-page-form-wrapper').hide();
+        window.console.log('data: ' + JSON.stringify(data));
+        window.wiki_page_name = data.name.urlName;
+        $('#wiki-header-page').html(data.name.htmlName);
+        wiki_refresh_page_list();
+      } else {
+        window.console.log('Error renaming page.');
+      }
+      }, 'json');    
+    event.preventDefault();
+  });
+  
   $(document).ready(function () {
     wiki_refresh_page_list();
     // Show Edit tab first. Otherwise the Ace editor does not load.

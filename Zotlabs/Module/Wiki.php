@@ -72,7 +72,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 		switch (argc()) {
 			case 2:
 				// Configure page template
-				$wikiheader = t('Wiki Sandbox');
+				$wikiheaderName = t('Wiki');
+				$wikiheaderPage = t('Sandbox');
 				$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
 				$hide_editor = false;
 				$showPageControls = false;
@@ -113,7 +114,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				} else {
 					$wiki_editor = true;
 				}
-				$wikiheader = urldecode($wikiUrlName) . ': ' . urldecode($pageUrlName);	// show wiki name and page			
+				$wikiheaderName = urldecode($wikiUrlName);
+				$wikiheaderPage = urldecode($pageUrlName);
 				$p = wiki_get_page_content(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				if(!$p['success']) {
 					notice('Error retrieving page content' . EOL);
@@ -135,7 +137,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 		require_once('library/markdown.php');	
 		
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
-			'$wikiheader' => $wikiheader,
+			'$wikiheaderName' => $wikiheaderName,
+			'$wikiheaderPage' => $wikiheaderPage,
 			'$hideEditor' => $hide_editor,
 			'$showPageControls' => $showPageControls,
 			'$showNewWikiButton'=> $showNewWikiButton,
@@ -152,6 +155,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$renderedContent' => Markdown(json_decode($content)),
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
+			'$pageRename' => array('pageRename', t('Enter the new name:'), '', ''),
 			'$commitMsg' => array('commitMsg', '', '', '', '', 'placeholder="(optional) Enter a custom message when saving the page..."'),
 			'$pageHistory' => $pageHistory['history']
 		));
@@ -377,7 +381,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if($deleted['success']) {
 				$ob = \App::get_observer();
 				$commit = wiki_git_commit(array(
-						'commit_msg' => 'Deleted ' . $pageHtmlName, 
+						'commit_msg' => 'Deleted ' . $pageUrlName, 
 						'resource_id' => $resource_id, 
 						'observer' => $ob,
 						'files' => null
@@ -416,6 +420,48 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 		}
 		
+		// Rename a page
+		if ((argc() === 4) && (argv(2) === 'rename') && (argv(3) === 'page')) {
+			$resource_id = $_POST['resource_id']; 
+			$pageUrlName = $_POST['oldName'];
+			$pageNewName = $_POST['newName'];
+			if ($pageUrlName === 'Home') {
+				json_return_and_die(array('message' => 'Cannot rename Home','success' => false));
+			}
+			if(urlencode(escape_tags($pageNewName)) === '') {				
+				json_return_and_die(array('message' => 'Error renaming page. Invalid name.', 'success' => false));
+			}
+			// Determine if observer has permission to rename pages
+			$nick = argv(1);
+			$channel = get_channel_by_nick($nick);			
+			if (local_channel() !== intval($channel['channel_id'])) {
+				$observer_hash = get_observer_hash();
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['write']) {
+					logger('Wiki write permission denied. ' . EOL);
+					json_return_and_die(array('success' => false));					
+				}
+			}
+			$renamed = wiki_rename_page(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName, 'pageNewName' => $pageNewName));
+			logger('$renamed: ' . json_encode($renamed));
+			if($renamed['success']) {
+				$ob = \App::get_observer();
+				$commit = wiki_git_commit(array(
+						'commit_msg' => 'Renamed ' . urldecode($pageUrlName) . ' to ' . $renamed['page']['htmlName'], 
+						'resource_id' => $resource_id, 
+						'observer' => $ob,
+						'files' => array($pageUrlName . '.md', $renamed['page']['fileName']),
+						'all' => true
+						));
+				if($commit['success']) {
+					json_return_and_die(array('name' => $renamed['page'], 'message' => 'Wiki git repo commit made', 'success' => true));
+				} else {
+					json_return_and_die(array('message' => 'Error making git commit','success' => false));					
+				}
+			} else {
+				json_return_and_die(array('message' => 'Error renaming page', 'success' => false));					
+			}
+		}
 
 		//notice('You must be authenticated.');
 		json_return_and_die(array('message' => 'You must be authenticated.', 'success' => false));

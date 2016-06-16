@@ -2908,7 +2908,7 @@ function text_highlight($s,$lang) {
     $hl = Text_Highlighter::factory($lang);
     $hl->setRenderer($renderer);
 	$o = $hl->highlight($s);
-	$o = str_replace("    ","&nbsp;&nbsp;&nbsp;&nbsp;",$o);
+	$o = str_replace(["    ","\n"],["&nbsp;&nbsp;&nbsp;&nbsp;",''],$o);
 
 	if($tag_added) {
 		$b = substr($o,0,strpos($o,'<li>'));

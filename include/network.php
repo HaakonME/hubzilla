@@ -21,15 +21,16 @@ function get_capath() {
  *    TRUE if asked to return binary results (file download)
  * @param int $redirects default 0
  *    internal use, recursion counter
- * @param array $opts (optional parameters) assoziative array with:
+ * @param array $opts (optional parameters) associative array with:
  *  * \b accept_content => supply Accept: header with 'accept_content' as the value
  *  * \b timeout => int seconds, default system config value or 60 seconds
  *  * \b http_auth => username:password
  *  * \b novalidate => do not validate SSL certs, default is to validate using our CA list
  *  * \b nobody => only return the header
  *  * \b filep => stream resource to write body to. header and body are not returned when using this option.
+ *  * \b custom => custom request method: e.g. 'PUT', 'DELETE'
  *
- * @return array an assoziative array with:
+ * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
  *  * \e string \b header => HTTP headers 
@@ -64,6 +65,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
+	if(x($opts,'custom'))
+		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -165,7 +169,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
  *    'filep' => stream resource to write body to. header and body are not returned when using this option.
- * @return array an assoziative array with:
+ *    'custom' => custom request method: e.g. 'PUT', 'DELETE'
+ *
+ * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
  *  * \e string \b header => HTTP headers
@@ -204,6 +210,10 @@ logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
  
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
+	if(x($opts,'custom'))
+		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
+
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);

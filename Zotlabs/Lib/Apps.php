@@ -264,6 +264,8 @@ class Apps {
 		if(! $papp['photo'])
 			$papp['photo'] = z_root() . '/' . get_default_profile_photo(80);
 
+		self::translate_system_apps($papp);
+
 		$papp['papp'] = self::papp_encode($papp);
 
 		if(! strstr($papp['url'],'://'))

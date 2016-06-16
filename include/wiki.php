@@ -231,6 +231,34 @@ function wiki_create_page($name, $resource_id) {
 	
 }
 
+function wiki_rename_page($arr) {
+	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
+	$pageNewName = ((array_key_exists('pageNewName',$arr)) ? $arr['pageNewName'] : '');
+	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('message' => 'Wiki not found.', 'success' => false);
+	}
+	$page_path_old = $w['path'].'/'.$pageUrlName.'.md';
+	logger('$page_path_old: ' . $page_path_old);
+	if (!is_readable($page_path_old) === true) {
+		return array('message' => 'Cannot read wiki page: ' . $page_path_old, 'success' => false);
+	}
+	$page = array('rawName' => $pageNewName, 'htmlName' => escape_tags($pageNewName), 'urlName' => urlencode(escape_tags($pageNewName)), 'fileName' => urlencode(escape_tags($pageNewName)).'.md');
+	$page_path_new = $w['path'] . '/' . $page['fileName'] ;
+	logger('$page_path_new: ' . $page_path_new);
+	if (is_file($page_path_new)) {
+		return array('message' => 'Page already exists.', 'success' => false);
+	}
+	// Rename the page file in the wiki repo
+	if(!rename($page_path_old, $page_path_new)) {
+		return array('message' => 'Error renaming page file.', 'success' => false);
+	} else {
+		return array('page' => $page, 'message' => '', 'success' => true);
+	}
+	
+}
+
 function wiki_get_page_content($arr) {
 	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
 	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
@@ -342,7 +370,7 @@ function wiki_revert_page($arr) {
 				}
 			}
 		} catch (\PHPGit\Exception\GitException $e) {
-			json_return_and_die(array('content' => $content, 'message' => 'GitRepo error thrown', 'success' => false));
+			return array('content' => $content, 'message' => 'GitRepo error thrown', 'success' => false);
 		}
 		return array('content' => $content, 'message' => '', 'success' => true);
 	} else {
@@ -352,9 +380,18 @@ function wiki_revert_page($arr) {
 
 function wiki_git_commit($arr) {
 	$files = ((array_key_exists('files', $arr)) ? $arr['files'] : null);
+	$all = ((array_key_exists('all', $arr)) ? $arr['all'] : false);
 	$commit_msg = ((array_key_exists('commit_msg', $arr)) ? $arr['commit_msg'] : 'Repo updated');
-	$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : json_return_and_die(array('message' => 'Wiki resource_id required for git commit', 'success' => false)));
-	$observer = ((array_key_exists('observer', $arr)) ? $arr['observer'] : json_return_and_die(array('message' => 'Observer required for git commit', 'success' => false)));
+	if(array_key_exists('resource_id', $arr)) {
+		$resource_id = $arr['resource_id'];
+	} else {
+		return array('message' => 'Wiki resource_id required for git commit', 'success' => false);
+	}
+	if(array_key_exists('observer', $arr)) {
+		$observer = $arr['observer'];
+	} else {
+		return array('message' => 'Observer required for git commit', 'success' => false);
+	}	
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
 		return array('message' => 'Error reading wiki', 'success' => false);
@@ -369,23 +406,23 @@ function wiki_git_commit($arr) {
 		if ($files === null) {
 			$options = array('all' => true); // git commit option to include all changes
 		} else {
-			$options = array(); // git commit options
+			$options = array('all' => $all); // git commit options\
 			foreach ($files as $file) {
 				if (!$git->git->add($file)) {	// add specified files to the git repo stage
 					if (!$git->git->reset->hard()) {
-						json_return_and_die(array('message' => 'Error adding file to git stage: ' . $file . '. Error resetting git repo.', 'success' => false));
+						return array('message' => 'Error adding file to git stage: ' . $file . '. Error resetting git repo.', 'success' => false);
 					}
-					json_return_and_die(array('message' => 'Error adding file to git stage: ' . $file, 'success' => false));
+					return array('message' => 'Error adding file to git stage: ' . $file, 'success' => false);
 				}
 			}
 		}
 		if ($git->commit($commit_msg, $options)) {
-			json_return_and_die(array('message' => 'Wiki repo commit succeeded', 'success' => true));
+			return array('message' => 'Wiki repo commit succeeded', 'success' => true);
 		} else {
-			json_return_and_die(array('message' => 'Wiki repo commit failed', 'success' => false));
+			return array('message' => 'Wiki repo commit failed', 'success' => false);
 		}
 	} catch (\PHPGit\Exception\GitException $e) {
-		json_return_and_die(array('message' => 'GitRepo error thrown', 'success' => false));
+		return array('message' => 'GitRepo error thrown', 'success' => false);
 	}
 }
 

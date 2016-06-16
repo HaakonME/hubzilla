@@ -16,7 +16,7 @@ require_once('include/menu.php');
  * @param int $account_id
  *     Account_id used for this request
  *
- * @returns assoziative array with:
+ * @returns associative array with:
  *  * \e boolean \b success boolean true if creating a new channel is allowed for this account
  *  * \e string \b message (optional) if success is false, optional error text
  *  * \e int \b total_identities
@@ -676,14 +676,6 @@ function identity_basic_export($channel_id, $items = false) {
 		$ret['mail'] = $m;
 	}
 
-	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d",
-		intval($channel_id)
-	);
-
-	if($r)
-		$ret['item_id'] = $r;
-
-	//$key = get_config('system','prvkey');
 
 	/** @warning this may run into memory limits on smaller systems */
 
@@ -745,17 +737,6 @@ function identity_export_year($channel_id,$year,$month = 0) {
 		foreach($r as $rr)
 			$ret['item'][] = encode_item($rr,true);
 	}
-
-	$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item_id.uid = %d 
-		and item.created >= '%s' and item.created < '%s' order by created ",
-		intval($channel_id),
-		dbesc($mindate), 
-		dbesc($maxdate)
-	);
-
-	if($r)
-		$ret['item_id'] = $r;
-
 
 	return $ret;
 }

@@ -839,7 +839,7 @@ require_once('include/api_auth.php');
 			$_REQUEST['parent_mid'] = $parent;
 
 		if($_REQUEST['namespace'] && $parent) {
-			$x = q("select iid from item_id where service = '%s' and sid = '%s' limit 1",
+			$x = q("select iid from iconfig where cat = 'system' and k = '%s' and v = '%s' limit 1",
 				dbesc($_REQUEST['namespace']),
 				dbesc($parent)
 			);
@@ -967,20 +967,10 @@ require_once('include/api_auth.php');
 
 		$ret = array();
 		$tmp = array();
-		$str = '';
 		foreach($i as $ii) {
 			$tmp[] = encode_item($ii,true);
-			if($str)
-				$str .= ',';
-			$str .= $ii['id'];
 		}
 		$ret['item'] = $tmp;	
-		if($str) {
-			$r = q("select item_id.*, item.mid from item_id left join item on item_id.iid = item.id where item.id in ( $str ) ");
-
-		    if($r)
-        		$ret['item_id'] = $r;
-		}
 					 
 		json_return_and_die($ret);
 	}
@@ -1462,7 +1452,8 @@ require_once('include/api_auth.php');
 		}
 		else {
 			if($_REQUEST['namespace'] && $_REQUEST['remote_id']) {
-				$r = q("select * from item_id where service = '%s' and sid = '%s' and uid = %d limit 1",
+				$r = q("select * from iconfig left join item on iconfig.iid = item.id 
+					where cat = 'system' and k = '%s' and v = '%s' and item.uid = %d limit 1",
 					dbesc($_REQUEST['namespace']),
 					dbesc($_REQUEST['remote_id']),
 					intval($user_info['uid'])
@@ -1472,7 +1463,7 @@ require_once('include/api_auth.php');
 				$id = $r[0]['iid'];
 			}
 			if($_REQUEST['namespace'] && $_REQUEST['comment_id']) {
-				$r = q("select * from item_id left join item on item.id = item_id.iid where service = '%s' and sid = '%s' and uid = %d and item.id != item.parent limit 1",
+				$r = q("select * from iconfig left join item on item.id = iconfig.iid where cat = 'system' and k = '%s' and v = '%s' and uid = %d and item.id != item.parent limit 1",
 					dbesc($_REQUEST['namespace']),
 					dbesc($_REQUEST['comment_id']),
 					intval($user_info['uid'])

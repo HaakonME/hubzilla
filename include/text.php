@@ -1743,7 +1743,8 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and item_type = %d ",
+	$r = q("select mid, v from item left join iconfig on iconfig.iid = item.id 
+		where iconfig.cat = 'system' and iconfig.k = 'PDL' and item.uid = %d and item_type = %d ",
 		intval($channel_id),
 		intval(ITEM_TYPE_PDL)
 	);
@@ -1753,7 +1754,7 @@ function layout_select($channel_id, $current = '') {
 		$options .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
 		foreach($r as $rr) {
 			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
-			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['v'] . '</option>';
 		}
 	}
 
@@ -2821,13 +2822,16 @@ function expand_acl($s) {
 // If it has a pdl we'll load it as we know the mid and pass the body through comanche_parser() which will generate the 
 // page layout from the given description
 
+// @FIXME - there is apparently a very similar function called layout_select; this one should probably take precedence
+// and the other should be checked for compatibility and removed
 
 function pdl_selector($uid, $current="") {
 	$o = '';
 
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' $sql_extra order by sid asc",
+	$r = q("select iconfig.*, mid from item_id left join item on iconfig.iid = item.id 
+		where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' $sql_extra order by v asc",
 		intval($uid)
 	);
 
@@ -2841,7 +2845,7 @@ function pdl_selector($uid, $current="") {
 	$entries[] = array('title' => t('Default'), 'mid' => '');
 	foreach($entries as $selection) {
 		$selected = (($selection == $current) ? ' selected="selected" ' : '');
-		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['sid']}</option>";
+		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['v']}</option>";
 	}
 
 	$o .= '</select>';
@@ -2877,3 +2881,43 @@ function flatten_array_recursive($arr) {
 	}
 	return($ret);
 }			
+
+function text_highlight($s,$lang) {
+
+	if($lang === 'js')
+		$lang = 'javascript';
+
+	if(! strpos('Text_Highlighter',get_include_path())) {
+		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
+	}
+	require_once('library/Text_Highlighter/Text/Highlighter.php');
+    require_once('library/Text_Highlighter/Text/Highlighter/Renderer/Html.php');
+    $options = array(
+        'numbers' => HL_NUMBERS_LI,
+        'tabsize' => 4,
+    );
+	$tag_added = false;
+	$s = trim(html_entity_decode($s,ENT_COMPAT));
+	$s = str_replace("    ","\t",$s);
+	if($lang === 'php') {
+		if(strpos('<?php',$s) !== 0) {
+			$s = '<?php' . "\n" . $s;
+			$tag_added = true;			
+		}
+
+	} 
+    $renderer = new Text_Highlighter_Renderer_HTML($options);
+    $hl = Text_Highlighter::factory($lang);
+    $hl->setRenderer($renderer);
+	$o = $hl->highlight($s);
+	$o = str_replace(["    ","\n"],["&nbsp;&nbsp;&nbsp;&nbsp;",''],$o);
+
+	if($tag_added) {
+		$b = substr($o,0,strpos($o,'<li>'));
+		$e = substr($o,strpos($o,'</li>'));
+		$o = $b . $e;
+	}
+
+    return('<code>' . $o . '</code>');
+}
+

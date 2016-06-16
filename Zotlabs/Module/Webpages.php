@@ -28,7 +28,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function get() {
+	function get() {
 	
 		if(! \App::$profile) {
 			notice( t('Requested profile is not available.') . EOL );
@@ -138,11 +138,19 @@ class Webpages extends \Zotlabs\Web\Controller {
 	
 		$sql_extra = item_permissions_sql($owner);
 	
-		$r = q("select * from item_id left join item on item_id.iid = item.id 
-			where item_id.uid = %d and service = 'WEBPAGE' and item_type = %d $sql_extra order by item.created desc",
+
+		$r = q("select * from iconfig left join item on iconfig.iid = item.id 
+			where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d 
+			$sql_extra order by item.created desc",
 			intval($owner),
 			intval(ITEM_TYPE_WEBPAGE)
 		);
+
+//		$r = q("select * from item_id left join item on item_id.iid = item.id 
+//			where item_id.uid = %d and service = 'WEBPAGE' and item_type = %d $sql_extra order by item.created desc",
+//			intval($owner),
+//			intval(ITEM_TYPE_WEBPAGE)
+//		);
 	
 		$pages = null;
 	
@@ -160,13 +168,13 @@ class Webpages extends \Zotlabs\Web\Controller {
 					'created'	=> $rr['created'],
 					'edited'	=> $rr['edited'],
 					'mimetype'	=> $rr['mimetype'],
-					'pagetitle'	=> $rr['sid'],
+					'pagetitle'	=> $rr['v'],
 					'mid'		=> $rr['mid'],
 					'layout_mid'    => $rr['layout_mid']
 				);
 				$pages[$rr['iid']][] = array(
 					'url'		=> $rr['iid'],
-					'pagetitle'	=> $rr['sid'],
+					'pagetitle'	=> $rr['v'],
 					'title'		=> $rr['title'],
 					'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
 					'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),

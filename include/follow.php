@@ -275,7 +275,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	call_hooks('follow', $arr);
 
-	/** If there is a default group for this channel, add this member to it */
+	/** If there is a default group for this channel, add this connection to it */
 
 	if($default_group) {
 		require_once('include/group.php');

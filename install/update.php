@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1176 );
+define( 'UPDATE_VERSION' , 1177 );
 
 /**
  *
@@ -2252,5 +2252,18 @@ function update_r1175() {
 	if($r1 && $r2 && $r3 && $r4)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+
+}
+
+
+function update_r1176() {
+
+	$r = q("select * from item_id where true");
+	if($r) {
+		foreach($r as $rr) {
+			\Zotlabs\Lib\IConfig::Set($rr['iid'],'system',$rr['service'],$rr['sid'],true);
+		}
+	}
+	return UPDATE_SUCCESS;
 
 }

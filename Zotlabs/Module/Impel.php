@@ -137,9 +137,7 @@ class Impel extends \Zotlabs\Web\Controller {
 				require_once('library/urlify/URLify.php');
 				$pagetitle = strtolower(\URLify::transliterate($j['pagetitle']));
 			}
-	
-	
-	
+		
 			// Verify ability to use html or php!!!
 	
 		    $execflag = false;
@@ -154,21 +152,14 @@ class Impel extends \Zotlabs\Web\Controller {
 				}
 			}
 	
-			$remote_id = 0;
-	
-			$z = q("select * from item_id where sid = '%s' and service = '%s' and uid = %d limit 1",
-				dbesc($pagetitle),
-				dbesc($namespace),
-				intval(local_channel())
-			);
-	
 			$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1",
 				dbesc($arr['mid']),
 				intval(local_channel())
 			);
+
+			\Zotlabs\Lib\IConfig::Set($arr,'system',$namespace,(($pagetitle) ? $pagetitle : substr($arr['mid'],0,16)),true);
 	
-			if($z && $i) {
-				$remote_id = $z[0]['id'];
+			if($i) {
 				$arr['id'] = $i[0]['id'];
 				// don't update if it has the same timestamp as the original
 				if($arr['edited'] > $i[0]['edited'])
@@ -182,12 +173,12 @@ class Impel extends \Zotlabs\Web\Controller {
 						intval(local_channel())
 					);
 				}
-				$x = item_store($arr,$execflag);
+				else
+					$x = item_store($arr,$execflag);
 			}
 	
-			if($x['success']) {
+			if($x && $x['success']) {
 				$item_id = $x['item_id'];
-				update_remote_id($channel,$item_id,$arr['item_type'],$pagetitle,$namespace,$remote_id,$arr['mid']);
 			}
 		}
 	
@@ -199,7 +190,8 @@ class Impel extends \Zotlabs\Web\Controller {
 			notice( sprintf( t('%s element installation failed'), $installed_type)); 
 		}
 	
-	//??? should perhaps return ret? 
+		//??? should perhaps return ret? 
+
 		json_return_and_die(true);
 	
 	}

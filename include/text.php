@@ -2884,9 +2884,11 @@ function flatten_array_recursive($arr) {
 
 function text_highlight($s,$lang) {
 
+	if($lang === 'js')
+		$lang = 'javascript';
+
 	if(! strpos('Text_Highlighter',get_include_path())) {
 		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
-		head_add_css('/library/Text_Highlighter/sample.css');	
 	}
 	require_once('library/Text_Highlighter/Text/Highlighter.php');
     require_once('library/Text_Highlighter/Text/Highlighter/Renderer/Html.php');

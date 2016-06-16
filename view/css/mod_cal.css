@@ -1,3 +1,7 @@
+.fc-scroller {
+	overflow: hidden !important;
+}
+
 /* fix borders */
 
 .fc th:first-child,

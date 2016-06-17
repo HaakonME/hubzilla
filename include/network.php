@@ -29,6 +29,8 @@ function get_capath() {
  *  * \b nobody => only return the header
  *  * \b filep => stream resource to write body to. header and body are not returned when using this option.
  *  * \b custom => custom request method: e.g. 'PUT', 'DELETE'
+ *  * \b cookiejar => cookie file (write)
+ *  * \B cookiefile => cookie file (read)
  *
  * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
@@ -60,6 +62,8 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_HEADER, $false);
 	}
 
+
+
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
@@ -81,6 +85,11 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
@@ -227,6 +236,12 @@ logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));

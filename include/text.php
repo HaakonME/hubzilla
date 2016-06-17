@@ -2899,6 +2899,11 @@ function text_highlight($s,$lang) {
 	$tag_added = false;
 	$s = trim(html_entity_decode($s,ENT_COMPAT));
 	$s = str_replace("    ","\t",$s);
+
+	// The highlighter library insists on an opening php tag for php code blocks. If 
+	// it isn't present, nothing is highlighted. So we're going to see if it's present.
+	// If not, we'll add it, and then quietly remove it after we get the processed output back.  
+
 	if($lang === 'php') {
 		if(strpos('<?php',$s) !== 0) {
 			$s = '<?php' . "\n" . $s;

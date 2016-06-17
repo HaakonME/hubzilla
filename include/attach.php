@@ -423,6 +423,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	$observer = array();
 
+	$dosync = ((array_key_exists('nosync',$arr) && $arr['nosync']) ? 0 : 1);
+
 	if($observer_hash) {
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 			dbesc($observer_hash)
@@ -829,6 +831,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		if($arr['description'])
 			$args['description'] = $arr['description'];
 
+		$args['deliver'] = $dosync;
+
 		$p = photo_upload($channel,$observer,$args);
 		if($p['success']) {
 			$ret['body'] = $p['body'];
@@ -865,10 +869,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		call_hooks('photo_upload_end',$ret);
 	}
 
-	$sync = attach_export_data($channel,$hash);
+	if($dosync) {
+		$sync = attach_export_data($channel,$hash);
 
-	if($sync) 
-		build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+		if($sync) 
+			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+	}
 
 	return $ret;
 }

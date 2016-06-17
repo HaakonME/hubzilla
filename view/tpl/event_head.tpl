@@ -30,6 +30,12 @@
 	function changeView(action, viewName) {
 		$('#events-calendar').fullCalendar(action, viewName);
 		var view = $('#events-calendar').fullCalendar('getView');
+		if(view.type === 'agendaDay' || view.type === 'agendaWeek') {
+			$('#events-calendar').fullCalendar('option', 'height', 'auto');
+		}
+		else {
+			$('#events-calendar').fullCalendar('option', 'height', '');
+		}
 		$('#title').text(view.title);
 	}
 
@@ -42,7 +48,6 @@
 			firstDay: {{$first_day}},
 
 			eventLimit: 3,
-			height: 'auto',
 
 			monthNames: aStr['monthNames'],
 			monthNamesShort: aStr['monthNamesShort'],

@@ -41,6 +41,10 @@ function photo_upload($channel, $observer, $args) {
 	else
 		$visible = 0;
 
+	$deliver = true;
+	if(array_key_exists('deliver',$args))
+		$deliver = intval($args['deliver']);
+
 	// Set to default channel permissions. If the parent directory (album) has permissions set, 
 	// use those instead. If we have specific permissions supplied, they take precedence over
 	// all other settings. 'allow_cid' being passed from an external source takes priority over channel settings.
@@ -330,7 +334,7 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = $args['body'];
+				$item['body'] = $summary;
 				$item['obj_type'] = ACTIVITY_OBJ_PHOTO;
 				$item['obj']	= json_encode($object);
 
@@ -355,14 +359,14 @@ function photo_upload($channel, $observer, $args) {
 				if(($item['edited'] > $r[0]['edited']) || $force) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
-					item_store_update($item);
+					item_store_update($item,false,$deliver);
 					continue;
 				}	
 			}
 			else {
 				$item['aid'] = $channel['channel_account_id'];
 				$item['uid'] = $channel['channel_id'];
-				$item_result = item_store($item);
+				$item_result = item_store($item,false,$deliver);
 			}
 		}
 	}
@@ -414,10 +418,10 @@ function photo_upload($channel, $observer, $args) {
 
 
 
-		$result = item_store($arr);
+		$result = item_store($arr,false,$deliver);
 		$item_id = $result['item_id'];
 
-		if($visible) 
+		if($visible && $deliver) 
 			Zotlabs\Daemon\Master::Summon(array('Notifier', 'wall-new', $item_id));
 	}
 

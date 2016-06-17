@@ -28,6 +28,6 @@ function on_fullscreen() {
 function on_inline() {
 	var view = $('#events-calendar').fullCalendar('getView');
 	if(view.type === 'month') {
-		$('#events-calendar').fullCalendar('option', 'height', 'auto');
+		$('#events-calendar').fullCalendar('option', 'height', '');
 	}
 }

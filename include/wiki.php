@@ -347,7 +347,7 @@ function wiki_revert_page($arr) {
 	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
 	$commitHash = ((array_key_exists('commitHash',$arr)) ? $arr['commitHash'] : null);
 	if (! $commitHash) {
-		return array('content' => $content, 'message' => 'No commit has provided', 'success' => false);
+		return array('content' => $content, 'message' => 'No commit was provided', 'success' => false);
 	}
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {
@@ -375,6 +375,48 @@ function wiki_revert_page($arr) {
 		return array('content' => $content, 'message' => '', 'success' => true);
 	} else {
 		return array('content' => $content, 'message' => 'Page file not writable', 'success' => false);
+	}
+}
+
+function wiki_compare_page($arr) {
+	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
+	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
+	$currentCommit = ((array_key_exists('currentCommit',$arr)) ? $arr['currentCommit'] : 'HEAD');
+	$compareCommit = ((array_key_exists('compareCommit',$arr)) ? $arr['compareCommit'] : null);
+	if (! $compareCommit) {
+		return array('message' => 'No compare commit was provided', 'success' => false);
+	}
+	$w = wiki_get_wiki($resource_id);
+	if (!$w['path']) {
+		return array('message' => 'Error reading wiki', 'success' => false);
+	}
+	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	if (is_readable($page_path) === true) {
+		$reponame = ((array_key_exists('title', $w['wiki'])) ? urlencode($w['wiki']['title']) : 'repo');
+		if($reponame === '') {
+			$reponame = 'repo';
+		}
+		$git = new GitRepo('', null, false, $w['wiki']['title'], $w['path']);
+		$compareContent = $currentContent = '';
+		try {
+			foreach ($git->git->tree($currentCommit) as $object) {
+				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName.'.md' ) {
+						$currentContent = $git->git->cat->blob($object['hash']);						
+				}
+			}
+			foreach ($git->git->tree($compareCommit) as $object) {
+				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName.'.md' ) {
+						$compareContent = $git->git->cat->blob($object['hash']);						
+				}
+			}
+			require_once('library/class.Diff.php');
+			$diff = Diff::toTable(Diff::compare($currentContent, $compareContent));
+		} catch (\PHPGit\Exception\GitException $e) {
+			return array('message' => 'GitRepo error thrown', 'success' => false);
+		}
+		return array('diff' => $diff, 'message' => '', 'success' => true);
+	} else {
+		return array('message' => 'Page file not writable', 'success' => false);
 	}
 }
 

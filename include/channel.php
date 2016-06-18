@@ -1224,6 +1224,7 @@ function advanced_profile(&$a) {
 
 		$things = get_things(App::$profile['profile_guid'],App::$profile['profile_uid']);
 
+
 //		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
 
 		return replace_macros($tpl, array(

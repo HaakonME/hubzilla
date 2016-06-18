@@ -199,6 +199,26 @@ CREATE TABLE IF NOT EXISTS `cache` (
   PRIMARY KEY (`k`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `cal` (
+  `cal_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cal_aid` int(10) unsigned NOT NULL DEFAULT '0',
+  `cal_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `cal_hash` varchar(255) NOT NULL DEFAULT '',
+  `cal_name` varchar(255) NOT NULL DEFAULT '',
+  `uri` varchar(255) NOT NULL DEFAULT '',
+  `logname` varchar(255) NOT NULL DEFAULT '',
+  `pass` varchar(255) NOT NULL DEFAULT '',
+  `ctag` varchar(255) NOT NULL DEFAULT '',
+  `synctoken` varchar(255) NOT NULL DEFAULT '',
+  `cal_types` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`cal_id`),
+  KEY `cal_aid` (`cal_aid`),
+  KEY `cal_uid` (`cal_uid`),
+  KEY `cal_hash` (`cal_hash`),
+  KEY `cal_name` (`cal_name`),
+  KEY `cal_types` (`cal_types`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `channel` (
   `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel_account_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -394,6 +414,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(11) NOT NULL DEFAULT '0',
+  `cal_id` int(11) unsigned NOT NULL DEFAULT '0',
   `event_xchan` char(255) NOT NULL DEFAULT '',
   `event_hash` char(255) NOT NULL DEFAULT '',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -420,6 +441,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `event_vdata` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
+  KEY `cal_id` (`cal_id`),
   KEY `etype` (`etype`),
   KEY `dtstart` (`dtstart`),
   KEY `dtend` (`dtend`),

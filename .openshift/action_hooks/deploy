@@ -216,3 +216,5 @@ util/add_addon_repo https://gitlab.com/zot/hubzilla-chess.git Chess insecure
 echo "Try to add or update Hubzilla Hubsites - unofficial repo"
 cd ${OPENSHIFT_REPO_DIR}
 util/add_addon_repo https://gitlab.com/zot/hubsites.git Hubsites insecure
+
+# This ends the script

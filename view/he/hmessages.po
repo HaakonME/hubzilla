@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-10 00:02-0700\n"
-"PO-Revision-Date: 2016-06-10 12:42+0000\n"
+"POT-Creation-Date: 2016-06-17 00:02-0700\n"
+"PO-Revision-Date: 2016-06-18 11:18+0000\n"
 "Last-Translator: GenghisKhan <genghiskhan@gmx.ca>\n"
 "Language-Team: Hebrew (http://www.transifex.com/Friendica/red-matrix/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "parent"
 msgstr "הורה"
 
-#: ../../Zotlabs/Storage/Browser.php:131 ../../include/text.php:2620
+#: ../../Zotlabs/Storage/Browser.php:131 ../../include/text.php:2621
 msgid "Collection"
 msgstr "אוסף"
 
@@ -41,22 +41,23 @@ msgstr "לוח שנה"
 
 #: ../../Zotlabs/Storage/Browser.php:143
 msgid "Schedule Inbox"
-msgstr ""
+msgstr "תיבת דואר נכנס מתוזמנת"
 
 #: ../../Zotlabs/Storage/Browser.php:146
 msgid "Schedule Outbox"
-msgstr ""
+msgstr "תיבת דואר יוצא מתוזמנת"
 
 #: ../../Zotlabs/Storage/Browser.php:164 ../../Zotlabs/Module/Photos.php:798
-#: ../../Zotlabs/Module/Photos.php:1243 ../../Zotlabs/Lib/Apps.php:486
-#: ../../Zotlabs/Lib/Apps.php:561 ../../include/widgets.php:1505
-#: ../../include/conversation.php:1032
+#: ../../Zotlabs/Module/Photos.php:1243
+#: ../../Zotlabs/Module/Embedphotos.php:147 ../../Zotlabs/Lib/Apps.php:489
+#: ../../Zotlabs/Lib/Apps.php:564 ../../include/conversation.php:1035
+#: ../../include/widgets.php:1578
 msgid "Unknown"
 msgstr "לא ידוע"
 
 #: ../../Zotlabs/Storage/Browser.php:226 ../../Zotlabs/Module/Fbrowser.php:85
-#: ../../Zotlabs/Lib/Apps.php:216 ../../include/nav.php:93
-#: ../../include/conversation.php:1639
+#: ../../Zotlabs/Lib/Apps.php:216 ../../include/conversation.php:1654
+#: ../../include/nav.php:93
 msgid "Files"
 msgstr "קבצים"
 
@@ -69,16 +70,17 @@ msgid "Shared"
 msgstr ""
 
 #: ../../Zotlabs/Storage/Browser.php:230 ../../Zotlabs/Storage/Browser.php:306
-#: ../../Zotlabs/Module/Blocks.php:156 ../../Zotlabs/Module/Layouts.php:182
+#: ../../Zotlabs/Module/Blocks.php:159 ../../Zotlabs/Module/Layouts.php:184
 #: ../../Zotlabs/Module/Menu.php:118 ../../Zotlabs/Module/New_channel.php:142
-#: ../../Zotlabs/Module/Webpages.php:186
+#: ../../Zotlabs/Module/Webpages.php:194
 msgid "Create"
 msgstr "צור"
 
 #: ../../Zotlabs/Storage/Browser.php:231 ../../Zotlabs/Storage/Browser.php:308
 #: ../../Zotlabs/Module/Cover_photo.php:357
 #: ../../Zotlabs/Module/Photos.php:825 ../../Zotlabs/Module/Photos.php:1364
-#: ../../Zotlabs/Module/Profile_photo.php:368 ../../include/widgets.php:1518
+#: ../../Zotlabs/Module/Profile_photo.php:368
+#: ../../Zotlabs/Module/Embedphotos.php:159 ../../include/widgets.php:1591
 msgid "Upload"
 msgstr "העלאה"
 
@@ -103,46 +105,46 @@ msgstr "גודל"
 msgid "Last Modified"
 msgstr "שונה לאחרונה"
 
-#: ../../Zotlabs/Storage/Browser.php:240 ../../Zotlabs/Module/Blocks.php:157
+#: ../../Zotlabs/Storage/Browser.php:240 ../../Zotlabs/Module/Blocks.php:160
 #: ../../Zotlabs/Module/Editblock.php:109
 #: ../../Zotlabs/Module/Connections.php:290
 #: ../../Zotlabs/Module/Connections.php:310
 #: ../../Zotlabs/Module/Editpost.php:84
-#: ../../Zotlabs/Module/Editlayout.php:113
+#: ../../Zotlabs/Module/Editlayout.php:114
 #: ../../Zotlabs/Module/Editwebpage.php:146
-#: ../../Zotlabs/Module/Layouts.php:190 ../../Zotlabs/Module/Menu.php:112
+#: ../../Zotlabs/Module/Layouts.php:192 ../../Zotlabs/Module/Menu.php:112
 #: ../../Zotlabs/Module/Admin.php:2113 ../../Zotlabs/Module/Settings.php:652
-#: ../../Zotlabs/Module/Thing.php:260 ../../Zotlabs/Module/Webpages.php:187
-#: ../../Zotlabs/Lib/Apps.php:337 ../../Zotlabs/Lib/ThreadItem.php:106
-#: ../../include/channel.php:937 ../../include/channel.php:941
-#: ../../include/menu.php:108 ../../include/page_widgets.php:8
-#: ../../include/page_widgets.php:36
+#: ../../Zotlabs/Module/Thing.php:260 ../../Zotlabs/Module/Webpages.php:195
+#: ../../Zotlabs/Lib/ThreadItem.php:106 ../../Zotlabs/Lib/Apps.php:340
+#: ../../include/channel.php:918 ../../include/channel.php:922
+#: ../../include/menu.php:108 ../../include/page_widgets.php:9
+#: ../../include/page_widgets.php:39
 msgid "Edit"
 msgstr "ערוך"
 
-#: ../../Zotlabs/Storage/Browser.php:241 ../../Zotlabs/Module/Blocks.php:159
-#: ../../Zotlabs/Module/Connedit.php:572
+#: ../../Zotlabs/Storage/Browser.php:241 ../../Zotlabs/Module/Blocks.php:162
+#: ../../Zotlabs/Module/Connedit.php:578
 #: ../../Zotlabs/Module/Editblock.php:134
 #: ../../Zotlabs/Module/Connections.php:263
-#: ../../Zotlabs/Module/Editlayout.php:136
+#: ../../Zotlabs/Module/Editlayout.php:137
 #: ../../Zotlabs/Module/Editwebpage.php:170 ../../Zotlabs/Module/Group.php:177
 #: ../../Zotlabs/Module/Photos.php:1173 ../../Zotlabs/Module/Admin.php:1039
 #: ../../Zotlabs/Module/Admin.php:1213 ../../Zotlabs/Module/Admin.php:2114
 #: ../../Zotlabs/Module/Settings.php:653 ../../Zotlabs/Module/Thing.php:261
-#: ../../Zotlabs/Module/Webpages.php:189 ../../Zotlabs/Lib/Apps.php:338
-#: ../../Zotlabs/Lib/ThreadItem.php:126 ../../include/conversation.php:657
+#: ../../Zotlabs/Module/Webpages.php:197 ../../Zotlabs/Lib/ThreadItem.php:126
+#: ../../Zotlabs/Lib/Apps.php:341 ../../include/conversation.php:660
 msgid "Delete"
 msgstr "מחק"
 
 #: ../../Zotlabs/Storage/Browser.php:285
 #, php-format
 msgid "You are using %1$s of your available file storage."
-msgstr ""
+msgstr "הינך משתמש ב- %1$s מתוך שטח אחסון קבצים זמין."
 
 #: ../../Zotlabs/Storage/Browser.php:290
 #, php-format
 msgid "You are using %1$s of %2$s available file storage. (%3$s&#37;)"
-msgstr ""
+msgstr "הינך משתמש ב- %1$s מתוך %2$s שטח אחסון קבצים זמין. (%3$s&#37;)"
 
 #: ../../Zotlabs/Storage/Browser.php:302
 msgid "WARNING:"
@@ -186,8 +188,8 @@ msgstr "הרשאה נדחתה"
 #: ../../Zotlabs/Module/Filestorage.php:24
 #: ../../Zotlabs/Module/Filestorage.php:79
 #: ../../Zotlabs/Module/Filestorage.php:94
-#: ../../Zotlabs/Module/Filestorage.php:121 ../../Zotlabs/Module/Item.php:210
-#: ../../Zotlabs/Module/Item.php:218 ../../Zotlabs/Module/Item.php:1070
+#: ../../Zotlabs/Module/Filestorage.php:121 ../../Zotlabs/Module/Item.php:211
+#: ../../Zotlabs/Module/Item.php:219 ../../Zotlabs/Module/Item.php:1070
 #: ../../Zotlabs/Module/Layouts.php:71 ../../Zotlabs/Module/Layouts.php:78
 #: ../../Zotlabs/Module/Layouts.php:89 ../../Zotlabs/Module/Id.php:76
 #: ../../Zotlabs/Module/Like.php:181 ../../Zotlabs/Module/Invite.php:17
@@ -199,7 +201,7 @@ msgstr "הרשאה נדחתה"
 #: ../../Zotlabs/Module/New_channel.php:104
 #: ../../Zotlabs/Module/Notifications.php:70
 #: ../../Zotlabs/Module/Photos.php:75 ../../Zotlabs/Module/Page.php:35
-#: ../../Zotlabs/Module/Page.php:90 ../../Zotlabs/Module/Pdledit.php:26
+#: ../../Zotlabs/Module/Page.php:91 ../../Zotlabs/Module/Pdledit.php:26
 #: ../../Zotlabs/Module/Poke.php:137 ../../Zotlabs/Module/Profile.php:68
 #: ../../Zotlabs/Module/Profile.php:76 ../../Zotlabs/Module/Profiles.php:203
 #: ../../Zotlabs/Module/Profiles.php:601
@@ -216,14 +218,14 @@ msgstr "הרשאה נדחתה"
 #: ../../Zotlabs/Module/Viewconnections.php:25
 #: ../../Zotlabs/Module/Viewconnections.php:30
 #: ../../Zotlabs/Module/Viewsrc.php:18 ../../Zotlabs/Module/Webpages.php:74
-#: ../../Zotlabs/Lib/Chatroom.php:137 ../../include/items.php:3438
+#: ../../Zotlabs/Lib/Chatroom.php:137 ../../include/photos.php:27
 #: ../../include/attach.php:141 ../../include/attach.php:189
 #: ../../include/attach.php:252 ../../include/attach.php:266
 #: ../../include/attach.php:273 ../../include/attach.php:338
 #: ../../include/attach.php:352 ../../include/attach.php:359
-#: ../../include/attach.php:437 ../../include/attach.php:895
-#: ../../include/attach.php:966 ../../include/attach.php:1118
-#: ../../include/photos.php:27
+#: ../../include/attach.php:439 ../../include/attach.php:901
+#: ../../include/attach.php:972 ../../include/attach.php:1124
+#: ../../include/items.php:3450
 msgid "Permission denied."
 msgstr "הרשאה נדחתה."
 
@@ -232,8 +234,8 @@ msgid "Not Found"
 msgstr "לא נמצא"
 
 #: ../../Zotlabs/Web/Router.php:149 ../../Zotlabs/Module/Block.php:79
-#: ../../Zotlabs/Module/Display.php:117 ../../Zotlabs/Module/Help.php:97
-#: ../../Zotlabs/Module/Page.php:93
+#: ../../Zotlabs/Module/Display.php:118 ../../Zotlabs/Module/Help.php:97
+#: ../../Zotlabs/Module/Page.php:94
 msgid "Page not found."
 msgstr "עמוד לא נמצא."
 
@@ -247,7 +249,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Openid.php:183
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
-msgstr ""
+msgstr "ברוך בואך %s. אימות מרוחק הצליח."
 
 #: ../../Zotlabs/Module/Achievements.php:15 ../../Zotlabs/Module/Blocks.php:33
 #: ../../Zotlabs/Module/Connect.php:17 ../../Zotlabs/Module/Editblock.php:31
@@ -255,7 +257,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Editwebpage.php:33
 #: ../../Zotlabs/Module/Filestorage.php:60 ../../Zotlabs/Module/Hcard.php:12
 #: ../../Zotlabs/Module/Layouts.php:31 ../../Zotlabs/Module/Profile.php:20
-#: ../../Zotlabs/Module/Webpages.php:34 ../../include/channel.php:837
+#: ../../Zotlabs/Module/Webpages.php:34 ../../include/channel.php:818
 msgid "Requested profile is not available."
 msgstr "פרופיל מבוקש לא זמין."
 
@@ -263,40 +265,40 @@ msgstr "פרופיל מבוקש לא זמין."
 msgid "Some blurb about what to do when you're new here"
 msgstr ""
 
-#: ../../Zotlabs/Module/Blocks.php:97 ../../Zotlabs/Module/Blocks.php:152
+#: ../../Zotlabs/Module/Blocks.php:97 ../../Zotlabs/Module/Blocks.php:155
 #: ../../Zotlabs/Module/Editblock.php:108
 msgid "Block Name"
 msgstr ""
 
-#: ../../Zotlabs/Module/Blocks.php:151 ../../include/text.php:2265
+#: ../../Zotlabs/Module/Blocks.php:154 ../../include/text.php:2266
 msgid "Blocks"
 msgstr ""
 
-#: ../../Zotlabs/Module/Blocks.php:153
+#: ../../Zotlabs/Module/Blocks.php:156
 msgid "Block Title"
 msgstr ""
 
-#: ../../Zotlabs/Module/Blocks.php:154 ../../Zotlabs/Module/Layouts.php:188
-#: ../../Zotlabs/Module/Menu.php:114 ../../Zotlabs/Module/Webpages.php:198
-#: ../../include/page_widgets.php:44
+#: ../../Zotlabs/Module/Blocks.php:157 ../../Zotlabs/Module/Layouts.php:190
+#: ../../Zotlabs/Module/Menu.php:114 ../../Zotlabs/Module/Webpages.php:206
+#: ../../include/page_widgets.php:47
 msgid "Created"
 msgstr "נוצר"
 
-#: ../../Zotlabs/Module/Blocks.php:155 ../../Zotlabs/Module/Layouts.php:189
-#: ../../Zotlabs/Module/Menu.php:115 ../../Zotlabs/Module/Webpages.php:199
-#: ../../include/page_widgets.php:45
+#: ../../Zotlabs/Module/Blocks.php:158 ../../Zotlabs/Module/Layouts.php:191
+#: ../../Zotlabs/Module/Menu.php:115 ../../Zotlabs/Module/Webpages.php:207
+#: ../../include/page_widgets.php:48
 msgid "Edited"
 msgstr "נערך"
 
-#: ../../Zotlabs/Module/Blocks.php:158 ../../Zotlabs/Module/Layouts.php:191
-#: ../../Zotlabs/Module/Photos.php:1072 ../../Zotlabs/Module/Webpages.php:188
-#: ../../include/conversation.php:1208
+#: ../../Zotlabs/Module/Blocks.php:161 ../../Zotlabs/Module/Layouts.php:193
+#: ../../Zotlabs/Module/Photos.php:1072 ../../Zotlabs/Module/Webpages.php:196
+#: ../../include/conversation.php:1219
 msgid "Share"
 msgstr "שתף"
 
-#: ../../Zotlabs/Module/Blocks.php:163 ../../Zotlabs/Module/Layouts.php:195
-#: ../../Zotlabs/Module/Pubsites.php:47 ../../Zotlabs/Module/Webpages.php:193
-#: ../../include/page_widgets.php:39
+#: ../../Zotlabs/Module/Blocks.php:166 ../../Zotlabs/Module/Layouts.php:197
+#: ../../Zotlabs/Module/Pubsites.php:47 ../../Zotlabs/Module/Webpages.php:201
+#: ../../include/page_widgets.php:42
 msgid "View"
 msgstr "תצוגה"
 
@@ -350,7 +352,7 @@ msgstr "יבא"
 
 #: ../../Zotlabs/Module/Cal.php:338 ../../Zotlabs/Module/Chat.php:196
 #: ../../Zotlabs/Module/Chat.php:238 ../../Zotlabs/Module/Connect.php:98
-#: ../../Zotlabs/Module/Connedit.php:731 ../../Zotlabs/Module/Events.php:475
+#: ../../Zotlabs/Module/Connedit.php:737 ../../Zotlabs/Module/Events.php:475
 #: ../../Zotlabs/Module/Events.php:672 ../../Zotlabs/Module/Group.php:85
 #: ../../Zotlabs/Module/Filestorage.php:162
 #: ../../Zotlabs/Module/Import.php:550
@@ -374,8 +376,8 @@ msgstr "יבא"
 #: ../../Zotlabs/Module/Setup.php:353 ../../Zotlabs/Module/Sources.php:114
 #: ../../Zotlabs/Module/Sources.php:149 ../../Zotlabs/Module/Thing.php:316
 #: ../../Zotlabs/Module/Thing.php:362 ../../Zotlabs/Module/Xchan.php:15
-#: ../../Zotlabs/Lib/ThreadItem.php:710 ../../include/widgets.php:757
-#: ../../include/widgets.php:769 ../../include/js_strings.php:22
+#: ../../Zotlabs/Lib/ThreadItem.php:710 ../../include/js_strings.php:22
+#: ../../include/widgets.php:757 ../../include/widgets.php:769
 #: ../../view/theme/redbasic/php/config.php:99
 msgid "Submit"
 msgstr "שלח"
@@ -385,6 +387,7 @@ msgid "Today"
 msgstr "היום"
 
 #: ../../Zotlabs/Module/Channel.php:29 ../../Zotlabs/Module/Chat.php:25
+#: ../../Zotlabs/Module/Wiki.php:20
 msgid "You must be logged in to see this page."
 msgstr "עליך להתחבר כדי לראות את עמוד זה."
 
@@ -425,19 +428,19 @@ msgid "Bookmark this room"
 msgstr "סמן את חדר זה"
 
 #: ../../Zotlabs/Module/Chat.php:205 ../../Zotlabs/Module/Mail.php:205
-#: ../../Zotlabs/Module/Mail.php:314 ../../include/conversation.php:1176
+#: ../../Zotlabs/Module/Mail.php:314 ../../include/conversation.php:1181
 msgid "Please enter a link URL:"
 msgstr "אנא הזן URL קישור:"
 
 #: ../../Zotlabs/Module/Chat.php:206 ../../Zotlabs/Module/Mail.php:258
 #: ../../Zotlabs/Module/Mail.php:383 ../../Zotlabs/Lib/ThreadItem.php:722
-#: ../../include/conversation.php:1256
+#: ../../include/conversation.php:1271
 msgid "Encrypt text"
 msgstr "הצפן טקסט"
 
 #: ../../Zotlabs/Module/Chat.php:207 ../../Zotlabs/Module/Editblock.php:111
 #: ../../Zotlabs/Module/Editwebpage.php:147 ../../Zotlabs/Module/Mail.php:252
-#: ../../Zotlabs/Module/Mail.php:377 ../../include/conversation.php:1143
+#: ../../Zotlabs/Module/Mail.php:377 ../../include/conversation.php:1146
 msgid "Insert web link"
 msgstr "הכנס קישור רשת"
 
@@ -573,7 +576,7 @@ msgstr ""
 msgid "is now connected to"
 msgstr "כעת מחובר אל"
 
-#: ../../Zotlabs/Module/Connedit.php:379 ../../Zotlabs/Module/Connedit.php:654
+#: ../../Zotlabs/Module/Connedit.php:379 ../../Zotlabs/Module/Connedit.php:660
 #: ../../Zotlabs/Module/Events.php:459 ../../Zotlabs/Module/Events.php:460
 #: ../../Zotlabs/Module/Events.php:469 ../../Zotlabs/Module/Api.php:89
 #: ../../Zotlabs/Module/Filestorage.php:157
@@ -585,7 +588,7 @@ msgstr "כעת מחובר אל"
 #: ../../Zotlabs/Module/Removeme.php:61 ../../Zotlabs/Module/Settings.php:581
 #: ../../include/dir_fns.php:143 ../../include/dir_fns.php:144
 #: ../../include/dir_fns.php:145 ../../view/theme/redbasic/php/config.php:105
-#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1707
+#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1708
 msgid "No"
 msgstr "לא"
 
@@ -600,7 +603,7 @@ msgstr "לא"
 #: ../../Zotlabs/Module/Removeme.php:61 ../../Zotlabs/Module/Settings.php:581
 #: ../../include/dir_fns.php:143 ../../include/dir_fns.php:144
 #: ../../include/dir_fns.php:145 ../../view/theme/redbasic/php/config.php:105
-#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1707
+#: ../../view/theme/redbasic/php/config.php:130 ../../boot.php:1708
 msgid "Yes"
 msgstr "כן"
 
@@ -608,270 +611,270 @@ msgstr "כן"
 msgid "Could not access address book record."
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:425
+#: ../../Zotlabs/Module/Connedit.php:431
 msgid "Refresh failed - channel is currently unavailable."
 msgstr "רענון נכשל - ערוץ אינו זמין כעת."
 
-#: ../../Zotlabs/Module/Connedit.php:440 ../../Zotlabs/Module/Connedit.php:449
-#: ../../Zotlabs/Module/Connedit.php:458 ../../Zotlabs/Module/Connedit.php:467
-#: ../../Zotlabs/Module/Connedit.php:480
+#: ../../Zotlabs/Module/Connedit.php:446 ../../Zotlabs/Module/Connedit.php:455
+#: ../../Zotlabs/Module/Connedit.php:464 ../../Zotlabs/Module/Connedit.php:473
+#: ../../Zotlabs/Module/Connedit.php:486
 msgid "Unable to set address book parameters."
 msgstr "לא מסוגל לקבוע פרמטרים של פנקס כתובות"
 
-#: ../../Zotlabs/Module/Connedit.php:503
+#: ../../Zotlabs/Module/Connedit.php:509
 msgid "Connection has been removed."
 msgstr "חיבור הוסר."
 
-#: ../../Zotlabs/Module/Connedit.php:519 ../../Zotlabs/Lib/Apps.php:219
-#: ../../include/nav.php:86 ../../include/conversation.php:954
+#: ../../Zotlabs/Module/Connedit.php:525 ../../Zotlabs/Lib/Apps.php:220
+#: ../../include/conversation.php:957 ../../include/nav.php:86
 msgid "View Profile"
 msgstr "הצג פרופיל"
 
-#: ../../Zotlabs/Module/Connedit.php:522
+#: ../../Zotlabs/Module/Connedit.php:528
 #, php-format
 msgid "View %s's profile"
 msgstr "צפה בפרופיל של %s"
 
-#: ../../Zotlabs/Module/Connedit.php:526
+#: ../../Zotlabs/Module/Connedit.php:532
 msgid "Refresh Permissions"
 msgstr "רענן הרשאות"
 
-#: ../../Zotlabs/Module/Connedit.php:529
+#: ../../Zotlabs/Module/Connedit.php:535
 msgid "Fetch updated permissions"
 msgstr "תפוס הרשאות מעודכנות"
 
-#: ../../Zotlabs/Module/Connedit.php:533
+#: ../../Zotlabs/Module/Connedit.php:539
 msgid "Recent Activity"
 msgstr "פעילות אחרונה"
 
-#: ../../Zotlabs/Module/Connedit.php:536
+#: ../../Zotlabs/Module/Connedit.php:542
 msgid "View recent posts and comments"
 msgstr "צפה בפוסטים ותגובות אחרונות"
 
-#: ../../Zotlabs/Module/Connedit.php:540 ../../Zotlabs/Module/Admin.php:1041
+#: ../../Zotlabs/Module/Connedit.php:546 ../../Zotlabs/Module/Admin.php:1041
 msgid "Unblock"
 msgstr "בטל חסימה"
 
-#: ../../Zotlabs/Module/Connedit.php:540 ../../Zotlabs/Module/Admin.php:1040
+#: ../../Zotlabs/Module/Connedit.php:546 ../../Zotlabs/Module/Admin.php:1040
 msgid "Block"
 msgstr "חסום"
 
-#: ../../Zotlabs/Module/Connedit.php:543
+#: ../../Zotlabs/Module/Connedit.php:549
 msgid "Block (or Unblock) all communications with this connection"
 msgstr "חסום (או בטל חסימה) את כל ההתקשרויות עם חיבור זה"
 
-#: ../../Zotlabs/Module/Connedit.php:544
+#: ../../Zotlabs/Module/Connedit.php:550
 msgid "This connection is blocked!"
 msgstr "חיבור זה הינו חסום!"
 
-#: ../../Zotlabs/Module/Connedit.php:548
+#: ../../Zotlabs/Module/Connedit.php:554
 msgid "Unignore"
 msgstr "בטל התעלמות"
 
-#: ../../Zotlabs/Module/Connedit.php:548
+#: ../../Zotlabs/Module/Connedit.php:554
 #: ../../Zotlabs/Module/Connections.php:277
 #: ../../Zotlabs/Module/Notifications.php:55
 msgid "Ignore"
 msgstr "התעלמות"
 
-#: ../../Zotlabs/Module/Connedit.php:551
+#: ../../Zotlabs/Module/Connedit.php:557
 msgid "Ignore (or Unignore) all inbound communications from this connection"
 msgstr "התעלם (או בטל התעלמות) מכל ההתקשרויות שפונות כלפי פנים (inbound) מתוך חיבור זה"
 
-#: ../../Zotlabs/Module/Connedit.php:552
+#: ../../Zotlabs/Module/Connedit.php:558
 msgid "This connection is ignored!"
 msgstr "חיבור זה הינו מנוכר!"
 
-#: ../../Zotlabs/Module/Connedit.php:556
+#: ../../Zotlabs/Module/Connedit.php:562
 msgid "Unarchive"
 msgstr "בטל גניזה"
 
-#: ../../Zotlabs/Module/Connedit.php:556
+#: ../../Zotlabs/Module/Connedit.php:562
 msgid "Archive"
 msgstr "גנוז"
 
-#: ../../Zotlabs/Module/Connedit.php:559
+#: ../../Zotlabs/Module/Connedit.php:565
 msgid ""
 "Archive (or Unarchive) this connection - mark channel dead but keep content"
 msgstr "גנוז את (או בטל את גניזת) חיבור זה - סמן את עמוד זה כמת אך השאר תוכן"
 
-#: ../../Zotlabs/Module/Connedit.php:560
+#: ../../Zotlabs/Module/Connedit.php:566
 msgid "This connection is archived!"
 msgstr "חיבור זה הינו גנוז!"
 
-#: ../../Zotlabs/Module/Connedit.php:564
+#: ../../Zotlabs/Module/Connedit.php:570
 msgid "Unhide"
-msgstr ""
+msgstr "חשוף"
 
-#: ../../Zotlabs/Module/Connedit.php:564
+#: ../../Zotlabs/Module/Connedit.php:570
 msgid "Hide"
 msgstr "הסתר"
 
-#: ../../Zotlabs/Module/Connedit.php:567
+#: ../../Zotlabs/Module/Connedit.php:573
 msgid "Hide or Unhide this connection from your other connections"
-msgstr ""
+msgstr "הסתר או חשוף את חיבור זה מן החיבורים האחרים שלך"
 
-#: ../../Zotlabs/Module/Connedit.php:568
+#: ../../Zotlabs/Module/Connedit.php:574
 msgid "This connection is hidden!"
 msgstr "חיבור זה הינו מוסתר!"
 
-#: ../../Zotlabs/Module/Connedit.php:575
+#: ../../Zotlabs/Module/Connedit.php:581
 msgid "Delete this connection"
 msgstr "מחק את חיבור זה"
 
-#: ../../Zotlabs/Module/Connedit.php:590 ../../include/widgets.php:493
+#: ../../Zotlabs/Module/Connedit.php:596 ../../include/widgets.php:493
 msgid "Me"
 msgstr "אני"
 
-#: ../../Zotlabs/Module/Connedit.php:591 ../../include/widgets.php:494
+#: ../../Zotlabs/Module/Connedit.php:597 ../../include/widgets.php:494
 msgid "Family"
 msgstr "משפחה"
 
-#: ../../Zotlabs/Module/Connedit.php:592 ../../Zotlabs/Module/Settings.php:342
+#: ../../Zotlabs/Module/Connedit.php:598 ../../Zotlabs/Module/Settings.php:342
 #: ../../Zotlabs/Module/Settings.php:346 ../../Zotlabs/Module/Settings.php:347
 #: ../../Zotlabs/Module/Settings.php:350 ../../Zotlabs/Module/Settings.php:361
-#: ../../include/widgets.php:495 ../../include/selectors.php:123
-#: ../../include/channel.php:389 ../../include/channel.php:390
-#: ../../include/channel.php:397
+#: ../../include/selectors.php:123 ../../include/channel.php:389
+#: ../../include/channel.php:390 ../../include/channel.php:397
+#: ../../include/widgets.php:495
 msgid "Friends"
 msgstr "חברים"
 
-#: ../../Zotlabs/Module/Connedit.php:593 ../../include/widgets.php:496
+#: ../../Zotlabs/Module/Connedit.php:599 ../../include/widgets.php:496
 msgid "Acquaintances"
 msgstr "מכרים"
 
-#: ../../Zotlabs/Module/Connedit.php:594
+#: ../../Zotlabs/Module/Connedit.php:600
 #: ../../Zotlabs/Module/Connections.php:92
 #: ../../Zotlabs/Module/Connections.php:107 ../../include/widgets.php:497
 msgid "All"
 msgstr "הכל"
 
-#: ../../Zotlabs/Module/Connedit.php:654
+#: ../../Zotlabs/Module/Connedit.php:660
 msgid "Approve this connection"
 msgstr "אשר את חיבור זה"
 
-#: ../../Zotlabs/Module/Connedit.php:654
+#: ../../Zotlabs/Module/Connedit.php:660
 msgid "Accept connection to allow communication"
 msgstr "אשר חיבור כדי להתיר תקשורת"
 
-#: ../../Zotlabs/Module/Connedit.php:659
+#: ../../Zotlabs/Module/Connedit.php:665
 msgid "Set Affinity"
 msgstr "הגדר קירבה"
 
-#: ../../Zotlabs/Module/Connedit.php:662
+#: ../../Zotlabs/Module/Connedit.php:668
 msgid "Set Profile"
 msgstr "הגדר פרופיל"
 
-#: ../../Zotlabs/Module/Connedit.php:665
+#: ../../Zotlabs/Module/Connedit.php:671
 msgid "Set Affinity & Profile"
 msgstr "הגדר קירבה וגם פרופיל"
 
-#: ../../Zotlabs/Module/Connedit.php:698
+#: ../../Zotlabs/Module/Connedit.php:704
 msgid "none"
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:702 ../../include/widgets.php:614
+#: ../../Zotlabs/Module/Connedit.php:708 ../../include/widgets.php:614
 msgid "Connection Default Permissions"
 msgstr "הרשאות שגרתיות של חיבור"
 
-#: ../../Zotlabs/Module/Connedit.php:702 ../../include/items.php:3926
+#: ../../Zotlabs/Module/Connedit.php:708 ../../include/items.php:3937
 #, php-format
 msgid "Connection: %s"
 msgstr "חיבור: %s"
 
-#: ../../Zotlabs/Module/Connedit.php:703
+#: ../../Zotlabs/Module/Connedit.php:709
 msgid "Apply these permissions automatically"
 msgstr "החל את הרשאות אלה אוטומטית"
 
-#: ../../Zotlabs/Module/Connedit.php:703
+#: ../../Zotlabs/Module/Connedit.php:709
 msgid "Connection requests will be approved without your interaction"
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:705
+#: ../../Zotlabs/Module/Connedit.php:711
 msgid "This connection's primary address is"
 msgstr "הכתובת העיקרית של חיבור זה היא"
 
-#: ../../Zotlabs/Module/Connedit.php:706
+#: ../../Zotlabs/Module/Connedit.php:712
 msgid "Available locations:"
 msgstr "מיקומים זמינים:"
 
-#: ../../Zotlabs/Module/Connedit.php:710
+#: ../../Zotlabs/Module/Connedit.php:716
 msgid ""
 "The permissions indicated on this page will be applied to all new "
 "connections."
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:711
+#: ../../Zotlabs/Module/Connedit.php:717
 msgid "Connection Tools"
 msgstr "כלי חיבור"
 
-#: ../../Zotlabs/Module/Connedit.php:713
+#: ../../Zotlabs/Module/Connedit.php:719
 msgid "Slide to adjust your degree of friendship"
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:714 ../../Zotlabs/Module/Rate.php:159
+#: ../../Zotlabs/Module/Connedit.php:720 ../../Zotlabs/Module/Rate.php:159
 #: ../../include/js_strings.php:20
 msgid "Rating"
 msgstr "דירוג"
 
-#: ../../Zotlabs/Module/Connedit.php:715
+#: ../../Zotlabs/Module/Connedit.php:721
 msgid "Slide to adjust your rating"
 msgstr "החלק כדי להתאים את הדירוג שלך"
 
-#: ../../Zotlabs/Module/Connedit.php:716 ../../Zotlabs/Module/Connedit.php:721
+#: ../../Zotlabs/Module/Connedit.php:722 ../../Zotlabs/Module/Connedit.php:727
 msgid "Optionally explain your rating"
 msgstr "הסבר לפי הצורך את הדירוג שלך"
 
-#: ../../Zotlabs/Module/Connedit.php:718
+#: ../../Zotlabs/Module/Connedit.php:724
 msgid "Custom Filter"
 msgstr "מסנן מותאם"
 
-#: ../../Zotlabs/Module/Connedit.php:719
+#: ../../Zotlabs/Module/Connedit.php:725
 msgid "Only import posts with this text"
 msgstr "יבא רק פוסטים עם טקסט זה"
 
-#: ../../Zotlabs/Module/Connedit.php:719 ../../Zotlabs/Module/Connedit.php:720
+#: ../../Zotlabs/Module/Connedit.php:725 ../../Zotlabs/Module/Connedit.php:726
 msgid ""
 "words one per line or #tags or /patterns/ or lang=xx, leave blank to import "
 "all posts"
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:720
+#: ../../Zotlabs/Module/Connedit.php:726
 msgid "Do not import posts with this text"
 msgstr "אל תייבא פוסטים עם טקסט זה"
 
-#: ../../Zotlabs/Module/Connedit.php:722
+#: ../../Zotlabs/Module/Connedit.php:728
 msgid "This information is public!"
 msgstr "מידע זה הינו ציבורי!"
 
-#: ../../Zotlabs/Module/Connedit.php:727
+#: ../../Zotlabs/Module/Connedit.php:733
 msgid "Connection Pending Approval"
 msgstr "חיבור ממתין לאישור"
 
-#: ../../Zotlabs/Module/Connedit.php:730
+#: ../../Zotlabs/Module/Connedit.php:736
 msgid "inherited"
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:732
+#: ../../Zotlabs/Module/Connedit.php:738
 #, php-format
 msgid ""
 "Please choose the profile you would like to display to %s when viewing your "
 "profile securely."
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:734
+#: ../../Zotlabs/Module/Connedit.php:740
 msgid "Their Settings"
 msgstr "ההגדרות שלהם"
 
-#: ../../Zotlabs/Module/Connedit.php:735
+#: ../../Zotlabs/Module/Connedit.php:741
 msgid "My Settings"
 msgstr "ההגדרות שלי"
 
-#: ../../Zotlabs/Module/Connedit.php:737
+#: ../../Zotlabs/Module/Connedit.php:743
 msgid "Individual Permissions"
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:738
+#: ../../Zotlabs/Module/Connedit.php:744
 msgid ""
 "Some permissions may be inherited from your channel's <a "
 "href=\"settings\"><strong>privacy settings</strong></a>, which have higher "
@@ -879,7 +882,7 @@ msgid ""
 " settings here."
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:739
+#: ../../Zotlabs/Module/Connedit.php:745
 msgid ""
 "Some permissions may be inherited from your channel's <a "
 "href=\"settings\"><strong>privacy settings</strong></a>, which have higher "
@@ -887,7 +890,7 @@ msgid ""
 "they wont have any impact unless the inherited setting changes."
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:740
+#: ../../Zotlabs/Module/Connedit.php:746
 msgid "Last update:"
 msgstr "עדכון אחרון:"
 
@@ -902,8 +905,8 @@ msgstr "גישה ציבורית נדחתה."
 #, php-format
 msgid "%d rating"
 msgid_plural "%d ratings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "דירוג %d"
+msgstr[1] "%d דירוגים"
 
 #: ../../Zotlabs/Module/Directory.php:254
 msgid "Gender: "
@@ -917,12 +920,12 @@ msgstr "מצב: "
 msgid "Homepage: "
 msgstr "עמוד בית: "
 
-#: ../../Zotlabs/Module/Directory.php:306 ../../include/channel.php:1183
+#: ../../Zotlabs/Module/Directory.php:306 ../../include/channel.php:1164
 msgid "Age:"
 msgstr "גיל:"
 
 #: ../../Zotlabs/Module/Directory.php:311 ../../include/event.php:52
-#: ../../include/event.php:84 ../../include/channel.php:1027
+#: ../../include/event.php:84 ../../include/channel.php:1008
 #: ../../include/bb2diaspora.php:507
 msgid "Location:"
 msgstr "מיקום:"
@@ -931,18 +934,18 @@ msgstr "מיקום:"
 msgid "Description:"
 msgstr "תיאור:"
 
-#: ../../Zotlabs/Module/Directory.php:322 ../../include/channel.php:1199
+#: ../../Zotlabs/Module/Directory.php:322 ../../include/channel.php:1180
 msgid "Hometown:"
 msgstr "עיר מגורים:"
 
-#: ../../Zotlabs/Module/Directory.php:324 ../../include/channel.php:1207
+#: ../../Zotlabs/Module/Directory.php:324 ../../include/channel.php:1188
 msgid "About:"
 msgstr "אודות:"
 
 #: ../../Zotlabs/Module/Directory.php:325 ../../Zotlabs/Module/Match.php:68
-#: ../../Zotlabs/Module/Suggest.php:56 ../../include/widgets.php:147
-#: ../../include/widgets.php:184 ../../include/connections.php:78
-#: ../../include/conversation.php:956 ../../include/channel.php:1012
+#: ../../Zotlabs/Module/Suggest.php:56 ../../include/conversation.php:959
+#: ../../include/channel.php:993 ../../include/connections.php:78
+#: ../../include/widgets.php:147 ../../include/widgets.php:184
 msgid "Connect"
 msgstr "התחבר"
 
@@ -1021,7 +1024,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Display.php:40 ../../Zotlabs/Module/Filestorage.php:33
 #: ../../Zotlabs/Module/Admin.php:164 ../../Zotlabs/Module/Admin.php:1255
 #: ../../Zotlabs/Module/Admin.php:1561 ../../Zotlabs/Module/Thing.php:89
-#: ../../Zotlabs/Module/Viewsrc.php:24 ../../include/items.php:3359
+#: ../../Zotlabs/Module/Viewsrc.php:24 ../../include/items.php:3371
 msgid "Item not found."
 msgstr "פריט לא נמצא."
 
@@ -1031,7 +1034,7 @@ msgstr "פריט לא נמצא."
 msgid "Item not found"
 msgstr "פריט לא נמצא"
 
-#: ../../Zotlabs/Module/Editblock.php:124 ../../include/conversation.php:1228
+#: ../../Zotlabs/Module/Editblock.php:124 ../../include/conversation.php:1243
 msgid "Title (optional)"
 msgstr "כותרת (רשות):"
 
@@ -1077,7 +1080,7 @@ msgstr "גנוזים"
 
 #: ../../Zotlabs/Module/Connections.php:76
 #: ../../Zotlabs/Module/Connections.php:86 ../../Zotlabs/Module/Menu.php:116
-#: ../../include/conversation.php:1535
+#: ../../include/conversation.php:1550
 msgid "New"
 msgstr "חדש"
 
@@ -1170,7 +1173,7 @@ msgid "Connections"
 msgstr "חיבורים"
 
 #: ../../Zotlabs/Module/Connections.php:306 ../../Zotlabs/Module/Search.php:44
-#: ../../Zotlabs/Lib/Apps.php:228 ../../include/text.php:945
+#: ../../Zotlabs/Lib/Apps.php:229 ../../include/text.php:945
 #: ../../include/text.php:957 ../../include/nav.php:165
 #: ../../include/acl_selectors.php:276
 msgid "Search"
@@ -1200,7 +1203,7 @@ msgid "Image resize failed."
 msgstr "שינוי גודל תמונה נכשל."
 
 #: ../../Zotlabs/Module/Cover_photo.php:168
-#: ../../Zotlabs/Module/Profile_photo.php:192 ../../include/photos.php:144
+#: ../../Zotlabs/Module/Profile_photo.php:192 ../../include/photos.php:148
 msgid "Unable to process image"
 msgstr "לא מסוגל לעבד תמונה"
 
@@ -1214,30 +1217,30 @@ msgstr "העלאת תמונה נכשלה."
 msgid "Unable to process image."
 msgstr "לא מסוגל לעבד תמונה."
 
-#: ../../Zotlabs/Module/Cover_photo.php:233 ../../include/items.php:4270
+#: ../../Zotlabs/Module/Cover_photo.php:233 ../../include/items.php:4298
 msgid "female"
 msgstr "נקבה"
 
-#: ../../Zotlabs/Module/Cover_photo.php:234 ../../include/items.php:4271
+#: ../../Zotlabs/Module/Cover_photo.php:234 ../../include/items.php:4299
 #, php-format
 msgid "%1$s updated her %2$s"
-msgstr ""
+msgstr "%1$s עדכנה את ה%2$s שלה"
 
-#: ../../Zotlabs/Module/Cover_photo.php:235 ../../include/items.php:4272
+#: ../../Zotlabs/Module/Cover_photo.php:235 ../../include/items.php:4300
 msgid "male"
 msgstr "זכר"
 
-#: ../../Zotlabs/Module/Cover_photo.php:236 ../../include/items.php:4273
+#: ../../Zotlabs/Module/Cover_photo.php:236 ../../include/items.php:4301
 #, php-format
 msgid "%1$s updated his %2$s"
-msgstr ""
+msgstr "%1$s עדכן את ה%2$s שלו"
 
-#: ../../Zotlabs/Module/Cover_photo.php:238 ../../include/items.php:4275
+#: ../../Zotlabs/Module/Cover_photo.php:238 ../../include/items.php:4303
 #, php-format
 msgid "%1$s updated their %2$s"
-msgstr ""
+msgstr "%1$s עדכנו את ה%2$s שלהם"
 
-#: ../../Zotlabs/Module/Cover_photo.php:240 ../../include/channel.php:1661
+#: ../../Zotlabs/Module/Cover_photo.php:240 ../../include/channel.php:1642
 msgid "cover photo"
 msgstr "תצלום שער"
 
@@ -1327,8 +1330,8 @@ msgid "Event not found."
 msgstr "אירוע לא נמצא."
 
 #: ../../Zotlabs/Module/Events.php:254 ../../Zotlabs/Module/Like.php:373
-#: ../../Zotlabs/Module/Tagger.php:51 ../../include/event.php:949
-#: ../../include/text.php:1943 ../../include/conversation.php:123
+#: ../../Zotlabs/Module/Tagger.php:51 ../../include/text.php:1944
+#: ../../include/event.php:949 ../../include/conversation.php:123
 msgid "event"
 msgstr "אירוע"
 
@@ -1413,12 +1416,12 @@ msgid "Share this event"
 msgstr "שתף את אירוע זה"
 
 #: ../../Zotlabs/Module/Events.php:470 ../../Zotlabs/Module/Photos.php:1093
-#: ../../Zotlabs/Module/Webpages.php:194 ../../Zotlabs/Lib/ThreadItem.php:719
-#: ../../include/conversation.php:1187 ../../include/page_widgets.php:40
+#: ../../Zotlabs/Module/Webpages.php:202 ../../Zotlabs/Lib/ThreadItem.php:719
+#: ../../include/conversation.php:1198 ../../include/page_widgets.php:43
 msgid "Preview"
 msgstr "תצוגה מקדימה"
 
-#: ../../Zotlabs/Module/Events.php:471 ../../include/conversation.php:1232
+#: ../../Zotlabs/Module/Events.php:471 ../../include/conversation.php:1247
 msgid "Permission settings"
 msgstr "הגדרות הרשאה"
 
@@ -1446,21 +1449,22 @@ msgstr "אירוע הוסר"
 msgid "Failed to remove event"
 msgstr "נכשל להסיר אירוע"
 
-#: ../../Zotlabs/Module/Fbrowser.php:29 ../../Zotlabs/Lib/Apps.php:220
-#: ../../include/nav.php:92 ../../include/conversation.php:1632
+#: ../../Zotlabs/Module/Fbrowser.php:29 ../../Zotlabs/Lib/Apps.php:221
+#: ../../include/conversation.php:1647 ../../include/nav.php:92
 msgid "Photos"
 msgstr "תצלומים"
 
 #: ../../Zotlabs/Module/Fbrowser.php:66 ../../Zotlabs/Module/Fbrowser.php:88
 #: ../../Zotlabs/Module/Admin.php:1406 ../../Zotlabs/Module/Settings.php:591
 #: ../../Zotlabs/Module/Settings.php:617 ../../Zotlabs/Module/Tagrm.php:15
-#: ../../Zotlabs/Module/Tagrm.php:138 ../../include/conversation.php:1259
+#: ../../Zotlabs/Module/Tagrm.php:138 ../../include/conversation.php:1235
+#: ../../include/conversation.php:1274
 msgid "Cancel"
 msgstr "ביטול"
 
 #: ../../Zotlabs/Module/Dirsearch.php:25 ../../Zotlabs/Module/Regdir.php:49
 msgid "This site is not a directory server"
-msgstr ""
+msgstr "אתר זה אינו שרת ספרייה"
 
 #: ../../Zotlabs/Module/Dirsearch.php:33
 msgid "This directory server requires an access token"
@@ -1538,17 +1542,17 @@ msgstr "דואר כפול נתקבל"
 msgid "mail delivered"
 msgstr "דואר נמסר"
 
-#: ../../Zotlabs/Module/Editlayout.php:126
-#: ../../Zotlabs/Module/Layouts.php:127 ../../Zotlabs/Module/Layouts.php:186
+#: ../../Zotlabs/Module/Editlayout.php:127
+#: ../../Zotlabs/Module/Layouts.php:128 ../../Zotlabs/Module/Layouts.php:188
 msgid "Layout Name"
 msgstr ""
 
-#: ../../Zotlabs/Module/Editlayout.php:127
-#: ../../Zotlabs/Module/Layouts.php:130
+#: ../../Zotlabs/Module/Editlayout.php:128
+#: ../../Zotlabs/Module/Layouts.php:131
 msgid "Layout Description (Optional)"
 msgstr ""
 
-#: ../../Zotlabs/Module/Editlayout.php:135
+#: ../../Zotlabs/Module/Editlayout.php:136
 msgid "Edit Layout"
 msgstr ""
 
@@ -1581,7 +1585,7 @@ msgid "Could not create privacy group."
 msgstr "לא היתה אפשרות ליצור קבוצת פרטיות."
 
 #: ../../Zotlabs/Module/Group.php:42 ../../Zotlabs/Module/Group.php:141
-#: ../../include/items.php:3893
+#: ../../include/items.php:3904
 msgid "Privacy group not found."
 msgstr "קבוצת פרטיות לא נמצאה."
 
@@ -1619,19 +1623,19 @@ msgstr "חברים"
 
 #: ../../Zotlabs/Module/Group.php:199
 msgid "All Connected Channels"
-msgstr ""
+msgstr "כל הערוצים המחוברים"
 
 #: ../../Zotlabs/Module/Group.php:231
 msgid "Click on a channel to add or remove."
-msgstr ""
+msgstr "לחץ על ערוץ כדי להוסיף או להסיר"
 
 #: ../../Zotlabs/Module/Ffsapi.php:12
 msgid "Share content from Firefox to $Projectname"
-msgstr ""
+msgstr "שתף תוכן מתוך Firefox אל $Projectname"
 
 #: ../../Zotlabs/Module/Ffsapi.php:15
 msgid "Activate the Firefox $Projectname provider"
-msgstr ""
+msgstr "הפעל את ספק $Projectname של Firefox"
 
 #: ../../Zotlabs/Module/Api.php:61 ../../Zotlabs/Module/Api.php:85
 msgid "Authorize application connection"
@@ -1661,7 +1665,7 @@ msgid "Help:"
 msgstr "עזרה:"
 
 #: ../../Zotlabs/Module/Help.php:85 ../../Zotlabs/Module/Help.php:90
-#: ../../Zotlabs/Module/Layouts.php:183 ../../Zotlabs/Lib/Apps.php:223
+#: ../../Zotlabs/Module/Layouts.php:185 ../../Zotlabs/Lib/Apps.php:224
 #: ../../include/nav.php:159
 msgid "Help"
 msgstr "עזרה"
@@ -1714,8 +1718,8 @@ msgstr "הצג URL לקובץ זה"
 msgid "Notify your contacts about this file"
 msgstr ""
 
-#: ../../Zotlabs/Module/Apps.php:47 ../../include/widgets.php:102
-#: ../../include/nav.php:163
+#: ../../Zotlabs/Module/Apps.php:47 ../../include/nav.php:163
+#: ../../include/widgets.php:102
 msgid "Apps"
 msgstr "אפליקציות"
 
@@ -1820,23 +1824,23 @@ msgid ""
 "only once and leave this page open until finished."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:178
+#: ../../Zotlabs/Module/Item.php:179
 msgid "Unable to locate original post."
 msgstr "לא מסוגל לאתר פוסט מקורי."
 
-#: ../../Zotlabs/Module/Item.php:427
+#: ../../Zotlabs/Module/Item.php:428
 msgid "Empty post discarded."
 msgstr "פוסט ריק סולק."
 
-#: ../../Zotlabs/Module/Item.php:467
+#: ../../Zotlabs/Module/Item.php:468
 msgid "Executable content type not permitted to this channel."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:847
+#: ../../Zotlabs/Module/Item.php:848
 msgid "Duplicate post suppressed."
 msgstr "פוסט כפול הודחק."
 
-#: ../../Zotlabs/Module/Item.php:977
+#: ../../Zotlabs/Module/Item.php:983
 msgid "System error. Post not saved."
 msgstr "שגיאת מערכת. פוסט לא נשמר."
 
@@ -1854,19 +1858,19 @@ msgstr ""
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""
 
-#: ../../Zotlabs/Module/Layouts.php:181 ../../include/text.php:2267
+#: ../../Zotlabs/Module/Layouts.php:183 ../../include/text.php:2268
 msgid "Layouts"
 msgstr ""
 
-#: ../../Zotlabs/Module/Layouts.php:183
+#: ../../Zotlabs/Module/Layouts.php:185
 msgid "Comanche page description language help"
 msgstr ""
 
-#: ../../Zotlabs/Module/Layouts.php:187
+#: ../../Zotlabs/Module/Layouts.php:189
 msgid "Layout Description"
 msgstr ""
 
-#: ../../Zotlabs/Module/Layouts.php:192
+#: ../../Zotlabs/Module/Layouts.php:194
 msgid "Download PDL file"
 msgstr "הורד קובץ PDL"
 
@@ -1898,12 +1902,12 @@ msgstr "שם מלא"
 
 #: ../../Zotlabs/Module/Id.php:17 ../../Zotlabs/Module/Id.php:18
 #: ../../Zotlabs/Module/Admin.php:1035 ../../Zotlabs/Module/Admin.php:1047
-#: ../../include/network.php:2151 ../../boot.php:1705
+#: ../../include/network.php:2176 ../../boot.php:1706
 msgid "Email"
 msgstr "דוא״ל"
 
 #: ../../Zotlabs/Module/Id.php:19 ../../Zotlabs/Module/Id.php:20
-#: ../../Zotlabs/Module/Id.php:21 ../../Zotlabs/Lib/Apps.php:236
+#: ../../Zotlabs/Module/Id.php:21 ../../Zotlabs/Lib/Apps.php:237
 msgid "Profile Photo"
 msgstr "תצלום פרופיל"
 
@@ -1939,7 +1943,7 @@ msgstr "אזור זמן"
 msgid "Homepage URL"
 msgstr ""
 
-#: ../../Zotlabs/Module/Id.php:30 ../../Zotlabs/Lib/Apps.php:234
+#: ../../Zotlabs/Module/Id.php:30 ../../Zotlabs/Lib/Apps.php:235
 msgid "Language"
 msgstr "שפה"
 
@@ -1989,12 +1993,12 @@ msgstr ""
 msgid "menu"
 msgstr "תפריט"
 
-#: ../../Zotlabs/Module/Impel.php:196
+#: ../../Zotlabs/Module/Impel.php:187
 #, php-format
 msgid "%s element installed"
 msgstr ""
 
-#: ../../Zotlabs/Module/Impel.php:199
+#: ../../Zotlabs/Module/Impel.php:190
 #, php-format
 msgid "%s element installation failed"
 msgstr ""
@@ -2035,13 +2039,13 @@ msgid "Previous action reversed."
 msgstr ""
 
 #: ../../Zotlabs/Module/Like.php:371 ../../Zotlabs/Module/Subthread.php:87
-#: ../../Zotlabs/Module/Tagger.php:47 ../../include/text.php:1940
+#: ../../Zotlabs/Module/Tagger.php:47 ../../include/text.php:1941
 #: ../../include/conversation.php:120
 msgid "photo"
 msgstr "תצלום"
 
 #: ../../Zotlabs/Module/Like.php:371 ../../Zotlabs/Module/Subthread.php:87
-#: ../../include/text.php:1946 ../../include/conversation.php:148
+#: ../../include/text.php:1947 ../../include/conversation.php:148
 msgid "status"
 msgstr "סטטוס"
 
@@ -2294,7 +2298,7 @@ msgid "Subject:"
 msgstr "נושא:"
 
 #: ../../Zotlabs/Module/Mail.php:251 ../../Zotlabs/Module/Mail.php:376
-#: ../../include/conversation.php:1220
+#: ../../include/conversation.php:1231
 msgid "Attach file"
 msgstr "צרף קובץ"
 
@@ -2303,7 +2307,7 @@ msgid "Send"
 msgstr "שלח"
 
 #: ../../Zotlabs/Module/Mail.php:256 ../../Zotlabs/Module/Mail.php:381
-#: ../../include/conversation.php:1251
+#: ../../include/conversation.php:1266
 msgid "Set expiration date"
 msgstr "קבע תאריך תפוגה"
 
@@ -2403,7 +2407,7 @@ msgstr "חבר אתר (%s)"
 #: ../../Zotlabs/Module/Lostpass.php:44
 #, php-format
 msgid "Password reset requested at %s"
-msgstr ""
+msgstr "בקשת איפוס סיסמה נתבקשה אצל %s"
 
 #: ../../Zotlabs/Module/Lostpass.php:67
 msgid ""
@@ -2411,7 +2415,7 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Lostpass.php:90 ../../boot.php:1711
+#: ../../Zotlabs/Module/Lostpass.php:90 ../../boot.php:1712
 msgid "Password Reset"
 msgstr "איפוס סיסמה"
 
@@ -2440,7 +2444,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Lostpass.php:112
 #, php-format
 msgid "Your password has changed at %s"
-msgstr ""
+msgstr "הסיסמה שלך נשתנתה אצל %s"
 
 #: ../../Zotlabs/Module/Lostpass.php:127
 msgid "Forgot your Password?"
@@ -2486,7 +2490,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Menu.php:100
 msgid "Allow Bookmarks"
-msgstr ""
+msgstr "התר סימניות"
 
 #: ../../Zotlabs/Module/Menu.php:100 ../../Zotlabs/Module/Menu.php:157
 msgid "Menu may be used to store saved bookmarks"
@@ -2496,7 +2500,7 @@ msgstr ""
 msgid "Submit and proceed"
 msgstr "שלח והמשך"
 
-#: ../../Zotlabs/Module/Menu.php:107 ../../include/text.php:2266
+#: ../../Zotlabs/Module/Menu.php:107 ../../include/text.php:2267
 msgid "Menus"
 msgstr "תפריטים"
 
@@ -2563,7 +2567,7 @@ msgctxt "mood"
 msgid "%1$s is %2$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mood.php:135 ../../Zotlabs/Lib/Apps.php:225
+#: ../../Zotlabs/Module/Mood.php:135 ../../Zotlabs/Lib/Apps.php:226
 msgid "Mood"
 msgstr "מצב רוח"
 
@@ -2798,7 +2802,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Notifications.php:30
 msgid "Invalid request identifier."
-msgstr ""
+msgstr "מזהה מבקש לא תקין."
 
 #: ../../Zotlabs/Module/Notifications.php:39
 msgid "Discard"
@@ -2891,18 +2895,19 @@ msgstr "תצלומי איש קשר"
 
 #: ../../Zotlabs/Module/Photos.php:766
 msgid "Show Newest First"
-msgstr ""
+msgstr "הצג את החדשים יותר בתחילה"
 
 #: ../../Zotlabs/Module/Photos.php:768
 msgid "Show Oldest First"
-msgstr ""
+msgstr "הצג את הישנים יותר בתחילה"
 
 #: ../../Zotlabs/Module/Photos.php:792 ../../Zotlabs/Module/Photos.php:1331
-#: ../../include/widgets.php:1499
+#: ../../Zotlabs/Module/Embedphotos.php:141 ../../include/widgets.php:1572
 msgid "View Photo"
 msgstr "צפה בתצלום"
 
-#: ../../Zotlabs/Module/Photos.php:823 ../../include/widgets.php:1516
+#: ../../Zotlabs/Module/Photos.php:823
+#: ../../Zotlabs/Module/Embedphotos.php:157 ../../include/widgets.php:1589
 msgid "Edit Album"
 msgstr "ערוך אלבום"
 
@@ -2980,7 +2985,7 @@ msgid "I don't like this (toggle)"
 msgstr "לא אהבתי את זה (החלף)"
 
 #: ../../Zotlabs/Module/Photos.php:1073 ../../Zotlabs/Lib/ThreadItem.php:397
-#: ../../include/conversation.php:740
+#: ../../include/conversation.php:743
 msgid "Please wait"
 msgstr "אנא המתן"
 
@@ -2994,55 +2999,55 @@ msgstr "זה את/ה"
 msgid "Comment"
 msgstr "תגובה"
 
-#: ../../Zotlabs/Module/Photos.php:1107 ../../include/conversation.php:574
+#: ../../Zotlabs/Module/Photos.php:1107 ../../include/conversation.php:577
 msgctxt "title"
 msgid "Likes"
 msgstr "אוהב"
 
-#: ../../Zotlabs/Module/Photos.php:1107 ../../include/conversation.php:574
+#: ../../Zotlabs/Module/Photos.php:1107 ../../include/conversation.php:577
 msgctxt "title"
 msgid "Dislikes"
 msgstr "לא אוהב"
 
-#: ../../Zotlabs/Module/Photos.php:1108 ../../include/conversation.php:575
+#: ../../Zotlabs/Module/Photos.php:1108 ../../include/conversation.php:578
 msgctxt "title"
 msgid "Agree"
 msgstr "מסכים"
 
-#: ../../Zotlabs/Module/Photos.php:1108 ../../include/conversation.php:575
+#: ../../Zotlabs/Module/Photos.php:1108 ../../include/conversation.php:578
 msgctxt "title"
 msgid "Disagree"
 msgstr "לא מסכים"
 
-#: ../../Zotlabs/Module/Photos.php:1108 ../../include/conversation.php:575
+#: ../../Zotlabs/Module/Photos.php:1108 ../../include/conversation.php:578
 msgctxt "title"
 msgid "Abstain"
 msgstr "נמנע"
 
-#: ../../Zotlabs/Module/Photos.php:1109 ../../include/conversation.php:576
+#: ../../Zotlabs/Module/Photos.php:1109 ../../include/conversation.php:579
 msgctxt "title"
 msgid "Attending"
 msgstr "נוכח"
 
-#: ../../Zotlabs/Module/Photos.php:1109 ../../include/conversation.php:576
+#: ../../Zotlabs/Module/Photos.php:1109 ../../include/conversation.php:579
 msgctxt "title"
 msgid "Not attending"
 msgstr "לא נוכח"
 
-#: ../../Zotlabs/Module/Photos.php:1109 ../../include/conversation.php:576
+#: ../../Zotlabs/Module/Photos.php:1109 ../../include/conversation.php:579
 msgctxt "title"
 msgid "Might attend"
 msgstr "עשוי להיווכח"
 
 #: ../../Zotlabs/Module/Photos.php:1126 ../../Zotlabs/Module/Photos.php:1138
 #: ../../Zotlabs/Lib/ThreadItem.php:181 ../../Zotlabs/Lib/ThreadItem.php:193
-#: ../../include/conversation.php:1717
+#: ../../include/conversation.php:1732
 msgid "View all"
 msgstr "צפה בכולם"
 
 #: ../../Zotlabs/Module/Photos.php:1130 ../../Zotlabs/Lib/ThreadItem.php:185
-#: ../../include/taxonomy.php:403 ../../include/conversation.php:1741
-#: ../../include/channel.php:1158
+#: ../../include/taxonomy.php:403 ../../include/conversation.php:1756
+#: ../../include/channel.php:1139
 msgctxt "noun"
 msgid "Like"
 msgid_plural "Likes"
@@ -3050,7 +3055,7 @@ msgstr[0] "אוהב"
 msgstr[1] "אוהבים"
 
 #: ../../Zotlabs/Module/Photos.php:1135 ../../Zotlabs/Lib/ThreadItem.php:190
-#: ../../include/conversation.php:1744
+#: ../../include/conversation.php:1759
 msgctxt "noun"
 msgid "Dislike"
 msgid_plural "Dislikes"
@@ -3119,7 +3124,7 @@ msgstr "לא מסוגל למצוא את המוקד שלך."
 
 #: ../../Zotlabs/Module/Oexchange.php:41
 msgid "Post successful."
-msgstr ""
+msgstr "פרסום הצליח."
 
 #: ../../Zotlabs/Module/Openid.php:30
 msgid "OpenID protocol error. No ID returned."
@@ -3129,7 +3134,7 @@ msgstr "שגיאת פרוטוקול OpenID. לא הוחזר ID."
 msgid "Login failed."
 msgstr "התחברות נכשלה."
 
-#: ../../Zotlabs/Module/Page.php:133
+#: ../../Zotlabs/Module/Page.php:131
 msgid ""
 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
 "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,"
@@ -3174,8 +3179,8 @@ msgstr "שם מודול:"
 msgid "Layout Help"
 msgstr ""
 
-#: ../../Zotlabs/Module/Poke.php:168 ../../Zotlabs/Lib/Apps.php:226
-#: ../../include/conversation.php:960
+#: ../../Zotlabs/Module/Poke.php:168 ../../Zotlabs/Lib/Apps.php:227
+#: ../../include/conversation.php:963
 msgid "Poke"
 msgstr ""
 
@@ -3294,7 +3299,7 @@ msgid "View this profile"
 msgstr "צפה בפרופיל זה"
 
 #: ../../Zotlabs/Module/Profiles.php:689 ../../Zotlabs/Module/Profiles.php:771
-#: ../../include/channel.php:959
+#: ../../include/channel.php:940
 msgid "Edit visibility"
 msgstr "ערוך נראות"
 
@@ -3306,7 +3311,7 @@ msgstr "כלי פרופיל"
 msgid "Change cover photo"
 msgstr "שנה תצלום שער"
 
-#: ../../Zotlabs/Module/Profiles.php:692 ../../include/channel.php:930
+#: ../../Zotlabs/Module/Profiles.php:692 ../../include/channel.php:911
 msgid "Change profile photo"
 msgstr "שנה תצלום פרופיל"
 
@@ -3326,8 +3331,8 @@ msgstr "מחק את פרופיל זה"
 msgid "Add profile things"
 msgstr "הוסף דברי פרופיל"
 
-#: ../../Zotlabs/Module/Profiles.php:697 ../../include/widgets.php:105
-#: ../../include/conversation.php:1526
+#: ../../Zotlabs/Module/Profiles.php:697 ../../include/conversation.php:1541
+#: ../../include/widgets.php:105
 msgid "Personal"
 msgstr "אישי"
 
@@ -3467,12 +3472,12 @@ msgstr ""
 msgid "My other channels"
 msgstr "הערוצים האחרים שלי"
 
-#: ../../Zotlabs/Module/Profiles.php:767 ../../include/channel.php:955
+#: ../../Zotlabs/Module/Profiles.php:767 ../../include/channel.php:936
 msgid "Profile Image"
 msgstr "תמונת פרופיל"
 
 #: ../../Zotlabs/Module/Profiles.php:777 ../../include/nav.php:88
-#: ../../include/channel.php:937
+#: ../../include/channel.php:918
 msgid "Edit Profiles"
 msgstr "ערוך פרופילים"
 
@@ -3494,7 +3499,7 @@ msgstr "מזהה פרופיל לא תקין."
 msgid "Profile Visibility Editor"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profperm.php:117 ../../include/channel.php:1249
+#: ../../Zotlabs/Module/Profperm.php:117 ../../include/channel.php:1230
 msgid "Profile"
 msgstr "פרופיל"
 
@@ -3506,7 +3511,7 @@ msgstr ""
 msgid "Visible To"
 msgstr ""
 
-#: ../../Zotlabs/Module/Pubsites.php:22 ../../include/widgets.php:1270
+#: ../../Zotlabs/Module/Pubsites.php:22 ../../include/widgets.php:1343
 msgid "Public Hubs"
 msgstr "מוקדים ציבוריים"
 
@@ -3540,7 +3545,7 @@ msgid "Software"
 msgstr "תוכנה"
 
 #: ../../Zotlabs/Module/Pubsites.php:31 ../../Zotlabs/Module/Ratings.php:103
-#: ../../include/conversation.php:959
+#: ../../include/conversation.php:962
 msgid "Ratings"
 msgstr "דירוג"
 
@@ -3666,7 +3671,7 @@ msgstr ""
 msgid "Site settings updated."
 msgstr "הגדרות אתר עודכנו."
 
-#: ../../Zotlabs/Module/Admin.php:400 ../../include/text.php:2841
+#: ../../Zotlabs/Module/Admin.php:400 ../../include/text.php:2845
 msgid "Default"
 msgstr "ברירת מחדל"
 
@@ -3684,25 +3689,25 @@ msgstr "לא נתמך"
 
 #: ../../Zotlabs/Module/Admin.php:460
 msgid "Yes - with approval"
-msgstr ""
+msgstr "כן - עם אימות"
 
 #: ../../Zotlabs/Module/Admin.php:466
 msgid "My site is not a public server"
-msgstr ""
+msgstr "האתר שלי אינו שרת פומבי"
 
 #: ../../Zotlabs/Module/Admin.php:467
 msgid "My site has paid access only"
-msgstr ""
+msgstr "לאתר שלי ישנה גישה בתשלום בלבד"
 
 #: ../../Zotlabs/Module/Admin.php:468
 msgid "My site has free access only"
-msgstr ""
+msgstr "לאתר שלי ישנה גישה חופשית בלבד"
 
 #: ../../Zotlabs/Module/Admin.php:469
 msgid "My site offers free accounts with optional paid upgrades"
-msgstr ""
+msgstr "האתר שלי מציע חשבונות בחינם לצד אפשרות לשדרוגים בתשלום"
 
-#: ../../Zotlabs/Module/Admin.php:491 ../../include/widgets.php:1382
+#: ../../Zotlabs/Module/Admin.php:491 ../../include/widgets.php:1455
 msgid "Site"
 msgstr "אתר"
 
@@ -3728,7 +3733,7 @@ msgstr "שם אתר"
 
 #: ../../Zotlabs/Module/Admin.php:501
 msgid "Banner/Logo"
-msgstr ""
+msgstr "באנר/לוגו"
 
 #: ../../Zotlabs/Module/Admin.php:502
 msgid "Administrator Information"
@@ -3786,7 +3791,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Admin.php:510
 msgid "Invitation only"
-msgstr ""
+msgstr "הזמנה בלבד"
 
 #: ../../Zotlabs/Module/Admin.php:510
 msgid ""
@@ -3926,11 +3931,11 @@ msgstr "שרת ספרייה שגרתי"
 
 #: ../../Zotlabs/Module/Admin.php:527
 msgid "Proxy user"
-msgstr ""
+msgstr "משתמש פרוקסי"
 
 #: ../../Zotlabs/Module/Admin.php:528
 msgid "Proxy URL"
-msgstr ""
+msgstr "URL פרוקסי"
 
 #: ../../Zotlabs/Module/Admin.php:529
 msgid "Network timeout"
@@ -3973,7 +3978,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Admin.php:533
 msgid "Maximum Load Average"
-msgstr ""
+msgstr "עומס ממוצע מרבי"
 
 #: ../../Zotlabs/Module/Admin.php:533
 msgid ""
@@ -4002,7 +4007,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Admin.php:678
 #, php-format
 msgid "Lock feature %s"
-msgstr ""
+msgstr "נעל תכונת %s"
 
 #: ../../Zotlabs/Module/Admin.php:686
 msgid "Manage Additional Features"
@@ -4052,7 +4057,7 @@ msgid ""
 "embedded content from that site is explicitly blocked."
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin.php:756 ../../include/widgets.php:1385
+#: ../../Zotlabs/Module/Admin.php:756 ../../include/widgets.php:1458
 msgid "Security"
 msgstr "אבטחה"
 
@@ -4090,7 +4095,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Admin.php:763
 msgid "Allow communications only from these channels"
-msgstr ""
+msgstr "התר התקשרויות רק מתוך ערוצים אלה"
 
 #: ../../Zotlabs/Module/Admin.php:763
 msgid ""
@@ -4100,11 +4105,11 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Admin.php:764
 msgid "Block communications from these channels"
-msgstr ""
+msgstr "חסום התקשרויות מתוך ערוצים אלה"
 
 #: ../../Zotlabs/Module/Admin.php:765
 msgid "Only allow embeds from secure (SSL) websites and links."
-msgstr ""
+msgstr "התר שיבוצים מתוך אתרים וקישורים נאובטחים (SSL) בלבד."
 
 #: ../../Zotlabs/Module/Admin.php:766
 msgid "Allow unfiltered embedded HTML content only from these domains"
@@ -4144,11 +4149,11 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Admin.php:821
 msgid "No failed updates."
-msgstr ""
+msgstr "אין עדכונים כושלים."
 
 #: ../../Zotlabs/Module/Admin.php:825
 msgid "Failed Updates"
-msgstr ""
+msgstr "עדכונים כושלים"
 
 #: ../../Zotlabs/Module/Admin.php:827
 msgid "Mark success (if update was manually applied)"
@@ -4176,7 +4181,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Admin.php:863
 msgid "Mark hub permanently offline"
-msgstr ""
+msgstr "סמן מוקד בלתי מקוון לצמיתות"
 
 #: ../../Zotlabs/Module/Admin.php:864
 msgid "Empty queue for this hub"
@@ -4184,7 +4189,7 @@ msgstr "רוקן תור עבור מוקד זה"
 
 #: ../../Zotlabs/Module/Admin.php:865
 msgid "Last known contact"
-msgstr ""
+msgstr "איש קשר מוכר אחרון"
 
 #: ../../Zotlabs/Module/Admin.php:901
 #, php-format
@@ -4197,8 +4202,8 @@ msgstr[1] ""
 #, php-format
 msgid "%s account deleted"
 msgid_plural "%s accounts deleted"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "חשבון %s נמחק"
+msgstr[1] "%s חשבונות נמחקו"
 
 #: ../../Zotlabs/Module/Admin.php:944
 msgid "Account not found"
@@ -4220,7 +4225,7 @@ msgid "Account '%s' unblocked"
 msgstr "חשבון '%s' נפתח"
 
 #: ../../Zotlabs/Module/Admin.php:1031 ../../Zotlabs/Module/Admin.php:1044
-#: ../../include/widgets.php:1383
+#: ../../include/widgets.php:1456
 msgid "Accounts"
 msgstr "חשבונות"
 
@@ -4230,7 +4235,7 @@ msgstr "בחר הכל"
 
 #: ../../Zotlabs/Module/Admin.php:1034
 msgid "Registrations waiting for confirm"
-msgstr ""
+msgstr "הרשמות ממתינות לצורך אישור"
 
 #: ../../Zotlabs/Module/Admin.php:1035
 msgid "Request date"
@@ -4326,7 +4331,7 @@ msgstr ""
 msgid "Channel '%s' code disallowed"
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin.php:1210 ../../include/widgets.php:1384
+#: ../../Zotlabs/Module/Admin.php:1210 ../../include/widgets.php:1457
 msgid "Channels"
 msgstr "ערוצים"
 
@@ -4340,13 +4345,13 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Admin.php:1216
 msgid "Allow Code"
-msgstr ""
+msgstr "התר קוד"
 
 #: ../../Zotlabs/Module/Admin.php:1217
 msgid "Disallow Code"
-msgstr ""
+msgstr "אסור קוד"
 
-#: ../../Zotlabs/Module/Admin.php:1218 ../../include/conversation.php:1611
+#: ../../Zotlabs/Module/Admin.php:1218 ../../include/conversation.php:1626
 msgid "Channel"
 msgstr "ערוץ"
 
@@ -4385,7 +4390,7 @@ msgid "Enable"
 msgstr "אפשר"
 
 #: ../../Zotlabs/Module/Admin.php:1330 ../../Zotlabs/Module/Admin.php:1420
-#: ../../include/widgets.php:1387
+#: ../../include/widgets.php:1460
 msgid "Plugins"
 msgstr "תוספות"
 
@@ -4394,8 +4399,8 @@ msgid "Toggle"
 msgstr "החלף"
 
 #: ../../Zotlabs/Module/Admin.php:1332 ../../Zotlabs/Module/Admin.php:1615
-#: ../../Zotlabs/Lib/Apps.php:215 ../../include/widgets.php:638
-#: ../../include/nav.php:208
+#: ../../Zotlabs/Lib/Apps.php:215 ../../include/nav.php:208
+#: ../../include/widgets.php:638
 msgid "Settings"
 msgstr "הגדרות"
 
@@ -4451,7 +4456,7 @@ msgstr "הורד מאגר תוספים"
 msgid "Install new repo"
 msgstr "התקן מאגר חדש"
 
-#: ../../Zotlabs/Module/Admin.php:1405 ../../Zotlabs/Lib/Apps.php:330
+#: ../../Zotlabs/Module/Admin.php:1405 ../../Zotlabs/Lib/Apps.php:333
 msgid "Install"
 msgstr "התקן"
 
@@ -4468,7 +4473,7 @@ msgid "Install a New Plugin Repository"
 msgstr "התקן מאגר תוסף חדש"
 
 #: ../../Zotlabs/Module/Admin.php:1435 ../../Zotlabs/Module/Settings.php:77
-#: ../../Zotlabs/Module/Settings.php:616 ../../Zotlabs/Lib/Apps.php:330
+#: ../../Zotlabs/Module/Settings.php:616 ../../Zotlabs/Lib/Apps.php:333
 msgid "Update"
 msgstr "עדכן"
 
@@ -4485,7 +4490,7 @@ msgid "Screenshot"
 msgstr "צילום מסך"
 
 #: ../../Zotlabs/Module/Admin.php:1613 ../../Zotlabs/Module/Admin.php:1647
-#: ../../include/widgets.php:1388
+#: ../../include/widgets.php:1461
 msgid "Themes"
 msgstr "ערכות נושא"
 
@@ -4501,8 +4506,8 @@ msgstr "[לא נתמך]"
 msgid "Log settings updated."
 msgstr "הגדרות יומן עדכנו."
 
-#: ../../Zotlabs/Module/Admin.php:1732 ../../include/widgets.php:1409
-#: ../../include/widgets.php:1419
+#: ../../Zotlabs/Module/Admin.php:1732 ../../include/widgets.php:1482
+#: ../../include/widgets.php:1492
 msgid "Logs"
 msgstr "יומנים"
 
@@ -4568,7 +4573,7 @@ msgstr "הגדרת שדה לא נמצאה"
 msgid "Edit Profile Field"
 msgstr "ערוך שדה פרופיל"
 
-#: ../../Zotlabs/Module/Admin.php:2106 ../../include/widgets.php:1390
+#: ../../Zotlabs/Module/Admin.php:2106 ../../include/widgets.php:1463
 msgid "Profile Fields"
 msgstr "שדות פרופיל"
 
@@ -4658,11 +4663,11 @@ msgstr "שמור סימנייה"
 
 #: ../../Zotlabs/Module/Rbmark.php:100
 msgid "URL of bookmark"
-msgstr ""
+msgstr "URL של סימנייה"
 
 #: ../../Zotlabs/Module/Rbmark.php:105
 msgid "Or enter new bookmark folder name"
-msgstr ""
+msgstr "או הזן שם תיקיית סימניות חדש"
 
 #: ../../Zotlabs/Module/Register.php:49
 msgid "Maximum daily site registrations exceeded. Please try again tomorrow."
@@ -4689,7 +4694,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Register.php:140
 msgid "Your registration can not be processed."
-msgstr ""
+msgstr "הרשמתך לא ניתנת לעיבוד"
 
 #: ../../Zotlabs/Module/Register.php:184
 msgid "Registration on this hub is disabled."
@@ -4752,13 +4757,13 @@ msgid "Membership on this site is by invitation only."
 msgstr "חברות באתר זה היא באמצעות הזמנה בלבד."
 
 #: ../../Zotlabs/Module/Register.php:262 ../../include/nav.php:147
-#: ../../boot.php:1685
+#: ../../boot.php:1686
 msgid "Register"
 msgstr "הרשמה"
 
 #: ../../Zotlabs/Module/Register.php:262
 msgid "Proceed to create your first channel"
-msgstr ""
+msgstr "המשך כדי ליצור את הערוץ הראשון שלך"
 
 #: ../../Zotlabs/Module/Regmod.php:15
 msgid "Please login."
@@ -4852,11 +4857,11 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Rmagic.php:48
 msgid "Authentication failed."
-msgstr ""
+msgstr "אימות נכשל."
 
 #: ../../Zotlabs/Module/Rmagic.php:88
 msgid "Remote Authentication"
-msgstr ""
+msgstr "אימות מרוחק"
 
 #: ../../Zotlabs/Module/Rmagic.php:89
 msgid "Enter your channel address (e.g. channel@example.com)"
@@ -4869,7 +4874,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Search.php:216
 #, php-format
 msgid "Items tagged with: %s"
-msgstr ""
+msgstr "פריטים מתוייגים עם: %s"
 
 #: ../../Zotlabs/Module/Search.php:218
 #, php-format
@@ -4878,7 +4883,7 @@ msgstr "תוצאות חיפוש עבור: %s"
 
 #: ../../Zotlabs/Module/Service_limits.php:23
 msgid "No service class restrictions found."
-msgstr ""
+msgstr "לא נמצאו הגבלות מחלקת ערוץ."
 
 #: ../../Zotlabs/Module/Settings.php:69
 msgid "Name is required"
@@ -4886,7 +4891,7 @@ msgstr "נדרש שם"
 
 #: ../../Zotlabs/Module/Settings.php:73
 msgid "Key and Secret are required"
-msgstr ""
+msgstr "מפתח וגם סוד הינם בגדר חובה."
 
 #: ../../Zotlabs/Module/Settings.php:225
 msgid "Not valid email."
@@ -5180,7 +5185,7 @@ msgstr "הגדרות ערוץ"
 msgid "Basic Settings"
 msgstr "הגדרות בסיסיות"
 
-#: ../../Zotlabs/Module/Settings.php:1040 ../../include/channel.php:1140
+#: ../../Zotlabs/Module/Settings.php:1040 ../../include/channel.php:1121
 msgid "Full Name:"
 msgstr "שם מלא:"
 
@@ -5333,7 +5338,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Settings.php:1086
 msgid "Send a notification email when:"
-msgstr ""
+msgstr "שלח דוא״ל התראה כאשר:"
 
 #: ../../Zotlabs/Module/Settings.php:1087
 msgid "You receive a connection request"
@@ -5349,7 +5354,7 @@ msgstr "מישהו כותב על קיר הפרופיל שלך"
 
 #: ../../Zotlabs/Module/Settings.php:1090
 msgid "Someone writes a followup comment"
-msgstr ""
+msgstr "מישהו רושם תגובת המשך"
 
 #: ../../Zotlabs/Module/Settings.php:1091
 msgid "You receive a private message"
@@ -5733,7 +5738,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Setup.php:507 ../../Zotlabs/Module/Setup.php:510
 msgid "proc_open"
-msgstr ""
+msgstr "proc_open"
 
 #: ../../Zotlabs/Module/Setup.php:507
 msgid ""
@@ -6004,8 +6009,8 @@ msgstr "מקור עודכן."
 msgid "*"
 msgstr "*"
 
-#: ../../Zotlabs/Module/Sources.php:96 ../../include/widgets.php:630
-#: ../../include/features.php:71
+#: ../../Zotlabs/Module/Sources.php:96 ../../include/features.php:71
+#: ../../include/widgets.php:630
 msgid "Channel Sources"
 msgstr "מקורות ערוץ"
 
@@ -6081,11 +6086,11 @@ msgstr ""
 msgid "Ignore/Hide"
 msgstr "התעלם/הסתר"
 
-#: ../../Zotlabs/Module/Tagger.php:55 ../../include/bbcode.php:256
+#: ../../Zotlabs/Module/Tagger.php:55 ../../include/bbcode.php:263
 msgid "post"
 msgstr "פוסט"
 
-#: ../../Zotlabs/Module/Tagger.php:57 ../../include/text.php:1948
+#: ../../Zotlabs/Module/Tagger.php:57 ../../include/text.php:1949
 #: ../../include/conversation.php:150
 msgid "comment"
 msgstr "תגובה"
@@ -6239,20 +6244,20 @@ msgstr "צפה בחיבורים"
 msgid "Source of Item"
 msgstr "מקור פריט"
 
-#: ../../Zotlabs/Module/Webpages.php:184 ../../Zotlabs/Lib/Apps.php:217
-#: ../../include/nav.php:106 ../../include/conversation.php:1685
+#: ../../Zotlabs/Module/Webpages.php:192 ../../Zotlabs/Lib/Apps.php:217
+#: ../../include/conversation.php:1700 ../../include/nav.php:106
 msgid "Webpages"
 msgstr "עמודי רשת"
 
-#: ../../Zotlabs/Module/Webpages.php:195 ../../include/page_widgets.php:41
+#: ../../Zotlabs/Module/Webpages.php:203 ../../include/page_widgets.php:44
 msgid "Actions"
 msgstr "פעולות"
 
-#: ../../Zotlabs/Module/Webpages.php:196 ../../include/page_widgets.php:42
+#: ../../Zotlabs/Module/Webpages.php:204 ../../include/page_widgets.php:45
 msgid "Page Link"
 msgstr "קישור עמוד"
 
-#: ../../Zotlabs/Module/Webpages.php:197
+#: ../../Zotlabs/Module/Webpages.php:205
 msgid "Page Title"
 msgstr "כותרת עמוד"
 
@@ -6264,91 +6269,25 @@ msgstr "חיפוש Xchan"
 msgid "Lookup xchan beginning with (or webbie): "
 msgstr ""
 
-#: ../../Zotlabs/Lib/Apps.php:204
-msgid "Site Admin"
-msgstr "מנהל אתר"
+#: ../../Zotlabs/Module/Wiki.php:75 ../../Zotlabs/Lib/Apps.php:218
+msgid "Wiki"
+msgstr "ויקי"
 
-#: ../../Zotlabs/Lib/Apps.php:205
-msgid "Bug Report"
-msgstr "דיווח באג"
+#: ../../Zotlabs/Module/Wiki.php:76
+msgid "Sandbox"
+msgstr "ארגז חול"
 
-#: ../../Zotlabs/Lib/Apps.php:206
-msgid "View Bookmarks"
-msgstr "הצג סימניות"
+#: ../../Zotlabs/Module/Wiki.php:156
+msgid "Enter the name of your new wiki:"
+msgstr "הזן את השם של הויקי החדש שלך:"
 
-#: ../../Zotlabs/Lib/Apps.php:207
-msgid "My Chatrooms"
-msgstr "חדרי השיחה שלי"
+#: ../../Zotlabs/Module/Wiki.php:157
+msgid "Enter the name of the new page:"
+msgstr "הזן את השם של העמוד החדש:"
 
-#: ../../Zotlabs/Lib/Apps.php:209
-msgid "Firefox Share"
-msgstr ""
-
-#: ../../Zotlabs/Lib/Apps.php:210
-msgid "Remote Diagnostics"
-msgstr ""
-
-#: ../../Zotlabs/Lib/Apps.php:211 ../../include/features.php:89
-msgid "Suggest Channels"
-msgstr "הצע ערוצים"
-
-#: ../../Zotlabs/Lib/Apps.php:212 ../../include/nav.php:110
-#: ../../boot.php:1703
-msgid "Login"
-msgstr "כניסה"
-
-#: ../../Zotlabs/Lib/Apps.php:214 ../../include/nav.php:179
-msgid "Grid"
-msgstr ""
-
-#: ../../Zotlabs/Lib/Apps.php:218 ../../include/nav.php:182
-msgid "Channel Home"
-msgstr "ערוץ בית"
-
-#: ../../Zotlabs/Lib/Apps.php:221 ../../include/nav.php:201
-#: ../../include/conversation.php:1649 ../../include/conversation.php:1652
-msgid "Events"
-msgstr "אירועים"
-
-#: ../../Zotlabs/Lib/Apps.php:222 ../../include/nav.php:167
-msgid "Directory"
-msgstr "ספרייה"
-
-#: ../../Zotlabs/Lib/Apps.php:224 ../../include/nav.php:193
-msgid "Mail"
-msgstr "דואר"
-
-#: ../../Zotlabs/Lib/Apps.php:227 ../../include/nav.php:96
-msgid "Chat"
-msgstr "שיחה"
-
-#: ../../Zotlabs/Lib/Apps.php:229
-msgid "Probe"
-msgstr ""
-
-#: ../../Zotlabs/Lib/Apps.php:230
-msgid "Suggest"
-msgstr "הצע"
-
-#: ../../Zotlabs/Lib/Apps.php:231
-msgid "Random Channel"
-msgstr "ערוץ אקראי"
-
-#: ../../Zotlabs/Lib/Apps.php:232
-msgid "Invite"
-msgstr "הזמן"
-
-#: ../../Zotlabs/Lib/Apps.php:233 ../../include/widgets.php:1386
-msgid "Features"
-msgstr "תכונות"
-
-#: ../../Zotlabs/Lib/Apps.php:235
-msgid "Post"
-msgstr "פוסט"
-
-#: ../../Zotlabs/Lib/Apps.php:335
-msgid "Purchase"
-msgstr "רכוש"
+#: ../../Zotlabs/Module/Wiki.php:158
+msgid "Enter the new name:"
+msgstr "הזן את השם החדש:"
 
 #: ../../Zotlabs/Lib/Chatroom.php:27
 msgid "Missing room name"
@@ -6370,19 +6309,19 @@ msgstr "חדר לא נמצא."
 msgid "Room is full"
 msgstr "חדר מלא"
 
-#: ../../Zotlabs/Lib/Enotify.php:60 ../../include/network.php:1823
+#: ../../Zotlabs/Lib/Enotify.php:60 ../../include/network.php:1848
 msgid "$Projectname Notification"
 msgstr "התראות $Projectname"
 
-#: ../../Zotlabs/Lib/Enotify.php:61 ../../include/network.php:1824
+#: ../../Zotlabs/Lib/Enotify.php:61 ../../include/network.php:1849
 msgid "$projectname"
 msgstr "$projectname"
 
-#: ../../Zotlabs/Lib/Enotify.php:63 ../../include/network.php:1826
+#: ../../Zotlabs/Lib/Enotify.php:63 ../../include/network.php:1851
 msgid "Thank You,"
 msgstr "תודה,"
 
-#: ../../Zotlabs/Lib/Enotify.php:65 ../../include/network.php:1828
+#: ../../Zotlabs/Lib/Enotify.php:65 ../../include/network.php:1853
 #, php-format
 msgid "%s Administrator"
 msgstr "הנהלת %s"
@@ -6575,11 +6514,11 @@ msgstr "צור פוסט חדש"
 msgid "commented on %s's post"
 msgstr "הגיב/ה על פוסט של %s"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:95 ../../include/conversation.php:664
+#: ../../Zotlabs/Lib/ThreadItem.php:95 ../../include/conversation.php:667
 msgid "Private Message"
 msgstr "הודעה פרטית"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:132 ../../include/conversation.php:656
+#: ../../Zotlabs/Lib/ThreadItem.php:132 ../../include/conversation.php:659
 msgid "Select"
 msgstr "בחר"
 
@@ -6627,11 +6566,11 @@ msgstr ""
 msgid "starred"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:234 ../../include/conversation.php:671
+#: ../../Zotlabs/Lib/ThreadItem.php:234 ../../include/conversation.php:674
 msgid "Message signature validated"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:235 ../../include/conversation.php:672
+#: ../../Zotlabs/Lib/ThreadItem.php:235 ../../include/conversation.php:675
 msgid "Message signature incorrect"
 msgstr ""
 
@@ -6687,17 +6626,17 @@ msgstr "קיר-אל-קיר"
 msgid "via Wall-To-Wall:"
 msgstr "מתוך קיר-אל-קיר:"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:341 ../../include/conversation.php:719
+#: ../../Zotlabs/Lib/ThreadItem.php:341 ../../include/conversation.php:722
 #, php-format
 msgid "from %s"
 msgstr "מאת %s"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:344 ../../include/conversation.php:722
+#: ../../Zotlabs/Lib/ThreadItem.php:344 ../../include/conversation.php:725
 #, php-format
 msgid "last edited: %s"
 msgstr "נערך לאחרונה: %s"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:345 ../../include/conversation.php:723
+#: ../../Zotlabs/Lib/ThreadItem.php:345 ../../include/conversation.php:726
 #, php-format
 msgid "Expires: %s"
 msgstr "פג: %s"
@@ -6718,23 +6657,23 @@ msgstr "סמן את הכל כנקראו"
 msgid "[+] show all"
 msgstr "[+] הצג הכל"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:711 ../../include/conversation.php:1215
+#: ../../Zotlabs/Lib/ThreadItem.php:711 ../../include/conversation.php:1226
 msgid "Bold"
 msgstr "מובלט"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:712 ../../include/conversation.php:1216
+#: ../../Zotlabs/Lib/ThreadItem.php:712 ../../include/conversation.php:1227
 msgid "Italic"
 msgstr "נטוי"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:713 ../../include/conversation.php:1217
+#: ../../Zotlabs/Lib/ThreadItem.php:713 ../../include/conversation.php:1228
 msgid "Underline"
 msgstr "קו תחתון"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:714 ../../include/conversation.php:1218
+#: ../../Zotlabs/Lib/ThreadItem.php:714 ../../include/conversation.php:1229
 msgid "Quote"
 msgstr "ציטוט"
 
-#: ../../Zotlabs/Lib/ThreadItem.php:715 ../../include/conversation.php:1219
+#: ../../Zotlabs/Lib/ThreadItem.php:715 ../../include/conversation.php:1230
 msgid "Code"
 msgstr "קוד"
 
@@ -6750,6 +6689,92 @@ msgstr "הכנס קישור"
 msgid "Video"
 msgstr "וידאו"
 
+#: ../../Zotlabs/Lib/Apps.php:204
+msgid "Site Admin"
+msgstr "מנהל אתר"
+
+#: ../../Zotlabs/Lib/Apps.php:205
+msgid "Bug Report"
+msgstr "דיווח באג"
+
+#: ../../Zotlabs/Lib/Apps.php:206
+msgid "View Bookmarks"
+msgstr "הצג סימניות"
+
+#: ../../Zotlabs/Lib/Apps.php:207
+msgid "My Chatrooms"
+msgstr "חדרי השיחה שלי"
+
+#: ../../Zotlabs/Lib/Apps.php:209
+msgid "Firefox Share"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Apps.php:210
+msgid "Remote Diagnostics"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Apps.php:211 ../../include/features.php:89
+msgid "Suggest Channels"
+msgstr "הצע ערוצים"
+
+#: ../../Zotlabs/Lib/Apps.php:212 ../../include/nav.php:110
+#: ../../boot.php:1704
+msgid "Login"
+msgstr "כניסה"
+
+#: ../../Zotlabs/Lib/Apps.php:214 ../../include/nav.php:179
+msgid "Grid"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Apps.php:219 ../../include/nav.php:182
+msgid "Channel Home"
+msgstr "ערוץ בית"
+
+#: ../../Zotlabs/Lib/Apps.php:222 ../../include/conversation.php:1664
+#: ../../include/conversation.php:1667 ../../include/nav.php:201
+msgid "Events"
+msgstr "אירועים"
+
+#: ../../Zotlabs/Lib/Apps.php:223 ../../include/nav.php:167
+msgid "Directory"
+msgstr "ספרייה"
+
+#: ../../Zotlabs/Lib/Apps.php:225 ../../include/nav.php:193
+msgid "Mail"
+msgstr "דואר"
+
+#: ../../Zotlabs/Lib/Apps.php:228 ../../include/nav.php:96
+msgid "Chat"
+msgstr "שיחה"
+
+#: ../../Zotlabs/Lib/Apps.php:230
+msgid "Probe"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Apps.php:231
+msgid "Suggest"
+msgstr "הצע"
+
+#: ../../Zotlabs/Lib/Apps.php:232
+msgid "Random Channel"
+msgstr "ערוץ אקראי"
+
+#: ../../Zotlabs/Lib/Apps.php:233
+msgid "Invite"
+msgstr "הזמן"
+
+#: ../../Zotlabs/Lib/Apps.php:234 ../../include/widgets.php:1459
+msgid "Features"
+msgstr "תכונות"
+
+#: ../../Zotlabs/Lib/Apps.php:236
+msgid "Post"
+msgstr "פוסט"
+
+#: ../../Zotlabs/Lib/Apps.php:338
+msgid "Purchase"
+msgstr "רכוש"
+
 #: ../../include/Import/import_diaspora.php:16
 msgid "No username found in import file."
 msgstr ""
@@ -6764,8 +6789,8 @@ msgid "Cannot locate DNS info for database server '%s'"
 msgstr ""
 
 #: ../../include/taxonomy.php:188 ../../include/taxonomy.php:270
-#: ../../include/widgets.php:46 ../../include/widgets.php:429
-#: ../../include/contact_widgets.php:91
+#: ../../include/contact_widgets.php:91 ../../include/widgets.php:46
+#: ../../include/widgets.php:429
 msgid "Categories"
 msgstr "קטגוריות"
 
@@ -6787,137 +6812,50 @@ msgstr ""
 
 #: ../../include/taxonomy.php:315
 msgid "want"
-msgstr ""
+msgstr "רוצים"
 
 #: ../../include/taxonomy.php:315
 msgid "wants"
-msgstr ""
+msgstr "רוצה"
 
 #: ../../include/taxonomy.php:316
 msgid "likes"
-msgstr ""
+msgstr "אוהב"
 
 #: ../../include/taxonomy.php:317
 msgid "dislikes"
-msgstr ""
+msgstr "לא אוהב"
 
-#: ../../include/event.php:22 ../../include/event.php:69
-#: ../../include/bb2diaspora.php:485
-msgid "l F d, Y \\@ g:i A"
-msgstr "l F d, Y \\@ g:i A"
-
-#: ../../include/event.php:30 ../../include/event.php:73
-#: ../../include/bb2diaspora.php:491
-msgid "Starts:"
-msgstr "מתחיל:"
-
-#: ../../include/event.php:40 ../../include/event.php:77
-#: ../../include/bb2diaspora.php:499
-msgid "Finishes:"
-msgstr "נגמר:"
-
-#: ../../include/event.php:812
-msgid "This event has been added to your calendar."
-msgstr "אירוע זה התווסף ללוח שנה שלך."
-
-#: ../../include/event.php:1012
-msgid "Not specified"
-msgstr ""
-
-#: ../../include/event.php:1013
-msgid "Needs Action"
-msgstr ""
-
-#: ../../include/event.php:1014
-msgid "Completed"
-msgstr "הושלם"
-
-#: ../../include/event.php:1015
-msgid "In Process"
-msgstr "בתהליך"
-
-#: ../../include/event.php:1016
-msgid "Cancelled"
-msgstr "בוטל"
-
-#: ../../include/import.php:29
-msgid ""
-"Cannot create a duplicate channel identifier on this system. Import failed."
-msgstr ""
-
-#: ../../include/import.php:76
-msgid "Channel clone failed. Import failed."
-msgstr ""
-
-#: ../../include/items.php:892 ../../include/items.php:937
-msgid "(Unknown)"
-msgstr "(לא ידוע)"
-
-#: ../../include/items.php:1136
-msgid "Visible to anybody on the internet."
-msgstr "נראה לכל אחד באינטרנט."
-
-#: ../../include/items.php:1138
-msgid "Visible to you only."
-msgstr "נראה לך בלבד."
-
-#: ../../include/items.php:1140
-msgid "Visible to anybody in this network."
-msgstr "נראה לכל אחד ברשת זו."
-
-#: ../../include/items.php:1142
-msgid "Visible to anybody authenticated."
-msgstr "נראה לכל מי שהוא מאומת."
-
-#: ../../include/items.php:1144
+#: ../../include/photos.php:114
 #, php-format
-msgid "Visible to anybody on %s."
-msgstr "נראה לכל אחד אצל %s."
+msgid "Image exceeds website size limit of %lu bytes"
+msgstr ""
 
-#: ../../include/items.php:1146
-msgid "Visible to all connections."
-msgstr "נראה לכל החיבורים."
+#: ../../include/photos.php:121
+msgid "Image file is empty."
+msgstr "קובץ תמונה הינו ריק."
 
-#: ../../include/items.php:1148
-msgid "Visible to approved connections."
-msgstr "נראה לחיבורים מאושרים."
+#: ../../include/photos.php:259
+msgid "Photo storage failed."
+msgstr "אחסון תצלום נכשל"
 
-#: ../../include/items.php:1150
-msgid "Visible to specific connections."
-msgstr "נראה לחיבורים מסוימים."
+#: ../../include/photos.php:299
+msgid "a new photo"
+msgstr "תצלום חדש"
 
-#: ../../include/items.php:3909
-msgid "Privacy group is empty."
-msgstr "קבוצת פרטיות הינה ריקה"
-
-#: ../../include/items.php:3916
+#: ../../include/photos.php:303
 #, php-format
-msgid "Privacy group: %s"
-msgstr "קבוצת פרטיות: %s"
-
-#: ../../include/items.php:3928
-msgid "Connection not found."
-msgstr "חיבור לא נמצא."
-
-#: ../../include/items.php:4277
-msgid "profile photo"
-msgstr "תצלום פרופיל"
-
-#: ../../include/message.php:20
-msgid "No recipient provided."
+msgctxt "photo_upload"
+msgid "%1$s posted %2$s to %3$s"
 msgstr ""
 
-#: ../../include/message.php:25
-msgid "[no subject]"
-msgstr "[אין נושא]"
+#: ../../include/photos.php:506 ../../include/conversation.php:1650
+msgid "Photo Albums"
+msgstr "אלבומי תמונה"
 
-#: ../../include/message.php:45
-msgid "Unable to determine sender."
-msgstr ""
-
-#: ../../include/message.php:222
-msgid "Stored post could not be verified."
-msgstr ""
+#: ../../include/photos.php:510
+msgid "Upload New Photos"
+msgstr "העלה תצלומים חדשים"
 
 #: ../../include/text.php:428
 msgid "prev"
@@ -7177,297 +7115,395 @@ msgstr "הסר קטגוריה"
 msgid "remove from file"
 msgstr "הסר מתוך קובץ"
 
-#: ../../include/text.php:1753 ../../include/text.php:1824
+#: ../../include/text.php:1754 ../../include/text.php:1825
 msgid "default"
 msgstr "ברירת מחדל"
 
-#: ../../include/text.php:1761
+#: ../../include/text.php:1762
 msgid "Page layout"
 msgstr ""
 
-#: ../../include/text.php:1761
+#: ../../include/text.php:1762
 msgid "You can create your own with the layouts tool"
 msgstr ""
 
-#: ../../include/text.php:1803
+#: ../../include/text.php:1804
 msgid "Page content type"
-msgstr ""
+msgstr "טיפוס תוכן עמוד"
 
-#: ../../include/text.php:1836
+#: ../../include/text.php:1837
 msgid "Select an alternate language"
 msgstr "בחר שפה חלופית"
 
-#: ../../include/text.php:1953
+#: ../../include/text.php:1954
 msgid "activity"
 msgstr "פעילות"
 
-#: ../../include/text.php:2262
+#: ../../include/text.php:2263
 msgid "Design Tools"
 msgstr "כלי עיצוב"
 
-#: ../../include/text.php:2268
+#: ../../include/text.php:2269
 msgid "Pages"
 msgstr "עמודים"
 
-#: ../../include/widgets.php:103
-msgid "System"
-msgstr "מערכת"
+#: ../../include/event.php:22 ../../include/event.php:69
+#: ../../include/bb2diaspora.php:485
+msgid "l F d, Y \\@ g:i A"
+msgstr "l F d, Y \\@ g:i A"
 
-#: ../../include/widgets.php:106
-msgid "New App"
-msgstr "אפליקציה חדשה"
+#: ../../include/event.php:30 ../../include/event.php:73
+#: ../../include/bb2diaspora.php:491
+msgid "Starts:"
+msgstr "מתחיל:"
 
-#: ../../include/widgets.php:154
-msgid "Suggestions"
-msgstr "הצעות"
+#: ../../include/event.php:40 ../../include/event.php:77
+#: ../../include/bb2diaspora.php:499
+msgid "Finishes:"
+msgstr "נגמר:"
 
-#: ../../include/widgets.php:155
-msgid "See more..."
-msgstr "צפה בעוד..."
+#: ../../include/event.php:812
+msgid "This event has been added to your calendar."
+msgstr "אירוע זה התווסף ללוח שנה שלך."
 
-#: ../../include/widgets.php:175
+#: ../../include/event.php:1012
+msgid "Not specified"
+msgstr "לא צוין"
+
+#: ../../include/event.php:1013
+msgid "Needs Action"
+msgstr "מצריך פעולה"
+
+#: ../../include/event.php:1014
+msgid "Completed"
+msgstr "הושלם"
+
+#: ../../include/event.php:1015
+msgid "In Process"
+msgstr "בתהליך"
+
+#: ../../include/event.php:1016
+msgid "Cancelled"
+msgstr "בוטל"
+
+#: ../../include/message.php:20
+msgid "No recipient provided."
+msgstr ""
+
+#: ../../include/message.php:25
+msgid "[no subject]"
+msgstr "[אין נושא]"
+
+#: ../../include/message.php:45
+msgid "Unable to determine sender."
+msgstr ""
+
+#: ../../include/message.php:222
+msgid "Stored post could not be verified."
+msgstr ""
+
+#: ../../include/conversation.php:204
 #, php-format
-msgid "You have %1$.0f of %2$.0f allowed connections."
+msgid "%1$s is now connected with %2$s"
+msgstr "%1$s כעת מחובר עם %2$s"
+
+#: ../../include/conversation.php:239
+#, php-format
+msgid "%1$s poked %2$s"
 msgstr ""
 
-#: ../../include/widgets.php:181
-msgid "Add New Connection"
-msgstr "הוסף חיבור חדש"
-
-#: ../../include/widgets.php:182
-msgid "Enter channel address"
-msgstr "הזן כתובת ערוץ"
-
-#: ../../include/widgets.php:183
-msgid "Examples: bob@example.com, https://example.com/barbara"
-msgstr "דוגמאות: bob@example.com, https://example.com/barbara"
-
-#: ../../include/widgets.php:199
-msgid "Notes"
-msgstr "תזכירים"
-
-#: ../../include/widgets.php:273
-msgid "Remove term"
-msgstr "הסר פריט"
-
-#: ../../include/widgets.php:281 ../../include/features.php:84
-msgid "Saved Searches"
-msgstr "חיפושים שמורים"
-
-#: ../../include/widgets.php:282 ../../include/group.php:316
-msgid "add"
-msgstr "להוסיף"
-
-#: ../../include/widgets.php:310 ../../include/contact_widgets.php:53
-#: ../../include/features.php:98
-msgid "Saved Folders"
-msgstr "תיקיות שמורות"
-
-#: ../../include/widgets.php:313 ../../include/widgets.php:432
-#: ../../include/contact_widgets.php:56 ../../include/contact_widgets.php:94
-msgid "Everything"
-msgstr "כל דבר"
-
-#: ../../include/widgets.php:354
-msgid "Archives"
-msgstr "ארכיונים"
-
-#: ../../include/widgets.php:516
-msgid "Refresh"
-msgstr "רענן"
-
-#: ../../include/widgets.php:556
-msgid "Account settings"
-msgstr "הגדרות חשבון"
-
-#: ../../include/widgets.php:562
-msgid "Channel settings"
-msgstr "הגדרות ערוץ"
-
-#: ../../include/widgets.php:571
-msgid "Additional features"
-msgstr "תכונות נוספות"
-
-#: ../../include/widgets.php:578
-msgid "Feature/Addon settings"
+#: ../../include/conversation.php:694
+#, php-format
+msgid "View %s's profile @ %s"
 msgstr ""
 
-#: ../../include/widgets.php:584
-msgid "Display settings"
-msgstr "הגדרות תצוגה"
+#: ../../include/conversation.php:713
+msgid "Categories:"
+msgstr "קטגוריות:"
 
-#: ../../include/widgets.php:591
-msgid "Manage locations"
-msgstr "נהל מיקומים"
+#: ../../include/conversation.php:714
+msgid "Filed under:"
+msgstr "תויק תחת:"
 
-#: ../../include/widgets.php:600
-msgid "Export channel"
-msgstr "יצא ערוץ"
+#: ../../include/conversation.php:741
+msgid "View in context"
+msgstr "צפה בתוך הקשר"
 
-#: ../../include/widgets.php:607
-msgid "Connected apps"
-msgstr "אפליקציות מחוברות"
+#: ../../include/conversation.php:850
+msgid "remove"
+msgstr "להסיר"
 
-#: ../../include/widgets.php:622
-msgid "Premium Channel Settings"
-msgstr "הגדרות ערוץ פרמיה"
+#: ../../include/conversation.php:854 ../../include/nav.php:247
+msgid "Loading..."
+msgstr "כעת טוען..."
 
-#: ../../include/widgets.php:651
-msgid "Private Mail Menu"
-msgstr "תפריט דואר פרטי"
+#: ../../include/conversation.php:855
+msgid "Delete Selected Items"
+msgstr "מחק פריטים נבחרים"
 
-#: ../../include/widgets.php:653
-msgid "Combined View"
-msgstr "תצוגה משולבת"
+#: ../../include/conversation.php:951
+msgid "View Source"
+msgstr "צפה במקור"
 
-#: ../../include/widgets.php:658 ../../include/nav.php:196
-msgid "Inbox"
-msgstr "תיבה נכנסת"
+#: ../../include/conversation.php:952
+msgid "Follow Thread"
+msgstr "עקוב שרשור"
 
-#: ../../include/widgets.php:663 ../../include/nav.php:197
-msgid "Outbox"
-msgstr "תיבה יוצאת"
+#: ../../include/conversation.php:953
+msgid "Unfollow Thread"
+msgstr "נקר שרשור"
 
-#: ../../include/widgets.php:668 ../../include/nav.php:198
-msgid "New Message"
-msgstr "הודעה חדשה"
+#: ../../include/conversation.php:958
+msgid "Activity/Posts"
+msgstr "פעילות/פוסטים"
 
-#: ../../include/widgets.php:685 ../../include/widgets.php:697
-msgid "Conversations"
-msgstr "דיונים"
+#: ../../include/conversation.php:960
+msgid "Edit Connection"
+msgstr "ערוך חיבור"
 
-#: ../../include/widgets.php:689
-msgid "Received Messages"
-msgstr "הודעות שנתקבלו"
+#: ../../include/conversation.php:961
+msgid "Message"
+msgstr "הודעה"
 
-#: ../../include/widgets.php:693
-msgid "Sent Messages"
-msgstr "הודעות שנשלחו"
+#: ../../include/conversation.php:1078
+#, php-format
+msgid "%s likes this."
+msgstr "%s אהב זאת."
 
-#: ../../include/widgets.php:707
-msgid "No messages."
-msgstr "אין הודעות."
+#: ../../include/conversation.php:1078
+#, php-format
+msgid "%s doesn't like this."
+msgstr "%s לא אוהב זאת."
 
-#: ../../include/widgets.php:725
-msgid "Delete conversation"
-msgstr "מחק דיון"
+#: ../../include/conversation.php:1082
+#, php-format
+msgid "<span  %1$s>%2$d people</span> like this."
+msgid_plural "<span  %1$s>%2$d people</span> like this."
+msgstr[0] "<span  %1$s>איש %2$d</span> אוהב זאת."
+msgstr[1] "<span  %1$s>%2$d אנשים</span> אוהבים זאת."
 
-#: ../../include/widgets.php:751
-msgid "Events Menu"
-msgstr "תפריט אירועים"
+#: ../../include/conversation.php:1084
+#, php-format
+msgid "<span  %1$s>%2$d people</span> don't like this."
+msgid_plural "<span  %1$s>%2$d people</span> don't like this."
+msgstr[0] "<span  %1$s>איש %2$d</span> לא אוהב זאת."
+msgstr[1] "<span  %1$s>%2$d אנשים</span> לא אוהבים זאת."
 
-#: ../../include/widgets.php:752
-msgid "Day View"
-msgstr "תצוגת יום"
+#: ../../include/conversation.php:1090
+msgid "and"
+msgstr "ועוד"
 
-#: ../../include/widgets.php:753
-msgid "Week View"
-msgstr "תצוגת שבוע"
+#: ../../include/conversation.php:1093
+#, php-format
+msgid ", and %d other people"
+msgid_plural ", and %d other people"
+msgstr[0] ", ועוד איש %d אחר"
+msgstr[1] ", ועוד %d אנשים אחרים"
 
-#: ../../include/widgets.php:754
-msgid "Month View"
-msgstr "תצוגת חודש"
+#: ../../include/conversation.php:1094
+#, php-format
+msgid "%s like this."
+msgstr "%s אוהבים זאת."
 
-#: ../../include/widgets.php:766
-msgid "Events Tools"
-msgstr "כלי אירוע"
+#: ../../include/conversation.php:1094
+#, php-format
+msgid "%s don't like this."
+msgstr "%s לא אוהבים זאת."
 
-#: ../../include/widgets.php:767
-msgid "Export Calendar"
-msgstr "יצא לוח שנה"
+#: ../../include/conversation.php:1133
+msgid "Set your location"
+msgstr "קבע את המיקום שלך"
 
-#: ../../include/widgets.php:768
-msgid "Import Calendar"
-msgstr "יבא לוח שנה"
+#: ../../include/conversation.php:1134
+msgid "Clear browser location"
+msgstr "טהר מיקום דפדפן"
 
-#: ../../include/widgets.php:842 ../../include/conversation.php:1662
-#: ../../include/conversation.php:1665
+#: ../../include/conversation.php:1150
+msgid "Embed image from photo albums"
+msgstr ""
+
+#: ../../include/conversation.php:1182
+msgid "Tag term:"
+msgstr ""
+
+#: ../../include/conversation.php:1183
+msgid "Where are you right now?"
+msgstr "היכן אתה כעת?"
+
+#: ../../include/conversation.php:1186
+msgid "Choose images to embed"
+msgstr ""
+
+#: ../../include/conversation.php:1187
+msgid "Choose an album"
+msgstr ""
+
+#: ../../include/conversation.php:1188
+msgid "Choose a different album..."
+msgstr ""
+
+#: ../../include/conversation.php:1189
+msgid "Error getting album list"
+msgstr ""
+
+#: ../../include/conversation.php:1190
+msgid "Error getting photo link"
+msgstr ""
+
+#: ../../include/conversation.php:1191
+msgid "Error getting album"
+msgstr ""
+
+#: ../../include/conversation.php:1221
+msgid "Page link name"
+msgstr "שם קישור עמוד"
+
+#: ../../include/conversation.php:1224
+msgid "Post as"
+msgstr "פרסם בתור"
+
+#: ../../include/conversation.php:1234
+msgid "Embed an image from your albums"
+msgstr ""
+
+#: ../../include/conversation.php:1236 ../../include/conversation.php:1273
+msgid "OK"
+msgstr "אישור"
+
+#: ../../include/conversation.php:1238
+msgid "Toggle voting"
+msgstr ""
+
+#: ../../include/conversation.php:1246
+msgid "Categories (optional, comma-separated list)"
+msgstr "קטגוריות (רשות, רשימה מופרדת פסיקים)"
+
+#: ../../include/conversation.php:1269
+msgid "Set publish date"
+msgstr ""
+
+#: ../../include/conversation.php:1518
+msgid "Discover"
+msgstr "גלה"
+
+#: ../../include/conversation.php:1521
+msgid "Imported public streams"
+msgstr "זרמים ציבוריים מיובאים"
+
+#: ../../include/conversation.php:1526
+msgid "Commented Order"
+msgstr ""
+
+#: ../../include/conversation.php:1529
+msgid "Sort by Comment Date"
+msgstr ""
+
+#: ../../include/conversation.php:1533
+msgid "Posted Order"
+msgstr ""
+
+#: ../../include/conversation.php:1536
+msgid "Sort by Post Date"
+msgstr "מיין לפי תאריך פוסט"
+
+#: ../../include/conversation.php:1544
+msgid "Posts that mention or involve you"
+msgstr "פוסטים אשר מציינים או מערבים אותך"
+
+#: ../../include/conversation.php:1553
+msgid "Activity Stream - by date"
+msgstr "זרם פעילות - לפי תאריך"
+
+#: ../../include/conversation.php:1559
+msgid "Starred"
+msgstr ""
+
+#: ../../include/conversation.php:1562
+msgid "Favourite Posts"
+msgstr "פוסטים מועדפים"
+
+#: ../../include/conversation.php:1569
+msgid "Spam"
+msgstr "ספאם"
+
+#: ../../include/conversation.php:1572
+msgid "Posts flagged as SPAM"
+msgstr "פוסטים מסומנים בתור ספאם"
+
+#: ../../include/conversation.php:1629
+msgid "Status Messages and Posts"
+msgstr "הודעות ופרסומי סטטוס"
+
+#: ../../include/conversation.php:1638
+msgid "About"
+msgstr "אודות"
+
+#: ../../include/conversation.php:1641
+msgid "Profile Details"
+msgstr "פרטי פרופיל"
+
+#: ../../include/conversation.php:1657
+msgid "Files and Storage"
+msgstr "קבצים ואחסון"
+
+#: ../../include/conversation.php:1677 ../../include/conversation.php:1680
+#: ../../include/widgets.php:842
 msgid "Chatrooms"
 msgstr "חדרי שיחה"
 
-#: ../../include/widgets.php:846
-msgid "Overview"
-msgstr "סקירה"
+#: ../../include/conversation.php:1690 ../../include/nav.php:102
+msgid "Bookmarks"
+msgstr "סימניות"
 
-#: ../../include/widgets.php:853
-msgid "Chat Members"
-msgstr "חברי שיחה"
+#: ../../include/conversation.php:1693
+msgid "Saved Bookmarks"
+msgstr "סימניות שמורות"
 
-#: ../../include/widgets.php:876
-msgid "Bookmarked Chatrooms"
-msgstr "חדרי שיחה מסומנים"
+#: ../../include/conversation.php:1703
+msgid "Manage Webpages"
+msgstr "נהל עמודי רשת"
 
-#: ../../include/widgets.php:899
-msgid "Suggested Chatrooms"
-msgstr "חדרי שיחה מוצעים"
+#: ../../include/conversation.php:1762
+msgctxt "noun"
+msgid "Attending"
+msgid_plural "Attending"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../../include/widgets.php:1044 ../../include/widgets.php:1156
-msgid "photo/image"
-msgstr "תצלום/תמונה"
+#: ../../include/conversation.php:1765
+msgctxt "noun"
+msgid "Not Attending"
+msgid_plural "Not Attending"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../../include/widgets.php:1099
-msgid "Click to show more"
-msgstr "לחץ כדי להציג עוד"
+#: ../../include/conversation.php:1768
+msgctxt "noun"
+msgid "Undecided"
+msgid_plural "Undecided"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../../include/widgets.php:1250
-msgid "Rating Tools"
-msgstr "כלי דירוג"
+#: ../../include/conversation.php:1771
+msgctxt "noun"
+msgid "Agree"
+msgid_plural "Agrees"
+msgstr[0] "מסכים"
+msgstr[1] "מסכימים"
 
-#: ../../include/widgets.php:1254 ../../include/widgets.php:1256
-msgid "Rate Me"
-msgstr "דרג אותי"
+#: ../../include/conversation.php:1774
+msgctxt "noun"
+msgid "Disagree"
+msgid_plural "Disagrees"
+msgstr[0] "לא מסכים"
+msgstr[1] "לא מסכימים"
 
-#: ../../include/widgets.php:1259
-msgid "View Ratings"
-msgstr "צפה בדירוגים"
-
-#: ../../include/widgets.php:1316
-msgid "Forums"
-msgstr "פורומים"
-
-#: ../../include/widgets.php:1345
-msgid "Tasks"
-msgstr "משימות"
-
-#: ../../include/widgets.php:1354
-msgid "Documentation"
-msgstr "תיעוד"
-
-#: ../../include/widgets.php:1356
-msgid "Project/Site Information"
-msgstr "מידע פרויקט/אתר"
-
-#: ../../include/widgets.php:1357
-msgid "For Members"
-msgstr "לחברים"
-
-#: ../../include/widgets.php:1358
-msgid "For Administrators"
-msgstr "למנהלים"
-
-#: ../../include/widgets.php:1359
-msgid "For Developers"
-msgstr "למפתחים"
-
-#: ../../include/widgets.php:1383 ../../include/widgets.php:1421
-msgid "Member registrations waiting for confirmation"
-msgstr "רישומי חברות אשר ממתינים לאישור"
-
-#: ../../include/widgets.php:1389
-msgid "Inspect queue"
-msgstr ""
-
-#: ../../include/widgets.php:1391
-msgid "DB updates"
-msgstr "עדכוני מסד נתונים"
-
-#: ../../include/widgets.php:1416 ../../include/nav.php:216
-msgid "Admin"
-msgstr "מנהל"
-
-#: ../../include/widgets.php:1417
-msgid "Plugin Features"
-msgstr "תכונות תוסף"
+#: ../../include/conversation.php:1777
+msgctxt "noun"
+msgid "Abstain"
+msgid_plural "Abstains"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../include/follow.php:27
 msgid "Channel is blocked on this site."
@@ -7497,26 +7533,17 @@ msgstr "גילוי ערוץ נכשל."
 msgid "Cannot connect to yourself."
 msgstr "לא ניתן להתחבר לעצמך."
 
-#: ../../include/bookmarks.php:35
-#, php-format
-msgid "%1$s's bookmarks"
-msgstr ""
-
-#: ../../include/api.php:1336
-msgid "Public Timeline"
-msgstr "ציר זמן ציבורי"
-
-#: ../../include/bbcode.php:123 ../../include/bbcode.php:844
-#: ../../include/bbcode.php:847 ../../include/bbcode.php:852
-#: ../../include/bbcode.php:855 ../../include/bbcode.php:858
-#: ../../include/bbcode.php:861 ../../include/bbcode.php:866
+#: ../../include/bbcode.php:123 ../../include/bbcode.php:866
 #: ../../include/bbcode.php:869 ../../include/bbcode.php:874
 #: ../../include/bbcode.php:877 ../../include/bbcode.php:880
-#: ../../include/bbcode.php:883
+#: ../../include/bbcode.php:883 ../../include/bbcode.php:888
+#: ../../include/bbcode.php:891 ../../include/bbcode.php:896
+#: ../../include/bbcode.php:899 ../../include/bbcode.php:902
+#: ../../include/bbcode.php:905
 msgid "Image/photo"
 msgstr "תמונה/תצלום"
 
-#: ../../include/bbcode.php:162 ../../include/bbcode.php:894
+#: ../../include/bbcode.php:162 ../../include/bbcode.php:916
 msgid "Encrypted content"
 msgstr "תוכן מוצפן"
 
@@ -7532,26 +7559,31 @@ msgid ""
 "to install it on this site."
 msgstr ""
 
-#: ../../include/bbcode.php:254
+#: ../../include/bbcode.php:261
 #, php-format
 msgid "%1$s wrote the following %2$s %3$s"
 msgstr ""
 
-#: ../../include/bbcode.php:331 ../../include/bbcode.php:339
+#: ../../include/bbcode.php:338 ../../include/bbcode.php:346
 msgid "Click to open/close"
 msgstr "לחץ כדי לפתוח/לסגור"
 
-#: ../../include/bbcode.php:339
+#: ../../include/bbcode.php:346
 msgid "spoiler"
 msgstr ""
 
-#: ../../include/bbcode.php:585
+#: ../../include/bbcode.php:607
 msgid "Different viewers will see this text differently"
 msgstr "צופים שונים ייראו את טקסט זה בצורה שונה"
 
-#: ../../include/bbcode.php:832
+#: ../../include/bbcode.php:854
 msgid "$1 wrote:"
 msgstr "$1 כתב(ה):"
+
+#: ../../include/bookmarks.php:35
+#, php-format
+msgid "%1$s's bookmarks"
+msgstr ""
 
 #: ../../include/dir_fns.php:141
 msgid "Directory Options"
@@ -7569,13 +7601,30 @@ msgstr "פורומים ציבוריים בלבד"
 msgid "This Website Only"
 msgstr "אתר רשת זה בלבד"
 
+#: ../../include/zot.php:709
+msgid "Invalid data packet"
+msgstr ""
+
+#: ../../include/zot.php:725
+msgid "Unable to verify channel signature"
+msgstr ""
+
+#: ../../include/zot.php:2373
+#, php-format
+msgid "Unable to verify site signature for %s"
+msgstr ""
+
+#: ../../include/zot.php:3722
+msgid "invalid target signature"
+msgstr ""
+
 #: ../../include/security.php:383
 msgid ""
 "The form security token was not correct. This probably happened because the "
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: ../../include/nav.php:82 ../../include/nav.php:113 ../../boot.php:1702
+#: ../../include/nav.php:82 ../../include/nav.php:113 ../../boot.php:1703
 msgid "Logout"
 msgstr "יציאה"
 
@@ -7599,7 +7648,7 @@ msgstr "עמוד הפרופיל שלך"
 msgid "Manage/Edit profiles"
 msgstr "נהל/ערוך פרופילים"
 
-#: ../../include/nav.php:90 ../../include/channel.php:941
+#: ../../include/nav.php:90 ../../include/channel.php:922
 msgid "Edit Profile"
 msgstr "ערוך פרופיל"
 
@@ -7618,10 +7667,6 @@ msgstr "הקבצים שלך"
 #: ../../include/nav.php:96
 msgid "Your chatrooms"
 msgstr "החדרי שיחה שלך"
-
-#: ../../include/nav.php:102 ../../include/conversation.php:1675
-msgid "Bookmarks"
-msgstr "סימניות"
 
 #: ../../include/nav.php:102
 msgid "Your bookmarks"
@@ -7712,6 +7757,18 @@ msgstr "צפה בכל ההודעות הפרטיות"
 msgid "Mark all private messages seen"
 msgstr "סמן את כל ההודעות הפרטיות כנקראו"
 
+#: ../../include/nav.php:196 ../../include/widgets.php:658
+msgid "Inbox"
+msgstr "תיבה נכנסת"
+
+#: ../../include/nav.php:197 ../../include/widgets.php:663
+msgid "Outbox"
+msgstr "תיבה יוצאת"
+
+#: ../../include/nav.php:198 ../../include/widgets.php:668
+msgid "New Message"
+msgstr "הודעה חדשה"
+
 #: ../../include/nav.php:201
 msgid "Event Calendar"
 msgstr "לוח שנה אירועים"
@@ -7732,13 +7789,13 @@ msgstr "נהל את הערוצים שלך"
 msgid "Account/Channel Settings"
 msgstr "הגדרות חשבון/ערוץ"
 
+#: ../../include/nav.php:216 ../../include/widgets.php:1489
+msgid "Admin"
+msgstr "מנהל"
+
 #: ../../include/nav.php:216
 msgid "Site Setup and Configuration"
 msgstr "הבניית והגדרת אתר"
-
-#: ../../include/nav.php:247 ../../include/conversation.php:851
-msgid "Loading..."
-msgstr "כעת טוען..."
 
 #: ../../include/nav.php:252
 msgid "@name, #tag, ?doc, content"
@@ -7747,19 +7804,6 @@ msgstr "@name, #tag, ?doc, content"
 #: ../../include/nav.php:253
 msgid "Please wait..."
 msgstr "אנא המתן..."
-
-#: ../../include/connections.php:95
-msgid "New window"
-msgstr "חלון חדש"
-
-#: ../../include/connections.php:96
-msgid "Open the selected location in a different window or browser tab"
-msgstr "פתח את המיקום הנבחר בתוך חלון או סימניית דפדפן אחרים"
-
-#: ../../include/connections.php:214
-#, php-format
-msgid "User '%s' deleted"
-msgstr "משתמש '%s' נמחק"
 
 #: ../../include/contact_widgets.php:11
 #, php-format
@@ -7796,6 +7840,16 @@ msgstr "הזמן חברים"
 msgid "Advanced example: name=fred and country=iceland"
 msgstr "דוגמא מתקדמת: name=פרד וגם country=איסלנד"
 
+#: ../../include/contact_widgets.php:53 ../../include/features.php:98
+#: ../../include/widgets.php:310
+msgid "Saved Folders"
+msgstr "תיקיות שמורות"
+
+#: ../../include/contact_widgets.php:56 ../../include/contact_widgets.php:94
+#: ../../include/widgets.php:313 ../../include/widgets.php:432
+msgid "Everything"
+msgstr "כל דבר"
+
 #: ../../include/contact_widgets.php:122
 #, php-format
 msgid "%d connection in common"
@@ -7806,268 +7860,6 @@ msgstr[1] ""
 #: ../../include/contact_widgets.php:127
 msgid "show more"
 msgstr "הצג עוד"
-
-#: ../../include/conversation.php:204
-#, php-format
-msgid "%1$s is now connected with %2$s"
-msgstr "%1$s כעת מחובר עם %2$s"
-
-#: ../../include/conversation.php:239
-#, php-format
-msgid "%1$s poked %2$s"
-msgstr ""
-
-#: ../../include/conversation.php:691
-#, php-format
-msgid "View %s's profile @ %s"
-msgstr ""
-
-#: ../../include/conversation.php:710
-msgid "Categories:"
-msgstr "קטגוריות:"
-
-#: ../../include/conversation.php:711
-msgid "Filed under:"
-msgstr "תויק תחת:"
-
-#: ../../include/conversation.php:738
-msgid "View in context"
-msgstr "צפה בתוך הקשר"
-
-#: ../../include/conversation.php:847
-msgid "remove"
-msgstr "להסיר"
-
-#: ../../include/conversation.php:852
-msgid "Delete Selected Items"
-msgstr "מחק פריטים נבחרים"
-
-#: ../../include/conversation.php:948
-msgid "View Source"
-msgstr "צפה במקור"
-
-#: ../../include/conversation.php:949
-msgid "Follow Thread"
-msgstr "עקוב שרשור"
-
-#: ../../include/conversation.php:950
-msgid "Unfollow Thread"
-msgstr "נקר שרשור"
-
-#: ../../include/conversation.php:955
-msgid "Activity/Posts"
-msgstr "פעילות/פוסטים"
-
-#: ../../include/conversation.php:957
-msgid "Edit Connection"
-msgstr "ערוך חיבור"
-
-#: ../../include/conversation.php:958
-msgid "Message"
-msgstr "הודעה"
-
-#: ../../include/conversation.php:1075
-#, php-format
-msgid "%s likes this."
-msgstr "%s אהב זאת."
-
-#: ../../include/conversation.php:1075
-#, php-format
-msgid "%s doesn't like this."
-msgstr "%s לא אוהב זאת."
-
-#: ../../include/conversation.php:1079
-#, php-format
-msgid "<span  %1$s>%2$d people</span> like this."
-msgid_plural "<span  %1$s>%2$d people</span> like this."
-msgstr[0] "<span  %1$s>איש %2$d</span> אוהב זאת."
-msgstr[1] "<span  %1$s>%2$d אנשים</span> אוהבים זאת."
-
-#: ../../include/conversation.php:1081
-#, php-format
-msgid "<span  %1$s>%2$d people</span> don't like this."
-msgid_plural "<span  %1$s>%2$d people</span> don't like this."
-msgstr[0] "<span  %1$s>איש %2$d</span> לא אוהב זאת."
-msgstr[1] "<span  %1$s>%2$d אנשים</span> לא אוהבים זאת."
-
-#: ../../include/conversation.php:1087
-msgid "and"
-msgstr "ועוד"
-
-#: ../../include/conversation.php:1090
-#, php-format
-msgid ", and %d other people"
-msgid_plural ", and %d other people"
-msgstr[0] ", ועוד איש %d אחר"
-msgstr[1] ", ועוד %d אנשים אחרים"
-
-#: ../../include/conversation.php:1091
-#, php-format
-msgid "%s like this."
-msgstr "%s אוהבים זאת."
-
-#: ../../include/conversation.php:1091
-#, php-format
-msgid "%s don't like this."
-msgstr "%s לא אוהבים זאת."
-
-#: ../../include/conversation.php:1130
-msgid "Set your location"
-msgstr "קבע את המיקום שלך"
-
-#: ../../include/conversation.php:1131
-msgid "Clear browser location"
-msgstr "טהר מיקום דפדפן"
-
-#: ../../include/conversation.php:1177
-msgid "Tag term:"
-msgstr ""
-
-#: ../../include/conversation.php:1178
-msgid "Where are you right now?"
-msgstr "היכן אתה כעת?"
-
-#: ../../include/conversation.php:1210
-msgid "Page link name"
-msgstr "שם קישור עמוד"
-
-#: ../../include/conversation.php:1213
-msgid "Post as"
-msgstr "פרסם בתור"
-
-#: ../../include/conversation.php:1223
-msgid "Toggle voting"
-msgstr ""
-
-#: ../../include/conversation.php:1231
-msgid "Categories (optional, comma-separated list)"
-msgstr "קטגוריות (רשות, רשימה מופרדת פסיקים)"
-
-#: ../../include/conversation.php:1254
-msgid "Set publish date"
-msgstr ""
-
-#: ../../include/conversation.php:1258
-msgid "OK"
-msgstr "אישור"
-
-#: ../../include/conversation.php:1503
-msgid "Discover"
-msgstr "גלה"
-
-#: ../../include/conversation.php:1506
-msgid "Imported public streams"
-msgstr "זרמים ציבוריים מיובאים"
-
-#: ../../include/conversation.php:1511
-msgid "Commented Order"
-msgstr ""
-
-#: ../../include/conversation.php:1514
-msgid "Sort by Comment Date"
-msgstr ""
-
-#: ../../include/conversation.php:1518
-msgid "Posted Order"
-msgstr ""
-
-#: ../../include/conversation.php:1521
-msgid "Sort by Post Date"
-msgstr "מיין לפי תאריך פוסט"
-
-#: ../../include/conversation.php:1529
-msgid "Posts that mention or involve you"
-msgstr "פוסטים אשר מציינים או מערבים אותך"
-
-#: ../../include/conversation.php:1538
-msgid "Activity Stream - by date"
-msgstr "זרם פעילות - לפי תאריך"
-
-#: ../../include/conversation.php:1544
-msgid "Starred"
-msgstr ""
-
-#: ../../include/conversation.php:1547
-msgid "Favourite Posts"
-msgstr "פוסטים מועדפים"
-
-#: ../../include/conversation.php:1554
-msgid "Spam"
-msgstr "ספאם"
-
-#: ../../include/conversation.php:1557
-msgid "Posts flagged as SPAM"
-msgstr "פוסטים מסומנים בתור ספאם"
-
-#: ../../include/conversation.php:1614
-msgid "Status Messages and Posts"
-msgstr "הודעות ופרסומי סטטוס"
-
-#: ../../include/conversation.php:1623
-msgid "About"
-msgstr "אודות"
-
-#: ../../include/conversation.php:1626
-msgid "Profile Details"
-msgstr "פרטי פרופיל"
-
-#: ../../include/conversation.php:1635 ../../include/photos.php:502
-msgid "Photo Albums"
-msgstr "אלבומי תמונה"
-
-#: ../../include/conversation.php:1642
-msgid "Files and Storage"
-msgstr "קבצים ואחסון"
-
-#: ../../include/conversation.php:1678
-msgid "Saved Bookmarks"
-msgstr "סימניות שמורות"
-
-#: ../../include/conversation.php:1688
-msgid "Manage Webpages"
-msgstr "נהל עמודי רשת"
-
-#: ../../include/conversation.php:1747
-msgctxt "noun"
-msgid "Attending"
-msgid_plural "Attending"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../include/conversation.php:1750
-msgctxt "noun"
-msgid "Not Attending"
-msgid_plural "Not Attending"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../include/conversation.php:1753
-msgctxt "noun"
-msgid "Undecided"
-msgid_plural "Undecided"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../include/conversation.php:1756
-msgctxt "noun"
-msgid "Agree"
-msgid_plural "Agrees"
-msgstr[0] "מסכים"
-msgstr[1] "מסכימים"
-
-#: ../../include/conversation.php:1759
-msgctxt "noun"
-msgid "Disagree"
-msgid_plural "Disagrees"
-msgstr[0] "לא מסכים"
-msgstr[1] "לא מסכימים"
-
-#: ../../include/conversation.php:1762
-msgctxt "noun"
-msgid "Abstain"
-msgid_plural "Abstains"
-msgstr[0] ""
-msgstr[1] ""
 
 #: ../../include/selectors.php:30
 msgid "Frequently"
@@ -8315,6 +8107,160 @@ msgstr "לא משנה"
 msgid "Ask me"
 msgstr "תשאלו אותי"
 
+#: ../../include/channel.php:32
+msgid "Unable to obtain identity information from database"
+msgstr ""
+
+#: ../../include/channel.php:66
+msgid "Empty name"
+msgstr "שם ריק"
+
+#: ../../include/channel.php:69
+msgid "Name too long"
+msgstr "שם ארוך מדי"
+
+#: ../../include/channel.php:180
+msgid "No account identifier"
+msgstr "אין מזהה חשבון"
+
+#: ../../include/channel.php:192
+msgid "Nickname is required."
+msgstr "נדרש שם כינוי."
+
+#: ../../include/channel.php:206
+msgid "Reserved nickname. Please choose another."
+msgstr ""
+
+#: ../../include/channel.php:211
+msgid ""
+"Nickname has unsupported characters or is already being used on this site."
+msgstr ""
+
+#: ../../include/channel.php:287
+msgid "Unable to retrieve created identity"
+msgstr ""
+
+#: ../../include/channel.php:345
+msgid "Default Profile"
+msgstr "פרופיל שגרתי"
+
+#: ../../include/channel.php:772
+msgid "Requested channel is not available."
+msgstr "ערוץ מבוקש אינו זמין."
+
+#: ../../include/channel.php:919
+msgid "Create New Profile"
+msgstr "צור פרופיל חדש"
+
+#: ../../include/channel.php:939
+msgid "Visible to everybody"
+msgstr "נראה לכל אחד"
+
+#: ../../include/channel.php:1012 ../../include/channel.php:1123
+msgid "Gender:"
+msgstr "מין:"
+
+#: ../../include/channel.php:1013 ../../include/channel.php:1167
+msgid "Status:"
+msgstr "מצב:"
+
+#: ../../include/channel.php:1014 ../../include/channel.php:1178
+msgid "Homepage:"
+msgstr "עמוד בית:"
+
+#: ../../include/channel.php:1015
+msgid "Online Now"
+msgstr "מקוון כעת"
+
+#: ../../include/channel.php:1128
+msgid "Like this channel"
+msgstr ""
+
+#: ../../include/channel.php:1152
+msgid "j F, Y"
+msgstr "j F, Y"
+
+#: ../../include/channel.php:1153
+msgid "j F"
+msgstr "j F"
+
+#: ../../include/channel.php:1160
+msgid "Birthday:"
+msgstr "יום הולדת:"
+
+#: ../../include/channel.php:1173
+#, php-format
+msgid "for %1$d %2$s"
+msgstr ""
+
+#: ../../include/channel.php:1176
+msgid "Sexual Preference:"
+msgstr "העדפה מינית:"
+
+#: ../../include/channel.php:1182
+msgid "Tags:"
+msgstr "תגיות:"
+
+#: ../../include/channel.php:1184
+msgid "Political Views:"
+msgstr "השקפות פוליטיות:"
+
+#: ../../include/channel.php:1186
+msgid "Religion:"
+msgstr "דת:"
+
+#: ../../include/channel.php:1190
+msgid "Hobbies/Interests:"
+msgstr "תחביבים/עניין:"
+
+#: ../../include/channel.php:1192
+msgid "Likes:"
+msgstr "אוהב:"
+
+#: ../../include/channel.php:1194
+msgid "Dislikes:"
+msgstr "שונא:"
+
+#: ../../include/channel.php:1196
+msgid "Contact information and Social Networks:"
+msgstr ""
+
+#: ../../include/channel.php:1198
+msgid "My other channels:"
+msgstr "הערוצים האחרים שלי:"
+
+#: ../../include/channel.php:1200
+msgid "Musical interests:"
+msgstr ""
+
+#: ../../include/channel.php:1202
+msgid "Books, literature:"
+msgstr "ספרים, ספרות:"
+
+#: ../../include/channel.php:1204
+msgid "Television:"
+msgstr "טלוויזיה:"
+
+#: ../../include/channel.php:1206
+msgid "Film/dance/culture/entertainment:"
+msgstr ""
+
+#: ../../include/channel.php:1208
+msgid "Love/Romance:"
+msgstr "אהבה/רומנטיקה:"
+
+#: ../../include/channel.php:1210
+msgid "Work/employment:"
+msgstr "עבודה/תעסוקה:"
+
+#: ../../include/channel.php:1212
+msgid "School/education:"
+msgstr "בי״ס/חינוך:"
+
+#: ../../include/channel.php:1232
+msgid "Like this thing"
+msgstr ""
+
 #: ../../include/PermissionDescription.php:31
 #: ../../include/acl_selectors.php:232
 msgid "Visible to your default audience"
@@ -8417,7 +8363,7 @@ msgid "Registration request at %s"
 msgstr "בקשת רישום אצל %s"
 
 #: ../../include/account.php:317 ../../include/account.php:344
-#: ../../include/account.php:404 ../../include/network.php:1871
+#: ../../include/account.php:404 ../../include/network.php:1896
 msgid "Administrator"
 msgstr "מנהל"
 
@@ -8459,217 +8405,63 @@ msgstr ""
 msgid "Item was not found."
 msgstr "פריט לא נמצא."
 
-#: ../../include/attach.php:497
+#: ../../include/attach.php:499
 msgid "No source file."
 msgstr "אין קובץ מקור."
 
-#: ../../include/attach.php:519
+#: ../../include/attach.php:521
 msgid "Cannot locate file to replace"
 msgstr ""
 
-#: ../../include/attach.php:537
+#: ../../include/attach.php:539
 msgid "Cannot locate file to revise/update"
 msgstr ""
 
-#: ../../include/attach.php:672
+#: ../../include/attach.php:674
 #, php-format
 msgid "File exceeds size limit of %d"
 msgstr ""
 
-#: ../../include/attach.php:686
+#: ../../include/attach.php:688
 #, php-format
 msgid "You have reached your limit of %1$.0f Mbytes attachment storage."
 msgstr ""
 
-#: ../../include/attach.php:842
+#: ../../include/attach.php:846
 msgid "File upload failed. Possible system limit or action terminated."
 msgstr ""
 
-#: ../../include/attach.php:855
+#: ../../include/attach.php:859
 msgid "Stored file could not be verified. Upload failed."
 msgstr ""
 
-#: ../../include/attach.php:909 ../../include/attach.php:925
+#: ../../include/attach.php:915 ../../include/attach.php:931
 msgid "Path not available."
 msgstr "נתיב לא זמין."
 
-#: ../../include/attach.php:971 ../../include/attach.php:1123
+#: ../../include/attach.php:977 ../../include/attach.php:1129
 msgid "Empty pathname"
 msgstr "שם נתיב ריק"
 
-#: ../../include/attach.php:997
+#: ../../include/attach.php:1003
 msgid "duplicate filename or path"
 msgstr "שם קובץ או נתיב כפול"
 
-#: ../../include/attach.php:1019
+#: ../../include/attach.php:1025
 msgid "Path not found."
 msgstr "נתיב לא נמצא."
 
-#: ../../include/attach.php:1077
+#: ../../include/attach.php:1083
 msgid "mkdir failed."
 msgstr "mkdir נכשל."
 
-#: ../../include/attach.php:1081
+#: ../../include/attach.php:1087
 msgid "database storage failed."
 msgstr "אחסון מסד נתונים נכשל."
 
-#: ../../include/attach.php:1129
+#: ../../include/attach.php:1135
 msgid "Empty path"
 msgstr "נתיב ריק"
-
-#: ../../include/channel.php:32
-msgid "Unable to obtain identity information from database"
-msgstr ""
-
-#: ../../include/channel.php:66
-msgid "Empty name"
-msgstr "שם ריק"
-
-#: ../../include/channel.php:69
-msgid "Name too long"
-msgstr "שם ארוך מדי"
-
-#: ../../include/channel.php:180
-msgid "No account identifier"
-msgstr "אין מזהה חשבון"
-
-#: ../../include/channel.php:192
-msgid "Nickname is required."
-msgstr "נדרש שם כינוי."
-
-#: ../../include/channel.php:206
-msgid "Reserved nickname. Please choose another."
-msgstr ""
-
-#: ../../include/channel.php:211
-msgid ""
-"Nickname has unsupported characters or is already being used on this site."
-msgstr ""
-
-#: ../../include/channel.php:287
-msgid "Unable to retrieve created identity"
-msgstr ""
-
-#: ../../include/channel.php:345
-msgid "Default Profile"
-msgstr "פרופיל שגרתי"
-
-#: ../../include/channel.php:791
-msgid "Requested channel is not available."
-msgstr "ערוץ מבוקש אינו זמין."
-
-#: ../../include/channel.php:938
-msgid "Create New Profile"
-msgstr "צור פרופיל חדש"
-
-#: ../../include/channel.php:958
-msgid "Visible to everybody"
-msgstr "נראה לכל אחד"
-
-#: ../../include/channel.php:1031 ../../include/channel.php:1142
-msgid "Gender:"
-msgstr "מין:"
-
-#: ../../include/channel.php:1032 ../../include/channel.php:1186
-msgid "Status:"
-msgstr "מצב:"
-
-#: ../../include/channel.php:1033 ../../include/channel.php:1197
-msgid "Homepage:"
-msgstr "עמוד בית:"
-
-#: ../../include/channel.php:1034
-msgid "Online Now"
-msgstr "מקוון כעת"
-
-#: ../../include/channel.php:1147
-msgid "Like this channel"
-msgstr ""
-
-#: ../../include/channel.php:1171
-msgid "j F, Y"
-msgstr "j F, Y"
-
-#: ../../include/channel.php:1172
-msgid "j F"
-msgstr "j F"
-
-#: ../../include/channel.php:1179
-msgid "Birthday:"
-msgstr "יום הולדת:"
-
-#: ../../include/channel.php:1192
-#, php-format
-msgid "for %1$d %2$s"
-msgstr ""
-
-#: ../../include/channel.php:1195
-msgid "Sexual Preference:"
-msgstr "העדפה מינית:"
-
-#: ../../include/channel.php:1201
-msgid "Tags:"
-msgstr "תגיות:"
-
-#: ../../include/channel.php:1203
-msgid "Political Views:"
-msgstr "השקפות פוליטיות:"
-
-#: ../../include/channel.php:1205
-msgid "Religion:"
-msgstr "דת:"
-
-#: ../../include/channel.php:1209
-msgid "Hobbies/Interests:"
-msgstr "תחביבים/עניין:"
-
-#: ../../include/channel.php:1211
-msgid "Likes:"
-msgstr "אוהב:"
-
-#: ../../include/channel.php:1213
-msgid "Dislikes:"
-msgstr "שונא:"
-
-#: ../../include/channel.php:1215
-msgid "Contact information and Social Networks:"
-msgstr ""
-
-#: ../../include/channel.php:1217
-msgid "My other channels:"
-msgstr "הערוצים האחרים שלי:"
-
-#: ../../include/channel.php:1219
-msgid "Musical interests:"
-msgstr ""
-
-#: ../../include/channel.php:1221
-msgid "Books, literature:"
-msgstr "ספרים, ספרות:"
-
-#: ../../include/channel.php:1223
-msgid "Television:"
-msgstr "טלוויזיה:"
-
-#: ../../include/channel.php:1225
-msgid "Film/dance/culture/entertainment:"
-msgstr ""
-
-#: ../../include/channel.php:1227
-msgid "Love/Romance:"
-msgstr "אהבה/רומנטיקה:"
-
-#: ../../include/channel.php:1229
-msgid "Work/employment:"
-msgstr "עבודה/תעסוקה:"
-
-#: ../../include/channel.php:1231
-msgid "School/education:"
-msgstr "בי״ס/חינוך:"
-
-#: ../../include/channel.php:1251
-msgid "Like this thing"
-msgstr ""
 
 #: ../../include/features.php:48
 msgid "General Features"
@@ -8858,6 +8650,10 @@ msgstr "קבוצת פרטיות"
 msgid "Enable management and selection of privacy groups"
 msgstr ""
 
+#: ../../include/features.php:84 ../../include/widgets.php:281
+msgid "Saved Searches"
+msgstr "חיפושים שמורים"
+
 #: ../../include/features.php:84
 msgid "Save search terms for re-use"
 msgstr ""
@@ -8962,6 +8758,28 @@ msgstr "תוכן מוטמע"
 msgid "Embedding disabled"
 msgstr "הטמעה הינה מנוטרלת"
 
+#: ../../include/import.php:29
+msgid ""
+"Cannot create a duplicate channel identifier on this system. Import failed."
+msgstr ""
+
+#: ../../include/import.php:76
+msgid "Channel clone failed. Import failed."
+msgstr ""
+
+#: ../../include/connections.php:95
+msgid "New window"
+msgstr "חלון חדש"
+
+#: ../../include/connections.php:96
+msgid "Open the selected location in a different window or browser tab"
+msgstr "פתח את המיקום הנבחר בתוך חלון או סימניית דפדפן אחרים"
+
+#: ../../include/connections.php:214
+#, php-format
+msgid "User '%s' deleted"
+msgstr "משתמש '%s' נמחק"
+
 #: ../../include/acl_selectors.php:271
 msgid "Who can see this?"
 msgstr "מי מסוגל לראות זאת?"
@@ -9015,7 +8833,7 @@ msgstr "גיל: "
 msgid "YYYY-MM-DD or MM-DD"
 msgstr "YYYY-MM-DD או MM-DD"
 
-#: ../../include/datetime.php:272 ../../boot.php:2470
+#: ../../include/datetime.php:272 ../../boot.php:2471
 msgid "never"
 msgstr ""
 
@@ -9114,6 +8932,10 @@ msgstr "הוסף קבוצת פרטיות"
 #: ../../include/group.php:314
 msgid "Channels not in any privacy group"
 msgstr ""
+
+#: ../../include/group.php:316 ../../include/widgets.php:282
+msgid "add"
+msgstr "להוסיף"
 
 #: ../../include/js_strings.php:5
 msgid "Delete this item?"
@@ -9359,105 +9181,344 @@ msgctxt "calendar"
 msgid "All day"
 msgstr "כל היום"
 
-#: ../../include/network.php:657
+#: ../../include/network.php:682
 msgid "view full size"
 msgstr "צפה בגודל מלא"
 
-#: ../../include/network.php:1885
+#: ../../include/network.php:1910
 msgid "No Subject"
 msgstr "אין נושא"
 
-#: ../../include/network.php:2146 ../../include/network.php:2147
+#: ../../include/network.php:2171 ../../include/network.php:2172
 msgid "Friendica"
 msgstr "Friendica"
 
-#: ../../include/network.php:2148
+#: ../../include/network.php:2173
 msgid "OStatus"
 msgstr "OStatus"
 
-#: ../../include/network.php:2149
+#: ../../include/network.php:2174
 msgid "GNU-Social"
 msgstr "GNU-Social"
 
-#: ../../include/network.php:2150
+#: ../../include/network.php:2175
 msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
-#: ../../include/network.php:2152
+#: ../../include/network.php:2177
 msgid "Diaspora"
 msgstr "Diaspora"
 
-#: ../../include/network.php:2153
+#: ../../include/network.php:2178
 msgid "Facebook"
 msgstr "פייסבוק"
 
-#: ../../include/network.php:2154
+#: ../../include/network.php:2179
 msgid "Zot"
 msgstr ""
 
-#: ../../include/network.php:2155
+#: ../../include/network.php:2180
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: ../../include/network.php:2156
+#: ../../include/network.php:2181
 msgid "XMPP/IM"
 msgstr "XMPP/IM"
 
-#: ../../include/network.php:2157
+#: ../../include/network.php:2182
 msgid "MySpace"
 msgstr "MySpace"
 
-#: ../../include/photos.php:110
+#: ../../include/items.php:902 ../../include/items.php:947
+msgid "(Unknown)"
+msgstr "(לא ידוע)"
+
+#: ../../include/items.php:1146
+msgid "Visible to anybody on the internet."
+msgstr "נראה לכל אחד באינטרנט."
+
+#: ../../include/items.php:1148
+msgid "Visible to you only."
+msgstr "נראה לך בלבד."
+
+#: ../../include/items.php:1150
+msgid "Visible to anybody in this network."
+msgstr "נראה לכל אחד ברשת זו."
+
+#: ../../include/items.php:1152
+msgid "Visible to anybody authenticated."
+msgstr "נראה לכל מי שהוא מאומת."
+
+#: ../../include/items.php:1154
 #, php-format
-msgid "Image exceeds website size limit of %lu bytes"
-msgstr ""
+msgid "Visible to anybody on %s."
+msgstr "נראה לכל אחד אצל %s."
 
-#: ../../include/photos.php:117
-msgid "Image file is empty."
-msgstr "קובץ תמונה הינו ריק."
+#: ../../include/items.php:1156
+msgid "Visible to all connections."
+msgstr "נראה לכל החיבורים."
 
-#: ../../include/photos.php:255
-msgid "Photo storage failed."
-msgstr "אחסון תצלום נכשל"
+#: ../../include/items.php:1158
+msgid "Visible to approved connections."
+msgstr "נראה לחיבורים מאושרים."
 
-#: ../../include/photos.php:295
-msgid "a new photo"
-msgstr "תצלום חדש"
+#: ../../include/items.php:1160
+msgid "Visible to specific connections."
+msgstr "נראה לחיבורים מסוימים."
 
-#: ../../include/photos.php:299
+#: ../../include/items.php:3920
+msgid "Privacy group is empty."
+msgstr "קבוצת פרטיות הינה ריקה"
+
+#: ../../include/items.php:3927
 #, php-format
-msgctxt "photo_upload"
-msgid "%1$s posted %2$s to %3$s"
-msgstr ""
+msgid "Privacy group: %s"
+msgstr "קבוצת פרטיות: %s"
 
-#: ../../include/photos.php:506
-msgid "Upload New Photos"
-msgstr "העלה תצלומים חדשים"
+#: ../../include/items.php:3939
+msgid "Connection not found."
+msgstr "חיבור לא נמצא."
 
-#: ../../include/zot.php:699
-msgid "Invalid data packet"
-msgstr ""
+#: ../../include/items.php:4305
+msgid "profile photo"
+msgstr "תצלום פרופיל"
 
-#: ../../include/zot.php:715
-msgid "Unable to verify channel signature"
-msgstr ""
-
-#: ../../include/zot.php:2363
-#, php-format
-msgid "Unable to verify site signature for %s"
-msgstr ""
-
-#: ../../include/zot.php:3712
-msgid "invalid target signature"
-msgstr ""
-
-#: ../../include/page_widgets.php:6
+#: ../../include/page_widgets.php:7
 msgid "New Page"
 msgstr "עמוד חדש"
 
-#: ../../include/page_widgets.php:43
+#: ../../include/page_widgets.php:46
 msgid "Title"
 msgstr "כותרת"
+
+#: ../../include/widgets.php:103
+msgid "System"
+msgstr "מערכת"
+
+#: ../../include/widgets.php:106
+msgid "New App"
+msgstr "אפליקציה חדשה"
+
+#: ../../include/widgets.php:154
+msgid "Suggestions"
+msgstr "הצעות"
+
+#: ../../include/widgets.php:155
+msgid "See more..."
+msgstr "צפה בעוד..."
+
+#: ../../include/widgets.php:175
+#, php-format
+msgid "You have %1$.0f of %2$.0f allowed connections."
+msgstr ""
+
+#: ../../include/widgets.php:181
+msgid "Add New Connection"
+msgstr "הוסף חיבור חדש"
+
+#: ../../include/widgets.php:182
+msgid "Enter channel address"
+msgstr "הזן כתובת ערוץ"
+
+#: ../../include/widgets.php:183
+msgid "Examples: bob@example.com, https://example.com/barbara"
+msgstr "דוגמאות: bob@example.com, https://example.com/barbara"
+
+#: ../../include/widgets.php:199
+msgid "Notes"
+msgstr "תזכירים"
+
+#: ../../include/widgets.php:273
+msgid "Remove term"
+msgstr "הסר פריט"
+
+#: ../../include/widgets.php:354
+msgid "Archives"
+msgstr "ארכיונים"
+
+#: ../../include/widgets.php:516
+msgid "Refresh"
+msgstr "רענן"
+
+#: ../../include/widgets.php:556
+msgid "Account settings"
+msgstr "הגדרות חשבון"
+
+#: ../../include/widgets.php:562
+msgid "Channel settings"
+msgstr "הגדרות ערוץ"
+
+#: ../../include/widgets.php:571
+msgid "Additional features"
+msgstr "תכונות נוספות"
+
+#: ../../include/widgets.php:578
+msgid "Feature/Addon settings"
+msgstr ""
+
+#: ../../include/widgets.php:584
+msgid "Display settings"
+msgstr "הגדרות תצוגה"
+
+#: ../../include/widgets.php:591
+msgid "Manage locations"
+msgstr "נהל מיקומים"
+
+#: ../../include/widgets.php:600
+msgid "Export channel"
+msgstr "יצא ערוץ"
+
+#: ../../include/widgets.php:607
+msgid "Connected apps"
+msgstr "אפליקציות מחוברות"
+
+#: ../../include/widgets.php:622
+msgid "Premium Channel Settings"
+msgstr "הגדרות ערוץ פרמיה"
+
+#: ../../include/widgets.php:651
+msgid "Private Mail Menu"
+msgstr "תפריט דואר פרטי"
+
+#: ../../include/widgets.php:653
+msgid "Combined View"
+msgstr "תצוגה משולבת"
+
+#: ../../include/widgets.php:685 ../../include/widgets.php:697
+msgid "Conversations"
+msgstr "דיונים"
+
+#: ../../include/widgets.php:689
+msgid "Received Messages"
+msgstr "הודעות שנתקבלו"
+
+#: ../../include/widgets.php:693
+msgid "Sent Messages"
+msgstr "הודעות שנשלחו"
+
+#: ../../include/widgets.php:707
+msgid "No messages."
+msgstr "אין הודעות."
+
+#: ../../include/widgets.php:725
+msgid "Delete conversation"
+msgstr "מחק דיון"
+
+#: ../../include/widgets.php:751
+msgid "Events Menu"
+msgstr "תפריט אירועים"
+
+#: ../../include/widgets.php:752
+msgid "Day View"
+msgstr "תצוגת יום"
+
+#: ../../include/widgets.php:753
+msgid "Week View"
+msgstr "תצוגת שבוע"
+
+#: ../../include/widgets.php:754
+msgid "Month View"
+msgstr "תצוגת חודש"
+
+#: ../../include/widgets.php:766
+msgid "Events Tools"
+msgstr "כלי אירוע"
+
+#: ../../include/widgets.php:767
+msgid "Export Calendar"
+msgstr "יצא לוח שנה"
+
+#: ../../include/widgets.php:768
+msgid "Import Calendar"
+msgstr "יבא לוח שנה"
+
+#: ../../include/widgets.php:846
+msgid "Overview"
+msgstr "סקירה"
+
+#: ../../include/widgets.php:853
+msgid "Chat Members"
+msgstr "חברי שיחה"
+
+#: ../../include/widgets.php:875
+msgid "Wiki List"
+msgstr "רשימת ויקי"
+
+#: ../../include/widgets.php:913
+msgid "Wiki Pages"
+msgstr "עמודי ויקי"
+
+#: ../../include/widgets.php:948
+msgid "Bookmarked Chatrooms"
+msgstr "חדרי שיחה מסומנים"
+
+#: ../../include/widgets.php:971
+msgid "Suggested Chatrooms"
+msgstr "חדרי שיחה מוצעים"
+
+#: ../../include/widgets.php:1117 ../../include/widgets.php:1229
+msgid "photo/image"
+msgstr "תצלום/תמונה"
+
+#: ../../include/widgets.php:1172
+msgid "Click to show more"
+msgstr "לחץ כדי להציג עוד"
+
+#: ../../include/widgets.php:1323
+msgid "Rating Tools"
+msgstr "כלי דירוג"
+
+#: ../../include/widgets.php:1327 ../../include/widgets.php:1329
+msgid "Rate Me"
+msgstr "דרג אותי"
+
+#: ../../include/widgets.php:1332
+msgid "View Ratings"
+msgstr "צפה בדירוגים"
+
+#: ../../include/widgets.php:1389
+msgid "Forums"
+msgstr "פורומים"
+
+#: ../../include/widgets.php:1418
+msgid "Tasks"
+msgstr "משימות"
+
+#: ../../include/widgets.php:1427
+msgid "Documentation"
+msgstr "תיעוד"
+
+#: ../../include/widgets.php:1429
+msgid "Project/Site Information"
+msgstr "מידע פרויקט/אתר"
+
+#: ../../include/widgets.php:1430
+msgid "For Members"
+msgstr "לחברים"
+
+#: ../../include/widgets.php:1431
+msgid "For Administrators"
+msgstr "למנהלים"
+
+#: ../../include/widgets.php:1432
+msgid "For Developers"
+msgstr "למפתחים"
+
+#: ../../include/widgets.php:1456 ../../include/widgets.php:1494
+msgid "Member registrations waiting for confirmation"
+msgstr "רישומי חברות אשר ממתינים לאישור"
+
+#: ../../include/widgets.php:1462
+msgid "Inspect queue"
+msgstr ""
+
+#: ../../include/widgets.php:1464
+msgid "DB updates"
+msgstr "עדכוני מסד נתונים"
+
+#: ../../include/widgets.php:1490
+msgid "Plugin Features"
+msgstr "תכונות תוסף"
 
 #: ../../include/permissions.php:26
 msgid "Can view my normal stream and posts"
@@ -9631,6 +9692,10 @@ msgstr "תצריפים:"
 msgid "$Projectname event notification:"
 msgstr ""
 
+#: ../../include/api.php:1326
+msgid "Public Timeline"
+msgstr "ציר זמן ציבורי"
+
 #: ../../view/theme/redbasic/php/config.php:82
 msgid "Focus (Hubzilla default)"
 msgstr ""
@@ -9767,62 +9832,62 @@ msgstr ""
 msgid "Set size of followup author photos"
 msgstr ""
 
-#: ../../boot.php:1162
+#: ../../boot.php:1163
 #, php-format
 msgctxt "opensearch"
 msgid "Search %1$s (%2$s)"
 msgstr ""
 
-#: ../../boot.php:1162
+#: ../../boot.php:1163
 msgctxt "opensearch"
 msgid "$Projectname"
-msgstr ""
+msgstr "$Projectname"
 
-#: ../../boot.php:1480
+#: ../../boot.php:1481
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: ../../boot.php:1483
+#: ../../boot.php:1484
 #, php-format
 msgid "Update Error at %s"
 msgstr ""
 
-#: ../../boot.php:1684
+#: ../../boot.php:1685
 msgid ""
 "Create an account to access services and applications within the Hubzilla"
 msgstr ""
 
-#: ../../boot.php:1706
+#: ../../boot.php:1707
 msgid "Password"
 msgstr "סיסמה"
 
-#: ../../boot.php:1707
+#: ../../boot.php:1708
 msgid "Remember me"
 msgstr "זכור אותי"
 
-#: ../../boot.php:1710
+#: ../../boot.php:1711
 msgid "Forgot your password?"
 msgstr "שכחת את הסיסמה שלך?"
 
-#: ../../boot.php:2276
+#: ../../boot.php:2277
 msgid "toggle mobile"
 msgstr ""
 
-#: ../../boot.php:2425
+#: ../../boot.php:2426
 msgid "Website SSL certificate is not valid. Please correct."
 msgstr "תעודת SSL אתר רשת אינה תקינה. אנא תקן."
 
-#: ../../boot.php:2428
+#: ../../boot.php:2429
 #, php-format
 msgid "[hubzilla] Website SSL error for %s"
 msgstr "[hubzilla] שגיאת SSL אתר רשת עבור %s"
 
-#: ../../boot.php:2469
+#: ../../boot.php:2470
 msgid "Cron/Scheduled tasks not running."
 msgstr "משימות Cron/מתוזמנות לא רצות."
 
-#: ../../boot.php:2473
+#: ../../boot.php:2474
 #, php-format
 msgid "[hubzilla] Cron tasks not running on %s"
 msgstr "[hubzilla] משימות Cron לא רצות על %s"

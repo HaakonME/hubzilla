@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the Red package.
 # 
 # Translators:
-# inboxwall <axetransit@gmail.com>, 2016
+# Jacob M <axetransit@gmail.com>, 2016
 # GenghisKhan <genghiskhan@gmx.ca>, 2015
 # GenghisKhan <genghiskhan@gmx.ca>, 2015-2016
 msgid ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-20 00:01-0700\n"
 "PO-Revision-Date: 2016-05-21 09:52+0000\n"
-"Last-Translator: inboxwall <axetransit@gmail.com>\n"
+"Last-Translator: Jacob M <axetransit@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/Friendica/red-matrix/language/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

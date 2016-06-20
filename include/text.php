@@ -2887,6 +2887,12 @@ function text_highlight($s,$lang) {
 	if($lang === 'js')
 		$lang = 'javascript';
 
+	if($lang === 'json') {
+		$lang = 'javascript';
+		if(! strpos(trim($s),"\n"))
+			$s = jindent($s);
+	}
+
 	if(! strpos('Text_Highlighter',get_include_path())) {
 		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
 	}

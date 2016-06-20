@@ -17,7 +17,7 @@ function group_add($uid,$name,$public = 0) {
 			$z = q("SELECT * FROM `groups` WHERE `id` = %d LIMIT 1",
 				intval($r)
 			);
-			if(count($z) && $z[0]['deleted']) {
+			if(($z) && $z[0]['deleted']) {
 				/*$r = q("UPDATE `groups` SET `deleted` = 0 WHERE `uid` = %d AND `gname` = '%s' LIMIT 1",
 					intval($uid),
 					dbesc($name)
@@ -129,7 +129,7 @@ function group_byname($uid,$name) {
 		intval($uid),
 		dbesc($name)
 	);
-	if(count($r))
+	if($r)
 		return $r[0]['id'];
 	return false;
 }
@@ -178,11 +178,11 @@ function group_add_member($uid,$name,$member,$gid = 0) {
 		intval($gid),
 		dbesc($member)
 	);
-	if(count($r))
+	if($r)
 		return true;	// You might question this, but 
 				// we indicate success because the group member was in fact created
 				// -- It was just created at another time
- 	if(! count($r))
+ 	if(! $r)
 		$r = q("INSERT INTO `group_member` (`uid`, `gid`, `xchan`)
 			VALUES( %d, %d, '%s' ) ",
 			intval($uid),
@@ -205,7 +205,7 @@ function group_get_members($gid) {
 			intval(local_channel()),
 			intval(local_channel())
 		);
-		if(count($r))
+		if($r)
 			$ret = $r;
 	}
 	return $ret;
@@ -218,7 +218,7 @@ function group_get_members_xchan($gid) {
 			intval($gid),
 			intval(local_channel())
 		);
-		if(count($r)) {
+		if($r) {
 			foreach($r as $rr) {
 				$ret[] = $rr['xchan'];
 			}
@@ -236,7 +236,7 @@ function mini_group_select($uid,$group = '') {
 		intval($uid)
 	);
 	$grps[] = array('name' => '', 'hash' => '0', 'selected' => '');
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
 			$grps[] = array('name' => $rr['gname'], 'id' => $rr['hash'], 'selected' => (($group == $rr['hash']) ? 'true' : ''));
 		}
@@ -279,7 +279,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 		$member_of = groups_containing(local_channel(),$cid);
 	} 
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
 			$selected = (($group_id == $rr['id']) ? ' group-selected' : '');
 			
@@ -356,7 +356,7 @@ function groups_containing($uid,$c) {
 	);
 
 	$ret = array();
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr)
 			$ret[] = $rr['gid'];
 	}

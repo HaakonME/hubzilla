@@ -771,6 +771,7 @@ class App {
 	public static  $groups;
 	public static  $language;
 	public static  $langsave;
+	public static  $rtl = false;
 	public static  $plugins_admin;
 	public static  $module_loaded = false;
 	public static  $query_string;
@@ -2281,6 +2282,12 @@ function construct_page(&$a) {
 
 	$page    = App::$page;
 	$profile = App::$profile;
+
+	// There's some experimental support for right-to-left text in the view/php/default.php page template.
+	// In v1.9 we started providing direction preference in the per language hstrings.php file
+	// This requires somebody with fluency in a RTL language to make happen
+
+	$page['direction'] = 0; // ((App::$rtl) ? 1 : 0);
 
 	header("Content-type: text/html; charset=utf-8");
 

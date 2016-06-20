@@ -189,6 +189,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  */
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
+//	logger('url: ' . $url);
+//	logger('params: ' . print_r($params,true));
+//	logger('opts: ' . print_r($opts,true));
+
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
 	$ch = curl_init($url);
@@ -214,14 +218,15 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'headers')) {
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
-logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 	}
  
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
 
-	if(x($opts,'custom'))
+	if(x($opts,'custom')) {
 		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
+		@curl_setopt($ch, CURLOPT_POST,0);
+	}
 
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {

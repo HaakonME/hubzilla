@@ -122,7 +122,7 @@ class XConfig {
 			);
 		}
 
-		App::$config[$xchan][$family][$key] = $value;
+		\App::$config[$xchan][$family][$key] = $value;
 
 		if($ret)
 			return $value;

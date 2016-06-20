@@ -136,6 +136,16 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Render the Markdown-formatted page content in HTML
 		require_once('library/markdown.php');	
 		
+		$wikiModalID = random_string(3);
+		$wikiModal = replace_macros(
+			get_markup_template('generic_modal.tpl'), array(
+				'$id' => $wikiModalID,
+				'$title' => t('Revision Comparison'),
+				'$ok' => t('Revert'),
+				'$cancel' => t('Cancel')
+			)
+		);
+		
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
 			'$wikiheaderPage' => $wikiheaderPage,
@@ -157,7 +167,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
 			'$pageRename' => array('pageRename', t('Enter the new name:'), '', ''),
 			'$commitMsg' => array('commitMsg', '', '', '', '', 'placeholder="(optional) Enter a custom message when saving the page..."'),
-			'$pageHistory' => $pageHistory['history']
+			'$pageHistory' => $pageHistory['history'],
+			'$wikiModal' => $wikiModal,
+			'$wikiModalID' => $wikiModalID,
+			'$commit' => 'HEAD'
 		));
 		head_add_js('library/ace/ace.js');	// Ace Code Editor
 		return $o;
@@ -412,11 +425,37 @@ class Wiki extends \Zotlabs\Web\Controller {
 					json_return_and_die(array('success' => false));					
 				}
 			}
-			$reverted = wiki_revert_page(array('commitHash' => $commitHash, 'observer' => \App::get_observer(), 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
+			$reverted = wiki_revert_page(array('commitHash' => $commitHash, 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 			if($reverted['success']) {
 				json_return_and_die(array('content' => $reverted['content'], 'message' => '', 'success' => true));					
 			} else {
 				json_return_and_die(array('content' => '', 'message' => 'Error reverting page', 'success' => false));					
+			}
+		}
+		
+		// Compare page revisions
+		if ((argc() === 4) && (argv(2) === 'compare') && (argv(3) === 'page')) {
+			$resource_id = $_POST['resource_id']; 
+			$pageUrlName = $_POST['name'];
+			$compareCommit = $_POST['compareCommit'];
+			$currentCommit = $_POST['currentCommit'];
+			// Determine if observer has permission to revert pages
+			$nick = argv(1);
+			$channel = get_channel_by_nick($nick);			
+			if (local_channel() !== intval($channel['channel_id'])) {
+				$observer_hash = get_observer_hash();
+				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
+				if(!$perms['read']) {
+					logger('Wiki read permission denied.' . EOL);
+					json_return_and_die(array('success' => false));					
+				}
+			}
+			$compare = wiki_compare_page(array('currentCommit' => $currentCommit, 'compareCommit' => $compareCommit, 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
+			if($compare['success']) {
+				$diffHTML = '<table class="text-center" width="100%"><tr><td class="lead" width="50%">Current Revision</td><td class="lead" width="50%">Selected Revision</td></tr></table>' . $compare['diff'];
+				json_return_and_die(array('diff' => $diffHTML, 'message' => '', 'success' => true));					
+			} else {
+				json_return_and_die(array('diff' => '', 'message' => 'Error comparing page', 'success' => false));					
 			}
 		}
 		

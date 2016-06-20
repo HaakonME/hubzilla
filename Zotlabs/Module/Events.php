@@ -171,7 +171,7 @@ class Events extends \Zotlabs\Web\Controller {
 			foreach($cats as $cat) {
 				$post_tags[] = array(
 					'uid'   => $profile_uid, 
-					'type'  => TERM_CATEGORY,
+					'ttype' => TERM_CATEGORY,
 					'otype' => TERM_OBJ_POST,
 					'term'  => trim($cat),
 					'url'   => $channel['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
@@ -180,12 +180,12 @@ class Events extends \Zotlabs\Web\Controller {
 		}
 	
 		$datarray = array();
-		$datarray['start'] = $start;
-		$datarray['finish'] = $finish;
+		$datarray['dtstart'] = $start;
+		$datarray['dtend'] = $finish;
 		$datarray['summary'] = $summary;
 		$datarray['description'] = $desc;
 		$datarray['location'] = $location;
-		$datarray['type'] = $type;
+		$datarray['etype'] = $type;
 		$datarray['adjust'] = $adjust;
 		$datarray['nofinish'] = $nofinish;
 		$datarray['uid'] = local_channel();
@@ -232,7 +232,7 @@ class Events extends \Zotlabs\Web\Controller {
 		}
 	
 		if($share)
-			proc_run('php',"include/notifier.php","event","$item_id");
+			\Zotlabs\Daemon\Master::Summon(array('Notifier','event',$item_id));
 	
 	}
 	
@@ -269,14 +269,14 @@ class Events extends \Zotlabs\Web\Controller {
 		nav_set_selected('all_events');
 	
 		if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
-			$r = q("update event set ignore = 1 where id = %d and uid = %d",
+			$r = q("update event set dismissed = 1 where id = %d and uid = %d",
 				intval(argv(2)),
 				intval(local_channel())
 			);
 		}
 	
 		if((argc() > 2) && (argv(1) === 'unignore') && intval(argv(2))) {
-			$r = q("update event set ignore = 0 where id = %d and uid = %d",
+			$r = q("update event set dismissed = 0 where id = %d and uid = %d",
 				intval(argv(2)),
 				intval(local_channel())
 			);
@@ -301,7 +301,7 @@ class Events extends \Zotlabs\Web\Controller {
 		$mode = 'view';
 		$y = 0;
 		$m = 0;
-		$ignored = ((x($_REQUEST,'ignored')) ? " and ignored = " . intval($_REQUEST['ignored']) . " "  : '');
+		$ignored = ((x($_REQUEST,'ignored')) ? " and dismissed = " . intval($_REQUEST['ignored']) . " "  : '');
 	
 	
 		// logger('args: ' . print_r(\App::$argv,true));
@@ -358,9 +358,9 @@ class Events extends \Zotlabs\Web\Controller {
 			if(x($_REQUEST,'summary')) $orig_event['summary'] = $_REQUEST['summary'];
 			if(x($_REQUEST,'description')) $orig_event['description'] = $_REQUEST['description'];
 			if(x($_REQUEST,'location')) $orig_event['location'] = $_REQUEST['location'];
-			if(x($_REQUEST,'start')) $orig_event['start'] = $_REQUEST['start'];
-			if(x($_REQUEST,'finish')) $orig_event['finish'] = $_REQUEST['finish'];
-			if(x($_REQUEST,'type')) $orig_event['type'] = $_REQUEST['type'];
+			if(x($_REQUEST,'start')) $orig_event['dtstart'] = $_REQUEST['start'];
+			if(x($_REQUEST,'finish')) $orig_event['dtend'] = $_REQUEST['finish'];
+			if(x($_REQUEST,'type')) $orig_event['etype'] = $_REQUEST['type'];
 			*/
 	
 			$n_checked = ((x($orig_event) && $orig_event['nofinish']) ? ' checked="checked" ' : '');
@@ -380,9 +380,9 @@ class Events extends \Zotlabs\Web\Controller {
 			if($orig_event['event_xchan'])
 				$sh_checked .= ' disabled="disabled" ';
 	
-			$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
+			$sdt = ((x($orig_event)) ? $orig_event['dtstart'] : 'now');
 	
-			$fdt = ((x($orig_event)) ? $orig_event['finish'] : '+1 hour');
+			$fdt = ((x($orig_event)) ? $orig_event['dtend'] : '+1 hour');
 	
 			$tz = date_default_timezone_get();
 			if(x($orig_event))
@@ -406,7 +406,7 @@ class Events extends \Zotlabs\Web\Controller {
 			$ftext = datetime_convert('UTC',$tz,$fdt);
 			$ftext = substr($ftext,0,14) . "00:00";
 	
-			$type = ((x($orig_event)) ? $orig_event['type'] : 'event');
+			$type = ((x($orig_event)) ? $orig_event['etype'] : 'event');
 	
 			$f = get_config('system','event_input_format');
 			if(! $f)
@@ -536,8 +536,8 @@ class Events extends \Zotlabs\Web\Controller {
 				);
 			} elseif($export) {
 				$r = q("SELECT * from event where uid = %d
-					AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' ) 
-					OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish = 1 ) AND `start` <= '%s' )) ",
+					AND (( `adjust` = 0 AND ( `dtend` >= '%s' or nofinish = 1 ) AND `dtstart` <= '%s' ) 
+					OR  (  `adjust` = 1 AND ( `dtend` >= '%s' or nofinish = 1 ) AND `dtstart` <= '%s' )) ",
 					intval(local_channel()),
 					dbesc($start),
 					dbesc($finish),
@@ -554,8 +554,8 @@ class Events extends \Zotlabs\Web\Controller {
 				$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
 	                              from event left join item on event_hash = resource_id 
 					where resource_type = 'event' and event.uid = %d $ignored 
-					AND (( adjust = 0 AND ( finish >= '%s' or nofinish = 1 ) AND start <= '%s' ) 
-					OR  (  adjust = 1 AND ( finish >= '%s' or nofinish = 1 ) AND start <= '%s' )) ",
+					AND (( adjust = 0 AND ( dtend >= '%s' or nofinish = 1 ) AND dtstart <= '%s' ) 
+					OR  (  adjust = 1 AND ( dtend >= '%s' or nofinish = 1 ) AND dtstart <= '%s' )) ",
 					intval(local_channel()),
 					dbesc($start),
 					dbesc($finish),
@@ -576,7 +576,7 @@ class Events extends \Zotlabs\Web\Controller {
 	
 			if($r) {
 				foreach($r as $rr) {
-					$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
+					$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['dtstart'], 'j') : datetime_convert('UTC','UTC',$rr['dtstart'],'j'));
 					if(! x($links,$j)) 
 						$links[$j] = z_root() . '/' . \App::$cmd . '#link-' . $j;
 				}
@@ -591,15 +591,15 @@ class Events extends \Zotlabs\Web\Controller {
 	
 				foreach($r as $rr) {
 					
-					$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
-					$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], $fmt) : datetime_convert('UTC','UTC',$rr['start'],$fmt));
+					$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['dtstart'], 'j') : datetime_convert('UTC','UTC',$rr['dtstart'],'j'));
+					$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['dtstart'], $fmt) : datetime_convert('UTC','UTC',$rr['dtstart'],$fmt));
 					$d = day_translate($d);
 					
-					$start = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'c') : datetime_convert('UTC','UTC',$rr['start'],'c'));
+					$start = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['dtstart'], 'c') : datetime_convert('UTC','UTC',$rr['dtstart'],'c'));
 					if ($rr['nofinish']){
 						$end = null;
 					} else {
-						$end = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['finish'], 'c') : datetime_convert('UTC','UTC',$rr['finish'],'c'));
+						$end = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['dtend'], 'c') : datetime_convert('UTC','UTC',$rr['dtend'],'c'));
 					}
 					
 					

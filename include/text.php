@@ -3,8 +3,6 @@
  * @file include/text.php
  */
 
-require_once("include/template_processor.php");
-require_once("include/smarty.php");
 require_once("include/bbcode.php");
 
 // random string, there are 86 characters max in text mode, 128 for hex
@@ -16,13 +14,12 @@ define('RANDOM_STRING_TEXT', 0x01 );
 /**
  * @brief This is our template processor.
  *
- * @param string|FriendicaSmarty $s the string requiring macro substitution,
- *   or an instance of FriendicaSmarty
+ * @param string|SmartyEngine $s the string requiring macro substitution,
+ *   or an instance of SmartyEngine
  * @param array $r key value pairs (search => replace)
  * @return string substituted string
  */
 function replace_macros($s, $r) {
-	$a = get_app();
 
 	$arr = array('template' => $s, 'params' => $r);
 	call_hooks('replace_macros', $arr);
@@ -98,7 +95,6 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 	if($type == 'application/x-pdl')
 		return escape_tags($s);
 
-	$a = get_app();
 	if(App::$is_sys) {
 		return $s;
 	}
@@ -325,6 +321,15 @@ function autoname($len) {
  */
 function xmlify($str) {
 	$buffer = '';
+
+	if(is_array($str)) {
+
+		// allow to fall through so we ge a PHP error, as the log statement will 
+		// probably get lost in the noise unless we're specifically looking for it. 
+
+		btlogger('xmlify called with array: ' . print_r($str,true), LOGGER_NORMAL, LOG_WARNING);
+	}
+
 
 	$len = mb_strlen($str);
 	for($x = 0; $x < $len; $x ++) {
@@ -569,21 +574,25 @@ function attribute_contains($attr, $s) {
  */
 
 function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
-		return;
-
-	$debugging = get_config('system', 'debugging');
-	$loglevel  = intval(get_config('system', 'loglevel'));
-	$logfile   = get_config('system', 'logfile');
+	if(App::$module == 'setup' && is_writable('install.log')) {
+		$debugging = true;
+		$logfile = 'install.log';
+		$loglevel = LOGGER_ALL;
+	}
+	else {
+		$debugging = get_config('system', 'debugging');
+		$loglevel  = intval(get_config('system', 'loglevel'));
+		$logfile   = get_config('system', 'logfile');
+	}
 
 	if((! $debugging) || (! $logfile) || ($level > $loglevel))
 		return;
 
 	$where = '';
+	
+	// We require > 5.4 but leave the version check so that install issues (including version) can be logged
+
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
 		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
@@ -592,7 +601,8 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
 
-	call_hooks('logger',$pluginfo);
+	if(! (App::$module == 'setup'))
+		call_hooks('logger',$pluginfo);
 
 	if(! $pluginfo['logged'])
 		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
@@ -650,11 +660,10 @@ function log_priority_str($priority) {
  * @param int $level A log level.
  */
 function dlogger($msg, $level = 0) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if((App::$module == 'install') || (! ($db && $db->connected)))
+	// turn off logger in install mode
+
+	if(App::$module == 'setup')
 		return;
 
 	$debugging = get_config('system','debugging');
@@ -725,6 +734,10 @@ function get_tags($s) {
 	// '=' needs to be avoided because when the replacement is made (in handle_tag()) it has to be ignored there
 	// Feel free to allow '=' if the issue with '=' is solved in handle_tag()
 	// added / ? and [ to avoid issues with hashchars in url paths
+
+	// added ; to single word tags to allow emojis and other unicode character constructs in bbcode
+	// (this would actually be &#xnnnnn; but the ampersand will have been escaped to &amp; by the time we see it.)
+
 	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
@@ -737,7 +750,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
@@ -801,7 +814,7 @@ function get_mentions($item,$tags) {
 		return $o;
 
 	foreach($tags as $x) {
-		if($x['type'] == TERM_MENTION) {
+		if($x['ttype'] == TERM_MENTION) {
 			$o .= "\t\t" . '<link rel="mentioned" href="' . $x['url'] . '" />' . "\r\n";
 			$o .= "\t\t" . '<link rel="ostatus:attention" href="' . $x['url'] . '" />' . "\r\n";
 		}
@@ -812,7 +825,6 @@ function get_mentions($item,$tags) {
 
 function contact_block() {
 	$o = '';
-	$a = get_app();
 
 	if(! App::$profile['uid'])
 		return;
@@ -925,7 +937,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 
 function search($s,$id='search-box',$url='/search',$save = false) {
-	$a = get_app();
+
 	return replace_macros(get_markup_template('searchbox.tpl'),array(
 		'$s' => $s,
 		'$id' => $id,
@@ -1070,7 +1082,7 @@ function get_mood_verbs() {
 // Function to list all smilies, both internal and from addons
 // Returns array with keys 'texts' and 'icons'
 function list_smilies() {
-	$a = get_app();
+
 	$texts =  array( 
 		'&lt;3', 
 		'&lt;/3', 
@@ -1104,9 +1116,7 @@ function list_smilies() {
 		':facepalm',
 		':like',
 		':dislike',
-		'red#matrix',
-		'red#',
-		'r#'
+		':hubzilla'
 	);
 
 	$icons = array(
@@ -1142,11 +1152,23 @@ function list_smilies() {
 		'<img class="smiley" src="' . z_root() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . z_root() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . z_root() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . z_root() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
+		'<img class="smiley" src="' . z_root() . '/images/hz-16.png" alt=":hubzilla" />',
 
 	);
+
+	$x = get_config('feature','emoji');
+	if($x === false)
+		$x = 1;
+	if($x) {
+		if(! App::$emojitab)
+			App::$emojitab = json_decode(file_get_contents('library/emoji.json'),true);
+		foreach(App::$emojitab as $e) {
+			if(strpos($e['shortname'],':tone') === 0)
+				continue;
+			$texts[] = $e['shortname'];
+			$icons[] = '<img class="smiley emoji" height="16" width="16" src="images/emoji/' . $e['unicode'] . '.png' . '" alt="' . $e['name'] . '" />';
+		}
+	}
 
 	$params = array('texts' => $texts, 'icons' => $icons);
 	call_hooks('smilie', $params);
@@ -1215,7 +1237,7 @@ function smile_unshield($m) {
  * @param array $x
  */
 function preg_heart($x) {
-	$a = get_app();
+
 	if (strlen($x[1]) == 1)
 		return $x[0];
 
@@ -1321,7 +1343,7 @@ function theme_attachments(&$item) {
  			
 			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			if(is_foreigner($item['author_xchan']))
 				$url = $r['href'];
 			else
@@ -1455,40 +1477,8 @@ function generate_named_map($location) {
 	return (($arr['html']) ? $arr['html'] : $location);
 }
 
-function format_event($jobject) {
-	$event = array();
-
-	$object = json_decode($jobject,true);
-
-	//ensure compatibility with older items - this check can be removed at a later point
-	if(array_key_exists('description', $object)) {
-
-		$bd_format = t('l F d, Y \@ g:i A'); // Friday January 18, 2011 @ 8:01 AM
-
-		$event['header'] = replace_macros(get_markup_template('event_item_header.tpl'),array(
-			'$title'	 => bbcode($object['title']),
-			'$dtstart_label' => t('Starts:'),
-			'$dtstart_title' => datetime_convert('UTC', 'UTC', $object['start'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
-			'$dtstart_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['start'] , $bd_format )) : day_translate(datetime_convert('UTC', 'UTC', $object['start'] , $bd_format))),
-			'$finish'	 => (($object['nofinish']) ? false : true),
-			'$dtend_label'	 => t('Finishes:'),
-			'$dtend_title'	 => datetime_convert('UTC','UTC',$object['finish'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
-			'$dtend_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['finish'] , $bd_format )) :  day_translate(datetime_convert('UTC', 'UTC', $object['finish'] , $bd_format )))
-		));
-
-		$event['content'] = replace_macros(get_markup_template('event_item_content.tpl'),array(
-			'$description'	  => bbcode($object['description']),
-			'$location_label' => t('Location:'),
-			'$location'	  => bbcode($object['location'])
-		));
-
-	}
-
-	return $event;
-}
 
 function prepare_body(&$item,$attach = false) {
-	require_once('include/identity.php');
 
 	call_hooks('prepare_body_init', $item); 
 
@@ -1498,7 +1488,7 @@ function prepare_body(&$item,$attach = false) {
 
 	if($is_photo) {
 
-		$object = json_decode($item['object'],true);
+		$object = json_decode($item['obj'],true);
 
 		// if original photo width is <= 640px prepend it to item body
 		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {
@@ -1514,7 +1504,7 @@ function prepare_body(&$item,$attach = false) {
 
 	$s .= prepare_text($item['body'],$item['mimetype'], false);
 
-	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event($item['object']) : false);
+	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event_obj($item['obj']) : false);
 
 	$prep_arr = array(
 		'item' => $item,
@@ -1718,7 +1708,6 @@ function feed_hublinks() {
 /* return atom link elements for salmon endpoints */
 
 function feed_salmonlinks($nick) {
-	$a = get_app();
 
 	$salmon  = '<link rel="salmon" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ;
 
@@ -1786,7 +1775,7 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'application/x-pdl'
 	);
 
-	$a = get_app();
+
 	if(App::$is_sys) {
 		$x[] = 'application/x-php';
 	}
@@ -1819,7 +1808,6 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 
 
 function lang_selector() {
-	global $a;
 
 	$langs = glob('view/*/hstrings.php');
 
@@ -2263,7 +2251,7 @@ function design_tools() {
 	$sys = false;
 
 	if(App::$is_sys && is_site_admin()) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$channel = get_sys_channel();
 		$sys = true;
 	}
@@ -2860,3 +2848,32 @@ function pdl_selector($uid, $current="") {
 	return $o;
 }
 
+/* 
+ * array flatten_array_recursive(array);
+ * returns a one-dimensional array from a multi-dimensional array 
+ * empty values are discarded
+ * example: print_r(flatten_array_recursive(array('foo','bar',array('baz','blip',array('zob','glob')),'','grip')));
+ *
+ * Array ( [0] => foo [1] => bar [2] => baz [3] => blip [4] => zob [5] => glob [6] => grip ) 
+ *
+ */
+
+function flatten_array_recursive($arr) {
+	$ret = array();
+
+	if(! $arr)
+		return $ret;
+
+	foreach($arr as $a) {
+		if(is_array($a)) {
+			$tmp = flatten_array_recursive($a);
+			if($tmp) {
+				$ret = array_merge($ret,$tmp);
+			}
+		}
+		elseif($a) {
+			$ret[] = $a;
+		}
+	}
+	return($ret);
+}			

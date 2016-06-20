@@ -223,7 +223,7 @@ class Network extends \Zotlabs\Web\Controller {
 	
 			if($x) {
 				$title = replace_macros(get_markup_template("section_title.tpl"),array(
-					'$title' => t('Privacy group: ') . $x['name']
+					'$title' => t('Privacy group: ') . $x['gname']
 				));
 			}
 	
@@ -385,7 +385,7 @@ class Network extends \Zotlabs\Web\Controller {
 		$abook_uids = " and abook.abook_channel = " . local_channel() . " ";
 	
 		if($firehose && (! get_config('system','disable_discover_tab'))) {
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			$sys = get_sys_channel();
 			$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
 			\App::$data['firehose'] = intval($sys['channel_id']);

@@ -77,16 +77,15 @@ but may be an issue with nginx or other web server platforms.
 	Example config scripts are available for these platforms in doc/install.
 	Apache and nginx have the most support. 
 
-    - PHP 5.4 or later. The later the better. 
+    - PHP 5.5 or later. 
 
     - PHP *command line* access with register_argc_argv set to true in the 
     php.ini file - and with no hosting provider restrictions on the use of 
     exec() and proc_open().
 
-    - curl, gd (with at least jpeg and png support), mysqli, mbstring, mcrypt, 
-    and openssl extensions. The imagick extension is not required but desirable.
-
-    - xml extension is required if you want webdav to work.
+    - curl, gd (with at least jpeg and png support), mysqli, mbstring, xml,
+    and openssl extensions. The imagick extension MAY be used instead of gd,
+	but is not required and MAY also be disabled via configuration option. 
 
     - some form of email server or email gateway such that PHP mail() works.
 
@@ -204,17 +203,17 @@ using web forms.
 ****************************************************************************
 ****************************************************************************
 
-8. Set up a cron job or scheduled task to run the poller once every 10-15 
-minutes to pick up the recent "public" postings of your friends. Example:
+8. Set up a cron job or scheduled task to run the Cron manager once every 10-15 
+minutes to perform background processing and maintenance. Example:
 
-	cd /base/directory; /path/to/php include/poller.php
+	cd /base/directory; /path/to/php Zotlabs/Daemon/Master.php Cron
 
 Change "/base/directory", and "/path/to/php" as appropriate for your situation.
 
 If you are using a Linux server, run "crontab -e" and add a line like the 
 one shown, substituting for your unique paths and settings:
 
-*/10 * * * *	cd /home/myname/mywebsite; /usr/bin/php include/poller.php
+*/10 * * * *	cd /home/myname/mywebsite; /usr/bin/php Zotlabs/Daemon/Master.php Cron
 
 You can generally find the location of PHP by executing "which php". If you 
 have troubles with this section please contact your hosting provider for 

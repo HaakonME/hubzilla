@@ -60,6 +60,8 @@ function phpiniSizeToBytes($val) {
 			$val *= 1024;
 		case 'k':
 			$val *= 1024;
+		default:
+			break;
 	}
 
 	return (int)$val;

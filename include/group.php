@@ -18,7 +18,7 @@ function group_add($uid,$name,$public = 0) {
 				intval($r)
 			);
 			if(count($z) && $z[0]['deleted']) {
-				/*$r = q("UPDATE `groups` SET `deleted` = 0 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+				/*$r = q("UPDATE `groups` SET `deleted` = 0 WHERE `uid` = %d AND `gname` = '%s' LIMIT 1",
 					intval($uid),
 					dbesc($name)
 				);*/
@@ -38,7 +38,7 @@ function group_add($uid,$name,$public = 0) {
 		} while($dups == true);
 
 
-		$r = q("INSERT INTO `groups` ( hash, uid, visible, name )
+		$r = q("INSERT INTO `groups` ( hash, uid, visible, gname )
 			VALUES( '%s', %d, %d, '%s' ) ",
 			dbesc($hash),
 			intval($uid),
@@ -57,7 +57,7 @@ function group_add($uid,$name,$public = 0) {
 function group_rmv($uid,$name) {
 	$ret = false;
 	if(x($uid) && x($name)) {
-		$r = q("SELECT id, hash FROM `groups` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+		$r = q("SELECT id, hash FROM `groups` WHERE `uid` = %d AND `gname` = '%s' LIMIT 1",
 			intval($uid),
 			dbesc($name)
 		);
@@ -108,7 +108,7 @@ function group_rmv($uid,$name) {
 		);
 
 		// remove group
-		$r = q("UPDATE `groups` SET `deleted` = 1 WHERE `uid` = %d AND `name` = '%s'",
+		$r = q("UPDATE `groups` SET `deleted` = 1 WHERE `uid` = %d AND `gname` = '%s'",
 			intval($uid),
 			dbesc($name)
 		);
@@ -125,7 +125,7 @@ function group_rmv($uid,$name) {
 function group_byname($uid,$name) {
 	if((! $uid) || (! strlen($name)))
 		return false;
-	$r = q("SELECT * FROM `groups` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `groups` WHERE `uid` = %d AND `gname` = '%s' LIMIT 1",
 		intval($uid),
 		dbesc($name)
 	);
@@ -232,13 +232,13 @@ function mini_group_select($uid,$group = '') {
 	$grps = array();
 	$o = '';
 
-	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `gname` ASC",
 		intval($uid)
 	);
 	$grps[] = array('name' => '', 'hash' => '0', 'selected' => '');
 	if(count($r)) {
 		foreach($r as $rr) {
-			$grps[] = array('name' => $rr['name'], 'id' => $rr['hash'], 'selected' => (($group == $rr['hash']) ? 'true' : ''));
+			$grps[] = array('name' => $rr['gname'], 'id' => $rr['hash'], 'selected' => (($group == $rr['hash']) ? 'true' : ''));
 		}
 
 	}
@@ -271,7 +271,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 	);
 
 
-	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `gname` ASC",
 		intval($_SESSION['uid'])
 	);
 	$member_of = array();
@@ -296,7 +296,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 				'id'		=> $rr['id'],
 				'enc_cid'   => base64url_encode($cid),
 				'cid'		=> $cid,
-				'text' 		=> $rr['name'],
+				'text' 		=> $rr['gname'],
 				'selected' 	=> $selected,
 				'href'		=> (($mode == 0) ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']) . ((x($_GET,'new')) ? '&new=' . $_GET['new'] : '') . ((x($_GET,'order')) ? '&order=' . $_GET['order'] : ''),
 				'edit'		=> $groupedit,
@@ -340,7 +340,7 @@ function expand_groups($a) {
 
 function member_of($c) {
 
-	$r = q("SELECT `groups`.`name`, `groups`.`id` FROM `groups` LEFT JOIN `group_member` ON `group_member`.`gid` = `groups`.`id` WHERE `group_member`.`xchan` = '%s' AND `groups`.`deleted` = 0 ORDER BY `groups`.`name`  ASC ",
+	$r = q("SELECT `groups`.`gname`, `groups`.`id` FROM `groups` LEFT JOIN `group_member` ON `group_member`.`gid` = `groups`.`id` WHERE `group_member`.`xchan` = '%s' AND `groups`.`deleted` = 0 ORDER BY `groups`.`gname`  ASC ",
 		dbesc($c)
 	);
 

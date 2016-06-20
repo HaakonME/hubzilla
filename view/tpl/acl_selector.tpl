@@ -12,6 +12,19 @@
 				{{if $aclModalDesc}}
 				<div id="acl-dialog-description" class="section-content-info-wrapper">{{$aclModalDesc}}</div>
 				{{/if}}
+				<label for="acl-select">{{$select_label}}</label>
+				<select id="acl-select" name="optionsRadios" class="form-control form-group">
+					<option id="acl-showall" value="public" selected>{{$showall}}</option>
+					<option id="acl-onlyme" value="onlyme">{{$onlyme}}</option>
+					<option id="acl-showlimited" value="limited">{{$showlimited}}</option>
+				</select>
+
+				{{if $showallOrigin}}
+				<div id="acl-info" class="form-group">
+					<i class="fa fa-info-circle"></i>&nbsp;{{$showallOrigin}}
+				</div>
+				{{/if}}
+
 				{{if $jotnets}}
 				<div class="jotnets-wrapper" role="tab" id="jotnets-wrapper">
 					<a data-toggle="collapse" class="btn btn-block btn-default" href="#jotnets-collapse" aria-expanded="false" aria-controls="jotnets-collapse">{{$jnetModalTitle}} <span class="caret"></span></a>
@@ -21,25 +34,8 @@
 					<div class="clear"></div>
 				</div>
 				{{/if}}
+
 				<div id="acl-wrapper">
-					<div id="acl-radiowrapper-showall" class="radio">
-						<label>
-							<input id="acl-showall" type="radio" name="optionsRadios" value="option1" checked>
-							{{if $showallIcon}}
-							<i class="fa {{$showallIcon}}"></i>
-							{{/if}}
-							<span id="acl-showall-caption">{{$showall}}</span>
-						</label>
-						{{if $showallOrigin}}
-						&nbsp;<a id="acl-info-icon" role="button" tabindex="0" class="fa fa-info-circle" data-trigger="focus" data-toggle="popover" data-placement="top" data-content="{{$showallOrigin}}"></a>
-						{{/if}}
-					</div>
-					<div id="acl-radiowrapper-showlimited" class="radio">
-						<label>
-							<input id="acl-showlimited" type="radio" name="optionsRadios" style="readonly" value="option2">
-							<span id=acl-showlimited-caption>{{$showlimited}}</span>
-						</label>
-					</div>
 					<div id="acl-list">
 						<div id="acl-search-wrapper">
 							<input type="text" id="acl-search" placeholder="&#xf002; {{$search}}">

@@ -349,6 +349,14 @@ function enableOnUser(){
 		}
 	}
 
+	function jotReact(id,icon) {
+		if(id && icon) {
+			$.get('{{$baseurl}}/react?f=&postid=' + id + '&emoji=' + icon);
+			if(timer) clearTimeout(timer);
+			timer = setTimeout(NavUpdate,1000);
+		}
+	}
+
 	function jotClearLocation() {
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').attr('disabled', true);

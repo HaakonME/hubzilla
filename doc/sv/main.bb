@@ -67,9 +67,6 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl]
 [zrl=[baseurl]/help/dev_beginner]Sep-for-step manual for beginning developers[/zrl]
 
-[h3]FAQ för utvecklare[/h3]
-[zrl=[baseurl]/help/faq_developers]FAQ For Developers[/zrl]
-
 [h3]Externa resurser[/h3]
 [zrl=[baseurl]/help/external-resource-links]External Resource Links[/zrl]
 [url=https://github.com/friendica/red]Main Website[/url]

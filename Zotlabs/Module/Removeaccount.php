@@ -36,17 +36,12 @@ class Removeaccount extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		require_once('include/Contact.php');
-	
 		$global_remove = intval($_POST['global']);
 	
-		account_remove($account_id,true);
-		
+		account_remove($account_id, 1 - $global_remove);		
 	}
-	
-	
-	
-		function get() {
+		
+	function get() {
 	
 		if(! local_channel())
 			goaway(z_root());

@@ -17,7 +17,6 @@ EOT;
 require_once('include/cli_startup.php');
 
 cli_startup();
-$a = get_app();
 
 	$plugs = get_config('system', 'addon');
 	$plugins_arr = array();

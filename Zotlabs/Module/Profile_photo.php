@@ -9,7 +9,7 @@ namespace Zotlabs\Module;
 
 require_once('include/photo/photo_driver.php');
 require_once('include/photos.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 /* @brief Function for sync'ing  permissions of profile-photos and their profile
 *
@@ -93,7 +93,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			$srcW = $_POST['xfinal'] - $srcX;
 			$srcH = $_POST['yfinal'] - $srcY;
 	
-			$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND scale = %d LIMIT 1",
+			$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND imgscale = %d LIMIT 1",
 				dbesc($image_id),
 				dbesc(local_channel()),
 				intval($scale));
@@ -101,9 +101,9 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			if($r) {
 	
 				$base_image = $r[0];
-				$base_image['data'] = (($r[0]['os_storage']) ? @file_get_contents($base_image['data']) : dbunescbin($base_image['data']));
+				$base_image['content'] = (($r[0]['os_storage']) ? @file_get_contents($base_image['content']) : dbunescbin($base_image['content']));
 			
-				$im = photo_factory($base_image['data'], $base_image['type']);
+				$im = photo_factory($base_image['content'], $base_image['mimetype']);
 				if($im->is_valid()) {
 	
 					$im->cropImage(300,$srcX,$srcY,$srcW,$srcH);
@@ -113,25 +113,25 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					$p = array('aid' => $aid, 'uid' => local_channel(), 'resource_id' => $base_image['resource_id'],
 						'filename' => $base_image['filename'], 'album' => t('Profile Photos'));
 	
-					$p['scale'] = 4;
+					$p['imgscale'] = 4;
 					$p['photo_usage'] = (($is_default_profile) ? PHOTO_PROFILE : PHOTO_NORMAL);
 	
 					$r1 = $im->save($p);
 	
 					$im->scaleImage(80);
-					$p['scale'] = 5;
+					$p['imgscale'] = 5;
 	
 					$r2 = $im->save($p);
 				
 					$im->scaleImage(48);
-					$p['scale'] = 6;
+					$p['imgscale'] = 6;
 	
 					$r3 = $im->save($p);
 				
 					if($r1 === false || $r2 === false || $r3 === false) {
 						// if one failed, delete them all so we can start over.
 						notice( t('Image resize failed.') . EOL );
-						$x = q("delete from photo where resource_id = '%s' and uid = %d and scale >= 4 ",
+						$x = q("delete from photo where resource_id = '%s' and uid = %d and imgscale >= 4 ",
 							dbesc($base_image['resource_id']),
 							local_channel()
 						);
@@ -179,7 +179,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
 	
 					// Update directory in background
-					proc_run('php',"include/directory.php",$channel['channel_id']);
+					\Zotlabs\Daemon\Master::Summon(array('Directory',$channel['channel_id']));
 	
 					// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
 	
@@ -208,7 +208,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 		logger('attach_store: ' . print_r($res,true));
 	
 		if($res && intval($res['data']['is_photo'])) {
-			$i = q("select * from photo where resource_id = '%s' and uid = %d order by scale",
+			$i = q("select * from photo where resource_id = '%s' and uid = %d order by imgscale",
 				dbesc($hash),
 				intval(local_channel())
 			);
@@ -220,11 +220,11 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			$os_storage = false;
 	
 			foreach($i as $ii) {
-				if(intval($ii['scale']) < 2) {
-					$smallest = intval($ii['scale']);
+				if(intval($ii['imgscale']) < 2) {
+					$smallest = intval($ii['imgscale']);
 					$os_storage = intval($ii['os_storage']);
-					$imagedata = $ii['data'];
-					$filetype = $ii['type'];
+					$imagedata = $ii['content'];
+					$filetype = $ii['mimetype'];
 				}
 			}
 		}
@@ -250,7 +250,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	 */
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL );
@@ -275,7 +275,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			$resource_id = argv(2);
 	
 	
-			$r = q("SELECT id, album, scale FROM photo WHERE uid = %d AND resource_id = '%s' ORDER BY scale ASC",
+			$r = q("SELECT id, album, imgscale FROM photo WHERE uid = %d AND resource_id = '%s' ORDER BY imgscale ASC",
 				intval(local_channel()),
 				dbesc($resource_id)
 			);
@@ -285,7 +285,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			}
 			$havescale = false;
 			foreach($r as $rr) {
-				if($rr['scale'] == 5)
+				if($rr['imgscale'] == 5)
 					$havescale = true;
 			}
 	
@@ -311,11 +311,11 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				);
 	
 				profile_photo_set_profile_perms(); //Reset default photo permissions to public
-				proc_run('php','include/directory.php',local_channel());
+				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 				goaway(z_root() . '/profiles');
 			}
 	
-			$r = q("SELECT `data`, `type`, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
+			$r = q("SELECT content, mimetype, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
 				intval($r[0]['id']),
 				intval(local_channel())
 	
@@ -326,15 +326,15 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			}
 	
 			if(intval($r[0]['os_storage']))
-				$data = @file_get_contents($r[0]['data']);
+				$data = @file_get_contents($r[0]['content']);
 			else
-				$data = dbunescbin($r[0]['data']); 
+				$data = dbunescbin($r[0]['content']); 
 	
-			$ph = photo_factory($data, $r[0]['type']);
+			$ph = photo_factory($data, $r[0]['mimetype']);
 			$smallest = 0;
 			if($ph->is_valid()) {
 				// go ahead as if we have just uploaded a new photo to crop
-				$i = q("select resource_id, scale from photo where resource_id = '%s' and uid = %d order by scale",
+				$i = q("select resource_id, imgscale from photo where resource_id = '%s' and uid = %d order by imgscale",
 					dbesc($r[0]['resource_id']),
 					intval(local_channel())
 				);
@@ -342,8 +342,8 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				if($i) {
 					$hash = $i[0]['resource_id'];
 					foreach($i as $ii) {
-						if(intval($ii['scale']) < 2) {
-							$smallest = intval($ii['scale']);
+						if(intval($ii['imgscale']) < 2) {
+							$smallest = intval($ii['imgscale']);
 						}
 					}
 	            }

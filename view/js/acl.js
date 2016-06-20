@@ -11,30 +11,50 @@ function ACL(backend_url, preset) {
 	that.deny_cid  = (preset[2] || []);
 	that.deny_gid  = (preset[3] || []);
 	that.group_uids = [];
-	that.nw = 4; //items per row. should be calulated from #acl-list.width
 
+	that.info         = $("#acl-info");
+	that.list         = $("#acl-list");
 	that.list_content = $("#acl-list-content");
 	that.item_tpl     = unescape($(".acl-list-item[rel=acl-template]").html());
 	that.showall      = $("#acl-showall");
+	that.onlyme       = $("#acl-onlyme");
 	that.showlimited  = $("#acl-showlimited");
+	that.acl_select   = $("#acl-select");
+
+	that.preset = preset;
+	that.self = [];
 
 	// set the initial ACL lists in case the enclosing form gets submitted before the ajax loader completes. 
 	that.on_submit();
 
-	if (preset.length === 0) that.showall.removeClass("btn-default").addClass("btn-warning");
-
 	/*events*/
 
 	$(document).ready(function() {
-			that.showall.click(that.on_showall);
-			that.showlimited.click(that.on_showlimited);
-			$(document).on('click','.acl-button-show',that.on_button_show);
-			$(document).on('click','.acl-button-hide',that.on_button_hide);
-			$("#acl-search").keypress(that.on_search);
 
-			/* startup! */
-			that.get(0,15000);
-			that.on_submit();
+		that.acl_select.change(function(event) {
+			var option = that.acl_select.val();
+
+			if(option == 'public') { // public
+				that.on_showall(event);
+			}
+
+			if(option == 'onlyme') { // limited to one self
+				that.on_onlyme(event);
+			}
+
+			if(option == 'limited') { // limited to custom selection
+				that.on_showlimited(event);
+			}
+		});
+
+		$(document).on('click','.acl-button-show',that.on_button_show);
+		$(document).on('click','.acl-button-hide',that.on_button_hide);
+
+		$("#acl-search").keypress(that.on_search);
+
+		/* startup! */
+		that.get(0,15000);
+		that.on_submit();
 	});
 }
 
@@ -72,33 +92,53 @@ ACL.prototype.on_search = function(event) {
 	that.kp_timer = setTimeout( that.search, 1000);
 };
 
-ACL.prototype.on_showall = function(event) {
-
+ACL.prototype.on_onlyme = function(event) {
 	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
 	event.stopPropagation();
 
-	if (that.showall.hasClass("btn-warning")) {
-		return false;
-	}
-	that.showall.removeClass("btn-default").addClass("btn-warning");
+	that.allow_cid = [that.self[0]];
+	that.allow_gid = [];
+	that.deny_cid  = [];
+	that.deny_gid  = [];
+
+	that.update_view(event.target.value);
+	that.on_submit();
+
+	return true; // return true so that state changes from update_view() will be applied
+};
+
+ACL.prototype.on_showall = function(event) {
+	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
+	event.stopPropagation();
 
 	that.allow_cid = [];
 	that.allow_gid = [];
 	that.deny_cid  = [];
 	that.deny_gid  = [];
 
-	that.update_view();
+	that.update_view(event.target.value);
 	that.on_submit();
 
 	return true; // return true so that state changes from update_view() will be applied
 };
 
 ACL.prototype.on_showlimited = function(event) {
-	// Prevent the radiobutton from being selected, as the showlimited radiobutton
-	// option is selected only by selecting show or hide options on channels or groups.
-	event.preventDefault();
+	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
 	event.stopPropagation();
-	return false;
+
+	if(that.preset[0].length === 0 && that.preset[1].length === 0 && that.preset[2].length === 0 && that.preset[3].length === 0) {
+		that.preset[0] = [that.self[0]];
+	}
+
+	that.allow_cid = (that.preset[0] || []);
+	that.allow_gid = (that.preset[1] || []);
+	that.deny_cid  = (that.preset[2] || []);
+	that.deny_gid  = (that.preset[3] || []);
+
+	that.update_view(event.target.value);
+	that.on_submit();
+
+	return true; // return true so that state changes from update_view() will be applied
 }
 
 ACL.prototype.on_selectall = function(event) {
@@ -199,33 +239,43 @@ ACL.prototype.set_deny = function(itemid) {
 	that.update_view();
 };
 
-ACL.prototype.update_radiobuttons = function(isPublic) {
-
-	that.showall.prop('checked', isPublic);
-	that.showlimited.prop('checked', !isPublic);
-	that.showlimited.prop('disabled', isPublic);
+ACL.prototype.update_select = function(preset) {
+	that.showall.prop('selected', preset === 'public');
+	that.onlyme.prop('selected', preset === 'onlyme');
+	that.showlimited.prop('selected', preset === 'limited');
 };
 
-ACL.prototype.update_view = function() {
-	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 &&
-		that.deny_gid.length === 0 && that.deny_cid.length === 0) {
-			// btn-warning indicates that the permissions are public, it was chosen because
-			// that.showall used to be a normal button, which btn-warning is a bootstrap style for.
-			that.showall.removeClass("btn-default").addClass("btn-warning");
-			that.update_radiobuttons(true);
+ACL.prototype.update_view = function(value) {
 
-			/* jot acl */
-			$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
-			$('#jot-public').show();
-			$('.profile-jot-net input').attr('disabled', false);
+	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0) {
+		that.list.hide(); //hide acl-list
+		that.info.show(); //show acl-info
+		that.update_select('public');
 
-	} else {
-		that.showall.removeClass("btn-warning").addClass("btn-default");
-		that.update_radiobuttons(false);
+		/* jot acl */
+		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
+		$('.profile-jot-net input').attr('disabled', false);
+
+	}
+
+	// if value != 'onlyme' we should fall through this one
+	else if (that.allow_gid.length === 0 && that.allow_cid.length === 1 && that.allow_cid[0] === that.self[0] && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value === 'onlyme') {
+		that.list.hide(); //hide acl-list if
+		that.info.hide(); //show acl-info
+		that.update_select('onlyme');
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
-		$('#jot-public').hide();
+		$('.profile-jot-net input').attr('disabled', 'disabled');
+	}
+
+	else {
+		that.list.show(); //show acl-list
+		that.info.hide(); //hide acl-info
+		that.update_select('limited');
+
+		/* jot acl */
+		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
 		$('.profile-jot-net input').attr('disabled', 'disabled');
 
 	}
@@ -300,12 +350,11 @@ ACL.prototype.get = function(start, count, search) {
 };
 
 ACL.prototype.populate = function(data) {
-	var height = Math.ceil(data.items.length / that.nw) * 42;
-	that.list_content.height(height);
 	$(data.items).each(function(){
 		html = "<div class='acl-list-item {4} {7} {5}' title='{6}' id='{2}{3}'>"+that.item_tpl+"</div>";
 		html = html.format(this.photo, this.name, this.type, this.xid, '', this.self, this.link, this.taggable);
 		if (this.uids !== undefined) that.group_uids[this.xid] = this.uids;
+		if (this.self === 'abook-self') that.self[0] = this.xid;
 		//console.log(html);
 		that.list_content.append(html);
 	});

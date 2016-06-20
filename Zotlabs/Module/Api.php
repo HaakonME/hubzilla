@@ -107,7 +107,7 @@ class Api extends \Zotlabs\Web\Controller {
 		$r = q("SELECT `clients`.* 
 			FROM `clients`, `tokens` 
 			WHERE `clients`.`client_id`=`tokens`.`client_id` 
-			AND `tokens`.`id`='%s' AND `tokens`.`scope`='request'",
+			AND `tokens`.`id`='%s' AND `tokens`.`auth_scope`='request'",
 			dbesc($token));
 
 		if (!count($r))

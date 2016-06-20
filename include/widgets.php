@@ -8,17 +8,17 @@
 require_once('include/dir_fns.php');
 require_once('include/contact_widgets.php');
 require_once('include/attach.php');
-require_once('include/Contact.php');
+
 
 function widget_profile($args) {
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 	return profile_sidebar(App::$profile, $block, true);
 }
 
 function widget_zcard($args) {
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 	$channel = channelx_by_n(App::$profile_uid);
 	return get_zcard($channel,get_observer_hash(),array('width' => 875));
 }
@@ -212,13 +212,13 @@ function widget_savedsearch($arr) {
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
 	
 	if(x($_GET,'searchsave') && $search) {
-		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
+		$r = q("select * from `term` where `uid` = %d and `ttype` = %d and `term` = '%s' limit 1",
 			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
 		);
 		if(! $r) {
-			q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
+			q("insert into `term` ( `uid`,`ttype`,`term` ) values ( %d, %d, '%s') ",
 				intval(local_channel()),
 				intval(TERM_SAVEDSEARCH),
 				dbesc($search)
@@ -227,7 +227,7 @@ function widget_savedsearch($arr) {
 	}
 
 	if(x($_GET,'searchremove') && $search) {
-		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s'",
+		q("delete from `term` where `uid` = %d and `ttype` = %d and `term` = '%s'",
 			intval(local_channel()),
 			intval(TERM_SAVEDSEARCH),
 			dbesc($search)
@@ -254,7 +254,7 @@ function widget_savedsearch($arr) {
 
 	$o = '';
 
-	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
+	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `ttype` = %d ",
 		intval(local_channel()),
 		intval(TERM_SAVEDSEARCH)
 	);
@@ -296,7 +296,7 @@ function widget_filer($arr) {
 	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);
@@ -369,7 +369,7 @@ function widget_fullprofile($arr) {
 	if(! App::$profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 
 	return profile_sidebar(App::$profile, $block);
 }
@@ -379,7 +379,7 @@ function widget_shortprofile($arr) {
 	if(! App::$profile['profile_uid'])
 		return;
 
-	$block = (((get_config('system', 'block_public')) && (! local_channel()) && (! remote_channel())) ? true : false);
+	$block = observer_prohibited();
 
 	return profile_sidebar(App::$profile, $block, true, true);
 }
@@ -771,7 +771,6 @@ function widget_eventstools($arr) {
 }
 
 function widget_design_tools($arr) {
-	$a = get_app();
 
 	// mod menu doesn't load a profile. For any modules which load a profile, check it.
 	// otherwise local_channel() is sufficient for permissions.
@@ -800,13 +799,14 @@ function widget_photo_albums($arr) {
 	if((! $channelx) || (! perm_is_allowed(App::$profile['profile_uid'], get_observer_hash(), 'view_storage')))
 		return '';
 	require_once('include/photos.php');
+	$sortkey = ((array_key_exists('sortkey',$arr)) ? $arr['sortkey'] : 'album');
+	$direction = ((array_key_exists('direction',$arr)) ? $arr['direction'] : 'asc');	
 
-	return photos_album_widget($channelx, App::get_observer());
+	return photos_album_widget($channelx, App::get_observer(),$sortkey,$direction);
 }
 
 
 function widget_vcard($arr) {
-	require_once ('include/Contact.php');
 	return vcard_from_xchan('', App::get_observer());
 }
 
@@ -835,8 +835,7 @@ function widget_menu_preview($arr) {
 function widget_chatroom_list($arr) {
 
 
-	require_once("include/chat.php");
-	$r = chatroom_list(App::$profile['profile_uid']);
+	$r = Zotlabs\Lib\Chatroom::roomlist(App::$profile['profile_uid']);
 
 	if($r) {
 		return replace_macros(get_markup_template('chatroomlist.tpl'), array(
@@ -855,6 +854,78 @@ function widget_chatroom_members() {
 	));
 
 	return $o;
+}
+
+function widget_wiki_list($arr) {
+
+	require_once("include/wiki.php");
+	$channel = null;
+	if (argc() < 2 && local_channel()) { 
+		// This should not occur because /wiki should redirect to /wiki/channel ...
+		$channel = \App::get_channel();
+	} else {
+		$channel = get_channel_by_nick(argv(1));	// Channel being viewed by observer
+	}
+	if (!$channel) {
+		return '';
+	}
+	$wikis = wiki_list($channel, get_observer_hash());
+	if ($wikis) {
+		return replace_macros(get_markup_template('wikilist.tpl'), array(
+			'$header' => t('Wiki List'),
+			'$channel' => $channel['channel_address'],
+			'$wikis' => $wikis['wikis'],
+			// If the observer is the local channel owner, show the wiki controls
+			'$showControls' => ((local_channel() === intval($channel['channel_id'])) ? true : false)
+		));
+	}
+	return '';
+}
+
+function widget_wiki_pages($arr) {
+
+	require_once("include/wiki.php");
+	$channelname = ((array_key_exists('channel',$arr)) ? $arr['channel'] : '');
+	$wikiname = '';
+	if (array_key_exists('refresh', $arr)) {
+		$not_refresh = (($arr['refresh']=== true) ? false : true);
+	} else {
+		$not_refresh = true;
+	}
+	$pages = array();
+	if (!array_key_exists('resource_id', $arr)) {
+		$hide = true;
+	} else {
+		$p = wiki_page_list($arr['resource_id']);
+		if ($p['pages']) {
+			$pages = $p['pages'];
+			$w = $p['wiki'];
+			// Wiki item record is $w['wiki']
+			$wikiname = $w['urlName'];
+			if (!$wikiname) {
+				$wikiname = '';
+			}
+		}
+	}
+	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
+			'$hide' => $hide,
+			'$not_refresh' => $not_refresh,
+			'$header' => t('Wiki Pages'),
+			'$channel' => $channelname,
+			'$wikiname' => $wikiname,
+			'$pages' => $pages
+	));
+}
+
+function widget_wiki_page_history($arr) {
+	require_once("include/wiki.php");
+	$pageUrlName = ((array_key_exists('pageUrlName', $arr)) ? $arr['pageUrlName'] : '');
+	$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : '');
+	$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
+
+	return replace_macros(get_markup_template('wiki_page_history.tpl'), array(
+			'$pageHistory' => $pageHistory['history']
+	));
 }
 
 function widget_bookmarkedchats($arr) {
@@ -1052,7 +1123,7 @@ function widget_photo($arr) {
 
 function widget_cover_photo($arr) {
 
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 	$o = '';
 	
 	if(App::$module == 'channel' && $_REQUEST['mid'])
@@ -1129,7 +1200,7 @@ function widget_photo_rand($arr) {
 	$filtered = array();
 	if($ret['success'] && $ret['photos'])
 	foreach($ret['photos'] as $p)
-		if($p['scale'] == $scale)
+		if($p['imgscale'] == $scale)
 			$filtered[] = $p['src'];
 
 	if($filtered) {
@@ -1381,7 +1452,7 @@ function widget_admin($arr) {
 
 	$aside = array(
 		'site'      => array(z_root() . '/admin/site/',     t('Site'),           'site'),
-		'users'     => array(z_root() . '/admin/users/',    t('Accounts'),       'users', 'pending-update', t('Member registrations waiting for confirmation')),
+		'accounts'  => array(z_root() . '/admin/accounts/', t('Accounts'),       'accounts', 'pending-update', t('Member registrations waiting for confirmation')),
 		'channels'  => array(z_root() . '/admin/channels/', t('Channels'),       'channels'),
 		'security'  => array(z_root() . '/admin/security/', t('Security'),       'security'),
 		'features'  => array(z_root() . '/admin/features/', t('Features'),       'features'),
@@ -1400,7 +1471,7 @@ function widget_admin($arr) {
 	$plugins = array();
 	if($r) {
 		foreach ($r as $h){
-			$plugin = $h['name'];
+			$plugin = $h['aname'];
 			$plugins[] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
 			// temp plugins with admin
 			App::$plugins_admin[] = $plugin;
@@ -1462,9 +1533,9 @@ function widget_album($args) {
 
 	$order = 'DESC';
 
-	$r = q("SELECT p.resource_id, p.id, p.filename, p.type, p.scale, p.description, p.created FROM photo p INNER JOIN
-		(SELECT resource_id, max(scale) scale FROM photo WHERE uid = %d AND album = '%s' AND scale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
-		ON (p.resource_id = ph.resource_id AND p.scale = ph.scale)
+	$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.imgscale, p.description, p.created FROM photo p INNER JOIN
+		(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
+		ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)
 		ORDER BY created $order ",
 		intval($owner_uid),
 		dbesc($album),
@@ -1485,7 +1556,7 @@ function widget_album($args) {
 			else
 				$twist = 'rotright';
 				
-			$ext = $phototypes[$rr['type']];
+			$ext = $phototypes[$rr['mimetype']];
 
 			$imgalt_e = $rr['filename'];
 			$desc_e = $rr['description'];
@@ -1498,7 +1569,7 @@ function widget_album($args) {
 				'twist' => ' ' . $twist . rand(2,4),
 				'link' => $imagelink,
 				'title' => t('View Photo'),
-				'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
+				'src' => z_root() . '/photo/' . $rr['resource_id'] . '-' . $rr['imgscale'] . '.' .$ext,
 				'alt' => $imgalt_e,
 				'desc'=> $desc_e,
 				'ext' => $ext,

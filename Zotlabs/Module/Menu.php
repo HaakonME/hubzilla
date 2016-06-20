@@ -2,7 +2,7 @@
 namespace Zotlabs\Module;
 
 require_once('include/menu.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 
 class Menu extends \Zotlabs\Web\Controller {

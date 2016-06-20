@@ -333,6 +333,15 @@ input {
 	text-decoration: none;
 }
 
+.section-content-info-wrapper {
+	color: #fff;
+	background-color: #43488A;
+}
+
+.section-content-info-wrapper a {
+	color: #fff;
+}
+
 .btn, #event-edit-form .btn, input.directory-rating-submit {
     border: 1px solid #FFF;
     color: #FFF; 
@@ -450,7 +459,7 @@ a:hover > .fa-trash-o {
 	.navbar-inverse .navbar-toggle .icon-bar {
 		background-color: #FFF;
 	}
-	.navbar-inverse .navbar-toggle .fa-arrow-circle-down, .navbar-inverse .navbar-toggle .fa-arrow-circle-right, .navbar-inverse .navbar-toggle .fa-arrow-circle-up, .navbar-inverse .navbar-toggle .fa-arrow-circle-left  {
+	.navbar-inverse .navbar-toggle .fa-arrow-circle-down, .navbar-inverse .navbar-toggle .fa-arrow-circle-right, .navbar-inverse .navbar-toggle .fa-arrow-circle-up, .navbar-inverse .navbar-toggle .fa-arrow-circle-left, .navbar-inverse .navbar-toggle .fa-question-circle  {
 		color: #FFF;
 	}
 	.navbar-inverse .navbar-toggle:hover .fa-arrow-circle-down, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-down, .navbar-inverse .navbar-toggle:hover .fa-arrow-circle-right, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-right, .navbar-inverse .navbar-toggle:hover .fa-arrow-circle-up, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-up, .navbar-inverse .navbar-toggle:hover .fa-arrow-circle-left, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-left {

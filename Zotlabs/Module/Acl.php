@@ -53,30 +53,32 @@ class Acl extends \Zotlabs\Web\Controller {
 		
 		if ($type=='' || $type=='g'){
 	
-			$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`
+			$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`gname`
 					FROM `groups`,`group_member` 
 					WHERE `groups`.`deleted` = 0 AND `groups`.`uid` = %d 
 					AND `group_member`.`gid`=`groups`.`id`
 					$sql_extra
 					GROUP BY `groups`.`id`
-					ORDER BY `groups`.`name` 
+					ORDER BY `groups`.`gname` 
 					LIMIT %d OFFSET %d",
 				intval(local_channel()),
 				intval($count),
 				intval($start)
 			);
-	
-			foreach($r as $g){
-	//		logger('acl: group: ' . $g['name'] . ' members: ' . group_get_members_xchan($g['id']));
-				$groups[] = array(
-					"type"  => "g",
-					"photo" => "images/twopeople.png",
-					"name"  => $g['name'],
-					"id"	=> $g['id'],
-					"xid"   => $g['hash'],
-					"uids"  => group_get_members_xchan($g['id']),
-					"link"  => ''
-				);
+
+			if($r) {	
+				foreach($r as $g){
+		//		logger('acl: group: ' . $g['gname'] . ' members: ' . group_get_members_xchan($g['id']));
+					$groups[] = array(
+						"type"  => "g",
+						"photo" => "images/twopeople.png",
+						"name"  => $g['gname'],
+						"id"	=> $g['id'],
+						"xid"   => $g['hash'],
+						"uids"  => group_get_members_xchan($g['id']),
+						"link"  => ''
+					);
+				}
 			}
 		}
 	
@@ -204,7 +206,7 @@ class Acl extends \Zotlabs\Web\Controller {
 		else
 			$r = array();
 	
-		if(count($r)) {
+		if($r) {
 			foreach($r as $g){
 	
 				// remove RSS feeds from ACLs - they are inaccessible
@@ -260,7 +262,7 @@ class Acl extends \Zotlabs\Web\Controller {
 	
 	//	logger('navbar_complete');
 	
-		if((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+		if(observer_prohibited()) {
 			return;
 		}
 	

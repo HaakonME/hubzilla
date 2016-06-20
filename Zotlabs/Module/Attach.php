@@ -40,7 +40,7 @@ class Attach extends \Zotlabs\Web\Controller {
 	
 		header('Content-disposition: attachment; filename="' . $r['data']['filename'] . '"');
 		if(intval($r['data']['os_storage'])) {
-			$fname = dbunescbin($r['data']['data']);
+			$fname = dbunescbin($r['data']['content']);
 			if(strpos($fname,'store') !== false)
 				$istream = fopen($fname,'rb');
 			else
@@ -53,7 +53,7 @@ class Attach extends \Zotlabs\Web\Controller {
 			}
 		}
 		else
-			echo dbunescbin($r['data']['data']);
+			echo dbunescbin($r['data']['content']);
 		killme();
 	
 	}

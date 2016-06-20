@@ -165,11 +165,10 @@ function bb_parse_crypt($match) {
 }
 
 function bb_parse_app($match) {
-	require_once('include/apps.php');
 
-	$app = app_decode($match[1]);
+	$app = Zotlabs\Lib\Apps::app_decode($match[1]);
 	if ($app)
-		return app_render($app);
+		return Zotlabs\Lib\Apps::app_render($app);
 }
 
 function bb_parse_element($match) {
@@ -276,7 +275,6 @@ function bb_location($match) {
  * @return string HTML iframe with content of $match[1]
  */
 function bb_iframe($match) {
-	$a = get_app();
 
 	$sandbox = ((strpos($match[1], App::get_hostname())) ? ' sandbox="allow-scripts" ' : '');
 
@@ -450,8 +448,6 @@ function bb_sanitize_style($input) {
 
 function bb_observer($Text) {
 
-	$a = get_app();
-
 	$observer = App::get_observer();
 
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
@@ -481,9 +477,12 @@ function bb_observer($Text) {
 	return $Text;
 }
 
-
-
-
+function bb_code($match) {
+	if(strpos($match[0], "<br />"))
+		return '<code>' . trim($match[1]) . '</code>';
+	else
+		return '<code class="inline-code">' . trim($match[1]) . '</code>';
+}
 
 
 
@@ -789,12 +788,9 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/sm", "<span style=\"font-family: $1;\">$2</span>", $Text);
 	}
 
-	// Declare the format for [code] layout
-	$CodeLayout = '<code>$1</code>';
-
 	// Check for [code] text
 	if (strpos($Text,'[code]') !== false) {
-		$Text = preg_replace("/\[code\](.*?)\[\/code\]/ism", "$CodeLayout", $Text);
+		$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/ism", 'bb_code', $Text);
 	}
 
 	// Check for [spoiler] text
@@ -985,6 +981,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/ism",'',$Text);
+		$Text = preg_replace("/\[event\-id\](.*?)\[\/event\-id\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-location\](.*?)\[\/event\-location\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-adjust\](.*?)\[\/event\-adjust\]/ism",'',$Text);
 

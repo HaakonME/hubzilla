@@ -7,7 +7,7 @@ namespace Zotlabs\Module;
 
 require_once('include/items.php');
 require_once('include/security.php');
-require_once('include/contact_selectors.php');
+require_once('include/selectors.php');
 require_once('include/acl_selectors.php');
 
 
@@ -26,7 +26,7 @@ class Thing extends \Zotlabs\Web\Controller {
 		$verb = escape_tags($_REQUEST['verb']);
 		$activity = intval($_REQUEST['activity']);
 		$profile_guid = escape_tags($_REQUEST['profile_assign']);
-		$url = $_REQUEST['link'];
+		$url = $_REQUEST['url'];
 		$photo = $_REQUEST['img'];
 	
 		$hash = random_string();
@@ -212,7 +212,7 @@ class Thing extends \Zotlabs\Web\Controller {
 	
 			$arr['verb'] = $verb;
 			$arr['obj_type'] = $objtype;
-			$arr['object'] = $obj;
+			$arr['obj'] = $obj;
 	
 			if(! $profile['is_default']) {
 				$arr['item_private'] = true;
@@ -235,7 +235,7 @@ class Thing extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function get() {
+	function get() {
 	
 		// @FIXME one problem with things is we can't share them unless we provide the channel in the url
 		// so we can definitively lookup the owner. 

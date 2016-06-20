@@ -93,15 +93,15 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 	
-		if(! $item['object'])
+		if(! $item['obj'])
 			return;
 
 		if(intval($item['item_thread_top']))
 			return;	
 
-		$obj = json_decode_plus($item['object']);
-		if((! $obj) && ($item['object'])) {
-			logger('localize_item: failed to decode object: ' . print_r($item['object'],true));
+		$obj = json_decode_plus($item['obj']);
+		if((! $obj) && ($item['obj'])) {
+			logger('localize_item: failed to decode object: ' . print_r($item['obj'],true));
 		}
 		
 		if($obj['author'] && $obj['author']['link'])
@@ -186,7 +186,7 @@ function localize_item(&$item){
 		$Alink = $item['author']['xchan_url'];
 
 
-		$obj= json_decode_plus($item['object']);
+		$obj= json_decode_plus($item['obj']);
 		
 		$Blink = $Bphoto = '';
 
@@ -219,7 +219,7 @@ function localize_item(&$item){
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
 
-		$obj= json_decode_plus($item['object']);
+		$obj= json_decode_plus($item['obj']);
 
 		$Blink = $Bphoto = '';
 
@@ -299,7 +299,7 @@ function localize_item(&$item){
 		}
 		$plink = '[zrl=' . $obj['plink'] . ']' . $post_type . '[/zrl]';
 
-		$parsedobj = parse_xml_string($xmlhead.$item['object']);
+		$parsedobj = parse_xml_string($xmlhead.$item['obj']);
 
 		$tag = sprintf('#[zrl=%s]%s[/zrl]', $parsedobj->id, $parsedobj->content);
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
@@ -316,7 +316,7 @@ function localize_item(&$item){
 
 		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 
-		$obj = parse_xml_string($xmlhead.$item['object']);
+		$obj = parse_xml_string($xmlhead.$item['obj']);
 		if(strlen($obj->id)) {
 			$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($obj->id),
@@ -754,10 +754,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
-			require_once('include/ConversationObject.php');
-			require_once('include/ItemObject.php');
-
-			$conv = new Conversation($mode, $preview, $prepared_item);
+			$conv = new Zotlabs\Lib\ThreadStream($mode, $preview, $prepared_item);
 
 			// In the display mode we don't have a profile owner. 
 
@@ -806,7 +803,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				if($item['id'] == $item['parent']) {
 
-					$item_object = new Item($item);
+					$item_object = new Zotlabs\Lib\ThreadItem($item);
 					$conv->add_thread($item_object);
 					if($page_mode === 'list') {
 						$item_object->set_template('conv_list.tpl');
@@ -861,8 +858,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 function best_link_url($item) {
 
-	$a = get_app();
-
 	$best_url = '';
 	$sparkle  = false;
 
@@ -891,7 +886,7 @@ function best_link_url($item) {
 
 
 function item_photo_menu($item){
-	$a = get_app();
+
 	$contact = null;
 
 	$ssl_state = false;
@@ -1110,7 +1105,6 @@ function status_editor($a, $x, $popup = false) {
 
 	$o = '';
 
-	require_once('include/Contact.php');
 	$c = channelx_by_n($x['profile_uid']);
 	if($c && $c['channel_moved'])
 		return $o;
@@ -1163,7 +1157,7 @@ function status_editor($a, $x, $popup = false) {
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />';
 
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$id_select = identity_selector();
 	}
 	else
@@ -1412,7 +1406,7 @@ function render_location_default($item) {
 
 
 function prepare_page($item) {
-	$a = get_app();
+
 	$naked = 1;
 //	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = App::get_observer();
@@ -1446,7 +1440,7 @@ function prepare_page($item) {
 
 
 function network_tabs() {
-	$a = get_app();
+
 	$no_active='';
 	$starred_active = '';
 	$new_active = '';
@@ -1662,8 +1656,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 
 	if ($p['chat'] && feature_enabled($uid,'ajaxchat')) {
-		require_once('include/chat.php');
-		$has_chats = chatroom_list_count($uid);
+		$has_chats = Zotlabs\Lib\Chatroom::list_count($uid);
 		if ($has_chats) {
 			$tabs[] = array(
 				'label' => t('Chatrooms'),

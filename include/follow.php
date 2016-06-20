@@ -17,7 +17,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	$result = array('success' => false,'message' => '');
 
-	$a = get_app();
 	$is_red = false;
 	$is_http = ((strpos($url,'://') !== false) ? true : false);
 
@@ -56,11 +55,11 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
 	elseif(! $is_http)
-		$ret = zot_finger($url,$channel);
+		$ret = Zotlabs\Zot\Finger::run($url,$channel);
 
-	if($ret && $ret['success']) {
+	if($ret && is_array($ret) && $ret['success']) {
 		$is_red = true;
-		$j = json_decode($ret['body'],true);
+		$j = $ret;
 	}
 
 	$my_perms = get_channel_default_perms($uid);
@@ -269,14 +268,14 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	if($r) {
 		$result['abook'] = $r[0];
-		proc_run('php', 'include/notifier.php', 'permission_create', $result['abook']['abook_id']);
+		Zotlabs\Daemon\Master::Summon(array('Notifier', 'permission_create', $result['abook']['abook_id']));
 	}
 
 	$arr = array('channel_id' => $uid, 'channel' => $channel, 'abook' => $result['abook']);
 
 	call_hooks('follow', $arr);
 
-	/** If there is a default group for this channel, add this member to it */
+	/** If there is a default group for this channel, add this connection to it */
 
 	if($default_group) {
 		require_once('include/group.php');

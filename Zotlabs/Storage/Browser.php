@@ -246,14 +246,17 @@ class Browser extends DAV\Browser\Plugin {
 		\App::$page['content'] = $html;
 		load_pdl($a);
 
-		$theme_info_file = "view/theme/" . current_theme() . "/php/theme.php";
+		$current_theme = \Zotlabs\Render\Theme::current();
+
+		$theme_info_file = "view/theme/" . $current_theme[0] . "/php/theme.php";
 		if (file_exists($theme_info_file)){
 			require_once($theme_info_file);
-			if (function_exists(str_replace('-', '_', current_theme()) . '_init')) {
-				$func = str_replace('-', '_', current_theme()) . '_init';
+			if (function_exists(str_replace('-', '_', $current_theme[0]) . '_init')) {
+				$func = str_replace('-', '_', $current_theme[0]) . '_init';
 				$func($a);
 			}
 		}
+		$this->server->httpResponse->setHeader('Content-Security-Policy', "script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'");
 		construct_page($a);
 	}
 

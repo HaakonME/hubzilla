@@ -256,6 +256,7 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
           window.console.log('Page saved successfully.');
           window.wiki_page_content = currentContent;
           $('#id_commitMsg').val(''); // Clear the commit message box
+          $('#wiki-get-history').click();
         } else {
           alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 
           window.console.log('Error saving page.');
@@ -301,6 +302,7 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
           $('#revert-'+commitHash).removeClass('btn-danger');
           $('#revert-'+commitHash).addClass('btn-success');
           $('#revert-'+commitHash).html('Page reverted<br>but not saved');
+          window.wiki_page_commit = commitHash;
           // put contents in editor
           editor.getSession().setValue(data.content);
         } else {
@@ -323,7 +325,6 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
       }, 
       function (data) {
         if (data.success) {
-          window.wiki_page_commit = compareCommit;
           var modalBody = $('#generic-modal-body-{{$wikiModalID}}');
           modalBody.html('<div class="descriptive-text">'+data.diff+'</div>');
           $('.modal-dialog').width('80%');

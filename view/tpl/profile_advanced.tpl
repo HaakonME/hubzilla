@@ -282,7 +282,7 @@
 		<ul class="profile-thing-list">
 		{{foreach $items as $item}}
 		<li>{{if $item.img}}<a href="{{$item.url}}" ><img src="{{$item.img}}" class="profile-thing-img" width="100" height="100" alt="{{$item.term}}" /></a>{{/if}}
-		<a href="{{$item.url}}" >{{$item.term}}</a>
+		<a href="{{$item.editurl}}" >{{$item.term}}</a>
 		{{if $profile.canlike}}<br />
 		<button type="button" class="btn btn-default btn-sm" onclick="doprofilelike('thing/' + '{{$item.term_hash}}','like'); return false;" title="{{$likethis}}" >
 		<i class="fa fa-thumbs-o-up" title="{{$likethis}}"></i>

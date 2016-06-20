@@ -29,6 +29,8 @@ function get_capath() {
  *  * \b nobody => only return the header
  *  * \b filep => stream resource to write body to. header and body are not returned when using this option.
  *  * \b custom => custom request method: e.g. 'PUT', 'DELETE'
+ *  * \b cookiejar => cookie file (write)
+ *  * \B cookiefile => cookie file (read)
  *
  * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
@@ -60,6 +62,8 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_HEADER, $false);
 	}
 
+
+
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
@@ -81,6 +85,11 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
@@ -180,6 +189,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  */
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
+//	logger('url: ' . $url);
+//	logger('params: ' . print_r($params,true));
+//	logger('opts: ' . print_r($opts,true));
+
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
 	$ch = curl_init($url);
@@ -205,14 +218,15 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'headers')) {
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
-logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 	}
  
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
 
-	if(x($opts,'custom'))
+	if(x($opts,'custom')) {
 		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
+		@curl_setopt($ch, CURLOPT_POST,0);
+	}
 
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
@@ -227,6 +241,12 @@ logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));

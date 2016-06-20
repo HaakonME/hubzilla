@@ -1744,13 +1744,7 @@ function goaway($s) {
 }
 
 function shutdown() {
-<<<<<<< HEAD
-	global $db;
-	if(is_object($db) && $db->connected)
-		$db->close();
-=======
 
->>>>>>> 1.8RC
 }
 
 /**

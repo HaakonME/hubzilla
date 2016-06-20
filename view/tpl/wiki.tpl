@@ -96,17 +96,6 @@
       </div>
       <div id="page-history-pane" class="tab-pane fade" {{if $hidePageHistory}}style="display: none;"{{/if}}>
         <div id="page-history-list" class="section-content-wrapper">
-          <table class="table-striped table-responsive table-hover" style="width: 100%;">
-          {{foreach $pageHistory as $commit}}
-            <tr><td>
-            <table>
-              <tr><td>Date</td><td>{{$commit.date}}</td></tr>
-              <tr><td>Name</td><td>{{$commit.name}}</td></tr>
-              <tr><td>Message</td><td>{{$commit.title}}</td></tr>
-            </table>
-            </td></tr>
-          {{/foreach}}          
-          </table>
         </div>
       </div>     
 
@@ -120,15 +109,21 @@
   {{/if}}
 </div>
 
+{{$wikiModal}}
+
 <script>
   window.wiki_resource_id = '{{$resource_id}}';
   window.wiki_page_name = '{{$page}}';
   window.wiki_page_content = {{$content}};
+  window.wiki_page_commit = '{{$commit}}';
   
   if (window.wiki_page_name === 'Home') {
     $('#delete-page').hide();
     $('#rename-page').hide();
   }
+  
+  $("#generic-modal-ok-{{$wikiModalID}}").removeClass('btn-primary');
+  $("#generic-modal-ok-{{$wikiModalID}}").addClass('btn-danger');
   
   $('#rename-page').click(function (ev) {
     $('#rename-page-form-wrapper').show();
@@ -261,6 +256,7 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
           window.console.log('Page saved successfully.');
           window.wiki_page_content = currentContent;
           $('#id_commitMsg').val(''); // Clear the commit message box
+          $('#wiki-get-history').click();
         } else {
           alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 
           window.console.log('Error saving page.');
@@ -306,10 +302,40 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
           $('#revert-'+commitHash).removeClass('btn-danger');
           $('#revert-'+commitHash).addClass('btn-success');
           $('#revert-'+commitHash).html('Page reverted<br>but not saved');
+          window.wiki_page_commit = commitHash;
           // put contents in editor
           editor.getSession().setValue(data.content);
         } else {
           window.console.log('Error reverting page.');
+        }
+      }, 'json');
+  }
+  
+  function wiki_compare_page(compareCommit) {
+    if (window.wiki_resource_id === '' || window.wiki_page_name === '' || window.wiki_page_commit === '') {
+      window.console.log('You must have a wiki page open in order to revert pages.');
+      return false;
+    }
+    $.post("wiki/{{$channel}}/compare/page", 
+      {
+        compareCommit: compareCommit, 
+        currentCommit: window.wiki_page_commit, 
+        name: window.wiki_page_name, 
+        resource_id: window.wiki_resource_id
+      }, 
+      function (data) {
+        if (data.success) {
+          var modalBody = $('#generic-modal-body-{{$wikiModalID}}');
+          modalBody.html('<div class="descriptive-text">'+data.diff+'</div>');
+          $('.modal-dialog').width('80%');
+          $("#generic-modal-ok-{{$wikiModalID}}").off('click');
+          $("#generic-modal-ok-{{$wikiModalID}}").click(function () {
+            wiki_revert_page(compareCommit);
+            $('#generic-modal-{{$wikiModalID}}').modal('hide');
+          });
+          $('#generic-modal-{{$wikiModalID}}').modal();
+        } else {
+          window.console.log('Error comparing page.');
         }
       }, 'json');
   }

@@ -55,8 +55,8 @@ class Profile extends \Zotlabs\Web\Controller {
 	
 	function get() {
 	
-		if(get_config('system','block_public') && (! get_account_id()) && (! remote_channel())) {
-				return login();
+		if(observer_prohibited(true)) {
+			return login();
 		}
 	
 		$groups = array();

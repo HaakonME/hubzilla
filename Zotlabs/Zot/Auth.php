@@ -80,11 +80,9 @@ class Auth {
 
 		if(! $x) {
 			// finger them if they can't be found.
-			$ret = zot_finger($address, null);
-			if ($ret['success']) {
-				$j = json_decode($ret['body'], true);
-				if($j)
-					import_xchan($j);
+			$j = Finger::run($address, null);
+			if ($j['success']) {
+				import_xchan($j);
 				$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash 
 					where hubloc_addr = '%s' order by hubloc_id desc",
 					dbesc($address)

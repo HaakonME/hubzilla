@@ -64,6 +64,7 @@ class Dav extends \Zotlabs\Web\Controller {
 
 
 		$auth = new \Zotlabs\Storage\BasicAuth();
+		$auth->setRealm(ucfirst(\Zotlabs\Lib\System::get_platform_name()) . 'WebDAV');
 
 //		$authBackend = new \Sabre\DAV\Auth\Backend\BasicCallBack(function($userName,$password) {
 //			if(account_verify_password($userName,$password))

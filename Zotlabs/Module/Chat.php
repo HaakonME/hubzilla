@@ -1,9 +1,11 @@
-<?php
-namespace Zotlabs\Module; /** @file */
+<?php /** @file */
 
-require_once('include/chat.php');
+namespace Zotlabs\Module; 
+
+
 require_once('include/bookmarks.php');
 
+use \Zotlabs\Lib as Zlib;
 
 class Chat extends \Zotlabs\Web\Controller {
 
@@ -41,7 +43,7 @@ class Chat extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function post() {
+	function post() {
 	
 		if($_POST['room_name'])
 			$room = strip_tags(trim($_POST['room_name']));	
@@ -54,7 +56,7 @@ class Chat extends \Zotlabs\Web\Controller {
 	
 		if($_POST['action'] === 'drop') {
 			logger('delete chatroom');
-			chatroom_destroy($channel,array('cr_name' => $room));
+			Zlib\Chatroom::destroy($channel,array('cr_name' => $room));
 			goaway(z_root() . '/chat/' . $channel['channel_address']);
 		}
 	
@@ -67,7 +69,7 @@ class Chat extends \Zotlabs\Web\Controller {
 		if(intval($arr['expire']) < 0)
 			$arr['expire'] = 0;
 	
-		chatroom_create($channel,$arr);
+		Zlib\Chatroom::create($channel,$arr);
 	
 		$x = q("select * from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
 			dbesc($room),
@@ -87,7 +89,7 @@ class Chat extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function get() {
+	function get() {
 	
 		if(local_channel())
 			$channel = \App::get_channel();
@@ -105,7 +107,7 @@ class Chat extends \Zotlabs\Web\Controller {
 		}
 		
 		if((argc() > 3) && intval(argv(2)) && (argv(3) === 'leave')) {
-			chatroom_leave($observer,argv(2),$_SERVER['REMOTE_ADDR']);
+			Zlib\Chatroom::leave($observer,argv(2),$_SERVER['REMOTE_ADDR']);
 			goaway(z_root() . '/channel/' . argv(1));
 		}
 	
@@ -158,7 +160,7 @@ class Chat extends \Zotlabs\Web\Controller {
 			$room_id = intval(argv(2));
 			$bookmark_link = get_bookmark_link($ob);
 	
-			$x = chatroom_enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
+			$x = Zlib\Chatroom::enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
 			if(! $x)
 				return;
 			$x = q("select * from chatroom where cr_id = %d and cr_uid = %d $sql_extra limit 1",
@@ -238,10 +240,10 @@ class Chat extends \Zotlabs\Web\Controller {
 			));
 		}
 	
-		$rooms = chatroom_list(\App::$profile['profile_uid']);
+		$rooms = Zlib\Chatroom::roomlist(\App::$profile['profile_uid']);
 	
 		$o .= replace_macros(get_markup_template('chatrooms.tpl'), array(
-			'$header' => sprintf( t('%1$s\'s Chatrooms'), \App::$profile['name']),
+			'$header' => sprintf( t('%1$s\'s Chatrooms'), \App::$profile['fullname']),
 			'$name' => t('Name'),
 			'$baseurl' => z_root(),
 			'$nickname' => \App::$profile['channel_address'],

@@ -28,22 +28,22 @@ function format_event_html($ev) {
 	$o .= '<div class="event-title"><h3><i class="fa fa-calendar"></i>&nbsp;' . bbcode($ev['summary']) .  '</h3></div>' . "\r\n";
 
 	$o .= '<div class="event-start"><span class="event-label">' . t('Starts:') . '</span>&nbsp;<span class="dtstart" title="'
-		. datetime_convert('UTC', 'UTC', $ev['start'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
+		. datetime_convert('UTC', 'UTC', $ev['dtstart'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
 		. '" >' 
 		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
-			$ev['start'] , $bd_format ))
+			$ev['dtstart'] , $bd_format ))
 			:  day_translate(datetime_convert('UTC', 'UTC', 
-			$ev['start'] , $bd_format)))
+			$ev['dtstart'] , $bd_format)))
 		. '</span></div>' . "\r\n";
 
 	if(! $ev['nofinish'])
 		$o .= '<div class="event-end" ><span class="event-label">' . t('Finishes:') . '</span>&nbsp;<span class="dtend" title="'
-			. datetime_convert('UTC','UTC',$ev['finish'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
+			. datetime_convert('UTC','UTC',$ev['dtend'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
 			. '" >' 
 			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), 
-				$ev['finish'] , $bd_format ))
+				$ev['dtend'] , $bd_format ))
 				:  day_translate(datetime_convert('UTC', 'UTC', 
-				$ev['finish'] , $bd_format )))
+				$ev['dtend'] , $bd_format )))
 			. '</span></div>'  . "\r\n";
 
 	$o .= '<div class="event-description">' . bbcode($ev['description']) .  '</div>' . "\r\n";
@@ -58,6 +58,37 @@ function format_event_html($ev) {
 	return $o;
 }
 
+function format_event_obj($jobject) {
+	$event = array();
+
+	$object = json_decode($jobject,true);
+
+	//ensure compatibility with older items - this check can be removed at a later point
+	if(array_key_exists('description', $object)) {
+
+		$bd_format = t('l F d, Y \@ g:i A'); // Friday January 18, 2011 @ 8:01 AM
+
+		$event['header'] = replace_macros(get_markup_template('event_item_header.tpl'),array(
+			'$title'	 => bbcode($object['title']),
+			'$dtstart_label' => t('Starts:'),
+			'$dtstart_title' => datetime_convert('UTC', 'UTC', $object['dtstart'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
+			'$dtstart_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['dtstart'] , $bd_format )) : day_translate(datetime_convert('UTC', 'UTC', $object['dtstart'] , $bd_format))),
+			'$finish'	 => (($object['nofinish']) ? false : true),
+			'$dtend_label'	 => t('Finishes:'),
+			'$dtend_title'	 => datetime_convert('UTC','UTC',$object['dtend'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
+			'$dtend_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['dtend'] , $bd_format )) :  day_translate(datetime_convert('UTC', 'UTC', $object['dtend'] , $bd_format )))
+		));
+
+		$event['content'] = replace_macros(get_markup_template('event_item_content.tpl'),array(
+			'$description'	  => bbcode($object['description']),
+			'$location_label' => t('Location:'),
+			'$location'	  => bbcode($object['location'])
+		));
+
+	}
+
+	return $event;
+}
 
 function ical_wrapper($ev) {
 
@@ -67,8 +98,8 @@ function ical_wrapper($ev) {
 	$o .= "BEGIN:VCALENDAR";
 	$o .= "\r\nVERSION:2.0";
 	$o .= "\r\nMETHOD:PUBLISH";
-	$o .= "\r\nPRODID:-//" . get_config('system','sitename') . "//" . Zotlabs\Project\System::get_platform_name() . "//" . strtoupper(App::$language). "\r\n";
-	if(array_key_exists('start', $ev))
+	$o .= "\r\nPRODID:-//" . get_config('system','sitename') . "//" . Zotlabs\Lib\System::get_platform_name() . "//" . strtoupper(App::$language). "\r\n";
+	if(array_key_exists('dtstart', $ev))
 		$o .= format_event_ical($ev);
 	else {
 		foreach($ev as $e) {
@@ -82,7 +113,7 @@ function ical_wrapper($ev) {
 
 function format_event_ical($ev) {
 
-	if($ev['type'] === 'task')
+	if($ev['etype'] === 'task')
 		return format_todo_ical($ev);
 
 	$o = '';
@@ -92,10 +123,10 @@ function format_event_ical($ev) {
 	$o .= "\r\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
 	$o .= "\r\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
 	$o .= "\r\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
-	if($ev['start']) 
-		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
-	if($ev['finish'] && ! $ev['nofinish']) 
-		$o .= "\r\nDTEND:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['dtstart']) 
+		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['dtstart'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['dtend'] && ! $ev['nofinish']) 
+		$o .= "\r\nDTEND:" . datetime_convert('UTC','UTC', $ev['dtend'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['summary']) 
 		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
 	if($ev['location'])
@@ -119,10 +150,10 @@ function format_todo_ical($ev) {
 	$o .= "\r\nCREATED:" . datetime_convert('UTC','UTC', $ev['created'],'Ymd\\THis\\Z');
 	$o .= "\r\nLAST-MODIFIED:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
 	$o .= "\r\nDTSTAMP:" . datetime_convert('UTC','UTC', $ev['edited'],'Ymd\\THis\\Z');
-	if($ev['start']) 
-		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['start'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
-	if($ev['finish'] && ! $ev['nofinish']) 
-		$o .= "\r\nDUE:" . datetime_convert('UTC','UTC', $ev['finish'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['dtstart']) 
+		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['dtstart'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
+	if($ev['dtend'] && ! $ev['nofinish']) 
+		$o .= "\r\nDUE:" . datetime_convert('UTC','UTC', $ev['dtend'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['summary']) 
 		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
 	if($ev['event_status']) {
@@ -166,14 +197,17 @@ function format_event_bbcode($ev) {
 	if($ev['description'])
 		$o .= '[event-description]' . $ev['description'] . '[/event-description]';
 
-	if($ev['start'])
-		$o .= '[event-start]' . $ev['start'] . '[/event-start]';
+	if($ev['dtstart'])
+		$o .= '[event-start]' . $ev['dtstart'] . '[/event-start]';
 
-	if(($ev['finish']) && (! $ev['nofinish']))
-		$o .= '[event-finish]' . $ev['finish'] . '[/event-finish]';
+	if(($ev['dtend']) && (! $ev['nofinish']))
+		$o .= '[event-finish]' . $ev['dtend'] . '[/event-finish]';
  
 	if($ev['location'])
 		$o .= '[event-location]' . $ev['location'] . '[/event-location]';
+
+	if($ev['event_hash'])
+		$o .= '[event-id]' . $ev['event_hash'] . '[/event-id]';
 
 	if($ev['adjust'])
 		$o .= '[event-adjust]' . $ev['adjust'] . '[/event-adjust]';
@@ -204,21 +238,24 @@ function bbtoevent($s) {
 		$ev['description'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-start\](.*?)\[\/event\-start\]/is",$s,$match))
-		$ev['start'] = $match[1];
+		$ev['dtstart'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-finish\](.*?)\[\/event\-finish\]/is",$s,$match))
-		$ev['finish'] = $match[1];
+		$ev['dtend'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-location\](.*?)\[\/event\-location\]/is",$s,$match))
 		$ev['location'] = $match[1];
 	$match = '';
+	if(preg_match("/\[event\-id\](.*?)\[\/event\-id\]/is",$s,$match))
+		$ev['event_hash'] = $match[1];
+	$match = '';
 	if(preg_match("/\[event\-adjust\](.*?)\[\/event\-adjust\]/is",$s,$match))
 		$ev['adjust'] = $match[1];
-	if(array_key_exists('start',$ev)) {
-		if(array_key_exists('finish',$ev)) {
-			if($ev['finish'] === $ev['start'])
+	if(array_key_exists('dtstart',$ev)) {
+		if(array_key_exists('dtend',$ev)) {
+			if($ev['dtend'] === $ev['dtstart'])
 				$ev['nofinish'] = 1;
-			elseif($ev['finish'])
+			elseif($ev['dtend'])
 				$ev['nofinish'] = 0;
 			else
 				$ev['nofinish'] = 1;
@@ -254,8 +291,8 @@ function sort_by_date($arr) {
  */
 function ev_compare($a, $b) {
 
-	$date_a = (($a['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$a['start']) : $a['start']);
-	$date_b = (($b['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$b['start']) : $b['start']);
+	$date_a = (($a['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$a['dtstart']) : $a['dtstart']);
+	$date_b = (($b['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$b['dtstart']) : $b['dtstart']);
 
 	if ($date_a === $date_b)
 		return strcasecmp($a['description'], $b['description']);
@@ -268,7 +305,7 @@ function event_store_event($arr) {
 
 	$arr['created']        = (($arr['created'])        ? $arr['created']        : datetime_convert());
 	$arr['edited']         = (($arr['edited'])         ? $arr['edited']         : datetime_convert());
-	$arr['type']           = (($arr['type'])           ? $arr['type']           : 'event' );
+	$arr['etype']          = (($arr['etype'])          ? $arr['etype']          : 'event' );
 	$arr['event_xchan']    = (($arr['event_xchan'])    ? $arr['event_xchan']    : '');
 	$arr['event_priority'] = (($arr['event_priority']) ? $arr['event_priority'] : 0);
 
@@ -278,45 +315,52 @@ function event_store_event($arr) {
 	else
 		$arr['event_status_date'] = NULL_DATE;
 
-	// Existing event being modified
 
-	if($arr['id'] || $arr['event_hash']) {
+	$existing_event = null;
 
-		// has the event actually changed?
+	if($arr['event_hash']) {
+		$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+			dbesc($arr['event_hash']),
+			intval($arr['uid'])
+		);
+		if($r) {
+			$existing_event = $r[0];
+		}
+	}
 
-		if($arr['event_hash']) {
-			$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
-				dbesc($arr['event_hash']),
-				intval($arr['uid'])
-			);
+	if($arr['id']) {
+		$r = q("SELECT * FROM event WHERE id = %d AND uid = %d LIMIT 1",
+			intval($arr['id']),
+			intval($arr['uid'])
+		);
+		if($r) {
+			$existing_event = $r[0];
 		}
 		else {
-			$r = q("SELECT * FROM event WHERE id = %d AND uid = %d LIMIT 1",
-				intval($arr['id']),
-				intval($arr['uid'])
-			);
-		}
-
-		if(! $r)
 			return false;
+		}
+	}
 
-		if($r[0]['edited'] === $arr['edited']) {
-			// Nothing has changed. Return the ID.
-			return $r[0];
+
+	if($existing_event) {
+
+		if($existing_event['edited'] >= $arr['edited']) {
+			// Nothing has changed. 
+			return $existing_event;
 		}
 
-		$hash = $r[0]['event_hash'];
+		$hash = $existing_event['event_hash'];
 
 		// The event changed. Update it.
 
 		$r = q("UPDATE `event` SET
 			`edited` = '%s',
-			`start` = '%s',
-			`finish` = '%s',
+			`dtstart` = '%s',
+			`dtend` = '%s',
 			`summary` = '%s',
 			`description` = '%s',
 			`location` = '%s',
-			`type` = '%s',
+			`etype` = '%s',
 			`adjust` = %d,
 			`nofinish` = %d,
 			`event_status` = '%s',
@@ -332,12 +376,12 @@ function event_store_event($arr) {
 			WHERE `id` = %d AND `uid` = %d",
 
 			dbesc($arr['edited']),
-			dbesc($arr['start']),
-			dbesc($arr['finish']),
+			dbesc($arr['dtstart']),
+			dbesc($arr['dtend']),
 			dbesc($arr['summary']),
 			dbesc($arr['description']),
 			dbesc($arr['location']),
-			dbesc($arr['type']),
+			dbesc($arr['etype']),
 			intval($arr['adjust']),
 			intval($arr['nofinish']),
 			dbesc($arr['event_status']),
@@ -350,7 +394,7 @@ function event_store_event($arr) {
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
 			dbesc($arr['deny_gid']),
-			intval($r[0]['id']),
+			intval($existing_event['id']),
 			intval($arr['uid'])
 		);
 	} else {
@@ -360,10 +404,12 @@ function event_store_event($arr) {
 
 		if(array_key_exists('external_id',$arr))
 			$hash = $arr['external_id'];
+		elseif(array_key_exists('event_hash',$arr))
+			$hash = $arr['event_hash'];
 		else
 			$hash = random_string() . '@' . App::get_hostname();
 
-		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
+		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,dtstart,dtend,summary,description,location,etype,
 			adjust,nofinish, event_status, event_status_date, event_percent, event_repeat, event_sequence, event_priority, allow_cid,allow_gid,deny_cid,deny_gid)
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
@@ -372,12 +418,12 @@ function event_store_event($arr) {
 			dbesc($hash),
 			dbesc($arr['created']),
 			dbesc($arr['edited']),
-			dbesc($arr['start']),
-			dbesc($arr['finish']),
+			dbesc($arr['dtstart']),
+			dbesc($arr['dtend']),
 			dbesc($arr['summary']),
 			dbesc($arr['description']),
 			dbesc($arr['location']),
-			dbesc($arr['type']),
+			dbesc($arr['etype']),
 			intval($arr['adjust']),
 			intval($arr['nofinish']),
 			dbesc($arr['event_status']),
@@ -426,7 +472,7 @@ function event_addtocal($item_id, $uid) {
 
 	$ev = bbtoevent($r[0]['body']);
 
-	if(x($ev,'summary') && x($ev,'start')) {
+	if(x($ev,'summary') && x($ev,'dtstart')) {
 		$ev['event_xchan'] = $item['author_xchan'];
 		$ev['uid']         = $channel['channel_id'];
 		$ev['account']     = $channel['channel_account_id'];
@@ -436,7 +482,7 @@ function event_addtocal($item_id, $uid) {
 
 		// is this an edit?
 
-		if($item['resource_type'] === 'event') {
+		if($item['resource_type'] === 'event' && (! $ev['event_hash'])) {
 			$ev['event_hash'] = $item['resource_id'];
 		}
 
@@ -472,7 +518,6 @@ function event_addtocal($item_id, $uid) {
 			if($z) {
 				build_sync_packet($channel['channel_id'],array('event_item' => array(encode_item($sync_item[0],true)),'event' => $z));
 			}
-
 			return true;
 		}
 	}
@@ -540,20 +585,20 @@ function event_import_ical($ical, $uid) {
 
 //	logger('dtstart: ' . var_export($dtstart,true));
 
-	$ev['start'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+	$ev['dtstart'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
 		$dtstart->format(\DateTime::W3C));
 
 
 	if(isset($ical->DTEND)) {
 		$dtend = $ical->DTEND->getDateTime();
-		$ev['finish'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+		$ev['dtend'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
 			$dtend->format(\DateTime::W3C));
 	}
 	else
 		$ev['nofinish'] = 1;
 
 
-	if($ev['start'] === $ev['finish'])
+	if($ev['dtstart'] === $ev['dtend'])
 		$ev['nofinish'] = 1;
 
 	if(isset($ical->CREATED)) {
@@ -587,7 +632,7 @@ function event_import_ical($ical, $uid) {
 			$ev['external_id'] = $evuid;
 	}
 		
-	if($ev['summary'] && $ev['start']) {
+	if($ev['summary'] && $ev['dtstart']) {
 		$ev['event_xchan'] = $channel['channel_hash'];
 		$ev['uid']         = $channel['channel_id'];
 		$ev['account']     = $channel['channel_account_id'];
@@ -626,29 +671,24 @@ function event_import_ical_task($ical, $uid) {
 
 	$dtstart = $ical->DTSTART->getDateTime();
 
+	$ev['adjust'] = (($ical->DTSTART->isFloating()) ? 1 : 0);
+
 //	logger('dtstart: ' . var_export($dtstart,true));
 
-	if(($dtstart->timezone_type == 2) || (($dtstart->timezone_type == 3) && ($dtstart->timezone === 'UTC'))) {
-		$ev['adjust'] = 1;
-	}
-	else {
-		$ev['adjust'] = 0;
-	}
-	
-	$ev['start'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+	$ev['dtstart'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
 		$dtstart->format(\DateTime::W3C));
 
 
 	if(isset($ical->DUE)) {
 		$dtend = $ical->DUE->getDateTime();
-		$ev['finish'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
+		$ev['dtend'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
 			$dtend->format(\DateTime::W3C));
 	}
 	else
 		$ev['nofinish'] = 1;
 
 
-	if($ev['start'] === $ev['finish'])
+	if($ev['dtstart'] === $ev['dtend'])
 		$ev['nofinish'] = 1;
 
 	if(isset($ical->CREATED)) {
@@ -713,9 +753,9 @@ function event_import_ical_task($ical, $uid) {
 		$ev['event_percent'] = (string) $ical->{'PERCENT-COMPLETE'} ;
 	}
 
-	$ev['type'] = 'task';
+	$ev['etype'] = 'task';
 
-	if($ev['summary'] && $ev['start']) {
+	if($ev['summary'] && $ev['dtstart']) {
 		$ev['event_xchan'] = $channel['channel_hash'];
 		$ev['uid']         = $channel['channel_id'];
 		$ev['account']     = $channel['channel_account_id'];
@@ -764,7 +804,10 @@ function event_store_item($arr, $event) {
 	$prefix = '';
 //	$birthday = false;
 
-	if($event['type'] === 'birthday') {
+	if(($event) && array_key_exists('event_hash',$event) && (! array_key_exists('event_hash',$arr)))
+		$arr['event_hash'] = $event['event_hash'];
+
+	if($event['etype'] === 'birthday') {
 		if(! is_sys_channel($arr['uid']))
 			$prefix =  t('This event has been added to your calendar.');
 //		$birthday = true;
@@ -788,21 +831,22 @@ function event_store_item($arr, $event) {
 			'type'    => ACTIVITY_OBJ_EVENT,
 			'id'      => z_root() . '/event/' . $r[0]['resource_id'],
 			'title'   => $arr['summary'],
-			'start'   => $arr['start'],
-			'finish'  => $arr['finish'],
+			'dtstart' => $arr['dtstart'],
+			'dtend'  => $arr['dtend'],
 			'nofinish'  => $arr['nofinish'],
 			'description' => $arr['description'],
 			'location'   => $arr['location'],
 			'adjust'   => $arr['adjust'],
 			'content' => format_event_bbcode($arr),
 			'author'  => array(
-			'name'     => $r[0]['xchan_name'],
-			'address'  => $r[0]['xchan_addr'],
-			'guid'     => $r[0]['xchan_guid'],
-			'guid_sig' => $r[0]['xchan_guid_sig'],
-			'link'     => array(
-				array('rel' => 'alternate', 'type' => 'text/html', 'href' => $r[0]['xchan_url']),
-				array('rel' => 'photo', 'type' => $r[0]['xchan_photo_mimetype'], 'href' => $r[0]['xchan_photo_m'])),
+				'name'     => $r[0]['xchan_name'],
+				'address'  => $r[0]['xchan_addr'],
+				'guid'     => $r[0]['xchan_guid'],
+				'guid_sig' => $r[0]['xchan_guid_sig'],
+				'link'     => array(
+					array('rel' => 'alternate', 'type' => 'text/html', 'href' => $r[0]['xchan_url']),
+					array('rel' => 'photo', 'type' => $r[0]['xchan_photo_mimetype'], 'href' => $r[0]['xchan_photo_m'])
+				),
 			),
 		));
 
@@ -813,7 +857,7 @@ function event_store_item($arr, $event) {
 
 		$sig = '';
 
-		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', sig = '%s', item_flags = %d, item_private = %d, obj_type = '%s'  WHERE id = %d AND uid = %d",
+		q("UPDATE item SET title = '%s', body = '%s', obj = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', sig = '%s', item_flags = %d, item_private = %d, obj_type = '%s'  WHERE id = %d AND uid = %d",
 			dbesc($arr['summary']),
 			dbesc($prefix . format_event_bbcode($arr)),
 			dbesc($object),
@@ -837,12 +881,12 @@ function event_store_item($arr, $event) {
 
 		if(($arr['term']) && (is_array($arr['term']))) {
 			foreach($arr['term'] as $t) {
-				q("insert into term (uid,oid,otype,type,term,url)
+				q("insert into term (uid,oid,otype,ttype,term,url)
 					values(%d,%d,%d,%d,'%s','%s') ",
 					intval($arr['uid']),
 					intval($r[0]['id']),
 					intval(TERM_OBJ_POST),
-					intval($t['type']),
+					intval($t['ttype']),
 					dbesc($t['term']),
 					dbesc($t['url'])
 				);
@@ -929,12 +973,12 @@ function event_store_item($arr, $event) {
 				dbesc($arr['event_xchan'])
 		);
 		if($x) {
-			$item_arr['object'] = json_encode(array(
+			$item_arr['obj'] = json_encode(array(
 				'type'    => ACTIVITY_OBJ_EVENT,
 				'id'      => z_root() . '/event/' . $event['event_hash'],
 				'title'   => $arr['summary'],
-				'start'   => $arr['start'],
-				'finish'  => $arr['finish'],
+				'dtstart' => $arr['dtstart'],
+				'dtend'  => $arr['dtend'],
 				'nofinish'  => $arr['nofinish'],
 				'description' => $arr['description'],
 				'location'   => $arr['location'],
@@ -984,7 +1028,7 @@ function tasks_fetch($arr) {
     if($arr && $arr['all'] == 1)
         $sql_extra = '';
 
-    $r = q("select * from event where type = 'task' and uid = %d $sql_extra order by created desc",
+    $r = q("select * from event where etype = 'task' and uid = %d $sql_extra order by created desc",
         intval(local_channel())
     );
 

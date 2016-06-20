@@ -5,7 +5,7 @@ require_once('include/acl_selectors.php');
 require_once('include/message.php');
 require_once('include/zot.php');
 require_once("include/bbcode.php");
-require_once('include/Contact.php');
+
 
 
 
@@ -32,17 +32,16 @@ class Mail extends \Zotlabs\Web\Controller {
 		if(! $recipient) {
 			$channel = \App::get_channel();
 	
-			$ret = zot_finger($rstr,$channel);
+			$j = \Zotlabs\Zot\Finger::run($rstr,$channel);
 	
-			if(! $ret['success']) {
+			if(! $j['success']) {
 				notice( t('Unable to lookup recipient.') . EOL);
 				return;
 			} 
-			$j = json_decode($ret['body'],true);
 	
 			logger('message_post: lookup: ' . $url . ' ' . print_r($j,true));
 	
-			if(! ($j['success'] && $j['guid'])) {
+			if(! $j['guid']) {
 				notice( t('Unable to communicate with requested channel.'));
 				return;
 			}
@@ -173,7 +172,7 @@ class Mail extends \Zotlabs\Web\Controller {
 				build_sync_packet(local_channel(),array('mail' => encode_mail($x[0],true)));
 			}
 	
-			proc_run('php','include/notifier.php','mail',intval(argv(3)));
+			\Zotlabs\Daemon\Master::Summon(array('Notifier','mail',intval(argv(3))));
 	
 			if($r) {
 					info( t('Message recalled.') . EOL );
@@ -305,11 +304,6 @@ class Mail extends \Zotlabs\Web\Controller {
 			\App::$poi = $messages[0]['from'];
 		else
 			\App::$poi = $messages[0]['to'];
-	
-	//	require_once('include/Contact.php');
-	
-	//	\App::set_widget('mail_conversant',vcard_from_xchan(\App::$poi,$get_observer_hash,'mail'));
-	
 	
 		$tpl = get_markup_template('msg-header.tpl');
 		

@@ -35,8 +35,6 @@ class Removeme extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		require_once('include/Contact.php');
-	
 		$global_remove = intval($_POST['global']);
 	
 		channel_remove(local_channel(),1 - $global_remove,true);
@@ -44,8 +42,7 @@ class Removeme extends \Zotlabs\Web\Controller {
 	}
 	
 	
-	
-		function get() {
+	function get() {
 	
 		if(! local_channel())
 			goaway(z_root());

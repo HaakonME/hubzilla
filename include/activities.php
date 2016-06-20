@@ -1,7 +1,6 @@
 <?php /** @file */
 
 function profile_activity($changed, $value) {
-	$a = get_app();
 
 	if(! local_channel() || ! is_array($changed) || ! count($changed))
 		return;
@@ -89,7 +88,7 @@ function profile_activity($changed, $value) {
 
 	if($i) {
 		// FIXME - limit delivery in notifier.php to those specificed in the perms argument
-	   	proc_run('php',"include/notifier.php","activity","$i", 'PERMS_R_PROFILE');
+	   	Zotlabs\Daemon\Master::Summon(array('Notifier','activity', $i, 'PERMS_R_PROFILE'));
 	}
 
 }

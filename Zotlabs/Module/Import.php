@@ -4,9 +4,9 @@ namespace Zotlabs\Module;
 // Import a channel, either by direct file upload or via
 // connection to original server. 
 
-require_once('include/Contact.php');
+
 require_once('include/zot.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 require_once('include/import.php');
 
 
@@ -408,8 +408,12 @@ class Import extends \Zotlabs\Web\Controller {
 				$saved = array();
 				foreach($groups as $group) {
 					$saved[$group['hash']] = array('old' => $group['id']);
+					if(array_key_exists('name',$group)) {
+						$group['gname'] = $group['name'];
+						unset($group['name']);
+					}
 					unset($group['id']);
-					$group['uid'] = $channel['channel_id'];
+					$group['uid'] = $channel['channel_id'];					
 					dbesc_array($group);
 					$r = dbq("INSERT INTO groups (`" 
 						. implode("`, `", array_keys($group)) 
@@ -496,11 +500,11 @@ class Import extends \Zotlabs\Web\Controller {
 		// send out refresh requests
 		// notify old server that it may no longer be primary.
 	
-		proc_run('php','include/notifier.php','location',$channel['channel_id']);
+		\Zotlabs\Daemon\Master::Summon(array('Notifier','location',$channel['channel_id']));
 	
 		// This will indirectly perform a refresh_all *and* update the directory
 	
-		proc_run('php', 'include/directory.php', $channel['channel_id']);
+		\Zotlabs\Daemon\Master::Summon(array('Directory', $channel['channel_id']));
 	
 	
 		notice( t('Import completed.') . EOL);

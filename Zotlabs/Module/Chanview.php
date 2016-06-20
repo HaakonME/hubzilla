@@ -1,9 +1,7 @@
 <?php
 namespace Zotlabs\Module;
 
-require_once('include/Contact.php');
 require_once('include/zot.php');
-
 
 class Chanview extends \Zotlabs\Web\Controller {
 
@@ -62,18 +60,15 @@ class Chanview extends \Zotlabs\Web\Controller {
 			}
 	
 			if($_REQUEST['address']) {
-				$ret = zot_finger($_REQUEST['address'],null);
-				if($ret['success']) {
-					$j = json_decode($ret['body'],true);
-					if($j)
-						import_xchan($j);
+				$j = \Zotlabs\Zot\Finger::run($_REQUEST['address'],null);
+				if($j['success']) {
+					import_xchan($j);
 					$r = q("select * from xchan where xchan_addr = '%s' limit 1",
 						dbesc($_REQUEST['address'])
 					);
 					if($r)
 						\App::$poi = $r[0];
 				}
-	
 			}
 		}
 	

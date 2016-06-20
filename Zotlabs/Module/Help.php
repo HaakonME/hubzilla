@@ -37,7 +37,7 @@ class Help extends \Zotlabs\Web\Controller {
 					$path = trim(substr($dirname,4),'/');
 	
 					$o .= '<li><a href="help/' . (($path) ? $path . '/' : '') . $fname . '" >' . ucwords(str_replace('_',' ',notags($fname))) . '</a><br />' . 
-					str_replace('$Projectname',\Zotlabs\Project\System::get_platform_name(),substr($rr['text'],0,200)) . '...<br /><br /></li>';
+					str_replace('$Projectname',\Zotlabs\Lib\System::get_platform_name(),substr($rr['text'],0,200)) . '...<br /><br /></li>';
 	
 				}
 				$o .= '</ul>';

@@ -47,11 +47,9 @@ class Magic extends \Zotlabs\Web\Controller {
 			 *
 			 */
 	
-			$ret = zot_finger((($addr) ? $addr : '[system]@' . $parsed['host']),null);
-			if($ret['success']) {
-				$j = json_decode($ret['body'],true);
-				if($j)
-					import_xchan($j);
+			$j = \Zotlabs\Zot\Finger::run((($addr) ? $addr : '[system]@' . $parsed['host']),null);
+			if($j['success']) {
+				import_xchan($j);
 	
 				// Now try again
 	

@@ -78,7 +78,7 @@ class Settings extends \Zotlabs\Web\Controller {
 					$r = q("UPDATE clients SET
 								client_id='%s',
 								pw='%s',
-								name='%s',
+								clname='%s',
 								redirect_uri='%s',
 								icon='%s',
 								uid=%d
@@ -91,7 +91,7 @@ class Settings extends \Zotlabs\Web\Controller {
 							intval(local_channel()),
 							dbesc($key));
 				} else {
-					$r = q("INSERT INTO clients (client_id, pw, name, redirect_uri, icon, uid)
+					$r = q("INSERT INTO clients (client_id, pw, clname, redirect_uri, icon, uid)
 						VALUES ('%s','%s','%s','%s','%s',%d)",
 						dbesc($key),
 						dbesc($secret),
@@ -337,7 +337,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				}
 				$hide_presence    = 1 - (intval($role_permissions['online']));
 				if($role_permissions['default_collection']) {
-					$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+					$r = q("select hash from groups where uid = %d and gname = '%s' limit 1",
 						intval(local_channel()),
 						dbesc( t('Friends') )
 					);
@@ -345,7 +345,7 @@ class Settings extends \Zotlabs\Web\Controller {
 						require_once('include/group.php');
 						group_add(local_channel(), t('Friends'));
 						group_add_member(local_channel(),t('Friends'),$channel['channel_hash']);
-						$r = q("select hash from groups where uid = %d and name = '%s' limit 1",
+						$r = q("select hash from groups where uid = %d and gname = '%s' limit 1",
 							intval(local_channel()),
 							dbesc( t('Friends') )
 						);
@@ -483,7 +483,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 		if($username != $channel['channel_name']) {
 			$name_change = true;
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			$err = validate_channelname($username);
 			if($err) {
 				notice($err);
@@ -537,13 +537,13 @@ class Settings extends \Zotlabs\Web\Controller {
 				dbesc(datetime_convert()),
 				dbesc($channel['channel_hash'])
 			);
-			$r = q("update profile set name = '%s' where uid = %d and is_default = 1",
+			$r = q("update profile set fullname = '%s' where uid = %d and is_default = 1",
 				dbesc($username),
 				intval($channel['channel_id'])
 			);
 		}
 	
-		proc_run('php','include/directory.php',local_channel());
+		\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 	
 		build_sync_packet();
 	
@@ -562,7 +562,7 @@ class Settings extends \Zotlabs\Web\Controller {
 			
 	
 	
-		function get() {
+	function get() {
 	
 		$o = '';
 		nav_set_selected('settings');
@@ -615,7 +615,7 @@ class Settings extends \Zotlabs\Web\Controller {
 					'$title'	=> t('Add application'),
 					'$submit'	=> t('Update'),
 					'$cancel'	=> t('Cancel'),
-					'$name'		=> array('name', t('Name'), $app['name'] , ''),
+					'$name'		=> array('name', t('Name'), $app['clname'] , ''),
 					'$key'		=> array('key', t('Consumer Key'), $app['client_id'], ''),
 					'$secret'	=> array('secret', t('Consumer Secret'), $app['pw'], ''),
 					'$redirect'	=> array('redirect', t('Redirect'), $app['redirect_uri'], ''),
@@ -1047,7 +1047,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 				'$h_prv' 	=> t('Security and Privacy Settings'),
 				'$permissions_set' => $permissions_set,
-				'$server_role' => \Zotlabs\Project\System::get_server_role(),
+				'$server_role' => \Zotlabs\Lib\System::get_server_role(),
 				'$perms_set_msg' => t('Your permissions are already configured. Click to view/adjust'),
 	
 				'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online'), $yes_no),
@@ -1062,11 +1062,11 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 				'$lbl_p2macro' => t('Advanced Privacy Settings'),
 	
-				'$expire' => array('expire',t('Expire other channel content after this many days'),$expire,sprintf( t('0 or blank to use the website limit. The website expires after %d days.'),intval($sys_expire))),
+				'$expire' => array('expire',t('Expire other channel content after this many days'),$expire, t('0 or blank to use the website limit.') . ' ' . ((intval($sys_expire)) ? sprintf( t('This website expires after %d days.'),intval($sys_expire)) : t('This website does not expire imported content.')) . ' ' . t('The website limit takes precedence if lower than your limit.')),
 				'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
-				'$permissions' => t('Default Post Permissions'),
+				'$permissions' => t('Default Post and Publish Permissions'),
 				'$permdesc' => t("\x28click to open/close\x29"),
-				'$aclselect' => populate_acl($perm_defaults, false, \PermissionDescription::fromDescription(t('Use my default audience setting for the type of post'))),
+				'$aclselect' => populate_acl($perm_defaults, false, \PermissionDescription::fromDescription(t('Use my default audience setting for the type of object published'))),
 				'$suggestme' => $suggestme,
 				'$group_select' => $group_select,
 				'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),

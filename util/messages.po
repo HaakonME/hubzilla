@@ -1023,7 +1023,7 @@ msgstr ""
 
 #: ../../include/widgets.php:136 ../../include/widgets.php:175
 #: ../../include/Contact.php:107 ../../include/conversation.php:956
-#: ../../include/identity.php:956 ../../mod/directory.php:316
+#: ../../include/channel.php:956 ../../mod/directory.php:316
 #: ../../mod/match.php:64 ../../mod/suggest.php:52
 msgid "Connect"
 msgstr ""
@@ -1088,8 +1088,8 @@ msgstr ""
 msgid "Family"
 msgstr ""
 
-#: ../../include/widgets.php:431 ../../include/identity.php:394
-#: ../../include/identity.php:395 ../../include/identity.php:402
+#: ../../include/widgets.php:431 ../../include/channel.php:394
+#: ../../include/channel.php:395 ../../include/channel.php:402
 #: ../../include/profile_selectors.php:80 ../../mod/settings.php:345
 #: ../../mod/settings.php:349 ../../mod/settings.php:350
 #: ../../mod/settings.php:353 ../../mod/settings.php:364
@@ -1206,7 +1206,7 @@ msgid "Finishes:"
 msgstr ""
 
 #: ../../include/event.php:50 ../../include/bb2diaspora.php:481
-#: ../../include/identity.php:1007 ../../mod/directory.php:302
+#: ../../include/channel.php:1007 ../../mod/directory.php:302
 #: ../../mod/events.php:684
 msgid "Location:"
 msgstr ""
@@ -1523,7 +1523,7 @@ msgid "View all"
 msgstr ""
 
 #: ../../include/ItemObject.php:179 ../../include/taxonomy.php:396
-#: ../../include/conversation.php:1712 ../../include/identity.php:1266
+#: ../../include/conversation.php:1712 ../../include/channel.php:1266
 #: ../../mod/photos.php:1019
 msgctxt "noun"
 msgid "Like"
@@ -1775,7 +1775,7 @@ msgstr ""
 msgid "Manage/Edit profiles"
 msgstr ""
 
-#: ../../include/nav.php:95 ../../include/identity.php:979
+#: ../../include/nav.php:95 ../../include/channel.php:979
 msgid "Edit Profile"
 msgstr ""
 
@@ -3279,48 +3279,48 @@ msgstr ""
 msgid "database storage failed."
 msgstr ""
 
-#: ../../include/identity.php:33
+#: ../../include/channel.php:33
 msgid "Unable to obtain identity information from database"
 msgstr ""
 
-#: ../../include/identity.php:67
+#: ../../include/channel.php:67
 msgid "Empty name"
 msgstr ""
 
-#: ../../include/identity.php:70
+#: ../../include/channel.php:70
 msgid "Name too long"
 msgstr ""
 
-#: ../../include/identity.php:186
+#: ../../include/channel.php:186
 msgid "No account identifier"
 msgstr ""
 
-#: ../../include/identity.php:198
+#: ../../include/channel.php:198
 msgid "Nickname is required."
 msgstr ""
 
-#: ../../include/identity.php:212
+#: ../../include/channel.php:212
 msgid "Reserved nickname. Please choose another."
 msgstr ""
 
-#: ../../include/identity.php:217 ../../include/dimport.php:34
+#: ../../include/channel.php:217 ../../include/dimport.php:34
 msgid ""
 "Nickname has unsupported characters or is already being used on this site."
 msgstr ""
 
-#: ../../include/identity.php:292
+#: ../../include/channel.php:292
 msgid "Unable to retrieve created identity"
 msgstr ""
 
-#: ../../include/identity.php:350
+#: ../../include/channel.php:350
 msgid "Default Profile"
 msgstr ""
 
-#: ../../include/identity.php:759
+#: ../../include/channel.php:759
 msgid "Requested channel is not available."
 msgstr ""
 
-#: ../../include/identity.php:806 ../../mod/profile.php:16
+#: ../../include/channel.php:806 ../../mod/profile.php:16
 #: ../../mod/achievements.php:11 ../../mod/webpages.php:29
 #: ../../mod/connect.php:13 ../../mod/hcard.php:8 ../../mod/blocks.php:29
 #: ../../mod/editlayout.php:27 ../../mod/editwebpage.php:28
@@ -3329,193 +3329,193 @@ msgstr ""
 msgid "Requested profile is not available."
 msgstr ""
 
-#: ../../include/identity.php:969 ../../mod/profiles.php:774
+#: ../../include/channel.php:969 ../../mod/profiles.php:774
 msgid "Change profile photo"
 msgstr ""
 
-#: ../../include/identity.php:975
+#: ../../include/channel.php:975
 msgid "Profiles"
 msgstr ""
 
-#: ../../include/identity.php:975
+#: ../../include/channel.php:975
 msgid "Manage/edit profiles"
 msgstr ""
 
-#: ../../include/identity.php:976 ../../mod/profiles.php:775
+#: ../../include/channel.php:976 ../../mod/profiles.php:775
 msgid "Create New Profile"
 msgstr ""
 
-#: ../../include/identity.php:991 ../../mod/profiles.php:786
+#: ../../include/channel.php:991 ../../mod/profiles.php:786
 msgid "Profile Image"
 msgstr ""
 
-#: ../../include/identity.php:994
+#: ../../include/channel.php:994
 msgid "visible to everybody"
 msgstr ""
 
-#: ../../include/identity.php:995 ../../mod/profiles.php:669
+#: ../../include/channel.php:995 ../../mod/profiles.php:669
 #: ../../mod/profiles.php:790
 msgid "Edit visibility"
 msgstr ""
 
-#: ../../include/identity.php:1011 ../../include/identity.php:1250
+#: ../../include/channel.php:1011 ../../include/channel.php:1250
 msgid "Gender:"
 msgstr ""
 
-#: ../../include/identity.php:1012 ../../include/identity.php:1294
+#: ../../include/channel.php:1012 ../../include/channel.php:1294
 msgid "Status:"
 msgstr ""
 
-#: ../../include/identity.php:1013 ../../include/identity.php:1305
+#: ../../include/channel.php:1013 ../../include/channel.php:1305
 msgid "Homepage:"
 msgstr ""
 
-#: ../../include/identity.php:1014
+#: ../../include/channel.php:1014
 msgid "Online Now"
 msgstr ""
 
-#: ../../include/identity.php:1097 ../../include/identity.php:1175
+#: ../../include/channel.php:1097 ../../include/channel.php:1175
 #: ../../mod/ping.php:324
 msgid "g A l F d"
 msgstr ""
 
-#: ../../include/identity.php:1098 ../../include/identity.php:1176
+#: ../../include/channel.php:1098 ../../include/channel.php:1176
 msgid "F d"
 msgstr ""
 
-#: ../../include/identity.php:1143 ../../include/identity.php:1215
+#: ../../include/channel.php:1143 ../../include/channel.php:1215
 #: ../../mod/ping.php:346
 msgid "[today]"
 msgstr ""
 
-#: ../../include/identity.php:1154
+#: ../../include/channel.php:1154
 msgid "Birthday Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1155
+#: ../../include/channel.php:1155
 msgid "Birthdays this week:"
 msgstr ""
 
-#: ../../include/identity.php:1208
+#: ../../include/channel.php:1208
 msgid "[No description]"
 msgstr ""
 
-#: ../../include/identity.php:1226
+#: ../../include/channel.php:1226
 msgid "Event Reminders"
 msgstr ""
 
-#: ../../include/identity.php:1227
+#: ../../include/channel.php:1227
 msgid "Events this week:"
 msgstr ""
 
-#: ../../include/identity.php:1240 ../../include/identity.php:1357
+#: ../../include/channel.php:1240 ../../include/channel.php:1357
 #: ../../include/apps.php:138 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr ""
 
-#: ../../include/identity.php:1248 ../../mod/settings.php:1056
+#: ../../include/channel.php:1248 ../../mod/settings.php:1056
 msgid "Full Name:"
 msgstr ""
 
-#: ../../include/identity.php:1255
+#: ../../include/channel.php:1255
 msgid "Like this channel"
 msgstr ""
 
-#: ../../include/identity.php:1279
+#: ../../include/channel.php:1279
 msgid "j F, Y"
 msgstr ""
 
-#: ../../include/identity.php:1280
+#: ../../include/channel.php:1280
 msgid "j F"
 msgstr ""
 
-#: ../../include/identity.php:1287
+#: ../../include/channel.php:1287
 msgid "Birthday:"
 msgstr ""
 
-#: ../../include/identity.php:1291 ../../mod/directory.php:297
+#: ../../include/channel.php:1291 ../../mod/directory.php:297
 msgid "Age:"
 msgstr ""
 
-#: ../../include/identity.php:1300
+#: ../../include/channel.php:1300
 #, php-format
 msgid "for %1$d %2$s"
 msgstr ""
 
-#: ../../include/identity.php:1303 ../../mod/profiles.php:691
+#: ../../include/channel.php:1303 ../../mod/profiles.php:691
 msgid "Sexual Preference:"
 msgstr ""
 
-#: ../../include/identity.php:1307 ../../mod/directory.php:313
+#: ../../include/channel.php:1307 ../../mod/directory.php:313
 #: ../../mod/profiles.php:693
 msgid "Hometown:"
 msgstr ""
 
-#: ../../include/identity.php:1309
+#: ../../include/channel.php:1309
 msgid "Tags:"
 msgstr ""
 
-#: ../../include/identity.php:1311 ../../mod/profiles.php:694
+#: ../../include/channel.php:1311 ../../mod/profiles.php:694
 msgid "Political Views:"
 msgstr ""
 
-#: ../../include/identity.php:1313
+#: ../../include/channel.php:1313
 msgid "Religion:"
 msgstr ""
 
-#: ../../include/identity.php:1315 ../../mod/directory.php:315
+#: ../../include/channel.php:1315 ../../mod/directory.php:315
 msgid "About:"
 msgstr ""
 
-#: ../../include/identity.php:1317
+#: ../../include/channel.php:1317
 msgid "Hobbies/Interests:"
 msgstr ""
 
-#: ../../include/identity.php:1319 ../../mod/profiles.php:697
+#: ../../include/channel.php:1319 ../../mod/profiles.php:697
 msgid "Likes:"
 msgstr ""
 
-#: ../../include/identity.php:1321 ../../mod/profiles.php:698
+#: ../../include/channel.php:1321 ../../mod/profiles.php:698
 msgid "Dislikes:"
 msgstr ""
 
-#: ../../include/identity.php:1323
+#: ../../include/channel.php:1323
 msgid "Contact information and Social Networks:"
 msgstr ""
 
-#: ../../include/identity.php:1325
+#: ../../include/channel.php:1325
 msgid "My other channels:"
 msgstr ""
 
-#: ../../include/identity.php:1327
+#: ../../include/channel.php:1327
 msgid "Musical interests:"
 msgstr ""
 
-#: ../../include/identity.php:1329
+#: ../../include/channel.php:1329
 msgid "Books, literature:"
 msgstr ""
 
-#: ../../include/identity.php:1331
+#: ../../include/channel.php:1331
 msgid "Television:"
 msgstr ""
 
-#: ../../include/identity.php:1333
+#: ../../include/channel.php:1333
 msgid "Film/dance/culture/entertainment:"
 msgstr ""
 
-#: ../../include/identity.php:1335
+#: ../../include/channel.php:1335
 msgid "Love/Romance:"
 msgstr ""
 
-#: ../../include/identity.php:1337
+#: ../../include/channel.php:1337
 msgid "Work/employment:"
 msgstr ""
 
-#: ../../include/identity.php:1339
+#: ../../include/channel.php:1339
 msgid "School/education:"
 msgstr ""
 
-#: ../../include/identity.php:1359
+#: ../../include/channel.php:1359
 msgid "Like this thing"
 msgstr ""
 

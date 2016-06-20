@@ -227,7 +227,7 @@ function oembed_fetch_url($embedurl){
 }
 	
 function oembed_format_object($j){
-	$a = get_app();
+
     $embedurl = $j->embedurl;
 
 // logger('format: ' . print_r($j,true));

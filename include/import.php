@@ -20,6 +20,8 @@ function import_channel($channel, $account_id, $seize) {
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_address'])
 	);
+	if($r && $r[0]['channel_guid'] == $channel['channel_guid'] && $r[0]['channel_pubkey'] === $channel['channel_pubkey'] && $r[0]['channel_hash'] === $channel['channel_hash'])
+		return $r[0];
 
 	if(($r) || (check_webbie(array($channel['channel_address'])) !== $channel['channel_address'])) {
 		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
@@ -119,6 +121,11 @@ function import_profiles($channel,$profiles) {
 			unset($profile['id']);
 			$profile['aid'] = get_account_id();
 			$profile['uid'] = $channel['channel_id'];
+
+			convert_oldfields($profile,'name','fullname');
+			convert_oldfields($profile,'with','partner');
+			convert_oldfields($profile,'work','employment');
+
 
 			// we are going to reset all profile photos to the original
 			// somebody will have to fix this later and put all the applicable photos into the export
@@ -330,7 +337,9 @@ function import_apps($channel,$apps) {
 				);
 				if($x) {
 					foreach($term as $t) {
-						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+						if(array_key_exists('type',$t))
+							$t['ttype'] = $t['type'];
+						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 					}
 				}
 			}
@@ -398,7 +407,9 @@ function sync_apps($channel,$apps) {
 
 			if($exists && $term) {
 				foreach($term as $t) {
-					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+					if(array_key_exists('type',$t))
+						$t['ttype'] = $t['type'];
+					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 				}
 			}
 
@@ -434,7 +445,9 @@ function sync_apps($channel,$apps) {
 					);
 					if($x) {
 						foreach($term as $t) {
-							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['type'],escape_tags($t['term']),escape_tags($t['url']));
+							if(array_key_exists('type',$t))
+								$t['ttype'] = $t['type'];
+							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 						}
 					}
 				}
@@ -574,7 +587,7 @@ function import_items($channel,$items,$sync = false) {
 					if($sync && $item['item_wall']) {
 						// deliver singletons if we have any
 						if($item_result && $item_result['success']) {
-							proc_run('php','include/notifier.php','single_activity',$item_result['item_id']);
+							Zotlabs\Daemon\Master::Summon(array('Notifier','single_activity',$item_result['item_id']));
 						}
 					}
 					continue;
@@ -588,7 +601,7 @@ function import_items($channel,$items,$sync = false) {
 			if($sync && $item['item_wall']) {
 				// deliver singletons if we have any
 				if($item_result && $item_result['success']) {
-					proc_run('php','include/notifier.php','single_activity',$item_result['item_id']);
+					Zotlabs\Daemon\Master::Summon(array('Notifier','single_activity',$item_result['item_id']));
 				}
 			}
 		}
@@ -636,6 +649,10 @@ function import_events($channel,$events) {
 			unset($event['id']);
 			$event['aid'] = $channel['channel_account_id'];
 			$event['uid'] = $channel['channel_id'];
+			convert_oldfields($event,'start','dtstart');
+			convert_oldfields($event,'finish','dtend');
+			convert_oldfields($event,'type','etype');
+			convert_oldfields($event,'ignore','dismissed');
 
 			dbesc_array($event);
 			$r = dbq("INSERT INTO event (`" 
@@ -668,6 +685,12 @@ function sync_events($channel,$events) {
 			unset($event['id']);
 			$event['aid'] = $channel['channel_account_id'];
 			$event['uid'] = $channel['channel_id'];
+
+			convert_oldfields($event,'start','dtstart');
+			convert_oldfields($event,'finish','dtend');
+			convert_oldfields($event,'type','etype');
+			convert_oldfields($event,'ignore','dismissed');
+
 
 			$exists = false;
 
@@ -936,7 +959,7 @@ function import_mail($channel,$mails,$sync = false) {
 			$m['uid'] = $channel['channel_id'];
 			$mail_id = mail_store($m);
 			if($sync && $mail_id) {
-				proc_run('php','include/notifier.php','single_mail',$mail_id);
+				Zotlabs\Daemon\Master::Summon(array('Notifier','single_mail',$mail_id));
 			}
  		}
 	}	
@@ -966,6 +989,8 @@ function sync_files($channel,$files) {
 				$attachment_stored = false;
 				foreach($f['attach'] as $att) {
 
+					convert_oldfields($att,'data','content');
+
 					if($att['deleted']) {
 						attach_delete($channel,$att['hash']);
 						continue;
@@ -973,8 +998,11 @@ function sync_files($channel,$files) {
 
 					$attach_exists = false;
 					$x = attach_by_hash($att['hash']);
+					logger('sync_files duplicate check: attach_exists=' . $attach_exists, LOGGER_DEBUG);
+					logger('sync_files duplicate check: att=' . print_r($att,true), LOGGER_DEBUG);
+					logger('sync_files duplicate check: attach_by_hash() returned ' . print_r($x,true), LOGGER_DEBUG);
 
-					if($x) {
+					if($x['success']) {
 						$attach_exists = true;
 						$attach_id = $x[0]['id'];
 					}
@@ -1032,7 +1060,7 @@ function sync_files($channel,$files) {
 
 // @fixme - update attachment structures if they are modified rather than created
 
-					$att['data'] = $newfname;
+					$att['content'] = $newfname;
 
 					// Note: we use $att['hash'] below after it has been escaped to
 					// fetch the file contents. 
@@ -1043,15 +1071,17 @@ function sync_files($channel,$files) {
 
 
 					if($attach_exists) {
-					    $str = '';
-    					foreach($att as $k => $v) {
-				        	if($str)
-            					$str .= ",";
-        					$str .= " `" . $k . "` = '" . $v . "' ";
-    					}
-					    $r = dbq("update `attach` set " . $str . " where id = " . intval($attach_id) );
+						logger('sync_files attach exists: ' . print_r($att,true), LOGGER_DEBUG);
+						$str = '';
+    						foreach($att as $k => $v) {
+				        		if($str)
+            							$str .= ",";
+        						$str .= " `" . $k . "` = '" . $v . "' ";
+    						}
+						$r = dbq("update `attach` set " . $str . " where id = " . intval($attach_id) );
 					}
 					else {
+						logger('sync_files attach does not exists: ' . print_r($att,true), LOGGER_DEBUG);
 						$r = dbq("INSERT INTO attach (`" 
 							. implode("`, `", array_keys($att)) 
 							. "`) VALUES ('" 
@@ -1064,6 +1094,7 @@ function sync_files($channel,$files) {
 
 					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
 						os_mkdir($newfname, STORAGE_DEFAULT_PERMISSIONS,true);
+						$attachment_stored = true;
 						continue;
 					}
 					else {
@@ -1111,6 +1142,11 @@ function sync_files($channel,$files) {
 					$p['aid'] = $channel['channel_account_id'];
 					$p['uid'] = $channel['channel_id'];
 
+					convert_oldfields($p,'data','content');
+					convert_oldfields($p,'scale','imgscale');
+					convert_oldfields($p,'size','filesize');
+					convert_oldfields($p,'type','mimetype');
+
 					// if this is a profile photo, undo the profile photo bit
 					// for any other photo which previously held it.
 
@@ -1136,15 +1172,15 @@ function sync_files($channel,$files) {
 						);
 					}
 
-					if($p['scale'] === 0 && $p['os_storage'])
-						$p['data'] = $store_path;
+					if($p['imgscale'] === 0 && $p['os_storage'])
+						$p['content'] = $store_path;
 					else
-						$p['data'] = base64_decode($p['data']);
+						$p['content'] = base64_decode($p['content']);
 
 
-					$exists = q("select * from photo where resource_id = '%s' and scale = %d and uid = %d limit 1",
+					$exists = q("select * from photo where resource_id = '%s' and imgscale = %d and uid = %d limit 1",
 						dbesc($p['resource_id']),
-						intval($p['scale']),
+						intval($p['imgscale']),
 						intval($channel['channel_id'])
 					);
 
@@ -1200,3 +1236,9 @@ function sync_files($channel,$files) {
 }
 
 
+function convert_oldfields(&$arr,$old,$new) {
+	if(array_key_exists($old,$arr)) {
+		$arr[$new] = $arr[$old];
+		unset($arr[$old]);
+	}
+}

@@ -11,13 +11,11 @@ require_once("include/PermissionDescription.php");
 
 function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
-	$a = get_app();
-
 	$o = '';
 
 	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
-	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `gname` ASC",
 		intval(local_channel())
 	);
 
@@ -34,7 +32,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
-			$trimmed = mb_substr($rr['name'],0,12);
+			$trimmed = mb_substr($rr['gname'],0,12);
 
 			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}\" >$trimmed</option>\r\n";
 		}
@@ -51,7 +49,6 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 /* MicMee 20130114 function contact_selector no longer in use, sql table contact does no longer exist
 function contact_selector($selname, $selclass, $preselected = false, $options) {
 
-	$a = get_app();
 
 	$mutual = false;
 	$networks = null;
@@ -157,7 +154,6 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 
 function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false, $celeb = false, $privatenet = false, $tabindex = null) {
 
-	$a = get_app();
 
 	$o = '';
 
@@ -230,14 +226,14 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 	$showall_origin = '';
 	$showall_icon   = 'fa-globe';
-
+	$role = get_pconfig(local_channel(),'system','permissions_role');
 
 	if(! $emptyACL_description) {
 		$showall_caption = t('Visible to your default audience');
 
 	} else if (is_a($emptyACL_description, 'PermissionDescription')) {
 		$showall_caption = $emptyACL_description->get_permission_description();
-		$showall_origin  = $emptyACL_description->get_permission_origin_description();
+		$showall_origin  = (($role === 'custom') ? $emptyACL_description->get_permission_origin_description() : '');
 		$showall_icon    = $emptyACL_description->get_permission_icon();
 
 	} else {
@@ -269,9 +265,11 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
 		'$showall'         => $showall_caption,
+		'$onlyme'          => t('Only me'),
 		'$showallOrigin'   => $showall_origin,
 		'$showallIcon'     => $showall_icon,
-		'$showlimited'     => t("Limit access:"),
+		'$select_label'    => t('Who can see this?'),
+		'$showlimited'     => t('Custom selection'),
 		'$showlimitedDesc' => t('Select "Show" to allow viewing. "Don\'t show" lets you override and limit the scope of "Show".'),
 		'$show'	           => t("Show"),
 		'$hide'	           => t("Don't show"),

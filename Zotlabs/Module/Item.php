@@ -17,10 +17,10 @@ namespace Zotlabs\Module;
  */  
 
 require_once('include/crypto.php');
-require_once('include/enotify.php');
 require_once('include/items.php');
 require_once('include/attach.php');
 
+use \Zotlabs\Lib as Zlib;
 
 class Item extends \Zotlabs\Web\Controller {
 
@@ -56,7 +56,7 @@ class Item extends \Zotlabs\Web\Controller {
 			$remote_xchan = $remote_observer = false;
 	
 		$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$sys = get_sys_channel();
 		if($sys && $profile_uid && ($sys['channel_id'] == $profile_uid) && is_site_admin()) {
 			$uid = intval($sys['channel_id']);
@@ -581,7 +581,7 @@ class Item extends \Zotlabs\Web\Controller {
 					if($success['replaced']) {
 						$post_tags[] = array(
 							'uid'   => $profile_uid, 
-							'type'  => $success['termtype'],
+							'ttype' => $success['termtype'],
 							'otype' => TERM_OBJ_POST,
 							'term'  => $success['term'],
 							'url'   => $success['url']
@@ -666,7 +666,7 @@ class Item extends \Zotlabs\Web\Controller {
 			foreach($cats as $cat) {
 				$post_tags[] = array(
 					'uid'   => $profile_uid, 
-					'type'  => TERM_CATEGORY,
+					'ttype' => TERM_CATEGORY,
 					'otype' => TERM_OBJ_POST,
 					'term'  => trim($cat),
 					'url'   => $owner_xchan['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
@@ -676,7 +676,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if($orig_post) {
 			// preserve original tags
-			$t = q("select * from term where oid = %d and otype = %d and uid = %d and type in ( %d, %d, %d )",
+			$t = q("select * from term where oid = %d and otype = %d and uid = %d and ttype in ( %d, %d, %d )",
 				intval($orig_post['id']),
 				intval(TERM_OBJ_POST),
 				intval($profile_uid),
@@ -688,7 +688,7 @@ class Item extends \Zotlabs\Web\Controller {
 				foreach($t as $t1) {
 					$post_tags[] = array(
 						'uid'   => $profile_uid, 
-						'type'  => $t1['type'],
+						'ttype' => $t1['type'],
 						'otype' => TERM_OBJ_POST,
 						'term'  => $t1['term'],
 						'url'   => $t1['url'],
@@ -901,7 +901,7 @@ class Item extends \Zotlabs\Web\Controller {
 				}
 			}
 			if(! $nopush)
-				proc_run('php', "include/notifier.php", 'edit_post', $post_id);
+				\Zotlabs\Daemon\Master::Summon(array('Notifier', 'edit_post', $post_id));
 	
 			if((x($_REQUEST,'return')) && strlen($return_path)) {
 				logger('return: ' . $return_path);
@@ -925,7 +925,7 @@ class Item extends \Zotlabs\Web\Controller {
 				// otherwise it will happen during delivery
 	
 				if(($datarray['owner_xchan'] != $datarray['author_xchan']) && (intval($parent_item['item_wall']))) {
-					notification(array(
+					Zlib\Enotify::submit(array(
 						'type'         => NOTIFY_COMMENT,
 						'from_xchan'   => $datarray['author_xchan'],
 						'to_xchan'     => $datarray['owner_xchan'],
@@ -943,7 +943,7 @@ class Item extends \Zotlabs\Web\Controller {
 				$parent = $post_id;
 	
 				if(($datarray['owner_xchan'] != $datarray['author_xchan']) && ($datarray['item_type'] == ITEM_TYPE_POST)) {
-					notification(array(
+					Zlib\Enotify::submit(array(
 						'type'         => NOTIFY_WALL,
 						'from_xchan'   => $datarray['author_xchan'],
 						'to_xchan'     => $datarray['owner_xchan'],
@@ -1008,7 +1008,7 @@ class Item extends \Zotlabs\Web\Controller {
 		call_hooks('post_local_end', $datarray);
 	
 		if(! $nopush)
-			proc_run('php', 'include/notifier.php', $notify_type, $post_id);
+			\Zotlabs\Daemon\Master::Summon(array('Notifier', $notify_type, $post_id));
 	
 		logger('post_complete');
 	

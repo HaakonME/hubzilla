@@ -32,9 +32,8 @@ class Siteinfo extends \Zotlabs\Web\Controller {
 			$r = q("select * from addon where hidden = 0");
 			if(count($r))
 				foreach($r as $rr)
-					$visible_plugins[] = $rr['name'];
+					$visible_plugins[] = $rr['aname'];
 		}
-	
 		$plugins_list = '';
 		if(count($visible_plugins)) {
 		        $plugins_text = t('Installed plugins/addons/apps:');

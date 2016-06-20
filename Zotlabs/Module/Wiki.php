@@ -452,7 +452,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			$compare = wiki_compare_page(array('currentCommit' => $currentCommit, 'compareCommit' => $compareCommit, 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 			if($compare['success']) {
-				json_return_and_die(array('diff' => $compare['diff'], 'message' => '', 'success' => true));					
+				$diffHTML = '<table class="text-center" width="100%"><tr><td class="lead" width="50%">Current Revision</td><td class="lead" width="50%">Selected Revision</td></tr></table>' . $compare['diff'];
+				json_return_and_die(array('diff' => $diffHTML, 'message' => '', 'success' => true));					
 			} else {
 				json_return_and_die(array('diff' => '', 'message' => 'Error comparing page', 'success' => false));					
 			}

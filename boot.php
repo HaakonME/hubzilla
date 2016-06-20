@@ -45,8 +45,8 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.9' );
-define ( 'ZOT_REVISION',            1.1     );
+define ( 'STD_VERSION',             '1.8' );
+define ( 'ZOT_REVISION',            '1.1' );
 
 define ( 'DB_UPDATE_VERSION',       1178  );
 

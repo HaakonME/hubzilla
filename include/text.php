@@ -2050,7 +2050,7 @@ function ids_to_array($arr,$idx = 'id') {
 	$t = array();
 	if($arr) {
 		foreach($arr as $x) {
-			if(strlen($x[$idx]) && (! in_array($x[$idx],$t))) {
+			if(array_key_exists($idx,$x) && strlen($x[$idx]) && (! in_array($x[$idx],$t))) {
 				$t[] = $x[$idx];
 			}
 		}

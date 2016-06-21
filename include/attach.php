@@ -618,7 +618,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 		if($r) {
 			$overwrite = get_pconfig($channel_id,'system','overwrite_dup_files');
-			if($overwrite) {
+			if(($overwrite) || ($options === 'import')) {
 				$options = 'replace';
 				$existing_id = $x[0]['id'];
 				$existing_size = intval($x[0]['filesize']);
@@ -802,7 +802,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if($is_photo) {
 
-		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
+		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct, 'options' => $options );
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		if($arr['group_allow'])

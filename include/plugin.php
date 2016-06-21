@@ -167,6 +167,12 @@ function reload_plugins() {
 	}
 }
 
+function visible_plugin_list() {
+	$r = q("select * from addon where hidden = 0 order by aname asc");
+	return(($r) ? ids_to_array($r,'aname') : array());
+}
+
+
 
 /**
  * @brief registers a hook.

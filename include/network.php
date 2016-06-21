@@ -1992,14 +1992,7 @@ function get_site_info() {
 	else
 		$service_class = false;
 
-	$visible_plugins = array();
-	if(is_array(App::$plugins) && count(App::$plugins)) {
-		$r = q("select * from addon where hidden = 0");
-		if(count($r))
-			foreach($r as $rr)
-				$visible_plugins[] = $rr['aname'];
-	}
-	sort($visible_plugins);
+	$visible_plugins = visible_plugin_list();
 
 	if(@is_dir('.git') && function_exists('shell_exec'))
 		$commit = trim(@shell_exec('git log -1 --format="%h"'));

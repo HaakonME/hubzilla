@@ -1889,6 +1889,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	}
 
 
+	$ret['item'] = $arr;
 
 	call_hooks('post_remote_end',$arr);
 
@@ -2139,6 +2140,15 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		return $ret;
 	}
 
+	// fetch an unescaped complete copy of the stored item
+
+	$r = q("select * from item where id = %d",
+		intval($orig_post_id)
+	);
+	if($r)
+		$arr = $r[0];
+
+
 	$r = q("delete from term where oid = %d and otype = %d",
 		intval($orig_post_id),
 		intval(TERM_OBJ_POST)
@@ -2169,6 +2179,8 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		}
 		$arr['iconfig'] = $meta;
 	}
+
+	$ret['item'] = $arr;
 
 	call_hooks('post_remote_update_end',$arr);
 

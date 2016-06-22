@@ -894,8 +894,8 @@ class Item extends \Zotlabs\Web\Controller {
 		if($orig_post) {
 			$datarray['id'] = $post_id;
 	
-			item_store_update($datarray,$execflag);
-	
+			$x = item_store_update($datarray,$execflag);
+			
 			if(! $parent) {
 				$r = q("select * from item where id = %d",
 					intval($post_id)

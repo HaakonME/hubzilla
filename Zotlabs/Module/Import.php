@@ -131,6 +131,8 @@ class Import extends \Zotlabs\Web\Controller {
 	
 		// import channel
 	
+		$relocate = ((array_key_exists('relocate',$data)) ? $data['relocate'] : null);
+
 		if(array_key_exists('channel',$data)) {
 	
 			if($completed < 1) {
@@ -475,7 +477,7 @@ class Import extends \Zotlabs\Web\Controller {
 			import_events($channel,$data['event']);
 	
 		if(is_array($data['event_item']))
-			import_items($channel,$data['event_item']);
+			import_items($channel,$data['event_item'],false,$relocate);
 	
 		if(is_array($data['menu']))
 			import_menus($channel,$data['menu']);
@@ -486,7 +488,7 @@ class Import extends \Zotlabs\Web\Controller {
 		$saved_notification_flags = notifications_off($channel['channel_id']);
 	
 		if($import_posts && array_key_exists('item',$data) && $data['item'])
-			import_items($channel,$data['item']);
+			import_items($channel,$data['item'],false,$relocate);
 	
 		notifications_on($channel['channel_id'],$saved_notification_flags);
 	

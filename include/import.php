@@ -553,7 +553,7 @@ function sync_chatrooms($channel,$chatrooms) {
 
 
 
-function import_items($channel,$items,$sync = false) {
+function import_items($channel,$items,$sync = false,$relocate = null) {
 
 	if($channel && $items) {
 		$allow_code = false;
@@ -584,13 +584,6 @@ function import_items($channel,$items,$sync = false) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
 					$item_result = item_store_update($item,$allow_code,$deliver);
-					if($sync && $item['item_wall']) {
-						// deliver singletons if we have any
-						if($item_result && $item_result['success']) {
-							Zotlabs\Daemon\Master::Summon(array('Notifier','single_activity',$item_result['item_id']));
-						}
-					}
-					continue;
 				}	
 			}
 			else {
@@ -598,10 +591,28 @@ function import_items($channel,$items,$sync = false) {
 				$item['uid'] = $channel['channel_id'];
 				$item_result = item_store($item,$allow_code,$deliver);
 			}
+
 			if($sync && $item['item_wall']) {
 				// deliver singletons if we have any
 				if($item_result && $item_result['success']) {
 					Zotlabs\Daemon\Master::Summon(array('Notifier','single_activity',$item_result['item_id']));
+				}
+			}
+			if($relocate && $item_result['item_id']) {
+				$item = $item_result['item'];
+				if($item['mid'] === $item['parent_mid']) {
+					item_url_replace($channel,$item,$relocate['url'],z_root(),$relocate['channel_address']);
+					dbesc_array($item);
+					$item_id = $item_result['item_id'];
+					unset($item['id']);
+					$str = '';
+					foreach($item as $k => $v) {
+						if($str)
+							$str .= ",";
+						$str .= " `" . $k . "` = '" . $v . "' ";
+            		}
+
+            		$r = dbq("update `item` set " . $str . " where id = " . $item_id );
 				}
 			}
 		}
@@ -609,8 +620,8 @@ function import_items($channel,$items,$sync = false) {
 }
 
 
-function sync_items($channel,$items) {
-	import_items($channel,$items,true);
+function sync_items($channel,$items,$relocate = null) {
+	import_items($channel,$items,true,$relocate);
 }
 
 
@@ -1200,31 +1211,9 @@ function sync_files($channel,$files) {
 				}
 			}
 			if($f['item']) {
-				sync_items($channel,$f['item']);
-				foreach($f['item'] as $i) {
-					if($i['message_id'] !== $i['message_parent'])
-						continue;
-					$r = q("select * from item where mid = '%s' and uid = %d limit 1",
-						dbesc($i['message_id']),
-						intval($channel['channel_id'])
-					);
-					if($r) {
-						$item = $r[0];
-						item_url_replace($channel,$item,$oldbase,z_root(),$original_channel);
-
-						dbesc_array($item);
-						$item_id = $item['id'];
-						unset($item['id']);
-					    $str = '';
-    					foreach($item as $k => $v) {
-				        	if($str)
-            					$str .= ",";
-        					$str .= " `" . $k . "` = '" . $v . "' ";
-    					}
-
-					    $r = dbq("update `item` set " . $str . " where id = " . $item_id );
-					}
-				}
+				sync_items($channel,$f['item'],
+					['channel_address' => $original_channel,'url' => $oldbase]
+				);
 			}
 		}
 	}

@@ -92,7 +92,7 @@ class Import_items extends \Zotlabs\Web\Controller {
 	
 	
 		if(array_key_exists('item',$data) && $data['item']) {
-			import_items($channel,$data['item']);
+			import_items($channel,$data['item'],false,((array_key_exists('relocate',$data)) ? $data['relocate'] : null));
 		}
 	
 		if(array_key_exists('item_id',$data) && $data['item_id']) {
@@ -106,7 +106,7 @@ class Import_items extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied') . EOL);

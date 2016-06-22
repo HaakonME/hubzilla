@@ -62,7 +62,17 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_HEADER, $false);
 	}
 
+	if(x($opts,'upload'))
+		@curl_setopt($ch, CURLOPT_UPLOAD, $opts['upload']);
+	
+	if(x($opts,'infile'))
+		@curl_setopt($ch, CURLOPT_INFILE, $opts['infile']);
 
+	if(x($opts,'infilesize'))
+		@curl_setopt($ch, CURLOPT_INFILESIZE, $opts['infilesize']);
+
+	if(x($opts,'readfunc'))
+		@curl_setopt($ch, CURLOPT_READFUNCTION, $opts['readfunc']);
 
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);

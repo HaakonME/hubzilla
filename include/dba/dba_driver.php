@@ -90,7 +90,7 @@ abstract class dba_driver {
 	protected $db;
 	protected $pdo = array();
 
-	public $debug = 0;
+	public  $debug = 0;
 	public  $connected = false;
 	public  $error = false;
 
@@ -332,6 +332,9 @@ function q($sql) {
 			else
 				db_logger('dba: vsprintf error: ' . print_r(debug_backtrace(), true),LOGGER_NORMAL,LOG_CRIT);
 		}
+		if(\DBA::$dba->debug)
+			db_logger('Sql: ' . $stmt, LOGGER_DEBUG, LOG_INFO);
+
 		return \DBA::$dba->q($stmt);
 	}
 

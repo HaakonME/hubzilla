@@ -23,12 +23,11 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 	/* @brief Initalize the profile-photo edit view
 	 *
-	 * @param $a Current application
 	 * @return void
 	 *
 	 */
 	
-		function init() {
+	function init() {
 	
 		if(! local_channel()) {
 			return;
@@ -46,7 +45,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	 *
 	 */
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel()) {
 			return;

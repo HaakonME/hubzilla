@@ -62,7 +62,7 @@ class Photo extends \Zotlabs\Web\Controller {
 				intval($uid),
 				intval(PHOTO_PROFILE)
 			);
-			if(count($r)) {
+			if($r) {
 				$data = dbunescbin($r[0]['content']);
 				$mimetype = $r[0]['mimetype'];
 			}
@@ -79,7 +79,7 @@ class Photo extends \Zotlabs\Web\Controller {
 			 * Other photos
 			 */
 	
-		        /* Check for a cookie to indicate display pixel density, in order to detect high-resolution
+			/* Check for a cookie to indicate display pixel density, in order to detect high-resolution
 			   displays. This procedure was derived from the "Retina Images" by Jeremey Worboys,
 			   used in accordance with the Creative Commons Attribution 3.0 Unported License.
 			   Project link: https://github.com/Retina-Images/Retina-Images

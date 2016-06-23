@@ -26,7 +26,7 @@
 
 	{{if ! $zcard}}
 	<div class="fn p-name">{{$profile.fullname}}{{if $profile.online}} <i class="fa fa-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
-	{{if $reddress}}<div class="reddress" oncopy="return false;">{{$profile.reddress}}</div>{{/if}}		
+	{{if $reddress}}<div class="reddress">{{$profile.reddress}}</div>{{/if}}		
 	{{/if}}
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}
 	{{if $location}}

@@ -862,7 +862,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 	);
 	if($z) {
 		$p[0]['picdate'] = $z[0]['xchan_photo_date'];
-		$p[0]['reddress'] = str_replace('@','&#xff20;',$z[0]['xchan_addr']);
+		$p[0]['reddress'] = str_replace('@','&#x40;',$z[0]['xchan_addr']);
 	}
 
 	// fetch user tags if this isn't the default profile

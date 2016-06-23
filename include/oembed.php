@@ -1,6 +1,8 @@
 <?php /** @file */
 
 
+use Zotlabs\Lib as Zlib;
+
 function oembed_replacecb($matches){
 
 	$embedurl=$matches[1];
@@ -130,7 +132,7 @@ function oembed_fetch_url($embedurl){
 	$txt = null;
 
 	if($action !== 'block') {
-		$txt = Cache::get(App::$videowidth . $embedurl);
+		$txt = Zlib\Cache::get('[' . App::$videowidth . '] ' . $embedurl);
 
 		if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
 			$txt = str_replace('http:','https:',$txt);
@@ -199,7 +201,7 @@ function oembed_fetch_url($embedurl){
 		//save in cache
 
 		if(! get_config('system','oembed_cache_disable'))
-			Cache::set(App::$videowidth . $embedurl,$txt);
+			Zlib\Cache::set('[' . App::$videowidth . '] ' . $embedurl,$txt);
 
 	}
 

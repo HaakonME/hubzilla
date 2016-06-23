@@ -348,7 +348,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	            }
 	        }
 	 
-			profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
+			$this->profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
 		}
 	
 		$profiles = q("select id, profile_name as name, is_default from profile where uid = %d",

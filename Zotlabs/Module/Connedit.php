@@ -219,7 +219,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			//Update profile photo permissions
 	
 			logger('A new profile was assigned - updating profile photos');
-			profile_photo_set_profile_perms($profile_id);
+			profile_photo_set_profile_perms(local_channel(),$profile_id);
 	
 		}
 	

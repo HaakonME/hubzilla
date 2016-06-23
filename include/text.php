@@ -2089,9 +2089,9 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 		}
 
 		foreach($items as $item) {
-			if($item['owner_xchan'] && (! in_array($item['owner_xchan'],$arr)))
+			if($item['owner_xchan'] && (! in_array("'" . dbesc($item['owner_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['owner_xchan']) . "'";
-			if($item['author_xchan'] && (! in_array($item['author_xchan'],$arr)))
+			if($item['author_xchan'] && (! in_array("'" . dbesc($item['author_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['author_xchan']) . "'";
 		}
 	}
@@ -2124,9 +2124,9 @@ function xchan_mail_query(&$item) {
 	$arr = array();
 	$chans = null;
 	if($item) {
-		if($item['from_xchan'] && (! in_array($item['from_xchan'],$arr)))
+		if($item['from_xchan'] && (! in_array("'" . dbesc($item['from_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['from_xchan']) . "'";
-		if($item['to_xchan'] && (! in_array($item['to_xchan'],$arr)))
+		if($item['to_xchan'] && (! in_array("'" . dbesc($item['to_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['to_xchan']) . "'";
 	}
 

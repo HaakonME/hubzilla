@@ -70,6 +70,8 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				}
 			} 
 	
+
+logger('profile: ' . $_REQUEST['profile']);
 			
 	
 			// phase 2 - we have finished cropping
@@ -268,11 +270,19 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				notice( t('Permission denied.') . EOL );
 				return;
 			};
-			
-	//		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
-	        
+				        
 			$resource_id = argv(2);
 	
+			// When using an existing photo, we don't have a dialogue to offer a choice of profiles,
+			// so it gets attached to the default
+
+			$p = q("select id from profile where is_default = 1 and uid = %d",
+				intval(local_channel())
+			);
+			if($p) {
+				$_REQUEST['profile'] = $p[0]['id'];
+			}
+
 	
 			$r = q("SELECT id, album, imgscale FROM photo WHERE uid = %d AND resource_id = '%s' ORDER BY imgscale ASC",
 				intval(local_channel()),
@@ -309,7 +319,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					dbesc($channel['xchan_hash'])
 				);
 	
-				profile_photo_set_profile_perms(); //Reset default photo permissions to public
+				profile_photo_set_profile_perms(); // Reset default photo permissions to public
 				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 				goaway(z_root() . '/profiles');
 			}

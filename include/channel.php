@@ -496,8 +496,10 @@ function identity_basic_export($channel_id, $items = false) {
 	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($channel_id)
 	);
-	if($r)
+	if($r) {
 		$ret['channel'] = $r[0];
+		$ret['relocate'] = [ 'channel_address' => $r[0]['channel_address'], 'url' => z_root()];
+	}
 
 	$r = q("select * from profile where uid = %d",
 		intval($channel_id)
@@ -514,7 +516,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 		for($x = 0; $x < count($ret['abook']); $x ++) {
 			$xchans[] = $ret['abook'][$x]['abook_chan'];
-			$abconfig = load_abconfig($ret['channel']['channel_hash'],$ret['abook'][$x]['abook_xchan']);
+			$abconfig = load_abconfig($channel_id,$ret['abook'][$x]['abook_xchan']);
 			if($abconfig)
 				$ret['abook'][$x]['abconfig'] = $abconfig;
 		}		 
@@ -717,6 +719,10 @@ function identity_export_year($channel_id,$year,$month = 0) {
 
 	$ret = array();
 
+	$ch = channelx_by_n($channel_id);
+	if($ch) {
+		$ret['relocate'] = [ 'channel_address' => $ch['channel_address'], 'url' => z_root()];
+	}
 	$mindate = datetime_convert('UTC','UTC',$year . '-' . $target_month . '-01 00:00:00');
 	if($month && $month < 12)
 		$maxdate = datetime_convert('UTC','UTC',$year . '-' . $target_month_plus . '-01 00:00:00');
@@ -856,7 +862,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 	);
 	if($z) {
 		$p[0]['picdate'] = $z[0]['xchan_photo_date'];
-		$p[0]['reddress'] = str_replace('@','&#xff20;',$z[0]['xchan_addr']);
+		$p[0]['reddress'] = str_replace('@','&#x40;',$z[0]['xchan_addr']);
 	}
 
 	// fetch user tags if this isn't the default profile
@@ -1027,6 +1033,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 	$diaspora = array(
 		'podloc'     => z_root(),
+		'guid'       => $profile['channel_guid'] . str_replace('.','',App::get_hostname()),
 		'searchable' => (($block) ? 'false' : 'true'),
 		'nickname'   => $profile['channel_address'],
 		'fullname'   => $profile['channel_name'],
@@ -1223,6 +1230,7 @@ function advanced_profile(&$a) {
 		}
 
 		$things = get_things(App::$profile['profile_guid'],App::$profile['profile_uid']);
+
 
 //		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
 

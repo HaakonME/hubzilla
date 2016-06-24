@@ -34,6 +34,7 @@ Hubzilla 1.8
 	Apps:
 		Synchronise app list with changes to system apps
 		Preserve existing app categories on app updates/edits
+		Regression: fixed translated system app names
 	Architecture:
 		Provide autoloaded class files and libraries for plugins.
 		Further refactoring of session driver to sort out some cookie anomolies
@@ -61,6 +62,9 @@ Hubzilla 1.8
 		Block 'sys' channels from being 'random profile' candidates
 		DB update failed email could be sent in the wrong language under rare circumstances
 		Openid remote authentication used incorrect namespace
+		URL attached to profile "things" was not linked, always showing the "thing" manage page
+		New connection wasn't added to default privacy group when "auto-accept" was enabled
+		Regression: iconfig sharing wasn't working properly
 	Plugins:
 		CalDAV/CardDAV plugin provided
 		Issue sending Diaspora 'like' activities from sources that did not propagate the DCV

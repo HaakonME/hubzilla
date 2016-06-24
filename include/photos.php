@@ -41,6 +41,10 @@ function photo_upload($channel, $observer, $args) {
 	else
 		$visible = 0;
 
+	$deliver = true;
+	if(array_key_exists('deliver',$args))
+		$deliver = intval($args['deliver']);
+
 	// Set to default channel permissions. If the parent directory (album) has permissions set, 
 	// use those instead. If we have specific permissions supplied, they take precedence over
 	// all other settings. 'allow_cid' being passed from an external source takes priority over channel settings.
@@ -330,7 +334,7 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = $args['body'];
+				$item['body'] = $summary;
 				$item['obj_type'] = ACTIVITY_OBJ_PHOTO;
 				$item['obj']	= json_encode($object);
 
@@ -355,14 +359,14 @@ function photo_upload($channel, $observer, $args) {
 				if(($item['edited'] > $r[0]['edited']) || $force) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
-					item_store_update($item);
+					item_store_update($item,false,$deliver);
 					continue;
 				}	
 			}
 			else {
 				$item['aid'] = $channel['channel_account_id'];
 				$item['uid'] = $channel['channel_id'];
-				$item_result = item_store($item);
+				$item_result = item_store($item,false,$deliver);
 			}
 		}
 	}
@@ -414,10 +418,10 @@ function photo_upload($channel, $observer, $args) {
 
 
 
-		$result = item_store($arr);
+		$result = item_store($arr,false,$deliver);
 		$item_id = $result['item_id'];
 
-		if($visible) 
+		if($visible && $deliver) 
 			Zotlabs\Daemon\Master::Summon(array('Notifier', 'wall-new', $item_id));
 	}
 
@@ -703,40 +707,65 @@ function gps2Num($coordPart) {
     return floatval($parts[0]) / floatval($parts[1]);
 }
 
-function profile_photo_set_profile_perms($profileid = '') {
+function profile_photo_set_profile_perms($uid, $profileid = 0) {
 	
 		$allowcid = '';
-		if (x($profileid)) {
-	
-			$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.id = %d OR profile.profile_guid = '%s' LIMIT 1", intval($profileid), dbesc($profileid));
-	
-		} else {
-	
+		if($profileid) {
+			$r = q("SELECT photo, profile_guid, id, is_default, uid
+				FROM profile WHERE uid = %d and ( profile.id = %d OR profile.profile_guid = '%s') LIMIT 1", 
+				intval($profileid), 
+				dbesc($profileid)
+			);
+		} 
+		else {
 			logger('Resetting permissions on default-profile-photo for user'.local_channel());
-			$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.uid = %d AND is_default = 1 LIMIT 1", intval(local_channel()) ); //If no profile is given, we update the default profile
+
+			$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile 
+				WHERE profile.uid = %d AND is_default = 1 LIMIT 1", 
+				intval($uid) 
+			); //If no profile is given, we update the default profile
 		}
+		if(! $r)
+			return;
 	
 		$profile = $r[0];
-		if(x($profile['id']) && x($profile['photo'])) { 
-		       	preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
-		       	$resource_id = $resource_id[0];
+
+		if($profile['id'] && $profile['photo']) { 
+	      	preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
+	       	$resource_id = $resource_id[0];
 	
-			if (intval($profile['is_default']) != 1) {
-				$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", intval(local_channel()) );
-				$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%d' ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
-				$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
+			if (! intval($profile['is_default'])) {
+				$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", 
+					intval($uid) 
+				);
+				//Should not be needed in future. Catches old int-profile-ids.
+				$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%d' ", 
+					intval($profile['id'])
+				);
+				$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'",
+					dbesc($profile['profile_guid'])
+				);
 				$allowcid = "<" . $r0[0]['channel_hash'] . ">";
 				foreach ($r1 as $entry) {
 					$allowcid .= "<" . $entry['abook_xchan'] . ">"; 
 				}
 				foreach ($r2 as $entry) {
-	               	                $allowcid .= "<" . $entry['abook_xchan'] . ">";
-		                      	}
+					$allowcid .= "<" . $entry['abook_xchan'] . ">";
+				}
 	
-				q("UPDATE `photo` SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d",dbesc($allowcid),dbesc($resource_id),intval($profile['uid']));
+				q("UPDATE photo SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d",
+					dbesc($allowcid),
+					dbesc($resource_id),
+					intval($uid)
+				);
 	
-			} else {
-				q("UPDATE `photo` SET allow_cid = '' WHERE profile = 1 AND uid = %d",intval($profile['uid'])); //Reset permissions on default profile picture to public
+			} 
+			else {
+				//Reset permissions on default profile picture to public
+				q("UPDATE photo SET allow_cid = '' WHERE photo_usage = %d AND uid = %d",
+					intval(PHOTO_PROFILE),
+					intval($uid)
+				); 
 			}
 		}
 	

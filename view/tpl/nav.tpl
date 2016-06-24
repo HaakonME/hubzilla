@@ -17,7 +17,7 @@
 			</button>
 			{{/if}}
 			{{if $userinfo}}
-				<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret" id="usermenu-caret"></span>
+				<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret dropdown-toggle fakelink" data-toggle="dropdown" id="usermenu-caret"></span>
 				{{if $localuser}}
 					<ul class="dropdown-menu" role="menu" aria-labelledby="avatar">
 						{{foreach $nav.usermenu as $usermenu}}

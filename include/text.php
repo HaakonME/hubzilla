@@ -376,30 +376,6 @@ function unxmlify($s) {
 	return $ret;
 }
 
-/**
- * Convenience wrapper, reverse the operation "bin2hex"
- * This is a built-in function in php >= 5.4
- *
- * @FIXME We already have php >= 5.4 requirements, so can we remove this?
- */
-if(! function_exists('hex2bin')) {
-function hex2bin($s) {
-	if(! (is_string($s) && strlen($s)))
-		return '';
-
-	if(strlen($s) & 1) {
-		logger('hex2bin: illegal hex string: ' . $s);
-		return $s;
-	}
-
-	if(! ctype_xdigit($s)) {
-		return($s);
-	}
-
-	return(pack("H*",$s));
-}}
-
-
 // Automatic pagination.
 // To use, get the count of total items.
 // Then call App::set_pager_total($number_items);
@@ -1283,7 +1259,7 @@ function normalise_link($url) {
  * is https and the other isn't, or if one is www.something and the other
  * isn't - and also ignore case differences.
  *
- * @see normalis_link()
+ * @see normalise_link()
  *
  * @param string $a
  * @param string $b
@@ -1635,7 +1611,7 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 
 function create_export_photo_body(&$item) {
 	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) {
-		$j = json_decode($item['object'],true);
+		$j = json_decode($item['obj'],true);
 		if($j) {
 			$item['body'] .= "\n\n" . (($j['body']) ? $j['body'] : $j['bbcode']);
 			$item['sig'] = '';
@@ -2050,7 +2026,7 @@ function ids_to_array($arr,$idx = 'id') {
 	$t = array();
 	if($arr) {
 		foreach($arr as $x) {
-			if(! in_array($x[$idx],$t)) {
+			if(array_key_exists($idx,$x) && strlen($x[$idx]) && (! in_array($x[$idx],$t))) {
 				$t[] = $x[$idx];
 			}
 		}
@@ -2089,9 +2065,9 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 		}
 
 		foreach($items as $item) {
-			if($item['owner_xchan'] && (! in_array($item['owner_xchan'],$arr)))
+			if($item['owner_xchan'] && (! in_array("'" . dbesc($item['owner_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['owner_xchan']) . "'";
-			if($item['author_xchan'] && (! in_array($item['author_xchan'],$arr)))
+			if($item['author_xchan'] && (! in_array("'" . dbesc($item['author_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['author_xchan']) . "'";
 		}
 	}
@@ -2124,9 +2100,9 @@ function xchan_mail_query(&$item) {
 	$arr = array();
 	$chans = null;
 	if($item) {
-		if($item['from_xchan'] && (! in_array($item['from_xchan'],$arr)))
+		if($item['from_xchan'] && (! in_array("'" . dbesc($item['from_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['from_xchan']) . "'";
-		if($item['to_xchan'] && (! in_array($item['to_xchan'],$arr)))
+		if($item['to_xchan'] && (! in_array("'" . dbesc($item['to_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['to_xchan']) . "'";
 	}
 
@@ -2887,6 +2863,12 @@ function text_highlight($s,$lang) {
 	if($lang === 'js')
 		$lang = 'javascript';
 
+	if($lang === 'json') {
+		$lang = 'javascript';
+		if(! strpos(trim($s),"\n"))
+			$s = jindent($s);
+	}
+
 	if(! strpos('Text_Highlighter',get_include_path())) {
 		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
 	}
@@ -2899,6 +2881,11 @@ function text_highlight($s,$lang) {
 	$tag_added = false;
 	$s = trim(html_entity_decode($s,ENT_COMPAT));
 	$s = str_replace("    ","\t",$s);
+
+	// The highlighter library insists on an opening php tag for php code blocks. If 
+	// it isn't present, nothing is highlighted. So we're going to see if it's present.
+	// If not, we'll add it, and then quietly remove it after we get the processed output back.  
+
 	if($lang === 'php') {
 		if(strpos('<?php',$s) !== 0) {
 			$s = '<?php' . "\n" . $s;

@@ -1,6 +1,6 @@
 CREATE TABLE "abconfig" (
   "id" serial  NOT NULL,
-  "chan" text NOT NULL,
+  "chan" bigint NOT NULL,
   "xchan" text NOT NULL,
   "cat" text NOT NULL,
   "k" text NOT NULL,

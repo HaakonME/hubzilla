@@ -376,30 +376,6 @@ function unxmlify($s) {
 	return $ret;
 }
 
-/**
- * Convenience wrapper, reverse the operation "bin2hex"
- * This is a built-in function in php >= 5.4
- *
- * @FIXME We already have php >= 5.4 requirements, so can we remove this?
- */
-if(! function_exists('hex2bin')) {
-function hex2bin($s) {
-	if(! (is_string($s) && strlen($s)))
-		return '';
-
-	if(strlen($s) & 1) {
-		logger('hex2bin: illegal hex string: ' . $s);
-		return $s;
-	}
-
-	if(! ctype_xdigit($s)) {
-		return($s);
-	}
-
-	return(pack("H*",$s));
-}}
-
-
 // Automatic pagination.
 // To use, get the count of total items.
 // Then call App::set_pager_total($number_items);
@@ -1283,7 +1259,7 @@ function normalise_link($url) {
  * is https and the other isn't, or if one is www.something and the other
  * isn't - and also ignore case differences.
  *
- * @see normalis_link()
+ * @see normalise_link()
  *
  * @param string $a
  * @param string $b
@@ -1635,7 +1611,7 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 
 function create_export_photo_body(&$item) {
 	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) {
-		$j = json_decode($item['object'],true);
+		$j = json_decode($item['obj'],true);
 		if($j) {
 			$item['body'] .= "\n\n" . (($j['body']) ? $j['body'] : $j['bbcode']);
 			$item['sig'] = '';

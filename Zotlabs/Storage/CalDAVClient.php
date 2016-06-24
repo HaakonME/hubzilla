@@ -45,7 +45,6 @@ class CalDAVClient {
 	}
 
 	private function set_data($s) {
-		logger('set data called');
 		$this->request_data = $s;
 		$this->filepos = 0;
 	}

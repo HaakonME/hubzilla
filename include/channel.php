@@ -516,7 +516,7 @@ function identity_basic_export($channel_id, $items = false) {
 
 		for($x = 0; $x < count($ret['abook']); $x ++) {
 			$xchans[] = $ret['abook'][$x]['abook_chan'];
-			$abconfig = load_abconfig($ret['channel']['channel_hash'],$ret['abook'][$x]['abook_xchan']);
+			$abconfig = load_abconfig($channel_id,$ret['abook'][$x]['abook_xchan']);
 			if($abconfig)
 				$ret['abook'][$x]['abconfig'] = $abconfig;
 		}		 

@@ -389,8 +389,7 @@ class Import extends \Zotlabs\Web\Controller {
 					if($abconfig) {
 						// @fixme does not handle sync of del_abconfig
 						foreach($abconfig as $abc) {
-							if($abc['chan'] === $channel['channel_hash'])
-								set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+							set_abconfig($channel['channel_id'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
 						}
 					}
 	

@@ -133,7 +133,7 @@
 								<li role="presentation"><a role="menuitem" href="#" onclick="jotShare({{$item.id}}); return false"><i class="fa fa-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
 								{{/if}}
 								{{if $item.plink}}
-								<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="fa fa-external-link"></i> {{$item.plink.title}}</a></li>
+								<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" class="u-url"><i class="fa fa-external-link"></i> {{$item.plink.title}}</a></li>
 								{{/if}}
 								{{if $item.edpost}}
 								<li role="presentation"><a role="menuitem" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost fa fa-pencil"></i> {{$item.edpost.1}}</a></li>

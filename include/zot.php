@@ -552,7 +552,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 						unset($new_connection[0]['abook_account']);
 						unset($new_connection[0]['abook_channel']);
 
-						$abconfig = load_abconfig($channel['channel_hash'],$new_connection['abook_xchan']);
+						$abconfig = load_abconfig($channel['channel_id'],$new_connection['abook_xchan']);
 						if($abconfig)
 							$new_connection['abconfig'] = $abconfig;
 
@@ -3335,8 +3335,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				if($abconfig) {
 					// @fixme does not handle sync of del_abconfig
 					foreach($abconfig as $abc) {
-						if($abc['chan'] === $channel['channel_hash'])
-							set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+						set_abconfig($channel['channel_id'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
 					}
 				}
 			}

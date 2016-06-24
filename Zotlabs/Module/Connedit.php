@@ -345,7 +345,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			unset($clone['abook_account']);
 			unset($clone['abook_channel']);
 	
-			$abconfig = load_abconfig($channel['channel_hash'],$clone['abook_xchan']);
+			$abconfig = load_abconfig($channel['channel_id'],$clone['abook_xchan']);
 			if($abconfig)
 				$clone['abconfig'] = $abconfig;
 	

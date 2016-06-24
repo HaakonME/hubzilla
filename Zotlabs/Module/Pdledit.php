@@ -20,7 +20,7 @@ class Pdledit extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);
@@ -32,18 +32,18 @@ class Pdledit extends \Zotlabs\Web\Controller {
 		else {
 			$o .= '<div class="generic-content-wrapper-styled">';
 			$o .= '<h1>' . t('Edit System Page Description') . '</h1>';
-			$files = glob('mod/*');
+			$files = glob('Zotlabs/Module/*.php');
 			if($files) {
 				foreach($files as $f) {
-					$name = basename($f,'.php');
+					$name = lcfirst(basename($f,'.php'));
 					$x = theme_include('mod_' . $name . '.pdl');
 					if($x) {
 						$o .= '<a href="pdledit/' . $name . '" >' . $name . '</a><br />';
 					}
 				}
 			}
-	
-	                $o .= '</div>';
+
+			$o .= '</div>';
 			
 			// list module pdl files
 			return $o;

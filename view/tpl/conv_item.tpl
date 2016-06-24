@@ -20,7 +20,7 @@
 				{{/if}}
 				<div class="wall-item-head">
 					<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
-						<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}} h-card" id="wall-item-photo-wrapper-{{$item.id}}">
+						<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}} h-card p-author" id="wall-item-photo-wrapper-{{$item.id}}">
 							<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-photo-link u-url" id="wall-item-photo-link-{{$item.id}}"><img src="{{$item.thumb}}" class="wall-item-photo{{$item.sparkle}} u-photo p-name" id="wall-item-photo-{{$item.id}}" alt="{{$item.name}}" /></a>
 						</div>
 						<div class="wall-item-photo-end" style="clear:both"></div>

@@ -32,8 +32,20 @@
       <form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" >
         <div class="clear"></div>
         {{include file="field_input.tpl" field=$wikiName}}
+        
+        <div id="post-visible-container" class="form-group field checkbox"> 
+          <span style="font-size:1.2em;" class="pull-left">Send notification post?</span>                            
+          <div style="margin-left:20px" class="pull-left">
+              <input name="postVisible" id="postVisible" value="0" type="checkbox">
+              <label class="switchlabel" for="postVisible"> 
+                  <span class="onoffswitch-inner" data-on="Post" data-off="None"></span>
+                  <span class="onoffswitch-switch"></span>
+              </label>
+          </div>
+        </div>
+        
         <div class="btn-group pull-right">
-            <div id="profile-jot-submit-right" class="btn-group">
+            <div id="profile-jot-submit-right" class="btn-group" style="margin-right: 20px;">
                 <button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="Permission settings" onclick="return false;">
                     <i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons">{{$bang}}</i>
                 </button>
@@ -80,6 +92,9 @@
           <li><a id="save-page" data-toggle="tab" href="#">Save</a></li>
           <li><a id="rename-page" data-toggle="tab" href="#">Rename</a></li>
           <li><a id="delete-page" data-toggle="tab" href="#">Delete</a></li>
+          <li class="divider"></li>
+          <li><a id="embed-image" data-toggle="tab" href="#">Embed image</a></li>
+          
         </ul>
       </li>
       {{/if}}
@@ -110,6 +125,29 @@
 </div>
 
 {{$wikiModal}}
+
+
+<div class="modal" id="embedPhotoModal" tabindex="-1" role="dialog" aria-labelledby="embedPhotoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
+      </div>
+     <div class="modal-body" id="embedPhotoModalBody" >
+         <div id="embedPhotoModalBodyAlbumListDialog" class="hide">
+            <div id="embedPhotoModalBodyAlbumList"></div>
+         </div>
+         <div id="embedPhotoModalBodyAlbumDialog" class="hide">
+         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
+        <button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <script>
   window.wiki_resource_id = '{{$resource_id}}';
@@ -339,4 +377,95 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
         }
       }, 'json');
   }
+  
+  $('#embed-image').click(function (ev) {
+    initializeEmbedPhotoDialog();
+    ev.preventDefault();
+  });
+
+
+    var initializeEmbedPhotoDialog = function () {
+        $('.embed-photo-selected-photo').each(function (index) {
+            $(this).removeClass('embed-photo-selected-photo');
+        });
+        getPhotoAlbumList();
+        $('#embedPhotoModalBodyAlbumDialog').off('click');
+        $('#embedPhotoModal').modal();
+    };
+
+    var choosePhotoFromAlbum = function (album) {
+        $.post("embedphotos/album", {name: album},
+            function(data) {
+                if (data['status']) {
+                    $('#embedPhotoModalLabel').html('{{$modalchooseimages}}');
+                    $('#embedPhotoModalBodyAlbumDialog').html('\
+                            <div><ul class="nav">\n\
+                                <li><a href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
+                                    <i class="fa fa-chevron-left"></i>&nbsp\n\
+                                    {{$modaldiffalbum}}\n\
+                                    </a>\n\
+                                </li>\n\
+                            </ul><br></div>')
+                    $('#embedPhotoModalBodyAlbumDialog').append(data['content']);
+                    $('#embedPhotoModalBodyAlbumDialog').click(function (evt) {
+                        evt.preventDefault();
+                        var image = document.getElementById(evt.target.id);
+                        if (typeof($(image).parent()[0]) !== 'undefined') {
+                            var imageparent = document.getElementById($(image).parent()[0].id);
+                            $(imageparent).toggleClass('embed-photo-selected-photo');
+                        }
+                    });
+                    $('#embedPhotoModalBodyAlbumListDialog').addClass('hide');
+                    $('#embedPhotoModalBodyAlbumDialog').removeClass('hide');
+                    $('#embed-photo-OKButton').click(function () {
+                        $('.embed-photo-selected-photo').each(function (index) {
+                            var href = $(this).attr('href');
+                            $.post("embedphotos/photolink", {href: href},
+                                function(ddata) {
+                                    if (ddata['status']) {
+                                      var imgURL = ddata['photolink'].replace( /\[.*\]\[.*\](.*)\[.*\]\[.*\]/, '![image]($1)' )
+                                      editor.getSession().setValue(editor.getValue() + imgURL);
+                                    } else {
+                                      window.console.log('{{$modalerrorlink}}' + ':' + ddata['errormsg']);
+                                    }
+                                    return false;
+                                },
+                            'json');
+                        });
+                        $('#embedPhotoModalBodyAlbumDialog').html('');
+                        $('#embedPhotoModalBodyAlbumDialog').off('click');
+                        $('#embedPhotoModal').modal('hide');
+                    });
+                } else {
+                    window.console.log('{{$modalerroralbum}} ' + JSON.stringify(album) + ':' + data['errormsg']);
+                }
+                return false;
+            },
+        'json');
+    };
+
+    var getPhotoAlbumList = function () {
+        $.post("embedphotos/albumlist", {},
+            function(data) {
+                if (data['status']) {
+                    var albums = data['albumlist']; //JSON.parse(data['albumlist']);
+                    $('#embedPhotoModalLabel').html('{{$modalchoosealbum}}');
+                    $('#embedPhotoModalBodyAlbumList').html('<ul class="nav"></ul>');
+                    for(var i=0; i<albums.length; i++) {
+                        var albumName = albums[i].text;
+                        var albumLink = '<li>';
+                        albumLink += '<a href="#" onclick="choosePhotoFromAlbum(\'' + albumName + '\');return false;">' + albumName + '</a>';
+                        albumLink += '</li>';
+                        $('#embedPhotoModalBodyAlbumList').find('ul').append(albumLink);
+                    }
+                    $('#embedPhotoModalBodyAlbumDialog').addClass('hide');
+                    $('#embedPhotoModalBodyAlbumListDialog').removeClass('hide');
+                } else {
+                    window.console.log('{{$modalerrorlist}}' + ':' + data['errormsg']);
+                }
+                return false;
+            },
+        'json');
+    };
+    
 </script>

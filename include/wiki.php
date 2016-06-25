@@ -51,7 +51,7 @@ function wiki_init_wiki($channel, $wiki) {
 		return null;
 	}
 	// Create GitRepo object 	
-	$git = new GitRepo($channel['channel_address'], null, false, $name, __DIR__ . '/../' . $path);	
+	$git = new GitRepo($channel['channel_address'], null, false, $wiki['urlName'], __DIR__ . '/../' . $path);	
 	if(!$git->initRepo()) {
 		logger('Error creating new git repo in ' . $git->path);
 		return null;
@@ -82,7 +82,7 @@ function wiki_create_wiki($channel, $observer_hash, $wiki, $acl) {
 	$ac = $acl->get();
 	$mid = item_message_id();
 	$arr = array();	// Initialize the array of parameters for the post
-	$item_hidden = 0; // TODO: Allow form creator to send post to ACL about new game automatically
+	$item_hidden = ((intval($wiki['postVisible']) === 0) ? 1 : 0); 
 	$wiki_url = z_root() . '/wiki/' . $channel['channel_address'] . '/' . $wiki['urlName'];
 	$arr['aid'] = $channel['channel_account_id'];
 	$arr['uid'] = $channel['channel_id'];
@@ -240,13 +240,11 @@ function wiki_rename_page($arr) {
 		return array('message' => 'Wiki not found.', 'success' => false);
 	}
 	$page_path_old = $w['path'].'/'.$pageUrlName.'.md';
-	logger('$page_path_old: ' . $page_path_old);
 	if (!is_readable($page_path_old) === true) {
 		return array('message' => 'Cannot read wiki page: ' . $page_path_old, 'success' => false);
 	}
 	$page = array('rawName' => $pageNewName, 'htmlName' => escape_tags($pageNewName), 'urlName' => urlencode(escape_tags($pageNewName)), 'fileName' => urlencode(escape_tags($pageNewName)).'.md');
 	$page_path_new = $w['path'] . '/' . $page['fileName'] ;
-	logger('$page_path_new: ' . $page_path_new);
 	if (is_file($page_path_new)) {
 		return array('message' => 'Page already exists.', 'success' => false);
 	}

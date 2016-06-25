@@ -25,12 +25,6 @@ function oembed_action($embedurl) {
 
 	logger('oembed_action: ' . $embedurl, LOGGER_DEBUG, LOG_INFO);
 
-	// These media files should now be caught in bbcode.php
-	// left here as a fallback in case this is called from another source
-
-	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
-	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
-
 	if(strpos($embedurl,'http://') === 0) {
 		if(intval(get_config('system','embed_sslonly'))) {
 			$action = 'block';
@@ -119,13 +113,18 @@ function oembed_fetch_url($embedurl){
 	// These media files should now be caught in bbcode.php
 	// left here as a fallback in case this is called from another source
 
-	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
-	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
+	$noexts = array(".mp3",".mp4",".ogg",".ogv",".oga",".ogm",".webm",".opus");
 
 	$result = oembed_action($embedurl); 
 
 	$embedurl = $result['url'];
 	$action = $result['action'];
+
+	foreach($noexts as $ext) {
+		if(strpos(strtolower($embedurl),$ext) !== false) {
+			$action = 'block';
+		}
+	}
 
 	$txt = null;
 
@@ -151,7 +150,7 @@ function oembed_fetch_url($embedurl){
 		}
 
 
-		if (! in_array($ext, $noexts) && $action !== 'block') {
+		if ($action !== 'block') {
 			// try oembed autodiscovery
 			$redirects = 0;
 			$result = z_fetch_url($furl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));

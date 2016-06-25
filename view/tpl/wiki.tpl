@@ -423,8 +423,8 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
                             $.post("embedphotos/photolink", {href: href},
                                 function(ddata) {
                                     if (ddata['status']) {
-                                      var imgURL = ddata['photolink'].replace( /\[.*\]\[.*\](.*)\[.*\]\[.*\]/, '![image]($1)' )
-                                      editor.getSession().setValue(editor.getValue() + imgURL);
+                                      var imgURL = ddata['photolink'].replace( /\[.*\]\[.*\](.*)\[.*\]\[.*\]/, '\n![image]($1)' )
+                                      editor.getSession().insert(editor.getCursorPosition(), imgURL)
                                     } else {
                                       window.console.log('{{$modalerrorlink}}' + ':' + ddata['errormsg']);
                                     }

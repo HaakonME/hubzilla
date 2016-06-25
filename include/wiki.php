@@ -474,3 +474,23 @@ function wiki_generate_page_filename($name) {
 		return $file . '.md';
 	}	
 }
+
+function wiki_convert_links($s, $wikiURL) {
+	
+	if (strpos($s,'[[') !== false) {
+		preg_match_all("/\[\[(.*?)\]\]/", $s, $match);
+		$pages = $pageURLs = array();
+		foreach ($match[1] as $m) {
+			// TODO: Why do we need to double urlencode for this to work?
+			$pageURLs[] = urlencode(urlencode(escape_tags($m)));
+			$pages[] = $m;
+		}
+		$idx = 0;
+		while(strpos($s,'[[') !== false) {
+		$replace = '<a href="'.$wikiURL.'/'.$pageURLs[$idx].'">'.$pages[$idx].'</a>';
+			$s = preg_replace("/\[\[(.*?)\]\]/", $replace, $s, 1);
+			$idx++;
+		}
+	}
+	return $s;
+}

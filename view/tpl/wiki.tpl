@@ -200,7 +200,7 @@
   editor.getSession().setValue(window.wiki_page_content);
 
   $('#wiki-get-preview').click(function (ev) {
-    $.post("wiki/{{$channel}}/preview", {content: editor.getValue()}, function (data) {
+    $.post("wiki/{{$channel}}/preview", {content: editor.getValue(), resource_id: window.wiki_resource_id}, function (data) {
       if (data.success) {
         $('#wiki-preview').html(data.html);
       } else {

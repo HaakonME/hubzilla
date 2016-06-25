@@ -74,7 +74,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 				// Configure page template
 				$wikiheaderName = t('Wiki');
 				$wikiheaderPage = t('Sandbox');
-				$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
+				require_once('library/markdown.php');	
+				$content = t('"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."');
+				$renderedContent = Markdown(json_decode($content));
 				$hide_editor = false;
 				$showPageControls = false;
 				$showNewWikiButton = $wiki_owner;
@@ -122,6 +124,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 					goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				}
 				$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
+				// Render the Markdown-formatted page content in HTML
+				require_once('library/markdown.php');	
+				$renderedContent = wiki_convert_links(Markdown(json_decode($content)),argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				$hide_editor = false;
 				$showPageControls = $wiki_editor;
 				$showNewWikiButton = $wiki_owner;
@@ -133,8 +138,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			default:	// Strip the extraneous URL components
 				goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName.'/'.$pageUrlName);
 		}
-		// Render the Markdown-formatted page content in HTML
-		require_once('library/markdown.php');	
 		
 		$wikiModalID = random_string(3);
 		$wikiModal = replace_macros(
@@ -162,7 +165,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
 			'$content' => $content,
-			'$renderedContent' => Markdown(json_decode($content)),
+			'$renderedContent' => $renderedContent,
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
 			'$pageRename' => array('pageRename', t('Enter the new name:'), '', ''),
@@ -193,8 +196,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Render mardown-formatted text in HTML for preview
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
+			$resource_id = $_POST['resource_id']; 
 			require_once('library/markdown.php');
 			$html = purify_html(Markdown($content));
+			$w = wiki_get_wiki($resource_id);
+			$wikiURL = argv(0).'/'.argv(1).'/'.$w['urlName'];
+			$html = wiki_convert_links($html,$wikiURL);
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}
 		

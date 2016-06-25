@@ -34,7 +34,6 @@ require_once('include/text.php');
 require_once('include/datetime.php');
 require_once('include/language.php');
 require_once('include/nav.php');
-require_once('include/cache.php');
 require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/features.php');
@@ -48,7 +47,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'STD_VERSION',             '1.9' );
 define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1178  );
+define ( 'DB_UPDATE_VERSION',       1179  );
 
 
 /**

@@ -40,7 +40,7 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 	 *
 	 */
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel()) {
 			return;
@@ -271,7 +271,7 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 	 */
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL );

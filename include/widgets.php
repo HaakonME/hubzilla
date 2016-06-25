@@ -1158,7 +1158,7 @@ function widget_cover_photo($arr) {
 	if(array_key_exists('subtitle', $arr) && isset($arr['subtitle']))
 		$subtitle = $arr['subtitle'];
 	else
-		$subtitle = $channel['xchan_addr'];
+		$subtitle = str_replace('@','&#x40;',$channel['xchan_addr']);
 
 	$c = get_cover_photo($channel_id,'html');
 

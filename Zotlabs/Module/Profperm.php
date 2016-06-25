@@ -97,7 +97,7 @@ class Profperm extends \Zotlabs\Web\Controller {
 	
 				//Time to update the permissions on the profile-pictures as well
 
-				profile_photo_set_profile_perms($profile['id']);
+				profile_photo_set_profile_perms(local_channel(),$profile['id']);
 	
 				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = '%s'",
 					intval(local_channel()),

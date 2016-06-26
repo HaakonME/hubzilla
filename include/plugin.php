@@ -655,7 +655,7 @@ function format_js_if_exists($source) {
 		// The source is a URL
 		$path = $source;
 		// If the url starts with // then it's an absolute URL
-		if($source[0][0] === '/' && $source[0][1] === '/') $path_prefix = '';
+		if($source[0] === '/' && $source[1] === '/') $path_prefix = '';
 	} else {
 		// It's a file from the theme
 		$path = theme_include($source);

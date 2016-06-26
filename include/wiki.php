@@ -494,3 +494,77 @@ function wiki_convert_links($s, $wikiURL) {
 	}
 	return $s;
 }
+
+function wiki_generate_toc($s) {
+	
+	if (strpos($s,'[toc]') !== false) {
+		$toc_md = wiki_toc($s);
+		$s = preg_replace("/\[toc\]/", $toc_md, $s, -1);
+	}
+	return $s;
+}
+
+// This function is derived from 
+// http://stackoverflow.com/questions/32068537/generate-table-of-contents-from-markdown-in-php
+function wiki_toc($content) {
+  // ensure using only "\n" as line-break
+  $source = str_replace(["\r\n", "\r"], "\n", $content);
+
+  // look for markdown TOC items
+  preg_match_all(
+    '/^(?:=|-|#).*$/m',
+    $source,
+    $matches,
+    PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE
+  );
+
+  // preprocess: iterate matched lines to create an array of items
+  // where each item is an array(level, text)
+  $file_size = strlen($source);
+  foreach ($matches[0] as $item) {
+    $found_mark = substr($item[0], 0, 1);
+    if ($found_mark == '#') {
+      // text is the found item
+      $item_text = $item[0];
+      $item_level = strrpos($item_text, '#') + 1;
+      $item_text = substr($item_text, $item_level);
+    } else {
+      // text is the previous line (empty if <hr>)
+      $item_offset = $item[1];
+      $prev_line_offset = strrpos($source, "\n", -($file_size - $item_offset + 2));
+      $item_text =
+        substr($source, $prev_line_offset, $item_offset - $prev_line_offset - 1);
+      $item_text = trim($item_text);
+      $item_level = $found_mark == '=' ? 1 : 2;
+    }
+    if (!trim($item_text) OR strpos($item_text, '|') !== FALSE) {
+      // item is an horizontal separator or a table header, don't mind
+      continue;
+    }
+    $raw_toc[] = ['level' => $item_level, 'text' => trim($item_text)];
+  }
+	$o = '';
+	foreach($raw_toc as $t) {
+		$level = intval($t['level']);
+		$text = $t['text'];
+		switch ($level) {
+			case 1:
+				$li = '* ';
+				break;
+			case 2:
+				$li = '  * ';
+				break;
+			case 3:
+				$li = '    * ';
+				break;
+			case 4:
+				$li = '      * ';
+				break;
+			default:
+				$li = '* ';
+				break;
+		}
+		$o .= $li . $text . "\n";
+	}
+  return $o;
+}

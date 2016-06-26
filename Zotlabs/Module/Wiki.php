@@ -74,7 +74,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 				// Configure page template
 				$wikiheaderName = t('Wiki');
 				$wikiheaderPage = t('Sandbox');
-				$content = '"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."';
+				require_once('library/markdown.php');	
+				$content = t('"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."');
+				$renderedContent = Markdown(json_decode($content));
 				$hide_editor = false;
 				$showPageControls = false;
 				$showNewWikiButton = $wiki_owner;
@@ -122,6 +124,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 					goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				}
 				$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
+				// Render the Markdown-formatted page content in HTML
+				require_once('library/markdown.php');	
+				$renderedContent = wiki_convert_links(Markdown(json_decode($content)),argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				$hide_editor = false;
 				$showPageControls = $wiki_editor;
 				$showNewWikiButton = $wiki_owner;
@@ -133,8 +138,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			default:	// Strip the extraneous URL components
 				goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName.'/'.$pageUrlName);
 		}
-		// Render the Markdown-formatted page content in HTML
-		require_once('library/markdown.php');	
 		
 		$wikiModalID = random_string(3);
 		$wikiModal = replace_macros(
@@ -145,7 +148,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				'$cancel' => t('Cancel')
 			)
 		);
-		
+				
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
 			'$wikiheaderPage' => $wikiheaderPage,
@@ -162,7 +165,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$acl' => $x['acl'],
 			'$bang' => $x['bang'],
 			'$content' => $content,
-			'$renderedContent' => Markdown(json_decode($content)),
+			'$renderedContent' => $renderedContent,
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
 			'$pageRename' => array('pageRename', t('Enter the new name:'), '', ''),
@@ -170,7 +173,17 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$pageHistory' => $pageHistory['history'],
 			'$wikiModal' => $wikiModal,
 			'$wikiModalID' => $wikiModalID,
-			'$commit' => 'HEAD'
+			'$commit' => 'HEAD',
+			'$embedPhotos' => t('Embed image from photo albums'),
+			'$embedPhotosModalTitle' => t('Embed an image from your albums'),
+			'$embedPhotosModalCancel' => t('Cancel'),
+			'$embedPhotosModalOK' => t('OK'),
+			'$modalchooseimages' => t('Choose images to embed'),
+			'$modalchoosealbum' => t('Choose an album'),
+			'$modaldiffalbum' => t('Choose a different album...'),
+			'$modalerrorlist' => t('Error getting album list'),
+			'$modalerrorlink' => t('Error getting photo link'),
+			'$modalerroralbum' => t('Error getting album'),
 		));
 		head_add_js('library/ace/ace.js');	// Ace Code Editor
 		return $o;
@@ -183,8 +196,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Render mardown-formatted text in HTML for preview
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
+			$resource_id = $_POST['resource_id']; 
 			require_once('library/markdown.php');
 			$html = purify_html(Markdown($content));
+			$w = wiki_get_wiki($resource_id);
+			$wikiURL = argv(0).'/'.argv(1).'/'.$w['urlName'];
+			$html = wiki_convert_links($html,$wikiURL);
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}
 		
@@ -202,6 +219,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			} 
 			$wiki = array(); 
 			// Generate new wiki info from input name
+			$wiki['postVisible'] = ((intval($_POST['postVisible']) === 0) ? 0 : 1);
 			$wiki['rawName'] = $_POST['wikiName'];
 			$wiki['htmlName'] = escape_tags($_POST['wikiName']);
 			$wiki['urlName'] = urlencode($_POST['wikiName']); 
@@ -235,20 +253,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if (local_channel() !== intval($channel['channel_id'])) {
 				logger('Wiki delete permission denied.' . EOL);
 				json_return_and_die(array('message' => 'Wiki delete permission denied.', 'success' => false));
-			} else {				
-				/*
-				$channel = get_channel_by_nick($nick);
-				$observer_hash = get_observer_hash();
-				// Figure out who the page owner is.
-				$perms = get_all_perms(intval($channel['channel_id']), $observer_hash);
-				// TODO: Create a new permission setting for wiki analogous to webpages. Until
-				// then, use webpage permissions
-				if (!$perms['write_pages']) {
-					logger('Wiki delete permission denied.' . EOL);
-					json_return_and_die(array('success' => false));
-				}
-				*/
-			}
+			} 
 			$resource_id = $_POST['resource_id']; 
 			$deleted = wiki_delete_wiki($resource_id);
 			if ($deleted['success']) {
@@ -482,7 +487,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 			}
 			$renamed = wiki_rename_page(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName, 'pageNewName' => $pageNewName));
-			logger('$renamed: ' . json_encode($renamed));
 			if($renamed['success']) {
 				$ob = \App::get_observer();
 				$commit = wiki_git_commit(array(

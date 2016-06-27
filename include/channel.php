@@ -761,11 +761,10 @@ function identity_export_year($channel_id,$year,$month = 0) {
  *
  * The channel default theme is also selected for use, unless over-riden elsewhere.
  *
- * @param[in,out] App &$a
  * @param string $nickname
  * @param string $profile
  */
-function profile_load(&$a, $nickname, $profile = '') {
+function profile_load($nickname, $profile = '') {
 
 //	logger('profile_load: ' . $nickname . (($profile) ? ' profile: ' . $profile : ''));
 

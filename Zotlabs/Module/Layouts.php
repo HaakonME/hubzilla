@@ -21,7 +21,7 @@ class Layouts extends \Zotlabs\Web\Controller {
 		else
 			return;
 
-		profile_load($a,$which);
+		profile_load($which);
 
 	}
 

@@ -20,6 +20,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 			notice(t('You must be logged in to see this page.') . EOL);
 			goaway('/login');
 		}
+		profile_load($nick);
+
 	}
 
 	function get() {

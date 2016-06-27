@@ -29,7 +29,7 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 		}
 	
 		$channel = \App::get_channel();
-		profile_load($a,$channel['channel_address']);
+		profile_load($channel['channel_address']);
 	
 	}
 	

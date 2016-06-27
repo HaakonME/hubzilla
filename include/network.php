@@ -1336,8 +1336,20 @@ function discover_by_webbie($webbie) {
 					$fullname = $vcard['fn'];
 				if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
 					$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];			
+				if(($vcard['key']) && (! $pubkey))
+					$pubkey = $vcard['key'];
 				if(! $avatar)
 					$avatar = $vcard['photo'];
+				if($diaspora) {
+					if(($vcard['guid']) && (! $diaspora_guid))
+						$diaspora_guid = $vcard['guid'];
+					if(($vcard['url']) && (! $diaspora_base))
+						$diaspora_base = $vcard['url'];						
+
+
+
+
+				}
 
 			}
 		}

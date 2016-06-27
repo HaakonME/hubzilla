@@ -11,7 +11,7 @@ class Viewconnections extends \Zotlabs\Web\Controller {
 			return;
 		}
 		if(argc() > 1)
-			profile_load($a,argv(1));
+			profile_load(argv(1));
 	}
 	
 	function get() {

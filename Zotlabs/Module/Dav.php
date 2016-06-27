@@ -58,7 +58,7 @@ class Dav extends \Zotlabs\Web\Controller {
 		\App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which . '" />' . "\r\n";
 	
 		if ($which)
-			profile_load($a, $which, $profile);
+			profile_load( $which, $profile);
 	
 
 

@@ -20,6 +20,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 			notice(t('You must be logged in to see this page.') . EOL);
 			goaway('/login');
 		}
+		profile_load($nick);
+
 	}
 
 	function get() {
@@ -123,7 +125,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					notice('Error retrieving page content' . EOL);
 					goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				}
-				$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
+				$content = ($p['content'] !== '' ? htmlspecialchars_decode($p['content'],ENT_COMPAT) : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				require_once('library/markdown.php');	
 				$renderedContent = wiki_convert_links(Markdown(json_decode($content)),argv(0).'/'.argv(1).'/'.$wikiUrlName);

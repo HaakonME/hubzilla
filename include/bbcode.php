@@ -498,6 +498,18 @@ function bb_highlight($match) {
 	return $match[0];
 }
 
+function bb_fixtable_lf($match) {
+
+	// remove extraneous whitespace between table element tags since newlines will all
+	// be converted to '<br />' and turn your neatly crafted tables into a whole lot of
+	// empty space.
+ 
+	$x = preg_replace("/\]\s+\[/",'][',$match[1]);
+	return '[table]' . $x . '[/table]';
+
+}
+
+
 
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica/Redmatrix/Hubzilla - Mike Macgirvin
@@ -579,7 +591,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace_callback("/\[code=(.*?)\](.*?)\[\/code\]/ism", 'bb_highlight', $Text);
 	}
 
-
+	$Text = preg_replace_callback("/\[table\](.*?)\[\/table\]/ism",'bb_fixtable_lf',$Text);
 
 	// Convert new line chars to html <br /> tags
 

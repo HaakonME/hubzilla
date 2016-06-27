@@ -7,7 +7,6 @@ use Zotlabs\Lib as Zlib;
 
 class Permissions {
 
-
 	static public function Perms($filter) {
 
 		$perms = [
@@ -43,39 +42,12 @@ class Permissions {
 		return Zlib\PConfig::Get($channel_id,'perms',$permission);
 	}
 
-
 	static public function Set($channel_id,$xchan_hash,$permission,$value) {
-		$channel = channelx_by_n($channel_id);
-		if($channel) {
-			return Zlib\AbConfig::Set($channel['channel_hash'],$xchan_hash,'perms',$permission,$value);
-		}
-		return false;
+		return Zlib\AbConfig::Set($channel_id,$xchan_hash,'perms',$permission,$value);
 	}
 		
 	static public function Get($channel_id,$xchan_hash,$permission) {
-		$channel = channelx_by_n($channel_id);
-		if($channel) {
-			return Zlib\AbConfig::Get($channel['channel_hash'],$xchan_hash,'perms',$permission);
-		}
-		return false;
+		return Zlib\AbConfig::Get($channel_id,$xchan_hash,'perms',$permission);
 	}
-
-	static public function SetHash($channel_hash,$xchan_hash,$permission,$value) {
-		return Zlib\AbConfig::Set($channel_hash,$xchan_hash,'perms',$permission,$value);
-	}
-		
-	static public function GetHash($channel_hash,$xchan_hash,$permission) {
-		return Zlib\AbConfig::Get($channel_hash,$xchan_hash,'perms',$permission);
-	}
-
-
-
-
-
-
-
-
-
-
 
 }

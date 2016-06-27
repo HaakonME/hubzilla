@@ -167,6 +167,12 @@ function reload_plugins() {
 	}
 }
 
+function visible_plugin_list() {
+	$r = q("select * from addon where hidden = 0 order by aname asc");
+	return(($r) ? ids_to_array($r,'aname') : array());
+}
+
+
 
 /**
  * @brief registers a hook.
@@ -545,15 +551,21 @@ function head_get_css() {
 }
 
 function format_css_if_exists($source) {
-	if (strpos($source[0], '/') !== false)
+	$path_prefix = script_path() . '/';
+
+	if (strpos($source[0], '/') !== false) {
+		// The source is a URL
 		$path = $source[0];
-	else
+		// If the url starts with // then it's an absolute URL
+		if($source[0][0] === '/' && $source[0][1] === '/') $path_prefix = '';
+	} else {
+		// It's a file from the theme
 		$path = theme_include($source[0]);
+	}
 
 	if($path) {
-		$path =  script_path() . '/' . $path;
 		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
-		return '<link rel="stylesheet" href="' . $path . $qstring . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
+		return '<link rel="stylesheet" href="' . $path_prefix . $path . $qstring . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
 	}
 }
 
@@ -593,26 +605,37 @@ function script_path() {
 	return $scheme . '://' . $hostname;
 }
 
-function head_add_js($src) {
-	App::$js_sources[] = $src;
+function head_add_js($src, $priority = 0) {
+	if(! is_array(App::$js_sources[$priority]))
+		App::$js_sources[$priority] = array();
+	App::$js_sources[$priority][] = $src;
 }
 
-function head_remove_js($src) {
+function head_remove_js($src, $priority = 0) {
 
-	$index = array_search($src, App::$js_sources);
+	$index = array_search($src, App::$js_sources[$priority]);
 	if($index !== false)
-		unset(App::$js_sources[$index]);
+		unset(App::$js_sources[$priority][$index]);
 }
+
+// We should probably try to register main.js with a high priority, but currently we handle it
+// separately and put it at the end of the html head block in case any other javascript is 
+// added outside the head_add_js construct.
 
 function head_get_js() {
+
 	$str = '';
-	$sources = App::$js_sources;
-	if(count($sources)) 
-		foreach($sources as $source) {
-			if($source === 'main.js')
-				continue;
-			$str .= format_js_if_exists($source);
+	if(App::$js_sources) {
+		foreach(App::$js_sources as $sources) {
+			if(count($sources)) { 
+				foreach($sources as $source) {
+					if($src === 'main.js')
+						continue;
+					$str .= format_js_if_exists($source);
+				}
+			}
 		}
+	}
 	return $str;
 }
 
@@ -626,14 +649,20 @@ function head_get_main_js() {
 }
 
 function format_js_if_exists($source) {
-	if(strpos($source,'/') !== false)
+	$path_prefix = script_path() . '/';
+
+	if(strpos($source,'/') !== false) {
+		// The source is a URL
 		$path = $source;
-	else
+		// If the url starts with // then it's an absolute URL
+		if($source[0] === '/' && $source[1] === '/') $path_prefix = '';
+	} else {
+		// It's a file from the theme
 		$path = theme_include($source);
+	}
 	if($path) {
-		$path =  script_path() . '/' . $path;
 		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
-		return '<script src="' . $path . $qstring . '" ></script>' . "\r\n" ;
+		return '<script src="' . $path_prefix . $path . $qstring . '" ></script>' . "\r\n" ;
 	}
 }
 

@@ -27,28 +27,11 @@ class Siteinfo extends \Zotlabs\Web\Controller {
 		else {
 		        $version = $commit = '';
 		}
-		$visible_plugins = array();
-		if(is_array(\App::$plugins) && count(\App::$plugins)) {
-			$r = q("select * from addon where hidden = 0");
-			if(count($r))
-				foreach($r as $rr)
-					$visible_plugins[] = $rr['name'];
-		}
-	
-		$plugins_list = '';
-		if(count($visible_plugins)) {
-		        $plugins_text = t('Installed plugins/addons/apps:');
-			$sorted = $visible_plugins;
-			$s = '';
-			sort($sorted);
-			foreach($sorted as $p) {
-				if(strlen($p)) {
-					if(strlen($s)) $s .= ', ';
-					$s .= $p;
-				}
-			}
-			$plugins_list .= $s;
-		}
+
+		$plugins_list = implode(', ',visible_plugin_list());
+
+		if($plugins_list)
+	        $plugins_text = t('Installed plugins/addons/apps:');
 		else
 			$plugins_text = t('No installed plugins/addons/apps');
 	

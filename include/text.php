@@ -376,30 +376,6 @@ function unxmlify($s) {
 	return $ret;
 }
 
-/**
- * Convenience wrapper, reverse the operation "bin2hex"
- * This is a built-in function in php >= 5.4
- *
- * @FIXME We already have php >= 5.4 requirements, so can we remove this?
- */
-if(! function_exists('hex2bin')) {
-function hex2bin($s) {
-	if(! (is_string($s) && strlen($s)))
-		return '';
-
-	if(strlen($s) & 1) {
-		logger('hex2bin: illegal hex string: ' . $s);
-		return $s;
-	}
-
-	if(! ctype_xdigit($s)) {
-		return($s);
-	}
-
-	return(pack("H*",$s));
-}}
-
-
 // Automatic pagination.
 // To use, get the count of total items.
 // Then call App::set_pager_total($number_items);
@@ -1283,7 +1259,7 @@ function normalise_link($url) {
  * is https and the other isn't, or if one is www.something and the other
  * isn't - and also ignore case differences.
  *
- * @see normalis_link()
+ * @see normalise_link()
  *
  * @param string $a
  * @param string $b
@@ -1635,7 +1611,7 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 
 function create_export_photo_body(&$item) {
 	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) {
-		$j = json_decode($item['object'],true);
+		$j = json_decode($item['obj'],true);
 		if($j) {
 			$item['body'] .= "\n\n" . (($j['body']) ? $j['body'] : $j['bbcode']);
 			$item['sig'] = '';
@@ -1743,7 +1719,8 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and item_type = %d ",
+	$r = q("select mid, v from item left join iconfig on iconfig.iid = item.id 
+		where iconfig.cat = 'system' and iconfig.k = 'PDL' and item.uid = %d and item_type = %d ",
 		intval($channel_id),
 		intval(ITEM_TYPE_PDL)
 	);
@@ -1753,7 +1730,7 @@ function layout_select($channel_id, $current = '') {
 		$options .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
 		foreach($r as $rr) {
 			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
-			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['v'] . '</option>';
 		}
 	}
 
@@ -2049,7 +2026,7 @@ function ids_to_array($arr,$idx = 'id') {
 	$t = array();
 	if($arr) {
 		foreach($arr as $x) {
-			if(! in_array($x[$idx],$t)) {
+			if(array_key_exists($idx,$x) && strlen($x[$idx]) && (! in_array($x[$idx],$t))) {
 				$t[] = $x[$idx];
 			}
 		}
@@ -2088,9 +2065,9 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 		}
 
 		foreach($items as $item) {
-			if($item['owner_xchan'] && (! in_array($item['owner_xchan'],$arr)))
+			if($item['owner_xchan'] && (! in_array("'" . dbesc($item['owner_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['owner_xchan']) . "'";
-			if($item['author_xchan'] && (! in_array($item['author_xchan'],$arr)))
+			if($item['author_xchan'] && (! in_array("'" . dbesc($item['author_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['author_xchan']) . "'";
 		}
 	}
@@ -2123,9 +2100,9 @@ function xchan_mail_query(&$item) {
 	$arr = array();
 	$chans = null;
 	if($item) {
-		if($item['from_xchan'] && (! in_array($item['from_xchan'],$arr)))
+		if($item['from_xchan'] && (! in_array("'" . dbesc($item['from_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['from_xchan']) . "'";
-		if($item['to_xchan'] && (! in_array($item['to_xchan'],$arr)))
+		if($item['to_xchan'] && (! in_array("'" . dbesc($item['to_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['to_xchan']) . "'";
 	}
 
@@ -2821,13 +2798,16 @@ function expand_acl($s) {
 // If it has a pdl we'll load it as we know the mid and pass the body through comanche_parser() which will generate the 
 // page layout from the given description
 
+// @FIXME - there is apparently a very similar function called layout_select; this one should probably take precedence
+// and the other should be checked for compatibility and removed
 
 function pdl_selector($uid, $current="") {
 	$o = '';
 
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' $sql_extra order by sid asc",
+	$r = q("select iconfig.*, mid from item_id left join item on iconfig.iid = item.id 
+		where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' $sql_extra order by v asc",
 		intval($uid)
 	);
 
@@ -2841,7 +2821,7 @@ function pdl_selector($uid, $current="") {
 	$entries[] = array('title' => t('Default'), 'mid' => '');
 	foreach($entries as $selection) {
 		$selected = (($selection == $current) ? ' selected="selected" ' : '');
-		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['sid']}</option>";
+		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['v']}</option>";
 	}
 
 	$o .= '</select>';
@@ -2877,3 +2857,54 @@ function flatten_array_recursive($arr) {
 	}
 	return($ret);
 }			
+
+function text_highlight($s,$lang) {
+
+	if($lang === 'js')
+		$lang = 'javascript';
+
+	if($lang === 'json') {
+		$lang = 'javascript';
+		if(! strpos(trim($s),"\n"))
+			$s = jindent($s);
+	}
+
+	if(! strpos('Text_Highlighter',get_include_path())) {
+		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
+	}
+	require_once('library/Text_Highlighter/Text/Highlighter.php');
+    require_once('library/Text_Highlighter/Text/Highlighter/Renderer/Html.php');
+    $options = array(
+        'numbers' => HL_NUMBERS_LI,
+        'tabsize' => 4,
+    );
+	$tag_added = false;
+	$s = trim(html_entity_decode($s,ENT_COMPAT));
+	$s = str_replace("    ","\t",$s);
+
+	// The highlighter library insists on an opening php tag for php code blocks. If 
+	// it isn't present, nothing is highlighted. So we're going to see if it's present.
+	// If not, we'll add it, and then quietly remove it after we get the processed output back.  
+
+	if($lang === 'php') {
+		if(strpos('<?php',$s) !== 0) {
+			$s = '<?php' . "\n" . $s;
+			$tag_added = true;			
+		}
+
+	} 
+    $renderer = new Text_Highlighter_Renderer_HTML($options);
+    $hl = Text_Highlighter::factory($lang);
+    $hl->setRenderer($renderer);
+	$o = $hl->highlight($s);
+	$o = str_replace(["    ","\n"],["&nbsp;&nbsp;&nbsp;&nbsp;",''],$o);
+
+	if($tag_added) {
+		$b = substr($o,0,strpos($o,'<li>'));
+		$e = substr($o,strpos($o,'</li>'));
+		$o = $b . $e;
+	}
+
+    return('<code>' . $o . '</code>');
+}
+

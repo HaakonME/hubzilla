@@ -34,7 +34,6 @@ require_once('include/text.php');
 require_once('include/datetime.php');
 require_once('include/language.php');
 require_once('include/nav.php');
-require_once('include/cache.php');
 require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/features.php');
@@ -45,10 +44,10 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.7.3' );
-define ( 'ZOT_REVISION',            1.1     );
+define ( 'STD_VERSION',             '1.9' );
+define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1176  );
+define ( 'DB_UPDATE_VERSION',       1179  );
 
 
 /**
@@ -514,6 +513,7 @@ define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
 define ( 'ACTIVITY_OBJ_GROUP',   NAMESPACE_ACTIVITY_SCHEMA . 'group' );
 define ( 'ACTIVITY_OBJ_GAME',    NAMESPACE_ACTIVITY_SCHEMA . 'game' );
+define ( 'ACTIVITY_OBJ_WIKI',    NAMESPACE_ACTIVITY_SCHEMA . 'wiki' );
 define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_ZOT  . '/activity/tagterm' );
 define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_ZOT  . '/activity/profile' );
 define ( 'ACTIVITY_OBJ_THING',   NAMESPACE_ZOT  . '/activity/thing' );
@@ -770,6 +770,7 @@ class App {
 	public static  $groups;
 	public static  $language;
 	public static  $langsave;
+	public static  $rtl = false;
 	public static  $plugins_admin;
 	public static  $module_loaded = false;
 	public static  $query_string;
@@ -2280,6 +2281,12 @@ function construct_page(&$a) {
 
 	$page    = App::$page;
 	$profile = App::$profile;
+
+	// There's some experimental support for right-to-left text in the view/php/default.php page template.
+	// In v1.9 we started providing direction preference in the per language hstrings.php file
+	// This requires somebody with fluency in a RTL language to make happen
+
+	$page['direction'] = 0; // ((App::$rtl) ? 1 : 0);
 
 	header("Content-type: text/html; charset=utf-8");
 

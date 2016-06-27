@@ -23,19 +23,18 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 	/* @brief Initalize the profile-photo edit view
 	 *
-	 * @param $a Current application
 	 * @return void
 	 *
 	 */
 	
-		function init() {
+	function init() {
 	
 		if(! local_channel()) {
 			return;
 		}
 	
 		$channel = \App::get_channel();
-		profile_load($a,$channel['channel_address']);
+		profile_load($channel['channel_address']);
 	
 	}
 	
@@ -46,7 +45,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	 *
 	 */
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel()) {
 			return;
@@ -54,24 +53,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 		
 		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
 	        
-		if((x($_POST,'cropfinal')) && ($_POST['cropfinal'] == 1)) {
-	
-			// unless proven otherwise
-			$is_default_profile = 1;
-	
-			if($_REQUEST['profile']) {
-				$r = q("select id, profile_guid, is_default, gender from profile where id = %d and uid = %d limit 1",
-					intval($_REQUEST['profile']),
-					intval(local_channel())
-				);
-				if($r) {
-					$profile = $r[0];
-					if(! intval($profile['is_default']))
-						$is_default_profile = 0;
-				}
-			} 
-	
-			
+		if((array_key_exists('postfinal',$_POST)) && (intval($_POST['cropfinal']) == 1)) {
 	
 			// phase 2 - we have finished cropping
 	
@@ -86,7 +68,23 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				$scale = substr($image_id,-1,1);
 				$image_id = substr($image_id,0,-2);
 			}
-				
+
+
+			// unless proven otherwise
+			$is_default_profile = 1;
+	
+			if($_REQUEST['profile']) {
+				$r = q("select id, profile_guid, is_default, gender from profile where id = %d and uid = %d limit 1",
+					intval($_REQUEST['profile']),
+					intval(local_channel())
+				);
+				if($r) {
+					$profile = $r[0];
+					if(! intval($profile['is_default']))
+						$is_default_profile = 0;
+				}
+			} 
+
 	
 			$srcX = $_POST['xstart'];
 			$srcY = $_POST['ystart'];
@@ -110,30 +108,38 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 					$aid = get_account_id();
 	
-					$p = array('aid' => $aid, 'uid' => local_channel(), 'resource_id' => $base_image['resource_id'],
-						'filename' => $base_image['filename'], 'album' => t('Profile Photos'));
+					$p = [ 
+						'aid'         => $aid, 
+						'uid'         => local_channel(), 
+						'resource_id' => $base_image['resource_id'],
+						'filename'    => $base_image['filename'], 
+						'album'       => t('Profile Photos')
+					];
 	
-					$p['imgscale'] = 4;
+					$p['imgscale']    = PHOTO_RES_PROFILE_300;
 					$p['photo_usage'] = (($is_default_profile) ? PHOTO_PROFILE : PHOTO_NORMAL);
 	
 					$r1 = $im->save($p);
 	
 					$im->scaleImage(80);
-					$p['imgscale'] = 5;
+					$p['imgscale'] = PHOTO_RES_PROFILE_80;
 	
 					$r2 = $im->save($p);
 				
 					$im->scaleImage(48);
-					$p['imgscale'] = 6;
+					$p['imgscale'] = PHOTO_RES_PROFILE_48;
 	
 					$r3 = $im->save($p);
 				
 					if($r1 === false || $r2 === false || $r3 === false) {
 						// if one failed, delete them all so we can start over.
 						notice( t('Image resize failed.') . EOL );
-						$x = q("delete from photo where resource_id = '%s' and uid = %d and imgscale >= 4 ",
+						$x = q("delete from photo where resource_id = '%s' and uid = %d and imgscale in ( %d, %d, %d ) ",
 							dbesc($base_image['resource_id']),
-							local_channel()
+							local_channel(),
+							intval(PHOTO_RES_PROFILE_300),
+							intval(PHOTO_RES_PROFILE_80),
+							intval(PHOTO_RES_PROFILE_48)
 						);
 						return;
 					}
@@ -183,10 +189,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 					// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
 	
-					profile_photo_set_profile_perms($_REQUEST['profile']);
-	
-	
-	
+					profile_photo_set_profile_perms(local_channel(),$_REQUEST['profile']);	
 				}
 				else
 					notice( t('Unable to process image') . EOL);
@@ -196,7 +199,9 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			return; // NOTREACHED
 		}
 	
-	
+		// A new photo was uploaded. Store it and save some important details
+		// in App::$data for use in the cropping function
+ 	
 	
 		$hash = photo_new_resource();
 		$smallest = 0;
@@ -220,7 +225,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			$os_storage = false;
 	
 			foreach($i as $ii) {
-				if(intval($ii['imgscale']) < 2) {
+				if(intval($ii['imgscale']) < PHOTO_RES_640) {
 					$smallest = intval($ii['imgscale']);
 					$os_storage = intval($ii['os_storage']);
 					$imagedata = $ii['content'];
@@ -238,7 +243,10 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 		}
 	
 		return $this->profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
-		
+
+		// This will "fall through" to the get() method, and since
+		// App::$data['imagecrop'] is set, it will proceed to cropping 
+		// rather than present the upload form		
 	}
 	
 	
@@ -269,11 +277,19 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				notice( t('Permission denied.') . EOL );
 				return;
 			};
-			
-	//		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
-	        
+				        
 			$resource_id = argv(2);
 	
+			// When using an existing photo, we don't have a dialogue to offer a choice of profiles,
+			// so it gets attached to the default
+
+			$p = q("select id from profile where is_default = 1 and uid = %d",
+				intval(local_channel())
+			);
+			if($p) {
+				$_REQUEST['profile'] = $p[0]['id'];
+			}
+
 	
 			$r = q("SELECT id, album, imgscale FROM photo WHERE uid = %d AND resource_id = '%s' ORDER BY imgscale ASC",
 				intval(local_channel()),
@@ -285,11 +301,11 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			}
 			$havescale = false;
 			foreach($r as $rr) {
-				if($rr['imgscale'] == 5)
+				if($rr['imgscale'] == PHOTO_RES_PROFILE_80)
 					$havescale = true;
 			}
 	
-			// set an already loaded photo as profile photo
+			// set an already loaded and cropped photo as profile photo
 	
 			if(($r[0]['album'] == t('Profile Photos')) && ($havescale)) {
 				// unset any existing profile photos
@@ -310,7 +326,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					dbesc($channel['xchan_hash'])
 				);
 	
-				profile_photo_set_profile_perms(); //Reset default photo permissions to public
+				profile_photo_set_profile_perms(local_channel()); // Reset default photo permissions to public
 				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 				goaway(z_root() . '/profiles');
 			}
@@ -342,17 +358,22 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				if($i) {
 					$hash = $i[0]['resource_id'];
 					foreach($i as $ii) {
-						if(intval($ii['imgscale']) < 2) {
+						if(intval($ii['imgscale']) < PHOTO_RES_640) {
 							$smallest = intval($ii['imgscale']);
 						}
 					}
 	            }
 	        }
 	 
-			profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
+			$this->profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
+
+			// falls through with App::$data['imagecrop'] set so we go straight to the cropping section
 		}
 	
-		$profiles = q("select id, profile_name as name, is_default from profile where uid = %d",
+
+		// present an upload form
+
+		$profiles = q("select id, profile_name as name, is_default from profile where uid = %d order by id asc",
 			intval(local_channel())
 		);
 	
@@ -379,6 +400,9 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			return $o;
 		}
 		else {
+
+			// present a cropping form
+
 			$filename = \App::$data['imagecrop'] . '-' . \App::$data['imagecrop_resolution'];
 			$resolution = \App::$data['imagecrop_resolution'];
 			$tpl = get_markup_template("cropbody.tpl");
@@ -416,13 +440,13 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 		if($max_length > 0)
 			$ph->scaleImage($max_length);
 	
-		$width  = $ph->getWidth();
-		$height = $ph->getHeight();
+		\App::$data['width']  = $ph->getWidth();
+		\App::$data['height'] = $ph->getHeight();
 	
-		if($width < 500 || $height < 500) {
+		if(\App::$data['width'] < 500 || \App::$data['height'] < 500) {
 			$ph->scaleImageUp(400);
-			$width  = $ph->getWidth();
-			$height = $ph->getHeight();
+			\App::$data['width']  = $ph->getWidth();
+			\App::$data['height'] = $ph->getHeight();
 		}
 	
 	

@@ -677,13 +677,23 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['item_flags'] = 0;
 
-	if(array_key_exists('flags',$x) && in_array('consensus',$x['flags']))
-		$arr['item_consensus'] = 1;
+	if(array_key_exists('flags',$x)) {
 
-	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
-		$arr['item_deleted'] = 1;
-	if(array_key_exists('flags',$x) && in_array('hidden',$x['flags']))
-		$arr['item_hidden'] = 1;
+		if(in_array('consensus',$x['flags']))
+			$arr['item_consensus'] = 1;
+
+		if(in_array('deleted',$x['flags']))
+			$arr['item_deleted'] = 1;
+
+		if(in_array('notshown',$x['flags']))
+			$arr['item_notshown'] = 1;
+
+		// hidden item are no longer propagated - notshown may be a suitable alternative
+
+		if(in_array('hidden',$x['flags']))
+			$arr['item_hidden'] = 1;
+
+	}
 
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
@@ -1339,6 +1349,8 @@ function encode_item_flags($item) {
 		$ret[] = 'deleted';
 	if(intval($item['item_hidden']))
 		$ret[] = 'hidden';
+	if(intval($item['item_notshown']))
+		$ret[] = 'notshown';
 	if(intval($item['item_thread_top']))
 		$ret[] = 'thread_parent';
 	if(intval($item['item_nsfw']))
@@ -1877,6 +1889,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	}
 
 
+	$ret['item'] = $arr;
 
 	call_hooks('post_remote_end',$arr);
 
@@ -2127,6 +2140,15 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		return $ret;
 	}
 
+	// fetch an unescaped complete copy of the stored item
+
+	$r = q("select * from item where id = %d",
+		intval($orig_post_id)
+	);
+	if($r)
+		$arr = $r[0];
+
+
 	$r = q("delete from term where oid = %d and otype = %d",
 		intval($orig_post_id),
 		intval(TERM_OBJ_POST)
@@ -2157,6 +2179,8 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		}
 		$arr['iconfig'] = $meta;
 	}
+
+	$ret['item'] = $arr;
 
 	call_hooks('post_remote_update_end',$arr);
 
@@ -3537,9 +3561,8 @@ function delete_item_lowlevel($item, $stage = DROPITEM_NORMAL, $force = false) {
 		intval($item['id'])
 	);
 
-	q("delete from item_id where iid = %d and uid = %d",
-		intval($item['id']),
-		intval($item['uid'])
+	q("delete from iconfig where iid = %d",
+		intval($item['id'])
 	);
 
 	q("delete from term where oid = %d and otype = %d",
@@ -4104,6 +4127,23 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	return $items;
 }
+
+function webpage_to_namespace($webpage) {
+
+	if($webpage == ITEM_TYPE_WEBPAGE)
+		$page_type = 'WEBPAGE';
+	elseif($webpage == ITEM_TYPE_BLOCK)
+		$page_type = 'BUILDBLOCK';
+	elseif($webpage == ITEM_TYPE_PDL)
+		$page_type = 'PDL';
+	elseif($webpage == ITEM_TYPE_DOC)
+		$page_type = 'docfile';
+	else
+		$page_type = 'unknown';
+	return $page_type;
+
+}
+
 
 
 function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid) {

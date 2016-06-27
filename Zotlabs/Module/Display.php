@@ -106,12 +106,13 @@ class Display extends \Zotlabs\Web\Controller {
 			$x = q("select * from channel where channel_id = %d limit 1",
 				intval($target_item['uid'])
 			);
-			$y = q("select * from item_id where uid = %d and service = 'WEBPAGE' and iid = %d limit 1",
+			$y = q("select * from iconfig left join item on iconfig.iid = item.id 
+				where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item.id = %d limit 1",
 				intval($target_item['uid']),
 				intval($target_item['id'])
 			);
 			if($x && $y) {
-				goaway(z_root() . '/page/' . $x[0]['channel_address'] . '/' . $y[0]['sid']);
+				goaway(z_root() . '/page/' . $x[0]['channel_address'] . '/' . $y[0]['v']);
 			}
 			else {
 				notice( t('Page not found.') . EOL);

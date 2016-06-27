@@ -23,7 +23,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 		else
 			return;
 
-		profile_load($a,$which);
+		profile_load($which);
 
 	}
 
@@ -114,11 +114,11 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 				$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
 		}
 
-		$item_id = q("select * from item_id where service = 'WEBPAGE' and iid = %d limit 1",
+		$item_id = q("select * from iconfig where cat = 'system' and k = 'WEBPAGE' and iid = %d limit 1",
 			intval($itm[0]['id'])
 		);
 		if($item_id)
-			$page_title = $item_id[0]['sid'];
+			$page_title = $item_id[0]['v'];
 
 		$mimetype = $itm[0]['mimetype'];
 

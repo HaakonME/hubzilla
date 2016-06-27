@@ -16,13 +16,13 @@ require_once('include/zot.php');
 require_once('include/widgets.php');
 require_once('include/photos.php');
 
-/* @brief Initialize the connection-editor
- *
- *
- */
-
 
 class Connedit extends \Zotlabs\Web\Controller {
+
+	/* @brief Initialize the connection-editor
+	 *
+	 *
+	 */
 
 	function init() {
 	
@@ -51,7 +51,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	 *
 	 */
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel())
 			return;
@@ -219,7 +219,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			//Update profile photo permissions
 	
 			logger('A new profile was assigned - updating profile photos');
-			profile_photo_set_profile_perms($profile_id);
+			profile_photo_set_profile_perms(local_channel(),$profile_id);
 	
 		}
 	
@@ -345,7 +345,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			unset($clone['abook_account']);
 			unset($clone['abook_channel']);
 	
-			$abconfig = load_abconfig($channel['channel_hash'],$clone['abook_xchan']);
+			$abconfig = load_abconfig($channel['channel_id'],$clone['abook_xchan']);
 			if($abconfig)
 				$clone['abconfig'] = $abconfig;
 	
@@ -357,7 +357,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	 *
 	 */
 	
-		function get() {
+	function get() {
 	
 		$sort_type = 0;
 		$o = '';
@@ -418,7 +418,13 @@ class Connedit extends \Zotlabs\Web\Controller {
 				goaway(z_root() . '/connedit/' . $contact_id);
 	
 			}
-	
+			if($cmd === 'resetphoto') {
+				q("update xchan set xchan_photo_date = '2001-01-01 00:00:00' where xchan_hash = '%s' limit 1",
+					dbesc($orig_record[0]['xchan_hash'])
+				);
+				$cmd = 'refresh';
+			}	
+
 			if($cmd === 'refresh') {
 				if($orig_record[0]['xchan_network'] === 'zot') {
 					if(! zot_refresh($orig_record[0],\App::get_channel()))

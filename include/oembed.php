@@ -1,6 +1,8 @@
 <?php /** @file */
 
 
+use Zotlabs\Lib as Zlib;
+
 function oembed_replacecb($matches){
 
 	$embedurl=$matches[1];
@@ -24,12 +26,6 @@ function oembed_action($embedurl) {
 	$embedurl = trim(str_replace('&amp;','&', $embedurl));
 
 	logger('oembed_action: ' . $embedurl, LOGGER_DEBUG, LOG_INFO);
-
-	// These media files should now be caught in bbcode.php
-	// left here as a fallback in case this is called from another source
-
-	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
-	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
 
 	if(strpos($embedurl,'http://') === 0) {
 		if(intval(get_config('system','embed_sslonly'))) {
@@ -119,18 +115,23 @@ function oembed_fetch_url($embedurl){
 	// These media files should now be caught in bbcode.php
 	// left here as a fallback in case this is called from another source
 
-	$noexts = array("mp3","mp4","ogg","ogv","oga","ogm","webm","opus");
-	$ext = pathinfo(strtolower($embedurl),PATHINFO_EXTENSION);
+	$noexts = array(".mp3",".mp4",".ogg",".ogv",".oga",".ogm",".webm",".opus");
 
 	$result = oembed_action($embedurl); 
 
 	$embedurl = $result['url'];
 	$action = $result['action'];
 
+	foreach($noexts as $ext) {
+		if(strpos(strtolower($embedurl),$ext) !== false) {
+			$action = 'block';
+		}
+	}
+
 	$txt = null;
 
 	if($action !== 'block') {
-		$txt = Cache::get(App::$videowidth . $embedurl);
+		$txt = Zlib\Cache::get('[' . App::$videowidth . '] ' . $embedurl);
 
 		if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
 			$txt = str_replace('http:','https:',$txt);
@@ -151,7 +152,7 @@ function oembed_fetch_url($embedurl){
 		}
 
 
-		if (! in_array($ext, $noexts) && $action !== 'block') {
+		if ($action !== 'block') {
 			// try oembed autodiscovery
 			$redirects = 0;
 			$result = z_fetch_url($furl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));
@@ -199,7 +200,7 @@ function oembed_fetch_url($embedurl){
 		//save in cache
 
 		if(! get_config('system','oembed_cache_disable'))
-			Cache::set(App::$videowidth . $embedurl,$txt);
+			Zlib\Cache::set('[' . App::$videowidth . '] ' . $embedurl,$txt);
 
 	}
 

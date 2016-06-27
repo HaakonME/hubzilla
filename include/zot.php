@@ -538,11 +538,21 @@ function zot_refresh($them, $channel = null, $force = false) {
 								Zotlabs\Daemon\Master::Summon(array('Onepoll',$new_connection[0]['abook_id']));
 						}
 
+
+						/** If there is a default group for this channel, add this connection to it */
+						$default_group = $channel['channel_default_group'];
+						if($default_group) {
+							require_once('include/group.php');
+							$g = group_rec_byhash($channel['channel_id'],$default_group);
+							if($g)	
+								group_add_member($channel['channel_id'],'',$x['hash'],$g['id']);
+						}
+
 						unset($new_connection[0]['abook_id']);
 						unset($new_connection[0]['abook_account']);
 						unset($new_connection[0]['abook_channel']);
 
-						$abconfig = load_abconfig($channel['channel_hash'],$new_connection['abook_xchan']);
+						$abconfig = load_abconfig($channel['channel_id'],$new_connection['abook_xchan']);
 						if($abconfig)
 							$new_connection['abconfig'] = $abconfig;
 
@@ -3021,7 +3031,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$info = (($packet) ? $packet : array());
 	$info['type'] = 'channel_sync';
-	$info['encoding'] = 'red'; // note: not zot, this packet is very red specific
+	$info['encoding'] = 'red'; // note: not zot, this packet is very platform specific
+	$info['relocate'] = ['channel_address' => $channel['channel_address'], 'url' => z_root() ];
 
 	if(array_key_exists($uid,App::$config) && array_key_exists('transient',App::$config[$uid])) {
 		$settings = App::$config[$uid]['transient'];
@@ -3159,10 +3170,13 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			sync_events($channel,$arr['event']);
 
 		if(array_key_exists('event_item',$arr) && $arr['event_item'])
-			sync_items($channel,$arr['event_item']);
+			sync_items($channel,$arr['event_item'],((array_key_exists('relocate',$arr)) ? $arr['relocate'] : null));
 
 		if(array_key_exists('item',$arr) && $arr['item'])
-			sync_items($channel,$arr['item']);
+			sync_items($channel,$arr['item'],((array_key_exists('relocate',$arr)) ? $arr['relocate'] : null));
+
+		// deprecated, maintaining for a few months for upward compatibility
+		// this should sync webpages, but the logic is a bit subtle
 
 		if(array_key_exists('item_id',$arr) && $arr['item_id'])
 			sync_items($channel,$arr['item_id']);
@@ -3321,8 +3335,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				if($abconfig) {
 					// @fixme does not handle sync of del_abconfig
 					foreach($abconfig as $abc) {
-						if($abc['chan'] === $channel['channel_hash'])
-							set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+						set_abconfig($channel['channel_id'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
 					}
 				}
 			}
@@ -3518,13 +3531,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				}
 			}
 		}
-
-
-		if(array_key_exists('item',$arr) && $arr['item'])
-			sync_items($channel,$arr['item']);
-
-		if(array_key_exists('item_id',$arr) && $arr['item_id'])
-			sync_items($channel,$arr['item_id']);
 
 		$addon = array('channel' => $channel,'data' => $arr);
 		call_hooks('process_channel_sync_delivery',$addon);

@@ -34,7 +34,13 @@
 			$('#events-calendar').fullCalendar('option', 'height', 'auto');
 		}
 		else {
-			$('#events-calendar').fullCalendar('option', 'height', '');
+			if($('main').hasClass('fullscreen')) {
+				$('#calendar').fullCalendar('option', 'height', $(window).height() - $('.section-title-wrapper').outerHeight(true) - 2); // -2 is for border width (.generic-content-wrapper top and bottom) of .generic-content-wrapper
+
+			}
+			else {
+				$('#calendar').fullCalendar('option', 'height', '');
+			}
 		}
 		$('#title').text(view.title);
 	}

@@ -64,9 +64,9 @@ class SuperCurl {
 						$this->auth = $v;
 						break;
 					case 'magicauth':
+						// currently experimental
 						$this->magicauth = $v;
 						\Zotlabs\Daemon\Master::Summon([ 'CurlAuth', $v ]);
-						sleep(2);
 						break;
 					case 'custom':
 						$this->request_method = $v;

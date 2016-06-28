@@ -15,7 +15,7 @@ class CurlAuth {
 		if($argc != 2)
 			killme();
 
-		session_start();
+		\App::$session->start();
 
 		$_SESSION['authenticated'] = 1;
 		$_SESSION['uid'] = $argv[1];
@@ -23,6 +23,7 @@ class CurlAuth {
 		$x = session_id();
 
 		$f = 'store/[data]/cookie_' . $argv[1];
+		$c = 'store/[data]/cookien_' . $argv[1];
 
 		$e = file_exists($f);
 
@@ -44,8 +45,10 @@ class CurlAuth {
 				}
 			}
 		}
+		$t = time() + (24 * 3600);
+		file_put_contents($f, $output . 'HttpOnly_' . \App::get_hostname() . "\tFALSE\t/\tTRUE\t$t\tPHPSESSID\t" . $x, (($e) ? FILE_APPEND : 0));
 
-		file_put_contents($f, $output . 'HttpOnly_' . \App::get_hostname() . "\tFALSE\t/\tFALSE\t0\tPHPSESSID\t" . $x, (($e) ? FILE_APPEND : 0));
+		file_put_contents($c,$x);
 
 		killme();
 	}

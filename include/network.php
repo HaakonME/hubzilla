@@ -101,6 +101,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(x($opts,'cookiefile'))
 		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
 
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
+
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
 
@@ -257,6 +260,10 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
 	if(x($opts,'cookiefile'))
 		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
+
+
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));

@@ -427,7 +427,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				else {
 	
 					// if you are on a different network we'll force a refresh of the connection basic info
-					Zotlabs\Daemon\Master::Summon(array('Notifier','permission_update',$contact_id));
+					\Zotlabs\Daemon\Master::Summon(array('Notifier','permission_update',$contact_id));
 				}
 				goaway(z_root() . '/connedit/' . $contact_id);
 			}

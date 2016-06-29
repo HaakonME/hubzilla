@@ -1136,18 +1136,31 @@ margin-right: 50px;
 	list-style-type: none;
 }
 
+.generic-icons {
+	font-size: 1.2em;
+	color: $toolicon_colour;
+	margin-right: 7px;
+}
+
+.generic-icons:hover {
+	color: $toolicon_colour;
+}
+
 .admin-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
-	margin-right: 10px;
+	margin-right: 7px;
 }
 
+.drop-icons,
 a .drop-icons {
 	color: $toolicon_colour;
 	font-size: 1.2em;
 	text-decoration: none;
+	cursor: pointer;
 }
- 
+
+.drop-icons:hover,
 a .drop-icons:hover {
 	color: #FF0000;
 }

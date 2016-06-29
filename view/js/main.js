@@ -941,6 +941,11 @@ function dropItem(url, object) {
 				$('body').css('cursor', 'auto');
 			});
 		});
+		return true;
+
+	}
+	else {
+		return false;
 	}
 }
 

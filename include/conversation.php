@@ -1703,12 +1703,18 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'title' => t('Manage Webpages'),
 			'id'    => 'webpages-tab',
 		);
-	} else {
-		/**
-		 * @FIXME we probably need a listing of events that were created by 
-		 * this channel and are visible to the observer
-		 */
+	} 
+
+	if(feature_enabled($uid,'wiki') && (! UNO)) {
+		$tabs[] = array(
+			'label' => t('Wiki'),
+			'url'   => z_root() . '/wiki/' . $nickname,
+			'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
+			'title' => t('Wiki'),
+			'id'    => 'wiki-tab',
+		);
 	}
+
 
 	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
 	call_hooks('profile_tabs', $arr);

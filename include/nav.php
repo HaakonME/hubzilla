@@ -104,6 +104,8 @@ EOT;
 
 		if(feature_enabled($channel['channel_id'],'webpages') && (! UNO))
 			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'),'webpages_nav_btn');
+		if(feature_enabled($channel['channel_id'],'wiki') && (! UNO))
+			$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wiki'),"",t('Your wiki'),'wiki_nav_btn');
 	}
 	else {
 		if(! get_account_id())  {

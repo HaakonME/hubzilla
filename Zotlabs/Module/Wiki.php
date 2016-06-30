@@ -25,8 +25,18 @@ class Wiki extends \Zotlabs\Web\Controller {
 	}
 
 	function get() {
+
+		if(observer_prohibited(true)) {
+			return login();
+		}
+	
+		$tab = 'wiki';
+	
+	
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
+		require_once('include/conversation.php');
+
 		// TODO: Combine the interface configuration into a unified object
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
 		$wiki_owner = false;
@@ -151,6 +161,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 			)
 		);
 				
+		$is_owner = ((local_channel()) && (local_channel() == \App::$profile['profile_uid']) ? true : false);
+		
+		$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+
+
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
 			'$wikiheaderPage' => $wikiheaderPage,

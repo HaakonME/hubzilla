@@ -76,12 +76,7 @@ class Dreport extends \Zotlabs\Web\Controller {
 			notice( t('no results') . EOL);
 			return;
 		}
-	
-//		$o .= '<div class="generic-content-wrapper-styled">';
-//		$o .= '<h2>' . sprintf( t('Delivery report for %1$s'),substr($mid,0,32)) . '...' . '</h2>';
 		
-//		$o .= '<table>';
-	
 		for($x = 0; $x < count($r); $x++ ) {
 			$r[$x]['name'] = escape_tags(substr($r[$x]['dreport_recip'],strpos($r[$x]['dreport_recip'],' ')));
 	
@@ -143,7 +138,7 @@ class Dreport extends \Zotlabs\Web\Controller {
 			$entries[] = [ 
 				'name' => $rr['name'],					
 				'result' => escape_tags($rr['dreport_result']),
-				'time' => escape_tags($rr['dreport_time'])
+				'time' => escape_tags(datetime_convert('UTC',date_default_timezone_get(),$rr['dreport_time']))
 			];
 		}
 
@@ -155,11 +150,6 @@ class Dreport extends \Zotlabs\Web\Controller {
 			'$entries' => $entries
 		));
 	
-//		foreach($r as $rr) {
-//			$o .= '<tr><td width="40%">' . $rr['name'] . '</td><td width="20%">' . escape_tags($rr['dreport_result']) . '</td><td width="20%">' . escape_tags($rr['dreport_time']) . '</td></tr>';
-//		}
-//		$o .= '</table>';
-//		$o .= '</div>';
 	
 		return $o;
 	

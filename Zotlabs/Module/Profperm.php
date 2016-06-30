@@ -17,7 +17,7 @@ class Profperm extends \Zotlabs\Web\Controller {
 	
 		$profile = \App::$argv[1];
 	
-		profile_load($a,$which,$profile);
+		profile_load($which,$profile);
 	
 	}
 	

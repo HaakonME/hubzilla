@@ -551,15 +551,21 @@ function head_get_css() {
 }
 
 function format_css_if_exists($source) {
-	if (strpos($source[0], '/') !== false)
+	$path_prefix = script_path() . '/';
+
+	if (strpos($source[0], '/') !== false) {
+		// The source is a URL
 		$path = $source[0];
-	else
+		// If the url starts with // then it's an absolute URL
+		if($source[0][0] === '/' && $source[0][1] === '/') $path_prefix = '';
+	} else {
+		// It's a file from the theme
 		$path = theme_include($source[0]);
+	}
 
 	if($path) {
-		$path =  script_path() . '/' . $path;
 		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
-		return '<link rel="stylesheet" href="' . $path . $qstring . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
+		return '<link rel="stylesheet" href="' . $path_prefix . $path . $qstring . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
 	}
 }
 
@@ -643,14 +649,20 @@ function head_get_main_js() {
 }
 
 function format_js_if_exists($source) {
-	if(strpos($source,'/') !== false)
+	$path_prefix = script_path() . '/';
+
+	if(strpos($source,'/') !== false) {
+		// The source is a URL
 		$path = $source;
-	else
+		// If the url starts with // then it's an absolute URL
+		if($source[0] === '/' && $source[1] === '/') $path_prefix = '';
+	} else {
+		// It's a file from the theme
 		$path = theme_include($source);
+	}
 	if($path) {
-		$path =  script_path() . '/' . $path;
 		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
-		return '<script src="' . $path . $qstring . '" ></script>' . "\r\n" ;
+		return '<script src="' . $path_prefix . $path . $qstring . '" ></script>' . "\r\n" ;
 	}
 }
 

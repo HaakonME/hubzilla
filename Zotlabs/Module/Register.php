@@ -259,7 +259,8 @@ class Register extends \Zotlabs\Web\Controller {
 			'$email'        => $email,
 			'$pass1'        => $password,
 			'$pass2'        => $password2,
-			'$submit'       => ((UNO || $auto_create || $registration_is) ? t('Register') : t('Proceed to create your first channel'))
+			'$submit'       => t('Register'),
+			'$verify_note'  => t('This site may require email verification after submitting this form. If you are returned to a login page, please check your email for instructions.')
 		));
 	
 		return $o;

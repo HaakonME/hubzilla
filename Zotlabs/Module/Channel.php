@@ -48,7 +48,7 @@ class Channel extends \Zotlabs\Web\Controller {
 		// Run profile_load() here to make sure the theme is set before
 		// we start loading content
 
-		profile_load($a,$which,$profile);
+		profile_load($which,$profile);
 
 	}
 

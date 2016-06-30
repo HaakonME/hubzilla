@@ -27,7 +27,7 @@ class Photos extends \Zotlabs\Web\Controller {
 		if(argc() > 1) {
 			$nick = argv(1);
 	
-			profile_load($a,$nick);
+			profile_load($nick);
 	
 			$channelx = channelx_by_nick($nick);
 	

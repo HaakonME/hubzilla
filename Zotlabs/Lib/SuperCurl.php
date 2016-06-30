@@ -26,6 +26,7 @@ class SuperCurl {
 
 	private $request_method = 'GET';
 	private $upload = false;
+	private $cookies = false;
 
 
     private function set_data($s) {
@@ -62,6 +63,11 @@ class SuperCurl {
 					case 'http_auth':
 						$this->auth = $v;
 						break;
+					case 'magicauth':
+						// currently experimental
+						$this->magicauth = $v;
+						\Zotlabs\Daemon\Master::Summon([ 'CurlAuth', $v ]);
+						break;
 					case 'custom':
 						$this->request_method = $v;
 						break;
@@ -90,8 +96,17 @@ class SuperCurl {
 
 	function exec() {
 		$opts = $this->curlopts;
+		$url = $this->url;
 		if($this->auth)
 			$opts['http_auth'] = $this->auth;
+		if($this->magicauth) {
+			$opts['cookiejar']  = 'store/[data]/cookie_' . $this->magicauth;
+			$opts['cookiefile'] = 'store/[data]/cookie_' . $this->magicauth;
+			$opts['cookie'] = 'PHPSESSID=' . trim(file_get_contents('store/[data]/cookien_' . $this->magicauth));
+			$c = channelx_by_n($this->magicauth);
+			if($c)
+				$url = zid($this->url,$c['channel_address'] . '@' . \App::get_hostname());
+		}	
 		if($this->custom)
 			$opts['custom'] = $this->custom;
 		if($this->headers)

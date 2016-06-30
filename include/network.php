@@ -101,6 +101,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(x($opts,'cookiefile'))
 		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
 
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
+
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
 
@@ -257,6 +260,10 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
 	if(x($opts,'cookiefile'))
 		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
+
+
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
@@ -1336,8 +1343,20 @@ function discover_by_webbie($webbie) {
 					$fullname = $vcard['fn'];
 				if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
 					$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];			
+				if(($vcard['key']) && (! $pubkey))
+					$pubkey = $vcard['key'];
 				if(! $avatar)
 					$avatar = $vcard['photo'];
+				if($diaspora) {
+					if(($vcard['guid']) && (! $diaspora_guid))
+						$diaspora_guid = $vcard['guid'];
+					if(($vcard['url']) && (! $diaspora_base))
+						$diaspora_base = $vcard['url'];						
+
+
+
+
+				}
 
 			}
 		}

@@ -12,7 +12,7 @@ class Block extends \Zotlabs\Web\Controller {
 	
 		$which = argv(1);
 		$profile = 0;
-		profile_load($a,$which,$profile);
+		profile_load($which,$profile);
 	
 		if(\App::$profile['profile_uid'])
 			head_set_icon(\App::$profile['thumb']);

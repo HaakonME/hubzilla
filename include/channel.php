@@ -747,6 +747,44 @@ function identity_export_year($channel_id,$year,$month = 0) {
 	return $ret;
 }
 
+// export items within an arbitrary date range. Date/time is in UTC.
+
+function channel_export_items($channel_id,$start,$finish) {
+
+	if(! $start)
+		return array();
+	else
+		$start = datetime_convert('UTC','UTC',$start);
+
+	$finish = datetime_convert('UTC','UTC',(($finish) ? $finish : 'now'));
+	if($finish < $start)
+		return array();
+
+	$ret = array();
+
+	$ch = channelx_by_n($channel_id);
+	if($ch) {
+		$ret['relocate'] = [ 'channel_address' => $ch['channel_address'], 'url' => z_root()];
+	}
+
+	$r = q("select * from item where ( item_wall = 1 or item_type != %d ) and item_deleted = 0 and uid = %d and created >= '%s' and created < '%s'  and resource_type = '' order by created",
+		intval(ITEM_TYPE_POST),
+		intval($channel_id),
+		dbesc($start), 
+		dbesc($finish)
+	);
+
+	if($r) {
+		$ret['item'] = array();
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		foreach($r as $rr)
+			$ret['item'][] = encode_item($rr,true);
+	}
+
+	return $ret;
+}
+
 
 /**
  * @brief Loads a profile into the App structure.
@@ -761,11 +799,10 @@ function identity_export_year($channel_id,$year,$month = 0) {
  *
  * The channel default theme is also selected for use, unless over-riden elsewhere.
  *
- * @param[in,out] App &$a
  * @param string $nickname
  * @param string $profile
  */
-function profile_load(&$a, $nickname, $profile = '') {
+function profile_load($nickname, $profile = '') {
 
 //	logger('profile_load: ' . $nickname . (($profile) ? ' profile: ' . $profile : ''));
 

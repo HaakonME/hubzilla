@@ -16,7 +16,24 @@ class Dreport extends \Zotlabs\Web\Controller {
 		$channel = \App::get_channel();
 		
 		$mid = ((argc() > 1) ? argv(1) : '');
-	
+
+		if($mid === 'push') {
+			$table = 'push';
+			$mid = ((argc() > 2) ? argv(2) : '');
+			if($mid) {	
+				$i = q("select id from item where mid = '%s' and author_xchan = '%s' and uid = %d",
+					dbesc($mid),
+					dbesc($channel['channel_hash']),
+					intval($channel['channel_id'])
+				);
+				if($i) {
+					\Zotlabs\Daemon\Master::Summon([ 'Notifier', 'edit_post', $i[0]['id'] ]);
+				}
+			}
+			sleep(3);
+			goaway(z_root() . '/dreport/' . urlencode($mid));
+		}
+
 		if($mid === 'mail') {
 			$table = 'mail';
 			$mid = ((argc() > 2) ? argv(2) : '');
@@ -60,9 +77,10 @@ class Dreport extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		$o .= '<div class="generic-content-wrapper-styled">';
-		$o .= '<h2>' . sprintf( t('Delivery report for %1$s'),substr($mid,0,32)) . '...' . '</h2>';
-		$o .= '<table>';
+//		$o .= '<div class="generic-content-wrapper-styled">';
+//		$o .= '<h2>' . sprintf( t('Delivery report for %1$s'),substr($mid,0,32)) . '...' . '</h2>';
+		
+//		$o .= '<table>';
 	
 		for($x = 0; $x < count($r); $x++ ) {
 			$r[$x]['name'] = escape_tags(substr($r[$x]['dreport_recip'],strpos($r[$x]['dreport_recip'],' ')));
@@ -119,13 +137,29 @@ class Dreport extends \Zotlabs\Web\Controller {
 		}
 	
 		usort($r,'self::dreport_gravity_sort');
-			
-	
+
+		$entries = array();
 		foreach($r as $rr) {
-			$o .= '<tr><td width="40%">' . $rr['name'] . '</td><td width="20%">' . escape_tags($rr['dreport_result']) . '</td><td width="20%">' . escape_tags($rr['dreport_time']) . '</td></tr>';
+			$entries[] = [ 
+				'name' => $rr['name'],					
+				'result' => escape_tags($rr['dreport_result']),
+				'time' => escape_tags($rr['dreport_time'])
+			];
 		}
-		$o .= '</table>';
-		$o .= '</div>';
+
+		$o = replace_macros(get_markup_template('dreport.tpl'), array(
+			'$title' => sprintf( t('Delivery report for %1$s'),substr($mid,0,32)) . '...',
+			'$table' => $table,
+			'$mid' => urlencode($mid),
+			'$push' => t('Redeliver'),
+			'$entries' => $entries
+		));
+	
+//		foreach($r as $rr) {
+//			$o .= '<tr><td width="40%">' . $rr['name'] . '</td><td width="20%">' . escape_tags($rr['dreport_result']) . '</td><td width="20%">' . escape_tags($rr['dreport_time']) . '</td></tr>';
+//		}
+//		$o .= '</table>';
+//		$o .= '</div>';
 	
 		return $o;
 	

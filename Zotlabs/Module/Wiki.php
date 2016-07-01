@@ -29,6 +29,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if(observer_prohibited(true)) {
 			return login();
 		}
+
+		if(! feature_enabled(\App::$profile_uid,'wiki')) {
+			notice( t('Not found') . EOL);
+     		return;
+ 		}
 	
 		$tab = 'wiki';
 	

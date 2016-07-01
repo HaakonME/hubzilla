@@ -575,12 +575,20 @@ function import_items($channel,$items,$sync = false,$relocate = null) {
 			if(! $item)
 				continue;
 
+			if($relocate && $item['mid'] === $item['parent_mid']) {
+				item_url_replace($channel,$item,$relocate['url'],z_root(),$relocate['channel_address']);
+			}
+
 			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
 				dbesc($item['mid']),
 				intval($channel['channel_id'])
 			);
 			if($r) {
-				if($item['edited'] > $r[0]['edited']) {
+
+				// flags may have changed and we are probably relocating the post, 
+				// so force an update even if we have the same timestamp
+
+				if($item['edited'] >= $r[0]['edited']) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
 					$item_result = item_store_update($item,$allow_code,$deliver);
@@ -595,24 +603,7 @@ function import_items($channel,$items,$sync = false,$relocate = null) {
 			if($sync && $item['item_wall']) {
 				// deliver singletons if we have any
 				if($item_result && $item_result['success']) {
-					Zotlabs\Daemon\Master::Summon(array('Notifier','single_activity',$item_result['item_id']));
-				}
-			}
-			if($relocate && $item_result['item_id']) {
-				$item = $item_result['item'];
-				if($item['mid'] === $item['parent_mid']) {
-					item_url_replace($channel,$item,$relocate['url'],z_root(),$relocate['channel_address']);
-					dbesc_array($item);
-					$item_id = $item_result['item_id'];
-					unset($item['id']);
-					$str = '';
-					foreach($item as $k => $v) {
-						if($str)
-							$str .= ",";
-						$str .= " `" . $k . "` = '" . $v . "' ";
-            		}
-
-            		$r = dbq("update `item` set " . $str . " where id = " . $item_id );
+					Zotlabs\Daemon\Master::Summon( [ 'Notifier','single_activity',$item_result['item_id'] ]);
 				}
 			}
 		}

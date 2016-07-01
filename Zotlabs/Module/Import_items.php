@@ -78,6 +78,8 @@ class Import_items extends \Zotlabs\Web\Controller {
 	//	logger('import: data: ' . print_r($data,true));
 	//	print_r($data);
 	
+		if(! is_array($data))
+			return;
 	
 		if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
 			$v1 = substr($data['compatibility']['database'],-4);

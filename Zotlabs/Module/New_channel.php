@@ -62,7 +62,7 @@ class New_channel extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function post() {
+	function post() {
 	
 		$arr = $_POST;
 	
@@ -96,7 +96,7 @@ class New_channel extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function get() {
+	function get() {
 	
 		$acc = \App::get_account();
 	

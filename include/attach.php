@@ -1468,7 +1468,7 @@ function find_filename_by_hash($channel_id, $attachHash) {
 function pipe_streams($in, $out) {
 	$size = 0;
 	while (!feof($in))
-		$size += fwrite($out, fread($in, 8192));
+		$size += fwrite($out, fread($in, 16384));
 
 	return $size;
 }

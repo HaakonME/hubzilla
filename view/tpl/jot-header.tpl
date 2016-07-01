@@ -7,6 +7,7 @@ var pretext = '{{$pretext}}';
 function initEditor(cb){
 	if (editor==false){
 		$("#profile-jot-text-loading").spin('small').show();
+		{{$geotag}}
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").spin(false).hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000', 'line-height': 'inherit' });
@@ -362,7 +363,6 @@ function enableOnUser(){
 		$('#profile-nolocation-wrapper').attr('disabled', true);
 	}
 
-	{{$geotag}}
 
     var initializeEmbedPhotoDialog = function () {
         $('.embed-photo-selected-photo').each(function (index) {

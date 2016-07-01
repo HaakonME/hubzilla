@@ -19,15 +19,10 @@ function enableDisableFinishDate() {
 }
 
 function on_fullscreen() {
-	var view = $('#events-calendar').fullCalendar('getView');
-	if(view.type === 'month') {
-		$('#events-calendar').fullCalendar('option', 'height', $(window).height() - $('.section-title-wrapper').outerHeight(true) - 2); // -2 is for border width (top and bottom) of .generic-content-wrapper
-	}
+	$('#events-calendar').fullCalendar('option', 'height', $(window).height() - $('.section-title-wrapper').outerHeight(true) - 2); // -2 is for border width (.generic-content-wrapper top and bottom) of .generic-content-wrapper
 }
 
 function on_inline() {
 	var view = $('#events-calendar').fullCalendar('getView');
-	if(view.type === 'month') {
-		$('#events-calendar').fullCalendar('option', 'height', '');
-	}
+	((view.type === 'month') ? $('#events-calendar').fullCalendar('option', 'height', '') : $('#events-calendar').fullCalendar('option', 'height', 'auto'));
 }

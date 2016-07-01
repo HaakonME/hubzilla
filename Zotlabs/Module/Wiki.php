@@ -126,8 +126,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$content = ($p['content'] !== '' ? $p['content'] : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				require_once('library/markdown.php');	
-				$toc_content = wiki_generate_toc(json_decode($content));
-				$html = purify_html(Markdown($toc_content));
+				$html = wiki_generate_toc(purify_html(Markdown(json_decode($content))));
 				$renderedContent = wiki_convert_links($html,argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				$hide_editor = false;
 				$showPageControls = $wiki_editor;
@@ -200,8 +199,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$content = $_POST['content'];
 			$resource_id = $_POST['resource_id']; 
 			require_once('library/markdown.php');
-			$content = wiki_generate_toc($content);
-			$html = purify_html(Markdown($content));
+			$html = wiki_generate_toc(purify_html(Markdown($content)));
 			$w = wiki_get_wiki($resource_id);
 			$wikiURL = argv(0).'/'.argv(1).'/'.$w['urlName'];
 			$html = wiki_convert_links($html,$wikiURL);

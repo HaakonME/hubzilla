@@ -498,7 +498,8 @@ function wiki_convert_links($s, $wikiURL) {
 function wiki_generate_toc($s) {
 	
 	if (strpos($s,'[toc]') !== false) {
-		$toc_md = wiki_toc($s);
+		//$toc_md = wiki_toc($s);	// Generate Markdown-formatted list prior to HTML render
+		$toc_md = '<ul id="wiki-toc"></ul>'; // use the available jQuery plugin http://ndabas.github.io/toc/
 		$s = preg_replace("/\[toc\]/", $toc_md, $s, -1);
 	}
 	return $s;

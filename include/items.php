@@ -449,11 +449,7 @@ function post_activity_item($arr) {
 		call_hooks('post_local_end', $arr);
 		Zotlabs\Daemon\Master::Summon(array('Notifier','activity',$post_id));
 		$ret['success'] = true;
-		$r = q("select * from item where id = %d limit 1",
-			intval($post_id)
-		);
-		if($r)
-			$ret['activity'] = $r[0];
+		$ret['activity'] = $post['item'];
 	}
 
 	return $ret;

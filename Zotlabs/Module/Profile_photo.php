@@ -53,7 +53,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 		
 		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
 	        
-		if((array_key_exists('postfinal',$_POST)) && (intval($_POST['cropfinal']) == 1)) {
+		if((array_key_exists('cropfinal',$_POST)) && (intval($_POST['cropfinal']) == 1)) {
 	
 			// phase 2 - we have finished cropping
 	
@@ -90,12 +90,11 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			$srcY = $_POST['ystart'];
 			$srcW = $_POST['xfinal'] - $srcX;
 			$srcH = $_POST['yfinal'] - $srcY;
-	
+
 			$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND uid = %d AND imgscale = %d LIMIT 1",
 				dbesc($image_id),
 				dbesc(local_channel()),
 				intval($scale));
-	
 			if($r) {
 	
 				$base_image = $r[0];
@@ -181,6 +180,8 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 						dbesc(datetime_convert()),
 						dbesc($channel['xchan_hash'])
 					);
+					// Similarly, tell the nav bar to bypass the cache and update the avater image.
+					$_SESSION['reload_avatar'] = true;
 	
 					info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
 	

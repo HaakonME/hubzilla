@@ -104,6 +104,8 @@ EOT;
 
 		if(feature_enabled($channel['channel_id'],'webpages') && (! UNO))
 			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'),'webpages_nav_btn');
+		if(feature_enabled($channel['channel_id'],'wiki') && (! UNO))
+			$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wiki'),"",t('Your wiki'),'wiki_nav_btn');
 	}
 	else {
 		if(! get_account_id())  {
@@ -126,7 +128,7 @@ EOT;
 		$nav['lock'] = array('logout','','lock', 
 			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
 	}
-	else {
+	elseif(! $_SESSION['authenticated']) {
 		$nav['loginmenu'][] = Array('rmagic',t('Remote authentication'),'',t('Click to authenticate to your home hub'),'rmagic_nav_btn');
 	}
 
@@ -143,7 +145,7 @@ EOT;
 	if((App::$module != 'home') && (! (local_channel()))) 
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'),'home_nav_btn');
 
-	if((App::$config['system']['register_policy'] == REGISTER_OPEN) && (! local_channel()) && (! remote_channel()))
+	if((App::$config['system']['register_policy'] == REGISTER_OPEN) && (! $_SESSION['authenticated']))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'),'register_nav_btn');
 
 	if(! get_config('system','hide_help')) {
@@ -252,6 +254,19 @@ $powered_by = '';
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...')
 	));
+
+
+	if(x($_SESSION, 'reload_avatar') && $observer) {
+		// The avatar has been changed on the server but the browser doesn't know that, 
+		// force the browser to reload the image from the server instead of its cache.
+		$tpl = get_markup_template('force_image_reload.tpl');
+
+		App::$page['nav'] .= replace_macros($tpl, array(
+			'$imgUrl' => $observer['xchan_photo_m']
+		));
+		unset($_SESSION['reload_avatar']);
+	}
+
 
 	call_hooks('page_header', App::$page['nav']);
 }

@@ -2457,6 +2457,15 @@ function check_cron_broken() {
 		set_config('system','lastcroncheck',datetime_convert());
 		return;
 	}
+	$t = get_config('system','lastcroncheck');
+	if($t === false) {
+		// This is serious. Config storage isn't working.
+		// We just set lastcroncheck. The system is horked.
+		// However don't add insult to injury by sending an email
+		// to the admin every time a page is accessed.
+		// just quietly
+		return;
+	}
 
 	if($t > datetime_convert('UTC','UTC','now - 3 days')) {
 		// Wait for 3 days before we do anything so as not to swamp the admin with messages

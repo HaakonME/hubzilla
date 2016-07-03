@@ -596,7 +596,7 @@ class Setup extends \Zotlabs\Web\Controller {
 	
 		if(! is_writable('store')) {
 			$status = false;
-			$help = t('Red uses the store directory to save uploaded files. The web server needs to have write access to the store directory under the Red top level folder') . EOL;
+			$help = t('This software uses the store directory to save uploaded files. The web server needs to have write access to the store directory under the Red top level folder') . EOL;
 			$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
 		}
 	
@@ -639,6 +639,9 @@ class Setup extends \Zotlabs\Web\Controller {
 					$help .= t('If your certificate is not recognized, members of other sites (who may themselves have valid certificates) will get a warning message on their own site complaining about security issues.') . EOL;
 					$help .= t('This can cause usability issues elsewhere (not just on your own site) so we must insist on this requirement.') .EOL;
 					$help .= t('Providers are available that issue free certificates which are browser-valid.'). EOL;
+
+					$help .= t('If you are confident that the certificate is valid and signed by a trusted authority, check to see if you have failed to install an intermediate cert. These are not normally required by browsers, but are required for server-to-server communications.') . EOL;
+
 	
 					$this->check_add($checks, t('SSL certificate validation'), false, true, $help);
 				}
@@ -695,6 +698,7 @@ class Setup extends \Zotlabs\Web\Controller {
 		// install the standard theme
 		set_config('system', 'allowed_themes', 'redbasic');
 	
+
 		// Set a lenient list of ciphers if using openssl. Other ssl engines
 		// (e.g. NSS used in RedHat) require different syntax, so hopefully
 		// the default curl cipher list will work for most sites. If not,
@@ -704,7 +708,9 @@ class Setup extends \Zotlabs\Web\Controller {
 		// z_fetch_url() is also used to import shared links and other content
 		// so in theory most any cipher could show up and we should do our best
 		// to make the content available rather than tell folks that there's a
-		// weird SSL error which they can't do anything about.
+		// weird SSL error which they can't do anything about. This does not affect
+		// the SSL server, but is only a client negotiation to find something workable.
+		// Hence it will not make your system susceptible to POODL or other nasties.
 	
 		$x = curl_version();
 		if(stristr($x['ssl_version'],'openssl'))

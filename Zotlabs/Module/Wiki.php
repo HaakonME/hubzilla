@@ -25,8 +25,23 @@ class Wiki extends \Zotlabs\Web\Controller {
 	}
 
 	function get() {
+
+		if(observer_prohibited(true)) {
+			return login();
+		}
+
+		if(! feature_enabled(\App::$profile_uid,'wiki')) {
+			notice( t('Not found') . EOL);
+     		return;
+ 		}
+	
+		$tab = 'wiki';
+	
+	
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
+		require_once('include/conversation.php');
+
 		// TODO: Combine the interface configuration into a unified object
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
 		$wiki_owner = false;
@@ -128,7 +143,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$content = ($p['content'] !== '' ? htmlspecialchars_decode($p['content'],ENT_COMPAT) : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				require_once('library/markdown.php');	
-				$renderedContent = wiki_convert_links(Markdown(json_decode($content)),argv(0).'/'.argv(1).'/'.$wikiUrlName);
+				$html = wiki_generate_toc(purify_html(Markdown(json_decode($content))));
+				$renderedContent = wiki_convert_links($html,argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				$hide_editor = false;
 				$showPageControls = $wiki_editor;
 				$showNewWikiButton = $wiki_owner;
@@ -151,6 +167,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 			)
 		);
 				
+		$is_owner = ((local_channel()) && (local_channel() == \App::$profile['profile_uid']) ? true : false);
+		
+		$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+
+
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
 			'$wikiheaderPage' => $wikiheaderPage,
@@ -200,7 +221,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$content = $_POST['content'];
 			$resource_id = $_POST['resource_id']; 
 			require_once('library/markdown.php');
-			$html = purify_html(Markdown($content));
+			$html = wiki_generate_toc(purify_html(Markdown($content)));
 			$w = wiki_get_wiki($resource_id);
 			$wikiURL = argv(0).'/'.argv(1).'/'.$w['urlName'];
 			$html = wiki_convert_links($html,$wikiURL);

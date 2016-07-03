@@ -180,6 +180,8 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 						dbesc(datetime_convert()),
 						dbesc($channel['xchan_hash'])
 					);
+					// Similarly, tell the nav bar to bypass the cache and update the avater image.
+					$_SESSION['reload_avatar'] = true;
 	
 					info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
 	

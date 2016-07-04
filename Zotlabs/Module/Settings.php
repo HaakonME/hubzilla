@@ -30,7 +30,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel())
 			return;
@@ -40,7 +40,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 		$channel = \App::get_channel();
 	
-		 logger('mod_settings: ' . print_r($_REQUEST,true));
+		// logger('mod_settings: ' . print_r($_REQUEST,true));
 	
 	
 		if((argc() > 1) && (argv(1) === 'oauth') && x($_POST,'remove')){
@@ -311,10 +311,10 @@ class Settings extends \Zotlabs\Web\Controller {
 					intval(local_channel())
 				);	
 	
-				$global_perms = get_perms();
+				$global_perms = \Zotlabs\Access\Permissions::Perms();
 	
 				foreach($global_perms as $k => $v) {
-					$set_perms .= ', ' . $v[0] . ' = ' . intval($_POST[$k]) . ' ';
+					\Zotlabs\Access\PermissionLimits::Set(local_channel(),$k,intval($_POST[$k]));
 				}
 				$acl = new \Zotlabs\Access\AccessList($channel);
 				$acl->set_from_array($_POST);
@@ -370,10 +370,10 @@ class Settings extends \Zotlabs\Web\Controller {
 					);
 				}
 	
-				$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and abook_self = 1",
-					intval((array_key_exists('perms_accept',$role_permissions)) ? $role_permissions['perms_accept'] : 0),
-					intval(local_channel())
-				);
+				foreach($global_perms as $k => $v) {
+					set_abconfig(local_channel(),$channel['channel_hash'],'my_perms',$k,((array_key_exists($k,$role_permissions['perms_accept'])) ? intval($role_permissions['perms_accept'][$k])));
+				}
+
 				set_pconfig(local_channel(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
 	
 				foreach($role_permissions as $p => $v) {
@@ -864,11 +864,7 @@ class Settings extends \Zotlabs\Web\Controller {
 			
 			return $o;
 		}
-		
-		
-	
-	
-	
+			
 		if(argv(1) === 'channel') {
 	
 			require_once('include/acl_selectors.php');
@@ -885,9 +881,8 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 			$channel = \App::get_channel();
 	
-	
-			$global_perms = get_perms();
-	
+			$global_perms = \Zotlabs\Access\Permissions::Perms();
+
 			$permiss = array();
 	
 			$perm_opts = array(
@@ -905,15 +900,13 @@ class Settings extends \Zotlabs\Web\Controller {
 			foreach($global_perms as $k => $perm) {
 				$options = array();
 				foreach($perm_opts as $opt) {
-					if((! $perm[2]) && $opt[1] == PERMS_PUBLIC)
-						continue;
 					$options[$opt[1]] = $opt[0];
 				}
-				$permiss[] = array($k,$perm[3],$channel[$perm[0]],$perm[4],$options);			
+				$permiss[] = array($k,$perm,$channel[$perm[0]],$perm[4],$options);			
 			}
 	
 	
-	//		logger('permiss: ' . print_r($permiss,true));
+			//		logger('permiss: ' . print_r($permiss,true));
 	
 	
 	

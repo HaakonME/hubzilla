@@ -2371,7 +2371,8 @@ function update_r1179() {
 			id serial NOT NULL,
 			perm varchar(64) not null default '',
 			channel_id int(10) unsigned not null default 0,
-			perm_limit int(10) unsigned not null default 0 )");
+			perm_limit int(10) unsigned not null default 0 
+			primary_key id )");
  		$r2 = q("create index \"idx_perm\" on perm_limits (\"perm\") ");
  		$r3 = q("create index \"idx_channel_id\" on perm_limits (\"channel_id\") ");
  		$r4 = q("create index \"idx_perm_limit\" on perm_limits (\"perm_limit\") ");

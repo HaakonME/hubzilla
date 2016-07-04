@@ -20,14 +20,6 @@ function perm_limits_upgrade($channel) {
 }
 
 
-function perm_limits_upgrade_create($channel_id,$perm,$perm_limit) {
-	$r = q("insert into perm_limits ( perm, channel_id, perm_limit ) 
-		values ( '%s', %d, %d ) ",
-		dbesc($perm),
-		intval($channel_id),
-		intval($perm_limit)
-	);
-}
 
 
 function perm_abook_upgrade($abook) {

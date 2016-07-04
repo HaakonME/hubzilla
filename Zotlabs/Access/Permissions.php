@@ -7,7 +7,7 @@ use Zotlabs\Lib as Zlib;
 
 class Permissions {
 
-	static public function Perms($filter) {
+	static public function Perms($filter = '') {
 
 		$perms = [
 			[ 'view_stream'   => t('Can view my normal stream and posts') ],

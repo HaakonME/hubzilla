@@ -34,6 +34,20 @@ class Permissions {
 
 	}
 
+	static public function BlockedAnonPerms() {
+
+		// Perms from the above list that are blocked from anonymous observers.
+		// e.g. you must be authenticated.
+
+		$perms = [ 'send_stream', 'write_pages', 'post_wall', 'write_storage', 'post_comments', 'post_mail', 'post_like', 'tag_deliver', 'chat', 'republish', 'delegate' ];
+
+		$x = array('permissions' => $perms);
+		call_hooks('write_perms',$x);
+		return($x['permissions']);
+
+	}
+
+
 	static public function OwnerLimitSet($channel_id,$permission,$limit) {
 		return Zlib\PConfig::Set($channel_id,'perms',$permission,$limit);
 	}

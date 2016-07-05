@@ -131,6 +131,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		foreach($_POST as $k => $v) {
 			if(strpos($k,'perms_') === 0) {
+				$perm = substr($k,6);
+				set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,(($v) ? 1 : 0));				
 				$abook_my_perms += $v;
 			}
 		}
@@ -654,7 +656,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$perms = array();
 			$channel = \App::get_channel();
 	
-			$global_perms = get_perms();
+			$global_perms = \Zotlabs\Access\Permissions::Perms();
+
 			$existing = get_all_perms(local_channel(),$contact['abook_xchan']);
 	
 			$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'), array(t('No'),('Yes')));
@@ -671,8 +674,10 @@ class Connedit extends \Zotlabs\Web\Controller {
 				$affinity = t('Set Affinity & Profile');
 	
 			foreach($global_perms as $k => $v) {
-				$thisperm = (($contact['abook_my_perms'] & $v[1]) ? "1" : '');
-				$checkinherited = ((($channel[$v[0]]) && ($channel[$v[0]] != PERMS_SPECIFIC)) ? "1" : '');
+				$thisperm = get_abconfig(local_channel(),$contact['abook_xchan'],'my_perms',$k);
+//fixme
+				
+				$checkinherited = \Zotlabs\Access\PermissionLimits::Get(local_channel(),$k);
 	
 				// For auto permissions (when $self is true) we don't want to look at existing
 				// permissions because they are enabled for the channel owner

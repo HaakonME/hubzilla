@@ -67,7 +67,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 	if($api)
 		return get_all_api_perms($uid,$api);	
 
-	$global_perms = get_perms();
+	$global_perms = \Zotlabs\Access\Permissions::Perms();
 
 	// Save lots of individual lookups
 
@@ -85,7 +85,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// First find out what the channel owner declared permissions to be.
 
-		$channel_perm = $permission[0];
+		$channel_perm = \ZotlabAccess\PermissionLimits::Get($uid,$perm_name);
 
 		if(! $channel_checked) {
 			$r = q("select * from channel where channel_id = %d limit 1",
@@ -105,7 +105,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 		// These take priority over all other settings.
 
 		if($observer_xchan) {
-			if($r[0][$channel_perm] & PERMS_AUTHED) {
+			if($channel_perm & PERMS_AUTHED) {
 				$ret[$perm_name] = true;
 				continue;
 			}
@@ -122,7 +122,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 						dbesc($observer_xchan)
 					);
 				}
-
+				$abperms = load_abconfig($uid,$observer_xchan);
 				$abook_checked = true;
 			}
 
@@ -136,7 +136,10 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 			// Check if this is a write permission and they are being ignored
 			// This flag is only visible internally.
 
-			if(($x) && ($internal_use) && (! $global_perms[$perm_name][2]) && intval($x[0]['abook_ignored'])) {
+			$blocked_anon_perms = \Zotlabs\Access\Permissions::BlockedAnonPerms();
+
+
+			if(($x) && ($internal_use) && (in_array($perm_name,$blocked_anon_perms) && intval($x[0]['abook_ignored'])) {
 				$ret[$perm_name] = false;
 				continue;
 			}
@@ -154,7 +157,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 		// if you've moved elsewhere, you will only have read only access
 
 		if(($observer_xchan) && ($r[0]['channel_hash'] === $observer_xchan)) {
-			if($r[0]['channel_moved'] && (! $permission[2]))
+			if($r[0]['channel_moved'] && (in_array($perm_name,$blocked_anon_perms)))
 				$ret[$perm_name] = false;
 			else
 				$ret[$perm_name] = true;
@@ -163,7 +166,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// Anybody at all (that wasn't blocked or ignored). They have permission.
 
-		if($r[0][$channel_perm] & PERMS_PUBLIC) {
+		if($channel_perm & PERMS_PUBLIC) {
 			$ret[$perm_name] = true;
 			continue;
 		}
@@ -178,7 +181,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// If we're still here, we have an observer, check the network.
 
-		if($r[0][$channel_perm] & PERMS_NETWORK) {
+		if($channel_perm & PERMS_NETWORK) {
 			if(($x && $x[0]['xchan_network'] === 'zot') || ($y && $y[0]['xchan_network'] === 'zot')) {
 				$ret[$perm_name] = true;
 				continue;
@@ -187,7 +190,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// If PERMS_SITE is specified, find out if they've got an account on this hub
 
-		if($r[0][$channel_perm] & PERMS_SITE) {
+		if($channel_perm & PERMS_SITE) {
 			if(! $onsite_checked) {
 				$c = q("select channel_hash from channel where channel_hash = '%s' limit 1",
 					dbesc($observer_xchan)
@@ -214,7 +217,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// They are in your address book, but haven't been approved
 
-		if($r[0][$channel_perm] & PERMS_PENDING) {
+		if($channel_perm & PERMS_PENDING) {
 			$ret[$perm_name] = true;
 			continue;
 		}
@@ -226,15 +229,15 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 		// They're a contact, so they have permission
 
-		if($r[0][$channel_perm] & PERMS_CONTACTS) {
+		if($channel_perm & PERMS_CONTACTS) {
 			$ret[$perm_name] = true;
 			continue;
 		}
 
 		// Permission granted to certain channels. Let's see if the observer is one of them
 
-		if($r[0][$channel_perm] & PERMS_SPECIFIC) {
-			if(($x[0]['abook_my_perms'] & $global_perms[$perm_name][1])) {
+		if($channel_perm & PERMS_SPECIFIC) {
+			if(array_key_exists('my_perms',$abperms) && array_key_exists($perm_name,$abperms['my_perms']) && $abperms['my_perms'][$perm_name]) {
 				$ret[$perm_name] = true;
 				continue;
 			}

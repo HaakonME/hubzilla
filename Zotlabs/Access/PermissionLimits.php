@@ -3,6 +3,19 @@
 namespace Zotlabs\Access;
 
 class PermissionLimits {
+
+	static public function Std_Limits() {
+		$perms = Permissions::Perms();
+		$limits = array();
+		foreach($perms as $k => $v) {
+			if(strstr($k,'view'))
+				$limits[$k] = PERMS_PUBLIC;
+			else
+				$limits[$k] = PERMS_SPECIFIC;
+		}
+		return $limits;
+	}
+
 	static public function Set($channel_id,$perm,$perm_limit) {
 		$r = q("select * from perm_limits where channel_id = %d and perm = '%s' limit 1",
 			intval($channel_id),

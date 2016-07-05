@@ -11,7 +11,7 @@ class PermissionLimits {
 		if($r) {
 			if($r[0]['perm_limit'] != $perm_limit) {
 				$x = q("update perm_limits set perm_limit = %d where id = %d",
-					dbesc($perm_limit)
+					dbesc($perm_limit),
 					intval($r[0]['id'])
 				);
 			}
@@ -29,7 +29,7 @@ class PermissionLimits {
 	static public function Get($channel_id,$perm = '') {
 		if($perm) {
 			$r = q("select * from perm_limits where channel_id = %d and perm = '%s' limit 1",
-				intval($channel_id)
+				intval($channel_id),
 				dbesc($perm)
 			);
 			if($r)

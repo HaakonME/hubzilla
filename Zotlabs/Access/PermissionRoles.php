@@ -7,8 +7,8 @@ use Zotlabs\Lib as Zlib;
 
 class PermissionRoles {
 
-	static private role_limits = array();
-	static private role_perms  = array();
+	static private $role_limits = array();
+	static private $role_perms  = array();
 
 	static public function roles() {
 	    $roles = [

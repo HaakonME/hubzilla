@@ -371,7 +371,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				}
 	
 				foreach($global_perms as $k => $v) {
-					set_abconfig(local_channel(),$channel['channel_hash'],'my_perms',$k,((array_key_exists($k,$role_permissions['perms_accept'])) ? intval($role_permissions['perms_accept'][$k])));
+					set_abconfig(local_channel(),$channel['channel_hash'],'my_perms',$k,((array_key_exists($k,$role_permissions['perms_connect'])) ? 1 : 0));
 				}
 
 				set_pconfig(local_channel(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));

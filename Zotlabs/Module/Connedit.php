@@ -197,8 +197,11 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$role = get_pconfig(local_channel(),'system','permissions_role');
 			if($role) {
 				$x = get_role_perms($role);
-				if($x['perms_accept'])
-					$abook_my_perms = $x['perms_accept'];
+				if($x['perms_connect']) {
+					foreach($x['perms_connect'] as $p) {
+						set_abconfig(local_channel(),$orig_record[0]['abook_xchan'],'my_perms',$p,1);
+					}
+				}
 			}
 		}
 	
@@ -374,8 +377,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 		$role = get_pconfig(local_channel(),'system','permissions_role');
 		if($role) {
 			$x = get_role_perms($role);
-			if($x['perms_accept'])
-				$my_perms = $x['perms_accept'];
+			if($x['perms_connect'])
+				$my_perms = $x['perms_connect'];
 		}
 	
 		$yes_no = array(t('No'),t('Yes'));

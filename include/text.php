@@ -2354,7 +2354,13 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 			$str_tags .= $newtag;
 		}
-		return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $basetag, 'url' => $url, 'contact' => $r[0]);	
+		return [
+			'replaced' => $replaced, 
+			'termtype' => $termtype, 
+			'term'     => $basetag, 
+			'url'      => $url, 
+			'contact'  => $r[0]
+		];	
 	}
 
 	//is it a person tag? 
@@ -2545,7 +2551,13 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		}
 	}
 
-	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
+	return [
+		'replaced' => $replaced, 
+		'termtype' => $termtype, 
+		'term'     => $newname, 
+		'url'      => $url, 
+		'contact'  => $r[0]
+	];
 }
 
 function linkify_tags($a, &$body, $uid, $diaspora = false) {

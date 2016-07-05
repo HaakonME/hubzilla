@@ -393,7 +393,7 @@ function get_atom_elements($feed, $item, &$author) {
 		$terms = array();
 		$terms[] = array(
 			'otype' => TERM_OBJ_POST,
-			'type'  => TERM_BOOKMARK,
+			'ttype' => TERM_BOOKMARK,
 			'url'   => $res['plink'],
 			'term'  => $res['title'],
 		);
@@ -403,7 +403,7 @@ function get_atom_elements($feed, $item, &$author) {
 		$terms = array();
 		$terms[] = array(
 			'otype' => TERM_OBJ_POST,
-			'type'  => TERM_BOOKMARK,
+			'ttype' => TERM_BOOKMARK,
 			'url'   => $res['plink'],
 			'term'  => $res['plink'],
 		);

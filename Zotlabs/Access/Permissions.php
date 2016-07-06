@@ -7,6 +7,23 @@ use Zotlabs\Lib as Zlib;
 
 class Permissions {
 
+	/**
+	 * Extensible permissions.
+	 * To add new permissions, add to the list of $perms below, with a simple description.
+	 * Also visit PermissionRoles.php and add to the $ret['perms_connect'] property for any role
+	 * if this permission should be granted to new connections.
+	 *
+	 * Permissions with 'view' in the name are considered read permissions. Anything
+	 * else requires authentication. Read permission limits are PERMS_PUBLIC and anything else
+	 * is given PERMS_SPECIFIC.
+	 *
+	 * PermissionLimits::Std_limits() retrieves the standard limits. A permission role
+	 * MAY alter an individual setting after retrieving the Std_limits if you require
+	 * something different for a specific permission within the given role.  
+	 *
+	 */
+
+
 	static public function Perms($filter = '') {
 
 		$perms = [
@@ -23,7 +40,7 @@ class Permissions {
 			[ 'post_mail'     => t('Can send me private mail messages') ],
 			[ 'post_like'     => t('Can like/dislike profiles and profile things') ],
 			[ 'tag_deliver'   => t('Can forward to all my channel connections via @+ mentions in posts') ],
-			[ 'chat'          => t('Can chat with me (when available)') ],
+			[ 'chat'          => t('Can chat with me') ],
 			[ 'republish'     => t('Can source my public posts in derived channels') ],
 			[ 'delegate'      => t('Can administer my channel') ]
 		];
@@ -39,29 +56,19 @@ class Permissions {
 		// Perms from the above list that are blocked from anonymous observers.
 		// e.g. you must be authenticated.
 
-		$perms = [ 'send_stream', 'write_pages', 'post_wall', 'write_storage', 'post_comments', 'post_mail', 'post_like', 'tag_deliver', 'chat', 'republish', 'delegate' ];
+		$res = array();
+		$perms = PermissionLimits::Std_limits();
+		foreach($perms as $perm => $limit) {
+			if($limit != PERMS_PUBLIC) {
+				$res[] = $perm;
+			}
+		}
 
-		$x = array('permissions' => $perms);
+		$x = array('permissions' => $res);
 		call_hooks('write_perms',$x);
 		return($x['permissions']);
 
 	}
 
-
-	static public function OwnerLimitSet($channel_id,$permission,$limit) {
-		return Zlib\PConfig::Set($channel_id,'perms',$permission,$limit);
-	}
-
-	static public function OwnerLimitGet($channel_id,$permission) {
-		return Zlib\PConfig::Get($channel_id,'perms',$permission);
-	}
-
-	static public function Set($channel_id,$xchan_hash,$permission,$value) {
-		return Zlib\AbConfig::Set($channel_id,$xchan_hash,'perms',$permission,$value);
-	}
-		
-	static public function Get($channel_id,$xchan_hash,$permission) {
-		return Zlib\AbConfig::Get($channel_id,$xchan_hash,'perms',$permission);
-	}
 
 }

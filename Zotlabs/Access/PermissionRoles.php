@@ -7,38 +7,6 @@ use Zotlabs\Lib as Zlib;
 
 class PermissionRoles {
 
-	static public function roles() {
-	    $roles = [
-			t('Social Networking') => [
-				'social' => t('Social - Mostly Public'), 
-				'social_restricted' => t('Social - Restricted'), 
-				'social_private' => t('Social - Private')
-			],
-
-			t('Community Forum') => [
-				'forum' => t('Forum - Mostly Public'), 
-				'forum_restricted' => t('Forum - Restricted'), 
-				'forum_private' => t('Forum - Private')
-			],
-
-			t('Feed Republish') => [
-				'feed' => t('Feed - Mostly Public'), 
-				'feed_restricted' => t('Feed - Restricted')
-			],
-
-			t('Special Purpose') => [
-				'soapbox' => t('Special - Celebrity/Soapbox'), 
-				'repository' => t('Special - Group Repository')
-			],
-
-			t('Other') => [
-				'custom' => t('Custom/Expert Mode')
-			]
-    
-		];
-
-    	return $roles;
-	}
 
 	static function role_perms($role) {
 
@@ -205,5 +173,43 @@ class PermissionRoles {
 
 		return $ret;
 	}
+
+
+
+
+	static public function roles() {
+	    $roles = [
+			t('Social Networking') => [
+				'social' => t('Social - Mostly Public'), 
+				'social_restricted' => t('Social - Restricted'), 
+				'social_private' => t('Social - Private')
+			],
+
+			t('Community Forum') => [
+				'forum' => t('Forum - Mostly Public'), 
+				'forum_restricted' => t('Forum - Restricted'), 
+				'forum_private' => t('Forum - Private')
+			],
+
+			t('Feed Republish') => [
+				'feed' => t('Feed - Mostly Public'), 
+				'feed_restricted' => t('Feed - Restricted')
+			],
+
+			t('Special Purpose') => [
+				'soapbox' => t('Special - Celebrity/Soapbox'), 
+				'repository' => t('Special - Group Repository')
+			],
+
+			t('Other') => [
+				'custom' => t('Custom/Expert Mode')
+			]
+    
+		];
+
+    	return $roles;
+	}
+
+
 
 }

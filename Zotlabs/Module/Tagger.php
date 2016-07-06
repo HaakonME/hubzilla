@@ -129,9 +129,14 @@ class Tagger extends \Zotlabs\Web\Controller {
 		
 		store_item_tag($item['uid'],$item['id'],TERM_OBJ_POST,TERM_COMMUNITYTAG,$term,$tagid);
 		$ret = post_activity_item($arr);
-	
-		if($ret['success'])
-			\Zotlabs\Daemon\Master::Summon(array('Notifier','tag',$ret['activity']['id']));
+
+		if($ret['success']) {
+			build_sync_packet(local_channel(),
+				[ 
+					'item' => [ encode_item($ret['activity'],true) ]
+				]
+			);
+		}
 	
 		killme();
 	

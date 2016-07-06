@@ -190,6 +190,7 @@
   
   $(document).ready(function () {
     wiki_refresh_page_list();
+    $("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
     // Show Edit tab first. Otherwise the Ace editor does not load.
     $("#wiki-nav-tabs li:eq(1) a").tab('show');
   });
@@ -203,6 +204,7 @@
     $.post("wiki/{{$channel}}/preview", {content: editor.getValue(), resource_id: window.wiki_resource_id}, function (data) {
       if (data.success) {
         $('#wiki-preview').html(data.html);
+        $("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
       } else {
         window.console.log('Error previewing page.');
       }

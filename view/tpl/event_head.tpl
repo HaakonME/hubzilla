@@ -30,18 +30,18 @@
 	function changeView(action, viewName) {
 		$('#events-calendar').fullCalendar(action, viewName);
 		var view = $('#events-calendar').fullCalendar('getView');
-		if(view.type === 'agendaDay' || view.type === 'agendaWeek') {
+
+		if(view.type !== 'month' && !$('main').hasClass('fullscreen')) {
 			$('#events-calendar').fullCalendar('option', 'height', 'auto');
 		}
 		else {
-			if($('main').hasClass('fullscreen')) {
-				$('#calendar').fullCalendar('option', 'height', $(window).height() - $('.section-title-wrapper').outerHeight(true) - 2); // -2 is for border width (.generic-content-wrapper top and bottom) of .generic-content-wrapper
-
-			}
-			else {
-				$('#calendar').fullCalendar('option', 'height', '');
-			}
+			$('#events-calendar').fullCalendar('option', 'height', '');
 		}
+
+		if($('main').hasClass('fullscreen')) {
+			$('#events-calendar').fullCalendar('option', 'height', $(window).height() - $('.section-title-wrapper').outerHeight(true) - 2); // -2 is for border width (.generic-content-wrapper top and bottom) of .generic-content-wrapper
+		}
+
 		$('#title').text(view.title);
 	}
 

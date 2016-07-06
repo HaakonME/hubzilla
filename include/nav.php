@@ -255,6 +255,19 @@ $powered_by = '';
 		'$pleasewait' => t('Please wait...')
 	));
 
+
+	if(x($_SESSION, 'reload_avatar') && $observer) {
+		// The avatar has been changed on the server but the browser doesn't know that, 
+		// force the browser to reload the image from the server instead of its cache.
+		$tpl = get_markup_template('force_image_reload.tpl');
+
+		App::$page['nav'] .= replace_macros($tpl, array(
+			'$imgUrl' => $observer['xchan_photo_m']
+		));
+		unset($_SESSION['reload_avatar']);
+	}
+
+
 	call_hooks('page_header', App::$page['nav']);
 }
 

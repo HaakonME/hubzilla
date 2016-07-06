@@ -248,7 +248,7 @@ class ThreadItem {
 		$has_bookmarks = false;
 		if(is_array($item['term'])) {
 			foreach($item['term'] as $t) {
-				if(!UNO && $t['type'] == TERM_BOOKMARK)
+				if(!UNO && $t['ttype'] == TERM_BOOKMARK)
 					$has_bookmarks = true;
 			}
 		}

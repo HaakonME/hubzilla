@@ -44,8 +44,6 @@ class Dav extends \Zotlabs\Web\Controller {
 			}
 		}
 
-		require_once('include/reddav.php');
-	
 		if (! is_dir('store'))
 			os_mkdir('store', STORAGE_DEFAULT_PERMISSIONS, false);
 	

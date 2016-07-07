@@ -78,17 +78,6 @@ class Cloud extends \Zotlabs\Web\Controller {
 	
 		$is_readable = false;
 	
-		if($_SERVER['REQUEST_METHOD'] === 'GET') {
-			try { 
-				$x = $rootDirectory->CollectionData('/' . \App::$cmd, $auth);
-			}
-			catch(\Exception $e) {
-				if($e instanceof Sabre\DAV\Exception\Forbidden) {
-					http_status_exit(401, 'Permission denied.');
-				}
-			}
-		}
-	
 		// provide a directory view for the cloud in Hubzilla
 		$browser = new \Zotlabs\Storage\Browser($auth);
 		$auth->setBrowserPlugin($browser);

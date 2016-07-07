@@ -2366,36 +2366,6 @@ function update_r1179() {
 
 	require_once('install/perm_upgrade.php');
 
-	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
-		$r1 = q("create table perm_limits (
-			id serial NOT NULL,
-			perm varchar(64) not null default '',
-			channel_id int(10) unsigned not null default 0,
-			perm_limit int(10) unsigned not null default 0 
-			primary_key id )");
- 		$r2 = q("create index \"idx_perm\" on perm_limits (\"perm\") ");
- 		$r3 = q("create index \"idx_channel_id\" on perm_limits (\"channel_id\") ");
- 		$r4 = q("create index \"idx_perm_limit\" on perm_limits (\"perm_limit\") ");
-
-
-		$r = $r1 && $r2 && $r3 && $r4;
-	}
-
-	else {
-		$r1 = q("create table if not exists perm_limits {
-			id int(10) not null AUTO_INCREMENT,
-			perm varchar(64) not null default '',
-			channel_id int(10) unsigned not null default 0,
-			perm_limit int(10) unsigned not null default 0,
-			PRIMARY KEY (`id`),
-  			KEY `perm` (`perm`),
-  			KEY `channel_id` (`channel_id`),
-			KEY `perm_limit` (`perm_limit`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ");
-
-		$r = $r1;
-	}
-
 	$r1 = q("select * from channel where true");
 	if($r1) {
 		foreach($r1 as $rr) {
@@ -2410,7 +2380,7 @@ function update_r1179() {
 		}
 	}
 	
-	$r = $r && $r1 && $r2;
+	$r = $r1 && $r2;
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

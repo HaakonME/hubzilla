@@ -2,6 +2,8 @@
 
 namespace Zotlabs\Access;
 
+use \Zotlabs\Lib as ZLib;
+
 class PermissionLimits {
 
 	static public function Std_Limits() {
@@ -17,43 +19,18 @@ class PermissionLimits {
 	}
 
 	static public function Set($channel_id,$perm,$perm_limit) {
-		$r = q("select * from perm_limits where channel_id = %d and perm = '%s' limit 1",
-			intval($channel_id),
-			dbesc($perm)
-		);
-		if($r) {
-			if($r[0]['perm_limit'] != $perm_limit) {
-				$x = q("update perm_limits set perm_limit = %d where id = %d",
-					dbesc($perm_limit),
-					intval($r[0]['id'])
-				);
-			}
-		}
-		else {
-			$r = q("insert into perm_limits ( perm, channel_id, perm_limit ) 
-				values ( '%s', %d, %d ) ",
-				dbesc($perm),
-				intval($channel_id),
-				intval($perm_limit)
-			);
-		}
+		ZLib\PConfig::Set($channel_id,'perm_limits',$perm,$perm_limit);
 	}
 
 	static public function Get($channel_id,$perm = '') {
 		if($perm) {
-			$r = q("select * from perm_limits where channel_id = %d and perm = '%s' limit 1",
-				intval($channel_id),
-				dbesc($perm)
-			);
-			if($r)
-				return $r[0];
-			return false;
+			return Zlib\PConfig::Get($channel_id,'perm_limits',$perm);
 		}
 		else {
-			return q("select * from perm_limits where channel_id = %d",
-				intval($channel_id)
-			);
+			Zlib\PConfig::Load($channel_id);
+			if(array_key_exists($channel_id,\App::$config) && array_key_exists('perm_limits',\App::$config[$channel_id]))
+				return \App::$config[$channel_id]['perm_limits'];
+			return false;
 		}
 	}	
-
 }

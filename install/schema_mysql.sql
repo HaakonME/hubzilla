@@ -904,18 +904,6 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
-create table if not exists perm_limits {
-	id int(10) not null AUTO_INCREMENT,
-	perm varchar(64) not null default '',
-	channel_id int(10) unsigned not null default 0,
-	perm_limit int(10) unsigned not null default 0,
-	PRIMARY KEY (`id`),
-  	KEY `perm` (`perm`),
-  	KEY `channel_id` (`channel_id`),
-	KEY `perm_limit` (`perm_limit`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',

@@ -1,22 +1,22 @@
 <?php
 
 function perm_limits_upgrade($channel) {
-	perm_limits_upgrade_create($channel['channel_id'],'view_stream',$channel['channel_r_stream']);
-	perm_limits_upgrade_create($channel['channel_id'],'view_profile',$channel['channel_r_profile']);
-	perm_limits_upgrade_create($channel['channel_id'],'view_contacts',$channel['channel_r_abook']);
-	perm_limits_upgrade_create($channel['channel_id'],'view_storage',$channel['channel_r_storage']);
-	perm_limits_upgrade_create($channel['channel_id'],'view_pages',$channel['channel_r_pages']);
-	perm_limits_upgrade_create($channel['channel_id'],'send_stream',$channel['channel_w_stream']);
-	perm_limits_upgrade_create($channel['channel_id'],'post_wall',$channel['channel_w_wall']);
-	perm_limits_upgrade_create($channel['channel_id'],'post_comments',$channel['channel_w_comment']);
-	perm_limits_upgrade_create($channel['channel_id'],'post_mail',$channel['channel_w_mail']);
-	perm_limits_upgrade_create($channel['channel_id'],'post_like',$channel['channel_w_like']);
-	perm_limits_upgrade_create($channel['channel_id'],'tag_deliver',$channel['channel_w_tagwall']);
-	perm_limits_upgrade_create($channel['channel_id'],'chat',$channel['channel_w_chat']);
-	perm_limits_upgrade_create($channel['channel_id'],'write_storage',$channel['channel_w_storage']);
-	perm_limits_upgrade_create($channel['channel_id'],'write_pages',$channel['channel_w_pages']);
-	perm_limits_upgrade_create($channel['channel_id'],'republish',$channel['channel_a_republish']);
-	perm_limits_upgrade_create($channel['channel_id'],'delegate',$channel['channel_a_delegate']);
+	set_pconfig($channel['channel_id'],'perm_limits','view_stream',$channel['channel_r_stream']);
+	set_pconfig($channel['channel_id'],'perm_limits','view_profile',$channel['channel_r_profile']);
+	set_pconfig($channel['channel_id'],'perm_limits','view_contacts',$channel['channel_r_abook']);
+	set_pconfig($channel['channel_id'],'perm_limits','view_storage',$channel['channel_r_storage']);
+	set_pconfig($channel['channel_id'],'perm_limits','view_pages',$channel['channel_r_pages']);
+	set_pconfig($channel['channel_id'],'perm_limits','send_stream',$channel['channel_w_stream']);
+	set_pconfig($channel['channel_id'],'perm_limits','post_wall',$channel['channel_w_wall']);
+	set_pconfig($channel['channel_id'],'perm_limits','post_comments',$channel['channel_w_comment']);
+	set_pconfig($channel['channel_id'],'perm_limits','post_mail',$channel['channel_w_mail']);
+	set_pconfig($channel['channel_id'],'perm_limits','post_like',$channel['channel_w_like']);
+	set_pconfig($channel['channel_id'],'perm_limits','tag_deliver',$channel['channel_w_tagwall']);
+	set_pconfig($channel['channel_id'],'perm_limits','chat',$channel['channel_w_chat']);
+	set_pconfig($channel['channel_id'],'perm_limits','write_storage',$channel['channel_w_storage']);
+	set_pconfig($channel['channel_id'],'perm_limits','write_pages',$channel['channel_w_pages']);
+	set_pconfig($channel['channel_id'],'perm_limits','republish',$channel['channel_a_republish']);
+	set_pconfig($channel['channel_id'],'perm_limits','delegate',$channel['channel_a_delegate']);
 }
 
 

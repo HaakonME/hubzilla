@@ -888,16 +888,6 @@ CREATE TABLE "pconfig" (
   PRIMARY KEY ("id"),
   UNIQUE ("uid","cat","k")
 );
-create table perm_limits (
-  id serial NOT NULL,
-  perm varchar(64) not null default '',
-  channel_id int(10) unsigned not null default 0,
-  perm_limit int(10) unsigned not null default 0,
-  primary key id 
-);
-create index "idx_perm" on perm_limits ("perm");
-create index "idx_channel_id" on perm_limits ("channel_id");
-create index "idx_perm_limit" on perm_limits ("perm_limit");
 
 CREATE TABLE "photo" (
   "id" serial  NOT NULL,

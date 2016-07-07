@@ -3282,7 +3282,7 @@ function item_expire($uid,$days) {
 
 	$expire_limit = get_config('system','expire_limit');
 	if(! intval($expire_limit))
-		$expire_limit = 5000;
+		$expire_limit = 2500;
 
 	$item_normal = item_normal();
 

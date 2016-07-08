@@ -3286,15 +3286,17 @@ function item_expire($uid,$days) {
 
 	$item_normal = item_normal();
 
-	$r = q("SELECT * FROM `item`
-		WHERE `uid` = %d
-		AND `created` < %s - INTERVAL %s
-		AND `id` = `parent`
-		$sql_extra
+	$r = q("SELECT id FROM item
+		WHERE uid = %d
+		AND created < %s - INTERVAL %s
 		AND item_retained = 0
-		$item_normal LIMIT $expire_limit ",
+		AND item_thread_top = 1
+		AND resource_type = ''
+		AND item_starred = 0
+		$sql_extra $item_normal LIMIT $expire_limit ",
 		intval($uid),
-		db_utcnow(), db_quoteinterval(intval($days).' DAY')
+		db_utcnow(), 
+		db_quoteinterval(intval($days).' DAY')
 	);
 
 	if(! $r)
@@ -3308,17 +3310,6 @@ function item_expire($uid,$days) {
 
 		$terms = get_terms_oftype($item['term'],TERM_FILE);
 		if($terms) {
-			retain_item($item['id']);
-			continue;
-		}
-
-		// Only expire posts, not photos and photo comments
-
-		if($item['resource_type'] === 'photo') {
-			retain_item($item['id']);
-			continue;
-		}
-		if(intval($item['item_starred'])) {
 			retain_item($item['id']);
 			continue;
 		}

@@ -842,7 +842,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			$z = q("select created from item where uid = %d and created > %s - INTERVAL %s and body = '%s' limit 1",
 				intval($profile_uid),
-				dbutcnow(),
+				db_utcnow(),
 				db_quoteinterval('2 MINUTE'),
 				dbesc($body)
 			);

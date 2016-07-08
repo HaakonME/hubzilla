@@ -206,6 +206,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
+		require_once('include/attach.php');
+
 		$mimetype = z_mime_content_type($name);
 
 		$c = q("SELECT * FROM channel WHERE channel_id = %d AND channel_removed = 0 LIMIT 1",

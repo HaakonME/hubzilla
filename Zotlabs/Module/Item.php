@@ -844,7 +844,7 @@ class Item extends \Zotlabs\Web\Controller {
 				intval($profile_uid),
 				dbutcnow(),
 				db_quoteinterval('2 MINUTE'),
-				dbesc($body),
+				dbesc($body)
 			);
 	
 			if($z) {

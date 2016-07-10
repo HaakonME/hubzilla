@@ -2246,6 +2246,30 @@ function design_tools() {
 	));
 }
 
+/**
+ * @brief Creates website import tools menu
+ *
+ * @return string
+ */
+function website_import_tools() {
+
+	$channel  = App::get_channel();
+	$sys = false;
+
+	if(App::$is_sys && is_site_admin()) {
+		require_once('include/channel.php');
+		$channel = get_sys_channel();
+		$sys = true;
+	}
+
+	$who = $channel['channel_address'];
+
+	return replace_macros(get_markup_template('design_tools.tpl'), array(
+		'$title' => t('Import'),
+		'$who' => $who,
+	));
+}
+
 /* case insensitive in_array() */
 
 function in_arrayi($needle, $haystack) {

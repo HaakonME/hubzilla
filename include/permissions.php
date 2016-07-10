@@ -81,6 +81,8 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 	$ret = array();
 
+	$abperms = (($uid && $observer_xchan) ? load_abconfig($uid,$observer_xchan) : false);
+
 	foreach($global_perms as $perm_name => $permission) {
 
 		// First find out what the channel owner declared permissions to be.
@@ -122,7 +124,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 						dbesc($observer_xchan)
 					);
 				}
-				$abperms = load_abconfig($uid,$observer_xchan);
+
 				$abook_checked = true;
 			}
 

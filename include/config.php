@@ -99,7 +99,7 @@ function del_aconfig($account_id, $family, $key) {
 
 
 function load_abconfig($chan,$xhash) {
-	Zlib\AbConfig::Load($chan,$xhash);
+	return Zlib\AbConfig::Load($chan,$xhash);
 }
 
 function get_abconfig($chan,$xhash,$family,$key) {

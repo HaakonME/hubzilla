@@ -896,17 +896,18 @@ class Settings extends \Zotlabs\Web\Controller {
 				array( t('Anybody on the internet'), PERMS_PUBLIC)
 			);
 	
+			$limits = \Zotlabs\Access\PermissionLimits::Get(local_channel());
 	
 			foreach($global_perms as $k => $perm) {
 				$options = array();
 				foreach($perm_opts as $opt) {
 					$options[$opt[1]] = $opt[0];
 				}
-				$permiss[] = array($k,$perm,$channel[$perm[0]],$perm[4],$options);			
+				$permiss[] = array($k,$perm,$limits[$k],'',$options);			
 			}
 	
 	
-			//		logger('permiss: ' . print_r($permiss,true));
+			//logger('permiss: ' . print_r($permiss,true));
 	
 	
 	

@@ -676,6 +676,18 @@ class Connedit extends \Zotlabs\Web\Controller {
 			if($slide && $multiprofs)
 				$affinity = t('Set Affinity & Profile');
 	
+			$theirs = q("select * from abconfig where chan = %d and xchan = '%s' and cat = 'their_perms'",
+					intval(local_channel()),
+					dbesc($contact['abook_xchan'])
+			);
+			$their_perms = array();
+			if($theirs) {
+				foreach($theirs as $t) {
+					$their_perms[$t['k']] = $t['v'];
+				}
+			}
+logger('theris: ' . print_r($their_perms,true));
+
 			foreach($global_perms as $k => $v) {
 				$thisperm = get_abconfig(local_channel(),$contact['abook_xchan'],'my_perms',$k);
 //fixme
@@ -686,8 +698,11 @@ class Connedit extends \Zotlabs\Web\Controller {
 				// permissions because they are enabled for the channel owner
 				if((! $self) && ($existing[$k]))
 					$thisperm = "1";
+
+				
+
 	
-				$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4], $checkinherited);
+				$perms[] = array('perms_' . $k, $v, ((array_key_exists($k,$their_perms)) ? intval($their_perms[$k]) : ''),$thisperm, 1, (($checkinherited & PERMS_SPECIFIC) ? '' : '1'), '', $checkinherited);
 			}
 	
 			$locstr = '';

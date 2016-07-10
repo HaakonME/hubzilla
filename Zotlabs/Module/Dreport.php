@@ -146,6 +146,7 @@ class Dreport extends \Zotlabs\Web\Controller {
 			'$title' => sprintf( t('Delivery report for %1$s'),substr($mid,0,32)) . '...',
 			'$table' => $table,
 			'$mid' => urlencode($mid),
+			'$options' => t('Options'),
 			'$push' => t('Redeliver'),
 			'$entries' => $entries
 		));

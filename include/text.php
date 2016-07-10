@@ -2264,9 +2264,13 @@ function website_import_tools() {
 
 	$who = $channel['channel_address'];
 
-	return replace_macros(get_markup_template('design_tools.tpl'), array(
+	return replace_macros(get_markup_template('website_import_tools.tpl'), array(
 		'$title' => t('Import'),
-		'$who' => $who,
+		//'$who' => $who,
+		'$import_label' => t('Import website...'),
+		'$import_placeholder' => t('Select folder to import'),
+		'$file_upload_text' => t('Import from a zipped folder:'),
+		'$file_import_text' => t('Import from cloud files:')
 	));
 }
 

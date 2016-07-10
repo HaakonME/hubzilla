@@ -81,7 +81,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 	$ret = array();
 
-	$abperms = (($uid && $observer_xchan) ? load_abconfig($uid,$observer_xchan) : false);
+	$abperms = (($uid && $observer_xchan) ? load_abconfig($uid,$observer_xchan) : array());
 
 	foreach($global_perms as $perm_name => $permission) {
 

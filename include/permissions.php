@@ -291,13 +291,16 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 
 	// First find out what the channel owner declared permissions to be.
 
-	$channel_perm = \Zotlabs\Access\PermissionLimits($uid,$permission);
+	$channel_perm = \Zotlabs\Access\PermissionLimits::Get($uid,$permission);
 
 	$r = q("select channel_pageflags, channel_moved, channel_hash from channel where channel_id = %d limit 1",
 		intval($uid)
 	);
 	if(! $r)
 		return false;
+
+
+	$blocked_anon_perms = \Zotlabs\Access\Permissions::BlockedAnonPerms();
 
 	if($observer_xchan) {
 		if($channel_perm & PERMS_AUTHED)
@@ -314,7 +317,7 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 		if(($x) && intval($x[0]['abook_blocked']))
 			return false;
 
-		if(($x) && (! $global_perms[$permission][2]) && intval($x[0]['abook_ignored']))
+		if(($x) && in_array($permission,$blocked_anon_perms) && intval($x[0]['abook_ignored']))
 			return false;
 
 		if(! $x) {
@@ -326,7 +329,6 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 		$abperms = load_abconfig($uid,$observer_xchan);
 	}
 	
-	$blocked_anon_perms = \Zotlabs\Access\Permissions::BlockedAnonPerms();
 
 	// system is blocked to anybody who is not authenticated
 

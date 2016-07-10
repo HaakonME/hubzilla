@@ -410,10 +410,10 @@ function zot_refresh($them, $channel = null, $force = false) {
 			if($permissions && is_array($permissions)) {
 				foreach($permissions as $k => $v) {
 					// The connected permission means you are in their address book
-					if($k === 'connected') {
-						$connected_set = intval($v);
-						continue;
-					}
+					//if($k === 'connected') {
+					//	$connected_set = intval($v);
+					//	continue;
+					//}
 					if(($v) && (array_key_exists($k,$global_perms))) {
 						$their_perms = $their_perms | intval($global_perms[$k][1]);
 					}

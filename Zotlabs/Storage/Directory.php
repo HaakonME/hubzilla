@@ -91,7 +91,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		$contents = RedCollectionData($this->red_path, $this->auth);
+		$contents = $this->CollectionData($this->red_path, $this->auth);
 		return $contents;
 	}
 
@@ -119,7 +119,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			return new Directory('/' . $modulename, $this->auth);
 		}
 
-		$x = RedFileData($this->ext_path . '/' . $name, $this->auth);
+		$x = $this->FileData($this->ext_path . '/' . $name, $this->auth);
 		if ($x) {
 			return $x;
 		}
@@ -205,6 +205,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			logger('permission denied ' . $name);
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
+
+		require_once('include/attach.php');
 
 		$mimetype = z_mime_content_type($name);
 
@@ -431,8 +433,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			return true;
 		}
 
-		$x = RedFileData($this->ext_path . '/' . $name, $this->auth, true);
-		//logger('RedFileData returns: ' . print_r($x, true), LOGGER_DATA);
+		$x = $this->FileData($this->ext_path . '/' . $name, $this->auth, true);
+		//logger('FileData returns: ' . print_r($x, true), LOGGER_DATA);
 		if ($x)
 			return true;
 
@@ -565,4 +567,280 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			$free
 		);
 	}
+
+
+	/**
+	 * @brief Array with all Directory and File DAV\Node items for the given path.
+ 	 *
+	 *
+	 * @param string $file path to a directory
+	 * @param \Zotlabs\Storage\BasicAuth &$auth
+	 * @returns null|array \Sabre\DAV\INode[]
+	 * @throw \Sabre\DAV\Exception\Forbidden
+	 * @throw \Sabre\DAV\Exception\NotFound
+	 */
+
+	function CollectionData($file, &$auth) {
+		$ret = array();
+
+		$x = strpos($file, '/cloud');
+		if ($x === 0) {
+			$file = substr($file, 6);
+		}
+
+		// return a list of channel if we are not inside a channel
+		if ((! $file) || ($file === '/')) {
+			return $this->ChannelList($auth);
+		}
+
+		$file = trim($file, '/');
+		$path_arr = explode('/', $file);
+
+		if (! $path_arr)
+			return null;
+
+		$channel_name = $path_arr[0];
+
+		$r = q("SELECT channel_id FROM channel WHERE channel_address = '%s' LIMIT 1",
+			dbesc($channel_name)
+		);
+
+		if (! $r)
+			return null;
+
+		$channel_id = $r[0]['channel_id'];
+		$perms = permissions_sql($channel_id);
+
+		$auth->owner_id = $channel_id;
+
+		$path = '/' . $channel_name;
+
+		$folder = '';
+		$errors = false;
+		$permission_error = false;
+
+		for ($x = 1; $x < count($path_arr); $x++) {
+			$r = q("SELECT id, hash, filename, flags, is_dir FROM attach WHERE folder = '%s' AND filename = '%s' AND uid = %d AND is_dir != 0 $perms LIMIT 1",
+				dbesc($folder),
+				dbesc($path_arr[$x]),
+				intval($channel_id)
+			);
+			if (! $r) {
+				// path wasn't found. Try without permissions to see if it was the result of permissions.
+				$errors = true;
+				$r = q("select id, hash, filename, flags, is_dir from attach where folder = '%s' and filename = '%s' and uid = %d and is_dir != 0 limit 1",
+					dbesc($folder),
+					basename($path_arr[$x]),
+					intval($channel_id)
+				);
+				if ($r) {
+					$permission_error = true;
+				}
+				break;
+			}
+
+			if ($r && intval($r[0]['is_dir'])) {
+				$folder = $r[0]['hash'];
+				$path = $path . '/' . $r[0]['filename'];
+			}
+		}
+
+		if ($errors) {
+			if ($permission_error) {
+				throw new DAV\Exception\Forbidden('Permission denied.');
+			} 
+			else {
+				throw new DAV\Exception\NotFound('A component of the request file path could not be found.');
+			}
+		}
+
+		// This should no longer be needed since we just returned errors for paths not found
+		if ($path !== '/' . $file) {
+			logger("Path mismatch: $path !== /$file");
+			return NULL;
+		}
+		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+			$prefix = 'DISTINCT ON (filename)';
+			$suffix = 'ORDER BY filename';
+		} 
+		else {
+			$prefix = '';
+			$suffix = 'GROUP BY filename';
+		}
+		$r = q("select $prefix id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, created, edited from attach where folder = '%s' and uid = %d $perms $suffix",
+			dbesc($folder),
+			intval($channel_id)
+		);
+
+		foreach ($r as $rr) {
+			//logger('filename: ' . $rr['filename'], LOGGER_DEBUG);
+			if (intval($rr['is_dir'])) {
+				$ret[] = new Directory($path . '/' . $rr['filename'], $auth);
+			} 
+			else {
+				$ret[] = new File($path . '/' . $rr['filename'], $rr, $auth);
+			}
+		}
+
+		return $ret;
+	}
+
+
+	/**
+	 * @brief Returns an array with viewable channels.
+	 *
+	 * Get a list of Directory objects with all the channels where the visitor
+	 * has <b>view_storage</b> perms.
+	 *
+	 *
+	 * @param BasicAuth &$auth
+	 * @return array Directory[]
+ 	 */
+
+	function ChannelList(&$auth) {
+		$ret = array();
+
+		$r = q("SELECT channel_id, channel_address FROM channel WHERE channel_removed = 0 
+			AND channel_system = 0 AND NOT (channel_pageflags & %d)>0",
+			intval(PAGE_HIDDEN)
+		);
+
+		if ($r) {
+			foreach ($r as $rr) {
+				if (perm_is_allowed($rr['channel_id'], $auth->observer, 'view_storage')) {
+					logger('found channel: /cloud/' . $rr['channel_address'], LOGGER_DATA);
+					// @todo can't we drop '/cloud'? It gets stripped off anyway in RedDirectory
+					$ret[] = new Directory('/cloud/' . $rr['channel_address'], $auth);
+				}
+			}
+		}
+		return $ret;
+	}
+
+
+	/**
+	 * @brief 
+	 *
+	 *
+	 * @param string $file
+	 *  path to file or directory
+	 * @param BasicAuth &$auth
+	 * @param boolean $test (optional) enable test mode
+	 * @return File|Directory|boolean|null
+	 * @throw \Sabre\DAV\Exception\Forbidden
+	 */
+
+	function FileData($file, &$auth, $test = false) {
+		logger($file . (($test) ? ' (test mode) ' : ''), LOGGER_DATA);
+
+		$x = strpos($file, '/cloud');
+		if ($x === 0) {
+			$file = substr($file, 6);
+		}
+		else {
+			$x = strpos($file,'/dav');
+			if($x === 0)
+				$file = substr($file,4);
+		}
+
+
+		if ((! $file) || ($file === '/')) {
+			return new Directory('/', $auth);
+		}
+
+		$file = trim($file, '/');
+
+		$path_arr = explode('/', $file);
+
+		if (! $path_arr)
+			return null;
+
+		$channel_name = $path_arr[0];
+
+		$r = q("select channel_id from channel where channel_address = '%s' limit 1",
+			dbesc($channel_name)
+		);
+
+		if (! $r)
+			return null;
+
+		$channel_id = $r[0]['channel_id'];
+
+		$path = '/' . $channel_name;
+
+		$auth->owner_id = $channel_id;
+
+		$permission_error = false;
+
+		$folder = '';
+
+		require_once('include/security.php');
+		$perms = permissions_sql($channel_id);
+
+		$errors = false;
+
+		for ($x = 1; $x < count($path_arr); $x++) {		
+			$r = q("select id, hash, filename, flags, is_dir from attach where folder = '%s' and filename = '%s' and uid = %d and is_dir != 0 $perms",
+				dbesc($folder),
+				dbesc($path_arr[$x]),
+				intval($channel_id)
+			);
+
+			if ($r && intval($r[0]['is_dir'])) {
+				$folder = $r[0]['hash'];
+				$path = $path . '/' . $r[0]['filename'];
+			}
+			if (! $r) {
+				$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
+					where folder = '%s' and filename = '%s' and uid = %d $perms order by filename limit 1",
+					dbesc($folder),
+					dbesc(basename($file)),
+					intval($channel_id)
+				);
+			}
+			if (! $r) {
+				$errors = true;
+				$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
+					where folder = '%s' and filename = '%s' and uid = %d order by filename limit 1",
+					dbesc($folder),
+					dbesc(basename($file)),
+					intval($channel_id)
+				);
+				if ($r)
+					$permission_error = true;
+			}
+		}
+
+		if ($path === '/' . $file) {
+			if ($test)
+				return true;
+			// final component was a directory.
+			return new Directory($file, $auth);
+		}
+
+		if ($errors) {
+			logger('not found ' . $file);
+			if ($test)
+				return false;
+			if ($permission_error) {
+				logger('permission error ' . $file);
+				throw new DAV\Exception\Forbidden('Permission denied.');
+			}
+			return;
+		}
+
+		if ($r) {
+			if ($test)
+				return true;
+
+			if (intval($r[0]['is_dir'])) {
+				return new Directory($path . '/' . $r[0]['filename'], $auth);
+			}
+			else {
+				return new File($path . '/' . $r[0]['filename'], $r[0], $auth);
+			}
+		}
+		return false;
+	}
+
 }

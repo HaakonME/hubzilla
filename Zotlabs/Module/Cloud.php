@@ -23,7 +23,6 @@ require_once('vendor/autoload.php');
 class Cloud extends \Zotlabs\Web\Controller {
 
 	function init() {
-		require_once('include/reddav.php');
 	
 		if (! is_dir('store'))
 			os_mkdir('store', STORAGE_DEFAULT_PERMISSIONS, false);
@@ -78,17 +77,6 @@ class Cloud extends \Zotlabs\Web\Controller {
 		$server->addPlugin($lockPlugin);
 	
 		$is_readable = false;
-	
-		if($_SERVER['REQUEST_METHOD'] === 'GET') {
-			try { 
-				$x = RedFileData('/' . \App::$cmd, $auth);
-			}
-			catch(\Exception $e) {
-				if($e instanceof Sabre\DAV\Exception\Forbidden) {
-					http_status_exit(401, 'Permission denied.');
-				}
-			}
-		}
 	
 		// provide a directory view for the cloud in Hubzilla
 		$browser = new \Zotlabs\Storage\Browser($auth);

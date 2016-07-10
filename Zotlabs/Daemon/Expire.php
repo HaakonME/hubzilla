@@ -38,7 +38,7 @@ class Expire {
 
 		logger('site_expire: ' . $site_expire);
 
-		$r = q("SELECT channel_id, channel_address, channel_pageflags, channel_expire_days from channel where true");
+		$r = q("SELECT channel_id, channel_system, channel_address, channel_expire_days from channel where true");
 
 		if ($r) {
 			foreach ($r as $rr) {

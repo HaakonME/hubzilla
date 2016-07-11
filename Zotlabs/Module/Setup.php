@@ -493,7 +493,6 @@ class Setup extends \Zotlabs\Web\Controller {
 		$this->check_add($ck_funcs, t('OpenSSL PHP module'), true, true);
 		$this->check_add($ck_funcs, t('mysqli or postgres PHP module'), true, true);
 		$this->check_add($ck_funcs, t('mb_string PHP module'), true, true);
-		$this->check_add($ck_funcs, t('mcrypt PHP module'), true, true);
 		$this->check_add($ck_funcs, t('xml PHP module'), true, true);
 	
 		if(function_exists('apache_get_modules')){
@@ -529,10 +528,6 @@ class Setup extends \Zotlabs\Web\Controller {
 		if(! function_exists('mb_strlen')) {
 			$ck_funcs[4]['status'] = false;
 			$ck_funcs[4]['help'] = t('Error: mb_string PHP module required but not installed.');
-		}
-		if(! function_exists('mcrypt_encrypt')) {
-			$ck_funcs[5]['status'] = false;
-			$ck_funcs[5]['help'] = t('Error: mcrypt PHP module required but not installed.');
 		}
 		if(! extension_loaded('xml')) {
 			$ck_funcs[6]['status'] = false;

@@ -1052,7 +1052,7 @@ create index "reg_uid" on register ("uid");
 CREATE TABLE "session" (
   "id" serial,
   "sid" text NOT NULL,
-  "sess_data" text NOT NULL,
+  "sess_data" text NOT NULL DEFAULT '',
   "expire" numeric(20)  NOT NULL,
   PRIMARY KEY ("id")
 );

@@ -388,10 +388,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 		if(! $x['success'])
 			return false;
 
-		$their_perms = 0;
-
 		if($channel) {
-			$global_perms = get_perms();
 			if($j['permissions']['data']) {
 				$permissions = crypto_unencapsulate(array(
 					'data' => $j['permissions']['data'],
@@ -408,15 +405,10 @@ function zot_refresh($them, $channel = null, $force = false) {
 			$connected_set = false;
 
 			if($permissions && is_array($permissions)) {
+				$old_read_stream_perm = get_abconfig($channel['channel_id'],$x['hash'],'their_perms','view_stream');
+
 				foreach($permissions as $k => $v) {
-					// The connected permission means you are in their address book
-					//if($k === 'connected') {
-					//	$connected_set = intval($v);
-					//	continue;
-					//}
-					if(($v) && (array_key_exists($k,$global_perms))) {
-						$their_perms = $their_perms | intval($global_perms[$k][1]);
-					}
+					set_abconfig($channel['channel_id'],$x['hash'],'their_perms',$k,$v);
 				}
 			}
 
@@ -443,36 +435,19 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if(substr($r[0]['abook_dob'],5) == substr($next_birthday,5))
 					$next_birthday = $r[0]['abook_dob'];
 
-				$current_abook_connected = (intval($r[0]['abook_unconnected']) ? 0 : 1);
-
-				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
+				$y = q("update abook set abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d
 					and abook_self = 0 ",
-					intval($their_perms),
 					dbescdate($next_birthday),
 					dbesc($x['hash']),
 					intval($channel['channel_id'])
 				);
 
-//				if(($connected_set === 0 || $connected_set === 1) && ($connected_set !== $current_abook_unconnected)) {
-
-					// if they are in your address book but you aren't in theirs, and/or this does not
-					// match your current connected state setting, toggle it.
-					/** @FIXME uncoverted to postgres */
-					/** @FIXME when this was enabled, all contacts became unconnected. Currently disabled intentionally */
-//					$y1 = q("update abook set abook_unconnected = 1
-//						where abook_xchan = '%s' and abook_channel = %d
-//						and abook_self = 0 limit 1",
-//						dbesc($x['hash']),
-//						intval($channel['channel_id'])
-//					);
-//				}
-
 				if(! $y)
 					logger('abook update failed');
 				else {
 					// if we were just granted read stream permission and didn't have it before, try to pull in some posts
-					if((! ($r[0]['abook_their_perms'] & PERMS_R_STREAM)) && ($their_perms & PERMS_R_STREAM))
+					if((! $old_read_stream_perm) && (intval($permissions['view_stream'])))
 						Zotlabs\Daemon\Master::Summon(array('Onepoll',$r[0]['abook_id']));
 				}
 			}
@@ -484,10 +459,10 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if($role) {
 					$xx = get_role_perms($role);
 					if($xx['perms_auto'])
-						$default_perms = $xx['perms_accept'];
+						$default_perms = $xx['perms_connect'];
 				}
 				if(! $default_perms)
-					$default_perms = intval(get_pconfig($channel['channel_id'],'system','autoperms'));
+					$default_perms = get_pconfig($channel['channel_id'],'system','autoperms'));
 
 
 				// Keep original perms to check if we need to notify them
@@ -498,13 +473,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if($closeness === false)
 					$closeness = 80;
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_pending ) values ( %d, %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
+				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_created, abook_updated, abook_dob, abook_pending ) values ( %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					intval($closeness),
 					dbesc($x['hash']),
-					intval($their_perms),
-					intval($default_perms),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($next_birthday),
@@ -532,8 +505,8 @@ function zot_refresh($them, $channel = null, $force = false) {
 							'link'       => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
 						));
 					
-						if($their_perms & PERMS_R_STREAM) {
-							if(($channel['channel_w_stream'] & PERMS_PENDING)
+						if(intval($permissions['view_stream']))) {
+							if(intval(get_pconfig($channel['channel_id'],'perms_limit','send_stream')) & PERMS_PENDING)
 								|| (! intval($new_connection[0]['abook_pending'])) )
 								Zotlabs\Daemon\Master::Summon(array('Onepoll',$new_connection[0]['abook_id']));
 						}
@@ -1371,6 +1344,7 @@ function public_recips($msg) {
 	if($msg['message']['type'] === 'activity') {
 		if(! get_config('system','disable_discover_tab'))
 			$include_sys = true;
+		$perm = 'send_stream';
 		$col = 'channel_w_stream';
 		$field = PERMS_W_STREAM;
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
@@ -1404,12 +1378,14 @@ function public_recips($msg) {
 			// contains the tag. we'll solve that further below.
 
 			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
+				$perm = 'post_comment';
 				$col = 'channel_w_comment';
 				$field = PERMS_W_COMMENT;
 			}
 		}
 	}
 	elseif($msg['message']['type'] === 'mail') {
+		$perm = 'post_mail';
 		$col = 'channel_w_mail';
 		$field = PERMS_W_MAIL;
 	}

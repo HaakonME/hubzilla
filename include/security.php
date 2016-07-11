@@ -132,6 +132,10 @@ function change_channel($change_channel) {
 		}
 		if(! is_dir('store/' . $r[0]['channel_address']))
 			@os_mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
+
+		$arr = [ 'channel_id' => $change_channel, 'chanx' => $ret ];
+		call_hooks('change_channel', $arr);
+
 	}
 
 	return $ret;

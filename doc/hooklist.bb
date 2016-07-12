@@ -73,6 +73,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/bb_translate_video]bb_translate_video[/zrl]
 	Called when extracting embedded services from bbcode video elements (rarely used)
 
+[zrl=[baseurl]/help/hook/change_channel]change_channel[/zrl]
+	Called when logging in to a channel (either during login or afterward through the channel manager)
+
 [zrl=[baseurl]/help/hook/channel_remove]channel_remove[/zrl]
 	Called when removing a channel
 

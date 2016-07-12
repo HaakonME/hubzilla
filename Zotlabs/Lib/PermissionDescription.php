@@ -1,6 +1,6 @@
 <?php
 
-if(class_exists('PermissionDescription')) return;
+namespace Zotlabs\Lib;
 
 require_once("include/permissions.php");
 require_once("include/language.php");

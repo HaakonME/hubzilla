@@ -7,8 +7,6 @@
  * @package acl_selectors 
  */
 
-require_once("include/PermissionDescription.php");
-
 function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o = '';
@@ -231,7 +229,7 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	if(! $emptyACL_description) {
 		$showall_caption = t('Visible to your default audience');
 
-	} else if (is_a($emptyACL_description, 'PermissionDescription')) {
+	} else if (is_a($emptyACL_description, '\\Zotlabs\\Lib\\PermissionDescription')) {
 		$showall_caption = $emptyACL_description->get_permission_description();
 		$showall_origin  = (($role === 'custom') ? $emptyACL_description->get_permission_origin_description() : '');
 		$showall_icon    = $emptyACL_description->get_permission_icon();

@@ -462,7 +462,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 						$default_perms = $xx['perms_connect'];
 				}
 				if(! $default_perms)
-					$default_perms = get_pconfig($channel['channel_id'],'system','autoperms'));
+					$default_perms = get_pconfig($channel['channel_id'],'system','autoperms');
 
 
 				// Keep original perms to check if we need to notify them
@@ -505,9 +505,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 							'link'       => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
 						));
 					
-						if(intval($permissions['view_stream']))) {
-							if(intval(get_pconfig($channel['channel_id'],'perms_limit','send_stream')) & PERMS_PENDING)
-								|| (! intval($new_connection[0]['abook_pending'])) )
+						if(intval($permissions['view_stream'])) {
+							if(intval(get_pconfig($channel['channel_id'],'perms_limit','send_stream') & PERMS_PENDING)
+								|| (! intval($new_connection[0]['abook_pending'])))
 								Zotlabs\Daemon\Master::Summon(array('Onepoll',$new_connection[0]['abook_id']));
 						}
 
@@ -1345,8 +1345,7 @@ function public_recips($msg) {
 		if(! get_config('system','disable_discover_tab'))
 			$include_sys = true;
 		$perm = 'send_stream';
-		$col = 'channel_w_stream';
-		$field = PERMS_W_STREAM;
+
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
 			// check mention recipient permissions on top level posts only
 			$check_mentions = true;
@@ -1378,67 +1377,30 @@ function public_recips($msg) {
 			// contains the tag. we'll solve that further below.
 
 			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
-				$perm = 'post_comment';
-				$col = 'channel_w_comment';
-				$field = PERMS_W_COMMENT;
+				$perm = 'post_comments';
 			}
 		}
 	}
-	elseif($msg['message']['type'] === 'mail') {
+	elseif($msg['message']['type'] === 'mail')
 		$perm = 'post_mail';
-		$col = 'channel_w_mail';
-		$field = PERMS_W_MAIL;
+
+	$r = array();
+	
+	$c = q("select channel_id, channel_hash from channel where channel_removed = 0");
+	if($c) {
+		foreach($c as $cc) {
+			if(perm_is_allowed($cc['channel_id'],$msg['notify']['sender']['hash'],$perm)) {
+				$r[] = [ 'hash' => $cc['channel_hash'] ];
+			}
+		}
 	}
-
-	if(! $col)
-		return NULL;
-
-	$col = dbesc($col);
-
-	// First find those channels who are accepting posts from anybody, or at least
-	// something greater than just their connections.
-
-	if($msg['notify']['sender']['url'] === z_root()) {
-		$sql = " where (( " . $col . " & " . intval(PERMS_NETWORK) . " ) > 0
-					or (  " . $col . " & " . intval(PERMS_SITE) . " ) > 0
-					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0
-					or (  " . $col . " & " . intval(PERMS_AUTHED)  . ") > 0 ) ";
-	} else {
-		$sql = " where ( " . $col . " = " . intval(PERMS_NETWORK) . " 
-					or " . $col . " = " . intval(PERMS_PUBLIC) . "
-					or " . $col . " = " . intval(PERMS_AUTHED) . " ) ";
-	}
-
-	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s'
-		and channel_removed = 0 ",
-		dbesc($msg['notify']['sender']['hash'])
-	);
-
-	if(! $r)
-		$r = array();
-
-	// Now we have to get a bit dirty. Find every channel that has the sender in their connections (abook)
-	// and is allowing this sender at least at a high level.
-
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id
-		where abook_xchan = '%s' and channel_removed = 0
-		and (( " . $col . " = " . intval(PERMS_SPECIFIC) . " and ( abook_my_perms & " . intval($field) . " ) > 0 )
-		OR   " . $col . " = " . intval(PERMS_PENDING) . " 
-		OR  ( " . $col . " = " . intval(PERMS_CONTACTS) . " and abook_pending = 0 )) ",
-		dbesc($msg['notify']['sender']['hash'])
-	);
-
-	if(! $x)
-		$x = array();
-
-	$r = array_merge($r,$x);
 
 	//logger('message: ' . print_r($msg['message'],true));
 
 	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
 		$sys = get_sys_channel();
 		if($sys)
-			$r[] = array('hash' => $sys['channel_hash']);
+			$r[] = [ 'hash' => $sys['channel_hash'] ];
 	}
 
 	// look for any public mentions on this site

@@ -129,14 +129,21 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		$abook_my_perms = 0;
 	
-		foreach($_POST as $k => $v) {
-			if(strpos($k,'perms_') === 0) {
-				$perm = substr($k,6);
-				set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,(($v) ? 1 : 0));				
-				$abook_my_perms += $v;
+		$all_perms = \Zotlabs\Access\Permissions::Perms();
+
+		if($all_perms) {
+			foreach($all_perms as $perm => $desc) {
+				if(in_array('perms_' . $perm, $_POST)) {
+					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,
+						intval($_POST['perms_' . $perm]));
+					$abook_my_perms ++;
+				}
+				else {
+					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,0);
+				}
 			}
 		}
-	
+				
 		$new_friend = false;
 	
 		if(! $is_self) {
@@ -686,7 +693,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 					$their_perms[$t['k']] = $t['v'];
 				}
 			}
-logger('theris: ' . print_r($their_perms,true));
 
 			foreach($global_perms as $k => $v) {
 				$thisperm = get_abconfig(local_channel(),$contact['abook_xchan'],'my_perms',$k);

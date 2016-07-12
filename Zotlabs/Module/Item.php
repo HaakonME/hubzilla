@@ -93,7 +93,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		$origin = (($api_source && array_key_exists('origin',$_REQUEST)) ? intval($_REQUEST['origin']) : 1);
 	
-		// To represent message-ids on other networks - this will create an item_id record
+		// To represent message-ids on other networks - this will create an iconfig record
 	
 		$namespace = (($api_source && array_key_exists('namespace',$_REQUEST)) ? strip_tags($_REQUEST['namespace']) : '');
 		$remote_id = (($api_source && array_key_exists('remote_id',$_REQUEST)) ? strip_tags($_REQUEST['remote_id']) : '');
@@ -535,7 +535,7 @@ class Item extends \Zotlabs\Web\Controller {
 			}
 	
 			/**
-			 * fix naked links by passing through a callback to see if this is a red site
+			 * fix naked links by passing through a callback to see if this is a hubzilla site
 			 * (already known to us) which will get a zrl, otherwise link with url, add bookmark tag to both.
 			 * First protect any url inside certain bbcode tags so we don't double link it.
 			 */
@@ -834,21 +834,23 @@ class Item extends \Zotlabs\Web\Controller {
 		if($orig_post)
 			$datarray['edit'] = true;
 	
+		// suppress duplicates, *unless* you're editing an existing post. This could get picked up
+		// as a duplicate if you're editing it very soon after posting it initially and you edited
+		// some attribute besides the content, such as title or categories. 
+
 		if(feature_enabled($profile_uid,'suppress_duplicates') && (! $orig_post)) {
 	
-			$z = q("select created from item where uid = %d and body = '%s'",
+			$z = q("select created from item where uid = %d and created > %s - INTERVAL %s and body = '%s' limit 1",
 				intval($profile_uid),
+				db_utcnow(),
+				db_quoteinterval('2 MINUTE'),
 				dbesc($body)
 			);
 	
 			if($z) {
-				foreach($z as $zz) {
-					if($zz['created'] > datetime_convert('UTC','UTC', 'now - 2 minutes')) {
-						$datarray['cancel'] = 1;
-						notice( t('Duplicate post suppressed.') . EOL);
-						logger('Duplicate post. Faking plugin cancel.');
-					}
-				}
+				$datarray['cancel'] = 1;
+				notice( t('Duplicate post suppressed.') . EOL);
+				logger('Duplicate post. Faking plugin cancel.');
 			}
 		}
 	
@@ -903,7 +905,7 @@ class Item extends \Zotlabs\Web\Controller {
 				if($r) {
 					xchan_query($r);
 					$sync_item = fetch_post_tags($r);
-					build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true))));
+					build_sync_packet($profile_uid,array('item' => array(encode_item($sync_item[0],true))));
 				}
 			}
 			if(! $nopush)
@@ -998,7 +1000,7 @@ class Item extends \Zotlabs\Web\Controller {
 			if($r) {
 				xchan_query($r);
 				$sync_item = fetch_post_tags($r);
-				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true))));
+				build_sync_packet($profile_uid,array('item' => array(encode_item($sync_item[0],true))));
 			}
 		}
 	
@@ -1011,11 +1013,6 @@ class Item extends \Zotlabs\Web\Controller {
 			\Zotlabs\Daemon\Master::Summon(array('Notifier', $notify_type, $post_id));
 	
 		logger('post_complete');
-	
-	
-	
-	
-	
 	
 		// figure out how to return, depending on from whence we came
 	

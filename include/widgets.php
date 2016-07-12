@@ -296,7 +296,7 @@ function widget_filer($arr) {
 	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
+	$r = q("select distinct term from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);
@@ -1347,7 +1347,7 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
+	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
 		intval(PERMS_W_TAGWALL),
 		intval(PERMS_W_STREAM),
 		intval(local_channel())
@@ -1361,12 +1361,34 @@ function widget_forums($arr) {
 	// There also should be a way to update this via ajax.
 
 	for($x = 0; $x < count($r1); $x ++) {
-		$r = q("select sum(item_unseen) as unseen from item where owner_xchan = '%s' and uid = %d $perms_sql ",
+		$r = q("select sum(item_unseen) as unseen from item where owner_xchan = '%s' and uid = %d and item_unseen = 1 $perms_sql ",
 			dbesc($r1[$x]['xchan_hash']),
 			intval(local_channel())
 		);
 		if($r)
 			$r1[$x]['unseen'] = $r[0]['unseen'];
+
+/**
+ * @FIXME
+ * This SQL makes the counts correct when you get forum posts arriving from different routes/sources
+ * (like personal channels). However the network query for these posts doesn't yet include this 
+ * correction and it makes the SQL for that query pretty hairy so this is left as a future exercise. 
+ * It may make more sense in that query to look for the mention in the body rather than another join,
+ * but that makes it very inefficient.
+ * 
+		$r = q("select sum(item_unseen) as unseen from item left join term on oid = id where otype = %d and owner_xchan != '%s' and item.uid = %d and url = '%s' and ttype = %d $perms_sql ",
+			intval(TERM_OBJ_POST),
+			dbesc($r1[$x]['xchan_hash']),
+			intval(local_channel()),
+			dbesc($r1[$x]['xchan_url']),
+			intval(TERM_MENTION)
+		);
+		if($r)
+			$r1[$x]['unseen'] = ((array_key_exists('unseen',$r1[$x])) ? $r1[$x]['unseen'] + $r[0]['unseen'] : $r[0]['unseen']);
+ *
+ * end @FIXME
+ */
+		
 	}
 
 	if($r1) {

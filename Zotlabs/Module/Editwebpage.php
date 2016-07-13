@@ -4,7 +4,6 @@ namespace Zotlabs\Module;
 require_once('include/channel.php');
 require_once('include/acl_selectors.php');
 require_once('include/conversation.php');
-require_once('include/PermissionDescription.php');
 
 
 class Editwebpage extends \Zotlabs\Web\Controller {
@@ -151,7 +150,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			'body' => undo_post_tagging($itm[0]['body']),
 			'post_id' => $post_id,
 			'visitor' => ($is_owner) ? true : false,
-			'acl' => populate_acl($itm[0],false,\PermissionDescription::fromGlobalPermission('view_pages')),
+			'acl' => populate_acl($itm[0],false,\Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')),
 			'showacl' => ($is_owner) ? true : false,
 			'mimetype' => $mimetype,
 			'mimeselect' => true,

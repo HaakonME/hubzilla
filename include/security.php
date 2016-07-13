@@ -89,6 +89,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
  *
  * @return bool|array false or channel record of the new channel
  */
+
 function change_channel($change_channel) {
 
 	$ret = false;
@@ -438,14 +439,19 @@ function stream_perms_api_uids($perms = NULL, $limit = 0, $rand = 0 ) {
 	$random_sql = (($rand) ? " ORDER BY " . db_getfunc('RAND') . " " : '');
 	if(local_channel())
 		$ret[] = local_channel();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and ( channel_r_stream & %d )>0 and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 $random_sql $limit_sql ",
-		intval($perms),
-		intval(PAGE_ADULT|PAGE_CENSORED)
+	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' and ( v & %d ) > 0 ",
+		intval($perms)
 	);
-	if($r) {
-		foreach($r as $rr)
-			if(! in_array($rr['channel_id'], $ret))
-				$ret[] = $rr['channel_id'];
+	if($x) {
+		$ids = ids_to_querystr($x,'uid');
+		$r = q("select channel_id from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 $random_sql $limit_sql ",
+			intval(PAGE_ADULT|PAGE_CENSORED)
+		);
+		if($r) {
+			foreach($r as $rr)
+				if(! in_array($rr['channel_id'], $ret))
+					$ret[] = $rr['channel_id'];
+		}
 	}
 
 	$str = '';
@@ -471,16 +477,21 @@ function stream_perms_xchans($perms = NULL ) {
 	if(local_channel())
 		$ret[] = get_observer_hash();
 
-	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0 and channel_system = 0 and channel_removed = 0 ",
-		intval($perms),
-		intval(PAGE_ADULT|PAGE_CENSORED)
+	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' and ( v & %d ) > 0 ",
+		intval($perms)
 	);
-	if($r) {
-		foreach($r as $rr)
-			if(! in_array($rr['channel_hash'], $ret))
-				$ret[] = $rr['channel_hash'];
-	}
+	if($x) {
+		$ids = ids_to_querystr($x,'uid');
+		$r = q("select channel_hash from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 ",
+			intval(PAGE_ADULT|PAGE_CENSORED)
+		);
 
+		if($r) {
+			foreach($r as $rr)
+				if(! in_array($rr['channel_hash'], $ret))
+					$ret[] = $rr['channel_hash'];
+		}
+	}
 	$str = '';
 	if($ret) {
 		foreach($ret as $rr) {

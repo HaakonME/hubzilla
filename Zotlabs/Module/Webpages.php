@@ -355,9 +355,8 @@ class Webpages extends \Zotlabs\Web\Controller {
         $arr['uid'] = $channel['channel_id'];
         $arr['aid'] = $channel['channel_account_id'];
         
-        $iid = q("select iid from item_id where service = 'BUILDBLOCK' and sid = '%s' and uid = %d",
-                dbesc($b['name']),
-                intval($channel['channel_id'])
+        $iid = q("select iid from iconfig where k = 'BUILDBLOCK' and v = '%s' and cat = 'system'",
+                dbesc($b['name'])
         );
         if($iid) {
             $iteminfo = q("select mid,created,edited from item where id = %d",
@@ -398,8 +397,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 
         $remote_id = 0;
 
-        $z = q("select * from item_id where sid = '%s' and service = '%s' and uid = %d limit 1", dbesc($pagetitle), dbesc($namespace), intval(local_channel())
-        );
+        $z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'service' limit 1", dbesc($pagetitle), dbesc($namespace));
 
         $i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", dbesc($arr['mid']), intval(local_channel())
         );

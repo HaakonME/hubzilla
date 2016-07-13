@@ -15,9 +15,9 @@
             <!-- Or upload a zipped file containing the website -->
             <p class="descriptive-text">{{$file_upload_text}}</p>
 			<div class="form-group">
-				<input id="website-upload-choose" type="file" name="userfile" />
+				<input id="website-upload-choose" type="file" name="zip_file" />
 			</div>
-			<button class="btn btn-primary btn-sm" type="submit" name="c_upload" value="c_upload">Upload</button>
+			<button class="btn btn-primary btn-sm" type="submit" name="w_upload" value="w_upload">Upload</button>
 		</form>
 	</ul>
 </div>

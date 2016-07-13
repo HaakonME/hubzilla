@@ -210,4 +210,226 @@ class Webpages extends \Zotlabs\Web\Controller {
 		return $o;
 	}
 	
+	function post() {
+		
+		if(($_FILES) && array_key_exists('zip_file',$_FILES)) {
+			$source = $_FILES["zip_file"]["tmp_name"];
+			$type = $_FILES["zip_file"]["type"];
+			$okay = false;
+			$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
+			foreach ($accepted_types as $mime_type) {
+				if ($mime_type == $type) {
+					$okay = true;
+					break;
+				}
+			}
+			if(!$okay) {
+				json_return_and_die(array('message' => 'Invalid file MIME type'));
+			}
+			$zip = new \ZipArchive();
+			if ($zip->open($source) === true) {
+				$tmp_folder_name = random_string(5);
+				$website = dirname($source) . '/' . $tmp_folder_name;
+				$zip->extractTo($website); // change this to the correct site path
+				$zip->close();
+				@unlink($source);
+
+				$hubsites = $this->import_website($website);
+				rrmdir($website);
+				$channel = \App::get_channel();
+				$blocks = $this->import_blocks($channel, $hubsites['blocks']);
+				logger('blocks imported: ' . json_encode($blocks));
+			}
+			
+		
+		}
+	}
+	
+	private function import_website($path) {
+			$hubsites = [];
+			$pages = [];
+			$blocks = [];
+			$layouts = [];
+			// Import pages
+			$dirtoscan = $path . '/pages/';
+			if (is_dir($dirtoscan)) {
+					$dirlist = scandir($dirtoscan);
+					if ($dirlist) {
+							foreach ($dirlist as $element) {
+									if ($element === '.' || $element === '..') {
+											continue;
+									}
+									$folder = $dirtoscan . '/' . $element;
+									if (is_dir($folder)) {
+											$jsonfilepath = $folder . '/page.json';
+											if (is_file($jsonfilepath)) {
+													$pagejson = json_decode(file_get_contents($jsonfilepath), true);
+													$pagejson['path'] = $folder . '/' . $pagejson['contentfile'];
+													if ($pagejson['contentfile'] === '') {
+															logger('hubsites plugin: Invalid page content file');
+															return false;
+													}
+													$pagecontent = file_get_contents($folder . '/' . $pagejson['contentfile']);
+													if (!$pagecontent) {
+															logger('hubsites plugin: Failed to get file content for ' . $pagejson['contentfile']);
+															return false;
+													}
+													$pages[] = $pagejson;
+											}
+									}
+							}
+					}
+			}
+			$hubsites['pages'] = $pages;
+			// Import layouts
+			$dirtoscan = $path . '/layouts/';
+			if (is_dir($dirtoscan)) {
+					$dirlist = scandir($dirtoscan);
+					if ($dirlist) {
+							foreach ($dirlist as $element) {
+									if ($element === '.' || $element === '..') {
+											continue;
+									}
+									$folder = $dirtoscan . '/' . $element;
+									if (is_dir($folder)) {
+											$jsonfilepath = $folder . '/layout.json';
+											if (is_file($jsonfilepath)) {
+													$layoutjson = json_decode(file_get_contents($jsonfilepath), true);
+													$layoutjson['path'] = $folder . '/' . $layoutjson['contentfile'];
+													if ($layoutjson['contentfile'] === '') {
+															logger('hubsites plugin: Invalid layout content file');
+															return false;
+													}
+													$layoutcontent = file_get_contents($folder . '/' . $layoutjson['contentfile']);
+													if (!$layoutcontent) {
+															logger('hubsites plugin: Failed to get file content for ' . $layoutjson['contentfile']);
+															return false;
+													}
+													$layouts[] = $layoutjson;
+											}
+									}
+							}
+					}
+			}
+			$hubsites['layouts'] = $layouts;
+			// Import blocks
+			$dirtoscan = $path . '/blocks/';
+			if (is_dir($dirtoscan)) {
+					$dirlist = scandir($dirtoscan);
+					if ($dirlist) {
+							foreach ($dirlist as $element) {
+									if ($element === '.' || $element === '..') {
+											continue;
+									}
+									$folder = $dirtoscan . '/' . $element;
+									if (is_dir($folder)) {
+											$jsonfilepath = $folder . '/block.json';
+											if (is_file($jsonfilepath)) {
+													$block = json_decode(file_get_contents($jsonfilepath), true);
+													$block['path'] = $folder . '/' . $block['contentfile'];
+													if ($block['contentfile'] === '') {
+															logger('hubsites plugin: Invalid block content file');
+															return false;
+													}
+													$blockcontent = file_get_contents($folder . '/' . $block['contentfile']);
+													if (!$blockcontent) {
+															logger('hubsites plugin: Failed to get file content for ' . $block['contentfile']);
+															return false;
+													}
+													$blocks[] = $block;
+											}
+									}
+							}
+					}
+			}
+			$hubsites['blocks'] = $blocks;
+			//logger('hubsites: ' . json_encode($hubsites));
+			return $hubsites;
+	}
+	
+	private function import_blocks($channel, $blocks) {
+    foreach ($blocks as &$b) {
+        
+        $arr = array();
+        $arr['item_type'] = ITEM_TYPE_BLOCK;
+        $namespace = 'BUILDBLOCK';
+        $arr['uid'] = $channel['channel_id'];
+        $arr['aid'] = $channel['channel_account_id'];
+        
+        $iid = q("select iid from item_id where service = 'BUILDBLOCK' and sid = '%s' and uid = %d",
+                dbesc($b['name']),
+                intval($channel['channel_id'])
+        );
+        if($iid) {
+            $iteminfo = q("select mid,created,edited from item where id = %d",
+                    intval($iid[0]['iid'])
+            );
+            $arr['mid'] = $arr['parent_mid'] = $iteminfo[0]['mid'];
+            $arr['created'] = $iteminfo[0]['created'];
+            $arr['edited'] = (($b['edited']) ? datetime_convert('UTC', 'UTC', $b['edited']) : datetime_convert());
+        } else {
+            $arr['created'] = (($b['created']) ? datetime_convert('UTC', 'UTC', $b['created']) : datetime_convert());
+            $arr['edited'] = datetime_convert('UTC', 'UTC', '0000-00-00 00:00:00');
+            $arr['mid'] = $arr['parent_mid'] = item_message_id();
+        }
+        $arr['title'] = $b['title'];
+        $arr['body'] = file_get_contents($b['path']);
+        $arr['owner_xchan'] = get_observer_hash();
+        $arr['author_xchan'] = (($b['author_xchan']) ? $b['author_xchan'] : get_observer_hash());
+        if(($b['mimetype'] === 'text/bbcode' || $b['mimetype'] === 'text/html' ||
+                $b['mimetype'] === 'text/markdown' ||$b['mimetype'] === 'text/plain' ||
+                $b['mimetype'] === 'application/x-pdl' ||$b['mimetype'] === 'application/x-php')) {
+            $arr['mimetype'] = $b['mimetype'];
+        } else {
+            $arr['mimetype'] = 'text/bbcode';
+        }
+
+        $pagetitle = $b['name']; 
+
+        // Verify ability to use html or php!!!
+        $execflag = false;
+        if ($arr['mimetype'] === 'application/x-php') {
+            $z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1", intval(local_channel())
+            );
+
+            if ($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
+                $execflag = true;
+            }
+        }
+
+        $remote_id = 0;
+
+        $z = q("select * from item_id where sid = '%s' and service = '%s' and uid = %d limit 1", dbesc($pagetitle), dbesc($namespace), intval(local_channel())
+        );
+
+        $i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", dbesc($arr['mid']), intval(local_channel())
+        );
+        if ($z && $i) {
+            $remote_id = $z[0]['id'];
+            $arr['id'] = $i[0]['id'];
+            // don't update if it has the same timestamp as the original
+            if ($arr['edited'] > $i[0]['edited'])
+                $x = item_store_update($arr, $execflag);
+        } else {
+            if (($i) && (intval($i[0]['item_deleted']))) {
+                // was partially deleted already, finish it off
+                q("delete from item where mid = '%s' and uid = %d", dbesc($arr['mid']), intval(local_channel())
+                );
+            }
+            $x = item_store($arr, $execflag);
+        }
+        if ($x['success']) {
+            $item_id = $x['item_id'];
+            update_remote_id($channel, $item_id, $arr['item_type'], $pagetitle, $namespace, $remote_id, $arr['mid']);
+            $b['import_success'] = 1;
+        } else {
+            $b['import_success'] = 0;
+        }
+    }
+    return $blocks;
+}
+
+
+
+
 }

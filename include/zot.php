@@ -3014,7 +3014,12 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		if($x['hubloc_host'] == App::get_hostname())
 			continue;
 
-		$synchubs[] = $x;
+		$y = q("select site_dead from site where site_url = '%s' limit 1",
+			dbesc($x['hubloc_url'])
+		);
+
+		if((! $y) || ($y[0]['site_dead'] == 0))
+			$synchubs[] = $x;
 	}
 
 	if(! $synchubs)

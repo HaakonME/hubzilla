@@ -4,7 +4,6 @@ namespace Zotlabs\Module;
 require_once('include/channel.php');
 require_once('include/conversation.php');
 require_once('include/acl_selectors.php');
-require_once('include/PermissionDescription.php');
 
 
 class Webpages extends \Zotlabs\Web\Controller {
@@ -105,7 +104,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 			'is_owner' => true,
 			'nickname' => \App::$profile['channel_address'],
 			'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-			'acl' => (($is_owner) ? populate_acl($channel_acl,false, \PermissionDescription::fromGlobalPermission('view_pages')) : ''),
+			'acl' => (($is_owner) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')) : ''),
 			'showacl' => (($is_owner) ? true : false),
 			'visitor' => true,
 			'hide_location' => true,

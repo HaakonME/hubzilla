@@ -125,13 +125,17 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(z_root(), strpos(z_root(), '://') + 3);
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . App::get_hostname();
 
 			App::set_observer($x[0]);
 			App::set_perms(get_all_perms(local_channel(), $hash));
 		}
 		if(! is_dir('store/' . $r[0]['channel_address']))
 			@os_mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
+
+		$arr = [ 'channel_id' => $change_channel, 'chanx' => $ret ];
+		call_hooks('change_channel', $arr);
+
 	}
 
 	return $ret;

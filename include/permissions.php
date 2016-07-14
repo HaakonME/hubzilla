@@ -81,7 +81,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 
 	$ret = array();
 
-	$abperms = (($uid && $observer_xchan) ? load_abconfig($uid,$observer_xchan) : array());
+	$abperms = (($uid && $observer_xchan) ? load_abconfig($uid,$observer_xchan,'my_perms') : array());
 
 	foreach($global_perms as $perm_name => $permission) {
 
@@ -333,7 +333,7 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 				dbesc($observer_xchan)
 			);
 		}
-		$abperms = load_abconfig($uid,$observer_xchan);
+		$abperms = load_abconfig($uid,$observer_xchan,'my_perms');
 	}
 	
 
@@ -407,8 +407,12 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 	// Permission granted to certain channels. Let's see if the observer is one of them
 
 	if(($r) && ($channel_perm & PERMS_SPECIFIC)) {
-		if(array_key_exists('my_perms',$abperms) && array_key_exists($permission,$abperms['my_perms']) && $abperms['my_perms'][$permission]) {
-			return true;
+		if($abperms) {
+			foreach($abperms as $ab) {
+				if($ab['cat'] == 'my_perms' && $ab['k'] == $permission) {
+					return ((intval($ab['v'])) ? true : false);
+				}
+			}
 		}
 	}
 

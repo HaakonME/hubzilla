@@ -234,10 +234,13 @@ class Webpages extends \Zotlabs\Web\Controller {
 				@unlink($source);
 
 				$hubsites = $this->import_website($website);
-				rrmdir($website);
 				$channel = \App::get_channel();
 				$blocks = $this->import_blocks($channel, $hubsites['blocks']);
-				logger('blocks imported: ' . json_encode($blocks));
+				$pages = $this->import_pages($channel, $hubsites['pages']);
+				$layouts = $this->import_layouts($channel, $hubsites['layouts']);
+				if($blocks || $pages || $layouts) {	// Without the if statement, the folder is deleted before the import_blocks function completes.
+					rrmdir($website);
+				}
 			}
 			
 		
@@ -265,12 +268,12 @@ class Webpages extends \Zotlabs\Web\Controller {
 													$pagejson = json_decode(file_get_contents($jsonfilepath), true);
 													$pagejson['path'] = $folder . '/' . $pagejson['contentfile'];
 													if ($pagejson['contentfile'] === '') {
-															logger('hubsites plugin: Invalid page content file');
+															logger('Invalid page content file');
 															return false;
 													}
 													$pagecontent = file_get_contents($folder . '/' . $pagejson['contentfile']);
 													if (!$pagecontent) {
-															logger('hubsites plugin: Failed to get file content for ' . $pagejson['contentfile']);
+															logger('Failed to get file content for ' . $pagejson['contentfile']);
 															return false;
 													}
 													$pages[] = $pagejson;
@@ -296,12 +299,12 @@ class Webpages extends \Zotlabs\Web\Controller {
 													$layoutjson = json_decode(file_get_contents($jsonfilepath), true);
 													$layoutjson['path'] = $folder . '/' . $layoutjson['contentfile'];
 													if ($layoutjson['contentfile'] === '') {
-															logger('hubsites plugin: Invalid layout content file');
+															logger('Invalid layout content file');
 															return false;
 													}
 													$layoutcontent = file_get_contents($folder . '/' . $layoutjson['contentfile']);
 													if (!$layoutcontent) {
-															logger('hubsites plugin: Failed to get file content for ' . $layoutjson['contentfile']);
+															logger('Failed to get file content for ' . $layoutjson['contentfile']);
 															return false;
 													}
 													$layouts[] = $layoutjson;
@@ -327,12 +330,12 @@ class Webpages extends \Zotlabs\Web\Controller {
 													$block = json_decode(file_get_contents($jsonfilepath), true);
 													$block['path'] = $folder . '/' . $block['contentfile'];
 													if ($block['contentfile'] === '') {
-															logger('hubsites plugin: Invalid block content file');
+															logger('Invalid block content file');
 															return false;
 													}
 													$blockcontent = file_get_contents($folder . '/' . $block['contentfile']);
 													if (!$blockcontent) {
-															logger('hubsites plugin: Failed to get file content for ' . $block['contentfile']);
+															logger('Failed to get file content for ' . $block['contentfile']);
 															return false;
 													}
 													$blocks[] = $block;
@@ -342,7 +345,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 					}
 			}
 			$hubsites['blocks'] = $blocks;
-			//logger('hubsites: ' . json_encode($hubsites));
 			return $hubsites;
 	}
 	
@@ -427,6 +429,185 @@ class Webpages extends \Zotlabs\Web\Controller {
 }
 
 
+private function import_pages($channel, $pages) {
+    foreach ($pages as &$p) {
+        
+        $arr = array();
+        $arr['item_type'] = ITEM_TYPE_WEBPAGE;
+        $namespace = 'WEBPAGE';
+        $arr['uid'] = $channel['channel_id'];
+        $arr['aid'] = $channel['channel_account_id'];
+
+        if($p['pagelink']) {
+                require_once('library/urlify/URLify.php');
+                $pagetitle = strtolower(\URLify::transliterate($p['pagelink']));
+        }
+        $arr['layout_mid'] = ''; // by default there is no layout associated with the page
+        // If a layout was specified, find it in the database and get its info. If
+        // it does not exist, leave layout_mid empty
+        logger('hubsites plugin: $p[layout] = ' . $p['layout']);
+        if($p['layout'] !== '') {
+            $liid = q("select iid from iconfig where k = 'PDL' and v = '%s' and cat = 'system'",
+                    dbesc($p['layout'])
+            );
+            if($liid) {
+                $linfo = q("select mid from item where id = %d",
+                        intval($liid[0]['iid'])
+                );
+                logger('hubsites plugin: $linfo= ' . json_encode($linfo,true));
+                $arr['layout_mid'] = $linfo[0]['mid'];
+            }                 
+        }
+        // See if the page already exists
+        $iid = q("select iid from iconfig where k = 'WEBPAGE' and v = '%s' and cat = 'system'",
+                dbesc($pagetitle)
+        );
+        if($iid) {
+            // Get the existing page info
+            $pageinfo = q("select mid,layout_mid,created,edited from item where id = %d",
+                    intval($iid[0]['iid'])
+            );
+            $arr['mid'] = $arr['parent_mid'] = $pageinfo[0]['mid'];
+            $arr['created'] = $pageinfo[0]['created'];
+            $arr['edited'] = (($p['edited']) ? datetime_convert('UTC', 'UTC', $p['edited']) : datetime_convert());
+        } else {
+            $arr['created'] = (($p['created']) ? datetime_convert('UTC', 'UTC', $p['created']) : datetime_convert());
+            $arr['edited'] = datetime_convert('UTC', 'UTC', '0000-00-00 00:00:00');
+            $arr['mid'] = $arr['parent_mid'] = item_message_id();
+        }
+        $arr['title'] = $p['title'];
+        $arr['body'] = file_get_contents($p['path']);
+        $arr['term'] = $p['term'];  // Not sure what this is supposed to be
+        
+        $arr['owner_xchan'] = get_observer_hash();
+        $arr['author_xchan'] = (($p['author_xchan']) ? $p['author_xchan'] : get_observer_hash());
+        if(($p['mimetype'] === 'text/bbcode' || $p['mimetype'] === 'text/html' ||
+                $p['mimetype'] === 'text/markdown' ||$p['mimetype'] === 'text/plain' ||
+                $p['mimetype'] === 'application/x-pdl' ||$p['mimetype'] === 'application/x-php')) {
+            $arr['mimetype'] = $p['mimetype'];
+        } else {
+            $arr['mimetype'] = 'text/bbcode';
+        }
+
+        // Verify ability to use html or php!!!
+        $execflag = false;
+        if ($arr['mimetype'] === 'application/x-php') {
+            $z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1", intval(local_channel())
+            );
+
+            if ($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
+                $execflag = true;
+            }
+        }
+
+        $remote_id = 0;
+
+        $z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'system' limit 1",
+                dbesc($pagetitle),
+                dbesc($namespace)
+        );
+
+        $i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", 
+                dbesc($arr['mid']), 
+                intval(local_channel())
+        );
+        if ($z && $i) {
+            $remote_id = $z[0]['id'];
+            $arr['id'] = $i[0]['id'];
+            // don't update if it has the same timestamp as the original
+            if ($arr['edited'] > $i[0]['edited'])
+                $x = item_store_update($arr, $execflag);
+        } else {
+            if (($i) && (intval($i[0]['item_deleted']))) {
+                // was partially deleted already, finish it off
+                q("delete from item where mid = '%s' and uid = %d", dbesc($arr['mid']), intval(local_channel())
+                );
+            }
+            logger('hubsites plugin: item_store= ' . json_encode($arr,true));
+            $x = item_store($arr, $execflag);
+        }
+        if ($x['success']) {
+            $item_id = $x['item_id'];
+            update_remote_id($channel, $item_id, $arr['item_type'], $pagetitle, $namespace, $remote_id, $arr['mid']);
+            $p['import_success'] = 1;
+        } else {
+            $p['import_success'] = 0;
+        }
+    }
+    return $pages;
+    
+}
+
+private function import_layouts($channel, $layouts) {
+    foreach ($layouts as &$p) {
+        
+        $arr = array();
+        $arr['item_type'] = ITEM_TYPE_PDL;
+        $namespace = 'PDL';
+        $arr['uid'] = $channel['channel_id'];
+        $arr['aid'] = $channel['channel_account_id'];
+        $pagetitle = $p['name'];
+        // See if the layout already exists
+        $iid = q("select iid from iconfig where k = 'PDL' and v = '%s' and cat = 'system'",
+                dbesc($pagetitle)
+        );
+        if($iid) {
+            // Get the existing layout info
+            $info = q("select mid,layout_mid,created,edited from item where id = %d",
+                    intval($iid[0]['iid'])
+            );
+            $arr['mid'] = $arr['parent_mid'] = $info[0]['mid'];
+            $arr['created'] = $info[0]['created'];
+            $arr['edited'] = (($p['edited']) ? datetime_convert('UTC', 'UTC', $p['edited']) : datetime_convert());
+        } else {
+            $arr['created'] = (($p['created']) ? datetime_convert('UTC', 'UTC', $p['created']) : datetime_convert());
+            $arr['edited'] = datetime_convert('UTC', 'UTC', '0000-00-00 00:00:00');
+            $arr['mid'] = $arr['parent_mid'] = item_message_id();
+        }
+        $arr['title'] = $p['description'];
+        $arr['body'] = file_get_contents($p['path']);
+        $arr['term'] = $p['term'];  // Not sure what this is supposed to be
+        
+        $arr['owner_xchan'] = get_observer_hash();
+        $arr['author_xchan'] = (($p['author_xchan']) ? $p['author_xchan'] : get_observer_hash());
+        $arr['mimetype'] = 'text/bbcode';
+
+        $remote_id = 0;
+
+        $z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'system' limit 1",
+                dbesc($pagetitle),
+                dbesc($namespace)
+        );
+
+        $i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", 
+                dbesc($arr['mid']), 
+                intval(local_channel())
+        );
+        if ($z && $i) {
+            $remote_id = $z[0]['id'];
+            $arr['id'] = $i[0]['id'];
+            // don't update if it has the same timestamp as the original
+            if ($arr['edited'] > $i[0]['edited'])
+                $x = item_store_update($arr, $execflag);
+        } else {
+            if (($i) && (intval($i[0]['item_deleted']))) {
+                // was partially deleted already, finish it off
+                q("delete from item where mid = '%s' and uid = %d", dbesc($arr['mid']), intval(local_channel())
+                );
+            }
+            $x = item_store($arr, $execflag);
+        }
+        if ($x['success']) {
+            $item_id = $x['item_id'];
+            update_remote_id($channel, $item_id, $arr['item_type'], $pagetitle, $namespace, $remote_id, $arr['mid']);
+            $p['import_success'] = 1;
+        } else {
+            $p['import_success'] = 0;
+        }
+    }
+    return $layouts;
+    
+}
 
 
 }

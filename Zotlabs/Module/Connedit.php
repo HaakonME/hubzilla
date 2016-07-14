@@ -205,20 +205,26 @@ class Connedit extends \Zotlabs\Web\Controller {
 			if($role) {
 				$x = get_role_perms($role);
 				if($x['perms_connect']) {
-					foreach($x['perms_connect'] as $p) {
-						set_abconfig(local_channel(),$orig_record[0]['abook_xchan'],'my_perms',$p,1);
-					}
+					$abook_my_perms = $x['perms_connect'];
+				}
+			}
+
+			if($all_perms) {
+				foreach($all_perms as $perm => $desc) {
+					if(array_key_exists($perm, $abook_my_perms))
+						set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,1);
+					else
+						set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,0);
 				}
 			}
 		}
-	
+
 		$abook_pending = (($new_friend) ? 0 : $orig_record[0]['abook_pending']);
 	
-		$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d,
+		$r = q("UPDATE abook SET abook_profile = '%s', abook_closeness = %d, abook_pending = %d,
 			abook_incl = '%s', abook_excl = '%s'
 			where abook_id = %d AND abook_channel = %d",
 			dbesc($profile_id),
-			intval($abook_my_perms),
 			intval($closeness),
 			intval($abook_pending),
 			dbesc($abook_incl),
@@ -239,7 +245,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			info( t('Connection updated.') . EOL);
 		else
 			notice( t('Failed to update connection record.') . EOL);
-	
+//@fixme perms	
 		if(\App::$poi && \App::$poi['abook_my_perms'] != $abook_my_perms
 			&& (! intval(\App::$poi['abook_self']))) {
 			\Zotlabs\Daemon\Master::Summon(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));

@@ -183,7 +183,7 @@ function is_item_normal($item) {
  * This function examines the comment_policy attached to an item and decides if the current observer has
  * sufficient privileges to comment. This will normally be called on a remote site where perm_is_allowed()
  * will not be suitable because the post owner does not have a local channel_id.
- * Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set.
+ * Generally we should look at the item - in particular the author['abook_flags'] and see if ABOOK_FLAG_SELF is set.
  * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call
  * can_comment_on_post()
  * We also check the comments_closed date/time on the item if this is set.
@@ -224,8 +224,7 @@ function can_comment_on_post($observer_xchan, $item) {
 		case 'contacts':
 		case 'authenticated':
 		case '':
-			if(array_key_exists('owner',$item)) {
-				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
+			if(array_key_exists('owner',$item) && get_abconfig($item['uid'],$item['owner']['abook_xchan'],'their_perms','post_comments')) {
 					return true;
 			}
 			break;
@@ -2856,7 +2855,7 @@ function check_item_source($uid, $item) {
 	if(! $x)
 		return false;
 
-	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
+	if(! get_abconfig($uid,$item['owner_xchan'],'their_perms','republish'))
 		return false;
 
 	if($item['item_private'] && (! intval($x[0]['abook_feed'])))

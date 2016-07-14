@@ -1,7 +1,18 @@
 <?php
 namespace Zotlabs\Module;
 
-/* ACL selector json backend */
+/*
+ * ACL selector json backend 
+ * This module provides JSON lists of connections and local/remote channels
+ * (xchans) to populate various tools such as the ACL (AccessControlList) popup
+ * and various auto-complete functions (such as email recipients, search, and 
+ * mention targets.
+ * There are two primary output structural formats. One for the ACL widget and
+ * the other for auto-completion.
+ * Many of the  behaviour variations are triggered on the use of single character keys
+ * however this functionality has grown in an ad-hoc manner and has gotten quite messy over time.    
+ */
+
 require_once("include/acl_selectors.php");
 require_once("include/group.php");
 
@@ -10,40 +21,63 @@ class Acl extends \Zotlabs\Web\Controller {
 
 	function init(){
 	
-	//	logger('mod_acl: ' . print_r($_REQUEST,true));
+		//	logger('mod_acl: ' . print_r($_REQUEST,true));
 	
-		$start = (x($_REQUEST,'start')?$_REQUEST['start']:0);
-		$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
-		$search = (x($_REQUEST,'search')?$_REQUEST['search']:"");
-		$type = (x($_REQUEST,'type')?$_REQUEST['type']:"");
-		$noforums = (x($_REQUEST,'n') ? $_REQUEST['n'] : false);	
+		$start    = (x($_REQUEST,'start')  ? $_REQUEST['start']  : 0);
+		$count    = (x($_REQUEST,'count')  ? $_REQUEST['count']  : 500);
+		$search   = (x($_REQUEST,'search') ? $_REQUEST['search'] : '');
+		$type     = (x($_REQUEST,'type')   ? $_REQUEST['type']   : '');
+		$noforums = (x($_REQUEST,'n')      ? $_REQUEST['n']      : false);	
+
+
+		// $type = 
+		//  ''   =>  standard ACL request
+		//  'g'  =>  Groups only ACL request
+		//  'c'  =>  Connections only ACL request or editor (textarea) mention request
+		// $_REQUEST['search'] contains ACL search text.
+
+
+		// $type =
+		//  'm'  =>  autocomplete private mail recipient (checks post_mail permission)
+		//  'a'  =>  autocomplete connections (mod_connections, mod_poke, mod_sources, mod_photos)
+		//  'x'  =>  nav search bar autocomplete (match any xchan)
+		// $_REQUEST['query'] contains autocomplete search text.
 	
-		// List of channels whose connections to also suggest, e.g. currently viewed channel or channels mentioned in a post
+		// List of channels whose connections to also suggest, 
+		// e.g. currently viewed channel or channels mentioned in a post
+
 		$extra_channels = (x($_REQUEST,'extra_channels') ? $_REQUEST['extra_channels'] : array());
 	
-		// For use with jquery.autocomplete for private mail completion
+		// The different autocomplete libraries use different names for the search text
+		// parameter. Internaly we'll use $search to represent the search text no matter
+		// what request variable it was attached to. 
 	
-		if(x($_REQUEST,'query') && strlen($_REQUEST['query'])) {
-			if(! $type)
-				$type = 'm';
+		if(array_key_exists('query',$_REQUEST)) {
 			$search = $_REQUEST['query'];
 		}
 	
-		if(!(local_channel()))
-			if(!($type == 'x' || $type == 'c'))
-				killme();
+		if( (! local_channel()) && (! ($type == 'x' || $type == 'c')))
+			killme();
 	
-		if ($search != "") {
+		if($search) {
 			$sql_extra = " AND `name` LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
 			$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . ((strpos($search,'@') === false) ? "%@%'"  : "%'")) . ") ";
 	
-			// This horrible mess is needed because position also returns 0 if nothing is found. W/ould be MUCH easier if it instead returned a very large value
-			// Otherwise we could just order by LEAST(POSITION($search IN xchan_name),POSITION($search IN xchan_addr)).
-			$order_extra2 = "CASE WHEN xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) ." then POSITION('".dbesc($search)."' IN xchan_name) else position('".dbesc($search)."' IN xchan_addr) end, ";
+			// This horrible mess is needed because position also returns 0 if nothing is found. 
+			// Would be MUCH easier if it instead returned a very large value
+			// Otherwise we could just 
+			// order by LEAST(POSITION($search IN xchan_name),POSITION($search IN xchan_addr)).
+
+			$order_extra2 = "CASE WHEN xchan_name LIKE " 
+					. protect_sprintf( "'%" . dbesc($search) . "%'" ) 
+					. " then POSITION('" . dbesc($search) 
+					. "' IN xchan_name) else position('" . dbesc($search) . "' IN xchan_addr) end, ";
+
 			$col = ((strpos($search,'@') !== false) ? 'xchan_addr' : 'xchan_name' );
 			$sql_extra3 = "AND $col like " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
 	
-		} else {
+		}
+		else {
 			$sql_extra = $sql_extra2 = $sql_extra3 = "";
 		}
 		
@@ -51,7 +85,7 @@ class Acl extends \Zotlabs\Web\Controller {
 		$groups = array();
 		$contacts = array();
 		
-		if ($type=='' || $type=='g'){
+		if($type == '' || $type == 'g') {
 	
 			$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`gname`
 					FROM `groups`,`group_member` 
@@ -82,7 +116,7 @@ class Acl extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		if ($type=='' || $type=='c') {
+		if($type == '' || $type == 'c') {
 			$extra_channels_sql  = ''; 
 			// Only include channels who allow the observer to view their permissions
 			foreach($extra_channels as $channel) {
@@ -171,7 +205,7 @@ class Acl extends \Zotlabs\Web\Controller {
 				intval(PERMS_W_MAIL)
 			);
 		}
-		elseif(($type == 'a') || ($type == 'p')) {
+		elseif($type == 'a') {
 	
 			$r = q("SELECT abook_id as id, xchan_name as name, xchan_hash as hash, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag , xchan_pubforum, abook_their_perms FROM abook left join xchan on abook_xchan = xchan_hash
 				WHERE abook_channel = %d
@@ -296,7 +330,7 @@ class Acl extends \Zotlabs\Web\Controller {
 			$url = $directory['url'] . '/dirsearch';
 		}
 	
-		$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
+		$count = (x($_REQUEST,'count') ?  $_REQUEST['count'] : 100);
 		if($url) {
 			$query = $url . '?f=' ;
 			$query .= '&name=' . urlencode($search) . "&limit=$count" . (($address) ? '&address=' . urlencode($search) : '');

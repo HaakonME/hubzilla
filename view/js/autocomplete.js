@@ -1,5 +1,5 @@
 /**
- * Red people autocomplete
+ * general autocomplete support
  *
  * require jQuery, jquery.textcomplete
  */

@@ -990,9 +990,9 @@ function encode_item($item,$mirror = false) {
 
 	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		if($item['title'])
-			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode($item['title'],true),$key);
 		if($item['body'])
-			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode($item['body'],true),$key);
 	}
 
 	// If we're trying to backup an item so that it's recoverable or for export/imprt,
@@ -1062,11 +1062,11 @@ function encode_item($item,$mirror = false) {
 	$x['owner']           = encode_item_xchan($item['owner']);
 	$x['author']          = encode_item_xchan($item['author']);
 	if($item['obj'])
-		$x['object']      = json_decode_plus($item['obj']);
+		$x['object']      = json_decode($item['obj'],true);
 	if($item['target'])
-		$x['target']      = json_decode_plus($item['target']);
+		$x['target']      = json_decode($item['target'],true);
 	if($item['attach'])
-		$x['attach']      = json_decode_plus($item['attach']);
+		$x['attach']      = json_decode($item['attach'],true);
 	if($y = encode_item_flags($item))
 		$x['flags']       = $y;
 
@@ -1382,7 +1382,7 @@ function encode_mail($item,$extended = false) {
 	$x['to']             = encode_item_xchan($item['to']);
 
 	if($item['attach'])
-		$x['attach']     = json_decode_plus($item['attach']);
+		$x['attach']     = json_decode($item['attach'],true);
 
 	$x['flags'] = array();
 
@@ -2390,7 +2390,7 @@ function tag_deliver($uid, $item_id) {
 		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['obj']))
 			$poke_notify = false;
 
-		$obj = json_decode_plus($item['obj']);
+		$obj = json_decode($item['obj'],true);
 		if($obj) {
 			if($obj['id'] !== $u[0]['channel_hash'])
 				$poke_notify = false;
@@ -2427,14 +2427,14 @@ function tag_deliver($uid, $item_id) {
 
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
 			logger('tag_deliver: community tag recipient: ' . $u[0]['channel_name']);
-			$j_tgt = json_decode_plus($item['target']);
+			$j_tgt = json_decode($item['target'],true);
 			if($j_tgt && $j_tgt['id']) {
 				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($j_tgt['id']),
 					intval($u[0]['channel_id'])
 				);
 				if($p) {
-					$j_obj = json_decode_plus($item['obj']);
+					$j_obj = json_decode($item['obj'],true);
 					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
 						if(is_array($j_obj['link']))
@@ -2519,7 +2519,7 @@ function tag_deliver($uid, $item_id) {
 		if(intval($item['item_obscured'])) {
 			$key = get_config('system','prvkey');
 			if($item['body'])
-				$body = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+				$body = crypto_unencapsulate(json_decode($item['body'],true),$key);
 		}
 		else
 			$body = $item['body'];

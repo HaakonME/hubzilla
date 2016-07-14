@@ -506,7 +506,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 						));
 					
 						if(intval($permissions['view_stream'])) {
-							if(intval(get_pconfig($channel['channel_id'],'perms_limit','send_stream') & PERMS_PENDING)
+							if(intval(get_pconfig($channel['channel_id'],'perm_limits','send_stream') & PERMS_PENDING)
 								|| (! intval($new_connection[0]['abook_pending'])))
 								Zotlabs\Daemon\Master::Summon(array('Onepoll',$new_connection[0]['abook_id']));
 						}
@@ -1395,7 +1395,7 @@ function public_recips($msg) {
 		}
 	}
 
-	//logger('message: ' . print_r($msg['message'],true));
+	// logger('message: ' . print_r($msg['message'],true));
 
 	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
 		$sys = get_sys_channel();
@@ -1881,9 +1881,9 @@ function remove_community_tag($sender, $arr, $uid) {
 	$i = $r[0];
 
 	if($i['target'])
-		$i['target'] = json_decode_plus($i['target']);
+		$i['target'] = json_decode($i['target'],true);
 	if($i['object'])
-		$i['object'] = json_decode_plus($i['object']);
+		$i['object'] = json_decode($i['object'],true);
 
 	if(! ($i['target'] && $i['object'])) {
 		logger('remove_community_tag: no target/object');

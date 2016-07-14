@@ -133,7 +133,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 
 		if($all_perms) {
 			foreach($all_perms as $perm => $desc) {
-				if(in_array('perms_' . $perm, $_POST)) {
+				if(array_key_exists('perms_' . $perm, $_POST)) {
 					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,
 						intval($_POST['perms_' . $perm]));
 					$abook_my_perms ++;

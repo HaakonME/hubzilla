@@ -239,8 +239,13 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 		// Permission granted to certain channels. Let's see if the observer is one of them
 
 		if($channel_perm & PERMS_SPECIFIC) {
-			if(array_key_exists('my_perms',$abperms) && array_key_exists($perm_name,$abperms['my_perms']) && $abperms['my_perms'][$perm_name]) {
-				$ret[$perm_name] = true;
+			if($abperms) {
+				foreach($abperms as $ab) {
+					if(($ab['cat'] == 'my_perms') && ($ab['k'] == $perm_name)) {
+						$ret[$perm_name] = (intval($ab['v']) ? true : false);
+						break;
+					}
+				}
 				continue;
 			}
 		}

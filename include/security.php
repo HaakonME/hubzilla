@@ -102,6 +102,8 @@ function atoken_xchan($atoken) {
 
 	return [ 
 		'xchan_hash' =>  $atoken['atoken_uid'] . '.' . $atoken['atoken_name'],
+		'xchan_name' => $atoken['atoken_name'],
+		'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
 		'xchan_network' => 'unknown',
 		'xchan_hidden' => 1,
 		'xchan_photo_mimetype' => 'image/jpeg',

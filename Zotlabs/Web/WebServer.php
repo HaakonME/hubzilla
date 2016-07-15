@@ -59,7 +59,14 @@ class WebServer {
 			\App::$query_string = strip_zids(\App::$query_string);
 			if(! local_channel()) {
 				$_SESSION['my_address'] = $_GET['zid'];
-				zid_init($a);
+				zid_init();
+			}
+		}
+
+		if((x($_GET,'zat')) && (! \App::$install)) {
+			\App::$query_string = strip_zats(\App::$query_string);
+			if(! local_channel()) {
+				zat_init();
 			}
 		}
 

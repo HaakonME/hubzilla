@@ -4,6 +4,10 @@
 		<div class="clear"></div>
 	</div>
 	<div class="atoken-text descriptive-text">{{$desc}}</div>
+	<div class="atoken-text descriptive-text">{{$desc2}}</div>
+	<div class="atoken-example">{{$url1}}<span class="zat-example">&f=&zat=<span class="token-mirror"></span></span></div>
+	<div class="atoken-example">{{$url2}}<span class="zat-example">&f=&zat=<span class="token-mirror"></span></span></div>
+	<br />
 	<form action="settings/tokens" id="settings-account-form" method="post" autocomplete="off" >
 		<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 		{{if $atoken}}<input type="hidden" name="atoken_id" value="{{$atoken.atoken_id}}" />{{/if}}

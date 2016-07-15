@@ -5,6 +5,9 @@
 $(document).ready(function() {
 	$('form').areYouSure({'addRemoveFieldsMarksDirty':true, 'message': aStr['leavethispage'] }); // Warn user about unsaved settings
 
+	$('.token-mirror').html($('#id_token').val());
+	$('#id_token').keyup( function() { $('.token-mirror').html($('#id_token').val()); });
+
 	$("#id_permissions_role").change(function() {
 		var role = $("#id_permissions_role").val();
 		if(role == 'custom')

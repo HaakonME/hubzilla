@@ -2047,3 +2047,9 @@ dl.bb-dl > dd > li {
 .atoken-text {
 	margin: 5px 10px 5px 10px;
 }
+.atoken-example {
+	margin-left: 20px;
+}
+.zat-example {
+	color: red;
+}

@@ -1703,7 +1703,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
 		'$form_id'      => $form_id,
-		'$lname'        => array('username', t('Email') , '', ''),
+		'$lname'        => array('username', t('Login/Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),
 		'$remember_me'  => array('remember_me', t('Remember me'), '', '',array(t('No'),t('Yes'))),
 		'$hiddens'      => $hiddens,

@@ -48,7 +48,7 @@
 	});
 
 	function slideUpCover() {
-		$('html, body').animate({scrollTop: $('#cover-photo').height() + 1 + 'px' });
+		$('html, body').animate({scrollTop: Math.ceil($('#cover-photo').height()) + 'px' });
 	}
 </script>
 

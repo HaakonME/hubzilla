@@ -283,12 +283,13 @@ $(function() {
 	/* Turn elements with one of our special rel tags into popup menus */
 	/* CHANGES: let bootstrap handle popups and only do the loading here */
 
-	$('a[rel^=#]').click(function(e){
+
+	$('a[rel^="#"]').click(function(e){
 		manage_popup_menu(this, e);
 		return;
 	});
 
-	$('span[rel^=#]').click(function(e){
+	$('span[rel^="#"]').click(function(e){
 		manage_popup_menu(this, e);
 		return;
 	});
@@ -679,8 +680,8 @@ function collapseHeight() {
 					speed: 0,
 					heightMargin: 50,
 					collapsedHeight: divmore_height,
-					moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
-					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',
+					moreLink: '<a href="#" class="divgrow-showmore fakelink">' + aStr.divgrowmore + '</a>',
+					lessLink: '<a href="#" class="divgrow-showmore fakelink">' + aStr.divgrowless + '</a>',
 					beforeToggle: function(trigger, element, expanded) {
 						if(expanded) {
 							if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {

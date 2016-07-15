@@ -82,6 +82,39 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	/* else just return */
 }
 
+function atoken_login($atoken) {
+	if(! $atoken)
+		return false;
+
+	$xchan = atoken_xchan($atoken);
+
+	$_SESSION['authenticated'] = 1;
+	$_SESSION['visitor_id'] = $xchan['xchan_hash'];
+	$_SESSION['atoken'] = $atoken['atoken_id'];
+
+	\App::set_observer($xchan);
+
+	return [ 'atoken' => true ];
+}
+
+
+function atoken_xchan($atoken) {
+
+	return [ 
+		'xchan_hash' =>  $atoken['atoken_uid'] . '.' . $atoken['atoken_name'],
+		'xchan_network' => 'unknown',
+		'xchan_hidden' => 1,
+		'xchan_photo_mimetype' => 'image/jpeg',
+		'xchan_photo_l' => get_default_profile_photo(300),
+		'xchan_photo_m' => get_default_profile_photo(80),
+		'xchan_photo_s' => get_default_profile_photo(48)
+
+	];
+
+}
+
+
+
 /**
  * @brief Change to another channel with current logged-in account.
  *

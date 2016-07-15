@@ -2045,5 +2045,8 @@ dl.bb-dl > dd > li {
 	list-style-type: none;
 }
 .atoken-list li {
-	margin-bottom: 8px;
+	margin-bottom: 10px;
+}
+.atoken-text {
+	margin: 5px 10px 5px 10px;
 }

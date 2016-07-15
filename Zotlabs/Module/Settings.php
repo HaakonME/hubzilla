@@ -134,7 +134,7 @@ class Settings extends \Zotlabs\Web\Controller {
 					$expires = NULL_DATE;
 			}
 			if($token_errs) {
-				notice( t('Name and Token are required.') . EOL);
+				notice( t('Name and Password are required.') . EOL);
 				return;
 			}
 			if($atoken_id) {
@@ -774,10 +774,13 @@ class Settings extends \Zotlabs\Web\Controller {
 				intval(local_channel())
 			);			
 
+			$desc = t('Use this form to create temporary access identifiers to share things with non-members. These identities may be used in Access Control Lists and visitors may login using these credentials to access the private content.');
+
 			$tpl = get_markup_template("settings_tokens.tpl");
 			$o .= replace_macros($tpl, array(
 				'$form_security_token' => get_form_security_token("settings_tokens"),
 				'$title'	=> t('Guest Access Tokens'),
+				'$desc'     => $desc,
 				'$tokens' => $t,
 				'$atoken' => $atoken,
 				'$name' => array('name', t('Login Name'), (($atoken) ? $atoken['atoken_name'] : ''),''),

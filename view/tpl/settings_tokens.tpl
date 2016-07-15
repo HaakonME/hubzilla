@@ -3,6 +3,7 @@
 		<h2>{{$title}}</h2>
 		<div class="clear"></div>
 	</div>
+	<div class="atoken-text descriptive-text">{{$desc}}</div>
 	<form action="settings/tokens" id="settings-account-form" method="post" autocomplete="off" >
 		<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 		{{if $atoken}}<input type="hidden" name="atoken_id" value="{{$atoken.atoken_id}}" />{{/if}}

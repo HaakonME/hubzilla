@@ -121,15 +121,22 @@ class Settings extends \Zotlabs\Web\Controller {
 
 		if((argc() > 1) && (argv(1) == 'tokens')) {
 			check_form_security_token_redirectOnErr('/settings/tokens', 'settings_tokens');
-			
-			$atoken_id = (($_POST['atoken_id']) ? intval($_POST['atoken_id']) : 0);
-			$name = trim(escape_tags($_POST['name']));
-			$token = trim($_POST['token']);
-			if(trim($_POST['expires']))
-				$expires = datetime_convert(date_default_timezone_get(),'UTC',$_POST['expires']);
-			else
-				$expires = NULL_DATE;
-
+			$token_errs = 0;
+			if(array_key_exists('token',$_POST)) {
+				$atoken_id = (($_POST['atoken_id']) ? intval($_POST['atoken_id']) : 0);
+				$name = trim(escape_tags($_POST['name']));
+				$token = trim($_POST['token']);
+				if((! $name) || (! $token))
+						$token_errs ++;
+				if(trim($_POST['expires']))
+					$expires = datetime_convert(date_default_timezone_get(),'UTC',$_POST['expires']);
+				else
+					$expires = NULL_DATE;
+			}
+			if($token_errs) {
+				notice( t('Name and Token are required.') . EOL);
+				return;
+			}
 			if($atoken_id) {
 				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expire = '%s' 
 					where atoken_id = %d and atoken_uid = %d",

@@ -653,7 +653,7 @@ function updateConvItems(mode,data) {
 }
 
 function collapseHeight() {
-	var origContentHeight = parseInt($("#region_2").height());
+	var origContentHeight = Math.ceil($("#region_2").height());
 	var cDiff = 0;
 	var i = 0;
 	var position = $(window).scrollTop();
@@ -663,19 +663,13 @@ function collapseHeight() {
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
 
-				//var trigger = $(window).scrollTop() < $(this).offset().top ? true : false;
-				//console.log($(this).offset().top + divmore_height - $(window).scrollTop() + cDiff - ($(".divgrow-showmore").outerHeight() * i));
-
 				// check if we will collapse some content above the visible content and compensate the diff later
 				if($(this).offset().top + divmore_height - $(window).scrollTop() + cDiff - ($(".divgrow-showmore").outerHeight() * i) < 65) {
-					//$(this).css('color', 'red');
-					//console.log($(this).offset().top + divmore_height + ' / ' + $(window).scrollTop());
 					diff = orgHeight - divmore_height;
 					cDiff = cDiff + diff;
 					i++;
 				}
 
-				//if(trigger) {
 				$(this).readmore({
 					speed: 0,
 					heightMargin: 50,
@@ -691,12 +685,11 @@ function collapseHeight() {
 					}
 				});
 				$(this).addClass('divmore');
-				//}
 			}
 		}
 	});
 
-	var collapsedContentHeight = parseInt($("#region_2").height());
+	var collapsedContentHeight = Math.ceil($("#region_2").height());
 	contentHeightDiff = origContentHeight - collapsedContentHeight;
 	console.log('collapseHeight() - contentHeightDiff: ' + contentHeightDiff + 'px');
 

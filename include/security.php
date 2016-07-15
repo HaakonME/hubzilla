@@ -100,18 +100,21 @@ function atoken_login($atoken) {
 
 function atoken_xchan($atoken) {
 
-	return [ 
-		'xchan_hash' =>  $atoken['atoken_uid'] . '.' . $atoken['atoken_name'],
-		'xchan_name' => $atoken['atoken_name'],
-		'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
-		'xchan_network' => 'unknown',
-		'xchan_hidden' => 1,
-		'xchan_photo_mimetype' => 'image/jpeg',
-		'xchan_photo_l' => get_default_profile_photo(300),
-		'xchan_photo_m' => get_default_profile_photo(80),
-		'xchan_photo_s' => get_default_profile_photo(48)
-
-	];
+	$c = channelx_by_n($atoken['atoken_uid']);
+	if($c) {
+		return [ 
+			'xchan_hash' =>  substr($c['channel_hash'],0,16) . '.' . $atoken['atoken_name'],
+			'xchan_name' => $atoken['atoken_name'],
+			'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
+			'xchan_network' => 'unknown',
+			'xchan_hidden' => 1,
+			'xchan_photo_mimetype' => 'image/jpeg',
+			'xchan_photo_l' => get_default_profile_photo(300),
+			'xchan_photo_m' => get_default_profile_photo(80),
+			'xchan_photo_s' => get_default_profile_photo(48)
+	
+		];
+	}
 
 }
 

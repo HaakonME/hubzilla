@@ -137,15 +137,17 @@ class Acl extends \Zotlabs\Web\Controller {
 					intval(local_channel())
 				);
 				if($r1) {
+					require_once('include/security.php');
 					$r2 = array();
 					foreach($r1 as $rr) {
+						$x = atoken_xchan($rr);
 						$r2[] = [ 
 							'id' => 'a' . $rr['atoken_id'] ,
-							'hash' => $rr['atoken_uid'] . '.' . $rr['atoken_name'],
-							'name' => $rr['atoken_name'],
-							'micro' => get_default_profile_photo(48),
+							'hash' => $x['xchan_hash'],
+							'name' => $x['xchan_name'],
+							'micro' => $x['xchan_photo_m'],
 							'url' => z_root(),
-							'nick' => t('guest:') . $rr['atoken_name'],
+							'nick' => $x['xchan_addr'],
 							'abook_their_perms' => 0,
 							'abook_flags' => 0,
 							'abook_self' => 0

@@ -47,7 +47,7 @@ Possible website applications include
 <em><a href="https://github.com/redmatrix/hubzilla/blob/master/install/INSTALL.txt">Installing Hubzilla</a></em> 
 </p>
 
-** Who Are We and What Are Our Principles? **
+**Who Are We and What Are Our Principles?**
 
 The Hubzilla community is powered by passionate volunteers creating an open source **commons** of decentralised services which are highly integrated and can rival the feature set of centralised providers. We are open to sponsorship and donations to cover expenses and compensate for our time and energy, however the project core is basically non-profit and is not designed for the purpose of commercial gain or exploitation. 
 

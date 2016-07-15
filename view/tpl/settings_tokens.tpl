@@ -17,9 +17,9 @@
 	</form>
 	{{if $tokens}}
 	<div>
-	<ul>
+	<ul class="atoken-list">
 	{{foreach $tokens as $t}}
-	<li><a href="settings/tokens/{{$t.atoken_id}}">{{$t.atoken_name}}</a> <a href="settings/tokens/{{$t.atoken_id}}/drop"><i class="fa fa-remove btn btn-xs btn-default pull-right"></i></a></li>
+	<li><span class="pull-right atoken-drop"><a href="settings/tokens/{{$t.atoken_id}}/drop"><i class="fa fa-trash btn btn-xs btn-default"></i></a></span><a href="settings/tokens/{{$t.atoken_id}}">{{$t.atoken_name}}</a></li>
 	{{/foreach}}
 	</ul>
 	</div>

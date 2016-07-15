@@ -138,7 +138,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				return;
 			}
 			if($atoken_id) {
-				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expire = '%s' 
+				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expires = '%s' 
 					where atoken_id = %d and atoken_uid = %d",
 					dbesc($name),
 					dbesc($token),
@@ -148,7 +148,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				);
 			}
 			else {
-				$r = q("insert into atoken ( atoken_aid, atoken_uid, atoken_name, atoken_token, atoken_expire )
+				$r = q("insert into atoken ( atoken_aid, atoken_uid, atoken_name, atoken_token, atoken_expires )
 					values ( %d, %d, '%s', '%s', '%s' ) ",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),

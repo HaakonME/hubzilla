@@ -2397,7 +2397,7 @@ function update_r1179() {
   KEY `atoken_token` (`atoken_token`),
   KEY `atoken_expires` (`atoken_expires`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
-
+	}
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

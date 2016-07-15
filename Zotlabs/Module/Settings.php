@@ -121,17 +121,24 @@ class Settings extends \Zotlabs\Web\Controller {
 
 		if((argc() > 1) && (argv(1) == 'tokens')) {
 			check_form_security_token_redirectOnErr('/settings/tokens', 'settings_tokens');
-			
-			$atoken_id = (($_POST['atoken_id']) ? intval($_POST['atoken_id']) : 0);
-			$name = trim(escape_tags($_POST['name']));
-			$token = trim($_POST['token']);
-			if(trim($_POST['expires']))
-				$expires = datetime_convert(date_default_timezone_get(),'UTC',$_POST['expires']);
-			else
-				$expires = NULL_DATE;
-
+			$token_errs = 0;
+			if(array_key_exists('token',$_POST)) {
+				$atoken_id = (($_POST['atoken_id']) ? intval($_POST['atoken_id']) : 0);
+				$name = trim(escape_tags($_POST['name']));
+				$token = trim($_POST['token']);
+				if((! $name) || (! $token))
+						$token_errs ++;
+				if(trim($_POST['expires']))
+					$expires = datetime_convert(date_default_timezone_get(),'UTC',$_POST['expires']);
+				else
+					$expires = NULL_DATE;
+			}
+			if($token_errs) {
+				notice( t('Name and Password are required.') . EOL);
+				return;
+			}
 			if($atoken_id) {
-				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expire = '%s' 
+				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expires = '%s' 
 					where atoken_id = %d and atoken_uid = %d",
 					dbesc($name),
 					dbesc($token),
@@ -141,7 +148,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				);
 			}
 			else {
-				$r = q("insert into atoken ( atoken_aid, atoken_uid, atoken_name, atoken_token, atoken_expire )
+				$r = q("insert into atoken ( atoken_aid, atoken_uid, atoken_name, atoken_token, atoken_expires )
 					values ( %d, %d, '%s', '%s', '%s' ) ",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
@@ -767,10 +774,13 @@ class Settings extends \Zotlabs\Web\Controller {
 				intval(local_channel())
 			);			
 
+			$desc = t('Use this form to create temporary access identifiers to share things with non-members. These identities may be used in Access Control Lists and visitors may login using these credentials to access the private content.');
+
 			$tpl = get_markup_template("settings_tokens.tpl");
 			$o .= replace_macros($tpl, array(
 				'$form_security_token' => get_form_security_token("settings_tokens"),
 				'$title'	=> t('Guest Access Tokens'),
+				'$desc'     => $desc,
 				'$tokens' => $t,
 				'$atoken' => $atoken,
 				'$name' => array('name', t('Login Name'), (($atoken) ? $atoken['atoken_name'] : ''),''),

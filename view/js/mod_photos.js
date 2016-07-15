@@ -3,7 +3,7 @@
  */
 $(document).ready(function() {
 
-	$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'p', false, function(data) {
+	$("#photo-edit-newtag").contact_autocomplete(baseurl + '/acl', 'a', false, function(data) {
 		$("#photo-edit-newtag").val('@' + data.name);
 	});
 

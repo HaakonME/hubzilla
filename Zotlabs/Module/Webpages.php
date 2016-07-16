@@ -211,7 +211,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 	
 	function post() {
 		
-		if(($_FILES) && array_key_exists('zip_file',$_FILES)) {
+		if(($_FILES) && array_key_exists('zip_file',$_FILES) && isset($_POST['w_upload'])) {
 			$source = $_FILES["zip_file"]["tmp_name"];
 			$type = $_FILES["zip_file"]["type"];
 			$okay = false;
@@ -256,7 +256,41 @@ class Webpages extends \Zotlabs\Web\Controller {
 				if($elements) {	
 					rrmdir($website);	// Delete the temporary decompressed files
 				}
-			}		
+			}	
+			
+			return null;
+		} 
+		
+		if (($_POST) && array_key_exists('url',$_POST) && isset($_POST['remotesubmit'])) {
+			$ret = [];
+			// Warning: Do not edit the following line. The first symbol is UTF-8 &#65312; 
+			$url = str_replace('@','@',notags(trim($_REQUEST['url'])));			
+			if(! allowed_url($url)) {
+				$ret['message'] = t('Channel is blocked on this site.');
+				return null;
+			}
+
+			$h = @parse_url($url);
+
+			if(! $h || !x($h, 'host') || !x($h, 'path')) {
+				return null;
+			}
+			if(substr($h['path'],-1,1) === '/') {
+				$h['path'] = substr($h['path'],0,-1);
+			}
+			if(substr($h['path'],0,1) === '/') {
+				$h['path'] = substr($h['path'],1);
+			}
+			$folders = explode('/', $h['path']);
+			if(!(array_shift($folders) === 'cloud')) {
+				return null;
+			}
+			$nick = array_shift($folders);
+			if(!$nick) {
+				return null;
+			}
+			return null;
+			
 		}
 	}
 	

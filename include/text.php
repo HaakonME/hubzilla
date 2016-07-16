@@ -2270,7 +2270,11 @@ function website_import_tools() {
 		'$import_label' => t('Import website...'),
 		'$import_placeholder' => t('Select folder to import'),
 		'$file_upload_text' => t('Import from a zipped folder:'),
-		'$file_import_text' => t('Import from cloud files:')
+		'$file_import_text' => t('Import from cloud files:'),
+		'$file_remote_text' => t('Import from another channel'),
+		'$desc' => t('https://example.com/cloud/peter/sharedfolder'),
+		'$hint' => t('https://example.com/cloud/peter/sharedfolder'),
+		'$follow' => t('Import'),
 	));
 }
 

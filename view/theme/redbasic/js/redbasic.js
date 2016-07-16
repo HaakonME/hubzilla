@@ -59,13 +59,12 @@ function makeFullScreen(full) {
 		$('header, nav, aside, #fullscreen-btn').hide();
 		$('#tabs-collapse-1').css({'visibility': 'hidden'});
 		$('#inline-btn').show();
-
 	}
 	else {
 		$('main').removeClass('fullscreen');
-		$('header, nav, aside, #inline-btn').hide();
+		$('header, nav, aside, #fullscreen-btn').show();
 		$('#tabs-collapse-1').css({'visibility': ''});
-		$('#fullscreen-btn').show();
+		$('#inline-btn').hide();
 		$('main').css({'transition': ''});
 	}
 }

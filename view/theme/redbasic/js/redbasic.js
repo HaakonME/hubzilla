@@ -56,15 +56,15 @@ $(document).ready(function() {
 function makeFullScreen(full) {
 	if(typeof full=='undefined' || full == true) {
 		$('main').css({'transition': 'none'}).addClass('fullscreen');
-		$('header, nav, aside, #tabs-collapse-1').css({'visibility': 'hidden'});
-		$('#fullscreen-btn').hide();
+		$('header, nav, aside, #fullscreen-btn').hide();
+		$('#tabs-collapse-1').css({'visibility': 'hidden'});
 		$('#inline-btn').show();
 
 	}
 	else {
 		$('main').removeClass('fullscreen');
-		$('header, nav, aside, #tabs-collapse-1').css({'visibility': ''});
-		$('#inline-btn').hide();
+		$('header, nav, aside, #inline-btn').hide();
+		$('#tabs-collapse-1').css({'visibility': ''});
 		$('#fullscreen-btn').show();
 		$('main').css({'transition': ''});
 	}

@@ -44,10 +44,10 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.9' );
+define ( 'STD_VERSION',             '1.9.1' );
 define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1179  );
+define ( 'DB_UPDATE_VERSION',       1180  );
 
 
 /**
@@ -1703,7 +1703,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
 		'$form_id'      => $form_id,
-		'$lname'        => array('username', t('Email') , '', ''),
+		'$lname'        => array('username', t('Login/Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),
 		'$remember_me'  => array('remember_me', t('Remember me'), '', '',array(t('No'),t('Yes'))),
 		'$hiddens'      => $hiddens,

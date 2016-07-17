@@ -1416,9 +1416,6 @@ img.mail-conv-sender-photo {
 	display: block;
 	border-top: 1px dashed #ccc;
 	text-align: center;
-	font-size: $body_font_size;
-	color: $link_colour;
-	cursor: pointer;	
 }
 
 .divgrow-showmore:hover {
@@ -2042,4 +2039,19 @@ dl.bb-dl > dd > li {
 
 #wiki-preview img {
     max-width: 100%;
+.atoken-list {
+	margin-right: 5px;
+	list-style-type: none;
+}
+.atoken-list li {
+	margin-bottom: 10px;
+}
+.atoken-text {
+	margin: 5px 10px 5px 10px;
+}
+.atoken-example {
+	margin-left: 20px;
+}
+.zat-example {
+	color: red;
 }

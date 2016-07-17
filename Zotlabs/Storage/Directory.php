@@ -369,6 +369,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		);
 
 		if ($r) {
+			require_once('include/attach.php');
 			$result = attach_mkdir($r[0], $this->auth->observer, array('filename' => $name, 'folder' => $this->folder_hash));
 
 			if($result['success']) {

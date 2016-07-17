@@ -20,8 +20,8 @@
 		</form>
 		<div class="descriptive-text">{{$desc2}}</div>
 		<ul>
-			<li>{{$url1}}<span class="zat-example">&f=&zat=<span class="token-mirror"></span></span></li>
-			<li>{{$url2}}<span class="zat-example">&f=&zat=<span class="token-mirror"></span></span></li>
+			<li>{{$url1}}<span class="zat-example">?f=&zat=<span class="token-mirror"></span></span></li>
+			<li>{{$url2}}<span class="zat-example">?f=&zat=<span class="token-mirror"></span></span></li>
 		</ul>
 	</div>
 	{{if $tokens}}

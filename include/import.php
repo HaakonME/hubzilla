@@ -1223,15 +1223,15 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 		$dirtoscan = $path;
 		switch ($type) {
 			case 'page':
-				$dirtoscan .= '/pages/';
+				$dirtoscan .= 'pages/';
 				$json_filename = 'page.json';
 				break;
 			case 'layout':
-				$dirtoscan .= '/layouts/';
+				$dirtoscan .= 'layouts/';
 				$json_filename = 'layout.json';
 				break;
 			case 'block':
-				$dirtoscan .= '/blocks/';
+				$dirtoscan .= 'blocks/';
 				$json_filename = 'block.json';
 				break;
 			default :
@@ -1251,7 +1251,7 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 					$folder = $dirtoscan . '/' . $element;
 					if (is_dir($folder)) {
 						if($cloud) {
-							$jsonfilepath = get_filename_by_cloudname($json_filename, $channel, $folder);
+							$jsonfilepath = $folder . '/' . get_filename_by_cloudname($json_filename, $channel, $folder);
 						} else {
 							$jsonfilepath = $folder . '/' . $json_filename;
 						}

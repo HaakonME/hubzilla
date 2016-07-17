@@ -1972,7 +1972,7 @@ function get_filename_by_cloudname($cloudname, $channel, $storepath) {
 	foreach($items as $item) {
 		$filename = find_filename_by_hash($channel['channel_id'], $item);
 		if($filename === $cloudname) {
-			return $filename;
+			return $item;
 		}
 	}
 	return null;

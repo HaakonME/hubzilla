@@ -269,9 +269,28 @@ class Webpages extends \Zotlabs\Web\Controller {
 				notice( t('Invalid folder path.') . EOL);
 				return null;
 			}
-			info( t('Valid folder path.') . EOL);
+				require_once('include/import.php');
+				$elements = [];
+				$elements['pages'] = scan_webpage_elements($_POST['path'], 'page', true);
+				$elements['layouts'] = scan_webpage_elements($_POST['path'], 'layout', true);
+				$elements['blocks'] = scan_webpage_elements($_POST['path'], 'block', true);
+			logger('elements: ' . json_encode($elements));
+			if(!(empty($elements['pages']) && empty($elements['blocks']) && empty($elements['layouts']))) {
+				info( t('Webpages elements detected.') . EOL);
+			}
 			
-			
+			// Import layout first so that pages that reference new layouts will find
+			// the mid of layout items in the database
+			foreach($elements['layouts'] as &$layout) {
+				$layout = import_webpage_element($layout, $channel, 'layout');
+			}
+			foreach($elements['pages'] as &$page) {
+				$page = import_webpage_element($page, $channel, 'page');
+			}
+			foreach($elements['blocks'] as &$block) {
+				$block = import_webpage_element($block, $channel, 'block');
+			}
+
 			
 			return null;
 			

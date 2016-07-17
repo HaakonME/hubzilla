@@ -206,7 +206,6 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		require_once('include/attach.php');
 
 		$mimetype = z_mime_content_type($name);
 

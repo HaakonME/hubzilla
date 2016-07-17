@@ -261,18 +261,14 @@ class Webpages extends \Zotlabs\Web\Controller {
 			return null;
 		} 
 		
-		if (($_POST) && array_key_exists('url',$_POST) && isset($_POST['remotesubmit'])) {
+		if (($_POST) && array_key_exists('path',$_POST) && isset($_POST['cloudsubmit'])) {
 			$ret = [];
 			// Warning: Do not edit the following line. The first symbol is UTF-8 &#65312; 
-			$url = str_replace('@','@',notags(trim($_REQUEST['url'])));			
-			if(! allowed_url($url)) {
-				$ret['message'] = t('Channel is blocked on this site.');
-				return null;
-			}
+			$path = str_replace('@','@',notags(trim($_REQUEST['path'])));		
 
-			$h = @parse_url($url);
+			$h = @parse_url($path);
 
-			if(! $h || !x($h, 'host') || !x($h, 'path')) {
+			if(! $h || !x($h, 'path')) {
 				return null;
 			}
 			if(substr($h['path'],-1,1) === '/') {
@@ -282,13 +278,47 @@ class Webpages extends \Zotlabs\Web\Controller {
 				$h['path'] = substr($h['path'],1);
 			}
 			$folders = explode('/', $h['path']);
-			if(!(array_shift($folders) === 'cloud')) {
-				return null;
+			$f = array_shift($folders);
+			
+			$channel = \App::get_channel();
+			$nick = \App::$profile['channel_address'];
+			//check to see if the absolute path was provided (/cloud/channelname/path/to/folder)
+			if(($f === 'cloud') ) { 
+				$g = array_shift($folders);
+				if( $g !== $nick) {
+					// if nick does not follow "cloud", then the top level folder must be called  "cloud"
+					// and the given path must be relative to "/cloud/channelname/". 
+					$folders = array_unshift($f,array_unshift($g, $folders));
+				} 
 			}
-			$nick = array_shift($folders);
-			if(!$nick) {
-				return null;
+			$clouddir = 'store/' . $nick . '/';
+			$folder_path = $clouddir . implode('/', $folders);
+			
+			
+//			if(!(is_dir($folder_path) && is_readable($folder_path))) {
+//				logger('path is not readable: ' . $folder_path);
+//				return null;
+//			}
+			$subdir = '/';
+			$valid = true;
+			while($folders && $valid && is_dir($clouddir . $subdir) && is_readable($clouddir . $subdir)) {
+				logger('hashed path: ' . $clouddir . $subdir);
+				$valid = false;
+				$f = array_shift($folders);
+				$items = array_diff(scandir($clouddir . $subdir), array('.', '..')); // hashed names
+				foreach($items as $item) {
+					$filename = find_filename_by_hash($channel['channel_id'], $item);
+					if($filename === $f) {
+						$subdir .= $item . '/';
+						$valid = true;
+					}
+				}
 			}
+			if(!$valid) {
+				logger('path is not valid: ' . $folder_path);
+			}
+			
+			
 			return null;
 			
 		}

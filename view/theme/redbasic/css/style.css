@@ -1655,6 +1655,7 @@ main.fullscreen .section-content-wrapper-np {
 	display: none;
 }
 
+.atoken-index-row:hover td,
 .chatroom-index-row:hover td,
 .locs-index-row:hover td,
 [id^="cloud-index-"]:hover td,
@@ -2035,21 +2036,4 @@ dl.bb-dl > dd > li {
     border-color: blue;
     border-style: solid;
     border-width: 5px;
-}
-
-.atoken-list {
-	margin-right: 5px;
-	list-style-type: none;
-}
-.atoken-list li {
-	margin-bottom: 10px;
-}
-.atoken-text {
-	margin: 5px 10px 5px 10px;
-}
-.atoken-example {
-	margin-left: 20px;
-}
-.zat-example {
-	color: red;
 }

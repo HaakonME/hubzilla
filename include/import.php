@@ -1218,8 +1218,8 @@ function convert_oldfields(&$arr,$old,$new) {
 	}
 }
 
-function scan_webpage_elements($path, $type) {
-
+function scan_webpage_elements($path, $type, $cloud = false) {
+		$channel = \App::get_channel();
 		$dirtoscan = $path;
 		switch ($type) {
 			case 'page':
@@ -1237,6 +1237,9 @@ function scan_webpage_elements($path, $type) {
 			default :
 				return array();
 		}
+		if($cloud) {
+			$dirtoscan = get_dirpath_by_cloudpath($channel, $dirtoscan);
+		}
 		$elements = [];
 		if (is_dir($dirtoscan)) {
 			$dirlist = scandir($dirtoscan);
@@ -1247,15 +1250,25 @@ function scan_webpage_elements($path, $type) {
 					}
 					$folder = $dirtoscan . '/' . $element;
 					if (is_dir($folder)) {
-						$jsonfilepath = $folder . '/' . $json_filename;
+						if($cloud) {
+							$jsonfilepath = get_filename_by_cloudname($json_filename, $channel, $folder);
+						} else {
+							$jsonfilepath = $folder . '/' . $json_filename;
+						}
 						if (is_file($jsonfilepath)) {
 							$metadata = json_decode(file_get_contents($jsonfilepath), true);
-							$metadata['path'] = $folder . '/' . $metadata['contentfile'];
+							if($cloud) {
+								$contentfilename = get_filename_by_cloudname($metadata['contentfile'], $channel, $folder);
+								$metadata['path'] = $folder . '/' . $contentfilename;
+							} else {
+								$contentfilename = $metadata['contentfile'];
+								$metadata['path'] = $folder . '/' . $contentfilename;
+							}
 							if ($metadata['contentfile'] === '') {
 								logger('Invalid ' . $type . ' content file');
 								return false;
 							}
-							$content = file_get_contents($folder . '/' . $metadata['contentfile']);
+							$content = file_get_contents($folder . '/' . $contentfilename);
 							if (!$content) {
 								logger('Failed to get file content for ' . $metadata['contentfile']);
 								return false;

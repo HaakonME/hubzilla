@@ -1910,3 +1910,70 @@ function get_attach_binname($s) {
 	}
 	return $p;
 }
+
+
+function get_dirpath_by_cloudpath($channel, $path) {
+	
+	// Warning: Do not edit the following line. The first symbol is UTF-8 &#65312; 
+	$path = str_replace('@','@',notags(trim($path)));		
+
+	$h = @parse_url($path);
+
+	if(! $h || !x($h, 'path')) {
+		return null;
+	}
+	if(substr($h['path'],-1,1) === '/') {
+		$h['path'] = substr($h['path'],0,-1);
+	}
+	if(substr($h['path'],0,1) === '/') {
+		$h['path'] = substr($h['path'],1);
+	}
+	$folders = explode('/', $h['path']);
+	$f = array_shift($folders);
+	
+	$nick = $channel['channel_address'];
+	//check to see if the absolute path was provided (/cloud/channelname/path/to/folder)
+	if($f === 'cloud' ) { 
+		$g = array_shift($folders);
+		if( $g !== $nick) {
+			// if nick does not follow "cloud", then the top level folder must be called  "cloud"
+			// and the given path must be relative to "/cloud/channelname/". 
+			$folders = array_unshift(array_unshift($folders, $g), $f);
+		} 
+	} else {
+		array_unshift($folders, $f);
+	}
+	$clouddir = 'store/' . $nick . '/' ;
+	$subdir = '/';
+	$valid = true;
+	while($folders && $valid && is_dir($clouddir . $subdir) && is_readable($clouddir . $subdir)) {
+		$valid = false;
+		$f = array_shift($folders);
+		$items = array_diff(scandir($clouddir . $subdir), array('.', '..')); // hashed names
+		foreach($items as $item) {
+			$filename = find_filename_by_hash($channel['channel_id'], $item);
+			if($filename === $f) {
+				$subdir .= $item . '/';
+				$valid = true;
+			}
+		}
+	}
+	if(!$valid) {
+		return null;
+	} else {
+		return $clouddir . $subdir;
+	}
+	
+	
+}
+
+function get_filename_by_cloudname($cloudname, $channel, $storepath) {
+	$items = array_diff(scandir($storepath), array('.', '..')); // hashed names
+	foreach($items as $item) {
+		$filename = find_filename_by_hash($channel['channel_id'], $item);
+		if($filename === $cloudname) {
+			return $filename;
+		}
+	}
+	return null;
+}

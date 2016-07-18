@@ -640,7 +640,7 @@ function updateConvItems(mode,data) {
 	var bimgcount = bimgs.length;
 
 	if (bimgcount) {
-		bimgs.load(function() {
+		bimgs.on('load',function() {
 			bimgcount--;
 			if (! bimgcount) {
 				collapseHeight();

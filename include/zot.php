@@ -12,6 +12,7 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
 require_once('include/queue_fn.php');
+require_once('include/perm_upgrade.php');
 
 
 /**
@@ -2936,6 +2937,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$channel = $r[0];
 
+	translate_channel_perms_outbound($channel);
+
 	if(intval($channel['channel_removed']))
 		return;
 
@@ -3132,6 +3135,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 
+			translate_channel_perms_inbound($arr['channel']);
+
 			if(array_key_exists('channel_pageflags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
 				// These flags cannot be sync'd.
 				// remove the bits from the incoming flags.
@@ -3145,7 +3150,15 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 			}
 			
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_deleted', 'channel_system');
+			$disallowed = [ 
+				'channel_id',        'channel_account_id',  'channel_primary',   'channel_prvkey', 
+				'channel_address',   'channel_notifyflags', 'channel_removed',   'channel_deleted', 
+				'channel_system',    'channel_r_stream',    'channel_r_profile', 'channel_r_abook', 
+				'channel_r_storage', 'channel_r_pages',     'channel_w_stream',  'channel_w_wall', 
+				'channel_w_comment', 'channel_w_mail',      'channel_w_like',    'channel_w_tagwall', 
+				'channel_w_chat',    'channel_w_storage',   'channel_w_pages',   'channel_a_republish', 
+				'channel_a_delegate' 
+			];
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {

@@ -159,7 +159,7 @@ function embedphotos_widget_album($args) {
 			'$upload' => array(t('Upload'), z_root() . '/photos/' . \App::$profile['channel_address'] . '/upload/' . bin2hex($album)),
 			'$order' => false,
 			'$upload_form' => $upload_form,
-			'$usage' => $usage_message
+			'$no_fullscreen_btn' => true
 		));
 
 		return $o;

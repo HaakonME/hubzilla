@@ -609,6 +609,15 @@ function widget_settings_menu($arr) {
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
 
+	if(! UNO) {
+		$tabs[] =	array(
+			'label' => t('Guest Access Tokens'),
+			'url' => z_root() . '/settings/tokens',
+			'selected' => ((argv(1) === 'tokens') ? 'active' : ''),
+		);
+	}
+
+
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(
 			'label' => t('Connection Default Permissions'),

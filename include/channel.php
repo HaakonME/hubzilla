@@ -6,6 +6,7 @@
 require_once('include/zot.php');
 require_once('include/crypto.php');
 require_once('include/menu.php');
+require_once('include/perm_upgrade.php');
 
 /**
  * @brief Called when creating a new channel.
@@ -497,7 +498,8 @@ function identity_basic_export($channel_id, $items = false) {
 		intval($channel_id)
 	);
 	if($r) {
-		$ret['channel'] = $r[0];
+		translate_channel_perms_outbound($r[0]);
+		$ret['channel'] = $r[0];		
 		$ret['relocate'] = [ 'channel_address' => $r[0]['channel_address'], 'url' => z_root()];
 	}
 

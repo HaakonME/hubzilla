@@ -2938,6 +2938,12 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	$channel = $r[0];
 
 	translate_channel_perms_outbound($channel);
+	if($packet && array_key_exists('abook',$packet) && $packet['abook']) {
+		for($x = 0; $x < count($packet['abook']); $x ++) {
+			translate_abook_perms_outbound($packet['abook'][$x]);
+		}
+	}
+
 
 	if(intval($channel['channel_removed']))
 		return;
@@ -3195,6 +3201,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 			foreach($arr['abook'] as $abook) {
 
+				
+
 				$abconfig = null;
 
 				if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && count($abook['abconfig']))
@@ -3288,6 +3296,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']));
 					}
 				}
+
+				// This will set abconfig vars if the sender is using old-style fixed permissions
+				// using the raw abook record as passed to us. New-style permissions will fall through
+				// and be set using abconfig
+
+				translate_abook_perms_inbound($channel,$abook);
 
 				if($abconfig) {
 					// @fixme does not handle sync of del_abconfig

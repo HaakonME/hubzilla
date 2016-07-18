@@ -521,6 +521,7 @@ function identity_basic_export($channel_id, $items = false) {
 			$abconfig = load_abconfig($channel_id,$ret['abook'][$x]['abook_xchan']);
 			if($abconfig)
 				$ret['abook'][$x]['abconfig'] = $abconfig;
+			translate_abook_perms_outbound($ret['abook'][$x]);
 		}		 
 		stringify_array_elms($xchans);
 	}

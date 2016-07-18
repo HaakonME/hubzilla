@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/menu.php');
+require_once('include/perm_upgrade.php');
 
 function import_channel($channel, $account_id, $seize) {
 

@@ -3062,7 +3062,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 	require_once('include/import.php');
 
-	/** @FIXME this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic. */
+	/** @FIXME this will sync red structures (channel, pconfig and abook). 
+		Eventually we need to make this application agnostic. */
 
 	$result = array();
 

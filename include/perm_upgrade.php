@@ -39,7 +39,6 @@ function perm_abook_upgrade($abook) {
 	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','delegate',intval(($abook['abook_their_perms'] & PERMS_A_DELEGATE)? 1 : 0));
 
 
-
 	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_stream',intval(($abook['abook_my_perms'] & PERMS_R_STREAM)? 1 : 0));
 	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_profile',intval(($abook['abook_my_perms'] & PERMS_R_PROFILE)? 1 : 0));
 	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_contacts',intval(($abook['abook_my_perms'] & PERMS_R_ABOOK)? 1 : 0));
@@ -59,8 +58,6 @@ function perm_abook_upgrade($abook) {
 
 
 }
-
-
 
 function translate_channel_perms_outbound(&$channel) {
 	$r = q("select * from pconfig where uid = %d and cat = 'perm_limits' ",
@@ -116,6 +113,106 @@ function translate_channel_perms_inbound($channel) {
 	}
 	else {
 		perm_limits_upgrade($channel);
+	}
+
+}
+
+function translate_abook_perms_outbound(&$abook) {
+	$my_perms = 0;
+	$their_perms = 0;
+
+	if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && $abook['abconfig']) {
+		foreach($abook['abconfig'] as $p) {
+			if($p['cat'] === 'their_perms') {
+				if($p['k'] === 'view_stream' && intval($p['v']))
+					$their_perms += PERMS_R_STREAM; 
+				if($p['k'] === 'view_profile' && intval($p['v']))
+					$their_perms += PERMS_R_PROFILE;
+				if($p['k'] === 'view_contacts' && intval($p['v']))
+					$their_perms += PERMS_R_ABOOK; 
+				if($p['k'] === 'view_storage' && intval($p['v']))
+					$their_perms += PERMS_R_STORAGE; 
+				if($p['k'] === 'view_pages' && intval($p['v']))
+					$their_perms += PERMS_R_PAGES; 
+				if($p['k'] === 'send_stream' && intval($p['v']))
+					$their_perms += PERMS_W_STREAM; 
+				if($p['k'] === 'post_wall' && intval($p['v']))
+					$their_perms += PERMS_W_WALL; 
+				if($p['k'] === 'post_comments' && intval($p['v']))
+					$their_perms += PERMS_W_COMMENT; 
+				if($p['k'] === 'post_mail' && intval($p['v']))
+					$their_perms += PERMS_W_MAIL; 
+				if($p['k'] === 'post_like' && intval($p['v']))
+					$their_perms += PERMS_W_LIKE; 
+				if($p['k'] === 'tag_deliver' && intval($p['v']))
+					$their_perms += PERMS_W_TAGWALL; 
+				if($p['k'] === 'chat' && intval($p['v']))
+					$their_perms += PERMS_W_CHAT; 
+				if($p['k'] === 'write_storage' && intval($p['v']))
+					$their_perms += PERMS_W_STORAGE; 
+				if($p['k'] === 'write_pages' && intval($p['v']))
+					$their_perms += PERMS_W_PAGES; 
+				if($p['k'] === 'republish' && intval($p['v']))
+					$their_perms += PERMS_A_REPUBLISH; 
+				if($p['k'] === 'delegate' && intval($p['v']))
+					$their_perms += PERMS_A_DELEGATE; 
+			}
+			if($p['cat'] === 'my_perms') {
+				if($p['k'] === 'view_stream' && intval($p['v']))
+					$my_perms += PERMS_R_STREAM; 
+				if($p['k'] === 'view_profile' && intval($p['v']))
+					$my_perms += PERMS_R_PROFILE;
+				if($p['k'] === 'view_contacts' && intval($p['v']))
+					$my_perms += PERMS_R_ABOOK; 
+				if($p['k'] === 'view_storage' && intval($p['v']))
+					$my_perms += PERMS_R_STORAGE; 
+				if($p['k'] === 'view_pages' && intval($p['v']))
+					$my_perms += PERMS_R_PAGES; 
+				if($p['k'] === 'send_stream' && intval($p['v']))
+					$my_perms += PERMS_W_STREAM; 
+				if($p['k'] === 'post_wall' && intval($p['v']))
+					$my_perms += PERMS_W_WALL; 
+				if($p['k'] === 'post_comments' && intval($p['v']))
+					$my_perms += PERMS_W_COMMENT; 
+				if($p['k'] === 'post_mail' && intval($p['v']))
+					$my_perms += PERMS_W_MAIL; 
+				if($p['k'] === 'post_like' && intval($p['v']))
+					$my_perms += PERMS_W_LIKE; 
+				if($p['k'] === 'tag_deliver' && intval($p['v']))
+					$my_perms += PERMS_W_TAGWALL; 
+				if($p['k'] === 'chat' && intval($p['v']))
+					$my_perms += PERMS_W_CHAT; 
+				if($p['k'] === 'write_storage' && intval($p['v']))
+					$my_perms += PERMS_W_STORAGE; 
+				if($p['k'] === 'write_pages' && intval($p['v']))
+					$my_perms += PERMS_W_PAGES; 
+				if($p['k'] === 'republish' && intval($p['v']))
+					$my_perms += PERMS_A_REPUBLISH; 
+				if($p['k'] === 'delegate' && intval($p['v']))
+					$my_perms += PERMS_A_DELEGATE; 
+			}
+		}
+	}
+	$abook['abook_their_perms'] = $their_perms;
+	$abook['abook_my_perms'] = $my_perms;
+}
+
+function translate_abook_perms_inbound($channel,$abook) {
+
+	$new_perms = false;
+	$abook['abook_channel'] = $channel['channel_id'];
+
+	if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && $abook['abconfig']) {
+			foreach($abook['abconfig'] as $p) {
+			if($p['cat'] == 'their_perms' || $p['cat'] == 'my_perms') {
+				$new_perms = true; 
+				break;
+			}
+		}
+	}
+
+	if($new_perms == false) {
+		perm_abook_upgrade($abook);
 	}
 
 }

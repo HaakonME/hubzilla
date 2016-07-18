@@ -687,7 +687,7 @@ function get_tags($s) {
 
 	// ignore anything in a code block
 
-	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
+	$s = preg_replace('/\[code(.*?)\](.*?)\[\/code\]/sm','',$s);
 
 	// ignore anything in [style= ]
 	$s = preg_replace('/\[style=(.*?)\]/sm','',$s);

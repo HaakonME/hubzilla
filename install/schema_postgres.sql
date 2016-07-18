@@ -137,6 +137,21 @@ create index "app_created" on app ("app_created");
 create index "app_edited" on app ("app_edited");
 create index "app_deleted" on app ("app_deleted");
 create index "app_system" on app ("app_system");
+
+CREATE TABLE "atoken" (
+  "atoken_id" serial NOT NULL,
+  "atoken_aid" bigint NOT NULL DEFAULT 0,
+  "atoken_uid" bigint NOT NULL DEFAULT 0,
+  "atoken_name" varchar(255) NOT NULL DEFAULT '',
+  "atoken_token" varchar(255) NOT NULL DEFAULT '',
+  "atoken_expires" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  PRIMARY KEY ("atoken_id"));
+create index atoken_aid on atoken (atoken_aid);
+create index atoken_uid on atoken (atoken_uid);
+create index atoken_name on atoken (atoken_name);
+create index atoken_token on atoken (atoken_token);
+create index atoken_expires on atoken (atoken_expires);
+
 CREATE TABLE "attach" (
   "id" serial  NOT NULL,
   "aid" bigint  NOT NULL DEFAULT '0',

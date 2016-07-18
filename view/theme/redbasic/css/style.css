@@ -1416,9 +1416,6 @@ img.mail-conv-sender-photo {
 	display: block;
 	border-top: 1px dashed #ccc;
 	text-align: center;
-	font-size: $body_font_size;
-	color: $link_colour;
-	cursor: pointer;	
 }
 
 .divgrow-showmore:hover {
@@ -1658,6 +1655,7 @@ main.fullscreen .section-content-wrapper-np {
 	display: none;
 }
 
+.atoken-index-row:hover td,
 .chatroom-index-row:hover td,
 .locs-index-row:hover td,
 [id^="cloud-index-"]:hover td,

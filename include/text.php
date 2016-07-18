@@ -774,6 +774,10 @@ function strip_zids($s) {
 	return preg_replace('/[\?&]zid=(.*?)(&|$)/ism','$2',$s);
 }
 
+function strip_zats($s) {
+	return preg_replace('/[\?&]zat=(.*?)(&|$)/ism','$2',$s);
+}
+
 
 // quick and dirty quoted_printable encoding
 

@@ -146,13 +146,40 @@ class Acl extends \Zotlabs\Web\Controller {
 			if(local_channel()) {
 				if($extra_channels_sql != '')
 					$extra_channels_sql = " OR (abook_channel IN ($extra_channels_sql)) and abook_hidden = 0 ";
+
+				$r2 = null;
+
+				$r1 = q("select * from atoken where atoken_uid = %d",
+					intval(local_channel())
+				);
+				if($r1) {
+					require_once('include/security.php');
+					$r2 = array();
+					foreach($r1 as $rr) {
+						$x = atoken_xchan($rr);
+						$r2[] = [ 
+							'id' => 'a' . $rr['atoken_id'] ,
+							'hash' => $x['xchan_hash'],
+							'name' => $x['xchan_name'],
+							'micro' => $x['xchan_photo_m'],
+							'url' => z_root(),
+							'nick' => $x['xchan_addr'],
+							'abook_their_perms' => 0,
+							'abook_flags' => 0,
+							'abook_self' => 0
+						];
+					}
+				} 
+
 	
 				$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, xchan_pubforum, abook_flags, abook_self 
 					FROM abook left join xchan on abook_xchan = xchan_hash 
 					WHERE (abook_channel = %d $extra_channels_sql) AND abook_blocked = 0 and abook_pending = 0 and xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
 					intval(local_channel())
 				);
-	
+				if($r2)
+					$r = array_merge($r2,$r);
+
 			}
 			else { // Visitors
 				$r = q("SELECT xchan_hash as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags, 0 as abook_self

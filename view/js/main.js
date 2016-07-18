@@ -283,12 +283,13 @@ $(function() {
 	/* Turn elements with one of our special rel tags into popup menus */
 	/* CHANGES: let bootstrap handle popups and only do the loading here */
 
-	$('a[rel^=#]').click(function(e){
+
+	$('a[rel^="#"]').click(function(e){
 		manage_popup_menu(this, e);
 		return;
 	});
 
-	$('span[rel^=#]').click(function(e){
+	$('span[rel^="#"]').click(function(e){
 		manage_popup_menu(this, e);
 		return;
 	});
@@ -639,7 +640,7 @@ function updateConvItems(mode,data) {
 	var bimgcount = bimgs.length;
 
 	if (bimgcount) {
-		bimgs.load(function() {
+		bimgs.on('load',function() {
 			bimgcount--;
 			if (! bimgcount) {
 				collapseHeight();
@@ -652,7 +653,7 @@ function updateConvItems(mode,data) {
 }
 
 function collapseHeight() {
-	var origContentHeight = parseInt($("#region_2").height());
+	var origContentHeight = Math.ceil($("#region_2").height());
 	var cDiff = 0;
 	var i = 0;
 	var position = $(window).scrollTop();
@@ -662,25 +663,19 @@ function collapseHeight() {
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
 
-				//var trigger = $(window).scrollTop() < $(this).offset().top ? true : false;
-				//console.log($(this).offset().top + divmore_height - $(window).scrollTop() + cDiff - ($(".divgrow-showmore").outerHeight() * i));
-
 				// check if we will collapse some content above the visible content and compensate the diff later
 				if($(this).offset().top + divmore_height - $(window).scrollTop() + cDiff - ($(".divgrow-showmore").outerHeight() * i) < 65) {
-					//$(this).css('color', 'red');
-					//console.log($(this).offset().top + divmore_height + ' / ' + $(window).scrollTop());
 					diff = orgHeight - divmore_height;
 					cDiff = cDiff + diff;
 					i++;
 				}
 
-				//if(trigger) {
 				$(this).readmore({
 					speed: 0,
 					heightMargin: 50,
 					collapsedHeight: divmore_height,
-					moreLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowmore + '</a>',
-					lessLink: '<a href="#" class="divgrow-showmore">' + aStr.divgrowless + '</a>',
+					moreLink: '<a href="#" class="divgrow-showmore fakelink">' + aStr.divgrowmore + '</a>',
+					lessLink: '<a href="#" class="divgrow-showmore fakelink">' + aStr.divgrowless + '</a>',
 					beforeToggle: function(trigger, element, expanded) {
 						if(expanded) {
 							if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
@@ -690,12 +685,11 @@ function collapseHeight() {
 					}
 				});
 				$(this).addClass('divmore');
-				//}
 			}
 		}
 	});
 
-	var collapsedContentHeight = parseInt($("#region_2").height());
+	var collapsedContentHeight = Math.ceil($("#region_2").height());
 	contentHeightDiff = origContentHeight - collapsedContentHeight;
 	console.log('collapseHeight() - contentHeightDiff: ' + contentHeightDiff + 'px');
 

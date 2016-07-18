@@ -20,8 +20,6 @@ function perm_limits_upgrade($channel) {
 }
 
 
-
-
 function perm_abook_upgrade($abook) {
 	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','view_stream',intval(($abook['abook_their_perms'] & PERMS_R_STREAM)? 1 : 0));
 	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','view_profile',intval(($abook['abook_their_perms'] & PERMS_R_PROFILE)? 1 : 0));
@@ -61,3 +59,6 @@ function perm_abook_upgrade($abook) {
 
 
 }
+
+
+

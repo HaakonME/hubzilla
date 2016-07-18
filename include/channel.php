@@ -1310,13 +1310,12 @@ function get_my_address() {
  * If somebody arrives at our site using a zid, add their xchan to our DB if we don't have it already.
  * And if they aren't already authenticated here, attempt reverse magic auth.
  *
- * @param App &$a
  *
  * @hooks 'zid_init'
  *      string 'zid' - their zid
  *      string 'url' - the destination url
  */
-function zid_init(&$a) {
+function zid_init() {
 	$tmp_str = get_my_address();
 	if(validate_email($tmp_str)) {
 		Zotlabs\Daemon\Master::Summon(array('Gprobe',bin2hex($tmp_str)));
@@ -1341,6 +1340,28 @@ function zid_init(&$a) {
 		}
 	}
 }
+
+/**
+ * @brief
+ *
+ * If somebody arrives at our site using a zat, authenticate them
+ *
+ */
+
+function zat_init() {
+	if(local_channel() || remote_channel())
+		return;
+
+	$r = q("select * from atoken where atoken_token = '%s' limit 1",
+		dbesc($_REQUEST['zat'])
+	);
+	if($r) {
+		atoken_login($r[0]);
+	}
+
+}
+
+
 
 /**
  * @brief Adds a zid parameter to a url.

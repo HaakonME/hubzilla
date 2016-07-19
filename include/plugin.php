@@ -626,6 +626,7 @@ function head_get_js() {
 
 	$str = '';
 	if(App::$js_sources) {
+		ksort(App::$js_sources,SORT_NUMERIC);
 		foreach(App::$js_sources as $sources) {
 			if(count($sources)) { 
 				foreach($sources as $source) {

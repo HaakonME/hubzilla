@@ -70,5 +70,47 @@ class Permissions {
 
 	}
 
+	// converts [ 0 => 'view_stream', ... ]
+	// to [ 'view_stream' => 1 ]
+	// for any permissions in $arr;
+	// Undeclared permissions are set to 0
 
+	static public function FilledPerms($arr) {
+		$everything = self::Perms();
+		$ret = [];
+		foreach($everything as $k => $v) {
+			if(in_array($k,$arr))
+				$ret[$k] = 1;
+			else
+				$ret[$k] = 0;
+		}
+		return $ret;
+
+	}
+
+	static public function FilledAutoperms($channel_id) {
+		if(! intval(get_pconfig($channel_id,'system','autoperms')))
+			return false;
+
+		$arr = [];
+		$r = q("select * from pconfig where uid = %d and cat = 'autoperms'",
+			intval($channel_id)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$arr[$rr['k']] = $arr[$rr['v']];
+			}
+		}
+		return $arr;
+	}
+
+	static public function PermsCompare($p1,$p2) {
+		foreach($p1 as $k => $v) {
+			if(! array_key_exists($k,$p2))
+				return false;
+			if($p1[$k] != $p2[$k])
+				return false;
+		}
+		return true;
+	}
 }

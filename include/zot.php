@@ -456,15 +456,28 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 				// new connection
 
+				$my_perms = null;
+
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
 					$xx = get_role_perms($role);
-					if($xx['perms_auto'])
+					if($xx['perms_auto']) {
 						$default_perms = $xx['perms_connect'];
+					$my_perms = \Zotlabs\Access\Permissions::FilledPerms($default_perms);
 				}
-				if(! $default_perms)
-					$default_perms = get_pconfig($channel['channel_id'],'system','autoperms');
 
+				if(! $my_perms) {
+					$x = \Zotlabs\Access\Permissions::FilledAutoperms($channel['channel_id']);
+					if($x) {
+						$my_perms = $x;
+					}
+				}
+
+				if($my_perms) {
+					foreach($my_perms as $k => $v) {
+						set_abconfig($channel['channel_id'],$x['hash'],'my_perms',$k,$v);
+					}
+				}
 
 				// Keep original perms to check if we need to notify them
 				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
@@ -497,7 +510,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					);
 
 					if($new_connection) {
-						if($new_perms != $previous_perms)
+						if(! \Zotlabs\Access\Permissions::PermsCompare($new_perms,$previous_perms))
 							Zotlabs\Daemon\Master::Summon(array('Notifier','permission_create',$new_connection[0]['abook_id']));
 						Zotlabs\Lib\Enotify::submit(array(
 							'type'       => NOTIFY_INTRO,

@@ -379,8 +379,21 @@ function create_identity($arr) {
 			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
 			if(array_key_exists('online',$role_permissions))
 				set_pconfig($newuid,'system','hide_presence',1-intval($role_permissions['online']));
-			if(array_key_exists('perms_auto',$role_permissions))
-				set_pconfig($newuid,'system','autoperms',(($role_permissions['perms_auto']) ? $role_permissions['perms_accept'] : 0));
+			if(array_key_exists('perms_auto',$role_permissions)) {
+				$autoperms = intval($role_permissions['perms_auto']);
+				set_pconfig($newuid,'system','autoperms',$autoperms);
+				if($autoperms) {
+					$x = \Zotlabs\Access\Permissions::FilledPerms($role_permissions['connect']);
+					foreach($x as $k => $v) {
+						set_pconfig($newuid,'autoperms',$k,$v);
+					}
+				}
+				else {
+					$r = q("delete from pconfig where uid = %d and cat = 'autoperms'",
+						intval($newuid)
+					);
+				}
+			}						
 		}
 
 		// Create a group with yourself as a member. This allows somebody to use it 

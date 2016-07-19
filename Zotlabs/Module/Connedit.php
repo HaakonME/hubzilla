@@ -126,9 +126,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$rating = 10;
 	
 		$rating_text = trim(escape_tags($_REQUEST['rating_text']));
-	
-		$abook_my_perms = 0;
-	
+		
 		$all_perms = \Zotlabs\Access\Permissions::Perms();
 
 		if($all_perms) {
@@ -136,13 +134,21 @@ class Connedit extends \Zotlabs\Web\Controller {
 				if(array_key_exists('perms_' . $perm, $_POST)) {
 					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,
 						intval($_POST['perms_' . $perm]));
-					$abook_my_perms ++;
+					if($autoperms) {
+						set_pconfig($channel['channel_id'],'autoperms',$perm,intval($_POST['perms_' . $perm]));
+					}
 				}
 				else {
 					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,0);
+					if($autoperms) {
+						set_pconfig($channel['channel_id'],'autoperms',$perm,0);
+					}
 				}
 			}
 		}
+
+		if(! is_null($autoperms)) 
+			set_pconfig($channel['channel_id'],'system','autoperms',$autoperms);
 				
 		$new_friend = false;
 	
@@ -209,14 +215,11 @@ class Connedit extends \Zotlabs\Web\Controller {
 				}
 			}
 
-			if($all_perms) {
-				foreach($all_perms as $perm => $desc) {
-					if(array_key_exists($perm, $abook_my_perms))
-						set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,1);
-					else
-						set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,0);
-				}
+			$filled_perms = \Zotlabs\Access\Permissions::FilledPerms($abook_my_perms);
+			foreach($filled_perms as $k => $v) {
+				set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$k,$v);
 			}
+
 		}
 
 		$abook_pending = (($new_friend) ? 0 : $orig_record[0]['abook_pending']);
@@ -245,10 +248,13 @@ class Connedit extends \Zotlabs\Web\Controller {
 			info( t('Connection updated.') . EOL);
 		else
 			notice( t('Failed to update connection record.') . EOL);
-//@fixme perms	
-		if(\App::$poi && \App::$poi['abook_my_perms'] != $abook_my_perms
-			&& (! intval(\App::$poi['abook_self']))) {
-			\Zotlabs\Daemon\Master::Summon(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));
+
+		if(! intval(\App::$poi['abook_self'])) {
+			\Zotlabs\Daemon\Master::Summon( [ 
+				'Notifier', 
+				(($new_friend) ? 'permission_create' : 'permission_update'), 
+				$contact_id 
+			]);
 		}
 	
 		if($new_friend) {

@@ -2412,6 +2412,7 @@ function update_r1180() {
 	if($r1) {
 		foreach($r1 as $rr) {
 			perm_limits_upgrade($rr);
+			autoperms_upgrade($rr);
 		}
 	}
 

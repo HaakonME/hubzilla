@@ -21,10 +21,7 @@ class Settings extends \Zotlabs\Web\Controller {
 			// We are setting these values - don't use the argc(), argv() functions here
 			\App::$argc = 2;
 			\App::$argv[] = 'channel';
-		}
-	
-	
-	
+		}	
 	}
 	
 	
@@ -422,19 +419,24 @@ class Settings extends \Zotlabs\Web\Controller {
 					);
 				}
 	
-				foreach($global_perms as $k => $v) {
-					set_abconfig(local_channel(),$channel['channel_hash'],'my_perms',$k,((array_key_exists($k,$role_permissions['perms_connect'])) ? 1 : 0));
-				}
+				$x = \Zotlabs\Access\Permissions::FilledPerms($role_permissions['perms_connect']);
+				foreach($x as $k => $v) {
+					set_abconfig(local_channel(),$channel['channel_hash'],'my_perms',$k, $v);
+					if($role_permissions['perms_auto']) {
+						set_pconfig(local_channel(),'autoperms',$k,$v);
+					}
+					else {
+						del_pconfig(local_channel(),'autoperms',$k);
+					}
+				}	
 
-				set_pconfig(local_channel(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
-	
-				foreach($role_permissions as $p => $v) {
-					if(strpos($p,'channel_') !== false) {
-						$set_perms .= ', ' . $p . ' = ' . intval($v) . ' ';
+				if($role_permissions['limits']) {
+					foreach($role_permissions['limits'] as $k => $v) {
+						\Zotlabs\Access\PermissionLimits::Set(local_channel(),$k,$v);
 					}
-					if($p === 'directory_publish') {
-						$publish = intval($v);
-					}
+				}
+				if(array_key_exists('directory_publish',$role_permissions)) {
+					$publish = intval($role_permissions['directory_publish']);
 				}
 			}
 	

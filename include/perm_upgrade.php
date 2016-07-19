@@ -19,44 +19,58 @@ function perm_limits_upgrade($channel) {
 	set_pconfig($channel['channel_id'],'perm_limits','delegate',$channel['channel_a_delegate']);
 }
 
+function perms_int_to_array($p) {
+
+	$ret = [];
+
+	$ret['view_stream']   = (($p & PERMS_R_STREAM)    ? 1 : 0);
+	$ret['view_profile']  = (($p & PERMS_R_PROFILE)   ? 1 : 0);
+	$ret['view_contacts'] = (($p & PERMS_R_ABOOK)     ? 1 : 0);
+	$ret['view_storage']  = (($p & PERMS_R_STORAGE)   ? 1 : 0);
+	$ret['view_pages']    = (($p & PERMS_R_PAGES)     ? 1 : 0);
+	$ret['send_stream']   = (($p & PERMS_W_STREAM)    ? 1 : 0);
+	$ret['post_wall']     = (($p & PERMS_W_WALL)      ? 1 : 0);
+	$ret['post_comments'] = (($p & PERMS_W_COMMENT)   ? 1 : 0);
+	$ret['post_mail']     = (($p & PERMS_W_MAIL)      ? 1 : 0);
+	$ret['post_like']     = (($p & PERMS_W_LIKE)      ? 1 : 0);
+	$ret['tag_deliver']   = (($p & PERMS_W_TAGWALL)   ? 1 : 0);
+	$ret['chat']          = (($p & PERMS_W_CHAT)      ? 1 : 0);
+	$ret['write_storage'] = (($p & PERMS_W_STORAGE)   ? 1 : 0);
+	$ret['write_pages']   = (($p & PERMS_W_PAGES)     ? 1 : 0);
+	$ret['republish']     = (($p & PERMS_A_REPUBLISH) ? 1 : 0);
+	$ret['delegate']      = (($p & PERMS_A_DELEGATE)  ? 1 : 0);
+
+	return $ret;
+}
+
+function autoperms_upgrade($channel) {
+	$x = get_pconfig($channel['channel_id'],'system','autoperms');
+	if(intval($x)) {
+		$y = perms_int_to_array($x);
+		if($y) {
+			foreach($y as $k => $v) {
+				set_pconfig($channel['channel_id'],'autoperms',$k,$v);
+			}
+		}
+	}
+}
+
 
 function perm_abook_upgrade($abook) {
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','view_stream',intval(($abook['abook_their_perms'] & PERMS_R_STREAM)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','view_profile',intval(($abook['abook_their_perms'] & PERMS_R_PROFILE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','view_contacts',intval(($abook['abook_their_perms'] & PERMS_R_ABOOK)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','view_storage',intval(($abook['abook_their_perms'] & PERMS_R_STORAGE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','view_pages',intval(($abook['abook_their_perms'] & PERMS_R_PAGES)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','send_stream',intval(($abook['abook_their_perms'] & PERMS_W_STREAM)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','post_wall',intval(($abook['abook_their_perms'] & PERMS_W_WALL)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','post_comments',intval(($abook['abook_their_perms'] & PERMS_W_COMMENT)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','post_mail',intval(($abook['abook_their_perms'] & PERMS_W_MAIL)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','post_like',intval(($abook['abook_their_perms'] & PERMS_W_LIKE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','tag_deliver',intval(($abook['abook_their_perms'] & PERMS_W_TAGWALL)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','chat',intval(($abook['abook_their_perms'] & PERMS_W_CHAT)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','write_storage',intval(($abook['abook_their_perms'] & PERMS_W_STORAGE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','write_pages',intval(($abook['abook_their_perms'] & PERMS_W_PAGES)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','republish',intval(($abook['abook_their_perms'] & PERMS_A_REPUBLISH)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms','delegate',intval(($abook['abook_their_perms'] & PERMS_A_DELEGATE)? 1 : 0));
 
+	$x = perms_int_to_array($abook['abook_their_perms']);
+	if($x) {
+		foreach($x as $k => $v) {
+			set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'their_perms',$k, $v);
+		}
+	}
 
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_stream',intval(($abook['abook_my_perms'] & PERMS_R_STREAM)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_profile',intval(($abook['abook_my_perms'] & PERMS_R_PROFILE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_contacts',intval(($abook['abook_my_perms'] & PERMS_R_ABOOK)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_storage',intval(($abook['abook_my_perms'] & PERMS_R_STORAGE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','view_pages',intval(($abook['abook_my_perms'] & PERMS_R_PAGES)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','send_stream',intval(($abook['abook_my_perms'] & PERMS_W_STREAM)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','post_wall',intval(($abook['abook_my_perms'] & PERMS_W_WALL)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','post_comments',intval(($abook['abook_my_perms'] & PERMS_W_COMMENT)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','post_mail',intval(($abook['abook_my_perms'] & PERMS_W_MAIL)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','post_like',intval(($abook['abook_my_perms'] & PERMS_W_LIKE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','tag_deliver',intval(($abook['abook_my_perms'] & PERMS_W_TAGWALL)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','chat',intval(($abook['abook_my_perms'] & PERMS_W_CHAT)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','write_storage',intval(($abook['abook_my_perms'] & PERMS_W_STORAGE)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','write_pages',intval(($abook['abook_my_perms'] & PERMS_W_PAGES)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','republish',intval(($abook['abook_my_perms'] & PERMS_A_REPUBLISH)? 1 : 0));
-	set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms','delegate',intval(($abook['abook_my_perms'] & PERMS_A_DELEGATE)? 1 : 0));
-
-
+	$x = perms_int_to_array($abook['abook_my_perms']);
+	if($x) {
+		foreach($x as $k => $v) {
+			set_abconfig($abook['abook_channel'],$abook['abook_xchan'],'my_perms',$k, $v);
+		}
+	}
 }
 
 function translate_channel_perms_outbound(&$channel) {
@@ -217,3 +231,6 @@ function translate_abook_perms_inbound($channel,$abook) {
 	}
 
 }
+
+
+

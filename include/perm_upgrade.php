@@ -192,9 +192,10 @@ function translate_abook_perms_outbound(&$abook) {
 					$my_perms += PERMS_A_DELEGATE; 
 			}
 		}
+
+		$abook['abook_their_perms'] = $their_perms;
+		$abook['abook_my_perms'] = $my_perms;
 	}
-	$abook['abook_their_perms'] = $their_perms;
-	$abook['abook_my_perms'] = $my_perms;
 }
 
 function translate_abook_perms_inbound($channel,$abook) {

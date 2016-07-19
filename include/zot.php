@@ -463,7 +463,8 @@ function zot_refresh($them, $channel = null, $force = false) {
 					$xx = get_role_perms($role);
 					if($xx['perms_auto']) {
 						$default_perms = $xx['perms_connect'];
-					$my_perms = \Zotlabs\Access\Permissions::FilledPerms($default_perms);
+						$my_perms = \Zotlabs\Access\Permissions::FilledPerms($default_perms);
+					}
 				}
 
 				if(! $my_perms) {

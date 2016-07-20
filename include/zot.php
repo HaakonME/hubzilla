@@ -3782,11 +3782,21 @@ function zotinfo($arr) {
 	}
 	else {
 		// check if it has characteristics of a public forum based on custom permissions.
-		$t = q("select abook_my_perms from abook where abook_channel = %d and abook_self = 1 limit 1",
-			intval($e['channel_id'])
+		$t = q("select * from abconfig where abconfig.cat = 'my_perms' and abconfig.chan = %d and abconfig.xchan = '%s' and abconfig.k in ('tag_deliver', 'send_stream') ",
+			intval($e['channel_id']),
+			intval($e['channel_hash'])
 		);
-		if(($t) && (($t[0]['abook_my_perms'] & PERMS_W_TAGWALL) && (! ($t[0]['abook_my_perms'] & PERMS_W_STREAM))))
-			$public_forum = true;
+		$ch = 0;
+		if($t) {
+			foreach($t as $tt) {
+				if($tt['k'] == 'tag_deliver' && $tt['v'] == 1)
+					$ch ++;
+				if($tt['k'] == 'send_stream' && $tt['v'] == 0)
+					$ch ++;
+			}
+			if($ch == 2)
+				$public_forum = true;
+		}
 	}
 
 

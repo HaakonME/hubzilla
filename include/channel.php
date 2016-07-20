@@ -1566,9 +1566,11 @@ function is_public_profile() {
 	if(intval(get_config('system','block_public')))
 		return false;
 	$channel = App::get_channel();
-	if($channel && $channel['channel_r_profile'] == PERMS_PUBLIC)
-		return true;
-
+	if($channel) {
+		$perm = \Zotlabs\Access\PermissionLimit::Get($channel['channel_id'],'view_profile');
+		if($perm == PERMS_PUBLIC)
+			return true;
+	}
 	return false;
 }
 

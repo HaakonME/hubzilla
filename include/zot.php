@@ -460,7 +460,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
-					$xx = get_role_perms($role);
+					$xx = \Zotlabs\Access\PermissionRoles::role_perms($role);
 					if($xx['perms_auto']) {
 						$default_perms = $xx['perms_connect'];
 						$my_perms = \Zotlabs\Access\Permissions::FilledPerms($default_perms);

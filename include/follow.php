@@ -66,7 +66,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	$role = get_pconfig($uid,'system','permissions_role');
 	if($role) {
-		$x = get_role_perms($role);
+		$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
 		if($x['perms_connect'])
 			$my_perms = $x['perms_connect'];
 	}

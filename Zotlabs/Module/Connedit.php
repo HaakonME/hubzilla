@@ -209,7 +209,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			$role = get_pconfig(local_channel(),'system','permissions_role');
 			if($role) {
-				$x = get_role_perms($role);
+				$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
 				if($x['perms_connect']) {
 					$abook_my_perms = $x['perms_connect'];
 				}
@@ -395,7 +395,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 		$my_perms = get_channel_default_perms(local_channel());
 		$role = get_pconfig(local_channel(),'system','permissions_role');
 		if($role) {
-			$x = get_role_perms($role);
+			$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
 			if($x['perms_connect'])
 				$my_perms = $x['perms_connect'];
 		}

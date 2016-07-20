@@ -379,7 +379,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				);
 			}
 		    else {
-			   	$role_permissions = get_role_perms($_POST['permissions_role']);
+			   	$role_permissions = \Zotlabs\Access\PermissionRoles::role_perms($_POST['permissions_role']);
 				if(! $role_permissions) {
 					notice('Permissions category could not be found.');
 					return;

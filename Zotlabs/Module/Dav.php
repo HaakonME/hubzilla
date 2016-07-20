@@ -14,6 +14,7 @@ use \Zotlabs\Storage;
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
 
+require_once('include/attach.php');
 
 /**
  * @brief Fires up the SabreDAV server.

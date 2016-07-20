@@ -211,90 +211,108 @@ class Webpages extends \Zotlabs\Web\Controller {
 	
 	function post() {
 		
-		if(($_FILES) && array_key_exists('zip_file',$_FILES) && isset($_POST['w_upload'])) {
-			$source = $_FILES["zip_file"]["tmp_name"];
-			$type = $_FILES["zip_file"]["type"];
-			$okay = false;
-			$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
-			foreach ($accepted_types as $mime_type) {
-				if ($mime_type == $type) {
-					$okay = true;
+    $action = $_REQUEST['action'];
+		if( $action ){
+			switch ($action) {
+        case 'scan':
+					
+					// the state of this variable tracks whether website files have been scanned (null, true, false)
+					$cloud = null;	
+					
+					// Website files are to be imported from an uploaded zip file
+					if(($_FILES) && array_key_exists('zip_file',$_FILES) && isset($_POST['w_upload'])) {
+						$source = $_FILES["zip_file"]["tmp_name"];
+						$type = $_FILES["zip_file"]["type"];
+						$okay = false;
+						$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
+						foreach ($accepted_types as $mime_type) {
+							if ($mime_type == $type) {
+								$okay = true;
+								break;
+							}
+						}
+						if(!$okay) {
+							json_return_and_die(array('message' => 'Invalid file MIME type'));
+						}
+						$zip = new \ZipArchive();
+						if ($zip->open($source) === true) {
+							$tmp_folder_name = random_string(5);
+							$website = dirname($source) . '/' . $tmp_folder_name;
+							$zip->extractTo($website); // change this to the correct site path
+							$zip->close();
+							@unlink($source);	// delete the compressed file now that the content has been extracted
+
+							$cloud = false;
+						} else {
+							notice( t('Error opening zip file') . EOL);
+							return null;
+						}	
+					} 
+
+					// Website files are to be imported from the channel cloud files
+					if (($_POST) && array_key_exists('path',$_POST) && isset($_POST['cloudsubmit'])) {
+
+						$channel = \App::get_channel();
+						$dirpath = get_dirpath_by_cloudpath($channel, $_POST['path']);
+						if(!$dirpath) {
+							notice( t('Invalid folder path.') . EOL);
+							return null;
+						}
+						$cloud = true;
+
+					}
+					
+					// If the website files were uploaded or specified in the cloud files, then $cloud
+					// should be either true or false
+					if ($cloud !== null) {
+						require_once('include/import.php');
+						$elements = [];
+						$elements['pages'] = scan_webpage_elements($_POST['path'], 'page', $cloud);
+						$elements['layouts'] = scan_webpage_elements($_POST['path'], 'layout', $cloud);
+						$elements['blocks'] = scan_webpage_elements($_POST['path'], 'block', $cloud);
+
+						if(!(empty($elements['pages']) && empty($elements['blocks']) && empty($elements['layouts']))) {
+							info( t('Webpages elements detected.') . EOL);
+							
+							$o .= replace_macros(get_markup_template('webpage_import.tpl'), array(
+								'$title'    => t('Import Webpage Elements'),
+							));
+
+							return $o;
+							
+						} else {
+							notice( t('No webpage elements detected.') . EOL);
+						}
+						// Import layout first so that pages that reference new layouts will find
+						// the mid of layout items in the database
+						foreach($elements['layouts'] as &$layout) {
+							$layout = import_webpage_element($layout, $channel, 'layout');
+						}
+						foreach($elements['pages'] as &$page) {
+							$page = import_webpage_element($page, $channel, 'page');
+						}
+						foreach($elements['blocks'] as &$block) {
+							$block = import_webpage_element($block, $channel, 'block');
+						}
+						
+					}
+					
+					// If the website elements were imported from a zip file, delete the temporary decompressed files
+					if ($cloud === false && $website) {
+						rrmdir($website);	// Delete the temporary decompressed files
+					}
+					
 					break;
-				}
+				case 'import':
+					break;
+				default :
+					break;
 			}
-			if(!$okay) {
-				json_return_and_die(array('message' => 'Invalid file MIME type'));
-			}
-			$zip = new \ZipArchive();
-			if ($zip->open($source) === true) {
-				$tmp_folder_name = random_string(5);
-				$website = dirname($source) . '/' . $tmp_folder_name;
-				$zip->extractTo($website); // change this to the correct site path
-				$zip->close();
-				@unlink($source);	// delete the compressed file now that the content has been extracted
-
-				require_once('include/import.php');
-				$elements = [];
-				$elements['pages'] = scan_webpage_elements($website, 'page');
-				$elements['layouts'] = scan_webpage_elements($website, 'layout');
-				$elements['blocks'] = scan_webpage_elements($website, 'block');
-				
-				$channel = \App::get_channel();
-				// Import layout first so that pages that reference new layouts will find
-				// the mid of layout items in the database
-				foreach($elements['layouts'] as &$layout) {
-					$layout = import_webpage_element($layout, $channel, 'layout');
-				}
-				foreach($elements['pages'] as &$page) {
-					$page = import_webpage_element($page, $channel, 'page');
-				}
-				foreach($elements['blocks'] as &$block) {
-					$block = import_webpage_element($block, $channel, 'block');
-				}
-				
-				// Without the if statement below, the folder is deleted before the import completes.
-				if($elements) {	
-					rrmdir($website);	// Delete the temporary decompressed files
-				}
-			}	
-			
-			return null;
-		} 
-		
-		if (($_POST) && array_key_exists('path',$_POST) && isset($_POST['cloudsubmit'])) {
-
-			$channel = \App::get_channel();
-			$dirpath = get_dirpath_by_cloudpath($channel, $_POST['path']);
-			if(!$dirpath) {
-				notice( t('Invalid folder path.') . EOL);
-				return null;
-			}
-				require_once('include/import.php');
-				$elements = [];
-				$elements['pages'] = scan_webpage_elements($_POST['path'], 'page', true);
-				$elements['layouts'] = scan_webpage_elements($_POST['path'], 'layout', true);
-				$elements['blocks'] = scan_webpage_elements($_POST['path'], 'block', true);
-			logger('elements: ' . json_encode($elements));
-			if(!(empty($elements['pages']) && empty($elements['blocks']) && empty($elements['layouts']))) {
-				info( t('Webpages elements detected.') . EOL);
-			}
-			
-			// Import layout first so that pages that reference new layouts will find
-			// the mid of layout items in the database
-			foreach($elements['layouts'] as &$layout) {
-				$layout = import_webpage_element($layout, $channel, 'layout');
-			}
-			foreach($elements['pages'] as &$page) {
-				$page = import_webpage_element($page, $channel, 'page');
-			}
-			foreach($elements['blocks'] as &$block) {
-				$block = import_webpage_element($block, $channel, 'block');
-			}
-
-			
-			return null;
-			
 		}
+		
+				
+		
+		
 	}
 	
 }

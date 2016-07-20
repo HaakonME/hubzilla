@@ -6,6 +6,8 @@
 		</li>
 		<form id="import-form" enctype="multipart/form-data" method="post" action="" style="display: none;" class="sub-menu">
             
+            <input type="hidden" name="action" value="scan">
+            
             <p class="descriptive-text">{{$file_import_text}}</p>
             <div class="form-group">
 				 <div class="input-group">

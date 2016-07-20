@@ -905,7 +905,7 @@ class Item extends \Zotlabs\Web\Controller {
 				if($r) {
 					xchan_query($r);
 					$sync_item = fetch_post_tags($r);
-					build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true))));
+					build_sync_packet($profile_uid,array('item' => array(encode_item($sync_item[0],true))));
 				}
 			}
 			if(! $nopush)
@@ -1000,7 +1000,7 @@ class Item extends \Zotlabs\Web\Controller {
 			if($r) {
 				xchan_query($r);
 				$sync_item = fetch_post_tags($r);
-				build_sync_packet($uid,array('item' => array(encode_item($sync_item[0],true))));
+				build_sync_packet($profile_uid,array('item' => array(encode_item($sync_item[0],true))));
 			}
 		}
 	
@@ -1013,11 +1013,6 @@ class Item extends \Zotlabs\Web\Controller {
 			\Zotlabs\Daemon\Master::Summon(array('Notifier', $notify_type, $post_id));
 	
 		logger('post_complete');
-	
-	
-	
-	
-	
 	
 		// figure out how to return, depending on from whence we came
 	

@@ -687,7 +687,7 @@ function get_tags($s) {
 
 	// ignore anything in a code block
 
-	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
+	$s = preg_replace('/\[code(.*?)\](.*?)\[\/code\]/sm','',$s);
 
 	// ignore anything in [style= ]
 	$s = preg_replace('/\[style=(.*?)\]/sm','',$s);
@@ -772,6 +772,10 @@ function tag_sort_length($a,$b) {
 
 function strip_zids($s) {
 	return preg_replace('/[\?&]zid=(.*?)(&|$)/ism','$2',$s);
+}
+
+function strip_zats($s) {
+	return preg_replace('/[\?&]zat=(.*?)(&|$)/ism','$2',$s);
 }
 
 

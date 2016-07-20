@@ -36,22 +36,33 @@ function account_verify_password($email, $pass) {
 	// you have to verify the email and then go through the account approval workflow before
 	// letting them login.
 
-	if(($email_verify) && ($register_policy == REGISTER_OPEN) && ($record['account_flags'] & ACCOUNT_UNVERIFIED))
-		return null;
+	// @bug there is no record here
+	//if(($email_verify) && ($register_policy == REGISTER_OPEN) && ($record['account_flags'] & ACCOUNT_UNVERIFIED))
+	//	return null;
 
 	$r = q("select * from account where account_email = '%s'",
 		dbesc($email)
 	);
-	if(! ($r && count($r)))
-		return null;
+	if($r) {
 
-	foreach($r as $record) {
-		if(($record['account_flags'] == ACCOUNT_OK)
-			&& (hash('whirlpool', $record['account_salt'] . $pass) === $record['account_password'])) {
-			logger('password verified for ' . $email);
-			return $record;
+		foreach($r as $record) {
+			if(($record['account_flags'] == ACCOUNT_OK)
+				&& (hash('whirlpool', $record['account_salt'] . $pass) === $record['account_password'])) {
+				logger('password verified for ' . $email);
+				return $record;
+			}
 		}
 	}
+
+	$x = q("select * from atoken where atoken_name = '%s' and atoken_token = '%s' limit 1",
+		dbesc($email),
+		dbesc($pass)
+	);
+	if($x) {
+		atoken_login($x[0]);		
+		return $x[0];
+	}
+
 	$error = 'password failed for ' . $email;
 	logger($error);
 
@@ -123,10 +134,18 @@ if((isset($_SESSION)) && (x($_SESSION, 'authenticated')) &&
 				authenticate_success($x[0], true, true);
 			}
 		}
-
-		$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where xchan_hash = '%s' limit 1",
-			dbesc($_SESSION['visitor_id'])
-		);
+		if(array_key_exists('atoken',$_SESSION)) {
+			$y = q("select * from atoken where atoken_id = %d limit 1",
+				intval($_SESSION['atoken'])
+			);
+			if($y)
+				$r = array(atoken_xchan($y[0]));
+		}
+		else {
+			$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where xchan_hash = '%s' limit 1",
+				dbesc($_SESSION['visitor_id'])
+			);
+		}
 		if($r) {
 			App::set_observer($r[0]);
 		}
@@ -199,20 +218,27 @@ else {
 
 		call_hooks('authenticate', $addon_auth);
 
+		$atoken = false;
+
 		if(($addon_auth['authenticated']) && (count($addon_auth['user_record']))) {
 			$record = $addon_auth['user_record'];
 		}
 		else {
-			$record = App::$account = account_verify_password($_POST['username'], $_POST['password']);
+			$x = account_verify_password($_POST['username'], $_POST['password']);
+			if(array_key_exists('atoken',$x))
+				$atoken = true;
+			if(! $atoken) {
+				$record = App::$account = $x;
 
-			if(App::$account) {
-				$_SESSION['account_id'] = App::$account['account_id'];
-			}
-			else {
-				notice( t('Failed authentication') . EOL);
-			}
+				if(App::$account) {
+					$_SESSION['account_id'] = App::$account['account_id'];
+				}
+				else {
+					notice( t('Failed authentication') . EOL);
+				}
 
-			logger('authenticate: ' . print_r(App::$account, true), LOGGER_ALL);
+				logger('authenticate: ' . print_r(App::$account, true), LOGGER_ALL);
+			}
 		}
 
 		if((! $record) || (! count($record))) {
@@ -252,7 +278,8 @@ else {
 		// if we haven't failed up this point, log them in.
 
 		$_SESSION['last_login_date'] = datetime_convert();
-		authenticate_success($record, true, true);
+		if(! $atoken)
+			authenticate_success($record, true, true);
 	}
 }
 
@@ -270,6 +297,7 @@ else {
  * @return int|bool
  *  Return channel_id from pconfig or false.
  */
+
 function match_openid($authid) {
 	// Query the uid/channel_id from pconfig for a given value.
 	$r = q("SELECT uid FROM pconfig WHERE cat = 'system' AND k = 'openid' AND v = '%s' LIMIT 1",

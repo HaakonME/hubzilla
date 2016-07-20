@@ -9,8 +9,6 @@ require_once('include/bbcode.php');
 require_once('include/security.php');
 require_once('include/attach.php');
 require_once('include/text.php');
-require_once('include/PermissionDescription.php');
-
 
 
 class Photos extends \Zotlabs\Web\Controller {
@@ -633,7 +631,7 @@ class Photos extends \Zotlabs\Web\Controller {
 				$lockstate = (($acl->is_private()) ? 'lock' : 'unlock');
 			}
 	
-			$aclselect = (($_is_owner) ? populate_acl($channel_acl,false, \PermissionDescription::fromGlobalPermission('view_storage')) : '');
+			$aclselect = (($_is_owner) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage')) : '');
 	
 			// this is wrong but is to work around an issue with js_upload wherein it chokes if these variables
 			// don't exist. They really should be set to a parseable representation of the channel's default permissions 
@@ -1023,7 +1021,7 @@ class Photos extends \Zotlabs\Web\Controller {
 			if($can_post) {
 				$album_e = $ph[0]['album'];
 				$caption_e = $ph[0]['description'];
-				$aclselect_e = (($_is_owner) ? populate_acl($ph[0], true, \PermissionDescription::fromGlobalPermission('view_storage')) : '');
+				$aclselect_e = (($_is_owner) ? populate_acl($ph[0], true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage')) : '');
 				$albums = ((array_key_exists('albums', \App::$data)) ? \App::$data['albums'] : photos_albums_list(\App::$data['channel'],\App::$data['observer']));
 	
 				$_SESSION['album_return'] = bin2hex($ph[0]['album']);

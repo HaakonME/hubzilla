@@ -1,3 +1,44 @@
+Hubzilla 1.10
+	Wiki:
+		Lots of enhanced functionality, usability improvements, and bugfixes from v1.8
+		Turned into an optional feature (default on) but disabled in UNO
+	Sync: 
+		Items are now relocated (links patched) when syncing to clones
+	Access Tokens:
+		New feature - allows members to create access controlled guest logins and create/share 'dropbox' style links to protected resources.
+	UI:
+		Use icons instead of iconic text constructs
+		Only request geolocation permission when creating a post, not on page load
+		provide 'redeliver' option on Delivery Report page for when things really stuff up
+		CalDAV/CardDAV management pages with heaps of functionality 
+	Lib:
+		z_fetch_url() updated to accept different request methods and request bodies
+		item_store(), item_store_update() now return the stored items
+		vcard microformat changes to remain spec compliant
+		microformat meta tags added to post/comments
+		AbConfig API changed to use channel_id rather than channel_hash, which was overly complicated to use
+		SuperCurl class added to provide a framework for re-use of obscure CURL options
+		Allow absolute links to CSS/JS files on CDN
+		Add Let'sEncrypt intermediate cert to lib in case you forget to install it on the server
+		Update fullcalendar and jquery (3.1) libs
+		Update sabre/dav to 3.2.0
+		Change content export from a month/year system to begin/end
+		Use streaming I/O for delivering large photos
+		Allow multiple App description files in a single plugin directory
+		optimise a couple of troublesome/inefficient SQL queries
+		avoid sending clone sync packets to dead sites
+	Resolved Issues:
+		channel home page not providing content to clients with javascript disabled
+		Replace '@' obfuscation with html entity rather than the unicode look-alike
+		xchan_query() failing to detect duplicates, resulting in inefficient queries
+		issues with 'use existing photo' for profile photo
+		layout editor "list all layouts" returned empty
+		oembed - better detect video file URLs so they aren't loaded into memory.
+		handcrafted bbcode tables could end up with way too much whitespace due to CRLF translation 
+		refresh permissions whitescreen in 1.8
+		force immediate profile photo update on local site
+		regression: 'save bookmarks' post action missing
+
 Hubzilla 1.8
 	Administration:
 		Cleanup and resolve some edge cases with addon repository manager

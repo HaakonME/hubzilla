@@ -121,7 +121,7 @@ a.wall-item-name-link {
 }
 
 .wall-item-content {
-	overflow: auto;
+	overflow: hidden;
 }
 
 .wall-item-content h1,

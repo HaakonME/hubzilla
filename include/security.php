@@ -82,6 +82,44 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	/* else just return */
 }
 
+function atoken_login($atoken) {
+	if(! $atoken)
+		return false;
+
+	$xchan = atoken_xchan($atoken);
+
+	$_SESSION['authenticated'] = 1;
+	$_SESSION['visitor_id'] = $xchan['xchan_hash'];
+	$_SESSION['atoken'] = $atoken['atoken_id'];
+
+	\App::set_observer($xchan);
+
+	return [ 'atoken' => true ];
+}
+
+
+function atoken_xchan($atoken) {
+
+	$c = channelx_by_n($atoken['atoken_uid']);
+	if($c) {
+		return [ 
+			'xchan_hash' =>  substr($c['channel_hash'],0,16) . '.' . $atoken['atoken_name'],
+			'xchan_name' => $atoken['atoken_name'],
+			'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
+			'xchan_network' => 'unknown',
+			'xchan_hidden' => 1,
+			'xchan_photo_mimetype' => 'image/jpeg',
+			'xchan_photo_l' => get_default_profile_photo(300),
+			'xchan_photo_m' => get_default_profile_photo(80),
+			'xchan_photo_s' => get_default_profile_photo(48)
+	
+		];
+	}
+
+}
+
+
+
 /**
  * @brief Change to another channel with current logged-in account.
  *
@@ -125,13 +163,17 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(z_root(), strpos(z_root(), '://') + 3);
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . App::get_hostname();
 
 			App::set_observer($x[0]);
 			App::set_perms(get_all_perms(local_channel(), $hash));
 		}
 		if(! is_dir('store/' . $r[0]['channel_address']))
 			@os_mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
+
+		$arr = [ 'channel_id' => $change_channel, 'chanx' => $ret ];
+		call_hooks('change_channel', $arr);
+
 	}
 
 	return $ret;

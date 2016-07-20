@@ -1,7 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS `abconfig` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `chan` int(10) unsigned NOT NULL DEFAULT '',
+  `chan` int(10) unsigned NOT NULL DEFAULT '0',
   `xchan` char(255) NOT NULL DEFAULT '',
   `cat` char(255) NOT NULL DEFAULT '',
   `k` char(255) NOT NULL DEFAULT '',
@@ -139,6 +139,23 @@ CREATE TABLE IF NOT EXISTS `app` (
   KEY `app_deleted` (`app_deleted`),
   KEY `app_system` (`app_system`),
   KEY `app_edited` (`app_edited`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `atoken` (
+  `atoken_id` int(11) NOT NULL AUTO_INCREMENT,
+  `atoken_aid` int(11) NOT NULL DEFAULT 0,
+  `atoken_uid` int(11) NOT NULL DEFAULT 0,
+  `atoken_name` char(255) NOT NULL DEFAULT '',
+  `atoken_token` char(255) NOT NULL DEFAULT '',
+  `atoken_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`atoken_id`),
+  KEY `atoken_aid` (`atoken_aid`),
+  KEY `atoken_uid` (`atoken_uid`),
+  KEY `atoken_uid_2` (`atoken_uid`),
+  KEY `atoken_name` (`atoken_name`),
+  KEY `atoken_token` (`atoken_token`),
+  KEY `atoken_expires` (`atoken_expires`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `attach` (

@@ -296,7 +296,7 @@ function widget_filer($arr) {
 	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
+	$r = q("select distinct term from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);
@@ -608,6 +608,15 @@ function widget_settings_menu($arr) {
 		'url' => z_root() . '/settings/oauth',
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
+
+	if(! UNO) {
+		$tabs[] =	array(
+			'label' => t('Guest Access Tokens'),
+			'url' => z_root() . '/settings/tokens',
+			'selected' => ((argv(1) === 'tokens') ? 'active' : ''),
+		);
+	}
+
 
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(

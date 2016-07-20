@@ -6,8 +6,6 @@ require_once('include/group.php');
 require_once('include/contact_widgets.php');
 require_once('include/conversation.php');
 require_once('include/acl_selectors.php');
-require_once('include/PermissionDescription.php');
-
 
 
 class Network extends \Zotlabs\Web\Controller {
@@ -171,7 +169,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'default_location' => $channel['channel_location'],
 				'nickname'         => $channel['channel_address'],
 				'lockstate'        => (($private_editing || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-				'acl'              => populate_acl((($private_editing) ? $def_acl : $channel_acl), true, \PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post'),
+				'acl'              => populate_acl((($private_editing) ? $def_acl : $channel_acl), true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post'),
 				'bang'             => (($private_editing) ? '!' : ''),
 				'visitor'          => true,
 				'profile_uid'      => local_channel(),

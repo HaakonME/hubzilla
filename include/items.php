@@ -385,7 +385,7 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
-	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true));
 	if($arr['public_policy'])
 		$arr['item_private'] = 1;
 
@@ -421,7 +421,7 @@ function post_activity_item($arr) {
 	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
 	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
 
-	$arr['comment_policy'] = map_scope($channel['channel_w_comment']);
+	$arr['comment_policy'] = map_scope(\Zotlabs\Access/PermissionLimits::Get($channel['channel_id'],'post_comments'));
 
 	if ((! $arr['plink']) && (intval($arr['item_thread_top']))) {
 		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
@@ -970,12 +970,12 @@ function encode_item($item,$mirror = false) {
 
 //	logger('encode_item: ' . print_r($item,true));
 
-	$r = q("select channel_r_stream, channel_w_comment from channel where channel_id = %d limit 1",
+	$r = q("select channel_id from channel where channel_id = %d limit 1",
 		intval($item['uid'])
 	);
 
 	if($r)
-		$comment_scope = $r[0]['channel_w_comment'];
+		$comment_scope = \Zotlabs\Access\PermissionLimits::Get($item['uid'],'post_comments');
 	else
 		$comment_scope = 0;
 
@@ -2761,7 +2761,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$private = (($channel['channel_allow_cid'] || $channel['channel_allow_gid']
 		|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 1 : 0);
 
-	$new_public_policy = map_scope($channel['channel_r_stream'],true);
+	$new_public_policy = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true);
 
 	if((! $private) && $new_public_policy)
 		$private = 1;
@@ -2806,7 +2806,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 		dbesc($channel['channel_deny_gid']),
 		intval($private),
 		dbesc($new_public_policy),
-		dbesc(map_scope($channel['channel_w_comment'])),
+		dbesc(map_scope(\Zotlabs\Access\PermissionLimits($channel['channel_id'],'post_comments'))),
 		dbesc($title),
 		dbesc($body),
 		intval($item_wall),

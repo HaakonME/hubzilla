@@ -316,9 +316,11 @@ class Item extends \Zotlabs\Web\Controller {
 		}
 	
 		$acl = new \Zotlabs\Access\AccessList($channel);
+
+		$view_policy = \Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream');	
+		$comment_policy = \Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments');
 	
-			
-		$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+		$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($view_policy,true));
 		if($webpage)
 			$public_policy = '';
 		if($public_policy)
@@ -810,7 +812,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		$datarray['layout_mid']     = $layout_mid;
 		$datarray['public_policy']  = $public_policy;
-		$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
+		$datarray['comment_policy'] = map_scope($comment_policy); 
 		$datarray['term']           = $post_tags;
 		$datarray['plink']          = $plink;
 		$datarray['route']          = $route;

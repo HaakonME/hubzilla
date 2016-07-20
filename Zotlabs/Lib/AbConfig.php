@@ -7,7 +7,7 @@ class AbConfig {
 
 	static public function Load($chan,$xhash,$family = '') {
 		if($family)
-			$where = sprintf(" and family = '%s' ",dbesc($family));
+			$where = sprintf(" and cat = '%s' ",dbesc($family));
 		$r = q("select * from abconfig where chan = %d and xchan = '%s' $where",
 			intval($chan),
 			dbesc($xhash)

@@ -468,9 +468,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 				}
 
 				if(! $my_perms) {
-					$x = \Zotlabs\Access\Permissions::FilledAutoperms($channel['channel_id']);
-					if($x) {
-						$my_perms = $x;
+					$m = \Zotlabs\Access\Permissions::FilledAutoperms($channel['channel_id']);
+					if($m) {
+						$my_perms = $m;
 					}
 				}
 

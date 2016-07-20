@@ -28,7 +28,7 @@ class Finger {
 
 		if (strpos($webbie,'@') === false) {
 			$address = $webbie;
-			$host = App::get_hostname();
+			$host = \App::get_hostname();
 		} else {
 			$address = substr($webbie,0,strpos($webbie,'@'));
 			$host = substr($webbie,strpos($webbie,'@')+1);

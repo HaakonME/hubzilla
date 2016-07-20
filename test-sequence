@@ -1,0 +1,37 @@
+extensible permissions testing
+
+- create a new channel with social role
+	- verify permission limits are created as pconfig entries
+
+	- connect from a remote system with traditional permissions
+		- verify 'their_perms' in abconfig
+		- approve the connection
+		- verify 'my_perms' in abconfig
+
+		- from remote system verify their_perms, my_perms
+
+		- change a setting
+			- verify 'my_perms' in abconfig
+			- from remote system verify change was communicated
+
+	- connect from a remote system with new perms
+		- repeat above tests
+
+
+- connect to a channel from diaspora or gnusocial
+	- verify permissions are correct
+
+- change channel role to forum
+	- repeat above tests, this time checking for auto acceptance with the correct permissions
+
+
+- connect outbound to a remote system with traditional permissions
+
+- connect outbound to a system with new permissions
+
+
+- attempt permission violations and check that they are denied
+
+
+
+

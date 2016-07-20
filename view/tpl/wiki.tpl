@@ -311,6 +311,9 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
       ev.preventDefault();
       return false;
     }
+    if(!confirm('Are you sure you want to delete the page: ' + window.wiki_page_name)) {
+      return;
+    }
     $.post("wiki/{{$channel}}/delete/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
       function (data) {
         if (data.success) {

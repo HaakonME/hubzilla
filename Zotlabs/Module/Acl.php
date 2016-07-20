@@ -237,8 +237,9 @@ class Acl extends \Zotlabs\Web\Controller {
 			}
 		}
 		elseif($type == 'm') {
+
 			$r = array();
-			$z = q("SELECT xchan_hash as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
+			$z = q("SELECT xchan_hash as hash, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
 				FROM abook left join xchan on abook_xchan = xchan_hash
 				WHERE abook_channel = %d 
 				and xchan_deleted = 0

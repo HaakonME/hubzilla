@@ -2806,7 +2806,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 		dbesc($channel['channel_deny_gid']),
 		intval($private),
 		dbesc($new_public_policy),
-		dbesc(map_scope(\Zotlabs\Access\PermissionLimits($channel['channel_id'],'post_comments'))),
+		dbesc(map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments'))),
 		dbesc($title),
 		dbesc($body),
 		intval($item_wall),

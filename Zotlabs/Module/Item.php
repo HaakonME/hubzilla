@@ -183,7 +183,9 @@ class Item extends \Zotlabs\Web\Controller {
 			}
 	
 			// can_comment_on_post() needs info from the following xchan_query 
-			xchan_query($r);
+			// This may be from the discover tab which means we need to correct the effective uid
+
+			xchan_query($r,true,(($r[0]['uid'] == local_channel()) ? 0 : local_channel()));
 	
 			$parent_item = $r[0];
 			$parent = $r[0]['id'];

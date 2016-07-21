@@ -1033,7 +1033,7 @@ function sync_files($channel,$files) {
 						$attach_id = $x[0]['id'];
 					}
 
-					$newfname = 'store/' . $channel['channel_address'] . '/' . get_attach_binname($att['data']);
+					$newfname = 'store/' . $channel['channel_address'] . '/' . get_attach_binname($att['content']);
 
  					unset($att['id']);
 					$att['aid'] = $channel['channel_account_id'];

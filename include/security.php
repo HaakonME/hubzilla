@@ -12,7 +12,7 @@
  * @param bool $return
  * @param bool $update_lastlog
  */
-function authenticate_success($user_record, $login_initial = false, $interactive = false, $return = false, $update_lastlog = false) {
+function authenticate_success($user_record, $channel = null, $login_initial = false, $interactive = false, $return = false, $update_lastlog = false) {
 
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
@@ -23,11 +23,15 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
 
+		if($channel)
+			$uid_to_load = $channel['channel_id'];
 
-		$uid_to_load = (((x($_SESSION,'uid')) && (intval($_SESSION['uid']))) 
-			? intval($_SESSION['uid']) 
-			: intval(App::$account['account_default_channel'])
-		);
+		if(! $uid_to_load) {
+			$uid_to_load = (((x($_SESSION,'uid')) && (intval($_SESSION['uid']))) 
+				? intval($_SESSION['uid']) 
+				: intval(App::$account['account_default_channel'])
+			);
+		}
 
 		if($uid_to_load) {
 			change_channel($uid_to_load);
@@ -85,16 +89,12 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 function atoken_login($atoken) {
 	if(! $atoken)
 		return false;
-
-	$xchan = atoken_xchan($atoken);
-
 	$_SESSION['authenticated'] = 1;
-	$_SESSION['visitor_id'] = $xchan['xchan_hash'];
+	$_SESSION['visitor_id'] = $atoken['xchan_hash'];
 	$_SESSION['atoken'] = $atoken['atoken_id'];
 
-	\App::set_observer($xchan);
-
-	return [ 'atoken' => true ];
+	\App::set_observer($atoken);
+	return true;
 }
 
 
@@ -102,7 +102,8 @@ function atoken_xchan($atoken) {
 
 	$c = channelx_by_n($atoken['atoken_uid']);
 	if($c) {
-		return [ 
+		return [
+			'atoken_id' => $atoken['atoken_id'], 
 			'xchan_hash' =>  substr($c['channel_hash'],0,16) . '.' . $atoken['atoken_name'],
 			'xchan_name' => $atoken['atoken_name'],
 			'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
@@ -115,7 +116,7 @@ function atoken_xchan($atoken) {
 	
 		];
 	}
-
+	return null;
 }
 
 

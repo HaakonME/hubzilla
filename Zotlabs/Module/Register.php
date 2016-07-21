@@ -146,7 +146,7 @@ class Register extends \Zotlabs\Web\Controller {
 			goaway(z_root());
 		}
 	
-		authenticate_success($result['account'],true,false,true);
+		authenticate_success($result['account'],null,true,false,true);
 		
 		$new_channel = false;
 		$next_page = 'new_channel';

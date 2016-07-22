@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/menu.php');
+require_once('include/perm_upgrade.php');
 
 function import_channel($channel, $account_id, $seize) {
 
@@ -61,15 +62,35 @@ function import_channel($channel, $account_id, $seize) {
 		if(! is_site_admin())
 			$channel['channel_pageflags'] = $channel['channel_pageflags'] ^ PAGE_ALLOWCODE;
 	}
-	
-	dbesc_array($channel);
 
-	$r = dbq("INSERT INTO channel (`" 
-		. implode("`, `", array_keys($channel)) 
-		. "`) VALUES ('" 
-		. implode("', '", array_values($channel)) 
-		. "')" 
-	);
+	// remove all the permissions related settings, we will import/upgrade them after the channel
+	// is created.
+
+	$disallowed = [ 
+		'channel_id',         'channel_r_stream',    'channel_r_profile', 'channel_r_abook', 
+		'channel_r_storage',  'channel_r_pages',     'channel_w_stream',  'channel_w_wall', 
+		'channel_w_comment',  'channel_w_mail',      'channel_w_like',    'channel_w_tagwall', 
+		'channel_w_chat',     'channel_w_storage',   'channel_w_pages',   'channel_a_republish', 
+		'channel_a_delegate', 'perm_limits' 
+	];
+
+	$clean = array();
+	foreach($channel as $k => $v) {
+		if(in_array($k,$disallowed))
+			continue;
+		$clean[$k] = $v;
+	}
+
+	if($clean) {
+		dbesc_array($clean);
+
+		$r = dbq("INSERT INTO channel (`" 
+			. implode("`, `", array_keys($clean)) 
+			. "`) VALUES ('" 
+			. implode("', '", array_values($clean)) 
+			. "')" 
+		);
+	}
 
 	if(! $r) {
 		logger('mod_import: channel clone failed. ', print_r($channel,true));
@@ -86,6 +107,14 @@ function import_channel($channel, $account_id, $seize) {
 		notice( t('Cloned channel not found. Import failed.') . EOL);
 		return false;
 	}
+
+	// extract the permissions from the original imported array and use our new channel_id to set them
+	// These could be in the old channel permission stule or the new pconfig. We have a function to
+	// translate and store them no matter which they throw at us.
+
+	$channel['channel_id'] = $r[0]['channel_id'];
+	translate_channel_perms_inbound($channel);
+
 	// reset
 	$channel = $r[0];
 
@@ -1004,7 +1033,7 @@ function sync_files($channel,$files) {
 						$attach_id = $x[0]['id'];
 					}
 
-					$newfname = 'store/' . $channel['channel_address'] . '/' . get_attach_binname($att['data']);
+					$newfname = 'store/' . $channel['channel_address'] . '/' . get_attach_binname($att['content']);
 
  					unset($att['id']);
 					$att['aid'] = $channel['channel_account_id'];

@@ -143,9 +143,9 @@ class Manage extends \Zotlabs\Web\Controller {
 		$create = array( 'new_channel', t('Create a new channel'), t('Create New'));
 	
 		$delegates = q("select * from abook left join xchan on abook_xchan = xchan_hash where 
-			abook_channel = %d and (abook_their_perms & %d) > 0",
+			abook_channel = %d and abook_xchan in ( select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'delegate' and v = 1 )",
 			intval(local_channel()),
-			intval(PERMS_A_DELEGATE)
+			intval(local_channel())
 		);
 	
 		if($delegates) {

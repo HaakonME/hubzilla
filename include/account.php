@@ -515,7 +515,7 @@ function account_approve($hash) {
 		auto_channel_create($register[0]['uid']);
 	else {
 		$_SESSION['login_return_url'] = 'new_channel';
-		authenticate_success($account[0],true,true,false,true);
+		authenticate_success($account[0],null,true,true,false,true);
 	}	
 
 

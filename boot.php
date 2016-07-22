@@ -47,7 +47,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'STD_VERSION',             '1.11' );
 define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1180  );
+define ( 'DB_UPDATE_VERSION',       1181  );
 
 
 /**
@@ -2449,6 +2449,7 @@ function check_cron_broken() {
 	
 	if((! $d) || ($d < datetime_convert('UTC','UTC','now - 4 hours'))) {
 		Zotlabs\Daemon\Master::Summon(array('Cron'));
+		set_config('system','lastcron',datetime_convert());
 	}
 
 	$t = get_config('system','lastcroncheck');

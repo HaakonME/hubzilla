@@ -47,12 +47,13 @@ class Follow extends \Zotlabs\Web\Controller {
 		if($abconfig)
 			$clone['abconfig'] = $abconfig;
 	
-		build_sync_packet(0 /* use the current local_channel */, array('abook' => array($clone)));
+		build_sync_packet(0 /* use the current local_channel */, array('abook' => array($clone)), true);
 	
+		$can_view_stream = intval(get_abconfig($channel['channel_id'],$clone['abook_xchan'],'their_perms','view_stream'));
 	
 		// If we can view their stream, pull in some posts
 	
-		if(($result['abook']['abook_their_perms'] & PERMS_R_STREAM) || ($result['abook']['xchan_network'] === 'rss'))
+		if(($can_view_stream) || ($result['abook']['xchan_network'] === 'rss'))
 			\Zotlabs\Daemon\Master::Summon(array('Onepoll',$result['abook']['abook_id']));
 	
 		goaway(z_root() . '/connedit/' . $result['abook']['abook_id'] . '?f=&follow=1');

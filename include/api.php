@@ -282,7 +282,8 @@ require_once('include/api_auth.php');
 					intval($uinfo[0]['xchan_hash'])
 			);
 			$countitms = $r[0]['count'];
-			$following = (($uinfo[0]['abook_myperms'] & PERMS_R_STREAM) ? true : false );
+			
+			$following = ((get_abconfig($uinfo[0]['abook_channel'],$uinfo[0]['abook_xchan'],'my_perms','view_stream')) ? true : false );
 		}
 
 

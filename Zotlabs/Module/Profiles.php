@@ -708,7 +708,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'$profile_id'   => $r[0]['id'],
 				'$profile_name' => array('profile_name', t('Profile name'), $r[0]['profile_name'], t('Required'), '*'),
 				'$is_default'   => $is_default,
-				'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope($channel['channel_r_profile'])),
+				'$default'      => t('This is your default profile.') . EOL . translate_scope(map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_profile'))),
 				'$advanced'     => $advanced,
 				'$name'         => array('name', t('Your full name'), $r[0]['fullname'], t('Required'), '*'),
 				'$pdesc'        => array('pdesc', t('Title/Description'), $r[0]['pdesc']),
@@ -767,7 +767,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 						'$alt' => t('Profile Image'),
 						'$profile_name' => $rr['profile_name'],
 						'$visible' => (($rr['is_default']) 
-							? '<strong>' . translate_scope(map_scope($channel['channel_r_profile'])) . '</strong>' 
+							? '<strong>' . translate_scope(map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_profile'))) . '</strong>' 
 							: '<a href="' . z_root() . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 					));
 				}

@@ -47,9 +47,9 @@ class Editpost extends \Zotlabs\Web\Controller {
 		if(intval($itm[0]['item_obscured'])) {
 			$key = get_config('system','prvkey');
 			if($itm[0]['title'])
-				$itm[0]['title'] = crypto_unencapsulate(json_decode_plus($itm[0]['title']),$key);
+				$itm[0]['title'] = crypto_unencapsulate(json_decode($itm[0]['title'],true),$key);
 			if($itm[0]['body'])
-				$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
+				$itm[0]['body'] = crypto_unencapsulate(json_decode($itm[0]['body'],true),$key);
 		}
 
 		$category = '';

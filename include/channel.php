@@ -6,6 +6,7 @@
 require_once('include/zot.php');
 require_once('include/crypto.php');
 require_once('include/menu.php');
+require_once('include/perm_upgrade.php');
 
 /**
  * @brief Called when creating a new channel.
@@ -225,42 +226,26 @@ function create_identity($arr) {
 	if(array_key_exists('publish', $arr))
 		$publish = intval($arr['publish']);
 
+	$role_permissions = null;
+
+	if(array_key_exists('permissions_role',$arr) && $arr['permissions_role']) {
+		$role_permissions = \Zotlabs\Access\PermissionRoles::role_perms($arr['permissions_role']);
+	}
+
+	if($role_permissions && array_key_exists('directory_publish',$role_permissions))
+		$publish = intval($role_permissions['directory_publish']);
+
 	$primary = true;
 		
 	if(array_key_exists('primary', $arr))
 		$primary = intval($arr['primary']);
 
-	$role_permissions = null;
-	$global_perms = get_perms();
-
-	if(array_key_exists('permissions_role',$arr) && $arr['permissions_role']) {
-		$role_permissions = get_role_perms($arr['permissions_role']);
-
-		if($role_permissions) {
-			foreach($role_permissions as $p => $v) {
-				if(strpos($p,'channel_') !== false) {
-					$perms_keys .= ', ' . $p;
-					$perms_vals .= ', ' . intval($v);
-				}
-				if($p === 'directory_publish')
-					$publish = intval($v);
-			}
-		}
-	}
-	else {
-		$defperms = site_default_perms();
-		foreach($defperms as $p => $v) {
-			$perms_keys .= ', ' . $global_perms[$p][0];
-			$perms_vals .= ', ' . intval($v);
-		}
-	}
-
 	$expire = 0;
 
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
-		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_system, channel_expire_days, channel_timezone $perms_keys )
-		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s' $perms_vals ) ",
+		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_system, channel_expire_days, channel_timezone )
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s' ) ",
 
 		intval($arr['account_id']),
 		intval($primary),
@@ -287,6 +272,17 @@ function create_identity($arr) {
 		$ret['message'] = t('Unable to retrieve created identity');
 		return $ret;
 	}
+
+	if($role_permissions && array_key_exists('limits',$role_permissions))
+		$perm_limits = $role_permissions['limits'];
+	else
+		$perm_limits = site_default_perms();
+
+	foreach($perm_limits as $p => $v)
+		\Zotlabs\Access\PermissionLimits::Set($r[0]['channel_id'],$p,$v);
+
+	if($role_permissions && array_key_exists('perms_auto',$role_permissions))
+		set_pconfig($r[0]['channel_id'],'system','autoperms',intval($role_permissions['perms_auto']));
 
 	$ret['channel'] = $r[0];
 
@@ -351,24 +347,28 @@ function create_identity($arr) {
 	);
 
 	if($role_permissions) {
-		$myperms = ((array_key_exists('perms_accept',$role_permissions)) ? intval($role_permissions['perms_accept']) : 0);
+		$myperms = ((array_key_exists('perms_connect',$role_permissions)) ? $role_permissions['perms_connect'] : array());
 	}
-	else
-		$myperms = PERMS_R_STREAM|PERMS_R_PROFILE|PERMS_R_PHOTOS|PERMS_R_ABOOK
-			|PERMS_W_STREAM|PERMS_W_WALL|PERMS_W_COMMENT|PERMS_W_MAIL|PERMS_W_CHAT
-			|PERMS_R_STORAGE|PERMS_R_PAGES|PERMS_W_LIKE;
+	else {
+		$x = \Zotlabs\Access\PermissionRoles::role_perms('social');
+		$myperms = $x['perms_connect'];
+	}
 
-	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_self, abook_my_perms )
-		values ( %d, %d, '%s', %d, '%s', '%s', %d, %d ) ",
+	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_self )
+		values ( %d, %d, '%s', %d, '%s', '%s', %d ) ",
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
 		dbesc($hash),
 		intval(0),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
-		intval(1),
-		intval($myperms)
+		intval(1)
 	);
+
+	$x = \Zotlabs\Access\Permissions::FilledPerms($myperms);
+	foreach($x as $k => $v) {
+		set_abconfig($newuid,$hash,'my_perms',$k,$v);
+	}
 
 	if(intval($ret['channel']['channel_account_id'])) {
 
@@ -378,8 +378,21 @@ function create_identity($arr) {
 			set_pconfig($newuid,'system','permissions_role',$arr['permissions_role']);
 			if(array_key_exists('online',$role_permissions))
 				set_pconfig($newuid,'system','hide_presence',1-intval($role_permissions['online']));
-			if(array_key_exists('perms_auto',$role_permissions))
-				set_pconfig($newuid,'system','autoperms',(($role_permissions['perms_auto']) ? $role_permissions['perms_accept'] : 0));
+			if(array_key_exists('perms_auto',$role_permissions)) {
+				$autoperms = intval($role_permissions['perms_auto']);
+				set_pconfig($newuid,'system','autoperms',$autoperms);
+				if($autoperms) {
+					$x = \Zotlabs\Access\Permissions::FilledPerms($role_permissions['perms_connect']);
+					foreach($x as $k => $v) {
+						set_pconfig($newuid,'autoperms',$k,$v);
+					}
+				}
+				else {
+					$r = q("delete from pconfig where uid = %d and cat = 'autoperms'",
+						intval($newuid)
+					);
+				}
+			}						
 		}
 
 		// Create a group with yourself as a member. This allows somebody to use it 
@@ -497,7 +510,8 @@ function identity_basic_export($channel_id, $items = false) {
 		intval($channel_id)
 	);
 	if($r) {
-		$ret['channel'] = $r[0];
+		translate_channel_perms_outbound($r[0]);
+		$ret['channel'] = $r[0];		
 		$ret['relocate'] = [ 'channel_address' => $r[0]['channel_address'], 'url' => z_root()];
 	}
 
@@ -519,6 +533,7 @@ function identity_basic_export($channel_id, $items = false) {
 			$abconfig = load_abconfig($channel_id,$ret['abook'][$x]['abook_xchan']);
 			if($abconfig)
 				$ret['abook'][$x]['abconfig'] = $abconfig;
+			translate_abook_perms_outbound($ret['abook'][$x]);
 		}		 
 		stringify_array_elms($xchans);
 	}
@@ -1551,9 +1566,11 @@ function is_public_profile() {
 	if(intval(get_config('system','block_public')))
 		return false;
 	$channel = App::get_channel();
-	if($channel && $channel['channel_r_profile'] == PERMS_PUBLIC)
-		return true;
-
+	if($channel) {
+		$perm = \Zotlabs\Access\PermissionLimit::Get($channel['channel_id'],'view_profile');
+		if($perm == PERMS_PUBLIC)
+			return true;
+	}
 	return false;
 }
 
@@ -1625,13 +1642,13 @@ function notifications_on($channel_id,$value) {
 
 function get_channel_default_perms($uid) {
 
-	$r = q("select abook_my_perms from abook where abook_channel = %d and abook_self = 1 limit 1",
+	$r = q("select abook_xchan from abook where abook_channel = %d and abook_self = 1 limit 1",
 		intval($uid)
 	);
 	if($r)
-		return $r[0]['abook_my_perms'];
+		return load_abconfig($uid,$r[0]['abook_xchan'],'my_perms');
 
-	return 0;
+	return array();
 }
 
 

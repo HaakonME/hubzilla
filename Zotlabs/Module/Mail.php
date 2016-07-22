@@ -57,8 +57,6 @@ class Mail extends \Zotlabs\Web\Controller {
 	
 			$their_perms = 0;
 	
-			$global_perms = get_perms();
-	
 			if($j['permissions']['data']) {
 				$permissions = crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']);
 				if($permissions)
@@ -68,13 +66,7 @@ class Mail extends \Zotlabs\Web\Controller {
 			else
 				$permissions = $j['permissions'];
 	
-			foreach($permissions as $k => $v) {
-				if($v) {
-					$their_perms = $their_perms | intval($global_perms[$k][1]);
-				}
-			}
-	
-			if(! ($their_perms & PERMS_W_MAIL)) {
+			if(! ($permissions['post_mail'])) {
 	 			notice( t('Selected channel has private message restrictions. Send failed.'));
 				// reported issue: let's still save the message and continue. We'll just tell them
 				// that nothing useful is likely to happen. They might have spent hours on it.  
@@ -120,7 +112,7 @@ class Mail extends \Zotlabs\Web\Controller {
 			
 	}
 	
-		function get() {
+	function get() {
 	
 		$o = '';
 		nav_set_selected('messages');

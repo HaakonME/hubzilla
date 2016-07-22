@@ -1284,9 +1284,9 @@ function unobscure(&$item) {
 	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode($item['title'],true),$key);
 		if($item['body'])
-			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode($item['body'],true),$key);
 		if(get_config('system','item_cache')) {
 			q("update item set title = '%s', body = '%s', item_obscured = 0 where id = %d",
 				dbesc($item['title']),
@@ -1309,7 +1309,7 @@ function unobscure_mail(&$item) {
 
 function theme_attachments(&$item) {
 
-	$arr = json_decode_plus($item['attach']);
+	$arr = json_decode($item['attach'],true);
 	if(is_array($arr) && count($arr)) {
 		$attaches = array();
 		foreach($arr as $r) {
@@ -2212,20 +2212,12 @@ function jindent($json) {
 	return $result;
 }
 
-
-function json_decode_plus($s) {
-	$x = json_decode($s,true);
-	if(! $x)
-		$x = json_decode(str_replace(array('\\"','\\\\'),array('"','\\'),$s),true);
-
-	return $x;
-}
-
 /**
  * @brief Creates navigation menu for webpage, layout, blocks, menu sites.
  *
  * @return string
  */
+
 function design_tools() {
 
 	$channel  = App::get_channel();

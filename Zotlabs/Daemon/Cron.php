@@ -66,7 +66,7 @@ class Cron {
 
 		q("delete from atoken where atoken_expires != '%s' && atoken_expires < %s",
 			dbesc(NULL_DATE),
-			dbutcnow()
+			db_utcnow()
 		);
 
 

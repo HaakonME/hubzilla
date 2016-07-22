@@ -126,15 +126,30 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$rating = 10;
 	
 		$rating_text = trim(escape_tags($_REQUEST['rating_text']));
-	
-		$abook_my_perms = 0;
-	
-		foreach($_POST as $k => $v) {
-			if(strpos($k,'perms_') === 0) {
-				$abook_my_perms += $v;
+		
+		$all_perms = \Zotlabs\Access\Permissions::Perms();
+
+		if($all_perms) {
+			foreach($all_perms as $perm => $desc) {
+				if(array_key_exists('perms_' . $perm, $_POST)) {
+					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,
+						intval($_POST['perms_' . $perm]));
+					if($autoperms) {
+						set_pconfig($channel['channel_id'],'autoperms',$perm,intval($_POST['perms_' . $perm]));
+					}
+				}
+				else {
+					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$perm,0);
+					if($autoperms) {
+						set_pconfig($channel['channel_id'],'autoperms',$perm,0);
+					}
+				}
 			}
 		}
-	
+
+		if(! is_null($autoperms)) 
+			set_pconfig($channel['channel_id'],'system','autoperms',$autoperms);
+				
 		$new_friend = false;
 	
 		if(! $is_self) {
@@ -194,19 +209,25 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			$role = get_pconfig(local_channel(),'system','permissions_role');
 			if($role) {
-				$x = get_role_perms($role);
-				if($x['perms_accept'])
-					$abook_my_perms = $x['perms_accept'];
+				$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
+				if($x['perms_connect']) {
+					$abook_my_perms = $x['perms_connect'];
+				}
 			}
+
+			$filled_perms = \Zotlabs\Access\Permissions::FilledPerms($abook_my_perms);
+			foreach($filled_perms as $k => $v) {
+				set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$k,$v);
+			}
+
 		}
-	
+
 		$abook_pending = (($new_friend) ? 0 : $orig_record[0]['abook_pending']);
 	
-		$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_pending = %d,
+		$r = q("UPDATE abook SET abook_profile = '%s', abook_closeness = %d, abook_pending = %d,
 			abook_incl = '%s', abook_excl = '%s'
 			where abook_id = %d AND abook_channel = %d",
 			dbesc($profile_id),
-			intval($abook_my_perms),
 			intval($closeness),
 			intval($abook_pending),
 			dbesc($abook_incl),
@@ -227,10 +248,13 @@ class Connedit extends \Zotlabs\Web\Controller {
 			info( t('Connection updated.') . EOL);
 		else
 			notice( t('Failed to update connection record.') . EOL);
-	
-		if(\App::$poi && \App::$poi['abook_my_perms'] != $abook_my_perms
-			&& (! intval(\App::$poi['abook_self']))) {
-			\Zotlabs\Daemon\Master::Summon(array('Notifier', (($new_friend) ? 'permission_create' : 'permission_update'), $contact_id));
+
+		if(! intval(\App::$poi['abook_self'])) {
+			\Zotlabs\Daemon\Master::Summon( [ 
+				'Notifier', 
+				(($new_friend) ? 'permission_create' : 'permission_update'), 
+				$contact_id 
+			]);
 		}
 	
 		if($new_friend) {
@@ -371,9 +395,9 @@ class Connedit extends \Zotlabs\Web\Controller {
 		$my_perms = get_channel_default_perms(local_channel());
 		$role = get_pconfig(local_channel(),'system','permissions_role');
 		if($role) {
-			$x = get_role_perms($role);
-			if($x['perms_accept'])
-				$my_perms = $x['perms_accept'];
+			$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
+			if($x['perms_connect'])
+				$my_perms = $x['perms_connect'];
 		}
 	
 		$yes_no = array(t('No'),t('Yes'));
@@ -654,7 +678,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$perms = array();
 			$channel = \App::get_channel();
 	
-			$global_perms = get_perms();
+			$global_perms = \Zotlabs\Access\Permissions::Perms();
+
 			$existing = get_all_perms(local_channel(),$contact['abook_xchan']);
 	
 			$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'), array(t('No'),('Yes')));
@@ -670,16 +695,32 @@ class Connedit extends \Zotlabs\Web\Controller {
 			if($slide && $multiprofs)
 				$affinity = t('Set Affinity & Profile');
 	
+			$theirs = q("select * from abconfig where chan = %d and xchan = '%s' and cat = 'their_perms'",
+					intval(local_channel()),
+					dbesc($contact['abook_xchan'])
+			);
+			$their_perms = array();
+			if($theirs) {
+				foreach($theirs as $t) {
+					$their_perms[$t['k']] = $t['v'];
+				}
+			}
+
 			foreach($global_perms as $k => $v) {
-				$thisperm = (($contact['abook_my_perms'] & $v[1]) ? "1" : '');
-				$checkinherited = ((($channel[$v[0]]) && ($channel[$v[0]] != PERMS_SPECIFIC)) ? "1" : '');
+				$thisperm = get_abconfig(local_channel(),$contact['abook_xchan'],'my_perms',$k);
+//fixme
+				
+				$checkinherited = \Zotlabs\Access\PermissionLimits::Get(local_channel(),$k);
 	
 				// For auto permissions (when $self is true) we don't want to look at existing
 				// permissions because they are enabled for the channel owner
 				if((! $self) && ($existing[$k]))
 					$thisperm = "1";
+
+				
+
 	
-				$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),$thisperm, $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4], $checkinherited);
+				$perms[] = array('perms_' . $k, $v, ((array_key_exists($k,$their_perms)) ? intval($their_perms[$k]) : ''),$thisperm, 1, (($checkinherited & PERMS_SPECIFIC) ? '' : '1'), '', $checkinherited);
 			}
 	
 			$locstr = '';

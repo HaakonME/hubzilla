@@ -1356,7 +1356,8 @@ function zat_init() {
 		dbesc($_REQUEST['zat'])
 	);
 	if($r) {
-		atoken_login($r[0]);
+		$xchan = atoken_xchan($r[0]);
+		atoken_login($xchan);
 	}
 
 }

@@ -17,7 +17,7 @@ class PConfig {
 	 */
 
 	static public function Load($uid) {
-		if($uid === false)
+		if(is_null($uid) || $uid === false)
 			return false;
 
 		if(! array_key_exists($uid, \App::$config))
@@ -61,7 +61,7 @@ class PConfig {
 
 	static public function Get($uid,$family,$key,$instore = false) {
 
-		if($uid === false)
+		if(is_null($uid) || $uid === false)
 			return false;
 
 		if(! array_key_exists($uid, \App::$config))
@@ -102,7 +102,7 @@ class PConfig {
 		// we provide a function backtrace in the logs so that we can find
 		// and fix the calling function.
 
-		if($uid === false) {
+		if(is_null($uid) || $uid === false) {
 			btlogger('UID is FALSE!', LOGGER_NORMAL, LOG_ERR);
 			return;
 		}
@@ -171,6 +171,9 @@ class PConfig {
 	 */
  
 	static public function Delete($uid, $family, $key) {
+
+		if(is_null($uid) || $uid === false)
+			return false;
 
 		$ret = false;
 

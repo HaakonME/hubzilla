@@ -69,9 +69,8 @@ function check_upstream_directory() {
 	if ($directory) {
 		$h = parse_url($directory);
 		if ($h) {
-			$x = zot_finger('[system]@' . $h['host']);
-			if ($x['success']) {
-				$j = json_decode($x['body'], true);
+			$j = Zotlabs\Zot\Finger::run('[system]@' . $h['host']);
+			if ($j['success']) {
 				if (array_key_exists('site', $j) && array_key_exists('directory_mode', $j['site'])) {
 					if ($j['site']['directory_mode'] === 'normal') {
 						$isadir = false;
@@ -94,6 +93,9 @@ function get_directory_setting($observer, $setting) {
 
 	if($ret === false)
 		$ret = get_config('directory', $setting);
+
+
+	// 'safemode' is the default if there is no observer or no established preference. 
 
 	if($setting == 'safemode' && $ret === false)
 		$ret = 1;

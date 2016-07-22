@@ -12,6 +12,7 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/hubloc.php');
 require_once('include/queue_fn.php');
+require_once('include/perm_upgrade.php');
 
 
 /**
@@ -329,7 +330,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 		return false;
 	}
 
+	$token = random_string();
+
 	$postvars = array();
+
+	$postvars['token'] = $token;
 
 	if($channel) {
 		$postvars['target']     = $channel['channel_guid'];
@@ -343,9 +348,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 		$postvars['guid_hash'] = $them['xchan_hash'];
 	if (array_key_exists('xchan_guid',$them) && $them['xchan_guid']
 		&& array_key_exists('xchan_guid_sig',$them) && $them['xchan_guid_sig']) {
-
 		$postvars['guid'] = $them['xchan_guid'];
 		$postvars['guid_sig'] = $them['xchan_guid_sig'];
+
 	}
 
 	$rhs = '/.well-known/zot-info';
@@ -363,15 +368,28 @@ function zot_refresh($them, $channel = null, $force = false) {
 			return false;
 		}
 
+		$signed_token = ((is_array($j) && array_key_exists('signed_token',$j)) ? $j['signed_token'] : null);
+		if($signed_token) {
+			$valid = rsa_verify('token.' . $token,base64url_decode($signed_token),$j['key']);
+			if(! $valid) {
+				logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_ERR);
+				return false;
+			}
+		}
+		else {
+			logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARNING);
+			// after 2017-01-01 this will be a hard error unless you over-ride it.
+			if((time() > 1483228800) && (! get_config('system','allow_unsigned_zotfinger'))) {
+				return false;
+			}
+		}
+
 		$x = import_xchan($j, (($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
 
 		if(! $x['success'])
 			return false;
 
-		$their_perms = 0;
-
 		if($channel) {
-			$global_perms = get_perms();
 			if($j['permissions']['data']) {
 				$permissions = crypto_unencapsulate(array(
 					'data' => $j['permissions']['data'],
@@ -388,15 +406,10 @@ function zot_refresh($them, $channel = null, $force = false) {
 			$connected_set = false;
 
 			if($permissions && is_array($permissions)) {
+				$old_read_stream_perm = get_abconfig($channel['channel_id'],$x['hash'],'their_perms','view_stream');
+
 				foreach($permissions as $k => $v) {
-					// The connected permission means you are in their address book
-					if($k === 'connected') {
-						$connected_set = intval($v);
-						continue;
-					}
-					if(($v) && (array_key_exists($k,$global_perms))) {
-						$their_perms = $their_perms | intval($global_perms[$k][1]);
-					}
+					set_abconfig($channel['channel_id'],$x['hash'],'their_perms',$k,$v);
 				}
 			}
 
@@ -423,52 +436,49 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if(substr($r[0]['abook_dob'],5) == substr($next_birthday,5))
 					$next_birthday = $r[0]['abook_dob'];
 
-				$current_abook_connected = (intval($r[0]['abook_unconnected']) ? 0 : 1);
-
-				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
+				$y = q("update abook set abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d
 					and abook_self = 0 ",
-					intval($their_perms),
 					dbescdate($next_birthday),
 					dbesc($x['hash']),
 					intval($channel['channel_id'])
 				);
 
-//				if(($connected_set === 0 || $connected_set === 1) && ($connected_set !== $current_abook_unconnected)) {
-
-					// if they are in your address book but you aren't in theirs, and/or this does not
-					// match your current connected state setting, toggle it.
-					/** @FIXME uncoverted to postgres */
-					/** @FIXME when this was enabled, all contacts became unconnected. Currently disabled intentionally */
-//					$y1 = q("update abook set abook_unconnected = 1
-//						where abook_xchan = '%s' and abook_channel = %d
-//						and abook_self = 0 limit 1",
-//						dbesc($x['hash']),
-//						intval($channel['channel_id'])
-//					);
-//				}
-
 				if(! $y)
 					logger('abook update failed');
 				else {
 					// if we were just granted read stream permission and didn't have it before, try to pull in some posts
-					if((! ($r[0]['abook_their_perms'] & PERMS_R_STREAM)) && ($their_perms & PERMS_R_STREAM))
-						proc_run('php','include/onepoll.php',$r[0]['abook_id']);
+					if((! $old_read_stream_perm) && (intval($permissions['view_stream'])))
+						Zotlabs\Daemon\Master::Summon(array('Onepoll',$r[0]['abook_id']));
 				}
 			}
 			else {
 
 				// new connection
 
+				$my_perms = null;
+
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
-					$xx = get_role_perms($role);
-					if($xx['perms_auto'])
-						$default_perms = $xx['perms_accept'];
+					$xx = \Zotlabs\Access\PermissionRoles::role_perms($role);
+					if($xx['perms_auto']) {
+						$default_perms = $xx['perms_connect'];
+						$my_perms = \Zotlabs\Access\Permissions::FilledPerms($default_perms);
+					}
 				}
-				if(! $default_perms)
-					$default_perms = intval(get_pconfig($channel['channel_id'],'system','autoperms'));
 
+				if(! $my_perms) {
+					$m = \Zotlabs\Access\Permissions::FilledAutoperms($channel['channel_id']);
+					if($m) {
+						$my_perms = $m;
+					}
+				}
+
+				if($my_perms) {
+					foreach($my_perms as $k => $v) {
+						set_abconfig($channel['channel_id'],$x['hash'],'my_perms',$k,$v);
+					}
+				}
 
 				// Keep original perms to check if we need to notify them
 				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
@@ -478,13 +488,11 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if($closeness === false)
 					$closeness = 80;
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_pending ) values ( %d, %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
+				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_created, abook_updated, abook_dob, abook_pending ) values ( %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					intval($closeness),
 					dbesc($x['hash']),
-					intval($their_perms),
-					intval($default_perms),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($next_birthday),
@@ -503,27 +511,36 @@ function zot_refresh($them, $channel = null, $force = false) {
 					);
 
 					if($new_connection) {
-						if($new_perms != $previous_perms)
-							proc_run('php','include/notifier.php','permission_create',$new_connection[0]['abook_id']);
-						require_once('include/enotify.php');
-						notification(array(
+						if(! \Zotlabs\Access\Permissions::PermsCompare($new_perms,$previous_perms))
+							Zotlabs\Daemon\Master::Summon(array('Notifier','permission_create',$new_connection[0]['abook_id']));
+						Zotlabs\Lib\Enotify::submit(array(
 							'type'       => NOTIFY_INTRO,
 							'from_xchan' => $x['hash'],
 							'to_xchan'   => $channel['channel_hash'],
 							'link'       => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
 						));
 					
-						if($their_perms & PERMS_R_STREAM) {
-							if(($channel['channel_w_stream'] & PERMS_PENDING)
-								|| (! intval($new_connection[0]['abook_pending'])) )
-								proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']);
+						if(intval($permissions['view_stream'])) {
+							if(intval(get_pconfig($channel['channel_id'],'perm_limits','send_stream') & PERMS_PENDING)
+								|| (! intval($new_connection[0]['abook_pending'])))
+								Zotlabs\Daemon\Master::Summon(array('Onepoll',$new_connection[0]['abook_id']));
+						}
+
+
+						/** If there is a default group for this channel, add this connection to it */
+						$default_group = $channel['channel_default_group'];
+						if($default_group) {
+							require_once('include/group.php');
+							$g = group_rec_byhash($channel['channel_id'],$default_group);
+							if($g)	
+								group_add_member($channel['channel_id'],'',$x['hash'],$g['id']);
 						}
 
 						unset($new_connection[0]['abook_id']);
 						unset($new_connection[0]['abook_account']);
 						unset($new_connection[0]['abook_channel']);
 
-						$abconfig = load_abconfig($channel['channel_hash'],$new_connection['abook_xchan']);
+						$abconfig = load_abconfig($channel['channel_id'],$new_connection['abook_xchan']);
 						if($abconfig)
 							$new_connection['abconfig'] = $abconfig;
 
@@ -1027,8 +1044,9 @@ function zot_process_response($hub, $arr, $outq) {
 /**
  * @brief
  *
- * We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
- * Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign with our site private key.
+ * We received a notification packet (in mod_post) that a message is waiting for us, and we've verified the sender.
+ * Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign with our site
+ * private key.
  * The entire pickup message is encrypted with the remote site's public key.
  * If everything checks out on the remote end, we will receive back a packet containing one or more messages,
  * which will be processed and delivered before this function ultimately returns.
@@ -1102,6 +1120,7 @@ function zot_fetch($arr) {
  *  * [1] => \e string $delivery_status
  *  * [2] => \e string $address
  */
+
 function zot_import($arr, $sender_url) {
 
 	$data = json_decode($arr['body'], true);
@@ -1332,7 +1351,7 @@ function zot_import($arr, $sender_url) {
  */
 function public_recips($msg) {
 
-	require_once('include/identity.php');
+	require_once('include/channel.php');
 
 	$check_mentions = false;
 	$include_sys = false;
@@ -1340,8 +1359,8 @@ function public_recips($msg) {
 	if($msg['message']['type'] === 'activity') {
 		if(! get_config('system','disable_discover_tab'))
 			$include_sys = true;
-		$col = 'channel_w_stream';
-		$field = PERMS_W_STREAM;
+		$perm = 'send_stream';
+
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
 			// check mention recipient permissions on top level posts only
 			$check_mentions = true;
@@ -1373,65 +1392,30 @@ function public_recips($msg) {
 			// contains the tag. we'll solve that further below.
 
 			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
-				$col = 'channel_w_comment';
-				$field = PERMS_W_COMMENT;
+				$perm = 'post_comments';
 			}
 		}
 	}
-	elseif($msg['message']['type'] === 'mail') {
-		$col = 'channel_w_mail';
-		$field = PERMS_W_MAIL;
+	elseif($msg['message']['type'] === 'mail')
+		$perm = 'post_mail';
+
+	$r = array();
+	
+	$c = q("select channel_id, channel_hash from channel where channel_removed = 0");
+	if($c) {
+		foreach($c as $cc) {
+			if(perm_is_allowed($cc['channel_id'],$msg['notify']['sender']['hash'],$perm)) {
+				$r[] = [ 'hash' => $cc['channel_hash'] ];
+			}
+		}
 	}
 
-	if(! $col)
-		return NULL;
-
-	$col = dbesc($col);
-
-	// First find those channels who are accepting posts from anybody, or at least
-	// something greater than just their connections.
-
-	if($msg['notify']['sender']['url'] === z_root()) {
-		$sql = " where (( " . $col . " & " . intval(PERMS_NETWORK) . " ) > 0
-					or (  " . $col . " & " . intval(PERMS_SITE) . " ) > 0
-					or (  " . $col . " & " . intval(PERMS_PUBLIC) . ") > 0
-					or (  " . $col . " & " . intval(PERMS_AUTHED)  . ") > 0 ) ";
-	} else {
-		$sql = " where ( " . $col . " = " . intval(PERMS_NETWORK) . " 
-					or " . $col . " = " . intval(PERMS_PUBLIC) . "
-					or " . $col . " = " . intval(PERMS_AUTHED) . " ) ";
-	}
-
-	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s'
-		and channel_removed = 0 ",
-		dbesc($msg['notify']['sender']['hash'])
-	);
-
-	if(! $r)
-		$r = array();
-
-	// Now we have to get a bit dirty. Find every channel that has the sender in their connections (abook)
-	// and is allowing this sender at least at a high level.
-
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id
-		where abook_xchan = '%s' and channel_removed = 0
-		and (( " . $col . " = " . intval(PERMS_SPECIFIC) . " and ( abook_my_perms & " . intval($field) . " ) > 0 )
-		OR   " . $col . " = " . intval(PERMS_PENDING) . " 
-		OR  ( " . $col . " = " . intval(PERMS_CONTACTS) . " and abook_pending = 0 )) ",
-		dbesc($msg['notify']['sender']['hash'])
-	);
-
-	if(! $x)
-		$x = array();
-
-	$r = array_merge($r,$x);
-
-	//logger('message: ' . print_r($msg['message'],true));
+	// logger('message: ' . print_r($msg['message'],true));
 
 	if($include_sys && array_key_exists('public_scope',$msg['message']) && $msg['message']['public_scope'] === 'public') {
 		$sys = get_sys_channel();
 		if($sys)
-			$r[] = array('hash' => $sys['channel_hash']);
+			$r[] = [ 'hash' => $sys['channel_hash'] ];
 	}
 
 	// look for any public mentions on this site
@@ -1494,7 +1478,7 @@ function public_recips($msg) {
 /**
  * @brief
  *
- * This is the second part of public_recipes().
+ * This is the second part of public_recips().
  * We'll find all the channels willing to accept public posts from us, then
  * match them against the sender privacy scope and see who in that list that
  * the sender is allowing.
@@ -1703,7 +1687,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 				if((! $relay) && (! $request) && (! $local_public)
 					&& perm_is_allowed($channel['channel_id'],$sender['hash'],'send_stream')) {
-					proc_run('php', 'include/notifier.php', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']);
+					Zotlabs\Daemon\Master::Summon(array('Notifier', 'request', $channel['channel_id'], $sender['hash'], $arr['parent_mid']));
 				}
 				continue;
 			}
@@ -1775,7 +1759,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
-				proc_run('php','include/notifier.php','relay',intval($item_id));
+				Zotlabs\Daemon\Master::Summon(array('Notifier','relay',intval($item_id)));
 				$DR->update('relayed');
 				$result[] = $DR->get();
 			}
@@ -1858,7 +1842,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
-			proc_run('php','include/notifier.php','relay',intval($item_id));
+			Zotlabs\Daemon\Master::Summon(array('Notifier','relay',intval($item_id)));
 			$DR->addto_update('relayed');
 			$result[] = $DR->get();
 		}
@@ -1912,9 +1896,9 @@ function remove_community_tag($sender, $arr, $uid) {
 	$i = $r[0];
 
 	if($i['target'])
-		$i['target'] = json_decode_plus($i['target']);
+		$i['target'] = json_decode($i['target'],true);
 	if($i['object'])
-		$i['object'] = json_decode_plus($i['object']);
+		$i['object'] = json_decode($i['object'],true);
 
 	if(! ($i['target'] && $i['object'])) {
 		logger('remove_community_tag: no target/object');
@@ -1932,7 +1916,7 @@ function remove_community_tag($sender, $arr, $uid) {
 		return;
 	}
 
-	q("delete from term where uid = %d and oid = %d and otype = %d and type in  ( %d, %d ) and term = '%s' and url = '%s'",
+	q("delete from term where uid = %d and oid = %d and otype = %d and ttype in  ( %d, %d ) and term = '%s' and url = '%s'",
 		intval($uid),
 		intval($r[0]['id']),
 		intval(TERM_OBJ_POST),
@@ -1953,6 +1937,16 @@ function remove_community_tag($sender, $arr, $uid) {
  */
 function update_imported_item($sender, $item, $orig, $uid) {
 
+	// If this is a comment being updated, remove any privacy information
+	// so that item_store_update will set it from the original.
+
+	if($item['mid'] !== $item['parent_mid']) {
+		unset($item['allow_cid']);
+		unset($item['allow_gid']);
+		unset($item['deny_cid']);
+		unset($item['deny_gid']);
+		unset($item['item_private']);
+	}
 
 	$x = item_store_update($item);
 
@@ -2371,11 +2365,14 @@ function sync_locations($sender, $arr, $absolute = false) {
 
 				$current_site = false;
 
+				$t = datetime_convert('UTC','UTC','now - 15 minutes');
+
 				if(array_key_exists('site',$arr) && $location['url'] == $arr['site']['url']) {
-					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d",
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d and hubloc_connected < '%s'",
 						dbesc(datetime_convert()),
 						dbesc(datetime_convert()),
-						intval($r[0]['hubloc_id'])
+						intval($r[0]['hubloc_id']),
+						dbesc($t)
 					);
 					$current_site = true;
 				}
@@ -2935,8 +2932,6 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	if(UNO)
 		return;
 
-	$a = get_app();
-
 	logger('build_sync_packet');
 
 	if($packet)
@@ -2956,6 +2951,14 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$channel = $r[0];
 
+	translate_channel_perms_outbound($channel);
+	if($packet && array_key_exists('abook',$packet) && $packet['abook']) {
+		for($x = 0; $x < count($packet['abook']); $x ++) {
+			translate_abook_perms_outbound($packet['abook'][$x]);
+		}
+	}
+
+
 	if(intval($channel['channel_removed']))
 		return;
 
@@ -2972,7 +2975,12 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		if($x['hubloc_host'] == App::get_hostname())
 			continue;
 
-		$synchubs[] = $x;
+		$y = q("select site_dead from site where site_url = '%s' limit 1",
+			dbesc($x['hubloc_url'])
+		);
+
+		if((! $y) || ($y[0]['site_dead'] == 0))
+			$synchubs[] = $x;
 	}
 
 	if(! $synchubs)
@@ -2989,7 +2997,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$info = (($packet) ? $packet : array());
 	$info['type'] = 'channel_sync';
-	$info['encoding'] = 'red'; // note: not zot, this packet is very red specific
+	$info['encoding'] = 'red'; // note: not zot, this packet is very platform specific
+	$info['relocate'] = ['channel_address' => $channel['channel_address'], 'url' => z_root() ];
 
 	if(array_key_exists($uid,App::$config) && array_key_exists('transient',App::$config[$uid])) {
 		$settings = App::$config[$uid]['transient'];
@@ -3019,7 +3028,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	}
 
 	if($groups_changed) {
-		$r = q("select hash as collection, visible, deleted, name from groups where uid = %d",
+		$r = q("select hash as collection, visible, deleted, gname as name from groups where uid = %d",
 			intval($uid)
 		);
 		if($r)
@@ -3050,7 +3059,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 			'msg'        => json_encode($info)
 		));
 
-		proc_run('php', 'include/deliver.php', $hash);
+		Zotlabs\Daemon\Master::Summon(array('Deliver', $hash));
 		$total = $total - 1;
 
 		if($interval && $total)
@@ -3073,7 +3082,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 	require_once('include/import.php');
 
-	/** @FIXME this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic. */
+	/** @FIXME this will sync red structures (channel, pconfig and abook). 
+		Eventually we need to make this application agnostic. */
 
 	$result = array();
 
@@ -3121,16 +3131,19 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			import_conv($channel,$arr['conv']);
 
 		if(array_key_exists('mail',$arr) && $arr['mail'])
-			import_mail($channel,$arr['mail']);
+			sync_mail($channel,$arr['mail']);
 
 		if(array_key_exists('event',$arr) && $arr['event'])
 			sync_events($channel,$arr['event']);
 
 		if(array_key_exists('event_item',$arr) && $arr['event_item'])
-			sync_items($channel,$arr['event_item']);
+			sync_items($channel,$arr['event_item'],((array_key_exists('relocate',$arr)) ? $arr['relocate'] : null));
 
 		if(array_key_exists('item',$arr) && $arr['item'])
-			sync_items($channel,$arr['item']);
+			sync_items($channel,$arr['item'],((array_key_exists('relocate',$arr)) ? $arr['relocate'] : null));
+
+		// deprecated, maintaining for a few months for upward compatibility
+		// this should sync webpages, but the logic is a bit subtle
 
 		if(array_key_exists('item_id',$arr) && $arr['item_id'])
 			sync_items($channel,$arr['item_id']);
@@ -3142,6 +3155,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			sync_files($channel,$arr['file']);
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
+
+			translate_channel_perms_inbound($arr['channel']);
 
 			if(array_key_exists('channel_pageflags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
 				// These flags cannot be sync'd.
@@ -3156,7 +3171,15 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 			}
 			
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags', 'channel_removed', 'channel_deleted', 'channel_system');
+			$disallowed = [ 
+				'channel_id',        'channel_account_id',  'channel_primary',   'channel_prvkey', 
+				'channel_address',   'channel_notifyflags', 'channel_removed',   'channel_deleted', 
+				'channel_system',    'channel_r_stream',    'channel_r_profile', 'channel_r_abook', 
+				'channel_r_storage', 'channel_r_pages',     'channel_w_stream',  'channel_w_wall', 
+				'channel_w_comment', 'channel_w_mail',      'channel_w_like',    'channel_w_tagwall', 
+				'channel_w_chat',    'channel_w_storage',   'channel_w_pages',   'channel_a_republish', 
+				'channel_a_delegate' 
+			];
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {
@@ -3192,6 +3215,8 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 			foreach($arr['abook'] as $abook) {
 
+				
+
 				$abconfig = null;
 
 				if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && count($abook['abconfig']))
@@ -3212,7 +3237,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				$clean = array();
 				if($abook['abook_xchan'] && $abook['entry_deleted']) {
 					logger('process_channel_sync_delivery: removing abook entry for ' . $abook['abook_xchan']);
-					require_once('include/Contact.php');
 
 					$r = q("select abook_id, abook_feed from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 						dbesc($abook['abook_xchan']),
@@ -3287,11 +3311,16 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					}
 				}
 
+				// This will set abconfig vars if the sender is using old-style fixed permissions
+				// using the raw abook record as passed to us. New-style permissions will fall through
+				// and be set using abconfig
+
+				translate_abook_perms_inbound($channel,$abook);
+
 				if($abconfig) {
 					// @fixme does not handle sync of del_abconfig
 					foreach($abconfig as $abc) {
-						if($abc['chan'] === $channel['channel_hash'])
-							set_abconfig($abc['chan'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
+						set_abconfig($channel['channel_id'],$abc['xchan'],$abc['cat'],$abc['k'],$abc['v']);
 					}
 				}
 			}
@@ -3313,10 +3342,10 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						}
 					}
 					if($found) {
-						if(($y['name'] != $cl['name'])
+						if(($y['gname'] != $cl['name'])
 							|| ($y['visible'] != $cl['visible'])
 							|| ($y['deleted'] != $cl['deleted'])) {
-							q("update groups set name = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d",
+							q("update groups set gname = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d",
 								dbesc($cl['name']),
 								intval($cl['visible']),
 								intval($cl['deleted']),
@@ -3332,7 +3361,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					}
 				}
 				if(! $found) {
-					$r = q("INSERT INTO `groups` ( hash, uid, visible, deleted, name )
+					$r = q("INSERT INTO `groups` ( hash, uid, visible, deleted, gname )
 						VALUES( '%s', %d, %d, %d, '%s' ) ",
 						dbesc($cl['collection']),
 						intval($channel['channel_id']),
@@ -3439,7 +3468,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('profile',$arr) && is_array($arr['profile']) && count($arr['profile'])) {
 
-			$disallowed = array('id','aid','uid');
+			$disallowed = array('id','aid','uid','guid');
 
 			foreach($arr['profile'] as $profile) {
 				$x = q("select * from profile where profile_guid = '%s' and uid = %d limit 1",
@@ -3463,13 +3492,22 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				foreach($profile as $k => $v) {
 					if(in_array($k,$disallowed))
 						continue;
+					
+					if($k === 'name')
+						$clean['fullname'] = $v;
+					elseif($k === 'with')
+						$clean['partner'] = $v;
+					elseif($k === 'work')
+						$clean['employment'] = $v;
+					elseif(array_key_exists($k,$x[0]))
+						$clean[$k] = $v;
 
-					$clean[$k] = $v;
 					/**
-					 * @TODO check if these are allowed, otherwise we'll error
+					 * @TODO 
 					 * We also need to import local photos if a custom photo is selected
 					 */
 				}
+
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
 						$r = dbq("UPDATE profile set `" . dbesc($k) . "` = '" . dbesc($v)
@@ -3478,13 +3516,6 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				}
 			}
 		}
-
-
-		if(array_key_exists('item',$arr) && $arr['item'])
-			sync_items($channel,$arr['item']);
-
-		if(array_key_exists('item_id',$arr) && $arr['item_id'])
-			sync_items($channel,$arr['item_id']);
 
 		$addon = array('channel' => $channel,'data' => $arr);
 		call_hooks('process_channel_sync_delivery',$addon);
@@ -3642,7 +3673,7 @@ function zot_reply_message_request($data) {
 			 * invoke delivery to send out the notify packet
 			 */
 
-			proc_run('php', 'include/deliver.php', $hash);
+			Zotlabs\Daemon\Master::Summon(array('Deliver', $hash));
 		}
 	}
 	$ret['success'] = true;
@@ -3662,6 +3693,8 @@ function zotinfo($arr) {
 	$zsig      = ((x($arr,'target_sig')) ? $arr['target_sig']  : '');
 	$zkey      = ((x($arr,'key'))        ? $arr['key']         : '');
 	$mindate   = ((x($arr,'mindate'))    ? $arr['mindate']     : '');
+	$token     = ((x($arr,'token'))      ? $arr['token']   : '');
+
 	$feed      = ((x($arr,'feed'))       ? intval($arr['feed']) : 0);
 
 	if($ztarget) {
@@ -3749,11 +3782,21 @@ function zotinfo($arr) {
 	}
 	else {
 		// check if it has characteristics of a public forum based on custom permissions.
-		$t = q("select abook_my_perms from abook where abook_channel = %d and abook_self = 1 limit 1",
-			intval($e['channel_id'])
+		$t = q("select * from abconfig where abconfig.cat = 'my_perms' and abconfig.chan = %d and abconfig.xchan = '%s' and abconfig.k in ('tag_deliver', 'send_stream') ",
+			intval($e['channel_id']),
+			intval($e['channel_hash'])
 		);
-		if(($t) && (($t[0]['abook_my_perms'] & PERMS_W_TAGWALL) && (! ($t[0]['abook_my_perms'] & PERMS_W_STREAM))))
-			$public_forum = true;
+		$ch = 0;
+		if($t) {
+			foreach($t as $tt) {
+				if($tt['k'] == 'tag_deliver' && $tt['v'] == 1)
+					$ch ++;
+				if($tt['k'] == 'send_stream' && $tt['v'] == 0)
+					$ch ++;
+			}
+			if($ch == 2)
+				$public_forum = true;
+		}
 	}
 
 
@@ -3805,6 +3848,10 @@ function zotinfo($arr) {
 	$ret['success'] = true;
 
 	// Communication details
+
+	if($token)
+		$ret['signed_token'] = base64url_encode(rsa_sign('token.' . $token,$e['channel_prvkey']));
+
 
 	$ret['guid']           = $e['xchan_guid'];
 	$ret['guid_sig']       = $e['xchan_guid_sig'];
@@ -3910,15 +3957,13 @@ function zotinfo($arr) {
 
 		$ret['site']['accounts'] = account_total();
 	
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$ret['site']['channels'] = channel_total();
 
 
-		$ret['site']['version'] = Zotlabs\Project\System::get_platform_name() . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+		$ret['site']['version'] = Zotlabs\Lib\System::get_platform_name() . ' ' . STD_VERSION . '[' . DB_UPDATE_VERSION . ']';
 
 		$ret['site']['admin'] = get_config('system','admin_email');
-
-		$a = get_app();
 
 		$visible_plugins = array();
 		if(is_array(App::$plugins) && count(App::$plugins)) {
@@ -3934,7 +3979,7 @@ function zotinfo($arr) {
 		$ret['site']['sellpage'] = get_config('system','sellpage');
 		$ret['site']['location'] = get_config('system','site_location');
 		$ret['site']['realm'] = get_directory_realm();
-		$ret['site']['project'] = Zotlabs\Project\System::get_platform_name();
+		$ret['site']['project'] = Zotlabs\Lib\System::get_platform_name() . ' ' . Zotlabs\Lib\System::get_server_role();
 
 	}
 
@@ -4048,6 +4093,17 @@ function delivery_report_is_storable($dr) {
 	if(($dr['location'] !== z_root()) && ($dr['sender'] === $rxchan) && ($dr['status'] === 'recipient_not_found'))
 		return false;
 
+	// If you have a private post with a recipient list, every single site is going to report
+	// back a failed delivery for anybody on that list that isn't local to them. We're only 
+	// concerned about this if we have a local hubloc record which says we expected them to
+	// have a channel on that site.
+ 
+	$r = q("select hubloc_id from hubloc where hubloc_hash = '%s' and hubloc_url = '%s'",
+		dbesc($rxchan),
+		dbesc($dr['location'])
+	);
+	if((! $r) && ($dr['status'] === 'recipient_not_found'))
+		return false;
 
 	$r = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 		dbesc($rxchan),
@@ -4082,7 +4138,7 @@ function update_hub_connected($hub,$sitekey = '') {
 		$sitekey = $hub['sitekey'];
 	}
 
-	// $sender['sitekey'] is a new addition to the protcol to distinguish 
+	// $sender['sitekey'] is a new addition to the protocol to distinguish 
 	// hublocs coming from re-installed sites. Older sites will not provide
 	// this field and we have to still mark them valid, since we can't tell
 	// if this hubloc has the same sitekey as the packet we received.
@@ -4091,10 +4147,13 @@ function update_hub_connected($hub,$sitekey = '') {
 	// Update our DB to show when we last communicated successfully with this hub
 	// This will allow us to prune dead hubs from using up resources
 
-	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d and hubloc_sitekey = '%s' ",
+	$t = datetime_convert('UTC','UTC','now - 15 minutes');
+
+	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d and hubloc_sitekey = '%s' and hubloc_connected < '%s' ",
 		dbesc(datetime_convert()),
 		intval($hub['hubloc_id']),
-		dbesc($sitekey)
+		dbesc($sitekey),
+		dbesc($t)
 	);
 
 	// a dead hub came back to life - reset any tombstones we might have
@@ -4394,7 +4453,6 @@ function zot_reply_purge($sender,$recipients) {
 		$arr = $sender;
 		$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
-		require_once('include/Contact.php');
 		remove_all_xchan_resources($sender_hash);	
 
 		$ret['success'] = true;

@@ -93,15 +93,15 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 	
-		if(! $item['object'])
+		if(! $item['obj'])
 			return;
 
 		if(intval($item['item_thread_top']))
 			return;	
 
-		$obj = json_decode_plus($item['object']);
-		if((! $obj) && ($item['object'])) {
-			logger('localize_item: failed to decode object: ' . print_r($item['object'],true));
+		$obj = json_decode($item['obj'],true);
+		if((! $obj) && ($item['obj'])) {
+			logger('localize_item: failed to decode object: ' . print_r($item['obj'],true));
 		}
 		
 		if($obj['author'] && $obj['author']['link'])
@@ -186,7 +186,7 @@ function localize_item(&$item){
 		$Alink = $item['author']['xchan_url'];
 
 
-		$obj= json_decode_plus($item['object']);
+		$obj= json_decode($item['obj'],true);
 		
 		$Blink = $Bphoto = '';
 
@@ -219,7 +219,7 @@ function localize_item(&$item){
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
 
-		$obj= json_decode_plus($item['object']);
+		$obj= json_decode($item['obj'],true);
 
 		$Blink = $Bphoto = '';
 
@@ -299,7 +299,7 @@ function localize_item(&$item){
 		}
 		$plink = '[zrl=' . $obj['plink'] . ']' . $post_type . '[/zrl]';
 
-		$parsedobj = parse_xml_string($xmlhead.$item['object']);
+		$parsedobj = parse_xml_string($xmlhead.$item['obj']);
 
 		$tag = sprintf('#[zrl=%s]%s[/zrl]', $parsedobj->id, $parsedobj->content);
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
@@ -316,7 +316,7 @@ function localize_item(&$item){
 
 		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 
-		$obj = parse_xml_string($xmlhead.$item['object']);
+		$obj = parse_xml_string($xmlhead.$item['obj']);
 		if(strlen($obj->id)) {
 			$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($obj->id),
@@ -403,9 +403,12 @@ function count_descendants($item) {
  * @return boolean
  */
 function visible_activity($item) {
-	$hidden_activities = array(ACTIVITY_LIKE, ACTIVITY_DISLIKE, ACTIVITY_AGREE, ACTIVITY_DISAGREE, ACTIVITY_ABSTAIN, ACTIVITY_ATTEND, ACTIVITY_ATTENDNO, ACTIVITY_ATTENDMAYBE);
+	$hidden_activities = [ ACTIVITY_LIKE, ACTIVITY_DISLIKE, ACTIVITY_AGREE, ACTIVITY_DISAGREE, ACTIVITY_ABSTAIN, ACTIVITY_ATTEND, ACTIVITY_ATTENDNO, ACTIVITY_ATTENDMAYBE ];
 
-	$post_types = array(ACTIVITY_OBJ_NOTE,ACTIVITY_OBJ_COMMENT,basename(ACTIVITY_OBJ_NOTE),basename(ACTIVITY_OBJ_COMMENT)); 
+	$post_types = [ ACTIVITY_OBJ_NOTE, ACTIVITY_OBJ_COMMENT, basename(ACTIVITY_OBJ_NOTE), basename(ACTIVITY_OBJ_COMMENT)]; 
+
+	if(intval($item['item_notshown']))
+		return false;
 
 	foreach ($hidden_activities as $act) {
 		if ((activity_match($item['verb'], $act)) && ($item['mid'] != $item['parent_mid'])) {
@@ -658,7 +661,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				);
 
 				$star = false;
-				$isstarred = "unstarred icon-star-empty";
+				$isstarred = "unstarred fa-star-o";
 
 				$lock = (($item['item_private'] || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
 					? t('Private Message')
@@ -754,10 +757,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
-			require_once('include/ConversationObject.php');
-			require_once('include/ItemObject.php');
-
-			$conv = new Conversation($mode, $preview, $prepared_item);
+			$conv = new Zotlabs\Lib\ThreadStream($mode, $preview, $prepared_item);
 
 			// In the display mode we don't have a profile owner. 
 
@@ -806,7 +806,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				if($item['id'] == $item['parent']) {
 
-					$item_object = new Item($item);
+					$item_object = new Zotlabs\Lib\ThreadItem($item);
 					$conv->add_thread($item_object);
 					if($page_mode === 'list') {
 						$item_object->set_template('conv_list.tpl');
@@ -861,8 +861,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 function best_link_url($item) {
 
-	$a = get_app();
-
 	$best_url = '';
 	$sparkle  = false;
 
@@ -891,7 +889,7 @@ function best_link_url($item) {
 
 
 function item_photo_menu($item){
-	$a = get_app();
+
 	$contact = null;
 
 	$ssl_state = false;
@@ -1110,82 +1108,95 @@ function status_editor($a, $x, $popup = false) {
 
 	$o = '';
 
-	require_once('include/Contact.php');
 	$c = channelx_by_n($x['profile_uid']);
 	if($c && $c['channel_moved'])
 		return $o;
-
-	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
 
 	$plaintext = true;
 
 //	if(feature_enabled(local_channel(),'richtext'))
 //		$plaintext = false;
 
-	$voting = feature_enabled(local_channel(), 'consensus_tools');
-	if(x($x, 'novoting'))
-		$voting = false;
+	$feature_voting = feature_enabled($x['profile_uid'], 'consensus_tools');
+	if(x($x, 'hide_voting'))
+		$feature_voting = false;
 
-	$mimeselect = '';
-	if(array_key_exists('mimetype', $x) && $x['mimetype']) {
-		if($x['mimetype'] != 'text/bbcode')
-			$plaintext = true;
-		if($x['mimetype'] === 'choose') {
-			$mimeselect = mimetype_select($x['profile_uid']);
-		}
-		else
-			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />';
-	}
+	$feature_expire = ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false);
+	if(x($x, 'hide_expire'))
+		$feature_expire = false;
 
-	$layoutselect = '';
-	if(array_key_exists('layout', $x) && $x['layout']) {
- 		if($x['layout'] === 'choose') {
-			$layoutselect = layout_select($x['profile_uid']);
-		}
-		else
-			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />';
-	}
+	$feature_future = ((feature_enabled($x['profile_uid'], 'delayed_posting') && (! $webpage)) ? true : false);
+	if(x($x, 'hide_future'))
+		$feature_future = false;
 
+	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
+	$setloc = t('Set your location');
+	$clearloc = ((get_pconfig($x['profile_uid'], 'system', 'use_browser_location')) ? t('Clear browser location') : '');
+	if(x($x, 'hide_location'))
+		$geotag = $setloc = $clearloc = '';
+
+	$mimetype = ((x($x,'mimetype')) ? $x['mimetype'] : 'text/bbcode');
+
+	$mimeselect = ((x($x,'mimeselect')) ? $x['mimeselect'] : false);
+	if($mimeselect)
+		$mimeselect = mimetype_select($x['profile_uid'], $mimetype);
+	else
+		$mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
+
+	$weblink = (($mimetype === 'text/bbcode') ? t('Insert web link') : false);
+	if(x($x, 'hide_weblink'))
+		$weblink = false;
+	
+	$embedPhotos = t('Embed image from photo albums');
+
+	$writefiles = (($mimetype === 'text/bbcode') ? perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage') : false);
+	if(x($x, 'hide_attach'))
+		$writefiles = false;
+
+	$layout = ((x($x,'layout')) ? $x['layout'] : '');
+
+	$layoutselect = ((x($x,'layoutselect')) ? $x['layoutselect'] : false);
+	if($layoutselect)
+		$layoutselect = layout_select($x['profile_uid'], $layout);
+	else
+		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />';
 
 	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
-		require_once('include/identity.php');
+		require_once('include/channel.php');
 		$id_select = identity_selector();
 	}
 	else
 		$id_select = '';
-
 
 	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
 	$tpl = get_markup_template('jot-header.tpl');
 
 	App::$page['htmlhead'] .= replace_macros($tpl, array(
-		'$newpost' => 'true',
 		'$baseurl' => z_root(),
 		'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$pretext' => ((x($x,'pretext')) ? $x['pretext'] : ''),
 		'$geotag' => $geotag,
 		'$nickname' => $x['nickname'],
-		'$ispublic' => t('Visible to <strong>everybody</strong>'),
 		'$linkurl' => t('Please enter a link URL:'),
-		'$vidurl' => t('Please enter a video link/URL:'),
-		'$audurl' => t('Please enter an audio link/URL:'),
 		'$term' => t('Tag term:'),
-		'$fileas' => t('Save to Folder:'),
 		'$whereareu' => t('Where are you right now?'),
-		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
 		'$editor_autocomplete'=> ((x($x,'editor_autocomplete')) ? $x['editor_autocomplete'] : ''),
 		'$bbco_autocomplete'=> ((x($x,'bbco_autocomplete')) ? $x['bbco_autocomplete'] : ''),
+		'$modalchooseimages' => t('Choose images to embed'),
+		'$modalchoosealbum' => t('Choose an album'),
+		'$modaldiffalbum' => t('Choose a different album...'),
+		'$modalerrorlist' => t('Error getting album list'),
+		'$modalerrorlink' => t('Error getting photo link'),
+		'$modalerroralbum' => t('Error getting album'),
 	));
 
 	$tpl = get_markup_template('jot.tpl');
 
 	$jotplugins = '';
-	$jotnets = '';
 
 	$preview = t('Preview');
-//	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
-	if(x($x, 'nopreview'))
+	if(x($x, 'hide_preview'))
 		$preview = '';
 
 	$defexpire = ((($z = get_pconfig($x['profile_uid'], 'system', 'default_post_expire')) && (! $webpage)) ? $z : '');
@@ -1201,7 +1212,6 @@ function status_editor($a, $x, $popup = false) {
 		$cipher = 'aes256';
 
 	call_hooks('jot_tool', $jotplugins);
-	call_hooks('jot_networks', $jotnets);
 
 	$o .= replace_macros($tpl, array(
 		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : App::$query_string),
@@ -1212,48 +1222,35 @@ function status_editor($a, $x, $popup = false) {
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),
 		'$id_select' => $id_select,
 		'$id_seltext' => t('Post as'),
-		'$writefiles' => perm_is_allowed($x['profile_uid'], get_observer_hash(), 'write_storage'),
+		'$writefiles' => $writefiles,
 		'$bold' => t('Bold'),
 		'$italic' => t('Italic'),
 		'$underline' => t('Underline'),
 		'$quote' => t('Quote'),
 		'$code' => t('Code'),
-		'$upload' => t('Upload photo'),
-		'$shortupload' => t('upload photo'),
 		'$attach' => t('Attach file'),
-		'$shortattach' => t('attach file'),
-		'$weblink' => t('Insert web link'),
-		'$shortweblink' => t('web link'),
-		'$video' => t('Insert video link'),
-		'$shortvideo' => t('video link'),
-		'$audio' => t('Insert audio link'),
-		'$shortaudio' => t('audio link'),
-		'$setloc' => t('Set your location'),
-		'$shortsetloc' => t('set location'),
+		'$weblink' => $weblink,
+		'$embedPhotos' => $embedPhotos,
+		'$embedPhotosModalTitle' => t('Embed an image from your albums'),
+		'$embedPhotosModalCancel' => t('Cancel'),
+		'$embedPhotosModalOK' => t('OK'),
+		'$setloc' => $setloc,
 		'$voting' => t('Toggle voting'),
-		'$feature_voting' => $voting,
+		'$feature_voting' => $feature_voting,
 		'$consensus' => 0,
-		'$noloc' => ((get_pconfig($x['profile_uid'], 'system', 'use_browser_location')) ? t('Clear browser location') : ''),
-		'$shortnoloc' => t('clear location'),
+		'$clearloc' => $clearloc,
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => ((x($x, 'placeholdertitle')) ? $x['placeholdertitle'] : t('Title (optional)')),
-		'$hidetitle' => ((x($x, 'hidetitle')) ? $x['hidetitle'] : false),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
-		'$category' => "",
+		'$category' => ((x($x, 'category')) ? $x['category'] : ''),
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
-		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
-		'$shortpermset' => t('permissions'),
-		'$ptyp' => '',
+		'$ptyp' => ((x($x, 'ptyp')) ? $x['ptyp'] : ''),
 		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8') : ''),
 		'$attachment' => ((x($x, 'attachment')) ? $x['attachment'] : ''),
-		'$post_id' => '',
-		'$baseurl' => z_root(),
+		'$post_id' => ((x($x, 'post_id')) ? $x['post_id'] : ''),
 		'$defloc' => $x['default_location'],
 		'$visitor' => $x['visitor'],
-		'$public' => t('Public post'),
-		'$jotnets' => $jotnets,
-		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
 		'$mimeselect' => $mimeselect,
@@ -1265,10 +1262,10 @@ function status_editor($a, $x, $popup = false) {
 		'$source' => ((x($x, 'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
 		'$defexpire' => $defexpire,
-		'$feature_expire' => ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false),
+		'$feature_expire' => $feature_expire,
 		'$expires' => t('Set expiration date'),
 		'$defpublish' => $defpublish,
-		'$feature_future' => ((feature_enabled($x['profile_uid'], 'delayed_posting') && (! $webpage)) ? true : false),
+		'$feature_future' => $feature_future,
 		'$future_txt' => t('Set publish date'),
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'], 'content_encrypt') && (! $webpage)) ? true : false),
 		'$encrypt' => t('Encrypt text'),
@@ -1424,7 +1421,7 @@ function render_location_default($item) {
 
 
 function prepare_page($item) {
-	$a = get_app();
+
 	$naked = 1;
 //	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = App::get_observer();
@@ -1458,7 +1455,7 @@ function prepare_page($item) {
 
 
 function network_tabs() {
-	$a = get_app();
+
 	$no_active='';
 	$starred_active = '';
 	$new_active = '';
@@ -1674,8 +1671,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 
 	if ($p['chat'] && feature_enabled($uid,'ajaxchat')) {
-		require_once('include/chat.php');
-		$has_chats = chatroom_list_count($uid);
+		$has_chats = Zotlabs\Lib\Chatroom::list_count($uid);
 		if ($has_chats) {
 			$tabs[] = array(
 				'label' => t('Chatrooms'),
@@ -1707,12 +1703,18 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'title' => t('Manage Webpages'),
 			'id'    => 'webpages-tab',
 		);
-	} else {
-		/**
-		 * @FIXME we probably need a listing of events that were created by 
-		 * this channel and are visible to the observer
-		 */
+	} 
+
+	if(feature_enabled($uid,'wiki') && (! UNO)) {
+		$tabs[] = array(
+			'label' => t('Wiki'),
+			'url'   => z_root() . '/wiki/' . $nickname,
+			'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
+			'title' => t('Wiki'),
+			'id'    => 'wiki-tab',
+		);
 	}
+
 
 	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
 	call_hooks('profile_tabs', $arr);

@@ -7,221 +7,380 @@ use Sabre\HTTP;
 use Sabre\VObject;
 use Sabre\DAVACL;
 
-require_once 'Sabre/CalDAV/TestUtil.php';
-require_once 'Sabre/HTTP/ResponseMock.php';
+class ICSExportPluginTest extends \Sabre\DAVServerTest {
 
-class ICSExportPluginTest extends \PHPUnit_Framework_TestCase {
+    protected $setupCalDAV = true;
+
+    protected $icsExportPlugin;
+
+    function setUp() {
+
+        parent::setUp();
+        $this->icsExportPlugin = new ICSExportPlugin();
+        $this->server->addPlugin(
+            $this->icsExportPlugin
+        );
+
+        $id = $this->caldavBackend->createCalendar(
+            'principals/admin',
+            'UUID-123467',
+            [
+                '{DAV:}displayname'                         => 'Hello!',
+                '{http://apple.com/ns/ical/}calendar-color' => '#AA0000FF',
+            ]
+        );
+
+        $this->caldavBackend->createCalendarObject(
+            $id,
+            'event-1',
+            <<<ICS
+BEGIN:VCALENDAR
+BEGIN:VTIMEZONE
+TZID:Europe/Amsterdam
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:event-1
+DTSTART;TZID=Europe/Amsterdam:20151020T000000
+END:VEVENT
+END:VCALENDAR
+ICS
+        );
+        $this->caldavBackend->createCalendarObject(
+            $id,
+            'todo-1',
+            <<<ICS
+BEGIN:VCALENDAR
+BEGIN:VTODO
+UID:todo-1
+END:VTODO
+END:VCALENDAR
+ICS
+        );
+
+
+    }
 
     function testInit() {
 
-        $p = new ICSExportPlugin();
-        $s = new DAV\Server();
-        $s->addPlugin($p);
+        $this->assertEquals(
+            $this->icsExportPlugin,
+            $this->server->getPlugin('ics-export')
+        );
+        $this->assertEquals($this->icsExportPlugin, $this->server->getPlugin('ics-export'));
+        $this->assertEquals('ics-export', $this->icsExportPlugin->getPluginInfo()['name']);
 
     }
 
     function testBeforeMethod() {
 
-        if (!SABRE_HASSQLITE) $this->markTestSkipped('SQLite driver is not available');
-        $cbackend = TestUtil::getBackend();
-
-        $props = array(
-            'uri'=>'UUID-123467',
-            'principaluri' => 'admin',
-            'id' => 1,
-        );
-        $tree = array(
-            new Calendar($cbackend,$props),
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export'
         );
 
-        $p = new ICSExportPlugin();
+        $response = $this->request($request);
 
-        $s = new DAV\Server($tree);
-        $s->addPlugin($p);
-        $s->addPlugin(new Plugin());
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals('text/calendar', $response->getHeader('Content-Type'));
 
-        $h = new HTTP\Request(array(
-            'QUERY_STRING' => 'export',
-        ));
+        $obj = VObject\Reader::read($response->body);
 
-        $s->httpRequest = $h;
-        $s->httpResponse = new HTTP\ResponseMock();
-
-        $this->assertFalse($p->beforeMethod('GET','UUID-123467?export'));
-
-        $this->assertEquals('HTTP/1.1 200 OK',$s->httpResponse->status);
-        $this->assertEquals(array(
-            'Content-Type' => 'text/calendar',
-        ), $s->httpResponse->headers);
-
-        $obj = VObject\Reader::read($s->httpResponse->body);
-
-        $this->assertEquals(5,count($obj->children()));
-        $this->assertEquals(1,count($obj->VERSION));
-        $this->assertEquals(1,count($obj->CALSCALE));
-        $this->assertEquals(1,count($obj->PRODID));
-        $this->assertTrue(strpos((string)$obj->PRODID, DAV\Version::VERSION)!==false);
-        $this->assertEquals(1,count($obj->VTIMEZONE));
-        $this->assertEquals(1,count($obj->VEVENT));
+        $this->assertEquals(8, count($obj->children()));
+        $this->assertEquals(1, count($obj->VERSION));
+        $this->assertEquals(1, count($obj->CALSCALE));
+        $this->assertEquals(1, count($obj->PRODID));
+        $this->assertTrue(strpos((string)$obj->PRODID, DAV\Version::VERSION) !== false);
+        $this->assertEquals(1, count($obj->VTIMEZONE));
+        $this->assertEquals(1, count($obj->VEVENT));
+        $this->assertEquals("Hello!", $obj->{"X-WR-CALNAME"});
+        $this->assertEquals("#AA0000FF", $obj->{"X-APPLE-CALENDAR-COLOR"});
 
     }
     function testBeforeMethodNoVersion() {
 
-        if (!SABRE_HASSQLITE) $this->markTestSkipped('SQLite driver is not available');
-        $cbackend = TestUtil::getBackend();
-
-        $props = array(
-            'uri'=>'UUID-123467',
-            'principaluri' => 'admin',
-            'id' => 1,
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export'
         );
-        $tree = array(
-            new Calendar($cbackend,$props),
-        );
-
-        $p = new ICSExportPlugin();
-
-        $s = new DAV\Server($tree);
-
-        $s->addPlugin($p);
-        $s->addPlugin(new Plugin());
-
-        $h = new HTTP\Request(array(
-            'QUERY_STRING' => 'export',
-        ));
-
-        $s->httpRequest = $h;
-        $s->httpResponse = new HTTP\ResponseMock();
-
         DAV\Server::$exposeVersion = false;
-        $this->assertFalse($p->beforeMethod('GET','UUID-123467?export'));
+        $response = $this->request($request);
         DAV\Server::$exposeVersion = true;
 
-        $this->assertEquals('HTTP/1.1 200 OK',$s->httpResponse->status);
-        $this->assertEquals(array(
-            'Content-Type' => 'text/calendar',
-        ), $s->httpResponse->headers);
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals('text/calendar', $response->getHeader('Content-Type'));
 
-        $obj = VObject\Reader::read($s->httpResponse->body);
+        $obj = VObject\Reader::read($response->body);
 
-        $this->assertEquals(5,count($obj->children()));
-        $this->assertEquals(1,count($obj->VERSION));
-        $this->assertEquals(1,count($obj->CALSCALE));
-        $this->assertEquals(1,count($obj->PRODID));
-        $this->assertFalse(strpos((string)$obj->PRODID, DAV\Version::VERSION)!==false);
-        $this->assertEquals(1,count($obj->VTIMEZONE));
-        $this->assertEquals(1,count($obj->VEVENT));
-
-    }
-
-    function testBeforeMethodNoGET() {
-
-        $p = new ICSExportPlugin();
-
-        $s = new DAV\Server();
-        $s->addPlugin($p);
-
-        $this->assertNull($p->beforeMethod('POST','UUID-123467?export'));
+        $this->assertEquals(8, count($obj->children()));
+        $this->assertEquals(1, count($obj->VERSION));
+        $this->assertEquals(1, count($obj->CALSCALE));
+        $this->assertEquals(1, count($obj->PRODID));
+        $this->assertFalse(strpos((string)$obj->PRODID, DAV\Version::VERSION) !== false);
+        $this->assertEquals(1, count($obj->VTIMEZONE));
+        $this->assertEquals(1, count($obj->VEVENT));
 
     }
 
     function testBeforeMethodNoExport() {
 
-        $p = new ICSExportPlugin();
-
-        $s = new DAV\Server();
-        $s->addPlugin($p);
-
-        $this->assertNull($p->beforeMethod('GET','UUID-123467'));
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467'
+        );
+        $response = new HTTP\Response();
+        $this->assertNull($this->icsExportPlugin->httpGet($request, $response));
 
     }
 
-    /**
-     * @expectedException Sabre\DAVACL\Exception\NeedPrivileges
-     */
     function testACLIntegrationBlocked() {
 
-        if (!SABRE_HASSQLITE) $this->markTestSkipped('SQLite driver is not available');
-        $cbackend = TestUtil::getBackend();
-
-        $props = array(
-            'uri'=>'UUID-123467',
-            'principaluri' => 'admin',
-            'id' => 1,
-        );
-        $tree = array(
-            new Calendar($cbackend,$props),
+        $aclPlugin = new DAVACL\Plugin();
+        $aclPlugin->allowUnauthenticatedAccess = false;
+        $this->server->addPlugin(
+            $aclPlugin
         );
 
-        $p = new ICSExportPlugin();
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export'
+        );
 
-        $s = new DAV\Server($tree);
-        $s->addPlugin($p);
-        $s->addPlugin(new Plugin());
-        $s->addPlugin(new DAVACL\Plugin());
-
-        $h = new HTTP\Request(array(
-            'QUERY_STRING' => 'export',
-        ));
-
-        $s->httpRequest = $h;
-        $s->httpResponse = new HTTP\ResponseMock();
-
-        $p->beforeMethod('GET','UUID-123467?export');
+        $this->request($request, 403);
 
     }
 
     function testACLIntegrationNotBlocked() {
 
-        if (!SABRE_HASSQLITE) $this->markTestSkipped('SQLite driver is not available');
-        $cbackend = TestUtil::getBackend();
-        $pbackend = new DAVACL\PrincipalBackend\Mock();
-
-        $props = array(
-            'uri'=>'UUID-123467',
-            'principaluri' => 'admin',
-            'id' => 1,
+        $aclPlugin = new DAVACL\Plugin();
+        $aclPlugin->allowUnauthenticatedAccess = false;
+        $this->server->addPlugin(
+            $aclPlugin
         );
-        $tree = array(
-            new Calendar($cbackend,$props),
-            new DAVACL\PrincipalCollection($pbackend),
+        $this->server->addPlugin(
+            new Plugin()
         );
 
-        $p = new ICSExportPlugin();
+        $this->autoLogin('admin');
 
-        $s = new DAV\Server($tree);
-        $s->addPlugin($p);
-        $s->addPlugin(new Plugin());
-        $s->addPlugin(new DAVACL\Plugin());
-        $s->addPlugin(new DAV\Auth\Plugin(new DAV\Auth\Backend\Mock(),'SabreDAV'));
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export'
+        );
 
-        // Forcing login
-        $s->getPlugin('acl')->adminPrincipals = array('principals/admin');
+        $response = $this->request($request, 200);
+        $this->assertEquals('text/calendar', $response->getHeader('Content-Type'));
 
-        $h = new HTTP\Request(array(
-            'QUERY_STRING' => 'export',
-            'REQUEST_URI' => '/UUID-123467',
-            'REQUEST_METHOD' => 'GET',
-        ));
+        $obj = VObject\Reader::read($response->body);
 
-        $s->httpRequest = $h;
-        $s->httpResponse = new HTTP\ResponseMock();
-
-        $s->exec();
-
-        $this->assertEquals('HTTP/1.1 200 OK',$s->httpResponse->status,'Invalid status received. Response body: '. $s->httpResponse->body);
-        $this->assertEquals(array(
-            'Content-Type' => 'text/calendar',
-        ), $s->httpResponse->headers);
-
-        $obj = VObject\Reader::read($s->httpResponse->body);
-
-        $this->assertEquals(5,count($obj->children()));
-        $this->assertEquals(1,count($obj->VERSION));
-        $this->assertEquals(1,count($obj->CALSCALE));
-        $this->assertEquals(1,count($obj->PRODID));
-        $this->assertEquals(1,count($obj->VTIMEZONE));
-        $this->assertEquals(1,count($obj->VEVENT));
+        $this->assertEquals(8, count($obj->children()));
+        $this->assertEquals(1, count($obj->VERSION));
+        $this->assertEquals(1, count($obj->CALSCALE));
+        $this->assertEquals(1, count($obj->PRODID));
+        $this->assertTrue(strpos((string)$obj->PRODID, DAV\Version::VERSION) !== false);
+        $this->assertEquals(1, count($obj->VTIMEZONE));
+        $this->assertEquals(1, count($obj->VEVENT));
 
     }
+
+    function testBadStartParam() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&start=foo'
+        );
+        $this->request($request, 400);
+
+    }
+
+    function testBadEndParam() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&end=foo'
+        );
+        $this->request($request, 400);
+
+    }
+
+    function testFilterStartEnd() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&start=1&end=2'
+        );
+        $response = $this->request($request, 200);
+
+        $obj = VObject\Reader::read($response->getBody());
+
+        $this->assertEquals(0, count($obj->VTIMEZONE));
+        $this->assertEquals(0, count($obj->VEVENT));
+
+    }
+
+    function testExpandNoStart() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&expand=1&end=2'
+        );
+        $this->request($request, 400);
+
+    }
+
+    function testExpand() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&start=1&end=2000000000&expand=1'
+        );
+        $response = $this->request($request, 200);
+
+        $obj = VObject\Reader::read($response->getBody());
+
+        $this->assertEquals(0, count($obj->VTIMEZONE));
+        $this->assertEquals(1, count($obj->VEVENT));
+
+    }
+
+    function testJCal() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export',
+            ['Accept' => 'application/calendar+json']
+        );
+
+        $response = $this->request($request, 200);
+        $this->assertEquals('application/calendar+json', $response->getHeader('Content-Type'));
+
+    }
+
+    function testJCalInUrl() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&accept=jcal'
+        );
+
+        $response = $this->request($request, 200);
+        $this->assertEquals('application/calendar+json', $response->getHeader('Content-Type'));
+
+    }
+
+    function testNegotiateDefault() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export',
+            ['Accept' => 'text/plain']
+        );
+
+        $response = $this->request($request, 200);
+        $this->assertEquals('text/calendar', $response->getHeader('Content-Type'));
+
+    }
+
+    function testFilterComponentVEVENT() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&componentType=VEVENT'
+        );
+
+        $response = $this->request($request, 200);
+
+        $obj = VObject\Reader::read($response->body);
+        $this->assertEquals(1, count($obj->VTIMEZONE));
+        $this->assertEquals(1, count($obj->VEVENT));
+        $this->assertEquals(0, count($obj->VTODO));
+
+    }
+
+    function testFilterComponentVTODO() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&componentType=VTODO'
+        );
+
+        $response = $this->request($request, 200);
+
+        $obj = VObject\Reader::read($response->body);
+
+        $this->assertEquals(0, count($obj->VTIMEZONE));
+        $this->assertEquals(0, count($obj->VEVENT));
+        $this->assertEquals(1, count($obj->VTODO));
+
+    }
+
+    function testFilterComponentBadComponent() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export&componentType=VVOODOO'
+        );
+
+        $response = $this->request($request, 400);
+
+    }
+
+    function testContentDisposition() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export'
+        );
+
+        $response = $this->request($request, 200);
+        $this->assertEquals('text/calendar', $response->getHeader('Content-Type'));
+        $this->assertEquals(
+            'attachment; filename="UUID-123467-' . date('Y-m-d') . '.ics"',
+            $response->getHeader('Content-Disposition')
+        );
+
+    }
+
+    function testContentDispositionJson() {
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-123467?export',
+            ['Accept' => 'application/calendar+json']
+        );
+
+        $response = $this->request($request, 200);
+        $this->assertEquals('application/calendar+json', $response->getHeader('Content-Type'));
+        $this->assertEquals(
+            'attachment; filename="UUID-123467-' . date('Y-m-d') . '.json"',
+            $response->getHeader('Content-Disposition')
+        );
+
+    }
+
+    function testContentDispositionBadChars() {
+
+        $this->caldavBackend->createCalendar(
+            'principals/admin',
+            'UUID-b_ad"(ch)ars',
+            [
+                '{DAV:}displayname'                         => 'Test bad characters',
+                '{http://apple.com/ns/ical/}calendar-color' => '#AA0000FF',
+            ]
+        );
+
+        $request = new HTTP\Request(
+            'GET',
+            '/calendars/admin/UUID-b_ad"(ch)ars?export',
+            ['Accept' => 'application/calendar+json']
+        );
+
+        $response = $this->request($request, 200);
+        $this->assertEquals('application/calendar+json', $response->getHeader('Content-Type'));
+        $this->assertEquals(
+            'attachment; filename="UUID-b_adchars-' . date('Y-m-d') . '.json"',
+            $response->getHeader('Content-Disposition')
+        );
+
+    }
+
 }

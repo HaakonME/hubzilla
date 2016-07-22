@@ -34,23 +34,20 @@ require_once('include/text.php');
 require_once('include/datetime.php');
 require_once('include/language.php');
 require_once('include/nav.php');
-require_once('include/cache.php');
 require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
-require_once('include/BaseObject.php');
 require_once('include/features.php');
 require_once('include/taxonomy.php');
-require_once('include/identity.php');
-require_once('include/Contact.php');
+require_once('include/channel.php');
+require_once('include/connections.php');
 require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'RED_VERSION',             trim(file_get_contents('version.inc')));
-define ( 'STD_VERSION',             '1.4' );
-define ( 'ZOT_REVISION',            1     );
+define ( 'STD_VERSION',             '1.11' );
+define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1165  );
+define ( 'DB_UPDATE_VERSION',       1181  );
 
 
 /**
@@ -314,15 +311,14 @@ define ( 'PERMS_A_REPUBLISH',      0x10000);
 define ( 'PERMS_W_LIKE',           0x20000);
 
 // General channel permissions
-
-define ( 'PERMS_PUBLIC'     , 0x0001 );
-define ( 'PERMS_NETWORK'    , 0x0002 );
-define ( 'PERMS_SITE'       , 0x0004 );
-define ( 'PERMS_CONTACTS'   , 0x0008 );
-define ( 'PERMS_SPECIFIC'   , 0x0080 );
-define ( 'PERMS_AUTHED'     , 0x0100 );
-define ( 'PERMS_PENDING'    , 0x0200 );
-
+                                        // 0 = Only you
+define ( 'PERMS_PUBLIC'     , 0x0001 ); // anybody
+define ( 'PERMS_NETWORK'    , 0x0002 ); // anybody in this network
+define ( 'PERMS_SITE'       , 0x0004 ); // anybody on this site
+define ( 'PERMS_CONTACTS'   , 0x0008 ); // any of my connections
+define ( 'PERMS_SPECIFIC'   , 0x0080 ); // only specific connections
+define ( 'PERMS_AUTHED'     , 0x0100 ); // anybody authenticated (could include visitors from other networks)
+define ( 'PERMS_PENDING'    , 0x0200 ); // any connections including those who haven't yet been approved
 
 // Address book flags
 
@@ -476,6 +472,7 @@ define ( 'NAMESPACE_YMEDIA',          'http://search.yahoo.com/mrss/' );
  * activity stream defines
  */
 
+define ( 'ACTIVITY_REACT',       NAMESPACE_ZOT   . '/activity/react' );
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_ZOT   . '/activity/dislike' );
 define ( 'ACTIVITY_AGREE',       NAMESPACE_ZOT   . '/activity/agree' );
@@ -516,6 +513,7 @@ define ( 'ACTIVITY_OBJ_ALBUM',   NAMESPACE_ACTIVITY_SCHEMA . 'photo-album' );
 define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
 define ( 'ACTIVITY_OBJ_GROUP',   NAMESPACE_ACTIVITY_SCHEMA . 'group' );
 define ( 'ACTIVITY_OBJ_GAME',    NAMESPACE_ACTIVITY_SCHEMA . 'game' );
+define ( 'ACTIVITY_OBJ_WIKI',    NAMESPACE_ACTIVITY_SCHEMA . 'wiki' );
 define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_ZOT  . '/activity/tagterm' );
 define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_ZOT  . '/activity/profile' );
 define ( 'ACTIVITY_OBJ_THING',   NAMESPACE_ZOT  . '/activity/thing' );
@@ -582,6 +580,72 @@ define ( 'ITEM_IS_STICKY',       1000 );
 define ( 'DBTYPE_MYSQL',    0 );
 define ( 'DBTYPE_POSTGRES', 1 );
 
+
+function sys_boot() {
+
+	// our central App object
+
+	App::init();
+
+	/*
+	 * Load the configuration file which contains our DB credentials.
+	 * Ignore errors. If the file doesn't exist or is empty, we are running in
+	 * installation mode.
+	 */
+
+	// miniApp is a conversion object from old style .htconfig.php files
+
+	$a = new miniApp;
+
+
+	App::$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
+
+	@include('.htconfig.php');
+
+	if(! defined('UNO'))
+		define('UNO', 0);
+
+	if(array_key_exists('default_timezone',get_defined_vars())) {
+		App::$config['system']['timezone'] = $default_timezone;
+	}
+
+	$a->convert();
+
+	App::$timezone = ((App::$config['system']['timezone']) ? App::$config['system']['timezone'] : 'UTC');
+	date_default_timezone_set(App::$timezone);
+
+
+	/*
+	 * Try to open the database;
+	 */
+
+	require_once('include/dba/dba_driver.php');
+
+	if(! App::$install) {
+		DBA::dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type, App::$install);
+		if(! DBA::$dba->connected) {
+			system_unavailable();
+		}
+
+		unset($db_host, $db_port, $db_user, $db_pass, $db_data, $db_type);
+
+		/**
+		 * Load configs from db. Overwrite configs from .htconfig.php
+		 */
+
+		load_config('config');
+		load_config('system');
+		load_config('feature');
+
+		App::$session = new Zotlabs\Web\Session();
+		App::$session->init();
+		load_hooks();
+		call_hooks('init_1');
+	}
+
+}
+
+
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
@@ -628,12 +692,25 @@ function startup() {
 class ZotlabsAutoloader {
     static public function loader($className) {
         $filename = str_replace('\\', '/', $className) . ".php";
-        if (file_exists($filename)) {
+        if(file_exists($filename)) {
             include($filename);
             if (class_exists($className)) {
                 return TRUE;
             }
         }
+		$arr = explode('\\',$className);
+		if($arr && count($arr) > 1) {
+			if(! $arr[0])
+				$arr = array_shift($arr);
+	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . $arr[1] . ((count($arr) === 2) ? '.php' : '/' . $arr[2] . ".php");
+    	    if(file_exists($filename)) {
+        	    include($filename);
+            	if (class_exists($className)) {
+                	return TRUE;
+	            }
+    	    }
+		}
+
         return FALSE;
     }
 }
@@ -689,9 +766,11 @@ class App {
 	private static $perms      = null;            // observer permissions
 	private static $widgets    = array();         // widgets for this page
 
+	public static  $session    = null;
 	public static  $groups;
 	public static  $language;
 	public static  $langsave;
+	public static  $rtl = false;
 	public static  $plugins_admin;
 	public static  $module_loaded = false;
 	public static  $query_string;
@@ -705,6 +784,7 @@ class App {
 	public static  $content;
 	public static  $data = array();
 	public static  $error = false;
+	public static  $emojitab = false;
 	public static  $cmd;
 	public static  $argv;
 	public static  $argc;
@@ -725,6 +805,7 @@ class App {
 	public static  $nav_sel;
 	public static $is_mobile = false;
 	public static $is_tablet = false;
+	public static $comanche;
 
 	public static  $category;
 
@@ -787,7 +868,7 @@ class App {
 	/**
 	 * App constructor.
 	 */
-	function init() {
+	public static function init() {
 		// we'll reset this after we read our config file
 		date_default_timezone_set('UTC');
 
@@ -860,6 +941,8 @@ class App {
 		if ((array_key_exists('0', self::$argv)) && strlen(self::$argv[0])) {
 			self::$module = str_replace(".", "_", self::$argv[0]);
 			self::$module = str_replace("-", "_", self::$module);
+			if(strpos(self::$module,'_') === 0)
+				self::$module = substr(self::$module,1);
 		} else {
 			self::$argc = 1;
 			self::$argv = array('home');
@@ -888,21 +971,28 @@ class App {
 
 		self::head_set_icon('/images/hz-32.png');
 
-		BaseObject::set_app($this);
-
 		/*
 		 * register template engines
 		 */
-		$dc = get_declared_classes();
-		foreach ($dc as $k) {
-			if (in_array("ITemplateEngine", class_implements($k))){
-				self::register_template_engine($k);
-			}
-		}
 
 		spl_autoload_register('ZotlabsAutoloader::loader');
 
 		self::$meta= new Zotlabs\Web\HttpMeta();
+
+		// create an instance of the smarty template engine so we can register it.
+
+		$smarty = new Zotlabs\Render\SmartyTemplate();
+
+		$dc = get_declared_classes();
+
+		foreach ($dc as $k) {
+			if(in_array('Zotlabs\\Render\\TemplateEngine', class_implements($k))) {
+				self::register_template_engine($k);
+			}
+		}
+
+
+
 	}
 
 	public static function get_baseurl($ssl = false) {
@@ -1055,7 +1145,7 @@ class App {
 		if(! self::$meta->get_field('og:title'))
 			self::$meta->set('og:title',self::$page['title']);
 
-		self::$meta->set('generator', Zotlabs\Project\System::get_platform_name());
+		self::$meta->set('generator', Zotlabs\Lib\System::get_platform_name());
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
@@ -1070,7 +1160,7 @@ class App {
 			'$local_channel' => local_channel(),
 			'$metas' => self::$meta->get(),
 			'$update_interval' => $interval,
-			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Project\System::get_site_name(), t('$Projectname','opensearch')), 
+			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Lib\System::get_site_name(), t('$Projectname','opensearch')), 
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
@@ -1176,7 +1266,6 @@ class App {
  * @return App
  */
 function get_app() {
-	global $a;
 	return $a;
 }
 
@@ -1226,7 +1315,6 @@ function system_unavailable() {
 
 
 function clean_urls() {
-	global $a;
 
 	//	if(App::$config['system']['clean_urls'])
 	return true;
@@ -1234,8 +1322,6 @@ function clean_urls() {
 }
 
 function z_path() {
-	global $a;
-
 	$base = z_root();
 	if(! clean_urls())
 		$base .= '/?q=';
@@ -1251,7 +1337,6 @@ function z_path() {
  * @return string
  */
 function z_root() {
-	global $a;
 	return App::get_baseurl();
 }
 
@@ -1381,6 +1466,12 @@ function check_config(&$a) {
 							@unlink($lockfile);
 							//send the administrator an e-mail
 							file_put_contents($lockfile, $x);
+							
+							$r = q("select account_language from account where account_email = '%s' limit 1",
+								dbesc(App::$config['system']['admin_email'])
+							);
+							push_lang(($r) ? $r[0]['account_language'] : 'en');
+
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
@@ -1398,6 +1489,7 @@ function check_config(&$a) {
 								. 'Content-transfer-encoding: 8bit' );
 							//try the logger
 							logger('CRITICAL: Update Failed: ' . $x);
+							pop_lang();
 						}
 						else
 							set_config('database','update_r' . $x, 'success');
@@ -1440,11 +1532,11 @@ function check_config(&$a) {
 
 	if(count($installed)) {
 		foreach($installed as $i) {
-			if(! in_array($i['name'], $plugins_arr)) {
-				unload_plugin($i['name']);
+			if(! in_array($i['aname'], $plugins_arr)) {
+				unload_plugin($i['aname']);
 			}
 			else {
-				$installed_arr[] = $i['name'];
+				$installed_arr[] = $i['aname'];
 			}
 		}
 	}
@@ -1541,7 +1633,20 @@ function fix_system_urls($oldurl, $newurl) {
 				intval($c[0]['channel_id'])
 			);
 
-			proc_run('php', 'include/notifier.php', 'refresh_all', $c[0]['channel_id']);
+			$m = q("select abook_id, abook_instance from abook where abook_instance like '%s' and abook_channel = %d",
+				dbesc('%' . $oldurl . '%'),
+				intval($c[0]['channel_id'])
+			);
+			if($m) {
+				foreach($m as $mm) {
+					q("update abook set abook_instance = '%s' where abook_id = %d",
+						dbesc(str_replace($oldurl,$newurl,$mm['abook_instance'])),
+						intval($mm['abook_id'])
+					);
+				}
+			}
+
+			Zotlabs\Daemon\Master::Summon(array('Notifier', 'refresh_all', $c[0]['channel_id']));
 		}
 	}
 
@@ -1570,7 +1675,6 @@ function fix_system_urls($oldurl, $newurl) {
 // returns the complete html for inserting into the page
 
 function login($register = false, $form_id = 'main-login', $hiddens=false) {
-	$a = get_app();
 	$o = '';
 	$reg = false;
 	$reglink = get_config('system', 'register_link');
@@ -1599,7 +1703,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
 		'$form_id'      => $form_id,
-		'$lname'        => array('username', t('Email') , '', ''),
+		'$lname'        => array('username', t('Login/Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),
 		'$remember_me'  => array('remember_me', t('Remember me'), '', '',array(t('No'),t('Yes'))),
 		'$hiddens'      => $hiddens,
@@ -1618,6 +1722,16 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
  * @brief Used to end the current process, after saving session state.
  */
 function killme() {
+
+	// Ensure that closing the database is the last function on the shutdown stack.
+	// If it is closed prematurely sessions might not get saved correctly.
+	// Note the second arg to PHP's session_set_save_handler() seems to order that shutdown 
+	// procedure last despite our best efforts, so we don't use that and implictly
+	// call register_shutdown_function('session_write_close'); within Zotlabs\Web\Session::init()
+	// and then register the database close function here where nothing else can register
+	// after it.
+
+	register_shutdown_function('shutdown');
 	exit;
 }
 
@@ -1627,6 +1741,10 @@ function killme() {
 function goaway($s) {
 	header("Location: $s");
 	killme();
+}
+
+function shutdown() {
+
 }
 
 /**
@@ -1660,7 +1778,9 @@ function get_account_id() {
  * @return int|bool channel_id or false
  */
 function local_channel() {
-	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'uid')))
+	if(session_id() 
+		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated'] 
+		&& array_key_exists('uid',$_SESSION) && intval($_SESSION['uid']))
 		return intval($_SESSION['uid']);
 
 	return false;
@@ -1691,7 +1811,9 @@ function local_user() {
  * @return string|bool visitor_id or false
  */
 function remote_channel() {
-	if((x($_SESSION, 'authenticated')) && (x($_SESSION, 'visitor_id')))
+	if(session_id() 
+		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated'] 
+		&& array_key_exists('visitor_id',$_SESSION) && $_SESSION['visitor_id'])
 		return $_SESSION['visitor_id'];
 
 	return false;
@@ -1716,7 +1838,9 @@ function remote_user() {
  * @param string $s Text to display
  */
 function notice($s) {
-	$a = get_app();
+	if(! session_id())
+		return;
+
 	if(! x($_SESSION, 'sysmsg')) $_SESSION['sysmsg'] = array();
 
 	// ignore duplicated error messages which haven't yet been displayed 
@@ -1740,8 +1864,10 @@ function notice($s) {
  * @param string $s Text to display
  */
 function info($s) {
-	$a = get_app();
-	if(! x($_SESSION, 'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
+	if(! session_id())
+		return;
+	if(! x($_SESSION, 'sysmsg_info')) 
+		$_SESSION['sysmsg_info'] = array();
 	if(App::$interactive)
 		$_SESSION['sysmsg_info'][] = $s;
 }
@@ -1769,42 +1895,45 @@ function get_max_import_size() {
  *
  * $cmd and string args are surrounded with ""
  */
-function proc_run($cmd){
-
-	$a = get_app();
+function proc_run(){
 
 	$args = func_get_args();
 
 	$newargs = array();
+
 	if(! count($args))
 		return;
 
-	// expand any arrays
-
-	foreach($args as $arg) {
-		if(is_array($arg)) {
-			foreach($arg as $n) {
-				$newargs[] = $n;
-			}
-		}
-		else
-			$newargs[] = $arg;
-	}
-
-	$args = $newargs;
+	$args = flatten_array_recursive($args);
 
 	$arr = array('args' => $args, 'run_cmd' => true);
 
-	call_hooks("proc_run", $arr);
+	call_hooks('proc_run', $arr);
+
 	if(! $arr['run_cmd'])
 		return;
 
 	if(count($args) && $args[0] === 'php')
 		$args[0] = ((x(App::$config,'system')) && (x(App::$config['system'],'php_path')) && (strlen(App::$config['system']['php_path'])) ? App::$config['system']['php_path'] : 'php');
 
-	for($x = 0; $x < count($args); $x++)
-		$args[$x] = escapeshellarg($args[$x]);
 
+	// redirect proc_run statements of legacy daemon processes to the newer Daemon Master object class
+	// We will keep this interface until everybody has transitioned. (2016-05-20)
+
+	if(strstr($args[1],'include/')) {
+		// convert 'include/foo.php' to 'Foo'
+		$orig = substr(ucfirst(substr($args[1],8)),0,-4);
+		logger('proc_run_redirect: ' . $orig);
+		if(file_exists('Zotlabs/Daemon/' . $orig . '.php')) {
+			array_shift($args); // daemons are all run by php, pop it off the top of the array
+			$args[0] = $orig;   // replace with the new daemon name
+			logger('Redirecting old proc_run interface: ' . print_r($args,true), LOGGER_DEBUG, LOG_DEBUG);
+			\Zotlabs\Daemon\Master::Summon($args); // summon the daemon
+			return;
+		}
+	}
+
+	$args = array_map('escapeshellarg',$args);
 	$cmdline = implode($args," ");
 
 	if(is_windows()) {
@@ -1824,108 +1953,13 @@ function proc_run($cmd){
  * @brief Checks if we are running on M$ Windows.
  *
  * @return bool true if we run on M$ Windows
+ *
+ * It's possible you might be able to run on WAMP or XAMPP, and this
+ * has been accomplished, but is not officially supported. Good luck. 
+ * 
  */
 function is_windows() {
 	return ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? true : false);
-}
-
-
-function current_theme(){
-	$app_base_themes = array('redbasic');
-
-	$a = get_app();
-	$page_theme = null;
-
-	// Find the theme that belongs to the channel whose stuff we are looking at
-
-	if(App::$profile_uid && App::$profile_uid != local_channel()) {
-		$r = q("select channel_theme from channel where channel_id = %d limit 1",
-			intval(App::$profile_uid)
-		);
-		if($r)
-			$page_theme = $r[0]['channel_theme'];
-	}
-
-	if(array_key_exists('theme', App::$layout) && App::$layout['theme'])
-		$page_theme = App::$layout['theme'];
-
-	// Allow folks to over-rule channel themes and always use their own on their own site.
-	// The default is for channel themes to take precedence over your own on pages belonging
-	// to that channel.
-
-	if($page_theme && local_channel() && App::$profile_uid && local_channel() != App::$profile_uid) {
-		if(get_pconfig(local_channel(),'system','always_my_theme'))
-			$page_theme = null;
-	}
-
-	$is_mobile = App::$is_mobile || App::$is_tablet;
-
-	$standard_system_theme = ((isset(App::$config['system']['theme'])) ? App::$config['system']['theme'] : '');
-	$standard_theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $standard_system_theme);
-
-	if($is_mobile) {
-		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
-			$system_theme = $standard_system_theme;
-			$theme_name = $standard_theme_name;
-		}
-		else {
-			$system_theme = ((isset(App::$config['system']['mobile_theme'])) ? App::$config['system']['mobile_theme'] : '');
-			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
-
-			if($theme_name === '' || $theme_name === '---' ) {
-				// user has selected to have the mobile theme be the same as the normal one
-				$system_theme = $standard_system_theme;
-				$theme_name = $standard_theme_name;
-			}
-		}
-	}
-	else {
-		$system_theme = $standard_system_theme;
-		$theme_name = $standard_theme_name;
-
-		if($page_theme)
-			$theme_name = $page_theme;
-	}
-
-	if($theme_name &&
-			(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
-					file_exists('view/theme/' . $theme_name . '/php/style.php')))
-		return($theme_name);
-
-	foreach($app_base_themes as $t) {
-		if(file_exists('view/theme/' . $t . '/css/style.css') ||
-			file_exists('view/theme/' . $t . '/php/style.php'))
-			return($t);
-	}
-
-	$fallback = array_merge(glob('view/theme/*/css/style.css'),glob('view/theme/*/php/style.php'));
-	if(count($fallback))
-		return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
-
-}
-
-
-/**
- * @brief Return full URL to theme which is currently in effect.
- *
- * Provide a sane default if nothing is chosen or the specified theme does not exist.
- *
- * @param bool $installing default false
- *
- * @return string
- */
-function current_theme_url($installing = false) {
-	global $a;
-
-	$t = current_theme();
-
-	$opts = '';
-	$opts = ((App::$profile_uid) ? '?f=&puid=' . App::$profile_uid : '');
-	$opts .= ((x(App::$layout,'schema')) ? '&schema=' . App::$layout['schema'] : '');
-	if(file_exists('view/theme/' . $t . '/php/style.php'))
-		return('view/theme/' . $t . '/php/style.pcss' . $opts);
-
-	return('view/theme/' . $t . '/css/style.css');
 }
 
 /**
@@ -1935,8 +1969,11 @@ function current_theme_url($installing = false) {
  *
  * @return bool true if user is an admin
  */
+
 function is_site_admin() {
-	$a = get_app();
+
+	if(! session_id())
+		return false;
 
 	if($_SESSION['delegate'])
 		return false;
@@ -1957,7 +1994,10 @@ function is_site_admin() {
  * @return bool true if user is a developer
  */
 function is_developer() {
-	$a = get_app();
+
+	if(! session_id())
+		return false;
+
 	if((intval($_SESSION['authenticated']))
 		&& (is_array(App::$account))
 		&& (App::$account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
@@ -1968,7 +2008,6 @@ function is_developer() {
 
 
 function load_contact_links($uid) {
-	$a = get_app();
 
 	$ret = array();
 
@@ -1977,7 +2016,7 @@ function load_contact_links($uid) {
 
 //	logger('load_contact_links');
 
-	$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d ",
+	$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url, xchan_network from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d ",
 		intval($uid)
 	);
 	if($r) {
@@ -2000,6 +2039,7 @@ function load_contact_links($uid) {
  *
  * @return string
  */
+
 function build_querystring($params, $name = null) {
 	$ret = '';
 	foreach($params as $key => $val) {
@@ -2042,8 +2082,9 @@ function dba_timer() {
 /**
  * @brief Returns xchan_hash from the observer.
  *
- * @return string Empty if no observer, otherwise xchan_hash from observer
+ * @return empty string if no observer, otherwise xchan_hash from observer
  */
+
 function get_observer_hash() {
 	$observer = App::get_observer();
 	if(is_array($observer))
@@ -2097,7 +2138,8 @@ function get_custom_nav(&$a, $navname) {
  * @param App &$a global application object
  */
 function load_pdl(&$a) {
-	require_once('include/comanche.php');
+
+	App::$comanche = new Zotlabs\Render\Comanche();
 
 	if (! count(App::$layout)) {
 
@@ -2106,7 +2148,7 @@ function load_pdl(&$a) {
 		$layout = $arr['layout'];
 
 		$n = 'mod_' . App::$module . '.pdl' ;
-		$u = comanche_get_channel_id();
+		$u = App::$comanche->get_channel_id();
 		if($u)
 			$s = get_pconfig($u, 'system', $n);
 		if(! $s)
@@ -2115,19 +2157,16 @@ function load_pdl(&$a) {
 		if((! $s) && (($p = theme_include($n)) != ''))
 			$s = @file_get_contents($p);
 		if($s) {
-			comanche_parser($a, $s);
+			App::$comanche->parse($s);
 			App::$pdl = $s;
 		}
 	}
-
 }
 
 
 function exec_pdl(&$a) {
-	require_once('include/comanche.php');
-
 	if(App::$pdl) {
-		comanche_parser($a, App::$pdl,1);
+		App::$comanche->parse(App::$pdl,1);
 	}
 }
 
@@ -2161,7 +2200,9 @@ function construct_page(&$a) {
 		}
 	}
 
-	if (($p = theme_include(current_theme() . '.js')) != '')
+	$current_theme = Zotlabs\Render\Theme::current();
+
+	if (($p = theme_include($current_theme[0] . '.js')) != '')
 		head_add_js($p);
 
 	if (($p = theme_include('mod_' . App::$module . '.php')) != '')
@@ -2175,14 +2216,14 @@ function construct_page(&$a) {
 		head_add_css(((x(App::$page, 'template')) ? App::$page['template'] : 'default' ) . '.css');
 
 	head_add_css('mod_' . App::$module . '.css');
-	head_add_css(current_theme_url($installing));
+	head_add_css(Zotlabs\Render\Theme::url($installing));
 
 	head_add_js('mod_' . App::$module . '.js');
 
 	App::build_pagehead();
 
 	if(App::$page['pdl_content']) {
-		App::$page['content'] = comanche_region($a,App::$page['content']);
+		App::$page['content'] = App::$comanche->region(App::$page['content']);
 	}
 
 	// Let's say we have a comanche declaration '[region=nav][/region][region=content]$nav $content[/region]'.
@@ -2203,7 +2244,7 @@ function construct_page(&$a) {
 		foreach(App::$layout as $k => $v) {
 			if((strpos($k, 'region_') === 0) && strlen($v)) {
 				if(strpos($v, '$region_') !== false) {
-					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism', 'comanche_replace_region', $v);
+					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism', array(App::$comanche,'replace_region'), $v);
 				}
 
 				// And a couple of convenience macros
@@ -2240,6 +2281,12 @@ function construct_page(&$a) {
 
 	$page    = App::$page;
 	$profile = App::$profile;
+
+	// There's some experimental support for right-to-left text in the view/php/default.php page template.
+	// In v1.9 we started providing direction preference in the per language hstrings.php file
+	// This requires somebody with fluency in a RTL language to make happen
+
+	$page['direction'] = 0; // ((App::$rtl) ? 1 : 0);
 
 	header("Content-type: text/html; charset=utf-8");
 
@@ -2281,7 +2328,6 @@ function appdirpath() {
  * @param string $icon
  */
 function head_set_icon($icon) {
-	global $a;
 
 	App::$data['pageicon'] = $icon;
 //	logger('head_set_icon: ' . $icon);
@@ -2293,7 +2339,6 @@ function head_set_icon($icon) {
  * @return string absolut path to pageicon
  */
 function head_get_icon() {
-	global $a;
 
 	$icon = App::$data['pageicon'];
 	if(! strpos($icon, '://'))
@@ -2359,7 +2404,7 @@ function z_get_temp_dir() {
 }
 
 function z_check_cert() {
-	$a = get_app();
+
 	if(strpos(z_root(),'https://') !== false) {
 		$x = z_fetch_url(z_root() . '/siteinfo/json');
 		if(! $x['success']) {
@@ -2379,8 +2424,6 @@ function z_check_cert() {
  * certificate.
  */
 function cert_bad_email() {
-
-	$a = get_app();
 
 	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
@@ -2402,25 +2445,31 @@ function cert_bad_email() {
  */
 function check_cron_broken() {
 
-	$t = get_config('system','lastpollcheck');
+	$d = get_config('system','lastcron');
+	
+	if((! $d) || ($d < datetime_convert('UTC','UTC','now - 4 hours'))) {
+		Zotlabs\Daemon\Master::Summon(array('Cron'));
+		set_config('system','lastcron',datetime_convert());
+	}
+
+	$t = get_config('system','lastcroncheck');
 	if(! $t) {
 		// never checked before. Start the timer.
-		set_config('system','lastpollcheck',datetime_convert());
+		set_config('system','lastcroncheck',datetime_convert());
 		return;
 	}
+
 	if($t > datetime_convert('UTC','UTC','now - 3 days')) {
 		// Wait for 3 days before we do anything so as not to swamp the admin with messages
 		return;
 	}
 
-	$d = get_config('system','lastpoll');
+	set_config('system','lastcroncheck',datetime_convert());
+
 	if(($d) && ($d > datetime_convert('UTC','UTC','now - 3 days'))) {
 		// Scheduled tasks have run successfully in the last 3 days.
-		set_config('system','lastpollcheck',datetime_convert());
 		return;
 	}
-
-	$a = get_app();
 
 	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
 	$email_msg = replace_macros($email_tpl, array(
@@ -2435,8 +2484,16 @@ function check_cron_broken() {
 		'From: Administrator' . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' );
-	set_config('system','lastpollcheck',datetime_convert());
 	return;
 }
 
+
+
+function observer_prohibited($allow_account = false) {
+
+	if($allow_account) 
+		return (((get_config('system','block_public')) && (! get_account_id()) && (! remote_channel())) ? true : false );
+	return (((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) ? true : false );
+
+}
 

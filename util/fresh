@@ -68,9 +68,9 @@ function process_command($line) {
 
 		case 'finger':
 			if(argv(1)) {
-				$x = zot_finger(argv(1),$channel);
+				$x = Zotlabs\Zot\Finger::run(argv(1),$channel);
 				if($x['success'])
-					echo jindent($x['body']);
+					echo jindent($x);
 			}
 			break;
 
@@ -82,12 +82,15 @@ function process_command($line) {
 				exec('/bin/stty echo');
 				echo "\n";
 				require_once('include/auth.php');
-				$record = App::$account = account_verify_password(argv(1),trim($x,"\n"));
+				$record = null;
+				$x = account_verify_password(argv(1),trim($x,"\n"));
+				if($x['account'])
+					$record = App::$account = $x['account'];
 
 				if($record) {
 					$_SESSION['account_id'] = App::$account['account_id'];
 					$_SESSION['last_login_date'] = datetime_convert();
-					authenticate_success($record, true, true);
+					authenticate_success($record, $x['channel'], true, true);
 					echo 'logged in';
 					$channel = App::get_channel();
 					if($channel)

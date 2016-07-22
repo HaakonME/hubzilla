@@ -3,9 +3,6 @@
 
 
 function findpeople_widget() {
-	require_once('include/Contact.php');
-
-	$a = get_app();
 
 	if(get_config('system','invitation_only')) {
 		$x = get_pconfig(local_channel(),'system','invites_remaining');
@@ -37,13 +34,12 @@ function findpeople_widget() {
 
 
 function fileas_widget($baseurl,$selected = '') {
-	$a = get_app();
 
 	if(! local_channel())
 		return '';
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);
@@ -65,8 +61,6 @@ function fileas_widget($baseurl,$selected = '') {
 }
 
 function categories_widget($baseurl,$selected = '') {
-
-	$a = get_app();
 	
 	if(! feature_enabled(App::$profile['profile_uid'],'categories'))
 		return '';
@@ -78,13 +72,15 @@ function categories_widget($baseurl,$selected = '') {
                 from term join item on term.oid = item.id
                 where item.uid = %d
                 and term.uid = item.uid
-                and term.type = %d
+                and term.ttype = %d
+				and term.otype = %d
                 and item.owner_xchan = '%s'
 				and item.item_wall = 1
 				$item_normal
                 order by term.term asc",
 		intval(App::$profile['profile_uid']),
 	        intval(TERM_CATEGORY),
+			intval(TERM_OBJ_POST),
 	        dbesc(App::$profile['channel_hash'])
 	);
 	if($r && count($r)) {
@@ -105,8 +101,6 @@ function categories_widget($baseurl,$selected = '') {
 }
 
 function common_friends_visitor_widget($profile_uid) {
-
-	$a = get_app();
 
 	if(local_channel() == $profile_uid)
 		return;

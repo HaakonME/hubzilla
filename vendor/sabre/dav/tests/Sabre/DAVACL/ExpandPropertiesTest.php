@@ -11,30 +11,38 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
 
     function getServer() {
 
-        $tree = array(
-            new MockPropertyNode('node1', array(
+        $tree = [
+            new DAV\Mock\PropertiesCollection('node1', [], [
                 '{http://sabredav.org/ns}simple' => 'foo',
-                '{http://sabredav.org/ns}href'   => new DAV\Property\Href('node2'),
-                '{DAV:}displayname'     => 'Node 1',
-            )),
-            new MockPropertyNode('node2', array(
+                '{http://sabredav.org/ns}href'   => new DAV\Xml\Property\Href('node2'),
+                '{DAV:}displayname'              => 'Node 1',
+            ]),
+            new DAV\Mock\PropertiesCollection('node2', [], [
+                '{http://sabredav.org/ns}simple'   => 'simple',
+                '{http://sabredav.org/ns}hreflist' => new DAV\Xml\Property\Href(['node1', 'node3']),
+                '{DAV:}displayname'                => 'Node 2',
+            ]),
+            new DAV\Mock\PropertiesCollection('node3', [], [
                 '{http://sabredav.org/ns}simple' => 'simple',
-                '{http://sabredav.org/ns}hreflist' => new DAV\Property\HrefList(array('node1','node3')),
-                '{DAV:}displayname'     => 'Node 2',
-            )),
-            new MockPropertyNode('node3', array(
-                '{http://sabredav.org/ns}simple' => 'simple',
-                '{DAV:}displayname'     => 'Node 3',
-            )),
-        );
+                '{DAV:}displayname'              => 'Node 3',
+            ]),
+        ];
 
         $fakeServer = new DAV\Server($tree);
+        $fakeServer->sapi = new HTTP\SapiMock();
         $fakeServer->debugExceptions = true;
         $fakeServer->httpResponse = new HTTP\ResponseMock();
         $plugin = new Plugin();
-        $plugin->allowAccessToNodesWithoutACL = true;
-
+        $plugin->allowUnauthenticatedAccess = false;
+        // Anyone can do anything
+        $plugin->setDefaultACL([
+            [
+                'principal' => '{DAV:}all',
+                'privilege' => '{DAV:}all',
+            ]
+        ]);
         $this->assertTrue($plugin instanceof Plugin);
+
         $fakeServer->addPlugin($plugin);
         $this->assertEquals($plugin, $fakeServer->getPlugin('acl'));
 
@@ -52,13 +60,13 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
   <d:property name="href" namespace="http://sabredav.org/ns" />
 </d:expand-property>';
 
-        $serverVars = array(
+        $serverVars = [
             'REQUEST_METHOD' => 'REPORT',
             'HTTP_DEPTH'     => '0',
             'REQUEST_URI'    => '/node1',
-        );
+        ];
 
-        $request = new HTTP\Request($serverVars);
+        $request = HTTP\Sapi::createFromServerArray($serverVars);
         $request->setBody($xml);
 
         $server = $this->getServer();
@@ -66,37 +74,38 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
 
         $server->exec();
 
-        $this->assertEquals('HTTP/1.1 207 Multi-Status', $server->httpResponse->status,'Incorrect status code received. Full body: ' . $server->httpResponse->body);
-        $this->assertEquals(array(
-            'Content-Type' => 'application/xml; charset=utf-8',
-        ), $server->httpResponse->headers);
+        $this->assertEquals(207, $server->httpResponse->status, 'Incorrect status code received. Full body: ' . $server->httpResponse->body);
+        $this->assertEquals([
+            'X-Sabre-Version' => [DAV\Version::VERSION],
+            'Content-Type'    => ['application/xml; charset=utf-8'],
+        ], $server->httpResponse->getHeaders());
 
 
-        $check = array(
+        $check = [
             '/d:multistatus',
-            '/d:multistatus/d:response' => 1,
-            '/d:multistatus/d:response/d:href' => 1,
-            '/d:multistatus/d:response/d:propstat' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop' => 2,
+            '/d:multistatus/d:response'                                 => 1,
+            '/d:multistatus/d:response/d:href'                          => 1,
+            '/d:multistatus/d:response/d:propstat'                      => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop'               => 2,
             '/d:multistatus/d:response/d:propstat/d:prop/d:displayname' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:simple' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:href' => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:simple'      => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:href'        => 1,
             '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:href' => 1,
-        );
+        ];
 
         $xml = simplexml_load_string($server->httpResponse->body);
-        $xml->registerXPathNamespace('d','DAV:');
-        $xml->registerXPathNamespace('s','http://sabredav.org/ns');
-        foreach($check as $v1=>$v2) {
+        $xml->registerXPathNamespace('d', 'DAV:');
+        $xml->registerXPathNamespace('s', 'http://sabredav.org/ns');
+        foreach ($check as $v1 => $v2) {
 
-            $xpath = is_int($v1)?$v2:$v1;
+            $xpath = is_int($v1) ? $v2 : $v1;
 
             $result = $xml->xpath($xpath);
 
             $count = 1;
             if (!is_int($v1)) $count = $v2;
 
-            $this->assertEquals($count,count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result) . '. Full response: ' . $server->httpResponse->body);
+            $this->assertEquals($count, count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result) . '. Full response: ' . $server->httpResponse->body);
 
         }
 
@@ -114,13 +123,13 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
   </d:property>
 </d:expand-property>';
 
-        $serverVars = array(
+        $serverVars = [
             'REQUEST_METHOD' => 'REPORT',
             'HTTP_DEPTH'     => '0',
             'REQUEST_URI'    => '/node1',
-        );
+        ];
 
-        $request = new HTTP\Request($serverVars);
+        $request = HTTP\Sapi::createFromServerArray($serverVars);
         $request->setBody($xml);
 
         $server = $this->getServer();
@@ -128,39 +137,40 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
 
         $server->exec();
 
-        $this->assertEquals('HTTP/1.1 207 Multi-Status', $server->httpResponse->status, 'Incorrect response status received. Full response body: ' . $server->httpResponse->body);
-        $this->assertEquals(array(
-            'Content-Type' => 'application/xml; charset=utf-8',
-        ), $server->httpResponse->headers);
+        $this->assertEquals(207, $server->httpResponse->status, 'Incorrect response status received. Full response body: ' . $server->httpResponse->body);
+        $this->assertEquals([
+            'X-Sabre-Version' => [DAV\Version::VERSION],
+            'Content-Type'    => ['application/xml; charset=utf-8'],
+        ], $server->httpResponse->getHeaders());
 
 
-        $check = array(
+        $check = [
             '/d:multistatus',
-            '/d:multistatus/d:response' => 1,
-            '/d:multistatus/d:response/d:href' => 1,
-            '/d:multistatus/d:response/d:propstat' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:href' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response/d:href' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response/d:propstat' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response/d:propstat/d:prop' => 1,
+            '/d:multistatus/d:response'                                                                     => 1,
+            '/d:multistatus/d:response/d:href'                                                              => 1,
+            '/d:multistatus/d:response/d:propstat'                                                          => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop'                                                   => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:href'                                            => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response'                                 => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response/d:href'                          => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response/d:propstat'                      => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response/d:propstat/d:prop'               => 1,
             '/d:multistatus/d:response/d:propstat/d:prop/s:href/d:response/d:propstat/d:prop/d:displayname' => 1,
-        );
+        ];
 
         $xml = simplexml_load_string($server->httpResponse->body);
-        $xml->registerXPathNamespace('d','DAV:');
-        $xml->registerXPathNamespace('s','http://sabredav.org/ns');
-        foreach($check as $v1=>$v2) {
+        $xml->registerXPathNamespace('d', 'DAV:');
+        $xml->registerXPathNamespace('s', 'http://sabredav.org/ns');
+        foreach ($check as $v1 => $v2) {
 
-            $xpath = is_int($v1)?$v2:$v1;
+            $xpath = is_int($v1) ? $v2 : $v1;
 
             $result = $xml->xpath($xpath);
 
             $count = 1;
             if (!is_int($v1)) $count = $v2;
 
-            $this->assertEquals($count,count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result));
+            $this->assertEquals($count, count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result) . ' Full response body: ' . $server->httpResponse->getBodyAsString());
 
         }
 
@@ -178,13 +188,13 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
   </d:property>
 </d:expand-property>';
 
-        $serverVars = array(
+        $serverVars = [
             'REQUEST_METHOD' => 'REPORT',
             'HTTP_DEPTH'     => '0',
             'REQUEST_URI'    => '/node2',
-        );
+        ];
 
-        $request = new HTTP\Request($serverVars);
+        $request = HTTP\Sapi::createFromServerArray($serverVars);
         $request->setBody($xml);
 
         $server = $this->getServer();
@@ -192,39 +202,40 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
 
         $server->exec();
 
-        $this->assertEquals('HTTP/1.1 207 Multi-Status', $server->httpResponse->status);
-        $this->assertEquals(array(
-            'Content-Type' => 'application/xml; charset=utf-8',
-        ), $server->httpResponse->headers);
+        $this->assertEquals(207, $server->httpResponse->status);
+        $this->assertEquals([
+            'X-Sabre-Version' => [DAV\Version::VERSION],
+            'Content-Type'    => ['application/xml; charset=utf-8'],
+        ], $server->httpResponse->getHeaders());
 
 
-        $check = array(
+        $check = [
             '/d:multistatus',
-            '/d:multistatus/d:response' => 1,
-            '/d:multistatus/d:response/d:href' => 1,
-            '/d:multistatus/d:response/d:propstat' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:href' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop' => 2,
+            '/d:multistatus/d:response'                                                                         => 1,
+            '/d:multistatus/d:response/d:href'                                                                  => 1,
+            '/d:multistatus/d:response/d:propstat'                                                              => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop'                                                       => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist'                                            => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response'                                 => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:href'                          => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat'                      => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop'               => 2,
             '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/d:displayname' => 2,
-        );
+        ];
 
         $xml = simplexml_load_string($server->httpResponse->body);
-        $xml->registerXPathNamespace('d','DAV:');
-        $xml->registerXPathNamespace('s','http://sabredav.org/ns');
-        foreach($check as $v1=>$v2) {
+        $xml->registerXPathNamespace('d', 'DAV:');
+        $xml->registerXPathNamespace('s', 'http://sabredav.org/ns');
+        foreach ($check as $v1 => $v2) {
 
-            $xpath = is_int($v1)?$v2:$v1;
+            $xpath = is_int($v1) ? $v2 : $v1;
 
             $result = $xml->xpath($xpath);
 
             $count = 1;
             if (!is_int($v1)) $count = $v2;
 
-            $this->assertEquals($count,count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result));
+            $this->assertEquals($count, count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result));
 
         }
 
@@ -245,13 +256,13 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
   </d:property>
 </d:expand-property>';
 
-        $serverVars = array(
+        $serverVars = [
             'REQUEST_METHOD' => 'REPORT',
             'HTTP_DEPTH'     => '0',
             'REQUEST_URI'    => '/node2',
-        );
+        ];
 
-        $request = new HTTP\Request($serverVars);
+        $request = HTTP\Sapi::createFromServerArray($serverVars);
         $request->setBody($xml);
 
         $server = $this->getServer();
@@ -259,100 +270,48 @@ class ExpandPropertiesTest extends \PHPUnit_Framework_TestCase {
 
         $server->exec();
 
-        $this->assertEquals('HTTP/1.1 207 Multi-Status', $server->httpResponse->status);
-        $this->assertEquals(array(
-            'Content-Type' => 'application/xml; charset=utf-8',
-        ), $server->httpResponse->headers);
+        $this->assertEquals(207, $server->httpResponse->status);
+        $this->assertEquals([
+            'X-Sabre-Version' => [DAV\Version::VERSION],
+            'Content-Type'    => ['application/xml; charset=utf-8'],
+        ], $server->httpResponse->getHeaders());
 
 
-        $check = array(
+        $check = [
             '/d:multistatus',
-            '/d:multistatus/d:response' => 1,
-            '/d:multistatus/d:response/d:href' => 1,
-            '/d:multistatus/d:response/d:propstat' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:href' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat' => 3,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop' => 3,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/d:displayname' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href' => 2,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response/d:href' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response/d:propstat' => 1,
-            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response/d:propstat/d:prop' => 1,
+            '/d:multistatus/d:response'                                                                                                             => 1,
+            '/d:multistatus/d:response/d:href'                                                                                                      => 1,
+            '/d:multistatus/d:response/d:propstat'                                                                                                  => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop'                                                                                           => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist'                                                                                => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response'                                                                     => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:href'                                                              => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat'                                                          => 3,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop'                                                   => 3,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/d:displayname'                                     => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href'                                            => 2,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response'                                 => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response/d:href'                          => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response/d:propstat'                      => 1,
+            '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response/d:propstat/d:prop'               => 1,
             '/d:multistatus/d:response/d:propstat/d:prop/s:hreflist/d:response/d:propstat/d:prop/s:href/d:response/d:propstat/d:prop/d:displayname' => 1,
-        );
+        ];
 
         $xml = simplexml_load_string($server->httpResponse->body);
-        $xml->registerXPathNamespace('d','DAV:');
-        $xml->registerXPathNamespace('s','http://sabredav.org/ns');
-        foreach($check as $v1=>$v2) {
+        $xml->registerXPathNamespace('d', 'DAV:');
+        $xml->registerXPathNamespace('s', 'http://sabredav.org/ns');
+        foreach ($check as $v1 => $v2) {
 
-            $xpath = is_int($v1)?$v2:$v1;
+            $xpath = is_int($v1) ? $v2 : $v1;
 
             $result = $xml->xpath($xpath);
 
             $count = 1;
             if (!is_int($v1)) $count = $v2;
 
-            $this->assertEquals($count,count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result));
+            $this->assertEquals($count, count($result), 'we expected ' . $count . ' appearances of ' . $xpath . ' . We found ' . count($result));
 
         }
 
     }
-}
-class MockPropertyNode implements DAV\INode, DAV\IProperties {
-
-    function __construct($name, array $properties) {
-
-        $this->name = $name;
-        $this->properties = $properties;
-
-    }
-
-    function getName() {
-
-        return $this->name;
-
-    }
-
-    function getProperties($requestedProperties) {
-
-        $returnedProperties = array();
-        foreach($requestedProperties as $requestedProperty) {
-            if (isset($this->properties[$requestedProperty])) {
-                $returnedProperties[$requestedProperty] =
-                    $this->properties[$requestedProperty];
-            }
-        }
-        return $returnedProperties;
-
-    }
-
-    function delete() {
-
-        throw new DAV\Exception('Not implemented');
-
-    }
-
-    function setName($name) {
-
-        throw new DAV\Exception('Not implemented');
-
-    }
-
-    function getLastModified() {
-
-        return null;
-
-    }
-
-    function updateProperties($properties) {
-
-        throw new DAV\Exception('Not implemented');
-
-    }
-
 }

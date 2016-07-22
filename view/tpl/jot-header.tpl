@@ -1,16 +1,16 @@
 <script language="javascript" type="text/javascript">
 
 var editor = false;
-var textlen = 0;
 var plaintext = '{{$editselect}}';
 var pretext = '{{$pretext}}';
 
 function initEditor(cb){
 	if (editor==false){
 		$("#profile-jot-text-loading").spin('small').show();
+		{{$geotag}}
 		if(plaintext == 'none') {
 			$("#profile-jot-text-loading").spin(false).hide();
-			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
+			$("#profile-jot-text").css({ 'height': 200, 'color': '#000', 'line-height': 'inherit' });
 			{{if $bbco_autocomplete}}
 			$("#profile-jot-text").bbco_autocomplete('{{$bbco_autocomplete}}'); // autocomplete bbcode
 			{{/if}}
@@ -75,14 +75,6 @@ function initEditor(cb){
 					else {
 						if(cPopup !== null) { cPopup.close(); cPopup = null; }
 					}
-
-					textlen = txt.length;
-					if(textlen != 0 && $('#jot-perms-icon').is('.unlock')) {
-						$('#profile-jot-desc').html(ispublic);
-					}
-					else {
-						$('#profile-jot-desc').html('&nbsp;');
-					}
 				});
 
 				ed.onInit.add(function(ed) {
@@ -109,8 +101,6 @@ function enableOnUser(){
 </script>
 <script type="text/javascript" src="{{$baseurl}}/view/js/ajaxupload.js" ></script>
 <script>
-	var ispublic = '{{$ispublic}}';
-
 	$(document).ready(function() {
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
@@ -352,11 +342,19 @@ function enableOnUser(){
 	function toggleVoting() {
 		if($('#jot-consensus').val() > 0) {
 			$('#jot-consensus').val(0);
-			$('#profile-voting, #profile-voting-sub').removeClass('icon-check').addClass('icon-check-empty');
+			$('#profile-voting, #profile-voting-sub').removeClass('fa-check-square-o').addClass('fa-square-o');
 		}
 		else {
 			$('#jot-consensus').val(1);
-			$('#profile-voting, #profile-voting-sub').removeClass('icon-check-empty').addClass('icon-check');
+			$('#profile-voting, #profile-voting-sub').removeClass('fa-square-o').addClass('fa-check-square-o');
+		}
+	}
+
+	function jotReact(id,icon) {
+		if(id && icon) {
+			$.get('{{$baseurl}}/react?f=&postid=' + id + '&emoji=' + icon);
+			if(timer) clearTimeout(timer);
+			timer = setTimeout(NavUpdate,1000);
 		}
 	}
 
@@ -365,8 +363,90 @@ function enableOnUser(){
 		$('#profile-nolocation-wrapper').attr('disabled', true);
 	}
 
-	{{$geotag}}
 
+    var initializeEmbedPhotoDialog = function () {
+        $('.embed-photo-selected-photo').each(function (index) {
+            $(this).removeClass('embed-photo-selected-photo');
+        });
+        getPhotoAlbumList();
+        $('#embedPhotoModalBodyAlbumDialog').off('click');
+        $('#embedPhotoModal').modal();
+    };
+
+    var choosePhotoFromAlbum = function (album) {
+        $.post("embedphotos/album", {name: album},
+            function(data) {
+                if (data['status']) {
+                    $('#embedPhotoModalLabel').html('{{$modalchooseimages}}');
+                    $('#embedPhotoModalBodyAlbumDialog').html('\
+                            <div><ul class="nav">\n\
+                                <li><a href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
+                                    <i class="fa fa-chevron-left"></i>&nbsp\n\
+                                    {{$modaldiffalbum}}\n\
+                                    </a>\n\
+                                </li>\n\
+                            </ul><br></div>')
+                    $('#embedPhotoModalBodyAlbumDialog').append(data['content']);
+                    $('#embedPhotoModalBodyAlbumDialog').click(function (evt) {
+                        evt.preventDefault();
+                        var image = document.getElementById(evt.target.id);
+                        if (typeof($(image).parent()[0]) !== 'undefined') {
+                            var imageparent = document.getElementById($(image).parent()[0].id);
+                            $(imageparent).toggleClass('embed-photo-selected-photo');
+                        }
+                    });
+                    $('#embedPhotoModalBodyAlbumListDialog').addClass('hide');
+                    $('#embedPhotoModalBodyAlbumDialog').removeClass('hide');
+                    $('#embed-photo-OKButton').click(function () {
+                        $('.embed-photo-selected-photo').each(function (index) {
+                            var href = $(this).attr('href');
+                            $.post("embedphotos/photolink", {href: href},
+                                function(ddata) {
+                                    if (ddata['status']) {
+                                        addeditortext(ddata['photolink']);
+                                    } else {
+                                        window.console.log('{{$modalerrorlink}}' + ':' + ddata['errormsg']);
+                                    }
+                                    return false;
+                                },
+                            'json');
+                        });
+                        $('#embedPhotoModalBodyAlbumDialog').html('');
+                        $('#embedPhotoModalBodyAlbumDialog').off('click');
+                        $('#embedPhotoModal').modal('hide');
+                    });
+                } else {
+                    window.console.log('{{$modalerroralbum}} ' + JSON.stringify(album) + ':' + data['errormsg']);
+                }
+                return false;
+            },
+        'json');
+    };
+
+    var getPhotoAlbumList = function () {
+        $.post("embedphotos/albumlist", {},
+            function(data) {
+                if (data['status']) {
+                    var albums = data['albumlist']; //JSON.parse(data['albumlist']);
+                    $('#embedPhotoModalLabel').html('{{$modalchoosealbum}}');
+                    $('#embedPhotoModalBodyAlbumList').html('<ul class="nav"></ul>');
+                    for(var i=0; i<albums.length; i++) {
+                        var albumName = albums[i].text;
+                        var albumLink = '<li>';
+                        albumLink += '<a href="#" onclick="choosePhotoFromAlbum(\'' + albumName + '\');return false;">' + albumName + '</a>';
+                        albumLink += '</li>';
+                        $('#embedPhotoModalBodyAlbumList').find('ul').append(albumLink);
+                    }
+                    $('#embedPhotoModalBodyAlbumDialog').addClass('hide');
+                    $('#embedPhotoModalBodyAlbumListDialog').removeClass('hide');
+                } else {
+                    window.console.log('{{$modalerrorlist}}' + ':' + data['errormsg']);
+                }
+                return false;
+            },
+        'json');
+    };
+    
 </script>
 
 <script>

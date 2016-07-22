@@ -18,25 +18,25 @@ class MapGetToPropFindTest extends DAV\AbstractServer {
 
     function testCollectionGet() {
 
-        $serverVars = array(
+        $serverVars = [
             'REQUEST_URI'    => '/',
             'REQUEST_METHOD' => 'GET',
-        );
+        ];
 
-        $request = new HTTP\Request($serverVars);
+        $request = HTTP\Sapi::createFromServerArray($serverVars);
         $request->setBody('');
         $this->server->httpRequest = ($request);
         $this->server->exec();
 
-        $this->assertEquals(array(
-            'Content-Type' => 'application/xml; charset=utf-8',
-            'DAV' => '1, 3, extended-mkcol',
-            'Vary' => 'Brief,Prefer',
-            ),
-            $this->response->headers
+        $this->assertEquals(207, $this->response->status, 'Incorrect status response received. Full response body: ' . $this->response->body);
+        $this->assertEquals([
+            'X-Sabre-Version' => [DAV\Version::VERSION],
+            'Content-Type'    => ['application/xml; charset=utf-8'],
+            'DAV'             => ['1, 3, extended-mkcol'],
+            'Vary'            => ['Brief,Prefer'],
+            ],
+            $this->response->getHeaders()
          );
-
-        $this->assertEquals('HTTP/1.1 207 Multi-Status',$this->response->status,'Incorrect status response received. Full response body: ' . $this->response->body);
 
     }
 

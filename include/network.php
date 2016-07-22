@@ -21,15 +21,18 @@ function get_capath() {
  *    TRUE if asked to return binary results (file download)
  * @param int $redirects default 0
  *    internal use, recursion counter
- * @param array $opts (optional parameters) assoziative array with:
+ * @param array $opts (optional parameters) associative array with:
  *  * \b accept_content => supply Accept: header with 'accept_content' as the value
  *  * \b timeout => int seconds, default system config value or 60 seconds
  *  * \b http_auth => username:password
  *  * \b novalidate => do not validate SSL certs, default is to validate using our CA list
  *  * \b nobody => only return the header
  *  * \b filep => stream resource to write body to. header and body are not returned when using this option.
+ *  * \b custom => custom request method: e.g. 'PUT', 'DELETE'
+ *  * \b cookiejar => cookie file (write)
+ *  * \B cookiefile => cookie file (read)
  *
- * @return array an assoziative array with:
+ * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
  *  * \e string \b header => HTTP headers 
@@ -59,11 +62,26 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_HEADER, $false);
 	}
 
+	if(x($opts,'upload'))
+		@curl_setopt($ch, CURLOPT_UPLOAD, $opts['upload']);
+	
+	if(x($opts,'infile'))
+		@curl_setopt($ch, CURLOPT_INFILE, $opts['infile']);
+
+	if(x($opts,'infilesize'))
+		@curl_setopt($ch, CURLOPT_INFILESIZE, $opts['infilesize']);
+
+	if(x($opts,'readfunc'))
+		@curl_setopt($ch, CURLOPT_READFUNCTION, $opts['readfunc']);
+
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
+	if(x($opts,'custom'))
+		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -77,6 +95,14 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
+
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
@@ -165,7 +191,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
  *    'filep' => stream resource to write body to. header and body are not returned when using this option.
- * @return array an assoziative array with:
+ *    'custom' => custom request method: e.g. 'PUT', 'DELETE'
+ *
+ * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
  *  * \e string \b header => HTTP headers
@@ -173,6 +201,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  *  * \e string \b debug => from curl_info()
  */
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
+
+//	logger('url: ' . $url);
+//	logger('params: ' . print_r($params,true));
+//	logger('opts: ' . print_r($opts,true));
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
@@ -199,11 +231,16 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'headers')) {
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
-logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 	}
  
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
+	if(x($opts,'custom')) {
+		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
+		@curl_setopt($ch, CURLOPT_POST,0);
+	}
+
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -217,6 +254,16 @@ logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
+
+
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
@@ -594,8 +641,6 @@ function parse_xml_string($s,$strict = true) {
 
 
 function scale_external_images($s, $include_link = true, $scale_replace = false) {
-
-	$a = get_app();
 
 	// Picture addresses can contain special characters
 	$s = htmlspecialchars_decode($s, ENT_COMPAT);
@@ -1168,6 +1213,10 @@ function discover_by_webbie($webbie) {
 	if(! $x)
 		$probe_old = true;
 
+
+	if((! $dfrn) && (! $has_salmon)) 
+		$probe_old = true;
+
 	if($probe_old) {
 		$y = old_webfinger($webbie);			
 		if($y) {
@@ -1294,8 +1343,20 @@ function discover_by_webbie($webbie) {
 					$fullname = $vcard['fn'];
 				if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
 					$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];			
+				if(($vcard['key']) && (! $pubkey))
+					$pubkey = $vcard['key'];
 				if(! $avatar)
 					$avatar = $vcard['photo'];
+				if($diaspora) {
+					if(($vcard['guid']) && (! $diaspora_guid))
+						$diaspora_guid = $vcard['guid'];
+					if(($vcard['url']) && (! $diaspora_base))
+						$diaspora_base = $vcard['url'];						
+
+
+
+
+				}
 
 			}
 		}
@@ -1614,8 +1675,6 @@ function fetch_xrd_links($url) {
 
 function scrape_vcard($url) {
 
-	$a = get_app();
-
 	$ret = array();
 
 	logger('scrape_vcard: url=' . $url);
@@ -1694,8 +1753,6 @@ function scrape_vcard($url) {
 
 
 function scrape_feed($url) {
-
-	$a = get_app();
 
 	$ret = array();
 	$level = 0;
@@ -1815,8 +1872,6 @@ function service_plink($contact, $guid) {
 
 function format_and_send_email($sender,$xchan,$item) {
 
-	require_once('include/enotify.php');
-
 	$title = $item['title'];
 	$body = $item['body'];
 
@@ -1835,7 +1890,7 @@ function format_and_send_email($sender,$xchan,$item) {
 		$tpl = get_markup_template('email_notify_html.tpl');
 		$email_html_body = replace_macros($tpl,array(
 			'$banner'	    => $banner,
-			'$notify_icon'  => Zotlabs\Project\System::get_notify_icon(),
+			'$notify_icon'  => Zotlabs\Lib\System::get_notify_icon(),
 			'$product'	    => $product,
 			'$preamble'	    => '',
 			'$sitename'	    => $sitename,
@@ -1881,7 +1936,7 @@ function format_and_send_email($sender,$xchan,$item) {
 
 		// use the EmailNotification library to send the message
 
-		enotify::send(array(
+		Zotlabs\Lib\Enotify::send(array(
 			'fromName'             => $product,
 			'fromEmail'            => $sender_email,
 			'replyTo'              => $sender_email,
@@ -1912,10 +1967,13 @@ function do_delivery($deliveries) {
 	$deliver = array();
 	foreach($deliveries as $d) {
 
+		if(! $d)
+			continue;
+
 		$deliver[] = $d;
 
 		if(count($deliver) >= $deliveries_per_process) {
-			proc_run('php','include/deliver.php',$deliver);
+			Zotlabs\Daemon\Master::Summon(array('Deliver',$deliver));
 			$deliver = array();
 			if($interval)
 				@time_sleep_until(microtime(true) + (float) $interval);
@@ -1925,16 +1983,13 @@ function do_delivery($deliveries) {
 	// catch any stragglers
 
 	if($deliver)
-		proc_run('php','include/deliver.php',$deliver);
+		Zotlabs\Daemon\Master::Summon(array('Deliver',$deliver));
 	
 
 }
 
 
 function get_site_info() {
-
-	global $db;
-	global $a;
 
 	$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
 	$directory_mode = Array('DIRECTORY_MODE_NORMAL', 'DIRECTORY_MODE_PRIMARY', 'DIRECTORY_MODE_SECONDARY', 256 => 'DIRECTORY_MODE_STANDALONE');
@@ -1966,14 +2021,7 @@ function get_site_info() {
 	else
 		$service_class = false;
 
-	$visible_plugins = array();
-	if(is_array(App::$plugins) && count(App::$plugins)) {
-		$r = q("select * from addon where hidden = 0");
-		if(count($r))
-			foreach($r as $rr)
-				$visible_plugins[] = $rr['name'];
-	}
-	sort($visible_plugins);
+	$visible_plugins = visible_plugin_list();
 
 	if(@is_dir('.git') && function_exists('shell_exec'))
 		$commit = trim(@shell_exec('git log -1 --format="%h"'));
@@ -1983,8 +2031,8 @@ function get_site_info() {
 	$site_info = get_config('system','info');
 	$site_name = get_config('system','sitename');
 	if(! get_config('system','hidden_version_siteinfo')) {
-		$version = Zotlabs\Project\System::get_project_version();
-		$tag = Zotlabs\Project\System::get_std_version();
+		$version = Zotlabs\Lib\System::get_project_version();
+		$tag = Zotlabs\Lib\System::get_std_version();
 
 		if(@is_dir('.git') && function_exists('shell_exec')) {
 			$commit = trim( @shell_exec('git log -1 --format="%h"'));
@@ -2020,7 +2068,7 @@ function get_site_info() {
 	$data = Array(
 		'version' => $version,
 		'version_tag' => $tag,
-		'server_role' => Zotlabs\Project\System::get_server_role(),
+		'server_role' => Zotlabs\Lib\System::get_server_role(),
 		'commit' => $commit,
 		'url' => z_root(),
 		'plugins' => $visible_plugins,
@@ -2034,8 +2082,8 @@ function get_site_info() {
 		'locked_features' => $locked_features,
 		'admin' => $admin,
 		'site_name' => (($site_name) ? $site_name : ''),
-		'platform' => Zotlabs\Project\System::get_platform_name(),
-		'dbdriver' => $db->getdriver(),
+		'platform' => Zotlabs\Lib\System::get_platform_name(),
+		'dbdriver' => DBA::$dba->getdriver(),
 		'lastpoll' => get_config('system','lastpoll'),
 		'info' => (($site_info) ? $site_info : ''),
 		'channels_total' => $channels_total_stat,
@@ -2114,8 +2162,9 @@ function check_channelallowed($hash) {
 	return $retvalue;
 }
 
-function deliverable_singleton($xchan) {
-	$r = q("select abook_instance from abook where abook_xchan = '%s' limit 1",
+function deliverable_singleton($channel_id,$xchan) {
+	$r = q("select abook_instance from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+		intval($channel_id),
 		dbesc($xchan['xchan_hash'])
 	);
 	if($r) {
@@ -2127,3 +2176,44 @@ function deliverable_singleton($xchan) {
 	return false;
 }
 
+
+
+function get_repository_version($branch = 'master') {
+
+	$path = "https://raw.githubusercontent.com/redmatrix/hubzilla/$branch/boot.php";
+	
+	$x = z_fetch_url($path);
+	if($x['success']) {
+		$y = preg_match('/define(.*?)STD_VERSION(.*?)([0-9.].*)\'/',$x['body'],$matches);
+		if($y)
+			return $matches[3];
+	}
+	return '?.?';
+
+}		
+
+function network_to_name($s) {
+
+	$nets = array(
+		NETWORK_DFRN      => t('Friendica'),
+		NETWORK_FRND      => t('Friendica'),
+		NETWORK_OSTATUS   => t('OStatus'),
+		NETWORK_GNUSOCIAL => t('GNU-Social'),
+		NETWORK_FEED      => t('RSS/Atom'),
+		NETWORK_MAIL      => t('Email'),
+		NETWORK_DIASPORA  => t('Diaspora'),
+		NETWORK_FACEBOOK  => t('Facebook'),
+		NETWORK_ZOT       => t('Zot'),
+		NETWORK_LINKEDIN  => t('LinkedIn'),
+		NETWORK_XMPP      => t('XMPP/IM'),
+		NETWORK_MYSPACE   => t('MySpace'),
+	);
+
+	call_hooks('network_to_name', $nets);
+
+	$search  = array_keys($nets);
+	$replace = array_values($nets);
+
+	return str_replace($search,$replace,$s);
+
+}

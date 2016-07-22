@@ -14,6 +14,7 @@
 <li>[img float=right]https://zothub.com/images/default_profile_photos/rainbow_man/48.jpg[/img] <img src="https://zothub.com/images/default_profile_photos/rainbow_man/48.jpg" style="float:right;" alt="Image/photo" /><br />
 <div style="clear:both;"></div>
 <li>[code]code[/code] <code>code</code><br />
+<li>[code=xxx]syntax highlighted code[/code] <code>supported languages php, css, mysql, sql, abap, diff, html, perl, ruby, vbscript, avrc, dtd, java, xml, cpp, python, javascript, js, json, sh</code><br />
 <li>[quote]quote[/quote] <blockquote>quote</blockquote><br />
 <li>[quote=Author]Author? Me? No, no, no...[/quote] <br /><strong class="author">Author wrote:</strong><blockquote>Author? Me? No, no, no...</blockquote><br />
 <li> [nobb] may be used to escape bbcode.</ul><br /> 
@@ -27,12 +28,31 @@
 <li>[list=a]<br />
 <li>[list=A] <br />
 <li>[ul]<br />
-<li>[ol]
+<li>[ol]<br />
+<li>[dl]<br />
+<li>[dl terms="biumlh"] &mdash; where style of the terms can be any combination of:
+	<dl class="bb-dl dl-horizontal">
+	<dt>b</dt><dd>bold</dd>
+	<dt>i</dt><dd>italic</dd>
+	<dt>u</dt><dd>underline</dd>
+	<dt>m</dt><dd>monospace</dd>
+	<dt>l</dt><dd>large</dd>
+	<dt>h</dt><dd>horizontal &mdash; like <em>this</em> defintion list</dd>
+	</dl>
+</li>
 
 </ul>For example:<br />[ul]<br />[*] First list element<br />[*] Second list element<br />[/ul]<br /><br />Will render something like: <br />
 <ul class="listbullet" style="list-style-type: circle;">
 <li> First list element<br />
-<li> Second list element</ul><br /> 
+<li> Second list element</ul>
+
+or<br /><br />[dl terms="b"]<br />[*= First element term] First element description<br />[*= Second element term] Second element description<br />[/dl]<br /><br />Will render something like: <br /><br />
+<dl class="bb-dl dl-terms-bold">
+<dt> First element term </dt><dd>First element description</dd>
+<dt> Second element term </dt><dd>Second element description</dd>
+</dl><br /> 
+
+
 <br />There's also:<br />
 <ul class="listloweralpha" style="list-style-type: lower-alpha;">
 <li>[hr]<br />
@@ -64,7 +84,7 @@
 <li>[spoiler] for hiding spoilers<br /><br /></li>
 
 <li>[rpost=title]Text to post[/rpost] The observer will be returned to their home hub to enter a post with the specified title and body. Both are optional</li>
-<li>[qr]text to post[/qr] - create a QR code.</li>
+<li>[qr]text to post[/qr] - create a QR code (if the qrator plugin is installed).</li>
 <li>[toc] - create a table of content in a webpage. Please refer to the <a href="http://ndabas.github.io/toc/" target="_blank">original jquery toc</a> to get more explanations.
 	<ul>
 		<li>Optional param: 'data-toc'. If ommited the default is 'body'</li>

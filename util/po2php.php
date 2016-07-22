@@ -1,15 +1,22 @@
 <?php
 
 
-function po2php_run($argv, $argc) {
+function po2php_run($argc,$argv) {
 
-	if ($argc!=2) {
+	if ($argc < 2) {
 		print "Usage: ".$argv[0]." <file.po>\n\n";
 		return;
 	}
-	
+
+	$rtl = false;	
+
 	$pofile = $argv[1];
 	$outfile = dirname($pofile)."/hstrings.php";
+
+	if($argc > 2) {
+		if($argv[2] === 'rtl')
+			$rtl = true;
+	}
 
 	if(strstr($outfile,'util'))
 		$lang = 'en';
@@ -53,6 +60,7 @@ function po2php_run($argv, $argc) {
 			$out .= '	return '.$cond.';'."\n";
 			$out .= '}}'."\n";
 		}
+		$out .= 'App::$rtl = ' . intval($rtl) . ';';
 		
 		if ($k!="" && substr($l,0,7)=="msgstr "){
 			if ($ink) { $ink = False; $out .= 'App::$strings["'.$k.'"] = '; }
@@ -140,5 +148,5 @@ function trim_message($str) {
 }
 
 if (array_search(__file__,get_included_files())===0){
-  po2php_run($argv,$argc);
+  po2php_run($argc,$argv);
 }

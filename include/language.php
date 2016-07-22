@@ -82,13 +82,11 @@ function get_best_language() {
 	if($arr['preferred'] !== 'unset')
 		return $arr['preferred'];
 
-	$a = get_app();
 	return ((isset(App::$config['system']['language'])) ? App::$config['system']['language'] : 'en');
 }
 
 
 function push_lang($language) {
-	global $a;
 
 	App::$langsave = App::$language;
 
@@ -104,7 +102,6 @@ function push_lang($language) {
 }
 
 function pop_lang() {
-	global $a;
 
 	if(App::$language === App::$langsave)
 		return;
@@ -124,7 +121,6 @@ function pop_lang() {
  * @param boolean $install (optional) default false
  */
 function load_translation_table($lang, $install = false) {
-	global $a;
 
 	App::$strings = array();
 
@@ -136,10 +132,10 @@ function load_translation_table($lang, $install = false) {
 	}
 
 	if(! $install) {
-		$plugins = q("SELECT name FROM addon WHERE installed=1;");
+		$plugins = q("SELECT aname FROM addon WHERE installed=1;");
 		if ($plugins !== false) {
 			foreach($plugins as $p) {
-				$name = $p['name'];
+				$name = $p['aname'];
 				if(file_exists("addon/$name/lang/$lang/hstrings.php")) {
 					include("addon/$name/lang/$lang/hstrings.php");
 				}
@@ -170,7 +166,6 @@ function load_translation_table($lang, $install = false) {
  *
  */
 function t($s, $ctx = '') {
-	global $a;
 
 	$cs = $ctx ? '__ctx:' . $ctx . '__ ' . $s : $s;
 	if (x(App::$strings, $cs)) {
@@ -189,7 +184,7 @@ function t($s, $ctx = '') {
 
 function translate_projectname($s) {
 
-	return str_replace(array('$projectname','$Projectname'),array(Zotlabs\Project\System::get_platform_name(),ucfirst(Zotlabs\Project\System::get_platform_name())),$s);
+	return str_replace(array('$projectname','$Projectname'),array(Zotlabs\Lib\System::get_platform_name(),ucfirst(Zotlabs\Lib\System::get_platform_name())),$s);
 
 }
 
@@ -205,7 +200,6 @@ function translate_projectname($s) {
  * @return string
  */
 function tt($singular, $plural, $count, $ctx = ''){
-	$a = get_app();
 
 	$cs = $ctx ? "__ctx:" . $ctx . "__ " . $singular : $singular;
 	if (x(App::$strings,$cs)) {

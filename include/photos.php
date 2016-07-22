@@ -19,8 +19,6 @@ require_once('include/text.php');
  */
 function photo_upload($channel, $observer, $args) {
 
-	$a = get_app();
-
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
 	$account_id = $channel['channel_account_id'];
@@ -42,6 +40,10 @@ function photo_upload($channel, $observer, $args) {
 		$visible = 1;
 	else
 		$visible = 0;
+
+	$deliver = true;
+	if(array_key_exists('deliver',$args))
+		$deliver = intval($args['deliver']);
 
 	// Set to default channel permissions. If the parent directory (album) has permissions set, 
 	// use those instead. If we have specific permissions supplied, they take precedence over
@@ -73,17 +75,17 @@ function photo_upload($channel, $observer, $args) {
 		$type = $args['getimagesize']['mime'];
 		$os_storage = 1;
 	}
-	elseif ($args['data']) {
+	elseif ($args['data'] || $args['content']) {
 
 		// allow an import from a binary string representing the image.
 		// This bypasses the upload step and max size limit checking
 
-		$imagedata = $args['data'];
+		$imagedata = (($args['content']) ? $args['content'] : $args['data']);
 		$filename = $args['filename'];
 		$filesize = strlen($imagedata);
 		// this is going to be deleted if it exists
 		$src = '/tmp/deletemenow';
-		$type = $args['type'];
+		$type = (($args['mimetype']) ? $args['mimetype'] : $args['type']);
 	} else {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
 
@@ -127,11 +129,11 @@ function photo_upload($channel, $observer, $args) {
 		$imagedata = @file_get_contents($src);
 	}
 
-	$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
+	$r = q("select sum(filesize) as total from photo where aid = %d and imgscale = 0 ",
 		intval($account_id)
 	);
 
-	$limit = service_class_fetch($channel_id,'photo_upload_limit');
+	$limit = engr_units_to_bytes(service_class_fetch($channel_id,'photo_upload_limit'));
 
 	if (($r) && ($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
 		$ret['message'] = upgrade_message();
@@ -174,7 +176,7 @@ function photo_upload($channel, $observer, $args) {
 	$errors = false;
 
 	$p = array('aid' => $account_id, 'uid' => $channel_id, 'xchan' => $visitor, 'resource_id' => $photo_hash,
-		'filename' => $filename, 'album' => $album, 'scale' => 0, 'photo_usage' => PHOTO_NORMAL, 
+		'filename' => $filename, 'album' => $album, 'imgscale' => 0, 'photo_usage' => PHOTO_NORMAL, 
 		'allow_cid' => $ac['allow_cid'], 'allow_gid' => $ac['allow_gid'],
 		'deny_cid' => $ac['deny_cid'], 'deny_gid' => $ac['deny_gid'],
 		'os_storage' => $os_storage, 'os_path' => $args['os_path']
@@ -207,7 +209,7 @@ function photo_upload($channel, $observer, $args) {
 	if(($width > 1024 || $height > 1024) && (! $errors))
 		$ph->scaleImage(1024);
 
-	$p['scale'] = 1;
+	$p['imgscale'] = 1;
 	$r1 = $ph->save($p);
 	$link[1] = array(
 		'rel'  => 'alternate',
@@ -222,7 +224,7 @@ function photo_upload($channel, $observer, $args) {
 	if(($width > 640 || $height > 640) && (! $errors)) 
 		$ph->scaleImage(640);
 
-	$p['scale'] = 2;
+	$p['imgscale'] = 2;
 	$r2 = $ph->save($p);
 	$link[2] = array(
 		'rel'  => 'alternate',
@@ -237,7 +239,7 @@ function photo_upload($channel, $observer, $args) {
 	if(($width > 320 || $height > 320) && (! $errors)) 
 		$ph->scaleImage(320);
 
-	$p['scale'] = 3;
+	$p['imgscale'] = 3;
 	$r3 = $ph->save($p);
 	$link[3] = array(
 		'rel'  => 'alternate',
@@ -296,7 +298,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$photo_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' . t('a new photo') . '[/zrl]';
 
-	$album_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album) . ']' . $album . '[/zrl]';
+	$album_link = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album) . ']' . ((strlen($album)) ? $album : '/') . '[/zrl]';
 
 	$activity_format = sprintf(t('%1$s posted %2$s to %3$s','photo_upload'), $author_link, $photo_link, $album_link);
 
@@ -332,9 +334,9 @@ function photo_upload($channel, $observer, $args) {
 
 			if($item['mid'] === $item['parent_mid']) {
 
-				$item['body'] = $args['body'];
+				$item['body'] = $summary;
 				$item['obj_type'] = ACTIVITY_OBJ_PHOTO;
-				$item['object']	= json_encode($object);
+				$item['obj']	= json_encode($object);
 
 				$item['tgt_type'] = ACTIVITY_OBJ_ALBUM;
 				$item['target']	= json_encode($target);
@@ -357,14 +359,14 @@ function photo_upload($channel, $observer, $args) {
 				if(($item['edited'] > $r[0]['edited']) || $force) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
-					item_store_update($item);
+					item_store_update($item,false,$deliver);
 					continue;
 				}	
 			}
 			else {
 				$item['aid'] = $channel['channel_account_id'];
 				$item['uid'] = $channel['channel_id'];
-				$item_result = item_store($item);
+				$item_result = item_store($item,false,$deliver);
 			}
 		}
 	}
@@ -391,8 +393,8 @@ function photo_upload($channel, $observer, $args) {
 		$arr['deny_cid']        = $ac['deny_cid'];
 		$arr['deny_gid']        = $ac['deny_gid'];
 		$arr['verb']            = ACTIVITY_POST;
-		$arr['obj_type']	= ACTIVITY_OBJ_PHOTO;
-		$arr['object']		= json_encode($object);
+		$arr['obj_type']	    = ACTIVITY_OBJ_PHOTO;
+		$arr['obj']		        = json_encode($object);
 		$arr['tgt_type']        = ACTIVITY_OBJ_ALBUM;
 		$arr['target']	        = json_encode($target);
 		$arr['item_wall']       = 1;
@@ -410,17 +412,17 @@ function photo_upload($channel, $observer, $args) {
 		// in the photos pages - using the photos permissions instead. We need the public policy to keep the photo
 		// linked item from leaking into the feed when somebody has a channel with read_stream restrictions.  
 
-		$arr['public_policy']   = map_scope($channel['channel_r_stream'],true);
+		$arr['public_policy']   = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true);
 		if($arr['public_policy'])
 			$arr['item_private'] = 1;
 
 
 
-		$result = item_store($arr);
+		$result = item_store($arr,false,$deliver);
 		$item_id = $result['item_id'];
 
-		if($visible) 
-			proc_run('php', "include/notifier.php", 'wall-new', $item_id);
+		if($visible && $deliver) 
+			Zotlabs\Daemon\Master::Summon(array('Notifier', 'wall-new', $item_id));
 	}
 
 	$ret['success'] = true;
@@ -445,7 +447,7 @@ function photo_upload($channel, $observer, $args) {
  *   * success (bool)
  *   * albums (array)
  */
-function photos_albums_list($channel, $observer) {
+function photos_albums_list($channel, $observer, $sort_key = 'album', $direction = 'asc') {
 
 	$channel_id     = $channel['channel_id'];
 	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
@@ -453,11 +455,15 @@ function photos_albums_list($channel, $observer) {
 	if(! perm_is_allowed($channel_id, $observer_xchan, 'view_storage'))
 		return false;
 
-	/** @FIXME create a permissions SQL which works on arbitrary observers and channels, regardless of login or web status */
 
-	$sql_extra = permissions_sql($channel_id);
+	$sql_extra = permissions_sql($channel_id,$observer_xchan);
 
-	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by max(created) desc",
+	$sort_key = dbesc($sort_key);
+	$direction = dbesc($direction);
+
+
+
+	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by $sort_key $direction",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
@@ -485,20 +491,14 @@ function photos_albums_list($channel, $observer) {
 	return $ret;
 }
 
-function photos_album_widget($channelx,$observer,$albums = null) {
+function photos_album_widget($channelx,$observer,$sortkey = 'album',$direction = 'asc') {
 
 	$o = '';
 
-	// If we weren't passed an album list, see if the photos module
-	// dropped one for us to find in App::$data['albums']. 
-	// If all else fails, load it.
-
-	if(! $albums) {
-		if(array_key_exists('albums', App::$data))
-			$albums = App::$data['albums'];
-		else
-			$albums = photos_albums_list($channelx,$observer);
-	}
+	if(array_key_exists('albums', App::$data))
+		$albums = App::$data['albums'];
+	else
+		$albums = photos_albums_list($channelx,$observer,$sortkey,$direction);
 
 	if($albums['success']) {
 		$o = replace_macros(get_markup_template('photo_albums.tpl'),array(
@@ -537,7 +537,7 @@ function photos_list_photos($channel, $observer, $album = '') {
 
 	$ret = array('success' => false);
 
-	$r = q("select resource_id, created, edited, title, description, album, filename, type, height, width, size, scale, photo_usage, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and photo_usage in ( %d, %d ) $sql_extra ",
+	$r = q("select resource_id, created, edited, title, description, album, filename, mimetype, height, width, filesize, imgscale, photo_usage, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and photo_usage in ( %d, %d ) $sql_extra ",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
@@ -545,7 +545,7 @@ function photos_list_photos($channel, $observer, $album = '') {
 
 	if($r) {
 		for($x = 0; $x < count($r); $x ++) {
-			$r[$x]['src'] = z_root() . '/photo/' . $r[$x]['resource_id'] . '-' . $r[$x]['scale'];
+			$r[$x]['src'] = z_root() . '/photo/' . $r[$x]['resource_id'] . '-' . $r[$x]['imgscale'];
 		}
 		$ret['success'] = true;
 		$ret['photos'] = $r;
@@ -663,7 +663,7 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 			
 	$arr['body']            = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
-		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 
+		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['imgscale'] . '[/zmg]' 
 		. '[/zrl]';
 
 	$result = item_store($arr);
@@ -706,3 +706,68 @@ function gps2Num($coordPart) {
 
     return floatval($parts[0]) / floatval($parts[1]);
 }
+
+function profile_photo_set_profile_perms($uid, $profileid = 0) {
+	
+		$allowcid = '';
+		if($profileid) {
+			$r = q("SELECT photo, profile_guid, id, is_default, uid
+				FROM profile WHERE uid = %d and ( profile.id = %d OR profile.profile_guid = '%s') LIMIT 1", 
+				intval($profileid), 
+				dbesc($profileid)
+			);
+		} 
+		else {
+			logger('Resetting permissions on default-profile-photo for user'.local_channel());
+
+			$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile 
+				WHERE profile.uid = %d AND is_default = 1 LIMIT 1", 
+				intval($uid) 
+			); //If no profile is given, we update the default profile
+		}
+		if(! $r)
+			return;
+	
+		$profile = $r[0];
+
+		if($profile['id'] && $profile['photo']) { 
+	      	preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
+	       	$resource_id = $resource_id[0];
+	
+			if (! intval($profile['is_default'])) {
+				$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", 
+					intval($uid) 
+				);
+				//Should not be needed in future. Catches old int-profile-ids.
+				$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%d' ", 
+					intval($profile['id'])
+				);
+				$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'",
+					dbesc($profile['profile_guid'])
+				);
+				$allowcid = "<" . $r0[0]['channel_hash'] . ">";
+				foreach ($r1 as $entry) {
+					$allowcid .= "<" . $entry['abook_xchan'] . ">"; 
+				}
+				foreach ($r2 as $entry) {
+					$allowcid .= "<" . $entry['abook_xchan'] . ">";
+				}
+	
+				q("UPDATE photo SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d",
+					dbesc($allowcid),
+					dbesc($resource_id),
+					intval($uid)
+				);
+	
+			} 
+			else {
+				//Reset permissions on default profile picture to public
+				q("UPDATE photo SET allow_cid = '' WHERE photo_usage = %d AND uid = %d",
+					intval(PHOTO_PROFILE),
+					intval($uid)
+				); 
+			}
+		}
+	
+		return;
+	}

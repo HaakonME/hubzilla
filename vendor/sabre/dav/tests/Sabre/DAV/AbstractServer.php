@@ -4,8 +4,6 @@ namespace Sabre\DAV;
 
 use Sabre\HTTP;
 
-require_once 'Sabre/HTTP/ResponseMock.php';
-
 abstract class AbstractServer extends \PHPUnit_Framework_TestCase {
 
     /**
@@ -23,9 +21,10 @@ abstract class AbstractServer extends \PHPUnit_Framework_TestCase {
 
         $this->response = new HTTP\ResponseMock();
         $this->server = new Server($this->getRootNode());
+        $this->server->sapi = new HTTP\SapiMock();
         $this->server->httpResponse = $this->response;
         $this->server->debugExceptions = true;
-        $this->deleteTree(SABRE_TEMPDIR,false);
+        $this->deleteTree(SABRE_TEMPDIR, false);
         file_put_contents(SABRE_TEMPDIR . '/test.txt', 'Test contents');
         mkdir(SABRE_TEMPDIR . '/dir');
         file_put_contents(SABRE_TEMPDIR . '/dir/child.txt', 'Child contents');
@@ -35,7 +34,7 @@ abstract class AbstractServer extends \PHPUnit_Framework_TestCase {
 
     function tearDown() {
 
-        $this->deleteTree(SABRE_TEMPDIR,false);
+        $this->deleteTree(SABRE_TEMPDIR, false);
 
     }
 
@@ -45,12 +44,12 @@ abstract class AbstractServer extends \PHPUnit_Framework_TestCase {
 
     }
 
-    private function deleteTree($path,$deleteRoot = true) {
+    private function deleteTree($path, $deleteRoot = true) {
 
-        foreach(scandir($path) as $node) {
+        foreach (scandir($path) as $node) {
 
-            if ($node=='.' || $node=='.svn' || $node=='..') continue;
-            $myPath = $path.'/'. $node;
+            if ($node == '.' || $node == '.svn' || $node == '..') continue;
+            $myPath = $path . '/' . $node;
             if (is_file($myPath)) {
                 unlink($myPath);
             } else {

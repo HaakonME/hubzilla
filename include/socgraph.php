@@ -152,11 +152,9 @@ function poco_load($xchan = '', $url = null) {
 		if(($x !== false) && (! count($x))) {
 			if($address) {
 				if($network === 'zot') {
-					$z = zot_finger($address,null);
-					if($z['success']) {
-						$j = json_decode($z['body'],true);
-						if($j)
-							import_xchan($j);
+					$j = Zotlabs\Zot\Finger::run($address,null);
+					if($j['success']) {
+						import_xchan($j);
 					}
 					$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
 						dbesc($hash)
@@ -404,7 +402,7 @@ function poco($a,$extended = false) {
 
 	$system_mode = false;
 
-	if(intval(get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) {
+	if(observer_prohibited()) {
 		logger('mod_poco: block_public');
 		http_status_exit(401);
 	}

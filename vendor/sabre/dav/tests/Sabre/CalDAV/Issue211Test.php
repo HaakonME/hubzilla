@@ -1,13 +1,13 @@
 <?php
 
 namespace Sabre\CalDAV;
+
 use Sabre\HTTP;
-use Sabre\VObject;
 
 /**
  * This unittest is created to check for an endless loop in Sabre\CalDAV\CalendarQueryValidator
  *
- * @copyright Copyright (C) 2007-2014 fruux GmbH (https://fruux.com/).
+ * @copyright Copyright (C) fruux GmbH (https://fruux.com/)
  * @author Evert Pot (http://evertpot.com/)
  * @license http://sabre.io/license/ Modified BSD License
  */
@@ -15,18 +15,18 @@ class Issue211Test extends \Sabre\DAVServerTest {
 
     protected $setupCalDAV = true;
 
-    protected $caldavCalendars = array(
-        array(
-            'id' => 1,
-            'name' => 'Calendar',
+    protected $caldavCalendars = [
+        [
+            'id'           => 1,
+            'name'         => 'Calendar',
             'principaluri' => 'principals/user1',
-            'uri' => 'calendar1',
-        )
-    );
+            'uri'          => 'calendar1',
+        ]
+    ];
 
-    protected $caldavCalendarObjects = array(
-        1 => array(
-            'event.ics' => array(
+    protected $caldavCalendarObjects = [
+        1 => [
+            'event.ics' => [
                 'calendardata' => 'BEGIN:VCALENDAR
 VERSION:2.0
 BEGIN:VEVENT
@@ -49,18 +49,18 @@ END:VALARM
 END:VEVENT
 END:VCALENDAR
 ',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     function testIssue211() {
 
-        $request = new HTTP\Request(array(
-            'REQUEST_METHOD' => 'REPORT',
+        $request = HTTP\Sapi::createFromServerArray([
+            'REQUEST_METHOD'    => 'REPORT',
             'HTTP_CONTENT_TYPE' => 'application/xml',
-            'REQUEST_URI' => '/calendars/user1/calendar1',
-            'HTTP_DEPTH' => '1',
-        ));
+            'REQUEST_URI'       => '/calendars/user1/calendar1',
+            'HTTP_DEPTH'        => '1',
+        ]);
 
         $request->setBody('<?xml version="1.0" encoding="utf-8" ?>
 <C:calendar-query xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">

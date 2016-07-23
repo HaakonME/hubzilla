@@ -9,24 +9,25 @@
 </div>
 <div id="files-upload-tools" class="section-content-tools-wrapper">
 	{{if $quota.limit || $quota.used}}<div class="{{if $quota.warning}}section-content-danger-wrapper{{else}}section-content-info-wrapper{{/if}}">{{if $quota.warning}}<strong>{{$quota.warning}} </strong>{{/if}}{{$quota.desc}}</div>{{/if}}
-	<label for="files-upload">{{$upload_header}}</label>
+	<!--
+    <label for="files-upload">{{$upload_header}}</label>
 	<form method="post" action="" enctype="multipart/form-data">
 		<input type="hidden" name="sabreAction" value="put">
 		<input class="form-group" id="files-upload" type="file" name="file">
 		<button class="btn btn-primary btn-sm pull-right" type="submit" value="{{$upload_submit}}">{{$upload_submit}}</button>
-		<!-- Name (optional): <input type="text" name="name"> we should rather provide a rename action in edit form-->
 	</form>
 	<div class="clear"></div>
-    
-    <form id="upload" action="" method="POST" enctype="multipart/form-data">
+    -->
+    <form id="ajax-upload-files" action="" method="POST" enctype="multipart/form-data">
+		<input type="hidden" name="sabreAction" value="put">
 
       <fieldset>
 
-      <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
       <input type="hidden" name="sabreAction" value="put">
       <div>
           <label for="fileselect">Files to upload:</label>
-          <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+<!--          <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />-->
+<!--          <input type="file" id="fileselect" name="fileselect[]"  />-->
           <div id="filedrag">or drop files here</div>
       </div>
 
@@ -36,7 +37,10 @@
 
       </fieldset>
     <div id="file-upload-list"></div>
-
+    
+    <div id="profile-rotator-wrapper">
+        <div id="profile-rotator"></div>
+    </div>
     </form>
     <div class="clear"></div>
 </div>
@@ -68,10 +72,24 @@
 
 <script>
 $(document).ready(function() {  
-// call initialization file
-if (window.File && window.FileList && window.FileReader) {
-	DragDropUploadInit();
-}
+//  
+//    try {
+//        var file_uploader = new window.AjaxUpload('submitbutton',
+//        { action: 'cloud',
+//            name: 'userfile',
+//            title: 'Upload',
+//            onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+//            onComplete: function(file,response) {
+//                $("#file-upload-list").append("Upload complete!");
+//                $('#profile-rotator').spin(false);
+//            }
+//        });
+//    } catch(e) {
+//    }
+    // call initialization file
+    if (window.File && window.FileList && window.FileReader) {
+        DragDropUploadInit();
+    }
 });
 
 //
@@ -98,6 +116,7 @@ function DragDropUploadInit() {
 		// remove submit button
 		submitbutton.hide();
 	}
+    
 
 }
 
@@ -125,8 +144,55 @@ function FileSelectHandler(e) {
           "</strong> size: <strong>" + f.size +
           "</strong> bytes</p>"
         );
+        DragDropUploadFile(f);
 	}
 
 }
+
+// upload  files
+function DragDropUploadFile(file) {
+
+    // Serialize the data in the form
+    //var serializedData = $('#ajax-upload-files').serialize();
+//
+//    $.ajax({
+//      type: "POST",
+//      url: '',
+//      data: serializedData,
+//      success: function(result){
+//        //window.console.log(result);
+//        return false;
+//      }
+//    });
+//    
+
+    var xhr = new XMLHttpRequest();
+    (xhr.upload || xhr).addEventListener('progress', function(e) {
+        var done = e.position || e.loaded
+        var total = e.totalSize || e.total;
+        console.log('xhr progress: ' + Math.round(done/total*100) + '%');
+    });
+    xhr.addEventListener('load', function(e) {
+        //console.log('xhr upload complete', e, this.responseText);
+        console.log('xhr upload complete', e);
+    });
+    xhr.open('post', 'cloud', true);
+	
+    var data = new FormData(document.getElementById("ajax-upload-files"));
+    data.append('file', file);
+    xhr.send(data);
+//
+//	var xhr = new XMLHttpRequest();
+//	if (xhr.upload) {
+//		// start upload
+//        window.console.log("Uploading...");
+//		xhr.open("POST", $("#ajax-upload-files").action, true);
+//		xhr.setRequestHeader("X_FILENAME", file.name);
+//		xhr.send(file);
+//
+//	}
+
+}
+
 
 </script>

@@ -163,7 +163,7 @@ class Plugin extends DAV\ServerPlugin {
      * @return bool
      */
     function httpPOST(RequestInterface $request, ResponseInterface $response) {
-
+			
         $contentType = $request->getHeader('Content-Type');
         list($contentType) = explode(';', $contentType);
         if ($contentType !== 'application/x-www-form-urlencoded' &&
@@ -179,7 +179,7 @@ class Plugin extends DAV\ServerPlugin {
 
         if ($this->server->emit('onBrowserPostAction', [$uri, $postVars['sabreAction'], $postVars])) {
 
-            switch ($postVars['sabreAction']) {
+					switch ($postVars['sabreAction']) {
 
                 case 'mkcol' :
                     if (isset($postVars['name']) && trim($postVars['name'])) {
@@ -221,7 +221,8 @@ class Plugin extends DAV\ServerPlugin {
 
                     if ($_FILES) $file = current($_FILES);
                     else break;
-
+										logger('$_FILES: ' . json_encode($_FILES));
+										logger('$file: ' . json_encode($file));
                     list(, $newName) = URLUtil::splitPath(trim($file['name']));
                     if (isset($postVars['name']) && trim($postVars['name']))
                         $newName = trim($postVars['name']);

@@ -167,6 +167,7 @@ function DragDropUploadFile(file) {
 //    
 
     var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
     (xhr.upload || xhr).addEventListener('progress', function(e) {
         var done = e.position || e.loaded
         var total = e.totalSize || e.total;

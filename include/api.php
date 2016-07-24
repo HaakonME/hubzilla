@@ -2040,6 +2040,7 @@ require_once('include/api_auth.php');
 			return false;
 		}
 		
+// @fixme - update for hubzilla extensible perms using abconfig or find a better way to do it
 		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
 		// This won't work if either of you send your stream to everybody on the network
 		if($qtype == 'friends')

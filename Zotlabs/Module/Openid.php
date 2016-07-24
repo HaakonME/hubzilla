@@ -82,8 +82,8 @@ class Openid extends \Zotlabs\Web\Controller {
 	
 				// no xchan...
 				// create one.
-				// We should probably probe the openid url and figure out if they have any kind of social presence we might be able to 
-				// scrape some identifying info from. 
+				// We should probably probe the openid url and figure out if they have any kind of
+				// social presence we might be able to scrape some identifying info from. 
 	
 				$name = $authid;
 				$url = trim($_REQUEST['openid_identity'],'/');

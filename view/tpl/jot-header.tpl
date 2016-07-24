@@ -164,6 +164,12 @@ function enableOnUser(){
 			});
 		} catch(e) {
 		}
+        
+        
+        // call initialization file
+        if (window.File && window.FileList && window.FileReader) {
+          DragDropUploadInit();
+        }
 	});
 
 	function deleteCheckedItems() {
@@ -446,7 +452,81 @@ function enableOnUser(){
             },
         'json');
     };
-    
+
+    //
+    // initialize
+    function DragDropUploadInit() {
+
+      var filedrag = $("#profile-jot-text");
+
+      // is XHR2 available?
+      var xhr = new XMLHttpRequest();
+      if (xhr.upload) {
+
+        // file drop
+        filedrag.on("dragover", DragDropUploadFileHover);
+        filedrag.on("dragleave", DragDropUploadFileHover);
+        filedrag.on("drop", DragDropUploadFileSelectHandler);
+
+      }
+
+      window.filesToUpload = 0;
+      window.fileUploadsCompleted = 0;
+
+
+    }
+
+    // file drag hover
+    function DragDropUploadFileHover(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      e.target.className = (e.type == "dragover" ? "hover" : "");
+    }
+
+    // file selection
+    function DragDropUploadFileSelectHandler(e) {
+
+      // cancel event and hover styling
+      DragDropUploadFileHover(e);
+
+      // fetch FileList object
+      var files = e.target.files || e.originalEvent.dataTransfer.files;
+      // process all File objects
+      for (var i = 0, f; f = files[i]; i++) {
+        DragDropUploadFile(f, i);
+      }
+
+    }
+
+    // upload  files
+    function DragDropUploadFile(file, idx) {
+
+      window.filesToUpload = window.filesToUpload + 1;
+
+      var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;   // Include the SESSION cookie info for authentication
+      (xhr.upload || xhr).addEventListener('progress', function (e) {
+         $('#profile-rotator').spin('tiny');
+      });
+      xhr.addEventListener('load', function (e) {
+        //console.log('xhr upload complete', e);
+        window.fileUploadsCompleted = window.fileUploadsCompleted + 1;
+        // When all the uploads have completed, refresh the page
+        if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {
+          addeditortext(xhr.responseText);
+          $('#jot-media').val($('#jot-media').val() + xhr.responseText);
+          $('#profile-rotator').spin(false);
+          window.fileUploadsCompleted = window.filesToUpload = 0;
+        }
+      });
+      // POST to the wall_upload endpoint
+      xhr.open('post', '{{$baseurl}}/wall_upload/{{$nickname}}', true);
+
+      var data = new FormData();
+      data.append('userfile', file);
+      xhr.send(data);
+    }
+
 </script>
 
 <script>

@@ -520,7 +520,7 @@ function enableOnUser(){
         }
       });
       // POST to the wall_upload endpoint
-      xhr.open('post', '{{$baseurl}}/wall_upload/{{$nickname}}', true);
+      xhr.open('post', '{{$baseurl}}/wall_attach/{{$nickname}}', true);
 
       var data = new FormData();
       data.append('userfile', file);

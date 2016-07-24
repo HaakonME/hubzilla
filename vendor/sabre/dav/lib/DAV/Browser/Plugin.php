@@ -221,8 +221,7 @@ class Plugin extends DAV\ServerPlugin {
 
                     if ($_FILES) $file = current($_FILES);
                     else break;
-										logger('$_FILES: ' . json_encode($_FILES));
-										logger('$file: ' . json_encode($file));
+										
                     list(, $newName) = URLUtil::splitPath(trim($file['name']));
                     if (isset($postVars['name']) && trim($postVars['name']))
                         $newName = trim($postVars['name']);

@@ -306,7 +306,8 @@ class Browser extends DAV\Browser\Plugin {
 				'$folder_submit' => t('Create'),
 				'$upload_header' => t('Upload file'),
 				'$upload_submit' => t('Upload'),
-				'$quota' => $quota
+				'$quota' => $quota,
+				'$dragdroptext' => t('Drop files here to immediately upload')
 			));
 	}
 

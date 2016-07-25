@@ -23,6 +23,14 @@ class PConfig {
 		if(! array_key_exists($uid, \App::$config))
 			\App::$config[$uid] = array();
 
+		if(! is_array(\App::$config)) {
+			btlogger('App::$config not an array: ' . $uid);
+		}
+
+		if(! is_array(\App::$config[$uid])) {
+			btlogger('App::$config[$uid] not an array: ' . $uid);
+		}
+
 		$r = q("SELECT * FROM pconfig WHERE uid = %d",
 			intval($uid)
 		);

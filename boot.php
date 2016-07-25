@@ -765,6 +765,7 @@ class App {
 	public  static $pdl        = null;            // Comanche page description
 	private static $perms      = null;            // observer permissions
 	private static $widgets    = array();         // widgets for this page
+	public  static $config     = array();         // config cache
 
 	public static  $session    = null;
 	public static  $groups;
@@ -774,7 +775,6 @@ class App {
 	public static  $plugins_admin;
 	public static  $module_loaded = false;
 	public static  $query_string;
-	public static  $config;                       // config cache
 	public static  $page;
 	public static  $profile;
 	public static  $user;

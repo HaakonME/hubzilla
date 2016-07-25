@@ -18,7 +18,7 @@
     <div class="clear"></div>
     <label for="files-upload">{{$upload_header}}</label>
     <div class="clear"></div>
-    <input class="form-group pull-left" id="files-upload" type="file" name="file" style="width: 70%;">
+    <input class="form-group pull-left" id="files-upload" type="file" name="file" multiple="multiple">
     <button class="btn btn-primary btn-sm pull-right" type="submit" value="{{$upload_submit}}">{{$upload_submit}}</button>
   </form>
   <div class="clear"></div>

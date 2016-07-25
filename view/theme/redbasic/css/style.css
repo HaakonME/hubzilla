@@ -106,6 +106,7 @@ input[type="submit"] {
 
 input, optgroup, select, textarea {
 	color: #333;
+	resize: vertical;
 }
 
 pre code {

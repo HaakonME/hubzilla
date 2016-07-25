@@ -9,6 +9,8 @@ require_once('include/photos.php');
 class File_upload extends \Zotlabs\Web\Controller {
 
 	function post() {
+
+		// logger('file upload: ' . print_r($_REQUEST,true));
 	
 		$channel = (($_REQUEST['channick']) ? get_channel_by_nick($_REQUEST['channick']) : null);
 	

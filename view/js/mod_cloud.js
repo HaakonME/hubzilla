@@ -90,9 +90,9 @@ function DragDropUploadFile(file, idx) {
     }
   });
   // POST to the entire cloud path 
-  xhr.open('post', window.location.pathname, true);
+  xhr.open('post', 'file_upload', true);
 
   var data = new FormData(document.getElementById("ajax-upload-files"));
-  data.append('file', file);
+  data.append('userfile', file);
   xhr.send(data);
 }

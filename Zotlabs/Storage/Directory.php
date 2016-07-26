@@ -3,6 +3,7 @@
 namespace Zotlabs\Storage;
 
 use Sabre\DAV;
+use Sabre\HTTP;
 
 /**
  * @brief RedDirectory class.
@@ -159,7 +160,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		list($parent_path, ) = DAV\URLUtil::splitPath($this->red_path);
+		list($parent_path, ) = HTTP\URLUtil::splitPath($this->red_path);
 		$new_path = $parent_path . '/' . $name;
 
 		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND uid = %d",

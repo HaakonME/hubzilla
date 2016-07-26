@@ -93,6 +93,6 @@ function DragDropUploadFile(file, idx) {
   xhr.open('post', window.location.pathname, true);
 
   var data = new FormData(document.getElementById("ajax-upload-files"));
-  data.append('file', file);
+  data.append('file[]', file);
   xhr.send(data);
 }

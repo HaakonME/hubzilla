@@ -70,6 +70,81 @@ class Browser extends DAV\Browser\Plugin {
 	}
 
 	/**
+	 * Extend from parent to add our own listeners
+	 */
+	function initialize(DAV\Server $server) {
+		parent::initialize($server);
+		if ($this->enablePost) {
+			$this->server->on('onBrowserPostAction', [$this, 'cloudPostAction']);
+		}
+	}
+
+	/**
+	 * Handles POST requests for tree operations.
+	 *
+	 * @param string $uri
+	 * @param string $action
+	 * @param array $postVars
+	 * @return boolean false will stop other events in the beforeMethod chain to execute
+	 */
+	function cloudPostAction($uri, $action, $postVars) {
+		switch ($postVars['sabreAction']) {
+			case 'mkcol' :
+				if (isset($postVars['name']) && trim($postVars['name'])) {
+					// Using basename() because we won't allow slashes
+					list(, $folderName) = \Sabre\HTTP\URLUtil::splitPath(trim($postVars['name']));
+
+					if (isset($postVars['resourceType'])) {
+						$resourceType = explode(',', $postVars['resourceType']);
+					} else {
+						$resourceType = ['{DAV:}collection'];
+					}
+
+					$properties = [];
+					foreach ($postVars as $varName => $varValue) {
+						// Any _POST variable in clark notation is treated
+						// like a property.
+						if ($varName[0] === '{') {
+							// PHP will convert any dots to underscores.
+							// This leaves us with no way to differentiate
+							// the two.
+							// Therefore we replace the string *DOT* with a
+							// real dot. * is not allowed in uris so we
+							// should be good.
+							$varName = str_replace('*DOT*', '.', $varName);
+							$properties[$varName] = $varValue;
+						}
+					}
+
+					$mkCol = new DAV\MkCol(
+						$resourceType,
+						$properties
+					);
+					$this->server->createCollection($uri . '/' . $folderName, $mkCol);
+				}
+				break;
+
+			case 'put' :
+
+				if ($_FILES)
+					$file = current($_FILES);
+				else
+					break;
+
+				for ($i = 0; $i < count($file['name']); $i++) {
+					list(, $newName) = \Sabre\HTTP\URLUtil::splitPath(trim($file['name'][$i]));
+
+					if (is_uploaded_file($file['tmp_name'][$i])) {
+						$this->server->createFile($uri . '/' . $newName, fopen($file['tmp_name'][$i], 'r'));
+					}
+				}
+				break;
+
+		}
+		return false;
+	}
+
+	/**
 	 * @brief Creates the directory listing for the given path.
 	 *
 	 * @param string $path which should be displayed

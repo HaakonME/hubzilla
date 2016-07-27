@@ -8,6 +8,9 @@ namespace Zotlabs\Lib;
 	 
 class Cache {
 	public static function get($key) {
+
+		$key = substr($key,0,254);
+
 		$r = q("SELECT v FROM cache WHERE k = '%s' limit 1",
 			dbesc($key)
 		);
@@ -18,6 +21,8 @@ class Cache {
 	}
 		
 	public static function set($key,$value) {
+
+		$key = substr($key,0,254);
 
 		$r = q("SELECT * FROM cache WHERE k = '%s' limit 1",
 			dbesc($key)

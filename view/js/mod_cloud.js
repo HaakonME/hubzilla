@@ -88,13 +88,13 @@ function UploadFileSelectHandler(e) {
 
 function prepareHtml(f, i) {
 	$("#cloud-index tr:nth-child(2)").after(
-		'<tr class="new-upload">' +
+		'<tr id="new-upload-' + i + '" class="new-upload">' +
 		'<td><i class="fa ' + getIconFromType(f.type) + '" title="' + f.type + '"></i></td>' +
 		'<td>' + f.name + '</td>' +
 		'<td id="upload-progress-' + i + '"></td><td></td><td></td><td></td><td></td>' +
 		'<td class="hidden-xs">' + formatSizeUnits(f.size) + '</td><td class="hidden-xs"></td>' +
 		'</tr>' +
-		'<tr class="new-upload">' +
+		'<tr id="new-upload-progress-bar-' + i + '"class="new-upload">' +
 		'<td id="upload-progress-bar-' + i + '" colspan="9" class="upload-progress-bar"></td>' +
 		'</tr>'
 	);
@@ -134,6 +134,7 @@ function getIconFromType(type) {
 		'application/x-rar-compressed': 'fa-file-archive-o',
 		//Audio
 		'audio/mpeg': 'fa-file-audio-o',
+		'audio/mp3': 'fa-file-audio-o', //webkit browsers need that
 		'audio/wav': 'fa-file-audio-o',
 		'application/ogg': 'fa-file-audio-o',
 		'audio/ogg': 'fa-file-audio-o',
@@ -158,32 +159,47 @@ function getIconFromType(type) {
 // upload  files
 function UploadFile(file, idx) {
 
-	window.filesToUpload = window.filesToUpload + 1;
+	window.filesToUpload = window.filesToUpload + 1
 
 	var xhr = new XMLHttpRequest();
 
 	xhr.withCredentials = true;   // Include the SESSION cookie info for authentication
 
 	(xhr.upload || xhr).addEventListener('progress', function (e) {
+
 		var done = e.position || e.loaded;
 		var total = e.totalSize || e.total;
 		// Dynamically update the percentage complete displayed in the file upload list
 		$('#upload-progress-' + idx).html(Math.round(done / total * 100) + '%');
 		$('#upload-progress-bar-' + idx).css('background-size', Math.round(done / total * 100) + '%');
+
+		if(done == total) {
+			$('#upload-progress-' + idx).html('Processing...');
+		}
+
 	});
 
+
 	xhr.addEventListener('load', function (e) {
+		//we could possibly turn the filenames to real links here and add the delete and edit buttons to avoid page reload...
+		$('#upload-progress-' + idx).html('Ready!');
 
 		//console.log('xhr upload complete', e);
 		window.fileUploadsCompleted = window.fileUploadsCompleted + 1;
 
 		// When all the uploads have completed, refresh the page
 		if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {
+
 			window.fileUploadsCompleted = window.filesToUpload = 0;
 
 			// After uploads complete, refresh browser window to display new files
 			window.location.href = window.location.href;
 		}
+	});
+
+
+	xhr.addEventListener('error', function (e) {
+		$('#upload-progress-' + idx).html('<span style="color: red;">ERROR</span>');
 	});
 
 	// POST to the entire cloud path 

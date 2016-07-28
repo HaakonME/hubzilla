@@ -22,6 +22,7 @@ function UploadInit() {
 	if (xhr.upload) {
 
 		// file select
+		fileselect.attr("multiple", 'multiple');
 		fileselect.on("change", UploadFileSelectHandler);
 
 		// file submit
@@ -64,27 +65,30 @@ function DragDropUploadFileSelectHandler(e) {
 // file selection via input
 function UploadFileSelectHandler(e) {
 	// fetch FileList object
-	if(e.type === 'click') {
+	if(e.target.id === 'upload-submit') {
 		e.preventDefault();
 		var files = e.data[0].files;
 	}
-	else {
+	if(e.target.id === 'files-upload') {
+		$('.new-upload').remove();
 		var files = e.target.files;
 	}
 
-	$('.new-upload').remove();
+
 
 	// process all File objects
 	for (var i = 0, f; f = files[i]; i++) {
-		prepareHtml(f, i);
-		if(e.type === 'click')
+		if(e.target.id === 'files-upload')
+			prepareHtml(f, i);
+		if(e.target.id === 'upload-submit') {
 			UploadFile(f, i);
+		}
 	}
 }
 
 function prepareHtml(f, i) {
 	$("#cloud-index tr:nth-child(2)").after(
-		'<tr id=\"new-upload-' + i + '\" class=\"new-upload\" style=\"background: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOM2RFTDwAE2QHxFMHIIwAAAABJRU5ErkJggg==\') repeat-y; background-size: 3px;\">' +
+		'<tr class=\"new-upload\">' +
 		'<td><i class=\"fa ' + getIconFromType(f.type) + '\" title=\"' + f.type + '\"></i></td>' +
 		'<td>' + f.name + '</td>' +
 		'<td id=\"upload-progress-' + i + '\"></td><td></td><td></td><td></td><td></td>' +
@@ -182,8 +186,8 @@ function UploadFile(file, idx) {
 	// POST to the entire cloud path 
 	xhr.open('post', window.location.pathname, true);
 
-	var data = new FormData(document.getElementById("ajax-upload-files"));
-
+	var data = new FormData();
+	data.append('sabreAction', 'put');
 	data.append('file', file);
 
 	xhr.send(data);

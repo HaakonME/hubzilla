@@ -2,7 +2,6 @@
 namespace Zotlabs\Module;
 
 
-
 class Rmagic extends \Zotlabs\Web\Controller {
 
 	function init() {

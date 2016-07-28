@@ -903,6 +903,7 @@ CREATE TABLE "pconfig" (
   PRIMARY KEY ("id"),
   UNIQUE ("uid","cat","k")
 );
+
 CREATE TABLE "photo" (
   "id" serial  NOT NULL,
   "aid" bigint  NOT NULL DEFAULT '0',

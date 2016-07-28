@@ -1,4 +1,4 @@
-<div class="section-content-wrapper-np">
+<div id="cloud-drag-area" class="section-content-wrapper-np">
 	<table id="cloud-index">
 		<tr>
 			<th width="1%"></th>

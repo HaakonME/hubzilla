@@ -920,6 +920,7 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
   UNIQUE KEY `access` (`uid`,`cat`,`k`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',

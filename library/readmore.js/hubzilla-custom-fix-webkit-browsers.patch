@@ -1,0 +1,13 @@
+diff --git a/library/readmore.js/readmore.js b/library/readmore.js/readmore.js
+index 34a624e..51222ce 100644
+--- a/library/readmore.js/readmore.js
++++ b/library/readmore.js/readmore.js
+@@ -246,7 +246,7 @@
+           collapsedHeight = $element.data('collapsedHeight');
+ 
+       if ($element.height() <= collapsedHeight) {
+-        newHeight = $element.data('expandedHeight') + 'px';
++        newHeight = 100 + '%';
+         newLink = 'lessLink';
+         expanded = true;
+       }

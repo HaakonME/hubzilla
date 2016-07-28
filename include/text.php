@@ -1284,9 +1284,9 @@ function unobscure(&$item) {
 	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode($item['title'],true),$key);
 		if($item['body'])
-			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode($item['body'],true),$key);
 		if(get_config('system','item_cache')) {
 			q("update item set title = '%s', body = '%s', item_obscured = 0 where id = %d",
 				dbesc($item['title']),
@@ -1309,7 +1309,7 @@ function unobscure_mail(&$item) {
 
 function theme_attachments(&$item) {
 
-	$arr = json_decode_plus($item['attach']);
+	$arr = json_decode($item['attach'],true);
 	if(is_array($arr) && count($arr)) {
 		$attaches = array();
 		foreach($arr as $r) {
@@ -2212,20 +2212,12 @@ function jindent($json) {
 	return $result;
 }
 
-
-function json_decode_plus($s) {
-	$x = json_decode($s,true);
-	if(! $x)
-		$x = json_decode(str_replace(array('\\"','\\\\'),array('"','\\'),$s),true);
-
-	return $x;
-}
-
 /**
  * @brief Creates navigation menu for webpage, layout, blocks, menu sites.
  *
  * @return string
  */
+
 function design_tools() {
 
 	$channel  = App::get_channel();
@@ -2616,32 +2608,33 @@ function getIconFromType($type) {
 		'application/octet-stream' => 'fa-file-o',
 		//Text
 		'text/plain' => 'fa-file-text-o',
-		'application/msword' => 'fa-file-text-o',
-		'application/pdf' => 'fa-file-text-o',
-		'application/vnd.oasis.opendocument.text' => 'fa-file-text-o',
+		'application/msword' => 'fa-file-word-o',
+		'application/pdf' => 'fa-file-pdf-o',
+		'application/vnd.oasis.opendocument.text' => 'fa-file-word-o',
 		'application/epub+zip' => 'fa-book',
 		//Spreadsheet
-		'application/vnd.oasis.opendocument.spreadsheet' => 'fa-table',
-		'application/vnd.ms-excel' => 'fa-table',
+		'application/vnd.oasis.opendocument.spreadsheet' => 'fa-file-excel-o',
+		'application/vnd.ms-excel' => 'fa-file-excel-o',
 		//Image
 		'image/jpeg' => 'fa-picture-o',
 		'image/png' => 'fa-picture-o',
 		'image/gif' => 'fa-picture-o',
 		'image/svg+xml' => 'fa-picture-o',
 		//Archive
-		'application/zip' => 'fa-archive',
-		'application/x-rar-compressed' => 'fa-archive',
+		'application/zip' => 'fa-file-archive-o',
+		'application/x-rar-compressed' => 'fa-file-archive-o',
 		//Audio
-		'audio/mpeg' => 'fa-music',
-		'audio/wav' => 'fa-music',
-		'application/ogg' => 'fa-music',
-		'audio/ogg' => 'fa-music',
-		'audio/webm' => 'fa-music',
-		'audio/mp4' => 'fa-music',
+		'audio/mpeg' => 'fa-file-audio-o',
+		'audio/wav' => 'fa-file-audio-o',
+		'application/ogg' => 'fa-file-audio-o',
+		'audio/ogg' => 'fa-file-audio-o',
+		'audio/webm' => 'fa-file-audio-o',
+		'audio/mp4' => 'fa-file-audio-o',
 		//Video
-		'video/quicktime' => 'fa-film',
-		'video/webm' => 'fa-film',
-		'video/mp4' => 'fa-film'
+		'video/quicktime' => 'fa-file-video-o',
+		'video/webm' => 'fa-file-video-o',
+		'video/mp4' => 'fa-file-video-o',
+		'video/x-matroska' => 'fa-file-video-o'
 	);
 
 	$iconFromType = 'fa-file-o';

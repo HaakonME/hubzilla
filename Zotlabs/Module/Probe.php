@@ -23,8 +23,6 @@ class Probe extends \Zotlabs\Web\Controller {
 			
 			$j = \Zotlabs\Zot\Finger::run($addr,$channel,false);
 
-			//			$res = zot_finger($addr,$channel,false);
-
 			$o .= '<pre>';
 			if(! $j['success']) {
 				$o .= sprintf( t('Fetching URL returns error: %1$s'),$res['error'] . "\r\n\r\n");

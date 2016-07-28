@@ -219,7 +219,7 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	}
 
 	/**
-	 * @brief Sets the timezone from the channel in RedBasicAuth.
+	 * @brief Sets the timezone from the channel in BasicAuth.
 	 *
 	 * Set in mod/cloud.php if the channel has a timezone set.
 	 *

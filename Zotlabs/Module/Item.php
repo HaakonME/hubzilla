@@ -318,9 +318,11 @@ class Item extends \Zotlabs\Web\Controller {
 		}
 	
 		$acl = new \Zotlabs\Access\AccessList($channel);
+
+		$view_policy = \Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream');	
+		$comment_policy = \Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments');
 	
-			
-		$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+		$public_policy = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($view_policy,true));
 		if($webpage)
 			$public_policy = '';
 		if($public_policy)
@@ -528,11 +530,11 @@ class Item extends \Zotlabs\Web\Controller {
 	
 	
 			if((! $parent) && (get_pconfig($profile_uid,'system','tagifonlyrecip')) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
-				$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+				$x = q("select abook_id, abconfig.v from abook left join abconfig on abook_xchan = abconfig.xchan and abook_channel = abconfig.chan and cat= 'their_perms' and abconfig.k = 'tag_deliver' and abconfig.v = 1 and abook_xchan = '%s' and abook_channel = %d limit 1",
 					dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
 					intval($profile_uid)
 				);
-				if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
+				if($x)
 					$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
 			}
 	
@@ -812,7 +814,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		$datarray['layout_mid']     = $layout_mid;
 		$datarray['public_policy']  = $public_policy;
-		$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
+		$datarray['comment_policy'] = map_scope($comment_policy); 
 		$datarray['term']           = $post_tags;
 		$datarray['plink']          = $plink;
 		$datarray['route']          = $route;

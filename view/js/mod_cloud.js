@@ -159,7 +159,7 @@ function getIconFromType(type) {
 // upload  files
 function UploadFile(file, idx) {
 
-	window.filesToUpload = window.filesToUpload + 1
+	window.filesToUpload = window.filesToUpload + 1;
 
 	var xhr = new XMLHttpRequest();
 

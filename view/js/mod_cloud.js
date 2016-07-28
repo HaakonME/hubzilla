@@ -94,7 +94,7 @@ function prepareHtml(f, i) {
 		'<td id="upload-progress-' + i + '"></td><td></td><td></td><td></td><td></td>' +
 		'<td class="hidden-xs">' + formatSizeUnits(f.size) + '</td><td class="hidden-xs"></td>' +
 		'</tr>' +
-		'<tr id="new-upload-progress-bar-' + i + '"class="new-upload">' +
+		'<tr id="new-upload-progress-bar-' + i + '" class="new-upload">' +
 		'<td id="upload-progress-bar-' + i + '" colspan="9" class="upload-progress-bar"></td>' +
 		'</tr>'
 	);

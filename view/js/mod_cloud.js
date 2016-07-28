@@ -84,7 +84,7 @@ function UploadFileSelectHandler(e) {
 
 function prepareHtml(f, i) {
 	$("#cloud-index tr:nth-child(2)").after(
-		'<tr id=\"new-upload-' + i + '\" class=\"new-upload\" style=\"background: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOM2RHTAwAE5gH+VJ1dlgAAAABJRU5ErkJggg==\') repeat-y; background-size: 0%;\">' +
+		'<tr id=\"new-upload-' + i + '\" class=\"new-upload\" style=\"background: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOM2RFTDwAE2QHxFMHIIwAAAABJRU5ErkJggg==\') repeat-y; background-size: 3px;\">' +
 		'<td><i class=\"fa ' + getIconFromType(f.type) + '\" title=\"' + f.type + '\"></i></td>' +
 		'<td>' + f.name + '</td>' +
 		'<td id=\"upload-progress-' + i + '\"></td><td></td><td></td><td></td><td></td>' +

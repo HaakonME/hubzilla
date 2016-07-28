@@ -13,7 +13,7 @@ require_once('include/api_auth.php');
 
 	/*
 	 *
-	 * Hubzilla API. Loosely based on and possibly compatible with Twitter-Like (v1.0) API but all similarities end there. 
+	 * Red API. Loosely based on and possibly compatible with a Twitter-Like API but all similarities end there. 
 	 *
 	 */
 

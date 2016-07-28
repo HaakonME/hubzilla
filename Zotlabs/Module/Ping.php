@@ -173,7 +173,7 @@ class Ping extends \Zotlabs\Web\Controller {
 					);
 					break;
 				case 'all_events':
-					$r = q("update event set `dismissed` = 1 where `dismissed` = 0 and uid = %d AND dtstart < '%s' AND dtstart > '%s' ",
+					$r = q("update event set `dimissed` = 1 where `dismissed` = 0 and uid = %d AND dtstart < '%s' AND dtstart > '%s' ",
 						intval(local_channel()),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + ' . intval($evdays) . ' days')),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))

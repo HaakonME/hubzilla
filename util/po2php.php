@@ -1,6 +1,5 @@
 <?php
 
-
 function po2php_run($argc,$argv) {
 
 	if ($argc < 2) {

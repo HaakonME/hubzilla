@@ -88,11 +88,14 @@ function UploadFileSelectHandler(e) {
 
 function prepareHtml(f, i) {
 	$("#cloud-index tr:nth-child(2)").after(
-		'<tr class=\"new-upload\">' +
-		'<td><i class=\"fa ' + getIconFromType(f.type) + '\" title=\"' + f.type + '\"></i></td>' +
+		'<tr class="new-upload">' +
+		'<td><i class="fa ' + getIconFromType(f.type) + '" title="' + f.type + '"></i></td>' +
 		'<td>' + f.name + '</td>' +
-		'<td id=\"upload-progress-' + i + '\"></td><td></td><td></td><td></td><td></td>' +
-		'<td class=\"hidden-xs\">' + formatSizeUnits(f.size) + '</td><td class=\"hidden-xs\"></td>' +
+		'<td id="upload-progress-' + i + '"></td><td></td><td></td><td></td><td></td>' +
+		'<td class="hidden-xs">' + formatSizeUnits(f.size) + '</td><td class="hidden-xs"></td>' +
+		'</tr>' +
+		'<tr class="new-upload">' +
+		'<td id="upload-progress-bar-' + i + '" colspan="9" class="upload-progress-bar"></td>' +
 		'</tr>'
 	);
 }
@@ -166,7 +169,7 @@ function UploadFile(file, idx) {
 		var total = e.totalSize || e.total;
 		// Dynamically update the percentage complete displayed in the file upload list
 		$('#upload-progress-' + idx).html(Math.round(done / total * 100) + '%');
-		$('#new-upload-' + idx).css('background-size', Math.round(done / total * 100) + '%');
+		$('#upload-progress-bar-' + idx).css('background-size', Math.round(done / total * 100) + '%');
 	});
 
 	xhr.addEventListener('load', function (e) {

@@ -84,12 +84,12 @@ function UploadFileSelectHandler(e) {
 
 function prepareHtml(f, i) {
 	$("#cloud-index tr:nth-child(2)").after(
-		"<tr class='new-upload'>" +
-		"<td><i class='fa " + getIconFromType(f.type) + "' title='" + f.type + "'></i></td>" +
-		"<td>" + f.name + "</td>" +
-		"<td id='upload-progress-" + i + "'></td><td></td><td></td><td></td><td></td>" +
-		"<td class='hiiden-xs'>" + formatSizeUnits(f.size) + "</td><td class='hiiden-xs'></td>" +
-		"</tr>"
+		'<tr id=\"new-upload-' + i + '\" class=\"new-upload\" style=\"background: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOM2RHTAwAE5gH+VJ1dlgAAAABJRU5ErkJggg==\') repeat-y; background-size: 0%;\">' +
+		'<td><i class=\"fa ' + getIconFromType(f.type) + '\" title=\"' + f.type + '\"></i></td>' +
+		'<td>' + f.name + '</td>' +
+		'<td id=\"upload-progress-' + i + '\"></td><td></td><td></td><td></td><td></td>' +
+		'<td class=\"hidden-xs\">' + formatSizeUnits(f.size) + '</td><td class=\"hidden-xs\"></td>' +
+		'</tr>'
 	);
 }
 
@@ -162,6 +162,7 @@ function UploadFile(file, idx) {
 		var total = e.totalSize || e.total;
 		// Dynamically update the percentage complete displayed in the file upload list
 		$('#upload-progress-' + idx).html(Math.round(done / total * 100) + '%');
+		$('#new-upload-' + idx).css('background-size', Math.round(done / total * 100) + '%');
 	});
 
 	xhr.addEventListener('load', function (e) {

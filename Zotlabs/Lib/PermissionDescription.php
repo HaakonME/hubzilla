@@ -78,13 +78,22 @@ class PermissionDescription  {
 
 		$result = null;
 
-		$global_perms = \Zotlabs\Access\Permissions::Perms();
+		$global_perms = get_perms();
 
 		if (array_key_exists($permname, $global_perms)) {
 
-			$channelPerm = \Zotlabs\Access\PermissionLimits::Get(\App::$channel['channel_id'],$permname);
+			$permDetails = $global_perms[$permname];
 
-			$result = new PermissionDescription('', $channelPerm);
+			// It should be OK to always just read the permissions from App::$channel
+			//
+			// App::$profile is a union of channel and profile fields.
+			// The distinction is basically that App::$profile is pointing to the resource
+			// being observed. App::$channel is referring to the current logged-in channel
+			// member (if this is a local channel) e.g. the observer. We only show the ACL
+			// widget to the page owner (observer and observed are the same) so in that case
+			// I believe either may be safely used here.
+			$channelPerm = \App::$channel[$permDetails[0]];
+			$result = new PermissionDescription($permDetails[1], $channelPerm);
 		} else {
 			// The acl dialog can handle null arguments, but it shouldn't happen
 			logger('null PermissionDescription from unknown global permission: ' . $permname ,LOGGER_DEBUG, LOG_ERROR);

@@ -74,7 +74,6 @@ function z_mime_content_type($filename) {
 //	'webm' => 'audio/webm',
 	'mp4' => 'video/mp4',
 //	'mp4' => 'audio/mp4',
-	'mkv' => 'video/x-matroska',
 
 	// adobe
 	'pdf' => 'application/pdf',

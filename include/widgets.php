@@ -1356,14 +1356,9 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	/**
-	 * We used to try and find public forums with custom permissions by checking to see if
-	 * send_stream was false and tag_deliver was true. However with the newer extensible 
-	 * permissions infrastructure this makes for a very complicated query. Now we're only
-	 * checking channels that report themselves specifically as pubforums
-	 */
-
-	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where xchan_pubforum = 1 and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
+	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
+		intval(PERMS_W_TAGWALL),
+		intval(PERMS_W_STREAM),
 		intval(local_channel())
 	);
 	if(! $r1)

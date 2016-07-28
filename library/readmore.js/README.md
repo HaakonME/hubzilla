@@ -9,22 +9,16 @@ Readmore.js is tested with—and supported on—all versions of jQuery greater t
 
 ## Install
 
-Install Readmore.js with npm:
+Install Readmore.js with Bower:
 
 ```
-$ npm install readmore-js
+$ bower install readmore
 ```
 
 Then include it in your HTML:
 
 ```html
-<script src="/node_modules/readmore-js/readmore.min.js"></script>
-```
-
-Or, using Webpack or Browserify:
-
-```javascript
-require('readmore-js');
+<script src="/bower_components/readmore/readmore.min.js"></script>
 ```
 
 
@@ -55,22 +49,16 @@ $('article').readmore({
 * `startOpen: false` do not immediately truncate, start in the fully opened position
 * `beforeToggle: function() {}` called after a more or less link is clicked, but *before* the block is collapsed or expanded
 * `afterToggle: function() {}` called *after* the block is collapsed or expanded
-* `blockProcessed: function() {}` called once per block during initilization after Readmore.js has processed the block.
 
 If the element has a `max-height` CSS property, Readmore.js will use that value rather than the value of the `collapsedHeight` option.
 
 ### The callbacks:
 
-The `beforeToggle` and `afterToggle` callbacks both receive the same arguments: `trigger`, `element`, and `expanded`.
+The callback functions, `beforeToggle` and `afterToggle`, both receive the same arguments: `trigger`, `element`, and `expanded`.
 
 * `trigger`: the "Read more" or "Close" element that was clicked
 * `element`: the block that is being collapsed or expanded
 * `expanded`: Boolean; `true` means the block is expanded
-
-The `blockProcessed` callback receives `element` and `collapsable`.
-
-* `element`: the block that has just been processed
-* `collapsable`: Boolean; `false` means the block was shorter than the specified minimum `collapsedHeight`--the block will not have a "Read more" link
 
 #### Callback example:
 
@@ -178,6 +166,6 @@ $ npm install
 Which will install the necessary development dependencies. Then, to build the minified script:
 
 ```
-$ npm run build
+$ gulp compress
 ```
 

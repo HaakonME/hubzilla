@@ -659,7 +659,7 @@ function collapseHeight() {
 	var position = $(window).scrollTop();
 
 	$(".wall-item-content, .directory-collapse").each(function() {
-		var orgHeight = $(this).outerHeight(true);
+		var orgHeight = parseInt($(this).css('height'));
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
 
@@ -679,7 +679,7 @@ function collapseHeight() {
 					beforeToggle: function(trigger, element, expanded) {
 						if(expanded) {
 							if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
-								$(window).scrollTop($(window).scrollTop() - ($(element).outerHeight(true) - divmore_height));
+								$(window).scrollTop($(window).scrollTop() - (orgHeight - divmore_height));
 							}
 						}
 					}

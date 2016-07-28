@@ -8,7 +8,6 @@ namespace Zotlabs\Module;
 require_once('include/zot.php');
 require_once('include/channel.php');
 require_once('include/import.php');
-require_once('include/perm_upgrade.php');
 
 
 
@@ -340,8 +339,6 @@ class Import extends \Zotlabs\Web\Controller {
 			$abooks = $data['abook'];
 			if($abooks) {
 				foreach($abooks as $abook) {
-
-					$abook_copy = $abook;
 	
 					$abconfig = null;
 					if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && count($abook['abconfig']))
@@ -350,10 +347,6 @@ class Import extends \Zotlabs\Web\Controller {
 					unset($abook['abook_id']);
 					unset($abook['abook_rating']);
 					unset($abook['abook_rating_text']);
-					unset($abook['abconfig']);
-					unset($abook['abook_their_perms']);
-					unset($abook['abook_my_perms']);
-
 					$abook['abook_account'] = $account_id;
 					$abook['abook_channel'] = $channel['channel_id'];
 					if(! array_key_exists('abook_blocked',$abook)) {
@@ -392,8 +385,6 @@ class Import extends \Zotlabs\Web\Controller {
 					$friends ++;
 					if(intval($abook['abook_feed']))
 						$feeds ++;
-
-					translate_abook_perms_inbound($channel,$abook_copy);
 	
 					if($abconfig) {
 						// @fixme does not handle sync of del_abconfig

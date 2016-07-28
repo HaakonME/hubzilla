@@ -152,7 +152,6 @@ class Router {
 				// pretend this is a module so it will initialise the theme
 				\App::$module = '404';
 				\App::$module_loaded = true;
-				\App::$error = true;
 			}
 		}
 	}

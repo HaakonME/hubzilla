@@ -99,7 +99,7 @@ function localize_item(&$item){
 		if(intval($item['item_thread_top']))
 			return;	
 
-		$obj = json_decode($item['obj'],true);
+		$obj = json_decode_plus($item['obj']);
 		if((! $obj) && ($item['obj'])) {
 			logger('localize_item: failed to decode object: ' . print_r($item['obj'],true));
 		}
@@ -186,7 +186,7 @@ function localize_item(&$item){
 		$Alink = $item['author']['xchan_url'];
 
 
-		$obj= json_decode($item['obj'],true);
+		$obj= json_decode_plus($item['obj']);
 		
 		$Blink = $Bphoto = '';
 
@@ -219,7 +219,7 @@ function localize_item(&$item){
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
 
-		$obj= json_decode($item['obj'],true);
+		$obj= json_decode_plus($item['obj']);
 
 		$Blink = $Bphoto = '';
 

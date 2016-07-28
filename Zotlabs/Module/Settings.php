@@ -21,7 +21,10 @@ class Settings extends \Zotlabs\Web\Controller {
 			// We are setting these values - don't use the argc(), argv() functions here
 			\App::$argc = 2;
 			\App::$argv[] = 'channel';
-		}	
+		}
+	
+	
+	
 	}
 	
 	
@@ -35,7 +38,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 		$channel = \App::get_channel();
 	
-		// logger('mod_settings: ' . print_r($_REQUEST,true));
+		 logger('mod_settings: ' . print_r($_REQUEST,true));
 	
 	
 		if((argc() > 1) && (argv(1) === 'oauth') && x($_POST,'remove')){
@@ -360,10 +363,10 @@ class Settings extends \Zotlabs\Web\Controller {
 					intval(local_channel())
 				);	
 	
-				$global_perms = \Zotlabs\Access\Permissions::Perms();
+				$global_perms = get_perms();
 	
 				foreach($global_perms as $k => $v) {
-					\Zotlabs\Access\PermissionLimits::Set(local_channel(),$k,intval($_POST[$k]));
+					$set_perms .= ', ' . $v[0] . ' = ' . intval($_POST[$k]) . ' ';
 				}
 				$acl = new \Zotlabs\Access\AccessList($channel);
 				$acl->set_from_array($_POST);
@@ -379,7 +382,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				);
 			}
 		    else {
-			   	$role_permissions = \Zotlabs\Access\PermissionRoles::role_perms($_POST['permissions_role']);
+			   	$role_permissions = get_role_perms($_POST['permissions_role']);
 				if(! $role_permissions) {
 					notice('Permissions category could not be found.');
 					return;
@@ -419,24 +422,19 @@ class Settings extends \Zotlabs\Web\Controller {
 					);
 				}
 	
-				$x = \Zotlabs\Access\Permissions::FilledPerms($role_permissions['perms_connect']);
-				foreach($x as $k => $v) {
-					set_abconfig(local_channel(),$channel['channel_hash'],'my_perms',$k, $v);
-					if($role_permissions['perms_auto']) {
-						set_pconfig(local_channel(),'autoperms',$k,$v);
+				$r = q("update abook set abook_my_perms  = %d where abook_channel = %d and abook_self = 1",
+					intval((array_key_exists('perms_accept',$role_permissions)) ? $role_permissions['perms_accept'] : 0),
+					intval(local_channel())
+				);
+				set_pconfig(local_channel(),'system','autoperms',(($role_permissions['perms_auto']) ? intval($role_permissions['perms_accept']) : 0));
+	
+				foreach($role_permissions as $p => $v) {
+					if(strpos($p,'channel_') !== false) {
+						$set_perms .= ', ' . $p . ' = ' . intval($v) . ' ';
 					}
-					else {
-						del_pconfig(local_channel(),'autoperms',$k);
+					if($p === 'directory_publish') {
+						$publish = intval($v);
 					}
-				}	
-
-				if($role_permissions['limits']) {
-					foreach($role_permissions['limits'] as $k => $v) {
-						\Zotlabs\Access\PermissionLimits::Set(local_channel(),$k,$v);
-					}
-				}
-				if(array_key_exists('directory_publish',$role_permissions)) {
-					$publish = intval($role_permissions['directory_publish']);
 				}
 			}
 	
@@ -965,7 +963,11 @@ class Settings extends \Zotlabs\Web\Controller {
 			
 			return $o;
 		}
-			
+		
+		
+	
+	
+	
 		if(argv(1) === 'channel') {
 	
 			require_once('include/acl_selectors.php');
@@ -982,8 +984,9 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 			$channel = \App::get_channel();
 	
-			$global_perms = \Zotlabs\Access\Permissions::Perms();
-
+	
+			$global_perms = get_perms();
+	
 			$permiss = array();
 	
 			$perm_opts = array(
@@ -997,18 +1000,19 @@ class Settings extends \Zotlabs\Web\Controller {
 				array( t('Anybody on the internet'), PERMS_PUBLIC)
 			);
 	
-			$limits = \Zotlabs\Access\PermissionLimits::Get(local_channel());
 	
 			foreach($global_perms as $k => $perm) {
 				$options = array();
 				foreach($perm_opts as $opt) {
+					if((! $perm[2]) && $opt[1] == PERMS_PUBLIC)
+						continue;
 					$options[$opt[1]] = $opt[0];
 				}
-				$permiss[] = array($k,$perm,$limits[$k],'',$options);			
+				$permiss[] = array($k,$perm[3],$channel[$perm[0]],$perm[4],$options);			
 			}
 	
 	
-			//logger('permiss: ' . print_r($permiss,true));
+	//		logger('permiss: ' . print_r($permiss,true));
 	
 	
 	

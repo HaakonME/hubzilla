@@ -511,10 +511,10 @@ function enableOnUser(){
       xhr.addEventListener('load', function (e) {
         //console.log('xhr upload complete', e);
         window.fileUploadsCompleted = window.fileUploadsCompleted + 1;
+		addeditortext(xhr.responseText);
+		$('#jot-media').val($('#jot-media').val() + xhr.responseText);
         // When all the uploads have completed, refresh the page
-        if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {
-          addeditortext(xhr.responseText);
-          $('#jot-media').val($('#jot-media').val() + xhr.responseText);
+        if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {  
           $('#profile-rotator').spin(false);
           window.fileUploadsCompleted = window.filesToUpload = 0;
         }

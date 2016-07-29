@@ -5,6 +5,7 @@
 nav .badge {
 	position: relative;
 	top: -49px;
+	left: 2px;
 	float: left;
 	font-size: 10px;
 	line-height: 20px;
@@ -59,7 +60,8 @@ aside .nav-pills > li > a,
 	padding: 6px 10px;
 }
 
-.wall-item-tools .dropdown-menu {
+.wall-item-tools .dropdown-menu,
+.section-title-wrapper .dropdown-menu {
 	min-width: auto;
 }
 

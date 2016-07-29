@@ -219,7 +219,7 @@ class Browser extends DAV\Browser\Plugin {
 
 		$output = '';
 		if ($this->enablePost) {
-			$this->server->emit('onHTMLActionsPanel', array($parent, &$output));
+			$this->server->emit('onHTMLActionsPanel', array($parent, &$output, $path));
 		}
 
 		$html .= replace_macros(get_markup_template('cloud.tpl'), array(
@@ -266,7 +266,7 @@ class Browser extends DAV\Browser\Plugin {
 	 * @param \Sabre\DAV\INode $node
 	 * @param string &$output
 	 */
-	public function htmlActionsPanel(DAV\INode $node, &$output) {
+	public function htmlActionsPanel(DAV\INode $node, &$output, $path) {
 		if (! $node instanceof DAV\ICollection)
 			return;
 

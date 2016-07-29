@@ -33,8 +33,9 @@ class Apps {
 		$files = glob('addon/*/*.apd');
 		if($files) {
 			foreach($files as $f) {
-				$n = basename($f,'.apd');
-				if(plugin_is_installed($n)) {
+				$path = explode('/',$f);
+				$plugin = $path[1];
+				if(plugin_is_installed($plugin)) {
 					$x = self::parse_app_description($f,$translate);
 					if($x) {
 						$ret[] = $x;

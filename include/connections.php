@@ -283,18 +283,30 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 		Zotlabs\Daemon\Master::Summon(array('Notifier','purge_all',$channel_id));
 	}
 
+
+	$r = q("select * from iconfig left join item on item.id = iconfig.iid
+		where item.uid = %d",
+		intval($channel_id)
+	);
+	if($r) {
+		foreach($r as $rr) {
+			q("delete from iconfig where iid = %d",
+				intval($rr['iid'])
+			);
+		}
+	}
+
+
 	q("DELETE FROM `groups` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `event` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `item` WHERE `uid` = %d", intval($channel_id));
-	q("DELETE FROM `item_id` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `mail` WHERE `channel_id` = %d", intval($channel_id));
 	q("DELETE FROM `notify` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `photo` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `attach` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `profile` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($channel_id));
-	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
 
 	// @FIXME At this stage we need to remove the file resources located under /store/$nickname
 

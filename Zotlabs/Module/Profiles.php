@@ -193,7 +193,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			$chan = \App::get_channel();
 	
-			profile_load($a,$chan['channel_address'],$r[0]['id']);
+			profile_load($chan['channel_address'],$r[0]['id']);
 		}
 	}
 	
@@ -584,7 +584,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			if($is_default) {
 				// reload the info for the sidebar widget - why does this not work?
-				profile_load($a,$channel['channel_address']);
+				profile_load($channel['channel_address']);
 				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 			}
 		}

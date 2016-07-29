@@ -2,6 +2,7 @@
 namespace Zotlabs\Module;
 
 require_once('include/security.php');
+require_once('include/attach.php');
 require_once('include/photo/photo_driver.php');
 
 
@@ -10,6 +11,8 @@ class Photo extends \Zotlabs\Web\Controller {
 	function init() {
 	
 		$prvcachecontrol = false;
+		$streaming = null;
+		$channel = null;
 	
 		switch(argc()) {
 			case 4:
@@ -62,7 +65,7 @@ class Photo extends \Zotlabs\Web\Controller {
 				intval($uid),
 				intval(PHOTO_PROFILE)
 			);
-			if(count($r)) {
+			if($r) {
 				$data = dbunescbin($r[0]['content']);
 				$mimetype = $r[0]['mimetype'];
 			}
@@ -79,7 +82,7 @@ class Photo extends \Zotlabs\Web\Controller {
 			 * Other photos
 			 */
 	
-		        /* Check for a cookie to indicate display pixel density, in order to detect high-resolution
+			/* Check for a cookie to indicate display pixel density, in order to detect high-resolution
 			   displays. This procedure was derived from the "Retina Images" by Jeremey Worboys,
 			   used in accordance with the Creative Commons Attribution 3.0 Unported License.
 			   Project link: https://github.com/Retina-Images/Retina-Images
@@ -131,6 +134,8 @@ class Photo extends \Zotlabs\Web\Controller {
 	
 				$sql_extra = permissions_sql($r[0]['uid']);
 	
+				$channel = channelx_by_n($r[0]['uid']);
+
 				// Now we'll see if we can access the photo
 	
 				$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND imgscale = %d $sql_extra LIMIT 1",
@@ -141,8 +146,9 @@ class Photo extends \Zotlabs\Web\Controller {
 				if($r && $allowed) {
 					$data = dbunescbin($r[0]['content']);
 					$mimetype = $r[0]['mimetype'];
-					if(intval($r[0]['os_storage']))
-						$data = file_get_contents($data);
+					if(intval($r[0]['os_storage'])) {
+						$streaming = $data;
+					}
 				}
 				else {
 	
@@ -242,7 +248,25 @@ class Photo extends \Zotlabs\Web\Controller {
 			header("Cache-Control: max-age=" . $cache);
 	
 		}
-		echo $data;
+
+		// If it's a file resource, stream it. 
+
+		if($streaming && $channel) {
+			if(strpos($streaming,'store') !== false)
+				$istream = fopen($streaming,'rb');
+			else
+				$istream = fopen('store/' . $channel['channel_address'] . '/' . $streaming,'rb');
+			$ostream = fopen('php://output','wb');
+			if($istream && $ostream) {
+				pipe_streams($istream,$ostream);
+				fclose($istream);
+				fclose($ostream);
+			}
+		}
+		else {
+			echo $data;
+		}
+
 		killme();
 		// NOTREACHED
 	}

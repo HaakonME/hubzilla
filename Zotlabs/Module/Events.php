@@ -6,7 +6,6 @@ require_once('include/bbcode.php');
 require_once('include/datetime.php');
 require_once('include/event.php');
 require_once('include/items.php');
-require_once('include/PermissionDescription.php');
 
 
 class Events extends \Zotlabs\Web\Controller {
@@ -471,7 +470,7 @@ class Events extends \Zotlabs\Web\Controller {
 				'$permissions' => t('Permission settings'),
 				// populating the acl dialog was a permission description from view_stream because Cal.php, which
 				// displays events, says "since we don't currently have an event permission - use the stream permission"
-				'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults), false, \PermissionDescription::fromGlobalPermission('view_stream'))),
+				'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults), false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'))),
 				'$submit' => t('Submit'),
 				'$advanced' => t('Advanced Options')
 	
@@ -668,8 +667,10 @@ class Events extends \Zotlabs\Web\Controller {
 				'$export'	=> array(z_root()."/events/$y/$m/export",t('Export'),'',''),
 				'$calendar'	=> cal($y,$m,$links, ' eventcal'),
 				'$events'	=> $events,
-				'$upload'	=> t('Import'),
-				'$submit'	=> t('Submit'),
+				'$view_label'   => t('View'),
+				'$month'        => t('Month'),
+				'$week'         => t('Week'),
+				'$day'          => t('Day'),
 				'$prev'		=> t('Previous'),
 				'$next'		=> t('Next'),
 				'$today'	=> t('Today'),

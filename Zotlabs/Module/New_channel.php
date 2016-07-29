@@ -62,7 +62,7 @@ class New_channel extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function post() {
+	function post() {
 	
 		$arr = $_POST;
 	
@@ -96,7 +96,7 @@ class New_channel extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function get() {
+	function get() {
 	
 		$acc = \App::get_account();
 	
@@ -125,9 +125,9 @@ class New_channel extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		$name = array('name', t('Name or caption'), ((x($_REQUEST,'name')) ? $_REQUEST['name'] : ''), t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group"'));
+		$name = array('name', t('Name or caption'), ((x($_REQUEST,'name')) ? $_REQUEST['name'] : ''), t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group"'), "*");
 		$nickhub = '@' . \App::get_hostname();
-		$nickname = array('nickname', t('Choose a short nickname'), ((x($_REQUEST,'nickname')) ? $_REQUEST['nickname'] : ''), sprintf( t('Your nickname will be used to create an easy to remember channel address e.g. nickname%s'), $nickhub));
+		$nickname = array('nickname', t('Choose a short nickname'), ((x($_REQUEST,'nickname')) ? $_REQUEST['nickname'] : ''), sprintf( t('Your nickname will be used to create an easy to remember channel address e.g. nickname%s'), $nickhub), "*");
 		$privacy_role = ((x($_REQUEST,'permissions_role')) ? $_REQUEST['permissions_role'] :  "" );
 		$role = array('permissions_role' , t('Channel role and privacy'), ($privacy_role) ? $privacy_role : 'social', t('Select a channel role with your privacy requirements.') . ' <a href="help/roles" target="_blank">' . t('Read more about roles') . '</a>',get_roles());
 	

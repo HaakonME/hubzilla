@@ -5,18 +5,20 @@ namespace Zotlabs\Lib;
 
 class AbConfig {
 
-	static public function Load($chash,$xhash) {
-		$r = q("select * from abconfig where chan = '%s' and xchan = '%s'",
-			dbesc($chash),
+	static public function Load($chan,$xhash,$family = '') {
+		if($family)
+			$where = sprintf(" and family = '%s' ",dbesc($family));
+		$r = q("select * from abconfig where chan = %d and xchan = '%s' $where",
+			intval($chan),
 			dbesc($xhash)
 		);
 		return $r;
 	}
 
 
-	static public function Get($chash,$xhash,$family,$key) {
-		$r = q("select * from abconfig where chan = '%s' and xchan = '%s' and cat = '%s' and k = '%s' limit 1",
-			dbesc($chash),
+	static public function Get($chan,$xhash,$family,$key) {
+		$r = q("select * from abconfig where chan = %d and xchan = '%s' and cat = '%s' and k = '%s' limit 1",
+			intval($chan),
 			dbesc($xhash),
 			dbesc($family),
 			dbesc($key)		
@@ -28,14 +30,14 @@ class AbConfig {
 	}
 
 
-	static public function Set($chash,$xhash,$family,$key,$value) {
+	static public function Set($chan,$xhash,$family,$key,$value) {
 
 		$dbvalue = ((is_array($value))  ? serialize($value) : $value);
 		$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
 
-		if(self::Get($chash,$xhash,$family,$key) === false) {
-			$r = q("insert into abconfig ( chan, xchan, cat, k, v ) values ( '%s', '%s', '%s', '%s', '%s' ) ",
-				dbesc($chash),
+		if(self::Get($chan,$xhash,$family,$key) === false) {
+			$r = q("insert into abconfig ( chan, xchan, cat, k, v ) values ( %d, '%s', '%s', '%s', '%s' ) ",
+				intval($chan),
 				dbesc($xhash),
 				dbesc($family),
 				dbesc($key),
@@ -43,9 +45,9 @@ class AbConfig {
 			);
 		}
 		else {
-			$r = q("update abconfig set v = '%s' where chan = '%s' and xchan = '%s' and cat = '%s' and k = '%s' ",
+			$r = q("update abconfig set v = '%s' where chan = %d and xchan = '%s' and cat = '%s' and k = '%s' ",
 				dbesc($dbvalue),		
-				dbesc($chash),
+				dbesc($chan),
 				dbesc($xhash),
 				dbesc($family),
 				dbesc($key)
@@ -58,10 +60,10 @@ class AbConfig {
 	}
 
 
-	static public function Delete($chash,$xhash,$family,$key) {
+	static public function Delete($chan,$xhash,$family,$key) {
 
-		$r = q("delete from abconfig where chan = '%s' and xchan = '%s' and cat = '%s' and k = '%s' ",
-			dbesc($chash),
+		$r = q("delete from abconfig where chan = %d and xchan = '%s' and cat = '%s' and k = '%s' ",
+			intval($chan),
 			dbesc($xhash),
 			dbesc($family),
 			dbesc($key)

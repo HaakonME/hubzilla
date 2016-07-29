@@ -1136,18 +1136,31 @@ margin-right: 50px;
 	list-style-type: none;
 }
 
+.generic-icons {
+	font-size: 1.2em;
+	color: $toolicon_colour;
+	margin-right: 7px;
+}
+
+.generic-icons:hover {
+	color: $toolicon_colour;
+}
+
 .admin-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
-	margin-right: 10px;
+	margin-right: 7px;
 }
 
+.drop-icons,
 a .drop-icons {
 	color: $toolicon_colour;
 	font-size: 1.2em;
 	text-decoration: none;
+	cursor: pointer;
 }
- 
+
+.drop-icons:hover,
 a .drop-icons:hover {
 	color: #FF0000;
 }
@@ -1403,9 +1416,6 @@ img.mail-conv-sender-photo {
 	display: block;
 	border-top: 1px dashed #ccc;
 	text-align: center;
-	font-size: $body_font_size;
-	color: $link_colour;
-	cursor: pointer;	
 }
 
 .divgrow-showmore:hover {
@@ -1645,6 +1655,7 @@ main.fullscreen .section-content-wrapper-np {
 	display: none;
 }
 
+.atoken-index-row:hover td,
 .chatroom-index-row:hover td,
 .locs-index-row:hover td,
 [id^="cloud-index-"]:hover td,
@@ -2019,4 +2030,14 @@ dl.bb-dl > dd > li {
 
 .help-searchlist a {
 	font-size: 130%;
+}
+
+.embed-photo-selected-photo {
+    border-color: blue;
+    border-style: solid;
+    border-width: 5px;
+}
+
+#wiki-preview img {
+    max-width: 100%;
 }

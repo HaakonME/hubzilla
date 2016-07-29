@@ -26,7 +26,7 @@ class Connect extends \Zotlabs\Web\Controller {
 		if($r)
 			\App::$data['channel'] = $r[0];
 	
-		profile_load($a,$which,'');
+		profile_load($which,'');
 	}
 	
 		function post() {

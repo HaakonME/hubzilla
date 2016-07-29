@@ -41,7 +41,6 @@ class Cron {
 		require_once('include/sharedwithme.php');
 		apply_updates();
 	
-
 		// expire any expired mail
 
 		q("delete from mail where expires != '%s' and expires < %s ",
@@ -61,6 +60,15 @@ class Cron {
 			foreach($r as $rr)
 				drop_item($rr['id'],false);
 		}
+
+
+		// delete expired access tokens
+
+		q("delete from atoken where atoken_expires != '%s' && atoken_expires < %s",
+			dbesc(NULL_DATE),
+			db_utcnow()
+		);
+
 
 
 		// Ensure that every channel pings a directory server once a month. This way we can discover
@@ -93,6 +101,18 @@ class Cron {
 					intval($rr['id'])
 				);
 				if($x) {
+					$z = q("select * from item where id = %d",
+						intval($message_id)
+					);
+					if($z) {
+						xchan_query($z);
+						$sync_item = fetch_post_tags($z);
+						build_sync_packet($sync_item[0]['uid'],
+							[ 
+								'item' => [ encode_item($sync_item[0],true) ]
+							]
+						);
+					}
 					Master::Summon(array('Notifier','wall-new',$rr['id']));
 				}
 			}

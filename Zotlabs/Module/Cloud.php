@@ -13,6 +13,9 @@ use \Zotlabs\Storage;
 // composer autoloader for SabreDAV
 require_once('vendor/autoload.php');
 
+require_once('include/attach.php');
+
+
 /**
  * @brief Fires up the SabreDAV server.
  *
@@ -23,7 +26,6 @@ require_once('vendor/autoload.php');
 class Cloud extends \Zotlabs\Web\Controller {
 
 	function init() {
-		require_once('include/reddav.php');
 	
 		if (! is_dir('store'))
 			os_mkdir('store', STORAGE_DEFAULT_PERMISSIONS, false);
@@ -37,7 +39,7 @@ class Cloud extends \Zotlabs\Web\Controller {
 		\App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which . '" />' . "\r\n";
 	
 		if ($which)
-			profile_load($a, $which, $profile);
+			profile_load( $which, $profile);
 	
 		$auth = new \Zotlabs\Storage\BasicAuth();
 	
@@ -78,17 +80,6 @@ class Cloud extends \Zotlabs\Web\Controller {
 		$server->addPlugin($lockPlugin);
 	
 		$is_readable = false;
-	
-		if($_SERVER['REQUEST_METHOD'] === 'GET') {
-			try { 
-				$x = RedFileData('/' . \App::$cmd, $auth);
-			}
-			catch(\Exception $e) {
-				if($e instanceof Sabre\DAV\Exception\Forbidden) {
-					http_status_exit(401, 'Permission denied.');
-				}
-			}
-		}
 	
 		// provide a directory view for the cloud in Hubzilla
 		$browser = new \Zotlabs\Storage\Browser($auth);

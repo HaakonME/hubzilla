@@ -21,15 +21,18 @@ function get_capath() {
  *    TRUE if asked to return binary results (file download)
  * @param int $redirects default 0
  *    internal use, recursion counter
- * @param array $opts (optional parameters) assoziative array with:
+ * @param array $opts (optional parameters) associative array with:
  *  * \b accept_content => supply Accept: header with 'accept_content' as the value
  *  * \b timeout => int seconds, default system config value or 60 seconds
  *  * \b http_auth => username:password
  *  * \b novalidate => do not validate SSL certs, default is to validate using our CA list
  *  * \b nobody => only return the header
  *  * \b filep => stream resource to write body to. header and body are not returned when using this option.
+ *  * \b custom => custom request method: e.g. 'PUT', 'DELETE'
+ *  * \b cookiejar => cookie file (write)
+ *  * \B cookiefile => cookie file (read)
  *
- * @return array an assoziative array with:
+ * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
  *  * \e string \b header => HTTP headers 
@@ -59,11 +62,26 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_HEADER, $false);
 	}
 
+	if(x($opts,'upload'))
+		@curl_setopt($ch, CURLOPT_UPLOAD, $opts['upload']);
+	
+	if(x($opts,'infile'))
+		@curl_setopt($ch, CURLOPT_INFILE, $opts['infile']);
+
+	if(x($opts,'infilesize'))
+		@curl_setopt($ch, CURLOPT_INFILESIZE, $opts['infilesize']);
+
+	if(x($opts,'readfunc'))
+		@curl_setopt($ch, CURLOPT_READFUNCTION, $opts['readfunc']);
+
 	if(x($opts,'headers'))
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
+	if(x($opts,'custom'))
+		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -77,6 +95,14 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
+
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
@@ -165,7 +191,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
  *    'filep' => stream resource to write body to. header and body are not returned when using this option.
- * @return array an assoziative array with:
+ *    'custom' => custom request method: e.g. 'PUT', 'DELETE'
+ *
+ * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
  *  * \e boolean \b success => boolean true (if HTTP 2xx result) or false
  *  * \e string \b header => HTTP headers
@@ -173,6 +201,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  *  * \e string \b debug => from curl_info()
  */
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
+
+//	logger('url: ' . $url);
+//	logger('params: ' . print_r($params,true));
+//	logger('opts: ' . print_r($opts,true));
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
@@ -199,11 +231,16 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'headers')) {
 		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
-logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 	}
  
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
+
+	if(x($opts,'custom')) {
+		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
+		@curl_setopt($ch, CURLOPT_POST,0);
+	}
+
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -217,6 +254,16 @@ logger('headers: ' . print_r($opts['headers'],true) . 'redir: ' . $redirects);
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+
+	if(x($opts,'cookiejar'))
+		@curl_setopt($ch, CURLOPT_COOKIEJAR, $opts['cookiejar']);
+	if(x($opts,'cookiefile'))
+		@curl_setopt($ch, CURLOPT_COOKIEFILE, $opts['cookiefile']);
+
+
+	if(x($opts,'cookie'))
+		@curl_setopt($ch, CURLOPT_COOKIE, $opts['cookie']);
 
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
@@ -1296,8 +1343,20 @@ function discover_by_webbie($webbie) {
 					$fullname = $vcard['fn'];
 				if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
 					$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];			
+				if(($vcard['key']) && (! $pubkey))
+					$pubkey = $vcard['key'];
 				if(! $avatar)
 					$avatar = $vcard['photo'];
+				if($diaspora) {
+					if(($vcard['guid']) && (! $diaspora_guid))
+						$diaspora_guid = $vcard['guid'];
+					if(($vcard['url']) && (! $diaspora_base))
+						$diaspora_base = $vcard['url'];						
+
+
+
+
+				}
 
 			}
 		}
@@ -1962,14 +2021,7 @@ function get_site_info() {
 	else
 		$service_class = false;
 
-	$visible_plugins = array();
-	if(is_array(App::$plugins) && count(App::$plugins)) {
-		$r = q("select * from addon where hidden = 0");
-		if(count($r))
-			foreach($r as $rr)
-				$visible_plugins[] = $rr['aname'];
-	}
-	sort($visible_plugins);
+	$visible_plugins = visible_plugin_list();
 
 	if(@is_dir('.git') && function_exists('shell_exec'))
 		$commit = trim(@shell_exec('git log -1 --format="%h"'));

@@ -302,11 +302,11 @@ function bb2diaspora_itemwallwall(&$item) {
 		}
 	}
 
-	if(($wallwall) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
+	if(($wallwall) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_s']) {
 		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
 		$item['body'] = "\n\n" 
-			. '[img]' . $item['author']['xchan_photo_m'] . '[/img]' 
+			. '[img]' . $item['author']['xchan_photo_s'] . '[/img]' 
 			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
 			. $item['body'];
 	}

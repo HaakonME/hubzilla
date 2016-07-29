@@ -74,8 +74,6 @@ function UploadFileSelectHandler(e) {
 		var files = e.target.files;
 	}
 
-
-
 	// process all File objects
 	for (var i = 0, f; f = files[i]; i++) {
 		if(e.target.id === 'files-upload')
@@ -87,7 +85,8 @@ function UploadFileSelectHandler(e) {
 }
 
 function prepareHtml(f, i) {
-	$("#cloud-index tr:nth-child(2)").after(
+	var num = i - 1;
+	$('#cloud-index #new-upload-progress-bar-' + num.toString()).after(
 		'<tr id="new-upload-' + i + '" class="new-upload">' +
 		'<td><i class="fa ' + getIconFromType(f.type) + '" title="' + f.type + '"></i></td>' +
 		'<td>' + f.name + '</td>' +
@@ -205,8 +204,12 @@ function UploadFile(file, idx) {
 	// POST to the entire cloud path 
 	xhr.open('post', window.location.pathname, true);
 
+	var formfields = $("#ajax-upload-files").serializeArray();
+
 	var data = new FormData();
-	data.append('sabreAction', 'put');
+	$.each(formfields, function(i, field) {
+		data.append(field.name, field.value);
+	});
 	data.append('file', file);
 
 	xhr.send(data);

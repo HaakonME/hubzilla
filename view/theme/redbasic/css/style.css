@@ -106,6 +106,7 @@ input[type="submit"] {
 
 input, optgroup, select, textarea {
 	color: #333;
+	resize: vertical;
 }
 
 pre code {
@@ -2040,19 +2041,4 @@ dl.bb-dl > dd > li {
 
 #wiki-preview img {
     max-width: 100%;
-.atoken-list {
-	margin-right: 5px;
-	list-style-type: none;
-}
-.atoken-list li {
-	margin-bottom: 10px;
-}
-.atoken-text {
-	margin: 5px 10px 5px 10px;
-}
-.atoken-example {
-	margin-left: 20px;
-}
-.zat-example {
-	color: red;
 }

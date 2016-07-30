@@ -124,7 +124,7 @@ class WebServer {
 		// now that we've been through the module content, see if the page reported
 		// a permission problem and if so, a 403 response would seem to be in order.
 
-		if(stristr(implode("", $_SESSION['sysmsg']), t('Permission denied'))) {
+		if(is_array($_SESSION['sysmsg']) && stristr(implode("", $_SESSION['sysmsg']), t('Permission denied'))) {
 			header($_SERVER['SERVER_PROTOCOL'] . ' 403 ' . t('Permission denied.'));
 		}
 

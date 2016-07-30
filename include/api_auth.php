@@ -64,8 +64,10 @@ function api_login(&$a){
 		}
 	}
 
+
+
 	if($record['account']) {
-		authenticate_success($record);
+		authenticate_success($record['account']);
 
 		if($channel_login)
 			change_channel($channel_login);

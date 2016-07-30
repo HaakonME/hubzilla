@@ -16,16 +16,24 @@ require_once('include/security.php');
 /**
  * @brief Verify login credentials.
  *
- * If system <i>authlog</i> is set a log entry will be added for failed login
+ * If system.authlog is set a log entry will be added for failed login
  * attempts.
  *
- * @param string $email
+ * @param string $login
  *  The login to verify (channel address, account email or guest login token).
  * @param string $pass
  *  The provided password to verify.
  * @return array|null
  *  Returns account record on success, null on failure.
+ *  The return array is dependent on the login mechanism.
+ *    $ret['account'] will be set if either an email or channel address validation was successful (local login).
+ *    $ret['channel'] will be set if a channel address validation was successful.
+ *    $ret['xchan'] will be set if a guest access token validation was successful. 
+ *   Keys will exist for invalid return arrays but will be set to null. 
+ *   This function does not perform a login. It merely validates systems passwords and tokens.  
+ *
  */
+
 function account_verify_password($login, $pass) {
 
 	$ret = [ 'account' => null, 'channel' => null, 'xchan' => null ];

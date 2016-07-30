@@ -556,13 +556,13 @@ function update_birthdays() {
 			$ev['uid'] = $rr['abook_channel'];
 			$ev['account'] = $rr['abook_account'];
 			$ev['event_xchan'] = $rr['xchan_hash'];
-			$ev['start'] = datetime_convert('UTC', 'UTC', $rr['abook_dob']);
-			$ev['finish'] = datetime_convert('UTC', 'UTC', $rr['abook_dob'] . ' + 1 day ');
+			$ev['dtstart'] = datetime_convert('UTC', 'UTC', $rr['abook_dob']);
+			$ev['dtend'] = datetime_convert('UTC', 'UTC', $rr['abook_dob'] . ' + 1 day ');
 			$ev['adjust'] = intval(feature_enabled($rr['abook_channel'],'smart_birthdays'));
 			$ev['summary'] = sprintf( t('%1$s\'s birthday'), $rr['xchan_name']);
 			$ev['description'] = sprintf( t('Happy Birthday %1$s'), 
 				'[zrl=' . $rr['xchan_url'] . ']' . $rr['xchan_name'] . '[/zrl]') ;
-			$ev['type'] = 'birthday';
+			$ev['etype'] = 'birthday';
 
 			$z = event_store_event($ev);
 			if ($z) {

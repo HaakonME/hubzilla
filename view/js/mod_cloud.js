@@ -22,6 +22,7 @@ function UploadInit() {
 	if (xhr.upload) {
 
 		// file select
+		fileselect.attr("multiple", 'multiple');
 		fileselect.on("change", UploadFileSelectHandler);
 
 		// file submit
@@ -64,30 +65,37 @@ function DragDropUploadFileSelectHandler(e) {
 // file selection via input
 function UploadFileSelectHandler(e) {
 	// fetch FileList object
-	if(e.type === 'click') {
+	if(e.target.id === 'upload-submit') {
 		e.preventDefault();
 		var files = e.data[0].files;
 	}
-	else {
+	if(e.target.id === 'files-upload') {
+		$('.new-upload').remove();
 		var files = e.target.files;
 	}
 
-	$('.new-upload').remove();
-
 	// process all File objects
 	for (var i = 0, f; f = files[i]; i++) {
-		prepareHtml(f, i);
-		if(e.type === 'click')
+		if(e.target.id === 'files-upload')
+			prepareHtml(f, i);
+		if(e.target.id === 'upload-submit') {
 			UploadFile(f, i);
+		}
 	}
 }
 
 function prepareHtml(f, i) {
-	$("#cloud-index").prepend(
-		"<tr class='new-upload'>" + "<td id='upload-progress-" + i + "'></td><td>" + f.name +
-		"</td><td>" + f.type +
-		"</td><td></td><td></td><td></td><td></td><td>" + formatSizeUnits(f.size) +
-		"</td><td></td></tr>"
+	var num = i - 1;
+	$('#cloud-index #new-upload-progress-bar-' + num.toString()).after(
+		'<tr id="new-upload-' + i + '" class="new-upload">' +
+		'<td><i class="fa ' + getIconFromType(f.type) + '" title="' + f.type + '"></i></td>' +
+		'<td>' + f.name + '</td>' +
+		'<td id="upload-progress-' + i + '"></td><td></td><td></td><td></td><td></td>' +
+		'<td class="hidden-xs">' + formatSizeUnits(f.size) + '</td><td class="hidden-xs"></td>' +
+		'</tr>' +
+		'<tr id="new-upload-progress-bar-' + i + '" class="new-upload">' +
+		'<td id="upload-progress-bar-' + i + '" colspan="9" class="upload-progress-bar"></td>' +
+		'</tr>'
 	);
 }
 
@@ -101,6 +109,52 @@ function formatSizeUnits(bytes){
         return bytes;
 }
 
+// this is basically a js port of include/text.php getIconFromType() function
+function getIconFromType(type) {
+	var map = {
+		//Common file
+		'application/octet-stream': 'fa-file-o',
+		//Text
+		'text/plain': 'fa-file-text-o',
+		'application/msword': 'fa-file-word-o',
+		'application/pdf': 'fa-file-pdf-o',
+		'application/vnd.oasis.opendocument.text': 'fa-file-word-o',
+		'application/epub+zip': 'fa-book',
+		//Spreadsheet
+		'application/vnd.oasis.opendocument.spreadsheet': 'fa-file-excel-o',
+		'application/vnd.ms-excel': 'fa-file-excel-o',
+		//Image
+		'image/jpeg': 'fa-picture-o',
+		'image/png': 'fa-picture-o',
+		'image/gif': 'fa-picture-o',
+		'image/svg+xml': 'fa-picture-o',
+		//Archive
+		'application/zip': 'fa-file-archive-o',
+		'application/x-rar-compressed': 'fa-file-archive-o',
+		//Audio
+		'audio/mpeg': 'fa-file-audio-o',
+		'audio/mp3': 'fa-file-audio-o', //webkit browsers need that
+		'audio/wav': 'fa-file-audio-o',
+		'application/ogg': 'fa-file-audio-o',
+		'audio/ogg': 'fa-file-audio-o',
+		'audio/webm': 'fa-file-audio-o',
+		'audio/mp4': 'fa-file-audio-o',
+		//Video
+		'video/quicktime': 'fa-file-video-o',
+		'video/webm': 'fa-file-video-o',
+		'video/mp4': 'fa-file-video-o',
+		'video/x-matroska': 'fa-file-video-o'
+	};
+
+	var iconFromType = 'fa-file-o';
+
+	if (type in map) {
+		iconFromType = map[type];
+	}
+
+	return iconFromType;
+}
+
 // upload  files
 function UploadFile(file, idx) {
 
@@ -111,19 +165,30 @@ function UploadFile(file, idx) {
 	xhr.withCredentials = true;   // Include the SESSION cookie info for authentication
 
 	(xhr.upload || xhr).addEventListener('progress', function (e) {
+
 		var done = e.position || e.loaded;
 		var total = e.totalSize || e.total;
 		// Dynamically update the percentage complete displayed in the file upload list
 		$('#upload-progress-' + idx).html(Math.round(done / total * 100) + '%');
+		$('#upload-progress-bar-' + idx).css('background-size', Math.round(done / total * 100) + '%');
+
+		if(done == total) {
+			$('#upload-progress-' + idx).html('Processing...');
+		}
+
 	});
 
+
 	xhr.addEventListener('load', function (e) {
+		//we could possibly turn the filenames to real links here and add the delete and edit buttons to avoid page reload...
+		$('#upload-progress-' + idx).html('Ready!');
 
 		//console.log('xhr upload complete', e);
 		window.fileUploadsCompleted = window.fileUploadsCompleted + 1;
 
 		// When all the uploads have completed, refresh the page
 		if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {
+
 			window.fileUploadsCompleted = window.filesToUpload = 0;
 
 			// After uploads complete, refresh browser window to display new files
@@ -131,11 +196,20 @@ function UploadFile(file, idx) {
 		}
 	});
 
+
+	xhr.addEventListener('error', function (e) {
+		$('#upload-progress-' + idx).html('<span style="color: red;">ERROR</span>');
+	});
+
 	// POST to the entire cloud path 
 	xhr.open('post', window.location.pathname, true);
 
-	var data = new FormData(document.getElementById("ajax-upload-files"));
+	var formfields = $("#ajax-upload-files").serializeArray();
 
+	var data = new FormData();
+	$.each(formfields, function(i, field) {
+		data.append(field.name, field.value);
+	});
 	data.append('file', file);
 
 	xhr.send(data);

@@ -2608,32 +2608,33 @@ function getIconFromType($type) {
 		'application/octet-stream' => 'fa-file-o',
 		//Text
 		'text/plain' => 'fa-file-text-o',
-		'application/msword' => 'fa-file-text-o',
-		'application/pdf' => 'fa-file-text-o',
-		'application/vnd.oasis.opendocument.text' => 'fa-file-text-o',
+		'application/msword' => 'fa-file-word-o',
+		'application/pdf' => 'fa-file-pdf-o',
+		'application/vnd.oasis.opendocument.text' => 'fa-file-word-o',
 		'application/epub+zip' => 'fa-book',
 		//Spreadsheet
-		'application/vnd.oasis.opendocument.spreadsheet' => 'fa-table',
-		'application/vnd.ms-excel' => 'fa-table',
+		'application/vnd.oasis.opendocument.spreadsheet' => 'fa-file-excel-o',
+		'application/vnd.ms-excel' => 'fa-file-excel-o',
 		//Image
 		'image/jpeg' => 'fa-picture-o',
 		'image/png' => 'fa-picture-o',
 		'image/gif' => 'fa-picture-o',
 		'image/svg+xml' => 'fa-picture-o',
 		//Archive
-		'application/zip' => 'fa-archive',
-		'application/x-rar-compressed' => 'fa-archive',
+		'application/zip' => 'fa-file-archive-o',
+		'application/x-rar-compressed' => 'fa-file-archive-o',
 		//Audio
-		'audio/mpeg' => 'fa-music',
-		'audio/wav' => 'fa-music',
-		'application/ogg' => 'fa-music',
-		'audio/ogg' => 'fa-music',
-		'audio/webm' => 'fa-music',
-		'audio/mp4' => 'fa-music',
+		'audio/mpeg' => 'fa-file-audio-o',
+		'audio/wav' => 'fa-file-audio-o',
+		'application/ogg' => 'fa-file-audio-o',
+		'audio/ogg' => 'fa-file-audio-o',
+		'audio/webm' => 'fa-file-audio-o',
+		'audio/mp4' => 'fa-file-audio-o',
 		//Video
-		'video/quicktime' => 'fa-film',
-		'video/webm' => 'fa-film',
-		'video/mp4' => 'fa-film'
+		'video/quicktime' => 'fa-file-video-o',
+		'video/webm' => 'fa-file-video-o',
+		'video/mp4' => 'fa-file-video-o',
+		'video/x-matroska' => 'fa-file-video-o'
 	);
 
 	$iconFromType = 'fa-file-o';

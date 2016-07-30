@@ -13,7 +13,7 @@
     <input type="hidden" name="sabreAction" value="put">
     <label for="files-upload">{{$upload_header}}</label>
     <div class="clear"></div>
-    <input class="form-group pull-left" id="files-upload" type="file" name="file" multiple>
+    <input class="form-group pull-left" id="files-upload" type="file" name="file">
     <button id="upload-submit" class="btn btn-primary btn-sm pull-right" type="submit" value="{{$upload_submit}}">{{$upload_submit}}</button>
   </form>
   <div class="clear"></div>

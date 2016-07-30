@@ -1,76 +1,120 @@
 <div class="generic-content-wrapper">
-	<div class="section-title-wrapper">
-		{{if $editor}}
-		<div class="pull-right">
-			<button id="webpage-create-btn" class="btn btn-xs btn-success" onclick="openClose('webpage-editor');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$create}}</button>
+		<form action="" method="post" autocomplete="on" >
+		<input type="hidden" name="action" value="importselected">
+		<div class="section-title-wrapper">
+			<div class="pull-right">				
+				<input class="webpage-import-button" type="submit" name="submit" value="Import selected"/>
+			</div>
+			<h2>{{$title}}</h2>
+			<div class="clear"></div>
 		</div>
-		{{/if}}
-		<h2>{{$listtitle}}</h2>
+		<div id="import-website-content-wrapper" class="section-content-wrapper">
+						<div class="pull-left">
+								<button id="toggle-select-all" class="btn btn-xs btn-primary" onclick="checkedAll(window.isChecked); return false;"><i class="fa fa-check"></i>&nbsp;Toggle Select All</button>
+						</div>
+						<div class="clear"></div>
+						<h4>Scanned Pages</h4>
+						<div>
+						<table class="table-striped table-responsive table-hover" style="width: 100%;">
+							<tr><td>Import?</td><td>Page</td><td>Existing Page</td></tr>
+						{{foreach $pages as $page}}
+								<tr>
+									<td>
+										<div class='squaredTwo'>
+										<input type="checkbox" id="page_{{$page.pagelink}}" name="page[]" value="{{$page.pagelink}}">
+										<label for="page_{{$page.pagelink}}"></label>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											Page Link: {{$page.pagelink}}<br>
+											Layout: {{$page.layout}}<br>
+											Title: {{$page.title}}<br>
+											Content File: {{$page.contentfile}}<br>
+											Type: {{$page.type}}<br>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											Name: {{$page.curpage.pagelink}}<br>
+											Layout: {{$page.curpage.layout}}<br>
+											Title: {{$page.curpage.title}}<br>
+											Last edit: {{$page.curpage.edited}}<br>
+											Type: {{$page.curpage.type}}<br>
+										</div>
+									</td>
+								</tr>
+						{{/foreach}}
+						</table>
+						</div>
+
+
+						<h4>Scanned Layouts</h4>
+						<div>
+						<table class="table-striped table-responsive table-hover" style="width: 100%;">
+								<tr><td>Import?</td><td>Layout</td><td>Existing Layout</td></tr>
+						{{foreach $layouts as $layout}}
+										<tr>
+												<td>
+														<div class='squaredTwo'>
+														<input type="checkbox" id="layout_{{$layout.name}}" name="layout[]" value="{{$layout.name}}">
+														<label for="layout_{{$layout.name}}"></label>
+														</div>
+												</td>
+												<td>
+														<div class='desc'>
+																Name: {{$layout.name}}<br>
+																Description: {{$layout.description}}<br>
+																Content File: {{$layout.contentfile}}<br>
+														</div>
+												</td>
+												<td>
+														<div class='desc'>
+																Name: {{$layout.curblock.name}}<br>
+																Title: {{$layout.curblock.description}}<br>
+																Last edit: {{$layout.curblock.edited}}<br>
+														</div>
+												</td>
+										</tr>
+						{{/foreach}}
+						</table>
+						</div>
+
+						<h4>Scanned Blocks</h4>
+						<div>
+						<table class="table-striped table-responsive table-hover" style="width: 100%;">
+								<tr><td>Import?</td><td>Block</td><td>Existing Block</td></tr>
+						{{foreach $blocks as $block}}
+										<tr>
+												<td>
+														<div class='squaredTwo'>
+														<input type="checkbox" id="block_{{$block.name}}" name="block[]" value="{{$block.name}}">
+														<label for="block_{{$block.name}}"></label>
+														</div>
+												</td>
+												<td>
+														<div class='desc'>
+																Name: {{$block.name}}<br>
+																Title: {{$block.title}}<br>
+																Content File: {{$block.contentfile}}<br>
+																Type: {{$block.type}}<br>
+														</div>
+												</td>
+												<td>
+														<div class='desc'>
+																Name: {{$block.curblock.name}}<br>
+																Title: {{$block.curblock.title}}<br>
+																Last edit: {{$block.curblock.edited}}<br>
+																Type: {{$block.curblock.type}}<br>
+														</div>
+												</td>
+										</tr>
+						{{/foreach}}
+						</table>
+						</div>
+				
+		</div>
 		<div class="clear"></div>
-	</div>
-	{{if $editor}}
-	<div id="webpage-editor" class="section-content-tools-wrapper">
-		{{$editor}}
-	</div>
-	{{/if}}
-	{{if $pages}}
-	<div id="pagelist-content-wrapper" class="section-content-wrapper-np">
-		<table id="webpage-list-table">
-			<tr>
-				<th width="1%">{{$pagelink_txt}}</th>
-				<th width="95%">{{$title_txt}}</th>
-				<th width="1%"></th>
-				<th width="1%"></th>
-				<th width="1%"></th>
-				<th width="1%"></th>
-				<th width="1%" class="hidden-xs">{{$created_txt}}</th>
-				<th width="1%" class="hidden-xs">{{$edited_txt}}</th>
-			</tr>
-			{{foreach $pages as $key => $items}}
-			{{foreach $items as $item}}
-			<tr id="webpage-list-item-{{$item.url}}">
-				<td>
-					{{if $view}}
-					<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}">{{$item.pagetitle}}</a>
-					{{else}}
-					{{$item.pagetitle}}
-					{{/if}}
-				</td>
-				<td>
-					{{$item.title}}
-				</td>
-				<td class="webpage-list-tool dropdown">
-					{{if $item.lockstate=='lock'}}
-					<i class="fa fa-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('item',{{$item.url}});" ></i>
-					<ul id="panel-{{$item.url}}" class="lockview-panel dropdown-menu"></ul>
-					{{/if}}
-				</td>
-				<td class="webpage-list-tool">
-					{{if $edit}}
-					<a href="{{$baseurl}}/{{$item.url}}" title="{{$edit}}"><i class="fa fa-pencil"></i></a>
-					{{/if}}
-				</td>
-				<td class="webpage-list-tool">
-					{{if $item.bb_element}}
-					<a href="rpost?attachment={{$item.bb_element}}" title="{{$share}}"><i class="fa fa-share-square-o"></i></a>
-					{{/if}}
-				</td>
-				<td class="webpage-list-tool">
-					{{if $edit}}
-					<a href="#" title="{{$delete}}" onclick="dropItem('item/drop/{{$item.url}}', '#webpage-list-item-{{$item.url}}'); return false;"><i class="fa fa-trash-o drop-icons"></i></a>
-					{{/if}}
-				</td>
-				<td class="hidden-xs">
-					{{$item.created}}
-				</td>
-				<td class="hidden-xs">
-					{{$item.edited}}
-				</td>
-			</tr>
-			{{/foreach}}
-			{{/foreach}}
-		</table>
-	</div>
-	{{/if}}
-	<div class="clear"></div>
+		</form>
 </div>
+

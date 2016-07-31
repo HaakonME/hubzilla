@@ -11,16 +11,10 @@
   {{if $quota.limit || $quota.used}}<div class="{{if $quota.warning}}section-content-danger-wrapper{{else}}section-content-info-wrapper{{/if}}">{{if $quota.warning}}<strong>{{$quota.warning}} </strong>{{/if}}{{$quota.desc}}</div>{{/if}}
   <form id="ajax-upload-files" method="post" action="" enctype="multipart/form-data">
     <input type="hidden" name="sabreAction" value="put">
-    <div>
-      <div id="filedrag" style="height: 7em;"><br>{{$dragdroptext}}</div>
-    </div>
-    <div id="file-upload-list"></div>
-    <div class="clear"></div>
     <label for="files-upload">{{$upload_header}}</label>
     <div class="clear"></div>
-    <input class="form-group pull-left" id="files-upload" type="file" name="file[]" multiple>
-    <button class="btn btn-primary btn-sm pull-right" type="submit" value="{{$upload_submit}}">{{$upload_submit}}</button>
+    <input class="form-group pull-left" id="files-upload" type="file" name="file">
+    <button id="upload-submit" class="btn btn-primary btn-sm pull-right" type="submit" value="{{$upload_submit}}">{{$upload_submit}}</button>
   </form>
   <div class="clear"></div>
-  <hr/>
 </div>

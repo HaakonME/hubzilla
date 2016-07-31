@@ -1252,15 +1252,15 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 		$dirtoscan = $path;
 		switch ($type) {
 			case 'page':
-				$dirtoscan .= 'pages/';
+				$dirtoscan .= '/pages/';
 				$json_filename = 'page.json';
 				break;
 			case 'layout':
-				$dirtoscan .= 'layouts/';
+				$dirtoscan .= '/layouts/';
 				$json_filename = 'layout.json';
 				break;
 			case 'block':
-				$dirtoscan .= 'blocks/';
+				$dirtoscan .= '/blocks/';
 				$json_filename = 'block.json';
 				break;
 			default :

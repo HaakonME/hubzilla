@@ -51,12 +51,12 @@ class Webpages extends \Zotlabs\Web\Controller {
 						$_SESSION['action'] = null;
 						$o .= replace_macros(get_markup_template('webpage_import.tpl'), array(
 							'$title'    => t('Import Webpage Elements'),
+							'$importbtn' => t('Import selected'),
 							'$action' => 'import',
 							'$pages' => $_SESSION['pages'],
 							'$layouts' => $_SESSION['layouts'],
 							'$blocks' => $_SESSION['blocks'],
 						));
-						//logger('webpage_import.tpl: ' . $o);
 						return $o;
 				
         case 'importselected':
@@ -254,7 +254,8 @@ class Webpages extends \Zotlabs\Web\Controller {
 							}
 						}
 						if(!$okay) {
-							json_return_and_die(array('message' => 'Invalid file MIME type'));
+							notice( t('Invalid file type.') . EOL);
+							return;
 						}
 						$zip = new \ZipArchive();
 						if ($zip->open($source) === true) {
@@ -263,7 +264,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 							$zip->extractTo($website); // change this to the correct site path
 							$zip->close();
 							@unlink($source);	// delete the compressed file now that the content has been extracted
-
 							$cloud = false;
 						} else {
 							notice( t('Error opening zip file') . EOL);
@@ -289,14 +289,19 @@ class Webpages extends \Zotlabs\Web\Controller {
 					if ($cloud !== null) {
 						require_once('include/import.php');
 						$elements = [];
-						$elements['pages'] = scan_webpage_elements($_POST['path'], 'page', $cloud);
-						$elements['layouts'] = scan_webpage_elements($_POST['path'], 'layout', $cloud);
-						$elements['blocks'] = scan_webpage_elements($_POST['path'], 'block', $cloud);
+						if($cloud) {
+								$path = $_POST['path'];
+						} else {
+								$path = $website;
+						}
+						$elements['pages'] = scan_webpage_elements($path, 'page', $cloud);
+						$elements['layouts'] = scan_webpage_elements($path, 'layout', $cloud);
+						$elements['blocks'] = scan_webpage_elements($path, 'block', $cloud);
 						$_SESSION['blocks'] = $elements['blocks'];
 						$_SESSION['layouts'] = $elements['layouts'];
 						$_SESSION['pages'] = $elements['pages'];
 						if(!(empty($elements['pages']) && empty($elements['blocks']) && empty($elements['layouts']))) {
-							info( t('Webpages elements detected.') . EOL);
+							//info( t('Webpages elements detected.') . EOL);
 							$_SESSION['action'] = 'import';
 						} else {
 							notice( t('No webpage elements detected.') . EOL);
@@ -306,7 +311,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 					}
 					
 					// If the website elements were imported from a zip file, delete the temporary decompressed files
-					if ($cloud === false && $website) {
+					if ($cloud === false && $website && $elements) {
 						rrmdir($website);	// Delete the temporary decompressed files
 					}
 					
@@ -372,7 +377,10 @@ class Webpages extends \Zotlabs\Web\Controller {
 								}
             }
             $_SESSION['import_pages'] = $pages;
-            break;
+						if(!(empty($_SESSION['import_pages']) && empty($_SESSION['import_blocks']) && empty($_SESSION['import_layouts']))) {
+								info( t('Import complete.') . EOL);
+						}
+						break;
 
 				default :
 					break;

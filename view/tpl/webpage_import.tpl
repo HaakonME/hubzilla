@@ -3,7 +3,7 @@
 		<input type="hidden" name="action" value="importselected">
 		<div class="section-title-wrapper">
 			<div class="pull-right">				
-				<input class="webpage-import-button" type="submit" name="submit" value="Import selected"/>
+					<button class="btn btn-md btn-success" type="submit" name="submit" value="{{$importbtn}}">{{$importbtn}}</button>
 			</div>
 			<h2>{{$title}}</h2>
 			<div class="clear"></div>

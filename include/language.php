@@ -82,39 +82,36 @@ function get_best_language() {
 	if($arr['preferred'] !== 'unset')
 		return $arr['preferred'];
 
-	$a = get_app();
-	return ((isset($a->config['system']['language'])) ? $a->config['system']['language'] : 'en');
+	return ((isset(App::$config['system']['language'])) ? App::$config['system']['language'] : 'en');
 }
 
 
 function push_lang($language) {
-	global $a;
 
-	$a->langsave = $a->language;
+	App::$langsave = App::$language;
 
-	if($language === $a->language)
+	if($language === App::$language)
 		return;
 
-	if(isset($a->strings) && count($a->strings)) {
-		$a->stringsave = $a->strings;
+	if(isset(App::$strings) && count(App::$strings)) {
+		App::$stringsave = App::$strings;
 	}
-	$a->strings = array();
+	App::$strings = array();
 	load_translation_table($language);
-	$a->language = $language;
+	App::$language = $language;
 }
 
 function pop_lang() {
-	global $a;
 
-	if($a->language === $a->langsave)
+	if(App::$language === App::$langsave)
 		return;
 
-	if(isset($a->stringsave))
-		$a->strings = $a->stringsave;
+	if(isset(App::$stringsave) && is_array(App::$stringsave))
+		App::$strings = App::$stringsave;
 	else
-		$a->strings = array();
+		App::$strings = array();
 
-	$a->language = $a->langsave;
+	App::$language = App::$langsave;
 }
 
 /**
@@ -124,9 +121,8 @@ function pop_lang() {
  * @param boolean $install (optional) default false
  */
 function load_translation_table($lang, $install = false) {
-	global $a;
 
-	$a->strings = array();
+	App::$strings = array();
 
 	if(file_exists("view/$lang/hstrings.php")) {
 		include("view/$lang/hstrings.php");
@@ -136,10 +132,10 @@ function load_translation_table($lang, $install = false) {
 	}
 
 	if(! $install) {
-		$plugins = q("SELECT name FROM addon WHERE installed=1;");
+		$plugins = q("SELECT aname FROM addon WHERE installed=1;");
 		if ($plugins !== false) {
 			foreach($plugins as $p) {
-				$name = $p['name'];
+				$name = $p['aname'];
 				if(file_exists("addon/$name/lang/$lang/hstrings.php")) {
 					include("addon/$name/lang/$lang/hstrings.php");
 				}
@@ -170,11 +166,10 @@ function load_translation_table($lang, $install = false) {
  *
  */
 function t($s, $ctx = '') {
-	global $a;
 
 	$cs = $ctx ? '__ctx:' . $ctx . '__ ' . $s : $s;
-	if (x($a->strings, $cs)) {
-		$t = $a->strings[$cs];
+	if (x(App::$strings, $cs)) {
+		$t = App::$strings[$cs];
 
 		return ((is_array($t)) ? translate_projectname($t[0]) : translate_projectname($t));
 	}
@@ -189,7 +184,7 @@ function t($s, $ctx = '') {
 
 function translate_projectname($s) {
 
-	return str_replace(array('$projectname','$Projectname'),array(Zotlabs\Project\System::get_platform_name(),ucfirst(Zotlabs\Project\System::get_platform_name())),$s);
+	return str_replace(array('$projectname','$Projectname'),array(Zotlabs\Lib\System::get_platform_name(),ucfirst(Zotlabs\Lib\System::get_platform_name())),$s);
 
 }
 
@@ -205,12 +200,11 @@ function translate_projectname($s) {
  * @return string
  */
 function tt($singular, $plural, $count, $ctx = ''){
-	$a = get_app();
 
 	$cs = $ctx ? "__ctx:" . $ctx . "__ " . $singular : $singular;
-	if (x($a->strings,$cs)) {
-		$t = $a->strings[$cs];
-		$f = 'string_plural_select_' . str_replace('-', '_', $a->language);
+	if (x(App::$strings,$cs)) {
+		$t = App::$strings[$cs];
+		$f = 'string_plural_select_' . str_replace('-', '_', App::$language);
 		if (! function_exists($f))
 			$f = 'string_plural_select_default';
 

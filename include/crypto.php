@@ -23,17 +23,9 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 	$verify = @openssl_verify($data,$sig,$key,$alg);
 
 	if(! $verify) {
-		logger('openssl_verify: ' . openssl_error_string(),LOGGER_NORMAL,LOG_ERR);
-		logger('openssl_verify: key: ' . $key, LOGGER_DEBUG, LOG_ERR); 
-		// provide a backtrace so that we can debug key issues
-		if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-			if($stack) {
-				foreach($stack as $s) {
-					logger('stack: ' . basename($s['file']) . ':' . $s['line'] . ':' . $s['function'] . '()',LOGGER_DEBUG,LOG_ERR);
-			    }
-			}
-		}
+		while($msg = openssl_error_string())
+			logger('openssl_verify: ' . $msg,LOGGER_NORMAL,LOG_ERR);
+		btlogger('openssl_verify: key: ' . $key, LOGGER_DEBUG, LOG_ERR); 
 	}
 
 	return $verify;
@@ -54,27 +46,15 @@ function pkcs5_unpad($text)
 } 
 
 function AES256CBC_encrypt($data,$key,$iv) {
-	if(get_config('system','openssl_encrypt')) {
-		return openssl_encrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
-	}
-	return mcrypt_encrypt(
-		MCRYPT_RIJNDAEL_128, 
-		str_pad($key,32,"\0"), 
-		pkcs5_pad($data,16), 
-		MCRYPT_MODE_CBC, 
-		str_pad($iv,16,"\0"));
+
+	return openssl_encrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+
 }
 
 function AES256CBC_decrypt($data,$key,$iv) {
-	if(get_config('system','openssl_encrypt')) {
-		return openssl_decrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
-	}
-	return pkcs5_unpad(mcrypt_decrypt(
-		MCRYPT_RIJNDAEL_128, 
-		str_pad($key,32,"\0"), 
-		$data, 
-		MCRYPT_MODE_CBC, 
-		str_pad($iv,16,"\0")));
+
+	return openssl_decrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+
 }
 
 function crypto_encapsulate($data,$pubkey,$alg='aes256cbc') {
@@ -256,6 +236,7 @@ function pkcs1_encode($Modulus,$PublicExponent) {
 }
 
 
+// http://stackoverflow.com/questions/27568570/how-to-convert-raw-modulus-exponent-to-rsa-public-key-pem-format
 function metopem($m,$e) {
 	$der = pkcs8_encode($m,$e);
 	$key = DerToPem($der,false);
@@ -306,10 +287,32 @@ function metorsa($m,$e) {
 	return $key;
 }	
 
+
+
 function salmon_key($pubkey) {
 	pemtome($pubkey,$m,$e);
 	return 'RSA' . '.' . base64url_encode($m,true) . '.' . base64url_encode($e,true) ;
 }
+
+
+function convert_salmon_key($key) {
+
+	if(strstr($key,','))
+		$rawkey = substr($key,strpos($key,',')+1);
+	else
+		$rawkey = substr($key,5);
+
+	$key_info = explode('.',$rawkey);
+
+	$m = base64url_decode($key_info[1]);
+	$e = base64url_decode($key_info[2]);
+
+	logger('key details: ' . print_r($key_info,true), LOGGER_DATA);
+	$salmon_key = metopem($m,$e);
+	return $salmon_key;
+
+}
+
 
 function z_obscure($s) {
 	return json_encode(crypto_encapsulate($s,get_config('system','pubkey')));
@@ -320,3 +323,4 @@ function z_unobscure($s) {
 		return $s;
 	return crypto_unencapsulate(json_decode($s,true),get_config('system','prvkey'));
 }
+

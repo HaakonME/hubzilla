@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1165 );
+define( 'UPDATE_VERSION' , 1180 );
 
 /**
  *
@@ -2058,3 +2058,349 @@ function update_r1164() {
     return UPDATE_FAILED;
 }
 
+function update_r1165() {
+
+	$r1 = q("alter table hook add hook_version int not null default '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES)
+		$r2 = q("create index \"hook_version_idx\" on hook (\"hook_version\") "); 
+	else 
+		$r2 = q("alter table hook add index ( hook_version ) ");
+    if($r1 && $r2)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+}
+
+function update_r1166() {
+
+	$r = q("alter table source add src_tag text not null default '' ");
+    if($r)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+}
+
+function update_r1167() {
+
+	$r1 = q("alter table app add app_deleted int not null default '0' ");
+	$r2 = q("alter table app add app_system int not null default '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r3 = q("create index \"app_deleted_idx\" on app (\"app_deleted\") "); 
+		$r4 = q("create index \"app_system_idx\" on app (\"app_system\") "); 
+	}
+	else { 
+		$r3 = q("alter table app add index ( app_deleted ) ");
+		$r4 = q("alter table app add index ( app_system ) ");
+	}
+
+	if($r1 && $r2 && $r3 && $r4)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1168() {
+
+	$r1 = q("alter table obj add obj_quantity int not null default '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r2 = q("create index \"obj_quantity_idx\" on obj (\"obj_quantity\") "); 
+	}
+	else { 
+		$r2 = q("alter table obj add index ( obj_quantity ) ");
+	}
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1169() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("ALTER TABLE `addon` CHANGE `timestamp` `tstamp` numeric( 20 ) UNSIGNED NOT NULL DEFAULT '0' ");
+		$r2 = q("ALTER TABLE `addon` CHANGE `name` `aname` text NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE `hook` CHANGE `function` `fn` text NOT NULL DEFAULT '' ");
+
+	}
+	else {
+		$r1 = q("ALTER TABLE `addon` CHANGE `timestamp` `tstamp` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' ");
+		$r2 = q("ALTER TABLE `addon` CHANGE `name` `aname` CHAR(255) NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE `hook` CHANGE `function` `fn` CHAR(255) NOT NULL DEFAULT '' ");
+	}
+
+	if($r1 && $r2 && $r3)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1170() {
+
+	$r1 = q("drop table fcontact");	
+	$r2 = q("drop table ffinder");	
+	$r3 = q("drop table fserver");	
+	$r4 = q("drop table fsuggest");	
+	$r5 = q("drop table spam");	
+
+	if($r1 && $r2 && $r3 && $r4 && $r5)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1171() {
+
+		$r1 = q("ALTER TABLE verify CHANGE `type` `vtype` varchar(32) NOT NULL DEFAULT '' ");
+		$r2 = q("ALTER TABLE tokens CHANGE `scope` `auth_scope` varchar(512) NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE auth_codes CHANGE `scope` `auth_scope` varchar(512) NOT NULL DEFAULT '' ");
+		$r4 = q("ALTER TABLE clients CHANGE `name` `clname` TEXT ");
+		$r5 = q("ALTER TABLE session CHANGE `data` `sess_data` TEXT NOT NULL ");
+		$r6 = q("ALTER TABLE register CHANGE `language` `lang` varchar(16) NOT NULL DEFAULT '' ");
+
+	if($r1 && $r2 && $r3 && $r4 && $r5 && $r6)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+
+
+}
+
+function update_r1172() {
+
+	$r1 = q("ALTER TABLE term CHANGE `type` `ttype` int(3) NOT NULL DEFAULT '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r2 = q("ALTER TABLE groups CHANGE `name` `gname` TEXT NOT NULL ");
+		$r3 = q("ALTER TABLE profile CHANGE `name` `fullname` TEXT NOT NULL ");
+		$r4 = q("ALTER TABLE profile CHANGE `with` `partner` TEXT NOT NULL ");
+		$r5 = q("ALTER TABLE profile CHANGE `work` `employment` TEXT NOT NULL ");
+	}
+	else {
+		$r2 = q("ALTER TABLE groups CHANGE `name` `gname` char(255) NOT NULL DEFAULT '' ");
+		$r3 = q("ALTER TABLE profile CHANGE `name` `fullname` char(255) NOT NULL DEFAULT '' ");
+		$r4 = q("ALTER TABLE profile CHANGE `with` `partner` char(255) NOT NULL DEFAULT '' ");
+		$r5 = q("ALTER TABLE profile CHANGE `work` `employment` TEXT NOT NULL ");
+	}
+	if($r1 && $r2 && $r3 && $r4 && $r5)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1173() {
+
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("ALTER TABLE notify CHANGE `name` `xname` TEXT NOT NULL ");
+		$r2 = q("ALTER TABLE notify CHANGE `date` `created` timestamp NOT NULL DEFAULT '0001-01-01 00:00:00' ");
+		$r3 = q("ALTER TABLE notify CHANGE `type` `ntype` numeric(3) NOT NULL DEFAULT '0' ");
+	}
+	else {
+		$r1 = q("ALTER TABLE notify CHANGE `name` `xname` char(255) NOT NULL DEFAULT '' ");
+		$r2 = q("ALTER TABLE notify CHANGE `date` `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' ");
+		$r3 = q("ALTER TABLE notify CHANGE `type` `ntype` smallint(3) NOT NULL DEFAULT '0' ");
+	}
+
+	if($r1 && $r2 && $r3)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1174() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("ALTER TABLE event CHANGE `type` `etype` varchar(255) NOT NULL DEFAULT '' ");
+		$r2 = q("ALTER TABLE event CHANGE `start` `dtstart` timestamp NOT NULL DEFAULT '0001-01-01 00:00:00' ");
+		$r3 = q("ALTER TABLE event CHANGE `finish` `dtend` timestamp NOT NULL DEFAULT '0001-01-01 00:00:00' ");
+		$r4 = q("ALTER TABLE event CHANGE `ignore` `dismissed` numeric(1) NOT NULL DEFAULT '0' ");
+		$r5 = q("ALTER TABLE attach CHANGE `data` `content` bytea NOT NULL ");
+		$r6 = q("ALTER TABLE photo CHANGE `data` `content` bytea NOT NULL ");
+	}
+	else {
+		$r1 = q("ALTER TABLE event CHANGE `type` `etype` char(255) NOT NULL DEFAULT '' ");
+		$r2 = q("ALTER TABLE event CHANGE `start` `dtstart` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' ");
+		$r3 = q("ALTER TABLE event CHANGE `finish` `dtend` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' ");
+		$r4 = q("ALTER TABLE event CHANGE `ignore` `dismissed` tinyint(1) NOT NULL DEFAULT '0' ");
+		$r5 = q("ALTER TABLE attach CHANGE `data` `content` longblob NOT NULL ");
+		$r6 = q("ALTER TABLE photo CHANGE `data` `content` mediumblob NOT NULL ");
+	}
+
+	if($r1 && $r2 && $r3 && $r4 && $r5 && $r6)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1175() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("ALTER TABLE item CHANGE `object` `obj` text NOT NULL");
+		$r2 = q("ALTER TABLE photo CHANGE `size` `filesize` bigint NOT NULL DEFAULT '0' ");
+		$r3 = q("ALTER TABLE photo CHANGE `scale` `imgscale` numeric(3) NOT NULL DEFAULT '0' ");
+		$r4 = q("ALTER TABLE photo CHANGE `type` `mimetype` varchar(128) NOT NULL DEFAULT 'image/jpeg' ");
+
+	}
+	else {
+		$r1 = q("ALTER TABLE item CHANGE `object` `obj` text NOT NULL");
+		$r2 = q("ALTER TABLE photo CHANGE `size` `filesize` int(10) unsigned NOT NULL DEFAULT '0' ");
+		$r3 = q("ALTER TABLE photo CHANGE `scale` `imgscale` tinyint(3) unsigned NOT NULL DEFAULT '0' ");
+		$r4 = q("ALTER TABLE photo CHANGE `type` `mimetype` char(128) NOT NULL DEFAULT 'image/jpeg' ");
+
+	}
+
+	if($r1 && $r2 && $r3 && $r4)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+
+function update_r1176() {
+
+	$r = q("select * from item_id where true");
+	if($r) {
+		foreach($r as $rr) {
+			\Zotlabs\Lib\IConfig::Set($rr['iid'],'system',$rr['service'],$rr['sid'],true);
+		}
+	}
+	return UPDATE_SUCCESS;
+
+}
+
+function update_r1177() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("alter table event add cal_id bigint NOT NULL DEFAULT '0'");
+		$r2 = q("create index \"event_cal_idx\" on event (\"cal_id\") "); 
+
+		$r3 = q("CREATE TABLE \"cal\" (
+			\"cal_id\" serial  NOT NULL,
+		 	\"cal_aid\" bigint NOT NULL DEFAULT '0',
+		 	\"cal_uid\" bigint NOT NULL DEFAULT '0',
+		 	\"cal_hash\" text NOT NULL,
+			\"cal_name\" text NOT NULL,
+			\"uri\" text NOT NULL,
+			\"logname\" text NOT NULL,
+			\"pass\" text NOT NULL,
+			\"ctag\" text NOT NULL,
+			\"synctoken\" text NOT NULL,
+			\"cal_types\" text NOT NULL,
+			PRIMARY KEY (\"cal_id\") ");
+		$r4 = q("create index \"cal_hash_idx\" on cal (\"cal_hash\") ");
+		$r5 = q("create index \"cal_name_idx\" on cal (\"cal_name\") ");
+		$r6 = q("create index \"cal_types_idx\" on cal (\"cal_types\") ");
+		$r7 = q("create index \"cal_aid_idx\" on cal (\"cal_aid\") ");
+		$r8 = q("create index \"cal_uid_idx\" on cal (\"cal_uid\") ");
+		$r = $r1 && $r2 && $r3 && $r4 && $r5 && $r6 && $r7 && $r8;
+	}
+	else {
+		$r1 = q("alter table event add cal_id int(10) unsigned NOT NULL DEFAULT '0', 
+			add index ( cal_id ) ");
+
+		$r2 = q("CREATE TABLE IF NOT EXISTS `cal` (
+			`cal_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			`cal_aid` int(10) unsigned NOT NULL DEFAULT '0',
+			`cal_uid` int(10) unsigned NOT NULL DEFAULT '0',
+			`cal_hash` varchar(255) NOT NULL DEFAULT '',
+			`cal_name` varchar(255) NOT NULL DEFAULT '',
+			`uri` varchar(255) NOT NULL DEFAULT '',
+			`logname` varchar(255) NOT NULL DEFAULT '',
+			`pass` varchar(255) NOT NULL DEFAULT '',
+			`ctag` varchar(255) NOT NULL DEFAULT '',
+			`synctoken` varchar(255) NOT NULL DEFAULT '',
+			`cal_types` varchar(255) NOT NULL DEFAULT '',
+			PRIMARY KEY (`cal_id`),
+			KEY `cal_aid` (`cal_aid`),
+			KEY `cal_uid` (`cal_uid`),
+			KEY `cal_hash` (`cal_hash`),
+			KEY `cal_name` (`cal_name`),
+			KEY `cal_types` (`cal_types`)
+			) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ");
+
+		$r = $r1 && $r2;
+	}
+
+    if($r)
+        return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+}
+
+
+function update_r1178() {
+
+	$c2 = null;
+
+	$c1 = q("SELECT channel_id, channel_hash from channel where true");
+	if($c1) {
+		$c2 = q("SELECT id, chan from abconfig where true");
+		if($c2) {
+			for($x = 0; $x < count($c2); $x ++) {
+				foreach($c1 as $c) {
+					if($c['channel_hash'] == $c2[$x]['chan']) {
+						$c2[$x]['chan'] = $c['channel_id'];
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	$r1 = q("ALTER TABLE abconfig CHANGE chan chan int(10) unsigned NOT NULL DEFAULT '0' ");
+
+	if($c2) {
+		foreach($c2 as $c) {
+			q("UPDATE abconfig SET chan = %d where id = %d",
+				intval($c['chan']),
+				intval($c['id'])
+			);
+		}
+	}
+
+	if($r1)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1179() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("CREATE TABLE atoken (
+  atoken_id serial NOT NULL,
+  atoken_aid bigint NOT NULL DEFAULT 0,
+  atoken_uid bigint NOT NULL DEFAULT 0,
+  atoken_name varchar(255) NOT NULL DEFAULT '',
+  atoken_token varchar(255) NOT NULL DEFAULT '',
+  atoken_expires timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  PRIMARY KEY (atoken_id)) ");
+	$r2 = q("create index atoken_aid on atoken (atoken_aid)");
+	$r3 = q("create index atoken_uid on atoken (atoken_uid)");
+	$r4 = q("create index atoken_name on atoken (atoken_name)");
+	$r5 = q("create index atoken_token on atoken (atoken_token)");
+	$r6 = q("create index atoken_expires on atoken (atoken_expires)");
+
+	$r = $r1 && $r2 && $r3 && $r4 && $r5 && $r6;
+ 
+	}
+	else {
+		$r = q("CREATE TABLE IF NOT EXISTS `atoken` (
+  `atoken_id` int(11) NOT NULL AUTO_INCREMENT,
+  `atoken_aid` int(11) NOT NULL DEFAULT 0,
+  `atoken_uid` int(11) NOT NULL DEFAULT 0,
+  `atoken_name` char(255) NOT NULL DEFAULT '',
+  `atoken_token` char(255) NOT NULL DEFAULT '',
+  `atoken_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`atoken_id`),
+  KEY `atoken_aid` (`atoken_aid`),
+  KEY `atoken_uid` (`atoken_uid`),
+  KEY `atoken_name` (`atoken_name`),
+  KEY `atoken_token` (`atoken_token`),
+  KEY `atoken_expires` (`atoken_expires`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+	}
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+	
+
+}

@@ -224,6 +224,19 @@ function print_warn {
     echo -e '\e[0m'
 }
 
+function stop_hubzilla {
+    if [ -d /etc/apache2 ]
+    then
+        print_info "stopping apache webserver..."
+        service apache2 stop
+    fi
+    if [ -f /etc/init.d/mysql ]
+    then
+        print_info "stopping mysql db..."
+        /etc/init.d/mysql stop
+    fi
+}
+
 function install_apache {
     print_info "installing apache..."
     nocheck_install "apache2 apache2-utils"
@@ -593,7 +606,7 @@ function install_hubzilla_plugins {
         echo "# 2. run" >> $plugin_install
         echo "#   cd /var/www/html/.homeinstall" >> $plugin_install
         echo "#   ./hubzilla-setup.sh" >> $plugin_install
-        echo "https://gitlab.com/zot/ownmapp.git ownMap" >> $plugin_install
+        echo "https://gitlab.com/zot/ownmapp.git ownMapp" >> $plugin_install
         echo "https://gitlab.com/zot/hubzilla-chess.git chess" >> $plugin_install
     fi
     # install plugins
@@ -906,6 +919,7 @@ sslconf=/etc/apache2/sites-available/default-ssl.conf
 #set -x    # activate debugging from here
 
 check_config
+stop_hubzilla
 update_upgrade
 install_curl
 install_sendmail

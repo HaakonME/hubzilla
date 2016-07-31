@@ -1,15 +1,21 @@
 <?php
 
+function po2php_run($argc,$argv) {
 
-function po2php_run($argv, $argc) {
-
-	if ($argc!=2) {
+	if ($argc < 2) {
 		print "Usage: ".$argv[0]." <file.po>\n\n";
 		return;
 	}
-	
+
+	$rtl = false;	
+
 	$pofile = $argv[1];
 	$outfile = dirname($pofile)."/hstrings.php";
+
+	if($argc > 2) {
+		if($argv[2] === 'rtl')
+			$rtl = true;
+	}
 
 	if(strstr($outfile,'util'))
 		$lang = 'en';
@@ -52,10 +58,12 @@ function po2php_run($argv, $argc) {
 			$out .= 'function string_plural_select_' . $lang . '($n){'."\n";
 			$out .= '	return '.$cond.';'."\n";
 			$out .= '}}'."\n";
+
+			$out .= 'App::$rtl = ' . intval($rtl) ;
 		}
 		
 		if ($k!="" && substr($l,0,7)=="msgstr "){
-			if ($ink) { $ink = False; $out .= '$a->strings["'.$k.'"] = '; }
+			if ($ink) { $ink = False; $out .= 'App::$strings["'.$k.'"] = '; }
 			if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }
 			
 			$v = substr($l,8,$len-10);
@@ -66,7 +74,7 @@ function po2php_run($argv, $argc) {
 		if ($k!="" && substr($l,0,7)=="msgstr["){
 			if ($ink) { 
 				$ink = False; 
-				$out .= '$a->strings["'.$k.'"] = '; 
+				$out .= 'App::$strings["'.$k.'"] = '; 
 			}
 			if ($inv) {	
 				$inv = False; 
@@ -86,14 +94,14 @@ function po2php_run($argv, $argc) {
 	
 		if (substr($l,0,6)=="msgid_") { 
 			$ink = False; 
-			$out .= '$a->strings["'.$k.'"] = '; 
+			$out .= 'App::$strings["'.$k.'"] = '; 
 		}
 
 
 		if ($ink) {
 			$k .= trim_message($l);
 			$k = preg_replace_callback($escape_s_exp,'escape_s',$k);
-			//$out .= '$a->strings['.$k.'] = ';
+			//$out .= 'App::$strings['.$k.'] = ';
 		}
 		
 		if (substr($l,0,6)=="msgid "){
@@ -112,7 +120,7 @@ function po2php_run($argv, $argc) {
 		if ($inv && substr($l,0,6)!="msgstr" && substr($l,0,7)!="msgctxt") {
 			$v .= trim_message($l);
 			$v = preg_replace_callback($escape_s_exp,'escape_s',$v);
-			//$out .= '$a->strings['.$k.'] = ';
+			//$out .= 'App::$strings['.$k.'] = ';
 		}
 
 		if (substr($l,0,7)=="msgctxt") {
@@ -140,5 +148,5 @@ function trim_message($str) {
 }
 
 if (array_search(__file__,get_included_files())===0){
-  po2php_run($argv,$argc);
+  po2php_run($argc,$argv);
 }

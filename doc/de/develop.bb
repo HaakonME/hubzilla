@@ -25,9 +25,6 @@
 [zrl=[baseurl]/help/git_for_non_developers]Git für Nicht-Entwickler[/zrl]
 [zrl=[baseurl]/help/dev_beginner]Schritt-für-Schritt-Einführung für neue Entwickler[/zrl]
 
-[h3]Häufig gestellte Fragen für Entwickler[/h3]
-[zrl=[baseurl]/help/faq_developers]FAQ für Entwickler[/zrl]
-
 [h3]Externe Ressourcen[/h3]
 [url=https://zothub.com/channel/one]Entwickler-Kanal[/url]
 [url=https://federated.social/channel/postgres]Postgres-spezifischer Admin-Support-Kanal[/url]

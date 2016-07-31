@@ -6,9 +6,8 @@ require_once('include/follow.php');
 require_once('include/photo/photo_driver.php');
 
 function import_diaspora($data) {
-	$a = get_app();
 
-	$account = $a->get_account();
+	$account = App::get_account();
 	if(! $account)
 		return false;
 

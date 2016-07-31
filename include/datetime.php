@@ -119,7 +119,6 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
  * @return string
  */
 function dob($dob) {
-	$a = get_app();
 
 	list($year, $month, $day) = sscanf($dob, '%4d-%2d-%2d');
 	$f = get_config('system', 'birthday_input_format');
@@ -135,7 +134,7 @@ function dob($dob) {
 		'dob',
 		t('Birthday'),
 		$value,
-		((intval($value)) ? t('Age: ') . age($value,$a->user['timezone'],$a->user['timezone']) : ''),
+		((intval($value)) ? t('Age: ') . age($value,App::$user['timezone'],App::$user['timezone']) : ''),
 		'',
 		'placeholder="' . t('YYYY-MM-DD or MM-DD') .'"'
 	)));
@@ -225,7 +224,7 @@ function datetimesel($format, $min, $max, $default, $label, $id = 'datetimepicke
 
 	$pickers = '';
 	if(!$pickdate) $pickers .= ',datepicker: false';
-	if(!$picktime) $pickers .= ',timepicker: false';
+	if(!$picktime) $pickers .= ',timepicker: false, closeOnDateSelect:true';
 
 	$extra_js = '';
 	if($minfrom != '') 
@@ -557,13 +556,13 @@ function update_birthdays() {
 			$ev['uid'] = $rr['abook_channel'];
 			$ev['account'] = $rr['abook_account'];
 			$ev['event_xchan'] = $rr['xchan_hash'];
-			$ev['start'] = datetime_convert('UTC', 'UTC', $rr['abook_dob']);
-			$ev['finish'] = datetime_convert('UTC', 'UTC', $rr['abook_dob'] . ' + 1 day ');
+			$ev['dtstart'] = datetime_convert('UTC', 'UTC', $rr['abook_dob']);
+			$ev['dtend'] = datetime_convert('UTC', 'UTC', $rr['abook_dob'] . ' + 1 day ');
 			$ev['adjust'] = intval(feature_enabled($rr['abook_channel'],'smart_birthdays'));
 			$ev['summary'] = sprintf( t('%1$s\'s birthday'), $rr['xchan_name']);
 			$ev['description'] = sprintf( t('Happy Birthday %1$s'), 
 				'[zrl=' . $rr['xchan_url'] . ']' . $rr['xchan_name'] . '[/zrl]') ;
-			$ev['type'] = 'birthday';
+			$ev['etype'] = 'birthday';
 
 			$z = event_store_event($ev);
 			if ($z) {

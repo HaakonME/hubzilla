@@ -4,7 +4,7 @@
 <h2>{{$mname}} {{$module}}</h2>
 
 <br />
-<a href="help/Comanche" target="hubzilla-help">{{$help}}</a>
+<a href="help/comanche" target="hubzilla-help">{{$help}}</a>
 <br />
 <br />
 
@@ -18,4 +18,7 @@
 <input type="submit" name="submit" value="{{$submit}}" />
 
 </form>
+<script>
+	$('textarea').bbco_autocomplete('comanche');
+</script>
 </div>

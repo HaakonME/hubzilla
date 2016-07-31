@@ -20,7 +20,7 @@ function file_tag_file_query($table,$s,$type = 'file') {
 	else
 		$termtype = TERM_CATEGORY;
 
-	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.ttype = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
 		intval($termtype),
 		protect_sprintf(dbesc($s))
 	);
@@ -29,14 +29,14 @@ function file_tag_file_query($table,$s,$type = 'file') {
 function term_query($table,$s,$type = TERM_UNKNOWN, $type2 = '') {
 
 	if($type2) {
-		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type in (%d, %d) and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.ttype in (%d, %d) and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
 			intval($type),
 			intval($type2),
 			protect_sprintf(dbesc($s))
 		);
 	}
 	else {
-		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
+		return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.ttype = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
 			intval($type),
 			protect_sprintf(dbesc($s))
 		);
@@ -49,7 +49,7 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 		return false;
 
 	$r = q("select * from term 
-		where uid = %d and oid = %d and otype = %d and type = %d 
+		where uid = %d and oid = %d and otype = %d and ttype = %d 
 		and term = '%s' and url = '%s' ",
 		intval($uid),
 		intval($iid),
@@ -61,7 +61,7 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 	if($r)
 		return false;
 
-	$r = q("insert into term (uid, oid, otype, type, term, url)
+	$r = q("insert into term (uid, oid, otype, ttype, term, url)
 		values( %d, %d, %d, %d, '%s', '%s') ",
 		intval($uid),
 		intval($iid),
@@ -85,7 +85,7 @@ function get_terms_oftype($arr,$type) {
 
 	foreach($type as $t)
 		foreach($arr as $x)
-			if($x['type'] == $t)
+			if($x['ttype'] == $t)
 				$ret[] = $x;
 
 	return $ret;
@@ -93,9 +93,9 @@ function get_terms_oftype($arr,$type) {
 
 function format_term_for_display($term) {
 	$s = '';
-	if(($term['type'] == TERM_HASHTAG) || ($term['type'] == TERM_COMMUNITYTAG))
+	if(($term['ttype'] == TERM_HASHTAG) || ($term['ttype'] == TERM_COMMUNITYTAG))
 		$s .= '#';
-	elseif($term['type'] == TERM_MENTION)
+	elseif($term['ttype'] == TERM_MENTION)
 		$s .= '@';
 	else
 		return $s;
@@ -142,7 +142,7 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 
 	// Fetch tags
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
-		where term.uid = %d and term.type = %d 
+		where term.uid = %d and term.ttype = %d 
 		and otype = %d and item_type = %d and item_private = 0
 		$sql_options $item_normal
 		group by term order by total desc %s",
@@ -156,47 +156,16 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 	if(! $r)
 		return array();
 
-	// Find minimum and maximum log-count.
-	$tags = array();
-	$min = 1e9;
-	$max = -1e9;
+	return Zotlabs\Text\Tagadelic::calc($r);
 
-	$x = 0;
-	foreach($r as $rr) {
-		$tags[$x][0] = $rr['term'];
-		$tags[$x][1] = log($rr['total']);
-		$tags[$x][2] = 0;
-		$min = min($min,$tags[$x][1]);
-		$max = max($max,$tags[$x][1]);
-		$x ++;
-	}
-
-	usort($tags,'tags_sort');
-
-	$range = max(.01, $max - $min) * 1.0001;
-
-	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
-	}
-
-	return $tags;
 }
-
-
-function tags_sort($a,$b) {
-	if(strtolower($a[0]) == strtolower($b[0]))
-		return 0;
-
-	return((strtolower($a[0]) < strtolower($b[0])) ? -1 : 1);
-}
-
 
 function dir_tagadelic($count = 0) {
 
 	$count = intval($count);
 
 	// Fetch tags
-	$r = q("select xtag_term, count(xtag_term) as total from xtag where xtag_flags = 0
+	$r = q("select xtag_term as term, count(xtag_term) as total from xtag where xtag_flags = 0
 		group by xtag_term order by total desc %s",
 		((intval($count)) ? "limit $count" : '')
 	);
@@ -204,30 +173,49 @@ function dir_tagadelic($count = 0) {
 	if(! $r)
 		return array();
 
-	// Find minimum and maximum log-count.
-	$tags = array();
-	$min = 1e9;
-	$max = -1e9;
 
-	$x = 0;
-	foreach($r as $rr) {
-		$tags[$x][0] = $rr['xtag_term'];
-		$tags[$x][1] = log($rr['total']);
-		$tags[$x][2] = 0;
-		$min = min($min,$tags[$x][1]);
-		$max = max($max,$tags[$x][1]);
-		$x ++;
+	return Zotlabs\Text\Tagadelic::calc($r);
+
+}
+
+
+function app_tagblock($link,$count = 0) {
+	$o = '';
+
+	$r = app_tagadelic($count);
+
+	if($r) {
+		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+		  $o .= '<a href="'.$link .'/' . '?f=&cat=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
 	}
 
-	usort($tags,'tags_sort');
+	return $o;
+}
 
-	$range = max(.01, $max - $min) * 1.0001;
+function app_tagadelic($count = 0) {
 
-	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(9 * ($tags[$x][1] - $min) / $range);
-	}
+	if(! local_channel())
+		return '';
 
-	return $tags;
+	$count = intval($count);
+
+
+	// Fetch tags
+	$r = q("select term, count(term) as total from term left join app on term.uid = app_channel where term.uid = %d
+		and term.otype = %d group by term order by total desc %s",
+		intval(local_channel()),
+		intval(TERM_OBJ_APP),
+		((intval($count)) ? "limit $count" : '')
+	);
+
+	if(! $r)
+		return array();
+
+	return Zotlabs\Text\Tagadelic::calc($r);
+
 }
 
 
@@ -299,7 +287,7 @@ function dir_tagblock($link,$r) {
 
 
 	if(! $r)
-		$r = get_app()->data['directory_keywords'];
+		$r = App::$data['directory_keywords'];
 
 	if($r) {
 		$o = '<div class="dirtagblock widget"><h3>' . t('Keywords') . '</h3><div class="tags" align="center">';
@@ -412,7 +400,7 @@ function get_things($profile_hash,$uid) {
 			if(! $things[$rr['obj_verb']])
 				$things[$rr['obj_verb']] = array();
 
-			$things[$rr['obj_verb']][] = array('term' => $rr['obj_term'],'url' => $rr['obj_url'],'img' => $rr['obj_imgurl'], 'profile' => $rr['profile_name'],'term_hash' => $rr['obj_obj'], 'likes' => $l,'like_count' => count($l),'like_label' => tt('Like','Likes',count($l),'noun'));
+			$things[$rr['obj_verb']][] = array('term' => $rr['obj_term'],'url' => $rr['obj_url'],'img' => $rr['obj_imgurl'], 'editurl' => z_root() . '/thing/' . $rr['obj_obj'], 'profile' => $rr['profile_name'],'term_hash' => $rr['obj_obj'], 'likes' => $l,'like_count' => count($l),'like_label' => tt('Like','Likes',count($l),'noun'));
 		} 
 		$sorted_things = array();
 		if($things) {

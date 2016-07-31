@@ -2,20 +2,15 @@
 
 namespace Sabre\DAV;
 
+use Sabre\HTTP\RequestInterface;
+
 class ClientMock extends Client {
 
+    public $request;
     public $response;
 
     public $url;
     public $curlSettings;
-
-    protected function curlRequest($url, $curlSettings) {
-
-        $this->url = $url;
-        $this->curlSettings = $curlSettings;
-        return $this->response;
-
-    }
 
     /**
      * Just making this method public
@@ -23,9 +18,16 @@ class ClientMock extends Client {
      * @param string $url
      * @return string
      */
-    public function getAbsoluteUrl($url) {
+    function getAbsoluteUrl($url) {
 
         return parent::getAbsoluteUrl($url);
+
+    }
+
+    function doRequest(RequestInterface $request) {
+
+        $this->request = $request;
+        return $this->response;
 
     }
 

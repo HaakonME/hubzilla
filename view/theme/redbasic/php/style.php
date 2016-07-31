@@ -1,6 +1,6 @@
 <?php
 
-if(! $a->install) {
+if(! App::$install) {
 
 	// Get the UID of the channel owner
 	$uid = get_theme_uid();
@@ -153,6 +153,18 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 
 	$x = file_get_contents('view/theme/redbasic/css/style.css');
 
+	if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
+		$x .= file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
+	}
+
+	if($align_left && file_exists('view/theme/redbasic/css/align_left.css')) {
+		$x .= file_get_contents('view/theme/redbasic/css/align_left.css');
+	}
+
+	if($schemecss) {
+		$x .= $schemecss;
+	}
+
 	$aside_width = 287;
 
 	// left aside and right aside are 285px + converse width
@@ -204,19 +216,7 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 
 }
 
-if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
-	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
-} 
-
-if($align_left && file_exists('view/theme/redbasic/css/align_left.css')) {
-	echo file_get_contents('view/theme/redbasic/css/align_left.css');
-}
-
-if($schemecss) {
-	echo $schemecss;
-}
-
 // Set the schema to the default schema in derived themes. See the documentation for creating derived themes how to override this. 
 
-if(local_channel() && $a->channel && $a->channel['channel_theme'] != 'redbasic')
+if(local_channel() && App::$channel && App::$channel['channel_theme'] != 'redbasic')
 	set_pconfig(local_channel(), 'redbasic', 'schema', '---');

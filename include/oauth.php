@@ -27,7 +27,7 @@ class ZotOAuth1DataStore extends OAuth1DataStore {
 		);
 
 		if($r) {
-			get_app()->set_oauth_key($consumer_key);
+			App::set_oauth_key($consumer_key);
 			return new OAuth1Consumer($r[0]['client_id'],$r[0]['pw'],$r[0]['redirect_uri']);
 		}
 		return null;
@@ -37,7 +37,7 @@ class ZotOAuth1DataStore extends OAuth1DataStore {
 
 		logger(__function__.":".$consumer.", ". $token_type.", ".$token, LOGGER_DEBUG);
 
-		$r = q("SELECT id, secret, scope, expires, uid  FROM tokens WHERE client_id = '%s' AND scope = '%s' AND id = '%s'",
+		$r = q("SELECT id, secret, auth_scope, expires, uid  FROM tokens WHERE client_id = '%s' AND auth_scope = '%s' AND id = '%s'",
 			dbesc($consumer->key),
 			dbesc($token_type),
 			dbesc($token)
@@ -45,7 +45,7 @@ class ZotOAuth1DataStore extends OAuth1DataStore {
 
 		if (count($r)){
 			$ot=new OAuth1Token($r[0]['id'],$r[0]['secret']);
-			$ot->scope=$r[0]['scope'];
+			$ot->scope=$r[0]['auth_scope'];
 			$ot->expires = $r[0]['expires'];
 			$ot->uid = $r[0]['uid'];
 			return $ot;
@@ -79,7 +79,7 @@ class ZotOAuth1DataStore extends OAuth1DataStore {
 			$k = $consumer;
 		}
 
-		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires) VALUES ('%s','%s','%s','%s', %d)",
+		$r = q("INSERT INTO tokens (id, secret, client_id, auth_scope, expires) VALUES ('%s','%s','%s','%s', %d)",
 				dbesc($key),
 				dbesc($sec),
 				dbesc($k),
@@ -110,7 +110,7 @@ class ZotOAuth1DataStore extends OAuth1DataStore {
 			$key = $this->gen_token();
 			$sec = $this->gen_token();
 
-			$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires, uid) VALUES ('%s','%s','%s','%s', %d, %d)",
+			$r = q("INSERT INTO tokens (id, secret, client_id, auth_scope, expires, uid) VALUES ('%s','%s','%s','%s', %d, %d)",
 				dbesc($key),
 				dbesc($sec),
 				dbesc($consumer->key),
@@ -170,7 +170,7 @@ class ZotOAuth1 extends OAuth1Server {
 		);
 		if($x) {
 			require_once('include/security.php');
-			authenticate_success($x[0],true,false,true,true);
+			authenticate_success($x[0],null,true,false,true,true);
 			$_SESSION['allow_api'] = true;
 		}
 	}
@@ -249,7 +249,7 @@ class FKOAuth2 extends OAuth2 {
 
 
 	protected function getAuthCode($code) {
-		$r = q("SELECT id, client_id, redirect_uri, expires, scope FROM auth_codes WHERE id = '%s'",
+		$r = q("SELECT id, client_id, redirect_uri, expires, auth_scope FROM auth_codes WHERE id = '%s'",
 				dbesc($code));
 		
 		if (count($r))
@@ -259,7 +259,7 @@ class FKOAuth2 extends OAuth2 {
 
 	protected function setAuthCode($code, $client_id, $redirect_uri, $expires, $scope = NULL) {
 		$r = q("INSERT INTO auth_codes 
-					(id, client_id, redirect_uri, expires, scope) VALUES 
+					(id, client_id, redirect_uri, expires, auth_scope) VALUES 
 					('%s', '%s', '%s', %d, '%s')",
 				dbesc($code),
 				dbesc($client_id),

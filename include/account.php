@@ -11,7 +11,7 @@ require_once('include/text.php');
 require_once('include/language.php');
 require_once('include/datetime.php');
 require_once('include/crypto.php');
-require_once('include/identity.php');
+require_once('include/channel.php');
 
 
 function check_account_email($email) {
@@ -229,7 +229,7 @@ function verify_email_address($arr) {
 
 	$hash = random_string();
 
-	$r = q("INSERT INTO register ( hash, created, uid, password, language ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
+	$r = q("INSERT INTO register ( hash, created, uid, password, lang ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
 		dbesc($hash),
 		dbesc(datetime_convert()),
 		intval($arr['account']['account_id']),
@@ -248,7 +248,7 @@ function verify_email_address($arr) {
 
 	$res = mail($arr['email'], email_header_encode(sprintf( t('Registration confirmation for %s'), get_config('system','sitename'))),
 		$email_msg,
-		'From: ' . 'Administrator' . '@' . get_app()->get_hostname() . "\n"
+		'From: ' . 'Administrator' . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' 
 	);
@@ -283,7 +283,7 @@ function send_reg_approval_email($arr) {
 
 	$hash = random_string();
 
-	$r = q("INSERT INTO register ( hash, created, uid, password, language ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
+	$r = q("INSERT INTO register ( hash, created, uid, password, lang ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
 		dbesc($hash),
 		dbesc(datetime_convert()),
 		intval($arr['account']['account_id']),
@@ -314,7 +314,7 @@ function send_reg_approval_email($arr) {
 
 		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('system','sitename')),
 			$email_msg,
-			'From: ' . t('Administrator') . '@' . get_app()->get_hostname() . "\n"
+			'From: ' . t('Administrator') . '@' . App::get_hostname() . "\n"
 			. 'Content-type: text/plain; charset=UTF-8' . "\n"
 			. 'Content-transfer-encoding: 8bit' 
 		);
@@ -341,7 +341,7 @@ function send_register_success_email($email,$password) {
 
 	$res = mail($email, sprintf( t('Registration details for %s'), get_config('system','sitename')),
 		$email_msg, 
-		'From: ' . t('Administrator') . '@' . get_app()->get_hostname() . "\n"
+		'From: ' . t('Administrator') . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
 		. 'Content-transfer-encoding: 8bit' 
 	);
@@ -387,7 +387,7 @@ function account_allow($hash) {
 		intval($register[0]['uid'])
 	);
 
-	push_lang($register[0]['language']);
+	push_lang($register[0]['lang']);
 
 	$email_tpl = get_intltext_template("register_open_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
@@ -499,11 +499,27 @@ function account_approve($hash) {
 		intval($register[0]['uid'])
 	);
 
+	// get a fresh copy after we've modified it.
+
+	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+
+	if(! $account)
+		return $ret;
+
+
+
 
 	if(get_config('system','auto_channel_create') || UNO)
 		auto_channel_create($register[0]['uid']);
+	else {
+		$_SESSION['login_return_url'] = 'new_channel';
+		authenticate_success($account[0],null,true,true,false,true);
+	}	
 
-	info( t('Account verified. Please login.') . EOL );
+
+	// info( t('Account verified. Please login.') . EOL );
 
 	return true;
 }
@@ -591,6 +607,7 @@ function service_class_allows($uid, $property, $usage = false) {
 	if($limit === false)
 		return true; // No service class set => everything is allowed
 
+	$limit = engr_units_to_bytes($limit);
 	if($usage === false) {
 		// We use negative values for not allowed properties in a subscriber plan
 		return ((x($limit)) ? (bool) $limit : true);
@@ -627,6 +644,8 @@ function account_service_class_allows($aid, $property, $usage = false) {
 	if($limit === false)
 		return true; // No service class is set => everything is allowed
 
+	$limit = engr_units_to_bytes($limit);
+
 	if($usage === false) {
 		// We use negative values for not allowed properties in a subscriber plan
 		return ((x($limit)) ? (bool) $limit : true);
@@ -653,9 +672,10 @@ function account_service_class_allows($aid, $property, $usage = false) {
  * @todo Should we merge this with account_service_class_fetch()?
  */
 function service_class_fetch($uid, $property) {
-	$a = get_app();
+
+
 	if($uid == local_channel()) {
-		$service_class = $a->account['account_service_class'];
+		$service_class = App::$account['account_service_class'];
 	}
 	else {
 		$r = q("select account_service_class as service_class 

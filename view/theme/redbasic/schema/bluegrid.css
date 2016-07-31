@@ -333,6 +333,15 @@ input {
 	text-decoration: none;
 }
 
+.section-content-info-wrapper {
+	color: #fff;
+	background-color: #43488A;
+}
+
+.section-content-info-wrapper a {
+	color: #fff;
+}
+
 .btn, #event-edit-form .btn, input.directory-rating-submit {
     border: 1px solid #FFF;
     color: #FFF; 
@@ -433,7 +442,7 @@ input {
     border-color: #AC2925 !important;
 }
 
-a:hover > .icon-trash {
+a:hover > .fa-trash-o {
 	color: #C9302C !important;	
 }
 
@@ -450,10 +459,10 @@ a:hover > .icon-trash {
 	.navbar-inverse .navbar-toggle .icon-bar {
 		background-color: #FFF;
 	}
-	.navbar-inverse .navbar-toggle .icon-circle-arrow-down, .navbar-inverse .navbar-toggle .icon-circle-arrow-right, .navbar-inverse .navbar-toggle .icon-circle-arrow-up, .navbar-inverse .navbar-toggle .icon-circle-arrow-left  {
+	.navbar-inverse .navbar-toggle .fa-arrow-circle-down, .navbar-inverse .navbar-toggle .fa-arrow-circle-right, .navbar-inverse .navbar-toggle .fa-arrow-circle-up, .navbar-inverse .navbar-toggle .fa-arrow-circle-left, .navbar-inverse .navbar-toggle .fa-question-circle  {
 		color: #FFF;
 	}
-	.navbar-inverse .navbar-toggle:hover .icon-circle-arrow-down, .navbar-inverse .navbar-toggle:focus .icon-circle-arrow-down, .navbar-inverse .navbar-toggle:hover .icon-circle-arrow-right, .navbar-inverse .navbar-toggle:focus .icon-circle-arrow-right, .navbar-inverse .navbar-toggle:hover .icon-circle-arrow-up, .navbar-inverse .navbar-toggle:focus .icon-circle-arrow-up, .navbar-inverse .navbar-toggle:hover .icon-circle-arrow-left, .navbar-inverse .navbar-toggle:focus .icon-circle-arrow-left {
+	.navbar-inverse .navbar-toggle:hover .fa-arrow-circle-down, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-down, .navbar-inverse .navbar-toggle:hover .fa-arrow-circle-right, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-right, .navbar-inverse .navbar-toggle:hover .fa-arrow-circle-up, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-up, .navbar-inverse .navbar-toggle:hover .fa-arrow-circle-left, .navbar-inverse .navbar-toggle:focus .fa-arrow-circle-left {
 		color: #43488A;
 	}
 	.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
@@ -464,4 +473,19 @@ a:hover > .icon-trash {
 	}
 }
 
+.help-content {
+	color: #FFF;
+	border: none;
+}
+
+.help-content a {
+	color: #FFF;
+	font-weight: 600;
+}
+
+.help-content-open {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 

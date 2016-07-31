@@ -5,8 +5,6 @@
  * @brief Some functions to handle addons and themes.
  */
 
-require_once("include/smarty.php");
-
 
 /**
  * @brief unloads an addon.
@@ -43,7 +41,7 @@ function uninstall_plugin($plugin) {
 		$func();
 	}
 
-	q("DELETE FROM `addon` WHERE `name` = '%s' ",
+	q("DELETE FROM `addon` WHERE `aname` = '%s' ",
 		dbesc($plugin)
 	);
 }
@@ -68,7 +66,7 @@ function install_plugin($plugin) {
 
 	$plugin_admin = (function_exists($plugin . '_plugin_admin') ? 1 : 0);
 
-	q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
+	q("INSERT INTO `addon` (`aname`, `installed`, `tstamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 		dbesc($plugin),
 		intval($t),
 		$plugin_admin
@@ -113,7 +111,7 @@ function load_plugin($plugin) {
 }
 
 function plugin_is_installed($name) {
-	$r = q("select name from addon where name = '%s' and installed = 1 limit 1",
+	$r = q("select aname from addon where aname = '%s' and installed = 1 limit 1",
 		dbesc($name)
 	);
 	if($r)
@@ -145,8 +143,8 @@ function reload_plugins() {
 				if(file_exists($fname)) {
 					$t = @filemtime($fname);
 					foreach($installed as $i) {
-						if(($i['name'] == $pl) && ($i['timestamp'] != $t)) {	
-							logger('Reloading plugin: ' . $i['name']);
+						if(($i['aname'] == $pl) && ($i['tstamp'] != $t)) {	
+							logger('Reloading plugin: ' . $i['aname']);
 							@include_once($fname);
 
 							if(function_exists($pl . '_unload')) {
@@ -157,7 +155,7 @@ function reload_plugins() {
 								$func = $pl . '_load';
 								$func();
 							}
-							q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d",
+							q("UPDATE `addon` SET `tstamp` = %d WHERE `id` = %d",
 								intval($t),
 								intval($i['id'])
 							);
@@ -168,6 +166,12 @@ function reload_plugins() {
 		}
 	}
 }
+
+function visible_plugin_list() {
+	$r = q("select * from addon where hidden = 0 order by aname asc");
+	return(($r) ? ids_to_array($r,'aname') : array());
+}
+
 
 
 /**
@@ -180,15 +184,15 @@ function reload_plugins() {
  * @return mixed|bool
  */
 function register_hook($hook, $file, $function, $priority = 0) {
-	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `fn` = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
 	);
-	if(count($r))
+	if($r)
 		return true;
 
-	$r = q("INSERT INTO `hook` (`hook`, `file`, `function`, `priority`) VALUES ( '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO `hook` (`hook`, `file`, `fn`, `priority`) VALUES ( '%s', '%s', '%s', '%s' )",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function),
@@ -208,7 +212,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
  * @return array
  */
 function unregister_hook($hook, $file, $function) {
-	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `function` = '%s'",
+	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `fn` = '%s'",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
@@ -219,27 +223,26 @@ function unregister_hook($hook, $file, $function) {
 
 
 //
-// It might not be obvious but themes can manually add hooks to the $a->hooks
+// It might not be obvious but themes can manually add hooks to the App::$hooks
 // array in their theme_init() and use this to customise the app behaviour.  
 // UPDATE: use insert_hook($hookname,$function_name) to do this
 //
 
 
 function load_hooks() {
-	$a = get_app();
-//	if(! is_array($a->hooks))
-		$a->hooks = array();
+
+	App::$hooks = array();
 
 	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
 	if($r) {
 		foreach($r as $rr) {
-			if(! array_key_exists($rr['hook'],$a->hooks))
-				$a->hooks[$rr['hook']] = array();
+			if(! array_key_exists($rr['hook'],App::$hooks))
+				App::$hooks[$rr['hook']] = array();
 
-			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
+			App::$hooks[$rr['hook']][] = array($rr['file'],$rr['fn'],$rr['priority'],$rr['hook_version']);
 		}
 	}
-//logger('hooks: ' . print_r($a->hooks,true));
+	//logger('hooks: ' . print_r(App::$hooks,true));
 }
 
 /**
@@ -259,15 +262,15 @@ function load_hooks() {
  * @param string $fn
  *     function name of callback handler
  */ 
-function insert_hook($hook, $fn) {
-	$a = get_app();
-	if(! is_array($a->hooks))
-		$a->hooks = array();
+function insert_hook($hook, $fn, $version = 0, $priority = 0) {
 
-	if(! array_key_exists($hook, $a->hooks))
-		$a->hooks[$hook] = array();
+	if(! is_array(App::$hooks))
+		App::$hooks = array();
 
-	$a->hooks[$hook][] = array('', $fn);
+	if(! array_key_exists($hook, App::$hooks))
+		App::$hooks[$hook] = array();
+
+	App::$hooks[$hook][] = array('', $fn, $priority, $version);
 }
 
 /**
@@ -280,23 +283,41 @@ function insert_hook($hook, $fn) {
  * @param string|array &$data to transmit to the callback handler
  */
 function call_hooks($name, &$data = null) {
-	$a = get_app();
-
-	if((is_array($a->hooks)) && (array_key_exists($name, $a->hooks))) {
-		foreach($a->hooks[$name] as $hook) {
+	$a = 0;
+	if((is_array(App::$hooks)) && (array_key_exists($name, App::$hooks))) {
+		foreach(App::$hooks[$name] as $hook) {
+			$origfn = $hook[1];
 			if($hook[0])
 				@include_once($hook[0]);
+			if(preg_match('|^a:[0-9]+:{.*}$|s', $hook[1])) {
+				$hook[1] = unserialize($hook[1]);
+			}
+			elseif(strpos($hook[1],'::')) {
+				// We shouldn't need to do this, but it appears that PHP 
+				// isn't able to directly execute a string variable with a class
+				// method in the manner we are attempting it, so we'll
+				// turn it into an array.
+				$hook[1] = explode('::',$hook[1]);
+			}
 
-			if(function_exists($hook[1])) {
+			if(is_callable($hook[1])) {
 				$func = $hook[1];
-				$func($a, $data);
-			} else {
+				if($hook[3])
+					$func($data);
+				else
+					$func($a, $data);
+			} 
+			else {
 
-				q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND function = '%s'",
-					dbesc($name),
-					dbesc($hook[0]),
-					dbesc($hook[1])
-				);
+				// Don't do any DB write calls if we're currently logging a possibly failed DB call. 
+				if(! DBA::$logging) {
+					// The hook should be removed so we don't process it.
+					q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND fn = '%s'",
+						dbesc($name),
+						dbesc($hook[0]),
+						dbesc($origfn)
+					);
+				}
 			}
 		}
 	}
@@ -392,7 +413,7 @@ function check_plugin_versions($info) {
 				$test = trim($test);
 				if(! $test)
 					continue;
-				if(! in_array($test,get_app()->plugins))
+				if(! in_array($test,App::$plugins))
 					$found = false;				
 			}
 		}
@@ -491,14 +512,14 @@ function get_theme_info($theme){
  * @return string
  */
 function get_theme_screenshot($theme) {
-	$a = get_app();
+
 	$exts = array('.png', '.jpg');
 	foreach($exts as $ext) {
 		if(file_exists('view/theme/' . $theme . '/img/screenshot' . $ext))
-			return($a->get_baseurl() . '/view/theme/' . $theme . '/img/screenshot' . $ext);
+			return(z_root() . '/view/theme/' . $theme . '/img/screenshot' . $ext);
 	}
 
-	return($a->get_baseurl() . '/images/blank.png');
+	return(z_root() . '/images/blank.png');
 }
 
 /**
@@ -508,19 +529,19 @@ function get_theme_screenshot($theme) {
  * @param string $media change media attribute (default to 'screen')
  */
 function head_add_css($src, $media = 'screen') {
-	get_app()->css_sources[] = array($src, $media);
+	App::$css_sources[] = array($src, $media);
 }
 
 function head_remove_css($src, $media = 'screen') {
-	$a = get_app();
-	$index = array_search(array($src, $media), $a->css_sources);
+
+	$index = array_search(array($src, $media), App::$css_sources);
 	if ($index !== false)
-		unset($a->css_sources[$index]);
+		unset(App::$css_sources[$index]);
 }
 
 function head_get_css() {
 	$str = '';
-	$sources = get_app()->css_sources;
+	$sources = App::$css_sources;
 	if (count($sources)) {
 		foreach ($sources as $source)
 			$str .= format_css_if_exists($source);
@@ -530,13 +551,22 @@ function head_get_css() {
 }
 
 function format_css_if_exists($source) {
-	if (strpos($source[0], '/') !== false)
-		$path = $source[0];
-	else
-		$path = theme_include($source[0]);
+	$path_prefix = script_path() . '/';
 
-	if($path)
-		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
+	if (strpos($source[0], '/') !== false) {
+		// The source is a URL
+		$path = $source[0];
+		// If the url starts with // then it's an absolute URL
+		if($source[0][0] === '/' && $source[0][1] === '/') $path_prefix = '';
+	} else {
+		// It's a file from the theme
+		$path = theme_include($source[0]);
+	}
+
+	if($path) {
+		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
+		return '<link rel="stylesheet" href="' . $path_prefix . $path . $qstring . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
+	}
 }
 
 /*
@@ -560,7 +590,7 @@ function script_path() {
 	
 	// Some proxy setups may require using http_host
 
-	if(intval(get_app()->config['system']['script_path_use_http_host']))
+	if(intval(App::$config['system']['script_path_use_http_host']))
 		$server_var = 'HTTP_HOST';
 	else
 		$server_var = 'SERVER_NAME';
@@ -575,26 +605,38 @@ function script_path() {
 	return $scheme . '://' . $hostname;
 }
 
-function head_add_js($src) {
-	get_app()->js_sources[] = $src;
+function head_add_js($src, $priority = 0) {
+	if(! is_array(App::$js_sources[$priority]))
+		App::$js_sources[$priority] = array();
+	App::$js_sources[$priority][] = $src;
 }
 
-function head_remove_js($src) {
-	$a = get_app();
-	$index = array_search($src, $a->js_sources);
+function head_remove_js($src, $priority = 0) {
+
+	$index = array_search($src, App::$js_sources[$priority]);
 	if($index !== false)
-		unset($a->js_sources[$index]);
+		unset(App::$js_sources[$priority][$index]);
 }
+
+// We should probably try to register main.js with a high priority, but currently we handle it
+// separately and put it at the end of the html head block in case any other javascript is 
+// added outside the head_add_js construct.
 
 function head_get_js() {
+
 	$str = '';
-	$sources = get_app()->js_sources;
-	if(count($sources)) 
-		foreach($sources as $source) {
-			if($source === 'main.js')
-				continue;
-			$str .= format_js_if_exists($source);
+	if(App::$js_sources) {
+		ksort(App::$js_sources,SORT_NUMERIC);
+		foreach(App::$js_sources as $sources) {
+			if(count($sources)) { 
+				foreach($sources as $source) {
+					if($src === 'main.js')
+						continue;
+					$str .= format_js_if_exists($source);
+				}
+			}
 		}
+	}
 	return $str;
 }
 
@@ -608,35 +650,44 @@ function head_get_main_js() {
 }
 
 function format_js_if_exists($source) {
-	if(strpos($source,'/') !== false)
+	$path_prefix = script_path() . '/';
+
+	if(strpos($source,'/') !== false) {
+		// The source is a URL
 		$path = $source;
-	else
+		// If the url starts with // then it's an absolute URL
+		if($source[0] === '/' && $source[1] === '/') $path_prefix = '';
+	} else {
+		// It's a file from the theme
 		$path = theme_include($source);
-	if($path)
-		return '<script src="' . script_path() . '/' . $path . '" ></script>' . "\r\n" ;
+	}
+	if($path) {
+		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;
+		return '<script src="' . $path_prefix . $path . $qstring . '" ></script>' . "\r\n" ;
+	}
 }
 
 
 function theme_include($file, $root = '') {
-	$a = get_app();
 
 	// Make sure $root ends with a slash / if it's not blank
 	if($root !== '' && $root[strlen($root)-1] !== '/')
 		$root = $root . '/';
 
-	$theme_info = $a->theme_info;
+	$theme_info = App::$theme_info;
 
 	if(array_key_exists('extends',$theme_info))
 		$parent = $theme_info['extends'];
 	else
 		$parent = 'NOPATH';
 
-	$theme = current_theme();
+	$theme = Zotlabs\Render\Theme::current();
+	$thname = $theme[0];
 
 	$ext = substr($file,strrpos($file,'.')+1);
 
 	$paths = array(
-		"{$root}view/theme/$theme/$ext/$file",
+		"{$root}view/theme/$thname/$ext/$file",
 		"{$root}view/theme/$parent/$ext/$file",
 		"{$root}view/site/$ext/$file",
 		"{$root}view/$ext/$file",
@@ -655,8 +706,8 @@ function theme_include($file, $root = '') {
 
 
 function get_intltext_template($s, $root = '') {
-	$a = get_app();
-	$t = $a->template_engine();
+
+	$t = App::template_engine();
 
 	$template = $t->get_intltext_template($s, $root);
 	return $template;
@@ -664,8 +715,8 @@ function get_intltext_template($s, $root = '') {
 
 
 function get_markup_template($s, $root = '') {
-	$a = get_app();
-	$t = $a->template_engine();
+
+	$t = App::template_engine();
 	$template = $t->get_markup_template($s, $root);
 	return $template;
 }

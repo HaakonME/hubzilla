@@ -423,6 +423,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	$observer = array();
 
+	$dosync = ((array_key_exists('nosync',$arr) && $arr['nosync']) ? 0 : 1);
+
 	if($observer_hash) {
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 			dbesc($observer_hash)
@@ -616,7 +618,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 		if($r) {
 			$overwrite = get_pconfig($channel_id,'system','overwrite_dup_files');
-			if($overwrite) {
+			if(($overwrite) || ($options === 'import')) {
 				$options = 'replace';
 				$existing_id = $x[0]['id'];
 				$existing_size = intval($x[0]['filesize']);
@@ -720,7 +722,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$edited = $created;
 
 	if($options === 'replace') {
-		$r = q("update attach set filename = '%s', filetype = '%s', folder = '%s', filesize = %d, os_storage = %d, is_photo = %d, data = '%s', edited = '%s' where id = %d and uid = %d",
+		$r = q("update attach set filename = '%s', filetype = '%s', folder = '%s', filesize = %d, os_storage = %d, is_photo = %d, content = '%s', edited = '%s' where id = %d and uid = %d",
 			dbesc($filename),
 			dbesc($mimetype),
 			dbesc($folder_hash),
@@ -734,7 +736,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 	}
 	elseif($options === 'revise') {
-		$r = q("insert into attach ( aid, uid, hash, creator, filename, filetype, folder, filesize, revision, os_storage, is_photo, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+		$r = q("insert into attach ( aid, uid, hash, creator, filename, filetype, folder, filesize, revision, os_storage, is_photo, content, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($x[0]['aid']),
 			intval($channel_id),
@@ -775,7 +777,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 	else {
 
-		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, folder, filesize, revision, os_storage, is_photo, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, folder, filesize, revision, os_storage, is_photo, content, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($channel['channel_account_id']),
 			intval($channel_id),
@@ -800,7 +802,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if($is_photo) {
 
-		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
+		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct, 'options' => $options );
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		if($arr['group_allow'])
@@ -828,6 +830,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 		if($arr['description'])
 			$args['description'] = $arr['description'];
+
+		$args['deliver'] = $dosync;
 
 		$p = photo_upload($channel,$observer,$args);
 		if($p['success']) {
@@ -864,6 +868,14 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		// This would've been called already with a success result in photos_upload() if it was a photo.
 		call_hooks('photo_upload_end',$ret);
 	}
+
+	if($dosync) {
+		$sync = attach_export_data($channel,$hash);
+
+		if($sync) 
+			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+	}
+
 	return $ret;
 }
 
@@ -1026,7 +1038,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$created = datetime_convert();
 
-	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_dir, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_dir, content, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 		intval($channel['channel_account_id']),
 		intval($channel_id),
@@ -1269,16 +1281,16 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 
 	// delete a file from filesystem
 	if(intval($r[0]['os_storage'])) {
-		$y = q("SELECT data FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+		$y = q("SELECT content FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($resource),
 			intval($channel_id)
 		);
 
 		if($y) {
-			if(strpos($y[0]['data'],'store') === false)
-				$f = 'store/' . $channel_address . '/' . $y[0]['data'];
+			if(strpos($y[0]['content'],'store') === false)
+				$f = 'store/' . $channel_address . '/' . $y[0]['content'];
 			else
-				$f = $y[0]['data'];
+				$f = $y[0]['content'];
 
 			if(is_dir($f))
 				@rmdir($f);
@@ -1456,7 +1468,7 @@ function find_filename_by_hash($channel_id, $attachHash) {
 function pipe_streams($in, $out) {
 	$size = 0;
 	while (!feof($in))
-		$size += fwrite($out, fread($in, 8192));
+		$size += fwrite($out, fread($in, 16384));
 
 	return $size;
 }
@@ -1477,7 +1489,7 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 
 	require_once('include/items.php');
 
-	$poster = get_app()->get_observer();
+	$poster = App::get_observer();
 
 	//if we got no object something went wrong
 	if(!$object)
@@ -1579,13 +1591,13 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 		$arr['deny_gid']      = perms2str($u_arr_deny_gid);
 		$arr['item_private']  = $private;
 		$arr['verb']          = ACTIVITY_UPDATE;
-		$arr['object']        = $u_jsonobject;
+		$arr['obj']           = $u_jsonobject;
 		$arr['body']          = '';
 
 		$post = item_store($arr);
 		$item_id = $post['item_id'];
 		if($item_id) {
-			proc_run('php',"include/notifier.php","activity",$item_id);
+			Zotlabs\Daemon\Master::Summon(array('Notifier','activity',$item_id));
 		}
 
 		call_hooks('post_local_end', $arr);
@@ -1614,14 +1626,14 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
 	$arr['deny_gid']      = perms2str($arr_deny_gid);
 	$arr['item_private']  = $private;
 	$arr['verb']          = (($update) ? ACTIVITY_UPDATE : ACTIVITY_POST);
-	$arr['object']        = (($update) ? $u_jsonobject : $jsonobject);
+	$arr['obj']           = (($update) ? $u_jsonobject : $jsonobject);
 	$arr['body']          = '';
 
 	$post = item_store($arr);
 	$item_id = $post['item_id'];
 
 	if($item_id) {
-		proc_run('php',"include/notifier.php","activity",$item_id);
+		Zotlabs\Daemon\Master::Summon(array('Notifier','activity',$item_id));
 	}
 
 	call_hooks('post_local_end', $arr);
@@ -1696,7 +1708,7 @@ function recursive_activity_recipients($arr_allow_cid, $arr_allow_gid, $arr_deny
 	$ret = array();
 	$parent_arr = array();
 	$count_values = array();
-	$poster = get_app()->get_observer();
+	$poster = App::get_observer();
 
 	//turn allow_gid into allow_cid's
 	foreach($arr_allow_gid as $gid) {
@@ -1814,3 +1826,87 @@ function filepath_macro($s) {
 
 }
 
+function attach_export_data($channel, $resource_id, $deleted = false) {
+
+	$ret = array();
+
+	$paths = array();
+
+	$hash_ptr = $resource_id;
+
+	$ret['fetch_url'] = z_root() . '/getfile';
+	$ret['original_channel'] = $channel['channel_address'];
+
+
+	if($deleted) {
+		$ret['attach'] = array(array('hash' => $resource_id, 'deleted' => 1));
+		return $ret;
+	}
+
+	do {
+		$r = q("select * from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($hash_ptr),
+			intval($channel['channel_id'])
+		);
+		if(! $r)
+			break;
+
+		if($hash_ptr === $resource_id) {
+			$attach_ptr = $r[0];
+		}
+
+		$hash_ptr = $r[0]['folder'];
+		$paths[] = $r[0];
+	} while($hash_ptr);
+
+
+	$paths = array_reverse($paths);
+
+	$ret['attach'] = $paths;
+
+
+	if($attach_ptr['is_photo']) {
+		$r = q("select * from photo where resource_id = '%s' and uid = %d order by imgscale asc",
+			dbesc($resource_id),
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			for($x = 0; $x < count($r); $x ++) {
+				$r[$x]['content'] = base64_encode($r[$x]['content']);
+			}
+			$ret['photo'] = $r;
+		}
+
+		$r = q("select * from item where resource_id = '%s' and resource_type = 'photo' and uid = %d ",
+			dbesc($resource_id),
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			$ret['item'] = array();
+			$items = q("select item.*, item.id as item_id from item where item.parent = %d ",
+				intval($r[0]['id'])
+			);
+			if($items) {
+				xchan_query($items);
+				$items = fetch_post_tags($items,true);
+				foreach($items as $rr)
+					$ret['item'][] = encode_item($rr,true);
+			}
+		}
+	}
+
+	return $ret;
+
+}
+
+
+/* strip off 'store/nickname/' from the provided path */
+
+function get_attach_binname($s) {
+	$p = $s;
+	if(strpos($s,'store/') === 0) {
+		$p = substr($s,6);
+		$p = substr($p,strpos($p,'/')+1);
+	}
+	return $p;
+}

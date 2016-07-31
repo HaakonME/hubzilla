@@ -2,10 +2,10 @@
 <html prefix="og: http://ogp.me/ns#">
 <head>
   <title><?php if(x($page,'title')) echo $page['title'] ?></title>
-  <script>var baseurl="<?php echo $a->get_baseurl() ?>";</script>
+  <script>var baseurl="<?php echo z_root() ?>";</script>
   <?php if(x($page,'htmlhead')) echo $page['htmlhead'] ?>
 </head>
-<body>
+<body <?php if($page['direction']) echo 'dir="rtl"' ?> >
 	<?php if(x($page,'banner')) echo $page['banner']; ?>
 	<header><?php if(x($page,'header')) echo $page['header']; ?></header>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><?php if(x($page,'nav')) echo $page['nav']; ?></nav>

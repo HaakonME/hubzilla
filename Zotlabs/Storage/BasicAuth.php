@@ -3,6 +3,8 @@
 namespace Zotlabs\Storage;
 
 use Sabre\DAV;
+use Sabre\HTTP\RequestInterface;
+use Sabre\HTTP\ResponseInterface;
 
 /**
  * @brief Authentication backend class for DAV.
@@ -73,10 +75,12 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	protected $timezone = '';
 
 
+	public $module_disabled = false;
+
+
 	/**
 	 * @brief Validates a username and password.
 	 *
-	 * Guest access is granted with the password "+++".
 	 *
 	 * @see \Sabre\DAV\Auth\Backend\AbstractBasic::validateUserPass
 	 * @param string $username
@@ -84,42 +88,29 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	 * @return bool
 	 */
 	protected function validateUserPass($username, $password) {
-		if (trim($password) === '+++') {
-			logger('guest: ' . $username);
-			return true;
-		}
 
 		require_once('include/auth.php');
 		$record = account_verify_password($username, $password);
-		if ($record && $record['account_default_channel']) {
-			$r = q("SELECT * FROM channel WHERE channel_account_id = %d AND channel_id = %d LIMIT 1",
-				intval($record['account_id']),
-				intval($record['account_default_channel'])
-			);
-			if ($r) {
-				return $this->setAuthenticated($r[0]);
+		if($record && $record['account']) {
+			if($record['channel'])
+				$channel = $record['channel'];
+			else {
+				$r = q("SELECT * FROM channel WHERE channel_account_id = %d AND channel_id = %d LIMIT 1",
+					intval($record['account']['account_id']),
+					intval($record['account']['account_default_channel'])
+				);
+				if($r)
+					$channel = $r[0];
 			}
 		}
-		$r = q("SELECT * FROM channel WHERE channel_address = '%s' LIMIT 1",
-			dbesc($username)
-		);
-		if ($r) {
-			$x = q("SELECT account_flags, account_salt, account_password FROM account WHERE account_id = %d LIMIT 1",
-				intval($r[0]['channel_account_id'])
-			);
-			if ($x) {
-				// @fixme this foreach should not be needed?
-				foreach ($x as $record) {
-					if (($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
-					&& (hash('whirlpool', $record['account_salt'] . $password) === $record['account_password'])) {
-						logger('password verified for ' . $username);
-						return $this->setAuthenticated($r[0]);
-					}
-				}
-			}
+		if($channel && $this->check_module_access($channel['channel_id'])) {
+			return $this->setAuthenticated($channel);
 		}
 
-		$error = 'password failed for ' . $username;
+		if($this->module_disabled)
+			$error = 'module not enabled for ' . $username;
+		else
+			$error = 'password failed for ' . $username;
 		logger($error);
 		log_failed_login($error);
 
@@ -140,6 +131,69 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 		$_SESSION['uid'] = $r['channel_id'];
 		$_SESSION['account_id'] = $r['channel_account_id'];
 		$_SESSION['authenticated'] = true;
+		return true;
+	}
+
+    /**
+     * When this method is called, the backend must check if authentication was
+     * successful.
+     *
+     * The returned value must be one of the following
+     *
+     * [true, "principals/username"]
+     * [false, "reason for failure"]
+     *
+     * If authentication was successful, it's expected that the authentication
+     * backend returns a so-called principal url.
+     *
+     * Examples of a principal url:
+     *
+     * principals/admin
+     * principals/user1
+     * principals/users/joe
+     * principals/uid/123457
+     *
+     * If you don't use WebDAV ACL (RFC3744) we recommend that you simply
+     * return a string such as:
+     *
+     * principals/users/[username]
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return array
+     */
+    function check(RequestInterface $request, ResponseInterface $response) {
+
+		if(local_channel()) {
+			$this->setAuthenticated(\App::get_channel());
+			return [ true, $this->principalPrefix . $this->channel_name ];
+		}
+
+        $auth = new \Sabre\HTTP\Auth\Basic(
+            $this->realm,
+            $request,
+            $response
+        );
+
+        $userpass = $auth->getCredentials();
+        if (!$userpass) {
+            return [false, "No 'Authorization: Basic' header found. Either the client didn't send one, or the server is misconfigured"];
+        }
+        if (!$this->validateUserPass($userpass[0], $userpass[1])) {
+            return [false, "Username or password was incorrect"];
+        }
+        return [true, $this->principalPrefix . $userpass[0]];
+
+    }
+
+	protected function check_module_access($channel_id) {
+		if($channel_id && \App::$module === 'cdav') {
+			$x = get_pconfig($channel_id,'cdav','enabled');
+			if(! $x) {
+				$this->module_disabled = true;
+				return false;
+			}
+		}
 		return true;
 	}
 

@@ -8,18 +8,8 @@ Roadmap for $Projectname V3
 Crypto
 	Convert E2EE to dynamic loading (on demand) using jQuery.getScript() [or other methods] to only load encryption libs when you require them. This should also support multiple encryption libraries (e.g. SJCL, others) triggered from the choice of algorithm and remain pluggable.
 
-Diaspora
-	Convert core Diaspora federation code into a plugin. This presents a number of challenges since it touches and special cases a lot of core functionality. (HZ - in progress)
-
 Subscriptions and business models
-	Build enough into core(/addons) to generate income (or at least try and cover costs) out of the box (in progress Habeas Codice)
-
-Merge all uploads into common DAV interface
-	Separate photo albums from photos and turn them into file directories. (HZ - done)
-	Upload everything direct to /store (HZ - done)
-	If photo, generate thumbnails and image resources (HZ - done)
-	Provide default upload folders with %y (and other?) macros for both photos and other file resources (HZ - done)
-	Allow "media" (anything that we can generate a thumbnail for) in the Photos section (and show thumbnails in the Files section where possible) (HZ - done)
+	Build enough into core(/addons) to generate income (or at least try and cover costs) out of the box 
 
 	Resolve the "every photo has an item" confusion, perhaps every file should also - but only if we can explain it and separate them conceptually.
 

@@ -270,7 +270,14 @@ function bb2dmention_callback($match) {
 
 function bb2diaspora_itemwallwall(&$item) {
 
+	// We will provide wallwall (embedded author on the Diaspora side) if
+	//  1. It is a wall-to-wall post
+	//  2. A comment arrived which has no Diaspora signature info
+
+
+	$wallwall = false;
 	$author_exists = true;
+
 	if(! array_key_exists('author',$item)) {
 		$author_exists = false;
 		logger('bb2diaspora_itemwallwall: no author');
@@ -281,15 +288,25 @@ function bb2diaspora_itemwallwall(&$item) {
 			$item['author'] = $r[0];
 	}
 
-	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author']))) {
-		logger('bb2diaspora_itemwallwall: author: ' . print_r($item['author'],true), LOGGER_DATA);
+	$has_meta = false;
+	if($item['diaspora_meta'] || get_iconfig($item,'diaspora','fields'))
+		$has_meta = true;
+
+	if($item['author_xchan'] != $item['owner_xchan']) {
+		if($item['mid'] == $item['parent_mid']) 
+			$wallwall = true;
+		else {
+			if(! $has_meta) {
+				$wallwall = true;
+			}
+		}
 	}
 
-	if(($item['mid'] == $item['parent_mid']) && ($item['author_xchan'] != $item['owner_xchan']) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_m']) {
+	if(($wallwall) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_s']) {
 		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
 		$item['body'] = "\n\n" 
-			. '[img]' . $item['author']['xchan_photo_m'] . '[/img]' 
+			. '[img]' . $item['author']['xchan_photo_s'] . '[/img]' 
 			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
 			. $item['body'];
 	}
@@ -301,7 +318,12 @@ function bb2diaspora_itemwallwall(&$item) {
 }
 
 
-function bb2diaspora_itembody($item, $force_update = false) {
+function bb2diaspora_itembody($item, $force_update = false, $have_channel = false) {
+
+
+	if(! get_iconfig($item,'diaspora','fields')) {
+		$force_update = true;
+	}
 
 	$matches = array();
 
@@ -339,8 +361,8 @@ function bb2diaspora_itembody($item, $force_update = false) {
 		}
 	}
 
-
-	bb2diaspora_itemwallwall($newitem);
+	if(! $have_channel)
+		bb2diaspora_itemwallwall($newitem);
 
 	$title = $newitem['title'];
 	$body  = preg_replace('/\#\^http/i', 'http', $newitem['body']);
@@ -457,8 +479,6 @@ function unescape_underscores_in_links($m) {
 
 function format_event_diaspora($ev) {
 
-	$a = get_app();
-
 	if(! ((is_array($ev)) && count($ev)))
 		return '';
 
@@ -473,7 +493,7 @@ function format_event_diaspora($ev) {
 			$ev['start'] , $bd_format ))
 			:  day_translate(datetime_convert('UTC', 'UTC', 
 			$ev['start'] , $bd_format)))
-		.  '](' . $a->get_baseurl() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['start'])) . ")\n";
+		.  '](' . z_root() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['start'])) . ")\n";
 
 	if(! $ev['nofinish'])
 		$o .= t('Finishes:') . ' ' . '[' 
@@ -481,7 +501,7 @@ function format_event_diaspora($ev) {
 				$ev['finish'] , $bd_format ))
 				:  day_translate(datetime_convert('UTC', 'UTC', 
 				$ev['finish'] , $bd_format )))
-			. '](' . $a->get_baseurl() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['finish'])) . ")\n";
+			. '](' . z_root() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['finish'])) . ")\n";
 
 	if(strlen($ev['location']))
 		$o .= t('Location:') . bb2diaspora($ev['location']) 

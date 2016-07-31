@@ -9,15 +9,21 @@ function import_channel($channel, $account_id, $seize) {
 		$channel['channel_removed'] = (($channel['channel_pageflags'] & 0x8000) ? 1 : 0);
 	}
 
+	// Ignore the hash provided and re-calculate
+
+	$channel['channel_hash'] = make_xchan_hash($channel['channel_guid'],$channel['channel_guid_sig']);
+
+	// Check for duplicate channels
+
 	$r = q("select * from channel where (channel_guid = '%s' or channel_hash = '%s' or channel_address = '%s' ) limit 1",
 		dbesc($channel['channel_guid']),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_address'])
 	);
+	if($r && $r[0]['channel_guid'] == $channel['channel_guid'] && $r[0]['channel_pubkey'] === $channel['channel_pubkey'] && $r[0]['channel_hash'] === $channel['channel_hash'])
+		return $r[0];
 
-	// We should probably also verify the hash 
-	
-	if($r) {
+	if(($r) || (check_webbie(array($channel['channel_address'])) !== $channel['channel_address'])) {
 		if($r[0]['channel_guid'] === $channel['channel_guid'] || $r[0]['channel_hash'] === $channel['channel_hash']) {
 			logger('mod_import: duplicate channel. ', print_r($channel,true));
 			notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
@@ -86,7 +92,6 @@ function import_channel($channel, $account_id, $seize) {
 	set_default_login_identity($account_id,$channel['channel_id'],false);
 	logger('import step 1');
 	$_SESSION['import_step'] = 1;
-	ref_session_write(session_id(), serialize($_SESSION));
 	return $channel;	
 
 }
@@ -116,6 +121,11 @@ function import_profiles($channel,$profiles) {
 			unset($profile['id']);
 			$profile['aid'] = get_account_id();
 			$profile['uid'] = $channel['channel_id'];
+
+			convert_oldfields($profile,'name','fullname');
+			convert_oldfields($profile,'with','partner');
+			convert_oldfields($profile,'work','employment');
+
 
 			// we are going to reset all profile photos to the original
 			// somebody will have to fix this later and put all the applicable photos into the export
@@ -297,8 +307,11 @@ function import_apps($channel,$apps) {
 	if($channel && $apps) {
 		foreach($apps as $app) {
 
+			$term = ((array_key_exists('term',$app) && is_array($app['term'])) ? $app['term'] : null); 
+
 			unset($app['id']);
 			unset($app['app_channel']);
+			unset($app['term']);
 
 			$app['app_channel'] = $channel['channel_id'];
 
@@ -307,6 +320,8 @@ function import_apps($channel,$apps) {
 				$app['app_photo'] = $x[0];
 			}
 
+			$hash = $app['app_id'];
+
 			dbesc_array($app);
 			$r = dbq("INSERT INTO app (`" 
 				. implode("`, `", array_keys($app)) 
@@ -314,6 +329,23 @@ function import_apps($channel,$apps) {
 				. implode("', '", array_values($app)) 
 				. "')" 
 			);
+
+			if($term) {
+				$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+					dbesc($hash),
+					intval($channel['channel_id'])
+				);
+				if($x) {
+					foreach($term as $t) {
+						if(array_key_exists('type',$t))
+							$t['ttype'] = $t['type'];
+						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
+					}
+				}
+			}
+
+
+
 		}
 	}
 }
@@ -325,16 +357,41 @@ function sync_apps($channel,$apps) {
 	if($channel && $apps) {
 		foreach($apps as $app) {
 
-           if(array_key_exists('app_deleted',$app) && $app['app_deleted'] && $app['app_id']) {
+			$exists = false;
+			$term = ((array_key_exists('term',$app)) ? $app['term'] : null);
+
+			$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+				dbesc($app['app_id']),
+				intval($channel['channel_id'])
+			);
+			if($x) {
+				$exists = $x[0];
+			}
+			
+			if(array_key_exists('app_deleted',$app) && $app['app_deleted'] && $app['app_id']) {
                 q("delete from app where app_id = '%s' and app_channel = %d limit 1",
                     dbesc($app['app_id']),
                     intval($channel['channel_id'])
                 );
+				if($exists) {
+					q("delete from term where otype = %d and oid = %d",
+						intval(TERM_OBJ_APP),
+						intval($exists['id'])
+            		);
+				}
                 continue;
             }
 
 			unset($app['id']);
 			unset($app['app_channel']);
+			unset($app['term']);
+
+			if($exists) {
+				q("delete from term where otype = %d and oid = %d",
+					intval(TERM_OBJ_APP),
+					intval($exists['id'])
+            	);
+			}
 
 			if(! $app['app_created'] || $app['app_created'] === NULL_DATE)
 				$app['app_created'] = datetime_convert();
@@ -348,16 +405,17 @@ function sync_apps($channel,$apps) {
 				$app['app_photo'] = $x[0];
 			}
 
-			$exists = false;
+			if($exists && $term) {
+				foreach($term as $t) {
+					if(array_key_exists('type',$t))
+						$t['ttype'] = $t['type'];
+					store_item_tag($channel['channel_id'],$exists['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
+				}
+			}
 
-			$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
-				dbesc($app['app_id']),
-				intval($channel['channel_id'])
-			);
-			if($x) {
-				if($x[0]['app_edited'] >= $app['app_edited'])
+			if($exists) {
+				if($exists['app_edited'] >= $app['app_edited'])
 					continue;
-				$exists = true;
 			}
 			$hash = $app['app_id'];
 
@@ -380,6 +438,19 @@ function sync_apps($channel,$apps) {
 					. implode("', '", array_values($app)) 
 					. "')" 
 				);
+				if($term) {
+					$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+						dbesc($hash),
+						intval($channel['channel_id'])
+					);
+					if($x) {
+						foreach($term as $t) {
+							if(array_key_exists('type',$t))
+								$t['ttype'] = $t['type'];
+							store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
+						}
+					}
+				}
 			}
 		}
 	}
@@ -482,7 +553,7 @@ function sync_chatrooms($channel,$chatrooms) {
 
 
 
-function import_items($channel,$items) {
+function import_items($channel,$items,$sync = false,$relocate = null) {
 
 	if($channel && $items) {
 		$allow_code = false;
@@ -499,20 +570,28 @@ function import_items($channel,$items) {
 		$deliver = false;  // Don't deliver any messages or notifications when importing
 
 		foreach($items as $i) {
+			$item_result = false;
 			$item = get_item_elements($i,$allow_code);
 			if(! $item)
 				continue;
+
+			if($relocate && $item['mid'] === $item['parent_mid']) {
+				item_url_replace($channel,$item,$relocate['url'],z_root(),$relocate['channel_address']);
+			}
 
 			$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
 				dbesc($item['mid']),
 				intval($channel['channel_id'])
 			);
 			if($r) {
-				if($item['edited'] > $r[0]['edited']) {
+
+				// flags may have changed and we are probably relocating the post, 
+				// so force an update even if we have the same timestamp
+
+				if($item['edited'] >= $r[0]['edited']) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
-					item_store_update($item,$allow_code,$deliver);
-					continue;
+					$item_result = item_store_update($item,$allow_code,$deliver);
 				}	
 			}
 			else {
@@ -520,13 +599,20 @@ function import_items($channel,$items) {
 				$item['uid'] = $channel['channel_id'];
 				$item_result = item_store($item,$allow_code,$deliver);
 			}
+
+			if($sync && $item['item_wall']) {
+				// deliver singletons if we have any
+				if($item_result && $item_result['success']) {
+					Zotlabs\Daemon\Master::Summon( [ 'Notifier','single_activity',$item_result['item_id'] ]);
+				}
+			}
 		}
 	}
 }
 
 
-function sync_items($channel,$items) {
-	import_items($channel,$items);
+function sync_items($channel,$items,$relocate = null) {
+	import_items($channel,$items,true,$relocate);
 }
 
 
@@ -540,19 +626,14 @@ function import_item_ids($channel,$itemids) {
 			);
 			if(! $r)
 				continue;
-			$z = q("select * from item_id where service = '%s' and sid = '%s' and iid = %d and uid = %d limit 1",
+			$z = q("select * from iconfig where iconfig.cat = 'system' and iconfig.k = '%s' 
+				and iconfig.v = '%s' and iid = %d limit 1",
 				dbesc($i['service']),
 				dbesc($i['sid']),
-				intval($r[0]['id']),
-				intval($channel['channel_id'])
+				intval($r[0]['id'])
 			);
 			if(! $z) {
-				q("insert into item_id (iid,uid,sid,service) values(%d,%d,'%s','%s')",
-					intval($r[0]['id']),
-					intval($channel['channel_id']),
-					dbesc($i['sid']),
-					dbesc($i['service'])
-				);
+				\Zotlabs\Lib\IConfig::Set($r[0]['id'],'system',$i['service'],$i['sid'],true);
 			}
 		}
 	}
@@ -565,6 +646,10 @@ function import_events($channel,$events) {
 			unset($event['id']);
 			$event['aid'] = $channel['channel_account_id'];
 			$event['uid'] = $channel['channel_id'];
+			convert_oldfields($event,'start','dtstart');
+			convert_oldfields($event,'finish','dtend');
+			convert_oldfields($event,'type','etype');
+			convert_oldfields($event,'ignore','dismissed');
 
 			dbesc_array($event);
 			$r = dbq("INSERT INTO event (`" 
@@ -597,6 +682,12 @@ function sync_events($channel,$events) {
 			unset($event['id']);
 			$event['aid'] = $channel['channel_account_id'];
 			$event['uid'] = $channel['channel_id'];
+
+			convert_oldfields($event,'start','dtstart');
+			convert_oldfields($event,'finish','dtend');
+			convert_oldfields($event,'type','etype');
+			convert_oldfields($event,'ignore','dismissed');
+
 
 			$exists = false;
 
@@ -635,6 +726,7 @@ function sync_events($channel,$events) {
 
 
 function import_menus($channel,$menus) {
+
 
 	if($channel && $menus) {
 		foreach($menus as $menu) {
@@ -681,6 +773,8 @@ function import_menus($channel,$menus) {
 			}
 		}
 	}
+
+
 }
 
 
@@ -836,7 +930,7 @@ function import_conv($channel,$convs) {
 
 
 
-function import_mail($channel,$mails) {
+function import_mail($channel,$mails,$sync = false) {
 	if($channel && $mails) {
 		foreach($mails as $mail) {
 			if(array_key_exists('flags',$mail) && in_array('deleted',$mail['flags'])) {
@@ -860,13 +954,266 @@ function import_mail($channel,$mails) {
 
 			$m['aid'] = $channel['channel_account_id'];
 			$m['uid'] = $channel['channel_id'];
-			mail_store($m);
+			$mail_id = mail_store($m);
+			if($sync && $mail_id) {
+				Zotlabs\Daemon\Master::Summon(array('Notifier','single_mail',$mail_id));
+			}
  		}
 	}	
 }
 
+function sync_mail($channel,$mails) {
+	import_mail($channel,$mails,true);
+}
+
+function sync_files($channel,$files) {
+
+	require_once('include/attach.php');
+
+	if($channel && $files) {
+		foreach($files as $f) {
+			if(! $f)
+				continue;
+
+			$fetch_url = $f['fetch_url'];
+			$oldbase = dirname($fetch_url);
+			$original_channel = $f['original_channel'];
+
+			if(! ($fetch_url && $original_channel))
+				continue;		
+
+			if($f['attach']) {
+				$attachment_stored = false;
+				foreach($f['attach'] as $att) {
+
+					convert_oldfields($att,'data','content');
+
+					if($att['deleted']) {
+						attach_delete($channel,$att['hash']);
+						continue;
+					}
+
+					$attach_exists = false;
+					$x = attach_by_hash($att['hash']);
+					logger('sync_files duplicate check: attach_exists=' . $attach_exists, LOGGER_DEBUG);
+					logger('sync_files duplicate check: att=' . print_r($att,true), LOGGER_DEBUG);
+					logger('sync_files duplicate check: attach_by_hash() returned ' . print_r($x,true), LOGGER_DEBUG);
+
+					if($x['success']) {
+						$attach_exists = true;
+						$attach_id = $x[0]['id'];
+					}
+
+					$newfname = 'store/' . $channel['channel_address'] . '/' . get_attach_binname($att['content']);
+
+ 					unset($att['id']);
+					$att['aid'] = $channel['channel_account_id'];
+					$att['uid'] = $channel['channel_id'];
 
 
+					// check for duplicate folder names with the same parent. 
+					// If we have a duplicate that doesn't match this hash value
+					// change the name so that the contents won't be "covered over" 
+					// by the existing directory. Use the same logic we use for 
+					// duplicate files. 
+
+					if(strpos($att['filename'],'.') !== false) {
+						$basename = substr($att['filename'],0,strrpos($att['filename'],'.'));
+						$ext = substr($att['filename'],strrpos($att['filename'],'.'));
+					}
+					else {
+						$basename = $att['filename'];
+						$ext = '';
+					}
+
+					$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' and hash != '%s' ",
+						dbesc($basename . $ext),
+						dbesc($basename . '(%)' . $ext),
+						dbesc($att['folder']),
+						dbesc($att['hash'])
+					);
+
+					if($r) {
+						$x = 1;
+
+						do {
+							$found = false;
+							foreach($r as $rr) {
+								if($rr['filename'] === $basename . '(' . $x . ')' . $ext) {
+									$found = true;
+									break;
+								}
+							}
+							if($found)
+								$x++;
+						}			
+						while($found);
+						$att['filename'] = $basename . '(' . $x . ')' . $ext;
+					}
+					else
+						$att['filename'] = $basename . $ext;
+
+					// end duplicate detection
+
+// @fixme - update attachment structures if they are modified rather than created
+
+					$att['content'] = $newfname;
+
+					// Note: we use $att['hash'] below after it has been escaped to
+					// fetch the file contents. 
+					// If the hash ever contains any escapable chars this could cause
+					// problems. Currently it does not. 
+
+					dbesc_array($att);
 
 
+					if($attach_exists) {
+						logger('sync_files attach exists: ' . print_r($att,true), LOGGER_DEBUG);
+						$str = '';
+    						foreach($att as $k => $v) {
+				        		if($str)
+            							$str .= ",";
+        						$str .= " `" . $k . "` = '" . $v . "' ";
+    						}
+						$r = dbq("update `attach` set " . $str . " where id = " . intval($attach_id) );
+					}
+					else {
+						logger('sync_files attach does not exists: ' . print_r($att,true), LOGGER_DEBUG);
+						$r = dbq("INSERT INTO attach (`" 
+							. implode("`, `", array_keys($att)) 
+							. "`) VALUES ('" 
+							. implode("', '", array_values($att)) 
+							. "')" );
+					}
 
+
+					// is this a directory?
+
+					if($att['filetype'] === 'multipart/mixed' && $att['is_dir']) {
+						os_mkdir($newfname, STORAGE_DEFAULT_PERMISSIONS,true);
+						$attachment_stored = true;
+						continue;
+					}
+					else {
+
+						// it's a file
+						// for the sync version of this algorithm (as opposed to 'offline import')
+						// we will fetch the actual file from the source server so it can be 
+						// streamed directly to disk and avoid consuming PHP memory if it's a huge
+						// audio/video file or something. 
+
+						$time = datetime_convert();
+
+						$parr = array('hash' => $channel['channel_hash'], 
+							'time' => $time, 
+							'resource' => $att['hash'],
+							'revision' => 0,
+							'signature' => base64url_encode(rsa_sign($channel['channel_hash'] . '.' . $time, $channel['channel_prvkey']))
+						);
+
+						$store_path = $newfname;
+
+						$fp = fopen($newfname,'w');
+						if(! $fp) {
+							logger('failed to open storage file.',LOGGER_NORMAL,LOG_ERR);
+							continue;
+						}
+						$redirects = 0;
+						$x = z_post_url($fetch_url,$parr,$redirects,array('filep' => $fp));
+						fclose($fp);
+
+						if($x['success']) {
+							$attachment_stored = true;
+						}
+						continue;
+					}
+				}
+			}
+			if(! $attachment_stored) {
+				// @TODO should we queue this and retry or delete everything or what? 
+				logger('attachment store failed',LOGGER_NORMAL,LOG_ERR);
+			}
+			if($f['photo']) {
+				foreach($f['photo'] as $p) {
+ 					unset($p['id']);
+					$p['aid'] = $channel['channel_account_id'];
+					$p['uid'] = $channel['channel_id'];
+
+					convert_oldfields($p,'data','content');
+					convert_oldfields($p,'scale','imgscale');
+					convert_oldfields($p,'size','filesize');
+					convert_oldfields($p,'type','mimetype');
+
+					// if this is a profile photo, undo the profile photo bit
+					// for any other photo which previously held it.
+
+					if($p['photo_usage'] == PHOTO_PROFILE) {
+						$e = q("update photo set photo_usage = %d where photo_usage = %d
+							and resource_id != '%s' and uid = %d ",
+							intval(PHOTO_NORMAL),
+							intval(PHOTO_PROFILE),
+							dbesc($p['resource_id']),
+							intval($channel['channel_id'])
+						);
+					}
+
+					// same for cover photos
+
+					if($p['photo_usage'] == PHOTO_COVER) {
+						$e = q("update photo set photo_usage = %d where photo_usage = %d
+							and resource_id != '%s' and uid = %d ",
+							intval(PHOTO_NORMAL),
+							intval(PHOTO_COVER),
+							dbesc($p['resource_id']),
+							intval($channel['channel_id'])
+						);
+					}
+
+					if($p['imgscale'] === 0 && $p['os_storage'])
+						$p['content'] = $store_path;
+					else
+						$p['content'] = base64_decode($p['content']);
+
+
+					$exists = q("select * from photo where resource_id = '%s' and imgscale = %d and uid = %d limit 1",
+						dbesc($p['resource_id']),
+						intval($p['imgscale']),
+						intval($channel['channel_id'])
+					);
+
+					dbesc_array($p);
+
+					if($exists) {
+					    $str = '';
+    					foreach($p as $k => $v) {
+				        	if($str)
+            					$str .= ",";
+        					$str .= " `" . $k . "` = '" . $v . "' ";
+    					}
+					    $r = dbq("update `photo` set " . $str . " where id = " . intval($exists[0]['id']) );
+					}
+					else {
+						$r = dbq("INSERT INTO photo (`" 
+							. implode("`, `", array_keys($p)) 
+							. "`) VALUES ('" 
+							. implode("', '", array_values($p)) 
+							. "')" );
+					}
+				}
+			}
+			if($f['item']) {
+				sync_items($channel,$f['item'],
+					['channel_address' => $original_channel,'url' => $oldbase]
+				);
+			}
+		}
+	}
+}
+
+
+function convert_oldfields(&$arr,$old,$new) {
+	if(array_key_exists($old,$arr)) {
+		$arr[$new] = $arr[$old];
+		unset($arr[$old]);
+	}
+}

@@ -3,8 +3,6 @@
  * @file include/text.php
  */
 
-require_once("include/template_processor.php");
-require_once("include/smarty.php");
 require_once("include/bbcode.php");
 
 // random string, there are 86 characters max in text mode, 128 for hex
@@ -16,18 +14,17 @@ define('RANDOM_STRING_TEXT', 0x01 );
 /**
  * @brief This is our template processor.
  *
- * @param string|FriendicaSmarty $s the string requiring macro substitution,
- *   or an instance of FriendicaSmarty
+ * @param string|SmartyEngine $s the string requiring macro substitution,
+ *   or an instance of SmartyEngine
  * @param array $r key value pairs (search => replace)
  * @return string substituted string
  */
 function replace_macros($s, $r) {
-	$a = get_app();
 
 	$arr = array('template' => $s, 'params' => $r);
 	call_hooks('replace_macros', $arr);
 
-	$t = $a->template_engine();
+	$t = App::template_engine();
 	$output = $t->replace_macros($arr['template'],$arr['params']);
 
 	return $output;
@@ -98,8 +95,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 	if($type == 'application/x-pdl')
 		return escape_tags($s);
 
-	$a = get_app();
-	if($a->is_sys) {
+	if(App::$is_sys) {
 		return $s;
 	}
 
@@ -122,7 +118,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 
 
 
-function purify_html($s) {
+function purify_html($s, $allow_position = false) {
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
 
@@ -201,6 +197,35 @@ function purify_html($s) {
 	$def->addElement('aside',   'Block', 'Flow', 'Common');
 	$def->addElement('header',  'Block', 'Flow', 'Common');
 	$def->addElement('footer',  'Block', 'Flow', 'Common');
+
+
+	if($allow_position) {
+		$cssDefinition = $config->getCSSDefinition();
+
+		$cssDefinition->info['position'] = new HTMLPurifier_AttrDef_Enum(array('absolute', 'fixed', 'relative', 'static', 'inherit'), false);
+
+		$cssDefinition->info['left'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+		$cssDefinition->info['right'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+		$cssDefinition->info['top'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+		$cssDefinition->info['bottom'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+			new HTMLPurifier_AttrDef_CSS_Length(),
+			new HTMLPurifier_AttrDef_CSS_Percentage()
+		));
+
+	}
+
 
 	$purifier = new HTMLPurifier($config);
 
@@ -297,6 +322,15 @@ function autoname($len) {
 function xmlify($str) {
 	$buffer = '';
 
+	if(is_array($str)) {
+
+		// allow to fall through so we ge a PHP error, as the log statement will 
+		// probably get lost in the noise unless we're specifically looking for it. 
+
+		btlogger('xmlify called with array: ' . print_r($str,true), LOGGER_NORMAL, LOG_WARNING);
+	}
+
+
 	$len = mb_strlen($str);
 	for($x = 0; $x < $len; $x ++) {
 		$char = mb_substr($str,$x,1);
@@ -342,60 +376,36 @@ function unxmlify($s) {
 	return $ret;
 }
 
-/**
- * Convenience wrapper, reverse the operation "bin2hex"
- * This is a built-in function in php >= 5.4
- *
- * @FIXME We already have php >= 5.4 requirements, so can we remove this?
- */
-if(! function_exists('hex2bin')) {
-function hex2bin($s) {
-	if(! (is_string($s) && strlen($s)))
-		return '';
-
-	if(strlen($s) & 1) {
-		logger('hex2bin: illegal hex string: ' . $s);
-		return $s;
-	}
-
-	if(! ctype_xdigit($s)) {
-		return($s);
-	}
-
-	return(pack("H*",$s));
-}}
-
-
 // Automatic pagination.
 // To use, get the count of total items.
-// Then call $a->set_pager_total($number_items);
-// Optionally call $a->set_pager_itemspage($n) to the number of items to display on each page
+// Then call App::set_pager_total($number_items);
+// Optionally call App::set_pager_itemspage($n) to the number of items to display on each page
 // Then call paginate($a) after the end of the display loop to insert the pager block on the page
 // (assuming there are enough items to paginate).
-// When using with SQL, the setting LIMIT %d, %d => $a->pager['start'],$a->pager['itemspage']
+// When using with SQL, the setting LIMIT %d, %d => App::$pager['start'],App::$pager['itemspage']
 // will limit the results to the correct items for the current page. 
 // The actual page handling is then accomplished at the application layer. 
 
 
 function paginate(&$a) {
 	$o = '';
-	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
+	$stripped = preg_replace('/(&page=[0-9]*)/','',App::$query_string);
 
 //	$stripped = preg_replace('/&zid=(.*?)([\?&]|$)/ism','',$stripped);
 
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
-	$pagenum = $a->pager['page'];
-	$url = $a->get_baseurl() . '/' . $stripped;
+	$pagenum = App::$pager['page'];
+	$url = z_root() . '/' . $stripped;
 
-	if($a->pager['total'] > $a->pager['itemspage']) {
+	if(App::$pager['total'] > App::$pager['itemspage']) {
 		$o .= '<div class="pager">';
-		if($a->pager['page'] != 1)
-			$o .= '<span class="pager_prev">'."<a href=\"$url".'&page='.($a->pager['page'] - 1).'">' . t('prev') . '</a></span> ';
+		if(App::$pager['page'] != 1)
+			$o .= '<span class="pager_prev">'."<a href=\"$url".'&page='.(App::$pager['page'] - 1).'">' . t('prev') . '</a></span> ';
 
 		$o .=  "<span class=\"pager_first\"><a href=\"$url"."&page=1\">" . t('first') . "</a></span> ";
 
-			$numpages = $a->pager['total'] / $a->pager['itemspage'];
+			$numpages = App::$pager['total'] / App::$pager['itemspage'];
 
 			$numstart = 1;
 			$numstop = $numpages;
@@ -406,15 +416,15 @@ function paginate(&$a) {
 			}
 
 		for($i = $numstart; $i <= $numstop; $i++){
-			if($i == $a->pager['page'])
+			if($i == App::$pager['page'])
 				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
 			else
 				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
 			$o .= '</span> ';
 		}
 
-		if(($a->pager['total'] % $a->pager['itemspage']) != 0) {
-			if($i == $a->pager['page'])
+		if((App::$pager['total'] % App::$pager['itemspage']) != 0) {
+			if($i == App::$pager['page'])
 				$o .= '<span class="pager_current">'.(($i < 10) ? '&nbsp;'.$i : $i);
 			else
 				$o .= "<span class=\"pager_n\"><a href=\"$url"."&page=$i\">".(($i < 10) ? '&nbsp;'.$i : $i)."</a>";
@@ -424,8 +434,8 @@ function paginate(&$a) {
 		$lastpage = (($numpages > intval($numpages)) ? intval($numpages)+1 : $numpages);
 		$o .= "<span class=\"pager_last\"><a href=\"$url"."&page=$lastpage\">" . t('last') . "</a></span> ";
 
-		if(($a->pager['total'] - ($a->pager['itemspage'] * $a->pager['page'])) > 0)
-			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . t('next') . '</a></span>';
+		if((App::$pager['total'] - (App::$pager['itemspage'] * App::$pager['page'])) > 0)
+			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".(App::$pager['page'] + 1).'">' . t('next') . '</a></span>';
 		$o .= '</div>'."\r\n";
 	}
 	return $o;
@@ -439,20 +449,20 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 	if(! $less)
 		$less = t('newer');
 
-	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
+	$stripped = preg_replace('/(&page=[0-9]*)/','',App::$query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
-	//$pagenum = $a->pager['page'];
-	$url = $a->get_baseurl() . '/' . $stripped;
+	//$pagenum = App::$pager['page'];
+	$url = z_root() . '/' . $stripped;
 
 	return replace_macros(get_markup_template('alt_pager.tpl'), array(
-		'$has_less' => (($a->pager['page'] > 1) ? true : false),
-		'$has_more' => (($i > 0 && $i >= $a->pager['itemspage']) ? true : false),
+		'$has_less' => ((App::$pager['page'] > 1) ? true : false),
+		'$has_more' => (($i > 0 && $i >= App::$pager['itemspage']) ? true : false),
 		'$less' => $less,
 		'$more' => $more,
 		'$url' => $url,
-		'$prevpage' => $a->pager['page'] - 1,
-		'$nextpage' => $a->pager['page'] + 1,
+		'$prevpage' => App::$pager['page'] - 1,
+		'$nextpage' => App::$pager['page'] + 1,
 	));
 
 }
@@ -470,7 +480,7 @@ function item_message_id() {
 	do {
 		$dups = false;
 		$hash = random_string();
-		$mid = $hash . '@' . get_app()->get_hostname();
+		$mid = $hash . '@' . App::get_hostname();
 
 		$r = q("SELECT id FROM item WHERE mid = '%s' LIMIT 1",
 			dbesc($mid));
@@ -540,21 +550,25 @@ function attribute_contains($attr, $s) {
  */
 
 function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if(($a->module == 'install') || (! ($db && $db->connected)))
-		return;
-
-	$debugging = get_config('system', 'debugging');
-	$loglevel  = intval(get_config('system', 'loglevel'));
-	$logfile   = get_config('system', 'logfile');
+	if(App::$module == 'setup' && is_writable('install.log')) {
+		$debugging = true;
+		$logfile = 'install.log';
+		$loglevel = LOGGER_ALL;
+	}
+	else {
+		$debugging = get_config('system', 'debugging');
+		$loglevel  = intval(get_config('system', 'loglevel'));
+		$logfile   = get_config('system', 'logfile');
+	}
 
 	if((! $debugging) || (! $logfile) || ($level > $loglevel))
 		return;
 
 	$where = '';
+	
+	// We require > 5.4 but leave the version check so that install issues (including version) can be logged
+
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
 		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
@@ -563,11 +577,31 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
 
-	call_hooks('logger',$pluginfo);
+	if(! (App::$module == 'setup'))
+		call_hooks('logger',$pluginfo);
 
 	if(! $pluginfo['logged'])
 		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
 }
+
+// like logger() but with a function backtrace to pinpoint certain classes
+// of problems which show up deep in the calling stack
+
+
+function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
+
+	logger($msg, $level, $priority);
+	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
+       	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		if($stack) {
+			for($x = 1; $x < count($stack); $x ++) {
+				logger('stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()',$level, $priority);
+		    }
+		}
+	}
+}
+
+
 
 function log_priority_str($priority) {
 	$parr = array(
@@ -602,11 +636,10 @@ function log_priority_str($priority) {
  * @param int $level A log level.
  */
 function dlogger($msg, $level = 0) {
-	// turn off logger in install mode
-	global $a;
-	global $db;
 
-	if(($a->module == 'install') || (! ($db && $db->connected)))
+	// turn off logger in install mode
+
+	if(App::$module == 'setup')
 		return;
 
 	$debugging = get_config('system','debugging');
@@ -654,7 +687,7 @@ function get_tags($s) {
 
 	// ignore anything in a code block
 
-	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
+	$s = preg_replace('/\[code(.*?)\](.*?)\[\/code\]/sm','',$s);
 
 	// ignore anything in [style= ]
 	$s = preg_replace('/\[style=(.*?)\]/sm','',$s);
@@ -677,6 +710,10 @@ function get_tags($s) {
 	// '=' needs to be avoided because when the replacement is made (in handle_tag()) it has to be ignored there
 	// Feel free to allow '=' if the issue with '=' is solved in handle_tag()
 	// added / ? and [ to avoid issues with hashchars in url paths
+
+	// added ; to single word tags to allow emojis and other unicode character constructs in bbcode
+	// (this would actually be &#xnnnnn; but the ampersand will have been escaped to &amp; by the time we see it.)
+
 	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])(@[^ \x0D\x0A,:?\[]+ [^ \x0D\x0A@,:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
@@ -689,7 +726,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
@@ -737,6 +774,10 @@ function strip_zids($s) {
 	return preg_replace('/[\?&]zid=(.*?)(&|$)/ism','$2',$s);
 }
 
+function strip_zats($s) {
+	return preg_replace('/[\?&]zat=(.*?)(&|$)/ism','$2',$s);
+}
+
 
 // quick and dirty quoted_printable encoding
 
@@ -753,7 +794,7 @@ function get_mentions($item,$tags) {
 		return $o;
 
 	foreach($tags as $x) {
-		if($x['type'] == TERM_MENTION) {
+		if($x['ttype'] == TERM_MENTION) {
 			$o .= "\t\t" . '<link rel="mentioned" href="' . $x['url'] . '" />' . "\r\n";
 			$o .= "\t\t" . '<link rel="ostatus:attention" href="' . $x['url'] . '" />' . "\r\n";
 		}
@@ -764,22 +805,21 @@ function get_mentions($item,$tags) {
 
 function contact_block() {
 	$o = '';
-	$a = get_app();
 
-	if(! $a->profile['uid'])
+	if(! App::$profile['uid'])
 		return;
 
-	if(! perm_is_allowed($a->profile['uid'],get_observer_hash(),'view_contacts'))
+	if(! perm_is_allowed(App::$profile['uid'],get_observer_hash(),'view_contacts'))
 		return;
 
-	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
+	$shown = get_pconfig(App::$profile['uid'],'system','display_friend_count');
 
 	if($shown === false)
 		$shown = 25;
 	if($shown == 0)
 		return;
 
-	$is_owner = ((local_channel() && local_channel() == $a->profile['uid']) ? true : false);
+	$is_owner = ((local_channel() && local_channel() == App::$profile['uid']) ? true : false);
 	$sql_extra = '';
 
 	$abook_flags = " and abook_pending = 0 and abook_self = 0 ";
@@ -789,12 +829,12 @@ function contact_block() {
 		$sql_extra = " and xchan_hidden = 0 ";
 	}
 
-	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
+	if((! is_array(App::$profile)) || (App::$profile['hide_friends']))
 		return $o;
 
 	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d
 		$abook_flags and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra",
-		intval($a->profile['uid'])
+		intval(App::$profile['uid'])
 	);
 	if(count($r)) {
 		$total = intval($r[0]['total']);
@@ -807,7 +847,7 @@ function contact_block() {
 		$randfunc = db_getfunc('RAND');
 	
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d $abook_flags and abook_archived = 0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra ORDER BY $randfunc LIMIT %d",
-			intval($a->profile['uid']),
+			intval(App::$profile['uid']),
 			intval($shown)
 		);
 
@@ -824,7 +864,7 @@ function contact_block() {
 	$tpl = get_markup_template('contact_block.tpl');
 	$o = replace_macros($tpl, array(
 		'$contacts' => $contacts,
-		'$nickname' => $a->profile['channel_address'],
+		'$nickname' => App::$profile['channel_address'],
 		'$viewconnections' => (($total > $shown) ? sprintf(t('View all %s connections'),$total) : ''),
 		'$micropro' => $micropro,
 	));
@@ -877,11 +917,11 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 
 function search($s,$id='search-box',$url='/search',$save = false) {
-	$a = get_app();
+
 	return replace_macros(get_markup_template('searchbox.tpl'),array(
 		'$s' => $s,
 		'$id' => $id,
-		'$action_url' => $a->get_baseurl((stristr($url,'network')) ? true : false) . $url,
+		'$action_url' => z_root() . $url,
 		'$search_label' => t('Search'),
 		'$save_label' => t('Save'),
 		'$savedsearch' => feature_enabled(local_channel(),'savedsearch')
@@ -1022,7 +1062,7 @@ function get_mood_verbs() {
 // Function to list all smilies, both internal and from addons
 // Returns array with keys 'texts' and 'icons'
 function list_smilies() {
-	$a = get_app();
+
 	$texts =  array( 
 		'&lt;3', 
 		'&lt;/3', 
@@ -1056,49 +1096,59 @@ function list_smilies() {
 		':facepalm',
 		':like',
 		':dislike',
-		'red#matrix',
-		'red#',
-		'r#'
+		':hubzilla'
 	);
 
 	$icons = array(
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="&lt;3" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="&lt;/3" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-brokenheart.gif" alt="&lt;\\3" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-smile.gif" alt=":-)" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-wink.gif" alt=";-)" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-frown.gif" alt=":-(" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-P" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-tongue-out.gif" alt=":-p" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-\"" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-x" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-kiss.gif" alt=":-X" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-laughing.gif" alt=":-D" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-|" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt="8-O" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-surprised.gif" alt=":-O" />',                
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o.O" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O.o" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="o_O" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-Oo.gif" alt="O_o" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-cry.gif" alt=":\'(" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-undecided.gif" alt=":-/" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-embarassed.gif" alt=":-[" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-cool.gif" alt="8-)" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":beer" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/beer_mug.gif" alt=":homebrew" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/coffee.gif" alt=":coffee" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#matrix') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="' . urlencode('red#') . '" />matrix</strong></a>',
-		'<a href="http://getzot.com"><strong>red<img class="smiley bb_rm-logo" src="' . $a->get_baseurl() . '/images/rm-32.png" alt="r#" />matrix</strong></a>'
+		'<img class="smiley" src="' . z_root() . '/images/smiley-heart.gif" alt="&lt;3" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-brokenheart.gif" alt="&lt;/3" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-brokenheart.gif" alt="&lt;\\3" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-smile.gif" alt=":-)" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-wink.gif" alt=";-)" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-frown.gif" alt=":-(" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-tongue-out.gif" alt=":-P" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-tongue-out.gif" alt=":-p" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-\"" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-\"" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-x" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-kiss.gif" alt=":-X" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-laughing.gif" alt=":-D" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt="8-|" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt="8-O" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt=":-O" />',                
+		'<img class="smiley" src="' . z_root() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="o.O" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="O.o" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="o_O" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="O_o" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-cry.gif" alt=":\'(" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-foot-in-mouth.gif" alt=":-!" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-undecided.gif" alt=":-/" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-embarassed.gif" alt=":-[" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-cool.gif" alt="8-)" />',
+		'<img class="smiley" src="' . z_root() . '/images/beer_mug.gif" alt=":beer" />',
+		'<img class="smiley" src="' . z_root() . '/images/beer_mug.gif" alt=":homebrew" />',
+		'<img class="smiley" src="' . z_root() . '/images/coffee.gif" alt=":coffee" />',
+		'<img class="smiley" src="' . z_root() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
+		'<img class="smiley" src="' . z_root() . '/images/like.gif" alt=":like" />',
+		'<img class="smiley" src="' . z_root() . '/images/dislike.gif" alt=":dislike" />',
+		'<img class="smiley" src="' . z_root() . '/images/hz-16.png" alt=":hubzilla" />',
 
 	);
+
+	$x = get_config('feature','emoji');
+	if($x === false)
+		$x = 1;
+	if($x) {
+		if(! App::$emojitab)
+			App::$emojitab = json_decode(file_get_contents('library/emoji.json'),true);
+		foreach(App::$emojitab as $e) {
+			if(strpos($e['shortname'],':tone') === 0)
+				continue;
+			$texts[] = $e['shortname'];
+			$icons[] = '<img class="smiley emoji" height="16" width="16" src="images/emoji/' . $e['unicode'] . '.png' . '" alt="' . $e['name'] . '" />';
+		}
+	}
 
 	$params = array('texts' => $texts, 'icons' => $icons);
 	call_hooks('smilie', $params);
@@ -1167,13 +1217,13 @@ function smile_unshield($m) {
  * @param array $x
  */
 function preg_heart($x) {
-	$a = get_app();
+
 	if (strlen($x[1]) == 1)
 		return $x[0];
 
 	$t = '';
 	for($cnt = 0; $cnt < strlen($x[1]); $cnt ++)
-		$t .= '<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-heart.gif" alt="&lt;3" />';
+		$t .= '<img class="smiley" src="' . z_root() . '/images/smiley-heart.gif" alt="&lt;3" />';
 
 	$r =  str_replace($x[0],$t,$x[0]);
 
@@ -1213,7 +1263,7 @@ function normalise_link($url) {
  * is https and the other isn't, or if one is www.something and the other
  * isn't - and also ignore case differences.
  *
- * @see normalis_link()
+ * @see normalise_link()
  *
  * @param string $a
  * @param string $b
@@ -1273,7 +1323,7 @@ function theme_attachments(&$item) {
  			
 			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
-			require_once('include/identity.php');
+			require_once('include/channel.php');
 			if(is_foreigner($item['author_xchan']))
 				$url = $r['href'];
 			else
@@ -1407,40 +1457,8 @@ function generate_named_map($location) {
 	return (($arr['html']) ? $arr['html'] : $location);
 }
 
-function format_event($jobject) {
-	$event = array();
-
-	$object = json_decode($jobject,true);
-
-	//ensure compatibility with older items - this check can be removed at a later point
-	if(array_key_exists('description', $object)) {
-
-		$bd_format = t('l F d, Y \@ g:i A'); // Friday January 18, 2011 @ 8:01 AM
-
-		$event['header'] = replace_macros(get_markup_template('event_item_header.tpl'),array(
-			'$title'	 => bbcode($object['title']),
-			'$dtstart_label' => t('Starts:'),
-			'$dtstart_title' => datetime_convert('UTC', 'UTC', $object['start'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
-			'$dtstart_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['start'] , $bd_format )) : day_translate(datetime_convert('UTC', 'UTC', $object['start'] , $bd_format))),
-			'$finish'	 => (($object['nofinish']) ? false : true),
-			'$dtend_label'	 => t('Finishes:'),
-			'$dtend_title'	 => datetime_convert('UTC','UTC',$object['finish'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
-			'$dtend_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['finish'] , $bd_format )) :  day_translate(datetime_convert('UTC', 'UTC', $object['finish'] , $bd_format )))
-		));
-
-		$event['content'] = replace_macros(get_markup_template('event_item_content.tpl'),array(
-			'$description'	  => bbcode($object['description']),
-			'$location_label' => t('Location:'),
-			'$location'	  => bbcode($object['location'])
-		));
-
-	}
-
-	return $event;
-}
 
 function prepare_body(&$item,$attach = false) {
-	require_once('include/identity.php');
 
 	call_hooks('prepare_body_init', $item); 
 
@@ -1450,7 +1468,7 @@ function prepare_body(&$item,$attach = false) {
 
 	if($is_photo) {
 
-		$object = json_decode($item['object'],true);
+		$object = json_decode($item['obj'],true);
 
 		// if original photo width is <= 640px prepend it to item body
 		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {
@@ -1466,7 +1484,7 @@ function prepare_body(&$item,$attach = false) {
 
 	$s .= prepare_text($item['body'],$item['mimetype'], false);
 
-	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event($item['object']) : false);
+	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event_obj($item['obj']) : false);
 
 	$prep_arr = array(
 		'item' => $item,
@@ -1512,35 +1530,6 @@ function prepare_body(&$item,$attach = false) {
 		$filer = format_filer($item);
 
 	$s = sslify($s);
-
-	// Look for spoiler
-	$spoilersearch = '<blockquote class="spoiler">';
-
-	// Remove line breaks before the spoiler
-	while ((strpos($s, "\n".$spoilersearch) !== false))
-		$s = str_replace("\n".$spoilersearch, $spoilersearch, $s);
-	while ((strpos($s, "<br />".$spoilersearch) !== false))
-		$s = str_replace("<br />".$spoilersearch, $spoilersearch, $s);
-
-	while ((strpos($s, $spoilersearch) !== false)) {
-
-		$pos = strpos($s, $spoilersearch);
-		$rnd = random_string(8);
-		$spoilerreplace = '<br /> <span id="spoiler-wrap-'.$rnd.'" style="white-space:nowrap;" class="fakelink" onclick="openClose(\'spoiler-'.$rnd.'\');">'.sprintf(t('Click to open/close')).'</span>'.
-                                '<blockquote class="spoiler" id="spoiler-'.$rnd.'" style="display: none;">';
-		$s = substr($s, 0, $pos).$spoilerreplace.substr($s, $pos+strlen($spoilersearch));
-	}
-
-	// Look for quote with author
-	$authorsearch = '<blockquote class="author">';
-
-	while ((strpos($s, $authorsearch) !== false)) {
-		$pos = strpos($s, $authorsearch);
-		$rnd = random_string(8);
-		$authorreplace = '<br /> <span id="author-wrap-'.$rnd.'" style="white-space:nowrap;" class="fakelink" onclick="openClose(\'author-'.$rnd.'\');">'.sprintf(t('Click to open/close')).'</span>'.
-                                '<blockquote class="author" id="author-'.$rnd.'" style="display: block;">';
-		$s = substr($s, 0, $pos).$authorreplace.substr($s, $pos+strlen($authorsearch));
-	}
 
 	$prep_arr = array(
 		'item' => $item,
@@ -1626,7 +1615,7 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 
 function create_export_photo_body(&$item) {
 	if(($item['verb'] === ACTIVITY_POST) && ($item['obj_type'] === ACTIVITY_OBJ_PHOTO)) {
-		$j = json_decode($item['object'],true);
+		$j = json_decode($item['obj'],true);
 		if($j) {
 			$item['body'] .= "\n\n" . (($j['body']) ? $j['body'] : $j['bbcode']);
 			$item['sig'] = '';
@@ -1699,14 +1688,13 @@ function feed_hublinks() {
 /* return atom link elements for salmon endpoints */
 
 function feed_salmonlinks($nick) {
-	$a = get_app();
 
-	$salmon  = '<link rel="salmon" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ;
+	$salmon  = '<link rel="salmon" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ;
 
 	// old style links that status.net still needed as of 12/2010 
 
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify($a->get_baseurl() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ; 
 
 	return $salmon;
 }
@@ -1735,7 +1723,8 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and item_type = %d ",
+	$r = q("select mid, v from item left join iconfig on iconfig.iid = item.id 
+		where iconfig.cat = 'system' and iconfig.k = 'PDL' and item.uid = %d and item_type = %d ",
 		intval($channel_id),
 		intval(ITEM_TYPE_PDL)
 	);
@@ -1745,7 +1734,7 @@ function layout_select($channel_id, $current = '') {
 		$options .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
 		foreach($r as $rr) {
 			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
-			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+			$options .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['v'] . '</option>';
 		}
 	}
 
@@ -1767,8 +1756,8 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'application/x-pdl'
 	);
 
-	$a = get_app();
-	if($a->is_sys) {
+
+	if(App::$is_sys) {
 		$x[] = 'application/x-php';
 	}
 	else {
@@ -1800,7 +1789,6 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 
 
 function lang_selector() {
-	global $a;
 
 	$langs = glob('view/*/hstrings.php');
 
@@ -1819,7 +1807,7 @@ function lang_selector() {
 			}
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
-			$selected = (($ll === $a->language && (x($_SESSION, 'language'))) ? $ll : $selected);
+			$selected = (($ll === App::$language && (x($_SESSION, 'language'))) ? $ll : $selected);
 			$lang_options[$ll] = get_language_name($ll, $ll) . " ($ll)";
 		}
 	}
@@ -1835,8 +1823,10 @@ function lang_selector() {
 }
 
 
-function return_bytes ($size_str) {
-	switch (substr ($size_str, -1)) {
+function engr_units_to_bytes ($size_str) {
+	if(! $size_str)
+		return $size_str;
+	switch (substr(trim($size_str), -1)) {
 		case 'M': case 'm': return (int)$size_str * 1048576;
 		case 'K': case 'k': return (int)$size_str * 1024;
 		case 'G': case 'g': return (int)$size_str * 1073741824;
@@ -1874,32 +1864,15 @@ function cleardiv() {
 
 
 function bb_translate_video($s) {
-
-	$matches = null;
-	$r = preg_match_all("/\[video\](.*?)\[\/video\]/ism",$s,$matches,PREG_SET_ORDER);
-	if($r) {
-		foreach($matches as $mtch) {
-			if((stristr($mtch[1],'youtube')) || (stristr($mtch[1],'youtu.be')))
-				$s = str_replace($mtch[0],'[youtube]' . $mtch[1] . '[/youtube]',$s);
-			elseif(stristr($mtch[1],'vimeo'))
-				$s = str_replace($mtch[0],'[vimeo]' . $mtch[1] . '[/vimeo]',$s);
-		}
-	}
-	return $s;
+	$arr = array('string' => $s);
+	call_hooks('bb_translate_video',$arr);
+	return $arr['string'];
 }
 
 function html2bb_video($s) {
-
-	$s = preg_replace('#<object[^>]+>(.*?)https?://www.youtube.com/((?:v|cp)/[A-Za-z0-9\-_=]+)(.*?)</object>#ism',
-			'[youtube]$2[/youtube]', $s);
-
-	$s = preg_replace('#<iframe[^>](.*?)https?://www.youtube.com/embed/([A-Za-z0-9\-_=]+)(.*?)</iframe>#ism',
-			'[youtube]$2[/youtube]', $s);
-
-	$s = preg_replace('#<iframe[^>](.*?)https?://player.vimeo.com/video/([0-9]+)(.*?)</iframe>#ism',
-			'[vimeo]$2[/vimeo]', $s);
-
-	return $s;
+	$arr = array('string' => $s);
+	call_hooks('html2bb_video',$arr);
+	return $arr['string'];
 }
 
 /**
@@ -2021,7 +1994,7 @@ function check_webbie($arr) {
 	if(strlen($reservechan))
 		$taken = explode(',', $reservechan);
 	else
-		$taken = array();
+		$taken = array('principals','addressbooks','calendars');
 
 	$str = '';
 	if(count($arr)) {
@@ -2053,6 +2026,20 @@ function check_webbie($arr) {
 	return '';
 }
 
+function ids_to_array($arr,$idx = 'id') {
+	$t = array();
+	if($arr) {
+		foreach($arr as $x) {
+			if(array_key_exists($idx,$x) && strlen($x[$idx]) && (! in_array($x[$idx],$t))) {
+				$t[] = $x[$idx];
+			}
+		}
+	}
+	return($t);
+}
+
+
+
 
 function ids_to_querystr($arr,$idx = 'id') {
 	$t = array();
@@ -2082,9 +2069,9 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 		}
 
 		foreach($items as $item) {
-			if($item['owner_xchan'] && (! in_array($item['owner_xchan'],$arr)))
+			if($item['owner_xchan'] && (! in_array("'" . dbesc($item['owner_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['owner_xchan']) . "'";
-			if($item['author_xchan'] && (! in_array($item['author_xchan'],$arr)))
+			if($item['author_xchan'] && (! in_array("'" . dbesc($item['author_xchan']) . "'",$arr)))
 				$arr[] = "'" . dbesc($item['author_xchan']) . "'";
 		}
 	}
@@ -2117,9 +2104,9 @@ function xchan_mail_query(&$item) {
 	$arr = array();
 	$chans = null;
 	if($item) {
-		if($item['from_xchan'] && (! in_array($item['from_xchan'],$arr)))
+		if($item['from_xchan'] && (! in_array("'" . dbesc($item['from_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['from_xchan']) . "'";
-		if($item['to_xchan'] && (! in_array($item['to_xchan'],$arr)))
+		if($item['to_xchan'] && (! in_array("'" . dbesc($item['to_xchan']) . "'",$arr)))
 			$arr[] = "'" . dbesc($item['to_xchan']) . "'";
 	}
 
@@ -2241,11 +2228,11 @@ function json_decode_plus($s) {
  */
 function design_tools() {
 
-	$channel  = get_app()->get_channel();
+	$channel  = App::get_channel();
 	$sys = false;
 
-	if(get_app()->is_sys && is_site_admin()) {
-		require_once('include/identity.php');
+	if(App::$is_sys && is_site_admin()) {
+		require_once('include/channel.php');
 		$channel = get_sys_channel();
 		$sys = true;
 	}
@@ -2354,8 +2341,8 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 				$basetag = str_replace('_',' ',substr($tag,1));
 
 			//create text for link
-			$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
-			$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
+			$url = z_root() . '/search?tag=' . rawurlencode($basetag);
+			$newtag = '#[zrl=' . z_root() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
 			//replace tag by the link. Make sure to not replace something in the middle of a word
 			// The '=' is needed to not replace color codes if the code is also used as a tag
 			// Much better would be to somehow completely avoiding things in e.g. [color]-tags.
@@ -2371,7 +2358,13 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 			$str_tags .= $newtag;
 		}
-		return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $basetag, 'url' => $url, 'contact' => $r[0]);	
+		return [
+			'replaced' => $replaced, 
+			'termtype' => $termtype, 
+			'term'     => $basetag, 
+			'url'      => $url, 
+			'contact'  => $r[0]
+		];	
 	}
 
 	//is it a person tag? 
@@ -2501,7 +2494,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 		// $r is set if we found something
 
-		$channel = get_app()->get_channel();
+		$channel = App::get_channel();
 
 		if($r) {
 			$profile = $r[0]['xchan_url'];
@@ -2531,7 +2524,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 					if($g && $exclusive) {
 						$access_tag .= 'gid:' . $g[0]['hash'];
 					}
-					$channel = get_app()->get_channel();
+					$channel = App::get_channel();
 					if($channel) {
 						$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . z_root() . '/channel/' . $channel['channel_address'] . ']' . $newname . '[/zrl]';
 						$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
@@ -2562,7 +2555,13 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		}
 	}
 
-	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
+	return [
+		'replaced' => $replaced, 
+		'termtype' => $termtype, 
+		'term'     => $newname, 
+		'url'      => $url, 
+		'contact'  => $r[0]
+	];
 }
 
 function linkify_tags($a, &$body, $uid, $diaspora = false) {
@@ -2589,7 +2588,7 @@ function linkify_tags($a, &$body, $uid, $diaspora = false) {
 			if($fullnametagged)
 				continue;
 
-			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : $a->profile_uid , $tag, $diaspora); 
+			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : App::$profile_uid , $tag, $diaspora); 
 			$results[] = array('success' => $success, 'access_tag' => $access_tag);
 			if($success['replaced']) $tagged[] = $tag;
 		}
@@ -2611,41 +2610,41 @@ function linkify_tags($a, &$body, $uid, $diaspora = false) {
 function getIconFromType($type) {
 	$iconMap = array(
 		//Folder
-		t('Collection') => 'icon-folder-close',
-		'multipart/mixed' => 'icon-folder-close', //dirs in attach use this mime type
+		t('Collection') => 'fa-folder',
+		'multipart/mixed' => 'fa-folder', //dirs in attach use this mime type
 		//Common file
-		'application/octet-stream' => 'icon-file-alt',
+		'application/octet-stream' => 'fa-file-o',
 		//Text
-		'text/plain' => 'icon-file-text-alt',
-		'application/msword' => 'icon-file-text-alt',
-		'application/pdf' => 'icon-file-text-alt',
-		'application/vnd.oasis.opendocument.text' => 'icon-file-text-alt',
-		'application/epub+zip' => 'icon-book',
+		'text/plain' => 'fa-file-text-o',
+		'application/msword' => 'fa-file-text-o',
+		'application/pdf' => 'fa-file-text-o',
+		'application/vnd.oasis.opendocument.text' => 'fa-file-text-o',
+		'application/epub+zip' => 'fa-book',
 		//Spreadsheet
-		'application/vnd.oasis.opendocument.spreadsheet' => 'icon-table',
-		'application/vnd.ms-excel' => 'icon-table',
+		'application/vnd.oasis.opendocument.spreadsheet' => 'fa-table',
+		'application/vnd.ms-excel' => 'fa-table',
 		//Image
-		'image/jpeg' => 'icon-picture',
-		'image/png' => 'icon-picture',
-		'image/gif' => 'icon-picture',
-		'image/svg+xml' => 'icon-picture',
+		'image/jpeg' => 'fa-picture-o',
+		'image/png' => 'fa-picture-o',
+		'image/gif' => 'fa-picture-o',
+		'image/svg+xml' => 'fa-picture-o',
 		//Archive
-		'application/zip' => 'icon-archive',
-		'application/x-rar-compressed' => 'icon-archive',
+		'application/zip' => 'fa-archive',
+		'application/x-rar-compressed' => 'fa-archive',
 		//Audio
-		'audio/mpeg' => 'icon-music',
-		'audio/wav' => 'icon-music',
-		'application/ogg' => 'icon-music',
-		'audio/ogg' => 'icon-music',
-		'audio/webm' => 'icon-music',
-		'audio/mp4' => 'icon-music',
+		'audio/mpeg' => 'fa-music',
+		'audio/wav' => 'fa-music',
+		'application/ogg' => 'fa-music',
+		'audio/ogg' => 'fa-music',
+		'audio/webm' => 'fa-music',
+		'audio/mp4' => 'fa-music',
 		//Video
-		'video/quicktime' => 'icon-film',
-		'video/webm' => 'icon-film',
-		'video/mp4' => 'icon-film'
+		'video/quicktime' => 'fa-film',
+		'video/webm' => 'fa-film',
+		'video/mp4' => 'fa-film'
 	);
 
-	$iconFromType = 'icon-file-alt';
+	$iconFromType = 'fa-file-o';
 
 	if (array_key_exists($type, $iconMap)) {
 		$iconFromType = $iconMap[$type];
@@ -2711,22 +2710,37 @@ function json_url_replace($old,$new,&$s) {
 }
 		
 
-function item_url_replace($channel,&$item,$old,$new) {
+function item_url_replace($channel,&$item,$old,$new,$oldnick = '') {
 	
-	if($item['attach'])
+	if($item['attach']) {
 		json_url_replace($old,$new,$item['attach']);
-	if($item['object'])
+		if($oldnick)
+			json_url_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['attach']);
+	}
+	if($item['object']) {
 		json_url_replace($old,$new,$item['object']);
-	if($item['target'])
+		if($oldnick)
+			json_url_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['object']);
+	}
+	if($item['target']) {
 		json_url_replace($old,$new,$item['target']);
+		if($oldnick)
+			json_url_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['target']);
+	}
 
 	if(string_replace($old,$new,$item['body'])) {
 		$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
 		$item['item_verified']  = 1;
 	}
 	
-	// @fixme item['plink'] and item['llink']
+	$item['plink'] = str_replace($old,$new,$item['plink']);
+	if($oldnick)
+		$item['plink'] = str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['plink']);
 
+	$item['llink'] = str_replace($old,$new,$item['llink']);
+	if($oldnick)
+		$item['llink'] = str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['llink']);
+	
 }
 
 
@@ -2788,3 +2802,125 @@ function expand_acl($s) {
 
 	return $ret;
 }
+
+
+// When editing a webpage - a dropdown is needed to select a page layout
+// On submit, the pdl_select value (which is the mid of an item with item_type = ITEM_TYPE_PDL) is stored in 
+// the webpage's resource_id, with resource_type 'pdl'.
+
+// Then when displaying a webpage, we can see if it has a pdl attached. If not we'll 
+// use the default site/page layout.
+
+// If it has a pdl we'll load it as we know the mid and pass the body through comanche_parser() which will generate the 
+// page layout from the given description
+
+// @FIXME - there is apparently a very similar function called layout_select; this one should probably take precedence
+// and the other should be checked for compatibility and removed
+
+function pdl_selector($uid, $current="") {
+	$o = '';
+
+	$sql_extra = item_permissions_sql($uid);
+
+	$r = q("select iconfig.*, mid from item_id left join item on iconfig.iid = item.id 
+		where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' $sql_extra order by v asc",
+		intval($uid)
+	);
+
+	$arr = array('channel_id' => $uid, 'current' => $current, 'entries' => $r);
+	call_hooks('pdl_selector',$arr);
+
+	$entries = $arr['entries'];
+	$current = $arr['current'];
+
+	$o .= '<select name="pdl_select" id="pdl_select" size="1">';
+	$entries[] = array('title' => t('Default'), 'mid' => '');
+	foreach($entries as $selection) {
+		$selected = (($selection == $current) ? ' selected="selected" ' : '');
+		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['v']}</option>";
+	}
+
+	$o .= '</select>';
+	return $o;
+}
+
+/* 
+ * array flatten_array_recursive(array);
+ * returns a one-dimensional array from a multi-dimensional array 
+ * empty values are discarded
+ * example: print_r(flatten_array_recursive(array('foo','bar',array('baz','blip',array('zob','glob')),'','grip')));
+ *
+ * Array ( [0] => foo [1] => bar [2] => baz [3] => blip [4] => zob [5] => glob [6] => grip ) 
+ *
+ */
+
+function flatten_array_recursive($arr) {
+	$ret = array();
+
+	if(! $arr)
+		return $ret;
+
+	foreach($arr as $a) {
+		if(is_array($a)) {
+			$tmp = flatten_array_recursive($a);
+			if($tmp) {
+				$ret = array_merge($ret,$tmp);
+			}
+		}
+		elseif($a) {
+			$ret[] = $a;
+		}
+	}
+	return($ret);
+}			
+
+function text_highlight($s,$lang) {
+
+	if($lang === 'js')
+		$lang = 'javascript';
+
+	if($lang === 'json') {
+		$lang = 'javascript';
+		if(! strpos(trim($s),"\n"))
+			$s = jindent($s);
+	}
+
+	if(! strpos('Text_Highlighter',get_include_path())) {
+		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
+	}
+	require_once('library/Text_Highlighter/Text/Highlighter.php');
+    require_once('library/Text_Highlighter/Text/Highlighter/Renderer/Html.php');
+    $options = array(
+        'numbers' => HL_NUMBERS_LI,
+        'tabsize' => 4,
+    );
+	$tag_added = false;
+	$s = trim(html_entity_decode($s,ENT_COMPAT));
+	$s = str_replace("    ","\t",$s);
+
+	// The highlighter library insists on an opening php tag for php code blocks. If 
+	// it isn't present, nothing is highlighted. So we're going to see if it's present.
+	// If not, we'll add it, and then quietly remove it after we get the processed output back.  
+
+	if($lang === 'php') {
+		if(strpos('<?php',$s) !== 0) {
+			$s = '<?php' . "\n" . $s;
+			$tag_added = true;			
+		}
+
+	} 
+    $renderer = new Text_Highlighter_Renderer_HTML($options);
+    $hl = Text_Highlighter::factory($lang);
+    $hl->setRenderer($renderer);
+	$o = $hl->highlight($s);
+	$o = str_replace(["    ","\n"],["&nbsp;&nbsp;&nbsp;&nbsp;",''],$o);
+
+	if($tag_added) {
+		$b = substr($o,0,strpos($o,'<li>'));
+		$e = substr($o,strpos($o,'</li>'));
+		$o = $b . $e;
+	}
+
+    return('<code>' . $o . '</code>');
+}
+

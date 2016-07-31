@@ -57,7 +57,7 @@ class Id extends \Zotlabs\Web\Controller {
 	
 		$profile = '';
 		$channel = \App::get_channel();
-		profile_load($a,$which,$profile);
+		profile_load($which,$profile);
 	
 		$op = new MysqlProvider;
 		$op->server();

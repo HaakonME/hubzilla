@@ -9,7 +9,6 @@ require_once('include/security.php');
 require_once('include/conversation.php');
 require_once('include/acl_selectors.php');
 require_once('include/permissions.php');
-require_once('include/PermissionDescription.php');
 
 class Channel extends \Zotlabs\Web\Controller {
 
@@ -48,7 +47,7 @@ class Channel extends \Zotlabs\Web\Controller {
 		// Run profile_load() here to make sure the theme is set before
 		// we start loading content
 
-		profile_load($a,$which,$profile);
+		profile_load($which,$profile);
 
 	}
 
@@ -133,7 +132,7 @@ class Channel extends \Zotlabs\Web\Controller {
 					'default_location' => (($is_owner) ? \App::$profile['channel_location'] : ''),
 					'nickname' => \App::$profile['channel_address'],
 					'lockstate' => (((strlen(\App::$profile['channel_allow_cid'])) || (strlen(\App::$profile['channel_allow_gid'])) || (strlen(\App::$profile['channel_deny_cid'])) || (strlen(\App::$profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
-					'acl' => (($is_owner) ? populate_acl($channel_acl,true, \PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post') : ''),
+					'acl' => (($is_owner) ? populate_acl($channel_acl,true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post') : ''),
 					'showacl' => (($is_owner) ? 'yes' : ''),
 					'bang' => '',
 					'visitor' => (($is_owner || $observer) ? true : false),

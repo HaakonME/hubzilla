@@ -10,9 +10,10 @@ head_add_css('view/css/conversation.css');
 head_add_css('view/css/widgets.css');
 head_add_css('view/css/colorbox.css');
 head_add_css('library/justifiedGallery/justifiedGallery.min.css');
+head_add_css('library/Text_Highlighter/sample.css');	
 
 head_add_js('jquery.js');
-//head_add_js('jquery-migrate-1.1.1.js');
+//head_add_js('jquery.migrate-3.0.0.js');
 head_add_js('library/justifiedGallery/jquery.justifiedGallery.min.js');
 head_add_js('library/sprintf.js/dist/sprintf.min.js');
 

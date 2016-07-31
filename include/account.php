@@ -499,11 +499,27 @@ function account_approve($hash) {
 		intval($register[0]['uid'])
 	);
 
+	// get a fresh copy after we've modified it.
+
+	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+
+	if(! $account)
+		return $ret;
+
+
+
 
 	if(get_config('system','auto_channel_create') || UNO)
 		auto_channel_create($register[0]['uid']);
+	else {
+		$_SESSION['login_return_url'] = 'new_channel';
+		authenticate_success($account[0],null,true,true,false,true);
+	}	
 
-	info( t('Account verified. Please login.') . EOL );
+
+	// info( t('Account verified. Please login.') . EOL );
 
 	return true;
 }

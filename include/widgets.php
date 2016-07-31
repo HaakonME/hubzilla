@@ -296,7 +296,7 @@ function widget_filer($arr) {
 	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and ttype = %d order by term asc",
+	$r = q("select distinct term from term where uid = %d and ttype = %d order by term asc",
 		intval(local_channel()),
 		intval(TERM_FILE)
 	);
@@ -609,6 +609,15 @@ function widget_settings_menu($arr) {
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
 
+	if(! UNO) {
+		$tabs[] =	array(
+			'label' => t('Guest Access Tokens'),
+			'url' => z_root() . '/settings/tokens',
+			'selected' => ((argv(1) === 'tokens') ? 'active' : ''),
+		);
+	}
+
+
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(
 			'label' => t('Connection Default Permissions'),
@@ -741,21 +750,6 @@ function widget_conversations($arr) {
 	}
 
 	return $o;
-}
-
-function widget_eventsmenu($arr) {
-	if (! local_channel())
-		return;
-
-	return replace_macros(get_markup_template('events_menu_side.tpl'), array(
-		'$title' => t('Events Menu'),
-		'$day' => t('Day View'),
-		'$week' => t('Week View'),
-		'$month' => t('Month View'),
-		'$export' => t('Export'),
-		'$upload' => t('Import'),
-		'$submit' => t('Submit')
-	));
 }
 
 function widget_eventstools($arr) {
@@ -994,8 +988,9 @@ function widget_item($arr) {
 	$sql_extra = item_permissions_sql($channel_id);
 
 	if($arr['title']) {
-		$r = q("select item.* from item left join item_id on item.id = item_id.iid
-			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and item_type = %d $sql_options $revision limit 1",
+		$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
+			where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s' 
+			and iconfig.k = 'WEBPAGE' and item_type = %d $sql_options $revision limit 1",
 			intval($channel_id),
 			dbesc($arr['title']),
 			intval(ITEM_TYPE_WEBPAGE)
@@ -1157,7 +1152,7 @@ function widget_cover_photo($arr) {
 	if(array_key_exists('subtitle', $arr) && isset($arr['subtitle']))
 		$subtitle = $arr['subtitle'];
 	else
-		$subtitle = $channel['xchan_addr'];
+		$subtitle = str_replace('@','&#x40;',$channel['xchan_addr']);
 
 	$c = get_cover_photo($channel_id,'html');
 
@@ -1253,8 +1248,8 @@ function widget_random_block($arr) {
 
 	$randfunc = db_getfunc('RAND');
 
-	$r = q("select item.* from item left join item_id on item.id = item_id.iid
-		where item.uid = %d and sid like '%s' and service = 'BUILDBLOCK' and 
+	$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
+		where item.uid = %d and iconfig.cat = 'system' and iconfig.v like '%s' and iconfig.k = 'BUILDBLOCK' and 
 		item_type = %d $sql_options order by $randfunc limit 1",
 		intval($channel_id),
 		dbesc('%' . $contains . '%'),
@@ -1361,7 +1356,7 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	$r1 = q("select * from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
+	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
 		intval(PERMS_W_TAGWALL),
 		intval(PERMS_W_STREAM),
 		intval(local_channel())
@@ -1375,12 +1370,34 @@ function widget_forums($arr) {
 	// There also should be a way to update this via ajax.
 
 	for($x = 0; $x < count($r1); $x ++) {
-		$r = q("select sum(item_unseen) as unseen from item where owner_xchan = '%s' and uid = %d $perms_sql ",
+		$r = q("select sum(item_unseen) as unseen from item where owner_xchan = '%s' and uid = %d and item_unseen = 1 $perms_sql ",
 			dbesc($r1[$x]['xchan_hash']),
 			intval(local_channel())
 		);
 		if($r)
 			$r1[$x]['unseen'] = $r[0]['unseen'];
+
+/**
+ * @FIXME
+ * This SQL makes the counts correct when you get forum posts arriving from different routes/sources
+ * (like personal channels). However the network query for these posts doesn't yet include this 
+ * correction and it makes the SQL for that query pretty hairy so this is left as a future exercise. 
+ * It may make more sense in that query to look for the mention in the body rather than another join,
+ * but that makes it very inefficient.
+ * 
+		$r = q("select sum(item_unseen) as unseen from item left join term on oid = id where otype = %d and owner_xchan != '%s' and item.uid = %d and url = '%s' and ttype = %d $perms_sql ",
+			intval(TERM_OBJ_POST),
+			dbesc($r1[$x]['xchan_hash']),
+			intval(local_channel()),
+			dbesc($r1[$x]['xchan_url']),
+			intval(TERM_MENTION)
+		);
+		if($r)
+			$r1[$x]['unseen'] = ((array_key_exists('unseen',$r1[$x])) ? $r1[$x]['unseen'] + $r[0]['unseen'] : $r[0]['unseen']);
+ *
+ * end @FIXME
+ */
+		
 	}
 
 	if($r1) {

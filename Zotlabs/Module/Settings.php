@@ -2,8 +2,6 @@
 namespace Zotlabs\Module; /** @file */
 
 require_once('include/zot.php');
-require_once('include/PermissionDescription.php');
-
 
 
 class Settings extends \Zotlabs\Web\Controller {
@@ -30,7 +28,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel())
 			return;
@@ -117,6 +115,60 @@ class Settings extends \Zotlabs\Web\Controller {
 			call_hooks('feature_settings_post', $_POST);
 	
 			build_sync_packet();
+			return;
+		}
+
+
+		if((argc() > 1) && (argv(1) == 'tokens')) {
+			check_form_security_token_redirectOnErr('/settings/tokens', 'settings_tokens');
+			$token_errs = 0;
+			if(array_key_exists('token',$_POST)) {
+				$atoken_id = (($_POST['atoken_id']) ? intval($_POST['atoken_id']) : 0);
+				$name = trim(escape_tags($_POST['name']));
+				$token = trim($_POST['token']);
+				if((! $name) || (! $token))
+						$token_errs ++;
+				if(trim($_POST['expires']))
+					$expires = datetime_convert(date_default_timezone_get(),'UTC',$_POST['expires']);
+				else
+					$expires = NULL_DATE;
+				$max_atokens = service_class_fetch(local_channel(),'access_tokens');
+				if($max_atokens) {
+					$r = q("select count(atoken_id) as total where atoken_uid = %d",
+						intval(local_channel())
+					);
+					if($r && intval($r[0]['total']) >= $max_tokens) {
+						notice( sprintf( t('This channel is limited to %d tokens'), $max_tokens) . EOL);
+						return;
+					}
+				}
+			}
+			if($token_errs) {
+				notice( t('Name and Password are required.') . EOL);
+				return;
+			}
+			if($atoken_id) {
+				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expires = '%s' 
+					where atoken_id = %d and atoken_uid = %d",
+					dbesc($name),
+					dbesc($token),
+					dbesc($expires),
+					intval($atoken_id),
+					intval($channel['channel_id'])
+				);
+			}
+			else {
+				$r = q("insert into atoken ( atoken_aid, atoken_uid, atoken_name, atoken_token, atoken_expires )
+					values ( %d, %d, '%s', '%s', '%s' ) ",
+					intval($channel['channel_account_id']),
+					intval($channel['channel_id']),
+					dbesc($name),
+					dbesc($token),
+					dbesc($expires)
+				);
+			}
+		
+			info( t('Token saved.') . EOL);
 			return;
 		}
 	
@@ -708,6 +760,53 @@ class Settings extends \Zotlabs\Web\Controller {
 			));
 			return $o;
 		}
+
+		if((argc() > 1) && (argv(1) === 'tokens')) {
+			$atoken = null;
+			if(argc() > 2) {
+				$id = argv(2);			
+
+				$atoken = q("select * from atoken where atoken_id = %d and atoken_uid = %d",
+					intval($id),
+					intval(local_channel())
+				);
+
+				if($atoken)
+					$atoken = $atoken[0];
+
+				if($atoken && argc() > 3 && argv(3) === 'drop') {
+					$r = q("delete from atoken where atoken_id = %d",
+						intval($id)
+					);
+				}
+			}
+			$t = q("select * from atoken where atoken_uid = %d",
+				intval(local_channel())
+			);			
+
+			$desc = t('Use this form to create temporary access identifiers to share things with non-members. These identities may be used in Access Control Lists and visitors may login using these credentials to access the private content.');
+
+			$desc2 = t('You may also provide <em>dropbox</em> style access links to friends and associates by adding the Login Password to any specific site URL as shown. Examples:');
+
+			$tpl = get_markup_template("settings_tokens.tpl");
+			$o .= replace_macros($tpl, array(
+				'$form_security_token' => get_form_security_token("settings_tokens"),
+				'$title'	=> t('Guest Access Tokens'),
+				'$desc'     => $desc,
+				'$desc2' => $desc2,
+				'$tokens' => $t,
+				'$atoken' => $atoken,
+				'$url1' => z_root() . '/channel/' . $channel['channel_address'],
+				'$url2' => z_root() . '/photos/' . $channel['channel_address'],
+				'$name' => array('name', t('Login Name') . ' <span class="required">*</span>', (($atoken) ? $atoken['atoken_name'] : ''),''),
+				'$token'=> array('token', t('Login Password') . ' <span class="required">*</span>',(($atoken) ? $atoken['atoken_token'] : autoname(8)), ''),
+				'$expires'=> array('expires', t('Expires (yyyy-mm-dd)'), (($atoken['atoken_expires'] && $atoken['atoken_expires'] != NULL_DATE) ? datetime_convert('UTC',date_default_timezone_get(),$atoken['atoken_expires']) : ''), ''),
+				'$submit' 	=> t('Submit')
+			));
+			return $o;
+		}
+
+
 	
 	
 	
@@ -1066,7 +1165,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 				'$permissions' => t('Default Post and Publish Permissions'),
 				'$permdesc' => t("\x28click to open/close\x29"),
-				'$aclselect' => populate_acl($perm_defaults, false, \PermissionDescription::fromDescription(t('Use my default audience setting for the type of object published'))),
+				'$aclselect' => populate_acl($perm_defaults, false, \Zotlabs\Lib\PermissionDescription::fromDescription(t('Use my default audience setting for the type of object published'))),
 				'$suggestme' => $suggestme,
 				'$group_select' => $group_select,
 				'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),

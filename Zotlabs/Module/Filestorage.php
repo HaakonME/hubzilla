@@ -6,7 +6,6 @@ namespace Zotlabs\Module;
  */
 
 require_once('include/attach.php');
-require_once('include/PermissionDescription.php');
 
 
 /**
@@ -134,7 +133,7 @@ class Filestorage extends \Zotlabs\Web\Controller {
 			$cloudpath = get_cloudpath($f) . (intval($f['is_dir']) ? '?f=&davguest=1' : '');
 			$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
 	
-			$aclselect_e = populate_acl($f, false, \PermissionDescription::fromGlobalPermission('view_storage'));
+			$aclselect_e = populate_acl($f, false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage'));
 			$is_a_dir = (intval($f['is_dir']) ? true : false);
 	
 			$lockstate = (($f['allow_cid'] || $f['allow_gid'] || $f['deny_cid'] || $f['deny_gid']) ? 'lock' : 'unlock'); 

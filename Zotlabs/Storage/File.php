@@ -337,6 +337,10 @@ class File extends DAV\Node implements DAV\IFile {
 			}
 		}
 
+		if(get_pconfig($this->auth->owner_id,'system','os_delete_prohibit') && \App::$module == 'dav') {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+		}
+ 
 		attach_delete($this->auth->owner_id, $this->data['hash']);
 
 		$ch = channelx_by_n($this->auth->owner_id);

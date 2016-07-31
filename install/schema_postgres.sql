@@ -1,6 +1,6 @@
 CREATE TABLE "abconfig" (
   "id" serial  NOT NULL,
-  "chan" text NOT NULL,
+  "chan" bigint NOT NULL DEFAULT '0',
   "xchan" text NOT NULL,
   "cat" text NOT NULL,
   "k" text NOT NULL,
@@ -137,6 +137,21 @@ create index "app_created" on app ("app_created");
 create index "app_edited" on app ("app_edited");
 create index "app_deleted" on app ("app_deleted");
 create index "app_system" on app ("app_system");
+
+CREATE TABLE "atoken" (
+  "atoken_id" serial NOT NULL,
+  "atoken_aid" bigint NOT NULL DEFAULT 0,
+  "atoken_uid" bigint NOT NULL DEFAULT 0,
+  "atoken_name" varchar(255) NOT NULL DEFAULT '',
+  "atoken_token" varchar(255) NOT NULL DEFAULT '',
+  "atoken_expires" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  PRIMARY KEY ("atoken_id"));
+create index atoken_aid on atoken (atoken_aid);
+create index atoken_uid on atoken (atoken_uid);
+create index atoken_name on atoken (atoken_name);
+create index atoken_token on atoken (atoken_token);
+create index atoken_expires on atoken (atoken_expires);
+
 CREATE TABLE "attach" (
   "id" serial  NOT NULL,
   "aid" bigint  NOT NULL DEFAULT '0',
@@ -193,6 +208,26 @@ CREATE TABLE "cache" (
   "updated" timestamp NOT NULL,
   PRIMARY KEY ("k")
 );
+CREATE TABLE "cal" (
+  "cal_id" serial  NOT NULL,
+  "cal_aid" bigint NOT NULL DEFAULT '0',
+  "cal_uid" bigint NOT NULL DEFAULT '0',
+  "cal_hash" text NOT NULL,
+  "cal_name" text NOT NULL,
+  "uri" text NOT NULL,
+  "logname" text NOT NULL,
+  "pass" text NOT NULL,
+  "ctag" text NOT NULL,
+  "synctoken" text NOT NULL,
+  "cal_types" text NOT NULL DEFAULT "0",
+  PRIMARY KEY ("cal_id")
+);
+create index "cal_hash_idx" on cal ("cal_hash");
+create index "cal_name_idx" on cal ("cal_name");
+create index "cal_types_idx" on cal ("cal_types");
+create index "cal_aid_idx" on cal ("cal_aid");
+create index "cal_uid_idx" on cal ("cal_uid");
+
 CREATE TABLE "channel" (
   "channel_id" serial  NOT NULL,
   "channel_account_id" bigint  NOT NULL DEFAULT '0',
@@ -380,14 +415,11 @@ create index "dreport_xchan" on dreport ("dreport_xchan");
 create index "dreport_queue" on dreport ("dreport_queue");
 create index "dreport_channel" on dreport ("dreport_channel");
 
-
-
-
-
 CREATE TABLE "event" (
   "id" serial NOT NULL,
   "aid" bigint  NOT NULL DEFAULT '0',
   "uid" bigint NOT NULL,
+  "cal_id" bigint NOT NULL DEFAULT '0',
   "event_xchan" text NOT NULL DEFAULT '',
   "event_hash" text NOT NULL DEFAULT '',
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -415,6 +447,7 @@ CREATE TABLE "event" (
   PRIMARY KEY ("id")
 );
 create index "event_uid_idx" on event ("uid");
+create index "event_cal_idx" on event ("cal_id");
 create index "event_etype_idx" on event ("etype");
 create index "event_dtstart_idx" on event ("dtstart");
 create index "event_dtend_idx" on event ("dtend");
@@ -1052,7 +1085,7 @@ create index "reg_uid" on register ("uid");
 CREATE TABLE "session" (
   "id" serial,
   "sid" text NOT NULL,
-  "sess_data" text NOT NULL,
+  "sess_data" text NOT NULL DEFAULT '',
   "expire" numeric(20)  NOT NULL,
   PRIMARY KEY ("id")
 );

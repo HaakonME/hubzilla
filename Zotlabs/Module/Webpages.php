@@ -4,7 +4,6 @@ namespace Zotlabs\Module;
 require_once('include/channel.php');
 require_once('include/conversation.php');
 require_once('include/acl_selectors.php');
-require_once('include/PermissionDescription.php');
 
 
 class Webpages extends \Zotlabs\Web\Controller {
@@ -23,12 +22,12 @@ class Webpages extends \Zotlabs\Web\Controller {
 		else
 			return;
 	
-		profile_load($a,$which);
+		profile_load($which);
 	
 	}
 	
 	
-		function get() {
+	function get() {
 	
 		if(! \App::$profile) {
 			notice( t('Requested profile is not available.') . EOL );
@@ -105,7 +104,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 			'is_owner' => true,
 			'nickname' => \App::$profile['channel_address'],
 			'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-			'acl' => (($is_owner) ? populate_acl($channel_acl,false, \PermissionDescription::fromGlobalPermission('view_pages')) : ''),
+			'acl' => (($is_owner) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')) : ''),
 			'showacl' => (($is_owner) ? true : false),
 			'visitor' => true,
 			'hide_location' => true,
@@ -138,11 +137,19 @@ class Webpages extends \Zotlabs\Web\Controller {
 	
 		$sql_extra = item_permissions_sql($owner);
 	
-		$r = q("select * from item_id left join item on item_id.iid = item.id 
-			where item_id.uid = %d and service = 'WEBPAGE' and item_type = %d $sql_extra order by item.created desc",
+
+		$r = q("select * from iconfig left join item on iconfig.iid = item.id 
+			where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d 
+			$sql_extra order by item.created desc",
 			intval($owner),
 			intval(ITEM_TYPE_WEBPAGE)
 		);
+
+//		$r = q("select * from item_id left join item on item_id.iid = item.id 
+//			where item_id.uid = %d and service = 'WEBPAGE' and item_type = %d $sql_extra order by item.created desc",
+//			intval($owner),
+//			intval(ITEM_TYPE_WEBPAGE)
+//		);
 	
 		$pages = null;
 	
@@ -160,13 +167,13 @@ class Webpages extends \Zotlabs\Web\Controller {
 					'created'	=> $rr['created'],
 					'edited'	=> $rr['edited'],
 					'mimetype'	=> $rr['mimetype'],
-					'pagetitle'	=> $rr['sid'],
+					'pagetitle'	=> $rr['v'],
 					'mid'		=> $rr['mid'],
 					'layout_mid'    => $rr['layout_mid']
 				);
 				$pages[$rr['iid']][] = array(
 					'url'		=> $rr['iid'],
-					'pagetitle'	=> $rr['sid'],
+					'pagetitle'	=> $rr['v'],
 					'title'		=> $rr['title'],
 					'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
 					'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),

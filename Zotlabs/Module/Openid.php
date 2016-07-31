@@ -48,7 +48,7 @@ class Openid extends \Zotlabs\Web\Controller {
 									$_SESSION['uid'] = $r[0]['channel_id'];
 									$_SESSION['account_id'] = $r[0]['channel_account_id'];
 									$_SESSION['authenticated'] = true;
-									authenticate_success($record,true,true,true,true);
+									authenticate_success($record,$r[0],true,true,true,true);
 									goaway(z_root());
 								}
 							}

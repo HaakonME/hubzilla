@@ -34,7 +34,6 @@ require_once('include/text.php');
 require_once('include/datetime.php');
 require_once('include/language.php');
 require_once('include/nav.php');
-require_once('include/cache.php');
 require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/features.php');
@@ -45,10 +44,10 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.8.1' );
+define ( 'STD_VERSION',             '1.10' );
 define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1176  );
+define ( 'DB_UPDATE_VERSION',       1180  );
 
 
 /**
@@ -771,6 +770,7 @@ class App {
 	public static  $groups;
 	public static  $language;
 	public static  $langsave;
+	public static  $rtl = false;
 	public static  $plugins_admin;
 	public static  $module_loaded = false;
 	public static  $query_string;
@@ -1703,7 +1703,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
 		'$form_id'      => $form_id,
-		'$lname'        => array('username', t('Email') , '', ''),
+		'$lname'        => array('username', t('Login/Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),
 		'$remember_me'  => array('remember_me', t('Remember me'), '', '',array(t('No'),t('Yes'))),
 		'$hiddens'      => $hiddens,
@@ -2282,6 +2282,12 @@ function construct_page(&$a) {
 	$page    = App::$page;
 	$profile = App::$profile;
 
+	// There's some experimental support for right-to-left text in the view/php/default.php page template.
+	// In v1.9 we started providing direction preference in the per language hstrings.php file
+	// This requires somebody with fluency in a RTL language to make happen
+
+	$page['direction'] = 0; // ((App::$rtl) ? 1 : 0);
+
 	header("Content-type: text/html; charset=utf-8");
 
 	// security headers - see https://securityheaders.io
@@ -2457,9 +2463,10 @@ function check_cron_broken() {
 		return;
 	}
 
+	set_config('system','lastcroncheck',datetime_convert());
+
 	if(($d) && ($d > datetime_convert('UTC','UTC','now - 3 days'))) {
 		// Scheduled tasks have run successfully in the last 3 days.
-		set_config('system','lastcroncheck',datetime_convert());
 		return;
 	}
 

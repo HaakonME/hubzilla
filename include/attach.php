@@ -423,6 +423,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	$observer = array();
 
+	$dosync = ((array_key_exists('nosync',$arr) && $arr['nosync']) ? 0 : 1);
+
 	if($observer_hash) {
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 			dbesc($observer_hash)
@@ -616,7 +618,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		);
 		if($r) {
 			$overwrite = get_pconfig($channel_id,'system','overwrite_dup_files');
-			if($overwrite) {
+			if(($overwrite) || ($options === 'import')) {
 				$options = 'replace';
 				$existing_id = $x[0]['id'];
 				$existing_size = intval($x[0]['filesize']);
@@ -800,7 +802,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if($is_photo) {
 
-		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct);
+		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct, 'options' => $options );
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		if($arr['group_allow'])
@@ -828,6 +830,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 		if($arr['description'])
 			$args['description'] = $arr['description'];
+
+		$args['deliver'] = $dosync;
 
 		$p = photo_upload($channel,$observer,$args);
 		if($p['success']) {
@@ -865,10 +869,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		call_hooks('photo_upload_end',$ret);
 	}
 
-	$sync = attach_export_data($channel,$hash);
+	if($dosync) {
+		$sync = attach_export_data($channel,$hash);
 
-	if($sync) 
-		build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+		if($sync) 
+			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+	}
 
 	return $ret;
 }
@@ -1462,7 +1468,7 @@ function find_filename_by_hash($channel_id, $attachHash) {
 function pipe_streams($in, $out) {
 	$size = 0;
 	while (!feof($in))
-		$size += fwrite($out, fread($in, 8192));
+		$size += fwrite($out, fread($in, 16384));
 
 	return $size;
 }

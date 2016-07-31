@@ -98,20 +98,20 @@ function del_aconfig($account_id, $family, $key) {
 }
 
 
-function load_abconfig($chash,$xhash) {
-	Zlib\AbConfig::Load($chash,$xhash);
+function load_abconfig($chan, $xhash, $family = '') {
+	return Zlib\AbConfig::Load($chan,$xhash,$family);
 }
 
-function get_abconfig($chash,$xhash,$family,$key) {
-	return Zlib\AbConfig::Get($chash,$xhash,$family,$key);
+function get_abconfig($chan,$xhash,$family,$key) {
+	return Zlib\AbConfig::Get($chan,$xhash,$family,$key);
 }
 
-function set_abconfig($chash,$xhash,$family,$key,$value) {
-	return Zlib\AbConfig::Set($chash,$xhash,$family,$key,$value);
+function set_abconfig($chan,$xhash,$family,$key,$value) {
+	return Zlib\AbConfig::Set($chan,$xhash,$family,$key,$value);
 }
 
-function del_abconfig($chash,$xhash,$family,$key) {
-	return Zlib\AbConfig::Delete($chash,$xhash,$family,$key);
+function del_abconfig($chan,$xhash,$family,$key) {
+	return Zlib\AbConfig::Delete($chan,$xhash,$family,$key);
 }
 
 function load_iconfig(&$item) {

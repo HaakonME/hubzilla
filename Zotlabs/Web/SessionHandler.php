@@ -24,7 +24,8 @@ class SessionHandler implements \SessionHandlerInterface {
 				return $r[0]['sess_data'];
 			}
 			else {
-				q("INSERT INTO `session` (sid, expire) values ('%s', '%s')",
+				q("INSERT INTO `session` (sess_data, sid, expire) values ('%s', '%s', '%s')",
+					dbesc(''),
 					dbesc($id),
 					dbesc(time() + 300)
 				);

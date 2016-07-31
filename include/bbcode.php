@@ -242,6 +242,13 @@ function bb_ShareAttributes($match) {
 	if ($matches[1] != "")
 		$message_id = $matches[1];
 
+	if(! $message_id) {
+		preg_match("/guid='(.*?)'/ism", $attributes, $matches);
+		if ($matches[1] != "")
+			$message_id = $matches[1];
+	}
+
+
 	$reldate = '<span class="autotime" title="' . datetime_convert('UTC', date_default_timezone_get(), $posted, 'c') . '" >' . datetime_convert('UTC', date_default_timezone_get(), $posted, 'r') . '</span>';
 
 	$headline = '<div class="shared_container"> <div class="shared_header">';
@@ -484,6 +491,24 @@ function bb_code($match) {
 		return '<code class="inline-code">' . trim($match[1]) . '</code>';
 }
 
+function bb_highlight($match) {
+	if(in_array(strtolower($match[1]),['php','css','mysql','sql','abap','diff','html','perl','ruby',
+		'vbscript','avrc','dtd','java','xml','cpp','python','javascript','js','json','sh']))
+		return text_highlight($match[2],strtolower($match[1]));
+	return $match[0];
+}
+
+function bb_fixtable_lf($match) {
+
+	// remove extraneous whitespace between table element tags since newlines will all
+	// be converted to '<br />' and turn your neatly crafted tables into a whole lot of
+	// empty space.
+ 
+	$x = preg_replace("/\]\s+\[/",'][',$match[1]);
+	return '[table]' . $x . '[/table]';
+
+}
+
 
 
 	// BBcode 2 HTML was written by WAY2WEB.net
@@ -558,6 +583,15 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	$Text = str_replace("<", "&lt;", $Text);
 	$Text = str_replace(">", "&gt;", $Text);
 
+
+	// Check for [code] text here, before the linefeeds are messed with.
+	// The highlighter will unescape and re-escape the content.
+
+	if (strpos($Text,'[code=') !== false) {
+		$Text = preg_replace_callback("/\[code=(.*?)\](.*?)\[\/code\]/ism", 'bb_highlight', $Text);
+	}
+
+	$Text = preg_replace_callback("/\[table\](.*?)\[\/table\]/ism",'bb_fixtable_lf',$Text);
 
 	// Convert new line chars to html <br /> tags
 

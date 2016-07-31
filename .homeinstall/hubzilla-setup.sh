@@ -513,7 +513,7 @@ END
     fi
     # run letsencrypt.sh
     # 
-    ./letsencrypt.sh --cron
+    ./letsencrypt.sh --cron --config $le_dir/config.sh
 }
 
 function configure_apache_for_https {
@@ -769,11 +769,11 @@ echo "#" >> /var/www/$hubzilladaily
 echo "echo \" \"" >> /var/www/$hubzilladaily
 echo "echo \"+++ \$(date) +++\"" >> /var/www/$hubzilladaily
 echo "echo \" \"" >> /var/www/$hubzilladaily
-echo "echo \"\$(date) - renew certificat if 30 days old...\"" >> /var/www/$hubzilladaily
-echo "bash /var/www/letsencrypt/letsencrypt.sh --cron" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - renew certificat...\"" >> /var/www/$hubzilladaily
+echo "bash $le_dir/letsencrypt.sh --cron --config $le_dir/config.sh" >> /var/www/$hubzilladaily
 echo "#" >> /var/www/$hubzilladaily
 echo "# stop hubzilla" >> /var/www/$hubzilladaily
-echo "echo \"\$(date) - stoping apaache and mysql...\"" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - stoping apache and mysql...\"" >> /var/www/$hubzilladaily
 echo "service apache2 stop" >> /var/www/$hubzilladaily
 echo "/etc/init.d/mysql stop # to avoid inconsistancies" >> /var/www/$hubzilladaily
 echo "#" >> /var/www/$hubzilladaily

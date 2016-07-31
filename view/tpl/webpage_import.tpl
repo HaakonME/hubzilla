@@ -16,7 +16,7 @@
 						<h4>Scanned Pages</h4>
 						<div>
 						<table class="table-striped table-responsive table-hover" style="width: 100%;">
-							<tr><td>Import?</td><td>Page</td><td>Existing Page</td></tr>
+							<tr><td>Import?</td><td>Page</td><!--<td>Existing Page</td>--></tr>
 						{{foreach $pages as $page}}
 								<tr>
 									<td>
@@ -34,6 +34,7 @@
 											Type: {{$page.type}}<br>
 										</div>
 									</td>
+								<!-- TODO: Retrieve existing element information to avoid accidental overwriting
 									<td>
 										<div class='desc'>
 											Name: {{$page.curpage.pagelink}}<br>
@@ -43,6 +44,7 @@
 											Type: {{$page.curpage.type}}<br>
 										</div>
 									</td>
+								-->
 								</tr>
 						{{/foreach}}
 						</table>
@@ -52,7 +54,7 @@
 						<h4>Scanned Layouts</h4>
 						<div>
 						<table class="table-striped table-responsive table-hover" style="width: 100%;">
-								<tr><td>Import?</td><td>Layout</td><td>Existing Layout</td></tr>
+								<tr><td>Import?</td><td>Layout</td><!--<td>Existing Layout</td>--></tr>
 						{{foreach $layouts as $layout}}
 										<tr>
 												<td>
@@ -68,6 +70,7 @@
 																Content File: {{$layout.contentfile}}<br>
 														</div>
 												</td>
+												<!-- TODO: Retrieve existing element information to avoid accidental overwriting
 												<td>
 														<div class='desc'>
 																Name: {{$layout.curblock.name}}<br>
@@ -75,6 +78,7 @@
 																Last edit: {{$layout.curblock.edited}}<br>
 														</div>
 												</td>
+												-->
 										</tr>
 						{{/foreach}}
 						</table>
@@ -83,7 +87,7 @@
 						<h4>Scanned Blocks</h4>
 						<div>
 						<table class="table-striped table-responsive table-hover" style="width: 100%;">
-								<tr><td>Import?</td><td>Block</td><td>Existing Block</td></tr>
+								<tr><td>Import?</td><td>Block</td><!--<td>Existing Block</td>--></tr>
 						{{foreach $blocks as $block}}
 										<tr>
 												<td>
@@ -100,6 +104,7 @@
 																Type: {{$block.type}}<br>
 														</div>
 												</td>
+												<!-- TODO: Retrieve existing element information to avoid accidental overwriting
 												<td>
 														<div class='desc'>
 																Name: {{$block.curblock.name}}<br>
@@ -108,6 +113,7 @@
 																Type: {{$block.curblock.type}}<br>
 														</div>
 												</td>
+												-->
 										</tr>
 						{{/foreach}}
 						</table>

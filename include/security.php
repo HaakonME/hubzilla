@@ -119,6 +119,34 @@ function atoken_xchan($atoken) {
 	return null;
 }
 
+function atoken_abook($uid,$xchan_hash) {
+
+	if(substr($xchan_hash,16,1) != '.')
+		return false;
+
+	$r = q("select channel_hash from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+
+	if(! $r)
+		return false;
+
+	$x = q("select * from atoken where atoken_uid = %d and atoken_name = '%s'",
+		intval($uid),
+		dbesc(substr($xchan_hash,17))
+	);
+
+	if($x) {
+		$xchan = atoken_xchan($x[0]);
+		$xchan['abook_blocked'] = 0;
+		$xchan['abook_ignored'] = 0;
+		$xchan['abook_pending'] = 0;
+		return $xchan;
+	}
+
+	return false;
+
+}
 
 
 /**

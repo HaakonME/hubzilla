@@ -1,4 +1,7 @@
 <?php
+
+require_once('include/security.php');
+
 /**
  * @file include/permissions.php
  *
@@ -123,6 +126,9 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 					$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
 						dbesc($observer_xchan)
 					);
+					// no xchan either, see if they've got a guest access token
+					if(! $y)
+						$x = atoken_abook($uid,$observer_xchan);
 				}
 
 				$abook_checked = true;
@@ -332,6 +338,9 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 			$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
 				dbesc($observer_xchan)
 			);
+			// no xchan either, see if they've got a guest access token
+			if(! $y)
+				$x = atoken_abook($uid,$observer_xchan);
 		}
 		$abperms = load_abconfig($uid,$observer_xchan,'my_perms');
 	}

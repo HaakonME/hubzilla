@@ -90,7 +90,7 @@ class Impel extends \Zotlabs\Web\Controller {
 	
 						$mitem['mitem_link'] = str_replace('[channelurl]',z_root() . '/channel/' . $channel['channel_address'],$it['link']);
 						$mitem['mitem_link'] = str_replace('[pageurl]',z_root() . '/page/' . $channel['channel_address'],$it['link']);
-						$mitem['mitem_link'] = str_replace('[storeurl]',z_root() . '/store/' . $channel['channel_address'],$it['link']);
+						$mitem['mitem_link'] = str_replace('[cloudurl]',z_root() . '/cloud/' . $channel['channel_address'],$it['link']);
 						$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
 
 						$mitem['mitem_desc'] = escape_tags($it['desc']);

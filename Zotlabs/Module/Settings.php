@@ -2,7 +2,7 @@
 namespace Zotlabs\Module; /** @file */
 
 require_once('include/zot.php');
-
+require_once('include/security.php');
 
 class Settings extends \Zotlabs\Web\Controller {
 
@@ -781,6 +781,8 @@ class Settings extends \Zotlabs\Web\Controller {
 
 		if((argc() > 1) && (argv(1) === 'tokens')) {
 			$atoken = null;
+			$atoken_xchan = '';
+
 			if(argc() > 2) {
 				$id = argv(2);			
 
@@ -793,12 +795,14 @@ class Settings extends \Zotlabs\Web\Controller {
 					$atoken = $atoken[0];
 					$atoken_xchan = substr($channel['channel_hash'],0,16) . '.' . $atoken['atoken_name'];
 				}
+
 				if($atoken && argc() > 3 && argv(3) === 'drop') {
-					$r = q("delete from atoken where atoken_id = %d",
-						intval($id)
-					);
+					atoken_delete($id);
+					$atoken = null;
+					$atoken_xchan = '';
 				}
 			}
+
 			$t = q("select * from atoken where atoken_uid = %d",
 				intval(local_channel())
 			);			

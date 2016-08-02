@@ -49,7 +49,7 @@ function menu_element($channel,$menu) {
 
 			$entry['link'] = str_replace(z_root() . '/channel/' . $channel['channel_address'],'[channelurl]',$it['mitem_link']);
 			$entry['link'] = str_replace(z_root() . '/page/' . $channel['channel_address'],'[pageurl]',$it['mitem_link']);
-			$entry['link'] = str_replace(z_root() . '/store/' . $channel['channel_address'],'[storeurl]',$it['mitem_link']);
+			$entry['link'] = str_replace(z_root() . '/cloud/' . $channel['channel_address'],'[cloudurl]',$it['mitem_link']);
 			$entry['link'] = str_replace(z_root(),'[baseurl]',$it['mitem_link']);
 
 			$entry['desc'] = $it['mitem_desc'];

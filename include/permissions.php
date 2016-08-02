@@ -122,13 +122,21 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 					dbesc($observer_xchan)
 				);
 				if(! $x) {
-					// not in address book, see if they've got an xchan
-					$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
-						dbesc($observer_xchan)
-					);
-					// no xchan either, see if they've got a guest access token
-					if(! $y)
-						$x = atoken_abook($uid,$observer_xchan);
+					// see if they've got a guest access token; these are treated as connections
+					$y = atoken_abook($uid,$observer_xchan);
+					if($y)
+						$x = array($y);
+
+					if(! $x) {
+						// not in address book and no guest token, see if they've got an xchan
+						// these *may* have individual (PERMS_SPECIFIC) permissions, but are not connections
+						$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
+							dbesc($observer_xchan)
+						);
+						if($y) {
+							$x = array(pseudo_abook($y[0]));
+						}
+					}
 				}
 
 				$abook_checked = true;
@@ -190,7 +198,7 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 		// If we're still here, we have an observer, check the network.
 
 		if($channel_perm & PERMS_NETWORK) {
-			if(($x && $x[0]['xchan_network'] === 'zot') || ($y && $y[0]['xchan_network'] === 'zot')) {
+			if($x && $x[0]['xchan_network'] === 'zot') {
 				$ret[$perm_name] = true;
 				continue;
 			}
@@ -238,6 +246,12 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
 		// They're a contact, so they have permission
 
 		if($channel_perm & PERMS_CONTACTS) {
+			// it was a fake abook entry, not really a connection
+			if(array_key_exists('abook_pseudo',$x[0]) && intval($x[0]['abook_pseudo'])) {
+				$ret[$perm_name] = false;
+				continue;
+			}
+				
 			$ret[$perm_name] = true;
 			continue;
 		}
@@ -334,13 +348,21 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 			return false;
 
 		if(! $x) {
-			// not in address book, see if they've got an xchan
-			$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
-				dbesc($observer_xchan)
-			);
-			// no xchan either, see if they've got a guest access token
-			if(! $y)
-				$x = atoken_abook($uid,$observer_xchan);
+			// see if they've got a guest access token
+			$y = atoken_abook($uid,$observer_xchan);
+			if($y)
+				$x = array($y);
+
+			if(! $x) {
+				// not in address book and no guest token, see if they've got an xchan
+				$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
+					dbesc($observer_xchan)
+				);
+				if($y) {
+					$x = array(pseudo_abook($y[0]));
+				}
+			}
+
 		}
 		$abperms = load_abconfig($uid,$observer_xchan,'my_perms');
 	}
@@ -410,6 +432,10 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 	// They're a contact, so they have permission
 
 	if($channel_perm & PERMS_CONTACTS) {
+		// it was a fake abook entry, not really a connection
+		if(array_key_exists('abook_pseudo',$x[0]) && intval($x[0]['abook_pseudo'])) {
+			return false;
+		}
 		return true;
 	}
 

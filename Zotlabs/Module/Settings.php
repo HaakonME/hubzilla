@@ -2,7 +2,7 @@
 namespace Zotlabs\Module; /** @file */
 
 require_once('include/zot.php');
-
+require_once('include/security.php');
 
 class Settings extends \Zotlabs\Web\Controller {
 
@@ -145,7 +145,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				return;
 			}
 			if($atoken_id) {
-				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expires = '%s' 
+				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s', atoken_expires = '%s' 
 					where atoken_id = %d and atoken_uid = %d",
 					dbesc($name),
 					dbesc($token),
@@ -164,7 +164,23 @@ class Settings extends \Zotlabs\Web\Controller {
 					dbesc($expires)
 				);
 			}
+
+			$atoken_xchan = substr($channel['channel_hash'],0,16) . '.' . $name;
+
+			$all_perms = \Zotlabs\Access\Permissions::Perms();
+
+			if($all_perms) {
+				foreach($all_perms as $perm => $desc) {
+					if(array_key_exists('perms_' . $perm, $_POST)) {
+						set_abconfig($channel['channel_id'],$atoken_xchan,'my_perms',$perm,intval($_POST['perms_' . $perm]));
+					}
+					else {
+						set_abconfig($channel['channel_id'],$atoken_xchan,'my_perms',$perm,0);
+					}
+				}
+			}
 		
+
 			info( t('Token saved.') . EOL);
 			return;
 		}
@@ -270,7 +286,7 @@ class Settings extends \Zotlabs\Web\Controller {
 			$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
 			$account = \App::get_account();
 			if($email != $account['account_email']) {
-	    	    if(! valid_email($email))
+				if(! valid_email($email))
 					$errs[] = t('Not valid email.');
 				$adm = trim(get_config('system','admin_email'));
 				if(($adm) && (strcasecmp($email,$adm) == 0)) {
@@ -378,7 +394,7 @@ class Settings extends \Zotlabs\Web\Controller {
 					intval(local_channel())
 				);
 			}
-		    else {
+			else {
 			   	$role_permissions = \Zotlabs\Access\PermissionRoles::role_perms($_POST['permissions_role']);
 				if(! $role_permissions) {
 					notice('Permissions category could not be found.');
@@ -765,6 +781,8 @@ class Settings extends \Zotlabs\Web\Controller {
 
 		if((argc() > 1) && (argv(1) === 'tokens')) {
 			$atoken = null;
+			$atoken_xchan = '';
+
 			if(argc() > 2) {
 				$id = argv(2);			
 
@@ -773,22 +791,55 @@ class Settings extends \Zotlabs\Web\Controller {
 					intval(local_channel())
 				);
 
-				if($atoken)
+				if($atoken) {
 					$atoken = $atoken[0];
+					$atoken_xchan = substr($channel['channel_hash'],0,16) . '.' . $atoken['atoken_name'];
+				}
 
 				if($atoken && argc() > 3 && argv(3) === 'drop') {
-					$r = q("delete from atoken where atoken_id = %d",
-						intval($id)
-					);
+					atoken_delete($id);
+					$atoken = null;
+					$atoken_xchan = '';
 				}
 			}
+
 			$t = q("select * from atoken where atoken_uid = %d",
 				intval(local_channel())
 			);			
 
-			$desc = t('Use this form to create temporary access identifiers to share things with non-members. These identities may be used in Access Control Lists and visitors may login using these credentials to access the private content.');
+			$desc = t('Use this form to create temporary access identifiers to share things with non-members. These identities may be used in Access Control Lists and visitors may login using these credentials to access private content.');
 
 			$desc2 = t('You may also provide <em>dropbox</em> style access links to friends and associates by adding the Login Password to any specific site URL as shown. Examples:');
+
+			$global_perms = \Zotlabs\Access\Permissions::Perms();
+
+			$existing = get_all_perms(local_channel(),(($atoken_xchan) ? $atoken_xchan : ''));
+
+			if($atoken_xchan) {
+				$theirs = q("select * from abconfig where chan = %d and xchan = '%s' and cat = 'their_perms'",
+					intval(local_channel()),
+					dbesc($atoken_xchan)
+				);
+				$their_perms = array();
+				if($theirs) {
+					foreach($theirs as $t) {
+						$their_perms[$t['k']] = $t['v'];
+					}
+				}
+			}
+			foreach($global_perms as $k => $v) {
+				$thisperm = get_abconfig(local_channel(),$contact['abook_xchan'],'my_perms',$k);
+//fixme
+
+				$checkinherited = \Zotlabs\Access\PermissionLimits::Get(local_channel(),$k);
+
+				if($existing[$k])
+					$thisperm = "1";
+
+				$perms[] = array('perms_' . $k, $v, ((array_key_exists($k,$their_perms)) ? intval($their_perms[$k]) : ''),$thisperm, 1, (($checkinherited & PERMS_SPECIFIC) ? '' : '1'), '', $checkinherited);
+			}
+
+
 
 			$tpl = get_markup_template("settings_tokens.tpl");
 			$o .= replace_macros($tpl, array(
@@ -803,6 +854,13 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$name' => array('name', t('Login Name') . ' <span class="required">*</span>', (($atoken) ? $atoken['atoken_name'] : ''),''),
 				'$token'=> array('token', t('Login Password') . ' <span class="required">*</span>',(($atoken) ? $atoken['atoken_token'] : autoname(8)), ''),
 				'$expires'=> array('expires', t('Expires (yyyy-mm-dd)'), (($atoken['atoken_expires'] && $atoken['atoken_expires'] != NULL_DATE) ? datetime_convert('UTC',date_default_timezone_get(),$atoken['atoken_expires']) : ''), ''),
+				'$them' => t('Their Settings'),
+				'$me' => t('My Settings'),
+				'$perms' => $perms,
+				'$inherited' => t('inherited'),
+				'$notself' => '1',
+				'$permlbl' => t('Individual Permissions'),
+				'$permnote'       => t('Some permissions may be inherited from your channel\'s <a href="settings"><strong>privacy settings</strong></a>, which have higher priority than individual settings. You can <strong>not</strong> change those settings here.'),
 				'$submit' 	=> t('Submit')
 			));
 			return $o;

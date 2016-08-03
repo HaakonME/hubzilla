@@ -495,6 +495,8 @@ class Like extends \Zotlabs\Web\Controller {
 		$arr['deny_gid']      = $deny_gid;
 		$arr['item_private']  = $private;
 	
+		call_hooks('post_local',$arr);
+
 	
 		$post = item_store($arr);	
 		$post_id = $post['item_id'];

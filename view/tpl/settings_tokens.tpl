@@ -17,13 +17,45 @@
 			<div class="settings-submit-wrapper form-group">
 				<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 			</div>
-		</form>
-		<div class="descriptive-text">{{$desc2}}</div>
-		<ul>
-			<li>{{$url1}}<span class="zat-example">?f=&zat=<span class="token-mirror"></span></span></li>
-			<li>{{$url2}}<span class="zat-example">?f=&zat=<span class="token-mirror"></span></span></li>
-		</ul>
 	</div>
+
+	<div class="panel">
+		<div class="section-subtitle-wrapper" role="tab" id="perms-tool">
+			<h3>
+				<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#perms-tool-collapse" aria-expanded="true" aria-controls="perms-tool-collapse">
+				{{$permlbl}}
+				</a>
+			</h3>
+		</div>
+		<div id="perms-tool-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="perms-tool">
+			<div class="section-content-tools-wrapper">
+				<div class="section-content-warning-wrapper">
+				{{$permnote}}
+				</div>
+
+				<table id="perms-tool-table" class=form-group>
+					<tr>
+						<td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td>
+					</tr>
+						{{foreach $perms as $prm}}
+						{{include file="field_acheckbox.tpl" field=$prm}}
+						{{/foreach}}
+				</table>
+
+				<div class="settings-submit-wrapper" >
+					<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+
+	<div class="descriptive-text">{{$desc2}}</div>
+	<ul>
+		<li>{{$url1}}<span class="zat-example">?f=&zat=<span class="token-mirror"></span></span></li>
+		<li>{{$url2}}<span class="zat-example">?f=&zat=<span class="token-mirror"></span></span></li>
+	</ul>
+
 	{{if $tokens}}
 	<div class="section-content-wrapper-np">
 		<table id="atoken-index">

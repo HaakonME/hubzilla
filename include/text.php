@@ -2242,6 +2242,34 @@ function design_tools() {
 	));
 }
 
+/**
+ * @brief Creates website import tools menu
+ *
+ * @return string
+ */
+function website_import_tools() {
+
+	$channel  = App::get_channel();
+	$sys = false;
+
+	if(App::$is_sys && is_site_admin()) {
+		require_once('include/channel.php');
+		$channel = get_sys_channel();
+		$sys = true;
+	}
+
+	return replace_macros(get_markup_template('website_import_tools.tpl'), array(
+		'$title' => t('Import'),
+		'$import_label' => t('Import website...'),
+		'$import_placeholder' => t('Select folder to import'),
+		'$file_upload_text' => t('Import from a zipped folder:'),
+		'$file_import_text' => t('Import from cloud files:'),
+		'$desc' => t('/cloud/channel/path/to/folder'),
+		'$hint' => t('Enter path to website files'),
+		'$select' => t('Select folder'),
+	));
+}
+
 /* case insensitive in_array() */
 
 function in_arrayi($needle, $haystack) {

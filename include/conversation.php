@@ -1213,8 +1213,6 @@ function status_editor($a, $x, $popup = false) {
 
 	call_hooks('jot_tool', $jotplugins);
 
-	//print_r(acl2json($x['permissions']['allow_gid'])); killme();
-
 	$o .= replace_macros($tpl, array(
 		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : App::$query_string),
 		'$action' =>  z_root() . '/item',

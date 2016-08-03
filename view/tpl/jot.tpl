@@ -1,4 +1,4 @@
-<form id="profile-jot-form" action="{{$action}}" method="post" class="acl-form" data-formid="profile-jot-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
+<form id="profile-jot-form" action="{{$action}}" method="post" class="acl-form" data-form_id="profile-jot-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 	{{$mimeselect}}
 	{{$layoutselect}}
 	{{if $id_select}}

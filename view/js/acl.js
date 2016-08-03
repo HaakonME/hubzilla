@@ -64,13 +64,12 @@ function ACL(backend_url) {
 
 
 ACL.prototype.get_form_data = function(event) { 
-//event.preventDefault()
 
-		form_id = $(this).data('formid');
+		form_id = $(this).data('form_id');
 
 		that.form_id = $('#' + form_id);
 
-		console.log(event);
+		console.log(form_id);
 
 		that.allow_cid = ($(this).data('allow_cid') || []);
 		that.allow_gid = ($(this).data('allow_gid') || []);

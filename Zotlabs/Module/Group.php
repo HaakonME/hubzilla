@@ -101,7 +101,7 @@ class Group extends \Zotlabs\Web\Controller {
 			check_form_security_token_redirectOnErr('/group', 'group_drop', 't');
 			
 			if(intval(argv(2))) {
-				$r = q("SELECT `name` FROM `groups` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `gname` FROM `groups` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval(argv(2)),
 					intval(local_channel())
 				);

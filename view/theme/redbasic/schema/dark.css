@@ -12,6 +12,7 @@ textarea, input, select
 
 #profile-jot-submit-wrapper {
 	border-top: none;
+	padding: 10px 0;
 }
 
 #jot-title-wrap {

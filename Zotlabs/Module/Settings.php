@@ -148,7 +148,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				return;
 			}
 			if($atoken_id) {
-				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s' atoken_expires = '%s' 
+				$r = q("update atoken set atoken_name = '%s', atoken_token = '%s', atoken_expires = '%s' 
 					where atoken_id = %d and atoken_uid = %d",
 					dbesc($name),
 					dbesc($token),

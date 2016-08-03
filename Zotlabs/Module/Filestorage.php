@@ -161,7 +161,12 @@ class Filestorage extends \Zotlabs\Web\Controller {
 				'$submit' => t('Submit'),
 				'$attach_btn_title' => t('Share this file'),
 				'$link_btn_title' => t('Show URL to this file'),
-				'$notify' => array('notify', t('Notify your contacts about this file'), 0, '', array(t('No'), t('Yes')))
+				'$notify' => array('notify', t('Notify your contacts about this file'), 0, '', array(t('No'), t('Yes'))),
+
+				'$allow_cid' => json_encode(expand_acl($f['allow_cid'])),
+				'$allow_gid' => json_encode(expand_acl($f['allow_gid'])),
+				'$deny_cid' => json_encode(expand_acl($f['deny_cid'])),
+				'$deny_cid' => json_encode(expand_acl($f['deny_gid']))
 			));
 	
 			echo $o;

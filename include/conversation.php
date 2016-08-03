@@ -1213,6 +1213,8 @@ function status_editor($a, $x, $popup = false) {
 
 	call_hooks('jot_tool', $jotplugins);
 
+	//print_r(acl2json($x['permissions']['allow_gid'])); killme();
+
 	$o .= replace_macros($tpl, array(
 		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : App::$query_string),
 		'$action' =>  z_root() . '/item',
@@ -1253,6 +1255,10 @@ function status_editor($a, $x, $popup = false) {
 		'$visitor' => $x['visitor'],
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
+		'$allow_cid' => acl2json($x['permissions']['allow_cid']),
+		'$allow_gid' => acl2json($x['permissions']['allow_gid']),
+		'$deny_cid' => acl2json($x['permissions']['deny_cid']),
+		'$deny_gid' => acl2json($x['permissions']['deny_gid']),
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
 		'$showacl' => ((array_key_exists('showacl', $x)) ? $x['showacl'] : true),

@@ -2796,6 +2796,12 @@ function expand_acl($s) {
 	return $ret;
 }
 
+function acl2json($s) {
+	$s = expand_acl($s);
+	$s = json_encode($s);
+	return $s;
+}
+
 
 // When editing a webpage - a dropdown is needed to select a page layout
 // On submit, the pdl_select value (which is the mid of an item with item_type = ITEM_TYPE_PDL) is stored in 

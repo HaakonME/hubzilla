@@ -1,15 +1,17 @@
-function ACL(backend_url, preset) {
+function ACL(backend_url) {
 	that = this;
 
 	that.url = backend_url;
 
 	that.kp_timer = null;
 
-	if (preset === undefined) preset = [];
-	that.allow_cid = (preset[0] || []);
-	that.allow_gid = (preset[1] || []);
-	that.deny_cid  = (preset[2] || []);
-	that.deny_gid  = (preset[3] || []);
+	that.self = [];
+
+	that.allow_cid = [];
+	that.allow_gid = [];
+	that.deny_cid  = [];
+	that.deny_gid  = [];
+
 	that.group_uids = [];
 
 	that.info         = $("#acl-info");
@@ -21,11 +23,8 @@ function ACL(backend_url, preset) {
 	that.showlimited  = $("#acl-showlimited");
 	that.acl_select   = $("#acl-select");
 
-	that.preset = preset;
-	that.self = [];
-
 	// set the initial ACL lists in case the enclosing form gets submitted before the ajax loader completes. 
-	that.on_submit();
+	//that.on_submit();
 
 	/*events*/
 
@@ -47,32 +46,59 @@ function ACL(backend_url, preset) {
 			}
 		});
 
+
+		//$(document).on('click', '.acl-submit', that.get_form_id_and_submit);
+		//$(document).on('click', '.acl-select', that.get_form_id_and_submit);
+
+		$(document).on('focus', '.acl-form', that.get_form_data);
+		$(document).on('click', '.acl-form', that.get_form_data);
+
 		$(document).on('click','.acl-button-show',that.on_button_show);
+		$(document).on('click','.acl-button-hide',that.on_button_hide);
+
 		$(document).on('click','.acl-button-hide',that.on_button_hide);
 
 		$("#acl-search").keypress(that.on_search);
 
 		/* startup! */
 		that.get(0,15000);
-		that.on_submit();
+		//that.on_submit();
 	});
 }
 
 // no longer called only on submit - call to update whenever a change occurs to the acl list. 
+ACL.prototype.get_form_data = function(event) { 
+//event.preventDefault()
+
+		that.form_id = $(this).data('formid');
+
+		console.log(event);
+
+		that.allow_cid = ($(this).data('allow_cid') || []);
+		that.allow_gid = ($(this).data('allow_gid') || []);
+		that.deny_cid  = ($(this).data('deny_cid') || []);
+		that.deny_gid  = ($(this).data('deny_gid') || []);
+
+		that.update_view();
+		that.on_submit();
+}
 
 ACL.prototype.on_submit = function() {
-	aclfields = $("#acl-fields").html("");
+
+
+	//console.log(that.form_id);
+	$('.acl-field').remove();
 	$(that.allow_gid).each(function(i,v) {
-		aclfields.append("<input type='hidden' name='group_allow[]' value='"+v+"'>");
+		$('#' + that.form_id).append("<input class='acl-field' type='hidden' name='group_allow[]' value='"+v+"'>");
 	});
 	$(that.allow_cid).each(function(i,v) {
-		aclfields.append("<input type='hidden' name='contact_allow[]' value='"+v+"'>");
+		$('#' + that.form_id).append("<input class='acl-field' type='hidden' name='contact_allow[]' value='"+v+"'>");
 	});
 	$(that.deny_gid).each(function(i,v) {
-		aclfields.append("<input type='hidden' name='group_deny[]' value='"+v+"'>");
+		$('#' + that.form_id).append("<input class='acl-field' type='hidden' name='group_deny[]' value='"+v+"'>");
 	});
 	$(that.deny_cid).each(function(i,v) {
-		aclfields.append("<input type='hidden' name='contact_deny[]' value='"+v+"'>");
+		$('#' + that.form_id).append("<input class='acl-field' type='hidden' name='contact_deny[]' value='"+v+"'>");
 	});
 
 	//areYouSure jquery plugin: recheck the form here
@@ -101,6 +127,7 @@ ACL.prototype.on_onlyme = function(event) {
 	that.deny_cid  = [];
 	that.deny_gid  = [];
 
+
 	that.update_view(event.target.value);
 	that.on_submit();
 
@@ -126,14 +153,14 @@ ACL.prototype.on_showlimited = function(event) {
 	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
 	event.stopPropagation();
 
-	if(that.preset[0].length === 0 && that.preset[1].length === 0 && that.preset[2].length === 0 && that.preset[3].length === 0) {
-		that.preset[0] = [that.self[0]];
+	if(that.allow_cid.length === 0 && that.allow_gid.length === 0 && that.deny_cid.length === 0 && that.deny_gid.length === 0) {
+		that.allow_cid = [that.self[0]];
 	}
 
-	that.allow_cid = (that.preset[0] || []);
-	that.allow_gid = (that.preset[1] || []);
-	that.deny_cid  = (that.preset[2] || []);
-	that.deny_gid  = (that.preset[3] || []);
+	that.allow_cid = (that.allow_cid || []);
+	that.allow_gid = (that.allow_gid || []);
+	that.deny_cid  = (that.deny_cid || []);
+	that.deny_gid  = (that.deny_gid || []);
 
 	that.update_view(event.target.value);
 	that.on_submit();
@@ -239,13 +266,20 @@ ACL.prototype.set_deny = function(itemid) {
 	that.update_view();
 };
 
-ACL.prototype.update_select = function(preset) {
-	that.showall.prop('selected', preset === 'public');
-	that.onlyme.prop('selected', preset === 'onlyme');
-	that.showlimited.prop('selected', preset === 'limited');
+ACL.prototype.update_select = function(set) {
+	that.showall.prop('selected', set === 'public');
+	that.onlyme.prop('selected', set === 'onlyme');
+	that.showlimited.prop('selected', set === 'limited');
 };
 
 ACL.prototype.update_view = function(value) {
+
+		console.log(that.form_id);
+
+		console.log(that.allow_cid);
+		console.log(that.allow_gid);
+		console.log(that.deny_cid);
+		console.log(that.deny_gid);
 
 	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0) {
 		that.list.hide(); //hide acl-list

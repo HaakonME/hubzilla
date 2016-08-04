@@ -23,7 +23,7 @@
 					{{/if}}
 					{{if $edit}}
 					<li class="nav-item">
-						<a class="nav-link" href="#"  title="" onclick="openClose('photo-edit'); return false;"><i class="fa fa-pencil"></i>&nbsp;{{$edit.edit}}</a>
+						<a class="nav-link acl-form-trigger" href="#"  title="" onclick="openClose('photo-edit'); return false;" data-form_id="photo_edit_form"><i class="fa fa-pencil"></i>&nbsp;{{$edit.edit}}</a>
 					</li>
 					{{/if}}
 				</ul>

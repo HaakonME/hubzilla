@@ -48,6 +48,7 @@ function ACL(backend_url) {
 
 		$(document).on('focus', '.acl-form', that.get_form_data);
 		$(document).on('click', '.acl-form', that.get_form_data);
+		$(document).on('click', '.acl-form-trigger', that.get_form_data);
 
 		$(document).on('click','.acl-button-show',that.on_button_show);
 		$(document).on('click','.acl-button-hide',that.on_button_hide);
@@ -71,10 +72,10 @@ ACL.prototype.get_form_data = function(event) {
 
 		console.log(form_id);
 
-		that.allow_cid = ($(this).data('allow_cid') || []);
-		that.allow_gid = ($(this).data('allow_gid') || []);
-		that.deny_cid  = ($(this).data('deny_cid') || []);
-		that.deny_gid  = ($(this).data('deny_gid') || []);
+		that.allow_cid = (that.form_id.data('allow_cid') || []);
+		that.allow_gid = (that.form_id.data('allow_gid') || []);
+		that.deny_cid  = (that.form_id.data('deny_cid') || []);
+		that.deny_gid  = (that.form_id.data('deny_gid') || []);
 
 		that.update_view();
 		that.on_submit();

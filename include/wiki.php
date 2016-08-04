@@ -505,6 +505,39 @@ function wiki_generate_toc($s) {
 	return $s;
 }
 
+/**
+ *  Converts a select set of bbcode tags. Much of the code is copied from include/bbcode.php
+ * @param string $s
+ * @return string
+ */
+function wiki_bbcode($s) {
+		
+		$s = str_replace(array('[baseurl]', '[sitename]'), array(z_root(), get_config('system', 'sitename')), $s);
+		
+		$observer = App::get_observer();
+		if ($observer) {
+				$s1 = '<span class="bb_observer" title="' . t('Different viewers will see this text differently') . '">';
+				$s2 = '</span>';
+				$obsBaseURL = $observer['xchan_connurl'];
+				$obsBaseURL = preg_replace("/\/poco\/.*$/", '', $obsBaseURL);
+				$s = str_replace('[observer.baseurl]', $obsBaseURL, $s);
+				$s = str_replace('[observer.url]', $observer['xchan_url'], $s);
+				$s = str_replace('[observer.name]', $s1 . $observer['xchan_name'] . $s2, $s);
+				$s = str_replace('[observer.address]', $s1 . $observer['xchan_addr'] . $s2, $s);
+				$s = str_replace('[observer.webname]', substr($observer['xchan_addr'], 0, strpos($observer['xchan_addr'], '@')), $s);
+				$s = str_replace('[observer.photo]', '', $s);
+		} else {
+				$s = str_replace('[observer.baseurl]', '', $s);
+				$s = str_replace('[observer.url]', '', $s);
+				$s = str_replace('[observer.name]', '', $s);
+				$s = str_replace('[observer.address]', '', $s);
+				$s = str_replace('[observer.webname]', '', $s);
+				$s = str_replace('[observer.photo]', '', $s);
+		}
+
+		return $s;
+}
+
 // This function is derived from 
 // http://stackoverflow.com/questions/32068537/generate-table-of-contents-from-markdown-in-php
 function wiki_toc($content) {

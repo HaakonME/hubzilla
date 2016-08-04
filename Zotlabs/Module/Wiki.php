@@ -221,6 +221,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$content = $_POST['content'];
 			$resource_id = $_POST['resource_id']; 
 			require_once('library/markdown.php');
+			$content = wiki_bbcode($content);
 			$html = wiki_generate_toc(purify_html(Markdown($content)));
 			$w = wiki_get_wiki($resource_id);
 			$wikiURL = argv(0).'/'.argv(1).'/'.$w['urlName'];

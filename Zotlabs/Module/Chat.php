@@ -234,6 +234,10 @@ class Chat extends \Zotlabs\Web\Controller {
 				'$chat_expire' => array('chat_expire',t('Expiration of chats (minutes)'),120,''),
 				'$permissions' =>  t('Permissions'),
 				'$acl' => populate_acl($channel_acl,false),
+				'$allow_cid' => acl2json($channel_acl['allow_cid']),
+				'$allow_gid' => acl2json($channel_acl['allow_gid']),
+				'$deny_cid' => acl2json($channel_acl['deny_cid']),
+				'$deny_gid' => acl2json($channel_acl['deny_gid']),
 				'$lockstate' => $lockstate,
 				'$submit' => t('Submit')
 	

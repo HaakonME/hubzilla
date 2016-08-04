@@ -495,6 +495,12 @@ function wiki_convert_links($s, $wikiURL) {
 	return $s;
 }
 
+/**
+ * Replace the instances of the string [toc] with a list element that will be populated by
+ * a table of contents by the JavaScript library
+ * @param string $s
+ * @return string
+ */
 function wiki_generate_toc($s) {
 	
 	if (strpos($s,'[toc]') !== false) {

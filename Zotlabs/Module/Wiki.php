@@ -142,8 +142,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 				$content = ($p['content'] !== '' ? htmlspecialchars_decode($p['content'],ENT_COMPAT) : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
-				require_once('library/markdown.php');	
-				$html = wiki_generate_toc(purify_html(Markdown(json_decode($content))));
+				require_once('library/markdown.php');
+				$html = wiki_generate_toc(purify_html(Markdown(wiki_bbcode(json_decode($content)))));
 				$renderedContent = wiki_convert_links($html,argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				$hide_editor = false;
 				$showPageControls = $wiki_editor;

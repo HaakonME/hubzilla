@@ -74,11 +74,16 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// Initialize the ACL to the channel default permissions
 			$x = array(
 					'lockstate' => (( $local_observer['channel_allow_cid'] || 
-														$local_observer['channel_allow_gid'] || 
-														$local_observer['channel_deny_cid'] || 
-														$local_observer['channel_deny_gid']) 
-														? 'lock' : 'unlock'),
+						$local_observer['channel_allow_gid'] || 
+						$local_observer['channel_deny_cid'] || 
+						$local_observer['channel_deny_gid'])
+						? 'lock' : 'unlock'
+					),
 					'acl' => populate_acl($channel_acl),
+					'allow_cid' => acl2json($channel_acl['allow_cid']),
+					'allow_gid' => acl2json($channel_acl['allow_gid']),
+					'deny_cid' => acl2json($channel_acl['deny_cid']),
+					'deny_gid' => acl2json($channel_acl['deny_gid']),
 					'bang' => ''
 			);
 		} else {
@@ -186,6 +191,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$page' => $pageUrlName,
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],
+			'$allow_cid' => $x['allow_cid'],
+			'$allow_gid' => $x['allow_gid'],
+			'$deny_cid' => $x['deny_cid'],
+			'$deny_gid' => $x['deny_gid'],
 			'$bang' => $x['bang'],
 			'$content' => $content,
 			'$renderedContent' => $renderedContent,

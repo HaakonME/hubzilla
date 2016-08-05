@@ -62,7 +62,7 @@ function ACL(backend_url) {
 }
 
 
-ACL.prototype.get_form_data = function(event, form_id) { 
+ACL.prototype.get_form_data = function(event) { 
 
 		form_id = $(this).data('form_id');
 

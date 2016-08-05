@@ -65,6 +65,7 @@ class Display extends \Zotlabs\Web\Controller {
 				'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 	
 				'acl' => populate_acl($channel_acl),
+				'permissions' => $channel_acl,
 				'bang' => '',
 				'visitor' => true,
 				'profile_uid' => local_channel(),

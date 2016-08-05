@@ -421,7 +421,7 @@ function post_activity_item($arr) {
 	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
 	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
 
-	$arr['comment_policy'] = map_scope(\Zotlabs\Access/PermissionLimits::Get($channel['channel_id'],'post_comments'));
+	$arr['comment_policy'] = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments'));
 
 	if ((! $arr['plink']) && (intval($arr['item_thread_top']))) {
 		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];

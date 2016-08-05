@@ -218,14 +218,13 @@ class Chat extends \Zotlabs\Web\Controller {
 			notice( t('Feature disabled.') . EOL);
 			return $o;
 		}
-	
-	
+
 		$acl = new \Zotlabs\Access\AccessList($channel);
 		$channel_acl = $acl->get();
-	
+
 		$lockstate = (($channel_acl['allow_cid'] || $channel_acl['allow_gid'] || $channel_acl['deny_cid'] || $channel_acl['deny_gid']) ? 'lock' : 'unlock');
 		require_once('include/acl_selectors.php');
-		
+
 		$chatroom_new = '';
 		if(local_channel()) {
 			$chatroom_new = replace_macros(get_markup_template('chatroom_new.tpl'),array(
@@ -243,7 +242,7 @@ class Chat extends \Zotlabs\Web\Controller {
 	
 			));
 		}
-	
+
 		$rooms = Zlib\Chatroom::roomlist(\App::$profile['profile_uid']);
 	
 		$o .= replace_macros(get_markup_template('chatrooms.tpl'), array(

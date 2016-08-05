@@ -165,7 +165,7 @@
 				</button>
 				{{/if}}
 				{{if $showacl}}
-				<button id="dbtn-acl" class="acl-select btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button">
+				<button id="dbtn-acl" class="acl-select btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button" data-form_id="profile-jot-form">
 					<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="fa fa-exclamation jot-icons"></i>{{/if}}
 				</button>
 				{{/if}}

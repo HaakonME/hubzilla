@@ -53,8 +53,6 @@ function ACL(backend_url) {
 		$(document).on('click','.acl-button-show',that.on_button_show);
 		$(document).on('click','.acl-button-hide',that.on_button_hide);
 
-		$(document).on('click','.acl-button-hide',that.on_button_hide);
-
 		$("#acl-search").keypress(that.on_search);
 
 		/* startup! */
@@ -64,7 +62,7 @@ function ACL(backend_url) {
 }
 
 
-ACL.prototype.get_form_data = function(event) { 
+ACL.prototype.get_form_data = function(event, form_id) { 
 
 		form_id = $(this).data('form_id');
 
@@ -401,5 +399,5 @@ ACL.prototype.populate = function(data) {
 		$(el).attr('src', $(el).data("src"));
 		$(el).removeAttr("data-src");
 	});
-	that.update_view();
+	//that.update_view();
 };

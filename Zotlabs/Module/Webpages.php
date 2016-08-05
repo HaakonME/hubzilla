@@ -127,6 +127,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 			'nickname' => \App::$profile['channel_address'],
 			'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'acl' => (($is_owner) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')) : ''),
+			'permissions' => (($is_owner) ? $channel_acl : ''),
 			'showacl' => (($is_owner) ? true : false),
 			'visitor' => true,
 			'hide_location' => true,

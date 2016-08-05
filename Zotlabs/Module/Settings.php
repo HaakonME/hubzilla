@@ -1220,6 +1220,10 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$permissions' => t('Default Post and Publish Permissions'),
 				'$permdesc' => t("\x28click to open/close\x29"),
 				'$aclselect' => populate_acl($perm_defaults, false, \Zotlabs\Lib\PermissionDescription::fromDescription(t('Use my default audience setting for the type of object published'))),
+				'$allow_cid' => acl2json($perm_defaults['allow_cid']),
+				'$allow_gid' => acl2json($perm_defaults['allow_gid']),
+				'$deny_cid' => acl2json($perm_defaults['deny_cid']),
+				'$deny_gid' => acl2json($perm_defaults['deny_gid']),
 				'$suggestme' => $suggestme,
 				'$group_select' => $group_select,
 				'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),
@@ -1282,7 +1286,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 			call_hooks('settings_form',$o);
 	
-			$o .= '</form>' . "\r\n";
+			//$o .= '</form>' . "\r\n";
 	
 			return $o;
 		}

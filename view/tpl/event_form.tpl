@@ -1,4 +1,4 @@
-<form id="event-edit-form" action="{{$post}}" method="post" >
+<form id="event-edit-form" action="{{$post}}" method="post" class="acl-form" data-form_id="event-edit-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 
 	<input type="hidden" name="event_id" value="{{$eid}}" />
 	<input type="hidden" name="event_hash" value="{{$event_hash}}" />
@@ -107,7 +107,6 @@
 
 	{{if ! $eid}}
 	{{include file="field_checkbox.tpl" field=$share}}
-	{{$acl}}
 	{{/if}}
 
 	<div class="clear"></div>
@@ -116,8 +115,12 @@
 	<div class="btn-group pull-right">
 		<button id="event-edit-preview-btn" class="btn btn-default" type="button" title="{{$preview}}" onclick="doEventPreview();"><i class="fa fa-eye" ></i></button>
 		{{if ! $eid}}
-		<button id="dbtn-acl" class="btn btn-default" type="button" data-toggle="modal" data-target="#aclModal" title="{{$permissions}}"><i id="jot-perms-icon" class="fa"></i></button>
+		<button id="dbtn-acl" class="btn btn-default" type="button" data-toggle="modal" data-target="#aclModal" title="{{$perms_label}}"><i id="jot-perms-icon" class="fa"></i></button>
 		{{/if}}
 		<button id="event-submit" class="btn btn-primary" type="submit" name="submit">{{$submit}}</button>
 	</div>
 </form>
+
+{{if ! $eid}}
+	{{$acl}}
+{{/if}}

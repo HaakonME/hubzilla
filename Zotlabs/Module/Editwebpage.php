@@ -151,6 +151,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			'post_id' => $post_id,
 			'visitor' => ($is_owner) ? true : false,
 			'acl' => populate_acl($itm[0],false,\Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')),
+			'permissions' => $itm[0],
 			'showacl' => ($is_owner) ? true : false,
 			'mimetype' => $mimetype,
 			'mimeselect' => true,

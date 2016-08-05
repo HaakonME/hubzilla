@@ -435,6 +435,10 @@ class Events extends \Zotlabs\Web\Controller {
 	
 			$acl = new \Zotlabs\Access\AccessList($channel);
 			$perm_defaults = $acl->get();
+
+			$permissions = ((x($orig_event)) ? $orig_event : $perm_defaults);
+
+			//print_r(acl2json($permissions['allow_gid'])); killme();
 	
 			$tpl = get_markup_template('event_form.tpl');
 	
@@ -467,10 +471,16 @@ class Events extends \Zotlabs\Web\Controller {
 				'$sh_checked' => $sh_checked,
 				'$share' => array('share', t('Share this event'), $sh_checked, '', array(t('No'),t('Yes'))),
 				'$preview' => t('Preview'),
-				'$permissions' => t('Permission settings'),
+				'$perms_label' => t('Permission settings'),
 				// populating the acl dialog was a permission description from view_stream because Cal.php, which
 				// displays events, says "since we don't currently have an event permission - use the stream permission"
 				'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults), false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'))),
+
+				'$allow_cid' => acl2json($permissions['allow_cid']),
+				'$allow_gid' => acl2json($permissions['allow_gid']),
+				'$deny_cid' => acl2json($permissions['deny_cid']),
+				'$deny_gid' => acl2json($permissions['deny_gid']),
+
 				'$submit' => t('Submit'),
 				'$advanced' => t('Advanced Options')
 	

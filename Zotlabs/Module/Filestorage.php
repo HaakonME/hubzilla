@@ -141,7 +141,7 @@ class Filestorage extends \Zotlabs\Web\Controller {
 			// Encode path that is used for link so it's a valid URL
 			// Keep slashes as slashes, otherwise mod_rewrite doesn't work correctly
 			$encoded_path = str_replace('%2F', '/', rawurlencode($cloudpath));
-	
+
 			$o = replace_macros(get_markup_template('attach_edit.tpl'), array(
 				'$header' => t('Edit file permissions'),
 				'$file' => $f,
@@ -151,6 +151,10 @@ class Filestorage extends \Zotlabs\Web\Controller {
 				'$channelnick' => $channel['channel_address'],
 				'$permissions' => t('Permissions'),
 				'$aclselect' => $aclselect_e,
+				'$allow_cid' => acl2json($f['allow_cid']),
+				'$allow_gid' => acl2json($f['allow_gid']),
+				'$deny_cid' => acl2json($f['deny_cid']),
+				'$deny_gid' => acl2json($f['deny_gid']),
 				'$lockstate' => $lockstate,
 				'$permset' => t('Set/edit permissions'),
 				'$recurse' => array('recurse', t('Include all files and sub folders'), 0, '', array(t('No'), t('Yes'))),
@@ -161,7 +165,7 @@ class Filestorage extends \Zotlabs\Web\Controller {
 				'$submit' => t('Submit'),
 				'$attach_btn_title' => t('Share this file'),
 				'$link_btn_title' => t('Show URL to this file'),
-				'$notify' => array('notify', t('Notify your contacts about this file'), 0, '', array(t('No'), t('Yes')))
+				'$notify' => array('notify', t('Notify your contacts about this file'), 0, '', array(t('No'), t('Yes'))),
 			));
 	
 			echo $o;

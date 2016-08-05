@@ -324,6 +324,10 @@ class Browser extends DAV\Browser\Plugin {
 				'$quota' => $quota,
 				'$channick' => $this->auth->owner_nick,
 				'$aclselect' => $aclselect,
+				'$allow_cid' => acl2json($channel_acl['allow_cid']),
+				'$allow_gid' => acl2json($channel_acl['allow_gid']),
+				'$deny_cid' => acl2json($channel_acl['deny_cid']),
+				'$deny_gid' => acl2json($channel_acl['deny_gid']),
 				'$lockstate' => $lockstate,
 				'$return_url' => \App::$cmd,
 				'$dragdroptext' => t('Drop files here to immediately upload')

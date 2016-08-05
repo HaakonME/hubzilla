@@ -152,11 +152,16 @@ class Connedit extends \Zotlabs\Web\Controller {
 				
 		$new_friend = false;
 	
+		// only store a record and notify the directory if the rating changed
+
 		if(! $is_self) {
 	
 			$signed = $orig_record[0]['abook_xchan'] . '.' . $rating . '.' . $rating_text;
-	
 			$sig = base64url_encode(rsa_sign($signed,$channel['channel_prvkey']));
+
+			$rated = ((intval($rating) || strlen($rating_text)) ? true : false);
+	
+			$record = 0;
 	
 			$z = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' and xlink_static = 1 limit 1",
 				dbesc($channel['channel_hash']),
@@ -164,17 +169,20 @@ class Connedit extends \Zotlabs\Web\Controller {
 			);
 	
 			if($z) {
-				$record = $z[0]['xlink_id'];
-				$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s'
-					where xlink_id = %d",
-					intval($rating),
-					dbesc($rating_text),
-					dbesc($sig),
-					dbesc(datetime_convert()),
-					intval($record)
-				);
+				if(($z[0]['xlink_rating'] != $rating) || ($z[0]['xlink_rating_text'] != $rating_text)) {
+					$record = $z[0]['xlink_id'];
+					$w = q("update xlink set xlink_rating = '%d', xlink_rating_text = '%s', xlink_sig = '%s', xlink_updated = '%s'
+						where xlink_id = %d",
+						intval($rating),
+						dbesc($rating_text),
+						dbesc($sig),
+						dbesc(datetime_convert()),
+						intval($record)
+					);
+				}
 			}
-			else {
+			elseif($rated) {
+				// only create a record if there's something to save
 				$w = q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_rating_text, xlink_sig, xlink_updated, xlink_static ) values ( '%s', '%s', %d, '%s', '%s', '%s', 1 ) ",
 					dbesc($channel['channel_hash']),
 					dbesc($orig_record[0]['abook_xchan']),

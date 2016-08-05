@@ -43,7 +43,7 @@ class Rate extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel())
 			return;

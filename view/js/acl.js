@@ -97,8 +97,6 @@ ACL.prototype.on_submit = function() {
 		that.form_id.append("<input class='acl-field' type='hidden' name='contact_deny[]' value='"+v+"'>");
 	});
 
-	//areYouSure jquery plugin: recheck the form here
-	$('form').trigger('checkform.areYouSure');
 };
 
 ACL.prototype.search = function() {

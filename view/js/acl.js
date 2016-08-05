@@ -65,10 +65,7 @@ function ACL(backend_url) {
 ACL.prototype.get_form_data = function(event) { 
 
 		form_id = $(this).data('form_id');
-
 		that.form_id = $('#' + form_id);
-
-		console.log(form_id);
 
 		that.allow_cid = (that.form_id.data('allow_cid') || []);
 		that.allow_gid = (that.form_id.data('allow_gid') || []);
@@ -77,6 +74,7 @@ ACL.prototype.get_form_data = function(event) {
 
 		that.update_view();
 		that.on_submit();
+
 }
 
 // no longer called only on submit - call to update whenever a change occurs to the acl list. 
@@ -268,17 +266,10 @@ ACL.prototype.update_select = function(set) {
 
 ACL.prototype.update_view = function(value) {
 	if(that.form_id) {
-		console.log(that.form_id);
-
 		that.form_id.data('allow_cid', that.allow_cid);
 		that.form_id.data('allow_gid', that.allow_gid);
 		that.form_id.data('deny_cid', that.deny_cid);
 		that.form_id.data('deny_gid', that.deny_gid);
-
-		console.log(that.form_id.data('allow_cid'));
-		console.log(that.form_id.data('allow_gid'));
-		console.log(that.form_id.data('deny_cid'));
-		console.log(that.form_id.data('deny_gid'));
 	}
 
 	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0) {

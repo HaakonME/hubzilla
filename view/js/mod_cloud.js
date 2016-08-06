@@ -202,7 +202,7 @@ function UploadFile(file, idx) {
 	});
 
 	// POST to the entire cloud path 
-	xhr.open('post', window.location.pathname, true);
+	xhr.open('post', 'file_upload', true);
 
 	var formfields = $("#ajax-upload-files").serializeArray();
 
@@ -210,7 +210,7 @@ function UploadFile(file, idx) {
 	$.each(formfields, function(i, field) {
 		data.append(field.name, field.value);
 	});
-	data.append('file', file);
+	data.append('userfile', file);
 
 	xhr.send(data);
 }

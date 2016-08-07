@@ -330,7 +330,7 @@ class Browser extends DAV\Browser\Plugin {
 				'$deny_gid' => acl2json($channel_acl['deny_gid']),
 				'$lockstate' => $lockstate,
 				'$return_url' => \App::$cmd,
-				'$path' => str_replace('cloud/' . $this->auth->owner_nick . '/', '', $path),
+				'$path' => trim(str_replace('cloud/' . $this->auth->owner_nick, '', $path),'/'),
 				'$dragdroptext' => t('Drop files here to immediately upload')
 			));
 	}

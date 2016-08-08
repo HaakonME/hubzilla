@@ -8,7 +8,7 @@
 	<dl class='entity_nickname'>
 		<dt>Nickname</dt>
 		<dd>		
-			<a class="nickname p-nickname">{{$diaspora.nickname}}</a>
+			<span class="nickname p-nickname">{{$diaspora.nickname}}</span>
 		</dd>
 	</dl>
 	<dl class='entity_full_name'>
@@ -33,31 +33,37 @@
 	<dl class="entity_url">
 		<dt>URL</dt>
 		<dd>
-			<a href="{{$diaspora.podloc}}/" id="pod_location" >{{$diaspora.podloc}}/</a>
+			<a href="{{$diaspora.podloc}}/" id="pod_location" class="url" rel="me" >{{$diaspora.podloc}}/</a>
 		</dd>
 	</dl>
 	<dl class="entity_photo">
 		<dt>Photo</dt>
 		<dd>
-			<img class="photo u-photo avatar" height="300" width="300" src="{{$diaspora.photo300}}">
+			<img class="photo u-photo avatar" height="300" width="300" src="{{$diaspora.photo300}}" />
 		</dd>
 	</dl>
 	<dl class="entity_photo_medium">
 		<dt>Photo</dt>
 		<dd> 
-			<img class="photo u-photo avatar" height="100" width="100" src="{{$diaspora.photo100}}">
+			<img class="photo u-photo avatar" height="100" width="100" src="{{$diaspora.photo100}}" />
 		</dd>
 	</dl>
 	<dl class="entity_photo_small">
 		<dt>Photo</dt>
 		<dd>
-			<img class="photo u-photo avatar" height="50" width="50" src="{{$diaspora.photo50}}">
+			<img class="photo u-photo avatar" height="50" width="50" src="{{$diaspora.photo50}}" />
 		</dd>
 	</dl>
 	<dl class="entity_searchable">
 		<dt>Searchable</dt>
 		<dd>
 			<span class="searchable">{{$diaspora.searchable}}</span>
+		</dd>
+	</dl>
+	<dl class="entity_key">
+		<dt>Key</dt>
+		<dd>
+		<pre class="key">{{$diaspora.pubkey}}</pre>
 		</dd>
 	</dl>
 </div>

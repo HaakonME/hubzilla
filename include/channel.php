@@ -1069,6 +1069,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	$diaspora = array(
 		'podloc'     => z_root(),
 		'guid'       => $profile['channel_guid'] . str_replace('.','',App::get_hostname()),
+		'pubkey'     => pemtorsa($profile['channel_pubkey']),
 		'searchable' => (($block) ? 'false' : 'true'),
 		'nickname'   => $profile['channel_address'],
 		'fullname'   => $profile['channel_name'],

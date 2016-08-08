@@ -602,6 +602,12 @@ function sys_boot() {
 
 	@include('.htconfig.php');
 
+	if(array_key_exists('default_timezone',get_defined_vars())) {
+		App::$config['system']['timezone'] = $default_timezone;
+	}
+
+	$a->convert();
+
 	if(defined('UNO')) {
 		if(UNO)
 			App::$config['system']['server_role'] = 'basic';
@@ -609,11 +615,8 @@ function sys_boot() {
 			App::$config['system']['server_role'] = 'pro';
 	}
 
-	if(array_key_exists('default_timezone',get_defined_vars())) {
-		App::$config['system']['timezone'] = $default_timezone;
-	}
-
-	$a->convert();
+	if(! (array_key_exists('server_role',App::$config['system']) && App::$config['system']['server_role']))
+		App::$config['system']['server_role'] = 'pro';
 
 	App::$timezone = ((App::$config['system']['timezone']) ? App::$config['system']['timezone'] : 'UTC');
 	date_default_timezone_set(App::$timezone);
@@ -637,7 +640,6 @@ function sys_boot() {
 		 * Load configs from db. Overwrite configs from .htconfig.php
 		 */
 
-		load_config('config');
 		load_config('system');
 		load_config('feature');
 

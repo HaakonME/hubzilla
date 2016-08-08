@@ -38,7 +38,9 @@ function get_feature_default($feature) {
 
 function get_features($filtered = true) {
 
-	if(UNO && $filtered)
+	$server_role = get_config('system','server_role');
+
+	if($server_role === 'basic' && $filtered)
 		return array();
 
 	$arr = array(
@@ -52,7 +54,7 @@ function get_features($filtered = true) {
 			array('advanced_profiles',   t('Advanced Profiles'),      t('Additional profile sections and selections'),false,get_config('feature_lock','advanced_profiles')),
 			array('profile_export',      t('Profile Import/Export'),  t('Save and load profile details across sites/channels'),false,get_config('feature_lock','profile_export')),
 			array('webpages',            t('Web Pages'),              t('Provide managed web pages on your channel'),false,get_config('feature_lock','webpages')),
-			array('wiki',            t('Wiki'),              t('Provide a wiki for your channel'),((UNO) ? false : true),get_config('feature_lock','wiki')),
+			array('wiki',            t('Wiki'),              t('Provide a wiki for your channel'),(($server_role === 'basic') ? false : true),get_config('feature_lock','wiki')),
 			array('hide_rating',       t('Hide Rating'),          t('Hide the rating buttons on your channel and profile pages. Note: People can still rate you somewhere else.'),false,get_config('feature_lock','hide_rating')),			
 			array('private_notes',       t('Private Notes'),          t('Enables a tool to store notes and reminders (note: not encrypted)'),false,get_config('feature_lock','private_notes')),
 			array('nav_channel_select',  t('Navigation Channel Select'), t('Change channels directly from within the navigation dropdown menu'),false,get_config('feature_lock','nav_channel_select')),

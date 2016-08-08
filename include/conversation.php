@@ -1709,7 +1709,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	} 
 
-	if(feature_enabled($uid,'wiki') && (! UNO)) {
+	if(feature_enabled($uid,'wiki') && (get_config('system','server_role') !== 'basic')) {
 		$tabs[] = array(
 			'label' => t('Wiki'),
 			'url'   => z_root() . '/wiki/' . $nickname,

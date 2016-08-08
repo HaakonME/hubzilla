@@ -2251,7 +2251,7 @@ function check_location_move($sender_hash,$locations) {
 	if(! $locations)
 		return;	
 
-	if(! UNO)
+	if(get_config('system','server_role') !== 'basic')
 		return;
 
 	if(count($locations) != 1)
@@ -2929,7 +2929,7 @@ function import_site($arr, $pubkey) {
  */
 function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
-	if(UNO)
+	if(get_config('system','server_role') === 'basic')
 		return;
 
 	logger('build_sync_packet');
@@ -3077,7 +3077,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
  */
 function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
-	if(UNO)
+	if(get_config('system','server_role') === 'basic')
 		return;
 
 	require_once('include/import.php');

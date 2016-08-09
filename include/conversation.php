@@ -802,6 +802,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					continue;
 				}
 
+
 				$item['pagedrop'] = $page_dropping;
 
 				if($item['id'] == $item['parent']) {

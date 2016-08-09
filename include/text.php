@@ -1179,6 +1179,7 @@ function smilies($s, $sample = false) {
 	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism', 'smile_shield', $s);
 	$s = preg_replace_callback('/<[a-z]+ .*?>/ism', 'smile_shield', $s);
 
+
 	$params = list_smilies();
 	$params['string'] = $s;
 
@@ -1192,6 +1193,7 @@ function smilies($s, $sample = false) {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
+
 	$s = preg_replace_callback('/<!--base64:(.*?)-->/ism', 'smile_unshield', $s);
 
 	return $s;
@@ -1204,11 +1206,11 @@ function smilies($s, $sample = false) {
  * @return string
  */
 function smile_shield($m) {
-	return '<!--base64:' . base64url_encode($m[0]) . '-->';
+	return '<!--base64:' . base64special_encode($m[0]) . '-->';
 }
 
 function smile_unshield($m) { 
-	return base64url_decode($m[1]); 
+	return base64special_decode($m[1]); 
 }
 
 /**
@@ -1603,7 +1605,9 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 				$s = bbcode($text,false,true,$cache);
 			else
 				$s = smilies(bbcode($text,false,true,$cache));
+
 			$s = zidify_links($s);
+
 			break;
 	}
 
@@ -1852,6 +1856,26 @@ function base64url_decode($s) {
 	}
 	return base64_decode(strtr($s,'-_','+/'));
 }
+
+
+function base64special_encode($s, $strip_padding = true) {
+
+	$s = strtr(base64_encode($s),'+/',',.');
+
+	if($strip_padding)
+		$s = str_replace('=','',$s);
+
+	return $s;
+}
+
+function base64special_decode($s) {
+	if(is_array($s)) {
+		logger('base64url_decode: illegal input: ' . print_r(debug_backtrace(), true));
+		return $s;
+	}
+	return base64_decode(strtr($s,',.','+/'));
+}
+
 
 /**
  * @ Return a div to clear floats.

@@ -269,13 +269,15 @@ function enableOnUser(){
 	function linkdrop(event) {
 		var reply = event.dataTransfer.getData("text/uri-list");
 		event.preventDefault();
+		var editwin = '#' + event.target.id;
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').spin('tiny');
 			$.get('{{$baseurl}}/linkinfo?f=&binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
-					addeditortext(data);
+					$(editwin).val( $(editwin).val() + data );
+					// addeditortext(data);
 					$('#profile-rotator').spin(false);
 				});
 			});

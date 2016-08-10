@@ -216,8 +216,8 @@ function oembed_fetch_url($embedurl){
 				logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j->html, LOGGER_DEBUG, LOG_INFO); 
 			}
 
-			$orig_len = trim(mb_strlen($orig));
-			$new_len = trim(mb_strlen($j->html));
+			$orig_len = mb_strlen(trim($orig));
+			$new_len = mb_strlen(trim($j->html));
 			if(! $new_len)
 				$j->type = 'error';
 			elseif($orig_len) {

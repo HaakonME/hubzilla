@@ -61,13 +61,15 @@ EOT;
 		'$banner' =>  $banner
 	));
 
+	$server_role = get_config('system','server_role');
+	$basic = (($server_role === 'basic') ? true : false);
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
 	$nav = Array();
 
 	/**
 	 * Display login or logout
-	 */
+	 */	
 
 	$nav['usermenu']=array();
 	$userinfo = null;
@@ -76,7 +78,7 @@ EOT;
 	if(local_channel()) {
 
 
-		if($chans && count($chans) > 1 && feature_enabled(local_channel(),'nav_channel_select') && (! UNO))
+		if($chans && count($chans) > 1 && feature_enabled(local_channel(),'nav_channel_select') && (! $basic))
 			$nav['channels'] = $chans;
 
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'),'logout_nav_btn');
@@ -84,7 +86,7 @@ EOT;
 		// user menu
 		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'),'channel_nav_btn');
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'),'profile_nav_btn');
-		if(feature_enabled(local_channel(),'multi_profiles') && (! UNO))
+		if(feature_enabled(local_channel(),'multi_profiles') && (! $basic))
 			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'),'profiles_nav_btn');
 		else
 			$nav['usermenu'][]   = Array('profiles/' . $prof[0]['id'], t('Edit Profile'),"", t('Edit your profile'),'profiles_nav_btn');
@@ -92,19 +94,19 @@ EOT;
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'),'photos_nav_btn');
 		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'),'cloud_nav_btn');
 
-		if((! UNO) && feature_enabled(local_channel(),'ajaxchat'))
+		if((! $basic) && feature_enabled(local_channel(),'ajaxchat'))
 			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'], t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
 
 
 		require_once('include/menu.php');
 		$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
-		if(($has_bookmarks) && (! UNO)) {
+		if(($has_bookmarks) && (! $basic)) {
 			$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'),'bookmarks_nav_btn');
 		}
 
-		if(feature_enabled($channel['channel_id'],'webpages') && (! UNO))
+		if(feature_enabled($channel['channel_id'],'webpages') && (! $basic))
 			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'),'webpages_nav_btn');
-		if(feature_enabled($channel['channel_id'],'wiki') && (! UNO))
+		if(feature_enabled($channel['channel_id'],'wiki') && (! $basic))
 			$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wiki'),"",t('Your wiki'),'wiki_nav_btn');
 	}
 	else {
@@ -161,7 +163,7 @@ EOT;
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'), 'help_nav_btn', $context_help, $enable_context_help);
 	}
 
-	if(! UNO)
+	if(! $basic)
 		$nav['apps'] = array('apps', t('Apps'), "", t('Applications, utilities, links, games'),'apps_nav_btn');
 
 	$nav['search'] = array('search', t('Search'), "", t('Search site @name, #tag, ?docs, content'));
@@ -204,7 +206,7 @@ EOT;
 		$nav['all_events']['all']=array('events', t('See all events'), "", "");
 		$nav['all_events']['mark'] = array('', t('Mark all events seen'), '','');
 
-		if(! UNO)		
+		if(! $basic)		
 			$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'),'manage_nav_btn');
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'),'settings_nav_btn');

@@ -100,13 +100,13 @@ function prepareHtml(f, i) {
 }
 
 function formatSizeUnits(bytes){
-        if      (bytes>=1000000000) {bytes=(bytes/1000000000).toFixed(2)+' GB';}
-        else if (bytes>=1000000)    {bytes=(bytes/1000000).toFixed(2)+' MB';}
-        else if (bytes>=1000)       {bytes=(bytes/1000).toFixed(2)+' KB';}
-        else if (bytes>1)           {bytes=bytes+' bytes';}
-        else if (bytes==1)          {bytes=bytes+' byte';}
-        else                        {bytes='0 byte';}
-        return bytes;
+	if      (bytes>=1000000000) {bytes=(bytes/1000000000).toFixed(2)+' GB';}
+	else if (bytes>=1000000)    {bytes=(bytes/1000000).toFixed(2)+' MB';}
+	else if (bytes>=1000)       {bytes=(bytes/1000).toFixed(2)+' KB';}
+	else if (bytes>1)           {bytes=bytes+' bytes';}
+	else if (bytes==1)          {bytes=bytes+' byte';}
+	else                        {bytes='0 byte';}
+	return bytes;
 }
 
 // this is basically a js port of include/text.php getIconFromType() function
@@ -202,7 +202,7 @@ function UploadFile(file, idx) {
 	});
 
 	// POST to the entire cloud path 
-	xhr.open('post', window.location.pathname, true);
+	xhr.open('post', 'file_upload', true);
 
 	var formfields = $("#ajax-upload-files").serializeArray();
 
@@ -210,7 +210,7 @@ function UploadFile(file, idx) {
 	$.each(formfields, function(i, field) {
 		data.append(field.name, field.value);
 	});
-	data.append('file', file);
+	data.append('userfile', file);
 
 	xhr.send(data);
 }

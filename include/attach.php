@@ -578,7 +578,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			$pathname = filepath_macro($album);
 		}
 	}
-	else {
+	if(! $pathname) {
 		$pathname = filepath_macro($upload_path);
 	}
 

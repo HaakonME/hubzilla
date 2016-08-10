@@ -1015,8 +1015,6 @@ function filestorage(event, nick, id) {
 	$('#cloud-index-' + last_filestorage_id).removeClass('cloud-index-active');
 	$('#perms-panel-' + last_filestorage_id).hide().html('');
 	$('#file-edit-' + id).spin('tiny');
-	// What for do we need this here?
-	delete acl;
 	$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
 		$('#cloud-index-' + id).addClass('cloud-index-active');
 		$('#perms-panel-' + id).html(data).show();

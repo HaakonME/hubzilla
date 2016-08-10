@@ -1343,13 +1343,18 @@ function discover_by_webbie($webbie) {
 					$fullname = $vcard['fn'];
 				if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
 					$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];			
-				if(($vcard['key']) && (! $pubkey))
-					$pubkey = $vcard['key'];
+				if(($vcard['public_key']) && (! $pubkey)) {
+					$diaspora_key = $vcard['public_key'];
+					if(strstr($diaspora_key,'RSA '))
+						$pubkey = rsatopem($diaspora_key);
+					else
+						$pubkey = $diaspora_key;
+				}
 				if(! $avatar)
 					$avatar = $vcard['photo'];
 				if($diaspora) {
-					if(($vcard['guid']) && (! $diaspora_guid))
-						$diaspora_guid = $vcard['guid'];
+					if(($vcard['uid']) && (! $diaspora_guid))
+						$diaspora_guid = $vcard['uid'];
 					if(($vcard['url']) && (! $diaspora_base))
 						$diaspora_base = $vcard['url'];						
 

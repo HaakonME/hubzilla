@@ -312,6 +312,10 @@ class Thing extends \Zotlabs\Web\Controller {
 				'$imgurl' => $r[0]['obj_imgurl'],
 				'$permissions' => t('Permissions'),
 				'$aclselect' => populate_acl($channel_acl,false),
+				'$allow_cid' => acl2json($channel_acl['allow_cid']),
+				'$allow_gid' => acl2json($channel_acl['allow_gid']),
+				'$deny_cid' => acl2json($channel_acl['deny_cid']),
+				'$deny_gid' => acl2json($channel_acl['deny_gid']),
 				'$lockstate' => $lockstate,
 				'$submit' => t('Submit')
 			));
@@ -358,6 +362,10 @@ class Thing extends \Zotlabs\Web\Controller {
 			'$img_lbl' => t('URL for photo of thing (optional)'),
 			'$permissions' => t('Permissions'),
 			'$aclselect' => populate_acl($channel_acl,false),
+			'$allow_cid' => acl2json($channel_acl['allow_cid']),
+			'$allow_gid' => acl2json($channel_acl['allow_gid']),
+			'$deny_cid' => acl2json($channel_acl['deny_cid']),
+			'$deny_gid' => acl2json($channel_acl['deny_gid']),
 			'$lockstate' => $lockstate,
 			'$submit' => t('Submit')
 		));

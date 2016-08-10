@@ -23,7 +23,7 @@
 					{{/if}}
 					{{if $edit}}
 					<li class="nav-item">
-						<a class="nav-link" href="#"  title="" onclick="openClose('photo-edit'); return false;"><i class="fa fa-pencil"></i>&nbsp;{{$edit.edit}}</a>
+						<a class="nav-link acl-form-trigger" href="#"  title="" onclick="openClose('photo-edit'); return false;" data-form_id="photo_edit_form"><i class="fa fa-pencil"></i>&nbsp;{{$edit.edit}}</a>
 					</li>
 					{{/if}}
 				</ul>
@@ -53,7 +53,7 @@
 	{{$map}}
 	</div>
 	<div id="photo-edit" class="section-content-tools-wrapper">
-		<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form">
+		<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form" class="acl-form" data-form_id="photo_edit_form" data-allow_cid='{{$edit.allow_cid}}' data-allow_gid='{{$edit.allow_gid}}' data-deny_cid='{{$edit.deny_cid}}' data-deny_gid='{{$edit.deny_gid}}'>
 			<input type="hidden" name="item_id" value="{{$edit.item_id}}" />
 			{{* album renaming is not supported atm.
 			<div class="form-group">
@@ -88,8 +88,6 @@
 			</div>
 			{{/if}}
 
-			{{$edit.aclselect}}
-
 			<div class="form-group pull-left">
 				<button class="btn btn-danger btn-sm" id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();" />{{$edit.delete}}</button>
 			</div>
@@ -102,6 +100,7 @@
 				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$edit.submit}}</button>
 			</div>
 		</form>
+		{{$edit.aclselect}}
 		<div id="photo-edit-end" class="clear"></div>
 	</div>
 	<div id="photo-view-wrapper">

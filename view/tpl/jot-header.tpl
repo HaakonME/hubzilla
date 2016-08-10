@@ -270,16 +270,30 @@ function enableOnUser(){
 		var reply = event.dataTransfer.getData("text/uri-list");
 		event.preventDefault();
 		var editwin = '#' + event.target.id;
+		var commentwin = false;
+		if(editwin) {
+			commentwin = ((editwin.indexOf('comment') >= 0) ? true : false);
+			if(commentwin) {
+				var commentid = editwin.substring(editwin.lastIndexOf('-') + 1);
+				commentOpen(document.getElementById(event.target.id),commentid);
+			}
+		}
+
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').spin('tiny');
 			$.get('{{$baseurl}}/linkinfo?f=&binurl=' + reply, function(data) {
-				if (!editor) $("#profile-jot-text").val("");
-				initEditor(function(){
+				if(commentwin) {
 					$(editwin).val( $(editwin).val() + data );
-					// addeditortext(data);
 					$('#profile-rotator').spin(false);
-				});
+				}
+				else {
+					if (!editor) $("#profile-jot-text").val("");
+					initEditor(function(){
+					addeditortext(data);
+					$('#profile-rotator').spin(false);
+					});
+				}
 			});
 		}
 	}

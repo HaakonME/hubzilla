@@ -268,7 +268,6 @@ function enableOnUser(){
 
 	function linkdrop(event) {
 		var reply = event.dataTransfer.getData("text/uri-list");
-		event.target.textContent = reply;
 		event.preventDefault();
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
@@ -488,6 +487,7 @@ function enableOnUser(){
 
       // cancel event and hover styling
       DragDropUploadFileHover(e);
+
 
       // fetch FileList object
       var files = e.target.files || e.originalEvent.dataTransfer.files;

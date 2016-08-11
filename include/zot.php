@@ -3784,9 +3784,11 @@ function zotinfo($arr) {
 		// check if it has characteristics of a public forum based on custom permissions.
 		$t = q("select * from abconfig where abconfig.cat = 'my_perms' and abconfig.chan = %d and abconfig.xchan = '%s' and abconfig.k in ('tag_deliver', 'send_stream') ",
 			intval($e['channel_id']),
-			intval($e['channel_hash'])
+			dbesc($e['channel_hash'])
 		);
+
 		$ch = 0;
+
 		if($t) {
 			foreach($t as $tt) {
 				if($tt['k'] == 'tag_deliver' && $tt['v'] == 1)

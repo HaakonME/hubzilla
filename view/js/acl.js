@@ -95,6 +95,12 @@ ACL.prototype.on_submit = function() {
 		that.form_id.append("<input class='acl-field' type='hidden' name='contact_deny[]' value='"+v+"'>");
 	});
 
+	var formfields = $('.profile-jot-net input').serializeArray();
+
+	$.each(formfields, function(i, field) {
+		that.form_id.append("<input class='acl-field' type='hidden' name='"+field.name+"' value='"+field.value+"'>");
+	});
+
 };
 
 ACL.prototype.search = function() {

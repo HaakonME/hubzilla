@@ -62,9 +62,10 @@ require_once('include/api_auth.php');
 
 
 	function api_register_func($path, $func, $auth=false){
-		global $API;
-		$API[$path] = array('func'=>$func,
-							'auth'=>$auth);
+		\Zotlabs\Lib\Api_router::register($path,$func,$auth);
+//		global $API;
+//		$API[$path] = array('func'=>$func,
+//							'auth'=>$auth);
 	}
 
 	
@@ -73,99 +74,104 @@ require_once('include/api_auth.php');
 	 **************************/
 
 	function api_call($a){
-		GLOBAL $API, $called_api;
+		GLOBAL $called_api;
 
-		// preset
-		$type="json";
 
-		foreach ($API as $p=>$info){
-			if (strpos(App::$query_string, $p)===0){
-				$called_api= explode("/",$p);
-				//unset($_SERVER['PHP_AUTH_USER']);
-				if ($info['auth'] === true && api_user() === false) {
-						api_login($a);
-				}
+		$type = 'json';
+		$p = App::$cmd;
 
-				load_contact_links(api_user());
-
-				$channel = App::get_channel();
-
-				logger('API call for ' . $channel['channel_name'] . ': ' . App::$query_string);
-				logger('API parameters: ' . print_r($_REQUEST,true));
-
-				$type="json";
-
-				if (strpos(App::$query_string, ".xml")>0) $type="xml";
-				if (strpos(App::$query_string, ".json")>0) $type="json";
-				if (strpos(App::$query_string, ".rss")>0) $type="rss";
-				if (strpos(App::$query_string, ".atom")>0) $type="atom";
-				if (strpos(App::$query_string, ".as")>0) $type="as";
-
-				$r = call_user_func($info['func'], $a, $type);
-				if ($r===false) return;
-
-				switch($type){
-					case "xml":
-						$r = mb_convert_encoding($r, "UTF-8",mb_detect_encoding($r));
-						header ("Content-Type: text/xml");
-						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-						break;
-					case "json":
-						header ("Content-Type: application/json");
-						foreach($r as $rr) {
-							if(! $rr)
-								$rr = array();
-							$json = json_encode($rr);
-						}
-						if ($_GET['callback'])
-							$json = $_GET['callback']."(".$json.")";
-						return $json; 
-						break;
-					case "rss":
-						header ("Content-Type: application/rss+xml");
-						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-						break;
-					case "atom":
-						header ("Content-Type: application/atom+xml");
-						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-						break;
-					case "as":
-						//header ("Content-Type: application/json");
-						//foreach($r as $rr)
-						//    return json_encode($rr);
-						return json_encode($r);
-						break;
-
-				}
-				//echo "<pre>"; var_dump($r); die();
-			}
+		if(strrpos($p,'.')) {
+			$type = substr($p,strrpos($p,'.')+1);
+			$p = substr($p,0,strrpos($p,'.'));
 		}
-		header("HTTP/1.1 404 Not Found");
-		logger('API call not implemented: '.App::$query_string." - ".print_r($_REQUEST,true));
-		$r = '<status><error>not implemented</error></status>';
-		switch($type){
-			case "xml":
-				header ("Content-Type: text/xml");
-				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-				break;
-			case "json":
-				header ("Content-Type: application/json");
-			    return json_encode(array('error' => 'not implemented'));
-				break;
-			case "rss":
-				header ("Content-Type: application/rss+xml");
-				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-				break;
-			case "atom":
-				header ("Content-Type: application/atom+xml");
-				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-				break;
+
+		$info = \Zotlabs\Lib\Api_router::find($p);
+
+		logger('info: ' . $p . ' type: ' . $type . ' ' . print_r($info,true));
+
+		if($info) {
+			$called_api= explode("/",$p);
+
+			if ($info['auth'] === true && api_user() === false) {
+					api_login($a);
+			}
+
+			load_contact_links(api_user());
+
+			$channel = App::get_channel();
+
+			logger('API call for ' . $channel['channel_name'] . ': ' . App::$query_string);
+			logger('API parameters: ' . print_r($_REQUEST,true));
+
+			$r = call_user_func($info['func'], $a, $type);
+
+			if($r === false) 
+				return;
+
+			switch($type){
+				case "xml":
+					$r = mb_convert_encoding($r, "UTF-8",mb_detect_encoding($r));
+					header ("Content-Type: text/xml");
+					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+					break;
+				case "json":
+					header ("Content-Type: application/json");
+					foreach($r as $rr) {
+						if(! $rr)
+							$rr = array();
+						$json = json_encode($rr);
+					}
+					if ($_GET['callback'])
+						$json = $_GET['callback']."(".$json.")";
+					return $json; 
+					break;
+				case "rss":
+					header ("Content-Type: application/rss+xml");
+					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+					break;
+				case "atom":
+					header ("Content-Type: application/atom+xml");
+					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+					break;
+				case "as":
+					//header ("Content-Type: application/json");
+					//foreach($r as $rr)
+					//    return json_encode($rr);
+					return json_encode($r);
+					break;
+
+			}
+
 		}
 	}
+
+	header("HTTP/1.1 404 Not Found");
+	logger('API call not implemented: ' . App::$query_string . ' - ' . print_r($_REQUEST,true));
+	$r = '<status><error>not implemented</error></status>';
+	switch($type){
+		case "xml":
+			header ("Content-Type: text/xml");
+			return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+			break;
+		case "json":
+			header ("Content-Type: application/json");
+		    return json_encode(array('error' => 'not implemented'));
+			break;
+		case "rss":
+			header ("Content-Type: application/rss+xml");
+			return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+			break;
+		case "atom":
+			header ("Content-Type: application/atom+xml");
+			return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+			break;
+	}
+
 
 	/**
 	 * RSS extra info
 	 */
+
 	function api_rss_extra($a, $arr, $user_info){
 		if (is_null($user_info)) $user_info = api_get_user($a);
 		$arr['$user'] = $user_info;

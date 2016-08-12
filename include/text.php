@@ -2975,3 +2975,38 @@ function text_highlight($s,$lang) {
     return('<code>' . $o . '</code>');
 }
 
+// function to convert multi-dimensional array to xml
+// create new instance of simplexml
+
+// $xml = new SimpleXMLElement('<root/>');
+
+// function callback
+// array2XML($xml, $my_array);
+
+// save as xml file
+// echo (($xml->asXML('data.xml')) ? 'Your XML file has been generated successfully!' : 'Error generating XML file!');
+
+function arrtoxml($root_elem,$arr) {
+	$xml = new SimpleXMLElement('<' . $root_elem . '/>');
+	array2XML($xml,$arr);
+	return $xml->asXML();
+}
+
+function array2XML($obj, $array)
+{
+    foreach ($array as $key => $value)
+    {
+        if(is_numeric($key))
+            $key = 'item' . $key;
+
+        if (is_array($value))
+        {
+            $node = $obj->addChild($key);
+            array2XML($node, $value);
+        }
+        else
+        {
+            $obj->addChild($key, htmlspecialchars($value));
+        }
+    }
+}

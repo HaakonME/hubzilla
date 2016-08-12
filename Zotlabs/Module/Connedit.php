@@ -336,9 +336,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 			call_hooks('accept_follow', $arr);
 		}
 	
-		if(! is_null($autoperms))
-			set_pconfig(local_channel(),'system','autoperms',(($autoperms) ? $abook_my_perms : 0));
-	
 		$this->connedit_clone($a);
 	
 		if(($_REQUEST['pending']) && (!$_REQUEST['done']))

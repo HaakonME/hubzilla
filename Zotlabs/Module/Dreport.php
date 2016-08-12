@@ -74,7 +74,7 @@ class Dreport extends \Zotlabs\Web\Controller {
 	
 		if(! $r) {
 			notice( t('no results') . EOL);
-			return;
+//			return;
 		}
 		
 		for($x = 0; $x < count($r); $x++ ) {

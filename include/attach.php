@@ -1438,6 +1438,22 @@ logger('attach_hash: ' . $attachHash);
 	return $hash;
 }
 
+function find_folder_hash_by_path($channel_id, $path) {
+
+	$filename = end(explode('/', $path));
+
+	$r = q("SELECT hash FROM attach WHERE uid = %d AND filename = '%s' LIMIT 1",
+		intval($channel_id),
+		dbesc($filename)
+	);
+
+	$hash = '';
+	if($r && $r[0]['hash']) {
+		$hash = $r[0]['hash'];
+	}
+	return $hash;
+}
+
 /**
  * @brief Returns the filename of an attachment in a given channel.
  *

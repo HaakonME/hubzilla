@@ -316,6 +316,8 @@ class Browser extends DAV\Browser\Plugin {
 		$quota['desc'] = $quotaDesc;
 		$quota['warning'] = ((($limit) && ((round($used / $limit, 1) * 100) >= 90)) ? t('WARNING:') : ''); // 10485760 bytes = 100MB
 
+		$path = trim(str_replace('cloud/' . $this->auth->owner_nick, '', $path),'/');
+
 		$output .= replace_macros(get_markup_template('cloud_actionspanel.tpl'), array(
 				'$folder_header' => t('Create new folder'),
 				'$folder_submit' => t('Create'),
@@ -330,7 +332,8 @@ class Browser extends DAV\Browser\Plugin {
 				'$deny_gid' => acl2json($channel_acl['deny_gid']),
 				'$lockstate' => $lockstate,
 				'$return_url' => \App::$cmd,
-				'$path' => trim(str_replace('cloud/' . $this->auth->owner_nick, '', $path),'/'),
+				'$path' => $path,
+				'$folder' => find_folder_hash_by_path($this->auth->owner_id, $path),
 				'$dragdroptext' => t('Drop files here to immediately upload')
 			));
 	}

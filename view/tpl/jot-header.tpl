@@ -503,6 +503,7 @@ function enableOnUser(){
 
       // cancel event and hover styling
       DragDropUploadFileHover(e);
+	  if (!editor) $("#profile-jot-text").val("");
 
 
       // fetch FileList object
@@ -527,7 +528,11 @@ function enableOnUser(){
       xhr.addEventListener('load', function (e) {
         //console.log('xhr upload complete', e);
         window.fileUploadsCompleted = window.fileUploadsCompleted + 1;
-		addeditortext(xhr.responseText);
+
+		initEditor(function() {
+			addeditortext(xhr.responseText);
+		});
+
 		$('#jot-media').val($('#jot-media').val() + xhr.responseText);
         // When all the uploads have completed, refresh the page
         if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {  

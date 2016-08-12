@@ -61,10 +61,8 @@ require_once('include/api_auth.php');
 	}
 
 
-	function api_register_func($path, $func, $auth=false){
-		global $API;
-		$API[$path] = array('func'=>$func,
-							'auth'=>$auth);
+	function api_register_func($path, $func, $auth=false) {
+		\Zotlabs\Lib\Api_router::register($path,$func,$auth);
 	}
 
 	
@@ -72,76 +70,86 @@ require_once('include/api_auth.php');
 	 *  MAIN API ENTRY POINT  *
 	 **************************/
 
-	function api_call($a){
-		GLOBAL $API, $called_api;
+	function api_call(){
 
-		// preset
-		$type="json";
+		$p    = App::$cmd;
+		$type = null;
 
-		foreach ($API as $p=>$info){
-			if (strpos(App::$query_string, $p)===0){
-				$called_api= explode("/",$p);
-				//unset($_SERVER['PHP_AUTH_USER']);
-				if ($info['auth'] === true && api_user() === false) {
-						api_login($a);
-				}
-
-				load_contact_links(api_user());
-
-				$channel = App::get_channel();
-
-				logger('API call for ' . $channel['channel_name'] . ': ' . App::$query_string);
-				logger('API parameters: ' . print_r($_REQUEST,true));
-
-				$type="json";
-
-				if (strpos(App::$query_string, ".xml")>0) $type="xml";
-				if (strpos(App::$query_string, ".json")>0) $type="json";
-				if (strpos(App::$query_string, ".rss")>0) $type="rss";
-				if (strpos(App::$query_string, ".atom")>0) $type="atom";
-				if (strpos(App::$query_string, ".as")>0) $type="as";
-
-				$r = call_user_func($info['func'], $a, $type);
-				if ($r===false) return;
-
-				switch($type){
-					case "xml":
-						$r = mb_convert_encoding($r, "UTF-8",mb_detect_encoding($r));
-						header ("Content-Type: text/xml");
-						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-						break;
-					case "json":
-						header ("Content-Type: application/json");
-						foreach($r as $rr) {
-							if(! $rr)
-								$rr = array();
-							$json = json_encode($rr);
-						}
-						if ($_GET['callback'])
-							$json = $_GET['callback']."(".$json.")";
-						return $json; 
-						break;
-					case "rss":
-						header ("Content-Type: application/rss+xml");
-						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-						break;
-					case "atom":
-						header ("Content-Type: application/atom+xml");
-						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-						break;
-					case "as":
-						//header ("Content-Type: application/json");
-						//foreach($r as $rr)
-						//    return json_encode($rr);
-						return json_encode($r);
-						break;
-
-				}
-				//echo "<pre>"; var_dump($r); die();
+		if(strrpos($p,'.')) {
+			$type = substr($p,strrpos($p,'.')+1);
+			if(strpos($type,'/') === false) {
+				$p = substr($p,0,strrpos($p,'.'));
+				// recalculate App argc,argv since we just extracted the type from it
+				App::$argv = explode('/',$p);
+				App::$argc = count(App::$argv);
 			}
 		}
+
+		if((! $type) || (! in_array($type, [ 'json', 'xml', 'rss', 'as', 'atom' ])))
+			$type = 'json';
+
+		$info = \Zotlabs\Lib\Api_router::find($p);
+
+		logger('info: ' . $p . ' type: ' . $type . ' ' . print_r($info,true));
+
+		if($info) {
+
+			if ($info['auth'] === true && api_user() === false) {
+					api_login($a);
+			}
+
+			load_contact_links(api_user());
+
+			$channel = App::get_channel();
+
+			logger('API call for ' . $channel['channel_name'] . ': ' . App::$query_string);
+			logger('API parameters: ' . print_r($_REQUEST,true));
+
+			$r = call_user_func($info['func'],$type);
+
+			if($r === false) 
+				return;
+
+			switch($type) {
+				case "xml":
+					$r = mb_convert_encoding($r, "UTF-8",mb_detect_encoding($r));
+					header ("Content-Type: text/xml");
+					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+					break;
+				case "json":
+					header ("Content-Type: application/json");
+					foreach($r as $rr) {
+						if(! $rr)
+							$rr = array();
+						$json = json_encode($rr);
+					}
+					// Lookup JSONP to understand these lines. They provide cross-domain AJAX ability.
+					if ($_GET['callback'])
+						$json = $_GET['callback'] . '(' . $json . ')' ;
+					return $json; 
+					break;
+				case "rss":
+					header ("Content-Type: application/rss+xml");
+					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+					break;
+				case "atom":
+					header ("Content-Type: application/atom+xml");
+					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+					break;
+				case "as":
+					//header ("Content-Type: application/json");
+					//foreach($r as $rr)
+					//    return json_encode($rr);
+					return json_encode($r);
+					break;
+
+			}
+
+		}
+	
+
 		header("HTTP/1.1 404 Not Found");
-		logger('API call not implemented: '.App::$query_string." - ".print_r($_REQUEST,true));
+		logger('API call not implemented: ' . App::$query_string . ' - ' . print_r($_REQUEST,true));
 		$r = '<status><error>not implemented</error></status>';
 		switch($type){
 			case "xml":
@@ -166,7 +174,8 @@ require_once('include/api_auth.php');
 	/**
 	 * RSS extra info
 	 */
-	function api_rss_extra($a, $arr, $user_info){
+
+	function api_rss_extra( $arr, $user_info){
 		if (is_null($user_info)) $user_info = api_get_user($a);
 		$arr['$user'] = $user_info;
 		$arr['$rss'] = array(
@@ -186,8 +195,8 @@ require_once('include/api_auth.php');
 	 * Returns user info array.
 	 */
 
-	function api_get_user($a, $contact_id = null, $contact_xchan = null){
-		global $called_api;
+	function api_get_user( $contact_id = null, $contact_xchan = null){
+
 		$user = null;
 		$extra_query = "";
 
@@ -212,26 +221,12 @@ require_once('include/api_auth.php');
 				if (api_user()!==false)
 					$extra_query .= " AND abook_channel = ".intval(api_user());
 			}
-		
-			if (is_null($user) && argc() > (count($called_api)-1) && (strstr(App::$cmd,'/users'))){
-				$argid = count($called_api);
-				list($xx, $null) = explode(".",argv($argid));
-				if(is_numeric($xx)){
-					$user = intval($xx);
-					$extra_query = " AND abook_id = %d ";
-				} else {
-					$user = dbesc($xx);
-					$extra_query = " AND xchan_addr like '%s@%%' ";
-					if (api_user() !== false)
-						$extra_query .= " AND abook_channel = ".intval(api_user());
-				}
-			}
 		}
 		
 		if (! $user) {
 			if (api_user() === false) {
 				api_login($a); 
-				return False;
+				return false;
 			} else {
 				$user = local_channel();
 				$extra_query = " AND abook_channel = %d AND abook_self = 1 ";
@@ -239,7 +234,8 @@ require_once('include/api_auth.php');
 			
 		}
 		
-		logger('api_user: ' . $extra_query . ', user: ' . $user);
+		logger('api_user: ' . $extra_query . ', user: ' . $user, LOGGER_DATA, LOG_INFO);
+
 		// user info		
 
 		$uinfo = q("SELECT * from abook left join xchan on abook_xchan = xchan_hash 
@@ -356,7 +352,7 @@ require_once('include/api_auth.php');
 		
 	}
 
-	function api_client_register($a,$type) {
+	function api_client_register($type) {
 
 		$ret = array();
 		$key = random_string(16);
@@ -389,12 +385,12 @@ require_once('include/api_auth.php');
 
 
 
-	function api_item_get_user($a, $item) {
+	function api_item_get_user( $item) {
 
 		// The author is our direct contact, in a conversation with us.
 
 		if($item['author']['abook_id']) {
-			return api_get_user($a,$item['author']['abook_id']);
+			return api_get_user($item['author']['abook_id']);
 		}	
 		
 		// We don't know this person directly.
@@ -473,7 +469,7 @@ require_once('include/api_auth.php');
 	 * returns a 401 status code and an error message if not. 
 	 * http://developer.twitter.com/doc/get/account/verify_credentials
 	 */
-	function api_account_verify_credentials($a, $type){
+	function api_account_verify_credentials( $type){
 		if (api_user()===false) return false;
 		$user_info = api_get_user($a);
 		
@@ -483,7 +479,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
 
 
-	function api_account_logout($a, $type){
+	function api_account_logout( $type){
 		require_once('include/auth.php');
 		App::$session->nuke();
 		return api_apply_template("user", $type, array('$user' => null));
@@ -507,7 +503,7 @@ require_once('include/api_auth.php');
 	 * Red basic channel export
 	 */
 
-	function api_export_basic($a, $type) {
+	function api_export_basic( $type) {
 		if(api_user() === false) {
 			logger('api_export_basic: no user');
 			return false;
@@ -519,9 +515,10 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/export/basic','api_export_basic', true);
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);
+	api_register_func('api/hz/1.0/channel/export/basic','api_export_basic', true);
 
 
-	function api_channel_stream($a, $type) {
+	function api_channel_stream( $type) {
 		if(api_user() === false) {
 			logger('api_channel_stream: no user');
 			return false;
@@ -536,18 +533,20 @@ require_once('include/api_auth.php');
 		}
 	}
 	api_register_func('api/red/channel/stream','api_channel_stream', true);
+	api_register_func('api/hz/1.0/channel/stream','api_channel_stream', true);
 
-	function api_attach_list($a,$type) {
+	function api_attach_list($type) {
 		logger('api_user: ' . api_user());
 		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),'','','','created asc'));
 	}
 	api_register_func('api/red/files','api_attach_list', true);
+	api_register_func('api/hz/1.0/files','api_attach_list', true);
 
 
 
 
 
-	function api_file_meta($a,$type) {
+	function api_file_meta($type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['file_id']) return false;
 		$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
@@ -563,9 +562,10 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/filemeta', 'api_file_meta', true);
+	api_register_func('api/hz/1.0/filemeta', 'api_file_meta', true);
 
 
-	function api_file_data($a,$type) {
+	function api_file_data($type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['file_id']) return false;
 		$start = (($_REQUEST['start']) ? intval($_REQUEST['start']) : 0);
@@ -606,10 +606,11 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/filedata', 'api_file_data', true);
+	api_register_func('api/hz/1.0/filedata', 'api_file_data', true);
 
 
 
-	function api_file_detail($a,$type) {
+	function api_file_detail($type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['file_id']) return false;
 		$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
@@ -631,20 +632,23 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/file', 'api_file_detail', true);
+	api_register_func('api/hz/1.0/file', 'api_file_detail', true);
 
 
-	function api_albums($a,$type) {
+	function api_albums($type) {
 		json_return_and_die(photos_albums_list(App::get_channel(),App::get_observer()));
 	}
 	api_register_func('api/red/albums','api_albums', true);
+	api_register_func('api/hz/1.0/albums','api_albums', true);
 
-	function api_photos($a,$type) {
+	function api_photos($type) {
 		$album = $_REQUEST['album'];
 		json_return_and_die(photos_list_photos(App::get_channel(),App::get_observer(),$album));
 	}
 	api_register_func('api/red/photos','api_photos', true);
+	api_register_func('api/hz/1.0/photos','api_photos', true);
 
-	function api_photo_detail($a,$type) {
+	function api_photo_detail($type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['photo_id']) return false;
 		$scale = ((array_key_exists('scale',$_REQUEST)) ? intval($_REQUEST['scale']) : 0);
@@ -684,9 +688,10 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/photo', 'api_photo_detail', true);
+	api_register_func('api/hz/1.0/photo', 'api_photo_detail', true);
 
 
-	function api_group_members($a,$type) {
+	function api_group_members($type) {
 		if(api_user() === false)
 			return false;
 
@@ -706,11 +711,12 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/group_members','api_group_members', true);
+	api_register_func('api/hz/1.0/group_members','api_group_members', true);
 
 
 
 
-	function api_group($a,$type) {
+	function api_group($type) {
 		if(api_user() === false)
 			return false;
 
@@ -720,9 +726,10 @@ require_once('include/api_auth.php');
 		json_return_and_die($r);
 	}
 	api_register_func('api/red/group','api_group', true);
+	api_register_func('api/hz/1.0/group','api_group', true);
 
 
-	function api_red_xchan($a,$type) {
+	function api_red_xchan($type) {
 		logger('api_xchan');
 
 		if(api_user() === false)
@@ -738,9 +745,10 @@ require_once('include/api_auth.php');
 	};
 
 	api_register_func('api/red/xchan','api_red_xchan',true);
+	api_register_func('api/hz/1.0/xchan','api_red_xchan',true);
 	
 
-	function api_statuses_mediap($a, $type) {
+	function api_statuses_mediap( $type) {
 		if (api_user() === false) {
 			logger('api_statuses_update: no user');
 			return false;
@@ -782,11 +790,11 @@ require_once('include/api_auth.php');
 		$mod->post();
 
 		// this should output the last post (the one we just posted).
-		return api_status_show($a,$type);
+		return api_status_show($type);
 	}
 	api_register_func('api/statuses/mediap','api_statuses_mediap', true);
 
-	function api_statuses_update($a, $type) {
+	function api_statuses_update( $type) {
 		if (api_user() === false) {
 			logger('api_statuses_update: no user');
 			return false;
@@ -901,13 +909,13 @@ require_once('include/api_auth.php');
 		$mod->post();	
 
 		// this should output the last post (the one we just posted).
-		return api_status_show($a,$type);
+		return api_status_show($type);
 	}
 	api_register_func('api/statuses/update_with_media','api_statuses_update', true);
 	api_register_func('api/statuses/update','api_statuses_update', true);
 
 
-	function red_item_new($a, $type) {
+	function red_item_new( $type) {
 
 		if (api_user() === false) {
 			logger('api_red_item_new: no user');
@@ -939,9 +947,10 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/item/new','red_item_new', true);
+	api_register_func('api/hz/1.0/item/new','red_item_new', true);
 
 
-	function red_item($a, $type) {
+	function red_item( $type) {
 
 		if (api_user() === false) {
 			logger('api_red_item_full: no user');
@@ -977,6 +986,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/item/full','red_item', true);
+	api_register_func('api/hz/1.0/item/full','red_item', true);
 
 
 
@@ -1042,7 +1052,7 @@ require_once('include/api_auth.php');
 		return $status_info;
 	}
 
-	function api_status_show($a, $type){
+	function api_status_show( $type){
 		$user_info = api_get_user($a);
 
 		// get last public message
@@ -1120,7 +1130,7 @@ require_once('include/api_auth.php');
 // FIXME - this is essentially the same as api_status_show except for the template formatting at the end. Consolidate.
  
 
-	function api_users_show($a, $type){
+	function api_users_show( $type){
 		$user_info = api_get_user($a);
 
 		require_once('include/security.php');
@@ -1192,7 +1202,7 @@ require_once('include/api_auth.php');
 	 * TODO: Add reply info
 	 */
 
-	function api_statuses_home_timeline($a, $type){
+	function api_statuses_home_timeline( $type){
 		if (api_user() === false) 
 			return false;
 
@@ -1259,10 +1269,10 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 				break;
 			case "as":
-				$as = api_format_as($a, $ret, $user_info);
+				$as = api_format_as( $ret, $user_info);
 				$as['title'] = App::$config['sitename']." Home Timeline";
 				$as['link']['url'] = z_root()."/".$user_info["screen_name"]."/all";
 				return($as);
@@ -1274,7 +1284,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
 
-	function api_statuses_public_timeline($a, $type){
+	function api_statuses_public_timeline( $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1320,10 +1330,10 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 				break;
 			case "as":
-				$as = api_format_as($a, $ret, $user_info);
+				$as = api_format_as( $ret, $user_info);
 				$as['title'] = App::$config['sitename']. " " . t('Public Timeline');
 				$as['link']['url'] = z_root()."/";
 				return($as);
@@ -1338,7 +1348,7 @@ require_once('include/api_auth.php');
 	 * 
 
 	 */
-	function api_statuses_show($a, $type){
+	function api_statuses_show( $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1377,7 +1387,7 @@ require_once('include/api_auth.php');
 			/*switch($type){
 				case "atom":
 				case "rss":
-					$data = api_rss_extra($a, $data, $user_info);
+					$data = api_rss_extra( $data, $user_info);
 			}*/
 			return  api_apply_template("status", $type, $data);
 		}
@@ -1388,7 +1398,7 @@ require_once('include/api_auth.php');
 	/**
 	 * 
 	 */
-	function api_statuses_repeat($a, $type){
+	function api_statuses_repeat( $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1434,7 +1444,7 @@ require_once('include/api_auth.php');
 	 * 
 	 */
 
-	function api_statuses_destroy($a, $type){
+	function api_statuses_destroy( $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1498,7 +1508,7 @@ require_once('include/api_auth.php');
 	 */
 
 
-	function api_statuses_mentions($a, $type){
+	function api_statuses_mentions( $type){
 		if (api_user()===false) return false;
 				
 		$user_info = api_get_user($a);
@@ -1548,10 +1558,10 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 				break;
 			case "as":
-				$as = api_format_as($a, $ret, $user_info);
+				$as = api_format_as( $ret, $user_info);
 				$as["title"] = App::$config['sitename']." Mentions";
 				$as['link']['url'] = z_root()."/";
 				return($as);
@@ -1565,7 +1575,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statuses/replies','api_statuses_mentions', true);
 
 
-	function api_statuses_user_timeline($a, $type){
+	function api_statuses_user_timeline( $type){
 		if (api_user()===false) return false;
 		
 		$user_info = api_get_user($a);
@@ -1633,7 +1643,7 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 		}
 
 		return  api_apply_template("timeline", $type, $data);
@@ -1649,7 +1659,7 @@ require_once('include/api_auth.php');
 	 *
 	 * api v1 : https://web.archive.org/web/20131019055350/https://dev.twitter.com/docs/api/1/post/favorites/create/%3Aid
 	 */
-	function api_favorites_create_destroy($a, $type){
+	function api_favorites_create_destroy( $type){
 
 		logger('favorites_create_destroy');
 
@@ -1706,7 +1716,7 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 		}
 
 		return api_apply_template("status", $type, $data);
@@ -1717,7 +1727,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_favorites($a, $type){
+	function api_favorites( $type){
 		if (api_user()===false) 
 			return false;
 
@@ -1770,10 +1780,10 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 				break;
 			case "as":
-				$as = api_format_as($a, $ret, $user_info);
+				$as = api_format_as( $ret, $user_info);
 				$as['title'] = App::$config['sitename']." Home Timeline";
 				$as['link']['url'] = z_root()."/".$user_info["screen_name"]."/all";
 				return($as);
@@ -1789,7 +1799,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_format_as($a, $ret, $user_info) {
+	function api_format_as( $ret, $user_info) {
 
 		$as = array();
 		$as['title'] = App::$config['sitename']." Public Timeline";
@@ -1907,7 +1917,7 @@ require_once('include/api_auth.php');
 
 			localize_item($item);
 
-			$status_user = (($item['author_xchan']==$user_info['guid'])?$user_info: api_item_get_user($a,$item));
+			$status_user = (($item['author_xchan']==$user_info['guid'])?$user_info: api_item_get_user($item));
 			if(array_key_exists('status',$status_user))
 				unset($status_user['status']);
 
@@ -1986,7 +1996,7 @@ require_once('include/api_auth.php');
 	}
 
 
-	function api_account_rate_limit_status($a,$type) {
+	function api_account_rate_limit_status($type) {
 
 		$hash = array(
 			  'reset_time_in_seconds' => strtotime('now + 1 hour'),
@@ -2002,7 +2012,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/account/rate_limit_status','api_account_rate_limit_status',true);
 
-	function api_help_test($a,$type) {
+	function api_help_test($type) {
 
 		if ($type == 'xml')
 			$ok = "true";
@@ -2019,7 +2029,7 @@ require_once('include/api_auth.php');
 	 *  This function is deprecated by Twitter
 	 *  returns: json, xml 
 	 **/
-	function api_statuses_f($a, $type, $qtype) {
+	function api_statuses_f( $type, $qtype) {
 		if (api_user()===false) return false;
 		$user_info = api_get_user($a);
 		
@@ -2054,20 +2064,20 @@ require_once('include/api_auth.php');
 
 		$ret = array();
 		foreach($r as $cid){
-			$ret[] = api_get_user($a, $cid['abook_id']);
+			$ret[] = api_get_user( $cid['abook_id']);
 		}
 
 		
 		return array('$users' => $ret);
 
 	}
-	function api_statuses_friends($a, $type){
-		$data =  api_statuses_f($a,$type,"friends");
+	function api_statuses_friends( $type){
+		$data =  api_statuses_f($type,"friends");
 		if ($data===false) return false;
 		return  api_apply_template("friends", $type, $data);
 	}
-	function api_statuses_followers($a, $type){
-		$data = api_statuses_f($a,$type,"followers");
+	function api_statuses_followers( $type){
+		$data = api_statuses_f($type,"followers");
 		if ($data===false) return false;
 		return  api_apply_template("friends", $type, $data);
 	}
@@ -2079,7 +2089,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_statusnet_config($a,$type) {
+	function api_statusnet_config($type) {
 
 		load_config('system');
 
@@ -2115,8 +2125,9 @@ require_once('include/api_auth.php');
 	api_register_func('api/statusnet/config','api_statusnet_config',false);
 	api_register_func('api/friendica/config','api_statusnet_config',false);
 	api_register_func('api/red/config','api_statusnet_config',false);
+	api_register_func('api/hz/1.0/config','api_statusnet_config',false);
 
-	function api_statusnet_version($a,$type) {
+	function api_statusnet_version($type) {
 
 		// liar
 
@@ -2134,7 +2145,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statusnet/version','api_statusnet_version',false);
 
 
-	function api_friendica_version($a,$type) {
+	function api_friendica_version($type) {
 
 		if($type === 'xml') {
 			header("Content-type: application/xml");
@@ -2149,9 +2160,10 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/friendica/version','api_friendica_version',false);
 	api_register_func('api/red/version','api_friendica_version',false);
+	api_register_func('api/hz/1.0/version','api_friendica_version',false);
 
 
-	function api_ff_ids($a,$type,$qtype) {
+	function api_ff_ids($type,$qtype) {
 		if(! api_user())
 			return false;
 
@@ -2187,17 +2199,17 @@ require_once('include/api_auth.php');
 		}
 	}
 
-	function api_friends_ids($a,$type) {
-		api_ff_ids($a,$type,'friends');
+	function api_friends_ids($type) {
+		api_ff_ids($type,'friends');
 	}
-	function api_followers_ids($a,$type) {
-		api_ff_ids($a,$type,'followers');
+	function api_followers_ids($type) {
+		api_ff_ids($type,'followers');
 	}
 	api_register_func('api/friends/ids','api_friends_ids',true);
 	api_register_func('api/followers/ids','api_followers_ids',true);
 
 
-	function api_direct_messages_new($a, $type) {
+	function api_direct_messages_new( $type) {
 		if (api_user()===false) return false;
 		
 		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
@@ -2213,7 +2225,7 @@ require_once('include/api_auth.php');
 				dbesc($_POST['screen_name'] . '@%')
 		);
 
-		$recipient = api_get_user($a, $r[0]['abook_id']);			
+		$recipient = api_get_user( $r[0]['abook_id']);			
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
@@ -2247,7 +2259,7 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 		}
 				
 		return  api_apply_template("direct_messages", $type, $data);
@@ -2255,7 +2267,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
 
-	function api_direct_messages_box($a, $type, $box) {
+	function api_direct_messages_box( $type, $box) {
 		if (api_user()===false) return false;
 		
 		$user_info = api_get_user($a);
@@ -2292,10 +2304,10 @@ require_once('include/api_auth.php');
 			foreach($r as $item) {
 				if ($item['from_xchan'] == $channel['channel_hash']) {
 					$sender = $user_info;
-					$recipient = api_get_user($a, null, $item['to_xchan']);
+					$recipient = api_get_user( null, $item['to_xchan']);
 				}
 				else {
-					$sender = api_get_user($a, null, $item['from_xchan']);
+					$sender = api_get_user( null, $item['from_xchan']);
 					$recipient = $user_info;
 				}
 	
@@ -2308,24 +2320,24 @@ require_once('include/api_auth.php');
 		switch($type){
 			case "atom":
 			case "rss":
-				$data = api_rss_extra($a, $data, $user_info);
+				$data = api_rss_extra( $data, $user_info);
 		}
 				
 		return  api_apply_template("direct_messages", $type, $data);
 		
 	}
 
-	function api_direct_messages_sentbox($a, $type){
-		return api_direct_messages_box($a, $type, "sentbox");
+	function api_direct_messages_sentbox( $type){
+		return api_direct_messages_box( $type, "sentbox");
 	}
-	function api_direct_messages_inbox($a, $type){
-		return api_direct_messages_box($a, $type, "inbox");
+	function api_direct_messages_inbox( $type){
+		return api_direct_messages_box( $type, "inbox");
 	}
-	function api_direct_messages_all($a, $type){
-		return api_direct_messages_box($a, $type, "all");
+	function api_direct_messages_all( $type){
+		return api_direct_messages_box( $type, "all");
 	}
-	function api_direct_messages_conversation($a, $type){
-		return api_direct_messages_box($a, $type, "conversation");
+	function api_direct_messages_conversation( $type){
+		return api_direct_messages_box( $type, "conversation");
 	}
 	api_register_func('api/direct_messages/conversation','api_direct_messages_conversation',true);
 	api_register_func('api/direct_messages/all','api_direct_messages_all',true);
@@ -2333,7 +2345,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
 
 
-	function api_oauth_request_token($a, $type){
+	function api_oauth_request_token( $type){
 		try{
 			$oauth = new ZotOAuth1();
 			$req = OAuth1Request::from_request();
@@ -2348,7 +2360,7 @@ require_once('include/api_auth.php');
 		killme();	
 	}
 
-	function api_oauth_access_token($a, $type){
+	function api_oauth_access_token( $type){
 		try{
 			$oauth = new ZotOAuth1();
 			$req = OAuth1Request::from_request();

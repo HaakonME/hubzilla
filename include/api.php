@@ -143,30 +143,30 @@ require_once('include/api_auth.php');
 			}
 
 		}
-	}
+	
 
-	header("HTTP/1.1 404 Not Found");
-	logger('API call not implemented: ' . App::$query_string . ' - ' . print_r($_REQUEST,true));
-	$r = '<status><error>not implemented</error></status>';
-	switch($type){
-		case "xml":
-			header ("Content-Type: text/xml");
-			return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-			break;
-		case "json":
-			header ("Content-Type: application/json");
-		    return json_encode(array('error' => 'not implemented'));
-			break;
-		case "rss":
-			header ("Content-Type: application/rss+xml");
-			return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-			break;
-		case "atom":
-			header ("Content-Type: application/atom+xml");
-			return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-			break;
+		header("HTTP/1.1 404 Not Found");
+		logger('API call not implemented: ' . App::$query_string . ' - ' . print_r($_REQUEST,true));
+		$r = '<status><error>not implemented</error></status>';
+		switch($type){
+			case "xml":
+				header ("Content-Type: text/xml");
+				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				break;
+			case "json":
+				header ("Content-Type: application/json");
+			    return json_encode(array('error' => 'not implemented'));
+				break;
+			case "rss":
+				header ("Content-Type: application/rss+xml");
+				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				break;
+			case "atom":
+				header ("Content-Type: application/atom+xml");
+				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				break;
+		}
 	}
-
 
 	/**
 	 * RSS extra info

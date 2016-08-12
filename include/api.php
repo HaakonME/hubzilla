@@ -72,16 +72,21 @@ require_once('include/api_auth.php');
 
 	function api_call(){
 
-		$type = 'json';
-		$p = App::$cmd;
+		$p    = App::$cmd;
+		$type = null;
 
 		if(strrpos($p,'.')) {
 			$type = substr($p,strrpos($p,'.')+1);
-			$p = substr($p,0,strrpos($p,'.'));
-			// recalculate App argc,argv since we just extracted the type from it
-			App::$argv = explode('/',$p);
-			App::$argc = count(App::$argv);
+			if(strpos($type,'/') === false) {
+				$p = substr($p,0,strrpos($p,'.'));
+				// recalculate App argc,argv since we just extracted the type from it
+				App::$argv = explode('/',$p);
+				App::$argc = count(App::$argv);
+			}
 		}
+
+		if((! $type) || (! in_array($type, [ 'json', 'xml', 'rss', 'as', 'atom' ])))
+			$type = 'json';
 
 		$info = \Zotlabs\Lib\Api_router::find($p);
 
@@ -118,8 +123,9 @@ require_once('include/api_auth.php');
 							$rr = array();
 						$json = json_encode($rr);
 					}
+					// Lookup JSONP to understand these lines. They provide cross-domain AJAX ability.
 					if ($_GET['callback'])
-						$json = $_GET['callback']."(".$json.")";
+						$json = $_GET['callback'] . '(' . $json . ')' ;
 					return $json; 
 					break;
 				case "rss":
@@ -509,7 +515,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/export/basic','api_export_basic', true);
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);
-	api_register_func('api/hz/v1/channel/export/basic','api_export_basic', true);
+	api_register_func('api/hz/1.0/channel/export/basic','api_export_basic', true);
 
 
 	function api_channel_stream( $type) {
@@ -527,14 +533,14 @@ require_once('include/api_auth.php');
 		}
 	}
 	api_register_func('api/red/channel/stream','api_channel_stream', true);
-	api_register_func('api/hz/v1/channel/stream','api_channel_stream', true);
+	api_register_func('api/hz/1.0/channel/stream','api_channel_stream', true);
 
 	function api_attach_list($type) {
 		logger('api_user: ' . api_user());
 		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),'','','','created asc'));
 	}
 	api_register_func('api/red/files','api_attach_list', true);
-	api_register_func('api/hz/v1/files','api_attach_list', true);
+	api_register_func('api/hz/1.0/files','api_attach_list', true);
 
 
 
@@ -556,7 +562,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/filemeta', 'api_file_meta', true);
-	api_register_func('api/hz/v1/filemeta', 'api_file_meta', true);
+	api_register_func('api/hz/1.0/filemeta', 'api_file_meta', true);
 
 
 	function api_file_data($type) {
@@ -600,7 +606,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/filedata', 'api_file_data', true);
-	api_register_func('api/hz/v1/filedata', 'api_file_data', true);
+	api_register_func('api/hz/1.0/filedata', 'api_file_data', true);
 
 
 
@@ -626,21 +632,21 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/file', 'api_file_detail', true);
-	api_register_func('api/hz/v1/file', 'api_file_detail', true);
+	api_register_func('api/hz/1.0/file', 'api_file_detail', true);
 
 
 	function api_albums($type) {
 		json_return_and_die(photos_albums_list(App::get_channel(),App::get_observer()));
 	}
 	api_register_func('api/red/albums','api_albums', true);
-	api_register_func('api/hz/v1/albums','api_albums', true);
+	api_register_func('api/hz/1.0/albums','api_albums', true);
 
 	function api_photos($type) {
 		$album = $_REQUEST['album'];
 		json_return_and_die(photos_list_photos(App::get_channel(),App::get_observer(),$album));
 	}
 	api_register_func('api/red/photos','api_photos', true);
-	api_register_func('api/hz/v1/photos','api_photos', true);
+	api_register_func('api/hz/1.0/photos','api_photos', true);
 
 	function api_photo_detail($type) {
 		if (api_user()===false) return false;
@@ -682,7 +688,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/photo', 'api_photo_detail', true);
-	api_register_func('api/hz/v1/photo', 'api_photo_detail', true);
+	api_register_func('api/hz/1.0/photo', 'api_photo_detail', true);
 
 
 	function api_group_members($type) {
@@ -705,7 +711,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/group_members','api_group_members', true);
-	api_register_func('api/hz/v1/group_members','api_group_members', true);
+	api_register_func('api/hz/1.0/group_members','api_group_members', true);
 
 
 
@@ -720,7 +726,7 @@ require_once('include/api_auth.php');
 		json_return_and_die($r);
 	}
 	api_register_func('api/red/group','api_group', true);
-	api_register_func('api/hz/v1/group','api_group', true);
+	api_register_func('api/hz/1.0/group','api_group', true);
 
 
 	function api_red_xchan($type) {
@@ -739,7 +745,7 @@ require_once('include/api_auth.php');
 	};
 
 	api_register_func('api/red/xchan','api_red_xchan',true);
-	api_register_func('api/hz/v1/xchan','api_red_xchan',true);
+	api_register_func('api/hz/1.0/xchan','api_red_xchan',true);
 	
 
 	function api_statuses_mediap( $type) {
@@ -941,7 +947,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/item/new','red_item_new', true);
-	api_register_func('api/hz/v1/item/new','red_item_new', true);
+	api_register_func('api/hz/1.0/item/new','red_item_new', true);
 
 
 	function red_item( $type) {
@@ -980,7 +986,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/item/full','red_item', true);
-	api_register_func('api/hz/v1/item/full','red_item', true);
+	api_register_func('api/hz/1.0/item/full','red_item', true);
 
 
 
@@ -2119,7 +2125,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statusnet/config','api_statusnet_config',false);
 	api_register_func('api/friendica/config','api_statusnet_config',false);
 	api_register_func('api/red/config','api_statusnet_config',false);
-	api_register_func('api/hz/v1/config','api_statusnet_config',false);
+	api_register_func('api/hz/1.0/config','api_statusnet_config',false);
 
 	function api_statusnet_version($type) {
 
@@ -2154,7 +2160,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/friendica/version','api_friendica_version',false);
 	api_register_func('api/red/version','api_friendica_version',false);
-	api_register_func('api/hz/v1/version','api_friendica_version',false);
+	api_register_func('api/hz/1.0/version','api_friendica_version',false);
 
 
 	function api_ff_ids($type,$qtype) {

@@ -90,7 +90,7 @@ class Api extends \Zotlabs\Web\Controller {
 			return $o;
 		}
 		
-		echo api_call($a);
+		echo api_call();
 		killme();
 	}
 

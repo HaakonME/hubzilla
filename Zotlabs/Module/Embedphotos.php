@@ -40,8 +40,8 @@ class Embedphotos extends \Zotlabs\Web\Controller {
         }
         $resource_id = array_pop(explode("/", $href));
         $r = q("SELECT obj from item where resource_type = 'photo' and resource_id = '%s' limit 1",
-			dbesc($resource_id)
-		);
+						dbesc($resource_id)
+					);
         if(!$r) {
             json_return_and_die(array('errormsg' => 'Error retrieving resource ' . $resource_id, 'status' => false));
         }
@@ -83,7 +83,7 @@ function embedphotos_widget_album($args) {
             return '';
 
     if($args['album'])
-            $album = $args['album'];
+            $album = (($args['album'] === '/') ? '' : $args['album'] );
     if($args['title'])
             $title = $args['title'];
 

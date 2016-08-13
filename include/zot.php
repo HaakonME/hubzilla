@@ -457,11 +457,13 @@ function zot_refresh($them, $channel = null, $force = false) {
 				// new connection
 
 				$my_perms = null;
+				$automatic = false;
 
 				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
 				if($role) {
 					$xx = \Zotlabs\Access\PermissionRoles::role_perms($role);
 					if($xx['perms_auto']) {
+						$automatic = true;
 						$default_perms = $xx['perms_connect'];
 						$my_perms = \Zotlabs\Access\Permissions::FilledPerms($default_perms);
 					}
@@ -470,6 +472,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if(! $my_perms) {
 					$m = \Zotlabs\Access\Permissions::FilledAutoperms($channel['channel_id']);
 					if($m) {
+						$automatic = true;
 						$my_perms = $m;
 					}
 				}
@@ -496,7 +499,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($next_birthday),
-					intval(($default_perms) ? 0 : 1)
+					intval(($automatic) ? 0 : 1)
 				);
 
 				if($y) {

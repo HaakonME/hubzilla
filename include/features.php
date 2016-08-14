@@ -74,7 +74,7 @@ function get_features($filtered = true) {
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds'),false,get_config('feature_lock','channel_sources')),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key'),false,get_config('feature_lock','content_encrypt')),
 			array('consensus_tools', t('Enable Voting Tools'),      t('Provide a class of post which others can vote on'),false,get_config('feature_lock','consensus_tools')),
-			array('disable_comments', t('Enable Disabling Comments'),      t('Provide the option to disable comments for a post'),false,get_config('feature_lock','disable_comments')),
+			array('disable_comments', t('Disable Comments'),      t('Provide the option to disable comments for a post'),false,get_config('feature_lock','disable_comments')),
 			array('delayed_posting', t('Delayed Posting'),      t('Allow posts to be published at a later date'),false,get_config('feature_lock','delayed_posting')),
 			array('suppress_duplicates', t('Suppress Duplicate Posts/Comments'),  t('Prevent posts with identical content to be published with less than two minutes in between submissions.'),true,get_config('feature_lock','suppress_duplicates')),
 

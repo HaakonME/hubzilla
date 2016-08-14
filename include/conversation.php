@@ -1194,6 +1194,8 @@ function status_editor($a, $x, $popup = false) {
 		'$modalerrorlist' => t('Error getting album list'),
 		'$modalerrorlink' => t('Error getting photo link'),
 		'$modalerroralbum' => t('Error getting album'),
+		'$nocomment_enabled' => t('Comments enabled'),
+		'$nocomment_disabled' => t('Comments disabled'),
 	));
 
 	$tpl = get_markup_template('jot.tpl');

@@ -1121,6 +1121,10 @@ function status_editor($a, $x, $popup = false) {
 	$feature_voting = feature_enabled($x['profile_uid'], 'consensus_tools');
 	if(x($x, 'hide_voting'))
 		$feature_voting = false;
+	
+	$feature_nocomment = feature_enabled($x['profile_uid'], 'disable_comments');
+	if(x($x, 'disable_comments'))
+		$feature_nocomment = false;
 
 	$feature_expire = ((feature_enabled($x['profile_uid'], 'content_expire') && (! $webpage)) ? true : false);
 	if(x($x, 'hide_expire'))
@@ -1239,6 +1243,9 @@ function status_editor($a, $x, $popup = false) {
 		'$voting' => t('Toggle voting'),
 		'$feature_voting' => $feature_voting,
 		'$consensus' => 0,
+		'$nocommenttitle' => t('Disable comments'),
+		'$feature_nocomment' => $feature_nocomment,
+		'$nocomment' => 0,
 		'$clearloc' => $clearloc,
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => ((x($x, 'placeholdertitle')) ? $x['placeholdertitle'] : t('Title (optional)')),

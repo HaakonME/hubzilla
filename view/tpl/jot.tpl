@@ -23,6 +23,7 @@
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
 		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
+		<input type="hidden" id="jot-nocomment" name="nocomment" value="{{if $nocomment}}{{$nocomment}}{{else}}0{{/if}}" />
 
 		{{if $webpage}}
 		<div id="jot-pagetitle-wrap" class="jothidden">
@@ -118,6 +119,11 @@
 						<i id="profile-voting" class="fa fa-square-o jot-icons"></i>
 					</button>
 				{{/if}}
+				{{if $feature_nocomment}}
+					<button id="profile-nocomment-wrapper" class="btn btn-default btn-sm" title="{{$nocommenttitle}}" onclick="toggleNoComment();return false;">
+						<i id="profile-nocomment" class="fa fa-comments jot-icons"></i>
+					</button>
+				{{/if}}
 				</div>
 				{{if $writefiles || $weblink || $setloc || $clearloc || $feature_expire || $feature_encrypt || $feature_voting}}
 				<div class="btn-group visible-xs visible-sm">
@@ -150,6 +156,9 @@
 						{{/if}}
 						{{if $feature_voting}}
 						<li><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="fa fa-square-o"></i>&nbsp;{{$voting}}</a></li>
+						{{/if}}
+						{{if $feature_nocomment}}
+						<li><a href="#" onclick="toggleNoComment(); return false;"><i id="profile-nocomment-sub" class="fa fa-comments"></i>&nbsp;{{$nocommenttitle}}</a></li>
 						{{/if}}
 					</ul>
 				</div>

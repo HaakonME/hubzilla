@@ -81,6 +81,7 @@ class Item extends \Zotlabs\Web\Controller {
 		$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 	
 		$consensus = intval($_REQUEST['consensus']);
+		$nocomment = intval($_REQUEST['nocomment']);
 	
 		// 'origin' (if non-zero) indicates that this network is where the message originated,
 		// for the purpose of relaying comments to other conversation members. 
@@ -707,6 +708,7 @@ class Item extends \Zotlabs\Web\Controller {
 		$item_wall = (($post_type === 'wall' || $post_type === 'wall-comment') ? 1 : 0);
 		$item_origin = (($origin) ? 1 : 0);
 		$item_consensus = (($consensus) ? 1 : 0);
+		$item_nocomment = (($nocomment) ? 1 : 0);
 	
 	
 		// determine if this is a wall post

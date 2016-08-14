@@ -371,6 +371,19 @@ function enableOnUser(){
 		}
 	}
 
+	function toggleNoComment() {
+		if($('#jot-nocomment').val() > 0) {
+			$('#jot-nocomment').val(0);
+			$('#profile-nocomment, #profile-nocomment-sub').removeClass('fa-comments-o').addClass('fa-comments');
+			$('#profile-nocomment-wrapper').attr('title', 'Comments enabled');
+		}
+		else {
+			$('#jot-nocomment').val(1);
+			$('#profile-nocomment, #profile-nocomment-sub').removeClass('fa-comments').addClass('fa-comments-o');
+			$('#profile-nocomment-wrapper').attr('title', 'Comments disabled');
+		}
+	}
+
 	function jotReact(id,icon) {
 		if(id && icon) {
 			$.get('{{$baseurl}}/react?f=&postid=' + id + '&emoji=' + icon);

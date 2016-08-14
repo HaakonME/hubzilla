@@ -158,7 +158,7 @@
 						<li><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="fa fa-square-o"></i>&nbsp;{{$voting}}</a></li>
 						{{/if}}
 						{{if $feature_nocomment}}
-						<li><a href="#" onclick="toggleNoComment(); return false;"><i id="profile-nocomment-sub" class="fa fa-comments"></i>&nbsp;{{$nocommenttitle}}</a></li>
+						<li><a href="#" onclick="toggleNoComment(); return false;"><i id="profile-nocomment-sub" class="fa fa-comments"></i>&nbsp;{{$nocommenttitlesub}}</a></li>
 						{{/if}}
 					</ul>
 				</div>

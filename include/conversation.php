@@ -1246,6 +1246,7 @@ function status_editor($a, $x, $popup = false) {
 		'$feature_voting' => $feature_voting,
 		'$consensus' => 0,
 		'$nocommenttitle' => t('Disable comments'),
+		'$nocommenttitlesub' => t('Toggle comments'),
 		'$feature_nocomment' => $feature_nocomment,
 		'$nocomment' => 0,
 		'$clearloc' => $clearloc,

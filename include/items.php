@@ -4327,3 +4327,137 @@ function sync_an_item($channel_id,$item_id) {
 		build_sync_packet($channel_d,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
 	}
 }
+
+
+function fix_attached_photo_permissions($uid,$xchan_hash,$body,
+	$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
+	
+	if(get_pconfig($uid,'system','force_public_uploads')) {
+		$str_contact_allow = $str_group_allow = $str_contact_deny = $str_group_deny = '';
+	}
+	
+	$match = null;
+	// match img and zmg image links
+	if(preg_match_all("/\[[zi]mg(.*?)\](.*?)\[\/[zi]mg\]/",$body,$match)) {
+		$images = $match[2];
+		if($images) {
+			foreach($images as $image) {
+				if(! stristr($image,z_root() . '/photo/'))
+					continue;
+				$image_uri = substr($image,strrpos($image,'/') + 1);
+				if(strpos($image_uri,'-') !== false)
+					$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				if(strpos($image_uri,'.') !== false)
+					$image_uri = substr($image_uri,0, strpos($image_uri,'.'));
+				if(! strlen($image_uri))
+					continue;
+				$srch = '<' . $xchan_hash . '>';
+					
+				$r = q("select folder from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($image_uri),
+					intval($uid)
+				);
+				if($r && $r[0]['folder']) {
+					$f = q("select * from attach where hash = '%s' and is_dir = 1 and uid = %d limit 1",
+						dbesc($r[0]['folder']),
+						intval($uid)
+					);
+					if(($f) && (($f[0]['allow_cid']) || ($f[0]['allow_gid']) || ($f[0]['deny_cid']) || ($f[0]['deny_gid']))) {
+						$str_contact_allow = $f[0]['allow_cid'];
+						$str_group_allow = $f[0]['allow_gid'];
+						$str_contact_deny = $f[0]['deny_cid'];
+						$str_group_deny = $f[0]['deny_gid'];
+					}
+				}
+	
+				$r = q("SELECT id FROM photo 
+					WHERE allow_cid = '%s' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
+					AND resource_id = '%s' AND uid = %d LIMIT 1",
+					dbesc($srch),
+					dbesc($image_uri),
+					intval($uid)
+				);
+	
+				if($r) {
+					$r = q("UPDATE photo SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+						WHERE resource_id = '%s' AND uid = %d ",
+						dbesc($str_contact_allow),
+						dbesc($str_group_allow),
+						dbesc($str_contact_deny),
+						dbesc($str_group_deny),
+						dbesc($image_uri),
+						intval($uid)
+					);
+	
+					// also update the linked item (which is probably invisible)
+	
+					$r = q("select id from item
+						WHERE allow_cid = '%s' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
+						AND resource_id = '%s' and resource_type = 'photo' AND uid = %d LIMIT 1",
+						dbesc($srch),
+						dbesc($image_uri),
+						intval($uid)
+					);
+					if($r) {
+						$private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
+	
+						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
+							WHERE id = %d AND uid = %d",
+							dbesc($str_contact_allow),
+							dbesc($str_group_allow),
+							dbesc($str_contact_deny),
+							dbesc($str_group_deny),
+							intval($private),
+							intval($r[0]['id']),
+							intval($uid)
+						);
+					}
+					$r = q("select id from attach where hash = '%s' and uid = %d limit 1",
+						dbesc($image_uri),
+						intval($uid)
+					);
+					if($r) {
+						q("update attach SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+							WHERE id = %d AND uid = %d",
+							dbesc($str_contact_allow),
+							dbesc($str_group_allow),
+							dbesc($str_contact_deny),
+							dbesc($str_group_deny),
+							intval($r[0]['id']),
+							intval($uid)
+						);
+					} 
+				}
+			}
+		}
+	}
+}
+	
+	
+function fix_attached_file_permissions($channel,$observer_hash,$body,
+	$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
+	
+	if(get_pconfig($channel['channel_id'],'system','force_public_uploads')) {
+		$str_contact_allow = $str_group_allow = $str_contact_deny = $str_group_deny = '';
+	}
+	
+	$match = false;
+	
+	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
+		$attaches = $match[1];
+		if($attaches) {
+			foreach($attaches as $attach) {
+				$hash = substr($attach,0,strpos($attach,','));
+				$rev = intval(substr($attach,strpos($attach,',')));
+				attach_store($channel,$observer_hash,$options = 'update', array(
+					'hash'      => $hash,
+					'revision'  => $rev,
+					'allow_cid' => $str_contact_allow,
+					'allow_gid'  => $str_group_allow,
+					'deny_cid'  => $str_contact_deny,
+					'deny_gid'  => $str_group_deny
+				));
+			}
+		}
+	}
+}

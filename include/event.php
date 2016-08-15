@@ -343,6 +343,13 @@ function event_store_event($arr) {
 		}
 	}
 
+	$hook_info = [ 'event' => $arr, 'existing_event' => $existing_event, 'cancel' => false ];
+	call_hooks('event_store_event',$hook_info);
+	if($hook_info['cancel'])
+		return false;
+
+	$arr = $hook_info['event'];
+	$existing_event = $hook_info['existing_event'];
 
 	if($existing_event) {
 

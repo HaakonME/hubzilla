@@ -184,6 +184,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/event_created]event_created[/zrl]
 	called when an event record is created
 
+[zrl=[baseurl]/help/hook/event_store_event]event_store_event[/zrl]
+	called when an event record is created or updated
+
 [zrl=[baseurl]/help/hook/event_updated]event_updated[/zrl]
 	called when an event record is modified
 

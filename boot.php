@@ -1583,13 +1583,13 @@ function fix_system_urls($oldurl, $newurl) {
 	);
 
 	if($r) {
-		foreach($r as $rr) {
-			$channel_address = substr($rr['hubloc_addr'],0,strpos($rr['hubloc_addr'],'@'));
+		foreach($r as $rv) {
+			$channel_address = substr($rv['hubloc_addr'],0,strpos($rv['hubloc_addr'],'@'));
 
 			// get the associated channel. If we don't have a local channel, do nothing for this entry.
 
 			$c = q("select * from channel where channel_hash = '%s' limit 1",
-				dbesc($rr['hubloc_hash'])
+				dbesc($rv['hubloc_hash'])
 			);
 			if(! $c)
 				continue;
@@ -1611,19 +1611,19 @@ function fix_system_urls($oldurl, $newurl) {
 
 			// The xchan_url might point to another nomadic identity clone
 
-			$replace_xchan_url = ((strpos($rr['xchan_url'],$oldurl) !== false) ? true : false);
+			$replace_xchan_url = ((strpos($rv['xchan_url'],$oldurl) !== false) ? true : false);
 
 			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_date = '%s' where xchan_hash = '%s'",
 				dbesc($channel_address . '@' . $rhs),
-				dbesc(($replace_xchan_url) ? str_replace($oldurl,$newurl,$rr['xchan_url']) : $rr['xchan_url']),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connurl'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_follow'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connpage'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_s'])),
+				dbesc(($replace_xchan_url) ? str_replace($oldurl,$newurl,$rv['xchan_url']) : $rv['xchan_url']),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_connurl'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_follow'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_connpage'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_m'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_s'])),
 				dbesc(datetime_convert()),
-				dbesc($rr['xchan_hash'])
+				dbesc($rv['xchan_hash'])
 			);
 
 			$y = q("update hubloc set hubloc_addr = '%s', hubloc_url = '%s', hubloc_url_sig = '%s', hubloc_host = '%s', hubloc_callback = '%s' where hubloc_hash = '%s' and hubloc_url = '%s'",
@@ -1632,13 +1632,13 @@ function fix_system_urls($oldurl, $newurl) {
 				dbesc(base64url_encode(rsa_sign($newurl,$c[0]['channel_prvkey']))),
 				dbesc($newhost),
 				dbesc($newurl . '/post'),
-				dbesc($rr['xchan_hash']),
+				dbesc($rv['xchan_hash']),
 				dbesc($oldurl)
 			);
 
 			$z = q("update profile set photo = '%s', thumb = '%s' where uid = %d",
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_m'])),
 				intval($c[0]['channel_id'])
 			);
 
@@ -1666,12 +1666,12 @@ function fix_system_urls($oldurl, $newurl) {
 	);
 
 	if($r) {
-		foreach($r as $rr) {
+		foreach($r as $rv) {
 			$x = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s' where xchan_hash = '%s'",
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
-				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_s'])),
-				dbesc($rr['xchan_hash'])
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_m'])),
+				dbesc(str_replace($oldurl,$newurl,$rv['xchan_photo_s'])),
+				dbesc($rv['xchan_hash'])
 			);
 		}
 	}
@@ -2029,8 +2029,8 @@ function load_contact_links($uid) {
 		intval($uid)
 	);
 	if($r) {
-		foreach($r as $rr){
-			$ret[$rr['xchan_hash']] = $rr;
+		foreach($r as $rv){
+			$ret[$rv['xchan_hash']] = $rv;
 		}
 	}
 	else

@@ -13,6 +13,7 @@ function ACL(backend_url) {
 	that.deny_gid  = [];
 
 	that.group_uids = [];
+	that.group_ids = [];
 	that.selected_id = '';
 
 	that.info         = $("#acl-info");
@@ -131,7 +132,7 @@ ACL.prototype.on_onlyme = function(event) {
 	that.deny_gid  = [];
 
 
-	that.update_view(event.target.value);
+	that.update_view();
 	that.on_submit();
 
 	return true; // return true so that state changes from update_view() will be applied
@@ -146,28 +147,27 @@ ACL.prototype.on_showall = function(event) {
 	that.deny_cid  = [];
 	that.deny_gid  = [];
 
-	that.update_view(event.target.value);
+	that.update_view();
 	that.on_submit();
 
 	return true; // return true so that state changes from update_view() will be applied
 };
 
 ACL.prototype.on_showgroup = function(event) {
-       var xid = that.acl_select.children(":selected").val();
-	that.selected_id = that.acl_select.children(":selected").attr('id');
+	var xid = that.acl_select.children(":selected").val();
 
-       // preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
-       event.stopPropagation();
+	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
+	event.stopPropagation();
 
-       that.allow_cid = [];
-       that.allow_gid = [xid];
-       that.deny_cid  = [];
-       that.deny_gid  = [];
+	that.allow_cid = [];
+	that.allow_gid = [xid];
+	that.deny_cid  = [];
+	that.deny_gid  = [];
 
-       that.update_view(that.selected_id);
-       that.on_submit();
+	that.update_view();
+	that.on_submit();
 
-       return true; // return true so that state changes from update_view() will be applied
+	return true; // return true so that state changes from update_view() will be applied
 };
 
 
@@ -180,7 +180,7 @@ ACL.prototype.on_showlimited = function(event) {
 	that.deny_cid  = [];
 	that.deny_gid  = [];
 
-	that.update_view(event.target.value);
+	that.update_view('limited');
 	that.on_submit();
 
 	return true; // return true so that state changes from update_view() will be applied
@@ -316,7 +316,7 @@ ACL.prototype.update_view = function(value) {
 	else if (that.allow_gid.length === 1 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value !== 'limited') {
 		that.list.hide(); //hide acl-list
 		that.info.hide(); //show acl-info
-		that.selected_id = that.allow_gid[0].substring(0,40);
+		that.selected_id = that.group_ids[that.allow_gid[0]];
 		that.update_select(that.selected_id);
 
 		/* jot acl */
@@ -427,17 +427,17 @@ ACL.prototype.populate = function(data) {
 		html = html.format(this.photo, this.name, this.type, this.xid, '', this.self, this.link, this.taggable);
 		if (this.uids !== undefined) {
 			that.group_uids[this.xid] = this.uids;
-			that.onlyme.before($('<option></option>').attr('id', this.xid.substring(0,40)).attr('value', this.xid).text(this.name));
+			that.group_ids[this.xid] = this.id;
 		}
 		if (this.self === 'abook-self') {
 			that.self[0] = this.xid;
 		}
 		that.list_content.append(html);
 	});
+
 	$("#acl-list-content .acl-list-item img[data-src]").each(function(i, el) {
 		// Replace data-src attribute with src attribute for every image
 		$(el).attr('src', $(el).data("src"));
 		$(el).removeAttr("data-src");
 	});
-	//that.update_view();
 };

@@ -16,6 +16,7 @@
 				<label for="acl-select">{{$select_label}}</label>
 				<select id="acl-select" name="optionsRadios" class="form-control form-group">
 					<option id="acl-showall" value="public" selected>{{$showall}}</option>
+					{{$groups}}
 					<option id="acl-onlyme" value="onlyme">{{$onlyme}}</option>
 					<option id="acl-showlimited" value="limited">{{$showlimited}}</option>
 				</select>

@@ -13,7 +13,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
-	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `gname` ASC",
+	$r = q("SELECT * FROM groups WHERE deleted = 0 AND uid = %d ORDER BY gname ASC",
 		intval(local_channel())
 	);
 
@@ -43,112 +43,6 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	return $o;
 }
-
-/* MicMee 20130114 function contact_selector no longer in use, sql table contact does no longer exist
-function contact_selector($selname, $selclass, $preselected = false, $options) {
-
-
-	$mutual = false;
-	$networks = null;
-	$single = false;
-	$exclude = false;
-	$size = 4;
-
-	if(is_array($options)) {
-		if(x($options,'size'))
-			$size = $options['size'];
-
-		if(x($options,'mutual_friends'))
-			$mutual = true;
-		if(x($options,'single'))
-			$single = true;
-		if(x($options,'multiple'))
-			$single = false;
-		if(x($options,'exclude'))
-			$exclude = $options['exclude'];
-
-		if(x($options,'networks')) {
-			switch($options['networks']) {
-				case 'DFRN_ONLY':
-					$networks = array('dfrn');
-					break;
-				case 'PRIVATE':
-					$networks = array('dfrn','face','mail', 'dspr');
-					break;
-				case 'TWO_WAY':
-					$networks = array('dfrn','face','mail','dspr','stat');
-					break;					
-				default:
-					break;
-			}
-		}
-	}
-		
-	$x = array('options' => $options, 'size' => $size, 'single' => $single, 'mutual' => $mutual, 'exclude' => $exclude, 'networks' => $networks);
-
-	call_hooks('contact_select_options', $x);
-
-	$o = '';
-
-	$sql_extra = '';
-
-	if($x['mutual']) {
-		$sql_extra .= sprintf(" AND `rel` = %d ", intval(CONTACT_IS_FRIEND));
-	}
-
-	if(intval($x['exclude']))
-		$sql_extra .= sprintf(" AND `id` != %d ", intval($x['exclude']));
-
-	if(is_array($x['networks']) && count($x['networks'])) {
-		for($y = 0; $y < count($x['networks']) ; $y ++)
-			$x['networks'][$y] = "'" . dbesc($x['networks'][$y]) . "'";
-		$str_nets = implode(',',$x['networks']);
-		$sql_extra .= " AND `network` IN ( $str_nets ) ";
-	}
-	
-	$tabindex = (x($options, 'tabindex') ? "tabindex=\"" . $options["tabindex"] . "\"" : "");
-
-	if($x['single'])
-		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"" . $x['size'] . "\" $tabindex >\r\n";
-	else 
-		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"" . $x['size'] . "$\" $tabindex >\r\n";
-
-	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
-		$sql_extra
-		ORDER BY `name` ASC ",
-		intval(local_channel())
-	);
-
-
-	$arr = array('contact' => $r, 'entry' => $o);
-
-	// e.g. 'network_pre_contact_deny', 'profile_pre_contact_allow'
-
-	call_hooks(App::$module . '_pre_' . $selname, $arr);
-
-	if(count($r)) {
-		foreach($r as $rr) {
-			if((is_array($preselected)) && in_array($rr['id'], $preselected))
-				$selected = " selected=\"selected\" ";
-			else
-				$selected = '';
-
-			$trimmed = mb_substr($rr['name'],0,20);
-
-			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}|{$rr['url']}\" >$trimmed</option>\r\n";
-		}
-	
-	}
-
-	$o .= "</select>\r\n";
-
-	call_hooks(App::$module . '_post_' . $selname, $o);
-
-	return $o;
-}*/
-
-
 
 function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false, $celeb = false, $privatenet = false, $tabindex = null) {
 
@@ -260,10 +154,21 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		call_hooks('jot_networks', $jotnets);
 	}
 
+	$r = q("SELECT id, hash, gname FROM groups WHERE deleted = 0 AND uid = %d ORDER BY gname ASC",
+		intval(local_channel())
+	);
+
+	if($r) {
+		foreach($r as $rr) {
+			$groups .= '<option id="' . $rr['id'] . '" value="' . $rr['hash'] . '">' . $rr['gname'] . '</option>' . "\r\n";
+		}
+	}
+
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
 		'$showall'         => $showall_caption,
 		'$onlyme'          => t('Only me'),
+		'$groups'	   => $groups,
 		'$showallOrigin'   => $showall_origin,
 		'$showallIcon'     => $showall_icon,
 		'$select_label'    => t('Who can see this?'),

@@ -1,11 +1,30 @@
 <?php
 
+class RedbasicConfig {
+	function get_schemas() {
+		$scheme_choices = array();
+		$scheme_choices["---"] = t("Focus (Hubzilla default)");
+		$files = glob('view/theme/redbasic/schema/*.php');
+		if($files) {
+			foreach($files as $file) {
+				$f = basename($file, ".php");
+				if($f != 'default') {
+					$scheme_name = $f;
+					$scheme_choices[$f] = $scheme_name;
+				}
+			}
+		}
+		return $scheme_choices;
+	}
+}
+
+
 function theme_content(&$a) {
 	if(!local_channel()) { return;}
 
 	$arr = array();
 
-	$arr['schema'] = get_pconfig(local_channel(),'redbasic', 'schema' );
+//	$arr['schema'] = get_pconfig(local_channel(),'redbasic', 'schema' );
 	$arr['narrow_navbar'] = get_pconfig(local_channel(),'redbasic', 'narrow_navbar' );
 	$arr['nav_bg'] = get_pconfig(local_channel(),'redbasic', 'nav_bg' );
 	$arr['nav_gradient_top'] = get_pconfig(local_channel(),'redbasic', 'nav_gradient_top' );
@@ -42,7 +61,7 @@ function theme_post(&$a) {
 	if(!local_channel()) { return;}
 
 	if (isset($_POST['redbasic-settings-submit'])) {
-		set_pconfig(local_channel(), 'redbasic', 'schema', $_POST['redbasic_schema']);
+//		set_pconfig(local_channel(), 'redbasic', 'schema', $_POST['redbasic_schema']);
 		set_pconfig(local_channel(), 'redbasic', 'narrow_navbar', $_POST['redbasic_narrow_navbar']);
 		set_pconfig(local_channel(), 'redbasic', 'nav_bg', $_POST['redbasic_nav_bg']);
 		set_pconfig(local_channel(), 'redbasic', 'nav_gradient_top', $_POST['redbasic_nav_gradient_top']);
@@ -78,18 +97,6 @@ function theme_post(&$a) {
 
 
 function redbasic_form(&$a, $arr) {
-	$scheme_choices = array();
-	$scheme_choices["---"] = t("Focus (Hubzilla default)");
-	$files = glob('view/theme/redbasic/schema/*.php');
-	if($files) {
-		foreach($files as $file) {
-			$f = basename($file, ".php");
-			if($f != 'default') {
-				$scheme_name = $f;
-				$scheme_choices[$f] = $scheme_name;
-			}
-		}
-	}
 
 if(feature_enabled(local_channel(),'expert')) 
 				$expert = 1;
@@ -101,7 +108,6 @@ if(feature_enabled(local_channel(),'expert'))
 		'$theme' => App::$channel['channel_theme'],
 		'$expert' => $expert,
 		'$title' => t("Theme settings"),
-		'$schema' => array('redbasic_schema', t('Select scheme'), $arr['schema'], '', $scheme_choices),
 		'$narrow_navbar' => array('redbasic_narrow_navbar',t('Narrow navbar'),$arr['narrow_navbar'], '', array(t('No'),t('Yes'))),
 		'$nav_bg' => array('redbasic_nav_bg', t('Navigation bar background color'), $arr['nav_bg']),
 		'$nav_gradient_top' => array('redbasic_nav_gradient_top', t('Navigation bar gradient top color'), $arr['nav_gradient_top']),

@@ -20,6 +20,9 @@
 						{{if $theme}}
 							{{include file="field_themeselect.tpl" field=$theme}}
 						{{/if}}
+						{{if $schema}}
+							{{include file="field_select.tpl" field=$schema}}
+						{{/if}}
 						{{if $mobile_theme}}
 							{{include file="field_themeselect.tpl" field=$mobile_theme}}
 						{{/if}}

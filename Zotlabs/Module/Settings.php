@@ -210,13 +210,21 @@ class Settings extends \Zotlabs\Web\Controller {
 		if((argc() > 1) && (argv(1) == 'display')) {
 			
 			check_form_security_token_redirectOnErr('/settings/display', 'settings_display');
-	
-			$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : \App::$channel['channel_theme']);
-			$mobile_theme = ((x($_POST,'mobile_theme')) ? notags(trim($_POST['mobile_theme']))  : '');
-			$preload_images = ((x($_POST,'preload_images')) ? intval($_POST['preload_images'])  : 0);
-			$user_scalable = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
-			$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
-			$title_tosource = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
+
+			$themespec = explode(':', \App::$channel['channel_theme']);
+			$existing_theme  = $themespec[0];
+			$existing_schema = $themespec[1];
+
+			$theme             = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : $existing_theme);
+
+			if(! $theme)
+				$theme = 'redbasic';
+
+			$mobile_theme      = ((x($_POST,'mobile_theme')) ? notags(trim($_POST['mobile_theme']))  : '');
+			$preload_images    = ((x($_POST,'preload_images')) ? intval($_POST['preload_images'])  : 0);
+			$user_scalable     = ((x($_POST,'user_scalable')) ? intval($_POST['user_scalable'])  : 0);
+			$nosmile           = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0); 
+			$title_tosource    = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
 			$channel_list_mode = ((x($_POST,'channel_list_mode')) ? intval($_POST['channel_list_mode']) : 0);
 			$network_list_mode = ((x($_POST,'network_list_mode')) ? intval($_POST['network_list_mode']) : 0);
 	
@@ -235,8 +243,7 @@ class Settings extends \Zotlabs\Web\Controller {
 			$itemspage   = ((x($_POST,'itemspage')) ? intval($_POST['itemspage']) : 20);
 			if($itemspage > 100)
 				$itemspage = 100;
-	
-	
+		
 			if ($mobile_theme == "---") 
 				del_pconfig(local_channel(),'system','mobile_theme');
 			else {
@@ -254,16 +261,31 @@ class Settings extends \Zotlabs\Web\Controller {
 			set_pconfig(local_channel(),'system','channel_divmore_height', $channel_divmore_height);
 			set_pconfig(local_channel(),'system','network_divmore_height', $network_divmore_height);
 	
-			if ($theme == \App::$channel['channel_theme']){
+			$newschema = '';
+			if($theme == $existing_theme){
 				// call theme_post only if theme has not been changed
 				if( ($themeconfigfile = $this->get_theme_config_file($theme)) != null){
 					require_once($themeconfigfile);
+					if(class_exists(ucfirst($theme) . 'Config')) {
+						$clsname = ucfirst($theme) . 'Config';
+						$theme_config = new $clsname();
+						$schemas = $theme_config->get_schemas();
+						if(array_key_exists($_POST['schema'],$schemas))
+							$newschema = $_POST['schema'];
+						if($newschema === '---')
+							$newschema = '';	
+					}
+
 					theme_post($a);
 				}
 			}
+
+			logger('theme: ' . $theme . (($newschema) ? ':' . $newschema : ''));
+
+			$_SESSION['theme'] = $theme . (($newschema) ? ':' . $newschema : '');
 	
 			$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d",
-					dbesc($theme),
+					dbesc($theme . (($newschema) ? ':' . $newschema : '')),
 					intval(local_channel())
 			);
 		
@@ -914,7 +936,6 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$settings_connectors' => $settings_connectors
 			));
 	
-			call_hooks('display_settings', $o);
 			return $o;
 		}
 	
@@ -923,9 +944,18 @@ class Settings extends \Zotlabs\Web\Controller {
 		 */
 	
 		if((argc() > 1) && (argv(1) === 'display')) {
+
+
 			$default_theme = get_config('system','theme');
 			if(! $default_theme)
-				$default_theme = 'default';
+				$default_theme = 'redbasic';
+
+			$themespec = explode(':', \App::$channel['channel_theme']);
+			$existing_theme  = $themespec[0];
+			$existing_schema = $themespec[1];
+
+			$theme = (($existing_theme) ? $existing_theme : $default_theme);
+
 			$default_mobile_theme = get_config('system','mobile_theme');
 			if(! $mobile_default_theme)
 				$mobile_default_theme = 'none';
@@ -964,7 +994,9 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 				}
 			}
-			$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
+
+			$theme_selected = ((array_key_exists('theme',$_SESSION) && $_SESSION['theme']) ? $_SESSION['theme'] : $theme);
+
 			$mobile_theme_selected = (!x($_SESSION,'mobile_theme')? $default_mobile_theme : $_SESSION['mobile_theme']);
 	
 			$preload_images = get_pconfig(local_channel(),'system','preload_images');
@@ -986,10 +1018,17 @@ class Settings extends \Zotlabs\Web\Controller {
 			$title_tosource = (($title_tosource===false)? '0': $title_tosource); // default if not set: 0
 	
 			$theme_config = "";
-			if( ($themeconfigfile = $this->get_theme_config_file($theme_selected)) != null){
+			if(($themeconfigfile = $this->get_theme_config_file($theme)) != null){
 				require_once($themeconfigfile);
+				if(class_exists(ucfirst($theme) . 'Config')) {
+					$clsname = ucfirst($theme) . 'Config';
+					$theme_config = new $clsname();
+					$schemas = $theme_config->get_schemas();
+				}
 				$theme_config = theme_content($a);
 			}
+
+logger('schemas: ' . print_r($schemas,true));
 			
 			$tpl = get_markup_template("settings_display.tpl");
 			$o = replace_macros($tpl, array(
@@ -1003,6 +1042,8 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$uid' => local_channel(),
 			
 				'$theme'	=> (($themes) ? array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview') : false),
+				'$schema'   => (($schemas) ? array('schema', t('Select scheme'), $existing_schema, '' , $schemas) : ''),
+
 				'$mobile_theme' => (($mobile_themes) ? array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, '') : false),
 				'$preload_images' => array('preload_images', t("Preload images before rendering the page"), $preload_images, t("The subjective page load time will be longer but the page will be ready when displayed"), $yes_no),
 				'$user_scalable' => array('user_scalable', t("Enable user zoom on mobile devices"), $user_scalable, '', $yes_no),
@@ -1020,7 +1061,8 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 	
 			));
-			
+
+			call_hooks('display_settings',$o);			
 			return $o;
 		}
 			

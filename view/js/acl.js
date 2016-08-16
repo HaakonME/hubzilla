@@ -186,32 +186,6 @@ ACL.prototype.on_showlimited = function(event) {
 	return true; // return true so that state changes from update_view() will be applied
 }
 
-ACL.prototype.on_selectall = function(event) {
-	event.preventDefault();
-	event.stopPropagation();
-
-	/* This function has not yet been completed. */
-	/* The goal is to select all ACL "show" entries with one action. */
- 
-	$('.acl-button-show').each(function(){});
-
-	if (that.showall.hasClass("btn-warning")) {
-		return false;
-	}
-	that.showall.removeClass("btn-default").addClass("btn-warning");
-
-	that.allow_cid = [];
-	that.allow_gid = [];
-	that.deny_cid  = [];
-	that.deny_gid  = [];
-
-	that.update_view();
-	that.on_submit();
-
-	return false;
-};
-
-
 ACL.prototype.on_button_show = function(event) {
 	event.preventDefault();
 	event.stopImmediatePropagation();
@@ -354,6 +328,7 @@ ACL.prototype.update_view = function(value) {
 	$("#acl-list-content .acl-list-item").each(function() {
 		$(this).removeClass("groupshow grouphide");
 	});
+
 	$("#acl-list-content .acl-list-item").each(function() {
 		itemid = $(this).attr('id');
 		type = itemid[0];

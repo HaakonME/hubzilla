@@ -22,7 +22,7 @@ function ACL(backend_url) {
 	that.item_tpl     = unescape($(".acl-list-item[rel=acl-template]").html());
 	that.showall      = $("#acl-showall");
 	that.onlyme       = $("#acl-onlyme");
-	that.showlimited  = $("#acl-showlimited");
+	that.custom       = $("#acl-custom");
 	that.acl_select   = $("#acl-select");
 
 	// set the initial ACL lists in case the enclosing form gets submitted before the ajax loader completes. 
@@ -35,7 +35,7 @@ function ACL(backend_url) {
 		that.acl_select.change(function(event) {
 			var option = that.acl_select.val();
 
-			if(option != 'public' && option != 'onlyme' && option != 'limited') { // selected group
+			if(option != 'public' && option != 'onlyme' && option != 'custom') { // limited to one selected group
 				that.on_showgroup(event);
 			}
 
@@ -47,8 +47,8 @@ function ACL(backend_url) {
 				that.on_onlyme(event);
 			}
 
-			if(option == 'limited') { // limited to custom selection
-				that.on_showlimited(event);
+			if(option == 'custom') { // limited to custom selection
+				that.on_custom(event);
 			}
 		});
 
@@ -171,7 +171,7 @@ ACL.prototype.on_showgroup = function(event) {
 };
 
 
-ACL.prototype.on_showlimited = function(event) {
+ACL.prototype.on_custom = function(event) {
 	// preventDefault() isn't called here as we want state changes from update_view() to be applied to the radiobutton
 	event.stopPropagation();
 
@@ -180,7 +180,7 @@ ACL.prototype.on_showlimited = function(event) {
 	that.deny_cid  = [];
 	that.deny_gid  = [];
 
-	that.update_view('limited');
+	that.update_view('custom');
 	that.on_submit();
 
 	return true; // return true so that state changes from update_view() will be applied
@@ -231,7 +231,7 @@ ACL.prototype.set_allow = function(itemid) {
 			if (that.deny_cid.indexOf(id)>=0) that.deny_cid.remove(id);
 			break;
 	}
-	that.update_view('limited');
+	that.update_view('custom');
 };
 
 ACL.prototype.set_deny = function(itemid) {
@@ -255,16 +255,16 @@ ACL.prototype.set_deny = function(itemid) {
 			if (that.allow_cid.indexOf(id)>=0) that.allow_cid.remove(id);
 			break;
 	}
-	that.update_view('limited');
+	that.update_view('custom');
 };
 
 ACL.prototype.update_select = function(set) {
-	if(set != 'public' && set != 'onlyme' && set != 'limited')  {
+	if(set != 'public' && set != 'onlyme' && set != 'custom')  {
 		$('#' + set).prop('selected', true );
 	}
 	that.showall.prop('selected', set === 'public');
 	that.onlyme.prop('selected', set === 'onlyme');
-	that.showlimited.prop('selected', set === 'limited');
+	that.custom.prop('selected', set === 'custom');
 };
 
 ACL.prototype.update_view = function(value) {
@@ -276,7 +276,7 @@ ACL.prototype.update_view = function(value) {
 		that.form_id.data('deny_gid', that.deny_gid);
 	}
 
-	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value !== 'limited') {
+	if (that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value !== 'custom') {
 		that.list.hide(); //hide acl-list
 		that.info.show(); //show acl-info
 		that.update_select('public');
@@ -287,7 +287,7 @@ ACL.prototype.update_view = function(value) {
 
 	}
 
-	else if (that.allow_gid.length === 1 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value !== 'limited') {
+	else if (that.allow_gid.length === 1 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value !== 'custom') {
 		that.list.hide(); //hide acl-list
 		that.info.hide(); //show acl-info
 		that.selected_id = that.group_ids[that.allow_gid[0]];
@@ -299,7 +299,7 @@ ACL.prototype.update_view = function(value) {
 	}
 
 	// if value != 'onlyme' we should fall through this one
-	else if (that.allow_gid.length === 0 && that.allow_cid.length === 1 && that.allow_cid[0] === that.self[0] && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value !== 'limited') {
+	else if (that.allow_gid.length === 0 && that.allow_cid.length === 1 && that.allow_cid[0] === that.self[0] && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value !== 'custom') {
 		that.list.hide(); //hide acl-list
 		that.info.hide(); //show acl-info
 		that.update_select('onlyme');
@@ -312,10 +312,10 @@ ACL.prototype.update_view = function(value) {
 	else {
 		that.list.show(); //show acl-list
 		that.info.hide(); //hide acl-info
-		that.update_select('limited');
+		that.update_select('custom');
 
 		/* jot acl */
-		if(that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value === 'limited') {
+		if(that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value === 'custom') {
 			$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
 			$('.profile-jot-net input').attr('disabled', false);
 		}

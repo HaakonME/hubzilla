@@ -18,7 +18,7 @@
 					<option id="acl-showall" value="public" selected>{{$showall}}</option>
 					{{$groups}}
 					<option id="acl-onlyme" value="onlyme">{{$onlyme}}</option>
-					<option id="acl-showlimited" value="limited">{{$showlimited}}</option>
+					<option id="acl-custom" value="custom">{{$custom}}</option>
 				</select>
 
 				{{if $showallOrigin}}

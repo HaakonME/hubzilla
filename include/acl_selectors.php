@@ -172,7 +172,7 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		'$showallOrigin'   => $showall_origin,
 		'$showallIcon'     => $showall_icon,
 		'$select_label'    => t('Who can see this?'),
-		'$showlimited'     => t('Custom selection'),
+		'$custom'          => t('Custom selection'),
 		'$showlimitedDesc' => t('Select "Show" to allow viewing. "Don\'t show" lets you override and limit the scope of "Show".'),
 		'$show'	           => t("Show"),
 		'$hide'	           => t("Don't show"),

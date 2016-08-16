@@ -112,7 +112,7 @@ class Theme {
 		$theme = self::current();
 
 		$t = $theme[0];
-		$s = ((count($theme) > 1) ? $t[1] : '');
+		$s = ((count($theme) > 1) ? $theme[1] : '');
 
 		$opts = '';
 		$opts = ((\App::$profile_uid) ? '?f=&puid=' . \App::$profile_uid : '');

@@ -411,7 +411,7 @@ function enableOnUser(){
         $.post("embedphotos/album", {name: album},
             function(data) {
                 if (data['status']) {
-                    $('#embedPhotoModalLabel').html('{{$modalchooseimages}}');
+                    $('#embedPhotoModalLabel').html("{{$modalchooseimages}}");
                     $('#embedPhotoModalBodyAlbumDialog').html('\
                             <div><ul class="nav">\n\
                                 <li><a href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
@@ -439,7 +439,7 @@ function enableOnUser(){
                                     if (ddata['status']) {
                                         addeditortext(ddata['photolink']);
                                     } else {
-                                        window.console.log('{{$modalerrorlink}}' + ':' + ddata['errormsg']);
+                                        window.console.log("{{$modalerrorlink}}" + ':' + ddata['errormsg']);
                                     }
                                     return false;
                                 },
@@ -450,7 +450,7 @@ function enableOnUser(){
                         $('#embedPhotoModal').modal('hide');
                     });
                 } else {
-                    window.console.log('{{$modalerroralbum}} ' + JSON.stringify(album) + ':' + data['errormsg']);
+                    window.console.log("{{$modalerroralbum}} " + JSON.stringify(album) + ':' + data['errormsg']);
                 }
                 return false;
             },
@@ -462,7 +462,7 @@ function enableOnUser(){
             function(data) {
                 if (data['status']) {
                     var albums = data['albumlist']; //JSON.parse(data['albumlist']);
-                    $('#embedPhotoModalLabel').html('{{$modalchoosealbum}}');
+                    $('#embedPhotoModalLabel').html("{{$modalchoosealbum}}");
                     $('#embedPhotoModalBodyAlbumList').html('<ul class="nav"></ul>');
                     for(var i=0; i<albums.length; i++) {
                         var albumName = albums[i].text;
@@ -474,7 +474,7 @@ function enableOnUser(){
                     $('#embedPhotoModalBodyAlbumDialog').addClass('hide');
                     $('#embedPhotoModalBodyAlbumListDialog').removeClass('hide');
                 } else {
-                    window.console.log('{{$modalerrorlist}}' + ':' + data['errormsg']);
+                    window.console.log("{{$modalerrorlist}}" + ':' + data['errormsg']);
                 }
                 return false;
             },

@@ -2294,6 +2294,28 @@ function website_import_tools() {
 	));
 }
 
+/**
+ * @brief Creates website export tools menu
+ *
+ * @return string
+ */
+function website_export_tools() {
+
+	$channel  = App::get_channel();
+	$sys = false;
+
+	if(App::$is_sys && is_site_admin()) {
+		require_once('include/channel.php');
+		$channel = get_sys_channel();
+		$sys = true;
+	}
+
+	return replace_macros(get_markup_template('website_export_tools.tpl'), array(
+		'$title' => t('Export'),
+		'$export_label' => t('Export website...'),
+	));
+}
+
 /* case insensitive in_array() */
 
 function in_arrayi($needle, $haystack) {

@@ -936,7 +936,7 @@ function profile_load($nickname, $profile = '') {
 	 * load/reload current theme info
 	 */
 
-	$_SESSION['theme'] = $p[0]['channel_theme'];
+//	$_SESSION['theme'] = $p[0]['channel_theme'];
 
 }
 

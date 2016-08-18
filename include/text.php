@@ -2267,11 +2267,11 @@ function design_tools() {
 }
 
 /**
- * @brief Creates website import tools menu
+ * @brief Creates website portation tools menu
  *
  * @return string
  */
-function website_import_tools() {
+function website_portation_tools() {
 
 	$channel  = App::get_channel();
 	$sys = false;
@@ -2282,7 +2282,7 @@ function website_import_tools() {
 		$sys = true;
 	}
 
-	return replace_macros(get_markup_template('website_import_tools.tpl'), array(
+	return replace_macros(get_markup_template('website_portation_tools.tpl'), array(
 		'$title' => t('Import'),
 		'$import_label' => t('Import website...'),
 		'$import_placeholder' => t('Select folder to import'),
@@ -2290,29 +2290,11 @@ function website_import_tools() {
 		'$file_import_text' => t('Import from cloud files:'),
 		'$desc' => t('/cloud/channel/path/to/folder'),
 		'$hint' => t('Enter path to website files'),
-		'$select' => t('Select folder'),
-	));
-}
-
-/**
- * @brief Creates website export tools menu
- *
- * @return string
- */
-function website_export_tools() {
-
-	$channel  = App::get_channel();
-	$sys = false;
-
-	if(App::$is_sys && is_site_admin()) {
-		require_once('include/channel.php');
-		$channel = get_sys_channel();
-		$sys = true;
-	}
-
-	return replace_macros(get_markup_template('website_export_tools.tpl'), array(
-		'$title' => t('Export'),
+		'$select' => t('Select folder'),			
 		'$export_label' => t('Export website...'),
+		'$file_download_text' => t('Export to a zip file'),
+		'$filename_desc' => t('website.zip'),
+		'$filename_hint' => t('Enter a name for the zip file.'),
 	));
 }
 

@@ -62,6 +62,16 @@ class Webpages extends \Zotlabs\Web\Controller {
         case 'importselected':
 						$_SESSION['action'] = null;
 						break;
+        case 'export_select_list':
+						$_SESSION['action'] = null;
+						$o .= replace_macros(get_markup_template('webpage_export_list.tpl'), array(
+							'$title'    => t('Export Webpage Elements'),
+							'$exportbtn' => t('Export selected'),
+							'$action' => $_SESSION['export'],	// value should be 'zipfile' or 'cloud'
+						));
+						$_SESSION['export'] = null;
+						return $o;
+				
 				default :
 						$_SESSION['action'] = null;
 						break;
@@ -233,7 +243,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 	}
 	
 	function post() {
-		
+		logger(json_encode($_REQUEST), LOGGER_DEBUG);
     $action = $_REQUEST['action'];
 		if( $action ){
 			switch ($action) {
@@ -382,7 +392,19 @@ class Webpages extends \Zotlabs\Web\Controller {
 								info( t('Import complete.') . EOL);
 						}
 						break;
-
+				
+				case 'exportzipfile':
+						
+						if(isset($_POST['w_download'])) {
+								logger($_POST['w_download'], LOGGER_DEBUG);
+								$_SESSION['action'] = 'export_select_list';
+								$_SESSION['export'] = 'zipfile';
+								if(isset($_POST['filename'])) {
+										$filename = filter_var($_POST['filename'], 'FILTER_SANITIZE_ENCODED');
+								} else {
+										$filename = 'website.zip';
+								}
+						}
 				default :
 					break;
 			}

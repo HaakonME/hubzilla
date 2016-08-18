@@ -695,8 +695,9 @@ function get_item_elements($x,$allow_code = false) {
 	// hub and verify that they are legit - or else we're going to toss the post. We only need to do this
 	// once, and after that your hub knows them. Sure some info is in the post, but it's only a transit identifier
 	// and not enough info to be able to look you up from your hash - which is the only thing stored with the post.
-
-	if(($xchan_hash = import_author_xchan($x['author'])) !== false)
+	
+	$xchan_hash = import_author_xchan($x['author']);
+	if($xchan_hash)
 		$arr['author_xchan'] = $xchan_hash;
 	else
 		return array();
@@ -705,7 +706,8 @@ function get_item_elements($x,$allow_code = false) {
 	if($arr['author_xchan'] === make_xchan_hash($x['owner']['guid'],$x['owner']['guid_sig']))
 		$arr['owner_xchan'] = $arr['author_xchan'];
 	else {
-		if(($xchan_hash = import_author_xchan($x['owner'])) !== false)
+		$xchan_hash = import_author_xchan($x['owner']);
+		if($xchan_hash)
 			$arr['owner_xchan'] = $xchan_hash;
 		else
 			return array();
@@ -1166,7 +1168,7 @@ function encode_item_xchan($xchan) {
 
 	$ret['name']     = $xchan['xchan_name'];
 	$ret['address']  = $xchan['xchan_addr'];
-	$ret['url']      = (($xchan['hubloc_url']) ? $xchan['hubloc_url'] : $xchan['xchan_url']);
+	$ret['url']      = $xchan['xchan_url'];
 	$ret['network']  = $xchan['xchan_network'];
 	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
 	$ret['guid']     = $xchan['xchan_guid'];

@@ -9,13 +9,43 @@
 			<div class="clear"></div>
 		</div>
 		<div id="import-website-content-wrapper" class="section-content-wrapper">
-						<div class="pull-left">
-								<button id="toggle-select-all" class="btn btn-xs btn-primary" onclick="checkedAll(window.isChecked); return false;"><i class="fa fa-check"></i>&nbsp;Toggle Select All</button>
-						</div>
-						<div class="clear"></div>
-				
+				<div class="pull-left">
+						<button id="toggle-select-all" class="btn btn-xs btn-primary" onclick="checkedAll(window.isChecked); return false;"><i class="fa fa-check"></i>&nbsp;Toggle Select All</button>
+				</div>
+
+				<div class="clear"></div>
+				<h4>Pages</h4>
+				<div>
+				<table class="table-striped table-responsive table-hover" style="width: 100%;">
+					<tr><td>Export?</td><td>Page Title</td><td>Page Link</td><td>Type</td></tr>
+						{{foreach $pages as $page}}
+								<tr>
+									<td>
+										<div class='squaredThree'>
+										<input type="checkbox" id="page_{{$page.mid}}" name="page[]" value="{{$page.mid}}">
+										<label for="page_{{$page.mid}}"></label>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											{{$page.title}}<br>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											{{$page.pagetitle}}<br>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											{{$page.mimetype}}<br>
+										</div>
+									</td>
+								</tr>
+						{{/foreach}}
+				</table>
+				</div>
 		</div>
-		<div class="clear"></div>
 		</form>
 </div>
 

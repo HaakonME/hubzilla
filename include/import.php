@@ -1472,3 +1472,65 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 		return $element;
     
 }
+
+function get_webpage_elements($channel, $type = 'all') {
+		$elements = array();
+		if(!$channel['channel_id'])	{
+				return null;
+		}
+		switch ($type) {
+				case 'pages':
+						$elements['pages'] = null;
+						$owner = $channel['channel_id'];
+							
+						$sql_extra = item_permissions_sql($owner);
+
+
+						$r = q("select * from iconfig left join item on iconfig.iid = item.id 
+							where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d 
+							$sql_extra order by item.created desc",
+							intval($owner),
+							intval(ITEM_TYPE_WEBPAGE)
+						);
+						
+						$pages = null;
+
+						if($r) {
+								$elements['pages'] = array();
+							$pages = array();
+							foreach($r as $rr) {
+								unobscure($rr);
+
+								//$lockstate = (($rr['allow_cid'] || $rr['allow_gid'] || $rr['deny_cid'] || $rr['deny_gid']) ? 'lock' : 'unlock');
+
+								$element_arr = array(
+									'type'		=> 'webpage',
+									'title'		=> $rr['title'],
+									'body'		=> $rr['body'],
+									'created'	=> $rr['created'],
+									'edited'	=> $rr['edited'],
+									'mimetype'	=> $rr['mimetype'],
+									'pagetitle'	=> $rr['v'],
+									'mid'		=> $rr['mid'],
+									'layout_mid'    => $rr['layout_mid']
+								);
+								$pages[$rr['iid']][] = array(
+									'url'		=> $rr['iid'],
+									'pagetitle'	=> $rr['v'],
+									'title'		=> $rr['title'],
+									'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
+									'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),
+									'bb_element'	=> '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]',
+									//'lockstate'     => $lockstate
+								);
+								$elements['pages'][] = $element_arr;
+							}
+							
+						}
+						break;
+
+				default:
+						return null;
+		}
+		return $elements;
+}

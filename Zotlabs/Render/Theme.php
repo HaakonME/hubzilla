@@ -127,5 +127,12 @@ class Theme {
 
 		return('view/theme/' . $t . '/css/style.css');
 	}
+
+	function debug() {
+		logger('system_theme: ' . self::$system_theme);
+		logger('session_theme: ' . self::$session_theme);
+
+	}
+
 }
 

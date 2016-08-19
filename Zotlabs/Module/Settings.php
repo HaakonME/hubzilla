@@ -1028,7 +1028,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				$theme_config = theme_content($a);
 			}
 
-logger('schemas: ' . print_r($schemas,true));
+			// logger('schemas: ' . print_r($schemas,true));
 			
 			$tpl = get_markup_template("settings_display.tpl");
 			$o = replace_macros($tpl, array(

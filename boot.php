@@ -2211,6 +2211,9 @@ function construct_page(&$a) {
 
 	$current_theme = Zotlabs\Render\Theme::current();
 
+	// logger('current_theme: ' . print_r($current_theme,true));
+	// Zotlabs\Render\Theme::debug();
+
 	if (($p = theme_include($current_theme[0] . '.js')) != '')
 		head_add_js($p);
 

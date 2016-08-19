@@ -118,11 +118,7 @@ require_once('include/api_auth.php');
 					break;
 				case "json":
 					header ("Content-Type: application/json");
-					foreach($r as $rr) {
-						if(! $rr)
-							$rr = array();
-						$json = json_encode($rr);
-					}
+					$json = json_encode((is_array($r[0])) ? $r[0] : array());
 					// Lookup JSONP to understand these lines. They provide cross-domain AJAX ability.
 					if ($_GET['callback'])
 						$json = $_GET['callback'] . '(' . $json . ')' ;
@@ -137,9 +133,6 @@ require_once('include/api_auth.php');
 					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 					break;
 				case "as":
-					//header ("Content-Type: application/json");
-					//foreach($r as $rr)
-					//    return json_encode($rr);
 					return json_encode($r);
 					break;
 

@@ -47,6 +47,41 @@
 						{{/foreach}}
 				</table>
 				</div>
+				
+				<div class="clear"></div>
+				<h4>Layouts</h4>
+				<div>
+				<table class="table-striped table-responsive table-hover" style="width: 100%;">
+						<thead>
+								<tr><th>Export?</th><th>Layout Name</th><th>Layout Description</th><th>Type</th></tr>
+						</thead>
+						{{foreach $layouts as $layout}}
+								<tr>
+									<td>
+										<div class='squaredThree'>
+										<input type="checkbox" id="layout_{{$layout.mid}}" name="layout[]" value="{{$layout.mid}}">
+										<label for="layout_{{$layout.mid}}"></label>
+										</div>
+									</td>
+									<td>
+										<div class="desc">
+											{{$layout.name}}<br>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											{{$layout.description}}<br>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											{{$layout.mimetype}}<br>
+										</div>
+									</td>
+								</tr>
+						{{/foreach}}
+				</table>
+				</div>
 		</div>
 		</form>
 </div>

@@ -1479,6 +1479,8 @@ function get_webpage_elements($channel, $type = 'all') {
 				return null;
 		}
 		switch ($type) {
+				case 'all':
+						// If all, execute all the pages, layouts, blocks case statements
 				case 'pages':
 						$elements['pages'] = null;
 						$owner = $channel['channel_id'];
@@ -1527,10 +1529,52 @@ function get_webpage_elements($channel, $type = 'all') {
 							}
 							
 						}
-						break;
+						if($type !== 'all') {
+								break;
+						}
 
+				case 'layouts':
+						$elements['layouts'] = null;
+						$owner = $channel['channel_id'];
+							
+						$sql_extra = item_permissions_sql($owner);
+
+
+						$r = q("select * from iconfig left join item on iconfig.iid = item.id 
+							where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' and item_type = %d 
+							$sql_extra order by item.created desc",
+							intval($owner),
+							intval(ITEM_TYPE_PDL)
+						);
+						
+						$layouts = null;
+
+						if($r) {
+								$elements['layouts'] = array();
+							$layouts = array();
+							foreach($r as $rr) {
+								unobscure($rr);
+
+								$elements['layouts'][] = array(
+									'type'		=> 'layout',
+									'description'		=> $rr['title'],		// description of the layout
+									'body'		=> $rr['body'],
+									'created'	=> $rr['created'],
+									'edited'	=> $rr['edited'],
+									'mimetype'	=> $rr['mimetype'],
+									'name'	=> $rr['v'],					// name of reference for the layout
+									'mid'		=> $rr['mid'],
+								);
+							}
+							
+						}
+						
+						if($type !== 'all') {
+								break;
+						}
+						
 				default:
-						return null;
+						break;
 		}
 		return $elements;
 }

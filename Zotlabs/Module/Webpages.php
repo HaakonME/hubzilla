@@ -69,12 +69,14 @@ class Webpages extends \Zotlabs\Web\Controller {
 						}
 						require_once('include/import.php');
 						
-						$elements = get_webpage_elements($channel, 'pages');
+						$pages = get_webpage_elements($channel, 'pages');
+						$layouts = get_webpage_elements($channel, 'layouts');
 						$o .= replace_macros(get_markup_template('webpage_export_list.tpl'), array(
 							'$title'    => t('Export Webpage Elements'),
 							'$exportbtn' => t('Export selected'),
 							'$action' => $_SESSION['export'],	// value should be 'zipfile' or 'cloud'
-							'$pages' => $elements['pages'],
+							'$pages' => $pages['pages'],
+							'$layouts' => $layouts['layouts'],
 						));
 						$_SESSION['export'] = null;
 						return $o;
@@ -417,6 +419,8 @@ class Webpages extends \Zotlabs\Web\Controller {
 						
 				case 'zipfile':
 						
+						$channel = \App::get_channel();
+						
 						$tmp_folder_name = random_string(10);
 						$zip_folder_name = random_string(10);
 						$zip_filename = $_SESSION['zipfilename'];
@@ -428,12 +432,54 @@ class Webpages extends \Zotlabs\Web\Controller {
 						}
 						$zip_filepath = '/tmp/' . $zip_folder_name . '/' . $zip_filename;
 						
+						$checkedlayouts = $_POST['layout'];
+            $layouts = [];
+            if (!empty($checkedlayouts)) {
+                foreach ($checkedlayouts as $mid) {
+										$l = q("select iconfig.v, iconfig.k, mimetype, title, body from iconfig 
+												left join item on item.id = iconfig.iid 
+												where mid = '%s' and item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' order by iconfig.v asc limit 1",
+												dbesc($mid),
+												intval($channel['channel_id'])																	
+										);
+										if($l) {
+												$l = $l[0];
+												$layoutinfo = array(
+														'body' => $l['body'],
+														'mimetype' => $l['mimetype'],
+														'description' => $l['title'],
+														'name' => $l['v'],
+														'json' => array(
+																'description' => $l['title'],
+																'name' => $l['v'],
+														)
+												);
+												switch ($layoutinfo['mimetype']) {
+														case 'text/bbcode':
+														default:
+																$layout_ext = 'bbcode';
+																break;
+												}
+												$layout_filename = $layoutinfo['name'] . '.' . $layout_ext;
+												$tmp_layoutfolder = $tmp_folderpath . '/layouts/' . $layoutinfo['name'];
+												$layout_filepath = $tmp_layoutfolder . '/' . $layout_filename;
+												$layoutinfo['json']['contentfile'] = $layout_filename;
+												$layout_jsonpath = $tmp_layoutfolder . '/layout.json';
+												if (!is_dir($tmp_layoutfolder) && !mkdir($tmp_layoutfolder, 0770, true)) {	
+														logger('Error creating temp export folder: ' . $tmp_layoutfolder, LOGGER_NORMAL);
+														json_return_and_die(array('message' => 'Error creating temp export folder'));
+												}
+												file_put_contents($layout_filepath, $layoutinfo['body']);
+												file_put_contents($layout_jsonpath, json_encode($layoutinfo['json'], JSON_UNESCAPED_SLASHES));																		
+										}
+								}
+						}
+						
 						$checkedpages = $_POST['page'];
             $pages = [];
             if (!empty($checkedpages)) {
                 foreach ($checkedpages as $mid) {
-
-										$channel = \App::get_channel();										
+										
 										$p = q("select * from iconfig left join item on iconfig.iid = item.id 
 												where item.uid = %d and item.mid = '%s' and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d",
 												intval($channel['channel_id']),
@@ -446,7 +492,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 														// Get the associated layout
 														$layoutinfo = array();
 														if($pp['layout_mid']) {
-																// TODO: Should we check for ownership here if the layout is already associated with the page?
 																$l = q("select iconfig.v, iconfig.k, mimetype, title, body from iconfig 
 																		left join item on item.id = iconfig.iid 
 																		where mid = '%s' and item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' order by iconfig.v asc limit 1",
@@ -476,7 +521,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 																		$layout_filepath = $tmp_layoutfolder . '/' . $layout_filename;
 																		$layoutinfo['json']['contentfile'] = $layout_filename;
 																		$layout_jsonpath = $tmp_layoutfolder . '/layout.json';
-																		if (!mkdir($tmp_layoutfolder, 0770, true)) {	
+																		if (!is_dir($tmp_layoutfolder) && !mkdir($tmp_layoutfolder, 0770, true)) {	
 																				logger('Error creating temp export folder: ' . $tmp_layoutfolder, LOGGER_NORMAL);
 																				json_return_and_die(array('message' => 'Error creating temp export folder'));
 																		}
@@ -522,7 +567,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 														$page_filepath = $tmp_pagefolder . '/' . $page_filename;
 														$page_jsonpath = $tmp_pagefolder . '/page.json';
 														$pageinfo['json']['contentfile'] = $page_filename;
-														if (!mkdir($tmp_pagefolder, 0770, true)) {	
+														if (!is_dir($tmp_pagefolder) && !mkdir($tmp_pagefolder, 0770, true)) {	
 																logger('Error creating temp export folder: ' . $tmp_pagefolder, LOGGER_NORMAL);
 																json_return_and_die(array('message' => 'Error creating temp export folder'));
 														}
@@ -532,17 +577,14 @@ class Webpages extends \Zotlabs\Web\Controller {
 										}										
                 }
             }
-						// TODO: Generate zipped file and return for download
-												
-						//create_zip_file($tmp_folderpath, $zip_filepath, true);
-						
+						// Generate the zip file
 						\Zotlabs\Lib\ExtendedZip::zipTree($tmp_folderpath, $zip_filepath, \ZipArchive::CREATE);
-						
+						// Output the file for download
 						header('Content-disposition: attachment; filename="' . $zip_filename . '"');
 						header("Content-Type: application/zip");
 						readfile($zip_filepath);
-						rrmdir($zip_folderpath);
-						rrmdir($tmp_folderpath);
+						rrmdir($zip_folderpath);		// delete temporary files
+						rrmdir($tmp_folderpath);		// delete temporary files
 						break;
 				default :
 					break;

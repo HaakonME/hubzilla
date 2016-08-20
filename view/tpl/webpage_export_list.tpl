@@ -17,7 +17,9 @@
 				<h4>Pages</h4>
 				<div>
 				<table class="table-striped table-responsive table-hover" style="width: 100%;">
-					<tr><td>Export?</td><td>Page Title</td><td>Page Link</td><td>Type</td></tr>
+						<thead>
+								<tr><th>Export?</th><th>Page Title</th><th>Page Link</th><th>Type</th></tr>
+						</thead>
 						{{foreach $pages as $page}}
 								<tr>
 									<td>
@@ -27,7 +29,7 @@
 										</div>
 									</td>
 									<td>
-										<div class='desc'>
+										<div class="desc">
 											{{$page.title}}<br>
 										</div>
 									</td>

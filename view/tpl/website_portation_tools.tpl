@@ -46,7 +46,7 @@
 								<div class="form-group">
 
 										<div class="input-group">
-												<input class="widget-input" type="text" name="filename" title="{{$filename_hint}}" placeholder="{{$filename_desc}}" />
+												<input class="widget-input" type="text" name="zipfilename" title="{{$filename_hint}}" placeholder="{{$filename_desc}}" value="" />
 												<div class="input-group-btn">
 														<button class="btn btn-default btn-sm" type="submit" name="w_download" value="w_download"><i class="fa fa-download generic-icons"></i></button>
 												</div>

@@ -72,6 +72,7 @@ class Acl extends \Zotlabs\Web\Controller {
 			);
 
 			$permitted = ids_to_array($x,'xchan');
+
 		}
 
 
@@ -249,7 +250,7 @@ class Acl extends \Zotlabs\Web\Controller {
 			);
 			if($z) {
 				foreach($z as $zz) {
-					if(in_array($zz['id'],$permitted)) {
+					if(in_array($zz['hash'],$permitted)) {
 						$r[] = $zz;
 					}
 				}

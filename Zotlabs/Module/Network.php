@@ -159,7 +159,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'allow_gid' => $channel['channel_allow_gid'], 
 				'deny_cid'  => $channel['channel_deny_cid'], 
 				'deny_gid'  => $channel['channel_deny_gid']
-			); 
+			);
 
 			$private_editing = ((($group || $cid) && (! intval($_GET['pf']))) ? true : false);
 	
@@ -176,7 +176,8 @@ class Network extends \Zotlabs\Web\Controller {
 				'profile_uid'      => local_channel(),
 				'editor_autocomplete' => true,
 				'bbco_autocomplete' => 'bbcode',
-				'bbcode' => true
+				'bbcode' => true,
+				'jotnets' => true
 			);
 			if($deftag)
 				$x['pretext'] = $deftag;

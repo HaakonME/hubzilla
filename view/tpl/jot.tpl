@@ -80,10 +80,10 @@
 					</button>
 					{{/if}}
 					{{if $embedPhotos}}
-                    <button id="embed-photo-wrapper" class="btn btn-default btn-sm" title="{{$embedPhotos}}" onclick="initializeEmbedPhotoDialog();return false;">
-                        <i id="embed-photo" class="fa fa-file-image-o jot-icons"></i>
-                    </button>
-                    {{/if}}
+					<button id="embed-photo-wrapper" class="btn btn-default btn-sm" title="{{$embedPhotos}}" onclick="initializeEmbedPhotoDialog();return false;">
+						<i id="embed-photo" class="fa fa-file-image-o jot-icons"></i>
+					</button>
+					{{/if}}
 				</div>
 				<div class="btn-group hidden-xs hidden-sm">
 					{{if $setloc}}
@@ -130,7 +130,7 @@
 					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="fa fa-caret-down jot-icons"></i>
 					</button>
-					<ul class="dropdown-menu dropdown-menu" role="menu">
+					<ul class="dropdown-menu" role="menu">
 						{{if $visitor}}
 						{{if $writefiles}}
 						<li><a id="wall-file-upload-sub" href="#" ><i class="fa fa-paperclip"></i>&nbsp;{{$attach}}</a></li>
@@ -173,17 +173,42 @@
 					<i class="fa fa-eye jot-icons" ></i>
 				</button>
 				{{/if}}
+				{{if $jotnets}}
+				<button id="dbtn-jotnets" class="btn btn-default btn-sm" data-toggle="modal" data-target="#jotnetsModal" type="button" title="{{$jotnets_label}}" style="{{if $lockstate == 'lock'}}display: none;{{/if}}">
+					<i class="fa fa-share-alt jot-icons"></i>
+				</button>
+				{{/if}}
 				{{if $showacl}}
-				<button id="dbtn-acl" class="acl-select btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button" data-form_id="profile-jot-form">
+				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button" data-form_id="profile-jot-form">
 					<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="fa fa-exclamation jot-icons"></i>{{/if}}
 				</button>
 				{{/if}}
-				<button id="dbtn-submit" class="acl-submit btn btn-primary btn-sm" type="submit" tabindex=3 name="button-submit">{{$share}}</button>
+				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" tabindex="3" name="button-submit">{{$share}}</button>
 			</div>
-			<div id="profile-jot-perms-end"></div>
+			<div class="clear"></div>
+			{{if $jotplugins}}
 			<div id="profile-jot-plugin-wrapper">
 				{{$jotplugins}}
 			</div>
+			{{/if}}
+			{{if $jotnets}}
+			<div class="modal" id="jotnetsModal" tabindex="-1" role="dialog" aria-labelledby="jotnetsModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="expiryModalLabel">{{$jotnets_label}}</h4>
+						</div>
+						<div class="modal-body">
+							{{$jotnets}}
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+			{{/if}}
 		</div>
 		<div id="profile-jot-text-loading"></div>
 		<div id="profile-jot-end" class="clear"></div>
@@ -197,70 +222,78 @@
 {{if $feature_expire}}
 <!-- Modal for item expiry-->
 <div class="modal" id="expiryModal" tabindex="-1" role="dialog" aria-labelledby="expiryModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="expiryModalLabel">{{$expires}}</h4>
-      </div>
-     <!--  <div class="modal-body"> -->
-            <div class="modal-body form-group" style="width:90%">
-		<div class='date'><input type='text' placeholder='yyyy-mm-dd HH:MM' name='start_text' id='expiration-date' class="form-control" /></div><script type='text/javascript'>$(function () {var picker = $('#expiration-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 }); })</script>
-            </div>
-      <!-- </div> -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
-        <button id="expiry-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="expiryModalLabel">{{$expires}}</h4>
+			</div>
+			<div class="modal-body form-group" style="width:90%">
+				<div class="date">
+					<input type="text" placeholder="yyyy-mm-dd HH:MM" name="start_text" id="expiration-date" class="form-control" />
+				</div>
+				<script>
+					$(function () {
+						var picker = $('#expiration-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 });
+					});
+				</script>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
+				<button id="expiry-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {{/if}}
 
 {{if $feature_future}}
-<!-- Modal for item created-->
 <div class="modal" id="createdModal" tabindex="-1" role="dialog" aria-labelledby="createdModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="createdModalLabel">{{$future_txt}}</h4>
-      </div>
-     <!--  <div class="modal-body"> -->
-            <div class="modal-body form-group" style="width:90%">
-		<div class='date'><input type='text' placeholder='yyyy-mm-dd HH:MM' name='created_text' id='created-date' class="form-control" /></div><script type='text/javascript'>$(function () {var picker = $('#created-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 }); })</script>
-            </div>
-      <!-- </div> -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
-        <button id="created-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="createdModalLabel">{{$future_txt}}</h4>
+			</div>
+			<div class="modal-body form-group" style="width:90%">
+				<div class="date">
+					<input type="text" placeholder="yyyy-mm-dd HH:MM" name="created_text" id="created-date" class="form-control" />
+				</div>
+				<script>
+					$(function () {
+						var picker = $('#created-date').datetimepicker({format:'Y-m-d H:i', minDate: 0 });
+					});
+				</script>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
+				<button id="created-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {{/if}}
 
 {{if $embedPhotos}}
 <div class="modal" id="embedPhotoModal" tabindex="-1" role="dialog" aria-labelledby="embedPhotoLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
-      </div>
-     <div class="modal-body" id="embedPhotoModalBody" >
-         <div id="embedPhotoModalBodyAlbumListDialog" class="hide">
-            <div id="embedPhotoModalBodyAlbumList"></div>
-         </div>
-         <div id="embedPhotoModalBodyAlbumDialog" class="hide">
-         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
-        <button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
+			</div>
+			<div class="modal-body" id="embedPhotoModalBody" >
+				<div id="embedPhotoModalBodyAlbumListDialog" class="hide">
+					<div id="embedPhotoModalBodyAlbumList"></div>
+				</div>
+				<div id="embedPhotoModalBodyAlbumDialog" class="hide"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
+				<button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {{/if}}
 

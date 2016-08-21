@@ -127,7 +127,9 @@ class Rpost extends \Zotlabs\Web\Controller {
 			'return_path' => 'rpost/return',
 			'bbco_autocomplete' => 'bbcode',
 			'editor_autocomplete'=> true,
-			'bbcode' => true
+			'bbcode' => true,
+			'jotnets' => true
+
 		);
 	
 		$editor = status_editor($a,$x);

@@ -1200,8 +1200,6 @@ function status_editor($a, $x, $popup = false) {
 
 	$tpl = get_markup_template('jot.tpl');
 
-	$jotplugins = '';
-
 	$preview = t('Preview');
 	if(x($x, 'hide_preview'))
 		$preview = '';
@@ -1218,7 +1216,13 @@ function status_editor($a, $x, $popup = false) {
 	if(! $cipher)
 		$cipher = 'aes256';
 
+	$jotplugins = '';
 	call_hooks('jot_tool', $jotplugins);
+
+	$jotnets = '';
+	if(x($x,'jotnets')) {
+		call_hooks('jot_networks', $jotnets);
+	}
 
 	$o .= replace_macros($tpl, array(
 		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : App::$query_string),
@@ -1276,6 +1280,8 @@ function status_editor($a, $x, $popup = false) {
 		'$preview' => $preview,
 		'$source' => ((x($x, 'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
+		'$jotnets' => $jotnets,
+		'$jotnets_label' => t('Other networks and post services'),
 		'$defexpire' => $defexpire,
 		'$feature_expire' => $feature_expire,
 		'$expires' => t('Set expiration date'),

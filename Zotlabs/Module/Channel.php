@@ -140,7 +140,8 @@ class Channel extends \Zotlabs\Web\Controller {
 					'profile_uid' => \App::$profile['profile_uid'],
 					'editor_autocomplete' => true,
 					'bbco_autocomplete' => 'bbcode',
-					'bbcode' => true
+					'bbcode' => true,
+					'jotnets' => true
         		);
 
         		$o .= status_editor($a,$x);

@@ -1,6 +1,6 @@
 /* jot */
 
-.jothidden input {
+.jothidden input[type="text"] {
 	border: 0px;
 	margin: 0px;
 	height: 39px;
@@ -70,20 +70,16 @@
 	margin-bottom: 30px;
 }
 
+#profile-jot-plugin-wrapper {
+	margin-top: 10px;
+}
+
 #profile-rotator-wrapper {
 	float: left;
 }
 
 #profile-rotator {
 	padding: 15px 0px 0px 15px;
-}
-
-.profile-jot-net {
-	float: left;
-	margin-right: 10px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	padding: 5px;
 }
 
 /* conversation */

@@ -126,7 +126,8 @@ class Rpost extends \Zotlabs\Web\Controller {
 			'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
 			'return_path' => 'rpost/return',
 			'bbco_autocomplete' => 'bbcode',
-			'bbcode' => true
+			'bbcode' => true,
+			'jotnets' => true
 		);
 	
 		$editor = status_editor($a,$x);

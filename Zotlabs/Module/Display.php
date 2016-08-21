@@ -73,7 +73,8 @@ class Display extends \Zotlabs\Web\Controller {
 				'expanded' => true,
 				'editor_autocomplete' => true,
 				'bbco_autocomplete' => 'bbcode',
-				'bbcode' => true
+				'bbcode' => true,
+				'jotnets' => true
 			);
 	
 			$o = '<div id="jot-popup">';

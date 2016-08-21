@@ -100,13 +100,6 @@ ACL.prototype.on_submit = function() {
 	$(that.deny_cid).each(function(i,v) {
 		that.form_id.append("<input class='acl-field' type='hidden' name='contact_deny[]' value='"+v+"'>");
 	});
-
-	var formfields = $('.profile-jot-net input').serializeArray();
-
-	$.each(formfields, function(i, field) {
-		that.form_id.append("<input class='acl-field' type='hidden' name='"+field.name+"' value='"+field.value+"'>");
-	});
-
 };
 
 ACL.prototype.search = function() {
@@ -283,6 +276,7 @@ ACL.prototype.update_view = function(value) {
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
+		$('#dbtn-jotnets').show();
 		$('.profile-jot-net input').attr('disabled', false);
 
 	}
@@ -295,6 +289,7 @@ ACL.prototype.update_view = function(value) {
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
+		$('#dbtn-jotnets').hide();
 		$('.profile-jot-net input').attr('disabled', 'disabled');
 	}
 
@@ -306,6 +301,7 @@ ACL.prototype.update_view = function(value) {
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
+		$('#dbtn-jotnets').hide();
 		$('.profile-jot-net input').attr('disabled', 'disabled');
 	}
 
@@ -317,10 +313,12 @@ ACL.prototype.update_view = function(value) {
 		/* jot acl */
 		if(that.allow_gid.length === 0 && that.allow_cid.length === 0 && that.deny_gid.length === 0 && that.deny_cid.length === 0 && value === 'custom') {
 			$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
+			$('#dbtn-jotnets').show();
 			$('.profile-jot-net input').attr('disabled', false);
 		}
 		else {
 			$('#jot-perms-icon, #dialog-perms-icon').removeClass('fa-unlock').addClass('fa-lock');
+			$('#dbtn-jotnets').hide();
 			$('.profile-jot-net input').attr('disabled', 'disabled');
 		}
 	}

@@ -82,6 +82,42 @@
 						{{/foreach}}
 				</table>
 				</div>
+				
+				<div class="clear"></div>
+				<h4>Blocks</h4>
+				<div>
+				<table class="table-striped table-responsive table-hover" style="width: 100%;">
+						<thead>
+								<tr><th>Export?</th><th>Block Title</th><th>Block Name</th><th>Type</th></tr>
+						</thead>
+						{{foreach $blocks as $block}}
+								<tr>
+									<td>
+										<div class='squaredThree'>
+										<input type="checkbox" id="block_{{$block.mid}}" name="block[]" value="{{$block.mid}}">
+										<label for="block_{{$block.mid}}"></label>
+										</div>
+									</td>
+									<td>
+										<div class="desc">
+											{{$block.title}}<br>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											{{$block.name}}<br>
+										</div>
+									</td>
+									<td>
+										<div class='desc'>
+											{{$block.mimetype}}<br>
+										</div>
+									</td>
+								</tr>
+						{{/foreach}}
+				</table>
+				</div>
+				
 		</div>
 		</form>
 </div>

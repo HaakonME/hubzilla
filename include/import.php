@@ -1311,9 +1311,15 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 								return false;
 							}
 							$content = file_get_contents($folder . '/' . $contentfilename);
+							logger('contentfile: ' . $folder . '/' . $contentfilename, LOGGER_DEBUG);
+							logger('content: ' . $content, LOGGER_DEBUG);
 							if (!$content) {
-								logger('Failed to get file content for ' . $metadata['contentfile']);
-								return false;
+									if(is_readable($folder . '/' . $contentfilename)) {
+											$content = '';
+									} else {
+										logger('Failed to get file content for ' . $metadata['contentfile']);
+										return false;
+									}
 							}
 							$elements[] = $metadata;
 						}
@@ -1403,6 +1409,10 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 		}
 		// Import the actual element content
 		$arr['body'] = file_get_contents($element['path']);
+		if($arr['item_type'] === ITEM_TYPE_PDL) {
+			logger(' body: ' . $arr['body'], LOGGER_DEBUG);
+			logger(' path: ' . $element['path'], LOGGER_DEBUG);
+		}
 		// The element owner is the channel importing the elements
 		$arr['owner_xchan'] = get_observer_hash();
 		// The author is either the owner or whomever was specified
@@ -1565,6 +1575,47 @@ function get_webpage_elements($channel, $type = 'all') {
 									'name'	=> $rr['v'],					// name of reference for the layout
 									'mid'		=> $rr['mid'],
 								);
+							}
+							
+						}
+						
+						if($type !== 'all') {
+								break;
+						}
+						
+				case 'blocks':
+						$elements['blocks'] = null;
+						$owner = $channel['channel_id'];
+							
+						$sql_extra = item_permissions_sql($owner);
+
+
+						$r = q("select iconfig.iid, iconfig.k, iconfig.v, mid, title, body, mimetype, created, edited from iconfig 
+								left join item on iconfig.iid = item.id
+								where uid = %d and iconfig.cat = 'system' and iconfig.k = 'BUILDBLOCK' 
+								and item_type = %d order by item.created desc",
+								intval($owner),
+								intval(ITEM_TYPE_BLOCK)
+							);
+						
+						$blocks = null;
+
+						if($r) {
+								$elements['blocks'] = array();
+							$blocks = array();
+							foreach($r as $rr) {
+								unobscure($rr);
+
+								$elements['blocks'][] = array(
+										'type'      => 'block',
+										'title'	    => $rr['title'],
+										'body'      => $rr['body'],
+										'created'   => $rr['created'],
+										'edited'    => $rr['edited'],
+										'mimetype'  => $rr['mimetype'],
+										'name'			=> $rr['v'],
+										'mid'       => $rr['mid']
+									);
 							}
 							
 						}

@@ -71,12 +71,14 @@ class Webpages extends \Zotlabs\Web\Controller {
 						
 						$pages = get_webpage_elements($channel, 'pages');
 						$layouts = get_webpage_elements($channel, 'layouts');
+						$blocks = get_webpage_elements($channel, 'blocks');
 						$o .= replace_macros(get_markup_template('webpage_export_list.tpl'), array(
 							'$title'    => t('Export Webpage Elements'),
 							'$exportbtn' => t('Export selected'),
 							'$action' => $_SESSION['export'],	// value should be 'zipfile' or 'cloud'
 							'$pages' => $pages['pages'],
 							'$layouts' => $layouts['layouts'],
+							'$blocks' => $blocks['blocks'],
 						));
 						$_SESSION['export'] = null;
 						return $o;
@@ -314,6 +316,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 								$path = $website;
 						}
 						$elements['pages'] = scan_webpage_elements($path, 'page', $cloud);
+						logger('$elements pages: ' . json_encode($elements['pages']));
 						$elements['layouts'] = scan_webpage_elements($path, 'layout', $cloud);
 						$elements['blocks'] = scan_webpage_elements($path, 'block', $cloud);
 						$_SESSION['blocks'] = $elements['blocks'];
@@ -331,7 +334,8 @@ class Webpages extends \Zotlabs\Web\Controller {
 					
 					// If the website elements were imported from a zip file, delete the temporary decompressed files
 					if ($cloud === false && $website && $elements) {
-						rrmdir($website);	// Delete the temporary decompressed files
+						$_SESSION['tempimportpath'] = $website;
+						//rrmdir($website);	// Delete the temporary decompressed files
 					}
 					
 					break;
@@ -399,6 +403,10 @@ class Webpages extends \Zotlabs\Web\Controller {
 						if(!(empty($_SESSION['import_pages']) && empty($_SESSION['import_blocks']) && empty($_SESSION['import_layouts']))) {
 								info( t('Import complete.') . EOL);
 						}
+						if(isset($_SESSION['tempimportpath'])) {
+								rrmdir($_SESSION['tempimportpath']);	// Delete the temporary decompressed files
+								unset($_SESSION['tempimportpath']);
+						}
 						break;
 				
 				case 'exportzipfile':
@@ -432,6 +440,64 @@ class Webpages extends \Zotlabs\Web\Controller {
 						}
 						$zip_filepath = '/tmp/' . $zip_folder_name . '/' . $zip_filename;
 						
+						$checkedblocks = $_POST['block'];
+            $blocks = [];
+            if (!empty($checkedblocks)) {
+                foreach ($checkedblocks as $mid) {
+										$b = q("select iconfig.v, iconfig.k, mimetype, title, body from iconfig 
+												left join item on item.id = iconfig.iid 
+												where mid = '%s' and item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'BUILDBLOCK' order by iconfig.v asc limit 1",
+												dbesc($mid),
+												intval($channel['channel_id'])																	
+										);
+										if($b) {
+												$b = $b[0];
+												$blockinfo = array(
+														'body' => $b['body'],
+														'mimetype' => $b['mimetype'],
+														'title' => $b['title'],
+														'name' => $b['v'],
+														'json' => array(
+																'title' => $b['title'],
+																'name' => $b['v'],
+																'mimetype' => $b['mimetype'],
+														)
+												);
+												switch ($blockinfo['mimetype']) {
+														case 'text/html':
+																$block_ext = 'html';
+																break;
+														case 'text/bbcode':
+																$block_ext = 'bbcode';
+																break;
+														case 'text/markdown':
+																$block_ext = 'md';
+																break;
+														case 'application/x-pdl':
+																$block_ext = 'pdl';
+																break;
+														case 'application/x-php':
+																$block_ext = 'php';
+																break;
+														default:
+																$block_ext = 'bbcode';
+																break;
+												}
+												$block_filename = $blockinfo['name'] . '.' . $block_ext;
+												$tmp_blockfolder = $tmp_folderpath . '/blocks/' . $blockinfo['name'];
+												$block_filepath = $tmp_blockfolder . '/' . $block_filename;
+												$blockinfo['json']['contentfile'] = $block_filename;
+												$block_jsonpath = $tmp_blockfolder . '/block.json';
+												if (!is_dir($tmp_blockfolder) && !mkdir($tmp_blockfolder, 0770, true)) {	
+														logger('Error creating temp export folder: ' . $tmp_blockfolder, LOGGER_NORMAL);
+														json_return_and_die(array('message' => 'Error creating temp export folder'));
+												}
+												file_put_contents($block_filepath, $blockinfo['body']);
+												file_put_contents($block_jsonpath, json_encode($blockinfo['json'], JSON_UNESCAPED_SLASHES));																		
+										}
+								}
+						}
+						
 						$checkedlayouts = $_POST['layout'];
             $layouts = [];
             if (!empty($checkedlayouts)) {
@@ -452,6 +518,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 														'json' => array(
 																'description' => $l['title'],
 																'name' => $l['v'],
+																'mimetype' => $l['mimetype'],
 														)
 												);
 												switch ($layoutinfo['mimetype']) {

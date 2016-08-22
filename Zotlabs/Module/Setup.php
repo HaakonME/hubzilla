@@ -101,7 +101,7 @@ class Setup extends \Zotlabs\Web\Controller {
 				$timezone = notags(trim($_POST['timezone']));
 				$adminmail = notags(trim($_POST['adminmail']));
 				$siteurl = notags(trim($_POST['siteurl']));
-				$advanced = ((intval($_POST['advanced'])) ? 'pro' : 'basic');
+				$advanced = ((intval($_POST['advanced'])) ? 'standard' : 'basic');
 	
 				if($siteurl != z_root()) {
 					$test = z_fetch_url($siteurl."/setup/testrewrite");

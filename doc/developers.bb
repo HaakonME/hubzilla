@@ -1,6 +1,6 @@
 [b]$Projectname Developer Guide[/b]
 
-We're pretty relaxed when it comes to developers. We don't have a lot of rules. Some of us are over-worked and if you want to help we're happy to let you help. That said, attention to a few guidelines will make the process smoother and make it easier to work together. We have developers from across the globe with different abilities and different cultural backgrounds and different levels of patience. Our primary rule is to respect others. Sometimes this is hard and sometimes we have very different opinions of how things should work, but if everybody makes an effort, we'll get along just fine.  
+We're pretty relaxed when it comes to developers. We don't have a lot of rules. Some of us are over-worked and if you want to help we're happy to let you help. That said, attention to a few guidelines will make the process smoother and make it easier to work together. All developers are expected to abide by our [zrl=[baseurl]/help/contributor/covenant]code of conduct[/zrl]. We have developers from across the globe with different abilities and different cultural backgrounds and different levels of patience. Our primary rule is to respect others. Sometimes this is hard and sometimes we have very different opinions of how things should work, but if everybody makes an effort, we'll get along just fine. 
 
 [b]Here is how you can join us.[/b]
 

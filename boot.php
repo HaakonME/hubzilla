@@ -612,11 +612,11 @@ function sys_boot() {
 		if(UNO)
 			App::$config['system']['server_role'] = 'basic';
 		else
-			App::$config['system']['server_role'] = 'pro';
+			App::$config['system']['server_role'] = 'standard';
 	}
 
 	if(! (array_key_exists('server_role',App::$config['system']) && App::$config['system']['server_role']))
-		App::$config['system']['server_role'] = 'pro';
+		App::$config['system']['server_role'] = 'standard';
 
 	App::$timezone = ((App::$config['system']['timezone']) ? App::$config['system']['timezone'] : 'UTC');
 	date_default_timezone_set(App::$timezone);

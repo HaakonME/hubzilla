@@ -404,6 +404,18 @@ function check_plugin_versions($info) {
 			return false;
 		}
 	}
+	if(array_key_exists('serverroles',$info)) {
+		$role = \Zotlabs\Lib\System::get_server_role();
+		if(! (
+			stristr($info['serverroles'],'*') 
+			|| stristr($info['serverroles'],'any') 
+			|| stristr($info['serverroles'],$role))) {
+			logger('serverrole limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
+			return false;
+
+		}
+	}
+
 
 	if(array_key_exists('requires',$info)) {
 		$arr = explode(',',$info['requires']);

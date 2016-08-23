@@ -1341,6 +1341,7 @@ class Admin extends \Zotlabs\Web\Controller {
 				'$str_minversion' => t('Minimum project version: '),
 				'$str_maxversion' => t('Maximum project version: '),
 				'$str_minphpversion' => t('Minimum PHP version: '),
+				'$str_serverroles' => t('Compatible Server Roles: '),
 				'$str_requires' => t('Requires: '),
 				'$disabled' => t('Disabled - version incompatibility'),
 	

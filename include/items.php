@@ -1627,8 +1627,21 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['commented']     = ((x($arr,'commented')  !== false) ? datetime_convert('UTC','UTC',$arr['commented'])  : datetime_convert());
 	$arr['comments_closed'] = ((x($arr,'comments_closed')  !== false) ? datetime_convert('UTC','UTC',$arr['comments_closed'])  : NULL_DATE);
 
-	$arr['received']      = datetime_convert();
-	$arr['changed']       = datetime_convert();
+	if($deliver) {
+		$arr['received']      = datetime_convert();
+		$arr['changed']       = datetime_convert();
+	}
+	else {
+
+		// When deliver flag is false, we are *probably* performing an import or bulk migration.
+		// If one updates the changed timestamp it will be made available to zotfeed and delivery
+		// will still take place through backdoor methods. Since these fields are rarely used
+		// otherwise, just preserve the original timestamp.
+
+		$arr['received']      = ((x($arr,'received')  !== false) ? datetime_convert('UTC','UTC',$arr['received'])  : datetime_convert());
+		$arr['changed']       = ((x($arr,'changed')  !== false) ? datetime_convert('UTC','UTC',$arr['changed'])  : datetime_convert()); 
+	}
+
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
@@ -2035,8 +2048,22 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		$arr['comments_closed'] = $orig[0]['comments_closed'];
 
 	$arr['commented']     = $orig[0]['commented'];
-	$arr['received']      = datetime_convert();
-	$arr['changed']       = datetime_convert();
+
+	if($deliver) {
+		$arr['received']      = datetime_convert();
+		$arr['changed']       = datetime_convert();
+	}
+	else {
+
+		// When deliver flag is false, we are *probably* performing an import or bulk migration.
+		// If one updates the changed timestamp it will be made available to zotfeed and delivery
+		// will still take place through backdoor methods. Since these fields are rarely used
+		// otherwise, just preserve the original timestamp.
+
+		$arr['received']      = $orig[0]['received'];
+		$arr['changed']       = $orig[0]['changed'];
+	}
+
 	$arr['route']         = ((array_key_exists('route',$arr)) ? trim($arr['route'])          : $orig[0]['route']);
 	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);

@@ -150,15 +150,6 @@ define ( 'MAX_IMAGE_LENGTH',        -1  );
 define ( 'DEFAULT_DB_ENGINE',  'MyISAM'  );
 
 /**
- * SSL redirection policies
- */
-
-define ( 'SSL_POLICY_NONE',         0 );
-define ( 'SSL_POLICY_FULL',         1 );
-define ( 'SSL_POLICY_SELFSIGN',     2 ); // NOT supported in Red
-
-
-/**
  * log levels
  */
 
@@ -167,6 +158,15 @@ define ( 'LOGGER_TRACE',           1 );
 define ( 'LOGGER_DEBUG',           2 );
 define ( 'LOGGER_DATA',            3 );
 define ( 'LOGGER_ALL',             4 );
+
+
+/**
+ * Server roles
+ */
+
+define ( 'SERVER_ROLE_BASIC',     0x0001 );
+define ( 'SERVER_ROLE_STANDARD',  0x0002 );
+define ( 'SERVER_ROLE_PRO',       0x0004 );
 
 /**
  * registration policies
@@ -612,11 +612,11 @@ function sys_boot() {
 		if(UNO)
 			App::$config['system']['server_role'] = 'basic';
 		else
-			App::$config['system']['server_role'] = 'pro';
+			App::$config['system']['server_role'] = 'standard';
 	}
 
 	if(! (array_key_exists('server_role',App::$config['system']) && App::$config['system']['server_role']))
-		App::$config['system']['server_role'] = 'pro';
+		App::$config['system']['server_role'] = 'standard';
 
 	App::$timezone = ((App::$config['system']['timezone']) ? App::$config['system']['timezone'] : 'UTC');
 	date_default_timezone_set(App::$timezone);
@@ -760,7 +760,7 @@ class miniApp {
 class App {
 
 	public  static $install    = false;           // true if we are installing the software
-
+	public  static $role       = 0;               // server role (constant, not the string)
 	public  static $account    = null;            // account record of the logged-in account
 	public  static $channel    = null;            // channel record of the current channel of the logged-in account
 	public  static $observer   = null;            // xchan record of the page observer
@@ -1043,6 +1043,31 @@ class App {
 				self::$path = trim($parsed['path'],'\\/');
 		}
 	}
+
+	public static function get_role() {
+		if(! self::$role)
+			return self::set_role();
+		return self::$role;
+	}
+
+	public static function set_role() {
+		$role_str = \Zotlabs\Lib\System::get_server_role();
+		switch($role_str) {
+			case 'basic':
+				$role = SERVER_ROLE_BASIC;
+				break;
+			case 'pro':
+				$role = SERVER_ROLE_PRO;
+				break;
+			case 'standard':
+			default:
+				$role = SERVER_ROLE_STANDARD;
+				break;
+		}
+		self::$role = $role;
+		return $role;
+	}
+
 
 	public static function get_scheme() {
 		return self::$scheme;

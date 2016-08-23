@@ -45,7 +45,7 @@ class System {
 	static public function get_server_role() {
 		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['server_role'])
 			return \App::$config['system']['server_role'];
-		return 'pro';
+		return 'standard';
 	}
 
 	static public function get_std_version() {

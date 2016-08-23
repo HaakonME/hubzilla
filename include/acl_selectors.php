@@ -148,11 +148,6 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		array_walk($deny_cid,'fixacl');
 		array_walk($deny_gid,'fixacl');
 	}
-	
-	$jotnets = '';
-	if($show_jotnets) {
-		call_hooks('jot_networks', $jotnets);
-	}
 
 	$r = q("SELECT id, hash, gname FROM groups WHERE deleted = 0 AND uid = %d ORDER BY gname ASC",
 		intval(local_channel())
@@ -181,8 +176,6 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		'$allowgid'        => json_encode($allow_gid),
 		'$denycid'         => json_encode($deny_cid),
 		'$denygid'         => json_encode($deny_gid),
-		'$jnetModalTitle'  => t('Other networks and post services'),
-		'$jotnets'         => $jotnets,
 		'$aclModalTitle'   => t('Permissions'),
 		'$aclModalDesc'    => $dialog_description,
 		'$aclModalDismiss' => t('Close'),

@@ -27,16 +27,6 @@
 				</div>
 				{{/if}}
 
-				{{if $jotnets}}
-				<div class="jotnets-wrapper" role="tab" id="jotnets-wrapper">
-					<a data-toggle="collapse" class="btn btn-block btn-default" href="#jotnets-collapse" aria-expanded="false" aria-controls="jotnets-collapse">{{$jnetModalTitle}} <span class="caret"></span></a>
-				</div>
-				<div id="jotnets-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="acl-select">
-					{{$jotnets}}
-					<div class="clear"></div>
-				</div>
-				{{/if}}
-
 				<div id="acl-wrapper">
 					<div id="acl-list">
 						<div id="acl-search-wrapper">
@@ -47,13 +37,14 @@
 							<div id="acl-list-content"></div>
 						</div>
 					</div>
-					<span id="acl-fields"></span>
 				</div>
+
 				<div class="acl-list-item" rel="acl-template" style="display:none">
 					<img data-src="{0}"><p>{1}</p>
 					<button class="acl-button-hide btn btn-xs btn-default"><i class="fa fa-times"></i> {{$hide}}</button>
 					<button class="acl-button-show btn btn-xs btn-default"><i class="fa fa-check"></i> {{$show}}</button>
 				</div>
+
 			</div>
 			<div class="modal-footer clear">
 				<button type="button" class="btn btn-default" data-dismiss="modal">{{$aclModalDismiss}}</button>

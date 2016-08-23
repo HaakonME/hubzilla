@@ -1381,6 +1381,11 @@ function zid($s,$address = '') {
 	if (! strlen($s) || strpos($s,'zid='))
 		return $s;
 
+	$m = parse_url($s);
+	$fragment = ((array_key_exists('fragment',$m) && $m['fragment']) ? $m['fragment'] : false);
+	if($fragment !== false)
+		$s = str_replace('#' . $fragment,'',$s);
+
 	$has_params = ((strpos($s,'?')) ? true : false);
 	$num_slashes = substr_count($s, '/');
 	if (! $has_params)
@@ -1400,6 +1405,11 @@ function zid($s,$address = '') {
 		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
 	else
 		$zurl = $s;
+
+	// put fragment at the end
+
+	if($fragment)
+		$zurl .= '#' . $fragment;
 
 	$arr = array('url' => $s, 'zid' => urlencode($myaddr), 'result' => $zurl);
 	call_hooks('zid', $arr);

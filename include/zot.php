@@ -3708,6 +3708,8 @@ function zotinfo($arr) {
 		}
 	}
 
+	$ztarget_hash = (($ztarget && $zsig) ? make_xchan_hash($ztarget,$zsig) : '' ); 
+
 	$r = null;
 
 	if(strlen($zhash)) {
@@ -3783,11 +3785,11 @@ function zotinfo($arr) {
 	if($role === 'forum' || $role === 'repository') {
 		$public_forum = true;
 	}
-	else {
+	elseif($ztarget_hash) {
 		// check if it has characteristics of a public forum based on custom permissions.
 		$t = q("select * from abconfig where abconfig.cat = 'my_perms' and abconfig.chan = %d and abconfig.xchan = '%s' and abconfig.k in ('tag_deliver', 'send_stream') ",
 			intval($e['channel_id']),
-			dbesc($e['channel_hash'])
+			dbesc($ztarget_hash)
 		);
 
 		$ch = 0;
@@ -3889,9 +3891,6 @@ function zotinfo($arr) {
 
 	$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
 
-	$ztarget_hash = (($ztarget && $zsig) 
-			? make_xchan_hash($ztarget,$zsig)
-			: '' ); 
 
 	$permissions = get_all_perms($e['channel_id'],$ztarget_hash,false);
 

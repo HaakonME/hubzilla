@@ -193,9 +193,9 @@ util/config directory globaldir 1
 util/config directory pubforums 0
 
 # Hubzill addons
-#echo "Try to add or update Hubzilla addons"
-#cd ${OPENSHIFT_REPO_DIR}
-#util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git HubzillaAddons 
+echo "Try to add or update Hubzilla addons"
+cd ${OPENSHIFT_REPO_DIR}
+util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git HubzillaAddons 
 
 # Hubzilla themes - unofficial repo
 #echo "Try to add or update Hubzilla themes - unofficial repo"

@@ -47,9 +47,9 @@ App::$config['system']['location_hash'] = 'if the auto install failed, put a uni
 // Choices are 'basic', 'standard', and 'pro'.
 // basic sets up the sevrer for basic social networking and removes "complicated" features
 // standard provides most desired features except e-commerce
-// pro gives you access to everything
+// pro gives you access to everything, but removes cross-platform federation/emulation
 
-App::$config['system']['server_role'] = 'pro';
+App::$config['system']['server_role'] = 'standard';
 
 
 // These lines set additional security headers to be sent with all responses

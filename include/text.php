@@ -2295,6 +2295,10 @@ function website_portation_tools() {
 		'$file_download_text' => t('Export to a zip file'),
 		'$filename_desc' => t('website.zip'),
 		'$filename_hint' => t('Enter a name for the zip file.'),
+		'$cloud_export_text' => t('Export to cloud files'),
+		'$cloud_export_desc' => t('/path/to/export/folder'),
+		'$cloud_export_hint' => t('Enter a path to a cloud files destination.'),
+		'$cloud_export_select' => t('Specify folder'),			
 	));
 }
 

@@ -424,7 +424,18 @@ class Webpages extends \Zotlabs\Web\Controller {
 						}
 						
 						break;
+				
+				case 'exportcloud':
+						logger('exportcloud', LOGGER_DEBUG);
+						if(isset($_POST['exportcloudpath']) && $_POST['exportcloudpath'] !== '') {
+								$_SESSION['action'] = 'export_select_list';
+								$_SESSION['export'] = 'cloud';
+								$_SESSION['exportcloudpath'] = filter_var($_POST['exportcloudpath'], FILTER_SANITIZE_ENCODED);
+						}
 						
+						break;
+				
+				case 'cloud':
 				case 'zipfile':
 						
 						$channel = \App::get_channel();
@@ -644,18 +655,46 @@ class Webpages extends \Zotlabs\Web\Controller {
 										}										
                 }
             }
-						// Generate the zip file
-						\Zotlabs\Lib\ExtendedZip::zipTree($tmp_folderpath, $zip_filepath, \ZipArchive::CREATE);
-						// Output the file for download
-						header('Content-disposition: attachment; filename="' . $zip_filename . '"');
-						header("Content-Type: application/zip");
-						readfile($zip_filepath);
-						rrmdir($zip_folderpath);		// delete temporary files
-						rrmdir($tmp_folderpath);		// delete temporary files
+						if($action === 'zipfile') {
+								// Generate the zip file
+								\Zotlabs\Lib\ExtendedZip::zipTree($tmp_folderpath, $zip_filepath, \ZipArchive::CREATE);
+								// Output the file for download
+								header('Content-disposition: attachment; filename="' . $zip_filename . '"');
+								header("Content-Type: application/zip");
+								$success = readfile($zip_filepath);
+						} elseif ($action === 'cloud') { // Only zipfile or cloud should be possible values for $action here
+								if(isset($_SESSION['exportcloudpath'])) {
+										require_once('include/attach.php');
+										$cloudpath = urldecode($_SESSION['exportcloudpath']);
+										$channel = \App::get_channel();
+										$dirpath = get_dirpath_by_cloudpath($channel, $cloudpath);
+										if(!$dirpath) {
+												$x = attach_mkdirp($channel, $channel['channel_hash'], array('pathname' => $cloudpath));
+												$folder_hash = (($x['success']) ? $x['data']['hash'] : '');
+												
+												if (!$x['success']) {
+														logger('Failed to create cloud file folder', LOGGER_NORMAL);
+												}
+												$dirpath = get_dirpath_by_cloudpath($channel, $cloudpath);
+												if (!is_dir($dirpath)) {
+														logger('Failed to create cloud file folder', LOGGER_NORMAL);
+												} 
+										}
+										
+										$success = copy_folder_to_cloudfiles($channel, $channel['channel_hash'], $tmp_folderpath, $cloudpath);
+								}
+						}
+						if(!$success) {
+								logger('Error exporting webpage elements', LOGGER_NORMAL);
+						}
+						
+						rrmdir($zip_folderpath); rrmdir($tmp_folderpath);		// delete temporary files
+						
 						break;
 				default :
 					break;
 			}
+			
 		}
 		
 	}

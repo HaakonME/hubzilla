@@ -274,6 +274,22 @@ class Browser extends DAV\Browser\Plugin {
 		// SimpleCollection, we won't need to show the panel either.
 		if (get_class($node) === 'Sabre\\DAV\\SimpleCollection')
 			return;
+		require_once('include/acl_selectors.php');
+
+		$aclselect = null;
+		$lockstate = '';
+
+		if($this->auth->owner_id) {
+			$channel = channelx_by_n($this->auth->owner_id);
+			if($channel) {
+				$acl = new \Zotlabs\Access\AccessList($channel);
+				$channel_acl = $acl->get();
+				$lockstate = (($acl->is_private()) ? 'lock' : 'unlock');
+
+				$aclselect = ((local_channel() == $this->auth->owner_id) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage')) : '');
+
+			}
+		}
 
 		// Storage and quota for the account (all channels of the owner of this directory)!
 		$limit = engr_units_to_bytes(service_class_fetch($owner, 'attach_upload_limit'));
@@ -293,7 +309,6 @@ class Browser extends DAV\Browser\Plugin {
 				userReadableSize($limit),
 				round($used / $limit, 1) * 100);
 		}
-
 		// prepare quota for template
 		$quota = array();
 		$quota['used'] = $used;
@@ -301,12 +316,25 @@ class Browser extends DAV\Browser\Plugin {
 		$quota['desc'] = $quotaDesc;
 		$quota['warning'] = ((($limit) && ((round($used / $limit, 1) * 100) >= 90)) ? t('WARNING:') : ''); // 10485760 bytes = 100MB
 
+		$path = trim(str_replace('cloud/' . $this->auth->owner_nick, '', $path),'/');
+
 		$output .= replace_macros(get_markup_template('cloud_actionspanel.tpl'), array(
 				'$folder_header' => t('Create new folder'),
 				'$folder_submit' => t('Create'),
 				'$upload_header' => t('Upload file'),
 				'$upload_submit' => t('Upload'),
-				'$quota' => $quota
+				'$quota' => $quota,
+				'$channick' => $this->auth->owner_nick,
+				'$aclselect' => $aclselect,
+				'$allow_cid' => acl2json($channel_acl['allow_cid']),
+				'$allow_gid' => acl2json($channel_acl['allow_gid']),
+				'$deny_cid' => acl2json($channel_acl['deny_cid']),
+				'$deny_gid' => acl2json($channel_acl['deny_gid']),
+				'$lockstate' => $lockstate,
+				'$return_url' => \App::$cmd,
+				'$path' => $path,
+				'$folder' => find_folder_hash_by_path($this->auth->owner_id, $path),
+				'$dragdroptext' => t('Drop files here to immediately upload')
 			));
 	}
 

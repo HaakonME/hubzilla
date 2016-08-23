@@ -1,4 +1,4 @@
-<form id="profile-jot-form" action="{{$action}}" method="post">
+<form id="profile-jot-form" action="{{$action}}" method="post" class="acl-form" data-form_id="profile-jot-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 	{{$mimeselect}}
 	{{$layoutselect}}
 	{{if $id_select}}
@@ -23,7 +23,6 @@
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
 		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
-		{{if $showacl}}{{$acl}}{{/if}}
 
 		{{if $webpage}}
 		<div id="jot-pagetitle-wrap" class="jothidden">
@@ -39,7 +38,7 @@
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
-			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex=2 placeholder="{{$share}}">{{$content}}</textarea>
+			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex=2 placeholder="{{$share}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >{{$content}}</textarea>
 		</div>
 		{{if $attachment}}
 		<div id="jot-attachment-wrap">
@@ -166,11 +165,11 @@
 				</button>
 				{{/if}}
 				{{if $showacl}}
-				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
+				<button id="dbtn-acl" class="acl-select btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button" data-form_id="profile-jot-form">
 					<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="fa fa-exclamation jot-icons"></i>{{/if}}
 				</button>
 				{{/if}}
-				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" tabindex=3 name="button-submit" >{{$share}}</button>
+				<button id="dbtn-submit" class="acl-submit btn btn-primary btn-sm" type="submit" tabindex=3 name="button-submit">{{$share}}</button>
 			</div>
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">
@@ -183,6 +182,8 @@
 </form>
 
 <div id="jot-preview-content" style="display:none;"></div>
+
+{{if $showacl}}{{$acl}}{{/if}}
 
 {{if $feature_expire}}
 <!-- Modal for item expiry-->

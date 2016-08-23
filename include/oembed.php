@@ -1,7 +1,9 @@
 <?php /** @file */
 
-
 use Zotlabs\Lib as Zlib;
+
+require_once('include/hubloc.php');
+
 
 function oembed_replacecb($matches){
 
@@ -130,6 +132,9 @@ function oembed_fetch_url($embedurl){
 
 	$txt = null;
 
+	// we should try to cache this and avoid a lookup on each render
+	$zrl = is_matrix_url($embedurl);
+
 	if($action !== 'block') {
 		$txt = Zlib\Cache::get('[' . App::$videowidth . '] ' . $embedurl);
 
@@ -142,15 +147,11 @@ function oembed_fetch_url($embedurl){
 
 		$txt = "";
 		$furl = $embedurl;
-		$zrl = false;
 
-		if(local_channel()) {
-			require_once('include/hubloc.php');
-			$zrl = is_matrix_url($furl);
-			if($zrl) 
-				$furl = zid($furl);	
-		}
+		logger('local_channel: ' . local_channel());
 
+		if(local_channel() && $zrl)
+			$furl = zid($furl);	
 
 		if ($action !== 'block') {
 			// try oembed autodiscovery
@@ -215,12 +216,26 @@ function oembed_fetch_url($embedurl){
 			if($j->html != $orig) {
 				logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j->html, LOGGER_DEBUG, LOG_INFO); 
 			}
+
+			$orig_len = mb_strlen(preg_replace('/\s+/','',$orig));
+			$new_len = mb_strlen(preg_replace('/\s+/','',$j->html));
+
+			if(stripos($orig,'<script') || (! $new_len)) 
+				$j->type = 'error';
+			elseif($orig_len) {
+				$ratio = $new_len / $orig_len;
+				if($ratio < 0.5) {
+					$j->type = 'error';
+					logger('oembed html truncated: ' . $ratio, LOGGER_DEBUG, LOG_INFO);
+				}
+			}
+
 		}
 	}
 
 	$j->embedurl = $embedurl;
 
-// logger('fetch return: ' . print_r($j,true));
+	// logger('fetch return: ' . print_r($j,true));
 
 	return $j;
 

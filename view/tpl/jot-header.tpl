@@ -164,6 +164,12 @@ function enableOnUser(){
 			});
 		} catch(e) {
 		}
+        
+        
+        // call initialization file
+        if (window.File && window.FileList && window.FileReader) {
+          DragDropUploadInit();
+        }
 	});
 
 	function deleteCheckedItems() {
@@ -262,17 +268,32 @@ function enableOnUser(){
 
 	function linkdrop(event) {
 		var reply = event.dataTransfer.getData("text/uri-list");
-		event.target.textContent = reply;
 		event.preventDefault();
+		var editwin = '#' + event.target.id;
+		var commentwin = false;
+		if(editwin) {
+			commentwin = ((editwin.indexOf('comment') >= 0) ? true : false);
+			if(commentwin) {
+				var commentid = editwin.substring(editwin.lastIndexOf('-') + 1);
+				commentOpen(document.getElementById(event.target.id),commentid);
+			}
+		}
+
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').spin('tiny');
 			$.get('{{$baseurl}}/linkinfo?f=&binurl=' + reply, function(data) {
-				if (!editor) $("#profile-jot-text").val("");
-				initEditor(function(){
+				if(commentwin) {
+					$(editwin).val( $(editwin).val() + data );
+					$('#profile-rotator').spin(false);
+				}
+				else {
+					if (!editor) $("#profile-jot-text").val("");
+					initEditor(function(){
 					addeditortext(data);
 					$('#profile-rotator').spin(false);
-				});
+					});
+				}
 			});
 		}
 	}
@@ -446,7 +467,82 @@ function enableOnUser(){
             },
         'json');
     };
-    
+
+    //
+    // initialize
+    function DragDropUploadInit() {
+
+      var filedrag = $("#profile-jot-text");
+
+      // is XHR2 available?
+      var xhr = new XMLHttpRequest();
+      if (xhr.upload) {
+
+        // file drop
+        filedrag.on("dragover", DragDropUploadFileHover);
+        filedrag.on("dragleave", DragDropUploadFileHover);
+        filedrag.on("drop", DragDropUploadFileSelectHandler);
+
+      }
+
+      window.filesToUpload = 0;
+      window.fileUploadsCompleted = 0;
+
+
+    }
+
+    // file drag hover
+    function DragDropUploadFileHover(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      e.target.className = (e.type == "dragover" ? "hover" : "");
+    }
+
+    // file selection
+    function DragDropUploadFileSelectHandler(e) {
+
+      // cancel event and hover styling
+      DragDropUploadFileHover(e);
+
+
+      // fetch FileList object
+      var files = e.target.files || e.originalEvent.dataTransfer.files;
+      // process all File objects
+      for (var i = 0, f; f = files[i]; i++) {
+        DragDropUploadFile(f, i);
+      }
+
+    }
+
+    // upload  files
+    function DragDropUploadFile(file, idx) {
+
+      window.filesToUpload = window.filesToUpload + 1;
+
+      var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;   // Include the SESSION cookie info for authentication
+      (xhr.upload || xhr).addEventListener('progress', function (e) {
+         $('#profile-rotator').spin('tiny');
+      });
+      xhr.addEventListener('load', function (e) {
+        //console.log('xhr upload complete', e);
+        window.fileUploadsCompleted = window.fileUploadsCompleted + 1;
+		addeditortext(xhr.responseText);
+		$('#jot-media').val($('#jot-media').val() + xhr.responseText);
+        // When all the uploads have completed, refresh the page
+        if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {  
+          $('#profile-rotator').spin(false);
+          window.fileUploadsCompleted = window.filesToUpload = 0;
+        }
+      });
+      // POST to the wall_upload endpoint
+      xhr.open('post', '{{$baseurl}}/wall_attach/{{$nickname}}', true);
+
+      var data = new FormData();
+      data.append('userfile', file);
+      xhr.send(data);
+    }
+
 </script>
 
 <script>

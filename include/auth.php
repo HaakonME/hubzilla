@@ -57,6 +57,7 @@ function account_verify_password($login, $pass) {
 			);
 			if($x) {
 				$ret['xchan'] = atoken_xchan($x[0]);
+				atoken_create_xchan($ret['xchan']);
 				return $ret;
 			}
 		}

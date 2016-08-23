@@ -40,6 +40,12 @@
 	resize: vertical;
 }
 
+#profile-jot-text.hover {
+	background-color: aliceblue;
+	opacity: 0.5;
+	box-shadow: inset 0 0px 7px #5cb85c;
+}
+
 .jot-attachment {
 	border: 0px;
 	padding: 10px;

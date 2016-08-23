@@ -407,7 +407,7 @@ function account_allow($hash) {
 
 	pop_lang();
 
-	if(get_config('system','auto_channel_create') || UNO)
+	if(get_config('system','auto_channel_create') || get_config('system','server_role') === 'basic')
 		auto_channel_create($register[0]['uid']);
 
 	if ($res) {
@@ -511,7 +511,7 @@ function account_approve($hash) {
 
 
 
-	if(get_config('system','auto_channel_create') || UNO)
+	if(get_config('system','auto_channel_create') || get_config('system','server_role') === 'basic')
 		auto_channel_create($register[0]['uid']);
 	else {
 		$_SESSION['login_return_url'] = 'new_channel';

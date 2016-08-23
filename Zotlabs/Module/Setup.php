@@ -101,7 +101,7 @@ class Setup extends \Zotlabs\Web\Controller {
 				$timezone = notags(trim($_POST['timezone']));
 				$adminmail = notags(trim($_POST['adminmail']));
 				$siteurl = notags(trim($_POST['siteurl']));
-				$advanced = ((intval($_POST['advanced'])) ? 1 : 0);
+				$advanced = ((intval($_POST['advanced'])) ? 'pro' : 'basic');
 	
 				if($siteurl != z_root()) {
 					$test = z_fetch_url($siteurl."/setup/testrewrite");
@@ -124,17 +124,17 @@ class Setup extends \Zotlabs\Web\Controller {
 	
 				$tpl = get_intltext_template('htconfig.tpl');
 				$txt = replace_macros($tpl,array(
-					'$dbhost'    => $dbhost,
-					'$dbport'    => $dbport,
-					'$dbuser'    => $dbuser,
-					'$dbpass'    => $dbpass,
-					'$dbdata'    => $dbdata,
-					'$dbtype'    => $dbtype,
-					'$uno'       => 1 - $advanced,
-					'$timezone'  => $timezone,
-					'$siteurl'   => $siteurl,
-					'$site_id'   => random_string(),
-					'$phpath'    => $phpath,
+					'$dbhost'      => $dbhost,
+					'$dbport'      => $dbport,
+					'$dbuser'      => $dbuser,
+					'$dbpass'      => $dbpass,
+					'$dbdata'      => $dbdata,
+					'$dbtype'      => $dbtype,
+					'$server_role' => $advanced,
+					'$timezone'    => $timezone,
+					'$siteurl'     => $siteurl,
+					'$site_id'     => random_string(),
+					'$phpath'      => $phpath,
 					'$adminmail' => $adminmail
 				));
 	

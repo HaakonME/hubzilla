@@ -12,7 +12,7 @@
 				<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 			</button>
 			{{if $nav.help.6}}
-			<button id="context-help-btn"class="navbar-toggle" type="button" onclick="contextualHelp(); return false;">
+			<button id="context-help-btn" class="navbar-toggle" type="button" onclick="contextualHelp(); return false;">
 				<i class="fa fa-question-circle"></i>
 			</button>
 			{{/if}}
@@ -56,7 +56,7 @@
 			{{if !$userinfo}}
 			{{if $nav.loginmenu}}
 				<li class="{{$nav.loginmenu.0.2}} hidden-xs">
-					<a data-toggle="dropdown" data-target="#" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
+					<a data-toggle="dropdown" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
 						{{foreach $nav.loginmenu as $loginmenu}}
 						<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem" id="{{$loginmenu.4}}">{{$loginmenu.1}}</a></li>

@@ -566,7 +566,6 @@ function contact_remove($channel_id, $abook_id) {
 			drop_item($rr['id'],false);
 		}
 	}
-
 	
 	q("delete from abook where abook_id = %d and abook_channel = %d",
 		intval($abook['abook_id']),
@@ -587,11 +586,6 @@ function contact_remove($channel_id, $abook_id) {
 		dbesc($abook['abook_xchan']),
 		dbesc($abook['abook_xchan']),
 		intval($channel_id)
-	);
-
-	$r = q("delete from abconfig where chan = %d and xchan = '%s'",
-			intval($channel_id),
-			dbesc($abook['abook_xchan'])
 	);
 
 	return true;

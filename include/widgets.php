@@ -595,7 +595,7 @@ function widget_settings_menu($arr) {
 	}
 
 	// IF can go away when UNO export and import is fully functional
-	if(get_config('system','server_role') !== 'basic') {
+	if(! UNO) {
 		$tabs[] =	array(
 			'label' => t('Export channel'),
 			'url' => z_root() . '/uexport',
@@ -609,7 +609,7 @@ function widget_settings_menu($arr) {
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
 
-	if(get_config('system','server_role') !== 'basic') {
+	if(! UNO) {
 		$tabs[] =	array(
 			'label' => t('Guest Access Tokens'),
 			'url' => z_root() . '/settings/tokens',
@@ -779,20 +779,6 @@ function widget_design_tools($arr) {
 	return design_tools();
 }
 
-function widget_website_import_tools($arr) {
-
-	// mod menu doesn't load a profile. For any modules which load a profile, check it.
-	// otherwise local_channel() is sufficient for permissions.
-
-	if(App::$profile['profile_uid']) 
-		if((App::$profile['profile_uid'] != local_channel()) && (! App::$is_sys))
-			return '';
- 
-	if(! local_channel())
-		return '';
-
-	return website_import_tools();
-}
 
 function widget_findpeople($arr) {
 	return findpeople_widget();

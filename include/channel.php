@@ -410,6 +410,14 @@ function create_identity($arr) {
 			set_pconfig($ret['channel']['channel_id'],'system','attach_path','%Y-%m');
 		}
 		
+		// UNO: channel defaults, incl addons (addons specific pconfig will only work after the relevant addon is enabled by the admin). It's located here, so members can modify these defaults after the channel is created.
+		if(UNO) {
+			//diaspora protocol addon
+			set_pconfig($ret['channel']['channel_id'],'system','diaspora_allowed', '1');
+			set_pconfig($ret['channel']['channel_id'],'system','diaspora_public_comments', '1');
+			set_pconfig($ret['channel']['channel_id'],'system','prevent_tag_hijacking', '0');
+		}
+		
 		// auto-follow any of the hub's pre-configured channel choices.
 		// Only do this if it's the first channel for this account;
 		// otherwise it could get annoying. Don't make this list too big
@@ -617,10 +625,19 @@ function identity_basic_export($channel_id, $items = false) {
 		for($y = 0; $y < count($x); $y ++) {
 			$m = menu_fetch($x[$y]['menu_name'],$channel_id,$ret['channel']['channel_hash']);
 			if($m)
-				$ret['menu'][] = menu_element($ret['channel'],$m);
+				$ret['menu'][] = menu_element($m);
 		}
 	}
 
+	$x = menu_list($channel_id);
+	if($x) {
+		$ret['menu'] = array();
+		for($y = 0; $y < count($x); $y ++) {
+			$m = menu_fetch($x[$y]['menu_name'],$channel_id,$ret['channel']['channel_hash']);
+			if($m)
+				$ret['menu'][] = menu_element($m);
+		}
+	}
 
 	$addon = array('channel_id' => $channel_id,'data' => $ret);
 	call_hooks('identity_basic_export',$addon);
@@ -1054,7 +1071,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	$diaspora = array(
 		'podloc'     => z_root(),
 		'guid'       => $profile['channel_guid'] . str_replace('.','',App::get_hostname()),
-		'pubkey'     => pemtorsa($profile['channel_pubkey']),
 		'searchable' => (($block) ? 'false' : 'true'),
 		'nickname'   => $profile['channel_address'],
 		'fullname'   => $profile['channel_name'],

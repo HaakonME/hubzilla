@@ -667,7 +667,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	}
 
 	// Remove bookmarks from UNO
-	if (get_config('system','server_role') === 'basic')
+	if (UNO)
 		$Text = str_replace('<span class="bookmark-identifier">#^</span>', '', $Text);
 
 	// Perform MAIL Search

@@ -159,7 +159,7 @@ class ASN_BASE {
 					}
 					$length = $tempLength;
 				}
-				$data = substr($string, $p, intval($length));
+				$data = substr($string, $p, $length);
 				$parsed[] = self::parseASNData($type, $data, $level, $maxLevels);
 				$p = $p + $length;
 			}

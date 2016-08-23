@@ -1,4 +1,3 @@
-<form>
 <div class="modal" id="aclModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -60,13 +59,14 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-</form>
+
 <script>
 	$('[data-toggle="popover"]').popover(); // Init the popover, if present
 
 	if(typeof acl=="undefined"){
 		acl = new ACL(
-			baseurl+"/acl"
+			baseurl+"/acl",
+			[ {{$allowcid}},{{$allowgid}},{{$denycid}},{{$denygid}} ]
 		);
 	}
 </script>

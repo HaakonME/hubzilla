@@ -668,10 +668,6 @@ class Photos extends \Zotlabs\Web\Controller {
 				'$selname' => $selname,
 				'$permissions' => t('Permissions'),
 				'$aclselect' => $aclselect,
-				'$allow_cid' => acl2json($channel_acl['allow_cid']),
-				'$allow_gid' => acl2json($channel_acl['allow_gid']),
-				'$deny_cid' => acl2json($channel_acl['deny_cid']),
-				'$deny_gid' => acl2json($channel_acl['deny_gid']),
 				'$lockstate' => $lockstate,
 				'$uploader' => $ret['addon_text'],
 				'$default' => (($ret['default_upload']) ? true : false),
@@ -1020,7 +1016,7 @@ class Photos extends \Zotlabs\Web\Controller {
 			// FIXME - remove this when we move to conversation module 
 	
 			$r = $r[0]['children'];
-
+	
 			$edit = null;
 			if($can_post) {
 				$album_e = $ph[0]['album'];
@@ -1046,10 +1042,6 @@ class Photos extends \Zotlabs\Web\Controller {
 					'tag_label' => t('Add a Tag'),
 					'permissions' => t('Permissions'),
 					'aclselect' => $aclselect_e,
-					'allow_cid' => acl2json($ph[0]['allow_cid']),
-					'allow_gid' => acl2json($ph[0]['allow_gid']),
-					'deny_cid' => acl2json($ph[0]['deny_cid']),
-					'deny_gid' => acl2json($ph[0]['deny_gid']),
 					'lockstate' => $lockstate[0],
 					'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com'),
 					'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),

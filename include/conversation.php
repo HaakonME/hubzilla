@@ -802,7 +802,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					continue;
 				}
 
-
 				$item['pagedrop'] = $page_dropping;
 
 				if($item['id'] == $item['parent']) {
@@ -1254,10 +1253,6 @@ function status_editor($a, $x, $popup = false) {
 		'$visitor' => $x['visitor'],
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
-		'$allow_cid' => acl2json($x['permissions']['allow_cid']),
-		'$allow_gid' => acl2json($x['permissions']['allow_gid']),
-		'$deny_cid' => acl2json($x['permissions']['deny_cid']),
-		'$deny_gid' => acl2json($x['permissions']['deny_gid']),
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
 		'$showacl' => ((array_key_exists('showacl', $x)) ? $x['showacl'] : true),
@@ -1710,7 +1705,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	} 
 
-	if(feature_enabled($uid,'wiki') && (get_config('system','server_role') !== 'basic')) {
+	if(feature_enabled($uid,'wiki') && (! UNO)) {
 		$tabs[] = array(
 			'label' => t('Wiki'),
 			'url'   => z_root() . '/wiki/' . $nickname,

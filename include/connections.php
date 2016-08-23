@@ -260,12 +260,12 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 	
 	if(! $local) {
 
-		$r = q("update channel set channel_deleted = '%s', channel_removed = 1, channel_r_stream = 0, channel_r_profile = 0,
-			channel_r_photos = 0, channel_r_abook = 0, channel_w_stream = 0, channel_w_wall = 0, channel_w_tagwall = 0,
-			channel_w_comment = 0, channel_w_mail = 0, channel_w_photos = 0, channel_w_chat = 0, channel_a_delegate = 0,
-			channel_r_storage = 0, channel_w_storage = 0, channel_r_pages = 0, channel_w_pages = 0, channel_a_republish = 0 
-			where channel_id = %d",
+		$r = q("update channel set channel_deleted = '%s', channel_removed = 1 where channel_id = %d",
 			dbesc(datetime_convert()),
+			intval($channel_id)
+		);
+
+		q("delete from pconfig where uid = %d",
 			intval($channel_id)
 		);
 
@@ -566,6 +566,7 @@ function contact_remove($channel_id, $abook_id) {
 			drop_item($rr['id'],false);
 		}
 	}
+
 	
 	q("delete from abook where abook_id = %d and abook_channel = %d",
 		intval($abook['abook_id']),
@@ -586,6 +587,11 @@ function contact_remove($channel_id, $abook_id) {
 		dbesc($abook['abook_xchan']),
 		dbesc($abook['abook_xchan']),
 		intval($channel_id)
+	);
+
+	$r = q("delete from abconfig where chan = %d and xchan = '%s'",
+			intval($channel_id),
+			dbesc($abook['abook_xchan'])
 	);
 
 	return true;

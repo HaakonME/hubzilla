@@ -183,7 +183,7 @@ function is_item_normal($item) {
  * This function examines the comment_policy attached to an item and decides if the current observer has
  * sufficient privileges to comment. This will normally be called on a remote site where perm_is_allowed()
  * will not be suitable because the post owner does not have a local channel_id.
- * Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set.
+ * Generally we should look at the item - in particular the author['abook_flags'] and see if ABOOK_FLAG_SELF is set.
  * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call
  * can_comment_on_post()
  * We also check the comments_closed date/time on the item if this is set.
@@ -224,8 +224,7 @@ function can_comment_on_post($observer_xchan, $item) {
 		case 'contacts':
 		case 'authenticated':
 		case '':
-			if(array_key_exists('owner',$item)) {
-				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
+			if(array_key_exists('owner',$item) && get_abconfig($item['uid'],$item['owner']['abook_xchan'],'their_perms','post_comments')) {
 					return true;
 			}
 			break;
@@ -386,7 +385,7 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
-	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope($channel['channel_r_stream'],true));
+	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true));
 	if($arr['public_policy'])
 		$arr['item_private'] = 1;
 
@@ -422,7 +421,7 @@ function post_activity_item($arr) {
 	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
 	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
 
-	$arr['comment_policy'] = map_scope($channel['channel_w_comment']);
+	$arr['comment_policy'] = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments'));
 
 	if ((! $arr['plink']) && (intval($arr['item_thread_top']))) {
 		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
@@ -971,12 +970,12 @@ function encode_item($item,$mirror = false) {
 
 //	logger('encode_item: ' . print_r($item,true));
 
-	$r = q("select channel_r_stream, channel_w_comment from channel where channel_id = %d limit 1",
+	$r = q("select channel_id from channel where channel_id = %d limit 1",
 		intval($item['uid'])
 	);
 
 	if($r)
-		$comment_scope = $r[0]['channel_w_comment'];
+		$comment_scope = \Zotlabs\Access\PermissionLimits::Get($item['uid'],'post_comments');
 	else
 		$comment_scope = 0;
 
@@ -990,9 +989,9 @@ function encode_item($item,$mirror = false) {
 
 	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
 		if($item['title'])
-			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode($item['title'],true),$key);
 		if($item['body'])
-			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode($item['body'],true),$key);
 	}
 
 	// If we're trying to backup an item so that it's recoverable or for export/imprt,
@@ -1062,11 +1061,11 @@ function encode_item($item,$mirror = false) {
 	$x['owner']           = encode_item_xchan($item['owner']);
 	$x['author']          = encode_item_xchan($item['author']);
 	if($item['obj'])
-		$x['object']      = json_decode_plus($item['obj']);
+		$x['object']      = json_decode($item['obj'],true);
 	if($item['target'])
-		$x['target']      = json_decode_plus($item['target']);
+		$x['target']      = json_decode($item['target'],true);
 	if($item['attach'])
-		$x['attach']      = json_decode_plus($item['attach']);
+		$x['attach']      = json_decode($item['attach'],true);
 	if($y = encode_item_flags($item))
 		$x['flags']       = $y;
 
@@ -1382,7 +1381,7 @@ function encode_mail($item,$extended = false) {
 	$x['to']             = encode_item_xchan($item['to']);
 
 	if($item['attach'])
-		$x['attach']     = json_decode_plus($item['attach']);
+		$x['attach']     = json_decode($item['attach'],true);
 
 	$x['flags'] = array();
 
@@ -2390,7 +2389,7 @@ function tag_deliver($uid, $item_id) {
 		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['obj']))
 			$poke_notify = false;
 
-		$obj = json_decode_plus($item['obj']);
+		$obj = json_decode($item['obj'],true);
 		if($obj) {
 			if($obj['id'] !== $u[0]['channel_hash'])
 				$poke_notify = false;
@@ -2427,14 +2426,14 @@ function tag_deliver($uid, $item_id) {
 
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
 			logger('tag_deliver: community tag recipient: ' . $u[0]['channel_name']);
-			$j_tgt = json_decode_plus($item['target']);
+			$j_tgt = json_decode($item['target'],true);
 			if($j_tgt && $j_tgt['id']) {
 				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($j_tgt['id']),
 					intval($u[0]['channel_id'])
 				);
 				if($p) {
-					$j_obj = json_decode_plus($item['obj']);
+					$j_obj = json_decode($item['obj'],true);
 					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
 						if(is_array($j_obj['link']))
@@ -2519,7 +2518,7 @@ function tag_deliver($uid, $item_id) {
 		if(intval($item['item_obscured'])) {
 			$key = get_config('system','prvkey');
 			if($item['body'])
-				$body = crypto_unencapsulate(json_decode_plus($item['body']),$key);
+				$body = crypto_unencapsulate(json_decode($item['body'],true),$key);
 		}
 		else
 			$body = $item['body'];
@@ -2762,7 +2761,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$private = (($channel['channel_allow_cid'] || $channel['channel_allow_gid']
 		|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 1 : 0);
 
-	$new_public_policy = map_scope($channel['channel_r_stream'],true);
+	$new_public_policy = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true);
 
 	if((! $private) && $new_public_policy)
 		$private = 1;
@@ -2807,7 +2806,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 		dbesc($channel['channel_deny_gid']),
 		intval($private),
 		dbesc($new_public_policy),
-		dbesc(map_scope($channel['channel_w_comment'])),
+		dbesc(map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments'))),
 		dbesc($title),
 		dbesc($body),
 		intval($item_wall),
@@ -2856,7 +2855,7 @@ function check_item_source($uid, $item) {
 	if(! $x)
 		return false;
 
-	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
+	if(! get_abconfig($uid,$item['owner_xchan'],'their_perms','republish'))
 		return false;
 
 	if($item['item_private'] && (! intval($x[0]['abook_feed'])))

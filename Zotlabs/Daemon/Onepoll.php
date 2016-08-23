@@ -102,7 +102,9 @@ class Onepoll {
 			$fetch_feed = true;
 			$x = null;
 
-			if(! ($contact['abook_their_perms'] & PERMS_R_STREAM ))
+			$can_view_stream = intval(get_abconfig($importer_uid,$contact['abook_xchan'],'their_perms','view_stream'));
+
+			if(! $can_view_stream)
 				$fetch_feed = false;
 
 			if($fetch_feed) {

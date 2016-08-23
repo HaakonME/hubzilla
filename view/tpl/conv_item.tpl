@@ -225,7 +225,6 @@
 		<div class="wall-item-comment-wrapper{{if $item.children}} wall-item-comment-wrapper-wc{{/if}}" >
 			{{$item.comment}}
 		</div>
-		<div id="comment-edit-preview-{{$item.id}}" class="comment-edit-preview"></div>
 		<div class="clear"></div>
 		{{/if}}
 	</div>

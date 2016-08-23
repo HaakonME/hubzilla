@@ -64,12 +64,16 @@ class Cron {
 
 		// delete expired access tokens
 
-		q("delete from atoken where atoken_expires != '%s' && atoken_expires < %s",
+		$r = q("select atoken_id from atoken where atoken_expires != '%s' && atoken_expires < %s",
 			dbesc(NULL_DATE),
 			db_utcnow()
 		);
-
-
+		if($r) {
+			require_once('include/security.php');
+			foreach($r as $rr) {
+				atoken_delete($rr['atoken_id']);
+			}
+		}
 
 		// Ensure that every channel pings a directory server once a month. This way we can discover
 		// channels and sites that quietly vanished and prevent the directory from accumulating stale

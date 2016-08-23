@@ -39,9 +39,9 @@ class Embedphotos extends \Zotlabs\Web\Controller {
             json_return_and_die(array('errormsg' => 'Error retrieving link ' . $href, 'status' => false));
         }
         $resource_id = array_pop(explode("/", $href));
-        $r = q("SELECT obj from item where resource_type = 'photo' and resource_id = '%s' limit 1",
-			dbesc($resource_id)
-		);
+        $r = q("SELECT obj,body from item where resource_type = 'photo' and resource_id = '%s' limit 1",
+						dbesc($resource_id)
+					);
         if(!$r) {
             json_return_and_die(array('errormsg' => 'Error retrieving resource ' . $resource_id, 'status' => false));
         }
@@ -50,7 +50,9 @@ class Embedphotos extends \Zotlabs\Web\Controller {
             $photolink = $obj['body'];
         } elseif (x($obj,'bbcode')) {
             $photolink = $obj['bbcode'];
-        } else {
+        } elseif ($r[0]['body'] !== '') {
+						$photolink = $r[0]['body'];
+				}	else {
             json_return_and_die(array('errormsg' => 'Error retrieving resource ' . $resource_id, 'status' => false));
         }
         json_return_and_die(array('status' => true, 'photolink' => $photolink));
@@ -83,7 +85,7 @@ function embedphotos_widget_album($args) {
             return '';
 
     if($args['album'])
-            $album = $args['album'];
+            $album = (($args['album'] === '/') ? '' : $args['album'] );
     if($args['title'])
             $title = $args['title'];
 

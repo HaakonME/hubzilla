@@ -108,9 +108,9 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 		if(intval($itm[0]['item_obscured'])) {
 			$key = get_config('system','prvkey');
 			if($itm[0]['title'])
-				$itm[0]['title'] = crypto_unencapsulate(json_decode_plus($itm[0]['title']),$key);
+				$itm[0]['title'] = crypto_unencapsulate(json_decode($itm[0]['title'],true),$key);
 			if($itm[0]['body'])
-				$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
+				$itm[0]['body'] = crypto_unencapsulate(json_decode($itm[0]['body'],true),$key);
 		}
 
 		$item_id = q("select * from iconfig where cat = 'system' and k = 'WEBPAGE' and iid = %d limit 1",
@@ -151,6 +151,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			'post_id' => $post_id,
 			'visitor' => ($is_owner) ? true : false,
 			'acl' => populate_acl($itm[0],false,\Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')),
+			'permissions' => $itm[0],
 			'showacl' => ($is_owner) ? true : false,
 			'mimetype' => $mimetype,
 			'mimeselect' => true,

@@ -13,7 +13,7 @@ require_once('include/api_auth.php');
 
 	/*
 	 *
-	 * Red API. Loosely based on and possibly compatible with a Twitter-Like API but all similarities end there. 
+	 * Hubzilla API. Loosely based on and possibly compatible with Twitter-Like (v1.0) API but all similarities end there. 
 	 *
 	 */
 
@@ -72,7 +72,7 @@ require_once('include/api_auth.php');
 	 *  MAIN API ENTRY POINT  *
 	 **************************/
 
-	function api_call(&$a){
+	function api_call($a){
 		GLOBAL $API, $called_api;
 
 		// preset
@@ -166,7 +166,7 @@ require_once('include/api_auth.php');
 	/**
 	 * RSS extra info
 	 */
-	function api_rss_extra(&$a, $arr, $user_info){
+	function api_rss_extra($a, $arr, $user_info){
 		if (is_null($user_info)) $user_info = api_get_user($a);
 		$arr['$user'] = $user_info;
 		$arr['$rss'] = array(
@@ -186,7 +186,7 @@ require_once('include/api_auth.php');
 	 * Returns user info array.
 	 */
 
-	function api_get_user(&$a, $contact_id = null, $contact_xchan = null){
+	function api_get_user($a, $contact_id = null, $contact_xchan = null){
 		global $called_api;
 		$user = null;
 		$extra_query = "";
@@ -282,7 +282,8 @@ require_once('include/api_auth.php');
 					intval($uinfo[0]['xchan_hash'])
 			);
 			$countitms = $r[0]['count'];
-			$following = (($uinfo[0]['abook_myperms'] & PERMS_R_STREAM) ? true : false );
+			
+			$following = ((get_abconfig($uinfo[0]['abook_channel'],$uinfo[0]['abook_xchan'],'my_perms','view_stream')) ? true : false );
 		}
 
 
@@ -355,7 +356,7 @@ require_once('include/api_auth.php');
 		
 	}
 
-	function api_client_register(&$a,$type) {
+	function api_client_register($a,$type) {
 
 		$ret = array();
 		$key = random_string(16);
@@ -388,7 +389,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_item_get_user(&$a, $item) {
+	function api_item_get_user($a, $item) {
 
 		// The author is our direct contact, in a conversation with us.
 
@@ -472,7 +473,7 @@ require_once('include/api_auth.php');
 	 * returns a 401 status code and an error message if not. 
 	 * http://developer.twitter.com/doc/get/account/verify_credentials
 	 */
-	function api_account_verify_credentials(&$a, $type){
+	function api_account_verify_credentials($a, $type){
 		if (api_user()===false) return false;
 		$user_info = api_get_user($a);
 		
@@ -482,7 +483,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
 
 
-	function api_account_logout(&$a, $type){
+	function api_account_logout($a, $type){
 		require_once('include/auth.php');
 		App::$session->nuke();
 		return api_apply_template("user", $type, array('$user' => null));
@@ -506,7 +507,7 @@ require_once('include/api_auth.php');
 	 * Red basic channel export
 	 */
 
-	function api_export_basic(&$a, $type) {
+	function api_export_basic($a, $type) {
 		if(api_user() === false) {
 			logger('api_export_basic: no user');
 			return false;
@@ -520,7 +521,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);
 
 
-	function api_channel_stream(&$a, $type) {
+	function api_channel_stream($a, $type) {
 		if(api_user() === false) {
 			logger('api_channel_stream: no user');
 			return false;
@@ -536,7 +537,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/red/channel/stream','api_channel_stream', true);
 
-	function api_attach_list(&$a,$type) {
+	function api_attach_list($a,$type) {
 		logger('api_user: ' . api_user());
 		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),'','','','created asc'));
 	}
@@ -546,7 +547,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_file_meta(&$a,$type) {
+	function api_file_meta($a,$type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['file_id']) return false;
 		$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
@@ -564,7 +565,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/filemeta', 'api_file_meta', true);
 
 
-	function api_file_data(&$a,$type) {
+	function api_file_data($a,$type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['file_id']) return false;
 		$start = (($_REQUEST['start']) ? intval($_REQUEST['start']) : 0);
@@ -608,7 +609,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_file_detail(&$a,$type) {
+	function api_file_detail($a,$type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['file_id']) return false;
 		$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
@@ -632,18 +633,18 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/file', 'api_file_detail', true);
 
 
-	function api_albums(&$a,$type) {
+	function api_albums($a,$type) {
 		json_return_and_die(photos_albums_list(App::get_channel(),App::get_observer()));
 	}
 	api_register_func('api/red/albums','api_albums', true);
 
-	function api_photos(&$a,$type) {
+	function api_photos($a,$type) {
 		$album = $_REQUEST['album'];
 		json_return_and_die(photos_list_photos(App::get_channel(),App::get_observer(),$album));
 	}
 	api_register_func('api/red/photos','api_photos', true);
 
-	function api_photo_detail(&$a,$type) {
+	function api_photo_detail($a,$type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['photo_id']) return false;
 		$scale = ((array_key_exists('scale',$_REQUEST)) ? intval($_REQUEST['scale']) : 0);
@@ -685,7 +686,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/photo', 'api_photo_detail', true);
 
 
-	function api_group_members(&$a,$type) {
+	function api_group_members($a,$type) {
 		if(api_user() === false)
 			return false;
 
@@ -709,7 +710,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_group(&$a,$type) {
+	function api_group($a,$type) {
 		if(api_user() === false)
 			return false;
 
@@ -721,7 +722,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/group','api_group', true);
 
 
-	function api_red_xchan(&$a,$type) {
+	function api_red_xchan($a,$type) {
 		logger('api_xchan');
 
 		if(api_user() === false)
@@ -739,7 +740,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/xchan','api_red_xchan',true);
 	
 
-	function api_statuses_mediap(&$a, $type) {
+	function api_statuses_mediap($a, $type) {
 		if (api_user() === false) {
 			logger('api_statuses_update: no user');
 			return false;
@@ -785,7 +786,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/statuses/mediap','api_statuses_mediap', true);
 
-	function api_statuses_update(&$a, $type) {
+	function api_statuses_update($a, $type) {
 		if (api_user() === false) {
 			logger('api_statuses_update: no user');
 			return false;
@@ -906,7 +907,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statuses/update','api_statuses_update', true);
 
 
-	function red_item_new(&$a, $type) {
+	function red_item_new($a, $type) {
 
 		if (api_user() === false) {
 			logger('api_red_item_new: no user');
@@ -940,7 +941,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/item/new','red_item_new', true);
 
 
-	function red_item(&$a, $type) {
+	function red_item($a, $type) {
 
 		if (api_user() === false) {
 			logger('api_red_item_full: no user');
@@ -1041,7 +1042,7 @@ require_once('include/api_auth.php');
 		return $status_info;
 	}
 
-	function api_status_show(&$a, $type){
+	function api_status_show($a, $type){
 		$user_info = api_get_user($a);
 
 		// get last public message
@@ -1119,7 +1120,7 @@ require_once('include/api_auth.php');
 // FIXME - this is essentially the same as api_status_show except for the template formatting at the end. Consolidate.
  
 
-	function api_users_show(&$a, $type){
+	function api_users_show($a, $type){
 		$user_info = api_get_user($a);
 
 		require_once('include/security.php');
@@ -1191,7 +1192,7 @@ require_once('include/api_auth.php');
 	 * TODO: Add reply info
 	 */
 
-	function api_statuses_home_timeline(&$a, $type){
+	function api_statuses_home_timeline($a, $type){
 		if (api_user() === false) 
 			return false;
 
@@ -1273,7 +1274,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
 
-	function api_statuses_public_timeline(&$a, $type){
+	function api_statuses_public_timeline($a, $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1337,7 +1338,7 @@ require_once('include/api_auth.php');
 	 * 
 
 	 */
-	function api_statuses_show(&$a, $type){
+	function api_statuses_show($a, $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1387,7 +1388,7 @@ require_once('include/api_auth.php');
 	/**
 	 * 
 	 */
-	function api_statuses_repeat(&$a, $type){
+	function api_statuses_repeat($a, $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1433,7 +1434,7 @@ require_once('include/api_auth.php');
 	 * 
 	 */
 
-	function api_statuses_destroy(&$a, $type){
+	function api_statuses_destroy($a, $type){
 		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
@@ -1497,7 +1498,7 @@ require_once('include/api_auth.php');
 	 */
 
 
-	function api_statuses_mentions(&$a, $type){
+	function api_statuses_mentions($a, $type){
 		if (api_user()===false) return false;
 				
 		$user_info = api_get_user($a);
@@ -1564,7 +1565,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statuses/replies','api_statuses_mentions', true);
 
 
-	function api_statuses_user_timeline(&$a, $type){
+	function api_statuses_user_timeline($a, $type){
 		if (api_user()===false) return false;
 		
 		$user_info = api_get_user($a);
@@ -1648,7 +1649,7 @@ require_once('include/api_auth.php');
 	 *
 	 * api v1 : https://web.archive.org/web/20131019055350/https://dev.twitter.com/docs/api/1/post/favorites/create/%3Aid
 	 */
-	function api_favorites_create_destroy(&$a, $type){
+	function api_favorites_create_destroy($a, $type){
 
 		logger('favorites_create_destroy');
 
@@ -1716,7 +1717,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_favorites(&$a, $type){
+	function api_favorites($a, $type){
 		if (api_user()===false) 
 			return false;
 
@@ -1985,7 +1986,7 @@ require_once('include/api_auth.php');
 	}
 
 
-	function api_account_rate_limit_status(&$a,$type) {
+	function api_account_rate_limit_status($a,$type) {
 
 		$hash = array(
 			  'reset_time_in_seconds' => strtotime('now + 1 hour'),
@@ -2001,7 +2002,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/account/rate_limit_status','api_account_rate_limit_status',true);
 
-	function api_help_test(&$a,$type) {
+	function api_help_test($a,$type) {
 
 		if ($type == 'xml')
 			$ok = "true";
@@ -2018,7 +2019,7 @@ require_once('include/api_auth.php');
 	 *  This function is deprecated by Twitter
 	 *  returns: json, xml 
 	 **/
-	function api_statuses_f(&$a, $type, $qtype) {
+	function api_statuses_f($a, $type, $qtype) {
 		if (api_user()===false) return false;
 		$user_info = api_get_user($a);
 		
@@ -2039,6 +2040,7 @@ require_once('include/api_auth.php');
 			return false;
 		}
 		
+// @fixme - update for hubzilla extensible perms using abconfig or find a better way to do it
 		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
 		// This won't work if either of you send your stream to everybody on the network
 		if($qtype == 'friends')
@@ -2059,12 +2061,12 @@ require_once('include/api_auth.php');
 		return array('$users' => $ret);
 
 	}
-	function api_statuses_friends(&$a, $type){
+	function api_statuses_friends($a, $type){
 		$data =  api_statuses_f($a,$type,"friends");
 		if ($data===false) return false;
 		return  api_apply_template("friends", $type, $data);
 	}
-	function api_statuses_followers(&$a, $type){
+	function api_statuses_followers($a, $type){
 		$data = api_statuses_f($a,$type,"followers");
 		if ($data===false) return false;
 		return  api_apply_template("friends", $type, $data);
@@ -2077,7 +2079,7 @@ require_once('include/api_auth.php');
 
 
 
-	function api_statusnet_config(&$a,$type) {
+	function api_statusnet_config($a,$type) {
 
 		load_config('system');
 
@@ -2114,7 +2116,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/friendica/config','api_statusnet_config',false);
 	api_register_func('api/red/config','api_statusnet_config',false);
 
-	function api_statusnet_version(&$a,$type) {
+	function api_statusnet_version($a,$type) {
 
 		// liar
 
@@ -2132,7 +2134,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statusnet/version','api_statusnet_version',false);
 
 
-	function api_friendica_version(&$a,$type) {
+	function api_friendica_version($a,$type) {
 
 		if($type === 'xml') {
 			header("Content-type: application/xml");
@@ -2149,7 +2151,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/version','api_friendica_version',false);
 
 
-	function api_ff_ids(&$a,$type,$qtype) {
+	function api_ff_ids($a,$type,$qtype) {
 		if(! api_user())
 			return false;
 
@@ -2185,17 +2187,17 @@ require_once('include/api_auth.php');
 		}
 	}
 
-	function api_friends_ids(&$a,$type) {
+	function api_friends_ids($a,$type) {
 		api_ff_ids($a,$type,'friends');
 	}
-	function api_followers_ids(&$a,$type) {
+	function api_followers_ids($a,$type) {
 		api_ff_ids($a,$type,'followers');
 	}
 	api_register_func('api/friends/ids','api_friends_ids',true);
 	api_register_func('api/followers/ids','api_followers_ids',true);
 
 
-	function api_direct_messages_new(&$a, $type) {
+	function api_direct_messages_new($a, $type) {
 		if (api_user()===false) return false;
 		
 		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
@@ -2253,7 +2255,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
 
-	function api_direct_messages_box(&$a, $type, $box) {
+	function api_direct_messages_box($a, $type, $box) {
 		if (api_user()===false) return false;
 		
 		$user_info = api_get_user($a);
@@ -2313,16 +2315,16 @@ require_once('include/api_auth.php');
 		
 	}
 
-	function api_direct_messages_sentbox(&$a, $type){
+	function api_direct_messages_sentbox($a, $type){
 		return api_direct_messages_box($a, $type, "sentbox");
 	}
-	function api_direct_messages_inbox(&$a, $type){
+	function api_direct_messages_inbox($a, $type){
 		return api_direct_messages_box($a, $type, "inbox");
 	}
-	function api_direct_messages_all(&$a, $type){
+	function api_direct_messages_all($a, $type){
 		return api_direct_messages_box($a, $type, "all");
 	}
-	function api_direct_messages_conversation(&$a, $type){
+	function api_direct_messages_conversation($a, $type){
 		return api_direct_messages_box($a, $type, "conversation");
 	}
 	api_register_func('api/direct_messages/conversation','api_direct_messages_conversation',true);
@@ -2331,7 +2333,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
 
 
-	function api_oauth_request_token(&$a, $type){
+	function api_oauth_request_token($a, $type){
 		try{
 			$oauth = new ZotOAuth1();
 			$req = OAuth1Request::from_request();
@@ -2346,7 +2348,7 @@ require_once('include/api_auth.php');
 		killme();	
 	}
 
-	function api_oauth_access_token(&$a, $type){
+	function api_oauth_access_token($a, $type){
 		try{
 			$oauth = new ZotOAuth1();
 			$req = OAuth1Request::from_request();

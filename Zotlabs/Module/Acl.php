@@ -58,7 +58,24 @@ class Acl extends \Zotlabs\Web\Controller {
 	
 		if( (! local_channel()) && (! ($type == 'x' || $type == 'c')))
 			killme();
-	
+
+		$permitted = [];
+
+		if(in_array($type, [ 'm', 'a', 'c' ])) {
+
+			// These queries require permission checking. We'll create a simple array of xchan_hash for those with
+			// the requisite permissions which we can check against. 
+
+			$x = q("select xchan from abconfig where chan = %d and cat = 'their_perms' and k = '%s' and v = 1",
+				intval(local_channel()),
+				dbesc(($type === 'm') ? 'post_mail' : 'tag_deliver')
+			);
+
+			$permitted = ids_to_array($x,'xchan');
+
+		}
+
+
 		if($search) {
 			$sql_extra = " AND `name` LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
 			$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . ((strpos($search,'@') === false) ? "%@%'"  : "%'")) . ") ";
@@ -87,13 +104,13 @@ class Acl extends \Zotlabs\Web\Controller {
 		
 		if($type == '' || $type == 'g') {
 	
-			$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`gname`
-					FROM `groups`,`group_member` 
-					WHERE `groups`.`deleted` = 0 AND `groups`.`uid` = %d 
-					AND `group_member`.`gid`=`groups`.`id`
+			$r = q("SELECT groups.id, groups.hash, groups.gname
+					FROM groups,group_member 
+					WHERE groups.deleted = 0 AND groups.uid = %d 
+					AND group_member.gid=groups.id
 					$sql_extra
-					GROUP BY `groups`.`id`
-					ORDER BY `groups`.`gname` 
+					GROUP BY groups.id
+					ORDER BY groups.gname 
 					LIMIT %d OFFSET %d",
 				intval(local_channel()),
 				intval($count),
@@ -156,7 +173,7 @@ class Acl extends \Zotlabs\Web\Controller {
 				} 
 
 	
-				$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags, abook_self 
+				$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, xchan_pubforum, abook_flags, abook_self 
 					FROM abook left join xchan on abook_xchan = xchan_hash 
 					WHERE (abook_channel = %d $extra_channels_sql) AND abook_blocked = 0 and abook_pending = 0 and xchan_deleted = 0 $sql_extra2 order by $order_extra2 xchan_name asc" ,
 					intval(local_channel())
@@ -221,16 +238,24 @@ class Acl extends \Zotlabs\Web\Controller {
 			}
 		}
 		elseif($type == 'm') {
-	
-			$r = q("SELECT xchan_hash as hash, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
+
+			$r = array();
+			$z = q("SELECT xchan_hash as hash, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
 				FROM abook left join xchan on abook_xchan = xchan_hash
-				WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d )>0)
+				WHERE abook_channel = %d 
 				and xchan_deleted = 0
 				$sql_extra3
-				ORDER BY `xchan_name` ASC ",
-				intval(local_channel()),
-				intval(PERMS_W_MAIL)
+				ORDER BY xchan_name ASC ",
+				intval(local_channel())
 			);
+			if($z) {
+				foreach($z as $zz) {
+					if(in_array($zz['hash'],$permitted)) {
+						$r[] = $zz;
+					}
+				}
+			}
+			
 		}
 		elseif($type == 'a') {
 	
@@ -274,7 +299,7 @@ class Acl extends \Zotlabs\Web\Controller {
 				if(strpos($g['hash'],'/') && $type != 'a')
 					continue;
 	
-				if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c' && (! $noforums)) {
+				if(in_array($g['hash'],$permitted) && $type == 'c' && (! $noforums)) {
 					$contacts[] = array(
 						"type"     => "c",
 						"photo"    => "images/twopeople.png",

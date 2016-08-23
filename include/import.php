@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/menu.php');
+require_once('include/perm_upgrade.php');
 
 function import_channel($channel, $account_id, $seize) {
 
@@ -61,15 +62,35 @@ function import_channel($channel, $account_id, $seize) {
 		if(! is_site_admin())
 			$channel['channel_pageflags'] = $channel['channel_pageflags'] ^ PAGE_ALLOWCODE;
 	}
-	
-	dbesc_array($channel);
 
-	$r = dbq("INSERT INTO channel (`" 
-		. implode("`, `", array_keys($channel)) 
-		. "`) VALUES ('" 
-		. implode("', '", array_values($channel)) 
-		. "')" 
-	);
+	// remove all the permissions related settings, we will import/upgrade them after the channel
+	// is created.
+
+	$disallowed = [ 
+		'channel_id',         'channel_r_stream',    'channel_r_profile', 'channel_r_abook', 
+		'channel_r_storage',  'channel_r_pages',     'channel_w_stream',  'channel_w_wall', 
+		'channel_w_comment',  'channel_w_mail',      'channel_w_like',    'channel_w_tagwall', 
+		'channel_w_chat',     'channel_w_storage',   'channel_w_pages',   'channel_a_republish', 
+		'channel_a_delegate', 'perm_limits' 
+	];
+
+	$clean = array();
+	foreach($channel as $k => $v) {
+		if(in_array($k,$disallowed))
+			continue;
+		$clean[$k] = $v;
+	}
+
+	if($clean) {
+		dbesc_array($clean);
+
+		$r = dbq("INSERT INTO channel (`" 
+			. implode("`, `", array_keys($clean)) 
+			. "`) VALUES ('" 
+			. implode("', '", array_values($clean)) 
+			. "')" 
+		);
+	}
 
 	if(! $r) {
 		logger('mod_import: channel clone failed. ', print_r($channel,true));
@@ -86,6 +107,14 @@ function import_channel($channel, $account_id, $seize) {
 		notice( t('Cloned channel not found. Import failed.') . EOL);
 		return false;
 	}
+
+	// extract the permissions from the original imported array and use our new channel_id to set them
+	// These could be in the old channel permission stule or the new pconfig. We have a function to
+	// translate and store them no matter which they throw at us.
+
+	$channel['channel_id'] = $r[0]['channel_id'];
+	translate_channel_perms_inbound($channel);
+
 	// reset
 	$channel = $r[0];
 
@@ -755,7 +784,11 @@ function import_menus($channel,$menus) {
 					foreach($menu['items'] as $it) {
 						$mitem = array();
 
+						$mitem['mitem_link'] = str_replace('[channelurl]',z_root() . '/channel/' . $channel['channel_address'],$it['link']);
+						$mitem['mitem_link'] = str_replace('[pageurl]',z_root() . '/page/' . $channel['channel_address'],$it['link']);
+						$mitem['mitem_link'] = str_replace('[cloudurl]',z_root() . '/cloud/' . $channel['channel_address'],$it['link']);
 						$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
+
 						$mitem['mitem_desc'] = escape_tags($it['desc']);
 						$mitem['mitem_order'] = intval($it['order']);
 						if(is_array($it['flags'])) {
@@ -835,7 +868,12 @@ function sync_menus($channel,$menus) {
 					foreach($menu['items'] as $it) {
 						$mitem = array();
 
+
+						$mitem['mitem_link'] = str_replace('[channelurl]',z_root() . '/channel/' . $channel['channel_address'],$it['link']);
+						$mitem['mitem_link'] = str_replace('[pageurl]',z_root() . '/page/' . $channel['channel_address'],$it['link']);
+						$mitem['mitem_link'] = str_replace('[cloudurl]',z_root() . '/cloud/' . $channel['channel_address'],$it['link']);
 						$mitem['mitem_link'] = str_replace('[baseurl]',z_root(),$it['link']);
+
 						$mitem['mitem_desc'] = escape_tags($it['desc']);
 						$mitem['mitem_order'] = intval($it['order']);
 						if(is_array($it['flags'])) {
@@ -1216,4 +1254,217 @@ function convert_oldfields(&$arr,$old,$new) {
 		$arr[$new] = $arr[$old];
 		unset($arr[$old]);
 	}
+}
+
+function scan_webpage_elements($path, $type, $cloud = false) {
+		$channel = \App::get_channel();
+		$dirtoscan = $path;
+		switch ($type) {
+			case 'page':
+				$dirtoscan .= '/pages/';
+				$json_filename = 'page.json';
+				break;
+			case 'layout':
+				$dirtoscan .= '/layouts/';
+				$json_filename = 'layout.json';
+				break;
+			case 'block':
+				$dirtoscan .= '/blocks/';
+				$json_filename = 'block.json';
+				break;
+			default :
+				return array();
+		}
+		if($cloud) {
+			$dirtoscan = get_dirpath_by_cloudpath($channel, $dirtoscan);
+		}
+		$elements = [];
+		if (is_dir($dirtoscan)) {
+			$dirlist = scandir($dirtoscan);
+			if ($dirlist) {
+				foreach ($dirlist as $element) {
+					if ($element === '.' || $element === '..') {
+						continue;
+					}
+					$folder = $dirtoscan . '/' . $element;
+					if (is_dir($folder)) {
+						if($cloud) {
+							$jsonfilepath = $folder . '/' . get_filename_by_cloudname($json_filename, $channel, $folder);
+						} else {
+							$jsonfilepath = $folder . '/' . $json_filename;
+						}
+						if (is_file($jsonfilepath)) {
+							$metadata = json_decode(file_get_contents($jsonfilepath), true);
+							if($cloud) {
+								$contentfilename = get_filename_by_cloudname($metadata['contentfile'], $channel, $folder);
+								$metadata['path'] = $folder . '/' . $contentfilename;
+							} else {
+								$contentfilename = $metadata['contentfile'];
+								$metadata['path'] = $folder . '/' . $contentfilename;
+							}
+							if ($metadata['contentfile'] === '') {
+								logger('Invalid ' . $type . ' content file');
+								return false;
+							}
+							$content = file_get_contents($folder . '/' . $contentfilename);
+							if (!$content) {
+								logger('Failed to get file content for ' . $metadata['contentfile']);
+								return false;
+							}
+							$elements[] = $metadata;
+						}
+					}
+				}
+			}
+		}
+		return $elements;
+	}
+	
+
+	function import_webpage_element($element, $channel, $type) {
+		
+		$arr = array();		// construct information for the webpage element item table record
+		
+		switch ($type) {
+			//
+			//	PAGES
+			//
+			case 'page':
+        $arr['item_type'] = ITEM_TYPE_WEBPAGE;
+        $namespace = 'WEBPAGE';
+				$name = $element['pagelink'];
+        if($name) {
+						require_once('library/urlify/URLify.php');
+						$name = strtolower(\URLify::transliterate($name));
+        }
+				$arr['title'] = $element['title'];
+        $arr['term'] = $element['term'];
+				$arr['layout_mid'] = ''; // by default there is no layout associated with the page
+				// If a layout was specified, find it in the database and get its info. If
+        // it does not exist, leave layout_mid empty
+        if($element['layout'] !== '') {
+            $liid = q("select iid from iconfig where k = 'PDL' and v = '%s' and cat = 'system'",
+                    dbesc($element['layout'])
+            );
+            if($liid) {
+                $linfo = q("select mid from item where id = %d",
+                        intval($liid[0]['iid'])
+                );
+                $arr['layout_mid'] = $linfo[0]['mid'];
+            }                 
+        }
+				break;
+			//
+			//	LAYOUTS
+			//
+			case 'layout':
+        $arr['item_type'] = ITEM_TYPE_PDL;
+        $namespace = 'PDL';
+				$name = $element['name'];
+				$arr['title'] = $element['description'];
+        $arr['term'] = $element['term'];
+				break;
+			//
+			//	BLOCKS
+			//
+			case 'block':
+        $arr['item_type'] = ITEM_TYPE_BLOCK;
+        $namespace = 'BUILDBLOCK';
+				$name = $element['name'];
+				$arr['title'] = $element['title'];
+				
+				break;
+			default :
+				return null;	// return null if invalid element type
+		}
+		
+		$arr['uid'] = $channel['channel_id'];
+		$arr['aid'] = $channel['channel_account_id'];
+		
+	  // Check if an item already exists based on the name
+		$iid = q("select iid from iconfig where k = '" . $namespace . "' and v = '%s' and cat = 'system'",
+						dbesc($name)
+		);
+		if($iid) { // If the item does exist, get the item metadata
+				$iteminfo = q("select mid,created,edited from item where id = %d",
+								intval($iid[0]['iid'])
+				);
+				$arr['mid'] = $arr['parent_mid'] = $iteminfo[0]['mid'];
+				$arr['created'] = $iteminfo[0]['created'];
+				$arr['edited'] = (($element['edited']) ? datetime_convert('UTC', 'UTC', $element['edited']) : datetime_convert());
+		} else { // otherwise, generate the creation times and unique id
+				$arr['created'] = (($element['created']) ? datetime_convert('UTC', 'UTC', $element['created']) : datetime_convert());
+				$arr['edited'] = datetime_convert('UTC', 'UTC', '0000-00-00 00:00:00');
+				$arr['mid'] = $arr['parent_mid'] = item_message_id();
+		}
+		// Import the actual element content
+		$arr['body'] = file_get_contents($element['path']);
+		// The element owner is the channel importing the elements
+		$arr['owner_xchan'] = get_observer_hash();
+		// The author is either the owner or whomever was specified
+		$arr['author_xchan'] = (($element['author_xchan']) ? $element['author_xchan'] : get_observer_hash());
+		// Import mimetype if it is a valid mimetype for the element
+		$mimetypes = [	'text/bbcode',
+										'text/html',
+										'text/markdown',
+										'text/plain',
+										'application/x-pdl',
+										'application/x-php'	
+		];
+		// Blocks and pages can have any mimetype, but layouts must be text/bbcode
+		if((in_array($element['mimetype'], $mimetypes))	&& ($type === 'page' || $type === 'block') ) {
+				$arr['mimetype'] = $element['mimetype'];
+		} else {
+				$arr['mimetype'] = 'text/bbcode';
+		}
+
+		// Verify ability to use html or php!!!
+		$execflag = false;
+		if ($arr['mimetype'] === 'application/x-php') {
+				$z = q("select account_id, account_roles, channel_pageflags from account "
+					. "left join channel on channel_account_id = account_id where channel_id = %d limit 1", 
+					intval(local_channel())
+				);
+
+				if ($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
+						$execflag = true;
+				}
+		}
+		
+		$z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'service' limit 1", 
+			dbesc($name), 
+			dbesc($namespace)
+		);
+
+		$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", 
+			dbesc($arr['mid']), 
+			intval(local_channel())
+		);
+		$remote_id = 0;
+		if ($z && $i) {
+				$remote_id = $z[0]['id'];
+				$arr['id'] = $i[0]['id'];
+				// don't update if it has the same timestamp as the original
+				if ($arr['edited'] > $i[0]['edited'])
+						$x = item_store_update($arr, $execflag);
+		} else {
+				if (($i) && (intval($i[0]['item_deleted']))) {
+						// was partially deleted already, finish it off
+						q("delete from item where mid = '%s' and uid = %d", 
+							dbesc($arr['mid']), 
+							intval(local_channel())
+						);
+				}
+				$x = item_store($arr, $execflag);
+		}
+		if ($x['success']) {
+				$item_id = $x['item_id'];
+				update_remote_id($channel, $item_id, $arr['item_type'], $name, $namespace, $remote_id, $arr['mid']);
+				$element['import_success'] = 1;
+		} else {
+				$element['import_success'] = 0;
+		}
+		
+		return $element;
+    
 }

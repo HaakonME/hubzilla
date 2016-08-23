@@ -74,11 +74,16 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// Initialize the ACL to the channel default permissions
 			$x = array(
 					'lockstate' => (( $local_observer['channel_allow_cid'] || 
-														$local_observer['channel_allow_gid'] || 
-														$local_observer['channel_deny_cid'] || 
-														$local_observer['channel_deny_gid']) 
-														? 'lock' : 'unlock'),
+						$local_observer['channel_allow_gid'] || 
+						$local_observer['channel_deny_cid'] || 
+						$local_observer['channel_deny_gid'])
+						? 'lock' : 'unlock'
+					),
 					'acl' => populate_acl($channel_acl),
+					'allow_cid' => acl2json($channel_acl['allow_cid']),
+					'allow_gid' => acl2json($channel_acl['allow_gid']),
+					'deny_cid' => acl2json($channel_acl['deny_cid']),
+					'deny_gid' => acl2json($channel_acl['deny_gid']),
 					'bang' => ''
 			);
 		} else {
@@ -142,8 +147,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 				$content = ($p['content'] !== '' ? htmlspecialchars_decode($p['content'],ENT_COMPAT) : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
-				require_once('library/markdown.php');	
-				$html = wiki_generate_toc(purify_html(Markdown(json_decode($content))));
+				require_once('library/markdown.php');
+				$html = wiki_generate_toc(purify_html(Markdown(wiki_bbcode(json_decode($content)))));
 				$renderedContent = wiki_convert_links($html,argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				$hide_editor = false;
 				$showPageControls = $wiki_editor;
@@ -186,6 +191,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$page' => $pageUrlName,
 			'$lockstate' => $x['lockstate'],
 			'$acl' => $x['acl'],
+			'$allow_cid' => $x['allow_cid'],
+			'$allow_gid' => $x['allow_gid'],
+			'$deny_cid' => $x['deny_cid'],
+			'$deny_gid' => $x['deny_gid'],
 			'$bang' => $x['bang'],
 			'$content' => $content,
 			'$renderedContent' => $renderedContent,
@@ -221,6 +230,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$content = $_POST['content'];
 			$resource_id = $_POST['resource_id']; 
 			require_once('library/markdown.php');
+			$content = wiki_bbcode($content);
 			$html = wiki_generate_toc(purify_html(Markdown($content)));
 			$w = wiki_get_wiki($resource_id);
 			$wikiURL = argv(0).'/'.argv(1).'/'.$w['urlName'];

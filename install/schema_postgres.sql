@@ -903,6 +903,7 @@ CREATE TABLE "pconfig" (
   PRIMARY KEY ("id"),
   UNIQUE ("uid","cat","k")
 );
+
 CREATE TABLE "photo" (
   "id" serial  NOT NULL,
   "aid" bigint  NOT NULL DEFAULT '0',
@@ -1085,7 +1086,7 @@ create index "reg_uid" on register ("uid");
 CREATE TABLE "session" (
   "id" serial,
   "sid" text NOT NULL,
-  "sess_data" text NOT NULL DEFAULT '',
+  "sess_data" text NOT NULL,
   "expire" numeric(20)  NOT NULL,
   PRIMARY KEY ("id")
 );

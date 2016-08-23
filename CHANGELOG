@@ -1,3 +1,28 @@
+Hubzilla 1.12
+	- extensible permissions so you can create a new permission rule such as "can write to my wiki" or "can see me naked". 
+	- guest access tokens can do anything you let them, including create posts and administer your channel 
+	- ACLs can be set on files and directories prior to creation.
+	- ACL tool can now be used in multiple forms within a page 
+	- a myriad of new drag/drop features (drop files or photos into /cloud or a post, or drop link into a post or comment, etc.)
+	- multiple file uploads
+	- improvements to website import
+	- UNO replaced with extensible server roles
+	- select bbcode elements (such as baseurl) supported in wiki pages
+	- addons:
+    	Diaspora Protocol - additional updates to maintain compatibility with 0.6.0.0 and stop showing likes as wall-to-wall comments (except when the liker does not have any Diaspora protocol ability)
+    	Cdav - continued improvements to the web UI
+    	Pong - the classic pong game
+    	Dfedfix - removed, no longer needed
+    	Openid - moved from core to addon
+	- bugfixes
+    	unable to delete privacy groups
+    	weird display interaction with code blocks and escaped base64 content containing 8 - O
+    	workaround WordPress oembeds which are almost completely javascript and therefore filtered
+    	restrict oembed cache url to 254 chars to avoid spurious failures caching google map urls
+    	"Page not found" appeared twice
+    	birthdays weren't being automatically added to event calendar
+    	some iCal entries had malformed descriptions
+
 Hubzilla 1.10
 	Wiki:
 		Lots of enhanced functionality, usability improvements, and bugfixes from v1.8

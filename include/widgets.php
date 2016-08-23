@@ -595,7 +595,7 @@ function widget_settings_menu($arr) {
 	}
 
 	// IF can go away when UNO export and import is fully functional
-	if(! UNO) {
+	if(get_config('system','server_role') !== 'basic') {
 		$tabs[] =	array(
 			'label' => t('Export channel'),
 			'url' => z_root() . '/uexport',
@@ -609,7 +609,7 @@ function widget_settings_menu($arr) {
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
 
-	if(! UNO) {
+	if(get_config('system','server_role') !== 'basic') {
 		$tabs[] =	array(
 			'label' => t('Guest Access Tokens'),
 			'url' => z_root() . '/settings/tokens',
@@ -779,6 +779,20 @@ function widget_design_tools($arr) {
 	return design_tools();
 }
 
+function widget_website_import_tools($arr) {
+
+	// mod menu doesn't load a profile. For any modules which load a profile, check it.
+	// otherwise local_channel() is sufficient for permissions.
+
+	if(App::$profile['profile_uid']) 
+		if((App::$profile['profile_uid'] != local_channel()) && (! App::$is_sys))
+			return '';
+ 
+	if(! local_channel())
+		return '';
+
+	return website_import_tools();
+}
 
 function widget_findpeople($arr) {
 	return findpeople_widget();
@@ -1356,9 +1370,14 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where ( xchan_pubforum = 1 or ((abook_their_perms & %d ) != 0 and (abook_their_perms & %d ) = 0) ) and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
-		intval(PERMS_W_TAGWALL),
-		intval(PERMS_W_STREAM),
+	/**
+	 * We used to try and find public forums with custom permissions by checking to see if
+	 * send_stream was false and tag_deliver was true. However with the newer extensible 
+	 * permissions infrastructure this makes for a very complicated query. Now we're only
+	 * checking channels that report themselves specifically as pubforums
+	 */
+
+	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where xchan_pubforum = 1 and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
 		intval(local_channel())
 	);
 	if(! $r1)

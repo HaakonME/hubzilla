@@ -99,7 +99,7 @@ function localize_item(&$item){
 		if(intval($item['item_thread_top']))
 			return;	
 
-		$obj = json_decode_plus($item['obj']);
+		$obj = json_decode($item['obj'],true);
 		if((! $obj) && ($item['obj'])) {
 			logger('localize_item: failed to decode object: ' . print_r($item['obj'],true));
 		}
@@ -186,7 +186,7 @@ function localize_item(&$item){
 		$Alink = $item['author']['xchan_url'];
 
 
-		$obj= json_decode_plus($item['obj']);
+		$obj= json_decode($item['obj'],true);
 		
 		$Blink = $Bphoto = '';
 
@@ -219,7 +219,7 @@ function localize_item(&$item){
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
 
-		$obj= json_decode_plus($item['obj']);
+		$obj= json_decode($item['obj'],true);
 
 		$Blink = $Bphoto = '';
 
@@ -802,6 +802,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					continue;
 				}
 
+
 				$item['pagedrop'] = $page_dropping;
 
 				if($item['id'] == $item['parent']) {
@@ -1253,6 +1254,10 @@ function status_editor($a, $x, $popup = false) {
 		'$visitor' => $x['visitor'],
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
+		'$allow_cid' => acl2json($x['permissions']['allow_cid']),
+		'$allow_gid' => acl2json($x['permissions']['allow_gid']),
+		'$deny_cid' => acl2json($x['permissions']['deny_cid']),
+		'$deny_gid' => acl2json($x['permissions']['deny_gid']),
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
 		'$showacl' => ((array_key_exists('showacl', $x)) ? $x['showacl'] : true),
@@ -1705,7 +1710,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	} 
 
-	if(feature_enabled($uid,'wiki') && (! UNO)) {
+	if(feature_enabled($uid,'wiki') && (get_config('system','server_role') !== 'basic')) {
 		$tabs[] = array(
 			'label' => t('Wiki'),
 			'url'   => z_root() . '/wiki/' . $nickname,

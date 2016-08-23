@@ -97,7 +97,6 @@ function del_aconfig($account_id, $family, $key) {
 	return Zlib\AConfig::Delete($account_id, $family, $key);
 }
 
-
 function load_abconfig($chan, $xhash, $family = '') {
 	return Zlib\AbConfig::Load($chan,$xhash,$family);
 }

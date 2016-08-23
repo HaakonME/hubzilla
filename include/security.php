@@ -108,6 +108,7 @@ function atoken_xchan($atoken) {
 			'xchan_name' => $atoken['atoken_name'],
 			'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
 			'xchan_network' => 'unknown',
+			'xchan_url' => z_root(),
 			'xchan_hidden' => 1,
 			'xchan_photo_mimetype' => 'image/jpeg',
 			'xchan_photo_l' => get_default_profile_photo(300),
@@ -119,6 +120,105 @@ function atoken_xchan($atoken) {
 	return null;
 }
 
+function atoken_delete($atoken_id) {
+
+	$r = q("select * from atoken where atoken_id = %d",
+		intval($atoken_id)
+	);
+	if(! $r)
+		return;
+
+	$c = q("select channel_id, channel_hash from channel where channel_id = %d",
+		intval($r[0]['atoken_uid'])
+	);
+	if(! $c)
+		return;
+	
+	$atoken_xchan = substr($c[0]['channel_hash'],0,16) . '.' . $r[0]['atoken_name'];
+
+	q("delete from atoken where atoken_id = %d",
+		intval($atoken_id)
+	);
+	q("delete from abconfig where chan = %d and xchan = '%s'",
+		intval($c[0]['channel_id']),
+		dbesc($atoken_xchan)
+	);
+}
+
+
+
+// in order for atoken logins to create content (such as posts) they need a stored xchan.
+// we'll create one on the first atoken_login; it can't really ever go away but perhaps
+// @fixme we should set xchan_deleted if it's expired or removed 
+
+function atoken_create_xchan($xchan) {
+
+	$r = q("select xchan_hash from xchan where xchan_hash = '%s'",
+		dbesc($xchan['xchan_hash'])
+	);
+	if($r)
+		return;
+
+   $r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_mimetype, xchan_photo_l, xchan_photo_m, xchan_photo_s ) 
+		values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+		dbesc($xchan['xchan_hash']),
+		dbesc($xchan['xchan_hash']),
+		dbesc($xchan['xchan_addr']),
+		dbesc($xchan['xchan_url']),
+		dbesc($xchan['xchan_name']),
+		dbesc($xchan['xchan_network']),
+		dbesc($xchan['xchan_photo_mimetype']),
+		dbesc($xchan['xchan_photo_l']),
+		dbesc($xchan['xchan_photo_m']),
+		dbesc($xchan['xchan_photo_s'])
+	);
+
+	return true;
+}
+
+function atoken_abook($uid,$xchan_hash) {
+
+	if(substr($xchan_hash,16,1) != '.')
+		return false;
+
+	$r = q("select channel_hash from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+
+	if(! $r)
+		return false;
+
+	$x = q("select * from atoken where atoken_uid = %d and atoken_name = '%s'",
+		intval($uid),
+		dbesc(substr($xchan_hash,17))
+	);
+
+	if($x) {
+		$xchan = atoken_xchan($x[0]);
+		$xchan['abook_blocked'] = 0;
+		$xchan['abook_ignored'] = 0;
+		$xchan['abook_pending'] = 0;
+		return $xchan;
+	}
+
+	return false;
+
+}
+
+
+function pseudo_abook($xchan) {
+	if(! $xchan) 
+		return false;
+
+	// set abook_pseudo to flag that we aren't really connected.
+
+	$xchan['abook_pseudo']  = 1;
+	$xchan['abook_blocked'] = 0;
+	$xchan['abook_ignored'] = 0;
+	$xchan['abook_pending'] = 0;
+	return $xchan;
+	
+}
 
 
 /**
@@ -128,6 +228,7 @@ function atoken_xchan($atoken) {
  *
  * @return bool|array false or channel record of the new channel
  */
+
 function change_channel($change_channel) {
 
 	$ret = false;
@@ -395,7 +496,7 @@ function public_permissions_sql($observer_hash) {
  * In this implementation, a security token is reusable (if the user submits a form, goes back and resubmits the form, maybe with small changes;
  * or if the security token is used for ajax-calls that happen several times), but only valid for a certain amout of time (3hours).
  * The "typename" seperates the security tokens of different types of forms. This could be relevant in the following case:
- *    A security token is used to protekt a link from CSRF (e.g. the "delete this profile"-link).
+ *	  A security token is used to protekt a link from CSRF (e.g. the "delete this profile"-link).
  *    If the new page contains by any chance external elements, then the used security token is exposed by the referrer.
  *    Actually, important actions should not be triggered by Links / GET-Requests at all, but somethimes they still are,
  *    so this mechanism brings in some damage control (the attacker would be able to forge a request to a form of this type, but not to forms of other types).
@@ -477,14 +578,19 @@ function stream_perms_api_uids($perms = NULL, $limit = 0, $rand = 0 ) {
 	$random_sql = (($rand) ? " ORDER BY " . db_getfunc('RAND') . " " : '');
 	if(local_channel())
 		$ret[] = local_channel();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and ( channel_r_stream & %d )>0 and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 $random_sql $limit_sql ",
-		intval($perms),
-		intval(PAGE_ADULT|PAGE_CENSORED)
+	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' and ( v & %d ) > 0 ",
+		intval($perms)
 	);
-	if($r) {
-		foreach($r as $rr)
-			if(! in_array($rr['channel_id'], $ret))
-				$ret[] = $rr['channel_id'];
+	if($x) {
+		$ids = ids_to_querystr($x,'uid');
+		$r = q("select channel_id from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 $random_sql $limit_sql ",
+			intval(PAGE_ADULT|PAGE_CENSORED)
+		);
+		if($r) {
+			foreach($r as $rr)
+				if(! in_array($rr['channel_id'], $ret))
+					$ret[] = $rr['channel_id'];
+		}
 	}
 
 	$str = '';
@@ -510,16 +616,21 @@ function stream_perms_xchans($perms = NULL ) {
 	if(local_channel())
 		$ret[] = get_observer_hash();
 
-	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d)>0 and not (channel_pageflags & %d)>0 and channel_system = 0 and channel_removed = 0 ",
-		intval($perms),
-		intval(PAGE_ADULT|PAGE_CENSORED)
+	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' and ( v & %d ) > 0 ",
+		intval($perms)
 	);
-	if($r) {
-		foreach($r as $rr)
-			if(! in_array($rr['channel_hash'], $ret))
-				$ret[] = $rr['channel_hash'];
-	}
+	if($x) {
+		$ids = ids_to_querystr($x,'uid');
+		$r = q("select channel_hash from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 ",
+			intval(PAGE_ADULT|PAGE_CENSORED)
+		);
 
+		if($r) {
+			foreach($r as $rr)
+				if(! in_array($rr['channel_hash'], $ret))
+					$ret[] = $rr['channel_hash'];
+		}
+	}
 	$str = '';
 	if($ret) {
 		foreach($ret as $rr) {

@@ -264,23 +264,22 @@ class Like extends \Zotlabs\Web\Controller {
 				logger('like: no item ' . $item_id);
 				killme();
 			}
-	
-	
+
+
+			xchan_query($r,true,(($r[0]['uid'] == local_channel()) ? 0 : local_channel()));	
+
 			$item = $r[0];
-			$owner_uid = $item['uid'];
-			$owner_aid = $item['aid'];
-	
-	
-			$sys = get_sys_channel();
-	
-	
-			// if this is a "discover" item, (item['uid'] is the sys channel),
-			// fallback to the item comment policy, which should've been
-			// respected when generating the conversation thread.
-			// Even if the activity is rejected by the item owner, it should still get attached
-			// to the local discover conversation on this site. 
-	
-			if(($owner_uid != $sys['channel_id']) && (! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments'))) {
+
+			$owner_uid = $r[0]['uid'];
+			$owner_aid = $r[0]['aid'];
+
+            $can_comment = false;
+            if((array_key_exists('owner',$item)) && intval($item['owner']['abook_self']))
+                $can_comment = perm_is_allowed($item['uid'],$observer['xchan_hash'],'post_comments');
+            else
+                $can_comment = can_comment_on_post($observer['xchan_hash'],$item);
+
+            if(! $can_comment) {
 				notice( t('Permission denied') . EOL);
 				killme();
 			}
@@ -496,6 +495,8 @@ class Like extends \Zotlabs\Web\Controller {
 		$arr['deny_gid']      = $deny_gid;
 		$arr['item_private']  = $private;
 	
+		call_hooks('post_local',$arr);
+
 	
 		$post = item_store($arr);	
 		$post_id = $post['item_id'];

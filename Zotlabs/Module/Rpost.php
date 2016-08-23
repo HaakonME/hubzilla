@@ -116,6 +116,7 @@ class Rpost extends \Zotlabs\Web\Controller {
 			'nickname' => $channel['channel_address'],
 			'lockstate' => (($acl->is_private()) ? 'lock' : 'unlock'),
 			'acl' => populate_acl($channel_acl, true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post'),
+			'permissions' => $channel_acl,
 			'bang' => '',
 			'visitor' => true,
 			'profile_uid' => local_channel(),
@@ -125,6 +126,7 @@ class Rpost extends \Zotlabs\Web\Controller {
 			'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
 			'return_path' => 'rpost/return',
 			'bbco_autocomplete' => 'bbcode',
+			'editor_autocomplete'=> true,
 			'bbcode' => true
 		);
 	

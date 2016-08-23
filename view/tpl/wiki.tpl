@@ -15,7 +15,7 @@
   <div class="section-title-wrapper">
     <div class="pull-right">
       {{if $showNewWikiButton}}
-      <button class="btn btn-primary btn-xs" onclick="$('#new-page-form-wrapper').hide(); openClose('new-wiki-form-wrapper');">New Wiki</button>
+      <button class="btn btn-primary btn-xs acl-form-trigger" onclick="$('#new-page-form-wrapper').hide(); openClose('new-wiki-form-wrapper');" data-form_id="new-wiki-form">New Wiki</button>
       {{/if}}
       {{if $showNewPageButton}}
       <button class="btn btn-success btn-xs" onclick="$('#new-wiki-form-wrapper').hide(); openClose('new-page-form-wrapper');">New Page</button>
@@ -29,7 +29,7 @@
     <div class="clear"></div>
   </div>
 	<div id="new-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" >
+      <form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" class="acl-form" data-form_id="new-wiki-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
         <div class="clear"></div>
         {{include file="field_input.tpl" field=$wikiName}}
         
@@ -45,17 +45,17 @@
         </div>
         
         <div class="btn-group pull-right">
-            <div id="profile-jot-submit-right" class="btn-group" style="margin-right: 20px;">
+            <div id="profile-jot-submit-right" class="btn-group">
                 <button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="Permission settings" onclick="return false;">
-                    <i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons">{{$bang}}</i>
+                    <i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>{{$bang}}
                 </button>
+                <button id="new-wiki-submit" class="btn btn-primary" type="submit" name="submit" >Create Wiki</button>
             </div>
-            <button id="new-wiki-submit" class="btn btn-primary" type="submit" name="submit" >Create Wiki</button>
         </div>
-        <div>{{$acl}}</div>
       </form>        
-      <div class="clear"></div>
-      <hr>
+     {{$acl}}
+     <div class="clear"></div>
+     <hr>
     </div>
   
 	<div id="new-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">

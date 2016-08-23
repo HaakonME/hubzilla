@@ -44,10 +44,10 @@ require_once('include/account.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '1.10' );
+define ( 'STD_VERSION',             '1.12' );
 define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1180  );
+define ( 'DB_UPDATE_VERSION',       1181  );
 
 
 /**
@@ -602,14 +602,21 @@ function sys_boot() {
 
 	@include('.htconfig.php');
 
-	if(! defined('UNO'))
-		define('UNO', 0);
-
 	if(array_key_exists('default_timezone',get_defined_vars())) {
 		App::$config['system']['timezone'] = $default_timezone;
 	}
 
 	$a->convert();
+
+	if(defined('UNO')) {
+		if(UNO)
+			App::$config['system']['server_role'] = 'basic';
+		else
+			App::$config['system']['server_role'] = 'pro';
+	}
+
+	if(! (array_key_exists('server_role',App::$config['system']) && App::$config['system']['server_role']))
+		App::$config['system']['server_role'] = 'pro';
 
 	App::$timezone = ((App::$config['system']['timezone']) ? App::$config['system']['timezone'] : 'UTC');
 	date_default_timezone_set(App::$timezone);
@@ -633,7 +640,6 @@ function sys_boot() {
 		 * Load configs from db. Overwrite configs from .htconfig.php
 		 */
 
-		load_config('config');
 		load_config('system');
 		load_config('feature');
 
@@ -765,6 +771,7 @@ class App {
 	public  static $pdl        = null;            // Comanche page description
 	private static $perms      = null;            // observer permissions
 	private static $widgets    = array();         // widgets for this page
+	public  static $config     = array();         // config cache
 
 	public static  $session    = null;
 	public static  $groups;
@@ -774,7 +781,6 @@ class App {
 	public static  $plugins_admin;
 	public static  $module_loaded = false;
 	public static  $query_string;
-	public static  $config;                       // config cache
 	public static  $page;
 	public static  $profile;
 	public static  $user;
@@ -1550,6 +1556,9 @@ function check_config(&$a) {
 	}
 
 	load_hooks();
+
+
+	check_for_new_perms();
 
 	check_cron_broken();
 
@@ -2440,6 +2449,67 @@ function cert_bad_email() {
 }
 
 
+function check_for_new_perms() {
+
+	$pregistered = get_config('system','perms');
+	$pcurrent = array_keys(\Zotlabs\Access\Permissions::Perms());
+
+	if(! $pregistered) {
+		set_config('system','perms',$pcurrent);
+		return;
+	}
+
+	$found_new_perm = false;
+
+	foreach($pcurrent as $p) {
+		if(! in_array($p,$pregistered)) {
+			$found_new_perm = true;
+			// for all channels
+			$c = q("select channel_id from channel where true");
+			if($c) {
+				foreach($c as $cc) {
+					// get the permission role
+					$r = q("select v from pconfig where uid = %d and cat = 'system' and k = 'permissions_role'",
+						intval($cc['uid'])
+					);
+					if($r) {
+						// get a list of connections
+						$x = q("select abook_xchan from abook where abook_channel = %d and abook_self = 0",
+							intval($cc['uid'])
+						);
+						// get the permissions role details
+						$rp = \Zotlabs\Access\PermissionRoles::role_perms($r[0]['v']);
+						if($rp) {
+							// set the channel limits if appropriate or 0
+							if(array_key_exists('limits',$rp) && array_key_exists($p,$rp['limits'])) {
+								\Zotlabs\Access\PermissionLimits::Set($cc['uid'],$p,$rp['limits'][$p]);
+							}
+							else {
+								\Zotlabs\Access\PermissionLimits::Set($cc['uid'],$p,0);
+							}
+
+							$set = ((array_key_exists('perms_connect',$rp) && array_key_exists($p,$rp['perms_connect'])) ? true : false);
+							// foreach connection set to the perms_connect value
+							if($x) {
+								foreach($x as $xx) {
+									set_abconfig($cc['uid'],$xx['abook_xchan'],'my_perms',$p,intval($set));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// We should probably call perms_refresh here, but this should get pushed in 24 hours and there is no urgency
+	if($found_new_perm)
+		set_config('system','perms',$pcurrent);
+
+}
+
+
+
 /**
  * @brief Send warnings every 3-5 days if cron is not running.
  */
@@ -2449,6 +2519,7 @@ function check_cron_broken() {
 	
 	if((! $d) || ($d < datetime_convert('UTC','UTC','now - 4 hours'))) {
 		Zotlabs\Daemon\Master::Summon(array('Cron'));
+		set_config('system','lastcron',datetime_convert());
 	}
 
 	$t = get_config('system','lastcroncheck');

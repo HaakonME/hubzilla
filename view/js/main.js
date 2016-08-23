@@ -659,7 +659,7 @@ function collapseHeight() {
 	var position = $(window).scrollTop();
 
 	$(".wall-item-content, .directory-collapse").each(function() {
-		var orgHeight = parseInt($(this).css('height'));
+		var orgHeight = $(this).outerHeight(true);
 		if(orgHeight > divmore_height) {
 			if(! $(this).hasClass('divmore')) {
 
@@ -679,7 +679,7 @@ function collapseHeight() {
 					beforeToggle: function(trigger, element, expanded) {
 						if(expanded) {
 							if((($(element).offset().top + divmore_height) - $(window).scrollTop()) < 65 ) {
-								$(window).scrollTop($(window).scrollTop() - (orgHeight - divmore_height));
+								$(window).scrollTop($(window).scrollTop() - ($(element).outerHeight(true) - divmore_height));
 							}
 						}
 					}
@@ -1015,8 +1015,6 @@ function filestorage(event, nick, id) {
 	$('#cloud-index-' + last_filestorage_id).removeClass('cloud-index-active');
 	$('#perms-panel-' + last_filestorage_id).hide().html('');
 	$('#file-edit-' + id).spin('tiny');
-	// What for do we need this here?
-	delete acl;
 	$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
 		$('#cloud-index-' + id).addClass('cloud-index-active');
 		$('#perms-panel-' + id).html(data).show();

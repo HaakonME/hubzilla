@@ -75,7 +75,7 @@
 			return;
 		}
 		$('html, body').animate({scrollTop: Math.ceil($('#cover-photo').height()) + 'px' });
-		return false;
+		return;
 	}
 </script>
 

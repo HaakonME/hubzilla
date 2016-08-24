@@ -29,6 +29,7 @@
 			$('main').css('opacity', 1);
 			$('aside').css('padding-top', aside_padding_top + 'px');
 			$('section').css('padding-top', section_padding_top + 'px');
+			$('#cover-photo').css('padding-top', $('nav').outerHeight());
 			$(window).scrollTop($(window).scrollTop() - $('#cover-photo').height())
 			$('.navbar-fixed-top').css({ 'position' : 'fixed', 'top' : 0});
 			$('main').css('margin-top', '');
@@ -54,7 +55,7 @@
 		if(coverSlid)
 			return;
 		$('html, body').animate({scrollTop: Math.ceil($('#cover-photo').height()) + 'px' });
-		$('#cover-photo').css({ 'position' : 'relative' , 'top' : 0 });
+		$('#cover-photo').css({ 'position' : 'relative' , 'top' : $('nav').outerHeight() });
 		$('.navbar-fixed-top').css({ 'position' : 'fixed', 'top' : 0});
 		$('aside').css('padding-top', aside_padding_top + 'px');
 		$('section').css('padding-top', section_padding_top + 'px');

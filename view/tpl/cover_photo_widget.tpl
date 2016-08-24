@@ -79,7 +79,7 @@
 	}
 </script>
 
-<div id="cover-photo" onclick="slideUpCover();" title="{{$hovertitle}}">
+<div id="cover-photo" title="{{$hovertitle}}">
 	{{$photo_html}}
 	<div id="cover-photo-caption">
 		<div class="cover-photo-title">

@@ -27,6 +27,12 @@ class SmartyTemplate implements TemplateEngine {
 
 	public function replace_macros($s, $r) {
 		$template = '';
+
+		// these are available for use in all templates
+
+		$r['$z_baseurl']     = z_root();
+		$r['$z_server_role'] = \Zotlabs\Lib\System::get_server_role();
+
 		if(gettype($s) === 'string') {
 			$template = $s;
 			$s = new SmartyInterface();

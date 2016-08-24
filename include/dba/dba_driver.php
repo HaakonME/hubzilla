@@ -62,6 +62,8 @@ class DBA {
  
 
 		if(is_object(self::$dba) && self::$dba->connected) {
+			if($server === 'localhost')
+			    $port = $set_port;
 			$dns = ((self::$dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql')
 			. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
 			. ';dbname=' . $db;

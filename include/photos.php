@@ -588,6 +588,8 @@ function photos_album_rename($channel_id, $oldname, $newname) {
 	);
 }
 
+
+
 /**
  * @brief
  *

@@ -103,14 +103,50 @@ class Comanche {
 
 	function test_condition($s) {
 
-		// This is extensible. The first version of variable testing supports tests of the form
+		// This is extensible. The first version of variable testing supports tests of the forms:
+		// [if $config.system.foo == baz] which will check if get_config('system','foo') is the string 'baz';
+		// [if $config.system.foo != baz] which will check if get_config('system','foo') is not the string 'baz';
+		// You may check numeric entries, but these checks are evaluated as strings. 
+		// [if $config.system.foo {} baz] which will check if 'baz' is an array element in get_config('system','foo')
+		// [if $config.system.foo {*} baz] which will check if 'baz' is an array key in get_config('system','foo')
 		// [if $config.system.foo] which will check for a return of a true condition for get_config('system','foo');
 		// The values 0, '', an empty array, and an unset value will all evaluate to false.
 
-		if(preg_match("/[\$]config[\.](.*?)/",$s,$matches)) {
-			$x = explode('.',$s);
-			if(get_config($x[1],$x[2]))
+		if(preg_match('/[\$]config[\.](.*?)\s\=\=\s(.*?)$/',$s,$matches)) {
+			$x = explode('.',$matches[1]);
+			if(get_config(trim($x[0]),trim($x[1])) == trim($matches[2]))
 				return true;
+			return false;
+		}
+		if(preg_match('/[\$]config[\.](.*?)\s\!\=\s(.*?)$/',$s,$matches)) {
+			$x = explode('.',$matches[1]);
+			if(get_config(trim($x[0]),trim($x[1])) != trim($matches[2]))
+				return true;
+			return false;
+		}
+
+		if(preg_match('/[\$]config[\.](.*?)\s\{\}\s(.*?)$/',$s,$matches)) {
+			$x = explode('.',$matches[1]);
+			$y = get_config(trim($x[0]),trim($x[1]));
+			if(is_array($y) && in_array(trim($matches[2]),$y))
+				return true;
+			return false;
+		}
+
+		if(preg_match('/[\$]config[\.](.*?)\s\{\*\}\s(.*?)$/',$s,$matches)) {
+			$x = explode('.',$matches[1]);
+			$y = get_config(trim($x[0]),trim($x[1]));
+			if(is_array($y) && array_key_exists(trim($matches[2]),$y))
+				return true;
+			return false;
+		}
+
+
+		if(preg_match('/[\$]config[\.](.*?)/',$s,$matches)) {
+			$x = explode('.',$matches[1]);
+			if(get_config(trim($x[0]),trim($x[1])))
+				return true;
+			return false;
 		}
 		return false;
 

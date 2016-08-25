@@ -11,7 +11,7 @@
 		$(document).on('click', slideUpCover);
 
 		if($('#cover-photo').length && $(window).width() > 755) {
-			if($(window).scrollTop() <= $('#cover-photo').height()) {
+			if($(window).scrollTop() < $('#cover-photo').height()) {
 				$('main').css('margin-top', - $('nav').outerHeight(true) + 'px');
 				$('aside').css('padding-top', aside_padding_top - $('nav').outerHeight() + 'px');
 				$('section').css('padding-top', section_padding_top  - $('nav').outerHeight() + 'px');
@@ -36,13 +36,13 @@
 			$('main').css('margin-top', '');
 			coverSlid = true;
 		}
-		else if ($('#cover-photo').length && $(window).width() > 755 && $(window).scrollTop() <= $('#cover-photo').height()){
+		else if ($('#cover-photo').length && $(window).width() > 755 && $(window).scrollTop() < $('#cover-photo').height()){
 			if(coverSlid) {
 				$(window).scrollTop(Math.ceil($('#cover-photo').height()));
 				setTimeout(function(){ coverSlid = false; }, 1000);
 			}
 			else {
-				if($(window).scrollTop() <= $('#cover-photo').height()) {
+				if($(window).scrollTop() < $('#cover-photo').height()) {
 					$('main').css('margin-top', - $('nav').outerHeight(true) + 'px');
 					$('aside').css('padding-top', aside_padding_top - $('nav').outerHeight() + 'px');
 					$('section').css('padding-top', section_padding_top  - $('nav').outerHeight() + 'px');

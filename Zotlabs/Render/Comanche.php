@@ -104,8 +104,19 @@ class Comanche {
 			$x = explode('.',$v);
 			if($x[0] == 'config')
 				return get_config($x[1],$x[2]);
-			elseif($x[0] === 'observer')
+			elseif($x[0] === 'observer') {
+				if(count($x) > 1) {
+					$y = \App::get_observer();
+					if(! $y)
+						return false;
+					if($x[1] == 'address')
+						return $y['xchan_addr'];
+					elseif($x[1] == 'name')
+						return $y['xchan_name'];
+					return false;
+				}
 				return get_observer_hash();
+			}
 			else
 				return false;
 		}

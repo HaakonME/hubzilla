@@ -2039,15 +2039,70 @@ function attach_move($channel_id,$resource_id,$new_folder_hash) {
 
 	rename($oldstorepath,$newstorepath);
 
-	$t = q("update attach set content = '%s', folder = '%s' where id = %d",
+	// duplicate detection. If 'overwrite' is specified, return false because we can't yet do that.
+
+	$filename = $r[0]['filename'];
+
+	$s = q("select filename, id, hash, filesize from attach where filename = '%s' and folder = '%s' ",
+		dbesc($filename),
+		dbesc($new_folder_hash)
+	);
+
+	if($s) {
+		$overwrite = get_pconfig($channel_id,'system','overwrite_dup_files');
+		if($overwrite) {
+			// @fixme
+			return;
+		}
+		else {
+			if(strpos($filename,'.') !== false) {
+				$basename = substr($filename,0,strrpos($filename,'.'));
+				$ext = substr($filename,strrpos($filename,'.'));
+			}
+			else {
+				$basename = $filename;
+				$ext = '';
+			}
+
+			$v = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' ",
+				dbesc($basename . $ext),
+				dbesc($basename . '(%)' . $ext),
+				dbesc($new_folder_hash)
+			);
+
+			if($v) {
+				$x = 1;
+
+				do {
+					$found = false;
+					foreach($v as $vv) {
+						if($vv['filename'] === $basename . '(' . $x . ')' . $ext) {
+							$found = true;
+							break;
+						}
+					}
+					if($found)
+						$x++;
+				}			
+				while($found);
+				$filename = $basename . '(' . $x . ')' . $ext;
+			}
+			else
+				$filename = $basename . $ext;
+		}
+	}
+
+	$t = q("update attach set content = '%s', folder = '%s', filename = '%s' where id = %d",
 		dbesc($newstorepath),
 		dbesc($new_folder_hash),
+		dbesc($filename),
 		intval($r[0]['id'])
 	);
 
 	if($r[0]['is_photo']) {
-		$t = q("update photo set album = '%s' where resource_id = '%s' and uid = %d",
+		$t = q("update photo set album = '%s', filename = '%s' where resource_id = '%s' and uid = %d",
 			dbesc($newdirname),
+			dbesc($filename),
 			dbesc($resource_id),
 			intval($channel_id)
 		);

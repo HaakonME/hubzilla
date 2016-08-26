@@ -1286,8 +1286,8 @@ function widget_random_block($arr) {
 function widget_rating($arr) {
 
 
-	$poco_rating = get_config('system','poco_rating_enable');
-	if((! $poco_rating) && ($poco_rating !== false)) {
+	$rating_enabled = get_config('system','rating_enabled');
+	if(! $rating_enabled) {
 		return;
 	}
 

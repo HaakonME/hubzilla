@@ -55,7 +55,7 @@ function get_features($filtered = true) {
 			array('profile_export',      t('Profile Import/Export'),  t('Save and load profile details across sites/channels'),false,get_config('feature_lock','profile_export')),
 			array('webpages',            t('Web Pages'),              t('Provide managed web pages on your channel'),false,get_config('feature_lock','webpages')),
 			array('wiki',            t('Wiki'),              t('Provide a wiki for your channel'),(($server_role === 'basic') ? false : true),get_config('feature_lock','wiki')),
-			array('hide_rating',       t('Hide Rating'),          t('Hide the rating buttons on your channel and profile pages. Note: People can still rate you somewhere else.'),false,get_config('feature_lock','hide_rating')),			
+//			array('hide_rating',       t('Hide Rating'),          t('Hide the rating buttons on your channel and profile pages. Note: People can still rate you somewhere else.'),false,get_config('feature_lock','hide_rating')),			
 			array('private_notes',       t('Private Notes'),          t('Enables a tool to store notes and reminders (note: not encrypted)'),false,get_config('feature_lock','private_notes')),
 			array('nav_channel_select',  t('Navigation Channel Select'), t('Change channels directly from within the navigation dropdown menu'),false,get_config('feature_lock','nav_channel_select')),
 			array('photo_location',       t('Photo Location'),          t('If location data is available on uploaded photos, link this to a map.'),false,get_config('feature_lock','photo_location')),

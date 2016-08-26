@@ -239,7 +239,7 @@ class Directory extends \Zotlabs\Web\Controller {
 	
 							$page_type = '';
 	
-							if($rr['total_ratings'])
+							if($rr['total_ratings'] && get_config('system','rating_enabled'))
 								$total_ratings = sprintf( tt("%d rating", "%d ratings", $rr['total_ratings']), $rr['total_ratings']);
 							else
 								$total_ratings = '';

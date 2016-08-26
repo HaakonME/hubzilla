@@ -119,8 +119,8 @@ class Rate extends \Zotlabs\Web\Controller {
 	//		return;
 	//	}
 	
-		$poco_rating = get_config('system','poco_rating_enable');
-		if((! $poco_rating) && ($poco_rating !== false)) {
+		$rating_enabled = get_config('system','rating_enabled');
+		if(! $rating_enabled) {
 			notice('Ratings are disabled on this site.');
 			return;
 		}
@@ -141,11 +141,7 @@ class Rate extends \Zotlabs\Web\Controller {
 			$rating_text = '';
 		}
 	
-		// if unset default to enabled
-		if($poco_rating === false)
-			$poco_rating = true;
-	
-		if($poco_rating) {
+		if($rating_enabled) {
 			$rating = replace_macros(get_markup_template('rating_slider.tpl'),array(
 				'$min' => -10,
 				'$val' => $rating_val

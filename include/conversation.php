@@ -941,12 +941,9 @@ function item_photo_menu($item){
 		$clean_url = normalise_link($item['author-link']);
 	}
 
-	$poco_rating = get_config('system','poco_rating_enable');
-	// if unset default to enabled
-	if($poco_rating === false)
-		$poco_rating = true;
+	$rating_enabled = get_config('system','rating_enabled');
 
-	$ratings_url = (($poco_rating) ? z_root() . '/ratings/' . urlencode($item['author_xchan']) : '');
+	$ratings_url = (($rating_enabled) ? z_root() . '/ratings/' . urlencode($item['author_xchan']) : '');
 
 	$post_menu = Array(
 		t("View Source") => $vsrc_link,

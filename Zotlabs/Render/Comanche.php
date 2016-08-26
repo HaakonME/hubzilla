@@ -99,7 +99,18 @@ class Comanche {
 		}
 	}
 
-
+	function get_condition_var($v) {
+		if($v) {
+			$x = explode('.',$v);
+			if($x[0] == 'config')
+				return get_config($x[1],$x[2]);
+			elseif($x[0] === 'observer')
+				return get_observer_hash();
+			else
+				return false;
+		}
+		return false;
+	}
 
 	function test_condition($s) {
 
@@ -112,39 +123,36 @@ class Comanche {
 		// [if $config.system.foo] which will check for a return of a true condition for get_config('system','foo');
 		// The values 0, '', an empty array, and an unset value will all evaluate to false.
 
-		if(preg_match('/[\$]config[\.](.*?)\s\=\=\s(.*?)$/',$s,$matches)) {
-			$x = explode('.',$matches[1]);
-			if(get_config(trim($x[0]),trim($x[1])) == trim($matches[2]))
+		if(preg_match('/[\$](.*?)\s\=\=\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if($x == trim($matches[2]))
 				return true;
 			return false;
 		}
-		if(preg_match('/[\$]config[\.](.*?)\s\!\=\s(.*?)$/',$s,$matches)) {
-			$x = explode('.',$matches[1]);
-			if(get_config(trim($x[0]),trim($x[1])) != trim($matches[2]))
-				return true;
-			return false;
-		}
-
-		if(preg_match('/[\$]config[\.](.*?)\s\{\}\s(.*?)$/',$s,$matches)) {
-			$x = explode('.',$matches[1]);
-			$y = get_config(trim($x[0]),trim($x[1]));
-			if(is_array($y) && in_array(trim($matches[2]),$y))
+		if(preg_match('/[\$](.*?)\s\!\=\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if($x != trim($matches[2]))
 				return true;
 			return false;
 		}
 
-		if(preg_match('/[\$]config[\.](.*?)\s\{\*\}\s(.*?)$/',$s,$matches)) {
-			$x = explode('.',$matches[1]);
-			$y = get_config(trim($x[0]),trim($x[1]));
-			if(is_array($y) && array_key_exists(trim($matches[2]),$y))
+		if(preg_match('/[\$](.*?)\s\{\}\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if(is_array($x) && in_array(trim($matches[2]),$x))
 				return true;
 			return false;
 		}
 
+		if(preg_match('/[\$](.*?)\s\{\*\}\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if(is_array($x) && array_key_exists(trim($matches[2]),$x))
+				return true;
+			return false;
+		}
 
-		if(preg_match('/[\$]config[\.](.*?)/',$s,$matches)) {
-			$x = explode('.',$matches[1]);
-			if(get_config(trim($x[0]),trim($x[1])))
+		if(preg_match('/[\$](.*?)/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if($x)
 				return true;
 			return false;
 		}

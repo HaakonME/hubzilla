@@ -62,14 +62,11 @@ function get_features($filtered = true) {
 			array('ajaxchat',       t('Access Controlled Chatrooms'),          t('Provide chatrooms and chat services with access control.'),true,get_config('feature_lock','ajaxchat')),
 			array('smart_birthdays',       t('Smart Birthdays'),          t('Make birthday events timezone aware in case your friends are scattered across the planet.'),true,get_config('feature_lock','smart_birthdays')),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options'),false,get_config('feature_lock','expert')),
-			array('premium_channel', t('Premium Channel'), t('Allows you to set restrictions and terms on those that connect with your channel'),false,get_config('feature_lock','premium_channel')),
 		),
 
 		// Post composition
 		'composition' => array(
 			t('Post Composition Features'),
-//			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor'),falseget_config('feature_lock','richtext')),
-//			array('markdown',       t('Use Markdown'),              t('Allow use of "Markdown" to format posts'),false,get_config('feature_lock','markdown')),
 			array('large_photos',   t('Large Photos'),              t('Include large (1024px) photo thumbnails in posts. If not enabled, use small (640px) photo thumbnails'),false,get_config('feature_lock','large_photos')),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds'),false,get_config('feature_lock','channel_sources')),
 			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key'),false,get_config('feature_lock','content_encrypt')),
@@ -105,6 +102,18 @@ function get_features($filtered = true) {
 			array('tagadelic',      t('Tag Cloud'),				    t('Provide a personal tag cloud on your channel page'),false,get_config('feature_lock','tagedelic')),
 		),
 	);
+
+
+
+	if(\Zotlabs\Lib\System::get_server_role() === 'pro') {
+		$arr['general'][] = [
+			'premium_channel', 
+			t('Premium Channel'), 
+			t('Allows you to set restrictions and terms on those that connect with your channel'),
+			false,
+			get_config('feature_lock','premium_channel')
+		];
+	}
 
 	// removed any locked features and remove the entire category if this makes it empty
 

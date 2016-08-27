@@ -2041,3 +2041,127 @@ function copy_folder_to_cloudfiles($channel, $observer_hash, $srcpath, $cloudpat
 
     return true;
 }
+/**
+ * attach_move()
+ * This function performs an in place directory-to-directory move of a stored attachment or photo.
+ * The data is physically moved in the store/nickname storage location and the paths adjusted
+ * in the attach structure (and if applicable the photo table). The new 'album name' is recorded
+ * for photos and will show up immediately there.
+ * This takes a channel_id, attach.hash of the file to move (this is the same as a photo resource_id), and
+ * the attach.hash of the new parent folder, which must already exist. If $new_folder_hash is blank or empty,
+ * the file is relocated to the root of the channel's storage area. 
+ *
+ * @fixme: this operation is currently not synced to clones !!
+ */
+
+function attach_move($channel_id,$resource_id,$new_folder_hash) {
+
+	$c = channelx_by_n($channel_id);
+	if(! $c)
+		return false;
+
+	$r = q("select * from attach where hash = '%s' and uid = %d limit 1",
+		dbesc($resource_id),
+		intval($channel_id)
+	);
+	if(! $r)
+		return false;
+
+	$oldstorepath = $r[0]['content'];
+	
+	if($new_folder_hash) {
+		$n = q("select * from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($new_folder_hash),
+			intval($channel_id)
+		);
+		if(! $n)
+			return;
+		$newdirname = $n[0]['filename'];
+		$newstorepath = $n[0]['content'] . '/' . $resource_id;
+	}
+	else {
+		$newstorepath = 'store/' . $c['channel_address'] . '/' . $resource_id;
+	}
+
+	rename($oldstorepath,$newstorepath);
+
+	// duplicate detection. If 'overwrite' is specified, return false because we can't yet do that.
+
+	$filename = $r[0]['filename'];
+
+	$s = q("select filename, id, hash, filesize from attach where filename = '%s' and folder = '%s' ",
+		dbesc($filename),
+		dbesc($new_folder_hash)
+	);
+
+	if($s) {
+		$overwrite = get_pconfig($channel_id,'system','overwrite_dup_files');
+		if($overwrite) {
+			// @fixme
+			return;
+		}
+		else {
+			if(strpos($filename,'.') !== false) {
+				$basename = substr($filename,0,strrpos($filename,'.'));
+				$ext = substr($filename,strrpos($filename,'.'));
+			}
+			else {
+				$basename = $filename;
+				$ext = '';
+			}
+
+			$v = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' ",
+				dbesc($basename . $ext),
+				dbesc($basename . '(%)' . $ext),
+				dbesc($new_folder_hash)
+			);
+
+			if($v) {
+				$x = 1;
+
+				do {
+					$found = false;
+					foreach($v as $vv) {
+						if($vv['filename'] === $basename . '(' . $x . ')' . $ext) {
+							$found = true;
+							break;
+						}
+					}
+					if($found)
+						$x++;
+				}			
+				while($found);
+				$filename = $basename . '(' . $x . ')' . $ext;
+			}
+			else
+				$filename = $basename . $ext;
+		}
+	}
+
+	$t = q("update attach set content = '%s', folder = '%s', filename = '%s' where id = %d",
+		dbesc($newstorepath),
+		dbesc($new_folder_hash),
+		dbesc($filename),
+		intval($r[0]['id'])
+	);
+
+	if($r[0]['is_photo']) {
+		$t = q("update photo set album = '%s', filename = '%s' where resource_id = '%s' and uid = %d",
+			dbesc($newdirname),
+			dbesc($filename),
+			dbesc($resource_id),
+			intval($channel_id)
+		);
+
+		$t = q("update photo set content = '%s' where resource_id = '%s' and uid = %d and imgscale = 0",
+			dbesc($newstorepath),
+			dbesc($resource_id),
+			intval($channel_id)
+		);
+	}
+
+	return true;
+
+}
+
+

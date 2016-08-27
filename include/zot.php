@@ -3785,20 +3785,14 @@ function zotinfo($arr) {
 	if($role === 'forum' || $role === 'repository') {
 		$public_forum = true;
 	}
-	elseif($ztarget_hash) {
+	else {
 		// check if it has characteristics of a public forum based on custom permissions.
-		$t = q("select * from abconfig where abconfig.cat = 'my_perms' and abconfig.chan = %d and abconfig.xchan = '%s' and abconfig.k in ('tag_deliver', 'send_stream') ",
-			intval($e['channel_id']),
-			dbesc($ztarget_hash)
-		);
-
-		$ch = 0;
-
-		if($t) {
-			foreach($t as $tt) {
-				if($tt['k'] == 'tag_deliver' && $tt['v'] == 1)
+		$m = \Zotlabs\Access\Permissions::FilledAutoperms($e['channel_id']);
+		if($m) {
+			foreach($m as $k => $v) {
+				if($k == 'tag_deliver' && intval($v) == 1)
 					$ch ++;
-				if($tt['k'] == 'send_stream' && $tt['v'] == 0)
+				if($k == 'send_stream' && intval($v) == 0)
 					$ch ++;
 			}
 			if($ch == 2)

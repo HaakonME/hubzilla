@@ -1103,8 +1103,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 	require_once('include/widgets.php');
 
-	if(! feature_enabled($profile['uid'],'hide_rating'))
-		$z = widget_rating(array('target' => $profile['channel_hash']));
+//	if(! feature_enabled($profile['uid'],'hide_rating'))
+	$z = widget_rating(array('target' => $profile['channel_hash']));
 
 	$o .= replace_macros($tpl, array(
 		'$zcard'         => $zcard,

@@ -268,6 +268,8 @@ class Admin extends \Zotlabs\Web\Controller {
 		check_form_security_token_redirectOnErr('/admin/site', 'admin_site');
 	
 		$sitename 			=	((x($_POST,'sitename'))			? notags(trim($_POST['sitename']))			: '');
+		$server_role 		=	((x($_POST,'server_role'))		? notags(trim($_POST['server_role']))		: 'standard');
+
 		$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])				: false);
 		$admininfo			=	((x($_POST,'admininfo'))		? trim($_POST['admininfo'])				: false);
 		$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
@@ -308,6 +310,8 @@ class Admin extends \Zotlabs\Web\Controller {
 		$feed_contacts     = ((x($_POST,'feed_contacts'))    ? intval($_POST['feed_contacts'])    : 0);
 		$verify_email      = ((x($_POST,'verify_email'))     ? 1 : 0);
 	
+
+		set_config('system', 'server_role', $server_role);
 		set_config('system', 'feed_contacts', $feed_contacts);
 		set_config('system', 'delivery_interval', $delivery_interval);
 		set_config('system', 'delivery_batch_count', $delivery_batch_count);
@@ -481,6 +485,12 @@ class Admin extends \Zotlabs\Web\Controller {
 		// now invert the logic for the setting.
 		$discover_tab = (1 - $discover_tab);
 	
+		$server_roles = [
+			'basic'    => t('Basic/Minimal Social Networking'),
+			'standard' => t('Standard Configuration (default)'),
+			'pro'      => t('Professional')
+		];
+
 	
 		$homelogin = get_config('system','login_on_homepage');
 		$enable_context_help = get_config('system','enable_context_help');
@@ -498,6 +508,9 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$baseurl' => z_root(),
 			// name, label, value, help string, extra data...
 			'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
+
+			'$server_role' 		=> array('server_role', t("Server Configuration/Role"), get_config('system','server_role'),'',$server_roles),
+
 			'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 			'$admininfo'		=> array('admininfo', t("Administrator Information"), $admininfo, t("Contact information for site administrators.  Displayed on siteinfo page.  BBCode can be used here")),
 			'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),

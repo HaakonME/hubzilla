@@ -67,7 +67,7 @@ Options are:
   [*= system.paranoia ] As the pconfig, but on a site-wide basis.  Can be overwritten by member settings.
   [*= system.photo_cache_time ] How long to cache photos, in seconds. Default is 86400 (1 day). Longer time increases performance, but it also means it takes longer for changed permissions to apply.
   [*= system.platform_name ] What to report as the platform name in webpages and statistics. (*) Must be set in .htconfig.php
-  [*= system.poco_rating_enable ] Distributed reputation reporting and data collection may be disabled. If your site does not participate  in distributed reputation you will also not be able to make use of the data from your connections on  other sites. By default and in the absence of any setting it is enabled. Individual members can opt out  by restricting who can see their connections or by not providing any reputation information for their  connections.
+  [*= system.rating_enabled ] Distributed reputation reporting and data collection. This feature is currently being re-worked.
   [*= system.poke_basic ] Reduce the number of poke verbs to exactly 1 ("poke"). Disable other verbs. 
   [*= system.proc_run_use_exec ] If 1, use the exec system call in proc_run to run background tasks. By default we use proc_open and proc_close. On some (currently rare) systems this does not work well.
   [*= system.projecthome ] Display the project page on your home page for logged out viewers.

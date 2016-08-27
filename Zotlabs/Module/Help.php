@@ -31,8 +31,8 @@ class Help extends \Zotlabs\Web\Controller {
 			if($r) {
 				$o .= '<ul class="help-searchlist">';
 				foreach($r as $rr) {
-					$dirname = dirname($rr['sid']);
-					$fname = basename($rr['sid']);
+					$dirname = dirname($rr['v']);
+					$fname = basename($rr['v']);
 					$fname = substr($fname,0,strrpos($fname,'.'));
 					$path = trim(substr($dirname,4),'/');
 	

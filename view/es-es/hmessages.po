@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-19 00:02-0700\n"
-"PO-Revision-Date: 2016-08-22 10:00+0000\n"
+"PO-Revision-Date: 2016-08-23 13:42+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/Friendica/red-matrix/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -9311,7 +9311,7 @@ msgstr "Páginas"
 
 #: ../../include/text.php:2287
 msgid "Import website..."
-msgstr "Importando el sitio web..."
+msgstr "Importar un sitio web..."
 
 #: ../../include/text.php:2288
 msgid "Select folder to import"

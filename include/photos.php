@@ -713,6 +713,7 @@ function profile_photo_set_profile_perms($uid, $profileid = 0) {
 		if($profileid) {
 			$r = q("SELECT photo, profile_guid, id, is_default, uid
 				FROM profile WHERE uid = %d and ( profile.id = %d OR profile.profile_guid = '%s') LIMIT 1", 
+				intval($uid),
 				intval($profileid), 
 				dbesc($profileid)
 			);

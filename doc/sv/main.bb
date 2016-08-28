@@ -13,7 +13,7 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 [h3]Kom igång[/h3]
 [zrl=[baseurl]/help/Privacy]Privacy Policy[/zrl]
 [zrl=[baseurl]/help/registration]Account Registration[/zrl]
-[zrl=[baseurl]/help/accounts_profiles_channels_basics]You at the $Projectname: accounts, profiles and channels in short[/zrl]
+[zrl=[baseurl]/help/accounts_profiles_channels_basics]You at $Projectname: accounts, profiles and channels in short[/zrl]
 [zrl=[baseurl]/help/profiles]Profiles[/zrl]
 [zrl=[baseurl]/help/channels]Channels[/zrl]
 [zrl=[baseurl]/help/sv/roles]Behörighetsförval för kanaler[/zrl]

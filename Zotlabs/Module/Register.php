@@ -38,7 +38,7 @@ class Register extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function post() {
+	function post() {
 	
 		$max_dailies = intval(get_config('system','max_daily_registrations'));
 		if($max_dailies) {

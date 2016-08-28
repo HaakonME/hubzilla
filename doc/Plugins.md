@@ -246,7 +246,7 @@ we will create an argc/argv list for use by your module functions
 
 ***Porting Friendica Plugins***
 
-The $Projectname uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
+The $Projectname uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica plugins can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
 
 * Friendica's pluginname_install() is pluginname_load()
 
@@ -258,6 +258,6 @@ The $Projectname has _install and _uninstall functions but these are used differ
 
 * Friendica's "plugin_settings_post" hook is called "feature_settings_post"
 
-Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the $Projectname. Many structured data names (especially DB schema columns) are also quite different. 
+Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in $Projectname. Many structured data names (especially DB schema columns) are also quite different. 
 
 #include doc/macros/main_footer.bb;

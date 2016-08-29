@@ -1288,19 +1288,27 @@ class Admin extends \Zotlabs\Web\Controller {
 	
 			if (x($_GET,"a") && $_GET['a']=="t"){
 				check_form_security_token_redirectOnErr('/admin/plugins', 'admin_plugins', 't');
-	
+				$pinstalled = false;
 				// Toggle plugin status
 				$idx = array_search($plugin, \App::$plugins);
 				if ($idx !== false){
 					unset(\App::$plugins[$idx]);
 					uninstall_plugin($plugin);
+					$pinstalled = false;
 					info( sprintf( t("Plugin %s disabled."), $plugin ) );
 				} else {
 					\App::$plugins[] = $plugin;
 					install_plugin($plugin);
+					$pinstalled = true;
 					info( sprintf( t("Plugin %s enabled."), $plugin ) );
 				}
 				set_config("system","addon", implode(", ",\App::$plugins));
+
+				if($pinstalled) {
+					@require_once("addon/$plugin/$plugin.php");
+					if(function_exists($plugin.'_plugin_admin'))
+						goaway(z_root() . '/admin/plugins/' . $plugin);
+				}
 				goaway(z_root() . '/admin/plugins' );
 			}
 			// display plugin details

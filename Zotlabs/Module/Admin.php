@@ -289,8 +289,6 @@ class Admin extends \Zotlabs\Web\Controller {
 		$mirror_frontpage   =	((x($_POST,'mirror_frontpage'))	? intval(trim($_POST['mirror_frontpage']))		: 0);
 		$directory_server   =   ((x($_POST,'directory_server')) ? trim($_POST['directory_server']) : '');
 		$allowed_sites        = ((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
-		$allowed_email        = ((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
-		$not_allowed_email    = ((x($_POST,'not_allowed_email'))	? notags(trim($_POST['not_allowed_email']))		: '');
 		$force_publish        = ((x($_POST,'publish_all'))		? True	: False);
 		$disable_discover_tab = ((x($_POST,'disable_discover_tab'))		? False	:	True);
 		$login_on_homepage    = ((x($_POST,'login_on_homepage'))		? True	:	False);
@@ -357,8 +355,6 @@ class Admin extends \Zotlabs\Web\Controller {
 		set_config('system','account_abandon_days', $abandon_days);
 		set_config('system','register_text', $register_text);
 		set_config('system','allowed_sites', $allowed_sites);
-		set_config('system','allowed_email', $allowed_email);
-		set_config('system','not_allowed_email', $not_allowed_email);	
 		set_config('system','publish_all', $force_publish);
 		set_config('system','disable_discover_tab', $disable_discover_tab);
 		if ($global_directory == '') {
@@ -527,8 +523,6 @@ class Admin extends \Zotlabs\Web\Controller {
 			'$mirror_frontpage'	=> array('mirror_frontpage', t("Preserve site homepage URL"), get_config('system','mirror_frontpage'), t('Present the site homepage in a frame at the original location instead of redirecting')),
 			'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 			'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
-			'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
-			'$not_allowed_email'	=> array('not_allowed_email', t("Not allowed email domains"), get_config('system','not_allowed_email'), t("Comma separated list of domains which are not allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains, unless allowed domains have been defined.")),
 			'$verify_email'		=> array('verify_email', t("Verify Email Addresses"), get_config('system','verify_email'), t("Check to verify email addresses used in account registration (recommended).")),
 			'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 			'$disable_discover_tab'	=> array('disable_discover_tab', t('Import Public Streams'), $discover_tab, t('Import and allow access to public content pulled from other sites. Warning: this content is unmoderated.')),
@@ -604,8 +598,12 @@ class Admin extends \Zotlabs\Web\Controller {
 	function admin_page_security_post(&$a){
 		check_form_security_token_redirectOnErr('/admin/security', 'admin_security');
 	
-	logger('post: ' . print_r($_POST,true));
-	
+		$allowed_email        = ((x($_POST,'allowed_email'))	    ? notags(trim($_POST['allowed_email']))		: '');
+		$not_allowed_email    = ((x($_POST,'not_allowed_email'))	? notags(trim($_POST['not_allowed_email']))		: '');
+
+		set_config('system','allowed_email', $allowed_email);
+		set_config('system','not_allowed_email', $not_allowed_email);	
+
 		$block_public         = ((x($_POST,'block_public'))		? True	: False);
 		set_config('system','block_public',$block_public);
 	
@@ -771,6 +769,8 @@ class Admin extends \Zotlabs\Web\Controller {
 	        '$block_public'     => array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently authenticated.")),
 			'$transport_security' => array('transport_security', t('Set "Transport Security" HTTP header'),intval(get_config('system','transport_security_header')),''),
 			'$content_security' => array('content_security', t('Set "Content Security Policy" HTTP header'),intval(get_config('system','content_security_policy')),''),
+			'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
+			'$not_allowed_email'	=> array('not_allowed_email', t("Not allowed email domains"), get_config('system','not_allowed_email'), t("Comma separated list of domains which are not allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains, unless allowed domains have been defined.")),
 			'$whitelisted_sites' => array('whitelisted_sites', t('Allow communications only from these sites'), $whitesites_str, t('One site per line. Leave empty to allow communication from anywhere by default')),
 			'$blacklisted_sites' => array('blacklisted_sites', t('Block communications from these sites'), $blacksites_str, ''),
 			'$whitelisted_channels' => array('whitelisted_channels', t('Allow communications only from these channels'), $whitechannels_str, t('One channel (hash) per line. Leave empty to allow from any channel by default')),

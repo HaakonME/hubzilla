@@ -43,11 +43,11 @@ class Setup extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
-		if (x($_POST, 'pass'))
+		if (x($_POST, 'pass')) {
 			$this->install_wizard_pass = intval($_POST['pass']);
+		}
 		else {
 			$this->install_wizard_pass = 1;
-			@os_mkdir(TEMPLATE_BUILD_PATH, STORAGE_DEFAULT_PERMISSIONS, true);
 		}
 	}
 	

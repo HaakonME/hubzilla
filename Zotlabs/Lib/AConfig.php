@@ -15,7 +15,7 @@ class AConfig {
 	}
 
 	static public function Set($account_id,$family,$key,$value) {
-		return XConfig::Get('a_' . $account_id,$family,$key,$value);
+		return XConfig::Set('a_' . $account_id,$family,$key,$value);
 	}
 
 	static public function Delete($account_id,$family,$key) {

@@ -1311,9 +1311,15 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 								return false;
 							}
 							$content = file_get_contents($folder . '/' . $contentfilename);
+							logger('contentfile: ' . $folder . '/' . $contentfilename, LOGGER_DEBUG);
+							logger('content: ' . $content, LOGGER_DEBUG);
 							if (!$content) {
-								logger('Failed to get file content for ' . $metadata['contentfile']);
-								return false;
+									if(is_readable($folder . '/' . $contentfilename)) {
+											$content = '';
+									} else {
+										logger('Failed to get file content for ' . $metadata['contentfile']);
+										return false;
+									}
 							}
 							$elements[] = $metadata;
 						}
@@ -1403,6 +1409,10 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 		}
 		// Import the actual element content
 		$arr['body'] = file_get_contents($element['path']);
+		if($arr['item_type'] === ITEM_TYPE_PDL) {
+			logger(' body: ' . $arr['body'], LOGGER_DEBUG);
+			logger(' path: ' . $element['path'], LOGGER_DEBUG);
+		}
 		// The element owner is the channel importing the elements
 		$arr['owner_xchan'] = get_observer_hash();
 		// The author is either the owner or whomever was specified
@@ -1471,4 +1481,194 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 		
 		return $element;
     
+}
+
+function get_webpage_elements($channel, $type = 'all') {
+		$elements = array();
+		if(!$channel['channel_id'])	{
+				return null;
+		}
+		switch ($type) {
+				case 'all':
+						// If all, execute all the pages, layouts, blocks case statements
+				case 'pages':
+						$elements['pages'] = null;
+						$owner = $channel['channel_id'];
+							
+						$sql_extra = item_permissions_sql($owner);
+
+
+						$r = q("select * from iconfig left join item on iconfig.iid = item.id 
+							where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d 
+							$sql_extra order by item.created desc",
+							intval($owner),
+							intval(ITEM_TYPE_WEBPAGE)
+						);
+						
+						$pages = null;
+
+						if($r) {
+								$elements['pages'] = array();
+							$pages = array();
+							foreach($r as $rr) {
+								unobscure($rr);
+
+								//$lockstate = (($rr['allow_cid'] || $rr['allow_gid'] || $rr['deny_cid'] || $rr['deny_gid']) ? 'lock' : 'unlock');
+
+								$element_arr = array(
+									'type'		=> 'webpage',
+									'title'		=> $rr['title'],
+									'body'		=> $rr['body'],
+									'created'	=> $rr['created'],
+									'edited'	=> $rr['edited'],
+									'mimetype'	=> $rr['mimetype'],
+									'pagetitle'	=> $rr['v'],
+									'mid'		=> $rr['mid'],
+									'layout_mid'    => $rr['layout_mid']
+								);
+								$pages[$rr['iid']][] = array(
+									'url'		=> $rr['iid'],
+									'pagetitle'	=> $rr['v'],
+									'title'		=> $rr['title'],
+									'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
+									'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),
+									'bb_element'	=> '[element]' . base64url_encode(json_encode($element_arr)) . '[/element]',
+									//'lockstate'     => $lockstate
+								);
+								$elements['pages'][] = $element_arr;
+							}
+							
+						}
+						if($type !== 'all') {
+								break;
+						}
+
+				case 'layouts':
+						$elements['layouts'] = null;
+						$owner = $channel['channel_id'];
+							
+						$sql_extra = item_permissions_sql($owner);
+
+
+						$r = q("select * from iconfig left join item on iconfig.iid = item.id 
+							where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' and item_type = %d 
+							$sql_extra order by item.created desc",
+							intval($owner),
+							intval(ITEM_TYPE_PDL)
+						);
+						
+						$layouts = null;
+
+						if($r) {
+								$elements['layouts'] = array();
+							$layouts = array();
+							foreach($r as $rr) {
+								unobscure($rr);
+
+								$elements['layouts'][] = array(
+									'type'		=> 'layout',
+									'description'		=> $rr['title'],		// description of the layout
+									'body'		=> $rr['body'],
+									'created'	=> $rr['created'],
+									'edited'	=> $rr['edited'],
+									'mimetype'	=> $rr['mimetype'],
+									'name'	=> $rr['v'],					// name of reference for the layout
+									'mid'		=> $rr['mid'],
+								);
+							}
+							
+						}
+						
+						if($type !== 'all') {
+								break;
+						}
+						
+				case 'blocks':
+						$elements['blocks'] = null;
+						$owner = $channel['channel_id'];
+							
+						$sql_extra = item_permissions_sql($owner);
+
+
+						$r = q("select iconfig.iid, iconfig.k, iconfig.v, mid, title, body, mimetype, created, edited from iconfig 
+								left join item on iconfig.iid = item.id
+								where uid = %d and iconfig.cat = 'system' and iconfig.k = 'BUILDBLOCK' 
+								and item_type = %d order by item.created desc",
+								intval($owner),
+								intval(ITEM_TYPE_BLOCK)
+							);
+						
+						$blocks = null;
+
+						if($r) {
+								$elements['blocks'] = array();
+							$blocks = array();
+							foreach($r as $rr) {
+								unobscure($rr);
+
+								$elements['blocks'][] = array(
+										'type'      => 'block',
+										'title'	    => $rr['title'],
+										'body'      => $rr['body'],
+										'created'   => $rr['created'],
+										'edited'    => $rr['edited'],
+										'mimetype'  => $rr['mimetype'],
+										'name'			=> $rr['v'],
+										'mid'       => $rr['mid']
+									);
+							}
+							
+						}
+						
+						if($type !== 'all') {
+								break;
+						}
+						
+				default:
+						break;
+		}
+		return $elements;
+}
+
+/* creates a compressed zip file */
+
+function create_zip_file($files = array(), $destination = '', $overwrite = false) {
+		//if the zip file already exists and overwrite is false, return false
+		if (file_exists($destination) && !$overwrite) {
+				return false;
+		}
+		//vars
+		$valid_files = array();
+		//if files were passed in...
+		if (is_array($files)) {
+				//cycle through each file
+				foreach ($files as $file) {
+						//make sure the file exists
+						if (file_exists($file)) {
+								$valid_files[] = $file;
+						}
+				}
+		} 		
+
+		//if we have good files...
+		if (count($valid_files)) {
+				//create the archive
+				$zip = new ZipArchive();
+				if ($zip->open($destination, $overwrite ? ZIPARCHIVE::OVERWRITE : ZIPARCHIVE::CREATE) !== true) {
+						return false;
+				}
+				//add the files
+				foreach ($valid_files as $file) {
+						$zip->addFile($file, $file);
+				}
+				//debug
+				//echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
+				//close the zip -- done!
+				$zip->close();
+
+				//check to make sure the file exists
+				return file_exists($destination);
+		} else {
+				return false;
+		}
 }

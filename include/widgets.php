@@ -779,7 +779,7 @@ function widget_design_tools($arr) {
 	return design_tools();
 }
 
-function widget_website_import_tools($arr) {
+function widget_website_portation_tools($arr) {
 
 	// mod menu doesn't load a profile. For any modules which load a profile, check it.
 	// otherwise local_channel() is sufficient for permissions.
@@ -791,7 +791,7 @@ function widget_website_import_tools($arr) {
 	if(! local_channel())
 		return '';
 
-	return website_import_tools();
+	return website_portation_tools();
 }
 
 function widget_findpeople($arr) {

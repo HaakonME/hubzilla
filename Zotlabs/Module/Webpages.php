@@ -41,7 +41,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 	
 		$uid = local_channel();
 		$owner = 0;
-		$channel = null;
 		$observer = \App::get_observer();
 	
 		$channel = \App::get_channel();
@@ -62,6 +61,28 @@ class Webpages extends \Zotlabs\Web\Controller {
         case 'importselected':
 						$_SESSION['action'] = null;
 						break;
+        case 'export_select_list':
+						$_SESSION['action'] = null;
+						if(!$uid) {
+								$_SESSION['export'] = null;
+								break;
+						}
+						require_once('include/import.php');
+						
+						$pages = get_webpage_elements($channel, 'pages');
+						$layouts = get_webpage_elements($channel, 'layouts');
+						$blocks = get_webpage_elements($channel, 'blocks');
+						$o .= replace_macros(get_markup_template('webpage_export_list.tpl'), array(
+							'$title'    => t('Export Webpage Elements'),
+							'$exportbtn' => t('Export selected'),
+							'$action' => $_SESSION['export'],	// value should be 'zipfile' or 'cloud'
+							'$pages' => $pages['pages'],
+							'$layouts' => $layouts['layouts'],
+							'$blocks' => $blocks['blocks'],
+						));
+						$_SESSION['export'] = null;
+						return $o;
+				
 				default :
 						$_SESSION['action'] = null;
 						break;
@@ -233,7 +254,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 	}
 	
 	function post() {
-		
     $action = $_REQUEST['action'];
 		if( $action ){
 			switch ($action) {
@@ -296,6 +316,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 								$path = $website;
 						}
 						$elements['pages'] = scan_webpage_elements($path, 'page', $cloud);
+						logger('$elements pages: ' . json_encode($elements['pages']));
 						$elements['layouts'] = scan_webpage_elements($path, 'layout', $cloud);
 						$elements['blocks'] = scan_webpage_elements($path, 'block', $cloud);
 						$_SESSION['blocks'] = $elements['blocks'];
@@ -313,7 +334,8 @@ class Webpages extends \Zotlabs\Web\Controller {
 					
 					// If the website elements were imported from a zip file, delete the temporary decompressed files
 					if ($cloud === false && $website && $elements) {
-						rrmdir($website);	// Delete the temporary decompressed files
+						$_SESSION['tempimportpath'] = $website;
+						//rrmdir($website);	// Delete the temporary decompressed files
 					}
 					
 					break;
@@ -381,15 +403,299 @@ class Webpages extends \Zotlabs\Web\Controller {
 						if(!(empty($_SESSION['import_pages']) && empty($_SESSION['import_blocks']) && empty($_SESSION['import_layouts']))) {
 								info( t('Import complete.') . EOL);
 						}
+						if(isset($_SESSION['tempimportpath'])) {
+								rrmdir($_SESSION['tempimportpath']);	// Delete the temporary decompressed files
+								unset($_SESSION['tempimportpath']);
+						}
 						break;
-
+				
+				case 'exportzipfile':
+						
+						if(isset($_POST['w_download'])) {
+								$_SESSION['action'] = 'export_select_list';
+								$_SESSION['export'] = 'zipfile';
+								if(isset($_POST['zipfilename']) && $_POST['zipfilename'] !== '') {
+										$filename = filter_var($_POST['zipfilename'], FILTER_SANITIZE_ENCODED);
+								} else {
+										$filename = 'website.zip';
+								}
+								$_SESSION['zipfilename'] = $filename;
+								
+						}
+						
+						break;
+				
+				case 'exportcloud':
+						logger('exportcloud', LOGGER_DEBUG);
+						if(isset($_POST['exportcloudpath']) && $_POST['exportcloudpath'] !== '') {
+								$_SESSION['action'] = 'export_select_list';
+								$_SESSION['export'] = 'cloud';
+								$_SESSION['exportcloudpath'] = filter_var($_POST['exportcloudpath'], FILTER_SANITIZE_ENCODED);
+						}
+						
+						break;
+				
+				case 'cloud':
+				case 'zipfile':
+						
+						$channel = \App::get_channel();
+						
+						$tmp_folder_name = random_string(10);
+						$zip_folder_name = random_string(10);
+						$zip_filename = $_SESSION['zipfilename'];
+						$tmp_folderpath = '/tmp/' . $tmp_folder_name;
+						$zip_folderpath = '/tmp/' . $zip_folder_name;
+						if (!mkdir($zip_folderpath, 0770, false)) {	
+								logger('Error creating zip file export folder: ' . $zip_folderpath, LOGGER_NORMAL);
+								json_return_and_die(array('message' => 'Error creating zip file export folder'));
+						}
+						$zip_filepath = '/tmp/' . $zip_folder_name . '/' . $zip_filename;
+						
+						$checkedblocks = $_POST['block'];
+            $blocks = [];
+            if (!empty($checkedblocks)) {
+                foreach ($checkedblocks as $mid) {
+										$b = q("select iconfig.v, iconfig.k, mimetype, title, body from iconfig 
+												left join item on item.id = iconfig.iid 
+												where mid = '%s' and item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'BUILDBLOCK' order by iconfig.v asc limit 1",
+												dbesc($mid),
+												intval($channel['channel_id'])																	
+										);
+										if($b) {
+												$b = $b[0];
+												$blockinfo = array(
+														'body' => $b['body'],
+														'mimetype' => $b['mimetype'],
+														'title' => $b['title'],
+														'name' => $b['v'],
+														'json' => array(
+																'title' => $b['title'],
+																'name' => $b['v'],
+																'mimetype' => $b['mimetype'],
+														)
+												);
+												switch ($blockinfo['mimetype']) {
+														case 'text/html':
+																$block_ext = 'html';
+																break;
+														case 'text/bbcode':
+																$block_ext = 'bbcode';
+																break;
+														case 'text/markdown':
+																$block_ext = 'md';
+																break;
+														case 'application/x-pdl':
+																$block_ext = 'pdl';
+																break;
+														case 'application/x-php':
+																$block_ext = 'php';
+																break;
+														default:
+																$block_ext = 'bbcode';
+																break;
+												}
+												$block_filename = $blockinfo['name'] . '.' . $block_ext;
+												$tmp_blockfolder = $tmp_folderpath . '/blocks/' . $blockinfo['name'];
+												$block_filepath = $tmp_blockfolder . '/' . $block_filename;
+												$blockinfo['json']['contentfile'] = $block_filename;
+												$block_jsonpath = $tmp_blockfolder . '/block.json';
+												if (!is_dir($tmp_blockfolder) && !mkdir($tmp_blockfolder, 0770, true)) {	
+														logger('Error creating temp export folder: ' . $tmp_blockfolder, LOGGER_NORMAL);
+														json_return_and_die(array('message' => 'Error creating temp export folder'));
+												}
+												file_put_contents($block_filepath, $blockinfo['body']);
+												file_put_contents($block_jsonpath, json_encode($blockinfo['json'], JSON_UNESCAPED_SLASHES));																		
+										}
+								}
+						}
+						
+						$checkedlayouts = $_POST['layout'];
+            $layouts = [];
+            if (!empty($checkedlayouts)) {
+                foreach ($checkedlayouts as $mid) {
+										$l = q("select iconfig.v, iconfig.k, mimetype, title, body from iconfig 
+												left join item on item.id = iconfig.iid 
+												where mid = '%s' and item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' order by iconfig.v asc limit 1",
+												dbesc($mid),
+												intval($channel['channel_id'])																	
+										);
+										if($l) {
+												$l = $l[0];
+												$layoutinfo = array(
+														'body' => $l['body'],
+														'mimetype' => $l['mimetype'],
+														'description' => $l['title'],
+														'name' => $l['v'],
+														'json' => array(
+																'description' => $l['title'],
+																'name' => $l['v'],
+																'mimetype' => $l['mimetype'],
+														)
+												);
+												switch ($layoutinfo['mimetype']) {
+														case 'text/bbcode':
+														default:
+																$layout_ext = 'bbcode';
+																break;
+												}
+												$layout_filename = $layoutinfo['name'] . '.' . $layout_ext;
+												$tmp_layoutfolder = $tmp_folderpath . '/layouts/' . $layoutinfo['name'];
+												$layout_filepath = $tmp_layoutfolder . '/' . $layout_filename;
+												$layoutinfo['json']['contentfile'] = $layout_filename;
+												$layout_jsonpath = $tmp_layoutfolder . '/layout.json';
+												if (!is_dir($tmp_layoutfolder) && !mkdir($tmp_layoutfolder, 0770, true)) {	
+														logger('Error creating temp export folder: ' . $tmp_layoutfolder, LOGGER_NORMAL);
+														json_return_and_die(array('message' => 'Error creating temp export folder'));
+												}
+												file_put_contents($layout_filepath, $layoutinfo['body']);
+												file_put_contents($layout_jsonpath, json_encode($layoutinfo['json'], JSON_UNESCAPED_SLASHES));																		
+										}
+								}
+						}
+						
+						$checkedpages = $_POST['page'];
+            $pages = [];
+            if (!empty($checkedpages)) {
+                foreach ($checkedpages as $mid) {
+										
+										$p = q("select * from iconfig left join item on iconfig.iid = item.id 
+												where item.uid = %d and item.mid = '%s' and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d",
+												intval($channel['channel_id']),
+												dbesc($mid),
+												intval(ITEM_TYPE_WEBPAGE)
+											);
+										
+										if($p) {
+												foreach ($p as $pp) {
+														// Get the associated layout
+														$layoutinfo = array();
+														if($pp['layout_mid']) {
+																$l = q("select iconfig.v, iconfig.k, mimetype, title, body from iconfig 
+																		left join item on item.id = iconfig.iid 
+																		where mid = '%s' and item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' order by iconfig.v asc limit 1",
+																		dbesc($pp['layout_mid']),
+																		intval($channel['channel_id'])																	
+																);
+																if($l) {
+																		$l = $l[0];
+																		$layoutinfo = array(
+																				'body' => $l['body'],
+																				'mimetype' => $l['mimetype'],
+																				'description' => $l['title'],
+																				'name' => $l['v'],
+																				'json' => array(
+																						'description' => $l['title'],
+																						'name' => $l['v'],
+																				)
+																		);
+																		switch ($layoutinfo['mimetype']) {
+																				case 'text/bbcode':
+																				default:
+																						$layout_ext = 'bbcode';
+																						break;
+																		}
+																		$layout_filename = $layoutinfo['name'] . '.' . $layout_ext;
+																		$tmp_layoutfolder = $tmp_folderpath . '/layouts/' . $layoutinfo['name'];
+																		$layout_filepath = $tmp_layoutfolder . '/' . $layout_filename;
+																		$layoutinfo['json']['contentfile'] = $layout_filename;
+																		$layout_jsonpath = $tmp_layoutfolder . '/layout.json';
+																		if (!is_dir($tmp_layoutfolder) && !mkdir($tmp_layoutfolder, 0770, true)) {	
+																				logger('Error creating temp export folder: ' . $tmp_layoutfolder, LOGGER_NORMAL);
+																				json_return_and_die(array('message' => 'Error creating temp export folder'));
+																		}
+																		file_put_contents($layout_filepath, $layoutinfo['body']);
+																		file_put_contents($layout_jsonpath, json_encode($layoutinfo['json'], JSON_UNESCAPED_SLASHES));																		
+																}
+														}
+														switch ($pp['mimetype']) {
+																case 'text/html':
+																		$page_ext = 'html';
+																		break;
+																case 'text/bbcode':
+																		$page_ext = 'bbcode';
+																		break;
+																case 'text/markdown':
+																		$page_ext = 'md';
+																		break;
+																case 'application/x-pdl':
+																		$page_ext = 'pdl';
+																		break;
+																case 'application/x-php':
+																		$page_ext = 'php';
+																		break;
+																default:
+																		break;
+														}
+														$pageinfo = array(
+																'title' => $pp['title'],
+																'body' => $pp['body'],
+																'pagelink' => $pp['v'],
+																'mimetype' => $pp['mimetype'],
+																'contentfile' => $pp['v'] . '.' . $page_ext,
+																'layout' => ((x($layoutinfo,'name')) ? $layoutinfo['name'] : ''),
+																'json' => array(
+																		'title' => $pp['title'],
+																		'pagelink' => $pp['v'],
+																		'mimetype' => $pp['mimetype'],
+																		'layout' => ((x($layoutinfo,'name')) ? $layoutinfo['name'] : ''),
+																)
+														);
+														$page_filename = $pageinfo['pagelink'] . '.' . $page_ext;
+														$tmp_pagefolder = $tmp_folderpath . '/pages/' . $pageinfo['pagelink'];
+														$page_filepath = $tmp_pagefolder . '/' . $page_filename;
+														$page_jsonpath = $tmp_pagefolder . '/page.json';
+														$pageinfo['json']['contentfile'] = $page_filename;
+														if (!is_dir($tmp_pagefolder) && !mkdir($tmp_pagefolder, 0770, true)) {	
+																logger('Error creating temp export folder: ' . $tmp_pagefolder, LOGGER_NORMAL);
+																json_return_and_die(array('message' => 'Error creating temp export folder'));
+														}
+														file_put_contents($page_filepath, $pageinfo['body']);
+														file_put_contents($page_jsonpath, json_encode($pageinfo['json'], JSON_UNESCAPED_SLASHES));
+												}
+										}										
+                }
+            }
+						if($action === 'zipfile') {
+								// Generate the zip file
+								\Zotlabs\Lib\ExtendedZip::zipTree($tmp_folderpath, $zip_filepath, \ZipArchive::CREATE);
+								// Output the file for download
+								header('Content-disposition: attachment; filename="' . $zip_filename . '"');
+								header("Content-Type: application/zip");
+								$success = readfile($zip_filepath);
+						} elseif ($action === 'cloud') { // Only zipfile or cloud should be possible values for $action here
+								if(isset($_SESSION['exportcloudpath'])) {
+										require_once('include/attach.php');
+										$cloudpath = urldecode($_SESSION['exportcloudpath']);
+										$channel = \App::get_channel();
+										$dirpath = get_dirpath_by_cloudpath($channel, $cloudpath);
+										if(!$dirpath) {
+												$x = attach_mkdirp($channel, $channel['channel_hash'], array('pathname' => $cloudpath));
+												$folder_hash = (($x['success']) ? $x['data']['hash'] : '');
+												
+												if (!$x['success']) {
+														logger('Failed to create cloud file folder', LOGGER_NORMAL);
+												}
+												$dirpath = get_dirpath_by_cloudpath($channel, $cloudpath);
+												if (!is_dir($dirpath)) {
+														logger('Failed to create cloud file folder', LOGGER_NORMAL);
+												} 
+										}
+										
+										$success = copy_folder_to_cloudfiles($channel, $channel['channel_hash'], $tmp_folderpath, $cloudpath);
+								}
+						}
+						if(!$success) {
+								logger('Error exporting webpage elements', LOGGER_NORMAL);
+						}
+						
+						rrmdir($zip_folderpath); rrmdir($tmp_folderpath);		// delete temporary files
+						
+						break;
 				default :
 					break;
 			}
+			
 		}
-		
-				
-		
 		
 	}
 	

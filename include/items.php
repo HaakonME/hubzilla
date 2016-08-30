@@ -113,6 +113,26 @@ function collect_recipients($item, &$private_envelope) {
 //			if($policy === 'pub')
 //				$recipients[] = $sys['xchan_hash'];
 		}
+
+		// Add the authors of any posts in this thread, if they are known to us.
+		// This is specifically designed to forward wall-to-wall posts to the original author,
+		// in case they aren't a connection but have permission to write on our wall.  
+		// This is important for issue tracker channels. It should be a no-op for most channels.
+		// Whether or not they will accept the delivery is not determined here, but should
+		// be taken into account by zot:process_delivery()
+
+		$r = q("select author_xchan from item where parent = %d",
+			intval($item['parent'])
+		);
+		if($r) {
+			foreach($r as $rv) {
+				if(! in_array($rv['author_xchan'],$recipients)) {
+					$recipients[] = $rv['author_xchan'];
+				}
+			}
+		}
+		
+
 	}
 
 	// This is a somewhat expensive operation but important.

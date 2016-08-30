@@ -112,7 +112,7 @@ class Apps {
 
 
 	static public function app_name_compare($a,$b) {
-		return strcmp($a['name'],$b['name']);
+		return strcasecmp($a['name'],$b['name']);
 	}
 
 

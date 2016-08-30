@@ -15,7 +15,10 @@ class SmartyTemplate implements TemplateEngine {
 			? \App::$config['system']['smarty3_folder'] : '');
         if (!$basecompiledir) $basecompiledir = str_replace('Zotlabs','',dirname(__dir__)) . "/" . TEMPLATE_BUILD_PATH;
         if (!is_dir($basecompiledir)) {
-            echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt> does not exist."; killme();
+			@os_mkdir(TEMPLATE_BUILD_PATH, STORAGE_DEFAULT_PERMISSIONS, true);
+	        if (!is_dir($basecompiledir)) {
+				echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt> does not exist."; killme();
+			}
         }
 		if(!is_writable($basecompiledir)){
 			echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt> must be writable by webserver."; killme();

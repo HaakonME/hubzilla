@@ -40,8 +40,13 @@ function search_doc_files($s) {
 	$r = fetch_post_tags($r,true);
 
 	for($x = 0; $x < count($r); $x ++) {
-
-		$r[$x]['text'] = $r[$x]['body'];
+		$position =	stripos($r[$x]['body'], $s);
+		$dislen = 300;
+		$start = $position-floor($dislen/2);
+		if ( $start < 0) {
+				$start = 0;
+		}
+		$r[$x]['text'] = substr($r[$x]['body'], $start, $dislen);
 
 		$r[$x]['rank'] = 0;
 		if($r[$x]['term']) {

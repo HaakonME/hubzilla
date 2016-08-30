@@ -81,7 +81,7 @@ This will select the theme named &quot;suckerberg&quot; and select the &quot;pas
 
 [/code]
 
-The condensed notation isn't part of Comanche itself but is recognised by the $Projectname platform as a theme specifier.
+The condensed notation isn't part of Comanche itself but is recognised by $Projectname platform as a theme specifier.
 
 [b]Regions[/b]
 Each region has a name, as noted above. You will specify the region of interest using a 'region' tag, which includes the name. Any content you wish placed in this region should be placed between the opening region tag and the closing tag.

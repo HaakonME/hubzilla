@@ -1,7 +1,6 @@
 <div id="files-mkdir-tools" class="section-content-tools-wrapper">
 	<label for="files-mkdir">{{$folder_header}}</label>
 	<form id="mkdir-form" method="post" action="file_upload" class="acl-form" data-form_id="mkdir-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
-		<!--input type="hidden" name="sabreAction" value="mkcol"-->
 		<input type="hidden" name="folder" value="{{$folder}}" />
 		<input type="hidden" name="channick" value="{{$channick}}" />
 		<input type="hidden" name="return_url" value="{{$return_url}}" />

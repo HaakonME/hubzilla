@@ -1311,8 +1311,6 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 								return false;
 							}
 							$content = file_get_contents($folder . '/' . $contentfilename);
-							logger('contentfile: ' . $folder . '/' . $contentfilename, LOGGER_DEBUG);
-							logger('content: ' . $content, LOGGER_DEBUG);
 							if (!$content) {
 									if(is_readable($folder . '/' . $contentfilename)) {
 											$content = '';
@@ -1401,18 +1399,14 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 				);
 				$arr['mid'] = $arr['parent_mid'] = $iteminfo[0]['mid'];
 				$arr['created'] = $iteminfo[0]['created'];
-				$arr['edited'] = (($element['edited']) ? datetime_convert('UTC', 'UTC', $element['edited']) : datetime_convert());
 		} else { // otherwise, generate the creation times and unique id
-				$arr['created'] = (($element['created']) ? datetime_convert('UTC', 'UTC', $element['created']) : datetime_convert());
-				$arr['edited'] = datetime_convert('UTC', 'UTC', '0000-00-00 00:00:00');
+				$arr['created'] = datetime_convert('UTC', 'UTC');
 				$arr['mid'] = $arr['parent_mid'] = item_message_id();
 		}
+		// Update the edited time whether or not the element already exists
+		$arr['edited'] = datetime_convert('UTC', 'UTC');
 		// Import the actual element content
 		$arr['body'] = file_get_contents($element['path']);
-		if($arr['item_type'] === ITEM_TYPE_PDL) {
-			logger(' body: ' . $arr['body'], LOGGER_DEBUG);
-			logger(' path: ' . $element['path'], LOGGER_DEBUG);
-		}
 		// The element owner is the channel importing the elements
 		$arr['owner_xchan'] = get_observer_hash();
 		// The author is either the owner or whomever was specified
@@ -1425,7 +1419,7 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 										'application/x-pdl',
 										'application/x-php'	
 		];
-		// Blocks and pages can have any mimetype, but layouts must be text/bbcode
+		// Blocks and pages can have any of the valid mimetypes, but layouts must be text/bbcode
 		if((in_array($element['mimetype'], $mimetypes))	&& ($type === 'page' || $type === 'block') ) {
 				$arr['mimetype'] = $element['mimetype'];
 		} else {
@@ -1434,7 +1428,7 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 
 		// Verify ability to use html or php!!!
 		$execflag = false;
-		if ($arr['mimetype'] === 'application/x-php') {
+		if ($arr['mimetype'] === 'application/x-php' || $arr['mimetype'] === 'text/html') {
 				$z = q("select account_id, account_roles, channel_pageflags from account "
 					. "left join channel on channel_account_id = account_id where channel_id = %d limit 1", 
 					intval(local_channel())
@@ -1442,10 +1436,15 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 
 				if ($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
 						$execflag = true;
+				} else {
+						logger('Unable to import element "' . $name .'" because AllowCode permission is denied.');
+						notice( t('Unable to import element "' . $name .'" because AllowCode permission is denied.') . EOL);
+						$element['import_success'] = 0;
+						return $element;
 				}
 		}
 		
-		$z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'service' limit 1", 
+		$z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'system' limit 1", 
 			dbesc($name), 
 			dbesc($namespace)
 		);

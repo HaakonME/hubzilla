@@ -316,7 +316,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 								$path = $website;
 						}
 						$elements['pages'] = scan_webpage_elements($path, 'page', $cloud);
-						logger('$elements pages: ' . json_encode($elements['pages']));
 						$elements['layouts'] = scan_webpage_elements($path, 'layout', $cloud);
 						$elements['blocks'] = scan_webpage_elements($path, 'block', $cloud);
 						$_SESSION['blocks'] = $elements['blocks'];
@@ -426,7 +425,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 						break;
 				
 				case 'exportcloud':
-						logger('exportcloud', LOGGER_DEBUG);
 						if(isset($_POST['exportcloudpath']) && $_POST['exportcloudpath'] !== '') {
 								$_SESSION['action'] = 'export_select_list';
 								$_SESSION['export'] = 'cloud';

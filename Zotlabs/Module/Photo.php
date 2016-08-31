@@ -133,7 +133,16 @@ class Photo extends \Zotlabs\Web\Controller {
 				$allowed = (($r[0]['uid']) ? perm_is_allowed($r[0]['uid'],$observer_xchan,'view_storage') : true);
 	
 				$sql_extra = permissions_sql($r[0]['uid']);
+
+				if(! $sql_extra)
+					$sql_extra = ' and true ';
+
+				// Only check permissions on normal photos. Those photos we don't check includes
+				// profile photos, xchan photos (which are also profile photos), 'thing' photos,
+				// and cover photos
 	
+				$sql_extra = " and (( photo_usage = 0 $sql_extra ) or photo_usage != 0 )";
+
 				$channel = channelx_by_n($r[0]['uid']);
 
 				// Now we'll see if we can access the photo

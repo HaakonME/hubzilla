@@ -324,3 +324,11 @@ input.listcheckbox {
 	margin: 0px;
 	vertical-align: middle;
 }
+
+.combobox {
+	padding: 15px;
+}
+
+#filer_save {
+	margin-left: 15px;
+}

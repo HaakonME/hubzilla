@@ -2267,11 +2267,11 @@ function design_tools() {
 }
 
 /**
- * @brief Creates website import tools menu
+ * @brief Creates website portation tools menu
  *
  * @return string
  */
-function website_import_tools() {
+function website_portation_tools() {
 
 	$channel  = App::get_channel();
 	$sys = false;
@@ -2282,7 +2282,7 @@ function website_import_tools() {
 		$sys = true;
 	}
 
-	return replace_macros(get_markup_template('website_import_tools.tpl'), array(
+	return replace_macros(get_markup_template('website_portation_tools.tpl'), array(
 		'$title' => t('Import'),
 		'$import_label' => t('Import website...'),
 		'$import_placeholder' => t('Select folder to import'),
@@ -2290,7 +2290,15 @@ function website_import_tools() {
 		'$file_import_text' => t('Import from cloud files:'),
 		'$desc' => t('/cloud/channel/path/to/folder'),
 		'$hint' => t('Enter path to website files'),
-		'$select' => t('Select folder'),
+		'$select' => t('Select folder'),			
+		'$export_label' => t('Export website...'),
+		'$file_download_text' => t('Export to a zip file'),
+		'$filename_desc' => t('website.zip'),
+		'$filename_hint' => t('Enter a name for the zip file.'),
+		'$cloud_export_text' => t('Export to cloud files'),
+		'$cloud_export_desc' => t('/path/to/export/folder'),
+		'$cloud_export_hint' => t('Enter a path to a cloud files destination.'),
+		'$cloud_export_select' => t('Specify folder'),			
 	));
 }
 

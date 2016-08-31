@@ -156,9 +156,12 @@ function oembed_fetch_url($embedurl){
 		if ($action !== 'block') {
 			// try oembed autodiscovery
 			$redirects = 0;
-			$result = z_fetch_url($furl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));
+			$result = z_fetch_url($furl, false, $redirects, array('timeout' => 30, 'accept_content' => "text/*", 'novalidate' => true ));
+
 			if($result['success'])
 				$html_text = $result['body'];
+			else
+				logger('fetch failure: ' . $furl);
 
 			if($html_text) {
 				$dom = @DOMDocument::loadHTML($html_text);
@@ -171,7 +174,10 @@ function oembed_fetch_url($embedurl){
 					foreach($entries as $e){
 						$href = $e->getAttributeNode("href")->nodeValue;
 						$x = z_fetch_url($href . '&maxwidth=' . App::$videowidth);
-						$txt = $x['body'];
+						if($x['success'])
+							$txt = $x['body'];
+						else
+							logger('fetch failed: ' . $href);
 						break;
 					}
 					// soundcloud is now using text/json+oembed instead of application/json+oembed, 
@@ -180,7 +186,10 @@ function oembed_fetch_url($embedurl){
 					foreach($entries as $e){
 						$href = $e->getAttributeNode("href")->nodeValue;
 						$x = z_fetch_url($href . '&maxwidth=' . App::$videowidth);
-						$txt = $x['body'];
+						if($x['success'])
+							$txt = $x['body'];
+						else
+							logger('json fetch failed: ' . $href);
 						break;
 					}
 				}

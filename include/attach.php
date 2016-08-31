@@ -1995,6 +1995,52 @@ function get_filename_by_cloudname($cloudname, $channel, $storepath) {
 	return null;
 }
 
+
+// recursively copy a directory into cloud files
+function copy_folder_to_cloudfiles($channel, $observer_hash, $srcpath, $cloudpath)
+{
+    if (!is_dir($srcpath) || !is_readable($srcpath)) {
+				logger('Error reading source path: ' . $srcpath, LOGGER_NORMAL);
+				return false;
+		}
+		$nodes = array_diff(scandir($srcpath), array('.', '..'));
+		foreach ($nodes as $node) {
+				$clouddir = $cloudpath . '/' . $node;		// Sub-folder in cloud files destination
+				$nodepath = $srcpath . '/' . $node;				// Sub-folder in source path
+				if(is_dir($nodepath)) {
+						$x = attach_mkdirp($channel, $observer_hash, array('pathname' => $clouddir));
+						if(!$x['success']) {
+								logger('Error creating cloud path: ' . $clouddir, LOGGER_NORMAL);
+								return false;
+						}
+						// Recursively call this function where the source and destination are the subfolders
+						$success = copy_folder_to_cloudfiles($channel, $observer_hash, $nodepath, $clouddir);
+						if(!$success) {
+								logger('Error copying contents of folder: ' . $nodepath, LOGGER_NORMAL);
+								return false;								
+						}
+				} elseif (is_file($nodepath) && is_readable($nodepath)) {
+						$x = attach_store($channel, $observer_hash, 'import', 
+												array(
+														'directory'					=> $cloudpath, 
+														'src'								=> $nodepath, 
+														'filename'					=> $node,
+														'filesize'					=> @filesize($nodepath),
+														'preserve_original'	=> true)
+												);
+						if(!$x['success']) {
+								logger('Error copying file: ' . $nodepath , LOGGER_NORMAL);
+								logger('Return value: ' . json_encode($x), LOGGER_NORMAL);
+								return false;								
+						}
+				} else {
+						logger('Error scanning source path', LOGGER_NORMAL);
+						return false;						
+				}
+		}
+
+    return true;
+}
 /**
  * attach_move()
  * This function performs an in place directory-to-directory move of a stored attachment or photo.

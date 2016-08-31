@@ -769,6 +769,8 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	}
 	// Check for list text
 	$Text = str_replace("[*]", "<li>", $Text);
+	$Text = str_replace("[]", "<li><input class=\"listcheckbox\" type=\"checkbox\" disabled=\"disabled\">", $Text);
+	$Text = str_replace("[x]", "<li><input class=\"listcheckbox\" type=\"checkbox\" checked=\"checked\" disabled=\"disabled\">", $Text);
 
  	// handle nested lists
 	$endlessloop = 0;

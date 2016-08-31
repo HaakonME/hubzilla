@@ -319,3 +319,11 @@ img.smiley.emoji:hover {
 	width: 32px;
 	height: 32px;
 }
+
+.combobox {
+	padding: 15px;
+}
+
+#filer_save {
+	margin-left: 15px;
+}

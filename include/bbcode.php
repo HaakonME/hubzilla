@@ -768,13 +768,14 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	}
 	// Check for list text
 	$Text = str_replace("[*]", "<li>", $Text);
-	$Text = str_replace("[]", "<li><input class=\"listcheckbox\" type=\"checkbox\" disabled=\"disabled\">", $Text);
-	$Text = str_replace("[x]", "<li><input class=\"listcheckbox\" type=\"checkbox\" checked=\"checked\" disabled=\"disabled\">", $Text);
+	$Text = str_replace("[]", "<li><input type=\"checkbox\" disabled=\"disabled\">", $Text);
+	$Text = str_replace("[x]", "<li><input type=\"checkbox\" checked=\"checked\" disabled=\"disabled\">", $Text);
 
  	// handle nested lists
 	$endlessloop = 0;
 
 	while ((((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false)) ||
+			((strpos($Text, "[/checklist]") !== false) && (strpos($Text, "[checklist]") !== false)) ||
 			((strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false)) ||
 			((strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false)) ||
 			((strpos($Text, "[/dl]") !== false) && (strpos($Text, "[dl")  !== false)) ||
@@ -786,6 +787,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[list=((?-i)I)\](.*?)\[\/list\]/ism", '<ul class="listupperroman" style="list-style-type: upper-roman;">$2</ul>', $Text);
 		$Text = preg_replace("/\[list=((?-i)a)\](.*?)\[\/list\]/ism", '<ul class="listloweralpha" style="list-style-type: lower-alpha;">$2</ul>', $Text);
 		$Text = preg_replace("/\[list=((?-i)A)\](.*?)\[\/list\]/ism", '<ul class="listupperalpha" style="list-style-type: upper-alpha;">$2</ul>', $Text);
+		$Text = preg_replace("/\[checklist\](.*?)\[\/checklist\]/ism", '<ul class="checklist" style="list-style-type: none;">$1</ul>', $Text);
 		$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>', $Text);
 		$Text = preg_replace("/\[ol\](.*?)\[\/ol\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>', $Text);
 		$Text = preg_replace("/\[li\](.*?)\[\/li\]/ism", '<li>$1</li>', $Text);

@@ -102,8 +102,8 @@ function submit_form(e) {
 
 function getWord(text, caretPos) {
 	var index = text.indexOf(caretPos);
-	var postText = text.substring(caretPos, caretPos+8);
-	if ((postText.indexOf('[/list]') > 0) || postText.indexOf('[/ul]') > 0 || postText.indexOf('[/ol]') > 0 || postText.indexOf('[/dl]') > 0) {
+	var postText = text.substring(caretPos, caretPos+13);
+	if (postText.indexOf('[/list]') > 0 || postText.indexOf('[/checklist]') > 0 || postText.indexOf('[/ul]') > 0 || postText.indexOf('[/ol]') > 0 || postText.indexOf('[/dl]') > 0) {
 		return postText;
 	}
 }
@@ -140,10 +140,11 @@ function listNewLineAutocomplete(id) {
 	var text = document.getElementById(id);
 	var caretPos = getCaretPosition(text)
 	var word = getWord(text.value, caretPos);
+
 	if (word != null) {
 		var textBefore = text.value.substring(0, caretPos);
 		var textAfter  = text.value.substring(caretPos, text.length);
-		var textInsert = (word.indexOf('[/dl]') > 0) ? '\r\n[*=] ' : '\r\n[*] ';
+		var textInsert = (word.indexOf('[/dl]') > 0) ? '\r\n[*=] ' : (word.indexOf('[/checklist]') > 0) ? '\r\n[] ' : '\r\n[*] ';
 		var caretPositionDiff = (word.indexOf('[/dl]') > 0) ? 3 : 1;
 
 		$('#' + id).val(textBefore + textInsert + textAfter);
@@ -268,7 +269,7 @@ function string2bb(element) {
 	$.fn.bbco_autocomplete = function(type) {
 
 		if(type=='bbcode') {
-			var open_close_elements = ['bold', 'italic', 'underline', 'overline', 'strike', 'superscript', 'subscript', 'quote', 'code', 'open', 'spoiler', 'map', 'nobb', 'list', 'ul', 'ol', 'dl', 'li', 'table', 'tr', 'th', 'td', 'center', 'color', 'font', 'size', 'zrl', 'zmg', 'rpost', 'qr', 'observer'];
+			var open_close_elements = ['bold', 'italic', 'underline', 'overline', 'strike', 'superscript', 'subscript', 'quote', 'code', 'open', 'spoiler', 'map', 'nobb', 'list', 'checklist', 'ul', 'ol', 'dl', 'li', 'table', 'tr', 'th', 'td', 'center', 'color', 'font', 'size', 'zrl', 'zmg', 'rpost', 'qr', 'observer'];
 			var open_elements = ['observer.baseurl', 'observer.address', 'observer.photo', 'observer.name', 'observer.webname', 'observer.url', '*', 'hr',  ];
 
 			var elements = open_close_elements.concat(open_elements);
@@ -300,7 +301,9 @@ function string2bb(element) {
 				element = string2bb(element);
 				if(open_elements.indexOf(element) < 0) {
 					if(element === 'list' || element === 'ol' || element === 'ul') {
-						return ['\[' + element + '\]' + '\n\[*\] ',            '\n\[/' + element + '\]'];
+						return ['\[' + element + '\]' + '\n\[*\] ', '\n\[/' + element + '\]'];
+					} else if(element === 'checklist') {
+						return ['\[' + element + '\]' + '\n\[\] ', '\n\[/' + element + '\]'];
 					} else if (element === 'dl') {
 						return ['\[' + element + '\]' + '\n\[*=Item name\] ', '\n\[/' + element + '\]'];
 					} else if(element === 'table') {

@@ -174,7 +174,7 @@ class Register extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		$registration_is = '';
 		$other_sites = '';
@@ -205,6 +205,12 @@ class Register extends \Zotlabs\Web\Controller {
 				return;
 			}
 		}
+
+		$privacy_role = ((x($_REQUEST,'permissions_role')) ? $_REQUEST['permissions_role'] : "");
+
+		$perm_roles = \Zotlabs\Access\PermissionRoles::roles();
+		if((get_account_techlevel() < 4) && $privacy_role !== 'custom')
+			unset($perm_roles[t('Other')]);
 	
 		// Configurable terms of service link
 	
@@ -231,8 +237,7 @@ class Register extends \Zotlabs\Web\Controller {
 		$name = array('name', t('Name or caption'), ((x($_REQUEST,'name')) ? $_REQUEST['name'] : ''), t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group"'));
 		$nickhub = '@' . str_replace(array('http://','https://','/'), '', get_config('system','baseurl'));
 		$nickname = array('nickname', t('Choose a short nickname'), ((x($_REQUEST,'nickname')) ? $_REQUEST['nickname'] : ''), sprintf( t('Your nickname will be used to create an easy to remember channel address e.g. nickname%s'), $nickhub));
-		$privacy_role = ((x($_REQUEST,'permissions_role')) ? $_REQUEST['permissions_role'] : "");
-		$role = array('permissions_role' , t('Channel role and privacy'), ($privacy_role) ? $privacy_role : 'social', t('Select a channel role with your privacy requirements.') . ' <a href="help/roles" target="_blank">' . t('Read more about roles') . '</a>',get_roles());
+		$role = array('permissions_role' , t('Channel role and privacy'), ($privacy_role) ? $privacy_role : 'social', t('Select a channel role with your privacy requirements.') . ' <a href="help/roles" target="_blank">' . t('Read more about roles') . '</a>',$perm_roles);
 		$tos = array('tos', $label_tos, '', '', array(t('no'),t('yes')));
 
 		$server_role = get_config('system','server_role');	
@@ -254,11 +259,11 @@ class Register extends \Zotlabs\Web\Controller {
 			'$invite_code'  => $invite_code,
 			'$auto_create'  => $auto_create,
 			'$name'         => $name,
-			'$role' 	=> $role,
+			'$role'         => $role,
 			'$default_role' => $default_role,
 			'$nickname'     => $nickname,
 			'$enable_tos'	=> $enable_tos,
-			'$tos'		=> $tos,
+			'$tos'          => $tos,
 			'$email'        => $email,
 			'$pass1'        => $password,
 			'$pass2'        => $password2,

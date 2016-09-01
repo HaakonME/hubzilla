@@ -1238,7 +1238,11 @@ class Settings extends \Zotlabs\Web\Controller {
 				$permissions_role = 'custom';
 	
 			$permissions_set = (($permissions_role != 'custom') ? true : false);
-	
+
+			$perm_roles = \Zotlabs\Access\PermissionRoles::roles();
+			if((get_account_techlevel() < 4) && $permissions_role !== 'custom')
+				unset($perm_roles[t('Other')]);
+
 			$vnotify = get_pconfig(local_channel(),'system','vnotify');
 			$always_show_in_notices = get_pconfig(local_channel(),'system','always_show_in_notices');
 			if($vnotify === false)
@@ -1289,7 +1293,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$deny_gid' => acl2json($perm_defaults['deny_gid']),
 				'$suggestme' => $suggestme,
 				'$group_select' => $group_select,
-				'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', get_roles()),
+				'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', $perm_roles),
 	
 				'$profile_in_dir' => $profile_in_dir,
 				'$hide_friends' => $hide_friends,

@@ -320,7 +320,8 @@ img.smiley.emoji:hover {
 	height: 32px;
 }
 
-input.listcheckbox {
+
+.checklist input {
 	margin: 0px;
 	vertical-align: middle;
 }

@@ -72,7 +72,7 @@ class Search_ac extends \Zotlabs\Web\Controller {
 		);
 		echo json_encode($o);
 	
-		logger('search_ac: ' . print_r($x,true));
+		logger('search_ac: ' . print_r($x,true),LOGGER_ALL,LOG_INFO);
 	
 		killme();
 	}

@@ -666,8 +666,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '<a class="zrl" href="$1" target="_blank" >$2</a>', $Text);
 	}
 
-	// Remove bookmarks from UNO
-	if (get_config('system','server_role') === 'basic')
+	if (get_account_techlevel() > 2)
 		$Text = str_replace('<span class="bookmark-identifier">#^</span>', '', $Text);
 
 	// Perform MAIL Search

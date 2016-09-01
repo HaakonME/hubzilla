@@ -594,14 +594,11 @@ function widget_settings_menu($arr) {
 		);
 	}
 
-	// IF can go away when UNO export and import is fully functional
-	if(get_config('system','server_role') !== 'basic') {
-		$tabs[] =	array(
-			'label' => t('Export channel'),
-			'url' => z_root() . '/uexport',
-			'selected' => ''
-		);
-	}
+	$tabs[] =	array(
+		'label' => t('Export channel'),
+		'url' => z_root() . '/uexport',
+		'selected' => ''
+	);
 
 	$tabs[] =	array(
 		'label' => t('Connected apps'),
@@ -609,7 +606,7 @@ function widget_settings_menu($arr) {
 		'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 	);
 
-	if(get_config('system','server_role') !== 'basic') {
+	if(get_account_techlevel() > 2) {
 		$tabs[] =	array(
 			'label' => t('Guest Access Tokens'),
 			'url' => z_root() . '/settings/tokens',

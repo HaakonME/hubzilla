@@ -63,6 +63,7 @@ EOT;
 
 	$server_role = get_config('system','server_role');
 	$basic = (($server_role === 'basic') ? true : false);
+	$techlevel = get_account_techlevel();
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
 	$nav = Array();

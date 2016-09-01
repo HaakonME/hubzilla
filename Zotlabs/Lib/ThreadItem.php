@@ -246,10 +246,11 @@ class ThreadItem {
 		}
 
 		$server_role = get_config('system','server_role');
+
 		$has_bookmarks = false;
 		if(is_array($item['term'])) {
 			foreach($item['term'] as $t) {
-				if(($server_role != 'basic') && ($t['ttype'] == TERM_BOOKMARK))
+				if((get_account_techlevel() > 0) && ($t['ttype'] == TERM_BOOKMARK))
 					$has_bookmarks = true;
 			}
 		}

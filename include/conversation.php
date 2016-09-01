@@ -1621,6 +1621,8 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 
 	$uid = ((App::$profile['profile_uid']) ? App::$profile['profile_uid'] : local_channel());
+	$account_id = ((App::$profile['profile_uid']) ? App::$profile['channel_account_id'] : App::get_account_id());
+
 
 	if($uid == local_channel()) {
 		$cal_link = '';
@@ -1723,7 +1725,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	} 
 
-	if(feature_enabled($uid,'wiki') && (get_config('system','server_role') !== 'basic')) {
+	if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
 		$tabs[] = array(
 			'label' => t('Wiki'),
 			'url'   => z_root() . '/wiki/' . $nickname,

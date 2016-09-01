@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1181 );
+define( 'UPDATE_VERSION' , 1182 );
 
 /**
  *
@@ -2427,5 +2427,12 @@ function update_r1180() {
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+function update_r1181() {
+	if(\Zotlabs\Lib\System::get_server_role() == 'pro') {
+		q("update account set account_level = 5 where true");
+	}
+	return UPDATE_SUCCESS;
 }
 

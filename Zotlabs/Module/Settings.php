@@ -306,6 +306,8 @@ class Settings extends \Zotlabs\Web\Controller {
 			$errs = array();
 	
 			$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
+			$techlevel = ((array_key_exists('techlevel',$_POST)) ? intval($_POST['techlevel']) : 0);
+
 			$account = \App::get_account();
 			if($email != $account['account_email']) {
 				if(! valid_email($email))
@@ -323,6 +325,13 @@ class Settings extends \Zotlabs\Web\Controller {
 					if(! $r)
 						$errs[] = t('System failure storing new email. Please try again.');
 				}
+			}
+			if($techlevel != $account['account_level']) {
+				$r = q("update account set account_level = %d where account_id = %d",
+					intval($techlevel),
+					intval($account['account_id'])
+				);
+				info( t('Technical skill level updated') . EOL);
 			}
 	
 			if($errs) {
@@ -783,8 +792,17 @@ class Settings extends \Zotlabs\Web\Controller {
 			call_hooks('account_settings', $account_settings);
 	
 			$email      = \App::$account['account_email'];
-			
-			
+
+			$techlevels = [
+				'0' => t('Beginner/Basic'),
+				'1' => t('Novice - not skilled but willing to learn'),
+				'2' => t('Intermediate - somewhat comfortable'),
+				'3' => t('Advanced - very comfortable'),
+				'4' => t('Expert - I can write computer code'),			
+				'5' => t('Wizard - I probably know more than you do')
+			];
+
+
 			$tpl = get_markup_template("settings_account.tpl");
 			$o .= replace_macros($tpl, array(
 				'$form_security_token' => get_form_security_token("settings_account"),
@@ -792,6 +810,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$origpass' => array('origpass', t('Current Password'), ' ',''),
 				'$password1'=> array('npassword', t('Enter New Password'), '', ''),
 				'$password2'=> array('confirm', t('Confirm New Password'), '', t('Leave password fields blank unless changing')),
+				'$techlevel' => [ 'techlevel', t('Your technical skill level'), \App::$account['account_level'], t('Used to provide a member experience matched to your comfort level'), $techlevels ],
 				'$submit' 	=> t('Submit'),
 				'$email' 	=> array('email', t('Email Address:'), $email, ''),
 				'$removeme' => t('Remove Account'),

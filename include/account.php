@@ -14,6 +14,13 @@ require_once('include/crypto.php');
 require_once('include/channel.php');
 
 
+function get_account_by_id($account_id) {
+	$r = q("select * from account where account_id = %d",
+		intval($account_id)
+	);
+	return (($r) ? $r[0] : false);
+}
+
 function check_account_email($email) {
 
 	$result = array('error' => false, 'message' => '');
@@ -750,4 +757,24 @@ function upgrade_message($bbcode = false) {
 function upgrade_bool_message($bbcode = false) {
 	$x = upgrade_link($bbcode);
 	return t('This action is not available under your subscription plan.') . (($x) ? ' ' . $x : '') ;
+}
+
+
+function get_account_techlevel($account_id = 0) {
+
+	$role = \Zotlabs\Lib\System::get_server_role();
+	if($role == 'basic')
+		return 0;
+	if($role == 'standard')
+		return 5;
+
+	if(! $account_id) {
+		$x = \App::get_account();
+	}
+	else { 
+		$x = get_account_by_id($account_id);
+	}
+
+	return (($x) ? intval($x['account_level']) : 0);
+
 }

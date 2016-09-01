@@ -1121,6 +1121,8 @@ class Settings extends \Zotlabs\Web\Controller {
 			foreach($global_perms as $k => $perm) {
 				$options = array();
 				foreach($perm_opts as $opt) {
+					if((! strstr($perm,'view')) && $opt[1] == PERMS_PUBLIC)
+						continue;
 					$options[$opt[1]] = $opt[0];
 				}
 				$permiss[] = array($k,$perm,$limits[$k],'',$options);			
@@ -1274,11 +1276,11 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$permiss_arr' => $permiss,
 				'$blocktags' => array('blocktags',t('Allow others to tag your posts'), 1-$blocktags, t('Often used by the community to retro-actively flag inappropriate content'), $yes_no),
 	
-				'$lbl_p2macro' => t('Advanced Privacy Settings'),
+				'$lbl_p2macro' => t('Channel Permission Limits'),
 	
 				'$expire' => array('expire',t('Expire other channel content after this many days'),$expire, t('0 or blank to use the website limit.') . ' ' . ((intval($sys_expire)) ? sprintf( t('This website expires after %d days.'),intval($sys_expire)) : t('This website does not expire imported content.')) . ' ' . t('The website limit takes precedence if lower than your limit.')),
 				'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
-				'$permissions' => t('Default Post and Publish Permissions'),
+				'$permissions' => t('Default Access Control List (ACL)'),
 				'$permdesc' => t("\x28click to open/close\x29"),
 				'$aclselect' => populate_acl($perm_defaults, false, \Zotlabs\Lib\PermissionDescription::fromDescription(t('Use my default audience setting for the type of object published'))),
 				'$allow_cid' => acl2json($perm_defaults['allow_cid']),

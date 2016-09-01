@@ -649,7 +649,6 @@ class Settings extends \Zotlabs\Web\Controller {
 		build_sync_packet();
 	
 	
-		//$_SESSION['theme'] = $theme;
 		if($email_changed && \App::$config['system']['register_policy'] == REGISTER_VERIFY) {
 	
 			// FIXME - set to un-verified, blocked and redirect to logout

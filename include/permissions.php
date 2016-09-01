@@ -6,7 +6,13 @@ require_once('include/security.php');
  * @file include/permissions.php
  *
  * This file conntains functions to check and work with permissions.
+ * 
+ * Most of this file is obsolete and has been superceded by extensible permissions in v1.12; it is left here 
+ * for reference and because we haven't yet checked that all functions have been replaced and are available 
+ * elsewhere (typically Zotlabs/Access/*).
  */
+
+
 
 /**
  * @brief Return an array with all available permissions.

@@ -936,7 +936,7 @@ function searchbox($s,$id='search-box',$url='/search',$save = false) {
 		'$action_url' => z_root() . '/' . $url,
 		'$search_label' => t('Search'),
 		'$save_label' => t('Save'),
-		'$savedsearch' => feature_enabled(local_channel(),'savedsearch')
+		'$savedsearch' => ($save && feature_enabled(local_channel(),'savedsearch'))
 	));
 }
 

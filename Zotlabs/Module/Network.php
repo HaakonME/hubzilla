@@ -61,6 +61,7 @@ class Network extends \Zotlabs\Web\Controller {
 	
 		$search = (($_GET['search']) ? $_GET['search'] : '');
 		if($search) {
+			$_GET['netsearch'] = escape_tags($search);
 			if(strpos($search,'@') === 0) {
 				$r = q("select abook_id from abook left join xchan on abook_xchan = xchan_hash where xchan_name = '%s' and abook_channel = %d limit 1",
 					dbesc(substr($search,1)),

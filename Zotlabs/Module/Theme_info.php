@@ -3,7 +3,7 @@
 namespace Zotlabs\Module;
 
 
-class Theme extends \Zotlabs\Web\Controller {
+class Theme_info extends \Zotlabs\Web\Controller {
 
 	function get() {
 		$theme = argv(1);
@@ -20,8 +20,28 @@ class Theme extends \Zotlabs\Web\Controller {
 			}
 			$theme_config = theme_content($a);
 		}
+		$info = get_theme_info($theme);
+		if($info) {
+			// unfortunately there will be no translation for this string
+			$desc    = $info['description'];
+			$version = $info['version'];
+			$credits = $info['credits'];
+		}
+		else {
+			$desc = '';
+			$version = '';
+			$credits = '';
+		}
 
-		$ret = array('theme' => $theme, 'schemas' => $schemas,'config' => $theme_config);
+		$ret = [ 
+			'theme' => $theme, 
+			'img' => get_theme_screenshot($theme), 
+			'desc' => $desc, 
+			'version' => $version, 
+			'credits' => $credits, 
+			'schemas' => $schemas,
+			'config' => $theme_config
+		];
 		json_return_and_die($ret);
 		
 	}

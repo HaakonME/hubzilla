@@ -1,5 +1,7 @@
 <?php
 
+namespace Zotlabs\Theme;
+
 class RedbasicConfig {
 
 	function get_schemas() {
@@ -19,7 +21,7 @@ class RedbasicConfig {
 	}
 
 	function get() {
-		if(!local_channel()) { 
+		if(! local_channel()) { 
 			return;
 		}
 
@@ -103,7 +105,7 @@ class RedbasicConfig {
 	  	$o .= replace_macros(get_markup_template('theme_settings.tpl'), array(
 			'$submit' => t('Submit'),
 			'$baseurl' => z_root(),
-			'$theme' => App::$channel['channel_theme'],
+			'$theme' => \App::$channel['channel_theme'],
 			'$expert' => $expert,
 			'$title' => t("Theme settings"),
 			'$narrow_navbar' => array('redbasic_narrow_navbar',t('Narrow navbar'),$arr['narrow_navbar'], '', array(t('No'),t('Yes'))),

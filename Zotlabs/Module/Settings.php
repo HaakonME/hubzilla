@@ -268,8 +268,8 @@ class Settings extends \Zotlabs\Web\Controller {
 				// call theme_post only if theme has not been changed
 				if( ($themeconfigfile = $this->get_theme_config_file($theme)) != null){
 					require_once($themeconfigfile);
-					if(class_exists(ucfirst($theme) . 'Config')) {
-						$clsname = ucfirst($theme) . 'Config';
+					if(class_exists('\\Zotlabs\\Theme\\' . ucfirst($theme) . 'Config')) {
+						$clsname = '\\Zotlabs\\Theme\\' . ucfirst($theme) . 'Config';
 						$theme_config = new $clsname();
 						$schemas = $theme_config->get_schemas();
 						if(array_key_exists($_POST['schema'],$schemas))

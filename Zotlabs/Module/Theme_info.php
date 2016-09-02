@@ -15,8 +15,8 @@ class Theme_info extends \Zotlabs\Web\Controller {
 		$theme_config = "";
 		if(($themeconfigfile = $this->get_theme_config_file($theme)) != null){
 			require_once($themeconfigfile);
-			if(class_exists(ucfirst($theme) . 'Config')) {
-				$clsname = ucfirst($theme) . 'Config';
+			if(class_exists('\\Zotlabs\\Theme\\' . ucfirst($theme) . 'Config')) {
+				$clsname = '\\Zotlabs\\Theme\\' . ucfirst($theme) . 'Config';
 				$th_config = new $clsname();
 				$schemas = $th_config->get_schemas();
 				if($schemas) {

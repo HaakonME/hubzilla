@@ -119,6 +119,7 @@ function create_account($arr) {
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
 	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : NULL_DATE);
+	$techlevel   = ((array_key_exists('techlevel',$arr)) ? intval($arr['techlevel']) : intval(get_config('system','techlevel')));
 
 	$default_service_class = get_config('system','default_service_class');
 
@@ -178,16 +179,17 @@ function create_account($arr) {
 
 	$r = q("INSERT INTO account 
 			( account_parent,  account_salt,  account_password, account_email,   account_language, 
-			  account_created, account_flags, account_roles,    account_expires, account_service_class )
-		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
+			  account_created, account_flags, account_roles,  account_level,  account_expires, account_service_class )
+		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s' )",
 		intval($parent),
 		dbesc($salt),
 		dbesc($password_encoded),
 		dbesc($email),
 		dbesc(get_best_language()),
 		dbesc(datetime_convert()),
-		dbesc($flags),
-		dbesc($roles),
+		intval($flags),
+		intval($roles),
+		intval($techlevel),
 		dbesc($expires),
 		dbesc($default_service_class)
 	);

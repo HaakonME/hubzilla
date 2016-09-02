@@ -1040,8 +1040,8 @@ class Settings extends \Zotlabs\Web\Controller {
 			$theme_config = "";
 			if(($themeconfigfile = $this->get_theme_config_file($theme)) != null){
 				require_once($themeconfigfile);
-				if(class_exists(ucfirst($theme) . 'Config')) {
-					$clsname = ucfirst($theme) . 'Config';
+				if(class_exists('\\Zotlabs\\Theme\\' . ucfirst($theme) . 'Config')) {
+					$clsname = '\\Zotlabs\\Theme\\' . ucfirst($theme) . 'Config';
 					$thm_config = new $clsname();
 					$schemas = $thm_config->get_schemas();
 					$theme_config = $thm_config->get();

@@ -1062,7 +1062,7 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$uid' => local_channel(),
 			
 				'$theme'	=> (($themes) ? array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview') : false),
-				'$schema'   => (($schemas) ? array('schema', t('Select scheme'), $existing_schema, '' , $schemas) : ''),
+				'$schema'   => array('schema', t('Select scheme'), $existing_schema, '' , $schemas),
 
 				'$mobile_theme' => (($mobile_themes) ? array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, '') : false),
 				'$preload_images' => array('preload_images', t("Preload images before rendering the page"), $preload_images, t("The subjective page load time will be longer but the page will be ready when displayed"), $yes_no),

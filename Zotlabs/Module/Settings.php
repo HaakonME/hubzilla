@@ -803,6 +803,10 @@ class Settings extends \Zotlabs\Web\Controller {
 				'5' => t('Wizard - I probably know more than you do')
 			];
 
+			$def_techlevel = get_config('system','techlevel');
+			if($def_techlevel === false)			
+				$def_techlevel = \App::$account['account_level'];
+			$techlock = get_config('system','techlevel_lock');
 
 			$tpl = get_markup_template("settings_account.tpl");
 			$o .= replace_macros($tpl, array(
@@ -811,7 +815,8 @@ class Settings extends \Zotlabs\Web\Controller {
 				'$origpass' => array('origpass', t('Current Password'), ' ',''),
 				'$password1'=> array('npassword', t('Enter New Password'), '', ''),
 				'$password2'=> array('confirm', t('Confirm New Password'), '', t('Leave password fields blank unless changing')),
-				'$techlevel' => [ 'techlevel', t('Your technical skill level'), \App::$account['account_level'], t('Used to provide a member experience matched to your comfort level'), $techlevels ],
+				'$techlevel' => [ 'techlevel', t('Your technical skill level'), $def_techlevel, t('Used to provide a member experience matched to your comfort level'), $techlevels ],
+				'$techlock' => $techlock,
 				'$submit' 	=> t('Submit'),
 				'$email' 	=> array('email', t('Email Address:'), $email, ''),
 				'$removeme' => t('Remove Account'),

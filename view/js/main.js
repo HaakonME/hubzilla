@@ -1247,12 +1247,6 @@ Array.prototype.remove = function(item) {
 	return this.push.apply(this, rest);
 };
 
-function previewTheme(elm) {
-	theme = $(elm).val();
-	$.getJSON('pretheme?f=&theme=' + theme,function(data) {
-		$('#theme-preview').html('<div id="theme-desc">' + data.desc + '</div><div id="theme-version">' + data.version + '</div><div id="theme-credits">' + data.credits + '</div><a href="' + data.img + '"><img src="' + data.img + '" style="max-width:100%; max-height:300px" alt="' + theme + '"></a>');
-	});
-}
 
 $(document).ready(function() {
 

@@ -8,6 +8,8 @@ $(document).ready(function() {
 	$('.token-mirror').html($('#id_token').val());
 	$('#id_token').keyup( function() { $('.token-mirror').html($('#id_token').val()); });
 
+	previewTheme($('#id_theme')[0]);
+
 	$("#id_permissions_role").change(function() {
 		var role = $("#id_permissions_role").val();
 		if(role == 'custom')
@@ -16,6 +18,26 @@ $(document).ready(function() {
 			$('#advanced-perm').hide();
 	});
 });
+
+
+function setTheme(elm) {
+	$('#settings-form').submit();
+}
+
+
+function previewTheme(elm) {
+	theme = $(elm).val();
+	$.getJSON('theme_info/' + theme,function(data) {
+		$('#theme-preview').html('<div id="theme-desc">' + data.desc + '</div><div id="theme-version">' + data.version + '</div><div id="theme-credits">' + data.credits + '</div><a href="' + data.img + '"><img src="' + data.img + '" style="max-width:100%; max-height:300px" alt="' + theme + '"></a>');
+		$('#id_schema').empty();
+		$(data.schemas).each(function(index,item) {
+			$('<option/>',{value:item['key'],text:item['val']}).appendTo('#id_schema');
+		});
+		$('#custom-settings-content .section-content-tools-wrapper').html(data.config);
+	});
+}
+
+
 
 /**
  * 0 nobody

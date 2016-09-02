@@ -9,6 +9,8 @@ class Theme_info extends \Zotlabs\Web\Controller {
 		$theme = argv(1);
 		if(! $theme)
 			killme();
+		
+		$schemalist = array();
 
 		$theme_config = "";
 		if(($themeconfigfile = $this->get_theme_config_file($theme)) != null){
@@ -17,6 +19,12 @@ class Theme_info extends \Zotlabs\Web\Controller {
 				$clsname = ucfirst($theme) . 'Config';
 				$th_config = new $clsname();
 				$schemas = $th_config->get_schemas();
+				if($schemas) {
+					foreach($schemas as $k => $v) {
+						$schemalist[] = [ 'key' => $k, 'val' => $v ];
+					}
+				}
+
 			}
 			$theme_config = theme_content($a);
 		}
@@ -39,7 +47,7 @@ class Theme_info extends \Zotlabs\Web\Controller {
 			'desc' => $desc, 
 			'version' => $version, 
 			'credits' => $credits, 
-			'schemas' => $schemas,
+			'schemas' => $schemalist,
 			'config' => $theme_config
 		];
 		json_return_and_die($ret);

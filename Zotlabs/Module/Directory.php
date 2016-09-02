@@ -84,7 +84,7 @@ class Directory extends \Zotlabs\Web\Controller {
 			$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 	
 	
-		if(strpos($search,'=') && local_channel() && get_pconfig(local_channel(),'feature','expert'))
+		if(strpos($search,'=') && local_channel() && feature_enabled(local_channel(),'feature','advanced_dirsearch'))
 			$advanced = $search;
 	
 	

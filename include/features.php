@@ -61,7 +61,6 @@ function get_features($filtered = true) {
 			array('photo_location',       t('Photo Location'),          t('If location data is available on uploaded photos, link this to a map.'),false,get_config('feature_lock','photo_location')),
 			array('ajaxchat',       t('Access Controlled Chatrooms'),          t('Provide chatrooms and chat services with access control.'),true,get_config('feature_lock','ajaxchat')),
 			array('smart_birthdays',       t('Smart Birthdays'),          t('Make birthday events timezone aware in case your friends are scattered across the planet.'),true,get_config('feature_lock','smart_birthdays')),
-			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options'),false,get_config('feature_lock','expert')),
 		),
 
 		// Post composition
@@ -86,8 +85,7 @@ function get_features($filtered = true) {
 			array('personal_tab',   t('Network Personal Tab'),		t('Enable tab to display only Network posts that you\'ve interacted on'),false,get_config('feature_lock','personal_tab')),
 			array('new_tab',   		t('Network New Tab'),			t('Enable tab to display all new Network activity'),false,get_config('feature_lock','new_tab')),
 			array('affinity',       t('Affinity Tool'),			    t('Filter stream activity by depth of relationships'),false,get_config('feature_lock','affinity')),
-			array('connfilter',     t('Connection Filtering'),      t('Filter incoming posts from connections based on keywords/content'),false,get_config('feature_lock','connfilter')),
-			array('suggest',    	t('Suggest Channels'),			t('Show channel suggestions'),false,get_config('feature_lock','suggest')),
+			array('suggest',    	t('Suggest Channels'),			t('Show friend and connection suggestions'),false,get_config('feature_lock','suggest')),
 		),
 
 		// Item tools
@@ -103,17 +101,45 @@ function get_features($filtered = true) {
 		),
 	);
 
+	$techlevel = get_account_techlevel();
 
-
-	if($server_role === 'pro' && get_account_techlevel() > 3) {
-		$arr['general'][] = [
-			'premium_channel', 
-			t('Premium Channel'), 
-			t('Allows you to set restrictions and terms on those that connect with your channel'),
+	if($techlevel > 2) {
+		$arr['net_module'][] = [
+			'connfilter',
+			t('Connection Filtering'),
+			t('Filter incoming posts from connections based on keywords/content'),
 			false,
-			get_config('feature_lock','premium_channel')
+			get_config('feature_lock','connfilter')
 		];
 	}
+
+	if($techlevel > 3) {
+		if($server_role === 'pro') {
+			$arr['general'][] = [
+				'premium_channel', 
+				t('Premium Channel'), 
+				t('Allows you to set restrictions and terms on those that connect with your channel'),
+				false,
+				get_config('feature_lock','premium_channel')
+			];
+		}
+		$arr['general'][] = [ 
+			'advanced_dirsearch', 
+			t('Advanced Directory Search'),
+			t('Allows creation of complex directory search queries'),
+			false, 
+			get_config('feature_lock','advanced_dirsearch')
+		];
+		$arr['general'][] = [ 
+			'advanced_theming', 
+			t('Advanced Theme and Layout Settings'),
+			t('Allows fine tuning of themes and page layouts'),
+			false, 
+			get_config('feature_lock','advanced_theming')
+		];
+	}
+
+
 
 	// removed any locked features and remove the entire category if this makes it empty
 

@@ -98,8 +98,8 @@ function theme_post(&$a) {
 
 function redbasic_form(&$a, $arr) {
 
-if(feature_enabled(local_channel(),'expert')) 
-				$expert = 1;
+	if(feature_enabled(local_channel(),'advanced_theming')) 
+		$expert = 1;
 					
 	  $t = get_markup_template('theme_settings.tpl');
 	  $o .= replace_macros($t, array(

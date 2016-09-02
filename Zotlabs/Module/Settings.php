@@ -191,6 +191,8 @@ class Settings extends \Zotlabs\Web\Controller {
 			check_form_security_token_redirectOnErr('/settings/features', 'settings_features');
 	
 			// Build list of features and check which are set
+			// We will not create any settings for features that are above our techlevel
+
 			$features = get_features();
 			$all_features = array();
 			foreach($features as $k => $v) {

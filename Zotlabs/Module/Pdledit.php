@@ -9,6 +9,9 @@ class Pdledit extends \Zotlabs\Web\Controller {
 			return;
 		if(! $_REQUEST['module'])
 			return;
+		if(! feature_enabled(local_channel(),'advanced_theming'))
+			return;
+
 		if(! trim($_REQUEST['content'])) {
 			del_pconfig(local_channel(),'system','mod_' . $_REQUEST['module'] . '.pdl');
 			goaway(z_root() . '/pdledit/' . $_REQUEST['module']);
@@ -24,6 +27,11 @@ class Pdledit extends \Zotlabs\Web\Controller {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);
+			return;
+		}
+
+		if(! feature_enabled(local_channel(),'advanced_theming')) {
+			notice( t('Feature disabled.') . EOL);
 			return;
 		}
 	

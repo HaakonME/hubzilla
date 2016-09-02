@@ -52,41 +52,6 @@
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-left">
-			{{if $nav.register}}<li class="{{$nav.register.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a></li>{{/if}}
-			{{if !$userinfo}}
-			{{if $nav.loginmenu}}
-				<li class="{{$nav.loginmenu.0.2}} hidden-xs">
-					<a data-toggle="dropdown" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						{{foreach $nav.loginmenu as $loginmenu}}
-						<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem" id="{{$loginmenu.4}}">{{$loginmenu.1}}</a></li>
-						{{/foreach}}
-					</ul>
-				</li>
-				{{foreach $nav.loginmenu as $loginmenu}}
-				<li role="presentation"><a class="{{$loginmenu.2}} visible-xs" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
-				{{/foreach}}
-			{{/if}}
-			{{/if}}
-
-			{{if $nav.alogout}}<li class="{{$nav}}-alogout.2"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a></li>{{/if}}
-
-			{{if $nav.network}}
-				<li class="{{$sel.network}} hidden-xs">
-					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" id="{{$nav.network.4}}"><i class="fa fa-th"></i></a>
-					<span class="net-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-network-menu"></span>
-					<ul id="nav-network-menu" role="menu" class="dropdown-menu" rel="network">
-						{{* <li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li> *}}
-						<li id="nav-network-mark-all"><a href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a></li>
-						<li class="empty">{{$emptynotifications}}</li>
-					</ul>
-				</li>
-				<li class="{{$sel.network}} visible-xs">
-					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="fa fa-th"></i></a>
-					<span class="net-update badge" rel="#nav-network-menu"></span>
-				</li>
-			{{/if}}
-
 			{{if $nav.home}}
 				<li class="{{$sel.home}} hidden-xs">
 					<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" id="{{$nav.home.4}}"><i class="fa fa-home"></i></a>
@@ -103,6 +68,43 @@
 				</li>
 			{{/if}}
 
+			{{if $nav.loginmenu && !$userinfo}}
+				<li class="{{$nav.loginmenu.0.2}} hidden-xs">
+					<a data-toggle="dropdown" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						{{foreach $nav.loginmenu as $loginmenu}}
+						<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem" id="{{$loginmenu.4}}">{{$loginmenu.1}}</a></li>
+						{{/foreach}}
+					</ul>
+				</li>
+				{{foreach $nav.loginmenu as $loginmenu}}
+				<li role="presentation"><a class="{{$loginmenu.2}} visible-xs" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
+				{{/foreach}}
+			{{/if}}
+
+			{{if $nav.register}}
+				<li class="{{$nav.register.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a></li>
+			{{/if}}
+
+			{{if $nav.alogout}}
+				<li class="{{$nav}}-alogout.2"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a></li>
+			{{/if}}
+
+			{{if $nav.network}}
+				<li class="{{$sel.network}} hidden-xs">
+					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" id="{{$nav.network.4}}"><i class="fa fa-th"></i></a>
+					<span class="net-update badge dropdown-toggle" data-toggle="dropdown" rel="#nav-network-menu"></span>
+					<ul id="nav-network-menu" role="menu" class="dropdown-menu" rel="network">
+						{{* <li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li> *}}
+						<li id="nav-network-mark-all"><a href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a></li>
+						<li class="empty">{{$emptynotifications}}</li>
+					</ul>
+				</li>
+				<li class="{{$sel.network}} visible-xs">
+					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="fa fa-th"></i></a>
+					<span class="net-update badge" rel="#nav-network-menu"></span>
+				</li>
+			{{/if}}
 
 			{{if $nav.messages}}
 				<li class="{{$sel.messages}} hidden-xs">
@@ -167,6 +169,7 @@
 				</li>
 			{{/if}}
 			</ul>
+
 			<ul class="nav navbar-nav navbar-right">
 				<li class="hidden-xs">
 					<form method="get" action="search" role="search">
@@ -180,6 +183,7 @@
 			{{if $powered_by}}
 				<div id="powered-by">{{$powered_by}}</div>
 			{{/if}}
+
 			{{if $nav.directory}}
 				<li class="{{$sel.directory}}">
 					<a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}" id="{{$nav.directory.4}}"><i class="fa fa-sitemap"></i></a>

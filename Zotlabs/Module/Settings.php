@@ -276,9 +276,9 @@ class Settings extends \Zotlabs\Web\Controller {
 							$newschema = $_POST['schema'];
 						if($newschema === '---')
 							$newschema = '';	
-					}
 
-					theme_post($a);
+						$theme_config->post();
+					}
 				}
 			}
 
@@ -1042,10 +1042,10 @@ class Settings extends \Zotlabs\Web\Controller {
 				require_once($themeconfigfile);
 				if(class_exists(ucfirst($theme) . 'Config')) {
 					$clsname = ucfirst($theme) . 'Config';
-					$theme_config = new $clsname();
-					$schemas = $theme_config->get_schemas();
+					$thm_config = new $clsname();
+					$schemas = $thm_config->get_schemas();
+					$theme_config = $thm_config->get();
 				}
-				$theme_config = theme_content($a);
 			}
 
 			// logger('schemas: ' . print_r($schemas,true));

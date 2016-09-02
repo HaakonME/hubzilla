@@ -24,9 +24,8 @@ class Theme_info extends \Zotlabs\Web\Controller {
 						$schemalist[] = [ 'key' => $k, 'val' => $v ];
 					}
 				}
-
+				$theme_config = $th_config->get();
 			}
-			$theme_config = theme_content($a);
 		}
 		$info = get_theme_info($theme);
 		if($info) {

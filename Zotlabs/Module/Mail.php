@@ -332,7 +332,7 @@ class Mail extends \Zotlabs\Web\Controller {
 				'delete' => t('Delete message'),
 				'dreport' => t('Delivery report'),
 				'recall' => t('Recall message'),
-				'can_recall' => (($channel['channel_hash'] == $message['from_xchan']) ? true : false),
+				'can_recall' => (($channel['channel_hash'] == $message['from_xchan'] && get_account_techlevel() > 0) ? true : false),
 				'is_recalled' => (intval($message['mail_recalled']) ? t('Message has been recalled.') : ''),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'], 'c'),
 			);

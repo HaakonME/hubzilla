@@ -238,7 +238,7 @@ class Notifier {
 				$channel = $s[0];
 			$uid = $item_id;
 			$recipients = array();
-			$r = q("select abook_xchan from abook where abook_channel = %d",
+			$r = q("select abook_xchan from abook where abook_channel = %d and abook_self = 0",
 				intval($item_id)
 			);
 			if($r) {

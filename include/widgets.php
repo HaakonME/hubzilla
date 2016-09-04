@@ -1492,6 +1492,9 @@ function widget_tasklist($arr) {
 
 
 function widget_helpindex($arr) {
+
+
+
 	$o .= '<div class="widget">' . '<h3>' . t('Documentation') . '</h3>';
 	$o .= '<ul class="nav nav-pills nav-stacked">';
 	$o .= '<li><a href="help/general">' . t('Project/Site Information') . '</a></li>';

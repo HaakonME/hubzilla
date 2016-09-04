@@ -148,7 +148,7 @@ EOT;
 	if(! local_channel()) 
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'),'home_nav_btn');
 
-	if((App::$config['system']['register_policy'] == REGISTER_OPEN) || (App::$config['system']['register_policy'] == REGISTER_APPROVE) && (! $_SESSION['authenticated']))
+	if(((App::$config['system']['register_policy'] == REGISTER_OPEN) || (App::$config['system']['register_policy'] == REGISTER_APPROVE)) && (! $_SESSION['authenticated']))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'),'register_nav_btn');
 
 	if(! get_config('system','hide_help')) {

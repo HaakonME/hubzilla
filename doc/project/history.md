@@ -53,4 +53,22 @@ The Redmatrix community held a vote and the project was renamed "Hubzilla", with
 
 Mike stepped down as active coordinator for the project in early 2015 and turned management over to the community. He remains active as a Hubzilla developer.  
 
+##And Then...
+
+In 2016, the project was re-architected to support multiple server "roles". These correspond to sub-projects which can be isolated from each other in terms of supported feature sets, but all use and support the same code-base and developers are able to work together on common features and goals. The roles primarily differ in target audience, project [governance](help/project/governance) and decision making structures, and this results in slightly different features and idealogy. They all share a common code repository. 
+
+Those roles are:
+
+### Basic
+
+Entry level server. Supported by and governed by the Hubzilla community. Most advanced or complex features have been stripped away to ease federation with external services. It is best suited as a FOSS social network tool. 
+
+### Standard
+
+The standard Hubzilla server. This provides a wide range of useful features and is supported by and governed by the Hubzilla community. It is best suited as an open source community and cloud server. 
+
+### Pro
+
+This is a specially crafted server with a unique feature set. It is supported by and governed by Mike Macgirvin dba "Zotlabs". Federation with external services has been stripped away in order to support a wide range of more technically advanced and complex features which may not have the support or backing of the Hubzilla community. It is best suited for business and workplace applications. 
+
 #include doc/macros/main_footer.bb;

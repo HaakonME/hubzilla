@@ -69,6 +69,6 @@ The standard Hubzilla server. This provides a wide range of useful features and 
 
 ### Pro
 
-This is a specially crafted server with a unique feature set. It is supported by and governed by Mike Macgirvin dba "Zotlabs". Federation with external services has been stripped away in order to support a wide range of more technically advanced and complex features which may not have the support or backing of the Hubzilla community. It is best suited for business and workplace applications. 
+This is a specially crafted server with a unique feature set. It is supported by and governed by Mike Macgirvin dba "Zotlabs". Federation with external services has been stripped away in order to support a wide range of more technically advanced and complex features; and also includes features and modes which may not have the support or backing of the Hubzilla open source community. It is best suited for business and workplace applications. 
 
 #include doc/macros/main_footer.bb;

@@ -1,4 +1,4 @@
-[h3]Diaspora Compatibility[h3]
+[h3]Diaspora Compatibility[/h3]
 
 The Diaspora Protocol addon allows a site to communicate using the Diaspora protocol, which allows communications and connections to be made with Diaspora members (and also Friendica members, since that network also provides the Diaspora Protocol). 
 

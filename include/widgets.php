@@ -1493,15 +1493,37 @@ function widget_tasklist($arr) {
 
 function widget_helpindex($arr) {
 
+	$o .= '<div class="widget">';
+	$o .= '<h3>' . t('Documentation') . '</h3>';
+
+	$level_0 = get_help_content('toc');
+
+	$level_0 = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$level_0);
+
+	$levels = array();
 
 
-	$o .= '<div class="widget">' . '<h3>' . t('Documentation') . '</h3>';
-	$o .= '<ul class="nav nav-pills nav-stacked">';
-	$o .= '<li><a href="help/general">' . t('Project/Site Information') . '</a></li>';
-	$o .= '<li><a href="help/members">' . t('For Members') . '</a></li>';
-	$o .= '<li><a href="help/admins">'  . t('For Administrators') . '</a></li>';
-	$o .= '<li><a href="help/develop">' . t('For Developers') . '</a></li>';
-	$o .= '</ul></div>';
+	if(argc() > 2) {
+		$path = '';
+		for($x = 1; $x < argc(); $x ++) {
+			$path .= argv($x) . '/';			
+			$y = get_help_content($path . 'toc');
+			if($y)
+				$levels[] = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$y);
+		}
+	}
+
+	if($level_0)
+		$o .= $level_0;
+	if($levels) {
+		foreach($levels as $l) {
+			$o .= '<br /><br />';
+			$o .= $l;
+		}
+	}
+
+	$o .= '</div>';
+
 	return $o;
 
 }

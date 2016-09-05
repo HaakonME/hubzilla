@@ -55,7 +55,7 @@ class Help extends \Zotlabs\Web\Controller {
 
 		return replace_macros(get_markup_template("help.tpl"), array(
 			'$title' => t('$Projectname Documentation'),
-			'$content' => translate_projectname($content)
+			'$content' => $content
 		));
 	
 	}

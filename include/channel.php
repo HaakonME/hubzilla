@@ -1627,13 +1627,24 @@ function notifications_on($channel_id,$value) {
 
 function get_channel_default_perms($uid) {
 
+
+	$ret = [];
+
 	$r = q("select abook_xchan from abook where abook_channel = %d and abook_self = 1 limit 1",
 		intval($uid)
 	);
-	if($r)
-		return load_abconfig($uid,$r[0]['abook_xchan'],'my_perms');
+	if($r) {
+		$x = load_abconfig($uid,$r[0]['abook_xchan'],'my_perms');
+		if($x) {
+			foreach($x as $xv) {
+				if(intval($xv['v'])) {
+					$ret[] = $xv['k'];
+				}
+			}
+		}
+	}
 
-	return array();
+	return $ret;
 }
 
 

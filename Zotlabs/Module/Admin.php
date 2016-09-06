@@ -88,12 +88,6 @@ class Admin extends \Zotlabs\Web\Controller {
 				case 'logs':
 					$this->admin_page_logs_post($a);
 					break;
-				case 'hubloc':
-					$this->admin_page_hubloc_post($a);
-					break;
-				case 'security':
-					$this->admin_page_security_post($a);
-					break;
 				case 'features':
 					$this->admin_page_features_post($a);
 					break;
@@ -145,9 +139,6 @@ class Admin extends \Zotlabs\Web\Controller {
 					break;
 				case 'themes':
 					$o = $this->admin_page_themes($a);
-					break;
-				case 'security':
-					$o = $this->admin_page_security($a);
 					break;
 				case 'features':
 					$o = $this->admin_page_features($a);
@@ -553,101 +544,6 @@ class Admin extends \Zotlabs\Web\Controller {
 		));
 	}
 	
-	function admin_page_hubloc_post(&$a){
-		check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
-		require_once('include/zot.php');
-	
-		//prepare for ping
-	
-		if ( $_POST['hublocid']) {
-			$hublocid = $_POST['hublocid'];
-			$arrhublocurl = q("SELECT hubloc_url FROM hubloc WHERE hubloc_id = %d ",
-				intval($hublocid)
-			);
-			$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
-	
-			//perform ping
-			$m = zot_build_packet(\App::get_channel(),'ping');
-			$r = zot_zot($hublocurl,$m);
-			//handle results and set the hubloc flags in db to make results visible
-			$r2 = $r['body'];
-			$r3 = $r2['success'];
-			if ( $r3['success'] == True ){
-				//set HUBLOC_OFFLINE to 0
-				logger(' success = true ',LOGGER_DEBUG);
-			} else {
-				//set HUBLOC_OFFLINE to 1 
-				logger(' success = false ', LOGGER_DEBUG);
-			}
-	
-			//unfotunatly zping wont work, I guess return format is not correct
-			//require_once('mod/zping.php');
-			//$r = zping_content($hublocurl);
-			//logger('zping answer: ' . $r, LOGGER_DEBUG);
-	
-			//in case of repair store new pub key for tested hubloc (all channel with this hubloc) in db
-			//after repair set hubloc flags to 0
-		}
-	
-		goaway(z_root() . '/admin/hubloc' );
-	}
-	
-	function trim_array_elems($arr) {
-		$narr = array();
-	
-		if($arr && is_array($arr)) {
-			for($x = 0; $x < count($arr); $x ++) {
-				$y = trim($arr[$x]);
-				if($y)
-					$narr[] = $y;
-			}
-		}
-		return $narr;
-	}
-	
-	function admin_page_security_post(&$a){
-		check_form_security_token_redirectOnErr('/admin/security', 'admin_security');
-	
-		$allowed_email        = ((x($_POST,'allowed_email'))	    ? notags(trim($_POST['allowed_email']))		: '');
-		$not_allowed_email    = ((x($_POST,'not_allowed_email'))	? notags(trim($_POST['not_allowed_email']))		: '');
-
-		set_config('system','allowed_email', $allowed_email);
-		set_config('system','not_allowed_email', $not_allowed_email);	
-
-		$block_public         = ((x($_POST,'block_public'))		? True	: False);
-		set_config('system','block_public',$block_public);
-	
-		$ws = $this->trim_array_elems(explode("\n",$_POST['whitelisted_sites']));
-		set_config('system','whitelisted_sites',$ws);
-	
-		$bs = $this->trim_array_elems(explode("\n",$_POST['blacklisted_sites']));
-		set_config('system','blacklisted_sites',$bs);
-	
-		$wc = $this->trim_array_elems(explode("\n",$_POST['whitelisted_channels']));
-		set_config('system','whitelisted_channels',$wc);
-	
-		$bc = $this->trim_array_elems(explode("\n",$_POST['blacklisted_channels']));
-		set_config('system','blacklisted_channels',$bc);
-	
-		$embed_sslonly         = ((x($_POST,'embed_sslonly'))		? True	: False);
-		set_config('system','embed_sslonly',$embed_sslonly);
-	
-		$we = $this->trim_array_elems(explode("\n",$_POST['embed_allow']));
-		set_config('system','embed_allow',$we);
-	
-		$be = $this->trim_array_elems(explode("\n",$_POST['embed_deny']));
-		set_config('system','embed_deny',$be);
-	
-		$ts = ((x($_POST,'transport_security')) ? True : False);
-		set_config('system','transport_security_header',$ts);
-
-		$cs = ((x($_POST,'content_security')) ? True : False);
-		set_config('system','content_security_policy',$cs);
-
-		goaway(z_root() . '/admin/security');
-	}
-	
-	
 	
 	
 	function admin_page_features_post(&$a) {
@@ -712,90 +608,6 @@ class Admin extends \Zotlabs\Web\Controller {
 			return $o;
 		}
 	}
-	
-	
-	
-	
-	
-	function admin_page_hubloc(&$a) {
-		$hubloc = q("SELECT hubloc_id, hubloc_addr, hubloc_host, hubloc_status  FROM hubloc");
-	
-		if(! $hubloc){
-			notice( t('No server found') . EOL);
-			goaway(z_root() . '/admin/hubloc');
-		}
-	
-		$t = get_markup_template('admin_hubloc.tpl');
-		return replace_macros($t, array(
-			'$hubloc' => $hubloc,
-			'$th_hubloc' => array(t('ID'), t('for channel'), t('on server'), t('Status')),
-			'$title' => t('Administration'),
-			'$page' => t('Server'),
-			'$queues' => $queues,
-			//'$accounts' => $accounts, /*$accounts is empty here*/
-			'$pending' => array( t('Pending registrations'), $pending),
-			'$plugins' => array( t('Active plugins'), \App::$plugins ),
-			'$form_security_token' => get_form_security_token('admin_hubloc')
-		));
-	}
-	
-	function admin_page_security(&$a) {
-	
-		$whitesites = get_config('system','whitelisted_sites');
-		$whitesites_str = ((is_array($whitesites)) ? implode($whitesites,"\n") : '');
-	
-		$blacksites = get_config('system','blacklisted_sites');
-		$blacksites_str = ((is_array($blacksites)) ? implode($blacksites,"\n") : '');
-	
-	
-		$whitechannels = get_config('system','whitelisted_channels');
-		$whitechannels_str = ((is_array($whitechannels)) ? implode($whitechannels,"\n") : '');
-	
-		$blackchannels = get_config('system','blacklisted_channels');
-		$blackchannels_str = ((is_array($blackchannels)) ? implode($blackchannels,"\n") : '');
-	
-	
-		$whiteembeds = get_config('system','embed_allow');
-		$whiteembeds_str = ((is_array($whiteembeds)) ? implode($whiteembeds,"\n") : '');
-	
-		$blackembeds = get_config('system','embed_deny');
-		$blackembeds_str = ((is_array($blackembeds)) ? implode($blackembeds,"\n") : '');
-	
-		$embed_coop = intval(get_config('system','embed_coop'));
-	
-		if((! $whiteembeds) && (! $blackembeds)) {
-			$embedhelp1 = t("By default, unfiltered HTML is allowed in embedded media. This is inherently insecure.");
-		}
-
-		$embedhelp2 = t("The recommended setting is to only allow unfiltered HTML from the following sites:"); 
-		$embedhelp3 = t("https://youtube.com/<br />https://www.youtube.com/<br />https://youtu.be/<br />https://vimeo.com/<br />https://soundcloud.com/<br />");
-		$embedhelp4 = t("All other embedded content will be filtered, <strong>unless</strong> embedded content from that site is explicitly blocked.");
-	
-		$t = get_markup_template('admin_security.tpl');
-		return replace_macros($t, array(
-			'$title' => t('Administration'),
-			'$page' => t('Security'),
-			'$form_security_token' => get_form_security_token('admin_security'),
-	        '$block_public'     => array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently authenticated.")),
-			'$transport_security' => array('transport_security', t('Set "Transport Security" HTTP header'),intval(get_config('system','transport_security_header')),''),
-			'$content_security' => array('content_security', t('Set "Content Security Policy" HTTP header'),intval(get_config('system','content_security_policy')),''),
-			'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
-			'$not_allowed_email'	=> array('not_allowed_email', t("Not allowed email domains"), get_config('system','not_allowed_email'), t("Comma separated list of domains which are not allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains, unless allowed domains have been defined.")),
-			'$whitelisted_sites' => array('whitelisted_sites', t('Allow communications only from these sites'), $whitesites_str, t('One site per line. Leave empty to allow communication from anywhere by default')),
-			'$blacklisted_sites' => array('blacklisted_sites', t('Block communications from these sites'), $blacksites_str, ''),
-			'$whitelisted_channels' => array('whitelisted_channels', t('Allow communications only from these channels'), $whitechannels_str, t('One channel (hash) per line. Leave empty to allow from any channel by default')),
-			'$blacklisted_channels' => array('blacklisted_channels', t('Block communications from these channels'), $blackchannels_str, ''),
-			'$embed_sslonly' => array('embed_sslonly',t('Only allow embeds from secure (SSL) websites and links.'), intval(get_config('system','embed_sslonly')),''),
-			'$embed_allow' => array('embed_allow', t('Allow unfiltered embedded HTML content only from these domains'), $whiteembeds_str, t('One site per line. By default embedded content is filtered.')),
-			'$embed_deny' => array('embed_deny', t('Block embedded HTML from these domains'), $blackembeds_str, ''),
-	
-//	        '$embed_coop'     => array('embed_coop', t('Cooperative embed security'), $embed_coop, t('Enable to share embed security with other compatible sites/hubs')),
-
-			'$submit' => t('Submit')
-		));
-	}
-	
-	
 	
 	
 	function admin_page_dbsync(&$a) {

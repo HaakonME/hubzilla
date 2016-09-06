@@ -262,8 +262,30 @@ function enableOnUser(){
 
 	function linkdropper(event) {
 		var linkFound = event.dataTransfer.types.contains("text/uri-list");
-		if(linkFound)
+		if(linkFound) {
 			event.preventDefault();
+			var editwin = '#' + event.target.id;
+			var commentwin = false;
+			if(editwin) {
+				commentwin = ((editwin.indexOf('comment') >= 0) ? true : false);
+				if(commentwin) {
+					var commentid = editwin.substring(editwin.lastIndexOf('-') + 1);
+					$('#comment-edit-text-' + commentid).addClass('hover');
+				}
+			}
+		}
+	}
+
+	function linkdropexit(event) {
+		var editwin = '#' + event.target.id;
+		var commentwin = false;
+		if(editwin) {
+			commentwin = ((editwin.indexOf('comment') >= 0) ? true : false);
+			if(commentwin) {
+				var commentid = editwin.substring(editwin.lastIndexOf('-') + 1);
+				$('#comment-edit-text-' + commentid).removeClass('hover');
+			}
+		}
 	}
 
 	function linkdrop(event) {
@@ -276,6 +298,7 @@ function enableOnUser(){
 			if(commentwin) {
 				var commentid = editwin.substring(editwin.lastIndexOf('-') + 1);
 				commentOpen(document.getElementById(event.target.id),commentid);
+
 			}
 		}
 

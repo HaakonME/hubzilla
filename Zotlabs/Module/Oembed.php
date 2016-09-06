@@ -22,7 +22,7 @@ class Oembed extends \Zotlabs\Web\Controller {
 			}
 		
 			else {
-				echo "<html><body>";
+				echo "<html><head><base target=\"_blank\" /></head><body>";
 				$src = base64url_decode(argv(1));
 				$j = oembed_fetch_url($src);
 				echo $j->html;

@@ -22,7 +22,7 @@ class Admin extends \Zotlabs\Web\Controller {
 	private $sm = null;
 
 	function __construct() {
-		$this->sm = new \\Zotlabs\Web\SubModule();
+		$this->sm = new \Zotlabs\Web\SubModule();
 	}
 
 	function post(){

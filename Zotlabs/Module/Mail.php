@@ -60,7 +60,7 @@ class Mail extends \Zotlabs\Web\Controller {
 			if($j['permissions']['data']) {
 				$permissions = crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']);
 				if($permissions)
-					$permissions = json_decode($permissions);
+					$permissions = json_decode($permissions, true);
 				logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
 			}
 			else

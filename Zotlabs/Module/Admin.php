@@ -1,7 +1,6 @@
 <?php
 namespace Zotlabs\Module;
 
-use \Zotlabs\Storage\GitRepo as GitRepo;
 
 /**
  * @file mod/admin.php
@@ -64,7 +63,7 @@ class Admin extends \Zotlabs\Web\Controller {
 			}
 		}
 		else {
-			$o = $this->admin_page_summary($a);
+			$o = $this->admin_page_summary();
 		}
 	
 		if(is_ajax()) {
@@ -84,7 +83,7 @@ class Admin extends \Zotlabs\Web\Controller {
 	 * @param App &$a
 	 * @return string HTML from parsed admin_summary.tpl
 	 */
-	function admin_page_summary(&$a) {
+	function admin_page_summary() {
 	
 		// list total user accounts, expirations etc.
 		$accounts = array();

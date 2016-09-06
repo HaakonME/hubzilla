@@ -2,6 +2,7 @@
 
 namespace Zotlabs\Module\Admin;
 
+use \Zotlabs\Storage\GitRepo as GitRepo;
 
 class Plugins {
 

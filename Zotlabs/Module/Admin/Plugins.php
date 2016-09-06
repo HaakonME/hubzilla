@@ -1,9 +1,9 @@
 <?php
 
-namespace Zotlabs\Admin;
+namespace Zotlabs\Module\Admin;
 
 
-class Plugins extends \Zotlabs\Web\Controller {
+class Plugins {
 
 	function get() {
 

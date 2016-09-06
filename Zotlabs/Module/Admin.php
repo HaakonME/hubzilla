@@ -19,6 +19,12 @@ require_once('include/account.php');
 
 class Admin extends \Zotlabs\Web\Controller {
 
+	private $sm = null;
+
+	function __construct() {
+		$this->sm = new \\Zotlabs\Web\SubModule();
+	}
+
 	function post(){
 		logger('admin_post', LOGGER_DEBUG);
 	
@@ -99,13 +105,7 @@ class Admin extends \Zotlabs\Web\Controller {
 					break;
 
 				default:
-					$filename = 'Zotlabs/Admin/'. ucfirst(argv(1)) . '.php';
-					$modname = '\\Zotlabs\\Admin\\' . ucfirst(argv(1));
-					if(file_exists($filename)) {
-						$controller = new $modname;
-						$controller->post();
-					}
-
+					$this->sm->call('post');
 					break;
 			}
 		}
@@ -165,14 +165,8 @@ class Admin extends \Zotlabs\Web\Controller {
 					$o = $this->admin_page_queue($a);
 					break;
 				default:
-
-					$filename = 'Zotlabs/Admin/'. ucfirst(argv(1)) . '.php';
-					$modname = '\\Zotlabs\\Admin\\' . ucfirst(argv(1));
-					if(file_exists($filename)) {
-						$controller = new $modname;
-						$o = $controller->get();
-					}
-					else {
+					$o = $this->sm->call('get');
+					if($o === false) {
 						notice( t('Item not found.') );
 					}
 					break;

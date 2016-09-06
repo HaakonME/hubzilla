@@ -697,6 +697,7 @@ function startup() {
 
 class ZotlabsAutoloader {
     static public function loader($className) {
+		$debug = false;
         $filename = str_replace('\\', '/', $className) . ".php";
         if(file_exists($filename)) {
             include($filename);

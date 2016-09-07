@@ -42,8 +42,8 @@
 		include_once($file);
 	}
 
-	echo "Directory: Zotlabs/Module/Admin\n";
-	$files = glob('Zotlabs/Module/Admin/*.php');
+	echo "Directory: Zotlabs/Module (sub-modules)\n";
+	$files = glob('Zotlabs/Module/*/*.php');
 	foreach($files as $file) {
 		echo $file . "\n";
 		include_once($file);

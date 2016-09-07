@@ -15,13 +15,14 @@ class Site {
 		if (!x($_POST, 'page_site')) {
 			return;
 		}
-	
+
 		check_form_security_token_redirectOnErr('/admin/site', 'admin_site');
 	
 		$sitename 			=	((x($_POST,'sitename'))			? notags(trim($_POST['sitename']))			: '');
 		$server_role 		=	((x($_POST,'server_role'))		? notags(trim($_POST['server_role']))		: 'standard');
 
 		$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])				: false);
+
 		$admininfo			=	((x($_POST,'admininfo'))		? trim($_POST['admininfo'])				: false);
 		$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 		$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');

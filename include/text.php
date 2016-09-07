@@ -138,30 +138,70 @@ function purify_html($s, $allow_position = false) {
 	$def = $config->getHTMLDefinition(true);
 
 	//data- attributes used by the foundation library
-	$def->info_global_attr['data-options'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-magellan-expedition'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-magellan-destination'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-magellan-arrival'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-offcanvas'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-topbar'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-orbit'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-orbit-slide-number'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-dropdown'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-dropdown-content'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-reveal-id'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-reveal'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-alert'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-tooltip'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-joyride'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-id'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-text'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-class'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-prev-tex'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-button'] = new HTMLPurifier_AttrDef_Text;
+
+	// f6 navigation
+
+	//dropdown menu
+	$def->info_global_attr['data-dropdown-menu'] = new HTMLPurifier_AttrDef_Text;
+	//drilldown menu
+	$def->info_global_attr['data-drilldown'] = new HTMLPurifier_AttrDef_Text;
+	//accordion menu
+	$def->info_global_attr['data-accordion-menu'] = new HTMLPurifier_AttrDef_Text;
+	//magellan
+	$def->info_global_attr['data-magellan'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-magellan-target'] = new HTMLPurifier_AttrDef_Text;
+
+	// f6 containers
+
+	//accordion
 	$def->info_global_attr['data-accordion'] = new HTMLPurifier_AttrDef_Text;
-	$def->info_global_attr['data-tab'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-accordion-item'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-tab-content'] = new HTMLPurifier_AttrDef_Text;
+	//dropdown
+	$def->info_global_attr['data-dropdown'] = new HTMLPurifier_AttrDef_Text;
+	//off-canvas
+	$def->info_global_attr['data-off-canvas-wrapper'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-off-canvas'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-off-canvas-content'] = new HTMLPurifier_AttrDef_Text;
+	//reveal
+	$def->info_global_attr['data-reveal'] = new HTMLPurifier_AttrDef_Text;
+	//tabs
+	$def->info_global_attr['data-tabs'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-tabs-content'] = new HTMLPurifier_AttrDef_Text;
+
+	// f6 media
+
+	//orbit
+	$def->info_global_attr['data-orbit'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-slide'] = new HTMLPurifier_AttrDef_Text;
+	//tooltip
+	$def->info_global_attr['data-tooltip'] = new HTMLPurifier_AttrDef_Text;
+
+	// f6 plugins
+
+	//abide - the use is pointless since we can't do anything with forms 
+
+	//equalizer
 	$def->info_global_attr['data-equalizer'] = new HTMLPurifier_AttrDef_Text;
 	$def->info_global_attr['data-equalizer-watch'] = new HTMLPurifier_AttrDef_Text;
+
+	//interchange - potentially dangerous since it can load content
+
+	//toggler
+	$def->info_global_attr['data-toggler'] = new HTMLPurifier_AttrDef_Text;
+
+	//sticky
+	$def->info_global_attr['data-sticky'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-sticky-container'] = new HTMLPurifier_AttrDef_Text;
+
+
+	// f6 common
+
+	$def->info_global_attr['data-options'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-toggle'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-close'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-open'] = new HTMLPurifier_AttrDef_Text;
+
 
 	//data- attributes used by the bootstrap library
 	$def->info_global_attr['data-dismiss'] = new HTMLPurifier_AttrDef_Text;

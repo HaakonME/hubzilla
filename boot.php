@@ -47,7 +47,7 @@ define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'STD_VERSION',             '1.13.1' );
 define ( 'ZOT_REVISION',            '1.1' );
 
-define ( 'DB_UPDATE_VERSION',       1182  );
+define ( 'DB_UPDATE_VERSION',       1183  );
 
 
 /**

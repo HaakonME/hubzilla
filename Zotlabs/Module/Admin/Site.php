@@ -59,6 +59,12 @@ class Site {
 		$maxloadavg        = ((x($_POST,'maxloadavg'))       ? intval(trim($_POST['maxloadavg'])) : 50);
 		$feed_contacts     = ((x($_POST,'feed_contacts'))    ? intval($_POST['feed_contacts'])    : 0);
 		$verify_email      = ((x($_POST,'verify_email'))     ? 1 : 0);
+		$techlevel_lock    = ((x($_POST,'techlock'))   ? intval($_POST['techlock'])   : 0);
+
+		$techlevel         = null;
+		if(array_key_exists('techlevel',$_POST))
+			$techlevel = intval($_POST['techlevel']);
+
 	
 
 		set_config('system', 'server_role', $server_role);
@@ -74,6 +80,10 @@ class Site {
 		set_config('system', 'enable_context_help', $enable_context_help);
 		set_config('system', 'verify_email', $verify_email);
 		set_config('system', 'default_expire_days', $default_expire_days);
+		set_config('system', 'techlevel_lock', $techlevel_lock);
+
+		if(! is_null($techlevel))
+			set_config('system', 'techlevel', $techlevel);
 	
 		if($directory_server)
 			set_config('system','directory_server',$directory_server);
@@ -234,6 +244,18 @@ class Site {
 			'pro'      => t('Professional')
 		];
 
+
+		$techlevels = [
+			'0' => t('Beginner/Basic'),
+			'1' => t('Novice - not skilled but willing to learn'),
+			'2' => t('Intermediate - somewhat comfortable'),
+			'3' => t('Advanced - very comfortable'),
+			'4' => t('Expert - I can write computer code'),			
+			'5' => t('Wizard - I probably know more than you do')
+		];
+
+
+
 	
 		$homelogin = get_config('system','login_on_homepage');
 		$enable_context_help = get_config('system','enable_context_help');
@@ -253,6 +275,11 @@ class Site {
 			'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
 
 			'$server_role' 		=> array('server_role', t("Server Configuration/Role"), get_config('system','server_role'),'',$server_roles),
+
+			'$techlevel' => [ 'techlevel', t('Site default technical skill level'), get_config('system','techlevel'), t('Used to provide a member experience matched to technical comfort level'), $techlevels ],
+
+			'$techlock' => [ 'techlock', t('Lock the technical skill level setting'), get_config('system','techlevel_lock'), t('Members can set their own technical comfort level by default') ],
+
 
 			'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 			'$admininfo'		=> array('admininfo', t("Administrator Information"), $admininfo, t("Contact information for site administrators.  Displayed on siteinfo page.  BBCode can be used here")),

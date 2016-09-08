@@ -147,6 +147,9 @@ function purify_html($s, $allow_position = false) {
 	$def->info_global_attr['data-drilldown'] = new HTMLPurifier_AttrDef_Text;
 	//accordion menu
 	$def->info_global_attr['data-accordion-menu'] = new HTMLPurifier_AttrDef_Text;
+	//responsive navigation
+	$def->info_global_attr['data-responsive-menu'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-responsive-toggle'] = new HTMLPurifier_AttrDef_Text;
 	//magellan
 	$def->info_global_attr['data-magellan'] = new HTMLPurifier_AttrDef_Text;
 	$def->info_global_attr['data-magellan-target'] = new HTMLPurifier_AttrDef_Text;
@@ -194,13 +197,13 @@ function purify_html($s, $allow_position = false) {
 	$def->info_global_attr['data-sticky'] = new HTMLPurifier_AttrDef_Text;
 	$def->info_global_attr['data-sticky-container'] = new HTMLPurifier_AttrDef_Text;
 
-
 	// f6 common
 
 	$def->info_global_attr['data-options'] = new HTMLPurifier_AttrDef_Text;
 	$def->info_global_attr['data-toggle'] = new HTMLPurifier_AttrDef_Text;
 	$def->info_global_attr['data-close'] = new HTMLPurifier_AttrDef_Text;
 	$def->info_global_attr['data-open'] = new HTMLPurifier_AttrDef_Text;
+	$def->info_global_attr['data-position'] = new HTMLPurifier_AttrDef_Text;
 
 
 	//data- attributes used by the bootstrap library

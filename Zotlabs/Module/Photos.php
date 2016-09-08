@@ -50,7 +50,7 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function post() {
+	function post() {
 	
 		logger('mod-photos: photos_post: begin' , LOGGER_DEBUG);
 	
@@ -104,24 +104,6 @@ class Photos extends \Zotlabs\Web\Controller {
 				goaway(z_root() . '/' . $_SESSION['photo_return']);
 			}
 	
-	
-			/*
-			 * RENAME photo album
-			 */
-	
-			$newalbum = notags(trim($_REQUEST['albumname']));
-			if($newalbum != $album) {
-	
-				// @fixme - syncronise with DAV or disallow completely
-	
-				goaway(z_root() . '/' . $_SESSION['photo_return']);
-	
-	//			$x = photos_album_rename($page_owner_uid,$album,$newalbum);
-	//			if($x) {
-	//				$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
-	//				goaway(z_root() . '/' . $newurl);
-	//			}
-			}
 	
 			/*
 			 * DELETE photo album and all its photos
@@ -229,25 +211,31 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 			goaway(z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/album/' . $_SESSION['album_return']);
 		}
-	
-	
-		if((\App::$argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
-	
+
+		if((argc() > 2) && array_key_exists('move_to_album',$_POST)) {
+			$m = q("select folder from attach where hash = '%s' and uid = %d limit 1",
+				dbesc(argv(2)),
+				intval($page_owner_uid)
+			);
+			if(($m) && ($m[0]['folder'] != $_POST['move_to_album'])) {
+				attach_move($page_owner_uid,argv(2),$_POST['move_to_album']);			
+				if(! ($_POST['desc'] && $_POST['newtag']))
+					goaway(z_root() . '/' . $_SESSION['photo_return']);
+			}
+		}
+
+		if((argc() > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false))) {
 	
 			$desc        = ((x($_POST,'desc'))    ? notags(trim($_POST['desc']))    : '');
 			$rawtags     = ((x($_POST,'newtag'))  ? notags(trim($_POST['newtag']))  : '');
 			$item_id     = ((x($_POST,'item_id')) ? intval($_POST['item_id'])       : 0);
-			$albname     = ((x($_POST,'albname')) ? notags(trim($_POST['albname'])) : '');
+
 			$is_nsfw     = ((x($_POST,'adult'))   ? intval($_POST['adult'])         : 0);
 		
 			$acl->set_from_array($_POST);
 			$perm = $acl->get();
 	
 			$resource_id = argv(2);
-	
-			if(! strlen($albname))
-				$albname = datetime_convert('UTC',date_default_timezone_get(),'now', 'Y');
-	
 	
 			if((x($_POST,'rotate') !== false) && 
 			   ( (intval($_POST['rotate']) == 1) || (intval($_POST['rotate']) == 2) )) {
@@ -464,14 +452,15 @@ class Photos extends \Zotlabs\Web\Controller {
 				}
 	
 			}
-		
-			goaway(z_root() . '/' . $_SESSION['photo_return']);
-			return; // NOTREACHED
-	
+
 			$sync = attach_export_data(\App::$data['channel'],$resource_id);
 	
 			if($sync) 
 				build_sync_packet($page_owner_uid,array('file' => array($sync)));
+		
+			goaway(z_root() . '/' . $_SESSION['photo_return']);
+			return; // NOTREACHED
+	
 	
 		}
 	
@@ -1023,12 +1012,22 @@ class Photos extends \Zotlabs\Web\Controller {
 
 			$edit = null;
 			if($can_post) {
+
+				$m = q("select folder from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($ph[0]['resource_id']),
+					intval($ph[0]['uid'])
+				);
+				if($m)
+					$album_hash = $m[0]['folder'];
+					
 				$album_e = $ph[0]['album'];
 				$caption_e = $ph[0]['description'];
 				$aclselect_e = (($_is_owner) ? populate_acl($ph[0], true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage')) : '');
 				$albums = ((array_key_exists('albums', \App::$data)) ? \App::$data['albums'] : photos_albums_list(\App::$data['channel'],\App::$data['observer']));
 	
 				$_SESSION['album_return'] = bin2hex($ph[0]['album']);
+
+				$folder_list = attach_folder_select_list($ph[0]['uid']);
 	
 				$edit = array(
 					'edit' => t('Edit photo'),
@@ -1037,6 +1036,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					'rotateccw' => t('Rotate CCW (left)'),
 					'albums' => $albums['albums'],
 					'album' => $album_e,
+					'album_select' => [ 'move_to_album', t('Move photo to album'), $album_hash, '', $folder_list ],
 					'newalbum_label' => t('Enter a new album name'),
 					'newalbum_placeholder' => t('or select an existing one (doubleclick)'),
 					'nickname' => \App::$data['channel']['channel_address'],

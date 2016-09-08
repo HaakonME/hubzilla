@@ -1151,6 +1151,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_dead` smallint NOT NULL DEFAULT '0',
   `site_type` smallint NOT NULL DEFAULT '0',
   `site_project` char(255) NOT NULL DEFAULT '',
+  `site_version` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),

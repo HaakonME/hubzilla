@@ -1131,6 +1131,7 @@ CREATE TABLE "site" (
   "site_dead" smallint NOT NULL DEFAULT '0',
   "site_type" smallint NOT NULL DEFAULT '0',
   "site_project" text NOT NULL DEFAULT '',
+  "site_version" text NOT NULL DEFAULT '',
   PRIMARY KEY ("site_url")
 );
 create index "site_flags" on site ("site_flags");

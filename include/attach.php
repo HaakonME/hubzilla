@@ -2165,3 +2165,51 @@ function attach_move($channel_id,$resource_id,$new_folder_hash) {
 }
 
 
+function attach_folder_select_list($channel_id) {
+
+	$r = q("select * from attach where is_dir = 1 and uid = %d",
+		intval($channel_id)
+	);
+
+	$out = [];
+	$out[''] = '/';
+	
+	if($r) {
+		foreach($r as $rv) {
+			$x = attach_folder_rpaths($r,$rv);
+			if($x)
+				$out[$x[0]] = $x[1];
+		}
+	}
+	return $out;
+}
+
+function attach_folder_rpaths($all_folders,$that_folder) {
+
+	$path         = '/' . $that_folder['filename'];
+	$current_hash = $that_folder['hash'];
+	$parent_hash  = $that_folder['folder'];
+	$error        = false;
+	$found        = false;
+
+	if($parent_hash) {
+		do {
+			foreach($all_folders as $selected) {
+				if(! $selected['is_dir'])
+					continue;
+				if($selected['hash'] == $parent_hash) {
+					$path         = '/' . $selected['filename'] . $path;
+					$current_hash = $selected['hash'];
+					$parent_hash  = $selected['folder'];
+					$found = true;
+					break;
+				}
+			}
+			if(! $found) 
+				$error = true;
+		}
+		while((! $found) && (! $error) && ($parent_hash != ''));
+	}
+	return (($error) ? false : [ $current_hash , $path ]);
+
+}

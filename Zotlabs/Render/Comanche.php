@@ -286,7 +286,7 @@ class Comanche {
 				$path = 'library/bootstrap/js/bootstrap.min.js';
 				break;
 			case 'foundation':
-				$path = 'library/foundation/js/foundation.min.js';
+				$path = 'library/foundation/js/foundation.js';
 				$init = "\r\n" . '<script>$(document).ready(function() { $(document).foundation(); });</script>';
 				break;
 		}

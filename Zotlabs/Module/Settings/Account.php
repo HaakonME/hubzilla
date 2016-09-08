@@ -110,9 +110,8 @@ class Account {
 			'5' => t('Wizard - I probably know more than you do')
 		];
 
-		$def_techlevel = get_config('system','techlevel');
-		if($def_techlevel === false)			
-			$def_techlevel = \App::$account['account_level'];
+
+		$def_techlevel = \App::$account['account_level'];
 		$techlock = get_config('system','techlevel_lock');
 
 		$tpl = get_markup_template("settings_account.tpl");

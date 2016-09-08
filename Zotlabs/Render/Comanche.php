@@ -124,7 +124,6 @@ class Comanche {
 	}
 
 	function test_condition($s) {
-
 		// This is extensible. The first version of variable testing supports tests of the forms:
 		// [if $config.system.foo == baz] which will check if get_config('system','foo') is the string 'baz';
 		// [if $config.system.foo != baz] which will check if get_config('system','foo') is not the string 'baz';
@@ -161,7 +160,7 @@ class Comanche {
 			return false;
 		}
 
-		if(preg_match('/[\$](.*?)/',$s,$matches)) {
+		if(preg_match('/[\$](.*?)$/',$s,$matches)) {
 			$x = $this->get_condition_var($matches[1]);
 			if($x)
 				return true;

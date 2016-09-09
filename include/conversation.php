@@ -1213,6 +1213,10 @@ function status_editor($a, $x, $popup = false) {
 	if(! $cipher)
 		$cipher = 'aes256';
 
+	// avoid illegal offset errors
+	if(! array_key_exists('permissions',$x)) 
+		$x['permissions'] = [ 'allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
+
 	$jotplugins = '';
 	call_hooks('jot_tool', $jotplugins);
 

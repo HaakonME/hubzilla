@@ -139,7 +139,7 @@ class Network extends \Zotlabs\Web\Controller {
 			if($_GET['pf'] === '1')
 				$deftag = '@' . t('forum') . '+' . intval($cid) . '+';
 			else
-				$def_acl = array('allow_cid' => '<' . $r[0]['abook_xchan'] . '>');
+				$def_acl = [ 'allow_cid' => '<' . $r[0]['abook_xchan'] . '>', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
 		}
 	
 		if(! $update) {

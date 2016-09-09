@@ -120,8 +120,9 @@ class Channel extends \Zotlabs\Web\Controller {
 					'deny_gid' => $channel['channel_deny_gid']
 				);
 			}
-			else
-				$channel_acl = array(); 
+			else {
+				$channel_acl = [ 'allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
+			}
 
 
 			if($perms['post_wall']) {
@@ -133,7 +134,7 @@ class Channel extends \Zotlabs\Web\Controller {
 					'nickname' => \App::$profile['channel_address'],
 					'lockstate' => (((strlen(\App::$profile['channel_allow_cid'])) || (strlen(\App::$profile['channel_allow_gid'])) || (strlen(\App::$profile['channel_deny_cid'])) || (strlen(\App::$profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
 					'acl' => (($is_owner) ? populate_acl($channel_acl,true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post') : ''),
-					'permissions' => (($is_owner) ? $channel_acl : ''),
+					'permissions' => $channel_acl,
 					'showacl' => (($is_owner) ? 'yes' : ''),
 					'bang' => '',
 					'visitor' => (($is_owner || $observer) ? true : false),

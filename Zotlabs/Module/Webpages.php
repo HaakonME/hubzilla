@@ -136,9 +136,11 @@ class Webpages extends \Zotlabs\Web\Controller {
 				'deny_gid'  => $channel['channel_deny_gid']
 			);
 		}
-		else
-			$channel_acl = array();
+		else {
+			$channel_acl = [ 'allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
+		}
 	
+
 		$is_owner = ($uid && $uid == $owner);
 		$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 	
@@ -148,7 +150,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 			'nickname' => \App::$profile['channel_address'],
 			'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'acl' => (($is_owner) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')) : ''),
-			'permissions' => (($is_owner) ? $channel_acl : ''),
+			'permissions' => $channel_acl,
 			'showacl' => (($is_owner) ? true : false),
 			'visitor' => true,
 			'hide_location' => true,

@@ -38,6 +38,11 @@ class Pubsites extends \Zotlabs\Web\Controller {
 					foreach($j['sites'] as $jj) {
 						if(! $jj['project'])
 							continue;
+						if(strpos($jj['version'],' ')) {
+							$x = explode(' ', $jj['version']);
+							if($x[1])
+								$jj['version'] = $x[1];
+						}
 						$m = parse_url($jj['url']);
 						$host = strtolower(substr($jj['url'],strpos($jj['url'],'://')+3));
 						$rate_links = ((local_channel()) ? '<td><a href="rate?f=&target=' . $host . '" class="btn-btn-default"><i class="fa fa-check-square-o"></i> ' . t('Rate') . '</a></td>' : '');

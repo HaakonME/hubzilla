@@ -3963,9 +3963,6 @@ function zotinfo($arr) {
 		require_once('include/channel.php');
 		$ret['site']['channels'] = channel_total();
 
-
-		$ret['site']['version'] = Zotlabs\Lib\System::get_platform_name() . ' ' . STD_VERSION . '[' . DB_UPDATE_VERSION . ']';
-
 		$ret['site']['admin'] = get_config('system','admin_email');
 
 		$visible_plugins = array();

@@ -219,7 +219,7 @@ CREATE TABLE "cal" (
   "pass" text NOT NULL,
   "ctag" text NOT NULL,
   "synctoken" text NOT NULL,
-  "cal_types" text NOT NULL DEFAULT "0",
+  "cal_types" text NOT NULL DEFAULT '0',
   PRIMARY KEY ("cal_id")
 );
 create index "cal_hash_idx" on cal ("cal_hash");
@@ -940,7 +940,7 @@ create index "photo_album" on photo ("album");
 create index "photo_imgscale" on photo ("imgscale");
 create index "photo_profile" on photo ("profile");
 create index "photo_flags" on photo ("photo_flags");
-create index "photo_type" on photo ("type");
+create index "photo_mimetype" on photo ("mimetype");
 create index "photo_aid" on photo ("aid");
 create index "photo_xchan" on photo ("xchan");
 create index "photo_filesize" on photo ("filesize");

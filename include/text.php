@@ -234,12 +234,15 @@ function purify_html($s, $allow_position = false) {
 	$def->info_global_attr['data-offset-bottom'] = new HTMLPurifier_AttrDef_Text;
 
 	//some html5 elements
+	//Block
 	$def->addElement('section', 'Block', 'Flow', 'Common');
 	$def->addElement('nav',     'Block', 'Flow', 'Common');
 	$def->addElement('article', 'Block', 'Flow', 'Common');
 	$def->addElement('aside',   'Block', 'Flow', 'Common');
 	$def->addElement('header',  'Block', 'Flow', 'Common');
 	$def->addElement('footer',  'Block', 'Flow', 'Common');
+	//Inline
+	$def->addElement('button',  'Inline', 'Inline', 'Common');
 
 
 	if($allow_position) {

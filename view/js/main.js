@@ -847,7 +847,7 @@ function pageUpdate() {
 function justifyPhotos(id) {
 	justifiedGalleryActive = true;
 	$('#' + id).justifiedGallery({
-		selector: '> a, > div:not(.spinner, #page-end)',
+		selector: 'a, div:not(.spinner, #page-end)',
 		margins: 3,
 		border: 0,
 		sizeRangeSuffixes: {

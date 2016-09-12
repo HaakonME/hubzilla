@@ -1,6 +1,6 @@
 <?php
 
-namespace Zotlabs\Module\Account;
+namespace Zotlabs\Module\Settings;
 
 class Account {
 

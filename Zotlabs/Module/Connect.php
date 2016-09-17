@@ -60,13 +60,13 @@ class Connect extends \Zotlabs\Web\Controller {
 		$observer = \App::get_observer();
 		if(($observer) && ($_POST['submit'] === t('Continue'))) {
 			if($observer['xchan_follow'])
-				$url = sprintf($observer['xchan_follow'],urlencode(\App::$data['channel']['channel_address'] . '@' . \App::get_hostname())); 
+				$url = sprintf($observer['xchan_follow'],urlencode(channel_reddress(\App::$data['channel'])));
 			if(! $url) {
 				$r = q("select * from hubloc where hubloc_hash = '%s' order by hubloc_id desc limit 1",
 					dbesc($observer['xchan_hash'])
 				);
 				if($r)
-					$url = $r[0]['hubloc_url'] . '/follow?f=&url=' . urlencode(\App::$data['channel']['channel_address'] . '@' . \App::get_hostname()); 
+					$url = $r[0]['hubloc_url'] . '/follow?f=&url=' . urlencode(channel_reddress(\App::$data['channel']));
 			}
 		}
 		if($url)

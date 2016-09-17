@@ -1894,3 +1894,8 @@ function channelx_by_n($id) {
 	return(($r) ? $r[0] : false);
 }
 
+function channel_reddress($channel) {
+	if(! ($channel && array_key_exists('channel_address',$channel)))
+		return '';
+	return strtolower($channel['channel_address'] . '@' . App::get_hostname());
+}

@@ -87,7 +87,7 @@ class Setup extends \Zotlabs\Web\Controller {
 				$db = \DBA::dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, $dbtype, true);
 	
 				if(! \DBA::$dba->connected) {
-					echo 'Database Connect failed: ' . DBA::$dba->error;
+					echo 'Database Connect failed: ' . \DBA::$dba->error;
 					killme();
 				}
 				return;

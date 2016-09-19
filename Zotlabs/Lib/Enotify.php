@@ -116,10 +116,13 @@ class Enotify {
 
 		$itemlink =  $params['link'];
 
-		// ignore like/unlike activity on posts - they probably require a sepearate notification preference
+		// ignore like/unlike activity on posts - they probably require a separate notification preference
 
-		if (array_key_exists('item',$params) && (! visible_activity($params['item'])))
+		if (array_key_exists('item',$params) && (! visible_activity($params['item']))) {
+			logger('notification: not a visible activity. Ignoring.');
+			pop_lang();
 			return;
+		}
 
 		$parent_mid = $params['parent_mid'];
 
@@ -386,8 +389,11 @@ class Enotify {
 	// Mark some notifications as seen right away
 	// Note! The notification have to be created, because they are used to send emails
 	// So easiest solution to hide them from Notices is to mark them as seen right away.
-	// Another option would be to not add them to the DB, and change how emails are handled (probably would be better that way)
+	// Another option would be to not add them to the DB, and change how emails are handled 
+	// (probably would be better that way)
+
 	$always_show_in_notices = get_pconfig($recip['channel_id'],'system','always_show_in_notices');
+
 	if (!$always_show_in_notices) {
 		if (($params['type'] == NOTIFY_WALL) || ($params['type'] == NOTIFY_MAIL) || ($params['type'] == NOTIFY_INTRO)) {
 			$seen = 1;
@@ -654,12 +660,12 @@ class Enotify {
 
 		require_once('include/conversation.php');
 
-		// Call localize_item with the "brief" flag to get a one line status for activities. 
+		// Call localize_item to get a one line status for activities. 
 		// This should set $item['localized'] to indicate we have a brief summary.
 
 		localize_item($item);
 
-		if($item_localize) {
+		if($item['localize']) {
 			$itemem_text = $item['localize'];
 		}
 		else {

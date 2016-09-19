@@ -29,7 +29,7 @@ class Api extends \Zotlabs\Web\Controller {
 			try {
 				$request = OAuth1Request::from_request();
 			}
-			catch(Exception $e) {
+			catch(\Exception $e) {
 				echo "<pre>"; var_dump($e); killme();
 			}
 			

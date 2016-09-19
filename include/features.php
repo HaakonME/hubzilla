@@ -442,7 +442,7 @@ function get_features($filtered = true) {
 				}
 			}
 			if(! $has_items) {
-				$narr[$k] = '';
+				unset($narr[$k]);
 			}
 		}
 		for($x = 0; $x < count($narr); $x ++) {

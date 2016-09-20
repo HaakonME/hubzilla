@@ -1,3 +1,60 @@
+Hubzilla 1.14 (not released)
+	- Upgrade fullcalendar library to version 3
+	- Whitelist button tag in htmlpurifier
+	- Upgrade justifiedGallery library to version 3.6.3
+	- Pubsites improvements
+	- Upgrade foundation library to version 6.2.3
+	- Ability to move photos to another album
+	- Submodules for settings page
+	- Submodules for admin page
+	- Remove chatroom suggestions
+	- Revamped and improved theme select backend
+	- Theme preview
+	⁻ Techlevels for pro server role
+	- BBcode checklist
+	- Improve save to folder modal dialog
+	- Case insensitive sort apps
+	- Add authors to post distribution
+	- Redirect to plugin page after enabling to show configuration settings if applicable
+	- Move allowed email domains to admin->security page
+	- Display text around the searched query in documentation search
+	- Comanche observer conditionals
+	- Remove ratings
+	- Context help for /connedit
+	- Comanche conditionals
+	- Cover photo enhancements (does not disappear after initial scrolldown)
+	- Website import/export
+	- Server roles (basic, standard and pro)
+
+	Bugfixes
+	- do not show hidden channels in /randprof
+	- Various postgres fixes
+	- Illegal offset errors in include/conversation:status_editor() when no permissions array is passed
+	- Patch foundation-6.2.3 to work with jquery-3.1
+	- Custom/expert permissions bug
+	- Mail: return array instead of object
+	- Don't send purge_all notification to self
+	- Saved search: tags and connection searches weren't being saved
+	- Do not allow PERMS_PUBLIC as a choice for writable permission limits
+	- Force cover photos as well as profile photos to be public. As a side effect 'thing' photos will also be considered public
+	- Make lock switching actually work with multiple acl forms
+	- Create smarty dir before any templates can be initialised
+	- Fix aconfig
+	- Broken doc search
+	- Puclic forum check with custom/exoert permissions
+
+	Plugins
+	- Diaspora: third party on other network comment issue
+	- Diaspora: comment fix (hubzilla originated comment with plugin activated by comment author not making it to Diaspora)
+	- Cdav: provide calendar list view
+	- Diaspora: allow comments on public diaspora posts which were imported by subscribing to public tags.
+	- Wppost: add blog_id parameter for WordPress MU sites such as WordPress.com
+	- Wppost: don't log the password in normal mode
+	- Hubwall: provide choice of sender addresses, the real admin email, postmaster, or noreply.
+	- Chord: General cleanup of chord app
+	- Chord: Update chord binary for modern linux systems
+	- Start grouping addons by server_role
+
 Hubzilla 1.12
 	- extensible permissions so you can create a new permission rule such as "can write to my wiki" or "can see me naked". 
 	- guest access tokens can do anything you let them, including create posts and administer your channel 

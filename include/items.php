@@ -2291,6 +2291,11 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 
 function send_status_notifications($post_id,$item) {
 
+	// only send notifications for comments
+
+	if($item['mid'] == $item['parent_mid'])
+		return;
+
 	$notify = false;
 	$unfollowed = false;
 
@@ -2305,6 +2310,7 @@ function send_status_notifications($post_id,$item) {
 	// my own post - no notification needed
 	if($item['author_xchan'] === $r[0]['channel_hash'])
 		return;
+
 
 	// I'm the owner - notify me
 

@@ -602,7 +602,7 @@ function widget_settings_menu($arr) {
 
 	);
 
-	if(get_features()) {
+	if(get_account_techlevel() > 0 && get_features()) {
 		$tabs[] = 	array(
 				'label'	=> t('Additional features'),
 				'url' 	=> z_root().'/settings/features',

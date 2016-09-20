@@ -445,10 +445,6 @@ function get_features($filtered = true) {
 				unset($narr[$k]);
 			}
 		}
-		for($x = 0; $x < count($narr); $x ++) {
-			if(! $narr[$x])
-				unset($narr[$x]);
-		}
 	}
 	else {
 		$narr = $arr;

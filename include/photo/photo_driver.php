@@ -358,6 +358,7 @@ abstract class photo_driver {
 				`photo_usage` = %d,
 				`title` = '%s',
 				`description` = '%s',
+				`os_path` = '%s',
 				`allow_cid` = '%s',
 				`allow_gid` = '%s',
 				`deny_cid` = '%s',
@@ -382,6 +383,7 @@ abstract class photo_driver {
 				intval($p['photo_usage']),
 				dbesc($p['title']),
 				dbesc($p['description']),
+				dbesc($p['os_path']),
 				dbesc($p['allow_cid']),
 				dbesc($p['allow_gid']),
 				dbesc($p['deny_cid']),
@@ -391,8 +393,8 @@ abstract class photo_driver {
 		}
 		else {
 			$r = q("INSERT INTO `photo`
-				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, mimetype, `album`, `height`, `width`, `content`, `os_storage`, `filesize`, `imgscale`, `photo_usage`, `title`, `description`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
+				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, mimetype, `album`, `height`, `width`, `content`, `os_storage`, `filesize`, `imgscale`, `photo_usage`, `title`, `description`, `os_path`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval($p['aid']),
 				intval($p['uid']),
 				dbesc($p['xchan']),
@@ -411,6 +413,7 @@ abstract class photo_driver {
 				intval($p['photo_usage']),
 				dbesc($p['title']),
 				dbesc($p['description']),
+				dbesc($p['os_path']),
 				dbesc($p['allow_cid']),
 				dbesc($p['allow_gid']),
 				dbesc($p['deny_cid']),

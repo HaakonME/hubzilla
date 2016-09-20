@@ -1645,7 +1645,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : NULL_DATE);
 	$arr['commented']     = ((x($arr,'commented')  !== false) ? datetime_convert('UTC','UTC',$arr['commented'])  : datetime_convert());
 	$arr['comments_closed'] = ((x($arr,'comments_closed')  !== false) ? datetime_convert('UTC','UTC',$arr['comments_closed'])  : NULL_DATE);
-	$arr['html'] = ((array_key_exists('html',$arr)) ? $arrr['html'] : '');
+	$arr['html'] = ((array_key_exists('html',$arr)) ? $arr['html'] : '');
 
 	if($deliver) {
 		$arr['received']      = datetime_convert();

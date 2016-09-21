@@ -423,7 +423,7 @@ function local_dir_update($uid, $force) {
 		$arr = array('channel_id' => $uid, 'hash' => $hash, 'profile' => $profile);
 		call_hooks('local_dir_update', $arr);
 
-		$address = $p[0]['channel_address'] . '@' . App::get_hostname();
+		$address = channel_reddress($p[0]);
 
 		if (perm_is_allowed($uid, '', 'view_profile')) {
 			import_directory_profile($hash, $arr['profile'], $address, 0);
@@ -439,5 +439,5 @@ function local_dir_update($uid, $force) {
 	}
 
 	$ud_hash = random_string() . '@' . App::get_hostname();
-	update_modtime($hash, $ud_hash, $p[0]['channel_address'] . '@' . App::get_hostname(),(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
+	update_modtime($hash, $ud_hash, channel_reddress($p[0]),(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
 }

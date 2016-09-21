@@ -265,7 +265,7 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . App::get_hostname();
+			$_SESSION['my_address'] = channel_reddress($r[0]);
 
 			App::set_observer($x[0]);
 			App::set_perms(get_all_perms(local_channel(), $hash));

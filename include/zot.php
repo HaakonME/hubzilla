@@ -1593,7 +1593,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 		}
 
 		$channel = $r[0];
-		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . App::get_hostname() . '>');
+		$DR->addto_recipient($channel['channel_name'] . ' <' . channel_reddress($channel) . '>');
 
 		/* blacklisted channels get a permission denied, no special message to tip them off */
 
@@ -2082,7 +2082,7 @@ function process_mail_delivery($sender, $arr, $deliveries) {
 		}
 
 		$channel = $r[0];
-		$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . App::get_hostname() . '>');
+		$DR->addto_recipient($channel['channel_name'] . ' <' . channel_reddress($channel) . '>');
 
 		/* blacklisted channels get a permission denied, no special message to tip them off */
 
@@ -3532,7 +3532,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('item',$arr) && is_array($arr['item'][0])) {
 			$DR = new Zotlabs\Zot\DReport(z_root(),$d['hash'],$d['hash'],$arr['item'][0]['message_id'],'channel sync processed');
-			$DR->addto_recipient($channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . App::get_hostname() . '>');
+			$DR->addto_recipient($channel['channel_name'] . ' <' . channel_reddress($channel) . '>');
 		}
 		else
 			$DR = new Zotlabs\Zot\DReport(z_root(),$d['hash'],$d['hash'],'sync packet','channel sync delivered');
@@ -4032,7 +4032,7 @@ function check_zotinfo($channel,$locations,&$ret) {
 				dbesc($channel['channel_guid']),
 				dbesc($channel['channel_guid_sig']),
 				dbesc($channel['channel_hash']),
-				dbesc($channel['channel_address'] . '@' . App::get_hostname()),
+				dbesc(channel_reddress($channel)),
 				intval(1),
 				dbesc(z_root()),
 				dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),

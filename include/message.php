@@ -75,7 +75,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		if($recip)
 			$recip_handle = $recip[0]['xchan_addr'];
 
-		$sender_handle = $channel['channel_address'] . '@' . App::get_hostname();
+		$sender_handle = channel_reddress($channel);
 
 		$handles = $recip_handle . ';' . $sender_handle;
 

@@ -105,7 +105,7 @@ class SuperCurl {
 			$opts['cookie'] = 'PHPSESSID=' . trim(file_get_contents('store/[data]/cookien_' . $this->magicauth));
 			$c = channelx_by_n($this->magicauth);
 			if($c)
-				$url = zid($this->url,$c['channel_address'] . '@' . \App::get_hostname());
+				$url = zid($this->url,channel_reddress($c));
 		}	
 		if($this->custom)
 			$opts['custom'] = $this->custom;

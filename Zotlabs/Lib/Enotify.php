@@ -465,7 +465,7 @@ class Enotify {
 		// use $_SESSION['zid_override'] to force zid() to use 
 		// the recipient address instead of the current observer
 
-		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . \App::get_hostname();
+		$_SESSION['zid_override'] = channel_reddress($recip);
 		$_SESSION['zrl_override'] = z_root() . '/channel/' . $recip['channel_address'];
 		
 		$textversion = zidify_links($textversion);

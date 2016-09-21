@@ -2262,7 +2262,7 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 
 	logger('storing diaspora comment signature',LOGGER_DEBUG);
 
-	$diaspora_handle = $channel['channel_address'] . '@' . App::get_hostname();
+	$diaspora_handle = channel_reddress($channel);
 
 	$signed_text = $datarray['mid'] . ';' . $parent_item['mid'] . ';' . $signed_body . ';' . $diaspora_handle;
 

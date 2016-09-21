@@ -2010,11 +2010,11 @@ function get_site_info() {
 		$admin = array();
 		foreach($r as $rr) {
 			if($rr['channel_pageflags'] & PAGE_HUBADMIN)
-				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . App::get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+				$admin[] = array( 'name' => $rr['channel_name'], 'address' => channel_reddress($rr), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
 		}
 		if(! $admin) {
 			foreach($r as $rr) {
-				$admin[] = array( 'name' => $rr['channel_name'], 'address' => $rr['channel_address'] . '@' . App::get_hostname(), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
+				$admin[] = array( 'name' => $rr['channel_name'], 'address' => channel_reddress($rr), 'channel' => z_root() . '/channel/' . $rr['channel_address']);
 			}
 		}
 	}

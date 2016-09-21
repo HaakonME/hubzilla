@@ -1148,8 +1148,10 @@ function discover_by_webbie($webbie) {
 
 				if($link['rel'] === PROTOCOL_ZOT) {
 					logger('discover_by_webbie: zot found for ' . $webbie, LOGGER_DEBUG);
-					if(array_key_exists('zot',$x) && $x['zot']['success'])
+					if(array_key_exists('zot',$x) && $x['zot']['success']) {
 						$i = import_xchan($x['zot']);
+						return true;
+					}
 					else {
 						$z = z_fetch_url($link['href']);
 						if($z['success']) {

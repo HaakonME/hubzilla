@@ -1590,6 +1590,9 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['item_wall']     = ((x($arr,'item_wall'))     ? intval($arr['item_wall'])           : 0 );
 	$arr['item_type']     = ((x($arr,'item_type'))     ? intval($arr['item_type'])           : 0 );
 
+	// obsolete, but needed so as not to throw not-null constraints on some database driveres
+	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
+
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
 

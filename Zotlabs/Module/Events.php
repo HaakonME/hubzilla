@@ -118,7 +118,7 @@ class Events extends \Zotlabs\Web\Controller {
 			goaway($onerror_url);
 		}
 	
-		$share = ((intval($_POST['share'])) ? intval($_POST['share']) : 0);
+		$share = ((intval($_POST['distr'])) ? intval($_POST['distr']) : 0);
 	
 		$channel = \App::get_channel();
 	
@@ -469,7 +469,7 @@ class Events extends \Zotlabs\Web\Controller {
 				'$t_orig' => $t_orig,
 				'$sh_text' => t('Share this event'),
 				'$sh_checked' => $sh_checked,
-				'$share' => array('share', t('Share this event'), $sh_checked, '', array(t('No'),t('Yes'))),
+				'$share' => array('distr', t('Share this event'), $sh_checked, '', array(t('No'),t('Yes'))),
 				'$preview' => t('Preview'),
 				'$perms_label' => t('Permission settings'),
 				// populating the acl dialog was a permission description from view_stream because Cal.php, which

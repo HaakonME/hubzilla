@@ -1217,6 +1217,9 @@ function sync_files($channel,$files) {
 						$p['content'] = base64_decode($p['content']);
 
 
+					if(!isset($p['display_path']))
+						$p['display_path'] = '';
+
 					$exists = q("select * from photo where resource_id = '%s' and imgscale = %d and uid = %d limit 1",
 						dbesc($p['resource_id']),
 						intval($p['imgscale']),

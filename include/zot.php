@@ -3643,8 +3643,7 @@ function zot_reply_message_request($data) {
 	if ($messages) {
 		$env_recips = null;
 
-		$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_error = 0 and hubloc_deleted = 0 
-			group by hubloc_sitekey",
+		$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_error = 0 and hubloc_deleted = 0",
 			dbesc($sender_hash)
 		);
 		if (! $r) {

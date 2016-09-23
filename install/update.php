@@ -1810,7 +1810,7 @@ function update_r1152() {
 	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) { 
 
 		$r1 = q("CREATE TABLE IF NOT EXISTS \"dreport\" (
-  \"dreport_id\" int(11) NOT NULL,
+  \"dreport_id\" serial NOT NULL,
   \"dreport_channel\" int(11) NOT NULL DEFAULT '0',
   \"dreport_mid\" char(255) NOT NULL DEFAULT '',
   \"dreport_site\" char(255) NOT NULL DEFAULT '',

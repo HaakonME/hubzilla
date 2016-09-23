@@ -396,7 +396,7 @@ create index "conv_created_idx" on conv ("created");
 create index "conv_updated_idx" on conv ("updated");
 
 CREATE TABLE IF NOT EXISTS "dreport" (
-  "dreport_id" int NOT NULL,
+  "dreport_id" serial NOT NULL,
   "dreport_channel" int NOT NULL DEFAULT '0',
   "dreport_mid" char(255) NOT NULL DEFAULT '',
   "dreport_site" char(255) NOT NULL DEFAULT '',

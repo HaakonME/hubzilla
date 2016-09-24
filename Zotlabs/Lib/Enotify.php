@@ -680,7 +680,7 @@ class Enotify {
 		// convert this logic into a json array just like the system notifications
 
 		return array(
-			'notify_link' => $item['llink'], 
+			'notify_link' => $item['llink'] . '#item_' . $item['id'], 
 			'name' => $item['author']['xchan_name'],
 			'url' => $item['author']['xchan_url'],
 			'photo' => $item['author']['xchan_photo_s'],

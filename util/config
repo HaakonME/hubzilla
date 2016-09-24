@@ -71,7 +71,7 @@ if($argc == 2) {
 }
 
 if($argc == 1) {
-	$r = q("select * from config where 1");
+	$r = q("select * from config where true");
 	if($r) {
 		foreach($r as $rr) {
 			echo "config[{$rr['cat']}][{$rr['k']}] = " . printable_config($rr['v']) . "\n";

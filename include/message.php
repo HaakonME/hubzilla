@@ -299,14 +299,30 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 				break;
 
 			case 'combined':
-				$sql = "SELECT * FROM ( SELECT * FROM mail WHERE channel_id = $local_channel ORDER BY created DESC $limit ) AS temp_table GROUP BY parent_mid ORDER BY created DESC";
+				$parents = q("SELECT parent_mid FROM mail WHERE mid = parent_mid AND channel_id = %d ORDER BY created DESC",
+					dbesc($local_channel)
+				);
+				//FIXME: We need the latest mail of a thread here. This query throws errors in postgres. We now look for the latest in php until somebody can fix this...
+				//$sql = "SELECT * FROM ( SELECT * FROM mail WHERE channel_id = $local_channel ORDER BY created DESC $limit ) AS temp_table GROUP BY parent_mid ORDER BY created DESC";
 				break;
 
 		}
 
 	}
 
-	$r = q($sql);
+	if($parents) {
+		foreach($parents as $parent) {
+			$all[] = q("SELECT * FROM mail WHERE parent_mid = '%s' AND channel_id = %d ORDER BY created DESC",
+				dbesc($parent['parent_mid']),
+				dbesc($local_channel)
+			);
+		}
+		foreach($all as $single)
+			$r[] = $single[0];
+	}
+	else {
+		$r = q($sql);
+	}
 
 	if(! $r) {
 		return array();

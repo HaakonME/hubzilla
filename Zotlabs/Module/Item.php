@@ -922,7 +922,9 @@ class Item extends \Zotlabs\Web\Controller {
 		$post = item_store($datarray,$execflag);
 	
 		$post_id = $post['item_id'];
-	
+
+		$datarray = $post['item'];
+
 		if($post_id) {
 			logger('mod_item: saved item ' . $post_id);
 	

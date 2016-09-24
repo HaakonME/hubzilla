@@ -412,6 +412,9 @@ class ThreadItem {
 		if($visible_comments === false)
 			$visible_comments = 3;
 
+		if(in_array(\App::$module,['display','update_display'])) 
+			$visible_comments = 99999;
+
 		if(($this->get_display_mode() === 'normal') && ($nb_children > 0)) {
 			foreach($children as $child) {
 				$result['children'][] = $child->get_template_data($conv_responses, $thread_level + 1);

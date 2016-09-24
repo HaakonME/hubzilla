@@ -115,6 +115,9 @@ class Enotify {
 //		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
 		$itemlink =  $params['link'];
+		if($params['item']['id'])
+			$itemlink .= '#item_' . $params['item']['id'];
+
 
 		// ignore like/unlike activity on posts - they probably require a separate notification preference
 

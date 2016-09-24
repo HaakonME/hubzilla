@@ -15,7 +15,7 @@ function tryoembed($match) {
 
 	$o = oembed_fetch_url($url);
 
-	if ($o->type == 'error')
+	if ($o['type'] == 'error')
 		return $match[0];
 
 	$html = oembed_format_object($o);

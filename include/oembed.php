@@ -105,7 +105,7 @@ function oembed_action($embedurl) {
 function oembed_process($url) {
 	$j = oembed_fetch_url($url);
 	logger('oembed_process: ' . print_r($j,true));
-	if($j && $j->type !== 'error')
+	if($j && $j['type'] !== 'error')
 		return '[embed]' . $url . '[/embed]';
 	return false;
 }
@@ -215,26 +215,29 @@ function oembed_fetch_url($embedurl){
 	}
 
 
-	$j = json_decode($txt);
+	$j = json_decode($txt,true);
+
+	if(! $j)
+		$j = [];
 
 	if($action === 'filter') {
-		if($j->html) {
-			$orig = $j->html;
+		if($j['html']) {
+			$orig = $j['html'];
 			$allow_position = (($zrl) ? true : false);
-			$j->html = purify_html($j->html,$allow_position);
-			if($j->html != $orig) {
-				logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j->html, LOGGER_DEBUG, LOG_INFO); 
+			$j['html'] = purify_html($j['html'],$allow_position);
+			if($j['html'] != $orig) {
+				logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j['html'], LOGGER_DEBUG, LOG_INFO); 
 			}
 
 			$orig_len = mb_strlen(preg_replace('/\s+/','',$orig));
-			$new_len = mb_strlen(preg_replace('/\s+/','',$j->html));
+			$new_len = mb_strlen(preg_replace('/\s+/','',$j['html']));
 
 			if(stripos($orig,'<script') || (! $new_len)) 
-				$j->type = 'error';
+				$j['type'] = 'error';
 			elseif($orig_len) {
 				$ratio = $new_len / $orig_len;
 				if($ratio < 0.5) {
-					$j->type = 'error';
+					$j['type'] = 'error';
 					logger('oembed html truncated: ' . $ratio, LOGGER_DEBUG, LOG_INFO);
 				}
 			}
@@ -242,7 +245,7 @@ function oembed_fetch_url($embedurl){
 		}
 	}
 
-	$j->embedurl = $embedurl;
+	$j['embedurl'] = $embedurl;
 
 	// logger('fetch return: ' . print_r($j,true));
 
@@ -253,27 +256,27 @@ function oembed_fetch_url($embedurl){
 	
 function oembed_format_object($j){
 
-    $embedurl = $j->embedurl;
+    $embedurl = $j['embedurl'];
 
 // logger('format: ' . print_r($j,true));
 
-	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null));
+	$jhtml = oembed_iframe($j['embedurl'],(isset($j['width']) ? $j['width'] : null), (isset($j['height']) ? $j['height'] : null));
 
-	$ret="<span class='oembed ".$j->type."'>";
-	switch ($j->type) {
+	$ret="<span class='oembed " . $j['type'] . "'>";
+	switch ($j['type']) {
 		case "video": {
-			if (isset($j->thumbnail_url)) {
-				$tw = (isset($j->thumbnail_width)) ? $j->thumbnail_width:200;
-				$th = (isset($j->thumbnail_height)) ? $j->thumbnail_height:180;
+			if (isset($j['thumbnail_url'])) {
+				$tw = (isset($j['thumbnail_width'])) ? $j['thumbnail_width'] : 200;
+				$th = (isset($j['thumbnail_height'])) ? $j['thumbnail_height'] : 180;
 				$tr = $tw/$th;
 				
 				$th=120; $tw = $th*$tr;
 				$tpl=get_markup_template('oembed_video.tpl');
 				if(strstr($embedurl,'youtu') && strstr(z_root(),'https:')) {
 					$embedurl = str_replace('http:','https:',$embedurl);
-					$j->thumbnail_url = str_replace('http:','https:', $j->thumbnail_url);
+					$j['thumbnail_url'] = str_replace('http:','https:', $j['thumbnail_url']);
 					$jhtml = str_replace('http:','https:', $jhtml);
-					$j->html = str_replace('http:','https:', $j->html);
+					$j['html'] = str_replace('http:','https:', $j['html']);
 				
 				}
 				$ret.=replace_macros($tpl, array(
@@ -282,7 +285,7 @@ function oembed_format_object($j){
 					'$escapedhtml'=>base64_encode($jhtml),
 					'$tw'=>$tw,
 					'$th'=>$th,
-					'$turl'=>$j->thumbnail_url,
+					'$turl'=> $j['thumbnail_url'],
 				));
 				
 			} else {
@@ -291,19 +294,19 @@ function oembed_format_object($j){
 			$ret.="<br>";
 		}; break;
 		case "photo": {
-			$ret.= "<img width='".$j->width."' src='".$j->url."'>";
+			$ret.= "<img width='".$j['width']."' src='".$j['url']."'>";
 			$ret.="<br>";
 		}; break;  
 		case "link": {
-			if($j->thumbnail_url) {
+			if($j['thumbnail_url']) {
 				if(is_matrix_url($embedurl)) {
 					$embedurl = zid($embedurl);
-					$j->thumbnail_url = zid($j->thumbnail_url);
+					$j['thumbnail_url'] = zid($j['thumbnail_url']);
 				}
-				$ret = '<a href="' . $embedurl . '" ><img src="' . $j->thumbnail_url . '" alt="thumbnail" /></a><br /><br />';
+				$ret = '<a href="' . $embedurl . '" ><img src="' . $j['thumbnail_url'] . '" alt="thumbnail" /></a><br /><br />';
 			}
 
-			//$ret = "<a href='".$embedurl."'>".$j->title."</a>";
+			//$ret = "<a href='".$embedurl."'>".$j['title']."</a>";
 		}; break;  
 		case "rich": {
 			// not so safe.. 
@@ -312,12 +315,12 @@ function oembed_format_object($j){
 	}
 
 	// add link to source if not present in "rich" type
-	if (  $j->type!='rich' || !strpos($j->html,$embedurl) ){
-		$embedlink = (isset($j->title))?$j->title:$embedurl;
+	if (  $j['type'] != 'rich' || !strpos($j['html'],$embedurl) ){
+		$embedlink = (isset($j['title']))?$j['title'] : $embedurl;
 		$ret .= '<br />' . "<a href='$embedurl' rel='oembed'>$embedlink</a>";
 		$ret .= "<br />";
-		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
-		if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
+		if (isset($j['author_name'])) $ret .= t(' by ') . $j['author_name'];
+		if (isset($j['provider_name'])) $ret .= t(' on ') . $j['provider_name'];
 	} else {
 		// add <a> for html2bbcode conversion
 		$ret .= "<br /><a href='$embedurl' rel='oembed'>$embedurl</a>";

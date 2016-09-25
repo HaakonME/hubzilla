@@ -412,8 +412,11 @@ class ThreadItem {
 		if($visible_comments === false)
 			$visible_comments = 3;
 
-		if(in_array(\App::$module,['display','update_display'])) 
-			$visible_comments = 99999;
+//		needed for scroll to comment from notification but needs more work
+//		as we do not want to open all comments unless there is actually an #item_xx anchor
+//		and the url fragment is not sent to the server. 
+//		if(in_array(\App::$module,['display','update_display'])) 
+//			$visible_comments = 99999;
 
 		if(($this->get_display_mode() === 'normal') && ($nb_children > 0)) {
 			foreach($children as $child) {

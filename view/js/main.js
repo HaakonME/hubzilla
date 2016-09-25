@@ -249,6 +249,7 @@ var divmore_height = 400;
 var last_filestorage_id = null;
 var mediaPlaying = false;
 var contentHeightDiff = 0;
+var gotoAnchor = ((document.location.hash.includes('item_')) ? document.location.hash : '');
 
 $(function() {
 	$.ajaxSetup({cache: false});
@@ -648,6 +649,11 @@ function updateConvItems(mode,data) {
 		});
 	} else {
 		collapseHeight();
+	}
+
+	if(gotoAnchor != '') {
+		document.location.hash = gotoAnchor;
+		gotoAnchor = '';
 	}
 
 }

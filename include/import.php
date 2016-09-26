@@ -422,9 +422,9 @@ function sync_apps($channel,$apps) {
             	);
 			}
 
-			if(! $app['app_created'] || $app['app_created'] === NULL_DATE)
+			if((! $app['app_created']) || ($app['app_created'] <= NULL_DATE))
 				$app['app_created'] = datetime_convert();
-			if(! $app['app_edited'] || $app['app_edited'] === NULL_DATE)
+			if((! $app['app_edited']) || ($app['app_edited'] <= NULL_DATE))
 				$app['app_edited'] = datetime_convert();
 
 			$app['app_channel'] = $channel['channel_id'];
@@ -536,9 +536,9 @@ function sync_chatrooms($channel,$chatrooms) {
 			unset($chatroom['cr_aid']);
 			unset($chatroom['cr_uid']);
 
-			if(! $chatroom['cr_created'] || $chatroom['cr_created'] === NULL_DATE)
+			if((! $chatroom['cr_created']) || ($chatroom['cr_created'] <= NULL_DATE))
 				$chatroom['cr_created'] = datetime_convert();
-			if(! $chatroom['cr_edited'] || $chatroom['cr_edited'] === NULL_DATE)
+			if((! $chatroom['cr_edited']) || ($chatroom['cr_edited'] <= NULL_DATE))
 				$chatroom['cr_edited'] = datetime_convert();
 
 			$chatroom['cr_aid'] = $channel['channel_account_id'];

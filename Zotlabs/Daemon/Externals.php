@@ -58,7 +58,7 @@ class Externals {
 			}
 
 			if($url) {
-				if($r[0]['site_pull'] !== NULL_DATE)
+				if($r[0]['site_pull'] > NULL_DATE)
 					$mindate = urlencode(datetime_convert('','',$r[0]['site_pull'] . ' - 1 day'));
 				else {
 					$days = get_config('externals','since_days');

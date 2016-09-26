@@ -275,7 +275,7 @@ function relative_date($posted_date, $format = null) {
 
 	$abs = strtotime($localtime);
 
-	if (is_null($posted_date) || $posted_date === NULL_DATE || $abs === false) {
+	if (is_null($posted_date) || is_null_date($posted_date) || $abs === false) {
 		return t('never');
 	}
 

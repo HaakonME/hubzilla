@@ -1212,7 +1212,7 @@ function advanced_profile(&$a) {
 		if(App::$profile['partner'])
 			$profile['marital']['partner'] = bbcode(App::$profile['partner']);
 
-		if(strlen(App::$profile['howlong']) && App::$profile['howlong'] !== NULL_DATE) {
+		if(strlen(App::$profile['howlong']) && App::$profile['howlong'] > NULL_DATE) {
 			$profile['howlong'] = relative_date(App::$profile['howlong'], t('for %1$d %2$s'));
 		}
 

@@ -37,7 +37,10 @@ function get_help_content($tocpath = false) {
 				$doctype = 'html';
 		}
 	}
-	
+
+	if(($tocpath) && (! $text))
+		return '';
+
 	if($tocpath === false) {
 		if(! $text) {
 			$text = load_doc_file('doc/Site.md');

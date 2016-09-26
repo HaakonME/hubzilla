@@ -1504,7 +1504,9 @@ function widget_helpindex($arr) {
 	$o .= '<div class="widget">';
 	$o .= '<h3>' . t('Documentation') . '</h3>';
 
-	$level_0 = get_help_content('toc');
+	$level_0 = get_help_content('sitetoc');
+	if(! $level_0)
+		$level_0 = get_help_content('toc');
 
 	$level_0 = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$level_0);
 
@@ -1515,7 +1517,9 @@ function widget_helpindex($arr) {
 		$path = '';
 		for($x = 1; $x < argc(); $x ++) {
 			$path .= argv($x) . '/';			
-			$y = get_help_content($path . 'toc');
+			$y = get_help_content($path . 'sitetoc');
+			if(! $y)
+				$y = get_help_content($path . 'toc');
 			if($y)
 				$levels[] = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$y);
 		}

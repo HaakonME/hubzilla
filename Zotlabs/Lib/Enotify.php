@@ -115,9 +115,6 @@ class Enotify {
 //		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
 		$itemlink =  $params['link'];
-		if($params['item']['id'])
-			$itemlink .= '#item_' . $params['item']['id'];
-
 
 		// ignore like/unlike activity on posts - they probably require a separate notification preference
 
@@ -680,7 +677,7 @@ class Enotify {
 		// convert this logic into a json array just like the system notifications
 
 		return array(
-			'notify_link' => $item['llink'] . '#item_' . $item['id'], 
+			'notify_link' => $item['llink'],
 			'name' => $item['author']['xchan_name'],
 			'url' => $item['author']['xchan_url'],
 			'photo' => $item['author']['xchan_photo_s'],

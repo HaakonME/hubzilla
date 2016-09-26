@@ -249,7 +249,7 @@ var divmore_height = 400;
 var last_filestorage_id = null;
 var mediaPlaying = false;
 var contentHeightDiff = 0;
-var gotoAnchor = ((document.location.hash.includes('item_')) ? document.location.hash : '');
+
 
 $(function() {
 	$.ajaxSetup({cache: false});
@@ -651,9 +651,13 @@ function updateConvItems(mode,data) {
 		collapseHeight();
 	}
 
-	if(gotoAnchor != '') {
-		document.location.hash = gotoAnchor;
-		gotoAnchor = '';
+	// auto-scroll to a particular comment in a thread (designated by mid) when in single-thread mode
+	if(bParam_mid && mode == 'replace') {
+		$('html, body').animate({ scrollTop: $('.item_' + bParam_mid.substring(0,32)).offset().top }, 'slow');
+		var scrolltoid = $('.collapsed-comments').attr('id').substring(19);
+		$('#collapsed-comments-' + scrolltoid).slideDown();
+		$('#hide-comments-' + scrolltoid).html(aStr.showfewer);
+		$('#hide-comments-total-' + scrolltoid).hide();
 	}
 
 }

@@ -174,6 +174,11 @@ class ThreadItem {
   
 		$responses = get_responses($conv_responses,$response_verbs,$this,$item);
 
+		$my_responses = [];
+		foreach($response_verbs as $v) {
+			$my_responses[$v] = (($conv_responses[$v][$item['mid'] . '-m']) ? 1 : 0);
+		}
+
 		$like_count = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid']] : '');
 		$like_list = ((x($conv_responses['like'],$item['mid'])) ? $conv_responses['like'][$item['mid'] . '-l'] : '');
 		if (count($like_list) > MAX_LIKERS) {
@@ -381,6 +386,7 @@ class ThreadItem {
 			'list_unseen_txt' => $list_unseen_txt,
 			'markseen' => t('Mark all seen'),
 			'responses' => $responses,
+			'my_responses' => $my_responses,
 			'like_count' => $like_count,
 			'like_list' => $like_list,
 			'like_list_part' => $like_list_part,

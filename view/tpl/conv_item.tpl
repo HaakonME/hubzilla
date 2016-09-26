@@ -94,35 +94,35 @@
 						<div class="btn-group dropdown">
 							{{if $item.like}}
 							<button type="button" title="{{$item.like.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false;">
-								<i class="fa fa-thumbs-o-up" ></i>
+								<i class="fa fa-thumbs-o-up{{if $item.my_responses.like}} ivoted{{/if}}" ></i>
 							</button>
 							{{/if}}
 							{{if $item.dislike}}
 							<button type="button" title="{{$item.dislike.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false;">
-								<i class="fa fa-thumbs-o-down" ></i>
+								<i class="fa fa-thumbs-o-down{{if $item.my_responses.dislike}} ivoted{{/if}}" ></i>
 							</button>
 							{{/if}}
 							{{if $item.isevent}}
 							<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
-								<i class="fa fa-check" ></i>
+								<i class="fa fa-check{{if $item.my_responses.attend}} ivoted{{/if}}" ></i>
 							</button>
 							<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
-								<i class="fa fa-times" ></i>
+								<i class="fa fa-times{{if $item.my_responses.attendno}} ivoted{{/if}}" ></i>
 							</button>
 							<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
-								<i class="fa fa-question" ></i>
+								<i class="fa fa-question{{if $item.my_responses.attendmaybe}} ivoted{{/if}}" ></i>
 							</button>
 							{{/if}}
 
 							{{if $item.canvote}}
 							<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
-								<i class="fa fa-check" ></i>
+								<i class="fa fa-check{{if $item.my_responses.agree}} ivoted{{/if}}" ></i>
 							</button>
 							<button type="button" title="{{$item.conlabels.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'disagree'); return false;">
-								<i class="fa fa-times" ></i>
+								<i class="fa fa-times{{if $item.my_responses.disagree}} ivoted{{/if}}" ></i>
 							</button>
 							<button type="button" title="{{$item.conlabels.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'abstain'); return false;">
-								<i class="fa fa-question" ></i>
+								<i class="fa fa-question{{if $item.my_responses.abstain}} ivoted{{/if}}" ></i>
 							</button>
 							{{/if}}
 							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">

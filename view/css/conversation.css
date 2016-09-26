@@ -340,3 +340,8 @@ img.smiley.emoji:hover {
 #filer_save {
 	margin-left: 15px;
 }
+
+.ivoted {
+	font-weight: bold;
+	font-size: 120%;
+}

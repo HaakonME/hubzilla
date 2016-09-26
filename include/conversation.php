@@ -1053,6 +1053,9 @@ function builtin_activity_puller($item, &$conv_responses) {
 				$conv_responses[$mode][$item['thr_parent']] ++;
 
 			$conv_responses[$mode][$item['thr_parent'] . '-l'][] = $url;
+			if(get_observer_hash() && get_observer_hash() === $item['author_xchan']) {
+				$conv_responses[$mode][$item['thr_parent'] . '-m'] = true;
+			}
 
 			// there can only be one activity verb per item so if we found anything, we can stop looking
 			return;

@@ -1,4 +1,9 @@
 Hubzilla 1.14 (not released)
+	- Allow a site to over-ride the help table-of-contents files
+	- Autoscroll to target post/comment when in single-thread mode
+	- Indicator for own response verb activity
+	- Add server role documentation
+	- Pro: remove 'Additional Features' link for techlevel 0
 	- Upgrade fullcalendar library to version 3
 	- Whitelist button tag in htmlpurifier
 	- Upgrade justifiedGallery library to version 3.6.3
@@ -27,8 +32,13 @@ Hubzilla 1.14 (not released)
 	- Server roles (basic, standard and pro)
 
 	Bugfixes
-	- do not show hidden channels in /randprof
-	- Various postgres fixes
+	- Missing categories in preview mode
+	- attach_store() sql issue
+	- Rename id share_container to distr_container - share_container seem to be blacklisted in various security browser plugins
+	- Add 'map' extension to files served natively by nginx without using the project controller
+	- Zot discovery wasn't returning in all cases (after discovering zot)
+	- Do not show hidden channels in /randprof
+	- Numerous postgres fixes
 	- Illegal offset errors in include/conversation:status_editor() when no permissions array is passed
 	- Patch foundation-6.2.3 to work with jquery-3.1
 	- Custom/expert permissions bug

@@ -262,6 +262,9 @@ function dbg($state) {
  */
 function dbesc($str) {
 
+	if(is_null_date($str))
+		$str = NULL_DATE;
+
 	if(\DBA::$dba && \DBA::$dba->connected)
 		return(\DBA::$dba->escape($str));
 	else

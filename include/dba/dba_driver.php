@@ -86,7 +86,7 @@ class DBA {
 abstract class dba_driver {
 	// legacy behavior
 	const INSTALL_SCRIPT='install/schema_mysql.sql';
-	const NULL_DATE = '0000-00-00 00:00:00';
+	const NULL_DATE = '0001-01-01 00:00:00';
 	const UTC_NOW = 'UTC_TIMESTAMP()';
 
 	protected $db;
@@ -276,12 +276,9 @@ function dbunescbin($str) {
 }
 
 function dbescdate($date) {
-	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES && $date == '0000-00-00 00:00:00') {
-		$date = NULL_DATE;
-	} else if(ACTIVE_DBTYPE != DBTYPE_POSTGRES && $date == '0001-01-01 00:00:00') {
-		$date = NULL_DATE;
-	}
-	return $date;
+	if(is_null_date($date))
+		return $dba->escape(NULL_DATE);
+	return $dba->escape($date);
 }
 
 function db_quoteinterval($txt) {
@@ -376,11 +373,8 @@ function dbq($sql) {
 
 function dbesc_array_cb(&$item, $key) {
 	if(is_string($item)) {
-		if($item == '0000-00-00 00:00:00' && ACTIVE_DBTYPE == DBTYPE_POSTGRES)
-			$item = '0001-01-01 00:00:00';
-		else if($item == '0001-01-01 00:00:00' && ACTIVE_DBTYPE == DBTYPE_MYSQL)
-			$item = '0000-00-00 00:00:00';
-
+		if(is_null_date($item))
+			$item = NULL_DATE;
 		$item = dbesc($item);
 	}
 }

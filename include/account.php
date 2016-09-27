@@ -548,8 +548,8 @@ function account_approve($hash) {
  */
 function downgrade_accounts() {
 
-	$r = q("select * from account where not ( account_flags & %d )>0 
-		and account_expires != '%s' 
+	$r = q("select * from account where not ( account_flags & %d ) > 0 
+		and account_expires > '%s' 
 		and account_expires < %s ",
 		intval(ACCOUNT_EXPIRED),
 		dbesc(NULL_DATE),

@@ -227,7 +227,7 @@ function sync_directories($dirmode) {
 
 		$token = get_config('system','realm_token');
 
-		$syncdate = (($rr['site_sync'] === NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
+		$syncdate = (($rr['site_sync'] <= NULL_DATE) ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
 		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($syncdate) . (($token) ? '&t=' . $token : ''));
 
 		if (! $x['success'])

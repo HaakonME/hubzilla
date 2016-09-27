@@ -163,7 +163,7 @@ function collect_recipients($item, &$private_envelope) {
 }
 
 function comments_are_now_closed($item) {
-	if($item['comments_closed'] !== NULL_DATE) {
+	if($item['comments_closed'] > NULL_DATE) {
 		$d = datetime_convert();
 		if($d > $item['comments_closed'])
 			return true;
@@ -1090,7 +1090,7 @@ function encode_item($item,$mirror = false) {
 	if($y = encode_item_flags($item))
 		$x['flags']       = $y;
 
-	if($item['comments_closed'] !== NULL_DATE)
+	if($item['comments_closed'] > NULL_DATE)
 		$x['comments_closed'] = $item['comments_closed'];
 
 	$x['public_scope']    = $scope;
@@ -1439,7 +1439,7 @@ function get_mail_elements($x) {
 	$arr['conv_guid']    = (($x['conv_guid'])? htmlspecialchars($x['conv_guid'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
-	if((! array_key_exists('expires',$x)) || ($x['expires'] === NULL_DATE))
+	if((! array_key_exists('expires',$x)) || ($x['expires'] <= NULL_DATE))
 		$arr['expires'] = NULL_DATE;
 	else
 		$arr['expires']      = datetime_convert('UTC','UTC',$x['expires']);
@@ -2065,7 +2065,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : $orig[0]['expires']);
 
-	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] != NULL_DATE)
+	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] > NULL_DATE)
 		$arr['comments_closed'] = datetime_convert('UTC','UTC',$arr['comments_closed']);
 	else
 		$arr['comments_closed'] = $orig[0]['comments_closed'];
@@ -3832,7 +3832,7 @@ function zot_feed($uid,$observer_hash,$arr) {
 
 	$limit = " LIMIT 100 ";
 
-	if($mindate != NULL_DATE) {
+	if($mindate > NULL_DATE) {
 		$sql_extra .= " and ( created > '$mindate' or changed > '$mindate' ) ";
 	}
 

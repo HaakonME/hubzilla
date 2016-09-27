@@ -652,7 +652,8 @@ function updateConvItems(mode,data) {
 	}
 
 	// auto-scroll to a particular comment in a thread (designated by mid) when in single-thread mode
-	if(bParam_mid && mode == 'replace') {
+	if($('.item_' + bParam_mid.substring(0,32)).length && mode == 'replace') {
+		console.log($('.item_' + bParam_mid.substring(0,32)));
 		$('html, body').animate({ scrollTop: $('.item_' + bParam_mid.substring(0,32)).offset().top }, 'slow');
 		if($('.collapsed-comments').length) {
 			var scrolltoid = $('.collapsed-comments').attr('id').substring(19);

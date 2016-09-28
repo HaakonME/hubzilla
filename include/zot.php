@@ -3164,7 +3164,10 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 
-			translate_channel_perms_inbound($arr['channel']);
+			$remote_channel = $arr['channel'];
+			$remote_channel['channel_id'] = $channel['channel_id'];
+			translate_channel_perms_inbound($remote_channel);
+
 
 			if(array_key_exists('channel_pageflags',$arr['channel']) && intval($arr['channel']['channel_pageflags'])) {
 				// These flags cannot be sync'd.

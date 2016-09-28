@@ -280,8 +280,8 @@ function dbunescbin($str) {
 
 function dbescdate($date) {
 	if(is_null_date($date))
-		return $dba->escape(NULL_DATE);
-	return $dba->escape($date);
+		return \DBA::$dba->escape(NULL_DATE);
+	return \DBA::$dba->escape($date);
 }
 
 function db_quoteinterval($txt) {

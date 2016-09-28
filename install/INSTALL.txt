@@ -74,8 +74,8 @@ but may be an issue with nginx or other web server platforms.
 1. Requirements
     - Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 
     local .htaccess file. Some folks have successfully used nginx and lighttpd.
-	Example config scripts are available for these platforms in doc/install.
-	Apache and nginx have the most support. 
+	Example config scripts are available for these platforms in the install 
+	directory. Apache and nginx have the most support. 
 
     - PHP 5.5 or later. 
 

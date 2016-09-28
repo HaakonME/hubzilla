@@ -279,15 +279,15 @@ class Setup extends \Zotlabs\Web\Controller {
 	
 			case 2: { // Database config
 	
-				$dbhost = ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : '127.0.0.1');
-				$dbuser = notags(trim($_POST['dbuser']));
-				$dbport = intval(notags(trim($_POST['dbport'])));
-				$dbpass = notags(trim($_POST['dbpass']));
-				$dbdata = notags(trim($_POST['dbdata']));
-				$dbtype = intval(notags(trim($_POST['dbtype'])));
-				$phpath = notags(trim($_POST['phpath']));
-				$adminmail = notags(trim($_POST['adminmail']));
-				$siteurl = notags(trim($_POST['siteurl']));
+				$dbhost = ((x($_POST,'dbhost')) ? trim($_POST['dbhost']) : '127.0.0.1');
+				$dbuser = trim($_POST['dbuser']);
+				$dbport = intval(trim($_POST['dbport']));
+				$dbpass = trim($_POST['dbpass']);
+				$dbdata = trim($_POST['dbdata']);
+				$dbtype = intval(trim($_POST['dbtype']));
+				$phpath = trim($_POST['phpath']);
+				$adminmail = trim($_POST['adminmail']);
+				$siteurl = trim($_POST['siteurl']);
 	
 				$tpl = get_markup_template('install_db.tpl');
 				$o .= replace_macros($tpl, array(
@@ -320,16 +320,16 @@ class Setup extends \Zotlabs\Web\Controller {
 			}; break;
 			case 3: { // Site settings
 				require_once('include/datetime.php');
-				$dbhost = ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : '127.0.0.1');
-				$dbport = intval(notags(trim($_POST['dbuser'])));
-				$dbuser = notags(trim($_POST['dbuser']));
-				$dbpass = notags(trim($_POST['dbpass']));
-				$dbdata = notags(trim($_POST['dbdata']));
-				$dbtype = intval(notags(trim($_POST['dbtype'])));
-				$phpath = notags(trim($_POST['phpath']));
+				$dbhost = ((x($_POST,'dbhost')) ? trim($_POST['dbhost']) : '127.0.0.1');
+				$dbport = intval(trim($_POST['dbuser']));
+				$dbuser = trim($_POST['dbuser']);
+				$dbpass = trim($_POST['dbpass']);
+				$dbdata = trim($_POST['dbdata']);
+				$dbtype = intval(trim($_POST['dbtype']));
+				$phpath = trim($_POST['phpath']);
 	
-				$adminmail = notags(trim($_POST['adminmail']));
-				$siteurl = notags(trim($_POST['siteurl']));
+				$adminmail = trim($_POST['adminmail']);
+				$siteurl = trim($_POST['siteurl']);
 				$timezone = ((x($_POST,'timezone')) ? ($_POST['timezone']) : 'America/Los_Angeles');
 	
 				$server_roles = [

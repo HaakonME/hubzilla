@@ -1,4 +1,6 @@
 Hubzilla 1.14 (not released)
+	- add plugin hook for 'get_profile_photo'
+	- Convert NULL_DATE to a legal date for compatibility with MySQL strict mode
 	- Allow a site to over-ride the help table-of-contents files
 	- Autoscroll to target post/comment when in single-thread mode
 	- Indicator for own response verb activity
@@ -15,7 +17,7 @@ Hubzilla 1.14 (not released)
 	- Remove chatroom suggestions
 	- Revamped and improved theme select backend
 	- Theme preview
-	⁻ Techlevels for pro server role
+	- Implement techlevels for pro server role
 	- BBcode checklist
 	- Improve save to folder modal dialog
 	- Case insensitive sort apps
@@ -51,7 +53,7 @@ Hubzilla 1.14 (not released)
 	- Create smarty dir before any templates can be initialised
 	- Fix aconfig
 	- Broken doc search
-	- Puclic forum check with custom/exoert permissions
+	- Public forum check with custom/expert permissions
 
 	Plugins
 	- Diaspora: third party on other network comment issue

@@ -63,7 +63,7 @@ class Photo extends \Zotlabs\Web\Controller {
 			$d = [ 'imgscale' => $resolution, 'channel_id' => $uid, 'default' => $default, 'data'  => '', 'mimetype' => '' ];
 			call_hooks('get_profile_photo',$d);
 
-			$resolution = $d['resolution'];
+			$resolution = $d['imgscale'];
 			$uid        = $d['channel_id']; 	
 			$default    = $d['default'];
 			$data       = $d['data'];

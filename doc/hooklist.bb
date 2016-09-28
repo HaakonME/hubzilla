@@ -236,6 +236,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/get_features]get_features[/zrl]
 	Called when get_features() is called
 
+[zrl=[baseurl]/help/hook/get_profile_photo]get_profile_photo[/zrl]
+	Called when local profile photo content is fetched in mod_photo
+
 [zrl=[baseurl]/help/hook/get_role_perms]get_role_perms[/zrl]
 	Called when get_role_perms() is called to obtain permissions for named permission roles
 

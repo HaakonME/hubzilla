@@ -28,12 +28,14 @@ Hubzilla 1.14 (not released)
 	- Comanche observer conditionals
 	- Remove ratings
 	- Context help for /connedit
+	- Provide configurable sidebar table-of-contents indexes for different levels of the help hierarchy
 	- Comanche conditionals
 	- Cover photo enhancements (does not disappear after initial scrolldown)
 	- Website import/export
 	- Server roles (basic, standard and pro)
 
 	Bugfixes
+	- regression: files/photos were not synchronising to channel clones properly
 	- Missing categories in preview mode
 	- attach_store() sql issue
 	- Rename id share_container to distr_container - share_container seem to be blacklisted in various security browser plugins

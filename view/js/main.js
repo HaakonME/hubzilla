@@ -652,7 +652,7 @@ function updateConvItems(mode,data) {
 	}
 
 	// auto-scroll to a particular comment in a thread (designated by mid) when in single-thread mode
-	if($('.item_' + bParam_mid.substring(0,32)).length && mode == 'replace') {
+	if($('.item_' + bParam_mid.substring(0,32)).length && !$('.item_' + bParam_mid.substring(0,32)).hasClass('toplevel_item') && mode == 'replace') {
 		if($('.collapsed-comments').length) {
 			var scrolltoid = $('.collapsed-comments').attr('id').substring(19);
 			$('#collapsed-comments-' + scrolltoid + ' .autotime').timeago();

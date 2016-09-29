@@ -661,6 +661,7 @@ function updateConvItems(mode,data) {
 			$('#hide-comments-total-' + scrolltoid).hide();
 		}
 		$('html, body').animate({ scrollTop: $('.item_' + bParam_mid.substring(0,32)).offset().top - $('nav').outerHeight() }, 'slow');
+		$('.item_' + bParam_mid.substring(0,32)).addClass('item-highlight');
 	}
 
 }

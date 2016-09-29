@@ -1267,14 +1267,6 @@ img.mail-conv-sender-photo {
 	font-size: $body_font_size;
 }
 
-.wall-item-head {
-	padding: 10px 10px 0.5em 10px;
-}
-
-.wall-item-content {
-	padding: 0.5em 10px;
-}
-
 .wall-event-item {
 	padding: 10px;
 	color: #fff;
@@ -1288,11 +1280,6 @@ img.mail-conv-sender-photo {
 	border-top-right-radius: $radiuspx;
 	border-top-left-radius: $radiuspx;
 }
-
-.wall-item-tools {
-	padding: 0.5em 10px 10px 10px;
-}
-
 
 .wall-item-title {
 	font-size: $font_size;

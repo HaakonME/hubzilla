@@ -97,6 +97,18 @@
 
 /* conv_item */
 
+.wall-item-head {
+	padding: 10px 10px 0.5em 10px;
+}
+
+.wall-item-content {
+	padding: 0.5em 10px;
+}
+
+.wall-item-tools {
+	padding: 0.5em 10px 10px 10px;
+}
+
 .wall-item-info {
 	display: block;
 	float: left;
@@ -193,6 +205,20 @@ a.wall-item-name-link {
 
 .shared_header {
 	margin-bottom: 20px;
+}
+
+.ivoted {
+	color: #337AB7;
+}
+
+.item-highlight {
+	border-left: 3px solid #337AB7;
+}
+
+.item-highlight .wall-item-head,
+.item-highlight .wall-item-content,
+.item-highlight .wall-item-tools {
+	padding-left: 7px;
 }
 
 /* comment_item */
@@ -339,8 +365,4 @@ img.smiley.emoji:hover {
 
 #filer_save {
 	margin-left: 15px;
-}
-
-.ivoted {
-	color: #337AB7;
 }

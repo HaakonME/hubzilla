@@ -99,10 +99,10 @@ class Browser extends DAV\Browser\Plugin {
 		$parent = $this->server->tree->getNodeForPath($path);
 
 		$parentpath = array();
-		// only show parent if not leaving /cloud/; TODO how to improve this? 
+		// only show parent if not leaving /cloud/; TODO how to improve this?
 		if ($path && $path != "cloud") {
-			list($parentUri) = \Sabre\HTTP\URLUtil::splitPath($path);
-			$fullPath = \Sabre\HTTP\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
+			list($parentUri) = \Sabre\Uri\split($path);
+			$fullPath = \Sabre\HTTP\encodePath($this->server->getBaseUri() . $parentUri);
 
 			$parentpath['icon'] = $this->enableAssets ? '<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl('icons/parent' . $this->iconExtension) . '" width="24" alt="' . t('parent') . '"></a>' : '';
 			$parentpath['path'] = $fullPath;
@@ -114,9 +114,9 @@ class Browser extends DAV\Browser\Plugin {
 			$type = null;
 
 			// This is the current directory, we can skip it
-			if (rtrim($file['href'],'/') == $path) continue;
+			if (rtrim($file['href'], '/') == $path) continue;
 
-			list(, $name) = \Sabre\HTTP\URLUtil::splitPath($file['href']);
+			list(, $name) = \Sabre\Uri\split($file['href']);
 
 			if (isset($file[200]['{DAV:}resourcetype'])) {
 				$type = $file[200]['{DAV:}resourcetype']->getValue();
@@ -166,8 +166,7 @@ class Browser extends DAV\Browser\Plugin {
 			$size = isset($file[200]['{DAV:}getcontentlength']) ? (int)$file[200]['{DAV:}getcontentlength'] : '';
 			$lastmodified = ((isset($file[200]['{DAV:}getlastmodified'])) ? $file[200]['{DAV:}getlastmodified']->getTime()->format('Y-m-d H:i:s') : '');
 
-			$fullPath = \Sabre\HTTP\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path ? $path . '/' : '') . $name, '/'));
-
+			$fullPath = \Sabre\HTTP\encodePath('/' . trim($this->server->getBaseUri() . ($path ? $path . '/' : '') . $name, '/'));
 
 			$displayName = isset($file[200]['{DAV:}displayname']) ? $file[200]['{DAV:}displayname'] : $name;
 
@@ -248,8 +247,8 @@ class Browser extends DAV\Browser\Plugin {
 
 		$current_theme = \Zotlabs\Render\Theme::current();
 
-		$theme_info_file = "view/theme/" . $current_theme[0] . "/php/theme.php";
-		if (file_exists($theme_info_file)){
+		$theme_info_file = 'view/theme/' . $current_theme[0] . '/php/theme.php';
+		if (file_exists($theme_info_file)) {
 			require_once($theme_info_file);
 			if (function_exists(str_replace('-', '_', $current_theme[0]) . '_init')) {
 				$func = str_replace('-', '_', $current_theme[0]) . '_init';
@@ -279,15 +278,14 @@ class Browser extends DAV\Browser\Plugin {
 		$aclselect = null;
 		$lockstate = '';
 
-		if($this->auth->owner_id) {
+		if ($this->auth->owner_id) {
 			$channel = channelx_by_n($this->auth->owner_id);
-			if($channel) {
+			if ($channel) {
 				$acl = new \Zotlabs\Access\AccessList($channel);
 				$channel_acl = $acl->get();
 				$lockstate = (($acl->is_private()) ? 'lock' : 'unlock');
 
 				$aclselect = ((local_channel() == $this->auth->owner_id) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage')) : '');
-
 			}
 		}
 
@@ -316,7 +314,7 @@ class Browser extends DAV\Browser\Plugin {
 		$quota['desc'] = $quotaDesc;
 		$quota['warning'] = ((($limit) && ((round($used / $limit, 1) * 100) >= 90)) ? t('WARNING:') : ''); // 10485760 bytes = 100MB
 
-		$path = trim(str_replace('cloud/' . $this->auth->owner_nick, '', $path),'/');
+		$path = trim(str_replace('cloud/' . $this->auth->owner_nick, '', $path), '/');
 
 		$output .= replace_macros(get_markup_template('cloud_actionspanel.tpl'), array(
 				'$folder_header' => t('Create new folder'),
@@ -354,7 +352,7 @@ class Browser extends DAV\Browser\Plugin {
 	 *
 	 * Given the owner, the parent folder and and attach name get the attachment
 	 * hash.
-	 * 
+	 *
 	 * @param int $owner
 	 *  The owner_id
 	 * @param string $hash
@@ -363,14 +361,13 @@ class Browser extends DAV\Browser\Plugin {
 	 *  The name of the attachment
 	 * @return string
 	 */
-
 	protected function findAttachHash($owner, $parentHash, $attachName) {
 		$r = q("SELECT hash FROM attach WHERE uid = %d AND folder = '%s' AND filename = '%s' ORDER BY edited DESC LIMIT 1",
 			intval($owner),
 			dbesc($parentHash),
 			dbesc($attachName)
 		);
-		$hash = "";
+		$hash = '';
 		if ($r) {
 			foreach ($r as $rr) {
 				$hash = $rr['hash'];

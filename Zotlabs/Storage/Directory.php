@@ -3,7 +3,6 @@
 namespace Zotlabs\Storage;
 
 use Sabre\DAV;
-use Sabre\HTTP;
 
 /**
  * @brief RedDirectory class.
@@ -54,7 +53,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		logger('directory ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
-		$modulename = \App::$module; 
+		$modulename = \App::$module;
 		$this->red_path = ((strpos($ext_path, '/' . $modulename) === 0) ? substr($ext_path, strlen($modulename) + 1) : $ext_path);
 		if (! $this->red_path) {
 			$this->red_path = '/';
@@ -98,7 +97,6 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 	/**
 	 * @brief Returns a child by name.
-	 *
 	 *
 	 * @throw \Sabre\DAV\Exception\Forbidden
 	 * @throw \Sabre\DAV\Exception\NotFound
@@ -160,7 +158,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-		list($parent_path, ) = HTTP\URLUtil::splitPath($this->red_path);
+		list($parent_path, ) = \Sabre\Uri\split($this->red_path);
 		$new_path = $parent_path . '/' . $name;
 
 		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND uid = %d",
@@ -169,12 +167,11 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			intval($this->auth->owner_id)
 		);
 
-
 		$ch = channelx_by_n($this->auth->owner_id);
-		if($ch) {
-			$sync = attach_export_data($ch,$this->folder_hash);
-			if($sync) 
-				build_sync_packet($ch['channel_id'],array('file' => array($sync)));
+		if ($ch) {
+			$sync = attach_export_data($ch, $this->folder_hash);
+			if ($sync)
+				build_sync_packet($ch['channel_id'], array('file' => array($sync)));
 		}
 
 		$this->red_path = $new_path;
@@ -207,7 +204,6 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
-
 		$mimetype = z_mime_content_type($name);
 
 		$c = q("SELECT * FROM channel WHERE channel_id = %d AND channel_removed = 0 LIMIT 1",
@@ -226,22 +222,22 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$direct = null;
 
-		if($this->folder_hash) {
+		if ($this->folder_hash) {
 			$r = q("select * from attach where hash = '%s' and is_dir = 1 and uid = %d limit 1",
 				dbesc($this->folder_hash),
 				intval($c[0]['channel_id'])
 			);
-			if($r)
+			if ($r)
 				$direct = $r[0];
 		}
 
-		if(($direct) && (($direct['allow_cid']) || ($direct['allow_gid']) || ($direct['deny_cid']) || ($direct['deny_gid']))) {
+		if (($direct) && (($direct['allow_cid']) || ($direct['allow_gid']) || ($direct['deny_cid']) || ($direct['deny_gid']))) {
 			$allow_cid = $direct['allow_cid'];
 			$allow_gid = $direct['allow_gid'];
 			$deny_cid = $direct['deny_cid'];
 			$deny_gid = $direct['deny_gid'];
 		}
-		else { 
+		else {
 			$allow_cid = $c[0]['channel_allow_cid'];
 			$allow_gid = $c[0]['channel_allow_gid'];
 			$deny_cid = $c[0]['channel_deny_cid'];
@@ -270,8 +266,6 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($deny_gid)
 		);
 
-
-
 		// returns the number of bytes that were written to the file, or FALSE on failure
 		$size = file_put_contents($f, $data);
 		// delete attach entry if file_put_contents() failed
@@ -284,15 +278,12 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		// returns now
 		$edited = datetime_convert();
 
-
-
 		$is_photo = 0;
 		$x = @getimagesize($f);
-		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA); 
-		if(($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA);
+		if (($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
 			$is_photo = 1;
 		}
-
 
 		// updates entry with filesize and timestamp
 		$d = q("UPDATE attach SET filesize = '%s', is_photo = %d, edited = '%s' WHERE hash = '%s' AND uid = %d",
@@ -329,28 +320,26 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			}
 		}
 
-		if($is_photo) {
+		if ($is_photo) {
 			$album = '';
-			if($this->folder_hash) {
+			if ($this->folder_hash) {
 				$f1 = q("select filename from attach WHERE hash = '%s' AND uid = %d",
 					dbesc($this->folder_hash),
 					intval($c[0]['channel_id'])
 				);
-				if($f1)
+				if ($f1)
 					$album = $f1[0]['filename'];
 			}
 
 			require_once('include/photos.php');
 			$args = array( 'resource_id' => $hash, 'album' => $album, 'os_path' => $f, 'filename' => $name, 'getimagesize' => $x, 'directory' => $direct);
-			$p = photo_upload($c[0],\App::get_observer(),$args);
+			$p = photo_upload($c[0], \App::get_observer(), $args);
 		}
 
-		$sync = attach_export_data($c[0],$hash);
+		$sync = attach_export_data($c[0], $hash);
 
-		if($sync) 
-			build_sync_packet($c[0]['channel_id'],array('file' => array($sync)));
-
-
+		if ($sync)
+			build_sync_packet($c[0]['channel_id'], array('file' => array($sync)));
 	}
 
 	/**
@@ -379,10 +368,10 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 				logger('createDirectory: attach_export_data returns $sync:' . print_r($sync, true), LOGGER_DEBUG);
 
 				if($sync) {
-					build_sync_packet($r[0]['channel_id'],array('file' => array($sync)));
+					build_sync_packet($r[0]['channel_id'], array('file' => array($sync)));
 				}
 			}
-			else {		
+			else {
 				logger('error ' . print_r($result, true), LOGGER_DEBUG);
 			}
 		}
@@ -391,7 +380,6 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @brief delete directory
 	 */
-
 	public function delete() {
 		logger('delete file ' . basename($this->red_path), LOGGER_DEBUG);
 
@@ -408,13 +396,11 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		attach_delete($this->auth->owner_id, $this->folder_hash);
 
 		$ch = channelx_by_n($this->auth->owner_id);
-		if($ch) {
-			$sync = attach_export_data($ch,$this->folder_hash,true);
-			if($sync) 
-				build_sync_packet($ch['channel_id'],array('file' => array($sync)));
+		if ($ch) {
+			$sync = attach_export_data($ch, $this->folder_hash, true);
+			if ($sync)
+				build_sync_packet($ch['channel_id'], array('file' => array($sync)));
 		}
-
-
 	}
 
 
@@ -573,14 +559,12 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @brief Array with all Directory and File DAV\Node items for the given path.
  	 *
-	 *
 	 * @param string $file path to a directory
 	 * @param \Zotlabs\Storage\BasicAuth &$auth
 	 * @returns null|array \Sabre\DAV\INode[]
 	 * @throw \Sabre\DAV\Exception\Forbidden
 	 * @throw \Sabre\DAV\Exception\NotFound
 	 */
-
 	function CollectionData($file, &$auth) {
 		$ret = array();
 
@@ -649,7 +633,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		if ($errors) {
 			if ($permission_error) {
 				throw new DAV\Exception\Forbidden('Permission denied.');
-			} 
+			}
 			else {
 				throw new DAV\Exception\NotFound('A component of the request file path could not be found.');
 			}
@@ -663,7 +647,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
 			$prefix = 'DISTINCT ON (filename)';
 			$suffix = 'ORDER BY filename';
-		} 
+		}
 		else {
 			$prefix = '';
 			$suffix = 'GROUP BY filename';
@@ -677,7 +661,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			//logger('filename: ' . $rr['filename'], LOGGER_DEBUG);
 			if (intval($rr['is_dir'])) {
 				$ret[] = new Directory($path . '/' . $rr['filename'], $auth);
-			} 
+			}
 			else {
 				$ret[] = new File($path . '/' . $rr['filename'], $rr, $auth);
 			}
@@ -697,11 +681,10 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @param BasicAuth &$auth
 	 * @return array Directory[]
  	 */
-
 	function ChannelList(&$auth) {
 		$ret = array();
 
-		$r = q("SELECT channel_id, channel_address FROM channel WHERE channel_removed = 0 
+		$r = q("SELECT channel_id, channel_address FROM channel WHERE channel_removed = 0
 			AND channel_system = 0 AND NOT (channel_pageflags & %d)>0",
 			intval(PAGE_HIDDEN)
 		);
@@ -720,8 +703,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 
 	/**
-	 * @brief 
-	 *
+	 * @brief
 	 *
 	 * @param string $file
 	 *  path to file or directory
@@ -730,7 +712,6 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @return File|Directory|boolean|null
 	 * @throw \Sabre\DAV\Exception\Forbidden
 	 */
-
 	function FileData($file, &$auth, $test = false) {
 		logger($file . (($test) ? ' (test mode) ' : ''), LOGGER_DATA);
 
@@ -739,11 +720,10 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			$file = substr($file, 6);
 		}
 		else {
-			$x = strpos($file,'/dav');
+			$x = strpos($file, '/dav');
 			if($x === 0)
-				$file = substr($file,4);
+				$file = substr($file, 4);
 		}
-
 
 		if ((! $file) || ($file === '/')) {
 			return new Directory('/', $auth);
@@ -780,7 +760,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		$errors = false;
 
-		for ($x = 1; $x < count($path_arr); $x++) {		
+		for ($x = 1; $x < count($path_arr); $x++) {
 			$r = q("select id, hash, filename, flags, is_dir from attach where folder = '%s' and filename = '%s' and uid = %d and is_dir != 0 $perms",
 				dbesc($folder),
 				dbesc($path_arr[$x]),
@@ -792,7 +772,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 				$path = $path . '/' . $r[0]['filename'];
 			}
 			if (! $r) {
-				$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
+				$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach
 					where folder = '%s' and filename = '%s' and uid = %d $perms order by filename limit 1",
 					dbesc($folder),
 					dbesc(basename($file)),
@@ -801,7 +781,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			}
 			if (! $r) {
 				$errors = true;
-				$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach 
+				$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, os_storage, created, edited from attach
 					where folder = '%s' and filename = '%s' and uid = %d order by filename limit 1",
 					dbesc($folder),
 					dbesc(basename($file)),

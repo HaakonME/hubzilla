@@ -229,7 +229,7 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
  * @param int $rev Revision
  * @return array
  */
-function attach_by_hash($hash, $rev = 0) {
+function attach_by_hash($hash, $observer_hash, $rev = 0) {
 
 	$ret = array('success' => false);
 
@@ -249,7 +249,7 @@ function attach_by_hash($hash, $rev = 0) {
 		return $ret;
 	}
 
-	if(! perm_is_allowed($r[0]['uid'], get_observer_hash(), 'view_storage')) {
+	if(! perm_is_allowed($r[0]['uid'], $observer_hash, 'view_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -315,7 +315,7 @@ function attach_can_view_folder($uid,$ob_hash,$folder_hash) {
  *  * \e string \b message (optional) only when success is false
  *  * \e array \b data array of attach DB entry without data component
  */
-function attach_by_hash_nodata($hash, $rev = 0) {
+function attach_by_hash_nodata($hash, $observer_hash, $rev = 0) {
 
 	$ret = array('success' => false);
 
@@ -335,7 +335,7 @@ function attach_by_hash_nodata($hash, $rev = 0) {
 		return $ret;
 	}
 
-	if(! perm_is_allowed($r[0]['uid'],get_observer_hash(),'view_storage')) {
+	if(! perm_is_allowed($r[0]['uid'],$observer_hash,'view_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}

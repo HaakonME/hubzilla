@@ -63,7 +63,7 @@ class Getfile extends \Zotlabs\Web\Controller {
 			killme();
 		}
 		
-		$r = attach_by_hash($resource,$revision);
+		$r = attach_by_hash($resource,$channel['channel_hash'],$revision);
 	
 		if(! $r['success']) {
 			logger('attach_by_hash failed: ' . $r['message']);

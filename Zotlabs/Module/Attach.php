@@ -14,7 +14,7 @@ class Attach extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		$r = attach_by_hash(argv(1),((argc() > 2) ? intval(argv(2)) : 0));
+		$r = attach_by_hash(argv(1),get_observer_hash(),((argc() > 2) ? intval(argv(2)) : 0));
 	
 		if(! $r['success']) {
 			notice( $r['message'] . EOL);

@@ -1036,7 +1036,7 @@ function sync_files($channel,$files) {
 					}
 
 					$attach_exists = false;
-					$x = attach_by_hash($att['hash']);
+					$x = attach_by_hash($att['hash'],$channel['channel_hash']);
 					logger('sync_files duplicate check: attach_exists=' . $attach_exists, LOGGER_DEBUG);
 					logger('sync_files duplicate check: att=' . print_r($att,true), LOGGER_DEBUG);
 					logger('sync_files duplicate check: attach_by_hash() returned ' . print_r($x,true), LOGGER_DEBUG);

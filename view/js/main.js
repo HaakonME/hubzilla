@@ -653,13 +653,14 @@ function updateConvItems(mode,data) {
 
 	// auto-scroll to a particular comment in a thread (designated by mid) when in single-thread mode
 	if($('.item_' + bParam_mid.substring(0,32)).length && mode == 'replace') {
-		$('html, body').animate({ scrollTop: $('.item_' + bParam_mid.substring(0,32)).offset().top - $('nav').outerHeight(true) }, 'slow');
 		if($('.collapsed-comments').length) {
 			var scrolltoid = $('.collapsed-comments').attr('id').substring(19);
-			$('#collapsed-comments-' + scrolltoid).slideDown();
+			$('#collapsed-comments-' + scrolltoid + ' .autotime').timeago();
+			$('#collapsed-comments-' + scrolltoid).show();
 			$('#hide-comments-' + scrolltoid).html(aStr.showfewer);
 			$('#hide-comments-total-' + scrolltoid).hide();
 		}
+		$('html, body').animate({ scrollTop: $('.item_' + bParam_mid.substring(0,32)).offset().top - $('nav').outerHeight() }, 'slow');
 	}
 
 }

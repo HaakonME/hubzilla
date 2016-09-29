@@ -1106,8 +1106,11 @@ function sync_files($channel,$files) {
 					// If the hash ever contains any escapable chars this could cause
 					// problems. Currently it does not. 
 
-					dbesc_array($att);
+					// @TODO implement os_path
+					if(!isset($att['os_path']))
+						$att['os_path'] = '';
 
+					dbesc_array($att);
 
 					if($attach_exists) {
 						logger('sync_files attach exists: ' . print_r($att,true), LOGGER_DEBUG);

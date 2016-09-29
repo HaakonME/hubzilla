@@ -8,7 +8,7 @@ The saved search widget will provide autocompletion of channels (the results are
 
 [ul]
 
-[li]@name - search your network stream for posts or comments written by 'name'. This will also change the post editor permissions to include only 'name'; as if it was a privacy group.[/li]
+[li]@name - search your network stream for posts or comments written by 'name'. This will also change the post editor permissions to include only 'name'; as if this was a privacy group.[/li]
 
 [li]#hashtag - search you network stream for posts containing #hashtag.[/li]
 

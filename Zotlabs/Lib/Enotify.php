@@ -615,6 +615,16 @@ class Enotify {
 	 */
 	static public function send($params) {
 
+		$params['sent']   = false;
+		$params['result'] = false;
+
+		call_hooks('enotify_send', $params);
+
+		if($params['sent']) {
+			logger("notification: enotify::send returns " . $params['sent'], LOGGER_DEBUG);
+			return;
+		}
+
 		$fromName = email_header_encode(html_entity_decode($params['fromName'],ENT_QUOTES,'UTF-8'),'UTF-8'); 
 		$messageSubject = email_header_encode(html_entity_decode($params['messageSubject'],ENT_QUOTES,'UTF-8'),'UTF-8');
 
@@ -655,6 +665,7 @@ class Enotify {
 			$messageHeader									// message headers
 		);
 		logger("notification: enotify::send returns " . $res, LOGGER_DEBUG);
+		return $res;
 	}
 
 	static public function format($item) {

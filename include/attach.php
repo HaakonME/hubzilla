@@ -254,7 +254,7 @@ function attach_by_hash($hash, $observer_hash, $rev = 0) {
 		return $ret;
 	}
 
-	$sql_extra = permissions_sql($r[0]['uid']);
+	$sql_extra = permissions_sql($r[0]['uid'],$observer_hash);
 
 	// Now we'll see if we can access the attachment
 
@@ -269,7 +269,7 @@ function attach_by_hash($hash, $observer_hash, $rev = 0) {
 	}
 
 	if($r[0]['folder']) {
-		$x = attach_can_view_folder($r[0]['uid'],get_observer_hash(),$r[0]['folder']);
+		$x = attach_can_view_folder($r[0]['uid'],$observer_hash,$r[0]['folder']);
 		if(! $x) {
 			$ret['message'] = t('Permission denied.');
 			return $ret;
@@ -340,7 +340,7 @@ function attach_by_hash_nodata($hash, $observer_hash, $rev = 0) {
 		return $ret;
 	}
 
-	$sql_extra = permissions_sql($r[0]['uid']);
+	$sql_extra = permissions_sql($r[0]['uid'],$observer_hash);
 
 	// Now we'll see if we can access the attachment
 
@@ -355,7 +355,7 @@ function attach_by_hash_nodata($hash, $observer_hash, $rev = 0) {
 	}
 
 	if($r[0]['folder']) {
-		$x = attach_can_view_folder($r[0]['uid'],get_observer_hash(),$r[0]['folder']);
+		$x = attach_can_view_folder($r[0]['uid'],$observer_hash,$r[0]['folder']);
 		if(! $x) {
 			$ret['message'] = t('Permission denied.');
 			return $ret;

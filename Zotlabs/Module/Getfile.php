@@ -30,9 +30,9 @@ class Getfile extends \Zotlabs\Web\Controller {
 
 		logger('post: ' . print_r($_POST,true),LOGGER_DEBUG,LOG_INFO);
 	
-		$hash = $_POST['hash'];
-		$time = $_POST['time'];
-		$sig = $_POST['signature'];
+		$hash     = $_POST['hash'];
+		$time     = $_POST['time'];
+		$sig      = $_POST['signature'];
 		$resource = $_POST['resource'];
 		$revision = intval($_POST['revision']);
 	

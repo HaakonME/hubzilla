@@ -94,17 +94,17 @@ class Setup extends \Zotlabs\Web\Controller {
 				// implied break;
 			case 4:
 				$urlpath = \App::get_path();
-				$dbhost = notags(trim($_POST['dbhost']));
-				$dbport = intval(notags(trim($_POST['dbport'])));
-				$dbuser = notags(trim($_POST['dbuser']));
-				$dbpass = notags(trim($_POST['dbpass']));
-				$dbdata = notags(trim($_POST['dbdata']));
-				$dbtype = intval(notags(trim($_POST['dbtype'])));
-				$phpath = notags(trim($_POST['phpath']));
-				$timezone = notags(trim($_POST['timezone']));
-				$adminmail = notags(trim($_POST['adminmail']));
-				$siteurl = notags(trim($_POST['siteurl']));
-				$server_role = notags(trim($_POST['server_role']));
+				$dbhost = trim($_POST['dbhost']);
+				$dbport = intval(trim($_POST['dbport']));
+				$dbuser = trim($_POST['dbuser']);
+				$dbpass = trim($_POST['dbpass']);
+				$dbdata = trim($_POST['dbdata']);
+				$dbtype = intval(trim($_POST['dbtype']));
+				$phpath = trim($_POST['phpath']);
+				$timezone = trim($_POST['timezone']);
+				$adminmail = trim($_POST['adminmail']);
+				$siteurl = trim($_POST['siteurl']);
+				$server_role = trim($_POST['server_role']);
 				if(! $server_role)
 					$server_role = 'standard';
 	

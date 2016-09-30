@@ -1939,7 +1939,9 @@ function format_and_send_email($sender,$xchan,$item) {
   		$hostname = App::get_hostname();
 	    if(strpos($hostname,':'))
     	    $hostname = substr($hostname,0,strpos($hostname,':'));
-		$sender_email = 'noreply' . '@' . $hostname;
+		$sender_email = get_config('system','reply_address');
+		if(! $sender_email)
+			$sender_email = 'noreply' . '@' . $hostname;
 
 		// use the EmailNotification library to send the message
 

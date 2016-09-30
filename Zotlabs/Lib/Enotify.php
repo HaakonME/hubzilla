@@ -70,7 +70,10 @@ class Enotify {
 		$hostname = substr($hostname,0,strpos($hostname,':'));
 
 		// Do not translate 'noreply' as it must be a legal 7-bit email address
-		$sender_email = 'noreply' . '@' . $hostname;
+
+		$sender_email = get_config('system','reply_address');
+		if(! $sender_email)
+			$sender_email = 'noreply' . '@' . $hostname;
 
 		$additional_mail_header = "";
 

@@ -630,10 +630,10 @@ class Enotify {
 		$params['sent']   = false;
 		$params['result'] = false;
 
-		call_hooks('enotify_send', $params);
+		call_hooks('email_send', $params);
 
 		if($params['sent']) {
-			logger("notification: enotify::send returns " . $params['sent'], LOGGER_DEBUG);
+			logger("notification: enotify::send returns " . $params['result'], LOGGER_DEBUG);
 			return;
 		}
 

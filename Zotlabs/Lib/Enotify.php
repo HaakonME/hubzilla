@@ -71,9 +71,21 @@ class Enotify {
 
 		// Do not translate 'noreply' as it must be a legal 7-bit email address
 
-		$sender_email = get_config('system','reply_address');
+		$reply_email = get_config('system','reply_address');
+		if(! $reply_email)
+			$reply_email = 'noreply' . '@' . $hostname;
+
+		$sender_email = get_config('system','from_email');
 		if(! $sender_email)
-			$sender_email = 'noreply' . '@' . $hostname;
+			$sender_email = 'Administrator' . '@' . App::get_hostname();
+
+	
+		$sender_name = get_config('system','from_email_name');
+		if(! $sender_name)
+			$sender_name = Zotlabs\Lib\System::get_site_name();
+
+
+
 
 		$additional_mail_header = "";
 
@@ -586,7 +598,7 @@ class Enotify {
 		self::send(array(
 			'fromName'             => $sender_name,
 			'fromEmail'            => $sender_email,
-			'replyTo'              => $sender_email,
+			'replyTo'              => $reply_email,
 			'toEmail'              => $recip['account_email'],
 			'messageSubject'       => $datarray['subject'],
 			'htmlVersion'          => $email_html_body,

@@ -246,20 +246,23 @@ function verify_email_address($arr) {
 		dbesc($arr['account']['account_language'])
 	);
 
+//@fixme - get correct language template
+
 	$email_msg = replace_macros(get_intltext_template('register_verify_member.tpl'), array(
 		'$sitename' => get_config('system','sitename'),
-		'$siteurl'  =>  z_root(),
+		'$siteurl'  => z_root(),
 		'$email'    => $arr['email'],
 		'$uid'      => $arr['account']['account_id'],
 		'$hash'     => $hash,
 		'$details'  => $details
 	 ));
 
-	$res = mail($arr['email'], email_header_encode(sprintf( t('Registration confirmation for %s'), get_config('system','sitename'))),
-		$email_msg,
-		'From: ' . 'Administrator' . '@' . App::get_hostname() . "\n"
-		. 'Content-type: text/plain; charset=UTF-8' . "\n"
-		. 'Content-transfer-encoding: 8bit' 
+	$res = z_mail(
+		[ 
+		'toEmail' => $arr['email'], 
+		'messageSubject' => sprintf( t('Registration confirmation for %s'), get_config('system','sitename')),
+		'textVersion' => $email_msg,
+		]
 	);
 
 	if($res)
@@ -321,11 +324,12 @@ function send_reg_approval_email($arr) {
 			'$details'  => $details
 		 ));
 
-		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('system','sitename')),
-			$email_msg,
-			'From: ' . t('Administrator') . '@' . App::get_hostname() . "\n"
-			. 'Content-type: text/plain; charset=UTF-8' . "\n"
-			. 'Content-transfer-encoding: 8bit' 
+		$res = z_mail(
+			[ 
+			'toEmail' => $admin['email'], 
+			'messageSubject' => sprintf( t('Registration request at %s'), get_config('system','sitename')),
+			'textVersion' => $email_msg,
+			]
 		);
 
 		if($res)
@@ -348,12 +352,14 @@ function send_register_success_email($email,$password) {
 		'$password' => t('your registration password'),
 	));
 
-	$res = mail($email, sprintf( t('Registration details for %s'), get_config('system','sitename')),
-		$email_msg, 
-		'From: ' . t('Administrator') . '@' . App::get_hostname() . "\n"
-		. 'Content-type: text/plain; charset=UTF-8' . "\n"
-		. 'Content-transfer-encoding: 8bit' 
+	$res = z_mail(
+		[ 
+		'toEmail' => $email,
+		'messageSubject' => sprintf( t('Registration details for %s'), get_config('system','sitename')),
+		'textVersion' => $email_msg,
+		]
 	);
+
 	return($res ? true : false);
 }
 
@@ -399,7 +405,7 @@ function account_allow($hash) {
 	push_lang($register[0]['lang']);
 
 	$email_tpl = get_intltext_template("register_open_eml.tpl");
-	$email_tpl = replace_macros($email_tpl, array(
+	$email_msg = replace_macros($email_tpl, array(
 			'$sitename' => get_config('system','sitename'),
 			'$siteurl' =>  z_root(),
 			'$username' => $account[0]['account_email'],
@@ -408,11 +414,13 @@ function account_allow($hash) {
 			'$uid' => $account[0]['account_id']
 	));
 
-	$res = mail($account[0]['account_email'], sprintf( t('Registration details for %s'), get_config('system','sitename')),
-		$email_tpl,
-			'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-			. 'Content-type: text/plain; charset=UTF-8' . "\n"
-			. 'Content-transfer-encoding: 8bit' );
+	$res = z_mail(
+		[ 
+		'toEmail' => $account[0]['account_email'],
+		'messageSubject' => sprintf( t('Registration details for %s'), get_config('system','sitename')),
+		'textVersion' => $email_msg,
+		]
+	);
 
 	pop_lang();
 

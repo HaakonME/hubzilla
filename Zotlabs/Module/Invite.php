@@ -59,12 +59,15 @@ class Invite extends \Zotlabs\Web\Controller {
 	
 			$account = \App::get_account();
 	
-	
-			$res = mail($recip, sprintf( t('Please join us on $Projectname'), \App::$config['sitename']),
-				$nmessage,
-				"From: " . $account['account_email'] . "\n"
-				. 'Content-type: text/plain; charset=UTF-8' . "\n"
-				. 'Content-transfer-encoding: 8bit' );
+			$res = z_mail(
+				[ 
+				'toEmail'        => $recip,
+				'fromName'       => ' ',
+				'fromEmail'      => $account['account_email'],
+				'messageSubject' => t('Please join us on $Projectname'),
+				'textVersion'    => $nmessage,
+				]
+			);
 	
 			if($res) {
 				$total ++;

@@ -2226,3 +2226,65 @@ function network_to_name($s) {
 	return str_replace($search,$replace,$s);
 
 }
+
+
+function z_mail($params) {
+
+	/**
+	 * @brief Send a text email message
+	 *
+	 * @param array $params an assoziative array with:
+	 *  * \e string \b fromName        name of the sender
+	 *  * \e string \b fromEmail       email of the sender
+	 *  * \e string \b replyTo         replyTo address to direct responses
+	 *  * \e string \b toEmail         destination email address
+	 *  * \e string \b messageSubject  subject of the message
+	 *  * \e string \b htmlVersion     html version of the message
+	 *  * \e string \b textVersion     text only version of the message
+	 *  * \e string \b additionalMailHeader  additions to the smtp mail header
+	 */
+
+	if(! $params['fromEmail']) {
+		$params['fromEmail'] = get_config('system','from_email');
+		if(! $params['fromEmail'])
+			$params['fromEmail'] = 'Administrator' . '@' . App::get_hostname();
+	}
+	if(! $params['fromName']) {
+		$params['fromName'] = get_config('system','from_email_name');
+		if(! $params['fromName'])
+			$params['fromName'] = Zotlabs\Lib\System::get_site_name();
+	}
+	if(! $params['replyTo']) {
+		$params['replyTo'] = get_config('system','reply_address');
+		if(! $params['replyTo'])
+			$params['replyTo'] = 'noreply' . '@' . App::get_hostname();
+	}
+
+	$params['sent']   = false;
+	$params['result'] = false;
+
+	call_hooks('enotify_send', $params);
+
+	if($params['sent']) {
+		logger('notification: z_mail returns ' . $params['result'], LOGGER_DEBUG);
+		return $params['result'];
+	}
+
+	$fromName = email_header_encode(html_entity_decode($params['fromName'],ENT_QUOTES,'UTF-8'),'UTF-8'); 
+	$messageSubject = email_header_encode(html_entity_decode($params['messageSubject'],ENT_QUOTES,'UTF-8'),'UTF-8');
+
+	$messageHeader =
+		$params['additionalMailHeader'] .
+		"From: $fromName <{$params['fromEmail']}>\n" .
+		"Reply-To: $fromName <{$params['replyTo']}>";
+
+	// send the message
+	$res = mail(
+		$params['toEmail'],								// send to address
+		$messageSubject,								// subject
+		$params['textVersion'],
+		$messageHeader									// message headers
+	);
+	logger('notification: z_mail returns ' . $res, LOGGER_DEBUG);
+	return $res;
+}

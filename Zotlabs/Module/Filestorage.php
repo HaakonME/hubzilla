@@ -44,14 +44,14 @@ class Filestorage extends \Zotlabs\Web\Controller {
 		//get the object before permissions change so we can catch eventual former allowed members
 		$object = get_file_activity_object($channel_id, $resource, $cloudPath);
 	
-		attach_change_permissions($channel_id, $resource, $x['allow_cid'], $x['allow_gid'], $x['deny_cid'], $x['deny_gid'], $recurse);
+		attach_change_permissions($channel_id, $resource, $x['allow_cid'], $x['allow_gid'], $x['deny_cid'], $x['deny_gid'], $recurse, true);
 	
 		file_activity($channel_id, $object, $x['allow_cid'], $x['allow_gid'], $x['deny_cid'], $x['deny_gid'], 'post', $notify);
 	
 		goaway($cloudPath);
 	}
 	
-		function get() {
+	function get() {
 	
 		if(argc() > 1)
 			$which = argv(1);

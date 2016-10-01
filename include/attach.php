@@ -1198,7 +1198,11 @@ function attach_mkdirp($channel, $observer_hash, $arr = null) {
  * @param string $deny_gid
  * @param boolean $recurse (optional) default false
  */
-function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse = false) {
+function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse = false, $sync = false) {
+
+	$channel = channelx_by_n($channel_id);
+	if(! $channel)
+		return;
 
 	$r = q("select hash, flags, is_dir, is_photo from attach where hash = '%s' and uid = %d limit 1",
 		dbesc($resource),
@@ -1216,7 +1220,7 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 			);
 			if($r) {
 				foreach($r as $rr) {
-					attach_change_permissions($channel_id, $rr['hash'], $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse);
+					attach_change_permissions($channel_id, $rr['hash'], $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse, $sync);
 				}
 			}
 		}
@@ -1239,6 +1243,13 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 			dbesc($resource),
 			intval($channel_id)
 		);
+	}
+
+	if($sync) {
+		$data = attach_export_data($channel,$resource_id);
+
+		if($data) 
+			build_sync_packet($channel['channel_id'],array('file' => array($data)));
 	}
 }
 

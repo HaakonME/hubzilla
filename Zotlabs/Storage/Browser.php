@@ -7,10 +7,10 @@ use Sabre\DAV;
 /**
  * @brief Provides a DAV frontend for the webbrowser.
  *
- * RedBrowser is a SabreDAV server-plugin to provide a view to the DAV storage
+ * Browser is a SabreDAV server-plugin to provide a view to the DAV storage
  * for the webbrowser.
  *
- * @extends \Sabre\DAV\Browser\Plugin
+ * @extends \\Sabre\\DAV\\Browser\\Plugin
  *
  * @link http://github.com/friendica/red
  * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
@@ -19,13 +19,13 @@ class Browser extends DAV\Browser\Plugin {
 
 	/**
 	 * @see set_writeable()
-	 * @see \Sabre\DAV\Auth\Backend\BackendInterface
-	 * @var RedBasicAuth
+	 * @see \\Sabre\\DAV\\Auth\\Backend\\BackendInterface
+	 * @var BasicAuth $auth
 	 */
 	private $auth;
 
 	/**
-	 * @brief Constructor for RedBrowser class.
+	 * @brief Constructor for Browser class.
 	 *
 	 * $enablePost will be activated through set_writeable() in a later stage.
 	 * At the moment the write_storage permission is only valid for the whole
@@ -36,7 +36,7 @@ class Browser extends DAV\Browser\Plugin {
 	 * Disable assets with $enableAssets = false. Should get some thumbnail views
 	 * anyway.
 	 *
-	 * @param RedBasicAuth &$auth
+	 * @param BasicAuth &$auth
 	 */
 	public function __construct(&$auth) {
 		$this->auth = $auth;
@@ -94,7 +94,6 @@ class Browser extends DAV\Browser\Plugin {
 			'{DAV:}getcontentlength',
 			'{DAV:}getlastmodified',
 			), 1);
-
 
 		$parent = $this->server->tree->getNodeForPath($path);
 
@@ -263,10 +262,11 @@ class Browser extends DAV\Browser\Plugin {
 	 * @brief Creates a form to add new folders and upload files.
 	 *
 	 * @param \Sabre\DAV\INode $node
-	 * @param string &$output
+	 * @param[in,out] string &$output
+	 * @param string $path
 	 */
 	public function htmlActionsPanel(DAV\INode $node, &$output, $path) {
-		if (! $node instanceof DAV\ICollection)
+		if(! $node instanceof DAV\ICollection)
 			return;
 
 		// We also know fairly certain that if an object is a non-extended
@@ -278,9 +278,9 @@ class Browser extends DAV\Browser\Plugin {
 		$aclselect = null;
 		$lockstate = '';
 
-		if ($this->auth->owner_id) {
+		if($this->auth->owner_id) {
 			$channel = channelx_by_n($this->auth->owner_id);
-			if ($channel) {
+			if($channel) {
 				$acl = new \Zotlabs\Access\AccessList($channel);
 				$channel_acl = $acl->get();
 				$lockstate = (($acl->is_private()) ? 'lock' : 'unlock');
@@ -295,12 +295,12 @@ class Browser extends DAV\Browser\Plugin {
 			intval($this->auth->channel_account_id)
 		);
 		$used = $r[0]['total'];
-		if ($used) {
+		if($used) {
 			$quotaDesc = t('You are using %1$s of your available file storage.');
 			$quotaDesc = sprintf($quotaDesc,
 				userReadableSize($used));
 		}
-		if ($limit && $used) {
+		if($limit && $used) {
 			$quotaDesc = t('You are using %1$s of %2$s available file storage. (%3$s&#37;)');
 			$quotaDesc = sprintf($quotaDesc,
 				userReadableSize($used),
@@ -355,7 +355,7 @@ class Browser extends DAV\Browser\Plugin {
 	 *
 	 * @param int $owner
 	 *  The owner_id
-	 * @param string $hash
+	 * @param string $parentHash
 	 *  The parent's folder hash
 	 * @param string $attachName
 	 *  The name of the attachment
@@ -373,6 +373,7 @@ class Browser extends DAV\Browser\Plugin {
 				$hash = $rr['hash'];
 			}
 		}
+
 		return $hash;
 	}
 

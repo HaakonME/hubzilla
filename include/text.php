@@ -17,6 +17,7 @@ define('RANDOM_STRING_TEXT', 0x01 );
  * @param string|SmartyEngine $s the string requiring macro substitution,
  *   or an instance of SmartyEngine
  * @param array $r key value pairs (search => replace)
+ *
  * @return string substituted string
  */
 function replace_macros($s, $r) {
@@ -35,6 +36,7 @@ function replace_macros($s, $r) {
  *
  * @param number $size
  * @param int $type
+ *
  * @return string
  */
 function random_string($size = 64, $type = RANDOM_STRING_HEX) {
@@ -52,14 +54,15 @@ function random_string($size = 64, $type = RANDOM_STRING_HEX) {
  * that had an XSS attack vector due to stripping the high-bit on an 8-bit character
  * after cleansing, and angle chars with the high bit set could get through as markup.
  *
- * This is now disabled because it was interfering with some legitimate unicode sequences 
- * and hopefully there aren't a lot of those browsers left. 
+ * This is now disabled because it was interfering with some legitimate unicode sequences
+ * and hopefully there aren't a lot of those browsers left.
  *
  * Use this on any text input where angle chars are not valid or permitted
  * They will be replaced with safer brackets. This may be filtered further
  * if these are not allowed either.
  *
  * @param string $string Input string
+ *
  * @return string Filtered string
  */
 function notags($string) {
@@ -74,13 +77,13 @@ function notags($string) {
 /**
  * use this on "body" or "content" input where angle chars shouldn't be removed,
  * and allow them to be safely displayed.
+ *
  * @param string $string
+ *
  * @return string
  */
 function escape_tags($string) {
-
 	return(htmlspecialchars($string, ENT_COMPAT, 'UTF-8', false));
-
 }
 
 
@@ -182,7 +185,7 @@ function purify_html($s, $allow_position = false) {
 
 	// f6 plugins
 
-	//abide - the use is pointless since we can't do anything with forms 
+	//abide - the use is pointless since we can't do anything with forms
 
 	//equalizer
 	$def->info_global_attr['data-equalizer'] = new HTMLPurifier_AttrDef_Text;
@@ -272,12 +275,10 @@ function purify_html($s, $allow_position = false) {
 
 	}
 
-
 	$purifier = new HTMLPurifier($config);
 
 	return $purifier->purify($s);
 }
-
 
 
 /**
@@ -293,7 +294,7 @@ function autoname($len) {
 	if ($len <= 0)
 		return '';
 
-	$vowels = array('a','a','ai','au','e','e','e','ee','ea','i','ie','o','ou','u'); 
+	$vowels = array('a','a','ai','au','e','e','e','ee','ea','i','ie','o','ou','u');
 	if (mt_rand(0, 5) == 4)
 		$vowels[] = 'y';
 
@@ -370,12 +371,11 @@ function xmlify($str) {
 
 	if(is_array($str)) {
 
-		// allow to fall through so we ge a PHP error, as the log statement will 
-		// probably get lost in the noise unless we're specifically looking for it. 
+		// allow to fall through so we ge a PHP error, as the log statement will
+		// probably get lost in the noise unless we're specifically looking for it.
 
 		btlogger('xmlify called with array: ' . print_r($str,true), LOGGER_NORMAL, LOG_WARNING);
 	}
-
 
 	$len = mb_strlen($str);
 	for($x = 0; $x < $len; $x ++) {
@@ -412,27 +412,36 @@ function xmlify($str) {
 	return($buffer);
 }
 
-// undo an xmlify
-// pass xml escaped text ($s), returns unescaped text
-
-
+/**
+ * @brief Undo an xmlify.
+ *
+ * Pass xml escaped text ($s), returns unescaped text.
+ *
+ * @param string $s
+ *
+ * @return string
+ */
 function unxmlify($s) {
-	$ret = str_replace('&amp;','&', $s);
-	$ret = str_replace(array('&lt;','&gt;','&quot;','&apos;'),array('<','>','"',"'"),$ret);
+	$ret = str_replace('&amp;', '&', $s);
+	$ret = str_replace(array('&lt;', '&gt;', '&quot;', '&apos;'), array('<', '>', '"', "'"), $ret);
+
 	return $ret;
 }
 
-// Automatic pagination.
-// To use, get the count of total items.
-// Then call App::set_pager_total($number_items);
-// Optionally call App::set_pager_itemspage($n) to the number of items to display on each page
-// Then call paginate($a) after the end of the display loop to insert the pager block on the page
-// (assuming there are enough items to paginate).
-// When using with SQL, the setting LIMIT %d, %d => App::$pager['start'],App::$pager['itemspage']
-// will limit the results to the correct items for the current page. 
-// The actual page handling is then accomplished at the application layer. 
-
-
+/**
+ * @brief Automatic pagination.
+ *
+ * To use, get the count of total items.
+ * Then call App::set_pager_total($number_items);
+ * Optionally call App::set_pager_itemspage($n) to the number of items to display on each page
+ * Then call paginate($a) after the end of the display loop to insert the pager block on the page
+ * (assuming there are enough items to paginate).
+ * When using with SQL, the setting LIMIT %d, %d => App::$pager['start'],App::$pager['itemspage']
+ * will limit the results to the correct items for the current page.
+ * The actual page handling is then accomplished at the application layer.
+ *
+ * @param App &$a
+ */
 function paginate(&$a) {
 	$o = '';
 	$stripped = preg_replace('/(&page=[0-9]*)/','',App::$query_string);
@@ -451,15 +460,15 @@ function paginate(&$a) {
 
 		$o .=  "<span class=\"pager_first\"><a href=\"$url"."&page=1\">" . t('first') . "</a></span> ";
 
-			$numpages = App::$pager['total'] / App::$pager['itemspage'];
+		$numpages = App::$pager['total'] / App::$pager['itemspage'];
 
-			$numstart = 1;
-			$numstop = $numpages;
+		$numstart = 1;
+		$numstop = $numpages;
 
-			if($numpages > 14) {
-				$numstart = (($pagenum > 7) ? ($pagenum - 7) : 1);
-				$numstop = (($pagenum > ($numpages - 7)) ? $numpages : ($numstart + 14));
-			}
+		if($numpages > 14) {
+			$numstart = (($pagenum > 7) ? ($pagenum - 7) : 1);
+			$numstop = (($pagenum > ($numpages - 7)) ? $numpages : ($numstart + 14));
+		}
 
 		for($i = $numstart; $i <= $numstop; $i++){
 			if($i == App::$pager['page'])
@@ -484,6 +493,7 @@ function paginate(&$a) {
 			$o .= '<span class="pager_next">'."<a href=\"$url"."&page=".(App::$pager['page'] + 1).'">' . t('next') . '</a></span>';
 		$o .= '</div>'."\r\n";
 	}
+
 	return $o;
 }
 
@@ -512,7 +522,6 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 	));
 
 }
-
 
 
 /**
@@ -558,17 +567,23 @@ function photo_new_resource() {
 	return $resource;
 }
 
-
-
-// for html,xml parsing - let's say you've got
-// an attribute foobar="class1 class2 class3"
-// and you want to find out if it contains 'class3'.
-// you can't use a normal sub string search because you
-// might match 'notclass3' and a regex to do the job is 
-// possible but a bit complicated. 
-// pass the attribute string as $attr and the attribute you 
-// are looking for as $s - returns true if found, otherwise false
-
+/**
+ * @brief
+ *
+ * for html,xml parsing - let's say you've got
+ * an attribute foobar="class1 class2 class3"
+ * and you want to find out if it contains 'class3'.
+ * you can't use a normal sub string search because you
+ * might match 'notclass3' and a regex to do the job is
+ * possible but a bit complicated.
+ *
+ * pass the attribute string as $attr and the attribute you
+ * are looking for as $s - returns true if found, otherwise false
+ *
+ * @param string $attr attribute string
+ * @param string $s attribute you are looking for
+ * @return boolean true if found
+ */
 function attribute_contains($attr, $s) {
 	$a = explode(' ', $attr);
 	if(count($a) && in_array($s, $a))
@@ -591,10 +606,9 @@ function attribute_contains($attr, $s) {
  * was called, so no need to add it to the message anymore.
  *
  * @param string $msg Message to log
- * @param int $level A log level.
+ * @param int $level A log level
  * @param int $priority - compatible with syslog
  */
-
 function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 
 	if(App::$module == 'setup' && is_writable('install.log')) {
@@ -612,7 +626,7 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 		return;
 
 	$where = '';
-	
+
 	// We require > 5.4 but leave the version check so that install issues (including version) can be logged
 
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
@@ -630,19 +644,23 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 		@file_put_contents($pluginfo['filename'], $pluginfo['message'], FILE_APPEND);
 }
 
-// like logger() but with a function backtrace to pinpoint certain classes
-// of problems which show up deep in the calling stack
-
-
+/**
+ * @brief like logger() but with a function backtrace to pinpoint certain classes
+ * of problems which show up deep in the calling stack.
+ *
+ * @param string $msg Message to log
+ * @param int $level A log level
+ * @param int $priority - compatible with syslog
+ */
 function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 
 	logger($msg, $level, $priority);
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-       	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		if($stack) {
 			for($x = 1; $x < count($stack); $x ++) {
 				logger('stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()',$level, $priority);
-		    }
+			}
 		}
 	}
 }
@@ -718,15 +736,17 @@ function activity_match($haystack,$needle) {
 	return false;
 }
 
-
-// Pull out all #hashtags and @person tags from $s;
-// We also get @person@domain.com - which would make 
-// the regex quite complicated as tags can also
-// end a sentence. So we'll run through our results
-// and strip the period from any tags which end with one.
-// Returns array of tags found, or empty array.
-
-
+/**
+ * @brief Pull out all #hashtags and @person tags from $s.
+ *
+ * We also get @person@domain.com - which would make
+ * the regex quite complicated as tags can also
+ * end a sentence. So we'll run through our results
+ * and strip the period from any tags which end with one.
+ *
+ * @param string $s
+ * @return Returns array of tags found, or empty array.
+ */
 function get_tags($s) {
 	$ret = array();
 	$match = array();
@@ -797,9 +817,9 @@ function get_tags($s) {
 
 	// make sure the longer tags are returned first so that if two or more have common substrings
 	// we'll replace the longest ones first. Otherwise the common substring would be found in
-	// both strings and the string replacement would link both to the shorter strings and 
+	// both strings and the string replacement would link both to the shorter strings and
 	// fail to link the longer string. Hubzilla github issue #378
- 
+
 	usort($ret,'tag_sort_length');
 
 //	logger('get_tags: ' . print_r($ret,true));
@@ -824,13 +844,15 @@ function strip_zats($s) {
 	return preg_replace('/[\?&]zat=(.*?)(&|$)/ism','$2',$s);
 }
 
-
-// quick and dirty quoted_printable encoding
-
-
+/**
+ * @brief Quick and dirty quoted_printable encoding.
+ *
+ * @param string $s
+ * @return string
+ */
 function qp($s) {
-	return str_replace ("%","=",rawurlencode($s));
-} 
+	return str_replace ("%", "=", rawurlencode($s));
+}
 
 
 function get_mentions($item,$tags) {
@@ -889,9 +911,9 @@ function contact_block() {
 		$contacts = t('No connections');
 		$micropro = null;
 	} else {
-		
+
 		$randfunc = db_getfunc('RAND');
-	
+
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d $abook_flags and abook_archived = 0 and xchan_orphan = 0 and xchan_deleted = 0 $sql_extra ORDER BY $randfunc LIMIT %d",
 			intval(App::$profile['uid']),
 			intval($shown)
@@ -936,8 +958,8 @@ function chanlink_cid($d) {
 }
 
 function magiclink_url($observer,$myaddr,$url) {
-	return (($observer) 
-		? z_root() . '/magic?f=&dest=' . $url . '&addr=' . $myaddr 
+	return (($observer)
+		? z_root() . '/magic?f=&dest=' . $url . '&addr=' . $myaddr
 		: $url
 	);
 }
@@ -1034,8 +1056,8 @@ function sslify($s) {
 	// Complain to your browser maker
 
 	$allow = get_config('system','sslify_everything');
-	
-	$pattern = (($allow) ? "/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/" : "/\<img(.*?)src=\"(http\:.*?)\"(.*?)\>/" ); 
+
+	$pattern = (($allow) ? "/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/" : "/\<img(.*?)src=\"(http\:.*?)\"(.*?)\>/" );
 
 	$matches = null;
 	$cnt = preg_match_all($pattern,$s,$matches,PREG_SET_ORDER);
@@ -1105,40 +1127,43 @@ function get_mood_verbs() {
 	return $arr;
 }
 
-// Function to list all smilies, both internal and from addons
-// Returns array with keys 'texts' and 'icons'
+/**
+ * @brief Function to list all smilies, both internal and from addons.
+ *
+ * @return Returns array with keys 'texts' and 'icons'
+ */
 function list_smilies() {
 
-	$texts =  array( 
-		'&lt;3', 
-		'&lt;/3', 
-		'&lt;\\3', 
-		':-)', 
-		';-)', 
-		':-(', 
-		':-P', 
-		':-p', 
-		':-"', 
-		':-&quot;', 
-		':-x', 
-		':-X', 
-		':-D', 
-		'8-|', 
-		'8-O', 
-		':-O', 
-		'\\o/', 
-		'o.O', 
-		'O.o', 
-		'o_O', 
-		'O_o', 
-		":'(", 
-		":-!", 
-		":-/", 
-		":-[", 
+	$texts =  array(
+		'&lt;3',
+		'&lt;/3',
+		'&lt;\\3',
+		':-)',
+		';-)',
+		':-(',
+		':-P',
+		':-p',
+		':-"',
+		':-&quot;',
+		':-x',
+		':-X',
+		':-D',
+		'8-|',
+		'8-O',
+		':-O',
+		'\\o/',
+		'o.O',
+		'O.o',
+		'o_O',
+		'O_o',
+		":'(",
+		":-!",
+		":-/",
+		":-[",
 		"8-)",
-		':beer', 
-		':homebrew', 
-		':coffee', 
+		':beer',
+		':homebrew',
+		':coffee',
 		':facepalm',
 		':like',
 		':dislike',
@@ -1161,7 +1186,7 @@ function list_smilies() {
 		'<img class="smiley" src="' . z_root() . '/images/smiley-laughing.gif" alt=":-D" />',
 		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt="8-|" />',
 		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt="8-O" />',
-		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt=":-O" />',                
+		'<img class="smiley" src="' . z_root() . '/images/smiley-surprised.gif" alt=":-O" />',
 		'<img class="smiley" src="' . z_root() . '/images/smiley-thumbsup.gif" alt="\\o/" />',
 		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="o.O" />',
 		'<img class="smiley" src="' . z_root() . '/images/smiley-Oo.gif" alt="O.o" />',
@@ -1208,7 +1233,7 @@ function list_smilies() {
  * We will escape text between HTML pre and code blocks, and HTML attributes
  * (such as urls) from being processed.
  *
- * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
+ * At a higher level, the bbcode [nosmile] tag can be used to prevent this
  * function from being executed by the prepare_text() routine when preparing
  * bbcode source for HTML display.
  *
@@ -1218,7 +1243,7 @@ function list_smilies() {
  */
 function smilies($s, $sample = false) {
 
-	if(intval(get_config('system', 'no_smilies')) 
+	if(intval(get_config('system', 'no_smilies'))
 		|| (local_channel() && intval(get_pconfig(local_channel(), 'system', 'no_smilies'))))
 		return $s;
 
@@ -1255,8 +1280,8 @@ function smile_shield($m) {
 	return '<!--base64:' . base64special_encode($m[0]) . '-->';
 }
 
-function smile_unshield($m) { 
-	return base64special_decode($m[1]); 
+function smile_unshield($m) {
+	return base64special_decode($m[1]);
 }
 
 /**
@@ -1364,11 +1389,11 @@ function theme_attachments(&$item) {
 
 			$icon = getIconFromType($r['type']);
 			$label = (($r['title']) ? urldecode(htmlspecialchars($r['title'], ENT_COMPAT, 'UTF-8')) : t('Unknown Attachment'));
-			
+
 			//some feeds provide an attachment where title an empty space
 			if($label  == ' ')
 				$label = t('Unknown Attachment');
- 			
+
 			$title = t('Size') . ' ' . (($r['length']) ? userReadableSize($r['length']) : t('unknown'));
 
 			require_once('include/channel.php');
@@ -1508,7 +1533,7 @@ function generate_named_map($location) {
 
 function prepare_body(&$item,$attach = false) {
 
-	call_hooks('prepare_body_init', $item); 
+	call_hooks('prepare_body_init', $item);
 
 	$s = '';
 	$photo = '';
@@ -1602,7 +1627,9 @@ function prepare_body(&$item,$attach = false) {
  * @brief Given a text string, convert from bbcode to html and add smilie icons.
  *
  * @param string $text
- * @param sting $content_type
+ * @param sting $content_type (optional) default text/bbcode
+ * @param boolean $cache (optional) default false
+ *
  * @return string
  */
 function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
@@ -1621,19 +1648,18 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 			$s = Markdown($text);
 			break;
 
-
 		case 'application/x-pdl';
 			$s = escape_tags($text);
 			break;
-		
-		// No security checking is done here at display time - so we need to verify 
-		// that the author is allowed to use PHP before storing. We also cannot allow 
-		// importation of PHP text bodies from other sites. Therefore this content 
+
+		// No security checking is done here at display time - so we need to verify
+		// that the author is allowed to use PHP before storing. We also cannot allow
+		// importation of PHP text bodies from other sites. Therefore this content
 		// type is only valid for web pages (and profile details).
 
-		// It may be possible to provide a PHP message body which is evaluated on the 
-		// sender's site before sending it elsewhere. In that case we will have a 
-		// different content-type here.  
+		// It may be possible to provide a PHP message body which is evaluated on the
+		// sender's site before sending it elsewhere. In that case we will have a
+		// different content-type here.
 
 		case 'application/x-php':
 			ob_start();
@@ -1687,7 +1713,7 @@ function create_export_photo_body(&$item) {
  */
 function zidify_callback($match) {
 	$is_zid = ((feature_enabled(local_channel(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
-	$replace = '<a' . $match[1] . ' href="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';			
+	$replace = '<a' . $match[1] . ' href="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';
 	$x = str_replace($match[0],$replace,$match[0]);
 
 	return $x;
@@ -1735,16 +1761,20 @@ function feed_hublinks() {
 	return $hubxml;
 }
 
-/* return atom link elements for salmon endpoints */
-
+/**
+ * @brief Return atom link elements for salmon endpoints
+ *
+ * @param string $nick
+ * @return string
+ */
 function feed_salmonlinks($nick) {
 
 	$salmon  = '<link rel="salmon" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ;
 
-	// old style links that status.net still needed as of 12/2010 
+	// old style links that status.net still needed as of 12/2010
 
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ; 
-	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ; 
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-replies" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ;
+	$salmon .= '  <link rel="http://salmon-protocol.org/ns/salmon-mention" href="' . xmlify(z_root() . '/salmon/' . $nick) . '" />' . "\n" ;
 
 	return $salmon;
 }
@@ -1773,7 +1803,7 @@ function unamp($s) {
 }
 
 function layout_select($channel_id, $current = '') {
-	$r = q("select mid, v from item left join iconfig on iconfig.iid = item.id 
+	$r = q("select mid, v from item left join iconfig on iconfig.iid = item.id
 		where iconfig.cat = 'system' and iconfig.k = 'PDL' and item.uid = %d and item_type = %d ",
 		intval($channel_id),
 		intval(ITEM_TYPE_PDL)
@@ -1817,12 +1847,12 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		);
 
 		if($r) {
-			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) { 
+			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
 				if(local_channel() && get_account_id() == $r[0]['account_id']) {
 					$x[] = 'application/x-php';
 				}
 			}
-		}		
+		}
 	}
 
 	foreach($x as $y) {
@@ -1886,9 +1916,8 @@ function base64special_decode($s) {
 	return base64_decode(strtr($s,',.','+/'));
 }
 
-
 /**
- * @ Return a div to clear floats.
+ * @brief Return a div to clear floats.
  *
  * @return string
  */
@@ -2087,11 +2116,18 @@ function ids_to_querystr($arr,$idx = 'id') {
 	return(implode(',', $t));
 }
 
-// Fetches xchan and hubloc data for an array of items with only an 
-// author_xchan and owner_xchan. If $abook is true also include the abook info. 
-// This is needed in the API to save extra per item lookups there.
-
-function xchan_query(&$items,$abook = true,$effective_uid = 0) {
+/**
+ * @brief Fetches xchan and hubloc data for an array of items with only an
+ * author_xchan and owner_xchan.
+ *
+ * If $abook is true also include the abook info. This is needed in the API to
+ * save extra per item lookups there.
+ *
+ * @param array[in,out] &$items
+ * @param boolean $abook If true also include the abook info
+ * @param number $effective_uid
+ */
+function xchan_query(&$items, $abook = true, $effective_uid = 0) {
 	$arr = array();
 	if($items && count($items)) {
 
@@ -2124,7 +2160,7 @@ function xchan_query(&$items,$abook = true,$effective_uid = 0) {
 		if(! $chans)
 			$chans = $xchans;
 		else
-			$chans = array_merge($xchans,$chans); 
+			$chans = array_merge($xchans,$chans);
 	}
 	if($items && count($items) && $chans && count($chans)) {
 		for($x = 0; $x < count($items); $x ++) {
@@ -2182,15 +2218,19 @@ function magic_link($s) {
 	return $s;
 }
 
-// if $escape is true, dbesc() each element before adding quotes
-
-function stringify_array_elms(&$arr,$escape = false) {
+/**
+ * if $escape is true, dbesc() each element before adding quotes
+ *
+ * @param array[in,out] &$arr
+ * @param boolean $escape default false
+ */
+function stringify_array_elms(&$arr, $escape = false) {
 	for($x = 0; $x < count($arr); $x ++)
 		$arr[$x] = "'" . (($escape) ? dbesc($arr[$x]) : $arr[$x]) . "'";
 }
 
 /**
- * Indents a flat JSON string to make it more human-readable.
+ * @brief Indents a flat JSON string to make it more human-readable.
  *
  * @param string $json The original JSON string to process.
  *
@@ -2214,7 +2254,7 @@ function jindent($json) {
 		if ($char == '"' && $prevChar != '\\') {
 			$outOfQuotes = !$outOfQuotes;
 
-		// If this character is the end of an element, 
+		// If this character is the end of an element,
 		// output a new line and indent the next line.
 		} else if(($char == '}' || $char == ']') && $outOfQuotes) {
 			$result .= $newLine;
@@ -2227,7 +2267,7 @@ function jindent($json) {
 		// Add the character to the result string.
 		$result .= $char;
 
-		// If the last character was the beginning of an element, 
+		// If the last character was the beginning of an element,
 		// output a new line and indent the next line.
 		if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
 			$result .= $newLine;
@@ -2239,7 +2279,7 @@ function jindent($json) {
 				$result .= $indentStr;
 			}
 		}
-		
+
 		$prevChar = $char;
 	}
 
@@ -2249,9 +2289,8 @@ function jindent($json) {
 /**
  * @brief Creates navigation menu for webpage, layout, blocks, menu sites.
  *
- * @return string
+ * @return string with parsed HTML
  */
-
 function design_tools() {
 
 	$channel  = App::get_channel();
@@ -2300,7 +2339,7 @@ function website_portation_tools() {
 		'$file_import_text' => t('Import from cloud files:'),
 		'$desc' => t('/cloud/channel/path/to/folder'),
 		'$hint' => t('Enter path to website files'),
-		'$select' => t('Select folder'),			
+		'$select' => t('Select folder'),
 		'$export_label' => t('Export website...'),
 		'$file_download_text' => t('Export to a zip file'),
 		'$filename_desc' => t('website.zip'),
@@ -2308,12 +2347,17 @@ function website_portation_tools() {
 		'$cloud_export_text' => t('Export to cloud files'),
 		'$cloud_export_desc' => t('/path/to/export/folder'),
 		'$cloud_export_hint' => t('Enter a path to a cloud files destination.'),
-		'$cloud_export_select' => t('Specify folder'),			
+		'$cloud_export_select' => t('Specify folder'),
 	));
 }
 
-/* case insensitive in_array() */
-
+/**
+ * @brief case insensitive in_array()
+ *
+ * @param string $needle
+ * @param array $haystack
+ * @return boolean
+ */
 function in_arrayi($needle, $haystack) {
 	return in_array(strtolower($needle), array_map('strtolower', $haystack));
 }
@@ -2322,10 +2366,13 @@ function normalise_openid($s) {
 	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
 
-// used in ajax endless scroll request to find out all the args that the master page was viewing.
-// This was using $_REQUEST, but $_REQUEST also contains all your cookies. So we're restricting it 
-// to $_GET and $_POST. 
-
+/**
+ * Used in ajax endless scroll request to find out all the args that the master page was viewing.
+ * This was using $_REQUEST, but $_REQUEST also contains all your cookies. So we're restricting it
+ * to $_GET and $_POST.
+ *
+ * @return string with additional URL parameters
+ */
 function extra_query_args() {
 	$s = '';
 	if(count($_GET)) {
@@ -2344,6 +2391,7 @@ function extra_query_args() {
 			}
 		}
 	}
+
 	return $s;
 }
 
@@ -2370,7 +2418,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION : $termtype);
 	$termtype = ((strpos($tag,'#^[') === 0) ? TERM_BOOKMARK : $termtype);
 
-	//is it a hash tag? 
+	//is it a hash tag?
 	if(strpos($tag,'#') === 0) {
 		if(strpos($tag,'#^[') === 0) {
 			if(preg_match('/#\^\[(url|zrl)(.*?)\](.*?)\[\/(url|zrl)\]/',$tag,$match)) {
@@ -2385,7 +2433,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 			return $replaced;
 		}
 		if($tag == '#getzot') {
-			$basetag = 'getzot'; 
+			$basetag = 'getzot';
 			$url = 'http://hubzilla.org';
 			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
 			$body = str_replace($tag,$newtag,$body);
@@ -2421,15 +2469,15 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 			$str_tags .= $newtag;
 		}
 		return [
-			'replaced' => $replaced, 
-			'termtype' => $termtype, 
-			'term'     => $basetag, 
-			'url'      => $url, 
+			'replaced' => $replaced,
+			'termtype' => $termtype,
+			'term'     => $basetag,
+			'url'      => $url,
 			'contact'  => $r[0]
-		];	
+		];
 	}
 
-	//is it a person tag? 
+	//is it a person tag?
 
 	if(strpos($tag,'@') === 0) {
 
@@ -2443,7 +2491,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		//get the person's name
 
 		$name = substr($tag,(($exclusive) ? 2 : 1)); // The name or name fragment we are going to replace
-		$newname = $name; // a copy that we can mess with 
+		$newname = $name; // a copy that we can mess with
 		$tagcid = 0;
 
 		$r = null;
@@ -2489,14 +2537,14 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 			if($abook_id) { // if there was an id
 				// select channel with that id from the logged in user's address book
-				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash
 					WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 						intval($abook_id),
 						intval($profile_uid)
 				);
 			}
 			else {
-				$r = q("SELECT * FROM xchan 
+				$r = q("SELECT * FROM xchan
 					WHERE xchan_hash like '%s%%' LIMIT 1",
 						dbesc($tagcid)
 				);
@@ -2525,7 +2573,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 			}
 
 			//select someone from this user's contacts by name
-			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
+			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash
 				WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
 					dbesc($newname),
 					intval($profile_uid)
@@ -2533,7 +2581,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 			if(! $r) {
 				//select someone by attag or nick and the name passed in
-				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash
 					WHERE xchan_addr like ('%s') AND abook_channel = %d LIMIT 1",
 						dbesc(((strpos($newname,'@')) ? $newname : $newname . '@%')),
 						intval($profile_uid)
@@ -2544,7 +2592,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 				// it's possible somebody has a name ending with '+', which we stripped off as a forum indicator
 				// This is very rare but we want to get it right.
 
-				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash
 					WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
 						dbesc($newname . '+'),
 						intval($profile_uid)
@@ -2568,12 +2616,12 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		}
 		else {
 
-			// check for a group/collection exclusion tag			
+			// check for a group/collection exclusion tag
 
 			// note that we aren't setting $replaced even though we're replacing text.
 			// This tag isn't going to get a term attached to it. It's only used for
 			// access control. The link points to out own channel just so it doesn't look
-			// weird - as all the other tags are linked to something. 
+			// weird - as all the other tags are linked to something.
 
 			if(local_channel() && local_channel() == $profile_uid) {
 				require_once('include/group.php');
@@ -2618,10 +2666,10 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 	}
 
 	return [
-		'replaced' => $replaced, 
-		'termtype' => $termtype, 
-		'term'     => $newname, 
-		'url'      => $url, 
+		'replaced' => $replaced,
+		'termtype' => $termtype,
+		'term'     => $newname,
+		'url'      => $url,
 		'contact'  => $r[0]
 	];
 }
@@ -2650,7 +2698,7 @@ function linkify_tags($a, &$body, $uid, $diaspora = false) {
 			if($fullnametagged)
 				continue;
 
-			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : App::$profile_uid , $tag, $diaspora); 
+			$success = handle_tag($a, $body, $access_tag, $str_tags, ($uid) ? $uid : App::$profile_uid , $tag, $diaspora);
 			$results[] = array('success' => $success, 'access_tag' => $access_tag);
 			if($success['replaced']) $tagged[] = $tag;
 		}
@@ -2771,10 +2819,10 @@ function json_url_replace($old,$new,&$s) {
 	$s = $x;
 	return $replaced;
 }
-		
+
 
 function item_url_replace($channel,&$item,$old,$new,$oldnick = '') {
-	
+
 	if($item['attach']) {
 		json_url_replace($old,$new,$item['attach']);
 		if($oldnick)
@@ -2795,7 +2843,7 @@ function item_url_replace($channel,&$item,$old,$new,$oldnick = '') {
 		$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
 		$item['item_verified']  = 1;
 	}
-	
+
 	$item['plink'] = str_replace($old,$new,$item['plink']);
 	if($oldnick)
 		$item['plink'] = str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['plink']);
@@ -2803,7 +2851,7 @@ function item_url_replace($channel,&$item,$old,$new,$oldnick = '') {
 	$item['llink'] = str_replace($old,$new,$item['llink']);
 	if($oldnick)
 		$item['llink'] = str_replace('/' . $oldnick . '/' ,'/' . $channel['channel_address'] . '/' ,$item['llink']);
-	
+
 }
 
 
@@ -2841,7 +2889,6 @@ function perms2str($p) {
 	return $ret;
 }
 
-
 /**
  * @brief Turn user/group ACLs stored as angle bracketed text into arrays.
  *
@@ -2869,35 +2916,41 @@ function expand_acl($s) {
 function acl2json($s) {
 	$s = expand_acl($s);
 	$s = json_encode($s);
+
 	return $s;
 }
 
-
-// When editing a webpage - a dropdown is needed to select a page layout
-// On submit, the pdl_select value (which is the mid of an item with item_type = ITEM_TYPE_PDL) is stored in 
-// the webpage's resource_id, with resource_type 'pdl'.
-
-// Then when displaying a webpage, we can see if it has a pdl attached. If not we'll 
-// use the default site/page layout.
-
-// If it has a pdl we'll load it as we know the mid and pass the body through comanche_parser() which will generate the 
-// page layout from the given description
-
-// @FIXME - there is apparently a very similar function called layout_select; this one should probably take precedence
-// and the other should be checked for compatibility and removed
-
-function pdl_selector($uid, $current="") {
+/**
+ * @brief When editing a webpage - a dropdown is needed to select a page layout
+ *
+ * On submit, the pdl_select value (which is the mid of an item with item_type = ITEM_TYPE_PDL)
+ * is stored in the webpage's resource_id, with resource_type 'pdl'.
+ *
+ * Then when displaying a webpage, we can see if it has a pdl attached. If not we'll
+ * use the default site/page layout.
+ *
+ * If it has a pdl we'll load it as we know the mid and pass the body through comanche_parser() which will generate the
+ * page layout from the given description
+ *
+ * @FIXME - there is apparently a very similar function called layout_select; this one should probably take precedence
+ * and the other should be checked for compatibility and removed
+ *
+ * @param int $uid
+ * @param string $current
+ * @return string HTML code for dropdown
+ */
+function pdl_selector($uid, $current='') {
 	$o = '';
 
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select iconfig.*, mid from item_id left join item on iconfig.iid = item.id 
+	$r = q("select iconfig.*, mid from item_id left join item on iconfig.iid = item.id
 		where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' $sql_extra order by v asc",
 		intval($uid)
 	);
 
 	$arr = array('channel_id' => $uid, 'current' => $current, 'entries' => $r);
-	call_hooks('pdl_selector',$arr);
+	call_hooks('pdl_selector', $arr);
 
 	$entries = $arr['entries'];
 	$current = $arr['current'];
@@ -2913,16 +2966,17 @@ function pdl_selector($uid, $current="") {
 	return $o;
 }
 
-/* 
- * array flatten_array_recursive(array);
- * returns a one-dimensional array from a multi-dimensional array 
+/**
+ * @brief returns a one-dimensional array from a multi-dimensional array
  * empty values are discarded
+ *
  * example: print_r(flatten_array_recursive(array('foo','bar',array('baz','blip',array('zob','glob')),'','grip')));
  *
- * Array ( [0] => foo [1] => bar [2] => baz [3] => blip [4] => zob [5] => glob [6] => grip ) 
+ * Array ( [0] => foo [1] => bar [2] => baz [3] => blip [4] => zob [5] => glob [6] => grip )
  *
+ * @param array $arr multi-dimensional array
+ * @return one-dimensional array
  */
-
 function flatten_array_recursive($arr) {
 	$ret = array();
 
@@ -2933,64 +2987,71 @@ function flatten_array_recursive($arr) {
 		if(is_array($a)) {
 			$tmp = flatten_array_recursive($a);
 			if($tmp) {
-				$ret = array_merge($ret,$tmp);
+				$ret = array_merge($ret, $tmp);
 			}
 		}
 		elseif($a) {
 			$ret[] = $a;
 		}
 	}
-	return($ret);
-}			
 
-function text_highlight($s,$lang) {
+	return($ret);
+}
+
+/**
+ * @brief Highlight Text.
+ *
+ * @param string $s Text to highlight
+ * @param string $lang Which language should be highlighted
+ * @return string
+ */
+function text_highlight($s, $lang) {
 
 	if($lang === 'js')
 		$lang = 'javascript';
 
 	if($lang === 'json') {
 		$lang = 'javascript';
-		if(! strpos(trim($s),"\n"))
+		if(! strpos(trim($s), "\n"))
 			$s = jindent($s);
 	}
 
-	if(! strpos('Text_Highlighter',get_include_path())) {
+	if(! strpos('Text_Highlighter', get_include_path())) {
 		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
 	}
 	require_once('library/Text_Highlighter/Text/Highlighter.php');
-    require_once('library/Text_Highlighter/Text/Highlighter/Renderer/Html.php');
-    $options = array(
-        'numbers' => HL_NUMBERS_LI,
-        'tabsize' => 4,
-    );
+	require_once('library/Text_Highlighter/Text/Highlighter/Renderer/Html.php');
+	$options = array(
+		'numbers' => HL_NUMBERS_LI,
+		'tabsize' => 4,
+	);
 	$tag_added = false;
-	$s = trim(html_entity_decode($s,ENT_COMPAT));
-	$s = str_replace("    ","\t",$s);
+	$s = trim(html_entity_decode($s, ENT_COMPAT));
+	$s = str_replace("    ", "\t", $s);
 
-	// The highlighter library insists on an opening php tag for php code blocks. If 
+	// The highlighter library insists on an opening php tag for php code blocks. If
 	// it isn't present, nothing is highlighted. So we're going to see if it's present.
-	// If not, we'll add it, and then quietly remove it after we get the processed output back.  
+	// If not, we'll add it, and then quietly remove it after we get the processed output back.
 
 	if($lang === 'php') {
-		if(strpos('<?php',$s) !== 0) {
+		if(strpos('<?php', $s) !== 0) {
 			$s = '<?php' . "\n" . $s;
-			$tag_added = true;			
+			$tag_added = true;
 		}
-
-	} 
-    $renderer = new Text_Highlighter_Renderer_HTML($options);
-    $hl = Text_Highlighter::factory($lang);
-    $hl->setRenderer($renderer);
+	}
+	$renderer = new Text_Highlighter_Renderer_HTML($options);
+	$hl = Text_Highlighter::factory($lang);
+	$hl->setRenderer($renderer);
 	$o = $hl->highlight($s);
-	$o = str_replace(["    ","\n"],["&nbsp;&nbsp;&nbsp;&nbsp;",''],$o);
+	$o = str_replace(["    ", "\n"], ["&nbsp;&nbsp;&nbsp;&nbsp;", ''], $o);
 
 	if($tag_added) {
-		$b = substr($o,0,strpos($o,'<li>'));
-		$e = substr($o,strpos($o,'</li>'));
+		$b = substr($o, 0, strpos($o, '<li>'));
+		$e = substr($o, strpos($o, '</li>'));
 		$o = $b . $e;
 	}
 
-    return('<code>' . $o . '</code>');
+	return('<code>' . $o . '</code>');
 }
 
 // function to convert multi-dimensional array to xml
@@ -3007,30 +3068,26 @@ function text_highlight($s,$lang) {
 function arrtoxml($root_elem,$arr) {
 	$xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><' . $root_elem . '></' . $root_elem . '>', null, false);
 	array2XML($xml,$arr);
+
 	return $xml->asXML();
 }
 
-function array2XML($obj, $array)
-{
-    foreach ($array as $key => $value)
-    {
-        if(is_numeric($key))
-            $key = 'item' . $key;
+function array2XML($obj, $array) {
+	foreach ($array as $key => $value) {
+		if(is_numeric($key))
+			$key = 'item' . $key;
 
-        if (is_array($value))
-        {
-            $node = $obj->addChild($key);
-            array2XML($node, $value);
-        }
-        else
-        {
-            $obj->addChild($key, htmlspecialchars($value));
-        }
-    }
+		if(is_array($value)) {
+			$node = $obj->addChild($key);
+			array2XML($node, $value);
+		} else {
+			$obj->addChild($key, htmlspecialchars($value));
+		}
+	}
 }
 
 
-function create_table_from_array($table,$arr) {
+function create_table_from_array($table, $arr) {
 
 	if(! ($arr && $table))
 		return false;
@@ -3040,9 +3097,9 @@ function create_table_from_array($table,$arr) {
 			. implode(TQUOT . ', ' . TQUOT, array_keys($arr))
 			. TQUOT . ") VALUES ('"
 			. implode("', '", array_values($arr))
-			. "')" 
+			. "')"
 		);
 	}
-	return $r;
 
+	return $r;
 }

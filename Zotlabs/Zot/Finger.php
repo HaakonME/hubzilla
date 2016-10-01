@@ -2,7 +2,10 @@
 
 namespace Zotlabs\Zot;
 
-
+/**
+ * @brief Finger
+ *
+ */
 class Finger {
 
 	static private $token;
@@ -19,25 +22,25 @@ class Finger {
 	 *
 	 * @return zotinfo array (with 'success' => true) or array('success' => false);
 	 */
-
 	static public function run($webbie, $channel = null, $autofallback = true) {
 
 		$ret = array('success' => false);
 
 		self::$token = random_string();
 
-		if (strpos($webbie,'@') === false) {
+		if (strpos($webbie, '@') === false) {
 			$address = $webbie;
 			$host = \App::get_hostname();
 		} else {
-			$address = substr($webbie,0,strpos($webbie,'@'));
-			$host = substr($webbie,strpos($webbie,'@')+1);
+			$address = substr($webbie, 0, strpos($webbie, '@'));
+			$host = substr($webbie, strpos($webbie, '@')+1);
 		}
 
 		$xchan_addr = $address . '@' . $host;
 
 		if ((! $address) || (! $xchan_addr)) {
 			logger('zot_finger: no address :' . $webbie);
+
 			return $ret;
 		}
 
@@ -53,16 +56,16 @@ class Finger {
 			dbesc($xchan_addr)
 		);
 
-		if ($r) {
+		if($r) {
 			$url = $r[0]['hubloc_url'];
 
-			if ($r[0]['hubloc_network'] && $r[0]['hubloc_network'] !== 'zot') {
+			if($r[0]['hubloc_network'] && $r[0]['hubloc_network'] !== 'zot') {
 				logger('zot_finger: alternate network: ' . $webbie);
-				logger('url: '.$url.', net: '.var_export($r[0]['hubloc_network'],true), LOGGER_DATA, LOG_DEBUG);
+				logger('url: '.$url.', net: '.var_export($r[0]['hubloc_network'], true), LOGGER_DATA, LOG_DEBUG);
+
 				return $ret;
 			}
-		} 
-		else {
+		} else {
 			$url = 'https://' . $host;
 		}
 
@@ -88,13 +91,12 @@ class Finger {
 					$result = z_post_url('http://' . $host . $rhs,$postvars);
 				}
 			}
-		} 
-		else {
+		} else {
 			$rhs .= '?f=&address=' . urlencode($address) . '&token=' . self::$token;
 
 			$result =  z_fetch_url($url . $rhs);
-			if ((! $result['success']) && ($autofallback)) {
-				if ($https) {
+			if((! $result['success']) && ($autofallback)) {
+				if($https) {
 					logger('zot_finger: https failed. falling back to http');
 					$result = z_fetch_url('http://' . $host . $rhs);
 				}
@@ -103,23 +105,25 @@ class Finger {
 
 		if(! $result['success']) {
 			logger('zot_finger: no results');
+
 			return $ret;
 		}
 
-		$x = json_decode($result['body'],true);
+		$x = json_decode($result['body'], true);
 		if($x) {
-			$signed_token = ((is_array($x) && array_key_exists('signed_token',$x)) ? $x['signed_token'] : null);
+			$signed_token = ((is_array($x) && array_key_exists('signed_token', $x)) ? $x['signed_token'] : null);
 			if($signed_token) {
-				$valid = rsa_verify('token.' . self::$token,base64url_decode($signed_token),$x['key']);
+				$valid = rsa_verify('token.' . self::$token, base64url_decode($signed_token), $x['key']);
 				if(! $valid) {
 					logger('invalid signed token: ' . $url . $rhs, LOGGER_NORMAL, LOG_ERR);
+
 					return $ret;
 				}
 			}
 			else {
 				logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARNING);
 				// after 2017-01-01 this will be a hard error unless you over-ride it.
-				if((time() > 1483228800) && (! get_config('system','allow_unsigned_zotfinger')))
+				if((time() > 1483228800) && (! get_config('system', 'allow_unsigned_zotfinger')))
 					return $ret;
 			}
 		}

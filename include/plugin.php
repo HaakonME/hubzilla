@@ -143,7 +143,7 @@ function reload_plugins() {
 				if(file_exists($fname)) {
 					$t = @filemtime($fname);
 					foreach($installed as $i) {
-						if(($i['aname'] == $pl) && ($i['tstamp'] != $t)) {	
+						if(($i['aname'] == $pl) && ($i['tstamp'] != $t)) {
 							logger('Reloading plugin: ' . $i['aname']);
 							@include_once($fname);
 
@@ -205,7 +205,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
 
 /**
  * @brief unregisters a hook.
- * 
+ *
  * @param string $hook the name of the hook
  * @param string $file the name of the file that hooks into
  * @param string $function the name of the function that the hook called
@@ -224,7 +224,7 @@ function unregister_hook($hook, $file, $function) {
 
 //
 // It might not be obvious but themes can manually add hooks to the App::$hooks
-// array in their theme_init() and use this to customise the app behaviour.  
+// array in their theme_init() and use this to customise the app behaviour.
 // UPDATE: use insert_hook($hookname,$function_name) to do this
 //
 
@@ -248,20 +248,22 @@ function load_hooks() {
 /**
  * @brief Inserts a hook into a page request.
  *
- * Insert a short-lived hook into the running page request. 
- * Hooks are normally persistent so that they can be called 
+ * Insert a short-lived hook into the running page request.
+ * Hooks are normally persistent so that they can be called
  * across asynchronous processes such as delivery and poll
  * processes.
  *
  * insert_hook lets you attach a hook callback immediately
  * which will not persist beyond the life of this page request
- * or the current process. 
+ * or the current process.
  *
  * @param string $hook
  *     name of hook to attach callback
  * @param string $fn
  *     function name of callback handler
- */ 
+ * @param int $version (optional) default 0
+ * @param int $priority (optional) default 0
+ */
 function insert_hook($hook, $fn, $version = 0, $priority = 0) {
 
 	if(! is_array(App::$hooks))
@@ -293,7 +295,7 @@ function call_hooks($name, &$data = null) {
 				$hook[1] = unserialize($hook[1]);
 			}
 			elseif(strpos($hook[1],'::')) {
-				// We shouldn't need to do this, but it appears that PHP 
+				// We shouldn't need to do this, but it appears that PHP
 				// isn't able to directly execute a string variable with a class
 				// method in the manner we are attempting it, so we'll
 				// turn it into an array.
@@ -306,10 +308,10 @@ function call_hooks($name, &$data = null) {
 					$func($data);
 				else
 					$func($a, $data);
-			} 
+			}
 			else {
 
-				// Don't do any DB write calls if we're currently logging a possibly failed DB call. 
+				// Don't do any DB write calls if we're currently logging a possibly failed DB call.
 				if(! DBA::$logging) {
 					// The hook should be removed so we don't process it.
 					q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND fn = '%s'",
@@ -370,7 +372,7 @@ function get_plugin_info($plugin){
 					} else {
 						$info[$k][] = array('name' => $v);
 					}
-				} 
+				}
 				else {
 					$info[$k] = $v;
 				}
@@ -407,8 +409,8 @@ function check_plugin_versions($info) {
 	if(array_key_exists('serverroles',$info)) {
 		$role = \Zotlabs\Lib\System::get_server_role();
 		if(! (
-			stristr($info['serverroles'],'*') 
-			|| stristr($info['serverroles'],'any') 
+			stristr($info['serverroles'],'*')
+			|| stristr($info['serverroles'],'any')
 			|| stristr($info['serverroles'],$role))) {
 			logger('serverrole limit: ' . $info['name'],LOGGER_NORMAL,LOG_WARNING);
 			return false;
@@ -426,7 +428,7 @@ function check_plugin_versions($info) {
 				if(! $test)
 					continue;
 				if(! in_array($test,App::$plugins))
-					$found = false;				
+					$found = false;
 			}
 		}
 		if(! $found)
@@ -583,11 +585,11 @@ function format_css_if_exists($source) {
 
 /*
  * This basically calculates the baseurl. We have other functions to do that, but
- * there was an issue with script paths and mixed-content whose details are arcane 
- * and perhaps lost in the message archives. The short answer is that we're ignoring 
- * the URL which we are "supposed" to use, and generating script paths relative to 
+ * there was an issue with script paths and mixed-content whose details are arcane
+ * and perhaps lost in the message archives. The short answer is that we're ignoring
+ * the URL which we are "supposed" to use, and generating script paths relative to
  * the URL which we are currently using; in order to ensure they are found and aren't
- * blocked due to mixed content issues. 
+ * blocked due to mixed content issues.
  */
 
 function script_path() {
@@ -599,7 +601,7 @@ function script_path() {
 		$scheme = 'https';
 	else
 		$scheme = 'http';
-	
+
 	// Some proxy setups may require using http_host
 
 	if(intval(App::$config['system']['script_path_use_http_host']))
@@ -631,7 +633,7 @@ function head_remove_js($src, $priority = 0) {
 }
 
 // We should probably try to register main.js with a high priority, but currently we handle it
-// separately and put it at the end of the html head block in case any other javascript is 
+// separately and put it at the end of the html head block in case any other javascript is
 // added outside the head_add_js construct.
 
 function head_get_js() {
@@ -640,7 +642,7 @@ function head_get_js() {
 	if(App::$js_sources) {
 		ksort(App::$js_sources,SORT_NUMERIC);
 		foreach(App::$js_sources as $sources) {
-			if(count($sources)) { 
+			if(count($sources)) {
 				foreach($sources as $source) {
 					if($src === 'main.js')
 						continue;
@@ -655,7 +657,7 @@ function head_get_js() {
 function head_get_main_js() {
 	$str = '';
 	$sources = array('main.js');
-	if(count($sources)) 
+	if(count($sources))
 		foreach($sources as $source)
 			$str .= format_js_if_exists($source,true);
 	return $str;

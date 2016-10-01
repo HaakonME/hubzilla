@@ -9,9 +9,9 @@ use Sabre\DAV;
  *
  * A class that represents a directory.
  *
- * @extends \Sabre\DAV\Node
- * @implements \Sabre\DAV\ICollection
- * @implements \Sabre\DAV\IQuota
+ * @extends \\Sabre\\DAV\\Node
+ * @implements \\Sabre\\DAV\\ICollection
+ * @implements \\Sabre\\DAV\\IQuota
  *
  * @link http://github.com/friendica/red
  * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
@@ -21,7 +21,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @brief The path inside /cloud
 	 *
-	 * @var string
+	 * @var string $red_path
 	 */
 	private $red_path;
 	private $folder_hash;
@@ -29,7 +29,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @brief The full path as seen in the browser.
 	 * /cloud + $red_path
 	 * @todo I think this is not used anywhere, we always strip '/cloud' and only use it in debug
-	 * @var string
+	 * @var string $ext_path
 	 */
 	private $ext_path;
 	private $root_dir = '';
@@ -38,7 +38,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @brief The real path on the filesystem.
 	 * The actual path in store/ with the hashed names.
 	 *
-	 * @var string
+	 * @var string $os_path
 	 */
 	private $os_path = '';
 
@@ -46,7 +46,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @brief Sets up the directory node, expects a full path.
 	 *
 	 * @param string $ext_path a full path
-	 * @param RedBasicAuth &$auth_plugin
+	 * @param BasicAuth &$auth_plugin
 	 */
 	public function __construct($ext_path, &$auth_plugin) {
 //		$ext_path = urldecode($ext_path);
@@ -55,14 +55,14 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		// remove "/cloud" from the beginning of the path
 		$modulename = \App::$module;
 		$this->red_path = ((strpos($ext_path, '/' . $modulename) === 0) ? substr($ext_path, strlen($modulename) + 1) : $ext_path);
-		if (! $this->red_path) {
+		if(! $this->red_path) {
 			$this->red_path = '/';
 		}
 		$this->auth = $auth_plugin;
 		$this->folder_hash = '';
 		$this->getDir();
 
-		if ($this->auth->browser) {
+		if($this->auth->browser) {
 			$this->auth->browser->set_writeable();
 		}
 	}
@@ -76,8 +76,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @brief Returns an array with all the child nodes.
 	 *
-	 * @throw \Sabre\DAV\Exception\Forbidden
-	 * @return array \Sabre\DAV\INode[]
+	 * @throw "\Sabre\DAV\Exception\Forbidden"
+	 * @return array \\Sabre\\DAV\\INode[]
 	 */
 	public function getChildren() {
 		logger('children for ' . $this->ext_path, LOGGER_DATA);
@@ -98,8 +98,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @brief Returns a child by name.
 	 *
-	 * @throw \Sabre\DAV\Exception\Forbidden
-	 * @throw \Sabre\DAV\Exception\NotFound
+	 * @throw "\Sabre\DAV\Exception\Forbidden"
+	 * @throw "\Sabre\DAV\Exception\NotFound"
 	 * @param string $name
 	 */
 	public function getChild($name) {
@@ -141,7 +141,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 *
 	 * @todo handle duplicate directory name
 	 *
-	 * @throw \Sabre\DAV\Exception\Forbidden
+	 * @throw "\Sabre\DAV\Exception\Forbidden"
 	 * @param string $name The new name of the directory.
 	 * @return void
 	 */
@@ -186,7 +186,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * After successful creation of the file, you may choose to return the ETag
 	 * of the new file here.
 	 *
-	 * @throw \Sabre\DAV\Exception\Forbidden
+	 * @throw "\Sabre\DAV\Exception\Forbidden"
 	 * @param string $name Name of the file
 	 * @param resource|string $data Initial payload
 	 * @return null|string ETag
@@ -431,7 +431,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	/**
 	 * @todo add description of what this function does.
 	 *
-	 * @throw \Sabre\DAV\Exception\NotFound
+	 * @throw "\Sabre\DAV\Exception\NotFound"
 	 * @return void
 	 */
 	function getDir() {
@@ -557,13 +557,13 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 
 	/**
-	 * @brief Array with all Directory and File DAV\Node items for the given path.
+	 * @brief Array with all Directory and File DAV\\Node items for the given path.
  	 *
 	 * @param string $file path to a directory
 	 * @param \Zotlabs\Storage\BasicAuth &$auth
-	 * @returns null|array \Sabre\DAV\INode[]
-	 * @throw \Sabre\DAV\Exception\Forbidden
-	 * @throw \Sabre\DAV\Exception\NotFound
+	 * @returns null|array \\Sabre\\DAV\\INode[]
+	 * @throw "\Sabre\DAV\Exception\Forbidden"
+	 * @throw "\Sabre\DAV\Exception\NotFound"
 	 */
 	function CollectionData($file, &$auth) {
 		$ret = array();
@@ -710,7 +710,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @param BasicAuth &$auth
 	 * @param boolean $test (optional) enable test mode
 	 * @return File|Directory|boolean|null
-	 * @throw \Sabre\DAV\Exception\Forbidden
+	 * @throw "\Sabre\DAV\Exception\Forbidden"
 	 */
 	function FileData($file, &$auth, $test = false) {
 		logger($file . (($test) ? ' (test mode) ' : ''), LOGGER_DATA);

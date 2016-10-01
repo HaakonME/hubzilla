@@ -3,9 +3,6 @@
  * @file include/items.php
  */
 
-// uncertain if this line is needed and why
-use Sabre\HTTP\URLUtil;
-
 use Zotlabs\Lib as Zlib;
 
 require_once('include/bbcode.php');
@@ -66,6 +63,7 @@ function collect_recipients($item, &$private_envelope) {
 
 		if($recipients && $deny)
 			$recipients = array_diff($recipients,$deny);
+
 		$private_envelope = true;
 	}
 	else {
@@ -116,7 +114,7 @@ function collect_recipients($item, &$private_envelope) {
 
 		// Add the authors of any posts in this thread, if they are known to us.
 		// This is specifically designed to forward wall-to-wall posts to the original author,
-		// in case they aren't a connection but have permission to write on our wall.  
+		// in case they aren't a connection but have permission to write on our wall.
 		// This is important for issue tracker channels. It should be a no-op for most channels.
 		// Whether or not they will accept the delivery is not determined here, but should
 		// be taken into account by zot:process_delivery()
@@ -131,7 +129,6 @@ function collect_recipients($item, &$private_envelope) {
 				}
 			}
 		}
-		
 
 	}
 
@@ -173,19 +170,19 @@ function comments_are_now_closed($item) {
 }
 
 function item_normal() {
-	return " and item.item_hidden = 0 and item.item_type = 0 and item.item_deleted = 0 
-		and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0 
+	return " and item.item_hidden = 0 and item.item_type = 0 and item.item_deleted = 0
+		and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0
 		and item.item_blocked = 0 ";
 }
 
 /**
  * @brief
- * 
- * This is a compatibility function primarily for plugins, because 
+ *
+ * This is a compatibility function primarily for plugins, because
  * in earlier DB schemas this was a much simpler single integer compare
  *
+ * @param array $item
  */
-
 function is_item_normal($item) {
 
 	if(intval($item['item_hidden']) || intval($item['item_type']) || intval($item['item_deleted'])
@@ -193,8 +190,7 @@ function is_item_normal($item) {
 		|| intval($item['item_blocked']))
 		return false;
 
-	return true; 
-
+	return true;
 }
 
 /**
@@ -236,7 +232,7 @@ function can_comment_on_post($observer_xchan, $item) {
 		case 'public':
 			// We don't really allow or support public comments yet, but anonymous
 			// folks won't ever reach this point (as $observer_xchan will be empty).
-			// This means the viewer has an xchan and we can identify them.  
+			// This means the viewer has an xchan and we can identify them.
 			return true;
 			break;
 		case 'any connections':
@@ -481,7 +477,7 @@ function validate_item_elements($message,$arr) {
 	if(! array_key_exists('created',$arr))
 		$result['message'] = 'missing created, possible author/owner lookup failure';
 
-	if((! $arr['mid']) || (! $arr['parent_mid'])) 
+	if((! $arr['mid']) || (! $arr['parent_mid']))
 		$result['message'] = 'missing message-id or parent message-id';
 
 	if(array_key_exists('flags',$message) && in_array('relay',$message['flags']) && $arr['mid'] === $arr['parent_mid'])
@@ -493,10 +489,6 @@ function validate_item_elements($message,$arr) {
 	return $result;
 
 }
-
-
-
-
 
 
 /**
@@ -652,7 +644,6 @@ function get_item_elements($x,$allow_code = false) {
 	if(mb_strlen($arr['title']) > 255)
 		$arr['title'] = mb_substr($arr['title'],0,255);
 
-
 	$arr['app']          = (($x['app'])            ? htmlspecialchars($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
 	$arr['route']        = (($x['route'])          ? htmlspecialchars($x['route'],          ENT_COMPAT,'UTF-8',false) : '');
 	$arr['mid']          = (($x['message_id'])     ? htmlspecialchars($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
@@ -714,7 +705,7 @@ function get_item_elements($x,$allow_code = false) {
 	// hub and verify that they are legit - or else we're going to toss the post. We only need to do this
 	// once, and after that your hub knows them. Sure some info is in the post, but it's only a transit identifier
 	// and not enough info to be able to look you up from your hash - which is the only thing stored with the post.
-	
+
 	$xchan_hash = import_author_xchan($x['author']);
 	if($xchan_hash)
 		$arr['author_xchan'] = $xchan_hash;
@@ -1057,7 +1048,6 @@ function encode_item($item,$mirror = false) {
 		$x['item_blocked'] = $item['item_blocked'];
 	}
 
-
 	$x['message_id']      = $item['mid'];
 	$x['message_top']     = $item['parent_mid'];
 	$x['message_parent']  = $item['thr_parent'];
@@ -1078,9 +1068,9 @@ function encode_item($item,$mirror = false) {
 	$x['longlat']         = $item['coord'];
 	$x['signature']       = $item['sig'];
 	$x['route']           = $item['route'];
-
 	$x['owner']           = encode_item_xchan($item['owner']);
 	$x['author']          = encode_item_xchan($item['author']);
+
 	if($item['obj'])
 		$x['object']      = json_decode($item['obj'],true);
 	if($item['target'])
@@ -1237,7 +1227,7 @@ function decode_item_meta($meta) {
 			$ret[] = array('cat' => escape_tags($m['family']),'k' => escape_tags($m['key']),'v' => $m['value'],'sharing' => $m['sharing']);
 		}
 	}
-	return $ret;		
+	return $ret;
 }
 
 /**
@@ -1530,6 +1520,8 @@ function get_profile_elements($x) {
  *
  * @param array $arr
  * @param boolean $allow_exec (optional) default false
+ * @param boolean $deliver (optional) default true
+ *
  * @return array
  *   * \e boolean \b success
  *   * \e int \b item_id
@@ -1662,7 +1654,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		// otherwise, just preserve the original timestamp.
 
 		$arr['received']      = ((x($arr,'received')  !== false) ? datetime_convert('UTC','UTC',$arr['received'])  : datetime_convert());
-		$arr['changed']       = ((x($arr,'changed')  !== false) ? datetime_convert('UTC','UTC',$arr['changed'])  : datetime_convert()); 
+		$arr['changed']       = ((x($arr,'changed')  !== false) ? datetime_convert('UTC','UTC',$arr['changed'])  : datetime_convert());
 	}
 
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
@@ -1681,7 +1673,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['public_policy'] = ((x($arr,'public_policy')) ? notags(trim($arr['public_policy']))  : '' );
 
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
-	
+
 	if(! array_key_exists('item_unseen',$arr))
 		$arr['item_unseen'] = 1;
 
@@ -2334,10 +2326,10 @@ function send_status_notifications($post_id,$item) {
 				// check for an unfollow thread activity - we should probably decode the obj and check the id
 				// but it will be extremely rare for this to be wrong.
 
-				if(($xx['verb'] === ACTIVITY_UNFOLLOW) 
-					&& ($xx['obj_type'] === ACTIVITY_OBJ_NOTE || $xx['obj_type'] === ACTIVITY_OBJ_PHOTO) 
+				if(($xx['verb'] === ACTIVITY_UNFOLLOW)
+					&& ($xx['obj_type'] === ACTIVITY_OBJ_NOTE || $xx['obj_type'] === ACTIVITY_OBJ_PHOTO)
 					&& ($xx['parent'] != $xx['id']))
-					$unfollowed = true;				
+					$unfollowed = true;
 			}
 			if($xx['id'] == $xx['parent']) {
 				$parent = $xx['parent'];
@@ -2560,7 +2552,7 @@ function tag_deliver($uid, $item_id) {
 
 	if($mention) {
 		logger('tag_deliver: mention found for ' . $u[0]['channel_name']);
-		
+
 		$r = q("update item set item_mentionsme = 1 where id = %d",
 			intval($item_id)
 		);
@@ -2849,7 +2841,7 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$title = $item['title'];
 	$body  = $item['body'];
 
-	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_obscured = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_obscured = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s',
 		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = %d, item_origin = %d  where id = %d",
 		intval($item_uplink),
 		intval($item_nocomment),
@@ -3344,7 +3336,7 @@ function item_expire($uid,$days) {
 		AND item_starred = 0
 		$sql_extra $item_normal LIMIT $expire_limit ",
 		intval($uid),
-		db_utcnow(), 
+		db_utcnow(),
 		db_quoteinterval(intval($days).' DAY')
 	);
 
@@ -3737,7 +3729,7 @@ function fetch_post_tags($items,$link = false) {
 		);
 		$imeta = q("select * from iconfig where iid in ( %s )",
 			dbesc($tag_finder_str)
-		); 
+		);
 
 	}
 
@@ -3870,7 +3862,7 @@ function zot_feed($uid,$observer_hash,$arr) {
 				unset($r[$x]);
 			}
 		}
-	
+
 		$parents_str = ids_to_querystr($r,'parent');
 		$sys_query = ((is_sys_channel($uid)) ? $sql_extra : '');
 		$item_normal = item_normal();
@@ -3934,9 +3926,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	if($arr['mid'])
 		$sql_options .= " and parent_mid = '" . dbesc($arr['mid']) . "' ";
-									
+
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE item_thread_top = 1 $sql_options $item_normal ) ";
-	
+
 	if($arr['since_id'])
 		$sql_extra .= " and item.id > " . $since_id . " ";
 
@@ -4188,7 +4180,7 @@ function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remo
 
 	if(! $post_id)
 		return;
-	
+
 	if($webpage == ITEM_TYPE_WEBPAGE)
 		$page_type = 'WEBPAGE';
 	elseif($webpage == ITEM_TYPE_BLOCK)
@@ -4339,7 +4331,7 @@ function send_profile_photo_activity($channel,$photo,$profile) {
 
 	$ptext = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' . t('profile photo') . '[/zrl]';
 
-	$ltext = '[zrl=' . z_root() . '/profile/' . $channel['channel_address'] . ']' . '[zmg=150x150]' . z_root() . '/photo/' . $photo['resource_id'] . '-4[/zmg][/zrl]'; 
+	$ltext = '[zrl=' . z_root() . '/profile/' . $channel['channel_address'] . ']' . '[zmg=150x150]' . z_root() . '/photo/' . $photo['resource_id'] . '-4[/zmg][/zrl]';
 
 	$arr['body'] = sprintf($t,$channel['channel_name'],$ptext) . "\n\n" . $ltext;
 
@@ -4381,11 +4373,11 @@ function sync_an_item($channel_id,$item_id) {
 
 function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 	$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
-	
+
 	if(get_pconfig($uid,'system','force_public_uploads')) {
 		$str_contact_allow = $str_group_allow = $str_contact_deny = $str_group_deny = '';
 	}
-	
+
 	$match = null;
 	// match img and zmg image links
 	if(preg_match_all("/\[[zi]mg(.*?)\](.*?)\[\/[zi]mg\]/",$body,$match)) {
@@ -4402,7 +4394,7 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 				if(! strlen($image_uri))
 					continue;
 				$srch = '<' . $xchan_hash . '>';
-					
+
 				$r = q("select folder from attach where hash = '%s' and uid = %d limit 1",
 					dbesc($image_uri),
 					intval($uid)
@@ -4419,15 +4411,15 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 						$str_group_deny = $f[0]['deny_gid'];
 					}
 				}
-	
-				$r = q("SELECT id FROM photo 
+
+				$r = q("SELECT id FROM photo
 					WHERE allow_cid = '%s' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
 					AND resource_id = '%s' AND uid = %d LIMIT 1",
 					dbesc($srch),
 					dbesc($image_uri),
 					intval($uid)
 				);
-	
+
 				if($r) {
 					$r = q("UPDATE photo SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
 						WHERE resource_id = '%s' AND uid = %d ",
@@ -4438,9 +4430,9 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 						dbesc($image_uri),
 						intval($uid)
 					);
-	
+
 					// also update the linked item (which is probably invisible)
-	
+
 					$r = q("select id from item
 						WHERE allow_cid = '%s' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
 						AND resource_id = '%s' and resource_type = 'photo' AND uid = %d LIMIT 1",
@@ -4450,7 +4442,7 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 					);
 					if($r) {
 						$private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
-	
+
 						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
 							WHERE id = %d AND uid = %d",
 							dbesc($str_contact_allow),
@@ -4476,23 +4468,23 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 							intval($r[0]['id']),
 							intval($uid)
 						);
-					} 
+					}
 				}
 			}
 		}
 	}
 }
-	
-	
+
+
 function fix_attached_file_permissions($channel,$observer_hash,$body,
 	$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
-	
+
 	if(get_pconfig($channel['channel_id'],'system','force_public_uploads')) {
 		$str_contact_allow = $str_group_allow = $str_contact_deny = $str_group_deny = '';
 	}
-	
+
 	$match = false;
-	
+
 	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
 		$attaches = $match[1];
 		if($attaches) {

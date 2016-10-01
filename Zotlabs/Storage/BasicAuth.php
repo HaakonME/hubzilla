@@ -12,7 +12,7 @@ use Sabre\HTTP\ResponseInterface;
  * This class also contains some data which is not necessary for authentication
  * like timezone settings.
  *
- * @extends Sabre\DAV\Auth\Backend\AbstractBasic
+ * @extends \\Sabre\\DAV\\Auth\\Backend\\AbstractBasic
  *
  * @link http://github.com/friendica/red
  * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
@@ -24,37 +24,37 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	 *
 	 * It is used for building path in filestorage/.
 	 *
-	 * @var string|null
+	 * @var string|null $channel_name
 	 */
 	protected $channel_name = null;
 	/**
-	 * channel_id of the current channel of the logged-in account.
+	 * @brief channel_id of the current channel of the logged-in account.
 	 *
-	 * @var int
+	 * @var int $channel_id
 	 */
 	public $channel_id = 0;
 	/**
-	 * channel_hash of the current channel of the logged-in account.
+	 * @brief channel_hash of the current channel of the logged-in account.
 	 *
-	 * @var string
+	 * @var string $channel_hash
 	 */
 	public $channel_hash = '';
 	/**
-	 * Set in mod/cloud.php to observer_hash.
+	 * @brief Set in mod/cloud.php to observer_hash.
 	 *
-	 * @var string
+	 * @var string $observer
 	 */
 	public $observer = '';
 	/**
 	 *
 	 * @see Browser::set_writeable()
-	 * @var \Sabre\DAV\Browser\Plugin
+	 * @var \\Sabre\\DAV\\Browser\\Plugin $browser
 	 */
 	public $browser;
 	/**
-	 * channel_id of the current visited path. Set in Directory::getDir().
+	 * @brief channel_id of the current visited path. Set in Directory::getDir().
 	 *
-	 * @var int
+	 * @var int $owner_id
 	 */
 	public $owner_id = 0;
 	/**
@@ -62,15 +62,15 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	 *
 	 * Used for creating the path in cloud/
 	 *
-	 * @var string
+	 * @var string $owner_nick
 	 */
 	public $owner_nick = '';
 	/**
 	 * Timezone from the visiting channel's channel_timezone.
 	 *
-	 * Used in @ref RedBrowser
+	 * Used in @ref Browser
 	 *
-	 * @var string
+	 * @var string $timezone
 	 */
 	protected $timezone = '';
 
@@ -82,7 +82,7 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	 * @brief Validates a username and password.
 	 *
 	 *
-	 * @see \Sabre\DAV\Auth\Backend\AbstractBasic::validateUserPass
+	 * @see \\Sabre\\DAV\\Auth\\Backend\\AbstractBasic::validateUserPass
 	 * @param string $username
 	 * @param string $password
 	 * @return bool
@@ -211,7 +211,7 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
 	 *
 	 * If nobody is currently logged in, this method should return null.
 	 *
-	 * @see \Sabre\DAV\Auth\Backend\AbstractBasic::getCurrentUser
+	 * @see \\Sabre\\DAV\\Auth\\Backend\\AbstractBasic::getCurrentUser
 	 * @return string|null
 	 */
 	public function getCurrentUser() {

@@ -1,5 +1,8 @@
-Hubzilla 1.14 (not released)
-	- add plugin hook for 'get_profile_photo'
+Hubzilla 1.14RC (2016-10-02)
+	- Unify the various mail sending instance to enotify::send() and z_mail()
+	- Provide ability for admin to change account password
+	- Replace deprecated Sabre functions
+	- Add plugin hook for 'get_profile_photo'
 	- Convert NULL_DATE to a legal date for compatibility with MySQL strict mode
 	- Allow a site to over-ride the help table-of-contents files
 	- Autoscroll to target post/comment when in single-thread mode
@@ -35,7 +38,11 @@ Hubzilla 1.14 (not released)
 	- Server roles (basic, standard and pro)
 
 	Bugfixes
-	- regression: files/photos were not synchronising to channel clones properly
+	- Personalize Server Emails
+	- Audio player doesn't automatically show for m4a files
+	- Fix ajax page update with /channel?f=&mid=hash
+	- Angle bracket characters in DB password not recognised
+	- Regression: files/photos were not synchronising to channel clones properly
 	- Missing categories in preview mode
 	- attach_store() sql issue
 	- Rename id share_container to distr_container - share_container seem to be blacklisted in various security browser plugins
@@ -58,6 +65,8 @@ Hubzilla 1.14 (not released)
 	- Public forum check with custom/expert permissions
 
 	Plugins
+	- Cdav: add support for recurring events
+	- New plugin phpmailer: use phpmailer class instead of php's built-in mail() function
 	- Diaspora: third party on other network comment issue
 	- Diaspora: comment fix (hubzilla originated comment with plugin activated by comment author not making it to Diaspora)
 	- Cdav: provide calendar list view

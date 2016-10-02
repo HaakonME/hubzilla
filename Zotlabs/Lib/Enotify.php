@@ -77,7 +77,7 @@ class Enotify {
 
 		$sender_email = get_config('system','from_email');
 		if(! $sender_email)
-			$sender_email = 'Administrator' . '@' . App::get_hostname();
+			$sender_email = 'Administrator' . '@' . \App::get_hostname();
 
 	
 		$sender_name = get_config('system','from_email_name');

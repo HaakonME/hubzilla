@@ -82,7 +82,7 @@ class Enotify {
 	
 		$sender_name = get_config('system','from_email_name');
 		if(! $sender_name)
-			$sender_name = Zotlabs\Lib\System::get_site_name();
+			$sender_name = \Zotlabs\Lib\System::get_site_name();
 
 
 

@@ -65,7 +65,8 @@ Hubzilla 1.14RC (2016-10-02)
 	- Public forum check with custom/expert permissions
 
 	Plugins
-	- Cdav: add support for recurring events
+	- Cdav security: fix rw permission check
+	- Cdav: add partial support for recurring events in the browser client (editing/creating is not implemented)
 	- New plugin phpmailer: use phpmailer class instead of php's built-in mail() function
 	- Diaspora: third party on other network comment issue
 	- Diaspora: comment fix (hubzilla originated comment with plugin activated by comment author not making it to Diaspora)

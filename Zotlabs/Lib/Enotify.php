@@ -633,8 +633,8 @@ class Enotify {
 		call_hooks('email_send', $params);
 
 		if($params['sent']) {
-			logger("notification: enotify::send returns " . $params['result'], LOGGER_DEBUG);
-			return;
+			logger("notification: enotify::send (addon) returns " . $params['result'], LOGGER_DEBUG);
+			return $params['result'];
 		}
 
 		$fromName = email_header_encode(html_entity_decode($params['fromName'],ENT_QUOTES,'UTF-8'),'UTF-8'); 

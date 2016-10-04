@@ -1246,7 +1246,7 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 	}
 
 	if($sync) {
-		$data = attach_export_data($channel,$resource_id);
+		$data = attach_export_data($channel,$resource);
 
 		if($data) 
 			build_sync_packet($channel['channel_id'],array('file' => array($data)));

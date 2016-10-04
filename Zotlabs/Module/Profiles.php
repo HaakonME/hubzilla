@@ -16,7 +16,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 		}
 	
 		if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
-			$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
+			$r = q("SELECT * FROM profile WHERE id = %d AND uid = %d AND is_default = 0 LIMIT 1",
 				intval(argv(2)),
 				intval(local_channel())
 			);
@@ -36,7 +36,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				dbesc($profile_guid),
 				intval(local_channel())
 			);
-			$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d",
+			$r = q("DELETE FROM profile WHERE id = %d AND uid = %d",
 				intval(argv(2)),
 				intval(local_channel())
 			);
@@ -61,16 +61,16 @@ class Profiles extends \Zotlabs\Web\Controller {
 			
 	//		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
 	
-			$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
+			$r0 = q("SELECT id FROM profile WHERE uid = %d",
 				intval(local_channel()));
 			$num_profiles = count($r0);
 	
 			$name = t('Profile-') . ($num_profiles + 1);
 	
-			$r1 = q("SELECT `fullname`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
+			$r1 = q("SELECT fullname, photo, thumb FROM profile WHERE uid = %d AND is_default = 1 LIMIT 1",
 				intval(local_channel()));
 			
-			$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `fullname`, `photo`, `thumb`)
+			$r2 = q("INSERT INTO profile (aid, uid , profile_guid, profile_name , fullname, photo, thumb)
 				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 				intval(get_account_id()),
 				intval(local_channel()),
@@ -81,7 +81,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				dbesc($r1[0]['thumb'])
 			);
 	
-			$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
+			$r3 = q("SELECT id FROM profile WHERE uid = %d AND profile_name = '%s' LIMIT 1",
 				intval(local_channel()),
 				dbesc($name)
 			);
@@ -97,12 +97,12 @@ class Profiles extends \Zotlabs\Web\Controller {
 			
 			check_form_security_token_redirectOnErr('/profiles', 'profile_clone', 't');
 	
-			$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
+			$r0 = q("SELECT id FROM profile WHERE uid = %d",
 				intval(local_channel()));
 			$num_profiles = count($r0);
 	
 			$name = t('Profile-') . ($num_profiles + 1);
-			$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			$r1 = q("SELECT * FROM profile WHERE uid = %d AND id = %d LIMIT 1",
 				intval(local_channel()),
 				intval(\App::$argv[2])
 			);
@@ -119,13 +119,13 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			dbesc_array($r1[0]);
 	
-			$r2 = dbq("INSERT INTO `profile` (`" 
+			$r2 = dbq("INSERT INTO profile (`" 
 				. implode("`, `", array_keys($r1[0])) 
 				. "`) VALUES ('" 
 				. implode("', '", array_values($r1[0])) 
 				. "')" );
 	
-			$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
+			$r3 = q("SELECT id FROM profile WHERE uid = %d AND profile_name = '%s' LIMIT 1",
 				intval(local_channel()),
 				dbesc($name)
 			);
@@ -143,7 +143,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 		if((argc() > 2) && (argv(1) === 'export')) {
 			
-			$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			$r1 = q("SELECT * FROM profile WHERE uid = %d AND id = %d LIMIT 1",
 				intval(local_channel()),
 				intval(argv(2))
 			);
@@ -181,7 +181,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				if($x)
 					$id = $x[0]['id'];
 			}
-			$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$r = q("SELECT * FROM profile WHERE id = %d AND uid = %d LIMIT 1",
 				intval($id),
 				intval(local_channel())
 			);
@@ -238,7 +238,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 	
 		if((argc() > 1) && (argv(1) !== "new") && intval(argv(1))) {
-			$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$orig = q("SELECT * FROM profile WHERE id = %d AND uid = %d LIMIT 1",
 				intval(\App::$argv[1]),
 				intval(local_channel())
 			);
@@ -484,41 +484,41 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			}			
 				
-			$r = q("UPDATE `profile` 
-				SET `profile_name` = '%s',
-				`fullname` = '%s',
-				`pdesc` = '%s',
-				`gender` = '%s',
-				`dob` = '%s',
-				`address` = '%s',
-				`locality` = '%s',
-				`region` = '%s',
-				`postal_code` = '%s',
-				`country_name` = '%s',
-				`marital` = '%s',
-				`partner` = '%s',
-				`howlong` = '%s',
-				`sexual` = '%s',
-				`homepage` = '%s',
-				`hometown` = '%s',
-				`politic` = '%s',
-				`religion` = '%s',
-				`keywords` = '%s',
-				`likes` = '%s',
-				`dislikes` = '%s',
-				`about` = '%s',
-				`interest` = '%s',
-				`contact` = '%s',
-				`channels` = '%s',
-				`music` = '%s',
-				`book` = '%s',
-				`tv` = '%s',
-				`film` = '%s',
-				`romance` = '%s',
-				`employment` = '%s',
-				`education` = '%s',
-				`hide_friends` = %d
-				WHERE `id` = %d AND `uid` = %d",
+			$r = q("UPDATE profile 
+				SET profile_name = '%s',
+				fullname = '%s',
+				pdesc = '%s',
+				gender = '%s',
+				dob = '%s',
+				address = '%s',
+				locality = '%s',
+				region = '%s',
+				postal_code = '%s',
+				country_name = '%s',
+				marital = '%s',
+				partner = '%s',
+				howlong = '%s',
+				sexual = '%s',
+				homepage = '%s',
+				hometown = '%s',
+				politic = '%s',
+				religion = '%s',
+				keywords = '%s',
+				likes = '%s',
+				dislikes = '%s',
+				about = '%s',
+				interest = '%s',
+				contact = '%s',
+				channels = '%s',
+				music = '%s',
+				book = '%s',
+				tv = '%s',
+				film = '%s',
+				romance = '%s',
+				employment = '%s',
+				education = '%s',
+				hide_friends = %d
+				WHERE id = %d AND uid = %d",
 				dbesc($profile_name),
 				dbesc($name),
 				dbesc($pdesc),
@@ -617,7 +617,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				if($x)
 					$id = $x[0]['id'];
 			}		
-			$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$r = q("SELECT * FROM profile WHERE id = %d AND uid = %d LIMIT 1",
 				intval($id),
 				intval(local_channel())
 			);
@@ -755,7 +755,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 		}
 		else {
 	
-			$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
+			$r = q("SELECT * FROM profile WHERE uid = %d",
 				local_channel());
 			if($r) {
 	

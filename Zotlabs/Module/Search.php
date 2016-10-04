@@ -79,7 +79,7 @@ class Search extends \Zotlabs\Web\Controller {
 			return $o;
 	
 		if($tag) {
-			$sql_extra = sprintf(" AND `item`.`id` IN (select `oid` from term where otype = %d and ttype in ( %d , %d) and term = '%s') ",
+			$sql_extra = sprintf(" AND item.id IN (select oid from term where otype = %d and ttype in ( %d , %d) and term = '%s') ",
 				intval(TERM_OBJ_POST),
 				intval(TERM_HASHTAG),
 				intval(TERM_COMMUNITYTAG),
@@ -88,7 +88,7 @@ class Search extends \Zotlabs\Web\Controller {
 		}
 		else {
 			$regstr = db_getfunc('REGEXP');
-			$sql_extra = sprintf(" AND `item`.`body` $regstr '%s' ", dbesc(protect_sprintf(preg_quote($search))));
+			$sql_extra = sprintf(" AND item.body $regstr '%s' ", dbesc(protect_sprintf(preg_quote($search))));
 		}
 	
 		// Here is the way permissions work in the search module...
@@ -165,8 +165,8 @@ class Search extends \Zotlabs\Web\Controller {
 				}
 				if(local_channel()) {
 					$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
-						WHERE ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
-						OR ( `item`.`uid` = %d )) OR item.owner_xchan = '%s' )
+						WHERE ((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' AND item.deny_gid  = '' AND item_private = 0 ) 
+						OR ( item.uid = %d )) OR item.owner_xchan = '%s' )
 						$item_normal
 						$sql_extra
 						$suffix $pager_sql ",
@@ -176,8 +176,8 @@ class Search extends \Zotlabs\Web\Controller {
 				}
 				if($r === null) {
 					$r = q("SELECT $prefix mid, item.id as item_id, item.* from item
-						WHERE (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
-						AND `item`.`deny_gid`  = '' AND item_private = 0 )
+						WHERE (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = ''
+						AND item.deny_gid  = '' AND item_private = 0 )
 						and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 							$pub_sql ) OR owner_xchan = '%s')
 						$item_normal

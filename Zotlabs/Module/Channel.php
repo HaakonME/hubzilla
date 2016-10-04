@@ -185,7 +185,7 @@ class Channel extends \Zotlabs\Web\Controller {
 				$_SESSION['loadtime'] = datetime_convert();
 			} 
 			else {
-				$r = q("SELECT distinct parent AS `item_id`, created from item
+				$r = q("SELECT distinct parent AS item_id, created from item
 					left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
 					WHERE uid = %d $item_normal
 					AND item_wall = 1 $simple_update
@@ -251,10 +251,10 @@ class Channel extends \Zotlabs\Web\Controller {
 
 			$parents_str = ids_to_querystr($r,'item_id');
  
-			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
-				FROM `item`
-				WHERE `item`.`uid` = %d $item_normal
-				AND `item`.`parent` IN ( %s )
+			$items = q("SELECT item.*, item.id AS item_id 
+				FROM item
+				WHERE item.uid = %d $item_normal
+				AND item.parent IN ( %s )
 				$sql_extra ",
 				intval(\App::$profile['profile_uid']),
 				dbesc($parents_str)

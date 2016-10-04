@@ -154,13 +154,13 @@ class Item extends \Zotlabs\Web\Controller {
 				$obj_type = ACTIVITY_OBJ_COMMENT;
 	
 			if($parent) {
-				$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+				$r = q("SELECT * FROM item WHERE id = %d LIMIT 1",
 					intval($parent)
 				);
 			}
 			elseif($parent_mid && $uid) {
 				// This is coming from an API source, and we are logged in
-				$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT * FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($parent_mid),
 					intval($uid)
 				);
@@ -170,7 +170,7 @@ class Item extends \Zotlabs\Web\Controller {
 				$parid = $r[0]['parent'];
 				$parent_mid = $r[0]['mid'];
 				if($r[0]['id'] != $r[0]['parent']) {
-					$r = q("SELECT * FROM `item` WHERE `id` = `parent` AND `parent` = %d LIMIT 1",
+					$r = q("SELECT * FROM item WHERE id = parent AND parent = %d LIMIT 1",
 						intval($parid)
 					);
 				}
@@ -244,7 +244,7 @@ class Item extends \Zotlabs\Web\Controller {
 		$iconfig = null;
 	
 		if($post_id) {
-			$i = q("SELECT * FROM `item` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			$i = q("SELECT * FROM item WHERE uid = %d AND id = %d LIMIT 1",
 				intval($profile_uid),
 				intval($post_id)
 			);

@@ -214,8 +214,8 @@ class Display extends \Zotlabs\Web\Controller {
 	
 					$r = q("SELECT * from item
 						WHERE mid = '%s'
-						AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
-						AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+						AND (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' 
+						AND item.deny_gid  = '' AND item_private = 0 ) 
 						and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 						OR uid = %d )
 						$sql_extra )
@@ -258,8 +258,8 @@ class Display extends \Zotlabs\Web\Controller {
 	
 				$r = q("SELECT * from item
 					WHERE mid = '%s'
-					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
-					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+					AND (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' 
+					AND item.deny_gid  = '' AND item_private = 0 ) 
 					and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 					OR uid = %d )
 					$sql_extra )
@@ -282,8 +282,8 @@ class Display extends \Zotlabs\Web\Controller {
 			$parents_str = ids_to_querystr($r,'id');
 			if($parents_str) {
 	
-				$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
-					FROM `item`
+				$items = q("SELECT item.*, item.id AS item_id 
+					FROM item
 					WHERE parent in ( %s ) $item_normal ",
 					dbesc($parents_str)
 				);
@@ -321,7 +321,7 @@ class Display extends \Zotlabs\Web\Controller {
 	/*
 		elseif((! $update) && (!  {
 			
-			$r = q("SELECT `id`, item_flags FROM `item` WHERE `id` = '%s' OR `mid` = '%s' LIMIT 1",
+			$r = q("SELECT id, item_flags FROM item WHERE id = '%s' OR mid = '%s' LIMIT 1",
 				dbesc($item_hash),
 				dbesc($item_hash)
 			);

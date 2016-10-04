@@ -336,7 +336,7 @@ class Events extends \Zotlabs\Web\Controller {
 	
 			/* edit/create form */
 			if($event_id) {
-				$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
 					dbesc($event_id),
 					intval(local_channel())
 				);
@@ -545,8 +545,8 @@ class Events extends \Zotlabs\Web\Controller {
 				);
 			} elseif($export) {
 				$r = q("SELECT * from event where uid = %d
-					AND (( `adjust` = 0 AND ( `dtend` >= '%s' or nofinish = 1 ) AND `dtstart` <= '%s' ) 
-					OR  (  `adjust` = 1 AND ( `dtend` >= '%s' or nofinish = 1 ) AND `dtstart` <= '%s' )) ",
+					AND (( adjust = 0 AND ( dtend >= '%s' or nofinish = 1 ) AND dtstart <= '%s' ) 
+					OR  (  adjust = 1 AND ( dtend >= '%s' or nofinish = 1 ) AND dtstart <= '%s' )) ",
 					intval(local_channel()),
 					dbesc($start),
 					dbesc($finish),
@@ -694,7 +694,7 @@ class Events extends \Zotlabs\Web\Controller {
 		}
 	
 		if($mode === 'drop' && $event_id) {
-			$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
+			$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
 				dbesc($event_id),
 				intval(local_channel())
 			);

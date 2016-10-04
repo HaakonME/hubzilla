@@ -211,7 +211,7 @@ class Setup extends \Zotlabs\Web\Controller {
 			$db_return_text .= $txt;
 		}
 		if(\DBA::$dba && \DBA::$dba->connected) {
-			$r = q("SELECT COUNT(*) as `total` FROM `account`");
+			$r = q("SELECT COUNT(*) as total FROM account");
 			if($r && count($r) && $r[0]['total']) {
 				$tpl = get_markup_template('install.tpl');
 				return replace_macros($tpl, array(

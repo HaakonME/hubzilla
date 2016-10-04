@@ -102,7 +102,7 @@ class Lockview extends \Zotlabs\Web\Controller {
 		stringify_array_elms($deny_users,true);
 	
 		if(count($allowed_groups)) {
-			$r = q("SELECT gname FROM `groups` WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
+			$r = q("SELECT gname FROM groups WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
 			if($r)
 				foreach($r as $rr) 
 					$l[] = '<li><b>' . $rr['gname'] . '</b></li>';
@@ -121,7 +121,7 @@ class Lockview extends \Zotlabs\Web\Controller {
 			}
 		}
 		if(count($deny_groups)) {
-			$r = q("SELECT gname FROM `groups` WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
+			$r = q("SELECT gname FROM groups WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
 			if($r)
 				foreach($r as $rr) 
 					$l[] = '<li><b><strike>' . $rr['gname'] . '</strike></b></li>';

@@ -93,9 +93,9 @@ class Manage extends \Zotlabs\Web\Controller {
 						$channels[$x]['mail'] = intval($mails[0]['total']);
 			
 	
-					$events = q("SELECT etype, dtstart, adjust FROM `event`
-						WHERE `event`.`uid` = %d AND dtstart < '%s' AND dtstart > '%s' and `dismissed` = 0
-						ORDER BY `dtstart` ASC ",
+					$events = q("SELECT etype, dtstart, adjust FROM event
+						WHERE event.uid = %d AND dtstart < '%s' AND dtstart > '%s' and dismissed = 0
+						ORDER BY dtstart ASC ",
 						intval($channels[$x]['channel_id']),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
 						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))

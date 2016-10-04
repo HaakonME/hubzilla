@@ -109,7 +109,7 @@ class Cal extends \Zotlabs\Web\Controller {
 	
 			/* edit/create form */
 			if($event_id) {
-				$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
 					dbesc($event_id),
 					intval($channel['channel_id'])
 				);

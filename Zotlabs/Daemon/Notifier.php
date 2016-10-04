@@ -120,7 +120,7 @@ class Notifier {
 			$normal_mode = false;
 			$mail = true;
 			$private = true;
-			$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
+			$message = q("SELECT * FROM mail WHERE id = %d LIMIT 1",
 					intval($item_id)
 			);
 			if(! $message) {

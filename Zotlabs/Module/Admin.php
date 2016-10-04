@@ -101,8 +101,8 @@ class Admin extends \Zotlabs\Web\Controller {
 		}
 	
 		// pending registrations
-		$r = q("SELECT COUNT(id) AS `count` FROM `register` WHERE `uid` != '0'");
-		$pending = $r[0]['count'];
+		$r = q("SELECT COUNT(id) AS rtotal FROM register WHERE uid != '0'");
+		$pending = $r[0]['rtotal'];
 	
 		// available channels, primary and clones
 		$channels = array();

@@ -364,7 +364,7 @@ class Enotify {
 	do {
 		$dups = false;
 		$hash = random_string();
-		$r = q("SELECT `id` FROM `notify` WHERE `hash` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM notify WHERE hash = '%s' LIMIT 1",
 			dbesc($hash));
 		if ($r)
 			$dups = true;

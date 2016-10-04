@@ -101,15 +101,7 @@ class Account {
 	
 		$email      = \App::$account['account_email'];
 
-		$techlevels = [
-			'0' => t('Beginner/Basic'),
-			'1' => t('Novice - not skilled but willing to learn'),
-			'2' => t('Intermediate - somewhat comfortable'),
-			'3' => t('Advanced - very comfortable'),
-			'4' => t('Expert - I can write computer code'),			
-			'5' => t('Wizard - I probably know more than you do')
-		];
-
+		$techlevels = \Zotlabs\Lib\Techlevels::levels();
 
 		$def_techlevel = \App::$account['account_level'];
 		$techlock = get_config('system','techlevel_lock');

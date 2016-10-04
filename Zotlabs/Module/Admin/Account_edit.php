@@ -29,6 +29,22 @@ class Account_edit {
 				info( sprintf( t('Password changed for account %d.'), $account_id). EOL);
 
 		}
+
+		$service_class = trim($_REQUEST['service_class']);
+		$account_level = intval(trim($_REQUEST['account_level']));
+		$account_language = trim($_REQUEST['account_language']);
+
+		$r = q("update account set account_service_class = '%s', account_level = %d, account_language = '%s' 
+			where account_id = %d",
+			dbesc($service_class),
+			intval($account_level),
+			dbesc($account_language),
+			intval($account_id)
+		);
+
+		if($r)
+			info( t('Account settings updated.') . EOL);
+
 		goaway(z_root() . '/admin/accounts');
 	}
 
@@ -46,11 +62,15 @@ class Account_edit {
 			return '';
 		}
 
+
 		$a = replace_macros(get_markup_template('admin_account_edit.tpl'), [
 			'$account' => $x[0],
 			'$title' => t('Account Edit'),
 			'$pass1' => [ 'pass1', t('New Password'), ' ','' ],
 			'$pass2' => [ 'pass2', t('New Password again'), ' ','' ],
+			'$account_level' => [ 'account_level', t('Technical skill level'), $x[0]['account_level'], '', \Zotlabs\Lib\Techlevels::levels() ],
+			'$account_language' => [ 'account_language' , t('Account language (for emails)'), $x[0]['account_language'], '', language_list() ],
+			'$service_class' => [ 'service_class', t('Service class'), $x[0]['account_service_class'], '' ],
 			'$submit' => t('Submit'),
 			]
 		);

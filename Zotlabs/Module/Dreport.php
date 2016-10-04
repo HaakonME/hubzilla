@@ -21,10 +21,11 @@ class Dreport extends \Zotlabs\Web\Controller {
 			$table = 'push';
 			$mid = ((argc() > 2) ? argv(2) : '');
 			if($mid) {	
-				$i = q("select id from item where mid = '%s' and author_xchan = '%s' and uid = %d",
+				$i = q("select id from item where mid = '%s' and uid = %d and ( author_xchan = '%s' or ( owner_xchan = '%s' and item_wall = 1 )) ",
 					dbesc($mid),
+					intval($channel['channel_id']),
 					dbesc($channel['channel_hash']),
-					intval($channel['channel_id'])
+					dbesc($channel['channel_hash'])
 				);
 				if($i) {
 					\Zotlabs\Daemon\Master::Summon([ 'Notifier', 'edit_post', $i[0]['id'] ]);
@@ -47,8 +48,9 @@ class Dreport extends \Zotlabs\Web\Controller {
 	
 		switch($table) {
 			case 'item':
-				$i = q("select id from item where mid = '%s' and author_xchan = '%s' ",
+				$i = q("select id from item where mid = '%s' and ( author_xchan = '%s' or ( owner_xchan = '%s' and item_wall = 1 )) ",
 					dbesc($mid),
+					dbesc($channel['channel_hash']),
 					dbesc($channel['channel_hash'])
 				);
 				break;

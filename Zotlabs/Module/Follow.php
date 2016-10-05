@@ -20,9 +20,6 @@ class Follow extends \Zotlabs\Web\Controller {
 	
 		$channel = \App::get_channel();
 
-		// Warning: Do not edit the following line. The first symbol is UTF-8 &#65312; 
-		$url = str_replace('@','@',$url);	
-
 		$result = new_contact($uid,$url,$channel,true,$confirm);
 		
 		if($result['success'] == false) {

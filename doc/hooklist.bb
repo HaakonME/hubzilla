@@ -68,7 +68,10 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 	called when converting bbcode to markdown
 
 [zrl=[baseurl]/help/hook/bbcode]bbcode[/zrl]
-	Called when converting bbcode to HTML
+	Called at end of converting bbcode to HTML
+
+[zrl=[baseurl]/help/hook/bbcode_filter]bbcode_filter[/zrl]
+	Called when beginning to convert bbcode to HTML
 
 [zrl=[baseurl]/help/hook/bb_translate_video]bb_translate_video[/zrl]
 	Called when extracting embedded services from bbcode video elements (rarely used)

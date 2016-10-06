@@ -516,6 +516,9 @@ function bb_fixtable_lf($match) {
 
 function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) {
 
+
+	call_hooks('bbcode_filter', $Text);
+
 	// Hide all [noparse] contained bbtags by spacefying them
 	if (strpos($Text,'[noparse]') !== false) {
 		$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_spacefy',$Text);

@@ -12,7 +12,6 @@ require_once('include/hubloc.php');
 function tryoembed($match) {
 	$url = ((count($match) == 2) ? $match[1] : $match[2]);
 
-
 	$o = oembed_fetch_url($url);
 
 	if ($o['type'] == 'error')
@@ -20,6 +19,18 @@ function tryoembed($match) {
 
 	$html = oembed_format_object($o);
 	return $html; 
+}
+
+
+function nakedoembed($match) {
+	$url = ((count($match) == 2) ? $match[1] : $match[2]);
+
+	$o = oembed_fetch_url($url);
+
+	if ($o['type'] == 'error')
+		return $match[0];
+
+	return '[embed]' . $url . '[/embed]';
 }
 
 function tryzrlaudio($match) {
@@ -645,6 +656,9 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	$urlchars = '[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,\@]';
 
 	if (strpos($Text,'http') !== false) {
+		if($tryoembed) {
+			$Text = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/$urlchars+)/ism", 'tryoembed', $Text);
+		}
 		$Text = preg_replace("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/$urlchars+)/ism", '$1<a href="$2" target="_blank" >$2</a>', $Text);
 	}
 

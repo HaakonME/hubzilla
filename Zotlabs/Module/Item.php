@@ -20,6 +20,8 @@ namespace Zotlabs\Module;
 require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/attach.php');
+require_once('include/bbcode.php');
+
 
 use \Zotlabs\Lib as Zlib;
 
@@ -550,6 +552,8 @@ class Item extends \Zotlabs\Web\Controller {
 			$body = preg_replace_callback('/\[url(.*?)\[\/(url)\]/ism','\red_escape_codeblock',$body);
 			$body = preg_replace_callback('/\[zrl(.*?)\[\/(zrl)\]/ism','\red_escape_codeblock',$body);
 	
+
+			$body = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'nakedoembed', $body);
 			$body = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", '\red_zrl_callback', $body);
 	
 			$body = preg_replace_callback('/\[\$b64zrl(.*?)\[\/(zrl)\]/ism','\red_unescape_codeblock',$body);

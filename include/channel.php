@@ -1066,19 +1066,26 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		? trim(substr($profile['channel_name'],0,strpos($profile['channel_name'],' '))) : $profile['channel_name']);
 	$lastname = (($firstname === $profile['channel_name']) ? '' : trim(substr($profile['channel_name'],strlen($firstname))));
 
-	$diaspora = array(
-		'podloc'     => z_root(),
-		'guid'       => $profile['channel_guid'] . str_replace('.','',App::get_hostname()),
-		'pubkey'     => pemtorsa($profile['channel_pubkey']),
-		'searchable' => (($block) ? 'false' : 'true'),
-		'nickname'   => $profile['channel_address'],
-		'fullname'   => $profile['channel_name'],
-		'firstname'  => $firstname,
-		'lastname'   => $lastname,
-		'photo300'   => z_root() . '/photo/profile/300/' . $profile['uid'] . '.jpg',
-		'photo100'   => z_root() . '/photo/profile/100/' . $profile['uid'] . '.jpg',
-		'photo50'    => z_root() . '/photo/profile/50/'  . $profile['uid'] . '.jpg',
-	);
+	// @fixme move this to the diaspora plugin itself
+
+	if(plugin_is_installed('diaspora')) {
+		$diaspora = array(
+			'podloc'     => z_root(),
+			'guid'       => $profile['channel_guid'] . str_replace('.','',App::get_hostname()),
+			'pubkey'     => pemtorsa($profile['channel_pubkey']),
+			'searchable' => (($block) ? 'false' : 'true'),
+			'nickname'   => $profile['channel_address'],
+			'fullname'   => $profile['channel_name'],
+			'firstname'  => $firstname,
+			'lastname'   => $lastname,
+			'photo300'   => z_root() . '/photo/profile/300/' . $profile['uid'] . '.jpg',
+			'photo100'   => z_root() . '/photo/profile/100/' . $profile['uid'] . '.jpg',
+			'photo50'    => z_root() . '/photo/profile/50/'  . $profile['uid'] . '.jpg',
+		);
+	}
+	else
+		$diaspora = '';
+
 
 	$contact_block = contact_block();
 
@@ -1124,7 +1131,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		'$editmenu'	 => profile_edit_menu($profile['uid'])
 	));
 
-	$arr = array('profile' => &$profile, 'entry' => &$o);
+	$arr = array('profile' => $profile, 'entry' => $o);
 
 	call_hooks('profile_sidebar', $arr);
 

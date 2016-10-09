@@ -41,7 +41,7 @@ function uninstall_plugin($plugin) {
 		$func();
 	}
 
-	q("DELETE FROM `addon` WHERE `aname` = '%s' ",
+	q("DELETE FROM addon WHERE aname = '%s' ",
 		dbesc($plugin)
 	);
 }
@@ -66,7 +66,7 @@ function install_plugin($plugin) {
 
 	$plugin_admin = (function_exists($plugin . '_plugin_admin') ? 1 : 0);
 
-	q("INSERT INTO `addon` (`aname`, `installed`, `tstamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
+	q("INSERT INTO addon (aname, installed, tstamp, plugin_admin) VALUES ( '%s', 1, %d , %d ) ",
 		dbesc($plugin),
 		intval($t),
 		$plugin_admin
@@ -126,7 +126,7 @@ function plugin_is_installed($name) {
 function reload_plugins() {
 	$plugins = get_config('system', 'addon');
 	if(strlen($plugins)) {
-		$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
+		$r = q("SELECT * FROM addon WHERE installed = 1");
 		if(count($r))
 			$installed = $r;
 		else
@@ -155,7 +155,7 @@ function reload_plugins() {
 								$func = $pl . '_load';
 								$func();
 							}
-							q("UPDATE `addon` SET `tstamp` = %d WHERE `id` = %d",
+							q("UPDATE addon SET tstamp = %d WHERE id = %d",
 								intval($t),
 								intval($i['id'])
 							);
@@ -184,7 +184,7 @@ function visible_plugin_list() {
  * @return mixed|bool
  */
 function register_hook($hook, $file, $function, $priority = 0) {
-	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `fn` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM hook WHERE hook = '%s' AND file = '%s' AND fn = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
@@ -192,7 +192,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
 	if($r)
 		return true;
 
-	$r = q("INSERT INTO `hook` (`hook`, `file`, `fn`, `priority`) VALUES ( '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO hook (hook, file, fn, priority) VALUES ( '%s', '%s', '%s', '%s' )",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function),
@@ -212,7 +212,7 @@ function register_hook($hook, $file, $function, $priority = 0) {
  * @return array
  */
 function unregister_hook($hook, $file, $function) {
-	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `fn` = '%s'",
+	$r = q("DELETE FROM hook WHERE hook = '%s' AND file = '%s' AND fn = '%s'",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)

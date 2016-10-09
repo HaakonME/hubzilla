@@ -74,7 +74,7 @@ function check_account_invite($invite_code) {
 		if(! $invite_code) {
 			$result['message'] .= t('An invitation is required.') . EOL;
 		}
-		$r = q("select * from register where `hash` = '%s' limit 1", dbesc($invite_code));
+		$r = q("select * from register where hash = '%s' limit 1", dbesc($invite_code));
 		if(! $r) {
 			$result['message'] .= t('Invitation could not be verified.') . EOL;
 		}
@@ -373,7 +373,7 @@ function account_allow($hash) {
 
 	$ret = array('success' => false);
 
-	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' LIMIT 1",
+	$register = q("SELECT * FROM register WHERE hash = '%s' LIMIT 1",
 		dbesc($hash)
 	);
 
@@ -465,7 +465,7 @@ function account_deny($hash) {
 		intval($register[0]['uid'])
 	);
 
-	$r = q("DELETE FROM `register` WHERE id = %d",
+	$r = q("DELETE FROM register WHERE id = %d",
 		dbesc($register[0]['id'])
 	);
 	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
@@ -482,7 +482,7 @@ function account_approve($hash) {
 
 	// Note: when the password in the register table is 'verify', the uid actually contains the account_id
 
-	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' and password = 'verify' LIMIT 1",
+	$register = q("SELECT * FROM register WHERE hash = '%s' and password = 'verify' LIMIT 1",
 		dbesc($hash)
 	);
 

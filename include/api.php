@@ -246,31 +246,31 @@ require_once('include/api_auth.php');
 			$usr = q("select * from channel where channel_id = %d limit 1",
 				intval(api_user())
 			);
-			$profile = q("select * from profile where uid = %d and `is_default` = 1 limit 1",
+			$profile = q("select * from profile where uid = %d and is_default = 1 limit 1",
 				intval(api_user())
 			);
 
 			$item_normal = item_normal();
 
 			// count public wall messages
-			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
-					WHERE `uid` = %d
+			$r = q("SELECT COUNT(id) as total FROM item
+					WHERE uid = %d
 					AND item_wall = 1 $item_normal 
-					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''
+					AND allow_cid='' AND allow_gid='' AND deny_cid='' AND deny_gid=''
 					AND item_private = 0 ",
 					intval($usr[0]['channel_id'])
 			);
-			$countitms = $r[0]['count'];
+			$countitms = $r[0]['total'];
 			$following = true;
 		}
 		else {
-			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
+			$r = q("SELECT COUNT(id) as total FROM item
 					WHERE author_xchan = '%s'
-					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''
+					AND allow_cid='' AND allow_gid='' AND deny_cid='' AND deny_gid=''
 					AND item_private = 0 ",
 					intval($uinfo[0]['xchan_hash'])
 			);
-			$countitms = $r[0]['count'];
+			$countitms = $r[0]['total'];
 			
 			$following = ((get_abconfig($uinfo[0]['abook_channel'],$uinfo[0]['abook_xchan'],'my_perms','view_stream')) ? true : false );
 		}
@@ -278,18 +278,18 @@ require_once('include/api_auth.php');
 
 		// count friends
 		if($usr) {
-			$r = q("SELECT COUNT(abook_id) as `count` FROM abook
+			$r = q("SELECT COUNT(abook_id) as total FROM abook
 					WHERE abook_channel = %d AND abook_self = 0 ",
 					intval($usr[0]['channel_id'])
 			);
-			$countfriends = $r[0]['count'];
-			$countfollowers = $r[0]['count'];
+			$countfriends = $r[0]['total'];
+			$countfollowers = $r[0]['total'];
 		}
 
-		$r = q("SELECT count(`id`) as `count` FROM item where item_starred = 1 and uid = %d " . item_normal(),
+		$r = q("SELECT count(id) as total FROM item where item_starred = 1 and uid = %d " . item_normal(),
 			intval($uinfo[0]['channel_id'])
 		);
-		$starred = $r[0]['count'];
+		$starred = $r[0]['total'];
 	
 
 		if(! intval($uinfo[0]['abook_self'])) {
@@ -508,7 +508,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/export/basic','api_export_basic', true);
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);
-	api_register_func('api/hz/1.0/channel/export/basic','api_export_basic', true);
+	api_register_func('api/z/1.0/channel/export/basic','api_export_basic', true);
 
 
 	function api_channel_stream( $type) {
@@ -526,14 +526,14 @@ require_once('include/api_auth.php');
 		}
 	}
 	api_register_func('api/red/channel/stream','api_channel_stream', true);
-	api_register_func('api/hz/1.0/channel/stream','api_channel_stream', true);
+	api_register_func('api/z/1.0/channel/stream','api_channel_stream', true);
 
 	function api_attach_list($type) {
 		logger('api_user: ' . api_user());
 		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),'','','','created asc'));
 	}
 	api_register_func('api/red/files','api_attach_list', true);
-	api_register_func('api/hz/1.0/files','api_attach_list', true);
+	api_register_func('api/z/1.0/files','api_attach_list', true);
 
 
 
@@ -555,7 +555,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/filemeta', 'api_file_meta', true);
-	api_register_func('api/hz/1.0/filemeta', 'api_file_meta', true);
+	api_register_func('api/z/1.0/filemeta', 'api_file_meta', true);
 
 
 	function api_file_data($type) {
@@ -599,7 +599,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/filedata', 'api_file_data', true);
-	api_register_func('api/hz/1.0/filedata', 'api_file_data', true);
+	api_register_func('api/z/1.0/filedata', 'api_file_data', true);
 
 
 
@@ -625,21 +625,21 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/file', 'api_file_detail', true);
-	api_register_func('api/hz/1.0/file', 'api_file_detail', true);
+	api_register_func('api/z/1.0/file', 'api_file_detail', true);
 
 
 	function api_albums($type) {
 		json_return_and_die(photos_albums_list(App::get_channel(),App::get_observer()));
 	}
 	api_register_func('api/red/albums','api_albums', true);
-	api_register_func('api/hz/1.0/albums','api_albums', true);
+	api_register_func('api/z/1.0/albums','api_albums', true);
 
 	function api_photos($type) {
 		$album = $_REQUEST['album'];
 		json_return_and_die(photos_list_photos(App::get_channel(),App::get_observer(),$album));
 	}
 	api_register_func('api/red/photos','api_photos', true);
-	api_register_func('api/hz/1.0/photos','api_photos', true);
+	api_register_func('api/z/1.0/photos','api_photos', true);
 
 	function api_photo_detail($type) {
 		if (api_user()===false) return false;
@@ -681,7 +681,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/photo', 'api_photo_detail', true);
-	api_register_func('api/hz/1.0/photo', 'api_photo_detail', true);
+	api_register_func('api/z/1.0/photo', 'api_photo_detail', true);
 
 
 	function api_group_members($type) {
@@ -704,7 +704,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/group_members','api_group_members', true);
-	api_register_func('api/hz/1.0/group_members','api_group_members', true);
+	api_register_func('api/z/1.0/group_members','api_group_members', true);
 
 
 
@@ -719,7 +719,7 @@ require_once('include/api_auth.php');
 		json_return_and_die($r);
 	}
 	api_register_func('api/red/group','api_group', true);
-	api_register_func('api/hz/1.0/group','api_group', true);
+	api_register_func('api/z/1.0/group','api_group', true);
 
 
 	function api_red_xchan($type) {
@@ -738,7 +738,7 @@ require_once('include/api_auth.php');
 	};
 
 	api_register_func('api/red/xchan','api_red_xchan',true);
-	api_register_func('api/hz/1.0/xchan','api_red_xchan',true);
+	api_register_func('api/z/1.0/xchan','api_red_xchan',true);
 	
 
 	function api_statuses_mediap( $type) {
@@ -940,7 +940,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/item/new','red_item_new', true);
-	api_register_func('api/hz/1.0/item/new','red_item_new', true);
+	api_register_func('api/z/1.0/item/new','red_item_new', true);
 
 
 	function red_item( $type) {
@@ -979,7 +979,7 @@ require_once('include/api_auth.php');
 	}
 
 	api_register_func('api/red/item/full','red_item', true);
-	api_register_func('api/hz/1.0/item/full','red_item', true);
+	api_register_func('api/z/1.0/item/full','red_item', true);
 
 
 
@@ -1219,9 +1219,9 @@ require_once('include/api_auth.php');
 
 		$sql_extra = '';
 		if ($max_id > 0)
-			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
+			$sql_extra .= ' AND item.id <= '.intval($max_id);
 		if ($exclude_replies > 0)
-			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
+			$sql_extra .= ' AND item.parent = item.id';
 
 		if (api_user() != $user_info['uid']) {
 			$observer = App::get_observer();
@@ -1297,7 +1297,7 @@ require_once('include/api_auth.php');
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
 		if ($max_id > 0)
-			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
+			$sql_extra = 'AND item.id <= '.intval($max_id);
 		require_once('include/security.php');
 		$item_normal = item_normal();
 
@@ -1358,9 +1358,9 @@ require_once('include/api_auth.php');
 
 		$sql_extra = '';
 		if ($conversation)
-			$sql_extra .= " AND `item`.`parent` = %d  ORDER BY `received` ASC ";
+			$sql_extra .= " AND item.parent = %d  ORDER BY received ASC ";
 		else
-			$sql_extra .= " AND `item`.`id` = %d";
+			$sql_extra .= " AND item.id = %d";
 
 		$item_normal = item_normal();
 		$r = q("select * from item where true $item_normal $sql_extra",
@@ -1591,24 +1591,24 @@ require_once('include/api_auth.php');
 		$start = $page*$count;
 
 		$sql_extra = '';
-		if ($user_info['self']==1) $sql_extra .= " AND `item`.`wall` = 1 ";
+		if ($user_info['self']==1) $sql_extra .= " AND item.wall = 1 ";
 
 //FIXME - this isn't yet implemented
-		if ($exclude_replies > 0)  $sql_extra .= ' AND `item`.`parent` = `item`.`id`';
+		if ($exclude_replies > 0)  $sql_extra .= ' AND item.parent = item.id';
 
-// 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-// 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-// 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-// 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-// 			FROM `item`, `contact`
-// 			WHERE `item`.`uid` = %d
-// 			AND `item`.`contact-id` = %d
-// 			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-// 			AND `contact`.`id` = `item`.`contact-id`
-// 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+// 	$r = q("SELECT item.*, item.id AS item_id, 
+// 			contact.name, contact.photo, contact.url, contact.rel,
+// 			contact.network, contact.thumb, contact.dfrn_id, contact.self,
+// 			contact.id AS cid, contact.uid AS contact-uid
+// 			FROM item, contact
+// 			WHERE item.uid = %d
+// 			AND item.contact-id = %d
+// 			AND item.visible = 1 and item.moderated = 0 AND item.deleted = 0
+// 			AND contact.id = item.contact-id
+// 			AND contact.blocked = 0 AND contact.pending = 0
 // 			$sql_extra
-// 			AND `item`.`id`>%d
-// 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+// 			AND item.id>%d
+// 			ORDER BY item.received DESC LIMIT %d ,%d ",
 // 			intval(api_user()),
 // 			intval($user_info['id']),
 // 			intval($since_id),
@@ -1741,9 +1741,9 @@ require_once('include/api_auth.php');
 
 		$sql_extra = '';
 		if ($max_id > 0)
-			$sql_extra .= ' AND `item`.`id` <= '.intval($max_id);
+			$sql_extra .= ' AND item.id <= '.intval($max_id);
 		if ($exclude_replies > 0)
-			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
+			$sql_extra .= ' AND item.parent = item.id';
 
 		if (api_user() != $user_info['uid']) {
 			$observer = App::get_observer();
@@ -2118,7 +2118,7 @@ require_once('include/api_auth.php');
 	api_register_func('api/statusnet/config','api_statusnet_config',false);
 	api_register_func('api/friendica/config','api_statusnet_config',false);
 	api_register_func('api/red/config','api_statusnet_config',false);
-	api_register_func('api/hz/1.0/config','api_statusnet_config',false);
+	api_register_func('api/z/1.0/config','api_statusnet_config',false);
 
 	function api_statusnet_version($type) {
 
@@ -2153,7 +2153,7 @@ require_once('include/api_auth.php');
 	}
 	api_register_func('api/friendica/version','api_friendica_version',false);
 	api_register_func('api/red/version','api_friendica_version',false);
-	api_register_func('api/hz/1.0/version','api_friendica_version',false);
+	api_register_func('api/z/1.0/version','api_friendica_version',false);
 
 
 	function api_ff_ids($type,$qtype) {
@@ -2213,7 +2213,7 @@ require_once('include/api_auth.php');
 
 		// in a decentralised world the screen name is ambiguous
 
-		$r = q("SELECT `abook_id` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d and xchan_addr like '%s'",
+		$r = q("SELECT abook_id FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel=%d and xchan_addr like '%s'",
 				intval(api_user()),
 				dbesc($_POST['screen_name'] . '@%')
 		);
@@ -2222,7 +2222,7 @@ require_once('include/api_auth.php');
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
-			$r = q('SELECT `parent_mid`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
+			$r = q('SELECT parent_mid, title FROM mail WHERE uid=%d AND id=%d',
 					intval(api_user()),
 					intval($_REQUEST['replyto']));
 			$replyto = $r[0]['parent_mid'];
@@ -2239,8 +2239,8 @@ require_once('include/api_auth.php');
 
 		$id = send_message(api_user(),$recipient['guid'], $_POST['text'], $sub, $replyto);
 
-		if ($id>-1) {
-			$r = q("SELECT * FROM `mail` WHERE id=%d", intval($id));
+		if ($id > (-1)) {
+			$r = q("SELECT * FROM mail WHERE id = %d", intval($id));
 			$ret = api_format_message($r[0], $recipient, $sender);
 		
 		} else {
@@ -2275,19 +2275,19 @@ require_once('include/api_auth.php');
 
 		$profile_url = z_root() . '/channel/' . $channel['channel_address'];
 		if ($box=="sentbox") {
-			$sql_extra = "`from_xchan`='".dbesc( $channel['channel_hash'] )."'";
+			$sql_extra = "from_xchan = '".dbesc( $channel['channel_hash'] )."'";
 		}
 		elseif ($box=="conversation") {
-			$sql_extra = "`parent_mid`='".dbesc( $_GET["uri"] )  ."'";
+			$sql_extra = "parent_mid = '".dbesc( $_GET["uri"] )  ."'";
 		}
 		elseif ($box=="all") {
 			$sql_extra = "true";
 		}
 		elseif ($box=="inbox") {
-			$sql_extra = "`from_xchan`!='".dbesc( $channel['channel_hash'] )."'";
+			$sql_extra = "from_xchan != '".dbesc( $channel['channel_hash'] )."'";
 		}
 		
-		$r = q("SELECT * FROM `mail` WHERE channel_id = %d AND $sql_extra ORDER BY created DESC LIMIT %d OFFSET %d",
+		$r = q("SELECT * FROM mail WHERE channel_id = %d AND $sql_extra ORDER BY created DESC LIMIT %d OFFSET %d",
 				intval(api_user()),
 				intval($count), intval($start)
 		);

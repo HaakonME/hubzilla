@@ -183,7 +183,7 @@ class Photo extends \Zotlabs\Web\Controller {
 					// they won't have the photo link, so there's a reasonable chance that the person
 					// might be able to obtain permission to view it.
 	
-					$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `imgscale` = %d LIMIT 1",
+					$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND imgscale = %d LIMIT 1",
 						dbesc($photo),
 						intval($resolution)
 					);

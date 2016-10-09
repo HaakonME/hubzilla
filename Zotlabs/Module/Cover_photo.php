@@ -309,7 +309,7 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 					$havescale = true;
 			}
 	
-			$r = q("SELECT `content`, `mimetype`, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
+			$r = q("SELECT content, mimetype, resource_id, os_storage FROM photo WHERE id = %d and uid = %d limit 1",
 				intval($r[0]['id']),
 				intval(local_channel())
 	

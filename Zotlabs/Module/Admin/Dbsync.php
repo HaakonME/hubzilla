@@ -42,7 +42,7 @@ class Dbsync {
 		}
 	
 		$failed = array();
-		$r = q("select * from config where `cat` = 'database' ");
+		$r = q("select * from config where cat = 'database' ");
 		if(count($r)) {
 			foreach($r as $rr) {
 				$upd = intval(substr($rr['k'],8));

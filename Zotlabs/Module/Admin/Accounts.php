@@ -133,10 +133,9 @@ class Accounts {
 		$base = z_root() . '/admin/accounts?f=';
 		$odir = (($dir === 'asc') ? '0' : '1');
 	
-		$users = q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
-				"(SELECT %s FROM channel as ch " .
-				"WHERE ch.channel_account_id = ac.account_id and ch.channel_removed = 0 ) as `channels` " .
-			"FROM account as ac where true $serviceclass order by $key $dir limit %d offset %d ",
+		$users = q("SELECT account_id , account_email, account_lastlog, account_created, account_expires, account_service_class, ( account_flags & %d ) > 0 as blocked, 
+			(SELECT %s FROM channel as ch WHERE ch.channel_account_id = ac.account_id and ch.channel_removed = 0 ) as channels FROM account as ac 
+			where true $serviceclass order by $key $dir limit %d offset %d ",
 			intval(ACCOUNT_BLOCKED),
 			db_concat('ch.channel_address', ' '),
 			intval(\App::$pager['itemspage']),

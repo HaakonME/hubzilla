@@ -3372,7 +3372,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 					}
 				}
 				if(! $found) {
-					$r = q("INSERT INTO `groups` ( hash, uid, visible, deleted, gname )
+					$r = q("INSERT INTO groups ( hash, uid, visible, deleted, gname )
 						VALUES( '%s', %d, %d, %d, '%s' ) ",
 						dbesc($cl['collection']),
 						intval($channel['channel_id']),
@@ -3446,7 +3446,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 							// if somebody is in the group that wasn't before - add them
 
 							if(! $found) {
-								q("INSERT INTO `group_member` (`uid`, `gid`, `xchan`)
+								q("INSERT INTO group_member (uid, gid, xchan)
 									VALUES( %d, %d, '%s' ) ",
 									intval($channel['channel_id']),
 									intval($y['id']),

@@ -149,7 +149,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 					if($is_default_profile) {
 						$r = q("UPDATE photo SET photo_usage = %d WHERE photo_usage = %d
-							AND resource_id != '%s' AND `uid` = %d",
+							AND resource_id != '%s' AND uid = %d",
 							intval(PHOTO_NORMAL),
 							intval(PHOTO_PROFILE),
 							dbesc($base_image['resource_id']),

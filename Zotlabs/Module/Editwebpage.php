@@ -95,7 +95,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 
 		$sql_extra = item_permissions_sql($owner);
 
-		$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s $sql_extra LIMIT 1",
+		$itm = q("SELECT * FROM item WHERE id = %d and uid = %s $sql_extra LIMIT 1",
 			intval($post_id),
 			intval($owner)
 		);

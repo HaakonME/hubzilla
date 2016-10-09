@@ -96,7 +96,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		$profile_id = $_POST['profile_assign'];
 		if($profile_id) {
-			$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND `uid` = %d LIMIT 1",
+			$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND uid = %d LIMIT 1",
 				dbesc($profile_id),
 				intval(local_channel())
 			);

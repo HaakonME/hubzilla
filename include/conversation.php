@@ -269,8 +269,8 @@ function localize_item(&$item){
 // (and update to json storage)
 
  	if (activity_match($item['verb'],ACTIVITY_TAG)) {
-		$r = q("SELECT * from `item`,`contact` WHERE 
-		`item`.`contact-id`=`contact`.`id` AND `item`.`mid`='%s';",
+		$r = q("SELECT * from item,contact WHERE 
+		item.contact-id=contact.id AND item.mid='%s';",
 		 dbesc($item['parent_mid']));
 		if(count($r)==0) return;
 		$obj=$r[0];

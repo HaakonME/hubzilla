@@ -540,7 +540,7 @@ function identity_basic_export($channel_id, $items = false) {
 			$ret['hubloc'] = $r;
 	}
 
-	$r = q("select * from `groups` where uid = %d ",
+	$r = q("select * from groups where uid = %d ",
 		intval($channel_id)
 	);
 
@@ -903,7 +903,7 @@ function profile_load($nickname, $profile = '') {
 	// fetch user tags if this isn't the default profile
 
 	if(! $p[0]['is_default']) {
-		$x = q("select `keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
+		$x = q("select keywords from profile where uid = %d and is_default = 1 limit 1",
 				intval($p[0]['profile_uid'])
 		);
 		if($x && $can_view_profile)

@@ -289,7 +289,7 @@ class Channel {
 		$yes_no = array(t('No'),t('Yes'));
 	
 	
-		$p = q("SELECT * FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
+		$p = q("SELECT * FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1",
 			intval(local_channel())
 		);
 		if(count($p))

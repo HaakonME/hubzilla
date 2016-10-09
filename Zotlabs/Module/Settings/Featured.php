@@ -19,7 +19,7 @@ class Featured {
 	
 		$o = '';
 			
-		$r = q("SELECT * FROM `hook` WHERE `hook` = 'feature_settings' ");
+		$r = q("SELECT * FROM hook WHERE hook = 'feature_settings' ");
 		if(! $r)
 			$settings_addons = t('No feature settings configured');
 	

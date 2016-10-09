@@ -392,7 +392,7 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 
 
 	if($updateseen) {
-		$r = q("UPDATE `mail` SET mail_seen = 1 where mail_seen = 0 and id = %d AND channel_id = %d",
+		$r = q("UPDATE mail SET mail_seen = 1 where mail_seen = 0 and id = %d AND channel_id = %d",
 			dbesc($messageitem_id),
 			intval($channel_id)
 		);
@@ -516,7 +516,7 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 
 
 	if($updateseen) {
-		$r = q("UPDATE `mail` SET mail_seen = 1 where mail_seen = 0 and parent_mid = '%s' AND channel_id = %d",
+		$r = q("UPDATE mail SET mail_seen = 1 where mail_seen = 0 and parent_mid = '%s' AND channel_id = %d",
 			dbesc($r[0]['parent_mid']),
 			intval($channel_id)
 		);

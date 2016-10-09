@@ -25,7 +25,7 @@ class Editpost extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		$itm = q("SELECT * FROM `item` WHERE `id` = %d AND ( owner_xchan = '%s' OR author_xchan = '%s' ) LIMIT 1",
+		$itm = q("SELECT * FROM item WHERE id = %d AND ( owner_xchan = '%s' OR author_xchan = '%s' ) LIMIT 1",
 			intval($post_id),
 			dbesc(get_observer_hash()),
 			dbesc(get_observer_hash())

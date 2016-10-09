@@ -111,7 +111,7 @@ class Invite extends \Zotlabs\Web\Controller {
 				$invite_code = autoname(8) . rand(1000,9999);
 				$nmessage = str_replace('$invite_code',$invite_code,$message);
 	
-				$r = q("INSERT INTO `register` (`hash`,`created`) VALUES ('%s', '%s') ",
+				$r = q("INSERT INTO register (hash,created) VALUES ('%s', '%s') ",
 					dbesc($invite_code),
 					dbesc(datetime_convert())
 				);

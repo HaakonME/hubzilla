@@ -1717,7 +1717,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		// find the parent and snarf the item id and ACL's
 		// and anything else we need to inherit
 
-		$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC LIMIT 1",
+		$r = q("SELECT * FROM item WHERE mid = '%s' AND uid = %d ORDER BY id ASC LIMIT 1",
 			dbesc($arr['parent_mid']),
 			intval($arr['uid'])
 		);
@@ -1749,8 +1749,8 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 			if($r[0]['mid'] != $r[0]['parent_mid']) {
 				$arr['parent_mid'] = $r[0]['parent_mid'];
-				$z = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `parent_mid` = '%s' AND `uid` = %d
-					ORDER BY `id` ASC LIMIT 1",
+				$z = q("SELECT * FROM item WHERE mid = '%s' AND parent_mid = '%s' AND uid = %d
+					ORDER BY id ASC LIMIT 1",
 					dbesc($r[0]['parent_mid']),
 					dbesc($r[0]['parent_mid']),
 					intval($arr['uid'])
@@ -1801,7 +1801,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	if($parent_deleted)
 		$arr['item_deleted'] = 1;
 
-	$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
+	$r = q("SELECT id FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 		dbesc($arr['mid']),
 		intval($arr['uid'])
 	);
@@ -1863,7 +1863,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	// find the item we just created
 
-	$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
+	$r = q("SELECT * FROM item WHERE mid = '%s' AND uid = %d ORDER BY id ASC ",
 		$arr['mid'],           // already dbesc'd
 		intval($arr['uid'])
 	);
@@ -1880,7 +1880,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	}
 	if(count($r) > 1) {
 		logger('item_store: duplicated post occurred. Removing duplicates.');
-		q("DELETE FROM `item` WHERE `mid` = '%s' AND `uid` = %d AND `id` != %d ",
+		q("DELETE FROM item WHERE mid = '%s' AND uid = %d AND id != %d ",
 			$arr['mid'],
 			intval($arr['uid']),
 			intval($current_post)
@@ -2177,7 +2177,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		$str .= " `" . $k . "` = '" . $v . "' ";
 	}
 
-	$r = dbq("update `item` set " . $str . " where id = " . $orig_post_id );
+	$r = dbq("update item set " . $str . " where id = " . $orig_post_id );
 
 	if($r)
 		logger('item_store_update: updated item ' . $orig_post_id, LOGGER_DEBUG);
@@ -3066,7 +3066,7 @@ function mail_store($arr) {
 		$arr['parent_mid'] = $arr['mid'];
 	}
 
-	$r = q("SELECT `id` FROM mail WHERE `mid` = '%s' AND channel_id = %d LIMIT 1",
+	$r = q("SELECT id FROM mail WHERE mid = '%s' AND channel_id = %d LIMIT 1",
 		dbesc($arr['mid']),
 		intval($arr['channel_id'])
 	);
@@ -3100,7 +3100,7 @@ function mail_store($arr) {
 
 	// find the item we just created
 
-	$r = q("SELECT `id` FROM mail WHERE `mid` = '%s' AND `channel_id` = %d ORDER BY `id` ASC ",
+	$r = q("SELECT id FROM mail WHERE mid = '%s' AND channel_id = %d ORDER BY id ASC ",
 		$arr['mid'],           // already dbesc'd
 		intval($arr['channel_id'])
 	);
@@ -3116,7 +3116,7 @@ function mail_store($arr) {
 	}
 	if(count($r) > 1) {
 		logger('mail_store: duplicated post occurred. Removing duplicates.');
-		q("DELETE FROM mail WHERE `mid` = '%s' AND `channel_id` = %d AND `id` != %d ",
+		q("DELETE FROM mail WHERE mid = '%s' AND channel_id = %d AND id != %d ",
 			$arr['mid'],
 			intval($arr['channel_id']),
 			intval($current_post)
@@ -3168,7 +3168,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 			if($x) {
 				$res = substr($i,$x+1);
 				$i = substr($i,0,$x);
-				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `imgscale` = %d AND `uid` = %d",
+				$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND imgscale = %d AND uid = %d",
 					dbesc($i),
 					intval($res),
 					intval($uid)
@@ -3883,8 +3883,8 @@ function zot_feed($uid,$observer_hash,$arr) {
 		$sys_query = ((is_sys_channel($uid)) ? $sql_extra : '');
 		$item_normal = item_normal();
 
-		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item`
-			WHERE `item`.`parent` IN ( %s ) $item_normal $sys_query ",
+		$items = q("SELECT item.*, item.id AS item_id FROM item
+			WHERE item.parent IN ( %s ) $item_normal $sys_query ",
 			dbesc($parents_str)
 		);
 	}
@@ -3952,7 +3952,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$sql_extra .= protect_sprintf(term_query('item', $arr['cat'], TERM_CATEGORY));
 
 	if($arr['gid'] && $uid) {
-		$r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
+		$r = q("SELECT * FROM groups WHERE id = %d AND uid = %d LIMIT 1",
 			intval($arr['group']),
 			intval($uid)
 		);

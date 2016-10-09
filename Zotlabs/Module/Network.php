@@ -201,7 +201,7 @@ class Network extends \Zotlabs\Web\Controller {
 	
 		$sql_nets = '';
 	
-		$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE item_thread_top = 1 $sql_options ) ";
+		$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE item_thread_top = 1 $sql_options ) ";
 	
 		if($group) {
 			$contact_str = '';

@@ -80,7 +80,7 @@ class Editblock extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
+		$itm = q("SELECT * FROM item WHERE id = %d and uid = %s LIMIT 1",
 			intval($post_id),
 			intval($owner)
 		);

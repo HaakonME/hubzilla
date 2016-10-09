@@ -55,7 +55,7 @@ class Profperm extends \Zotlabs\Web\Controller {
 	
 	
 		if((argc() > 1) && (intval(argv(1)))) {
-			$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
+			$r = q("SELECT * FROM profile WHERE id = %d AND uid = %d AND is_default = 0 LIMIT 1",
 				intval(argv(1)),
 				intval(local_channel())
 			);

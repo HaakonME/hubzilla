@@ -45,7 +45,7 @@ class Tasks extends \Zotlabs\Web\Controller {
 	
 		if((argc() > 2) && (argv(1) === 'complete') && intval(argv(2))) {
 			$ret = array('success' => false);
-			$r = q("select * from event where `etype` = 'task' and uid = %d and id = %d limit 1",
+			$r = q("select * from event where etype = 'task' and uid = %d and id = %d limit 1",
 				intval(local_channel()),
 				intval(argv(2))
 			);

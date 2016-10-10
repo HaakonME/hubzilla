@@ -268,7 +268,7 @@ function bb2dmention_callback($match) {
 }
 
 
-function bb2diaspora_itemwallwall(&$item) {
+function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 
 	// We will provide wallwall (embedded author on the Diaspora side) if
 	//  1. It is a wall-to-wall post
@@ -302,6 +302,9 @@ function bb2diaspora_itemwallwall(&$item) {
 		}
 	}
 
+	if($uplink)
+		$wallwall = true;
+
 	if(($wallwall) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_s']) {
 		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
@@ -318,7 +321,7 @@ function bb2diaspora_itemwallwall(&$item) {
 }
 
 
-function bb2diaspora_itembody($item, $force_update = false, $have_channel = false) {
+function bb2diaspora_itembody($item, $force_update = false, $have_channel = false, $uplink) {
 
 
 	if(! get_iconfig($item,'diaspora','fields')) {
@@ -362,7 +365,7 @@ function bb2diaspora_itembody($item, $force_update = false, $have_channel = fals
 	}
 
 	if(! $have_channel)
-		bb2diaspora_itemwallwall($newitem);
+		bb2diaspora_itemwallwall($newitem,$uplink);
 
 	$title = $newitem['title'];
 	$body  = preg_replace('/\#\^http/i', 'http', $newitem['body']);

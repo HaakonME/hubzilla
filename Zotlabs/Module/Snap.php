@@ -58,6 +58,9 @@ class Snap extends \Zotlabs\Web\Controller {
 		else
 			killme();	
 
+		if(! in_array(strtolower($_SERVER['REQUEST_METHOD']),['propfind','get','head']))
+			killme(); 
+
 		$auth = new \Zotlabs\Storage\BasicAuth();
 		$auth->setRealm(ucfirst(\Zotlabs\Lib\System::get_platform_name()) . 'WebDAV');
 

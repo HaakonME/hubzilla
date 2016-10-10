@@ -536,9 +536,6 @@ require_once('include/api_auth.php');
 	api_register_func('api/z/1.0/files','api_attach_list', true);
 
 
-
-
-
 	function api_file_meta($type) {
 		if (api_user()===false) return false;
 		if(! $_REQUEST['file_id']) return false;
@@ -601,7 +598,19 @@ require_once('include/api_auth.php');
 	api_register_func('api/red/filedata', 'api_file_data', true);
 	api_register_func('api/z/1.0/filedata', 'api_file_data', true);
 
+	function api_file_export($type) {
+		if (api_user()===false) return false;
+		if(! $_REQUEST['file_id']) return false;
 
+		$ret = attach_export_data(api_user(),$_REQUEST['file_id']);
+		if($ret) {
+			json_return_and_die($ret);
+		}
+		killme();
+	}
+
+	api_register_func('api/red/file/export', 'api_file_export', true);
+	api_register_func('api/z/1.0/file/export', 'api_file_export', true);
 
 	function api_file_detail($type) {
 		if (api_user()===false) return false;
@@ -623,6 +632,10 @@ require_once('include/api_auth.php');
 		}
 		killme();
 	}
+
+
+
+
 
 	api_register_func('api/red/file', 'api_file_detail', true);
 	api_register_func('api/z/1.0/file', 'api_file_detail', true);

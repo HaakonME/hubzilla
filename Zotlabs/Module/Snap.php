@@ -58,6 +58,15 @@ class Snap extends \Zotlabs\Web\Controller {
 		else
 			killme();	
 
+		if($_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_USER'] !== $which)
+			killme();
+
+		if(local_channel()) {
+			$c = \App::get_channel();
+			if($c && $c['channel_address'] !== $which)
+				killme();
+		}
+
 		if(! in_array(strtolower($_SERVER['REQUEST_METHOD']),['propfind','get','head']))
 			killme(); 
 

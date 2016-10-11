@@ -3005,7 +3005,7 @@ function text_highlight($s,$lang) {
 // echo (($xml->asXML('data.xml')) ? 'Your XML file has been generated successfully!' : 'Error generating XML file!');
 
 function arrtoxml($root_elem,$arr) {
-	$xml = new SimpleXMLElement('<' . $root_elem . '/>');
+	$xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><' . $root_elem . '></' . $root_elem . '>', null, false);
 	array2XML($xml,$arr);
 	return $xml->asXML();
 }

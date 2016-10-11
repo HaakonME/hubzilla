@@ -118,7 +118,11 @@ require_once('include/api_auth.php');
 					break;
 				case "json":
 					header ("Content-Type: application/json");
-					$json = json_encode((is_array($r[0])) ? $r[0] : array());
+					if($r) {
+						foreach($r as $rv) {
+							$json = json_encode($rv);
+						}
+					}
 					// Lookup JSONP to understand these lines. They provide cross-domain AJAX ability.
 					if ($_GET['callback'])
 						$json = $_GET['callback'] . '(' . $json . ')' ;
@@ -133,7 +137,12 @@ require_once('include/api_auth.php');
 					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 					break;
 				case "as":
-					return json_encode($r);
+					if($r) {
+						foreach($r as $rv) {
+							$json = json_encode($rv);
+						}
+					}
+					return $json;
 					break;
 
 			}
@@ -338,7 +347,6 @@ require_once('include/api_auth.php');
 		$x = api_get_status($uinfo[0]['xchan_hash']);
 		if($x)
 			$ret['status'] = $x;
-
 //		logger('api_get_user: ' . print_r($ret,true));
 
 		return $ret;
@@ -450,9 +458,11 @@ require_once('include/api_auth.php');
 				$ret = replace_macros($tpl, $data);
 				break;
 			case "json":
+			default:
 				$ret = $data;
 				break;
 		}
+
 		return $ret;
 	}
 	
@@ -465,7 +475,6 @@ require_once('include/api_auth.php');
 	function api_account_verify_credentials( $type){
 		if (api_user()===false) return false;
 		$user_info = api_get_user($a);
-		
 		return api_apply_template("user", $type, array('$user' => $user_info));
 
 	}

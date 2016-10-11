@@ -50,9 +50,8 @@ class Cron {
 
 		// expire any expired items
 
-		$r = q("select id from item where expires > '%s' and expires < %s 
+		$r = q("select id from item where expires > '2001-01-01 00:00:00' and expires < %s 
 			and item_deleted = 0 ",
-			dbesc(NULL_DATE),
 			db_utcnow()
 		);
 		if($r) {

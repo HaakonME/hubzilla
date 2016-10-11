@@ -1948,9 +1948,9 @@ function get_attach_binname($s) {
 
 
 function get_dirpath_by_cloudpath($channel, $path) {
-	
-	// Warning: Do not edit the following line. The first symbol is UTF-8 &#65312; 
-	$path = str_replace('@','@',notags(trim($path)));		
+
+	// Warning: Do not edit the following line. The first symbol is UTF-8 (U+FF20) &#65312;
+	$path = str_replace('＠', '@', notags(trim($path)));
 
 	$h = @parse_url($path);
 

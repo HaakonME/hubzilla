@@ -309,9 +309,12 @@ function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
 		$item['body'] = "\n\n" 
+			. '[quote]' 
 			. '[img]' . $item['author']['xchan_photo_s'] . '[/img]' 
-			. '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]' . "\n\n" 
-			. $item['body'];
+			. ' ' 
+			. '[url=' . $item['author']['xchan_url'] . '][b]' . $item['author']['xchan_name'] . '[/b][/url]' . "\n\n" 
+			. $item['body'] 
+			. '[/quote]';
 	}
 
 	// $item['author'] might cause a surprise further down the line if it wasn't expected to be here.

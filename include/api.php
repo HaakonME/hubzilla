@@ -62,7 +62,7 @@ require_once('include/api_zot.php');
 	}
 
 
-	function api_register_func($path, $func, $auth=false) {
+	function api_register_func($path, $func, $auth = false) {
 		\Zotlabs\Lib\Api_router::register($path,$func,$auth);
 	}
 
@@ -128,15 +128,6 @@ require_once('include/api_zot.php');
 						$r = $_GET['callback'] . '(' . $r . ')' ;
 					return $r; 
 					break;
-				case "rss":
-					header ("Content-Type: application/rss+xml");
-					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-					break;
-				case "atom":
-					header ("Content-Type: application/atom+xml");
-					return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
-					break;
-
 			}
 
 		}
@@ -170,7 +161,7 @@ require_once('include/api_zot.php');
 	 */
 
 	function api_rss_extra( $arr, $user_info){
-		if (is_null($user_info)) $user_info = api_get_user($a);
+		if (is_null($user_info)) $user_info = api_get_user();
 		$arr['$user'] = $user_info;
 		$arr['$rss'] = array(
 			'alternate' => $user_info['url'],
@@ -477,7 +468,7 @@ require_once('include/api_zot.php');
 	function api_account_verify_credentials($type){
 		if(api_user()===false) 
 			return false;
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 		return api_apply_template('user', $type, array('user' => $user_info));
 	}
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
@@ -508,7 +499,7 @@ require_once('include/api_zot.php');
 			logger('api_statuses_update: no user');
 			return false;
 		}
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 //		logger('status_with_media: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
 
@@ -564,7 +555,7 @@ require_once('include/api_zot.php');
 		$_REQUEST['api_source'] = true;
 
 
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		// convert $_POST array items to the form we use for web posts.
 
@@ -734,7 +725,7 @@ require_once('include/api_zot.php');
 	}
 
 	function api_status_show( $type){
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		// get last public message
 
@@ -812,7 +803,7 @@ require_once('include/api_zot.php');
  
 
 	function api_users_show( $type){
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		require_once('include/security.php');
 		$item_normal = item_normal();
@@ -887,7 +878,7 @@ require_once('include/api_zot.php');
 		if (api_user() === false) 
 			return false;
 
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 		// get last network messages
 
 
@@ -945,30 +936,17 @@ require_once('include/api_zot.php');
 			);
 		}
 
-
 		$data = array('$statuses' => $ret);
-		switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra( $data, $user_info);
-				break;
-			case "as":
-				$as = api_format_as( $ret, $user_info);
-				$as['title'] = App::$config['sitename']." Home Timeline";
-				$as['link']['url'] = z_root()."/".$user_info["screen_name"]."/all";
-				return($as);
-				break;
-		}
-
 		return  api_apply_template("timeline", $type, $data);
 	}
+
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
 
 	function api_statuses_public_timeline( $type){
 		if (api_user()===false) return false;
 
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		$sys = get_sys_channel();
 
@@ -1032,7 +1010,7 @@ require_once('include/api_zot.php');
 	function api_statuses_show( $type){
 		if (api_user()===false) return false;
 
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		// params
 		$id = intval(argv(3));
@@ -1082,7 +1060,7 @@ require_once('include/api_zot.php');
 	function api_statuses_repeat( $type){
 		if (api_user()===false) return false;
 
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		// params
 		$id = intval(argv(3));
@@ -1128,7 +1106,7 @@ require_once('include/api_zot.php');
 	function api_statuses_destroy( $type){
 		if (api_user()===false) return false;
 
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		// params
 		$id = intval(argv(3));
@@ -1192,7 +1170,7 @@ require_once('include/api_zot.php');
 	function api_statuses_mentions( $type){
 		if (api_user()===false) return false;
 				
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 		// get last network messages
 
 
@@ -1259,7 +1237,7 @@ require_once('include/api_zot.php');
 	function api_statuses_user_timeline( $type){
 		if (api_user()===false) return false;
 		
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 		// get last network messages
 
 
@@ -1340,17 +1318,16 @@ require_once('include/api_zot.php');
 	 *
 	 * api v1 : https://web.archive.org/web/20131019055350/https://dev.twitter.com/docs/api/1/post/favorites/create/%3Aid
 	 */
-	function api_favorites_create_destroy( $type){
+	function api_favorites_create_destroy($type){
 
-		logger('favorites_create_destroy');
-
-		if (api_user()===false) 
+		if(api_user() === false) 
 			return false;
 
-		$action = str_replace(".".$type,"",argv(2));
+		$action = str_replace('.' . $type,'',argv(2));
 		if (argc() > 3) {
 			$itemid = intval(argv(3));
-		} else {
+		}
+		else {
 			$itemid = intval($_REQUEST['id']);
 		}
 
@@ -1359,14 +1336,14 @@ require_once('include/api_zot.php');
 			intval(api_user())
 		);
 
-		if (! $item)
+		if(! $item)
 			return false;
 
         switch($action){
-            case "create":
+            case 'create':
                 $flags = $item[0]['item_starred'] = 1;
                 break;
-            case "destroy":
+            case 'destroy':
                 $flags = $item[0]['item_starred'] = 0;
                 break;
             default:
@@ -1388,31 +1365,24 @@ require_once('include/api_zot.php');
 
 		xchan_query($item,true);
 
-
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 		$rets = api_format_items($item,$user_info);
 		$ret = $rets[0];
 
-		$data = array('$status' => $ret);
-		switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra( $data, $user_info);
-		}
+		$data = array('status' => $ret);
 
-		return api_apply_template("status", $type, $data);
+		return api_apply_template('status', $type, $data);
 	}
 
 	api_register_func('api/favorites/create', 'api_favorites_create_destroy', true);
 	api_register_func('api/favorites/destroy', 'api_favorites_create_destroy', true);
 
 
-
 	function api_favorites( $type){
 		if (api_user()===false) 
 			return false;
 
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 
 		// params
 		$count	       = (x($_REQUEST,'count')?$_REQUEST['count']:20);
@@ -1457,27 +1427,12 @@ require_once('include/api_zot.php');
 
 		$ret = api_format_items($r,$user_info);
 
-		$data = array('$statuses' => $ret);
-		switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra( $data, $user_info);
-				break;
-			case "as":
-				$as = api_format_as( $ret, $user_info);
-				$as['title'] = App::$config['sitename']." Home Timeline";
-				$as['link']['url'] = z_root()."/".$user_info["screen_name"]."/all";
-				return($as);
-				break;
-		}
-
-		return  api_apply_template("timeline", $type, $data);
+		$data = array('statuses' => $ret);
+		return(api_apply_template("timeline", $type, $data));
 
 	}
 
 	api_register_func('api/favorites','api_favorites', true);
-
-
 
 
 	function api_format_as( $ret, $user_info) {
@@ -1700,7 +1655,7 @@ require_once('include/api_zot.php');
 		else
 			$ok = "ok";
 
-		return api_apply_template('test', $type, array('$ok' => $ok));
+		return api_apply_template('test', $type, array('ok' => $ok));
 
 	}
 	api_register_func('api/help/test','api_help_test',false);
@@ -1712,7 +1667,7 @@ require_once('include/api_zot.php');
 	 **/
 	function api_statuses_f( $type, $qtype) {
 		if (api_user()===false) return false;
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 		
 		
 		// friends and followers only for self
@@ -1731,37 +1686,48 @@ require_once('include/api_zot.php');
 			return false;
 		}
 		
-// @fixme - update for hubzilla extensible perms using abconfig or find a better way to do it
-		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
-		// This won't work if either of you send your stream to everybody on the network
-		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( abook_their_perms & %d )>0 and ( abook_my_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
-		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
- 
-		$r = q("SELECT abook_id FROM abook where abook_self = 0 and abook_channel = %d $sql_extra",
-			intval(api_user())
-		);
 
-		$ret = array();
-		foreach($r as $cid){
-			$ret[] = api_get_user( $cid['abook_id']);
+
+
+		if($qtype == 'friends') {
+			$r = q("select abook_id from abook left join abconfig on abook_xchan = xchan and abook_channel = chan 
+				where chan = %d and abook_self = 0 and abook_pending = 0 and cat = 'my_perms' and k = 'view_stream' and v = '1' ",
+				intval(api_user())
+			);
 		}
 
-		
-		return array('$users' => $ret);
+		if($qtype == 'followers') {
+			$r = q("select abook_id from abook left join abconfig on abook_xchan = xchan and abook_channel = chan 
+				where chan = %d and abook_self = 0 and abook_pending = 0 and cat = 'their_perms' and k = 'view_stream' and v = '1' ",
+				intval(api_user())
+			);
+		}
+
+		$ret = array();
+
+		if($r) {
+			foreach($r as $cid) {
+				$ret[] = api_get_user($cid['abook_id']);
+			}
+		}
+
+		return array('users' => $ret);
 
 	}
-	function api_statuses_friends( $type){
-		$data =  api_statuses_f($type,"friends");
-		if ($data===false) return false;
-		return  api_apply_template("friends", $type, $data);
+
+	function api_statuses_friends($type){
+		$data = api_statuses_f($type,'friends');
+		if($data === false)
+			return false;
+		return(api_apply_template('friends', $type, $data));
 	}
-	function api_statuses_followers( $type){
-		$data = api_statuses_f($type,"followers");
-		if ($data===false) return false;
-		return  api_apply_template("friends", $type, $data);
+	function api_statuses_followers($type){
+		$data = api_statuses_f($type,'followers');
+		if ($data === false)
+			return false;
+		return(api_apply_template('friends', $type, $data));
 	}
+
 	api_register_func('api/statuses/friends','api_statuses_friends',true);
 	api_register_func('api/statuses/followers','api_statuses_followers',true);
 
@@ -1772,33 +1738,50 @@ require_once('include/api_zot.php');
 
 	function api_statusnet_config($type) {
 
-		load_config('system');
-
-		$name   = get_config('system','sitename');
-		$server = App::get_hostname();
-		$logo   = z_root() . '/images/hz-64.png';
-		$email  = get_config('system','admin_email');
-		$closed = ((get_config('system','register_policy') == REGISTER_CLOSED) ? 'true' : 'false');
-		$private = ((get_config('system','block_public')) ? 'true' : 'false');
-		$textlimit = (string) ((get_config('system','max_import_size')) ? get_config('system','max_import_size') : 200000);
+		$name      = get_config('system','sitename');
+		$server    = App::get_hostname();
+		$logo      = z_root() . '/images/hz-64.png';
+		$email     = get_config('system','admin_email');
+		$closed    = ((get_config('system','register_policy') == REGISTER_CLOSED) ? true : false);
+		$private   = ((get_config('system','block_public')) ? true : false);
+		$textlimit = ((get_config('system','max_import_size')) ? get_config('system','max_import_size') : 200000);
 		if(get_config('system','api_import_size'))
-			$texlimit = string(get_config('system','api_import_size'));
-		$ssl = ((get_config('system','have_ssl')) ? 'true' : 'false');
-		$sslserver = (($ssl === 'true') ? str_replace('http:','https:',z_root()) : '');
+			$texlimit = get_config('system','api_import_size');
 
-		$config = array(
-			'site' => array('name' => $name,'server' => $server, 'theme' => 'default', 'path' => '',
-			'logo' => $logo, 'fancy' => 'true', 'language' => 'en', 'email' => $email, 'broughtby' => '',
-			'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
-			'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
-			'shorturllength' => '30',
-        	'hubzilla' => array(
-				'PLATFORM_NAME' => Zotlabs\Lib\System::get_platform_name(),
-				'STD_VERSION' => Zotlabs\Lib\System::get_project_version(),
-				'ZOT_REVISION' => ZOT_REVISION,
-				'DB_UPDATE_VERSION' => Zotlabs\Lib\System::get_update_version()
-			)
-		));  
+		$m = parse_url(z_root());
+
+		$ssl = (($m['scheme'] === 'https') ? true : false);
+		$sslserver = (($ssl) ? str_replace('http:','https:',z_root()) : '');
+
+		$config = [
+			'site' => [ 
+				'name'           => $name,
+				'server'         => $server, 
+				'theme'          => 'default', 
+				'path'           => '',
+				'logo'           => $logo, 
+				'fancy'          => true, 
+				'language'       => 'en', 
+				'email'          => $email, 
+				'broughtby'      => '',
+				'broughtbyurl'   => '', 
+				'timezone'       => 'UTC', 
+				'closed'         => $closed, 
+				'inviteonly'     => false,
+				'private'        => $private, 
+				'textlimit'      => $textlimit, 
+				'sslserver'      => $sslserver, 
+				'ssl'            => $ssl,
+				'shorturllength' => 30,
+    
+		    	'platform' => [
+					'PLATFORM_NAME' => Zotlabs\Lib\System::get_platform_name(),
+					'STD_VERSION' => Zotlabs\Lib\System::get_project_version(),
+					'ZOT_REVISION' => ZOT_REVISION,
+					'DB_UPDATE_VERSION' => Zotlabs\Lib\System::get_update_version()
+				]
+			]
+		];  
 
 		return api_apply_template('config', $type, array('config' => $config));
 
@@ -1845,23 +1828,25 @@ require_once('include/api_zot.php');
 
 
 	function api_ff_ids($type,$qtype) {
+
 		if(! api_user())
 			return false;
 
+		if($qtype == 'friends') {
+			$r = q("select abook_id from abook left join abconfig on abook_xchan = xchan and abook_channel = chan 
+				where chan = %d and abook_self = 0 and abook_pending = 0 and cat = 'my_perms' and k = 'view_stream' and v = '1' ",
+				intval(api_user())
+			);
+		}
 
-		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
-		// This won't work if either of you send your stream to everybody on the network
+		if($qtype == 'followers') {
+			$r = q("select abook_id from abook left join abconfig on abook_xchan = xchan and abook_channel = chan 
+				where chan = %d and abook_self = 0 and abook_pending = 0 and cat = 'their_perms' and k = 'view_stream' and v = '1' ",
+				intval(api_user())
+			);
+		}
 
-		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( abook_their_perms & %d )>0 and ( abook_my_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
-		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( abook_my_perms & %d )>0 and not ( abook_their_perms & %d )>0 ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
- 
-		$r = q("SELECT abook_id FROM abook where abook_self = 0 and abook_channel = %d $sql_extra",
-			intval(api_user())
-		);
-
-		if(is_array($r)) {
+		if($r) {
 			if($type === 'xml') {
 				header("Content-type: application/xml");
 				echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<ids>' . "\r\n";
@@ -1895,29 +1880,34 @@ require_once('include/api_zot.php');
 		
 		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
 
-		$sender = api_get_user($a);
+		$sender = api_get_user();
 		
 		require_once("include/message.php");
 
 		// in a decentralised world the screen name is ambiguous
 
-		$r = q("SELECT abook_id FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel=%d and xchan_addr like '%s'",
-				intval(api_user()),
-				dbesc($_POST['screen_name'] . '@%')
+		$r = q("SELECT abook_id FROM abook left join xchan on abook_xchan = xchan_hash 
+			WHERE abook_channel = %d and xchan_addr like '%s'",
+			intval(api_user()),
+			dbesc($_POST['screen_name'] . '@%')
 		);
 
-		$recipient = api_get_user( $r[0]['abook_id']);			
-		$replyto = '';
-		$sub     = '';
-		if (x($_REQUEST,'replyto')) {
+		$recipient = api_get_user($r[0]['abook_id']);			
+		$replyto   = '';
+		$sub       = '';
+		
+		if(array_key_exists('replyto',$_REQUEST) && $_REQUEST['replyto']) {
 			$r = q('SELECT parent_mid, title FROM mail WHERE uid=%d AND id=%d',
-					intval(api_user()),
-					intval($_REQUEST['replyto']));
-			$replyto = $r[0]['parent_mid'];
-			$sub     = $r[0]['title'];
+				intval(api_user()),
+				intval($_REQUEST['replyto'])
+			);
+			if($r) {
+				$replyto = $r[0]['parent_mid'];
+				$sub     = $r[0]['title'];
+			}
 		}
 		else {
-			if (x($_REQUEST,'title')) {
+			if(x($_REQUEST,'title')) {
 				$sub = $_REQUEST['title'];
 			}
 			else {
@@ -1931,59 +1921,57 @@ require_once('include/api_zot.php');
 			$r = q("SELECT * FROM mail WHERE id = %d", intval($id));
 			$ret = api_format_message($r[0], $recipient, $sender);
 		
-		} else {
-			$ret = array("error"=>$id);	
+		} 
+		else {
+			$ret = [ 'error' => $id ];	
 		}
 		
-		$data = Array('$messages'=>$ret);
-		
-		switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra( $data, $user_info);
-		}
-				
-		return  api_apply_template("direct_messages", $type, $data);
+		$data = [ 'messages' => $ret ];
+		return(api_apply_template('direct_messages', $type, $data));
 				
 	}
+
 	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
 
 	function api_direct_messages_box( $type, $box) {
-		if (api_user()===false) return false;
+		if(api_user()===false) 
+			return false;
 		
-		$user_info = api_get_user($a);
+		$user_info = api_get_user();
 		
 		// params
-		$count = (x($_GET,'count')?$_GET['count']:20);
-		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-		if ($page<0) $page=0;
+		$count = (x($_GET,'count') ? $_GET['count'] : 20);
+		$page  = (x($_REQUEST,'page') ? $_REQUEST['page'] - 1 : 0);
+		if($page < 0) 
+			$page=0;
 		
-		$start = $page*$count;
+		$start   = $page*$count;
 		$channel = App::get_channel();		
 
 		$profile_url = z_root() . '/channel/' . $channel['channel_address'];
-		if ($box=="sentbox") {
-			$sql_extra = "from_xchan = '".dbesc( $channel['channel_hash'] )."'";
+		if ($box === 'sentbox') {
+			$sql_extra = "from_xchan = '" . dbesc( $channel['channel_hash'] ) . "'";
 		}
-		elseif ($box=="conversation") {
-			$sql_extra = "parent_mid = '".dbesc( $_GET["uri"] )  ."'";
+		elseif($box === 'conversation') {
+			$sql_extra = "parent_mid = '" . dbesc($_GET['uri'])  . "'";
 		}
-		elseif ($box=="all") {
-			$sql_extra = "true";
+		elseif($box === 'all') {
+			$sql_extra = 'true';
 		}
-		elseif ($box=="inbox") {
-			$sql_extra = "from_xchan != '".dbesc( $channel['channel_hash'] )."'";
+		elseif($box === 'inbox') {
+			$sql_extra = "from_xchan != '" . dbesc($channel['channel_hash']) . "'";
 		}
 		
 		$r = q("SELECT * FROM mail WHERE channel_id = %d AND $sql_extra ORDER BY created DESC LIMIT %d OFFSET %d",
 				intval(api_user()),
-				intval($count), intval($start)
+				intval($count), 
+				intval($start)
 		);
 		
-		$ret = Array();
+		$ret = array();
 		if($r) {
 			foreach($r as $item) {
-				if ($item['from_xchan'] == $channel['channel_hash']) {
+				if ($item['from_xchan'] === $channel['channel_hash']) {
 					$sender = $user_info;
 					$recipient = api_get_user( null, $item['to_xchan']);
 				}
@@ -1992,33 +1980,26 @@ require_once('include/api_zot.php');
 					$recipient = $user_info;
 				}
 	
-				$ret[]=api_format_message($item, $recipient, $sender);
+				$ret[] = api_format_message($item, $recipient, $sender);
 			}
 		}
 		
-
-		$data = array('$messages' => $ret);
-		switch($type){
-			case "atom":
-			case "rss":
-				$data = api_rss_extra( $data, $user_info);
-		}
-				
-		return  api_apply_template("direct_messages", $type, $data);
+		$data = array('messages' => $ret);
+		return(api_apply_template('direct_messages', $type, $data));
 		
 	}
 
-	function api_direct_messages_sentbox( $type){
-		return api_direct_messages_box( $type, "sentbox");
+	function api_direct_messages_sentbox($type){
+		return api_direct_messages_box($type, 'sentbox');
 	}
-	function api_direct_messages_inbox( $type){
-		return api_direct_messages_box( $type, "inbox");
+	function api_direct_messages_inbox($type){
+		return api_direct_messages_box($type, 'inbox');
 	}
-	function api_direct_messages_all( $type){
-		return api_direct_messages_box( $type, "all");
+	function api_direct_messages_all($type){
+		return api_direct_messages_box($type, 'all');
 	}
-	function api_direct_messages_conversation( $type){
-		return api_direct_messages_box( $type, "conversation");
+	function api_direct_messages_conversation($type){
+		return api_direct_messages_box($type, 'conversation');
 	}
 	api_register_func('api/direct_messages/conversation','api_direct_messages_conversation',true);
 	api_register_func('api/direct_messages/all','api_direct_messages_all',true);
@@ -2044,10 +2025,12 @@ require_once('include/api_zot.php');
 	function api_oauth_access_token( $type){
 		try{
 			$oauth = new ZotOAuth1();
-			$req = OAuth1Request::from_request();
-			$r = $oauth->fetch_access_token($req);
-		}catch(Exception $e){
-			echo "error=". OAuth1Util::urlencode_rfc3986($e->getMessage()); killme();
+			$req   = OAuth1Request::from_request();
+			$r     = $oauth->fetch_access_token($req);
+		}
+		catch(Exception $e) {
+			echo 'error=' . OAuth1Util::urlencode_rfc3986($e->getMessage()); 
+			killme();
 		}
 		echo $r;
 		killme();			

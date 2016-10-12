@@ -854,6 +854,7 @@ function pageUpdate() {
 		scroll_next = false;
 		updatePageItems(update_mode,data);
 		$("#page-spinner").spin(false);
+		$(".autotime").timeago();
 		in_progress = false;
 	});
 }

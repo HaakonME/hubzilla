@@ -50,7 +50,7 @@ require_once('include/api_zot.php');
 					return false;
 			}
 		}			
-		if ($_SESSION["allow_api"])
+		if ($_SESSION['allow_api'])
 			return local_channel();
 		return false;
 	}
@@ -58,7 +58,7 @@ require_once('include/api_zot.php');
 
 	function api_date($str){
 		//Wed May 23 06:01:13 +0000 2007
-		return datetime_convert('UTC', 'UTC', $str, "D M d H:i:s +0000 Y" );
+		return datetime_convert('UTC', 'UTC', $str, 'D M d H:i:s +0000 Y' );
 	}
 
 
@@ -117,12 +117,12 @@ require_once('include/api_zot.php');
 				return;
 
 			switch($type) {
-				case "xml":
-					header ("Content-Type: text/xml");
+				case 'xml':
+					header ('Content-Type: text/xml');
 					return $r; 
 					break;
-				case "json":
-					header ("Content-Type: application/json");
+				case 'json':
+					header ('Content-Type: application/json');
 					// Lookup JSONP to understand these lines. They provide cross-domain AJAX ability.
 					if ($_GET['callback'])
 						$r = $_GET['callback'] . '(' . $r . ')' ;
@@ -133,49 +133,29 @@ require_once('include/api_zot.php');
 		}
 	
 
-		header("HTTP/1.1 404 Not Found");
+		header('HTTP/1.1 404 Not Found');
 		logger('API call not implemented: ' . App::$query_string . ' - ' . print_r($_REQUEST,true));
 		$r = '<status><error>not implemented</error></status>';
 		switch($type){
-			case "xml":
-				header ("Content-Type: text/xml");
-				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+			case 'xml':
+				header ('Content-Type: text/xml');
+				return '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $r;
 				break;
 			case "json":
-				header ("Content-Type: application/json");
+				header ('Content-Type: application/json');
 			    return json_encode(array('error' => 'not implemented'));
 				break;
 			case "rss":
-				header ("Content-Type: application/rss+xml");
-				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				header ('Content-Type: application/rss+xml');
+				return '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $r;
 				break;
 			case "atom":
-				header ("Content-Type: application/atom+xml");
-				return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
+				header ('Content-Type: application/atom+xml');
+				return '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $r;
 				break;
 		}
 	}
 
-	/**
-	 * RSS extra info
-	 */
-
-	function api_rss_extra( $arr, $user_info){
-		if (is_null($user_info)) $user_info = api_get_user();
-		$arr['$user'] = $user_info;
-		$arr['$rss'] = array(
-			'alternate' => $user_info['url'],
-			'self' => z_root(). "/". App::$query_string,
-			'base' => z_root(),
-			'updated' => api_date(null),
-			'atom_updated' => datetime_convert('UTC','UTC','now',ATOM_TIME),
-			'language' => $user_info['language'],
-			'logo'	=> z_root()."/images/rm-64.png",
-		);
-		
-		return $arr;
-	}
-	 
 	/**
 	 * Returns user info array.
 	 */
@@ -183,7 +163,7 @@ require_once('include/api_zot.php');
 	function api_get_user($contact_id = null, $contact_xchan = null){
 
 		$user = null;
-		$extra_query = "";
+		$extra_query = '';
 
 
 		if(! is_null($contact_xchan)) {
@@ -305,11 +285,11 @@ require_once('include/api_zot.php');
 			'location' => ($usr) ? $usr[0]['channel_location'] : '',
 			'profile_image_url' => $uinfo[0]['xchan_photo_l'],
 			'url' => $uinfo[0]['xchan_url'],
-			'contact_url' => z_root() . "/connections/".$uinfo[0]['abook_id'],
+			'contact_url' => z_root() . '/connections/'.$uinfo[0]['abook_id'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
 			'created_at' => api_date($uinfo[0]['abook_created']),
-			'utc_offset' => "+00:00",
+			'utc_offset' => '+00:00',
 			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
 			'statuses_count' => intval($countitms), //#XXX: fix me 
@@ -440,13 +420,13 @@ require_once('include/api_zot.php');
 	function api_apply_template($templatename, $type, $data){
 
 		switch($type){
-			case "xml":
+			case 'xml':
 				if($data) {
 					foreach($data as $k => $v)
 						$ret = arrtoxml(str_replace('$','',$k),$v);
 				}
 				break;
-			case "json":
+			case 'json':
 			default:
 				if($data) {
 					foreach($data as $rv) {
@@ -530,7 +510,7 @@ require_once('include/api_zot.php');
 		$mod->post();
 
 
-		$_REQUEST['body']=$txt."\n\n".$posted;
+		$_REQUEST['body']= $txt . "\n\n" . $posted;
 
 		$mod = new Zotlabs\Module\Item();
 		$mod->post();
@@ -788,7 +768,7 @@ require_once('include/api_zot.php');
 				unset($status_info['user']['status']);
 		}
 
-		return  api_apply_template("status", $type, array('$status' => $status_info));
+		return  api_apply_template('status', $type, array('$status' => $status_info));
 		
 	}
 
@@ -861,7 +841,7 @@ require_once('include/api_zot.php');
 			);
 
 		}
-		return  api_apply_template("user", $type, array('$user' => $user_info));
+		return  api_apply_template('user', $type, array('$user' => $user_info));
 
 	}
 	api_register_func('api/users/show','api_users_show');
@@ -883,22 +863,21 @@ require_once('include/api_zot.php');
 
 
 		// params
-		$count           = (x($_REQUEST,'count')?$_REQUEST['count']:20);
-		$page            = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		$count           = (x($_REQUEST,'count') ? $_REQUEST['count'] : 20);
+		$page            = (x($_REQUEST,'page') ? $_REQUEST['page']-1 : 0);
 		if($page < 0) 
 			$page = 0;
-		$since_id        = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
-		$max_id          = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
-		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
-		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$since_id        = (x($_REQUEST,'since_id') ? $_REQUEST['since_id'] : 0);
+		$max_id          = (x($_REQUEST,'max_id') ? $_REQUEST['max_id'] : 0);
+		$exclude_replies = (x($_REQUEST,'exclude_replies') ? 1 : 0);
 
-		$start = $page*$count;
+		$start = $page * $count;
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
 		$sql_extra = '';
 		if ($max_id > 0)
-			$sql_extra .= ' AND item.id <= '.intval($max_id);
+			$sql_extra .= ' AND item.id <= ' . intval($max_id);
 		if ($exclude_replies > 0)
 			$sql_extra .= ' AND item.parent = item.id';
 
@@ -907,7 +886,7 @@ require_once('include/api_zot.php');
 			require_once('include/permissions.php');
 			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
 				return '';
-			$sql_extra .= " and item_private = 0 ";
+			$sql_extra .= ' and item_private = 0 ';
 		}
 
 		$item_normal = item_normal();
@@ -937,28 +916,29 @@ require_once('include/api_zot.php');
 		}
 
 		$data = array('$statuses' => $ret);
-		return  api_apply_template("timeline", $type, $data);
+		return  api_apply_template('timeline', $type, $data);
 	}
 
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
 
 	function api_statuses_public_timeline( $type){
-		if (api_user()===false) return false;
+		if(api_user() === false)
+			return false;
 
 		$user_info = api_get_user();
 
 		$sys = get_sys_channel();
 
 		// params
-		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
-		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-		if ($page<0) $page=0;
-		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
-		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
-		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$count = (x($_REQUEST,'count') ? $_REQUEST['count']   : 20);
+		$page  = (x($_REQUEST,'page')  ? $_REQUEST['page']-1  :  0);
+		if($page < 0)
+			$page=0;
+		$since_id = (x($_REQUEST,'since_id') ? $_REQUEST['since_id'] : 0);
+		$max_id = (x($_REQUEST,'max_id') ? $_REQUEST['max_id'] : 0);
 
-		$start = $page*$count;
+		$start = $page * $count;
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
@@ -987,16 +967,14 @@ require_once('include/api_zot.php');
 
 		$data = array('statuses' => $ret);
 
-		return  api_apply_template("timeline", $type, $data);
+		return  api_apply_template('timeline', $type, $data);
 	}
 	api_register_func('api/statuses/public_timeline','api_statuses_public_timeline', true);
 
-	/**
-	 * 
 
-	 */
-	function api_statuses_show( $type){
-		if (api_user()===false) return false;
+	function api_statuses_show($type){
+		if(api_user()===false) 
+			return false;
 
 		$user_info = api_get_user();
 
@@ -1007,8 +985,8 @@ require_once('include/api_zot.php');
 
 		logger('API: api_statuses_show: '.$id);
 
-		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
-		$conversation = (x($_REQUEST,'conversation')?1:0);
+		//$include_entities = (x($_REQUEST,'include_entities') ? $_REQUEST['include_entities'] : false);
+		$conversation = (x($_REQUEST,'conversation') ? 1 : 0);
 
 		$sql_extra = '';
 		if ($conversation)
@@ -1017,7 +995,8 @@ require_once('include/api_zot.php');
 			$sql_extra .= " AND item.id = %d";
 
 		$item_normal = item_normal();
-		$r = q("select * from item where true $item_normal $sql_extra",
+		$r = q("select * from item where uid = %d $item_normal $sql_extra",
+			intval(api_user()),
 			intval($id)
 		);
 
@@ -1028,10 +1007,10 @@ require_once('include/api_zot.php');
 
 		if ($conversation) {
 			$data = array('statuses' => $ret);
-			return api_apply_template("timeline", $type, $data);
+			return api_apply_template('timeline', $type, $data);
 		} else {
 			$data = array('status' => $ret[0]);
-			return  api_apply_template("status", $type, $data);
+			return  api_apply_template('status', $type, $data);
 		}
 	}
 	api_register_func('api/statuses/show','api_statuses_show', true);
@@ -1041,16 +1020,17 @@ require_once('include/api_zot.php');
 	 * 
 	 */
 	function api_statuses_repeat( $type){
-		if (api_user()===false) return false;
+		if(api_user()===false) 
+			return false;
 
 		$user_info = api_get_user();
 
 		// params
 		$id = intval(argv(3));
 
-		logger('API: api_statuses_repeat: '.$id);
+		logger('API: api_statuses_repeat: ' . $id);
 
-		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+		//$include_entities = (x($_REQUEST,'include_entities') ? $_REQUEST['include_entities'] : false);
 
 		$observer = App::get_observer();
 
@@ -1061,8 +1041,8 @@ require_once('include/api_zot.php');
 		);
 
 		if(perm_is_allowed($r[0]['uid'],$observer['xchan_hash'],'view_stream')) {
-			if ($r[0]['body'] != "") {
-				$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[zrl=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/zrl] \n".$r[0]['body'];
+			if ($r[0]['body'] != '') {
+				$_REQUEST['body'] = html_entity_decode('&#x2672; ', ENT_QUOTES, 'UTF-8') . '[zrl=' . $r[0]['reply_url'] . ']' . $r[0]['reply_author'] . '[/zrl] ' . "\n" . $r[0]['body'];
 				$_REQUEST['profile_uid'] = api_user();
 				$_REQUEST['type'] = 'wall';
 				$_REQUEST['api_source'] = true;
@@ -1074,9 +1054,9 @@ require_once('include/api_zot.php');
 			return false;
 
 		if ($type == 'xml')
-			$ok = "true";
+			$ok = 'true';
 		else
-			$ok = "ok";
+			$ok = 'ok';
 
 		return api_apply_template('test', $type, array('$ok' => $ok));
 	}
@@ -1087,7 +1067,8 @@ require_once('include/api_zot.php');
 	 */
 
 	function api_statuses_destroy( $type){
-		if (api_user()===false) return false;
+		if(api_user()===false)
+			return false;
 
 		$user_info = api_get_user();
 
@@ -1135,9 +1116,9 @@ require_once('include/api_zot.php');
 
 
 		if ($type == 'xml')
-			$ok = "true";
+			$ok = 'true';
 		else
-			$ok = "ok";
+			$ok = 'ok';
 
 		return api_apply_template('test', $type, array('$ok' => $ok));
 	}
@@ -1158,21 +1139,16 @@ require_once('include/api_zot.php');
 
 
 		// params
-		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
-		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-		if ($page<0) $page=0;
-		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
-		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
-		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$count = (x($_REQUEST,'count') ? $_REQUEST['count']  : 20);
+		$page  = (x($_REQUEST,'page')  ? $_REQUEST['page']-1 :  0);
+		if($page < 0) 
+			$page=0;
+		$since_id = (x($_REQUEST,'since_id') ? $_REQUEST['since_id'] : 0);
+		$max_id = (x($_REQUEST,'max_id') ? $_REQUEST['max_id'] : 0);
 
-		$start = $page*$count;
+		$start = $page * $count;
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
-
-		$myurl = z_root() . '/channel/'. App::$user['nickname'];
-		$myurl = substr($myurl,strpos($myurl,'://')+3);
-		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
-		$diasp_url = str_replace('/channel/','/u/',$myurl);
 
 		$sql_extra .= " AND item_mentionsme = 1 ";
 		if ($max_id > 0)
@@ -1192,13 +1168,11 @@ require_once('include/api_zot.php');
 
 		xchan_query($r,true);
 
-
 		$ret = api_format_items($r,$user_info);
-
 
 		$data = array('statuses' => $ret);
 
-		return  api_apply_template("timeline", $type, $data);
+		return  api_apply_template('timeline', $type, $data);
 	}
 	api_register_func('api/statuses/mentions','api_statuses_mentions', true);
 	// FIXME?? I don't think mentions and replies are congruent in this case
@@ -1206,60 +1180,41 @@ require_once('include/api_zot.php');
 
 
 	function api_statuses_user_timeline( $type){
-		if(api_user()===false) 
+		if(api_user() === false) 
 			return false;
 		
 		$user_info = api_get_user();
 
 		// get last network messages
 
-		logger("api_statuses_user_timeline: api_user: ". api_user() .
+		logger('api_statuses_user_timeline: api_user: '. api_user() .
 			   "\nuser_info: ".print_r($user_info, true) .
 			   "\n_REQUEST:  ".print_r($_REQUEST, true),
 			   LOGGER_DEBUG);
 
 		// params
-		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
-		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-		if ($page<0) $page=0;
-		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
-		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
-		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$count = (x($_REQUEST,'count') ? $_REQUEST['count'] : 20);
+		$page = (x($_REQUEST,'page') ? $_REQUEST['page']-1 : 0);
+		if($page < 0) 
+			$page = 0;
+		$since_id = (x($_REQUEST,'since_id') ? $_REQUEST['since_id'] : 0);
+		$exclude_replies = (x($_REQUEST,'exclude_replies') ? 1 :0);
 		
-		$start = $page*$count;
+		$start = $page * $count;
 
 		$sql_extra = '';
-		if ($user_info['self']==1) $sql_extra .= " AND item.wall = 1 ";
 
 //FIXME - this isn't yet implemented
 		if ($exclude_replies > 0)  $sql_extra .= ' AND item.parent = item.id';
 
-// 	$r = q("SELECT item.*, item.id AS item_id, 
-// 			contact.name, contact.photo, contact.url, contact.rel,
-// 			contact.network, contact.thumb, contact.dfrn_id, contact.self,
-// 			contact.id AS cid, contact.uid AS contact-uid
-// 			FROM item, contact
-// 			WHERE item.uid = %d
-// 			AND item.contact-id = %d
-// 			AND item.visible = 1 and item.moderated = 0 AND item.deleted = 0
-// 			AND contact.id = item.contact-id
-// 			AND contact.blocked = 0 AND contact.pending = 0
-// 			$sql_extra
-// 			AND item.id>%d
-// 			ORDER BY item.received DESC LIMIT %d ,%d ",
-// 			intval(api_user()),
-// 			intval($user_info['id']),
-// 			intval($since_id),
-// 			intval($start),	intval($count)
-// 		);
-
-		$arr = array(
-		  'uid' => api_user(),
-		  'since_id' => $since_id,
-		  'start' => $start,
-		  'records' => $count);
+		$arr = [
+			'uid'      => api_user(),
+			'since_id' => $since_id,
+			'start'    => $start,
+			'records'  => $count
+		];
 	
-		if ($user_info['self']==1)
+		if ($user_info['self'] === 1)
 			$arr['wall'] = 1;
 		else
 			$arr['cid'] = $user_info['id'];
@@ -1269,9 +1224,8 @@ require_once('include/api_zot.php');
 		
 		$ret = api_format_items($r,$user_info);
 
-
 		$data = array('statuses' => $ret);
-		return  api_apply_template("timeline", $type, $data);
+		return(api_apply_template('timeline', $type, $data));
 	}
 
 	api_register_func('api/statuses/user_timeline','api_statuses_user_timeline', true);
@@ -1345,27 +1299,27 @@ require_once('include/api_zot.php');
 
 
 	function api_favorites( $type){
-		if (api_user()===false) 
+		if(api_user()===false) 
 			return false;
 
 		$user_info = api_get_user();
 
 		// params
-		$count	       = (x($_REQUEST,'count')?$_REQUEST['count']:20);
-		$page            = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		$count	         = (x($_REQUEST,'count') ? $_REQUEST['count'] : 20);
+		$page            = (x($_REQUEST,'page')  ? $_REQUEST['page']-1 : 0);
 		if($page < 0) 
 			$page = 0;
-		$since_id        = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
-		$max_id          = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
-		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
+		$since_id        = (x($_REQUEST,'since_id') ? $_REQUEST['since_id'] : 0);
+		$max_id          = (x($_REQUEST,'max_id') ? $_REQUEST['max_id'] : 0);
+		$exclude_replies = (x($_REQUEST,'exclude_replies') ? 1 :0);
 
-		$start = $page*$count;
+		$start = $page * $count;
 
-		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
+		//$include_entities = (x($_REQUEST,'include_entities') ? $_REQUEST['include_entities'] : false);
 
 		$sql_extra = '';
 		if ($max_id > 0)
-			$sql_extra .= ' AND item.id <= '.intval($max_id);
+			$sql_extra .= ' AND item.id <= ' . intval($max_id);
 		if ($exclude_replies > 0)
 			$sql_extra .= ' AND item.parent = item.id';
 
@@ -1374,7 +1328,7 @@ require_once('include/api_zot.php');
 			require_once('include/permissions.php');
 			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
 				return '';
-			$sql_extra .= " and item_private = 0 ";
+			$sql_extra .= ' and item_private = 0 ';
 		}
 
 		$item_normal = item_normal();
@@ -1394,7 +1348,7 @@ require_once('include/api_zot.php');
 		$ret = api_format_items($r,$user_info);
 
 		$data = array('statuses' => $ret);
-		return(api_apply_template("timeline", $type, $data));
+		return(api_apply_template('timeline', $type, $data));
 
 	}
 
@@ -1417,17 +1371,17 @@ require_once('include/api_zot.php');
 		//don't send title to regular StatusNET requests to avoid confusing these apps
 		if (x($_GET, 'getText')) {
 			$ret['title'] = $item['title'] ;
-			if ($_GET["getText"] == "html") {
+			if ($_GET['getText'] === 'html') {
 				$ret['text'] = prepare_text($item['body'],$item['mimetype']);
 			}
-			elseif ($_GET["getText"] == "plain") {
+			elseif ($_GET['getText'] === 'plain') {
 				$ret['text'] = html2plain(prepare_text($item['body'],$item['mimetype']), 0);
 			}
 		}
 		else {
-			$ret['text'] = $item['title']."\n".html2plain(prepare_text($item['body'],$item['mimetype']), 0);
+			$ret['text'] = $item['title'] . "\n" . html2plain(prepare_text($item['body'],$item['mimetype']),0);
 		}
-		if (isset($_GET["getUserObjects"]) && $_GET["getUserObjects"] == "false") {
+		if (isset($_GET['getUserObjects']) && $_GET['getUserObjects'] == 'false') {
 			unset($ret['sender']);
 			unset($ret['recipient']);
 		}
@@ -1486,12 +1440,12 @@ require_once('include/api_zot.php');
 			if (($statustitle != '') and (strpos($statusbody, $statustitle) !== false))
 				$statustext = trim($statusbody);
 			else
-				$statustext = trim($statustitle."\n\n".$statusbody);
+				$statustext = trim($statustitle . "\n\n" . $statusbody);
 
 
 			$status = array(
 				'text'		                => $statustext,
-				'truncated'                 => False,
+				'truncated'                 => false,
 				'created_at'                => api_date($item['created']),
 				'in_reply_to_status_id'     => $in_reply_to_status_id,
 				'source'                    => (($item['app']) ? $item['app'] : 'web'),
@@ -1520,8 +1474,8 @@ require_once('include/api_zot.php');
 					'entities'     => '',
 					'objecttype'   => (($item['obj_type']) ? $item['obj_type'] : ACTIVITY_OBJ_NOTE),
 					'verb'         => (($item['verb']) ? $item['verb'] : ACTIVITY_POST),
-					'self'         => z_root()."/api/statuses/show/".$item['id'].".".$type,
-					'edit'         => z_root()."/api/statuses/show/".$item['id'].".".$type,
+					'self'         => z_root().'/api/statuses/show/'.$item['id'].'.'.$type,
+					'edit'         => z_root().'/api/statuses/show/'.$item['id'].'.'.$type,
 				);
 
 				$status = array_merge($status, $status2);
@@ -1541,7 +1495,7 @@ require_once('include/api_zot.php');
 			  'hourly_limit' => (string) 150,
 			  'reset_time' => datetime_convert('UTC','UTC','now + 1 hour',ATOM_TIME),
 		);
-		if ($type == "xml")
+		if ($type == 'xml')
 			$hash['resettime_in_seconds'] = $hash['reset_time_in_seconds'];
 
 		return api_apply_template('ratelimit', $type, array('$hash' => $hash));
@@ -1552,9 +1506,9 @@ require_once('include/api_zot.php');
 	function api_help_test($type) {
 
 		if ($type == 'xml')
-			$ok = "true";
+			$ok = 'true';
 		else
-			$ok = "ok";
+			$ok = 'ok';
 
 		return api_apply_template('test', $type, array('ok' => $ok));
 
@@ -1698,12 +1652,12 @@ require_once('include/api_zot.php');
 		// liar
 
 		if($type === 'xml') {
-			header("Content-type: application/xml");
+			header('Content-type: application/xml');
 			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>0.9.7</version>' . "\r\n";
 			killme();
 		}
 		elseif($type === 'json') {
-			header("Content-type: application/json");
+			header('Content-type: application/json');
 			echo '"0.9.7"';
 			killme();
 		}
@@ -1714,12 +1668,12 @@ require_once('include/api_zot.php');
 	function api_friendica_version($type) {
 
 		if($type === 'xml') {
-			header("Content-type: application/xml");
+			header('Content-type: application/xml');
 			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>' . Zotlabs\Lib\System::get_project_version() . '</version>' . "\r\n";
 			killme();
 		}
 		elseif($type === 'json') {
-			header("Content-type: application/json");
+			header('Content-type: application/json');
 			echo '"' . Zotlabs\Lib\System::get_project_version() . '"';
 			killme();
 		}
@@ -1750,17 +1704,19 @@ require_once('include/api_zot.php');
 
 		if($r) {
 			if($type === 'xml') {
-				header("Content-type: application/xml");
+				header('Content-type: application/xml');
 				echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<ids>' . "\r\n";
-				foreach($r as $rr)
-					echo '<id>' . $rr['abook_id'] . '</id>' . "\r\n";
+				foreach($r as $rv)
+					echo '<id>' . $rv['abook_id'] . '</id>' . "\r\n";
 				echo '</ids>' . "\r\n";
 				killme();
 			}
 			elseif($type === 'json') {
 				$ret = array();
-				header("Content-type: application/json");
-				foreach($r as $rr) $ret[] = $rr['abook_id'];
+				header('Content-type: application/json');
+				foreach($r as $rv) {
+					$ret[] = $rv['abook_id'];
+				}
 				echo json_encode($ret);
 				killme();
 			}
@@ -1780,11 +1736,11 @@ require_once('include/api_zot.php');
 	function api_direct_messages_new( $type) {
 		if (api_user()===false) return false;
 		
-		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
+		if (!x($_POST, 'text') || !x($_POST,'screen_name')) return;
 
 		$sender = api_get_user();
 		
-		require_once("include/message.php");
+		require_once('include/message.php');
 
 		// in a decentralised world the screen name is ambiguous
 
@@ -1813,16 +1769,20 @@ require_once('include/api_zot.php');
 				$sub = $_REQUEST['title'];
 			}
 			else {
-				$sub = ((strlen($_POST['text'])>10)?substr($_POST['text'],0,10)."...":$_POST['text']);
+				$sub = ((strlen($_POST['text']) > 10) ? substr($_POST['text'],0,10) . '...' : $_POST['text']);
 			}
 		}
 
 		$id = send_message(api_user(),$recipient['guid'], $_POST['text'], $sub, $replyto);
 
-		if ($id > (-1)) {
-			$r = q("SELECT * FROM mail WHERE id = %d", intval($id));
-			$ret = api_format_message($r[0], $recipient, $sender);
-		
+		if($id > (-1)) {
+			$r = q("SELECT * FROM mail WHERE id = %d", 
+				intval($id)
+			);
+			if(! $r)
+				return false;
+
+			$ret = api_format_message($r[0], $recipient, $sender);		
 		} 
 		else {
 			$ret = [ 'error' => $id ];	
@@ -1836,7 +1796,7 @@ require_once('include/api_zot.php');
 	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
 
 	function api_direct_messages_box( $type, $box) {
-		if(api_user()===false) 
+		if(api_user() === false) 
 			return false;
 		
 		$user_info = api_get_user();
@@ -1847,7 +1807,7 @@ require_once('include/api_zot.php');
 		if($page < 0) 
 			$page=0;
 		
-		$start   = $page*$count;
+		$start   = $page * $count;
 		$channel = App::get_channel();		
 
 		$profile_url = z_root() . '/channel/' . $channel['channel_address'];
@@ -1917,7 +1877,7 @@ require_once('include/api_zot.php');
 			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
 			logger('oauth_exception: ' . print_r($e->getMessage(),true));
-			echo "error=". OAuth1Util::urlencode_rfc3986($e->getMessage()); 
+			echo 'error=' . OAuth1Util::urlencode_rfc3986($e->getMessage()); 
 			killme();
 		}
 		echo $r;

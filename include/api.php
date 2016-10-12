@@ -229,7 +229,7 @@ require_once('include/api_zot.php');
 			$r = q("SELECT COUNT(id) as total FROM item
 					WHERE uid = %d
 					AND item_wall = 1 $item_normal 
-					AND allow_cid='' AND allow_gid='' AND deny_cid='' AND deny_gid=''
+					AND allow_cid = '' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
 					AND item_private = 0 ",
 					intval($usr[0]['channel_id'])
 			);
@@ -241,7 +241,7 @@ require_once('include/api_zot.php');
 		else {
 			$r = q("SELECT COUNT(id) as total FROM item
 					WHERE author_xchan = '%s'
-					AND allow_cid='' AND allow_gid='' AND deny_cid='' AND deny_gid=''
+					AND allow_cid = '' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
 					AND item_private = 0 ",
 					intval($uinfo[0]['xchan_hash'])
 			);

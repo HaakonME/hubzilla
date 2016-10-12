@@ -17,13 +17,13 @@ class Api extends \Zotlabs\Web\Controller {
 	
 	function get() {
 
-		if(\App::$cmd=='api/oauth/authorize'){
+		if(\App::$cmd === 'api/oauth/authorize'){
 	
 			/* 
 			 * api/oauth/authorize interact with the user. return a standard page
 			 */
 			
-			\App::$page['template'] = "minimal";
+			\App::$page['template'] = 'minimal';
 					
 			// get consumer/client from request token
 			try {
@@ -42,8 +42,8 @@ class Api extends \Zotlabs\Web\Controller {
 
 				$consumer = new OAuth1Consumer($app['client_id'], $app['pw'], $app['redirect_uri']);
 	
-				$verifier = md5($app['secret'].local_channel());
-				set_config("oauth", $verifier, local_channel());
+				$verifier = md5($app['secret'] . local_channel());
+				set_config('oauth', $verifier, local_channel());
 				
 				
 				if($consumer->callback_url != null) {
@@ -78,11 +78,11 @@ class Api extends \Zotlabs\Web\Controller {
 						
 			$tpl = get_markup_template('oauth_authorize.tpl');
 			$o = replace_macros($tpl, array(
-				'$title' => t('Authorize application connection'),
-				'$app' => $app,
+				'$title'     => t('Authorize application connection'),
+				'$app'       => $app,
 				'$authorize' => t('Do you want to authorize this application to access your posts and contacts, and/or create new posts for you?'),
-				'$yes'	=> t('Yes'),
-				'$no'	=> t('No'),
+				'$yes'	     => t('Yes'),
+				'$no'	     => t('No'),
 			));
 			
 			//echo "<pre>"; var_dump($app); killme();

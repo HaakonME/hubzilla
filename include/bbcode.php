@@ -784,6 +784,9 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("(\[footer\](.*?)\[\/footer\])ism", "<div class=\"wall-item-footer\">$1</div>", $Text);
 	}
 	// Check for list text
+
+	$Text = preg_replace("/<br \/>\[\*\]/ism",'[*]',$Text);
+
 	$Text = str_replace("[*]", "<li>", $Text);
 	$Text = str_replace("[]", "<li><input type=\"checkbox\" disabled=\"disabled\">", $Text);
 	$Text = str_replace("[x]", "<li><input type=\"checkbox\" checked=\"checked\" disabled=\"disabled\">", $Text);
@@ -807,6 +810,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[checklist\](.*?)\[\/checklist\]/ism", '<ul class="checklist" style="list-style-type: none;">$1</ul>', $Text);
 		$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>', $Text);
 		$Text = preg_replace("/\[ol\](.*?)\[\/ol\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>', $Text);
+		$Text = preg_replace("/\[\/li\]<br \/>\[li\]/ism",'[/li][li]',$Text);
 		$Text = preg_replace("/\[li\](.*?)\[\/li\]/ism", '<li>$1</li>', $Text);
 
 		// [dl] tags have an optional [dl terms="bi"] form where bold/italic/underline/mono/large

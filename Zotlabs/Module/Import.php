@@ -77,23 +77,27 @@ class Import extends \Zotlabs\Web\Controller {
 	
 			$channelname = substr($old_address,0,strpos($old_address,'@'));
 			$servername  = substr($old_address,strpos($old_address,'@')+1);
-	
-			$scheme = 'https://';
-			$api_path = '/api/red/channel/export/basic?f=&channel=' . $channelname;
+
+			$api_path = probe_api_path($servername);
+			if(! $api_path) {
+				notice( t('Unable to download data from old server') . EOL);
+				return;
+			}
+
+			$api_path .= 'channel/export/basic?f=&channel=' . $channelname;
 			if($import_posts)
 				$api_path .= '&posts=1';
 			$binary = false;
 			$redirects = 0;
 			$opts = array('http_auth' => $email . ':' . $password);
-			$url = $scheme . $servername . $api_path;
-			$ret = z_fetch_url($url, $binary, $redirects, $opts);
-			if(! $ret['success'])
-				$ret = z_fetch_url('http://' . $servername . $api_path, $binary, $redirects, $opts);
-			if($ret['success'])
+			$ret = z_fetch_url($api_path, $binary, $redirects, $opts);
+			if($ret['success']) {
 				$data = $ret['body'];
-			else
+			}
+			else {
 				notice( t('Unable to download data from old server') . EOL);
-	
+				return;
+			}
 		}
 	
 		if(! $data) {

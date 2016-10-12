@@ -2288,3 +2288,22 @@ function z_mail($params) {
 	logger('notification: z_mail returns ' . $res, LOGGER_DEBUG);
 	return $res;
 }
+
+// discover the best API path available for redmatrix/hubzilla servers
+
+function probe_api_path($host) {
+
+	$schemes = ['https', 'http' ];
+	$paths   = ['/api/z/1.0/version', '/api/red/version' ];
+
+	foreach($schemes as $scheme) {
+		foreach($paths as $path) {
+			$curpath = $scheme . '://' . $host . $path;
+			$x = z_fetch_url($curpath);
+			if($x['success'] && ! strlen($x['body'],'not implemented'))
+				return str_replace('version','',$curpath);
+		}
+	}
+
+	return '';
+}

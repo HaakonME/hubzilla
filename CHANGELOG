@@ -1,4 +1,5 @@
-Hubzilla 1.14RC (2016-10-02)
+Hubzilla 1.14 (2016-10-13)
+	- New hook bbcode_filter
 	- Unify the various mail sending instance to enotify::send() and z_mail()
 	- Provide ability for admin to change account password
 	- Replace deprecated Sabre functions
@@ -38,6 +39,9 @@ Hubzilla 1.14RC (2016-10-02)
 	- Server roles (basic, standard and pro)
 
 	Bugfixes
+	- Fix connected time not shown on ajax loaded connections
+	- API issues
+	- Fix readmore.js collapsing on scrolldirection change in some mobile browsers
 	- Personalize Server Emails
 	- Audio player doesn't automatically show for m4a files
 	- Fix ajax page update with /channel?f=&mid=hash
@@ -65,6 +69,7 @@ Hubzilla 1.14RC (2016-10-02)
 	- Public forum check with custom/expert permissions
 
 	Plugins
+	- Standard Embed: update to convert old corporate bbcodes
 	- Cdav security: fix rw permission check
 	- Cdav: add partial support for recurring events in the browser client (editing/creating is not implemented)
 	- New plugin phpmailer: use phpmailer class instead of php's built-in mail() function

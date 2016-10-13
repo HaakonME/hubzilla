@@ -165,7 +165,7 @@ function import_profiles($channel,$profiles) {
 			dbesc_array($profile);
 			$r = dbq("INSERT INTO profile (" . TQUOT 
 				. implode(TQUOT . ", " . TQUOT, array_keys($profile)) 
-				. TQUOT ") VALUES ('" 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($profile)) 
 				. "')" 
 			);

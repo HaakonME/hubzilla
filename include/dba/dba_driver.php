@@ -391,9 +391,22 @@ function dbesc_array_cb(&$item, $key) {
 
 
 function dbesc_array(&$arr) {
+	$bogus_key = false;
 	if(is_array($arr) && count($arr)) {
+		$matches = false;
+		foreach($arr as $k => $v) {
+			if(preg_match('/([^a-zA-Z0-9\-\_\.])/',$k,$matches)) {
+				logger('bogus key: ' . $k);
+				$bogus_key = true;
+			}
+		}
 		array_walk($arr,'dbesc_array_cb');
+		if($bogus_key) {
+			$arr['BOGUS.KEY'] = 1;
+			return false;
+		}
 	}
+	return true;
 }
 
 function db_getfunc($f) {

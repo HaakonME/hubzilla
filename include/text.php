@@ -3035,13 +3035,14 @@ function create_table_from_array($table,$arr) {
 	if(! ($arr && $table))
 		return false;
 
-	dbesc_array($arr);
-
-	$r = dbq("INSERT INTO " . TQUOT . $table . TQUOT . " (" . TQUOT
+	if(dbesc_array($arr)) {
+		$r = dbq("INSERT INTO " . TQUOT . $table . TQUOT . " (" . TQUOT
 			. implode(TQUOT . ', ' . TQUOT, array_keys($arr))
 			. TQUOT . ") VALUES ('"
 			. implode("', '", array_values($arr))
-			. "')" );
+			. "')" 
+		);
+	}
 	return $r;
 
 }

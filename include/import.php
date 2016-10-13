@@ -1026,7 +1026,8 @@ function sync_files($channel,$files) {
 
 					if($attach_exists) {
 						logger('sync_files attach exists: ' . print_r($att,true), LOGGER_DEBUG);
-						dbesc_array($att);
+						if(! dbesc_array($att))
+							continue;
 						$str = '';
     					foreach($att as $k => $v) {
 			        		if($str)
@@ -1140,7 +1141,8 @@ function sync_files($channel,$files) {
 
 
 					if($exists) {
-						dbesc_array($p);
+						if(! dbesc_array($p))
+							continue;
 					    $str = '';
     					foreach($p as $k => $v) {
 				        	if($str)

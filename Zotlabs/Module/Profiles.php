@@ -117,13 +117,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 			$r1[0]['profile_name'] = dbesc($name);
 			$r1[0]['profile_guid'] = dbesc(random_string());
 	
-			dbesc_array($r1[0]);
-	
-			$r2 = dbq("INSERT INTO profile (" . TQUOT 
-				. implode(TQUOT . ", " . TQUOT, array_keys($r1[0])) 
-				. TQUOT . ") VALUES ('" 
-				. implode("', '", array_values($r1[0])) 
-				. "')" );
+			create_table_from_array('profile', $r1[0]);
 	
 			$r3 = q("SELECT id FROM profile WHERE uid = %d AND profile_name = '%s' LIMIT 1",
 				intval(local_channel()),

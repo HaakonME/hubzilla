@@ -3521,8 +3521,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
-						$r = dbq("UPDATE profile set `" . dbesc($k) . "` = '" . dbesc($v)
-						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']));
+						$r = dbq("UPDATE profile set " . TQUOT . dbesc($k) . TQUOT . " = '" . dbesc($v)
+						. "' where profile_guid = '" . dbesc($profile['profile_guid']) 
+						. "' and uid = " . intval($channel['channel_id']));
 					}
 				}
 			}

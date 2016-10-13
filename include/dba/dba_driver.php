@@ -72,6 +72,7 @@ class DBA {
 
 		define('NULL_DATE', self::$dba->get_null_date());
 		define('ACTIVE_DBTYPE', self::$dbtype);
+		define('TQUOT', self::$dba->get_table_quote());
 		return self::$dba;
 	}
 
@@ -88,6 +89,7 @@ abstract class dba_driver {
 	const INSTALL_SCRIPT='install/schema_mysql.sql';
 	const NULL_DATE = '0001-01-01 00:00:00';
 	const UTC_NOW = 'UTC_TIMESTAMP()';
+	const TQUOT = "`";
 
 	protected $db;
 	protected $pdo = array();
@@ -156,6 +158,11 @@ abstract class dba_driver {
 	function get_install_script() {
 		return static::INSTALL_SCRIPT;
 	}
+
+	function get_table_quote() {
+		return static::TQUOT;
+	}
+
 
 	function utcnow() {
 		return static::UTC_NOW;
@@ -313,7 +320,7 @@ function db_concat($fld, $sep) {
  * queries return true if the command was successful or false if it wasn't.
  *
  * Example:
- *  $r = q("SELECT * FROM `%s` WHERE `uid` = %d",
+ *  $r = q("SELECT * FROM %s WHERE `uid` = %d",
  *         'user', 1);
  *
  * @param string $sql The SQL query to execute

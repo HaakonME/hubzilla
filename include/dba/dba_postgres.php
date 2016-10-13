@@ -7,6 +7,7 @@ class dba_postgres extends dba_driver {
 	const INSTALL_SCRIPT='install/schema_postgres.sql';
 	const NULL_DATE = '0001-01-01 00:00:00';
 	const UTC_NOW = "now() at time zone 'UTC'";
+	const TQUOT = '"';
 	
 	function connect($server,$port,$user,$pass,$db) {
 		if(!$port) $port = 5432;

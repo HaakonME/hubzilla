@@ -1855,9 +1855,9 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	dbesc_array($arr);
 
-	$r = dbq("INSERT INTO `item` (`"
-			. implode("`, `", array_keys($arr))
-			. "`) VALUES ('"
+	$r = dbq("INSERT INTO " . TQUOT . 'item' . TQUOT . " (" . TQUOT
+			. implode(TQUOT . ', ' . TQUOT, array_keys($arr))
+			. TQUOT . ") VALUES ('"
 			. implode("', '", array_values($arr))
 			. "')" );
 
@@ -2174,7 +2174,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	foreach($arr as $k => $v) {
 		if($str)
 			$str .= ",";
-		$str .= " `" . $k . "` = '" . $v . "' ";
+		$str .= " " . TQUOT . $k . TQUOT . " = '" . $v . "' ";
 	}
 
 	$r = dbq("update item set " . $str . " where id = " . $orig_post_id );
@@ -3092,9 +3092,9 @@ function mail_store($arr) {
 
 	logger('mail_store: ' . print_r($arr,true), LOGGER_DATA);
 
-	$r = dbq("INSERT INTO mail (`"
-			. implode("`, `", array_keys($arr))
-			. "`) VALUES ('"
+	$r = dbq("INSERT INTO mail (" . TQUOT
+			. implode(TQUOT . ', ' . TQUOT, array_keys($arr))
+			. TQUOT . ") VALUES ('"
 			. implode("', '", array_values($arr))
 			. "')" );
 

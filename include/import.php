@@ -84,9 +84,9 @@ function import_channel($channel, $account_id, $seize) {
 	if($clean) {
 		dbesc_array($clean);
 
-		$r = dbq("INSERT INTO channel (`" 
-			. implode("`, `", array_keys($clean)) 
-			. "`) VALUES ('" 
+		$r = dbq("INSERT INTO channel (" . TQUOT 
+			. implode(TQUOT . ", " . TQUOT, array_keys($clean)) 
+			. TQUOT . ") VALUES ('" 
 			. implode("', '", array_values($clean)) 
 			. "')" 
 		);
@@ -132,9 +132,9 @@ function import_config($channel,$configs) {
 			unset($config['id']);
 			$config['uid'] = $channel['channel_id'];
 			dbesc_array($config);
-			$r = dbq("INSERT INTO pconfig (`" 
-				. implode("`, `", array_keys($config)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO pconfig (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($config)) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($config)) 
 				. "')" );
 		}
@@ -163,9 +163,9 @@ function import_profiles($channel,$profiles) {
 			$profile['thumb'] = z_root() . '/photo/profile/m/' . $channel['channel_id'];
 
 			dbesc_array($profile);
-			$r = dbq("INSERT INTO profile (`" 
-				. implode("`, `", array_keys($profile)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO profile (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($profile)) 
+				. TQUOT ") VALUES ('" 
 				. implode("', '", array_values($profile)) 
 				. "')" 
 			);
@@ -205,9 +205,9 @@ function import_hublocs($channel,$hublocs,$seize) {
 				unset($hubloc['hubloc_id']);
 				dbesc_array($hubloc);
 		
-				$r = dbq("INSERT INTO hubloc (`" 
-					. implode("`, `", array_keys($hubloc)) 
-					. "`) VALUES ('" 
+				$r = dbq("INSERT INTO hubloc (" . TQUOT 
+					. implode(TQUOT . ", " . TQUOT, array_keys($hubloc)) 
+					. TQUOT . ") VALUES ('" 
 					. implode("', '", array_values($hubloc)) 
 					. "')" 
 				);
@@ -244,9 +244,9 @@ function import_objs($channel,$objs) {
 
 			dbesc_array($obj);
 
-			$r = dbq("INSERT INTO obj (`" 
-				. implode("`, `", array_keys($obj)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO obj (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($obj)) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($obj)) 
 				. "')" 
 			);
@@ -304,7 +304,7 @@ function sync_objs($channel,$objs) {
 			if($exists) {
 				unset($obj['obj_obj']);
 				foreach($obj as $k => $v) {
-					$r = q("UPDATE obj SET `%s` = '%s' WHERE obj_obj = '%s' AND obj_channel = %d",
+					$r = q("UPDATE obj SET " . TQUOT . "%s" . TQUOT . " = '%s' WHERE obj_obj = '%s' AND obj_channel = %d",
 						dbesc($k),
 						dbesc($v),
 						dbesc($hash),
@@ -316,9 +316,9 @@ function sync_objs($channel,$objs) {
 
 				dbesc_array($obj);
 
-				$r = dbq("INSERT INTO obj (`" 
-					. implode("`, `", array_keys($obj)) 
-					. "`) VALUES ('" 
+				$r = dbq("INSERT INTO obj (" . TQUOT 
+					. implode(TQUOT . ", " . TQUOT, array_keys($obj)) 
+					. TQUOT . ") VALUES ('" 
 					. implode("', '", array_values($obj)) 
 					. "')" 
 				);
@@ -352,9 +352,9 @@ function import_apps($channel,$apps) {
 			$hash = $app['app_id'];
 
 			dbesc_array($app);
-			$r = dbq("INSERT INTO app (`" 
-				. implode("`, `", array_keys($app)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO app (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($app)) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($app)) 
 				. "')" 
 			);
@@ -451,7 +451,7 @@ function sync_apps($channel,$apps) {
 			if($exists) {
 				unset($app['app_id']);
 				foreach($app as $k => $v) {
-					$r = q("UPDATE app SET `%s` = '%s' WHERE app_id = '%s' AND app_channel = %d",
+					$r = q("UPDATE app SET " . TQUOT . "%s" . TQUOT . " = '%s' WHERE app_id = '%s' AND app_channel = %d",
 						dbesc($k),
 						dbesc($v),
 						dbesc($hash),
@@ -461,9 +461,9 @@ function sync_apps($channel,$apps) {
 			}
 			else {
 				dbesc_array($app);
-				$r = dbq("INSERT INTO app (`" 
-					. implode("`, `", array_keys($app)) 
-					. "`) VALUES ('" 
+				$r = dbq("INSERT INTO app (" . TQUOT 
+					. implode(TQUOT . ", " . TQUOT, array_keys($app)) 
+					. TQUOT . ") VALUES ('" 
 					. implode("', '", array_values($app)) 
 					. "')" 
 				);
@@ -503,9 +503,9 @@ function import_chatrooms($channel,$chatrooms) {
 			$chatroom['cr_uid'] = $channel['channel_id'];
 
 			dbesc_array($chatroom);
-			$r = dbq("INSERT INTO chatroom (`" 
-				. implode("`, `", array_keys($chatroom)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO chatroom (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($chatroom)) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($chatroom)) 
 				. "')" 
 			);
@@ -559,7 +559,7 @@ function sync_chatrooms($channel,$chatrooms) {
 
 			if($exists) {
 				foreach($chatroom as $k => $v) {
-					$r = q("UPDATE chatroom SET `%s` = '%s' WHERE cr_name = '%s' AND cr_uid = %d",
+					$r = q("UPDATE chatroom SET " . TQUOT . "%s" . TQUOT . " = '%s' WHERE cr_name = '%s' AND cr_uid = %d",
 						dbesc($k),
 						dbesc($v),
 						dbesc($name),
@@ -569,9 +569,9 @@ function sync_chatrooms($channel,$chatrooms) {
 			}
 			else {
 				dbesc_array($chatroom);
-				$r = dbq("INSERT INTO chatroom (`" 
-					. implode("`, `", array_keys($chatroom)) 
-					. "`) VALUES ('" 
+				$r = dbq("INSERT INTO chatroom (" . TQUOT 
+					. implode(TQUOT . ", " . TQUOT, array_keys($chatroom)) 
+					. TQUOT . ") VALUES ('" 
 					. implode("', '", array_values($chatroom)) 
 					. "')" 
 				);
@@ -685,9 +685,9 @@ function import_events($channel,$events) {
 			convert_oldfields($event,'ignore','dismissed');
 
 			dbesc_array($event);
-			$r = dbq("INSERT INTO event (`" 
-				. implode("`, `", array_keys($event)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO event (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($event)) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($event)) 
 				. "')" 
 			);
@@ -736,7 +736,7 @@ function sync_events($channel,$events) {
 
 			if($exists) {
 				foreach($event as $k => $v) {
-					$r = q("UPDATE event SET `%s` = '%s' WHERE event_hash = '%s' AND uid = %d",
+					$r = q("UPDATE event SET " . TQUOT . "%s" . TQUOT . " = '%s' WHERE event_hash = '%s' AND uid = %d",
 						dbesc($k),
 						dbesc($v),
 						dbesc($event['event_hash']),
@@ -746,9 +746,9 @@ function sync_events($channel,$events) {
 			}
 			else {
 				dbesc_array($event);
-				$r = dbq("INSERT INTO event (`" 
-					. implode("`, `", array_keys($event)) 
-					. "`) VALUES ('" 
+				$r = dbq("INSERT INTO event (" . TQUOT 
+					. implode(TQUOT . ", " . TQUOT, array_keys($event)) 
+					. TQUOT . ") VALUES ('" 
 					. implode("', '", array_values($event)) 
 					. "')" 
 				);
@@ -928,9 +928,9 @@ function import_likes($channel,$likes) {
 				continue;
 
 			dbesc_array($like);
-			$r = dbq("INSERT INTO likes (`" 
-				. implode("`, `", array_keys($like)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO likes (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($like)) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($like)) 
 				. "')" );
 		}
@@ -961,9 +961,9 @@ function import_conv($channel,$convs) {
 				continue;
 
 			dbesc_array($conv);
-			$r = dbq("INSERT INTO conv (`" 
-				. implode("`, `", array_keys($conv)) 
-				. "`) VALUES ('" 
+			$r = dbq("INSERT INTO conv (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($conv)) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($conv)) 
 				. "')" );
 		}
@@ -1118,15 +1118,15 @@ function sync_files($channel,$files) {
     						foreach($att as $k => $v) {
 				        		if($str)
             							$str .= ",";
-        						$str .= " `" . $k . "` = '" . $v . "' ";
+        						$str .= " " . TQUOT . $k . TQUOT . " = '" . $v . "' ";
     						}
-						$r = dbq("update `attach` set " . $str . " where id = " . intval($attach_id) );
+						$r = dbq("update attach set " . $str . " where id = " . intval($attach_id) );
 					}
 					else {
 						logger('sync_files attach does not exists: ' . print_r($att,true), LOGGER_DEBUG);
-						$r = dbq("INSERT INTO attach (`" 
-							. implode("`, `", array_keys($att)) 
-							. "`) VALUES ('" 
+						$r = dbq("INSERT INTO attach (" . TQUOT 
+							. implode(TQUOT . ", " . TQUOT, array_keys($att)) 
+							. TQUOT . ") VALUES ('" 
 							. implode("', '", array_values($att)) 
 							. "')" );
 					}
@@ -1236,14 +1236,14 @@ function sync_files($channel,$files) {
     					foreach($p as $k => $v) {
 				        	if($str)
             					$str .= ",";
-        					$str .= " `" . $k . "` = '" . $v . "' ";
+        					$str .= " " . TQUOT . $k . TQUOT . " = '" . $v . "' ";
     					}
-					    $r = dbq("update `photo` set " . $str . " where id = " . intval($exists[0]['id']) );
+					    $r = dbq("update photo set " . $str . " where id = " . intval($exists[0]['id']) );
 					}
 					else {
-						$r = dbq("INSERT INTO photo (`" 
-							. implode("`, `", array_keys($p)) 
-							. "`) VALUES ('" 
+						$r = dbq("INSERT INTO photo (" . TQUOT 
+							. implode(TQUOT . ", " . TQUOT, array_keys($p)) 
+							. TQUOT . ") VALUES ('" 
 							. implode("', '", array_values($p)) 
 							. "')" );
 					}

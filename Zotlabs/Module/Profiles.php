@@ -119,9 +119,9 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			dbesc_array($r1[0]);
 	
-			$r2 = dbq("INSERT INTO profile (`" 
-				. implode("`, `", array_keys($r1[0])) 
-				. "`) VALUES ('" 
+			$r2 = dbq("INSERT INTO profile (" . TQUOT 
+				. implode(TQUOT . ", " . TQUOT, array_keys($r1[0])) 
+				. TQUOT . ") VALUES ('" 
 				. implode("', '", array_values($r1[0])) 
 				. "')" );
 	

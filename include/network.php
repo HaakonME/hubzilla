@@ -2266,7 +2266,7 @@ function z_mail($params) {
 	call_hooks('email_send', $params);
 
 	if($params['sent']) {
-		logger('notification: z_mail returns ' . $params['result'], LOGGER_DEBUG);
+		logger('notification: z_mail returns ' . (($params['result']) ? 'success' : 'failure'), LOGGER_DEBUG);
 		return $params['result'];
 	}
 
@@ -2285,7 +2285,7 @@ function z_mail($params) {
 		$params['textVersion'],
 		$messageHeader									// message headers
 	);
-	logger('notification: z_mail returns ' . $res, LOGGER_DEBUG);
+	logger('notification: z_mail returns ' . (($res) ? 'success' : 'failure'), LOGGER_DEBUG);
 	return $res;
 }
 

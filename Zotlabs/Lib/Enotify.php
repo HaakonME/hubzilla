@@ -633,7 +633,7 @@ class Enotify {
 		call_hooks('email_send', $params);
 
 		if($params['sent']) {
-			logger("notification: enotify::send (addon) returns " . $params['result'], LOGGER_DEBUG);
+			logger("notification: enotify::send (addon) returns " . (($params['result']) ? 'success' : 'failure'), LOGGER_DEBUG);
 			return $params['result'];
 		}
 
@@ -676,7 +676,7 @@ class Enotify {
 			$multipartMessageBody,							// message body
 			$messageHeader									// message headers
 		);
-		logger("notification: enotify::send returns " . $res, LOGGER_DEBUG);
+		logger("notification: enotify::send returns " . (($res) ? 'success' : 'failure'), LOGGER_DEBUG);
 		return $res;
 	}
 

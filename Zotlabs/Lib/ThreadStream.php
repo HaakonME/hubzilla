@@ -58,7 +58,7 @@ class ThreadStream {
 			case 'display':
 				// in this mode we set profile_owner after initialisation (from conversation()) and then 
 				// pull some trickery which allows us to re-invoke this function afterward
-				// it's an ugly hack so FIXME
+				// it's an ugly hack so @FIXME
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			case 'page':
@@ -160,9 +160,9 @@ class ThreadStream {
 			}
 			elseif(($this->observer) && (! $item->is_commentable())) {
 				if((array_key_exists('owner',$item->data)) && intval($item->data['owner']['abook_self']))
-					$item->set_commentable(perm_is_allowed($this->profile_owner,$this->observer['xchan_hash'],'post_comments'));
+					$item->set_commentable(perm_is_allowed($this->profile_owner,$ob_hash,'post_comments'));
 				else
-					$item->set_commentable(can_comment_on_post($this->observer['xchan_hash'],$item->data));
+					$item->set_commentable(can_comment_on_post($ob_hash,$item->data));
 			}
 		}
 		require_once('include/channel.php');

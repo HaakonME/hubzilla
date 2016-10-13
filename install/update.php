@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1183 );
+define( 'UPDATE_VERSION' , 1184 );
 
 /**
  *
@@ -2441,6 +2441,16 @@ function update_r1182() {
 	$r1 = q("alter table site add site_version varchar(32) not null default '' ");
 
 	if($r1)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1183() {
+	$r1 = q("alter table hook CHANGE priority priority smallint NOT NULL DEFAULT '0' ");
+	$r2 = q("create index priority on hook (priority)");
+
+	if($r1 && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }

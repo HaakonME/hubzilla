@@ -504,10 +504,11 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `hook` char(255) NOT NULL DEFAULT '',
   `file` char(255) NOT NULL DEFAULT '',
   `fn` char(255) NOT NULL DEFAULT '',
-  `priority` int(11) unsigned NOT NULL DEFAULT '0',
+  `priority` smallint NOT NULL DEFAULT '0',
   `hook_version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `hook` (`hook`),
+  KEY `priority` (`priority`),
   KEY `hook_version` (`hook_version`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

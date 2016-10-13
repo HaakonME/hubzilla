@@ -452,6 +452,7 @@ require_once('include/api_zot.php');
 		return api_apply_template('user', $type, array('user' => $user_info));
 	}
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
+	api_register_func('api/1.1/account/verify_credentials','api_account_verify_credentials', true);
 
 
 	function api_account_logout( $type){
@@ -460,6 +461,7 @@ require_once('include/api_zot.php');
 		return api_apply_template('user', $type, array('user' => null));
 	}
 	api_register_func('api/account/logout','api_account_logout', false);
+	api_register_func('api/1.1/account/logout','api_account_logout', false);
 	 	
 
 
@@ -518,7 +520,9 @@ require_once('include/api_zot.php');
 		// this should output the last post (the one we just posted).
 		return api_status_show($type);
 	}
+
 	api_register_func('api/statuses/mediap','api_statuses_mediap', true);
+	api_register_func('api/1.1/statuses/mediap','api_statuses_mediap', true);
 
 	function api_statuses_update( $type) {
 		if (api_user() === false) {
@@ -639,6 +643,8 @@ require_once('include/api_zot.php');
 	}
 	api_register_func('api/statuses/update_with_media','api_statuses_update', true);
 	api_register_func('api/statuses/update','api_statuses_update', true);
+	api_register_func('api/1.1/statuses/update_with_media','api_statuses_update', true);
+	api_register_func('api/1.1/statuses/update','api_statuses_update', true);
 
 
 
@@ -844,7 +850,9 @@ require_once('include/api_zot.php');
 		return  api_apply_template('user', $type, array('$user' => $user_info));
 
 	}
+
 	api_register_func('api/users/show','api_users_show');
+	api_register_func('api/1.1/users/show','api_users_show');
 
 	/**
 	 *
@@ -921,6 +929,8 @@ require_once('include/api_zot.php');
 
 	api_register_func('api/statuses/home_timeline','api_statuses_home_timeline', true);
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
+	api_register_func('api/1.1/statuses/home_timeline','api_statuses_home_timeline', true);
+	api_register_func('api/1.1/statuses/friends_timeline','api_statuses_home_timeline', true);
 
 	function api_statuses_public_timeline( $type){
 		if(api_user() === false)
@@ -969,7 +979,9 @@ require_once('include/api_zot.php');
 
 		return  api_apply_template('timeline', $type, $data);
 	}
+
 	api_register_func('api/statuses/public_timeline','api_statuses_public_timeline', true);
+	api_register_func('api/1.1/statuses/public_timeline','api_statuses_public_timeline', true);
 
 
 	function api_statuses_show($type){
@@ -1013,7 +1025,9 @@ require_once('include/api_zot.php');
 			return  api_apply_template('status', $type, $data);
 		}
 	}
+
 	api_register_func('api/statuses/show','api_statuses_show', true);
+	api_register_func('api/1.1/statuses/show','api_statuses_show', true);
 
 
 	/**
@@ -1060,7 +1074,9 @@ require_once('include/api_zot.php');
 
 		return api_apply_template('test', $type, array('$ok' => $ok));
 	}
+
 	api_register_func('api/statuses/retweet','api_statuses_repeat', true);
+	api_register_func('api/1.1/statuses/retweet','api_statuses_repeat', true);
 
 	/**
 	 * 
@@ -1122,7 +1138,9 @@ require_once('include/api_zot.php');
 
 		return api_apply_template('test', $type, array('$ok' => $ok));
 	}
+
 	api_register_func('api/statuses/destroy','api_statuses_destroy', true);
+	api_register_func('api/1.1/statuses/destroy','api_statuses_destroy', true);
 
 	/**
 	 * 
@@ -1174,9 +1192,13 @@ require_once('include/api_zot.php');
 
 		return  api_apply_template('timeline', $type, $data);
 	}
+
 	api_register_func('api/statuses/mentions','api_statuses_mentions', true);
 	// FIXME?? I don't think mentions and replies are congruent in this case
 	api_register_func('api/statuses/replies','api_statuses_mentions', true);
+
+	api_register_func('api/1.1/statuses/mentions','api_statuses_mentions', true);
+	api_register_func('api/1.1/statuses/replies','api_statuses_mentions', true);
 
 
 	function api_statuses_user_timeline( $type){
@@ -1229,6 +1251,7 @@ require_once('include/api_zot.php');
 	}
 
 	api_register_func('api/statuses/user_timeline','api_statuses_user_timeline', true);
+	api_register_func('api/1.1/statuses/user_timeline','api_statuses_user_timeline', true);
 
 
 
@@ -1296,6 +1319,8 @@ require_once('include/api_zot.php');
 
 	api_register_func('api/favorites/create', 'api_favorites_create_destroy', true);
 	api_register_func('api/favorites/destroy', 'api_favorites_create_destroy', true);
+	api_register_func('api/1.1/favorites/create', 'api_favorites_create_destroy', true);
+	api_register_func('api/1.1/favorites/destroy', 'api_favorites_create_destroy', true);
 
 
 	function api_favorites( $type){
@@ -1353,6 +1378,7 @@ require_once('include/api_zot.php');
 	}
 
 	api_register_func('api/favorites','api_favorites', true);
+	api_register_func('api/1.1/favorites','api_favorites', true);
 
 
 	function api_format_message($item, $recipient, $sender) {
@@ -1501,7 +1527,9 @@ require_once('include/api_zot.php');
 		return api_apply_template('ratelimit', $type, array('$hash' => $hash));
 
 	}
+
 	api_register_func('api/account/rate_limit_status','api_account_rate_limit_status',true);
+	api_register_func('api/1.1/account/rate_limit_status','api_account_rate_limit_status',true);
 
 	function api_help_test($type) {
 
@@ -1513,7 +1541,9 @@ require_once('include/api_zot.php');
 		return api_apply_template('test', $type, array('ok' => $ok));
 
 	}
+
 	api_register_func('api/help/test','api_help_test',false);
+	api_register_func('api/1.1/help/test','api_help_test',false);
 
 	/**
 	 *  https://dev.twitter.com/docs/api/1/get/statuses/friends 
@@ -1586,10 +1616,8 @@ require_once('include/api_zot.php');
 
 	api_register_func('api/statuses/friends','api_statuses_friends',true);
 	api_register_func('api/statuses/followers','api_statuses_followers',true);
-
-
-
-
+	api_register_func('api/1.1/statuses/friends','api_statuses_friends',true);
+	api_register_func('api/1.1/statuses/followers','api_statuses_followers',true);
 
 
 	function api_statusnet_config($type) {
@@ -1731,6 +1759,8 @@ require_once('include/api_zot.php');
 	}
 	api_register_func('api/friends/ids','api_friends_ids',true);
 	api_register_func('api/followers/ids','api_followers_ids',true);
+	api_register_func('api/1.1/friends/ids','api_friends_ids',true);
+	api_register_func('api/1.1/followers/ids','api_followers_ids',true);
 
 
 	function api_direct_messages_new( $type) {
@@ -1794,6 +1824,7 @@ require_once('include/api_zot.php');
 	}
 
 	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
+	api_register_func('api/1.1/direct_messages/new','api_direct_messages_new',true);
 
 	function api_direct_messages_box( $type, $box) {
 		if(api_user() === false) 
@@ -1863,10 +1894,16 @@ require_once('include/api_zot.php');
 	function api_direct_messages_conversation($type){
 		return api_direct_messages_box($type, 'conversation');
 	}
+
 	api_register_func('api/direct_messages/conversation','api_direct_messages_conversation',true);
 	api_register_func('api/direct_messages/all','api_direct_messages_all',true);
 	api_register_func('api/direct_messages/sent','api_direct_messages_sentbox',true);
 	api_register_func('api/direct_messages','api_direct_messages_inbox',true);
+
+	api_register_func('api/1.1/direct_messages/conversation','api_direct_messages_conversation',true);
+	api_register_func('api/1.1/direct_messages/all','api_direct_messages_all',true);
+	api_register_func('api/1.1/direct_messages/sent','api_direct_messages_sentbox',true);
+	api_register_func('api/1.1/direct_messages','api_direct_messages_inbox',true);
 
 
 	function api_oauth_request_token( $type){
@@ -1900,6 +1937,9 @@ require_once('include/api_zot.php');
 
 	api_register_func('api/oauth/request_token', 'api_oauth_request_token', false);
 	api_register_func('api/oauth/access_token', 'api_oauth_access_token', false);
+
+	api_register_func('api/1.1/oauth/request_token', 'api_oauth_request_token', false);
+	api_register_func('api/1.1/oauth/access_token', 'api_oauth_access_token', false);
 
 
 /*

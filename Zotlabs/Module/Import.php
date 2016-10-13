@@ -298,15 +298,8 @@ class Import extends \Zotlabs\Web\Controller {
 					);
 					if($r)
 						continue;
-	
-					dbesc_array($xchan);
-			
-					$r = dbq("INSERT INTO xchan (" . TQUOT 
-						. implode(TQUOT . ", " . TQUOT, array_keys($xchan)) 
-						. TQUOT . ") VALUES ('" 
-						. implode("', '", array_values($xchan)) 
-						. "')" );
-	
+
+					create_table_from_array('xchan',$xchan);	
 		
 					require_once('include/photo/photo_driver.php');
 					$photos = import_xchan_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
@@ -386,13 +379,8 @@ class Import extends \Zotlabs\Web\Controller {
 							continue;
 					}
 	
-					dbesc_array($abook);
-					$r = dbq("INSERT INTO abook (" . TQUOT 
-						. implode(TQUOT . ", " . TQUOT, array_keys($abook)) 
-						. TQUOT . ") VALUES ('" 
-						. implode("', '", array_values($abook)) 
-						. "')" );
-	
+					create_table_from_array('abook',$abook);
+
 					$friends ++;
 					if(intval($abook['abook_feed']))
 						$feeds ++;
@@ -427,13 +415,9 @@ class Import extends \Zotlabs\Web\Controller {
 						unset($group['name']);
 					}
 					unset($group['id']);
-					$group['uid'] = $channel['channel_id'];					
-					dbesc_array($group);
-					$r = dbq("INSERT INTO groups (" . TQUOT 
-						. implode(TQUOT . ", " . TQUOT, array_keys($group)) 
-						. TQUOT . ") VALUES ('" 
-						. implode("', '", array_values($group)) 
-						. "')" );
+					$group['uid'] = $channel['channel_id'];
+
+					create_table_from_array('groups',$group);
 				}
 				$r = q("select * from groups where uid = %d",
 					intval($channel['channel_id'])
@@ -455,12 +439,7 @@ class Import extends \Zotlabs\Web\Controller {
 						if($x['old'] == $group_member['gid'])
 							$group_member['gid'] = $x['new'];
 					}
-					dbesc_array($group_member);
-					$r = dbq("INSERT INTO group_member (" . TQUOT 
-						. implode(TQUOT . ", " . TQUOT, array_keys($group_member)) 
-						. TQUOT . ") VALUES ('" 
-						. implode("', '", array_values($group_member)) 
-						. "')" );
+					create_table_from_array('group_member',$group_member);
 				}
 			}
 			logger('import step 9');

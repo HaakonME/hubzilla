@@ -1853,13 +1853,8 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
 
-	dbesc_array($arr);
 
-	$r = dbq("INSERT INTO " . TQUOT . 'item' . TQUOT . " (" . TQUOT
-			. implode(TQUOT . ', ' . TQUOT, array_keys($arr))
-			. TQUOT . ") VALUES ('"
-			. implode("', '", array_values($arr))
-			. "')" );
+	create_table_from_array('item',$arr);
 
 	// find the item we just created
 
@@ -3088,15 +3083,9 @@ function mail_store($arr) {
 		return 0;
 	}
 
-	dbesc_array($arr);
-
 	logger('mail_store: ' . print_r($arr,true), LOGGER_DATA);
 
-	$r = dbq("INSERT INTO mail (" . TQUOT
-			. implode(TQUOT . ', ' . TQUOT, array_keys($arr))
-			. TQUOT . ") VALUES ('"
-			. implode("', '", array_values($arr))
-			. "')" );
+	create_table_from_array('mail', $arr);
 
 	// find the item we just created
 

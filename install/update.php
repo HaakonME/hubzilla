@@ -2448,7 +2448,7 @@ function update_r1182() {
 
 function update_r1183() {
 	$r1 = q("alter table hook CHANGE priority priority smallint NOT NULL DEFAULT '0' ");
-	$r2 = q("create index priority on hook (priority)");
+	$r2 = q("create index priority_idx on hook (priority)");
 
 	if($r1 && $r2)
 		return UPDATE_SUCCESS;

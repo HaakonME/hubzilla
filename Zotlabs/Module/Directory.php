@@ -1,4 +1,5 @@
 <?php
+
 namespace Zotlabs\Module;
 
 require_once('include/socgraph.php');

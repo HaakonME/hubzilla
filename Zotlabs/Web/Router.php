@@ -2,51 +2,53 @@
 
 namespace Zotlabs\Web;
 
-
+/**
+ *
+ * We have already parsed the server path into App::$argc and App::$argv
+ *
+ * App::$argv[0] is our module name. Let's call it 'foo'. We will load the
+ * Zotlabs/Module/Foo.php (object) or file mod/foo.php (procedural)
+ * and use it for handling our URL request to 'https://ourgreatwebsite.something/foo' .
+ * The module file contains a few functions that we call in various circumstances
+ * and in the following order:
+ * @code{.php}
+ * Object:
+ *    class Foo extends \Zotlabs\Web\Controller {
+ *        function init() { init function }
+ *        function post() { post function }
+ *        function get()  { normal page function }
+ *    }
+ *
+ * Procedual interface:
+ *        foo_init()
+ *        foo_post() (only called if there are $_POST variables)
+ *        foo_content() - the string return of this function contains our page body
+ * @endcode
+ * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do
+ * so within the module init and/or post functions and then invoke killme() to terminate
+ * further processing.
+ */
 class Router {
 
 	private $modname = '';
 	private $controller = null;
 
+	/**
+	 * @brief Router constructor
+	 *
+	 * @param[in,out] App &$a
+	 * @throws Exception module not found
+	 */
 	function __construct(&$a) {
-
-		/**
-		 *
-		 * We have already parsed the server path into App::$argc and App::$argv
-		 *
-		 * App::$argv[0] is our module name. Let's call it 'foo'. We will load the
-		 * Zotlabs/Module/Foo.php (object) or file mod/foo.php (procedural)
-		 * and use it for handling our URL request to 'https://ourgreatwebsite.something/foo' .
-		 * The module file contains a few functions that we call in various circumstances
-		 * and in the following order:
-		 *
-		 * Object:
-		 *    class Foo extends Zotlabs\Web\Controller {
-		 *        function init() { init function }
-		 *        function post() { post function }
-		 *        function get()  { normal page function }
-		 *    }
-		 *
-		 * Procedual interface:
-		 *        foo_init()
-		 *        foo_post() (only called if there are $_POST variables)
-		 *        foo_content() - the string return of this function contains our page body
-		 *
-		 * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do
-		 * so within the module init and/or post functions and then invoke killme() to terminate
-		 * further processing.
-		 */
 
 		$module = \App::$module;
 		$modname = "Zotlabs\\Module\\" . ucfirst($module);
 
 		if(strlen($module)) {
 
-			/**
-			 *
+			/*
 			 * We will always have a module name.
 			 * First see if we have a plugin which is masquerading as a module.
-			 *
 			 */
 
 			if(is_array(\App::$plugins) && in_array($module,\App::$plugins) && file_exists("addon/{$module}/{$module}.php")) {
@@ -66,7 +68,7 @@ class Router {
 				goaway(z_root());
 			}
 
-			/**
+			/*
 			 * If the site has a custom module to over-ride the standard module, use it.
 			 * Otherwise, look for the standard program module
 			 */
@@ -101,13 +103,13 @@ class Router {
 					}
 				}
 			}
-				
-			/**
-			 * This provides a place for plugins to register module handlers which don't otherwise exist 
-			 * on the system, or to completely over-ride an existing module. 
+
+			/*
+			 * This provides a place for plugins to register module handlers which don't otherwise exist
+			 * on the system, or to completely over-ride an existing module.
 			 * If the plugin sets 'installed' to true we won't throw a 404 error for the specified module even if
 			 * there is no specific module file or matching plugin name.
-			 * The plugin should catch at least one of the module hooks for this URL. 
+			 * The plugin should catch at least one of the module hooks for this URL.
 			 */
 
 			$x = array('module' => $module, 'installed' => \App::$module_loaded, 'controller' => $this->controller);
@@ -117,7 +119,7 @@ class Router {
 				$this->controller = $x['controller'];
 			}
 
-			/**
+			/*
 			 * The URL provided does not resolve to a valid module.
 			 *
 			 * On Dreamhost sites, quite often things go wrong for no apparent reason and they send us to '/internal_error.html'.
@@ -157,7 +159,11 @@ class Router {
 		}
 	}
 
-
+	/**
+	 * @brief
+	 *
+	 * @param[in,out] App &$a
+	 */
 	function Dispatch(&$a) {
 
 		/**
@@ -168,14 +174,14 @@ class Router {
 			\App::$page['page_title'] = \App::$module;
 			$placeholder = '';
 
-			/**
+			/*
 			 * No theme has been specified when calling the module_init functions
 			 * For this reason, please restrict the use of templates to those which
 			 * do not provide any presentation details - as themes will not be able
 			 * to over-ride them.
 			 */
 
-			$arr = array('init' => true, 'replace' => false);		
+			$arr = array('init' => true, 'replace' => false);
 			call_hooks(\App::$module . '_mod_init', $arr);
 			if(! $arr['replace']) {
 				if($this->controller && method_exists($this->controller,'init')) {
@@ -187,7 +193,7 @@ class Router {
 				}
 			}
 
-			/**
+			/*
 			 * Do all theme initialisation here before calling any additional module functions.
 			 * The module_init function may have changed the theme.
 			 * Additionally any page with a Comanche template may alter the theme.
@@ -195,7 +201,7 @@ class Router {
 			 */
 
 
-			/**
+			/*
 			 * In case a page has overloaded a module, see if we already have a layout defined
 			 * otherwise, if a PDL file exists for this module, use it
 			 * The member may have also created a customised PDL that's stored in the config
@@ -203,7 +209,7 @@ class Router {
 
 			load_pdl($a);
 
-			/**
+			/*
 		 	 * load current theme info
 		 	 */
 
@@ -226,7 +232,7 @@ class Router {
 				}
 			}
 
-			if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! \App::$error) && (! x($_POST, 'auth-params'))) {		
+			if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! \App::$error) && (! x($_POST, 'auth-params'))) {
 				call_hooks(\App::$module . '_mod_post', $_POST);
 
 				if($this->controller && method_exists($this->controller,'post')) {
@@ -238,7 +244,7 @@ class Router {
 				}
 			}
 
-			if(! \App::$error)  {
+			if(! \App::$error) {
 				$arr = array('content' => \App::$page['content'], 'replace' => false);
 				call_hooks(\App::$module . '_mod_content', $arr);
 				\App::$page['content'] = $arr['content'];

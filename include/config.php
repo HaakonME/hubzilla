@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file include/config.php
  * @brief Arbitrary configuration storage.
@@ -7,7 +6,6 @@
  * Arrays get stored as serialized strings.
  * Booleans are stored as integer 0/1.
  *
-
  * - <b>config</b> is used for hub specific configurations. It overrides the
  * configurations from .htconfig file. The storage is of size TEXT.
  * - <b>pconfig</b> is used for channel specific configurations and takes a
@@ -26,7 +24,7 @@
  * - get_config() and set_config() can also be done through the command line tool
  * @ref util/config.md "util/config"
  * - get_pconfig() and set_pconfig() can also be done through the command line tool
- * @ref util/pconfig.md "util/pconfig" and takes a channel_id as first argument. 
+ * @ref util/pconfig.md "util/pconfig" and takes a channel_id as first argument.
  *
  */
 

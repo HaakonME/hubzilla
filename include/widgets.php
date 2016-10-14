@@ -126,7 +126,7 @@ function widget_suggestions($arr) {
 
 	// Get two random entries from the top 20 returned.
 	// We'll grab the first one and the one immediately following.
-	// This will throw some entropy intot he situation so you won't 
+	// This will throw some entropy intot he situation so you won't
 	// be looking at the same two mug shots every time the widget runs
 
 	$index = ((count($r) > 2) ? mt_rand(0,count($r) - 2) : 0);
@@ -169,7 +169,7 @@ function widget_follow($args) {
 		intval($uid)
 	);
 	if($r)
-		$total_channels = $r[0]['total'];	
+		$total_channels = $r[0]['total'];
 	$limit = service_class_fetch($uid,'total_channels');
 	if($limit !== false) {
 		$abook_usage_message = sprintf( t("You have %1$.0f of %2$.0f allowed connections."), $total_channels, $limit);
@@ -212,7 +212,7 @@ function widget_savedsearch($arr) {
 	$search = ((x($_GET,'netsearch')) ? $_GET['netsearch'] : '');
 	if(! $search)
 		$search = ((x($_GET,'search')) ? $_GET['search'] : '');
-	
+
 	if(x($_GET,'searchsave') && $search) {
 		$r = q("select * from term where uid = %d and ttype = %d and term = '%s' limit 1",
 			intval(local_channel()),
@@ -252,7 +252,7 @@ function widget_savedsearch($arr) {
 	$hasamp = ((strpos($srchurl,'&') !== false) ? true : false);
 
 	if(($hasamp) && (! $hasq))
-		$srchurl = substr($srchurl,0,strpos($srchurl,'&')) . '?f=&' . substr($srchurl,strpos($srchurl,'&')+1);		
+		$srchurl = substr($srchurl,0,strpos($srchurl,'&')) . '?f=&' . substr($srchurl,strpos($srchurl,'&')+1);
 
 	$o = '';
 
@@ -292,7 +292,7 @@ function widget_savedsearch($arr) {
 function widget_sitesearch($arr) {
 
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
-	
+
 	$srchurl = App::$query_string;
 
 	$srchurl =  rtrim(preg_replace('/search\=[^\&].*?(\&|$)/is','',$srchurl),'&');
@@ -304,7 +304,7 @@ function widget_sitesearch($arr) {
 	$hasamp = ((strpos($srchurl,'&') !== false) ? true : false);
 
 	if(($hasamp) && (! $hasq))
-		$srchurl = substr($srchurl,0,strpos($srchurl,'&')) . '?f=&' . substr($srchurl,strpos($srchurl,'&')+1);		
+		$srchurl = substr($srchurl,0,strpos($srchurl,'&')) . '?f=&' . substr($srchurl,strpos($srchurl,'&')+1);
 
 	$o = '';
 
@@ -554,7 +554,7 @@ function widget_affinity($arr) {
 		));
 		$arr = array('html' => $x);
 		call_hooks('main_slider',$arr);
-		return $arr['html']; 
+		return $arr['html'];
 	}
 
  	return '';
@@ -802,10 +802,10 @@ function widget_design_tools($arr) {
 	// mod menu doesn't load a profile. For any modules which load a profile, check it.
 	// otherwise local_channel() is sufficient for permissions.
 
-	if(App::$profile['profile_uid']) 
+	if(App::$profile['profile_uid'])
 		if((App::$profile['profile_uid'] != local_channel()) && (! App::$is_sys))
 			return '';
- 
+
 	if(! local_channel())
 		return '';
 
@@ -817,10 +817,10 @@ function widget_website_portation_tools($arr) {
 	// mod menu doesn't load a profile. For any modules which load a profile, check it.
 	// otherwise local_channel() is sufficient for permissions.
 
-	if(App::$profile['profile_uid']) 
+	if(App::$profile['profile_uid'])
 		if((App::$profile['profile_uid'] != local_channel()) && (! App::$is_sys))
 			return '';
- 
+
 	if(! local_channel())
 		return '';
 
@@ -841,7 +841,7 @@ function widget_photo_albums($arr) {
 		return '';
 	require_once('include/photos.php');
 	$sortkey = ((array_key_exists('sortkey',$arr)) ? $arr['sortkey'] : 'album');
-	$direction = ((array_key_exists('direction',$arr)) ? $arr['direction'] : 'asc');	
+	$direction = ((array_key_exists('direction',$arr)) ? $arr['direction'] : 'asc');
 
 	return photos_album_widget($channelx, App::get_observer(),$sortkey,$direction);
 }
@@ -901,7 +901,7 @@ function widget_wiki_list($arr) {
 
 	require_once("include/wiki.php");
 	$channel = null;
-	if (argc() < 2 && local_channel()) { 
+	if (argc() < 2 && local_channel()) {
 		// This should not occur because /wiki should redirect to /wiki/channel ...
 		$channel = \App::get_channel();
 	} else {
@@ -996,9 +996,9 @@ function widget_suggestedchats($arr) {
 	if(! feature_enabled(App::$profile['profile_uid'],'ajaxchat'))
 		return '';
 
-	// There are reports that this tool does not ever remove chatrooms on dead sites, 
+	// There are reports that this tool does not ever remove chatrooms on dead sites,
 	// and also will happily link to private chats which you cannot enter.
-	// For those reasons, it will be disabled until somebody decides it's worth 
+	// For those reasons, it will be disabled until somebody decides it's worth
 	// fixing and comes up with a plan for doing so.
 
 	return '';
@@ -1044,7 +1044,7 @@ function widget_item($arr) {
 
 	if($arr['title']) {
 		$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
-			where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s' 
+			where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s'
 			and iconfig.k = 'WEBPAGE' and item_type = %d $sql_options $revision limit 1",
 			intval($channel_id),
 			dbesc($arr['title']),
@@ -1108,7 +1108,7 @@ function showtime(){
 //    timeValue  += ((seconds < 10) ? ":0" : ":") + seconds
 	if(! military)
 	    timeValue  += (hours >= 12) ? " P.M." : " A.M."
-    $('.clockface').html(timeValue) 
+    $('.clockface').html(timeValue)
     timerID = setTimeout("showtime()",1000)
     timerRunning = true
 }
@@ -1124,17 +1124,16 @@ return $o;
 
 }
 
-
 /**
- * @function widget_photo($arr)
- *    widget to display a single photo.
- * @param array $arr;
- *    'src' => URL of photo
- *    'zrl' => true or false, use zid in url
- *    'style' => CSS string
- * URL must be an http or https URL
+ * @brief Widget to display a single photo.
+ *
+ * @param array $arr associative array with
+ *    * \e string \b src URL of photo; URL must be an http or https URL
+ *    * \e boolean \b zrl use zid in URL
+ *    * \e string \b style CSS string
+ *
+ * @return string with parsed HTML
  */
-
 function widget_photo($arr) {
 
 	$style = $zrl = false;
@@ -1142,7 +1141,7 @@ function widget_photo($arr) {
 	if(array_key_exists('src', $arr) && isset($arr['src']))
 		$url = $arr['src'];
 
-	if(strpos($url,'http') !== 0)
+	if(strpos($url, 'http') !== 0)
 		return '';
 
 	if(array_key_exists('style', $arr) && isset($arr['style']))
@@ -1150,7 +1149,7 @@ function widget_photo($arr) {
 
 	// ensure they can't sneak in an eval(js) function
 
-	if(strpbrk($style,'(\'"<>') !== false)
+	if(strpbrk($style, '(\'"<>') !== false)
 		$style = '';
 
 	if(array_key_exists('zrl', $arr) && isset($arr['zrl']))
@@ -1161,8 +1160,8 @@ function widget_photo($arr) {
 
 	$o = '<div class="widget">';
 
-	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '') 
-				  . (($style) ? ' style="' . $style . '"' : '') 
+	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '')
+				  . (($style) ? ' style="' . $style . '"' : '')
 				  . ' src="' . $url . '" alt="' . t('photo/image') . '">';
 
 	$o .= '</div>';
@@ -1175,7 +1174,7 @@ function widget_cover_photo($arr) {
 
 	require_once('include/channel.php');
 	$o = '';
-	
+
 	if(App::$module == 'channel' && $_REQUEST['mid'])
 		return '';
 
@@ -1191,7 +1190,7 @@ function widget_cover_photo($arr) {
 
 	if(array_key_exists('style', $arr) && isset($arr['style']))
 		$style = $arr['style'];
-	else 
+	else
 		$style = 'width:100%; height: auto;';
 
 	// ensure they can't sneak in an eval(js) function
@@ -1273,8 +1272,8 @@ function widget_photo_rand($arr) {
 
 	$o = '<div class="widget">';
 
-	$o .= '<img class="zrl" ' 
-		. (($style) ? ' style="' . $style . '"' : '') 
+	$o .= '<img class="zrl" '
+		. (($style) ? ' style="' . $style . '"' : '')
 		. ' src="' . $url . '" alt="' . t('photo/image') . '">';
 
 	$o .= '</div>';
@@ -1304,7 +1303,7 @@ function widget_random_block($arr) {
 	$randfunc = db_getfunc('RAND');
 
 	$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
-		where item.uid = %d and iconfig.cat = 'system' and iconfig.v like '%s' and iconfig.k = 'BUILDBLOCK' and 
+		where item.uid = %d and iconfig.cat = 'system' and iconfig.v like '%s' and iconfig.k = 'BUILDBLOCK' and
 		item_type = %d $sql_options order by $randfunc limit 1",
 		intval($channel_id),
 		dbesc('%' . $contains . '%'),
@@ -1413,7 +1412,7 @@ function widget_forums($arr) {
 
 	/**
 	 * We used to try and find public forums with custom permissions by checking to see if
-	 * send_stream was false and tag_deliver was true. However with the newer extensible 
+	 * send_stream was false and tag_deliver was true. However with the newer extensible
 	 * permissions infrastructure this makes for a very complicated query. Now we're only
 	 * checking channels that report themselves specifically as pubforums
 	 */
@@ -1440,11 +1439,11 @@ function widget_forums($arr) {
 /**
  * @FIXME
  * This SQL makes the counts correct when you get forum posts arriving from different routes/sources
- * (like personal channels). However the network query for these posts doesn't yet include this 
- * correction and it makes the SQL for that query pretty hairy so this is left as a future exercise. 
+ * (like personal channels). However the network query for these posts doesn't yet include this
+ * correction and it makes the SQL for that query pretty hairy so this is left as a future exercise.
  * It may make more sense in that query to look for the mention in the body rather than another join,
  * but that makes it very inefficient.
- * 
+ *
 		$r = q("select sum(item_unseen) as unseen from item left join term on oid = id where otype = %d and owner_xchan != '%s' and item.uid = %d and url = '%s' and ttype = %d $perms_sql ",
 			intval(TERM_OBJ_POST),
 			dbesc($r1[$x]['xchan_hash']),
@@ -1457,7 +1456,7 @@ function widget_forums($arr) {
  *
  * end @FIXME
  */
-		
+
 	}
 
 	if($r1) {
@@ -1471,7 +1470,7 @@ function widget_forums($arr) {
 		}
 		$o .= '</ul></div>';
 	}
-	return $o; 
+	return $o;
 
 }
 
@@ -1489,7 +1488,7 @@ function widget_tasklist($arr) {
 				$(".tasklist-tasks").html(data.html);
 			});
 		}
-		</script>'; 
+		</script>';
 
 	$o .= '<div class="widget">' . '<h3>' . t('Tasks') . '</h3><div class="tasklist-tasks">';
 	$o .= '</div><form id="tasklist-new-form" action="" ><input id="tasklist-new-summary" type="text" name="summary" value="" /></form>';
@@ -1516,7 +1515,7 @@ function widget_helpindex($arr) {
 	if(argc() > 2) {
 		$path = '';
 		for($x = 1; $x < argc(); $x ++) {
-			$path .= argv($x) . '/';			
+			$path .= argv($x) . '/';
 			$y = get_help_content($path . 'sitetoc');
 			if(! $y)
 				$y = get_help_content($path . 'toc');
@@ -1590,7 +1589,7 @@ function widget_admin($arr) {
 	call_hooks('admin_aside',$arr);
 
 	$o .= replace_macros(get_markup_template('admin_aside.tpl'), array(
-			'$admin' => $aside, 
+			'$admin' => $aside,
 			'$admtxt' => t('Admin'),
 			'$plugadmtxt' => t('Plugin Features'),
 			'$plugins' => $plugins,
@@ -1620,7 +1619,7 @@ function widget_album($args) {
 	if($args['title'])
 		$title = $args['title'];
 
-	/** 
+	/**
 	 * This may return incorrect permissions if you have multiple directories of the same name.
 	 * It is a limitation of the photo table using a name for a photo album instead of a folder hash
 	 */
@@ -1640,7 +1639,7 @@ function widget_album($args) {
 	$order = 'DESC';
 
 	$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.imgscale, p.description, p.created FROM photo p INNER JOIN
-		(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph 
+		(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) $sql_extra GROUP BY resource_id) ph
 		ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)
 		ORDER BY created $order ",
 		intval($owner_uid),
@@ -1648,7 +1647,7 @@ function widget_album($args) {
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
 	);
-		
+
 	//edit album name
 	$album_edit = null;
 
@@ -1661,7 +1660,7 @@ function widget_album($args) {
 				$twist = 'rotleft';
 			else
 				$twist = 'rotright';
-				
+
 			$ext = $phototypes[$rr['mimetype']];
 
 			$imgalt_e = $rr['filename'];

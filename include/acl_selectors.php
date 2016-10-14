@@ -1,17 +1,24 @@
-<?php /** @file */
+<?php
 /**
- * 
+ * @file include/acl_selectors.php
+ *
+ * @package acl_selectors
  */
 
 /**
- * @package acl_selectors 
+ * @brief
+ *
+ * @param string $selname
+ * @param string $selclass
+ * @param mixed $preselected
+ * @param number $size
+ * @return string
  */
-
-function group_select($selname,$selclass,$preselected = false,$size = 4) {
+function group_select($selname, $selclass, $preselected = false, $size = 4) {
 
 	$o = '';
 
-	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
+	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\">\r\n";
 
 	$r = q("SELECT * FROM groups WHERE deleted = 0 AND uid = %d ORDER BY gname ASC",
 		intval(local_channel())
@@ -34,18 +41,16 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}\" >$trimmed</option>\r\n";
 		}
-	
+
 	}
 	$o .= "</select>\r\n";
 
 	call_hooks(App::$module . '_post_' . $selname, $o);
 
-
 	return $o;
 }
 
 function contact_select($selname, $selclass, $preselected = false, $size = 4, $privmail = false, $celeb = false, $privatenet = false, $tabindex = null) {
-
 
 	$o = '';
 
@@ -54,17 +59,17 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	$sql_extra = '';
 
-	$tabindex = ($tabindex > 0 ? "tabindex=\"$tabindex\"" : "");
+	$tabindex = ($tabindex > 0 ? 'tabindex="$tabindex"' : '');
 
 	if($privmail)
 		$o .= "<select name=\"$selname\" id=\"$selclass\" class=\"$selclass\" size=\"$size\" $tabindex >\r\n";
-	else 
-		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" $tabindex >\r\n";
+	else
+		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" $tabindex>\r\n";
 
 	$r = q("SELECT abook_id, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash
 		where abook_self = 0 and abook_channel = %d
 		$sql_extra
-		ORDER BY xchan_name ASC ",
+		ORDER BY xchan_name ASC",
 		intval(local_channel())
 	);
 
@@ -78,15 +83,14 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	if($r) {
 		foreach($r as $rr) {
 			if((is_array($preselected)) && in_array($rr['id'], $preselected))
-				$selected = " selected=\"selected\" ";
+				$selected = ' selected="selected" ';
 			else
 				$selected = '';
 
-			$trimmed = mb_substr($rr['xchan_name'],0,20);
+			$trimmed = mb_substr($rr['xchan_name'], 0, 20);
 
 			$o .= "<option value=\"{$rr['abook_id']}\" $selected title=\"{$rr['xchan_name']}|{$rr['xchan_url']}\" >$trimmed</option>\r\n";
 		}
-	
 	}
 
 	$o .= "</select>\r\n";
@@ -98,13 +102,13 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 
 function fixacl(&$item) {
-	$item = str_replace(array('<','>'),array('',''),$item);
+	$item = str_replace(array('<', '>'), array('', ''), $item);
 }
 
 /**
 * Builds a modal dialog for editing permissions, using acl_selector.tpl as the template.
 *
-* @param array   $default Optional access control list for the initial state of the dialog.
+* @param array   $defaults Optional access control list for the initial state of the dialog.
 * @param boolean $show_jotnets Whether plugins for federated networks should be included in the permissions dialog
 * @param PermissionDescription $emptyACL_description - An optional description for the permission implied by selecting an empty ACL. Preferably an instance of PermissionDescription.
 * @param string  $dialog_description Optional message to include at the top of the dialog. E.g. "Warning: Post permissions cannot be changed once sent".
@@ -118,16 +122,15 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 	$showall_origin = '';
 	$showall_icon   = 'fa-globe';
-	$role = get_pconfig(local_channel(),'system','permissions_role');
+	$role = get_pconfig(local_channel(), 'system', 'permissions_role');
 
 	if(! $emptyACL_description) {
 		$showall_caption = t('Visible to your default audience');
 
-	} else if (is_a($emptyACL_description, '\\Zotlabs\\Lib\\PermissionDescription')) {
+	} else if(is_a($emptyACL_description, '\\Zotlabs\\Lib\\PermissionDescription')) {
 		$showall_caption = $emptyACL_description->get_permission_description();
 		$showall_origin  = (($role === 'custom') ? $emptyACL_description->get_permission_origin_description() : '');
 		$showall_icon    = $emptyACL_description->get_permission_icon();
-
 	} else {
 		// For backwards compatibility we still accept a string... for now!
 		$showall_caption = $emptyACL_description;
@@ -135,7 +138,7 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 
 
 	if(is_array($defaults)) {
-		$allow_cid = ((strlen($defaults['allow_cid'])) 
+		$allow_cid = ((strlen($defaults['allow_cid']))
 			? explode('><', $defaults['allow_cid']) : array() );
 		$allow_gid = ((strlen($defaults['allow_gid']))
 			? explode('><', $defaults['allow_gid']) : array() );
@@ -169,9 +172,9 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		'$select_label'    => t('Who can see this?'),
 		'$custom'          => t('Custom selection'),
 		'$showlimitedDesc' => t('Select "Show" to allow viewing. "Don\'t show" lets you override and limit the scope of "Show".'),
-		'$show'	           => t("Show"),
+		'$show'	           => t('Show'),
 		'$hide'	           => t("Don't show"),
-		'$search'          => t("Search"),
+		'$search'          => t('Search'),
 		'$allowcid'        => json_encode($allow_cid),
 		'$allowgid'        => json_encode($allow_gid),
 		'$denycid'         => json_encode($deny_cid),
@@ -183,20 +186,19 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	));
 
 	return $o;
-
 }
 
 /**
-* Returns a string that's suitable for passing as the $dialog_description argument to a
-* populate_acl() call for wall posts or network posts.
-*
-* This string is needed in 3 different files, and our .po translation system currently
-* cannot be used as a string table (because the value is always the key in english) so
-* I've centralized the value here (making this function name the "key") until we have a
-* better way.
-*
-* @return string Description to present to user in modal permissions dialog
-*/
+ * Returns a string that's suitable for passing as the $dialog_description argument to a
+ * populate_acl() call for wall posts or network posts.
+ *
+ * This string is needed in 3 different files, and our .po translation system currently
+ * cannot be used as a string table (because the value is always the key in english) so
+ * I've centralized the value here (making this function name the "key") until we have a
+ * better way.
+ *
+ * @return string Description to present to user in modal permissions dialog
+ */
 function get_post_aclDialogDescription() {
 
 	// I'm trying to make two points in this description text - warn about finality of wall
@@ -212,4 +214,3 @@ function get_post_aclDialogDescription() {
 
 	return sprintf($description, $emphasisOpen, $emphasisClose);
 }
-

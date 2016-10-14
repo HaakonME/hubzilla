@@ -327,7 +327,7 @@ class Channel {
 		}
 	
 	
-		logger('permiss: ' . print_r($permiss,true));
+		//		logger('permiss: ' . print_r($permiss,true));
 	
 	
 	

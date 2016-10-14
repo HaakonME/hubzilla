@@ -32,6 +32,8 @@ class Finger {
 		} else {
 			$address = substr($webbie,0,strpos($webbie,'@'));
 			$host = substr($webbie,strpos($webbie,'@')+1);
+			if(strpos($host,'/'))
+				$host = substr($host,0,strpos($host,'/'));
 		}
 
 		$xchan_addr = $address . '@' . $host;
@@ -58,7 +60,7 @@ class Finger {
 
 			if ($r[0]['hubloc_network'] && $r[0]['hubloc_network'] !== 'zot') {
 				logger('zot_finger: alternate network: ' . $webbie);
-				logger('url: '.$url.', net: '.var_export($r[0]['hubloc_network'],true), LOGGER_DATA, LOG_DEBUG);
+				logger('url: ' . $url . ', net: ' . var_export($r[0]['hubloc_network'],true), LOGGER_DATA, LOG_DEBUG);
 				return $ret;
 			}
 		} 

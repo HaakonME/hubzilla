@@ -186,6 +186,8 @@ function zot_finger($webbie, $channel = null, $autofallback = true) {
 	} else {
 		$address = substr($webbie,0,strpos($webbie,'@'));
 		$host = substr($webbie,strpos($webbie,'@')+1);
+		if(strpos($host,'/'))
+			$host = substr($host,0,strpos($host,'/'));
 	}
 
 	$xchan_addr = $address . '@' . $host;
@@ -354,6 +356,8 @@ function zot_refresh($them, $channel = null, $force = false) {
 	}
 
 	$rhs = '/.well-known/zot-info';
+
+	logger('zot_refresh: ' . $url, LOGGER_DATA, LOG_INFO);
 
 	$result = z_post_url($url . $rhs,$postvars);
 

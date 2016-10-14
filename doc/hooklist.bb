@@ -320,6 +320,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/magic_auth]magic_auth[/zrl]
 	Called when processing a magic-auth sequence
 
+[zrl=[baseurl]/help/hook/markdown_to_bb]markdown_to_bb[/zrl]
+	Called when processing markdown conversion
+
 [zrl=[baseurl]/help/hook/match_webfinger_location]match_webfinger_location[/zrl]
 	Called when processing webfinger requests
 

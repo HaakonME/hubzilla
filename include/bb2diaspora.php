@@ -161,16 +161,13 @@ function diaspora2bb($s, $use_zrl = false) {
 		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url=$2$3]$2$3[/url]',$s);
 	}
 
-	//$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)(vimeo|youtu|www\.youtube|soundcloud)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url=$2$3$4]$2$3$4[/url]',$s);
-	$s = bb_tag_preg_replace("/\[url\=?(.*?)\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/url\]/ism",'[embed]https://www.youtube.com/watch?v=$2[/embed]','url',$s);
-	$s = bb_tag_preg_replace("/\[url\=https?:\/\/www.youtube.com\/watch\?v\=(.*?)\].*?\[\/url\]/ism",'[embed]https://www.youtube.com/watch?v=$1[/embed]','url',$s);
-	$s = bb_tag_preg_replace("/\[url\=?(.*?)\]https?:\/	\/vimeo.com\/([0-9]+)(.*?)\[\/url\]/ism",'[embed]https://vimeo.com/$2[/embed]','url',$s);
-	$s = bb_tag_preg_replace("/\[url\=https?:\/\/vimeo.com\/([0-9]+)\](.*?)\[\/url\]/ism",'[embed]https://vimeo.com/$1[/embed]','url',$s);
 	// remove duplicate adjacent code tags
 	$s = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/ism","[code]$2[/code]", $s);
 
 	// Don't show link to full picture (until it is fixed)
 	$s = scale_external_images($s, false);
+
+	call_hooks('markdown_to_bb',$s);
 
 	return $s;
 }

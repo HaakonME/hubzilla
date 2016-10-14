@@ -5,11 +5,9 @@ namespace Zotlabs\Module\Admin;
 
 class Site {
 
-	
 	/**
 	 * @brief POST handler for Admin Site Page.
 	 *
-	 * @param App &$a
 	 */
 	function post(){
 		if (!x($_POST, 'page_site')) {
@@ -17,38 +15,38 @@ class Site {
 		}
 
 		check_form_security_token_redirectOnErr('/admin/site', 'admin_site');
-	
+
 		$sitename 			=	((x($_POST,'sitename'))			? notags(trim($_POST['sitename']))			: '');
 		$server_role 		=	((x($_POST,'server_role'))		? notags(trim($_POST['server_role']))		: 'standard');
 
-		$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])				: false);
+		$banner				=	((x($_POST,'banner'))			? trim($_POST['banner'])				: false);
 
 		$admininfo			=	((x($_POST,'admininfo'))		? trim($_POST['admininfo'])				: false);
 		$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 		$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 		$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
-	//	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
+//		$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
 		$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
-	
+
 		$register_policy	=	((x($_POST,'register_policy'))	? intval(trim($_POST['register_policy']))	:  0);
-		
+
 		$access_policy	=	((x($_POST,'access_policy'))	? intval(trim($_POST['access_policy']))	:  0);
-		$invite_only        = ((x($_POST,'invite_only'))		? True	: False);
-		$abandon_days	    =	((x($_POST,'abandon_days'))	    ? intval(trim($_POST['abandon_days']))	    :  0);
-	
+		$invite_only	= ((x($_POST,'invite_only'))		? True	: False);
+		$abandon_days	=	((x($_POST,'abandon_days'))	    ? intval(trim($_POST['abandon_days']))	    :  0);
+
 		$register_text		=	((x($_POST,'register_text'))	? notags(trim($_POST['register_text']))		: '');
-		$frontpage		    =	((x($_POST,'frontpage'))	? notags(trim($_POST['frontpage']))		: '');
-		$mirror_frontpage   =	((x($_POST,'mirror_frontpage'))	? intval(trim($_POST['mirror_frontpage']))		: 0);
-		$directory_server   =   ((x($_POST,'directory_server')) ? trim($_POST['directory_server']) : '');
-		$allowed_sites        = ((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
-		$force_publish        = ((x($_POST,'publish_all'))		? True	: False);
-		$disable_discover_tab = ((x($_POST,'disable_discover_tab'))		? False	:	True);
-		$login_on_homepage    = ((x($_POST,'login_on_homepage'))		? True	:	False);
-		$enable_context_help    = ((x($_POST,'enable_context_help'))		? True	:	False);
+		$frontpage			=	((x($_POST,'frontpage'))	? notags(trim($_POST['frontpage']))		: '');
+		$mirror_frontpage	=	((x($_POST,'mirror_frontpage'))	? intval(trim($_POST['mirror_frontpage']))		: 0);
+		$directory_server	=	((x($_POST,'directory_server')) ? trim($_POST['directory_server']) : '');
+		$allowed_sites		=	((x($_POST,'allowed_sites'))	? notags(trim($_POST['allowed_sites']))		: '');
+		$force_publish		=	((x($_POST,'publish_all'))		? True	: False);
+		$disable_discover_tab =	((x($_POST,'disable_discover_tab'))		? False	:	True);
+		$login_on_homepage	=	((x($_POST,'login_on_homepage'))		? True	:	False);
+		$enable_context_help = ((x($_POST,'enable_context_help'))		? True	:	False);
 		$global_directory     = ((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 		$no_community_page    = !((x($_POST,'no_community_page'))	? True	:	False);
 		$default_expire_days  = ((array_key_exists('default_expire_days',$_POST)) ? intval($_POST['default_expire_days']) : 0);
-	
+
 		$verifyssl         = ((x($_POST,'verifyssl'))        ? True : False);
 		$proxyuser         = ((x($_POST,'proxyuser'))        ? notags(trim($_POST['proxyuser']))  : '');
 		$proxy             = ((x($_POST,'proxy'))            ? notags(trim($_POST['proxy']))      : '');
@@ -62,10 +60,8 @@ class Site {
 		$techlevel_lock    = ((x($_POST,'techlock'))   ? intval($_POST['techlock'])   : 0);
 
 		$techlevel         = null;
-		if(array_key_exists('techlevel',$_POST))
+		if(array_key_exists('techlevel', $_POST))
 			$techlevel = intval($_POST['techlevel']);
-
-	
 
 		set_config('system', 'server_role', $server_role);
 		set_config('system', 'feed_contacts', $feed_contacts);
@@ -84,16 +80,16 @@ class Site {
 
 		if(! is_null($techlevel))
 			set_config('system', 'techlevel', $techlevel);
-	
+
 		if($directory_server)
 			set_config('system','directory_server',$directory_server);
-	
+
 		if ($banner == '') {
 			del_config('system', 'banner');
 		} else {
 			set_config('system', 'banner', $banner);
 		}
-	
+
 		if ($admininfo == ''){
 			del_config('system', 'admininfo');
 		} else {
@@ -110,9 +106,9 @@ class Site {
 		}
 	//	set_config('system','site_channel', $site_channel);
 		set_config('system','maximagesize', $maximagesize);
-	
+
 		set_config('system','register_policy', $register_policy);
-		set_config('system','invitation_only', $invite_only);	
+		set_config('system','invitation_only', $invite_only);
 		set_config('system','access_policy', $access_policy);
 		set_config('system','account_abandon_days', $abandon_days);
 		set_config('system','register_text', $register_text);
@@ -124,14 +120,14 @@ class Site {
 		} else {
 			set_config('system', 'directory_submit_url', $global_directory);
 		}
-	
+
 		set_config('system','no_community_page', $no_community_page);
 		set_config('system','no_utf', $no_utf);
 		set_config('system','verifyssl', $verifyssl);
 		set_config('system','proxyuser', $proxyuser);
 		set_config('system','proxy', $proxy);
 		set_config('system','curl_timeout', $timeout);
-	
+
 		info( t('Site settings updated.') . EOL);
 		goaway(z_root() . '/admin/site' );
 	}
@@ -139,15 +135,14 @@ class Site {
 	/**
 	 * @brief Admin page site.
 	 *
-	 * @return string
+	 * @return string with HTML
 	 */
-
 	function get() {
-	
+
 		/* Installed langs */
 		$lang_choices = array();
 		$langs = glob('view/*/hstrings.php');
-	
+
 		if(is_array($langs) && count($langs)) {
 			if(! in_array('view/en/hstrings.php',$langs))
 				$langs[] = 'view/en/';
@@ -157,7 +152,7 @@ class Site {
 				$lang_choices[$t[1]] = $t[1];
 			}
 		}
-	
+
 		/* Installed themes */
 		$theme_choices_mobile["---"] = t("Default");
 		$theme_choices = array();
@@ -184,13 +179,13 @@ class Site {
 				}
 			}
 		}
-	
+
 		$dir_choices = null;
 		$dirmode = get_config('system','directory_mode');
 		$realm = get_directory_realm();
-	
+
 		// directory server should not be set or settable unless we are a directory client
-	
+
 		if($dirmode == DIRECTORY_MODE_NORMAL) {
 			$x = q("select site_url from site where site_flags in (%d,%d) and site_realm = '%s'",
 				intval(DIRECTORY_MODE_SECONDARY),
@@ -204,25 +199,25 @@ class Site {
 				}
 			}
 		}
-	
+
 		/* Banner */
-	
+
 		$banner = get_config('system', 'banner');
-		if($banner === false) 
+		if($banner === false)
 			$banner = get_config('system','sitename');
-	
+
 		$banner = htmlspecialchars($banner);
-	
+
 		/* Admin Info */
 		$admininfo = get_config('system', 'admininfo');
-	
+
 		/* Register policy */
 		$register_choices = Array(
 			REGISTER_CLOSED  => t("No"),
 			REGISTER_APPROVE => t("Yes - with approval"),
 			REGISTER_OPEN    => t("Yes")
 		);
-	
+
 		/* Acess policy */
 		$access_choices = Array(
 			ACCESS_PRIVATE => t("My site is not a public server"),
@@ -230,36 +225,32 @@ class Site {
 			ACCESS_FREE => t("My site has free access only"),
 			ACCESS_TIERED => t("My site offers free accounts with optional paid upgrades")
 		);
-	
+
 		$discover_tab = get_config('system','disable_discover_tab');
 		// $disable public streams by default
 		if($discover_tab === false)
 			$discover_tab = 1;
 		// now invert the logic for the setting.
 		$discover_tab = (1 - $discover_tab);
-	
+
 		$server_roles = [
 			'basic'    => t('Basic/Minimal Social Networking'),
 			'standard' => t('Standard Configuration (default)'),
 			'pro'      => t('Professional')
 		];
 
-
 		$techlevels = [
 			'0' => t('Beginner/Basic'),
 			'1' => t('Novice - not skilled but willing to learn'),
 			'2' => t('Intermediate - somewhat comfortable'),
 			'3' => t('Advanced - very comfortable'),
-			'4' => t('Expert - I can write computer code'),			
+			'4' => t('Expert - I can write computer code'),
 			'5' => t('Wizard - I probably know more than you do')
 		];
 
-
-
-	
 		$homelogin = get_config('system','login_on_homepage');
 		$enable_context_help = get_config('system','enable_context_help');
-	
+
 		$t = get_markup_template("admin_site.tpl");
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -269,7 +260,7 @@ class Site {
 			'$upload' => t('File upload'),
 			'$corporate' => t('Policies'),
 			'$advanced' => t('Advanced'),
-	
+
 			'$baseurl' => z_root(),
 			// name, label, value, help string, extra data...
 			'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
@@ -280,14 +271,13 @@ class Site {
 
 			'$techlock' => [ 'techlock', t('Lock the technical skill level setting'), get_config('system','techlevel_lock'), t('Members can set their own technical comfort level by default') ],
 
-
 			'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 			'$admininfo'		=> array('admininfo', t("Administrator Information"), $admininfo, t("Contact information for site administrators.  Displayed on siteinfo page.  BBCode can be used here")),
 			'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 			'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 			'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
-	//		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
-			'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')), 
+//			'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
+			'$feed_contacts'    => array('feed_contacts', t('Allow Feeds as Connections'),get_config('system','feed_contacts'),t('(Heavy system resource usage)')),
 			'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 			'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
 			'$invite_only'		=> array('invite_only', t("Invitation only"), get_config('system','invitation_only'), t("Only allow new member registrations with an invitation code. Above register policy must be set to Yes.")),
@@ -302,9 +292,9 @@ class Site {
 			'$disable_discover_tab'	=> array('disable_discover_tab', t('Import Public Streams'), $discover_tab, t('Import and allow access to public content pulled from other sites. Warning: this content is unmoderated.')),
 			'$login_on_homepage'	=> array('login_on_homepage', t("Login on Homepage"),((intval($homelogin) || $homelogin === false) ? 1 : '') , t("Present a login box to visitors on the home page if no other content has been configured.")),
 			'$enable_context_help'	=> array('enable_context_help', t("Enable context help"),((intval($enable_context_help) === 1 || $enable_context_help === false) ? 1 : 0) , t("Display contextual help for the current page when the help button is pressed.")),
-	
+
 			'$directory_server' => (($dir_choices) ? array('directory_server', t("Directory Server URL"), get_config('system','directory_server'), t("Default directory server"), $dir_choices) : null),
-	
+
 			'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 			'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
 			'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), t("Value is in seconds. Set to 0 for unlimited (not recommended).")),
@@ -316,8 +306,5 @@ class Site {
 			'$form_security_token' => get_form_security_token("admin_site"),
 		));
 	}
-	
-
-
 
 }

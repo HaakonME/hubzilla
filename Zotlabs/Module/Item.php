@@ -508,7 +508,7 @@ class Item extends \Zotlabs\Web\Controller {
 	//			$body = escape_tags(trim($body));
 	//			$body = str_replace("\n",'<br />', $body);
 	//			$body = preg_replace_callback('/\[share(.*?)\]/ism','\share_shield',$body);			
-	//			$body = diaspora2bb($body,true);
+	//			$body = markdown_to_bb($body,true);
 	//			$body = preg_replace_callback('/\[share(.*?)\]/ism','\share_unshield',$body);
 	//		}
 	

@@ -123,7 +123,7 @@ function diaspora_mention_callback($matches) {
  * @param boolean $use_zrl default false
  * @return string
  */
-function diaspora2bb($s, $use_zrl = false) {
+function markdown_to_bb($s, $use_zrl = false) {
 
 	$s = str_replace("&#xD;","\r",$s);
 	$s = str_replace("&#xD;\n&gt;","",$s);

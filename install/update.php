@@ -2447,7 +2447,13 @@ function update_r1182() {
 
 
 function update_r1183() {
-	$r1 = q("alter table hook ALTER priority priority smallint NOT NULL DEFAULT '0' ");
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("alter table hook ALTER priority priority smallint NOT NULL DEFAULT '0' ");
+	}
+	else {
+		$r1 = q("alter table hook CHANGE priority priority smallint NOT NULL DEFAULT '0' ");
+	}
 	$r2 = q("create index priority_idx on hook (priority)");
 
 	if($r1 && $r2)

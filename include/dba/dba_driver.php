@@ -29,27 +29,33 @@ class DBA {
 	 * @return null|dba_driver A database driver object (dba_mysql|dba_mysqli) or null if no driver found.
 	 */
 
-	static public function dba_factory($server, $port,$user,$pass,$db,$dbtype,$install = false) {
+	static public function dba_factory($server,$port,$user,$pass,$db,$dbtype,$install = false) {
 
 		self::$dba = null;
 
 		self::$dbtype = intval($dbtype);
-		$set_port = $port;
 
 		if(self::$dbtype == DBTYPE_POSTGRES) {
+			if(! ($port))
+				$port = 5432;
+
 			require_once('include/dba/dba_postgres.php');
-			if(is_null($port)) $set_port = 5432;
-			self::$dba = new dba_postgres($server, $set_port, $user, $pass, $db, $install);
+			self::$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
 		}
 		else {
+			if(! ($port))
+				$port = 3306;
+			if($server === 'localhost')
+				$server = '127.0.0.1';
+
+
 
 //			Highly experimental at the present time.
 //			require_once('include/dba/dba_pdo.php');
-//			self::$dba = new dba_pdo($server, $set_port,$user,$pass,$db,$install);
+//			self::$dba = new dba_pdo($server, $port,$user,$pass,$db,$install);
 //		}
 
 			if(class_exists('mysqli')) {
-				if (is_null($port)) $set_port = ini_get("mysqli.default_port");
 				require_once('include/dba/dba_mysqli.php');
 				self::$dba = new dba_mysqli($server, $set_port,$user,$pass,$db,$install);
 			}

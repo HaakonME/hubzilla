@@ -27,6 +27,9 @@
  * documented.
  */
 
+// composer autoloader for all namespaced Classes
+require_once('vendor/autoload.php');
+
 require_once('include/config.php');
 require_once('include/network.php');
 require_once('include/plugin.php');
@@ -695,44 +698,14 @@ function startup() {
 }
 
 
-class ZotlabsAutoloader {
-    static public function loader($className) {
-		$debug = false;
-        $filename = str_replace('\\', '/', $className) . ".php";
-        if(file_exists($filename)) {
-            include($filename);
-            if (class_exists($className)) {
-                return TRUE;
-            }
-        }
-		$arr = explode('\\',$className);
-		if($arr && count($arr) > 1) {
-			if(! $arr[0])
-				$arr = array_shift($arr);
-	        $filename = 'addon/' . lcfirst($arr[0]) . '/' . $arr[1] . ((count($arr) === 2) ? '.php' : '/' . $arr[2] . ".php");
-    	    if(file_exists($filename)) {
-        	    include($filename);
-            	if (class_exists($className)) {
-                	return TRUE;
-	            }
-    	    }
-		}
-
-        return FALSE;
-    }
-}
-
-
 /**
  * class miniApp
  *
  * this is a transient structure which is needed to convert the $a->config settings
  * from older (existing) htconfig files which used a global App ($a) into the updated App structure
- * which is now static (although currently constructed at startup). We are only converting 
- * 'system' config settings. 
+ * which is now static (although currently constructed at startup). We are only converting
+ * 'system' config settings.
  */
-
-
 class miniApp {
 	public $config = array('system' => array());
 
@@ -982,24 +955,21 @@ class App {
 		 * register template engines
 		 */
 
-		spl_autoload_register('ZotlabsAutoloader::loader');
-
 		self::$meta= new Zotlabs\Web\HttpMeta();
 
 		// create an instance of the smarty template engine so we can register it.
 
 		$smarty = new Zotlabs\Render\SmartyTemplate();
-
+		/// @todo validate if this is still the desired behavior
+		self::register_template_engine(get_class($smarty));
+/*
 		$dc = get_declared_classes();
-
 		foreach ($dc as $k) {
 			if(in_array('Zotlabs\\Render\\TemplateEngine', class_implements($k))) {
 				self::register_template_engine($k);
 			}
 		}
-
-
-
+*/
 	}
 
 	public static function get_baseurl($ssl = false) {

@@ -1,0 +1,43 @@
+{
+	"name" : "zotlabs/hubzilla",
+	"type" : "application",
+	"description" : "Hubzilla is a powerful platform for creating interconnected websites featuring a decentralized identity, communications, and permissions framework built using common webserver technology.",
+	"keywords" : [
+		"CMS",
+		"identity",
+		"decentralisation",
+		"permission",
+		"SSO",
+		"ZOT"
+	],
+	"homepage" : "http://github.com/redmatrix/hubzilla",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Mike Macgirvin",
+			"role" : "founder"
+		}
+	],
+	"support" : {
+		"issues" : "https://github.com/redmatrix/hubzilla/issues",
+		"source" : "https://github.com/redmatrix/hubzilla"
+	},
+	"require" : {
+		"php" : ">=5.5",
+		"ext-curl" : "*",
+		"ext-gd" : "*",
+		"ext-mbstring" : "*",
+		"ext-xml" : "*",
+		"sabre/dav" : "~3.2",
+		"ext-openssl" : "*"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Hubzilla\\" : "include/",
+			"Zotlabs\\" : "Zotlabs/"
+		}
+	},
+	"minimum-stability" : "stable",
+	"config" : {
+		"notify-on-install" : false
+	}
+}

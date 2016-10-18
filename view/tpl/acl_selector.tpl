@@ -15,10 +15,10 @@
 				{{/if}}
 				<label for="acl-select">{{$select_label}}</label>
 				<select id="acl-select" name="optionsRadios" class="form-control form-group">
-					<option id="acl-showall" value="public" selected>{{$showall}}</option>
+					<option id="acl-showall" value="public" {{$public_selected}}>{{$showall}}</option>
 					{{$groups}}
-					<option id="acl-onlyme" value="onlyme">{{$onlyme}}</option>
-					<option id="acl-custom" value="custom">{{$custom}}</option>
+					<option id="acl-onlyme" value="onlyme" {{$justme_selected}}>{{$onlyme}}</option>
+					<option id="acl-custom" value="custom" {{$custom_selected}}>{{$custom}}</option>
 				</select>
 
 				{{if $showallOrigin}}

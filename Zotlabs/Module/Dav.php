@@ -11,9 +11,6 @@ namespace Zotlabs\Module;
 use \Sabre\DAV as SDAV;
 use \Zotlabs\Storage;
 
-// composer autoloader for SabreDAV
-require_once('vendor/autoload.php');
-
 require_once('include/attach.php');
 
 class Dav extends \Zotlabs\Web\Controller {
@@ -74,7 +71,6 @@ class Dav extends \Zotlabs\Web\Controller {
 		$auth->setBrowserPlugin($browser);
 
 		// Experimental QuotaPlugin
-		// require_once('Zotlabs/Storage/QuotaPlugin.php');
 		// $server->addPlugin(new \Zotlabs\Storage\QuotaPlugin($auth));
 
 		// All we need to do now, is to fire up the server

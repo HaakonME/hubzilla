@@ -44,11 +44,12 @@
 [*] moremoods - Additional mood options
 [*] morepokes - additional poke options (not safe for work)
 [*] msgfooter - provide legal or other text on each outgoing post
-[*] noembed - use noembed.com as an addition to Hubzilla's native oembed functionality (currently broken)
+[*] noembed - use noembed.com as an addition to $Projectname native oembed functionality (currently broken)
 [*] nofed - prevent "federation" of channel posts, maintains all interaction on your site
 [*] nsabait - add random terrorism related hashtags to your posts
 [*] nsfw - Highly recommended plugin to collpase posts with inappropriate content
 [*] openclipatar - choose a profile photo from hundreds of royalty free images
+[*] openid - OpenID authentication and OpenID server
 [*] openstreetmap - render locations and maps using OpenStreetMap
 [*] pageheader - display text at the top of every page on the site
 [*] phpmailer - alternate mail delivery system with more configurability

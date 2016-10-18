@@ -185,13 +185,16 @@ class PConfig {
 
 		$ret = false;
 
-		if(array_key_exists($key, \App::$config[$uid][$family]))
+		if(array_key_exists($uid,\App::$config) 
+			&& array_key_exists($family,\App::$config['uid']) 
+			&& array_key_exists($key, \App::$config[$uid][$family]))
 			unset(\App::$config[$uid][$family][$key]);
-			$ret = q("DELETE FROM pconfig WHERE uid = %d AND cat = '%s' AND k = '%s'",
-				intval($uid),
-				dbesc($family),
-				dbesc($key)
-			);
+			
+		$ret = q("DELETE FROM pconfig WHERE uid = %d AND cat = '%s' AND k = '%s'",
+			intval($uid),
+			dbesc($family),
+			dbesc($key)
+		);
 
 		return $ret;
 	}

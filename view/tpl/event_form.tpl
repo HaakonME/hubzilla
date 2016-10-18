@@ -105,10 +105,6 @@
 		</div>
 	</div>
 
-	{{if ! $eid}}
-	{{include file="field_checkbox.tpl" field=$share}}
-	{{/if}}
-
 	<div class="clear"></div>
 
 	<button type="button" class="btn btn-default" onclick="openClose('advanced');">{{$advanced}}</button>

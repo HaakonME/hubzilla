@@ -2583,7 +2583,7 @@ function import_directory_profile($hash, $profile, $addr, $ud_flags = UPDATE_FLA
 	$arr = array();
 
 	$arr['xprof_hash']         = $hash;
-	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
+	$arr['xprof_dob']          = (($profile['birthday'] === '0000-00-00') ? $profile['birthday'] : datetime_convert('','',$profile['birthday'],'Y-m-d')); // !!!! check this for 0000 year
 	$arr['xprof_age']          = (($profile['age'])         ? intval($profile['age']) : 0);
 	$arr['xprof_desc']         = (($profile['description']) ? htmlspecialchars($profile['description'], ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_gender']       = (($profile['gender'])      ? htmlspecialchars($profile['gender'],      ENT_COMPAT,'UTF-8',false) : '');

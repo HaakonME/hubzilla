@@ -127,17 +127,7 @@ class Photo extends \Zotlabs\Web\Controller {
 				  }
 			}
 			
-			// If using resolution 1, make sure it exists before proceeding:
-			if($resolution == 1) {
-			    $r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND imgscale = %d LIMIT 1",
-				   dbesc($photo),
-				   intval($resolution)
-				);
-			    if(! $r) {
-			      $resolution = 2;
-				}
-			}
-	
+
 			$r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND imgscale = %d LIMIT 1",
 				dbesc($photo),
 				intval($resolution)
@@ -166,6 +156,14 @@ class Photo extends \Zotlabs\Web\Controller {
 					intval($resolution)
 				);
 	
+				$d = [ 'imgscale' => $resolution, 'resource_id' => $photo, 'photo' => $r, 'allowed' => $allowed ];
+				call_hooks('get_photo',$d);
+
+				$resolution = $d['imgscale'];
+				$photo      = $d['resource_id'];
+				$r          = $d['photo'];
+				$allowed    = $d['allowed'];
+
 				if($r && $allowed) {
 					$data = dbunescbin($r[0]['content']);
 					$mimetype = $r[0]['mimetype'];
@@ -200,6 +198,9 @@ class Photo extends \Zotlabs\Web\Controller {
 			}
 		}
 	
+
+
+
 		if(! isset($data)) {
 			if(isset($resolution)) {
 				switch($resolution) {

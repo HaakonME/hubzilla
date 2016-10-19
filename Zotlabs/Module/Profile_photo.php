@@ -319,7 +319,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 			// set an already loaded and cropped photo as profile photo
 	
-			if(($r[0]['album'] == t('Profile Photos')) && ($havescale)) {
+			if($havescale) {
 				// unset any existing profile photos
 				$r = q("UPDATE photo SET photo_usage = %d WHERE photo_usage = %d AND uid = %d",
 					intval(PHOTO_NORMAL),

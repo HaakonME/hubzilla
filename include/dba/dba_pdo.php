@@ -9,11 +9,12 @@ class dba_pdo extends dba_driver {
 
 	function connect($server,$port,$user,$pass,$db) {
 		
-		$this->driver_dbtype = 'mysql'; // (($dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql');
+		$this->driver_dbtype = 'mysql';
 		$dns = $this->driver_dbtype
 		. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
 		. ';dbname=' . $db;
 
+		db_logger('dns: ' . $dns);
 
 		try {
 			$this->db = new PDO($dns,$user,$pass);

@@ -12,7 +12,15 @@ class DBA {
 
 	static public $dba = null;
 	static public $dbtype = null;
+	static public $scheme = 'mysql';
 	static public $logging = false;
+
+	static public $install_script = 'install/schema_mysql.sql';
+	static public $null_date = '0001-01-01 00:00:00';
+	static public $utc_now = 'UTC_TIMESTAMP()';
+	static public $tquot = "`";
+
+
 
 	/**
 	 * @brief Returns the database driver object.
@@ -35,50 +43,42 @@ class DBA {
 
 		self::$dbtype = intval($dbtype);
 
+
 		if(self::$dbtype == DBTYPE_POSTGRES) {
-			if(! ($port))
+			if(!($port))
 				$port = 5432;
+
+			self::$install_script = 'install/schema_postgres.sql';
+			self::$utc_now = "now() at time zone 'UTC'";
+			self::$tquot = '"';
+			self::$scheme = 'postgres';
 
 			require_once('include/dba/dba_postgres.php');
 			self::$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
 		}
 		else {
-			if(! ($port))
+			if(!($port))
 				$port = 3306;
 			if($server === 'localhost')
 				$server = '127.0.0.1';
 
+			require_once('include/dba/dba_pdo.php');
+			self::$dba = new dba_pdo($server,$port,$user,$pass,$db,$install);
 
-
-//			Highly experimental at the present time.
-//			require_once('include/dba/dba_pdo.php');
-//			self::$dba = new dba_pdo($server, $port,$user,$pass,$db,$install);
-//		}
-
-			if(class_exists('mysqli')) {
-				require_once('include/dba/dba_mysqli.php');
-				self::$dba = new dba_mysqli($server, $set_port,$user,$pass,$db,$install);
-			}
 		}
 
-		// Until we have a proper PDO driver, store the DB connection parameters for
-		// plugins/addons which use PDO natively (such as cdav). This is wasteful as
-		// it opens a separate connection to the DB, but saves a lot of effort re-writing
-		// third-party interfaces that are working and well tested. 
- 
 
 		if(is_object(self::$dba) && self::$dba->connected) {
-			if($server === 'localhost') 
-				$port = $set_port;
+
 			$dns = ((self::$dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql')
 			. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
 			. ';dbname=' . $db;
 			self::$dba->pdo_set(array($dns,$user,$pass));
 		}
 
-		define('NULL_DATE', self::$dba->get_null_date());
+		define('NULL_DATE', self::$null_date);
 		define('ACTIVE_DBTYPE', self::$dbtype);
-		define('TQUOT', self::$dba->get_table_quote());
+		define('TQUOT', self::$tquot);
 		return self::$dba;
 	}
 
@@ -92,10 +92,6 @@ class DBA {
  */
 abstract class dba_driver {
 	// legacy behavior
-	const INSTALL_SCRIPT='install/schema_mysql.sql';
-	const NULL_DATE = '0001-01-01 00:00:00';
-	const UTC_NOW = 'UTC_TIMESTAMP()';
-	const TQUOT = "`";
 
 	protected $db;
 	protected $pdo = array();
@@ -158,20 +154,20 @@ abstract class dba_driver {
 	}
 
 	function get_null_date() {
-		return static::NULL_DATE;
+		return self::$null_date;
 	}
 
 	function get_install_script() {
-		return static::INSTALL_SCRIPT;
+		return self::$install_script;
 	}
 
 	function get_table_quote() {
-		return static::TQUOT;
+		return self::$tquot;
 	}
 
 
 	function utcnow() {
-		return static::UTC_NOW;
+		return self::$utc_now;
 	}
 
 	function install($server,$user,$pass,$db) {

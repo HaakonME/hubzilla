@@ -118,8 +118,10 @@ class Events extends \Zotlabs\Web\Controller {
 			goaway($onerror_url);
 		}
 	
-		$share = ((intval($_POST['distr'])) ? intval($_POST['distr']) : 0);
-	
+		//		$share = ((intval($_POST['distr'])) ? intval($_POST['distr']) : 0);
+
+		$share = 1;	
+
 		$channel = \App::get_channel();
 	
 		$acl = new \Zotlabs\Access\AccessList(false);

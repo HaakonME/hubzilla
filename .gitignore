@@ -60,11 +60,13 @@ nbproject/
 .idea/
 
 
-# composer files (at the moment composer is not officially supported and only used to add SabreDAV, we should add these)
-composer.* 
-
-# When we include composer we should exclude vendor/
+## composer
+# locally installed composer binary
+composer.phar
+# vendor/ is managed by composer, no need to include in our repository
+# requires new deployment and needs discussion first
 #vendor/
-# Exclude at least some vendor test files, examples, etc.
-vendor/sabre/*/tests/
+# Exclude at least some vendor test files, examples, etc. so far
+vendor/**/tests/
+vendor/**/Test/
 vendor/sabre/*/examples/

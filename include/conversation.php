@@ -146,7 +146,7 @@ function localize_item(&$item){
 			case ACTIVITY_OBJ_NOTE:
 			default:
 				$post_type = t('status');
-				if($obj['mid'] != $obj['parent_mid'])
+				if($obj['id'] != $obj['parent'])
 					$post_type = t('comment');
 				break;
 		}

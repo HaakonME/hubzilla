@@ -152,13 +152,36 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		array_walk($deny_gid,'fixacl');
 	}
 
+
+	$channel = ((local_channel()) ? \App::get_channel() : '');
+	$has_acl = false;
+	$single_group = false;
+	$just_me = false;
+	$custom = false;
+
+	if($allow_cid || $allow_gid || $deny_gid || $deny_cid) {
+		$has_acl = true;
+		$custom = true;
+	}
+
+	if(count($allow_gid) === 1 && (! $allow_cid) && (! $deny_gid) && (! $deny_cid)) {
+		$single_group = true;
+		$custom = false;
+	}
+
+	if(count($allow_cid) === 1 && $channel && $allow_cid[0] = $channel['channel_hash'] && (! $allow_gid) && (! $deny_gid) && (! $deny_cid)) {
+		$just_me = true;
+		$custom = false;
+	}	
+
 	$r = q("SELECT id, hash, gname FROM groups WHERE deleted = 0 AND uid = %d ORDER BY gname ASC",
 		intval(local_channel())
 	);
 
 	if($r) {
 		foreach($r as $rr) {
-			$groups .= '<option id="' . $rr['id'] . '" value="' . $rr['hash'] . '">' . $rr['gname'] . '</option>' . "\r\n";
+			$selected = (($single_group && $rr['hash'] === $allow_gid[0]) ? ' selected = "selected" ' : '');
+			$groups .= '<option id="' . $rr['id'] . '" value="' . $rr['hash'] . '"' . $selected . '>' . $rr['gname'] . '</option>' . "\r\n";
 		}
 	}
 
@@ -166,7 +189,10 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 	$o = replace_macros($tpl, array(
 		'$showall'         => $showall_caption,
 		'$onlyme'          => t('Only me'),
-		'$groups'	   => $groups,
+		'$groups'	       => $groups,
+		'$public_selected' => (($has_acl) ? false : true),
+		'$justme_selected' => $just_me,
+		'$custom_selected' => $custom,
 		'$showallOrigin'   => $showall_origin,
 		'$showallIcon'     => $showall_icon,
 		'$select_label'    => t('Who can see this?'),

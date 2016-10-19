@@ -205,15 +205,23 @@ class Profile_photo extends \Zotlabs\Web\Controller {
  	
 	
 		$hash = photo_new_resource();
+		$importing = false;
 		$smallest = 0;
 	
-		require_once('include/attach.php');
+
+		if($_REQUEST['importfile']) {
+			$hash = $_REQUEST['importfile'];
+			$importing = true;
+		}
+		else {
+			require_once('include/attach.php');
 	
-		$res = attach_store(\App::get_channel(), get_observer_hash(), '', array('album' => t('Profile Photos'), 'hash' => $hash));
+			$res = attach_store(\App::get_channel(), get_observer_hash(), '', array('album' => t('Profile Photos'), 'hash' => $hash));
 	
-		logger('attach_store: ' . print_r($res,true));
+			logger('attach_store: ' . print_r($res,true));
+		}
 	
-		if($res && intval($res['data']['is_photo'])) {
+		if(($res && intval($res['data']['is_photo'])) || $importing) {
 			$i = q("select * from photo where resource_id = '%s' and uid = %d order by imgscale",
 				dbesc($hash),
 				intval(local_channel())
@@ -284,14 +292,17 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 			// When using an existing photo, we don't have a dialogue to offer a choice of profiles,
 			// so it gets attached to the default
 
-			$p = q("select id from profile where is_default = 1 and uid = %d",
+			$c = q("select id, is_default from profile where uid = %d",
 				intval(local_channel())
 			);
-			if($p) {
-				$_REQUEST['profile'] = $p[0]['id'];
+
+			$multi_profiles = true;
+
+			if(($c) && (count($c) === 1) && (intval($c[0]['is_default']))) {
+				$_REQUEST['profile'] = $c[0]['id'];
+				$multi_profiles = false;
 			}
 
-	
 			$r = q("SELECT id, album, imgscale FROM photo WHERE uid = %d AND resource_id = '%s' ORDER BY imgscale ASC",
 				intval(local_channel()),
 				dbesc($resource_id)
@@ -308,7 +319,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 			// set an already loaded and cropped photo as profile photo
 	
-			if(($r[0]['album'] == t('Profile Photos')) && ($havescale)) {
+			if($havescale) {
 				// unset any existing profile photos
 				$r = q("UPDATE photo SET photo_usage = %d WHERE photo_usage = %d AND uid = %d",
 					intval(PHOTO_NORMAL),
@@ -366,9 +377,15 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	            }
 	        }
 	 
-			$this->profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
+			if($multi_profiles) {
+				\App::$data['importfile'] = $resource_id;
+			}
+			else {
+				$this->profile_photo_crop_ui_head($a, $ph, $hash, $smallest);
+			}
 
 			// falls through with App::$data['imagecrop'] set so we go straight to the cropping section
+
 		}
 	
 
@@ -377,6 +394,8 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 		$profiles = q("select id, profile_name as name, is_default from profile where uid = %d order by id asc",
 			intval(local_channel())
 		);
+
+		$importing = ((array_key_exists('importfile',\App::$data)) ? true : false);
 	
 		if(! x(\App::$data,'imagecrop')) {
 	
@@ -384,10 +403,11 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 			$o .= replace_macros($tpl,array(
 				'$user' => \App::$channel['channel_address'],
+				'$importfile' => (($importing) ? \App::$data['importfile'] : ''),
 				'$lbl_upfile' => t('Upload File:'),
 				'$lbl_profiles' => t('Select a profile:'),
-				'$title' => t('Upload Profile Photo'),
-				'$submit' => t('Upload'),
+				'$title' => (($importing) ? t('Use Photo for Profile') : t('Upload Profile Photo')),
+				'$submit' => (($importing) ? t('Use') : t('Upload')),
 				'$profiles' => $profiles,
 				'$single' => ((count($profiles) == 1) ? true : false),
 				'$profile0' => $profiles[0],

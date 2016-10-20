@@ -7,9 +7,9 @@ class dba_pdo extends dba_driver {
 
 	public $driver_dbtype = null;
 
-	function connect($server,$port,$user,$pass,$db) {
+	function connect($server,$scheme,$port,$user,$pass,$db) {
 		
-		$this->driver_dbtype = 'mysql';
+		$this->driver_dbtype = $scheme;
 		$dns = $this->driver_dbtype
 		. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
 		. ';dbname=' . $db;
@@ -28,6 +28,9 @@ class dba_pdo extends dba_driver {
 			return false;
 		}
 
+		if($this->driver_dbtype === 'postgres')
+			$this->q("SET standard_conforming_strings = 'off'; SET backslash_quote = 'on';");
+
 		$this->connected = true;
 		return true;
 
@@ -36,6 +39,9 @@ class dba_pdo extends dba_driver {
 	function q($sql) {
 		if((! $this->db) || (! $this->connected))
 			return false;
+
+		if($this->driver_dbtype === 'postgres' && (!  strpos($sql,';')))
+			$sql .= ';';
 
 		$this->error = '';
 		$select = ((stripos($sql,'select') === 0) ? true : false);
@@ -89,6 +95,16 @@ class dba_pdo extends dba_driver {
 		$this->connected = false;
 	}
 	
+	function concat($fld,$sep) {
+		if($this->driver_dbtype === 'postgres') {
+			return 'string_agg(' . $fld . ',\'' . $sep . '\')';
+		}
+		else {
+			return 'GROUP_CONCAT(DISTINCT '.$fld.' SEPARATOR \''.$sep.'\')';
+		}
+	}
+
+
 	function getdriver() {
 		return 'pdo';
 	}

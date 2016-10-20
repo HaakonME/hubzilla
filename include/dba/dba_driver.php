@@ -54,7 +54,7 @@ class DBA {
 			self::$scheme = 'postgres';
 
 			require_once('include/dba/dba_postgres.php');
-			self::$dba = new dba_postgres($server, $port, $user, $pass, $db, $install);
+			self::$dba = new dba_postgres($server, self::$scheme, $port, $user, $pass, $db, $install);
 		}
 		else {
 			if(!($port))
@@ -63,8 +63,7 @@ class DBA {
 				$server = '127.0.0.1';
 
 			require_once('include/dba/dba_pdo.php');
-			self::$dba = new dba_pdo($server,$port,$user,$pass,$db,$install);
-
+			self::$dba = new dba_pdo($server,self::$scheme,$port,$user,$pass,$db,$install);
 		}
 
 
@@ -112,7 +111,7 @@ abstract class dba_driver {
 	 * @param string $db database name
 	 * @return bool
 	 */
-	abstract function connect($server, $port, $user, $pass, $db);
+	abstract function connect($server, $scheme, $port, $user, $pass, $db);
 
 	/**
 	 * @brief Perform a DB query with the SQL statement $sql.
@@ -146,31 +145,31 @@ abstract class dba_driver {
 	 */
 	abstract function getdriver();
 
-	function __construct($server, $port, $user,$pass,$db,$install = false) {
-		if(($install) && (! $this->install($server, $port, $user, $pass, $db))) {
+	function __construct($server, $scheme, $port, $user,$pass,$db,$install = false) {
+		if(($install) && (! $this->install($server, $scheme, $port, $user, $pass, $db))) {
 			return;
 		}
-		$this->connect($server, $port, $user, $pass, $db);
+		$this->connect($server, $scheme, $port, $user, $pass, $db);
 	}
 
 	function get_null_date() {
-		return DBA::$null_date;
+		return \DBA::$null_date;
 	}
 
 	function get_install_script() {
-		return DBA::$install_script;
+		return \DBA::$install_script;
 	}
 
 	function get_table_quote() {
-		return DBA::$tquot;
+		return \DBA::$tquot;
 	}
 
 
 	function utcnow() {
-		return DBA::$utc_now;
+		return \DBA::$utc_now;
 	}
 
-	function install($server,$user,$pass,$db) {
+	function install($server,$scheme,$port,$user,$pass,$db) {
 		if (!(strlen($server) && strlen($user))){
 			$this->connected = false;
 			$this->db = null;

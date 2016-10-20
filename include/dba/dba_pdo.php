@@ -28,7 +28,7 @@ class dba_pdo extends dba_driver {
 			return false;
 		}
 
-		if($this->driver_dbtype === 'postgres')
+		if($this->driver_dbtype === 'pgsql')
 			$this->q("SET standard_conforming_strings = 'off'; SET backslash_quote = 'on';");
 
 		$this->connected = true;
@@ -40,7 +40,7 @@ class dba_pdo extends dba_driver {
 		if((! $this->db) || (! $this->connected))
 			return false;
 
-		if($this->driver_dbtype === 'postgres' && (!  strpos($sql,';')))
+		if($this->driver_dbtype === 'pgsql' && (!  strpos($sql,';')))
 			$sql .= ';';
 
 		$this->error = '';
@@ -96,11 +96,20 @@ class dba_pdo extends dba_driver {
 	}
 	
 	function concat($fld,$sep) {
-		if($this->driver_dbtype === 'postgres') {
+		if($this->driver_dbtype === 'pgsql') {
 			return 'string_agg(' . $fld . ',\'' . $sep . '\')';
 		}
 		else {
 			return 'GROUP_CONCAT(DISTINCT '.$fld.' SEPARATOR \''.$sep.'\')';
+		}
+	}
+
+	function quote_interval($txt) {
+		if($this->driver_dbtype === 'pgsql') {
+			return "'$txt'";
+		}
+		else {
+			return $txt;
 		}
 	}
 

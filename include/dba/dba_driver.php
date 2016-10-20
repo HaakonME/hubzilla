@@ -51,20 +51,21 @@ class DBA {
 			self::$install_script = 'install/schema_postgres.sql';
 			self::$utc_now = "now() at time zone 'UTC'";
 			self::$tquot = '"';
-			self::$scheme = 'postgres';
+			self::$scheme = 'pgsql';
 
-			require_once('include/dba/dba_postgres.php');
-			self::$dba = new dba_postgres($server, self::$scheme, $port, $user, $pass, $db, $install);
+//			require_once('include/dba/dba_postgres.php');
+//			self::$dba = new dba_postgres($server, self::$scheme, $port, $user, $pass, $db, $install);
 		}
 		else {
 			if(!($port))
 				$port = 3306;
 			if($server === 'localhost')
 				$server = '127.0.0.1';
+		}
 
 			require_once('include/dba/dba_pdo.php');
 			self::$dba = new dba_pdo($server,self::$scheme,$port,$user,$pass,$db,$install);
-		}
+		
 
 
 		if(is_object(self::$dba) && self::$dba->connected) {

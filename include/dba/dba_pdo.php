@@ -14,7 +14,7 @@ class dba_pdo extends dba_driver {
 		. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
 		. ';dbname=' . $db;
 
-		db_logger('dns: ' . $dns);
+		// db_logger('dns: ' . $dns);
 
 		try {
 			$this->db = new PDO($dns,$user,$pass);
@@ -40,8 +40,11 @@ class dba_pdo extends dba_driver {
 		if((! $this->db) || (! $this->connected))
 			return false;
 
-		if($this->driver_dbtype === 'pgsql' && (!  strpos($sql,';')))
-			$sql .= ';';
+		if($this->driver_dbtype === 'pgsql') {
+			if(substr(rtrim($sql),-1,1) !== ';') {
+				$sql .= ';';
+			}
+		}
 
 		$this->error = '';
 		$select = ((stripos($sql,'select') === 0) ? true : false);
@@ -110,6 +113,24 @@ class dba_pdo extends dba_driver {
 		}
 		else {
 			return $txt;
+		}
+	}
+
+	function escapebin($str) {
+		if($this->driver_dbtype === 'pgsql') {
+			return str_replace([ chr(92), chr(0), chr(39) ], [ '\\\134', '\\\000', '\\\047' ], $str);
+		}
+		else {
+			return $this->escape($str);
+		}
+	}
+	
+	function unescapebin($str) {
+		if($this->driver_dbtype === 'pgsql') {
+			return stripcslashes($str);
+		}
+		else {
+			return $str;
 		}
 	}
 

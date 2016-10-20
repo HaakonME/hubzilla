@@ -53,8 +53,6 @@ class DBA {
 			self::$tquot = '"';
 			self::$scheme = 'pgsql';
 
-//			require_once('include/dba/dba_postgres.php');
-//			self::$dba = new dba_postgres($server, self::$scheme, $port, $user, $pass, $db, $install);
 		}
 		else {
 			if(!($port))
@@ -63,14 +61,12 @@ class DBA {
 				$server = '127.0.0.1';
 		}
 
-			require_once('include/dba/dba_pdo.php');
-			self::$dba = new dba_pdo($server,self::$scheme,$port,$user,$pass,$db,$install);
+		require_once('include/dba/dba_pdo.php');
+		self::$dba = new dba_pdo($server,self::$scheme,$port,$user,$pass,$db,$install);
 		
-
-
 		if(is_object(self::$dba) && self::$dba->connected) {
 
-			$dns = ((self::$dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql')
+			$dns = ((self::$dbtype == DBTYPE_POSTGRES) ? 'pgsql' : 'mysql')
 			. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
 			. ';dbname=' . $db;
 			self::$dba->pdo_set(array($dns,$user,$pass));

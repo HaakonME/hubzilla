@@ -154,20 +154,20 @@ abstract class dba_driver {
 	}
 
 	function get_null_date() {
-		return self::$null_date;
+		return DBA::$null_date;
 	}
 
 	function get_install_script() {
-		return self::$install_script;
+		return DBA::$install_script;
 	}
 
 	function get_table_quote() {
-		return self::$tquot;
+		return DBA::$tquot;
 	}
 
 
 	function utcnow() {
-		return self::$utc_now;
+		return DBA::$utc_now;
 	}
 
 	function install($server,$user,$pass,$db) {

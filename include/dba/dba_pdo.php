@@ -10,14 +10,18 @@ class dba_pdo extends dba_driver {
 	function connect($server,$scheme,$port,$user,$pass,$db) {
 		
 		$this->driver_dbtype = $scheme;
-		$dns = $this->driver_dbtype
-		. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
-		. ';dbname=' . $db;
 
-		// db_logger('dns: ' . $dns);
+		if(strpbrk($server,':;')) {
+			$dsn = $server;
+		}
+		else {
+			$dsn = $this->driver_dbtype . ':host=' . $server . (is_null($port) ? '' : ';port=' . $port);
+		}
+		
+		$dsn .= ';dbname=' . $db;
 
 		try {
-			$this->db = new PDO($dns,$user,$pass);
+			$this->db = new PDO($dsn,$user,$pass);
 			$this->db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 		}
 		catch(PDOException $e) {

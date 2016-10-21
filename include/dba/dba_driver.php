@@ -25,16 +25,14 @@ class DBA {
 	/**
 	 * @brief Returns the database driver object.
 	 *
-	 * If available it will use PHP's mysqli otherwise mysql driver.
-	 *
-	 * @param string $server DB server name
+	 * @param string $server DB server name (or PDO dsn - e.g. mysqli:foobar.com;)
 	 * @param string $port DB port
 	 * @param string $user DB username
 	 * @param string $pass DB password
 	 * @param string $db database name
 	 * @param string $dbtype 0 for mysql, 1 for postgres
 	 * @param bool $install Defaults to false
-	 * @return null|dba_driver A database driver object (dba_mysql|dba_mysqli) or null if no driver found.
+	 * @return null|dba_driver A database driver object (dba_pdo) or null if no driver found.
 	 */
 
 	static public function dba_factory($server,$port,$user,$pass,$db,$dbtype,$install = false) {
@@ -57,8 +55,6 @@ class DBA {
 		else {
 			if(!($port))
 				$port = 3306;
-			if($server === 'localhost')
-				$server = '127.0.0.1';
 		}
 
 		require_once('include/dba/dba_pdo.php');
@@ -66,10 +62,16 @@ class DBA {
 		
 		if(is_object(self::$dba) && self::$dba->connected) {
 
-			$dns = ((self::$dbtype == DBTYPE_POSTGRES) ? 'pgsql' : 'mysql')
-			. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
-			. ';dbname=' . $db;
-			self::$dba->pdo_set(array($dns,$user,$pass));
+			if(strpbrk($server,':;')) {
+				$dsn = $server;
+			}
+			else {
+				$dsn = self::$scheme . ':host=' . $server . (is_null($port) ? '' : ';port=' . $port);
+			}
+			$dsn .= ';dbname=' . $db;
+
+
+			self::$dba->pdo_set(array($dsn,$user,$pass));
 		}
 
 		define('NULL_DATE', self::$null_date);

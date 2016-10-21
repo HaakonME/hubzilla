@@ -137,10 +137,6 @@ function oembed_fetch_url($embedurl){
 
 	if($action !== 'block') {
 		$txt = Zlib\Cache::get('[' . App::$videowidth . '] ' . $embedurl);
-
-		if(strstr($txt,'youtu') && strstr(z_root(),'https:')) {
-			$txt = str_replace('http:','https:',$txt);
-		}
 	}
 		
 	if(is_null($txt)) {
@@ -272,13 +268,7 @@ function oembed_format_object($j){
 				
 				$th=120; $tw = $th*$tr;
 				$tpl=get_markup_template('oembed_video.tpl');
-				if(strstr($embedurl,'youtu') && strstr(z_root(),'https:')) {
-					$embedurl = str_replace('http:','https:',$embedurl);
-					$j['thumbnail_url'] = str_replace('http:','https:', $j['thumbnail_url']);
-					$jhtml = str_replace('http:','https:', $jhtml);
-					$j['html'] = str_replace('http:','https:', $j['html']);
-				
-				}
+
 				$ret.=replace_macros($tpl, array(
                     '$baseurl' => z_root(),
 					'$embedurl'=>$embedurl,

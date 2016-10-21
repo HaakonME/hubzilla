@@ -354,7 +354,7 @@ class Acl extends \Zotlabs\Web\Controller {
 	
 		$dirmode = intval(get_config('system','directory_mode'));
 		$search = ((x($_REQUEST,'search')) ? htmlentities($_REQUEST['search'],ENT_COMPAT,'UTF-8',false) : '');
-		if(! $search || mb_strlen($search) < 2)
+		if(! $search)
 			return array();
 	
 		$star = false;
@@ -371,6 +371,9 @@ class Acl extends \Zotlabs\Web\Controller {
 		if(strpos($search,'@') !== false) {
 			$address = true;
 		}
+
+		if(mb_strlen($search) < 3)
+			return array();
 	
 		if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
 			$url = z_root() . '/dirsearch';

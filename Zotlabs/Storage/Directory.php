@@ -260,8 +260,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($f),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
-			dbesc((($this->os_path) ? $this->os_path . '/' : '')),
-			dbesc((($this->red_path) ? $this->red_path . '/' : '')),
+			'', //TODO: use os_path
+			'', //TODO: use display_path
 			dbesc($allow_cid),
 			dbesc($allow_gid),
 			dbesc($deny_cid),

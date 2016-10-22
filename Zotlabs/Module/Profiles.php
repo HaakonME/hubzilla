@@ -31,7 +31,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			// move every contact using this profile as their default to the user default
 	
-			$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid AS FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND abook_channel = %d ",
+			$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND abook_channel = %d ",
 				intval(local_channel()),
 				dbesc($profile_guid),
 				intval(local_channel())

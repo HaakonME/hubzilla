@@ -90,6 +90,35 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// Not the channel owner 
 			$channel_acl = $x = array();
 		}
+		
+		// Download a wiki
+		if ((argc() > 3) && (argv(2) === 'download') && (argv(3) === 'wiki')) {
+				$resource_id = argv(4); 
+				$w = wiki_get_wiki($resource_id);
+				if (!$w['path']) {
+						notice('Error retrieving wiki' . EOL);
+				}
+				$zip_folder_name = random_string(10);
+				$zip_folderpath = '/tmp/' . $zip_folder_name;
+				if (!mkdir($zip_folderpath, 0770, false)) {	
+						logger('Error creating zip file export folder: ' . $zip_folderpath, LOGGER_NORMAL);
+						notice('Error creating zip file export folder' . EOL);
+				}
+				$zip_filename = $w['urlName'];
+				$zip_filepath = '/tmp/' . $zip_folder_name . '/' . $zip_filename;
+				// Generate the zip file
+				\Zotlabs\Lib\ExtendedZip::zipTree($w['path'], $zip_filepath, \ZipArchive::CREATE);
+				// Output the file for download
+				header('Content-disposition: attachment; filename="' . $zip_filename . '.zip"');
+				header("Content-Type: application/zip");
+				$success = readfile($zip_filepath);
+				if ($success) {
+						rrmdir($zip_folderpath); 	// delete temporary files
+				} else {
+						rrmdir($zip_folderpath); 	// delete temporary files
+						logger('Error downloading wiki: ' . $resource_id);
+				}
+		}
 
 		switch (argc()) {
 			case 2:
@@ -296,6 +325,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				json_return_and_die(array('message' => 'Error deleting wiki', 'success' => false));
 			}
 		}
+
 
 		// Create a page
 		if ((argc() === 4) && (argv(2) === 'create') && (argv(3) === 'page')) {

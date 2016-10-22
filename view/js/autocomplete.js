@@ -202,7 +202,7 @@ function string2bb(element) {
 	$.fn.search_autocomplete = function(backend_url) {
 		// Autocomplete contacts
 		contacts = {
-			match: /(^@)([^\n]{2,})$/,
+			match: /(^@)([^\n]{3,})$/,
 			index: 2,
 			search: function(term, callback) { contact_search(term, callback, backend_url, 'x', [], spinelement='#nav-search-spinner'); },
 			replace: basic_replace,

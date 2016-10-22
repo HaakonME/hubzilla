@@ -1,44 +1,127 @@
+#
+# Travis-CI configuration file
+#
+## configure things
+#
+
 # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
 language: php
 
-# list any PHP version you want to test against
+# use docker based containers
+sudo: false
+
+# Git branches whitelist to build on Travis CI
+branches:
+  only:
+  - master
+  - dev
+
+# Install additional software
+addons:
+  # Install dependencies for generating API documentation with doxygen
+  apt:
+    packages:
+      - doxygen
+      - doxygen-latex
+      - graphviz
+      - ttf-liberation
+
+# enable and start databases?
+#services:
+#  - mariadb
+#  - postgresql
+
+# any PHP version we want to test against, our unit tests require PHP>=5.6
 php:
-  # using major version aliases
+  - '5.6'
+  - '7.0'
+  #- hhvm
 
-  # aliased to a recent 5.6.x version
-  - 5.6
-  # aliased to a recent 7.x version
-  - 7.0
-  # aliased to a recent hhvm version
-  - hhvm
+# list of environments to test
+env:
+  global:
+    # used for doxygen deployment script
+    - DOXYFILE: $TRAVIS_BUILD_DIR/util/Doxyfile
+    - GHP_REPO_REF: github.com/redmatrix/hubzilla.git
+    # Uncomment if a newer/specific version of Doxygen should be used
+    #- DOXY_VER: 1.8.12
+  # use matrix only for PHP and MySQL, all other combinations added through includes
+  matrix:
+    - DB=mysql
 
-# optionally specify a list of environments, for example to test different RDBMS
-#env:
-#  - DB=mysql
-#  - DB=pgsql
-
-# optionally set up exclutions and allowed failures in the matrix
+# Matrix configuration details
 matrix:
+  fast_finish: true
+  # Additional check combinations
+  include:
+    # PHP7, mariadb 10.1
+    - php: '7.0'
+      env: DB=mariadb MARIADB_VERSION=10.1
+      # use mariadb instead of MySQL
+      addons:
+        mariadb: '10.1'
+    # PHP7, PostgreSQL 9.4
+    - php: '7.0'
+      env: DB=pgsql POSTGRESQL_VERSION=9.4
+      # Use newer postgres than 9.1 default
+      addons:
+        postgresql: '9.4'
+   # Exclude from default matrix combinations
 #  exclude:
 #    - php: hhvm
 #      env: DB=pgsql  # PDO driver for pgsql is unsupported by HHVM (3rd party install for support)
-  allow_failures:
-    - php: hhvm
+
+# cache composer downloads between runs
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+
+
+#
+## execute things
+#
+
+before_install:
+  - travis_retry composer self-update
+
+# Install composer dev libs
+install:
+  - travis_retry composer install --optimize-autoloader
 
 # execute any number of scripts before the test run, custom env's are available as variables
-#before_script:
-#  - if [[ "$DB" == "pgsql" ]]; then psql -c "DROP DATABASE IF EXISTS hello_world_test;" -U postgres; fi
-#  - if [[ "$DB" == "pgsql" ]]; then psql -c "create database hello_world_test;" -U postgres; fi
-#  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS hello_world_test;" -uroot; fi
-
-install:
-  - composer install --optimize-autoloader
+before_script:
+  # Some preparation tasks of environment
+  - ./tests/travis/prepare.sh
+  # DB specific prepare scripts
+  - if [[ "$DB" == "mysql" ]]; then ./tests/travis/prepare_mysql.sh; fi
+  - if [[ "$DB" == "mariadb" ]]; then ./tests/travis/prepare_mysql.sh; fi
+  - if [[ "$DB" == "pgsql" ]]; then ./tests/travis/prepare_pgsql.sh; fi
 
 # omitting "script:" will default to phpunit
-# use the $DB env variable to determine the phpunit.xml to use
-script: vendor/bin/phpunit  tests/unit/
+script: ./vendor/bin/phpunit -c tests/phpunit-$DB.xml
+
+after_success:
+  # Generate API documentation and deploy it to gh-pages
+  - ./tests/travis/gen_apidocs.sh
+#after_failure:
+
+# Deploying a release to GitHub when tagging in master
+# Waiting for upcoming 'Build Stages' Q1/Q2 2017 to make generation of API docs
+# and release packages cleaner. https://github.com/travis-ci/travis-ci/issues/929
+#before_deploy:
+#deploy:
+#  skip_cleaning: true
+#  provider: releases
+#  on:
+#    tags: true
+#after_deploy:
+
+#after_script:
+
+
 
 # configure notifications (email, IRC, campfire etc)
-notifications:
+#notifications:
 #  irc: "irc.freenode.org#yourfavouriteroomfortravis"
 # a plugin/script to post to a hubzilla channel would be neat here

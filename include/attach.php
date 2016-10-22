@@ -1043,6 +1043,10 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$created = datetime_convert();
 
+	// not yet used
+	$os_path = '';
+	$display_path = '';
+
 	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_dir, content, created, edited, os_path, display_path, allow_cid, allow_gid, deny_cid, deny_gid )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 		intval($channel['channel_account_id']),
@@ -1059,8 +1063,8 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		dbesc($path),
 		dbesc($created),
 		dbesc($created),
-		dbesc($path),
-		dbesc($path),
+		dbesc($os_path),
+		dbesc($display_path),
 		dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $channel['channel_allow_cid']),
 		dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : $channel['channel_allow_gid']),
 		dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : $channel['channel_deny_cid']),

@@ -321,7 +321,7 @@ function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 }
 
 
-function bb2diaspora_itembody($item, $force_update = false, $have_channel = false, $uplink) {
+function bb2diaspora_itembody($item, $force_update = false, $have_channel = false, $uplink = false) {
 
 
 	if(! get_iconfig($item,'diaspora','fields')) {

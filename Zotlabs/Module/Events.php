@@ -611,6 +611,12 @@ class Events extends \Zotlabs\Web\Controller {
 						$end = null;
 					} else {
 						$end = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['dtend'], 'c') : datetime_convert('UTC','UTC',$rr['dtend'],'c'));
+
+						// give a fake end to birthdays so they get crammed into a 
+						// single day on the calendar
+
+						if($rr['etype'] === 'birthday')
+							$end = null;
 					}
 					
 					

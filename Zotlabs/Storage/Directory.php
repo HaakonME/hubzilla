@@ -244,8 +244,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			$deny_gid = $c[0]['channel_deny_gid'];
 		}
 
-		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, os_storage, filetype, filesize, revision, is_photo, content, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, os_storage, filetype, filesize, revision, is_photo, content, created, edited, os_path, display_path, allow_cid, allow_gid, deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($c[0]['channel_account_id']),
 			intval($c[0]['channel_id']),
 			dbesc($hash),
@@ -260,6 +260,8 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($f),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
+			'', //TODO: use os_path
+			'', //TODO: use display_path
 			dbesc($allow_cid),
 			dbesc($allow_gid),
 			dbesc($deny_cid),

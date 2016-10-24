@@ -246,7 +246,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					intval($page_owner_uid)
 				);
 				if(count($r)) {
-					$d = (($r[0]['os_storage']) ? @file_get_contents($r[0]['content']) : dbunescbin($r[0]['content']));
+					$d = (($r[0]['os_storage']) ? @file_get_contents(dbunescbin($r[0]['content'])) : dbunescbin($r[0]['content']));
 					$ph = photo_factory($d, $r[0]['mimetype']);
 					if($ph->is_valid()) {
 						$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );

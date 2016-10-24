@@ -1912,7 +1912,7 @@ function attach_export_data($channel, $resource_id, $deleted = false) {
 		);
 		if($r) {
 			for($x = 0; $x < count($r); $x ++) {
-				$r[$x]['content'] = base64_encode($r[$x]['content']);
+				$r[$x]['content'] = base64_encode(dbunescbin($r[$x]['content']));
 			}
 			$ret['photo'] = $r;
 		}

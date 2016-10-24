@@ -83,7 +83,7 @@
 				$ptr['content'] = '';
 			elseif(! intval($r[0]['os_storage'])) {
 				$ptr['start'] = $start;
-				$x = substr(dbunescbin($ptr['content'],$start,$length));
+				$x = substr(dbunescbin($ptr['content']),$start,$length);
 				$ptr['length'] = strlen($x);
 				$ptr['content'] = base64_encode($x);
 			}

@@ -107,7 +107,7 @@ class dba_pdo extends dba_driver {
 			return 'string_agg(' . $fld . ',\'' . $sep . '\')';
 		}
 		else {
-			return 'GROUP_CONCAT(DISTINCT '.$fld.' SEPARATOR \''.$sep.'\')';
+			return 'GROUP_CONCAT(DISTINCT ' . $fld . ' SEPARATOR \'' . $sep . '\')';
 		}
 	}
 
@@ -120,9 +120,12 @@ class dba_pdo extends dba_driver {
 		}
 	}
 
+	// These two functions assume that postgres standard_conforming_strings is set to off;
+	// which we perform during DB open.
+
 	function escapebin($str) {
 		if($this->driver_dbtype === 'pgsql') {
-			return str_replace([ chr(92), chr(0), chr(39) ], [ '\\\134', '\\\000', '\\\047' ], $str);
+			return "\\\\x" . bin2hex($str);
 		}
 		else {
 			return $this->escape($str);
@@ -131,7 +134,11 @@ class dba_pdo extends dba_driver {
 	
 	function unescapebin($str) {
 		if($this->driver_dbtype === 'pgsql') {
-			return stripcslashes($str);
+
+			// The initial backslash inserted by escapebin above will have been stripped 
+			// by the postgres server, leaving us with '\x{hexdigits}'
+
+			return hex2bin(substr($str,2));
 		}
 		else {
 			return $str;

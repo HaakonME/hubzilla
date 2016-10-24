@@ -53,7 +53,14 @@ class DBA {
 
 		}
 		else {
-			if(!($port))
+
+			// attempt to use the pdo driver compiled-in mysqli socket
+			// if using 'localhost' with no port configured.
+			// If this is wrong you'll need to set the socket path specifically
+			// using a server name of 'mysql:unix_socket=/socket/path', setting /socket/path
+			// as needed for your platform
+
+			if((!($port)) && ($server !== 'localhost'))
 				$port = 3306;
 		}
 

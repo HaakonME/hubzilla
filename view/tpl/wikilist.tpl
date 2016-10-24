@@ -8,6 +8,7 @@
             </a>  
             <ul class="dropdown-menu  pull-right">  
               <li><a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="View  {{$wiki.title}}">View</a></li>
+							<li><a href="#" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;" title="Download  {{$wiki.title}}">Download</a></li>
               {{if $showControls}}
               <li class="divider"></li>  
               <li><a href="#" onclick="wiki_delete_wiki('{{$wiki.title}}','{{$wiki.resource_id}}'); return false;" title="Delete {{$wiki.title}}">Delete wiki</a></li>                                

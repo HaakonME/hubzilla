@@ -88,7 +88,7 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 			if($r) {
 	
 				$base_image = $r[0];
-				$base_image['content'] = (($r[0]['os_storage']) ? @file_get_contents($base_image['content']) : dbunescbin($base_image['content']));
+				$base_image['content'] = (($r[0]['os_storage']) ? @file_get_contents(dbunescbin($base_image['content'])) : dbunescbin($base_image['content']));
 			
 				$im = photo_factory($base_image['content'], $base_image['mimetype']);
 				if($im->is_valid()) {
@@ -320,7 +320,7 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 			}
 	
 			if(intval($r[0]['os_storage']))
-				$data = @file_get_contents($r[0]['content']);
+				$data = @file_get_contents(dbunescbin($r[0]['content']));
 			else
 				$data = dbunescbin($r[0]['content']); 
 	

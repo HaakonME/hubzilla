@@ -239,6 +239,10 @@ function wiki_delete_wiki(wikiHtmlName, resource_id) {
     }, 'json');
 }
 
+  
+function wiki_download_wiki(resource_id) {
+		window.location = "wiki/{{$channel}}/download/wiki/" + resource_id;
+}
 
   $('#new-page-submit').click(function (ev) {
     if (window.wiki_resource_id === '') {

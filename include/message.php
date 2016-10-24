@@ -436,7 +436,7 @@ function private_messages_drop($channel_id, $messageitem_id, $drop_conversation 
 			intval($channel_id)
 		);
 		if($z) {
-			q("delete from conv where guid = '%s' and uid = %d limit 1",
+			q("delete from conv where guid = '%s' and uid = %d",
 				dbesc($x[0]['conv_guid']),
 				intval($channel_id)
 			);		

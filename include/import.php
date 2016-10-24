@@ -860,7 +860,7 @@ function import_conv($channel,$convs) {
 	if($channel && $convs) {
 		foreach($convs as $conv) {
 			if($conv['deleted']) {
-				q("delete from conv where guid = '%s' and uid = %d limit 1",
+				q("delete from conv where guid = '%s' and uid = %d",
 					dbesc($conv['guid']),
 					intval($channel['channel_id'])
 				);

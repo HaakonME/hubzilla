@@ -153,17 +153,6 @@
 			}
 		});
 
-		// ACL
-		$('#id_distr').change(function() {
-
-			if ($('#id_distr').is(':checked')) {
-				$('#dbtn-acl').show();
-			}
-			else {
-				$('#dbtn-acl').hide();
-			}
-		}).trigger('change');
-
 	});
 
 </script>

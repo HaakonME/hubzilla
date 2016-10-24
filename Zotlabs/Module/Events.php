@@ -440,8 +440,6 @@ class Events extends \Zotlabs\Web\Controller {
 
 			$permissions = ((x($orig_event)) ? $orig_event : $perm_defaults);
 
-			//print_r(acl2json($permissions['allow_gid'])); killme();
-	
 			$tpl = get_markup_template('event_form.tpl');
 	
 			$form = replace_macros($tpl,array(
@@ -469,9 +467,6 @@ class Events extends \Zotlabs\Web\Controller {
 				'$l_text' => (($event_id) ? t('Edit Location') : t('Location')),
 				'$l_orig' => $l_orig,
 				'$t_orig' => $t_orig,
-				'$sh_text' => t('Share this event'),
-				'$sh_checked' => $sh_checked,
-				'$share' => array('distr', t('Share this event'), $sh_checked, '', array(t('No'),t('Yes'))),
 				'$preview' => t('Preview'),
 				'$perms_label' => t('Permission settings'),
 				// populating the acl dialog was a permission description from view_stream because Cal.php, which
@@ -482,6 +477,8 @@ class Events extends \Zotlabs\Web\Controller {
 				'$allow_gid' => acl2json($permissions['allow_gid']),
 				'$deny_cid' => acl2json($permissions['deny_cid']),
 				'$deny_gid' => acl2json($permissions['deny_gid']),
+
+				'$lockstate' => (($acl->is_private()) ? 'lock' : 'unlock'),
 
 				'$submit' => t('Submit'),
 				'$advanced' => t('Advanced Options')
@@ -611,6 +608,12 @@ class Events extends \Zotlabs\Web\Controller {
 						$end = null;
 					} else {
 						$end = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['dtend'], 'c') : datetime_convert('UTC','UTC',$rr['dtend'],'c'));
+
+						// give a fake end to birthdays so they get crammed into a 
+						// single day on the calendar
+
+						if($rr['etype'] === 'birthday')
+							$end = null;
 					}
 					
 					

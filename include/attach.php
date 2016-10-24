@@ -727,7 +727,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			intval($filesize),
 			intval(1),
 			intval($is_photo),
-			dbesc($os_basepath . $os_relpath),
+			dbescbin($os_basepath . $os_relpath),
 			dbesc($created),
 			dbesc($os_path),
 			dbesc($display_path),
@@ -749,7 +749,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			intval($x[0]['revision'] + 1),
 			intval(1),
 			intval($is_photo),
-			dbesc($os_basepath . $os_relpath),
+			dbescbin($os_basepath . $os_relpath),
 			dbesc($created),
 			dbesc($created),
 			dbesc($os_path),
@@ -794,7 +794,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			intval(0),
 			intval(1),
 			intval($is_photo),
-			dbesc($os_basepath . $os_relpath),
+			dbescbin($os_basepath . $os_relpath),
 			dbesc($created),
 			dbesc($created),
 			dbesc($os_path),
@@ -1060,7 +1060,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		dbesc($arr['folder']),
 		intval(1),
 		intval(1),
-		dbesc($path),
+		dbescbin($path),
 		dbesc($created),
 		dbesc($created),
 		dbesc($os_path),
@@ -1306,6 +1306,7 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		);
 
 		if($y) {
+			$y[0]['content'] = dbunescbin($y[0]['content']);
 			if(strpos($y[0]['content'],'store') === false)
 				$f = 'store/' . $channel_address . '/' . $y[0]['content'];
 			else
@@ -2099,7 +2100,7 @@ function attach_move($channel_id, $resource_id, $new_folder_hash) {
 	if(! $r)
 		return false;
 
-	$oldstorepath = $r[0]['content'];
+	$oldstorepath = dbunescbin($r[0]['content']);
 
 	if($new_folder_hash) {
 		$n = q("select * from attach where hash = '%s' and uid = %d limit 1",
@@ -2110,7 +2111,7 @@ function attach_move($channel_id, $resource_id, $new_folder_hash) {
 			return;
 
 		$newdirname = $n[0]['filename'];
-		$newstorepath = $n[0]['content'] . '/' . $resource_id;
+		$newstorepath = dbunescbin($n[0]['content']) . '/' . $resource_id;
 	}
 	else {
 		$newstorepath = 'store/' . $c['channel_address'] . '/' . $resource_id;
@@ -2172,7 +2173,7 @@ function attach_move($channel_id, $resource_id, $new_folder_hash) {
 	}
 
 	$t = q("update attach set content = '%s', folder = '%s', filename = '%s' where id = %d",
-		dbesc($newstorepath),
+		dbescbin($newstorepath),
 		dbesc($new_folder_hash),
 		dbesc($filename),
 		intval($r[0]['id'])
@@ -2187,7 +2188,7 @@ function attach_move($channel_id, $resource_id, $new_folder_hash) {
 		);
 
 		$t = q("update photo set content = '%s' where resource_id = '%s' and uid = %d and imgscale = 0",
-			dbesc($newstorepath),
+			dbescbin($newstorepath),
 			dbesc($resource_id),
 			intval($channel_id)
 		);

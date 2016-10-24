@@ -28,7 +28,8 @@ function photo_upload($channel, $observer, $args) {
 		return $ret;
 	}
 
-//	call_hooks('photo_upload_begin', $args);
+
+//call_hooks('photo_upload_begin', $args);
 
 	/*
 	 * Determine the album to use

@@ -137,8 +137,9 @@ class dba_pdo extends dba_driver {
 
 			// The initial backslash inserted by escapebin above will have been stripped 
 			// by the postgres server, leaving us with '\x{hexdigits}'
+			// The PDO driver returns bytea fields as streams, so fetch the content with fgets
 
-			return hex2bin(substr($str,2));
+			return hex2bin(substr(fgets($str),2));
 		}
 		else {
 			return $str;

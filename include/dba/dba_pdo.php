@@ -134,12 +134,15 @@ class dba_pdo extends dba_driver {
 	
 	function unescapebin($str) {
 		if($this->driver_dbtype === 'pgsql') {
+			$x = '';
+			while(! feof($str)) {
+				$x .= fread($str,8192);
+			}
+			if(substr($x,0,2) === '\\x') {
+				$x = hex2bin(substr($x,2));
+			}
+			return $x;
 
-			// The initial backslash inserted by escapebin above will have been stripped 
-			// by the postgres server, leaving us with '\x{hexdigits}'
-			// The PDO driver returns bytea fields as streams, so fetch the content with fgets
-
-			return hex2bin(substr(fgets($str),2));
 		}
 		else {
 			return $str;

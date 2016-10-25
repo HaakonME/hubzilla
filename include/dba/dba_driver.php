@@ -182,7 +182,7 @@ abstract class dba_driver {
 			return false;
 		}
 
-		if(strlen($server) && ($server !== 'localhost') && ($server !== '127.0.0.1')) {
+		if(strlen($server) && ($server !== 'localhost') && ($server !== '127.0.0.1') && (! strpbrk($server,':;'))) {
 			if((! dns_get_record($server, DNS_A + DNS_CNAME + DNS_PTR)) && (! filter_var($server, FILTER_VALIDATE_IP))) {
 				$this->error = sprintf( t('Cannot locate DNS info for database server \'%s\''), $server);
 				$this->connected = false;

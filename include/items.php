@@ -4503,3 +4503,46 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 		}
 	}
 }
+
+
+function item_create_edit_activity($post) {
+	if((! $post) || (! $post['item']))
+		return;
+
+	$update_item = $post['item'];
+
+	$new_item = $update_item;
+
+	$new_item['id'] = 0;
+	$new_item['parent'] = 0;
+	$new_item['mid'] = item_message_id();
+	
+	$new_item['body'] = sprintf( t('Edited %s'), (($update_item['item_thread_top']) ? t('Post','edit_activity') : t('Comment','edit_activity')));
+
+	$new_item['body'] .= "\n\n";
+	$new_item['body'] .= $update_item['body'];
+
+	$new_item['title'] = $update_item['title'];
+
+	$new_item['verb'] = ACTIVITY_UPDATE;
+	$new_item['item_thread_top'] = 0;
+
+	$x = post_activity_item($new_item);	
+
+	logger('posted edit activity');
+
+	$post_id = $x['id'];
+	if($post_id) {
+		$r = q("select * from item where id = %d",
+					intval($post_id)
+		);
+		if($r) {
+			xchan_query($r);
+			$sync_item = fetch_post_tags($r);
+			build_sync_packet($new_item['uid'],array('item' => array(encode_item($sync_item[0],true))));
+		}
+	}
+
+	\Zotlabs\Daemon\Master::Summon(array('Notifier', 'edit_activity', $post_id));
+	
+}

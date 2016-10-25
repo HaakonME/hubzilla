@@ -54,7 +54,7 @@ class dba_pdo extends dba_driver {
 		$select = ((stripos($sql,'select') === 0) ? true : false);
 
 		try {
-			$result = $this->db->query($sql);
+			$result = $this->db->query($sql, PDO::FETCH_ASSOC);
 		}
 		catch(PDOException $e) {
 	

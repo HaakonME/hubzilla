@@ -15,7 +15,7 @@ class dba_pdo extends dba_driver {
 			$dsn = $server;
 		}
 		else {
-			$dsn = $this->driver_dbtype . ':host=' . $server . (is_null($port) ? '' : ';port=' . $port);
+			$dsn = $this->driver_dbtype . ':host=' . $server . (intval($port) ? '' : ';port=' . $port);
 		}
 		
 		$dsn .= ';dbname=' . $db;

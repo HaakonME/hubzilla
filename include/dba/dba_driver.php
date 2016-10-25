@@ -73,7 +73,7 @@ class DBA {
 				$dsn = $server;
 			}
 			else {
-				$dsn = self::$scheme . ':host=' . $server . (is_null($port) ? '' : ';port=' . $port);
+				$dsn = self::$scheme . ':host=' . $server . (intval($port) ? '' : ';port=' . $port);
 			}
 			$dsn .= ';dbname=' . $db;
 

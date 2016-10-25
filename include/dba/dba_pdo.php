@@ -7,16 +7,21 @@ class dba_pdo extends dba_driver {
 
 	public $driver_dbtype = null;
 
-	function connect($server,$port,$user,$pass,$db) {
+	function connect($server,$scheme,$port,$user,$pass,$db) {
 		
-		$this->driver_dbtype = 'mysql'; // (($dbtype == DBTYPE_POSTGRES) ? 'postgres' : 'mysql');
-		$dns = $this->driver_dbtype
-		. ':host=' . $server . (is_null($port) ? '' : ';port=' . $port)
-		. ';dbname=' . $db;
+		$this->driver_dbtype = $scheme;
 
+		if(strpbrk($server,':;')) {
+			$dsn = $server;
+		}
+		else {
+			$dsn = $this->driver_dbtype . ':host=' . $server . (is_null($port) ? '' : ';port=' . $port);
+		}
+		
+		$dsn .= ';dbname=' . $db;
 
 		try {
-			$this->db = new PDO($dns,$user,$pass);
+			$this->db = new PDO($dsn,$user,$pass);
 			$this->db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 		}
 		catch(PDOException $e) {
@@ -27,6 +32,9 @@ class dba_pdo extends dba_driver {
 			return false;
 		}
 
+		if($this->driver_dbtype === 'pgsql')
+			$this->q("SET standard_conforming_strings = 'off'; SET backslash_quote = 'on';");
+
 		$this->connected = true;
 		return true;
 
@@ -35,6 +43,12 @@ class dba_pdo extends dba_driver {
 	function q($sql) {
 		if((! $this->db) || (! $this->connected))
 			return false;
+
+		if($this->driver_dbtype === 'pgsql') {
+			if(substr(rtrim($sql),-1,1) !== ';') {
+				$sql .= ';';
+			}
+		}
 
 		$this->error = '';
 		$select = ((stripos($sql,'select') === 0) ? true : false);
@@ -88,6 +102,54 @@ class dba_pdo extends dba_driver {
 		$this->connected = false;
 	}
 	
+	function concat($fld,$sep) {
+		if($this->driver_dbtype === 'pgsql') {
+			return 'string_agg(' . $fld . ',\'' . $sep . '\')';
+		}
+		else {
+			return 'GROUP_CONCAT(DISTINCT ' . $fld . ' SEPARATOR \'' . $sep . '\')';
+		}
+	}
+
+	function quote_interval($txt) {
+		if($this->driver_dbtype === 'pgsql') {
+			return "'$txt'";
+		}
+		else {
+			return $txt;
+		}
+	}
+
+	// These two functions assume that postgres standard_conforming_strings is set to off;
+	// which we perform during DB open.
+
+	function escapebin($str) {
+		if($this->driver_dbtype === 'pgsql') {
+			return "\\\\x" . bin2hex($str);
+		}
+		else {
+			return $this->escape($str);
+		}
+	}
+	
+	function unescapebin($str) {
+		if($this->driver_dbtype === 'pgsql') {
+			$x = '';
+			while(! feof($str)) {
+				$x .= fread($str,8192);
+			}
+			if(substr($x,0,2) === '\\x') {
+				$x = hex2bin(substr($x,2));
+			}
+			return $x;
+
+		}
+		else {
+			return $str;
+		}
+	}
+
+
 	function getdriver() {
 		return 'pdo';
 	}

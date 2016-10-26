@@ -414,8 +414,8 @@ function visible_activity($item) {
 		}
 	}
 
-//	if(is_edit_activity($item))
-//		return false;
+	if(is_edit_activity($item))
+		return false;
 
 	return true;
 }
@@ -1312,7 +1312,8 @@ function status_editor($a, $x, $popup = false) {
 		'$expiryModalOK' => t('OK'),
 		'$expiryModalCANCEL' => t('Cancel'),
 		'$expanded' => ((x($x, 'expanded')) ? $x['expanded'] : false),
-		'$bbcode' => ((x($x, 'bbcode')) ? $x['bbcode'] : false)
+		'$bbcode' => ((x($x, 'bbcode')) ? $x['bbcode'] : false),
+		'$parent' => ((array_key_exists('parent',$x) && $x['parent']) ? $x['parent'] : 0)
 	));
 
 	if ($popup === true) {

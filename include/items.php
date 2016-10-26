@@ -4506,12 +4506,20 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 
 
 function item_create_edit_activity($post) {
+
 	if((! $post) || (! $post['item']))
 		return;
 
 	$update_item = $post['item'];
 
 	$new_item = $update_item;
+
+	$author = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($new_item['author_xchan'])
+	);
+	if($author)
+		$item_author = $author[0];
+
 
 	$new_item['id'] = 0;
 	$new_item['parent'] = 0;
@@ -4521,10 +4529,34 @@ function item_create_edit_activity($post) {
 
 	$new_item['body'] .= "\n\n";
 	$new_item['body'] .= $update_item['body'];
+	
+	$new_item['sig'] = '';
 
 	$new_item['verb'] = ACTIVITY_UPDATE;
 	$new_item['item_thread_top'] = 0;
 	$new_item['created'] = $new_item['edited'] = datetime_convert();
+
+	$new_item['obj'] = json_encode(array(
+		'type'    => (($update_item['item_thread_top']) ? ACTIVITY_OBJ_NOTE : ACTIVITY_OBJ_COMMENT),
+		'id'      => $update_item['mid'],
+		'parent'  => $update_item['parent_mid'],
+		'link'    => array(array('rel' => 'alternate','type' => 'text/html', 'href' => $update_item['plink'])),
+		'title'   => $update_item['title'],
+		'content' => $update_item['body'],
+		'created' => $update_item['created'],
+		'edited'  => $update_item['edited'],
+		'author'  => array(
+			'name'     => $item_author['xchan_name'],
+			'address'  => $item_author['xchan_addr'],
+			'guid'     => $item_author['xchan_guid'],
+			'guid_sig' => $item_author['xchan_guid_sig'],
+			'link'     => array(
+				array('rel' => 'alternate', 'type' => 'text/html', 'href' => $item_author['xchan_url']),
+				array('rel' => 'photo', 'type' => $item_author['xchan_photo_mimetype'], 'href' => $item_author['xchan_photo_m'])),
+			),
+	));
+	
+
 
 	$x = post_activity_item($new_item);	
 

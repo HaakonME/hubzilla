@@ -901,7 +901,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			$x = item_store_update($datarray,$execflag);
 			
-			// item_create_edit_activity($x);			
+			item_create_edit_activity($x);			
 
 			if(! $parent) {
 				$r = q("select * from item where id = %d",

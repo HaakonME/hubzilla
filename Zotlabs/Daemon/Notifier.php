@@ -4,6 +4,7 @@ namespace Zotlabs\Daemon;
 
 require_once('include/queue_fn.php');
 require_once('include/html2plain.php');
+require_once('include/conversation.php');
 
 /*
  * This file was at one time responsible for doing all deliveries, but this caused

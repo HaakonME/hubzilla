@@ -605,6 +605,12 @@ function sys_boot() {
 
 	@include('.htconfig.php');
 
+	// allow somebody to set some initial settings just in case they can't
+	// install without special fiddling
+
+	if(App::$install && file_exists('.htpreconfig.php'))
+		@include('.htpreconfig.php');
+
 	if(array_key_exists('default_timezone',get_defined_vars())) {
 		App::$config['system']['timezone'] = $default_timezone;
 	}

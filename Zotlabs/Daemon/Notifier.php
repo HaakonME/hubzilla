@@ -372,12 +372,13 @@ class Notifier {
 				if(! $encoded_item['flags'])
 					$encoded_item['flags'] = array();
 				$encoded_item['flags'][] = 'relay';
+				$upstream = true;
 			}
 			else {
 				logger('notifier: normal distribution', LOGGER_DEBUG);
 				if($cmd === 'relay')
 					logger('notifier: owner relay');
-
+				$upstream = false;
 				// if our parent is a tag_delivery recipient, uplink to the original author causing
 				// a delivery fork. 
 	
@@ -446,6 +447,7 @@ class Notifier {
 
 		$narr = array(
 			'channel' => $channel,
+			'upstream' => $upstream,
 			'env_recips' => $env_recips,
 			'packet_recips' => $packet_recips,
 			'recipients' => $recipients,
@@ -547,6 +549,7 @@ class Notifier {
 
 				$narr = array(
 					'channel' => $channel,
+					'upstream' => $upstream,
 					'env_recips' => $env_recips,
 					'packet_recips' => $packet_recips,
 					'recipients' => $recipients,

@@ -13,7 +13,7 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 	
 		$text = null;
 		$str_tags = '';
-	
+		$process_oembed = true;	
 	
 		$br = "\n";
 	
@@ -22,6 +22,11 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 		else
 			$url = trim($_GET['url']);
 	
+		if(substr($url,0,1) === '!') {
+			$process_oembed = false;
+			$url = substr($url,1);
+		}
+
 		$url = strip_zids($url);
 	
 		if((substr($url,0,1) != '/') && (substr($url,0,4) != 'http'))
@@ -91,10 +96,12 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
-		$x = oembed_process($url);
-		if($x) {
-			echo $x;
-			killme();
+		if($process_oembed) {
+			$x = oembed_process($url);
+			if($x) {
+				echo $x;
+				killme();
+			}
 		}
 	
 		if($url && $title && $text) {

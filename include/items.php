@@ -4525,7 +4525,7 @@ function item_create_edit_activity($post) {
 	$new_item['parent'] = 0;
 	$new_item['mid'] = item_message_id();
 	
-	$new_item['body'] = sprintf( t('Edited %s'), (($update_item['item_thread_top']) ? t('Post','edit_activity') : t('Comment','edit_activity')));
+	$new_item['body'] = sprintf( t('[Edited %s]'), (($update_item['item_thread_top']) ? t('Post','edit_activity') : t('Comment','edit_activity')));
 
 	$new_item['body'] .= "\n\n";
 	$new_item['body'] .= $update_item['body'];

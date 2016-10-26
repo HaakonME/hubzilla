@@ -54,8 +54,7 @@ class Regdir extends \Zotlabs\Web\Controller {
 		if ($url) {
 			$m = parse_url($url);
 	
-			if ((! $m) || ((! @dns_get_record($m['host'], DNS_A + DNS_CNAME + DNS_PTR)) && (! filter_var($m['host'], FILTER_VALIDATE_IP) ))) {
-	
+			if ((! $m) || (! z_dns_check($m['host']))) {
 				$result['message'] = 'unparseable url';
 				json_return_and_die($result);
 			}

@@ -414,8 +414,8 @@ function visible_activity($item) {
 		}
 	}
 
-	if(is_edit_activity($item))
-		return false;
+//	if(is_edit_activity($item))
+//		return false;
 
 	return true;
 }

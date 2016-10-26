@@ -480,6 +480,23 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 		}
 }
 
+
+
+function z_dns_check($h,$check_mx = 0) {
+
+	// dns_get_record() has issues on some platforms
+	// so allow somebody to ignore it completely
+
+	if(get_config('system','do_not_check_dns'))
+		return true;
+
+	$opts = DNS_A + DNS_CNAME + DNS_PTR;
+	if($check_mx)
+		$opts += DNS_MX;
+	return((@dns_get_record($h, $opts) || filter_var($h, FILTER_VALIDATE_IP)) ? true : false);
+
+}
+
 // Take a URL from the wild, prepend http:// if necessary
 // and check DNS to see if it's real (or check if is a valid IP address)
 // return true if it's OK, false if something is wrong with it
@@ -494,7 +511,7 @@ function validate_url(&$url) {
 		$url = 'http://' . $url;
 	$h = @parse_url($url);
 
-	if(($h) && (@dns_get_record($h['host'], DNS_A + DNS_CNAME + DNS_PTR) || filter_var($h['host'], FILTER_VALIDATE_IP) )) {
+	if(($h) && z_dns_check($h['host'])) {
 		return true;
 	}
 	return false;
@@ -512,7 +529,7 @@ function validate_email($addr) {
 		return false;
 	$h = substr($addr,strpos($addr,'@') + 1);
 
-	if(($h) && (@dns_get_record($h, DNS_A + DNS_CNAME + DNS_PTR + DNS_MX) || filter_var($h, FILTER_VALIDATE_IP) )) {
+	if(($h) && z_dns_check($h,true)) {
 		return true;
 	}
 	return false;

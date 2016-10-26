@@ -4522,14 +4522,11 @@ function item_create_edit_activity($post) {
 	$new_item['body'] .= "\n\n";
 	$new_item['body'] .= $update_item['body'];
 
-	$new_item['title'] = $update_item['title'];
-
 	$new_item['verb'] = ACTIVITY_UPDATE;
 	$new_item['item_thread_top'] = 0;
+	$new_item['created'] = $new_item['edited'] = datetime_convert();
 
 	$x = post_activity_item($new_item);	
-
-	logger('posted edit activity');
 
 	$post_id = $x['id'];
 	if($post_id) {

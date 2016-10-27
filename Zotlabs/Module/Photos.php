@@ -259,7 +259,7 @@ class Photos extends \Zotlabs\Web\Controller {
 							@file_put_contents($r[0]['content'],$ph->imageString());
 							$data = $r[0]['content'];
 							$fsize = @filesize($r[0]['content']);
-							q("update attach set filesize = %d where hash = '%s' and uid = %d limit 1",
+							q("update attach set filesize = %d where hash = '%s' and uid = %d",
 								intval($fsize),
 								dbesc($resource_id),
 								intval($page_owner_uid)

@@ -70,7 +70,7 @@ class Regdir extends \Zotlabs\Web\Controller {
 			if(! $result['success'])
 				$valid = 0;
 	
-			q("update site set site_valid = %d where site_url = '%s' limit 1",
+			q("update site set site_valid = %d where site_url = '%s'",
 				intval($valid),
 				strtolower($url)
 			);

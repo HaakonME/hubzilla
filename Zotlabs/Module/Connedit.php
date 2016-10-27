@@ -448,7 +448,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			}
 			if($cmd === 'resetphoto') {
-				q("update xchan set xchan_photo_date = '2001-01-01 00:00:00' where xchan_hash = '%s' limit 1",
+				q("update xchan set xchan_photo_date = '2001-01-01 00:00:00' where xchan_hash = '%s'",
 					dbesc($orig_record[0]['xchan_hash'])
 				);
 				$cmd = 'refresh';

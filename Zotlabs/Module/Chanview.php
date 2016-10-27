@@ -86,6 +86,7 @@ class Chanview extends \Zotlabs\Web\Controller {
 		}
 	
 		if(! \App::$poi) {
+
 			//		We don't know who this is, and we can't figure it out from the URL
 			//		On the plus side, there's a good chance we know somebody else at that 
 			//		hub so sending them there with a Zid will probably work anyway.
@@ -99,26 +100,42 @@ class Chanview extends \Zotlabs\Web\Controller {
 				$url = zid($url);
 
 		}
+
+		$is_zot = false;
 	
 		if (\App::$poi) {
-		$url = \App::$poi['xchan_url'];
-		if($observer)
-			$url = zid($url);
+			$url = \App::$poi['xchan_url'];
+			if(\App::$poi['xchan_network'] === 'zot') {
+				$is_zot = true;
+			}			
 		}
-		// let somebody over-ride the iframed viewport presentation
-		// or let's just declare this a failed experiment.
+
+		// We will load the chanview template if it's a foreign network, 
+		// just so that we can provide a connect button along with a profile
+		// photo. Chances are we can't load the remote profile into an iframe
+		// because of cross-domain security headers. So provide a link to
+		// the remote profile. 
+
+		// Zot channels will usually have a connect link.
+		// If it isn't zot, 'pro' members won't be able to use the connect
+		// button as it is a foreign network so just send them to the remote
+		// profile.  
+
 	
-	//	if((! local_channel()) || (get_pconfig(local_channel(),'system','chanview_full')))
-		
-		goaway($url);
+		if($is_zot || \Zotlabs\Lib\System::get_server_role() === 'pro') {
+			if($is_zot && $observer) {
+				$url = zid($url);
+			}
+			goaway($url);
+		}
+		else {	
+			$o = replace_macros(get_markup_template('chanview.tpl'),array(
+				'$url' => $url,
+				'$full' => t('toggle full screen mode')
+			));
 	
-	//	$o = replace_macros(get_markup_template('chanview.tpl'),array(
-	//		'$url' => $url,
-	//		'$full' => t('toggle full screen mode')
-	//	));
-	
-	//	return $o;
-	
+			return $o;
+		}
 	}
 	
 }

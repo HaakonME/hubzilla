@@ -58,7 +58,9 @@ class Chanview extends \Zotlabs\Web\Controller {
 				}
 				logger('mod_chanview: constructed address ' . print_r($matches,true)); 
 			}
-	
+
+			$r = null;
+
 			if($_REQUEST['address']) {
 				$j = \Zotlabs\Zot\Finger::run($_REQUEST['address'],null);
 				if($j['success']) {
@@ -66,19 +68,36 @@ class Chanview extends \Zotlabs\Web\Controller {
 					$r = q("select * from xchan where xchan_addr = '%s' limit 1",
 						dbesc($_REQUEST['address'])
 					);
-					if($r)
+					if($r) {
 						\App::$poi = $r[0];
+					}
+				}
+				if(! $r) {
+					if(discover_by_webbie($_REQUEST['address'])) {
+						$r = q("select * from xchan where xchan_addr = '%s' limit 1",
+							dbesc($_REQUEST['address'])
+						);
+						if($r) {
+							\App::$poi = $r[0];
+						}
+					}
 				}
 			}
 		}
 	
 		if(! \App::$poi) {
-	//		We don't know who this is, and we can't figure it out from the URL
-	//		On the plus side, there's a good chance we know somebody else at that 
-	//		hub so sending them there with a Zid will probably work anyway.
+			//		We don't know who this is, and we can't figure it out from the URL
+			//		On the plus side, there's a good chance we know somebody else at that 
+			//		hub so sending them there with a Zid will probably work anyway.
+
 			$url = ($_REQUEST['url']);
+			if(! $url) {
+				notice( t('Channel not found.') . EOL);
+				return;
+			}
 			if($observer)
 				$url = zid($url);
+
 		}
 	
 		if (\App::$poi) {

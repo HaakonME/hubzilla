@@ -226,7 +226,7 @@ class Like extends \Zotlabs\Web\Controller {
 				$z[0]['deleted'] = 1;
 				build_sync_packet($ch[0]['channel_id'],array('likes' => $z));
 	
-				q("delete from likes where id = %d limit 1",
+				q("delete from likes where id = %d",
 					intval($z[0]['id'])
 				);
 				if($z[0]['i_mid']) {

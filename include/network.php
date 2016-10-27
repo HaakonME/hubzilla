@@ -1434,7 +1434,7 @@ function discover_by_webbie($webbie) {
 			dbesc($address)
 		);
 		if($r) {
-			$r = q("update xchan set xchan_name = '%s', xchan_network = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+			$r = q("update xchan set xchan_name = '%s', xchan_network = '%s', xchan_name_date = '%s' where xchan_hash = '%s'",
 				dbesc($fullname),
 				dbesc($network),
 				dbesc(datetime_convert()),

@@ -18,7 +18,7 @@ function group_add($uid,$name,$public = 0) {
 				intval($r)
 			);
 			if(($z) && $z[0]['deleted']) {
-				/*$r = q("UPDATE groups SET deleted = 0 WHERE uid = %d AND gname = '%s' LIMIT 1",
+				/*$r = q("UPDATE groups SET deleted = 0 WHERE uid = %d AND gname = '%s'",
 					intval($uid),
 					dbesc($name)
 				);*/

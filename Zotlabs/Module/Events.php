@@ -707,7 +707,7 @@ class Events extends \Zotlabs\Web\Controller {
 			$sync_event = $r[0];
 	
 			if($r) {
-				$r = q("delete from event where event_hash = '%s' and uid = %d limit 1",
+				$r = q("delete from event where event_hash = '%s' and uid = %d",
 					dbesc($event_id),
 					intval(local_channel())
 				);

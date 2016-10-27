@@ -227,7 +227,7 @@ function sync_objs($channel,$objs) {
 		foreach($objs as $obj) {
 
 			if(array_key_exists('obj_deleted',$obj) && $obj['obj_deleted'] && $obj['obj_obj']) {
-				q("delete from obj where obj_obj = '%s' and obj_channel = %d limit 1",
+				q("delete from obj where obj_obj = '%s' and obj_channel = %d",
 					dbesc($obj['obj_obj']),
 					intval($channel['channel_id'])
 				);
@@ -351,7 +351,7 @@ function sync_apps($channel,$apps) {
 			}
 			
 			if(array_key_exists('app_deleted',$app) && $app['app_deleted'] && $app['app_id']) {
-                q("delete from app where app_id = '%s' and app_channel = %d limit 1",
+                q("delete from app where app_id = '%s' and app_channel = %d",
                     dbesc($app['app_id']),
                     intval($channel['channel_id'])
                 );
@@ -416,7 +416,7 @@ function sync_apps($channel,$apps) {
 				create_table_from_array('app',$app);
 
 				if($term) {
-					$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+					$x = q("select * from app where app_id = '%s' and app_channel = %d",
 						dbesc($hash),
 						intval($channel['channel_id'])
 					);
@@ -466,7 +466,7 @@ function sync_chatrooms($channel,$chatrooms) {
 				continue;
 
 			if(array_key_exists('cr_deleted',$chatroom) && $chatroom['cr_deleted']) {
-                q("delete from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
+                q("delete from chatroom where cr_name = '%s' and cr_uid = %d",
                     dbesc($chatroom['cr_name']),
                     intval($channel['channel_id'])
                 );
@@ -635,7 +635,7 @@ function sync_events($channel,$events) {
 				continue;
 
 			if($event['event_deleted']) {
-				$r = q("delete from event where event_hash = '%s' and uid = %d limit 1",
+				$r = q("delete from event where event_hash = '%s' and uid = %d",
 					dbesc($event['event_hash']),
 					intval($channel['channel_id'])
 				);	
@@ -889,14 +889,14 @@ function import_mail($channel,$mails,$sync = false) {
 	if($channel && $mails) {
 		foreach($mails as $mail) {
 			if(array_key_exists('flags',$mail) && in_array('deleted',$mail['flags'])) {
-				q("delete from mail where mid = '%s' and uid = %d limit 1",
+				q("delete from mail where mid = '%s' and uid = %d",
 					dbesc($mail['message_id']),
 					intval($channel['channel_id'])
 				);
 				continue;
 			}
 			if(array_key_exists('flags',$mail) && in_array('recalled',$mail['flags'])) {
-				q("update mail set mail_recalled = 1 where mid = '%s' and uid = %d limit 1",
+				q("update mail set mail_recalled = 1 where mid = '%s' and uid = %d",
 					dbesc($mail['message_id']),
 					intval($channel['channel_id'])
 				);

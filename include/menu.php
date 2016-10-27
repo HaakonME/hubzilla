@@ -284,7 +284,7 @@ function menu_delete_id($menu_id, $uid) {
 			intval($menu_id),
 			intval($uid)
 		);
-		return q("delete from menu where menu_id = %d and menu_channel_id = %d limit 1",
+		return q("delete from menu where menu_id = %d and menu_channel_id = %d",
 			intval($menu_id),
 			intval($uid)
 		);

@@ -501,7 +501,7 @@ class Setup extends \Zotlabs\Web\Controller {
 		$this->check_add($ck_funcs, t('libCurl PHP module'), true, true);
 		$this->check_add($ck_funcs, t('GD graphics PHP module'), true, true);
 		$this->check_add($ck_funcs, t('OpenSSL PHP module'), true, true);
-		$this->check_add($ck_funcs, t('mysqli or postgres PHP module'), true, true);
+		$this->check_add($ck_funcs, t('PDO database PHP module'), true, true);
 		$this->check_add($ck_funcs, t('mb_string PHP module'), true, true);
 		$this->check_add($ck_funcs, t('xml PHP module'), true, true);
 
@@ -531,9 +531,9 @@ class Setup extends \Zotlabs\Web\Controller {
 			$ck_funcs[2]['status'] = false;
 			$ck_funcs[2]['help'] = t('Error: openssl PHP module required but not installed.');
 		}
-		if(! function_exists('mysqli_connect') && !function_exists('pg_connect')) {
+		if(! class_exists('PDO')) {
 			$ck_funcs[3]['status'] = false;
-			$ck_funcs[3]['help'] = t('Error: mysqli or postgres PHP module required but neither are installed.');
+			$ck_funcs[3]['help'] = t('Error: PDO database PHP module required but not installed.');
 		}
 		if(! function_exists('mb_strlen')) {
 			$ck_funcs[4]['status'] = false;

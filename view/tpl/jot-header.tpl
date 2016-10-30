@@ -26,6 +26,7 @@ function initEditor(cb){
 				  'transition' : 'elastic' 
 			});
 			$(".jothidden").show();
+			$("#profile-jot-text").addClass('jot-expanded');
 			if (typeof cb!="undefined") cb();
 			if(pretext.length)
 				addeditortext(pretext);

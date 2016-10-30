@@ -156,12 +156,21 @@ but may be an issue with nginx or other web server platforms.
 
 
 3. Create an empty database and note the access details (hostname, username, 
-password, database name). The MySQL client libraries will fallback to socket 
+password, database name). The PDO database libraries will fallback to socket 
 communication if the hostname is 'localhost' and some people have reported
 issues with the socket implementation. Use it if your requirements mandate. 
 Otherwise if the database is served on the local server, use '127.0.0.1' for
-the hostname. See https://dev.mysql.com/doc/refman/5.0/en/connecting.html
-for more information. 
+the hostname. 
+
+Internally we now use the PDO library for database connections. If you 
+encounter a database configuration which cannot be expressed on the setup form
+(for instance using MySQL with an unusual socket location); you can supply
+the PDO connection string as the database hostname. For instance
+	
+	mysql:unix_socket=/my/special/socket_path
+
+You should still fill in all other applicable form values as needed.  
+
 
 4. If you know in advance that it will be impossible for the web server to 
 write or create files in your web directory, create an empty file called 
@@ -223,7 +232,7 @@ You should also be sure that App::$config['system']['php_path'] is set correctly
 in your .htconfig.php file, it should look like (changing it to the correct 
 PHP location):
 
-App::$config['system']['php_path'] = '/usr/local/php55/bin/php';
+App::$config['system']['php_path'] = '/usr/local/php56/bin/php';
   
  
 #####################################################################
@@ -296,6 +305,21 @@ a lot of help available on the web. Google "mod-rewrite" along with the
 name of your operating system distribution or Apache package.
 
   
+#####################################################################
+- If you see an error during database setup that DNS lookup failed
+#####################################################################
+
+This is a known issue on some versions of FreeBSD, because 
+dns_get_record() fails for some lookups. Create a file in your top webserver 
+folder called '.htpreconfig.php' and inside it put the following:
+
+<?php
+App::$config['system']['do_not_check_dns'] = 1;
+
+This should allow installation to proceed. Once the database has been
+installed, add the same config statement (but not the '<?php' line) to the 
+.htconfig.php file which was created during installation. 
+
 #####################################################################
 - If you are unable to write the file .htconfig.php during installation 
 due to permissions issues:

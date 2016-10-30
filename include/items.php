@@ -4507,7 +4507,7 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 
 function item_create_edit_activity($post) {
 
-	if((! $post) || (! $post['item']) || ($post['item']['item_type'] == ITEM_TYPE_WEBPAGE))
+	if((! $post) || (! $post['item']) || ($post['item']['item_type'] != ITEM_TYPE_POST))
 		return;
 
 	$update_item = $post['item'];

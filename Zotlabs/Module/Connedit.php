@@ -521,11 +521,12 @@ class Connedit extends \Zotlabs\Web\Controller {
 			if($cmd === 'drop') {
 	
 	
-	// FIXME
-	// We need to send either a purge or a refresh packet to the other side (the channel being unfriended).
-	// The issue is that the abook DB record _may_ get destroyed when we call contact_remove. As the notifier runs
-	// in the background there could be a race condition preventing this packet from being sent in all cases.
-	// PLACEHOLDER
+				// @FIXME
+				// We need to send either a purge or a refresh packet to the other side (the channel being unfriended).
+				// The issue is that the abook DB record _may_ get destroyed when we call contact_remove. As the notifier
+				// runs in the background there could be a race condition preventing this packet from being sent in all
+				// cases.
+				// PLACEHOLDER
 	
 				contact_remove(local_channel(), $orig_record[0]['abook_id']);
 				build_sync_packet(0 /* use the current local_channel */,
@@ -800,9 +801,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			return $arr['output'];
 	
-		}
-	
-	
+		}	
 	}
-	
 }

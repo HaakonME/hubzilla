@@ -427,6 +427,13 @@ function check_plugin_versions($info) {
 				$test = trim($test);
 				if(! $test)
 					continue;
+				if(strpos($test,'.')) {
+					$conf = explode('.',$test);
+					if(get_config(trim($conf[0]),trim($conf[1])))
+						return true;
+					else
+						return false;
+				}
 				if(! in_array($test,App::$plugins))
 					$found = false;
 			}

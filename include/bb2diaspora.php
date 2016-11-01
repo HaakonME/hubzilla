@@ -449,6 +449,8 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	$md = new Markdownify(false, false, false);
 	$Text = $md->parseString($Text);
 
+
+
 	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason. 
 
 	$Text = str_replace(array('&\\_lt\\_;','&\\_gt\\_;','&\\_amp\\_;'),array('&lt;','&gt;','&amp;'),$Text);

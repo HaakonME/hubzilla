@@ -550,7 +550,6 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
 
-
 	if($cache)
 		$observer = false;
 	else
@@ -1028,7 +1027,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	// Summary (e.g. title) is required, earlier revisions only required description (in addition to 
 	// start which is always required). Allow desc with a missing summary for compatibility.
 
-	if ((x($ev,'desc') || x($ev,'summary')) && x($ev,'start')) {
+	if ((x($ev,'desc') || x($ev,'summary')) && x($ev,'dtstart')) {
 
 		$sub = format_event_html($ev);
 

@@ -29,7 +29,7 @@ class Connect extends \Zotlabs\Web\Controller {
 		profile_load($which,'');
 	}
 	
-		function post() {
+	function post() {
 	
 		if(! array_key_exists('channel', \App::$data))
 			return;
@@ -78,7 +78,7 @@ class Connect extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		$edit = ((local_channel() && (local_channel() == \App::$data['channel']['channel_id'])) ? true : false);
 	

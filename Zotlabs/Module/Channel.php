@@ -74,6 +74,7 @@ class Channel extends \Zotlabs\Web\Controller {
 
 		$category = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
 		$hashtags = ((x($_REQUEST,'tag')) ? $_REQUEST['tag'] : '');
+		$static   = ((array_key_exists('static',$_REQUEST)) ? intval($_REQUEST['static']) : 0);
 
 		$groups = array();
 
@@ -109,6 +110,8 @@ class Channel extends \Zotlabs\Web\Controller {
 
 
 		if(! $update) {
+
+			$static = intval(feature_enabled(\App::$profile['profile_uid'],'static_updates'));
 
 			$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 
@@ -175,6 +178,9 @@ class Channel extends \Zotlabs\Web\Controller {
 			$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 		if($load)
 			$simple_update = '';
+
+		if($static && $simple_update)
+			$simple_update .= " and item_thread_top = 0 and author_xchan = '" . protect_sprintf(get_observer_hash()) . "' ";
 
 		if(($update) && (! $load)) {
 
@@ -304,7 +310,7 @@ class Channel extends \Zotlabs\Web\Controller {
 				'$nouveau' => '0',
 				'$wall' => '1',
 				'$fh' => '0',
-				'$static'  => intval(feature_enabled(\App::$profile['profile_uid'],'static_updates')),
+				'$static'  => $static,
 				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search' => '',
 				'$order' => '',

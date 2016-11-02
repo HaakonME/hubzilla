@@ -22,9 +22,12 @@ class Pubstream extends \Zotlabs\Web\Controller {
 	
 		$item_normal = item_normal();
 
-		$static  = ((local_channel()) ? intval(feature_enabled(local_channel(),'static_updates')) : 0);
+		$static = ((array_key_exists('static',$_REQUEST)) ? intval($_REQUEST['static']) : 0);
+
 	
 		if(! $update) {
+
+			$static  = ((local_channel()) ? intval(feature_enabled(local_channel(),'static_updates')) : 0);
 	
 			$maxheight = get_config('system','home_divmore_height');
 			if(! $maxheight)
@@ -99,7 +102,10 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 		if($load)
 			$simple_update = '';
-	
+
+		if($static && $simple_update)
+            $simple_update .= " and item_thread_top = 0 and author_xchan = '" . protect_sprintf(get_observer_hash()) . "' ";
+
 		//logger('update: ' . $update . ' load: ' . $load);
 	
 		if($update) {

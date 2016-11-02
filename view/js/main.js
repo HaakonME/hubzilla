@@ -754,12 +754,12 @@ function liveUpdate() {
 			update_mode = 'append';
 	}
 	else {
-		if(bParam_static) {
-			in_progress = false;
-			if(timer) clearTimeout(timer);
-			timer = setTimeout(NavUpdate,10000);
-			return;
-		}
+//		if(bParam_static) {
+//			in_progress = false;
+//			if(timer) clearTimeout(timer);
+//			timer = setTimeout(NavUpdate,10000);
+//			return;
+//		}
 
 		update_mode = 'update';
 		var orgHeight = $("#region_2").height();

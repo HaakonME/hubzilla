@@ -54,6 +54,7 @@ class Network extends \Zotlabs\Web\Controller {
 		$datequery  = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
 		$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 		$nouveau    = ((x($_GET,'new')) ? intval($_GET['new']) : 0);
+		$static     = ((x($_GET,'static')) ? intval($_GET['static']) : 0); 
 		$gid        = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 		$category   = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
 		$hashtags   = ((x($_REQUEST,'tag')) ? $_REQUEST['tag'] : '');
@@ -186,6 +187,8 @@ class Network extends \Zotlabs\Web\Controller {
 	
 			$status_editor = status_editor($a,$x);
 			$o .= $status_editor;
+
+			$static = intval(feature_enabled(local_channel(),'static_updates'));
 	
 		}
 	
@@ -295,7 +298,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'$fh'      => (($firehose) ? $firehose : '0'),
 				'$nouveau' => (($nouveau) ? $nouveau : '0'),
 				'$wall'    => '0',
-				'$static'  => intval(feature_enabled(local_channel(),'static_updates')),
+				'$static'  => $static, 
 				'$list'    => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$page'    => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search'  => (($search) ? $search : ''),
@@ -402,7 +405,8 @@ class Network extends \Zotlabs\Web\Controller {
 			$page_mode = 'client';
 	
 		$simple_update = (($update) ? " and item_unseen = 1 " : '');
-	
+
+
 		// This fixes a very subtle bug so I'd better explain it. You wake up in the morning or return after a day
 		// or three and look at your matrix page - after opening up your browser. The first page loads just as it
 		// should. All of a sudden a few seconds later, page 2 will get inserted at the beginning of the page
@@ -419,6 +423,9 @@ class Network extends \Zotlabs\Web\Controller {
 			$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";
 		if($load)
 			$simple_update = '';
+
+		if($static && $simple_update)
+			$simple_update .= " and item_thread_top = 0 and author_xchan = '" . protect_sprintf(get_observer_hash()) . "' ";	
 	
 		if($nouveau && $load) {
 			// "New Item View" - show all items unthreaded in reverse created date order

@@ -17,6 +17,7 @@
 	var bParam_wall = {{$wall}};
 	var bParam_list = {{$list}};
 	var bParam_fh = {{$fh}};
+	var bParam_static = {{$static}};
 
 	var bParam_search = "{{$search}}";
 	var bParam_order = "{{$order}}";

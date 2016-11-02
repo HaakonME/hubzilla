@@ -96,6 +96,8 @@ class Search extends \Zotlabs\Web\Controller {
 		// OR your own posts if you are a logged in member
 		// No items will be shown if the member has a blocked profile wall. 
 	
+		$static  = ((local_channel()) ? intval(feature_enabled(local_channel(),'static_updates')) : 0);
+
 		if((! $update) && (! $load)) {
 	
 			// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
@@ -120,6 +122,7 @@ class Search extends \Zotlabs\Web\Controller {
 				'$fh' => '0',
 				'$nouveau' => '0',
 				'$wall' => '0',
+				'$static' => $static,
 				'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search' => (($tag) ? urlencode('#') : '') . $search,

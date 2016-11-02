@@ -304,6 +304,7 @@ class Channel extends \Zotlabs\Web\Controller {
 				'$nouveau' => '0',
 				'$wall' => '1',
 				'$fh' => '0',
+				'$static'  => intval(feature_enabled(\App::$profile['profile_uid'],'static_updates')),
 				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search' => '',
 				'$order' => '',

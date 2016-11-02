@@ -295,6 +295,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'$fh'      => (($firehose) ? $firehose : '0'),
 				'$nouveau' => (($nouveau) ? $nouveau : '0'),
 				'$wall'    => '0',
+				'$static'  => intval(feature_enabled(local_channel(),'static_updates')),
 				'$list'    => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$page'    => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search'  => (($search) ? $search : ''),

@@ -157,6 +157,15 @@ function get_features($filtered = true) {
 				feature_level('smart_birthdays',2),
 			],
 
+			[
+				'static_updates',       
+				t('Manual Page Updates'),          
+				t('Off = automatically update changing conversations. On = Wait until the page is re-loaded.'),
+				false,
+				get_config('feature_lock','static_updates'),
+				feature_level('static_updates',1),
+			],
+
 			[ 
 				'advanced_dirsearch', 
 				t('Advanced Directory Search'),

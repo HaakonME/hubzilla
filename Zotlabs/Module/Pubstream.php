@@ -21,6 +21,8 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			return;
 	
 		$item_normal = item_normal();
+
+		$static  = ((local_channel()) ? intval(feature_enabled(local_channel(),'static_updates')) : 0);
 	
 		if(! $update) {
 	
@@ -49,6 +51,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 				'$nouveau' => '0',
 				'$wall'    => '0',
 				'$list'    => '0',
+				'$static'  => $static,
 				'$page'    => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search'  => '',
 				'$order'   => 'comment',

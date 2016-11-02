@@ -130,6 +130,7 @@ class Display extends \Zotlabs\Web\Controller {
 		if($load)
 			$simple_update = '';
 	
+		$static  = ((local_channel()) ? intval(feature_enabled(local_channel(),'static_updates')) : 0);
 	
 	
 		if((! $update) && (! $load)) {
@@ -154,6 +155,7 @@ class Display extends \Zotlabs\Web\Controller {
 				'$fh' => '0',
 				'$nouveau' => '0',
 				'$wall' => '0',
+				'$static' => $static,
 				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$search' => '',

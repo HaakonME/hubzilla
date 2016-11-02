@@ -249,7 +249,7 @@ var divmore_height = 400;
 var last_filestorage_id = null;
 var mediaPlaying = false;
 var contentHeightDiff = 0;
-
+var liveRecurse = 0;
 
 $(function() {
 	$.ajaxSetup({cache: false});
@@ -762,6 +762,27 @@ function liveUpdate() {
 	var dstart = new Date();
 	console.log('LOADING data...');
 	$.get(update_url, function(data) {
+
+		// on shared hosts occasionally the live update process will be killed
+		// leaving an incomplete HTML structure, which leads to conversations getting
+		// truncated and the page messed up if all the divs aren't closed. We will try 
+		// again and give up if we can't get a valid HTML response after 10 tries.
+
+		if((data.indexOf("<html>") != (-1)) && (data.indexOf("</html>") == (-1))) {
+			console.log('Incomplete data. Reloading');
+			in_progress = false;
+			liveRecurse ++;
+			if(liveRecurse < 10) {
+				liveUpdate();
+			}
+			else {
+				console.log('Incomplete data. Too many attempts. Giving up.');
+			}
+		}		
+
+		// else data was valid - reset the recursion counter
+		liveRecurse = 0;
+
 		var dready = new Date();
 		console.log('DATA ready in: ' + (dready - dstart)/1000 + ' seconds.');
 

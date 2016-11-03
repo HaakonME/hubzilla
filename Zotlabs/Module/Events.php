@@ -57,9 +57,6 @@ class Events extends \Zotlabs\Web\Controller {
 			$start = sprintf('%d-%d-%d %d:%d:0',$startyear,$startmonth,$startday,$starthour,$startminute);
 		}
 	
-		if($nofinish) {
-			$finish = NULL_DATE;
-		}
 	
 		if($finish_text) {
 			$finish = $finish_text;
@@ -67,6 +64,11 @@ class Events extends \Zotlabs\Web\Controller {
 		else {
 			$finish = sprintf('%d-%d-%d %d:%d:0',$finishyear,$finishmonth,$finishday,$finishhour,$finishminute);
 		}
+
+		if($nofinish) {
+			$finish = NULL_DATE;
+		}
+
 	
 		if($adjust) {
 			$start = datetime_convert(date_default_timezone_get(),'UTC',$start);
@@ -207,8 +209,10 @@ class Events extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
+		logger('event: ' . print_r($datarray,true));
+dbg(1);
 		$event = event_store_event($datarray);
-	
+dbg(0);	
 	
 		if($post_tags)	
 			$datarray['term'] = $post_tags;

@@ -101,7 +101,7 @@ class Search extends \Zotlabs\Web\Controller {
 
 		if((! $update) && (! $load)) {
 	
-			$static  = ((local_channel()) ? intval(feature_enabled(local_channel(),'static_updates')) : 0);
+			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 0);
 
 
 			// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,

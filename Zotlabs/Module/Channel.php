@@ -111,7 +111,7 @@ class Channel extends \Zotlabs\Web\Controller {
 
 		if(! $update) {
 
-			$static = intval(feature_enabled(\App::$profile['profile_uid'],'static_updates'));
+			$static = channel_manual_conv_update(\App::$profile['profile_uid']);
 
 			$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 

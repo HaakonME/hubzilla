@@ -188,7 +188,7 @@ class Network extends \Zotlabs\Web\Controller {
 			$status_editor = status_editor($a,$x);
 			$o .= $status_editor;
 
-			$static = intval(feature_enabled(local_channel(),'static_updates'));
+			$static = channel_manual_conv_update(local_channel());
 	
 		}
 	

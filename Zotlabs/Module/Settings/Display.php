@@ -28,6 +28,7 @@ class Display {
 		$title_tosource    = ((x($_POST,'title_tosource')) ? intval($_POST['title_tosource'])  : 0);		 
 		$channel_list_mode = ((x($_POST,'channel_list_mode')) ? intval($_POST['channel_list_mode']) : 0);
 		$network_list_mode = ((x($_POST,'network_list_mode')) ? intval($_POST['network_list_mode']) : 0);
+		$manual_update     = ((array_key_exists('manual_update',$_POST)) ? intval($_POST['manual_update']) : 0);
 	
 		$channel_divmore_height = ((x($_POST,'channel_divmore_height')) ? intval($_POST['channel_divmore_height']) : 400);
 		if($channel_divmore_height < 50)
@@ -61,6 +62,7 @@ class Display {
 		set_pconfig(local_channel(),'system','network_list_mode', $network_list_mode);
 		set_pconfig(local_channel(),'system','channel_divmore_height', $channel_divmore_height);
 		set_pconfig(local_channel(),'system','network_divmore_height', $network_divmore_height);
+		set_pconfig(local_channel(),'system','manual_conversation_update', $manual_update);
 	
 		$newschema = '';
 		if($theme == $existing_theme){
@@ -204,6 +206,7 @@ class Display {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Show emoticons (smilies) as images"), 1-intval($nosmile), '', $yes_no),
+			'$manual_update'	=> array('manual_update', t('Manual conversation updates'), channel_manual_conv_update(local_channel()), t('Default is automatic, which may increase screen jumping'), $yes_no),
 			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, '', $yes_no),
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,

@@ -1931,3 +1931,14 @@ function channel_reddress($channel) {
 
 	return strtolower($channel['channel_address'] . '@' . App::get_hostname());
 }
+
+
+function channel_manual_conv_update($channel_id) {
+
+	$x = get_pconfig($channel_id, 'system','manual_conversation_update');
+	if($x === false)
+		$x = get_config('system','manual_conversation_update');
+
+	return intval($x);
+
+}

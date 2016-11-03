@@ -186,6 +186,7 @@ class PConfig {
 		$ret = false;
 
 		if(array_key_exists($uid,\App::$config) 
+			&& is_array(\App::$config['uid']) 
 			&& array_key_exists($family,\App::$config['uid']) 
 			&& array_key_exists($key, \App::$config[$uid][$family]))
 			unset(\App::$config[$uid][$family][$key]);

@@ -209,10 +209,7 @@ class Events extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
-		logger('event: ' . print_r($datarray,true));
-dbg(1);
 		$event = event_store_event($datarray);
-dbg(0);	
 	
 		if($post_tags)	
 			$datarray['term'] = $post_tags;

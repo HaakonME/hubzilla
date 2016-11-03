@@ -17,14 +17,10 @@
 			</button>
 			{{/if}}
 			{{if $userinfo}}
-				{{if $z_server_role == 'pro'}}
 				<div class="usermenu-head dropdown-toggle fakelink" data-toggle="dropdown">
 					<img id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">
 					<span class="caret" id="usermenu-caret"></span>
 				</div>
-				{{else}}
-				<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret dropdown-toggle fakelink" data-toggle="dropdown" id="usermenu-caret"></span>
-				{{/if}}
 				{{if $localuser}}
 					<ul class="dropdown-menu" role="menu" aria-labelledby="avatar">
 						{{foreach $nav.usermenu as $usermenu}}

@@ -495,10 +495,13 @@ function z_dns_check($h,$check_mx = 0) {
 		&& \App::$config['system']['do_not_check_dns'])
 		return true;
 
-	$opts = DNS_A + DNS_CNAME + DNS_PTR;
-	if($check_mx)
-		$opts += DNS_MX;
-	return((@dns_get_record($h, $opts) || filter_var($h, FILTER_VALIDATE_IP)) ? true : false);
+
+	//$opts = DNS_A + DNS_CNAME + DNS_PTR;
+	//if($check_mx)
+	//	$opts += DNS_MX;
+	// Specific record type flags are unreliable on FreeBSD and Mac, 
+	// so now we'll ignore these and just check for the existence of any DNS record. 
+	return((@dns_get_record($h) || filter_var($h, FILTER_VALIDATE_IP)) ? true : false);
 
 }
 

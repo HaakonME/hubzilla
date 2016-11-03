@@ -211,7 +211,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		return $result;
 	}
 
-	$r = q("select abook_xchan, abook_instance from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+	$r = q("select abook_id, abook_xchan, abook_pending, abook_instance from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 		dbesc($xchan_hash),
 		intval($uid)
 	);
@@ -237,7 +237,28 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$x = q("update abook set abook_instance = '%s' where abook_id = %d",
 			dbesc($abook_instance),
 			intval($r[0]['abook_id'])
-		);		
+		);
+
+		if(intval($r[0]['abook_pending'])) {
+
+			$abook_my_perms = get_channel_default_perms($uid);
+            $role = get_pconfig($uid,'system','permissions_role');
+            if($role) {
+                $x = \Zotlabs\Access\PermissionRoles::role_perms($role);
+                if($x['perms_connect']) {
+                    $abook_my_perms = $x['perms_connect'];
+                }
+            }
+
+            $filled_perms = \Zotlabs\Access\Permissions::FilledPerms($abook_my_perms);
+            foreach($filled_perms as $k => $v) {
+                set_abconfig($uid,$r[0]['abook_xchan'],'my_perms',$k,$v);
+            }
+
+			$x = q("update abook set abook_pending = 0 where abook_id = %d",
+				intval($r[0]['abook_id'])
+			);
+		}
 	}
 	else {
 		$closeness = get_pconfig($uid,'system','new_abook_closeness');

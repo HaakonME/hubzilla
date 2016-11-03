@@ -224,7 +224,7 @@ class Cal extends \Zotlabs\Web\Controller {
 	
 				$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
 	                              from event left join item on event_hash = resource_id 
-					where resource_type = 'event' and event.uid = %d $ignored 
+					where resource_type = 'event' and event.uid = %d and event.uid = item.uid $ignored 
 					AND (( adjust = 0 AND ( dtend >= '%s' or nofinish = 1 ) AND dtstart <= '%s' ) 
 					OR  (  adjust = 1 AND ( dtend >= '%s' or nofinish = 1 ) AND dtstart <= '%s' )) $sql_extra ",
 					intval($channel['channel_id']),

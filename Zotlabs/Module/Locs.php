@@ -80,7 +80,7 @@ class Locs extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 	
 		if(! local_channel()) {

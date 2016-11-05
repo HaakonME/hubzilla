@@ -324,10 +324,6 @@ class Ping extends \Zotlabs\Web\Controller {
 
 			if($r) {
 				foreach($r as $rr) {
-					if($rr['adjust'])
-						$md = datetime_convert('UTC', date_default_timezone_get(), $rr['dtstart'], 'Y/m');
-					else
-						$md = datetime_convert('UTC', 'UTC', $rr['dtstart'], 'Y/m');
 
 					$strt = datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['dtstart']);
 					$today = ((substr($strt, 0, 10) === datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d')) ? true : false);

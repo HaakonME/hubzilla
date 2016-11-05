@@ -581,11 +581,11 @@ function widget_settings_menu($arr) {
 	if($abk)
 		$abook_self_id = $abk[0]['abook_id'];
 
-	$hublocs = q("select count(*) as total from hubloc where hubloc_hash = '%s'",
+	$x = q("select count(*) as total from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0 ",
 		dbesc($channel['channel_hash'])
 	);
 
-	$hublocs = (($hublocs[0]['total'] > 1) ? true : false);
+	$hublocs = (($x && $x[0]['total'] > 1) ? true : false);
 
 	$tabs = array(
 		array(

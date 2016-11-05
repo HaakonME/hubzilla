@@ -162,7 +162,7 @@ function channel_total() {
  * Also creates the related xchan, hubloc, profile, and "self" abook records,
  * and an empty "Friends" group/collection for the new channel.
  *
- * @param array $arr assoziative array with:
+ * @param array $arr associative array with:
  *  * \e string \b name full name of channel
  *  * \e string \b nickname "email/url-compliant" nickname
  *  * \e int \b account_id to attach with this channel

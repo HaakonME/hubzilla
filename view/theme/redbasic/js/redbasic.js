@@ -32,6 +32,12 @@ $(document).ready(function() {
 		$('#expand-tabs-icon').toggleClass('fa-arrow-circle-down').toggleClass('fa-arrow-circle-up');
 	});
 
+	$('.usermenu-head').click(function() {
+		if($('#navbar-collapse-1').hasClass('in')){
+			$('#navbar-collapse-1').removeClass('in');
+		}
+	});
+	
 	if($('#tabs-collapse-1').length === 0) {
 		$('#expand-tabs').hide();
 	}

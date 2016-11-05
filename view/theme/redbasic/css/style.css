@@ -1515,7 +1515,11 @@ nav .dropdown-menu {
 	color: $nav_icon_colour;
 }
 
-#avatar:hover + #usermenu-caret {
+.usermenu-head {
+	float: left;
+}
+
+.usermenu-head:hover #usermenu-caret {
 	color: $nav_active_icon_colour;
 }
 

@@ -21,8 +21,9 @@ addons:
   # Install dependencies for generating API documentation with doxygen
   apt:
     packages:
-      - doxygen
-      - doxygen-latex
+      # default doxygen 1.7 is too old, we install our own
+      #- doxygen
+      #- doxygen-latex
       - graphviz
       - ttf-liberation
 
@@ -75,6 +76,7 @@ matrix:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/doxygen/doxygen-$DOXY_VER/bin
 
 
 

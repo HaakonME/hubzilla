@@ -34,24 +34,41 @@ if [[ "$TRAVIS_JOB_NUMBER" != "${TRAVIS_BUILD_NUMBER}.1" ]]; then
 	exit
 fi
 
-# @TODO get newer doxygen
-echo "Doxygen version 1.7 is too old for us :("
+# Get newer Doxygen
+#echo "Doxygen version 1.7 is too old for us :("
+#doxygen --version
+
+# Travis CI has an old Doxygen 1.7 build, so we fetch a recent static binary
+export DOXY_BINPATH=$HOME/doxygen/doxygen-$DOXY_VER/bin
+if [ ! -e "$DOXY_BINPATH/doxygen" ]; then
+	echo "Installing newer Doxygen $DOXY_VER ..."
+	mkdir -p $HOME/doxygen && cd $HOME/doxygen
+	wget -O - http://ftp.stack.nl/pub/users/dimitri/doxygen-$DOXY_VER.linux.bin.tar.gz | tar xz
+	export PATH=$PATH:$DOXY_BINPATH
+fi
+echo "Doxygen version"
 doxygen --version
 
-# Only build API documentation for master branch push
+echo "Generating Doxygen API documentation ..."
+cd $TRAVIS_BUILD_DIR
+mkdir -p ./doc/html
+# Redirect stderr and stdout to log file and console to be able to review documentation errors
+doxygen $DOXYFILE 2>&1 | tee ./doc/html/doxygen.log
+
+
+# There is no sane way yet, to prevent missuse of the push tokens in our workflow.
+# We would need a way to limit a token to only push to gh-pages or a way to prevent
+# manipulations to travis scripts which is not possible because we want it to run
+# for pull requests.
+# There are protected branches in GitHub, but they do not work for forced pushes.
+exit
+
+# Only continue for master branch pushes
 if [[ "$TRAVIS_EVENT_TYPE" != "push" ]] || [[ "$TRAVIS_BRANCH" != "master" ]]; then
 	echo "Conditions not met to build API documentation."
 	echo "We are finished ..."
-	exit
+#	exit
 fi
-
-echo "Generating Doxygen API documentation for master ..."
-
-cd $TRAVIS_BUILD_DIR
-mkdir -p ./doc/html
-
-# Redirect stderr and stdout to log file and console
-doxygen $DOXYFILE 2>&1 | tee ./doc/html/doxygen.log
 
 # Check if GitHub token is configured in Travis to be able to push to the repo
 if [ -z "$GHP_TOKEN" ]; then

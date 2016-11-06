@@ -23,3 +23,12 @@ ALIASES += "TODO=\todo"
 ALIASES += "BUG=\bug"
 ALIASES += "hooks=\xrefitem hooks \"Hooks\" \"Hooks List\""
 ALIASES += "HOOKS=\hooks"
+# Output
+QUIET = YES
+WARNINGS = YES
+# Dot tool config
+HAVE_DOT = YES
+DOT_IMAGE_FORMAT = svg
+INTERACTIVE_SVG = YES
+CLASS_GRAPH = YES
+COLLABORATION_GRAPH = NO

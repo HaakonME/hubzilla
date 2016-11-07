@@ -4174,7 +4174,7 @@ function update_hub_connected($hub,$sitekey = '') {
 			intval($hub['hubloc_id']),
 			dbesc($sitekey)
 		);
-		if(intval($r[0]['hubloc_orphancheck'])) {
+		if(intval($hub['hubloc_orphancheck'])) {
 			q("update hubloc set hubloc_orhpancheck = 0 where hubloc_id = %d and hubloc_sitekey = '%s' ",
 				intval($hub['hubloc_id']),
 				dbesc($sitekey)

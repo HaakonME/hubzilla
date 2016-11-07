@@ -1135,9 +1135,9 @@ class App {
 
 	public static function build_pagehead() {
 
-		$user_scalable = ((local_channel()) ? get_pconfig(local_channel(),'system','user_scalable') : 1);
+		$user_scalable = ((local_channel()) ? get_pconfig(local_channel(),'system','user_scalable') : 0);
 		if ($user_scalable === false)
-			$user_scalable = 1;
+			$user_scalable = 0;
 
 		$preload_images = ((local_channel()) ? get_pconfig(local_channel(),'system','preload_images') : 0);
 		if ($preload_images === false)

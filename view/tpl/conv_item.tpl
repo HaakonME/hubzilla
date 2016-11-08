@@ -105,7 +105,7 @@
 							{{if $item.isevent}}
 							<div class="btn-group dropdown">
 								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-attend-menu-{{$item.id}}" title="{{$item.attend_title}}">
-									<i class="fa fa-calendar-check-o">
+									<i class="fa fa-calendar-check-o"></i>
 								</button>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-attend-menu-{{$item.id}}">
 									<li role="presentation"><a class="menuitem" href="#" title="{{$item.attend.0}}" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">

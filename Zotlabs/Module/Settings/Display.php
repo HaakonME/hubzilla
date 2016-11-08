@@ -159,7 +159,7 @@ class Display {
 		$preload_images = (($preload_images===false)? '0': $preload_images); // default if not set: 0
 	
 		$user_scalable = get_pconfig(local_channel(),'system','user_scalable');
-		$user_scalable = (($user_scalable===false)? '1': $user_scalable); // default if not set: 1
+		$user_scalable = (($user_scalable===false)? '0': $user_scalable); // default if not set: 0
 			
 		$browser_update = intval(get_pconfig(local_channel(), 'system','update_interval'));
 		$browser_update = (($browser_update == 0) ? 80 : $browser_update / 1000); // default if not set: 40 seconds

@@ -103,27 +103,40 @@
 							</button>
 							{{/if}}
 							{{if $item.isevent}}
-							<button type="button" title="{{$item.attend.0}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
-								<i class="fa fa-check{{if $item.my_responses.attend}} ivoted{{/if}}" ></i>
-							</button>
-							<button type="button" title="{{$item.attend.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'attendno'); return false;">
-								<i class="fa fa-times{{if $item.my_responses.attendno}} ivoted{{/if}}" ></i>
-							</button>
-							<button type="button" title="{{$item.attend.2}}" class="btn btn-default btn-sm" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
-								<i class="fa fa-question{{if $item.my_responses.attendmaybe}} ivoted{{/if}}" ></i>
-							</button>
+							<div class="btn-group dropdown">
+								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-attend-menu-{{$item.id}}" title="{{$item.attend_title}}">
+									<i class="fa fa-check-square-o"></i>
+								</button>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-attend-menu-{{$item.id}}">
+									<li role="presentation"><a class="menuitem" href="#" title="{{$item.attend.0}}" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
+										<i class="item-act-list fa fa-check{{if $item.my_responses.attend}} ivoted{{/if}}" ></i> {{$item.attend.0}}</a>
+									</li>
+									<li role="presentation"><a class="menuitem" href="#" title="{{$item.attend.1}}" onclick="itemAddToCal({{$item.id}}), dolike({{$item.id}},'attendno'); return false;">
+										<i class="item-act-list fa fa-times{{if $item.my_responses.attendno}} ivoted{{/if}}" ></i> {{$item.attend.1}}</a>
+									</li>
+									<li role="presentation"><a class="menuitem" href="#" title="{{$item.attend.2}}" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendmaybe'); return false;">
+										<i class="item-act-list fa fa-question{{if $item.my_responses.attendmaybe}} ivoted{{/if}}" ></i> {{$item.attend.2}}</a>
+									</li>
+								</ul>
+							</div>
 							{{/if}}
-
 							{{if $item.canvote}}
-							<button type="button" title="{{$item.conlabels.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'agree'); return false;">
-								<i class="fa fa-check{{if $item.my_responses.agree}} ivoted{{/if}}" ></i>
-							</button>
-							<button type="button" title="{{$item.conlabels.1}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'disagree'); return false;">
-								<i class="fa fa-times{{if $item.my_responses.disagree}} ivoted{{/if}}" ></i>
-							</button>
-							<button type="button" title="{{$item.conlabels.2}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'abstain'); return false;">
-								<i class="fa fa-question{{if $item.my_responses.abstain}} ivoted{{/if}}" ></i>
-							</button>
+							<div class="btn-group dropdown">
+								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-consensus-menu-{{$item.id}}" title="{{$item.vote_title}}">
+									<i class="fa fa-check-square-o"></i>
+								</button>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-consensus-menu-{{$item.id}}">
+									<li role="presentation"><a class="menuitem" href="#" title="{{$item.conlabels.0}}" onclick="dolike({{$item.id}},'agree'); return false;">
+										<i class="item-act-list fa fa-check{{if $item.my_responses.agree}} ivoted{{/if}}" ></i> {{$item.conlabels.0}}</a>
+									</li>
+									<li role="presentation"><a class="menuitem" href="#" title="{{$item.conlabels.1}}" onclick="dolike({{$item.id}},'disagree'); return false;">
+										 <i class="item-act-list fa fa-times{{if $item.my_responses.disagree}} ivoted{{/if}}" ></i> {{$item.conlabels.1}}</a> 
+									</li>
+									<li role="presentation"><a class="menuitem" href="#" title="{{$item.conlabels.2}}" onclick="dolike({{$item.id}},'abstain'); return false;">
+										<i class="item-act-list fa fa-question{{if $item.my_responses.abstain}} ivoted{{/if}}" ></i> {{$item.conlabels.2}}</a>
+									</li>
+								</ul>
+							</div>
 							{{/if}}
 							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
 								<i class="fa fa-caret-down"></i>

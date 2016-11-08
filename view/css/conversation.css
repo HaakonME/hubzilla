@@ -203,6 +203,10 @@ a.wall-item-name-link {
 	filter:alpha(opacity=100);
 }
 
+.item-act-list {
+	width: 20px;
+}
+
 .shared_header {
 	margin-bottom: 20px;
 }

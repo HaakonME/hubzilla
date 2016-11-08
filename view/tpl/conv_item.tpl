@@ -105,7 +105,7 @@
 							{{if $item.isevent}}
 							<div class="btn-group dropdown">
 								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-attend-menu-{{$item.id}}" title="{{$item.attend_title}}">
-									<i class="fa fa-calendar"></i>&nbsp;<i class="fa fa-check-square-o"></i>
+									<i class="fa fa-calendar-check-o">
 								</button>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-attend-menu-{{$item.id}}">
 									<li role="presentation"><a class="menuitem" href="#" title="{{$item.attend.0}}" onclick="itemAddToCal({{$item.id}}); dolike({{$item.id}},'attendyes'); return false;">
@@ -123,7 +123,7 @@
 							{{if $item.canvote}}
 							<div class="btn-group dropdown">
 								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-consensus-menu-{{$item.id}}" title="{{$item.vote_title}}">
-									<i class="fa fa-bar-chart"></i>&nbsp;<i class="fa fa-check-square-o"></i>
+									<i class="fa fa-check-square-o"></i>
 								</button>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-consensus-menu-{{$item.id}}">
 									<li role="presentation"><a class="menuitem" href="#" title="{{$item.conlabels.0}}" onclick="dolike({{$item.id}},'agree'); return false;">

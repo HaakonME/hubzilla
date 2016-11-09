@@ -905,7 +905,7 @@ function widget_wiki_list($arr) {
 		// This should not occur because /wiki should redirect to /wiki/channel ...
 		$channel = \App::get_channel();
 	} else {
-		$channel = get_channel_by_nick(argv(1));	// Channel being viewed by observer
+		$channel = channelx_by_nick(argv(1));	// Channel being viewed by observer
 	}
 	if (!$channel) {
 		return '';

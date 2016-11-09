@@ -22,7 +22,7 @@ class Wall_upload extends \Zotlabs\Web\Controller {
 		}
 		else {
 			if(argc() > 1)
-				$channel = get_channel_by_nick(argv(1));
+				$channel = channelx_by_nick(argv(1));
 		}
 	
 		if(! $channel) {

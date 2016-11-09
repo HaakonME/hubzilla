@@ -1532,19 +1532,12 @@ function remote_online_status($webbie) {
 }
 
 
-function get_channel_by_nick($nick) {
-	$r = q("select * from channel where channel_address = '%s' limit 1",
-		dbesc($nick)
-	);
-	return(($r) ? $r[0] : false);
-
-}
-
 /**
  * @brief
  *
  * @return string
  */
+
 function identity_selector() {
 	if (local_channel()) {
 		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and channel_removed = 0 order by channel_name ",

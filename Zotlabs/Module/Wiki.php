@@ -54,7 +54,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		
 		// init() should have forced the URL to redirect to /wiki/channel so assume argc() > 1
 		$nick = argv(1);
-		$channel = get_channel_by_nick($nick);  // The channel who owns the wikis being viewed
+		$channel = channelx_by_nick($nick);  // The channel who owns the wikis being viewed
 		if(! $channel) {
 			notice('Invalid channel' . EOL);
 			goaway('/' . argv(0));
@@ -271,7 +271,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// /wiki/channel/create/wiki
 		if ((argc() > 3) && (argv(2) === 'create') && (argv(3) === 'wiki')) {
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);
+			$channel = channelx_by_nick($nick);
 			// Determine if observer has permission to create wiki
 			$observer_hash = get_observer_hash();
 			// Only the channel owner can create a wiki, at least until we create a 
@@ -309,7 +309,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Delete a wiki
 		if ((argc() > 3) && (argv(2) === 'delete') && (argv(3) === 'wiki')) {
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);
+			$channel = channelx_by_nick($nick);
 			// Only the channel owner can delete a wiki, at least until we create a 
 			// more detail permissions framework
 			if (local_channel() !== intval($channel['channel_id'])) {
@@ -332,7 +332,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$nick = argv(1);
 			$resource_id = $_POST['resource_id']; 
 			// Determine if observer has permission to create a page
-			$channel = get_channel_by_nick($nick);
+			$channel = channelx_by_nick($nick);
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
@@ -357,7 +357,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Fetch page list for a wiki
 		if ((argc() === 5) && (argv(2) === 'get') && (argv(3) === 'page') && (argv(4) === 'list')) {
 			$resource_id = $_POST['resource_id']; // resource_id for wiki in db
-			$channel = get_channel_by_nick(argv(1));
+			$channel = channelx_by_nick(argv(1));
 			$observer_hash = get_observer_hash();
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
@@ -385,7 +385,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$commitMsg = 'Updated ' . $pageHtmlName;
 			}
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);
+			$channel = channelx_by_nick($nick);
 			// Determine if observer has permission to save content
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
@@ -423,7 +423,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$pageUrlName = $_POST['name'];
 			
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);
+			$channel = channelx_by_nick($nick);
 			// Determine if observer has permission to read content
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
@@ -449,7 +449,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			// Determine if observer has permission to delete pages
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);			
+			$channel = channelx_by_nick($nick);			
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
@@ -484,7 +484,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$commitHash = $_POST['commitHash'];
 			// Determine if observer has permission to revert pages
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);			
+			$channel = channelx_by_nick($nick);			
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
@@ -509,7 +509,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$currentCommit = $_POST['currentCommit'];
 			// Determine if observer has permission to revert pages
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);			
+			$channel = channelx_by_nick($nick);			
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);
@@ -540,7 +540,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			// Determine if observer has permission to rename pages
 			$nick = argv(1);
-			$channel = get_channel_by_nick($nick);			
+			$channel = channelx_by_nick($nick);			
 			if (local_channel() !== intval($channel['channel_id'])) {
 				$observer_hash = get_observer_hash();
 				$perms = wiki_get_permissions($resource_id, intval($channel['channel_id']), $observer_hash);

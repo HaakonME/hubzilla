@@ -12,7 +12,7 @@ class File_upload extends \Zotlabs\Web\Controller {
 
 		// logger('file upload: ' . print_r($_REQUEST,true));
 	
-		$channel = (($_REQUEST['channick']) ? get_channel_by_nick($_REQUEST['channick']) : null);
+		$channel = (($_REQUEST['channick']) ? channelx_by_nick($_REQUEST['channick']) : null);
 	
 		if(! $channel) {
 			logger('channel not found');

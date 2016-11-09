@@ -7,12 +7,14 @@ class Api extends \Zotlabs\Web\Controller {
 
 
 	function init() {
-		$args = [];
-		call_hooks('api_register',$args);
+		zot_api_init();
 
 		api_register_func('api/client/register', 'api_client_register', false);
 		api_register_func('api/oauth/request_token', 'api_oauth_request_token', false);
 		api_register_func('api/oauth/access_token', 'api_oauth_access_token', false);
+
+		$args = [];
+		call_hooks('api_register',$args);
 
 		return;
 	}

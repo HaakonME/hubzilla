@@ -1,11 +1,47 @@
 <?php
 
+	function zot_api_init() {
+		api_register_func('api/export/basic','api_export_basic', true);
+		api_register_func('api/red/channel/export/basic','api_export_basic', true);
+		api_register_func('api/z/1.0/channel/export/basic','api_export_basic', true);
+		api_register_func('api/red/channel/stream','api_channel_stream', true);
+		api_register_func('api/z/1.0/channel/stream','api_channel_stream', true);
+		api_register_func('api/red/files','api_attach_list', true);
+		api_register_func('api/z/1.0/files','api_attach_list', true);
+		api_register_func('api/red/filemeta', 'api_file_meta', true);
+		api_register_func('api/z/1.0/filemeta', 'api_file_meta', true);
+		api_register_func('api/red/filedata', 'api_file_data', true);
+		api_register_func('api/z/1.0/filedata', 'api_file_data', true);
+		api_register_func('api/red/file/export', 'api_file_export', true);
+		api_register_func('api/z/1.0/file/export', 'api_file_export', true);
+		api_register_func('api/red/file', 'api_file_detail', true);
+		api_register_func('api/z/1.0/file', 'api_file_detail', true);
+		api_register_func('api/red/albums','api_albums', true);
+		api_register_func('api/z/1.0/albums','api_albums', true);
+		api_register_func('api/red/photos','api_photos', true);
+		api_register_func('api/z/1.0/photos','api_photos', true);
+		api_register_func('api/red/photo', 'api_photo_detail', true);
+		api_register_func('api/z/1.0/photo', 'api_photo_detail', true);
+		api_register_func('api/red/group_members','api_group_members', true);
+		api_register_func('api/z/1.0/group_members','api_group_members', true);
+		api_register_func('api/red/group','api_group', true);
+		api_register_func('api/z/1.0/group','api_group', true);
+		api_register_func('api/red/xchan','api_red_xchan',true);
+		api_register_func('api/z/1.0/xchan','api_red_xchan',true);
+		api_register_func('api/red/item/new','red_item_new', true);
+		api_register_func('api/z/1.0/item/new','red_item_new', true);
+		api_register_func('api/red/item/full','red_item', true);
+		api_register_func('api/z/1.0/item/full','red_item', true);
+
+		return;
+	}
+
 
 	/*
 	 * Red basic channel export
 	 */
 
-	function api_export_basic( $type) {
+	function api_export_basic($type) {
 		if(api_user() === false) {
 			logger('api_export_basic: no user');
 			return false;
@@ -15,12 +51,9 @@
 		
 		json_return_and_die(identity_basic_export(api_user(),(($_REQUEST['posts']) ? intval($_REQUEST['posts']) : 0 )));	
 	}
-	api_register_func('api/export/basic','api_export_basic', true);
-	api_register_func('api/red/channel/export/basic','api_export_basic', true);
-	api_register_func('api/z/1.0/channel/export/basic','api_export_basic', true);
 
 
-	function api_channel_stream( $type) {
+	function api_channel_stream($type) {
 		if(api_user() === false) {
 			logger('api_channel_stream: no user');
 			return false;
@@ -34,15 +67,11 @@
 
 		}
 	}
-	api_register_func('api/red/channel/stream','api_channel_stream', true);
-	api_register_func('api/z/1.0/channel/stream','api_channel_stream', true);
 
 	function api_attach_list($type) {
 		logger('api_user: ' . api_user());
 		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),'','','','created asc'));
 	}
-	api_register_func('api/red/files','api_attach_list', true);
-	api_register_func('api/z/1.0/files','api_attach_list', true);
 
 
 	function api_file_meta($type) {
@@ -60,8 +89,6 @@
 		killme();
 	}
 
-	api_register_func('api/red/filemeta', 'api_file_meta', true);
-	api_register_func('api/z/1.0/filemeta', 'api_file_meta', true);
 
 
 	function api_file_data($type) {
@@ -104,8 +131,6 @@
 		killme();
 	}
 
-	api_register_func('api/red/filedata', 'api_file_data', true);
-	api_register_func('api/z/1.0/filedata', 'api_file_data', true);
 
 	function api_file_export($type) {
 		if (api_user()===false) return false;
@@ -118,8 +143,6 @@
 		killme();
 	}
 
-	api_register_func('api/red/file/export', 'api_file_export', true);
-	api_register_func('api/z/1.0/file/export', 'api_file_export', true);
 
 	function api_file_detail($type) {
 		if (api_user()===false) return false;
@@ -142,22 +165,16 @@
 		killme();
 	}
 
-	api_register_func('api/red/file', 'api_file_detail', true);
-	api_register_func('api/z/1.0/file', 'api_file_detail', true);
 
 
 	function api_albums($type) {
 		json_return_and_die(photos_albums_list(App::get_channel(),App::get_observer()));
 	}
-	api_register_func('api/red/albums','api_albums', true);
-	api_register_func('api/z/1.0/albums','api_albums', true);
 
 	function api_photos($type) {
 		$album = $_REQUEST['album'];
 		json_return_and_die(photos_list_photos(App::get_channel(),App::get_observer(),$album));
 	}
-	api_register_func('api/red/photos','api_photos', true);
-	api_register_func('api/z/1.0/photos','api_photos', true);
 
 	function api_photo_detail($type) {
 		if (api_user()===false) return false;
@@ -198,8 +215,6 @@
 		killme();
 	}
 
-	api_register_func('api/red/photo', 'api_photo_detail', true);
-	api_register_func('api/z/1.0/photo', 'api_photo_detail', true);
 
 
 	function api_group_members($type) {
@@ -221,8 +236,6 @@
 		}
 	}
 
-	api_register_func('api/red/group_members','api_group_members', true);
-	api_register_func('api/z/1.0/group_members','api_group_members', true);
 
 
 
@@ -236,8 +249,6 @@
 		);
 		json_return_and_die($r);
 	}
-	api_register_func('api/red/group','api_group', true);
-	api_register_func('api/z/1.0/group','api_group', true);
 
 
 	function api_red_xchan($type) {
@@ -255,12 +266,9 @@
 		json_return_and_die($r);
 	};
 
-	api_register_func('api/red/xchan','api_red_xchan',true);
-	api_register_func('api/z/1.0/xchan','api_red_xchan',true);
-	
 
 
-	function red_item_new( $type) {
+	function red_item_new($type) {
 
 		if (api_user() === false) {
 			logger('api_red_item_new: no user');
@@ -291,11 +299,9 @@
 		json_return_and_die($x);
 	}
 
-	api_register_func('api/red/item/new','red_item_new', true);
-	api_register_func('api/z/1.0/item/new','red_item_new', true);
 
 
-	function red_item( $type) {
+	function red_item($type) {
 
 		if (api_user() === false) {
 			logger('api_red_item_full: no user');
@@ -330,7 +336,5 @@
 		json_return_and_die($ret);
 	}
 
-	api_register_func('api/red/item/full','red_item', true);
-	api_register_func('api/z/1.0/item/full','red_item', true);
 
 

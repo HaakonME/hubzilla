@@ -1539,11 +1539,11 @@ function remote_online_status($webbie) {
  */
 
 function identity_selector() {
-	if (local_channel()) {
+	if(local_channel()) {
 		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and channel_removed = 0 order by channel_name ",
 			intval(get_account_id())
 		);
-		if (count($r) > 1) {
+		if($r && count($r) > 1) {
 			//$account = App::get_account();
 			$o = replace_macros(get_markup_template('channel_id_select.tpl'), array(
 				'$channels' => $r,

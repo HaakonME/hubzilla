@@ -13,13 +13,42 @@
 </style>
 <div class="generic-content-wrapper">
   <div class="section-title-wrapper">
+			
     <div class="pull-right">
-      {{if $showNewWikiButton}}
-      <button class="btn btn-primary btn-xs acl-form-trigger" onclick="$('#new-page-form-wrapper').hide(); openClose('new-wiki-form-wrapper');" data-form_id="new-wiki-form">New Wiki</button>
-      {{/if}}
-      {{if $showNewPageButton}}
-      <button class="btn btn-success btn-xs" onclick="$('#new-wiki-form-wrapper').hide(); openClose('new-page-form-wrapper');">New Page</button>
-      {{/if}}
+				{{if $showNewWikiButton || $showPageControls}}
+			<div class="btn-group">
+				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
+				</button>
+				<ul class="dropdown-menu">						
+				{{if $showNewWikiButton}}
+				<li class="nav-item">
+						<a class="nav-link" href="#" onclick="$('#new-page-form-wrapper').hide(); openClose('new-wiki-form-wrapper'); return false;" data-form_id="new-wiki-form"><i class="fa fa-book"></i>&nbsp;New Wiki</a>
+					</li>
+					{{/if}}
+					{{if $showNewPageButton}}
+					<li class="nav-item">
+						<a class="nav-link" href="#" onclick="$('#new-wiki-form-wrapper').hide(); openClose('new-page-form-wrapper'); return false;" data-form_id="new-page-form"><i class="fa fa-file-text-o"></i>&nbsp;New Page</a>
+					</li>
+					{{/if}}
+						{{if $showPageControls}}
+					<li class="divider"></li>
+					
+					<li class="nav-item">
+						<a id="rename-page" class="nav-link" href="#"><i class="fa fa-edit"></i>&nbsp;Rename Page</a>
+					</li>
+					<li class="nav-item">
+						<a id="delete-page" class="nav-link" href="#"><i class="fa fa-trash-o"></i>&nbsp;Delete Page</a>
+					</li>
+					<li class="nav-item">
+						<a id="embed-image" class="nav-link" href="#"><i class="fa fa-picture-o"></i>&nbsp;Embed Image</a>
+					</li>
+					{{/if}}
+				</ul>
+			</div>	
+				
+		{{/if}}
+				
       <button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();
           adjustFullscreenTopBarHeight();"><i class="fa fa-expand"></i></button>
       <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);
@@ -85,21 +114,10 @@
       <li><a data-toggle="tab" href="#edit-pane">Edit</a></li>
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
       <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
-      {{if $showPageControls}}
-      <li class="dropdown">
-        <a data-toggle="dropdown" class="dropdown-toggle" href="#">Page <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-          <li><a id="save-page" data-toggle="tab" href="#">Save</a></li>
-          <li><a id="rename-page" data-toggle="tab" href="#">Rename</a></li>
-          <li><a id="delete-page" data-toggle="tab" href="#">Delete</a></li>
-          <li class="divider"></li>
-          <li><a id="embed-image" data-toggle="tab" href="#">Embed image</a></li>
-          
-        </ul>
-      </li>
-      {{/if}}
+
     </ul>
-    <div class="tab-content" id="wiki-page-tabs">
+					
+			<div class="tab-content" id="wiki-page-tabs">
 
       <div id="edit-pane" class="tab-pane fade">
         <div id="ace-editor"></div>
@@ -118,9 +136,20 @@
     </div>
   </div>
   {{if $showCommitMsg}}
+	{{if $showPageControls}}
   <div class="section-content-wrapper">
-    {{include file="field_input.tpl" field=$commitMsg}}    
+			<div id="id_{{$commitMsg.0}}_wrapper" class='form-group field input'>
+		<label for='id_{{$commitMsg.0}}' id='label_{{$commitMsg.0}}'>{{$commitMsg.1}}{{if $commitMsg.4}}<span class="required"> {{$commitMsg.4}}</span>{{/if}}</label>
+		<span>
+				<input class="" style="width: 80%;" name='{{$commitMsg.0}}' id='id_{{$commitMsg.0}}' type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
+				<a id="save-page" href="#" class="btn btn-primary btn-md">Save</a>
+		</span>
+		<span id='help_{{$commitMsg.0}}' class='help-block'>{{$commitMsg.3}}</span>
+		
+		<div class="clear"></div>
+	</div>
   </div>
+  {{/if}}
   {{/if}}
 </div>
 
@@ -165,6 +194,7 @@
   
   $('#rename-page').click(function (ev) {
     $('#rename-page-form-wrapper').show();
+		ev.preventDefault();
   });
   
   $( "#rename-page-form" ).submit(function( event ) {
@@ -316,6 +346,7 @@ function wiki_download_wiki(resource_id) {
       return false;
     }
     if(!confirm('Are you sure you want to delete the page: ' + window.wiki_page_name)) {
+			ev.preventDefault();
       return;
     }
     $.post("wiki/{{$channel}}/delete/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 

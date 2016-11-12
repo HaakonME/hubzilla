@@ -13,6 +13,7 @@
 </style>
 <div class="generic-content-wrapper">
   <div class="section-title-wrapper">
+			
     <div class="pull-right">
       {{if $showNewWikiButton}}
       <button class="btn btn-primary btn-xs acl-form-trigger" onclick="$('#new-page-form-wrapper').hide(); openClose('new-wiki-form-wrapper');" data-form_id="new-wiki-form">New Wiki</button>
@@ -86,20 +87,21 @@
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
       <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
       {{if $showPageControls}}
+			<li><a id="save-page" href="#" class="btn btn-primary">Save</a></li>
       <li class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">Page <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a id="save-page" data-toggle="tab" href="#">Save</a></li>
+          <!--<li><a id="save-page" data-toggle="tab" href="#">Save</a></li>-->
           <li><a id="rename-page" data-toggle="tab" href="#">Rename</a></li>
           <li><a id="delete-page" data-toggle="tab" href="#">Delete</a></li>
-          <li class="divider"></li>
           <li><a id="embed-image" data-toggle="tab" href="#">Embed image</a></li>
           
         </ul>
       </li>
       {{/if}}
     </ul>
-    <div class="tab-content" id="wiki-page-tabs">
+					
+			<div class="tab-content" id="wiki-page-tabs">
 
       <div id="edit-pane" class="tab-pane fade">
         <div id="ace-editor"></div>

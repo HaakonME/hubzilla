@@ -102,6 +102,10 @@ class Enotify {
 				$title = $params['item']['title'];
 				$body = $params['item']['body'];
 			}
+			if($item['created'] < datetime_convert('UTC','UTC','now - 1 month')) {
+				logger('notification invoked for an old item which may have been refetched.',LOGGER_DEBUG,LOG_INFO);
+				return;
+			}
 		} 
 		else {
 			$title = $body = '';

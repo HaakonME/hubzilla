@@ -4,6 +4,7 @@
  */
 
 require_once("include/bbcode.php");
+require_once('include/hubloc.php');
 
 // random string, there are 86 characters max in text mode, 128 for hex
 // output is urlsafe
@@ -1734,6 +1735,36 @@ function zidify_links($s) {
 	$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
 
 	return $s;
+}
+
+
+
+
+function zidify_text_callback($match) {
+	$is_zid = is_matrix_url($match[2]);
+	$replace = '<a' . $match[1] . ' href="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';
+	$x = str_replace($match[0],$replace,$match[0]);
+
+	return $x;
+}
+
+function zidify_text_img_callback($match) {
+	$is_zid = is_matrix_url($match[2]);
+	$replace = '<img' . $match[1] . ' src="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';
+
+	$x = str_replace($match[0],$replace,$match[0]);
+
+	return $x;
+}
+
+function zidify_text($s) {
+
+	$s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_text_callback',$s);
+	$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_text_img_callback',$s);
+
+	return $s;
+
+
 }
 
 /**

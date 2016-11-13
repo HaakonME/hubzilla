@@ -111,7 +111,7 @@
 
   <div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
-      <li><a data-toggle="tab" href="#edit-pane">Edit</a></li>
+      <li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">Edit</a></li>
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
       <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
 
@@ -229,7 +229,11 @@
   editor.setTheme("ace/theme/github");
   editor.getSession().setMode("ace/mode/markdown");
   editor.getSession().setValue(window.wiki_page_content);
-
+	window.editor = editor; // Store the editor in the window object so the anonymous function can use it.
+	$('#edit-pane-tab').click(function (ev) {
+			setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
+  });
+	
   $('#wiki-get-preview').click(function (ev) {
     $.post("wiki/{{$channel}}/preview", {content: editor.getValue(), resource_id: window.wiki_resource_id}, function (data) {
       if (data.success) {

@@ -46,8 +46,6 @@
 			logger('api_export_basic: no user');
 			return false;
 		}
-
-		require_once('include/channel.php');
 		
 		json_return_and_die(identity_basic_export(api_user(),(($_REQUEST['posts']) ? intval($_REQUEST['posts']) : 0 )));	
 	}
@@ -215,30 +213,34 @@
 		killme();
 	}
 
-
-
 	function api_group_members($type) {
 		if(api_user() === false)
 			return false;
+
+		$r = null;
 
 		if($_REQUEST['group_id']) {
 			$r = q("select * from groups where uid = %d and id = %d limit 1",
 				intval(api_user()),
 				intval($_REQUEST['group_id'])
 			);
-			if($r) {
-				$x = q("select * from group_member left join xchan on group_member.xchan = xchan.xchan_hash 
-					left join abook on abook_xchan = xchan_hash where gid = %d",
-					intval($_REQUEST['group_id'])
-				);
-				json_return_and_die($x);
-			}
 		}
+		elseif($_REQUEST['group_name']) {
+			$r = q("select * from groups where uid = %d and gname = '%s' limit 1",
+				intval(api_user()),
+				dbesc($_REQUEST['group_name'])
+			);
+		}
+
+		if($r) {
+			$x = q("select * from group_member left join xchan on group_member.xchan = xchan.xchan_hash 
+				left join abook on abook_xchan = xchan_hash where gid = %d",
+				intval($r[0]['id'])
+			);
+			json_return_and_die($x);
+		}
+
 	}
-
-
-
-
 
 	function api_group($type) {
 		if(api_user() === false)

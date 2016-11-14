@@ -209,6 +209,10 @@ class Cal extends \Zotlabs\Web\Controller {
 			$adjust_start = datetime_convert('UTC', date_default_timezone_get(), $start);
 			$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
 	
+
+			if(! perm_is_allowed(\App::$profile['uid'],get_observer_hash(),'view_contacts'))
+				$sql_extra .= " and etype != 'birthday' ";
+
 			if (x($_GET,'id')){
 			  	$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
 	                                from event left join item on resource_id = event_hash where resource_type = 'event' and event.uid = %d and event.id = %d $sql_extra limit 1",

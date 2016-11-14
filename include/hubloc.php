@@ -1,13 +1,23 @@
 <?php /** @file */
 
 function is_matrix_url($url) {
+
+	static $remembered = [];
+
 	$m = @parse_url($url);
 	if($m['host']) {
-		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+
+		if(array_key_exists($m['host'],$remembered))
+			return $remembered[$m['host']];
+
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' and hubloc_network = 'zot' limit 1",
 			dbesc($m['host'])
 		);
-		if($r)
+		if($r) {
+			$remembered[$m['host']] = true;
 			return true;
+		}
+		$remembered[$m['host']] = false;
 	}
 	return false;
 }

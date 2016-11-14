@@ -917,7 +917,7 @@ function widget_wiki_list($arr) {
 			'$channel' => $channel['channel_address'],
 			'$wikis' => $wikis['wikis'],
 			// If the observer is the local channel owner, show the wiki controls
-			'$showControls' => ((local_channel() === intval($channel['channel_id'])) ? true : false)
+			'$owner' => ((local_channel() === intval($channel['channel_id'])) ? true : false)
 		));
 	}
 	return '';

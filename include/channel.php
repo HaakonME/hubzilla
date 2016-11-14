@@ -1371,60 +1371,6 @@ function zat_init() {
 
 
 
-/**
- * @brief Adds a zid parameter to a url.
- *
- * @param string $s
- *   The url to accept the zid
- * @param boolean $address
- *   $address to use instead of session environment
- * @return string
- *
- * @hooks 'zid'
- *      string url - url to accept zid
- *      string zid - urlencoded zid
- *      string result - the return string we calculated, change it if you want to return something else
- */
-function zid($s,$address = '') {
-	if (! strlen($s) || strpos($s,'zid='))
-		return $s;
-
-	$m = parse_url($s);
-	$fragment = ((array_key_exists('fragment',$m) && $m['fragment']) ? $m['fragment'] : false);
-	if($fragment !== false)
-		$s = str_replace('#' . $fragment,'',$s);
-
-	$has_params = ((strpos($s,'?')) ? true : false);
-	$num_slashes = substr_count($s, '/');
-	if (! $has_params)
-		$has_params = ((strpos($s, '&')) ? true : false);
-
-	$achar = strpos($s,'?') ? '&' : '?';
-
-	$mine = get_my_url();
-	$myaddr = (($address) ? $address : get_my_address());
-
-	/**
-	 * @FIXME checking against our own channel url is no longer reliable. We may have a lot
-	 * of urls attached to out channel. Should probably match against our site, since we
-	 * will not need to remote authenticate on our own site anyway.
-	 */
-
-	if ($mine && $myaddr && (! link_compare($mine,$s)))
-		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
-	else
-		$zurl = $s;
-
-	// put fragment at the end
-
-	if($fragment)
-		$zurl .= '#' . $fragment;
-
-	$arr = array('url' => $s, 'zid' => urlencode($myaddr), 'result' => $zurl);
-	call_hooks('zid', $arr);
-
-	return $arr['result'];
-}
 
 // Used from within PCSS themes to set theme parameters. If there's a
 // puid request variable, that is the "page owner" and normally their theme

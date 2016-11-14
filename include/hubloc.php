@@ -1,29 +1,5 @@
 <?php /** @file */
 
-function is_matrix_url($url) {
-
-	static $remembered = [];
-
-	$m = @parse_url($url);
-	if($m['host']) {
-
-		if(array_key_exists($m['host'],$remembered))
-			return $remembered[$m['host']];
-
-		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' and hubloc_network = 'zot' limit 1",
-			dbesc($m['host'])
-		);
-		if($r) {
-			$remembered[$m['host']] = true;
-			return true;
-		}
-		$remembered[$m['host']] = false;
-	}
-	return false;
-}
-
-
-
 function prune_hub_reinstalls() {
 
 	$r = q("select site_url from site where site_type = %d",

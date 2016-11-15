@@ -76,11 +76,12 @@
     </div>
   
 	<div id="edit-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="edit-wiki-form" action="wiki/create/page" method="post" >
+      <form id="edit-wiki-form" action="wiki/edit/wiki" method="post" >
         <div class="clear"></div>
         
         <div class="btn-group pull-right">
-            <button id="edit-wiki-submit" class="btn btn-success" type="submit" name="submit" >Edit Wiki</button>
+            <!--<button id="edit-wiki-submit" class="btn btn-success" type="submit" name="submit" >Edit Wiki</button>-->
+						<button class="btn btn-md btn-danger" onclick="wiki_delete_wiki(window.wiki_title, window.wiki_resource_id); return false;"><i class="fa fa-trash-o"></i>&nbsp;Delete Wiki</button>
         </div>
       </form>        <div class="clear"></div>
       <hr>
@@ -218,13 +219,6 @@
 			event.preventDefault();
 		});
 
-		$(document).ready(function () {
-			wiki_refresh_page_list();
-			$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
-			// Show Edit tab first. Otherwise the Ace editor does not load.
-			$("#wiki-nav-tabs li:eq(1) a").tab('show');
-		});
-
 		var editor = ace.edit("ace-editor");
 		editor.setTheme("ace/theme/github");
 		editor.getSession().setMode("ace/mode/markdown");
@@ -301,8 +295,13 @@
 			}
 			$.post("wiki/{{$channel}}/get/page/list/", {resource_id: window.wiki_resource_id}, function (data) {
 				if (data.success) {
-					$('#wiki_page_list_container').html(data.pages);
-					$('#wiki_page_list_container').show();
+						$('#wiki_page_list_container').html(data.pages);
+						$('#wiki_page_list_container').show();
+						{{if $showNewPageButton}}
+								$('#new-page-button').show();
+						{{else}}
+								$('#new-page-button').hide();
+						{{/if}}
 				} else {
 					alert('Error fetching page list!');
 					window.console.log('Error fetching page list!');
@@ -512,41 +511,43 @@
 			'json');
 		};
 
-		function wiki_hide_forms() {
+		function wiki_show_new_wiki_form() {
 			$('#new-page-form-wrapper').hide(); 
 			$('#edit-wiki-form-wrapper').hide();
-			$('#new-wiki-form-wrapper').hide();
-		}
-
-		function wiki_show_new_wiki_form() {
-			wiki_hide_forms();
-			openClose('new-wiki-form-wrapper'); 
+			$('#new-wiki-form-wrapper').toggle(); 
 			return false;
 		}
 
 		function wiki_show_new_page_form() {
-			wiki_hide_forms();
-			openClose('new-page-form-wrapper'); 
+			$('#edit-wiki-form-wrapper').hide();
+			$('#new-wiki-form-wrapper').hide();
+			$('#new-page-form-wrapper').toggle(); 
 			return false;
 		}
 
-		function wiki_show_edit_wiki_form() {
-			wiki_hide_forms();
-			openClose('edit-wiki-form-wrapper'); 
+		function wiki_show_edit_wiki_form(wiki_title, wiki_resource_id) {
+			window.wiki_resource_id = wiki_resource_id;
+			window.wiki_title = wiki_title;
+			$('#new-page-form-wrapper').hide();
+			$('#new-wiki-form-wrapper').hide();
+			$('#edit-wiki-form-wrapper').toggle();  
 			return false;
 		}
 		
-		
 		$(document).ready(function () {
+				wiki_refresh_page_list();
+				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
+				// Show Edit tab first. Otherwise the Ace editor does not load.
+				$("#wiki-nav-tabs li:eq(1) a").tab('show');
 				{{if $showNewWikiButton}}
 						$('#new-wiki-button').show();
 				{{else}}
 						$('#new-wiki-button').hide();
 				{{/if}}
-				{{if $showNewPageButton}}
-						$('#new-page-button').show();
+				{{if $showPageControls}}
+						$('#edit-wiki-button').show();
 				{{else}}
-						$('#new-page-button').hide();
+						$('#edit-wiki-button').hide();
 				{{/if}}
 		});
 </script>

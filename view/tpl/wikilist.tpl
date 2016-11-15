@@ -1,5 +1,9 @@
 <div id="wiki_list" class="widget">
-	<h3>{{$header}}</h3>
+		
+		<h3>{{$header}}
+				<i id="new-wiki-button" class="pull-right generic-icons fakelink fa fa-plus" title="New wiki" onclick="wiki_show_new_wiki_form();"></i>
+		</h3>
+				
 	<div>
 		{{foreach $wikis as $wiki}}
         <div class="form-group" id="wiki-{{$wiki.resource_id}}">

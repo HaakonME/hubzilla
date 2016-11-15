@@ -311,9 +311,6 @@
 			return false;
 
 		$perm = ((array_key_exists('perm',$_REQUEST)) ? $_REQUEST['perm'] : '');
-		// possibly should return all perms
-		if(! $perm)
-			return false;
 
 		if(array_key_exists('abook_id',$_REQUEST) && intval($_REQUEST['abook_id'])) {
 			$r = q("select abook_xchan as xchan_hash from abook where abook_id = %d and abook_channel = %d limit 1",
@@ -324,10 +321,24 @@
 		else {
 			$r = xchan_fetch($_REQUEST);
 		}
-		if($r)
-			$x = [ [ 'perm' => $perm, 'allowed' => perm_is_allowed(api_user(), $r[0]['xchan_hash'], $perm)] ];
 
+		$x = false;
+
+		if($r) {
+			if($perm)
+				$x = [ [ 'perm' => $perm, 'allowed' => perm_is_allowed(api_user(), $r[0]['xchan_hash'], $perm)] ];
+			else {
+				$x = [];
+				$p = get_all_perms(api_user(),$r[0]['xchan_hash']);
+				if($p) {
+					foreach($p as $k => $v)
+						$x[] = [ 'perm' => $k, 'allowed' => $v ];
+				}
+			}
+		}
+		
 		json_return_and_die($x);
+
 	}
 
 	function red_item_new($type) {

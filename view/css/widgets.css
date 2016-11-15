@@ -151,3 +151,7 @@ li:hover .group-edit-icon {
 .cover-photo-subtitle {
 	font-size: 20px;
 }
+
+a.wikilist {
+	z-index: 1;
+}

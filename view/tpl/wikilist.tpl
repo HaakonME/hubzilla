@@ -1,17 +1,15 @@
 <div id="wiki_list" class="widget">
-		
-		<h3>{{$header}}
-				<i id="new-wiki-button" class="pull-right generic-icons fakelink fa fa-plus" title="New wiki" onclick="wiki_show_new_wiki_form();"></i>
-		</h3>
-				
-	<div>
+		<h3>{{$header}}</h3>
+		<ul class="nav nav-pills nav-stacked">
+		{{if $wikis}}		
 		{{foreach $wikis as $wiki}}
-        <div class="form-group" id="wiki-{{$wiki.resource_id}}">
-						<a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="View  {{$wiki.title}}"><b>{{$wiki.title}}</b></a>
-						<i id="edit-wiki-button" class="pull-right generic-icons fakelink fa fa-edit" onclick="wiki_show_edit_wiki_form('{{$wiki.title}}', '{{$wiki.resource_id}}');" title="Edit {{$wiki.title}}"></i>
-						<i class="pull-right generic-icons fakelink fa fa-download" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;" title="Download  {{$wiki.title}}"></i>
-        </div> 
+        <li>{{if $owner}}<a href="#" onclick="wiki_show_edit_wiki_form('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;" class="pull-right wikilist" title="{{$edit}}"><i id="edit-wiki-button" class="fa fa-edit"></i></a>{{/if}}
+			<a href="#" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;" title="{{$download}}" class="pull-right wikilist"><i class="fa fa-download"></i></a>
+			<a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}">{{$wiki.title}}</a>
+        </li> 
 		{{/foreach}}
-	</div>
+		{{/if}}
+		{{if $owner}}<li><a href="#" class="fakelink" onclick="wiki_show_new_wiki_form(); return false;"><i id="new-wiki-button" class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>{{/if}}
+		</ul>
 </div>
 

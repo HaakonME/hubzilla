@@ -917,7 +917,11 @@ function widget_wiki_list($arr) {
 			'$channel' => $channel['channel_address'],
 			'$wikis' => $wikis['wikis'],
 			// If the observer is the local channel owner, show the wiki controls
-			'$owner' => ((local_channel() === intval($channel['channel_id'])) ? true : false)
+			'$owner' => ((local_channel() && local_channel() === intval(\App::$profile['uid'])) ? true : false),
+			'$edit' => t('Edit'),
+			'$download' => t('Download'),
+			'$view' => t('View'),
+			'$addnew' => t('Add new wiki')
 		));
 	}
 	return '';
@@ -948,13 +952,17 @@ function widget_wiki_pages($arr) {
 			}
 		}
 	}
+	$can_create = perm_is_allowed(\App::$profile['uid'],get_observer_hash(),'write_pages');
+
 	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
 			'$hide' => $hide,
 			'$not_refresh' => $not_refresh,
 			'$header' => t('Wiki Pages'),
 			'$channel' => $channelname,
 			'$wikiname' => $wikiname,
-			'$pages' => $pages
+			'$pages' => $pages,
+			'$canadd' => $can_create,
+			'$addnew' => t('Add new page'),
 	));
 }
 

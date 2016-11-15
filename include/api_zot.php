@@ -33,6 +33,8 @@
 		api_register_func('api/red/item/full','red_item', true);
 		api_register_func('api/z/1.0/item/full','red_item', true);
 
+		api_register_func('api/z/1.0/abook','api_zot_abook_xchan',true);
+
 		return;
 	}
 
@@ -265,6 +267,23 @@
 			$r = xchan_store($_REQUEST);
 		}
 		$r = xchan_fetch($_REQUEST);
+		json_return_and_die($r);
+	};
+
+	function api_zot_abook_xchan($type) {
+		logger('api_abook_xchan');
+
+		if(api_user() === false)
+			return false;
+
+		$sql_extra = ((array_key_exists('abook_id',$_REQUEST) && intval($_REQUEST['abook_id'])) ? ' and abook_id = ' . intval($_REQUEST['abook_id']) . ' ' : '');
+		if($_SERVER['REQUEST_METHOD'] === 'POST') {
+			// update
+		}
+		$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d $sql_extra ",
+			intval(api_user())
+		);
+
 		json_return_and_die($r);
 	};
 

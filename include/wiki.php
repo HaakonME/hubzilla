@@ -192,8 +192,9 @@ function wiki_exists_by_name($uid, $urlName) {
 function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
 	// TODO: For now, only the owner can edit
 	$sql_extra = item_permissions_sql($owner_id, $observer_hash);
-	$r = q("SELECT * FROM item WHERE resource_type = '%s' AND resource_id = '%s' $sql_extra LIMIT 1",
-				dbesc(WIKI_ITEM_RESOURCE_TYPE), 
+	$r = q("SELECT * FROM item WHERE uid = %d and resource_type = '%s' AND resource_id = '%s' $sql_extra LIMIT 1",
+		intval($owner_id),
+		dbesc(WIKI_ITEM_RESOURCE_TYPE), 
         dbesc($resource_id)
     );
 	

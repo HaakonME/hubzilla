@@ -544,10 +544,5 @@
 				{{else}}
 						$('#new-wiki-button').hide();
 				{{/if}}
-				{{if $showPageControls}}
-						$('#edit-wiki-button').show();
-				{{else}}
-						$('#edit-wiki-button').hide();
-				{{/if}}
 		});
 </script>

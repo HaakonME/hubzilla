@@ -35,6 +35,7 @@
 
 		api_register_func('api/z/1.0/abook','api_zot_abook_xchan',true);
 		api_register_func('api/z/1.0/abconfig','api_zot_abconfig',true);
+		api_register_func('api/z/1.0/perm_allowed','api_zot_perm_allowed',true);
 
 		return;
 	}
@@ -305,6 +306,29 @@
 
 	}
 
+	function api_zot_perm_allowed($type) {
+		if(api_user() === false)
+			return false;
+
+		$perm = ((array_key_exists('perm',$_REQUEST)) ? $_REQUEST['perm'] : '');
+		// possibly should return all perms
+		if(! $perm)
+			return false;
+
+		if(array_key_exists('abook_id',$_REQUEST) && intval($_REQUEST['abook_id'])) {
+			$r = q("select abook_xchan as xchan_hash from abook where abook_id = %d and abook_channel = %d limit 1",
+				intval($_REQUEST['abook_id']),
+				intval(api_user())
+			);
+		}
+		else {
+			$r = xchan_fetch($_REQUEST);
+		}
+		if($r)
+			$x = [ [ 'perm' => $perm, 'allowed' => perm_is_allowed(api_user(), $r[0]['xchan_hash'], $perm)] ];
+
+		json_return_and_die($x);
+	}
 
 	function red_item_new($type) {
 

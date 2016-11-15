@@ -34,6 +34,7 @@
 		api_register_func('api/z/1.0/item/full','red_item', true);
 
 		api_register_func('api/z/1.0/abook','api_zot_abook_xchan',true);
+		api_register_func('api/z/1.0/abconfig','api_zot_abconfig',true);
 
 		return;
 	}
@@ -287,6 +288,22 @@
 		json_return_and_die($r);
 	};
 
+	function api_zot_abconfig($type) {
+
+		if(api_user() === false)
+			return false;
+
+		$sql_extra = ((array_key_exists('abook_id',$_REQUEST) && intval($_REQUEST['abook_id'])) ? ' and abook_id = ' . intval($_REQUEST['abook_id']) . ' ' : '');
+		if($_SERVER['REQUEST_METHOD'] === 'POST') {
+			// update
+		}
+		$r = q("select abconfig.* from abconfig left join abook on abook_xchan = abconfig.xchan and abook_channel = abconfig.chan where abconfig.chan = %d $sql_extra ",
+			intval(api_user())
+		);
+
+		json_return_and_die($r);
+
+	}
 
 
 	function red_item_new($type) {

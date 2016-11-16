@@ -13,11 +13,13 @@ function wiki_list($channel, $observer_hash) {
 			dbesc(WIKI_ITEM_RESOURCE_TYPE),
 			intval($channel['channel_id'])
 	);
-	foreach($wikis as &$w) {		
-		$w['rawName'] = get_iconfig($w, 'wiki', 'rawName');
-		$w['htmlName'] = get_iconfig($w, 'wiki', 'htmlName');
-		$w['urlName'] = get_iconfig($w, 'wiki', 'urlName');
-		$w['path'] = get_iconfig($w, 'wiki', 'path');
+	if($wikis) {
+		foreach($wikis as &$w) {		
+			$w['rawName'] = get_iconfig($w, 'wiki', 'rawName');
+			$w['htmlName'] = get_iconfig($w, 'wiki', 'htmlName');
+			$w['urlName'] = get_iconfig($w, 'wiki', 'urlName');
+			$w['path'] = get_iconfig($w, 'wiki', 'path');
+		}
 	}
 	// TODO: query db for wikis the observer can access. Return with two lists, for read and write access
 	return array('wikis' => $wikis);
@@ -125,7 +127,7 @@ function wiki_create_wiki($channel, $observer_hash, $wiki, $acl) {
 	$item_id = $post['item_id'];
 
 	if ($item_id) {
-		proc_run('php', "include/notifier.php", "activity", $item_id);
+	   \Zotlabs\Daemon\Master::Summon(array('Notifier', 'activity', $item_id));
 		return array('item' => $arr, 'success' => true);
 	} else {
 		return array('item' => null, 'success' => false);
@@ -192,23 +194,23 @@ function wiki_exists_by_name($uid, $urlName) {
 function wiki_get_permissions($resource_id, $owner_id, $observer_hash) {
 	// TODO: For now, only the owner can edit
 	$sql_extra = item_permissions_sql($owner_id, $observer_hash);
+
+	if(local_channel() && local_channel == $owner_id) {
+		return [ 'read' => true, 'write' => true, 'success' => true ];
+	}
+
 	$r = q("SELECT * FROM item WHERE uid = %d and resource_type = '%s' AND resource_id = '%s' $sql_extra LIMIT 1",
 		intval($owner_id),
 		dbesc(WIKI_ITEM_RESOURCE_TYPE), 
         dbesc($resource_id)
     );
-	
+
 	if (!$r) {
 		return array('read' => false, 'write' => false, 'success' => true);
 	} else {
-		$perms = get_all_perms($owner_id, $observer_hash);
 		// TODO: Create a new permission setting for wiki analogous to webpages. Until
 		// then, use webpage permissions
-		if (!$perms['write_pages']) {
-			$write = false;
-		} else {
-			$write = true;
-		}
+		$write = perm_is_allowed($owner_id, $observer_hash,'write_pages');
 		return array('read' => true, 'write' => $write, 'success' => true);
 	}
 }

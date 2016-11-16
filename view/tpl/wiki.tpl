@@ -408,7 +408,8 @@
 				if (data.success) {
 				var modalBody = $('#generic-modal-body-{{$wikiModalID}}');
 				modalBody.html('<div class="descriptive-text">'+data.diff+'</div>');
-				$('.modal-dialog').width('80%');
+				// this does not work well on small devices
+				//$('.modal-dialog').width('80%');
 				$("#generic-modal-ok-{{$wikiModalID}}").off('click');
 				$("#generic-modal-ok-{{$wikiModalID}}").click(function () {
 					wiki_revert_page(compareCommit);

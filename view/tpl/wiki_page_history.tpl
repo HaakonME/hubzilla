@@ -1,4 +1,8 @@
 <style>
+  .diff {
+    width:100%;
+  }
+
   .diff td{
     padding:0 0.667em;
     vertical-align:top;

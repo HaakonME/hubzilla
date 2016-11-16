@@ -1649,7 +1649,6 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	$uid = ((App::$profile['profile_uid']) ? App::$profile['profile_uid'] : local_channel());
 	$account_id = ((App::$profile['profile_uid']) ? App::$profile['channel_account_id'] : App::$channel['channel_account_id']);
 
-
 	if($uid == local_channel()) {
 		$cal_link = '';
 	}

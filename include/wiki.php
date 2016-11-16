@@ -128,7 +128,7 @@ function wiki_create_wiki($channel, $observer_hash, $wiki, $acl) {
 
 	if ($item_id) {
 	   \Zotlabs\Daemon\Master::Summon(array('Notifier', 'activity', $item_id));
-		return array('item' => $arr, 'success' => true);
+		return array('item' => $post['item'], 'success' => true);
 	} else {
 		return array('item' => null, 'success' => false);
 	}

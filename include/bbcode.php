@@ -403,6 +403,15 @@ function bb_definitionList_unescapeBraces($match) {
 	return '<dt>' . str_replace('\]', ']', $match[1]) . '</dt>';
 }
 
+
+function bb_checklist($match) {
+	$str = $match[1];
+	$str = str_replace("[]", "<li><input type=\"checkbox\" disabled=\"disabled\">", $str);
+	$str = str_replace("[x]", "<li><input type=\"checkbox\" checked=\"checked\" disabled=\"disabled\">", $str);
+	return '<ul class="checklist" style="list-style-type: none;">' . $str . '</ul>';
+}
+
+
 /**
  * @brief Sanitize style properties from BBCode to HTML.
  *
@@ -787,14 +796,11 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	$Text = preg_replace("/<br \/>\[\*\]/ism",'[*]',$Text);
 
 	$Text = str_replace("[*]", "<li>", $Text);
-	$Text = str_replace("[]", "<li><input type=\"checkbox\" disabled=\"disabled\">", $Text);
-	$Text = str_replace("[x]", "<li><input type=\"checkbox\" checked=\"checked\" disabled=\"disabled\">", $Text);
 
  	// handle nested lists
 	$endlessloop = 0;
 
 	while ((((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false)) ||
-			((strpos($Text, "[/checklist]") !== false) && (strpos($Text, "[checklist]") !== false)) ||
 			((strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false)) ||
 			((strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false)) ||
 			((strpos($Text, "[/dl]") !== false) && (strpos($Text, "[dl")  !== false)) ||
@@ -806,7 +812,6 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[list=((?-i)I)\](.*?)\[\/list\]/ism", '<ul class="listupperroman" style="list-style-type: upper-roman;">$2</ul>', $Text);
 		$Text = preg_replace("/\[list=((?-i)a)\](.*?)\[\/list\]/ism", '<ul class="listloweralpha" style="list-style-type: lower-alpha;">$2</ul>', $Text);
 		$Text = preg_replace("/\[list=((?-i)A)\](.*?)\[\/list\]/ism", '<ul class="listupperalpha" style="list-style-type: upper-alpha;">$2</ul>', $Text);
-		$Text = preg_replace("/\[checklist\](.*?)\[\/checklist\]/ism", '<ul class="checklist" style="list-style-type: none;">$1</ul>', $Text);
 		$Text = preg_replace("/\[ul\](.*?)\[\/ul\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>', $Text);
 		$Text = preg_replace("/\[ol\](.*?)\[\/ol\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>', $Text);
 		$Text = preg_replace("/\[\/li\]<br \/>\[li\]/ism",'[/li][li]',$Text);
@@ -818,7 +823,13 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		//   "[dl" <optional-whitespace> <optional-termStyles> "]" <matchGroup2> "[/dl]"
 		// where optional-termStyles are: "terms=" <optional-quote> <matchGroup1> <optional-quote>
 		$Text = preg_replace_callback('/\[dl[[:space:]]*(?:terms=(?:&quot;|")?([a-zA-Z]+)(?:&quot;|")?)?\](.*?)\[\/dl\]/ism', 'bb_definitionList', $Text);
+
 	}
+
+	if (strpos($Text,'[checklist]') !== false) {
+		$Text = preg_replace_callback("/\[checklist\](.*?)\[\/checklist\]/ism", 'bb_checklist', $Text);
+	}
+
 	if (strpos($Text,'[th]') !== false) {
 		$Text = preg_replace("/\[th\](.*?)\[\/th\]/sm", '<th>$1</th>', $Text);
 	}

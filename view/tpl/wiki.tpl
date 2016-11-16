@@ -37,10 +37,8 @@
 				
 		{{/if}}
 				
-      <button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();
-          adjustFullscreenTopBarHeight();"><i class="fa fa-expand"></i></button>
-      <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);
-          adjustInlineTopBarHeight();"><i class="fa fa-compress"></i></button>
+      <button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();"><i class="fa fa-expand"></i></button>
+      <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);"><i class="fa fa-compress"></i></button>
     </div>
     <h2><span id="wiki-header-name">{{$wikiheaderName}}</span>: <span id="wiki-header-page">{{$wikiheaderPage}}</span></h2>
     <div class="clear"></div>
@@ -405,6 +403,7 @@
 				resource_id: window.wiki_resource_id
 			}, 
 			function (data) {
+				console.log(data);
 				if (data.success) {
 				var modalBody = $('#generic-modal-body-{{$wikiModalID}}');
 				modalBody.html('<div class="descriptive-text">'+data.diff+'</div>');

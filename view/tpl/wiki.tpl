@@ -219,6 +219,8 @@
 
 		var editor = ace.edit("ace-editor");
 		editor.setTheme("ace/theme/github");
+		editor.setShowPrintMargin(false);
+		editor.getSession().setUseWrapMode('free');
 		editor.getSession().setMode("ace/mode/markdown");
 		editor.getSession().setValue(window.wiki_page_content);
 			window.editor = editor; // Store the editor in the window object so the anonymous function can use it.

@@ -87,7 +87,7 @@ class dba_pdo extends dba_driver {
 				db_logger('dba_pdo: ' . printable(print_r($r,true)), LOGGER_NORMAL, LOG_INFO);
 			}
 		}
-		return $r;
+		return (($this->error) ? false : $r);
 	}
 
 	function escape($str) {

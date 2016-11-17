@@ -43,47 +43,7 @@
     <h2><span id="wiki-header-name">{{$wikiheaderName}}</span>: <span id="wiki-header-page">{{$wikiheaderPage}}</span></h2>
     <div class="clear"></div>
   </div>
-	<div id="new-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" class="acl-form" data-form_id="new-wiki-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
-        <div class="clear"></div>
-        {{include file="field_input.tpl" field=$wikiName}}
-        
-        <div id="post-visible-container" class="form-group field checkbox"> 
-          <span style="font-size:1.2em;" class="pull-left">Send notification post?</span>                            
-          <div style="margin-left:20px" class="pull-left">
-              <input name="postVisible" id="postVisible" value="0" type="checkbox">
-              <label class="switchlabel" for="postVisible"> 
-                  <span class="onoffswitch-inner" data-on="Post" data-off="None"></span>
-                  <span class="onoffswitch-switch"></span>
-              </label>
-          </div>
-        </div>
-        
-        <div class="btn-group pull-right">
-            <div id="profile-jot-submit-right" class="btn-group">
-                <button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="Permission settings" onclick="return false;">
-                    <i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>{{$bang}}
-                </button>
-                <button id="new-wiki-submit" class="btn btn-primary" type="submit" name="submit" >Create Wiki</button>
-            </div>
-        </div>
-      </form>        
-     {{$acl}}
-     <div class="clear"></div>
-     <hr>
-    </div>
   
-	<div id="edit-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="edit-wiki-form" action="wiki/edit/wiki" method="post" >
-        <div class="clear"></div>
-        
-        <div class="btn-group pull-right">
-            <!--<button id="edit-wiki-submit" class="btn btn-success" type="submit" name="submit" >Edit Wiki</button>-->
-						<button class="btn btn-md btn-danger" onclick="wiki_delete_wiki(window.wiki_title, window.wiki_resource_id); return false;"><i class="fa fa-trash-o"></i>&nbsp;Delete Wiki</button>
-        </div>
-      </form>        <div class="clear"></div>
-      <hr>
-    </div>
 		
 	<div id="new-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
       <form id="new-page-form" action="wiki/create/page" method="post" >
@@ -218,14 +178,23 @@
 		});
 
 		var editor = ace.edit("ace-editor");
-		editor.setTheme("ace/theme/github");
-		editor.setShowPrintMargin(false);
-		editor.getSession().setUseWrapMode('free');
-		editor.getSession().setMode("ace/mode/markdown");
+		editor.setOptions({
+			theme: "ace/theme/github",
+			mode: "ace/mode/markdown",
+
+			wrap: true,
+
+			minLines: 30,
+			maxLines: Infinity,
+
+			printMargin: false
+		});
+
 		editor.getSession().setValue(window.wiki_page_content);
-			window.editor = editor; // Store the editor in the window object so the anonymous function can use it.
-			$('#edit-pane-tab').click(function (ev) {
-					setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
+		window.editor = editor; // Store the editor in the window object so the anonymous function can use it.
+
+		$('#edit-pane-tab').click(function (ev) {
+			setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
 		});
 
 		$('#wiki-get-preview').click(function (ev) {

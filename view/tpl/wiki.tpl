@@ -218,14 +218,23 @@
 		});
 
 		var editor = ace.edit("ace-editor");
-		editor.setTheme("ace/theme/github");
-		editor.setShowPrintMargin(false);
-		editor.getSession().setUseWrapMode('free');
-		editor.getSession().setMode("ace/mode/markdown");
+		editor.setOptions({
+			theme: "ace/theme/github",
+			mode: "ace/mode/markdown",
+
+			wrap: true,
+
+			minLines: 30,
+			maxLines: Infinity,
+
+			printMargin: false,
+		});
+
 		editor.getSession().setValue(window.wiki_page_content);
-			window.editor = editor; // Store the editor in the window object so the anonymous function can use it.
-			$('#edit-pane-tab').click(function (ev) {
-					setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
+		window.editor = editor; // Store the editor in the window object so the anonymous function can use it.
+
+		$('#edit-pane-tab').click(function (ev) {
+			setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
 		});
 
 		$('#wiki-get-preview').click(function (ev) {

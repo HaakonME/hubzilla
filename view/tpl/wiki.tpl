@@ -227,7 +227,7 @@
 			minLines: 30,
 			maxLines: Infinity,
 
-			printMargin: false,
+			printMargin: false
 		});
 
 		editor.getSession().setValue(window.wiki_page_content);

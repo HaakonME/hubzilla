@@ -49,7 +49,7 @@
 [*] nsabait - add random terrorism related hashtags to your posts
 [*] nsfw - Highly recommended plugin to collpase posts with inappropriate content
 [*] openclipatar - choose a profile photo from hundreds of royalty free images
-[*] openid - OpenID authentication and OpenID server
+[*] openid - OpenID authentication and OpenID server. Your OpenID URL is [observer.baseurl]/id/[observer.webname]
 [*] openstreetmap - render locations and maps using OpenStreetMap
 [*] pageheader - display text at the top of every page on the site
 [*] phpmailer - alternate mail delivery system with more configurability

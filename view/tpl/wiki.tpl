@@ -44,17 +44,6 @@
     <div class="clear"></div>
   </div>
   
-	<div id="edit-wiki-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="edit-wiki-form" action="wiki/edit/wiki" method="post" >
-        <div class="clear"></div>
-        
-        <div class="btn-group pull-right">
-            <!--<button id="edit-wiki-submit" class="btn btn-success" type="submit" name="submit" >Edit Wiki</button>-->
-						<button class="btn btn-md btn-danger" onclick="wiki_delete_wiki(window.wiki_title, window.wiki_resource_id); return false;"><i class="fa fa-trash-o"></i>&nbsp;Delete Wiki</button>
-        </div>
-      </form>        <div class="clear"></div>
-      <hr>
-    </div>
 		
 	<div id="new-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
       <form id="new-page-form" action="wiki/create/page" method="post" >

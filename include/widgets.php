@@ -941,8 +941,20 @@ function widget_wiki_list($arr) {
 				// Not the channel owner 
 				$owner_acl = $x = array();
 		}
-
+		if(argc()>1) {
+			$activeWikiURLname = argv(2);
+		} else {
+			$activeWikiURLname = '';
+		}
+		logger($activeWikiURLname, LOGGER_DEBUG);
 		$wikis = wiki_list($channel, get_observer_hash());
+		foreach($wikis['wikis'] as &$w) {
+			if($w['urlName'] === $activeWikiURLname) {
+				$w['active'] = true;
+			} else {
+				$w['active'] = false;
+			}
+		}
 		if ($wikis) {
 				return replace_macros(get_markup_template('wikilist.tpl'), array(
 						'$header' => t('Wiki List'),

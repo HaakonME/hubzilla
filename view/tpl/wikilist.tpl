@@ -3,7 +3,7 @@
 		<ul class="nav nav-pills nav-stacked">
 		{{if $wikis}}		
 		{{foreach $wikis as $wiki}}
-		<li>{{if $owner}}<a href="#" onclick="$('div[id^=\'edit-wiki-form-wrapper\']').hide(); $('div[id^=\'new-wiki-form-wrapper\']').hide(); openClose('edit-wiki-form-wrapper-{{$wiki.resource_id}}'); return false;" class="pull-right wikilist" title="{{$edit}}"><i class="fa fa-pencil"></i></a>{{/if}}
+		<li {{if $wiki.active}}class="active"{{/if}}>{{if $owner}}<a href="#" onclick="$('div[id^=\'edit-wiki-form-wrapper\']').hide(); $('div[id^=\'new-wiki-form-wrapper\']').hide(); openClose('edit-wiki-form-wrapper-{{$wiki.resource_id}}'); return false;" class="pull-right wikilist" title="{{$edit}}"><i class="fa fa-pencil"></i></a>{{/if}}
 				<a href="#" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;" title="{{$download}}" class="pull-right wikilist"><i class="fa fa-download"></i></a>
 				<a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}">{{$wiki.title}}</a>
 				{{if $owner}}

@@ -632,6 +632,14 @@ function sys_boot() {
 	date_default_timezone_set(App::$timezone);
 
 
+	if(! defined('DEFAULT_PLATFORM_ICON')) {
+		define( 'DEFAULT_PLATFORM_ICON', '/images/hz-32.png' );
+	}
+
+	if(! defined('DEFAULT_NOTIFY_ICON')) {
+		define( 'DEFAULT_NOTIFY_ICON', '/images/hz-white-32.png' );
+	}
+
 	/*
 	 * Try to open the database;
 	 */
@@ -956,7 +964,7 @@ class App {
 		self::$is_mobile = $mobile_detect->isMobile();
 		self::$is_tablet = $mobile_detect->isTablet();
 
-		self::head_set_icon('/images/hz-32.png');
+		self::head_set_icon(DEFAULT_PLATFORM_ICON);
 
 		/*
 		 * register template engines
@@ -969,14 +977,7 @@ class App {
 		$smarty = new Zotlabs\Render\SmartyTemplate();
 		/// @todo validate if this is still the desired behavior
 		self::register_template_engine(get_class($smarty));
-/*
-		$dc = get_declared_classes();
-		foreach ($dc as $k) {
-			if(in_array('Zotlabs\\Render\\TemplateEngine', class_implements($k))) {
-				self::register_template_engine($k);
-			}
-		}
-*/
+
 	}
 
 	public static function get_baseurl($ssl = false) {
@@ -1734,14 +1735,6 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
  * @brief Used to end the current process, after saving session state.
  */
 function killme() {
-
-	// Ensure that closing the database is the last function on the shutdown stack.
-	// If it is closed prematurely sessions might not get saved correctly.
-	// Note the second arg to PHP's session_set_save_handler() seems to order that shutdown 
-	// procedure last despite our best efforts, so we don't use that and implictly
-	// call register_shutdown_function('session_write_close'); within Zotlabs\Web\Session::init()
-	// and then register the database close function here where nothing else can register
-	// after it.
 
 	register_shutdown_function('shutdown');
 	exit;

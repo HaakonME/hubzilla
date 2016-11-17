@@ -32,13 +32,13 @@ class System {
 	static public function get_notify_icon() {
 		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['email_notify_icon_url'])
 			return \App::$config['system']['email_notify_icon_url'];
-		return z_root() . '/images/hz-white-32.png';
+		return z_root() . DEFAULT_NOTIFY_ICON;
 	}
 
 	static public function get_site_icon() {
 		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['site_icon_url'])
 			return \App::$config['system']['site_icon_url'];
-		return z_root() . '/images/hz-32.png';
+		return z_root() . DEFAULT_PLATFORM_ICON ;
 	}
 
 

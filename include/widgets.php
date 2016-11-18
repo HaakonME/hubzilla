@@ -975,7 +975,7 @@ function widget_wiki_list($arr) {
 						'$deny_cid' => $x['deny_cid'],
 						'$deny_gid' => $x['deny_gid'],
 						'$bang' => $x['bang'],
-						'$notify' => array('postVisible', t('Send notification'))
+						'$notify' => array('postVisible', t('Send notification'), '', '', array(t('No'), t('Yes')))
 				));
 		}
 		return '';

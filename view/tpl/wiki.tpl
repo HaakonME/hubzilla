@@ -40,21 +40,12 @@
       <button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();"><i class="fa fa-expand"></i></button>
       <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);"><i class="fa fa-compress"></i></button>
     </div>
-    <h2><span id="wiki-header-name">{{$wikiheaderName}}</span>: <span id="wiki-header-page">{{$wikiheaderPage}}</span></h2>
+	  <h2><span id="wiki-header-name"><i class="fa fa-book"></i>&nbsp{{$wikiheaderName}}</span>
+		</h2>
     <div class="clear"></div>
   </div>
   
 		
-	<div id="new-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="new-page-form" action="wiki/create/page" method="post" >
-        <div class="clear"></div>
-        {{include file="field_input.tpl" field=$pageName}}
-        <div class="btn-group pull-right">
-            <button id="new-page-submit" class="btn btn-success" type="submit" name="submit" >Create Page</button>
-        </div>
-      </form>        <div class="clear"></div>
-      <hr>
-    </div>
   
     <div id="rename-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
       <form id="rename-page-form" action="wiki/rename/page" method="post" >
@@ -68,13 +59,15 @@
     </div>
 
   <div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
+	   	
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
+		
       <li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">Edit</a></li>
-      <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">Preview</a></li>
+      <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
       <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
-
+	<li id="wiki-header-page"><a data-toggle="tab" href="#pages-pane" id="wiki-show-page-list"><i class="fa fa-file-text-o" style="margin-right: 10px"></i>&nbsp{{$wikiheaderPage}}</a></li>
     </ul>
-					
+				
 			<div class="tab-content" id="wiki-page-tabs">
 
       <div id="edit-pane" class="tab-pane fade">
@@ -88,7 +81,24 @@
       <div id="page-history-pane" class="tab-pane fade" {{if $hidePageHistory}}style="display: none;"{{/if}}>
         <div id="page-history-list" class="section-content-wrapper">
         </div>
-      </div>     
+      </div>       
+      <div id="pages-pane" class="tab-pane">
+		  <div id="wiki_page_list_container" style="display: none;">
+        <div id="wiki_page_list" class="section-content-wrapper">
+          
+        </div>
+		</div>
+	<div id="new-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
+      <form id="new-page-form" action="wiki/create/page" method="post" >
+        <div class="clear"></div>
+        {{include file="field_input.tpl" field=$pageName}}
+        <div class="btn-group pull-right">
+            <button id="new-page-submit" class="btn btn-success" type="submit" name="submit" >Create Page</button>
+        </div>
+      </form>        <div class="clear"></div>
+      <hr>
+    </div>
+      </div>  
 
 
     </div>

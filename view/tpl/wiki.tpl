@@ -40,7 +40,8 @@
       <button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();"><i class="fa fa-expand"></i></button>
       <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);"><i class="fa fa-compress"></i></button>
     </div>
-	  <h2><span id="wiki-header-name"><i class="fa fa-book"></i>&nbsp{{$wikiheaderName}}</span>
+	  <h2><span id="wiki-header-name"><i class="fa fa-book"></i>&nbsp{{$wikiheaderName}}</span>&nbsp&nbsp:&nbsp&nbsp
+		  <span id="wiki-header-page"><i class="fa fa-file-text-o"></i>&nbsp{{$wikiheaderPage}}</span>
 		</h2>
     <div class="clear"></div>
   </div>
@@ -65,13 +66,29 @@
       <li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">Edit</a></li>
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
       <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
-	<li id="wiki-header-page"><a data-toggle="tab" href="#pages-pane" id="wiki-show-page-list"><i class="fa fa-file-text-o" style="margin-right: 10px"></i>&nbsp{{$wikiheaderPage}}</a></li>
+	<li id="wiki-header-page"><a data-toggle="tab" href="#pages-pane" id="wiki-show-page-list"><i class="fa fa-file-text-o" style="margin-right: 10px"></i>&nbsp Pages</a></li>
     </ul>
 				
 			<div class="tab-content" id="wiki-page-tabs">
 
       <div id="edit-pane" class="tab-pane fade">
         <div id="ace-editor"></div>
+		{{if $showCommitMsg}}
+		  {{if $showPageControls}}
+		<div class="section-content-wrapper">
+				  <div id="id_{{$commitMsg.0}}_wrapper" class='form-group field input'>
+			  <label for='id_{{$commitMsg.0}}' id='label_{{$commitMsg.0}}'>{{$commitMsg.1}}{{if $commitMsg.4}}<span class="required"> {{$commitMsg.4}}</span>{{/if}}</label>
+			  <span>
+					  <input class="" style="width: 80%;" name='{{$commitMsg.0}}' id='id_{{$commitMsg.0}}' type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
+					  <a id="save-page" href="#" class="btn btn-primary btn-md">Save</a>
+			  </span>
+			  <span id='help_{{$commitMsg.0}}' class='help-block'>{{$commitMsg.3}}</span>
+
+			  <div class="clear"></div>
+		  </div>
+		</div>
+		{{/if}}
+		{{/if}}
       </div>      
       <div id="preview-pane" class="tab-pane fade in active">
         <div id="wiki-preview" class="section-content-wrapper">
@@ -103,22 +120,6 @@
 
     </div>
   </div>
-  {{if $showCommitMsg}}
-	{{if $showPageControls}}
-  <div class="section-content-wrapper">
-			<div id="id_{{$commitMsg.0}}_wrapper" class='form-group field input'>
-		<label for='id_{{$commitMsg.0}}' id='label_{{$commitMsg.0}}'>{{$commitMsg.1}}{{if $commitMsg.4}}<span class="required"> {{$commitMsg.4}}</span>{{/if}}</label>
-		<span>
-				<input class="" style="width: 80%;" name='{{$commitMsg.0}}' id='id_{{$commitMsg.0}}' type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
-				<a id="save-page" href="#" class="btn btn-primary btn-md">Save</a>
-		</span>
-		<span id='help_{{$commitMsg.0}}' class='help-block'>{{$commitMsg.3}}</span>
-		
-		<div class="clear"></div>
-	</div>
-  </div>
-  {{/if}}
-  {{/if}}
 </div>
 
 {{$wikiModal}}

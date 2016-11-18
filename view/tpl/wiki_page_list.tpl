@@ -1,6 +1,6 @@
 {{if $not_refresh}}<div id="wiki_page_list_container" {{if $hide}} style="display: none;" {{/if}}>{{/if}}
 <div id="wiki_page_list" class="widget" >
-	<h3>{{$header}}</h3>
+	<!--<h3>{{$header}}</h3>-->
 
 	<ul class="nav nav-pills nav-stacked">
 		{{if $pages}}

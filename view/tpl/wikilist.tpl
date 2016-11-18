@@ -28,11 +28,7 @@
 	<div id="new-wiki-form-wrapper" class="sub-menu" style="display:none;">
 		<form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" class="acl-form" data-form_id="new-wiki-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 			{{include file="field_input.tpl" field=$wikiName}}
-			<div id="post-visible-container" class="checkbox">
-				<label>
-					<input name="postVisible" id="postVisible" value="0" type="checkbox">{{$notify}}
-				</label>
-			</div>
+			{{include file="field_checkbox.tpl" field=$notify}}
 			<div>
 				<div id="profile-jot-submit-right" class="btn-group">
 					<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="Permission settings" onclick="return false;">

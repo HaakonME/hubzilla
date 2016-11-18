@@ -967,7 +967,7 @@ function widget_wiki_list($arr) {
 						'$view' => t('View'),
 						'$addnew' => t('Create new wiki'),
 						'$create' => t('Create'),
-						'$wikiName' => array('wikiName', t('Wiki name'), '', ''),
+						'$wikiName' => array('wikiName', t('Wiki name')),
 						'$lockstate' => $x['lockstate'],
 						'$acl' => $x['acl'],
 						'$allow_cid' => $x['allow_cid'],
@@ -975,7 +975,7 @@ function widget_wiki_list($arr) {
 						'$deny_cid' => $x['deny_cid'],
 						'$deny_gid' => $x['deny_gid'],
 						'$bang' => $x['bang'],
-						'$notify' => t('Send notification')
+						'$notify' => array('postVisible', t('Send notification'))
 				));
 		}
 		return '';

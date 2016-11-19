@@ -12,7 +12,7 @@ class Dirsearch extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function get() {
+	function get() {
 	
 		$ret = array('success' => false);
 	
@@ -457,6 +457,6 @@ class Dirsearch extends \Zotlabs\Web\Controller {
 			}
 		}
 		return $ret;
-	}		
-	
+	}
+
 }

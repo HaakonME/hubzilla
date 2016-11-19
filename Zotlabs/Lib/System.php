@@ -54,5 +54,11 @@ class System {
 		return '0.0.0';
 	}
 
-
+	static public function compatible_project($p) {
+		foreach(['hubzilla','zap'] as $t) {
+			if(stristr($p,$t))
+				return true;
+		}
+		return false;
+	}
 }

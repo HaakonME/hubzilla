@@ -128,7 +128,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				require_once('library/markdown.php');	
 				$content = t('"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."');
 				$renderedContent = Markdown(json_decode($content));
-				$hide_editor = false;
+				$hide_editor = true;
 				$showPageControls = false;
 				$showNewWikiButton = $wiki_owner;
 				$showNewPageButton = false;
@@ -209,8 +209,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
 			'$wikiheaderPage' => $wikiheaderPage,
-			'$hideEditor' => $hide_editor,
+			'$hideEditor' => $hide_editor, // True will completely hide the content section and is used for the case of no wiki selected
+			'$chooseWikiMessage' => t('Choose an available wiki from the list on the left.'),
 			'$showPageControls' => $showPageControls,
+			'$editOrSourceLabel' => (($showPageControls) ? t('Edit') : t('Source')),
 			'$tools_label' => 'Wiki Tools',
 			'$showNewWikiButton'=> $showNewWikiButton,
 			'$showNewPageButton'=> $showNewPageButton,

@@ -32,13 +32,16 @@ function wiki_page_list($resource_id) {
 		return array('pages' => null, 'wiki' => null);
 	}
 	$pages = array();
+	$pages[] = array('title' => 'Home', 'url' => 'Home');
 	if (is_dir($w['path']) === true) {
 		$files = array_diff(scandir($w['path']), array('.', '..', '.git'));
 		// TODO: Check that the files are all text files
 		
 		foreach($files as $file) {
 			// strip the .md file extension and unwrap URL encoding to leave HTML encoded name
-			$pages[] = array('title' => urldecode(substr($file, 0, -3)), 'url' => urlencode(substr($file, 0, -3)));
+			if( urldecode(substr($file, 0, -3)) !== 'Home') {
+				$pages[] = array('title' => urldecode(substr($file, 0, -3)), 'url' => urlencode(substr($file, 0, -3)));
+			}
 		}
 	}
 

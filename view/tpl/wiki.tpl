@@ -11,7 +11,12 @@
     transition: opacity 0.5s 0.5s ease;
   }
 </style>
-<div class="generic-content-wrapper">
+{{if $hideEditor}}
+<div>
+	<p class="lead text-center">{{$chooseWikiMessage}}</p>
+</div>
+{{/if}}
+<div class="generic-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
   <div class="section-title-wrapper">
 			
     <div class="pull-right">

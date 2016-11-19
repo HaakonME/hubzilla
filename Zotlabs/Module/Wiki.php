@@ -211,6 +211,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$wikiheaderPage' => $wikiheaderPage,
 			'$hideEditor' => $hide_editor,
 			'$showPageControls' => $showPageControls,
+			'$editOrSourceLabel' => (($showPageControls) ? t('Edit') : t('Source')),
 			'$tools_label' => 'Wiki Tools',
 			'$showNewWikiButton'=> $showNewWikiButton,
 			'$showNewPageButton'=> $showNewPageButton,

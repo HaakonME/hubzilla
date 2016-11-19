@@ -62,8 +62,7 @@
   <div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
 	   	
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
-	<li id="wiki-header-page"><a data-toggle="tab" href="#pages-pane" id="wiki-show-page-list"><i class="fa fa-file-text-o" style="margin-right: 10px"></i>&nbsp Pages</a></li>	
-      <li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">Edit</a></li>
+      <li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
       <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
 	
@@ -98,23 +97,8 @@
       <div id="page-history-pane" class="tab-pane fade" {{if $hidePageHistory}}style="display: none;"{{/if}}>
         <div id="page-history-list" class="section-content-wrapper">
         </div>
-      </div>       
-      <div id="pages-pane" class="tab-pane">
-		  <div id="wiki_page_list_container" style="display: none;">
-        <div id="wiki_page_list" class="section-content-wrapper">
-          
-        </div>
-		</div>
-	<div id="new-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
-      <form id="new-page-form" action="wiki/create/page" method="post" >
-        <div class="clear"></div>
-        {{include file="field_input.tpl" field=$pageName}}
-        <div class="btn-group pull-right">
-            <button id="new-page-submit" class="btn btn-success" type="submit" name="submit" >Create Page</button>
-        </div>
-      </form>        <div class="clear"></div>
-      <hr>
-    </div>
+      </div>    
+	
       </div>  
 
 
@@ -203,7 +187,9 @@
 
 		editor.getSession().setValue(window.wiki_page_content);
 		window.editor = editor; // Store the editor in the window object so the anonymous function can use it.
-
+		{{if !$showPageControls}}
+			editor.setReadOnly(true); // Disable editing if the viewer lacks edit permission
+		{{/if}}
 		$('#edit-pane-tab').click(function (ev) {
 			setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
 		});
@@ -251,23 +237,6 @@
 		function wiki_download_wiki(resource_id) {
 				window.location = "wiki/{{$channel}}/download/wiki/" + resource_id;
 		}
-
-		$('#new-page-submit').click(function (ev) {
-			if (window.wiki_resource_id === '') {
-			window.console.log('You must have a wiki open in order to create pages.');
-			ev.preventDefault();
-			return false;
-			}
-			$.post("wiki/{{$channel}}/create/page", {name: $('#id_pageName').val(), resource_id: window.wiki_resource_id}, 
-			function (data) {
-				if (data.success) {
-				window.location = data.url;
-				} else {
-				window.console.log('Error creating page.');
-				}
-			}, 'json');
-			ev.preventDefault();
-		});
 
 		function wiki_refresh_page_list() {
 			if (window.wiki_resource_id === '') {
@@ -493,6 +462,7 @@
 		};
 
 		function wiki_show_new_wiki_form() {
+			$('div[id^=\'edit-wiki-form-wrapper\']').hide();
 			$('#new-page-form-wrapper').hide(); 
 			$('#edit-wiki-form-wrapper').hide();
 			$('#new-wiki-form-wrapper').toggle(); 
@@ -500,6 +470,7 @@
 		}
 
 		function wiki_show_new_page_form() {
+			$('div[id^=\'edit-wiki-form-wrapper\']').hide();
 			$('#edit-wiki-form-wrapper').hide();
 			$('#new-wiki-form-wrapper').hide();
 			$('#new-page-form-wrapper').toggle(); 
@@ -509,6 +480,7 @@
 		function wiki_show_edit_wiki_form(wiki_title, wiki_resource_id) {
 			window.wiki_resource_id = wiki_resource_id;
 			window.wiki_title = wiki_title;
+			$('div[id^=\'edit-wiki-form-wrapper\']').hide();
 			$('#new-page-form-wrapper').hide();
 			$('#new-wiki-form-wrapper').hide();
 			$('#edit-wiki-form-wrapper').toggle();  
@@ -519,11 +491,12 @@
 				wiki_refresh_page_list();
 				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
 				// Show Edit tab first. Otherwise the Ace editor does not load.
-				$("#wiki-nav-tabs li:eq(2) a").tab('show');
+				$("#wiki-nav-tabs li:eq(1) a").tab('show');
 				{{if $showNewWikiButton}}
 						$('#new-wiki-button').show();
 				{{else}}
 						$('#new-wiki-button').hide();
 				{{/if}}
+				
 		});
 </script>

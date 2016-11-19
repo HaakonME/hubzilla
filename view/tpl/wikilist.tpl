@@ -21,7 +21,7 @@
 		{{/foreach}}
 		{{/if}}
 		{{if $owner}}
-		<li><a href="#" class="fakelink" onclick="$('div[id^=\'edit-wiki-form-wrapper\']').hide(); openClose('new-wiki-form-wrapper'); return false;"><i id="new-wiki-button" class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>
+		<li><a href="#" class="fakelink" onclick="wiki_show_new_wiki_form(); return false;"><i id="new-wiki-button" class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>
 		{{/if}}
 	</ul>
 	{{if $owner}}

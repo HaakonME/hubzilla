@@ -40,8 +40,8 @@
       <button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();"><i class="fa fa-expand"></i></button>
       <button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);"><i class="fa fa-compress"></i></button>
     </div>
-	  <h2><span id="wiki-header-name"><i class="fa fa-book"></i>&nbsp{{$wikiheaderName}}</span>&nbsp&nbsp:&nbsp&nbsp
-		  <span id="wiki-header-page"><i class="fa fa-file-text-o"></i>&nbsp{{$wikiheaderPage}}</span>
+	  <h2><span id="wiki-header-name"><i class="fa fa-book"></i>&nbsp<b>{{$wikiheaderName}}</b></span>&nbsp:&nbsp
+		  <span id="wiki-header-page">{{$wikiheaderPage}}</span>
 		</h2>
     <div class="clear"></div>
   </div>
@@ -62,11 +62,11 @@
   <div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
 	   	
     <ul class="nav nav-tabs" id="wiki-nav-tabs">
-		
+	<li id="wiki-header-page"><a data-toggle="tab" href="#pages-pane" id="wiki-show-page-list"><i class="fa fa-file-text-o" style="margin-right: 10px"></i>&nbsp Pages</a></li>	
       <li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">Edit</a></li>
       <li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
       <li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
-	<li id="wiki-header-page"><a data-toggle="tab" href="#pages-pane" id="wiki-show-page-list"><i class="fa fa-file-text-o" style="margin-right: 10px"></i>&nbsp Pages</a></li>
+	
     </ul>
 				
 			<div class="tab-content" id="wiki-page-tabs">
@@ -519,7 +519,7 @@
 				wiki_refresh_page_list();
 				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
 				// Show Edit tab first. Otherwise the Ace editor does not load.
-				$("#wiki-nav-tabs li:eq(1) a").tab('show');
+				$("#wiki-nav-tabs li:eq(2) a").tab('show');
 				{{if $showNewWikiButton}}
 						$('#new-wiki-button').show();
 				{{else}}

@@ -427,6 +427,12 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 
 	$Text = preg_replace_callback('/\@\!?\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', 'bb2dmention_callback', $Text);
 
+	// strip map tags, as the rendering is performed in bbcode() and the resulting output
+	// is not compatible with Diaspora (at least in the case of openstreetmap and probably
+	// due to the inclusion of an html iframe)
+
+	$Text = preg_replace("/\[map\=(.*?)\]/ism", '$1', $Text);
+	$Text = preg_replace("/\[map\](.*?)\[\/map\]/ism", '$1', $Text);
 
 	// Converting images with size parameters to simple images. Markdown doesn't know it.
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '[img]$3[/img]', $Text);

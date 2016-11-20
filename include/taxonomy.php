@@ -386,7 +386,7 @@ function get_things($profile_hash,$uid) {
 			$things[$k] = null;
 		foreach($r as $rr) {
 
-			$l = q("select xchan_name, xchan_photo_s, xchan_url from likes left join xchan on likee = xchan_hash where
+			$l = q("select xchan_name, xchan_photo_s, xchan_url from likes left join xchan on liker = xchan_hash where
 				target_type = '%s' and target_id = '%s' and channel_id = %d",
 				dbesc(ACTIVITY_OBJ_THING),
 				dbesc($rr['obj_obj']),

@@ -147,7 +147,7 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 	// Hush-hush ultra top-secret mode
 
 	if ($remote_key) {
-		$data = crypto_encapsulate(json_encode($data),$remote_key);
+		$data = crypto_encapsulate(json_encode($data),$remote_key, CRYPTO_ALGORITHM);
 	}
 
 	return json_encode($data);
@@ -399,7 +399,8 @@ function zot_refresh($them, $channel = null, $force = false) {
 					'data' => $j['permissions']['data'],
 					'key'  => $j['permissions']['key'],
 					'iv'   => $j['permissions']['iv']),
-					$channel['channel_prvkey']);
+					$channel['channel_prvkey'],
+					CRYPTO_ALGORITHM );
 				if($permissions)
 					$permissions = json_decode($permissions,true);
 				logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA, LOG_DEBUG);
@@ -1091,7 +1092,7 @@ function zot_fetch($arr) {
 			'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
 		);
 
-		$datatosend = json_encode(crypto_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
+		$datatosend = json_encode(crypto_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey'], CRYPTO_ALGORITHM));
 
 		$fetch = zot_zot($url,$datatosend);
 
@@ -3913,7 +3914,7 @@ function zotinfo($arr) {
 			$permissions['connected'] = true;
 	}
 
-	$ret['permissions'] = (($ztarget && $zkey) ? crypto_encapsulate(json_encode($permissions),$zkey) : $permissions);
+	$ret['permissions'] = (($ztarget && $zkey) ? crypto_encapsulate(json_encode($permissions),$zkey, CRYPTO_ALGORITHM) : $permissions);
 
 	if($permissions['view_profile'])
 		$ret['profile']  = $profile;
@@ -4317,7 +4318,7 @@ function zot_reply_pickup($data) {
 		}
 	}
 
-	$encrypted = crypto_encapsulate(json_encode($ret),$sitekey);
+	$encrypted = crypto_encapsulate(json_encode($ret),$sitekey, CRYPTO_ALGORITHM);
 	json_return_and_die($encrypted);
 
 	/* pickup: end */

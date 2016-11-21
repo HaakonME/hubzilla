@@ -315,7 +315,7 @@ function convert_salmon_key($key) {
 
 
 function z_obscure($s) {
-	return json_encode(crypto_encapsulate($s,get_config('system','pubkey')));
+	return json_encode(crypto_encapsulate($s,get_config('system','pubkey'),CRYPTO_ALGORITHM));
 }
 
 function z_unobscure($s) {

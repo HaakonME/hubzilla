@@ -363,7 +363,7 @@ function localize_item(&$item){
 
 	if(intval($item['item_obscured'])
 		&& strlen($item['body']) && (! strpos($item['body'],'data'))) {
-		$item['body']  = json_encode(crypto_encapsulate($item['body'],get_config('system','pubkey')));
+		$item['body']  = json_encode(crypto_encapsulate($item['body'],get_config('system','pubkey'), CRYPTO_ALGORITHM));
 	}
 
 }

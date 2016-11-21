@@ -398,9 +398,9 @@ function zot_refresh($them, $channel = null, $force = false) {
 				$permissions = crypto_unencapsulate(array(
 					'data' => $j['permissions']['data'],
 					'key'  => $j['permissions']['key'],
-					'iv'   => $j['permissions']['iv']),
-					$channel['channel_prvkey'],
-					CRYPTO_ALGORITHM );
+					'iv'   => $j['permissions']['iv'],
+					'alg'  => $j['permissions']['alg']),
+					$channel['channel_prvkey']);
 				if($permissions)
 					$permissions = json_decode($permissions,true);
 				logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA, LOG_DEBUG);

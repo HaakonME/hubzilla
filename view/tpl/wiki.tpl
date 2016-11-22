@@ -66,7 +66,7 @@
         <div id="ace-editor"></div>
 		{{if $showCommitMsg}}
 		  {{if $showPageControls}}
-		<div class="section-content-wrapper">
+		<div>
 				  <div id="id_{{$commitMsg.0}}_wrapper" class='form-group field input'>
 			  <label for='id_{{$commitMsg.0}}' id='label_{{$commitMsg.0}}'>{{$commitMsg.1}}{{if $commitMsg.4}}<span class="required"> {{$commitMsg.4}}</span>{{/if}}</label>
 			  <span>
@@ -82,12 +82,12 @@
 		{{/if}}
       </div>      
       <div id="preview-pane" class="tab-pane fade in active">
-        <div id="wiki-preview" class="section-content-wrapper">
+        <div id="wiki-preview">
           {{$renderedContent}}
         </div>
       </div>
       <div id="page-history-pane" class="tab-pane fade" {{if $hidePageHistory}}style="display: none;"{{/if}}>
-        <div id="page-history-list" class="section-content-wrapper">
+        <div id="page-history-list">
         </div>
       </div>    
 	

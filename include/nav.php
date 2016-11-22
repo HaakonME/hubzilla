@@ -108,7 +108,7 @@ EOT;
 		if(feature_enabled($channel['channel_id'],'webpages') && (! $basic))
 			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'),'webpages_nav_btn');
 		if(feature_enabled($channel['channel_id'],'wiki') && (! $basic))
-			$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wiki'),"",t('Your wiki'),'wiki_nav_btn');
+			$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wikis'),"",t('Your wikis'),'wiki_nav_btn');
 	}
 	else {
 		if(! get_account_id())  {
@@ -127,17 +127,9 @@ EOT;
 		);
 	}
 
-	if($observer) {
-		$nav['lock'] = array('logout','','lock', 
-			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
-	}
 	elseif(! $_SESSION['authenticated']) {
 		$nav['loginmenu'][] = Array('rmagic',t('Remote authentication'),'',t('Click to authenticate to your home hub'),'rmagic_nav_btn');
 	}
-
-	/**
-	 * "Home" should also take you home from an authenticated remote profile connection
-	 */
 
 	$homelink = get_my_url();
 	if(! $homelink) {
@@ -145,8 +137,14 @@ EOT;
 		$homelink = (($observer) ? $observer['xchan_url'] : '');
 	}
 
-	if(! local_channel()) 
-		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'),'home_nav_btn');
+	if(! local_channel()) {
+		$nav['rusermenu'] = array(
+			$homelink,
+			t('Get me home'),
+			'logout',
+			t('Log me out of this site')
+		);
+	}
 
 	if(((get_config('system','register_policy') == REGISTER_OPEN) || (get_config('system','register_policy') == REGISTER_APPROVE)) && (! $_SESSION['authenticated']))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'),'register_nav_btn');

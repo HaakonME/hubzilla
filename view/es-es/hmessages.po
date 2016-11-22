@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-18 00:04-0800\n"
-"PO-Revision-Date: 2016-11-19 10:04+0000\n"
+"PO-Revision-Date: 2016-11-20 09:13+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/Friendica/red-matrix/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -168,7 +168,7 @@ msgstr "Se puede chatear conmigo"
 
 #: ../../Zotlabs/Access/Permissions.php:44 ../../include/permissions.php:53
 msgid "Can source my public posts in derived channels"
-msgstr "Pueden utilizarse mis publicaciones públicas como origen de contenidos  en canales derivados"
+msgstr "Pueden utilizarse mis entradas públicas como origen de contenidos  en canales derivados"
 
 #: ../../Zotlabs/Access/Permissions.php:45
 msgid "Can administer my channel"
@@ -5234,7 +5234,7 @@ msgid ""
 "This software uses the store directory to save uploaded files. The web "
 "server needs to have write access to the store directory under the Red top "
 "level folder"
-msgstr "Este software utiliza el directorio de almacenamiento para guardar los archivos subidos. El servidor web debe tener acceso de escritura al directorio de almacenamiento en la carpeta de nivel superior"
+msgstr "Este software utiliza el directorio de almacenamiento para guardar los ficheros subidos. El servidor web debe tener acceso de escritura al directorio de almacenamiento en la carpeta de nivel superior"
 
 #: ../../Zotlabs/Module/Setup.php:608
 msgid "store is writable"
@@ -5257,7 +5257,7 @@ msgstr "Si su servidor soporta conexiones cifradas SSL o si permite conexiones a
 msgid ""
 "This restriction is incorporated because public posts from you may for "
 "example contain references to images on your own hub."
-msgstr "Se ha incorporado esta restricción para evitar que sus publicaciones públicas hagan referencia a imágenes en su propio servidor."
+msgstr "Se ha incorporado esta restricción para evitar que sus entradas públicas hagan referencia a imágenes en su propio servidor."
 
 #: ../../Zotlabs/Module/Setup.php:644
 msgid ""
@@ -5861,7 +5861,7 @@ msgstr "Error al recuperar el wiki"
 
 #: ../../Zotlabs/Module/Wiki.php:105
 msgid "Error creating zip file export folder"
-msgstr "Error al crear el fichero comprimido zip de la carpeta de exportación"
+msgstr "Error al crear el fichero comprimido zip de la carpeta a exportar"
 
 #: ../../Zotlabs/Module/Wiki.php:126 ../../Zotlabs/Lib/Apps.php:219
 #: ../../include/features.php:99 ../../include/nav.php:111
@@ -6608,7 +6608,7 @@ msgstr "%Y - año en curso, %m - mes actual"
 
 #: ../../Zotlabs/Module/Settings/Channel.php:541
 msgid "Default file upload folder"
-msgstr "Carpeta por defecto de los archivos subidos"
+msgstr "Carpeta por defecto de los ficheros subidos"
 
 #: ../../Zotlabs/Module/Settings/Channel.php:543
 msgid "Personal menu to display in your channel pages"
@@ -7513,7 +7513,7 @@ msgid ""
 "Chord names start with a root note (A-G) and may include sharps (#) and "
 "flats (b). This software will parse most of the standard naming conventions "
 "such as maj, min, dim, sus(2 or 4), aug, with optional repeating elements."
-msgstr "Los nombres de acordes comienzan con una nota fundamental (La-Sol) y pueden incluir bemoles (#) y sostenidos (b). Este software analizará la mayor parte de las convenciones de nomenclatura estándar como maj, min, tenue, SUS (2 ó 4), aug, con la repetición de elementos opcionales."
+msgstr "Los nombres de acordes comienzan con una nota fundamental (La-Sol) y pueden incluir sostenidos (#) y bemoles (b). Este software analizará la mayor parte de las convenciones de nomenclatura estándar como maj, min, tenue, SUS (2 ó 4), aug, con la repetición de elementos opcionales."
 
 #: ../../extend/addon/addon/chords/Mod_Chords.php:48
 msgid ""
@@ -7744,7 +7744,7 @@ msgstr "Usuario en Flattr"
 
 #: ../../extend/addon/addon/flattrwidget/flattrwidget.php:104
 msgid "URL of the Thing to flattr"
-msgstr "URL de la Cosa para flattr"
+msgstr "URL de la Cosa para apoyar en flattr"
 
 #: ../../extend/addon/addon/flattrwidget/flattrwidget.php:104
 msgid "If empty channel URL is used"
@@ -7752,7 +7752,7 @@ msgstr "Si está vacío, se usa la URL del canal"
 
 #: ../../extend/addon/addon/flattrwidget/flattrwidget.php:108
 msgid "Title of the Thing to flattr"
-msgstr "Título de la Cosa para flattr"
+msgstr "Título de la Cosa para apoyar en  flattr"
 
 #: ../../extend/addon/addon/flattrwidget/flattrwidget.php:108
 msgid "If empty \"channel name on The Hubzilla\" will be used"
@@ -8003,7 +8003,7 @@ msgstr "Ocultar este contacto"
 #: ../../extend/addon/addon/friendica/dfrn_request.php:705
 #, php-format
 msgid "Welcome home %s."
-msgstr "Bienvenido a casa %s."
+msgstr "Bienvenido a la página de inicio %s."
 
 #: ../../extend/addon/addon/friendica/dfrn_request.php:706
 #, php-format
@@ -8289,7 +8289,7 @@ msgstr "Ha fallado"
 
 #: ../../extend/addon/addon/js_upload/js_upload.php:315
 msgid "No files were uploaded."
-msgstr "No se han subido archivos."
+msgstr "No se han subido ficheros."
 
 #: ../../extend/addon/addon/js_upload/js_upload.php:322
 msgid "Uploaded file is empty"
@@ -8497,7 +8497,7 @@ msgstr "una bofetada humillante"
 
 #: ../../extend/addon/addon/morepokes/morepokes.php:19
 msgid "bitchslapped"
-msgstr "ha abofeteado/a de forma humillante a"
+msgstr "ha abofeteado de forma humillante a"
 
 #: ../../extend/addon/addon/morepokes/morepokes.php:20
 msgid "shag"
@@ -8784,7 +8784,7 @@ msgstr "Tal como se ingresaron"
 
 #: ../../extend/addon/addon/openclipatar/openclipatar.php:66
 msgid "Order of other"
-msgstr "Orden de otro tipo"
+msgstr "Orden de los demás"
 
 #: ../../extend/addon/addon/openclipatar/openclipatar.php:66
 msgid "Sort order of other clipart ids."
@@ -9326,7 +9326,7 @@ msgid ""
 "details from unknown viewers?</em>) the link potentially included in public "
 "postings relayed to GNU social will lead the visitor to a blank page "
 "informing the visitor that the access to your profile has been restricted."
-msgstr "<strong>Aviso</strong>: Debido a su configuración de privacidad (<em>Ocultar los detalles de su perfil a los visitantes desconocidos?</em>) el vínculo potencialmente incluido en las publicaciones públicas retransmitidas a GNU social llevará al visitante a una página en blanco que le informará de que el acceso a su perfil ha sido restringido."
+msgstr "<strong>Aviso</strong>: Debido a su configuración de privacidad (<em>Ocultar los detalles de su perfil a los visitantes desconocidos?</em>) el vínculo potencialmente incluido en las entradas públicas retransmitidas a GNU social llevará al visitante a una página en blanco que le informará de que el acceso a su perfil ha sido restringido."
 
 #: ../../extend/addon/addon/statusnet/statusnet.php:411
 msgid "Allow posting to GNU social"
@@ -9596,7 +9596,7 @@ msgstr "Si ve este icono puede estar seguro de que el remitente es quien dice se
 msgid ""
 "Danger! It seems someone tried to forge a message! This message is not "
 "necessarily from who it says it is from!"
-msgstr "¡Peligro! ¡Parece que alguien intentó forjar un mensaje! ¡Este mensaje no es necesariamente de quien dice que es!"
+msgstr "¡Peligro! ¡Parece que alguien intentó falsificar un mensaje! ¡Este mensaje no es necesariamente de quien dice que es!"
 
 #: ../../extend/addon/addon/tour/tour.php:125
 msgid ""
@@ -9643,7 +9643,7 @@ msgid ""
 "details from unknown viewers?</em>) the link potentially included in public "
 "postings relayed to Twitter will lead the visitor to a blank page informing "
 "the visitor that the access to your profile has been restricted."
-msgstr "<strong>Aviso:</strong> Debido a su configuración de privacidad (<em>Ocultar los detalles de su perfil a los visitantes desconocidos?</em>), el enlace potencialmente incluido en las publicaciones públicas retransmitidas a Twitter llevará al visitante a una página en blanco informándolo de que el acceso a su perfil ha sido restringido."
+msgstr "<strong>Aviso:</strong> Debido a su configuración de privacidad (<em>Ocultar los detalles de su perfil a los visitantes desconocidos?</em>), el enlace potencialmente incluido en las entradas públicas retransmitidas a Twitter llevará al visitante a una página en blanco informándolo de que el acceso a su perfil ha sido restringido."
 
 #: ../../extend/addon/addon/twitter/twitter.php:242
 msgid "Allow posting to Twitter"
@@ -9924,15 +9924,15 @@ msgstr "Fecha y hora de finalización"
 
 #: ../../extend/addon/addon/cdav/Mod_Cdav.php:848
 msgid "List month"
-msgstr "Mes de la lista"
+msgstr "Lista mensual"
 
 #: ../../extend/addon/addon/cdav/Mod_Cdav.php:849
 msgid "List week"
-msgstr "Semana de la lista"
+msgstr "Lista semanal"
 
 #: ../../extend/addon/addon/cdav/Mod_Cdav.php:850
 msgid "List day"
-msgstr "Día de la lista"
+msgstr "Lista diaria"
 
 #: ../../extend/addon/addon/cdav/Mod_Cdav.php:857
 msgid "More"
@@ -10277,7 +10277,7 @@ msgstr "Token de acceso de Mapbox"
 msgid ""
 "If you enter a Mapbox access token, it will be used to retrieve map tiles "
 "from Mapbox instead of the default OpenStreetMap tile server."
-msgstr "Si introduce un token de acceso a Mapbox, se utilizará para recuperar los mapas de mosaicos de imágenes de Mapbox en lugar del servidor de mosaicode imágenes  OpenStreetMap predeterminado."
+msgstr "Si introduce un token de acceso a Mapbox, se utilizará para recuperar los mapas de mosaicos de imágenes de Mapbox en lugar del servidor de mosaico de imágenes  OpenStreetMap predeterminado."
 
 #: ../../extend/addon/addon/rendezvous/rendezvous.php:122
 msgid "Rendezvous"
@@ -10333,7 +10333,7 @@ msgstr "Editar alerta de proximidad"
 msgid ""
 "A proximity alert will be issued when this member is within a certain radius"
 " of you.<br><br>Enter a radius in meters (0 to disable):"
-msgstr "Se emitirá una alerta de proximidad cuando este miembro esté dentro de un cierto radio respecto a usted.<br><br> Ingrese el radio en metros (0 para deshabilitar):"
+msgstr "Se emitirá una alerta de proximidad cuando este miembro esté dentro de un radio determinado respecto a usted.<br><br> Ingrese el radio en metros (0 para deshabilitar):"
 
 #: ../../extend/addon/addon/rendezvous/rendezvous.php:140
 msgid "distance"
@@ -10349,7 +10349,7 @@ msgid ""
 "invite to the group. Those who open the link become members of the "
 "rendezvous. They can view other member locations, add markers to the map, or"
 " share their own locations with the group."
-msgstr "Cree una nueva cita y comparta los enlaces de acceso con los que desea invitar al grupo. Aquellos que abren el enlace se convierten en miembros de la cita. Pueden ver otras ubicaciones de miembros, añadir marcadores al mapa o compartir sus propias ubicaciones con el grupo."
+msgstr "Cree una nueva cita y comparta los enlaces de acceso con los que desea invitar al grupo. Aquellos que abran el enlace se convertirán en miembros de la cita. Pueden ver otras ubicaciones de miembros, añadir marcadores al mapa o compartir sus propias ubicaciones con el grupo."
 
 #: ../../include/Import/import_diaspora.php:16
 msgid "No username found in import file."
@@ -10813,7 +10813,7 @@ msgstr "Deshabilitar comentarios"
 
 #: ../../include/features.php:223
 msgid "Provide the option to disable comments for a post"
-msgstr "Proporcionar la opción de desactivar los comentarios de una publicación"
+msgstr "Proporcionar la opción de desactivar los comentarios para una entrada"
 
 #: ../../include/features.php:231
 msgid "Delayed Posting"
@@ -12155,11 +12155,11 @@ msgstr "sitio_web.zip"
 
 #: ../../include/text.php:2302
 msgid "Enter a name for the zip file."
-msgstr "Escribir un nombre para el fichero .zip."
+msgstr "Escriba un nombre para el fichero zip."
 
 #: ../../include/text.php:2303
 msgid "Export to cloud files"
-msgstr "Exportar a los ficheros en la nube"
+msgstr "Exportar a la nube de ficheros"
 
 #: ../../include/text.php:2304
 msgid "/path/to/export/folder"
@@ -12167,7 +12167,7 @@ msgstr "/ruta/para/exportar/carpeta"
 
 #: ../../include/text.php:2305
 msgid "Enter a path to a cloud files destination."
-msgstr "Escribir una ruta de destino para los ficheros en la nube"
+msgstr "Escriba una ruta de destino a la nube de ficheros."
 
 #: ../../include/text.php:2306
 msgid "Specify folder"
@@ -12591,7 +12591,7 @@ msgstr "foto del perfil"
 #: ../../include/items.php:4456
 #, php-format
 msgid "[Edited %s]"
-msgstr "[%s editado]"
+msgstr "[se ha editado %s]"
 
 #: ../../include/items.php:4456
 msgctxt "edit_activity"

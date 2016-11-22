@@ -90,7 +90,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 			// Not the channel owner 
 			$owner_acl = $x = array();
 		}
-		
+
+		$is_owner = ((local_channel()) && (local_channel() == \App::$profile['profile_uid']) ? true : false);
+		$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+
 		// Download a wiki
 		if ((argc() > 3) && (argv(2) === 'download') && (argv(3) === 'wiki')) {
 				$resource_id = argv(4); 
@@ -122,18 +125,33 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 		switch (argc()) {
 			case 2:
-				// Configure page template
-				$wikiheaderName = t('Wiki');
-				$wikiheaderPage = t('Sandbox');
-				require_once('library/markdown.php');	
-				$content = t('"# Wiki Sandbox\n\nContent you **edit** and **preview** here *will not be saved*."');
-				$renderedContent = Markdown(json_decode($content));
-				$hide_editor = true;
-				$showPageControls = false;
-				$showNewWikiButton = $wiki_owner;
-				$showNewPageButton = false;
-				$hidePageHistory = true;
-				$showCommitMsg = false;
+				$wikis = wiki_list($owner, get_observer_hash());
+				if ($wikis) {
+					$o .= replace_macros(get_markup_template('wikilist.tpl'), array(
+						'$header' => t('Wikis'),
+						'$channel' => $owner['channel_address'],
+						'$wikis' => $wikis['wikis'],
+						// If the observer is the local channel owner, show the wiki controls
+						'$owner' => ((local_channel() && local_channel() === intval(\App::$profile['uid'])) ? true : false),
+						'$edit' => t('Edit'),
+						'$download' => t('Download'),
+						'$view' => t('View'),
+						'$create' => t('Create New'),
+						'$submit' => t('Submit'),
+						'$wikiName' => array('wikiName', t('Wiki name')),
+						'$name' => t('Name'),
+						'$lockstate' => $x['lockstate'],
+						'$acl' => $x['acl'],
+						'$allow_cid' => $x['allow_cid'],
+						'$allow_gid' => $x['allow_gid'],
+						'$deny_cid' => $x['deny_cid'],
+						'$deny_gid' => $x['deny_gid'],
+						'$notify' => array('postVisible', t('Create a status post for this wiki'), '', '', array(t('No'), t('Yes')))
+					));
+
+					return $o;
+				}
+
 				break;
 			case 3:
 				// /wiki/channel/wiki -> No page was specified, so redirect to Home.md
@@ -201,11 +219,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			)
 		);
 				
-		$is_owner = ((local_channel()) && (local_channel() == \App::$profile['profile_uid']) ? true : false);
-		
-		$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
-
-
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
 			'$wikiheaderPage' => $wikiheaderPage,

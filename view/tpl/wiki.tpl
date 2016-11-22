@@ -1,16 +1,3 @@
-<style type="text/css" media="screen">
-  #ace-editor { 
-    position: relative;        
-    width: 100%;
-    height: 500px;
-  }
-  .fade.in {
-    -webkit-transition: opacity 0.5s 0.5s ease;
-    -moz-transition: opacity 0.5s 0.5s ease;
-    -o-transition: opacity 0.5s 0.5s ease;
-    transition: opacity 0.5s 0.5s ease;
-  }
-</style>
 {{if $hideEditor}}
 <div>
 	<p class="lead text-center">{{$chooseWikiMessage}}</p>
@@ -221,27 +208,6 @@
 			}, 'json');
 			ev.preventDefault();
 		});
-
-		function wiki_delete_wiki(wikiHtmlName, resource_id) {
-		if(!confirm('Are you sure you want to delete the entire wiki: ' + JSON.stringify(wikiHtmlName))) {
-			return;
-		}
-		$.post("wiki/{{$channel}}/delete/wiki", {resource_id: resource_id}, function (data) {
-			if (data.success) {
-				window.console.log('Wiki deleted');
-				// Refresh list and redirect page as necessary
-				window.location = 'wiki/{{$channel}}';
-			} else {
-				alert('Error deleting wiki!');
-				window.console.log('Error deleting wiki.');
-			}
-			}, 'json');
-		}
-
-
-		function wiki_download_wiki(resource_id) {
-				window.location = "wiki/{{$channel}}/download/wiki/" + resource_id;
-		}
 
 		function wiki_refresh_page_list() {
 			if (window.wiki_resource_id === '') {
@@ -465,14 +431,6 @@
 				},
 			'json');
 		};
-
-		function wiki_show_new_wiki_form() {
-			$('div[id^=\'edit-wiki-form-wrapper\']').hide();
-			$('#new-page-form-wrapper').hide(); 
-			$('#edit-wiki-form-wrapper').hide();
-			$('#new-wiki-form-wrapper').toggle(); 
-			return false;
-		}
 
 		function wiki_show_new_page_form() {
 			$('div[id^=\'edit-wiki-form-wrapper\']').hide();

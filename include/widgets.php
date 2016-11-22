@@ -956,7 +956,7 @@ function widget_wiki_list($arr) {
 			}
 		}
 		if ($wikis) {
-				return replace_macros(get_markup_template('wikilist.tpl'), array(
+				return replace_macros(get_markup_template('wikilist_widget.tpl'), array(
 						'$header' => t('Wiki List'),
 						'$channel' => $channel['channel_address'],
 						'$wikis' => $wikis['wikis'],

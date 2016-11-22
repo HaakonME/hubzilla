@@ -1649,6 +1649,7 @@ main.fullscreen .section-content-wrapper-np {
 
 .atoken-index-row:hover td,
 .chatroom-index-row:hover td,
+.wikis-index-row:hover td,
 .locs-index-row:hover td,
 [id^="cloud-index-"]:hover td,
 .cloud-index-active {

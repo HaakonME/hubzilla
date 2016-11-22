@@ -1752,7 +1752,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 	if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
 		$tabs[] = array(
-			'label' => t('Wiki'),
+			'label' => t('Wikis'),
 			'url'   => z_root() . '/wiki/' . $nickname,
 			'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
 			'title' => t('Wiki'),

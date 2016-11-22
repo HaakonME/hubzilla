@@ -93,7 +93,7 @@ function queue_deliver($outq, $immediate = false) {
 			// your site has existed. Since we don't know for sure what these sites are,
 			// call them unknown
 
-			q("insert into site (site_url, site_update, site_dead, site_type) values ('%s','%s',0,%d) ",
+			q("insert into site (site_url, site_update, site_dead, site_type, site_crypto) values ('%s','%s',0,%d,'') ",
 				dbesc($base),
 				dbesc(datetime_convert()),
 				intval(($outq['outq_driver'] === 'post') ? SITE_TYPE_NOTZOT : SITE_TYPE_UNKNOWN)

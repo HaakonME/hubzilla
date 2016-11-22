@@ -192,17 +192,19 @@ function sync_directories($dirmode) {
 			'site_update' => NULL_DATE, 
 			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
 			'site_realm' => DIRECTORY_REALM,
-			'site_valid' => 1
+			'site_valid' => 1,
+			'site_crypto' => 'aes256cbc'
 			
 		);
-		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm, site_valid )
-			values ( '%s', %d, '%s', '%s', '%s', %d ) ",
+		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm, site_valid, site_crypto )
+			values ( '%s', %d, '%s', '%s', '%s', %d, '%s' ) ",
 			dbesc($r[0]['site_url']),
 			intval($r[0]['site_flags']),
 			dbesc($r[0]['site_update']),
 			dbesc($r[0]['site_directory']),
 			dbesc($r[0]['site_realm']),
-			intval($r[0]['site_valid'])
+			intval($r[0]['site_valid']),
+			dbesc($r[0]['site_crypto'])
 		);
 
 		$r = q("select * from site where site_flags in (%d, %d) and site_url != '%s' and site_type = %d ",

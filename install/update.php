@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1184 );
+define( 'UPDATE_VERSION' , 1185 );
 
 /**
  *
@@ -2460,6 +2460,15 @@ function update_r1183() {
 	$r2 = q("create index priority_idx on hook (priority)");
 
 	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1184() {
+
+	$r1 = q("alter table site add site_crypto text not null default '' ");
+
+	if($r1)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }

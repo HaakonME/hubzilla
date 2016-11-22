@@ -2852,6 +2852,7 @@ function import_site($arr, $pubkey) {
 	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
 	$site_realm = htmlspecialchars($arr['realm'],ENT_COMPAT,'UTF-8',false);
 	$site_project = htmlspecialchars($arr['project'],ENT_COMPAT,'UTF-8',false);
+	$site_crypto = ((array_key_exists('encryption',$arr)) ? implode(',', htmlspecialchars($arr['encryption'],ENT_COMPAT,'UTF-8',false)) : '');
 	$site_version = ((array_key_exists('version',$arr)) ? htmlspecialchars($arr['version'],ENT_COMPAT,'UTF-8',false) : '');
 
 	// You can have one and only one primary directory per realm.
@@ -2873,6 +2874,7 @@ function import_site($arr, $pubkey) {
 			|| ($siterecord['site_register'] != $register_policy)
 			|| ($siterecord['site_project'] != $site_project)
 			|| ($siterecord['site_realm'] != $site_realm)
+			|| ($siterecord['site_crypto'] != $site_crypto)
 			|| ($siterecord['site_version'] != $site_version)   ) {
 
 			$update = true;
@@ -2881,7 +2883,7 @@ function import_site($arr, $pubkey) {
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
 
-			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s', site_type = %d, site_project = '%s', site_version = '%s'
+			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s', site_type = %d, site_project = '%s', site_version = '%s', site_crypto = '%s'
 				where site_url = '%s'",
 				dbesc($site_location),
 				intval($site_directory),
@@ -2894,6 +2896,7 @@ function import_site($arr, $pubkey) {
 				intval(SITE_TYPE_ZOT),
 				dbesc($site_project),
 				dbesc($site_version),
+				dbesc($site_crypto),
 				dbesc($url)
 			);
 			if(! $r) {
@@ -2911,8 +2914,8 @@ function import_site($arr, $pubkey) {
 	else {
 		$update = true;
 
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type, site_project, site_version )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s', %d, '%s', '%s' )",
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type, site_project, site_version, site_crypto )
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s', %d, '%s', '%s', '%s' )",
 			dbesc($site_location),
 			dbesc($url),
 			intval($access_policy),
@@ -2924,7 +2927,8 @@ function import_site($arr, $pubkey) {
 			dbesc($site_realm),
 			intval(SITE_TYPE_ZOT),
 			dbesc($site_project),
-			dbesc($site_version)
+			dbesc($site_version),
+			dbesc($site_crypto)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));

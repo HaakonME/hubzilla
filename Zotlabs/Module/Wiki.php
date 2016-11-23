@@ -258,7 +258,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
 			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
 			'$pageRename' => array('pageRename', t('Enter the new name:'), '', ''),
-			'$commitMsg' => array('commitMsg', '', '', '', '', 'placeholder="(optional) Enter a custom message when saving the page..."'),
+			'$commitMsg' => array('commitMsg', '', '', '', '', 'placeholder="Short description of your changes (optional)"'),
 			'$pageHistory' => $pageHistory['history'],
 			'$wikiModal' => $wikiModal,
 			'$wikiModalID' => $wikiModalID,

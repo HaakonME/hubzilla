@@ -342,7 +342,7 @@
 						$('#embedPhotoModalBodyAlbumDialog').html('\
 								<div><ul class="nav">\n\
 									<li><a href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
-										<i class="fa fa-chevron-left"></i>&nbsp\n\
+										<i class="fa fa-chevron-left"></i>&nbsp;\n\
 										{{$modaldiffalbum}}\n\
 										</a>\n\
 									</li>\n\

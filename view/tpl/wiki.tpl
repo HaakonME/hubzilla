@@ -71,7 +71,7 @@
 			  <label for='id_{{$commitMsg.0}}' id='label_{{$commitMsg.0}}'>{{$commitMsg.1}}{{if $commitMsg.4}}<span class="required"> {{$commitMsg.4}}</span>{{/if}}</label>
 			  <span>
 					  <input class="" style="width: 80%;" name='{{$commitMsg.0}}' id='id_{{$commitMsg.0}}' type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
-					  <a id="save-page" href="#" class="btn btn-primary btn-md">Save</a>
+					  <a id="save-page" href="#" class="btn btn-primary btn-md disabled">Save</a>
 			  </span>
 			  <span id='help_{{$commitMsg.0}}' class='help-block'>{{$commitMsg.3}}</span>
 
@@ -231,35 +231,38 @@
 		}
 
 		$('#save-page').click(function (ev) {
-			if (window.wiki_resource_id === '' || window.wiki_page_name === '') {
-			window.console.log('You must have a wiki page open in order to edit pages.');
-			ev.preventDefault();
-			return false;
-			}
-			var currentContent = editor.getValue();
-			if (window.wiki_page_content === currentContent) {
-			window.console.log('No edits to save.');
-			ev.preventDefault();
-			return false;
-			}
-			$.post("wiki/{{$channel}}/save/page", 
-			{ content: currentContent, 
-				commitMsg: $('#id_commitMsg').val(),
-				name: window.wiki_page_name, 
-				resource_id: window.wiki_resource_id
-			}, 
-			function (data) {
-				if (data.success) {
-				window.console.log('Page saved successfully.');
-				window.wiki_page_content = currentContent;
-				$('#id_commitMsg').val(''); // Clear the commit message box
-				$('#wiki-get-history').click();
-				} else {
-				alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 
-				window.console.log('Error saving page.');
-				}
-			}, 'json');
-			ev.preventDefault();
+                        if (window.wiki_resource_id === '' || window.wiki_page_name === '') {
+                            window.console.log('You must have a wiki page open in order to edit pages.');
+                            ev.preventDefault();
+                            return false;
+                        }
+                        var currentContent = editor.getValue();
+                        if (window.wiki_page_content === currentContent) {
+                            window.console.log('No edits to save.');
+                            ev.preventDefault();
+                            return false;
+                        }
+                        $.post("wiki/{{$channel}}/save/page", 
+                        { content: currentContent, 
+                            commitMsg: $('#id_commitMsg').val(),
+                            name: window.wiki_page_name, 
+                            resource_id: window.wiki_resource_id
+                        }, 
+                        function (data) {
+                            if (data.success) {
+                                window.console.log('Page saved successfully.');
+                                window.wiki_page_content = currentContent;
+                                $('#id_commitMsg').val(''); // Clear the commit message box
+                                $('#save-page').addClass('disabled');  // Disable the save button
+                                window.editor.getSession().getUndoManager().markClean();  // Reset the undo history for the editor
+                                window.editor.focus();  // Return focus to the editor for continued editing
+                                // $('#wiki-get-history').click();
+                            } else {
+                                alert('Error saving page.'); // TODO: Replace alerts with auto-timeout popups 
+                                window.console.log('Error saving page.');
+                            }
+                        }, 'json');
+                        ev.preventDefault();
 		});
 
 		$('#delete-page').click(function (ev) {
@@ -460,6 +463,14 @@
 				{{else}}
 						$('#new-wiki-button').hide();
 				{{/if}}
+                                // using input event instead of change since it's called with some timeout
+                                window.editor.on("input", function() {
+                                    if(window.editor.getSession().getUndoManager().isClean()) {
+                                        $('#save-page').addClass('disabled');
+                                    } else {
+                                        $('#save-page').removeClass('disabled');
+                                    }
+                                });
 				
 		});
 </script>

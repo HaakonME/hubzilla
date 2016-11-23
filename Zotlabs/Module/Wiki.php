@@ -118,18 +118,21 @@ class Wiki extends \Zotlabs\Web\Controller {
 			\Zotlabs\Lib\ExtendedZip::zipTree($w['path'], $zip_filepath, \ZipArchive::CREATE);
 
 			// Output the file for download
+
 			header('Content-disposition: attachment; filename="' . $zip_filename . '.zip"');
-			header("Content-Type: application/zip");
+			header('Content-Type: application/zip');
 
 			$success = readfile($zip_filepath);
 
-			if($success) {
-				rrmdir($zip_folderpath);	// delete temporary files
-			}
-			else {
-				rrmdir($zip_folderpath);	// delete temporary files
+			if(!$success) {
 				logger('Error downloading wiki: ' . $resource_id);
+				notice(t('Error downloading wiki: ' . $resource_id) . EOL);
 			}
+
+			// delete temporary files
+			rrmdir($zip_folderpath);
+			killme();
+
 		}
 
 		switch (argc()) {

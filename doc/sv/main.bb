@@ -43,7 +43,6 @@ Zot är en fantastisk ny kommunikationsprotokoll uppfunnit speciellt för $Proje
 [zrl=[baseurl]/help/faq_admins]FAQ For Admins[/zrl]
 
 [h3]Teknisk dokumentation[/h3]
-[zrl=[baseurl]/help/project/history]$Projectname history[/zrl]
 [zrl=[baseurl]/help/Zot---A-High-Level-Overview]A high level overview of Zot[/zrl]
 [zrl=[baseurl]/help/zot]An introduction to Zot[/zrl]
 [zrl=[baseurl]/help/zot_structures]Zot Stuctures[/zrl]

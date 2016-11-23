@@ -3,7 +3,7 @@
 [zrl=[baseurl]/help/Privacy]Privacy Policy[/zrl]
 [zrl=[baseurl]/help/project/governance]Project Governance[/zrl]
 [zrl=[baseurl]/help/contributor/convenant]Project Covenant and Code of Conduct[/zrl]
-[zrl=[baseurl]/help/project/history]$Projectname history[/zrl]
+
 [h3]External resources[/h3]
 [zrl=[baseurl]/help/external-resource-links]List of external resources[/zrl]
 [url=https://github.com/redmatrix/hubzilla]Main Website[/url]

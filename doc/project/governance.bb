@@ -2,25 +2,9 @@
 
 Governance relates to the management of a project and particularly how this relates to conflict resolution.
 
-This project uses a dual-governance model.
-
-The project as a whole and the repository were created initially by Mike Macgirvin; who controls the project copyright, and the project license, and manages the project as a Self Appointed Benevolent Dictator for Life. He holds veto power over any project proposal or decision and his word is final.
-
-That said, Mike has no interest in running the day to day activities of the project and influencing its direction, other than to protect his own work from sabotage. 
-
-The internal project structure contains multiple "configurations" known as 'basic', 'standard', and 'pro'. Mike's veto power extends to any proposal or decision which he feels might adversely affect the 'pro' configuration.
-
-The 'basic and 'standard' configurations are controlled completely by the community. If the proposal or decision is crafted in such a way that its effects are limited to these configurations, Mike will consider relinquishing his power of veto and convert it to a normal community vote.
-
-Mario Vavti has done an incredible amount of work on the usability and theming of the project and holds veto power over any proposal or decision which might impact usability and "look and feel"; and his decision is also final. 
-
-Mario's veto power is likewise restricted to anything using the standard project 'theme'. If a new theme is created and an otherwise vetoed decision is implemented entirely in this different theme and has no impact on the standard project theme, his veto [b]may[/b] also be turned into a normal community vote.
-
-This ability to work around a veto is at the discretion of Mike and Mario. They [b]may[/b] choose to relinquish their veto if the scope of the work is limited as described above, and in most circumstances they will leave the decision to the community. They are not obligated to do so. 
-
 [h3]Community Governance[/h3]
 
-Beyond those two special cases, the project is maintained and decisions made by the 'community'. The governance structure is still evolving. Until the structure is finalised, decisions are made in the following order:
+The project is maintained and decisions made by the 'community'. The governance structure is still evolving. Until the structure is finalised, decisions are made in the following order:
 
 [ol]
 [*] Lazy Consensus
@@ -29,7 +13,7 @@ If a project proposal is made to one of the community governance forums and ther
 
 [*] Veto
 
-If a proposal is vetoed, it is not necessarily the final word. See above on how to convert a veto into a normal community vote. This can be done by framing the proposal so that it does not impact the 'pro' configuration or the standard theme.
+Senior developers with a significant history of project commits may veto any decision. The decision may not proceed until the veto is removed or an alternative proposal is presented.
 
 [*] Community Vote
 

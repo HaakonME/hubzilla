@@ -1017,7 +1017,7 @@ function widget_wiki_pages($arr) {
 			'$pages' => $pages,
 			'$canadd' => $can_create,
 			'$addnew' => t('Add new page'),
-			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
+			'$pageName' => array('pageName', t('Page name')),
 	));
 }
 

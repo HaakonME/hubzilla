@@ -95,30 +95,39 @@ class Wiki extends \Zotlabs\Web\Controller {
 		$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 
 		// Download a wiki
-		if ((argc() > 3) && (argv(2) === 'download') && (argv(3) === 'wiki')) {
+		if((argc() > 3) && (argv(2) === 'download') && (argv(3) === 'wiki')) {
+
 			$resource_id = argv(4);
+
 			$w = wiki_get_wiki($resource_id);
-			if (!$w['path']) {
-					notice(t('Error retrieving wiki') . EOL);
+			if(!$w['path']) {
+				notice(t('Error retrieving wiki') . EOL);
 			}
+
 			$zip_folder_name = random_string(10);
 			$zip_folderpath = '/tmp/' . $zip_folder_name;
-			if (!mkdir($zip_folderpath, 0770, false)) {
+			if(!mkdir($zip_folderpath, 0770, false)) {
 				logger('Error creating zip file export folder: ' . $zip_folderpath, LOGGER_NORMAL);
 				notice(t('Error creating zip file export folder') . EOL);
 			}
+
 			$zip_filename = $w['urlName'];
 			$zip_filepath = '/tmp/' . $zip_folder_name . '/' . $zip_filename;
+
 			// Generate the zip file
 			\Zotlabs\Lib\ExtendedZip::zipTree($w['path'], $zip_filepath, \ZipArchive::CREATE);
+
 			// Output the file for download
 			header('Content-disposition: attachment; filename="' . $zip_filename . '.zip"');
 			header("Content-Type: application/zip");
+
 			$success = readfile($zip_filepath);
-			if ($success) {
-				rrmdir($zip_folderpath); 	// delete temporary files
-			} else {
-				rrmdir($zip_folderpath); 	// delete temporary files
+
+			if($success) {
+				rrmdir($zip_folderpath);	// delete temporary files
+			}
+			else {
+				rrmdir($zip_folderpath);	// delete temporary files
 				logger('Error downloading wiki: ' . $resource_id);
 			}
 		}

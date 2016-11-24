@@ -1,6 +1,16 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		{{if $notself}}
+			{{if $abook_prev || $abook_next}}
+			<div class="btn-group pull-right">
+				{{if $abook_prev}}
+				<a href="connedit/{{$abook_prev}}" class="btn btn-default btn-xs" ><i class="fa fa-backward"></i></a>
+				{{/if}}
+				{{if $abook_next}}
+				<a href="connedit/{{$abook_next}}" class="btn btn-default btn-xs" ><i class="fa fa-forward"></i></a>
+				{{/if}}
+			</div>
+			{{/if}}
 		<div class="dropdown pull-right">
 			<button id="connection-dropdown" class="btn btn-default btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}

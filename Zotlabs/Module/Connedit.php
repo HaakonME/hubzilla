@@ -41,10 +41,15 @@ class Connedit extends \Zotlabs\Web\Controller {
 			}
 		}
 	
+
 		$channel = \App::get_channel();
 		if($channel)
 			head_set_icon($channel['xchan_photo_s']);
 	
+	}
+
+	static public function xchan_name_sort($a,$b) {
+		return strcasecmp($a['xchan_name'],$b['xchan_name']);
 	}
 	
 	/* @brief Evaluate posted values and set changes
@@ -546,9 +551,34 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		if(\App::$poi) {
 	
+			$abook_prev = 0;
+			$abook_next = 0;
+
 			$contact_id = \App::$poi['abook_id'];
 			$contact = \App::$poi;
-	
+
+			$cn = q("SELECT abook_id, xchan_name from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_self = 0",
+				intval(local_channel())
+			);
+			if($cn) {
+				usort($cn, '\\Zotlabs\\Module\\Connedit::xchan_name_sort');
+
+				$pntotal = count($cn);
+
+				for($x = 0; $x < $pntotal; $x ++) {
+					if($cn[$x]['abook_id'] == $contact_id) {
+						if($x === 0)
+							$abook_prev = 0;
+						else
+							$abook_prev = $cn[$x - 1]['abook_id'];
+						if($x === $pntotal)
+							$abook_next = 0;
+						else
+							$abook_next = $cn[$x +1]['abook_id'];
+					}
+				}
+ 			}
+
 			$tools = array(
 	
 				'view' => array(
@@ -615,8 +645,10 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			$self = false;
 	
-			if(intval($contact['abook_self']))
+			if(intval($contact['abook_self'])) {
 				$self = true;
+				$abook_prev = $abook_next = 0;
+			}
 	
 			$tpl = get_markup_template("abook_edit.tpl");
 	
@@ -792,7 +824,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$multiprofs'     => $multiprofs,
 				'$contact_id'     => $contact['abook_id'],
 				'$name'           => $contact['xchan_name'],
-	
+				'$abook_prev'     => $abook_prev,
+				'$abook_next'     => $abook_next	
 			));
 	
 			$arr = array('contact' => $contact,'output' => $o);

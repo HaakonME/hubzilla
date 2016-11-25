@@ -1,8 +1,25 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		{{if $notself}}
+		<div class="pull-right">
+			<div class="btn-group">
+				<button id="connection-dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
+				</button>
+				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+					<li><a  href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a></li>
+					<li><a  href="{{$tools.recent.url}}" title="{{$tools.recent.title}}">{{$tools.recent.label}}</a></li>
+					<li class="divider"></li>
+					<li><a  href="#" title="{{$tools.refresh.title}}" onclick="window.location.href='{{$tools.refresh.url}}'; return false;">{{$tools.refresh.label}}</a></li>
+					<li><a  href="#" title="{{$tools.block.title}}" onclick="window.location.href='{{$tools.block.url}}'; return false;">{{$tools.block.label}}</a></li>
+					<li><a  href="#" title="{{$tools.ignore.title}}" onclick="window.location.href='{{$tools.ignore.url}}'; return false;">{{$tools.ignore.label}}</a></li>
+					<li><a  href="#" title="{{$tools.archive.title}}" onclick="window.location.href='{{$tools.archive.url}}'; return false;">{{$tools.archive.label}}</a></li>
+					<li><a  href="#" title="{{$tools.hide.title}}" onclick="window.location.href='{{$tools.hide.url}}'; return false;">{{$tools.hide.label}}</a></li>
+					<li><a  href="#" title="{{$tools.delete.title}}" onclick="window.location.href='{{$tools.delete.url}}'; return false;">{{$tools.delete.label}}</a></li>
+				</ul>
+			</div>
 			{{if $abook_prev || $abook_next}}
-			<div class="btn-group pull-right">
+			<div class="btn-group">
 				{{if $abook_prev}}
 				<a href="connedit/{{$abook_prev}}" class="btn btn-default btn-xs" ><i class="fa fa-backward"></i></a>
 				{{/if}}
@@ -11,21 +28,6 @@
 				{{/if}}
 			</div>
 			{{/if}}
-		<div class="dropdown pull-right">
-			<button id="connection-dropdown" class="btn btn-default btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
-			</button>
-			<ul class="dropdown-menu" aria-labelledby="dLabel">
-				<li><a  href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a></li>
-				<li><a  href="{{$tools.recent.url}}" title="{{$tools.recent.title}}">{{$tools.recent.label}}</a></li>
-				<li class="divider"></li>
-				<li><a  href="#" title="{{$tools.refresh.title}}" onclick="window.location.href='{{$tools.refresh.url}}'; return false;">{{$tools.refresh.label}}</a></li>
-				<li><a  href="#" title="{{$tools.block.title}}" onclick="window.location.href='{{$tools.block.url}}'; return false;">{{$tools.block.label}}</a></li>
-				<li><a  href="#" title="{{$tools.ignore.title}}" onclick="window.location.href='{{$tools.ignore.url}}'; return false;">{{$tools.ignore.label}}</a></li>
-				<li><a  href="#" title="{{$tools.archive.title}}" onclick="window.location.href='{{$tools.archive.url}}'; return false;">{{$tools.archive.label}}</a></li>
-				<li><a  href="#" title="{{$tools.hide.title}}" onclick="window.location.href='{{$tools.hide.url}}'; return false;">{{$tools.hide.label}}</a></li>
-				<li><a  href="#" title="{{$tools.delete.title}}" onclick="window.location.href='{{$tools.delete.url}}'; return false;">{{$tools.delete.label}}</a></li>
-			</ul>
 		</div>
 		{{/if}}
 		<h2>{{$header}}</h2>

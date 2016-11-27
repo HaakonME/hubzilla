@@ -68,7 +68,7 @@ function get_help_content($tocpath = false) {
 	}
 
 	if($doctype === 'html')
-		$content = $text;
+                $content = parseIdentityAwareHTML($text);
 	if($doctype === 'markdown')	{
 		require_once('library/markdown.php');
 		# escape #include tags

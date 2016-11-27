@@ -567,6 +567,9 @@ function parseIdentityAwareHTML($Text) {
 		$Text = str_replace('[observer.webname]','',$Text);
 		$Text = str_replace('[observer.photo]','', $Text);
 	}
+        
+        $Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
+        
         return $Text;
 }
 

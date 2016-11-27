@@ -15,7 +15,7 @@ function get_help_content($tocpath = false) {
 	$text = '';
 
 	$path = (($tocpath !== false) ? $tocpath : '');
-
+        
 	if($tocpath === false && argc() > 1) {
 		$path = '';
 		for($x = 1; $x < argc(); $x ++) {

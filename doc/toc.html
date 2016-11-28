@@ -8,14 +8,18 @@
     .doco-list-group-item {
         padding-left: 15px;
     } 
-    .widget {
+    #region_1 .widget {
         position: fixed;
         top:70px;
         width: inherit;
         height: 80%;
         overflow-y: scroll;
     }
-
+    @media screen and (max-width: 767px) {
+        #region_1 .widget {
+            position: static;
+        }
+    }
 </style>
 
 <div class="panel-group" id="accordion">
@@ -120,11 +124,13 @@
             break;
         default:
             break;
-    }        
+    }
+    // Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
     $(document).ready(function () {
         var tocUl = $('#page-toc-container').append('<ul>').find('ul');
-        tocUl.removeClass();
+        tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
         tocUl.toc({content: "#doco-content", headings: "h1,h2,h3,h4"});
+        $('#region_1 .widget').scrollTop($(tocUl).offset().top - $('#accordion').offset().top);
     });
 
 </script>

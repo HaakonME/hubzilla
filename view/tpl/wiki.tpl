@@ -11,9 +11,6 @@
 						<a id="rename-page" class="nav-link" href="#"><i class="fa fa-edit"></i>&nbsp;Rename Page</a>
 					</li>
 					<li class="nav-item">
-						<a id="delete-page" class="nav-link" href="#"><i class="fa fa-trash-o"></i>&nbsp;Delete Page</a>
-					</li>
-					<li class="nav-item">
 						<a id="embed-image" class="nav-link" href="#"><i class="fa fa-picture-o"></i>&nbsp;Embed Image</a>
 					</li>
 				</ul>
@@ -237,33 +234,6 @@
                             }
                         }, 'json');
                         ev.preventDefault();
-		});
-
-		$('#delete-page').click(function (ev) {
-			if (window.wiki_resource_id === '' || window.wiki_page_name === '' || window.wiki_page_name === 'Home') {
-			window.console.log('You must have a wiki page open in order to delete pages.');
-			ev.preventDefault();
-			return false;
-			}
-			if(!confirm('Are you sure you want to delete the page: ' + window.wiki_page_name)) {
-					ev.preventDefault();
-			return;
-			}
-			$.post("wiki/{{$channel}}/delete/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
-			function (data) {
-				if (data.success) {
-				window.console.log('Page deleted successfully.');
-				var url = window.location.href;
-				if (url.substr(-1) == '/') url = url.substr(0, url.length - 2);
-				url = url.split('/');
-				url.pop();
-				window.location = url.join('/');
-				} else {
-				alert('Error deleting page.'); // TODO: Replace alerts with auto-timeout popups 
-				window.console.log('Error deleting page.');
-				}
-			}, 'json');
-			ev.preventDefault();
 		});
 
 		function wiki_revert_page(commitHash) {

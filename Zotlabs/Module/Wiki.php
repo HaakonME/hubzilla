@@ -390,7 +390,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'files' => array($page['page']['urlName'].'.md')
 						));
 				if($commit['success']) {
-					json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.urlencode($page['page']['urlName']), 'success' => true));
+					json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.$page['page']['urlName'], 'success' => true));
 				} else {
 					json_return_and_die(array('message' => 'Error making git commit','url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.urlencode($page['page']['urlName']),'success' => false));
 				}				

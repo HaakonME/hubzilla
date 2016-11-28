@@ -379,14 +379,6 @@
 			'json');
 		};
 
-		function wiki_show_new_page_form() {
-			$('div[id^=\'edit-wiki-form-wrapper\']').hide();
-			$('#edit-wiki-form-wrapper').hide();
-			$('#new-wiki-form-wrapper').hide();
-			$('#new-page-form-wrapper').toggle(); 
-			return false;
-		}
-
 		function wiki_show_edit_wiki_form(wiki_title, wiki_resource_id) {
 			window.wiki_resource_id = wiki_resource_id;
 			window.wiki_title = wiki_title;

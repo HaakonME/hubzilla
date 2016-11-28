@@ -29,17 +29,12 @@
 
 <script>
 	$('#new-page-submit').click(function (ev) {
-		if (window.wiki_resource_id === '') {
-			window.console.log('You must have a wiki open in order to create pages.');
-			ev.preventDefault();
-			return false;
-		}
 		$.post("wiki/{{$channel}}/create/page", {name: $('#id_pageName').val(), resource_id: window.wiki_resource_id}, 
-		function (data) {
-			if (data.success) {
-			window.location = data.url;
+		function(data) {
+			if(data.success) {
+				window.location = data.url;
 			} else {
-			window.console.log('Error creating page.');
+				window.console.log('Error creating page.');
 			}
 		}, 'json');
 		ev.preventDefault();
@@ -69,6 +64,12 @@
 				window.console.log('Error deleting page.');
 			}
 		}, 'json');
+		return false;
+	}
+
+	function wiki_show_new_page_form() {
+		$('#new-page-form-wrapper').toggle();
+		$('#id_pageName').focus();
 		return false;
 	}
 </script>

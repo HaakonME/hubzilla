@@ -93,29 +93,38 @@
     </div>
 </div>
 
+<div id="page-toc-container" style="margin-top:1.0em;">
+    <h3>Contents</h3>
+</div>
+
 <script>
-//    $(document).ready(function() {
-        // Determine the content section from the URL and expand the appropriate menu section
-        var url = document.createElement('a');
-        url.href = window.location;
-        switch (url.pathname.split('/')[2]) {
-            case 'tutorials':
-                $('#tutorials').addClass('in');
-                break;
-            case 'about':
-                $('#about').addClass('in');
-                break;
-            case 'admin':
-                $('#administrators').addClass('in');
-                break;
-            case 'member':
-                $('#members').addClass('in');
-                break;
-            case 'developer':
-                $('#developers').addClass('in');
-                break;
-            default:
-                break;
-        }        
-//    }
+
+    // Determine the content section from the URL and expand the appropriate menu section
+    var url = document.createElement('a');
+    url.href = window.location;
+    switch (url.pathname.split('/')[2]) {
+        case 'tutorials':
+            $('#tutorials').addClass('in');
+            break;
+        case 'about':
+            $('#about').addClass('in');
+            break;
+        case 'admin':
+            $('#administrators').addClass('in');
+            break;
+        case 'member':
+            $('#members').addClass('in');
+            break;
+        case 'developer':
+            $('#developers').addClass('in');
+            break;
+        default:
+            break;
+    }        
+    $(document).ready(function () {
+        var tocUl = $('#page-toc-container').append('<ul>').find('ul');
+        tocUl.removeClass();
+        tocUl.toc({content: "#doco-content", headings: "h1,h2,h3,h4"});
+    });
+
 </script>

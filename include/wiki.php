@@ -139,6 +139,9 @@ function wiki_create_wiki($channel, $observer_hash, $wiki, $acl) {
 	if (!set_iconfig($arr, 'wiki', 'urlName', $wiki['urlName'], true)) {
 		return array('item' => null, 'success' => false);
 	}
+	if (!set_iconfig($arr, 'wiki', 'mimteType', $wiki['mimeType'], true)) {
+		return array('item' => null, 'success' => false);
+	}
 	$post = item_store($arr);
 	$item_id = $post['item_id'];
 
@@ -179,17 +182,20 @@ function wiki_get_wiki($resource_id) {
 		$rawName = get_iconfig($w, 'wiki', 'rawName');
 		$htmlName = get_iconfig($w, 'wiki', 'htmlName');
 		$urlName = get_iconfig($w, 'wiki', 'urlName');
+		$mimeType = get_iconfig($w, 'wiki', 'mimeType');
 		$path = get_iconfig($w, 'wiki', 'path');
 		if (!realpath(__DIR__ . '/../' . $path)) {
 			return array('wiki' => null, 'path' => null);
 		}
 		// Path to wiki exists
 		$abs_path = realpath(__DIR__ . '/../' . $path);
-		return array( 'wiki' => $w, 
-									'path' => $abs_path, 
-									'rawName' => $rawName, 
-									'htmlName' => $htmlName, 
-									'urlName' => $urlName
+		return array(
+			'wiki' => $w,
+			'path' => $abs_path,
+			'rawName' => $rawName,
+			'htmlName' => $htmlName,
+			'urlName' => $urlName,
+			'mimeType' => $mimeType
 		);
 	}
 }

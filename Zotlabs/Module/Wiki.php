@@ -34,10 +34,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			notice( t('Not found') . EOL);
      		return;
  		}
-	
-		$tab = 'wiki';
-	
-	
+
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
 		require_once('include/conversation.php');
@@ -151,6 +148,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'$create' => t('Create New'),
 						'$submit' => t('Submit'),
 						'$wikiName' => array('wikiName', t('Wiki name')),
+						'$mimeType' => array('mimeType', t('Content type'), '', '', ['text/markdown' => 'Markdown', 'text/bbcode' => 'BB Code']),
 						'$name' => t('Name'),
 						'$lockstate' => $x['lockstate'],
 						'$acl' => $x['acl'],
@@ -322,6 +320,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$wiki['rawName'] = $_POST['wikiName'];
 			$wiki['htmlName'] = escape_tags($_POST['wikiName']);
 			$wiki['urlName'] = urlencode($_POST['wikiName']); 
+			$wiki['mimeType'] = $_POST['mimeType'];
 			if($wiki['urlName'] === '') {				
 				notice( t('Error creating wiki. Invalid name.') . EOL);
 				goaway('/wiki');

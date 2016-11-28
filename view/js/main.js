@@ -444,16 +444,18 @@ function contextualHelp() {
 }
 
 function contextualHelpFocus(target, openSidePanel) {
-	if (openSidePanel) {
-		$("main").addClass('region_1-on');  // Open the side panel to highlight element
-	}
-	else {
-		$("main").removeClass('region_1-on');
-	}
-	$('html,body').animate({ scrollTop: $(target).offset().top - $('nav').outerHeight(true) - $('#contextual-help-content').outerHeight(true)}, 'slow');
-	for (i = 0; i < 3; i++) {
-		$(target).fadeTo('slow', 0.1).fadeTo('slow', 1.0);
-	}
+        if($(target).length) {
+            if (openSidePanel) {
+                    $("main").addClass('region_1-on');  // Open the side panel to highlight element
+            }
+            else {
+                    $("main").removeClass('region_1-on');
+            }
+            $('html,body').animate({ scrollTop: $(target).offset().top - $('nav').outerHeight(true) - $('#contextual-help-content').outerHeight(true)}, 'slow');
+            for (i = 0; i < 3; i++) {
+                    $(target).fadeTo('slow', 0.1).fadeTo('slow', 1.0);
+            }
+        }
 }
 
 function updatePageItems(mode, data) {

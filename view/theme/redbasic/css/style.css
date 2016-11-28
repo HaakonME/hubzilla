@@ -2040,3 +2040,14 @@ dl.bb-dl > dd > li {
 	padding-left: 15px;
 	border-left: 3px solid #eee;
 }
+
+.nav-pills-stacked-icons {
+	padding: 6px 10px;
+	float: right;
+	position: relative;
+	z-index:1;
+}
+
+.nav-pills-stacked-icons:hover + a {
+	background-color: #eee;
+}

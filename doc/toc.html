@@ -1,6 +1,130 @@
-<ul>
-<li><a href="help/general">Project/Site Information</a></li>
-<li><a href="help/members">For Members</a></li>
-<li><a href="help/admins">For Administrators</a></li>
-<li><a href="help/develop">For Developers</a></li>
-</ul>
+<style>
+    #accordion .glyphicon { margin-right:10px; }
+    .panel-collapse>.list-group .list-group-item:first-child {border-top-right-radius: 0;border-top-left-radius: 0;}
+    .panel-collapse>.list-group .list-group-item {border-width: 1px 0;}
+    .panel-collapse>.list-group {margin-bottom: 0;}
+    .panel-collapse .list-group-item {border-radius:0;}
+
+    .doco-list-group-item {
+        padding-left: 15px;
+    } 
+    .widget {
+        position: fixed;
+        top:70px;
+        width: inherit;
+        height: 80%;
+        overflow-y: scroll;
+    }
+
+</style>
+
+<div class="panel-group" id="accordion">
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#about"><span class="glyphicon glyphicon-folder-open">
+                    </span>About</a>
+            </h4>
+        </div>
+        <div id="about" class="panel-collapse collapse">
+            <ul class="list-group">
+                <li class="doco-list-group-item"><a href="/help/about/about_hubzilla#about-hubzilla-toc"><span class="glyphicon glyphicon-file"></span>Hubzilla project</a></li>
+                <li class="doco-list-group-item"><a href="/help/about/about_hub"><span class="glyphicon glyphicon-file"></span>About this hub</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#members"><span class="glyphicon glyphicon-folder-open">
+                    </span>Members</a>
+            </h4>
+        </div>
+        <div id="members" class="panel-collapse collapse">
+            <ul class="list-group">
+                <li class="doco-list-group-item"><a href="/help/member/member_guide#member-guide-toc">Contents</a></li>
+                <li class="doco-list-group-item"><a href="/help/member/member_faq#member-faq-toc">FAQ</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#administrators"><span class="glyphicon glyphicon-folder-open">
+                    </span>Administrators</a>
+            </h4>
+        </div>
+        <div id="administrators" class="panel-collapse collapse">
+            <ul class="list-group">
+                <li class="doco-list-group-item"><a href="/help/admin/administrator_guide#admin-guide-toc">Contents</a></li>
+                <li class="doco-list-group-item"><a href="/help/admin/administrator_guide#Before_you_begin">Installation</a></li>
+
+
+            </ul>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#developers"><span class="glyphicon glyphicon-folder-open">
+                    </span>Developers</a>
+            </h4>
+        </div>
+        <div id="developers" class="panel-collapse collapse">
+            <ul class="list-group">
+                <li class="doco-list-group-item"><a href="/help/developer/developer_guide#developer-guide-toc">Contents</a></li>
+                <li class="doco-list-group-item"><a href="/help/developer/developer_guide#Who_is_a_Hubzilla_developer_Should_I_read_this_">Overview</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#tutorials"><span class="glyphicon glyphicon-folder-open">
+                    </span>Tutorials</a>
+            </h4>
+        </div>
+        <div id="tutorials" class="panel-collapse collapse">
+            <ul class="list-group">
+                <li class="doco-list-group-item"><a href="/help/tutorials/personal_channel">Personal Channel</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="page-toc-container" style="margin-top:1.0em;">
+    <h3>Contents</h3>
+</div>
+
+<script>
+
+    // Determine the content section from the URL and expand the appropriate menu section
+    var url = document.createElement('a');
+    url.href = window.location;
+    switch (url.pathname.split('/')[2]) {
+        case 'tutorials':
+            $('#tutorials').addClass('in');
+            break;
+        case 'about':
+            $('#about').addClass('in');
+            break;
+        case 'admin':
+            $('#administrators').addClass('in');
+            break;
+        case 'member':
+            $('#members').addClass('in');
+            break;
+        case 'developer':
+            $('#developers').addClass('in');
+            break;
+        default:
+            break;
+    }        
+    $(document).ready(function () {
+        var tocUl = $('#page-toc-container').append('<ul>').find('ul');
+        tocUl.removeClass();
+        tocUl.toc({content: "#doco-content", headings: "h1,h2,h3,h4"});
+    });
+
+</script>

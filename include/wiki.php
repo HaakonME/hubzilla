@@ -31,16 +31,29 @@ function wiki_page_list($resource_id) {
 	if (!$w['path']) {
 		return array('pages' => null, 'wiki' => null);
 	}
-	$pages = array();
-	$pages[] = array('title' => 'Home', 'url' => 'Home');
+
+	$pages[] = [
+		'resource_id' => '',
+		'title' => 'Home',
+		'url' => 'Home',
+		'link_id' => 'id_wiki_home_0'
+	];
+
 	if (is_dir($w['path']) === true) {
 		$files = array_diff(scandir($w['path']), array('.', '..', '.git'));
 		// TODO: Check that the files are all text files
-		
+		$i = 1;
 		foreach($files as $file) {
 			// strip the .md file extension and unwrap URL encoding to leave HTML encoded name
-			if( urldecode(substr($file, 0, -3)) !== 'Home') {
-				$pages[] = array('title' => urldecode(substr($file, 0, -3)), 'url' => urlencode(substr($file, 0, -3)));
+			$title = substr($file, 0, -3);
+			if(urldecode($title) !== 'Home') {
+				$pages[] = [
+					'resource_id' => $resource_id,
+					'title' => urldecode($title),
+					'url' => $title,
+					'link_id' => 'id_' . substr($resource_id, 0, 10) . '_' . $i
+				];
+				$i++;
 			}
 		}
 	}

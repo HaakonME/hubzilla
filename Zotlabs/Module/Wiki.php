@@ -382,7 +382,18 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			$page = wiki_create_page($name, $resource_id);
 			if ($page['success']) {
-				json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.urlencode($page['page']['urlName']), 'success' => true));
+				$ob = \App::get_observer();
+				$commit = wiki_git_commit(array(
+						'commit_msg' => t('New page created'), 
+						'resource_id' => $resource_id, 
+						'observer' => $ob,
+						'files' => array($page['page']['urlName'].'.md')
+						));
+				if($commit['success']) {
+					json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.$page['page']['urlName'], 'success' => true));
+				} else {
+					json_return_and_die(array('message' => 'Error making git commit','url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.urlencode($page['page']['urlName']),'success' => false));
+				}				
 			} else {
 				logger('Error creating page');
 				json_return_and_die(array('message' => 'Error creating page.', 'success' => false));

@@ -34,10 +34,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			notice( t('Not found') . EOL);
      		return;
  		}
-	
-		$tab = 'wiki';
-	
-	
+
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
 		require_once('include/conversation.php');
@@ -151,6 +148,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'$create' => t('Create New'),
 						'$submit' => t('Submit'),
 						'$wikiName' => array('wikiName', t('Wiki name')),
+						'$mimeType' => array('mimeType', t('Content type'), '', '', ['text/markdown' => 'Markdown', 'text/bbcode' => 'BB Code']),
 						'$name' => t('Name'),
 						'$lockstate' => $x['lockstate'],
 						'$acl' => $x['acl'],
@@ -315,17 +313,19 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if (local_channel() !== intval($owner['channel_id'])) {
 				goaway('/' . argv(0) . '/' . $nick . '/');
 			} 
-
 			$wiki = array(); 
 			// Generate new wiki info from input name
 			$wiki['postVisible'] = ((intval($_POST['postVisible']) === 0) ? 0 : 1);
 			$wiki['rawName'] = $_POST['wikiName'];
 			$wiki['htmlName'] = escape_tags($_POST['wikiName']);
 			$wiki['urlName'] = urlencode($_POST['wikiName']); 
+			$wiki['mimeType'] = $_POST['mimeType'];
+
 			if($wiki['urlName'] === '') {				
 				notice( t('Error creating wiki. Invalid name.') . EOL);
 				goaway('/wiki');
 			}
+
 			// Get ACL for permissions
 			$acl = new \Zotlabs\Access\AccessList($owner);
 			$acl->set_from_array($_POST);
@@ -387,7 +387,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'commit_msg' => t('New page created'), 
 						'resource_id' => $resource_id, 
 						'observer' => $ob,
-						'files' => array($page['page']['urlName'].'.md')
+						'files' => array($page['page']['fileName'])
 						));
 				if($commit['success']) {
 					json_return_and_die(array('url' => '/'.argv(0).'/'.argv(1).'/'.$page['wiki']['urlName'].'/'.$page['page']['urlName'], 'success' => true));
@@ -443,7 +443,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'commit_msg' => $commitMsg, 
 						'resource_id' => $resource_id, 
 						'observer' => $ob,
-						'files' => array($pageUrlName.'.md')
+						'files' => array($saved['fileName'])
 						));
 				if($commit['success']) {
 					json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
@@ -582,7 +582,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'commit_msg' => 'Renamed ' . urldecode($pageUrlName) . ' to ' . $renamed['page']['htmlName'], 
 						'resource_id' => $resource_id, 
 						'observer' => $ob,
-						'files' => array($pageUrlName . '.md', $renamed['page']['fileName']),
+						'files' => array($pageUrlName . substr($renamed['page']['fileName'], -3), $renamed['page']['fileName']),
 						'all' => true
 						));
 				if($commit['success']) {

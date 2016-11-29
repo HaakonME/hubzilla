@@ -26,7 +26,7 @@
     <div class="panel">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#about"><span class="glyphicon glyphicon-folder-open">
+                <a data-toggle="collapse" data-parent="#accordion" href="#about"><span class="glyphicon glyphicon-folder-close">
                     </span>About</a>
             </h4>
         </div>
@@ -40,7 +40,7 @@
     <div class="panel">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#members"><span class="glyphicon glyphicon-folder-open">
+                <a data-toggle="collapse" data-parent="#accordion" href="#members"><span class="glyphicon glyphicon-folder-close">
                     </span>Members</a>
             </h4>
         </div>
@@ -54,7 +54,7 @@
     <div class="panel">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#administrators"><span class="glyphicon glyphicon-folder-open">
+                <a data-toggle="collapse" data-parent="#accordion" href="#administrators"><span class="glyphicon glyphicon-folder-close">
                     </span>Administrators</a>
             </h4>
         </div>
@@ -70,7 +70,7 @@
     <div class="panel">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#developers"><span class="glyphicon glyphicon-folder-open">
+                <a data-toggle="collapse" data-parent="#accordion" href="#developers"><span class="glyphicon glyphicon-folder-close">
                     </span>Developers</a>
             </h4>
         </div>
@@ -85,7 +85,7 @@
     <div class="panel">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#tutorials"><span class="glyphicon glyphicon-folder-open">
+                <a data-toggle="collapse" data-parent="#accordion" href="#tutorials"><span class="glyphicon glyphicon-folder-close">
                     </span>Tutorials</a>
             </h4>
         </div>
@@ -131,6 +131,20 @@
         tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
         tocUl.toc({content: "#doco-content", headings: "h1,h2,h3,h4"});
         $('#region_1 .widget').scrollTop($(tocUl).offset().top - $('#accordion').offset().top);
+        
+        $('#accordion .panel-title').click(function(event) {
+            if(!$('#accordion .panel-title').find('a').hasClass('collapsed') && !$('#accordion .panel-title').is(this)) {
+                $('#accordion .panel-title').find('span').removeClass('glyphicon-folder-close').addClass('glyphicon-folder-open');
+            } else {
+                $('#accordion .panel-title').find('span').removeClass('glyphicon-folder-open').addClass('glyphicon-folder-close');
+            }
+            if(!$(this).find('a').hasClass('collapsed')) {
+                $(this).find('span').removeClass('glyphicon-folder-open').addClass('glyphicon-folder-close');
+            } else {
+                $(this).find('span').removeClass('glyphicon-folder-close').addClass('glyphicon-folder-open');
+            }
+
+        });
     });
 
 </script>

@@ -98,7 +98,7 @@ class DBA {
 abstract class dba_driver {
 	// legacy behavior
 
-	protected $db;
+	public $db;
 	protected $pdo = array();
 
 	public  $debug = 0;

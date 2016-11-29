@@ -42,6 +42,20 @@ class System {
 	}
 
 
+	static public function get_project_link() {
+		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['project_link'])
+			return \App::$config['system']['project_link'];
+		return 'https://hubzilla.org';
+	}
+
+	static public function get_project_srclink() {
+		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['project_srclink'])
+			return \App::$config['system']['project_srclink'];
+		return 'https://github.org/redmatrix/hubzilla';
+	}
+
+
+
 	static public function get_server_role() {
 		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['server_role'])
 			return \App::$config['system']['server_role'];

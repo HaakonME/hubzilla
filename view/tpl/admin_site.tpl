@@ -49,6 +49,7 @@
 	{{/if}}
 
 	{{include file="field_textarea.tpl" field=$banner}}
+	{{include file="field_textarea.tpl" field=$siteinfo}}
 	{{include file="field_textarea.tpl" field=$admininfo}}
 	{{include file="field_select.tpl" field=$language}}
 	{{include file="field_select.tpl" field=$theme}}

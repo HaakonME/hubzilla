@@ -1,5 +1,10 @@
-#ace-editor { 
+#ace-editor {
 	position: relative;        
+	width: 100%;
+	height: 500px;
+}
+
+#editor {
 	width: 100%;
 	height: 500px;
 }

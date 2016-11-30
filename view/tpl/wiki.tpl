@@ -42,7 +42,11 @@
 		</ul>
 		<div class="tab-content" id="wiki-page-tabs">
 			<div id="edit-pane" class="tab-pane fade">
+				{{if !$mimeType || $mimeType == 'text/markdown'}}
 				<div id="ace-editor"></div>
+				{{else}}
+				<textarea id="editor">{{$content}}</textarea>
+				{{/if}}
 				{{if $showCommitMsg}}
 				{{if $showPageControls}}
 				<div>
@@ -50,7 +54,7 @@
 						<div class="input-group">
 							<input class="widget-input" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
 							<div class="input-group-btn">
-								<button id="save-page" type="button" class="btn btn-primary btn-sm disabled">Save</button>
+								<button id="save-page" type="button" class="btn btn-primary btn-sm{{if !$mimeType || $mimeType == 'text/markdown'}} disabled{{/if}}">Save</button>
 							</div>
 						</div>
 					</div>
@@ -98,7 +102,7 @@
 <script>
 		window.wiki_resource_id = '{{$resource_id}}';
 		window.wiki_page_name = '{{$page}}';
-		window.wiki_page_content = {{$content}};
+		window.wiki_page_content = {{if !$mimeType || $mimeType == 'text/markdown'}}{{$content}}{{else}}`{{$content}}`{{/if}};
 		window.wiki_page_commit = '{{$commit}}';
 
 		if (window.wiki_page_name === 'Home') {
@@ -135,6 +139,7 @@
 			event.preventDefault();
 		});
 
+		{{if !$mimeType || $mimeType == 'text/markdown'}}
 		var editor = ace.edit("ace-editor");
 		editor.setOptions({
 			theme: "ace/theme/github",
@@ -153,12 +158,26 @@
 		{{if !$showPageControls}}
 			editor.setReadOnly(true); // Disable editing if the viewer lacks edit permission
 		{{/if}}
+
+
+		{{else}}
+		window.editor = editor = $('#editor');
+		{{/if}}
+
 		$('#edit-pane-tab').click(function (ev) {
 			setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
 		});
 
 		$('#wiki-get-preview').click(function (ev) {
-			$.post("wiki/{{$channel}}/preview", {content: editor.getValue(), resource_id: window.wiki_resource_id}, function (data) {
+			$.post("wiki/{{$channel}}/preview", {
+				{{if !$mimeType || $mimeType == 'text/markdown'}}
+				content: editor.getValue(),
+				{{else}}
+				content: editor.val(),
+				{{/if}}
+				resource_id: window.wiki_resource_id
+			},
+			function (data) {
 			if (data.success) {
 				$('#wiki-preview').html(data.html);
 				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
@@ -207,7 +226,12 @@
                             ev.preventDefault();
                             return false;
                         }
-                        var currentContent = editor.getValue();
+			{{if !$mimeType || $mimeType == 'text/markdown'}}
+			var currentContent = editor.getValue();
+			{{else}}
+			var currentContent = editor.val();
+			{{/if}}
+
                         if (window.wiki_page_content === currentContent) {
                             window.console.log('No edits to save.');
                             ev.preventDefault();
@@ -224,8 +248,12 @@
                                 window.console.log('Page saved successfully.');
                                 window.wiki_page_content = currentContent;
                                 $('#id_commitMsg').val(''); // Clear the commit message box
+
+				{{if !$mimeType || $mimeType == 'text/markdown'}}
                                 $('#save-page').addClass('disabled');  // Disable the save button
                                 window.editor.getSession().getUndoManager().markClean();  // Reset the undo history for the editor
+				{{/if}}
+
                                 window.editor.focus();  // Return focus to the editor for continued editing
                                 // $('#wiki-get-history').click();
                             } else {
@@ -400,6 +428,7 @@
 						$('#new-wiki-button').hide();
 				{{/if}}
                                 // using input event instead of change since it's called with some timeout
+				{{if !$mimeType || $mimeType == 'text/markdown'}}
                                 window.editor.on("input", function() {
                                     if(window.editor.getSession().getUndoManager().isClean()) {
                                         $('#save-page').addClass('disabled');
@@ -407,6 +436,10 @@
                                         $('#save-page').removeClass('disabled');
                                     }
                                 });
+				{{else}}
+				window.editor.bbco_autocomplete('bbcode');
+				{{/if}}
+
 				
 		});
 </script>

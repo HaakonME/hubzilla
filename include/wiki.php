@@ -303,7 +303,7 @@ function wiki_get_page_content($arr) {
 			}
 		}		
 		// TODO: Check that the files are all text files
-		return array('content' => json_encode($content), 'message' => '', 'success' => true);
+		return array('content' => json_encode($content), 'mimeType' => $w['mimeType'], 'message' => '', 'success' => true);
 	}
 }
 
@@ -523,7 +523,6 @@ function wiki_convert_links($s, $wikiURL) {
  * @return string
  */
 function wiki_generate_toc($s) {
-	
 	if (strpos($s,'[toc]') !== false) {
 		//$toc_md = wiki_toc($s);	// Generate Markdown-formatted list prior to HTML render
 		$toc_md = '<ul id="wiki-toc"></ul>'; // use the available jQuery plugin http://ndabas.github.io/toc/

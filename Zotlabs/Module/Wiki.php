@@ -38,6 +38,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
 		require_once('include/conversation.php');
+		require_once('include/bbcode.php');
 
 		// TODO: Combine the interface configuration into a unified object
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
@@ -209,7 +210,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$content = ($p['content'] !== '' ? $rawContent : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				if($mimeType == 'text/bbcode') {
-					$renderedContent = purify_html(bbcode($content));
+					$renderedContent = bbcode($content);
 				}
 				else {
 					require_once('library/markdown.php');
@@ -287,6 +288,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 	function post() {
 		require_once('include/wiki.php');
+		require_once('include/bbcode.php');
 
 		$nick = argv(1);
 		$owner = channelx_by_nick($nick);
@@ -309,7 +311,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$mimeType = $w['mimeType'];
 
 			if($mimeType == 'text/bbcode') {
-				$html = purify_html(bbcode($content));
+				$html = bbcode($content);
 			}
 			else {
 				require_once('library/markdown.php');

@@ -51,7 +51,7 @@ class System {
 	static public function get_project_srclink() {
 		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['project_srclink'])
 			return \App::$config['system']['project_srclink'];
-		return 'https://github.org/redmatrix/hubzilla';
+		return 'https://github.com/redmatrix/hubzilla';
 	}
 
 

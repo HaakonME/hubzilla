@@ -1,17 +1,332 @@
-<p><strong>Table of Contents</strong></p>
 
-<ul id="about-hubzilla-toc">
-    <li><a href="/help/about/about_hubzilla#project">Project</a></li>
-    <li><a href="/help/about/about_hubzilla#features">Features</a></li>
-    <li><a href="/help/about/about_hubzilla#zot">Zot protocol</a></li>
-</ul>
-
-<hr>
 
 <h1 id="project">Project</h1>
 <p>
     Hubzilla is a decentralized communication network, which aims to provide communication that is censorship-resistant, privacy-respecting, and thus free from the oppressive claws of contemporary corporate communication giants. These giants function primarily as spy networks for paying clients of all sorts and types, in addition to monopolizing and centralizing the Internet; a feature that was not part of the original and revolutionary goals that produced the World Wide Web. <br><br>Hubzilla is free and open source.&nbsp;&nbsp;It is designed to scale from a $35 Raspberry Pi, to top of the line AMD and Intel Xeon-powered multi-core enterprise servers.&nbsp;&nbsp;It can be used to support communication between a few individuals, or scale to many thousands and more.<br><br>Hubzilla aims to be skill and resource agnostic. It is easy to use by everyday computer users, as well as by systems administrators and developers. <br><br>How you use it depends on how you want to use it. <br><br>It is written in the PHP scripting language, thus making it trivial to install on any hosting platform in use today. This includes self-hosting at home, at hosting providers such as <a href="http://mediatemple.com/">Media Temple</a> and <a href="http://www.dreamhost.com/">Dreamhost</a>, or on virtual and dedicated servers, offered by the likes of <a href="https://www.linode.com">Linode</a>,&nbsp;&nbsp;<a href="http://greenqloud.com">GreenQloud</a> or <a href="https://aws.amazon.com">Amazon AWS</a>.<br><br>In other words, Hubzilla can run on any computing platform that comes with a web server, a MySQL-compatible database, and the PHP scripting language. <br><br>Along the way, Hubzilla offers a number of unique goodies: <br><br><strong>Single-click user identification:</strong> meaning you can access sites on Hubzilla simply by clicking on links to remote sites. Authentication just happens automagically behind the scenes. Forget about remembering multiple user names with multiple passwords when accessing different sites online.<br><br><strong>Cloning:</strong> of online identities. Your online presence no longer has to be tied to a single server, domain name or IP address.&nbsp;&nbsp;You can clone and import your identity (or channel as we call it) to another server (or, a hub as servers are known in Hubzilla).&nbsp;&nbsp;Now, should your primary hub go down, no worries, your contacts, posts<em>*</em>, and messages<em>*</em> will automagically continue to be available and accessible under your cloned channel. <em>(*: only posts and messages as from the moment you cloned your channel)</em><br><br><strong>Privacy:</strong> Hubzilla identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.&nbsp;&nbsp;The user is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.&nbsp;&nbsp;No questions, no fuss.
 </p>
+
+<h2 id="project-history">History</h2>
+
+
+<p>Hubzilla is a community developed open source project based on work introduced in Friendica by the Friendica
+community and which previously was named Redmatrix. The core design, the project mission, and software base itself were
+created/written primarily by Mike Macgirvin and represent the culmination of over a decade of software design using
+variations of this platform and an evolving vision of the role of communication software in our lives. Many others have
+contributed to this work, both conceptually and in terms of actual code (far too many to list individually).</p>
+
+<h3>Mike Macgirvin -- Biography</h3>
+
+<p>Mike Macgirvin is an American software engineer now living in Australia. He spent his early adult years designing and
+repairing semiconductor fabrication equipment for a number of companies as a self-described "machine wizard". In 1985 he
+became a research engineer at Stanford University for the Gravity Probe-B space mission and soon became a Unix systems
+administrator writing communication software and utilities; and becoming an expert in emerging internet technologies
+such as the now ubiquitous "World Wide Web". He authored an email "client" called "ML" which pioneered some advanced
+concepts in encryption, the ability to filter message streams into different "views", and multi-protocol support; and
+was an active proponent of and participant in the open source software <em>movement</em>. In 1996 he went to Netscape
+Communications to become tech lead on their Messaging Server and integrate this with Collabra (groupware) into a
+comprehensive communications server package. He stayed on after Netscape was acquired by America Online and was tech
+manager of the Groups@AOL project until 2001.</p>
+
+<p>During a layoff round, Mike was let go from America Online in August 2001 and purchased a music store in Mountain
+View, California later to be known as "Sonica Music Company". Opening a retail store for non-essential goods at the
+beginning of a prolonged economic downturn was in retrospect probably not the wisest career move. Sonica eventually
+folded; in late 2006. Mike returned to working on software and systems support full-time and was employed briefly at
+Symantec before moving to Australia in early 2007. He currently lives on a farm "out in the middle of nowhere" and is
+employed as a Computer Systems Officer at the University of Wollongong.</p>
+
+<h3>Hubzilla - The Early Years</h3>
+
+<p>The software which went into creating Hubzilla has been through several distinct historical phases. It began in 2003
+when Mike Macgirvin was looking for a content management system to power the website for his music store and found the
+available solutions to be lacking in various respects. The project was born as the "PurpleHaze weblog" under the nom de
+plume "Nerdware Communications". It was a multi-user PHP/MySQL CMS which provided blogs, forums, photo albums, events
+and more. Initially it provided the basis for a social community and shopping for customers of the store, but was also
+linked to Mike's personal weblog running on another domain. The distinguishing characteristic of this software was the
+ability for so-called "normal users" to re-assemble the components and choose different content feeds - and in essence
+create their own personal "multi-user CMS" as a view. Their custom view was able to communicate with anybody else that
+used the system, but could be partitioned so that adult sites and motorcycle enthusiast sites would not be visible to
+each other and not clash (or in this case Mike's personal website and the music store website). This software was
+developed primarily from 2003 until 2008.</p>
+
+<p>In 2006 this software was used as the prototype for Symantec's "safeweb" reputation and community site. It was
+developed and enhanced until about 2008. A rewrite took place in 2008 named "Reflection" but work stagnated as the
+community dwindled. The need for content management systems and communications software dropped dramatically during this
+time as humans flocked to the new social aggregrators - Facebook and Twitter.</p>
+
+<h3>Mistpark/Friendica</h3>
+
+<p>In early 2010, Mike left Facebook, concerned at the company's increasing hold and control of personal information. In
+his words "Companies die. We watched it happen in the dot-com years. When they do, their databases are sold to the
+highest bidder.". Mike used some remnants of the old CMS project to create a decentralised social communications
+platform. This was launched in July 2010 as "Mistpark". The name was chosen as a tribute to his new home in the Southern
+Highlands of Australia. The key innovation in this project was the ability to authenticate remotely and invisibly to
+other decentralised instances of the software so to allow remote viewing of private photos and provide "wall-to-wall"
+posting across website instances. The lack of simple remote identity <em>provenance</em> was a serious limitation of
+other decentralised communication protocols.</p>
+
+<p>In late 2010, the name was changed to "Friendika". The name Friendika had some symbolic issues, since the suffix was
+common with "swastika" and "Amerika", both having negative connotations, however the dot-com domain was available.
+Friendica was in fact the first choice but the 'friendica.com' domain name was already registered. It became available a
+year later and the project was renamed to Friendica in late 2011.</p>
+
+<p>Soon after version 1 was released in July 2010 - providing basic social communications, the software also took on a
+new role - cross-service federation; which was first introduced in August and September 2010. Federation allowed the
+software to "behave as" a StatusNet site and friends and messages could communicate to the other service from their own
+platforms. It was also hoped to provide federation with Diaspora - a project with similar scope being developed in
+secret in New York and first released in November of that year. Over the course of the next year, the federation ability
+was extended to provide integrated communications from RSS feeds, to and from email, StatusNet, Facebook, Twitter, and
+the emerging Diaspora project. The software provided a single "view" of your entire social space no matter what provider
+you or your friends used. StatusNet and Diaspora were supported natively so that one account could access any of these
+services. Facebook and Twitter used "API federation" which required the person to have an account on those services with
+which to link.</p>
+
+<p>By July 2012, Twitter and Facebook had both changed their terms of service and essentially outlawed "API federation"
+in the way Friendica was using it. Diaspora announced they were changing their protocol and would not maintain
+compatibility nor provide any warning when compatibility would break (or documentation on the proposed changes). The
+creator of StatusNet was also leaving his project to create something new (pump.io). As the software's primary purpose
+by this time was "federation of different social services into one interface", this created a bit of a crisis. The
+federated social web was crumbling. Also of concern was that independent and decentralised social websites shut down
+frequently, requiring all their members to start over again on another site. Often the effort involved to do this seemed
+daunting - and many people ran back to the relative safety of the large corporate providers - Facebook, Twitter, and now
+Google+.</p>
+
+<p>Mike realised he did not want to be held hostage to the decisions that other projects and companies and independent
+websites make. Friendica could operate on its own without attaching to these other networks, but its vision and
+implementation of a federated social world depended on federation with others for its project identity - so this created
+an identity crisis.</p>
+
+<p>Mike had been working on this project for some time and there were a number of things which needed re-writing,
+including the base communication protocol which Friendica used (DFRN or the "Distributed Friends and Relations Network"
+protocol). These ideas were starting to emerge as a different method of communication he called "zot". Zot began as a
+way to create a common language for federated websites, but there was no interest in this ability and as mentioned, the
+federated web was crumbling. The first version was soon scrapped and zot was re-designed and re-ignited as a streamlined
+communication protocol which was location-independent; e.g. not tied to any website. This would allow people to carry on
+unaffected if their website operator shut down temporarily or permanently. They wouldn't have to make friends all over
+again, and permissions of everything on the system wouldn't have to be changed to allow bob@site1 to see something that
+was private to him, even though he was now bob@site2. This was a serious problem with decentralisation. People moved and
+their online identities were lost and had to be re-created from scratch and existing relationships destroyed and had to
+be created all over again.</p>
+
+<h3>Redmatrix</h3>
+
+<p>In July 2012, Mike left the Friendica project and began development of "zot" and a new base project called "red" in
+his somewhat elusive <em>spare time</em>. Red is Spanish for "network". It wasn't really a "social network" and
+especially not a "federated social network". It was just Red (technically "la red"), or "the network". Work began by
+removing all the "federation" components and going back to basics - communication and remote authentication. It was a
+major re-write and took roughly six months before even basic communication was re-established. It was also no longer
+compatible with Friendica - which had been given to the "Friendica community" and by this time (December 2012) was
+developing separately on its own track.</p>
+
+<p>It became clear during this time that the single most compelling feature of the project wasn't the social network at
+all, but the authentication layer and decentralised access control mechanisms. Combined with zot's location independence
+it created a new model for software which had never existed previously - decentralised identity-aware web publishing and
+single sign-on to any compatible provider across the web. These weren't <em>evolutionary</em>, they were
+<strong>revolutionary</strong>. One of the biggest flaws of the modern web is the reliance on different passwords for
+every service you use, or reliance on a single provider if you were to tie them to - say your Facebook login. Facebook
+can remove your account at any time. Gone. If you rely on their authentication for all your websites, your entire online
+identity - now gone. This is also what was missing from Friendica - a compelling software feature which could stand on
+its own, without requiring a social network and especially without requiring a federated social network with all the
+mentioned external dependencies.</p>
+
+<p>An early visitor to the project noted that he had some difficulty finding the project on Google because of the choice
+of name - "red". Yes, this was a poor decision in retrospect. We were buried on page 23,712 of the search results. The
+concept that was emerging around this identity-aware publishing was that of "a matrix of inter-connected thought
+streams", since we didn't have a concept of "people" and "friends". All were just connected "channels" with different
+ways to connect. So "Redmatrix" was chosen to give it a searchable name. It had nothing to do with the Matrix film and
+red and blue pills, though that is frequently cited (erronously); and in fact isn't a bad analogy.</p>
+
+<p>The concept of identity-aware content was alien to anything that existed previously on the web, so to make it useful
+we had to provide the ability to use it for content. It needed content publishing tools. This brought back concepts from
+the old "Content Management System" on which the software was originally based. To get it up and running quickly we
+created a markup language for webpages called "Comanche" which let you describe a page in high-level terms based on
+bbcode tags. We also added WebDAV so you could put decentralised access control on files and drag/drop from your
+operating system. So now you could have private photos, webpages, files, events, conversations, chatrooms - and they are
+visible to those you choose - no matter what site they use. All they need is zot. And your viewers could move to another
+site or just pop up at a different site any time they want and we don't care. And it <strong>also</strong> had a
+built-in social network; with lots of additional privacy and encryption features which were added even before the
+Snowden revelations gave them added urgency.</p>
+
+<p>Over time a few federation components re-emerged. The ability to view RSS feeds was important to many people.
+Diaspora never really managed to re-write their protocol, so that was re-implemented and allowed Redmatrix to connect
+with Diaspora and Friendica again (Friendica still had their Diaspora protocol intact, so this was the most common
+language now remaining on the free web - despite its faults). Diaspora communications aren't able to make use of the
+advanced identity features, but they work for basic communications.</p>
+
+<h3>Hubzilla</h3>
+
+<p>The Redmatrix project reached a point of stagnation in early 2015 as network growth leveled and active interest in
+the project declined. Mike met with several external high tech developers and innovators in a round of discussions that
+were called "Zotopia" in early 2015 to perform an independent review of the project and try to identify what had gone
+wrong and plan a route forward. The basic consensus is that the project suffered from bad marketing decisions which were
+compounded by mixed messages about the project goals and target audience. A "rival" project (Diaspora) was marketing
+itself as a Facebook competitor, but after some long discussions it was determined that Redmatrix wasn't a Facebook
+competitor at all, and too much emphasis was being placed on the "social network" and "anti-Facebook" features. It was a
+novel decentralisation platform with distributed identity and permissions, and as was pointed out, the "end user" was
+the wrong target market. These marketing mistakes were now identified with the project name and random sampling of
+various "customers" showed that none of them really had a clue about the software goals or target market segment. The
+mixed messages were associated with the brand identity and this was a problem.</p>
+
+<p>The Redmatrix community held a vote and the project was renamed "Hubzilla", with a renewed identity and focus - to
+provide software for creating and ultimately linking together unrelated community websites or "hubs" into a global
+community. This is in fact what we were building all along, but didn't fully recognise it. The target audience for this
+software as it turns out is not the members or end users, but software integrators and digital community architects and
+builders. These in turn will be responsible for marketing their own product (their respective online communities) to
+end-users or members. The software solves a real world need of linking isolated and "walled garden" community sites
+together into a larger cooperative. The transition from Redmatrix to Hubzilla was complex and has taken several months
+as we consolidated the marketing and media assets to deliver a consistent message. It is still ongoing at this time, and
+should be completed in Q4 2015.</p>
+
+<p>Mike stepped down as active coordinator for the project in early 2015 and turned management over to the community. He
+remains active as a Hubzilla developer.</p>
+
+<h3>And Then...</h3>
+
+<p>In 2016, the project was re-architected to support multiple server "roles". These correspond to sub-projects which
+can be isolated from each other in terms of supported feature sets, but all use and support the same code-base and
+developers are able to work together on common features and goals. The roles primarily differ in target audience,
+project <a href="help/project/governance">governance</a> and decision making structures, and this results in slightly
+different features and idealogy. They all share a common code repository.</p>
+
+<p>Those roles are:</p>
+
+<h4>Basic</h4>
+
+<p>Entry level server. Supported by and governed by the Hubzilla community. Most advanced or complex features have been
+stripped away to ease federation with external services. It is best suited as a FOSS social network tool.</p>
+
+<h4>Standard</h4>
+
+<p>The standard Hubzilla server. This provides a wide range of useful features and is supported by and governed by the
+Hubzilla community. It is best suited as an open source community and cloud server.</p>
+
+<h4>Pro</h4>
+
+<p>This is a specially crafted server with a unique feature set. It is supported by and governed by Mike Macgirvin dba
+"Zotlabs". Federation with external services has been stripped away in order to support a wide range of more technically
+advanced and complex features; and also includes features and modes which may not have the support or backing of the
+Hubzilla open source community. It is best suited for business and workplace applications.</p>
+
+
+
+<h2 id="project-governance">Governance</h2>
+
+<p>Governance relates to the management of a project and particularly how this relates to conflict
+resolution.</p><p>This project uses a dual-governance model.</p><p>The project as a whole and the repository were
+created initially by Mike Macgirvin; who controls the project copyright, and the project license, and manages the
+project as a Self Appointed Benevolent Dictator for Life. He holds veto power over any project proposal or decision and
+his word is final.</p><p>That said, Mike has no interest in running the day to day activities of the project and
+influencing its direction, other than to protect his own work from sabotage. </p><p>The internal project structure
+contains multiple "configurations" known as 'basic', 'standard', and 'pro'. Mike's veto power extends to any proposal or
+decision which he feels might adversely affect the 'pro' configuration.</p><p>The 'basic and 'standard' configurations
+are controlled completely by the community. If the proposal or decision is crafted in such a way that its effects are
+limited to these configurations, Mike will consider relinquishing his power of veto and convert it to a normal community
+vote.</p><p>Mario Vavti has done an incredible amount of work on the usability and theming of the project and holds
+veto power over any proposal or decision which might impact usability and "look and feel"; and his decision is also
+final. </p><p>Mario's veto power is likewise restricted to anything using the standard project 'theme'. If a new theme
+is created and an otherwise vetoed decision is implemented entirely in this different theme and has no impact on the
+standard project theme, his veto <strong>may</strong> also be turned into a normal community vote.</p><p>This ability
+to work around a veto is at the discretion of Mike and Mario. They <strong>may</strong> choose to relinquish their veto
+if the scope of the work is limited as described above, and in most circumstances they will leave the decision to the
+community. They are not obligated to do so. </p><p><h3>Community Governance</h3></p><p>Beyond those two special cases,
+the project is maintained and decisions made by the 'community'. The governance structure is still evolving. Until the
+structure is finalised, decisions are made in the following order:</p><p><ul class="listdecimal"
+style="list-style-type: decimal;"><br><li> Lazy Consensus</p><p>If a project proposal is made to one of the community
+governance forums and there are no serious objections in a "reasonable" amount of time from date of proposal (we usually
+provide 2-3 days for all interested parties to weigh in), no vote needs to be taken and the proposal will be considered
+approved. Some concerns may be raised at this time, but if these are addressed during discussion and work-arounds
+provided, it will still be considered approved. </p><p></li><li> Veto</p><p>If a proposal is vetoed, it is not
+necessarily the final word. See above on how to convert a veto into a normal community vote. This can be done by framing
+the proposal so that it does not impact the 'pro' configuration or the standard theme.</p><p></li><li> Community
+Vote</p><p>A decision which does not have a clear mandate or clear consensus, but is not vetoed, can be taken to a
+community vote. At present this is a simple popular vote in one of the applicable community forums.&nbsp;&nbsp;At this
+time, popular vote decides the outcome. This may change in the future if the community adopts a 'council' governance
+model. This document will be updated at that time with the updated governance rules. <br></li></ul></p><p>Community
+Voting does not always provide a pleasant outcome and can generate polarised factions in the community (hence the reason
+why other models are under consideration). If the proposal is 'down voted' there are still several things which can be
+done and the proposal re-submitted with slightly different parameters (convert to an addon, convert to an optional
+feature which is disabled by default, etc.). If interest in the feature is high and the vote is "close", it can generate
+lots of bad feelings amongst the losing voters. On such close votes, it is <strong>strongly recommended</strong> that
+the proposer take steps to address any concerns that were raised and re-submit.</p>
+	
+
+
+<h2 id="project-privacy-policy">Privacy Policy</h2>
+
+<h3>Summary</h3>
+
+<p>Q: Who can see my content?</p>
+
+<p>A: By default ANYBODY on the internet, UNLESS you restrict it. Hubzilla allows you to choose the privacy level you desire. Restricted content will NOT be visible to "spy networks" and advertisers. It will be protected against eavesdropping by outsiders - to the best of our ability. Hub administrators with sufficient skills and patience MAY be able to eavesdrop on some private communications but they must expend effort to do so. Privacy modes exist within Hubzilla which are even resistant to eavesdropping by skilled and determined hub administrators.</p>
+
+<p>Q: Can my content be censored?</p>
+
+<p>A: Hubzilla (the network) CANNOT censor your content. Server and hub administrators are subject to local laws and MAY remove objectionable content from their site/hub. Anybody MAY become a hub administrator, including you; and therefore publish content which might otherwise be censored. You still MAY be subject to local laws.</p>
+
+<h3>Definitions</h3>
+
+<p><strong>Hubzilla</strong></p>
+
+<p>Otherwise referred to as "the network", Hubzilla is a collection of individual computers/servers (aka <strong>hubs</strong>) which connect together to form a larger cooperative network.</p>
+
+<p><strong>hub</strong></p>
+
+<p>An individual computer or server connected to Hubzilla. These are provided by a <strong>hub administrator</strong> and may be public or private, paid or free.</p>
+
+<p><strong>hub administrator</strong></p>
+
+<p>The system operator of an individual hub.</p>
+
+<h3>Policies</h3>
+
+<p><strong>Public Information</strong></p>
+
+<p>Any information or anything posted by you within Hubzilla MAY be public or visible to anybody on the internet. To the extent possible, Hubzilla allows you to protect content and restrict who can view it.</p>
+
+<p>Your profile photo, your channel name, and the location (URL or network address) of your channel are visible to anybody on the internet and privacy controls will not affect the display of these items.</p>
+
+<p>You MAY additionally provide other profile information. Any information which you provide in your "default" or <strong>public profile</strong> MAY be transmitted to other hubs in Hubzilla and additionally MAY be displayed in the channel directory. You can restrict the viewing of this profile information. It may be restricted only to members of your hub, or only connections (friends), or other limited sets of viewers as you desire. If you wish for your profile to be restricted, you must set the appropriate privacy setting, or simply DO NOT provide additional information.</p>
+
+<p><strong>Content</strong></p>
+
+<p>Content you provide (status posts, photos, files, etc.) belongs to you. Hubzilla default is to publish content openly and visible to anybody on the internet (PUBLIC). You MAY control this in your channel settings and restrict the default permissions or you MAY restrict the visibility of any single published item separately (PRIVATE). Hubzilla developers will ensure that restricted content is ONLY visible to those in the restriction list - to the best of their ability.</p>
+
+<p>Content (especially status posts) that you share with other networks or that you have made visible to anybody on the internet (PUBLIC) cannot easily be taken back once it has been published. It MAY be shared with other networks and made available through RSS/Atom feeds. It may also be syndicated on other Hubzilla sites. It MAY appear on other networks and websites and be visible in internet searches. If you do not wish this default behaviour please adjust your channel settings and restrict who can see your content.</p>
+
+<p><strong>Comments and Forum posts</strong></p>
+
+<p>Comments to posts that were created by others and posts which are designated as forum posts belong to you as the creator/author, but the distribution of these posts is not under your direct control, and you relinquish SOME rights to these items. These posts/comments MAY be re-distributed to others, and MAY be visible to anybody on the internet. In the case of comments, the creator of the "first message" in the thread (conversation) to which you are replying controls the distribution of all comments and replies to that message. They "own" and therefore have certain rights with regard to the entire conversation (including all comments contained within it). You can still edit or delete the comment, but the conversation owner also has rights to edit, delete, re-distribute, and backup/restore any or all the content from the conversation.</p>
+
+<p><strong>Private Information</strong></p>
+
+<p>Hubzilla developers will ensure that any content you provide which is designated as PRIVATE will be protected against eavesdropping - to the best of their ability. Private channel content CAN be seen in the database of every involved hub administrator, but private messages are obscured in the database. The latter means that it is very difficult, but NOT impossible for this content to be seen by a hub administrator. Private channel content and private messages are also stripped from email notifications. End to end encryption is provided as an optional feature and this CANNOT be seen, even by a determined administrator.</p>
+
+<h3>Identity Privacy</h3>
+
+<p>Privacy for your identity is another aspect. Because you have a decentralized identity in Hubzilla, your privacy extends beyond your home hub. If you want to have complete control of your privacy and security you should run your own hub on a dedicated server. For many people, this is complicated and may stretch their technical abilities. So let's list a few precautions you can make to assure your privacy as much as possible.</p>
+
+<p>A decentralized identity has a lot of advantages and gives you al lot of interesting features, but you should be aware of the fact that your identity is known by other hubs in Hubzilla network. One of those advantages is that other channels can serve you customized content and allow you to see private things (such as private photos which others wish to share with you). Because of this those channels need to know who you are. But we understand that sometimes those other channels know more from you than you might desire. For instance the plug-in Visage that can tell a channel owner the last time you visit their profile. You can easily OPT-OUT of this low level and we think, harmless tracking.</p>
+
+<ul>
+<li>You can enable <a href="http://donottrack.us/">Do Not Track (DNT)</a> in your web browser. We respect this new privacy policy proposal. All modern browsers support DNT. You will find it in the privacy settings of your browsers or else you can consult the web browser's manual. This will not affect the functionality of Hubzilla. This setting is probably enough for most people.</li>
+</ul>
+
+<p>*You can <a href="settings">disable publication</a> of your channel in our channel directory. If you want people to find your channel, you should give your channel address directly to them. We think this is a good indication that you prefer extra privacy and automatically enable "Do Not Track" if this is the case.</p>
+
+<ul>
+<li>You can have a blocked hub. That means that all channels and content on that hub is not public, and not visible to the outside world. This is something only your hub administrator can do. We also respect this and automatically enable "Do Not Track" if it is set.</li>
+</ul>
+
+<h3>Censorship</h3>
+
+<p>Hubzilla is a global network which is inclusive of all religions and cultures. This does not imply that every member of the network feels the same way you do on contentious issues, and some people may be STRONGLY opposed to the content you post. In general, if you wish to post something that you know may nor be universally acceptable, the best approach is to restrict the audience using privacy controls to a small circle of friends.</p>
+
+<p>Hubzilla as a network provider is unable to censor content. However, hub administrators MAY censor any content which appears on their hub to comply with local laws or even personal judgement. Their decision is final. If you have issues with any hub administrator, you may move your account and postings to another site which is more in line with your expectations. Please check (periodically) the <a href="help/TermsOfService">Terms of Service</a> of your hub to learn about any rules or guidelines. If your content consists of material which is illegal or may cause issues, you are STRONGLY encouraged to host your own (become a hub administrator). You may still find that your content is blocked on some hubs, but Hubzilla as a network cannot block it from being posted.</p>
+
+<p>Hubzilla RECOMMENDS that hub administrators provide a grace period of 1-2 days between warning an account holder of content that needs to be removed and physically removing or disabling the account. This will give the content owner an opportunity to export their channel meta-data and import it to another site. In rare cases the content may be of such a nature to justify the immediate termination of the account. This is a hub decision, not a Hubzilla decision.</p>
+
+<p>If you typically and regularly post content of an adult or offensive nature, you are STRONGLY encouraged to mark your account "NSFW" (Not Safe For Work). This will prevent the display of your profile photo in the directory except to viewers that have chosen to disable "safe mode". If your profile photo is found by directory administrators to be adult or offensive, the directory administrator MAY flag your profile photo as NSFW. There is currently no official mechanism to contest or reverse this decision, which is why you SHOULD mark your own account NSFW if it is likely to be inappropriate for general audiences.</p>
+
+	
 
 <h1 id="features">Features</h1>
 <p>

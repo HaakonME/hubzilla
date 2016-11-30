@@ -20,7 +20,7 @@
 
 <h2>{{$prj_header}}</h2>
 
-<div>{{$prj_name}}</div>
+<div>{{$prj_name}} ({{$z_server_role}})</div>
 
 {{if $prj_version}}
 <div>{{$prj_version}}</div>

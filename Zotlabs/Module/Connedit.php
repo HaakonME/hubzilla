@@ -398,6 +398,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			return login();
 		}
 	
+		$section = ((array_key_exists('section',$_REQUEST)) ? $_REQUEST['section'] : '');
 		$channel = \App::get_channel();
 		$my_perms = get_channel_default_perms(local_channel());
 		$role = get_pconfig(local_channel(),'system','permissions_role');
@@ -779,6 +780,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
 				'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), t('Connection requests will be approved without your interaction'), $yes_no),
 				'$addr'           => $contact['xchan_addr'],
+				'$section'        => $section,
 				'$addr_text'      => t('This connection\'s primary address is'),
 				'$loc_text'       => t('Available locations:'),
 				'$locstr'         => $locstr,

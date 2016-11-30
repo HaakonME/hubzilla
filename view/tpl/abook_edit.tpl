@@ -21,10 +21,10 @@
 			{{if $abook_prev || $abook_next}}
 			<div class="btn-group">
 				{{if $abook_prev}}
-				<a href="connedit/{{$abook_prev}}" class="btn btn-default btn-xs" ><i class="fa fa-backward"></i></a>
+				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs" ><i class="fa fa-backward"></i></a>
 				{{/if}}
 				{{if $abook_next}}
-				<a href="connedit/{{$abook_next}}" class="btn btn-default btn-xs" ><i class="fa fa-forward"></i></a>
+				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs" ><i class="fa fa-forward"></i></a>
 				{{/if}}
 			</div>
 			{{/if}}
@@ -63,6 +63,7 @@
 		<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
 
 		<input type="hidden" name="contact_id" value="{{$contact_id}}">
+		<input type="hidden" name="section" value="{{$section}}">
 
 		<div class="panel-group" id="contact-edit-tools" role="tablist" aria-multiselectable="true">
 			{{if $notself}}
@@ -96,7 +97,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if !$is_pending}} in{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
+				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if !$is_pending || $section == 'affinity'}} in{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
 					<div class="section-content-tools-wrapper">
 						{{if $slide}}
 						<div class="form-group"><strong>{{$lbl_slider}}</strong></div>
@@ -127,7 +128,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if !$is_pending && !($slide || $multiprofs)}} in{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
+				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if ( !$is_pending && !($slide || $multiprofs)) || $section == 'filter' }} in{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
 					<div class="section-content-tools-wrapper">
 						{{include file="field_textarea.tpl" field=$incl}}
 						{{include file="field_textarea.tpl" field=$excl}}
@@ -181,7 +182,7 @@
 					</h3>
 				</div>
 				{{/if}}
-				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self}} in{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
+				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self || $section === 'perms'}} in{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
 					<div class="section-content-tools-wrapper">
 						<div class="section-content-warning-wrapper">
 						{{if $notself}}{{$permnote}}{{/if}}

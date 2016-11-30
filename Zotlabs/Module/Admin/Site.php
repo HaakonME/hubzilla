@@ -22,6 +22,7 @@ class Site {
 		$banner				=	((x($_POST,'banner'))			? trim($_POST['banner'])				: false);
 
 		$admininfo			=	((x($_POST,'admininfo'))		? trim($_POST['admininfo'])				: false);
+		$siteinfo			=	((x($_POST,'siteinfo'))		    ? trim($_POST['siteinfo'])				: '');
 		$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 		$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 		$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
@@ -97,6 +98,7 @@ class Site {
 			linkify_tags($a, $admininfo, local_channel());
 			set_config('system', 'admininfo', $admininfo);
 		}
+		set_config('system','siteinfo',$siteinfo);
 		set_config('system', 'language', $language);
 		set_config('system', 'theme', $theme);
 		if ( $theme_mobile === '---' ) {
@@ -273,6 +275,7 @@ class Site {
 
 			'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 			'$admininfo'		=> array('admininfo', t("Administrator Information"), $admininfo, t("Contact information for site administrators.  Displayed on siteinfo page.  BBCode can be used here")),
+			'$siteinfo'		=> array('siteinfo', t('Site Information'), get_config('system','siteinfo'), t("Publicly visible description of this site.  Displayed on siteinfo page.  BBCode can be used here")),
 			'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 			'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 			'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),

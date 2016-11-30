@@ -48,9 +48,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 	}
 
-	static public function xchan_name_sort($a,$b) {
-		return strcasecmp($a['xchan_name'],$b['xchan_name']);
-	}
 	
 	/* @brief Evaluate posted values and set changes
 	 *
@@ -401,6 +398,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			return login();
 		}
 	
+		$section = ((array_key_exists('section',$_REQUEST)) ? $_REQUEST['section'] : '');
 		$channel = \App::get_channel();
 		$my_perms = get_channel_default_perms(local_channel());
 		$role = get_pconfig(local_channel(),'system','permissions_role');
@@ -557,12 +555,11 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$contact_id = \App::$poi['abook_id'];
 			$contact = \App::$poi;
 
-			$cn = q("SELECT abook_id, xchan_name from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_self = 0",
+			$cn = q("SELECT abook_id, xchan_name from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_self = 0 order by xchan_name",
 				intval(local_channel())
 			);
-			if($cn) {
-				usort($cn, '\\Zotlabs\\Module\\Connedit::xchan_name_sort');
 
+			if($cn) {
 				$pntotal = count($cn);
 
 				for($x = 0; $x < $pntotal; $x ++) {
@@ -783,6 +780,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
 				'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), t('Connection requests will be approved without your interaction'), $yes_no),
 				'$addr'           => $contact['xchan_addr'],
+				'$section'        => $section,
 				'$addr_text'      => t('This connection\'s primary address is'),
 				'$loc_text'       => t('Available locations:'),
 				'$locstr'         => $locstr,

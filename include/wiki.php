@@ -19,6 +19,7 @@ function wiki_list($channel, $observer_hash) {
 			$w['htmlName'] = get_iconfig($w, 'wiki', 'htmlName');
 			$w['urlName'] = get_iconfig($w, 'wiki', 'urlName');
 			$w['path'] = get_iconfig($w, 'wiki', 'path');
+			$w['path'] = get_iconfig($w, 'wiki', 'mimeType');
 		}
 	}
 	// TODO: query db for wikis the observer can access. Return with two lists, for read and write access
@@ -44,7 +45,7 @@ function wiki_page_list($resource_id) {
 		// TODO: Check that the files are all text files
 		$i = 1;
 		foreach($files as $file) {
-			// strip the .md file extension and unwrap URL encoding to leave HTML encoded name
+			// strip the file extension and unwrap URL encoding to leave HTML encoded name
 			$title = substr($file, 0, -3);
 			if(urldecode($title) !== 'Home') {
 				$pages[] = [
@@ -91,7 +92,7 @@ function wiki_create_wiki($channel, $observer_hash, $wiki, $acl) {
 		$resource_id = random_string();
 		$r = q("SELECT mid FROM item WHERE resource_id = '%s' AND resource_type = '%s' AND uid = %d LIMIT 1", 
 			dbesc($resource_id), 
-			dbesc(WIKI_ITEM_RESOURCE_TYPE), 
+			dbesc(WIKI_ITEM_RESOURCE_TYPE),
 			intval($channel['channel_id'])
 		);
 		if (count($r))
@@ -139,6 +140,9 @@ function wiki_create_wiki($channel, $observer_hash, $wiki, $acl) {
 	if (!set_iconfig($arr, 'wiki', 'urlName', $wiki['urlName'], true)) {
 		return array('item' => null, 'success' => false);
 	}
+	if (!set_iconfig($arr, 'wiki', 'mimeType', $wiki['mimeType'], true)) {
+		return array('item' => null, 'success' => false);
+	}
 	$post = item_store($arr);
 	$item_id = $post['item_id'];
 
@@ -168,8 +172,8 @@ function wiki_delete_wiki($resource_id) {
 
 function wiki_get_wiki($resource_id) {
 	$item = q("SELECT * FROM item WHERE resource_type = '%s' AND resource_id = '%s' AND item_deleted = 0 limit 1", 
-						dbesc(WIKI_ITEM_RESOURCE_TYPE), 
-						dbesc($resource_id)
+		dbesc(WIKI_ITEM_RESOURCE_TYPE),
+		dbesc($resource_id)
 	);
 	if (!$item) {
 		return array('wiki' => null, 'path' => null);
@@ -179,17 +183,21 @@ function wiki_get_wiki($resource_id) {
 		$rawName = get_iconfig($w, 'wiki', 'rawName');
 		$htmlName = get_iconfig($w, 'wiki', 'htmlName');
 		$urlName = get_iconfig($w, 'wiki', 'urlName');
+		$mimeType = get_iconfig($w, 'wiki', 'mimeType');
+
 		$path = get_iconfig($w, 'wiki', 'path');
 		if (!realpath(__DIR__ . '/../' . $path)) {
 			return array('wiki' => null, 'path' => null);
 		}
 		// Path to wiki exists
 		$abs_path = realpath(__DIR__ . '/../' . $path);
-		return array( 'wiki' => $w, 
-									'path' => $abs_path, 
-									'rawName' => $rawName, 
-									'htmlName' => $htmlName, 
-									'urlName' => $urlName
+		return array(
+			'wiki' => $w,
+			'path' => $abs_path,
+			'rawName' => $rawName,
+			'htmlName' => $htmlName,
+			'urlName' => $urlName,
+			'mimeType' => $mimeType
 		);
 	}
 }
@@ -236,7 +244,8 @@ function wiki_create_page($name, $resource_id) {
 	if (!$w['path']) {
 		return array('page' => null, 'wiki' => null, 'message' => 'Wiki not found.', 'success' => false);
 	}
-	$page = array('rawName' => $name, 'htmlName' => escape_tags($name), 'urlName' => urlencode(escape_tags($name)), 'fileName' => urlencode(escape_tags($name)).'.md');
+
+	$page = array('rawName' => $name, 'htmlName' => escape_tags($name), 'urlName' => urlencode(escape_tags($name)), 'fileName' => urlencode(escape_tags($name)) . wiki_get_mimetype($w));
 	$page_path = $w['path'] . '/' . $page['fileName'];
 	if (is_file($page_path)) {
 		return array('page' => null, 'wiki' => null, 'message' => 'Page already exists.', 'success' => false);
@@ -258,11 +267,11 @@ function wiki_rename_page($arr) {
 	if (!$w['path']) {
 		return array('message' => 'Wiki not found.', 'success' => false);
 	}
-	$page_path_old = $w['path'].'/'.$pageUrlName.'.md';
+	$page_path_old = $w['path'] . '/' . $pageUrlName . wiki_get_mimetype($w);
 	if (!is_readable($page_path_old) === true) {
 		return array('message' => 'Cannot read wiki page: ' . $page_path_old, 'success' => false);
 	}
-	$page = array('rawName' => $pageNewName, 'htmlName' => escape_tags($pageNewName), 'urlName' => urlencode(escape_tags($pageNewName)), 'fileName' => urlencode(escape_tags($pageNewName)).'.md');
+	$page = array('rawName' => $pageNewName, 'htmlName' => escape_tags($pageNewName), 'urlName' => urlencode(escape_tags($pageNewName)), 'fileName' => urlencode(escape_tags($pageNewName)) . wiki_get_mimetype($w));
 	$page_path_new = $w['path'] . '/' . $page['fileName'] ;
 	if (is_file($page_path_new)) {
 		return array('message' => 'Page already exists.', 'success' => false);
@@ -283,7 +292,7 @@ function wiki_get_page_content($arr) {
 	if (!$w['path']) {
 		return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	$page_path = $w['path'] . '/' . $pageUrlName . wiki_get_mimetype($w);
 	if (is_readable($page_path) === true) {
 		if(filesize($page_path) === 0) {
 			$content = '';
@@ -305,7 +314,7 @@ function wiki_page_history($arr) {
 	if (!$w['path']) {
 		return array('history' => null, 'message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	$page_path = $w['path'] . '/' . $pageUrlName . wiki_get_mimetype($w);
 	if (!is_readable($page_path) === true) {
 		return array('history' => null, 'message' => 'Cannot read wiki page: ' . $page_path, 'success' => false);
 	}
@@ -330,12 +339,14 @@ function wiki_save_page($arr) {
 	if (!$w['path']) {
 		return array('message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+
+	$fileName = $pageUrlName . wiki_get_mimetype($w);
+	$page_path = $w['path'] . '/' . $fileName;
 	if (is_writable($page_path) === true) {
 		if(!file_put_contents($page_path, $content)) {
 			return array('message' => 'Error writing to page file', 'success' => false);
 		}
-		return array('message' => '', 'success' => true);
+		return array('message' => '', 'filename' => $filename, 'success' => true);
 	} else {
 		return array('message' => 'Page file not writable', 'success' => false);
 	}	
@@ -348,7 +359,7 @@ function wiki_delete_page($arr) {
 	if (!$w['path']) {
 		return array('message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	$page_path = $w['path'] . '/' . $pageUrlName . wiki_get_mimetype($w);
 	if (is_writable($page_path) === true) {
 		if(!unlink($page_path)) {
 			return array('message' => 'Error deleting page file', 'success' => false);
@@ -370,7 +381,7 @@ function wiki_revert_page($arr) {
 	if (!$w['path']) {
 		return array('content' => $content, 'message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	$page_path = $w['path'] . '/' . $pageUrlName . wiki_get_mimetype($w);
 	if (is_writable($page_path) === true) {
 		
 		$reponame = ((array_key_exists('title', $w['wiki'])) ? urlencode($w['wiki']['title']) : 'repo');
@@ -382,7 +393,7 @@ function wiki_revert_page($arr) {
 		try {
 			$git->setIdentity($observer['xchan_name'], $observer['xchan_addr']);
 			foreach ($git->git->tree($commitHash) as $object) {
-				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName.'.md' ) {
+				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName . wiki_get_mimetype($w)) {
 						$content = $git->git->cat->blob($object['hash']);						
 				}
 			}
@@ -407,7 +418,7 @@ function wiki_compare_page($arr) {
 	if (!$w['path']) {
 		return array('message' => 'Error reading wiki', 'success' => false);
 	}
-	$page_path = $w['path'].'/'.$pageUrlName.'.md';
+	$page_path = $w['path'] . '/' . $pageUrlName . wiki_get_mimetype($w);
 	if (is_readable($page_path) === true) {
 		$reponame = ((array_key_exists('title', $w['wiki'])) ? urlencode($w['wiki']['title']) : 'repo');
 		if($reponame === '') {
@@ -417,12 +428,12 @@ function wiki_compare_page($arr) {
 		$compareContent = $currentContent = '';
 		try {
 			foreach ($git->git->tree($currentCommit) as $object) {
-				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName.'.md' ) {
+				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName . wiki_get_mimetype($w)) {
 						$currentContent = $git->git->cat->blob($object['hash']);						
 				}
 			}
 			foreach ($git->git->tree($compareCommit) as $object) {
-				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName.'.md' ) {
+				if ($object['type'] == 'blob' && $object['file'] === $pageUrlName . wiki_get_mimetype($w)) {
 						$compareContent = $git->git->cat->blob($object['hash']);						
 				}
 			}
@@ -483,15 +494,6 @@ function wiki_git_commit($arr) {
 	} catch (\PHPGit\Exception\GitException $e) {
 		return array('message' => 'GitRepo error thrown', 'success' => false);
 	}
-}
-
-function wiki_generate_page_filename($name) {
-	$file = urlencode(escape_tags($name));
-	if( $file === '') {
-		return null;
-	} else {
-		return $file . '.md';
-	}	
 }
 
 function wiki_convert_links($s, $wikiURL) {
@@ -561,6 +563,13 @@ function wiki_bbcode($s) {
 		}
 
 		return $s;
+}
+
+function wiki_get_mimetype($arr) {
+	if($arr['mimeType'] == 'text/bbcode')
+		return '.bb';
+	else
+		return '.md';
 }
 
 // This function is derived from 

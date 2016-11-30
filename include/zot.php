@@ -425,6 +425,10 @@ function zot_refresh($them, $channel = null, $force = false) {
 				$next_birthday = NULL_DATE;
 			}
 
+
+			// Keep original perms to check if we need to notify them
+			$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
+
 			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_self = 0 limit 1",
 				dbesc($x['hash']),
 				intval($channel['channel_id'])
@@ -487,10 +491,6 @@ function zot_refresh($them, $channel = null, $force = false) {
 						set_abconfig($channel['channel_id'],$x['hash'],'my_perms',$k,$v);
 					}
 				}
-
-				// Keep original perms to check if we need to notify them
-				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
-
 
 				$closeness = get_pconfig($channel['channel_id'],'system','new_abook_closeness');
 				if($closeness === false)

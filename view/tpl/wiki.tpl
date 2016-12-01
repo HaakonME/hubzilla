@@ -2,7 +2,7 @@
 	<div class="section-title-wrapper">
 		<div class="pull-right">
 			{{if $showPageControls}}
-			<div class="btn-group">
+			<div id="page-tools" class="btn-group" style="display: none;">
 				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
 					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
 				</button>
@@ -45,7 +45,7 @@
 		<ul class="nav nav-tabs" id="wiki-nav-tabs">
 			<li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
 			<li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
-			<li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
+			<li><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
 		</ul>
 		<div class="tab-content" id="wiki-page-tabs">
 			<div id="edit-pane" class="tab-pane fade">
@@ -171,7 +171,7 @@
 
 		$('#edit-pane-tab').click(function (ev) {
 			setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
-			$('#embed-image').show();
+			$('#page-tools').show();
 		});
 
 		$('#wiki-get-preview').click(function (ev) {
@@ -187,7 +187,7 @@
 			if (data.success) {
 				$('#wiki-preview').html(data.html);
 				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
-				$('#embed-image').hide();
+				$('#page-tools').hide();
 			} else {
 				window.console.log('Error previewing page.');
 			}
@@ -199,6 +199,7 @@
 			$.post("wiki/{{$channel}}/history/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, function (data) {
 			if (data.success) {
 				$('#page-history-list').html(data.historyHTML);
+				$('#page-tools').hide();
 			} else {
 				window.console.log('Error getting page history.');
 			}

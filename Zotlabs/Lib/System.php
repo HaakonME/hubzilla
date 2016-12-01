@@ -69,6 +69,10 @@ class System {
 	}
 
 	static public function compatible_project($p) {
+
+		if(get_directory_realm() != DIRECTORY_REALM)
+			return true;
+
 		foreach(['hubzilla','zap'] as $t) {
 			if(stristr($p,$t))
 				return true;

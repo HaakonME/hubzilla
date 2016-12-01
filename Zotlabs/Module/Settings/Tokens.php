@@ -115,6 +115,7 @@ class Tokens {
 		$desc2 = t('You may also provide <em>dropbox</em> style access links to friends and associates by adding the Login Password to any specific site URL as shown. Examples:');
 
 		$global_perms = \Zotlabs\Access\Permissions::Perms();
+		$their_perms = [];
 
 		$existing = get_all_perms(local_channel(),(($atoken_xchan) ? $atoken_xchan : ''));
 
@@ -123,7 +124,6 @@ class Tokens {
 				intval(local_channel()),
 				dbesc($atoken_xchan)
 			);
-			$their_perms = array();
 			if($theirs) {
 				foreach($theirs as $t) {
 					$their_perms[$t['k']] = $t['v'];

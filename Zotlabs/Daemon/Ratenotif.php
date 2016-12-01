@@ -77,7 +77,7 @@ class Ratenotif {
 						continue;
 
 					$hash = random_string();
-					$n = zot_build_packet($channel,'notify',null,null,$hash);
+					$n = zot_build_packet($channel,'notify',null,null,'',$hash);
 
 					queue_insert(array(
 						'hash'       => $hash,

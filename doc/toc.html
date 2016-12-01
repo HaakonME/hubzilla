@@ -408,7 +408,7 @@
             window.console.log($(this).attr('href'));
             var url = document.createElement('a');
             url.href = window.location;
-            var pageName = url.href.split('/').pop();
+            var pageName = url.href.split('/').pop().split('#').shift();
             window.console.log('pageName: ' + pageName);
             var linkName = $(this).attr('href').split('/').pop();
             window.console.log('linkName: ' + linkName);

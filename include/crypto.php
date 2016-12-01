@@ -138,6 +138,9 @@ function other_encapsulate($data,$pubkey,$alg) {
 
 function crypto_methods() {
 
+	if(\Zotlabs\Lib\System::get_server_role() !== 'pro')
+		return [ 'aes256cbc' ];
+
 	// 'std' is the new project standard which is aes256cbc but transmits/receives 256-byte key and iv. 
 	// aes256cbc is provided for compatibility with earlier zot implementations which assume 32-byte key and 16-byte iv. 
 	// other_encapsulate() now produces these longer keys/ivs by default so that it is difficult to guess a

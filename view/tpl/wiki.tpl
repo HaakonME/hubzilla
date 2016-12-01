@@ -2,14 +2,16 @@
 	<div class="section-title-wrapper">
 		<div class="pull-right">
 			{{if $showPageControls}}
-			<div class="btn-group">
+			<div id="page-tools" class="btn-group" style="display: none;">
 				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
 					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right">
+					{{if $renamePage}}
 					<li class="nav-item">
-						<a id="rename-page" class="nav-link" href="#"><i class="fa fa-edit"></i>&nbsp;Rename Page</a>
+						<a class="nav-link rename-page" href="#"><i class="fa fa-edit"></i>&nbsp;{{$renamePage}}</a>
 					</li>
+					{{/if}}
 					<li class="nav-item">
 						<a id="embed-image" class="nav-link" href="#"><i class="fa fa-picture-o"></i>&nbsp;Embed Image</a>
 					</li>
@@ -28,17 +30,22 @@
 	<div id="rename-page-form-wrapper" class="section-content-tools-wrapper" style="display:none;">
 		<form id="rename-page-form" action="wiki/rename/page" method="post" >
 			{{include file="field_input.tpl" field=$pageRename}}
-			<div class="btn-group pull-right">
-				<button id="rename-page-submit" class="btn btn-warning" type="submit" name="submit" >Rename Page</button>
+			<div class="form-group">
+				<div class="pull-right">
+					<button id="rename-page-submit" class="btn btn-primary" type="submit" name="submit">Submit</button>
+				</div>
+				<div>
+					<button class="btn btn-default rename-page" type="button">Cancel</button>
+				</div>
+				<div class="clear"></div>
 			</div>
 		</form>
-		<div class="clear"></div>
 	</div>
 	<div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
 		<ul class="nav nav-tabs" id="wiki-nav-tabs">
 			<li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
 			<li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
-			<li {{if $hidePageHistory}}style="display: none;"{{/if}}><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
+			<li><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
 		</ul>
 		<div class="tab-content" id="wiki-page-tabs">
 			<div id="edit-pane" class="tab-pane fade">
@@ -47,7 +54,6 @@
 				{{else}}
 				<textarea id="editor">{{$content}}</textarea>
 				{{/if}}
-				{{if $showCommitMsg}}
 				{{if $showPageControls}}
 				<div>
 					<div id="id_{{$commitMsg.0}}_wrapper" class="form-group field input">
@@ -60,14 +66,13 @@
 					</div>
 				</div>
 				{{/if}}
-				{{/if}}
 			</div>
 			<div id="preview-pane" class="tab-pane fade in active">
 				<div id="wiki-preview">
 					{{$renderedContent}}
 				</div>
 			</div>
-			<div id="page-history-pane" class="tab-pane fade" {{if $hidePageHistory}}style="display: none;"{{/if}}>
+			<div id="page-history-pane" class="tab-pane fade">
 				<div id="page-history-list"></div>
 			</div>
 		</div>
@@ -105,17 +110,12 @@
 		window.wiki_page_content = {{if !$mimeType || $mimeType == 'text/markdown'}}{{$content}}{{else}}`{{$content}}`{{/if}};
 		window.wiki_page_commit = '{{$commit}}';
 
-		if (window.wiki_page_name === 'Home') {
-			$('#delete-page').hide();
-			$('#rename-page').hide();
-		}
-
 		$("#generic-modal-ok-{{$wikiModalID}}").removeClass('btn-primary');
 		$("#generic-modal-ok-{{$wikiModalID}}").addClass('btn-danger');
 
-		$('#rename-page').click(function (ev) {
-			$('#rename-page-form-wrapper').show();
-				ev.preventDefault();
+		$('.rename-page').click(function (ev) {
+			$('#rename-page-form-wrapper').toggle();
+			ev.preventDefault();
 		});
 
 		$( "#rename-page-form" ).submit(function( event ) {
@@ -155,17 +155,23 @@
 
 		editor.getSession().setValue(window.wiki_page_content);
 		window.editor = editor; // Store the editor in the window object so the anonymous function can use it.
-		{{if !$showPageControls}}
-			editor.setReadOnly(true); // Disable editing if the viewer lacks edit permission
-		{{/if}}
 
 
 		{{else}}
 		window.editor = editor = $('#editor');
 		{{/if}}
 
+		{{if !$showPageControls}}
+			{{if !$mimeType || $mimeType == 'text/markdown'}}
+			editor.setReadOnly(true); // Disable editing if the viewer lacks edit permission
+			{{else}}
+			editor.prop('readonly', true);
+			{{/if}}
+		{{/if}}
+
 		$('#edit-pane-tab').click(function (ev) {
 			setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
+			$('#page-tools').show();
 		});
 
 		$('#wiki-get-preview').click(function (ev) {
@@ -181,6 +187,7 @@
 			if (data.success) {
 				$('#wiki-preview').html(data.html);
 				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
+				$('#page-tools').hide();
 			} else {
 				window.console.log('Error previewing page.');
 			}
@@ -192,6 +199,7 @@
 			$.post("wiki/{{$channel}}/history/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, function (data) {
 			if (data.success) {
 				$('#page-history-list').html(data.historyHTML);
+				$('#page-tools').hide();
 			} else {
 				window.console.log('Error getting page history.');
 			}
@@ -407,27 +415,14 @@
 			'json');
 		};
 
-		function wiki_show_edit_wiki_form(wiki_title, wiki_resource_id) {
-			window.wiki_resource_id = wiki_resource_id;
-			window.wiki_title = wiki_title;
-			$('div[id^=\'edit-wiki-form-wrapper\']').hide();
-			$('#new-page-form-wrapper').hide();
-			$('#new-wiki-form-wrapper').hide();
-			$('#edit-wiki-form-wrapper').toggle();  
-			return false;
-		}
-		
 		$(document).ready(function () {
 				wiki_refresh_page_list();
 				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
+
+				// This seems obsolete
 				// Show Edit tab first. Otherwise the Ace editor does not load.
-				$("#wiki-nav-tabs li:eq(1) a").tab('show');
-				{{if $showNewWikiButton}}
-						$('#new-wiki-button').show();
-				{{else}}
-						$('#new-wiki-button').hide();
-				{{/if}}
-                                // using input event instead of change since it's called with some timeout
+				//$("#wiki-nav-tabs li:eq(1) a").tab('show');
+
 				{{if !$mimeType || $mimeType == 'text/markdown'}}
                                 window.editor.on("input", function() {
                                     if(window.editor.getSession().getUndoManager().isClean()) {

@@ -44,8 +44,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
 		$wiki_owner = false;
 		$showNewWikiButton = false;
-		$showCommitMsg = false;
-		$hidePageHistory = false;
 		$pageHistory = array();
 		$local_observer = null;
 		$resource_id = '';
@@ -173,10 +171,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 				// Fetch the wiki info and determine observer permissions
 				$wikiUrlName = urlencode(argv(2));
 				$pageUrlName = urlencode(argv(3));
+
 				$w = wiki_exists_by_name($owner['channel_id'], $wikiUrlName);
 				if(!$w['resource_id']) {
 					notice(t('Wiki not found') . EOL);
 					goaway('/'.argv(0).'/'.argv(1));
+					return; //not reached
 				}				
 				$resource_id = $w['resource_id'];
 				
@@ -187,6 +187,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					if(!$perms['read']) {
 						notice(t('Permission denied.') . EOL);
 						goaway('/'.argv(0).'/'.argv(1));
+						return; //not reached
 					}
 					if($perms['write']) {
 						$wiki_editor = true;
@@ -198,15 +199,18 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 				$wikiheaderName = urldecode($wikiUrlName);
 				$wikiheaderPage = urldecode($pageUrlName);
+				$renamePage = (($wikiheaderPage === 'Home') ? '' : t('Rename page'));
+
 				$p = wiki_get_page_content(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				if(!$p['success']) {
 					notice(t('Error retrieving page content') . EOL);
 					goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName);
+					return; //not reached
 				}
 
 				$mimeType = $p['mimeType'];
 
-				$rawContent = $p['mimeType'] == 'text/bbcode' ? htmlspecialchars_decode(json_decode($p['content']),ENT_COMPAT) : htmlspecialchars_decode($p['content'],ENT_COMPAT);
+				$rawContent = (($p['mimeType'] == 'text/bbcode') ? htmlspecialchars_decode(json_decode($p['content']),ENT_COMPAT) : htmlspecialchars_decode($p['content'],ENT_COMPAT));
 				$content = ($p['content'] !== '' ? $rawContent : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				if($mimeType == 'text/bbcode') {
@@ -221,12 +225,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$showPageControls = $wiki_editor;
 				$showNewWikiButton = $wiki_owner;
 				$showNewPageButton = $wiki_editor;
-				$hidePageHistory = false;
-				$showCommitMsg = true;
 				$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 				break;
 			default:	// Strip the extraneous URL components
-				goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName.'/'.$pageUrlName);
+				goaway('/' . argv(0) . '/' . argv(1) . '/' . $wikiUrlName . '/' . $pageUrlName);
+				return; //not reached
 		}
 		
 		$wikiModalID = random_string(3);
@@ -241,15 +244,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
 			'$wikiheaderPage' => $wikiheaderPage,
+			'$renamePage' => $renamePage,
 			'$hideEditor' => $hide_editor, // True will completely hide the content section and is used for the case of no wiki selected
 			'$chooseWikiMessage' => t('Choose an available wiki from the list on the left.'),
 			'$showPageControls' => $showPageControls,
 			'$editOrSourceLabel' => (($showPageControls) ? t('Edit') : t('Source')),
-			'$tools_label' => 'Wiki Tools',
+			'$tools_label' => 'Page Tools',
 			'$showNewWikiButton'=> $showNewWikiButton,
 			'$showNewPageButton'=> $showNewPageButton,
-			'$hidePageHistory' => $hidePageHistory,
-			'$showCommitMsg' => $showCommitMsg,
 			'$channel' => $owner['channel_address'],
 			'$resource_id' => $resource_id,
 			'$page' => $pageUrlName,
@@ -263,9 +265,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$mimeType' => $mimeType,
 			'$content' => $content,
 			'$renderedContent' => $renderedContent,
-			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
-			'$pageName' => array('pageName', t('Enter the name of the new page:'), '', ''),
-			'$pageRename' => array('pageRename', t('Enter the new name:'), '', ''),
+			'$pageRename' => array('pageRename', t('New page name'), '', ''),
 			'$commitMsg' => array('commitMsg', '', '', '', '', 'placeholder="Short description of your changes (optional)"'),
 			'$pageHistory' => $pageHistory['history'],
 			'$wikiModal' => $wikiModal,
@@ -282,7 +282,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$modalerrorlink' => t('Error getting photo link'),
 			'$modalerroralbum' => t('Error getting album'),
 		));
-		head_add_js('library/ace/ace.js');	// Ace Code Editor
+
+		if($p['mimeType'] != 'text/bbcode')
+			head_add_js('library/ace/ace.js');	// Ace Code Editor
+
 		return $o;
 	}
 

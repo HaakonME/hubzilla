@@ -5,248 +5,9 @@
     Hubzilla is a decentralized communication network, which aims to provide communication that is censorship-resistant, privacy-respecting, and thus free from the oppressive claws of contemporary corporate communication giants. These giants function primarily as spy networks for paying clients of all sorts and types, in addition to monopolizing and centralizing the Internet; a feature that was not part of the original and revolutionary goals that produced the World Wide Web. <br><br>Hubzilla is free and open source.&nbsp;&nbsp;It is designed to scale from a $35 Raspberry Pi, to top of the line AMD and Intel Xeon-powered multi-core enterprise servers.&nbsp;&nbsp;It can be used to support communication between a few individuals, or scale to many thousands and more.<br><br>Hubzilla aims to be skill and resource agnostic. It is easy to use by everyday computer users, as well as by systems administrators and developers. <br><br>How you use it depends on how you want to use it. <br><br>It is written in the PHP scripting language, thus making it trivial to install on any hosting platform in use today. This includes self-hosting at home, at hosting providers such as <a href="http://mediatemple.com/">Media Temple</a> and <a href="http://www.dreamhost.com/">Dreamhost</a>, or on virtual and dedicated servers, offered by the likes of <a href="https://www.linode.com">Linode</a>,&nbsp;&nbsp;<a href="http://greenqloud.com">GreenQloud</a> or <a href="https://aws.amazon.com">Amazon AWS</a>.<br><br>In other words, Hubzilla can run on any computing platform that comes with a web server, a MySQL-compatible database, and the PHP scripting language. <br><br>Along the way, Hubzilla offers a number of unique goodies: <br><br><strong>Single-click user identification:</strong> meaning you can access sites on Hubzilla simply by clicking on links to remote sites. Authentication just happens automagically behind the scenes. Forget about remembering multiple user names with multiple passwords when accessing different sites online.<br><br><strong>Cloning:</strong> of online identities. Your online presence no longer has to be tied to a single server, domain name or IP address.&nbsp;&nbsp;You can clone and import your identity (or channel as we call it) to another server (or, a hub as servers are known in Hubzilla).&nbsp;&nbsp;Now, should your primary hub go down, no worries, your contacts, posts<em>*</em>, and messages<em>*</em> will automagically continue to be available and accessible under your cloned channel. <em>(*: only posts and messages as from the moment you cloned your channel)</em><br><br><strong>Privacy:</strong> Hubzilla identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.&nbsp;&nbsp;The user is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.&nbsp;&nbsp;No questions, no fuss.
 </p>
 
-<h2 id="project-history">History</h2>
-
-
-<p>Hubzilla is a community developed open source project based on work introduced in Friendica by the Friendica
-community and which previously was named Redmatrix. The core design, the project mission, and software base itself were
-created/written primarily by Mike Macgirvin and represent the culmination of over a decade of software design using
-variations of this platform and an evolving vision of the role of communication software in our lives. Many others have
-contributed to this work, both conceptually and in terms of actual code (far too many to list individually).</p>
-
-<h3>Mike Macgirvin -- Biography</h3>
-
-<p>Mike Macgirvin is an American software engineer now living in Australia. He spent his early adult years designing and
-repairing semiconductor fabrication equipment for a number of companies as a self-described "machine wizard". In 1985 he
-became a research engineer at Stanford University for the Gravity Probe-B space mission and soon became a Unix systems
-administrator writing communication software and utilities; and becoming an expert in emerging internet technologies
-such as the now ubiquitous "World Wide Web". He authored an email "client" called "ML" which pioneered some advanced
-concepts in encryption, the ability to filter message streams into different "views", and multi-protocol support; and
-was an active proponent of and participant in the open source software <em>movement</em>. In 1996 he went to Netscape
-Communications to become tech lead on their Messaging Server and integrate this with Collabra (groupware) into a
-comprehensive communications server package. He stayed on after Netscape was acquired by America Online and was tech
-manager of the Groups@AOL project until 2001.</p>
-
-<p>During a layoff round, Mike was let go from America Online in August 2001 and purchased a music store in Mountain
-View, California later to be known as "Sonica Music Company". Opening a retail store for non-essential goods at the
-beginning of a prolonged economic downturn was in retrospect probably not the wisest career move. Sonica eventually
-folded; in late 2006. Mike returned to working on software and systems support full-time and was employed briefly at
-Symantec before moving to Australia in early 2007. He currently lives on a farm "out in the middle of nowhere" and is
-employed as a Computer Systems Officer at the University of Wollongong.</p>
-
-<h3>Hubzilla - The Early Years</h3>
-
-<p>The software which went into creating Hubzilla has been through several distinct historical phases. It began in 2003
-when Mike Macgirvin was looking for a content management system to power the website for his music store and found the
-available solutions to be lacking in various respects. The project was born as the "PurpleHaze weblog" under the nom de
-plume "Nerdware Communications". It was a multi-user PHP/MySQL CMS which provided blogs, forums, photo albums, events
-and more. Initially it provided the basis for a social community and shopping for customers of the store, but was also
-linked to Mike's personal weblog running on another domain. The distinguishing characteristic of this software was the
-ability for so-called "normal users" to re-assemble the components and choose different content feeds - and in essence
-create their own personal "multi-user CMS" as a view. Their custom view was able to communicate with anybody else that
-used the system, but could be partitioned so that adult sites and motorcycle enthusiast sites would not be visible to
-each other and not clash (or in this case Mike's personal website and the music store website). This software was
-developed primarily from 2003 until 2008.</p>
-
-<p>In 2006 this software was used as the prototype for Symantec's "safeweb" reputation and community site. It was
-developed and enhanced until about 2008. A rewrite took place in 2008 named "Reflection" but work stagnated as the
-community dwindled. The need for content management systems and communications software dropped dramatically during this
-time as humans flocked to the new social aggregrators - Facebook and Twitter.</p>
-
-<h3>Mistpark/Friendica</h3>
-
-<p>In early 2010, Mike left Facebook, concerned at the company's increasing hold and control of personal information. In
-his words "Companies die. We watched it happen in the dot-com years. When they do, their databases are sold to the
-highest bidder.". Mike used some remnants of the old CMS project to create a decentralised social communications
-platform. This was launched in July 2010 as "Mistpark". The name was chosen as a tribute to his new home in the Southern
-Highlands of Australia. The key innovation in this project was the ability to authenticate remotely and invisibly to
-other decentralised instances of the software so to allow remote viewing of private photos and provide "wall-to-wall"
-posting across website instances. The lack of simple remote identity <em>provenance</em> was a serious limitation of
-other decentralised communication protocols.</p>
-
-<p>In late 2010, the name was changed to "Friendika". The name Friendika had some symbolic issues, since the suffix was
-common with "swastika" and "Amerika", both having negative connotations, however the dot-com domain was available.
-Friendica was in fact the first choice but the 'friendica.com' domain name was already registered. It became available a
-year later and the project was renamed to Friendica in late 2011.</p>
-
-<p>Soon after version 1 was released in July 2010 - providing basic social communications, the software also took on a
-new role - cross-service federation; which was first introduced in August and September 2010. Federation allowed the
-software to "behave as" a StatusNet site and friends and messages could communicate to the other service from their own
-platforms. It was also hoped to provide federation with Diaspora - a project with similar scope being developed in
-secret in New York and first released in November of that year. Over the course of the next year, the federation ability
-was extended to provide integrated communications from RSS feeds, to and from email, StatusNet, Facebook, Twitter, and
-the emerging Diaspora project. The software provided a single "view" of your entire social space no matter what provider
-you or your friends used. StatusNet and Diaspora were supported natively so that one account could access any of these
-services. Facebook and Twitter used "API federation" which required the person to have an account on those services with
-which to link.</p>
-
-<p>By July 2012, Twitter and Facebook had both changed their terms of service and essentially outlawed "API federation"
-in the way Friendica was using it. Diaspora announced they were changing their protocol and would not maintain
-compatibility nor provide any warning when compatibility would break (or documentation on the proposed changes). The
-creator of StatusNet was also leaving his project to create something new (pump.io). As the software's primary purpose
-by this time was "federation of different social services into one interface", this created a bit of a crisis. The
-federated social web was crumbling. Also of concern was that independent and decentralised social websites shut down
-frequently, requiring all their members to start over again on another site. Often the effort involved to do this seemed
-daunting - and many people ran back to the relative safety of the large corporate providers - Facebook, Twitter, and now
-Google+.</p>
-
-<p>Mike realised he did not want to be held hostage to the decisions that other projects and companies and independent
-websites make. Friendica could operate on its own without attaching to these other networks, but its vision and
-implementation of a federated social world depended on federation with others for its project identity - so this created
-an identity crisis.</p>
-
-<p>Mike had been working on this project for some time and there were a number of things which needed re-writing,
-including the base communication protocol which Friendica used (DFRN or the "Distributed Friends and Relations Network"
-protocol). These ideas were starting to emerge as a different method of communication he called "zot". Zot began as a
-way to create a common language for federated websites, but there was no interest in this ability and as mentioned, the
-federated web was crumbling. The first version was soon scrapped and zot was re-designed and re-ignited as a streamlined
-communication protocol which was location-independent; e.g. not tied to any website. This would allow people to carry on
-unaffected if their website operator shut down temporarily or permanently. They wouldn't have to make friends all over
-again, and permissions of everything on the system wouldn't have to be changed to allow bob@site1 to see something that
-was private to him, even though he was now bob@site2. This was a serious problem with decentralisation. People moved and
-their online identities were lost and had to be re-created from scratch and existing relationships destroyed and had to
-be created all over again.</p>
-
-<h3>Redmatrix</h3>
-
-<p>In July 2012, Mike left the Friendica project and began development of "zot" and a new base project called "red" in
-his somewhat elusive <em>spare time</em>. Red is Spanish for "network". It wasn't really a "social network" and
-especially not a "federated social network". It was just Red (technically "la red"), or "the network". Work began by
-removing all the "federation" components and going back to basics - communication and remote authentication. It was a
-major re-write and took roughly six months before even basic communication was re-established. It was also no longer
-compatible with Friendica - which had been given to the "Friendica community" and by this time (December 2012) was
-developing separately on its own track.</p>
-
-<p>It became clear during this time that the single most compelling feature of the project wasn't the social network at
-all, but the authentication layer and decentralised access control mechanisms. Combined with zot's location independence
-it created a new model for software which had never existed previously - decentralised identity-aware web publishing and
-single sign-on to any compatible provider across the web. These weren't <em>evolutionary</em>, they were
-<strong>revolutionary</strong>. One of the biggest flaws of the modern web is the reliance on different passwords for
-every service you use, or reliance on a single provider if you were to tie them to - say your Facebook login. Facebook
-can remove your account at any time. Gone. If you rely on their authentication for all your websites, your entire online
-identity - now gone. This is also what was missing from Friendica - a compelling software feature which could stand on
-its own, without requiring a social network and especially without requiring a federated social network with all the
-mentioned external dependencies.</p>
-
-<p>An early visitor to the project noted that he had some difficulty finding the project on Google because of the choice
-of name - "red". Yes, this was a poor decision in retrospect. We were buried on page 23,712 of the search results. The
-concept that was emerging around this identity-aware publishing was that of "a matrix of inter-connected thought
-streams", since we didn't have a concept of "people" and "friends". All were just connected "channels" with different
-ways to connect. So "Redmatrix" was chosen to give it a searchable name. It had nothing to do with the Matrix film and
-red and blue pills, though that is frequently cited (erronously); and in fact isn't a bad analogy.</p>
-
-<p>The concept of identity-aware content was alien to anything that existed previously on the web, so to make it useful
-we had to provide the ability to use it for content. It needed content publishing tools. This brought back concepts from
-the old "Content Management System" on which the software was originally based. To get it up and running quickly we
-created a markup language for webpages called "Comanche" which let you describe a page in high-level terms based on
-bbcode tags. We also added WebDAV so you could put decentralised access control on files and drag/drop from your
-operating system. So now you could have private photos, webpages, files, events, conversations, chatrooms - and they are
-visible to those you choose - no matter what site they use. All they need is zot. And your viewers could move to another
-site or just pop up at a different site any time they want and we don't care. And it <strong>also</strong> had a
-built-in social network; with lots of additional privacy and encryption features which were added even before the
-Snowden revelations gave them added urgency.</p>
-
-<p>Over time a few federation components re-emerged. The ability to view RSS feeds was important to many people.
-Diaspora never really managed to re-write their protocol, so that was re-implemented and allowed Redmatrix to connect
-with Diaspora and Friendica again (Friendica still had their Diaspora protocol intact, so this was the most common
-language now remaining on the free web - despite its faults). Diaspora communications aren't able to make use of the
-advanced identity features, but they work for basic communications.</p>
-
-<h3>Hubzilla</h3>
-
-<p>The Redmatrix project reached a point of stagnation in early 2015 as network growth leveled and active interest in
-the project declined. Mike met with several external high tech developers and innovators in a round of discussions that
-were called "Zotopia" in early 2015 to perform an independent review of the project and try to identify what had gone
-wrong and plan a route forward. The basic consensus is that the project suffered from bad marketing decisions which were
-compounded by mixed messages about the project goals and target audience. A "rival" project (Diaspora) was marketing
-itself as a Facebook competitor, but after some long discussions it was determined that Redmatrix wasn't a Facebook
-competitor at all, and too much emphasis was being placed on the "social network" and "anti-Facebook" features. It was a
-novel decentralisation platform with distributed identity and permissions, and as was pointed out, the "end user" was
-the wrong target market. These marketing mistakes were now identified with the project name and random sampling of
-various "customers" showed that none of them really had a clue about the software goals or target market segment. The
-mixed messages were associated with the brand identity and this was a problem.</p>
-
-<p>The Redmatrix community held a vote and the project was renamed "Hubzilla", with a renewed identity and focus - to
-provide software for creating and ultimately linking together unrelated community websites or "hubs" into a global
-community. This is in fact what we were building all along, but didn't fully recognise it. The target audience for this
-software as it turns out is not the members or end users, but software integrators and digital community architects and
-builders. These in turn will be responsible for marketing their own product (their respective online communities) to
-end-users or members. The software solves a real world need of linking isolated and "walled garden" community sites
-together into a larger cooperative. The transition from Redmatrix to Hubzilla was complex and has taken several months
-as we consolidated the marketing and media assets to deliver a consistent message. It is still ongoing at this time, and
-should be completed in Q4 2015.</p>
-
-<p>Mike stepped down as active coordinator for the project in early 2015 and turned management over to the community. He
-remains active as a Hubzilla developer.</p>
-
-<h3>And Then...</h3>
-
-<p>In 2016, the project was re-architected to support multiple server "roles". These correspond to sub-projects which
-can be isolated from each other in terms of supported feature sets, but all use and support the same code-base and
-developers are able to work together on common features and goals. The roles primarily differ in target audience,
-project <a href="help/project/governance">governance</a> and decision making structures, and this results in slightly
-different features and idealogy. They all share a common code repository.</p>
-
-<p>Those roles are:</p>
-
-<h4>Basic</h4>
-
-<p>Entry level server. Supported by and governed by the Hubzilla community. Most advanced or complex features have been
-stripped away to ease federation with external services. It is best suited as a FOSS social network tool.</p>
-
-<h4>Standard</h4>
-
-<p>The standard Hubzilla server. This provides a wide range of useful features and is supported by and governed by the
-Hubzilla community. It is best suited as an open source community and cloud server.</p>
-
-<h4>Pro</h4>
-
-<p>This is a specially crafted server with a unique feature set. It is supported by and governed by Mike Macgirvin dba
-"Zotlabs". Federation with external services has been stripped away in order to support a wide range of more technically
-advanced and complex features; and also includes features and modes which may not have the support or backing of the
-Hubzilla open source community. It is best suited for business and workplace applications.</p>
-
-
-
 <h2 id="project-governance">Governance</h2>
 
-<p>Governance relates to the management of a project and particularly how this relates to conflict
-resolution.</p><p>This project uses a dual-governance model.</p><p>The project as a whole and the repository were
-created initially by Mike Macgirvin; who controls the project copyright, and the project license, and manages the
-project as a Self Appointed Benevolent Dictator for Life. He holds veto power over any project proposal or decision and
-his word is final.</p><p>That said, Mike has no interest in running the day to day activities of the project and
-influencing its direction, other than to protect his own work from sabotage. </p><p>The internal project structure
-contains multiple "configurations" known as 'basic', 'standard', and 'pro'. Mike's veto power extends to any proposal or
-decision which he feels might adversely affect the 'pro' configuration.</p><p>The 'basic and 'standard' configurations
-are controlled completely by the community. If the proposal or decision is crafted in such a way that its effects are
-limited to these configurations, Mike will consider relinquishing his power of veto and convert it to a normal community
-vote.</p><p>Mario Vavti has done an incredible amount of work on the usability and theming of the project and holds
-veto power over any proposal or decision which might impact usability and "look and feel"; and his decision is also
-final. </p><p>Mario's veto power is likewise restricted to anything using the standard project 'theme'. If a new theme
-is created and an otherwise vetoed decision is implemented entirely in this different theme and has no impact on the
-standard project theme, his veto <strong>may</strong> also be turned into a normal community vote.</p><p>This ability
-to work around a veto is at the discretion of Mike and Mario. They <strong>may</strong> choose to relinquish their veto
-if the scope of the work is limited as described above, and in most circumstances they will leave the decision to the
-community. They are not obligated to do so. </p><p><h3>Community Governance</h3></p><p>Beyond those two special cases,
-the project is maintained and decisions made by the 'community'. The governance structure is still evolving. Until the
-structure is finalised, decisions are made in the following order:</p><p><ul class="listdecimal"
-style="list-style-type: decimal;"><br><li> Lazy Consensus</p><p>If a project proposal is made to one of the community
-governance forums and there are no serious objections in a "reasonable" amount of time from date of proposal (we usually
-provide 2-3 days for all interested parties to weigh in), no vote needs to be taken and the proposal will be considered
-approved. Some concerns may be raised at this time, but if these are addressed during discussion and work-arounds
-provided, it will still be considered approved. </p><p></li><li> Veto</p><p>If a proposal is vetoed, it is not
-necessarily the final word. See above on how to convert a veto into a normal community vote. This can be done by framing
-the proposal so that it does not impact the 'pro' configuration or the standard theme.</p><p></li><li> Community
-Vote</p><p>A decision which does not have a clear mandate or clear consensus, but is not vetoed, can be taken to a
-community vote. At present this is a simple popular vote in one of the applicable community forums.&nbsp;&nbsp;At this
-time, popular vote decides the outcome. This may change in the future if the community adopts a 'council' governance
-model. This document will be updated at that time with the updated governance rules. <br></li></ul></p><p>Community
-Voting does not always provide a pleasant outcome and can generate polarised factions in the community (hence the reason
-why other models are under consideration). If the proposal is 'down voted' there are still several things which can be
-done and the proposal re-submitted with slightly different parameters (convert to an addon, convert to an optional
-feature which is disabled by default, etc.). If interest in the feature is high and the vote is "close", it can generate
-lots of bad feelings amongst the losing voters. On such close votes, it is <strong>strongly recommended</strong> that
-the proposer take steps to address any concerns that were raised and re-submit.</p>
+<br><br>Governance relates to the management of a project and particularly how this relates to conflict resolution.<br><br><h3>Community Governance</h3><br><br>The project is maintained and decisions made by the 'community'. The governance structure is still evolving. Until the structure is finalised, decisions are made in the following order:<br><br><ul class="listdecimal" style="list-style-type: decimal;"><li> Lazy Consensus<br><br>If a project proposal is made to one of the community governance forums and there are no serious objections in a "reasonable" amount of time from date of proposal (we usually provide 2-3 days for all interested parties to weigh in), no vote needs to be taken and the proposal will be considered approved. Some concerns may be raised at this time, but if these are addressed during discussion and work-arounds provided, it will still be considered approved. <br></li><li> Veto<br><br>Senior developers with a significant history of project commits may veto any decision. The decision may not proceed until the veto is removed or an alternative proposal is presented.<br></li><li> Community Vote<br><br>A decision which does not have a clear mandate or clear consensus, but is not vetoed, can be taken to a community vote. At present this is a simple popular vote in one of the applicable community forums.&nbsp;&nbsp;At this time, popular vote decides the outcome. This may change in the future if the community adopts a 'council' governance model. This document will be updated at that time with the updated governance rules. <br></li></ul><br><br>Community Voting does not always provide a pleasant outcome and can generate polarised factions in the community (hence the reason why other models are under consideration). If the proposal is 'down voted' there are still several things which can be done and the proposal re-submitted with slightly different parameters (convert to an addon, convert to an optional feature which is disabled by default, etc.). If interest in the feature is high and the vote is "close", it can generate lots of bad feelings amongst the losing voters. On such close votes, it is <strong>strongly recommended</strong> that the proposer take steps to address any concerns that were raised and re-submit.
 	
 
 
@@ -337,3 +98,93 @@ the proposer take steps to address any concerns that were raised and re-submit.<
 <p>    
     <strong>What is Zot?</strong><br><br>Zot is the protocol that powers Hubzilla, providing three core capabilities: Communications, Identity, and Access Control.<br><br>The functionality it provides can also be described as follows: <br><br> - a relationship online is just a bunch of permissions<br> - the internet is just another folder<br><br><strong><span style="font-size: 20px;">Communications</span></strong><br><br>Zot is a revolutionary protocol which provides <em>decentralised communications</em> and <em>identity management</em> across the grid. The resulting platform can provide web services comparable to those offered by large corporate providers, but without the large corporate provider and their associated privacy issues, insatiable profit drive, and walled-garden mentality.<br><br>Communications and social networking are an integral part of the grid. Any channel (and any services provided by that channel) can make full use of feature-rich social communications on a global scale. These communications may be public or private - and private communications comprise not only fully encrypted transport, but also encrypted storage to help protect against accidental snooping and disclosure by rogue system administrators and internet service providers. <br><br>Zot allows a wide array of background services in the grid, from offering friend suggestions, to directory services. You can also perform other things which would typically only be possibly on a centralized provider - such as "Wall to Wall" posts. Private/multiple profiles can be easily created, and web content can be tailored to the viewer via the <em>Affinity Slider</em>. <br><br>You won't find these features at all on other decentralized communication services. In addition to providing hub (server) decentralization, perhaps the most innovative and interesting Zot feature is its provision of <em>decentralized identity</em> services.<br><br><strong><span style="font-size: 20px;">Identity</span></strong> <br><br>Zot's identity layer is unique. It provides <em>invisible single sign-on</em> across all sites in the grid. <br><br>It also provides <em>nomadic identity</em>, so that your communications with friends, family, and or anyone else you're communicating with won't be affected by the loss of your primary communication node - either temporarily or permanently. <br><br>The important bits of your identity and relationships can be backed up to a thumb drive, or your laptop, and may appear at any node in the grid at any time - with all your friends and preferences intact. <br><br>Crucially, these nomadic instances are kept in sync so any instance can take over if another one is compromised or damaged. This protects you against not only major system failure, but also temporary site overloads and governmental manipulation or censorship. <br><br>Nomadic identity, single sign-on, and Hubzilla's decentralization of hubs, we believe, introduce a high degree of degree of <em>resiliency</em> and <em>persistence</em> in internet communications, that are sorely needed amidst global trends towards corporate centralization, as well as mass and indiscriminate government surveillance and censorship.<br><br>As you browse the grid, viewing channels and their unique content, you are seamlessly authenticated as you go, even across completely different server hubs. No passwords to enter. Nothing to type. You're just greeted by name on every new site you visit. <br><br>How does Zot do that? We call it <em>magic-auth</em>, because Hubzilla hides the details of the complexities that go into single sign-on logins, and nomadic identities, from the experience of browsing on the grid.&nbsp;&nbsp;This is one of the design goals of Hubzilla: to increase privacy, and freedom on the web, while reducing the complexity and tedium brought by the need to enter new passwords and user names for every different sight that someone might visit online.<br><br>You login only once on your home hub (or any nomadic backup hub you have chosen). This allows you to access any authenticated services provided anywhere in the grid - such as shopping, blogs, forums, and access to private information. This is just like the services offered by large corporate providers with huge user databases; however you can be a member of this community, as well as a server on this network using a $35 Rasberry Pi. Your password isn't stored on a thousand different sites, or even worse, only on a few sites like Google and Facebook, beyond your direct control.<br><br>You cannot be silenced. You cannot be removed from the grid, unless you yourself choose to exit it.<br><br><strong><span style="font-size: 20px;">Access Control</span></strong><br><br>Zot's identity layer allows you to provide fine-grained permissions to any content you wish to publish - and these permissions extend across Hubzilla. This is like having one super huge website made up of an army of small individual websites - and where each channel in the grid can completely control their privacy and sharing preferences for any web resources they create. <br><br>Currently, the grid supports communications, photo albums, events, and files. This will be extended in the future to provide content management services (web pages) and cloud storage facilities, such as WebDAV and multi-media libraries. Every object and how it is shared and with whom is completely under your control.<br><br>This type of control is available on large corporate providers such as Facebook and Google, because they own the user database. Within the grid, there is no need for a huge user databaseon your machine - because the grid <em>is</em> your user database. It has what is essentially infinite capacity (limited by the total number of hubs online across the internet), and is spread amongst hundreds, and potentially millions of computers. <br><br>Access can be granted or denied for any resource, to any channel, or any group of channels; anywhere within the grid. Others can access your content if you permit them to do so, and they do not even need to have an account on your hub. Your private photos cannot be viewed, because permission really work; they are not an addon that was added as an afterthought. If you aren't on the list of allowed viewers for a particular photo, you aren't going to look at it. <br><br><strong><span style="font-size: 18px;">Additional Resources and Links</span></strong><br><br>For more detailed, technical information about Zot, check out the following links: <br><br> - <a href="https://github.com/friendica/red/wiki/Zot---A-High-Level-Overview">A high level overview</a><br><br> - <a href="https://github.com/friendica/red/wiki/zot">Zot development specification</a><br><br> - <a href="https://github.com/redmatrix/hubzilla/blob/master/include/zot.php">Zot reference implementation in PHP</a>	
 </p>
+
+<h1 id="credits">Credits</h1>
+<p>
+Thanks to all who have helped and contributed to the project and its predecessors over the years. 
+It is possible we missed in your name but this is unintentional. We also thank the community and 
+its members for providing valuable input and without whom this entire effort would be meaningless. 
+</p>
+<p>
+It is also worth acknowledging the contributions and solutions to problems which arose from 
+discussions amongst members and developers of other somewhat related and competing projects; 
+even if we have had our occasional disagreements. 
+</p>
+<ul>
+    <li>Mike Macgirvin</li>
+    <li>Fabio Comuni</li>
+    <li>Simon L'nu</li>
+    <li>marijus</li>
+    <li>Tobias Diekershoff</li>
+    <li>fabrixxm</li>
+    <li>tommy tomson</li>
+    <li>Simon</li>
+    <li>zottel</li>
+    <li>Christian Vogeley</li>
+    <li>Jeroen van Riet Paap (jeroenpraat)</li>
+    <li>Michael Vogel</li>
+    <li>erik</li>
+    <li>Zach Prezkuta</li>
+    <li>Paolo T</li>
+    <li>Michael Meer</li>
+    <li>Michael</li>
+    <li>Abinoam P. Marques Jr</li>
+    <li>Tobias Hößl</li>
+    <li>Alexander Kampmann</li>
+    <li>Olaf Conradi</li>
+    <li>Paolo Tacconi</li>
+    <li>tobiasd</li>
+    <li>Devlon Duthie</li>
+    <li>Zvi ben Yaakov (a.k.a rdc)</li>
+    <li>Alexandre Hannud Abdo</li>
+    <li>Olivier Migeot</li>
+    <li>Chris Case</li>
+    <li>Klaus Weidenbach</li>
+    <li>Michael Johnston</li>
+    <li>olivierm</li>
+    <li>Vasudev Kamath</li>
+    <li>pixelroot</li>
+    <li>Max Weller</li>
+    <li>duthied</li>
+    <li>Martin Schmitt</li>
+    <li>Sebastian Egbers</li>
+    <li>Erkan Yilmaz</li>
+    <li>sasiflo</li>
+    <li>Stefan Parviainen</li>
+    <li>Haakon Meland Eriksen</li>
+    <li>Oliver Hartmann (23n)</li>
+    <li>Erik Lundin</li>
+    <li>habeascodice</li>
+    <li>sirius</li>
+    <li>Charles</li>
+    <li>Tony Baldwin</li>
+    <li>Hauke Zuehl</li>
+    <li>Keith Fernie</li>
+    <li>Anne Walk</li>
+    <li>toclimb</li>
+    <li>Daniel Frank</li>
+    <li>Matthew Exon</li>
+    <li>Michal Supler</li>
+    <li>Tobias Luther</li>
+    <li>U-SOUND\mike</li>
+    <li>mrjive</li>
+    <li>nostupidzone</li>
+    <li>tonnerkiller</li>
+    <li>Antoine G</li>
+    <li>Christian Drechsler</li>
+    <li>Ludovic Grossard</li>
+    <li>RedmatrixCanada</li>
+    <li>Stanislav Lechev [0xAF]</li>
+    <li>aweiher</li>
+    <li>bufalo1973</li>
+    <li>dsp1986</li>
+    <li>felixgilles</li>
+    <li>ike</li>
+    <li>maase2</li>
+    <li>mycocham</li>
+    <li>ndurchx</li>
+    <li>pafcu</li>
+    <li>Simó Albert i Beltran</li>
+    <li>Manuel Reva</li>
+    <li>Manuel Jiménez Friaza</li>
+</ul>

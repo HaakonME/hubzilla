@@ -10,8 +10,17 @@ class Permissions {
 	/**
 	 * Extensible permissions.
 	 * To add new permissions, add to the list of $perms below, with a simple description.
+	 *
 	 * Also visit PermissionRoles.php and add to the $ret['perms_connect'] property for any role
 	 * if this permission should be granted to new connections.
+	 *
+	 * Next look at PermissionRoles::new_custom_perms() and provide a handler for updating custom 
+	 * permission roles. You will want to set a default PermissionLimit for each channel and also
+	 * provide a sane default for any existing connections. You may or may not wish to provide a
+	 * default auto permission. If in doubt, leave this alone as custom permissions by definition
+	 * are the responsbility of the channel owner to manage. You just don't want to create any 
+	 * suprises or break things so you have an opportunity to provide sane settings. 
+	 *
 	 *
 	 * Permissions with 'view' in the name are considered read permissions. Anything
 	 * else requires authentication. Read permission limits are PERMS_PUBLIC and anything else

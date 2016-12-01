@@ -160,6 +160,7 @@ class PermissionRoles {
 				$ret['limits'] = PermissionLimits::Std_Limits();
 				break;
 
+			case 'custom':
 			default:
 				break;
 		}
@@ -174,7 +175,48 @@ class PermissionRoles {
 		return $ret;
 	}
 
+	static public function new_custom_perms($uid,$perm,$abooks) {
 
+		// set permissionlimits for this permission here, for example:
+
+		// if($perm === 'mynewperm')
+		//     \Zotlabs\Access\PermissionLimits::Set($uid,$perm,1);
+
+
+		// set autoperms here if applicable
+		// choices are to set to 0, 1, or the value of an existing perm
+
+		if(get_pconfig($uid,'system','autoperms')) {
+
+			$c = channelx_by_n($uid);
+			$value = 0;
+
+			// if($perm === 'mynewperm')
+			//	 $value = get_abconfig($uid,$c['channel_hash'],'autoperms','someexistingperm'));
+
+			if($c) {
+				set_abconfig($uid,$c['channel_hash'],'autoperms',$perm,$value);
+			}
+
+
+		}
+
+		// now set something for all existing connections.
+
+		if($abooks) {
+			foreach($abooks as $ab) {
+				switch($perm) {
+					// case 'mynewperm':
+					// choices are to set to 1, set to 0, or clone an existing perm
+					// set_abconfig($uid,$ab['abook_xchan'],'my_perms',$perm,
+					//		get_abconfig($uid,$ab['abook_xchan'],'my_perms','someexistingperm'));
+					
+					default:
+						break;
+				}
+			}
+		}
+	}
 
 
 	static public function roles() {

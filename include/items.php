@@ -1463,6 +1463,11 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	$ret = array('success' => false, 'item_id' => 0);
 
+	if(array_key_exists('cancel',$arr) && $arr['cancel']) {
+		logger('cancelled by plugin');
+		return $ret;
+	}		
+
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
 		$ret['message'] = 'No uid.';
@@ -1881,6 +1886,12 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	$allow_exec = $d['allow_exec'];
 
 	$ret = array('success' => false, 'item_id' => 0);
+
+	if(array_key_exists('cancel',$arr) && $arr['cancel']) {
+		logger('cancelled by plugin');
+		return $ret;
+	}		
+
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
 		$ret['message'] = 'no uid.';

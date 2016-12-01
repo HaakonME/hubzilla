@@ -133,7 +133,7 @@ class dba_pdo extends dba_driver {
 	}
 	
 	function unescapebin($str) {
-		if($this->driver_dbtype === 'pgsql') {
+		if($this->driver_dbtype === 'pgsql' && (! is_null($str))) {
 			$x = '';
 			while(! feof($str)) {
 				$x .= fread($str,8192);

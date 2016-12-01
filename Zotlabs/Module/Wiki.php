@@ -38,6 +38,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
 		require_once('include/conversation.php');
+		require_once('include/bbcode.php');
 
 		// TODO: Combine the interface configuration into a unified object
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
@@ -202,11 +203,20 @@ class Wiki extends \Zotlabs\Web\Controller {
 					notice(t('Error retrieving page content') . EOL);
 					goaway('/'.argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				}
-				$content = ($p['content'] !== '' ? htmlspecialchars_decode($p['content'],ENT_COMPAT) : '"# New page\n"');
+
+				$mimeType = $p['mimeType'];
+
+				$rawContent = $p['mimeType'] == 'text/bbcode' ? htmlspecialchars_decode(json_decode($p['content']),ENT_COMPAT) : htmlspecialchars_decode($p['content'],ENT_COMPAT);
+				$content = ($p['content'] !== '' ? $rawContent : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
-				require_once('library/markdown.php');
-				$html = wiki_generate_toc(zidify_text(purify_html(Markdown(wiki_bbcode(json_decode($content))))));
-				$renderedContent = wiki_convert_links($html,argv(0).'/'.argv(1).'/'.$wikiUrlName);
+				if($mimeType == 'text/bbcode') {
+					$renderedContent = bbcode($content);
+				}
+				else {
+					require_once('library/markdown.php');
+					$html = wiki_generate_toc(zidify_text(purify_html(Markdown(wiki_bbcode(json_decode($content))))));
+					$renderedContent = wiki_convert_links($html,argv(0).'/'.argv(1).'/'.$wikiUrlName);
+				}
 				$hide_editor = false;
 				$showPageControls = $wiki_editor;
 				$showNewWikiButton = $wiki_owner;
@@ -220,14 +230,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 		}
 		
 		$wikiModalID = random_string(3);
-		$wikiModal = replace_macros(
-			get_markup_template('generic_modal.tpl'), array(
-				'$id' => $wikiModalID,
-				'$title' => t('Revision Comparison'),
-				'$ok' => t('Revert'),
-				'$cancel' => t('Cancel')
-			)
-		);
+
+		$wikiModal = replace_macros(get_markup_template('generic_modal.tpl'), array(
+			'$id' => $wikiModalID,
+			'$title' => t('Revision Comparison'),
+			'$ok' => t('Revert'),
+			'$cancel' => t('Cancel')
+		));
 				
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
 			'$wikiheaderName' => $wikiheaderName,
@@ -251,6 +260,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$deny_cid' => $x['deny_cid'],
 			'$deny_gid' => $x['deny_gid'],
 			'$bang' => $x['bang'],
+			'$mimeType' => $mimeType,
 			'$content' => $content,
 			'$renderedContent' => $renderedContent,
 			'$wikiName' => array('wikiName', t('Enter the name of your new wiki:'), '', ''),
@@ -278,6 +288,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 	function post() {
 		require_once('include/wiki.php');
+		require_once('include/bbcode.php');
 
 		$nick = argv(1);
 		$owner = channelx_by_nick($nick);
@@ -293,13 +304,21 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Render mardown-formatted text in HTML for preview
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
-			$resource_id = $_POST['resource_id']; 
-			require_once('library/markdown.php');
-			$content = wiki_bbcode($content);
-			$html = wiki_generate_toc(zidify_text(purify_html(Markdown($content))));
+			$resource_id = $_POST['resource_id'];
 			$w = wiki_get_wiki($resource_id);
 			$wikiURL = argv(0).'/'.argv(1).'/'.$w['urlName'];
-			$html = wiki_convert_links($html,$wikiURL);
+
+			$mimeType = $w['mimeType'];
+
+			if($mimeType == 'text/bbcode') {
+				$html = bbcode($content);
+			}
+			else {
+				require_once('library/markdown.php');
+				$content = wiki_bbcode($content);
+				$html = wiki_generate_toc(zidify_text(purify_html(Markdown($content))));
+				$html = wiki_convert_links($html,$wikiURL);
+			}
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}
 		

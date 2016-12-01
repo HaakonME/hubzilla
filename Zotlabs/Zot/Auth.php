@@ -149,9 +149,13 @@ class Auth {
 		// The actual channel sending the packet ($c[0]) is not important, but this provides a 
 		// generic zot packet with a sender which can be verified
 
+		$x = q("select site_crypto from site where site_url = '%s' limit 1",
+			dbesc($hubloc['hubloc_url'])
+		);
+
 		$p = zot_build_packet($channel,$type = 'auth_check', 
 			array(array('guid' => $hubloc['hubloc_guid'],'guid_sig' => $hubloc['hubloc_guid_sig'])), 
-			$hubloc['hubloc_sitekey'], $this->sec);
+			$hubloc['hubloc_sitekey'], (($x) ? $x[0]['site_crypto'] : ''), $this->sec);
 
 		$this->Debug('auth check packet created using sitekey ' . $hubloc['hubloc_sitekey']);
 		$this->Debug('packet contents: ' . $p);

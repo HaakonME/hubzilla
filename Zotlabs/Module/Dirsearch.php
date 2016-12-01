@@ -410,13 +410,13 @@ class Dirsearch extends \Zotlabs\Web\Controller {
 		$rand = db_getfunc('rand');
 		$realm = get_directory_realm();
 		if($realm == DIRECTORY_REALM) {
-			$r = q("select * from site where site_access != 0 and site_register !=0 and ( site_realm = '%s' or site_realm = '') and site_type = %d order by $rand",
+			$r = q("select * from site where site_access != 0 and site_register !=0 and ( site_realm = '%s' or site_realm = '') and site_type = %d and site_dead = 0 order by $rand",
 				dbesc($realm),
 				intval(SITE_TYPE_ZOT)
 			);
 		}
 		else {
-			$r = q("select * from site where site_access != 0 and site_register !=0 and site_realm = '%s' and site_type = %d order by $rand",
+			$r = q("select * from site where site_access != 0 and site_register !=0 and site_realm = '%s' and site_type = %d and site_dead = 0 order by $rand",
 				dbesc($realm),
 				intval(SITE_TYPE_ZOT)
 			);

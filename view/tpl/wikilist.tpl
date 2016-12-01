@@ -9,8 +9,7 @@
 	<div id="new-wiki-form-wrapper" class="section-content-tools-wrapper">
 		<form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" class="acl-form" data-form_id="new-wiki-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 			{{include file="field_input.tpl" field=$wikiName}}
-			{{* include file="field_select.tpl" field=$mimeType *}}
-			<input type="hidden" name="mimeType" value="text/markdown">
+			{{include file="field_select.tpl" field=$mimeType}}
 			{{include file="field_checkbox.tpl" field=$notify}}
 			<div>
 				<div class="btn-group pull-right">

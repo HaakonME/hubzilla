@@ -491,7 +491,7 @@ class Notifier {
 		// Now we have collected recipients (except for external mentions, FIXME)
 		// Let's reduce this to a set of hubs.
 
-		$r = q("select * from hubloc where hubloc_hash in (" . implode(',',$recipients) . ") 
+		$r = q("select hubloc.*, site.site_crypto from hubloc left join site on site_url = hubloc_url where hubloc_hash in (" . implode(',',$recipients) . ") 
 			and hubloc_error = 0 and hubloc_deleted = 0"
 		);		
  
@@ -603,8 +603,8 @@ class Notifier {
 				$packet = zot_build_packet($channel,$packet_type,(($packet_recips) ? $packet_recips : null));
 			}
 			elseif($packet_type === 'request') {
-				$packet = zot_build_packet($channel,$packet_type,$env_recips,$hub['hubloc_sitekey'],$hash,
-					array('message_id' => $request_message_id)
+				$packet = zot_build_packet($channel,$packet_type,$env_recips,$hub['hubloc_sitekey'],$hub['site_crypto'],
+					$hash, array('message_id' => $request_message_id)
 				);
 			}
 
@@ -618,7 +618,7 @@ class Notifier {
 				));
 			}
 			else {
-				$packet = zot_build_packet($channel,'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash);	
+				$packet = zot_build_packet($channel,'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null), $hub['site_crypto'],$hash);	
 				queue_insert(array(
 					'hash'       => $hash,
 					'account_id' => $target_item['aid'],

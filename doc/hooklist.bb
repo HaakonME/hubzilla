@@ -145,6 +145,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/cron_weekly]cron_weekly[/zrl]
 	Called when weekly scheduled tasks are executed
 
+[zrl=[baseurl]/help/hook/crypto_methods]crypto_methods[/zrl]
+	Called when generating a list of crypto algorithms in the locally preferred order
+
 [zrl=[baseurl]/help/hook/directory_item]directory_item[/zrl]
 	Called when generating a directory listing for display
 
@@ -385,6 +388,12 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/oembed_probe]oembed_probe[/zrl]
 	Called when performing an oembed content lookup
+
+[zrl=[baseurl]/help/hook/other_encapsulate]other_encapsulate[/zrl]
+	Called when encrypting content for which the algorithm is unknown (see also crypto_methods)
+
+[zrl=[baseurl]/help/hook/other_unencapsulate]other_unencapsulate[/zrl]
+	Called when decrypting content for which the algorithm is unknown (see also crypto_methods)
 
 [zrl=[baseurl]/help/hook/page_content_top]page_content_top[/zrl]
 	Called when we generate a webpage (before calling the module content function)

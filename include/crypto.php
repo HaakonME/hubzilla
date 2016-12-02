@@ -67,11 +67,13 @@ function AES128CBC_decrypt($data,$key,$iv) {
 
 function STD_encrypt($data,$key,$iv) {
 	$key = substr($key,0,32);
+	$iv = substr($iv,0,16);
 	return openssl_encrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
 }
 
 function STD_decrypt($data,$key,$iv) {
 	$key = substr($key,0,32);
+	$iv = substr($iv,0,16);
 	return openssl_decrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
 }
 

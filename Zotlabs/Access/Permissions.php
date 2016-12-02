@@ -35,6 +35,7 @@ class Permissions {
 	 */
 
 	static public function version() {
+		// This must match the version in PermissionRoles.php before permission updates can run.
 		return 1;
 	}
 

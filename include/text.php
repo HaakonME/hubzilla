@@ -2049,7 +2049,7 @@ function ids_to_array($arr,$idx = 'id') {
 	$t = array();
 	if($arr) {
 		foreach($arr as $x) {
-			if(array_key_exists($idx,$x) && strlen($x[$idx]) && (! in_array($x[$idx],$t))) {
+			if(array_key_exists($idx,$x) && strlen($x[$idx]) && (! in_array($x[$idx],$t))) {			
 				$t[] = $x[$idx];
 			}
 		}
@@ -2060,12 +2060,15 @@ function ids_to_array($arr,$idx = 'id') {
 
 
 
-function ids_to_querystr($arr,$idx = 'id') {
+function ids_to_querystr($arr,$idx = 'id',$quote = false) {
 	$t = array();
 	if($arr) {
 		foreach($arr as $x) {
 			if(! in_array($x[$idx],$t)) {
-				$t[] = $x[$idx];
+				if($quote) 
+					$t[] = "'" . dbesc($x[$idx]) . "'";
+				else
+					$t[] = $x[$idx];
 			}
 		}
 	}

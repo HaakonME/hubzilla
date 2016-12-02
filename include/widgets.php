@@ -1473,14 +1473,23 @@ function widget_forums($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	/**
-	 * We used to try and find public forums with custom permissions by checking to see if
-	 * send_stream was false and tag_deliver was true. However with the newer extensible
-	 * permissions infrastructure this makes for a very complicated query. Now we're only
-	 * checking channels that report themselves specifically as pubforums
-	 */
+	$xf = false;
 
-	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where xchan_pubforum = 1 and xchan_deleted = 0 and abook_channel = %d order by xchan_name $limit ",
+	$x1 = q("select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'send_stream' and v = 0",
+		intval(local_channel())
+	);
+	if($x1) {
+		$xc = ids_to_querystr($x1,'xchan',true);
+		$x2 = q("select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'tag_deliver' and v = 1 and xchan in (" . $xc . ") ",
+			intval(local_channel())
+		);
+		if($x2)
+			$xf = ids_to_querystr($x2,'xchan',true);
+	}
+
+	$sql_extra = (($xf) ? " and ( xchan_hash in (" . $xf . ") or xchan_pubforum = 1 ) " : " and xchan_pubforum = 1 "); 
+
+	$r1 = q("select abook_id, xchan_hash, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash where xchan_deleted = 0 and abook_channel = %d $sql_extra order by xchan_name $limit ",
 		intval(local_channel())
 	);
 	if(! $r1)

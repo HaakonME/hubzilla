@@ -28,7 +28,7 @@ class Siteinfo extends \Zotlabs\Web\Controller {
 				'$prj_header' => t('Software and Project information'),
 				'$prj_name' => t('This site is powered by $Projectname'),
 				'$prj_transport' => t('Federated and decentralised networking and identity services provided by Zot'),
-				'$transport_link' => '<a href="http://zotlabs.com">http://zotlabs.com</a>',
+				'$transport_link' => '<a href="https://zotlabs.com">https://zotlabs.com</a>',
 				'$prj_version' => ((get_config('system','hidden_version_siteinfo')) ? '' : sprintf( t('Version %s'), \Zotlabs\Lib\System::get_project_version())),
 				'$prj_linktxt' => t('Project homepage'),
 				'$prj_srctxt' => t('Developer homepage'),

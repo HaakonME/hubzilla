@@ -7,6 +7,9 @@ use Zotlabs\Lib as Zlib;
 
 class PermissionRoles {
 
+	static public function version() {
+		return 1;
+	}
 
 	static function role_perms($role) {
 

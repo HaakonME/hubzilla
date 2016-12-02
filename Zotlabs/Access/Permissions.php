@@ -21,6 +21,8 @@ class Permissions {
 	 * are the responsbility of the channel owner to manage. You just don't want to create any 
 	 * suprises or break things so you have an opportunity to provide sane settings. 
 	 *
+	 * Update the version here and in PermissionRoles
+	 *
 	 *
 	 * Permissions with 'view' in the name are considered read permissions. Anything
 	 * else requires authentication. Read permission limits are PERMS_PUBLIC and anything else
@@ -31,6 +33,10 @@ class Permissions {
 	 * something different for a specific permission within the given role.  
 	 *
 	 */
+
+	static public function version() {
+		return 1;
+	}
 
 
 	static public function Perms($filter = '') {

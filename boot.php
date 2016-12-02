@@ -2454,6 +2454,11 @@ function cert_bad_email() {
 
 function check_for_new_perms() {
 
+	// Do not execute if we are in the middle of a git update and the relevant versions don't match
+
+	if( \Zotlabs\Access\Permissions::version() != \Zotlabs\Access\PermissionRoles::version())
+		return;
+
 	$pregistered = get_config('system','perms');
 	$pcurrent = array_keys(\Zotlabs\Access\Permissions::Perms());
 

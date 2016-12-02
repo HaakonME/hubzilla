@@ -3651,7 +3651,7 @@ function zot_reply_message_request($data) {
 	if ($messages) {
 		$env_recips = null;
 
-		$r = q("select hubloc.*, site.site_crypto from hubloc left join site on hulob_url = site_url where hubloc_hash = '%s' and hubloc_error = 0 and hubloc_deleted = 0",
+		$r = q("select hubloc.*, site.site_crypto from hubloc left join site on hubloc_url = site_url where hubloc_hash = '%s' and hubloc_error = 0 and hubloc_deleted = 0",
 			dbesc($sender_hash)
 		);
 		if (! $r) {

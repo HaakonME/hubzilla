@@ -366,8 +366,13 @@
 							$.post("embedphotos/photolink", {href: href},
 								function(ddata) {
 									if (ddata['status']) {
+										{{if !$mimeType || $mimeType == 'text/markdown'}}
 										var imgURL = ddata['photolink'].replace( /\[.*\]\[.*\](.*)\[.*\]\[.*\]/, '\n![image]($1)' )
 										editor.getSession().insert(editor.getCursorPosition(), imgURL)
+										{{else}}
+										var currentContent = $('#editor').val();
+										$('#editor').val(currentContent + ddata['photolink']);
+										{{/if}}
 									} else {
 										window.console.log('{{$modalerrorlink}}' + ':' + ddata['errormsg']);
 									}

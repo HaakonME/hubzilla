@@ -63,7 +63,6 @@ define ( 'DB_UPDATE_VERSION',       1185  );
  */
 define ( 'EOL',                    '<br>' . "\r\n"        );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
-//define ( 'NULL_DATE',              '0000-00-00 00:00:00'  );
 define ( 'TEMPLATE_BUILD_PATH',    'store/[data]/smarty3' );
 
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000); // A directory client
@@ -84,8 +83,7 @@ $DIRECTORY_FALLBACK_SERVERS = array(
 	'https://hubzilla.zottel.net',
 	'https://hub.pixelbits.de',
 	'https://my.federated.social',
-	'https://hubzilla.nl',
-	'https://blablanet.es'
+	'https://hubzilla.nl'
 );
 
 

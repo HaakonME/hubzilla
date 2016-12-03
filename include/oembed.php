@@ -338,7 +338,7 @@ function oembed_iframe($src,$width,$height) {
 
 	// Make sure any children are sandboxed within their own iframe.
 
-	return '<iframe ' . $scroll . 'height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' 
+	return '<iframe ' . $scroll . 'height="' . $height . '" width="' . $width . '" src="' . $s . '" allowfullscreen frameborder="no" >' 
 		. t('Embedded content') . '</iframe>'; 
 
 }

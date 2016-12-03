@@ -28,8 +28,8 @@
 		api_register_func('api/z/1.0/group','api_group', true);
 		api_register_func('api/red/xchan','api_red_xchan',true);
 		api_register_func('api/z/1.0/xchan','api_red_xchan',true);
-		api_register_func('api/red/item/new','red_item_new', true);
-		api_register_func('api/z/1.0/item/new','red_item_new', true);
+		api_register_func('api/red/item/store','red_item_store', true);
+		api_register_func('api/z/1.0/item/store','red_item_store', true);
 		api_register_func('api/red/item/full','red_item', true);
 		api_register_func('api/z/1.0/item/full','red_item', true);
 
@@ -341,15 +341,15 @@
 
 	}
 
-	function red_item_new($type) {
+	function red_item_store($type) {
 
 		if (api_user() === false) {
-			logger('api_red_item_new: no user');
+			logger('api_red_item_store: no user');
 			return false;
 		}
 
-		logger('api_red_item_new: REQUEST ' . print_r($_REQUEST,true));
-		logger('api_red_item_new: FILES ' . print_r($_FILES,true));
+		logger('api_red_item_store: REQUEST ' . print_r($_REQUEST,true));
+		logger('api_red_item_store: FILES ' . print_r($_FILES,true));
 
 
 		// set this so that the item_post() function is quiet and doesn't redirect or emit json

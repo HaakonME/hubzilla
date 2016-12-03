@@ -1,8 +1,9 @@
 API item/store
 ==============
 
+Usage: POST /api/z/1.0/item/store
 
-Description: item/store posts an item (typically a conversation item or post, but can be any item). 
+Description: item/store posts an item (typically a conversation item or post, but can be any item) using form input.  
 
 
 Required:

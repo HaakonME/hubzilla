@@ -360,11 +360,10 @@
 		if(x($_FILES,'media')) {
 			$_FILES['userfile'] = $_FILES['media'];
 			// upload the image if we have one
-			$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-			$mod = new Zotlabs\Module\Wall_upload();
+			$mod = new Zotlabs\Module\Wall_attach();
 			$media = $mod->post();
-			if(strlen($media)>0)
-				$_REQUEST['body'] .= "\n\n".$media;
+			if($media)
+				$_REQUEST['body'] .= "\n\n" . $media;
 		}
 
 		$mod = new Zotlabs\Module\Item();

@@ -12,7 +12,7 @@ class Wall_attach extends \Zotlabs\Web\Controller {
 	
 		$using_api = false;
 	
-		if(\App::$data['api_info'] && array_key_exists('media',$_FILES)) {
+		if($_REQUEST['api_source'] && array_key_exists('media',$_FILES)) {
 			$using_api = true;
 		}
 

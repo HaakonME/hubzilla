@@ -16,10 +16,22 @@ Required:
 Optional:
 
 - $_FILES['media']
-	uploaded media file (currently photos)
+	uploaded media file to include with post
 
 - title
 	title of post/item
+
+- contact_allow
+	array of xchan.xchan_hash allowed to view this item
+
+- group_allow
+	array of group.hash allowed to view this item
+
+- contact_deny
+	array of xchan.xchan_hash not allowed to view this item
+
+- group_deny
+	array of group.hash not allowed to view this item
 
 - coord
 	geographic coordinates

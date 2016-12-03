@@ -1813,6 +1813,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		$x = q("update item set parent = id where id = %d",
 			intval($r[0]['id'])
 		);
+		$arr['parent'] = $r[0]['id'];
 	}
 
 

@@ -19,7 +19,7 @@ function wiki_list($channel, $observer_hash) {
 			$w['htmlName'] = get_iconfig($w, 'wiki', 'htmlName');
 			$w['urlName'] = get_iconfig($w, 'wiki', 'urlName');
 			$w['path'] = get_iconfig($w, 'wiki', 'path');
-			$w['path'] = get_iconfig($w, 'wiki', 'mimeType');
+			$w['mimeType'] = get_iconfig($w, 'wiki', 'mimeType');
 		}
 	}
 	// TODO: query db for wikis the observer can access. Return with two lists, for read and write access

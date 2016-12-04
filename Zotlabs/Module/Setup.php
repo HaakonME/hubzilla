@@ -161,13 +161,6 @@ class Setup extends \Zotlabs\Web\Controller {
 		}
 	}
 
-	function get_db_errno() {
-		if(class_exists('mysqli'))
-			return mysqli_connect_errno();
-		else
-			return mysql_errno();
-	}
-
 	/**
 	 * @brief Get output for the setup page.
 	 *
@@ -175,6 +168,7 @@ class Setup extends \Zotlabs\Web\Controller {
 	 *
 	 * @return string parsed HTML output
 	 */
+
 	function get() {
 
 		$o = '';
@@ -401,7 +395,8 @@ class Setup extends \Zotlabs\Web\Controller {
 
 		if (strlen($phpath)) {
 			$passed = file_exists($phpath);
-		} else {
+		}
+		elseif(function_exists('shell_exec')) {
 			if(is_windows())
 				$phpath = trim(shell_exec('where php'));
 			else
@@ -426,9 +421,13 @@ class Setup extends \Zotlabs\Web\Controller {
 		if($passed) {
 			$str = autoname(8);
 			$cmd = "$phpath install/testargs.php $str";
-			$result = trim(shell_exec($cmd));
-			$passed2 = $result == $str;
 			$help = '';
+
+			if(function_exists('shell_exec'))
+				$result = trim(shell_exec($cmd));
+			else
+				$help .= t('Unable to check command line PHP as shell_exec() is disabled. This is required.') . EOL;
+			$passed2 = (($result == $str) ? true : false);
 			if(!$passed2) {
 				$help .= t('The command line version of PHP on your system does not have "register_argc_argv" enabled.'). EOL;
 				$help .= t('This is required for message delivery to work.');
@@ -517,6 +516,18 @@ class Setup extends \Zotlabs\Web\Controller {
 		}
 		else {
 			$this->check_add($ck_funcs, t('proc_open'), true, true);
+		}
+		if((! function_exists('exec')) || strstr(ini_get('disable_functions'),'exec')) {
+			$this->check_add($ck_funcs, t('exec'), false, true, t('Error: exec is required but is either not installed or has been disabled in php.ini'));
+		}
+		else {
+			$this->check_add($ck_funcs, t('exec'), true, true);
+		}
+		if((! function_exists('shell_exec')) || strstr(ini_get('disable_functions'),'shell_exec')) {
+			$this->check_add($ck_funcs, t('shell_exec'), false, true, t('Error: shell_exec is required but is either not installed or has been disabled in php.ini'));
+		}
+		else {
+			$this->check_add($ck_funcs, t('shell_exec'), true, true);
 		}
 
 		if(! function_exists('curl_init')) {

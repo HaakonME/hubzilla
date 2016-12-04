@@ -237,8 +237,8 @@
 		}
 
 		if($r) {
-			$x = q("select * from group_member left join xchan on group_member.xchan = xchan.xchan_hash 
-				left join abook on abook_xchan = xchan_hash where gid = %d",
+			$x = q("select * from group_member left join abook on abook_xchan = xchan and abook_channel = group_member.uid left join xchan on group_member.xchan = xchan.xchan_hash 
+				where gid = %d",
 				intval($r[0]['id'])
 			);
 			json_return_and_die($x);

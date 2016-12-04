@@ -456,7 +456,7 @@ class Setup extends \Zotlabs\Web\Controller {
 				userReadableSize($result['max_upload_filesize']),
 				$result['max_file_uploads']
 				);
-		$help .= '<br>' . t('You can adjust these settings in the servers php.ini.');
+		$help .= '<br>' . t('You can adjust these settings in the server php.ini file.');
 
 		$this->check_add($checks, t('PHP upload limits'), true, false, $help);
 	}

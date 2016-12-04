@@ -28,8 +28,8 @@
 		api_register_func('api/z/1.0/group','api_group', true);
 		api_register_func('api/red/xchan','api_red_xchan',true);
 		api_register_func('api/z/1.0/xchan','api_red_xchan',true);
-		api_register_func('api/red/item/store','red_item_store', true);
-		api_register_func('api/z/1.0/item/store','red_item_store', true);
+		api_register_func('api/red/item/update','zot_item_update', true);
+		api_register_func('api/z/1.0/item/update','zot_item_update', true);
 		api_register_func('api/red/item/full','red_item', true);
 		api_register_func('api/z/1.0/item/full','red_item', true);
 
@@ -266,7 +266,7 @@
 		require_once('include/hubloc.php');
 
 		if($_SERVER['REQUEST_METHOD'] === 'POST') {
-			$r = xchan_store($_REQUEST);
+			// $r = xchan_store($_REQUEST);
 		}
 		$r = xchan_fetch($_REQUEST);
 		json_return_and_die($r);
@@ -341,7 +341,7 @@
 
 	}
 
-	function red_item_store($type) {
+	function zot_item_update($type) {
 
 		if (api_user() === false) {
 			logger('api_red_item_store: no user');

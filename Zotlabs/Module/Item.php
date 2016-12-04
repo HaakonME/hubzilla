@@ -126,6 +126,8 @@ class Item extends \Zotlabs\Web\Controller {
 			$ret = $this->item_check_service_class($uid,(($_REQUEST['webpage'] == ITEM_TYPE_WEBPAGE) ? true : false));
 			if (!$ret['success']) { 
 				notice( t($ret['message']) . EOL) ;
+				if($api_source)
+					return ( [ 'success' => false, 'message' => 'service class exception' ] );	
 				if(x($_REQUEST,'return')) 
 					goaway(z_root() . "/" . $return_path );
 				killme();
@@ -180,6 +182,8 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			if(($r === false) || (! count($r))) {
 				notice( t('Unable to locate original post.') . EOL);
+				if($api_source)
+					return ( [ 'success' => false, 'message' => 'invalid post id' ] );	
 				if(x($_REQUEST,'return')) 
 					goaway(z_root() . "/" . $return_path );
 				killme();
@@ -214,6 +218,8 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			if(! $can_comment) {
 				notice( t('Permission denied.') . EOL) ;
+				if($api_source)
+					return ( [ 'success' => false, 'message' => 'permission denied' ] );	
 				if(x($_REQUEST,'return')) 
 					goaway(z_root() . "/" . $return_path );
 				killme();
@@ -222,6 +228,8 @@ class Item extends \Zotlabs\Web\Controller {
 		else {
 			if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],($webpage) ? 'write_pages' : 'post_wall')) {
 				notice( t('Permission denied.') . EOL) ;
+				if($api_source)
+					return ( [ 'success' => false, 'message' => 'permission denied' ] );	
 				if(x($_REQUEST,'return')) 
 					goaway(z_root() . "/" . $return_path );
 				killme();
@@ -276,6 +284,8 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if(! $channel) {
 			logger("mod_item: no channel.");
+			if($api_source)
+				return ( [ 'success' => false, 'message' => 'no channel' ] );	
 			if(x($_REQUEST,'return')) 
 				goaway(z_root() . "/" . $return_path );
 			killme();
@@ -291,6 +301,8 @@ class Item extends \Zotlabs\Web\Controller {
 		}
 		else {
 			logger("mod_item: no owner.");
+			if($api_source)
+				return ( [ 'success' => false, 'message' => 'no owner' ] );	
 			if(x($_REQUEST,'return')) 
 				goaway(z_root() . "/" . $return_path );
 			killme();
@@ -433,6 +445,8 @@ class Item extends \Zotlabs\Web\Controller {
 				if($preview)
 					killme();
 				info( t('Empty post discarded.') . EOL );
+				if($api_source)
+					return ( [ 'success' => false, 'message' => 'no content' ] );	
 				if(x($_REQUEST,'return')) 
 					goaway(z_root() . "/" . $return_path );
 				killme();
@@ -473,6 +487,8 @@ class Item extends \Zotlabs\Web\Controller {
 				}
 				else {
 					notice( t('Executable content type not permitted to this channel.') . EOL);
+					if($api_source)
+						return ( [ 'success' => false, 'message' => 'forbidden content type' ] );	
 					if(x($_REQUEST,'return')) 
 						goaway(z_root() . "/" . $return_path );
 					killme();
@@ -863,7 +879,8 @@ class Item extends \Zotlabs\Web\Controller {
 			logger('mod_item: post cancelled by plugin or duplicate suppressed.');
 			if($return_path)
 				goaway(z_root() . "/" . $return_path);
-	
+			if($api_source)
+				return ( [ 'success' => false, 'message' => 'operation cancelled' ] );	
 			$json = array('cancel' => 1);
 			$json['reload'] = z_root() . '/' . $_REQUEST['jsreload'];
 			echo json_encode($json);
@@ -916,6 +933,10 @@ class Item extends \Zotlabs\Web\Controller {
 			if(! $nopush)
 				\Zotlabs\Daemon\Master::Summon(array('Notifier', 'edit_post', $post_id));
 	
+
+			if($api_source)
+				return($x);
+
 			if((x($_REQUEST,'return')) && strlen($return_path)) {
 				logger('return: ' . $return_path);
 				goaway(z_root() . "/" . $return_path );
@@ -990,8 +1011,11 @@ class Item extends \Zotlabs\Web\Controller {
 		else {
 			logger('mod_item: unable to retrieve post that was just stored.');
 			notice( t('System error. Post not saved.') . EOL);
-			goaway(z_root() . "/" . $return_path );
-			// NOTREACHED
+			if($return_path)
+				goaway(z_root() . "/" . $return_path );
+			if($api_source)
+				return ( [ 'success' => false, 'message' => 'system error' ] );
+			killme();
 		}
 		
 		if(($parent) && ($parent != $post_id)) {

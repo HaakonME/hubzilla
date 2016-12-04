@@ -336,6 +336,19 @@ a.wall-item-name-link {
 
 /* bb-code */
 
+/* prevent [toc] bbcode links to scroll the titles behind the navbar */
+.section-content-wrapper h1,
+.section-content-wrapper h2,
+.section-content-wrapper h3,
+.section-content-wrapper h4 {
+	padding-top: 60px;
+	margin-top: -40px;
+}
+
+.toc {
+	margin-top: 1em;
+}
+
 code {
 	font-family: Courier, monospace;
 	font-size: 1em;

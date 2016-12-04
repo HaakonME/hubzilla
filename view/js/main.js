@@ -1315,7 +1315,6 @@ $(document).ready(function() {
 		numbers       : aStr['t17'],
 	};
 
-	$("#toc").toc();
 });
 
 function zFormError(elm,x) {

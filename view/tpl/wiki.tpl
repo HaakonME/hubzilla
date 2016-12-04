@@ -184,7 +184,9 @@
 		function (data) {
 		if (data.success) {
 			$('#wiki-preview').html(data.html);
+			{{if !$mimeType || $mimeType == 'text/markdown'}}
 			$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
+			{{/if}}
 			$('#page-tools').hide();
 		} else {
 			window.console.log('Error previewing page.');
@@ -418,13 +420,12 @@
 
 	$(document).ready(function () {
 		wiki_refresh_page_list();
-		$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
-
 		// This seems obsolete
 		// Show Edit tab first. Otherwise the Ace editor does not load.
 		//$("#wiki-nav-tabs li:eq(1) a").tab('show');
 
 		{{if !$mimeType || $mimeType == 'text/markdown'}}
+		$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
 		window.editor.on("input", function() {
 			if(window.editor.getSession().getUndoManager().isClean()) {
 				$('#save-page').addClass('disabled');

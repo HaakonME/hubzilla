@@ -824,12 +824,14 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("(\[h6\](.*?)\[\/h6\])ism",'<h6>$1</h6>',$Text);
 	}
 	// Check for table of content without params
-	if (strpos($Text,'[toc]') !== false) {
-		$Text = preg_replace("/\[toc\]/ism",'<ul id="toc"></ul>',$Text);
+	while(strpos($Text,'[toc]') !== false) {
+		$toc_id = 'toc-' . random_string(10);
+		$Text = preg_replace("/\[toc\]/ism", '<ul id="' . $toc_id . '" class="toc" data-toc=".section-content-wrapper"></ul><script>$("#' . $toc_id . '").toc();</script>', $Text, 1);
 	}
 	// Check for table of content with params
-	if (strpos($Text,'[toc') !== false) {
-		$Text = preg_replace("/\[toc([^\]]+?)\]/ism",'<ul$1></ul>',$Text);
+	while(strpos($Text,'[toc') !== false) {
+		$toc_id = 'toc-' . random_string(10);
+		$Text = preg_replace("/\[toc([^\]]+?)\]/ism", '<ul id="' . $toc_id . '" class="toc"$1></ul><script>$("#' . $toc_id . '").toc();</script>', $Text, 1);
 	}
 	// Check for centered text
 	if (strpos($Text,'[/center]') !== false) {

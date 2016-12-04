@@ -28,7 +28,7 @@
 		<table id="wikis-index">
 			<tr>
 				<th width="97%">{{$name}}</th>
-				<th width="1%">Type</th>
+				<th width="1%">{{$type}}</th>
 				<th width="1%" class="wikis-index-tool"></th>
 				{{if $owner}}
 				<th width="1%"></th>

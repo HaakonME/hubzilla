@@ -16,7 +16,7 @@ class AbConfig {
 	}
 
 
-	static public function Get($chan,$xhash,$family,$key) {
+	static public function Get($chan,$xhash,$family,$key, $default = false) {
 		$r = q("select * from abconfig where chan = %d and xchan = '%s' and cat = '%s' and k = '%s' limit 1",
 			intval($chan),
 			dbesc($xhash),
@@ -26,7 +26,7 @@ class AbConfig {
 		if($r) {
 			return ((preg_match('|^a:[0-9]+:{.*}$|s', $r[0]['v'])) ? unserialize($r[0]['v']) : $r[0]['v']);
 		}
-		return false;
+		return $default;
 	}
 
 

@@ -98,13 +98,13 @@ class Config {
 	 * @return mixed Return value or false on error or if not set
 	 */
 
-	static public function Get($family,$key) {
+	static public function Get($family,$key,$default = false) {
 		if((! array_key_exists($family, \App::$config)) || (! array_key_exists('config_loaded', \App::$config[$family])))
 			self::Load($family);
 
 		if(array_key_exists('config_loaded', \App::$config[$family])) {
 			if(! array_key_exists($key, \App::$config[$family])) {
-				return false;		
+				return $default;		
 			}
 			return ((! is_array(\App::$config[$family][$key])) && (preg_match('|^a:[0-9]+:{.*}$|s', \App::$config[$family][$key])) 
 				? unserialize(\App::$config[$family][$key])
@@ -112,7 +112,7 @@ class Config {
 			);
 		}
 
-		return false;
+		return $default;
 	}
 
 	/**

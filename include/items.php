@@ -4116,25 +4116,21 @@ function webpage_to_namespace($webpage) {
 
 function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid) {
 
-	$page_type = '';
-
 	if(! $post_id)
 		return;
 
-	if($webpage == ITEM_TYPE_WEBPAGE)
-		$page_type = 'WEBPAGE';
-	elseif($webpage == ITEM_TYPE_BLOCK)
-		$page_type = 'BUILDBLOCK';
-	elseif($webpage == ITEM_TYPE_PDL)
-		$page_type = 'PDL';
-	elseif($webpage == ITEM_TYPE_DOC)
-		$page_type = 'docfile';
-	elseif($namespace && $remote_id) {
+	$page_type = webpage_to_namespace($webpage);
+
+	if($page_type == 'unknown' && $namespace && $remote_id) {
 		$page_type = $namespace;
 		$pagetitle = $remote_id;
 	}
+	else {
+		$page_type = '';
+	}
 
 	if($page_type) {
+
 		// store page info as an alternate message_id so we can access it via
 		//    https://sitename/page/$channelname/$pagetitle
 		// if no pagetitle was given or it couldn't be transliterated into a url, use the first

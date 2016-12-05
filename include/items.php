@@ -3980,8 +3980,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 			$sql_nets .= "( abook.abook_closeness >= " . intval($arr['cmin']) . " ";
 			$sql_nets .= " AND abook.abook_closeness <= " . intval($arr['cmax']) . " ) ";
-			/** @fixme dead code, $cmax is undefined */
-			if ($cmax == 99)
+
+			if ($arr['cmax'] == 99)
 				$sql_nets .= " OR abook.abook_closeness IS NULL ) ";
 		}
 	}

@@ -11,7 +11,11 @@ api/z/1.0/channel/export/basic
 
 api/z/1.0/channel/stream
 
-	Fetch conversation items 
+	Fetch channel conversation items 
+
+api/z/1.0/network/stream
+
+	Fetch network conversation items 
 
 
 api/z/1.0/files

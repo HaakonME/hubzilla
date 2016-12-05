@@ -1,5 +1,5 @@
 #
-# Travis-CI configuration file
+# Travis-CI configuration file for Hubzilla
 #
 ## configure things
 #
@@ -7,6 +7,8 @@
 # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
 language: php
 
+# use newer 'trusty' based distro, old one is 'precise'
+dist: trusty
 # use docker based containers
 sudo: false
 
@@ -21,9 +23,8 @@ addons:
   # Install dependencies for generating API documentation with doxygen
   apt:
     packages:
-      # default doxygen 1.7 is too old, we install our own
-      #- doxygen
-      #- doxygen-latex
+      - doxygen
+      - doxygen-latex
       - graphviz
       - ttf-liberation
 
@@ -36,7 +37,8 @@ addons:
 php:
   - '5.6'
   - '7.0'
-  #- hhvm
+  - '7.1'
+  #- 'hhvm'
 
 # list of environments to test
 env:
@@ -46,6 +48,8 @@ env:
     - GHP_REPO_REF: github.com/redmatrix/hubzilla.git
     # Uncomment if a newer/specific version of Doxygen should be used
     #- DOXY_VER: 1.8.12
+    # Code Coverage is slow, no need to have it in every build
+    - PHPUCOV: "--no-coverage"
   # use matrix only for PHP and MySQL, all other combinations added through includes
   matrix:
     - DB=mysql
@@ -55,18 +59,20 @@ matrix:
   fast_finish: true
   # Additional check combinations
   include:
-    # PHP7, mariadb 10.1
-    - php: '7.0'
-      env: DB=mariadb MARIADB_VERSION=10.1
+    # PHP7.1, mariadb 10.1
+    - php: '7.1'
+      env: DB=mariadb MARIADB_VERSION=10.1 CODECOV=1
       # use mariadb instead of MySQL
       addons:
         mariadb: '10.1'
-    # PHP7, PostgreSQL 9.4
-    - php: '7.0'
-      env: DB=pgsql POSTGRESQL_VERSION=9.4
-      # Use newer postgres than 9.1 default
+    # PHP7.1, PostgreSQL 9.6
+    - php: '7.1'
+      env: DB=pgsql POSTGRESQL_VERSION=9.6
+      # Use newer postgres than 9.2 default
       addons:
-        postgresql: '9.4'
+        postgresql: '9.6'
+      services:
+        - postgresql
    # Exclude from default matrix combinations
 #  exclude:
 #    - php: hhvm
@@ -76,7 +82,7 @@ matrix:
 cache:
   directories:
     - $HOME/.composer/cache
-    - $HOME/doxygen/doxygen-$DOXY_VER/bin
+    #- $HOME/doxygen/doxygen-$DOXY_VER/bin
 
 
 
@@ -93,6 +99,10 @@ install:
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
+  # Use code coverage config for phpunit
+  - if [[ ! -z $CODECOV ]]; then export PHPUCOV=""; fi
+  # HHVM needs xdebug for code coverage, but extremely slow
+  #- if [[ $TRAVIS_PHP_VERSION =~ ^hhvm ]]; then echo 'xdebug.enable = On' >> /etc/hhvm/php.ini; fi
   # Some preparation tasks of environment
   - ./tests/travis/prepare.sh
   # DB specific prepare scripts
@@ -101,7 +111,7 @@ before_script:
   - if [[ "$DB" == "pgsql" ]]; then ./tests/travis/prepare_pgsql.sh; fi
 
 # omitting "script:" will default to phpunit
-script: ./vendor/bin/phpunit -c tests/phpunit-$DB.xml
+script: ./vendor/bin/phpunit $PHPUCOV -c tests/phpunit-$DB.xml
 
 after_success:
   # Generate API documentation and deploy it to gh-pages

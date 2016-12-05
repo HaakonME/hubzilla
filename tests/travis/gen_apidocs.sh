@@ -34,20 +34,21 @@ if [[ "$TRAVIS_JOB_NUMBER" != "${TRAVIS_BUILD_NUMBER}.1" ]]; then
 	exit
 fi
 
-# Get newer Doxygen
-#echo "Doxygen version 1.7 is too old for us :("
-#doxygen --version
-
-# Travis CI has an old Doxygen 1.7 build, so we fetch a recent static binary
-export DOXY_BINPATH=$HOME/doxygen/doxygen-$DOXY_VER/bin
-if [ ! -e "$DOXY_BINPATH/doxygen" ]; then
-	echo "Installing newer Doxygen $DOXY_VER ..."
-	mkdir -p $HOME/doxygen && cd $HOME/doxygen
-	wget -O - http://ftp.stack.nl/pub/users/dimitri/doxygen-$DOXY_VER.linux.bin.tar.gz | tar xz
-	export PATH=$PATH:$DOXY_BINPATH
-fi
-echo "Doxygen version"
+echo "Doxygen version >= 1.8 is required"
 doxygen --version
+
+# Check if newer version of Doxygen should be used
+if [ ! -z "$DOXY_VER" ]; then
+	export DOXY_BINPATH=$HOME/doxygen/doxygen-$DOXY_VER/bin
+	if [ ! -e "$DOXY_BINPATH/doxygen" ]; then
+		echo "Installing newer Doxygen $DOXY_VER ..."
+		mkdir -p $HOME/doxygen && cd $HOME/doxygen
+		wget -O - http://ftp.stack.nl/pub/users/dimitri/doxygen-$DOXY_VER.linux.bin.tar.gz | tar xz
+		export PATH=$DOXY_BINPATH:$PATH
+	fi
+	echo "Doxygen version"
+	doxygen --version
+fi
 
 echo "Generating Doxygen API documentation ..."
 cd $TRAVIS_BUILD_DIR

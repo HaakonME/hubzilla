@@ -30,7 +30,7 @@ echo "Preparing for PostgreSQL ..."
 # Print out some PostgreSQL information
 psql --version
 # Why does this hang further execution of the job?
-#psql -c "SELECT VERSION();" -U postgres
+psql -c "SELECT VERSION();" -U postgres
 
 # Create Hubzilla database
 psql -c "DROP DATABASE IF EXISTS hubzilla;" -U postgres

@@ -426,7 +426,7 @@ class Setup extends \Zotlabs\Web\Controller {
 			if(function_exists('shell_exec'))
 				$result = trim(shell_exec($cmd));
 			else
-				$help .= t('Unable to check command line PHP as shell_exec() is disabled. This is required.') . EOL;
+				$help .= t('Unable to check command line PHP, as shell_exec() is disabled. This is required.') . EOL;
 			$passed2 = (($result == $str) ? true : false);
 			if(!$passed2) {
 				$help .= t('The command line version of PHP on your system does not have "register_argc_argv" enabled.'). EOL;

@@ -149,6 +149,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'$wikiName' => array('wikiName', t('Wiki name')),
 						'$mimeType' => array('mimeType', t('Content type'), '', '', ['text/markdown' => 'Markdown', 'text/bbcode' => 'BB Code']),
 						'$name' => t('Name'),
+						'$type' => t('Type'),
 						'$lockstate' => $x['lockstate'],
 						'$acl' => $x['acl'],
 						'$allow_cid' => $x['allow_cid'],

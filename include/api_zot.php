@@ -33,6 +33,7 @@
 		api_register_func('api/red/item/full','red_item', true);
 		api_register_func('api/z/1.0/item/full','red_item', true);
 
+		api_register_func('api/z/1.0/network/stream','api_network_stream', true);
 		api_register_func('api/z/1.0/abook','api_zot_abook_xchan',true);
 		api_register_func('api/z/1.0/abconfig','api_zot_abconfig',true);
 		api_register_func('api/z/1.0/perm_allowed','api_zot_perm_allowed',true);
@@ -55,18 +56,63 @@
 	}
 
 
+	function api_network_stream($type) {
+		if(api_user() === false) {
+			logger('api_channel_stream: no user');
+			return false;
+		}
+
+		$channel = channelx_by_n(api_user());
+		if(! $channel)
+			return false;
+
+
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			// json_return_and_die(post_activity_item($_REQUEST));
+		}
+		else {
+			$mindate = (($_REQUEST['mindate']) ? datetime_convert('UTC','UTC',$_REQUEST['mindate']) : '');
+        	if(! $mindate)
+            	$mindate = datetime_convert('UTC','UTC', 'now - 14 days');
+
+			$arr = $_REQUEST;
+			$ret = [];	
+			$i = items_fetch($arr,App::get_channel(),get_observer_hash());
+			if($i) {
+				foreach($i as $iv) {
+					$ret[] = encode_item($iv);
+				}
+			}
+
+			json_return_and_die($ret);
+		}
+	}
+
+
+
+
+
+
 	function api_channel_stream($type) {
 		if(api_user() === false) {
 			logger('api_channel_stream: no user');
 			return false;
 		}
 
+		$channel = channelx_by_n(api_user());
+		if(! $channel)
+			return false;
+
+
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			json_return_and_die(post_activity_item($_REQUEST));
 		}
 		else {
-			// fetch stream
+			$mindate = (($_REQUEST['mindate']) ? datetime_convert('UTC','UTC',$_REQUEST['mindate']) : '');
+        	if(! $mindate)
+            	$mindate = datetime_convert('UTC','UTC', 'now - 14 days');
 
+			json_return_and_die(zot_feed($channel['channel_id'],$channel['channel_hash'],[ 'mindate' => $mindate ]));
 		}
 	}
 
@@ -237,8 +283,8 @@
 		}
 
 		if($r) {
-			$x = q("select * from group_member left join xchan on group_member.xchan = xchan.xchan_hash 
-				left join abook on abook_xchan = xchan_hash where gid = %d",
+			$x = q("select * from group_member left join abook on abook_xchan = xchan and abook_channel = group_member.uid left join xchan on group_member.xchan = xchan.xchan_hash 
+				where gid = %d",
 				intval($r[0]['id'])
 			);
 			json_return_and_die($x);

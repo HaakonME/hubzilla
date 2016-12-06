@@ -10,8 +10,8 @@ class AConfig {
 		return XConfig::Load('a_' . $account_id);
 	}
 
-	static public function Get($account_id,$family,$key) {
-		return XConfig::Get('a_' . $account_id,$family,$key);
+	static public function Get($account_id,$family,$key,$default = false) {
+		return XConfig::Get('a_' . $account_id,$family,$key, $default);
 	}
 
 	static public function Set($account_id,$family,$key,$value) {

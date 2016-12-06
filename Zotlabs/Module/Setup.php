@@ -161,13 +161,6 @@ class Setup extends \Zotlabs\Web\Controller {
 		}
 	}
 
-	function get_db_errno() {
-		if(class_exists('mysqli'))
-			return mysqli_connect_errno();
-		else
-			return mysql_errno();
-	}
-
 	/**
 	 * @brief Get output for the setup page.
 	 *
@@ -175,6 +168,7 @@ class Setup extends \Zotlabs\Web\Controller {
 	 *
 	 * @return string parsed HTML output
 	 */
+
 	function get() {
 
 		$o = '';
@@ -401,7 +395,8 @@ class Setup extends \Zotlabs\Web\Controller {
 
 		if (strlen($phpath)) {
 			$passed = file_exists($phpath);
-		} else {
+		}
+		elseif(function_exists('shell_exec')) {
 			if(is_windows())
 				$phpath = trim(shell_exec('where php'));
 			else
@@ -426,9 +421,13 @@ class Setup extends \Zotlabs\Web\Controller {
 		if($passed) {
 			$str = autoname(8);
 			$cmd = "$phpath install/testargs.php $str";
-			$result = trim(shell_exec($cmd));
-			$passed2 = $result == $str;
 			$help = '';
+
+			if(function_exists('shell_exec'))
+				$result = trim(shell_exec($cmd));
+			else
+				$help .= t('Unable to check command line PHP, as shell_exec() is disabled. This is required.') . EOL;
+			$passed2 = (($result == $str) ? true : false);
 			if(!$passed2) {
 				$help .= t('The command line version of PHP on your system does not have "register_argc_argv" enabled.'). EOL;
 				$help .= t('This is required for message delivery to work.');
@@ -457,7 +456,7 @@ class Setup extends \Zotlabs\Web\Controller {
 				userReadableSize($result['max_upload_filesize']),
 				$result['max_file_uploads']
 				);
-		$help .= '<br>' . t('You can adjust these settings in the servers php.ini.');
+		$help .= '<br>' . t('You can adjust these settings in the server php.ini file.');
 
 		$this->check_add($checks, t('PHP upload limits'), true, false, $help);
 	}
@@ -512,11 +511,17 @@ class Setup extends \Zotlabs\Web\Controller {
 				$this->check_add($ck_funcs, t('Apache mod_rewrite module'), true, true);
 			}
 		}
-		if((! function_exists('proc_open')) || strstr(ini_get('disable_functions'),'proc_open')) {
-			$this->check_add($ck_funcs, t('proc_open'), false, true, t('Error: proc_open is required but is either not installed or has been disabled in php.ini'));
+		if((! function_exists('exec')) || strstr(ini_get('disable_functions'),'exec')) {
+			$this->check_add($ck_funcs, t('exec'), false, true, t('Error: exec is required but is either not installed or has been disabled in php.ini'));
 		}
 		else {
-			$this->check_add($ck_funcs, t('proc_open'), true, true);
+			$this->check_add($ck_funcs, t('exec'), true, true);
+		}
+		if((! function_exists('shell_exec')) || strstr(ini_get('disable_functions'),'shell_exec')) {
+			$this->check_add($ck_funcs, t('shell_exec'), false, true, t('Error: shell_exec is required but is either not installed or has been disabled in php.ini'));
+		}
+		else {
+			$this->check_add($ck_funcs, t('shell_exec'), true, true);
 		}
 
 		if(! function_exists('curl_init')) {
@@ -579,7 +584,7 @@ class Setup extends \Zotlabs\Web\Controller {
 
 		if(! is_writable(TEMPLATE_BUILD_PATH) ) {
 			$status = false;
-			$help = t('Red uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
+			$help = t('This software uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
 			$help .= sprintf( t('In order to store these compiled templates, the web server needs to have write access to the directory %s under the top level web folder.'), TEMPLATE_BUILD_PATH) . EOL;
 			$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
 			$help .= sprintf( t('Note: as a security measure, you should give the web server write access to %s only--not the template files (.tpl) that it contains.'), TEMPLATE_BUILD_PATH) . EOL;
@@ -601,7 +606,7 @@ class Setup extends \Zotlabs\Web\Controller {
 
 		if(! is_writable('store')) {
 			$status = false;
-			$help = t('This software uses the store directory to save uploaded files. The web server needs to have write access to the store directory under the Red top level folder') . EOL;
+			$help = t('This software uses the store directory to save uploaded files. The web server needs to have write access to the store directory under the top level web folder') . EOL;
 			$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
 		}
 
@@ -716,7 +721,7 @@ class Setup extends \Zotlabs\Web\Controller {
 		// (e.g. NSS used in RedHat) require different syntax, so hopefully
 		// the default curl cipher list will work for most sites. If not,
 		// this can set via config. Many distros are now disabling RC4,
-		// but many Red sites still use it and are unable to change it.
+		// but many existing sites still use it and are unable to change it.
 		// We do not use SSL for encryption, only to protect session cookies.
 		// z_fetch_url() is also used to import shared links and other content
 		// so in theory most any cipher could show up and we should do our best

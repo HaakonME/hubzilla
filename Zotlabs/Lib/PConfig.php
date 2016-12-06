@@ -67,16 +67,16 @@ class PConfig {
 	 * @return mixed Stored value or false if it does not exist
 	 */
 
-	static public function Get($uid,$family,$key,$instore = false) {
+	static public function Get($uid,$family,$key,$default = false) {
 
 		if(is_null($uid) || $uid === false)
-			return false;
+			return $default;
 
 		if(! array_key_exists($uid, \App::$config))
 			self::Load($uid);
 
 		if((! array_key_exists($family, \App::$config[$uid])) || (! array_key_exists($key, \App::$config[$uid][$family])))
-			return false;
+			return $default;
 
 		return ((! is_array(\App::$config[$uid][$family][$key])) && (preg_match('|^a:[0-9]+:{.*}$|s', \App::$config[$uid][$family][$key])) 
 			? unserialize(\App::$config[$uid][$family][$key])

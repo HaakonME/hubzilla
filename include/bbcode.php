@@ -826,12 +826,12 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	// Check for table of content without params
 	while(strpos($Text,'[toc]') !== false) {
 		$toc_id = 'toc-' . random_string(10);
-		$Text = preg_replace("/\[toc\]/ism",  '<strong>' . t('Contents:') . '</strong><ul id="' . $toc_id . '" class="toc" data-toc=".section-content-wrapper"></ul><script>$("#' . $toc_id . '").toc();</script>', $Text, 1);
+		$Text = preg_replace("/\[toc\]/ism", '<ul id="' . $toc_id . '" class="toc" data-toc=".section-content-wrapper"></ul><script>$("#' . $toc_id . '").toc();</script>', $Text, 1);
 	}
 	// Check for table of content with params
 	while(strpos($Text,'[toc') !== false) {
 		$toc_id = 'toc-' . random_string(10);
-		$Text = preg_replace("/\[toc([^\]]+?)\]/ism", '<strong>' . t('Contents:') . '</strong><ul id="' . $toc_id . '" class="toc"$1></ul><script>$("#' . $toc_id . '").toc();</script>', $Text, 1);
+		$Text = preg_replace("/\[toc([^\]]+?)\]/ism", '<ul id="' . $toc_id . '" class="toc"$1></ul><script>$("#' . $toc_id . '").toc();</script>', $Text, 1);
 	}
 	// Check for centered text
 	if (strpos($Text,'[/center]') !== false) {

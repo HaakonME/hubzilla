@@ -10,7 +10,7 @@ class IConfig {
 		return;
 	}
 
-	static public function Get(&$item, $family, $key) {
+	static public function Get(&$item, $family, $key, $default = false) {
 
 		$is_item = false;
 	
@@ -28,7 +28,7 @@ class IConfig {
 			$iid = $item;
 
 		if(! $iid)
-			return false;
+			return $default;
 
 		if(is_array($item) && array_key_exists('iconfig',$item) && is_array($item['iconfig'])) {
 			foreach($item['iconfig'] as $c) {
@@ -48,7 +48,7 @@ class IConfig {
 				$item['iconfig'][] = $r[0];
 			return $r[0]['v'];
 		}
-		return false;
+		return $default;
 
 	}
 

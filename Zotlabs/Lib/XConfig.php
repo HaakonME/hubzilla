@@ -59,16 +59,16 @@ class XConfig {
 	 * @return mixed Stored $value or false if it does not exist
 	 */
 
-	static public function Get($xchan, $family, $key) {
+	static public function Get($xchan, $family, $key, $default = false) {
 
 		if(! $xchan)
-			return false;
+			return $default;
 
 		if(! array_key_exists($xchan, \App::$config))
 			load_xconfig($xchan);
 
 		if((! array_key_exists($family, \App::$config[$xchan])) || (! array_key_exists($key, \App::$config[$xchan][$family])))
-			return false;
+			return $default;
 
 		return ((! is_array(\App::$config[$xchan][$family][$key])) && (preg_match('|^a:[0-9]+:{.*}$|s', \App::$config[$xchan][$family][$key])) 
 			? unserialize(\App::$config[$xchan][$family][$key])

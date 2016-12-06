@@ -55,6 +55,7 @@ function get_help_content($tocpath = false) {
 		if(! $text) {
 			$doctype = 'bbcode';
 			$text = load_doc_file('doc/main.bb');
+                        goaway('/help/about/about_hubzilla');
 			\App::$page['title'] = t('Help');
 		}
 

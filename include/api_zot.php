@@ -118,7 +118,13 @@
 
 	function api_attach_list($type) {
 		logger('api_user: ' . api_user());
-		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),'','','','created asc'));
+		$hash     = ((array_key_exists('filehash',$_REQUEST)) ? $_REQUEST['filehash'] : '');
+		$filename = ((array_key_exists('filename',$_REQUEST)) ? $_REQUEST['filename'] : '');
+		$filetype = ((array_key_exists('filetype',$_REQUEST)) ? $_REQUEST['filetype'] : '');
+		$start    = ((array_key_exists('start',$_REQUEST))    ? intval($_REQUEST['start'])   : 0);
+		$records  = ((array_key_exists('records',$_REQUEST))  ? intval($_REQUEST['records']) : 0);
+
+		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),$hash,$filename,$filetype,'created asc',$start,$records));
 	}
 
 

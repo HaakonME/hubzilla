@@ -197,10 +197,10 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 		$sql_extra .= protect_sprintf(" and hash = '" . dbesc($hash) . "' ");
 
 	if($filename)
-		$sql_extra .= protect_sprintf(" and filename like '@" . dbesc($filename) . "@' ");
+		$sql_extra .= protect_sprintf(" and filename like '%" . dbesc($filename) . "%' ");
 
 	if($filetype)
-		$sql_extra .= protect_sprintf(" and filetype like '@" . dbesc($filetype) . "@' ");
+		$sql_extra .= protect_sprintf(" and filetype like '%" . dbesc($filetype) . "%' ");
 
 	if($entries)
 		$limit = " limit " . intval($start) . ", " . intval(entries) . " ";

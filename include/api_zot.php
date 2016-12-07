@@ -157,9 +157,9 @@
 		$start = (($_REQUEST['start']) ? intval($_REQUEST['start']) : 0);
 		$length = (($_REQUEST['length']) ? intval($_REQUEST['length']) : 0);
 
-		$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
+		$r = q("select * from attach where uid = %d and hash like '%s' limit 1",
 			intval(api_user()),
-			dbesc($_REQUEST['file_id'])
+			dbesc($_REQUEST['file_id'] . '%')
 		);
 		if($r) {
 			$ptr = $r[0];

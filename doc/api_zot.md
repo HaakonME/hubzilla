@@ -27,9 +27,9 @@ api/z/1.0/filemeta
 	Export file metadata for any uploaded file
 
 
-api/z/1.0/filedata
+[api/z/1.0/filedata](help/api/api_filedata)
 
-	Export file contents for any uploaded file
+	Fetch file contents or partial contents for any uploaded file 
 
 
 api/z/1.0/file/export

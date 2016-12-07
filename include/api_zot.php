@@ -124,7 +124,13 @@
 		$start    = ((array_key_exists('start',$_REQUEST))    ? intval($_REQUEST['start'])   : 0);
 		$records  = ((array_key_exists('records',$_REQUEST))  ? intval($_REQUEST['records']) : 0);
 
-		json_return_and_die(attach_list_files(api_user(),get_observer_hash(),$hash,$filename,$filetype,'created asc',$start,$records));
+		$x = attach_list_files(api_user(),get_observer_hash(),$hash,$filename,$filetype,'created asc',$start,$records);
+		if($start || $records) {
+			$x['start'] = $start;
+			$x['records'] = count($x['results']);
+		}
+
+		json_return_and_die($x);
 	}
 
 

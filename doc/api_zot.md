@@ -18,7 +18,7 @@ api/z/1.0/network/stream
 	Fetch network conversation items 
 
 
-api/z/1.0/files
+[api/z/1.0/files](help/api/api_files)
 
 	List file storage
 

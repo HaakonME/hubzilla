@@ -90,6 +90,7 @@
         <div id="developers" class="panel-collapse collapse in">
             <ul class="list-group">
                 <li class="doco-list-group-item"><a href="/help/developer/developer_guide">Guide</a></li>
+                <li class="doco-list-group-item"><a href="/help/developer/api_zot">Zot API</a></li>
             </ul>
         </div>
     </div>
@@ -417,7 +418,9 @@
                 tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
                 tocUl.toc({content: "#doco-content", headings: "h1,h2"});
                 tocUl.addClass('toc-content');
+                if( $(window).height() > 499) {
                 tocUl.sticky({topSpacing:$('nav').outerHeight(true), zIndex: 1000});
+            }
             }
         });
         

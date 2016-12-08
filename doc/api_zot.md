@@ -3,82 +3,82 @@ Zot API
 
 
 
-api/z/1.0/channel/export/basic
+channel/export/basic
 
 	Export channel data
 
 
 
-api/z/1.0/channel/stream
+channel/stream
 
 	Fetch channel conversation items 
 
-api/z/1.0/network/stream
+network/stream
 
 	Fetch network conversation items 
 
 
-[api/z/1.0/files](help/api/api_files)
+[files](help/api/api_files)
 
 	List file storage
 
-api/z/1.0/filemeta
+filemeta
 
 	Export file metadata for any uploaded file
 
 
-[api/z/1.0/filedata](help/api/api_filedata)
+[filedata](help/api/api_filedata)
 
 	Fetch file contents or partial contents for any uploaded file 
 
 
-api/z/1.0/file/export
+file/export
 
-api/z/1.0/file
+file
 
-api/z/1.0/albums
+[albums](help/api/api_albums)
 
 	List photo albums
 
 
-api/z/1.0/photos
+photos
 
 	list photo metadata
 
 
-api/z/1.0/photo
+photo
 
 
-[api/z/1.0/group](help/api/group)
+[group](help/api/group)
 
 	List privacy groups
 
-[api/z/1.0/group_members](help/api/group_members)
+[group_members](help/api/group_members)
 
 	List members of a privacy group
 
 
-[api/z/1.0/xchan](help/api/api_xchan)
+[xchan](help/api/api_xchan)
 
 	Global extended channel (identity) information
 
-[api/z/1.0/item/update](help/api/api_item_update)
+[item/update](help/api/api_item_update)
 
 	Create or update an item (post, activity, webpage, etc.)
 
 
-api/z/1.0/item/full
+item/full
 
 	Get all data associated with an item
 
-api/z/1.0/abook
+abook
 
 	Connections
 
-api/z/1.0/abconfig
+abconfig
 
 	Connection metadata (such as permissions)
 
-api/z/1.0/perm_allowed
+perm_allowed
 
 	Check a permission for a given xchan

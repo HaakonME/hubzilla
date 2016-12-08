@@ -1847,18 +1847,22 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	call_hooks('post_remote_end',$arr);
 
-	// update the commented timestamp on the parent
+	// update the commented timestamp on the parent - unless this is potentially a clone of an older item
+	// which we don't wish to bring to the surface. As the queue only holds deliveries for 3 days, it's
+	// suspected of being an older cloned item if the creation time is older than that. 
 
-	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and item_delayed = 0 ",
-		dbesc($arr['parent_mid']),
-		intval($arr['uid'])
-	);
+	if($arr['created'] > datetime_convert('','','now - 4 days')) {
+		$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and item_delayed = 0 ",
+			dbesc($arr['parent_mid']),
+			intval($arr['uid'])
+		);
 
-	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d",
-		dbesc(($z) ? $z[0]['commented'] : (datetime_convert())),
-		dbesc(datetime_convert()),
-		intval($parent_id)
-	);
+		q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d",
+			dbesc(($z) ? $z[0]['commented'] : (datetime_convert())),
+			dbesc(datetime_convert()),
+			intval($parent_id)
+		);
+	}
 
 
 	// If _creating_ a deleted item, don't propagate it further or send out notifications.

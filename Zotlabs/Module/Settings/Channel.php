@@ -404,8 +404,11 @@ class Channel {
 			'$desc' => t('Your channel address is'),
 			'$nickname' => $nickname,
 			'$subdir' => $subdir,
+			'$davdesc' => t('Your files/photos are accessible via WebDAV at'),
+			'$davpath' => ((get_account_techlevel() > 3) ? z_root() . '/dav/' . $nickname : ''),
 			'$basepath' => \App::get_hostname()
 		));
+
 	
 		$stpl = get_markup_template('settings.tpl');
 	

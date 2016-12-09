@@ -109,6 +109,11 @@ input, optgroup, select, textarea {
 	resize: vertical;
 }
 
+#help-content pre code {
+	overflow-x: auto;
+	white-space: pre;
+}
+
 pre code {
 	border: none;
 }

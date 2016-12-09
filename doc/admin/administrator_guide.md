@@ -1,16 +1,16 @@
 
 # Overview
 
-Hubzilla is more than a simple web application. It is a
+$Projectname is more than a simple web application. It is a
 complex communications system which more closely resembles an email server
 than a web server. For reliability and performance, messages are delivered in
 the background and are queued for later delivery when sites are down. This
 kind of functionality requires a bit more of the host system than the typical
 blog. Not every PHP/MySQL hosting provider will be able to support
-Hubzilla. Many will but please review the requirements and confirm these
+$Projectname. Many will but please review the requirements and confirm these
 with your hosting provider prior to installation.
 
-We've tried very hard to ensure that Hubzilla will run on commodity
+We've tried very hard to ensure that $Projectname will run on commodity
 hosting platforms such as those used to host Wordpress blogs and Drupal
 websites. It will run on most any Linux VPS system. Windows LAMP platforms
 such as XAMPP and WAMP are not officially supported at this time however
@@ -31,7 +31,7 @@ issues.
 
 ## Choose a domain name or subdomain name for your server
 
-Hubzilla can only be installed into the root of a domain or sub-domain, and can 
+$Projectname can only be installed into the root of a domain or sub-domain, and can 
 not be installed using alternate TCP ports.
 
 ## Decide if you will use SSL and obtain an SSL certificate before software installation
@@ -61,15 +61,15 @@ Free "browser-valid" certificates are available from providers such as StartSSL
 and LetsEncrypt. 
 
 If you do NOT use SSL, there may be a delay of up to a minute for the initial
-install script * while we check the SSL port to see if anything responds there.
-When communicating with new sites, Hubzilla always attempts connection on the
+install script - while we check the SSL port to see if anything responds there.
+When communicating with new sites, $Projectname always attempts connection on the
 SSL port first, before falling back to a less secure connection.  If you do not
 use SSL, your webserver MUST NOT listen on port 443 at all.
 
 If you use LetsEncrypt to provide certificates and create a file under 
 .well-known/acme-challenge so that LetsEncrypt can verify your domain ownership, 
 please remove or rename the .well-known directory as soon as the certificate is 
-generated. Hubzilla will provide its own handler for ".well-known" services when
+generated. $Projectname will provide its own handler for ".well-known" services when
 it is installed, and an existing directory in this location may prevent some of 
 these services from working correctly. This should not be a problem with Apache,
 but may be an issue with nginx or other web server platforms.
@@ -111,7 +111,7 @@ PHP might differ from the _webserver_ version
 
 # Manual Installation #
 
-## Unpack the Hubzilla files into the root of your web server document area ###
+## Unpack the $Projectname files into the root of your web server document area ###
 If you copy the directory tree to your webserver, make sure that you include the
 hidden files like .htaccess.
 
@@ -168,7 +168,7 @@ Create searchable representations of the online documentation. You may do this
     util/importdoc
 
 # Automated installation via the .homeinstall shell script
-There is a shell script in (``.homeinstall/hubzilla-setup.sh``) that will install Hubzilla and its dependencies on a fresh installation of Debian 8.3 stable (Jessie). It should work on similar Linux systems but your results may vary.
+There is a shell script in (``.homeinstall/hubzilla-setup.sh``) that will install $Projectname and its dependencies on a fresh installation of Debian 8.3 stable (Jessie). It should work on similar Linux systems but your results may vary.
 
 ## Requirements
 The installation script was originally designed for a small hardware server behind your home router. However, it has been tested on several systems running Debian 8.3:
@@ -194,7 +194,7 @@ The installation script was originally designed for a small hardware server behi
 1. `sed -i "s/^upload_max_filesize =.*/upload_max_filesize = 100M/g" /etc/php5/apache2/php.ini`
 1. `sed -i "s/^post_max_size =.*/post_max_size = 100M/g" /etc/php5/apache2/php.ini`
 1. `service apache2 reload`
-1. Open your domain with a browser and step throught the initial configuration of Hubzilla.
+1. Open your domain with a browser and step throught the initial configuration of $Projectname.
 
 # Service Classes
 
@@ -296,16 +296,16 @@ empty:
 
     util/config system directory_server ""
 
-# Upgrading from RedMatrix to Hubzilla
+# Upgrading from RedMatrix to $Projectname
 
-## How to migrate an individual channel from RedMatrix to Hubzilla
+## How to migrate an individual channel from RedMatrix to $Projectname
 
-1. Clone the channel by opening an account on a Hubzilla hub and performing a basic import (not content) from the original RedMatrix hub. Give your new clone time to sync connections and settings.
+1. Clone the channel by opening an account on a $Projectname hub and performing a basic import (not content) from the original RedMatrix hub. Give your new clone time to sync connections and settings.
 1. Export individual channel content from your RedMatrix hub to a set of JSON text files using the red.hub/uexport tool. Do this in monthly increments if necessary.
-1. Import the JSON data files sequentially in chronological order into the Hubzilla clone using the new.hub/import_items tool.
+1. Import the JSON data files sequentially in chronological order into the $Projectname clone using the new.hub/import_items tool.
 1. Inform your Friendica and Diaspora contacts that your channel moves. They need to reconnect to your new address.  
 1. After successful import (check!) delete your channel on the old RedMatrix Server.
-1. On the Hubzilla server visit new.hub/locs and upgrade to your channel to a primary one. And when the old Redmatrix server is still listed delete them here as well. Press "Sync" to inform all other server in the grid.
+1. On the $Projectname server visit new.hub/locs and upgrade to your channel to a primary one. And when the old Redmatrix server is still listed delete them here as well. Press "Sync" to inform all other server in the grid.
 
 # Troubleshooting
 ## Log files
@@ -319,7 +319,7 @@ There are three different log facilities.
 There are some lines at the bottom of the supplied .htconfig.php file; which if uncommented will enable a PHP error log (*extremely* useful for finding the source of white screen failures). This isn't done by default due to potential issues with logfile ownership and write permissions and the fact that there is no logfile rotation by default.                                                                                                          
                                                                                                                   
 
-**The third is the "application log"**. This is used by Hubzilla to report what is going on in the program and usually reports any difficulties or unexpected data we received. It also occasionally reports "heartbeat" status messages to indicate that we reached a certain point in a script. **This** is the most important log file to us, as we create it ourself for the sole purpose of reporting the status of background tasks and anything that seems weird or out of place. It may not be fatal, but maybe just unexpected. If you're performing a task and there's a problem, let us know what is in this file when the problem occurred. (Please don't send me 100M dumps you'll only piss me off). Just a few relevant lines so I can rule out a few hundred thousand lines of code and concentrate on where the problem starts showing up.
+**The third is the "application log"**. This is used by $Projectname to report what is going on in the program and usually reports any difficulties or unexpected data we received. It also occasionally reports "heartbeat" status messages to indicate that we reached a certain point in a script. **This** is the most important log file to us, as we create it ourself for the sole purpose of reporting the status of background tasks and anything that seems weird or out of place. It may not be fatal, but maybe just unexpected. If you're performing a task and there's a problem, let us know what is in this file when the problem occurred. (Please don't send me 100M dumps you'll only piss me off). Just a few relevant lines so I can rule out a few hundred thousand lines of code and concentrate on where the problem starts showing up.
 
 These are your site logs, not mine. We report serious issues at any log level. I highly recommend 'DEBUG' log level for most sites - which provides a bit of additional info and doesn't create huge logfiles. When there's a problem which defies all attempts to track, you might wish to use DATA log level for a short period of time to capture all the detail of what structures we were dealing with at the time. This log level will use a lot of space so is recommended only for brief periods or for developer test sites.
 

@@ -1,11 +1,11 @@
 
-[h1]Hubzilla Project[/h1]
+[h1]Project Overview[/h1]
 
-$Projectname is a decentralized communication network, which aims to provide communication that is censorship-resistant, privacy-respecting, and thus free from the oppressive claws of contemporary corporate communication giants. These giants function primarily as spy networks for paying clients of all sorts and types, in addition to monopolizing and centralizing the Internet; a feature that was not part of the original and revolutionary goals that produced the World Wide Web. 
+$Projectname is a decentralized community server providing communications, identity, and access control services which work together seamlessly across domains and connected websites. It allows anybody to publicly or [b]privately[/b] publish a range of web/media/personal content. The cross-domain privacy implementation is unique and somewhat revolutionary, as identity and access rights are negotiated by servers invisibly in the background.
 
 $Projectname is free and open source.  It is designed to scale from a $35 Raspberry Pi, to top of the line AMD and Intel Xeon-powered multi-core enterprise servers.  It can be used to support communication between a few individuals, or scale to many thousands and more.
 
-$Projectname aims to be skill and resource agnostic. It is easy to use by everyday computer users, as well as by systems administrators and developers. 
+$Projectname aims to be skill and resource agnostic. It is easy to use by everyday people, as well as by systems administrators and developers. 
 
 How you use it depends on how you want to use it. 
 

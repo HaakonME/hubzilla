@@ -417,7 +417,7 @@
             if(pageName === linkName) {
                 var tocUl = $(this).closest('li').append('<ul>').find('ul');
                 tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
-                tocUl.toc({content: "#doco-content", headings: "h1,h2"});
+                tocUl.toc({content: "#doco-content", headings: "h1"});
                 tocUl.addClass('toc-content');
                 if( $(window).height() > 499) {
                 tocUl.sticky({topSpacing:$('nav').outerHeight(true), zIndex: 1000});

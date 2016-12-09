@@ -2003,20 +2003,8 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	$arr['commented']     = $orig[0]['commented'];
 
-	if($deliver) {
-		$arr['received']      = datetime_convert();
-		$arr['changed']       = datetime_convert();
-	}
-	else {
-
-		// When deliver flag is false, we are *probably* performing an import or bulk migration.
-		// If one updates the changed timestamp it will be made available to zotfeed and delivery
-		// will still take place through backdoor methods. Since these fields are rarely used
-		// otherwise, just preserve the original timestamp.
-
-		$arr['received']      = $orig[0]['received'];
-		$arr['changed']       = $orig[0]['changed'];
-	}
+	$arr['received']      = $orig[0]['received'];
+	$arr['changed']       = $orig[0]['changed'];
 
 	$arr['route']         = ((array_key_exists('route',$arr)) ? trim($arr['route'])          : $orig[0]['route']);
 	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);

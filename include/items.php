@@ -1847,18 +1847,22 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	call_hooks('post_remote_end',$arr);
 
-	// update the commented timestamp on the parent
+	// update the commented timestamp on the parent - unless this is potentially a clone of an older item
+	// which we don't wish to bring to the surface. As the queue only holds deliveries for 3 days, it's
+	// suspected of being an older cloned item if the creation time is older than that. 
 
-	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and item_delayed = 0 ",
-		dbesc($arr['parent_mid']),
-		intval($arr['uid'])
-	);
+	if($arr['created'] > datetime_convert('','','now - 4 days')) {
+		$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and item_delayed = 0 ",
+			dbesc($arr['parent_mid']),
+			intval($arr['uid'])
+		);
 
-	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d",
-		dbesc(($z) ? $z[0]['commented'] : (datetime_convert())),
-		dbesc(datetime_convert()),
-		intval($parent_id)
-	);
+		q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d",
+			dbesc(($z) ? $z[0]['commented'] : (datetime_convert())),
+			dbesc(datetime_convert()),
+			intval($parent_id)
+		);
+	}
 
 
 	// If _creating_ a deleted item, don't propagate it further or send out notifications.
@@ -1999,20 +2003,8 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	$arr['commented']     = $orig[0]['commented'];
 
-	if($deliver) {
-		$arr['received']      = datetime_convert();
-		$arr['changed']       = datetime_convert();
-	}
-	else {
-
-		// When deliver flag is false, we are *probably* performing an import or bulk migration.
-		// If one updates the changed timestamp it will be made available to zotfeed and delivery
-		// will still take place through backdoor methods. Since these fields are rarely used
-		// otherwise, just preserve the original timestamp.
-
-		$arr['received']      = $orig[0]['received'];
-		$arr['changed']       = $orig[0]['changed'];
-	}
+	$arr['received']      = $orig[0]['received'];
+	$arr['changed']       = $orig[0]['changed'];
 
 	$arr['route']         = ((array_key_exists('route',$arr)) ? trim($arr['route'])          : $orig[0]['route']);
 	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);

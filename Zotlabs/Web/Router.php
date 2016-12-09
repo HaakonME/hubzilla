@@ -137,15 +137,21 @@ class Router {
 					killme();
 				}
 
-				logger("Module {$module} not found.", LOGGER_DEBUG, LOG_WARNING);
-
-				if((x($_SERVER, 'QUERY_STRING')) && ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') && \App::$config['system']['dreamhost_error_hack']) {
-					logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI']);
+				if((x($_SERVER, 'QUERY_STRING')) 
+					&& ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') 
+					&& \App::$config['system']['dreamhost_error_hack']) {
+					logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI'],LOGGER_DEBUG);
 					goaway(z_root() . $_SERVER['REQUEST_URI']);
 				}
 
-				logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] . ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' . $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
-				header($_SERVER['SERVER_PROTOCOL'] . ' 404 ' . t('Not Found'));
+				if(get_config('system','log_404',true)) {
+					logger("Module {$module} not found.", LOGGER_DEBUG, LOG_WARNING);
+					logger('index.php: page not found: ' . $_SERVER['REQUEST_URI'] 
+						. ' ADDRESS: ' . $_SERVER['REMOTE_ADDR'] . ' QUERY: ' 
+						. $_SERVER['QUERY_STRING'], LOGGER_DEBUG);
+				}
+
+				header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
 				$tpl = get_markup_template('404.tpl');
 				\App::$page['content'] = replace_macros($tpl, array(
 						'$message' => t('Page not found.')

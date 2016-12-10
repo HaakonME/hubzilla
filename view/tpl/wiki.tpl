@@ -172,7 +172,7 @@
 	$('#edit-pane-tab').click(function (ev) {
 		setTimeout(function() {
 			window.editor.focus();
-			if($('main').hasClass('.fullscreen')) {
+			if($('main').hasClass('fullscreen')) {
 				adjustFullscreenEditorHeight();
 			}
 			else {
@@ -473,6 +473,8 @@
 	});
 
 	$(window).resize(function () {
-		adjustFullscreenEditorHeight();
+		if($('main').hasClass('fullscreen')) {
+			adjustFullscreenEditorHeight();
+		}
 	});
 </script>

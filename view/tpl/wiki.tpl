@@ -175,6 +175,9 @@
 			if($('main').hasClass('.fullscreen')) {
 				adjustFullscreenEditorHeight();
 			}
+			else {
+				adjustInlineEditorHeight();
+			}
 
 		}, 500); // Return the focus to the editor allowing immediate text entry
 		$('#page-tools').show();
@@ -336,21 +339,22 @@
 		$('#editor, #ace-editor').height($(window).height() - $('#id_commitMsg_wrapper').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('#wiki-nav-tabs').outerHeight(true) - 17);
 		{{if !$mimeType || $mimeType == 'text/markdown'}}
 		editor.setOptions({
-			maxLines: '',
-			minLines: ''
+			maxLines: null,
+			minLines: null
 		});
 		editor.resize();
 		{{/if}}
 	}
 
 	function adjustInlineEditorHeight() {
-		$('#editor').height(500);
 		{{if !$mimeType || $mimeType == 'text/markdown'}}
 		editor.setOptions({
 			maxLines: Infinity,
 			minLines: 30
 		});
-
+		editor.resize();
+		{{else}}
+		editor.height(editor[0].scrollHeight);
 		{{/if}}
 	}
 

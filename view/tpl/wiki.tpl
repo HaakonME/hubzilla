@@ -19,7 +19,7 @@
 			</div>	
 			{{/if}}
 			<button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenEditorHeight();"><i class="fa fa-expand"></i></button>
-			<button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);"><i class="fa fa-compress"></i></button>
+			<button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false); adjustInlineEditorHeight()"><i class="fa fa-compress"></i></button>
 		</div>
 		<h2>
 			<span id="wiki-header-name">{{$wikiheaderName}}</span>:
@@ -147,6 +147,9 @@
 		theme: "ace/theme/github",
 		mode: "ace/mode/markdown",
 
+		maxLines: Infinity,
+		minLines: 30,
+
 		wrap: true,
 
 		printMargin: false
@@ -167,9 +170,14 @@
 	{{/if}}
 
 	$('#edit-pane-tab').click(function (ev) {
-		setTimeout(function() {window.editor.focus(); adjustFullscreenEditorHeight();}, 500); // Return the focus to the editor allowing immediate text entry
-		$('#page-tools').show();
+		setTimeout(function() {
+			window.editor.focus();
+			if($('main').hasClass('.fullscreen')) {
+				adjustFullscreenEditorHeight();
+			}
 
+		}, 500); // Return the focus to the editor allowing immediate text entry
+		$('#page-tools').show();
 	});
 
 	$('#wiki-get-preview').click(function (ev) {
@@ -326,10 +334,24 @@
 
 	function adjustFullscreenEditorHeight() {
 		$('#editor, #ace-editor').height($(window).height() - $('#id_commitMsg_wrapper').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('#wiki-nav-tabs').outerHeight(true) - 17);
+		{{if !$mimeType || $mimeType == 'text/markdown'}}
+		editor.setOptions({
+			maxLines: '',
+			minLines: ''
+		});
+		editor.resize();
+		{{/if}}
 	}
 
 	function adjustInlineEditorHeight() {
-		$('#editor, #ace-editor').height($(window).height() - $('#id_commitMsg_wrapper').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23);
+		$('#editor').height(500);
+		{{if !$mimeType || $mimeType == 'text/markdown'}}
+		editor.setOptions({
+			maxLines: Infinity,
+			minLines: 30
+		});
+
+		{{/if}}
 	}
 
 	$('#embed-image').click(function (ev) {

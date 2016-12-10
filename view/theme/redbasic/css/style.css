@@ -1788,6 +1788,7 @@ nav .badge.mail-update:hover {
 
 #expand-aside,
 #expand-tabs,
+#doco-return-to-top-btn,
 #context-help-btn {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;

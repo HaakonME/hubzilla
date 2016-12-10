@@ -19,7 +19,7 @@ Along the way, $Projectname offers a number of unique goodies:
 
 [b]Cloning:[/b] of online identities. Your online presence no longer has to be tied to a single server, domain name or IP address.  You can clone and import your identity (or channel as we call it) to another server (or, a hub as servers are known in $Projectname).  Now, should your primary hub go down, no worries, your contacts, posts[i]*[/i], and messages[i]*[/i] will automagically continue to be available and accessible under your cloned channel. [i](*: only posts and messages as from the moment you cloned your channel)[/i]
 
-[b]Privacy:[/b] $Projectname identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.  The member is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.  No questions, no fuss. 
+[b]Privacy:[/b] $Projectname identities (Zot IDs) can be deleted, backed up/downloaded, and cloned. People have full control of their own data and content. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.  
 
 
 [h2]Additional Resources and Links[/h2]

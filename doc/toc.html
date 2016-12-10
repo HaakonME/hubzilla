@@ -1,50 +1,38 @@
 <style>
-    #accordion .glyphicon { margin-right:10px; }
-    .panel-collapse>.list-group .list-group-item:first-child {border-top-right-radius: 0;border-top-left-radius: 0;}
-    .panel-collapse>.list-group .list-group-item {border-width: 1px 0;}
-    .panel-collapse>.list-group {margin-bottom: 0;}
-    .panel-collapse .list-group-item {border-radius:0;}
-
-    .doco-list-group-item {
-        padding-left: 15px;
-    } 
     .doco-list-group-item > a {
         font-weight: bold;
-        font-size: 1.1em;
     } 
+
+    .sub-menu {
+        margin: 3px 0px 10px 10px;
+    }
     
     #doco-content h1 {
         border-bottom: #cccccc thin solid;
         padding-bottom: 0.3em;
     }
     
-    #doco-content > h1, 
-    #doco-content > h2, 
-    #doco-content > h3, 
-    #doco-content > h4 {
-        padding-top: 60px; 
-        margin-top: -60px;
-    }
-    
     #region_1 .widget ul ul {
         list-style-type: none;
-        padding-left: 15px;
     }
     
     .toc-content {
         background-color: white;
-        border-left: #cccccc 2px solid;
-        margin-left: 10px;
+    }
+
+    .toc-content li,
+    #doco-top-toc li {
+	padding: 3px 0px;
     }
 </style>
 
-<div class="panel-group" id="accordion">
+<div class="" id="accordion">
     <div class="panel">
-        <div class="panel-heading">
-            <h4 class="panel-title">
+        <div class="">
+            <h3 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#about">
                     About</a>
-            </h4>
+            </h3>
         </div>
         <div id="about" class="panel-collapse collapse in">
             <ul class="list-group">
@@ -54,11 +42,11 @@
         </div>
     </div>
     <div class="panel">
-        <div class="panel-heading">
-            <h4 class="panel-title">
+        <div class="">
+            <h3 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#members">
                     Members</a>
-            </h4>
+            </h3>
         </div>
         <div id="members" class="panel-collapse collapse in">
             <ul class="list-group">
@@ -68,11 +56,11 @@
         </div>
     </div>
     <div class="panel">
-        <div class="panel-heading">
-            <h4 class="panel-title">
+        <div class="">
+            <h3 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#administrators">
                     Administrators</a>
-            </h4>
+            </h3>
         </div>
         <div id="administrators" class="panel-collapse collapse in">
             <ul class="list-group">
@@ -82,11 +70,11 @@
         </div>
     </div>
     <div class="panel">
-        <div class="panel-heading">
-            <h4 class="panel-title">
+        <div class="">
+            <h3 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#developers">
                     Developers</a>
-            </h4>
+            </h3>
         </div>
         <div id="developers" class="panel-collapse collapse in">
             <ul class="list-group">
@@ -96,11 +84,11 @@
         </div>
     </div>
     <div class="panel">
-        <div class="panel-heading">
-            <h4 class="panel-title">
+        <div class="">
+            <h3 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#tutorials">
                     Tutorials</a>
-            </h4>
+            </h3>
         </div>
         <div id="tutorials" class="panel-collapse collapse in">
             <ul class="list-group">
@@ -418,7 +406,7 @@
                 var tocUl = $(this).closest('li').append('<ul>').find('ul');
                 tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
                 tocUl.toc({content: "#doco-content", headings: "h1"});
-                tocUl.addClass('toc-content');
+                tocUl.addClass('toc-content sub-menu');
                 if( $(window).height() > 499) {
 					tocUl.sticky({topSpacing:$('nav').outerHeight(true), zIndex: 1000});
 				}

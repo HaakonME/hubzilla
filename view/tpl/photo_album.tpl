@@ -1,4 +1,4 @@
-<div class="generic-content-wrapper">
+<div class="{{if !$no_fullscreen_btn}}generic-content-wrapper{{/if}}">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
 			{{if $order}}

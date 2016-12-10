@@ -1573,7 +1573,7 @@ function widget_tasklist($arr) {
 function widget_helpindex($arr) {
 
 	$o .= '<div class="widget">';
-	$o .= '<h3>' . t('Documentation') . '</h3>';
+	//$o .= '<h3>' . t('Documentation') . '</h3>';
 
 	$level_0 = get_help_content('sitetoc');
 	if(! $level_0)

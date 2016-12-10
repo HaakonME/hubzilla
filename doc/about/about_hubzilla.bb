@@ -15,11 +15,11 @@ In other words, $Projectname can run on any computing platform that comes with a
 
 Along the way, $Projectname offers a number of unique goodies: 
 
-[b]Single-click user identification:[/b] meaning you can access sites on $Projectname simply by clicking on links to remote sites. Authentication just happens automagically behind the scenes. Forget about remembering multiple user names with multiple passwords when accessing different sites online.
+[b]Single-click identification:[/b] meaning you can access sites on $Projectname simply by clicking on links to remote sites. Authentication just happens automagically behind the scenes. Forget about remembering multiple login names with multiple passwords when accessing different sites online.
 
 [b]Cloning:[/b] of online identities. Your online presence no longer has to be tied to a single server, domain name or IP address.  You can clone and import your identity (or channel as we call it) to another server (or, a hub as servers are known in $Projectname).  Now, should your primary hub go down, no worries, your contacts, posts[i]*[/i], and messages[i]*[/i] will automagically continue to be available and accessible under your cloned channel. [i](*: only posts and messages as from the moment you cloned your channel)[/i]
 
-[b]Privacy:[/b] $Projectname identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.  The user is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.  No questions, no fuss. 
+[b]Privacy:[/b] $Projectname identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.  The member is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.  No questions, no fuss. 
 
 
 [h2]Additional Resources and Links[/h2]
@@ -374,7 +374,7 @@ Nomadic identity, single sign-on, and $Projectname's decentralization of hubs, w
 
 As you browse the grid, viewing channels and their unique content, you are seamlessly authenticated as you go, even across completely different server hubs. No passwords to enter. Nothing to type. You're just greeted by name on every new site you visit. 
 
-How does Zot do that? We call it [i]magic-auth[/i], because $Projectname hides the details of the complexities that go into single sign-on logins, and nomadic identities, from the experience of browsing on the grid.  This is one of the design goals of $Projectname: to increase privacy, and freedom on the web, while reducing the complexity and tedium brought by the need to enter new passwords and user names for every different sight that someone might visit online.
+How does Zot do that? We call it [i]magic-auth[/i], because $Projectname hides the details of the complexities that go into single sign-on logins, and nomadic identities, from the experience of browsing on the grid.  This is one of the design goals of $Projectname: to increase privacy, and freedom on the web, while reducing the complexity and tedium brought by the need to enter new passwords and login names for every different sight that someone might visit online.
 
 You login only once on your home hub (or any nomadic backup hub you have chosen). This allows you to access any authenticated services provided anywhere in the grid - such as shopping, blogs, forums, and access to private information. This is just like the services offered by large corporate providers with huge user databases; however you can be a member of this community, as well as a server on this network using a $35 Rasberry Pi. Your password isn't stored on a thousand different sites, or even worse, only on a few sites like Google and Facebook, beyond your direct control.
 
@@ -386,7 +386,7 @@ Zot's identity layer allows you to provide fine-grained permissions to any conte
 
 Currently, the grid supports communications, photo albums, events, and files. This will be extended in the future to provide content management services (web pages) and cloud storage facilities, such as WebDAV and multi-media libraries. Every object and how it is shared and with whom is completely under your control.
 
-This type of control is available on large corporate providers such as Facebook and Google, because they own the user database. Within the grid, there is no need for a huge user databaseon your machine - because the grid [i]is[/i] your user database. It has what is essentially infinite capacity (limited by the total number of hubs online across the internet), and is spread amongst hundreds, and potentially millions of computers. 
+This type of control is available on large corporate providers such as Facebook and Google, because they own the user database. Within the grid, there is no need for a huge user database on your machine - because the grid [i]is[/i] your user database. It has what is essentially infinite capacity (limited by the total number of hubs online across the internet), and is spread amongst hundreds, and potentially millions of computers. 
 
 Access can be granted or denied for any resource, to any channel, or any group of channels; anywhere within the grid. Others can access your content if you permit them to do so, and they do not even need to have an account on your hub. Your private photos cannot be viewed, because permission really work; they are not an addon that was added as an afterthought. If you aren't on the list of allowed viewers for a particular photo, you aren't going to look at it. 
 

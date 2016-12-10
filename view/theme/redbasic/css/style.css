@@ -2040,6 +2040,12 @@ dl.bb-dl > dd > li {
 	max-width: 100%;
 }
 
+#ace-editor,
+#editor {
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+}
+
 .sub-menu {
 	margin-top: 10px;
 	padding-left: 15px;

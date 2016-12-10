@@ -18,7 +18,7 @@
 				</ul>
 			</div>	
 			{{/if}}
-			<button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen();"><i class="fa fa-expand"></i></button>
+			<button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenEditorHeight();"><i class="fa fa-expand"></i></button>
 			<button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false);"><i class="fa fa-compress"></i></button>
 		</div>
 		<h2>
@@ -52,11 +52,13 @@
 				{{if !$mimeType || $mimeType == 'text/markdown'}}
 				<div id="ace-editor"></div>
 				{{else}}
-				<textarea id="editor">{{$content}}</textarea>
+				<div id="editor-wrapper">
+					<textarea id="editor">{{$content}}</textarea>
+				</div>
 				{{/if}}
 				{{if $showPageControls}}
 				<div>
-					<div id="id_{{$commitMsg.0}}_wrapper" class="form-group field input">
+					<div id="id_{{$commitMsg.0}}_wrapper" class="field input">
 						<div class="input-group">
 							<input class="widget-input" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
 							<div class="input-group-btn">
@@ -147,9 +149,6 @@
 
 		wrap: true,
 
-		minLines: 30,
-		maxLines: Infinity,
-
 		printMargin: false
 	});
 
@@ -168,8 +167,9 @@
 	{{/if}}
 
 	$('#edit-pane-tab').click(function (ev) {
-		setTimeout(function() {window.editor.focus();}, 500); // Return the focus to the editor allowing immediate text entry
-			$('#page-tools').show();
+		setTimeout(function() {window.editor.focus(); adjustFullscreenEditorHeight();}, 500); // Return the focus to the editor allowing immediate text entry
+		$('#page-tools').show();
+
 	});
 
 	$('#wiki-get-preview').click(function (ev) {
@@ -324,6 +324,14 @@
 		}, 'json');
 	}
 
+	function adjustFullscreenEditorHeight() {
+		$('#editor, #ace-editor').height($(window).height() - $('#id_commitMsg_wrapper').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('#wiki-nav-tabs').outerHeight(true) - 17);
+	}
+
+	function adjustInlineEditorHeight() {
+		$('#editor, #ace-editor').height($(window).height() - $('#id_commitMsg_wrapper').outerHeight(true) - $('.section-title-wrapper').outerHeight(true) - $('nav').outerHeight(true) - 23);
+	}
+
 	$('#embed-image').click(function (ev) {
 		initializeEmbedPhotoDialog();
 		ev.preventDefault();
@@ -436,5 +444,9 @@
 		{{else}}
 		window.editor.bbco_autocomplete('bbcode');
 		{{/if}}
+	});
+
+	$(window).resize(function () {
+		adjustFullscreenEditorHeight();
 	});
 </script>

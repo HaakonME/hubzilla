@@ -217,6 +217,85 @@ class Enotify {
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
 	}
 
+	if ($params['type'] == NOTIFY_LIKE) {
+//		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
+
+		$itemlink =  $params['link'];
+
+		// ignore like/unlike activity on posts - they probably require a separate notification preference
+
+		if (array_key_exists('item',$params) && (! activity_match($params['item']['verb'],ACTIVITY_LIKE))) {
+			logger('notification: not a like activity. Ignoring.');
+			pop_lang();
+			return;
+		}
+
+		$parent_mid = $params['parent_mid'];
+
+		// Check to see if there was already a notify for this post.
+		// If so don't create a second notification
+
+		$p = null;
+		$p = q("select id from notify where link = '%s' and uid = %d limit 1",
+			dbesc($params['link']),
+			intval($recip['channel_id'])
+		);
+		if ($p) {
+			logger('notification: like already notified');
+			pop_lang();
+			return;
+		}
+	
+
+		// if it's a post figure out who's post it is.
+
+		$p = null;
+
+		if($params['otype'] === 'item' && $parent_mid) {
+			$p = q("select * from item where mid = '%s' and uid = %d limit 1",
+				dbesc($parent_mid),
+				intval($recip['channel_id'])
+			);
+		}
+
+		xchan_query($p);
+
+
+		$item_post_type = item_post_type($p[0]);
+//		$private = $p[0]['item_private'];
+		$parent_id = $p[0]['id'];
+
+		$parent_item = $p[0];
+
+
+		// "your post"
+		if($p[0]['owner']['xchan_name'] == $p[0]['author']['xchan_name'] && intval($p[0]['item_wall']))
+			$dest_str = sprintf(t('%1$s, %2$s liked [zrl=%3$s]your %4$s[/zrl]'),
+				$recip['channel_name'],
+				'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+				$itemlink,
+				$item_post_type);
+		else {
+			pop_lang();
+			return;
+		}
+
+		// Some mail softwares relies on subject field for threading.
+		// So, we cannot have different subjects for notifications of the same thread.
+		// Before this we have the name of the replier on the subject rendering 
+		// differents subjects for messages on the same thread.
+
+		$subject = sprintf( t('[$Projectname:Notify] Like received to conversation #%1$d by %2$s'), $parent_id, $sender['xchan_name']);
+		$preamble = sprintf( t('%1$s, %2$s liked an item/conversation you created.'), $recip['channel_name'], $sender['xchan_name']); 
+		$epreamble = $dest_str; 
+
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+	}
+
+
+
 	if($params['type'] == NOTIFY_WALL) {
 		$subject = sprintf( t('[$Projectname:Notify] %s posted to your profile wall') , $sender['xchan_name']);
 

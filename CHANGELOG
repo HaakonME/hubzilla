@@ -1,3 +1,88 @@
+Hubzilla 2.0 (????-??-??)
+	- Router error reporting
+	- Setup changes to check for shell_exec and exec functions
+	- Extensible permissions
+	- Allow plugins to cancel item_store() and item_store_update()
+	- ZOT version 1.2
+	- Provide a fresh new look and cleaner layout and more relevant information to siteinfo
+	- Introduce highlight bbcode [hl]
+	- Implement wiki mimetypes markdown or bbcode
+	- Doc pages refactoring
+	- Update webpages and wiki context help
+	- Make a git commit when a new wiki page is created
+	- Prev-next navigation for mod_connedit
+	- Move the remote user homebutton to the user menu
+	- Do not render maps for Diaspora destinations
+	- Provide 'per-page' caching for is_matrix_url() results to reduce duplicate queries
+	- Don't send notification for posts/comments on old conversations that were refetched after having expired
+	- Numerous wiki UI improvements
+	- Move twitter api to addon
+	- Cleanup and re-organise the voting and attendance buttons
+	- Reorganise emoticons
+	- Collapse navbar-collapse-1 if avatar menu is clicked.
+	- New display setting: static page update as opposed to live update
+	- Command line connect utility
+	- Modernise chanview
+	- Implement edit activities
+	- Wiki export
+	- Numerous postgres fixes
+	- Remove requirement that imported profile photos be in the profile photos album
+	- Change event behaviour - share by default.
+	- Use PDO db driver
+	- API re-write and extended
+
+	Bugfixes
+	- Fix clone sync missing for some item delete operations
+	- Fix embed-image for fullscreen mode
+	- Fix attach_list_files()
+	- Fix full screen for embedded videos
+	- Fix the forum widget for forums with custom perms
+	- Fix issue #607 parens not recognised inside urls
+	- Fix pubsites: don't list dead sites
+	- Fix issue #596 silence headers already sent warning
+	- Fix missing plugins in zot-info
+	- Fix notification issue
+	- Fix issue #594 like of thing appears as profile owner like
+	- Fix export issue
+	- Fix checklist bbcode - only turn [] and [x] into checkboxes if it is found inside a checklist
+	- Fix wiki permissions issues
+	- Fix public calendar leaks connection information (birthdays) when view_contacts is not allowed
+	- Fix attach_rename: flaw in duplicate filename detection resulted in filename(1)(1)(1).ext
+	- Fix a fatal error with incorrect DB object access
+	- Provide /locs link on settings page if there is more than one hubloc for this channnel *that isn't deleted*.
+	- Fix issue #577 if connecting to a channel that is already pending, undo the pending and set connect permissions accordingly
+	- Fix issue #575, when 'nofinish' is set on an event, invalid date was generated/stored
+	- Fix bbcode event formatting issue
+	- Fix zot_finger from navbar people search looping
+	- Fix fromStandalonePermission()
+
+	Plugins
+	- Superblock: refactoring
+	- New addon: tripleaes
+	- Cdav:  "if not exists" only supported starting with postgresql v. 9.5 debian stable has 9.4
+	- Rendezvous: added markers and members export tool at /rendezvous/[group_id]/export/{markers,members}
+	- Twitter: move twitter api to addon
+	- New addon: b2tbtn (back to top button)
+	- GNU Social: only enable plugin if system.experimental is set
+	- Diaspora: import public diaspora messages to sys if applicable
+	- Diaspora: try and handle singletons better and simplify the associated notifier decisions
+	- Rendezvous: add proximity alert feature to members to issue notification when member is within a specified distance.
+	- New addon: diaspora_reconnect
+	- Diaspora: change the logic for deciding between upstream and downstream message flow for notifier plugins
+	- Rendezvous: prompt member to share their location by activating the GPS control using a tooltip and pulsing visibility
+	- statistics_json: fix nodeinfo
+	- Rendezvous: restored the lost gps-icon.png and corrected the OpenStreetMap tile server URL to avoid insecure content warnings
+	- Rendezvous: use observer name if available
+	- std_embeds: missing backslash
+	- Diaspora: postgres fixes issue #31
+	- Rendezvous: added marker list with centering buttons and popup open.
+	- Rendezvous: added control to see list of members sharing their location, with buttons to pan the map to center them
+	- Diaspora: system level diaspora toggle
+	- Rendezvous: added control that displays members.
+	- Diaspora: rename diaspora2bb() to markdown_to_bb() in core
+	- Hubwall: remove illegal unescaped angle chars
+	- Rendezvous: Add control to delete member if not updated in over 14 minutes
+
 Hubzilla 1.14 (2016-10-13)
 	- New hook bbcode_filter
 	- Unify the various mail sending instance to enotify::send() and z_mail()

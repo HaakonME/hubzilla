@@ -1,18 +1,18 @@
 Hubzilla 2.0 (????-??-??)
 	- Router error reporting
 	- Setup changes to check for shell_exec and exec functions
-	- Extensible permissions
+	- Extensible permissions upgrade handling for channels with custom permission roles
 	- Allow plugins to cancel item_store() and item_store_update()
-	- ZOT version 1.2
+	- ZOT version 1.2 provides negotiation of cryptographic algorithms
 	- Provide a fresh new look and cleaner layout and more relevant information to siteinfo
 	- Introduce highlight bbcode [hl]
 	- Implement wiki mimetypes markdown or bbcode
 	- Doc pages refactoring
 	- Update webpages and wiki context help
 	- Make a git commit when a new wiki page is created
-	- Prev-next navigation for mod_connedit
+	- Prev-next navigation for mod_connedit to ease bulk connection edits
 	- Move the remote user homebutton to the user menu
-	- Do not render maps for Diaspora destinations
+	- Do not render maps/locations for Diaspora destinations
 	- Provide 'per-page' caching for is_matrix_url() results to reduce duplicate queries
 	- Don't send notification for posts/comments on old conversations that were refetched after having expired
 	- Numerous wiki UI improvements
@@ -21,15 +21,15 @@ Hubzilla 2.0 (????-??-??)
 	- Reorganise emoticons
 	- Collapse navbar-collapse-1 if avatar menu is clicked.
 	- New display setting: static page update as opposed to live update
-	- Command line connect utility
+	- Command line administrative channel connect utility
 	- Modernise chanview
-	- Implement edit activities
+	- Implement edit activities to share post/comment edits with protocols which do not support them (e.g. Diaspora)
 	- Wiki export
-	- Numerous postgres fixes
+	- Numerous postgres compatibility fixes
 	- Remove requirement that imported profile photos be in the profile photos album
 	- Change event behaviour - share by default.
-	- Use PDO db driver
-	- API re-write and extended
+	- Use PDO database driver exclusively (deprecate drivers that are separately maintained)
+	- Zot API re-write and extended
 
 	Bugfixes
 	- Fix clone sync missing for some item delete operations
@@ -58,7 +58,7 @@ Hubzilla 2.0 (????-??-??)
 
 	Plugins
 	- Superblock: refactoring
-	- New addon: tripleaes
+	- New addon: tripleaes for pro
 	- Cdav:  "if not exists" only supported starting with postgresql v. 9.5 debian stable has 9.4
 	- Rendezvous: added markers and members export tool at /rendezvous/[group_id]/export/{markers,members}
 	- Twitter: move twitter api to addon
@@ -67,7 +67,7 @@ Hubzilla 2.0 (????-??-??)
 	- Diaspora: import public diaspora messages to sys if applicable
 	- Diaspora: try and handle singletons better and simplify the associated notifier decisions
 	- Rendezvous: add proximity alert feature to members to issue notification when member is within a specified distance.
-	- New addon: diaspora_reconnect
+	- New addon: diaspora_reconnect to refriend diaspora/friendica connections from a clone or channel move
 	- Diaspora: change the logic for deciding between upstream and downstream message flow for notifier plugins
 	- Rendezvous: prompt member to share their location by activating the GPS control using a tooltip and pulsing visibility
 	- statistics_json: fix nodeinfo

@@ -473,22 +473,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 	if (local_channel())
 		load_pconfig(local_channel(),'');
 
-	$arr_blocked = null;
-
-	if (local_channel())
-		$str_blocked = get_pconfig(local_channel(),'system','blocked');
-	if (! local_channel() && ($mode == 'network')) {
-		$sys = get_sys_channel();
-		$id = $sys['channel_id'];
- 		$str_blocked = get_pconfig($id,'system','blocked');
-	}
-
-	if ($str_blocked) {
-		$arr_blocked = explode(',',$str_blocked);
-		for ($x = 0; $x < count($arr_blocked); $x ++)
-			$arr_blocked[$x] = trim($arr_blocked[$x]);
-	}
-
 	$profile_owner   = 0;
 	$page_writeable  = false;
 	$live_update_div = '';
@@ -615,17 +599,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 			foreach($items as $item) {
 
-				if($arr_blocked) {
-					$blocked = false;
-					foreach($arr_blocked as $b) {
-						if(($b) && (($item['author_xchan'] == $b) || ($item['owner_xchan'] == $b))) { 
-							$blocked = true;
-							break;
-						}
-					}
-					if($blocked)
-						continue;
-				}
+				$x = [ 'mode' => $mode, 'item' => $item ];
+				call_hooks('stream_item',$x);
+				
+				if($x['item']['blocked'])
+					continue;
+
+				$item = $x['item'];
 
 				$threadsid++;
 
@@ -787,28 +767,14 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				// Check for any blocked authors
 
-				if($arr_blocked) {
-					$blocked = false;
-					foreach($arr_blocked as $b) {
-						if(($b) && (($item['author_xchan'] == $b) || $item['owner_xchan'] == $b)) {
-							$blocked = true;
-							break;
-						}
-					}
-					if($blocked)
-						continue;
-				}
 
-				// Check all the kids too
+				$x = [ 'mode' => $mode, 'item' => $item ];
+				call_hooks('stream_item',$x);
+				
+				if($x['item']['blocked'])
+					continue;
 
-				if($arr_blocked && $item['children']) {
-					for($d = 0; $d < count($item['children']); $d ++) {
-						foreach($arr_blocked as $b) {
-							if(($b) && (($item['children'][$d]['author_xchan'] == $b) || ($item['children'][$d]['owner_xchan'] == $b)))
-								$item['children'][$d]['author_blocked'] = true;
-						}
-					}
-				}
+				$item = $x['item'];
 
 				builtin_activity_puller($item, $conv_responses);
 

@@ -44,7 +44,7 @@ class ThreadItem {
 				 * Only add those that will be displayed
 				 */
 
-				if((! visible_activity($item)) || array_key_exists('author_blocked',$item)) {
+				if((! visible_activity($item)) || array_key_exists('blocked',$item)) {
 					continue;
 				}
 

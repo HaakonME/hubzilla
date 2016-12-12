@@ -62,7 +62,7 @@
 						<div class="input-group">
 							<input class="widget-input" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
 							<div class="input-group-btn">
-								<button id="save-page" type="button" class="btn btn-primary btn-sm{{if !$mimeType || $mimeType == 'text/markdown'}} disabled{{/if}}">Save</button>
+								<button id="save-page" type="button" class="btn btn-primary btn-sm disabled">Save</button>
 							</div>
 						</div>
 					</div>
@@ -178,7 +178,6 @@
 			else {
 				adjustInlineEditorHeight();
 			}
-
 		}, 500); // Return the focus to the editor allowing immediate text entry
 		$('#page-tools').show();
 	});
@@ -252,6 +251,7 @@
 		{{/if}}
 
 		if (window.wiki_page_content === currentContent) {
+			$('#save-page').addClass('disabled');  // Disable the save button
 			window.console.log('No edits to save.');
 			ev.preventDefault();
 			return false;
@@ -267,9 +267,8 @@
 				window.console.log('Page saved successfully.');
 				window.wiki_page_content = currentContent;
 				$('#id_commitMsg').val(''); // Clear the commit message box
-
-				{{if !$mimeType || $mimeType == 'text/markdown'}}
 				$('#save-page').addClass('disabled');  // Disable the save button
+				{{if !$mimeType || $mimeType == 'text/markdown'}}
 				window.editor.getSession().getUndoManager().markClean();  // Reset the undo history for the editor
 				{{/if}}
 
@@ -454,9 +453,6 @@
 
 	$(document).ready(function () {
 		wiki_refresh_page_list();
-		// This seems obsolete
-		// Show Edit tab first. Otherwise the Ace editor does not load.
-		//$("#wiki-nav-tabs li:eq(1) a").tab('show');
 
 		{{if !$mimeType || $mimeType == 'text/markdown'}}
 		$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
@@ -468,6 +464,9 @@
 			}
 		});
 		{{else}}
+		window.editor.on("input", function() {
+			$('#save-page').removeClass('disabled');
+		});
 		window.editor.bbco_autocomplete('bbcode');
 		{{/if}}
 	});

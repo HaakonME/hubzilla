@@ -60,8 +60,7 @@ aside .nav-pills > li > a,
 	padding: 6px 10px;
 }
 
-.wall-item-tools .dropdown-menu,
-.section-title-wrapper .dropdown-menu {
+.wall-item-tools .dropdown-menu {
 	min-width: auto;
 }
 

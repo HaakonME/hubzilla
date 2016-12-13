@@ -407,11 +407,20 @@
                 tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
                 tocUl.toc({content: "#doco-content", headings: "h1"});
                 tocUl.addClass('toc-content sub-menu');
-                if( $(window).height() > 499) {
+				tocUl.attr('id', 'doco-side-toc');
+                if( $(window).width() > 768) {
 					tocUl.sticky({topSpacing:$('nav').outerHeight(true), zIndex: 1000});
 				}
             }
         });
+		
+		$( window ).resize(function() {
+			if($(window).width() < 768 ) {
+				$( "#doco-side-toc" ).unstick();
+			} else {
+				$( "#doco-side-toc" ).sticky({topSpacing:$('nav').outerHeight(true), zIndex: 1000});
+			}
+		});
 		        
     });
 

@@ -53,7 +53,7 @@
 				}
 			}
 		}
-		if($('#cover-photo').length) {
+		if($('#cover-photo').length && $('main').css('opacity') < 1) {
 			$('main').css('opacity', ($(window).scrollTop()/$('#cover-photo').height()).toFixed(1));
 		}
 	});

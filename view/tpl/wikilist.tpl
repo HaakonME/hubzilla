@@ -27,8 +27,9 @@
 	<div class="section-content-wrapper-np">
 		<table id="wikis-index">
 			<tr>
-				<th width="97%">{{$name}}</th>
+				<th width="96%">{{$name}}</th>
 				<th width="1%">{{$type}}</th>
+				<th width="1%" class="wikis-index-tool"></th>
 				<th width="1%" class="wikis-index-tool"></th>
 				{{if $owner}}
 				<th width="1%"></th>
@@ -38,6 +39,12 @@
 			<tr class="wikis-index-row">
 				<td><a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}"{{if $wiki.active}} class="active"{{/if}}>{{$wiki.title}}</a></td>
 				<td>{{$wiki.mimeType}}</td>
+				<td class="wiki-index-tool dropdown">
+					{{if $wiki.lock}}
+					<i class="fa fa-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i></button>
+					<ul id="panel-{{$wiki.id}}" class="lockview-panel dropdown-menu dropdown-menu-right"></ul>
+					{{/if}}
+				</td>
 				<td class="wiki-index-tool"><i class="fa fa-download fakelink" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td>
 				{{if $owner}}
 				<td><i class="fa fa-trash-o drop-icons" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"></i></td>

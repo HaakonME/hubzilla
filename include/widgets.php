@@ -898,87 +898,17 @@ function widget_chatroom_members() {
 }
 
 function widget_wiki_list($arr) {
-
-		require_once("include/wiki.php");
-		$channel = null;
-		if (argc() < 2 && local_channel()) {
-				// This should not occur because /wiki should redirect to /wiki/channel ...
-				$channel = \App::get_channel();
-		} else {
-				$channel = channelx_by_nick(argv(1)); // Channel being viewed by observer
-		}
-		if (!$channel) {
-				return '';
-		}
-		// init() should have forced the URL to redirect to /wiki/channel so assume argc() > 1
-		$nick = argv(1);
-		$owner = channelx_by_nick($nick);  // The channel who owns the wikis being viewed
-		// Determine if the observer is the channel owner so the ACL dialog can be populated
-		if (local_channel() === intval($owner['channel_id'])) {
-
-				// Obtain the default permission settings of the channel
-				$owner_acl = array(
-						'allow_cid' => $owner['channel_allow_cid'],
-						'allow_gid' => $owner['channel_allow_gid'],
-						'deny_cid' => $owner['channel_deny_cid'],
-						'deny_gid' => $owner['channel_deny_gid']
-				);
-				// Initialize the ACL to the channel default permissions
-				$x = array(
-						'lockstate' => (( $owner['channel_allow_cid'] ||
-						$owner['channel_allow_gid'] ||
-						$owner['channel_deny_cid'] ||
-						$owner['channel_deny_gid']) ? 'lock' : 'unlock'
-						),
-						'acl' => populate_acl($owner_acl),
-						'allow_cid' => acl2json($owner_acl['allow_cid']),
-						'allow_gid' => acl2json($owner_acl['allow_gid']),
-						'deny_cid' => acl2json($owner_acl['deny_cid']),
-						'deny_gid' => acl2json($owner_acl['deny_gid']),
-						'bang' => ''
-				);
-		} else {
-				// Not the channel owner 
-				$owner_acl = $x = array();
-		}
-		if(argc()>1) {
-			$activeWikiURLname = argv(2);
-		} else {
-			$activeWikiURLname = '';
-		}
-		logger($activeWikiURLname, LOGGER_DEBUG);
-		$wikis = wiki_list($channel, get_observer_hash());
-		foreach($wikis['wikis'] as &$w) {
-			if($w['urlName'] === $activeWikiURLname) {
-				$w['active'] = true;
-			} else {
-				$w['active'] = false;
-			}
-		}
-		if ($wikis) {
-				return replace_macros(get_markup_template('wikilist_widget.tpl'), array(
-						'$header' => t('Wiki List'),
-						'$channel' => $channel['channel_address'],
-						'$wikis' => $wikis['wikis'],
-						// If the observer is the local channel owner, show the wiki controls
-						'$owner' => ((local_channel() && local_channel() === intval(\App::$profile['uid'])) ? true : false),
-						'$edit' => t('Edit'),
-						'$download' => t('Download'),
-						'$view' => t('View'),
-						'$addnew' => t('Create new wiki'),
-						'$create' => t('Create'),
-						'$wikiName' => array('wikiName', t('Wiki name')),
-						'$lockstate' => $x['lockstate'],
-						'$acl' => $x['acl'],
-						'$allow_cid' => $x['allow_cid'],
-						'$allow_gid' => $x['allow_gid'],
-						'$deny_cid' => $x['deny_cid'],
-						'$deny_gid' => $x['deny_gid'],
-						'$bang' => $x['bang'],
-						'$notify' => array('postVisible', t('Send notification'), '', '', array(t('No'), t('Yes')))
-				));
-		}
-		return '';
+	require_once("include/wiki.php");
+	$channel = channelx_by_n(App::$profile_uid);
+	$wikis = wiki_list($channel, get_observer_hash());
+	if($wikis) {
+		return replace_macros(get_markup_template('wikilist_widget.tpl'), array(
+			'$header' => t('Wiki List'),
+			'$channel' => $channel['channel_address'],
+			'$wikis' => $wikis['wikis']
+		));
+	}
+	return '';
 }
 
 function widget_wiki_pages($arr) {
@@ -1573,7 +1503,6 @@ function widget_tasklist($arr) {
 function widget_helpindex($arr) {
 
 	$o .= '<div class="widget">';
-	//$o .= '<h3>' . t('Documentation') . '</h3>';
 
 	$level_0 = get_help_content('sitetoc');
 	if(! $level_0)

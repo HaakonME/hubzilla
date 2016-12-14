@@ -149,7 +149,7 @@ function markdown_to_bb($s, $use_zrl = false) {
 
 	$s = html2bbcode($s);
 
-	$s = preg_replace("/\[([uz])rl=(.*?)\]\[\/[uz]rl\]/ism",'[$1rl=$2]$2[/$1rl]',$s);
+	$s = preg_replace("/\[([uz])rl=(.*?)\]\[\[uz]rl\]/ism",'[$1rl=$2]$2[/$1rl]',$s);
 
 	// protect the recycle symbol from turning into a tag, but without unescaping angles and naked ampersands
 	$s = str_replace('&#x2672;',html_entity_decode('&#x2672;',ENT_QUOTES,'UTF-8'),$s);

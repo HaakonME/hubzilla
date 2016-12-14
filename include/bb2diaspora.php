@@ -130,6 +130,9 @@ function markdown_to_bb($s, $use_zrl = false) {
 
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
 
+	// if empty link text replace with the url
+	$s = preg_replace("/\[\]\((.*?)\)/ism",'[$1]($1)',$s);
+
 	// first try plustags
 
 	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}\+/','diaspora_mention_callback',$s);
@@ -148,8 +151,6 @@ function markdown_to_bb($s, $use_zrl = false) {
 	$s = str_replace('&#35;','#',$s);
 
 	$s = html2bbcode($s);
-
-	$s = preg_replace("/\[([uz])rl=(.*?)\]\[\[uz]rl\]/ism",'[$1rl=$2]$2[/$1rl]',$s);
 
 	// protect the recycle symbol from turning into a tag, but without unescaping angles and naked ampersands
 	$s = str_replace('&#x2672;',html_entity_decode('&#x2672;',ENT_QUOTES,'UTF-8'),$s);

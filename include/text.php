@@ -3080,7 +3080,7 @@ function cleanup_bbcode($body) {
 
 
 	$body = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\\
-+\,\(\)]+)/ism", 'nakedoembed', $body);
++\,\(\)]+)/ism", '\nakedoembed', $body);
 	$body = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\\
 +\,\(\)]+)/ism", '\red_zrl_callback', $body);
 

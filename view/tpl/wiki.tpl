@@ -41,7 +41,7 @@
 			</div>
 		</form>
 	</div>
-	<div id="wiki-content-container" class="section-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
+	<div id="wiki-content-container" class="section-content-wrapper">
 		<ul class="nav nav-tabs" id="wiki-nav-tabs">
 			<li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
 			<li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
@@ -225,11 +225,6 @@
 			if (data.success) {
 				$('#wiki_page_list_container').html(data.pages);
 				$('#wiki_page_list_container').show();
-				{{if $showNewPageButton}}
-					$('#new-page-button').show();
-				{{else}}
-					$('#new-page-button').hide();
-				{{/if}}
 			} else {
 				alert('Error fetching page list!');
 				window.console.log('Error fetching page list!');

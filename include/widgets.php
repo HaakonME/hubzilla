@@ -958,7 +958,8 @@ function widget_wiki_page_history($arr) {
 	$pageHistory = wiki_page_history(array('resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 
 	return replace_macros(get_markup_template('wiki_page_history.tpl'), array(
-			'$pageHistory' => $pageHistory['history']
+			'$pageHistory' => $pageHistory['history'],
+			'$permsWrite' => $arr['permsWrite']
 	));
 }
 

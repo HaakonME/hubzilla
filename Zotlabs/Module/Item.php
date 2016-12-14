@@ -556,42 +556,8 @@ class Item extends \Zotlabs\Web\Controller {
 				if($x)
 					$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
 			}
-	
-			/**
-			 * fix naked links by passing through a callback to see if this is a hubzilla site
-			 * (already known to us) which will get a zrl, otherwise link with url, add bookmark tag to both.
-			 * First protect any url inside certain bbcode tags so we don't double link it.
-			 */
-	
-	
-			$body = preg_replace_callback('/\[code(.*?)\[\/(code)\]/ism','\red_escape_codeblock',$body);
-			$body = preg_replace_callback('/\[url(.*?)\[\/(url)\]/ism','\red_escape_codeblock',$body);
-			$body = preg_replace_callback('/\[zrl(.*?)\[\/(zrl)\]/ism','\red_escape_codeblock',$body);
-	
 
-			$body = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,\(\)]+)/ism", 'nakedoembed', $body);
-			$body = preg_replace_callback("/([^\]\='".'"'."\/]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,\(\)]+)/ism", '\red_zrl_callback', $body);
-	
-			$body = preg_replace_callback('/\[\$b64zrl(.*?)\[\/(zrl)\]/ism','\red_unescape_codeblock',$body);
-			$body = preg_replace_callback('/\[\$b64url(.*?)\[\/(url)\]/ism','\red_unescape_codeblock',$body);
-			$body = preg_replace_callback('/\[\$b64code(.*?)\[\/(code)\]/ism','\red_unescape_codeblock',$body);
-	
-	
-			// fix any img tags that should be zmg
-	
-			$body = preg_replace_callback('/\[img(.*?)\](.*?)\[\/img\]/ism','\red_zrlify_img_callback',$body);
-	
-	
-			$body = bb_translate_video($body);
-	
-			/**
-			 * Fold multi-line [code] sequences
-			 */
-	
-			$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
-	
-			$body = scale_external_images($body,false);
-	
+			$body = cleanup_bbcode($body);
 	
 			// Look for tags and linkify them
 			$results = linkify_tags($a, $body, ($uid) ? $uid : $profile_uid);

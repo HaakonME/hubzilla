@@ -23,10 +23,12 @@ class Mail extends \Zotlabs\Web\Controller {
 		$rstr      = ((x($_REQUEST,'messagerecip')) ? notags(trim($_REQUEST['messagerecip'])) : '');
 		$preview   = ((x($_REQUEST,'preview'))      ? intval($_REQUEST['preview'])            : 0);
 		$expires   = ((x($_REQUEST,'expires')) ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : NULL_DATE);
-	
-
 
 		if($preview) {
+
+			$body = cleanup_bbcode($body);
+			$results = linkify_tags($a, $body, local_channel());
+
 			if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
 				$attachments = array();
 				foreach($match[2] as $mtch) {
@@ -45,17 +47,10 @@ class Mail extends \Zotlabs\Web\Controller {
 					$body = trim(str_replace($match[1],'',$body));
 				}
 			}
-logger('previewing');
+
 			echo json_encode(['preview' => smilies(bbcode($body))]);
 			killme();
 		} 
-
-
-
-
-
-
-
 
 		// If we have a raw string for a recipient which hasn't been auto-filled,
 		// it means they probably aren't in our address book, hence we don't know

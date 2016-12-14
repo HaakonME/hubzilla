@@ -4,4 +4,5 @@ $(document).ready(function() {
 	});
 	$(".autotime").timeago()
 	$('#prvmail-text').bbco_autocomplete('bbcode');
+    $("#prvmail-text").editor_autocomplete(baseurl+"/acl");
 }); 

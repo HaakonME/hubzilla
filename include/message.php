@@ -16,6 +16,28 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 	$a = get_app();
 	$observer_hash = get_observer_hash();
 
+
+	if($uid) {
+		$r = q("select * from channel where channel_id = %d limit 1",
+			intval($uid)
+		);
+		if($r)
+			$channel = $r[0];
+	}
+	else {
+		$channel = App::get_channel();
+	}
+
+	if(! $channel) {
+		$ret['message'] = t('Unable to determine sender.');
+		return $ret;
+	}
+
+
+	$body = cleanup_bbcode($body);
+	$results = linkify_tags($a, $body, $uid);
+
+
 	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$match))
 		$attaches = $match[1];
 
@@ -43,22 +65,6 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 	$jattach = (($attachments) ? json_encode($attachments) : '');
 
 
-	if($preview) {
-
-
-
-
-
-
-
-
-
-
-	}
-
-
-
-
 	if(! $recipient) {
 		$ret['message'] = t('No recipient provided.');
 		return $ret;
@@ -66,22 +72,6 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 	
 	if(! strlen($subject))
 		$subject = t('[no subject]');
-
-	if($uid) {
-		$r = q("select * from channel where channel_id = %d limit 1",
-			intval($uid)
-		);
-		if($r)
-			$channel = $r[0];
-	}
-	else {
-		$channel = App::get_channel();
-	}
-
-	if(! $channel) {
-		$ret['message'] = t('Unable to determine sender.');
-		return $ret;
-	}
 
 
 	// look for any existing conversation structure

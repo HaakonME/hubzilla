@@ -557,6 +557,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/well_known]well_known[/zrl]
 	Called when accessing the '.well-known' special site addresses
 
+[zrl=[baseurl]/help/hook/zot_best_algorithm]zot_best_algorithm[/zrl]
+	Called when negotiating crypto algorithms with remote sites
+
 [zrl=[baseurl]/help/hook/zid]zid[/zrl]
 	Called when adding the observer's zid to a URL
 

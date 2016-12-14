@@ -24,6 +24,39 @@ class Mail extends \Zotlabs\Web\Controller {
 		$preview   = ((x($_REQUEST,'preview'))      ? intval($_REQUEST['preview'])            : 0);
 		$expires   = ((x($_REQUEST,'expires')) ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : NULL_DATE);
 	
+
+
+		if($preview) {
+			if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
+				$attachments = array();
+				foreach($match[2] as $mtch) {
+					$hash = substr($mtch,0,strpos($mtch,','));
+					$rev = intval(substr($mtch,strpos($mtch,',')));
+					$r = attach_by_hash_nodata($hash,get_observer_hash(),$rev);
+					if($r['success']) {
+						$attachments[] = array(
+							'href'     => z_root() . '/attach/' . $r['data']['hash'],
+							'length'   =>  $r['data']['filesize'],
+							'type'     => $r['data']['filetype'],
+							'title'    => urlencode($r['data']['filename']),
+							'revision' => $r['data']['revision']
+						);
+					}
+					$body = trim(str_replace($match[1],'',$body));
+				}
+			}
+logger('previewing');
+			echo json_encode(['preview' => smilies(bbcode($body))]);
+			killme();
+		} 
+
+
+
+
+
+
+
+
 		// If we have a raw string for a recipient which hasn't been auto-filled,
 		// it means they probably aren't in our address book, hence we don't know
 		// if we have permission to send them private messages.

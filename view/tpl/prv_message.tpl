@@ -10,6 +10,7 @@
 
 				<input type="hidden" id="inp-prvmail-expires" name="expires" value="{{$defexpire}}" />
 				<input type="hidden" name="media_str" id="jot-media" value="" />
+				<input type="hidden" name="preview" id="mail-preview" value="0" />
 
 				{{if $new}}
 				<div class="form-group">
@@ -35,9 +36,16 @@
 				</div>
 
 				<div id="prvmail-submit-wrapper" class="form-group">
-					<div id="prvmail-submit" class="pull-right">
+					<div id="prvmail-submit-div" class="pull-right">
 						<button class="btn btn-primary btn-sm" type="submit" id="prvmail-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 					</div>
+
+					<div id="prvmail-preview-div" class="pull-right">
+						<button class="btn btn-default btn-sm" id="prvmail-preview" title="{{$preview}}" onclick="preview_mail(); return false;"><i class="fa fa-eye"></i></button>
+					</div>
+
+
+
 					<div id="prvmail-tools" class="btn-toolbar pull-left">
 						<div class="btn-group">
 							<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'prvmail-text'); return false;">
@@ -101,6 +109,7 @@
 					</div>
 					<div class="clear"></div>
 				</div>
+				<div id="mail-preview-content" style="display: none;"></div>
 			</form>
 		</div>
 {{if $new}}

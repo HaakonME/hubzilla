@@ -1146,6 +1146,25 @@ function preview_post() {
 	return true;
 }
 
+function preview_mail() {
+	$("#mail-preview").val("1");
+	$("#mail-preview-content").show();
+	$.post(
+		"mail",
+		$("#prvmail-form").serialize(),
+		function(data) {
+			if(data.preview) {
+				$("#mail-preview-content").html(data.preview);
+				$("#mail-preview-content" + " a").click(function() { return false; });
+			}
+		},
+		"json"
+	);
+	$("#mail-preview").val("0");
+	return true;
+}
+
+
 function unpause() {
 	// unpause auto reloads if they are currently stopped
 	totStopped = false;

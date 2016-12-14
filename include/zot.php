@@ -169,6 +169,11 @@ function zot_best_algorithm($methods) {
 	if(\Zotlabs\Lib\System::get_server_role() !== 'pro')
 		return 'aes256cbc';
 
+	$x = [ 'methods' => $methods, 'result' => '' ];
+	call_hooks('zot_best_algorithm',$x);
+	if($x['result'])
+		return $x['result'];
+
 	if($methods) {
 		$x = explode(',',$methods);
 		if($x) {

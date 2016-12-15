@@ -2,7 +2,7 @@
 <?php
 
 /**
-* set channel email notifications utility
+* switch off channel email notifications utility
 * This is a preliminary solution using the existing functions from include/channel.php. 
 * More options would be nice.
 **/
@@ -19,7 +19,7 @@ cli_startup();
 
 
 	if($argc != 2) {
-		echo 'Usage: util/nconfig channel_id|channel_address off|on' . PHP_EOL;
+		echo 'Usage: util/nconfig channel_id|channel_address off' . PHP_EOL;
 		exit(1);
 	}
 
@@ -38,9 +38,6 @@ cli_startup();
 	switch ($argv[2]) {
 		case 'off':
 			$result = notifications_off($c['channel_id']);
-			break;
-		case 'on':
-			$result = notifications_on($c['channel_id']);
 			break;
 		default:
 			echo 'Only on or off in lower cases are allowed' . PHP_EOL;

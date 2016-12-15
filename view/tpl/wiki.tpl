@@ -84,27 +84,25 @@
 {{$wikiModal}}
 
 <div class="modal" id="embedPhotoModal" tabindex="-1" role="dialog" aria-labelledby="embedPhotoLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
-      </div>
-     <div class="modal-body" id="embedPhotoModalBody" >
-         <div id="embedPhotoModalBodyAlbumListDialog" class="hide">
-            <div id="embedPhotoModalBodyAlbumList"></div>
-         </div>
-         <div id="embedPhotoModalBodyAlbumDialog" class="hide">
-         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
-        <button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
+			</div>
+			<div class="modal-body" id="embedPhotoModalBody" >
+				<div id="embedPhotoModalBodyAlbumListDialog" class="hide">
+					<div id="embedPhotoModalBodyAlbumList"></div>
+				</div>
+				<div id="embedPhotoModalBodyAlbumDialog" class="hide"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
+				<button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
 
 <script>
 	window.wiki_resource_id = '{{$resource_id}}';

@@ -56,6 +56,7 @@ class Appman extends \Zotlabs\Web\Controller {
 		if($_POST['delete']) {
 			Zlib\Apps::app_destroy(local_channel(),$papp);
 		}
+
 	
 		if($_POST['edit']) {
 			return;

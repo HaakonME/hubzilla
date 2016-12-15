@@ -21,7 +21,7 @@ class Apps extends \Zotlabs\Web\Controller {
 		if(local_channel()) {
 			Zlib\Apps::import_system_apps();
 			$syslist = array();
-			$list = Zlib\Apps::app_list(local_channel(), false, $_GET['cat']);
+			$list = Zlib\Apps::app_list(local_channel(), (($mode == 'edit') ? true : false), $_GET['cat']);
 			if($list) {
 				foreach($list as $x) {
 					$syslist[] = Zlib\Apps::app_encode($x);

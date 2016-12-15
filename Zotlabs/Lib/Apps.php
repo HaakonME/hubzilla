@@ -38,6 +38,7 @@ class Apps {
 				if(plugin_is_installed($plugin)) {
 					$x = self::parse_app_description($f,$translate);
 					if($x) {
+						$x['plugin'] = $plugin;
 						$ret[] = $x;
 					}
 				}
@@ -54,7 +55,6 @@ class Apps {
 			return;
 		$apps = self::get_system_apps(false);
 
-
 		self::$installed_system_apps = q("select * from app where app_system = 1 and app_channel = %d",
 			intval(local_channel())
 		);
@@ -68,7 +68,7 @@ class Apps {
 				if($id !== true) {
 					// if we already installed this app, but it changed, preserve any categories we created
 					$s = '';
-					$r = q("select * from term where otype = %d and oid = d",
+					$r = q("select * from term where otype = %d and oid = %d",
 						intval(TERM_OBJ_APP),
 						intval($id)
 					);
@@ -100,6 +100,8 @@ class Apps {
 		}
 		$notfound = true;
 		foreach(self::$installed_system_apps as $iapp) {
+			if($app['plugin'] && (! $iapp['app_plugin']))
+				return(1);
 			if($iapp['app_id'] == hash('whirlpool',$app['name'])) {
 				$notfound = false;
 				if($iapp['app_version'] != $app['version']) {
@@ -238,9 +240,9 @@ class Apps {
 			'Profile Photo' => t('Profile Photo')
 		);
 
-		if(array_key_exists($arr['name'],$apps))
+		if(array_key_exists($arr['name'],$apps)) {
 			$arr['name'] = $apps[$arr['name']];
-
+		}
 	}
 
 
@@ -266,6 +268,9 @@ class Apps {
 			$papp['photo'] = z_root() . '/' . get_default_profile_photo(80);
 
 		self::translate_system_apps($papp);
+
+		if(($papp['plugin']) && (! plugin_is_installed($papp['plugin'])))
+			return '';
 
 		$papp['papp'] = self::papp_encode($papp);
 
@@ -339,7 +344,9 @@ class Apps {
 			'$purchase' => (($papp['page'] && (! $installed)) ? t('Purchase') : ''),
 			'$install' => (($hosturl && $mode == 'view') ? $install_action : ''),
 			'$edit' => ((local_channel() && $installed && $mode == 'edit') ? t('Edit') : ''),
-			'$delete' => ((local_channel() && $installed && $mode == 'edit') ? t('Delete') : '')
+			'$delete' => ((local_channel() && $installed && $mode == 'edit') ? t('Delete') : ''),
+			'$undelete' => ((local_channel() && $installed && $mode == 'edit') ? t('Undelete') : ''),
+			'$deleted' => $papp['deleted']
 		));
 	}
 
@@ -359,7 +366,7 @@ class Apps {
 			if($r) {
 				if(! $r[0]['app_system']) {
 					if($app['categories'] && (! $app['term'])) {
-						$r[0]['term'] = q("select * from term where otype = %d and oid = d",
+						$r[0]['term'] = q("select * from term where otype = %d and oid = %d",
 							intval(TERM_OBJ_APP),
 							intval($r[0]['id'])
 						);
@@ -382,29 +389,58 @@ class Apps {
 				intval($uid)
 			);
 			if($x) {
-				$x[0]['app_deleted'] = 1;
-				q("delete from term where otype = %d and oid = %d",
-					intval(TERM_OBJ_APP),
-					intval($x[0]['id'])
-				);
-				if($x[0]['app_system']) {
-					$r = q("update app set app_deleted = 1 where app_id = '%s' and app_channel = %d",
-						dbesc($app['guid']),
-						intval($uid)
+				if(! intval($x[0]['app_deleted'])) {
+					$x[0]['app_deleted'] = 1;
+					q("delete from term where otype = %d and oid = %d",
+						intval(TERM_OBJ_APP),
+						intval($x[0]['id'])
 					);
+					if($x[0]['app_system']) {
+						$r = q("update app set app_deleted = 1 where app_id = '%s' and app_channel = %d",
+							dbesc($app['guid']),
+							intval($uid)
+						);
+					}
+					else {
+						$r = q("delete from app where app_id = '%s' and app_channel = %d",
+							dbesc($app['guid']),
+							intval($uid)
+						);
+
+						// we don't sync system apps - they may be completely different on the other system
+						build_sync_packet($uid,array('app' => $x));
+					}
 				}
 				else {
-					$r = q("delete from app where app_id = '%s' and app_channel = %d",
-						dbesc($app['guid']),
-						intval($uid)
-					);
-
-					// we don't sync system apps - they may be completely different on the other system
-					build_sync_packet($uid,array('app' => $x));
+					self::app_undestroy($uid,$app);
 				}
 			}
 		}
 	}
+
+
+	static public function app_undestroy($uid,$app) {
+
+		// undelete a system app
+		
+		if($uid && $app['guid']) {
+
+			$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
+				dbesc($app['guid']),
+				intval($uid)
+			);
+			if($x) {
+				if($x[0]['app_system']) {
+					$r = q("update app set app_deleted = 0 where app_id = '%s' and app_channel = %d",
+						dbesc($app['guid']),
+						intval($uid)
+					);
+				}
+			}
+		}
+	}
+
+
 
 
 	static public function app_installed($uid,$app) {
@@ -421,7 +457,7 @@ class Apps {
 
 	static public function app_list($uid, $deleted = false, $cat = '') {
 		if($deleted) 
-			$sql_extra = " and app_deleted = 1 ";
+			$sql_extra = "";
 		else
 			$sql_extra = " and app_deleted = 0 ";
 
@@ -494,13 +530,14 @@ class Apps {
 		$darray['app_addr']     = ((x($arr,'addr'))     ? escape_tags($arr['addr']) : '');
 		$darray['app_price']    = ((x($arr,'price'))    ? escape_tags($arr['price']) : '');
 		$darray['app_page']     = ((x($arr,'page'))     ? escape_tags($arr['page']) : '');
+		$darray['app_plugin']   = ((x($arr,'plugin'))   ? escape_tags($arr['plugin']) : '');
 		$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 		$darray['app_system']   = ((x($arr,'system'))   ? intval($arr['system']) : 0);
 		$darray['app_deleted']  = ((x($arr,'deleted'))  ? intval($arr['deleted']) : 0);
 
 		$created = datetime_convert();
 
-		$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page, app_requires, app_created, app_edited, app_system, app_deleted ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
+		$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page, app_requires, app_created, app_edited, app_system, app_plugin, app_deleted ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', %d )",
 			dbesc($darray['app_id']),
 			dbesc($darray['app_sig']),
 			dbesc($darray['app_author']),
@@ -517,6 +554,7 @@ class Apps {
 			dbesc($created),
 			dbesc($created),
 			intval($darray['app_system']),
+			dbesc($darray['app_plugin']),
 			intval($darray['app_deleted'])
 		);
 		if($r) {
@@ -569,13 +607,14 @@ class Apps {
 		$darray['app_addr']     = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
 		$darray['app_price']    = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
 		$darray['app_page']     = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
+		$darray['app_plugin']   = ((x($arr,'plugin')) ? escape_tags($arr['plugin']) : '');
 		$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 		$darray['app_system']   = ((x($arr,'system'))   ? intval($arr['system']) : 0);
 		$darray['app_deleted']  = ((x($arr,'deleted'))  ? intval($arr['deleted']) : 0);
 
 		$edited = datetime_convert();
 
-		$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s', app_edited = '%s', app_system = %d, app_deleted = %d where app_id = '%s' and app_channel = %d",
+		$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s', app_edited = '%s', app_system = %d, app_plugin = '%s', app_deleted = %d where app_id = '%s' and app_channel = %d",
 			dbesc($darray['app_sig']),
 			dbesc($darray['app_author']),
 			dbesc($darray['app_name']),
@@ -589,6 +628,7 @@ class Apps {
 			dbesc($darray['app_requires']),
 			dbesc($edited),
 			intval($darray['app_system']),
+			dbesc($darray['app_plugin']),
 			intval($darray['app_deleted']),
 			dbesc($darray['app_id']),
 			intval($darray['app_channel'])
@@ -672,6 +712,9 @@ class Apps {
 
 		if($app['app_system'])
 			$ret['system'] = $app['app_system'];
+
+		if($app['app_plugin'])
+			$ret['plugin'] = $app['app_plugin'];
 
 		if($app['app_deleted'])
 			$ret['deleted'] = $app['app_deleted'];

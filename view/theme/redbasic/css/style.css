@@ -1067,10 +1067,11 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .contact-block-content {
 	margin-top: 10px;
 }
-.contact-block-img.archived {
+.contact-block-img.archived, .app-deleted {
 	opacity: 0.3;
 	filter:alpha(opacity=30);
 }
+
 
 .profile-match-connect { margin-top: 5px; }
 

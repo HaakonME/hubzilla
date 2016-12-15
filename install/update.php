@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1185 );
+define( 'UPDATE_VERSION' , 1186 );
 
 /**
  *
@@ -2467,6 +2467,15 @@ function update_r1183() {
 function update_r1184() {
 
 	$r1 = q("alter table site add site_crypto text not null default '' ");
+
+	if($r1)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1185() {
+
+	$r1 = q("alter table app add app_plugin char(255) not null default '' ");
 
 	if($r1)
 		return UPDATE_SUCCESS;

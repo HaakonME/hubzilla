@@ -16,16 +16,7 @@
 
 	// Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
 	$(document).ready(function () {
-
 		$('#doco-top-toc').toc({content: "#doco-content", headings: "h1,h2,h3,h4"});
-		$('.navbar-header').append('<button id="doco-return-to-top-btn">'); //.find('button');
-		var goTopBtn = $('#doco-return-to-top-btn');
-		goTopBtn.append('<i>').find('i').addClass('fa fa-arrow-circle-up');
-		//goTopBtn.attr('id', 'doco-return-to-top-btn');
-		goTopBtn.attr('type', 'button');
-		goTopBtn.attr('data-toggle', 'offcanvas');
-		goTopBtn.addClass('navbar-toggle');
-		goTopBtn.click(function() { $(window).scrollTop(0); });
 	});
 	
 	function docoTocToggle() {

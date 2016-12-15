@@ -1406,12 +1406,12 @@ function widget_forums($arr) {
 
 	$xf = false;
 
-	$x1 = q("select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'send_stream' and v = 0",
+	$x1 = q("select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'send_stream' and v = '0'",
 		intval(local_channel())
 	);
 	if($x1) {
 		$xc = ids_to_querystr($x1,'xchan',true);
-		$x2 = q("select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'tag_deliver' and v = 1 and xchan in (" . $xc . ") ",
+		$x2 = q("select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'tag_deliver' and v = '1' and xchan in (" . $xc . ") ",
 			intval(local_channel())
 		);
 		if($x2)

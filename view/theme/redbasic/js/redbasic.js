@@ -89,5 +89,6 @@ function makeFullScreen(full) {
 		$('#tabs-collapse-1').css({'visibility': ''});
 		$('#inline-btn').hide();
 		$('main').css({'transition': ''});
+		$(document.body).trigger("sticky_kit:recalc");
 	}
 }

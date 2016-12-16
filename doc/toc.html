@@ -389,6 +389,22 @@
 	$(".widget").stick_in_parent({
 		offset_top: $('nav').outerHeight(true)
 	});
+
+	$('#expand-aside').click(function() {
+		if($('main').hasClass('region_1-on')) {
+			$('body').css('overflow-x', 'hidden');
+		}
+		else {
+			$('body').css('overflow-x', '');
+		}
+	});
+	$(window).scroll(function() {
+		if($('main').hasClass('region_1-on') && $(window).scrollLeft() > 5) {
+			$('#expand-aside-icon').toggleClass('fa-arrow-circle-right').toggleClass('fa-arrow-circle-left');
+			$('main').toggleClass('region_1-on');
+			$('body').css('overflow-x', '');
+		}
+	});
     });
 
 </script>

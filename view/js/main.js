@@ -1166,7 +1166,6 @@ function preview_mail() {
 	return true;
 }
 
-
 function unpause() {
 	// unpause auto reloads if they are currently stopped
 	totStopped = false;

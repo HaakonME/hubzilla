@@ -473,7 +473,6 @@ footer {
 
 #contact-block {
 	width: 100%;
-	float: left;
 }
 
 #contact-block-numcontacts {
@@ -482,12 +481,10 @@ footer {
 }
 
 .contact-block-div {
-	float: left;
-	width: 50px;
-	height: 50px;
+	display: inline;
 }
+
 .contact-block-textdiv {
-	float: left;
 	width: 150px;
 	height: 34px;
 }
@@ -495,12 +492,11 @@ footer {
 #contact-block-end {
 	clear: both;
 }
-.contact-block-link {
-	float: left;
-}
+
 .contact-block-img {
-	width:48px;
-	height:48px;
+	width:47px;
+	height:47px;
+	margin-bottom: 3px;
 }
 
 #tag-remove {

@@ -337,7 +337,7 @@ function db_concat($fld, $sep) {
 function q($sql) {
 
 	$args = func_get_args();
-	unset($args[0]);
+	array_shift($args);
 
 	if(\DBA::$dba && \DBA::$dba->connected) {
 		$stmt = vsprintf($sql, $args);

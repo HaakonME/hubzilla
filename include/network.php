@@ -59,7 +59,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'filep')) {
 		@curl_setopt($ch, CURLOPT_FILE, $opts['filep']);
-		@curl_setopt($ch, CURLOPT_HEADER, $false);
+		@curl_setopt($ch, CURLOPT_HEADER, false);
 	}
 
 	if(x($opts,'upload'))
@@ -87,7 +87,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
 	}
 	else {
-		$curl_time = intval(get_config('system','curl_timeout'));
+		$curl_time = intval(@get_config('system','curl_timeout'));
 		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 
@@ -107,7 +107,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
 		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
 
-	$prx = get_config('system','proxy');
+	$prx = @get_config('system','proxy');
 	if(strlen($prx)) {
 		@curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
 		@curl_setopt($ch, CURLOPT_PROXY, $prx);
@@ -226,7 +226,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	if(x($opts,'filep')) {
 		@curl_setopt($ch, CURLOPT_FILE, $opts['filep']);
-		@curl_setopt($ch, CURLOPT_HEADER, $false);
+		@curl_setopt($ch, CURLOPT_HEADER, false);
 	}
 
 	if(x($opts,'headers')) {
@@ -246,7 +246,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
 	}
 	else {
-		$curl_time = intval(get_config('system','curl_timeout'));
+		$curl_time = intval(@get_config('system','curl_timeout'));
 		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 

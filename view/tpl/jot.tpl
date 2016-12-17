@@ -180,7 +180,7 @@
 				{{/if}}
 				{{if $showacl}}
 				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button" data-form_id="profile-jot-form">
-					<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>{{if $bang}}&nbsp;<i class="fa fa-exclamation jot-icons"></i>{{/if}}
+					<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons{{if $bang}} jot-lock-warn{{/if}}"></i>
 				</button>
 				{{/if}}
 				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" tabindex="3" name="button-submit">{{$share}}</button>

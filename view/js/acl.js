@@ -276,6 +276,7 @@ ACL.prototype.update_view = function(value) {
 
 		/* jot acl */
 		$('#jot-perms-icon, #dialog-perms-icon, #' + that.form_id[0].id + ' .jot-perms-icon').removeClass('fa-lock').addClass('fa-unlock');
+		$('#jot-perms-icon').removeClass('jot-lock-warn');
 		$('#dbtn-jotnets').show();
 		$('.profile-jot-net input').attr('disabled', false);
 

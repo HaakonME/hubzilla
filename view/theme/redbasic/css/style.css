@@ -1267,6 +1267,11 @@ img.mail-conv-sender-photo {
 	color: $toolicon_colour;
 }
 
+.jot-icons.jot-lock-warn {
+	color: red;
+}
+
+
 /* conversation */
 .nsfw-wrap {
 	text-align: center;

@@ -666,6 +666,8 @@ function updateConvItems(mode,data) {
 		$('.item_' + bParam_mid.substring(0,32)).addClass('item-highlight');
 	}
 
+	$(document.body).trigger("sticky_kit:recalc");
+
 }
 
 function collapseHeight() {
@@ -1163,7 +1165,6 @@ function preview_mail() {
 	$("#mail-preview").val("0");
 	return true;
 }
-
 
 function unpause() {
 	// unpause auto reloads if they are currently stopped

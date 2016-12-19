@@ -74,12 +74,19 @@
 						<i class="fa fa-caret-down"></i>
 					</button>
 					<ul class="dropdown-menu">
-						{{if $item.item_photo_menu}}
-						{{$item.item_photo_menu}}
+						{{if $item.thread_action_menu}}
+						{{foreach $item.thread_action_menu as $mitem}}
+						<li role="presentation"><a role="menuitem" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} ><i class="fa fa-{{$mitem.icon}}"></i> {{$mitem.title}}</a></li>
+						{{/foreach}}
 						{{/if}}
 						{{if $item.drop.dropping}}
-						<li role="presentation" class="divider"></li>
 						<li><a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="fa fa-trash-o"></i> {{$item.drop.delete}}</a></li>
+						{{/if}}
+						{{if $item.thread_author_menu}}
+						<li role="presentation" class="divider"></li>
+						{{foreach $item.thread_author_menu as $mitem}}
+						<li role="presentation"><a role="menuitem" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} >{{$mitem.title}}</a></li>
+						{{/foreach}}
 						{{/if}}
 					</ul>
 				</div>

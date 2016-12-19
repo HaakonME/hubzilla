@@ -1067,15 +1067,15 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace("/\[zaudio\](.*?)\[\/zaudio\]/", '<a class="zid" href="$1" target="_blank" >$1</a>', $Text);
 	}
 
-	if ($tryoembed){
-		if (strpos($Text,'[/iframe]') !== false) {
-			$Text = preg_replace_callback("/\[iframe\](.*?)\[\/iframe\]/ism", 'bb_iframe', $Text);
-		}
-	} else {
-		if (strpos($Text,'[/iframe]') !== false) {
-			$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<a href="$1" target="_blank" >$1</a>', $Text);
-		}
-	}
+//	if ($tryoembed){
+//		if (strpos($Text,'[/iframe]') !== false) {
+//			$Text = preg_replace_callback("/\[iframe\](.*?)\[\/iframe\]/ism", 'bb_iframe', $Text);
+//		}
+//	} else {
+//		if (strpos($Text,'[/iframe]') !== false) {
+//			$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<a href="$1" target="_blank" >$1</a>', $Text);
+//		}
+//	}
 
 	// oembed tag
 	$Text = oembed_bbcode2html($Text);

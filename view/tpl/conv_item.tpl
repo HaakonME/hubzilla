@@ -166,17 +166,26 @@
 								{{if $item.star}}
 								<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="fa fa-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
 								{{/if}}
+
+								{{if $item.thread_action_menu}}
+								{{foreach $item.thread_action_menu as $mitem}}
+								<li role="presentation"><a role="menuitem" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} ><i class="fa fa-{{$mitem.icon}}"></i> {{$mitem.title}}</a></li>
+								{{/foreach}}
+								{{/if}}
+
 								{{if $item.drop.dropping}}
 								<li role="presentation"><a role="menuitem" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="fa fa-trash-o"></i> {{$item.drop.delete}}</a></li>
 								{{/if}}
-								{{if $item.item_photo_menu}}
+
+								{{if $item.thread_author_menu}}
 								<li role="presentation" class="divider"></li>
-								{{$item.item_photo_menu}}
+								{{foreach $item.thread_author_menu as $mitem}}
+								<li role="presentation"><a role="menuitem" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} >{{$mitem.title}}</a></li>
+								{{/foreach}}
+								{{/if}}
 
 								{{if $item.edpost && $item.dreport}}
 								<li role="presentation"><a role="menuitem" href="dreport/{{$item.mid}}">{{$item.dreport}}</a></li>
-								{{/if}}
-
 								{{/if}}
 							</ul>
 						</div>

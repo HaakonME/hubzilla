@@ -165,7 +165,7 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 		$x .= $schemecss;
 	}
 
-	$aside_width = 287;
+	$aside_width = 288;
 
 	// left aside and right aside are 285px + converse width
 	if($align_left) {

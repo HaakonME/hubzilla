@@ -689,7 +689,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,
-					'item_photo_menu' => item_photo_menu($item),
+					'thread_action_menu' => thread_action_menu($item,$mode),
+					'thread_author_menu' => thread_author_menu($item,$mode),
 					'name' => $profile_name,
 					'sparkle' => $sparkle,
 					'lock' => $lock,
@@ -959,6 +960,169 @@ function item_photo_menu($item){
 
 	return $o;
 }
+
+
+function thread_action_menu($item,$mode = '') {
+
+	$menu = [];
+	
+	if((local_channel()) && local_channel() == $item['uid']) {
+		$menu[] = [ 
+			'menu' => 'view_source',
+			'title' => t('View Source'),
+			'icon' => 'eye',
+			'action' => 'viewsrc(' . $item['id'] . '); return false;',
+			'href' => '#'
+		];
+
+		if(! in_array($mode, [ 'network-new', 'search', 'community'])) {
+			if($item['parent'] == $item['id'] && (get_observer_hash() != $item['author_xchan'])) {
+				$menu[] = [ 
+					'menu' => 'follow_thread',
+					'title' => t('Follow Thread'),
+					'icon' => 'plus',
+					'action' => 'dosubthread(' . $item['id'] . '); return false;',
+					'href' => '#'
+				];
+			}
+
+			$menu[] = [ 
+				'menu' => 'unfollow_thread',
+				'title' => t('Unfollow Thread'),
+				'icon' => 'minus',
+				'action' => 'dounsubthread(' . $item['id'] . '); return false;',
+				'href' => '#'
+			];
+		}
+
+	}
+
+
+
+
+	$args = [ 'item' => $item, 'mode' => $mode, 'menu' => $menu ];
+	call_hooks('thread_action_menu', $args);
+
+	return $args['menu'];
+
+}
+
+function thread_author_menu($item, $mode = '') {
+
+	$menu = [];
+
+	$local_channel = local_channel();
+
+	if($local_channel) {
+		if(! count(App::$contacts))
+			load_contact_links($local_channel);
+		$channel = App::get_channel();
+		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
+	}
+
+	$profile_link = chanlink_hash($item['author_xchan']);
+	if($item['uid'] > 0)
+		$pm_url = z_root() . '/mail/new/?f=&hash=' . $item['author_xchan'];
+
+	if(App::$contacts && array_key_exists($item['author_xchan'],App::$contacts))
+		$contact = App::$contacts[$item['author_xchan']];
+	else
+		if($local_channel && $item['author']['xchan_addr'])
+			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
+
+	if($contact) {
+		$poke_link = z_root() . '/poke/?f=&c=' . $contact['abook_id'];
+		if (! intval($contact['abook_self']))  
+			$contact_url = z_root() . '/connedit/' . $contact['abook_id'];
+		$posts_link = z_root() . '/network/?cid=' . $contact['abook_id'];
+
+		$clean_url = normalise_link($item['author-link']);
+	}
+
+	$rating_enabled = get_config('system','rating_enabled');
+
+	$ratings_url = (($rating_enabled) ? z_root() . '/ratings/' . urlencode($item['author_xchan']) : '');
+
+	if($profile_link) {
+		$menu[] = [ 
+			'menu' => 'view_profile',
+			'title' => t('View Profile'),
+			'icon' => 'fw',
+			'action' => '',
+			'href' => $profile_link
+		];
+	}
+
+	if($posts_link) {
+		$menu[] = [ 
+			'menu' => 'view_posts',
+			'title' => t('Activity/Posts'),
+			'icon' => 'fw',
+			'action' => '',
+			'href' => $posts_link
+		];
+	}
+
+	if($follow_url) {
+		$menu[] = [ 
+			'menu' => 'follow',
+			'title' => t('Connect'),
+			'icon' => 'fw',
+			'action' => '',
+			'href' => $follow_url
+		];
+	}
+
+	if($contact_url) {
+		$menu[] = [ 
+			'menu' => 'connedit',
+			'title' => t('Edit Connection'),
+			'icon' => 'fw',
+			'action' => '',
+			'href' => $contact_url
+		];
+	}
+
+	if($pm_url) {
+		$menu[] = [ 
+			'menu' => 'prv_message',
+			'title' => t('Message'),
+			'icon' => 'fw',
+			'action' => '',
+			'href' => $pm_url
+		];
+	}
+
+	if($ratings_url) {
+		$menu[] = [ 
+			'menu' => 'ratings',
+			'title' => t('Ratings'),
+			'icon' => 'fw',
+			'action' => '',
+			'href' => $ratings_url
+		];
+	}
+
+	if($poke_link) {
+		$menu[] = [ 
+			'menu' => 'poke',
+			'title' => t('Poke'),
+			'icon' => 'fw',
+			'action' => '',
+			'href' => $poke_link
+		];
+	}
+
+	$args = [ 'item' => $item, 'mode' => $mode, 'menu' => $menu ];
+	call_hooks('thread_author_menu', $args);
+
+	return $args['menu'];
+
+}
+
+
+
+
 
 /**
  * @brief Checks item to see if it is one of the builtin activities (like/dislike, event attendance, consensus items, etc.)

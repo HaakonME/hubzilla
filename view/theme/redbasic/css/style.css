@@ -22,12 +22,18 @@ body {
 	color: $font_colour;
 	margin: 0px;
 	height: 100%;
+	overflow-x: hidden;
+	
 }
 
 aside {
 	width: $aside_widthpx;
 	min-width: $aside_widthpx;
 	max-width: $aside_widthpx;
+}
+
+aside#region_1 {
+	border-right: 1px solid transparent;
 }
 
 main {
@@ -473,7 +479,6 @@ footer {
 
 #contact-block {
 	width: 100%;
-	float: left;
 }
 
 #contact-block-numcontacts {
@@ -482,12 +487,10 @@ footer {
 }
 
 .contact-block-div {
-	float: left;
-	width: 50px;
-	height: 50px;
+	display: inline;
 }
+
 .contact-block-textdiv {
-	float: left;
 	width: 150px;
 	height: 34px;
 }
@@ -495,12 +498,11 @@ footer {
 #contact-block-end {
 	clear: both;
 }
-.contact-block-link {
-	float: left;
-}
+
 .contact-block-img {
-	width:48px;
-	height:48px;
+	width:47px;
+	height:47px;
+	margin-bottom: 3px;
 }
 
 #tag-remove {
@@ -1267,6 +1269,11 @@ img.mail-conv-sender-photo {
 	color: $toolicon_colour;
 }
 
+.jot-icons.jot-lock-warn {
+	color: darkorange;
+}
+
+
 /* conversation */
 .nsfw-wrap {
 	text-align: center;
@@ -1835,10 +1842,6 @@ nav .badge.mail-update:hover {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;
-	}
-
-	main {
-		transition: all 0.25s ease-in-out;
 	}
 
 	main {

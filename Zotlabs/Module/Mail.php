@@ -47,8 +47,7 @@ class Mail extends \Zotlabs\Web\Controller {
 					$body = trim(str_replace($match[1],'',$body));
 				}
 			}
-
-			echo json_encode(['preview' => smilies(bbcode($body))]);
+			echo json_encode(['preview' => zidify_links(smilies(bbcode($body)))]);
 			killme();
 		} 
 
@@ -110,6 +109,8 @@ class Mail extends \Zotlabs\Web\Controller {
 		require_once('include/text.php');
 		linkify_tags($a, $body, local_channel());
 	
+		// I don't think this is used any more.
+
 		if($preview) {
 			$mail = [
 				'mailbox' => 'outbox',
@@ -118,8 +119,8 @@ class Mail extends \Zotlabs\Web\Controller {
 				'from_name' => $channel['xchan_name'],
 				'from_url' =>  $channel['xchan_url'],
 				'from_photo' => $channel['xchan_photo_s'],
-				'subject' => smilies(bbcode($subject)),
-				'body' => smilies(bbcode($body)),
+				'subject' => zidify_links(smilies(bbcode($subject))),
+				'body' => zidify_links(smilies(bbcode($body))),
 				'attachments' => '',
 				'can_recall' => false,
 				'is_recalled' => '',
@@ -369,7 +370,7 @@ class Mail extends \Zotlabs\Web\Controller {
 				'to_url' =>  chanlink_hash($message['to_xchan']),
 				'to_photo' => $message['to']['xchan_photo_s'],
 				'subject' => $message['title'],
-				'body' => smilies(bbcode($message['body'])),
+				'body' => zidify_links(smilies(bbcode($message['body']))),
 				'attachments' => $s,
 				'delete' => t('Delete message'),
 				'dreport' => t('Delivery report'),

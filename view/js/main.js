@@ -451,10 +451,18 @@ function contextualHelpFocus(target, openSidePanel) {
             else {
                     $("main").removeClass('region_1-on');
             }
+
+	    var css_position = $(target).parent().css('position');
+	    if (css_position === 'fixed') {
+	            $(target).parent().css('position', 'static');
+	    }
+
             $('html,body').animate({ scrollTop: $(target).offset().top - $('nav').outerHeight(true) - $('#contextual-help-content').outerHeight(true)}, 'slow');
             for (i = 0; i < 3; i++) {
                     $(target).fadeTo('slow', 0.1).fadeTo('slow', 1.0);
             }
+
+	    $(target).parent().css('position', css_position);
         }
 }
 

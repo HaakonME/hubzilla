@@ -22,12 +22,18 @@ body {
 	color: $font_colour;
 	margin: 0px;
 	height: 100%;
+	overflow-x: hidden;
+	
 }
 
 aside {
 	width: $aside_widthpx;
 	min-width: $aside_widthpx;
 	max-width: $aside_widthpx;
+}
+
+aside#region_1 {
+	border-right: 1px solid transparent;
 }
 
 main {
@@ -1836,10 +1842,6 @@ nav .badge.mail-update:hover {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;
-	}
-
-	main {
-		transition: all 0.25s ease-in-out;
 	}
 
 	main {

@@ -335,6 +335,8 @@ class ThreadItem {
 			'wall' => t('Wall-to-Wall'),
 			'vwall' => t('via Wall-To-Wall:'),
 			'profile_url' => $profile_link,
+			'thread_action_menu' => thread_action_menu($item,$conv->get_mode()),
+			'thread_author_menu' => thread_author_menu($item,$conv->get_mode()),
 			'item_photo_menu' => item_photo_menu($item),
 			'dreport' => $dreport,
 			'name' => $profile_name,

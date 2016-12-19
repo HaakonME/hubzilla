@@ -104,7 +104,7 @@ function oembed_action($embedurl) {
 
 function oembed_process($url) {
 	$j = oembed_fetch_url($url);
-	logger('oembed_process: ' . print_r($j,true));
+	logger('oembed_process: ' . print_r($j,true), LOGGER_DATA, LOG_DEBUG);
 	if($j && $j['type'] !== 'error')
 		return '[embed]' . $url . '[/embed]';
 	return false;
@@ -135,19 +135,15 @@ function oembed_fetch_url($embedurl){
 	// we should try to cache this and avoid a lookup on each render
 	$zrl = is_matrix_url($embedurl);
 
+	$furl = ((local_channel() && $zrl) ? zid($embedurl) : $embedurl);
+
 	if($action !== 'block') {
-		$txt = Zlib\Cache::get('[' . App::$videowidth . '] ' . $embedurl);
+		$txt = Zlib\Cache::get('[' . App::$videowidth . '] ' . $furl);
 	}
 		
 	if(is_null($txt)) {
 
 		$txt = "";
-		$furl = $embedurl;
-
-		logger('local_channel: ' . local_channel());
-
-		if(local_channel() && $zrl)
-			$furl = zid($furl);	
 
 		if ($action !== 'block') {
 			// try oembed autodiscovery
@@ -206,10 +202,9 @@ function oembed_fetch_url($embedurl){
 		//save in cache
 
 		if(! get_config('system','oembed_cache_disable'))
-			Zlib\Cache::set('[' . App::$videowidth . '] ' . $embedurl,$txt);
+			Zlib\Cache::set('[' . App::$videowidth . '] ' . $furl, $txt);
 
 	}
-
 
 	$j = json_decode($txt,true);
 

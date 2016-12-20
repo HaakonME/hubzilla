@@ -1,30 +1,27 @@
-Zot API
-=======
+### Zot API
 
 The API endpoints detailed below are relative to `api/z/1.0`, meaning that if an 
 API is listed as `channel/stream` the full API URL is 
 `[baseurl]/api/z/1.0/channel/stream`
 
-channel/export/basic
-================================================================================
+### channel/export/basic
 
 Export channel data
 
 
-channel/stream
-================================================================================
+### channel/stream
 
 Fetch channel conversation items 
 
-network/stream
-================================================================================
+### network/stream
+
 
 Fetch network conversation items 
 
 
 
-files
-================================================================================
+### files
+
 
 List file storage (attach DB)
 
@@ -130,13 +127,13 @@ Returns:
 
 
 
-filemeta
-================================================================================
+### filemeta
+
 Export file metadata for any uploaded file
 
 
-filedata
-================================================================================
+### filedata
+
 
 Provides the ability to download a file from cloud storage in chunks
 
@@ -203,14 +200,14 @@ Returns:
 	}
 
 
-file/export
-================================================================================
+### file/export
 
-file
-================================================================================
 
-albums
-================================================================================
+### file
+
+
+### albums
+
 
 Description: list photo albums
 
@@ -278,18 +275,18 @@ Example:
 
 
 
-photos
-================================================================================
+### photos
+
 
 list photo metadata
 
 
-photo
-================================================================================
+### photo
 
 
-group
-================================================================================
+
+### group
+
 
 `GET /api/z/1.0/group`
 
@@ -328,8 +325,8 @@ To use with API group_members, provide either 'group_id' from the id element ret
 	    }
 	]
 
-group_members
-================================================================================
+### group_members
+
 
 `GET /api/z/1.0/group_members`
 
@@ -461,8 +458,8 @@ group_member+abook+xchan (DB join) for each member of the privacy group
 	]
 
 
-xchan
-================================================================================
+### xchan
+
 
 An xchan is a global location independent channel and is the primary record for a network 
 identity. It may refer to channels on other websites, networks, or services. 
@@ -506,8 +503,8 @@ Returns:
 		"deleted": "0"
 	}
 
-item/update
-================================================================================
+### item/update
+
 
 Create or update an item (post, activity, webpage, etc.)
 
@@ -733,22 +730,22 @@ Returns:
 
     }
 
-item/full
-================================================================================
+### item/full
+
 
 Get all data associated with an item
 
-abook
-================================================================================
+### abook
+
 
 Connections
 
-abconfig
-================================================================================
+### abconfig
+
 
 Connection metadata (such as permissions)
 
-perm_allowed
-================================================================================
+### perm_allowed
+
 
 Check a permission for a given xchan

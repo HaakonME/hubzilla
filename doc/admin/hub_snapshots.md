@@ -1,4 +1,4 @@
-# Hub Snapshot Tools
+### Hub Snapshot Tools
 
 Hubzilla developers frequently need to switch between branches that might have 
 incompatible database schemas or content. The following two scripts create and 
@@ -7,7 +7,7 @@ root and the entire database state. Each script requires a config file called
 `hub-snapshot.conf` residing in the same folder and containing the specific 
 directories and database details of your hub.
 
-# Config
+### Config
 
 The format of the config file is very strict. There must be no spaces between the 
 variable name and the value. Replace only the content inside the quotes with your 
@@ -24,7 +24,7 @@ configuration. Save this file as `hub-snapshot.conf` alongside the scripts.
     # The target snapshot folder where the git repo will be initialized
     SNAPSHOTROOT="/root/snapshots/hubzilla/"
     
-# Snapshot
+### Snapshot
 
 Example usage:
 
@@ -84,7 +84,7 @@ Example usage:
     
     exit 0
 
-# Restore
+### Restore
 
     #!/bin/bash
     # Restore hub to a previous state. Input hub config and commit hash

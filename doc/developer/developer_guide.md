@@ -1,4 +1,4 @@
-# Who is a Hubzilla developer? Should I read this?
+### Who is a Hubzilla developer? Should I read this?
 
 Anyone who contributes to making Hubzilla better is a developer. There are many different and important ways you can contribute to this amazing technology, _even if you do not know how to write code_. The software itself is only a part of the Hubzilla project. You can contribute by 
 
@@ -11,31 +11,31 @@ _Software_ developers are of course welcomed; there are so many great ideas to i
 
 This document will help you get started learning and contributing to Hubzilla.
 
-# Versioning system
+### Versioning system
 
 The versioning system is similar to the popular semantic versioning but less stringent. Given x.y.z,  x changes yearly. y changes for "stable" monthly builds, and z increments when there are interface changes. We maintain our date and build numbers for medium grain version control (commits within a certain date range) and of course git revs for fine grained control.
 
-# Git repository branches
+### Git repository branches
 
 There are two official branches of the Hubzilla git repo. 
 
 * The stable version is maintained on the **master** branch. The latest commit in this branch is considered to be suitable for production hubs. 
 * Experimental development occurs on the **dev** branch, which is merged into **master** when it is deemed tested and stable enough.
 
-# Developer tools and workflows
+### Developer tools and workflows
 
-## Hub Snapshots
+#### Hub Snapshots
 
-The [[Hub Snapshots]] page provides instructions and scripts for taking complete 
+The [hub snapshots](/help/admin/hub_snapshots) page provides instructions and scripts for taking complete 
 snapshots of a hub to support switching between consistent and completely known 
 states. This is useful to prevent situations where the content or database schema 
 might be incompatible with the code. 
 
-# Translations
+### Translations
 
 Our translations are managed through Transifex. If you wish to help out translating Hubzilla to another language, sign up on transifex.com, visit [https://www.transifex.com/projects/p/red-matrix/](https://www.transifex.com/projects/p/red-matrix/) and request to join one of the existing language teams or create a new one. Notify one of the core developers when you have a translation update which requires merging, or ask about merging it yourself if you're comfortable with git and PHP. We have a string file called 'messages.po' which is gettext compliant and a handful of email templates, and from there we automatically generate the application's language files.   
 
-## Translation Process
+#### Translation Process
 
 The strings used in the UI of Hubzilla is translated at [Transifex][1] and then
 included in the git repository at github. If you want to help with translation
@@ -98,7 +98,7 @@ view/de/hmessages.po you would do the following.
    repository, push it to your fork of the Hubzilla repository at github and
    issue a pull request for that commit.
 
-## Utilities
+#### Utilities
 
 Additional to the po2php script there are some more utilities for translation
 in the "util" directory of the Hubzilla source tree.  If you only want to
@@ -108,7 +108,7 @@ works.
 
 For further information see the utils/README file.
 
-## Known Problems
+#### Known Problems
 
 * Hubzilla uses the language setting of the visitors browser to determain the
   language for the UI. Most of the time this works, but there are some known
@@ -116,7 +116,7 @@ For further information see the utils/README file.
 * the early translations are based on the friendica translations, if you 
   some rough translations please let us know or fix them at Transifex.
 
-# To-be-organized information
+### To-be-organized information
 
 **Here is how you can join us.**
 

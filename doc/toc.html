@@ -108,7 +108,7 @@
             if(pageName === linkName) {
                 var tocUl = $(this).closest('li').append('<ul>').find('ul');
                 tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
-                tocUl.toc({content: "#doco-content", headings: "h1"});
+                tocUl.toc({content: "#doco-content", headings: "h3"});
                 tocUl.addClass('toc-content sub-menu');
 		tocUl.attr('id', 'doco-side-toc');
 

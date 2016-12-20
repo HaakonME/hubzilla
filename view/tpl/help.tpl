@@ -3,10 +3,10 @@
 	<h2>{{$title}}: {{$heading}}</h2>
 	</div>
 	<div class="section-content-wrapper" id="doco-content">
-		<h1 class="fakelink" id="doco-top-toc-heading"><span  onclick="docoTocToggle(); return false;">
+		<h3 class="fakelink" id="doco-top-toc-heading"><span  onclick="docoTocToggle(); return false;">
 			<i class="fakelink fa fa-caret-right" id="doco-toc-toggle"></i>
 			{{$tocHeading}}
-		</span></h1>
+		</span></h3>
 	<ul id="doco-top-toc" style="margin-bottom: 1.5em; display: none;"></ul>
 	{{$content}}
 	</div>
@@ -16,7 +16,7 @@
 
 	// Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
 	$(document).ready(function () {
-		$('#doco-top-toc').toc({content: "#doco-content", headings: "h1,h2,h3,h4"});
+		$('#doco-top-toc').toc({content: "#doco-content", headings: "h3,h4,h5,h6"});
 	});
 	
 	function docoTocToggle() {

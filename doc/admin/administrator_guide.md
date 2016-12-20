@@ -109,9 +109,9 @@ PHP might differ from the _webserver_ version
 * Installation into a top-level domain or sub-domain (without a 
   directory/path component in the URL) is REQUIRED.
 
-# Manual Installation #
+### Manual Installation
 
-#### Unpack the $Projectname files into the root of your web server document area ###
+#### Unpack the $Projectname files into the root of your web server document area
 If you copy the directory tree to your webserver, make sure that you include the
 hidden files like .htaccess.
 

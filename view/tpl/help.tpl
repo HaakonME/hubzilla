@@ -3,7 +3,7 @@
 	<h2>{{$title}}: {{$heading}}</h2>
 	</div>
 	<div class="section-content-wrapper" id="doco-content">
-		<h3 class="fakelink" id="doco-top-toc-heading"><span  onclick="docoTocToggle(); return false;">
+		<h3 id="doco-top-toc-heading"><span class="fakelink" onclick="docoTocToggle(); return false;">
 			<i class="fakelink fa fa-caret-right" id="doco-toc-toggle"></i>
 			{{$tocHeading}}
 		</span></h3>

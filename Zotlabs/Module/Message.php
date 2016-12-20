@@ -79,7 +79,7 @@ class Message extends \Zotlabs\Web\Controller {
 					'to_photo'   => $rr['to']['xchan_photo_s'],
 					'subject'    => (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
 					'delete'     => t('Delete conversation'),
-					'body'       => smilies(bbcode($rr['body'])),
+					'body'       => zidify_links(smilies(bbcode($rr['body']))),
 					'date'       => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
 					'seen'       => $rr['seen']
 				);

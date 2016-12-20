@@ -625,14 +625,14 @@ class Events extends \Zotlabs\Web\Controller {
 	
 					$drop = array(z_root().'/events/drop/'.$rr['event_hash'],t('Delete event'),'','');
 	
-					$title = strip_tags(html_entity_decode(bbcode($rr['summary']),ENT_QUOTES,'UTF-8'));
+					$title = strip_tags(html_entity_decode(zidify_links(bbcode($rr['summary'])),ENT_QUOTES,'UTF-8'));
 					if(! $title) {
 						list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);
 						$title = strip_tags(html_entity_decode($title,ENT_QUOTES,'UTF-8'));
 					}
 					$html = format_event_html($rr);
-					$rr['desc'] = bbcode($rr['desc']);
-					$rr['location'] = bbcode($rr['location']);
+					$rr['desc'] = zidify_links(smilies(bbcode($rr['desc'])));
+					$rr['location'] = zidify_links(smilies(bbcode($rr['location'])));
 					$events[] = array(
 						'id'=>$rr['id'],
 						'hash' => $rr['event_hash'],

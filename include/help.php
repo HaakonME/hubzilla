@@ -79,7 +79,7 @@ function get_help_content($tocpath = false) {
 	}
 	if($doctype === 'bbcode') {
 		require_once('include/bbcode.php');
-		$content = bbcode($text);
+		$content = zidify_links(bbcode($text));
 		// bbcode retargets external content to new windows. This content is internal.
 		$content = str_replace(' target="_blank"', '', $content);
 	}
@@ -95,7 +95,7 @@ function preg_callback_help_include($matches) {
 		$include = str_replace($matches[0],load_doc_file($matches[1]),$matches[0]);
 		if(preg_match('/\.bb$/', $matches[1]) || preg_match('/\.txt$/', $matches[1])) {
 			require_once('include/bbcode.php');
-			$include = bbcode($include);
+			$include = zidify_links(bbcode($include));
 			$include = str_replace(' target="_blank"','',$include);
 		}
 		elseif(preg_match('/\.md$/', $matches[1])) {

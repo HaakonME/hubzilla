@@ -143,7 +143,7 @@ class Chatsvc extends \Zotlabs\Web\Controller {
 						'name' => $rr['xchan_name'],
 						'isotime' => datetime_convert('UTC', date_default_timezone_get(), $rr['created'], 'c'),
 						'localtime' => datetime_convert('UTC', date_default_timezone_get(), $rr['created'], 'r'),
-						'text' => smilies(bbcode($rr['chat_text'])),
+						'text' => zidify_links(smilies(bbcode($rr['chat_text']))),
 						'self' => ((get_observer_hash() == $rr['chat_xchan']) ? 'self' : '')
 					);
 				}

@@ -25,7 +25,7 @@ function format_event_html($ev) {
 
 	$o = '<div class="vevent">' . "\r\n";
 
-	$o .= '<div class="event-title"><h3><i class="fa fa-calendar"></i>&nbsp;' . bbcode($ev['summary']) .  '</h3></div>' . "\r\n";
+	$o .= '<div class="event-title"><h3><i class="fa fa-calendar"></i>&nbsp;' . zidify_links(smilies(bbcode($ev['summary']))) .  '</h3></div>' . "\r\n";
 
 	$o .= '<div class="event-start"><span class="event-label">' . t('Starts:') . '</span>&nbsp;<span class="dtstart" title="'
 		. datetime_convert('UTC', 'UTC', $ev['dtstart'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
@@ -46,11 +46,11 @@ function format_event_html($ev) {
 				$ev['dtend'] , $bd_format )))
 			. '</span></div>'  . "\r\n";
 
-	$o .= '<div class="event-description">' . bbcode($ev['description']) .  '</div>' . "\r\n";
+	$o .= '<div class="event-description">' . zidify_links(smilies(bbcode($ev['description']))) .  '</div>' . "\r\n";
 
 	if(strlen($ev['location']))
 		$o .= '<div class="event-location"><span class="event-label"> ' . t('Location:') . '</span>&nbsp;<span class="location">' 
-			. bbcode($ev['location'])
+			. zidify_links(smilies(bbcode($ev['location'])))
 			. '</span></div>' . "\r\n";
 
 	$o .= '</div>' . "\r\n";
@@ -69,7 +69,7 @@ function format_event_obj($jobject) {
 		$bd_format = t('l F d, Y \@ g:i A'); // Friday January 18, 2011 @ 8:01 AM
 
 		$event['header'] = replace_macros(get_markup_template('event_item_header.tpl'),array(
-			'$title'	 => bbcode($object['title']),
+			'$title'	 => zidify_links(smilies(bbcode($object['title']))),
 			'$dtstart_label' => t('Starts:'),
 			'$dtstart_title' => datetime_convert('UTC', 'UTC', $object['dtstart'], (($object['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' )),
 			'$dtstart_dt'	 => (($object['adjust']) ? day_translate(datetime_convert('UTC', date_default_timezone_get(), $object['dtstart'] , $bd_format )) : day_translate(datetime_convert('UTC', 'UTC', $object['dtstart'] , $bd_format))),
@@ -80,9 +80,9 @@ function format_event_obj($jobject) {
 		));
 
 		$event['content'] = replace_macros(get_markup_template('event_item_content.tpl'),array(
-			'$description'	  => bbcode($object['description']),
+			'$description'	  => zidify_links(smilies(bbcode($object['description']))),
 			'$location_label' => t('Location:'),
-			'$location'	  => bbcode($object['location'])
+			'$location'	  => zidify_links(smilies(bbcode($object['location'])))
 		));
 
 	}

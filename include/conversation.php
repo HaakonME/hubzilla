@@ -1564,7 +1564,7 @@ function format_location($item) {
 
 	if(strpos($item['location'],'#') === 0) {
 		$location = substr($item['location'],1);
-		$location = ((strpos($location,'[') !== false) ? bbcode($location) : $location);
+		$location = ((strpos($location,'[') !== false) ? zidify_links(bbcode($location)) : $location);
 	}
 	else {
 		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
@@ -1616,7 +1616,7 @@ function prepare_page($item) {
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
 		'$auth_url' => (($naked) ? '' : zid($item['author']['xchan_url'])),
 		'$date' => (($naked) ? '' : datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'Y-m-d H:i')),
-		'$title' => smilies(bbcode($item['title'])),
+		'$title' => zidify_links(smilies(bbcode($item['title']))),
 		'$body' => $body['html'],
 		'$preview' => $preview,
 		'$link' => $link,

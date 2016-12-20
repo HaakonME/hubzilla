@@ -215,7 +215,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$content = ($p['content'] !== '' ? $rawContent : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				if($mimeType == 'text/bbcode') {
-					$renderedContent = wiki_convert_links(bbcode($content),argv(0).'/'.argv(1).'/'.$wikiUrlName);
+					$renderedContent = wiki_convert_links(zidify_links(smilies(bbcode($content))),argv(0).'/'.argv(1).'/'.$wikiUrlName);
 				}
 				else {
 					require_once('library/markdown.php');
@@ -299,7 +299,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$mimeType = $w['mimeType'];
 
 			if($mimeType == 'text/bbcode') {
-				$html = wiki_convert_links(bbcode($content),$wikiURL);
+				$html = wiki_convert_links(zidify_links(smilies(bbcode($content))),$wikiURL);
 			}
 			else {
 				require_once('library/markdown.php');

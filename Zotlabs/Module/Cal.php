@@ -292,8 +292,8 @@ class Cal extends \Zotlabs\Web\Controller {
 						$title = strip_tags(html_entity_decode($title,ENT_QUOTES,'UTF-8'));
 					}
 					$html = format_event_html($rr);
-					$rr['desc'] = bbcode($rr['desc']);
-					$rr['location'] = bbcode($rr['location']);
+					$rr['desc'] = zidify_links(smilies(bbcode($rr['desc'])));
+					$rr['location'] = zidify_links(smilies(bbcode($rr['location'])));
 					$events[] = array(
 						'id'=>$rr['id'],
 						'hash' => $rr['event_hash'],

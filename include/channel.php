@@ -1218,7 +1218,7 @@ function advanced_profile(&$a) {
 			$profile['marital'] = array( t('Status:'), App::$profile['marital']);
 
 		if(App::$profile['partner'])
-			$profile['marital']['partner'] = bbcode(App::$profile['partner']);
+			$profile['marital']['partner'] = zidify_links(bbcode(App::$profile['partner']));
 
 		if(strlen(App::$profile['howlong']) && App::$profile['howlong'] > NULL_DATE) {
 			$profile['howlong'] = relative_date(App::$profile['howlong'], t('for %1$d %2$s'));

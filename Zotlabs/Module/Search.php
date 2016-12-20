@@ -211,7 +211,7 @@ class Search extends \Zotlabs\Web\Controller {
 			$result = array();
 			require_once('include/conversation.php');
 			foreach($items as $item) {
-				$item['html'] = bbcode($item['body']);
+				$item['html'] = zidify_links(bbcode($item['body']));
 				$x = encode_item($item);
 				$x['html'] = prepare_text($item['body'],$item['mimetype']);
 				$result[] = $x;

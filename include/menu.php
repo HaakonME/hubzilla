@@ -102,7 +102,7 @@ function menu_render($menu, $class='', $edit = false, $var = array()) {
 		if($menu['items'][$x]['mitem_flags'] & MENU_ITEM_NEWWIN)
 			$menu['items'][$x]['newwin'] = '1';
 
-		$menu['items'][$x]['mitem_desc'] = bbcode($menu['items'][$x]['mitem_desc']);
+		$menu['items'][$x]['mitem_desc'] = zidify_links(smilies(bbcode($menu['items'][$x]['mitem_desc'])));
 	}
 
 	$wrap = (($var['wrap'] === 'none') ? false : true);

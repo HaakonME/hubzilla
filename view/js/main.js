@@ -674,6 +674,8 @@ function updateConvItems(mode,data) {
 		$('.item_' + bParam_mid.substring(0,32)).addClass('item-highlight');
 	}
 
+	$(document.body).trigger("sticky_kit:recalc");
+
 }
 
 function collapseHeight() {

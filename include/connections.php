@@ -630,3 +630,225 @@ function random_profile() {
 	return '';
 }
 
+function update_vcard($arr,$vcard = null) {
+
+	$fn = $arr['fn'];
+
+	if(! $vcard) {
+		$vcard = new \Sabre\VObject\Component\VCard([
+			'FN' => $fn,
+			'N' => array_reverse(explode(' ', $fn))
+		]);
+	}
+	$org = $arr['org'];
+	if($org) {
+		$vcard->ORG = $org;
+	}
+
+	$title = $arr['title'];
+	if($title) {
+		$vcard->TITLE = $title;
+	}
+
+	$tel = $arr['tel'];
+	$tel_type = $arr['tel_type'];
+	if($tel) {
+		$i = 0;
+		foreach($tel as $item) {
+			if($item) {
+				$vcard->add('TEL', $item, ['type' => $tel_type[$i]]);
+			}
+			$i++;
+		}
+	}
+
+	$email = $arr['email'];
+	$email_type = $arr['email_type'];
+	if($email) {
+		$i = 0;
+		foreach($email as $item) {
+			if($item) {
+				$vcard->add('EMAIL', $item, ['type' => $email_type[$i]]);
+			}
+			$i++;
+		}
+	}
+
+	$impp = $arr['impp'];
+	$impp_type = $arr['impp_type'];
+	if($impp) {
+		$i = 0;
+		foreach($impp as $item) {
+			if($item) {
+				$vcard->add('IMPP', $item, ['type' => $impp_type[$i]]);
+			}
+			$i++;
+		}
+	}
+
+	$url = $arr['url'];
+	$url_type = $arr['url_type'];
+	if($url) {
+		$i = 0;
+		foreach($url as $item) {
+			if($item) {
+				$vcard->add('URL', $item, ['type' => $url_type[$i]]);
+			}
+			$i++;
+		}
+	}
+
+	$adr = $arr['adr'];
+	$adr_type = $arr['adr_type'];
+
+	if($adr) {
+		$i = 0;
+		foreach($adr as $item) {
+			if($item) {
+				$vcard->add('ADR', $item, ['type' => $adr_type[$i]]);
+			}
+			$i++;
+		}
+	}
+
+	$note = $arr['note'];
+	if($note) {
+		$vcard->NOTE = $note;
+	}
+
+	return $vcard->serialize();
+
+}
+
+function get_vcard_array($vc) {
+
+	$photo = '';
+	if($vc->PHOTO) {
+		$photo_value = strtolower($vc->PHOTO->getValueType()); // binary or uri
+		if($photo_value === 'binary') {
+			$photo_type = strtolower($vc->PHOTO['TYPE']); // mime jpeg, png or gif
+			$photo = 'data:image/' . $photo_type . ';base64,' . base64_encode((string)$vc->PHOTO);
+		}
+		else {
+			$url = parse_url((string)$vc->PHOTO);
+			$photo = 'data:' . $url['path'];
+		}
+	}
+
+	$fn = '';
+	if($vc->FN) {
+		$fn = (string) escape_tags($vc->FN);
+	}
+
+	$org = '';
+	if($vc->ORG) {
+		$org = (string) escape_tags($vc->ORG);
+	}
+
+	$title = '';
+	if($vc->TITLE) {
+		$title = (string) escape_tags($vc->TITLE);
+	}
+
+	$tels = [];
+	if($vc->TEL) {
+		foreach($vc->TEL as $tel) {
+			$type = (($tel['TYPE']) ? vcard_translate_type((string)$tel['TYPE']) : '');
+			$tels[] = [
+				'type' => $type,
+				'nr' => (string) escape_tags($tel)
+			];
+		}
+	}
+	$emails = [];
+	if($vc->EMAIL) {
+		foreach($vc->EMAIL as $email) {
+			$type = (($email['TYPE']) ? vcard_translate_type((string)$email['TYPE']) : '');
+			$emails[] = [
+				'type' => $type,
+				'address' => (string) escape_tags($email)
+			];
+		}
+	}
+
+	$impps = [];
+	if($vc->IMPP) {
+		foreach($vc->IMPP as $impp) {
+			$type = (($impp['TYPE']) ? vcard_translate_type((string)$impp['TYPE']) : '');
+			$impps[] = [
+				'type' => $type,
+				'address' => (string) escape_tags($impp)
+			];
+		}
+	}
+
+	$urls = [];
+	if($vc->URL) {
+		foreach($vc->URL as $url) {
+			$type = (($url['TYPE']) ? vcard_translate_type((string)$url['TYPE']) : '');
+			$urls[] = [
+				'type' => $type,
+				'address' => (string) escape_tags($url)
+			];
+		}
+	}
+
+	$adrs = [];
+	if($vc->ADR) {
+		foreach($vc->ADR as $adr) {
+			$type = (($adr['TYPE']) ? vcard_translate_type((string)$adr['TYPE']) : '');
+			$adrs[] = [
+				'type' => $type,
+				'address' => escape_tags($adr->getParts())
+			];
+		}
+	}
+
+	$note = '';
+	if($vc->NOTE) {
+		$note = (string) escape_tags($vc->NOTE);
+	}
+
+	$card = [
+		'photo'  => $photo,
+		'fn'     => $fn,
+		'org'    => $org,
+		'title'  => $title,
+		'tels'   => $tels,
+		'emails' => $emails,
+		'impps'  => $impps,
+		'urls'   => $urls,
+		'adrs'   => $adrs,
+		'note'   => $note
+	];
+
+	return $card;
+
+}
+
+
+function vcard_translate_type($type) {
+
+	if(!$type)
+		return;
+
+	$type = strtoupper($type);
+
+	$map = [
+		'CELL' => t('Mobile'),
+		'HOME' => t('Home'),
+		'HOME,VOICE' => t('Home, Voice'),
+		'HOME,FAX' => t('Home, Fax'),
+		'WORK' => t('Work'),
+		'WORK,VOICE' => t('Work, Voice'),
+		'WORK,FAX' => t('Work, Fax'),
+		'OTHER' => t('Other')
+	];
+
+	if (array_key_exists($type, $map)) {
+		return [$type, $map[$type]];
+	}
+	else {
+		return [$type, t('Other') . ' (' . $type . ')'];
+	}
+}

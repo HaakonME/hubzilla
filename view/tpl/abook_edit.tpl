@@ -87,6 +87,285 @@
 				</div>
 			</div>
 			{{/if}}
+			<div class="panel">
+				<div class="section-subtitle-wrapper" role="tab" id="vcard-tool">
+					<h3>
+						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#vcard-tool-collapse" aria-expanded="true" aria-controls="vcard-tool-collapse">
+							{{$vcard_label}}
+						</a>
+					</h3>
+				</div>
+
+				<div id="vcard-tool-collapse" class="panel-collapse collapse{{if !$is_pending || $section == 'vcard'}} in{{/if}}" role="tabpanel" aria-labelledby="vcard-tool">
+
+<script>
+$(document).ready(function() {
+
+	$(document).on('click', '.vcard-header, .vcard-cancel-btn', updateView);
+	$(document).on('click', '.add-field', doAdd);
+	$(document).on('click', '.remove-field', doRemove);
+
+	function updateView() {
+		var id = $(this).data('id');
+		var action = $(this).data('action');
+		var header = $('#vcard-header-' + id);
+		var cancel = $('#vcard-cancel-' + id);
+		var addField = $('#vcard-add-field-' + id);
+		var info = $('#vcard-info-' + id);
+		var vcardPreview = $('#vcard-preview-' + id);
+		var fn = $('#vcard-fn-' + id);
+
+		if(action === 'open') {
+			$(header).addClass('active');
+			$(cancel).show();
+			$(addField).show();
+			$(info).show();
+			$(fn).show();
+			$(vcardPreview).hide();
+		}
+		else {
+			$(header).removeClass('active');
+			$(cancel).hide();
+			$(addField).hide();
+			$(info).hide();
+			$(fn).hide();
+			$(vcardPreview).show();
+		}
+	}
+
+	function doAdd() {
+		var what = $(this).data('add');
+		var id = $(this).data('id');
+		var element = '#template-form-' + what;
+		var where = '#card_form_' + id;
+
+		$(element + ' .remove-field').attr('data-id', id)
+
+		if(what === 'vcard-adr') {
+			var adrCount = $(where + ' .form-' + what).length;
+			var attrName = 'adr[' + adrCount + '][]';
+			$(element + ' input').attr('name', attrName);
+		}
+
+		if(what === 'vcard-org' || what === 'vcard-title' || what === 'vcard-note') {
+			$(where + ' .add-' + what).hide()
+		}
+
+		$(element).clone().removeAttr('id').appendTo(where + ' .form-' + what + '-wrapper');
+	}
+
+	function doRemove() {
+		var what = $(this).data('remove');
+		var element = $(this).parents('div.form-' + what);
+		var where = '#card_form_' + $(this).data('id');
+
+		if(what === 'vcard-org' || what === 'vcard-title' || what === 'vcard-note') {
+			$(where + ' .add-' + what).show()
+		}
+
+		$(element).remove();
+	}
+
+});
+</script>
+
+
+
+			<div class="dropdown pull-right">
+				<button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle"><i class="fa fa-plus"></i> {{$add_field}}</button>
+				<ul class="dropdown-menu">
+					<li class="add-vcard-org" style="display: none"><a href="#" data-add="vcard-org" data-id="new" class="add-field" onclick="return false;">{{$org_label}}</a></li>
+					<li class="add-vcard-title" style="display: none"><a href="#" data-add="vcard-title" data-id="new" class="add-field" onclick="return false;">{{$title_label}}</a></li>
+					<li class="add-vcard-tel"><a href="#" data-add="vcard-tel" data-id="new" class="add-field" onclick="return false;">{{$tel_label}}</a></li>
+					<li class="add-vcard-email"><a href="#" data-add="vcard-email" data-id="new" class="add-field" onclick="return false;">{{$email_label}}</a></li>
+					<li class="add-vcard-impp"><a href="#" data-add="vcard-impp" data-id="new" class="add-field" onclick="return false;">{{$impp_label}}</a></li>
+					<li class="add-vcard-url"><a href="#" data-add="vcard-url" data-id="new" class="add-field" onclick="return false;">{{$url_label}}</a></li>
+					<li class="add-vcard-adr"><a href="#" data-add="vcard-adr" data-id="new" class="add-field" onclick="return false;">{{$adr_label}}</a></li>
+					<li class="add-vcard-note"><a href="#" data-add="vcard-note" data-id="new" class="add-field" onclick="return false;">{{$note_label}}</a></li>
+				</ul>
+			</div>
+
+			<div class="vcard-fn-create form-group">
+				<div class="form-vcard-fn-wrapper">
+					<div class="form-group form-vcard-fn">
+						<div class="vcard-nophoto"><i class="fa fa-user"></i></div><input type="text" name="fn" value="" placeholder="{{$name_label}}">
+					</div>
+				</div>
+			</div>
+
+			<div class="vcard-org form-group">
+				<div class="form-vcard-org-wrapper">
+					<div class="form-group form-vcard-org">
+						<input type="text" name="org" value="" placeholder="{{$org_label}}">
+						<i data-remove="vcard-org" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+					</div>
+				</div>
+			</div>
+
+			<div class="vcard-title form-group">
+				<div class="form-vcard-title-wrapper">
+					<div class="form-group form-vcard-title">
+						<input type="text" name="title" value="" placeholder="{{$title_label}}">
+						<i data-remove="vcard-title" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+					</div>
+				</div>
+			</div>
+
+			<div class="vcard-tel form-group">
+				<div class="form-vcard-tel-wrapper">
+					<div class="form-group form-vcard-tel">
+						<select name="tel_type[]">
+							<option value="CELL">{{$mobile}}</option>
+							<option value="HOME">{{$home}}</option>
+							<option value="WORK">{{$work}}</option>
+							<option value="OTHER">{{$other}}</option>
+						</select>
+						<input type="text" name="tel[]" value="" placeholder="{{$tel_label}}">
+						<i data-remove="vcard-tel" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="vcard-email form-group">
+				<div class="form-vcard-email-wrapper">
+					<div class="form-group form-vcard-email">
+						<select name="email_type[]">
+							<option value="HOME">{{$home}}</option>
+							<option value="WORK">{{$work}}</option>
+							<option value="OTHER">{{$other}}</option>
+						</select>
+						<input type="text" name="email[]" value="" placeholder="{{$email_label}}">
+						<i data-remove="vcard-email" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+					</div>
+				</div>
+			</div>
+
+			<div class="vcard-impp form-group">
+				<div class="form-vcard-impp-wrapper">
+				</div>
+			</div>
+
+			<div class="vcard-url form-group">
+				<div class="form-vcard-url-wrapper">
+				</div>
+			</div>
+
+			<div class="vcard-adr form-group">
+				<div class="form-vcard-adr-wrapper">
+				</div>
+			</div>
+
+			<div class="vcard-note form-group">
+				<div class="form-vcard-note-wrapper">
+				</div>
+			</div>
+
+			<div class="clear"></div>
+
+
+
+<div id="template-form-vcard-org" class="form-group form-vcard-org">
+	<div class="form-group form-vcard-org">
+		<input type="text" name="org" value="" placeholder="{{$org_label}}">
+		<i data-remove="vcard-org" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+	</div>
+</div>
+
+<div id="template-form-vcard-title" class="form-group form-vcard-title">
+	<div class="form-group form-vcard-title">
+		<input type="text" name="title" value="" placeholder="{{$title_label}}">
+		<i data-remove="vcard-title" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+	</div>
+</div>
+
+<div id="template-form-vcard-tel" class="form-group form-vcard-tel">
+	<select name="tel_type[]">
+		<option value="CELL">{{$mobile}}</option>
+		<option value="HOME">{{$home}}</option>
+		<option value="WORK">{{$work}}</option>
+		<option value="OTHER">{{$other}}</option>
+	</select>
+	<input type="text" name="tel[]" value="" placeholder="{{$tel_label}}">
+	<i data-remove="vcard-tel" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+</div>
+
+<div id="template-form-vcard-email" class="form-group form-vcard-email">
+	<select name="email_type[]">
+		<option value="HOME">{{$home}}</option>
+		<option value="WORK">{{$work}}</option>
+		<option value="OTHER">{{$other}}</option>
+	</select>
+	<input type="text" name="email[]" value="" placeholder="{{$email_label}}">
+	<i data-remove="vcard-email" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+</div>
+
+<div id="template-form-vcard-impp" class="form-group form-vcard-impp">
+	<select name="impp_type[]">
+		<option value="HOME">{{$home}}</option>
+		<option value="WORK">{{$work}}</option>
+		<option value="OTHER">{{$other}}</option>
+	</select>
+	<input type="text" name="impp[]" value="" placeholder="{{$impp_label}}">
+	<i data-remove="vcard-impp" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+</div>
+
+<div id="template-form-vcard-url" class="form-group form-vcard-url">
+	<select name="url_type[]">
+		<option value="HOME">{{$home}}</option>
+		<option value="WORK">{{$work}}</option>
+		<option value="OTHER">{{$other}}</option>
+	</select>
+	<input type="text" name="url[]" value="" placeholder="{{$url_label}}">
+	<i data-remove="vcard-url" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+</div>
+
+<div id="template-form-vcard-adr" class="form-group form-vcard-adr">
+	<div class="form-group">
+		<select name="adr_type[]">
+			<option value="HOME">{{$home}}</option>
+			<option value="WORK">{{$work}}</option>
+			<option value="OTHER">{{$other}}</option>
+		</select>
+		<label>{{$adr_label}}</label>
+		<i data-remove="vcard-adr" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+	</div>
+	<div class="form-group">
+		<input type="text" name="" value="" placeholder="{{$po_box}}">
+	</div>
+	<div class="form-group">
+		<input type="text" name="" value="" placeholder="{{$extra}}">
+	</div>
+	<div class="form-group">
+		<input type="text" name="" value="" placeholder="{{$street}}">
+	</div>
+	<div class="form-group">
+		<input type="text" name="" value="" placeholder="{{$locality}}">
+	</div>
+	<div class="form-group">
+		<input type="text" name="" value="" placeholder="{{$region}}">
+	</div>
+	<div class="form-group">
+		<input type="text" name="" value="" placeholder="{{$zip_code}}">
+	</div>
+	<div class="form-group">
+		<input type="text" name="" value="" placeholder="{{$country}}">
+	</div>
+</div>
+
+<div id="template-form-vcard-note" class="form-group form-vcard-note">
+	<label>{{$note_label}}</label>
+	<i data-remove="vcard-note" data-id="" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
+	<textarea name="note" class="form-control"></textarea>
+</div>
+
+
+		</div>
+		</div>
+
+
+
+
 
 			{{if $affinity }}
 			<div class="panel">

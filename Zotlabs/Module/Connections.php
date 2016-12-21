@@ -229,9 +229,17 @@ class Connections extends \Zotlabs\Web\Controller {
 		$contacts = array();
 	
 		if($r) {
-	
+
+			vcard_query($r);
+
+
 			foreach($r as $rr) {
 				if($rr['xchan_url']) {
+
+					if(($rr['vcard']) && is_array($rr['vcard']['tels']) && $rr['vcard']['tels'][0]['nr'])
+						$phone = ((\App::$is_mobile || \App::$is_tablet) ? $rr['vcard']['tels'][0]['nr'] : '');
+					else
+						$phone = '';
 	
 					$status_str = '';
 					$status = array(
@@ -267,6 +275,8 @@ class Connections extends \Zotlabs\Web\Controller {
 						'network_label' => t('Network'),
 						'network' => network_to_name($rr['xchan_network']),
 						'public_forum' => ((intval($rr['xchan_pubforum'])) ? true : false),
+						'call' => t('Call'),
+						'phone' => $phone,
 						'status_label' => t('Status'),
 						'status' => $status_str,
 						'connected_label' => t('Connected'),

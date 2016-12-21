@@ -858,3 +858,33 @@ function vcard_translate_type($type) {
 		return [$type, t('Other') . ' (' . $type . ')'];
 	}
 }
+
+
+function vcard_query(&$r) {
+
+	$arr = [];
+
+	if($r && is_array($r) && count($r)) {
+		$uid = $r[0]['abook_channel'];
+		foreach($r as $rv) {
+			if($rv['abook_xchan'] && (! in_array("'" . dbesc($rv['abook_xchan']) . "'",$arr)))
+				$arr[] = "'" . dbesc($rv['abook_xchan']) . "'";
+		}
+	}
+
+	if($arr) {
+		$a = q("select * from abconfig where chan = %d and xchan in (" . protect_sprintf(implode(',', $arr)) . ") and cat = 'system' and k = 'vcard'",
+			intval($uid)
+		);
+		if($a) {
+			foreach($a as $av) {
+				for($x = 0; $x < count($r); $x ++) {
+					if($r[$x]['abook_xchan'] == $av['xchan']) {		
+						$vctmp = \Sabre\VObject\Reader::read($av['v']);
+						$r[$x]['vcard'] = (($vctmp) ? get_vcard_array($vctmp,$r[$x]['abook_id']) : [] );
+					}
+				}
+			}
+		}
+	}
+}

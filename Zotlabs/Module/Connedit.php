@@ -37,7 +37,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				intval(argv(1))
 			);
 			if($r) {
-				\App::$poi = $r[0];
+				\App::$poi = array_shift($r);
 			}
 		}
 	
@@ -373,7 +373,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				intval(\App::$poi['abook_id'])
 			);
 			if($r) {
-				\App::$poi = $r[0];
+				\App::$poi = array_shift($r);
 			}
 	
 			$clone = \App::$poi;
@@ -665,13 +665,13 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 			if(feature_enabled(local_channel(),'affinity')) {
 	
-				$labels = array(
+				$labels = [
 					t('Me'),
 					t('Family'),
 					t('Friends'),
 					t('Acquaintances'),
 					t('All')
-				);
+				];
 				call_hooks('affinity_labels',$labels);
 				$label_str = '';
 	
@@ -789,8 +789,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			else
 				$locstr = t('none');
 	
-			$o .= replace_macros($tpl,array(
-	
+			$o .= replace_macros($tpl, [
 				'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
 				'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), t('Connection requests will be approved without your interaction'), $yes_no),
 				'$addr'           => $contact['xchan_addr'],
@@ -840,42 +839,34 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$abook_prev'     => $abook_prev,
 				'$abook_next'     => $abook_next,
 				'$vcard_label'    => t('Details'),	
-				'$displayname' => $displayname,
-				'$name_label' => t('Name'),
-				'$org_label' => t('Organisation'),
-				'$title_label' => t('Title'),
-				'$tel_label' => t('Phone'),
-				'$email_label' => t('Email'),
-				'$impp_label' => t('Instant messenger'),
-				'$url_label' => t('Website'),
-				'$adr_label' => t('Address'),
-				'$note_label' => t('Note'),
-				'$mobile' => t('Mobile'),
-				'$home' => t('Home'),
-				'$work' => t('Work'),
-				'$other' => t('Other'),
-				'$add_card' => t('Add Contact'),
-				'$add_field' => t('Add Field'),
-				'$create' => t('Create'),
-				'$update' => t('Update'),
-				'$delete' => t('Delete'),
-				'$cancel' => t('Cancel'),
-				'$po_box' => t('P.O. Box'),
-				'$extra' => t('Additional'),
-				'$street' => t('Street'),
-				'$locality' => t('Locality'),
-				'$region' => t('Region'),
-				'$zip_code' => t('ZIP Code'),
-				'$country' => t('Country')
-
-
-
-
-
-
-
-
-			));
+				'$displayname'    => $displayname,
+				'$name_label'     => t('Name'),
+				'$org_label'      => t('Organisation'),
+				'$title_label'    => t('Title'),
+				'$tel_label'      => t('Phone'),
+				'$email_label'    => t('Email'),
+				'$impp_label'     => t('Instant messenger'),
+				'$url_label'      => t('Website'),
+				'$adr_label'      => t('Address'),
+				'$note_label'     => t('Note'),
+				'$mobile'         => t('Mobile'),
+				'$home'           => t('Home'),
+				'$work'           => t('Work'),
+				'$other'          => t('Other'),
+				'$add_card'       => t('Add Contact'),
+				'$add_field'      => t('Add Field'),
+				'$create'         => t('Create'),
+				'$update'         => t('Update'),
+				'$delete'         => t('Delete'),
+				'$cancel'         => t('Cancel'),
+				'$po_box'         => t('P.O. Box'),
+				'$extra'          => t('Additional'),
+				'$street'         => t('Street'),
+				'$locality'       => t('Locality'),
+				'$region'         => t('Region'),
+				'$zip_code'       => t('ZIP Code'),
+				'$country'        => t('Country')
+			]);
 	
 			$arr = array('contact' => $contact,'output' => $o);
 	

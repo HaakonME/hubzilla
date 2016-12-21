@@ -228,7 +228,7 @@ class Connections extends \Zotlabs\Web\Controller {
 	
 		$contacts = array();
 	
-		if(count($r)) {
+		if($r) {
 	
 			foreach($r as $rr) {
 				if($rr['xchan_url']) {

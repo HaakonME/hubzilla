@@ -121,3 +121,8 @@ input.vcard-fn,
 #template-form-vcard-note {
 	display: none;
 }
+
+.connphone {
+	font-size: 150%;
+	color: green;
+}

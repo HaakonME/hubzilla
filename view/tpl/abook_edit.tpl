@@ -88,15 +88,6 @@
 			</div>
 			{{/if}}
 			<div class="panel">
-				<div class="section-subtitle-wrapper" role="tab" id="vcard-tool">
-					<h3>
-						<a data-toggle="collapse" data-parent="#contact-edit-tools" href="#vcard-tool-collapse" aria-expanded="true" aria-controls="vcard-tool-collapse">
-							{{$vcard_label}}
-						</a>
-					</h3>
-				</div>
-
-				<div id="vcard-tool-collapse" class="panel-collapse collapse{{if !$is_pending || $section == 'vcard'}} in{{/if}}" role="tabpanel" aria-labelledby="vcard-tool">
 
 
 <div id="template-form-vcard-org" class="form-group form-vcard-org">
@@ -194,10 +185,6 @@
 </div>
 
 
-
-
-
-
 		<div class="section-content-wrapper-np">
 			<div id="vcard-cancel-{{$vcard.id}}" class="vcard-cancel vcard-cancel-btn" data-id="{{$vcard.id}}" data-action="cancel"><i class="fa fa-close"></i></div>
 			<div id="vcard-add-field-{{$vcard.id}}" class="dropdown pull-right vcard-add-field">
@@ -216,8 +203,8 @@
 			<div id="vcard-header-{{$vcard.id}}" class="vcard-header" data-id="{{$vcard.id}}" data-action="open">
 				<span id="vcard-preview-{{$vcard.id}}" class="vcard-preview">
 					{{if $vcard.fn}}<span class="vcard-fn-preview">{{$vcard.fn}}</span>{{/if}}
-					{{if $vcard.emails.0.address}}<span class="vcard-email-preview hidden-xs">{{$vcard.emails.0.address}}</span>{{/if}}
-					{{if $vcard.tels.0}}<span class="vcard-tel-preview hidden-xs">{{$vcard.tels.0.nr}}</span>{{/if}}
+					{{if $vcard.emails.0.address}}<span class="vcard-email-preview hidden-xs"><a href="mailto:{{$vcard.emails.0.address}}">{{$vcard.emails.0.address}}</a></span>{{/if}}
+					{{if $vcard.tels.0}}<span class="vcard-tel-preview hidden-xs">{{$vcard.tels.0.nr}} <a href="tel:{{$vcard.tels.0.nr}}"><i class="fa fa-phone connphone"></i></a></span>{{/if}}
 				</span>
 				<input id="vcard-fn-{{$vcard.id}}" class="vcard-fn" type="text" name="fn" value="{{$vcard.fn}}" size="{{$vcard.fn|count_characters:true}}" placeholder="{{$name_label}}">
 			</div>
@@ -378,26 +365,14 @@
 			</div>
 
 
-
-
-
-
-
-
-
-
-
+			<div class="settings-submit-wrapper" >
+				<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
+			</div>
 
 		</div>
 
 
 
-						<div class="settings-submit-wrapper" >
-							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
-						</div>
-
-
-		</div>
 
 
 

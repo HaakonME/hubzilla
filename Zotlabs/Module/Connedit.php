@@ -90,7 +90,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 		$vcard = (($vc) ? \Sabre\VObject\Reader::read($vc) : null); 
 		$serialised_vcard = update_vcard($_REQUEST,$vcard);
 		if($serialised_vcard)
-			set_abconfig(local_channel(),$orig_record['abook_xchan'],'system','vcard',$serialised_vcard);
+			set_abconfig(local_channel(),$orig_record[0]['abook_xchan'],'system','vcard',$serialised_vcard);
 
 		if(intval($orig_record[0]['abook_self'])) {
 			$autoperms = intval($_POST['autoperms']);

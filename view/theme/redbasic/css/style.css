@@ -32,8 +32,12 @@ aside {
 	max-width: $aside_widthpx;
 }
 
-aside#region_1 {
+aside #region_1 {
 	border-right: 1px solid transparent;
+}
+
+aside #left_aside_wrapper {
+	margin-bottom: 10px;
 }
 
 main {

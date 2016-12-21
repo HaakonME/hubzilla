@@ -640,6 +640,11 @@ function update_vcard($arr,$vcard = null) {
 			'N' => array_reverse(explode(' ', $fn))
 		]);
 	}
+	else {
+		$vcard->FN = $fn;
+		$vcard->N = array_reverse(explode(' ', $fn));
+	}
+
 	$org = $arr['org'];
 	if($org) {
 		$vcard->ORG = $org;

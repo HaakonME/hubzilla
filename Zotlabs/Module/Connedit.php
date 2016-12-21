@@ -657,6 +657,9 @@ class Connedit extends \Zotlabs\Web\Controller {
 
 			$vctmp = (($vc) ? \Sabre\VObject\Reader::read($vc) : null); 
 			$vcard = (($vctmp) ? get_vcard_array($vctmp,$contact['abook_id']) : [] );
+			if(! $vcard)
+				$vcard['fn'] = $contact['xchan_name'];
+
 
 			$tpl = get_markup_template("abook_edit.tpl");
 	

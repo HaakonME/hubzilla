@@ -1,4 +1,9 @@
 Hubzilla 2.0 (????-??-??)
+	- Deprecate bb_iframe
+	- Note widget: resize the textarea to reveal full content
+	- Implement fixed left aside
+	- Implement lockview for wikilist
+	- Simplify wikilist widget
 	- Router error reporting
 	- Setup changes to check for shell_exec and exec functions
 	- Extensible permissions upgrade handling for channels with custom permission roles
@@ -32,6 +37,11 @@ Hubzilla 2.0 (????-??-??)
 	- Zot API re-write and extended
 
 	Bugfixes
+	- Fix z_fetch_url() incorrect variable
+	- Fix SQL error with app categories
+	- Fix do not show revert buttons if we do not have write perms
+	- Fix dropdown positions
+	- Fix do not increase opacity to more than 1
 	- Fix clone sync missing for some item delete operations
 	- Fix embed-image for fullscreen mode
 	- Fix attach_list_files()
@@ -57,6 +67,7 @@ Hubzilla 2.0 (????-??-??)
 	- Fix fromStandalonePermission()
 
 	Plugins
+	- Diaspora: missing item author when diaspora public comment received from relay
 	- Superblock: refactoring
 	- New addon: tripleaes for pro
 	- Cdav:  "if not exists" only supported starting with postgresql v. 9.5 debian stable has 9.4

@@ -26,7 +26,7 @@ head_add_js('library/jquery-textcomplete/jquery.textcomplete.js');
 //head_add_js('library/colorbox/jquery.colorbox.js');
 head_add_js('library/jquery.timeago.js');
 head_add_js('library/readmore.js/readmore.js');
-head_add_js('library/sticky-kit/sticky-kit.min.js');
+head_add_js('library/sticky-kit/sticky-kit.js');
 //head_add_js('library/jquery_ac/friendica.complete.js');
 //head_add_js('library/tiptip/jquery.tipTip.minified.js');
 head_add_js('library/jgrowl/jquery.jgrowl_minimized.js');

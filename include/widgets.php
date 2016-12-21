@@ -778,7 +778,7 @@ function widget_conversations($arr) {
 			'$messages' => $messages
 		));
 
-		$o .= alt_pager($a,count($r));
+		//$o .= alt_pager($a,count($r));
 
 	}
 

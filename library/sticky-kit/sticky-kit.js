@@ -77,7 +77,7 @@
         padding_top = parseInt(parent.css("padding-top"), 10);
         padding_bottom = parseInt(parent.css("padding-bottom"), 10);
         parent_top = parent.offset().top + border_top + padding_top;
-        parent_height = parent.height();
+        parent_height = parent.outerHeight(true);
         if (fixed) {
           fixed = false;
           bottomed = false;

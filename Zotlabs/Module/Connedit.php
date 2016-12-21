@@ -832,6 +832,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$permnote_self'  => t('Some permissions may be inherited from your channel\'s <a href="settings"><strong>privacy settings</strong></a>, which have higher priority than individual settings. You can change those settings here but they wont have any impact unless the inherited setting changes.'),
 				'$lastupdtext'    => t('Last update:'),
 				'$last_update'    => relative_date($contact['abook_connected']),
+				'$is_mobile'      => ((\App::$is_mobile || \App::$is_tablet) ? true : false),
 				'$profile_select' => contact_profile_assign($contact['abook_profile']),
 				'$multiprofs'     => $multiprofs,
 				'$contact_id'     => $contact['abook_id'],

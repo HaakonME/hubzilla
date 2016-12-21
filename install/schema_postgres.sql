@@ -1043,6 +1043,7 @@ CREATE TABLE "profile" (
   "photo" text NOT NULL,
   "thumb" text NOT NULL,
   "publish" numeric(1) NOT NULL DEFAULT '0',
+  "profile_vcard" text NOT NULL DEFAULT '',
   PRIMARY KEY ("id"),
   UNIQUE ("profile_guid","uid")
 

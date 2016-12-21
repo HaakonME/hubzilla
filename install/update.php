@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1186 );
+define( 'UPDATE_VERSION' , 1187 );
 
 /**
  *
@@ -2480,4 +2480,15 @@ function update_r1185() {
 	if($r1)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+function update_r1186() {
+
+	$r1 = q("alter table profile add profile_vcard text not null default '' ");
+
+	if($r1)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+
 }

@@ -204,7 +204,7 @@
 				<span id="vcard-preview-{{$vcard.id}}" class="vcard-preview">
 					{{if $vcard.fn}}<span class="vcard-fn-preview">{{$vcard.fn}}</span>{{/if}}
 					{{if $vcard.emails.0.address}}<span class="vcard-email-preview hidden-xs"><a href="mailto:{{$vcard.emails.0.address}}">{{$vcard.emails.0.address}}</a></span>{{/if}}
-					{{if $vcard.tels.0}}<span class="vcard-tel-preview hidden-xs">{{$vcard.tels.0.nr}} <a href="tel:{{$vcard.tels.0.nr}}"><i class="fa fa-phone connphone"></i></a></span>{{/if}}
+					{{if $vcard.tels.0}}<span class="vcard-tel-preview hidden-xs">{{$vcard.tels.0.nr}}{{if $is_mobile}} <a class="btn btn-default btn-xs" href="tel:{{$vcard.tels.0.nr}}"><i class="fa fa-phone connphone"></i></a>{{/if}}</span>{{/if}}
 				</span>
 				<input id="vcard-fn-{{$vcard.id}}" class="vcard-fn" type="text" name="fn" value="{{$vcard.fn}}" size="{{$vcard.fn|count_characters:true}}" placeholder="{{$name_label}}">
 			</div>

@@ -1059,6 +1059,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `photo` char(255) NOT NULL DEFAULT '',
   `thumb` char(255) NOT NULL DEFAULT '',
   `publish` tinyint(1) NOT NULL DEFAULT '0',
+  `profile_vcard` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `guid` (`profile_guid`,`uid`),
   KEY `uid` (`uid`),

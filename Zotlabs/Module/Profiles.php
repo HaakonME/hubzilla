@@ -191,7 +191,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 		}
 	}
 	
-		function post() {
+	function post() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);

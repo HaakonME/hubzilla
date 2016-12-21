@@ -98,172 +98,6 @@
 
 				<div id="vcard-tool-collapse" class="panel-collapse collapse{{if !$is_pending || $section == 'vcard'}} in{{/if}}" role="tabpanel" aria-labelledby="vcard-tool">
 
-<script>
-$(document).ready(function() {
-
-	$(document).on('click', '.vcard-header, .vcard-cancel-btn', updateView);
-	$(document).on('click', '.add-field', doAdd);
-	$(document).on('click', '.remove-field', doRemove);
-
-	function updateView() {
-		var id = $(this).data('id');
-		var action = $(this).data('action');
-		var header = $('#vcard-header-' + id);
-		var cancel = $('#vcard-cancel-' + id);
-		var addField = $('#vcard-add-field-' + id);
-		var info = $('#vcard-info-' + id);
-		var vcardPreview = $('#vcard-preview-' + id);
-		var fn = $('#vcard-fn-' + id);
-
-		if(action === 'open') {
-			$(header).addClass('active');
-			$(cancel).show();
-			$(addField).show();
-			$(info).show();
-			$(fn).show();
-			$(vcardPreview).hide();
-		}
-		else {
-			$(header).removeClass('active');
-			$(cancel).hide();
-			$(addField).hide();
-			$(info).hide();
-			$(fn).hide();
-			$(vcardPreview).show();
-		}
-	}
-
-	function doAdd() {
-		var what = $(this).data('add');
-		var id = $(this).data('id');
-		var element = '#template-form-' + what;
-		var where = '#card_form_' + id;
-
-		$(element + ' .remove-field').attr('data-id', id)
-
-		if(what === 'vcard-adr') {
-			var adrCount = $(where + ' .form-' + what).length;
-			var attrName = 'adr[' + adrCount + '][]';
-			$(element + ' input').attr('name', attrName);
-		}
-
-		if(what === 'vcard-org' || what === 'vcard-title' || what === 'vcard-note') {
-			$(where + ' .add-' + what).hide()
-		}
-
-		$(element).clone().removeAttr('id').appendTo(where + ' .form-' + what + '-wrapper');
-	}
-
-	function doRemove() {
-		var what = $(this).data('remove');
-		var element = $(this).parents('div.form-' + what);
-		var where = '#card_form_' + $(this).data('id');
-
-		if(what === 'vcard-org' || what === 'vcard-title' || what === 'vcard-note') {
-			$(where + ' .add-' + what).show()
-		}
-
-		$(element).remove();
-	}
-
-});
-</script>
-
-
-
-			<div class="dropdown pull-right">
-				<button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle"><i class="fa fa-plus"></i> {{$add_field}}</button>
-				<ul class="dropdown-menu">
-					<li class="add-vcard-org" style="display: none"><a href="#" data-add="vcard-org" data-id="new" class="add-field" onclick="return false;">{{$org_label}}</a></li>
-					<li class="add-vcard-title" style="display: none"><a href="#" data-add="vcard-title" data-id="new" class="add-field" onclick="return false;">{{$title_label}}</a></li>
-					<li class="add-vcard-tel"><a href="#" data-add="vcard-tel" data-id="new" class="add-field" onclick="return false;">{{$tel_label}}</a></li>
-					<li class="add-vcard-email"><a href="#" data-add="vcard-email" data-id="new" class="add-field" onclick="return false;">{{$email_label}}</a></li>
-					<li class="add-vcard-impp"><a href="#" data-add="vcard-impp" data-id="new" class="add-field" onclick="return false;">{{$impp_label}}</a></li>
-					<li class="add-vcard-url"><a href="#" data-add="vcard-url" data-id="new" class="add-field" onclick="return false;">{{$url_label}}</a></li>
-					<li class="add-vcard-adr"><a href="#" data-add="vcard-adr" data-id="new" class="add-field" onclick="return false;">{{$adr_label}}</a></li>
-					<li class="add-vcard-note"><a href="#" data-add="vcard-note" data-id="new" class="add-field" onclick="return false;">{{$note_label}}</a></li>
-				</ul>
-			</div>
-
-			<div class="vcard-fn-create form-group">
-				<div class="form-vcard-fn-wrapper">
-					<div class="form-group form-vcard-fn">
-						<div class="vcard-nophoto"><i class="fa fa-user"></i></div><input type="text" name="fn" value="" placeholder="{{$name_label}}">
-					</div>
-				</div>
-			</div>
-
-			<div class="vcard-org form-group">
-				<div class="form-vcard-org-wrapper">
-					<div class="form-group form-vcard-org">
-						<input type="text" name="org" value="" placeholder="{{$org_label}}">
-						<i data-remove="vcard-org" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
-					</div>
-				</div>
-			</div>
-
-			<div class="vcard-title form-group">
-				<div class="form-vcard-title-wrapper">
-					<div class="form-group form-vcard-title">
-						<input type="text" name="title" value="" placeholder="{{$title_label}}">
-						<i data-remove="vcard-title" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
-					</div>
-				</div>
-			</div>
-
-			<div class="vcard-tel form-group">
-				<div class="form-vcard-tel-wrapper">
-					<div class="form-group form-vcard-tel">
-						<select name="tel_type[]">
-							<option value="CELL">{{$mobile}}</option>
-							<option value="HOME">{{$home}}</option>
-							<option value="WORK">{{$work}}</option>
-							<option value="OTHER">{{$other}}</option>
-						</select>
-						<input type="text" name="tel[]" value="" placeholder="{{$tel_label}}">
-						<i data-remove="vcard-tel" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="vcard-email form-group">
-				<div class="form-vcard-email-wrapper">
-					<div class="form-group form-vcard-email">
-						<select name="email_type[]">
-							<option value="HOME">{{$home}}</option>
-							<option value="WORK">{{$work}}</option>
-							<option value="OTHER">{{$other}}</option>
-						</select>
-						<input type="text" name="email[]" value="" placeholder="{{$email_label}}">
-						<i data-remove="vcard-email" data-id="new" class="fa fa-trash-o remove-field drop-icons fakelink"></i>
-					</div>
-				</div>
-			</div>
-
-			<div class="vcard-impp form-group">
-				<div class="form-vcard-impp-wrapper">
-				</div>
-			</div>
-
-			<div class="vcard-url form-group">
-				<div class="form-vcard-url-wrapper">
-				</div>
-			</div>
-
-			<div class="vcard-adr form-group">
-				<div class="form-vcard-adr-wrapper">
-				</div>
-			</div>
-
-			<div class="vcard-note form-group">
-				<div class="form-vcard-note-wrapper">
-				</div>
-			</div>
-
-			<div class="clear"></div>
-
-
 
 <div id="template-form-vcard-org" class="form-group form-vcard-org">
 	<div class="form-group form-vcard-org">
@@ -362,15 +196,6 @@ $(document).ready(function() {
 
 
 
-						<div class="settings-submit-wrapper" >
-							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
-						</div>
-
-
-		</div>
-
-
-
 
 
 		<div class="section-content-wrapper-np">
@@ -389,7 +214,6 @@ $(document).ready(function() {
 				</ul>
 			</div>
 			<div id="vcard-header-{{$vcard.id}}" class="vcard-header" data-id="{{$vcard.id}}" data-action="open">
-				{{if $vcard.photo}}<img class="vcard-photo" src="{{$vcard.photo}}" width="32px" height="32px">{{else}}<div class="vcard-nophoto"><i class="fa fa-user"></i></div>{{/if}}
 				<span id="vcard-preview-{{$vcard.id}}" class="vcard-preview">
 					{{if $vcard.fn}}<span class="vcard-fn-preview">{{$vcard.fn}}</span>{{/if}}
 					{{if $vcard.emails.0.address}}<span class="vcard-email-preview hidden-xs">{{$vcard.emails.0.address}}</span>{{/if}}
@@ -562,6 +386,15 @@ $(document).ready(function() {
 
 
 
+
+
+		</div>
+
+
+
+						<div class="settings-submit-wrapper" >
+							<button type="submit" name="done" value="{{$submit}}" class="btn btn-primary">{{$submit}}</button>
+						</div>
 
 
 		</div>

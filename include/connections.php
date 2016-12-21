@@ -720,7 +720,7 @@ function update_vcard($arr,$vcard = null) {
 
 }
 
-function get_vcard_array($vc) {
+function get_vcard_array($vc,$id) {
 
 	$photo = '';
 	if($vc->PHOTO) {
@@ -810,6 +810,7 @@ function get_vcard_array($vc) {
 	}
 
 	$card = [
+		'id'     => $id,
 		'photo'  => $photo,
 		'fn'     => $fn,
 		'org'    => $org,

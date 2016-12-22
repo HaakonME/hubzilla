@@ -656,11 +656,24 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 
 	logger($msg, $level, $priority);
+
+	if(file_exists('btlogger.log') && is_writable('btlogger.log')) {
+		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
+		$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
+		@file_put_contents('btlogger.log', $s, FILE_APPEND);
+	}
+
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
 		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		if($stack) {
 			for($x = 1; $x < count($stack); $x ++) {
-				logger('stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()',$level, $priority);
+				$s = 'stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()';
+				logger($s,$level, $priority);
+
+				if(file_exists('btlogger.log') && is_writable('btlogger.log')) {
+					@file_put_contents('btlogger.log', $s, FILE_APPEND);
+				}
 			}
 		}
 	}

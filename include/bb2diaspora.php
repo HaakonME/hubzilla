@@ -128,6 +128,11 @@ function markdown_to_bb($s, $use_zrl = false) {
 	$s = str_replace("&#xD;","\r",$s);
 	$s = str_replace("&#xD;\n&gt;","",$s);
 
+	if(is_array($s)) {
+		btlogger('markdown_to_bb called with array. ' . print_r($s,true), LOGGER_NORMAL, LOG_WARNING);
+		return '';
+	}
+
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
 
 	// if empty link text replace with the url

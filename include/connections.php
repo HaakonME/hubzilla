@@ -634,6 +634,18 @@ function update_vcard($arr,$vcard = null) {
 
 	$fn = $arr['fn'];
 
+	
+	// This isn't strictly correct and could be a cause for concern.
+	// 'N' => array_reverse(explode(' ', $fn))
+
+
+	// What we really want is 
+	// 'N' => Adams;John;Quincy;Reverend,Dr.;III
+	// which is a very difficult parsing problem especially if you allow
+	// the surname to contain spaces. The only way to be sure to get it
+	// right is to provide a form to input all the various fields and not 
+	// try to extract it from the FN. 
+
 	if(! $vcard) {
 		$vcard = new \Sabre\VObject\Component\VCard([
 			'FN' => $fn,

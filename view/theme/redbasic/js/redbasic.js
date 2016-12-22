@@ -16,9 +16,11 @@ $(document).ready(function() {
 	}
 	$('#css3-calc').remove(); // Remove the test element
 
-	$('#left_aside_wrapper').stick_in_parent({
-		offset_top: $('nav').outerHeight(true)
-	});
+	if($(window).width() > 767) {
+		$('#left_aside_wrapper').stick_in_parent({
+			offset_top: $('nav').outerHeight(true)
+		});
+	}
 
 	$('#expand-aside').on('click', toggleAside);
 

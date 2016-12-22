@@ -14,7 +14,6 @@ $(document).ready(function() {
 			}
 		});
 	}
-
 	$('#css3-calc').remove(); // Remove the test element
 
 	$('#left_aside_wrapper').stick_in_parent({
@@ -96,15 +95,13 @@ function toggleAside() {
 	if($('main').hasClass('region_1-on')){
 		$('main').removeClass('region_1-on')
 		$('#overlay').remove();
+		$('#left_aside_wrapper').trigger("sticky_kit:detach");
 	}
 	else {
 		$('main').addClass('region_1-on')
 		$('<div id="overlay"></div>').appendTo('section');
+		$('#left_aside_wrapper').stick_in_parent({
+			offset_top: $('nav').outerHeight(true)
+		});
 	}
-
-	$(window).scroll();
-	// work around a bug where a browser seems to not trigger scroll with $(window).scroll()
-	var scrollpos = $(window).scrollTop();
-	$(window).scrollTop(scrollpos - 1);
-	setTimeout(function(){ $(window).scrollTop(scrollpos) }, 100);
 }

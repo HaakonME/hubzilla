@@ -1,4 +1,3 @@
-
 [h3]Project Overview[/h3]
 
 $Projectname is a decentralized community server providing communications, identity, and access control services which work together seamlessly across domains and connected websites. It allows anybody to publicly or [b]privately[/b] publish a range of web/media/personal content. The cross-domain privacy implementation is unique and somewhat revolutionary, as identity and access rights are negotiated by servers invisibly in the background.

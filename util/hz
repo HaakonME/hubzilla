@@ -33,6 +33,6 @@ echo "enter your message to be posted as $USER @ $HUB, then hit Ctrl-D to send."
 
 MSG=$(cat)
 
-curl -ssl -u${USER}:${PASS} --data-urlencode "status=${MSG}" https://${HUB}/api/statuses/update
+curl -ssl -u${USER}:${PASS} --data-urlencode "body=${MSG}" https://${HUB}/api/z/1.0/item/update
 
 

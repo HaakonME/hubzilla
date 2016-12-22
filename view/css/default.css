@@ -15,12 +15,14 @@ main {
 }
 
 aside {
+	position: relative;
 	display: table-cell;
 	vertical-align: top;
 	padding: 71px 7px 0px 7px;
 }
 
 section {
+	position: relative;
 	width: 100%;
 	display: table-cell;
 	vertical-align: top;

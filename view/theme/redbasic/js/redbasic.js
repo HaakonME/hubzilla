@@ -92,7 +92,19 @@ function makeFullScreen(full) {
 }
 
 function toggleAside() {
-	$(window).scroll();
 	$('#expand-aside-icon').toggleClass('fa-arrow-circle-right').toggleClass('fa-arrow-circle-left');
-	$('main').toggleClass('region_1-on');
+	if($('main').hasClass('region_1-on')){
+		$('main').removeClass('region_1-on')
+		$('#overlay').remove();
+	}
+	else {
+		$('main').addClass('region_1-on')
+		$('<div id="overlay"></div>').appendTo('section');
+	}
+
+	$(window).scroll();
+	// work around a bug where a browser seems to not trigger scroll with $(window).scroll()
+	var scrollpos = $(window).scrollTop();
+	$(window).scrollTop(scrollpos - 1);
+	setTimeout(function(){ $(window).scrollTop(scrollpos) }, 100);
 }

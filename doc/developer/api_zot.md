@@ -1,3 +1,43 @@
+### What is Zot?
+
+Zot is the revolutionary protocol that powers $Projectname, providing **communications**, **identity management**, and **access control** across a fully **decentralised** network of independent websites, often called "the grid". The resulting platform is a robust system that supports privacy and security while enabling the kind of rich web services typically seen only in centralized, proprietary solutions.
+
+#### Communications
+
+Communications and social networking are an integral part of the grid. Any channel (and any services provided by that channel) can make full use of feature-rich social communications on a global scale. These communications may be public or private - and private communications comprise not only fully encrypted transport, but also encrypted storage to help protect against accidental snooping and disclosure by rogue system administrators and internet service providers. 
+
+Zot supports a wide array of background services in the grid, from friend suggestions to directory services. New content and data updates are propagated in the background between hubs across the grid according to access control lists and permissions specified by both sender *and* receiver channels. Data is also synchronized between an arbitrary number of channel clones, allowing hub members to access data and continue collaborating seamlessly in the event that their primary hub is inaccessible or offline.
+
+#### Identity 
+
+Zot's identity layer is unique. It provides **invisible single sign-on** across all sites in the grid. 
+
+It also provides **nomadic identity**, so that your communications with friends, family, and or anyone else you're communicating with won't be affected by the loss of your primary communication node - either temporarily or permanently. 
+
+The important bits of your identity and relationships can be backed up to a thumb drive, or your laptop, and may appear at any node in the grid at any time - with all your friends and preferences intact. 
+
+Crucially, these nomadic instances are kept in sync so any instance can take over if another one is compromised or damaged. This protects you against not only major system failure, but also temporary site overloads and governmental manipulation or censorship. 
+
+Nomadic identity, single sign-on, and $Projectname's decentralisation of hubs, we believe, introduce a high degree of degree of **resiliency** and **persistence** in internet communications, that are sorely needed amidst global trends towards corporate centralization, as well as mass and indiscriminate government surveillance and censorship.
+
+As you browse the grid, viewing channels and their unique content, you are seamlessly authenticated as you go, even across completely different server hubs. No passwords to enter. Nothing to type. You're just greeted by name on every new site you visit. 
+
+How does Zot do that? We call it **magic-auth**, because $Projectname hides the details of the complexities that go into single sign-on logins, and nomadic identities, from the experience of browsing on the grid.  This is one of the design goals of $Projectname: to increase privacy, and freedom on the web, while reducing the complexity and tedium brought by the need to enter new passwords and login names for every different sight that someone might visit online.
+
+You login only once on your home hub (or any nomadic backup hub you have chosen). This allows you to access any authenticated services provided anywhere in the grid - such as shopping, blogs, forums, and access to private information. This is just like the services offered by large corporate providers with huge user databases; however you can be a member of this community, as well as a server on this network using a $35 Rasberry Pi. Your password isn't stored on a thousand different sites, or even worse, only on a few sites like Google and Facebook, beyond your direct control.
+
+You cannot be silenced. You cannot be removed from the grid, unless you yourself choose to exit it.
+
+#### Access Control
+
+Zot's identity layer allows you to provide fine-grained permissions to any content you wish to publish - and these permissions extend across $Projectname. This is like having one super huge website made up of an army of small individual websites - and where each channel in the grid can completely control their privacy and sharing preferences for any web resources they create. 
+
+Currently, $Projectname supports access control for many types of data, including post/comment discussion threads, photo albums, events, cloud files, web pages, wikis, and more. Every object and how it is shared and with whom is completely under your control.
+
+This type of control is trivial on large corporate providers because they own the user database. Within the grid, there is no need for a huge user database on your machine - because the grid **is** your user database. It has what is essentially infinite capacity (limited by the total number of hubs online across the internet), and is spread amongst hundreds, and potentially millions of computers. 
+
+Access can be granted or denied for any resource, to any channel, or any group of channels; anywhere within the grid. Others can access your content if you permit them to do so, and they do not even need to have an account on your hub. 
+
 ### Zot API
 
 The API endpoints detailed below are relative to `api/z/1.0`, meaning that if an 

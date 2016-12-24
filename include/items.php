@@ -1527,7 +1527,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		// apply the input filter here - if it is obscured it has been filtered already
 		$arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
 
-		if(local_channel() && (! $arr['sig'])) {
+		if(local_channel() && (local_channel() == $arr['uid']) && (! $arr['sig'])) {
 			$channel = App::get_channel();
 			if($channel['channel_hash'] === $arr['author_xchan']) {
 				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
@@ -1944,7 +1944,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
         // apply the input filter here - if it is obscured it has been filtered already
         $arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
 
-        if(local_channel() && (! $arr['sig'])) {
+		if(local_channel() && (local_channel() == $arr['uid']) && (! $arr['sig'])) {
             $channel = App::get_channel();
             if($channel['channel_hash'] === $arr['author_xchan']) {
                 $arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));

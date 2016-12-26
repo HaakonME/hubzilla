@@ -1786,6 +1786,20 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		$cal_link = '/cal/' . $nickname;
 	}
 
+	require_once('include/security.php');
+	$sql_options = item_permissions_sql($uid);
+
+	$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
+		where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s' 
+		and item.item_delayed = 0 and item.item_deleted = 0 
+		and ( iconfig.k = 'WEBPAGE' and item_type = %d ) 
+		$sql_options limit 1",
+		intval($uid),
+		dbesc('home'),
+		intval(ITEM_TYPE_WEBPAGE)
+	);
+
+	$has_webpages = (($r) ? true : false);
 
 	if (get_pconfig($uid, 'system', 'noprofiletabs'))
 		return;
@@ -1870,15 +1884,16 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	}
 
-	if ($p['write_pages'] && feature_enabled($uid,'webpages')) {
+	if($has_webpages && feature_enabled($uid,'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
-			'url'   => z_root() . '/webpages/' . $nickname,
+			'url'   => z_root() . '/page/' . $nickname . '/home',
 			'sel'   => ((argv(0) == 'webpages') ? 'active' : ''),
-			'title' => t('Manage Webpages'),
+			'title' => t('View Webpages'),
 			'id'    => 'webpages-tab',
 		);
-	} 
+	}
+ 
 
 	if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
 		$tabs[] = array(

@@ -173,7 +173,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 		if($_REQUEST['pagetitle'])
 			$x['pagetitle'] = $_REQUEST['pagetitle'];
 	
-		$editor = status_editor($a,$x);
 	
 		// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, 
 		// so just list titles and an edit link.
@@ -197,6 +196,11 @@ class Webpages extends \Zotlabs\Web\Controller {
 //			intval(ITEM_TYPE_WEBPAGE)
 //		);
 	
+		if(! $r)
+			$x['pagetitle'] = 'home';
+
+		$editor = status_editor($a,$x);
+
 		$pages = null;
 	
 		if($r) {

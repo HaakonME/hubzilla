@@ -186,16 +186,7 @@ Any number of profiles may be created containing different information and these
 $Projectname offers a simple, one-click account backup, where you can download a complete backup of your profile(s). Backups can then be used to clone or restore a profile.
 
 [h4]Account Deletion[/h4]
-
 Accounts can be immediately deleted by clicking on a link. That's it.  All associated content is then deleted from the grid (this includes posts and any other content produced by the deleted profile). Depending on the number of connections you have, the process of deleting remote content could take some time but it is scheduled to happen as quickly as is practical.
-
-[h4]Content Creation[/h4]
-
-[h4]Writing Posts[/h4]
-
-$Projectname supports a number of different ways of adding rich-text content. The default is a custom variant of BBcode, tailored for use in $Projectname. You may also enable the use of Markdown if you find that easier to work with. A visual editor may also be used. The traditional visual editor for $Projectname had some serious issues and has since been removed. We are currently looking for a replacement. 
-
-When creating &quot;Websites&quot;, content may be entered in HTML, Markdown, BBcode, and/or plain text.
 
 [h4]Deletion of content[/h4]
 Any content created in $Projectname remains under the control of the member (or channel) that originally created it.  At any time, a member can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot ($Projectname communication and authentication protocol).

@@ -287,6 +287,15 @@ The connection edit screen offers a slider to select a degree of friendship with
 
 The slider on the matrix page has both a minimum and maximum value. Posts will only be shown from people who fall between this range. Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
 
+[h3]Markup Languages[/h3]
+$Projectname supports several markup languages for advanced formatting of content. The default markup language is a [url=[baseurl]/help/member/bbcode]custom variant of BBcode[/url], tailored for use in $Projectname. [url=[baseurl]/help/member/bbcode]BBcode[/url] is supported for posts, wiki pages, and web page elements. Wiki pages and webpage elements may also be written using standard Markdown.
+[table border=0]
+[tr][th]Content Type[/th][th]Supported Markup[/th][/tr]
+[tr][td]Post[/td][td][url=[baseurl]/help/member/bbcode]BBcode[/url][/td][/tr]
+[tr][td]Wiki[/td][td][url=[baseurl]/help/member/bbcode]BBcode[/url], Markdown[/td][/tr]
+[tr][td]Webpage element[/td][td][url=[baseurl]/help/member/bbcode]BBcode[/url], Markdown, HTML[/td][/tr]
+[/table]
+
 [h3]Personal Cloud Storage[/h3]
 
 $Projectname provides an ability to store privately and/or share arbitrary files with friends.

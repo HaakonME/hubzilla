@@ -200,6 +200,14 @@ function xchan_store($arr) {
 	if(! $arr['photo'])
 		$arr['photo'] = z_root() . '/' . get_default_profile_photo();
 
+
+	if($arr['network'] === 'zot') {
+		if((! $arr['key']) || (! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key']))) {
+			logger('Unable to verify signature for ' . $arr['hash']);
+			return false;
+		}
+	}
+
 	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_instance_url, xchan_hidden, xchan_orphan, xchan_censored, xchan_selfcensored, xchan_system, xchan_pubforum, xchan_deleted, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s','%s','%s',%d, %d, %d, %d, %d, %d, %d, '%s') ",
 		dbesc($arr['hash']),
 		dbesc($arr['guid']),

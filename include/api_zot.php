@@ -334,8 +334,8 @@
 		logger('api_xchan');
 		require_once('include/hubloc.php');
 
-		if($_SERVER['REQUEST_METHOD'] === 'POST') {
-			// $r = xchan_store($_REQUEST);
+		if($_SERVER['REQUEST_METHOD'] === 'POST') {			
+			$r = xchan_store($_REQUEST);
 		}
 		$r = xchan_fetch($_REQUEST);
 		json_return_and_die($r);

@@ -530,7 +530,17 @@ function bb_fixtable_lf($match) {
 }
 
 function parseIdentityAwareHTML($Text) {
-   
+
+	// Hide all [noparse] contained bbtags by spacefying them
+	if (strpos($Text,'[noparse]') !== false) {
+		$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_spacefy',$Text);
+	}
+	if (strpos($Text,'[nobb]') !== false) {
+		$Text = preg_replace_callback("/\[nobb\](.*?)\[\/nobb\]/ism", 'bb_spacefy',$Text);
+	}
+	if (strpos($Text,'[pre]') !== false) {
+		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
+	}   
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
 
@@ -568,9 +578,21 @@ function parseIdentityAwareHTML($Text) {
 		$Text = str_replace('[observer.photo]','', $Text);
 	}
         
-        $Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
+	$Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
         
-        return $Text;
+
+	// Unhide all [noparse] contained bbtags unspacefying them 
+	// and triming the [noparse] tag.
+	if (strpos($Text,'[noparse]') !== false) {
+		$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_unspacefy_and_trim', $Text);
+	}
+	if (strpos($Text,'[nobb]') !== false) {
+		$Text = preg_replace_callback("/\[nobb\](.*?)\[\/nobb\]/ism", 'bb_unspacefy_and_trim', $Text);
+	}
+	if (strpos($Text,'[pre]') !== false) {
+		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_unspacefy_and_trim', $Text);
+	}
+	return $Text;
 }
 
 	// BBcode 2 HTML was written by WAY2WEB.net
@@ -891,8 +913,8 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	}
 	if (strpos($Text,'[/table]') !== false) {
 		$Text = preg_replace("/\[table\](.*?)\[\/table\]/sm", '<table>$1</table>', $Text);
-		$Text = preg_replace("/\[table border=1\](.*?)\[\/table\]/sm", '<table border="1" >$1</table>', $Text);
-		$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table border="0" >$1</table>', $Text);
+		$Text = preg_replace("/\[table border=1\](.*?)\[\/table\]/sm", '<table class="table table-responsive table-bordered" >$1</table>', $Text);
+		$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table class="table table-responsive" >$1</table>', $Text);
 	}
 	$Text = str_replace('</tr><br /><tr>', "</tr>\n<tr>", $Text);
 	$Text = str_replace('[hr]', '<hr />', $Text);

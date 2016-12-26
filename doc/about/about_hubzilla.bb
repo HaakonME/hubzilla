@@ -32,7 +32,7 @@ The $Projectname software stack is a relatively standard webserver application w
 
 [*= nomadic identity] The ability to authenticate and easily migrate an identity across independent hubs and web domains. Nomadic identity provides true ownership of an online identity, because the identities of the channels controlled by an account on a hub are not tied to the hub itself. A hub is more like a "host" for channels. With Hubzilla, you don't have an "account" on a server like you do on typical websites; you own an identity that you can take with you across the grid by using clones.
 
-[*= [url=[baseurl]/help/developer/what_is_zot]Zot[/url]] The novel JSON-based protocol for implementing secure decentralised communications and services. It differs from many other communication protocols by building communications on top of a decentralised identity and authentication framework. The authentication component is similar to OpenID conceptually but is insulated from DNS-based identities. Where possible remote authentication is silent and invisible. This provides a mechanism for internet-scale distributed access control which is unobtrusive.
+[*= [url=[baseurl]/help/developer/api_zot]Zot[/url]] The novel JSON-based protocol for implementing secure decentralised communications and services. It differs from many other communication protocols by building communications on top of a decentralised identity and authentication framework. The authentication component is similar to OpenID conceptually but is insulated from DNS-based identities. Where possible remote authentication is silent and invisible. This provides a mechanism for internet-scale distributed access control which is unobtrusive.
 [/dl]
 
 [h3]Features[/h3]
@@ -186,16 +186,7 @@ Any number of profiles may be created containing different information and these
 $Projectname offers a simple, one-click account backup, where you can download a complete backup of your profile(s). Backups can then be used to clone or restore a profile.
 
 [h4]Account Deletion[/h4]
-
 Accounts can be immediately deleted by clicking on a link. That's it.  All associated content is then deleted from the grid (this includes posts and any other content produced by the deleted profile). Depending on the number of connections you have, the process of deleting remote content could take some time but it is scheduled to happen as quickly as is practical.
-
-[h4]Content Creation[/h4]
-
-[h4]Writing Posts[/h4]
-
-$Projectname supports a number of different ways of adding rich-text content. The default is a custom variant of BBcode, tailored for use in $Projectname. You may also enable the use of Markdown if you find that easier to work with. A visual editor may also be used. The traditional visual editor for $Projectname had some serious issues and has since been removed. We are currently looking for a replacement. 
-
-When creating &quot;Websites&quot;, content may be entered in HTML, Markdown, BBcode, and/or plain text.
 
 [h4]Deletion of content[/h4]
 Any content created in $Projectname remains under the control of the member (or channel) that originally created it.  At any time, a member can delete a message, or a range of messages.  The deletion process ensures that the content is deleted, regardless of whether it was posted on a channel's primary (home) hub, or on another hub, where the channel was remotely authenticated via Zot ($Projectname communication and authentication protocol).

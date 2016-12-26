@@ -1,36 +1,116 @@
-<h3>BBcode reference</h3>
-<div style="font-size: 14px;">
-<br /><br />
-<ul class="listdecimal" style="list-style-type: decimal;">
-<li>[b]bold[/b] - <strong>bold</strong><br />
-<li>[i]italic[/i] - <em>italic</em><br />
-<li>[u]underlined[/u] - <u>underlined</u><br />
-<li>[s]strike[/s] - <strike>strike</strike><br />
-<li>[color=red]red[/color] - <span style="color:  red;">red</span><br />
-<li>[url=https://zothub.com]$Projectname[/url] <a href="https://zothub.com">$Projectname</a><br />
-<li>[img]/images/default_profile_photos/rainbow_man/48.jpg[/img] <img src="/images/default_profile_photos/rainbow_man/48.jpg" alt="Image/photo" /><br />
-<li>[img float=left]/images/default_profile_photos/rainbow_man/48.jpg[/img] <img src="/images/default_profile_photos/rainbow_man/48.jpg" style="float:left;" alt="Image/photo" /><br />
-<div style="clear:both;"></div>
-<li>[img float=right]/images/default_profile_photos/rainbow_man/48.jpg[/img] <img src="/images/default_profile_photos/rainbow_man/48.jpg" style="float:right;" alt="Image/photo" /><br />
-<div style="clear:both;"></div>
-<li>[code]code[/code] <code>code</code><br />
-<li>[code=xxx]syntax highlighted code[/code] <code>supported languages php, css, mysql, sql, abap, diff, html, perl, ruby, vbscript, avrc, dtd, java, xml, cpp, python, javascript, js, json, sh</code><br />
-<li>[quote]quote[/quote] <blockquote>quote</blockquote><br />
-<li>[quote=Author]Author? Me? No, no, no...[/quote] <br /><strong class="author">Author wrote:</strong><blockquote>Author? Me? No, no, no...</blockquote><br />
-<li> [nobb][nobb]This is how you can show how to use BBcode syntax[/nobb][/nobb]</ul><br /> 
+<h3>Text Decoration</h3>
+<table class="table table-responsive table-bordered">
+	<tbody>
+		<tr>
+			<th>BBcode syntax</th><th>Rendered text</th>
+		</tr>
+		<tr>
+			<td><pre>[b]bold[/b]</pre></td><td><strong>bold</strong></td>
+		</tr>
+		<tr>
+			<td><pre>[i]italic[/i]</pre></td><td><em>italic</em></td>
+		</tr>
+		<tr>
+			<td><pre>[u]underlined[/u]</pre></td><td><u>underlined</u></td>
+		</tr>
+		<tr>
+			<td><pre>[s]strike[/s]</pre></td><td><strike>strike</strike></td>
+		</tr>
+		<tr>
+			<td><pre>[color=red]red[/color]</pre></td><td><span style="color:  red;">red</span></td>
+		</tr>
+		<tr>
+			<td><pre>[font=courier]some text[/font] </pre></td><td><span style="font-family: courier;">some text</span></td>
+		</tr>
+		<tr>
+			<td><pre>[quote]quote[/quote]</pre></td><td><blockquote>quote</blockquote></td>
+		</tr>
+		<tr>
+			<td><pre>[quote=Author]Author? Me? No, no, no...[/quote]</pre></td><td><strong class="author">Author wrote:</strong><blockquote>Author? Me? No, no, no...</blockquote></td>
+		</tr>
+		<tr>
+			<td><pre>[size=small]small text[/size]
+[size=xx-large]xx-large text[/size]
+[size=20]20px exactly[/size]
+				</pre>
+				Size options include: <strong>xx-small, small, medium, large, xx-large</strong></td><td><span style="font-size: small;">small text</span><br><span style="font-size: xx-large;">xx-large text</span><br><span style="font-size: 20px;">20px exactly</span></td>
+		</tr>
+		<tr>
+			<td><pre>Add a horizontal bar
+[hr]
+Like this
+				</pre></td><td>
+					Add a horizontal bar<br><hr><br>Like this
+				</td>
+		</tr>
+		<tr>
+			<td><pre>This is
+[center]centered[/center]
+text</pre></td><td>
+					This is<br><div style="text-align:center;">centered</div><br>text
+				</td>
+		</tr>
+	</tbody>
+</table>
 
-<br />You can make lists with:<br />
-<ul class="listbullet" style="list-style-type: circle;">
-<li>[list]<br />
-<li>[list=1]<br />
-<li>[list=i]<br />
-<li>[list=I] <br />
-<li>[list=a]<br />
-<li>[list=A] <br />
-<li>[ul]<br />
-<li>[ol]<br />
-<li>[dl]<br />
-<li>[dl terms="biumlh"] &mdash; where style of the terms can be any combination of:
+<h3>Code blocks</h3>
+Code can be rendered generically in a block or inline format (depending on if there are new line characters in the text), or you can specify a supported language for enhanced syntax highlighting. Supported languages include <strong>php, css, mysql, sql, abap, diff, html, perl, ruby, vbscript, avrc, dtd, java, xml, cpp, python, javascript, js, json, sh </strong>.
+<br><br>
+<table class="table table-responsive table-bordered">
+	<tbody>
+		<tr>
+			<th>BBcode syntax</th><th>Output</th>
+		</tr>
+		<tr>
+			<td><pre>[code]function bbcode() { }[/code]</pre></td><td><code>function bbcode() { }</code></td>
+		</tr>
+		<tr>
+			<td><pre>[code=php]function bbcode() {
+  $variable = true;
+  if( $variable ) {
+    echo "true";
+  }
+}[/code]</pre></td><td><code><div class="hl-main"><ol class="hl-main"><li><span class="hl-code">&nbsp;</span><span class="hl-reserved">function</span><span class="hl-code"> </span><span class="hl-identifier">bbcode</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code"></span></li><li><span class="hl-code">&nbsp;&nbsp;&nbsp;</span><span class="hl-var">$variable</span><span class="hl-code"> = </span><span class="hl-reserved">true</span><span class="hl-code">;</span></li><li><span class="hl-code">&nbsp;&nbsp;&nbsp;</span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code"> </span><span class="hl-var">$variable</span><span class="hl-code"> </span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code"></span></li><li><span class="hl-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="hl-reserved">echo</span><span class="hl-code"> </span><span class="hl-quotes">"</span><span class="hl-string">true</span><span class="hl-quotes">"</span><span class="hl-code">;</span></li><li><span class="hl-code">&nbsp;&nbsp;&nbsp;</span><span class="hl-brackets">}</span><span class="hl-code"></span></li><li><span class="hl-code">&nbsp;</span><span class="hl-brackets">}</span></li></ol></div></code></td>
+		</tr>
+		<tr>
+			<td><pre>[nobb][nobb]This is how [i]you[/i] can 
+[u]show[/u] how to use 
+[hl]BBcode[/hl] syntax[/nobb][/nobb]</pre></td><td>[nobb]This is how [i]you[/i] can [u]show[/u] how to use [hl]BBcode[/hl] syntax[/nobb]</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>Lists</h3>
+<table class="table table-responsive table-bordered">
+	<tbody>
+		<tr>
+			<th>BBcode syntax</th><th>Rendered list</th>
+		</tr>
+		<tr>
+			<td><pre>[ul]
+[*] First list element
+[*] Second list element
+[/ul]</pre></td><td><ul class="listbullet" style="list-style-type: circle;"><li> First list element</li><li> Second list element<br></li></ul></td>
+		</tr>
+		<tr>
+			<td><pre>[ol]
+[*] First list element
+[*] Second list element
+[/ol]</pre></td><td><ul class="listdecimal" style="list-style-type: decimal;"><li> First list element</li><li> Second list element<br></li></ul></td>
+		</tr>
+		<tr>
+			<td><pre>[list=A]
+[*] First list element
+[*] Second list element
+[/list]</pre>
+				The list type options are <pre>1, i, I, a, A</pre>.</td><td><ul class="listupperalpha" style="list-style-type: upper-alpha;"><li> First list element</li><li> Second list element</li></ul></td>
+		</tr>
+		<tr>
+			<td><pre>[dl terms="b"]
+[*= First element term] First element description
+[*= Second element term] Second element description
+[/dl]</pre>
+				The <strong>terms</strong> style options can be any combination of:
 	<dl class="bb-dl dl-horizontal">
 	<dt>b</dt><dd>bold</dd>
 	<dt>i</dt><dd>italic</dd>
@@ -39,35 +119,88 @@
 	<dt>l</dt><dd>large</dd>
 	<dt>h</dt><dd>horizontal &mdash; like <em>this</em> defintion list</dd>
 	</dl>
-</li>
+			</td><td><dl class="bb-dl dl-terms-bold">
+<dt> First element term</dt><dd> First element description<br></dd>
+<dt> Second element term</dt><dd> Second element description<br></dd></dl></td>
+		</tr>
+		<tr>
+			<td><pre></pre></td><td></td>
+		</tr>
+		<tr>
+			<td><pre></pre></td><td></td>
+		</tr>
+		
+	</tbody>
+</table>
 
-</ul>For example:<br />[ul]<br />[*] First list element<br />[*] Second list element<br />[/ul]<br /><br />Will render something like: <br />
-<ul class="listbullet" style="list-style-type: circle;">
-<li> First list element<br />
-<li> Second list element</ul>
+<h3>Tables</h3>
 
-or<br /><br />[dl terms="b"]<br />[*= First element term] First element description<br />[*= Second element term] Second element description<br />[/dl]<br /><br />Will render something like: <br /><br />
-<dl class="bb-dl dl-terms-bold">
-<dt> First element term </dt><dd>First element description</dd>
-<dt> Second element term </dt><dd>Second element description</dd>
-</dl><br /> 
+<table class="table table-responsive table-bordered">
+	<tbody>
+		<tr>
+			<th>BBcode syntax</th><th>Rendered table</th>
+		</tr>
+		<tr>
+			<td><pre>[table border=0]
+[tr]
+[th]Header 1[/th][th]Header 2[/th]
+[/tr]
+[tr][td]Content[/td][td]Content[/td][/tr]
+[tr][td]Content[/td][td]Content[/td][/tr]
+[/table]</pre></td><td><table class="table table-responsive"><tbody><tr><th>Header 1</th><th>Header 2</th></tr>
+<tr><td>Content</td><td>Content</td></tr><tr><td>Content</td><td>Content</td></tr></tbody></table></td>
+		</tr>
+		<tr>
+			<td><pre>[table border=1]
+[tr]
+[th]Header 1[/th][th]Header 2[/th]
+[/tr]
+[tr][td]Content[/td][td]Content[/td][/tr]
+[tr][td]Content[/td][td]Content[/td][/tr]
+[/table]</pre></td><td><table class="table table-responsive table-bordered"><tbody><tr><th>Header 1</th><th>Header 2</th></tr>
+<tr><td>Content</td><td>Content</td></tr><tr><td>Content</td><td>Content</td></tr></tbody></table></td>
+		</tr>
+		<tr>
+			<td><pre>[table]
+[tr]
+[th]Header 1[/th][th]Header 2[/th]
+[/tr]
+[tr][td]Content[/td][td]Content[/td][/tr]
+[tr][td]Content[/td][td]Content[/td][/tr]
+[/table]</pre></td><td><table><tbody><tr><th>Header 1</th><th>Header 2</th></tr><tr><td>Content</td><td>Content</td></tr><tr><td>Content</td><td>Content</td></tr></tbody></table>
+</td>
+		</tr>
+	</tbody>
+</table>
 
+<h3>Links and Embedded Content</h3>
 
-<br />There's also:<br />
-<ul class="listloweralpha" style="list-style-type: lower-alpha;">
-<li>[hr]<br />
-<li>[video]video URL[/video]<br />
-<li>[audio]audio URL[/audio]<br />
-<li>[table]<br />
-<li>[th] <br />
-<li>[td]<br />
-<li>[tr]<br />
-<li>[center]<br />
-<li>[font=courier]some text[/font] <span style="font-family: courier;">some text</span><br />
-</ul><br />
-<br />Tables? Yes!<br /><br />[table border=1]<br />  [tr]<br />    [th]Tables now[/th]<br />  [/tr]<br />  [tr]<br />    [td]Have headers[/td]<br />  [/tr]<br />[/table]<br /><br /><table border="1" ><tr><th>Tables now</th></tr><tr><td>Have headers</td></tr></table><br />All sizes, <br />From the [size=xx-small] - <span style="font-size: xx-small;">xx-small</span>.<br />To the [size=xx-large] - <span style="font-size: xx-large;">xx-large</span>.<br />To fit exactly <span style="font-size: 20px;">20px</span> use [size=20].<br /><br />
+<table class="table table-responsive table-bordered">
+	<tbody>
+		<tr>
+			<th>BBcode syntax</th><th>Rendered output</th>
+		</tr>
+		<tr>
+			<td><pre>[video]video URL[/video]
+[audio]audio URL[/audio]</pre></td><td></td>
+		</tr>
+		<tr>
+			<td><pre>[url=https://hubzilla.org]Hubzilla[/url]</pre></td><td><a href="https://hubzilla.org" target="_blank">Hubzilla</a></td>
+		</tr>
+		<tr>
+			<td><pre>An image [img]url/of/image.jpg[/img] 
+in some text </pre></td><td>
+				An image <img src="/images/default_profile_photos/rainbow_man/48.jpg" alt="Image/photo"> in some text
+			</td>
+		</tr>
+		<tr>
+			<td><pre></pre></td><td></td>
+		</tr>
+	</tbody>
+</table>
+	
 
-<p>$Projectname specific codes</p>
+<h3>$Projectname specific codes</h3>
 <ul class="listbullet" style="list-style-type: circle;">
 <li>[&amp;copy;] &copy;  This works for many HTML entities</li>
 <li>[zrl]https://zothub.com[/zrl] Magic-auth version of [url] tag</li>

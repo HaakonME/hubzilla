@@ -21,6 +21,7 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/attach.php');
 require_once('include/bbcode.php');
+require_once('include/security.php');
 
 
 use \Zotlabs\Lib as Zlib;
@@ -34,9 +35,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if((! local_channel()) && (! remote_channel()) && (! x($_REQUEST,'commenter')))
 			return;
-	
-		require_once('include/security.php');
-	
+
 		$uid = local_channel();
 		$channel = null;
 		$observer = null;
@@ -1036,9 +1035,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if((! local_channel()) && (! remote_channel()))
 			return;
-	
-		require_once('include/security.php');
-	
+		
 		if((argc() == 3) && (argv(1) === 'drop') && intval(argv(2))) {
 	
 			require_once('include/items.php');

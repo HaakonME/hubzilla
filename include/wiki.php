@@ -332,9 +332,35 @@ function wiki_page_history($arr) {
 	}	
 }
 
+function wiki_prepare_content($s) {
+		
+	$text = preg_replace_callback('{
+				(?:\n\n|\A\n?)
+				(	            # $1 = the code block -- one or more lines, starting with a space/tab
+				  (?>
+					[ ]{'.'4'.'}  # Lines must start with a tab or a tab-width of spaces
+					.*\n+
+				  )+
+				)
+				((?=^[ ]{0,'.'4'.'}\S)|\Z)	# Lookahead for non-space at line-start, or end of doc
+			}xm',
+			'wiki_prepare_content_callback', $s);
+
+	return $text;
+}
+
+function wiki_prepare_content_callback($matches) {
+	$codeblock = $matches[1];
+
+	$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES, UTF8, false);
+	return "\n\n" . $codeblock ;
+}
+
+
+
 function wiki_save_page($arr) {
 	$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
-	$content = ((array_key_exists('content',$arr)) ? purify_html($arr['content']) : '');
+	$content = ((array_key_exists('content',$arr)) ? purify_html(wiki_prepare_content($arr['content'])) : '');
 	$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
 	$w = wiki_get_wiki($resource_id);
 	if (!$w['path']) {

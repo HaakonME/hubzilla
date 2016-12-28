@@ -142,6 +142,11 @@ input, optgroup, select, textarea {
 	resize: vertical;
 }
 
+.selected-doco-nav {
+	font-weight: bold;
+	text-shadow: 2px 2px 3px lightgray;
+}
+
 #help-content pre code {
 	overflow-x: auto;
 	white-space: pre;

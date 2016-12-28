@@ -511,6 +511,20 @@ function bb_code($match) {
 		return '<code class="inline-code">' . trim($match[1]) . '</code>';
 }
 
+function bb_code_options($match) {
+	if(strpos($match[0], "<br />")) {
+		$class = "";
+	} else {
+		$class = "inline-code";
+	}
+	if(strpos($match[1], 'nowrap')) {
+		$style = "overflow-x: auto; white-space: pre;";
+	} else {
+		$style = "";
+	}
+	return '<code class="'. $class .'" style="'. $style .'">' . trim($match[2]) . '</code>';
+}
+
 function bb_highlight($match) {
 	$lang = ((in_array(strtolower($match[1]),['php','css','mysql','sql','abap','diff','html','perl','ruby',
 		'vbscript','avrc','dtd','java','xml','cpp','python','javascript','js','json','sh']))
@@ -931,6 +945,11 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 	// Check for [code] text
 	if (strpos($Text,'[code]') !== false) {
 		$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/ism", 'bb_code', $Text);
+	}
+
+	// Check for [code options] text
+	if (strpos($Text,'[code ') !== false) {
+		$Text = preg_replace_callback("/\[code(.*?)\](.*?)\[\/code\]/ism", 'bb_code_options', $Text);
 	}
 
 	// Check for [spoiler] text

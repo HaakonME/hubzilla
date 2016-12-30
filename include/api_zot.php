@@ -1,6 +1,8 @@
 <?php
 
 	function zot_api_init() {
+        api_register_func('api/red/version','api_zot_version',false);
+        api_register_func('api/z/1.0/version','api_zot_version',false);
 		api_register_func('api/export/basic','api_export_basic', true);
 		api_register_func('api/red/channel/export/basic','api_export_basic', true);
 		api_register_func('api/z/1.0/channel/export/basic','api_export_basic', true);
@@ -40,6 +42,22 @@
 
 		return;
 	}
+
+
+	function api_zot_version($type) {
+
+		if($type === 'xml') {
+			header('Content-type: application/xml');
+			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>' . Zotlabs\Lib\System::get_project_version() . '</version>' . "\r\n";
+			killme();
+		}
+		elseif($type === 'json') {
+			header('Content-type: application/json');
+			echo '"' . Zotlabs\Lib\System::get_project_version() . '"';
+			killme();
+		}
+	}
+
 
 
 	/*

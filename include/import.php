@@ -86,7 +86,7 @@ function import_channel($channel, $account_id, $seize) {
 	}
 
 	if(! $r) {
-		logger('mod_import: channel clone failed. ', print_r($channel,true));
+		logger('mod_import: channel clone failed. ' . print_r($channel,true));
 		notice( t('Channel clone failed. Import failed.') . EOL);
 		return false;
 	}
@@ -96,7 +96,7 @@ function import_channel($channel, $account_id, $seize) {
 		$channel['channel_guid']   // Already dbesc'd
 	);
 	if(! $r) {
-		logger('mod_import: channel not found. ', print_r($channel,true));
+		logger('mod_import: channel not found. ' . print_r($channel,true));
 		notice( t('Cloned channel not found. Import failed.') . EOL);
 		return false;
 	}

@@ -30,13 +30,6 @@ $(document).ready(function() {
 		}
 	});
 
-	$(window).on('scroll', function() {
-		if($('main').hasClass('region_1-on') && $(window).scrollLeft() > 5){
-			$(window).scrollLeft(0);
-			toggleAside();
-		}
-	});
-
 	if($('aside').length && $('aside').html().length === 0) {
 		$('#expand-aside').hide();
 	}

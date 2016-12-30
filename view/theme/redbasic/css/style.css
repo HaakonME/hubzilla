@@ -8,8 +8,8 @@
 
 /* generals */
 html {
-	height: 100%;
 	font-size: 100%;
+	overflow-x: hidden;
 }
 
 body {
@@ -21,7 +21,6 @@ body {
 	background-size: cover;
 	color: $font_colour;
 	margin: 0px;
-	height: 100%;
 	overflow-x: hidden;
 }
 

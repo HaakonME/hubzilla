@@ -68,6 +68,7 @@ class Directory extends \Zotlabs\Web\Controller {
 		$observer = get_observer_hash();
 	
 		$globaldir = get_directory_setting($observer, 'globaldir');
+
 		// override your personal global search pref if we're doing a navbar search of the directory
 		if(intval($_REQUEST['navsearch']))
 			$globaldir = 1;

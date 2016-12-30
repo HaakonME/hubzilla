@@ -434,12 +434,12 @@ function contextualHelp() {
 
 	if(container.hasClass('contextual-help-content-open')) {
 		container.removeClass('contextual-help-content-open');
-		$('main').css('top', '')
+		$('main').css('margin-top', '')
 	}
 	else {
 		container.addClass('contextual-help-content-open');
 		var mainTop = container.outerHeight(true);
-		$('main').css('top', mainTop + 'px');
+		$('main').css('margin-top', mainTop + 'px');
 	}
 }
 

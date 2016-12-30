@@ -296,6 +296,181 @@ $Projectname supports several markup languages for advanced formatting of conten
 [tr][td]Webpage element[/td][td][url=[baseurl]/help/member/bbcode]BBcode[/url], Markdown, HTML[/td][/tr]
 [/table]
 
+[h3]Web Pages[/h3]
+
+Hubzilla enables users to create static webpages.  To activate this feature, enable the [b]Web Pages[/b] feature in your [b][url=[baseurl]/settings/features/]Additional Features[/url][/b] section.
+
+Once enabled, a new tab will appear on your channel page labeled &quot;Webpages&quot;. Clicking this link will take you to the webpage editor. Pages will be accessible at [b][baseurl]/page/[observer=1][observer.webname][/observer][observer=0]channelname[/observer]/pagelinktitle[/b]
+
+The &quot;page link title&quot; box allows a user to specify the &quot;pagelinktitle&quot; of this URL.  If no page link title is set, we will set one for you automatically, using the message ID of the item.  
+
+Beneath the page creation box, a list of existing pages will appear with an &quot;edit&quot; link.  Clicking this will take you to an editor, similar to that of the post editor, where you can make changes to your webpages.
+	
+[h4]Using Blocks[/h4]
+
+Blocks can be parts of webpages. The basic HTML of a block looks like this
+[code]
+	<div>
+		Block Content
+	</div>
+
+[/code]
+
+If a block has text/html content type it can also contain menu elements. Sample content of
+[code]
+	<p>HTML block content</p> 
+	[menu]menuname[/menu]
+
+[/code]
+will produce HTML like this
+[code]
+	<div>
+		<p>HTML block content</p>
+		<div>
+			<ul>
+				<li><a href="#">Link 1</a></li>
+				<li><a href="#">Link 2</a></li>
+				<li><a href="#">Link 3</a></li>
+			</ul>
+		</div>
+	</div>
+
+[/code]
+
+Via the $content macro a block can also contain the actual webpage content. For this create a block with only
+[code]
+	$content
+
+[/code]as content.
+
+To make a block appear in the webpage it must be defined in the page layout inside a region.
+[code]
+	[region=aside]
+		[block]blockname[/block]
+	[/region]
+
+[/code]
+
+The block appearance can be manipulated in the page layout.
+
+Custom classes can be assigned
+[code]
+	[region=aside]
+		[block=myclass]blockname[/block]
+	[/region]
+
+[/code]
+will produce this HTML
+[code]
+	<div class="myclass">
+		Block Content
+	</div>
+
+[/code]
+
+Via the wrap variable a block can be stripped off its wrapping <div></div> tag
+[code]
+	[region=aside]
+		[block][var=wrap]none[/var]blockname[/block]
+	[/region]
+
+[/code]
+will produce this HTML
+[code]
+	Block Content
+[/code]
+
+[h4]Webpage element import tool[/h4]
+
+There are two methods of importing webpage elements: uploading a zip file or referencing a local cloud files folder. Both methods require that the webpage elements are specified using a specific folder structure. The import tool makes it possible to import all the elements necessary to construct an entire website or set of websites. The goal is to accommodate external development of webpages as well as tools to simplify and automate deployment on a hub.
+
+[h5] Folder structure [/h5]
+Element definitions must be stored in the repo root under folders called 
+[code]
+	/pages/
+	/blocks/
+	/layouts/
+[/code]
+
+Each element of these types must be defined in an individual subfolder using two files: one JSON-formatted file for the metadata and one plain text file for the element content.
+
+[h5] Page elements [/h5]
+Page element metadata is specified in a JSON-formatted file called [code]page.json[/code] with the following properties:
+[list]
+[*] title
+[*] pagelink
+[*] mimetype
+[*] layout
+[*] contentfile
+[/list]
+[b]Example[/b] 
+
+Files: 
+[code]	
+	/pages/my-page/page.json
+	/pages/my-page/my-page.bbcode
+[/code]	
+Content of [code]page.json[/code]:
+[code]	
+	{
+		"title": "My Page",
+		"pagelink": "mypage",
+		"mimetype": "text/bbcode",
+		"layout": "my-layout",
+		"contentfile": "my-page.bbcode"
+	}
+[/code]	
+[h5] Layout elements [/h5]
+
+Layout element metadata is specified in a JSON-formatted file called [code]layout.json[/code] with the following properties:
+[list]
+[*] name
+[*] description
+[*] contentfile
+[/list]
+[b]Example[/b] 
+
+Files:
+[code]
+	/layouts/my-layout/layout.json
+	/layouts/my-layout/my-layout.bbcode
+[/code]	
+Content of [code]layout.json[/code]:
+[code]
+	{
+		"name": "my-layout",
+		"description": "Layout for my project page",
+		"contentfile": "my-layout.bbcode"
+	}
+[/code]
+
+[h5] Block elements [/h5]
+
+Block element metadata is specified in a JSON-formatted file called [code]block.json[/code] with the following properties:
+[list]
+[*] name
+[*] title
+[*] mimetype
+[*] contentfile
+[/list]
+[b]Example[/b] 
+
+Files:
+[code]	
+	/blocks/my-block/block.json
+	/blocks/my-block/my-block.html
+[/code]
+Content of [code]block.json[/code]:	
+
+[code]
+	{
+		"name": "my-block",
+		"title": "",
+		"mimetype": "text/html",
+		"contentfile": "my-block.html"
+	}
+[/code]
+
 [h3]Personal Cloud Storage[/h3]
 
 $Projectname provides an ability to store privately and/or share arbitrary files with friends.

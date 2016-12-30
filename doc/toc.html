@@ -49,7 +49,8 @@
         <div id="developers" class="panel-collapse collapse in">
             <ul class="list-group">
                 <li class="doco-list-group-item"><a href="/help/developer/developer_guide">Guide</a></li>
-                <li class="doco-list-group-item"><a href="/help/developer/api_zot">Zot Protocol and API</a></li>
+                <li class="doco-list-group-item"><a href="/help/developer/zot_protocol">Zot Protocol</a></li>
+                <li class="doco-list-group-item"><a href="/help/developer/api_zot">Zot API</a></li>
             </ul>
         </div>
     </div>
@@ -67,7 +68,7 @@
     </div>
 </div>
 <script>
-
+	toc = {};
     // Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
     $(document).ready(function () {
         $(".panel-collapse.in").find('a').each(function(){
@@ -88,8 +89,29 @@
             }
         });
 		
-	$(document.body).trigger("sticky_kit:recalc");
+		$(document.body).trigger("sticky_kit:recalc");
 
-    });
+		toc.contentTop = [];
+		toc.edgeMargin    = 20;   // margin above the top or margin from the end of the page
+		toc.topRange      = 200;  // measure from the top of the viewport to X pixels down
+		// Set up content an array of locations
+		$('#doco-side-toc').find('a').each(function(){
+			toc.contentTop.push( $( '#'+$(this).attr('href').split('#').pop() ).offset().top );
+		});
 
+
+		// adjust side menu
+		$(window).scroll(function(){
+			var winTop = $(window).scrollTop(),
+				bodyHt = $(document).height(),
+				vpHt = $(window).height() + toc.edgeMargin;  // viewport height + margin
+			$.each( toc.contentTop, function(i,loc){
+			 if ( ( loc > winTop - toc.edgeMargin && ( loc < winTop + toc.topRange || ( winTop + vpHt ) >= bodyHt ) ) ){
+			  $('#doco-side-toc li')
+			   .removeClass('selected-doco-nav')
+			   .eq(i).addClass('selected-doco-nav');
+			 }
+			});
+		});
+	});
 </script>

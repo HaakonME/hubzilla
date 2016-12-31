@@ -30,7 +30,7 @@ $(document).ready(function() {
 		}
 	});
 
-	if($('aside').length && $('aside').html().length === 0) {
+	if($('#left_aside_wrapper').length && $('#left_aside_wrapper').html().length === 0) {
 		$('#expand-aside').hide();
 	}
 

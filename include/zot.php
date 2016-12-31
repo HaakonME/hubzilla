@@ -1943,6 +1943,20 @@ function update_imported_item($sender, $item, $orig, $uid) {
 		unset($item['item_private']);
 	}
 
+	// Subtle issue where we might receive an edit item update from a downstream source.
+	// Ignore unless it comes from upstream. 
+
+	$x = q("select item_wall from item where mid = '%s' and uid = %d limit 1",
+		dbesc($item['mid']),
+		intval($uid)
+	);
+
+	if($x && $x[0]['item_wall'] == 1 && $item['item_wall'] == 0) {
+		notice('remote wall update ignored');
+		return;
+	}
+
+
 	$x = item_store_update($item);
 
 	// If we're updating an event that we've saved locally, we store the item info first

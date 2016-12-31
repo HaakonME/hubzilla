@@ -1782,7 +1782,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 					$result[] = $DR->get();
 				}
 				else {
-					update_imported_item($sender,$arr,$r[0],$channel['channel_id']);
+					update_imported_item($sender,$arr,$r[0],$channel['channel_id'],$tag_delivery);
 					$DR->update('updated');
 					$result[] = $DR->get();
 					if(! $relay)
@@ -1930,7 +1930,7 @@ function remove_community_tag($sender, $arr, $uid) {
  * @param int $uid
  */
 
-function update_imported_item($sender, $item, $orig, $uid) {
+function update_imported_item($sender, $item, $orig, $uid, $tag_delivery) {
 
 	// If this is a comment being updated, remove any privacy information
 	// so that item_store_update will set it from the original.
@@ -1943,16 +1943,11 @@ function update_imported_item($sender, $item, $orig, $uid) {
 		unset($item['item_private']);
 	}
 
-	// Subtle issue where we might receive an edit item update from a downstream source.
-	// Ignore unless it comes from upstream. 
+	// we need the tag_delivery check for downstream flowing posts as the stored post 
+	// may have a different owner than the one being transmitted. 
 
-	$x = q("select item_wall from item where mid = '%s' and uid = %d limit 1",
-		dbesc($item['mid']),
-		intval($uid)
-	);
-
-	if($x && $x[0]['item_wall'] == 1 && $item['item_wall'] == 0) {
-		notice('remote wall update ignored');
+	if(($sender['hash'] != $orig['owner_xchan'] && $sender['hash'] != $orig['author_xchan']) && (! $tag_delivery)) {
+		notice('sender is not owner or author');
 		return;
 	}
 

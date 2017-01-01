@@ -238,7 +238,7 @@ We highly recommend that you use the "typical social network" settings when you 
   
   [*= Anybody authenticated ] This is similar to "anybody in this network" except that it can include anybody   who can authenticate by any means - and therefore [i]may[/i] include visitors from other networks.
   
-  [*=Guest Access Token] This allows you to share a file, folder, photo, album, or channel with a specific person or group of people. They don't need to be Hubzilla members. You can set an expiration for the Access Token.
+  [*=Guest Access Token] This allows you to share a file, folder, photo, album, or channel with a specific person or group of people. They don't need to be $Projectname members. You can set an expiration for the Access Token.
 
   [*= Anybody on the internet ] Completely public. This permission will be approved for anybody at all.
 [/dl]
@@ -287,6 +287,15 @@ The connection edit screen offers a slider to select a degree of friendship with
 
 The slider on the matrix page has both a minimum and maximum value. Posts will only be shown from people who fall between this range. Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
 
+[h3]Guest Access Tokens[/h3]
+Guest access tokens (sometimes called "Zot access tokens") allow you to share a file, folder, photo, album, or channel with a specific person or group of people who are not $Projectname members. These tokens allow you to share individual items by sending a link that includes the token in the URL; alternatively, people can actually [i]log in[/i] using the token credentials, after which they can seamlessly view whatever content has been shared with that token.
+
+To create and manage guest tokens, open the [zrl=[baseurl]/settings/tokens/]Guest Access Tokens[/zrl] settings page. A random token is generate with each page load, allowing you to create one by inputting an associated user name and optionally specifying an expiration date. Existing tokens are listed below the dialog and can be edited by selecting them or deleted by pressing the trash icon.
+
+Additional permissions may be granted to the guest token by expanding the [b]Individual Permissions[/b] options and selecting privacy settings such as [b]Can view my channel stream and posts[/b] or [b]Can chat with me[/b].
+
+[img][baseurl]/doc/member/assets/zat_dialog.png[/img]
+
 [h3]Markup Languages[/h3]
 $Projectname supports several markup languages for advanced formatting of content. The default markup language is a [url=[baseurl]/help/member/bbcode]custom variant of BBcode[/url], tailored for use in $Projectname. [url=[baseurl]/help/member/bbcode]BBcode[/url] is supported for posts, wiki pages, and web page elements. Wiki pages and webpage elements may also be written using standard Markdown.
 [table border=0]
@@ -298,7 +307,7 @@ $Projectname supports several markup languages for advanced formatting of conten
 
 [h3]Web Pages[/h3]
 
-Hubzilla enables users to create static webpages.  To activate this feature, enable the [b]Web Pages[/b] feature in your [b][url=[baseurl]/settings/features/]Additional Features[/url][/b] section.
+$Projectname enables users to create static webpages.  To activate this feature, enable the [b]Web Pages[/b] feature in your [b][url=[baseurl]/settings/features/]Additional Features[/url][/b] section.
 
 Once enabled, a new tab will appear on your channel page labeled &quot;Webpages&quot;. Clicking this link will take you to the webpage editor. Pages will be accessible at [b][baseurl]/page/[observer=1][observer.webname][/observer][observer=0]channelname[/observer]/pagelinktitle[/b]
 
@@ -763,8 +772,8 @@ RedDav using Windows 7 graphical user interface wizard:
 2. Right-click the My computer icon to access its menu.
 3. Left-click Map network drive... to open the connection dialog wizard.
 4. Type #^[url=https://example.net/dav/your_channel_name]https://example.net/dav/your_channel_name[/url] in the textbox and click the Complete button where &quot;example.net&quot; is the URL of your hub.
-5. Type your Hubzilla account's user name. IMPORTANT - NO at-sign or domain name.
-6. Type your Hubzilla password
+5. Type your $Projectname account's user name. IMPORTANT - NO at-sign or domain name.
+6. Type your $Projectname password
 
 [h4]Cloud Desktop Clients - Linux[/h4]
 

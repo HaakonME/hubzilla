@@ -146,6 +146,10 @@ input, optgroup, select, textarea {
 	text-shadow: 2px 2px 3px lightgray;
 }
 
+#doco-content img {
+	width: 100%;
+}
+
 #help-content pre code {
 	overflow-x: auto;
 	white-space: pre;

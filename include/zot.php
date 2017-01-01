@@ -1782,7 +1782,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 					$result[] = $DR->get();
 				}
 				else {
-					update_imported_item($sender,$arr,$r[0],$channel['channel_id']);
+					update_imported_item($sender,$arr,$r[0],$channel['channel_id'],$tag_delivery);
 					$DR->update('updated');
 					$result[] = $DR->get();
 					if(! $relay)
@@ -1930,7 +1930,7 @@ function remove_community_tag($sender, $arr, $uid) {
  * @param int $uid
  */
 
-function update_imported_item($sender, $item, $orig, $uid) {
+function update_imported_item($sender, $item, $orig, $uid, $tag_delivery) {
 
 	// If this is a comment being updated, remove any privacy information
 	// so that item_store_update will set it from the original.
@@ -1942,6 +1942,15 @@ function update_imported_item($sender, $item, $orig, $uid) {
 		unset($item['deny_gid']);
 		unset($item['item_private']);
 	}
+
+	// we need the tag_delivery check for downstream flowing posts as the stored post 
+	// may have a different owner than the one being transmitted. 
+
+	if(($sender['hash'] != $orig['owner_xchan'] && $sender['hash'] != $orig['author_xchan']) && (! $tag_delivery)) {
+		notice('sender is not owner or author');
+		return;
+	}
+
 
 	$x = item_store_update($item);
 

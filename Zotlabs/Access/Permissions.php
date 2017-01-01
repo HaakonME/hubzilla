@@ -18,7 +18,7 @@ class Permissions {
 	 * permission roles. You will want to set a default PermissionLimit for each channel and also
 	 * provide a sane default for any existing connections. You may or may not wish to provide a
 	 * default auto permission. If in doubt, leave this alone as custom permissions by definition
-	 * are the responsbility of the channel owner to manage. You just don't want to create any 
+	 * are the responsibility of the channel owner to manage. You just don't want to create any 
 	 * suprises or break things so you have an opportunity to provide sane settings. 
 	 *
 	 * Update the version here and in PermissionRoles

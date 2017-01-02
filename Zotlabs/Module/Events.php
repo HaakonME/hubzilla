@@ -378,11 +378,14 @@ class Events extends \Zotlabs\Web\Controller {
 			$event_xchan = ((x($orig_event)) ? $orig_event['event_xchan'] : $channel['channel_hash']);
 			$mid = ((x($orig_event)) ? $orig_event['mid'] : '');
 	
-			if(! x($orig_event))
+			if(! x($orig_event)) {
 				$sh_checked = '';
-			else
+				$a_checked = ' checked="checked" ';
+			}
+			else {
 				$sh_checked = ((($orig_event['allow_cid'] === '<' . $channel['channel_hash'] . '>' || (! $orig_event['allow_cid'])) && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
-	
+			}
+
 			if($orig_event['event_xchan'])
 				$sh_checked .= ' disabled="disabled" ';
 	

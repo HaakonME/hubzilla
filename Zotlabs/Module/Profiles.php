@@ -243,6 +243,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 			
 			check_form_security_token_redirectOnErr('/profiles', 'profile_edit');
 			
+
 			$is_default = (($orig[0]['is_default']) ? 1 : 0);
 	
 			$profile_name = notags(trim($_POST['profile_name']));
@@ -315,6 +316,15 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			$hide_friends = ((intval($_POST['hide_friends'])) ? 1: 0);
 	
+
+			$orig_vcard = (($orig[0]['profile_vcard']) ? \Sabre\VObject\Reader::read($orig[0]['profile_vcard']) : null); 
+
+			$_REQUEST['fn'] = $name;
+			$_REQUEST['title'] = $pdesc;
+
+			$profile_vcard = update_vcard($_REQUEST,$orig_vcard);
+
+
 			require_once('include/text.php');
 			linkify_tags($a, $likes, local_channel());
 			linkify_tags($a, $dislikes, local_channel());
@@ -511,7 +521,8 @@ class Profiles extends \Zotlabs\Web\Controller {
 				romance = '%s',
 				employment = '%s',
 				education = '%s',
-				hide_friends = %d
+				hide_friends = %d,
+				profile_vcard = '%s'
 				WHERE id = %d AND uid = %d",
 				dbesc($profile_name),
 				dbesc($name),
@@ -546,6 +557,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				dbesc($work),
 				dbesc($education),
 				intval($hide_friends),
+				dbesc($profile_vcard),
 				intval(argv(1)),
 				intval(local_channel())
 			);

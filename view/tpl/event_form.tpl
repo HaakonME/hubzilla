@@ -10,6 +10,10 @@
 
 	{{include file="field_input.tpl" field=$summary}}
 
+	{{if $tz_choose}}
+	{{include file="field_select_grouped.tpl" field=$timezone}}
+	{{/if}}
+
 	{{$s_dsel}}
 
 	{{$f_dsel}}

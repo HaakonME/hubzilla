@@ -157,6 +157,15 @@ function get_features($filtered = true) {
 				feature_level('smart_birthdays',2),
 			],
 
+			[
+				'event_tz_select',       
+				t('Event Timezone Selection'),          
+				t('Allow event creation in timezones other than your own.'),
+				false,
+				get_config('feature_lock','event_tz_select'),
+				feature_level('event_tz_select',2),
+			],
+
 			[ 
 				'advanced_dirsearch', 
 				t('Advanced Directory Search'),

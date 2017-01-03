@@ -111,8 +111,22 @@ class Chatsvc extends \Zotlabs\Web\Controller {
 				intval(\App::$data['chat']['room_id'])
 			);
 			if($r) {
-				foreach($r as $rr) {
-					switch($rr['cp_status']) {
+				foreach($r as $rv) {
+					if(! $rv['xchan_name']) {
+						$rv['xchan_hash'] =  $rv['cp_xchan'];
+						$rv['xchan_name'] = substr($rv['cp_xchan'],strrpos($rv['cp_xchan'],'.')+1);
+						$rv['xchan_addr'] = '';
+						$rv['xchan_network'] = 'unknown';
+						$rv['xchan_url'] = z_root();
+						$rv['xchan_hidden'] = 1;
+						$rv['xchan_photo_mimetype'] = 'image/jpeg';
+						$rv['xchan_photo_l'] = get_default_profile_photo(300); 
+						$rv['xchan_photo_m'] = get_default_profile_photo(80); 
+						$rv['xchan_photo_s'] = get_default_profile_photo(48); 
+
+					}
+
+					switch($rv['cp_status']) {
 						case 'away':
 							$status = t('Away');
 							$status_class = 'away';
@@ -124,7 +138,7 @@ class Chatsvc extends \Zotlabs\Web\Controller {
 							break;
 					}
 		
-					$inroom[] = array('img' => zid($rr['xchan_photo_m']), 'img_type' => $rr['xchan_photo_mimetype'],'name' => $rr['xchan_name'], 'status' => $status, 'status_class' => $status_class);
+					$inroom[] = array('img' => zid($rv['xchan_photo_m']), 'img_type' => $rv['xchan_photo_mimetype'],'name' => $rv['xchan_name'], 'status' => $status, 'status_class' => $status_class);
 				}
 			}
 	

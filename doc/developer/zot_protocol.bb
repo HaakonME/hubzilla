@@ -397,7 +397,7 @@ auth_check messages MUST be encrypted with AES256CBC. This message is sent to th
       "success":1, 
       "confirm":"q0Ysovd1uQRsur2xG9Tg6bC23ynzw0191SkVd7CJcYoaePy6e_v0vnmPg2xBUtIaHpx_aSuhgAkd3aVjPeaVBmts6aakT6a_yAEy7l2rBydntu2tvrHhoVqRNOmw0Q1tI6hwobk1BgK9Pm0lwOeAo8Q98BqIJxf47yO9pATa0wktOg6a7LMogC2zkkhwOV5oEqjJfeHeo27TiHr1e2WaphfCusjmk27V_FAYTzw05HvW4SPCx55EeeTJYIwDfQwjLfP4aKV-I8HQCINt-2yxJvzH7Izy9AW-7rYU0Il_gW5hrhIS5MTM12GBXLVs2Ij1CCLXIs4cO0x6e8KEIKwIjf7iAu60JPmnb_fx4QgBlF2HLw9vXMwZokor8yktESoGl1nvf5VV5GHWSIKAur3KPS2Tb0ekNh-tIk9u-xob4d9eIf6tge_d3aq1LcAtrDBDLk8AD0bho5zrVuTmZ9k-lBVPr_DRHSV_dlpu088j3ThaBsuV1olHK3vLFRhYCDIO0CqqK5IuhqtRNnRaqhlNN6fQUHpXk2SwHiJ2W36RCYMTnno6ezFk_tN-RA2ly-FomNZoC5FPA9gFwoJR7ZmVFDmUeK3bW-zYTA5vu15lpBPnt7Up_5rZKkr0WQVbhWJmylqOuwuNWbn3SrMQ8rYFZ23Tv300cOfKVgRBaePWQb4" 
     }
-[code]
+[/code]
 'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the base64url encoded whirlpool hash of the source guid and guid_sig; signed with the source channel private key. This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. 
 
 [h3]Zot Structures[/h3]
@@ -424,9 +424,33 @@ Used for initiating a dialogue with another Zot site. This packet MAY be encrypt
         "guid_sig":"PT9-TApzpm7QtMxC63MjtdK2nUyxNI0tUoWlOYTFGke3kNdtxSzSvDV4uzq_7SSBtlrNnVMAFx2_1FDgyKawmqVtRPmT7QSXrKOL2oPzL8Hu_nnVVTs_0YOLQJJ0GYACOOK-R5874WuXLEept5-KYg0uShifsvhHnxnPIlDM9lWuZ1hSJTrk3NN9Ds6AKpyNRqf3DUdz81-Xvs8I2kj6y5vfFtm-FPKAqu77XP05r74vGaWbqb1r8zpWC7zxXakVVOHHC4plG6rLINjQzvdSFKCQb5R_xtGsPPfvuE24bv4fvN4ZG2ILvb6X4Dly37WW_HXBqBnUs24mngoTxFaPgNmz1nDQNYQu91-ekX4-BNaovjDx4tP379qIG3-NygHTjFoOMDVUvs-pOPi1kfaoMjmYF2mdZAmVYS2nNLWxbeUymkHXF8lT_iVsJSzyaRFJS1Iqn7zbvwH1iUBjD_pB9EmtNmnUraKrCU9eHES27xTwD-yaaH_GHNc1XwXNbhWJaPFAm35U8ki1Le4WbUVRluFx0qwVqlEF3ieGO84PMidrp51FPm83B_oGt80xpvf6P8Ht5WvVpytjMU8UG7-js8hAzWQeYiK05YTXk-78xg0AO6NoNe_RSRk05zYpF6KlA2yQ_My79rZBv9GFt4kUfIxNjd9OiV1wXdidO7Iaq_Q",
         "url":"http:\/\/podunk.edu",
         "url_sig":"T8Bp7j5DHHhQDCFcAHXfuhUfGk2P3inPbImwaXXF1xJd3TGgluoXyyKDx6WDm07x0hqbupoAoZB1qBP3_WfvWiJVAK4N1FD77EOYttUEHZ7L43xy5PCpojJQmkppGbPJc2jnTIc_F1vvGvw5fv8gBWZvPqTdb6LWF6FLrzwesZpi7j2rsioZ3wyUkqb5TDZaNNeWQrIEYXrEnWkRI_qTSOzx0dRTsGO6SpU1fPWuOOYMZG8Nh18nay0kLpxReuHCiCdxjXRVvk5k9rkcMbDBJcBovhiSioPKv_yJxcZVBATw3z3TTE95kGi4wxCEenxwhSpvouwa5b0hT7NS4Ay70QaxoKiLb3ZjhZaUUn4igCyZM0h6fllR5I6J_sAQxiMYD0v5ouIlb0u8YVMni93j3zlqMWdDUZ4WgTI7NNbo8ug9NQDHd92TPmSE1TytPTgya3tsFMzwyq0LZ0b-g-zSXWIES__jKQ7vAtIs9EwlPxqJXEDDniZ2AJ6biXRYgE2Kd6W_nmI7w31igwQTms3ecXe5ENI3ckEPUAq__llNnND7mxp5ZrdXzd5HHU9slXwDShYcW3yDeQLEwAVomTGSFpBrCX8W77n9hF3JClkWaeS4QcZ3xUtsSS81yLrp__ifFfQqx9_Be89WVyIOoF4oydr08EkZ8zwlAsbZLG7eLXY"
+        "sitekey":"-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxTeIwXZWrw/S+Ju6gewh
+LgkKnNNe2uCUqCqMZoYgJar3T5sHCDhvXc4dDCbDkxVIaA/+V1mURtBV60a3IGjn
+OAO0W0XGGLe2ED7G5o9U8T9mVGq8Mauv0v1oQ5wIR1gEAhBavkQ2OUGuF/YKn2nj
+HlKsv9HzUAHpcDMUe3Uklc2RhQbMcnJxEgkyjCkDyrTtCZzISkTAocHvpCG1KSog
+njUZdiz9UWxvM4rCFkCJvQU4RwRZJb7GA9ul+9JrF7NvUQTx8csRP2weBk1E9yyj
+wbe187E0eVj9RXX2Mx3mYhgrTdodxLOVMSXZLg1/SMpeFFl7QBhuM0SiOPg8a7Et
+e2iNA/RD4WiUFqCDfafasRa1TOozOm7LA+08lkAh5PeQPJsJbrX0wVVft++Y+5/z
+BvcUOP73vcbz7j5hJ7HLsbQtye/UUCfODBFybuDqRM84Aet8rjZohX7vukXdMD4I
+2HuB7pjR4uIfyYr0J63ANkvbsn8LR+RnirmHrK5H/OgxxjXcfYbGEQgFxvxhF6lA
+FpMu6Do4dx3CIb6pRmZ8bjSImXexJ0BSo9n3gtrz0XYLecsYFlQ9+QQjm83qxyLb
+M23in0xqMVsyQvzjNkpImrO/QdbEFRIIMee83IHq+adbyjQR49Z2hNEIZhkLPc3U
+2cJJ2HkzkOoF2K37qwIzk68CAwEAAQ==
+-----END PUBLIC KEY-----
+"
+      },
+      "recipients":{
+         {
+            "guid":"lql-1VnxtiO4-WF0h72wLX1Fu8szzHDOXgQaTbELwXW77k8AKFfh-hYr70vqMrc3SSvWN-Flrc5HFhRTWB7ICw",
+            "guid_sig":"PafvEL0VpKfxATxlCqDjfOeSIMdmpr3iU7X-Sysa1h5LzDpjSXsjO37tYZL-accb1M5itLlfnW5epkTa5I4flsW21zSY1A2jCuBQUTLLGV7rNyyBy7lgqJUFvAMRx0TfXzP9lcaPqlM9T1tA6jfWOsOmkdzwofGeXBnsjGfjsO2xdGYe6vwjOU0DSavukvzDMnOayB9DekpvDnaNBTxeGLM45Skzr7ZEMcNF7TeXMbnvpfLaALYEKeQs9bGH-UgAG8fBWgzVAzeBfx_XSR1rdixjyiZGP0kq0h35SlmMPcEjliodOBFwMXqpXFB7Ibp4F6o6te2p2ErViJccQVG8VNKB6SbKNXY6bhP5zVcVsJ-vR-p4xXoYJJvzTN7yTDsGAXHOLF4ZrXbo5yi5gFAlIrTLAF2EdWQwxSGyLRWKxG8PrDkzEzX6cJJ0VRcLh5z6OI5QqQNdeghPZbshMFMJSc_ApCPi9_hI4ZfctCIOi3T6bdgTNKryLm5fhy_eqjwLAZTGP-aUBgLZpb1mf2UojBn6Ey9cCyq-0T2RWyk-FcIcbV4qJ-p_8oODqw13Qs5FYkjLr1bGBq82SuolkYrXEwQClxnrfKa4KYc2_eHAXPL01iS9zVnI1ySOCNJshB97Odpooc4wk7Nb2Fo-Q6THU9zuu0uK_-JbK7IIl6go2qA"
+         },
       },
       "callback":"\/post",
-      "version":1,
+      "version":"1.2",
+      "encryption":{
+        "aes256cbc"
+      },
       "secret":"1eaa6613699be6ebb2adcefa5379c61a3678aa0df89025470fac871431b70467",
       "secret_sig":"0uShifsvhHnxnPIlDM9lWuZ1hSJTrk3NN9Ds6AKpyNRqf3DUdz81-Xvs8I2kj6y5vfFtm-FPKAqu77XP05r74vGaWbqb1r8zpWC7zxXakVVOHHC4plG6rLINjQzvdSFKCQb5R_xtGsPPfvuE24bv4fvN4ZG2ILvb6X4Dly37WW_HXBqBnUs24mngoTxFaPgNmz1nDQNYQu91-ekX4-BNaovjDx4tP379qIG3-NygHTjFoOMDVUvs-pOPi1kfaoMjmYF2mdZAmVYS2nNLWxbeUymkHXF8lT_iVsJSzyaRFJS1Iqn7zbvwH1iUBjD_pB9EmtNmnUraKrCU9eHES27xTwD-yaaH_GHNc1XwXNbhWJaPFAm35U8ki1Le4WbUVRluFx0qwVqlEF3ieGO84PMidrp51FPm83B_oGt80xpvf6P8Ht5WvVpytjMU8UG7-js8hAzWQeYiK05YTXk-78xg0AO6NoNe_RSRk05zYpF6KlA2yQ_My79rZBv9GFt4kUfIxNjd9OiV1wXdidO7Iaq_Q"
     }
@@ -436,13 +460,20 @@ Used for initiating a dialogue with another Zot site. This packet MAY be encrypt
 [*= type] The message type: [b]notify, purge, refresh, force_refresh, auth_check, ping[/b] or [b]pickup[/b]. The packet contents vary by message type. Here we will describe the [b]notify[/b] packet. 
 [*= callback]A string to be appended onto the url which identifies the Zot communications endpoint on this system. It is typically the string "/post".
 [*= version]The Zot protocol identifier, to allow future protocol revisions to co-exist. 
+[*= encryption] array of supported encryption algorithms, order by decreasing preference. If no compatible encryption methods are provided, applications MUST use 'aes256cbc'.
 [*= secret]A 64-char string which is randomly generated by the sending site.
 [*= secret_sig]The RSA signature of the secret, signed with the sender's private key. 
 [*= sender] An array of four components that provide a portable identity. We can contact the URL provided and download a Zot info packet to obtain the public key of the sender, and use that to verify the sender guid and the posting URL signatures.
 	[dl terms="b"]
 	[*= guid]Typically a 64 character base64url encoded string. This is generated when an identity is created and an attempt is made that it be unique; though this isn't required.
-	[*= guid_sig]The RSA signature of the guid, signed by the sender's private key.
+	[*= guid_sig]The RSA signature of the guid, signed by the sender's private key and base64url encoded.
 	[*= url]The base url of the location this post is originating from.
-	[*= url_sig]The RSA signature of url, signed by the sender's private key.
+	[*= url_sig]The RSA signature of url, signed by the sender's private key and base64url encoded.
+	[*= sitekey]The public key of the website specified in the url
 	[/dl]
+[*= recipients] Only used for private messages. An array of envelope recipients. Each recipient is represented by an array of guid and guid_sig. When recipients are specified, the entire packet is also encapsulated using a negotiated cryptographic algorithm or 'aes256cbc' if none could be negotiated. 
+	[dl terms="b"]
+	[*= guid]The guid of a private recipient.
+	[*= guid_sig]The RSA signature of the guid, signed by the recipient's private key and base64url encoded
+    [/dl]
 [/dl]

@@ -388,7 +388,13 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['body'] = escape_tags($res['body']);
 	}
 
-	if($res['plink'] && $res['title']) {
+
+	// strip title if statusnet/gnusocial
+
+	if(strpos($item->get_id(),'noticeId=')) {
+		$res['title'] = '';
+	}
+	elseif($res['plink'] && $res['title']) {
 		$res['body'] = '#^[url=' . $res['plink'] . ']' . $res['title'] . '[/url]' . "\n\n" . $res['body'];
 		$terms = array();
 		$terms[] = array(
@@ -760,11 +766,12 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 			$is_reply = false;
 			$item_id = base64url_encode($item->get_id());
 
-			logger('consume_feed: processing ' . $item_id, LOGGER_DEBUG);
+			logger('consume_feed: processing ' . $raw_item_id, LOGGER_DEBUG);
 
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
+				$raw_parent_mid = $rawthread[0]['attribs']['']['ref'];
 				$parent_mid = base64url_encode($rawthread[0]['attribs']['']['ref']);
 			}
 
@@ -778,6 +785,10 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$item_id  = base64url_encode($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
+
+
+logger('raw_item_id: ' . $raw_item_id);
+logger('datarray: ' . print_r($datarray,true));
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
@@ -824,7 +835,18 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					continue;
 				}
 
+				$x = q("select mid from item where ( mid = '%s' || plink = '%s' || llink = '%s' ) and uid = %d limit 1",
+					dbesc($raw_parent_mid),
+					dbesc($raw_parent_mid),
+					dbesc($raw_parent_mid),
+					intval($importer['channel_id'])
+				);
+				if($x)
+					$parent_mid = $x[0]['mid'];
+
 				$datarray['parent_mid'] = $parent_mid;
+
+
 				$datarray['aid'] = $importer['channel_account_id'];
 				$datarray['uid'] = $importer['channel_id'];
 
@@ -1159,7 +1181,11 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
-		$o .= '<thr:in-reply-to ref="' . z_root() . '/display/' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
+		$raw_parent = @base64url_decode($parent_item);
+		if(strpos($raw_parent,'noticeID='))
+			$parent_item = $raw_parent;
+		$o .= '<thr:in-reply-to ref="' . (($parent_item === $raw_parent) ? $parent_item : z_root() . '/display/' . xmlify($parent_item)) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
+
 	}
 
 	if(activity_match($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_match($item['verb'],ACTIVITY_POST)) {

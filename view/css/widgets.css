@@ -64,8 +64,9 @@ li:hover .widget-nav-pills-icons {
 #note-text {
 	padding: 5px;
 	width: 100%;
-	resize: vertical;
+	resize: none;
 	min-height: 250px;
+	overflow: hidden;
 }
 
 /* saved searches */

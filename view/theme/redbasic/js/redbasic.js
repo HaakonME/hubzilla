@@ -18,7 +18,9 @@ $(document).ready(function() {
 
 	if($(window).width() > 767) {
 		$('#left_aside_wrapper').stick_in_parent({
-			offset_top: $('nav').outerHeight(true)
+			offset_top: $('nav').outerHeight(true),
+			parent: '#region_1',
+			spacer: '#left_aside_spacer'
 		});
 	}
 
@@ -105,7 +107,9 @@ function toggleAside() {
 		$('main').addClass('region_1-on')
 		$('<div id="overlay"></div>').appendTo('section');
 		$('#left_aside_wrapper').stick_in_parent({
-			offset_top: $('nav').outerHeight(true) - 10
+			offset_top: $('nav').outerHeight(true) - 10,
+			parent: '#region_1',
+			spacer: '#left_aside_spacer'
 		});
 	}
 }

@@ -3120,3 +3120,9 @@ function cleanup_bbcode($body) {
 	return $body;
 
 }
+
+// callback for array_walk
+
+function array_trim(&$v,$k) {
+	$v = trim($v);
+}

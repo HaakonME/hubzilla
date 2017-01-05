@@ -496,6 +496,11 @@ class Setup extends \Zotlabs\Web\Controller {
 	function check_funcs(&$checks) {
 		$ck_funcs = array();
 
+		$disabled = explode(',',ini_get('disable_functions'));
+		if($disabled)
+			array_walk($disabled,'array_trim');
+
+
 		// add check metadata, the real check is done bit later and return values set
 		$this->check_add($ck_funcs, t('libCurl PHP module'), true, true);
 		$this->check_add($ck_funcs, t('GD graphics PHP module'), true, true);
@@ -511,13 +516,13 @@ class Setup extends \Zotlabs\Web\Controller {
 				$this->check_add($ck_funcs, t('Apache mod_rewrite module'), true, true);
 			}
 		}
-		if((! function_exists('exec')) || strstr(ini_get('disable_functions'),'exec')) {
+		if((! function_exists('exec')) || in_array('exec',$disabled)) {
 			$this->check_add($ck_funcs, t('exec'), false, true, t('Error: exec is required but is either not installed or has been disabled in php.ini'));
 		}
 		else {
 			$this->check_add($ck_funcs, t('exec'), true, true);
 		}
-		if((! function_exists('shell_exec')) || strstr(ini_get('disable_functions'),'shell_exec')) {
+		if((! function_exists('shell_exec')) || in_array('shell_exec',$disabled)) {
 			$this->check_add($ck_funcs, t('shell_exec'), false, true, t('Error: shell_exec is required but is either not installed or has been disabled in php.ini'));
 		}
 		else {

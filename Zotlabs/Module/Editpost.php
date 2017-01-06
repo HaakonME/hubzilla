@@ -78,6 +78,7 @@ class Editpost extends \Zotlabs\Web\Controller {
 
 		$x = array(
 			'nickname' => $channel['channel_address'],
+			'item' => $itm[0],
 			'editor_autocomplete'=> true,
 			'bbco_autocomplete'=> 'bbcode',
 			'return_path' => $_SESSION['return_url'],

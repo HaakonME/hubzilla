@@ -127,12 +127,18 @@ function format_event_ical($ev) {
 		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['dtstart'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['dtend'] && ! $ev['nofinish']) 
 		$o .= "\r\nDTEND:" . datetime_convert('UTC','UTC', $ev['dtend'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
-	if($ev['summary']) 
+	if($ev['summary']) {
 		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
-	if($ev['location'])
+		$o .= "\r\nX-ZOT-SUMMARY:" . format_ical_sourcetext($ev['summary']);
+	}
+	if($ev['location']) {
 		$o .= "\r\nLOCATION:" . format_ical_text($ev['location']);
-	if($ev['description']) 
+		$o .= "\r\nX-ZOT-LOCATION:" . format_ical_sourcetext($ev['location']);
+	}
+	if($ev['description']) {
 		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
+		$o .= "\r\nX-ZOT-DESCRIPTION:" . format_ical_sourcetext($ev['description']);
+	}
 	if($ev['event_priority'])
 		$o .= "\r\nPRIORITY:" . intval($ev['event_priority']);
 	$o .= "\r\nUID:" . $ev['event_hash'] ;
@@ -154,8 +160,10 @@ function format_todo_ical($ev) {
 		$o .= "\r\nDTSTART:" . datetime_convert('UTC','UTC', $ev['dtstart'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
 	if($ev['dtend'] && ! $ev['nofinish']) 
 		$o .= "\r\nDUE:" . datetime_convert('UTC','UTC', $ev['dtend'],'Ymd\\THis' . (($ev['adjust']) ? '\\Z' : ''));
-	if($ev['summary']) 
+	if($ev['summary']) {
 		$o .= "\r\nSUMMARY:" . format_ical_text($ev['summary']);
+		$o .= "\r\nX-ZOT-SUMMARY:" . format_ical_sourcetext($ev['summary']);
+	}
 	if($ev['event_status']) {
 		$o .= "\r\nSTATUS:" . $ev['event_status'];
 		if($ev['event_status'] === 'COMPLETED')
@@ -165,10 +173,14 @@ function format_todo_ical($ev) {
 		$o .= "\r\nPERCENT-COMPLETE:" . $ev['event_percent'];		
 	if(intval($ev['event_sequence'])) 
 		$o .= "\r\nSEQUENCE:" . $ev['event_sequence'];
-	if($ev['location'])
+	if($ev['location']) {
 		$o .= "\r\nLOCATION:" . format_ical_text($ev['location']);
-	if($ev['description']) 
+		$o .= "\r\nX-ZOT-LOCATION:" . format_ical_sourcetext($ev['location']);
+	}
+	if($ev['description']) {
 		$o .= "\r\nDESCRIPTION:" . format_ical_text($ev['description']);
+		$o .= "\r\nX-ZOT-DESCRIPTION:" . format_ical_sourcetext($ev['description']);
+	}
 	$o .= "\r\nUID:" . $ev['event_hash'] ;
 	if($ev['event_priority'])
 		$o .= "\r\nPRIORITY:" . intval($ev['event_priority']);
@@ -178,13 +190,18 @@ function format_todo_ical($ev) {
 }
 
 
-
 function format_ical_text($s) {
 	require_once('include/bbcode.php');
 	require_once('include/html2plain.php');
 
 	$s = html2plain(bbcode($s));
 	$s = str_replace(["\r\n","\n"],["",""],$s);
+	return(wordwrap(str_replace(['\\',',',';'],['\\\\','\\,','\\;'],$s),72,"\r\n ",true));
+
+}
+
+function format_ical_sourcetext($s) {
+	$s = base64_encode($s);
 	return(wordwrap(str_replace(['\\',',',';'],['\\\\','\\,','\\;'],$s),72,"\r\n ",true));
 }
 
@@ -623,12 +640,21 @@ function event_import_ical($ical, $uid) {
 		$ev['edited'] = datetime_convert('UTC','UTC',$edited->format(\DateTime::W3C));
 	}
 
-	if(isset($ical->LOCATION))
+	if(isset($ical->{'X-ZOT-LOCATION'}))
+		$ev['location'] = event_ical_get_sourcetext( (string) $ical->{'X-ZOT-LOCATION'});
+	elseif(isset($ical->LOCATION))
 		$ev['location'] = (string) $ical->LOCATION;
-	if(isset($ical->DESCRIPTION))
+
+	if(isset($ical->{'X-ZOT-DESCRIPTION'}))
+		$ev['description'] = event_ical_get_sourcetext( (string) $ical->{'X-ZOT-DESCRIPTION'});
+	elseif(isset($ical->DESCRIPTION))
 		$ev['description'] = (string) $ical->DESCRIPTION;
-	if(isset($ical->SUMMARY))
+
+	if(isset($ical->{'X-ZOT-SUMMARY'}))
+		$ev['summary'] = event_ical_get_sourcetext( (string) $ical->{'X-ZOT-SUMMARY'});
+	elseif(isset($ical->SUMMARY))
 		$ev['summary'] = (string) $ical->SUMMARY;
+
 	if(isset($ical->PRIORITY))
 		$ev['event_priority'] = intval((string) $ical->PRIORITY);
 
@@ -661,6 +687,10 @@ function event_import_ical($ical, $uid) {
 
 	return false;
 
+}
+
+function event_ical_get_sourcetext($s) {
+	return base64_decode($s);
 }
 
 function event_import_ical_task($ical, $uid) {
@@ -718,12 +748,21 @@ function event_import_ical_task($ical, $uid) {
 		$ev['edited'] = datetime_convert('UTC','UTC',$edited->format(\DateTime::W3C));
 	}
 
-	if(isset($ical->LOCATION))
+	if(isset($ical->{'X-ZOT-LOCATION'}))
+		$ev['location'] = event_ical_get_sourcetext( (string) $ical->{'X-ZOT-LOCATION'});
+	elseif(isset($ical->LOCATION))
 		$ev['location'] = (string) $ical->LOCATION;
-	if(isset($ical->DESCRIPTION))
+
+	if(isset($ical->{'X-ZOT-DESCRIPTION'}))
+		$ev['description'] = event_ical_get_sourcetext( (string) $ical->{'X-ZOT-DESCRIPTION'});
+	elseif(isset($ical->DESCRIPTION))
 		$ev['description'] = (string) $ical->DESCRIPTION;
-	if(isset($ical->SUMMARY))
+
+	if(isset($ical->{'X-ZOT-SUMMARY'}))
+		$ev['summary'] = event_ical_get_sourcetext( (string) $ical->{'X-ZOT-SUMMARY'});
+	elseif(isset($ical->SUMMARY))
 		$ev['summary'] = (string) $ical->SUMMARY;
+
 	if(isset($ical->PRIORITY))
 		$ev['event_priority'] = intval((string) $ical->PRIORITY);
 

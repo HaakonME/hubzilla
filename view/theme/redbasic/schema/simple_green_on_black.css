@@ -383,3 +383,23 @@ pre {
 .contextual-help-tool i {
 	color: $link_colour;
 }
+
+.profile-match-wrapper {
+	width: 150px;	
+	height: 120px;
+	border: none;
+}
+
+.profile-match-name {
+    	width: 144px;
+    	white-space: nowrap;
+    	text-overflow: ellipsis;
+}
+
+.widget-nav-pills-icons:hover + a {
+	background-color: #143D12;
+}
+
+.widget-nav-pills-checkbox:hover + a {
+	background-color: #143D12;
+}

@@ -236,7 +236,7 @@ function get_atom_elements($feed, $item, &$author) {
 	if(substr($author['author_link'],-1,1) == '/')
 		$author['author_link'] = substr($author['author_link'],0,-1);
 
-	$res['mid'] = base64url_encode(unxmlify($item->get_id()));
+	$res['mid'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
@@ -736,7 +736,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 			if($deleted && is_array($contact)) {
 				$r = q("SELECT * from item where mid = '%s' and author_xchan = '%s' and uid = %d limit 1",
-					dbesc(base64url_encode($mid)),
+					dbesc($mid),
 					dbesc($contact['xchan_hash']),
 					intval($importer['channel_id'])
 				);
@@ -745,7 +745,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$item = $r[0];
 
 					if(! intval($item['item_deleted'])) {
-						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . base64url_decode($item['mid']), LOGGER_DEBUG);
+						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . $item['mid'], LOGGER_DEBUG);
 						drop_item($item['id'],false);
 					}
 				}
@@ -764,7 +764,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
-			$item_id = base64url_encode($item->get_id());
+			$item_id = $item->get_id();
 
 			logger('consume_feed: processing ' . $raw_item_id, LOGGER_DEBUG);
 
@@ -772,7 +772,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
 				$raw_parent_mid = $rawthread[0]['attribs']['']['ref'];
-				$parent_mid = base64url_encode($rawthread[0]['attribs']['']['ref']);
+				$parent_mid = $rawthread[0]['attribs']['']['ref'];
 			}
 
 			if($is_reply) {
@@ -782,13 +782,9 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				// Have we seen it? If not, import it.
 
-				$item_id  = base64url_encode($item->get_id());
+				$item_id  = $item->get_id();
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
-
-
-logger('raw_item_id: ' . $raw_item_id);
-logger('datarray: ' . print_r($datarray,true));
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
@@ -860,7 +856,7 @@ logger('datarray: ' . print_r($datarray,true));
 
 				// Head post of a conversation. Have we seen it? If not, import it.
 
-				$item_id  = base64url_encode($item->get_id());
+				$item_id  = $item->get_id();
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
@@ -1005,14 +1001,14 @@ function process_salmon_feed($xml, $importer) {
 
 		foreach($items as $item) {
 
-			$item_id = base64url_encode($item->get_id());
+			$item_id = $item->get_id();
 
 			logger('processing ' . $item_id, LOGGER_DEBUG);
 
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
-				$parent_mid = base64url_encode($rawthread[0]['attribs']['']['ref']);
+				$parent_mid = $rawthread[0]['attribs']['']['ref'];
 			}
 
 			if($is_reply)
@@ -1181,10 +1177,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
-		$raw_parent = @base64url_decode($parent_item);
-		if(strpos($raw_parent,'noticeID='))
-			$parent_item = $raw_parent;
-		$o .= '<thr:in-reply-to ref="' . (($parent_item === $raw_parent) ? $parent_item : z_root() . '/display/' . xmlify($parent_item)) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
+		$o .= '<thr:in-reply-to ref="' . z_root() . '/display/' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 
 	}
 

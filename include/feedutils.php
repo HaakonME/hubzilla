@@ -304,7 +304,7 @@ function get_atom_elements($feed, $item, &$author) {
 			foreach($base as $link) {
 				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link'])) {
 					$author['author_link'] = unxmlify($link['attribs']['']['href']);
-					$author['author_is_feed'] = true;
+0					$author['author_is_feed'] = true;
 				}
 				if(! $author['author_photo']) {
 					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
@@ -331,6 +331,8 @@ function get_atom_elements($feed, $item, &$author) {
 		}
 	}
 
+	$ostatus_protocol = (($item->get_item_tags(NAMESPACE_OSTATUS,'conversation')) ? true : false);
+
 	$apps = $item->get_item_tags(NAMESPACE_STATUSNET,'notice_info');
 	if($apps && $apps[0]['attribs']['']['source']) {
 		$res['app'] = strip_tags(unxmlify($apps[0]['attribs']['']['source']));
@@ -343,6 +345,8 @@ function get_atom_elements($feed, $item, &$author) {
 	$have_real_body = false;
 
 	$rawenv = $item->get_item_tags(NAMESPACE_DFRN, 'env');
+	if(! $rawenv)
+		$rawenv = $item->get_item_tags(NAMESPACE_ZOT,'source');
 	if($rawenv) {
 		$have_real_body = true;
 		$res['body'] = $rawenv[0]['data'];
@@ -389,9 +393,11 @@ function get_atom_elements($feed, $item, &$author) {
 	}
 
 
-	// strip title if statusnet/gnusocial
+	// strip title and don't apply "title-in-body" if the feed involved 
+	// uses the OStatus stack. We need a more generalised way for the calling
+	// function to specify this behaviour or for plugins to alter it. 
 
-	if(strpos($item->get_id(),'noticeId=')) {
+	if($ostatus_protocol) {
 		$res['title'] = '';
 	}
 	elseif($res['plink'] && $res['title']) {
@@ -629,14 +635,15 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['target'] = $obj;
 	}
 
-	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
+	$arr = array('feed' => $feed, 'item' => $item, 'author' => $author, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
-	logger('get_atom_elements: author: ' . print_r($author,true),LOGGER_DATA);
 
-	logger('get_atom_elements: ' . print_r($res,true),LOGGER_DATA);
+	logger('get_atom_elements: author: ' . print_r($arr['author'],true),LOGGER_DATA);
 
-	return $res;
+	logger('get_atom_elements: ' . print_r($arr['result'],true),LOGGER_DATA);
+
+	return $arr['result'];
 }
 
 function encode_rel_links($links) {

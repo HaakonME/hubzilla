@@ -104,6 +104,8 @@ class Comanche {
 			$x = explode('.',$v);
 			if($x[0] == 'config')
 				return get_config($x[1],$x[2]);
+			elseif($x[0] === 'request')
+				return $_SERVER['REQUEST_URI'];
 			elseif($x[0] === 'observer') {
 				if(count($x) > 1) {
 					$y = \App::get_observer();
@@ -125,6 +127,8 @@ class Comanche {
 
 	function test_condition($s) {
 		// This is extensible. The first version of variable testing supports tests of the forms:
+
+		// [if $config.system.foo ~= baz] which will check if get_config('system','foo') contains the string 'baz';
 		// [if $config.system.foo == baz] which will check if get_config('system','foo') is the string 'baz';
 		// [if $config.system.foo != baz] which will check if get_config('system','foo') is not the string 'baz';
 		// You may check numeric entries, but these checks are evaluated as strings. 
@@ -133,12 +137,20 @@ class Comanche {
 		// [if $config.system.foo] which will check for a return of a true condition for get_config('system','foo');
 		// The values 0, '', an empty array, and an unset value will all evaluate to false.
 
+		if(preg_match('/[\$](.*?)\s\~\=\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if(stripos($x,trim($matches[2])) !== false)
+				return true;
+			return false;
+		}
+
 		if(preg_match('/[\$](.*?)\s\=\=\s(.*?)$/',$s,$matches)) {
 			$x = $this->get_condition_var($matches[1]);
 			if($x == trim($matches[2]))
 				return true;
 			return false;
 		}
+
 		if(preg_match('/[\$](.*?)\s\!\=\s(.*?)$/',$s,$matches)) {
 			$x = $this->get_condition_var($matches[1]);
 			if($x != trim($matches[2]))

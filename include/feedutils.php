@@ -304,7 +304,7 @@ function get_atom_elements($feed, $item, &$author) {
 			foreach($base as $link) {
 				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link'])) {
 					$author['author_link'] = unxmlify($link['attribs']['']['href']);
-0					$author['author_is_feed'] = true;
+					$author['author_is_feed'] = true;
 				}
 				if(! $author['author_photo']) {
 					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
@@ -1229,31 +1229,62 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(strlen($actarg))
 		$o .= $actarg;
 
-	// FIXME
-//	$tags = item_getfeedtags($item);
-//	if(count($tags)) {
-//		foreach($tags as $t) {
-//			$o .= '<category scheme="X-DFRN:' . xmlify($t[0]) . ':' . xmlify($t[1]) . '" term="' . xmlify($t[2]) . '" />' . "\r\n";
-//		}
-//	}
 
-// FIXME
-//	$o .= item_getfeedattach($item);
+	if($item['attach']) {
+		$enclosures = json_decode($item['attach'],true);
+		if($enclosures) {
+			foreach($enclosures as $enc) {
+				$o .= '<link rel="enclosure" '
+				. (($enc['href']) ? 'href="' . $enc['href'] . '" ' : '')
+				. (($enc['length']) ? 'length="' . $enc['length'] . '" ' : '')
+				. (($enc['type']) ? 'type="' . $enc['type'] . '" ' : '')
+				. ' />';
+			}
+		}
+	}
 
-//	$mentioned = get_mentions($item,$tags);
-//	if($mentioned)
-//		$o .= $mentioned;
+	if($item['term']) {
+		foreach($item['term'] as $term) {
+			$scheme = '';
+			$label = ''; 
+			switch($term['ttype']) {
+				case TERM_UNKNOWN:
+					$scheme = NAMESPACE_ZOT . '/term/unknown';
+					$label = $term['term'];
+					break;
+				case TERM_HASHTAG:
+				case TERM_COMMUNITYTAG:
+					$scheme = NAMESPACE_ZOT . '/term/hashtag';
+					$label = '#' . $term['term'];
+					break;
+				case TERM_MENTION:
+					$scheme = NAMESPACE_ZOT . '/term/mention';
+					$label = '@' . $term['term'];
+					break;
+				case TERM_CATEGORY:
+					$scheme = NAMESPACE_ZOT . '/term/category';
+					$label = $term['term'];
+					break;
+				default:
+					break;
+			}
+			if(! $scheme)
+				continue;
+
+			$o .= '<category scheme="' . $scheme . '" term="' . $term['term'] . '" label="' . $label . '" />' . "\r\n";
+		}
+	}
 
 	$o .= '</entry>' . "\r\n";
 
 	$x = [ 
-		'item'    => $item, 
-		'type'    => $type, 
-		'author'  => $author, 
-		'owner'   => $owner, 
-		'comment' => $comment, 
+		'item'     => $item, 
+		'type'     => $type, 
+		'author'   => $author, 
+		'owner'    => $owner, 
+		'comment'  => $comment, 
 		'abook_id' => $cid, 
-		'entry'   => $o 
+		'entry'    => $o 
 	];
 
 	call_hooks('atom_entry', $x);

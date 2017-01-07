@@ -1178,9 +1178,6 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 
 	}
 
-	$o .= '<link rel="ostatus:conversation" href="' . xmlify($item['parent_mid']) . '"/>' . "\r\n";
-	$o .= '<ostatus:conversation>' . xmlify($item['parent_mid']) . '</ostatus:conversation>' . "\r\n";
-
 	if(activity_match($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_match($item['verb'],ACTIVITY_POST)) {
 		$obj = ((is_array($item['obj'])) ? $item['obj'] : json_decode($item['obj'],true));
  
@@ -1240,11 +1237,21 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 //	if($mentioned)
 //		$o .= $mentioned;
 
-	call_hooks('atom_entry', $o);
-
 	$o .= '</entry>' . "\r\n";
 
-	return $o;
+	$x = [ 
+		'item'    => $item, 
+		'type'    => $type, 
+		'author'  => $author, 
+		'owner'   => $owner, 
+		'comment' => $comment, 
+		'abook_id => $cid, 
+		'entry'   => $o 
+	];
+
+	call_hooks('atom_entry', $x);
+
+	return $x['entry'];
 }
 
 

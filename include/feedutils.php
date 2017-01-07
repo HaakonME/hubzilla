@@ -1245,7 +1245,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		'author'  => $author, 
 		'owner'   => $owner, 
 		'comment' => $comment, 
-		'abook_id => $cid, 
+		'abook_id' => $cid, 
 		'entry'   => $o 
 	];
 

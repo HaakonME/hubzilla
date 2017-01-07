@@ -771,7 +771,6 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
-				$raw_parent_mid = $rawthread[0]['attribs']['']['ref'];
 				$parent_mid = $rawthread[0]['attribs']['']['ref'];
 			}
 
@@ -831,10 +830,8 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					continue;
 				}
 
-				$x = q("select mid from item where ( mid = '%s' || plink = '%s' || llink = '%s' ) and uid = %d limit 1",
-					dbesc($raw_parent_mid),
-					dbesc($raw_parent_mid),
-					dbesc($raw_parent_mid),
+				$x = q("select mid from item where mid = '%s' and uid = %d limit 1",
+					dbesc($parent_mid),
 					intval($importer['channel_id'])
 				);
 				if($x)

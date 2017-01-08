@@ -131,7 +131,12 @@ class Comanche {
 		// [if $config.system.foo ~= baz] which will check if get_config('system','foo') contains the string 'baz';
 		// [if $config.system.foo == baz] which will check if get_config('system','foo') is the string 'baz';
 		// [if $config.system.foo != baz] which will check if get_config('system','foo') is not the string 'baz';
-		// You may check numeric entries, but these checks are evaluated as strings. 
+		// [if $config.system.foo >= 3] which will check if get_config('system','foo') is greater than or equal to 3;
+		// [if $config.system.foo > 3] which will check if get_config('system','foo') is greater than 3;
+
+		// [if $config.system.foo <= 3] which will check if get_config('system','foo') is less than or equal to 3;
+		// [if $config.system.foo < 3] which will check if get_config('system','foo') is less than 3;
+
 		// [if $config.system.foo {} baz] which will check if 'baz' is an array element in get_config('system','foo')
 		// [if $config.system.foo {*} baz] which will check if 'baz' is an array key in get_config('system','foo')
 		// [if $config.system.foo] which will check for a return of a true condition for get_config('system','foo');
@@ -154,6 +159,31 @@ class Comanche {
 		if(preg_match('/[\$](.*?)\s\!\=\s(.*?)$/',$s,$matches)) {
 			$x = $this->get_condition_var($matches[1]);
 			if($x != trim($matches[2]))
+				return true;
+			return false;
+		}
+
+		if(preg_match('/[\$](.*?)\s\>\=\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if($x >= trim($matches[2]))
+				return true;
+			return false;
+		}
+		if(preg_match('/[\$](.*?)\s\<\=\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if($x <= trim($matches[2]))
+				return true;
+			return false;
+		}
+		if(preg_match('/[\$](.*?)\s\>\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if($x > trim($matches[2]))
+				return true;
+			return false;
+		}
+		if(preg_match('/[\$](.*?)\s\>\s(.*?)$/',$s,$matches)) {
+			$x = $this->get_condition_var($matches[1]);
+			if($x < trim($matches[2]))
 				return true;
 			return false;
 		}

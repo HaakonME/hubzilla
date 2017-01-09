@@ -645,6 +645,15 @@ class Connedit extends \Zotlabs\Web\Controller {
 				),
 	
 			);
+
+			$sections = [];
+
+			$sections['perms'] = [
+					'label' => t('Permissions'),
+					'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/?f=&section=perms',
+					'sel'   => '',
+					'title' => t('Open Individual Permissions section by default'),
+			];
 	
 			$self = false;
 	
@@ -664,6 +673,13 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$tpl = get_markup_template("abook_edit.tpl");
 	
 			if(feature_enabled(local_channel(),'affinity')) {
+
+				$sections['affinity'] = [
+					'label' => t('Affinity'),
+					'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/?f=&section=affinity',
+					'sel'   => '',
+					'title' => t('Open Set Affinity section by default'),
+				];
 	
 				$labels = [
 					t('Me'),
@@ -692,6 +708,15 @@ class Connedit extends \Zotlabs\Web\Controller {
 					'$val' => (($contact['abook_closeness']) ? $contact['abook_closeness'] : 99),
 					'$labels' => $label_str,
 				));
+			}
+
+			if(feature_enabled(local_channel(),'connfilter')) {
+				$sections['filter'] = [
+					'label' => t('Filter'),
+					'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/?f=&section=filter',
+					'sel'   => '',
+					'title' => t('Open Custom Filter section by default'),
+				];
 			}
 	
 			$rating_val = 0;
@@ -794,6 +819,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), t('Connection requests will be approved without your interaction'), $yes_no),
 				'$addr'           => $contact['xchan_addr'],
 				'$section'        => $section,
+				'$sections'       => $sections,
 				'$vcard'          => $vcard,
 				'$addr_text'      => t('This connection\'s primary address is'),
 				'$loc_text'       => t('Available locations:'),

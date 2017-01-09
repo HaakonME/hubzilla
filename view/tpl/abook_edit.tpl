@@ -20,12 +20,14 @@
 			</div>
 			{{if $abook_prev || $abook_next}}
 			<div class="btn-group">
-				{{if $abook_prev}}
-				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs" ><i class="fa fa-backward"></i></a>
-				{{/if}}
-				{{if $abook_next}}
-				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs" ><i class="fa fa-forward"></i></a>
-				{{/if}}
+				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs{{if ! $abook_prev}} disabled{{/if}}" ><i class="fa fa-backward"></i></a>
+				<button class="btn btn-default btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
+				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
+				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+					{{foreach $sections as $s}}
+					<li><a href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a></li>
+					{{/foreach}}
+				</ul>
 			</div>
 			{{/if}}
 		</div>
@@ -387,7 +389,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if !$is_pending || $section == 'affinity'}} in{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
+				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if $section == 'affinity'}} in{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
 					<div class="section-content-tools-wrapper">
 						{{if $slide}}
 						<div class="form-group"><strong>{{$lbl_slider}}</strong></div>
@@ -418,7 +420,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if ( !$is_pending && !($slide || $multiprofs)) || $section == 'filter' }} in{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
+				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if $section == 'filter' }} in{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
 					<div class="section-content-tools-wrapper">
 						{{include file="field_textarea.tpl" field=$incl}}
 						{{include file="field_textarea.tpl" field=$excl}}
@@ -442,7 +444,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="rating-tool-collapse" class="panel-collapse collapse{{if !$is_pending && !($slide || $multiprofs) && !$connfilter}} in{{/if}}" role="tabpanel" aria-labelledby="rating-tool">
+				<div id="rating-tool-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="rating-tool">
 					<div class="section-content-tools-wrapper">
 						<div class="section-content-warning-wrapper">
 							{{$rating_info}}

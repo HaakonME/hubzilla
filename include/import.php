@@ -155,7 +155,7 @@ function import_profiles($channel,$profiles) {
 }
 
 
-function import_hublocs($channel,$hublocs,$seize) {
+function import_hublocs($channel,$hublocs,$seize,$moving = false) {
 
 	if($channel && $hublocs) {
 		foreach($hublocs as $hubloc) {
@@ -173,18 +173,31 @@ function import_hublocs($channel,$hublocs,$seize) {
 				$hubloc['hubloc_deleted'] = (($hubloc['hubloc_flags'] & 0x1000) ? 1 : 0);
 			}
 
+			if($moving && $hubloc['hubloc_hash'] === $channel['channel_hash'] && $hubloc['hubloc_url'] !== z_root()) {
+				$hubloc['hubloc_deleted'] = 1;
+			}
+
 			$arr = array(
 				'guid' => $hubloc['hubloc_guid'],
 				'guid_sig' => $hubloc['hubloc_guid_sig'],
 				'url' => $hubloc['hubloc_url'],
-				'url_sig' => $hubloc['hubloc_url_sig']
+				'url_sig' => $hubloc['hubloc_url_sig'],
+				'sitekey' => ((array_key_exists('hubloc_sitekey',$hubloc)) ? $hubloc['hubloc_sitekey'] : '')
 			);
 			if(($hubloc['hubloc_hash'] === $channel['channel_hash']) && intval($hubloc['hubloc_primary']) && ($seize))
 				$hubloc['hubloc_primary'] = 0;
 
-			if(! zot_gethub($arr)) {				
+			if(($x = zot_gethub($arr,false)) === false) {				
 				unset($hubloc['hubloc_id']);
 				create_table_from_array('hubloc',$hubloc);
+			}
+			else {
+				q("UPDATE hubloc set hubloc_primary = %d, hubloc_deleted = %d where hubloc_id = %d",
+					intval($hubloc['hubloc_primary']),
+					intval($hubloc['hubloc_deleted']),
+					intval($x['hubloc_id'])
+				);				
+
 			}
 		}
 	}

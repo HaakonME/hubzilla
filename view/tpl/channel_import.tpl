@@ -33,6 +33,12 @@
 	<label for="import-make-primary" id="label-import-make-primary">{{$label_import_primary}}</label>
 	<div id="import-make-primary-end" class="import-field-end"></div>
 
+	{{if $allow_move}}
+	<input type="checkbox" name="moving" id="import-moving" value="1" />
+	<label for="import-moving" id="label-import-moving">{{$label_import_moving}}</label>
+	<div id="import-moving-end" class="import-field-end"></div>
+	{{/if}}
+
 	<input type="submit" name="submit" id="import-submit-button" value="{{$submit}}" />
 	<div id="import-submit-end" class="import-field-end"></div>
 

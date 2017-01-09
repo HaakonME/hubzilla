@@ -118,7 +118,7 @@ class Import extends \Zotlabs\Web\Controller {
 			return;
 		}
 		
-		$moving = false;
+		$moving = intval($_REQUEST['moving']);
 		
 		if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
 			$v1 = substr($data['compatibility']['database'],-4);
@@ -196,8 +196,8 @@ class Import extends \Zotlabs\Web\Controller {
 	
 		if($completed < 4) {
 	
-			if(is_array($data['hubloc']) && (! $moving)) {
-				import_hublocs($channel,$data['hubloc'],$seize);
+			if(is_array($data['hubloc'])) {
+				import_hublocs($channel,$data['hubloc'],$seize,$moving);
 	
 			}
 			logger('import step 4');
@@ -536,6 +536,9 @@ class Import extends \Zotlabs\Web\Controller {
 			'$label_old_pass' => t('Your old login password'),
 			'$common' => t('For either option, please choose whether to make this hub your new primary address, or whether your old location should continue this role. You will be able to post from either location, but only one can be marked as the primary location for files, photos, and media.'),
 			'$label_import_primary' => t('Make this hub my primary location'),
+			'$allow_move' => 0,
+			'$label_import_moving' => t('Move this channel (disable all previous locations)'),
+
 			'$label_import_posts' => t('Import existing posts if possible (experimental - limited by available memory'),
 			'$pleasewait' => t('This process may take several minutes to complete. Please submit the form only once and leave this page open until finished.'), 
 			'$email' => '',

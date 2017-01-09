@@ -21,3 +21,7 @@ Wishlist:
 - issues manager
 
 - wiki cloning
+
+- provide easy channel move (as opposed to channel copy or clone), which is currently supported only by the basic server role.
+
+- provide RSA keychange operation; which cannot affect the primary identity (which is based on the channel keys), so add a secondary dynamic key pair which will be used for all other operations and can be upgraded or revoked at any time.  

@@ -568,7 +568,7 @@ function zot_gethub($arr, $multiple = false) {
 	}
 	logger('zot_gethub: not found: ' . print_r($arr,true), LOGGER_DEBUG);
 
-	return null;
+	return false;
 }
 
 /**

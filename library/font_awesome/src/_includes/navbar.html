@@ -5,7 +5,7 @@
         <span id="rotating-message"></span>
       </div>
       <div class="action">
-        <a id="rotating-url" class="btn btn-primary btn-block" href=""></a>
+        <a id="rotating-url" class="btn btn-primary btn-lg btn-block" href=""></a>
       </div>
     </div>
   </div>
@@ -15,14 +15,20 @@
   <div class="container">
     <ul class="nav navbar-nav navbar-right">
       <li>
-        <a href="http://fortawesome.com/?utm_source=font_awesome_navbar&utm_medium=display&utm_content=ad_1_next_level&utm_campaign=promo_5.0_update" data-toggle="tooltip" data-container="body" data-placement="bottom" data-html="true" title="Take your front end game<br>to the next level!">
-          <i class="fas fas-fort-logo fas-lg valign-baseline"></i>&nbsp;
+        <a href="http://fortawesome.com/start?utm_source=font_awesome_navbar&utm_medium=display&utm_content=font_awesome_navbar&utm_campaign=promo_{{ site.fontawesome.minor_version }}_update" data-toggle="tooltip" data-container="body" data-placement="bottom" data-html="true" title="Take your front end game<br>to the next level!">
+          <i class="fa fa-fort-awesome fa-lg valign-baseline"></i>&nbsp;
           Fort Awesome
         </a>
       </li>
+      <li>
+        <a href="http://symbolset.com/?utm_source=font_awesome_navbar&utm_medium=display&utm_content=font_awesome_navbar&utm_campaign=promo_{{ site.fontawesome.minor_version }}_update" data-toggle="tooltip" data-container="body" data-placement="bottom" data-html="true" title="Get the perfect icon set!">
+          <i class="fas fas-heart-ss"></i>&nbsp;
+          Symbolset
+        </a>
+      </li>
       <li class="active">
-        <a href="http://fontawesome.io/?utm_source=font_awesome_navbar&utm_medium=display&utm_content=font_awesome_navbar&utm_campaign=promo_5.0_update" data-toggle="tooltip" data-container="body" data-placement="bottom" data-html="true" title="The iconic font<br>&amp; CSS toolkit">
-          <i class="fas fas-flag-logo"></i>&nbsp;
+        <a href="http://fontawesome.io/?utm_source=font_awesome_navbar&utm_medium=display&utm_content=font_awesome_navbar&utm_campaign=promo_{{ site.fontawesome.minor_version }}_update" data-toggle="tooltip" data-container="body" data-placement="bottom" data-html="true" title="The iconic font<br>&amp; CSS toolkit">
+          <i class="fa fa-font-awesome"></i>&nbsp;
           Font Awesome</a>
       </li>
     </ul>
@@ -37,7 +43,7 @@
         <i class="fa fa-bars fa-lg" aria-hidden="true" title="Toggle navigation"></i>
         <span class="sr-only">Toggle navigation</span>
       </button>
-      <a class="navbar-brand" href="{{ page.relative_path }}"><i class="fas fas-flag-logo fas-lg" aria-hidden="true"></i> Font Awesome</a>
+      <a class="navbar-brand" href="{{ page.relative_path }}"><i class="fa fa-font-awesome" aria-hidden="true"></i> Font Awesome</a>
     </div>
 
     <div class="navbar-collapse collapse">
@@ -65,7 +71,7 @@
           <ul class="dropdown-menu pull-right">
             <li><a href="{{ page.relative_path }}icons/"><i class="fa fa-flag fa-fw" aria-hidden="true"></i>&nbsp; All Icons</a></li>
             <li class="divider"></li>
-            <li><a href="{{ page.relative_path }}icons/#new"><i class="fa fa-wheelchair-alt fa-fw" aria-hidden="true"></i>&nbsp; New Icons in {{ site.fontawesome.minor_version }}</a></li>
+            <li><a href="{{ page.relative_path }}icons/#new"><i class="fa fa-handshake-o fa-fw" aria-hidden="true"></i>&nbsp; New Icons in {{ site.fontawesome.minor_version }}</a></li>
             <li><a href="{{ page.relative_path }}icons/#web-application"><i class="fa fa-camera-retro fa-fw" aria-hidden="true"></i>&nbsp; Web Application Icons</a></li>
             <li><a href="{{ page.relative_path }}icons/#accessibility"><i class="fa fa-universal-access fa-fw" aria-hidden="true"></i>&nbsp; Accessibility Icons</a></li>
             <li><a href="{{ page.relative_path }}icons/#hand"><i class="fa fa-hand-spock-o fa-fw" aria-hidden="true"></i>&nbsp; Hand Icons</a></li>
@@ -111,11 +117,10 @@
         <li class="hidden-xs hidden-md hidden-lg{% if page.navbar_active == "accessibility" %} active{% endif %}"><a href="{{ page.relative_path }}accessibility/"><i class="fa fa-universal-access"></i></a></li>
         <li{% if page.navbar_active == "community" %} class="active"{% endif %}><a href="{{ page.relative_path }}community/">Community</a></li>
         <li{% if page.navbar_active == "license" %} class="active"{% endif %}><a href="{{ page.relative_path }}license/">License</a></li>
-        <li class="hidden-sm hidden-xs"><a href="{{ site.fontawesome.blog_url }}">Blog</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li{% if page.navbar_active == "store" %} class="active"{% endif %}><a href="{{ page.relative_path }}store/"><i class="fa fa-shopping-cart margin-right-sm hidden-sm hidden-md"></i>Store</a></li>
+        <li><a href="{{ site.fontawesome.blog_url }}">Blog</a></li>
       </ul>
     </div>
   </div>

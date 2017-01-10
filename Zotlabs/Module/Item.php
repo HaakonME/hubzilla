@@ -733,7 +733,7 @@ class Item extends \Zotlabs\Web\Controller {
 			$thr_parent = $mid;
 	
 		$datarray = array();
-	
+
 		$item_thread_top = ((! $parent) ? 1 : 0);
 	
 		if ((! $plink) && ($item_thread_top)) {

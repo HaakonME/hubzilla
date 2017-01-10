@@ -4463,9 +4463,9 @@ function item_create_edit_activity($post) {
 	$new_item['verb'] = ACTIVITY_UPDATE;
 	$new_item['item_thread_top'] = 0;
 	$new_item['created'] = $new_item['edited'] = datetime_convert();
-
+	$new_item['obj_type'] = (($update_item['item_thread_top']) ? ACTIVITY_OBJ_NOTE : ACTIVITY_OBJ_COMMENT);
 	$new_item['obj'] = json_encode(array(
-		'type'    => (($update_item['item_thread_top']) ? ACTIVITY_OBJ_NOTE : ACTIVITY_OBJ_COMMENT),
+		'type'    => $new_item['obj_type'],
 		'id'      => $update_item['mid'],
 		'parent'  => $update_item['parent_mid'],
 		'link'    => array(array('rel' => 'alternate','type' => 'text/html', 'href' => $update_item['plink'])),

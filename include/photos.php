@@ -480,6 +480,7 @@ function photos_albums_list($channel, $observer, $sort_key = 'album', $direction
 		foreach($albums as $k => $album) {
 			$entry = array(
 				'text' => (($album['album']) ? $album['album'] : '/'),
+				'jstext' => (($album['album']) ? addslashes($album['album']) : '/'),
 				'total' => $album['total'],
 				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']),
 				'urlencode' => urlencode($album['album']),

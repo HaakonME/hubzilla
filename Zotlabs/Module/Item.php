@@ -140,6 +140,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 	
 		$item_flags = $item_restrict = 0;
+		$expires = NULL_DATE;
 	
 		$route = '';
 		$parent_item = null;
@@ -394,6 +395,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			$postopts          = $orig_post['postopts'];
 			$created           = $orig_post['created'];
+			$expires           = $orig_post['expires'];
 			$mid               = $orig_post['mid'];
 			$parent_mid        = $orig_post['parent_mid'];
 			$plink             = $orig_post['plink'];
@@ -453,7 +455,6 @@ class Item extends \Zotlabs\Web\Controller {
 		}
 		
 	
-		$expires = NULL_DATE;
 	
 		if(feature_enabled($profile_uid,'content_expire')) {
 			if(x($_REQUEST,'expire')) {
@@ -462,7 +463,8 @@ class Item extends \Zotlabs\Web\Controller {
 					$expires = NULL_DATE;
 			}
 		}
-	
+
+
 		$mimetype = notags(trim($_REQUEST['mimetype']));
 		if(! $mimetype)
 			$mimetype = 'text/bbcode';

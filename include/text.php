@@ -655,13 +655,16 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
  */
 function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 
+	if(! defined('BTLOGGER_DEBUG_FILE'))
+		define('BTLOGGER_DEBUG_FILE','btlogger.out');
+
 	logger($msg, $level, $priority);
 
-	if(file_exists('btlogger.log') && is_writable('btlogger.log')) {
+	if(file_exists(BTLOGGER_DEBUG_FILE) && is_writable(BTLOGGER_DEBUG_FILE)) {
 		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 		$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
-		@file_put_contents('btlogger.log', $s, FILE_APPEND);
+		@file_put_contents(BTLOGGER_DEBUG_FILE, $s, FILE_APPEND);
 	}
 
 	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
@@ -671,8 +674,8 @@ function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 				$s = 'stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()';
 				logger($s,$level, $priority);
 
-				if(file_exists('btlogger.log') && is_writable('btlogger.log')) {
-					@file_put_contents('btlogger.log', $s, FILE_APPEND);
+				if(file_exists(BTLOGGER_DEBUG_FILE) && is_writable(BTLOGGER_DEBUG_FILE)) {
+					@file_put_contents(BTLOGGER_DEBUG_FILE, $s . PHP_EOL, FILE_APPEND);
 				}
 			}
 		}

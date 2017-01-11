@@ -427,10 +427,11 @@
 					var albums = data['albumlist']; //JSON.parse(data['albumlist']);
 					$('#embedPhotoModalLabel').html("{{$modalchoosealbum}}");
 					$('#embedPhotoModalBodyAlbumList').html('<ul class="nav"></ul>');
-					for(var i=0; i<albums.length; i++) {
+					for(var i = 0; i < albums.length; i++) {
 						var albumName = albums[i].text;
+						var jsAlbumName = albums[i].jstext;
 						var albumLink = '<li>';
-						albumLink += '<a href="#" onclick="choosePhotoFromAlbum("' + albumName + '");return false;">' + albumName + '</a>';
+						albumLink += '<a href="#" onclick="choosePhotoFromAlbum(\'' + jsAlbumName + '\'); return false;">' + albumName + '</a>';
 						albumLink += '</li>';
 						$('#embedPhotoModalBodyAlbumList').find('ul').append(albumLink);
 					}

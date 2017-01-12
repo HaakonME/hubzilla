@@ -87,8 +87,8 @@ class Acl extends \Zotlabs\Web\Controller {
 
 			$order_extra2 = "CASE WHEN xchan_name LIKE " 
 					. protect_sprintf( "'%" . dbesc($search) . "%'" ) 
-					. " then POSITION('" . dbesc($search) 
-					. "' IN xchan_name) else position('" . dbesc($search) . "' IN xchan_addr) end, ";
+					. " then POSITION('" . protect_sprintf(dbesc($search)) 
+					. "' IN xchan_name) else position('" . protect_sprintf(dbesc($search)) . "' IN xchan_addr) end, ";
 
 			$col = ((strpos($search,'@') !== false) ? 'xchan_addr' : 'xchan_name' );
 			$sql_extra3 = "AND $col like " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";

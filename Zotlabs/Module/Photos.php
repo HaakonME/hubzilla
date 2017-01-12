@@ -695,7 +695,6 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$cmd) . '" title="oembed" />' . "\r\n";
 	
-			/*
 			$r = q("SELECT resource_id, max(imgscale) AS imgscale FROM photo WHERE uid = %d AND album = '%s' 
 				AND imgscale <= 4 and photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id",
 				intval($owner_uid),
@@ -710,16 +709,12 @@ class Photos extends \Zotlabs\Web\Controller {
 			} else {
 				goaway(z_root() . '/photos/' . \App::$data['channel']['channel_address']);
 			}
-			*/
 
-			\App::set_pager_itemspage(60);
-	
 			if($_GET['order'] === 'posted')
 				$order = 'ASC';
 			else
 				$order = 'DESC';
-	
-				
+
 			$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.imgscale, p.description, p.created FROM photo p INNER JOIN
 					(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id) ph 
 					ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)

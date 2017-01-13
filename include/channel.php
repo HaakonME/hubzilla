@@ -1705,21 +1705,26 @@ function get_zcard($channel, $observer_hash = '', $args = array()) {
 	$maxwidth = (($args['width']) ? intval($args['width']) : 0);
 	$maxheight = (($args['height']) ? intval($args['height']) : 0);
 
-	if(($maxwidth > 1200) || ($maxwidth < 1))
+	if(($maxwidth > 1200) || ($maxwidth < 1)) {
 		$maxwidth = 1200;
+		$cover_width = 1200;
+	}
 
 	if($maxwidth <= 425) {
 		$width = 425;
+		$cover_width = 425;
 		$size = 'hz_small';
 		$cover_size = PHOTO_RES_COVER_425;
 		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'], 'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
 	} elseif($maxwidth <= 900) {
 		$width = 900;
+		$cover_width = 850;
 		$size = 'hz_medium';
 		$cover_size = PHOTO_RES_COVER_850;
 		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'], 'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
 	} elseif($maxwidth <= 1200) {
 		$width = 1200;
+		$cover_width = 1200;
 		$size = 'hz_large';
 		$cover_size = PHOTO_RES_COVER_1200;
 		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'], 'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
@@ -1741,7 +1746,8 @@ function get_zcard($channel, $observer_hash = '', $args = array()) {
 		$cover = $r[0];
 		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['imgscale'];
 	} else {
-		$cover = $pphoto;
+		$default_cover = get_config('system','default_cover_photo','pexels-94622');
+		$cover = [ 'href' => z_root() . '/images/default_cover_photos/' . $default_cover . '/' . $cover_width . '.jpg' ];
 	}
 
 	$o .= replace_macros(get_markup_template('zcard.tpl'), array(
@@ -1765,23 +1771,28 @@ function get_zcard_embed($channel, $observer_hash = '', $args = array()) {
 	$maxwidth = (($args['width']) ? intval($args['width']) : 0);
 	$maxheight = (($args['height']) ? intval($args['height']) : 0);
 
-	if(($maxwidth > 1200) || ($maxwidth < 1))
+	if(($maxwidth > 1200) || ($maxwidth < 1)) {
 		$maxwidth = 1200;
+		$cover_width = 1200;
+	}
 
 	if($maxwidth <= 425) {
 		$width = 425;
+		$cover_width = 425;
 		$size = 'hz_small';
 		$cover_size = PHOTO_RES_COVER_425;
 		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 80 , 'height' => 80, 'href' => $channel['xchan_photo_m']);
 	}
 	elseif($maxwidth <= 900) {
 		$width = 900;
+		$cover_width = 850;
 		$size = 'hz_medium';
 		$cover_size = PHOTO_RES_COVER_850;
 		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 160 , 'height' => 160, 'href' => $channel['xchan_photo_l']);
 	}
 	elseif($maxwidth <= 1200) {
 		$width = 1200;
+		$cover_width = 1200;
 		$size = 'hz_large';
 		$cover_size = PHOTO_RES_COVER_1200;
 		$pphoto = array('mimetype' => $channel['xchan_photo_mimetype'],  'width' => 300 , 'height' => 300, 'href' => $channel['xchan_photo_l']);
@@ -1799,8 +1810,10 @@ function get_zcard_embed($channel, $observer_hash = '', $args = array()) {
 	if($r) {
 		$cover = $r[0];
 		$cover['href'] = z_root() . '/photo/' . $r[0]['resource_id'] . '-' . $r[0]['imgscale'];
-	} else {
-		$cover = $pphoto;
+	}
+	else {
+		$default_cover = get_config('system','default_cover_photo','pexels-94622');
+		$cover = [ 'href' => z_root() . '/images/default_cover_photos/' . $default_cover . '/' . $cover_width . '.jpg' ];
 	}
 
 	$o .= replace_macros(get_markup_template('zcard_embed.tpl'),array(

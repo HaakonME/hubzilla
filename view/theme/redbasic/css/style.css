@@ -9,7 +9,6 @@
 /* generals */
 html {
 	font-size: 100%;
-	overflow-x: hidden;
 }
 
 body {
@@ -21,7 +20,6 @@ body {
 	background-size: cover;
 	color: $font_colour;
 	margin: 0px;
-	overflow-x: hidden;
 }
 
 aside {

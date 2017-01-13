@@ -464,10 +464,15 @@ function photos_albums_list($channel, $observer, $sort_key = 'album', $direction
 	$sort_key = dbesc($sort_key);
 	$direction = dbesc($direction);
 
-	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by $sort_key $direction",
-		intval($channel_id),
-		intval(PHOTO_NORMAL),
-		intval(PHOTO_PROFILE)
+	//$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by $sort_key $direction",
+	//	intval($channel_id),
+	//	intval(PHOTO_NORMAL),
+	//	intval(PHOTO_PROFILE)
+	//);
+
+	// this query provides the same results but might perform better
+	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and os_storage = 1 $sql_extra group by album order by $sort_key $direction",
+		intval($channel_id)
 	);
 
 	// add various encodings to the array so we can just loop through and pick them out in a template
@@ -489,6 +494,8 @@ function photos_albums_list($channel, $observer, $sort_key = 'album', $direction
 			$ret['albums'][] = $entry;
 		}
 	}
+
+	App::$data['albums'] = $ret;
 
 	return $ret;
 }

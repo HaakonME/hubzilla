@@ -27,6 +27,7 @@ class Appman extends \Zotlabs\Web\Controller {
 				'price' => escape_tags($_REQUEST['price']),
 				'requires' => escape_tags($_REQUEST['requires']),
 				'system' => intval($_REQUEST['system']),
+				'plugin' => escape_tags($_REQUEST['plugin']),
 				'sig' => escape_tags($_REQUEST['sig']),
 				'categories' => escape_tags($_REQUEST['categories'])
 			);
@@ -57,13 +58,13 @@ class Appman extends \Zotlabs\Web\Controller {
 			Zlib\Apps::app_destroy(local_channel(),$papp);
 		}
 
-	
 		if($_POST['edit']) {
 			return;
 		}
-	
+
 		if($_SESSION['return_url']) 
 			goaway(z_root() . '/' . $_SESSION['return_url']);
+
 		goaway(z_root() . '/apps');
 	
 	
@@ -76,7 +77,7 @@ class Appman extends \Zotlabs\Web\Controller {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
+
 		$channel = \App::get_channel();
 		$app = null;
 		$embed = null;
@@ -122,6 +123,7 @@ class Appman extends \Zotlabs\Web\Controller {
 			'$price' => array('price', t('Price of app'),(($app) ? $app['app_price'] : ''), ''),
 			'$page' => array('page', t('Location (URL) to purchase app'),(($app) ? $app['app_page'] : ''), ''),
 			'$system' => (($app) ? intval($app['app_system']) : 0),
+			'$plugin' => (($app) ? $app['app_plugin'] : ''),
 			'$requires' => (($app) ? $app['app_requires'] : ''),
 			'$embed' => $embed,
 			'$submit' => t('Submit')

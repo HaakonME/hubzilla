@@ -104,7 +104,8 @@ function widget_appselect($arr) {
 		'$authed' => ((local_channel()) ? true : false),
 		'$personal' => t('Personal'),
 		'$new' => t('New App'),
-		'$edit' => t('Edit App')
+		'$edit' => t('Edit Apps'),
+		'$cat' => ((array_key_exists('cat',$_REQUEST)) ? $_REQUEST['cat'] : '')
 	));
 }
 
@@ -441,10 +442,12 @@ function widget_appcategories($arr) {
 	if(! local_channel())
 		return '';
 
-	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat'],ENT_COMPAT,'UTF-8') : '');
-	$srchurl = App::$query_string;
+	$selected = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat'],ENT_COMPAT,'UTF-8') : '');
+
 	$srchurl =  rtrim(preg_replace('/cat\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
+
+	$srchurl = z_root() . '/apps';
 
 	$terms = array();
 

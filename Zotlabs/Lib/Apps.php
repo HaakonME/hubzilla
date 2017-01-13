@@ -100,15 +100,15 @@ class Apps {
 		}
 		$notfound = true;
 		foreach(self::$installed_system_apps as $iapp) {
-			if($app['plugin'] && (! $iapp['app_plugin']))
-				return(1);
 			if($iapp['app_id'] == hash('whirlpool',$app['name'])) {
 				$notfound = false;
-				if($iapp['app_version'] != $app['version']) {
+				if(($iapp['app_version'] != $app['version'])
+					|| ($app['plugin'] && (! $iapp['app_plugin']))) {
 					return intval($iapp['app_id']);
 				}
 			}
 		}
+
 		return $notfound;
 	}
 
@@ -503,7 +503,7 @@ class Apps {
 
 	static public function app_store($arr) {
 
-		// logger('app_store: ' . print_r($arr,true));
+		//logger('app_store: ' . print_r($arr,true));
 
 		$darray = array();
 		$ret = array('success' => false);
@@ -583,6 +583,7 @@ class Apps {
 
 	static public function app_update($arr) {
 
+		//logger('app_update: ' . print_r($arr,true));
 		$darray = array();
 		$ret = array('success' => false);
 

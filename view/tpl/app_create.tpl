@@ -14,6 +14,7 @@
 
 <input type="hidden" name="requires" value="{{$requires}}" />
 <input type="hidden" name="system" value="{{$system}}" />
+<input type="hidden" name="plugin" value="{{$plugin}}" />
 
 
 {{include file="field_input.tpl" field=$name}}

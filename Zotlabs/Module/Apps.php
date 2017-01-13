@@ -12,8 +12,8 @@ class Apps extends \Zotlabs\Web\Controller {
 			$mode = 'edit';
 		else
 			$mode = 'list';
-	
-		$_SESSION['return_url'] = \App::$cmd;
+
+		$_SESSION['return_url'] = \App::$query_string;
 	
 		$apps = array();
 	

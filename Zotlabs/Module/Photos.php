@@ -188,13 +188,12 @@ class Photos extends \Zotlabs\Web\Controller {
 		}
 	
 		if((argc() > 2) && (x($_REQUEST,'delete')) && ($_REQUEST['delete'] === t('Delete Photo'))) {
-	
 			// same as above but remove single photo
 	
 			$ob_hash = get_observer_hash();
 			if(! $ob_hash)
 				goaway(z_root() . '/' . $_SESSION['photo_return']);
-	
+
 			$r = q("SELECT id, resource_id FROM photo WHERE ( xchan = '%s' or uid = %d ) AND resource_id = '%s' LIMIT 1",
 				dbesc($ob_hash),
 				intval(local_channel()),

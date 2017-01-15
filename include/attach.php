@@ -1279,8 +1279,10 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		intval($channel_id)
 	);
 
-	if(! $r)
+	if(! $r) {
+		attach_drop_photo($channel_id,$resource);		
 		return;
+	}
 
 	$cloudpath = get_parent_cloudpath($channel_id, $channel_address, $resource);
 	$object = get_file_activity_object($channel_id, $resource, $cloudpath);
@@ -1326,18 +1328,9 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 	);
 
 	if($r[0]['is_photo']) {
-		$x = q("select id, item_hidden from item where resource_id = '%s' and resource_type = 'photo' and uid = %d",
-			dbesc($resource),
-			intval($channel_id)
-		);
-		if($x) {
-			drop_item($x[0]['id'],false,(($x[0]['item_hidden']) ? DROPITEM_NORMAL : DROPITEM_PHASE1),true);
-		}
-		q("DELETE FROM photo WHERE uid = %d AND resource_id = '%s'",
-			intval($channel_id),
-			dbesc($resource)
-		);
+		attach_drop_photo($channel_id,$resource);
 	}
+
 
 	// update the parent folder's lastmodified timestamp
 	$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d",
@@ -1350,6 +1343,24 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 
 	return;
 }
+
+
+function attach_drop_photo($channel_id,$resource) {
+
+	$x = q("select id, item_hidden from item where resource_id = '%s' and resource_type = 'photo' and uid = %d",
+		dbesc($resource),
+		intval($channel_id)
+	);
+	if($x) {
+		drop_item($x[0]['id'],false,(($x[0]['item_hidden']) ? DROPITEM_NORMAL : DROPITEM_PHASE1),true);
+	}
+	q("DELETE FROM photo WHERE uid = %d AND resource_id = '%s'",
+		intval($channel_id),
+		dbesc($resource)
+	);
+
+}
+
 
 /**
  * @brief Returns path to file in cloud/.

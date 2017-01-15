@@ -11,8 +11,10 @@ function photo_factory($data, $type = null) {
 		'image/svg+xml'
 	);
 
-	if($type && in_array(strtolower($type),$unsupported_types))
+	if($type && in_array(strtolower($type),$unsupported_types)) {
+		logger('photo_factory: unsupported image type');
 		return null;
+	}
 
 	$ignore_imagick = get_config('system', 'ignore_imagick');
 

@@ -34,6 +34,11 @@
 				<a class="btn btn-primary btn-xs" href="{{$editmenu.edit.0}}" ><i class="fa fa-pencil"></i>&nbsp;{{$editmenu.edit.3}}</a>
 			</div>
 			{{/if}}
+			{{if $exportlink}}
+			<div class="btn-group">
+				<a class="btn btn-default btn-xs" href="{{$exportlink}}" ><i class="fa fa-vcard"></i>&nbsp;{{$export}}</a>
+			</div>
+			{{/if}}
 		</div>
 		<h2>{{$title}}</h2>
 		<div class="clear"></div>

@@ -60,7 +60,9 @@ class Profile extends \Zotlabs\Web\Controller {
 		}
 	
 		$groups = array();
-	
+
+
+
 		$tab = 'profile';
 		$o = '';
 	
@@ -69,6 +71,15 @@ class Profile extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
+
+
+		if(argc() > 2 && argv(2) === 'vcard') {
+			header('Content-type: text/vcard');
+			header('content-disposition: attachment; filename="' . t('vcard') . '-' . $profile['channel_address'] . '.vcf"' );
+			echo \App::$profile['profile_vcard'];
+			killme();
+		}
+
 	
 		$is_owner = ((local_channel()) && (local_channel() == \App::$profile['profile_uid']) ? true : false);
 	

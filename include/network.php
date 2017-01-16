@@ -714,6 +714,10 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 
 			if($i['success']) {
 				$ph = photo_factory($i['body'], $type);
+
+				if(! is_object($ph))
+					continue;
+
 				if($ph->is_valid()) {
 					$orig_width = $ph->getWidth();
 					$orig_height = $ph->getHeight();

@@ -244,6 +244,7 @@ $powered_by = '';
 
 	App::$page['nav'] .= replace_macros($tpl, array(
 		'$baseurl' => z_root(),
+		'$fulldocs' => t('Documentation'),
 		'$sitelocation' => $sitelocation,
 		'$nav' => $x['nav'],
 		'$banner' =>  $banner,

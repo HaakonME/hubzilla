@@ -632,6 +632,9 @@ function random_profile() {
 
 function update_vcard($arr,$vcard = null) {
 
+
+	//	logger('update_vcard: ' . print_r($arr,true));
+
 	$fn = $arr['fn'];
 
 	
@@ -816,8 +819,10 @@ function get_vcard_array($vc,$id) {
 			$type = (($adr['TYPE']) ? vcard_translate_type((string)$adr['TYPE']) : '');
 			$adrs[] = [
 				'type' => $type,
-				'address' => escape_tags($adr->getParts())
+				'address' => $adr->getParts()
 			];
+			$last_entry = end($adrs);
+			array_walk($adrs[$last_entry],'array_escape_tags');
 		}
 	}
 

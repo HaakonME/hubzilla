@@ -319,10 +319,38 @@ class Profiles extends \Zotlabs\Web\Controller {
 
 			$orig_vcard = (($orig[0]['profile_vcard']) ? \Sabre\VObject\Reader::read($orig[0]['profile_vcard']) : null); 
 
-			$_REQUEST['fn'] = $name;
-			$_REQUEST['title'] = $pdesc;
+			$channel = \App::get_channel();
 
-			$profile_vcard = update_vcard($_REQUEST,$orig_vcard);
+			$default_vcard_cat = ((defined('DEFAULT_VCARD_CAT')) ? DEFAULT_VCARD_CAT : 'HOME');
+
+			$defcard = [
+				'fn'         => $name,
+				'title'      => $pdesc,
+				'photo'      => $channel['xchan_photo_l'],
+				'adr'        => [],
+				'adr_type'   => [ $default_vcard_cat ],
+				'tel'        => [],
+				'tel_type'   => [ $default_vcard_cat ],
+				'email'      => [],
+				'email_type' => [ $default_vcard_cat ],
+				'impp'       => [],
+				'impp_type'  => [ $default_vcard_cat ],
+				'url'        => [],
+				'url_type'   => [ $default_vcard_cat ]
+			];
+
+			$defcard['adr'][] = [
+				0 => '',
+				1 => '',
+				2 => $address,
+				3 => $locality,
+				4 => $region,
+				5 => $postal_code,
+				6 => $country_name
+			];
+				
+
+			$profile_vcard = update_vcard($defcard,$orig_vcard);
 
 
 			require_once('include/text.php');

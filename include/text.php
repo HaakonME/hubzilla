@@ -3129,3 +3129,7 @@ function cleanup_bbcode($body) {
 function array_trim(&$v,$k) {
 	$v = trim($v);
 }
+
+function array_escape_tags(&$v,$k) {
+	$v = escape_tags($v);
+}

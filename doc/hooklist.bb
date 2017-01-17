@@ -148,6 +148,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/crypto_methods]crypto_methods[/zrl]
 	Called when generating a list of crypto algorithms in the locally preferred order
 
+[zrl=[baseurl]/help/hook/daemon_addon]daemon_addon[/zrl]
+	Called when invoking the extensible background daemon
+
 [zrl=[baseurl]/help/hook/directory_item]directory_item[/zrl]
 	Called when generating a directory listing for display
 

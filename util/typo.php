@@ -38,8 +38,10 @@
 	echo "Directory: Zotlabs\n";
 	$files = glob('Zotlabs/*/*.php');
 	foreach($files as $file) {
-		echo $file . "\n";
-		include_once($file);
+		if(strpos($file,'SiteModule') === false) {
+			echo $file . "\n";
+			include_once($file);
+		}
 	}
 
 	echo "Directory: Zotlabs/Module (sub-modules)\n";

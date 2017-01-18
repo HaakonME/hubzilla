@@ -903,7 +903,12 @@ function widget_chatroom_members() {
 function widget_wiki_list($arr) {
 	require_once("include/wiki.php");
 	$channel = channelx_by_n(App::$profile_uid);
-	$wikis = wiki_list($channel, get_observer_hash());
+
+	if(defined('NATIVE_WIKI'))
+		$wikis = Zotlabs\Lib\NativeWiki::listwikis($channel,get_observer_hash());
+	else
+		$wikis = wiki_list($channel, get_observer_hash());
+
 	if($wikis) {
 		return replace_macros(get_markup_template('wikilist_widget.tpl'), array(
 			'$header' => t('Wiki List'),
@@ -918,6 +923,8 @@ function widget_wiki_pages($arr) {
 
 	require_once("include/wiki.php");
 	$channelname = ((array_key_exists('channel',$arr)) ? $arr['channel'] : '');
+	$c = channelx_by_nick($channelname);
+
 	$wikiname = '';
 	if (array_key_exists('refresh', $arr)) {
 		$not_refresh = (($arr['refresh']=== true) ? false : true);
@@ -925,11 +932,15 @@ function widget_wiki_pages($arr) {
 		$not_refresh = true;
 	}
 	$pages = array();
-	if (!array_key_exists('resource_id', $arr)) {
+	if (! array_key_exists('resource_id', $arr)) {
 		$hide = true;
 	} else {
-		$p = wiki_page_list($arr['resource_id']);
-		if ($p['pages']) {
+		if(defined('NATIVE_WIKI'))
+			$p = Zotlabs\Lib\NativeWikiPage::page_list($c['channel_id'],get_observer_hash(),$arr['resource_id']);
+		else
+			$p = wiki_page_list($arr['resource_id']);
+
+		if($p['pages']) {
 			$pages = $p['pages'];
 			$w = $p['wiki'];
 			// Wiki item record is $w['wiki']

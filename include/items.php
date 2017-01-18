@@ -302,7 +302,7 @@ function add_source_route($iid, $hash) {
  *  * \e boolean \b success true or false
  *  * \e array \b activity the resulting activity if successful
  */
-function post_activity_item($arr) {
+function post_activity_item($arr,$allow_code = false,$deliver = true) {
 
 	$ret = array('success' => false);
 
@@ -382,11 +382,11 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
-	$post = item_store($arr);
+	$post = item_store($arr,$allow_code,$deliver);
 	if($post['success'])
 		$post_id = $post['item_id'];
 
-	if($post_id) {
+	if($post_id && $deliver) {
 		$arr['id'] = $post_id;
 		call_hooks('post_local_end', $arr);
 		Zotlabs\Daemon\Master::Summon(array('Notifier','activity',$post_id));
@@ -1564,8 +1564,11 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 		$arr['attach'] = json_encode($arr['attach']);
 	}
 
-	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                 : 0);
-	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))           : random_string());
+	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                           : 0);
+	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))                     : random_string());
+	$arr['revision']      = ((x($arr,'revision') && intval($arr['revision']) > 0)   ? intval($arr['revision']) : 0);
+logger('revision: ' . $arr['revision']);
+
 	$arr['author_xchan']  = ((x($arr,'author_xchan'))  ? notags(trim($arr['author_xchan']))  : '');
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
@@ -1726,9 +1729,10 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	if($parent_deleted)
 		$arr['item_deleted'] = 1;
 
-	$r = q("SELECT id FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
+	$r = q("SELECT id FROM item WHERE mid = '%s' AND uid = %d and revision = %d LIMIT 1",
 		dbesc($arr['mid']),
-		intval($arr['uid'])
+		intval($arr['uid']),
+		intval($arr['revision'])
 	);
 	if($r) {
 		logger('item_store: duplicate item ignored. ' . print_r($arr,true));
@@ -1783,9 +1787,10 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	// find the item we just created
 
-	$r = q("SELECT * FROM item WHERE mid = '%s' AND uid = %d ORDER BY id ASC ",
+	$r = q("SELECT * FROM item WHERE mid = '%s' AND uid = %d and revision = %d ORDER BY id ASC ",
 		$arr['mid'],           // already dbesc'd
-		intval($arr['uid'])
+		intval($arr['uid']),
+		intval($arr['revision'])
 	);
 
 	if($r && count($r)) {
@@ -1995,6 +2000,8 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : $orig[0]['expires']);
+
+	$arr['revision']      = ((x($arr,'revision') && $arr['revision'] > 0)   ? intval($arr['revision']) : 0);
 
 	if(array_key_exists('comments_closed',$arr) && $arr['comments_closed'] > NULL_DATE)
 		$arr['comments_closed'] = datetime_convert('UTC','UTC',$arr['comments_closed']);

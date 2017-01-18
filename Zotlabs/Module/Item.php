@@ -429,7 +429,9 @@ class Item extends \Zotlabs\Web\Controller {
 			$body              = trim($_REQUEST['body']);
 			$body              .= trim($_REQUEST['attachment']);
 			$postopts          = '';
-	
+
+			$allow_empty       = ((array_key_exists('allow_empty',$_REQUEST)) ? intval($_REQUEST['allow_empty']) : 0);	
+
 			$private = intval($acl->is_private() || ($public_policy));
 	
 			// If this is a comment, set the permissions from the parent.
@@ -442,7 +444,7 @@ class Item extends \Zotlabs\Web\Controller {
 				$owner_hash        = $parent_item['owner_xchan'];
 			}
 		
-			if(! strlen($body)) {
+			if((! $allow_empty) && (! strlen($body))) {
 				if($preview)
 					killme();
 				info( t('Empty post discarded.') . EOL );

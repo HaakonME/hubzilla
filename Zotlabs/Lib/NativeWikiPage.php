@@ -541,7 +541,7 @@ class NativeWikiPage {
 			
 			$s = str_replace(array('[baseurl]', '[sitename]'), array(z_root(), get_config('system', 'sitename')), $s);
 			
-			$observer = App::get_observer();
+			$observer = \App::get_observer();
 			if ($observer) {
 					$s1 = '<span class="bb_observer" title="' . t('Different viewers will see this text differently') . '">';
 					$s2 = '</span>';

@@ -39,7 +39,6 @@ class Wiki extends \Zotlabs\Web\Controller {
      		return;
  		}
 
-		require_once('include/wiki.php');
 		require_once('include/acl_selectors.php');
 		require_once('include/conversation.php');
 		require_once('include/bbcode.php');
@@ -239,8 +238,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 				else {
 					require_once('library/markdown.php');
-					$html = wiki_generate_toc(zidify_text(purify_html(Markdown(wiki_bbcode(json_decode($content))))));
-					$renderedContent = wiki_convert_links($html, argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
+					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(Markdown(Zlib\NativeWikiPage::bbcode(json_decode($content))))));
+					$renderedContent = Zlib\NativeWikiPage::convert_links($html, argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}
 				$showPageControls = $wiki_editor;
 				break;
@@ -296,7 +295,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 	}
 
 	function post() {
-		require_once('include/wiki.php');
+
 		require_once('include/bbcode.php');
 
 		$nick = argv(1);

@@ -60,7 +60,7 @@ class Tagger extends \Zotlabs\Web\Controller {
 	
 	
 		$links = array(array('rel' => 'alternate','type' => 'text/html', 
-			'href' => z_root() . '/display/' . urlencode($item['mid'])));
+			'href' => z_root() . '/display/' . gen_link_id($item['mid'])));
 	
 		$target = json_encode(array(
 			'type'    => $targettype,

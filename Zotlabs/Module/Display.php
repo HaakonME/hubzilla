@@ -30,12 +30,10 @@ class Display extends \Zotlabs\Web\Controller {
 		if(argc() > 1 && argv(1) !== 'load')
 			$item_hash = argv(1);
 	
-	
 		if($_REQUEST['mid'])
 			$item_hash = $_REQUEST['mid'];
-	
-	
-		if(! $item_hash) {
+
+			if(! $item_hash) {
 			\App::$error = 404;
 			notice( t('Item not found.') . EOL);
 			return;
@@ -93,9 +91,15 @@ class Display extends \Zotlabs\Web\Controller {
 		// find a copy of the item somewhere
 	
 		$target_item = null;
-	
+
+		if(strpos($item_hash,'b64.') === 0)
+			$decoded = @base64url_decode(substr($item_hash,4));
+		if($decoded)
+			$item_hash = $decoded;
+
 		$r = q("select id, uid, mid, parent_mid, item_type, item_deleted from item where mid like '%s' limit 1",
-			dbesc($item_hash . '%')
+			dbesc($item_hash . '%'),
+			dbesc($decoded . '%')
 		);
 	
 		if($r) {

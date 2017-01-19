@@ -3124,6 +3124,12 @@ function cleanup_bbcode($body) {
 
 }
 
+function gen_link_id($mid) {
+	if(strpbrk($mid,':/&?<>"\'') !== false)
+		return 'b64.' . base64url_encode($mid);
+	return $mid;
+}
+
 // callback for array_walk
 
 function array_trim(&$v,$k) {
@@ -3133,3 +3139,4 @@ function array_trim(&$v,$k) {
 function array_escape_tags(&$v,$k) {
 	$v = escape_tags($v);
 }
+

@@ -724,6 +724,8 @@ class Item extends \Zotlabs\Web\Controller {
 		if(! $mid) {
 			$mid = (($message_id) ? $message_id : item_message_id());
 		}
+
+
 		if(! $parent_mid) {
 			$parent_mid = $mid;
 		}
@@ -935,7 +937,7 @@ class Item extends \Zotlabs\Web\Controller {
 						'from_xchan'   => $datarray['author_xchan'],
 						'to_xchan'     => $datarray['owner_xchan'],
 						'item'         => $datarray,
-						'link'		   => z_root() . '/display/' . urlencode($datarray['mid']),
+						'link'		   => z_root() . '/display/' . gen_link_id($datarray['mid']),
 						'verb'         => ACTIVITY_POST,
 						'otype'        => 'item',
 						'parent'       => $parent,
@@ -953,7 +955,7 @@ class Item extends \Zotlabs\Web\Controller {
 						'from_xchan'   => $datarray['author_xchan'],
 						'to_xchan'     => $datarray['owner_xchan'],
 						'item'         => $datarray,
-						'link'		   => z_root() . '/display/' . urlencode($datarray['mid']),
+						'link'		   => z_root() . '/display/' . gen_link_id($datarray['mid']),
 						'verb'         => ACTIVITY_POST,
 						'otype'        => 'item'
 					));
@@ -1005,7 +1007,7 @@ class Item extends \Zotlabs\Web\Controller {
 		}
 	
 		$datarray['id']    = $post_id;
-		$datarray['llink'] = z_root() . '/display/' . urlencode($datarray['mid']);
+		$datarray['llink'] = z_root() . '/display/' . gen_link_id($datarray['mid']);
 	
 		call_hooks('post_local_end', $datarray);
 	

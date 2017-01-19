@@ -313,7 +313,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
 			$resource_id = $_POST['resource_id'];
-			$w = Zlib\NativeWiki::get_wiki($owner,$observer_hash,$resource_id);
+			$w = Zlib\NativeWiki::get_wiki($owner['channel_id'],$observer_hash,$resource_id);
 
 			$wikiURL = argv(0) . '/' . argv(1) . '/' . $w['urlName'];
 

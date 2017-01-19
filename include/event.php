@@ -1016,9 +1016,9 @@ function event_store_item($arr, $event) {
 		// otherwise we'll fallback to /display/$message_id
 
 		if($wall)
-			$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . $item_arr['mid'];
+			$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . urlencode($item_arr['mid']);
 		else
-			$item_arr['plink'] = z_root() . '/display/' . $item_arr['mid'];
+			$item_arr['plink'] = z_root() . '/display/' . urlencode($item_arr['mid']);
 
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($arr['event_xchan'])

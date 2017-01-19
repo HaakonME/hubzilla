@@ -60,7 +60,7 @@ class Tagger extends \Zotlabs\Web\Controller {
 	
 	
 		$links = array(array('rel' => 'alternate','type' => 'text/html', 
-			'href' => z_root() . '/display/' . $item['mid']));
+			'href' => z_root() . '/display/' . urlencode($item['mid'])));
 	
 		$target = json_encode(array(
 			'type'    => $targettype,
@@ -80,11 +80,6 @@ class Tagger extends \Zotlabs\Web\Controller {
 					array('rel' => 'photo', 'type' => $item['xchan_photo_mimetype'], 'href' => $item['xchan_photo_m'])),
 				),
 		));
-	
-	
-	
-		$link = xmlify('<link rel="alternate" type="text/html" href="' 
-			. z_root() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
 	
 		$tagid = z_root() . '/search?tag=' . $term;
 		$objtype = ACTIVITY_OBJ_TAGTERM;

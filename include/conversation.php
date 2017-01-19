@@ -733,7 +733,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'like' => '',
 					'dislike' => '',
 					'comment' => '',
-					'conv' => (($preview) ? '' : array('href'=> z_root() . '/display/' . $item['mid'], 'title'=> t('View in context'))),
+					'conv' => (($preview) ? '' : array('href'=> z_root() . '/display/' . urlencode($item['mid']), 'title'=> t('View in context'))),
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 					'thread_level' => 1,

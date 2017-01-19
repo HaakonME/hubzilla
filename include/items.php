@@ -1624,7 +1624,7 @@ logger('revision: ' . $arr['revision']);
 	if($d2 > $d1)
 		$arr['item_delayed'] = 1;
 
-	$arr['llink'] = z_root() . '/display/' . $arr['mid'];
+	$arr['llink'] = z_root() . '/display/' . urlencode($arr['mid']);
 
 	if(! $arr['plink'])
 		$arr['plink'] = $arr['llink'];
@@ -2279,7 +2279,7 @@ function send_status_notifications($post_id,$item) {
 	if($unfollowed)
 		return;
 
-	$link =  z_root() . '/display/' . $item['mid'];
+	$link =  z_root() . '/display/' . urlencode($item['mid']);
 
 	$y = q("select id from notify where link = '%s' and uid = %d limit 1",
 		dbesc($link),

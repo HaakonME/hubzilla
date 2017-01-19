@@ -138,7 +138,7 @@ class Subthread extends \Zotlabs\Web\Controller {
 	
 		$ulink = '[zrl=' . $item_author['xchan_url'] . ']' . $item_author['xchan_name'] . '[/zrl]';
 		$alink = '[zrl=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/zrl]';
-		$plink = '[zrl=' . z_root() . '/display/' . $item['mid'] . ']' . $post_type . '[/zrl]';
+		$plink = '[zrl=' . z_root() . '/display/' . urlencode($item['mid']) . ']' . $post_type . '[/zrl]';
 		
 		$arr['body']          =  sprintf( $bodyverb, $alink, $ulink, $plink );
 	

@@ -20,7 +20,8 @@ class NativeWikiPage {
 
 		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
 
-		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d $sql_extra group by mid",
+		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d 
+			$sql_extra group by mid",
 			dbesc($resource_id),
 			intval($channel_id)
 		);
@@ -55,6 +56,9 @@ class NativeWikiPage {
 		$arr['resource_type'] = 'nwikipage';
 		$arr['resource_id'] = $resource_id;
 
+		// We may wish to change this some day.
+		$arr['item_unpublished'] = 1;
+
 		set_iconfig($arr,'nwikipage','pagetitle',urlencode(($name) ? $name : t('(No Title)')),true);
 
 		post_activity_item($arr, false, false);
@@ -77,36 +81,45 @@ class NativeWikiPage {
 		$channel_id    = ((array_key_exists('channel_id',$arr))    ? $arr['channel_id']    : 0);
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
-		if(! $w['path']) {
+		if(! $w['wiki']) {
 			return array('message' => t('Wiki not found.'), 'success' => false);
 		}
 
-		$page_path_old = $w['path'] . '/' . $pageUrlName . \Zlib\NativeWikiPage::get_file_ext($w);
 
-		if(! is_readable($page_path_old) === true) {
-			return array('message' => 'Cannot read wiki page: ' . $page_path_old, 'success' => false);
+		$ic = q("select * from iconfig left join item on iconfig.iid = item.id 
+			where uid = %d and cat = 'nwikipage' and k = 'pagetitle' and v = '%s'",
+			intval($channel_id),
+			dbesc($pageNewName)
+		);
+	
+		if($ic) {
+			return [ 'success' => false, 'message' => t('Destination name already exists') ];
 		}
 
-		$page = [ 
-			'rawName' => $pageNewName, 
-			'htmlName' => escape_tags($pageNewName), 
-			'urlName' => urlencode(escape_tags($pageNewName)), 
-			'fileName' => urlencode(escape_tags($pageNewName)) . \Zlib\NativeWikiPage::get_file_ext($w)
-		];
 
-		$page_path_new = $w['path'] . '/' . $page['fileName'] ;
+		$ids = [];
 
-		if(is_file($page_path_new)) {
-			return array('message' => 'Page already exists.', 'success' => false);
+		$ic = q("select *, item.id as item_id from iconfig left join item on iconfig.iid = item.id 
+			where uid = %d and cat = 'nwikipage' and k = 'pagetitle' and v = '%s'",
+			intval($channel_id),
+			dbesc($pageUrlName)
+		);
+	
+		if($ic) {
+			foreach($ic as $c) {
+				set_iconfig($c['item_id'],'nwikipage','pagetitle',$pageNewName);
+			}
+
+			$page = [ 
+				'rawName'  => $pageNewName, 
+				'htmlName' => escape_tags($pageNewName), 
+				'urlName'  => urlencode(escape_tags($pageNewName))
+			];
+
+			return [ 'success' => true, 'page' => $page ];
 		}
 
-		// Rename the page file in the wiki repo
-		if(! rename($page_path_old, $page_path_new)) {
-			return array('message' => 'Error renaming page file.', 'success' => false);
-		}
-		else {
-			return array('page' => $page, 'message' => '', 'success' => true);
-		}
+		return [ 'success' => false, 'message' => t('Page not found') ];
 	
 	}
 
@@ -178,7 +191,7 @@ class NativeWikiPage {
 	
 
 	static public function load_page($arr) {
-logger('arr: ' . print_r($arr,true));
+
 		$pageUrlName   = ((array_key_exists('pageUrlName',$arr))   ? $arr['pageUrlName']     : '');
 		$resource_id   = ((array_key_exists('resource_id',$arr))   ? $arr['resource_id']     : '');
 		$observer_hash = ((array_key_exists('observer_hash',$arr)) ? $arr['observer_hash']   : '');
@@ -191,7 +204,7 @@ logger('arr: ' . print_r($arr,true));
 		}
 
 		$ids = '';
-dbg(0);
+
 		$ic = q("select * from iconfig left join item on iconfig.iid = item.id where uid = %d and cat = 'nwikipage' and k = 'pagetitle' and v = '%s'",
 			intval($channel_id),
 			dbesc($pageUrlName)
@@ -217,13 +230,13 @@ dbg(0);
 				dbesc($resource_id),
 				intval($channel_id)
 			);
-dbg(0);
+
 			if($r) {
 				$items = fetch_post_tags($r,true);
 				return $items[0];
 			}
 		}
-dbg(0);
+
 		return null;
 	}
 
@@ -317,17 +330,23 @@ dbg(0);
 			return array('message' => t('Error reading wiki'), 'success' => false);
 		}
 	
+		// fetch the most recently saved revision. 
+
 		$item = self::load_page($arr);
 		if(! $item) {
 			return array('message' => t('Page not found'), 'success' => false);
 		}
+
+		// change just the fields we need to change to create a revision; 
+
 		unset($item['id']);
 		unset($item['author']);
 
-		$item['parent'] = 0;
-		$item['body'] = $content;
+		$item['parent']       = 0;
+		$item['body']         = $content;
 		$item['author_xchan'] = $observer_hash;
-		$item['revision'] = (($arr['revision']) ? intval($arr['revision']) + 1 : intval($item['revision']) + 1);
+		$item['revision']     = (($arr['revision']) ? intval($arr['revision']) + 1 : intval($item['revision']) + 1);
+		$item['edited']       = datetime_convert();
 
 		if($item['iconfig'] && is_array($item['iconfig']) && count($item['iconfig'])) {
 			for($x = 0; $x < count($item['iconfig']); $x ++) {
@@ -352,19 +371,32 @@ dbg(0);
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
 
-		if (!$w['path']) {
-			return array('message' => t('Error reading wiki'), 'success' => false);
+		if(! $w['wiki']) {
+			return [ 'success' => false, 'message' => t('Error reading wiki') ];
 		}
-		$page_path = $w['path'] . '/' . $pageUrlName . wiki_get_file_ext($w);
-		if (is_writable($page_path) === true) {
-			if(!unlink($page_path)) {
-				return array('message' => t('Error deleting page file'), 'success' => false);
+
+		$ids = [];
+
+		$ic = q("select * from iconfig left join item on iconfig.iid = item.id 
+			where uid = %d and cat = 'nwikipage' and k = 'pagetitle' and v = '%s'",
+			intval($channel_id),
+			dbesc($pageUrlName)
+		);
+	
+		if($ic) {
+			foreach($ic as $c) {
+				$ids[] = intval($c['iid']);
 			}
-			return array('message' => '', 'success' => true);
-		} 
-		else {
-			return array('message' => t('Page file not writable'), 'success' => false);
-		}	
+		}
+
+		if($ids) {
+			foreach($ids as $id) {
+				drop_item($id,false);
+			}
+			return [ 'success' => true ];
+		}
+
+		return [ 'success' => false, 'message' => t('Nothing deleted') ];	
 	}
 	
 	static public function revert_page($arr) {
@@ -401,54 +433,41 @@ dbg(0);
 	static public function compare_page($arr) {
 		$pageUrlName = ((array_key_exists('pageUrlName',$arr)) ? $arr['pageUrlName'] : '');
 		$resource_id = ((array_key_exists('resource_id',$arr)) ? $arr['resource_id'] : '');
-		$currentCommit = ((array_key_exists('currentCommit',$arr)) ? $arr['currentCommit'] : 'HEAD');
-		$compareCommit = ((array_key_exists('compareCommit',$arr)) ? $arr['compareCommit'] : null);
+		$currentCommit = ((array_key_exists('currentCommit',$arr)) ? $arr['currentCommit'] : (-1));
+		$compareCommit = ((array_key_exists('compareCommit',$arr)) ? $arr['compareCommit'] : 0);
 		$observer_hash = ((array_key_exists('observer_hash',$arr)) ? $arr['observer_hash'] : '');
 		$channel_id    = ((array_key_exists('channel_id',$arr))    ? $arr['channel_id']    : 0);
 
-		if (! $compareCommit) {
-			return array('message' => t('No compare commit was provided'), 'success' => false);
-		}
-
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
 
-		if (!$w['path']) {
+		if (!$w['wiki']) {
 			return array('message' => t('Error reading wiki'), 'success' => false);
 		}
-		$page_path = $w['path'] . '/' . $pageUrlName . \Zlib\NativeWikiPage::get_file_ext($w);
-		if (is_readable($page_path) === true) {
-			$reponame = ((array_key_exists('title', $w['wiki'])) ? urlencode($w['wiki']['title']) : 'repo');
-			if($reponame === '') {
-				$reponame = 'repo';
-			}
-			$git = new GitRepo('', null, false, $w['wiki']['title'], $w['path']);
-			$compareContent = $currentContent = '';
-			try {
-				foreach ($git->git->tree($currentCommit) as $object) {
-					if ($object['type'] == 'blob' && $object['file'] === $pageUrlName . wiki_get_file_ext($w)) {
-							$currentContent = $git->git->cat->blob($object['hash']);						
-					}
-				}
-				foreach ($git->git->tree($compareCommit) as $object) {
-					if ($object['type'] == 'blob' && $object['file'] === $pageUrlName . wiki_get_file_ext($w)) {
-							$compareContent = $git->git->cat->blob($object['hash']);						
-					}
-				}
-				require_once('library/class.Diff.php');
-				$diff = Diff::toTable(Diff::compare($currentContent, $compareContent));
-			} 
-			catch (\PHPGit\Exception\GitException $e) {
-				return array('message' => t('GitRepo error thrown'), 'success' => false);
-			}
-			return array('diff' => $diff, 'message' => '', 'success' => true);
-		} 
-		else {
-			return array('message' => t('Page file not writable'), 'success' => false);
+
+		$x = $arr;
+		$x['revision'] = (-1);
+
+		$currpage = self::load_page($x);
+		if($currpage)
+			$currentContent = $currpage['body'];
+
+		$x['revision'] = $compareCommit;
+		$comppage = self::load_page($x);
+		if($comppage)
+			$compareContent = $comppage['body'];
+
+		if($currpage && $comppage) {
+			require_once('library/class.Diff.php');
+			$diff = \Diff::toTable(\Diff::compare($currentContent, $compareContent));
+
+			return [ 'success' => true, 'diff' => $diff ];
 		}
+		return [ 'success' => false, 'message' =>  t('Compare: object not found.') ];
+
 	}
 	
 	static public function commit($arr) {
-logger('committing');
+
 		$commit_msg    = ((array_key_exists('commit_msg', $arr))   ? $arr['commit_msg']    : t('Page updated'));
 		$observer_hash = ((array_key_exists('observer_hash',$arr)) ? $arr['observer_hash'] : '');
 		$channel_id    = ((array_key_exists('channel_id',$arr))    ? $arr['channel_id']    : 0);
@@ -468,7 +487,7 @@ logger('committing');
 		}
 
 		$page = self::load_page($arr);
-logger('commit: page: ' . print_r($page,true));
+
 		if($page) {
 			set_iconfig($page['id'],'nwikipage','commit_msg',escape_tags($commit_msg),true);
 			return [ 'success' => true, 'page' => $page ];

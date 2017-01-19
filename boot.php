@@ -53,6 +53,7 @@ define ( 'ZOT_REVISION',            '1.2' );
 
 define ( 'DB_UPDATE_VERSION',       1187  );
 
+define ( 'PROJECT_BASE',   __DIR__ );
 
 /**
  * @brief Constant with a HTML line break.

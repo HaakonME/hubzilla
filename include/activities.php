@@ -27,7 +27,7 @@ function profile_activity($changed, $value) {
 	$arr['verb']        = ACTIVITY_UPDATE;
 	$arr['obj_type']    = ACTIVITY_OBJ_PROFILE;
 
-	$arr['plink'] = z_root() . '/channel/' . $self['channel_address'] . '/?f=&mid=' . $arr['mid'];
+	$arr['plink'] = z_root() . '/channel/' . $self['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
 				
 	$A = '[url=' . z_root() . '/channel/' . $self['channel_address'] . ']' . $self['channel_name'] . '[/url]';
 

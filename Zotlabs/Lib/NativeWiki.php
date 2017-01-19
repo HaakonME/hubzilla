@@ -61,7 +61,7 @@ class NativeWiki {
 		$arr['resource_id'] = $resource_id;
 		$arr['owner_xchan'] = $channel['channel_hash'];
 		$arr['author_xchan'] = $observer_hash;
-		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
 		$arr['llink'] = $arr['plink'];
 		$arr['title'] = $wiki['htmlName'];		 // name of new wiki;
 		$arr['allow_cid'] = $ac['allow_cid'];

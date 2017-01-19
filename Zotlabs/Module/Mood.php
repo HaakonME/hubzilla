@@ -89,7 +89,7 @@ class Mood extends \Zotlabs\Web\Controller {
 			$item['item_thread_top'] = 1;
 	
 		if ((! $arr['plink']) && intval($arr['item_thread_top'])) {
-			$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+			$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
 		}
 	
 	

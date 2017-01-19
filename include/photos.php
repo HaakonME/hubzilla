@@ -402,7 +402,7 @@ function photo_upload($channel, $observer, $args) {
 		$arr['item_origin']     = 1;
 		$arr['item_thread_top'] = 1;
 		$arr['item_private']    = intval($acl->is_private());
-		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
 		$arr['body']		= $summary;
 
 
@@ -671,7 +671,7 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$arr['deny_cid']        = $photo['deny_cid'];
 	$arr['deny_gid']        = $photo['deny_gid'];
 
-	$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+	$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
 
 	$arr['body']            = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']'
 		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['imgscale'] . '[/zmg]'

@@ -295,7 +295,7 @@ class ThreadItem {
 		$owner_address = substr($item['owner']['xchan_addr'],0,strpos($item['owner']['xchan_addr'],'@'));
 		$viewthread = $item['llink'];
 		if($conv->get_mode() === 'channel')
-			$viewthread = z_root() . '/channel/' . $owner_address . '?f=&mid=' . $item['mid'];
+			$viewthread = z_root() . '/channel/' . $owner_address . '?f=&mid=' . urlencode($item['mid']);
 
 		$comment_count_txt = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
 		$list_unseen_txt = (($unseen_comments) ? sprintf('%d unseen',$unseen_comments) : '');

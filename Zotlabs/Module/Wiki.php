@@ -4,6 +4,11 @@ namespace Zotlabs\Module;
 
 use \Zotlabs\Lib as Zlib;
 
+require_once('include/acl_selectors.php');
+require_once('include/conversation.php');
+require_once('include/bbcode.php');
+
+
 class Wiki extends \Zotlabs\Web\Controller {
 
 	private $wiki = null;
@@ -39,9 +44,6 @@ class Wiki extends \Zotlabs\Web\Controller {
      		return;
  		}
 
-		require_once('include/acl_selectors.php');
-		require_once('include/conversation.php');
-		require_once('include/bbcode.php');
 
 		// TODO: Combine the interface configuration into a unified object
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)

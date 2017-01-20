@@ -539,30 +539,36 @@ class NativeWikiPage {
 	 */
 	static public function bbcode($s) {
 			
-			$s = str_replace(array('[baseurl]', '[sitename]'), array(z_root(), get_config('system', 'sitename')), $s);
+		$s = str_replace(array('[baseurl]', '[sitename]'), array(z_root(), get_config('system', 'sitename')), $s);
 			
-			$observer = \App::get_observer();
-			if ($observer) {
-					$s1 = '<span class="bb_observer" title="' . t('Different viewers will see this text differently') . '">';
-					$s2 = '</span>';
-					$obsBaseURL = $observer['xchan_connurl'];
-					$obsBaseURL = preg_replace("/\/poco\/.*$/", '', $obsBaseURL);
-					$s = str_replace('[observer.baseurl]', $obsBaseURL, $s);
-					$s = str_replace('[observer.url]', $observer['xchan_url'], $s);
-					$s = str_replace('[observer.name]', $s1 . $observer['xchan_name'] . $s2, $s);
-					$s = str_replace('[observer.address]', $s1 . $observer['xchan_addr'] . $s2, $s);
-					$s = str_replace('[observer.webname]', substr($observer['xchan_addr'], 0, strpos($observer['xchan_addr'], '@')), $s);
-					$s = str_replace('[observer.photo]', '', $s);
-			} else {
-					$s = str_replace('[observer.baseurl]', '', $s);
-					$s = str_replace('[observer.url]', '', $s);
-					$s = str_replace('[observer.name]', '', $s);
-					$s = str_replace('[observer.address]', '', $s);
-					$s = str_replace('[observer.webname]', '', $s);
-					$s = str_replace('[observer.photo]', '', $s);
-			}
+		$s = preg_replace_callback("/\[observer\.language\=(.*?)\](.*?)\[\/observer\]/ism",'oblanguage_callback', $s);
+
+		$s = preg_replace_callback("/\[observer\.language\!\=(.*?)\](.*?)\[\/observer\]/ism",'oblanguage_necallback', $s);
+
+
+		$observer = \App::get_observer();
+		if ($observer) {
+			$s1 = '<span class="bb_observer" title="' . t('Different viewers will see this text differently') . '">';
+			$s2 = '</span>';
+			$obsBaseURL = $observer['xchan_connurl'];
+			$obsBaseURL = preg_replace("/\/poco\/.*$/", '', $obsBaseURL);
+			$s = str_replace('[observer.baseurl]', $obsBaseURL, $s);
+			$s = str_replace('[observer.url]', $observer['xchan_url'], $s);
+			$s = str_replace('[observer.name]', $s1 . $observer['xchan_name'] . $s2, $s);
+			$s = str_replace('[observer.address]', $s1 . $observer['xchan_addr'] . $s2, $s);
+			$s = str_replace('[observer.webname]', substr($observer['xchan_addr'], 0, strpos($observer['xchan_addr'], '@')), $s);
+			$s = str_replace('[observer.photo]', '', $s);
+		} 
+		else {
+			$s = str_replace('[observer.baseurl]', '', $s);
+			$s = str_replace('[observer.url]', '', $s);
+			$s = str_replace('[observer.name]', '', $s);
+			$s = str_replace('[observer.address]', '', $s);
+			$s = str_replace('[observer.webname]', '', $s);
+			$s = str_replace('[observer.photo]', '', $s);
+		}
 	
-			return $s;
+		return $s;
 	}
 	
 	static public function get_file_ext($arr) {

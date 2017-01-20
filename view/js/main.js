@@ -662,7 +662,13 @@ function updateConvItems(mode,data) {
 	}
 
 	// auto-scroll to a particular comment in a thread (designated by mid) when in single-thread mode
-	if($('.item_' + bParam_mid.substring(0,32)).length && !$('.item_' + bParam_mid.substring(0,32)).hasClass('toplevel_item') && mode == 'replace') {
+	// use the same method to generate the submid as we use in ThreadItem, 
+	// substr(0,32) + base64_encode + replace(['+','='],['','']);
+	var submid = bParam_mid;
+	var submid_encoded = ((submid.length) ? submid.substring(0,32) : 'abcdefg');
+	submid_encoded = window.btoa(submid_encoded);
+	submid_encoded = submid_encoded.replace(/[\+\=]/g,'');
+	if($('.item_' + submid_encoded).length && !$('.item_' + submid_encoded).hasClass('toplevel_item') && mode == 'replace') {
 		if($('.collapsed-comments').length) {
 			var scrolltoid = $('.collapsed-comments').attr('id').substring(19);
 			$('#collapsed-comments-' + scrolltoid + ' .autotime').timeago();
@@ -670,8 +676,8 @@ function updateConvItems(mode,data) {
 			$('#hide-comments-' + scrolltoid).html(aStr.showfewer);
 			$('#hide-comments-total-' + scrolltoid).hide();
 		}
-		$('html, body').animate({ scrollTop: $('.item_' + bParam_mid.substring(0,32)).offset().top - $('nav').outerHeight() }, 'slow');
-		$('.item_' + bParam_mid.substring(0,32)).addClass('item-highlight');
+		$('html, body').animate({ scrollTop: $('.item_' + submid_encoded).offset().top - $('nav').outerHeight() }, 'slow');
+		$('.item_' + submid_encoded).addClass('item-highlight');
 	}
 
 	$(document.body).trigger("sticky_kit:recalc");

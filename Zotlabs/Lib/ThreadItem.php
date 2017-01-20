@@ -409,7 +409,7 @@ class ThreadItem {
 			'comment' => $this->get_comment_box($indent),
 			'previewing' => ($conv->is_preview() ? ' preview ' : ''),
 			'wait' => t('Please wait'),
-			'submid' => base64_encode(substr($item['mid'],0,32)),
+			'submid' => str_replace(['+','='], ['',''], base64_encode(substr($item['mid'],0,32))),
 			'thread_level' => $thread_level
 		);
 

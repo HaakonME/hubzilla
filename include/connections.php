@@ -822,7 +822,8 @@ function get_vcard_array($vc,$id) {
 				'address' => $adr->getParts()
 			];
 			$last_entry = end($adrs);
-			array_walk($adrs[$last_entry]['address'],'array_escape_tags');
+			if($adrs[$last_entry]['address'])
+				array_walk($adrs[$last_entry]['address'],'array_escape_tags');
 		}
 	}
 

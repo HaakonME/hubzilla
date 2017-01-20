@@ -473,11 +473,26 @@ function bb_sanitize_style($input) {
 	return '<span style="' . $css_string_san . '">' . $input[2] . '</span>';
 }
 
+function oblanguage_callback($matches) {
+	if(strlen($matches[1]) == 2) {
+		$compare = strtolower(substr(\App::$language,0,2));
+	}
+	else {
+		$compare = strtolower(\App::$language);
+	}
+
+	if($compare === strtolower($matches[1]))
+		return $matches[2];
+
+	return '';
+}
+
 function bb_observer($Text) {
 
 	$observer = App::get_observer();
 
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
+
 		if ($observer) {
 			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
 			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
@@ -561,6 +576,9 @@ function parseIdentityAwareHTML($Text) {
         $observer = App::get_observer();
 
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
+
+		$Text = preg_replace_callback("/\[observer\.language\=(.*?)\](.*?)\[\/observer\]/ism",'oblanguage_callback', $Text);
+
 		if ($observer) {
 			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
 			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
@@ -643,6 +661,8 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$observer = App::get_observer();
 
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
+		$Text = preg_replace_callback("/\[observer\.language\=(.*?)\](.*?)\[\/observer\]/ism",'oblanguage_callback', $Text);
+
 		if ($observer) {
 			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
 			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);

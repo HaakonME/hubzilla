@@ -108,6 +108,8 @@ class Comanche {
 				return $_SERVER['REQUEST_URI'];
 			elseif($x[0] === 'observer') {
 				if(count($x) > 1) {
+					if($x[1] == 'language')
+						return \App::$language;
 					$y = \App::get_observer();
 					if(! $y)
 						return false;

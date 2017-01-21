@@ -23,10 +23,13 @@ class Notifications extends \Zotlabs\Web\Controller {
 		if($r) {
 			$notifications_available = 1;
 			foreach ($r as $it) {
+				$x = strip_tags(bbcode($it['msg']));
+				if(strpos($x,','))
+					$x = substr($x,strpos($x,',')+1);
 				$notif_content .= replace_macros(get_markup_template('notify.tpl'),array(
 					'$item_link' => z_root().'/notify/view/'. $it['id'],
 					'$item_image' => $it['photo'],
-					'$item_text' => strip_tags(bbcode($it['msg'])),
+					'$item_text' => $x,
 					'$item_when' => relative_date($it['created'])
 				));
 			}

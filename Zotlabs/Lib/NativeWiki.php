@@ -2,8 +2,6 @@
 
 namespace Zotlabs\Lib;
 
-use \Zotlabs\Storage\GitRepo as GitRepo;
-
 define ( 'NWIKI_ITEM_RESOURCE_TYPE', 'nwiki' );
 
 class NativeWiki {

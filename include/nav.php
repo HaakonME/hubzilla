@@ -12,16 +12,14 @@ function nav(&$a) {
 		App::$page['nav'] = '';
 
 	$base = z_root();
-    App::$page['htmlhead'] .= <<< EOT
 
+	App::$page['htmlhead'] .= <<< EOT
 <script>$(document).ready(function() {
 	$("#nav-search-text").search_autocomplete('$base/acl');
 });
 
 </script>
 EOT;
-
-
 
 	if(local_channel()) {
 		$channel = App::get_channel();
@@ -234,11 +232,11 @@ EOT;
 	$x = array('nav' => $nav, 'usermenu' => $userinfo );
 	call_hooks('nav', $x);
 
-// Not sure the best place to put this on the page. So I'm implementing it but leaving it 
-// turned off until somebody discovers this and figures out a good location for it. 
-$powered_by = '';
+	// Not sure the best place to put this on the page. So I'm implementing it but leaving it 
+	// turned off until somebody discovers this and figures out a good location for it. 
+	$powered_by = '';
 
-//	$powered_by = '<strong>red<img class="smiley" src="' . z_root() . '/images/rm-16.png" alt="r#" />matrix</strong>';
+	// $powered_by = '<strong>red<img class="smiley" src="' . z_root() . '/images/rm-16.png" alt="r#" />matrix</strong>';
 
 	$tpl = get_markup_template('nav.tpl');
 
@@ -256,7 +254,6 @@ $powered_by = '';
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...')
 	));
-
 
 	if(x($_SESSION, 'reload_avatar') && $observer) {
 		// The avatar has been changed on the server but the browser doesn't know that, 

@@ -1,21 +1,23 @@
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<button id="expand-tabs" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#tabs-collapse-1">
-				<i class="fa fa-arrow-circle-down" id="expand-tabs-icon"></i>
-			</button>
-			<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
-				<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
-			</button>
-			{{if $nav.help.6}}
-			<button id="context-help-btn" class="navbar-toggle" type="button" onclick="contextualHelp(); return false;">
-				<i class="fa fa-question-circle"></i>
-			</button>
-			{{/if}}
+			<div>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<button id="expand-tabs" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#tabs-collapse-1">
+					<i class="fa fa-arrow-circle-down" id="expand-tabs-icon"></i>
+				</button>
+				<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
+					<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
+				</button>
+				{{if $nav.help.6}}
+				<button id="context-help-btn" class="navbar-toggle" type="button" onclick="contextualHelp(); return false;">
+					<i class="fa fa-question-circle"></i>
+				</button>
+				{{/if}}
+			</div>
 			{{if $userinfo}}
 				<div class="usermenu-head dropdown-toggle fakelink" data-toggle="dropdown">
 					<img id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">
@@ -206,7 +208,16 @@
 					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="contextualHelp(); return false;"{{/if}}>{{if $nav.help.6}}<i class="fa fa-question-circle"></i>{{else}}<i class="fa fa-question"></i>{{/if}}</a>
 				</li>
 			{{/if}}
+
+			{{if $navapps}}
+				<li class="dropdown-toggle" data-toggle="dropdown">
+					<a href="#"><i class="fa fa-bars"></i></a>
+				</li>
+				{{$navapps}}
+			{{/if}}
+
 			</ul>
+
 		</div>
 	</div>
 	{{if $nav.help.6}}

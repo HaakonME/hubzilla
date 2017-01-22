@@ -1,5 +1,7 @@
 <?php /** @file */
 
+use \Zotlabs\Lib as Zlib;
+
 function nav() {
 
 	/**
@@ -238,6 +240,30 @@ EOT;
 
 	// $powered_by = '<strong>red<img class="smiley" src="' . z_root() . '/images/rm-16.png" alt="r#" />matrix</strong>';
 
+
+	//app bin
+	$navapps = '';
+	if(get_config('system','experimental_app_bin')) {
+		if(local_channel()) {
+			//Zlib\Apps::import_system_apps();
+			$syslist = array();
+			$list = Zlib\Apps::app_list(local_channel(), false, $_GET['cat']);
+			if($list) {
+				foreach($list as $li) {
+					$syslist[] = Zlib\Apps::app_encode($li);
+				}
+			}
+			Zlib\Apps::translate_system_apps($syslist);
+		}
+		else {
+			$syslist = Zlib\Apps::get_system_apps(true);
+		}
+
+		$navapps = replace_macros(get_markup_template('navapps.tpl'), array(
+			'$apps' => $syslist
+		));
+	}
+
 	$tpl = get_markup_template('nav.tpl');
 
 	App::$page['nav'] .= replace_macros($tpl, array(
@@ -252,7 +278,8 @@ EOT;
 		'$sel' => 	App::$nav_sel,
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),
-		'$pleasewait' => t('Please wait...')
+		'$pleasewait' => t('Please wait...'),
+		'$navapps' => $navapps
 	));
 
 	if(x($_SESSION, 'reload_avatar') && $observer) {

@@ -1,6 +1,6 @@
 <?php /** @file */
 
-function nav(&$a) {
+function nav() {
 
 	/**
 	 *

@@ -2100,3 +2100,8 @@ dl.bb-dl > dd > li {
 .nav-pills-stacked-icons:hover + a {
 	background-color: #eee;
 }
+
+.app-icon {
+	font-size: 80px;
+	text-align: center;
+}

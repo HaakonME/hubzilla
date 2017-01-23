@@ -3178,7 +3178,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			sync_menus($channel,$arr['menu']);
 
 		if(array_key_exists('wiki',$arr) && $arr['wiki'])
-			sync_items($channel,$arr['wiki']);
+			sync_items($channel,$arr['wiki'],((array_key_exists('relocate',$arr)) ? $arr['relocate'] : null));
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 

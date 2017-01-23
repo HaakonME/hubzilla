@@ -671,6 +671,17 @@ function identity_basic_export($channel_id, $items = false) {
 		$ret['mail'] = $m;
 	}
 
+	$r = q("select * from item where resource_type like 'nwiki%%' and uid = %d order by created",
+		intval($channel_id)
+	);
+	if($r) {
+		$ret['wiki'] = array();
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		foreach($r as $rv) {
+			$ret['wiki'][] = encode_item($rv,true);
+		}
+	}
 
 	/** @warning this may run into memory limits on smaller systems */
 

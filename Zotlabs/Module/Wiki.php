@@ -104,7 +104,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 
 		// Download a wiki
-
+/*
 		if((argc() > 3) && (argv(2) === 'download') && (argv(3) === 'wiki')) {
 
 			$resource_id = argv(4);
@@ -144,7 +144,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			killme();
 
 		}
-
+*/
 		switch(argc()) {
 			case 2:
 				$wikis = Zlib\NativeWiki::listwikis($owner, get_observer_hash());
@@ -361,6 +361,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$acl->set_from_array($_POST);
 			$r = Zlib\NativeWiki::create_wiki($owner, $observer_hash, $wiki, $acl);
 			if($r['success']) {
+				Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$r['item_id']);
 				$homePage = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash,'Home', $r['item']['resource_id']);
 				if(! $homePage['success']) {
 					notice( t('Wiki created, but error creating Home page.'));
@@ -386,6 +387,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$resource_id = $_POST['resource_id']; 
 			$deleted = Zlib\NativeWiki::delete_wiki($owner['channel_id'],$observer_hash,$resource_id);
 			if ($deleted['success']) {
+				Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$deleted['item_id']);
 				json_return_and_die(array('message' => '', 'success' => true));
 			} 
 			else {
@@ -425,11 +427,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 				));
 
 				if($commit['success']) {
+					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id']);
 					json_return_and_die(array('url' => '/' . argv(0) . '/' . argv(1) . '/' . $page['wiki']['urlName'] . '/' . $page['page']['urlName'], 'success' => true));
 				} 
 				else {
 					json_return_and_die(array('message' => 'Error making git commit','url' => '/' . argv(0) . '/' . argv(1) . '/' . $page['wiki']['urlName'] . '/' . urlencode($page['page']['urlName']),'success' => false));
 				}				
+
+
 			}
 			else {
 				logger('Error creating page');
@@ -487,6 +492,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				));
 		
 				if($commit['success']) {
+					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id']);
 					json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
 				}
 				else {
@@ -549,6 +555,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					'files' => null
 				));
 				if($commit['success']) {
+					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id']);
 					json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
 				}
 				else {
@@ -563,7 +570,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Revert a page
 		if ((argc() === 4) && (argv(2) === 'revert') && (argv(3) === 'page')) {
 
-logger('revert was called: ' . print_r($_POST,true));
 			$resource_id = $_POST['resource_id']; 
 			$pageUrlName = $_POST['name'];
 			$commitHash = $_POST['commitHash'];
@@ -637,6 +643,7 @@ logger('revert was called: ' . print_r($_POST,true));
 				));
 
 				if($commit['success']) {
+					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id']);
 					json_return_and_die(array('name' => $renamed['page'], 'message' => 'Wiki git repo commit made', 'success' => true));
 				}
 				else {

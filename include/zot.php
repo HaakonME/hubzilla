@@ -3174,8 +3174,11 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 		if(array_key_exists('menu',$arr) && $arr['menu'])
 			sync_menus($channel,$arr['menu']);
 
-		if(array_key_exists('file',$arr) && $arr['file'])
-			sync_files($channel,$arr['file']);
+		if(array_key_exists('menu',$arr) && $arr['menu'])
+			sync_menus($channel,$arr['menu']);
+
+		if(array_key_exists('wiki',$arr) && $arr['wiki'])
+			sync_items($channel,$arr['wiki']);
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
 

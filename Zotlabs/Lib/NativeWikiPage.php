@@ -61,16 +61,19 @@ class NativeWikiPage {
 
 		set_iconfig($arr,'nwikipage','pagetitle',urlencode(($name) ? $name : t('(No Title)')),true);
 
-		post_activity_item($arr, false, false);
+		$p = post_activity_item($arr, false, false);
 
-		$page = [ 
-			'rawName'  => $name,
-			'htmlName' => escape_tags($name),
-			'urlName'  => urlencode(escape_tags($name)), 
-			'fileName' => urlencode(escape_tags($name)) . Zlib\NativeWikiPage::get_file_ext($w)
-		];
+		if($p['success']) {
+			$page = [ 
+				'rawName'  => $name,
+				'htmlName' => escape_tags($name),
+				'urlName'  => urlencode(escape_tags($name)), 
+				'fileName' => urlencode(escape_tags($name)) . Zlib\NativeWikiPage::get_file_ext($w)
+			];
 
-		return array('page' => $page, 'wiki' => $w, 'message' => '', 'success' => true);
+			return array('page' => $page, 'item_id' => $p['post_id'], 'wiki' => $w, 'message' => '', 'success' => true);
+		}
+		return [ 'success' => false, 'message' => t('Wiki page create failed.') ];
 	}
 
 	static public function rename_page($arr) {
@@ -119,7 +122,7 @@ class NativeWikiPage {
 			return [ 'success' => true, 'page' => $page ];
 		}
 
-		return [ 'success' => false, 'message' => t('Page not found') ];
+		return [ 'success' => false, 'item_id' => $c['item_id'], 'message' => t('Page not found') ];
 	
 	}
 
@@ -358,7 +361,7 @@ class NativeWikiPage {
 		$ret = item_store($item, false, false);
 
 		if($ret['item_id'])
-			return array('message' => '', 'filename' => $filename, 'success' => true);
+			return array('message' => '', 'item_id' => $ret['item_id'], 'filename' => $filename, 'success' => true);
 		else
 			return array('message' => t('Page update failed.'), 'success' => false);
 	}	
@@ -490,7 +493,7 @@ class NativeWikiPage {
 
 		if($page) {
 			set_iconfig($page['id'],'nwikipage','commit_msg',escape_tags($commit_msg),true);
-			return [ 'success' => true, 'page' => $page ];
+			return [ 'success' => true, 'item_id' => $page['id'], 'page' => $page ];
 		}
 
 		return [ 'success' => false, 'message' => t('Page not found.') ];

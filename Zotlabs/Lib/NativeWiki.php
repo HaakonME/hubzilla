@@ -93,10 +93,22 @@ class NativeWiki {
 
 		if($item_id) {
 			\Zotlabs\Daemon\Master::Summon(array('Notifier', 'activity', $item_id));
-			return array('item' => $post['item'], 'success' => true);
+			return array('item' => $post['item'], 'item_id' => $item_id, 'success' => true);
 		}
 		else {
 			return array('item' => null, 'success' => false);
+		}
+	}
+
+	static public function sync_a_wiki_item($uid,$id) {
+		$r = q("select * from item where id = %d and uid = %d",
+			intval($id),
+			intval($uid)
+		);
+		if($r) {
+			xchan_query($r);
+			$sync_item = fetch_post_tags($r);
+			build_sync_packet($uid,array('wiki' => array(encode_item($sync_item[0],true))));
 		}
 	}
 
@@ -113,7 +125,7 @@ class NativeWiki {
 
 		info( t('Wiki files deleted successfully'));
 
-		return array('item' => $item, 'success' => (($drop === 1) ? true : false));
+		return array('item' => $item, 'item_id' => $item['id'], 'success' => (($drop === 1) ? true : false));
 	}
 
 

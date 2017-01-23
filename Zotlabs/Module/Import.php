@@ -472,6 +472,9 @@ class Import extends \Zotlabs\Web\Controller {
 	
 		if(is_array($data['menu']))
 			import_menus($channel,$data['menu']);
+
+		if(is_array($data['wiki']))
+			import_items($channel,$data['wiki'],false,$relocate);
 		
 		$addon = array('channel' => $channel,'data' => $data);
 		call_hooks('import_channel',$addon);

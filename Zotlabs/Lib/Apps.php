@@ -448,9 +448,8 @@ class Apps {
 
 	static public function app_installed($uid,$app) {
 
-		$r = q("select id from app where app_id = '%s' and app_version = '%s' and app_channel = %d limit 1",
+		$r = q("select id from app where app_id = '%s' and app_channel = %d limit 1",
 			dbesc((array_key_exists('guid',$app)) ? $app['guid'] : ''), 
-			dbesc((array_key_exists('version',$app)) ? $app['version'] : ''), 
 			intval($uid)
 		);
 		return(($r) ? true : false);

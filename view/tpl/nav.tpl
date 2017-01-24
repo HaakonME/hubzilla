@@ -154,13 +154,16 @@
 				</li>
 			{{/if}}
 
-			{{if $nav.loginmenu && !$userinfo}}
-				<li class="{{$nav.loginmenu.0.2}} hidden-xs">
+			{{if $nav.login && !$userinfo}}
+				<li class="nav-login hidden-xs">
 					<a data-toggle="dropdown" href="{{$nav.loginmenu.0.0}}" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						{{foreach $nav.loginmenu as $loginmenu}}
+					{{$nav.login}}
+					{{$nav.remote_login}}
+
+					<!--	{{foreach $nav.loginmenu as $loginmenu}}
 						<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem" id="{{$loginmenu.4}}">{{$loginmenu.1}}</a></li>
-						{{/foreach}}
+						{{/foreach}} --!>
 					</ul>
 				</li>
 				{{foreach $nav.loginmenu as $loginmenu}}

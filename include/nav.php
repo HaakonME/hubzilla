@@ -112,6 +112,7 @@ EOT;
 	}
 	else {
 		if(! get_account_id())  {
+			$nav['login'] = login();
 			$nav['loginmenu'][] = Array('login',t('Login'),'',t('Sign in'),'login_nav_btn');
 		}
 		else
@@ -128,6 +129,7 @@ EOT;
 	}
 
 	elseif(! $_SESSION['authenticated']) {
+		$nav['remote_login'] = remote_login();
 		$nav['loginmenu'][] = Array('rmagic',t('Remote authentication'),'',t('Click to authenticate to your home hub'),'rmagic_nav_btn');
 	}
 

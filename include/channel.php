@@ -1909,3 +1909,17 @@ function channel_manual_conv_update($channel_id) {
 	return intval($x);
 
 }
+
+
+function remote_login() {
+
+		$o = replace_macros(get_markup_template('remote_login.tpl'),array(
+			'$title' => t('Remote Authentication'),
+			'$desc' => t('Enter your channel address (e.g. channel@example.com)'),
+			'$submit' => t('Authenticate')
+		));
+		return $o;
+
+
+
+}

@@ -2107,5 +2107,15 @@ dl.bb-dl > dd > li {
 }
 
 .rmagic-button {
+	padding-top: 10px;
 	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+#nav-login {
+	display: none;
+	width: 200px;
+	border: 1px solid #ccc;
+	border-radius: $radiuspx;
+
 }

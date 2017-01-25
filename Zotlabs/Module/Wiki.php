@@ -416,7 +416,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			$page = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash, $name, $resource_id);
 
-			if($page['success']) {
+			if($page['item_id']) {
 				$ob = \App::get_observer();
 				$commit = Zlib\NativeWikiPage::commit(array(
 					'commit_msg'    => t('New page created'), 
@@ -547,20 +547,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 			$deleted = Zlib\NativeWikiPage::delete_page(array('channel_id' => $owner['channel_id'], 'observer_hash' => $observer_hash, 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
 			if($deleted['success']) {
-				$ob = \App::get_observer();
-				$commit = Zlib\NativeWikiPage::git_commit(array(
-					'commit_msg' => 'Deleted ' . $pageUrlName, 
-					'resource_id' => $resource_id, 
-					'observer' => $ob,
-					'files' => null
-				));
-				if($commit['success']) {
-					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id'],$resource_id);
-					json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
-				}
-				else {
-					json_return_and_die(array('message' => 'Error making git commit','success' => false));					
-				}
+				Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id'],$resource_id);
+				json_return_and_die(array('message' => 'Wiki git repo commit made', 'success' => true));
 			}
 			else {
 				json_return_and_die(array('message' => 'Error deleting page', 'success' => false));					

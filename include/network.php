@@ -51,7 +51,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
 	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	@curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; Red)");
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; zot)");
 
 	$ciphers = @get_config('system','curl_ssl_ciphers');
 	if($ciphers)
@@ -84,7 +84,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['custom']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
-		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
+		@curl_setopt($ch, CURLOPT_TIMEOUT, intval($opts['timeout']));
 	}
 	else {
 		$curl_time = intval(@get_config('system','curl_timeout'));
@@ -218,7 +218,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	@curl_setopt($ch, CURLOPT_POST,1);
 	@curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
-	@curl_setopt($ch, CURLOPT_USERAGENT, "Red");
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; zot)");
 
 	$ciphers = @get_config('system','curl_ssl_ciphers');
 	if($ciphers)

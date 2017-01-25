@@ -256,5 +256,47 @@ class PermissionRoles {
 	}
 
 
+	static public function permcats($uid) {
+
+		$permcats = [
+			[ 'follower', t('follower','permcat'),
+				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
+				  'post_like' ]
+			],
+
+			[ 'contributor', t('contributor','permcat'),
+				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
+				  'post_wall','post_comments','post_like','tag_deliver','chat' ]
+			],
+			[ 'trusted', t('trusted','permcat'),
+				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
+				  'write_storage','post_wall','post_comments','post_like','tag_deliver',
+				  'chat', 'republish' ]
+			],
+			[ 'moderator', t('moderator','permcat'),
+				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
+				  'write_storage','post_wall','post_comments','post_like','tag_deliver',
+				  'chat', 'republish' ]
+			]
+		];
+
+		if($uid) {
+			$x = q("select * from pconfig where uid = %d and cat = 'permcat'",
+				intval($uid)
+			);
+			if($x) {
+				foreach($x as $xv) {
+					$permcats[] = [ $xv['k'], $xv['k'], $xv['v'] ];
+				}
+			}
+		}					
+
+		call_hooks('permcats',$permcats);
+
+		return $permcats;
+
+	}
+
+
 
 }

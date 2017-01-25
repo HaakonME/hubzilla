@@ -1512,6 +1512,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
+	$arr['postopts']      = ((x($arr,'postopts'))      ? trim($arr['postopts'])              : '');
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_wall']     = ((x($arr,'item_wall'))     ? intval($arr['item_wall'])           : 0 );
 	$arr['item_type']     = ((x($arr,'item_type'))     ? intval($arr['item_type'])           : 0 );

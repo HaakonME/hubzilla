@@ -20,7 +20,7 @@ class NativeWikiPage {
 
 		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
 
-		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d 
+		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and item_hidden = 0
 			$sql_extra group by mid",
 			dbesc($resource_id),
 			intval($channel_id)
@@ -63,7 +63,7 @@ class NativeWikiPage {
 
 		$p = post_activity_item($arr, false, false);
 
-		if($p['success']) {
+		if($p['item_id']) {
 			$page = [ 
 				'rawName'  => $name,
 				'htmlName' => escape_tags($name),
@@ -71,7 +71,7 @@ class NativeWikiPage {
 				'fileName' => urlencode(escape_tags($name)) . Zlib\NativeWikiPage::get_file_ext($w)
 			];
 
-			return array('page' => $page, 'item_id' => $p['post_id'], 'wiki' => $w, 'message' => '', 'success' => true);
+			return array('page' => $page, 'item_id' => $p['item_id'], 'wiki' => $w, 'message' => '', 'success' => true);
 		}
 		return [ 'success' => false, 'message' => t('Wiki page create failed.') ];
 	}
@@ -202,6 +202,7 @@ class NativeWikiPage {
 		$revision      = ((array_key_exists('revision',$arr))      ? $arr['revision']        : (-1));
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
+
 		if (! $w['wiki']) {
 			return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
 		}
@@ -385,7 +386,7 @@ class NativeWikiPage {
 			intval($channel_id),
 			dbesc($pageUrlName)
 		);
-	
+
 		if($ic) {
 			foreach($ic as $c) {
 				$ids[] = intval($c['iid']);
@@ -393,9 +394,7 @@ class NativeWikiPage {
 		}
 
 		if($ids) {
-			foreach($ids as $id) {
-				drop_item($id,false);
-			}
+			drop_items($ids);
 			return [ 'success' => true ];
 		}
 
@@ -484,7 +483,6 @@ class NativeWikiPage {
 		}
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
-
 		if (! $w['wiki']) {
 			return array('message' => t('Error reading wiki'), 'success' => false);
 		}

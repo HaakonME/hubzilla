@@ -383,15 +383,18 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 	}
 
 	$post = item_store($arr,$allow_code,$deliver);
-	if($post['success'])
+
+	if($post['success']) {
 		$post_id = $post['item_id'];
+		$ret['item_id'] = $post_id;
+	}
 
 	if($post_id && $deliver) {
 		$arr['id'] = $post_id;
 		call_hooks('post_local_end', $arr);
 		Zotlabs\Daemon\Master::Summon(array('Notifier','activity',$post_id));
 		$ret['success'] = true;
-		$ret['item_id'] = $post_id;
+		//$ret['item_id'] = $post_id;
 		$ret['activity'] = $post['item'];
 	}
 

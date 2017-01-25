@@ -3343,6 +3343,11 @@ function drop_items($items,$interactive = false,$stage = DROPITEM_NORMAL,$force 
 
 function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = false) {
 
+	// These resource types have linked items that should only be removed at the same time
+	// as the linked resource; if we encounter one set it to item_hidden rather than item_deleted.
+
+	$linked_resource_types = [ 'photo' ];
+
 	// locate item to be deleted
 
 	$r = q("SELECT * FROM item WHERE id = %d LIMIT 1",
@@ -3358,7 +3363,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 
 	$item = $r[0];
 
-	$linked_item = (($item['resource_id']) ? true : false);
+	$linked_item = (($item['resource_id'] && $item['resource_type'] && in_array($linked_resource_types,$item['resource_type'])) ? true : false);
 
 	$ok_to_delete = false;
 

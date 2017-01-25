@@ -20,7 +20,7 @@ class NativeWikiPage {
 
 		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
 
-		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and item_hidden = 0
+		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and item_deleted = 0 and item_hidden = 0
 			$sql_extra group by mid",
 			dbesc($resource_id),
 			intval($channel_id)
@@ -277,7 +277,7 @@ class NativeWikiPage {
 
 		$r = null;
 		if($ids) {
-			$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and id in ( $ids ) $sql_extra",
+			$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and id in ( $ids ) and item_deleted = 0 $sql_extra",
 				dbesc($resource_id),
 				intval($channel_id)
 			);

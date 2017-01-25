@@ -100,10 +100,14 @@ class NativeWiki {
 		}
 	}
 
-	static public function sync_a_wiki_item($uid,$id) {
-		$r = q("select * from item where id = %d and uid = %d",
+	static public function sync_a_wiki_item($uid,$id,$resource_id) {
+
+
+		$r = q("SELECT * from item WHERE uid = %d AND ( id = %d OR ( resource_type = '%s and resource_id = %d )) ",
+			intval($uid),
 			intval($id),
-			intval($uid)
+			dbesc(NWIKI_ITEM_RESOURCE_TYPE)
+			intval($resource_id)
 		);
 		if($r) {
 			xchan_query($r);

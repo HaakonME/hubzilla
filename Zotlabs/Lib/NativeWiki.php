@@ -106,7 +106,7 @@ class NativeWiki {
 		$r = q("SELECT * from item WHERE uid = %d AND ( id = %d OR ( resource_type = '%s and resource_id = %d )) ",
 			intval($uid),
 			intval($id),
-			dbesc(NWIKI_ITEM_RESOURCE_TYPE)
+			dbesc(NWIKI_ITEM_RESOURCE_TYPE),
 			intval($resource_id)
 		);
 		if($r) {

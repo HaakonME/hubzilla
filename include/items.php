@@ -3311,7 +3311,7 @@ function retain_item($id) {
 	);
 }
 
-function drop_items($items) {
+function drop_items($items,$interactive = false,$stage = DROPITEM_NORMAL,$force = false) {
 	$uid = 0;
 
 	if(! local_channel() && ! remote_channel())
@@ -3319,7 +3319,7 @@ function drop_items($items) {
 
 	if(count($items)) {
 		foreach($items as $item) {
-			$owner = drop_item($item,false);
+			$owner = drop_item($item,$interactive,$stage,$force);
 			if($owner && ! $uid)
 				$uid = $owner;
 		}

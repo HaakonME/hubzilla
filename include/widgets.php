@@ -945,6 +945,8 @@ function widget_wiki_pages($arr) {
 	}
 	$can_create = perm_is_allowed(\App::$profile['uid'],get_observer_hash(),'write_pages');
 
+	$can_delete = ((local_channel() && (local_channel() == \App::$profile['uid'])) ? true : false);
+
 	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
 			'$hide' => $hide,
 			'$resource_id' => $arr['resource_id'],
@@ -954,6 +956,7 @@ function widget_wiki_pages($arr) {
 			'$wikiname' => $wikiname,
 			'$pages' => $pages,
 			'$canadd' => $can_create,
+			'$candel' => $can_delete,
 			'$addnew' => t('Add new page'),
 			'$pageName' => array('pageName', t('Page name')),
 	));

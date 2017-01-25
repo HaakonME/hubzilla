@@ -538,6 +538,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 				json_return_and_die(array('message' => t('Cannot delete Home'),'success' => false));
 			}
 			// Determine if observer has permission to delete pages
+			// currently just allow page owner
+
+			if((! local_channel()) || (local_channel() != $owner['channel_id'])) {
+				logger('Wiki write permission denied. ' . EOL);
+				json_return_and_die(array('success' => false));					
+			}
 
 			$perms = Zlib\NativeWiki::get_permissions($resource_id, intval($owner['channel_id']), $observer_hash);
 			if(! $perms['write']) {

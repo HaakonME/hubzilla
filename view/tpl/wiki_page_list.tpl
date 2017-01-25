@@ -5,7 +5,7 @@
 		{{if $pages}}
 		{{foreach $pages as $page}}
 		<li id="{{$page.link_id}}">
-			{{if $page.resource_id && $canadd}}
+			{{if $page.resource_id && $candel}}
 			<i class="widget-nav-pills-icons fa fa-trash-o drop-icons" onclick="wiki_delete_page('{{$page.title}}', '{{$page.url}}', '{{$page.resource_id}}', '{{$page.link_id}}')"></i>
 			{{/if}}
 			<a href="/wiki/{{$channel}}/{{$wikiname}}/{{$page.url}}">{{$page.title}}</a>

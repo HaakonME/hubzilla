@@ -417,7 +417,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$page = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash, $name, $resource_id);
 
 			if($page['item_id']) {
-				$ob = \App::get_observer();
 				$commit = Zlib\NativeWikiPage::commit(array(
 					'commit_msg'    => t('New page created'), 
 					'resource_id'   => $resource_id, 
@@ -481,7 +480,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$saved = Zlib\NativeWikiPage::save_page(array('channel_id' => $owner['channel_id'], 'observer_hash' => $observer_hash, 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName, 'content' => $content));
 
 			if($saved['success']) {
-				$ob = \App::get_observer();
 				$commit = Zlib\NativeWikiPage::commit(array(
 					'commit_msg' => $commitMsg, 
 					'pageUrlName' => $pageUrlName,
@@ -628,12 +626,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$renamed = Zlib\NativeWikiPage::rename_page(array('channel_id' => $owner['channel_id'], 'observer_hash' => $observer_hash, 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName, 'pageNewName' => $pageNewName));
 
 			if($renamed['success']) {
-				$ob = \App::get_observer();
 				$commit = Zlib\NativeWikiPage::commit(array(
 					'channel_id' => $owner['channel_id'],
 					'commit_msg' => 'Renamed ' . urldecode($pageUrlName) . ' to ' . $renamed['page']['htmlName'], 
 					'resource_id' => $resource_id, 
-					'observer_hash' => $ob['xchan_hash'],
+					'observer_hash' => $observer_hash,
 					'pageUrlName' => $pageNewName
 				));
 				if($commit['success']) {

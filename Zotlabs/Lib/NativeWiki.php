@@ -103,7 +103,7 @@ class NativeWiki {
 	static public function sync_a_wiki_item($uid,$id,$resource_id) {
 
 
-		$r = q("SELECT * from item WHERE uid = %d AND ( id = %d OR ( resource_type = '%s and resource_id = %d )) ",
+		$r = q("SELECT * from item WHERE uid = %d AND ( id = %d OR ( resource_type = '%s' and resource_id = %d )) ",
 			intval($uid),
 			intval($id),
 			dbesc(NWIKI_ITEM_RESOURCE_TYPE),

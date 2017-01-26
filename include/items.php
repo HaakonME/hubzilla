@@ -3363,7 +3363,7 @@ function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL,$force = fal
 
 	$item = $r[0];
 
-	$linked_item = (($item['resource_id'] && $item['resource_type'] && in_array($linked_resource_types,$item['resource_type'])) ? true : false);
+	$linked_item = (($item['resource_id'] && $item['resource_type'] && in_array($item['resource_type'], $linked_resource_types)) ? true : false);
 
 	$ok_to_delete = false;
 

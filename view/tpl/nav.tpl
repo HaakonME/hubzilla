@@ -156,7 +156,7 @@
 
 			{{if $nav.login && !$userinfo}}
 				<li class="nav-login hidden-xs">
-					<a onclick=openClose('nav-login'); return false;" href="#" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
+					<a onclick="openClose('nav-login'); return false;" href="#" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
 					<div id="nav-login" class="login-dropdown-menu" style="display:none; width:150%;">
 					{{$nav.login}}
 					{{$nav.remote_login}}

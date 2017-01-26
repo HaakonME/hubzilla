@@ -77,6 +77,7 @@ class NativeWikiPage {
 	}
 
 	static public function rename_page($arr) {
+
 		$pageUrlName   = ((array_key_exists('pageUrlName',$arr))   ? $arr['pageUrlName']   : '');
 		$pageNewName   = ((array_key_exists('pageNewName',$arr))   ? $arr['pageNewName']   : '');
 		$resource_id   = ((array_key_exists('resource_id',$arr))   ? $arr['resource_id']   : '');
@@ -94,7 +95,7 @@ class NativeWikiPage {
 			intval($channel_id),
 			dbesc($pageNewName)
 		);
-	
+
 		if($ic) {
 			return [ 'success' => false, 'message' => t('Destination name already exists') ];
 		}
@@ -107,7 +108,7 @@ class NativeWikiPage {
 			intval($channel_id),
 			dbesc($pageUrlName)
 		);
-	
+
 		if($ic) {
 			foreach($ic as $c) {
 				set_iconfig($c['item_id'],'nwikipage','pagetitle',$pageNewName);
@@ -213,7 +214,7 @@ class NativeWikiPage {
 			intval($channel_id),
 			dbesc($pageUrlName)
 		);
-	
+
 		if($ic) {
 			foreach($ic as $c) {
 				if($ids)
@@ -224,11 +225,13 @@ class NativeWikiPage {
 
 		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
 		if($revision == (-1))
-	        $sql_extra .= " order by revision desc ";
-    	elseif($revision)
-        	$sql_extra .= " and revision = " . intval($revision) . " ";
+			$sql_extra .= " order by revision desc ";
+		elseif($revision)
+			$sql_extra .= " and revision = " . intval($revision) . " ";
 
 		$r = null;
+
+
 		if($ids) {
 			$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and id in ( $ids ) $sql_extra limit 1",
 				dbesc($resource_id),
@@ -486,6 +489,7 @@ class NativeWikiPage {
 		if (! $w['wiki']) {
 			return array('message' => t('Error reading wiki'), 'success' => false);
 		}
+
 
 		$page = self::load_page($arr);
 

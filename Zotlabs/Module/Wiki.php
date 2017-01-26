@@ -619,23 +619,23 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 			// Determine if observer has permission to rename pages
 
-			$perms = Zlib\NativeWikiPage::get_permissions($resource_id, intval($owner['channel_id']), $observer_hash);
+			$perms = Zlib\NativeWiki::get_permissions($resource_id, intval($owner['channel_id']), $observer_hash);
 			if(! $perms['write']) {
 				logger('Wiki write permission denied. ' . EOL);
 				json_return_and_die(array('success' => false));					
 			}
 
 			$renamed = Zlib\NativeWikiPage::rename_page(array('channel_id' => $owner['channel_id'], 'observer_hash' => $observer_hash, 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName, 'pageNewName' => $pageNewName));
+
 			if($renamed['success']) {
 				$ob = \App::get_observer();
-				$commit = wiki_git_commit(array(
+				$commit = Zlib\NativeWikiPage::commit(array(
+					'channel_id' => $owner['channel_id'],
 					'commit_msg' => 'Renamed ' . urldecode($pageUrlName) . ' to ' . $renamed['page']['htmlName'], 
 					'resource_id' => $resource_id, 
-					'observer' => $ob,
-					'files' => array($pageUrlName . substr($renamed['page']['fileName'], -3), $renamed['page']['fileName']),
-					'all' => true
+					'observer_hash' => $ob['xchan_hash'],
+					'pageUrlName' => $pageNewName
 				));
-
 				if($commit['success']) {
 					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id'],$resource_id);
 					json_return_and_die(array('name' => $renamed['page'], 'message' => 'Wiki git repo commit made', 'success' => true));

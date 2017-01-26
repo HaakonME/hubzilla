@@ -189,8 +189,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				// GET /wiki/channel/wiki/page
 				// Fetch the wiki info and determine observer permissions
 
-				$wikiUrlName = urlencode(argv(2));
-				$pageUrlName = urlencode(argv(3));
+				$wikiUrlName = urldecode(argv(2));
+				$pageUrlName = urldecode(argv(3));
 
 				$w = Zlib\NativeWiki::exists_by_name($owner['channel_id'], $wikiUrlName);
 
@@ -345,11 +345,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 			} 
 			$wiki = array(); 
 			// Generate new wiki info from input name
-			$wiki['postVisible'] = ((intval($_POST['postVisible']) === 0) ? 0 : 1);
-			$wiki['rawName'] = $_POST['wikiName'];
-			$wiki['htmlName'] = escape_tags($_POST['wikiName']);
-			$wiki['urlName'] = urlencode($_POST['wikiName']); 
-			$wiki['mimeType'] = $_POST['mimeType'];
+			$wiki['postVisible'] = ((intval($_POST['postVisible'])) ? 1 : 0);
+			$wiki['rawName']     = $_POST['wikiName'];
+			$wiki['htmlName']    = escape_tags($_POST['wikiName']);
+			$wiki['urlName']     = urlencode(urlencode($_POST['wikiName'])); 
+			$wiki['mimeType']    = $_POST['mimeType'];
 
 			if($wiki['urlName'] === '') {				
 				notice( t('Error creating wiki. Invalid name.') . EOL);
@@ -367,6 +367,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					notice( t('Wiki created, but error creating Home page.'));
 					goaway(z_root() . '/wiki/' . $nick . '/' . $wiki['urlName']);
 				}
+				Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$homePage['item_id'],$r['item']['resource_id']);
 				goaway(z_root() . '/wiki/' . $nick . '/' . $wiki['urlName'] . '/' . $homePage['page']['urlName']);
 			}
 			else {
@@ -427,10 +428,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 				if($commit['success']) {
 					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$commit['item_id'],$resource_id);
-					json_return_and_die(array('url' => '/' . argv(0) . '/' . argv(1) . '/' . $page['wiki']['urlName'] . '/' . $page['page']['urlName'], 'success' => true));
+					json_return_and_die(array('url' => '/' . argv(0) . '/' . argv(1) . '/' . urlencode($page['wiki']['urlName']) . '/' . urlencode($page['page']['urlName']), 'success' => true));
 				} 
 				else {
-					json_return_and_die(array('message' => 'Error making git commit','url' => '/' . argv(0) . '/' . argv(1) . '/' . $page['wiki']['urlName'] . '/' . urlencode($page['page']['urlName']),'success' => false));
+					json_return_and_die(array('message' => 'Error making git commit','url' => '/' . argv(0) . '/' . argv(1) . '/' . urlencode($page['wiki']['urlName']) . '/' . urlencode($page['page']['urlName']),'success' => false));
 				}				
 
 

@@ -10,7 +10,8 @@ class NativeWiki {
 	static public function listwikis($channel, $observer_hash) {
 
 		$sql_extra = item_permissions_sql($channel['channel_id'], $observer_hash);
-		$wikis = q("SELECT * FROM item WHERE resource_type = '%s' AND mid = parent_mid AND uid = %d AND item_deleted = 0 $sql_extra", 
+		$wikis = q("SELECT * FROM item 
+			WHERE resource_type = '%s' AND mid = parent_mid AND uid = %d AND item_deleted = 0 $sql_extra", 
 			dbesc(NWIKI_ITEM_RESOURCE_TYPE),
 			intval($channel['channel_id'])
 		);
@@ -18,8 +19,8 @@ class NativeWiki {
 		if($wikis) {
 			foreach($wikis as &$w) {
 				$w['rawName']  = get_iconfig($w, 'wiki', 'rawName');
-				$w['htmlName'] = get_iconfig($w, 'wiki', 'htmlName');
-				$w['urlName']  = get_iconfig($w, 'wiki', 'urlName');
+				$w['htmlName'] = escape_tags($w['rawName']);
+				$w['urlName']  = urlencode(urlencode($w['rawName']));
 				$w['mimeType'] = get_iconfig($w, 'wiki', 'mimeType');
 				$w['lock']     = (($w['item_private'] || $w['allow_cid'] || $w['allow_gid'] || $w['deny_cid'] || $w['deny_gid']) ? true : false);
 			}
@@ -61,7 +62,7 @@ class NativeWiki {
 		$arr['author_xchan'] = $observer_hash;
 		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
 		$arr['llink'] = $arr['plink'];
-		$arr['title'] = $wiki['htmlName'];		 // name of new wiki;
+		$arr['title'] = $wiki['htmlName'];  // name of new wiki;
 		$arr['allow_cid'] = $ac['allow_cid'];
 		$arr['allow_gid'] = $ac['allow_gid'];
 		$arr['deny_cid'] = $ac['deny_cid'];
@@ -78,17 +79,12 @@ class NativeWiki {
 		if(! set_iconfig($arr, 'wiki', 'rawName', $wiki['rawName'], true)) {
 			return array('item' => null, 'success' => false);
 		}
-		if(! set_iconfig($arr, 'wiki', 'htmlName', $wiki['htmlName'], true)) {
-			return array('item' => null, 'success' => false);
-		}
-		if(! set_iconfig($arr, 'wiki', 'urlName', $wiki['urlName'], true)) {
-			return array('item' => null, 'success' => false);
-		}
 		if(! set_iconfig($arr, 'wiki', 'mimeType', $wiki['mimeType'], true)) {
 			return array('item' => null, 'success' => false);
 		}
 	
 		$post = item_store($arr);
+
 		$item_id = $post['item_id'];
 
 		if($item_id) {
@@ -151,15 +147,13 @@ class NativeWiki {
 			$w = $item[0];	// wiki item table record
 			// Get wiki metadata
 			$rawName  = get_iconfig($w, 'wiki', 'rawName');
-			$htmlName = get_iconfig($w, 'wiki', 'htmlName');
-			$urlName  = get_iconfig($w, 'wiki', 'urlName');
 			$mimeType = get_iconfig($w, 'wiki', 'mimeType');
 
 			return array(
 				'wiki' => $w,
 				'rawName' => $rawName,
-				'htmlName' => $htmlName,
-				'urlName' => $urlName,
+				'htmlName' => escape_tags($rawName),
+				'urlName' => urlencode(urlencode($rawName)),
 				'mimeType' => $mimeType
 			);
 		}
@@ -170,10 +164,11 @@ class NativeWiki {
 
 		$sql_extra = item_permissions_sql($uid);		
 
-		$item = q("SELECT id, resource_id FROM item WHERE resource_type = '%s' AND title = '%s' AND uid = %d 
+		$item = q("SELECT item.id, resource_id FROM item left join iconfig on iconfig.iid = item.id 
+			WHERE resource_type = '%s' AND iconfig.v = '%s' AND uid = %d 
 			AND item_deleted = 0 $sql_extra limit 1", 
 			dbesc(NWIKI_ITEM_RESOURCE_TYPE), 
-			dbesc(escape_tags(urldecode($urlName))), 
+			dbesc(urldecode($urlName)), 
 			intval($uid)
 		);
 

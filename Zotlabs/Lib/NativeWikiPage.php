@@ -32,8 +32,8 @@ class NativeWikiPage {
 				if(urldecode($title) !== 'Home') {
 					$pages[] = [
 						'resource_id' => $resource_id,
-						'title'       => urldecode($title),
-						'url'         => $title,
+						'title'       => escape_tags($title),
+						'url'         => urlencode(urlencode($title)),
 						'link_id'     => 'id_' . substr($resource_id, 0, 10) . '_' . $page_item['id']
 					];
 				}
@@ -59,7 +59,7 @@ class NativeWikiPage {
 		// We may wish to change this some day.
 		$arr['item_unpublished'] = 1;
 
-		set_iconfig($arr,'nwikipage','pagetitle',urlencode(($name) ? $name : t('(No Title)')),true);
+		set_iconfig($arr,'nwikipage','pagetitle',(($name) ? $name : t('(No Title)')),true);
 
 		$p = post_activity_item($arr, false, false);
 
@@ -67,11 +67,11 @@ class NativeWikiPage {
 			$page = [ 
 				'rawName'  => $name,
 				'htmlName' => escape_tags($name),
-				'urlName'  => urlencode(escape_tags($name)), 
-				'fileName' => urlencode(escape_tags($name)) . Zlib\NativeWikiPage::get_file_ext($w)
+				'urlName'  => urlencode($name), 
+
 			];
 
-			return array('page' => $page, 'item_id' => $p['item_id'], 'wiki' => $w, 'message' => '', 'success' => true);
+			return array('page' => $page, 'item_id' => $p['item_id'], 'item' => $p['activity'], 'wiki' => $w, 'message' => '', 'success' => true);
 		}
 		return [ 'success' => false, 'message' => t('Wiki page create failed.') ];
 	}
@@ -133,6 +133,7 @@ class NativeWikiPage {
 		$observer_hash = ((array_key_exists('observer_hash',$arr)) ? $arr['observer_hash']      : '');
 		$channel_id    = ((array_key_exists('channel_id',$arr))    ? intval($arr['channel_id']) : 0);
 		$revision      = ((array_key_exists('revision',$arr))      ? intval($arr['revision'])   : (-1));
+
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
 		if (! $w['wiki']) {

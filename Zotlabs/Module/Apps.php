@@ -17,7 +17,6 @@ class Apps extends \Zotlabs\Web\Controller {
 	
 		$apps = array();
 	
-	
 		if(local_channel()) {
 			Zlib\Apps::import_system_apps();
 			$syslist = array();

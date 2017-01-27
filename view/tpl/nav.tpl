@@ -163,13 +163,13 @@
 
 					<!--	{{foreach $nav.loginmenu as $loginmenu}}
 						<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem" id="{{$loginmenu.4}}">{{$loginmenu.1}}</a></li>
-						{{/foreach}} --!>
+						{{/foreach}} -->
 					</div>
 				</li>
 <!--				{{foreach $nav.loginmenu as $loginmenu}}
 				<li role="presentation"><a class="{{$loginmenu.2}} visible-xs" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
 				{{/foreach}}
---!>
+-->
 			{{/if}}
 
 			{{if $nav.register}}
@@ -194,7 +194,7 @@
 			{{if $powered_by}}
 				<div id="powered-by">{{$powered_by}}</div>
 			{{/if}}
-
+{{if ! $navapps}}
 			{{if $nav.directory}}
 				<li class="{{$sel.directory}}">
 					<a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}" id="{{$nav.directory.4}}"><i class="fa fa-sitemap"></i></a>
@@ -212,6 +212,7 @@
 					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}"{{if $nav.help.6}} onclick="contextualHelp(); return false;"{{/if}}>{{if $nav.help.6}}<i class="fa fa-question-circle"></i>{{else}}<i class="fa fa-question"></i>{{/if}}</a>
 				</li>
 			{{/if}}
+{{/if}}
 
 			{{if $navapps}}
 				<li class="dropdown-toggle" data-toggle="dropdown">
@@ -222,6 +223,9 @@
 
 			</ul>
 
+		</div>
+		<div class="collapse navbar-collapse" id="navbar-collapse-2">
+			{{$navapps}}
 		</div>
 	</div>
 	{{if $nav.help.6}}

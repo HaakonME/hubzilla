@@ -249,7 +249,7 @@ EOT;
 		if(local_channel()) {
 			//Zlib\Apps::import_system_apps();
 			$syslist = array();
-			$list = Zlib\Apps::app_list(local_channel(), false, $_GET['cat']);
+			$list = Zlib\Apps::app_list(local_channel(), false, 'featured');
 			if($list) {
 				foreach($list as $li) {
 					$syslist[] = Zlib\Apps::app_encode($li);
@@ -262,7 +262,8 @@ EOT;
 		}
 
 		$navapps = replace_macros(get_markup_template('navapps.tpl'), array(
-			'$apps' => $syslist
+			'$apps' => $syslist,
+			'$localuser' => local_channel(),
 		));
 	}
 

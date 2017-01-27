@@ -31,6 +31,8 @@ echo "Preparing for MySQL ..."
 mysql --version
 mysql -e "SELECT VERSION();"
 mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
+mysql -e "SHOW VARIABLES LIKE 'collation_%';"
+mysql -e "SHOW VARIABLES LIKE 'character_set%';"
 mysql -e "SELECT @@sql_mode;"
 
 # Create Hubzilla database

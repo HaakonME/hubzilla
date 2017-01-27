@@ -6,7 +6,7 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutTodoAnnotatedTests="true"
-         processIsolation="true"
+         processIsolation="false"
          verbose="true">
     <testsuite name="Hubzilla default Test Suite">
         <directory suffix="Test.php">./unit/</directory>

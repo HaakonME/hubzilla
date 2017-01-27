@@ -1,8 +1,10 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
+		{{if $allowManageRepos}}
 		<div class="pull-right">
 			<button class="btn btn-success btn-xs" onclick="openClose('form');">{{$managerepos}}</button>
 		</div>
+		{{/if}}
 		<h2 id="title">{{$title}} - {{$page}}</h2>
 		<div class="clear"></div>
 	</div>
@@ -18,7 +20,7 @@
         {{foreach $addonrepos as $repo}}
         <tr>
             <td style="width: 70%;">
-              <span class="pull-left">{{$repo.name}}</span>
+				<span class="pull-left">{{$repo.name}}</span><span id="update-message-{{$repo.name}}" style="margin-left: 20px;"></span>
             </td>
             <td style="width: 15%;">
               <button class="btn btn-xs btn-primary pull-right" style="margin-left: 10px; margin-right: 10px;" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
@@ -139,10 +141,20 @@
             function(response) {
                 if (response.success) {
                   window.console.log('Addon repo '+repoName+' successfully updated :' + response['message']);
-                  alert('Addon repo updated.');
+                  //alert('Addon repo updated.');
+				  $('#update-message-' + repoName).css('background-color', 'yellow');
+				  $('#update-message-' + repoName).html('Repo updated!');
+				  setTimeout(function () {
+					  $('#update-message-' + repoName).html('');
+				  }, 60000);
                 } else {
                   window.console.log('Error updating repo :' + response['message']);
-                  alert('Error updating addon repo!');
+                  //alert('Error updating addon repo!');
+				  $('#update-message-' + repoName).css('background-color', 'red');
+				  $('#update-message-' + repoName).html('Error updating repo!');
+				  setTimeout(function () {
+					  $('#update-message-' + repoName).html('');
+				  }, 60000);
                 }
                 return false;
             },

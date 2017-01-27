@@ -36,7 +36,7 @@ class Plugins {
 							json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
 						}
 						else {
-							if (!symlink('extend/addon', $addonDir)) {
+							if (!symlink(realpath('extend/addon'), $addonDir)) {
 								logger('Error creating symlink to addon folder: ' . $addonDir);
 								json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
 							}
@@ -57,7 +57,7 @@ class Plugins {
 							$files = array_diff(scandir($repoDir), array('.', '..'));
 							foreach ($files as $file) {
 								if (is_dir($repoDir . '/' . $file) && $file !== '.git') {
-									$source = 'extend/addon/' . $repoName . '/' . $file;
+									$source = '../extend/addon/' . $repoName . '/' . $file;
 									$target = realpath('addon/') . '/' . $file;
 									unlink($target);
 									if (!symlink($source, $target)) {
@@ -86,7 +86,7 @@ class Plugins {
 							logger('Error creating extend folder: ' . $extendDir);
 							json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
 						} else {
-							if (!symlink('extend/addon', $addonDir)) {
+							if (!symlink(realpath('extend/addon'), $addonDir)) {
 								logger('Error creating symlink to addon folder: ' . $addonDir);
 								json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
 							}
@@ -119,7 +119,7 @@ class Plugins {
 								logger('Error creating extend folder: ' . $extendDir);
 								json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
 							} else {
-								if (!symlink('extend/addon', $addonDir)) {
+								if (!symlink(realpath('extend/addon'), $addonDir)) {
 									logger('Error creating symlink to addon folder: ' . $addonDir);
 									json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
 								}
@@ -156,7 +156,7 @@ class Plugins {
 						$files = array_diff(scandir($repoDir), array('.', '..'));
 						foreach ($files as $file) {
 							if (is_dir($repoDir . '/' . $file) && $file !== '.git') {
-								$source = 'extend/addon/' . $repoName . '/' . $file;
+								$source = '../extend/addon/' . $repoName . '/' . $file;
 								$target = realpath('addon/') . '/' . $file;
 								unlink($target);
 								if (!symlink($source, $target)) {
@@ -176,13 +176,13 @@ class Plugins {
 						$repoURL = $_REQUEST['repoURL'];
 						$extendDir = 'store/[data]/git/sys/extend';
 						$addonDir = $extendDir . '/addon';
-						$tempAddonDir = 'store/[data]/git/sys/temp';
+						$tempAddonDir = realpath('store/[data]') . '/git/sys/temp';
 						if (!file_exists($extendDir)) {
 							if (!mkdir($extendDir, 0770, true)) {
 								logger('Error creating extend folder: ' . $extendDir);
 								json_return_and_die(array('message' => 'Error creating extend folder: ' . $extendDir, 'success' => false));
 							} else {
-								if (!symlink('extend/addon', $addonDir)) {
+								if (!symlink(realpath('extend/addon'), $addonDir)) {
 									logger('Error creating symlink to addon folder: ' . $addonDir);
 									json_return_and_die(array('message' => 'Error creating symlink to addon folder: ' . $addonDir, 'success' => false));
 								}
@@ -395,6 +395,10 @@ class Plugins {
 	
 		usort($plugins,'self::plugin_sort');
 
+		$allowManageRepos = false;
+		if(is_writable('extend/addon') && is_writable('store/[data]')) {
+			$allowManageRepos = true;
+		} 
 		
 		$admin_plugins_add_repo_form= replace_macros(
 			get_markup_template('admin_plugins_addrepo.tpl'), array(
@@ -432,6 +436,7 @@ class Plugins {
 			'$plugins' => $plugins,
 			'$disabled' => t('Disabled - version incompatibility'),
 			'$form_security_token' => get_form_security_token('admin_plugins'),
+			'$allowManageRepos' => $allowManageRepos,
 			'$managerepos' => t('Manage Repos'),
 			'$installedtitle' => t('Installed Plugin Repositories'),
 			'$addnewrepotitle' =>	t('Install a New Plugin Repository'),

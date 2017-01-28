@@ -45,6 +45,7 @@ require_once('include/channel.php');
 require_once('include/connections.php');
 require_once('include/account.php');
 require_once('include/zid.php');
+require_once('include/xchan.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );

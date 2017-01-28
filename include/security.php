@@ -171,19 +171,16 @@ function atoken_create_xchan($xchan) {
 	if($r)
 		return;
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_mimetype, xchan_photo_l, xchan_photo_m, xchan_photo_s )
-		values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
-		dbesc($xchan['xchan_hash']),
-		dbesc($xchan['xchan_hash']),
-		dbesc($xchan['xchan_addr']),
-		dbesc($xchan['xchan_url']),
-		dbesc($xchan['xchan_name']),
-		dbesc($xchan['xchan_network']),
-		dbesc($xchan['xchan_photo_mimetype']),
-		dbesc($xchan['xchan_photo_l']),
-		dbesc($xchan['xchan_photo_m']),
-		dbesc($xchan['xchan_photo_s'])
-	);
+	$xchan['xchan_guid'] = $xchan['xchan_hash'];
+
+	$store = [];
+	foreach($xchan as $k => $v) {
+		if(strpos($k,'xchan_') === 0) {
+			$store[$k] = $v;
+		}
+	}
+	
+	$r = xchan_store_lowlevel($store);
 
 	return true;
 }

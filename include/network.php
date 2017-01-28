@@ -1121,16 +1121,17 @@ function discover_by_url($url,$arr = null) {
 	if(! $photo)
 		$photo = z_root() . '/images/rss_icon.png';
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_instance_url, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
-		dbesc($guid),
-		dbesc($guid),
-		dbesc($pubkey),
-		dbesc($addr),
-		dbesc($profile),
-		dbesc($name),
-		dbesc($network),
-		dbesc(z_root()),
-		dbesc(datetime_convert())
+	$r = xchan_store_lowlevel(
+		[
+			'xchan_hash'         => $guid,
+			'xchan_guid'         => $guid,
+			'xchan_pubkey'       => $pubkey,
+			'xchan_addr'         => $addr,
+			'xchan_url'          => $profile,
+			'xchan_name'         => $name,
+			'xchan_name_date'    => datetime_convert(),
+			'xchan_network'      => $network
+		]
 	);
 
 	$photos = import_xchan_photo($photo,$guid);
@@ -1449,6 +1450,20 @@ function discover_by_webbie($webbie) {
 			);
 		}
 		else {
+
+			$r = xchan_store_lowlevel(
+				[
+					'xchan_hash'         => $address,
+					'xchan_guid'         => (($diaspora_guid) ? $diaspora_guid : $location),
+					'xchan_pubkey'       => $pubkey,
+					'xchan_addr'         => $address,
+					'xchan_url'          => $location,
+					'xchan_name'         => $fullname,
+					'xchan_name_date'    => datetime_convert(),
+					'xchan_network'      => $network
+				]
+			);
+
 			$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 				dbesc($address),
 				dbesc(($diaspora_guid) ? $diaspora_guid : $location),

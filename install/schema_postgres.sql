@@ -884,6 +884,7 @@ CREATE TABLE "outq" (
   "outq_delivered" numeric(1) NOT NULL DEFAULT '0',
   "outq_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "outq_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "outq_scheduled" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "outq_notify" text NOT NULL,
   "outq_msg" text NOT NULL,
   "outq_priority" smallint NOT NULL DEFAULT '0',
@@ -894,6 +895,7 @@ create index "outq_channel" on outq ("outq_channel");
 create index "outq_hub" on outq ("outq_posturl");
 create index "outq_created" on outq ("outq_created");
 create index "outq_updated" on outq ("outq_updated");
+create index "outq_scheduled" on outq ("outq_scheduled");
 create index "outq_async" on outq ("outq_async");
 create index "outq_delivered" on outq ("outq_delivered");
 create index "outq_priority" on outq ("outq_priority");

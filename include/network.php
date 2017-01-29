@@ -1450,7 +1450,6 @@ function discover_by_webbie($webbie) {
 			);
 		}
 		else {
-
 			$r = xchan_store_lowlevel(
 				[
 					'xchan_hash'         => $address,
@@ -1462,17 +1461,6 @@ function discover_by_webbie($webbie) {
 					'xchan_name_date'    => datetime_convert(),
 					'xchan_network'      => $network
 				]
-			);
-
-			$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_pubkey, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
-				dbesc($address),
-				dbesc(($diaspora_guid) ? $diaspora_guid : $location),
-				dbesc($pubkey),
-				dbesc($address),
-				dbesc($location),
-				dbesc($fullname),
-				dbesc($network),
-				dbescdate(datetime_convert())
 			);
 		}
 

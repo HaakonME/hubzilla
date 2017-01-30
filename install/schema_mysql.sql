@@ -898,6 +898,7 @@ CREATE TABLE IF NOT EXISTS `outq` (
   `outq_delivered` tinyint(1) NOT NULL DEFAULT '0',
   `outq_created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
   `outq_updated` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+  `outq_scheduled` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
   `outq_notify` mediumtext NOT NULL,
   `outq_msg` mediumtext NOT NULL,
   `outq_priority` smallint(6) NOT NULL DEFAULT '0',
@@ -907,6 +908,7 @@ CREATE TABLE IF NOT EXISTS `outq` (
   KEY `outq_hub` (`outq_posturl`),
   KEY `outq_created` (`outq_created`),
   KEY `outq_updated` (`outq_updated`),
+  KEY `outq_scheduled` (`outq_scheduled`),
   KEY `outq_async` (`outq_async`),
   KEY `outq_delivered` (`outq_delivered`),
   KEY `outq_priority` (`outq_priority`)

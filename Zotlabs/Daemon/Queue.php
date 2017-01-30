@@ -61,7 +61,7 @@ class Queue {
 			// the site is permanently down, there's no reason to attempt delivery at all, or at most not more than once 
 			// or twice a day. 
 	
-			$r = q("SELECT * FROM outq WHERE outq_delivered = 0 and outq_scheduled < '%s' ",
+			$r = q("SELECT * FROM outq WHERE outq_delivered = 0 and outq_scheduled < %s ",
 				db_utcnow()
 			);
 		}

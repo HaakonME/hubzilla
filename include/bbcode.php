@@ -7,7 +7,7 @@
 require_once('include/oembed.php');
 require_once('include/event.php');
 require_once('include/zot.php');
-require_once('include/hubloc.php');
+
 
 function tryoembed($match) {
 	$url = ((count($match) == 2) ? $match[1] : $match[2]);

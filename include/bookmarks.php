@@ -23,7 +23,6 @@ function bookmark_add($channel,$sender,$taxonomy,$private,$opts = null) {
 	$iarr['mitem_desc'] = $taxonomy['term'];
 	$iarr['mitem_flags'] = (($ischat) ? MENU_ITEM_CHATROOM : 0);
 
-	require_once('include/hubloc.php');
 	$zrl = is_matrix_url($taxonomy['url']);
 
 	if($zrl)

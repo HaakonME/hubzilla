@@ -17,7 +17,6 @@ class Cron_weekly {
 
 		z_check_cert();
 
-		require_once('include/hubloc.php');
 		prune_hub_reinstalls();
 	
 		mark_orphan_hubsxchans();

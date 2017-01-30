@@ -3,7 +3,6 @@
 namespace Zotlabs\Daemon;
 
 require_once('include/zot.php');
-require_once('include/hubloc.php');
 
 
 class Checksites {

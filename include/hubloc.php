@@ -1,5 +1,36 @@
 <?php /** @file */
 
+
+function hubloc_store_lowlevel($arr) {
+
+	$store = [
+		'hubloc_guid'        => ((array_key_exists('hubloc_guid',$arr))        ? $arr['hubloc_guid']        : ''),
+		'hubloc_guid_sig'    => ((array_key_exists('hubloc_guid_sig',$arr))    ? $arr['hubloc_guid_sig']    : ''),
+		'hubloc_hash'        => ((array_key_exists('hubloc_hash',$arr))        ? $arr['hubloc_hash']        : ''),
+		'hubloc_addr'        => ((array_key_exists('hubloc_addr',$arr))        ? $arr['hubloc_addr']        : ''),
+		'hubloc_network'     => ((array_key_exists('hubloc_network',$arr))     ? $arr['hubloc_network']     : ''),
+		'hubloc_flags'       => ((array_key_exists('hubloc_flags',$arr))       ? $arr['hubloc_flags']       : 0),
+		'hubloc_status'      => ((array_key_exists('hubloc_status',$arr))      ? $arr['hubloc_status']      : 0),
+		'hubloc_url'         => ((array_key_exists('hubloc_url',$arr))         ? $arr['hubloc_url']         : ''),
+		'hubloc_url_sig'     => ((array_key_exists('hubloc_url_sig',$arr))     ? $arr['hubloc_url_sig']     : ''),
+		'hubloc_host'        => ((array_key_exists('hubloc_host',$arr))        ? $arr['hubloc_host']        : ''),
+		'hubloc_callback'    => ((array_key_exists('hubloc_callback',$arr))    ? $arr['hubloc_callback']    : ''),
+		'hubloc_connect'     => ((array_key_exists('hubloc_connect',$arr))     ? $arr['hubloc_connect']     : ''),
+		'hubloc_sitekey'     => ((array_key_exists('hubloc_sitekey',$arr))     ? $arr['hubloc_sitekey']     : ''),
+		'hubloc_updated'     => ((array_key_exists('hubloc_updated',$arr))     ? $arr['hubloc_updated']     : NULL_DATE),
+		'hubloc_connected'   => ((array_key_exists('hubloc_connected',$arr))   ? $arr['hubloc_connected']   : NULL_DATE),
+		'hubloc_primary'     => ((array_key_exists('hubloc_primary',$arr))     ? $arr['hubloc_primary']     : 0),
+		'hubloc_orphancheck' => ((array_key_exists('hubloc_orphancheck',$arr)) ? $arr['hubloc_orphancheck'] : 0),
+		'hubloc_error'       => ((array_key_exists('hubloc_error',$arr))       ? $arr['hubloc_error']       : 0),
+		'hubloc_deleted'     => ((array_key_exists('hubloc_deleted',$arr))     ? $arr['hubloc_deleted']     : 0)
+	];
+
+	return create_table_from_array('hubloc',$store);
+
+}
+
+
+
 function prune_hub_reinstalls() {
 
 	$r = q("select site_url from site where site_type = %d",

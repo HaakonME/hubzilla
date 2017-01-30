@@ -350,7 +350,6 @@
 		if(api_user() === false)
 			return false;
 		logger('api_xchan');
-		require_once('include/hubloc.php');
 
 		if($_SERVER['REQUEST_METHOD'] === 'POST') {			
 			$r = xchan_store($_REQUEST);

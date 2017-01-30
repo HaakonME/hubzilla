@@ -76,7 +76,6 @@ class Cron_daily {
 		Master::Summon(array('Expire'));
 		Master::Summon(array('Cli_suggest'));
 
-		require_once('include/hubloc.php');
 		remove_obsolete_hublocs();
 
 		call_hooks('cron_daily',datetime_convert());

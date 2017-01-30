@@ -10,7 +10,6 @@
 
 require_once('include/crypto.php');
 require_once('include/items.php');
-require_once('include/hubloc.php');
 require_once('include/queue_fn.php');
 require_once('include/perm_upgrade.php');
 
@@ -2469,22 +2468,25 @@ function sync_locations($sender, $arr, $absolute = false) {
 				);
 			}
 			logger('sync_locations: new hub: ' . $location['url']);
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_network, hubloc_primary, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
-					values ( '%s','%s','%s','%s', '%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
-				dbesc($sender['guid']),
-				dbesc($sender['guid_sig']),
-				dbesc($sender['hash']),
-				dbesc($location['address']),
-				dbesc('zot'),
-				intval($location['primary']),
-				dbesc($location['url']),
-				dbesc($location['url_sig']),
-				dbesc($location['host']),
-				dbesc($location['callback']),
-				dbesc($location['sitekey']),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert())
+
+			$r = hubloc_store_lowlevel(
+				[
+					'hubloc_guid'      => $sender['guid'],
+					'hubloc_guid_sig'  => $sender['guid_sig'],
+					'hubloc_hash'      => $sender['hash'],
+					'hubloc_addr'      => $location['address'],
+					'hubloc_network'   => 'zot',
+					'hubloc_primary'   => $location['primary'],
+					'hubloc_url'       => $location['url'],
+					'hubloc_url_sig'   => $location['url_sig'],
+					'hubloc_host'      => $location['host'],
+					'hubloc_callback'  => $location['callback'],
+					'hubloc_sitekey'   => $location['sitekey'],
+					'hubloc_updated'   => datetime_convert(),
+					'hubloc_connected' => datetime_convert()
+				]
 			);
+
 			$what .= 'newhub ';
 			$changed = true;
 
@@ -4057,21 +4059,24 @@ function check_zotinfo($channel,$locations,&$ret) {
 			q("delete from hubloc where hubloc_hash = '%s'",
 				dbesc($channel['channel_hash'])
 			);
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_primary,
-				hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
-				values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
-				dbesc($channel['channel_guid']),
-				dbesc($channel['channel_guid_sig']),
-				dbesc($channel['channel_hash']),
-				dbesc(channel_reddress($channel)),
-				intval(1),
-				dbesc(z_root()),
-				dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
-				dbesc(App::get_hostname()),
-				dbesc(z_root() . '/post'),
-				dbesc(get_config('system','pubkey')),
-				dbesc('zot')
+
+			$r = hubloc_store_lowelevel(
+				[
+					'hubloc_guid'     => $channel['channel_guid'],
+					'hubloc_guid_sig' => $channel['channel_guid_sig'],
+					'hubloc_hash'     => $channel['channel_hash'],
+					'hubloc_addr'     => channel_reddress($channel),
+					'hubloc_network'  => 'zot',
+					'hubloc_primary'  => 1,
+					'hubloc_url'      => z_root(),
+					'hubloc_url_sig'  => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey'])),
+					'hubloc_host'     => App::get_hostname(),
+					'hubloc_callback' => z_root() . '/post',
+					'hubloc_sitekey'  => get_config('system','pubkey'),
+					'hubloc_updated'  => datetime_convert(),
+				]
 			);
+
 			if($r) {
 				$x = zot_encode_locations($channel);
 				if($x) {

@@ -8,6 +8,21 @@ function update_queue_item($id, $add_priority = 0) {
 	if(! $x)
 		return;
 
+
+	$y = q("select min(outq_created) as earliest from outq where outq_posturl = '%s'",
+		dbesc($x[0]['outq_posturl'])
+	);
+
+	// look for the oldest queue entry with this destination URL. If it's older than a couple of days,
+	// the destination is considered to be down and only scheduled once an hour, regardless of the
+	// age of the current queue item.
+
+	$might_be_down = false;
+
+	if($y)
+		$might_be_down = ((datetime_convert('UTC','UTC',$y[0]['earliest']) < datetime_convert('UTC','UTC','now - 2 days')) ? true : false);
+
+
 	// Set all other records for this destination way into the future. 
 	// The queue delivers by destination. We'll keep one queue item for
 	// this destination (this one) with a shorter delivery. If we succeed
@@ -23,7 +38,7 @@ function update_queue_item($id, $add_priority = 0) {
  
 	$since = datetime_convert('UTC','UTC',$x[0]['outq_created']);
 
-	if($since < datetime_convert('UTC','UTC','now - 12 hour')) {
+	if(($might_be_down) || ($since < datetime_convert('UTC','UTC','now - 12 hour'))) {
 		$next = datetime_convert('UTC','UTC','now + 1 hour');
 	}
 	else {

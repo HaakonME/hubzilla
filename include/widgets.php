@@ -521,9 +521,16 @@ function widget_affinity($arr) {
 
 	if(! local_channel())
 		return '';
-
-	$cmin = ((x($_REQUEST,'cmin')) ? intval($_REQUEST['cmin']) : 0);
-	$cmax = ((x($_REQUEST,'cmax')) ? intval($_REQUEST['cmax']) : 99);
+	
+	// Get default cmin value from pconfig, but allow GET parameter to override
+	$cmin = intval(get_pconfig(local_channel(),'affinity','cmin'));
+	$cmin = (($cmin) ? $cmin : 0);
+	$cmin = ((x($_REQUEST,'cmin')) ? intval($_REQUEST['cmin']) : $cmin);
+	
+	// Get default cmax value from pconfig, but allow GET parameter to override
+	$cmax = intval(get_pconfig(local_channel(),'affinity','cmax'));
+	$cmax = (($cmax) ? $cmax : 99);
+	$cmax = ((x($_REQUEST,'cmax')) ? intval($_REQUEST['cmax']) : $cmax);
 
 
 	if(feature_enabled(local_channel(),'affinity')) {
@@ -897,6 +904,75 @@ function widget_chatroom_members() {
 		'$header' => t('Chat Members')
 	));
 
+	return $o;
+}
+
+/*
+ * $arr input array:
+ *		room_id
+ *		
+ */
+function widget_chatroom_panel($arr) {
+	
+	// This widget is only intended for use on the page of a local channel
+	if(local_channel()) {
+		$channel = \App::get_channel();
+		$observer = get_observer_hash();
+		if(! $observer) {
+			// This should never fail because the observer should be a local channel
+			return;
+		}
+	} else {
+		return; 
+	}
+	
+	$room_id = $arr['room_id'];
+	
+	$x = \Zotlabs\Lib\Chatroom::enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
+	if(! $x)
+		return;
+	$x = q("select * from chatroom where cr_id = %d and cr_uid = %d $sql_extra limit 1",
+		intval($room_id),
+		intval(\App::$profile['profile_uid'])
+	);
+
+	if($x) {
+		$acl = new \Zotlabs\Access\AccessList(false);
+		$acl->set($x[0]);
+
+		$private = $acl->is_private();
+		$room_name = $x[0]['cr_name'];
+		if($bookmark_link)
+			$bookmark_link .= '&url=' . z_root() . '/chat/' . argv(1) . '/' . argv(2) . '&title=' . urlencode($x[0]['cr_name']) . (($private) ? '&private=1' : '') . '&ischat=1'; 
+	}
+	else {
+		logger('Room not found');
+		return;
+	}
+	
+	$cipher = get_pconfig(local_channel(),'system','default_cipher');
+	if(! $cipher)
+		$cipher = 'aes256';
+	
+	$o = replace_macros(get_markup_template('chat.tpl'),array(
+		'$is_owner' => ((local_channel() && local_channel() == $x[0]['cr_uid']) ? true : false),
+		'$room_name' => $room_name,
+		'$room_id' => $room_id,
+		'$baseurl' => z_root(),
+		'$nickname' => argv(1),
+		'$submit' => t('Submit'),
+		'$leave' => t('Leave Room'),
+		'$drop' => t('Delete Room'),
+		'$away' => t('I am away right now'),
+		'$online' => t('I am online'),
+		'$bookmark_link' => $bookmark_link,
+		'$bookmark' => t('Bookmark this room'),
+		'$feature_encrypt' => ((feature_enabled(local_channel(),'content_encrypt')) ? true : false),
+		'$cipher' => $cipher,
+		'$linkurl' => t('Please enter a link URL:'),
+		'$encrypt' => t('Encrypt text'),
+		'$insert' => t('Insert web link')
+	));
 	return $o;
 }
 

@@ -45,13 +45,14 @@ require_once('include/channel.php');
 require_once('include/connections.php');
 require_once('include/account.php');
 require_once('include/zid.php');
+require_once('include/xchan.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'STD_VERSION',             '2.1' );
 define ( 'ZOT_REVISION',            '1.2' );
 
-define ( 'DB_UPDATE_VERSION',       1187  );
+define ( 'DB_UPDATE_VERSION',       1188  );
 
 define ( 'PROJECT_BASE',   __DIR__ );
 

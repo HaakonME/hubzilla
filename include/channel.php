@@ -311,23 +311,25 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_system ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
-		dbesc($hash),
-		dbesc($guid),
-		dbesc($sig),
-		dbesc($key['pubkey']),
-		dbesc(z_root() . "/photo/profile/l/{$newuid}"),
-		dbesc(z_root() . "/photo/profile/m/{$newuid}"),
-		dbesc(z_root() . "/photo/profile/s/{$newuid}"),
-		dbesc(channel_reddress($ret['channel'])),
-		dbesc(z_root() . '/channel/' . $ret['channel']['channel_address']),
-		dbesc(z_root() . '/follow?f=&url=%s'),
-		dbesc(z_root() . '/poco/' . $ret['channel']['channel_address']),
-		dbesc($ret['channel']['channel_name']),
-		dbesc('zot'),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		intval($system)
+	$r = xchan_store_lowlevel(
+		[
+			'xchan_hash'       => $hash,
+			'xchan_guid'       => $guid,
+			'xchan_guid_sig'   => $sig,
+			'xchan_pubkey'     => $key['pubkey'],
+			'xchan_photo_l'    => z_root() . "/photo/profile/l/{$newuid}",
+			'xchan_photo_m'    => z_root() . "/photo/profile/m/{$newuid}",
+			'xchan_photo_s'    => z_root() . "/photo/profile/s/{$newuid}",
+			'xchan_addr'       => channel_reddress($ret['channel']),
+			'xchan_url'        => z_root() . '/channel/' . $ret['channel']['channel_address'],
+			'xchan_follow'     => z_root() . '/follow?f=&url=%s',
+			'xchan_connurl'    => z_root() . '/poco/' . $ret['channel']['channel_address'],
+			'xchan_name'       => $ret['channel']['channel_name'],
+			'xchan_network'    => 'zot',
+			'xchan_photo_date' => datetime_convert(),
+			'xchan_name_date'  => datetime_convert(),
+			'xchan_system'     => $system
+		]
 	);
 
 	// Not checking return value.

@@ -833,13 +833,15 @@ function import_author_rss($x) {
 	}
 	$name = trim($x['name']);
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_url, xchan_name, xchan_network )
-		values ( '%s', '%s', '%s', '%s', '%s' )",
-		dbesc($x['guid']),
-		dbesc($x['guid']),
-		dbesc($x['url']),
-		dbesc(($name) ? $name : t('(Unknown)')),
-		dbesc('rss')
+	$r = xchan_store_lowlevel(
+		[
+			'xchan_hash'         => $x['guid'],
+			'xchan_guid'         => $x['guid'],
+			'xchan_url'          => $x['url'],
+			'xchan_name'         => (($name) ? $name : t('(Unknown)')),
+			'xchan_name_date'    => datetime_convert(),
+			'xchan_network'      => 'rss'
+		]
 	);
 
 	if($r && $x['photo']) {
@@ -878,14 +880,17 @@ function import_author_unknown($x) {
 
 	$name = trim($x['name']);
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_url, xchan_name, xchan_network )
-		values ( '%s', '%s', '%s', '%s', '%s' )",
-		dbesc($x['url']),
-		dbesc($x['url']),
-		dbesc($x['url']),
-		dbesc(($name) ? $name : t('(Unknown)')),
-		dbesc('unknown')
+	$r = xchan_store_lowlevel(
+		[
+			'xchan_hash'         => $x['url'],
+			'xchan_guid'         => $x['url'],
+			'xchan_url'          => $x['url'],
+			'xchan_name'         => (($name) ? $name : t('(Unknown)')),
+			'xchan_name_date'    => datetime_convert(),
+			'xchan_network'      => 'unknown'
+		]
 	);
+
 	if($r && $x['photo']) {
 
 		$photos = import_xchan_photo($x['photo']['src'],$x['url']);
@@ -1516,6 +1521,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['postopts']      = ((x($arr,'postopts'))      ? trim($arr['postopts'])              : '');
+	$arr['route']         = ((x($arr,'route'))         ? trim($arr['route'])                 : '');
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_wall']     = ((x($arr,'item_wall'))     ? intval($arr['item_wall'])           : 0 );
 	$arr['item_type']     = ((x($arr,'item_type'))     ? intval($arr['item_type'])           : 0 );

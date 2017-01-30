@@ -61,30 +61,15 @@ class Queue {
 			// the site is permanently down, there's no reason to attempt delivery at all, or at most not more than once 
 			// or twice a day. 
 	
-			// FIXME: can we sort postgres on outq_priority and maintain the 'distinct' ?
-			// The order by max(outq_priority) might be a dodgy query because of the group by.
-			// The desired result is to return a sequence in the order most likely to be delivered in this run.
-			// If a hub has already been sitting in the queue for a few days, they should be delivered last;
-			// hence every failure should drop them further down the priority list.
- 
-			if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
-				$prefix = 'DISTINCT ON (outq_posturl)';
-				$suffix = 'ORDER BY outq_posturl';
-			} else {
-				$prefix = '';
-				$suffix = 'GROUP BY outq_posturl ORDER BY max(outq_priority)';
-			}
-			$r = q("SELECT $prefix * FROM outq WHERE outq_delivered = 0 and (( outq_created > %s - INTERVAL %s and outq_updated < %s - INTERVAL %s ) OR ( outq_updated < %s - INTERVAL %s )) $suffix",
-				db_utcnow(), db_quoteinterval('12 HOUR'),
-				db_utcnow(), db_quoteinterval('15 MINUTE'),
-				db_utcnow(), db_quoteinterval('1 HOUR')
+			$r = q("SELECT * FROM outq WHERE outq_delivered = 0 and outq_scheduled < %s ",
+				db_utcnow()
 			);
 		}
 		if(! $r)
 			return;
 
-		foreach($r as $rr) {
-			queue_deliver($rr);
+		foreach($r as $rv) {
+			queue_deliver($rv);
 		}
 	}
 }

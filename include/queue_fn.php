@@ -2,9 +2,42 @@
 
 function update_queue_item($id, $add_priority = 0) {
 	logger('queue: requeue item ' . $id,LOGGER_DEBUG);
-	q("UPDATE outq SET outq_updated = '%s', outq_priority = outq_priority + %d WHERE outq_hash = '%s'",
+	$x = q("select outq_created, outq_posturl from outq where outq_hash = '%s' limit 1",
+		dbesc($id)
+	);
+	if(! $x)
+		return;
+
+	// Set all other records for this destination way into the future. 
+	// The queue delivers by destination. We'll keep one queue item for
+	// this destination (this one) with a shorter delivery. If we succeed
+	// once, we'll try to deliver everything for that destination.
+	// The delivery will be set to at most once per hour, and if the 
+	// queue item is less than 12 hours old, we'll schedule for fifteen
+	// minutes. 
+
+	$r = q("UPDATE outq SET outq_scheduled = '%s' WHERE outq_posturl = '%s'",
+		dbesc(datetime_convert('UTC','UTC','now + 5 days')),
+		dbesc($x[0]['outq_posturl'])
+	);
+ 
+	$since = datetime_convert('UTC','UTC',$x[0]['outq_created']);
+
+	if($since < datetime_convert('UTC','UTC','now - 12 hour')) {
+		$next = datetime_convert('UTC','UTC','now + 1 hour');
+	}
+	else {
+		$next = datetime_convert('UTC','UTC','now + 15 minutes');
+	}
+
+	q("UPDATE outq SET outq_updated = '%s', 
+		outq_priority = outq_priority + %d, 
+		outq_scheduled = '%s' 
+		WHERE outq_hash = '%s'",
+
 		dbesc(datetime_convert()),
 		intval($add_priority),
+		dbesc($next),
 		dbesc($id)
 	);
 }
@@ -33,8 +66,12 @@ function queue_set_delivered($id,$channel = 0) {
 	logger('queue: set delivered ' . $id,LOGGER_DEBUG);
 	$sql_extra = (($channel_id) ? " and outq_channel = " . intval($channel_id) . " " : '');
 
-	q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' $sql_extra ",
+	// Set the next scheduled run date so far in the future that it will be expired
+	// long before it ever makes it back into the delivery chain. 
+
+	q("update outq set outq_delivered = 1, outq_updated = '%s', outq_scheduled = '%s' where outq_hash = '%s' $sql_extra ",
 		dbesc(datetime_convert()),
+		dbesc(datetime_convert('UTC','UTC','now + 5 days')),
 		dbesc($id)
 	);
 }
@@ -44,8 +81,8 @@ function queue_set_delivered($id,$channel = 0) {
 function queue_insert($arr) {
 
 	$x = q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_priority,
-		outq_created, outq_updated, outq_notify, outq_msg ) 
-		values ( '%s', %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' )",
+		outq_created, outq_updated, outq_scheduled, outq_notify, outq_msg ) 
+		values ( '%s', %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($arr['hash']),
 		intval($arr['account_id']),
 		intval($arr['channel_id']),
@@ -53,6 +90,7 @@ function queue_insert($arr) {
 		dbesc($arr['posturl']),
 		intval(1),
 		intval(($arr['priority']) ? $arr['priority'] : 0),
+		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
 		dbesc($arr['notify']),

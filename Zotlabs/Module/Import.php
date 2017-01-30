@@ -247,25 +247,27 @@ class Import extends \Zotlabs\Web\Controller {
 				$r = q("delete from xchan where xchan_hash = '%s'",
 					dbesc($channel['channel_hash'])
 				);
-	
-				$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_orphan, xchan_censored, xchan_selfcensored, xchan_system, xchan_pubforum, xchan_deleted ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, %d, %d )",
-					dbesc($channel['channel_hash']),
-					dbesc($channel['channel_guid']),
-					dbesc($channel['channel_guid_sig']),
-					dbesc($channel['channel_pubkey']),
-					dbesc(z_root() . "/photo/profile/l/" . $channel['channel_id']),
-					dbesc(z_root() . "/photo/profile/m/" . $channel['channel_id']),
-					dbesc(z_root() . "/photo/profile/s/" . $channel['channel_id']),
-					dbesc(channel_reddress($channel)),
-					dbesc(z_root() . '/channel/' . $channel['channel_address']),
-					dbesc(z_root() . '/follow?f=&url=%s'),
-					dbesc(z_root() . '/poco/' . $channel['channel_address']),
-					dbesc($channel['channel_name']),
-					dbesc('zot'),
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					0,0,0,0,0,0,0
-				);
+
+
+				$r = xchan_store_lowlevel(
+					[
+						'xchan_hash'           => $channel['channel_hash'],
+						'xchan_guid'           => $channel['channel_guid'],
+						'xchan_guid_sig'       => $channel['channel_guid_sig'],
+						'xchan_pubkey'         => $channel['channel_pubkey'],
+						'xchan_photo_l'        => z_root() . "/photo/profile/l/" . $channel['channel_id'],
+						'xchan_photo_m'        => z_root() . "/photo/profile/m/" . $channel['channel_id'],
+						'xchan_photo_s'        => z_root() . "/photo/profile/s/" . $channel['channel_id'],
+						'xchan_addr'           => channel_reddress($channel),
+						'xchan_url'            => z_root() . '/channel/' . $channel['channel_address'],
+						'xchan_connurl'        => z_root() . '/poco/' . $channel['channel_address'],
+						'xchan_follow'         => z_root() . '/follow?f=&url=%s',
+						'xchan_name'           => $channel['channel_name'],
+						'xchan_network'        => 'zot',
+						'xchan_photo_date'     => datetime_convert(),
+						'xchan_name_date'      => datetime_convert()
+					]
+				);	
 			}
 			logger('import step 6');
 			$_SESSION['import_step'] = 6;

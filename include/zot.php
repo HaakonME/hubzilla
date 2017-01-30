@@ -759,28 +759,28 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 				&& ($arr['site']['url'] != z_root()))
 			$arr['searchable'] = false;
 
-		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_hidden, xchan_selfcensored, xchan_deleted, xchan_pubforum )
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d) ",
-			dbesc($xchan_hash),
-			dbesc($arr['guid']),
-			dbesc($arr['guid_sig']),
-			dbesc($arr['key']),
-			dbesc($arr['photo_mimetype']),
-			dbesc($arr['photo']),
-			dbesc($arr['address']),
-			dbesc($arr['url']),
-			dbesc($arr['connections_url']),
-			dbesc($arr['follow_url']),
-			dbesc($arr['connect_url']),
-			dbesc(($arr['name']) ? $arr['name'] : '-'),
-			dbesc('zot'),
-			dbescdate($arr['photo_updated']),
-			dbescdate($arr['name_updated']),
-			intval(1 - intval($arr['searchable'])),
-			intval($arr['adult_content']),
-			intval($arr['deleted']),
-			intval($arr['public_forum'])
+		$x = xchan_store_lowlevel(
+			[
+				'xchan_hash'           => $xchan_hash, 
+				'xchan_guid'           => $arr['guid'],
+				'xchan_guid_sig'       => $arr['guid_sig'],
+				'xchan_pubkey'         => $arr['key'],
+				'xchan_photo_mimetype' => $arr['photo_mimetype'],
+				'xchan_photo_l'        => $arr['photo'],
+				'xchan_addr'           => $arr['address'],
+				'xchan_url'            => $arr['url'],
+				'xchan_connurl'        => $arr['connections_url'],
+				'xchan_follow'         => $arr['follow_url'],
+				'xchan_connpage'       => $arr['connect_url'],
+				'xchan_name'           => (($arr['name']) ? $arr['name'] : '-'),
+				'xchan_network'        => 'zot',
+				'xchan_photo_date'     => $arr['photo_updated'],
+				'xchan_name_date'      => $arr['name_updated'],
+				'xchan_hidden'         => intval(1 - intval($arr['searchable'])),
+				'xchan_selfcensored'   => $arr['adult_content'],
+				'xchan_deleted'        => $arr['deleted'],
+				'xchan_pubforum'       => $arr['public_forum']
+			]
 		);
 
 		$what .= 'new_xchan';

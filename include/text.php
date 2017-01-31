@@ -3130,6 +3130,7 @@ function gen_link_id($mid) {
 	return $mid;
 }
 
+
 // callback for array_walk
 
 function array_trim(&$v,$k) {

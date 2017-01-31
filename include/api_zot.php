@@ -69,8 +69,13 @@
 			logger('api_export_basic: no user');
 			return false;
 		}
-		
-		json_return_and_die(identity_basic_export(api_user(),(($_REQUEST['posts']) ? intval($_REQUEST['posts']) : 0 )));	
+		$sections = (($_REQUEST['sections']) ? explode(',',$_REQUEST['sections']) : '');
+		if($_REQUEST['posts']) {
+			$sections = get_default_export_sections();
+			$sections[] = 'items';
+		}
+
+		json_return_and_die(identity_basic_export(api_user(),$sections));
 	}
 
 

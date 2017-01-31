@@ -242,6 +242,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/get_best_language]get_best_language[/zrl]
 	called when choosing the preferred language for the page
 
+[zrl=[baseurl]/help/hook/get_default_export_sections]get_default_export_sections[/zrl]
+	Called to get the default list of functional data groups to export in identity_basic_export()
+
 [zrl=[baseurl]/help/hook/get_features]get_features[/zrl]
 	Called when get_features() is called
 

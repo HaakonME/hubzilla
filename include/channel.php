@@ -476,6 +476,16 @@ function set_default_login_identity($account_id, $channel_id, $force = true) {
 	}
 }
 
+
+function get_default_export_sections() {
+	$sections = [ 'channel', 'connections', 'config', 'apps', 'chatrooms', 'events', 'webpages', 'mail', 'wikis' ];
+
+	$cb = [ 'sections' => $sections ];
+	call_hooks('get_default_export_sections', $cb);
+	return $cb['sections'];
+}
+
+
 /**
  * @brief Create an array representing the important channel information
  * which would be necessary to create a nomadic identity clone. This includes
@@ -489,224 +499,278 @@ function set_default_login_identity($account_id, $channel_id, $force = true) {
  * @returns array
  *     See function for details
  */
-function identity_basic_export($channel_id, $items = false) {
+function identity_basic_export($channel_id, $sections = null) {
 
 	/*
-	 * Red basic channel export
+	 * basic channel export
 	 */
 
-	$ret = array();
+	if(! $sections) {
+		$sections = get_default_export_sections();
+	}
+		
+	$ret = [];
 
 	// use constants here as otherwise we will have no idea if we can import from a site
 	// with a non-standard platform and version.
-	$ret['compatibility'] = array('project' => PLATFORM_NAME, 'version' => STD_VERSION, 'database' => DB_UPDATE_VERSION, 'server_role' => Zotlabs\Lib\System::get_server_role());
+
+	$ret['compatibility'] = [
+		'project' => PLATFORM_NAME, 
+		'version' => STD_VERSION, 
+		'database' => DB_UPDATE_VERSION, 
+		'server_role' => Zotlabs\Lib\System::get_server_role()
+	];
+
+	/*
+	 * Process channel information regardless of it is one of the sections desired
+	 * because we need the channel relocation information in all export files/streams.
+	 */
 
 	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($channel_id)
 	);
 	if($r) {
 		translate_channel_perms_outbound($r[0]);
-		$ret['channel'] = $r[0];
 		$ret['relocate'] = [ 'channel_address' => $r[0]['channel_address'], 'url' => z_root()];
-	}
-
-	$r = q("select * from profile where uid = %d",
-		intval($channel_id)
-	);
-	if($r)
-		$ret['profile'] = $r;
-
-	$xchans = array();
-	$r = q("select * from abook where abook_channel = %d ",
-		intval($channel_id)
-	);
-	if($r) {
-		$ret['abook'] = $r;
-
-		for($x = 0; $x < count($ret['abook']); $x ++) {
-			$xchans[] = $ret['abook'][$x]['abook_xchan'];
-			$abconfig = load_abconfig($channel_id,$ret['abook'][$x]['abook_xchan']);
-			if($abconfig)
-				$ret['abook'][$x]['abconfig'] = $abconfig;
-			translate_abook_perms_outbound($ret['abook'][$x]);
+		if(in_array('channel',$sections)) {
+			$ret['channel'] = $r[0];
 		}
-		stringify_array_elms($xchans);
 	}
 
-	if($xchans) {
-		$r = q("select * from xchan where xchan_hash in ( " . implode(',',$xchans) . " ) ");
+	if(in_array('channel',$sections)) {
+		$r = q("select * from profile where uid = %d",
+			intval($channel_id)
+		);
 		if($r)
-			$ret['xchan'] = $r;
+			$ret['profile'] = $r;
 
-		$r = q("select * from hubloc where hubloc_hash in ( " . implode(',',$xchans) . " ) ");
+
+		$r = q("select mimetype, content, os_storage from photo 
+			where imgscale = 4 and photo_usage = %d and uid = %d limit 1",
+			intval(PHOTO_PROFILE),
+			intval($channel_id)
+		);
+
+		if($r) {
+			$ret['photo'] = [
+				'type' => $r[0]['mimetype'], 
+				'data' => (($r[0]['os_storage']) 
+					? base64url_encode(file_get_contents($r[0]['content'])) : base64url_encode($r[0]['content']))
+			];
+		}
+	}
+
+	if(in_array('connections',$sections)) {
+		$xchans = array();
+		$r = q("select * from abook where abook_channel = %d ",
+			intval($channel_id)
+		);
+		if($r) {
+			$ret['abook'] = $r;
+
+			for($x = 0; $x < count($ret['abook']); $x ++) {
+				$xchans[] = $ret['abook'][$x]['abook_xchan'];
+				$abconfig = load_abconfig($channel_id,$ret['abook'][$x]['abook_xchan']);
+				if($abconfig)
+					$ret['abook'][$x]['abconfig'] = $abconfig;
+				translate_abook_perms_outbound($ret['abook'][$x]);
+			}
+			stringify_array_elms($xchans);
+		}
+
+		if($xchans) {
+			$r = q("select * from xchan where xchan_hash in ( " . implode(',',$xchans) . " ) ");
+			if($r)
+				$ret['xchan'] = $r;
+
+			$r = q("select * from hubloc where hubloc_hash in ( " . implode(',',$xchans) . " ) ");
+			if($r)
+				$ret['hubloc'] = $r;
+		}
+
+		$r = q("select * from groups where uid = %d ",
+			intval($channel_id)
+		);
+
 		if($r)
-			$ret['hubloc'] = $r;
+			$ret['group'] = $r;
+
+		$r = q("select * from group_member where uid = %d ",
+			intval($channel_id)
+		);
+		if($r)
+			$ret['group_member'] = $r;
+
 	}
 
-	$r = q("select * from groups where uid = %d ",
-		intval($channel_id)
-	);
+	if(in_array('config',$sections)) {
+		$r = q("select * from pconfig where uid = %d",
+			intval($channel_id)
+		);
+		if($r)
+			$ret['config'] = $r;
+	
+		// All other term types will be included in items, if requested.
 
-	if($r)
-		$ret['group'] = $r;
+		$r = q("select * from term where ttype in (%d,%d) and uid = %d",
+			intval(TERM_SAVEDSEARCH),
+			intval(TERM_THING),
+			intval($channel_id)
+		);
+		if($r)
+			$ret['term'] = $r;
 
-	$r = q("select * from group_member where uid = %d ",
-		intval($channel_id)
-	);
-	if($r)
-		$ret['group_member'] = $r;
+		// add psuedo-column obj_baseurl to aid in relocations
 
-	$r = q("select * from pconfig where uid = %d",
-		intval($channel_id)
-	);
-	if($r)
-		$ret['config'] = $r;
+		$r = q("select obj.*, '%s' as obj_baseurl from obj where obj_channel = %d",
+			dbesc(z_root()),
+			intval($channel_id)
+		);
 
-	$r = q("select mimetype, content, os_storage from photo where imgscale = 4 and photo_usage = %d and uid = %d limit 1",
-		intval(PHOTO_PROFILE),
-		intval($channel_id)
-	);
+		if($r)
+			$ret['obj'] = $r;
 
-	if($r) {
-		$ret['photo'] = array('type' => $r[0]['mimetype'], 'data' => (($r[0]['os_storage']) ? base64url_encode(file_get_contents($r[0]['content'])) : base64url_encode($r[0]['content'])));
+		$r = q("select * from likes where channel_id = %d",
+			intval($channel_id)
+		);
+
+		if($r)
+			$ret['likes'] = $r;
+
 	}
 
-	// All other term types will be included in items, if requested.
-
-	$r = q("select * from term where ttype in (%d,%d) and uid = %d",
-		intval(TERM_SAVEDSEARCH),
-		intval(TERM_THING),
-		intval($channel_id)
-	);
-	if($r)
-		$ret['term'] = $r;
-
-	// add psuedo-column obj_baseurl to aid in relocations
-
-	$r = q("select obj.*, '%s' as obj_baseurl from obj where obj_channel = %d",
-		dbesc(z_root()),
-		intval($channel_id)
-	);
-
-	if($r)
-		$ret['obj'] = $r;
-
-	$r = q("select * from app where app_channel = %d and app_system = 0",
-		intval($channel_id)
-	);
-	if($r) {
-		for($x = 0; $x < count($r); $x ++) {
-			$r[$x]['term'] = q("select * from term where otype = %d and oid = %d",
-				intval(TERM_OBJ_APP),
-				intval($r[$x]['id'])
-			);
-		}
-		$ret['app'] = $r;
-	}
-
-	$r = q("select * from chatroom where cr_uid = %d",
-		intval($channel_id)
-	);
-	if($r)
-		$ret['chatroom'] = $r;
-
-	$r = q("select * from event where uid = %d",
-		intval($channel_id)
-	);
-	if($r)
-		$ret['event'] = $r;
-
-	$r = q("select * from item where resource_type = 'event' and uid = %d",
-		intval($channel_id)
-	);
-	if($r) {
-		$ret['event_item'] = array();
-		xchan_query($r);
-		$r = fetch_post_tags($r,true);
-		foreach($r as $rr)
-			$ret['event_item'][] = encode_item($rr,true);
-	}
-
-	$x = menu_list($channel_id);
-	if($x) {
-		$ret['menu'] = array();
-		for($y = 0; $y < count($x); $y ++) {
-			$m = menu_fetch($x[$y]['menu_name'],$channel_id,$ret['channel']['channel_hash']);
-			if($m)
-				$ret['menu'][] = menu_element($ret['channel'],$m);
+	if(in_array('apps',$sections)) {
+		$r = q("select * from app where app_channel = %d and app_system = 0",
+			intval($channel_id)
+		);
+		if($r) {
+			for($x = 0; $x < count($r); $x ++) {
+				$r[$x]['term'] = q("select * from term where otype = %d and oid = %d",
+					intval(TERM_OBJ_APP),
+					intval($r[$x]['id'])
+				);
+			}
+			$ret['app'] = $r;
 		}
 	}
 
-	$addon = array('channel_id' => $channel_id,'data' => $ret);
+	if(in_array('chatrooms',$sections)) {
+		$r = q("select * from chatroom where cr_uid = %d",
+			intval($channel_id)
+		);
+		if($r)
+			$ret['chatroom'] = $r;
+	}
+
+
+	if(in_array('events',$sections)) {
+		$r = q("select * from event where uid = %d",
+			intval($channel_id)
+		);
+		if($r)
+			$ret['event'] = $r;
+
+		$r = q("select * from item where resource_type = 'event' and uid = %d",
+			intval($channel_id)
+		);
+		if($r) {
+			$ret['event_item'] = array();
+			xchan_query($r);
+			$r = fetch_post_tags($r,true);
+			foreach($r as $rr)
+				$ret['event_item'][] = encode_item($rr,true);
+		}
+	}
+
+	if(in_array('webpages',$sections)) {
+		$x = menu_list($channel_id);
+		if($x) {
+			$ret['menu'] = array();
+			for($y = 0; $y < count($x); $y ++) {
+				$m = menu_fetch($x[$y]['menu_name'],$channel_id,$ret['channel']['channel_hash']);
+				if($m)
+					$ret['menu'][] = menu_element($ret['channel'],$m);
+			}
+		}
+		$r = q("select * from item where item_type in ( " 
+			. ITEM_TYPE_BLOCK . "," . ITEM_TYPE_PDL . "," . ITEM_TYPE_WEBPAGE . " ) and uid = %d",
+			intval($channel_id)
+		);
+		if($r) {
+			$ret['webpages'] = array();
+			xchan_query($r);
+			$r = fetch_post_tags($r,true);
+			foreach($r as $rr)
+				$ret['webpages'][] = encode_item($rr,true);
+
+		}
+	}
+
+	if(in_array('mail',$sections)) {
+		$r = q("select * from conv where uid = %d",
+			intval($channel_id)
+		);
+		if($r) {
+			for($x = 0; $x < count($r); $x ++) {
+				$r[$x]['subject'] = base64url_decode(str_rot47($r[$x]['subject']));
+			}
+			$ret['conv'] = $r;
+		}
+
+		$r = q("select * from mail where mail.uid = %d",
+			intval($channel_id)
+		);
+		if($r) {
+			$m = array();
+			foreach($r as $rr) {
+				xchan_mail_query($rr);
+				$m[] = mail_encode($rr,true);
+			}
+			$ret['mail'] = $m;
+		}
+	}
+
+	if(in_array('wikis',$sections)) {
+		$r = q("select * from item where resource_type like 'nwiki%%' and uid = %d order by created",
+			intval($channel_id)
+		);
+		if($r) {
+			$ret['wiki'] = array();
+			xchan_query($r);
+			$r = fetch_post_tags($r,true);
+			foreach($r as $rv) {
+				$ret['wiki'][] = encode_item($rv,true);
+			}
+		}
+	}
+
+	if(in_array('items',$sections)) {
+		/** @warning this may run into memory limits on smaller systems */
+
+		/** export three months of posts. If you want to export and import all posts you have to start with
+		 * the first year and export/import them in ascending order.
+		 *
+		 * Don't export linked resource items. we'll have to pull those out separately.
+		 */
+
+		$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d 
+			and created > %s - INTERVAL %s and resource_type = '' order by created",
+			intval($channel_id),
+			db_utcnow(),
+			db_quoteinterval('3 MONTH')
+		);
+		if($r) {
+			$ret['item'] = array();
+			xchan_query($r);
+			$r = fetch_post_tags($r,true);
+			foreach($r as $rr)
+				$ret['item'][] = encode_item($rr,true);
+		}
+	}
+
+	$addon = [ 'channel_id' => $channel_id, 'sections' => $sections, 'data' => $ret];
 	call_hooks('identity_basic_export',$addon);
 	$ret = $addon['data'];
-
-	if(! $items)
-		return $ret;
-
-	$r = q("select * from likes where channel_id = %d",
-		intval($channel_id)
-	);
-
-	if($r)
-		$ret['likes'] = $r;
-
-
-	$r = q("select * from conv where uid = %d",
-		intval($channel_id)
-	);
-	if($r) {
-		for($x = 0; $x < count($r); $x ++) {
-			$r[$x]['subject'] = base64url_decode(str_rot47($r[$x]['subject']));
-		}
-		$ret['conv'] = $r;
-	}
-
-	$r = q("select * from mail where mail.uid = %d",
-		intval($channel_id)
-	);
-	if($r) {
-		$m = array();
-		foreach($r as $rr) {
-			xchan_mail_query($rr);
-			$m[] = mail_encode($rr,true);
-		}
-		$ret['mail'] = $m;
-	}
-
-	$r = q("select * from item where resource_type like 'nwiki%%' and uid = %d order by created",
-		intval($channel_id)
-	);
-	if($r) {
-		$ret['wiki'] = array();
-		xchan_query($r);
-		$r = fetch_post_tags($r,true);
-		foreach($r as $rv) {
-			$ret['wiki'][] = encode_item($rv,true);
-		}
-	}
-
-	/** @warning this may run into memory limits on smaller systems */
-
-
-	/** export three months of posts. If you want to export and import all posts you have to start with
-	  * the first year and export/import them in ascending order.
-	  *
-	  * Don't export linked resource items. we'll have to pull those out separately.
-	  */
-
-	$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d and created > %s - INTERVAL %s and resource_type = '' order by created",
-		intval($channel_id),
-		db_utcnow(),
-		db_quoteinterval('3 MONTH')
-	);
-	if($r) {
-		$ret['item'] = array();
-		xchan_query($r);
-		$r = fetch_post_tags($r,true);
-		foreach($r as $rr)
-			$ret['item'][] = encode_item($rr,true);
-	}
 
 	return $ret;
 }

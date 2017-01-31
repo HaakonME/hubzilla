@@ -350,7 +350,7 @@ class Apps {
 			'$delete' => ((local_channel() && $installed && $mode == 'edit') ? t('Delete') : ''),
 			'$undelete' => ((local_channel() && $installed && $mode == 'edit') ? t('Undelete') : ''),
 			'$deleted' => $papp['deleted'],
-			'$featured' => ((strpos($papp['categories'], 'featured') === false) ? false : true)
+			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true)
 		));
 	}
 
@@ -461,7 +461,7 @@ class Apps {
 			);
 		}
 		else {
-			store_item_tag($uid,$r[0]['id'],TERM_OBJ_APP,TERM_CATEGORY,'featured',escape_tags(z_root() . '/apps/?f=&cat=featured'));
+			store_item_tag($uid,$r[0]['id'],TERM_OBJ_APP,TERM_CATEGORY,'nav_featured_app',escape_tags(z_root() . '/apps/?f=&cat=nav_featured_app'));
 		}
 	}
 

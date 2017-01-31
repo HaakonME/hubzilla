@@ -249,7 +249,7 @@ EOT;
 		if(local_channel()) {
 			//Zlib\Apps::import_system_apps();
 			$syslist = array();
-			$list = Zlib\Apps::app_list(local_channel(), false, 'featured');
+			$list = Zlib\Apps::app_list(local_channel(), false, 'nav_featured_app');
 			if($list) {
 				foreach($list as $li) {
 					$syslist[] = Zlib\Apps::app_encode($li);

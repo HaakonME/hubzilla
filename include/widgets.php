@@ -456,6 +456,7 @@ function widget_appcategories($arr) {
         where app_channel = %d
         and term.uid = app_channel
         and term.otype = %d
+        and term.term != 'nav_featured_app'
         order by term.term asc",
 		intval(local_channel()),
 	    intval(TERM_OBJ_APP)

@@ -291,20 +291,21 @@ function create_identity($arr) {
 
 	// Create a verified hub location pointing to this site.
 
-	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_primary,
-		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
-		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
-		dbesc($guid),
-		dbesc($sig),
-		dbesc($hash),
-		dbesc(channel_reddress($ret['channel'])),
-		intval($primary),
-		dbesc(z_root()),
-		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
-		dbesc(App::get_hostname()),
-		dbesc(z_root() . '/post'),
-		dbesc(get_config('system','pubkey')),
-		dbesc('zot')
+	$r = hubloc_store_lowlevel(
+		[
+			'hubloc_guid'     => $guid,
+			'hubloc_guid_sig' => $sig,
+			'hubloc_hash'     => $hash,
+			'hubloc_addr'     => channel_reddress($ret['channel']),
+			'hubloc_primary'  => $primary,
+			'hubloc_url'      => z_root(),
+			'hubloc_url_sig'  => base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey'])),
+			'hubloc_host'     => App::get_hostname(),
+			'hubloc_callback' => z_root() . '/post',
+			'hubloc_sitekey'  => get_config('system','pubkey'),
+			'hubloc_network'  => 'zot',
+			'hubloc_updated'  => datetime_convert()
+		]
 	);
 	if(! $r)
 		logger('create_identity: Unable to store hub location');

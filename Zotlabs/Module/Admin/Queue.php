@@ -15,7 +15,6 @@ class Queue {
 		$expert = ((array_key_exists('expert',$_REQUEST)) ? intval($_REQUEST['expert']) : 0);
 	
 		if($_REQUEST['drophub']) {
-			require_once('hubloc.php');
 			hubloc_mark_as_down($_REQUEST['drophub']);
 			remove_queue_by_posturl($_REQUEST['drophub']);
 		}

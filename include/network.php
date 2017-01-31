@@ -1469,15 +1469,18 @@ function discover_by_webbie($webbie) {
 		);
 
 		if(! $r) {
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_hash, hubloc_addr, hubloc_network, hubloc_url, hubloc_host, hubloc_callback, hubloc_updated, hubloc_primary ) values ('%s','%s','%s','%s','%s','%s','%s','%s', 1)",
-				dbesc(($diaspora_guid) ? $diaspora_guid : $location),
-				dbesc($address),
-				dbesc($address),
-				dbesc($network),
-				dbesc($base),
-				dbesc($host),
-				dbesc($notify),
-				dbescdate(datetime_convert())
+			$r = hubloc_store_lowlevel(
+				[
+					'hubloc_guid'     => (($diaspora_guid) ? $diaspora_guid : $location),
+					'hubloc_hash'     => $address,
+					'hubloc_addr'     => $address,
+					'hubloc_network'  => $network,
+					'hubloc_url'      => $base,
+					'hubloc_host'     => $host,
+					'hubloc_callback' => $notify,
+					'hubloc_updated'  => datetime_convert(),
+					'hubloc_primary'  => 1
+				]
 			);
 		}
 		$photos = import_xchan_photo($avatar,$address);

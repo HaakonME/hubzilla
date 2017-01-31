@@ -2,8 +2,6 @@
 
 use Zotlabs\Lib as Zlib;
 
-require_once('include/hubloc.php');
-
 
 function oembed_replacecb($matches){
 

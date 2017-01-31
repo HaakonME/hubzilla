@@ -170,7 +170,7 @@ function zidify_text($s) {
  * @return string
  */
 function red_zrl_callback($matches) {
-	require_once('include/hubloc.php');
+
 	$zrl = is_matrix_url($matches[2]);
 
 	$t = strip_zids($matches[2]);
@@ -215,7 +215,7 @@ function red_unescape_codeblock($m) {
 
 
 function red_zrlify_img_callback($matches) {
-	require_once('include/hubloc.php');
+
 	$zrl = is_matrix_url($matches[2]);
 
 	$t = strip_zids($matches[2]);

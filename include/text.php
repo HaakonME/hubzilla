@@ -4,7 +4,7 @@
  */
 
 require_once("include/bbcode.php");
-require_once('include/hubloc.php');
+
 
 // random string, there are 86 characters max in text mode, 128 for hex
 // output is urlsafe

@@ -349,7 +349,8 @@ class Apps {
 			'$edit' => ((local_channel() && $installed && $mode == 'edit') ? t('Edit') : ''),
 			'$delete' => ((local_channel() && $installed && $mode == 'edit') ? t('Delete') : ''),
 			'$undelete' => ((local_channel() && $installed && $mode == 'edit') ? t('Undelete') : ''),
-			'$deleted' => $papp['deleted']
+			'$deleted' => $papp['deleted'],
+			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true)
 		));
 	}
 
@@ -421,7 +422,6 @@ class Apps {
 		}
 	}
 
-
 	static public function app_undestroy($uid,$app) {
 
 		// undelete a system app
@@ -443,8 +443,27 @@ class Apps {
 		}
 	}
 
+	static public function app_feature($uid,$app) {
+		$r = q("select id from app where app_id = '%s' and app_channel = %d limit 1",
+			dbesc($app['guid']),
+			intval($uid)
+		);
 
+		$x = q("select * from term where otype = %d and oid = %d limit 1",
+			intval(TERM_OBJ_APP),
+			intval($r[0]['id'])
+		);
 
+		if($x) {
+			q("delete from term where otype = %d and oid = %d",
+				intval(TERM_OBJ_APP),
+				intval($x[0]['oid'])
+			);
+		}
+		else {
+			store_item_tag($uid,$r[0]['id'],TERM_OBJ_APP,TERM_CATEGORY,'nav_featured_app',escape_tags(z_root() . '/apps/?f=&cat=nav_featured_app'));
+		}
+	}
 
 	static public function app_installed($uid,$app) {
 

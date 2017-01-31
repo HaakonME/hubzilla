@@ -1,7 +1,6 @@
 <?php
 
 require_once('include/html2bbcode.php');
-require_once('include/hubloc.php');
 
 // Sample module for importing conversation data from Reflection CMS. Some preparation was used to 
 // dump relevant posts, categories and comments into individual JSON files, and also JSON dump of 

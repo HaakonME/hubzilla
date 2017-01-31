@@ -56,19 +56,21 @@ class Fhublocs extends \Zotlabs\Web\Controller {
 	
 				// Create a verified hub location pointing to this site.
 	
-				$h = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_primary, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_network )
-					values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
-					dbesc($rr['channel_guid']),
-					dbesc($rr['channel_guid_sig']),
-					dbesc($rr['channel_hash']),
-					dbesc(channel_reddress($rr)),
-					intval($primary),
-					dbesc(z_root()),
-					dbesc(base64url_encode(rsa_sign(z_root(),$rr['channel_prvkey']))),
-					dbesc(\App::get_hostname()),
-					dbesc(z_root() . '/post'),
-					dbesc($sitekey),
-					dbesc('zot')
+
+				$h = hubloc_store_lowlevel(
+					[
+						'hubloc_guid'     => $rr['channel_guid'],
+						'hubloc_guid_sig' => $rr['channel_guid_sig'],
+						'hubloc_hash'     => $rr['channel_hash'],
+						'hubloc_addr'     => channel_reddress($rr),
+						'hubloc_network'  => 'zot',
+						'hubloc_primary'  => $primary,
+						'hubloc_url'      => z_root(),
+						'hubloc_url_sig'  => base64url_encode(rsa_sign(z_root(),$rr['channel_prvkey'])),
+						'hubloc_host'     => \App::get_hostname(),
+						'hubloc_callback' => z_root() . '/post',
+						'hubloc_sitekey'  => $sitekey
+					]
 				);
 	
 				if($h)

@@ -4060,7 +4060,7 @@ function check_zotinfo($channel,$locations,&$ret) {
 				dbesc($channel['channel_hash'])
 			);
 
-			$r = hubloc_store_lowelevel(
+			$r = hubloc_store_lowlevel(
 				[
 					'hubloc_guid'     => $channel['channel_guid'],
 					'hubloc_guid_sig' => $channel['channel_guid_sig'],

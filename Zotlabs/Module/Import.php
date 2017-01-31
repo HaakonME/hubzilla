@@ -207,7 +207,7 @@ class Import extends \Zotlabs\Web\Controller {
 		if($completed < 5) {
 			// create new hubloc for the new channel at this site
 
-			$r = hubloc_store_lowelevel(
+			$r = hubloc_store_lowlevel(
 				[
 					'hubloc_guid'     => $channel['channel_guid'],
 					'hubloc_guid_sig' => $channel['channel_guid_sig'],

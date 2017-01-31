@@ -57,7 +57,7 @@ class Fhublocs extends \Zotlabs\Web\Controller {
 				// Create a verified hub location pointing to this site.
 	
 
-				$h = hubloc_store_lowelevel(
+				$h = hubloc_store_lowlevel(
 					[
 						'hubloc_guid'     => $rr['channel_guid'],
 						'hubloc_guid_sig' => $rr['channel_guid_sig'],

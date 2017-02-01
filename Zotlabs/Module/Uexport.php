@@ -9,10 +9,11 @@ class Uexport extends \Zotlabs\Web\Controller {
 			killme();
 	
 		if(argc() > 1) {
+
+			$sections = (($_REQUEST['sections']) ? explode(',',$_REQUEST['sections']) : '');
+
 			$channel = \App::get_channel();
-	
-			require_once('include/channel.php');
-	
+
 			if(argc() > 1 && intval(argv(1)) > 1900) {
 				$year = intval(argv(1));
 			}
@@ -30,15 +31,16 @@ class Uexport extends \Zotlabs\Web\Controller {
 			}
 	
 			if(argc() > 1 && argv(1) === 'basic') {
-				echo json_encode(identity_basic_export(local_channel()));
+				echo json_encode(identity_basic_export(local_channel(),$sections));
 				killme();
 			}
 	
-			// FIXME - this basically doesn't work in the wild with a channel more than a few months old due to memory and execution time limits.  
-			// It probably needs to be built at the CLI and offered to download as a tarball.  Maybe stored in the members dav.
+			// Warning: this option may consume a lot of memory
 	
 			if(argc() > 1 && argv(1) === 'complete') {
-				echo json_encode(identity_basic_export(local_channel(),true));
+				$sections = get_default_export_sections();
+				$sections[] = 'items';
+				echo json_encode(identity_basic_export(local_channel(),$sections));
 				killme();
 			}
 		}
@@ -57,6 +59,7 @@ class Uexport extends \Zotlabs\Web\Controller {
 			'$basic' => t('Export your basic channel information to a file.  This acts as a backup of your connections, permissions, profile and basic data, which can be used to import your data to a new server hub, but does not contain your content.'),
 			'$fulltitle' => t('Export Content'),
 			'$full' => t('Export your channel information and recent content to a JSON backup that can be restored or imported to another server hub. This backs up all of your connections, permissions, profile data and several months of posts. This file may be VERY large.  Please be patient - it may take several minutes for this download to begin.'),
+
 			'$by_year' => t('Export your posts from a given year.'),
 	
 			'$extra' => t('You may also export your posts and conversations for a particular year or month. Adjust the date in your browser location bar to select other dates. If the export fails (possibly due to memory exhaustion on your server hub), please try again selecting a more limited date range.'),

@@ -99,6 +99,17 @@ class Comanche {
 		}
 	}
 
+	/**
+	 * Currently supported condition variables:
+	 *
+	 * $config.xxx.yyy - get_config with cat = xxx and k = yyy
+	 * $request - request uri for this page
+	 * $observer.language - viewer's preferred language (closest match)
+	 * $observer.address - xchan_addr or false
+	 * $observer.name - xchan_name or false
+	 * $observer - xchan_hash of observer or empty string
+	 */
+
 	function get_condition_var($v) {
 		if($v) {
 			$x = explode('.',$v);

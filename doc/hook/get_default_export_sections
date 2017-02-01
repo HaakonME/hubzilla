@@ -1,0 +1,10 @@
+[h3]get_default_export_sections[/h3]
+
+The get_default_export_sections call returns the basic functional groups of data to export using channel_export_basic().
+
+The hook is passed an array 
+		[
+			'sections' => [ 'channel', 'connections', 'config', 'apps', 'chatrooms', 'events', 'webpages', 'mail', 'wikis' ]
+		]
+
+If you desire the export to contain three months of items, add 'items' to the 'sections' array

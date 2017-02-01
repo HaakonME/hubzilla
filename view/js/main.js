@@ -308,12 +308,6 @@ $(function() {
 		}
 	}
 
-	// fancyboxes
-	// Is this actually used anywhere?
-	$("a.popupbox").colorbox({
-		'transition' : 'elastic'
-	});
-
 	NavUpdate(); 
 	// Allow folks to stop the ajax page updates with the pause/break key
 	$(document).keydown(function(event) {
@@ -376,28 +370,28 @@ function NavUpdate() {
 
 			if(data.network == 0) {
 				data.network = '';
-				$('.net-update').removeClass('show');
+				$('.net-update, .net-button').hide();
 			} else {
-				$('.net-update').addClass('show');
+				$('.net-update, .net-button').show();
 			}
 			$('.net-update').html(data.network);
 
-			if(data.home == 0) { data.home = ''; $('.home-update').removeClass('show'); } else { $('.home-update').addClass('show'); }
+			if(data.home == 0) { data.home = ''; $('.home-update, .home-button').hide(); } else { $('.home-update, .home-button').show(); }
 			$('.home-update').html(data.home);
 
-			if(data.intros == 0) { data.intros = ''; $('.intro-update').removeClass('show'); } else { $('.intro-update').addClass('show'); }
+			if(data.intros == 0) { data.intros = ''; $('.intro-update, .intro-button').hide(); } else { $('.intro-update, .intro-button').show(); }
 			$('.intro-update').html(data.intros);
 
-			if(data.mail == 0) { data.mail = ''; $('.mail-update').removeClass('show'); } else { $('.mail-update').addClass('show'); }
+			if(data.mail == 0) { data.mail = ''; $('.mail-update, .mail-button').hide(); } else { $('.mail-update, .mail-button').show(); }
 			$('.mail-update').html(data.mail);
 
-			if(data.notify == 0) { data.notify = ''; $('.notify-update').removeClass('show'); } else { $('.notify-update').addClass('show'); }
+			if(data.notify == 0) { data.notify = ''; $('.notify-update, .notify-button').hide(); } else { $('.notify-update, .notify-button').show(); }
 			$('.notify-update').html(data.notify);
 
 			if(data.register == 0) { data.register = ''; $('.register-update').removeClass('show'); } else { $('.register-update').addClass('show'); }
 			$('.register-update').html(data.register);
 
-			if(data.events == 0) { data.events = ''; $('.events-update').removeClass('show'); } else { $('.events-update').addClass('show'); }
+			if(data.events == 0) { data.events = ''; $('.events-update, .events-button').hide(); } else { $('.events-update, .events-button').show(); }
 			$('.events-update').html(data.events);
 
 			if(data.events_today == 0) { data.events_today = ''; $('.events-today-update').removeClass('show'); } else { $('.events-today-update').addClass('show'); $('.events-update').html(data.events + '*'); }
@@ -409,7 +403,7 @@ function NavUpdate() {
 			if(data.birthdays_today == 0) { data.birthdays_today = ''; $('.birthdays-today-update').removeClass('show'); } else { $('.birthdays-today-update').addClass('show'); $('.birthdays-update').html(data.birthdays + '*'); }
 			$('.birthdays-today-update').html(data.birthdays_today);
 
-			if(data.all_events == 0) { data.all_events = ''; $('.all_events-update').removeClass('show'); } else { $('.all_events-update').addClass('show'); }
+			if(data.all_events == 0) { data.all_events = ''; $('.all_events-update, .all_events-button').hide(); } else { $('.all_events-update, .all_events-button').show(); }
 			$('.all_events-update').html(data.all_events);
 
 			if(data.all_events_today == 0) { data.all_events_today = ''; $('.all_events-today-update').removeClass('show'); } else { $('.all_events-today-update').addClass('show'); $('.all_events-update').html(data.all_events + '*'); }

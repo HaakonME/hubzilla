@@ -244,28 +244,26 @@ EOT;
 
 
 	//app bin
-	$navapps = '';
-	if(get_config('system','experimental_app_bin')) {
-		if(local_channel()) {
-			//Zlib\Apps::import_system_apps();
-			$syslist = array();
-			$list = Zlib\Apps::app_list(local_channel(), false, 'nav_featured_app');
-			if($list) {
-				foreach($list as $li) {
-					$syslist[] = Zlib\Apps::app_encode($li);
-				}
+	if(local_channel()) {
+		//Zlib\Apps::import_system_apps();
+		$syslist = array();
+		$list = Zlib\Apps::app_list(local_channel(), false, 'nav_featured_app');
+		if($list) {
+			foreach($list as $li) {
+				$syslist[] = Zlib\Apps::app_encode($li);
 			}
-			Zlib\Apps::translate_system_apps($syslist);
 		}
-		else {
-			$syslist = Zlib\Apps::get_system_apps(true);
-		}
-
-		$navapps = replace_macros(get_markup_template('navapps.tpl'), array(
-			'$apps' => $syslist,
-			'$localuser' => local_channel(),
-		));
+		Zlib\Apps::translate_system_apps($syslist);
 	}
+	else {
+		$syslist = Zlib\Apps::get_system_apps(true);
+	}
+
+	$navapps = replace_macros(get_markup_template('navapps.tpl'), array(
+		'$apps' => $syslist,
+		'$localuser' => local_channel(),
+	));
+
 
 	$tpl = get_markup_template('nav.tpl');
 

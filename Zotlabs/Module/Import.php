@@ -112,7 +112,7 @@ class Import extends \Zotlabs\Web\Controller {
 	//	print_r($data);
 	
 	
-		if(! array_key_exists('compatibility,$data)) {
+		if(! array_key_exists('compatibility',$data)) {
 			call_hooks('import_foreign_channel_data',$data);
 			if($data['handled'])
 				return;

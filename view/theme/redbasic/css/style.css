@@ -2106,16 +2106,20 @@ dl.bb-dl > dd > li {
 	text-align: center;
 }
 
-.rmagic-button {
-	padding-top: 10px;
-	margin-left: 10px;
-	margin-bottom: 10px;
-}
-
 #nav-login {
 	display: none;
 	width: 200px;
 	border: 1px solid #ccc;
 	border-radius: $radiuspx;
 
+}
+
+.login-dropdown-menu {
+	padding: 8px;
+	background-color: #eee;
+}
+
+.rmagic-button {
+	margin: 15px 0 5px;
+	
 }

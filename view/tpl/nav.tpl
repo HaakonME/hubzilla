@@ -160,16 +160,8 @@
 					<div id="nav-login" class="login-dropdown-menu" style="display:none; width:150%;">
 					{{$nav.login}}
 					{{$nav.remote_login}}
-
-					<!--	{{foreach $nav.loginmenu as $loginmenu}}
-						<li role="presentation"><a class="{{$loginmenu.2}}" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem" id="{{$loginmenu.4}}">{{$loginmenu.1}}</a></li>
-						{{/foreach}} -->
 					</div>
 				</li>
-<!--				{{foreach $nav.loginmenu as $loginmenu}}
-				<li role="presentation"><a class="{{$loginmenu.2}} visible-xs" href="{{$loginmenu.0}}" title="{{$loginmenu.3}}" role="menuitem">{{$loginmenu.1}}</a></li>
-				{{/foreach}}
--->
 			{{/if}}
 
 			{{if $nav.register}}

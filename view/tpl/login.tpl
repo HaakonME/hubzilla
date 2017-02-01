@@ -1,4 +1,6 @@
+{{if $login_page}}
 <div class="generic-content-wrapper-styled">
+{{/if}}
 <form action="{{$dest_url}}" id="{{$form_id}}" method="post" >
 	<input type="hidden" name="auth-params" value="login" />
 	<div id="login-main">
@@ -17,5 +19,7 @@
 		<input type="hidden" name="{{$k}}" value="{{$v}}" />
 	{{/foreach}}
 </form>
+{{if $login_page}}
 </div>
 <script type="text/javascript"> $(document).ready(function() { $("#id_{{$lname.0}}").focus();} );</script>
+{{/if}}

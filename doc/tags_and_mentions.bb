@@ -49,6 +49,10 @@ Topical tags are indicated by preceding the tag name with the  # character. This
 
 Topical tags are also not linked if they are purely numeric, e.g. #1. If you wish to use a numeric hashtag, please add some descriptive text such as #[zrl=https://friendicared.net/search?tag=2012-elections]2012-elections[/zrl].
 
+[b]Bookmarks[/b]
+
+Bookmarks indicate a link which can be saved to your bookmark folder. They use the sequence #^ followed by the link. Often these are generatd automatically. If the 'bookmarker' addon is installed, this sequence will be converted to a bookmark icon when viewing the post or comment online and clicking the icon will save the bookmark. If the bookmarker addon is not installed, the post 'dropdown menu' contains a link for saving the bookmark or bookmarks. 
+
 
 [b]Spaces in Tags and Mentions[/b]
 

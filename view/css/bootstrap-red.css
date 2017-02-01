@@ -3,10 +3,8 @@
 /* nav overrides */
 
 nav .badge {
-	position: relative;
-	top: -49px;
-	left: 2px;
-	float: left;
+	margin-top: -30px;
+	margin-left: -30px;
 	font-size: 10px;
 	line-height: 20px;
 	padding: 0px 5px;
@@ -14,21 +12,12 @@ nav .badge {
 	min-width: 20px;
 	border-radius: 10px;
 	cursor: pointer;
-}
-
-@media screen and (max-width: 767px) {
-	nav .badge {
-		top: -46px;
-	}
+	display: inline-block !important;
 }
 
 #navbar-collapse-1 i,
 .navbar-header i {
 	font-size: 14px;
-}
-
-nav ul li {
-	max-height: 50px;
 }
 
 nav .navbar-header img {
@@ -45,13 +34,12 @@ aside .nav-pills > li > a,
 	padding: 6px 10px;
 }
 
-.wall-item-tools .dropdown-menu {
-	min-width: auto;
+nav .dropdown-menu {
+	margin-top: 0px;
 }
 
-.dropdown-menu li a {
-	overflow: hidden;
-	text-overflow: ellipsis;
+.wall-item-tools .dropdown-menu {
+	min-width: auto;
 }
 
 .nav-tabs.nav-justified > li {

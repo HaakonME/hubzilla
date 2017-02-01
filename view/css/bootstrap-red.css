@@ -37,13 +37,6 @@ nav .navbar-header img {
 	margin-top: 1px;
 }
 
-nav .dropdown-menu {
-	max-height: 450px;
-	width: 270px;
-	overflow-y: auto;
-	margin-top: 0px;
-}
-
 /* nav overrides end */
 
 

@@ -8,7 +8,7 @@ use Zotlabs\Lib as Zlib;
 class PermissionRoles {
 
 	static public function version() {
-		return 1;
+		return 2;
 	}
 
 	static function role_perms($role) {
@@ -25,7 +25,7 @@ class PermissionRoles {
 				$ret['online'] = true;
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'send_stream', 'post_wall', 'post_comments', 
+					'view_pages', 'view_wiki', 'send_stream', 'post_wall', 'post_comments', 
 					'post_mail', 'chat', 'post_like', 'republish' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
@@ -38,7 +38,7 @@ class PermissionRoles {
 				$ret['online'] = true;
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'send_stream', 'post_wall', 'post_comments', 
+					'view_pages', 'view_wiki', 'send_stream', 'post_wall', 'post_comments', 
 					'post_mail', 'chat', 'post_like' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
@@ -52,7 +52,7 @@ class PermissionRoles {
 				$ret['online'] = false;
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'send_stream', 'post_wall', 'post_comments', 
+					'view_pages', 'view_wiki', 'send_stream', 'post_wall', 'post_comments', 
 					'post_mail', 'post_like' ];
 				$ret['limits'] = PermissionLimits::Std_Limits();
 				$ret['limits']['view_contacts'] = PERMS_SPECIFIC;
@@ -67,7 +67,7 @@ class PermissionRoles {
 				$ret['online'] = false;
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'post_wall', 'post_comments', 'tag_deliver',
+					'view_pages', 'view_wiki', 'post_wall', 'post_comments', 'tag_deliver',
 					'post_mail', 'post_like' , 'republish', 'chat' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
@@ -80,7 +80,7 @@ class PermissionRoles {
 				$ret['online'] = false;
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'post_wall', 'post_comments', 'tag_deliver',
+					'view_pages', 'view_wiki', 'post_wall', 'post_comments', 'tag_deliver',
 					'post_mail', 'post_like' , 'chat' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
@@ -95,7 +95,7 @@ class PermissionRoles {
 
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'post_wall', 'post_comments',
+					'view_pages', 'view_wiki', 'post_wall', 'post_comments',
 					'post_mail', 'post_like' , 'chat' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
@@ -103,6 +103,7 @@ class PermissionRoles {
 				$ret['limits']['view_contacts'] = PERMS_SPECIFIC;
 				$ret['limits']['view_storage']  = PERMS_SPECIFIC;
 				$ret['limits']['view_pages']    = PERMS_SPECIFIC;
+				$ret['limits']['view_wiki']     = PERMS_SPECIFIC;
 
 				break;
 
@@ -114,7 +115,7 @@ class PermissionRoles {
 
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'send_stream', 'post_wall', 'post_comments', 
+					'view_pages', 'view_wiki', 'send_stream', 'post_wall', 'post_comments', 
 					'post_mail', 'post_like' , 'republish' ];
 	
 				$ret['limits'] = PermissionLimits::Std_Limits();
@@ -128,7 +129,7 @@ class PermissionRoles {
 				$ret['online'] = false;
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'send_stream', 'post_wall', 'post_comments', 
+					'view_pages', 'view_wiki', 'send_stream', 'post_wall', 'post_comments', 
 					'post_mail', 'post_like' , 'republish' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
@@ -143,7 +144,7 @@ class PermissionRoles {
 
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'post_like' , 'republish' ];
+					'view_pages', 'view_wiki', 'post_like' , 'republish' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
 
@@ -157,8 +158,8 @@ class PermissionRoles {
 
 				$ret['perms_connect'] = [ 
 					'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-					'view_pages', 'write_storage', 'write_pages', 'post_wall', 'post_comments', 'tag_deliver',
-					'post_mail', 'post_like' , 'republish', 'chat' ];
+					'view_pages', 'view_wiki', 'write_storage', 'write_pages', 'post_wall', 'post_comments', 'tag_deliver',
+					'post_mail', 'post_like' , 'republish', 'chat', 'write_wiki' ];
 
 				$ret['limits'] = PermissionLimits::Std_Limits();
 				break;
@@ -185,6 +186,12 @@ class PermissionRoles {
 		// if($perm === 'mynewperm')
 		//     \Zotlabs\Access\PermissionLimits::Set($uid,$perm,1);
 
+		if($perm === 'view_wiki')
+		     \Zotlabs\Access\PermissionLimits::Set($uid,$perm,PERMS_PUBLIC);
+
+		if($perm === 'write_wiki')
+		     \Zotlabs\Access\PermissionLimits::Set($uid,$perm,PERMS_SPECIFIC);
+
 
 		// set autoperms here if applicable
 		// choices are to set to 0, 1, or the value of an existing perm
@@ -195,7 +202,13 @@ class PermissionRoles {
 			$value = 0;
 
 			// if($perm === 'mynewperm')
-			//	 $value = get_abconfig($uid,$c['channel_hash'],'autoperms','someexistingperm'));
+			//	 $value = get_abconfig($uid,$c['channel_hash'],'autoperms','someexistingperm');
+
+			if($perm === 'view_wiki')
+				$value = get_abconfig($uid,$c['channel_hash'],'autoperms','view_pages');
+
+			if($perm === 'write_wiki')
+				$value = get_abconfig($uid,$c['channel_hash'],'autoperms','write_pages');
 
 			if($c) {
 				set_abconfig($uid,$c['channel_hash'],'autoperms',$perm,$value);
@@ -212,8 +225,16 @@ class PermissionRoles {
 					// case 'mynewperm':
 					// choices are to set to 1, set to 0, or clone an existing perm
 					// set_abconfig($uid,$ab['abook_xchan'],'my_perms',$perm,
-					//		get_abconfig($uid,$ab['abook_xchan'],'my_perms','someexistingperm'));
-					
+					//		intval(get_abconfig($uid,$ab['abook_xchan'],'my_perms','someexistingperm')));
+
+					case 'view_wiki':
+						set_abconfig($uid,$ab['abook_xchan'],'my_perms',$perm,
+							intval(get_abconfig($uid,$ab['abook_xchan'],'my_perms','view_pages')));
+
+					case 'write_wiki':
+						set_abconfig($uid,$ab['abook_xchan'],'my_perms',$perm,
+							intval(get_abconfig($uid,$ab['abook_xchan'],'my_perms','write_pages')));
+
 					default:
 						break;
 				}

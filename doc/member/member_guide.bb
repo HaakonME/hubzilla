@@ -53,7 +53,7 @@ To create an alternate profile, first go to [zrl=[baseurl]/settings/features]Set
 
 Then select &quot;Edit Profiles&quot; from the menu of your $Projectname site. You may edit an existing profile, change the profile photo, add things to a profile or create a new profile. You may also create a &quot;clone&quot; of an existing profile if you only wish to change a few items but don't wish to enter all the information again. To do that, click on the profile you want to clone and choose &quot;Clone this profile&quot; there.
 
-In the list of your profiles, you can also choose the contacts who can see a specific profile. Just click on &quot;Edit visibility&quot; next to the profile in question (only available for the profiles that are not your default profile) and then click on user images to add them to or remove them from the group of people who can see this profile.
+In the list of your profiles, you can also choose the contacts who can see a specific profile. Just click on &quot;Edit visibility&quot; next to the profile in question (only available for the profiles that are not your default profile) and then click on specific connections to add them to or remove them from the group of people who can see this profile.
 
 Once a profile has been selected, when the person views your profile, they will see the private profile you have assigned. If they are not authenticated, they will see your public profile.
 
@@ -290,7 +290,7 @@ The slider on the matrix page has both a minimum and maximum value. Posts will o
 [h3]Guest Access Tokens[/h3]
 Guest access tokens (sometimes called "Zot access tokens") allow you to share a file, folder, photo, album, or channel with a specific person or group of people who are not $Projectname members. These tokens allow you to share individual items by sending a link that includes the token in the URL; alternatively, people can actually [i]log in[/i] using the token credentials, after which they can seamlessly view whatever content has been shared with that token.
 
-To create and manage guest tokens, open the [zrl=[baseurl]/settings/tokens/]Guest Access Tokens[/zrl] settings page. A random token is generate with each page load, allowing you to create one by inputting an associated user name and optionally specifying an expiration date. Existing tokens are listed below the dialog and can be edited by selecting them or deleted by pressing the trash icon.
+To create and manage guest tokens, open the [zrl=[baseurl]/settings/tokens/]Guest Access Tokens[/zrl] settings page. A random token is generate with each page load, allowing you to create one by inputting an associated login name and optionally specifying an expiration date. Existing tokens are listed below the dialog and can be edited by selecting them or deleted by pressing the trash icon.
 
 Additional permissions may be granted to the guest token by expanding the [b]Individual Permissions[/b] options and selecting privacy settings such as [b]Can view my channel stream and posts[/b] or [b]Can chat with me[/b].
 
@@ -305,13 +305,71 @@ $Projectname supports several markup languages for advanced formatting of conten
 [tr][td]Webpage element[/td][td][url=[baseurl]/help/member/bbcode]BBcode[/url], Markdown, HTML[/td][/tr]
 [/table]
 
+[h3]Tags And Mentions[/h3]
+Like many other platforms, $Projectname uses a special notation inside messages to indicate &quot;tags&quot; or contextual links to other entities.
+
+[h4]Mentions[/h4]
+Channels are tagged by simply preceding their name with the @ character. 
+
+[code]
+@Jack
+[/code]
+
+When you start to mention somebody, it will create an auto-complete box to select from your immediate connections. Select one as appropriate.
+
+If the person mentioned is in the list of recipients for the post, they will receive a tag notification.   
+
+[h4]Deliverable Mentions[/h4]
+
+Some connections in the mention auto-complete box behave differently than others. If you mention a channel which provides "re-delivery of mentions" it will also send the post to all of that channel's default delivery connections. This is how one posts to "forums". The auto-complete box will provide two entries for these channels, one will mention just the channel. The other will invoke re-delivery and be listed as the channel's "network". 
+
+[code]
+@Gardening  - mention the Gardening forum
+[/code]
+
+[code]
+@Gardening+ - mention the Gardening Forum and also post to the Gardening "network" (e.g. all the forum members; if you have permission to do so)
+[/code]
+
+[h4]Private Mentions[/h4]
+If you wish to restrict a post to a single person or a number of people, you can do this by selecting channels or privacy groups from the privacy tool. You can also just tag them with a privacy tag. A privacy tag is a name preceded by the two characters @! - and in addition to tagging these channels, will also change the privacy permissions of the post to only include them. You can have more than one privacy tag, for instance @!bob and @!linda will send the post only to Bob and Linda. This mechanism over-rides the privacy selector.  
+
+You may also tag privacy groups which are "public". When you create or edit a privacy group, there is a checkbox to allow the group members to be seen by others. If this box is checked for a group and you tag (for instance) @!Friends - the post will be restricted to the Friends group. Check that the group is public before doing this - as there is no way to take back a post except to delete it. The group name will appear in the post and will alert members of that group that they are members of it.    
+
+[h4]Mentions and Comments[/h4]
+The above mechanisms only apply to "top-level" posts you create. Mentioning a channel with any of the above mechanisms has no effect in comments, except that the mentioned channel may receive a notification if they were already included as a recipient in the conversation. 
+
+[h4]Topical Tags[/h4]
+Topical tags are indicated by preceding the tag name with the  # character. This will create a link in the post to a generalised site search for the term provided.  For example, #[zrl=[baseurl]/search?tag=cars]cars[/zrl] will provide a search link for all posts mentioning 'cars' on your site. Topical tags are generally a minimum of three characters in length.  Shorter search terms are not likely to yield any search results, although this depends on the database configuration. 
+
+Topical tags are also not linked if they are purely numeric, e.g. #1. If you wish to use a numeric hashtag, please add some descriptive text such as #2012-elections.
+
+[h4]Bookmarks[/h4]
+Bookmarks indicate a link which can be saved to your bookmark folder. They use the sequence #^ followed by the link. Often these are generatd automatically. If the 'bookmarker' addon is installed, this sequence will be converted to a bookmark icon when viewing the post or comment online and clicking the icon will save the bookmark. If the bookmarker addon is not installed, the post 'dropdown menu' contains a link for saving the bookmark or bookmarks. 
+
+[h4]Spaces in Tags and Mentions[/h4]
+Where possible please use the auto-complete window to select tag and mention recipients, because it will generate a coded tag which uniquely identifies one channel. Names are sometimes ambiguous. However, you can "manually" tag a channel by matching the channel name or address.
+
+[code]
+@Robert Johnson
+[/code]
+
+will tag Robert Johnson, but we can only match one space. If the name was "Blind Lemon Jefferson" it won't be found unless you enclose the entire name in double quotes or change the spaces to underscores. 
+
+[code]
+@"Blind Lemon Jefferson"
+@Blind_Lemon_Jefferson
+[/code]
+
+are both equivalent.  
+
 [h3]Web Pages[/h3]
 
-$Projectname enables users to create static webpages.  To activate this feature, enable the [b]Web Pages[/b] feature in your [b][url=[baseurl]/settings/features/]Additional Features[/url][/b] section.
+$Projectname allows members and allowed connections to create static webpages.  To activate this feature, enable the [b]Web Pages[/b] feature in your [b][url=[baseurl]/settings/features/]Additional Features[/url][/b] section.
 
 Once enabled, a new tab will appear on your channel page labeled &quot;Webpages&quot;. Clicking this link will take you to the webpage editor. Pages will be accessible at [b][baseurl]/page/[observer=1][observer.webname][/observer][observer=0]channelname[/observer]/pagelinktitle[/b]
 
-The &quot;page link title&quot; box allows a user to specify the &quot;pagelinktitle&quot; of this URL.  If no page link title is set, we will set one for you automatically, using the message ID of the item.  
+The &quot;page link title&quot; box allows you to specify the &quot;pagelinktitle&quot; of this URL.  If no page link title is set, we will set one for you automatically, using the message ID of the item.  
 
 Beneath the page creation box, a list of existing pages will appear with an &quot;edit&quot; link.  Clicking this will take you to an editor, similar to that of the post editor, where you can make changes to your webpages.
 	
@@ -767,12 +825,12 @@ When using WebDAV, the file is created with your channel's default file permissi
 
 [h4]Cloud Desktop Clients - Windows[/h4]
 
-RedDav using Windows 7 graphical user interface wizard:
+WebDAV using Windows 7 graphical user interface wizard:
 1. Left-click the Start-button to open the start menu.
 2. Right-click the My computer icon to access its menu.
 3. Left-click Map network drive... to open the connection dialog wizard.
 4. Type #^[url=https://example.net/dav/your_channel_name]https://example.net/dav/your_channel_name[/url] in the textbox and click the Complete button where &quot;example.net&quot; is the URL of your hub.
-5. Type your $Projectname account's user name. IMPORTANT - NO at-sign or domain name.
+5. Type your $Projectname channel nickname. IMPORTANT - NO at-sign or domain name.
 6. Type your $Projectname password
 
 [h4]Cloud Desktop Clients - Linux[/h4]

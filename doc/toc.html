@@ -72,13 +72,10 @@
     // Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
     $(document).ready(function () {
         $(".panel-collapse.in").find('a').each(function(){
-            window.console.log($(this).attr('href'));
             var url = document.createElement('a');
             url.href = window.location;
             var pageName = url.href.split('/').pop().split('#').shift();
-            window.console.log('pageName: ' + pageName);
             var linkName = $(this).attr('href').split('/').pop();
-            window.console.log('linkName: ' + linkName);
             if(pageName === linkName) {
                 var tocUl = $(this).closest('li').append('<ul>').find('ul');
                 tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
@@ -110,8 +107,17 @@
 			  $('#doco-side-toc li')
 			   .removeClass('selected-doco-nav')
 			   .eq(i).addClass('selected-doco-nav');
+				if (typeof($('#doco-side-toc li').eq(i).find('a').attr('href').split('#')[1]) !== 'undefined') {
+					window.history.pushState({}, '', location.href.split('#')[0] + '#' + $('#doco-side-toc li').eq(i).find('a').attr('href').split('#')[1]);
+				}
 			 }
 			});
 		});
+		
+		// When the page loads, it does not scroll to the section specified in the URL because it
+		// has not been constructed yet by the script. This will reload the URL
+		if (typeof(location.href.split('#')[1]) !== 'undefined') {	
+			location.replace(location.href)
+		}
 	});
 </script>

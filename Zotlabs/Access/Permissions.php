@@ -36,7 +36,7 @@ class Permissions {
 
 	static public function version() {
 		// This must match the version in PermissionRoles.php before permission updates can run.
-		return 1;
+		return 2;
 	}
 
 
@@ -50,7 +50,9 @@ class Permissions {
 			'view_storage'  => t('Can view my file storage and photos'),
 			'write_storage' => t('Can upload/modify my file storage and photos'),
 			'view_pages'    => t('Can view my channel webpages'),
+			'view_wiki'     => t('Can view my wiki pages'),
 			'write_pages'   => t('Can create/edit my channel webpages'),
+			'write_wiki'    => t('Can write to my wiki pages'),
 			'post_wall'     => t('Can post on my channel (wall) page'),
 			'post_comments' => t('Can comment on or like my posts'),
 			'post_mail'     => t('Can send me private mail messages'),

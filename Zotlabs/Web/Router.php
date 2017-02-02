@@ -121,27 +121,22 @@ class Router {
 
 			/*
 			 * The URL provided does not resolve to a valid module.
-			 *
-			 * On Dreamhost sites, quite often things go wrong for no apparent reason and they send us to '/internal_error.html'.
-			 * We don't like doing this, but as it occasionally accounts for 10-20% or more of all site traffic -
-			 * we are going to trap this and redirect back to the requested page. As long as you don't have a critical error on your page
-			 * this will often succeed and eventually do the right thing.
-			 *
-			 * Otherwise we are going to emit a 404 not found.
 	 		 */
 
 			if(! (\App::$module_loaded)) {
 
-				// Stupid browser tried to pre-fetch our Javascript img template. Don't log the event or return anything - just quietly exit.
+				$x = [ 
+					'module' => $module, 
+					'installed' => \App::$module_loaded, 
+					'controller' => $this->controller
+				];
+				call_hooks('page_not_found',$x);
+
+				// Stupid browser tried to pre-fetch our Javascript img template. 
+				// Don't log the event or return anything - just quietly exit.
+
 				if((x($_SERVER, 'QUERY_STRING')) && preg_match('/{[0-9]}/', $_SERVER['QUERY_STRING']) !== 0) {
 					killme();
-				}
-
-				if((x($_SERVER, 'QUERY_STRING')) 
-					&& ($_SERVER['QUERY_STRING'] === 'q=internal_error.html') 
-					&& \App::$config['system']['dreamhost_error_hack']) {
-					logger('index.php: dreamhost_error_hack invoked. Original URI =' . $_SERVER['REQUEST_URI'],LOGGER_DEBUG);
-					goaway(z_root() . $_SERVER['REQUEST_URI']);
 				}
 
 				if(get_config('system','log_404',true)) {

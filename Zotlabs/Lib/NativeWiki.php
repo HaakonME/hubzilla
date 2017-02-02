@@ -201,7 +201,7 @@ class NativeWiki {
 		else {
 			// TODO: Create a new permission setting for wiki analogous to webpages. Until
 			// then, use webpage permissions
-			$write = perm_is_allowed($owner_id, $observer_hash,'write_pages');
+			$write = perm_is_allowed($owner_id, $observer_hash,'write_wiki');
 			return array('read' => true, 'write' => $write, 'success' => true);
 		}
 	}

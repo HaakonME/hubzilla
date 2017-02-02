@@ -1694,7 +1694,7 @@ function fix_system_urls($oldurl, $newurl) {
 // link. This will most always depend on the value of App::$config['system']['register_policy'].
 // returns the complete html for inserting into the page
 
-function login($register = false, $form_id = 'main-login', $hiddens=false) {
+function login($register = false, $form_id = 'main-login', $hiddens=false, $login_page = true) {
 	$o = '';
 	$reg = false;
 	$reglink = get_config('system', 'register_link');
@@ -1720,6 +1720,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 
 	$o .= replace_macros($tpl,array(
 		'$dest_url'     => $dest_url,
+		'$login_page'   => $login_page,
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
 		'$form_id'      => $form_id,
@@ -2463,6 +2464,7 @@ function check_for_new_perms() {
 		return;
 
 	$pregistered = get_config('system','perms');
+
 	$pcurrent = array_keys(\Zotlabs\Access\Permissions::Perms());
 
 	if(! $pregistered) {
@@ -2474,6 +2476,7 @@ function check_for_new_perms() {
 
 	foreach($pcurrent as $p) {
 		if(! in_array($p,$pregistered)) {
+
 			$found_new_perm = true;
 			// for all channels
 			$c = q("select channel_id from channel where true");
@@ -2481,12 +2484,12 @@ function check_for_new_perms() {
 				foreach($c as $cc) {
 					// get the permission role
 					$r = q("select v from pconfig where uid = %d and cat = 'system' and k = 'permissions_role'",
-						intval($cc['uid'])
+						intval($cc['channel_id'])
 					);
 					if($r) {
 						// get a list of connections
 						$x = q("select abook_xchan from abook where abook_channel = %d and abook_self = 0",
-							intval($cc['uid'])
+							intval($cc['channel_id'])
 						);
 						// get the permissions role details
 						$rp = \Zotlabs\Access\PermissionRoles::role_perms($r[0]['v']);
@@ -2494,23 +2497,23 @@ function check_for_new_perms() {
 
 							// for custom permission roles we need to customise how we initiate this new permission
 							if(array_key_exists('role',$rp) && ($rp['role'] === 'custom' || $rp['role'] === '')) {
-								\Zotlabs\Access\PermissionRoles::new_custom_perms($cc['uid'],$p,$x);
+								\Zotlabs\Access\PermissionRoles::new_custom_perms($cc['channel_id'],$p,$x);
 							}
 							else {
 								// set the channel limits if appropriate or 0
 								if(array_key_exists('limits',$rp) && array_key_exists($p,$rp['limits'])) {
-									\Zotlabs\Access\PermissionLimits::Set($cc['uid'],$p,$rp['limits'][$p]);
+									\Zotlabs\Access\PermissionLimits::Set($cc['channel_id'],$p,$rp['limits'][$p]);
 								}
 								else {
-									\Zotlabs\Access\PermissionLimits::Set($cc['uid'],$p,0);
+									\Zotlabs\Access\PermissionLimits::Set($cc['channel_id'],$p,0);
 								}
 
 
-								$set = ((array_key_exists('perms_connect',$rp) && array_key_exists($p,$rp['perms_connect'])) ? true : false);
+								$set = ((array_key_exists('perms_connect',$rp) && in_array($p,$rp['perms_connect'])) ? 1 : 0);
 								// foreach connection set to the perms_connect value
 								if($x) {
 									foreach($x as $xx) {
-										set_abconfig($cc['uid'],$xx['abook_xchan'],'my_perms',$p,intval($set));
+										set_abconfig($cc['channel_id'],$xx['abook_xchan'],'my_perms',$p,intval($set));
 									}
 								}
 							}

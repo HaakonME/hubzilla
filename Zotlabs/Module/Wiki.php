@@ -45,6 +45,11 @@ class Wiki extends \Zotlabs\Web\Controller {
  		}
 
 
+		if(! perm_is_allowed(\App::$profile_uid,get_observer_hash(),'view_wiki')) {
+			notice( t('Permission denied.') . EOL);
+			return;
+		}
+
 		// TODO: Combine the interface configuration into a unified object
 		// Something like $interface = array('new_page_button' => false, 'new_wiki_button' => false, ...)
 
@@ -309,7 +314,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		
+		if(! perm_is_allowed(\App::$profile_uid,get_observer_hash(),'write_wiki')) {
+			notice( t('Permission denied.') . EOL);
+			return;
+		}
+
 		// /wiki/channel/preview
 		// Render mardown-formatted text in HTML for preview
 		if((argc() > 2) && (argv(2) === 'preview')) {

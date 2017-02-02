@@ -112,7 +112,7 @@ EOT;
 	}
 	else {
 		if(! get_account_id())  {
-			$nav['login'] = login();
+			$nav['login'] = login(true,'main-login',false,false);
 			$nav['loginmenu'][] = Array('login',t('Login'),'',t('Sign in'),'login_nav_btn');
 		}
 		else

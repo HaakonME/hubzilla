@@ -5,8 +5,8 @@
 {{$head_css}}
 {{$js_strings}}
 {{$head_js}}
-<link rel="shortcut icon" href="{{$icon}}" />
-<link rel="search" href="{{$baseurl}}/opensearch" type="application/opensearchdescription+xml" title="{{$osearch}}" />
+{{$linkrel}}
+{{$plugins}}
 <link rel="EditURI" type="application/rsd+xml" href="{{$baseurl}}/rsd.xml" />
 <script>
 	var updateInterval = {{$update_interval}};

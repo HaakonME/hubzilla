@@ -556,20 +556,46 @@ function head_add_css($src, $media = 'screen') {
 function head_remove_css($src, $media = 'screen') {
 
 	$index = array_search(array($src, $media), App::$css_sources);
-	if ($index !== false)
+	if($index !== false)
 		unset(App::$css_sources[$index]);
 }
 
 function head_get_css() {
 	$str = '';
 	$sources = App::$css_sources;
-	if (count($sources)) {
-		foreach ($sources as $source)
+	if(count($sources)) {
+		foreach($sources as $source)
 			$str .= format_css_if_exists($source);
 	}
 
 	return $str;
 }
+
+function head_add_link($arr) {
+	if($arr) {
+		App::$linkrel[] = $arr;
+	}
+}
+
+function head_get_links() {
+	$str = '';
+	$sources = App::$linkrel;
+	if(count($sources)) {
+		foreach($sources as $source) {
+			if(is_array($source) && count($source)) {
+				$str .= '<link';
+				foreach($source as $k => $v) {
+					$str .= ' ' . $k . '="' . $v . '"';
+				}
+				$str .= ' />' . "\r\n";
+
+			}
+		}
+	}
+
+	return $str;
+}
+
 
 function format_css_if_exists($source) {
 	$path_prefix = script_path() . '/';

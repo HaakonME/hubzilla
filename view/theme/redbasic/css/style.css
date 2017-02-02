@@ -1524,10 +1524,6 @@ img.mail-conv-sender-photo {
 
 /* nav bootstrap */
 
-.net-button {
-	display: none;
-}
-
 nav img {
 	border-radius: $radiuspx;
 }

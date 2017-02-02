@@ -28,15 +28,16 @@
 						{{foreach $nav.usermenu as $usermenu}}
 						<li role="presentation"><a href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem" id="{{$usermenu.4}}">{{$usermenu.1}}</a></li>
 						{{/foreach}}
-						<li role="presentation" class="divider"></li>
-						{{if $nav.profiles}}<li role="presentation"><a href="{{$nav.profiles.0}}" title="{{$nav.profiles.3}}" role="menuitem" id="{{$nav.profiles.4}}">{{$nav.profiles.1}}</a></li>{{/if}}
-						{{if $nav.settings}}<li role="presentation"><a href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem" id="{{$nav.settings.4}}">{{$nav.settings.1}}</a></li>{{/if}}
 						{{if $nav.manage}}<li role="presentation"><a href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem" id="{{$nav.manage.4}}">{{$nav.manage.1}}</a></li>{{/if}}	
 						{{if $nav.channels}}
 						{{foreach $nav.channels as $chan}}
 							<li role="presentation" class="nav-channel-select"><a href="manage/{{$chan.channel_id}}" title="{{$chan.channel_name}}" role="menuitem">{{$chan.channel_name}}</a></li>
 						{{/foreach}}
 						{{/if}}
+						<li role="presentation" class="divider"></li>
+						{{if $nav.profiles}}<li role="presentation"><a href="{{$nav.profiles.0}}" title="{{$nav.profiles.3}}" role="menuitem" id="{{$nav.profiles.4}}">{{$nav.profiles.1}}</a></li>{{/if}}
+						{{if $nav.settings}}<li role="presentation"><a href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem" id="{{$nav.settings.4}}">{{$nav.settings.1}}</a></li>{{/if}}
+
 						{{if $nav.admin}}
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a></li>

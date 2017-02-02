@@ -53,7 +53,7 @@ To create an alternate profile, first go to [zrl=[baseurl]/settings/features]Set
 
 Then select &quot;Edit Profiles&quot; from the menu of your $Projectname site. You may edit an existing profile, change the profile photo, add things to a profile or create a new profile. You may also create a &quot;clone&quot; of an existing profile if you only wish to change a few items but don't wish to enter all the information again. To do that, click on the profile you want to clone and choose &quot;Clone this profile&quot; there.
 
-In the list of your profiles, you can also choose the contacts who can see a specific profile. Just click on &quot;Edit visibility&quot; next to the profile in question (only available for the profiles that are not your default profile) and then click on user images to add them to or remove them from the group of people who can see this profile.
+In the list of your profiles, you can also choose the contacts who can see a specific profile. Just click on &quot;Edit visibility&quot; next to the profile in question (only available for the profiles that are not your default profile) and then click on specific connections to add them to or remove them from the group of people who can see this profile.
 
 Once a profile has been selected, when the person views your profile, they will see the private profile you have assigned. If they are not authenticated, they will see your public profile.
 
@@ -290,7 +290,7 @@ The slider on the matrix page has both a minimum and maximum value. Posts will o
 [h3]Guest Access Tokens[/h3]
 Guest access tokens (sometimes called "Zot access tokens") allow you to share a file, folder, photo, album, or channel with a specific person or group of people who are not $Projectname members. These tokens allow you to share individual items by sending a link that includes the token in the URL; alternatively, people can actually [i]log in[/i] using the token credentials, after which they can seamlessly view whatever content has been shared with that token.
 
-To create and manage guest tokens, open the [zrl=[baseurl]/settings/tokens/]Guest Access Tokens[/zrl] settings page. A random token is generate with each page load, allowing you to create one by inputting an associated user name and optionally specifying an expiration date. Existing tokens are listed below the dialog and can be edited by selecting them or deleted by pressing the trash icon.
+To create and manage guest tokens, open the [zrl=[baseurl]/settings/tokens/]Guest Access Tokens[/zrl] settings page. A random token is generate with each page load, allowing you to create one by inputting an associated login name and optionally specifying an expiration date. Existing tokens are listed below the dialog and can be edited by selecting them or deleted by pressing the trash icon.
 
 Additional permissions may be granted to the guest token by expanding the [b]Individual Permissions[/b] options and selecting privacy settings such as [b]Can view my channel stream and posts[/b] or [b]Can chat with me[/b].
 
@@ -365,11 +365,11 @@ are both equivalent.
 
 [h3]Web Pages[/h3]
 
-$Projectname enables users to create static webpages.  To activate this feature, enable the [b]Web Pages[/b] feature in your [b][url=[baseurl]/settings/features/]Additional Features[/url][/b] section.
+$Projectname allows members and allowed connections to create static webpages.  To activate this feature, enable the [b]Web Pages[/b] feature in your [b][url=[baseurl]/settings/features/]Additional Features[/url][/b] section.
 
 Once enabled, a new tab will appear on your channel page labeled &quot;Webpages&quot;. Clicking this link will take you to the webpage editor. Pages will be accessible at [b][baseurl]/page/[observer=1][observer.webname][/observer][observer=0]channelname[/observer]/pagelinktitle[/b]
 
-The &quot;page link title&quot; box allows a user to specify the &quot;pagelinktitle&quot; of this URL.  If no page link title is set, we will set one for you automatically, using the message ID of the item.  
+The &quot;page link title&quot; box allows you to specify the &quot;pagelinktitle&quot; of this URL.  If no page link title is set, we will set one for you automatically, using the message ID of the item.  
 
 Beneath the page creation box, a list of existing pages will appear with an &quot;edit&quot; link.  Clicking this will take you to an editor, similar to that of the post editor, where you can make changes to your webpages.
 	
@@ -830,7 +830,7 @@ WebDAV using Windows 7 graphical user interface wizard:
 2. Right-click the My computer icon to access its menu.
 3. Left-click Map network drive... to open the connection dialog wizard.
 4. Type #^[url=https://example.net/dav/your_channel_name]https://example.net/dav/your_channel_name[/url] in the textbox and click the Complete button where &quot;example.net&quot; is the URL of your hub.
-5. Type your $Projectname account's user name. IMPORTANT - NO at-sign or domain name.
+5. Type your $Projectname channel nickname. IMPORTANT - NO at-sign or domain name.
 6. Type your $Projectname password
 
 [h4]Cloud Desktop Clients - Linux[/h4]

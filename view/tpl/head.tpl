@@ -7,7 +7,6 @@
 {{$head_js}}
 {{$linkrel}}
 {{$plugins}}
-<link rel="EditURI" type="application/rsd+xml" href="{{$baseurl}}/rsd.xml" />
 <script>
 	var updateInterval = {{$update_interval}};
 	var localUser = {{if $local_channel}}{{$local_channel}}{{else}}false{{/if}};

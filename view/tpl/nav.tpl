@@ -1,11 +1,15 @@
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<div>
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-2">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
+				{{if $localuser}}
+				<button id="notifications-btn" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+					<i class="fa fa-exclamation-circle"></i>
+				</button>
+				{{/if}}
 				<button id="expand-tabs" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#tabs-collapse-1">
 					<i class="fa fa-arrow-circle-down" id="expand-tabs-icon"></i>
 				</button>
@@ -17,7 +21,7 @@
 					<i class="fa fa-question-circle"></i>
 				</button>
 				{{/if}}
-			</div>
+
 			{{if $userinfo}}
 				<div class="usermenu-head dropdown-toggle fakelink" data-toggle="dropdown">
 					<img id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">
@@ -57,8 +61,10 @@
 				{{/if}}
 			{{/if}}
 		</div>
+
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-left">
+			{{if $localuser}}
 			{{if $nav.network}}
 				<li class="{{$sel.network}} net-button" style="display: none;">
 					<a href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#nav-network-menu">
@@ -141,9 +147,10 @@
 					</ul>
 				</li>
 			{{/if}}
+			{{/if}}
 
 			{{if $nav.login && !$userinfo}}
-				<li class="">
+				<li class="hidden-xs">
 					<a href="#" class="dropdown-toggle" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}" data-toggle="dropdown">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
 					<div id="nav-login" class="dropdown-menu">
 						<div class="form-group">
@@ -155,11 +162,11 @@
 			{{/if}}
 
 			{{if $nav.register}}
-				<li class="{{$nav.register.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a></li>
+				<li class="{{$nav.register.2}} hidden-xs"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a></li>
 			{{/if}}
 
 			{{if $nav.alogout}}
-				<li class="{{$nav}}-alogout.2"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a></li>
+				<li class="{{$nav}}-alogout.2 hidden-xs"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a></li>
 			{{/if}}
 			</ul>
 
@@ -175,14 +182,21 @@
 					<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}" onclick="contextualHelp(); return false;"><i class="fa fa-question-circle"></i></a>
 				</li>
 			{{/if}}
-				<li>
+				<li class="hidden-xs">
 					<a href="#" data-toggle="dropdown"><i class="fa fa-bars"></i></a>
+					<ul class="dropdown-menu">
 					{{$navapps}}
+					</ul>
 				</li>
 
 			</ul>
 
 		</div>
+	</div>
+	<div class="collapse navbar-collapse" id="navbar-collapse-2">
+		<ul class="nav navbar-nav navbar-left hidden-sm hidden-md hidden-lg">
+			{{$navapps}}
+		</ul>
 	</div>
 	{{if $nav.help.6}}
 	<div id="contextual-help-content" class="contextual-help-content">

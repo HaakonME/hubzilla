@@ -1818,7 +1818,8 @@ nav .badge.mail-update {
 #expand-aside,
 #expand-tabs,
 #doco-return-to-top-btn,
-#context-help-btn {
+#context-help-btn,
+#notifications-btn {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
 }

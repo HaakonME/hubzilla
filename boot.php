@@ -1694,7 +1694,7 @@ function fix_system_urls($oldurl, $newurl) {
 // link. This will most always depend on the value of App::$config['system']['register_policy'].
 // returns the complete html for inserting into the page
 
-function login($register = false, $form_id = 'main-login', $hiddens=false) {
+function login($register = false, $form_id = 'main-login', $hiddens=false, $login_page = true) {
 	$o = '';
 	$reg = false;
 	$reglink = get_config('system', 'register_link');
@@ -1720,6 +1720,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 
 	$o .= replace_macros($tpl,array(
 		'$dest_url'     => $dest_url,
+		'$login_page'   => $login_page,
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
 		'$form_id'      => $form_id,

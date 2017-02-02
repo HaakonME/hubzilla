@@ -35,6 +35,13 @@ aside .nav-pills > li > a,
 
 nav .dropdown-menu {
 	margin-top: 0px;
+	max-height: 70vh;
+	overflow: auto;
+}
+
+nav .navbar-collapse.in .dropdown-menu {
+	max-height: none;
+	overflow: none;
 }
 
 .wall-item-tools .dropdown-menu {

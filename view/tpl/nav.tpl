@@ -180,9 +180,6 @@
 			</ul>
 
 		</div>
-		<div class="collapse navbar-collapse" id="navbar-collapse-2">
-			{{$navapps}}
-		</div>
 	</div>
 	{{if $nav.help.6}}
 	<div id="contextual-help-content" class="contextual-help-content">

@@ -59,7 +59,7 @@
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-left">
 			{{if $nav.network}}
-				<li class="{{$sel.network}} net-button">
+				<li class="{{$sel.network}} net-button" style="display: none;">
 					<a href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#nav-network-menu">
 						<i class="fa fa-fw fa-th"></i>
 						<span class="net-update badge"></span>
@@ -73,7 +73,7 @@
 			{{/if}}
 
 			{{if $nav.home}}
-				<li class="{{$sel.home}} home-button">
+				<li class="{{$sel.home}} home-button" style="display: none;">
 					<a class="{{$nav.home.2}}" href="#" title="{{$nav.home.3}}" id="{{$nav.home.4}}" data-toggle="dropdown" rel="#nav-home-menu">
 						<i class="fa fa-fw fa-home"></i>
 						<span class="home-update badge"></span>
@@ -87,7 +87,7 @@
 			{{/if}}
 
 			{{if $nav.messages}}
-				<li class="{{$sel.messages}} mail-button">
+				<li class="{{$sel.messages}} mail-button" style="display: none;">
 					<a class="{{$nav.messages.2}}" href="#" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}" data-toggle="dropdown" rel="#nav-messages-menu">
 						<i class="fa fa-fw fa-envelope"></i>
 						<span class="mail-update badge"></span>
@@ -101,7 +101,7 @@
 			{{/if}}
 
 			{{if $nav.all_events}}
-				<li class="{{$sel.all_events}} all_events-button">
+				<li class="{{$sel.all_events}} all_events-button" style="display: none;">
 					<a class="{{$nav.all_events.2}}" href="#" title="{{$nav.all_events.3}}" id="{{$nav.all_events.4}}" data-toggle="dropdown" rel="#nav-all_events-menu">
 						<i class="fa fa-fw fa-calendar"></i>
 						<span class="all_events-update badge"></span>
@@ -115,7 +115,7 @@
 			{{/if}}
 
 			{{if $nav.intros}}
-				<li class="{{$sel.intros}} intro-button">
+				<li class="{{$sel.intros}} intro-button" style="display: none;">
 					<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
 						<i class="fa fa-fw fa-user"></i>
 						<span class="intro-update badge"></span>
@@ -128,7 +128,7 @@
 			{{/if}}
 
 			{{if $nav.notifications}}
-				<li class="{{$sel.notifications}} notify-button">
+				<li class="{{$sel.notifications}} notify-button" style="display: none;">
 					<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#nav-notify-menu">
 						<i class="fa fa-fw fa-exclamation"></i>
 						<span class="notify-update badge"></span>

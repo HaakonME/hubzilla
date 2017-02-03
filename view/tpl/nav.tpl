@@ -156,7 +156,7 @@
 
 			{{if $nav.login && !$userinfo}}
 				<li class="">
-					<a href="#" class="dropdown-toggle" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}" data-toggle="dropdown">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
+					<a href="#" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}" onclick="openClose('nav-login'); return false;">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
 					<div id="nav-login" class="dropdown-menu">
 						<div class="form-group">
 							{{$nav.login}}

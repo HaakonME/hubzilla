@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/cloud/$nick
 requires: local_channel
 name: Files
-photo: $baseurl/app/storage.png
+photo: icon:folder-open
+categories: Productivity

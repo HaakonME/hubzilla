@@ -368,6 +368,14 @@ function NavUpdate() {
 
 			updateCountsOnly = false;
 
+			if(data.network || data.home || data.intros || data.mail || data.all_events || data.notify) {
+				$('#notifications-btn').show();
+			}
+			else {
+				$('#notifications-btn').hide();
+				$('#navbar-collapse-1').removeClass('in');
+			}
+
 			if(data.network == 0) {
 				data.network = '';
 				$('.net-update, .net-button').hide();

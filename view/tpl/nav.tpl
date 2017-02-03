@@ -6,7 +6,7 @@
 			<span class="icon-bar"></span>
 		</button>
 		{{if $localuser}}
-		<button id="notifications-btn" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1" style="display: none">
+		<button id="notifications-btn" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1" style="color: grey;">
 			<i class="fa fa-exclamation-circle"></i>
 		</button>
 		{{/if}}

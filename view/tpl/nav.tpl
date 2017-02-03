@@ -156,7 +156,7 @@
 
 			{{if $nav.login && !$userinfo}}
 				<li class="">
-					<a href="#" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
+					<a href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}} <span class="caret" id="loginmenu-caret"></span></a>
 				</li>
 			{{/if}}
 
@@ -221,24 +221,6 @@
 			{{$navapps}}
 		</div>
 	</div>
-
-
-			{{if $nav.login && !$userinfo}}
-
-					<div id="nav-login" class="modal" role="dialog">
-						<div class="modal-dialog">
-							<div class="modal-header"><h3>{{$nav.loginmenu.0.1}}</h3></div>
-							<div class="modal-body">
-								<div class="form-group">
-									{{$nav.login}}
-									{{$nav.remote_login}}
-								</div>
-							</div>
-						</div>
-					</div>
-
-			{{/if}}
-
 
 	{{if $nav.help.6}}
 	<div id="contextual-help-content" class="contextual-help-content">

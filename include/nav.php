@@ -76,6 +76,20 @@ EOT;
 	$userinfo = null;
 	$nav['loginmenu']=array();
 
+	if($observer) {
+			$userinfo = array(
+			'icon' => $observer['xchan_photo_m'],
+			'name' => $observer['xchan_addr'],
+		);
+	}
+
+	elseif(! $_SESSION['authenticated']) {
+		$nav['remote_login'] = remote_login();
+		$nav['loginmenu'][] = Array('rmagic',t('Remote authentication'),'',t('Click to authenticate to your home hub'),'rmagic_nav_btn');
+	}
+
+
+
 	if(local_channel()) {
 
 
@@ -114,6 +128,13 @@ EOT;
 		if(! get_account_id())  {
 			$nav['login'] = login(true,'main-login',false,false);
 			$nav['loginmenu'][] = Array('login',t('Login'),'',t('Sign in'),'login_nav_btn');
+			App::$page['content'] .= replace_macros(get_markup_template('nav_login.tpl'),
+				[ 
+					'$nav' => $nav,
+					'userinfo' => $userinfo
+				]
+			);
+
 		}
 		else
 			$nav['alogout'] = Array('logout',t('Logout'), "", t('End this session'),'logout_nav_btn');
@@ -121,17 +142,6 @@ EOT;
 
 	}
 
-	if($observer) {
-			$userinfo = array(
-			'icon' => $observer['xchan_photo_m'],
-			'name' => $observer['xchan_addr'],
-		);
-	}
-
-	elseif(! $_SESSION['authenticated']) {
-		$nav['remote_login'] = remote_login();
-		$nav['loginmenu'][] = Array('rmagic',t('Remote authentication'),'',t('Click to authenticate to your home hub'),'rmagic_nav_btn');
-	}
 
 	$homelink = get_my_url();
 	if(! $homelink) {

@@ -2191,7 +2191,7 @@ function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id,
 
 	// since Diaspora doesn't handle edits we can only do this for the original text and not update it.
 
-	require_once('include/bb2diaspora.php');
+	require_once('include/markdown.php');
 	$signed_body = bb2diaspora_itembody($datarray,$walltowall);
 
 	if($walltowall) {

@@ -159,6 +159,8 @@ class Apps {
 		if(array_key_exists('version',$ret))
 			$ret['version'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['version']);
 
+		if(array_key_exists('categories',$ret))
+			$ret['categories'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['categories']);
 
 		if(array_key_exists('requires',$ret)) {
 			$requires = explode(',',$ret['requires']);

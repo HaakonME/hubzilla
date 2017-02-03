@@ -25,7 +25,9 @@
 						{{include file="field_checkbox.tpl" field=$adult}}
 						{{include file="field_input.tpl" field=$photo_path}}
 						{{include file="field_input.tpl" field=$attach_path}}
-
+						{{if $basic_addon}}
+						{{$basic_addon}}
+						{{/if}}
 						<div class="settings-submit-wrapper" >
 							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 						</div>
@@ -82,6 +84,9 @@
 							{{include file="field_checkbox.tpl" field=$blocktags}}
 							{{include file="field_input.tpl" field=$expire}}
 						</div>
+						{{if $sec_addon}}
+						{{$sec_addon}}
+						{{/if}}
 						<div class="settings-submit-wrapper" >
 							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 						</div>
@@ -135,6 +140,9 @@
 								{{include file="field_input.tpl" field=$evdays}}
 							</div>
 						</div>
+						{{if $notify_addon}}
+						{{$notify_addon}}
+						{{/if}}
 						<div class="settings-submit-wrapper" >
 							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 						</div>
@@ -152,9 +160,6 @@
 				</div>
 				<div id="miscellaneous-settings-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="miscellaneous-settings">
 					<div class="section-content-tools-wrapper">
-						<div class="ffsapilink">
-							<a type="button" class="btn btn-default" href="/ffsapi">{{$firefoxshare}}</a>
-						</div>
 						{{if $menus}}
 						<div class="form-group channel-menu">
 							<label for="channel_menu">{{$menu_desc}}</label>
@@ -166,6 +171,11 @@
 						</div>
 						{{/if}}
 						{{include file="field_checkbox.tpl" field=$cal_first_day}}
+
+						{{if $misc_addon}}
+						{{$misc_addon}}
+						{{/if}}
+
 						<div class="settings-submit-wrapper" >
 							<button type="submit" name="submit" class="btn btn-primary">{{$submit}}</button>
 						</div>

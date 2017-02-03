@@ -5,9 +5,8 @@
 {{$head_css}}
 {{$js_strings}}
 {{$head_js}}
-<link rel="shortcut icon" href="{{$icon}}" />
-<link rel="search" href="{{$baseurl}}/opensearch" type="application/opensearchdescription+xml" title="{{$osearch}}" />
-<link rel="EditURI" type="application/rsd+xml" href="{{$baseurl}}/rsd.xml" />
+{{$linkrel}}
+{{$plugins}}
 <script>
 	var updateInterval = {{$update_interval}};
 	var localUser = {{if $local_channel}}{{$local_channel}}{{else}}false{{/if}};

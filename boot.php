@@ -802,6 +802,7 @@ class App {
 	public static  $identities;
 	public static  $css_sources = array();
 	public static  $js_sources = array();
+	public static  $linkrel = array();
 	public static  $theme_info = array();
 	public static  $is_sys = false;
 	public static  $nav_sel;
@@ -1164,6 +1165,11 @@ class App {
 
 		self::$meta->set('generator', Zotlabs\Lib\System::get_platform_name());
 
+		head_add_link(['rel' => 'shortcut icon', 'href' => head_get_icon()]);
+
+		$x = [ 'header' => '' ];
+		call_hooks('build_pagehead',$x);
+
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
 		 * being first
@@ -1176,11 +1182,12 @@ class App {
 			'$baseurl' => self::get_baseurl(),
 			'$local_channel' => local_channel(),
 			'$metas' => self::$meta->get(),
+			'$plugins' => $x['header'],
 			'$update_interval' => $interval,
 			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Lib\System::get_site_name(), t('$Projectname','opensearch')), 
-			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
+			'$linkrel' => head_get_links(),
 			'$js_strings' => js_strings(),
 			'$zid' => get_my_address(),
 			'$channel_id' => self::$profile['uid'],

@@ -448,7 +448,10 @@ class Channel {
 		$always_show_in_notices = get_pconfig(local_channel(),'system','always_show_in_notices');
 		if($vnotify === false)
 			$vnotify = (-1);
-	
+
+		$plugin = [ 'basic' => '', 'security' => '', 'notify' => '', 'misc' => '' ];
+		call_hooks('channel_settings',$plugin);
+
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
 	
@@ -537,6 +540,10 @@ class Channel {
 			'$always_show_in_notices'  => array('always_show_in_notices', t('Also show new wall posts, private messages and connections under Notices'), $always_show_in_notices, 1, '', $yes_no),
 	
 			'$evdays' => array('evdays', t('Notify me of events this many days in advance'), $evdays, t('Must be greater than 0')),			
+			'$basic_addon' => $plugin['basic'],
+			'$sec_addon'  => $plugin['security'],
+			'$notify_addon' => $plugin['notify'],
+			'$misc_addon' => $plugin['misc'],
 	
 			'$h_advn' => t('Advanced Account/Page Type Settings'),
 			'$h_descadvn' => t('Change the behaviour of this account for special situations'),

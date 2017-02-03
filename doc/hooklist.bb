@@ -85,6 +85,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/channel_remove]channel_remove[/zrl]
 	Called when removing a channel
 
+[zrl=[baseurl]/help/hook/channel_settings]channel_settings[/zrl]
+	Called when displaying the channel settings page
+
 [zrl=[baseurl]/help/hook/chat_message]chat_message[/zrl]
 	Called to create a chat message.
 

@@ -523,7 +523,7 @@ class Item extends \Zotlabs\Web\Controller {
 			// <img src="javascript:alert('hacked');" />
 	
 	//		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
-	//			require_once('include/bb2diaspora.php');
+	//			require_once('include/markdown.php');
 	//			$body = escape_tags(trim($body));
 	//			$body = str_replace("\n",'<br />', $body);
 	//			$body = preg_replace_callback('/\[share(.*?)\]/ism','\share_shield',$body);			

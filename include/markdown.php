@@ -1,6 +1,6 @@
 <?php
 /**
- * @file include/bb2diaspora.php
+ * @file include/markdown.php
  * @brief Some functions for BB conversions for Diaspora protocol.
  */
 

@@ -339,12 +339,9 @@ class Apps {
 		}
 
 		$install_action = (($installed) ? t('Update') : t('Install'));
-		$icon = ((strpos($papp['photo'],'icon:') === 0) ? substr($papp['photo'],5) : ''); 
-
 
 		return replace_macros(get_markup_template('app.tpl'),array(
 			'$app' => $papp,
-			'$icon' => $icon,
 			'$hosturl' => $hosturl,
 			'$purchase' => (($papp['page'] && (! $installed)) ? t('Purchase') : ''),
 			'$install' => (($hosturl && $mode == 'view') ? $install_action : ''),
@@ -512,8 +509,11 @@ class Apps {
 					intval(TERM_OBJ_APP),
 					intval($r[$x]['id'])
 				);
+
+				$r[$x]['app_icon'] = ((strpos($r[$x]['app_photo'],'icon:') === 0) ? substr($r[$x]['app_photo'],5) : '');
 			}
 		}
+
 		return($r);
 	}
 
@@ -718,6 +718,9 @@ class Apps {
 
 		if($app['app_photo'])
 			$ret['photo'] = $app['app_photo'];
+
+		if($app['app_icon'])
+			$ret['icon'] = $app['app_icon'];
 
 		if($app['app_version'])
 			$ret['version'] = $app['app_version'];

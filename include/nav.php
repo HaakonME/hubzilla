@@ -264,7 +264,6 @@ EOT;
 		'$localuser' => local_channel(),
 	));
 
-
 	$tpl = get_markup_template('nav.tpl');
 
 	App::$page['nav'] .= replace_macros($tpl, array(

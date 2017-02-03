@@ -1,6 +1,6 @@
 
 	{{foreach $apps as $app}}
-	<li><a href="{{$app.url}}">{{if $icon}}<i class="app-icon fa fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" />{{/if}}&nbsp;{{$app.name}}</a></li>
+	<li><a href="{{$app.url}}">{{if $app.icon}}<i class="fa fa-{{$app.icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" />{{/if}}&nbsp;{{$app.name}}</a></li>
 	{{/foreach}}
 	{{if $localuser}}
 	<li class="divider"></li>

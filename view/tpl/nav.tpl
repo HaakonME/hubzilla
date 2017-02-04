@@ -156,7 +156,7 @@
 
 			{{if $nav.login && !$userinfo}}
 				<li class="">
-					<a href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}} <span class="caret" id="loginmenu-caret"></span></a>
+					<a href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
 				</li>
 			{{/if}}
 

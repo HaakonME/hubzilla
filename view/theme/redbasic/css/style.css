@@ -2107,9 +2107,11 @@ dl.bb-dl > dd > li {
 }
 
 #nav-login {
-	padding: 10px;
-	min-width: 300px; 
+}
 
-	border: 1px solid #000;
-	background-color: #fff;
+.rmagic-button {
+	max-width: 400px;
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
 }

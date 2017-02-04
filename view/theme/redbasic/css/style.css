@@ -1188,6 +1188,11 @@ margin-right: 50px;
 	color: $toolicon_colour;
 }
 
+.generic-icons-nav {
+	font-size: 1.2em;
+	margin-right: 7px;
+}
+
 nav .navbar-collapse.in .generic-icons,
 nav .navbar-collapse.collapsing .generic-icons {
 	color: $nav_active_icon_colour;

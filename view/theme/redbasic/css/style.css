@@ -2106,10 +2106,7 @@ dl.bb-dl > dd > li {
 	text-align: center;
 }
 
-#nav-login {
-}
-
-.rmagic-button {
+#login-main, .rmagic-button {
 	max-width: 400px;
 	margin-top: 20px;
 	margin-left: auto;

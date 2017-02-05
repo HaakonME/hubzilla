@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.7/phpunit.xsd"
-         backupGlobals="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.0/phpunit.xsd"
+         bootstrap="../boot.php"
+         forceCoversAnnotation="false"
          beStrictAboutCoversAnnotation="true"
          beStrictAboutOutputDuringTests="true"
-         beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutTodoAnnotatedTests="true"
-         processIsolation="true"
          verbose="true">
     <testsuite name="Hubzilla default Test Suite">
         <directory suffix="Test.php">./unit/</directory>
@@ -28,7 +27,8 @@
     </filter>
     <logging>
         <log type="junit" target="./results/junit.xml" logIncompleteSkipped="false"/>
-        <log type="coverage-html" target="./results/report/" lowUpperBound="35"
-       highLowerBound="70"/>
+        <log type="coverage-clover" target="./results/coverage-clover.xml"/>
+        <log type="coverage-html" target="./results/coverage-report/" lowUpperBound="35"
+        highLowerBound="70"/>
     </logging>
 </phpunit>

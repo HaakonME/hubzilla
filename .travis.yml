@@ -33,11 +33,11 @@ addons:
 #  - mariadb
 #  - postgresql
 
-# any PHP version we want to test against, our unit tests require PHP>=5.6
+# any PHP version we want to test against, current stable phpunit requires PHP >= 7.0
 php:
-  - '5.6'
   - '7.0'
   - '7.1'
+  # HHVM does not fulfil PHPUnit platform requirements as being compatible with PHP7 yet
   #- 'hhvm'
 
 # list of environments to test
@@ -108,8 +108,6 @@ install:
 before_script:
   # Use code coverage config for phpunit
   - if [[ ! -z $CODECOV ]]; then export PHPUCOV=""; fi
-  # HHVM needs xdebug for code coverage, but extremely slow
-  #- if [[ $TRAVIS_PHP_VERSION =~ ^hhvm ]]; then echo 'xdebug.enable = On' >> /etc/hhvm/php.ini; fi
   # Some preparation tasks of environment
   - ./tests/travis/prepare.sh
   # DB specific prepare scripts

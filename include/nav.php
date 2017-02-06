@@ -192,9 +192,11 @@ EOT;
 
 	
 		$nav['network'] = array('network', t('Grid'), "", t('Your grid'),'network_nav_btn');
+		$nav['network']['all'] = [ 'network', t('View your network/grid'), '','' ];
 		$nav['network']['mark'] = array('', t('Mark all grid notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'),'home_nav_btn');
+		$nav['home']['all'] = [ 'channel/' . $channel['channel_address'], t('View your channel home'), '' , '' ];
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 
 
@@ -202,11 +204,11 @@ EOT;
 
 
 		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'),'notifications_nav_btn');
-		$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
+		$nav['notifications']['all']=array('notifications/system', t('View all notifications'), "", "");
 		$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 
 		$nav['messages'] = array('mail/combined', t('Mail'), "", t('Private mail'),'mail_nav_btn');
-		$nav['messages']['all']=array('mail/combined', t('See all private messages'), "", "");
+		$nav['messages']['all']=array('mail/combined', t('View your private messages'), "", "");
 		$nav['messages']['mark'] = array('', t('Mark all private messages seen'), '','');
 		$nav['messages']['inbox'] = array('mail/inbox', t('Inbox'), "", t('Inbox'));
 		$nav['messages']['outbox']= array('mail/outbox', t('Outbox'), "", t('Outbox'));
@@ -214,7 +216,7 @@ EOT;
 
 
 		$nav['all_events'] = array('events', t('Events'), "", t('Event Calendar'),'events_nav_btn');
-		$nav['all_events']['all']=array('events', t('See all events'), "", "");
+		$nav['all_events']['all']=array('events', t('View events'), "", "");
 		$nav['all_events']['mark'] = array('', t('Mark all events seen'), '','');
 
 		if(! $basic)		

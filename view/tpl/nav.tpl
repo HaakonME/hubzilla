@@ -74,7 +74,7 @@
 					<span class="net-update badge"></span>
 				</a>
 				<ul id="nav-network-menu" role="menu" class="dropdown-menu" rel="network">
-					{{* <li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li> *}}
+					<li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li>
 					<li id="nav-network-mark-all"><a href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a></li>
 					<li class="empty">{{$emptynotifications}}</li>
 				</ul>
@@ -87,7 +87,7 @@
 					<span class="home-update badge"></span>
 				</a>
 				<ul id="nav-home-menu" class="dropdown-menu" rel="home">
-					{{* <li id="nav-home-see-all"><a href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a></li> *}}
+					<li id="nav-home-see-all"><a href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a></li>
 					<li id="nav-home-mark-all"><a href="#" onclick="markRead('home'); return false;">{{$nav.home.mark.1}}</a></li>
 					<li class="empty">{{$emptynotifications}}</li>
 				</ul>

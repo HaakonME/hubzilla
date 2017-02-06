@@ -1,3 +1,4 @@
+version: 1
 url: $baseurl/search
 name: Search
-photo: $baseurl/app/search.png
+photo: icon:search

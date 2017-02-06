@@ -5,12 +5,6 @@
 	padding: 20px;
 }
 
-.app-detail {
-	height: 130px;
-	overflow-x: hidden;
-	overflow-y: hidden;
-}
-
-.app-tools {
-	margin-bottom: 0;
+.app-name {
+	margin: 10px 0px;
 }

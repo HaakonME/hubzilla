@@ -38,7 +38,7 @@ class Apps extends \Zotlabs\Web\Controller {
 		foreach($syslist as $app) {
 			$apps[] = Zlib\Apps::app_render($app,$mode);
 		}
-	
+
 		return replace_macros(get_markup_template('myapps.tpl'), array(
 			'$sitename' => get_config('system','sitename'),
 			'$cat' => ((array_key_exists('cat',$_GET) && $_GET['cat']) ? ' - ' . escape_tags($_GET['cat']) : ''),

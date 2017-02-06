@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/wiki/$nick
-requires: local_channel
+requires: local_channel, wiki
 name: Wiki
-photo: $baseurl/app/wiki.png
+photo: icon:pencil-square-o
+categories: Productivity

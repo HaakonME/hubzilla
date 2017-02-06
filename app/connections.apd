@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/connections
 requires: local_channel
 name: Connections
-photo: $baseurl/app/connections.png
+photo: icon:users
+categories: nav_featured_app, Networking

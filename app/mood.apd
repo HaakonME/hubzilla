@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/mood
 requires: local_channel
 name: Mood
-photo: $baseurl/app/mood.png
+photo: icon:smile-o
+categories: Social

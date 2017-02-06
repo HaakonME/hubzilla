@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/webpages/$nick
 requires: local_channel, webpages
 name: Webpages
-photo: $baseurl/app/webpages.png
+photo: icon:newspaper-o
+categories: Productivity

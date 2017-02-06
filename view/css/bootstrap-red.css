@@ -3,23 +3,15 @@
 /* nav overrides */
 
 nav .badge {
-	position: relative;
-	top: -49px;
-	left: 2px;
-	float: left;
+	position: absolute;
+	top: 1px;
+	left: 1px;
 	font-size: 10px;
 	line-height: 20px;
 	padding: 0px 5px;
 	height: 20px;
 	min-width: 20px;
 	border-radius: 10px;
-	cursor: pointer;
-}
-
-@media screen and (max-width: 767px) {
-	nav .badge {
-		top: -46px;
-	}
 }
 
 #navbar-collapse-1 i,
@@ -27,29 +19,10 @@ nav .badge {
 	font-size: 14px;
 }
 
-nav ul li {
-	max-height: 50px;
-}
-
 nav .navbar-header img {
 	height: 49px;
 	width: 49px;
 	margin-top: 1px;
-}
-
-nav .dropdown-menu {
-	max-height: 450px;
-	width: 270px;
-	overflow-y: auto;
-	margin-top: 0px;
-}
-
-nav .navbar-collapse .navbar-left {
-	float: left;
-}
-
-nav .navbar-collapse .navbar-right {
-	float: right;
 }
 
 /* nav overrides end */
@@ -60,13 +33,19 @@ aside .nav-pills > li > a,
 	padding: 6px 10px;
 }
 
-.wall-item-tools .dropdown-menu {
-	min-width: auto;
+nav .dropdown-menu {
+	margin-top: 0px;
+	max-height: 70vh;
+	overflow: auto;
 }
 
-.dropdown-menu li a {
-	overflow: hidden;
-	text-overflow: ellipsis;
+nav .navbar-collapse.in .dropdown-menu {
+	max-height: none;
+	overflow: none;
+}
+
+.wall-item-tools .dropdown-menu {
+	min-width: auto;
 }
 
 .nav-tabs.nav-justified > li {

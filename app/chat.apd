@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/chat/$nick
-requires: local_channel
+requires: local_channel, ajaxchat
 name: My Chatrooms
-photo: $baseurl/app/chat.png
+photo: icon:comments-o
+categories: Productivity

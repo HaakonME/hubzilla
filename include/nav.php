@@ -99,30 +99,30 @@ EOT;
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'),'logout_nav_btn');
 		
 		// user menu
-		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'),'channel_nav_btn');
+		//$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'),'channel_nav_btn');
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'),'profile_nav_btn');
 		if(feature_enabled(local_channel(),'multi_profiles') && (! $basic))
 			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'),'profiles_nav_btn');
 		else
 			$nav['usermenu'][]   = Array('profiles/' . $prof[0]['id'], t('Edit Profile'),"", t('Edit your profile'),'profiles_nav_btn');
 
-		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'),'photos_nav_btn');
-		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'),'cloud_nav_btn');
+		//$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'),'photos_nav_btn');
+		//$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'),'cloud_nav_btn');
 
-		if((! $basic) && feature_enabled(local_channel(),'ajaxchat'))
-			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'], t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
+		//if((! $basic) && feature_enabled(local_channel(),'ajaxchat'))
+		//	$nav['usermenu'][] = Array('chat/' . $channel['channel_address'], t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
 
 
-		require_once('include/menu.php');
-		$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
-		if(($has_bookmarks) && (! $basic)) {
-			$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'),'bookmarks_nav_btn');
-		}
+		//require_once('include/menu.php');
+		//$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
+		//if(($has_bookmarks) && (! $basic)) {
+		//	$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'),'bookmarks_nav_btn');
+		//}
 
-		if(feature_enabled($channel['channel_id'],'webpages') && (! $basic))
-			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'),'webpages_nav_btn');
-		if(feature_enabled($channel['channel_id'],'wiki') && (! $basic))
-			$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wikis'),"",t('Your wikis'),'wiki_nav_btn');
+		//if(feature_enabled($channel['channel_id'],'webpages') && (! $basic))
+		//	$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'),'webpages_nav_btn');
+		//if(feature_enabled($channel['channel_id'],'wiki') && (! $basic))
+		//	$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wikis'),"",t('Your wikis'),'wiki_nav_btn');
 	}
 	else {
 		if(! get_account_id())  {
@@ -254,27 +254,27 @@ EOT;
 
 
 	//app bin
-	$navapps = '';
-	if(get_config('system','experimental_app_bin')) {
-		if(local_channel()) {
-			//Zlib\Apps::import_system_apps();
-			$syslist = array();
-			$list = Zlib\Apps::app_list(local_channel(), false, 'nav_featured_app');
-			if($list) {
-				foreach($list as $li) {
-					$syslist[] = Zlib\Apps::app_encode($li);
-				}
-			}
-			Zlib\Apps::translate_system_apps($syslist);
-		}
-		else {
-			$syslist = Zlib\Apps::get_system_apps(true);
+	if(local_channel()) {
+		if(get_pconfig(local_channel(), 'system','initial_import_system_apps') === false) {
+			Zlib\Apps::import_system_apps();
+			set_pconfig(local_channel(), 'system','initial_import_system_apps', 1);
 		}
 
-		$navapps = replace_macros(get_markup_template('navapps.tpl'), array(
-			'$apps' => $syslist,
-			'$localuser' => local_channel(),
-		));
+		$syslist = array();
+		$list = Zlib\Apps::app_list(local_channel(), false, 'nav_featured_app');
+		if($list) {
+			foreach($list as $li) {
+				$syslist[] = Zlib\Apps::app_encode($li);
+			}
+		}
+		Zlib\Apps::translate_system_apps($syslist);
+	}
+	else {
+		$syslist = Zlib\Apps::get_system_apps(true);
+	}
+
+	foreach($syslist as $app) {
+		$navapps[] = Zlib\Apps::app_render($app,'nav');
 	}
 
 	$tpl = get_markup_template('nav.tpl');

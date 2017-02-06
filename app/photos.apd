@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/photos/$nick
 requires: local_channel
 name: Photos
-photo: $baseurl/app/photos.png
+photo: icon:photo
+categories: Multimedia

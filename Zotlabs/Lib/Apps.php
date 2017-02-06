@@ -146,8 +146,11 @@ class Apps {
 		$ret['type'] = 'system';
 
 		foreach($ret as $k => $v) {
-			if(strpos($v,'http') === 0)
-				$ret[$k] = zid($v);
+			if(strpos($v,'http') === 0) {
+				if(! (local_channel() && strpos($v,z_root()) === 0)) {
+					$ret[$k] = zid($v);
+				}
+			}
 		}
 
 		if(array_key_exists('desc',$ret))
@@ -280,8 +283,11 @@ class Apps {
 			$papp['url'] = z_root() . ((strpos($papp['url'],'/') === 0) ? '' : '/') . $papp['url'];
 
 		foreach($papp as $k => $v) {
-			if(strpos($v,'http') === 0 && $k != 'papp')
-				$papp[$k] = zid($v);
+			if(strpos($v,'http') === 0 && $k != 'papp') {
+				if(! (local_channel() && strpos($v,z_root()) === 0)) {
+					$papp[$k] = zid($v);
+				}
+			}
 			if($k === 'desc')
 				$papp['desc'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$papp['desc']);
 

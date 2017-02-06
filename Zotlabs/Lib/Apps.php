@@ -450,13 +450,13 @@ class Apps {
 			intval($uid)
 		);
 
-		$x = q("select * from term where otype = %d and oid = %d limit 1",
+		$x = q("select * from term where otype = %d and oid = %d and term = 'nav_featured_app' limit 1",
 			intval(TERM_OBJ_APP),
 			intval($r[0]['id'])
 		);
 
 		if($x) {
-			q("delete from term where otype = %d and oid = %d",
+			q("delete from term where otype = %d and oid = %d and term = 'nav_featured_app'",
 				intval(TERM_OBJ_APP),
 				intval($x[0]['oid'])
 			);

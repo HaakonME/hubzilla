@@ -26,6 +26,7 @@ class Apps {
 			foreach($files as $f) {
 				$x = self::parse_app_description($f,$translate);
 				if($x) {
+					$x['icon'] = ((strpos($x['photo'],'icon:') === 0) ? substr($x['photo'],5) : '');
 					$ret[] = $x;
 				}
 			}
@@ -39,6 +40,7 @@ class Apps {
 					$x = self::parse_app_description($f,$translate);
 					if($x) {
 						$x['plugin'] = $plugin;
+						$x['icon'] = ((strpos($x['photo'],'icon:') === 0) ? substr($x['photo'],5) : '');
 						$ret[] = $x;
 					}
 				}
@@ -501,6 +503,7 @@ class Apps {
 		$r = q("select * from app where app_channel = %d $sql_extra order by app_name asc",
 			intval($uid)
 		);
+
 		if($r) {
 			for($x = 0; $x < count($r); $x ++) {
 				if(! $r[$x]['app_system'])

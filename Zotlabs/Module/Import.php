@@ -1,4 +1,5 @@
 <?php
+
 namespace Zotlabs\Module;
 
 // Import a channel, either by direct file upload or via
@@ -21,28 +22,16 @@ class Import extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		$max_identities = account_service_class_fetch($account_id,'total_identities');
-		$max_friends = account_service_class_fetch($account_id,'total_channels');
-		$max_feeds = account_service_class_fetch($account_id,'total_feeds');
-	
-		if($max_identities !== false) {
-			$r = q("select channel_id from channel where channel_account_id = %d",
-				intval($account_id)
-			);
-			if($r && count($r) > $max_identities) {
-				notice( sprintf( t('Your service plan only allows %d channels.'), $max_identities) . EOL);
-				return;
-			}
-		}
-	
-	
-		$data     = null;
-		$seize    = ((x($_REQUEST,'make_primary')) ? intval($_REQUEST['make_primary']) : 0);
-		$import_posts = ((x($_REQUEST,'import_posts')) ? intval($_REQUEST['import_posts']) : 0);
-		$src      = $_FILES['filename']['tmp_name'];
-		$filename = basename($_FILES['filename']['name']);
-		$filesize = intval($_FILES['filename']['size']);
-		$filetype = $_FILES['filename']['type'];
+		$max_friends    = account_service_class_fetch($account_id,'total_channels');
+		$max_feeds      = account_service_class_fetch($account_id,'total_feeds');
+		$data           = null;
+		$seize          = ((x($_REQUEST,'make_primary')) ? intval($_REQUEST['make_primary']) : 0);
+		$import_posts   = ((x($_REQUEST,'import_posts')) ? intval($_REQUEST['import_posts']) : 0);
+		$src            = $_FILES['filename']['tmp_name'];
+		$filename       = basename($_FILES['filename']['name']);
+		$filesize       = intval($_FILES['filename']['size']);
+		$filetype       = $_FILES['filename']['type'];
+		$moving         = intval($_REQUEST['moving']);
 	
 		$completed = ((array_key_exists('import_step',$_SESSION)) ? intval($_SESSION['import_step']) : 0);
 		if($completed)
@@ -118,8 +107,6 @@ class Import extends \Zotlabs\Web\Controller {
 				return;
 		}
 
-		$moving = intval($_REQUEST['moving']);
-		
 		if(array_key_exists('compatibility',$data) && array_key_exists('database',$data['compatibility'])) {
 			$v1 = substr($data['compatibility']['database'],-4);
 			$v2 = substr(DB_UPDATE_VERSION,-4);
@@ -140,6 +127,19 @@ class Import extends \Zotlabs\Web\Controller {
 
 		if(array_key_exists('channel',$data)) {
 	
+			$max_identities = account_service_class_fetch($account_id,'total_identities');
+	
+			if($max_identities !== false) {
+				$r = q("select channel_id from channel where channel_account_id = %d",
+					intval($account_id)
+				);
+				if($r && count($r) > $max_identities) {
+					notice( sprintf( t('Your service plan only allows %d channels.'), $max_identities) . EOL);
+					return;
+				}
+			}
+
+
 			if($completed < 1) {
 				$channel = import_channel($data['channel'], $account_id, $seize);
 	
@@ -547,10 +547,8 @@ class Import extends \Zotlabs\Web\Controller {
 			'$label_old_pass' => t('Your old login password'),
 			'$common' => t('For either option, please choose whether to make this hub your new primary address, or whether your old location should continue this role. You will be able to post from either location, but only one can be marked as the primary location for files, photos, and media.'),
 			'$label_import_primary' => t('Make this hub my primary location'),
-			'$allow_move' => 0,
 			'$label_import_moving' => t('Move this channel (disable all previous locations)'),
-
-			'$label_import_posts' => t('Import existing posts if possible (experimental - limited by available memory'),
+			'$label_import_posts' => t('Import a few months of posts if possible (limited by available memory'),
 			'$pleasewait' => t('This process may take several minutes to complete. Please submit the form only once and leave this page open until finished.'), 
 			'$email' => '',
 			'$pass' => '',

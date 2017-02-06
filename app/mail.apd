@@ -3,4 +3,4 @@ url: $baseurl/mail/combined
 requires: local_channel
 name: Mail
 photo: icon:envelope
-categories: nav_featured_app, Conversation
+categories: nav_featured_app, Personal

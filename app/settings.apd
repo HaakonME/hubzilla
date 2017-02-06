@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/settings
 requires: local_channel
 name: Settings
-photo: $baseurl/app/settings.png
+photo: icon:cog
+categories: System

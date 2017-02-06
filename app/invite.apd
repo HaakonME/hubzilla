@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/invite
 requires: local_channel
 name: Invite
-photo: $baseurl/app/invite.png
+photo: icon:user-plus
+categories: Networking

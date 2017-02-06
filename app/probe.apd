@@ -1,4 +1,6 @@
+version: 1
 url: $baseurl/probe
 requires: local_channel
 name: Remote Diagnostics
-photo: $baseurl/app/probe.png
+photo: icon:user-md
+categories: System

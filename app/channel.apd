@@ -3,4 +3,4 @@ url: $baseurl/channel/$nick
 requires: local_channel
 name: Channel Home
 photo: icon:home
-categories: nav_featured_app, Conversation, Personal
+categories: nav_featured_app, Personal

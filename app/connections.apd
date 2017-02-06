@@ -3,4 +3,4 @@ url: $baseurl/connections
 requires: local_channel
 name: Connections
 photo: icon:users
-categories: nav_featured_app, Social
+categories: nav_featured_app, Networking

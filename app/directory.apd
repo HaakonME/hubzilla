@@ -2,4 +2,4 @@ version: 1
 url: $baseurl/directory
 name: Directory
 photo: icon:sitemap
-categories: nav_featured_app, Social
+categories: nav_featured_app, Networking

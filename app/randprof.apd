@@ -1,6 +1,6 @@
+version: 1
 url: $baseurl/randprof
 name: Random Channel
 target: randprof
-photo: $baseurl/app/randprof.png
-
-
+photo: icon:random
+categories: Networking

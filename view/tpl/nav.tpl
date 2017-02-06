@@ -183,7 +183,13 @@
 	</div>
 	<div class="collapse navbar-collapse" id="navbar-collapse-2">
 		<ul class="nav navbar-nav navbar-left hidden-sm hidden-md hidden-lg">
-			{{$navapps}}
+			{{foreach $navapps as $navapp}}
+			{{$navapp}}
+			{{/foreach}}
+			{{if $localuser}}
+			<li class="divider"></li>
+			<li><a href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>Add Apps</a></li>
+			{{/if}}
 		</ul>
 	</div>
 

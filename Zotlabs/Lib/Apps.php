@@ -352,7 +352,7 @@ class Apps {
 			'$undelete' => ((local_channel() && $installed && $mode == 'edit') ? t('Undelete') : ''),
 			'$deleted' => $papp['deleted'],
 			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true),
-			'$navapps' => ((local_channel() && $installed && $mode == 'nav') ? true : false)
+			'$navapps' => (($mode == 'nav') ? true : false)
 		));
 	}
 

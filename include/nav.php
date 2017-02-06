@@ -255,7 +255,11 @@ EOT;
 
 	//app bin
 	if(local_channel()) {
-		//Zlib\Apps::import_system_apps();
+		if(get_pconfig(local_channel(), 'system','initial_import_system_apps') === false) {
+			Zlib\Apps::import_system_apps();
+			set_pconfig(local_channel(), 'system','initial_import_system_apps', 1);
+		}
+
 		$syslist = array();
 		$list = Zlib\Apps::app_list(local_channel(), false, 'nav_featured_app');
 		if($list) {

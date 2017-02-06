@@ -1,6 +1,6 @@
 version: 1
 url: $baseurl/chat/$nick
-requires: local_channel, chat
+requires: local_channel
 name: My Chatrooms
 photo: icon:comments-o
 categories: Productivity

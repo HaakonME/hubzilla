@@ -110,6 +110,39 @@ function diaspora_mention_callback($matches) {
 
 }
 
+function diaspora_mention_callback2($matches) {
+
+	$webbie = $matches[1] . '@' . $matches[2];
+	$link = '';
+	if($webbie) {
+		$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
+			dbesc($webbie)
+		);
+		if(! $r) {
+			$x = discover_by_webbie($webbie);
+			if($x) {
+				$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash where hubloc_addr = '%s' limit 1",
+					dbesc($webbie)
+				);
+			}
+		}
+		if($r)
+			$link = $r[0]['xchan_url'];
+	}
+
+	$name = (($r) ? $r[0]['xchan_name'] : $matches[1]);
+
+	if(! $link)
+		$link = 'https://' . $matches[2] . '/u/' . $matches[1];
+
+	if($r && $r[0]['hubloc_network'] === 'zot')
+		return '@[zrl=' . $link . ']' . trim($name) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/zrl]' ;
+	else
+		return '@[url=' . $link . ']' . trim($name) . ((substr($matches[0],-1,1) === '+') ? '+' : '') . '[/url]' ;
+
+}
+
+
 
 /**
  * @brief
@@ -141,8 +174,10 @@ function markdown_to_bb($s, $use_zrl = false) {
 	// first try plustags
 
 	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}\+/','diaspora_mention_callback',$s);
-
 	$s = preg_replace_callback('/\@\{(.+?)\; (.+?)\@(.+?)\}/','diaspora_mention_callback',$s);
+
+	$s = preg_replace_callback('/\@\{(.+?)\@(.+?)\}\+/','diaspora_mention_callback2',$s);
+	$s = preg_replace_callback('/\@\{(.+?)\@(.+?)\}/','diaspora_mention_callback2',$s);
 
 	// Escaping the hash tags - doesn't always seem to work
 	// $s = preg_replace('/\#([^\s\#])/','\\#$1',$s);

@@ -122,7 +122,7 @@
 			{{if $nav.intros}}
 			<li class="{{$sel.intros}} intro-button" style="display: none;">
 				<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
-					<i class="fa fa-fw fa-user"></i>
+					<i class="fa fa-fw fa-users"></i>
 					<span class="intro-update badge"></span>
 				</a>
 				<ul id="nav-intros-menu" class="dropdown-menu" rel="intros">

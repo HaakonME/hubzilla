@@ -145,14 +145,8 @@
 			</li>
 			{{/if}}
 			{{if $nav.login && !$userinfo}}
-			<li class="hidden-xs">
-				<a href="#" title="{{$nav.loginmenu.0.3}}" id="{{$nav.loginmenu.0.4}}" onclick="openClose('nav-login'); return false;">{{$nav.loginmenu.0.1}} <span class="caret" id="loginmenu-caret"></span></a>
-				<div id="nav-login" class="dropdown-menu">
-					<div class="form-group">
-						{{$nav.login}}
-					</div>
-					{{$nav.remote_login}}
-				</div>
+			<li class="">
+				<a href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
 			</li>
 			{{/if}}
 			{{if $nav.register}}
@@ -186,6 +180,7 @@
 			{{$navapps}}
 		</ul>
 	</div>
+
 	{{if $nav.help.6}}
 	<div id="contextual-help-content" class="contextual-help-content">
 		{{$nav.help.5}}

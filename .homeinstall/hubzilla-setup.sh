@@ -491,7 +491,7 @@ END
         print_info "letsenrypt exists already (nothing downloaded > no certificate created and registered)"
         return 0
     fi
-    git clone https://github.com/lukas2511/letsencrypt.sh $le_dir
+    git clone https://github.com/lukas2511/dehydrated $le_dir
     cd $le_dir
     # create config file for letsencrypt.sh
     echo "WELLKNOWN=$le_dir" > $le_dir/config.sh
@@ -511,9 +511,9 @@ END
     then
         die "Failed to load $url_http"
     fi
-    # run letsencrypt.sh
+    # run script dehydrated
     # 
-    ./letsencrypt.sh --cron --config $le_dir/config.sh
+    ./dehydrated --cron --config $le_dir/config.sh
 }
 
 function configure_apache_for_https {
@@ -730,8 +730,8 @@ echo "#" >> /var/www/$hubzilladaily
 echo "echo \" \"" >> /var/www/$hubzilladaily
 echo "echo \"+++ \$(date) +++\"" >> /var/www/$hubzilladaily
 echo "echo \" \"" >> /var/www/$hubzilladaily
-echo "echo \"\$(date) - renew certificat...\"" >> /var/www/$hubzilladaily
-echo "bash $le_dir/letsencrypt.sh --cron --config $le_dir/config.sh" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - renew certificate...\"" >> /var/www/$hubzilladaily
+echo "bash $le_dir/dehydrated --cron --config $le_dir/config.sh" >> /var/www/$hubzilladaily
 echo "#" >> /var/www/$hubzilladaily
 echo "# stop hubzilla" >> /var/www/$hubzilladaily
 echo "echo \"\$(date) - stoping apache and mysql...\"" >> /var/www/$hubzilladaily
@@ -798,7 +798,7 @@ echo "echo \"\$(date) - db size...\"" >> /var/www/$hubzilladaily
 echo "du -h /var/cache/rsnapshot/ | grep mysql/hubzilla" >> /var/www/$hubzilladaily
 echo "#" >> /var/www/$hubzilladaily
 echo "# update" >> /var/www/$hubzilladaily
-echo "echo \"\$(date) - updating letsencrypt.sh...\"" >> /var/www/$hubzilladaily
+echo "echo \"\$(date) - updating dehydrated...\"" >> /var/www/$hubzilladaily
 echo "git -C /var/www/letsencrypt/ pull" >> /var/www/$hubzilladaily
 echo "echo \"\$(date) - updating hubhilla core...\"" >> /var/www/$hubzilladaily
 echo "git -C /var/www/html/ pull" >> /var/www/$hubzilladaily

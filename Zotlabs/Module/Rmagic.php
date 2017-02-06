@@ -70,13 +70,12 @@ class Rmagic extends \Zotlabs\Web\Controller {
 	
 	
 	function get() {
-	
-		$o = replace_macros(get_markup_template('rmagic.tpl'),array(
-			'$title' => t('Remote Authentication'),
-			'$desc' => t('Enter your channel address (e.g. channel@example.com)'),
-			'$submit' => t('Authenticate')
-		));
-		return $o;
-	
+		return replace_macros(get_markup_template('rmagic.tpl'),
+			[
+				'$title'   => t('Remote Authentication'),
+				'$address' => [ 'address', t('Enter your channel address (e.g. channel@example.com)'), '', '' ],
+				'$submit'  => t('Authenticate')
+			]
+		);	
 	}
 }

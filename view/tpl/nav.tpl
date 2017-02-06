@@ -156,18 +156,18 @@
 			<li class="{{$nav}}-alogout.2 hidden-xs"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a></li>
 			{{/if}}
 		</ul>
-		<ul class="nav navbar-nav navbar-right">
-			<li class="hidden-xs">
+		<ul class="nav navbar-nav navbar-right hidden-xs">
+			<li class="">
 				<form method="get" action="search" role="search">
 					<div id="nav-search-spinner"></div><input class="fa-search" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();"/>
 				</form>
 			</li>
 			{{if $nav.help.6}}
-			<li class="{{$sel.help}} hidden-xs">
+			<li class="{{$sel.help}}">
 				<a class="{{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}" onclick="contextualHelp(); return false;"><i class="fa fa-question-circle"></i></a>
 			</li>
 			{{/if}}
-			<li class="hidden-xs">
+			<li class="">
 				<a href="#" data-toggle="dropdown"><i class="fa fa-bars"></i></a>
 				<ul class="dropdown-menu">
 				{{$navapps}}

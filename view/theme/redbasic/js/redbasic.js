@@ -53,8 +53,8 @@ $(document).ready(function() {
 	});
 
 	$('.usermenu-head').click(function() {
-		if($('#navbar-collapse-1').hasClass('in')){
-			$('#navbar-collapse-1').removeClass('in');
+		if($('#navbar-collapse-1, #navbar-collapse-2').hasClass('in')){
+			$('#navbar-collapse-1, #navbar-collapse-2').removeClass('in');
 		}
 	});
 	

@@ -170,7 +170,13 @@
 			<li class="">
 				<a href="#" data-toggle="dropdown"><i class="fa fa-bars"></i></a>
 				<ul class="dropdown-menu">
-				{{$navapps}}
+					{{foreach $navapps as $navapp}}
+					{{$navapp}}
+					{{/foreach}}
+					{{if $localuser}}
+					<li class="divider"></li>
+					<li><a href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>Add Apps</a></li>
+					{{/if}}
 				</ul>
 			</li>
 		</ul>

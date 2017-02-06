@@ -1,6 +1,7 @@
+{{if !$navapps}}
 <div class="app-container">
 	<div class="app-detail{{if $deleted}} app-deleted{{/if}}">
-		<a href="{{$app.url}}" {{if $ap.target}}target="{{$app.target}}" {{/if}}{{if $app.desc}}title="{{$app.desc}}{{if $app.price}} ({{$app.price}}){{/if}}"{{else}}title="{{$app.name}}"{{/if}}>{{if $app.icon}}<i class="app-icon fa fa-fw fa-{{$app.icon}}"></i>{{else}}<img src="{{$app.photo}}" width="80" height="80" />{{/if}}
+		<a href="{{$app.url}}"{{if $app.target}} target="{{$app.target}}"{{/if}}{{if $app.desc}} title="{{$app.desc}}{{if $app.price}} ({{$app.price}}){{/if}}"{{else}}title="{{$app.name}}"{{/if}}>{{if $icon}}<i class="app-icon fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="80" height="80" />{{/if}}
 			<div class="app-name" style="text-align:center;">{{$app.name}}</div>
 		</a>
 	</div>
@@ -24,4 +25,7 @@
 	</div>
 	{{/if}}
 </div>
+{{else}}
+<li><a href="{{$app.url}}">{{if $icon}}<i class="generic-icons-nav fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" style="margin-right:9px;"/>{{/if}}{{$app.name}}</a></li>
+{{/if}}
 

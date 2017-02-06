@@ -26,7 +26,6 @@ class Apps {
 			foreach($files as $f) {
 				$x = self::parse_app_description($f,$translate);
 				if($x) {
-					$x['icon'] = ((strpos($x['photo'],'icon:') === 0) ? substr($x['photo'],5) : '');
 					$ret[] = $x;
 				}
 			}
@@ -40,7 +39,6 @@ class Apps {
 					$x = self::parse_app_description($f,$translate);
 					if($x) {
 						$x['plugin'] = $plugin;
-						$x['icon'] = ((strpos($x['photo'],'icon:') === 0) ? substr($x['photo'],5) : '');
 						$ret[] = $x;
 					}
 				}
@@ -341,9 +339,11 @@ class Apps {
 		}
 
 		$install_action = (($installed) ? t('Update') : t('Install'));
+		$icon = ((strpos($papp['photo'],'icon:') === 0) ? substr($papp['photo'],5) : '');
 
 		return replace_macros(get_markup_template('app.tpl'),array(
 			'$app' => $papp,
+			'$icon' => $icon,
 			'$hosturl' => $hosturl,
 			'$purchase' => (($papp['page'] && (! $installed)) ? t('Purchase') : ''),
 			'$install' => (($hosturl && $mode == 'view') ? $install_action : ''),
@@ -351,7 +351,8 @@ class Apps {
 			'$delete' => ((local_channel() && $installed && $mode == 'edit') ? t('Delete') : ''),
 			'$undelete' => ((local_channel() && $installed && $mode == 'edit') ? t('Undelete') : ''),
 			'$deleted' => $papp['deleted'],
-			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true)
+			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true),
+			'$navapps' => ((local_channel() && $installed && $mode == 'nav') ? true : false)
 		));
 	}
 
@@ -512,8 +513,6 @@ class Apps {
 					intval(TERM_OBJ_APP),
 					intval($r[$x]['id'])
 				);
-
-				$r[$x]['app_icon'] = ((strpos($r[$x]['app_photo'],'icon:') === 0) ? substr($r[$x]['app_photo'],5) : '');
 			}
 		}
 

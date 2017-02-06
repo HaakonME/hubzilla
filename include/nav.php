@@ -273,10 +273,9 @@ EOT;
 		$syslist = Zlib\Apps::get_system_apps(true);
 	}
 
-	$navapps = replace_macros(get_markup_template('navapps.tpl'), array(
-		'$apps' => $syslist,
-		'$localuser' => local_channel(),
-	));
+	foreach($syslist as $app) {
+		$navapps[] = Zlib\Apps::app_render($app,'nav');
+	}
 
 	$tpl = get_markup_template('nav.tpl');
 

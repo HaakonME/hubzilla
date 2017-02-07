@@ -206,7 +206,7 @@ class Display {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Show emoticons (smilies) as images"), 1-intval($nosmile), '', $yes_no),
-			'$manual_update'	=> array('manual_update', t('Manual conversation updates'), channel_manual_conv_update(local_channel()), t('Default is automatic, which may increase screen jumping'), $yes_no),
+			'$manual_update'	=> array('manual_update', t('Manual conversation updates'), channel_manual_conv_update(local_channel()), t('Default is on, turning this off may increase screen jumping'), $yes_no),
 			'$title_tosource'	=> array('title_tosource', t("Link post titles to source"), $title_tosource, '', $yes_no),
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,

@@ -22,12 +22,12 @@ Everything you publish or share can be restricted to those channels and people y
 
 Migration and live backups of your connections, settings, and everything you publish are built-in, so you never need worry about server failure. 
 
-Hubzilla is completely decentralised and open source, for you modify or adapt to your needs and desires. Plugins, themes, and numerous configuration options extend the overall capabilities to anything you can imagine. 
+Hubzilla is completely decentralised and open source, for you modify or adapt to your needs and desires. Plugins, themes, and numerous configuration options extend the overall capabilities to do anything you can imagine. 
 
 
 **Who Are We?**
 
-The Hubzilla community conists of passionate volunteers creating an open source commons of decentralised services which are highly integrated and can rival the feature set of large centralised providers. We do our best to provide ethical software which places you in control of your online communications and privacy expectations.
+The Hubzilla community consists of passionate volunteers creating an open source commons of decentralised services which are highly integrated and can rival the feature set of large centralised providers. We do our best to provide ethical software which places you in control of your online communications and privacy expectations.
 
 
 [![Build Status](https://travis-ci.org/redmatrix/hubzilla.svg)](https://travis-ci.org/redmatrix/hubzilla)

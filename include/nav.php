@@ -275,6 +275,8 @@ EOT;
 		$syslist = Zlib\Apps::get_system_apps(true);
 	}
 
+	usort($syslist,'Zotlabs\\Lib\\Apps::app_name_compare');
+
 	foreach($syslist as $app) {
 		$navapps[] = Zlib\Apps::app_render($app,'nav');
 	}

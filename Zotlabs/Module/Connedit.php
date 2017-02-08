@@ -793,6 +793,15 @@ class Connedit extends \Zotlabs\Web\Controller {
 				$perms[] = array('perms_' . $k, $v, ((array_key_exists($k,$their_perms)) ? intval($their_perms[$k]) : ''),$thisperm, 1, (($checkinherited & PERMS_SPECIFIC) ? '' : '1'), '', $checkinherited);
 			}
 	
+			$pcat = new \Zotlabs\Lib\Permcat(local_channel());
+			$pcatlist = $pcat->listing();
+			$permcats = [];
+			if($pcatlist) {
+				foreach($pcatlist as $pc) {
+					$permcats[$pc['name']] = $pc['localname'];
+				}
+			}
+
 			$locstr = '';
 	
 			$locs = q("select hubloc_addr as location from hubloc left join site on hubloc_url = site_url where hubloc_hash = '%s'
@@ -817,6 +826,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 			$o .= replace_macros($tpl, [
 				'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
 				'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), t('Connection requests will be approved without your interaction'), $yes_no),
+				'$permcat'        => [ 'permcat', t('Permission role'), '', '',$permcats ],
 				'$addr'           => $contact['xchan_addr'],
 				'$section'        => $section,
 				'$sections'       => $sections,

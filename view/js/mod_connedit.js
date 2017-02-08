@@ -17,6 +17,15 @@ $(document).ready(function() {
 			connectFullShare();
 	});
 
+
+	$('#id_permcat').change(function() {
+		$('.loading-role-rotator').spin(true);
+		var permName = $('#id_permcat').val();
+		loadAbookRole(permName);
+	});
+
+
+
 	$(document).on('click', '.vcard-header, .vcard-cancel-btn', updateView);
 	$(document).on('click', '.add-field', doAdd);
 	$(document).on('click', '.remove-field', doRemove);
@@ -119,6 +128,7 @@ function loadAbookRole(name) {
 			if(this.value)
 				$('#me_id_perms_' + this.name).attr('checked','checked');
 		});
+		$('.loading-role-rotator').spin(false);
 	});
 }
 

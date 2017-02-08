@@ -25,7 +25,7 @@
 				</a>
 			</h3>
 		</div>
-		<div id="perms-tool-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="perms-tool">
+		<div id="perms-tool-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="perms-tool">
 			<div class="section-content-tools-wrapper">
 				<div class="section-content-warning-wrapper">
 				{{$permnote}}

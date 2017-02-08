@@ -2104,6 +2104,9 @@ dl.bb-dl > dd > li {
 	font-size: 80px;
 	color: $toolicon_colour;
 	text-shadow: 3px 3px 3px lightgrey;
+}
+
+.app-detail {
 	text-align: center;
 }
 

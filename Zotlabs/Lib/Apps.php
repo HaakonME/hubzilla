@@ -262,6 +262,7 @@ class Apps {
 		 *    list: normal mode for viewing an app on the app page
 		 *       no buttons are shown
 		 *    edit: viewing the app page in editing mode provides a delete button
+		 *    nav: render apps for app-bin
 		 */
 
 		$installed = false;
@@ -357,7 +358,7 @@ class Apps {
 			'$delete' => ((local_channel() && $installed && $mode == 'edit') ? t('Delete') : ''),
 			'$undelete' => ((local_channel() && $installed && $mode == 'edit') ? t('Undelete') : ''),
 			'$deleted' => $papp['deleted'],
-			'$feature' => ((array_key_exists('categories',$papp)) ? true : false),
+			'$feature' => (($papp['embed']) ? false : true),
 			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true),
 			'$navapps' => (($mode == 'nav') ? true : false)
 		));
@@ -768,6 +769,8 @@ class Apps {
 
 		if(! $embed)
 			return $ret;
+
+		$ret['embed'] = true;
 
 		if(array_key_exists('categories',$ret))
 			unset($ret['categories']);

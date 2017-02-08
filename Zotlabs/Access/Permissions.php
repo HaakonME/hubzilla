@@ -106,6 +106,18 @@ class Permissions {
 
 	}
 
+	static public function OPerms($arr) {
+		$ret = [];
+		if($arr) {
+			foreach($arr as $k => $v) {
+				$ret[] = [ 'name' => $k, 'value' => $v ];
+			}
+		}
+		return $ret;
+	}
+
+
+
 	static public function FilledAutoperms($channel_id) {
 		if(! intval(get_pconfig($channel_id,'system','autoperms')))
 			return false;

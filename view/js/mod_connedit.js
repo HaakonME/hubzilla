@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
-	$('form').areYouSure({'addRemoveFieldsMarksDirty':true, 'message': aStr['leavethispage'] }); // Warn user about unsaved settings
+	// Warn member about unsaved settings
+	$('form').areYouSure({'addRemoveFieldsMarksDirty':true, 'message': aStr['leavethispage'] }); 
 
 	if(typeof(after_following) !== 'undefined' && after_following) {
 		if(typeof(connectDefaultShare) !== 'undefined')
@@ -102,3 +103,23 @@ function connectFullShare() {
 	$('#me_id_perms_republish').attr('checked','checked');
 	$('#me_id_perms_post_like').attr('checked','checked');
 }
+
+function loadAbookRole(name) {
+
+	if(! name)
+		name = 'default';
+
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
+
+	$.get('permcat/' + name, function(data) {
+		$(data.perms).each(function() {
+			if(this.value)
+				$('#me_id_perms_' + this.name).attr('checked','checked');
+		});
+	});
+}
+
+

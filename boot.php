@@ -1709,7 +1709,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false, $logi
 		$reglink = 'register';
 
 	$reg = array(
-		'title' => t('Create an account to access services and applications within the Hubzilla'),
+		'title' => t('Create an account to access services and applications'),
 		'desc' => t('Register'),
 		'link' => (($register) ? $reglink : 'pubsites')
 	);
@@ -1733,7 +1733,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false, $logi
 		'$form_id'      => $form_id,
 		'$lname'        => array('username', t('Login/Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),
-		'$remember_me'  => array('remember_me', t('Remember me'), '', '',array(t('No'),t('Yes'))),
+		'$remember_me'  => array((($login_page) ? 'remember' : 'remember_me'), t('Remember me'), '', '',array(t('No'),t('Yes'))),
 		'$hiddens'      => $hiddens,
 		'$register'     => $reg,
 		'$lostpass'     => t('Forgot your password?'),

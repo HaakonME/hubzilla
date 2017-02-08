@@ -300,7 +300,7 @@ else {
 		// (i.e. expire when the browser is closed), even when there's a time expiration
 		// on the cookie
 
-		if($_POST['remember_me']) {
+		if(($_POST['remember_me']) || ($_POST['remember'])) {
 			$_SESSION['remember_me'] = 1;
 			App::$session->new_cookie(31449600); // one year
 		}

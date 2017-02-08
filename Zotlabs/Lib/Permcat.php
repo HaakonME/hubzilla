@@ -67,17 +67,11 @@ class Permcat {
 				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages','view_wiki',
 				  'post_like' ]
 			],
-
 			[ 'contributor', t('contributor','permcat'),
 				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages','view_wiki',
 				  'post_wall','post_comments','write_wiki','post_like','tag_deliver','chat' ]
 			],
-			[ 'trusted', t('trusted','permcat'),
-				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
-				  'write_storage','post_wall','write_pages','write_wiki','post_comments','post_like','tag_deliver',
-				  'chat', 'republish' ]
-			],
-			[ 'moderator', t('moderator','permcat'),
+			[ 'publisher', t('publisher','permcat'),
 				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
 				  'write_storage','post_wall','write_pages','write_wiki','post_comments','post_like','tag_deliver',
 				  'chat', 'republish' ]

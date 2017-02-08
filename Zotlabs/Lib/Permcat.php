@@ -79,7 +79,7 @@ class Permcat {
 			],
 			[ 'moderator', t('moderator','permcat'),
 				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
-				  'write_storage','post_wall','wite_pages','write_wiki','post_comments','post_like','tag_deliver',
+				  'write_storage','post_wall','write_pages','write_wiki','post_comments','post_like','tag_deliver',
 				  'chat', 'republish' ]
 			]
 		];
@@ -101,10 +101,13 @@ class Permcat {
 
 	}
 
+	static public function update($channel_id, $name,$permarr) {
+		PConfig::Set($channel_id,'permcat',$name,$permarr);
+	}
 
-
-
-
+	static public function delete($channel_id,$name) {
+		PConfig::Delete($channel_id,'permcat',$name);
+	}
 
 
 }

@@ -35,7 +35,7 @@
 
 				<table id="perms-tool-table" class=form-group>
 					<tr>
-						<td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td>
+						<td></td><td colspan="2" class="abook-me">{{$me}}</td>
 					</tr>
 						{{foreach $perms as $prm}}
 						{{include file="field_acheckbox.tpl" field=$prm}}

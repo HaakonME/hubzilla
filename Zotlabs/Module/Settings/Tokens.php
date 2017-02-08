@@ -161,7 +161,8 @@ class Tokens {
 			'$me' => t('My Settings'),
 			'$perms' => $perms,
 			'$inherited' => t('inherited'),
-			'$notself' => '1',
+			'$notself' => 0,
+			'$self' => 1,
 			'$permlbl' => t('Individual Permissions'),
 			'$permnote'       => t('Some permissions may be inherited from your channel\'s <a href="settings"><strong>privacy settings</strong></a>, which have higher priority than individual settings. You can <strong>not</strong> change those settings here.'),
 			'$submit' 	=> t('Submit')

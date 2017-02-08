@@ -90,7 +90,8 @@ class Permcat {
 			);
 			if($x) {
 				foreach($x as $xv) {
-					$permcats[] = [ $xv['k'], $xv['k'], $xv['v'] ];
+					$value = ((preg_match('|^a:[0-9]+:{.*}$|s', $xv['v'])) ? unserialize($xv['v']) : $xv['v']);
+					$permcats[] = [ $xv['k'], $xv['k'], $value ];
 				}
 			}
 		}					

@@ -661,6 +661,14 @@ function widget_settings_menu($arr) {
 		);
 	}
 
+	if(feature_enabled(local_channel(),'permcats')) {
+		$tabs[] = array(
+			'label' => t('Permission Categories'),
+			'url' => z_root() . '/settings/permcats',
+			'selected' => ((argv(1) === 'permcats') ? 'active' : ''),
+		);
+	}
+
 
 	if($role === false || $role === 'custom') {
 		$tabs[] = array(

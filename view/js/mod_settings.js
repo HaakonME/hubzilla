@@ -17,6 +17,16 @@ $(document).ready(function() {
 		else
 			$('#advanced-perm').hide();
 	});
+
+	$('#id_permcat_list').change(function() {
+		$('.loading-role-rotator').spin(true);
+		var permName = $('#id_permcat').val();
+		loadPermcat(permName);
+	});
+
+
+
+
 });
 
 
@@ -137,3 +147,25 @@ function channel_privacy_macro(n) {
 		$('#id_profile_in_directory').val(1);
 	}
 }
+
+
+
+function loadPermcat(name) {
+
+	if(! name)
+		name = 'default';
+
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
+
+	$.get('permcat/' + name, function(data) {
+		$(data.perms).each(function() {
+			if(this.value)
+				$('#me_id_perms_' + this.name).attr('checked','checked');
+		});
+		$('.loading-role-rotator').spin(false);
+	});
+}
+

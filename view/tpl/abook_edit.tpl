@@ -473,8 +473,11 @@
 						{{if $self}}{{$permnote_self}}{{/if}}
 						</div>
 
+						{{if $permcat_enable}}
 						<div class="loading-role-rotator"></div>
+						<a href="settings/permcats" class="pull-right"><i class="fa fa-plus"></i>&nbsp;{{$permcat_new}}</a>
 						{{include file="field_select.tpl" field=$permcat}}
+						{{/if}}
 
 						<table id="perms-tool-table" class=form-group>
 							<tr>

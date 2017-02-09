@@ -42,6 +42,8 @@ class Permcats {
 
 	function get() {
 
+logger('cmd: ' . \App::$cmd);
+
 		if(! local_channel())
 			return;
 
@@ -51,30 +53,33 @@ class Permcats {
 		if(argc() > 2) 
 			$name = argv(2);			
 
+		if(argc() > 3 && argv(3) === 'drop') {
+			\Zotlabs\Lib\Permcat::delete(local_channel(),$name);
+			build_sync_packet();
+			json_return_and_die([ 'success' => true ]);
+		}
+
 
 		$desc = t('Use this form to create permission rules for various classes of people or connections.');
 
-		$global_perms = \Zotlabs\Access\Permissions::Perms();
+		$existing = [];
 
-		$their_perms = [];
-
-		$existing = get_all_perms(local_channel(),(($atoken_xchan) ? $atoken_xchan : ''));
-
-		if($atoken_xchan) {
-			$theirs = q("select * from abconfig where chan = %d and xchan = '%s' and cat = 'their_perms'",
-				intval(local_channel()),
-				dbesc($atoken_xchan)
-			);
-			if($theirs) {
-				foreach($theirs as $t) {
-					$their_perms[$t['k']] = $t['v'];
-				}
+		$pcat = new \Zotlabs\Lib\Permcat(local_channel());
+		$pcatlist = $pcat->listing();
+		$permcats = [];
+		if($pcatlist) {
+			foreach($pcatlist as $pc) {
+				if(($pc['name']) && ($name) && ($pc['name'] == $name))
+					$existing = $pc['perms'];
+				if(! $pc['system'])
+					$permcats[$pc['name']] = $pc['localname'];
 			}
 		}
-		foreach($global_perms as $k => $v) {
-			$thisperm = get_abconfig(local_channel(),$contact['abook_xchan'],'my_perms',$k);
-//fixme
 
+		$global_perms = \Zotlabs\Access\Permissions::Perms();
+
+		foreach($global_perms as $k => $v) {
+			$thisperm = \Zotlabs\Lib\Permcat::find_permcat($existing,$k);
 			$checkinherited = \Zotlabs\Access\PermissionLimits::Get(local_channel(),$k);
 
 			if($existing[$k])
@@ -92,6 +97,7 @@ class Permcats {
 			'$desc'     => $desc,
 			'$desc2' => $desc2,
 			'$tokens' => $t,
+			'$permcats' => $permcats,
 			'$atoken' => $atoken,
 			'$url1' => z_root() . '/channel/' . $channel['channel_address'],
 			'$url2' => z_root() . '/photos/' . $channel['channel_address'],

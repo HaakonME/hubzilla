@@ -28,7 +28,8 @@ class Permcat {
 		$this->permcats[] = [
 			'name'      => $name,
 			'localname' => $localname,
-			'perms'     => Zaccess\Permissions::Operms($perms)
+			'perms'     => Zaccess\Permissions::Operms($perms),
+			'system'    => 1
 		];
 
 
@@ -38,7 +39,8 @@ class Permcat {
 				$this->permcats[] = [
 					'name'      => $p[$x][0],
 					'localname' => $p[$x][1],
-					'perms'     => Zaccess\Permissions::Operms(Zaccess\Permissions::FilledPerms($p[$x][2]))
+					'perms'     => Zaccess\Permissions::Operms(Zaccess\Permissions::FilledPerms($p[$x][2])),
+					'system'    => intval($p[$x][3])
 				];
 			}
 		}
@@ -65,16 +67,16 @@ class Permcat {
 		$permcats = [
 			[ 'follower', t('follower','permcat'),
 				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages','view_wiki',
-				  'post_like' ]
+				  'post_like' ], 1
 			],
 			[ 'contributor', t('contributor','permcat'),
 				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages','view_wiki',
-				  'post_wall','post_comments','write_wiki','post_like','tag_deliver','chat' ]
+				  'post_wall','post_comments','write_wiki','post_like','tag_deliver','chat' ], 1
 			],
 			[ 'publisher', t('publisher','permcat'),
 				[ 'view_stream','view_profile','view_contacts','view_storage','view_pages',
 				  'write_storage','post_wall','write_pages','write_wiki','post_comments','post_like','tag_deliver',
-				  'chat', 'republish' ]
+				  'chat', 'republish' ], 1
 			]
 		];
 
@@ -85,7 +87,7 @@ class Permcat {
 			if($x) {
 				foreach($x as $xv) {
 					$value = ((preg_match('|^a:[0-9]+:{.*}$|s', $xv['v'])) ? unserialize($xv['v']) : $xv['v']);
-					$permcats[] = [ $xv['k'], $xv['k'], $value ];
+					$permcats[] = [ $xv['k'], $xv['k'], $value, 0 ];
 				}
 			}
 		}					
@@ -94,6 +96,14 @@ class Permcat {
 
 		return $permcats;
 
+	}
+
+	static public function find_permcat($arr,$name) {
+		if((! $arr) || (! $name))
+			return false;
+		foreach($arr as $p)
+			if($p['name'] == $name)
+				return $p['value'];
 	}
 
 	static public function update($channel_id, $name,$permarr) {

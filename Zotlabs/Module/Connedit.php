@@ -827,6 +827,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
 				'$autoperms'      => array('autoperms',t('Apply these permissions automatically'), ((get_pconfig(local_channel(),'system','autoperms')) ? 1 : 0), t('Connection requests will be approved without your interaction'), $yes_no),
 				'$permcat'        => [ 'permcat', t('Permission role'), '', '',$permcats ],
+				'$permcat_new'    => t('Add permission role'),
+				'$permcat_enable' => feature_enabled(local_channel(),'permcats'),
 				'$addr'           => $contact['xchan_addr'],
 				'$section'        => $section,
 				'$sections'       => $sections,

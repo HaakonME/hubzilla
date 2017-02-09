@@ -149,6 +149,15 @@ function get_features($filtered = true) {
 			],
 
 			[
+				'permcats',       
+				t('Permission Groups'),          
+				t('Provide alternate connection permission roles.'),
+				false,
+				get_config('feature_lock','permcats'),
+				feature_level('permcats',2),
+			],
+
+			[
 				'smart_birthdays',       
 				t('Smart Birthdays'),          
 				t('Make birthday events timezone aware in case your friends are scattered across the planet.'),

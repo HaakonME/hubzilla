@@ -45,6 +45,19 @@
 				</div>
 			</div>
 		</div>
+		{{if $permcats}}
+		<div class="section-content-wrapper-np">
+			<table id="permcat-index">
+			{{foreach $permcats as $k => $v}}
+			<tr class="permcat-row-{{$k}}">
+				<td width="99%"><a href="settings/permcats/{{$k}}">{{$k}}</a></td>
+				<td width="1%"><i class="fa fa-trash-o drop-icons" onClick="dropItem('/settings/permcats/{{$k}}/drop', '.permcat-row-{{$k}}')"></i></td>
+			</tr>
+			{{/foreach}}
+			</table>
+		</div>
+		{{/if}}
+
 	</div>
 	</form>
 

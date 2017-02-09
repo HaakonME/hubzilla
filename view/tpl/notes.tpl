@@ -5,10 +5,12 @@
 		var noteSaveTimer = null;
 		var noteText = $('#note-text');
 
-		noteText.on('change keyup keydown paste cut', function () {
-			$(this).height(0).height(this.scrollHeight);
-			$(document.body).trigger("sticky_kit:recalc");
-		}).change();
+		$(document).ready(function(e){
+			noteText.on('change keyup keydown paste cut', function () {
+				noteText.height(0).height(noteText[0].scrollHeight);
+				$(document.body).trigger("sticky_kit:recalc");
+			}).change();
+		});
 
 		$(document).on('focusout',"#note-text",function(e){
 			if(noteSaveTimer)

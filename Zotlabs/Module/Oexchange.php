@@ -16,7 +16,7 @@ class Oexchange extends \Zotlabs\Web\Controller {
 		}
 	}
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			if(remote_channel()) {

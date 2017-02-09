@@ -8,6 +8,8 @@ class Wfinger extends \Zotlabs\Web\Controller {
 
 	function init() {
 	
+		session_write_close();
+
 		$result = array();
 	
 		$scheme = '';

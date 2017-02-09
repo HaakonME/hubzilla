@@ -2116,3 +2116,6 @@ dl.bb-dl > dd > li {
 	margin-left: auto;
 	margin-right: auto;
 }
+#permcat-index {
+	margin: 10px;
+}

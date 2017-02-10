@@ -12,7 +12,6 @@
 					{{$nav.remote_login}}
 				</div>
 			</div>
-
 		</div>
 	</div>
 </div>

@@ -212,6 +212,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 		}
 	
 		if(($_REQUEST['pending']) && intval($orig_record[0]['abook_pending'])) {
+
 			$new_friend = true;
 	
 			// @fixme it won't be common, but when you accept a new connection request
@@ -221,21 +222,13 @@ class Connedit extends \Zotlabs\Web\Controller {
 			// request. The workaround is to approve the connection, then go back and
 			// adjust permissions as desired.
 	
-			$abook_my_perms = get_channel_default_perms(local_channel());
-	
-			$role = get_pconfig(local_channel(),'system','permissions_role');
-			if($role) {
-				$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
-				if($x['perms_connect']) {
-					$abook_my_perms = $x['perms_connect'];
+			$p = \Zotlabs\Access\Permissions::connect_perms(local_channel());
+			$my_perms = $p['perms'];
+			if($my_perms) {
+				foreach($my_perms as $k => $v) {
+					set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$k,$v);
 				}
 			}
-
-			$filled_perms = \Zotlabs\Access\Permissions::FilledPerms($abook_my_perms);
-			foreach($filled_perms as $k => $v) {
-				set_abconfig($channel['channel_id'],$orig_record[0]['abook_xchan'],'my_perms',$k,$v);
-			}
-
 		}
 
 		$abook_pending = (($new_friend) ? 0 : $orig_record[0]['abook_pending']);

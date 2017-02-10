@@ -94,6 +94,10 @@ class Permissions {
 	// Undeclared permissions are set to 0
 
 	static public function FilledPerms($arr) {
+		if(is_null($arr)) {
+			btlogger('FilledPerms: null');
+		}
+
 		$everything = self::Perms();
 		$ret = [];
 		foreach($everything as $k => $v) {

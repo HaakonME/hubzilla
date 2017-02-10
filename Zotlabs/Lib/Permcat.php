@@ -10,24 +10,52 @@ class Permcat {
 
 	public function __construct($channel_id) {
 
-		$name = 'default';
-		$localname = t('default','permcat');
-		
-		$perms = Zaccess\Permissions::FilledAutoPerms($channel_id);
-		if(! $perms) {
-			$role = get_pconfig($channel_id,'system','permissions_role');
-			if($role) {
-				$x = Zaccess\PermissionRoles::role_perms($role);
+		$perms = [];
+
+		// first check role perms for a perms_connect setting
+
+		$role = get_pconfig($channel_id,'system','permissions_role');
+		if($role) {
+			$x = Zaccess\PermissionRoles::role_perms($role);
+			if($x['perms_connect']) {
 				$perms = Zaccess\Permissions::FilledPerms($x['perms_connect']);
-			}
-			if(! $perms) {
-				$perms = Zaccess\Permissions::FilledPerms([]);
 			}
 		}
 
+		// if no role perms it may be a custom role, see if there any autoperms
+
+		if(! $perms) {
+			$perms = Zaccess\Permissions::FilledAutoPerms($channel_id);
+		}
+
+		// if no autoperms it may be a custom role with manual perms
+
+		if(! $perms) {
+			$r = q("select channel_hash from channel where channel_id = %d",
+				intval($channel_id)
+			);
+			if($r) {
+				$x = q("select * from abconfig where chan = %d and xchan = '%s' and cat = 'my_perms'",
+					intval($channel_id),
+					dbesc($r[0]['channel_hash'])
+				);
+				if($x) {
+					foreach($x as $xv) {
+						$perms[$xv['k']] = intval($xv['v']);
+					}
+				}
+			}
+		}
+
+		// nothing was found - create a filled permission array where all permissions are 0
+
+		if(! $perms) {
+			$perms = Zaccess\Permissions::FilledPerms([]);
+		}
+
 		$this->permcats[] = [
-			'name'      => $name,
-			'localname' => $localname,
+			'name'      => 'default',
+			'localname' => t('default','permcat'),
 			'perms'     => Zaccess\Permissions::Operms($perms),
 			'system'    => 1
 		];

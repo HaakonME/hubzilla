@@ -1,5 +1,5 @@
 {{if $nav.login && !$userinfo}}
-<div id="nav-login" class="modal modal-sm" tabindex="-1" role="dialog">
+<div id="nav-login" class="modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

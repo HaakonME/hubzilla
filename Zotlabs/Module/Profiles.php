@@ -70,15 +70,16 @@ class Profiles extends \Zotlabs\Web\Controller {
 			$r1 = q("SELECT fullname, photo, thumb FROM profile WHERE uid = %d AND is_default = 1 LIMIT 1",
 				intval(local_channel()));
 			
-			$r2 = q("INSERT INTO profile (aid, uid , profile_guid, profile_name , fullname, photo, thumb)
-				VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
-				intval(get_account_id()),
-				intval(local_channel()),
-				dbesc(random_string()),
-				dbesc($name),
-				dbesc($r1[0]['fullname']),
-				dbesc($r1[0]['photo']),
-				dbesc($r1[0]['thumb'])
+			$r2 = profile_store_lowlevel(
+				[
+					'aid'          => intval(get_account_id()),
+					'uid'          => intval(local_channel()),
+					'profile_guid' => random_string(),
+					'profile_name' => $name,
+					'fullname'     => $r1[0]['fullname'],
+					'photo'        => $r1[0]['photo'],
+					'thumb'        => $r1[0]['thumb']
+				]
 			);
 	
 			$r3 = q("SELECT id FROM profile WHERE uid = %d AND profile_name = '%s' LIMIT 1",

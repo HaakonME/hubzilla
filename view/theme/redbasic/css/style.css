@@ -1829,7 +1829,8 @@ nav .badge.mail-update {
 #expand-tabs,
 #doco-return-to-top-btn,
 #context-help-btn,
-#notifications-btn {
+#notifications-btn,
+#login_nav_btn_collapse {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
 }

@@ -5,6 +5,11 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		</button>
+		{{if $nav.login && !$userinfo}}
+		<button type="button" class="navbar-toggle" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
+			{{$nav.loginmenu.1.1}}
+		</button>
+		{{/if}}
 		{{if $localuser}}
 		<button id="notifications-btn" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1" style="color: grey;">
 			<i class="fa fa-exclamation-circle"></i>

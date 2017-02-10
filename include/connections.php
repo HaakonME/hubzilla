@@ -1,6 +1,38 @@
 <?php /** @file */
 
 
+function abook_store_lowlevel($arr) {
+
+	$store = [
+		'abook_account'     => ((array_key_exists('abook_account',$arr))     ? $arr['abook_account']     : 0),
+		'abook_channel'     => ((array_key_exists('abook_channel',$arr))     ? $arr['abook_channel']     : 0),
+		'abook_xchan'       => ((array_key_exists('abook_xchan',$arr))       ? $arr['abook_xchan']       : ''),
+		'abook_my_perms'    => ((array_key_exists('abook_my_perms',$arr))    ? $arr['abook_my_perms']    : 0),
+		'abook_their_perms' => ((array_key_exists('abook_their_perms',$arr)) ? $arr['abook_their_perms'] : 0),
+		'abook_closeness'   => ((array_key_exists('abook_closeness',$arr))   ? $arr['abook_closeness']   : 99),
+		'abook_created'     => ((array_key_exists('abook_created',$arr))     ? $arr['abook_created']     : NULL_DATE),
+		'abook_updated'     => ((array_key_exists('abook_updated',$arr))     ? $arr['abook_updated']     : NULL_DATE),
+		'abook_connected'   => ((array_key_exists('abook_connected',$arr))   ? $arr['abook_connected']   : NULL_DATE),
+		'abook_dob'         => ((array_key_exists('abook_dob',$arr))         ? $arr['abook_dob']         : NULL_DATE),
+		'abook_flags'       => ((array_key_exists('abook_flags',$arr))       ? $arr['abook_flags']       : 0),
+		'abook_blocked'     => ((array_key_exists('abook_blocked',$arr))     ? $arr['abook_blocked']     : 0),
+		'abook_ignored'     => ((array_key_exists('abook_ignored',$arr))     ? $arr['abook_ignored']     : 0),
+		'abook_hidden'      => ((array_key_exists('abook_hidden',$arr))      ? $arr['abook_hidden']      : 0),
+		'abook_archived'    => ((array_key_exists('abook_archived',$arr))    ? $arr['abook_archived']    : 0),
+		'abook_pending'     => ((array_key_exists('abook_pending',$arr))     ? $arr['abook_pending']     : 0),
+		'abook_unconnected' => ((array_key_exists('abook_unconnected',$arr)) ? $arr['abook_unconnected'] : 0),
+		'abook_self'        => ((array_key_exists('abook_self',$arr))        ? $arr['abook_self']        : 0),
+		'abook_feed'        => ((array_key_exists('abook_feed',$arr))        ? $arr['abook_feed']        : 0),
+		'abook_profile'     => ((array_key_exists('abook_profile',$arr))     ? $arr['abook_profile']     : ''),
+		'abook_incl'        => ((array_key_exists('abook_incl',$arr))        ? $arr['abook_incl']        : ''),
+		'abook_excl'        => ((array_key_exists('abook_excl',$arr))        ? $arr['abook_excl']        : ''),
+		'abook_instance'    => ((array_key_exists('abook_instance',$arr))    ? $arr['abook_instance']    : '')
+	];
+
+	return create_table_from_array('abook',$store);
+
+}
+
 
 function rconnect_url($channel_id,$xchan) {
 

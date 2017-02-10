@@ -13,12 +13,11 @@ require_once('include/zot.php');
 
 function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) {
 
+	$result = [ 'success' => false, 'message' => '' ];
 
-
-	$result = array('success' => false,'message' => '');
-
-	$is_red = false;
-	$is_http = ((strpos($url,'://') !== false) ? true : false);
+	$my_perms = false;
+	$is_zot   = false;
+	$is_http  = ((strpos($url,'://') !== false) ? true : false);
 
 	if($is_http && substr($url,-1,1) === '/')
 		$url = substr($url,0,-1);
@@ -58,20 +57,14 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$ret = Zotlabs\Zot\Finger::run($url,$channel);
 
 	if($ret && is_array($ret) && $ret['success']) {
-		$is_red = true;
+		$is_zot = true;
 		$j = $ret;
 	}
 
-	$my_perms = get_channel_default_perms($uid);
+	$p = \Zotlabs\Access\Permissions::connect_perms($uid);
+	$my_perms = $p['perms'];
 
-	$role = get_pconfig($uid,'system','permissions_role');
-	if($role) {
-		$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
-		if($x['perms_connect'])
-			$my_perms = $x['perms_connect'];
-	}
-
-	if($is_red && $j) {
+	if($is_zot && $j) {
 
 		logger('follow: ' . $url . ' ' . print_r($j,true), LOGGER_DEBUG);
 
@@ -166,14 +159,13 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		}
 	}
 
-
 	if(! $xchan_hash) {
 		$result['message'] = t('Channel discovery failed.');
 		logger('follow: ' . $result['message']);
 		return $result;
 	}
 
-	$allowed = (($is_red || $r[0]['xchan_network'] === 'rss') ? 1 : 0);
+	$allowed = (($is_zot || $r[0]['xchan_network'] === 'rss') ? 1 : 0);
 
 	$x = array('channel_id' => $uid, 'follow_address' => $url, 'xchan' => $r[0], 'allowed' => $allowed, 'singleton' => 0);
 
@@ -211,7 +203,8 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		return $result;
 	}
 
-	$r = q("select abook_id, abook_xchan, abook_pending, abook_instance from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+	$r = q("select abook_id, abook_xchan, abook_pending, abook_instance from abook 
+		where abook_xchan = '%s' and abook_channel = %d limit 1",
 		dbesc($xchan_hash),
 		intval($uid)
 	);
@@ -226,6 +219,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	}
 
 	if($r) {
+
 		$abook_instance = $r[0]['abook_instance'];
 
 		if(($singleton) && strpos($abook_instance,z_root()) === false) {
@@ -240,21 +234,6 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		);
 
 		if(intval($r[0]['abook_pending'])) {
-
-			$abook_my_perms = get_channel_default_perms($uid);
-            $role = get_pconfig($uid,'system','permissions_role');
-            if($role) {
-                $x = \Zotlabs\Access\PermissionRoles::role_perms($role);
-                if($x['perms_connect']) {
-                    $abook_my_perms = $x['perms_connect'];
-                }
-            }
-
-            $filled_perms = \Zotlabs\Access\Permissions::FilledPerms($abook_my_perms);
-            foreach($filled_perms as $k => $v) {
-                set_abconfig($uid,$r[0]['abook_xchan'],'my_perms',$k,$v);
-            }
-
 			$x = q("update abook set abook_pending = 0 where abook_id = %d",
 				intval($r[0]['abook_id'])
 			);
@@ -265,29 +244,26 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		if($closeness === false)
 			$closeness = 80;
 
-		$r = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_feed, abook_created, abook_updated, abook_instance )
-			values( %d, %d, %d, '%s', %d, '%s', '%s', '%s' ) ",
-			intval($aid),
-			intval($uid),
-			intval($closeness),
-			dbesc($xchan_hash),
-			intval(($is_http) ? 1 : 0),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc(($singleton) ? z_root() : '')
+		$r = abook_store_lowlevel(
+			[
+				'abook_account'   => intval($aid),
+				'abook_channel'   => intval($uid),
+				'abook_closeness' => intval($closeness),
+				'abook_xchan'     => $xchan_hash,
+				'abook_feed'      => intval(($is_http) ? 1 : 0),
+				'abook_created'   => datetime_convert(),
+				'abook_updated'   => datetime_convert(),
+				'abook_instance'  => (($singleton) ? z_root() : '')
+			]
 		);
 	}
 
 	if(! $r)
 		logger('mod_follow: abook creation failed');
 
-	$all_perms = \Zotlabs\Access\Permissions::Perms();
-	if($all_perms) {
-		foreach($all_perms as $k => $v) {
-			if(in_array($k,$my_perms))
-				set_abconfig($uid,$xchan_hash,'my_perms',$k,1);
-			else
-				set_abconfig($uid,$xchan_hash,'my_perms',$k,0);
+	if($my_perms) {
+		foreach($my_perms as $k => $v) {
+			set_abconfig($uid,$xchan_hash,'my_perms',$k,$v);
 		}
 	}
 

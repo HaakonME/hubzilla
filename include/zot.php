@@ -417,28 +417,12 @@ function zot_refresh($them, $channel = null, $force = false) {
 			}
 			else {
 
+				$p = \Zotlabs\Access\Permissions::connect_perms($channel['channel_id']);
+
+				$my_perms  = $p['perms'];
+				$automatic = $p['automatic'];
+
 				// new connection
-
-				$my_perms = null;
-				$automatic = false;
-
-				$role = get_pconfig($channel['channel_id'],'system','permissions_role');
-				if($role) {
-					$xx = \Zotlabs\Access\PermissionRoles::role_perms($role);
-					if($xx['perms_auto']) {
-						$automatic = true;
-						$default_perms = $xx['perms_connect'];
-						$my_perms = \Zotlabs\Access\Permissions::FilledPerms($default_perms);
-					}
-				}
-
-				if(! $my_perms) {
-					$m = \Zotlabs\Access\Permissions::FilledAutoperms($channel['channel_id']);
-					if($m) {
-						$automatic = true;
-						$my_perms = $m;
-					}
-				}
 
 				if($my_perms) {
 					foreach($my_perms as $k => $v) {
@@ -450,15 +434,17 @@ function zot_refresh($them, $channel = null, $force = false) {
 				if($closeness === false)
 					$closeness = 80;
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_closeness, abook_xchan, abook_created, abook_updated, abook_dob, abook_pending ) values ( %d, %d, %d, '%s', '%s', '%s', '%s', %d )",
-					intval($channel['channel_account_id']),
-					intval($channel['channel_id']),
-					intval($closeness),
-					dbesc($x['hash']),
-					dbesc(datetime_convert()),
-					dbesc(datetime_convert()),
-					dbesc($next_birthday),
-					intval(($automatic) ? 0 : 1)
+				$y = abook_store_lowlevel(
+					[
+						'abook_account'   => intval($channel['channel_account_id']),
+						'abook_channel'   => intval($channel['channel_id']),
+						'abook_closeness' => intval($closeness),
+						'abook_xchan'     => $x['hash'],
+						'abook_created'   => datetime_convert(),
+						'abook_updated'   => datetime_convert(),
+						'abook_dob'       => $next_birthday,
+						'abook_pending'   => intval(($automatic) ? 0 : 1)
+					]
 				);
 
 				if($y) {
@@ -3323,10 +3309,12 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 						logger('process_channel_sync_delivery: total_feeds service class limit exceeded');
 						continue;
 					}
-					q("insert into abook ( abook_xchan, abook_account, abook_channel ) values ('%s', %d, %d ) ",
-						dbesc($clean['abook_xchan']),
-						intval($channel['channel_account_id']),
-						intval($channel['channel_id'])
+					abook_store_lowlevel(
+						[
+							'abook_xchan'   => $clean['abook_xchan'],
+							'abook_account' => $channel['channel_account_id'],
+							'abook_channel' => $channel['channel_id']
+						]
 					);
 					$total_friends ++;
 					if(intval($clean['abook_feed']))

@@ -336,17 +336,18 @@ function create_identity($arr) {
 	// Not checking return value.
 	// It's ok for this to fail if it's an imported channel, and therefore the hash is a duplicate
 
-	$r = q("INSERT INTO profile ( aid, uid, profile_guid, profile_name, is_default, publish, fullname, photo, thumb)
-		VALUES ( %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s') ",
-		intval($ret['channel']['channel_account_id']),
-		intval($newuid),
-		dbesc(random_string()),
-		t('Default Profile'),
-		1,
-		$publish,
-		dbesc($ret['channel']['channel_name']),
-		dbesc(z_root() . "/photo/profile/l/{$newuid}"),
-		dbesc(z_root() . "/photo/profile/m/{$newuid}")
+	$r = profile_store_lowlevel(
+		[
+			'aid'          => intval($ret['channel']['channel_account_id']),
+			'uid'          => intval($newuid),
+			'profile_guid' => random_string(),
+			'profile_name' => t('Default Profile'),
+			'is_default'   => 1,
+			'publish'      => $publish,
+			'fullname'     => $ret['channel']['channel_name'],
+			'photo'        => z_root() . "/photo/profile/l/{$newuid}",
+			'thumb'        => z_root() . "/photo/profile/m/{$newuid}"
+		]
 	);
 
 	if($role_permissions) {
@@ -357,15 +358,16 @@ function create_identity($arr) {
 		$myperms = $x['perms_connect'];
 	}
 
-	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_self )
-		values ( %d, %d, '%s', %d, '%s', '%s', %d ) ",
-		intval($ret['channel']['channel_account_id']),
-		intval($newuid),
-		dbesc($hash),
-		intval(0),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		intval(1)
+	$r = abook_store_lowlevel(
+		[
+			'abook_account'   => intval($ret['channel']['channel_account_id']),
+			'abook_channel'   => intval($newuid),
+			'abook_xchan'     => $hash,
+			'abook_closeness' => 0,
+			'abook_created'   => datetime_convert(),
+			'abook_updated'   => datetime_convert(),
+			'abook_self'      => 1
+		]
 	);
 
 	$x = \Zotlabs\Access\Permissions::FilledPerms($myperms);
@@ -390,6 +392,7 @@ function create_identity($arr) {
 						set_pconfig($newuid,'autoperms',$k,$v);
 					}
 				}
+				// as this is a new channel, this shouldn't do anything and probaby is not needed
 				else {
 					$r = q("delete from pconfig where uid = %d and cat = 'autoperms'",
 						intval($newuid)
@@ -462,6 +465,7 @@ function create_identity($arr) {
  *       if true, set this default unconditionally
  *       if $force is false only do this if there is no existing default
  */
+
 function set_default_login_identity($account_id, $channel_id, $force = true) {
 	$r = q("select account_default_channel from account where account_id = %d limit 1",
 		intval($account_id)
@@ -499,6 +503,7 @@ function get_default_export_sections() {
  * @returns array
  *     See function for details
  */
+
 function identity_basic_export($channel_id, $sections = null) {
 
 	/*
@@ -1989,6 +1994,58 @@ function remote_login() {
 		));
 		return $o;
 
+}
 
 
+
+function profile_store_lowlevel($arr) {
+
+    $store = [
+        'profile_guid'  => ((array_key_exists('profile_guid',$arr))  ? $arr['profile_guid']  : ''),
+        'aid'           => ((array_key_exists('aid',$arr))           ? $arr['aid']           : 0),
+        'uid'           => ((array_key_exists('uid',$arr))           ? $arr['uid']           : 0),
+        'profile_name'  => ((array_key_exists('profile_name',$arr))  ? $arr['profile_name']  : ''),
+        'is_default'    => ((array_key_exists('is_default',$arr))    ? $arr['is_default']    : 0),
+        'hide_friends'  => ((array_key_exists('hide_friends',$arr))  ? $arr['hide_friends']  : 0),
+        'fullname'      => ((array_key_exists('fullname',$arr))      ? $arr['fullname']      : ''),
+        'pdesc'         => ((array_key_exists('pdesc',$arr))         ? $arr['pdesc']         : ''),
+        'chandesc'      => ((array_key_exists('chandesc',$arr))      ? $arr['chandesc']      : ''),
+        'dob'           => ((array_key_exists('dob',$arr))           ? $arr['dob']           : ''),
+        'dob_tz'        => ((array_key_exists('dob_tz',$arr))        ? $arr['dob_tz']        : ''),
+        'address'       => ((array_key_exists('address',$arr))       ? $arr['address']       : ''),
+        'locality'      => ((array_key_exists('locality',$arr))      ? $arr['locality']      : ''),
+        'region'        => ((array_key_exists('region',$arr))        ? $arr['region']        : ''),
+        'postal_code'   => ((array_key_exists('postal_code',$arr))   ? $arr['postal_code']   : ''),
+        'country_name'  => ((array_key_exists('country_name',$arr))  ? $arr['country_name']  : ''),
+        'hometown'      => ((array_key_exists('hometown',$arr))      ? $arr['hometown']      : ''),
+        'gender'        => ((array_key_exists('gender',$arr))        ? $arr['gender']        : ''),
+        'marital'       => ((array_key_exists('marital',$arr))       ? $arr['marital']       : ''),
+        'partner'       => ((array_key_exists('partner',$arr))       ? $arr['partner']       : ''),
+        'howlong'       => ((array_key_exists('howlong',$arr))       ? $arr['howlong']       : NULL_DATE),
+        'sexual'        => ((array_key_exists('sexual',$arr))        ? $arr['sexual']        : ''),
+        'politic'       => ((array_key_exists('politic',$arr))       ? $arr['politic']       : ''),
+        'religion'      => ((array_key_exists('religion',$arr))      ? $arr['religion']      : ''),
+        'keywords'      => ((array_key_exists('keywords',$arr))      ? $arr['keywords']      : ''),
+        'likes'         => ((array_key_exists('likes',$arr))         ? $arr['likes']         : ''),
+        'dislikes'      => ((array_key_exists('dislikes',$arr))      ? $arr['dislikes']      : ''),
+        'about'         => ((array_key_exists('about',$arr))         ? $arr['about']         : ''),
+        'summary'       => ((array_key_exists('summary',$arr))       ? $arr['summary']       : ''),
+        'music'         => ((array_key_exists('music',$arr))         ? $arr['music']         : ''),
+        'book'          => ((array_key_exists('book',$arr))          ? $arr['book']          : ''),
+        'tv'            => ((array_key_exists('tv',$arr))            ? $arr['tv']            : ''),
+        'film'          => ((array_key_exists('film',$arr))          ? $arr['film']          : ''),
+        'interest'      => ((array_key_exists('interest',$arr))      ? $arr['interest']      : ''),
+        'romance'       => ((array_key_exists('romance',$arr))       ? $arr['romance']       : ''),
+        'employment'    => ((array_key_exists('employment',$arr))    ? $arr['employment']    : ''),
+        'education'     => ((array_key_exists('education',$arr))     ? $arr['education']     : ''),
+        'contact'       => ((array_key_exists('contact',$arr))       ? $arr['contact']       : ''),
+        'channels'      => ((array_key_exists('channels',$arr))      ? $arr['channels']      : ''),
+        'homepage'      => ((array_key_exists('homepage',$arr))      ? $arr['homepage']      : ''),
+        'photo'         => ((array_key_exists('photo',$arr))         ? $arr['photo']         : ''),
+        'thumb'         => ((array_key_exists('thumb',$arr))         ? $arr['thumb']         : ''),
+        'publish'       => ((array_key_exists('publish',$arr))       ? $arr['publish']       : 0),
+        'profile_vcard' => ((array_key_exists('profile_vcard',$arr)) ? $arr['profile_vcard'] : '')
+	];
+
+	return create_table_from_array('profile',$store);
 }

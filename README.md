@@ -3,10 +3,6 @@
 Hubzilla - Community Server
 ===========================
 
-Channel it.
------------
-
-
 <p align="center" markdown="1">
 <em><a href="https://github.com/redmatrix/hubzilla/blob/master/install/INSTALL.txt">Installing Hubzilla</a></em> 
 </p>

@@ -74,7 +74,7 @@
         $(".panel-collapse.in").find('a').each(function(){
             var url = document.createElement('a');
             url.href = window.location;
-            var pageName = url.href.split('/').pop().split('#').shift();
+            var pageName = url.href.split('/').pop().split('#').shift().split('?').shift();
             var linkName = $(this).attr('href').split('/').pop();
             if(pageName === linkName) {
                 var tocUl = $(this).closest('li').append('<ul>').find('ul');
@@ -116,8 +116,15 @@
 		
 		// When the page loads, it does not scroll to the section specified in the URL because it
 		// has not been constructed yet by the script. This will reload the URL
-		if (typeof(location.href.split('#')[1]) !== 'undefined') {	
-			location.replace(location.href)
+		if (typeof(location.href.split('#')[1]) !== 'undefined') {
+			var p = document.createElement('a');
+			p.href = location.href;
+			var portstr = '';
+			if(p.port !== '') {
+				portstr = ':'+ p.port;
+			}
+			var newref = p.protocol + '//'+  p.hostname + portstr + p.pathname + p.hash.split('?').shift();
+			location.replace(newref)
 		}
 	});
 </script>

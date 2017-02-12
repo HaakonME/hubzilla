@@ -286,7 +286,7 @@ list photo metadata
 [h3]group[/h3]
 
 
-`GET /api/z/1.0/group`
+[code]GET /api/z/1.0/group[/code]
 
 Description: list privacy groups
 
@@ -326,7 +326,7 @@ To use with API group_members, provide either 'group_id' from the id element ret
 [h3]group_members[/h3]
 
 
-`GET /api/z/1.0/group_members`
+[code]GET /api/z/1.0/group_members[/code]
 
 Required:
 
@@ -462,7 +462,7 @@ group_member+abook+xchan (DB join) for each member of the privacy group
 An xchan is a global location independent channel and is the primary record for a network 
 identity. It may refer to channels on other websites, networks, or services. 
 
-`GET /api/z/1.0/xchan`
+[code]GET /api/z/1.0/xchan[/code]
 
 Required: one of [ address, hash, guid ] as GET parameters
 
@@ -506,7 +506,7 @@ Returns:
 
 Create or update an item (post, activity, webpage, etc.)
 
-Usage: `POST /api/z/1.0/item/update`
+Usage: [code]POST /api/z/1.0/item/update[/code]
 
 Description: item/update posts an item (typically a conversation item or post, but can be any item) using form input.  
 

@@ -1295,7 +1295,6 @@ function import_webpage_element($element, $channel, $type) {
 		//	LAYOUTS
 		//
 		case 'layout':
-			logger('Importing layout...', LOGGER_DEBUG);
 			$arr['item_type'] = ITEM_TYPE_PDL;
 			$namespace = 'PDL';
 			$name = $element['name'];

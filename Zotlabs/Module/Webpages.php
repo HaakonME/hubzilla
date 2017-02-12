@@ -288,6 +288,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 						if ($zip->open($source) === true) {
 							$tmp_folder_name = random_string(5);
 							$website = dirname($source) . '/' . $tmp_folder_name;
+							logger($website ,LOGGER_DEBUG);
 							$zip->extractTo($website); // change this to the correct site path
 							$zip->close();
 							@unlink($source);	// delete the compressed file now that the content has been extracted

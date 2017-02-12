@@ -252,7 +252,7 @@ header #banner #logo-text {
 	display: block;
 	position: fixed;
 	top: 51px;
-	width: 100%;
+	left: 0px;
 	max-height: 50%;
 	background: $comment_item_colour;
 	padding: 20px;

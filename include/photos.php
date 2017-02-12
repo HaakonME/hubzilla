@@ -718,10 +718,59 @@ function gps2Num($coordPart) {
     return floatval($parts[0]) / floatval($parts[1]);
 }
 
+
+function photo_profile_setperms($channel_id,$resource_id,$profile_id) {
+
+	if(! $profile_id)
+		return;
+
+	$r = q("select profile_guid, is_default from profile where id = %d and uid = %d limit 1",
+		dbesc($profile_id),
+		intval($channel_id)
+	); 
+
+	if(! $r)
+		return;
+
+	$is_default   = $r[0]['is_default'];
+	$profile_guid = $r[0]['profile_guid'];
+
+	if($is_default) {
+		$r = q("update photo set allow_cid = '', allow_gid = '', deny_cid = '', deny_gid = '' 
+			where resource_id = '%s' and uid = %d",
+			dbesc($resource_id),
+			intval($channel_id)
+		);
+		$r = q("update attach set allow_cid = '', allow_gid = '', deny_cid = '', deny_gid = '' 
+			where hash = '%s' and uid = %d",
+			dbesc($resource_id),
+			intval($channel_id)
+		);
+	}
+	else {
+		$r = q("update photo set allow_cid = '', allow_gid = '%s', deny_cid = '', deny_gid = '' 
+			where resource_id = '%s' and uid = %d",
+			dbesc('vp.' . $profile_guid),
+			dbesc($resource_id),
+			intval($channel_id)
+		);
+
+		$r = q("update attach set allow_cid = '', allow_gid = '%s', deny_cid = '', deny_gid = '' 
+			where hash = '%s' and uid = %d",
+			dbesc('vp.' . $profile_guid),
+			dbesc($resource_id),
+			intval($channel_id)
+		);
+	}
+}
+
 function profile_photo_set_profile_perms($uid, $profileid = 0) {
 
-		$allowcid = '';
-		if($profileid) {
+	$allowcid = '';
+
+
+	if($profileid) {
+
 			$r = q("SELECT photo, profile_guid, id, is_default, uid
 				FROM profile WHERE uid = %d and ( profile.id = %d OR profile.profile_guid = '%s') LIMIT 1",
 				intval($uid),

@@ -180,6 +180,10 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 						dbesc(datetime_convert()),
 						dbesc($channel['xchan_hash'])
 					);
+
+					photo_profile_setperms(local_channel(),$base_image['resource_id'],$_REQUEST['profile']);
+
+
 					// Similarly, tell the nav bar to bypass the cache and update the avater image.
 					$_SESSION['reload_avatar'] = true;
 	
@@ -188,9 +192,6 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					// Update directory in background
 					\Zotlabs\Daemon\Master::Summon(array('Directory',$channel['channel_id']));
 	
-					// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
-	
-					profile_photo_set_profile_perms(local_channel(),$_REQUEST['profile']);	
 				}
 				else
 					notice( t('Unable to process image') . EOL);
@@ -338,7 +339,8 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					dbesc($channel['xchan_hash'])
 				);
 	
-				profile_photo_set_profile_perms(local_channel()); // Reset default photo permissions to public
+				photo_profile_setperms(local_channel(),$resource_id,$_REQUEST['profile']);
+
 				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 				goaway(z_root() . '/profiles');
 			}

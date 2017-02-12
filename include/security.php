@@ -553,7 +553,21 @@ function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'f
 // var $contact_id = xchan_hash of connection
 
 function init_groups_visitor($contact_id) {
-	$groups = array();
+	$groups = [];
+
+	// private profiles are treated as a virtual group
+
+	$r = q("SELECT abook_profile from abook where abook_xchan = '%s' and abook_profile != '' ",
+		dbesc($contact_id)
+	);
+	if($r) {
+		foreach($r as $rv) {
+			$groups[] = 'vp.' . $rv['abook_profile'];
+		}
+	}
+
+	// physical groups this channel is a member of
+
 	$r = q("SELECT hash FROM groups left join group_member on groups.id = group_member.gid WHERE xchan = '%s' ",
 		dbesc($contact_id)
 	);

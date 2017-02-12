@@ -227,6 +227,26 @@ function group_get_members_xchan($gid) {
 	return $ret;
 }
 
+function group_get_profile_members_xchan($uid,$gid) {
+	$ret = [];
+
+	if(intval($gid)) {
+		$r = q("SELECT abook_xchan as xchan from abook left join profile on abook_profile = profile_guid where profile.id = %d and profile.uid = %d",
+			intval($gid),
+			intval($uid)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$ret[] = $rr['xchan'];
+			}
+		}
+	}
+	return $ret;
+}
+
+
+
+
 function mini_group_select($uid,$group = '') {
 	
 	$grps = array();
@@ -320,20 +340,46 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 	return $o;
 }
 
-function expand_groups($a) {
-	if(! (is_array($a) && count($a)))
+function expand_groups($g) {
+	if(! (is_array($g) && count($g)))
 		return array();
-	$x = $a;
-	stringify_array_elms($x,true);
-	$groups = implode(',', $x);
 
-	if($groups)
-		$r = q("SELECT xchan FROM group_member WHERE gid IN ( select id from groups where hash in ( $groups ))");
-	$ret = array();
+	$ret = [];
+	$x   = [];
 
-	if($r)
-		foreach($r as $rr)
-			$ret[] = $rr['xchan'];
+	// private profile linked virtual groups
+
+	foreach($g as $gv) {
+		if(substr($gv,0,3) === 'vp.') {
+			$profile_hash = substr($gv,3);
+			if($profile_hash) {
+				$r = q("select abook_xchan from abook where abook_profile = '%s'",
+					dbesc($profile_hash)
+				);
+				if($r) {
+					foreach($r as $rv) {
+						$ret[] = $rv['abook_xchan'];
+					}
+				}
+			}
+		}
+		else {
+			$x[] = $gv;
+		}
+	}								 
+
+	if($x) {
+		stringify_array_elms($x,true);
+		$groups = implode(',', $x);
+		if($groups) {
+			$r = q("SELECT xchan FROM group_member WHERE gid IN ( select id from groups where hash in ( $groups ))");
+			if($r) {
+				foreach($r as $rr) {
+					$ret[] = $rr['xchan'];
+				}
+			}
+		}
+	}
 	return $ret;
 }
 

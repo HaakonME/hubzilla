@@ -84,6 +84,10 @@
 							{{include file="field_checkbox.tpl" field=$blocktags}}
 							{{include file="field_input.tpl" field=$expire}}
 						</div>
+						{{if $permcat_enable}}
+						{{include file="field_select.tpl" field=$defpermcat}}
+						{{/if}}
+
 						{{if $sec_addon}}
 						{{$sec_addon}}
 						{{/if}}

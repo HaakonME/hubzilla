@@ -32,10 +32,10 @@ class Lockview extends \Zotlabs\Web\Controller {
 		if(! $item_id)
 			killme();
 	
-		if (!in_array($type, array('item','photo','event', 'menu_item', 'chatroom')))
+		if (! in_array($type, array('item', 'photo', 'attach', 'event', 'menu_item', 'chatroom')))
 			killme();
 	
-		//we have different naming in in menu_item table and chatroom table
+		// we have different naming in in menu_item table and chatroom table
 		switch($type) {
 			case 'menu_item':
 				$id = 'mitem_id';
@@ -101,6 +101,22 @@ class Lockview extends \Zotlabs\Web\Controller {
 		stringify_array_elms($deny_groups,true);
 		stringify_array_elms($deny_users,true);
 	
+
+		$profile_groups = [];
+		if($allowed_groups) {
+			foreach($allowed_groups as $g) {
+				if(substr($g,0,4) === '\'vp.') {
+					$profile_groups[] = '\'' . substr($g,4);
+				}
+			}
+		}
+		if(count($profile_groups)) {
+			$r = q("SELECT profile_name FROM profile WHERE profile_guid IN ( " . implode(', ', $profile_groups) . " )");
+			if($r)
+				foreach($r as $rr) 
+					$l[] = '<li><b>' . t('Profile','acl') . ' ' . $rr['profile_name'] . '</b></li>';
+		}
+
 		if(count($allowed_groups)) {
 			$r = q("SELECT gname FROM groups WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
 			if($r)
@@ -120,6 +136,25 @@ class Lockview extends \Zotlabs\Web\Controller {
 				}
 			}
 		}
+
+
+		$profile_groups = [];
+		if($deny_groups) {
+			foreach($deny_groups as $g) {
+				if(substr($g,0,4) === '\'vp.') {
+					$profile_groups[] = '\'' . substr($g,4);
+				}
+			}
+		}
+		if(count($profile_groups)) {
+			$r = q("SELECT profile_name FROM profile WHERE profile_guid IN ( " . implode(', ', $profile_groups) . " )");
+			if($r)
+				foreach($r as $rr) 
+					$l[] = '<li><b><strike>' . t('Profile','acl') . ' ' . $rr['profile_name'] . '</strike></b></li>';
+		}
+
+
+
 		if(count($deny_groups)) {
 			$r = q("SELECT gname FROM groups WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
 			if($r)

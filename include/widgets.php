@@ -663,7 +663,7 @@ function widget_settings_menu($arr) {
 
 	if(feature_enabled(local_channel(),'permcats')) {
 		$tabs[] = array(
-			'label' => t('Permission Categories'),
+			'label' => t('Permission Groups'),
 			'url' => z_root() . '/settings/permcats',
 			'selected' => ((argv(1) === 'permcats') ? 'active' : ''),
 		);

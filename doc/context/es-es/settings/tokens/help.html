@@ -1,0 +1,23 @@
+<dl class="dl-horizontal">
+    <dt><a href="/help/member/member_guide#Guest_Access_Tokens">Guest Access Tokens</a></dt>
+    <dd>
+        Para facilitar el intercambio de recursos privados con no miembros o miembros de otros nodos federados con una identificación limitada, Hubzilla debe proporcionar a los miembros un mecanismo para crear y administrar inicios de sesión temporales ("desechables"), también conocidos como "Zot Access Tokens". Estos tokens/credenciales se pueden utilizar para autenticarse en un sitio de hubzilla con el único propósito de acceder a recursos privilegiados o de acceso controlado (archivos, fotos, publicaciones, páginas web, salas de chat, etc.).
+    </dd>
+    <dt>Crear un token</dt>
+        <dd>
+            El formulario para crear / editar acepta tres parámetros, un nombre legible por el usuario, una contraseña o un token de acceso, y un 
+            límite de caducidad opcional. Una vez que ha caducado, el acceso mediante el token deja de ser válido, ya no puede usarse, y será 
+            purgado automáticamente de la lista de cuentas temporales. El campo de la contraseña, en los formularios para crear/editar, 
+            muestra el texto del token de acceso y no una displays the text of the access token and not una contraseña oscurecida.
+        </dd>
+    <dt>Compartir un token</dt>
+        <dd>
+            No especificamos mecanismos para compartir estos tokens con otros. Se puede usar cualquier método de comunicación. Cualquier token que haya creado se añade al selector de la Lista de Control y puede ser usado por cualquiera que esté en esa lista.
+
+            <b>Ejemplo</b>: Una visitante llega a su sitio. Tiene un token de acceso que usted le ha proporcionado e intenta ver uno de sus álbumes de fotos (que está restringido para que solo lo puedan ver usted mismo y una identidad temporal). El permiso es denegado.
+
+            La visitante, ahora, selecciona "Iniciar sesión" del menú de la barra de navegación, que muestra la página de inicio de sesión. Ella escribe el nombre y contraseña que usted le ha proporcionado: ahora ya puede ver el álbum privado de fotos.
+
+            De forma alternativa, puede compartir un enlace a un fichero protegido, añadiendo un parámetro del tipo "&zat=abc123" a la dirección URL, en el que la cadena "abc123" es el token de acceso o contraseña para el inicio de sesión temporal. No se requiere ninguna negociación posterior: el fichero será mostrado.
+        </dd>
+</dl>

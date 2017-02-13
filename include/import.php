@@ -1315,7 +1315,7 @@ function import_webpage_element($element, $channel, $type) {
 			return null;	// return null if invalid element type
 	}
 		
-	$arr['uid'] = $channel['channel_id'];
+	$arr['uid'] = local_channel();
 	$arr['aid'] = $channel['channel_account_id'];
 		
 	// Check if an item already exists based on the name
@@ -1376,36 +1376,40 @@ function import_webpage_element($element, $channel, $type) {
 		}
 	}
 		
-	$z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'system' limit 1", 
-		dbesc($name), 
-		dbesc($namespace)
-	);
+//	$z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'system' limit 1", 
+//		dbesc($name), 
+//		dbesc($namespace)
+//	);
 
 	$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", 
 		dbesc($arr['mid']), 
 		intval(local_channel())
 	);
-	$remote_id = 0;
-	if($z && $i) {
-		$remote_id = $z[0]['id'];
+	
+	\Zotlabs\Lib\IConfig::Set($arr,'system',$namespace,(($name) ? $name : substr($arr['mid'],0,16)),true);
+	
+	
+	if($i) {
 		$arr['id'] = $i[0]['id'];
 		// don't update if it has the same timestamp as the original
 		if($arr['edited'] > $i[0]['edited'])
-			$x = item_store_update($arr, $execflag);
+			$x = item_store_update($arr,$execflag);
 	}
 	else {
 		if(($i) && (intval($i[0]['item_deleted']))) {
 			// was partially deleted already, finish it off
-			q("delete from item where mid = '%s' and uid = %d", 
-				dbesc($arr['mid']), 
+			q("delete from item where mid = '%s' and uid = %d",
+				dbesc($arr['mid']),
 				intval(local_channel())
 			);
 		}
-		$x = item_store($arr, $execflag);
+		else
+			$x = item_store($arr,$execflag);
 	}
-	if($x['success']) {
+	
+	if($x && $x['success']) {
 		$item_id = $x['item_id'];
-		update_remote_id($channel, $item_id, $arr['item_type'], $name, $namespace, $remote_id, $arr['mid']);
+		//update_remote_id($channel, $item_id, $arr['item_type'], $name, $namespace, $remote_id, $arr['mid']);
 		$element['import_success'] = 1;
 	}
 	else {

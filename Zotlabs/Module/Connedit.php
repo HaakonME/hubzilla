@@ -245,14 +245,6 @@ class Connedit extends \Zotlabs\Web\Controller {
 			intval(local_channel())
 		);
 	
-		if($orig_record[0]['abook_profile'] != $profile_id) {
-			//Update profile photo permissions
-	
-			logger('A new profile was assigned - updating profile photos');
-			profile_photo_set_profile_perms(local_channel(),$profile_id);
-	
-		}
-	
 		if($r)
 			info( t('Connection updated.') . EOL);
 		else

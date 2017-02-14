@@ -174,6 +174,16 @@ function populate_acl($defaults = null,$show_jotnets = true, $emptyACL_descripti
 		$custom = false;
 	}	
 
+	$r = q("SELECT id, profile_guid, profile_name from profile where is_default = 0 and uid = %d order by profile_name",
+		intval(local_channel())
+	);
+	if($r) {
+		foreach($r as $rv) {
+			$selected = (($single_group && 'vp.' . $rr['hash'] === $allow_gid[0]) ? ' selected = "selected" ' : '');
+			$groups .= '<option id="' . 'vp' . $rv['id'] . '" value="' . 'vp.' . $rv['profile_guid'] . '"' . $selected . '>' . t('Profile','acl') . ' ' . $rv['profile_name'] . '</option>' . "\r\n";
+		}
+	}
+
 	$r = q("SELECT id, hash, gname FROM groups WHERE deleted = 0 AND uid = %d ORDER BY gname ASC",
 		intval(local_channel())
 	);

@@ -18,6 +18,7 @@ class Channel {
 	
 		$role = ((x($_POST,'permissions_role')) ? notags(trim($_POST['permissions_role'])) : '');
 		$oldrole = get_pconfig(local_channel(),'system','permissions_role');
+
 	
 		if(($role != $oldrole) || ($role === 'custom')) {
 	
@@ -144,6 +145,7 @@ class Channel {
 		$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 		$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
 		$adult            = (($_POST['adult'] == 1) ? 1 : 0);
+		$defpermcat       = ((x($_POST,'defpermcat')) ? notags(trim($_POST['defpermcat'])) : 'default');
 	
 		$cal_first_day   = (((x($_POST,'first_day')) && (intval($_POST['first_day']) == 1)) ? 1: 0);
 	
@@ -232,6 +234,7 @@ class Channel {
 		set_pconfig(local_channel(),'system','photo_path',$photo_path);
 		set_pconfig(local_channel(),'system','attach_path',$attach_path);
 		set_pconfig(local_channel(),'system','cal_first_day',$cal_first_day);
+		set_pconfig(local_channel(),'system','default_permcat',$defpermcat);
 	
 		$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d $set_perms where channel_id = %d",
 			dbesc($username),
@@ -411,6 +414,19 @@ class Channel {
 			'$basepath' => \App::get_hostname()
 		));
 
+
+
+		$pcat = new \Zotlabs\Lib\Permcat(local_channel());
+		$pcatlist = $pcat->listing();
+		$permcats = [];
+		if($pcatlist) {
+			foreach($pcatlist as $pc) {
+				$permcats[$pc['name']] = $pc['localname'];
+			}
+		}
+
+		$default_permcat = get_pconfig(local_channel(),'system','default_permcat','default');
+
 	
 		$stpl = get_markup_template('settings.tpl');
 	
@@ -500,7 +516,8 @@ class Channel {
 			'$suggestme' => $suggestme,
 			'$group_select' => $group_select,
 			'$role' => array('permissions_role' , t('Channel permissions category:'), $permissions_role, '', $perm_roles),
-	
+			'$defpermcat' => [ 'defpermcat', t('Default Permissions Group'), $default_permcat, '', $permcats ],	
+			'$permcat_enable' => feature_enabled(local_channel(),'permcats'),
 			'$profile_in_dir' => $profile_in_dir,
 			'$hide_friends' => $hide_friends,
 			'$hide_wall' => $hide_wall,

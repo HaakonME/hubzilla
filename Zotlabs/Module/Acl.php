@@ -103,7 +103,24 @@ class Acl extends \Zotlabs\Web\Controller {
 		$contacts = array();
 		
 		if($type == '' || $type == 'g') {
-	
+
+			$r = q("select id, profile_guid, profile_name from profile where is_default = 0 and uid = %d",
+				intval(local_channel())
+			);	
+			if($r) {
+				foreach($r as $rv) {
+					$groups[] = array(
+						"type"  => "g",
+						"photo" => "images/twopeople.png",
+						"name"  => t('Profile','acl') . ' ' . $rv['profile_name'],
+						"id"	=> 'vp' . $rv['id'],
+						"xid"   => 'vp.' . $rv['profile_guid'],
+						"uids"  => group_get_profile_members_xchan(local_channel(), $rv['id']),
+						"link"  => ''
+					);
+				}
+			}
+
 			$r = q("SELECT groups.id, groups.hash, groups.gname
 					FROM groups, group_member 
 					WHERE groups.deleted = 0 AND groups.uid = %d 

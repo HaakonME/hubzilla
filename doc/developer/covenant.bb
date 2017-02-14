@@ -43,5 +43,5 @@ Project maintainers who do not follow or enforce the Code of Conduct in good fai
 
 [h3]Attribution[/h3]
 
-This Code of Conduct is adapted from the [url="http://contributor-covenant.org"]Contributor Covenant[/url], version 1.4, available at [url="http://contributor-covenant.org/version/1/4/"]http://contributor-covenant.org/version/1/4[/url].
+This Code of Conduct is adapted from the [url=http://contributor-covenant.org]Contributor Covenant[/url], version 1.4, available at [url=http://contributor-covenant.org/version/1/4/]http://contributor-covenant.org/version/1/4[/url].
 

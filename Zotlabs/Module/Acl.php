@@ -19,7 +19,7 @@ require_once("include/group.php");
 
 class Acl extends \Zotlabs\Web\Controller {
 
-	function init(){
+	function init() {
 	
 		//	logger('mod_acl: ' . print_r($_REQUEST,true));
 	
@@ -49,7 +49,7 @@ class Acl extends \Zotlabs\Web\Controller {
 		$extra_channels = (x($_REQUEST,'extra_channels') ? $_REQUEST['extra_channels'] : array());
 	
 		// The different autocomplete libraries use different names for the search text
-		// parameter. Internaly we'll use $search to represent the search text no matter
+		// parameter. Internally we'll use $search to represent the search text no matter
 		// what request variable it was attached to. 
 	
 		if(array_key_exists('query',$_REQUEST)) {
@@ -104,6 +104,8 @@ class Acl extends \Zotlabs\Web\Controller {
 		
 		if($type == '' || $type == 'g') {
 
+			// virtual groups based on private profile viewing ability
+
 			$r = q("select id, profile_guid, profile_name from profile where is_default = 0 and uid = %d",
 				intval(local_channel())
 			);	
@@ -120,6 +122,8 @@ class Acl extends \Zotlabs\Web\Controller {
 					);
 				}
 			}
+
+			// Normal privacy groups
 
 			$r = q("SELECT groups.id, groups.hash, groups.gname
 					FROM groups, group_member 
@@ -151,25 +155,34 @@ class Acl extends \Zotlabs\Web\Controller {
 		}
 	
 		if($type == '' || $type == 'c') {
+
 			$extra_channels_sql  = ''; 
-			// Only include channels who allow the observer to view their permissions
-			foreach($extra_channels as $channel) {
-				if(perm_is_allowed(intval($channel), get_observer_hash(),'view_contacts'))
-					$extra_channels_sql .= "," . intval($channel);
+
+			// Only include channels who allow the observer to view their connections
+			if($extra_channels) {
+				foreach($extra_channels as $channel) {
+					if(perm_is_allowed(intval($channel), get_observer_hash(),'view_contacts')) {
+						if($extra_channel_sql)
+							$extra_channels_sql .= ',';
+						$extra_channels_sql .= intval($channel);
+					}
+				}
 			}
-	
-			$extra_channels_sql = substr($extra_channels_sql,1); // Remove initial comma
 	
 			// Getting info from the abook is better for local users because it contains info about permissions
 			if(local_channel()) {
 				if($extra_channels_sql != '')
 					$extra_channels_sql = " OR (abook_channel IN ($extra_channels_sql)) and abook_hidden = 0 ";
 
+
+				// Add atokens belonging to the local channel @TODO restrict by search
+
 				$r2 = null;
 
 				$r1 = q("select * from atoken where atoken_uid = %d",
 					intval(local_channel())
 				);
+
 				if($r1) {
 					require_once('include/security.php');
 					$r2 = array();
@@ -189,6 +202,7 @@ class Acl extends \Zotlabs\Web\Controller {
 					}
 				} 
 
+				// add connections
 	
 				$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, xchan_pubforum, abook_flags, abook_self 
 					FROM abook left join xchan on abook_xchan = xchan_hash 

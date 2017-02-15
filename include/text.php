@@ -1581,11 +1581,6 @@ function prepare_body(&$item,$attach = false) {
 	$photo = $prep_arr['photo'];
 	$event = $prep_arr['event'];
 
-//	q("update item set html = '%s' where id = %d",
-//		dbesc($s),
-//		intval($item['id'])
-//	);
-
 	if(! $attach) {
 		return $s;
 	}

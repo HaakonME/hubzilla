@@ -586,8 +586,10 @@ function photo_new_resource() {
  * @return boolean true if found
  */
 function attribute_contains($attr, $s) {
+	// remove quotes
+	$attr = str_replace([ '"',"'" ],['',''],$attr);
 	$a = explode(' ', $attr);
-	if(count($a) && in_array($s, $a))
+	if($a && in_array($s, $a))
 		return true;
 
 	return false;

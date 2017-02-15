@@ -2,7 +2,7 @@
 
 namespace Zotlabs\Web;
 
-class HTMLHeaders {
+class HTTPHeaders {
 
 	private $in_progress = [];
 	private $parsed = [];

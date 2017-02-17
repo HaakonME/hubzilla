@@ -6,23 +6,28 @@
 			<span class="icon-bar"></span>
 		</button>
 		{{if $nav.login && !$userinfo}}
-		<button type="button" class="navbar-toggle" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
+		<button type="button" class="navbar-toggle navbar-toggle-extra" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 			{{$nav.loginmenu.1.1}}
 		</button>
+		{{if $nav.register}}
+		<a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}" class="navbar-toggle navbar-toggle-extra">
+			{{$nav.register.1}}
+		</a>
+		{{/if}}
 		{{/if}}
 		{{if $localuser}}
-		<button id="notifications-btn" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1" style="color: grey;">
+		<button id="notifications-btn" type="button" class="navbar-toggle navbar-toggle-extra" data-toggle="collapse" data-target="#navbar-collapse-1" style="color: grey;">
 			<i class="fa fa-exclamation-circle"></i>
 		</button>
 		{{/if}}
-		<button id="expand-tabs" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#tabs-collapse-1">
+		<button id="expand-tabs" type="button" class="navbar-toggle navbar-toggle-extra" data-toggle="collapse" data-target="#tabs-collapse-1">
 			<i class="fa fa-arrow-circle-down" id="expand-tabs-icon"></i>
 		</button>
-		<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
+		<button id="expand-aside" type="button" class="navbar-toggle navbar-toggle-extra" data-toggle="offcanvas" data-target="#region_1">
 			<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 		</button>
 		{{if $nav.help.6}}
-		<button id="context-help-btn" class="navbar-toggle" type="button" onclick="contextualHelp(); return false;">
+		<button id="context-help-btn" class="navbar-toggle navbar-toggle-extra" type="button" onclick="contextualHelp(); return false;">
 			<i class="fa fa-question-circle"></i>
 		</button>
 		{{/if}}

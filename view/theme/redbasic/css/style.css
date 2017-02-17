@@ -1825,14 +1825,14 @@ nav .badge.mail-update {
 	background-color: $nav_active_icon_colour;
 }
 
-#expand-aside,
-#expand-tabs,
-#doco-return-to-top-btn,
-#context-help-btn,
-#notifications-btn,
-#login_nav_btn_collapse {
+.navbar-toggle-extra {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
+}
+
+a.navbar-toggle-extra:hover {
+	color: $nav_active_icon_colour;
+	text-decoration: none;
 }
 
 .nav-tabs.nav-justified {

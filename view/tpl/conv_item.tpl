@@ -143,38 +143,38 @@
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="wall-item-menu-{{$item.id}}">
 								{{if $item.share}}
-								<li role="presentation"><a role="menuitem" href="#" onclick="jotShare({{$item.id}}); return false"><i class="fa fa-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
+								<li role="presentation"><a role="menuitem" href="#" onclick="jotShare({{$item.id}}); return false"><i class="fa fa-fw fa-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
 								{{/if}}
 								{{if $item.plink}}
-								<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" class="u-url"><i class="fa fa-external-link"></i> {{$item.plink.title}}</a></li>
+								<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" class="u-url"><i class="fa fa-fw fa-external-link"></i> {{$item.plink.title}}</a></li>
 								{{/if}}
 								{{if $item.edpost}}
-								<li role="presentation"><a role="menuitem" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost fa fa-pencil"></i> {{$item.edpost.1}}</a></li>
+								<li role="presentation"><a role="menuitem" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost fa fa-fw fa-pencil"></i> {{$item.edpost.1}}</a></li>
 								{{/if}}
 								{{if $item.tagger}}
-								<li role="presentation"><a role="menuitem" href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="fa fa-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a></li>
+								<li role="presentation"><a role="menuitem" href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="fa fa-fw fa-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a></li>
 								{{/if}}
 								{{if $item.filer}}
-								<li role="presentation"><a role="menuitem" href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="fa fa-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a></li>
+								<li role="presentation"><a role="menuitem" href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="fa fa-fw fa-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a></li>
 								{{/if}}
 								{{if $item.bookmark}}
-								<li role="presentation"><a role="menuitem" href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="fa fa-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
+								<li role="presentation"><a role="menuitem" href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="fa fa-fw fa-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
 								{{/if}}
 								{{if $item.addtocal}}
-								<li role="presentation"><a role="menuitem" href="#" onclick="itemAddToCal({{$item.id}}); return false;"><i id="addtocal-{{$item.id}}" class="fa fa-calendar" title="{{$item.addtocal}}"></i> {{$item.addtocal}}</a></li>
+								<li role="presentation"><a role="menuitem" href="#" onclick="itemAddToCal({{$item.id}}); return false;"><i id="addtocal-{{$item.id}}" class="fa fa-fw fa-calendar" title="{{$item.addtocal}}"></i> {{$item.addtocal}}</a></li>
 								{{/if}}
 								{{if $item.star}}
-								<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="fa fa-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
+								<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="fa fa-fw fa-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
 								{{/if}}
 
 								{{if $item.thread_action_menu}}
 								{{foreach $item.thread_action_menu as $mitem}}
-								<li role="presentation"><a role="menuitem" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} ><i class="fa fa-{{$mitem.icon}}"></i> {{$mitem.title}}</a></li>
+								<li role="presentation"><a role="menuitem" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} ><i class="fa fa-fw fa-{{$mitem.icon}}"></i> {{$mitem.title}}</a></li>
 								{{/foreach}}
 								{{/if}}
 
 								{{if $item.drop.dropping}}
-								<li role="presentation"><a role="menuitem" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="fa fa-trash-o"></i> {{$item.drop.delete}}</a></li>
+								<li role="presentation"><a role="menuitem" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="fa fa-fw fa-trash-o"></i> {{$item.drop.delete}}</a></li>
 								{{/if}}
 
 								{{if $item.thread_author_menu}}

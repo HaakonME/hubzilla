@@ -79,12 +79,11 @@ define ( 'DIRECTORY_MODE_STANDALONE',  0x0100); // A detached (off the grid) hub
 // point to go out and find the rest of the world.
 
 define ( 'DIRECTORY_REALM',            'RED_GLOBAL');
-define ( 'DIRECTORY_FALLBACK_MASTER',  'https://hub.pixelbits.de');
+define ( 'DIRECTORY_FALLBACK_MASTER',  'https://gravizot.de');
 
 $DIRECTORY_FALLBACK_SERVERS = array( 
 	'https://hubzilla.site',
 	'https://hubzilla.zottel.net',
-	'https://hub.pixelbits.de',
 	'https://my.federated.social',
 	'https://hubzilla.nl',
 	'https://gravizot.de'

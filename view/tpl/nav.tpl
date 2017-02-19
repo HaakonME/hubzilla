@@ -207,8 +207,8 @@
 	<div id="contextual-help-content" class="contextual-help-content">
 		{{$nav.help.5}}
 		<div class="pull-right">
-			<a class="btn btn-primary btn-xs" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}"><i class="fa fa-question"></i>&nbsp;{{$fulldocs}}</a>
-			<a class="contextual-help-tool" href="#" onclick="contextualHelp(); return false;"><i class="fa fa-times"></i></a>
+			<a class="btn btn-primary btn-xs" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}"><i class="fa fa-fw fa-question"></i>&nbsp;{{$fulldocs}}</a>
+			<a class="contextual-help-tool" href="#" onclick="contextualHelp(); return false;"><i class="fa fa-fw fa-times"></i></a>
 		</div>
 	</div>
 	{{/if}}

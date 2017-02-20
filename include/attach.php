@@ -1479,10 +1479,12 @@ function find_folder_hash_by_path($channel_id, $path) {
 
 	$filename = end(explode('/', $path));
 
-	$r = q("SELECT hash FROM attach WHERE uid = %d AND filename = '%s' LIMIT 1",
-		intval($channel_id),
-		dbesc($filename)
-	);
+	if($filename) {
+		$r = q("SELECT hash FROM attach WHERE uid = %d AND filename = '%s' LIMIT 1",
+			intval($channel_id),
+			dbesc($filename)
+		);
+	}
 
 	$hash = '';
 	if($r && $r[0]['hash']) {

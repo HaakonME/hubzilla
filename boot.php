@@ -2225,7 +2225,7 @@ function construct_page(&$a) {
 	// Zotlabs\Render\Theme::debug();
 
 	if (($p = theme_include($current_theme[0] . '.js')) != '')
-		head_add_js($p);
+		head_add_js('/' . $p);
 
 	if (($p = theme_include('mod_' . App::$module . '.php')) != '')
 		require_once($p);
@@ -2237,10 +2237,13 @@ function construct_page(&$a) {
 	else
 		head_add_css(((x(App::$page, 'template')) ? App::$page['template'] : 'default' ) . '.css');
 
-	head_add_css('mod_' . App::$module . '.css');
+	if (($p = theme_include('mod_' . App::$module . '.css')) != '')
+		head_add_css('mod_' . App::$module . '.css');
+
 	head_add_css(Zotlabs\Render\Theme::url($installing));
 
-	head_add_js('mod_' . App::$module . '.js');
+	if (($p = theme_include('mod_' . App::$module . '.js')) != '')
+		head_add_js('mod_' . App::$module . '.js');
 
 	App::build_pagehead();
 

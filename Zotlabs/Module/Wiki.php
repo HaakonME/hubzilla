@@ -296,7 +296,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		));
 
 		if($p['mimeType'] != 'text/bbcode')
-			head_add_js('library/ace/ace.js');	// Ace Code Editor
+			head_add_js('/library/ace/ace.js');	// Ace Code Editor
 
 		return $o;
 	}

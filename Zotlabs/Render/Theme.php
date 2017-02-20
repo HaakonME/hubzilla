@@ -125,9 +125,9 @@ class Theme {
 		$opts .= $schema_str;
 
 		if(file_exists('view/theme/' . $t . '/php/style.php'))
-			return('view/theme/' . $t . '/php/style.pcss' . $opts);
+			return('/view/theme/' . $t . '/php/style.pcss' . $opts);
 
-		return('view/theme/' . $t . '/css/style.css');
+		return('/view/theme/' . $t . '/css/style.css');
 	}
 
 	function debug() {

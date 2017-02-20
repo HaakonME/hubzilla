@@ -598,16 +598,23 @@ function head_get_links() {
 
 
 function format_css_if_exists($source) {
-	$path_prefix = script_path() . '/';
 
-	if (strpos($source[0], '/') !== false) {
-		// The source is a URL
-		$path = $source[0];
+	// script_path() returns https://yoursite.tld
+
+	$path_prefix = script_path();
+
+	$script = $source[0];
+
+	if(strpos($script, '/') !== false) {
+		// The script is a path relative to the server root
+		$path = $script;
 		// If the url starts with // then it's an absolute URL
-		if($source[0][0] === '/' && $source[0][1] === '/') $path_prefix = '';
+		if(substr($script,0,2) === '//') {
+			$path_prefix = '';
+		}
 	} else {
 		// It's a file from the theme
-		$path = theme_include($source[0]);
+		$path = '/' . theme_include($script);
 	}
 
 	if($path) {
@@ -697,16 +704,19 @@ function head_get_main_js() {
 }
 
 function format_js_if_exists($source) {
-	$path_prefix = script_path() . '/';
+	$path_prefix = script_path();
 
 	if(strpos($source,'/') !== false) {
-		// The source is a URL
+		// The source is a known path on the system
 		$path = $source;
 		// If the url starts with // then it's an absolute URL
-		if($source[0] === '/' && $source[1] === '/') $path_prefix = '';
-	} else {
+		if(substr($source,0,2) === '//') {
+			$path_prefix = '';
+		}
+	} 
+	else {
 		// It's a file from the theme
-		$path = theme_include($source);
+		$path = '/' . theme_include($source);
 	}
 	if($path) {
 		$qstring = ((parse_url($path, PHP_URL_QUERY)) ? '&' : '?') . 'v=' . STD_VERSION;

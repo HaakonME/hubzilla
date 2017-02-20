@@ -684,7 +684,7 @@ function head_get_js() {
 		foreach(App::$js_sources as $sources) {
 			if(count($sources)) {
 				foreach($sources as $source) {
-					if($src === 'main.js')
+					if($source === 'main.js')
 						continue;
 					$str .= format_js_if_exists($source);
 				}

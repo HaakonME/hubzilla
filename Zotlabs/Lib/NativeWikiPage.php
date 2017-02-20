@@ -48,13 +48,21 @@ class NativeWikiPage {
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
 
+		if (! $w['wiki']) {
+			return array('content' => null, 'message' => 'Error reading wiki', 'success' => false);
+		}
+
 		// create an empty activity
 
 		$arr = [];
-		$arr['uid'] = $channel_id;
-		$arr['author_xchan'] = $observer_hash;
+		$arr['uid']           = $channel_id;
+		$arr['author_xchan']  = $observer_hash;
 		$arr['resource_type'] = 'nwikipage';
-		$arr['resource_id'] = $resource_id;
+		$arr['resource_id']   = $resource_id;
+		$arr['allow_cid']     = $w['wiki']['allow_cid'];
+		$arr['allow_gid']     = $w['wiki']['allow_gid'];
+		$arr['deny_cid']      = $w['wiki']['deny_cid'];
+		$arr['deny_gid']      = $w['wiki']['deny_gid'];
 
 		// We may wish to change this some day.
 		$arr['item_unpublished'] = 1;

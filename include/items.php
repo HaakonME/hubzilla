@@ -361,8 +361,8 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 
 	$arr['allow_cid']    = ((x($arr,'allow_cid')) ? $arr['allow_cid'] : $channel['channel_allow_cid']);
 	$arr['allow_gid']    = ((x($arr,'allow_gid')) ? $arr['allow_gid'] : $channel['channel_allow_gid']);
-	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
-	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
+	$arr['deny_cid']     = ((x($arr,'deny_cid'))  ? $arr['deny_cid']  : $channel['channel_deny_cid']);
+	$arr['deny_gid']     = ((x($arr,'deny_gid'))  ? $arr['deny_gid']  : $channel['channel_deny_gid']);
 
 	$arr['comment_policy'] = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments'));
 
@@ -424,7 +424,7 @@ function validate_item_elements($message,$arr) {
 
 
 /**
- * @brief Limit lenght on imported system messages.
+ * @brief Limit length on imported system messages.
  *
  * The purpose of this function is to apply system message length limits to
  * imported messages without including any embedded photos in the length.

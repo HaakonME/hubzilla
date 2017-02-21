@@ -59,8 +59,6 @@ class Cloud extends \Zotlabs\Web\Controller {
 			$auth->observer = $ob_hash;
 		}
 
-		if ($_GET['davguest'])
-			$_SESSION['davguest'] = true;
 
 		$_SERVER['QUERY_STRING'] = str_replace(array('?f=', '&f='), array('', ''), $_SERVER['QUERY_STRING']);
 		$_SERVER['QUERY_STRING'] = strip_zids($_SERVER['QUERY_STRING']);

@@ -959,7 +959,7 @@ function widget_wiki_pages($arr) {
 			}
 		}
 	}
-	$can_create = perm_is_allowed(\App::$profile['uid'],get_observer_hash(),'write_pages');
+	$can_create = perm_is_allowed(\App::$profile['uid'],get_observer_hash(),'write_wiki');
 
 	$can_delete = ((local_channel() && (local_channel() == \App::$profile['uid'])) ? true : false);
 

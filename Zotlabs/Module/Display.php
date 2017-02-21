@@ -1,12 +1,17 @@
 <?php
 namespace Zotlabs\Module;
 
+require_once("include/bbcode.php");
+require_once('include/security.php');
+require_once('include/conversation.php');
+require_once('include/acl_selectors.php');
+require_once('include/items.php');
 
 
 class Display extends \Zotlabs\Web\Controller {
 
 	function get($update = 0, $load = false) {
-	
+
 		$checkjs = new \Zotlabs\Web\CheckJS(1);
 	
 		if($load)
@@ -18,15 +23,7 @@ class Display extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		require_once("include/bbcode.php");
-		require_once('include/security.php');
-		require_once('include/conversation.php');
-		require_once('include/acl_selectors.php');
-		require_once('include/items.php');
-	
-	
-		\App::$page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
-	
+			
 		if(argc() > 1 && argv(1) !== 'load')
 			$item_hash = argv(1);
 	
@@ -40,6 +37,7 @@ class Display extends \Zotlabs\Web\Controller {
 		}
 	
 		$observer_is_owner = false;
+		$updateable = false;
 	
 	
 		if(local_channel() && (! $update)) {
@@ -184,10 +182,9 @@ class Display extends \Zotlabs\Web\Controller {
 		$item_normal = item_normal();
 	
 		$sql_extra = public_permissions_sql($observer_hash);
-	
+
 		if(($update && $load) || ($checkjs->disabled())) {
 	
-			$updateable = false;
 	
 			$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(\App::$pager['itemspage']),intval(\App::$pager['start']));
 	
@@ -197,9 +194,9 @@ class Display extends \Zotlabs\Web\Controller {
 				require_once('include/channel.php');
 				$sys = get_sys_channel();
 				$sysid = $sys['channel_id'];
-	
+
 				if(local_channel()) {
-					$r = q("SELECT * from item
+					$r = q("SELECT item.id as item_id from item
 						WHERE uid = %d
 						and mid = '%s'
 						$item_normal
@@ -213,6 +210,7 @@ class Display extends \Zotlabs\Web\Controller {
 					}
 	
 				}
+
 				if($r === null) {
 	
 					// in case somebody turned off public access to sys channel content using permissions
@@ -222,7 +220,7 @@ class Display extends \Zotlabs\Web\Controller {
 						$sysid = 0;
 	
 	
-					$r = q("SELECT * from item
+					$r = q("SELECT item.id as item_id from item
 						WHERE mid = '%s'
 						AND (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' 
 						AND item.deny_gid  = '' AND item_private = 0 ) 
@@ -245,11 +243,11 @@ class Display extends \Zotlabs\Web\Controller {
 			require_once('include/channel.php');
 			$sys = get_sys_channel();
 			$sysid = $sys['channel_id'];
-	
+
 			if(local_channel()) {
-				$r = q("SELECT * from item
+				$r = q("SELECT item.parent AS item_id from item
 					WHERE uid = %d
-					and mid = '%s'
+					and parent_mid = '%s'
 					$item_normal
 					$simple_update
 					limit 1",
@@ -260,14 +258,15 @@ class Display extends \Zotlabs\Web\Controller {
 					$updateable = true;
 				}
 			}
+
 			if($r === null) {
 				// in case somebody turned off public access to sys channel content using permissions
 				// make that content unsearchable by ensuring the owner_xchan can't match
 				if(! perm_is_allowed($sysid,$observer_hash,'view_stream'))
 					$sysid = 0;
 	
-				$r = q("SELECT * from item
-					WHERE mid = '%s'
+				$r = q("SELECT item.parent AS item_id from item
+					WHERE parent_mid = '%s'
 					AND (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' 
 					AND item.deny_gid  = '' AND item_private = 0 ) 
 					and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
@@ -289,7 +288,7 @@ class Display extends \Zotlabs\Web\Controller {
 	
 		if($r) {
 	
-			$parents_str = ids_to_querystr($r,'id');
+			$parents_str = ids_to_querystr($r,'item_id');
 			if($parents_str) {
 	
 				$items = q("SELECT item.*, item.id AS item_id 
@@ -319,10 +318,10 @@ class Display extends \Zotlabs\Web\Controller {
 		if($updateable) {
 			$x = q("UPDATE item SET item_unseen = 0 where item_unseen = 1 AND uid = %d and parent = %d ",
 				intval(local_channel()),
-				intval($r[0]['parent'])
+				intval($r[0]['item_id'])
 			);
 		}
-	
+
 		$o .= '<div id="content-complete"></div>';
 	
 		return $o;

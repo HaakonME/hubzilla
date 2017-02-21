@@ -314,11 +314,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		if(! perm_is_allowed(\App::$profile_uid,get_observer_hash(),'write_wiki')) {
-			notice( t('Permission denied.') . EOL);
-			return;
-		}
-
 		// /wiki/channel/preview
 		// Render mardown-formatted text in HTML for preview
 		if((argc() > 2) && (argv(2) === 'preview')) {

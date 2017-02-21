@@ -314,7 +314,13 @@ class Browser extends DAV\Browser\Plugin {
 		$quota['desc'] = $quotaDesc;
 		$quota['warning'] = ((($limit) && ((round($used / $limit, 1) * 100) >= 90)) ? t('WARNING:') : ''); // 10485760 bytes = 100MB
 
-		$path = trim(str_replace('cloud/' . $this->auth->owner_nick, '', $path), '/');
+		// strip 'cloud/nickname', but only at the beginning of the path
+
+		$special = 'cloud/' . $this->auth->owner_nick;
+		$count   = strlen($special);
+
+		if(strpos($path,$special) === 0)
+			$path = trim(substr($path,$count),'/');
 
 		$output .= replace_macros(get_markup_template('cloud_actionspanel.tpl'), array(
 				'$folder_header' => t('Create new folder'),

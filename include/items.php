@@ -359,10 +359,12 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 	if(($is_comment) && ($arr['obj_type'] === ACTIVITY_OBJ_NOTE))
 		$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
-	$arr['allow_cid']    = ((x($arr,'allow_cid')) ? $arr['allow_cid'] : $channel['channel_allow_cid']);
-	$arr['allow_gid']    = ((x($arr,'allow_gid')) ? $arr['allow_gid'] : $channel['channel_allow_gid']);
-	$arr['deny_cid']     = ((x($arr,'deny_cid'))  ? $arr['deny_cid']  : $channel['channel_deny_cid']);
-	$arr['deny_gid']     = ((x($arr,'deny_gid'))  ? $arr['deny_gid']  : $channel['channel_deny_gid']);
+	if(! ($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid'])) {
+		$arr['allow_cid']    = $channel['channel_allow_cid'];
+		$arr['allow_gid']    = $channel['channel_allow_gid'];
+		$arr['deny_cid']     = $channel['channel_deny_cid'];
+		$arr['deny_gid']     = $channel['channel_deny_gid'];
+	}
 
 	$arr['comment_policy'] = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'post_comments'));
 

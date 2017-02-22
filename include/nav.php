@@ -296,7 +296,8 @@ EOT;
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...'),
-		'$navapps' => $navapps
+		'$navapps' => $navapps,
+		'$editapps' => t('Manage Apps')
 	));
 
 	if(x($_SESSION, 'reload_avatar') && $observer) {

@@ -33,9 +33,7 @@ class Chat extends \Zotlabs\Web\Controller {
 			$which = $channel['channel_address'];
 			$profile = argv(1);		
 		}
-	
-		\App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which .'" />' . "\r\n" ;
-	
+		
 		// Run profile_load() here to make sure the theme is set before
 		// we start loading content
 	

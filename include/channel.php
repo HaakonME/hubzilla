@@ -1976,9 +1976,7 @@ function channel_manual_conv_update($channel_id) {
 
 	$x = get_pconfig($channel_id, 'system','manual_conversation_update');
 	if($x === false)
-		$x = get_config('system','manual_conversation_update');
-	if($x === false)
-		$x = 1;
+		$x = get_config('system','manual_conversation_update', 1);
 
 	return intval($x);
 

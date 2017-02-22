@@ -29,7 +29,20 @@ class Hcard extends \Zotlabs\Web\Controller {
 	        $profile = $r[0]['profile_guid'];
 	    }
 	
-	    \App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which .'" />' . "\r\n" ;
+		head_add_link( [ 
+			'rel'   => 'alternate', 
+			'type'  => 'application/atom+xml',
+			'title' => t('Posts and comments'),
+			'href'  => z_root() . '/feed/' . $which
+		]);
+
+		head_add_link( [ 
+			'rel'   => 'alternate', 
+			'type'  => 'application/atom+xml',
+			'title' => t('Only posts'),
+			'href'  => z_root() . '/feed/' . $which . '?f=&top=1'
+		]);
+
 	
 	    if(! $profile) {
 	        $x = q("select channel_id as profile_uid from channel where channel_address = '%s' limit 1",

@@ -37,8 +37,6 @@ class Cloud extends \Zotlabs\Web\Controller {
 
 		$profile = 0;
 
-		\App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . z_root() . '/feed/' . $which . '" />' . "\r\n";
-
 		if ($which)
 			profile_load( $which, $profile);
 

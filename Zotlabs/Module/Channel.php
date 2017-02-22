@@ -41,12 +41,20 @@ class Channel extends \Zotlabs\Web\Controller {
 			$profile = argv(1);
 		}
 
-		\App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" title="' . t('Posts and comments') . '" href="' . z_root() . '/feed/' . $which . '" />' . "\r\n" ;
-		\App::$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" title="' . t('Only posts') . '" href="' . z_root() . '/feed/' . $which . '?top=1" />' . "\r\n" ;
+		head_add_link( [ 
+			'rel'   => 'alternate', 
+			'type'  => 'application/atom+xml',
+			'title' => t('Posts and comments'),
+			'href'  => z_root() . '/feed/' . $which
+		]);
 
-		// Not yet ready for prime time
-		//	\App::$page['htmlhead'] .= '<link rel="openid.server" href="' . z_root() . '/id/' . $which .'?f=" />' . "\r\n" ;
-		//	\App::$page['htmlhead'] .= '<link rel="openid.delegate" href="' . z_root() . '/channel/' . $which .'" />' . "\r\n" ;
+		head_add_link( [ 
+			'rel'   => 'alternate', 
+			'type'  => 'application/atom+xml',
+			'title' => t('Only posts'),
+			'href'  => z_root() . '/feed/' . $which . '?f=&top=1'
+		]);
+
 
 		// Run profile_load() here to make sure the theme is set before
 		// we start loading content

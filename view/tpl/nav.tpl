@@ -185,7 +185,7 @@
 					{{/foreach}}
 					{{if $localuser}}
 					<li class="divider"></li>
-					<li><a href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>Add Apps</a></li>
+					<li><a href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>{{$editapps}}</a></li>
 					{{/if}}
 				</ul>
 			</li>
@@ -198,7 +198,7 @@
 			{{/foreach}}
 			{{if $localuser}}
 			<li class="divider"></li>
-			<li><a href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>Add Apps</a></li>
+			<li><a href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>{{$editapps}}</a></li>
 			{{/if}}
 		</ul>
 	</div>

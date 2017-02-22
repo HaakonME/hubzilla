@@ -297,7 +297,7 @@ EOT;
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...'),
 		'$navapps' => $navapps,
-		'$editapps' => t('Manage Apps')
+		'$addapps' => t('Add Apps')
 	));
 
 	if(x($_SESSION, 'reload_avatar') && $observer) {

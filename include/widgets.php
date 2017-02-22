@@ -96,20 +96,6 @@ function widget_collections($args) {
 	return group_side($every, $each, $edit, $current, $abook_id, $wmode);
 }
 
-
-function widget_appselect($arr) {
-	return replace_macros(get_markup_template('app_select.tpl'),array(
-		'$title' => t('Apps'),
-		'$system' => t('System'),
-		'$authed' => ((local_channel()) ? true : false),
-		'$personal' => t('Personal'),
-		'$new' => t('New App'),
-		'$edit' => t('Edit Apps'),
-		'$cat' => ((array_key_exists('cat',$_REQUEST)) ? $_REQUEST['cat'] : '')
-	));
-}
-
-
 function widget_suggestions($arr) {
 
 	if((! local_channel()) || (! feature_enabled(local_channel(),'suggest')))

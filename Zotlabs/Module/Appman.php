@@ -36,8 +36,9 @@ class Appman extends \Zotlabs\Web\Controller {
 	
 			if(Zlib\Apps::app_installed(local_channel(),$arr))
 				info( t('App installed.') . EOL);
-	
-			return;
+
+			goaway(z_root() . '/apps');
+			return; //not reached
 		}
 	
 	

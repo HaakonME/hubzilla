@@ -206,7 +206,7 @@ class Directory extends \Zotlabs\Web\Controller {
 	
 						foreach($j['results'] as $rr) {
 	
-							$profile_link = chanlink_url($rr['url']);
+							$profile_link = chanlink_hash($rr['hash']);
 			
 							$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
 							$connect_link = ((local_channel()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		

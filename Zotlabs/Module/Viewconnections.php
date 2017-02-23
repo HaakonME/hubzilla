@@ -70,7 +70,7 @@ class Viewconnections extends \Zotlabs\Web\Controller {
 	
 		foreach($r as $rr) {
 	
-		    $url = chanlink_url($rr['xchan_url']);
+		    $url = chanlink_hash($rr['xchan_hash']);
 			if($url) {
 				$contacts[] = array(
 					'id' => $rr['abook_id'],

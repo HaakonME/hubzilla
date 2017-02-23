@@ -269,7 +269,7 @@ class Connections extends \Zotlabs\Web\Controller {
 						'link' => z_root() . '/connedit/' . $rr['abook_id'],
 						'deletelink' => z_root() . '/connedit/' . intval($rr['abook_id']) . '/drop',
 						'delete' => t('Delete'),
-						'url' => chanlink_url($rr['xchan_url']),
+						'url' => chanlink_hash($rr['xchan_hash']),
 						'webbie_label' => t('Channel address'),
 						'webbie' => $rr['xchan_addr'],
 						'network_label' => t('Network'),

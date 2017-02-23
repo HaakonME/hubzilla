@@ -767,7 +767,7 @@ class ThreadItem {
 			return;
 		
 		if($this->is_toplevel() && ($this->get_data_value('author_xchan') != $this->get_data_value('owner_xchan'))) {
-			$this->owner_url = chanlink_url($this->data['owner']['xchan_url']);
+			$this->owner_url = chanlink_hash($this->data['owner']['xchan_hash']);
 			$this->owner_photo = $this->data['owner']['xchan_photo_m'];
 			$this->owner_name = $this->data['owner']['xchan_name'];
 			$this->wall_to_wall = true;

@@ -136,7 +136,7 @@ class ThreadItem {
 		$filer = ((($conv->get_profile_owner() == local_channel()) && (! array_key_exists('real_uid',$item))) ? t("Save to Folder") : false);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
-		$profile_link   = chanlink_url($item['author']['xchan_url']);
+		$profile_link   = chanlink_hash($item['author_xchan']);
 		$profile_name   = $item['author']['xchan_name'];
 
 		$location = format_location($item);

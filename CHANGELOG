@@ -1,3 +1,89 @@
+Hubzilla 2.2 (2017-??-??)
+	- Use chanlink_hash() instead of chanlink_url() where appropriate
+	- Use head_add_link() for feed discovery
+	- Provide HTTP header parser which honours continuation lines
+	- Numerous doco improvements
+	- Implement virtual profile groups
+	- Implement permission roles
+	- Implement app-tray
+	- Default to manual conversation updates
+	- Implement channel move
+	- Implement nav login modal
+	- Rename bb2diaspora.php to markdown.php
+	- Remove module match
+	- Move firefox social api configuration to plugin
+	- Move rsd service to twitter_api plugin
+	- Add build_pagehead hook
+	- Move opensearch to plugins
+	- Move dreamhost hack to plugin
+	- Add wiki permissions
+	- Introduce hubloc_store_lowlevel() and xchan_store_lowlevel(
+	- Move diaspora account import to the diaspora plugin
+	- Allow export of single data sets instead of always exporting everything we know about in channel export
+	- Queue optimisations for sites that have lingered in the queue for more than a couple of days
+	- Add affinity slider tool settings for min and max defaults in settings/featured
+	- Provide lowlevel xchan storage function to ensure that all non-null rows are initialised
+	- Implement native wiki
+	- Block well-known from oembed
+	- Implement oberver.language bbcode
+	- Implement daemon_addon hook to let plugins create custom background processes
+	- Implement profile vcards
+	- Default cover photo
+	- Remove fullscreen functionality in photo album view
+	- Update fontawesome lib to version 4.7.0
+	- Implement a menu to select a section to be open by default in connedit
+	- Improve comanche conditionals
+	- Add enclosures and categories to atom feed
+	- Allow the atom_entry hook to change the results
+	- Set 'adjust for viewer timezone' as the default for new events
+	- Allow event creation in other timezones than your own
+	- Update fullcalendar lib to version 3.1
+	- Move api version call back to core
+	- Create first webpage as 'home' if none exist
+	- Show webpages link to visitors if a 'home' page exists
+
+	Bugfixes
+	- Fix no acl not detected in post_activity_item()
+	- Fix find_folder_hash_by_path() was not safe against multiple attach structures with the same filename but in different directories
+	- Fix don't search on empty filename - we shouldn't find it. The reason why this change is being made is because we actually did find it due to a development glitch
+	- Fix several places where head_add_(css|js) functions have been used incorrectly.
+	- Fix webpage import tool
+	- Fix numerous bugs with the addon repo management GUI
+	- Fix attach_delete() to remove photo resources even if the attach table row wasn't found
+	- Fix choking if photo_factory() returns null
+	- Fix embedimage if an albumname contains quotes
+	- Fix chat member list when one or more members are connected via access tokens
+	- Fix issue #636 - some localised (e.g. Italian) strings have single quotes which throw JS errors when used in single quoted template constructs
+	- Fix issues #629 and #635 - edited post arriving from downstream source was not being rejected
+	- Fix peoplefind widget not honouring directory option settings
+	- Fix issue with HTML in code blocks in markdown in wiki
+	- Fix issue with post signatures if posted from api and logged in locally with a different identity
+
+	Plugins/Addon
+	- Add experimental webmention plugin
+	- NSFW: Use button instead of text link
+	- Diaspora: gracefully handle multiple photos per post
+	- Diaspora: change profile photo permission call
+	- Logrotate: don't throw an error if another server process renamed the logfile before we got to it
+	- Chess: the channel owner must be one of the players, so only require selecting one connection for an opponent
+	- Move firefox social api configuration to plugin from core
+	- Move rsd service to twitter_api plugin from core
+	- Move opensearch to plugins from core
+	- Move dreamhost hack to plugin from
+	- Move diaspora account import to addon from core
+	- Reflect hubloc store changes in plugins
+	- Reflect xchan store changes in plugins
+	- Rendezvous: Fixed marker creation bug
+	- Rendezvous: Center on marker if specified in URL, and update browser address bar with shareable link when selecting markers on the map
+	- Rendezvous: Set default value of 0 for priximity alert when making new markers
+	- Move gitwiki to plugins from core which has been replaced by native wiki
+	- Openclipatar: reflect changes to files and photos which were unified in core some time ago
+	- Reintroduce gnusocial plugin after security/functionality review
+	- Twitter_api: hubzilla core issue 638 - unsupported message-id field not available in all twitter api functions
+	- Superblock: update to reflect core changes
+	- Rendezvous: implement static marker proximity alert
+	- Phpmailer: security update
+
 Hubzilla 2.0 (2016-12-23)
 	- Deprecate bb_iframe
 	- Note widget: resize the textarea to reveal full content

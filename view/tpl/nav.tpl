@@ -6,11 +6,11 @@
 			<span class="icon-bar"></span>
 		</button>
 		{{if $nav.login && !$userinfo}}
-		<button type="button" class="navbar-toggle navbar-toggle-extra" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
+		<button type="button" class="navbar-toggle navbar-toggle-extra-left" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 			{{$nav.loginmenu.1.1}}
 		</button>
 		{{if $nav.register}}
-		<a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}" class="navbar-toggle navbar-toggle-extra">
+		<a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}" class="navbar-toggle navbar-toggle-extra-left">
 			{{$nav.register.1}}
 		</a>
 		{{/if}}

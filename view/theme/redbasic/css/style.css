@@ -1832,7 +1832,16 @@ nav .badge.mail-update {
 	padding: 7px 10px;
 }
 
-a.navbar-toggle-extra:hover {
+.navbar-toggle-extra-left {
+	float: left;
+	margin-left: 15px;
+	margin-right: 0px;
+	color: $nav_active_icon_colour;
+	padding: 7px 10px;
+}
+
+a.navbar-toggle-extra:hover,
+a.navbar-toggle-extra-left:hover  {
 	color: $nav_active_icon_colour;
 	text-decoration: none;
 }

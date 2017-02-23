@@ -1384,6 +1384,24 @@ function os_mkdir($path, $mode = 0777, $recursive = false) {
 	return $result; 
 }
 
+
+// recursively delete a directory
+function rrmdir($path) {
+	if(is_dir($path) === true) {
+		$files = array_diff(scandir($path), array('.', '..'));
+		foreach($files as $file) {
+			rrmdir(realpath($path) . '/' . $file);
+		}
+		return rmdir($path);
+	}
+	elseif(is_file($path) === true) {
+		return unlink($path);
+	}
+
+	return false;
+}
+
+
 /**
  * @brief Function to check if request was an AJAX (xmlhttprequest) request.
  *

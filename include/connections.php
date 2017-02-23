@@ -188,232 +188,6 @@ function abook_toggle_flag($abook,$flag) {
 }
 
 
-// Included here for completeness, but this is a very dangerous operation.
-// It is the caller's responsibility to confirm the requestor's intent and
-// authorisation to do this.
-
-function user_remove($uid) {
-
-}
-
-function account_remove($account_id,$local = true,$unset_session=true) {
-
-	logger('account_remove: ' . $account_id);
-
-	if(! intval($account_id)) {
-		logger('account_remove: no account.');
-		return false;
-	}
-
-	// Don't let anybody nuke the only admin account.
-
-	$r = q("select account_id from account where (account_roles & %d) > 0",
-		intval(ACCOUNT_ROLE_ADMIN)
-	);
-
-	if($r !== false && count($r) == 1 && $r[0]['account_id'] == $account_id) {
-		logger("Unable to remove the only remaining admin account");
-		return false;
-	}
-
-	$r = q("select * from account where account_id = %d limit 1",
-		intval($account_id)
-	);
-	$account_email=$r[0]['account_email'];
-
-	if(! $r) {
-		logger('account_remove: No account with id: ' . $account_id);
-		return false;
-	}
-
-	$x = q("select channel_id from channel where channel_account_id = %d",
-		intval($account_id)
-	);
-	if($x) {
-		foreach($x as $xx) {
-			channel_remove($xx['channel_id'],$local,false);
-		}
-	}
-
-	$r = q("delete from account where account_id = %d",
-		intval($account_id)
-	);
-
-
-	if ($unset_session) {
-		unset($_SESSION['authenticated']);
-		unset($_SESSION['uid']);
-		notice( sprintf(t("User '%s' deleted"),$account_email) . EOL);
-		goaway(z_root());
-	}
-	return $r;
-
-}
-// recursively delete a directory
-function rrmdir($path)
-{
-    if (is_dir($path) === true)
-    {
-        $files = array_diff(scandir($path), array('.', '..'));
-
-        foreach ($files as $file)
-        {
-            rrmdir(realpath($path) . '/' . $file);
-        }
-
-        return rmdir($path);
-    }
-
-    else if (is_file($path) === true)
-    {
-        return unlink($path);
-    }
-
-    return false;
-}
-
-function channel_remove($channel_id, $local = true, $unset_session=false) {
-
-	if(! $channel_id)
-		return;
-
-	logger('Removing channel: ' . $channel_id);
-	logger('channel_remove: local only: ' . intval($local));
-
-	$r = q("select * from channel where channel_id = %d limit 1", intval($channel_id));
-	if(! $r) {
-		logger('channel_remove: channel not found: ' . $channel_id);
-		return;
-	}
-
-	$channel = $r[0];
-
-	call_hooks('channel_remove',$r[0]);
-	
-	if(! $local) {
-
-		$r = q("update channel set channel_deleted = '%s', channel_removed = 1 where channel_id = %d",
-			dbesc(datetime_convert()),
-			intval($channel_id)
-		);
-
-		q("delete from pconfig where uid = %d",
-			intval($channel_id)
-		);
-
-		logger('deleting hublocs',LOGGER_DEBUG);
-	
-		$r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s'",
-			dbesc($channel['channel_hash'])
-		);
-
-
-		$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
-			dbesc($channel['channel_hash'])
-		);
-
-		Zotlabs\Daemon\Master::Summon(array('Notifier','purge_all',$channel_id));
-	}
-
-
-	$r = q("select * from iconfig left join item on item.id = iconfig.iid
-		where item.uid = %d",
-		intval($channel_id)
-	);
-	if($r) {
-		foreach($r as $rr) {
-			q("delete from iconfig where iid = %d",
-				intval($rr['iid'])
-			);
-		}
-	}
-
-
-	q("DELETE FROM groups WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM group_member WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM event WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM item WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM mail WHERE channel_id = %d", intval($channel_id));
-	q("DELETE FROM notify WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM photo WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM attach WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM profile WHERE uid = %d", intval($channel_id));
-	q("DELETE FROM pconfig WHERE uid = %d", intval($channel_id));
-
-	// @FIXME At this stage we need to remove the file resources located under /store/$nickname
-
-
-	q("delete from abook where abook_xchan = '%s' and abook_self = 1 ",
-		dbesc($channel['channel_hash'])
-	);
-
-	$r = q("update channel set channel_deleted = '%s', channel_removed = 1 where channel_id = %d",
-		dbesc(datetime_convert()),
-		intval($channel_id)
-	);
-
-	// if this was the default channel, set another one as default
-	if(App::$account['account_default_channel'] == $channel_id) {
-		$r = q("select channel_id from channel where channel_account_id = %d and channel_removed = 0 limit 1",
-            intval(App::$account['account_id']),
-            intval(PAGE_REMOVED));
-		if ($r) {
-			$rr = q("update account set account_default_channel = %d where account_id = %d",
-				intval($r[0]['channel_id']),
-				intval(App::$account['account_id']));
-			logger("Default channel deleted, changing default to channel_id " . $r[0]['channel_id']);
-		}
-		else {
-			$rr = q("update account set account_default_channel = 0 where account_id = %d",
-				intval(App::$account['account_id'])
-			);
-		}
-	}
-
-	logger('deleting hublocs',LOGGER_DEBUG);
-
-	$r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s' and hubloc_url = '%s' ",
-		dbesc($channel['channel_hash']),
-		dbesc(z_root())
-	);
-
-	// Do we have any valid hublocs remaining?
-
-	$hublocs = 0;
-
-	$r = q("select hubloc_id from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0",
-		dbesc($channel['channel_hash'])
-	);
-	if($r)
-		$hublocs = count($r);
-
-	if(! $hublocs) {
-		$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s' ",
-			dbesc($channel['channel_hash'])
-		);
-	}
-	
-	//remove from file system
-   $r = q("select channel_address from channel where channel_id = %d limit 1",
-			intval($channel_id)
-		);
-		if($r)
-			$channel_address = $r[0]['channel_address'] ;
-	if ($channel_address !== '') {	
-	$f = 'store/' . $channel_address.'/';
-	logger ('delete '. $f);
-			if(is_dir($f))
-				@rrmdir($f);
-	}
-
-	Zotlabs\Daemon\Master::Summon(array('Directory',$channel_id));
-
-	if($channel_id == local_channel() && $unset_session) {
-		App::$session->nuke();
-		goaway(z_root());
-	}
-
-}
 
 /**
  * mark any hubs "offline" that haven't been heard from in more than 30 days
@@ -430,10 +204,10 @@ function mark_orphan_hubsxchans() {
 	if($dirmode == DIRECTORY_MODE_NORMAL)
 		return;
 
-    $r = q("update hubloc set hubloc_error = 1 where hubloc_error = 0 
+	$r = q("update hubloc set hubloc_error = 1 where hubloc_error = 0 
 		and hubloc_network = 'zot' and hubloc_connected < %s - interval %s",
-        db_utcnow(), db_quoteinterval('36 day')
-    );
+		db_utcnow(), db_quoteinterval('36 day')
+	);
 
 //	$realm = get_directory_realm();
 //	if($realm == DIRECTORY_REALM) {
@@ -547,13 +321,13 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 
 			// directory servers need to keep the record around for sync purposes - mark it deleted
 
-	        $r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s'",
-        	    dbesc($xchan)
-        	);
+			$r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s'",
+				dbesc($xchan)
+			);
 
-        	$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
-            	dbesc($xchan)
-        	);
+			$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
+				dbesc($xchan)
+			);
 		}
 	}
 }

@@ -3,21 +3,21 @@ Hubzilla 2.2 (2017-??-??)
 	- Use head_add_link() for feed discovery
 	- Provide HTTP header parser which honours continuation lines
 	- Numerous doco improvements
-	- Implement virtual profile groups
+	- Implement virtual privacy groups from restricted profile access list
 	- Implement permission roles
 	- Implement app-tray
 	- Default to manual conversation updates
-	- Implement channel move
+	- Implement channel move for all server roles
 	- Implement nav login modal
 	- Rename bb2diaspora.php to markdown.php
-	- Remove module match
+	- Remove obsolete module 'match'
 	- Move firefox social api configuration to plugin
 	- Move rsd service to twitter_api plugin
 	- Add build_pagehead hook
 	- Move opensearch to plugins
 	- Move dreamhost hack to plugin
 	- Add wiki permissions
-	- Introduce hubloc_store_lowlevel() and xchan_store_lowlevel(
+	- Introduce hubloc_store_lowlevel() and xchan_store_lowlevel()
 	- Move diaspora account import to the diaspora plugin
 	- Allow export of single data sets instead of always exporting everything we know about in channel export
 	- Queue optimisations for sites that have lingered in the queue for more than a couple of days
@@ -25,15 +25,17 @@ Hubzilla 2.2 (2017-??-??)
 	- Provide lowlevel xchan storage function to ensure that all non-null rows are initialised
 	- Implement native wiki
 	- Block well-known from oembed
-	- Implement oberver.language bbcode
+	- Implement observer.language bbcode and observer.language comanche conditional
 	- Implement daemon_addon hook to let plugins create custom background processes
 	- Implement profile vcards
+	- Implement connection vcards
+	- Implement 'click to call' in address book
 	- Default cover photo
 	- Remove fullscreen functionality in photo album view
 	- Update fontawesome lib to version 4.7.0
 	- Implement a menu to select a section to be open by default in connedit
 	- Improve comanche conditionals
-	- Add enclosures and categories to atom feed
+	- Add enclosures and categories to atom feed parsing
 	- Allow the atom_entry hook to change the results
 	- Set 'adjust for viewer timezone' as the default for new events
 	- Allow event creation in other timezones than your own

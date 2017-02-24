@@ -334,10 +334,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 		}
 		else {
 			logger('No signed token from '  . $url . $rhs, LOGGER_NORMAL, LOG_WARNING);
-			// after 2017-01-01 this will be a hard error unless you over-ride it.
-			if((time() > 1483228800) && (! get_config('system','allow_unsigned_zotfinger'))) {
-				return false;
-			}
+			return false;
 		}
 
 		$x = import_xchan($j, (($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));

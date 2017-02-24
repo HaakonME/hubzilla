@@ -317,8 +317,10 @@ class Profiles extends \Zotlabs\Web\Controller {
 	
 			$hide_friends = ((intval($_POST['hide_friends'])) ? 1: 0);
 	
+// start fresh and create a new vcard. TODO: preserve the original guid or whatever else needs saving
+//			$orig_vcard = (($orig[0]['profile_vcard']) ? \Sabre\VObject\Reader::read($orig[0]['profile_vcard']) : null); 
 
-			$orig_vcard = (($orig[0]['profile_vcard']) ? \Sabre\VObject\Reader::read($orig[0]['profile_vcard']) : null); 
+			$orig_vcard = null;
 
 			$channel = \App::get_channel();
 
@@ -700,7 +702,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 
 			$vc = $r[0]['profile_vcard'];
 			$vctmp = (($vc) ? \Sabre\VObject\Reader::read($vc) : null); 
-			$vcard = (($vctmp) ? get_vcard_array($vctmp,$contact['abook_id']) : [] );
+			$vcard = (($vctmp) ? get_vcard_array($vctmp,$r[0]['id']) : [] );
 	
 			$f = get_config('system','birthday_input_format');
 			if(! $f)

@@ -47,6 +47,28 @@
 
 	{{foreach $fields as $f}}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		{{if $f == 'name'}}
 			<dl id="aprofile-fullname" class="aprofile">
 			 <dt>{{$profile.fullname.0}}</dt>

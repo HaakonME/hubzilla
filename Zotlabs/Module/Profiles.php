@@ -330,13 +330,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'photo'      => $channel['xchan_photo_l'],
 				'adr'        => [],
 				'adr_type'   => [ $default_vcard_cat ],
-				'tel'        => [],
-				'tel_type'   => [ $default_vcard_cat ],
-				'email'      => [],
-				'email_type' => [ $default_vcard_cat ],
-				'impp'       => [],
-				'impp_type'  => [ $default_vcard_cat ],
-				'url'        => [],
+				'url'        => [ $homepage ],
 				'url_type'   => [ $default_vcard_cat ]
 			];
 
@@ -350,8 +344,11 @@ class Profiles extends \Zotlabs\Web\Controller {
 				6 => $country_name
 			];
 				
-
 			$profile_vcard = update_vcard($defcard,$orig_vcard);
+
+			$orig_vcard = \Sabre\VObject\Reader::read($profile_vcard);
+
+			$profile_vcard = update_vcard($_REQUEST,$orig_vcard);
 
 
 			require_once('include/text.php');
@@ -700,6 +697,10 @@ class Profiles extends \Zotlabs\Web\Controller {
 			}
 	
 	//logger('extra_fields: ' . print_r($extra_fields,true));
+
+			$vc = $r[0]['profile_vcard'];
+			$vctmp = (($vc) ? \Sabre\VObject\Reader::read($vc) : null); 
+			$vcard = (($vctmp) ? get_vcard_array($vctmp,$contact['abook_id']) : [] );
 	
 			$f = get_config('system','birthday_input_format');
 			if(! $f)
@@ -717,6 +718,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 					. get_form_security_token("profile_drop"),
 	
 				'$fields'       => $fields,
+				'$vcard'        => $vcard,
 				'$guid'         => $r[0]['profile_guid'],
 				'$banner'       => t('Edit Profile Details'),
 				'$submit'       => t('Submit'),
@@ -776,11 +778,27 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'$film'         => array('film', t('Film/Dance/Culture/Entertainment'), $r[0]['film']),
 				'$interest'     => array('interest', t('Hobbies/Interests'), $r[0]['interest']),
 				'$romance'      => array('romance',t('Love/Romance'), $r[0]['romance']),
-				'$work'         => array('work', t('Work/Employment'), $r[0]['employment']),
+				'$employ'         => array('work', t('Work/Employment'), $r[0]['employment']),
 				'$education'    => array('education', t('School/Education'), $r[0]['education']),
 				'$contact'      => array('contact', t('Contact information and social networks'), $r[0]['contact']),
 				'$channels'     => array('channels', t('My other channels'), $r[0]['channels']),
 				'$extra_fields' => $extra_fields,
+                '$tel_label'      => t('Phone'),
+                '$email_label'    => t('Email'),
+                '$impp_label'     => t('Instant messenger'),
+                '$url_label'      => t('Website'),
+                '$adr_label'      => t('Address'),
+                '$note_label'     => t('Note'),
+                '$mobile'         => t('Mobile'),
+                '$home'           => t('Home'),
+                '$work'           => t('Work'),
+                '$other'          => t('Other'),
+                '$add_card'       => t('Add Contact'),
+                '$add_field'      => t('Add Field'),
+                '$create'         => t('Create'),
+                '$update'         => t('Update'),
+                '$delete'         => t('Delete'),
+                '$cancel'         => t('Cancel'),
 			));
 	
 			$arr = array('profile' => $r[0], 'entry' => $o);

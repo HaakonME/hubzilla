@@ -1608,7 +1608,7 @@ function get_profile_fields_basic($filter = 0) {
 
 	$profile_fields_basic = (($filter == 0) ? get_config('system','profile_fields_basic') : null);
 	if(! $profile_fields_basic)
-		$profile_fields_basic = array('fullname','pdesc','chandesc','gender','dob','dob_tz','address','locality','region','postal_code','country_name','marital','sexual','homepage','hometown','keywords','about','contact');
+		$profile_fields_basic = array('fullname','pdesc','chandesc','comms','gender','dob','dob_tz','address','locality','region','postal_code','country_name','marital','sexual','homepage','hometown','keywords','about','contact');
 
 	$x = array();
 	if($profile_fields_basic)

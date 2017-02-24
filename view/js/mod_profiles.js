@@ -38,7 +38,7 @@ $(document).ready(function() {
 		var what = $(this).data('add');
 		var id = $(this).data('id');
 		var element = '#template-form-' + what;
-		var where = '#abook-edit-form';
+		var where = '#profile-edit-form';
 
 		$(element + ' .remove-field').attr('data-id', id)
 
@@ -58,7 +58,7 @@ $(document).ready(function() {
 	function doRemove() {
 		var what = $(this).data('remove');
 		var element = $(this).parents('div.form-' + what);
-		var where = '#abook_edit_form' + $(this).data('id');
+		var where = '#profile-edit-form' + $(this).data('id');
 
 		if(what === 'vcard-org' || what === 'vcard-title' || what === 'vcard-note') {
 			$(where + ' .add-' + what).show()

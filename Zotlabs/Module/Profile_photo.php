@@ -183,6 +183,10 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 
 					photo_profile_setperms(local_channel(),$base_image['resource_id'],$_REQUEST['profile']);
 
+					$sync = attach_export_data($channel,$base_image['resource_id']);
+					if($sync)
+						build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+
 
 					// Similarly, tell the nav bar to bypass the cache and update the avater image.
 					$_SESSION['reload_avatar'] = true;
@@ -340,6 +344,11 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 				);
 	
 				photo_profile_setperms(local_channel(),$resource_id,$_REQUEST['profile']);
+
+				$sync = attach_export_data($channel,$resource_id);
+				if($sync)
+					build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+
 
 				\Zotlabs\Daemon\Master::Summon(array('Directory',local_channel()));
 				goaway(z_root() . '/profiles');

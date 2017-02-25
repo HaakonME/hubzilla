@@ -36,7 +36,9 @@ class Viewsrc extends \Zotlabs\Web\Controller {
 			if($r) {
 				if(intval($r[0]['item_obscured']))
 					$r[0]['body'] = crypto_unencapsulate(json_decode($r[0]['body'],true),get_config('system','prvkey')); 
-				$o = (($json) ? json_encode($r[0]['body']) : str_replace("\n",'<br />',$r[0]['body']));
+
+				$content = escape_tags($r[0]['body']);
+				$o = (($json) ? json_encode($content) : str_replace("\n",'<br />',$content));
 			}
 		}
 	

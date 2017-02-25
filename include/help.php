@@ -1,5 +1,7 @@
 <?php
 
+use \Michelf\MarkdownExtra;
+
 /**
  * @brief
  *
@@ -15,7 +17,7 @@ function get_help_content($tocpath = false) {
 	$text = '';
 
 	$path = (($tocpath !== false) ? $tocpath : '');
-        
+
 	if($tocpath === false && argc() > 1) {
 		$path = '';
 		for($x = 1; $x < argc(); $x ++) {
@@ -55,7 +57,7 @@ function get_help_content($tocpath = false) {
 		if(! $text) {
 			$doctype = 'bbcode';
 			$text = load_doc_file('doc/main.bb');
-                        goaway('/help/about/about_hubzilla');
+			goaway('/help/about/about_hubzilla');
 			\App::$page['title'] = t('Help');
 		}
 
@@ -69,12 +71,11 @@ function get_help_content($tocpath = false) {
 	}
 
 	if($doctype === 'html')
-                $content = parseIdentityAwareHTML($text);
-	if($doctype === 'markdown')	{
-		require_once('library/markdown.php');
+		$content = parseIdentityAwareHTML($text);
+	if($doctype === 'markdown') {
 		# escape #include tags
 		$text = preg_replace('/#include/ism', '%%include', $text);
-		$content = Markdown($text);
+		$content = MarkdownExtra::defaultTransform($text);
 		$content = preg_replace('/%%include/ism', '#include', $content);
 	}
 	if($doctype === 'bbcode') {
@@ -99,8 +100,7 @@ function preg_callback_help_include($matches) {
 			$include = str_replace(' target="_blank"','',$include);
 		}
 		elseif(preg_match('/\.md$/', $matches[1])) {
-			require_once('library/markdown.php');
-			$include = Markdown($include);
+			$include = MarkdownExtra::defaultTransform($include);
 		}
 		return $include;
 	}

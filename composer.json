@@ -28,7 +28,8 @@
 		"ext-mbstring" : "*",
 		"ext-xml" : "*",
 		"ext-openssl" : "*",
-		"sabre/dav" : "~3.2"
+		"sabre/dav" : "~3.2",
+		"michelf/php-markdown" : "^1.7"
 	},
 	"require-dev" : {
 		"php" : ">=5.6",

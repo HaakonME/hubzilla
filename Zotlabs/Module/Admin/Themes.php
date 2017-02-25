@@ -2,38 +2,41 @@
 
 namespace Zotlabs\Module\Admin;
 
+use \Michelf\MarkdownExtra;
 
+/**
+ * @brief Admin area theme settings.
+ */
 class Themes {
 
+	/**
+	 * @brief
+	 *
+	 */
 	function post() {
 
 		$theme = argv(2);
 		if (is_file("view/theme/$theme/php/config.php")){
 			require_once("view/theme/$theme/php/config.php");
-			// fixme add parent theme if derived
-			if (function_exists("theme_admin_post")){
+			/// @FIXME add parent theme if derived
+			if (function_exists('theme_admin_post')){
 				theme_admin_post($a);
 			}
 		}
 		info(t('Theme settings updated.'));
-		if(is_ajax()) 
+		if(is_ajax())
 			return;
-	
+
 		goaway(z_root() . '/admin/themes/' . $theme );
 	}
 
 
-	
-
-	
 	/**
 	 * @brief Themes admin page.
 	 *
-	 * @return string
+	 * @return string with parsed HTML
 	 */
-
 	function get(){
-	
 		$allowed_themes_str = get_config('system', 'allowed_themes');
 		$allowed_themes_raw = explode(',', $allowed_themes_str);
 		$allowed_themes = array();
@@ -41,7 +44,7 @@ class Themes {
 			foreach($allowed_themes_raw as $x)
 				if(strlen(trim($x)))
 					$allowed_themes[] = trim($x);
-	
+
 		$themes = array();
 		$files = glob('view/theme/*');
 		if($files) {
@@ -53,56 +56,55 @@ class Themes {
 				$themes[] = array('name' => $f, 'experimental' => $is_experimental, 'supported' => $is_supported, 'allowed' => $is_allowed);
 			}
 		}
-	
+
 		if(! count($themes)) {
 			notice( t('No themes found.'));
 			return '';
 		}
-	
+
 		/*
 		 * Single theme
 		 */
-	
+
 		if (\App::$argc == 3){
 			$theme = \App::$argv[2];
 			if(! is_dir("view/theme/$theme")){
 				notice( t("Item not found.") );
 				return '';
 			}
-	
+
 			if (x($_GET,"a") && $_GET['a']=="t"){
 				check_form_security_token_redirectOnErr('/admin/themes', 'admin_themes', 't');
-	
+
 				// Toggle theme status
-	
+
 				$this->toggle_theme($themes, $theme, $result);
 				$s = $this->rebuild_theme_table($themes);
 				if($result)
 					info( sprintf('Theme %s enabled.', $theme));
 				else
 					info( sprintf('Theme %s disabled.', $theme));
-	
+
 				set_config('system', 'allowed_themes', $s);
 				goaway(z_root() . '/admin/themes' );
 			}
-	
+
 			// display theme details
-			require_once('library/markdown.php');
-	
+
 			if ($this->theme_status($themes,$theme)) {
 				$status="on"; $action= t("Disable");
 			} else {
 				$status="off"; $action= t("Enable");
 			}
-	
+
 			$readme=Null;
 			if (is_file("view/theme/$theme/README.md")){
 				$readme = file_get_contents("view/theme/$theme/README.md");
-				$readme = Markdown($readme);
+				$readme = MarkdownExtra::defaultTransform($readme);
 			} else if (is_file("view/theme/$theme/README")){
-				$readme = "<pre>". file_get_contents("view/theme/$theme/README") ."</pre>";
+				$readme = '<pre>'. file_get_contents("view/theme/$theme/README") .'</pre>';
 			}
-	
+
 			$admin_form = '';
 			if (is_file("view/theme/$theme/php/config.php")){
 				require_once("view/theme/$theme/php/config.php");
@@ -110,11 +112,11 @@ class Themes {
 					$admin_form = theme_admin($a);
 				}
 			}
-	
+
 			$screenshot = array( get_theme_screenshot($theme), t('Screenshot'));
 			if(! stristr($screenshot[0],$theme))
 				$screenshot = null;
-	
+
 			$t = get_markup_template('admin_plugins_details.tpl');
 			return replace_macros($t, array(
 				'$title' => t('Administration'),
@@ -122,7 +124,7 @@ class Themes {
 				'$toggle' => t('Toggle'),
 				'$settings' => t('Settings'),
 				'$baseurl' => z_root(),
-			
+
 				'$plugin' => $theme,
 				'$status' => $status,
 				'$action' => $action,
@@ -133,22 +135,22 @@ class Themes {
 				'$str_maintainer' => t('Maintainer: '),
 				'$screenshot' => $screenshot,
 				'$readme' => $readme,
-	
+
 				'$form_security_token' => get_form_security_token('admin_themes'),
 			));
 		}
-	
+
 		/*
 		 * List themes
 		 */
-	
+
 		$xthemes = array();
 		if($themes) {
 			foreach($themes as $th) {
 				$xthemes[] = array($th['name'],(($th['allowed']) ? "on" : "off"), get_theme_info($th['name']));
 			}
 		}
-	
+
 		$t = get_markup_template('admin_plugins.tpl');
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -162,13 +164,14 @@ class Themes {
 			'$form_security_token' => get_form_security_token('admin_themes'),
 		));
 	}
-	
 
 
 	/**
-	 * @param array $themes
-	 * @param string $th
-	 * @param int $result
+	 * @brief Toggle a theme.
+	 *
+	 * @param array &$themes
+	 * @param[in] string $th
+	 * @param[out] int &$result
 	 */
 	function toggle_theme(&$themes, $th, &$result) {
 		for($x = 0; $x < count($themes); $x ++) {
@@ -184,7 +187,7 @@ class Themes {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param array $themes
 	 * @param string $th
@@ -203,8 +206,7 @@ class Themes {
 		}
 		return 0;
 	}
-	
-	
+
 	/**
 	 * @param array $themes
 	 * @return string
@@ -222,12 +224,5 @@ class Themes {
 		}
 		return $o;
 	}
-	
-
-
-
-
-
-
 
 }

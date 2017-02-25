@@ -3,10 +3,14 @@
 namespace Zotlabs\Module\Admin;
 
 use \Zotlabs\Storage\GitRepo as GitRepo;
+use \Michelf\MarkdownExtra;
 
 class Plugins {
 
-
+	/**
+	 * @brief
+	 *
+	 */
 	function post() {
 
 		if(argc() > 2 && is_file("addon/" . argv(2) . "/" . argv(2) . ".php")) {
@@ -15,16 +19,15 @@ class Plugins {
 				$func = argv(2) . '_plugin_admin_post';
 				$func($a);
 			}
-				
-			goaway(z_root() . '/admin/plugins/' . argv(2) );
 
+			goaway(z_root() . '/admin/plugins/' . argv(2) );
 		}
 		elseif(argc() > 2) {
 			switch(argv(2)) {
 				case 'updaterepo':
 					if (array_key_exists('repoName', $_REQUEST)) {
 						$repoName = $_REQUEST['repoName'];
-					} 
+					}
 					else {
 						json_return_and_die(array('message' => 'No repo name provided.', 'success' => false));
 					}
@@ -101,16 +104,15 @@ class Plugins {
 						logger('Repo directory not writable to web server: ' . $repoDir);
 						json_return_and_die(array('message' => 'Repo directory not writable to web server.', 'success' => false));
 					}
-					// TODO: remove directory and unlink /addon/files
+					/// @TODO remove directory and unlink /addon/files
 					if (rrmdir($repoDir)) {
 						json_return_and_die(array('message' => 'Repo deleted.', 'success' => true));
 					} else {
 						json_return_and_die(array('message' => 'Error deleting addon repo.', 'success' => false));
 					}
 				case 'installrepo':
-					require_once('library/markdown.php');
 					if (array_key_exists('repoURL', $_REQUEST)) {
-						require_once('library/PHPGit.autoload.php');			// Load PHPGit dependencies					
+						require_once('library/PHPGit.autoload.php');			// Load PHPGit dependencies
 						$repoURL = $_REQUEST['repoURL'];
 						$extendDir = 'store/[data]/git/sys/extend';
 						$addonDir = $extendDir . '/addon';
@@ -170,9 +172,8 @@ class Plugins {
 						json_return_and_die(array('repo' => $repo, 'message' => '', 'success' => true));
 					}
 				case 'addrepo':
-					require_once('library/markdown.php');
 					if (array_key_exists('repoURL', $_REQUEST)) {
-						require_once('library/PHPGit.autoload.php');	 // Load PHPGit dependencies					
+						require_once('library/PHPGit.autoload.php');	 // Load PHPGit dependencies
 						$repoURL = $_REQUEST['repoURL'];
 						$extendDir = 'store/[data]/git/sys/extend';
 						$addonDir = $extendDir . '/addon';
@@ -225,7 +226,7 @@ class Plugins {
 						$repo['readme'] = $repo['manifest'] = null;
 						foreach ($git->git->tree('master') as $object) {
 							if ($object['type'] == 'blob' && (strtolower($object['file']) === 'readme.md' || strtolower($object['file']) === 'readme')) {
-								$repo['readme'] = Markdown($git->git->cat->blob($object['hash']));
+								$repo['readme'] = MarkdownExtra::defaultTransform($git->git->cat->blob($object['hash']));
 							} else if ($object['type'] == 'blob' && strtolower($object['file']) === 'manifest.json') {
 								$repo['manifest'] = $git->git->cat->blob($object['hash']);
 							}
@@ -241,7 +242,11 @@ class Plugins {
 		}
 	}
 
-
+	/**
+	 * @brief Plugins admin page.
+	 *
+	 * @return string with parsed HTML
+	 */
 	function get() {
 
 		/*
@@ -254,13 +259,13 @@ class Plugins {
 				notice( t("Item not found.") );
 				return '';
 			}
-	
+
 			$enabled = in_array($plugin,\App::$plugins);
 			$info = get_plugin_info($plugin);
 			$x = check_plugin_versions($info);
-	
+
 			// disable plugins which are installed but incompatible versions
-	
+
 			if($enabled && ! $x) {
 				$enabled = false;
 				$idz = array_search($plugin, \App::$plugins);
@@ -271,7 +276,7 @@ class Plugins {
 				}
 			}
 			$info['disabled'] = 1-intval($x);
-	
+
 			if (x($_GET,"a") && $_GET['a']=="t"){
 				check_form_security_token_redirectOnErr('/admin/plugins', 'admin_plugins', 't');
 				$pinstalled = false;
@@ -297,9 +302,9 @@ class Plugins {
 				}
 				goaway(z_root() . '/admin/plugins' );
 			}
+
 			// display plugin details
-			require_once('library/markdown.php');
-	
+
 			if (in_array($plugin, \App::$plugins)){
 				$status = 'on';
 				$action = t('Disable');
@@ -307,21 +312,21 @@ class Plugins {
 				$status = 'off';
 				$action =  t('Enable');
 			}
-	
+
 			$readme = null;
 			if (is_file("addon/$plugin/README.md")){
 				$readme = file_get_contents("addon/$plugin/README.md");
-				$readme = Markdown($readme);
+				$readme = MarkdownExtra::defaultTransform($readme);
 			} else if (is_file("addon/$plugin/README")){
 				$readme = "<pre>". file_get_contents("addon/$plugin/README") ."</pre>";
 			}
-	
+
 			$admin_form = '';
-	
+
 			$r = q("select * from addon where plugin_admin = 1 and aname = '%s' limit 1",
 				dbesc($plugin)
 			);
-	
+
 			if($r) {
 				@require_once("addon/$plugin/$plugin.php");
 				if(function_exists($plugin.'_plugin_admin')) {
@@ -329,8 +334,8 @@ class Plugins {
 					$func($a, $admin_form);
 				}
 			}
-	
-	
+
+
 			$t = get_markup_template('admin_plugins_details.tpl');
 			return replace_macros($t, array(
 				'$title' => t('Administration'),
@@ -338,7 +343,7 @@ class Plugins {
 				'$toggle' => t('Toggle'),
 				'$settings' => t('Settings'),
 				'$baseurl' => z_root(),
-	
+
 				'$plugin' => $plugin,
 				'$status' => $status,
 				'$action' => $action,
@@ -351,17 +356,17 @@ class Plugins {
 				'$str_serverroles' => t('Compatible Server Roles: '),
 				'$str_requires' => t('Requires: '),
 				'$disabled' => t('Disabled - version incompatibility'),
-	
+
 				'$admin_form' => $admin_form,
 				'$function' => 'plugins',
 				'$screenshot' => '',
 				'$readme' => $readme,
-	
+
 				'$form_security_token' => get_form_security_token('admin_plugins'),
 			));
 		}
-	
-	
+
+
 		/*
 		 * List plugins
 		 */
@@ -374,9 +379,9 @@ class Plugins {
 					$info = get_plugin_info($id);
 					$enabled = in_array($id,\App::$plugins);
 					$x = check_plugin_versions($info);
-	
+
 					// disable plugins which are installed but incompatible versions
-	
+
 					if($enabled && ! $x) {
 						$enabled = false;
 						$idz = array_search($id, \App::$plugins);
@@ -387,19 +392,19 @@ class Plugins {
 						}
 					}
 					$info['disabled'] = 1-intval($x);
-	
+
 					$plugins[] = array( $id, (($enabled)?"on":"off") , $info);
 				}
 			}
 		}
-	
+
 		usort($plugins,'self::plugin_sort');
 
 		$allowManageRepos = false;
 		if(is_writable('extend/addon') && is_writable('store/[data]')) {
 			$allowManageRepos = true;
-		} 
-		
+		}
+
 		$admin_plugins_add_repo_form= replace_macros(
 			get_markup_template('admin_plugins_addrepo.tpl'), array(
 				'$post' => 'admin/plugins/addrepo',
@@ -418,14 +423,14 @@ class Plugins {
 				'$cancel' => t('Cancel')
 			)
 		);
-			
+
 		$reponames = $this->listAddonRepos();
 		$addonrepos = [];
 		foreach($reponames as $repo) {
 			$addonrepos[] = array('name' => $repo, 'description' => '');
-			// TODO: Parse repo info to provide more information about repos
+			/// @TODO Parse repo info to provide more information about repos
 		}
-		
+
 		$t = get_markup_template('admin_plugins.tpl');
 		return replace_macros($t, array(
 			'$title' => t('Administration'),
@@ -470,6 +475,5 @@ class Plugins {
 	static public function plugin_sort($a,$b) {
 		return(strcmp(strtolower($a[2]['name']),strtolower($b[2]['name'])));
 	}
-
 
 }

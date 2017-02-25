@@ -63,6 +63,8 @@ nbproject/
 ## composer
 # locally installed composer binary
 composer.phar
+# allow composer.lock, as it is required to have a common state
+!composer.lock
 # vendor/ is managed by composer, no need to include in our repository
 # requires new deployment and needs discussion first
 #vendor/

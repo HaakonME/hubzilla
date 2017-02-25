@@ -32,7 +32,7 @@ matrix:
 #  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS hello_world_test;" -uroot; fi
 
 install:
-  - composer require phpunit/phpunit
+  - composer install --optimize-autoloader
 
 # omitting "script:" will default to phpunit
 # use the $DB env variable to determine the phpunit.xml to use

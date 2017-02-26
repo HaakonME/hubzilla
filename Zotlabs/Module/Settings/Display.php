@@ -130,12 +130,19 @@ class Display {
 		if($allowed_themes) {
 			foreach($allowed_themes as $th) {
 				$f = $th;
+
+				$min_version = ((file_exists('view/theme/' . $th . '/.MINVERSION')) ? file_get_contents('view/theme/' . $th . '/.MINVERSION') : 0);
+				if((version_compare($min_version, STD_VERSION, '>=')) || ($min_version == 0)) {
+					$mobile_themes[$f] = $themes[$f] = sprintf(t('%s - (Incompatible)'), $f);
+					continue;
+				}
+
 				$is_experimental = file_exists('view/theme/' . $th . '/experimental');
 				$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 				$is_mobile = file_exists('view/theme/' . $th . '/mobile');
 				$is_library = file_exists('view/theme/'. $th . '/library');
-				$mobile_themes["---"] = t("No special theme for mobile devices");
-	
+				$mobile_themes['---'] = t("No special theme for mobile devices");
+
 				if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
 					$theme_name = (($is_experimental) ?  sprintf(t('%s - (Experimental)'), $f) : $f);
 					if (! $is_library) {
@@ -147,7 +154,6 @@ class Display {
 						}
 					}
 				}
-
 			}
 		}
 

@@ -1566,7 +1566,7 @@ function widget_admin($arr) {
 	 */
 
 	if(! is_site_admin()) {
-		return login(false);
+		return '';
 	}
 
 	$o = '';

@@ -62,12 +62,6 @@ class Router {
 				}
 			}
 
-			if((strpos($module,'admin') === 0) && (! is_site_admin())) {
-				\App::$module_loaded = false;
-				notice( t('Permission denied.') . EOL);
-				goaway(z_root());
-			}
-
 			/*
 			 * If the site has a custom module to over-ride the standard module, use it.
 			 * Otherwise, look for the standard program module

@@ -816,15 +816,19 @@ To delete attachments or change the permissions on the stored files, visit [obse
 
 [h4]Web Access[/h4]
 
-Your files are visible on the web at the location [observer=1][baseurl]/cloud/[observer.webname][/observer][observer=0][baseurl]/cloud/username[/observer] to anybody who is allowed to view them. If the viewer has sufficient privileges, they may also have the ability to create new files and folders/directories.
+Your files are visible on the web at the location [observer=1][baseurl]/cloud/[observer.webname][/observer][observer=0][baseurl]/cloud/username[/observer] to anybody who is allowed to view them. If the viewer has sufficient privileges, they may also have the ability to create new files and folders/directories. This should only be used for smaller files and photos (up to a few megabytes) as it uses internal memory. For larger files (videos, music, etc.), please upload using WebDAV. These files may still be retrieved via web access. 
 
 [h4]WebDAV access[/h4]
 
-See: [zrl=[baseurl]/help/member/member_guide#Cloud_Desktop_Clients]Cloud Desktop Clients[/zrl]
+WebDAV provides a way to copy files directly to or from your computer's operating system, where your cloud files appear as a virtual disk drive. This should be used to upload large files such as video and audio; as it is not limited to available memory. See [zrl=help/member/member_guide#Cloud_Desktop_Clients]Cloud Desktop Clients[/zrl] below.
+
 
 [h4]Permissions[/h4]
 
 When using WebDAV, the file is created with your channel's default file permissions and this cannot be changed from within the operating system. It also may not be as restrictive as you would like. What we've found is that the preferred method of making files private is to first create folders or directories; then visit [observer=1][baseurl]/cloud/[observer.webname][/observer][observer=0][baseurl]/cloud/username[/observer] select the directory and change the permissions. Do this before you put anything into the directory. The directory permissions take precedence so you can then put files or other folders into that container and they will be protected from unwanted viewers by the directory permissions. It is common for folks to create a &quot;personal&quot; or &quot;private&quot; folder which is restricted to themselves. You can use this as a personal cloud to store anything from anywhere on the web or any computer and it is protected from others. You might also create folders for &quot;family&quot; and &quot;friends&quot; with permission granted to appropriate privacy groups.
+
+[h3]Cloud Desktop Clients[/h3]
+
 
 [h4]Cloud Desktop Clients - Windows[/h4]
 

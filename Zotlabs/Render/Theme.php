@@ -69,15 +69,17 @@ class Theme {
 		if(array_key_exists('theme_preview',$_GET))
 			$chosen_theme = $_GET['theme_preview'];
 
+
+
+		// Allow theme selection of the form 'theme_name:schema_name'
+		$themepair = explode(':', $chosen_theme);
+
 		// Check if $chosen_theme is compatible with core. If not fall back to default
-		$info = get_theme_info($chosen_theme);
+		$info = get_theme_info($themepair[0]);
 		$compatible = check_plugin_versions($info);
 		if(!$compatible) {
 			$chosen_theme = '';
 		}
-
-		// Allow theme selection of the form 'theme_name:schema_name'
-		$themepair = explode(':', $chosen_theme);
 
 		if($chosen_theme && (file_exists('view/theme/' . $themepair[0] . '/css/style.css') || file_exists('view/theme/' . $themepair[0] . '/php/style.php'))) {
 			return($themepair);

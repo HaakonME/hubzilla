@@ -107,7 +107,7 @@
 <script>
 	window.wiki_resource_id = '{{$resource_id}}';
 	window.wiki_page_name = '{{$page}}';
-	window.wiki_page_content = {{if !$mimeType || $mimeType == 'text/markdown'}}{{$content}}{{else}}`{{$content}}`{{/if}};
+	window.wiki_page_content = `{{$content}}`;
 	window.wiki_page_commit = '{{$commit}}';
 
 	$("#generic-modal-ok-{{$wikiModalID}}").removeClass('btn-primary');

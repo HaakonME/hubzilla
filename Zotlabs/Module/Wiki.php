@@ -234,10 +234,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 				$mimeType = $p['mimeType'];
 
-				$rawContent = (($p['mimeType'] == 'text/bbcode') 
-					? htmlspecialchars_decode(json_decode($p['content']),ENT_COMPAT) 
-					: htmlspecialchars_decode($p['content'],ENT_COMPAT)
-				);
+				$rawContent = htmlspecialchars_decode(json_decode($p['content']),ENT_COMPAT);
+
 				$content = ($p['content'] !== '' ? $rawContent : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				if($mimeType == 'text/bbcode') {
@@ -245,7 +243,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 				else {
 					require_once('library/markdown.php');
-					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(Markdown(Zlib\NativeWikiPage::bbcode(json_decode($content))))));
+					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(Markdown(Zlib\NativeWikiPage::bbcode($content)))));
 					$renderedContent = Zlib\NativeWikiPage::convert_links($html, argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}
 				$showPageControls = $wiki_editor;

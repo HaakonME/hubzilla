@@ -69,8 +69,6 @@ class Theme {
 		if(array_key_exists('theme_preview',$_GET))
 			$chosen_theme = $_GET['theme_preview'];
 
-
-
 		// Allow theme selection of the form 'theme_name:schema_name'
 		$themepair = explode(':', $chosen_theme);
 

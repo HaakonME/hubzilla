@@ -1,4 +1,5 @@
 Hubzilla 2.2 (2017-??-??)
+	- Provide version compatibility check for themes (minversion, maxversion)
 	- Use chanlink_hash() instead of chanlink_url() where appropriate
 	- Use head_add_link() for feed discovery
 	- Provide HTTP header parser which honours continuation lines

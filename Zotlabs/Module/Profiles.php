@@ -785,6 +785,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 				'$contact'      => array('contact', t('Contact information and social networks'), $r[0]['contact']),
 				'$channels'     => array('channels', t('My other channels'), $r[0]['channels']),
 				'$extra_fields' => $extra_fields,
+				'$comms'          => t('Communications'),
                 '$tel_label'      => t('Phone'),
                 '$email_label'    => t('Email'),
                 '$impp_label'     => t('Instant messenger'),

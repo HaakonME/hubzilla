@@ -687,7 +687,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$ret = array();
 
 		$r = q("SELECT channel_id, channel_address FROM channel WHERE channel_removed = 0
-			AND channel_system = 0 AND NOT (channel_pageflags & %d)>0",
+			AND channel_system = 0 AND (channel_pageflags & %d) = 0",
 			intval(PAGE_HIDDEN)
 		);
 

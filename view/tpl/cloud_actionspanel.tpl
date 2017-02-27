@@ -19,7 +19,7 @@
 	<div class="clear"></div>
 </div>
 <div id="files-upload-tools" class="section-content-tools-wrapper">
-	{{if $quota.limit || $quota.used}}<div class="{{if $quota.warning}}section-content-danger-wrapper{{else}}section-content-info-wrapper{{/if}}">{{if $quota.warning}}<strong>{{$quota.warning}} </strong>{{/if}}{{$quota.desc}}</div>{{/if}}
+	{{if $quota.limit || $quota.used}}<div class="{{if $quota.warning}}section-content-danger-wrapper{{else}}section-content-info-wrapper{{/if}}">{{if $quota.warning}}<strong>{{$quota.warning}} </strong>{{/if}}{{if $quota.desc}}{{$quota.desc}}<br><br>{{/if}}{{$info}}</div>{{/if}}
 	<form id="ajax-upload-files" method="post" action="file_upload" enctype="multipart/form-data" class="acl-form" data-form_id="ajax-upload-files" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 		<input type="hidden" name="directory" value="{{$path}}" />
 		<input type="hidden" name="channick" value="{{$channick}}" />

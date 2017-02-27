@@ -164,8 +164,9 @@ class Site {
 				$vars = '';
 				$f = basename($file);
 
-				$min_version = ((file_exists('view/theme/' . $f . '/.MINVERSION')) ? file_get_contents('view/theme/' . $f . '/.MINVERSION') : 0);
-				if((version_compare($min_version, STD_VERSION, '>=')) || ($min_version == 0)) {
+				$info = get_theme_info($f);
+				$compatible = check_plugin_versions($info);
+				if(!$compatible) {
 					$theme_choices[$f] = $theme_choices_mobile[$f] = sprintf(t('%s - (Incompatible)'), $f);
 					continue;
 				}

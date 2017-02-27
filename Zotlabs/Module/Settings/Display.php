@@ -131,8 +131,9 @@ class Display {
 			foreach($allowed_themes as $th) {
 				$f = $th;
 
-				$min_version = ((file_exists('view/theme/' . $th . '/.MINVERSION')) ? file_get_contents('view/theme/' . $th . '/.MINVERSION') : 0);
-				if((version_compare($min_version, STD_VERSION, '>=')) || ($min_version == 0)) {
+				$info = get_theme_info($th);
+				$compatible = check_plugin_versions($info);
+				if(!$compatible) {
 					$mobile_themes[$f] = $themes[$f] = sprintf(t('%s - (Incompatible)'), $f);
 					continue;
 				}

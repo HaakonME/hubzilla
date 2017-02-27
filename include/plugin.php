@@ -471,6 +471,8 @@ function get_theme_info($theme){
 		'description' => '',
 		'author' => array(),
 		'version' => '',
+		'minversion' => '',
+		'maxversion' => '',
 		'compat' => '',
 		'credits' => '',
 		'maintainer' => array(),

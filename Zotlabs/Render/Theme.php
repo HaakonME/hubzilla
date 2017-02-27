@@ -70,8 +70,9 @@ class Theme {
 			$chosen_theme = $_GET['theme_preview'];
 
 		// Check if $chosen_theme is compatible with core. If not fall back to default
-		$min_version = ((file_exists('view/theme/' . $chosen_theme . '/.MINVERSION')) ? file_get_contents('view/theme/' . $chosen_theme . '/.MINVERSION') : 0);
-		if((version_compare($min_version, STD_VERSION, '>=')) || ($min_version == 0)) {
+		$info = get_theme_info($chosen_theme);
+		$compatible = check_plugin_versions($info);
+		if(!$compatible) {
 			$chosen_theme = '';
 		}
 

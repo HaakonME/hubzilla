@@ -38,6 +38,13 @@ class Cron_daily {
 			db_utcnow(), db_quoteinterval('30 DAY')
 		);
 
+		// expire any unread notifications over a year old
+
+		q("delete from notify where seen = 0 and created < %s - INTERVAL %s",
+			db_utcnow(), db_quoteinterval('1 YEAR')
+		);
+
+
 		//update statistics in config
 		require_once('include/statistics_fns.php');
 		update_channels_total_stat();

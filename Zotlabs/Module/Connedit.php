@@ -444,7 +444,8 @@ class Connedit extends \Zotlabs\Web\Controller {
 
 			if($cmd === 'fetchvc') {
 				$url = str_replace('/channel/','/profile/',$orig_record[0]['xchan_url']) . '/vcard';
-				$x = z_fetch_url($url);
+				$recurse = 0;
+				$x = z_fetch_url(zid($url),false,$recurse,['headers' => ['Cookie: PHPSESSID=' . session_id()]]);
 				if($x['success']) {
 					$h = new \Zotlabs\Web\HTTPHeaders($x['header']);
 					$fields = $h->fetch();

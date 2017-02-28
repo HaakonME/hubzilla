@@ -9,8 +9,12 @@
 				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
 					<li><a  href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a></li>
 					<li><a  href="{{$tools.recent.url}}" title="{{$tools.recent.title}}">{{$tools.recent.label}}</a></li>
-					<li class="divider"></li>
+					{{if $tools.fetchvc}}
+					<li><a  href="{{$tools.fetchvc.url}}" title="{{$tools.fetchvc.title}}">{{$tools.fetchvc.label}}</a></li>
+					{{/if}}
 					<li><a  href="#" title="{{$tools.refresh.title}}" onclick="window.location.href='{{$tools.refresh.url}}'; return false;">{{$tools.refresh.label}}</a></li>
+					<li><a  href="#" title="{{$tools.rephoto.title}}" onclick="window.location.href='{{$tools.rephoto.url}}'; return false;">{{$tools.rephoto.label}}</a></li>
+					<li class="divider"></li>
 					<li><a  href="#" title="{{$tools.block.title}}" onclick="window.location.href='{{$tools.block.url}}'; return false;">{{$tools.block.label}}</a></li>
 					<li><a  href="#" title="{{$tools.ignore.title}}" onclick="window.location.href='{{$tools.ignore.url}}'; return false;">{{$tools.ignore.label}}</a></li>
 					<li><a  href="#" title="{{$tools.archive.title}}" onclick="window.location.href='{{$tools.archive.url}}'; return false;">{{$tools.archive.label}}</a></li>

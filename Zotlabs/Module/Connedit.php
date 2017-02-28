@@ -441,6 +441,33 @@ class Connedit extends \Zotlabs\Web\Controller {
 				goaway(z_root() . '/connedit/' . $contact_id);
 	
 			}
+
+			if($cmd === 'fetchvc') {
+				$url = str_replace('/channel/','/profile/',$orig_record[0]['xchan_url']) . '/vcard';
+				$x = z_fetch_url($url);
+				if($x['success']) {
+					$h = new \Zotlabs\Web\HTTPHeaders($x['header']);
+					$fields = $h->fetch();
+					if($fields) {
+						foreach($fields as $y) {
+							 if(array_key_exists('content-type',$y)) {
+								$type = explode(';',trim($y['content-type']));
+								if($type && $type[0] === 'text/vcard' && $x['body']) {
+									$vc = \Sabre\VObject\Reader::read($x['body']);
+									$vcard = $vc->serialize();
+									if($vcard) {
+										set_abconfig(local_channel(),$orig_record[0]['abook_xchan'],'system','vcard',$vcard);
+										$this->connedit_clone($a);
+									}
+								}
+							}
+						}
+					}
+				}
+				goaway(z_root() . '/connedit/' . $contact_id);
+			}
+
+
 			if($cmd === 'resetphoto') {
 				q("update xchan set xchan_photo_date = '2001-01-01 00:00:00' where xchan_hash = '%s'",
 					dbesc($orig_record[0]['xchan_hash'])
@@ -582,6 +609,13 @@ class Connedit extends \Zotlabs\Web\Controller {
 					'sel'   => '',
 					'title' => t('Fetch updated permissions'),
 				),
+
+				'rephoto' => array(
+					'label' => t('Refresh Photo'),
+					'url'   => z_root() . '/connedit/' . $contact['abook_id'] . '/resetphoto',
+					'sel'   => '',
+					'title' => t('Fetch updated photo'),
+				),
 	
 				'recent' => array(
 					'label' => t('Recent Activity'),
@@ -630,6 +664,17 @@ class Connedit extends \Zotlabs\Web\Controller {
 				),
 	
 			);
+
+
+			if($contact['xchan_network'] === 'zot') {
+				$tools['fetchvc'] = [
+					'label' => t('Fetch Vcard'),
+					'url'    => z_root() . '/connedit/' . $contact['abook_id'] . '/fetchvc',
+					'sel'   => '',
+					'title' => t('Fetch electronic calling card for this connection')
+				];
+			}
+
 
 			$sections = [];
 

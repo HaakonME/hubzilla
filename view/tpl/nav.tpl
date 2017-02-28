@@ -1,5 +1,5 @@
 <div class="container-fluid">
-	<div class="navbar-header">
+	<div class="navbar-header dropdown">
 		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-2">
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>

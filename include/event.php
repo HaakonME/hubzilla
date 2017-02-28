@@ -292,7 +292,7 @@ function bbtoevent($s) {
 			$ev['nofinish'] = 1;
 	}
 
-	logger('bbtoevent: ' . print_r($ev,true));
+//	logger('bbtoevent: ' . print_r($ev,true));
 
 	return $ev;
 }

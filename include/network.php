@@ -91,6 +91,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 
+	if(x($opts,'session') && strpos($url,z_root()) === 0) {
+		@curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'Cookie: PHPSESSID=' . session_id() ]);
+	}
+
 	if(x($opts,'http_auth')) {
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);

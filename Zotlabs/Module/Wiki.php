@@ -3,6 +3,7 @@
 namespace Zotlabs\Module;
 
 use \Zotlabs\Lib as Zlib;
+use \Michelf\MarkdownExtra;
 
 require_once('include/acl_selectors.php');
 require_once('include/conversation.php');
@@ -242,8 +243,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					$renderedContent = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))), argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}
 				else {
-					require_once('library/markdown.php');
-					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(Markdown(Zlib\NativeWikiPage::bbcode($content)))));
+					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(MarkdownExtra::defaultTransform(Zlib\NativeWikiPage::bbcode($content)))));
 					$renderedContent = Zlib\NativeWikiPage::convert_links($html, argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}
 				$showPageControls = $wiki_editor;

@@ -4,9 +4,10 @@
  * @brief Some functions for BB conversions for Diaspora protocol.
  */
 
+use Michelf\MarkdownExtra;
+
 require_once("include/oembed.php");
 require_once("include/event.php");
-require_once("library/markdown.php");
 require_once("include/html2bbcode.php");
 require_once("include/bbcode.php");
 require_once("library/markdownify/markdownify.php");
@@ -73,7 +74,7 @@ function bb_tag_preg_replace($pattern, $replace, $name, $s) {
 
 function share_shield($m) {
 	return str_replace($m[1],'!=+=+=!' . base64url_encode($m[1]) . '=+!=+!=',$m[0]);
-} 
+}
 
 function share_unshield($m) {
 	$x = str_replace(array('!=+=+=!','=+!=+!='),array('',''),$m[1]);
@@ -184,7 +185,7 @@ function markdown_to_bb($s, $use_zrl = false) {
 	// This seems to work
 	$s = preg_replace('/\#([^\s\#])/','&#35;$1',$s);
 
-	$s = Markdown($s);
+	$s = MarkdownExtra::defaultTransform($s);
 
 	$s = str_replace("\r","",$s);
 
@@ -299,7 +300,7 @@ function bb2dmention_callback($match) {
 
 	$r = q("select xchan_addr from xchan where xchan_url = '%s'",
 		dbesc($match[2])
-	); 
+	);
 
 	if($r)
 		return '@{' . $match[3] . ' ; ' . $r[0]['xchan_addr'] . '}';
@@ -333,7 +334,7 @@ function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 		$has_meta = true;
 
 	if($item['author_xchan'] != $item['owner_xchan']) {
-		if($item['mid'] == $item['parent_mid']) 
+		if($item['mid'] == $item['parent_mid'])
 			$wallwall = true;
 		else {
 			if(! $has_meta) {
@@ -348,12 +349,12 @@ function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 	if(($wallwall) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_s']) {
 		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
-		$item['body'] = "\n\n" 
-			. '[quote]' 
-			. '[img]' . $item['author']['xchan_photo_s'] . '[/img]' 
-			. ' ' 
-			. '[url=' . $item['author']['xchan_url'] . '][b]' . $item['author']['xchan_name'] . '[/b][/url]' . "\n\n" 
-			. $item['body'] 
+		$item['body'] = "\n\n"
+			. '[quote]'
+			. '[img]' . $item['author']['xchan_photo_s'] . '[/img]'
+			. ' '
+			. '[url=' . $item['author']['xchan_url'] . '][b]' . $item['author']['xchan_name'] . '[/b][/url]' . "\n\n"
+			. $item['body']
 			. '[/quote]';
 	}
 
@@ -490,7 +491,7 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	// Convert it to HTML - don't try oembed
 	$Text = bbcode($Text, $preserve_nl, false);
 
-	// Markdownify does not preserve previously escaped html entities such as <> and &. 
+	// Markdownify does not preserve previously escaped html entities such as <> and &.
 
 	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
 
@@ -500,7 +501,7 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 
 
 
-	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason. 
+	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
 
 	$Text = str_replace(array('&\\_lt\\_;','&\\_gt\\_;','&\\_amp\\_;'),array('&lt;','&gt;','&amp;'),$Text);
 
@@ -510,7 +511,7 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	// So take off the angle brackets of any such URL
 	$Text = preg_replace("/<http(.*?)>/is", "http$1", $Text);
 
-	// Remove empty zrl links 
+	// Remove empty zrl links
 	$Text = preg_replace("/\[zrl\=\].*?\[\/zrl\]/is", "", $Text);
 
 	// Remove all unconverted tags
@@ -543,22 +544,22 @@ function format_event_diaspora($ev) {
 	$o .= '**' . (($ev['summary']) ? bb2diaspora($ev['summary']) : bb2diaspora($ev['desc'])) .  '**' . "\n";
 
 	$o .= t('Starts:') . ' ' . '['
-		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
+		. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC',
 			$ev['start'] , $bd_format ))
-			:  day_translate(datetime_convert('UTC', 'UTC', 
+			:  day_translate(datetime_convert('UTC', 'UTC',
 			$ev['start'] , $bd_format)))
 		.  '](' . z_root() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['start'])) . ")\n";
 
 	if(! $ev['nofinish'])
-		$o .= t('Finishes:') . ' ' . '[' 
-			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC', 
+		$o .= t('Finishes:') . ' ' . '['
+			. (($ev['adjust']) ? day_translate(datetime_convert('UTC', 'UTC',
 				$ev['finish'] , $bd_format ))
-				:  day_translate(datetime_convert('UTC', 'UTC', 
+				:  day_translate(datetime_convert('UTC', 'UTC',
 				$ev['finish'] , $bd_format )))
 			. '](' . z_root() . '/localtime/?f=&time=' . urlencode(datetime_convert('UTC','UTC',$ev['finish'])) . ")\n";
 
 	if(strlen($ev['location']))
-		$o .= t('Location:') . bb2diaspora($ev['location']) 
+		$o .= t('Location:') . bb2diaspora($ev['location'])
 			. "\n";
 
 	$o .= "\n";

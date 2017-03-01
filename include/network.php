@@ -24,6 +24,7 @@ function get_capath() {
  * @param array $opts (optional parameters) associative array with:
  *  * \b accept_content => supply Accept: header with 'accept_content' as the value
  *  * \b timeout => int seconds, default system config value or 60 seconds
+ *  * \b headers => array of additional header fields
  *  * \b http_auth => username:password
  *  * \b novalidate => do not validate SSL certs, default is to validate using our CA list
  *  * \b nobody => only return the header
@@ -31,6 +32,7 @@ function get_capath() {
  *  * \b custom => custom request method: e.g. 'PUT', 'DELETE'
  *  * \b cookiejar => cookie file (write)
  *  * \b cookiefile => cookie file (read)
+ *  * \b session => boolean; append session cookie *if* $url is our own site
  *
  * @return array an associative array with:
  *  * \e int \b return_code => HTTP return code or 0 if timeout or failure
@@ -74,8 +76,21 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(x($opts,'readfunc'))
 		@curl_setopt($ch, CURLOPT_READFUNCTION, $opts['readfunc']);
 
-	if(x($opts,'headers'))
-		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
+	// When using the session option and fetching from our own site, 
+	// append the PHPSESSID cookie to any existing headers.
+	// Don't add to $opts['headers'] so that the cookie does not get
+	// sent to other sites via redirects
+
+	$instance_headers = ((array_key_exists('headers',$opts) && is_array($opts['headers'])) ? $opts['headers'] : []);
+
+	if(x($opts,'session')) {
+		if(strpos($url,z_root()) === 0) {
+			$instance_headers[] = 'Cookie: PHPSESSID=' . session_id();
+		}
+	}
+	if($instance_headers)
+		@curl_setopt($ch, CURLOPT_HTTPHEADER, $instance_headers);
+
 
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);
@@ -91,9 +106,6 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 
-	if(x($opts,'session') && strpos($url,z_root()) === 0) {
-		@curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'Cookie: PHPSESSID=' . session_id() ]);
-	}
 
 	if(x($opts,'http_auth')) {
 		// "username" . ':' . "password"
@@ -233,9 +245,16 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_HEADER, false);
 	}
 
-	if(x($opts,'headers')) {
-		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
+	$instance_headers = ((array_key_exists('headers',$opts) && is_array($opts['headers'])) ? $opts['headers'] : []);
+
+	if(x($opts,'session')) {
+		if(strpos($url,z_root()) === 0) {
+			$instance_headers[] = 'Cookie: PHPSESSID=' . session_id();
+		}
 	}
+	if($instance_headers)
+		@curl_setopt($ch, CURLOPT_HTTPHEADER, $instance_headers);
+
 
 	if(x($opts,'nobody'))
 		@curl_setopt($ch, CURLOPT_NOBODY, $opts['nobody']);

@@ -17,12 +17,10 @@
 	</div>
 	<div id="contacts-search-form" class="section-content-tools-wrapper">
 		<form action="{{$cmd}}" method="get" >
-			<div class="form-group">
-				<div class="input-group">
-					<input type="text" name="search" id="contacts-search" class="widget-input" onfocus="this.select();" value="{{$search}}" placeholder="{{$desc}}" />
-					<div class="input-group-btn">
-						<button id="contacts-search-submit" class="btn btn-default btn-sm" type="submit" name="submit" value="{{$submit}}"><i class="fa fa-search"></i></button>
-					</div>
+			<div class="input-group form-group">
+				<input type="text" name="search" id="contacts-search" class="form-control input-sm" onfocus="this.select();" value="{{$search}}" placeholder="{{$desc}}" />
+				<div class="input-group-btn">
+					<button id="contacts-search-submit" class="btn btn-default btn-sm" type="submit" name="submit" value="{{$submit}}"><i class="fa fa-fw fa-search"></i></button>
 				</div>
 			</div>
 		</form>

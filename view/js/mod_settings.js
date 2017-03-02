@@ -44,7 +44,7 @@ function previewTheme(elm) {
 		$(data.schemas).each(function(index,item) {
 			$('<option/>',{value:item['key'],text:item['val']}).appendTo('#id_schema');
 		});
-		$('#id_schema').val(schema ? schema : data.schemas[0]);
+		$('#id_schema').val(schema ? schema : '---');
 		$('#custom-settings-content .section-content-tools-wrapper').html(data.config);
 	});
 }

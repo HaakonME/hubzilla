@@ -1508,7 +1508,7 @@ function widget_activity($arr) {
 
 	$perms_sql = item_permissions_sql(local_channel()) . item_normal();
 
-	$r = q("select owner_xchan, author_xchan from item where item_unseen = 1 and uid = %d $perms_sql",
+	$r = q("select author_xchan from item where item_unseen = 1 and uid = %d $perms_sql",
 		intval(local_channel())
 	);
 
@@ -1517,16 +1517,12 @@ function widget_activity($arr) {
 
 	if($r) {
 		foreach($r as $rv) {
-			if(array_key_exists($rv['owner_xchan'],$contributors))
-				$contributors[$rv['owner_xchan']] ++;
-			else
-				$contributors[$rv['owner_xchan']] = 1;
-			if($rv['owner_xchan'] === $rv['author_xchan'])
-				continue;
-			if(array_key_exists($rv['author_xchan'],$contributors))
+			if(array_key_exists($rv['author_xchan'],$contributors)) {
 				$contributors[$rv['author_xchan']] ++;
-			else
+			}
+			else {
 				$contributors[$rv['author_xchan']] = 1;
+			}
 		}
 		foreach($contributors as $k => $v) {
 			$arr[] = [ 'author_xchan' => $k, 'total' => $v	];	

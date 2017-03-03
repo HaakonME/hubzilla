@@ -854,6 +854,11 @@ function tag_sort_length($a,$b) {
 	return((mb_strlen($b) < mb_strlen($a)) ? (-1) : 1);
 }
 
+function total_sort($a,$b) {
+	if($a['total'] == $b['total'])
+		return 0;
+	return(($b['total'] < $a['total']) ? 1 : (-1));
+}
 
 
 /**

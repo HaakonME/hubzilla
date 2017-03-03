@@ -130,6 +130,7 @@ class Search extends \Zotlabs\Web\Controller {
 				'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search' => (($tag) ? urlencode('#') : '') . $search,
+				'$xchan' => '',
 				'$order' => '',
 				'$file' => '',
 				'$cats' => '',

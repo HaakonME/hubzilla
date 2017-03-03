@@ -118,8 +118,8 @@ class Network extends \Zotlabs\Web\Controller {
 		$cmax     = ((x($_GET,'cmax'))  ? intval($_GET['cmax'])  : 99);
 		$firehose = ((x($_GET,'fh'))    ? intval($_GET['fh'])    : 0);
 		$file     = ((x($_GET,'file'))  ? $_GET['file']          : '');
-	
-	
+		$xchan    = ((x($_GET,'xchan')) ? $_GET['xchan']         : '');
+		
 		$deftag = '';
 	
 		if(x($_GET,'search') || x($_GET,'file'))
@@ -257,6 +257,26 @@ class Network extends \Zotlabs\Web\Controller {
 				goaway(z_root() . '/network');
 			}
 		}
+		elseif($xchan) {
+				$r = q("select * from xchan where xchan_hash = '%s'",
+					dbesc($xchan)
+				);
+				if($r) {
+					$sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_channel()) . " AND ( author_xchan = '" . dbesc($xchan) . "' or owner_xchan = '" . dbesc($xchan) . "' ) $item_normal ) ";
+					$title = replace_macros(get_markup_template("section_title.tpl"),array(
+						'$title' => '<a href="' . zid($r[0]['xchan_url']) . '" ><img src="' . zid($r[0]['xchan_photo_s'])  . '" alt="' . urlencode($r[0]['xchan_name']) . '" /></a> <a href="' . zid($r[0]['xchan_url']) . '" >' . $r[0]['xchan_name'] . '</a>'
+				));
+				$o = $tabs;
+				$o .= $title;
+				$o .= $status_editor;
+
+			}
+			else {
+				notice( t('Invalid channel.') . EOL);
+				goaway(z_root() . '/network');
+			}
+
+		}
 	
 		if(x($category)) {
 			$sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
@@ -302,6 +322,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'$list'    => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$page'    => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search'  => (($search) ? $search : ''),
+				'$xchan'   => $xchan,
 				'$order'   => $order,
 				'$file'    => $file,
 				'$cats'    => $category,

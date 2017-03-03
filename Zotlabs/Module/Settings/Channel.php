@@ -277,8 +277,8 @@ class Channel {
 		if($email_changed && \App::$config['system']['register_policy'] == REGISTER_VERIFY) {
 	
 			// FIXME - set to un-verified, blocked and redirect to logout
-			// Why? Are we verifying people or email addresses?
-	
+			// Q: Why? Are we verifying people or email addresses?
+			// A: the policy is to verify email addresses
 		}
 	
 		goaway(z_root() . '/settings' );

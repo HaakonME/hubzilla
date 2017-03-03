@@ -321,6 +321,7 @@ class Channel extends \Zotlabs\Web\Controller {
 				'$static'  => $static,
 				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search' => '',
+				'$xchan' => '',
 				'$order' => '',
 				'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$file' => '',

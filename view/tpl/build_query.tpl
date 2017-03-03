@@ -20,6 +20,7 @@
 	var bParam_static = {{$static}};
 
 	var bParam_search = "{{$search}}";
+	var bParam_xchan = "{{$xchan}}";
 	var bParam_order = "{{$order}}";
 	var bParam_file = "{{$file}}";
 	var bParam_cats = "{{$cats}}";
@@ -47,6 +48,7 @@
 		if(bParam_list != 0) bCmd = bCmd + "&list=" + bParam_list;
 		if(bParam_fh != 0) bCmd = bCmd + "&fh=" + bParam_fh;
 		if(bParam_search != "") bCmd = bCmd + "&search=" + bParam_search;
+		if(bParam_xchan != "") bCmd = bCmd + "&xchan=" + bParam_xchan;
 		if(bParam_order != "") bCmd = bCmd + "&order=" + bParam_order;
 		if(bParam_file != "") bCmd = bCmd + "&file=" + bParam_file;
 		if(bParam_cats != "") bCmd = bCmd + "&cat=" + bParam_cats;

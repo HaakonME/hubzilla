@@ -57,6 +57,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 				'$static'  => $static,
 				'$page'    => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$search'  => '',
+				'$xchan'   => '',
 				'$order'   => 'comment',
 				'$file'    => '',
 				'$cats'    => '',

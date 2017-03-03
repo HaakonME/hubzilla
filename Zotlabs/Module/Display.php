@@ -165,6 +165,7 @@ class Display extends \Zotlabs\Web\Controller {
 				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
 				'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 				'$search' => '',
+				'$xchan' => '',
 				'$order' => '',
 				'$file' => '',
 				'$cats' => '',

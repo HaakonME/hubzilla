@@ -65,7 +65,7 @@ class Display {
 		set_pconfig(local_channel(),'system','manual_conversation_update', $manual_update);
 	
 		$newschema = '';
-		if($theme == $existing_theme){
+		if($theme){
 			// call theme_post only if theme has not been changed
 			if( ($themeconfigfile = $this->get_theme_config_file($theme)) != null){
 				require_once($themeconfigfile);

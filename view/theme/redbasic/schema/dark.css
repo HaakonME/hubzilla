@@ -417,7 +417,6 @@ pre {
 
 .contextual-help-content-open {
 	background: $nav_bg;
-	top: 50px;
 	border-bottom: #555 1px solid;
 	box-shadow: 0px 3px 3px rgba(85,85,85,0.2);
 }

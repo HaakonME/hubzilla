@@ -857,7 +857,7 @@ function tag_sort_length($a,$b) {
 function total_sort($a,$b) {
 	if($a['total'] == $b['total'])
 		return 0;
-	return(($b['total'] < $a['total']) ? 1 : (-1));
+	return(($b['total'] > $a['total']) ? 1 : (-1));
 }
 
 

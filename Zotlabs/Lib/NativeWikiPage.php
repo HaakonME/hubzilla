@@ -188,7 +188,7 @@ class NativeWikiPage {
 				$processed ++;
 				$history[] = [ 
 					'revision' => $item['revision'],
-					'date' => datetime_convert('UTC',date_default_timezone_get(),$item['created']),
+					'date' => datetime_convert('UTC',date_default_timezone_get(),$item['edited']),
 					'name' => $item['author']['xchan_name'],
 					'title' => get_iconfig($item,'nwikipage','commit_msg') 
 				];

@@ -46,6 +46,7 @@ Hubzilla 2.2 (2017-??-??)
 	- Show webpages link to visitors if a 'home' page exists
 
 	Bugfixes
+	- Fix schema not saved if session theme != selected theme and schema select display issue
 	- Fix no acl not detected in post_activity_item()
 	- Fix find_folder_hash_by_path() was not safe against multiple attach structures with the same filename but in different directories
 	- Fix don't search on empty filename - we shouldn't find it. The reason why this change is being made is because we actually did find it due to a development glitch

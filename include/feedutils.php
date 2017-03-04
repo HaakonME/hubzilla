@@ -793,6 +793,10 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
+				if($datarray['mid'])
+					$datarray['mid'] = normalise_id($item->get_id());
+
+
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
 					$datarray['comment_policy'] = 'none';
@@ -864,6 +868,9 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$item_id  = normalise_id($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
+
+				if($datarray['mid'])
+					$datarray['mid'] = normalise_id($item->get_id());
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
@@ -938,6 +945,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 					continue;
 				}
+
 
 				$datarray['parent_mid'] = $item_id;
 				$datarray['uid'] = $importer['channel_id'];

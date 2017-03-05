@@ -210,6 +210,10 @@ function format_event_bbcode($ev) {
 
 	$o = '';
 
+	if($ev['event_vdata']) {
+		$o .= '[event]' . $ev['event_vdata'] . '[/event]';
+	}
+
 	if($ev['summary'])
 		$o .= '[event-summary]' . $ev['summary'] . '[/event-summary]';
 

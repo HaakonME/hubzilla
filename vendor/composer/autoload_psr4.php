@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Zotlabs\\' => array($baseDir . '/Zotlabs'),
+    'Test\\Markdownify\\' => array($vendorDir . '/pixel418/markdownify/test'),
     'Sabre\\Xml\\' => array($vendorDir . '/sabre/xml/lib'),
     'Sabre\\VObject\\' => array($vendorDir . '/sabre/vobject/lib'),
     'Sabre\\Uri\\' => array($vendorDir . '/sabre/uri/lib'),
@@ -17,5 +18,6 @@ return array(
     'Sabre\\CardDAV\\' => array($vendorDir . '/sabre/dav/lib/CardDAV'),
     'Sabre\\CalDAV\\' => array($vendorDir . '/sabre/dav/lib/CalDAV'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'Markdownify\\' => array($vendorDir . '/pixel418/markdownify/src'),
     'Hubzilla\\' => array($baseDir . '/include'),
 );

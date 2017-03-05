@@ -21,6 +21,10 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         array (
             'Zotlabs\\' => 8,
         ),
+        'T' => 
+        array (
+            'Test\\Markdownify\\' => 17,
+        ),
         'S' => 
         array (
             'Sabre\\Xml\\' => 10,
@@ -37,6 +41,10 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         array (
             'Psr\\Log\\' => 8,
         ),
+        'M' => 
+        array (
+            'Markdownify\\' => 12,
+        ),
         'H' => 
         array (
             'Hubzilla\\' => 9,
@@ -47,6 +55,10 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         'Zotlabs\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Zotlabs',
+        ),
+        'Test\\Markdownify\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pixel418/markdownify/test',
         ),
         'Sabre\\Xml\\' => 
         array (
@@ -88,6 +100,10 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Markdownify\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pixel418/markdownify/src',
+        ),
         'Hubzilla\\' => 
         array (
             0 => __DIR__ . '/../..' . '/include',
@@ -106,6 +122,9 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
 
     public static $classMap = array (
         'Hubzilla\\Import\\Import' => __DIR__ . '/../..' . '/include/Import/Importer.php',
+        'Markdownify\\Converter' => __DIR__ . '/..' . '/pixel418/markdownify/src/Converter.php',
+        'Markdownify\\ConverterExtra' => __DIR__ . '/..' . '/pixel418/markdownify/src/ConverterExtra.php',
+        'Markdownify\\Parser' => __DIR__ . '/..' . '/pixel418/markdownify/src/Parser.php',
         'Michelf\\Markdown' => __DIR__ . '/..' . '/michelf/php-markdown/Michelf/Markdown.php',
         'Michelf\\MarkdownExtra' => __DIR__ . '/..' . '/michelf/php-markdown/Michelf/MarkdownExtra.php',
         'Michelf\\MarkdownInterface' => __DIR__ . '/..' . '/michelf/php-markdown/Michelf/MarkdownInterface.php',
@@ -117,6 +136,8 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         'Psr\\Log\\LoggerInterface' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerInterface.php',
         'Psr\\Log\\LoggerTrait' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerTrait.php',
         'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
+        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+        'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'Sabre\\CalDAV\\Backend\\AbstractBackend' => __DIR__ . '/..' . '/sabre/dav/lib/CalDAV/Backend/AbstractBackend.php',
         'Sabre\\CalDAV\\Backend\\BackendInterface' => __DIR__ . '/..' . '/sabre/dav/lib/CalDAV/Backend/BackendInterface.php',
         'Sabre\\CalDAV\\Backend\\NotificationSupport' => __DIR__ . '/..' . '/sabre/dav/lib/CalDAV/Backend/NotificationSupport.php',
@@ -367,7 +388,6 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         'Sabre\\HTTP\\URLUtil' => __DIR__ . '/..' . '/sabre/http/lib/URLUtil.php',
         'Sabre\\HTTP\\Util' => __DIR__ . '/..' . '/sabre/http/lib/Util.php',
         'Sabre\\HTTP\\Version' => __DIR__ . '/..' . '/sabre/http/lib/Version.php',
-        'Sabre\\Uri\\InvalidUriException' => __DIR__ . '/..' . '/sabre/uri/lib/InvalidUriException.php',
         'Sabre\\Uri\\Version' => __DIR__ . '/..' . '/sabre/uri/lib/Version.php',
         'Sabre\\VObject\\BirthdayCalendarGenerator' => __DIR__ . '/..' . '/sabre/vobject/lib/BirthdayCalendarGenerator.php',
         'Sabre\\VObject\\Cli' => __DIR__ . '/..' . '/sabre/vobject/lib/Cli.php',
@@ -456,6 +476,9 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         'Sabre\\Xml\\Writer' => __DIR__ . '/..' . '/sabre/xml/lib/Writer.php',
         'Sabre\\Xml\\XmlDeserializable' => __DIR__ . '/..' . '/sabre/xml/lib/XmlDeserializable.php',
         'Sabre\\Xml\\XmlSerializable' => __DIR__ . '/..' . '/sabre/xml/lib/XmlSerializable.php',
+        'Test\\Markdownify\\ConverterExtraTest' => __DIR__ . '/..' . '/pixel418/markdownify/test/ConverterExtraTest.php',
+        'Test\\Markdownify\\ConverterTest' => __DIR__ . '/..' . '/pixel418/markdownify/test/ConverterTest.php',
+        'Test\\Markdownify\\ConverterTestCase' => __DIR__ . '/..' . '/pixel418/markdownify/test/ConverterTestCase.php',
         'Zotlabs\\Access\\AccessList' => __DIR__ . '/../..' . '/Zotlabs/Access/AccessList.php',
         'Zotlabs\\Access\\PermissionLimits' => __DIR__ . '/../..' . '/Zotlabs/Access/PermissionLimits.php',
         'Zotlabs\\Access\\PermissionRoles' => __DIR__ . '/../..' . '/Zotlabs/Access/PermissionRoles.php',

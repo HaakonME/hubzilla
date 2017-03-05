@@ -29,7 +29,8 @@
 		"ext-xml" : "*",
 		"ext-openssl" : "*",
 		"sabre/dav" : "~3.2",
-		"michelf/php-markdown" : "^1.7"
+		"michelf/php-markdown" : "^1.7",
+		"pixel418/markdownify": "^2.2"
 	},
 	"require-dev" : {
 		"php" : ">=5.6",

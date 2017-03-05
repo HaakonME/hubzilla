@@ -5,12 +5,12 @@
  */
 
 use Michelf\MarkdownExtra;
+use Markdownify\Converter;
 
 require_once("include/oembed.php");
 require_once("include/event.php");
 require_once("include/html2bbcode.php");
 require_once("include/bbcode.php");
-require_once("library/markdownify/markdownify.php");
 
 
 function get_bb_tag_pos($s, $name, $occurance = 1) {
@@ -367,7 +367,6 @@ function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 
 function bb2diaspora_itembody($item, $force_update = false, $have_channel = false, $uplink = false) {
 
-
 	if(! get_iconfig($item,'diaspora','fields')) {
 		$force_update = true;
 	}
@@ -454,7 +453,7 @@ function bb2diaspora_itembody($item, $force_update = false, $have_channel = fals
 	return html_entity_decode($body);
 }
 
-function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
+function bb2diaspora($Text, $preserve_nl = false, $fordiaspora = true) {
 
 	// Re-enabling the converter again.
 	// The bbcode parser now handles youtube-links (and the other stuff) correctly.
@@ -496,9 +495,8 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
 
 	// Now convert HTML to Markdown
-	$md = new Markdownify(false, false, false);
+	$md = new Converter(Converter::LINK_AFTER_CONTENT, false, false);
 	$Text = $md->parseString($Text);
-
 
 
 	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
@@ -522,7 +520,7 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 
 	$Text = trim($Text);
 
-	call_hooks('bb2diaspora',$Text);
+	call_hooks('bb2diaspora', $Text);
 
 	return $Text;
 }

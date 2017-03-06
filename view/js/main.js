@@ -695,7 +695,7 @@ function collapseHeight() {
 	$(".wall-item-content, .directory-collapse").each(function() {
 		var orgHeight = $(this).outerHeight(true);
 		if(orgHeight > divmore_height) {
-			if(! $(this).hasClass('divmore')) {
+			if(! $(this).hasClass('divmore') && $(this).has('div.no-collapse').length == 0) {
 
 				// check if we will collapse some content above the visible content and compensate the diff later
 				if($(this).offset().top + divmore_height - $(window).scrollTop() + cDiff - ($(".divgrow-showmore").outerHeight() * i) < 65) {

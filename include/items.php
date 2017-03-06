@@ -328,7 +328,8 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 		return $ret;
 	}
 
-	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true));
+	$arr['public_policy'] = ((array_key_exists('public_policy',$arr)) ? escape_tags($arr['public_policy']) : map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true));
+
 	if($arr['public_policy'])
 		$arr['item_private'] = 1;
 

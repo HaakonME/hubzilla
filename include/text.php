@@ -1224,20 +1224,6 @@ function list_smilies() {
 
 	);
 
-	$x = get_config('feature','emoji');
-	if($x === false)
-		$x = 1;
-	if($x) {
-		if(! App::$emojitab)
-			App::$emojitab = json_decode(file_get_contents('library/emoji.json'),true);
-		foreach(App::$emojitab as $e) {
-			if(strpos($e['shortname'],':tone') === 0)
-				continue;
-			$texts[] = $e['shortname'];
-			$icons[] = '<img class="smiley emoji" height="16" width="16" src="images/emoji/' . $e['unicode'] . '.png' . '" alt="' . $e['name'] . '" />';
-		}
-	}
-
 	$params = array('texts' => $texts, 'icons' => $icons);
 	call_hooks('smilie', $params);
 

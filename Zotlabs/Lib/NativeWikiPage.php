@@ -232,7 +232,11 @@ class NativeWikiPage {
 			}
 		}
 
-		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
+		$sql_extra = '';
+
+		if($w['wiki']['allow_cid'] || $w['wiki']['allow_gid'] || $w['wiki']['deny_cid'] || $w['wiki']['deny_gid'])
+			$sql_extra .= item_permissions_sql($channel_id,$observer_hash);
+
 		if($revision == (-1))
 			$sql_extra .= " order by revision desc ";
 		elseif($revision)
@@ -284,7 +288,11 @@ class NativeWikiPage {
 			}
 		}
 
-		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
+		$sql_extra = '';
+
+		if($w['wiki']['allow_cid'] || $w['wiki']['allow_gid'] || $w['wiki']['deny_cid'] || $w['wiki']['deny_gid'])
+			$sql_extra .= item_permissions_sql($channel_id,$observer_hash);
+
 		$sql_extra .= " order by revision desc ";
 
 		$r = null;

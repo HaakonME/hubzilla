@@ -360,7 +360,8 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 	if(($is_comment) && ($arr['obj_type'] === ACTIVITY_OBJ_NOTE))
 		$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
-	if(! ($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid'])) {
+	if(! ( array_key_exists('allow_cid',$arr) || array_key_exists('allow_gid',$arr) 
+		|| array_key_exists('deny_cid',$arr) || array_key_exists('deny_gid',$arr))) {
 		$arr['allow_cid']    = $channel['channel_allow_cid'];
 		$arr['allow_gid']    = $channel['channel_allow_gid'];
 		$arr['deny_cid']     = $channel['channel_deny_cid'];

@@ -314,7 +314,11 @@ function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 	// We will provide wallwall (embedded author on the Diaspora side) if
 	//  1. It is a wall-to-wall post
 	//  2. A comment arrived which has no Diaspora signature info
+	//  3. The channel allows us to send unsigned activities
 
+	$dcv = get_pconfig($item['uid'],'system','diaspora_send_unsigned');
+	if(! $dcv)
+		return;
 
 	$wallwall = false;
 	$author_exists = true;
@@ -346,7 +350,8 @@ function bb2diaspora_itemwallwall(&$item,$uplink = false) {
 	if($uplink)
 		$wallwall = true;
 
-	if(($wallwall) && (is_array($item['author'])) && $item['author']['xchan_url'] && $item['author']['xchan_name'] && $item['author']['xchan_photo_s']) {
+	if(($wallwall) && (is_array($item['author'])) && $item['author']['xchan_url'] 
+		&& $item['author']['xchan_name'] && $item['author']['xchan_photo_s']) {
 		logger('bb2diaspora_itemwallwall: wall to wall post',LOGGER_DEBUG);
 		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
 		$item['body'] = "\n\n"
@@ -372,25 +377,6 @@ function bb2diaspora_itembody($item, $force_update = false, $have_channel = fals
 	}
 
 	$matches = array();
-
-	if(($item['diaspora_meta']) && (! $force_update)) {
-		$diaspora_meta = json_decode($item['diaspora_meta'],true);
-		if($diaspora_meta) {
-			if(array_key_exists('iv',$diaspora_meta)) {
-				$key = get_config('system','prvkey');
-				$meta = json_decode(crypto_unencapsulate($diaspora_meta,$key),true);
-			}
-			else {
-				$meta = $diaspora_meta;
-			}
-			if($meta) {
-				logger('bb2diaspora_itembody: cached ');
-				$newitem = $item;
-				$newitem['body'] = $meta['body'];
-				return $newitem['body'];
-			}
-		}
-	}
 
 	create_export_photo_body($item);
 

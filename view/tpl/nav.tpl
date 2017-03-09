@@ -1,5 +1,5 @@
 {{if $nav.login && !$userinfo}}
-<div class="navbar-toggler-left">
+<div>
 	<button type="button" class="navbar-toggler" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 		{{$nav.loginmenu.1.1}}
 	</button>

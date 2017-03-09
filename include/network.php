@@ -984,40 +984,6 @@ function email_header_encode($in_str, $charset = 'UTF-8') {
 	return $out_str;
 }
 
-function email_send($addr, $subject, $headers, $item) {
-	//$headers .= 'MIME-Version: 1.0' . "\n";
-	//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
-	//$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
-	//$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
-
-	$part = uniqid("", true);
-
-	$html	= prepare_body($item);
-
-	$headers .= "Mime-Version: 1.0\n";
-	$headers .= 'Content-Type: multipart/alternative; boundary="=_'.$part.'"'."\n\n";
-
-	$body = "\n--=_".$part."\n";
-	$body .= "Content-Transfer-Encoding: 8bit\n";
-	$body .= "Content-Type: text/plain; charset=utf-8; format=flowed\n\n";
-
-	$body .= html2plain($html)."\n";
-
-	$body .= "--=_".$part."\n";
-	$body .= "Content-Transfer-Encoding: 8bit\n";
-	$body .= "Content-Type: text/html; charset=utf-8\n\n";
-
-	$body .= '<html><head></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">'.$html."</body></html>\n";
-
-	$body .= "--=_".$part."--";
-
-	//$message = '<html><body>' . $html . '</body></html>';
-	//$message = html2plain($html);
-	logger('notifier: email delivery to ' . $addr);
-	mail($addr, $subject, $body, $headers);
-}
-
-
 
 function discover_by_url($url,$arr = null) {
 	require_once('library/HTML5/Parser.php');
@@ -1027,10 +993,10 @@ function discover_by_url($url,$arr = null) {
 		if(! $arr)
 			return false;
 		$network = (($arr['network']) ? $arr['network'] : 'unknown');
-		$name = (($arr['name']) ? $arr['name'] : 'unknown');
-		$photo = (($arr['photo']) ? $arr['photo'] : '');
-		$addr = (($arr['addr']) ? $arr['addr'] : '');
-		$guid = $url;
+		$name    = (($arr['name']) ? $arr['name'] : 'unknown');
+		$photo   = (($arr['photo']) ? $arr['photo'] : '');
+		$addr    = (($arr['addr']) ? $arr['addr'] : '');
+		$guid    = $url;
 	}
 
 	$profile = $url;
@@ -1067,8 +1033,8 @@ function discover_by_url($url,$arr = null) {
 	if($feed->error())
 		logger('probe_url: scrape_feed: Error parsing XML: ' . $feed->error());
 
-	$name = unxmlify(trim($feed->get_title()));
-	$photo = $feed->get_image_url();
+	$name   = unxmlify(trim($feed->get_title()));
+	$photo  = $feed->get_image_url();
 	$author = $feed->get_author();
 
 	if($author) {
@@ -1172,22 +1138,10 @@ function discover_by_url($url,$arr = null) {
 
 
 function discover_by_webbie($webbie) {
-	require_once('library/HTML5/Parser.php');
 
-	$result   = array();
+	$result   = [];
 
 	$network  = null;
-
-	$diaspora = false;
-	$gnusoc   = false;
-	$dfrn     = false;
-
-	$has_salmon = false;
-	$salmon_key = false;
-	$atom_feed = false;
-	$diaspora_base = '';
-	$diaspora_guid = '';
-	$diaspora_key = '';
 
 	$webbie = strtolower($webbie);
 
@@ -1214,21 +1168,6 @@ function discover_by_webbie($webbie) {
 						}
 					}
 				}
-				if($link['rel'] == NAMESPACE_DFRN) {
-					 $dfrn = $link['href'];
-				}
-				if($link['rel'] == 'magic-public-key') {
-        			if(substr($link['href'],0,5) === 'data:') {
-						$salmon_key = convert_salmon_key($link['href']);
-					}
-				}
-				if($link['rel'] == 'salmon') {
-					$has_salmon = true;
-					$salmon = $link['href'];
-				}
-				if($link['rel'] == 'http://schemas.google.com/g/2010#updates-from') {
-					$atom_feed = $link['href'];
-				}
 			}
 		}
 	}
@@ -1240,287 +1179,9 @@ function discover_by_webbie($webbie) {
 	if($arr['success'])
 		return true;
 
-	$aliases = array();
-
-	// Now let's make some decisions on what we may need
-	// to obtain further info
-
-	$probe_atom  = false;
-	$probe_old   = false;
-	$probe_hcard = false;
-
-	$address  = '';
-	$location = '';
-	$nickname = '';
-	$fullname = '';
-	$avatar   = '';
-	$pubkey   = '';
-
-	if(is_array($x)) {
-		if(array_key_exists('address',$x))
-			$address = $x['address'];
-		if(array_key_exists('location',$x))
-			$location = $x['location'];
-		if(array_key_exists('nickname',$x))
-			$nickname = $x['nickname'];
-	}
-
-	if(! $x)
-		$probe_old = true;
-
-
-	if((! $dfrn) && (! $has_salmon))
-		$probe_old = true;
-
-	if($probe_old) {
-		$y = old_webfinger($webbie);
-		if($y) {
-			logger('old_webfinger: ' . print_r($x,true));
-			foreach($y as $link) {
-				if($link['@attributes']['rel'] === NAMESPACE_DFRN)
-					$dfrn = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'salmon')
-					$notify = unamp($link['@attributes']['href']);
-	 			if($link['@attributes']['rel'] === NAMESPACE_FEED)
-					$poll = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'http://microformats.org/profile/hcard')
-					$hcard = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
-					$profile = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'http://portablecontacts.net/spec/1.0')
-					$poco = unamp($link['@attributes']['href']);
-				if($link['@attributes']['rel'] === 'http://joindiaspora.com/seed_location') {
-					$diaspora_base = unamp($link['@attributes']['href']);
-					$diaspora = true;
-				}
-				if($link['@attributes']['rel'] === 'http://joindiaspora.com/guid') {
-					$diaspora_guid = unamp($link['@attributes']['href']);
-					$diaspora = true;
-				}
-				if($link['@attributes']['rel'] === 'diaspora-public-key') {
-					$diaspora_key = base64_decode(unamp($link['@attributes']['href']));
-					if(strstr($diaspora_key,'RSA '))
-						$pubkey = rsatopem($diaspora_key);
-					else
-						$pubkey = $diaspora_key;
-					$diaspora = true;
-				}
-				if($link['@attributes']['rel'] == 'magic-public-key') {
-        			if(substr($link['@attributes']['href'],0,5) === 'data:') {
-						$salmon_key = convert_salmon_key($link['@attributes']['href']);
-					}
-				}
-				if($link['@attributes']['rel'] == 'salmon') {
-					$has_salmon = true;
-					$salmon = $link['@attributes']['href'];
-				}
-
-				if($link['@attributes']['rel'] == 'http://schemas.google.com/g/2010#updates-from') {
-					$atom_feed = $link['@attributes']['href'];
-				}
-				if($link['@attributes']['rel'] === 'alias') {
-					$aliases[] = $link['@attributes']['href'];
-				}
-				if($link['@attributes']['rel'] === 'subject') {
-					$subject = $link['@attributes']['href'];
-				}
-			}
-		}
-	}
-
-	if($subject || $aliases) {
-		if(strpos($webbie,'@')) {
-			$rhs = substr($webbie,strpos($webbie,'@')+1);
-		}
-		else {
-			$m = parse_url($webbie);
-			if($m) {
-				$rhs = $m['host'] . (($m['port']) ? ':' . $m['port'] : '');
-			}
-		}
-
-		$v = array('subject' => $subject,'aliases' => $aliases);
-		$address = find_webfinger_address($v,$rhs);
-		$location = find_webfinger_location($v,$rhs);
-		if($address)
-			$nickname = substr($address,0,strpos($address,'@'));
-
-	}
-
-	if($salmon_key && $has_salmon && $atom_feed && (! $dfrn) && (! $diaspora)) {
-		$gnusoc = true;
-		$probe_atom = true;
-	}
-
-	if(! $pubkey)
-		$pubkey = $salmon_key;
-
-	if(($dfrn || $diaspora) && $hcard)
-		$probe_hcard = true;
-
-	if(! $fullname)
-		$fullname = $nickname;
-
-	if($probe_atom) {
-		$k = z_fetch_url($atom_feed);
-		if($k['success'])
-			$feed_meta = feed_meta($k['body']);
-		if($feed_meta) {
-
-			// stash any discovered pubsubhubbub hubs in case we need to follow them
-			// this will save an expensive lookup later
-
-			if($feed_meta['hubs'] && $address) {
-				set_xconfig($address,'system','push_hubs',$feed_meta['hubs']);
-				set_xconfig($address,'system','feed_url',$atom_feed);
-			}
-			if($feed_meta['author']['author_name']) {
-				$fullname = $feed_meta['author']['author_name'];
-			}
-			if(! $avatar) {
-				if($feed_meta['author']['author_photo'])
-					$avatar = $feed_meta['author']['author_photo'];
-			}
-
-			// for GNU-social over-ride any url aliases we may have picked up in webfinger
-			// The author.uri element in the feed is likely to be more accurate
-
-			if($gnusoc && $feed_meta['author']['author_uri'])
-				$location = $feed_meta['author']['author_uri'];
-		}
-	}
-	else {
-		if($probe_hcard) {
-			$vcard = scrape_vcard($hcard);
-			if($vcard) {
-				logger('vcard: ' . print_r($vcard,true), LOGGER_DATA);
-				if($vcard['fn'])
-					$fullname = $vcard['fn'];
-				if($vcard['photo'] && (strpos($vcard['photo'],'http') !== 0))
-					$vcard['photo'] = $diaspora_base . '/' . $vcard['photo'];
-				if(($vcard['public_key']) && (! $pubkey)) {
-					$diaspora_key = $vcard['public_key'];
-					if(strstr($diaspora_key,'RSA '))
-						$pubkey = rsatopem($diaspora_key);
-					else
-						$pubkey = $diaspora_key;
-				}
-				if(! $avatar)
-					$avatar = $vcard['photo'];
-				if($diaspora) {
-					if(($vcard['uid']) && (! $diaspora_guid))
-						$diaspora_guid = $vcard['uid'];
-					if(($vcard['url']) && (! $diaspora_base))
-						$diaspora_base = $vcard['url'];
-
-
-
-
-				}
-
-			}
-		}
-	}
-
-	if(($profile) && (! $location))
-		$location = $profile;
-
-	if($location) {
-		$m = parse_url($location);
-		$base = $m['scheme'] . '://' . $m['host'];
-		$host = $m['host'];
-	}
-
-
-	if($diaspora && $diaspora_base && $diaspora_guid) {
-		if($dfrn)
-			$network = 'friendica-over-diaspora';
-		else
-			$network = 'diaspora';
-
-		$base = trim($diaspora_base,'/');
-		$notify = $base . '/receive';
-
-	}
-	else {
-		if($gnusoc) {
-			$network = 'gnusoc';
-			$notify = $salmon;
-		}
-	}
-
-
-	logger('network: ' . $network);
-	logger('address: ' . $address);
-	logger('fullname: ' . $fullname);
-	logger('pubkey: ' . $pubkey);
-	logger('location: ' . $location);
-
-
-
-	// if we have everything we need, let's create the records
-
-	if($network && $address && $fullname && $pubkey && $location) {
-		$r = q("select * from xchan where xchan_hash = '%s' limit 1",
-			dbesc($address)
-		);
-		if($r) {
-			$r = q("update xchan set xchan_name = '%s', xchan_network = '%s', xchan_name_date = '%s' where xchan_hash = '%s'",
-				dbesc($fullname),
-				dbesc($network),
-				dbesc(datetime_convert()),
-				dbesc($address)
-			);
-		}
-		else {
-			$r = xchan_store_lowlevel(
-				[
-					'xchan_hash'         => $address,
-					'xchan_guid'         => (($diaspora_guid) ? $diaspora_guid : $location),
-					'xchan_pubkey'       => $pubkey,
-					'xchan_addr'         => $address,
-					'xchan_url'          => $location,
-					'xchan_name'         => $fullname,
-					'xchan_name_date'    => datetime_convert(),
-					'xchan_network'      => $network
-				]
-			);
-		}
-
-		$r = q("select * from hubloc where hubloc_hash = '%s' limit 1",
-			dbesc($address)
-		);
-
-		if(! $r) {
-			$r = hubloc_store_lowlevel(
-				[
-					'hubloc_guid'     => (($diaspora_guid) ? $diaspora_guid : $location),
-					'hubloc_hash'     => $address,
-					'hubloc_addr'     => $address,
-					'hubloc_network'  => $network,
-					'hubloc_url'      => $base,
-					'hubloc_host'     => $host,
-					'hubloc_callback' => $notify,
-					'hubloc_updated'  => datetime_convert(),
-					'hubloc_primary'  => 1
-				]
-			);
-		}
-		$photos = import_xchan_photo($avatar,$address);
-		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s'",
-			dbescdate(datetime_convert()),
-			dbesc($photos[0]),
-			dbesc($photos[1]),
-			dbesc($photos[2]),
-			dbesc($photos[3]),
-			dbesc($address)
-		);
-		return true;
-	}
 	return false;
+
 }
-
-
 
 function webfinger_rfc7033($webbie,$zot = false) {
 
@@ -1547,87 +1208,12 @@ function webfinger_rfc7033($webbie,$zot = false) {
 
 	if($s['success']) {
 		$j = json_decode($s['body'],true);
-
-		// We could have a number of URL aliases and webbies
-		// make an executive decision about the most likely "best" of each
-		// by comparing against some examples from known networks we're likely to encounter.
-		// Otherwise we have to store every alias that we may ever encounter and
-		// validate every URL we ever find against every possible alias
-
-		// @fixme pump.io is going to be a real bugger since it doesn't return subject or aliases
-		// or provide lookup by url
-
-		$j['address'] = find_webfinger_address($j,$rhs);
-		$j['location'] = find_webfinger_location($j,$rhs);
-		if($j['address'])
-			$j['nickname'] = substr($j['address'],0,strpos($j['address'],'@'));
+		return($j);
 	}
-	else
-		return false;
 
-	return($j);
+	return false;
+
 }
-
-function find_webfinger_address($j,$rhs) {
-	if(is_array($j) && ($j)) {
-		if(strpos($j['subject'],'acct:') !== false && strpos($j['subject'],'@' . $rhs))
-			return str_replace('acct:','',$j['subject']);
-		if($j['aliases']) {
-			foreach($j['aliases'] as $alias) {
-				if(strpos($alias,'acct:') !== false && strpos($alias,'@' . $rhs)) {
-					return str_replace('acct:','',$alias);
-				}
-			}
-		}
-	}
-	return '';
-}
-
-
-function find_webfinger_location($j,$rhs) {
-	if(is_array($j) && ($j)) {
-		if(strpos($j['subject'],'http') === 0) {
-			$x = match_webfinger_location($j['subject'],$rhs);
-			if($x)
-				return $x;
-		}
-		if($j['aliases']) {
-			foreach($j['aliases'] as $alias) {
-				if(strpos($alias,'http') === 0) {
-					$x = match_webfinger_location($alias,$rhs);
-					if($x)
-						return($x);
-				}
-			}
-		}
-	}
-	return '';
-}
-
-function match_webfinger_location($s,$h) {
-
-	// GNU-social and the older StatusNet - the $host/user/123 form doesn't work
-	if(preg_match('|' . $h . '/index.php/user/([0-9]*?)$|',$s))
-		return $s;
-	// Redmatrix / hubzilla
-	if(preg_match('|' . $h . '/channel/|',$s))
-		return $s;
-	// Friendica
-	if(preg_match('|' . $h . '/profile/|',$s))
-		return $s;
-
-	$arr = array('test' => $s, 'host' => $h, 'success' => false);
-	call_hooks('match_webfinger_location',$arr);
-	if($arr['success'])
-		return $s;
-	return '';
-}
-
-
-
-
-
-
 
 function old_webfinger($webbie) {
 
@@ -1696,9 +1282,6 @@ function fetch_xrd_links($url) {
 	if ((! $xml) || (! stristr($xml,'<xrd')))
 		return array();
 
-	// fix diaspora's bad xml
-	$xml = str_replace(array('href=&quot;','&quot;/>'),array('href="','"/>'),$xml);
-
 	$h = parse_xml_string($xml);
 	if(! $h)
 		return array();
@@ -1736,85 +1319,6 @@ function fetch_xrd_links($url) {
 
 	return $links;
 }
-
-
-function scrape_vcard($url) {
-
-	$ret = array();
-
-	logger('scrape_vcard: url=' . $url);
-
-	$x = z_fetch_url($url);
-	if(! $x['success'])
-		return $ret;
-
-	$s = $x['body'];
-
-	if(! $s)
-		return $ret;
-
-	$headers = $x['header'];
-	$lines = explode("\n",$headers);
-	if(count($lines)) {
-		foreach($lines as $line) {
-			// don't try and run feeds through the html5 parser
-			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
-				return ret;
-		}
-	}
-
-	try {
-		$dom = HTML5_Parser::parse($s);
-	} catch (DOMException $e) {
-		logger('scrape_vcard: parse error: ' . $e);
-	}
-
-	if(! $dom)
-		return $ret;
-
-	// Pull out hCard profile elements
-
-	$largest_photo = 0;
-
-	$items = $dom->getElementsByTagName('*');
-	foreach($items as $item) {
-		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
-			$level2 = $item->getElementsByTagName('*');
-			foreach($level2 as $x) {
-				if(attribute_contains($x->getAttribute('id'),'pod_location'))
-					$ret['pod_location'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'fn'))
-					$ret['fn'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'uid'))
-					$ret['uid'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'nickname'))
-					$ret['nick'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'searchable'))
-					$ret['searchable'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'key'))
-					$ret['public_key'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'given_name'))
-					$ret['given_name'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'family_name'))
-					$ret['family_name'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'url'))
-					$ret['url'] = $x->textContent;
-
-				if((attribute_contains($x->getAttribute('class'),'photo'))
-					|| (attribute_contains($x->getAttribute('class'),'avatar'))) {
-					$size = intval($x->getAttribute('width'));
-					if(($size > $largest_photo) || (! $largest_photo)) {
-						$ret['photo'] = $x->getAttribute('src');
-						$largest_photo = $size;
-					}
-				}
-			}
-		}
-	}
-
-	return $ret;
-}
-
 
 
 function scrape_feed($url) {
@@ -1910,31 +1414,6 @@ function scrape_feed($url) {
 }
 
 
-
-function service_plink($contact, $guid) {
-
-	$plink = '';
-
-	$m = parse_url($contact['xchan_url']);
-	if($m) {
-		$url = $m['scheme'] . '://' . $m['host'] . (($m['port']) ? ':' . $m['port'] : '');
-	}
-	else
-		$url = 'https://' . substr($contact['xchan_addr'],strpos($contact['xchan_addr'],'@')+1);
-
-	$handle = substr($contact['xchan_addr'], 0, strpos($contact['xchan_addr'],'@'));
-
-	if($contact['xchan_network'] === 'diaspora')
-		$plink = $url . '/posts/' . $guid;
-	if($contact['xchan_network'] === 'friendica-over-diaspora')
-		$plink = $url . '/display/' . $handle . '/' . $guid;
-	if($contact['xchan_network'] === 'zot')
-		$plink = $url . '/channel/' . $handle . '?f=&mid=' . $guid;
-
-	return $plink;
-}
-
-
 function format_and_send_email($sender,$xchan,$item) {
 
 	$title = $item['title'];
@@ -1944,7 +1423,7 @@ function format_and_send_email($sender,$xchan,$item) {
 
 	$htmlversion = bbcode(str_replace(array("\\r","\\n"), array("","<br />\n"),$body));
 
-   $banner     = t('$Projectname Notification');
+	$banner     = t('$Projectname Notification');
     $product    = t('$projectname'); // PLATFORM_NAME;
     $siteurl    = z_root();
     $thanks     = t('Thank You,');

@@ -600,11 +600,6 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
-	if(array_key_exists('diaspora_signature',$x) && is_array($x['diaspora_signature']))
-		$x['diaspora_signature'] = json_encode($x['diaspora_signature']);
-
-	$arr['diaspora_meta'] = (($x['diaspora_signature']) ? $x['diaspora_signature'] : '');
-
 	$arr['obj']          = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -1035,17 +1030,7 @@ function encode_item($item,$mirror = false) {
 	if($item['iconfig'])
 		$x['meta']        = encode_item_meta($item['iconfig'],$mirror);
 
-	if($item['diaspora_meta']) {
-		$z = json_decode($item['diaspora_meta'],true);
-		if($z) {
-			if(is_array($z) && array_key_exists('iv',$z))
-				$x['diaspora_signature'] = crypto_unencapsulate($z,$key);
-			else
-				$x['diaspora_signature'] = $z;
-			if(! is_array($z))
-				logger('encode_item: diaspora meta is not an array: ' . print_r($z,true));
-		}
-	}
+
 	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
 
 	return $x;
@@ -1324,7 +1309,6 @@ function encode_mail($item,$extended = false) {
 	$x['message_parent'] = $item['parent_mid'];
 	$x['created']        = $item['created'];
 	$x['expires']        = $item['expires'];
-	$x['diaspora_meta']  = $item['diaspora_meta'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
 	$x['from']           = encode_item_xchan($item['from']);
@@ -1517,7 +1501,6 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['title'] = ((array_key_exists('title',$arr) && strlen($arr['title']))  ? trim($arr['title']) : '');
 	$arr['body']  = ((array_key_exists('body',$arr) && strlen($arr['body']))    ? trim($arr['body'])  : '');
 
-	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
@@ -2027,7 +2010,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	$arr['changed']       = $orig[0]['changed'];
 
 	$arr['route']         = ((array_key_exists('route',$arr)) ? trim($arr['route'])          : $orig[0]['route']);
-	$arr['diaspora_meta'] = ((x($arr,'diaspora_meta')) ? $arr['diaspora_meta']               : $orig[0]['diaspora_meta']);
+
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : $orig[0]['verb']);
@@ -2182,55 +2165,6 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	$ret['item_id'] = $orig_post_id;
 
 	return $ret;
-}
-
-
-
-function store_diaspora_comment_sig($datarray, $channel, $parent_item, $post_id, $walltowall = false) {
-
-	// We won't be able to sign Diaspora comments for authenticated visitors
-	// - we don't have their private key
-
-	// since Diaspora doesn't handle edits we can only do this for the original text and not update it.
-
-	require_once('include/markdown.php');
-	$signed_body = bb2diaspora_itembody($datarray,$walltowall);
-
-	if($walltowall) {
-		logger('wall to wall comment',LOGGER_DEBUG);
-		// post will come across with the owner's identity. Throw a preamble onto the post to indicate the true author.
-		$signed_body = "\n\n"
-			. '![' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_photo_m'] . ')'
-			. '[' . $datarray['author']['xchan_name'] . '](' . $datarray['author']['xchan_url'] . ')' . "\n\n"
-			. $signed_body;
-	}
-
-	logger('storing diaspora comment signature',LOGGER_DEBUG);
-
-	$diaspora_handle = channel_reddress($channel);
-
-	$signed_text = $datarray['mid'] . ';' . $parent_item['mid'] . ';' . $signed_body . ';' . $diaspora_handle;
-
-
-	if( $channel && $channel['channel_prvkey'] )
-		$authorsig = base64_encode(rsa_sign($signed_text, $channel['channel_prvkey'], 'sha256'));
-	else
-		$authorsig = '';
-
-	$x = array('signer' => $diaspora_handle, 'body' => $signed_body, 'signed_text' => $signed_text, 'signature' => $authorsig);
-
-	$y = json_encode($x);
-
-	$r = q("update item set diaspora_meta = '%s' where id = %d",
-		dbesc($y),
-		intval($post_id)
-	);
-
-
-	if(! $r)
-		logger('store_diaspora_comment_sig: DB write failed');
-
-	return;
 }
 
 

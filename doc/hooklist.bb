@@ -491,9 +491,6 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/prepare_body_init]prepare_body_init[/zrl]
 	Called before generating the HTML for a displayed conversation item
 
-[zrl=[baseurl]/help/hook/probe_well_known]probe_well_known[/zrl]
-	under construction
-
 [zrl=[baseurl]/help/hook/proc_run]proc_run[/zrl]
 	Called when invoking PHP sub processes
 

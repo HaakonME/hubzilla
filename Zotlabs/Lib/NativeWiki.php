@@ -75,6 +75,8 @@ class NativeWiki {
 		$arr['obj_type'] = ACTIVITY_OBJ_WIKI;
 		$arr['body'] = '[table][tr][td][h1]New Wiki[/h1][/td][/tr][tr][td][zrl=' . $wiki_url . ']' . $wiki['htmlName'] . '[/zrl][/td][/tr][/table]';
 
+		$arr['public_policy'] = map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_wiki'),true);
+
 		// Save the wiki name information using iconfig. This is shareable.
 		if(! set_iconfig($arr, 'wiki', 'rawName', $wiki['rawName'], true)) {
 			return array('item' => null, 'success' => false);

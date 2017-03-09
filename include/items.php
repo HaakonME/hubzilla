@@ -328,7 +328,8 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 		return $ret;
 	}
 
-	$arr['public_policy'] = ((x($_REQUEST,'public_policy')) ? escape_tags($_REQUEST['public_policy']) : map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true));
+	$arr['public_policy'] = ((array_key_exists('public_policy',$arr)) ? escape_tags($arr['public_policy']) : map_scope(\Zotlabs\Access\PermissionLimits::Get($channel['channel_id'],'view_stream'),true));
+
 	if($arr['public_policy'])
 		$arr['item_private'] = 1;
 
@@ -359,7 +360,8 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 	if(($is_comment) && ($arr['obj_type'] === ACTIVITY_OBJ_NOTE))
 		$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
-	if(! ($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid'])) {
+	if(! ( array_key_exists('allow_cid',$arr) || array_key_exists('allow_gid',$arr) 
+		|| array_key_exists('deny_cid',$arr) || array_key_exists('deny_gid',$arr))) {
 		$arr['allow_cid']    = $channel['channel_allow_cid'];
 		$arr['allow_gid']    = $channel['channel_allow_gid'];
 		$arr['deny_cid']     = $channel['channel_deny_cid'];

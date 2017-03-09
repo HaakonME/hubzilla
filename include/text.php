@@ -1183,8 +1183,7 @@ function list_smilies() {
 		':coffee',
 		':facepalm',
 		':like',
-		':dislike',
-		':hubzilla'
+		':dislike'
 	);
 
 	$icons = array(
@@ -1219,8 +1218,7 @@ function list_smilies() {
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/coffee.gif" alt=":coffee" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/like.gif" alt=":like" />',
-		'<img class="smiley" src="' . z_root() . '/images/emoticons/dislike.gif" alt=":dislike" />',
-		'<img class="smiley" src="' . z_root() . '/images/hz-16.png" alt=":hubzilla" />',
+		'<img class="smiley" src="' . z_root() . '/images/emoticons/dislike.gif" alt=":dislike" />'
 
 	);
 

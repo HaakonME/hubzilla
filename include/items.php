@@ -248,8 +248,6 @@ function can_comment_on_post($observer_xchan, $item) {
 	}
 	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'red'))
 		return true;
-	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'diaspora'))
-		return true;
 	if(strstr($item['comment_policy'],'site:') && strstr($item['comment_policy'],App::get_hostname()))
 		return true;
 
@@ -766,8 +764,6 @@ function import_author_xchan($x) {
 	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
 		$y = import_author_zot($x);
 	}
-	if(! $y)
-		$y = import_author_diaspora($x);
 
 	if($x['network'] === 'rss') {
 		$y = import_author_rss($x);
@@ -781,36 +777,6 @@ function import_author_xchan($x) {
 }
 
 /**
- * @brief Imports an author from Diaspora.
- *
- * @param array $x an associative array with
- *   * \e string \b address
- * @return boolean|string false on error, otherwise xchan_hash of the new entry
- */
-function import_author_diaspora($x) {
-	if(! $x['address'])
-		return false;
-
-	$r = q("select * from xchan where xchan_addr = '%s' limit 1",
-		dbesc($x['address'])
-	);
-	if($r) {
-		logger('in_cache: ' . $x['address'], LOGGER_DATA);
-		return $r[0]['xchan_hash'];
-	}
-
-	if(discover_by_webbie($x['address'])) {
-		$r = q("select xchan_hash from xchan where xchan_addr = '%s' limit 1",
-			dbesc($x['address'])
-		);
-		if($r)
-			return $r[0]['xchan_hash'];
-	}
-
-	return false;
-}
-
-/**
  * @brief Imports an author from a RSS feed.
  *
  * @param array $x an associative array with
@@ -819,6 +785,7 @@ function import_author_diaspora($x) {
  *   * \e string \b guid
  * @return boolean|string
  */
+
 function import_author_rss($x) {
 	if(! $x['url'])
 		return false;

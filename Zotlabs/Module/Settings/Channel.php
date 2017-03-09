@@ -575,7 +575,7 @@ class Channel {
 			'$removeme' => t('Remove Channel'),
 			'$removechannel' => t('Remove this channel.'),
 			'$firefoxshare' => t('Firefox Share $Projectname provider'),
-			'$cal_first_day' => array('first_day', t('Start calendar week on monday'), ((get_pconfig(local_channel(),'system','cal_first_day')) ? 1 : ''), '', $yes_no),
+			'$cal_first_day' => array('first_day', t('Start calendar week on Monday'), ((get_pconfig(local_channel(),'system','cal_first_day')) ? 1 : ''), '', $yes_no),
 		));
 	
 		call_hooks('settings_form',$o);

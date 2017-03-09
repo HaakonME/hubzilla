@@ -54,7 +54,8 @@
 </div><!-- /.modal -->
 </form>
 <script>
-	$('[data-toggle="popover"]').popover(); // Init the popover, if present
+	// compatibility issue with bootstrap v4
+	//$('[data-toggle="popover"]').popover(); // Init the popover, if present
 
 	if(typeof acl=="undefined"){
 		acl = new ACL(

@@ -2,6 +2,7 @@
 
 /* nav overrides */
 
+
 nav .badge {
 	position: absolute;
 	top: 1px;
@@ -14,15 +15,8 @@ nav .badge {
 	border-radius: 10px;
 }
 
-#navbar-collapse-1 i,
-.navbar-header i {
+#navbar-collapse-1 i {
 	font-size: 14px;
-}
-
-nav .navbar-header img {
-	height: 49px;
-	width: 49px;
-	margin-top: 1px;
 }
 
 /* nav overrides end */

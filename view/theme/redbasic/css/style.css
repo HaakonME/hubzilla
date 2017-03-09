@@ -570,34 +570,14 @@ footer {
 	display: none;
 }
 
-#nav-searchbar {
-	float: right;
-	margin-top: 2px;
-	margin-right: 10px;
-}
-
 #nav-search-spinner {
 	float: left;
 	margin: 25px 0px 0px 25px;
 	color: $nav_active_icon_colour;
 }
 
-#nav-search-text:hover,
-#nav-search-text:focus {
-	background-color: #fff;
-	color: #000; 
-}
-
 #nav-search-text {
-	font-size: 12px;
-	width: 200px;
-	height: 20px;
-	margin: 15px;
-	padding: 0px 5px 0px 5px;
-	border-radius: $radiuspx;
-	border-color: $nav_bd;
-	background-color: #eee;
-    	transition: background-color 300ms ease 0s;
+	width: 250px;
 }
 
 #nav-search-text::-webkit-input-placeholder {
@@ -1568,16 +1548,14 @@ nav .dropdown-menu {
 	margin-right: 5px;
 }
 
-#usermenu-caret {
-	color: $nav_icon_colour;
+.usermenu {
+	width: 32px;
+	height: 32px;
 }
 
-.usermenu-head {
-	float: left;
-}
-
-.usermenu-head:hover #usermenu-caret {
-	color: $nav_active_icon_colour;
+.usermenu img {
+	width: 100%;
+	height: 100%;
 }
 
 .page-title {
@@ -1825,25 +1803,6 @@ nav .badge.mail-update {
 
 .navbar-inverse .navbar-toggle .icon-bar {
 	background-color: $nav_active_icon_colour;
-}
-
-.navbar-toggle-extra {
-	color: $nav_active_icon_colour;
-	padding: 7px 10px;
-}
-
-.navbar-toggle-extra-left {
-	float: left;
-	margin-left: 15px;
-	margin-right: 0px;
-	color: $nav_active_icon_colour;
-	padding: 7px 10px;
-}
-
-a.navbar-toggle-extra:hover,
-a.navbar-toggle-extra-left:hover  {
-	color: $nav_active_icon_colour;
-	text-decoration: none;
 }
 
 .nav-tabs.nav-justified {

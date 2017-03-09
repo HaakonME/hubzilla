@@ -78,10 +78,10 @@
 <div class="collapse navbar-collapse " id="navbar-collapse-1">
 	<ul class="navbar-nav mr-auto">
 		{{if $nav.network}}
-		<li class="nav-item dropdown {{$sel.network}} net-button" style="display: none;">
+		<li class="nav-item dropdown net-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#nav-network-menu">
 				<i class="fa fa-fw fa-th"></i>
-				<span class="net-update"></span>
+				<span class="badge badge-pill badge-default net-update"></span>
 			</a>
 			<div id="nav-network-menu" class="dropdown-menu" rel="network">
 				<a class="dropdown-item" id="nav-network-see-all" href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a>
@@ -91,10 +91,10 @@
 		</li>
 		{{/if}}
 		{{if $nav.home}}
-		<li class="nav-item dropdown {{$sel.home}} home-button" style="display: none;">
+		<li class="nav-item dropdown home-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.home.3}}" id="{{$nav.home.4}}" data-toggle="dropdown" rel="#nav-home-menu">
 				<i class="fa fa-fw fa-home"></i>
-				<span class="home-update"></span>
+				<span class="badge badge-pill badge-danger home-update"></span>
 			</a>
 			<div id="nav-home-menu" class="dropdown-menu" rel="home">
 				<a class="dropdown-item" id="nav-home-see-all" href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a>
@@ -104,10 +104,10 @@
 		</li>
 		{{/if}}
 		{{if $nav.messages}}
-		<li class="nav-item dropdown {{$sel.messages}} mail-button" style="display: none;">
+		<li class="nav-item dropdown mail-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}" data-toggle="dropdown" rel="#nav-messages-menu">
 				<i class="fa fa-fw fa-envelope"></i>
-				<span class="mail-update"></span>
+				<span class="badge badge-pill badge-danger mail-update"></span>
 			</a>
 			<div id="nav-messages-menu" class="dropdown-menu" rel="messages">
 				<a class="dropdown-item" id="nav-messages-see-all" href="{{$nav.messages.all.0}}">{{$nav.messages.all.1}}</a>
@@ -117,10 +117,10 @@
 		</li>
 		{{/if}}
 		{{if $nav.all_events}}
-		<li class="nav-item dropdown {{$sel.all_events}} all_events-button" style="display: none;">
+		<li class="nav-item dropdown all_events-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.all_events.3}}" id="{{$nav.all_events.4}}" data-toggle="dropdown" rel="#nav-all_events-menu">
 				<i class="fa fa-fw fa-calendar"></i>
-				<span class="all_events-update"></span>
+				<span class="badge badge-pill badge-default all_events-update"></span>
 			</a>
 			<div id="nav-all_events-menu" class="dropdown-menu" rel="all_events">
 				<a class="dropdown-item" id="nav-all_events-see-all" href="{{$nav.all_events.all.0}}">{{$nav.all_events.all.1}}</a>
@@ -130,10 +130,10 @@
 		</li>
 		{{/if}}
 		{{if $nav.intros}}
-		<li class="nav-item dropdown {{$sel.intros}} intro-button" style="display: none;">
+		<li class="nav-item dropdown intro-button" style="display: none;">
 			<a class="nav-link" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
 				<i class="fa fa-fw fa-users"></i>
-				<span class="intro-update"></span>
+				<span class="badge badge-pill badge-danger intro-update"></span>
 			</a>
 			<div id="nav-intros-menu" class="dropdown-menu" rel="intros">
 				<a class="dropdown-item" id="nav-intros-see-all" href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a>
@@ -142,10 +142,10 @@
 		</li>
 		{{/if}}
 		{{if $nav.notifications}}
-		<li class="nav-item dropdown {{$sel.notifications}} notify-button" style="display: none;">
+		<li class="nav-item dropdown notify-button" style="display: none;">
 			<a class="nav-link" href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#nav-notify-menu">
 				<i class="fa fa-fw fa-exclamation"></i>
-				<span class="notify-update"></span>
+				<span class="badge badge-pill badge-danger notify-update"></span>
 			</a>
 			<div id="nav-notify-menu" class="dropdown-menu" rel="notify">
 				<a class="dropdown-item" id="nav-notify-see-all" href="{{$nav.notifications.all.0}}">{{$nav.notifications.all.1}}</a>

@@ -3,19 +3,15 @@
 /* nav overrides */
 
 nav .badge {
+	font-size: 100%;
 	position: absolute;
 	top: 1px;
 	left: 1px;
-	font-size: 10px;
-	line-height: 20px;
-	padding: 0px 5px;
-	height: 20px;
-	min-width: 20px;
-	border-radius: 10px;
+
 }
 
 #navbar-collapse-1 i {
-	font-size: 14px;
+	font-size: 1rem;
 }
 
 /* nav overrides end */
@@ -27,7 +23,6 @@ aside .nav-pills > li > a,
 }
 
 nav .dropdown-menu {
-	margin-top: 0px;
 	max-height: 70vh;
 	overflow: auto;
 }

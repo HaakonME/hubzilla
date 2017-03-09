@@ -122,7 +122,7 @@ if (! $toolicon_activecolour)
 if (! $item_opacity)
 	$item_opacity = "1";
 if (! $font_size)
-	$font_size = "0.9rem";
+	$font_size = "1rem";
 if (! $body_font_size)
 	$body_font_size = "0.75rem";
 if (! $font_colour)

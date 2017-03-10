@@ -17,6 +17,8 @@ branches:
   only:
   - master
   - dev
+  # whitelist our tags for release deployments e.g. 2.2
+  - /^\d+\.\d+(\.\d+)?(-\S*)?$/
 
 # Install additional software
 addons:
@@ -45,7 +47,6 @@ env:
   global:
     # used for doxygen deployment script
     - DOXYFILE: $TRAVIS_BUILD_DIR/util/Doxyfile
-    - GHP_REPO_REF: github.com/redmatrix/hubzilla.git
     # Uncomment if a newer/specific version of Doxygen should be used
     #- DOXY_VER: 1.8.12
     # Code Coverage is slow, no need to have it in every build
@@ -123,15 +124,26 @@ after_success:
   - ./tests/travis/gen_apidocs.sh
 #after_failure:
 
-# Deploying a release to GitHub when tagging in master
-# Waiting for upcoming 'Build Stages' Q1/Q2 2017 to make generation of API docs
-# and release packages cleaner. https://github.com/travis-ci/travis-ci/issues/929
+# Deploying release and API documentation to GitHub
 #before_deploy:
-#deploy:
-#  skip_cleaning: true
-#  provider: releases
-#  on:
-#    tags: true
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    local_dir: $TRAVIS_BUILD_DIR/doc/html
+    github_token: $GH_TOKEN
+    on:
+      repo: redmatrix/hubzilla
+      branch: master
+      condition: '(-n "$GH_TOKEN") && ("$TRAVIS_JOB_NUMBER" == "${TRAVIS_BUILD_NUMBER}.1")'
+  # add API documentation to release, could also be used to provide full packages if we want to drop vendor from our repo
+  - provider: releases
+    skip_cleanup: true
+    api_key: $GH_TOKEN
+    file: 'doc/hubzilla-api-documentation.zip'
+    on:
+      repo: redmatrix/hubzilla
+      tags: true
+      condition: '(-n "$GH_TOKEN") && ("$TRAVIS_JOB_NUMBER" == "${TRAVIS_BUILD_NUMBER}.1")'
 #after_deploy:
 
 #after_script:

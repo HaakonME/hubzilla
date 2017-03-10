@@ -1169,9 +1169,15 @@ margin-right: 50px;
 }
 
 .generic-icons {
-	font-size: 1.2em;
+	font-size: 1rem;
 	color: $toolicon_colour;
-	margin-right: 7px;
+	margin-right: 0.5rem;
+}
+
+.generic-icons-right {
+	font-size: 1rem;
+	color: $toolicon_colour;
+	margin-left: 0.5rem;
 }
 
 .generic-icons:hover {
@@ -1474,6 +1480,11 @@ img.mail-conv-sender-photo {
 
 .widget h3 {
 	color: $toolicon_colour;
+}
+
+.widget .nav-item:hover {
+	background-color: #eee;
+	border-radius: $radiuspx;
 }
 
 #note-text {
@@ -2061,17 +2072,6 @@ dl.bb-dl > dd > li {
 	margin-top: 10px;
 	padding-left: 15px;
 	border-left: 3px solid #eee;
-}
-
-.nav-pills-stacked-icons {
-	padding: 6px 10px;
-	float: right;
-	position: relative;
-	z-index:1;
-}
-
-.nav-pills-stacked-icons:hover + a {
-	background-color: #eee;
 }
 
 .app-icon {

@@ -75,7 +75,7 @@
 	{{/if}}
 </div>
 {{/if}}
-<div class="collapse navbar-collapse " id="navbar-collapse-1">
+<div class="collapse navbar-collapse" id="navbar-collapse-1">
 	<ul class="navbar-nav mr-auto">
 		{{if $nav.network}}
 		<li class="nav-item dropdown net-button" style="display: none;">
@@ -154,21 +154,21 @@
 			</div>
 		</li>
 		{{/if}}
-			{{if $nav.login && !$userinfo}}
-			<li class="nav-item">
-				<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
-			</li>
-			{{/if}}
-			{{if $nav.register}}
-			<li class="nav-item {{$nav.register.2}} hidden-xs-down">
-				<a class="nav-link" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a>
-			</li>
-			{{/if}}
-			{{if $nav.alogout}}
-			<li class="nav-item {{$nav}}-alogout.2 hidden-xs-down">
-				<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
-			</li>
-			{{/if}}
+		{{if $nav.login && !$userinfo}}
+		<li class="nav-item">
+			<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
+		</li>
+		{{/if}}
+		{{if $nav.register}}
+		<li class="nav-item {{$nav.register.2}} hidden-xs-down">
+			<a class="nav-link" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a>
+		</li>
+		{{/if}}
+		{{if $nav.alogout}}
+		<li class="nav-item {{$nav}}-alogout.2 hidden-xs-down">
+			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
+		</li>
+		{{/if}}
 	</ul>
 
 	<!--div class="navbar-text hidden-lg-down">Hubzilla</div-->

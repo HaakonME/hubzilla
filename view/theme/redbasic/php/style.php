@@ -102,7 +102,7 @@ if (! $nav_icon_colour)
 if (! $nav_active_icon_colour)
 	$nav_active_icon_colour = "#fff";
 if (! $link_colour)
-	$link_colour = "#337AB7";
+	$link_colour = "#0275d8";
 if (! $banner_colour)
 	$banner_colour = "#fff";
 if (! $bgcolour)

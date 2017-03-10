@@ -20,32 +20,13 @@
 
 .widget-nav-pills-icons {
 	opacity: 0;
-	padding: 6px 10px;
 	float: right;
-	position: relative;
-	z-index:1;
 }
-
 
 .widget-nav-pills-checkbox {
-	padding: 6px 10px;
+	padding: 0.6rem 1.4rem;
 	float: right;
-	position: relative;
-	z-index:1;
 	cursor: pointer;
-}
-
-i.widget-nav-pills-icons,
-i.widget-nav-pills-checkbox {
-	margin-top: 2px;
-}
-
-.widget-nav-pills-icons:hover + a {
-	background-color: #eee;
-}
-
-.widget-nav-pills-checkbox:hover + a {
-	background-color: #eee;
 }
 
 li:hover .widget-nav-pills-icons {

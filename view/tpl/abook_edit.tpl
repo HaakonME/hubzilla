@@ -4,7 +4,7 @@
 		<div class="pull-right">
 			<div class="btn-group">
 				<button id="connection-dropdown" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
+					<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
 					<li><a  href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a></li>

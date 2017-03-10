@@ -22,9 +22,9 @@
 	
 	function docoTocToggle() {
 		if($('#doco-top-toc').is(':visible')) {
-			$('#doco-toc-toggle').removeClass('fa-caret-down').addClass('fa-caret-right');
+			$('#doco-toc-toggle').removeClass('fa-cog').addClass('fa-caret-right');
 		} else {
-			$('#doco-toc-toggle').removeClass('fa-caret-right').addClass('fa-caret-down');
+			$('#doco-toc-toggle').removeClass('fa-caret-right').addClass('fa-cog');
 		}
 		$('#doco-top-toc').toggle();
 		

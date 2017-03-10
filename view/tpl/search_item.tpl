@@ -71,7 +71,7 @@
 			<div class="wall-item-tools">
 				<div class="wall-item-tools-right btn-group pull-right">
 					<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-caret-down"></i>
+						<i class="fa fa-cog"></i>
 					</button>
 					<ul class="dropdown-menu">
 						{{if $item.thread_action_menu}}

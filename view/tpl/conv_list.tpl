@@ -113,7 +113,7 @@
 						{{/if}}
 
 						<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
-							<i class="fa fa-caret-down"></i>
+							<i class="fa fa-cog"></i>
 						</button>
 						<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-menu-{{$item.id}}">
 							{{if $item.share}}

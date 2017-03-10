@@ -2,7 +2,7 @@
 	<div class="section-title-wrapper">
 		<div class="pull-right">
 			<div class="dropdown">
-				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i>&nbsp;{{$view_label}}</button>
+				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i>&nbsp;{{$view_label}}</button>
 				<ul class="dropdown-menu">
 					<li><a href="#" onclick="changeView('changeView', 'month'); return false;">{{$month}}</a></li>
 					<li><a href="#" onclick="changeView('changeView', 'agendaWeek'); return false;">{{$week}}</a></li>

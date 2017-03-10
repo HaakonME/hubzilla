@@ -77,7 +77,7 @@
 						{{/if}}
 						<div class="btn-group visible-xs visible-sm">
 							<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-								<i id="more-tools-icon" class="fa fa-caret-down jot-icons"></i>
+								<i id="more-tools-icon" class="fa fa-cog jot-icons"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu">
 								<li class="visible-xs"><a href="#" id="prvmail-attach-sub"><i class="fa fa-paperclip"></i>&nbsp;{{$attach}}</a></li>

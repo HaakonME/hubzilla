@@ -3,12 +3,12 @@
 function toggle_posted_date_button() {
 	if($('#posted-date-dropdown').is(':visible')) {
 		$('#posted-date-icon').removeClass('fa-caret-up');
-		$('#posted-date-icon').addClass('fa-caret-down');
+		$('#posted-date-icon').addClass('fa-cog');
 		$('#posted-date-dropdown').hide();
 	}
 	else {
 		$('#posted-date-icon').addClass('fa-caret-up');
-		$('#posted-date-icon').removeClass('fa-caret-down');
+		$('#posted-date-icon').removeClass('fa-cog');
 		$('#posted-date-dropdown').show();
 	}
 }
@@ -40,7 +40,7 @@ function toggle_posted_date_button() {
 		{{/foreach}}
 		{{if $cutoff}}
 		</div>
-		<button class="btn btn-outline-secondary btn-sm" onclick="toggle_posted_date_button(); return false;"><i id="posted-date-icon" class="fa fa-caret-down"></i></button>
+		<button class="btn btn-outline-secondary btn-sm" onclick="toggle_posted_date_button(); return false;"><i id="posted-date-icon" class="fa fa-cog"></i></button>
 		{{/if}}
 	</ul>
 </div>

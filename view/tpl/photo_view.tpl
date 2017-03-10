@@ -5,7 +5,7 @@
 			{{if $tools || $map || $edit}}
 			<div class="btn-group">
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
+					<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right">
 					{{if $tools}}

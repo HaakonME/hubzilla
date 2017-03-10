@@ -10,17 +10,16 @@ nav .badge {
 
 }
 
+.nav-item.nav-item-hack {
+	height: 1.9rem;
+}
+
 #navbar-collapse-1 i {
 	font-size: 1rem;
 }
 
 /* nav overrides end */
 
-
-aside .nav-pills > li > a,
-.response-list .nav-pills > li > a {
-	padding: 6px 10px;
-}
 
 nav .dropdown-menu {
 	max-height: 70vh;

@@ -128,7 +128,7 @@
 				{{if $writefiles || $weblink || $setloc || $clearloc || $feature_expire || $feature_encrypt || $feature_voting}}
 				<div class="btn-group visible-xs visible-sm">
 					<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-						<i id="more-tools-icon" class="fa fa-caret-down jot-icons"></i>
+						<i id="more-tools-icon" class="fa fa-cog jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu" role="menu">
 						{{if $visitor}}

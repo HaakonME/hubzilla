@@ -21,7 +21,7 @@
 		{{/if}}
 		<div class="pull-right dropdown">
 			<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="mail-item-menu-{{$mail.id}}">
-				<i class="fa fa-caret-down"></i>
+				<i class="fa fa-cog"></i>
 			</button>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="mail-item-menu-{{$mail.id}}">
 				{{if $mail.can_recall}}

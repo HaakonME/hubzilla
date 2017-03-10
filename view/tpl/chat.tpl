@@ -5,11 +5,11 @@
 			<form id="chat-destroy" method="post" action="chat">
 				<input type="hidden" name="room_name" value="{{$room_name}}" />
 				<input type="hidden" name="action" value="drop" />
-				<button class="btn btn-danger btn-xs" type="submit" name="submit" value="{{$drop}}" onclick="return confirmDelete();"><i class="fa fa-trash-o"></i>&nbsp;{{$drop}}</button>
+				<button class="btn btn-danger btn-sm" type="submit" name="submit" value="{{$drop}}" onclick="return confirmDelete();"><i class="fa fa-trash-o"></i>&nbsp;{{$drop}}</button>
 			</form>
 			{{/if}}
-			<button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenTopBarHeight();"><i class="fa fa-expand"></i></button>
-			<button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false); adjustInlineTopBarHeight();"><i class="fa fa-compress"></i></button>
+			<button id="fullscreen-btn" type="button" class="btn btn-outline-secondary btn-sm" onclick="makeFullScreen(); adjustFullscreenTopBarHeight();"><i class="fa fa-expand"></i></button>
+			<button id="inline-btn" type="button" class="btn btn-outline-secondary btn-sm" onclick="makeFullScreen(false); adjustInlineTopBarHeight();"><i class="fa fa-compress"></i></button>
 		</div>
 		<h2>{{$room_name}}</h2>
 		<div class="clear"></div>
@@ -27,7 +27,7 @@
 				</div>
 				<div id="chat-submit-wrapper">
 					<div id="chat-submit" class="dropup pull-right">
-						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-caret-up"></i></button>
+						<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-caret-up"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="chat-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 						<ul class="dropdown-menu">
 							<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online"><i class="fa fa-circle online"></i>&nbsp;{{$online}}</a></li>
@@ -44,36 +44,36 @@
 					</div>
 					<div id="chat-tools" class="btn-toolbar pull-left">
 						<div class="btn-group">
-							<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'chatText'); return false;">
+							<button id="main-editor-bold" class="btn btn-outline-secondary btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'chatText'); return false;">
 								<i class="fa fa-bold jot-icons"></i>
 							</button>
-							<button id="main-editor-italic" class="btn btn-default btn-sm" title="{{$italic}}" onclick="inserteditortag('i', 'chatText'); return false;">
+							<button id="main-editor-italic" class="btn btn-outline-secondary btn-sm" title="{{$italic}}" onclick="inserteditortag('i', 'chatText'); return false;">
 								<i class="fa fa-italic jot-icons"></i>
 							</button>
-							<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u', 'chatText'); return false;">
+							<button id="main-editor-underline" class="btn btn-outline-secondary btn-sm" title="{{$underline}}" onclick="inserteditortag('u', 'chatText'); return false;">
 								<i class="fa fa-underline jot-icons"></i>
 							</button>
-							<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'chatText'); return false;">
+							<button id="main-editor-quote" class="btn btn-outline-secondary btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'chatText'); return false;">
 								<i class="fa fa-quote-left jot-icons"></i>
 							</button>
-							<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'chatText'); return false;">
+							<button id="main-editor-code" class="btn btn-outline-secondary btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'chatText'); return false;">
 								<i class="fa fa-terminal jot-icons"></i>
 							</button>
 						</div>
 						<div class="btn-group hidden-xs">
-							<button id="chat-link-wrapper" class="btn btn-default btn-sm" onclick="chatJotGetLink(); return false;" >
+							<button id="chat-link-wrapper" class="btn btn-outline-secondary btn-sm" onclick="chatJotGetLink(); return false;" >
 								<i id="chat-link" class="fa fa-link jot-icons" title="{{$insert}}" ></i>
 							</button>
 						</div>
 						{{if $feature_encrypt}}
 						<div class="btn-group hidden-xs">
-							<button id="chat-encrypt-wrapper" class="btn btn-default btn-sm" onclick="red_encrypt('{{$cipher}}', '#chatText', $('#chatText').val()); return false;">
+							<button id="chat-encrypt-wrapper" class="btn btn-outline-secondary btn-sm" onclick="red_encrypt('{{$cipher}}', '#chatText', $('#chatText').val()); return false;">
 								<i id="chat-encrypt" class="fa fa-key jot-icons" title="{{$encrypt}}" ></i>
 							</button>
 						</div>
 						{{/if}}
 						<div class="btn-group dropup visible-xs">
-							<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 								<i id="more-tools-icon" class="fa fa-caret-up jot-icons"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu">

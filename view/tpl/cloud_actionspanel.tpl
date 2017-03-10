@@ -8,7 +8,7 @@
 		<div class="pull-right btn-group">
 			<div class="btn-group">
 				{{if $lockstate}}
-				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" type="button">
+				<button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" type="button">
 					<i class="jot-perms-icon fa fa-{{$lockstate}}"></i>
 				</button>
 				{{/if}}
@@ -29,7 +29,7 @@
 		<div class="pull-right btn-group">
 			<div class="btn-group">
 				{{if $lockstate}}
-				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" type="button">
+				<button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" type="button">
 					<i class="jot-perms-icon fa fa-{{$lockstate}}"></i>
 				</button>
 				{{/if}}

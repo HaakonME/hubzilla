@@ -81,7 +81,7 @@
 					<div class="wall-item-tools-right pull-right">
 						{{if $item.toplevel && $item.emojis && $item.reactions}}
 						<div class="btn-group dropdown">
-							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-react-{{$item.id}}">
+							<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-react-{{$item.id}}">
 								<i class="fa fa-smile-o"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="wall-item-react-{{$item.id}}">
@@ -93,18 +93,18 @@
 						{{/if}}
 						<div class="btn-group dropdown">
 							{{if $item.like}}
-							<button type="button" title="{{$item.like.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false;">
+							<button type="button" title="{{$item.like.0}}" class="btn btn-outline-secondary btn-sm" onclick="dolike({{$item.id}},'like'); return false;">
 								<i class="fa fa-thumbs-o-up{{if $item.my_responses.like}} ivoted{{/if}}" ></i>
 							</button>
 							{{/if}}
 							{{if $item.dislike}}
-							<button type="button" title="{{$item.dislike.0}}" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false;">
+							<button type="button" title="{{$item.dislike.0}}" class="btn btn-outline-secondary btn-sm" onclick="dolike({{$item.id}},'dislike'); return false;">
 								<i class="fa fa-thumbs-o-down{{if $item.my_responses.dislike}} ivoted{{/if}}" ></i>
 							</button>
 							{{/if}}
 							{{if $item.isevent}}
 							<div class="btn-group dropdown">
-								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-attend-menu-{{$item.id}}" title="{{$item.attend_title}}">
+								<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-attend-menu-{{$item.id}}" title="{{$item.attend_title}}">
 									<i class="fa fa-calendar-check-o"></i>
 								</button>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-attend-menu-{{$item.id}}">
@@ -122,7 +122,7 @@
 							{{/if}}
 							{{if $item.canvote}}
 							<div class="btn-group dropdown">
-								<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-consensus-menu-{{$item.id}}" title="{{$item.vote_title}}">
+								<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-consensus-menu-{{$item.id}}" title="{{$item.vote_title}}">
 									<i class="fa fa-check-square-o"></i>
 								</button>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-consensus-menu-{{$item.id}}">
@@ -138,7 +138,7 @@
 								</ul>
 							</div>
 							{{/if}}
-							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
+							<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
 								<i class="fa fa-caret-down"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="wall-item-menu-{{$item.id}}">
@@ -196,14 +196,14 @@
 					<div class="wall-item-tools-left{{if ($item.responses.count > 1) || ($item.responses.count &&  $item.attachments)}} btn-group{{/if}}">
 						{{if $item.attachments}}
 						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="attachment-menu-{{$item.id}}"><i class="fa fa-paperclip"></i></button>
+							<button type="button" class="btn btn-outline-secondary btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="attachment-menu-{{$item.id}}"><i class="fa fa-paperclip"></i></button>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="attachment-menu-{{$item.id}}">{{$item.attachments}}</ul>
 						</div>
 						{{/if}}
 						{{foreach $item.responses as $verb=>$response}}
 						{{if $response.count}}
 						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-{{$verb}}-{{$item.id}}">{{$response.count}} {{$response.button}}</button>
+							<button type="button" class="btn btn-outline-secondary btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-{{$verb}}-{{$item.id}}">{{$response.count}} {{$response.button}}</button>
 							{{if $response.list_part}}
 							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-{{$verb}}-{{$item.id}}">{{foreach $response.list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 							{{else}}
@@ -221,7 +221,7 @@
 										<ul class="nav nav-pills nav-stacked">{{foreach $response.list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
 										</div>
 										<div class="modal-footer clear">
-											<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+											<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$item.modal_dismiss}}</button>
 										</div>
 									</div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->

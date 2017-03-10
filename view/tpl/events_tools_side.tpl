@@ -9,7 +9,7 @@
 			<div class="form-group">
 				<input id="event-upload-choose" type="file" name="userfile" />
 			</div>
-			<button id="dbtn-submit" class="btn btn-primary btn-xs" type="submit" name="submit" >{{$submit}}</button>
+			<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$submit}}</button>
 		</form>
 	</div>
 </div>

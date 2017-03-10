@@ -72,7 +72,7 @@
 						{{include file="field_checkbox.tpl" field=$manual_update}}
 						{{if $expert}}
 						<div class="form-group">
-							<a class="btn btn-default "href="pdledit">{{$layout_editor}}</a>
+							<a class="btn btn-outline-secondary "href="pdledit">{{$layout_editor}}</a>
 						</div>
 						{{/if}}
 						<div class="settings-submit-wrapper" >

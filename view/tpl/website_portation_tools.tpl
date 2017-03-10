@@ -14,7 +14,7 @@
 										<div class="input-group">
 												<input class="widget-input" type="text" name="path" title="{{$hint}}" placeholder="{{$desc}}" />
 												<div class="input-group-btn">
-														<button class="btn btn-default btn-sm" type="submit" name="cloudsubmit" value="{{$select}}"><i class="fa fa-folder-open generic-icons"></i></button>
+														<button class="btn btn-outline-secondary btn-sm" type="submit" name="cloudsubmit" value="{{$select}}"><i class="fa fa-folder-open generic-icons"></i></button>
 												</div>
 										</div>
 								</div>
@@ -26,7 +26,7 @@
 										<div class="input-group">
 												<input class="widget-input" type="file" name="zip_file" />
 												<div class="input-group-btn">
-														<button class="btn btn-default btn-sm" type="submit" name="w_upload" value="w_upload"><i class="fa fa-file-archive-o generic-icons"></i></button>
+														<button class="btn btn-outline-secondary btn-sm" type="submit" name="w_upload" value="w_upload"><i class="fa fa-file-archive-o generic-icons"></i></button>
 												</div>
 										</div>
 								</div>
@@ -48,7 +48,7 @@
 										<div class="input-group">
 												<input class="widget-input" type="text" name="zipfilename" title="{{$filename_hint}}" placeholder="{{$filename_desc}}" value="" />
 												<div class="input-group-btn">
-														<button class="btn btn-default btn-sm" type="submit" name="w_download" value="w_download"><i class="fa fa-download generic-icons"></i></button>
+														<button class="btn btn-outline-secondary btn-sm" type="submit" name="w_download" value="w_download"><i class="fa fa-download generic-icons"></i></button>
 												</div>
 										</div>
 								</div>
@@ -62,7 +62,7 @@
 										<div class="input-group">
 												<input class="widget-input" type="text" name="exportcloudpath" title="{{$cloud_export_hint}}" placeholder="{{$cloud_export_desc}}" />
 												<div class="input-group-btn">
-														<button class="btn btn-default btn-sm" type="submit" name="exportcloudsubmit" value="{{$cloud_export_select}}"><i class="fa fa-folder-open generic-icons"></i></button>
+														<button class="btn btn-outline-secondary btn-sm" type="submit" name="exportcloudsubmit" value="{{$cloud_export_select}}"><i class="fa fa-folder-open generic-icons"></i></button>
 												</div>
 										</div>
 								</div>

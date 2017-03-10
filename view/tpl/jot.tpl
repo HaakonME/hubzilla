@@ -50,19 +50,19 @@
 			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
 				{{if $bbcode}}
 				<div class="btn-group">
-					<button id="main-editor-bold" class="btn btn-default btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
+					<button id="main-editor-bold" class="btn btn-outline-secondary btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="fa fa-bold jot-icons"></i>
 					</button>
-					<button id="main-editor-italic" class="btn btn-default btn-sm" title="{{$italic}}" onclick="inserteditortag('i', 'profile-jot-text'); return false;">
+					<button id="main-editor-italic" class="btn btn-outline-secondary btn-sm" title="{{$italic}}" onclick="inserteditortag('i', 'profile-jot-text'); return false;">
 						<i class="fa fa-italic jot-icons"></i>
 					</button>
-					<button id="main-editor-underline" class="btn btn-default btn-sm" title="{{$underline}}" onclick="inserteditortag('u', 'profile-jot-text'); return false;">
+					<button id="main-editor-underline" class="btn btn-outline-secondary btn-sm" title="{{$underline}}" onclick="inserteditortag('u', 'profile-jot-text'); return false;">
 						<i class="fa fa-underline jot-icons"></i>
 					</button>
-					<button id="main-editor-quote" class="btn btn-default btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
+					<button id="main-editor-quote" class="btn btn-outline-secondary btn-sm" title="{{$quote}}" onclick="inserteditortag('quote', 'profile-jot-text'); return false;">
 						<i class="fa fa-quote-left jot-icons"></i>
 					</button>
-					<button id="main-editor-code" class="btn btn-default btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
+					<button id="main-editor-code" class="btn btn-outline-secondary btn-sm" title="{{$code}}" onclick="inserteditortag('code', 'profile-jot-text'); return false;">
 						<i class="fa fa-terminal jot-icons"></i>
 					</button>
 				</div>
@@ -70,29 +70,29 @@
 				{{if $visitor}}
 				<div class="btn-group hidden-xs hidden-sm">
 					{{if $writefiles}}
-					<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
+					<button id="wall-file-upload" class="btn btn-outline-secondary btn-sm" title="{{$attach}}" >
 						<i id="wall-file-upload-icon" class="fa fa-paperclip jot-icons"></i>
 					</button>
 					{{/if}}
 					{{if $weblink}}
-					<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
+					<button id="profile-link-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 						<i id="profile-link" class="fa fa-link jot-icons"></i>
 					</button>
 					{{/if}}
 					{{if $embedPhotos}}
-					<button id="embed-photo-wrapper" class="btn btn-default btn-sm" title="{{$embedPhotos}}" onclick="initializeEmbedPhotoDialog();return false;">
+					<button id="embed-photo-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$embedPhotos}}" onclick="initializeEmbedPhotoDialog();return false;">
 						<i id="embed-photo" class="fa fa-file-image-o jot-icons"></i>
 					</button>
 					{{/if}}
 				</div>
 				<div class="btn-group hidden-xs hidden-sm">
 					{{if $setloc}}
-					<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
+					<button id="profile-location-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
 						<i id="profile-location" class="fa fa-globe jot-icons"></i>
 					</button>
 					{{/if}}
 					{{if $clearloc}}
-					<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" title="{{$clearloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
+					<button id="profile-nolocation-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$clearloc}}" onclick="jotClearLocation();return false;" disabled="disabled">
 						<i id="profile-nolocation" class="fa fa-circle-o jot-icons"></i>
 					</button>
 					{{/if}}
@@ -100,34 +100,34 @@
 				<div class="btn-group hidden-xs hidden-sm">
 				{{/if}}
 				{{if $feature_expire}}
-					<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
+					<button id="profile-expire-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
 						<i id="profile-expires" class="fa fa-eraser jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_future}}
-					<button id="profile-future-wrapper" class="btn btn-default btn-sm" title="{{$future_txt}}" onclick="jotGetPubDate();return false;">
+					<button id="profile-future-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$future_txt}}" onclick="jotGetPubDate();return false;">
 						<i id="profile-future" class="fa fa-clock-o jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_encrypt}}
-					<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
+					<button id="profile-encrypt-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
 						<i id="profile-encrypt" class="fa fa-key jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_voting}}
-					<button id="profile-voting-wrapper" class="btn btn-default btn-sm" title="{{$voting}}" onclick="toggleVoting();return false;">
+					<button id="profile-voting-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$voting}}" onclick="toggleVoting();return false;">
 						<i id="profile-voting" class="fa fa-square-o jot-icons"></i>
 					</button>
 				{{/if}}
 				{{if $feature_nocomment}}
-					<button id="profile-nocomment-wrapper" class="btn btn-default btn-sm" title="{{$nocommenttitle}}" onclick="toggleNoComment();return false;">
+					<button id="profile-nocomment-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$nocommenttitle}}" onclick="toggleNoComment();return false;">
 						<i id="profile-nocomment" class="fa fa-comments jot-icons"></i>
 					</button>
 				{{/if}}
 				</div>
 				{{if $writefiles || $weblink || $setloc || $clearloc || $feature_expire || $feature_encrypt || $feature_voting}}
 				<div class="btn-group visible-xs visible-sm">
-					<button type="button" id="more-tools" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+					<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="fa fa-caret-down jot-icons"></i>
 					</button>
 					<ul class="dropdown-menu" role="menu">
@@ -169,17 +169,17 @@
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $preview}}
-				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
+				<button class="btn btn-outline-secondary btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="fa fa-eye jot-icons" ></i>
 				</button>
 				{{/if}}
 				{{if $jotnets}}
-				<button id="dbtn-jotnets" class="btn btn-default btn-sm" data-toggle="modal" data-target="#jotnetsModal" type="button" title="{{$jotnets_label}}" style="{{if $lockstate == 'lock'}}display: none;{{/if}}">
+				<button id="dbtn-jotnets" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#jotnetsModal" type="button" title="{{$jotnets_label}}" style="{{if $lockstate == 'lock'}}display: none;{{/if}}">
 					<i class="fa fa-share-alt jot-icons"></i>
 				</button>
 				{{/if}}
 				{{if $showacl}}
-				<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button" data-form_id="profile-jot-form">
+				<button id="dbtn-acl" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button" data-form_id="profile-jot-form">
 					<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons{{if $bang}} jot-lock-warn{{/if}}"></i>
 				</button>
 				{{/if}}
@@ -203,7 +203,7 @@
 							{{$jotnets}}
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
 						</div>
 					</div><!-- /.modal-content -->
 				</div><!-- /.modal-dialog -->
@@ -239,7 +239,7 @@
 				</script>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
 				<button id="expiry-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
 			</div>
 		</div><!-- /.modal-content -->
@@ -266,7 +266,7 @@
 				</script>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
 				<button id="created-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
 			</div>
 		</div><!-- /.modal-content -->
@@ -289,7 +289,7 @@
 				<div id="embedPhotoModalBodyAlbumDialog" class="hide"></div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
 				<button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
 			</div>
 		</div><!-- /.modal-content -->

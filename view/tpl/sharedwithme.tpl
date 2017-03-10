@@ -1,6 +1,6 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		<a href="/sharedwithme/dropall" onclick="return confirmDelete();" class="btn btn-xs btn-default pull-right"><i class="fa fa-trash-o"></i>&nbsp;{{$dropall}}</a>
+		<a href="/sharedwithme/dropall" onclick="return confirmDelete();" class="btn btn-sm btn-outline-secondary pull-right"><i class="fa fa-trash-o"></i>&nbsp;{{$dropall}}</a>
 		<h2>{{$header}}</h2>
 	</div>
 	<div class="section-content-wrapper-np">

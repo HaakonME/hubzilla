@@ -8,7 +8,7 @@
 				$.post(baseurl + '/locs','drop='+id,function(data) { window.location.href=window.location.href; });
 			}
 		</script>
-		<button class="btn btn-success btn-xs pull-right" onclick="window.location.href='/locs/f=&sync=1'; return false;"><i class="fa fa-refresh"></i>&nbsp;{{$sync}}</button>
+		<button class="btn btn-success btn-sm pull-right" onclick="window.location.href='/locs/f=&sync=1'; return false;"><i class="fa fa-refresh"></i>&nbsp;{{$sync}}</button>
 		<h2>{{$header}}</h2>
 	</div>
 	<div class="section-content-wrapper-np">

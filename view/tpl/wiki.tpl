@@ -3,7 +3,7 @@
 		<div class="pull-right">
 			{{if $showPageControls}}
 			<div id="page-tools" class="btn-group" style="display: none;">
-				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
 					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right">
@@ -18,8 +18,8 @@
 				</ul>
 			</div>	
 			{{/if}}
-			<button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenEditorHeight();"><i class="fa fa-expand"></i></button>
-			<button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false); adjustInlineEditorHeight()"><i class="fa fa-compress"></i></button>
+			<button id="fullscreen-btn" type="button" class="btn btn-outline-secondary btn-sm" onclick="makeFullScreen(); adjustFullscreenEditorHeight();"><i class="fa fa-expand"></i></button>
+			<button id="inline-btn" type="button" class="btn btn-outline-secondary btn-sm" onclick="makeFullScreen(false); adjustInlineEditorHeight()"><i class="fa fa-compress"></i></button>
 		</div>
 		<h2>
 			<span id="wiki-header-name">{{$wikiheaderName}}</span>:
@@ -35,7 +35,7 @@
 					<button id="rename-page-submit" class="btn btn-primary" type="submit" name="submit">Submit</button>
 				</div>
 				<div>
-					<button class="btn btn-default rename-page" type="button">Cancel</button>
+					<button class="btn btn-outline-secondary rename-page" type="button">Cancel</button>
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -97,7 +97,7 @@
 				<div id="embedPhotoModalBodyAlbumDialog" class="hide"></div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
 				<button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
 			</div>
 		</div><!-- /.modal-content -->

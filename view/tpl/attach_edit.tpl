@@ -7,19 +7,19 @@
 	{{if $isadir}}{{include file="field_checkbox.tpl" field=$recurse}}{{/if}}
 	<div id="attach-edit-tools-share" class="btn-group form-group">
 		{{if !$isadir}}
-		<a href="/rpost?attachment=[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" id="attach-btn" class="btn btn-default btn-xs" title="{{$attach_btn_title}}">
+		<a href="/rpost?attachment=[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" id="attach-btn" class="btn btn-outline-secondary btn-sm" title="{{$attach_btn_title}}">
 			<i class="fa fa-share-square-o jot-icons"></i>
 		</a>
 		{{/if}}
-		<button id="link-btn" class="btn btn-default btn-xs" type="button" onclick="openClose('link-code');" title="{{$link_btn_title}}">
+		<button id="link-btn" class="btn btn-outline-secondary btn-sm" type="button" onclick="openClose('link-code');" title="{{$link_btn_title}}">
 			<i class="fa fa-link jot-icons"></i>
 		</button>
 	</div>
 	<div id="attach-edit-perms" class="btn-group pull-right">
-		<button id="dbtn-acl" class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button">
+		<button id="dbtn-acl" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" type="button">
 			<i id="jot-perms-icon" class="fa fa-{{$lockstate}} jot-icons"></i>
 		</button>
-		<button id="dbtn-submit" class="btn btn-primary btn-xs" type="submit" name="submit">
+		<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit">
 			{{$submit}}
 		</button>
 	</div>

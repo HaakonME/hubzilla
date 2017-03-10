@@ -2,8 +2,8 @@
 	<div class="section-title-wrapper">
 		{{if $editor}}
 		<div class="pull-right">
-			<button id="webpage-create-btn" class="btn btn-xs btn-success" onclick="openClose('layout-editor');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$create}}</button>
-			<a href="{{$help.url}}" target="_blank" class="btn btn-xs btn-warning" title="{{$help.title}}"><i class="fa fa-info"></i>&nbsp;{{$help.text}}</a>
+			<button id="webpage-create-btn" class="btn btn-sm btn-success" onclick="openClose('layout-editor');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$create}}</button>
+			<a href="{{$help.url}}" target="_blank" class="btn btn-sm btn-warning" title="{{$help.title}}"><i class="fa fa-info"></i>&nbsp;{{$help.text}}</a>
 		</div>
 		{{/if}}
 		<h2>{{$title}}</h2>

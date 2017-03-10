@@ -41,13 +41,13 @@
 
 				<div class="acl-list-item" rel="acl-template" style="display:none">
 					<img data-src="{0}"><p>{1}</p>
-					<button class="acl-button-hide btn btn-xs btn-default"><i class="fa fa-times"></i> {{$hide}}</button>
-					<button class="acl-button-show btn btn-xs btn-default"><i class="fa fa-check"></i> {{$show}}</button>
+					<button class="acl-button-hide btn btn-sm btn-outline-secondary"><i class="fa fa-times"></i> {{$hide}}</button>
+					<button class="acl-button-show btn btn-sm btn-outline-secondary"><i class="fa fa-check"></i> {{$show}}</button>
 				</div>
 
 			</div>
 			<div class="modal-footer clear">
-				<button type="button" class="btn btn-default" data-dismiss="modal">{{$aclModalDismiss}}</button>
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$aclModalDismiss}}</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

@@ -46,10 +46,10 @@
         <tr><td width="10%">Date</td><td width="70%">{{$commit.date}}</td>
             <td rowspan="3" width="20%" align="right">
 		{{if $permsWrite}}
-              <button id="revert-{{$commit.revision}}" class="btn btn-danger btn-xs" onclick="wiki_revert_page('{{$commit.revision}}')">Revert</button>
+              <button id="revert-{{$commit.revision}}" class="btn btn-danger btn-sm" onclick="wiki_revert_page('{{$commit.revision}}')">Revert</button>
               <br><br>
 		{{/if}}
-              <button id="compare-{{$commit.revision}}" class="btn btn-warning btn-xs" onclick="wiki_compare_page('{{$commit.revision}}')">Compare</button>
+              <button id="compare-{{$commit.revision}}" class="btn btn-warning btn-sm" onclick="wiki_compare_page('{{$commit.revision}}')">Compare</button>
             </td></tr>
         <tr><td>{{$name_lbl}}</td><td>{{$commit.name}}</td></tr>
         <tr><td>{{$msg_label}}</td><td>{{$commit.title}}</td></tr>

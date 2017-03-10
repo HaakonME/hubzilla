@@ -3,7 +3,7 @@
 		{{if $notself}}
 		<div class="pull-right">
 			<div class="btn-group">
-				<button id="connection-dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button id="connection-dropdown" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
@@ -24,9 +24,9 @@
 			</div>
 			{{if $abook_prev || $abook_next}}
 			<div class="btn-group">
-				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs{{if ! $abook_prev}} disabled{{/if}}" ><i class="fa fa-backward"></i></a>
-				<button class="btn btn-default btn-xs{{if $is_pending}} disabled{{/if}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
-				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
+				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_prev}} disabled{{/if}}" ><i class="fa fa-backward"></i></a>
+				<button class="btn btn-outline-secondary btn-sm{{if $is_pending}} disabled{{/if}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
+				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
 				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
 					{{foreach $sections as $s}}
 					<li><a href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a></li>
@@ -191,7 +191,7 @@
 			<div class="section-content-wrapper-np">
 				<div id="vcard-cancel-{{$vcard.id}}" class="vcard-cancel vcard-cancel-btn" data-id="{{$vcard.id}}" data-action="cancel"><i class="fa fa-close"></i></div>
 				<div id="vcard-add-field-{{$vcard.id}}" class="dropdown pull-right vcard-add-field">
-					<button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle"><i class="fa fa-plus"></i> {{$add_field}}</button>
+					<button data-toggle="dropdown" type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle"><i class="fa fa-plus"></i> {{$add_field}}</button>
 					<ul class="dropdown-menu">
 						<li class="add-vcard-org"{{if $vcard.org}} style="display: none"{{/if}}><a href="#" data-add="vcard-org" data-id="{{$vcard.id}}" class="add-field" onclick="return false;">{{$org_label}}</a></li>
 						<li class="add-vcard-title"{{if $vcard.title}} style="display: none"{{/if}}><a href="#" data-add="vcard-title" data-id="{{$vcard.id}}" class="add-field" onclick="return false;">{{$title_label}}</a></li>
@@ -208,7 +208,7 @@
 					<span id="vcard-preview-{{$vcard.id}}" class="vcard-preview">
 						{{if $vcard.fn}}<span class="vcard-fn-preview">{{$vcard.fn}}</span>{{/if}}
 						{{if $vcard.emails.0.address}}<span class="vcard-email-preview hidden-xs"><a href="mailto:{{$vcard.emails.0.address}}">{{$vcard.emails.0.address}}</a></span>{{/if}}
-						{{if $vcard.tels.0}}<span class="vcard-tel-preview hidden-xs">{{$vcard.tels.0.nr}}{{if $is_mobile}} <a class="btn btn-default btn-xs" href="tel:{{$vcard.tels.0.nr}}"><i class="fa fa-phone connphone"></i></a>{{/if}}</span>{{/if}}
+						{{if $vcard.tels.0}}<span class="vcard-tel-preview hidden-xs">{{$vcard.tels.0.nr}}{{if $is_mobile}} <a class="btn btn-outline-secondary btn-sm" href="tel:{{$vcard.tels.0.nr}}"><i class="fa fa-phone connphone"></i></a>{{/if}}</span>{{/if}}
 					</span>
 					<input id="vcard-fn-{{$vcard.id}}" class="vcard-fn" type="text" name="fn" value="{{$vcard.fn}}" size="{{$vcard.fn|count_characters:true}}" placeholder="{{$name_label}}">
 				</div>

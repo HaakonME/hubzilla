@@ -70,7 +70,7 @@
 			{{/if}}
 			<div class="wall-item-tools">
 				<div class="wall-item-tools-right btn-group pull-right">
-					<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+					<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-caret-down"></i>
 					</button>
 					<ul class="dropdown-menu">
@@ -92,7 +92,7 @@
 				</div>
 				{{if $item.attachments}}
 				<div class="wall-item-tools-left btn-group">
-					<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="attachment-menu-{{$item.id}}"><i class="fa fa-paperclip"></i></button>
+					<button type="button" class="btn btn-outline-secondary btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="attachment-menu-{{$item.id}}"><i class="fa fa-paperclip"></i></button>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="attachment-menu-{{$item.id}}">{{$item.attachments}}</ul>
 				</div>
 				{{/if}}

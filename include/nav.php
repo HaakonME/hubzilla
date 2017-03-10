@@ -152,7 +152,7 @@ EOT;
 	if(! local_channel()) {
 		$nav['rusermenu'] = array(
 			$homelink,
-			t('Get me home'),
+			t('Take me home'),
 			'logout',
 			t('Log me out of this site')
 		);

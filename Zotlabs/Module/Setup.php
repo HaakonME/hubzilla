@@ -324,11 +324,6 @@ class Setup extends \Zotlabs\Web\Controller {
 				$siteurl = trim($_POST['siteurl']);
 				$timezone = ((x($_POST,'timezone')) ? ($_POST['timezone']) : 'America/Los_Angeles');
 
-				$server_roles = [
-					'basic'    => t('Basic/Minimal Social Networking'),
-					'standard' => t('Standard Configuration (default)'),
-					'pro'      => t('Professional')
-				];
 
 				$tpl = get_markup_template('install_settings.tpl');
 				$o .= replace_macros($tpl, array(
@@ -347,8 +342,6 @@ class Setup extends \Zotlabs\Web\Controller {
 					'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 
 					'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
-
-					'$server_role' => array('server_role', t("Server Configuration/Role"), 'standard','',$server_roles),
 
 					'$timezone' => array('timezone', t('Please select a default timezone for your website'), $timezone, '', get_timezones()),
 

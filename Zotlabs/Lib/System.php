@@ -57,9 +57,7 @@ class System {
 
 
 	static public function get_server_role() {
-		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['server_role'])
-			return \App::$config['system']['server_role'];
-		return 'standard';
+		return 'pro';
 	}
 
 	static public function get_std_version() {
@@ -72,11 +70,8 @@ class System {
 
 		if(get_directory_realm() != DIRECTORY_REALM)
 			return true;
-
-		foreach(['hubzilla','zap'] as $t) {
-			if(stristr($p,$t))
-				return true;
-		}
+		if(in_array(strtolower($p),['hubzilla','zap','red']))
+			return true;
 		return false;
 	}
 }

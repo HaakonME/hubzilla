@@ -98,15 +98,7 @@
 /* conv_item */
 
 .wall-item-head {
-	padding: 10px 10px 0.5em 10px;
-}
-
-.wall-item-content {
-	padding: 0.5em 10px;
-}
-
-.wall-item-tools {
-	padding: 0.5em 10px 10px 10px;
+	line-height: 1.2;
 }
 
 .wall-item-info {
@@ -138,22 +130,12 @@ a.wall-item-name-link {
 }
 
 .wall-item-ago .fa-check {
+	font-size: 0.75rem;
 	cursor: pointer;
 }
 
 .wall-item-content {
 	overflow: hidden;
-}
-
-.wall-item-content h1,
-.wall-item-content h2 {
-	font-size: 1.319em;
-}
-
-.wall-item-title h3,
-.wall-item-content h3,
-.wall-item-content h4 {
-	font-size: 1.112em;
 }
 
 .wall-item-content img {
@@ -163,9 +145,6 @@ a.wall-item-name-link {
 .wall-item-title h3 {
 	font-weight: bold;
 	margin: 0px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .wall-item-title-end {

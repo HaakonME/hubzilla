@@ -18,18 +18,19 @@
 					{{$item.event}}
 				</div>
 				{{/if}}
-				<div class="wall-item-head">
+				{{if $item.title}}
+				<div class="p-2 wall-item-title" id="wall-item-title-{{$item.id}}" title="{{$item.title}}">
+					<h3>{{if $item.title_tosource}}{{if $item.plink}}<a href="{{$item.plink.href}}" title="{{$item.title}} ({{$item.plink.title}})">{{/if}}{{/if}}{{$item.title}}{{if $item.title_tosource}}{{if $item.plink}}</a>{{/if}}{{/if}}</h3>
+				</div>
+				<hr class="my-0">
+				{{/if}}
+				<div class="p-2 wall-item-head">
 					<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
 						<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}} h-card p-author" id="wall-item-photo-wrapper-{{$item.id}}">
 							<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-photo-link u-url" id="wall-item-photo-link-{{$item.id}}"><img src="{{$item.thumb}}" class="wall-item-photo{{$item.sparkle}} u-photo p-name" id="wall-item-photo-{{$item.id}}" alt="{{$item.name}}" /></a>
 						</div>
 						<div class="wall-item-photo-end" style="clear:both"></div>
 					</div>
-					{{if $item.title}}
-					<div class="wall-item-title" id="wall-item-title-{{$item.id}}" title="{{$item.title}}">
-					<h3>{{if $item.title_tosource}}{{if $item.plink}}<a href="{{$item.plink.href}}" title="{{$item.title}} ({{$item.plink.title}})">{{/if}}{{/if}}{{$item.title}}{{if $item.title_tosource}}{{if $item.plink}}</a>{{/if}}{{/if}}</h3>
-					</div>
-					{{/if}}
 					{{if $item.lock}}
 					<div class="wall-item-lock dropdown">
 						<i class="fa fa-lock lockview dropdown-toggle" data-toggle="dropdown" title="{{$item.lock}}" onclick="lockview('item',{{$item.id}});" ></i><ul id="panel-{{$item.id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
@@ -45,7 +46,7 @@
 				</div>
 
 				{{if $item.body}}
-				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
+				<div class="p-2 wall-item-content" id="wall-item-content-{{$item.id}}">
 					<div class="wall-item-body e-content" id="wall-item-body-{{$item.id}}" >
 						{{$item.body}}
 					</div>
@@ -53,7 +54,7 @@
 				</div>
 				{{/if}}
 				{{if $item.has_tags}}
-				<div class="wall-item-tools">
+				<div class="p-2 wall-item-tools">
 					{{if $item.mentions}}
 					<div class="body-tags" id="item-mentions">
 						<span class="tag">{{$item.mentions}}</span>
@@ -77,7 +78,7 @@
 					<div class="clear"></div>
 				</div>
 				{{/if}}
-				<div class="wall-item-tools">
+				<div class="p-2 wall-item-tools">
 					<div class="wall-item-tools-right pull-right">
 						{{if $item.toplevel && $item.emojis && $item.reactions}}
 						<div class="btn-group dropdown">

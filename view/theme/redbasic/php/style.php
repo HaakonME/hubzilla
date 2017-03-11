@@ -10,33 +10,33 @@ if(! App::$install) {
 	}
 
 	// Load the owners pconfig
-	$nav_bg = get_pconfig($uid, "redbasic", "nav_bg");
-	$nav_gradient_top = get_pconfig($uid, "redbasic", "nav_gradient_top");
-	$nav_gradient_bottom = get_pconfig($uid, "redbasic", "nav_gradient_bottom");
-	$nav_active_gradient_top = get_pconfig($uid, "redbasic", "nav_active_gradient_top");
-	$nav_active_gradient_bottom = get_pconfig($uid, "redbasic", "nav_active_gradient_bottom");
-	$nav_bd = get_pconfig($uid, "redbasic", "nav_bd");
-	$nav_icon_colour = get_pconfig($uid, "redbasic", "nav_icon_colour");
-	$nav_active_icon_colour = get_pconfig($uid, "redbasic", "nav_active_icon_colour");
+	$nav_bg = get_pconfig($uid, 'redbasic', 'nav_bg');
+	$nav_gradient_top = get_pconfig($uid, 'redbasic', 'nav_gradient_top');
+	$nav_gradient_bottom = get_pconfig($uid, 'redbasic', 'nav_gradient_bottom');
+	$nav_active_gradient_top = get_pconfig($uid, 'redbasic', 'nav_active_gradient_top');
+	$nav_active_gradient_bottom = get_pconfig($uid, 'redbasic', 'nav_active_gradient_bottom');
+	$nav_bd = get_pconfig($uid, 'redbasic', 'nav_bd');
+	$nav_icon_colour = get_pconfig($uid, 'redbasic', 'nav_icon_colour');
+	$nav_active_icon_colour = get_pconfig($uid, 'redbasic', 'nav_active_icon_colour');
 	$narrow_navbar = get_pconfig($uid,'redbasic','narrow_navbar');
 	$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
-	$link_colour = get_pconfig($uid, "redbasic", "link_colour");
+	$link_colour = get_pconfig($uid, 'redbasic', 'link_colour');
 	$schema = get_pconfig($uid,'redbasic','schema');
-	$bgcolour = get_pconfig($uid, "redbasic", "background_colour");
-	$background_image = get_pconfig($uid, "redbasic", "background_image");
+	$bgcolour = get_pconfig($uid, 'redbasic', 'background_colour');
+	$background_image = get_pconfig($uid, 'redbasic', 'background_image');
 	$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
 	$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
-	$item_colour = get_pconfig($uid, "redbasic", "item_colour");
-	$comment_item_colour = get_pconfig($uid, "redbasic", "comment_item_colour");
-	$comment_border_colour = get_pconfig($uid, "redbasic", "comment_border_colour");
-	$comment_indent = get_pconfig($uid, "redbasic", "comment_indent");
-	$body_font_size = get_pconfig($uid, "redbasic", "body_font_size");
-	$font_size = get_pconfig($uid, "redbasic", "font_size");
-	$font_colour = get_pconfig($uid, "redbasic", "font_colour");
-	$radius = get_pconfig($uid, "redbasic", "radius");
-	$shadow = get_pconfig($uid,"redbasic","photo_shadow");
-	$converse_width=get_pconfig($uid,"redbasic","converse_width");
-	$align_left=get_pconfig($uid,"redbasic","align_left");
+	$item_colour = get_pconfig($uid, 'redbasic', 'item_colour');
+	$comment_item_colour = get_pconfig($uid, 'redbasic', 'comment_item_colour');
+	$comment_border_colour = get_pconfig($uid, 'redbasic', 'comment_border_colour');
+	$comment_indent = get_pconfig($uid, 'redbasic', 'comment_indent');
+	$body_font_size = get_pconfig($uid, 'redbasic', 'body_font_size');
+	$font_size = get_pconfig($uid, 'redbasic', 'font_size');
+	$font_colour = get_pconfig($uid, 'redbasic', 'font_colour');
+	$radius = get_pconfig($uid, 'redbasic', 'radius');
+	$shadow = get_pconfig($uid,'redbasic','photo_shadow');
+	$converse_width=get_pconfig($uid,'redbasic','converse_width');
+	$align_left=get_pconfig($uid,'redbasic','align_left');
 	$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 	$top_photo=get_pconfig($uid,'redbasic','top_photo');
 	$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
@@ -86,59 +86,59 @@ if (! $schema) {
 //Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
 //individually.  If we don't, we'll have problems if a user has set one, but not all options.
 if (! $nav_bg)
-	$nav_bg = "#222";
+	$nav_bg = '#222';
 if (! $nav_gradient_top)
-	$nav_gradient_top = "#3c3c3c";
+	$nav_gradient_top = '#3c3c3c';
 if (! $nav_gradient_bottom)
-	$nav_gradient_bottom = "#222";
+	$nav_gradient_bottom = '#222';
 if (! $nav_active_gradient_top)
-	$nav_active_gradient_top = "#222";
+	$nav_active_gradient_top = '#222';
 if (! $nav_active_gradient_bottom)
-	$nav_active_gradient_bottom = "#282828";
+	$nav_active_gradient_bottom = '#282828';
 if (! $nav_bd)
-	$nav_bd = "#222";
+	$nav_bd = '#222';
 if (! $nav_icon_colour)
-	$nav_icon_colour = "#999";
+	$nav_icon_colour = '#999';
 if (! $nav_active_icon_colour)
-	$nav_active_icon_colour = "#fff";
+	$nav_active_icon_colour = '#fff';
 if (! $link_colour)
-	$link_colour = "#0275d8";
+	$link_colour = '#0275d8';
 if (! $banner_colour)
-	$banner_colour = "#fff";
+	$banner_colour = '#fff';
 if (! $bgcolour)
-	$bgcolour = "rgb(254,254,254)";
+	$bgcolour = 'rgb(254,254,254)';
 if (! $background_image)
 	$background_image ='';
 if (! $item_colour)
-	$item_colour = "rgb(238,238,238)";
+	$item_colour = 'rgb(238,238,238)';
 if (! $comment_item_colour)
-	$comment_item_colour = "rgb(255,255,255)";
+	$comment_item_colour = 'rgb(255,255,255)';
 if (! $comment_border_colour)
-	$comment_border_colour = "rgb(255,255,255)";
+	$comment_border_colour = 'rgb(255,255,255)';
 if (! $toolicon_colour)
 	$toolicon_colour = '#777';
 if (! $toolicon_activecolour)
 	$toolicon_activecolour = '#000';
 if (! $item_opacity)
-	$item_opacity = "1";
+	$item_opacity = '1';
 if (! $font_size)
-	$font_size = "1rem";
+	$font_size = '1rem';
 if (! $body_font_size)
-	$body_font_size = "0.75rem";
+	$body_font_size = '0.9rem';
 if (! $font_colour)
-	$font_colour = "#4d4d4d";
+	$font_colour = '#4d4d4d';
 if (! $radius)
-	$radius = "4";
+	$radius = '4';
 if (! $shadow)
-	$shadow = "0";
+	$shadow = '0';
 if (! $converse_width)
-	$converse_width = "790";
+	$converse_width = '790';
 if(! $top_photo)
-	$top_photo = '48px';
+	$top_photo = '2.2rem';
 if(! $comment_indent)
 	$comment_indent = '0px';
 if(! $reply_photo)
-	$reply_photo = '32px';
+	$reply_photo = '2.2rem';
 if($nav_min_opacity === false || $nav_min_opacity === '') {
 	$nav_float_min_opacity = 1.0;
 	$nav_percent_min_opacity = 100;

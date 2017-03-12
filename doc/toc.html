@@ -1,30 +1,30 @@
 <div class="" id="accordion">
-    <div class="panel">
+    <div class="">
         <div class="">
             <h3 class="panel-title">
                     About
             </h3>
         </div>
-        <div id="about" class="panel-collapse collapse in">
-            <ul class="list-group">
-                <li class="doco-list-group-item"><a href="/help/about/about_hubzilla">About Hubzilla</a></li>
-                <li class="doco-list-group-item"><a href="/help/about/hubzilla_project">Hubzilla project</a></li>
-                <li class="doco-list-group-item"><a href="/help/about/about_hub">About this hub</a></li>
-            </ul>
+        <div id="about" class="doco-section">
+            <div class="flex-column">
+                <a class="nav-link" href="/help/about/about_hubzilla">About Hubzilla</a>
+                <a class="nav-link" href="/help/about/hubzilla_project">Hubzilla project</a>
+                <a class="nav-link" href="/help/about/about_hub">About this hub</a>
+            </div>
         </div>
     </div>
-    <div class="panel">
+    <div class="">
         <div class="">
             <h3 class="panel-title">
                     Members
             </h3>
         </div>
-        <div id="members" class="panel-collapse collapse in">
-            <ul class="list-group">
-                <li class="doco-list-group-item"><a href="/help/member/member_guide">Guide</a></li>
-                <li class="doco-list-group-item"><a href="/help/member/bbcode">BBcode Reference</a></li>
-                <li class="doco-list-group-item"><a href="/help/member/member_faq">FAQ</a></li>
-            </ul>
+        <div id="members" class="doco-section">
+            <div class="flex-column">
+               <a class="nav-link" href="/help/member/member_guide">Guide</a>
+               <a class="nav-link" href="/help/member/bbcode">BBcode Reference</a>
+               <a class="nav-link" href="/help/member/member_faq">FAQ</a>
+            </div>
         </div>
     </div>
     <div class="panel">
@@ -33,12 +33,12 @@
                     Administrators
             </h3>
         </div>
-        <div id="administrators" class="panel-collapse collapse in">
-            <ul class="list-group">
-                <li class="doco-list-group-item"><a href="/help/admin/administrator_guide">Guide</a></li>
-                <li class="doco-list-group-item"><a href="/help/admin/hub_snapshots">Hub Snapshots</a></li>
-                <li class="doco-list-group-item"><a href="/help/database">Database Tables</a></li>
-            </ul>
+        <div id="administrators" class="doco-section">
+            <div class="flex-column">
+                <a class="nav-link" href="/help/admin/administrator_guide">Guide</a>
+                <a class="nav-link" href="/help/admin/hub_snapshots">Hub Snapshots</a>
+                <a class="nav-link" href="/help/database">Database Tables</a>
+            </div>
         </div>
     </div>
     <div class="panel">
@@ -47,14 +47,14 @@
                     Developers
             </h3>
         </div>
-        <div id="developers" class="panel-collapse collapse in">
-            <ul class="list-group">
-                <li class="doco-list-group-item"><a href="/help/developer/developer_guide">Guide</a></li>
-                <li class="doco-list-group-item"><a href="/help/developer/covenant">Code of Conduct</a></li>
-                <li class="doco-list-group-item"><a href="/help/developer/zot_protocol">Zot Protocol</a></li>
-                <li class="doco-list-group-item"><a href="/help/developer/api_zot">Zot API</a></li>
-                <li class="doco-list-group-item"><a href="/help/hooklist">Hooks</a></li>
-            </ul>
+        <div id="developers" class="doco-section">
+            <div class="flex-column">
+                <a class="nav-link" href="/help/developer/developer_guide">Guide</a>
+                <a class="nav-link" href="/help/developer/covenant">Code of Conduct</a>
+                <a class="nav-link" href="/help/developer/zot_protocol">Zot Protocol</a>
+                <a class="nav-link" href="/help/developer/api_zot">Zot API</a>
+                <a class="nav-link" href="/help/hooklist">Hooks</a>
+            </div>
         </div>
     </div>
     <div class="panel">
@@ -63,10 +63,10 @@
                     Tutorials
             </h3>
         </div>
-        <div id="tutorials" class="panel-collapse collapse in">
-            <ul class="list-group">
-                <li class="doco-list-group-item"><a href="/help/tutorials/personal_channel">Personal Channel</a></li>
-            </ul>
+        <div id="tutorials" class="doco-section">
+            <div class="flex-column">
+                <a class="nav-link" href="/help/tutorials/personal_channel">Personal Channel</a>
+            </div>
         </div>
     </div>
 </div>
@@ -74,16 +74,16 @@
 	toc = {};
     // Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
     $(document).ready(function () {
-        $(".panel-collapse.in").find('a').each(function(){
+        $(".doco-section").find('a').each(function(){
             var url = document.createElement('a');
             url.href = window.location;
             var pageName = url.href.split('/').pop().split('#').shift().split('?').shift();
             var linkName = $(this).attr('href').split('/').pop();
             if(pageName === linkName) {
-                var tocUl = $(this).closest('li').append('<ul>').find('ul');
+                var tocUl = $(this).closest('a').append('<ul>').find('ul');
                 tocUl.removeClass();  // Classes are automatically added to <ul> elements by something else
                 tocUl.toc({content: "#doco-content", headings: "h3"});
-                tocUl.addClass('toc-content sub-menu');
+                tocUl.addClass('toc-content');
 		tocUl.attr('id', 'doco-side-toc');
 
             }

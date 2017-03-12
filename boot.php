@@ -1130,24 +1130,25 @@ class App {
 		 * since the code added by the modules frequently depends on it
 		 * being first
 		 */
-		$tpl = get_markup_template('head.tpl');
-		self::$page['htmlhead'] = replace_macros($tpl, array(
-			'$preload_images' => $preload_images,
-			'$user_scalable' => $user_scalable,
-			'$query' => urlencode(self::$query_string),
-			'$baseurl' => self::get_baseurl(),
-			'$local_channel' => local_channel(),
-			'$metas' => self::$meta->get(),
-			'$plugins' => $x['header'],
-			'$update_interval' => $interval,
-			'osearch' => sprintf( t('Search %1$s (%2$s)','opensearch'), Zotlabs\Lib\System::get_site_name(), t('$Projectname','opensearch')), 
-			'$head_css' => head_get_css(),
-			'$head_js' => head_get_js(),
-			'$linkrel' => head_get_links(),
-			'$js_strings' => js_strings(),
-			'$zid' => get_my_address(),
-			'$channel_id' => self::$profile['uid'],
-		)) . self::$page['htmlhead'];
+
+		self::$page['htmlhead'] = replace_macros(get_markup_template('head.tpl'), 
+			[
+				'$preload_images'  => $preload_images,
+				'$user_scalable'   => $user_scalable,
+				'$query'           => urlencode(self::$query_string),
+				'$baseurl'         => self::get_baseurl(),
+				'$local_channel'   => local_channel(),
+				'$metas'           => self::$meta->get(),
+				'$plugins'         => $x['header'],
+				'$update_interval' => $interval,
+				'$head_css'        => head_get_css(),
+				'$head_js'         => head_get_js(),
+				'$linkrel'         => head_get_links(),
+				'$js_strings'      => js_strings(),
+				'$zid'             => get_my_address(),
+				'$channel_id'      => self::$profile['uid']
+			]
+		) . self::$page['htmlhead'];
 
 		// always put main.js at the end
 		self::$page['htmlhead'] .= head_get_main_js();
@@ -1160,11 +1161,13 @@ class App {
 	* @param string $name
 	*/
 	public static function register_template_engine($class, $name = '') {
-		if ($name === ""){
-			$v = get_class_vars( $class );
-			if(x($v, "name")) $name = $v['name'];
+		if(! $name) {
+			$v = get_class_vars($class);
+			if(x($v, "name")) { 
+				$name = $v['name'];
+			}
 		}
-		if ($name === ""){
+		if (! $name) {
 			echo "template engine <tt>$class</tt> cannot be registered without a name.\n";
 			killme();
 		}
@@ -1180,19 +1183,21 @@ class App {
 	* @return object Template Engine instance
 	*/
 	public static function template_engine($name = ''){
-		if ($name !== "") {
+		if($name !== '') {
 			$template_engine = $name;
-		} else {
+		}
+		else {
 			$template_engine = 'smarty3';
-			if (x(self::$theme, 'template_engine')) {
+			if(x(self::$theme, 'template_engine')) {
 				$template_engine = self::$theme['template_engine'];
 			}
 		}
 
-		if (isset(self::$template_engines[$template_engine])){
+		if(isset(self::$template_engines[$template_engine])){
 			if(isset(self::$template_engine_instance[$template_engine])){
 				return self::$template_engine_instance[$template_engine];
-			} else {
+			}
+			else {
 				$class = self::$template_engines[$template_engine];
 				$obj = new $class;
 				self::$template_engine_instance[$template_engine] = $obj;
@@ -1200,7 +1205,8 @@ class App {
 			}
 		}
 
-		echo "template engine <tt>$template_engine</tt> is not registered!\n"; killme();
+		echo "template engine <tt>$template_engine</tt> is not registered!\n"; 
+		killme();
 	}
 
 	/**
@@ -2555,7 +2561,7 @@ function check_cron_broken() {
 		'$lastdate' => (($d)? $d : t('never'))
 	));
 
-	$subject = email_header_encode(sprintf(t('[hubzilla] Cron tasks not running on %s'), App::get_hostname()));
+	$subject = email_header_encode(sprintf(t('[$Projectname] Cron tasks not running on %s'), App::get_hostname()));
 	mail(App::$config['system']['admin_email'], $subject, $email_msg,
 		'From: Administrator' . '@' . App::get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"

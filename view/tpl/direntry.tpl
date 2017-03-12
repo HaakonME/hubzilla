@@ -1,5 +1,5 @@
 <div class="directory-item{{if $entry.safe}} safe{{/if}}" id="directory-item-{{$entry.hash}}" >
-	<div class="section-subtitle-wrapper">
+	<div class="section-subtitle-wrapper clearfix">
 		<div class="pull-right">
 			{{if $entry.viewrate}}
 				{{if $entry.total_ratings}}<a href="ratings/{{$entry.hash}}" id="dir-rating-{{$entry.hash}}" class="btn btn-outline-secondary btn-sm">{{$entry.total_ratings}}</a>{{/if}}

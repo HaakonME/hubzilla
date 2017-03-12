@@ -12,18 +12,18 @@
 {{/if}}
 <div class="navbar-toggler-right">
 	{{if $nav.help.6}}
-	<button id="context-help-btn" class="navbar-toggler" type="button" onclick="contextualHelp(); return false;">
+	<button id="context-help-btn" class="navbar-toggler border-0" type="button" onclick="contextualHelp(); return false;">
 		<i class="fa fa-question-circle"></i>
 	</button>
 	{{/if}}
-	<button id="expand-aside" type="button" class="navbar-toggler" data-toggle="offcanvas" data-target="#region_1">
+	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
-	<button id="expand-tabs" type="button" class="navbar-toggler" data-toggle="collapse" data-target="#tabs-collapse-1">
+	<!--button id="expand-tabs" type="button" class="navbar-toggler border-0" data-toggle="collapse" data-target="#tabs-collapse-1">
 		<i class="fa fa-arrow-circle-down" id="expand-tabs-icon"></i>
-	</button>
+	</button-->
 	{{if $localuser}}
-	<button id="notifications-btn" type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse-1" style="color: grey;">
+	<button id="notifications-btn" type="button" class="navbar-toggler border-0" data-toggle="collapse" data-target="#navbar-collapse-1" style="color: grey;">
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
 	{{/if}}
@@ -37,7 +37,7 @@
 		<img id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">
 	</div>
 	{{if $localuser}}
-	<div class="dropdown-menu" role="menu" aria-labelledby="avatar">
+	<div class="dropdown-menu">
 		{{foreach $nav.usermenu as $usermenu}}
 		<a class="dropdown-item"  href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem" id="{{$usermenu.4}}">{{$usermenu.1}}</a>
 		{{/foreach}}

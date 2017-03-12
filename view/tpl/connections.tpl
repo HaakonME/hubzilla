@@ -1,5 +1,5 @@
 <div class="generic-content-wrapper">
-	<div class="section-title-wrapper">
+	<div class="section-title-wrapper clearfix">
 		<div class="dropdown pull-right">
 			<button type="button" class="btn btn-primary btn-sm" onclick="openClose('contacts-search-form');">
 				<i class="fa fa-search"></i>&nbsp;{{$label}}
@@ -7,11 +7,11 @@
 			<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{$sort}}">
 				<i class="fa fa-sort"></i>
 			</button>
-			<ul class="dropdown-menu">
+			<div class="dropdown-menu dropdown-menu-right">
 				{{foreach $tabs as $menu}}
-				<li><a href="{{$menu.url}}">{{$menu.label}}</a></li>
+				<a class="dropdown-item" href="{{$menu.url}}">{{$menu.label}}</a>
 				{{/foreach}}
-			</ul>
+			</div>
 		</div>
 		{{if $finding}}<h2>{{$finding}}</h2>{{else}}<h2>{{$header}}{{if $total}} ({{$total}}){{/if}}</h2>{{/if}}
 	</div>
@@ -25,11 +25,10 @@
 			</div>
 		</form>
 	</div>
-	<div id="connections-wrapper">
+	<div id="connections-wrapper clearfix">
 		{{foreach $contacts as $contact}}
 			{{include file="connection_template.tpl"}}
 		{{/foreach}}
-		<div id="page-end"></div>
 	</div>
 </div>
 <script>$(document).ready(function() { loadingPage = false;});</script>

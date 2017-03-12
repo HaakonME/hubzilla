@@ -918,9 +918,6 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	padding-top: 2px;
 	font-weight: bold;
 	line-height: 1em;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	display: block;
 }
 
@@ -1314,9 +1311,10 @@ img.mail-conv-sender-photo {
 
 
 /* conversation */
-.nsfw-wrap {
-	text-align: center;
-	font-size: $body_font_size;
+
+.top-radius {
+	border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radiuspx;
 }
 
 .wall-event-item {
@@ -1532,10 +1530,10 @@ nav img {
 }
 
 .dropdown-menu-img-sm {
-	float: left;
-	width: 36px;
-	height: 36px;
+	width: 3em;
+	height: 3em;
 	margin-right: 5px;
+	float: left;
 }
 
 .dropdown-menu-img-xs {
@@ -1587,8 +1585,12 @@ nav img {
 	text-overflow: ellipsis;
 }
 
+.section-subtitle-wrapper h3 {
+	padding: 3px;
+}
+
 .section-subtitle-wrapper {
-	padding: 7px 10px;
+	padding: 4px 10px;
 	background-color: $item_colour;
 	border-bottom: 3px solid $comment_item_colour;
 }
@@ -1708,6 +1710,10 @@ nav ul li .notify-unseen
 
 /* bootstrap overrides */
 
+.btn {
+	font-size: $body_font_size;
+}
+
 .panel {
   background-color: transparent;
   border: 0px solid transparent;
@@ -1792,6 +1798,8 @@ blockquote {
 	background-color: $nav_active_icon_colour;
 }
 */
+
+/*
 .nav-tabs.nav-justified {
 	background-color: rgba(254,254,254,.5);
 	border-top-left-radius: 4px;
@@ -1809,14 +1817,11 @@ blockquote {
 .nav-tabs > li.active > a:focus {
 	background-color: transparent;
 }
+*/
 
 #tabs-collapse-1 {
 	padding: 0px;
 	margin-bottom: 25px;
-}
-
-.btn {
-	font-size: $body_font_size;
 }
 
 @media screen and (max-width: 767px) {
@@ -1995,7 +2000,7 @@ dl.bb-dl > dd > li {
 
 .field.checkbox > div > input:checked + label .onoffswitch-switch {
     right: 0px;
-    background-color: #337AB7;
+    background-color: #0275d8;
 }
 
 .help-searchlist {

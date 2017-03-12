@@ -35,10 +35,6 @@ nav .navbar-collapse.in .dropdown-menu {
 	min-width: auto;
 }
 
-.nav-tabs.nav-justified > li {
-	white-space: nowrap;
-}
-
 code {
 	white-space: normal;
 }

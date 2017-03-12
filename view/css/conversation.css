@@ -111,10 +111,6 @@
 	margin-left:10px;
 }
 
-.lockview-panel {
-	padding: 3px 20px;
-}
-
 .wall-item-lock {
 	float: left;
 }
@@ -129,8 +125,11 @@ a.wall-item-name-link {
 	text-overflow: ellipsis;
 }
 
-.wall-item-ago .fa-check {
+.wall-item-ago i {
 	font-size: 0.75rem;
+}
+
+.wall-item-ago .fa-check {
 	cursor: pointer;
 }
 
@@ -142,7 +141,7 @@ a.wall-item-name-link {
 	max-width: 100%;
 }
 
-.wall-item-title h3 {
+.wall-item-title.h3 {
 	font-weight: bold;
 	margin: 0px;
 }
@@ -191,11 +190,11 @@ a.wall-item-name-link {
 }
 
 .ivoted {
-	color: #337AB7;
+	color: #0275d8;
 }
 
 .item-highlight {
-	border-left: 3px solid #337AB7;
+	border-left: 3px solid #0275d8;
 }
 
 .item-highlight .wall-item-head,
@@ -270,12 +269,10 @@ a.wall-item-name-link {
 
 .item-verified {
 	color: darkgreen;
-	font-size: 1em !important;
 }
 
 .item-forged {
 	color: #FF0000;
-	font-size: 1em !important;
 }
 
 /* event item */

@@ -72,7 +72,7 @@ class Lockview extends \Zotlabs\Web\Controller {
 		}
 	
 		if($uid != local_channel()) {
-			echo '<li>' . t('Remote privacy information not available.') . '</li>';
+			echo '<div class="dropdown-item">' . t('Remote privacy information not available.') . '</div>';
 			killme();
 		}
 	
@@ -84,7 +84,7 @@ class Lockview extends \Zotlabs\Web\Controller {
 			// as unknown specific recipients. The sender will have the visibility list and will fall through to the
 			// next section.
 	 
-			echo '<li>' . translate_scope((! $item['public_policy']) ? 'specific' : $item['public_policy']) . '</li>';
+			echo '<div class="dropdown-item">' . translate_scope((! $item['public_policy']) ? 'specific' : $item['public_policy']) . '</div>';
 			killme();
 		}
 	
@@ -93,7 +93,7 @@ class Lockview extends \Zotlabs\Web\Controller {
 		$deny_users = expand_acl($item['deny_cid']);
 		$deny_groups = expand_acl($item['deny_gid']);
 	
-		$o = '<li>' . t('Visible to:') . '</li>';
+		$o = '<div class="dropdown-item">' . t('Visible to:') . '</div>';
 		$l = array();
 	
 		stringify_array_elms($allowed_groups,true);
@@ -114,24 +114,24 @@ class Lockview extends \Zotlabs\Web\Controller {
 			$r = q("SELECT profile_name FROM profile WHERE profile_guid IN ( " . implode(', ', $profile_groups) . " )");
 			if($r)
 				foreach($r as $rr) 
-					$l[] = '<li><b>' . t('Profile','acl') . ' ' . $rr['profile_name'] . '</b></li>';
+					$l[] = '<div class="dropdown-item"><b>' . t('Profile','acl') . ' ' . $rr['profile_name'] . '</b></div>';
 		}
 
 		if(count($allowed_groups)) {
 			$r = q("SELECT gname FROM groups WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
 			if($r)
 				foreach($r as $rr) 
-					$l[] = '<li><b>' . $rr['gname'] . '</b></li>';
+					$l[] = '<div class="dropdown-item"><b>' . $rr['gname'] . '</b></div>';
 		}
 		if(count($allowed_users)) {
 			$r = q("SELECT xchan_name FROM xchan WHERE xchan_hash IN ( " . implode(', ',$allowed_users) . " )");
 			if($r)
 				foreach($r as $rr) 
-					$l[] = '<li>' . $rr['xchan_name'] . '</li>';
+					$l[] = '<div class="dropdown-item">' . $rr['xchan_name'] . '</div>';
 			if($atokens) {
 				foreach($atokens as $at) {
 					if(in_array("'" . $at['xchan_hash'] . "'",$allowed_users)) {	
-						$l[] = '<li>' . $at['xchan_name'] . '</li>';
+						$l[] = '<div class="dropdown-item">' . $at['xchan_name'] . '</div>';
 					}
 				}
 			}
@@ -150,7 +150,7 @@ class Lockview extends \Zotlabs\Web\Controller {
 			$r = q("SELECT profile_name FROM profile WHERE profile_guid IN ( " . implode(', ', $profile_groups) . " )");
 			if($r)
 				foreach($r as $rr) 
-					$l[] = '<li><b><strike>' . t('Profile','acl') . ' ' . $rr['profile_name'] . '</strike></b></li>';
+					$l[] = '<div class="dropdown-item"><b><strike>' . t('Profile','acl') . ' ' . $rr['profile_name'] . '</strike></b></div>';
 		}
 
 
@@ -159,18 +159,18 @@ class Lockview extends \Zotlabs\Web\Controller {
 			$r = q("SELECT gname FROM groups WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
 			if($r)
 				foreach($r as $rr) 
-					$l[] = '<li><b><strike>' . $rr['gname'] . '</strike></b></li>';
+					$l[] = '<div class="dropdown-item"><b><strike>' . $rr['gname'] . '</strike></b></div>';
 		}
 		if(count($deny_users)) {
 			$r = q("SELECT xchan_name FROM xchan WHERE xchan_hash IN ( " . implode(', ', $deny_users) . " )");
 			if($r)
 				foreach($r as $rr) 
-					$l[] = '<li><strike>' . $rr['xchan_name'] . '</strike></li>';
+					$l[] = '<div class="dropdown-item"><strike>' . $rr['xchan_name'] . '</strike></div>';
 
 			if($atokens) {
 				foreach($atokens as $at) {
 					if(in_array("'" . $at['xchan_hash'] . "'",$deny_users)) {	
-						$l[] = '<li><strike>' . $at['xchan_name'] . '</strike></li>';
+						$l[] = '<div class="dropdown-item"><strike>' . $at['xchan_name'] . '</strike></div>';
 					}
 				}
 			}

@@ -116,7 +116,7 @@ input#jot-title:hover, input#jot-title:focus {
 }
 
 nav .dropdown-menu, .wall-item-tools .dropdown-menu, .section-title-wrapper .dropdown-menu, .section-content-wrapper .dropdown-menu {
-    background-color: rgba(67,72,138,.97);
+    background-color: #43488A;
     color: #fff;
     border-radius: 0;
     border: none;
@@ -304,6 +304,30 @@ input {
 
 #login-main {
     margin-top: 0;
+    color: #EEE;
+}
+
+#remember_me_container label:hover, #remember_container label:hover {
+    color: #FFF;
+}
+
+#login-main #lost-password-link, #login-main #register-link {
+    color: #FFF;
+}
+
+#nav-login .modal-content {
+	background-color: #43488A;
+	background-image: url('/images/bggrid.png');
+	box-shadow: 0 5px 15px rgba(0,0,0,.3);
+	-webkit-box-shadow: 0 5px 15px rgba(0,0,0,.3);
+}
+
+#nav-login h3, #nav-login button.close {
+    color: #EEE;
+}
+
+#nav-login .modal-header {
+	border-bottom: none;
 }
 
 .directory-item {

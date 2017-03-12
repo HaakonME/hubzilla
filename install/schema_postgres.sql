@@ -16,8 +16,6 @@ CREATE TABLE "abook" (
   "abook_account" bigint  NOT NULL,
   "abook_channel" bigint  NOT NULL,
   "abook_xchan" text NOT NULL DEFAULT '',
-  "abook_my_perms" bigint NOT NULL DEFAULT '0',
-  "abook_their_perms" bigint NOT NULL DEFAULT '0',
   "abook_closeness" numeric(3)  NOT NULL DEFAULT '99',
   "abook_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "abook_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -41,8 +39,6 @@ CREATE TABLE "abook" (
   create index  "abook_account" on abook ("abook_account");
   create index  "abook_channel" on abook  ("abook_channel");
   create index  "abook_xchan"  on abook ("abook_xchan");
-  create index  "abook_my_perms" on abook  ("abook_my_perms");
-  create index  "abook_their_perms" on abook  ("abook_their_perms");
   create index  "abook_closeness" on abook  ("abook_closeness");
   create index  "abook_created"  on abook ("abook_created");
   create index  "abook_updated"  on abook ("abook_updated");
@@ -259,24 +255,6 @@ CREATE TABLE "channel" (
   "channel_allow_gid" text ,
   "channel_deny_cid" text ,
   "channel_deny_gid" text ,
-  "channel_r_stream" bigint  NOT NULL DEFAULT '128',
-  "channel_r_profile" bigint  NOT NULL DEFAULT '128',
-  "channel_r_photos" bigint  NOT NULL DEFAULT '128',
-  "channel_r_abook" bigint  NOT NULL DEFAULT '128',
-  "channel_w_stream" bigint  NOT NULL DEFAULT '128',
-  "channel_w_wall" bigint  NOT NULL DEFAULT '128',
-  "channel_w_tagwall" bigint  NOT NULL DEFAULT '128',
-  "channel_w_comment" bigint  NOT NULL DEFAULT '128',
-  "channel_w_mail" bigint  NOT NULL DEFAULT '128',
-  "channel_w_photos" bigint  NOT NULL DEFAULT '128',
-  "channel_w_chat" bigint  NOT NULL DEFAULT '128',
-  "channel_a_delegate" bigint  NOT NULL DEFAULT '0',
-  "channel_r_storage" bigint  NOT NULL DEFAULT '128',
-  "channel_w_storage" bigint  NOT NULL DEFAULT '128',
-  "channel_r_pages" bigint  NOT NULL DEFAULT '128',
-  "channel_w_pages" bigint  NOT NULL DEFAULT '128',
-  "channel_a_republish" bigint  NOT NULL DEFAULT '128',
-  "channel_w_like" bigint  NOT NULL DEFAULT '128',
   "channel_removed" smallint NOT NULL DEFAULT '0',
   "channel_system" smallint NOT NULL DEFAULT '0',
   "channel_moved" text NOT NULL DEFAULT '',
@@ -294,28 +272,10 @@ create index "channel_pageflags" on channel ("channel_pageflags");
 create index "channel_max_anon_mail" on channel ("channel_max_anon_mail");
 create index "channel_max_friend_req" on channel ("channel_max_friend_req");
 create index "channel_default_gid" on channel ("channel_default_group");
-create index "channel_r_stream" on channel ("channel_r_stream");
-create index "channel_r_profile" on channel ("channel_r_profile");
-create index "channel_r_photos" on channel ("channel_r_photos");
-create index "channel_r_abook" on channel ("channel_r_abook");
-create index "channel_w_stream" on channel ("channel_w_stream");
-create index "channel_w_wall" on channel ("channel_w_wall");
-create index "channel_w_tagwall" on channel ("channel_w_tagwall");
-create index "channel_w_comment" on channel ("channel_w_comment");
-create index "channel_w_mail" on channel ("channel_w_mail");
-create index "channel_w_photos" on channel ("channel_w_photos");
-create index "channel_w_chat" on channel ("channel_w_chat");
 create index "channel_guid" on channel ("channel_guid");
 create index "channel_hash" on channel ("channel_hash");
 create index "channel_expire_days" on channel ("channel_expire_days");
-create index "channel_a_delegate" on channel ("channel_a_delegate");
-create index "channel_r_storage" on channel ("channel_r_storage");
-create index "channel_w_storage" on channel ("channel_w_storage");
-create index "channel_r_pages" on channel ("channel_r_pages");
-create index "channel_w_pages" on channel ("channel_w_pages");
 create index "channel_deleted" on channel ("channel_deleted");
-create index "channel_a_republish" on channel ("channel_a_republish");
-create index "channel_w_like" on channel ("channel_w_like");
 create index "channel_dirdate" on channel ("channel_dirdate");
 create index "channel_lastpost" on channel ("channel_lastpost");
 create index "channel_removed" on channel ("channel_removed");
@@ -609,7 +569,6 @@ CREATE TABLE "item" (
   "resource_type" varchar(16) NOT NULL DEFAULT '',
   "attach" text NOT NULL,
   "sig" text NOT NULL DEFAULT '',
-  "diaspora_meta" text NOT NULL DEFAULT '',
   "location" text NOT NULL DEFAULT '',
   "coord" text NOT NULL DEFAULT '',
   "public_policy" text NOT NULL DEFAULT '',

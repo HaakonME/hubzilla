@@ -217,7 +217,7 @@
 
 <div id="jot-preview-content" style="display:none;"></div>
 
-{{if $showacl}}{{$acl}}{{/if}}
+{{$acl}}
 
 {{if $feature_expire}}
 <!-- Modal for item expiry-->

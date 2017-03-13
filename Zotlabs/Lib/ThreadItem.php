@@ -82,7 +82,8 @@ class ThreadItem {
 		$dropping = false;
 		$star = false;
 		$isstarred = "unstarred fa-star-o";
-		$indent = '';
+		$is_comment = false;
+		$is_item = false;
 		$osparkle = '';
 		$total_children = $this->count_descendants();
 		$unseen_comments = (($item['real_uid']) ? 0 : $this->count_unseen_descendants());
@@ -232,7 +233,7 @@ class ThreadItem {
 			}
 		} 
 		else {
-			$indent = 'comment';
+			$is_comment = true;
 		}
 
 
@@ -282,7 +283,7 @@ class ThreadItem {
 			$dreport = t('Delivery Report');
 
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
-			$indent .= ' shiny';
+			$is_new = true;
 
 
 		localize_item($item);
@@ -361,7 +362,8 @@ class ThreadItem {
 			'attend_title' => t('Attendance Options'),
 			'vote_label' => t('Vote'),
 			'vote_title' => t('Voting Options'),
-			'indent' => $indent,
+			'is_comment' => $is_comment,
+			'is_new' => $is_new,
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => $this->get_owner_name(),
@@ -407,7 +409,7 @@ class ThreadItem {
 			'showlike' => $showlike,
 			'showdislike' => $showdislike,
 			'comment' => $this->get_comment_box($indent),
-			'previewing' => ($conv->is_preview() ? ' preview ' : ''),
+			'previewing' => ($conv->is_preview() ? true : false ),
 			'wait' => t('Please wait'),
 			'submid' => str_replace(['+','='], ['',''], base64_encode(substr($item['mid'],0,32))),
 			'thread_level' => $thread_level

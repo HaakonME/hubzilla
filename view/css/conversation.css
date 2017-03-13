@@ -73,10 +73,6 @@
 	height: 30px;
 }
 
-#profile-jot-wrapper {
-	margin-bottom: 30px;
-}
-
 #profile-jot-plugin-wrapper {
 	margin-top: 10px;
 }
@@ -91,9 +87,6 @@
 
 /* conversation */
 
-.thread-wrapper.toplevel_item {
-	margin-bottom: 20px;
-}
 
 /* conv_item */
 

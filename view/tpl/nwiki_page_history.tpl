@@ -39,10 +39,10 @@
     background:rgb(224,255,224);
   }
 </style>
-<table class="table-striped table-responsive table-hover" style="width: 100%;">
+<table class="" style="width: 100%;">
   {{foreach $pageHistory as $commit}}
-  <tr><td>
-      <table id="rev-{{$commit.revision}}" onclick="$('#details-{{$commit.revision}}').show()" width="100%">
+  <tr class="wikis-index-row"><td>
+      <table id="rev-{{$commit.revision}}" onclick="$('#details-{{$commit.revision}}').show()" style="width: 100%;">
         <tr><td width="10%">Date</td><td width="70%">{{$commit.date}}</td>
             <td rowspan="3" width="20%" align="right">
 		{{if $permsWrite}}

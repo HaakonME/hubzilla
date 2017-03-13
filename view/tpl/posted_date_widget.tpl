@@ -18,21 +18,21 @@ function toggle_posted_date_button() {
 <div id="datebrowse-sidebar" class="widget">
 	<h3>{{$title}}</h3>
 	<script>function dateSubmit(dateurl) { window.location.href = dateurl; } </script>
-	<ul id="posted-date-selector" class="nav nav-pills nav-stacked">
+	<ul id="posted-date-selector" class="nav nav-pills flex-column">
 		{{foreach $dates as $y => $arr}}
 		{{if $y == $cutoff_year}}
 		</ul>
 		<div id="posted-date-dropdown" style="display: none;">
-		<ul id="posted-date-selector-drop" class="nav nav-pills nav-stacked">
+		<ul id="posted-date-selector-drop" class="nav nav-pills flex-column">
 		{{/if}} 
-		<li id="posted-date-selector-year-{{$y}}">
-			<a href="#" onclick="openClose('posted-date-selector-{{$y}}'); return false;">{{$y}}</a>
+		<li class="nav-item" id="posted-date-selector-year-{{$y}}">
+			<a class="nav-link" href="#" onclick="openClose('posted-date-selector-{{$y}}'); return false;">{{$y}}</a>
 		</li>
 		<div id="posted-date-selector-{{$y}}" style="display: none;">
-			<ul class="posted-date-selector-months nav nav-pills nav-stacked">
+			<ul class="posted-date-selector-months nav nav-pills flex-column">
 				{{foreach $arr as $d}}
-				<li>
-					<a href="#" onclick="dateSubmit('{{$url}}?f=&dend={{$d.1}}{{if $showend}}&dbegin={{$d.2}}{{/if}}'); return false;">{{$d.0}}</a>
+				<li class="nav-item">
+					<a class="nav-link" href="#" onclick="dateSubmit('{{$url}}?f=&dend={{$d.1}}{{if $showend}}&dbegin={{$d.2}}{{/if}}'); return false;">{{$d.0}}</a>
 				</li>
 				{{/foreach}}
 			</ul>

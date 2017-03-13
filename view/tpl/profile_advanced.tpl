@@ -1,6 +1,6 @@
 <div id="profile-content-wrapper" class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		<div class="pull-right">
+		<div class="float-right">
 			{{if $profile.like_count}}
 			<div class="btn-group">
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="profile-like">{{$profile.like_count}} {{$profile.like_button_label}}</button>
@@ -19,15 +19,15 @@
 			{{if $editmenu.multi}}
 			<div class="btn-group">
 				<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" href="#" ><i class="fa fa-pencil"></i>&nbsp;{{$editmenu.edit.3}}</a>
-				<ul class="dropdown-menu dropdown-menu-right" role="menu">
+				<div class="dropdown-menu dropdown-menu-right">
 					{{foreach $editmenu.menu.entries as $e}}
-					<li>
-						<a href="profiles/{{$e.id}}"><img class="dropdown-menu-img-xs" src='{{$e.photo}}'>{{$e.profile_name}}<div class='clear'></div></a>
-					</li>
+					<a class="dropdown-item" href="profiles/{{$e.id}}"><img class="dropdown-menu-img-xs" src='{{$e.photo}}'> {{$e.profile_name}}</a>
 					{{/foreach}}
-					<li><a href="profile_photo" >{{$editmenu.menu.chg_photo}}</a></li>
-					{{if $editmenu.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$editmenu.menu.cr_new}}</a></li>{{/if}}
-				</ul>
+					<a class="dropdown-item" href="profile_photo" >{{$editmenu.menu.chg_photo}}</a>
+					{{if $editmenu.menu.cr_new}}
+					<a class="dropdown-item" href="profiles/new" id="profile-listing-new-link">{{$editmenu.menu.cr_new}}</a>
+					{{/if}}
+				</div>
 			</div>
 			{{elseif $editmenu}}
 			<div class="btn-group">

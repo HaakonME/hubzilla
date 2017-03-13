@@ -6,16 +6,12 @@
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
 					<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 				</button>
-				<ul class="dropdown-menu dropdown-menu-right">
+				<div class="dropdown-menu dropdown-menu-right">
 					{{if $renamePage}}
-					<li class="nav-item">
-						<a class="nav-link rename-page" href="#"><i class="fa fa-edit"></i>&nbsp;{{$renamePage}}</a>
-					</li>
+					<a class="dropdown-item rename-page" href="#"><i class="fa fa-fw fa-edit"></i>&nbsp;{{$renamePage}}</a>
 					{{/if}}
-					<li class="nav-item">
-						<a id="embed-image" class="nav-link" href="#"><i class="fa fa-picture-o"></i>&nbsp;Embed Image</a>
-					</li>
-				</ul>
+					<a id="embed-image" class="dropdown-item" href="#"><i class="fa fa-fw fa-picture-o"></i>&nbsp;Embed Image</a>
+				</div>
 			</div>	
 			{{/if}}
 			<button id="fullscreen-btn" type="button" class="btn btn-outline-secondary btn-sm" onclick="makeFullScreen(); adjustFullscreenEditorHeight();"><i class="fa fa-expand"></i></button>
@@ -43,12 +39,12 @@
 	</div>
 	<div id="wiki-content-container" class="section-content-wrapper">
 		<ul class="nav nav-tabs" id="wiki-nav-tabs">
-			<li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
-			<li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
-			<li><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
+			<li class="nav-item" id="edit-pane-tab"><a class="nav-link" data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
+			<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
+			<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
 		</ul>
 		<div class="tab-content" id="wiki-page-tabs">
-			<div id="edit-pane" class="tab-pane fade">
+			<div id="edit-pane" class="tab-pane">
 				{{if !$mimeType || $mimeType == 'text/markdown'}}
 				<div id="ace-editor"></div>
 				{{else}}
@@ -62,19 +58,19 @@
 						<div class="input-group">
 							<input class="widget-input" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
 							<div class="input-group-btn">
-								<button id="save-page" type="button" class="btn btn-primary btn-sm disabled">Save</button>
+								<button id="save-page" type="button" class="btn btn-primary disabled">Save</button>
 							</div>
 						</div>
 					</div>
 				</div>
 				{{/if}}
 			</div>
-			<div id="preview-pane" class="tab-pane fade in active">
+			<div id="preview-pane" class="tab-pane active">
 				<div id="wiki-preview">
 					{{$renderedContent}}
 				</div>
 			</div>
-			<div id="page-history-pane" class="tab-pane fade">
+			<div id="page-history-pane" class="tab-pane">
 				<div id="page-history-list"></div>
 			</div>
 		</div>

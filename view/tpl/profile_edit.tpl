@@ -1,53 +1,34 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		<div class="dropdown pull-right" id="profile-edit-links">
+		<div class="dropdown float-right" id="profile-edit-links">
 			<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 			</button>
-			<ul class="dropdown-menu">
-				<li class="nav-item">
-					<a class="nav-link" href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}"><i class="fa fa-user"></i>&nbsp;{{$profpic}}</a>
-				</li>
+			<div class="dropdown-menu">
+				<a class="dropdown-item" href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}"><i class="fa fa-fw fa-user"></i>&nbsp;{{$profpic}}</a>
 				{{if $is_default}}
-				<li class="nav-item">
-					<a href="cover_photo" id="cover-photo_upload-link" title="{{$coverpic}}"><i class="fa fa-picture-o"></i>&nbsp;{{$coverpic}}</a>
-				</li>
+				<a class="dropdown-item" href="cover_photo" id="cover-photo_upload-link" title="{{$coverpic}}"><i class="fa fa-fw fa-picture-o"></i>&nbsp;{{$coverpic}}</a>
 				{{/if}}
 				{{if ! $is_default}}
-				<li class="nav-item">
-					<a href="profperm/{{$profile_id}}" id="profile-edit-visibility-link" title="{{$editvis}}"><i class="fa fa-pencil"></i>&nbsp;{{$editvis}}</a>
-				</li>
+				<a class="dropdown-item" href="profperm/{{$profile_id}}" id="profile-edit-visibility-link" title="{{$editvis}}"><i class="fa fa-fw fa-pencil"></i>&nbsp;{{$editvis}}</a>
 				{{/if}}
-				<li class="nav-item">
-					<a href="thing" id="profile-edit-thing-link" title="{{$addthing}}"><i class="fa fa-plus-circle"></i>&nbsp;{{$addthing}}</a>
-				</li>
-				<li class="divider"></li>
-				<li class="nav-item">
-					<a href="profile/{{$profile_id}}/view" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a>
-				</li>
-
+				<a class="dropdown-item" href="thing" id="profile-edit-thing-link" title="{{$addthing}}"><i class="fa fa-fw fa-plus-circle"></i>&nbsp;{{$addthing}}</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="profile/{{$profile_id}}/view" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a>
 				{{if $profile_clone_link}}
-				<li class="divider"></li>
-				<li class="nav-item">
-					<a href="{{$profile_clone_link}}" id="profile-edit-clone-link" title="{{$cr_prof}}">{{$cl_prof}}</a>
-				</li>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="{{$profile_clone_link}}" id="profile-edit-clone-link" title="{{$cr_prof}}">{{$cl_prof}}</a>
 				{{/if}}
 				{{if $exportable}}
-				<li class="divider"></li>
-				<li class="nav-item">
-					<a href="profiles/export/{{$profile_id}}">{{$lbl_export}}</a>
-				</li>
-				<li class="nav-item">
-					<a href="#" onClick="openClose('profile-upload-form'); return false;">{{$lbl_import}}</a>
-				</li>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="profiles/export/{{$profile_id}}">{{$lbl_export}}</a>
+				<a class="dropdown-item" href="#" onClick="openClose('profile-upload-form'); return false;">{{$lbl_import}}</a>
 				{{/if}}
 				{{if ! $is_default}}
-				<li class="divider"></li>
-				<li class="nav-item">
-					<a href="{{$profile_drop_link}}" id="profile-edit-drop-link" title="{{$del_prof}}" onclick="return confirmDelete();"><i class="fa fa-trash-o"></i>&nbsp;{{$del_prof}}</a>
-				</li>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="{{$profile_drop_link}}" id="profile-edit-drop-link" title="{{$del_prof}}" onclick="return confirmDelete();"><i class="fa fa-trash-o"></i>&nbsp;{{$del_prof}}</a>
 				{{/if}}
-			<ul>
+			</div>
 		</div>
 		<h2>{{$banner}}</h2>
 		<div class="clear"></div>

@@ -1703,8 +1703,7 @@ main.fullscreen .section-content-wrapper-np {
 
 nav ul li .undefined, 
 nav ul li .notify-seen,
-nav ul li .notify-unseen
- {
+nav ul li .notify-unseen {
     max-height: 3rem;
 }
 
@@ -1819,10 +1818,6 @@ blockquote {
 }
 */
 
-#tabs-collapse-1 {
-	padding: 0px;
-	margin-bottom: 25px;
-}
 
 @media screen and (max-width: 767px) {
 
@@ -2052,3 +2047,5 @@ dl.bb-dl > dd > li {
 #permcat-index {
 	margin: 10px;
 }
+
+.shiny { background-color: red; }

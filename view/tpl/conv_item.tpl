@@ -4,10 +4,10 @@
 </div>
 <div id="collapsed-comments-{{$item.id}}" class="collapsed-comments" style="display: none;">
 {{/if}}
-	<div id="thread-wrapper-{{$item.id}}" class="thread-wrapper{{if $item.toplevel}} {{$item.toplevel}} generic-content-wrapper h-entry {{else}} u-comment h-cite {{/if}} item_{{$item.submid}}">
+	<div id="thread-wrapper-{{$item.id}}" class="mb-4 clearfix thread-wrapper{{if $item.toplevel}} {{$item.toplevel}} generic-content-wrapper h-entry {{else}} u-comment h-cite {{/if}} item_{{$item.submid}}">
 		<a name="item_{{$item.id}}" ></a>
-		<div class="wall-item-outside-wrapper {{$item.indent}}{{$item.previewing}}" id="wall-item-outside-wrapper-{{$item.id}}" >
-			<div class="wall-item-content-wrapper {{$item.indent}}" id="wall-item-content-wrapper-{{$item.id}}" style="clear:both;">
+		<div class="clearfix wall-item-outside-wrapper{{if $item.is_comment}} comment{{/if}}{{if $item.previewing}} preview{{/if}}" id="wall-item-outside-wrapper-{{$item.id}}" >
+			<div class="clearfix wall-item-content-wrapper{{if $item.is_comment}} comment{{/if}}" id="wall-item-content-wrapper-{{$item.id}}" style="clear:both;">
 				{{if $item.photo}}
 				<div class="wall-photo-item" id="wall-photo-item-{{$item.id}}">
 					{{$item.photo}}
@@ -19,9 +19,12 @@
 				</div>
 				{{/if}}
 				{{if $item.title && !$item.event}}
-				<div class="p-2 bg-primary text-white wall-item-title h3{{if !$item.photo}} rounded-top{{/if}}" id="wall-item-title-{{$item.id}}" title="{{$item.title}}">
+				<div class="p-2{{if $item.is_new}} bg-primary text-white{{/if}} wall-item-title h3{{if !$item.photo}} rounded-top{{/if}}" id="wall-item-title-{{$item.id}}" title="{{$item.title}}">
 					{{if $item.title_tosource}}{{if $item.plink}}<a href="{{$item.plink.href}}" title="{{$item.title}} ({{$item.plink.title}})">{{/if}}{{/if}}{{$item.title}}{{if $item.title_tosource}}{{if $item.plink}}</a>{{/if}}{{/if}}
 				</div>
+				{{if ! $item.is_new}}
+				<hr class="m-0">
+				{{/if}}
 				{{/if}}
 				<div class="p-2 wall-item-head">
 					<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
@@ -78,7 +81,7 @@
 					<div class="clear"></div>
 				</div>
 				{{/if}}
-				<div class="p-2 wall-item-tools">
+				<div class="p-2 clearfix wall-item-tools">
 					<div class="wall-item-tools-right pull-right">
 						{{if $item.toplevel && $item.emojis && $item.reactions}}
 						<div class="btn-group dropdown">
@@ -233,11 +236,8 @@
 						{{/foreach}}
 					</div>
 					{{/if}}
-					<div class="clear"></div>
 				</div>
-				<div class="clear"></div>
 			</div>
-			<div class="clear{{if $indent}} {{$indent}}{{/if}}"></div>
 		</div>
 		{{if $item.toplevel}}
 		{{foreach $item.children as $child}}
@@ -245,10 +245,9 @@
 		{{/foreach}}
 		{{/if}}
 		{{if $item.comment}}
-		<div class="wall-item-comment-wrapper{{if $item.children}} wall-item-comment-wrapper-wc{{/if}}" >
+		<div class="p-2 wall-item-comment-wrapper{{if $item.children}} wall-item-comment-wrapper-wc{{/if}}" >
 			{{$item.comment}}
 		</div>
-		<div class="clear"></div>
 		{{/if}}
 	</div>
 {{if $item.comment_lastcollapsed}}

@@ -54,8 +54,6 @@ class System {
 		return 'https://github.com/redmatrix/hubzilla';
 	}
 
-
-
 	static public function get_server_role() {
 		return 'pro';
 	}

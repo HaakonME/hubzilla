@@ -144,18 +144,8 @@ class Impel extends \Zotlabs\Web\Controller {
 		
 			// Verify ability to use html or php!!!
 	
-		    $execflag = false;
-	
-			if($arr['mimetype'] === 'application/x-php') {
-				$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
-					intval(local_channel())
-				);
-	
-				if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-					$execflag = true;
-				}
-			}
-	
+			$execflag = ((intval($channel['channel_id']) == intval(local_channel()) && ($channel['channel_pageflags'] & PAGE_ALLOWCODE)) ? true : false);
+
 			$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1",
 				dbesc($arr['mid']),
 				intval(local_channel())

@@ -2252,3 +2252,20 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 	}
 
 }
+
+/*
+ * This checks if a channel is allowed to publish executable code.
+ * It is up to the caller to determine if the observer or local_channel 
+ * is in fact the resource owner whose channel_id is being checked
+ */
+
+function channel_codeallowed($channel_id) {
+
+	if(! intval($channel_id))
+		return false;
+
+	$x = channelx_by_n($channel_id);
+	if(($x) && ($x['channel_pageflags'] & PAGE_ALLOWCODE))
+		return true;
+	return false;
+}

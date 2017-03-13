@@ -58,7 +58,6 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 ); // 1 - this account can create content with PHP/Javascript
 define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 ); // 2 - this is the special system account
 define ( 'ACCOUNT_ROLE_DEVELOPER', 0x0004 );
 define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 ); // 4096 - this account is an administrator

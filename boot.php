@@ -549,7 +549,6 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );
 define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 );
 define ( 'ACCOUNT_ROLE_DEVELOPER', 0x0004 );
 define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );

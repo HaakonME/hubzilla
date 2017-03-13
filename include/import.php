@@ -528,16 +528,8 @@ function sync_chatrooms($channel,$chatrooms) {
 function import_items($channel,$items,$sync = false,$relocate = null) {
 
 	if($channel && $items) {
-		$allow_code = false;
-		$r = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id 
-			where channel_id = %d limit 1",
-			intval($channel['channel_id'])
-		);
-		if($r) {
-			if(($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
-				$allow_code = true;
-			}
-		}
+		
+		$allow_code = channel_codeallowed($channel['channel_id']);
 
 		$deliver = false;  // Don't deliver any messages or notifications when importing
 
@@ -1352,28 +1344,8 @@ function import_webpage_element($element, $channel, $type) {
 	}
 
 	// Verify ability to use html or php!!!
-	$execflag = false;
-	if($arr['mimetype'] === 'application/x-php' || $arr['mimetype'] === 'text/html') {
-		$z = q("select account_id, account_roles, channel_pageflags from account "
-			. "left join channel on channel_account_id = account_id where channel_id = %d limit 1", 
-			intval(local_channel())
-		);
 
-		if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-			$execflag = true;
-		}
-		else {
-			logger('Unable to import element "' . $name .'" because AllowCode permission is denied.');
-			notice( t('Unable to import element "' . $name .'" because AllowCode permission is denied.') . EOL);
-			$element['import_success'] = 0;
-			return $element;
-		}
-	}
-		
-//	$z = q("select * from iconfig where v = '%s' and k = '%s' and cat = 'system' limit 1", 
-//		dbesc($name), 
-//		dbesc($namespace)
-//	);
+	$execflag = channel_codeallowed(local_channel());
 
 	$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", 
 		dbesc($arr['mid']), 

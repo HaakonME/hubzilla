@@ -478,17 +478,8 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		// Verify ability to use html or php!!!
 	
-		$execflag = false;
-	
-		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
-			intval($profile_uid)
-		);
-		if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-			if($uid && (get_account_id() == $z[0]['account_id'])) {
-				$execflag = true;
-			}
-		}
-	
+		$execflag = ((intval($channel['channel_id']) == intval($profile_uid) && ($channel['channel_pageflags'] & PAGE_ALLOWCODE)) ? true : false);
+
 		$gacl = $acl->get();
 		$str_contact_allow = $gacl['allow_cid'];
 		$str_group_allow   = $gacl['allow_gid'];

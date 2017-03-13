@@ -184,7 +184,7 @@
 			<a class="nav-link {{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}" onclick="contextualHelp(); return false;"><i class="fa fa-fw fa-question-circle"></i></a>
 		</li>
 		{{/if}}
-		<li class="nav-item dropdown">
+		<li class="nav-item dropdown" id="app-menu">
 			<a class="nav-link" href="#" data-toggle="dropdown"><i class="fa fa-fw fa-bars"></i></a>
 			<div class="dropdown-menu dropdown-menu-right">
 				{{foreach $navapps as $navapp}}

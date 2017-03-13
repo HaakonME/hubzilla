@@ -17,6 +17,7 @@ require_once('include/text.php');
  * @param array $args
  * @return array
  */
+
 function photo_upload($channel, $observer, $args) {
 
 	$ret = array('success' => false);
@@ -27,9 +28,6 @@ function photo_upload($channel, $observer, $args) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
-
-
-//call_hooks('photo_upload_begin', $args);
 
 	/*
 	 * Determine the album to use
@@ -89,8 +87,6 @@ function photo_upload($channel, $observer, $args) {
 		$type = (($args['mimetype']) ? $args['mimetype'] : $args['type']);
 	} else {
 		$f = array('src' => '', 'filename' => '', 'filesize' => 0, 'type' => '');
-
-//		call_hooks('photo_upload_file',$f);
 
 		if (x($f,'src') && x($f,'filesize')) {
 			$src      = $f['src'];
@@ -374,37 +370,37 @@ function photo_upload($channel, $observer, $args) {
 	else {
 		$mid = item_message_id();
 
-		$arr = array();
+		$arr = [
+			'aid'             => $account_id,
+			'uid'             => $channel_id,
+			'mid'             => $mid,
+			'parent_mid'      => $mid,
+			'item_hidden'     => $item_hidden,
+			'resource_type'   => 'photo',
+			'resource_id'     => $photo_hash,
+			'owner_xchan'     => $channel['channel_hash'],
+			'author_xchan'    => $observer['xchan_hash'],
+			'title'           => $title,
+			'allow_cid'       => $ac['allow_cid'],
+			'allow_gid'       => $ac['allow_gid'],
+			'deny_cid'        => $ac['deny_cid'],
+			'deny_gid'        => $ac['deny_gid'],
+			'verb'            => ACTIVITY_POST,
+			'obj_type'        => ACTIVITY_OBJ_PHOTO,
+			'obj'             => json_encode($object),
+			'tgt_type'        => ACTIVITY_OBJ_ALBUM,
+			'target'	      => json_encode($target),
+			'item_wall'       => $visible,
+			'item_origin'     => 1,
+			'item_thread_top' => 1,
+			'item_private'    => intval($acl->is_private()),
+			'body'            => $summary
+		];
+
+		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
 
 		if($lat && $lon)
 			$arr['coord'] = $lat . ' ' . $lon;
-
-		$arr['aid']             = $account_id;
-		$arr['uid']             = $channel_id;
-		$arr['mid']             = $mid;
-		$arr['parent_mid']      = $mid;
-		$arr['item_hidden']     = $item_hidden;
-		$arr['resource_type']   = 'photo';
-		$arr['resource_id']     = $photo_hash;
-		$arr['owner_xchan']     = $channel['channel_hash'];
-		$arr['author_xchan']    = $observer['xchan_hash'];
-		$arr['title']           = $title;
-		$arr['allow_cid']       = $ac['allow_cid'];
-		$arr['allow_gid']       = $ac['allow_gid'];
-		$arr['deny_cid']        = $ac['deny_cid'];
-		$arr['deny_gid']        = $ac['deny_gid'];
-		$arr['verb']            = ACTIVITY_POST;
-		$arr['obj_type']	    = ACTIVITY_OBJ_PHOTO;
-		$arr['obj']		        = json_encode($object);
-		$arr['tgt_type']        = ACTIVITY_OBJ_ALBUM;
-		$arr['target']	        = json_encode($target);
-		$arr['item_wall']       = 1;
-		$arr['item_origin']     = 1;
-		$arr['item_thread_top'] = 1;
-		$arr['item_private']    = intval($acl->is_private());
-		$arr['plink']           = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . urlencode($arr['mid']);
-		$arr['body']		= $summary;
-
 
 		// this one is tricky because the item and the photo have the same permissions, those of the photo.
 		// Use the channel read_stream permissions to get the correct public_policy for the item and recalculate the
@@ -451,6 +447,7 @@ function photo_upload($channel, $observer, $args) {
  *   * \e boolean \b success
  *   * \e array \b albums
  */
+
 function photos_albums_list($channel, $observer, $sort_key = 'album', $direction = 'asc') {
 
 	$channel_id     = $channel['channel_id'];
@@ -531,6 +528,7 @@ function photos_album_widget($channelx,$observer,$sortkey = 'album',$direction =
  * @param string $album default empty
  * @return boolean|array
  */
+
 function photos_list_photos($channel, $observer, $album = '') {
 
 	$channel_id     = $channel['channel_id'];
@@ -570,6 +568,7 @@ function photos_list_photos($channel, $observer, $album = '') {
  * @param string $album name of the album
  * @return boolean
  */
+
 function photos_album_exists($channel_id, $album) {
 	$r = q("SELECT id FROM photo WHERE album = '%s' AND uid = %d limit 1",
 		dbesc($album),
@@ -589,6 +588,7 @@ function photos_album_exists($channel_id, $album) {
  * @param string $newname The new name of the album
  * @return bool|array
  */
+
 function photos_album_rename($channel_id, $oldname, $newname) {
 	return q("UPDATE photo SET album = '%s' WHERE album = '%s' AND uid = %d",
 		dbesc($newname),
@@ -607,6 +607,7 @@ function photos_album_rename($channel_id, $oldname, $newname) {
  * @param string $remote_xchan
  * @return string|boolean
  */
+
 function photos_album_get_db_idstr($channel_id, $album, $remote_xchan = '') {
 
 	if ($remote_xchan) {
@@ -642,6 +643,7 @@ function photos_album_get_db_idstr($channel_id, $album, $remote_xchan = '') {
  * @param boolean $visible default false
  * @return int item_id
  */
+
 function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 
 	// Create item container
@@ -697,7 +699,7 @@ function getGps($exifCoord, $hemi) {
 
 function getGpstimestamp($exifCoord) {
 
-    $hours = count($exifCoord) > 0 ? gps2Num($exifCoord[0]) : 0;
+    $hours   = count($exifCoord) > 0 ? gps2Num($exifCoord[0]) : 0;
     $minutes = count($exifCoord) > 1 ? gps2Num($exifCoord[1]) : 0;
     $seconds = count($exifCoord) > 2 ? gps2Num($exifCoord[2]) : 0;
 

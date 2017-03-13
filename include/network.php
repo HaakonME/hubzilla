@@ -1611,33 +1611,33 @@ function get_site_info() {
 
 
 
-	$data = Array(
-		'version' => $version,
-		'version_tag' => $tag,
-		'server_role' => Zotlabs\Lib\System::get_server_role(),
-		'commit' => $commit,
-		'url' => z_root(),
-		'plugins' => $visible_plugins,
-		'register_policy' =>  $register_policy[get_config('system','register_policy')],
-		'invitation_only' => intval(get_config('system','invitation_only')),
-		'directory_mode' =>  $directory_mode[get_config('system','directory_mode')],
-		'language' => get_config('system','language'),
-		'rss_connections' => intval(get_config('system','feed_contacts')),
-		'expiration' => $site_expire,
+	$data = [
+		'url'                          => z_root(),
+		'platform'                     => Zotlabs\Lib\System::get_platform_name(),
+		'site_name'                    => (($site_name) ? $site_name : ''),
+		'version'                      => $version,
+		'version_tag'                  => $tag,
+		'server_role'                  => Zotlabs\Lib\System::get_server_role(),
+		'commit'                       => $commit,
+		'plugins'                      => $visible_plugins,
+		'register_policy'              =>  $register_policy[get_config('system','register_policy')],
+		'invitation_only'              => intval(get_config('system','invitation_only')),
+		'directory_mode'               =>  $directory_mode[get_config('system','directory_mode')],
+		'language'                     => get_config('system','language'),
+		'rss_connections'              => intval(get_config('system','feed_contacts')),
+		'expiration'                   => $site_expire,
 		'default_service_restrictions' => $service_class,
-		'locked_features' => $locked_features,
-		'admin' => $admin,
-		'site_name' => (($site_name) ? $site_name : ''),
-		'platform' => Zotlabs\Lib\System::get_platform_name(),
-		'dbdriver' => DBA::$dba->getdriver(),
-		'lastpoll' => get_config('system','lastpoll'),
-		'info' => (($site_info) ? $site_info : ''),
-		'channels_total' => $channels_total_stat,
-		'channels_active_halfyear' => $channels_active_halfyear_stat,
-		'channels_active_monthly' => $channels_active_monthly_stat,
-		'local_posts' => $local_posts_stat,
-		'hide_in_statistics' => $hide_in_statistics
-	);
+		'locked_features'              => $locked_features,
+		'admin'                        => $admin,
+		'dbdriver'                     => DBA::$dba->getdriver(),
+		'lastpoll'                     => get_config('system','lastpoll'),
+		'info'                         => (($site_info) ? $site_info : ''),
+		'channels_total'               => $channels_total_stat,
+		'channels_active_halfyear'     => $channels_active_halfyear_stat,
+		'channels_active_monthly'      => $channels_active_monthly_stat,
+		'local_posts'                  => $local_posts_stat,
+		'hide_in_statistics'           => $hide_in_statistics
+	];
 	return $data;
 }
 

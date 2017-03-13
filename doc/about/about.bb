@@ -1,7 +1,7 @@
-[h3]What is Hubzilla?[/h3]
+[h3]What is $Projectname?[/h3]
 $Projectname is a [b]free and open source[/b] set of web applications and services running on a special kind of web server, called a "hub", that can connect to other hubs in a decentralised network we like to call "the grid", providing sophisticated communications, identity, and access control services which work together seamlessly across domains and independent websites. It allows anybody to publicly or [b]privately[/b] publish content via "channels", which are the fundamental, cryptographically secured identities that provide authentication independently of the hubs which host them. This revolutionary liberation of online identity from individual servers and domains is called "nomadic identity", and it is powered by the Zot protocol, a new framework for decentralised access control with fine-grained, extensible permissions.
 
-[h3]Right... so what is Hubzilla?[/h3]
+[h3]Right... so what is $Projectname?[/h3]
 From the practical perspective of hub members who use the software, $Projectname offers a variety of familiar, integrated web apps and services, including: 
 [ul]
 [li]social networking discussion threads[/li]
@@ -15,14 +15,9 @@ While all of these apps and services can be found in other software packages, on
 [h3]Software Stack[/h3]
 The $Projectname software stack is a relatively standard webserver application written primarily in PHP/MySQL and [url=https://github.com/redmatrix/hubzilla/blob/master/install/INSTALL.txt]requiring little more than a web server, a MySQL-compatible database, and the PHP scripting language[/url]. It is designed to be easily installable by those with basic website administration skills on typical shared hosting platforms with a broad range of computing hardware. It is also easily extended via plugins and themes and other third-party tools. 
 
-[h3]Additional Resources and Links[/h3]
-[list][*][url=http://hubzilla.org]Hubzilla project website[/url]
-[*][url=https://github.com/redmatrix/hubzilla]Hubzilla core code repository[/url]
-[*][url=https://github.com/redmatrix/hubzilla-addons]Hubzilla official addons repository[/url][/list]
-
 [h3]Glossary[/h3]
 [dl terms="b"]
-[*= hub] An instance of the Hubzilla software running on a standard web server
+[*= hub] An instance of this software running on a standard web server
 
 [*= grid] The global network of hubs that exchange information with each other using the Zot protocol.
 

@@ -53,7 +53,7 @@ class Config {
 		$dbvalue = ((is_array($value))  ? serialize($value) : $value);
 		$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
 
-		if(get_config($family, $key) === false || (! self::get_from_storage($family, $key))) {
+		if(self::Get($family, $key) === false || (! self::get_from_storage($family, $key))) {
 			$ret = q("INSERT INTO config ( cat, k, v ) VALUES ( '%s', '%s', '%s' ) ",
 				dbesc($family),
 				dbesc($key),

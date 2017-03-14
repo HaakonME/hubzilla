@@ -921,15 +921,12 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	display: block;
 }
 
-.dropdown-sub-text {
+.dropdown-notification {
 	line-height: 1em;
+	font-size: 0.75rem;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: block;
-}
-
-.notify-seen a {
-	background: #ddd;
 }
 
 #page-spinner {
@@ -1470,11 +1467,6 @@ img.mail-conv-sender-photo {
 	color: $toolicon_colour;
 }
 
-.widget .nav-item:hover {
-	background-color: #eee;
-	border-radius: $radiuspx;
-}
-
 #note-text {
 	border: 1px solid #ccc;
 	border-radius: $radiuspx;
@@ -1537,8 +1529,8 @@ nav img {
 }
 
 .dropdown-menu-img-xs {
-	height: 18px;
-	width: 18px;
+	height: 1em;
+	width: 1em;
 	margin-right: 5px;
 }
 
@@ -1701,12 +1693,9 @@ main.fullscreen .section-content-wrapper-np {
 	background-color: $item_colour;
 }
 
-nav ul li .undefined, 
-nav ul li .notify-seen,
-nav ul li .notify-unseen {
-    max-height: 3rem;
+.notify-seen {
+	background-color: $item_colour;
 }
-
 /* bootstrap overrides */
 
 .btn {

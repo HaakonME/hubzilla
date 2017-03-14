@@ -7,7 +7,7 @@
 </head>
 <body <?php if($page['direction']) echo 'dir="rtl"' ?> >
 	<?php if(x($page,'banner')) echo $page['banner']; ?>
-	<header class="hidden-md-down"><?php if(x($page,'header')) echo $page['header']; ?></header>
+	<header><?php if(x($page,'header')) echo $page['header']; ?></header>
 	<nav class="navbar fixed-top navbar-toggleable-sm navbar-inverse bg-inverse"><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
 	<main>
 		<aside id="region_1"><div id="left_aside_spacer"><div id="left_aside_wrapper"><?php if(x($page,'aside')) echo $page['aside']; ?></div></div></aside>

@@ -19,11 +19,8 @@
 	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
-	<!--button id="expand-tabs" type="button" class="navbar-toggler border-0" data-toggle="collapse" data-target="#tabs-collapse-1">
-		<i class="fa fa-arrow-circle-down" id="expand-tabs-icon"></i>
-	</button-->
 	{{if $localuser}}
-	<button id="notifications-btn" type="button" class="navbar-toggler border-0" data-toggle="collapse" data-target="#navbar-collapse-1" style="color: grey;">
+	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-muted" data-toggle="collapse" data-target="#navbar-collapse-1">
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
 	{{/if}}
@@ -171,13 +168,17 @@
 		{{/if}}
 	</ul>
 
-	<!--div class="navbar-text hidden-lg-down">Hubzilla</div-->
+	<div class="navbar-text text-white font-weight-bold">{{$banner}}</div>
 
-	<ul class="navbar-nav hidden-sm-down ml-auto">
-		<li class="nav-item">
+	<ul id="nav-right" class="navbar-nav hidden-sm-down ml-auto">
+		<li class="nav-item collapse clearfix" id="nav-search">
 			<form class="form-inline" method="get" action="search" role="search">
-				<div id="nav-search-spinner"></div><input class="fa-search" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();"/>
+				<input class="form-control form-control-sm mt-1" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur=" $('#nav-search').hide(); $('#nav-search-btn').show();"/>
 			</form>
+			<div id="nav-search-spinner"></div>
+		</li>
+		<li class="nav-item" id="nav-search-btn">
+			<a class="nav-link" href="#nav-search" title="{{$nav.search.3}}" onclick="$('#nav-search').show(); $('#nav-search-btn').hide(); $('#nav-search-text').focus(); return false;"><i class="fa fa-fw fa-search"></i></a>
 		</li>
 		{{if $nav.help.6}}
 		<li class="nav-item dropdown {{$sel.help}}">

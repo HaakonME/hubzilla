@@ -42,8 +42,6 @@ EOT;
 		
 	$sitelocation = (($myident) ? $myident : App::get_hostname());
 
-
-
 	/**
 	 *
 	 * Provide a banner/logo/whatever
@@ -55,10 +53,9 @@ EOT;
 	if($banner === false) 
 		$banner = get_config('system','sitename');
 
+	//the notifications template is in hdr.tpl
 	App::$page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
-        '$baseurl' => z_root(),
-		'$sitelocation' => $sitelocation,
-		'$banner' =>  $banner
+		//we could additionally use this to display important system notifications e.g. for updates
 	));
 
 	$server_role = get_config('system','server_role');
@@ -66,21 +63,21 @@ EOT;
 	$techlevel = get_account_techlevel();
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
-	$nav = Array();
+	$nav = [];
 
 	/**
 	 * Display login or logout
 	 */	
 
-	$nav['usermenu']=array();
+	$nav['usermenu'] = [];
 	$userinfo = null;
-	$nav['loginmenu']=array();
+	$nav['loginmenu'] = [];
 
 	if($observer) {
-			$userinfo = array(
+		$userinfo = [
 			'icon' => $observer['xchan_photo_m'],
 			'name' => $observer['xchan_addr'],
-		);
+		];
 	}
 
 	elseif(! $_SESSION['authenticated']) {
@@ -96,38 +93,21 @@ EOT;
 		if($chans && count($chans) > 1 && feature_enabled(local_channel(),'nav_channel_select') && (! $basic))
 			$nav['channels'] = $chans;
 
-		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'),'logout_nav_btn');
+		$nav['logout'] = ['logout',t('Logout'), "", t('End this session'),'logout_nav_btn'];
 		
 		// user menu
-		//$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'),'channel_nav_btn');
-		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'),'profile_nav_btn');
+		$nav['usermenu'][] = ['profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'),'profile_nav_btn'];
+
 		if(feature_enabled(local_channel(),'multi_profiles') && (! $basic))
-			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'),'profiles_nav_btn');
+			$nav['usermenu'][]   = ['profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'),'profiles_nav_btn'];
 		else
-			$nav['usermenu'][]   = Array('profiles/' . $prof[0]['id'], t('Edit Profile'),"", t('Edit your profile'),'profiles_nav_btn');
+			$nav['usermenu'][]   = ['profiles/' . $prof[0]['id'], t('Edit Profile'),"", t('Edit your profile'),'profiles_nav_btn'];
 
-		//$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'),'photos_nav_btn');
-		//$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'),'cloud_nav_btn');
-
-		//if((! $basic) && feature_enabled(local_channel(),'ajaxchat'))
-		//	$nav['usermenu'][] = Array('chat/' . $channel['channel_address'], t('Chat'),"",t('Your chatrooms'),'chat_nav_btn');
-
-
-		//require_once('include/menu.php');
-		//$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
-		//if(($has_bookmarks) && (! $basic)) {
-		//	$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'),'bookmarks_nav_btn');
-		//}
-
-		//if(feature_enabled($channel['channel_id'],'webpages') && (! $basic))
-		//	$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'),'webpages_nav_btn');
-		//if(feature_enabled($channel['channel_id'],'wiki') && (! $basic))
-		//	$nav['usermenu'][] = Array('wiki/' . $channel['channel_address'],t('Wikis'),"",t('Your wikis'),'wiki_nav_btn');
 	}
 	else {
 		if(! get_account_id())  {
 			$nav['login'] = login(true,'main-login',false,false);
-			$nav['loginmenu'][] = Array('login',t('Login'),'',t('Sign in'),'login_nav_btn');
+			$nav['loginmenu'][] = ['login',t('Login'),'',t('Sign in'),'login_nav_btn'];
 			App::$page['content'] .= replace_macros(get_markup_template('nav_login.tpl'),
 				[ 
 					'$nav' => $nav,
@@ -137,7 +117,7 @@ EOT;
 
 		}
 		else
-			$nav['alogout'] = Array('logout',t('Logout'), "", t('End this session'),'logout_nav_btn');
+			$nav['alogout'] = ['logout',t('Logout'), "", t('End this session'),'logout_nav_btn'];
 
 
 	}
@@ -159,7 +139,7 @@ EOT;
 	}
 
 	if(((get_config('system','register_policy') == REGISTER_OPEN) || (get_config('system','register_policy') == REGISTER_APPROVE)) && (! $_SESSION['authenticated']))
-		$nav['register'] = array('register',t('Register'), "", t('Create an account'),'register_nav_btn');
+		$nav['register'] = ['register',t('Register'), "", t('Create an account'),'register_nav_btn'];
 
 	if(! get_config('system','hide_help')) {
 		$help_url = z_root() . '/help?f=&cmd=' . App::$cmd;
@@ -171,15 +151,10 @@ EOT;
 			//point directly to /help if $context_help is empty - this can be removed once we have context help for all modules
 			$enable_context_help = (($context_help) ? true : false);
 		}
-		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'), 'help_nav_btn', $context_help, $enable_context_help);
+		$nav['help'] = [$help_url, t('Help'), "", t('Help and documentation'), 'help_nav_btn', $context_help, $enable_context_help];
 	}
 
-	if(! $basic)
-		$nav['apps'] = array('apps', t('Apps'), "", t('Applications, utilities, links, games'),'apps_nav_btn');
-
-	$nav['search'] = array('search', t('Search'), "", t('Search site @name, #tag, ?docs, content'));
-
-	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Directory'),'directory_nav_btn'); 
+	$nav['search'] = ['search', t('Search'), "", t('Search site @name, #tag, ?docs, content')];
 
 
 	/**
@@ -246,14 +221,12 @@ EOT;
 		$banner = get_config('system','sitename');
 
 	$x = array('nav' => $nav, 'usermenu' => $userinfo );
+
 	call_hooks('nav', $x);
 
 	// Not sure the best place to put this on the page. So I'm implementing it but leaving it 
 	// turned off until somebody discovers this and figures out a good location for it. 
 	$powered_by = '';
-
-	// $powered_by = '<strong>red<img class="smiley" src="' . z_root() . '/images/rm-16.png" alt="r#" />matrix</strong>';
-
 
 	//app bin
 	if(local_channel()) {

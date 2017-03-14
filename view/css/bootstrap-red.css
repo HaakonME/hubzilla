@@ -17,18 +17,17 @@ nav .badge {
 	font-size: 1rem;
 }
 
-/* nav overrides end */
-
+#navbar-collapse-2.show {
+	max-height: 100vh;
+	overflow: auto;
+}
 
 nav .dropdown-menu {
 	max-height: 70vh;
 	overflow: auto;
 }
 
-nav .navbar-collapse.in .dropdown-menu {
-	max-height: none;
-	overflow: none;
-}
+/* nav overrides end */
 
 .wall-item-tools .dropdown-menu {
 	min-width: auto;
@@ -36,10 +35,6 @@ nav .navbar-collapse.in .dropdown-menu {
 
 code {
 	white-space: normal;
-}
-
-.form-control {
-	font-size: unset;
 }
 
 .panel-group {

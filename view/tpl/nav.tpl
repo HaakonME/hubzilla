@@ -168,12 +168,12 @@
 		{{/if}}
 	</ul>
 
-	<div class="navbar-text text-white font-weight-bold">{{$banner}}</div>
+	<div class="navbar-text text-white font-weight-bold hidden-sm-down">{{$banner}}</div>
 
 	<ul id="nav-right" class="navbar-nav hidden-sm-down ml-auto">
 		<li class="nav-item collapse clearfix" id="nav-search">
 			<form class="form-inline" method="get" action="search" role="search">
-				<input class="form-control form-control-sm mt-1" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur=" $('#nav-search').hide(); $('#nav-search-btn').show();"/>
+				<input class="form-control form-control-sm mt-1 mr-2" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur=" $('#nav-search').hide(); $('#nav-search-btn').show();"/>
 			</form>
 			<div id="nav-search-spinner"></div>
 		</li>

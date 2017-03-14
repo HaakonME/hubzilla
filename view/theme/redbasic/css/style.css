@@ -545,7 +545,7 @@ footer {
 #nav-search-spinner {
 	float: right;
 	margin-top: -0.85rem;
-	margin-right: 1.1rem;
+	margin-right: 1.6rem;
 }
 
 
@@ -880,14 +880,12 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 }
 
 .contactname {
-	padding-top: 2px;
 	font-weight: bold;
-	line-height: 1em;
 	display: block;
 }
 
 .dropdown-notification {
-	line-height: 1em;
+	line-height: 1.1em;
 	font-size: 0.75rem;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1487,15 +1485,15 @@ nav img {
 }
 
 .dropdown-menu-img-sm {
-	width: 3em;
-	height: 3em;
+	width: 3.3em;
+	height: 3.3em;
 	margin-right: 5px;
 	float: left;
 }
 
 .dropdown-menu-img-xs {
-	height: 1em;
-	width: 1em;
+	height: 1.1em;
+	width: 1.1em;
 	margin-right: 5px;
 }
 

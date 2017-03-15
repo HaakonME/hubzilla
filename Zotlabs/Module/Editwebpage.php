@@ -130,8 +130,6 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 	
 		$layout = $itm[0]['layout_mid'];
 	
-		$tpl = get_markup_template("jot.tpl");
-
 		$rp = 'webpages/' . $which;
 
 		$x = array(

@@ -530,11 +530,6 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr = array();
 
-	if($allow_code)
-		$arr['body'] = $x['body'];
-	else
-		$arr['body'] = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
-
 	$key = get_config('system','pubkey');
 
 	$maxlen = get_max_import_size();
@@ -647,7 +642,17 @@ function get_item_elements($x,$allow_code = false) {
 			return array();
 	}
 
+	// Check signature on the body text received. 
+	// This presents an issue that we aren't verifying the text that is actually displayed
+	// on this site. We are however verifying the received text was exactly as received.
+	// We have every right to strip content that poses a security risk. You are welcome to
+	// create a plugin to verify the content after filtering if this offends you.  
+
 	if($arr['sig']) {
+
+		// check the supplied signature against the supplied content.
+		// Note that we will purify the content which could change it.
+
 		$r = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 			dbesc($arr['author_xchan'])
 		);
@@ -656,6 +661,14 @@ function get_item_elements($x,$allow_code = false) {
 		else
 			logger('get_item_elements: message verification failed.');
 	}
+
+	// if the input is markdown, remove one level of html escaping.
+	// It will be re-applied in item_store() and/or item_store_update().
+	// Do this after signature checking as the original signature
+	// was generated on the escaped content.
+
+	if($arr['mimetype'] === 'text/markdown')
+		$arr['body'] = \Zotlabs\Lib\MarkdownSoap::unescape($arr['body']);
 
 	if(array_key_exists('revision',$x)) {
 
@@ -1525,14 +1538,20 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 	$arr['lang'] = detect_language($arr['body']);
 	// apply the input filter here
-	$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
 
-	if(local_channel() && (local_channel() == $arr['uid'])) {
-		if(! $arr['sig']) {
-			$channel = App::get_channel();
-			if($channel['channel_hash'] === $arr['author_xchan']) {
-				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-				$arr['item_verified'] = 1;
+	if(array_key_exists('input_filtered_signed',$arr)) {
+		unset($arr['input_filtered_signed']);
+	}
+	else {
+		$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
+
+		if(local_channel() && (local_channel() == $arr['uid'])) {
+			if(! $arr['sig']) {
+				$channel = App::get_channel();
+				if($channel['channel_hash'] === $arr['author_xchan']) {
+					$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+					$arr['item_verified'] = 1;
+				}
 			}
 		}
 	}
@@ -1946,17 +1965,22 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		return $ret;
 	}
 
-
 	$arr['lang'] = detect_language($arr['body']);
 
-	// apply the input filter here
-	$arr['body'] = trim($arr['body'],$arr['mimetype'],$allow_exec);
+	if(array_key_exists('input_filtered_signed',$arr)) {
+		unset($arr['input_filtered_signed']);
+	}
+	else {
+		$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
 
-	if(local_channel() && (local_channel() == $arr['uid']) && (! $arr['sig'])) {
-		$channel = App::get_channel();
-		if($channel['channel_hash'] === $arr['author_xchan']) {
-			$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-			$arr['item_verified'] = 1;
+		if(local_channel() && (local_channel() == $arr['uid'])) {
+			if(! $arr['sig']) {
+				$channel = App::get_channel();
+				if($channel['channel_hash'] === $arr['author_xchan']) {
+					$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+					$arr['item_verified'] = 1;
+				}
+			}
 		}
 	}
 

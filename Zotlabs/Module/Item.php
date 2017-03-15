@@ -480,22 +480,12 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		$execflag = false;
 	
-		if($mimetype !== 'text/bbcode') {
-			$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
-				intval($profile_uid)
-			);
-			if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
-				if($uid && (get_account_id() == $z[0]['account_id'])) {
-					$execflag = true;
-				}
-				else {
-					notice( t('Executable content type not permitted to this channel.') . EOL);
-					if($api_source)
-						return ( [ 'success' => false, 'message' => 'forbidden content type' ] );	
-					if(x($_REQUEST,'return')) 
-						goaway(z_root() . "/" . $return_path );
-					killme();
-				}
+		$z = q("select account_id, account_roles, channel_pageflags from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+			intval($profile_uid)
+		);
+		if($z && (($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) || ($z[0]['channel_pageflags'] & PAGE_ALLOWCODE))) {
+			if($uid && (get_account_id() == $z[0]['account_id'])) {
+				$execflag = true;
 			}
 		}
 	

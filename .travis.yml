@@ -1,44 +1,156 @@
+#
+# Travis-CI configuration file for Hubzilla
+#
+## configure things
+#
+
 # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
 language: php
 
-# list any PHP version you want to test against
+# use newer 'trusty' based distro, old one is 'precise'
+dist: trusty
+# use docker based containers
+sudo: false
+
+# Git branches whitelist to build on Travis CI
+branches:
+  only:
+  - master
+  - dev
+  # whitelist our tags for release deployments e.g. 2.2
+  - /^\d+\.\d+(\.\d+)?(-\S*)?$/
+
+# Install additional software
+addons:
+  # Install dependencies for generating API documentation with doxygen
+  apt:
+    packages:
+      - doxygen
+      - doxygen-latex
+      - graphviz
+      - ttf-liberation
+
+# enable and start databases on a per job basis
+#services:
+#  - mariadb
+#  - postgresql
+
+# any PHP version we want to test against, current stable phpunit requires PHP >= 7.0
 php:
-  # using major version aliases
+  - '7.0'
+  - '7.1'
+  # HHVM does not fulfil PHPUnit platform requirements as being compatible with PHP7 yet
+  #- 'hhvm'
 
-  # aliased to a recent 5.6.x version
-  - 5.6
-  # aliased to a recent 7.x version
-  - 7.0
-  # aliased to a recent hhvm version
-  - hhvm
+# list of environments to test
+env:
+  global:
+    # used for doxygen deployment script
+    - DOXYFILE: $TRAVIS_BUILD_DIR/util/Doxyfile
+    # Uncomment if a newer/specific version of Doxygen should be used
+    #- DOXY_VER: 1.8.12
+    # Code Coverage is slow, no need to have it in every build
+    - PHPUCOV: "--no-coverage"
+  # use matrix only for PHP and MySQL, all other combinations added through includes
+  matrix:
+    # trusty default MySQL 5.6
+    - DB=mysql MYSQL_VERSION=5.6
 
-# optionally specify a list of environments, for example to test different RDBMS
-#env:
-#  - DB=mysql
-#  - DB=pgsql
-
-# optionally set up exclutions and allowed failures in the matrix
+# Matrix configuration details
 matrix:
+  fast_finish: true
+  # Additional check combinations
+  include:
+    # PHP7.1, mariadb 10.1
+    - php: '7.1'
+      env: DB=mariadb MARIADB_VERSION=10.1 CODECOV=1
+      # use mariadb instead of MySQL
+      addons:
+        mariadb: '10.1'
+    # PHP7.1, PostgreSQL 9.6
+    - php: '7.1'
+      env: DB=pgsql POSTGRESQL_VERSION=9.6
+      # Use newer postgres than 9.2 default
+      addons:
+        postgresql: '9.6'
+      services:
+        - postgresql
+    # PHP7.1, old precise distribution with MySQL 5.5
+    - php: '7.1'
+      env: DB=mysql MYSQL_VERSION=5.5
+      dist: precise
+      services:
+        - mysql
+   # Excludes from default matrix combinations
 #  exclude:
 #    - php: hhvm
 #      env: DB=pgsql  # PDO driver for pgsql is unsupported by HHVM (3rd party install for support)
-  allow_failures:
-    - php: hhvm
+
+# cache composer downloads between runs
+cache:
+  directories:
+    - $HOME/.composer/cache
+    #- $HOME/doxygen/doxygen-$DOXY_VER/bin
+
+
+
+#
+## execute things
+#
+
+before_install:
+  - travis_retry composer self-update
+
+# Install composer dev libs
+install:
+  - travis_retry composer install --optimize-autoloader
 
 # execute any number of scripts before the test run, custom env's are available as variables
-#before_script:
-#  - if [[ "$DB" == "pgsql" ]]; then psql -c "DROP DATABASE IF EXISTS hello_world_test;" -U postgres; fi
-#  - if [[ "$DB" == "pgsql" ]]; then psql -c "create database hello_world_test;" -U postgres; fi
-#  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS hello_world_test;" -uroot; fi
-
-install:
-  - composer install --optimize-autoloader
+before_script:
+  # Use code coverage config for phpunit
+  - if [[ ! -z $CODECOV ]]; then export PHPUCOV=""; fi
+  # Some preparation tasks of environment
+  - ./tests/travis/prepare.sh
+  # DB specific prepare scripts
+  - if [[ "$DB" == "mysql" ]]; then ./tests/travis/prepare_mysql.sh; fi
+  - if [[ "$DB" == "mariadb" ]]; then ./tests/travis/prepare_mysql.sh; fi
+  - if [[ "$DB" == "pgsql" ]]; then ./tests/travis/prepare_pgsql.sh; fi
 
 # omitting "script:" will default to phpunit
-# use the $DB env variable to determine the phpunit.xml to use
-script: vendor/bin/phpunit  tests/unit/
+script: ./vendor/bin/phpunit $PHPUCOV -c tests/phpunit-$DB.xml
+
+after_success:
+  # Generate API documentation and deploy it to gh-pages
+  - ./tests/travis/gen_apidocs.sh
+#after_failure:
+
+# Deploying release and API documentation to GitHub
+#before_deploy:
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    local_dir: $TRAVIS_BUILD_DIR/doc/html
+    github_token: $GH_TOKEN
+    on:
+      repo: redmatrix/hubzilla
+      branch: master
+      condition: '(-n "$GH_TOKEN") && ("$TRAVIS_JOB_NUMBER" == "${TRAVIS_BUILD_NUMBER}.1")'
+  # add API documentation to release, could also be used to provide full packages if we want to drop vendor from our repo
+  - provider: releases
+    skip_cleanup: true
+    api_key: $GH_TOKEN
+    file: 'doc/hubzilla-api-documentation.zip'
+    on:
+      repo: redmatrix/hubzilla
+      tags: true
+      condition: '(-n "$GH_TOKEN") && ("$TRAVIS_JOB_NUMBER" == "${TRAVIS_BUILD_NUMBER}.1")'
+#after_deploy:
+
+#after_script:
+
+
 
 # configure notifications (email, IRC, campfire etc)
-notifications:
+#notifications:
 #  irc: "irc.freenode.org#yourfavouriteroomfortravis"
 # a plugin/script to post to a hubzilla channel would be neat here

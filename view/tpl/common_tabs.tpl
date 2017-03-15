@@ -5,8 +5,8 @@
 		{{/foreach}}
 	</ul>
 </div>
-<div class="hidden-md-up dropdown clearfix" style="position:fixed; right:7px; top:4.5rem; z-index:1020">
-	<button type="button" class="btn btn-outline-secondary btn-sm float-right" data-toggle="dropdown">
+<div class="hidden-md-up dropup clearfix" style="position:fixed; right:7px; bottom:2rem; z-index:1020">
+	<button type="button" class="btn btn-outline-success btn-sm float-right" data-toggle="dropdown">
 		<i class="fa fa-bars"></i>
 	</button>
 	<div class="dropdown-menu dropdown-menu-right">

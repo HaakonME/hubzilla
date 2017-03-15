@@ -1292,7 +1292,7 @@ img.mail-conv-sender-photo {
 }
 
 .wall-item-footer {
-	font-size: $body_font_size;
+	font-size: 0.75rem;
 	margin-top: 2em;
 }
 
@@ -1367,8 +1367,7 @@ img.mail-conv-sender-photo {
 .mail-conv-body,
 .page-body,
 .chat-item-text,
-.chat-item-text-self,
-#doco-content {
+.chat-item-text-self {
 	font-size: $font_size;
 	clear: both;
 }

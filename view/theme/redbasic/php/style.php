@@ -134,11 +134,11 @@ if (! $shadow)
 if (! $converse_width)
 	$converse_width = '790';
 if(! $top_photo)
-	$top_photo = '2.2rem';
+	$top_photo = '2.3rem';
 if(! $comment_indent)
 	$comment_indent = '0px';
 if(! $reply_photo)
-	$reply_photo = '2.2rem';
+	$reply_photo = '2.3rem';
 if($nav_min_opacity === false || $nav_min_opacity === '') {
 	$nav_float_min_opacity = 1.0;
 	$nav_percent_min_opacity = 100;

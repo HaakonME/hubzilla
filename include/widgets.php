@@ -1480,12 +1480,12 @@ function widget_forums($arr) {
 
 	if($r1) {
 		$o .= '<div class="widget">';
-		$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills nav-stacked">';
+		$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills flex-column">';
 
 		foreach($r1 as $rr) {
 			if($unseen && (! intval($rr['unseen'])))
 				continue;
-			$o .= '<li><a href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><span class="badge pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+			$o .= '<li class="nav-item"><a class="nav-link" href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><span class="badge badge-default float-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><img class ="dropdown-menu-img-xs" src="' . $rr['xchan_photo_s'] . '" /> ' . $rr['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';
 	}
@@ -1537,10 +1537,10 @@ function widget_activity($arr) {
 
 	if($arr) {
 		$o .= '<div class="widget">';
-		$o .= '<h3>' . t('Activity','widget') . '</h3><ul class="nav nav-pills nav-stacked">';
+		$o .= '<h3>' . t('Activity','widget') . '</h3><ul class="nav nav-pills flex-column">';
 
 		foreach($arr as $rv) {
-			$o .= '<li><a href="network?f=&xchan=' . urlencode($rv['author_xchan']) . '" ><span class="badge pull-right">' . ((intval($rv['total'])) ? intval($rv['total']) : '') . '</span><img src="' . $rv['author']['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rv['author']['xchan_name'] . '</a></li>';
+			$o .= '<li class="nav-item"><a class="nav-link" href="network?f=&xchan=' . urlencode($rv['author_xchan']) . '" ><span class="badge badge-default float-right">' . ((intval($rv['total'])) ? intval($rv['total']) : '') . '</span><img src="' . $rv['author']['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rv['author']['xchan_name'] . '</a></li>';
 		}
 		$o .= '</ul></div>';
 	}
@@ -1582,7 +1582,7 @@ function widget_helpindex($arr) {
 	if(! $level_0)
 		$level_0 = get_help_content('toc');
 
-	$level_0 = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$level_0);
+	$level_0 = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills flex-column">',$level_0);
 
 	$levels = array();
 
@@ -1595,7 +1595,7 @@ function widget_helpindex($arr) {
 			if(! $y)
 				$y = get_help_content($path . 'toc');
 			if($y)
-				$levels[] = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$y);
+				$levels[] = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills flex-column">',$y);
 		}
 	}
 

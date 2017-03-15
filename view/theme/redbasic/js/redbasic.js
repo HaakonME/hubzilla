@@ -16,6 +16,8 @@ $(document).ready(function() {
 	}
 	$('#css3-calc').remove(); // Remove the test element
 
+
+
 	if($(window).width() > 767) {
 		$('#left_aside_wrapper').stick_in_parent({
 			offset_top: $('nav').outerHeight(true) + 10,
@@ -23,6 +25,11 @@ $(document).ready(function() {
 			spacer: '#left_aside_spacer'
 		});
 	}
+
+	if($('#region_1 .widget').length > 0)
+		$('#expand-aside').show();
+	else
+		$('#expand-aside').hide();
 
 	$('#expand-aside').on('click', toggleAside);
 

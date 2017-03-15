@@ -90,10 +90,6 @@
 
 /* conv_item */
 
-.wall-item-head {
-	line-height: 1.2;
-}
-
 .wall-item-head-new {
 	border-top: 3px solid #0275d8;
 }
@@ -122,6 +118,7 @@ a.wall-item-name-link {
 	text-overflow: ellipsis;
 }
 
+.wall-item-ago,
 .wall-item-ago i {
 	font-size: 0.75rem;
 }
@@ -149,10 +146,6 @@ a.wall-item-name-link {
 
 .wall-item-body {
 	word-wrap: break-word;
-}
-
-.body-tags {
-	margin-top: 5px;
 }
 
 .item-tool {

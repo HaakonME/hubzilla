@@ -705,8 +705,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$os_relpath .= $hash;
 
 	// not yet used
-	$os_path = '';
-	$display_path = '';
+	$os_path = ltrim($os_relpath,'/');
+
+	$display_path = $pathname . '/' . $filename;
 
 	if($src)
 		@file_put_contents($os_basepath . $os_relpath,@file_get_contents($src));

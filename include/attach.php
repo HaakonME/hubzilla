@@ -702,11 +702,10 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		$os_relpath .= $folder_hash . '/';
 	}
 
-	$os_relpath .= $hash;
+	$os_relpath  .= $hash;
+	$os_relpath   = ltrim($os_relpath,'/');
 
-	// not yet used
-	$os_path = ltrim($os_relpath,'/');
-
+	$os_path      = $os_relpath;
 	$display_path = $pathname . '/' . $filename;
 
 	if($src)
@@ -811,7 +810,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	if($is_photo) {
 
-		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_path' => $os_basepath . $os_relpath, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct, 'options' => $options );
+		$args = array( 'source' => $source, 'visible' => $visible, 'resource_id' => $hash, 'album' => basename($pathname), 'os_syspath' => $os_basepath . $os_relpath, 'os_path' => $os_path, 'display_path' => $display_path, 'filename' => $filename, 'getimagesize' => $gis, 'directory' => $direct, 'options' => $options );
 		if($arr['contact_allow'])
 			$args['contact_allow'] = $arr['contact_allow'];
 		if($arr['group_allow'])

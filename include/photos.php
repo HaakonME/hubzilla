@@ -67,8 +67,8 @@ function photo_upload($channel, $observer, $args) {
 
 	$os_storage = 0;
 
-	if($args['os_path'] && $args['getimagesize']) {
-		$imagedata = @file_get_contents($args['os_path']);
+	if($args['os_syspath'] && $args['getimagesize']) {
+		$imagedata = @file_get_contents($args['os_syspath']);
 		$filename = $args['filename'];
 		$filesize = strlen($imagedata);
 		// this is going to be deleted if it exists
@@ -153,7 +153,7 @@ function photo_upload($channel, $observer, $args) {
 		return $ret;
 	}
 
-	$exif = $ph->orient(($args['os_path']) ? $args['os_path'] : $src);
+	$exif = $ph->orient(($args['os_syspath']) ? $args['os_syspath'] : $src);
 
 	@unlink($src);
 
@@ -180,7 +180,8 @@ function photo_upload($channel, $observer, $args) {
 		'filename' => $filename, 'album' => $album, 'imgscale' => 0, 'photo_usage' => PHOTO_NORMAL,
 		'allow_cid' => $ac['allow_cid'], 'allow_gid' => $ac['allow_gid'],
 		'deny_cid' => $ac['deny_cid'], 'deny_gid' => $ac['deny_gid'],
-		'os_storage' => $os_storage, 'os_path' => $args['os_path']
+		'os_storage' => $os_storage, 'os_syspath' => $args['os_syspath'],
+		'os_path' => $args['os_path'], 'display_path' => $args['display_path']
 	);
 	if($args['created'])
 		$p['created'] = $args['created'];
@@ -205,7 +206,7 @@ function photo_upload($channel, $observer, $args) {
 		$errors = true;
 
 	unset($p['os_storage']);
-	unset($p['os_path']);
+	unset($p['os_syspath']);
 
 	if(($width > 1024 || $height > 1024) && (! $errors))
 		$ph->scaleImage(1024);

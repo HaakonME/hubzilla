@@ -380,7 +380,7 @@ abstract class photo_driver {
 				dbesc($p['album']),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				(intval($p['os_storage']) ? dbescbin($p['os_path']) : dbescbin($this->imageString())),
+				(intval($p['os_storage']) ? dbescbin($p['os_syspath']) : dbescbin($this->imageString())),
 				intval($p['os_storage']),
 				intval(strlen($this->imageString())),
 				intval($p['imgscale']),
@@ -411,7 +411,7 @@ abstract class photo_driver {
 				dbesc($p['album']),
 				intval($this->getHeight()),
 				intval($this->getWidth()),
-				(intval($p['os_storage']) ? dbescbin($p['os_path']) : dbescbin($this->imageString())),
+				(intval($p['os_storage']) ? dbescbin($p['os_syspath']) : dbescbin($this->imageString())),
 				intval($p['os_storage']),
 				intval(strlen($this->imageString())),
 				intval($p['imgscale']),
@@ -424,90 +424,6 @@ abstract class photo_driver {
 				dbesc($p['allow_gid']),
 				dbesc($p['deny_cid']),
 				dbesc($p['deny_gid'])
-			);
-		}
-		return $r;
-	}
-
-
-	// should be obsolete now
-
-	public function store($aid, $uid, $xchan, $rid, $filename, $album, $scale, $usage = PHOTO_NORMAL, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
-
-		$x = q("select id from photo where resource_id = '%s' and uid = %d and xchan = '%s' and imgscale = %d limit 1",
-				dbesc($rid),
-				intval($uid),
-				dbesc($xchan),
-				intval($scale)
-		);
-		if(count($x)) {
-			$r = q("UPDATE photo
-				set aid = %d,
-				uid = %d,
-				xchan = '%s',
-				resource_id = '%s',
-				created = '%s',
-				edited = '%s',
-				filename = '%s',
-				mimetype = '%s',
-				album = '%s',
-				height = %d,
-				width = %d,
-				content = '%s',
-				filesize = %d,
-				imgscale = %d,
-				photo_usage = %d,
-				allow_cid = '%s',
-				allow_gid = '%s',
-				deny_cid = '%s',
-				deny_gid = '%s'
-				where id = %d",
-
-				intval($aid),
-				intval($uid),
-				dbesc($xchan),
-				dbesc($rid),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc(basename($filename)),
-				dbesc($this->getType()),
-				dbesc($album),
-				intval($this->getHeight()),
-				intval($this->getWidth()),
-				dbescbin($this->imageString()),
-				intval(strlen($this->imageString())),
-				intval($scale),
-				intval($photo_usage),
-				dbesc($allow_cid),
-				dbesc($allow_gid),
-				dbesc($deny_cid),
-				dbesc($deny_gid),
-				intval($x[0]['id'])
-			);
-		}
-		else {
-			$r = q("INSERT INTO photo
-				( aid, uid, xchan, resource_id, created, edited, filename, mimetype, album, height, width, content, filesize, imgscale, photo_usage, allow_cid, allow_gid, deny_cid, deny_gid )
-				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s' )",
-				intval($aid),
-				intval($uid),
-				dbesc($xchan),
-				dbesc($rid),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc(basename($filename)),
-				dbesc($this->getType()),
-				dbesc($album),
-				intval($this->getHeight()),
-				intval($this->getWidth()),
-				dbescbin($this->imageString()),
-				intval(strlen($this->imageString())),
-				intval($scale),
-				intval($photo_usage),
-				dbesc($allow_cid),
-				dbesc($allow_gid),
-				dbesc($deny_cid),
-				dbesc($deny_gid)
 			);
 		}
 		return $r;

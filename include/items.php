@@ -336,18 +336,6 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 	if(! array_key_exists('mimetype',$arr))
 		$arr['mimetype'] = 'text/bbcode';
 
-	if(array_key_exists('item_private',$arr) && $arr['item_private']) {
-
-		$arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
-
-		if($channel) {
-			if($channel['channel_hash'] === $arr['author_xchan']) {
-				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-				$arr['item_verified'] = 1;
-			}
-		}
-	}
-
 	$arr['mid']          = ((x($arr,'mid')) ? $arr['mid'] : item_message_id());
 	$arr['parent_mid']   = ((x($arr,'parent_mid')) ? $arr['parent_mid'] : $arr['mid']);
 	$arr['thr_parent']   = ((x($arr,'thr_parent')) ? $arr['thr_parent'] : $arr['mid']);
@@ -1533,35 +1521,36 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	// obsolete, but needed so as not to throw not-null constraints on some database driveres
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 
-	// only detect language if we have text content, and if the post is private but not yet
-	// obscured, make it so.
 
-	if((! array_key_exists('item_obscured',$arr)) || $arr['item_obscured'] == 0) {
 
-		$arr['lang'] = detect_language($arr['body']);
-		// apply the input filter here - if it is obscured it has been filtered already
-		$arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
+	$arr['lang'] = detect_language($arr['body']);
+	// apply the input filter here
+	$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
 
-		if(local_channel() && (local_channel() == $arr['uid']) && (! $arr['sig'])) {
+	if(local_channel() && (local_channel() == $arr['uid'])) {
+		if(! $arr['sig']) {
 			$channel = App::get_channel();
 			if($channel['channel_hash'] === $arr['author_xchan']) {
 				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
 				$arr['item_verified'] = 1;
 			}
 		}
+	}
 
-		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+	if(! array_key_exists('sig',$arr))
+		$arr['sig'] = '';
 
-		if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
-			$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
-			call_hooks('item_translate', $translate);
-			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
-				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-				$ret['message'] = 'language not accepted';
-				return $ret;
-			}
-			$arr = $translate['item'];
+	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+
+	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+		call_hooks('item_translate', $translate);
+		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
+			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+			$ret['message'] = 'language not accepted';
+			return $ret;
 		}
+		$arr = $translate['item'];
 	}
 
 	if((x($arr,'obj')) && is_array($arr['obj'])) {
@@ -1957,33 +1946,31 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 		return $ret;
 	}
 
-    if((! array_key_exists('item_obscured', $arr)) || $arr['item_obscured'] == 0) {
 
-		$arr['lang'] = detect_language($arr['body']);
+	$arr['lang'] = detect_language($arr['body']);
 
-        // apply the input filter here - if it is obscured it has been filtered already
-        $arr['body'] = trim(z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']));
+	// apply the input filter here
+	$arr['body'] = trim($arr['body'],$arr['mimetype'],$allow_exec);
 
-		if(local_channel() && (local_channel() == $arr['uid']) && (! $arr['sig'])) {
-            $channel = App::get_channel();
-            if($channel['channel_hash'] === $arr['author_xchan']) {
-                $arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-                $arr['item_verified'] = 1;
-            }
-        }
-
-		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
-
-		if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
-			$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
-			call_hooks('item_translate', $translate);
-			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
-				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-				$ret['message'] = 'language not accepted';
-				return $ret;
-			}
-			$arr = $translate['item'];
+	if(local_channel() && (local_channel() == $arr['uid']) && (! $arr['sig'])) {
+		$channel = App::get_channel();
+		if($channel['channel_hash'] === $arr['author_xchan']) {
+			$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+			$arr['item_verified'] = 1;
 		}
+	}
+
+	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+
+	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+		call_hooks('item_translate', $translate);
+		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
+			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+			$ret['message'] = 'language not accepted';
+			return $ret;
+		}
+		$arr = $translate['item'];
 	}
 
 	if((x($arr,'obj')) && is_array($arr['obj'])) {

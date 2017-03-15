@@ -58,7 +58,7 @@
 				<div class="p-2 wall-item-tools clearfix">
 
 					<div class="body-tags">
-						<span class="tag">{{$item.mentions}}{{$item.tags}}{{$item.categories}}</span>
+						<span class="tag">{{$item.mentions}} {{$item.tags}} {{$item.categories}}</span>
 					</div>
 				{{**
 					{{if $item.mentions}}

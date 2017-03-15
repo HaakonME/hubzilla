@@ -1104,7 +1104,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .contact-block-content {
 	margin-top: 10px;
 }
-.contact-block-img.archived, .app-deleted {
+.contact-block-img.archived, .app-deleted, .dim {
 	opacity: 0.3;
 	filter:alpha(opacity=30);
 }

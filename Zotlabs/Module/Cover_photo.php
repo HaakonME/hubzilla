@@ -23,19 +23,17 @@ require_once('include/channel.php');
 class Cover_photo extends \Zotlabs\Web\Controller {
 
 	function init() {
-	
 		if(! local_channel()) {
 			return;
 		}
 	
 		$channel = \App::get_channel();
-		profile_load($channel['channel_address']);
-	
+		profile_load($channel['channel_address']);	
 	}
 	
-	/* @brief Evaluate posted values
+	/**
+	 * @brief Evaluate posted values
 	 *
-	 * @param $a Current application
 	 * @return void
 	 *
 	 */
@@ -130,8 +128,15 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 	
 					$aid = get_account_id();
 	
-					$p = array('aid' => $aid, 'uid' => local_channel(), 'resource_id' => $base_image['resource_id'],
-						'filename' => $base_image['filename'], 'album' => t('Cover Photos'));
+					$p = [ 
+						'aid'          => $aid, 
+						'uid'          => local_channel(), 
+						'resource_id'  => $base_image['resource_id'],
+						'filename'     => $base_image['filename'], 
+						'album'        => t('Cover Photos'),
+						'os_path'      => $base_image['os_path'],
+						'display_path' => $base_image['display_path']
+					];
 	
 					$p['imgscale'] = 7;
 					$p['photo_usage'] = PHOTO_COVER;
@@ -195,11 +200,10 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 			$os_storage = false;
 	
 			foreach($i as $ii) {
-				$smallest = intval($ii['imgscale']);
+				$smallest   = intval($ii['imgscale']);
 				$os_storage = intval($ii['os_storage']);
-				$imagedata = $ii['content'];
-				$filetype = $ii['mimetype'];
-	
+				$imagedata  = $ii['content'];
+				$filetype   = $ii['mimetype'];
 			}
 		}
 	
@@ -263,10 +267,10 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 	}
 	
 	
-	/* @brief Generate content of profile-photo view
+	/**
+	 * @brief Generate content of profile-photo view
 	 *
-	 * @param $a Current application
-	 * @return void
+	 * @return string
 	 *
 	 */
 	
@@ -350,15 +354,15 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 			$tpl = get_markup_template('cover_photo.tpl');
 	
 			$o .= replace_macros($tpl,array(
-				'$user' => \App::$channel['channel_address'],
-				'$lbl_upfile' => t('Upload File:'),
-				'$lbl_profiles' => t('Select a profile:'),
-				'$title' => t('Upload Cover Photo'),
-				'$submit' => t('Upload'),
-				'$profiles' => $profiles,
+				'$user'                => \App::$channel['channel_address'],
+				'$lbl_upfile'          => t('Upload File:'),
+				'$lbl_profiles'        => t('Select a profile:'),
+				'$title'               => t('Upload Cover Photo'),
+				'$submit'              => t('Upload'),
+				'$profiles'            => $profiles,
 				'$form_security_token' => get_form_security_token("cover_photo"),
-	// FIXME - yuk  
-				'$select' => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . z_root() . '">' . t('skip this step') . '</a>' : '<a href="'. z_root() . '/photos/' . \App::$channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
+					/// @FIXME - yuk  
+				'$select'              => sprintf('%s %s', t('or'), ($newuser) ? '<a href="' . z_root() . '">' . t('skip this step') . '</a>' : '<a href="'. z_root() . '/photos/' . \App::$channel['channel_address'] . '">' . t('select a photo from your photo albums') . '</a>')
 			));
 			
 			call_hooks('cover_photo_content_end', $o);
@@ -370,14 +374,14 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 			$resolution = 3;
 			$tpl = get_markup_template("cropcover.tpl");
 			$o .= replace_macros($tpl,array(
-				'$filename' => $filename,
-				'$profile' => intval($_REQUEST['profile']),
-				'$resource' => \App::$data['imagecrop'] . '-3',
-				'$image_url' => z_root() . '/photo/' . $filename,
-				'$title' => t('Crop Image'),
-				'$desc' => t('Please adjust the image cropping for optimum viewing.'),
+				'$filename'            => $filename,
+				'$profile'             => intval($_REQUEST['profile']),
+				'$resource'            => \App::$data['imagecrop'] . '-3',
+				'$image_url'           => z_root() . '/photo/' . $filename,
+				'$title'               => t('Crop Image'),
+				'$desc'                => t('Please adjust the image cropping for optimum viewing.'),
 				'$form_security_token' => get_form_security_token("cover_photo"),
-				'$done' => t('Done Editing')
+				'$done'                => t('Done Editing')
 			));
 			return $o;
 		}
@@ -392,8 +396,6 @@ class Cover_photo extends \Zotlabs\Web\Controller {
 	 * @return void
 	 *
 	 */
-	
-	
 	
 	function cover_photo_crop_ui_head(&$a, $ph, $hash, $smallest){
 	

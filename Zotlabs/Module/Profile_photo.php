@@ -108,11 +108,13 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 					$aid = get_account_id();
 	
 					$p = [ 
-						'aid'         => $aid, 
-						'uid'         => local_channel(), 
-						'resource_id' => $base_image['resource_id'],
-						'filename'    => $base_image['filename'], 
-						'album'       => t('Profile Photos')
+						'aid'          => $aid, 
+						'uid'          => local_channel(), 
+						'resource_id'  => $base_image['resource_id'],
+						'filename'     => $base_image['filename'], 
+						'album'        => t('Profile Photos'),
+						'os_path'      => $base_image['os_path'],
+						'display_path' => $base_image['display_path']
 					];
 	
 					$p['imgscale']    = PHOTO_RES_PROFILE_300;

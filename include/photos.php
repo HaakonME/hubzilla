@@ -333,11 +333,14 @@ function photo_upload($channel, $observer, $args) {
 			if($item['mid'] === $item['parent_mid']) {
 
 				$item['body'] = $summary;
+				$item['mimetype'] = 'text/bbcode';
 				$item['obj_type'] = ACTIVITY_OBJ_PHOTO;
 				$item['obj']	= json_encode($object);
 
 				$item['tgt_type'] = ACTIVITY_OBJ_ALBUM;
 				$item['target']	= json_encode($target);
+
+				$item['body'] = trim(z_input_filter($item['body'],$item['mimetype'],false));
 
 				if($item['author_xchan'] === $channel['channel_hash']) {
 					$item['sig'] = base64url_encode(rsa_sign($item['body'],$channel['channel_prvkey']));
@@ -346,6 +349,12 @@ function photo_upload($channel, $observer, $args) {
 				else {
 					$item['sig'] = '';
 				}
+
+				// notify item_store or item_store_update that the input has been filtered and signed already.
+				// The signing procedure in those functions uses local_channel() which may not apply here.
+
+				$item['input_filtered_signed'] = true;
+
 				$force = true;
 
 			}

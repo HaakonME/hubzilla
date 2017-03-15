@@ -471,15 +471,16 @@ class Item extends \Zotlabs\Web\Controller {
 		if(! $mimetype)
 			$mimetype = 'text/bbcode';
 	
+
+		$execflag = ((intval($uid) == intval($profile_uid) 
+			&& ($channel['channel_pageflags'] & PAGE_ALLOWCODE)) ? true : false);
+
 		if($preview) {
-			$body = z_input_filter($profile_uid,$body,$mimetype);
+			$body = z_input_filter($body,$mimetype,$execflag);
 		}
-	
 	
 		// Verify ability to use html or php!!!
 	
-		$execflag = ((intval($channel['channel_id']) == intval($profile_uid) && ($channel['channel_pageflags'] & PAGE_ALLOWCODE)) ? true : false);
-
 		$gacl = $acl->get();
 		$str_contact_allow = $gacl['allow_cid'];
 		$str_group_allow   = $gacl['allow_gid'];
@@ -842,18 +843,6 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if(mb_strlen($datarray['title']) > 255)
 			$datarray['title'] = mb_substr($datarray['title'],0,255);
-	
-		if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
-	
-			$datarray['body'] = trim(z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']));
-	
-			if($uid) {
-				if($channel['channel_hash'] === $datarray['author_xchan']) {
-					$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
-					$datarray['item_verified'] = 1;
-				}
-			}
-		}
 	
 		if($webpage) {
 			Zlib\IConfig::Set($datarray,'system', webpage_to_namespace($webpage),

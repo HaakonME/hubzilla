@@ -3,6 +3,7 @@
  * @file include/text.php
  */
 
+use \Zotlabs\Lib as Zlib;
 use \Michelf\MarkdownExtra;
 
 require_once("include/bbcode.php");
@@ -89,11 +90,9 @@ function escape_tags($string) {
 }
 
 
-function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
+function z_input_filter($s,$type = 'text/bbcode',$allow_code = false) {
 
 	if($type === 'text/bbcode')
-		return escape_tags($s);
-	if($type === 'text/markdown')
 		return escape_tags($s);
 	if($type == 'text/plain')
 		return escape_tags($s);
@@ -104,11 +103,15 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 		return $s;
 	}
 
-	$r = q("select channel_pageflags from channel where channel_id = %d limit 1",
-		intval($channel_id)
-	);
-	if(($r) && (local_channel() == $channel_id) && ($r[0]['channel_pageflags'] & PAGE_ALLOWCODE)) {
+	if($allow_code) {
+		if($type === 'text/markdown')
+			return htmlspecialchars($s,ENT_QUOTES);
 		return $s;
+	}
+
+	if($type === 'text/markdown') {
+		$x = new Zlib\MarkdownSoap($s);
+		return $x->clean();
 	}
 
 	if($type === 'text/html')
@@ -1636,6 +1639,7 @@ function prepare_text($text, $content_type = 'text/bbcode', $cache = false) {
 			break;
 
 		case 'text/markdown':
+			$text = Zlib\MarkdownSoap::unescape($text);
 			$s = MarkdownExtra::defaultTransform($text);
 			break;
 

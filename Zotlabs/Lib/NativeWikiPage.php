@@ -307,34 +307,6 @@ class NativeWikiPage {
 		return null;
 	}
 
-
-
-	static public function prepare_content($s) {
-			
-		$text = preg_replace_callback('{
-					(?:\n\n|\A\n?)
-					(	            # $1 = the code block -- one or more lines, starting with a space/tab
-					  (?>
-						[ ]{'.'4'.'}  # Lines must start with a tab or a tab-width of spaces
-						.*\n+
-					  )+
-					)
-					((?=^[ ]{0,'.'4'.'}\S)|\Z)	# Lookahead for non-space at line-start, or end of doc
-				}xm',
-				'self::nwiki_prepare_content_callback', $s);
-	
-		return $text;
-	}
-	
-	static public function nwiki_prepare_content_callback($matches) {
-		$codeblock = $matches[1];
-	
-		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES, UTF8, false);
-		return "\n\n" . $codeblock ;
-	}
-	
-	
-	
 	static public function save_page($arr) {
 
 		$pageUrlName   = ((array_key_exists('pageUrlName',$arr))   ? $arr['pageUrlName']   : '');
@@ -352,7 +324,8 @@ class NativeWikiPage {
 
 		$mimetype = $w['mimeType'];
 		if($mimetype === 'text/markdown') {
-			$content = purify_html(Zlib\NativeWikiPage::prepare_content($content));
+			$x = new Zlib\MarkdownSoap($content);
+			$content = $x->clean();
 		}
 		else {
 			$content = escape_tags($content);

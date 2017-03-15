@@ -243,6 +243,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					$renderedContent = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))), argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}
 				else {
+					$content = Zlib\MarkdownSoap::unescape($content);
 					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(MarkdownExtra::defaultTransform(Zlib\NativeWikiPage::bbcode($content)))));
 					$renderedContent = Zlib\NativeWikiPage::convert_links($html, argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}

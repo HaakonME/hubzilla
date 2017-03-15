@@ -5,7 +5,7 @@ namespace Zotlabs\Lib;
 /**
  * MarkdownSoap
  * Purify Markdown for storage
- *   $x = newMarkdownSoap($string_to_be_cleansed);
+ *   $x = new MarkdownSoap($string_to_be_cleansed);
  *   $text = $x->clean();
  *
  * What this does:

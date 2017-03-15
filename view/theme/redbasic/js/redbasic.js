@@ -26,7 +26,7 @@ $(document).ready(function() {
 		});
 	}
 
-	if($('#region_1 .widget').length > 0)
+	if(($(window).width() < 767) && ($('#left_aside_wrapper .widget').length > 0))
 		$('#expand-aside').show();
 	else
 		$('#expand-aside').hide();
@@ -47,26 +47,15 @@ $(document).ready(function() {
 			left_aside_height = $('#left_aside_wrapper').height();
 		}
 	});
-/*
-	$('#expand-tabs').click(function() {
-		if($('#tabs-collapse-1').hasClass('show')){
-			$('#tabs-collapse-1').removeClass('show');
-		}
-		$('#expand-tabs-icon').toggleClass('fa-arrow-circle-down').toggleClass('fa-arrow-circle-up');
-	});
-*/
+
 	$('.usermenu').click(function() {
 		if($('#navbar-collapse-1, #navbar-collapse-2').hasClass('show')){
 			$('#navbar-collapse-1, #navbar-collapse-2').removeClass('show');
 		}
 	});
-	
-	if($('#tabs-collapse-1').length === 0) {
-		$('#expand-tabs').hide();
-	}
 
 	$("input[data-role=cat-tagsinput]").tagsinput({
-		tagClass: 'label label-primary'
+		tagClass: 'badge badge-pill badge-warning'
 	});
 
 	var doctitle = document.title;

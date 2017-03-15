@@ -94,6 +94,10 @@
 	line-height: 1.2;
 }
 
+.wall-item-head-new {
+	border-top: 3px solid #0275d8;
+}
+
 .wall-item-info {
 	display: block;
 	float: left;

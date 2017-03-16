@@ -530,7 +530,7 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr = array();
 
-	$key = get_config('system','pubkey');
+	$arr['body'] = $x['body'];
 
 	$maxlen = get_max_import_size();
 

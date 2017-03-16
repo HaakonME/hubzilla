@@ -20,6 +20,12 @@ class Mock extends AbstractBackend {
                     'principaluri'      => 'principals/user1',
                     '{DAV:}displayname' => 'd-name',
                 ],
+                [
+                    'id'                => 'bar',
+                    'uri'               => 'book3',
+                    'principaluri'      => 'principals/user1',
+                    '{DAV:}displayname' => 'd-name',
+                ],
             ];
 
             $card2 = fopen('php://memory', 'r+');
@@ -29,6 +35,9 @@ class Mock extends AbstractBackend {
                 'foo' => [
                     'card1' => "BEGIN:VCARD\nVERSION:3.0\nUID:12345\nEND:VCARD",
                     'card2' => $card2,
+                ],
+                'bar' => [
+                    'card3' => "BEGIN:VCARD\nVERSION:3.0\nUID:12345\nFN:Test-Card\nEMAIL;TYPE=home:bar@example.org\nEND:VCARD",
                 ],
             ];
         }
@@ -58,7 +67,7 @@ class Mock extends AbstractBackend {
      * Calling the handle method is like telling the PropPatch object "I
      * promise I can handle updating this property".
      *
-     * Read the PropPatch documenation for more info and examples.
+     * Read the PropPatch documentation for more info and examples.
      *
      * @param string $addressBookId
      * @param \Sabre\DAV\PropPatch $propPatch
@@ -117,7 +126,7 @@ class Mock extends AbstractBackend {
      * calculating them. If they are specified, you can also ommit carddata.
      * This may speed up certain requests, especially with large cards.
      *
-     * @param mixed $addressbookId
+     * @param mixed $addressBookId
      * @return array
      */
     function getCards($addressBookId) {

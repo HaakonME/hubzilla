@@ -24,7 +24,9 @@ class File extends DAV\File {
      * Creates the object
      *
      * @param string $name
-     * @param array $children
+     * @param resource $contents
+     * @param Collection $parent
+     * @param int $lastModified
      * @return void
      */
     function __construct($name, $contents, Collection $parent = null, $lastModified = -1) {
@@ -57,6 +59,7 @@ class File extends DAV\File {
     /**
      * Changes the name of the node.
      *
+     * @param string $name
      * @return void
      */
     function setName($name) {
@@ -70,7 +73,7 @@ class File extends DAV\File {
      *
      * The data argument is a readable stream resource.
      *
-     * After a succesful put operation, you may choose to return an ETag. The
+     * After a successful put operation, you may choose to return an ETag. The
      * etag must always be surrounded by double-quotes. These quotes must
      * appear in the actual string you're returning.
      *

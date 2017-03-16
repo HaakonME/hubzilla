@@ -3,8 +3,8 @@
 namespace Sabre\CardDAV;
 
 use Sabre\DAV;
-use Sabre\HTTP;
 use Sabre\DAVACL;
+use Sabre\HTTP;
 
 require_once 'Sabre/HTTP/ResponseMock.php';
 
@@ -293,10 +293,10 @@ VCF;
         $response = $this->request($request, 204);
 
         $expected = [
-            'uri'          => 'blabla.vcf',
-            'carddata'     => $body,
-            'size'         => strlen($body),
-            'etag'         => '"' . md5($body) . '"',
+            'uri'      => 'blabla.vcf',
+            'carddata' => $body,
+            'size'     => strlen($body),
+            'etag'     => '"' . md5($body) . '"',
         ];
 
         $this->assertEquals($expected, $this->cardBackend->getCard('addressbook1', 'blabla.vcf'));

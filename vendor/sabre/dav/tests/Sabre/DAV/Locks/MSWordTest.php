@@ -2,8 +2,8 @@
 
 namespace Sabre\DAV\Locks;
 
-use Sabre\HTTP;
 use Sabre\DAV;
+use Sabre\HTTP;
 
 require_once 'Sabre/HTTP/ResponseMock.php';
 require_once 'Sabre/TestUtil.php';
@@ -112,9 +112,9 @@ class MSWordTest extends \PHPUnit_Framework_TestCase {
     function getPutRequest($lockToken) {
 
         $request = HTTP\Sapi::createFromServerArray([
-           'REQUEST_METHOD'    => 'PUT',
-           'REQUEST_URI'       => '/Nouveau%20Microsoft%20Office%20Excel%20Worksheet.xlsx',
-           'HTTP_IF'           => 'If: (' . $lockToken . ')',
+           'REQUEST_METHOD' => 'PUT',
+           'REQUEST_URI'    => '/Nouveau%20Microsoft%20Office%20Excel%20Worksheet.xlsx',
+           'HTTP_IF'        => 'If: (' . $lockToken . ')',
         ]);
         $request->setBody('FAKE BODY');
         return $request;

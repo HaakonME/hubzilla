@@ -13,22 +13,6 @@ require_once('include/attach.php');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function widget_website_portation_tools($arr) {
 
 	// mod menu doesn't load a profile. For any modules which load a profile, check it.
@@ -50,10 +34,6 @@ function widget_findpeople($arr) {
 
 
 
-function widget_vcard($arr) {
-	return vcard_from_xchan('', App::get_observer());
-}
-
 
 /*
  * The following directory widgets are only useful on the directory page
@@ -68,114 +48,10 @@ function widget_dirtags($arr) {
 	return dir_tagblock(z_root() . '/directory', null);
 }
 
-function widget_menu_preview($arr) {
-	if(! App::$data['menu_item'])
-		return;
-	require_once('include/menu.php');
-
-	return menu_render(App::$data['menu_item']);
-}
-
-function widget_chatroom_list($arr) {
 
 
-	$r = Zotlabs\Lib\Chatroom::roomlist(App::$profile['profile_uid']);
 
-	if($r) {
-		return replace_macros(get_markup_template('chatroomlist.tpl'), array(
-			'$header' => t('Chatrooms'),
-			'$baseurl' => z_root(),
-			'$nickname' => App::$profile['channel_address'],
-			'$items' => $r,
-			'$overview' => t('Overview')
-		));
-	}
-}
 
-function widget_chatroom_members() {
-	$o = replace_macros(get_markup_template('chatroom_members.tpl'), array(
-		'$header' => t('Chat Members')
-	));
-
-	return $o;
-}
-
-function widget_wiki_list($arr) {
-
-	$channel = channelx_by_n(App::$profile_uid);
-
-	$wikis = Zotlabs\Lib\NativeWiki::listwikis($channel,get_observer_hash());
-
-	if($wikis) {
-		return replace_macros(get_markup_template('wikilist_widget.tpl'), array(
-			'$header' => t('Wiki List'),
-			'$channel' => $channel['channel_address'],
-			'$wikis' => $wikis['wikis']
-		));
-	}
-	return '';
-}
-
-function widget_wiki_pages($arr) {
-
-	$channelname = ((array_key_exists('channel',$arr)) ? $arr['channel'] : '');
-	$c = channelx_by_nick($channelname);
-
-	$wikiname = '';
-	if (array_key_exists('refresh', $arr)) {
-		$not_refresh = (($arr['refresh']=== true) ? false : true);
-	} else {
-		$not_refresh = true;
-	}
-	$pages = array();
-	if (! array_key_exists('resource_id', $arr)) {
-		$hide = true;
-	} else {
-		$p = Zotlabs\Lib\NativeWikiPage::page_list($c['channel_id'],get_observer_hash(),$arr['resource_id']);
-
-		if($p['pages']) {
-			$pages = $p['pages'];
-			$w = $p['wiki'];
-			// Wiki item record is $w['wiki']
-			$wikiname = $w['urlName'];
-			if (!$wikiname) {
-				$wikiname = '';
-			}
-		}
-	}
-	$can_create = perm_is_allowed(\App::$profile['uid'],get_observer_hash(),'write_wiki');
-
-	$can_delete = ((local_channel() && (local_channel() == \App::$profile['uid'])) ? true : false);
-
-	return replace_macros(get_markup_template('wiki_page_list.tpl'), array(
-			'$hide' => $hide,
-			'$resource_id' => $arr['resource_id'],
-			'$not_refresh' => $not_refresh,
-			'$header' => t('Wiki Pages'),
-			'$channel' => $channelname,
-			'$wikiname' => $wikiname,
-			'$pages' => $pages,
-			'$canadd' => $can_create,
-			'$candel' => $can_delete,
-			'$addnew' => t('Add new page'),
-			'$pageName' => array('pageName', t('Page name')),
-	));
-}
-
-function widget_wiki_page_history($arr) {
-
-	$pageUrlName = ((array_key_exists('pageUrlName', $arr)) ? $arr['pageUrlName'] : '');
-	$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : '');
-
-	$pageHistory = Zotlabs\Lib\NativeWikiPage::page_history(array('channel_id' => App::$profile_uid, 'observer_hash' => get_observer_hash(), 'resource_id' => $resource_id, 'pageUrlName' => $pageUrlName));
-	return replace_macros(get_markup_template('nwiki_page_history.tpl'), array(
-		'$pageHistory' => $pageHistory['history'],
-		'$permsWrite' => $arr['permsWrite'],
-		'$name_lbl' => t('Name'),
-		'$msg_label' => t('Message','wiki_history')
-	));
-
-}
 
 function widget_bookmarkedchats($arr) {
 
@@ -749,28 +625,6 @@ function widget_activity($arr) {
 
 
 
-function widget_tasklist($arr) {
-
-	if (! local_channel())
-		return;
-
-	require_once('include/event.php');
-	$o .= '<script>var tasksShowAll = 0; $(document).ready(function() { tasksFetch(); $("#tasklist-new-form").submit(function(event) { event.preventDefault(); $.post( "tasks/new", $("#tasklist-new-form").serialize(), function(data) { tasksFetch();  $("#tasklist-new-summary").val(""); } ); return false; } )});</script>';
-	$o .= '<script>function taskComplete(id) { $.post("tasks/complete/"+id, function(data) { tasksFetch();}); }
-		function tasksFetch() {
-			$.get("tasks/fetch" + ((tasksShowAll) ? "/all" : ""), function(data) {
-				$(".tasklist-tasks").html(data.html);
-			});
-		}
-		</script>';
-
-	$o .= '<div class="widget">' . '<h3>' . t('Tasks') . '</h3><div class="tasklist-tasks">';
-	$o .= '</div><form id="tasklist-new-form" action="" ><input id="tasklist-new-summary" type="text" name="summary" value="" /></form>';
-	$o .= '</div>';
-	return $o;
-
-}
-
 
 function widget_helpindex($arr) {
 
@@ -813,68 +667,6 @@ function widget_helpindex($arr) {
 }
 
 
-
-function widget_admin($arr) {
-
-	/*
-	 * Side bar links
-	 */
-
-	if(! is_site_admin()) {
-		return '';
-	}
-
-	$o = '';
-
-	// array( url, name, extra css classes )
-
-	$aside = array(
-		'site'      => array(z_root() . '/admin/site/',     t('Site'),           'site'),
-		'accounts'  => array(z_root() . '/admin/accounts/', t('Accounts'),       'accounts', 'pending-update', t('Member registrations waiting for confirmation')),
-		'channels'  => array(z_root() . '/admin/channels/', t('Channels'),       'channels'),
-		'security'  => array(z_root() . '/admin/security/', t('Security'),       'security'),
-		'features'  => array(z_root() . '/admin/features/', t('Features'),       'features'),
-		'plugins'   => array(z_root() . '/admin/plugins/',  t('Plugins'),        'plugins'),
-		'themes'    => array(z_root() . '/admin/themes/',   t('Themes'),         'themes'),
-		'queue'     => array(z_root() . '/admin/queue',     t('Inspect queue'),  'queue'),
-		'profs'     => array(z_root() . '/admin/profs',     t('Profile Fields'), 'profs'),
-		'dbsync'    => array(z_root() . '/admin/dbsync/',   t('DB updates'),     'dbsync')
-
-	);
-
-	/* get plugins admin page */
-
-	$r = q("SELECT * FROM addon WHERE plugin_admin = 1");
-
-	$plugins = array();
-	if($r) {
-		foreach ($r as $h){
-			$plugin = $h['aname'];
-			$plugins[] = array(z_root() . '/admin/plugins/' . $plugin, $plugin, 'plugin');
-			// temp plugins with admin
-			App::$plugins_admin[] = $plugin;
-		}
-	}
-
-	$logs = array(z_root() . '/admin/logs/', t('Logs'), 'logs');
-
-	$arr = array('links' => $aside,'plugins' => $plugins,'logs' => $logs);
-	call_hooks('admin_aside',$arr);
-
-	$o .= replace_macros(get_markup_template('admin_aside.tpl'), array(
-			'$admin' => $aside,
-			'$admtxt' => t('Admin'),
-			'$plugadmtxt' => t('Plugin Features'),
-			'$plugins' => $plugins,
-			'$logtxt' => t('Logs'),
-			'$logs' => $logs,
-			'$h_pending' => t('Member registrations waiting for confirmation'),
-			'$admurl'=> z_root() . '/admin/'
-	));
-
-	return $o;
-
-}
 
 
 

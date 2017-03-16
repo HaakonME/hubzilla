@@ -33,7 +33,7 @@ class Conversations {
 			require_once('include/message.php');
 
 			// private_messages_list() can do other more complicated stuff, for now keep it simple
-			$r = private_messages_list(local_channel(), $mailbox, App::$pager['start'], App::$pager['itemspage']);
+			$r = private_messages_list(local_channel(), $mailbox, \App::$pager['start'], \App::$pager['itemspage']);
 
 			if(! $r) {
 				info( t('No messages.') . EOL);

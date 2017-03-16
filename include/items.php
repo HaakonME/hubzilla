@@ -528,11 +528,9 @@ function get_item_elements($x,$allow_code = false) {
 
 	$arr = array();
 
-	$key = get_config('system','pubkey');
+	$arr['body'] = $x['body'];
 
 	$maxlen = get_max_import_size();
-
-	$arr['body'] = $x['body'];
 
 	if($maxlen && mb_strlen($arr['body']) > $maxlen) {
 		$arr['body'] = mb_substr($arr['body'],0,$maxlen,'UTF-8');

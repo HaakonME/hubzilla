@@ -13,82 +13,9 @@ require_once('include/attach.php');
 
 
 
-function widget_shortprofile($arr) {
-
-	if(! App::$profile['profile_uid'])
-		return;
-
-	$block = observer_prohibited();
-
-	return profile_sidebar(App::$profile, $block, true, true);
-}
-
-
-function widget_categories($arr) {
-
-
-	if(App::$profile['profile_uid'] && (! perm_is_allowed(App::$profile['profile_uid'],get_observer_hash(),'view_stream')))
-		return '';
-
-	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat'],ENT_COMPAT,'UTF-8') : '');
-	$srchurl = App::$query_string;
-	$srchurl =  rtrim(preg_replace('/cat\=[^\&].*?(\&|$)/is','',$srchurl),'&');
-	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
-
-	return categories_widget($srchurl, $cat);
-
-}
-
-function widget_appcategories($arr) {
-
-	if(! local_channel())
-		return '';
-
-	$selected = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat'],ENT_COMPAT,'UTF-8') : '');
-
-	$srchurl =  rtrim(preg_replace('/cat\=[^\&].*?(\&|$)/is','',$srchurl),'&');
-	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
-
-	$srchurl = z_root() . '/apps';
-
-	$terms = array();
-
-	$r = q("select distinct(term.term)
-        from term join app on term.oid = app.id
-        where app_channel = %d
-        and term.uid = app_channel
-        and term.otype = %d
-        and term.term != 'nav_featured_app'
-        order by term.term asc",
-		intval(local_channel()),
-	    intval(TERM_OBJ_APP)
-	);
-	if($r) {
-		foreach($r as $rr)
-			$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
-
-		return replace_macros(get_markup_template('categories_widget.tpl'),array(
-			'$title' => t('Categories'),
-			'$desc' => '',
-			'$sel_all' => (($selected == '') ? 'selected' : ''),
-			'$all' => t('Everything'),
-			'$terms' => $terms,
-			'$base' => $srchurl,
-
-		));
-	}
 
 
 
-}
-
-
-
-function widget_appcloud($arr) {
-	if(! local_channel())
-		return '';
-	return app_tagblock(z_root() . '/apps');
-}
 
 
 function widget_tagcloud_wall($arr) {

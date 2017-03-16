@@ -532,6 +532,8 @@ function get_item_elements($x,$allow_code = false) {
 
 	$maxlen = get_max_import_size();
 
+	$arr['body'] = $x['body'];
+
 	if($maxlen && mb_strlen($arr['body']) > $maxlen) {
 		$arr['body'] = mb_substr($arr['body'],0,$maxlen,'UTF-8');
 		logger('get_item_elements: message length exceeds max_import_size: truncated');

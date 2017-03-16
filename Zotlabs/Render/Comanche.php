@@ -411,7 +411,8 @@ class Comanche {
 		}
 
 		$clsname = ucfirst($name);
-		$nsname = "Zotlabs\\Widget\\" . $clsname;
+		$nsname = "\\Zotlabs\\Widget\\" . $clsname;
+
 		if(file_exists('Zotlabs/SiteWidget/' . $clsname . '.php'))
 			require_once('Zotlabs/SiteWidget/' . $clsname . '.php');
 		elseif(file_exists('Zotlabs/Widget/' . $clsname . '.php'))

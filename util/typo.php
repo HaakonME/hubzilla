@@ -28,17 +28,18 @@
 		include_once($file);
 	}
 
-	echo "Directory: include/RedDAV\n";
-	$files = glob('include/RedDAV/*.php');
+	echo "Directory: include/photo\n";
+	$files = glob('include/photo/*.php');
 	foreach($files as $file) {
 		echo $file . "\n";
 		include_once($file);
 	}
 
+
 	echo "Directory: Zotlabs\n";
 	$files = glob('Zotlabs/*/*.php');
 	foreach($files as $file) {
-		if(strpos($file,'SiteModule') === false) {
+		if((strpos($file,'SiteModule') === false) || (strpos($file,'SiteWidget') === false)) {
 			echo $file . "\n";
 			include_once($file);
 		}
@@ -50,21 +51,6 @@
 		echo $file . "\n";
 		include_once($file);
 	}
-
-
-	echo "Directory: include/photo\n";
-	$files = glob('include/photo/*.php');
-	foreach($files as $file) {
-		echo $file . "\n";
-		include_once($file);
-	}
-
-//	echo "Directory: mod\n";
-//	$files = glob('mod/*.php');
-//	foreach($files as $file) {
-//		echo $file . "\n";
-//		include_once($file);
-//	}
 
 	echo "Directory: addon\n";
 	$dirs = glob('addon/*');
@@ -93,6 +79,5 @@
 
 	foreach($files as $file) {
 		echo $file . "\n";
-	passthru($phpath . ' util/typohelper.php ' . $file);
-//		include_once($file);
+		passthru($phpath . ' util/typohelper.php ' . $file);
 	}

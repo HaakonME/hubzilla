@@ -2,6 +2,7 @@
 
 namespace Zotlabs\Widget;
 
+require_once('include/contact_widgets.php');
 
 class Categories {
 

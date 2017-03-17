@@ -1408,6 +1408,26 @@ function get_profile_elements($x) {
 }
 
 
+
+
+function item_sign(&$item) {
+
+	if(array_key_exists('sig',$item) && $item['sig'])
+		return;
+
+	$r = q("select channel_prvkey from channel where channel_id = %d and channel_hash = '%s' ",
+			intval($item['uid']),
+			dbesc($item['author_xchan'])
+	);
+	if(! $r)
+		return;
+
+	$item['sig'] = base64url_encode(rsa_sign($item['body'],$r[0]['channel_prvkey']));
+	$item['item_verified'] = 1;
+
+}
+
+
 /**
  * @brief
  *
@@ -1487,24 +1507,12 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 
 
 	$arr['lang'] = detect_language($arr['body']);
+
 	// apply the input filter here
 
-	if(array_key_exists('input_filtered_signed',$arr)) {
-		unset($arr['input_filtered_signed']);
-	}
-	else {
-		$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
+	$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
 
-		if(local_channel() && (local_channel() == $arr['uid'])) {
-			if(! $arr['sig']) {
-				$channel = App::get_channel();
-				if($channel['channel_hash'] === $arr['author_xchan']) {
-					$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-					$arr['item_verified'] = 1;
-				}
-			}
-		}
-	}
+	item_sign($arr);
 
 	if(! array_key_exists('sig',$arr))
 		$arr['sig'] = '';
@@ -1917,22 +1925,11 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 
 	$arr['lang'] = detect_language($arr['body']);
 
-	if(array_key_exists('input_filtered_signed',$arr)) {
-		unset($arr['input_filtered_signed']);
-	}
-	else {
-		$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
+	// apply the input filter here
 
-		if(local_channel() && (local_channel() == $arr['uid'])) {
-			if(! $arr['sig']) {
-				$channel = App::get_channel();
-				if($channel['channel_hash'] === $arr['author_xchan']) {
-					$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
-					$arr['item_verified'] = 1;
-				}
-			}
-		}
-	}
+	$arr['body'] = trim(z_input_filter($arr['body'],$arr['mimetype'],$allow_exec));
+
+	item_sign($arr);
 
 	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
 

@@ -4,8 +4,6 @@ namespace Zotlabs\Render;
 
 require_once('include/security.php');
 require_once('include/menu.php');
-require_once('include/widgets.php');
-
 
 
 class Comanche {

@@ -5,10 +5,6 @@ namespace Zotlabs\Module;
 require_once('include/socgraph.php');
 require_once('include/selectors.php');
 require_once('include/group.php');
-require_once('include/contact_widgets.php');
-require_once('include/zot.php');
-require_once('include/widgets.php');
-
 
 class Connections extends \Zotlabs\Web\Controller {
 

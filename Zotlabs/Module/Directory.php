@@ -4,7 +4,6 @@ namespace Zotlabs\Module;
 
 require_once('include/socgraph.php');
 require_once('include/dir_fns.php');
-require_once('include/widgets.php');
 require_once('include/bbcode.php');
 
 

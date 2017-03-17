@@ -1193,11 +1193,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 	else
 		$tpl = get_markup_template('profile_vcard.tpl');
 
-	require_once('include/widgets.php');
-
-//	if(! feature_enabled($profile['uid'],'hide_rating'))
-	$z = widget_rating(array('target' => $profile['channel_hash']));
-
 	$o .= replace_macros($tpl, array(
 		'$zcard'         => $zcard,
 		'$profile'       => $profile,
@@ -1211,7 +1206,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		'$chanmenu'      => $channel_menu,
 		'$diaspora'      => $diaspora,
 		'$reddress'      => $reddress,
-		'$rating'        => $z,
+		'$rating'        => '',
 		'$contact_block' => $contact_block,
 		'$editmenu'	 => profile_edit_menu($profile['uid'])
 	));

@@ -1419,14 +1419,11 @@ img.mail-conv-sender-photo {
 
 /* nav bootstrap */
 
-nav img {
-	border-radius: $radiuspx;
-}
-
 .menu-img-3 {
 	width: 3.3em;
 	height: 3.3em;
 	margin-right: 5px;
+	border-radius: $radiuspx;
 	float: left;
 }
 
@@ -1434,18 +1431,21 @@ nav img {
 	height: 2.2em;
 	width: 2.2em;
 	margin-right: 5px;
+	border-radius: $radiuspx;
 	float: left;
 }
 
 .menu-img-1 {
-	height: 1.1em;
-	width: 1.1em;
+	height: 1.5em;
+	width: 1.5em;
 	margin-right: 5px;
+	border-radius: $radiuspx;
 }
 
 .usermenu {
 	width: 2.2rem;
 	height: 2.2rem;
+	border-radius: $radiuspx;
 }
 
 .usermenu img {

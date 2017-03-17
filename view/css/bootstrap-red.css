@@ -9,6 +9,10 @@ nav .badge {
 
 }
 
+.widget .badge {
+	font-size: 100%;
+}
+
 .nav-item.nav-item-hack {
 	height: 2.3rem;
 }

@@ -49,8 +49,10 @@ class Filer extends \Zotlabs\Web\Controller {
 			}
 			$tpl = get_markup_template("filer_dialog.tpl");
 			$o = replace_macros($tpl, array(
-				'$field' => array('term', t("Save to Folder:"), '', '', $filetags, t('- select -')),
+				'$field' => array('term', t('Enter a folder name'), '', '', $filetags, 'placeholder="' . t('or select an existing folder (doubleclick)') . '"'),
 				'$submit' => t('Save'),
+				'$title' => t('Save to Folder'),
+				'$cancel' => t('Cancel')
 			));
 			
 			echo $o;

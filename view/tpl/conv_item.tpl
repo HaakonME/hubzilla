@@ -4,10 +4,10 @@
 </div>
 <div id="collapsed-comments-{{$item.id}}" class="collapsed-comments" style="display: none;">
 {{/if}}
-	<div id="thread-wrapper-{{$item.id}}" class="clearfix thread-wrapper{{if $item.toplevel}} {{$item.toplevel}} mb-4 generic-content-wrapper h-entry {{else}} u-comment h-cite {{/if}} item_{{$item.submid}}">
+	<div id="thread-wrapper-{{$item.id}}" class="thread-wrapper{{if $item.toplevel}} {{$item.toplevel}} mb-4 generic-content-wrapper h-entry {{else}} u-comment h-cite {{/if}} item_{{$item.submid}}">
 		<a name="item_{{$item.id}}" ></a>
-		<div class="clearfix wall-item-outside-wrapper{{if $item.is_comment}} comment{{/if}}{{if $item.previewing}} preview{{/if}}" id="wall-item-outside-wrapper-{{$item.id}}" >
-			<div class="clearfix wall-item-content-wrapper{{if $item.is_comment}} comment{{/if}}" id="wall-item-content-wrapper-{{$item.id}}" style="clear:both;">
+		<div class="wall-item-outside-wrapper{{if $item.is_comment}} comment{{/if}}{{if $item.previewing}} preview{{/if}}" id="wall-item-outside-wrapper-{{$item.id}}" >
+			<div class="clearfix wall-item-content-wrapper{{if $item.is_comment}} comment{{/if}}" id="wall-item-content-wrapper-{{$item.id}}">
 				{{if $item.photo}}
 				<div class="wall-photo-item" id="wall-photo-item-{{$item.id}}">
 					{{$item.photo}}
@@ -26,12 +26,11 @@
 				<hr class="m-0">
 				{{/if}}
 				{{/if}}
-				<div class="p-2 wall-item-head{{if $item.is_new && !$item.title && !$item.event && !$item.is_comment}} wall-item-head-new rounded-top{{/if}} clearfix">
+				<div class="p-2 clearfix wall-item-head{{if $item.is_new && !$item.title && !$item.event && !$item.is_comment}} wall-item-head-new rounded-top{{/if}}">
 					<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
 						<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}} h-card p-author" id="wall-item-photo-wrapper-{{$item.id}}">
 							<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-photo-link u-url" id="wall-item-photo-link-{{$item.id}}"><img src="{{$item.thumb}}" class="wall-item-photo{{$item.sparkle}} u-photo p-name" id="wall-item-photo-{{$item.id}}" alt="{{$item.name}}" /></a>
 						</div>
-						<div class="wall-item-photo-end" style="clear:both"></div>
 					</div>
 					{{if $item.lock}}
 					<div class="wall-item-lock dropdown">
@@ -58,7 +57,7 @@
 				<div class="p-2 wall-item-tools clearfix">
 
 					<div class="body-tags">
-						<span class="tag">{{$item.mentions}} {{$item.tags}} {{$item.categories}}</span>
+						<span class="tag">{{$item.mentions}} {{$item.tags}} {{$item.categories}} {{$item.folders}}</span>
 					</div>
 				{{**
 					{{if $item.mentions}}
@@ -76,12 +75,12 @@
 						<span class="tag p-category">{{$item.categories}}</span>
 					</div>
 					{{/if}}
-				**}}
 					{{if $item.folders}}
 					<div class="body-tags" id="item-folders">
 						<span class="tag">{{$item.folders}}</span>
 					</div>
 					{{/if}}
+				**}}
 				</div>
 				{{/if}}
 				<div class="p-2 clearfix wall-item-tools">
@@ -93,7 +92,7 @@
 							</button>
 							<div class="dropdown-menu dropdown-menu-right">
 							{{foreach $item.reactions as $react}}
-								<a class="dropdown-item" href="#" onclick="jotReact({{$item.id}},'{{$react}}'); return false;"><img class="dropdown-menu-img-sm" src="/images/emoji/{{$react}}.png" alt="{{$react}}" /></a>
+								<a class="dropdown-item clearfix" href="#" onclick="jotReact({{$item.id}},'{{$react}}'); return false;"><img class="menu-img-2" src="/images/emoji/{{$react}}.png" alt="{{$react}}" /></a>
 							{{/foreach}}
 							</div>
 						</div>
@@ -173,24 +172,20 @@
 								{{if $item.star}}
 								<a class="dropdown-item" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="generic-icons-nav fa fa-fw fa-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i>{{$item.star.toggle}}</a>
 								{{/if}}
-
 								{{if $item.thread_action_menu}}
 								{{foreach $item.thread_action_menu as $mitem}}
 								<a class="dropdown-item" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} ><i class="generic-icons-nav fa fa-fw fa-{{$mitem.icon}}"></i>{{$mitem.title}}</a>
 								{{/foreach}}
 								{{/if}}
-
 								{{if $item.drop.dropping}}
 								<a class="dropdown-item" href="#" onclick="dropItem('item/drop/{{$item.id}}', '#thread-wrapper-{{$item.id}}'); return false;" title="{{$item.drop.delete}}" ><i class="generic-icons-nav fa fa-fw fa-trash-o"></i>{{$item.drop.delete}}</a>
 								{{/if}}
-
 								{{if $item.thread_author_menu}}
 								<div class="dropdown-divider"></div>
 								{{foreach $item.thread_author_menu as $mitem}}
 								<a class="dropdown-item" {{if $mitem.href}}href="{{$mitem.href}}"{{/if}} {{if $mitem.action}}onclick="{{$mitem.action}}"{{/if}} {{if $mitem.title}}title="{{$mitem.title}}"{{/if}} >{{$mitem.title}}</a>
 								{{/foreach}}
 								{{/if}}
-
 								{{if $item.edpost && $item.dreport}}
 								<a class="dropdown-item" href="dreport/{{$item.mid}}">{{$item.dreport}}</a>
 								{{/if}}

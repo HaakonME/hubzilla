@@ -358,10 +358,6 @@ footer {
 	filter:alpha(opacity=100);
 }
 
-#view-contact-end {
-	clear: both;
-}
-
 #profile-photo-wrapper img {
 	width: 100%;
 	height: 100%;
@@ -502,10 +498,6 @@ footer {
 	height: 34px;
 }
 
-#contact-block-end {
-	clear: both;
-}
-
 .contact-block-img {
 	width:47px;
 	height:47px;
@@ -529,13 +521,7 @@ footer {
 }
 
 .wall-item-conv {
-	padding: 7px 10px;
 	background-color: $comment_item_colour;
-}
-
-
-#conversation-end {
-	clear: both;
 }
 
 #nav-notifications-template {
@@ -622,11 +608,6 @@ nav .acpopup {
 	text-align: center;
 }
 
-.profile-match-break,
-.profile-match-end {
-	clear: both;
-}
-
 .profile-match-connect {
 	text-align: center;
 	font-weight: bold;
@@ -645,9 +626,6 @@ nav .acpopup {
 	float: right;
 }
 
-#profile-match-wrapper-end {
-	clear: both;
-}
 .side-link {
 	margin-bottom: 15px;
 }
@@ -660,10 +638,6 @@ nav .acpopup {
 	border: 1px solid #ddd;
 }
 
-#group-members-end {
-	clear: both;
-}
-
 #group-separator {
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -674,11 +648,6 @@ nav .acpopup {
 	height: 450px;
 	overflow: auto;
 	border: 1px solid #ddd;
-}
-
-#group-all-contacts-end {
-	clear: both;
-	margin-bottom: 10px;
 }
 
 #group-edit-desc {
@@ -694,10 +663,6 @@ nav .acpopup {
 	border: 1px solid #ddd;
 }
 
-#prof-members-end {
-	clear: both;
-}
-
 #prof-separator {
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -708,11 +673,6 @@ nav .acpopup {
 	height: 450px;
 	overflow: auto;
 	border: 1px solid #ddd;
-}
-
-#prof-all-contacts-end {
-	clear: both;
-	margin-bottom: 10px;
 }
 
 #prof-edit-desc {
@@ -727,10 +687,6 @@ nav .acpopup {
 	height: 80px;
 	width: 80px;
 	margin-right: 15px;
-}
-.notification-listing-end {
-	clear: both;
-	margin-bottom: 15px;
 }
 
 /**
@@ -787,13 +743,6 @@ div.jGrowl div.info {
 
 div.jGrowl div.jGrowl-notification {
     min-height: 60px;
-}
-
-#id_term_label {
-	width:75px;
-}
-#id_term {
-	width:100px;
 }
 
 #nav-search-text-ac .autocomplete {
@@ -884,7 +833,8 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	display: block;
 }
 
-.dropdown-notification {
+.dropdown-notification,
+.member-item {
 	line-height: 1.1em;
 	font-size: 0.75rem;
 	overflow: hidden;
@@ -895,10 +845,6 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 #page-spinner {
 	color: #777;
 	margin: 24px;
-}
-
-.tabs-end {
-	clear: both;
 }
 
 .modal-header .contextual-help-tool {
@@ -1335,11 +1281,6 @@ img.mail-conv-sender-photo {
 	border-top: 0px solid $comment_item_colour;
 }
 
-.wall-item-like,
-.wall-item-dislike {
-	font-size: 11px;
-}
-
 .wall-item-photo {
 	border: none;
 	width: $top_photo !important;
@@ -1369,7 +1310,6 @@ img.mail-conv-sender-photo {
 .chat-item-text,
 .chat-item-text-self {
 	font-size: $font_size;
-	clear: both;
 }
 
 .item-tool {
@@ -1483,14 +1423,21 @@ nav img {
 	border-radius: $radiuspx;
 }
 
-.dropdown-menu-img-sm {
+.menu-img-3 {
 	width: 3.3em;
 	height: 3.3em;
 	margin-right: 5px;
 	float: left;
 }
 
-.dropdown-menu-img-xs {
+.menu-img-2 {
+	height: 2.2em;
+	width: 2.2em;
+	margin-right: 5px;
+	float: left;
+}
+
+.menu-img-1 {
 	height: 1.1em;
 	width: 1.1em;
 	margin-right: 5px;

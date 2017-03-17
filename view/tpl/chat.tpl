@@ -29,18 +29,18 @@
 					<div id="chat-submit" class="dropup pull-right">
 						<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-caret-up"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="chat-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
-						<ul class="dropdown-menu">
-							<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online"><i class="fa fa-circle online"></i>&nbsp;{{$online}}</a></li>
-							<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=away"><i class="fa fa-circle away"></i>&nbsp;{{$away}}</a></li>
-							<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/chat/{{$nickname}}/{{$room_id}}/leave"><i class="fa fa-circle leave"></i>&nbsp;{{$leave}}</a></li>
-                            <li class="divider"></li>
-                            <li class="nav-item" id="toggle-notifications"><a class="nav-link" href="" onclick="toggleChatNotifications(); return false;"><i id="toggle-notifications-icon" class="fa fa-bell-slash-o"></i>&nbsp;Toggle notifications</a></li>
-                            <li class="nav-item disabled" id="toggle-notifications-audio"><a class="nav-link" href="" onclick="toggleChatNotificationAudio(); return false;"><i id="toggle-notifications-audio-icon" class="fa fa-volume-off"></i>&nbsp;Toggle sound</a></li>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online"><i class="fa fa-circle online"></i>&nbsp;{{$online}}</a>
+							<a class="dropdown-item" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=away"><i class="fa fa-circle away"></i>&nbsp;{{$away}}</a>
+							<a class="dropdown-item" href="{{$baseurl}}/chat/{{$nickname}}/{{$room_id}}/leave"><i class="fa fa-circle leave"></i>&nbsp;{{$leave}}</a>
+                       					<div class="dropdown-divider"></div>
+                        				<a id="toggle-notifications" class="dropdown-item" href="" onclick="toggleChatNotifications(); return false;"><i id="toggle-notifications-icon" class="fa fa-bell-slash-o"></i>&nbsp;Toggle notifications</a>
+                        				<a id="toggle-notifications-audio" class="dropdown-item disabled" href="" onclick="toggleChatNotificationAudio(); return false;"><i id="toggle-notifications-audio-icon" class="fa fa-volume-off"></i>&nbsp;Toggle sound</a>
 							{{if $bookmark_link}}
-							<li class="divider"></li>
-							<li class="nav-item"><a class="nav-link" href="{{$bookmark_link}}" target="_blank" ><i class="fa fa-bookmark"></i>&nbsp;{{$bookmark}}</a></li>
+                         				<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="{{$bookmark_link}}" target="_blank" ><i class="fa fa-bookmark"></i>&nbsp;{{$bookmark}}</a>
 							{{/if}}
-						</ul>
+						</div>
 					</div>
 					<div id="chat-tools" class="btn-toolbar pull-left">
 						<div class="btn-group">
@@ -76,13 +76,13 @@
 							<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 								<i id="more-tools-icon" class="fa fa-caret-up jot-icons"></i>
 							</button>
-							<ul class="dropdown-menu dropdown-menu-right" role="menu">
-								<li class="visible-xs"><a href="#" onclick="chatJotGetLink(); return false;" ><i class="fa fa-link"></i>&nbsp;{{$insert}}</a></li>
+							<div class="dropdown-menu dropdown-menu-right">
+								<a class="dropdown-item" href="#" onclick="chatJotGetLink(); return false;" ><i class="fa fa-link"></i>&nbsp;{{$insert}}</a>
 								{{if $feature_encrypt}}
-								<li class="divider"></li>
-								<li class="visible-xs"><a href="#" onclick="red_encrypt('{{$cipher}}', '#chatText' ,$('#chatText').val()); return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a></li>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="#" onclick="red_encrypt('{{$cipher}}', '#chatText' ,$('#chatText').val()); return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a>
 								{{/if}}
-							</ul>
+							</div>
 						</div>
 					</div>
 					<div id="chat-rotator-wrapper" class="pull-left">
@@ -150,7 +150,7 @@ function update_inroom(inroom) {
 	$.each( inroom, function(index, item) {
 		var newNode = document.createElement('div');
 		newNode.setAttribute('class', 'member-item');
-		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" /> ' + '<span class="name">' + item.name + '</span><br /><span class="' + item.status_class + '">' + item.status + '</span>');
+		$(newNode).html('<img class="dropdown-menu-img-xs" src="' + item.img + '" alt="' + item.name + '" /> ' + '<span class="contactname">' + item.name + '</span><span class="' + item.status_class + '">' + item.status + '</span>');
 		html.appendChild(newNode);
 	});
     memberChange = chatRoomMembersChange(inroom); // get list of arrivals and departures

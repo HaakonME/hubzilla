@@ -614,6 +614,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$owner_photo = '';
 				$owner_name  = '';
 				$sparkle     = '';
+				$is_new      = false;
 
 				if($mode === 'search' || $mode === 'community') {
 					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
@@ -682,6 +683,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
+				if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
+					$is_new = true;
+
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
@@ -738,6 +742,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'wait' => t('Please wait'),
 					'thread_level' => 1,
 					'has_tags' => $has_tags,
+					'is_new' => $is_new
 				);
 
 				$arr = array('item' => $item, 'output' => $tmp_item);
@@ -1176,7 +1181,7 @@ function builtin_activity_puller($item, &$conv_responses) {
 		if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
 			$name = (($item['author']['xchan_name']) ? $item['author']['xchan_name'] : t('Unknown'));
 			$url = (($item['author_xchan'] && $item['author']['xchan_photo_s']) 
-				? '<a class="dropdown-item" href="' . chanlink_hash($item['author_xchan']) . '">' . '<img class="dropdown-menu-img-xs" src="' . zid($item['author']['xchan_photo_s'])  . '" alt="' . urlencode($name) . '" />' . $name . '</a>' 
+				? '<a class="dropdown-item" href="' . chanlink_hash($item['author_xchan']) . '">' . '<img class="menu-img-1" src="' . zid($item['author']['xchan_photo_s'])  . '" alt="' . urlencode($name) . '" />' . $name . '</a>' 
 				: '<a class="dropdown-item" href="#" class="disabled">' . $name . '</a>'
 			);
 

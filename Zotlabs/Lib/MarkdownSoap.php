@@ -34,9 +34,13 @@ class MarkdownSoap {
 
 
 	function clean() {
+
 		$x = $this->extract_code($this->str);
+
 		$x = $this->purify($x);
+
 		$x = $this->putback_code($x);		
+
 		$x = $this->escape($x);
 		
 		return $x;
@@ -60,7 +64,7 @@ class MarkdownSoap {
 	}
 	
 	function encode_code($matches) {
-		return $this->token . ';' . base64_encode($matches[1]) . ';' ;
+		return $this->token . ';' . base64_encode($matches[0]) . ';' ;
 	}
 
 	function decode_code($matches) {
@@ -73,7 +77,13 @@ class MarkdownSoap {
 	}
 
 	function purify($s) {
-		return purify_html($s);
+		$s = str_replace("\n",'<br>',$s);
+		$s = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$s);
+		$s = str_replace(' ','&nbsp;',$s);
+		$s = purify_html($s);
+		$s = str_replace('&nbsp;'," ",$s);
+		$s = str_replace(['<br>','<br />'],["\n","\n"],$s);
+		return $s;
 	}
 
 	function escape($s) {

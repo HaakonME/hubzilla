@@ -610,7 +610,7 @@ function parse_vobject($ical, $type) {
 	$ev['etype'] = $type;
 
 	$dtstart = $ical->DTSTART->getDateTime();
-	$ev['adjust'] = (($ical->DTSTART->isFloating()) ? 1 : 0);
+	$ev['adjust'] = (($ical->DTSTART->isFloating()) ? 0 : 1);
 
 	$ev['dtstart'] = datetime_convert((($ev['adjust']) ? 'UTC' : date_default_timezone_get()),'UTC',
 		$dtstart->format(\DateTime::W3C));
@@ -751,7 +751,7 @@ function event_import_ical($ical, $uid) {
 	}
 
 	$dtstart = $ical->DTSTART->getDateTime();
-	$ev['adjust'] = (($ical->DTSTART->isFloating()) ? 1 : 0);
+	$ev['adjust'] = (($ical->DTSTART->isFloating()) ? 0 : 1);
 
 //	logger('dtstart: ' . var_export($dtstart,true));
 
@@ -854,7 +854,7 @@ function event_import_ical_task($ical, $uid) {
 
 	$dtstart = $ical->DTSTART->getDateTime();
 
-	$ev['adjust'] = (($ical->DTSTART->isFloating()) ? 1 : 0);
+	$ev['adjust'] = (($ical->DTSTART->isFloating()) ? 0 : 1);
 
 //	logger('dtstart: ' . var_export($dtstart,true));
 

@@ -238,6 +238,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 				$rawContent = htmlspecialchars_decode(json_decode($p['content']),ENT_COMPAT);
 
+				$rawContent = $p['content'];
+
 				$content = ($p['content'] !== '' ? $rawContent : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				if($mimeType == 'text/bbcode') {
@@ -245,7 +247,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				}
 				else {
 					$content = Zlib\MarkdownSoap::unescape($content);
-					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(MarkdownExtra::defaultTransform(Zlib\NativeWikiPage::bbcode($content)))));
+					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(MarkdownExtra::defaultTransform(Zlib\NativeWikiPage::bbcode($content))));
 					$renderedContent = Zlib\NativeWikiPage::convert_links($html, argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}
 				$showPageControls = $wiki_editor;
@@ -329,8 +331,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$html = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))),$wikiURL);
 			}
 			else {
-				$content = Zlib\NativeWikiPage::bbcode($content);
-				$html = Zlib\NativeWikiPage::generate_toc(zidify_text(purify_html(MarkdownExtra::defaultTransform($content))));
+				$bb = Zlib\NativeWikiPage::bbcode($content);
+				$x = new ZLib\MarkdownSoap($bb);
+				$md = $x->clean();
+				$md = ZLib\MarkdownSoap::unescape($md);
+				$html = MarkdownExtra::defaultTransform($md);
+				$html = Zlib\NativeWikiPage::generate_toc(zidify_text($html));
 				$html = Zlib\NativeWikiPage::convert_links($html,$wikiURL);
 			}
 			json_return_and_die(array('html' => $html, 'success' => true));
@@ -455,7 +461,11 @@ class Wiki extends \Zotlabs\Web\Controller {
 				json_return_and_die(array('pages' => null, 'message' => 'Permission denied.', 'success' => false));					
 			}
 
-			$page_list_html = widget_wiki_pages(array(
+			// @FIXME - we shouldn't invoke this if it isn't in the PDL or has been over-ridden
+
+			$x = new \Zotlabs\Widget\Wiki_pages();
+
+			$page_list_html = $x->widget(array(
 					'resource_id' => $resource_id, 
 					'refresh' => true, 
 					'channel' => argv(1)));
@@ -513,7 +523,6 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$resource_id = $_POST['resource_id'];
 			$pageUrlName = $_POST['name'];
 			
-
 			// Determine if observer has permission to read content
 
 			$perms = Zlib\NativeWiki::get_permissions($resource_id, intval($owner['channel_id']), $observer_hash);
@@ -522,11 +531,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 				json_return_and_die(array('historyHTML' => '', 'message' => 'Permission denied.', 'success' => false));
 			}
 
-			$historyHTML = widget_wiki_page_history(array(
+			$historyHTML = \Zotlabs\Lib\NativeWikiPage::render_page_history(array(
 				'resource_id' => $resource_id,
 				'pageUrlName' => $pageUrlName,
 				'permsWrite'  => $perms['write']
 			));
+
 			json_return_and_die(array('historyHTML' => $historyHTML, 'message' => '', 'success' => true));
 		}
 

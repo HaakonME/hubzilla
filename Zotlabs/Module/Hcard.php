@@ -59,12 +59,10 @@ class Hcard extends \Zotlabs\Web\Controller {
 	}
 	
 	
-		function get() {
-	
-		require_once('include/widgets.php');
-		return widget_profile(array());
-	
-	
+	function get() {
+
+		$x = new \Zotlabs\Widget\Profile();	
+		return $x->widget(array());
 	
 	}
 	

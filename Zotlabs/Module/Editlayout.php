@@ -119,6 +119,7 @@ class Editlayout extends \Zotlabs\Web\Controller {
 			'hide_weblink' => true,
 			'hide_attach' => true,
 			'hide_preview' => true,
+			'disable_comments' => true,
 			'ptyp' => $itm[0]['obj_type'],
 			'body' => undo_post_tagging($itm[0]['body']),
 			'post_id' => $post_id,

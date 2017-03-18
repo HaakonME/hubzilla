@@ -323,13 +323,6 @@ class NativeWikiPage {
 		}
 
 		$mimetype = $w['mimeType'];
-		if($mimetype === 'text/markdown') {
-			$x = new Zlib\MarkdownSoap($content);
-			$content = $x->clean();
-		}
-		else {
-			$content = escape_tags($content);
-		}
 	
 		// fetch the most recently saved revision. 
 
@@ -348,6 +341,7 @@ class NativeWikiPage {
 		$item['author_xchan'] = $observer_hash;
 		$item['revision']     = (($arr['revision']) ? intval($arr['revision']) + 1 : intval($item['revision']) + 1);
 		$item['edited']       = datetime_convert();
+		$item['mimetype']     = $mimetype;
 
 		if($item['iconfig'] && is_array($item['iconfig']) && count($item['iconfig'])) {
 			for($x = 0; $x < count($item['iconfig']); $x ++) {
@@ -515,6 +509,29 @@ class NativeWikiPage {
 		}
 		return $s;
 	}
+
+	static public function render_page_history($arr) {
+
+		$pageUrlName = ((array_key_exists('pageUrlName', $arr)) ? $arr['pageUrlName'] : '');
+		$resource_id = ((array_key_exists('resource_id', $arr)) ? $arr['resource_id'] : '');
+
+		$pageHistory = self::page_history([
+			'channel_id'    => \App::$profile_uid, 
+			'observer_hash' => get_observer_hash(),
+			'resource_id'   => $resource_id,
+			'pageUrlName'   => $pageUrlName
+		]);
+
+		return replace_macros(get_markup_template('nwiki_page_history.tpl'), array(
+			'$pageHistory' => $pageHistory['history'],
+			'$permsWrite'  => $arr['permsWrite'],
+			'$name_lbl'    => t('Name'),
+			'$msg_label'   => t('Message','wiki_history')
+		));
+
+	}
+
+
 	
 	/**
 	 * Replace the instances of the string [toc] with a list element that will be populated by

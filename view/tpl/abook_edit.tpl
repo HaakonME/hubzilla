@@ -6,32 +6,31 @@
 				<button id="connection-dropdown" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 				</button>
-				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
-					<li><a  href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a></li>
-					<li><a  href="{{$tools.recent.url}}" title="{{$tools.recent.title}}">{{$tools.recent.label}}</a></li>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+					<a class="dropdown-item" href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a>
+					<a class="dropdown-item" href="{{$tools.recent.url}}" title="{{$tools.recent.title}}">{{$tools.recent.label}}</a>
 					{{if $tools.fetchvc}}
-					<li><a  href="{{$tools.fetchvc.url}}" title="{{$tools.fetchvc.title}}">{{$tools.fetchvc.label}}</a></li>
+					<a class="dropdown-item" href="{{$tools.fetchvc.url}}" title="{{$tools.fetchvc.title}}">{{$tools.fetchvc.label}}</a>
 					{{/if}}
-					<li><a  href="#" title="{{$tools.refresh.title}}" onclick="window.location.href='{{$tools.refresh.url}}'; return false;">{{$tools.refresh.label}}</a></li>
-					<li><a  href="#" title="{{$tools.rephoto.title}}" onclick="window.location.href='{{$tools.rephoto.url}}'; return false;">{{$tools.rephoto.label}}</a></li>
-					<li class="divider"></li>
-					<li><a  href="#" title="{{$tools.block.title}}" onclick="window.location.href='{{$tools.block.url}}'; return false;">{{$tools.block.label}}</a></li>
-					<li><a  href="#" title="{{$tools.ignore.title}}" onclick="window.location.href='{{$tools.ignore.url}}'; return false;">{{$tools.ignore.label}}</a></li>
-					<li><a  href="#" title="{{$tools.archive.title}}" onclick="window.location.href='{{$tools.archive.url}}'; return false;">{{$tools.archive.label}}</a></li>
-					<li><a  href="#" title="{{$tools.hide.title}}" onclick="window.location.href='{{$tools.hide.url}}'; return false;">{{$tools.hide.label}}</a></li>
-					<li><a  href="#" title="{{$tools.delete.title}}" onclick="window.location.href='{{$tools.delete.url}}'; return false;">{{$tools.delete.label}}</a></li>
-				</ul>
+					<a class="dropdown-item" href="#" title="{{$tools.refresh.title}}" onclick="window.location.href='{{$tools.refresh.url}}'; return false;">{{$tools.refresh.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.rephoto.title}}" onclick="window.location.href='{{$tools.rephoto.url}}'; return false;">{{$tools.rephoto.label}}</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" title="{{$tools.block.title}}" onclick="window.location.href='{{$tools.block.url}}'; return false;">{{$tools.block.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.ignore.title}}" onclick="window.location.href='{{$tools.ignore.url}}'; return false;">{{$tools.ignore.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.archive.title}}" onclick="window.location.href='{{$tools.archive.url}}'; return false;">{{$tools.archive.label}}</a>					<a class="dropdown-item" href="#" title="{{$tools.hide.title}}" onclick="window.location.href='{{$tools.hide.url}}'; return false;">{{$tools.hide.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.delete.title}}" onclick="window.location.href='{{$tools.delete.url}}'; return false;">{{$tools.delete.label}}</a>
+				</div>
 			</div>
 			{{if $abook_prev || $abook_next}}
 			<div class="btn-group">
 				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_prev}} disabled{{/if}}" ><i class="fa fa-backward"></i></a>
 				<button class="btn btn-outline-secondary btn-sm{{if $is_pending}} disabled{{/if}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
 				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
-				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
 					{{foreach $sections as $s}}
-					<li><a href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a></li>
+					<a class="dropdown-item" href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a>
 					{{/foreach}}
-				</ul>
+				</div>
 			</div>
 			{{/if}}
 		</div>
@@ -470,7 +469,7 @@
 					</h3>
 				</div>
 				{{/if}}
-				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self || $section === 'perms'}} in{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
+				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self || $section === 'perms'}} show{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
 					<div class="section-content-tools-wrapper">
 						<div class="section-content-warning-wrapper">
 						{{if $notself}}{{$permnote}}{{/if}}

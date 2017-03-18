@@ -31,12 +31,12 @@
 					<textarea class="form-control" id="prvmail-text" name="body">{{$text}}</textarea>
 				</div>
 				<div id="prvmail-submit-wrapper" class="form-group">
-					<div id="prvmail-submit" class="pull-right btn-group">
+					<div id="prvmail-submit" class="float-right btn-group">
 						<button class="btn btn-outline-secondary btn-sm" id="prvmail-preview" title="{{$preview}}" onclick="preview_mail(); return false;"><i class="fa fa-eye"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="prvmail-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 					</div>
-					<div id="prvmail-tools" class="btn-toolbar pull-left">
-						<div class="btn-group">
+					<div id="prvmail-tools" class="btn-toolbar float-left">
+						<div class="btn-group mr-2">
 							<button id="main-editor-bold" class="btn btn-outline-secondary btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'prvmail-text'); return false;">
 								<i class="fa fa-bold jot-icons"></i>
 							</button>
@@ -53,7 +53,7 @@
 								<i class="fa fa-terminal jot-icons"></i>
 							</button>
 						</div>
-						<div class="btn-group hidden-xs">
+						<div class="btn-group hidden-md-down mr-2">
 							<button id="prvmail-attach-wrapper" class="btn btn-outline-secondary btn-sm" >
 								<i id="prvmail-attach" class="fa fa-paperclip jot-icons" title="{{$attach}}"></i>
 							</button>
@@ -62,7 +62,7 @@
 							</button>
 						</div>
 						{{if $feature_expire || $feature_encrypt}}
-						<div class="btn-group hidden-sm hidden-xs">
+						<div class="btn-group hidden-md-down mr-2">
 							{{if $feature_expire}}
 							<button id="prvmail-expire-wrapper" class="btn btn-outline-secondary btn-sm" onclick="prvmailGetExpiry();return false;" >
 								<i id="prvmail-expires" class="fa fa-eraser jot-icons" title="{{$expires}}" ></i>
@@ -75,22 +75,22 @@
 							{{/if}}
 						</div>
 						{{/if}}
-						<div class="btn-group visible-xs visible-sm">
+						<div class="btn-group hidden-lg-up">
 							<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 								<i id="more-tools-icon" class="fa fa-cog jot-icons"></i>
 							</button>
-							<ul class="dropdown-menu dropdown-menu-right" role="menu">
-								<li class="visible-xs"><a href="#" id="prvmail-attach-sub"><i class="fa fa-paperclip"></i>&nbsp;{{$attach}}</a></li>
-								<li class="visible-xs"><a href="#" onclick="prvmailJotGetLink(); return false;" ><i class="fa fa-link"></i>&nbsp;{{$insert}}</a></li>
+							<div class="dropdown-menu dropdown-menu-right" role="menu">
+								<a class="dropdown-item" href="#" id="prvmail-attach-sub"><i class="fa fa-paperclip"></i>&nbsp;{{$attach}}</a>
+								<a class="dropdown-item" href="#" onclick="prvmailJotGetLink(); return false;" ><i class="fa fa-link"></i>&nbsp;{{$insert}}</a>
 								{{if $feature_expire || $feature_encrypt}}
-								<li class="divider visible-xs"></li>
-								<li class="visible-sm visible-xs"><a href="#" onclick="prvmailGetExpiry(); return false;"><i id="prvmail-expires" class="fa fa-eraser"></i>&nbsp;{{$expires}}</a></li>
-								<li class="visible-sm visible-xs"><a href="#" onclick="red_encrypt('{{$cipher}}','#prvmail-text',$('#prvmail-text').val()); return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a></li>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="#" onclick="prvmailGetExpiry(); return false;"><i id="prvmail-expires" class="fa fa-eraser"></i>&nbsp;{{$expires}}</a>
+								<a class="dropdown-item" href="#" onclick="red_encrypt('{{$cipher}}','#prvmail-text',$('#prvmail-text').val()); return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a>
 								{{/if}}
-							</ul>
+							</div>
 						</div>
 					</div>
-					<div id="prvmail-rotator-wrapper" class="pull-left">
+					<div id="prvmail-rotator-wrapper" class="float-left">
 						<div id="prvmail-rotator"></div>
 					</div>
 					<div class="clear"></div>

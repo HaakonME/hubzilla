@@ -36,6 +36,10 @@ empty line above';
 		$this->assertEquals($html5elements, purify_html($html5elements));
 		$this->assertEquals('<button>button label</button>', purify_html('<button>button label</button>'));
 
+		// unsupported HTML5 elements
+		$this->assertEquals('Your HTML parser does not support HTML5 video.', purify_html('<video controls><source src="movie.ogg" type="video/ogg">Your HTML parser does not support HTML5 video.</video>'));
+		$this->assertEquals('Your HTML parser does not support HTML5 audio.', purify_html('<audio controls><source src="movie.ogg" "type="audio/ogg">Your HTML parser does not support HTML5 audio.</audio>'));
+
 		// preserve f6 and bootstrap additional data attributes from our own configuration
 		$this->assertEquals('<div data-title="title">text</div>', purify_html('<div data-title="title">text</div>'));
 		$this->assertEquals('<ul data-accordion-menu=""><li>item1</li></ul>', purify_html('<ul data-accordion-menu><li>item1</li></ul>'));
@@ -51,6 +55,8 @@ empty line above';
 		$this->assertEquals('<a href="#">link with rel="nofollow"</a>', purify_html('<a href="#" rel="nofollow">link with rel="nofollow"</a>'));
 		$this->assertEquals('a b', purify_html('a&nbsp;b'));
 		$this->assertEquals('ä ä € €', purify_html('ä &auml; &euro; &#8364;'));
+		$this->assertEquals('<img src="picture.png" alt="text" />', purify_html('<img src="picture.png" alt="text">'));
+		$this->assertEquals('', purify_html('<iframe width="560" height="315" src="https://www.youtube.com/embed/kiNGx5oL7hk" frameborder="0" allowfullscreen></iframe>'));
 	}
 
 	public function testPurifyHTML_js() {

@@ -333,20 +333,20 @@ ACL.prototype.update_view = function(value) {
 		type = itemid[0];
 		id   = itemid.substr(1);
 
-		btshow = $(this).children(".acl-button-show").removeClass("btn-success").addClass("btn-default");
-		bthide = $(this).children(".acl-button-hide").removeClass("btn-danger").addClass("btn-default");
+		btshow = $(this).children(".acl-button-show").removeClass("btn-success").addClass("btn-outline-success");
+		bthide = $(this).children(".acl-button-hide").removeClass("btn-danger").addClass("btn-outline-danger");
 
 		switch(type) {
 			case "g":
 				var uclass = "";
 				if (that.allow_gid.indexOf(id)>=0) {
-					btshow.removeClass("btn-default").addClass("btn-success");
-					bthide.removeClass("btn-danger").addClass("btn-default");
+					btshow.removeClass("btn-outline-success").addClass("btn-success");
+					bthide.removeClass("btn-danger").addClass("btn-outline-danger");
 					uclass="groupshow";
 				}
 				if (that.deny_gid.indexOf(id)>=0) {
-					btshow.removeClass("btn-success").addClass("btn-default");
-					bthide.removeClass("btn-default").addClass("btn-danger");
+					btshow.removeClass("btn-success").addClass("btn-outline-success");
+					bthide.removeClass("btn-outline-danger").addClass("btn-danger");
 					uclass = "grouphide";
 				}
 				$(that.group_uids[id]).each(function(i, v) {
@@ -366,13 +366,13 @@ ACL.prototype.update_view = function(value) {
 			case "c":
 				if (that.allow_cid.indexOf(id)>=0){
 					if(!$(this).hasClass("grouphide") ) {
-						btshow.removeClass("btn-default").addClass("btn-success");
-						bthide.removeClass("btn-danger").addClass("btn-default");
+						btshow.removeClass("btn-outline-success").addClass("btn-success");
+						bthide.removeClass("btn-danger").addClass("btn-outline-danger");
 					}
 				}
 				if (that.deny_cid.indexOf(id)>=0){
-					btshow.removeClass("btn-success").addClass("btn-default");
-					bthide.removeClass("btn-default").addClass("btn-danger");
+					btshow.removeClass("btn-success").addClass("btn-outline-success");
+					bthide.removeClass("btn-outline-danger").addClass("btn-danger");
 					$(this).removeClass("groupshow");
 				}
 		}

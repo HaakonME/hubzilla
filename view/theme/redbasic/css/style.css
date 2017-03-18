@@ -77,6 +77,11 @@ h6, .h6 {
 	font-size: 0.75rem;
 }
 
+#banner {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 .jslider {
 	font-family: sans-serif, arial, freesans;
@@ -109,6 +114,7 @@ a:focus,
 }
 
 input, optgroup, select, textarea {
+	color: $font_colour;
 	resize: vertical;
 }
 
@@ -145,8 +151,7 @@ pre {
 	color: #FF0000;
 }
 
-nav,
-header {
+nav {
 	opacity: $nav_float_min_opacity;
 	filter:alpha(opacity=$nav_percent_min_opacity);
 }
@@ -172,48 +177,7 @@ header {
 	padding: 10px;
 }
 
-nav #banner #logo-text a {
-	font-size: 40px;
-	font-weight: bold;
-	margin-left: 3px;
- 	color: #000000;
-
-}
-nav #banner #logo-text a:hover { text-decoration: none; }
-
 .nav-channel-select { margin-left: 8px; }
-
-header #banner {
-	z-index: 1040;
-	margin-top: 10px;
-	text-align: center;
-	text-shadow: 1px 1px 2px rgba(0,0,0,.5);
-	font-size: 14px;
-	font-family: tahoma, "Lucida Sans", sans;
-	color: $banner_colour;
-	font-weight: bold;
-	whitespace: nowrap;
-}
-
-header #banner a,
-header #banner a:active,
-header #banner a:visited,
-header #banner a:link,
-header #banner a:hover {
-	color: $banner_colour;
-	text-decoration: none;
-	outline: none;
-	vertical-align: bottom;
-}
-
-header #banner #logo-img {
-  height: 22px;
-  margin-top: 5px;
-}
-
-header #banner #logo-text {
-  font-size: 22px;
-}
 
 /* contextual help */
 .contextual-help-content {
@@ -244,18 +208,18 @@ header #banner #logo-text {
 .contextual-help-tool {
 	padding: 7px;
 	filter: alpha(opacity=20);
-	opacity: .2;
+	opacity: .5;
 }
 
 .contextual-help-tool:hover {
 	filter: alpha(opacity=50);
-	opacity: .5;
+	opacity: 1;
 	text-decoration: none;
 }
 
 .contextual-help-tool i {
-	color: #000;
-	font-size: 16px;
+	color: $font_colour;
+	font-size: 1.05rem;
 }
 
 /* contextual help end */
@@ -847,22 +811,6 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	margin: 24px;
 }
 
-.modal-header .contextual-help-tool {
-	/* Mostly duplicating ".modal-header .close" and ".close" layout settings from bootstrap */
-	float: right;
-	font-size: 21px;
-	padding: 0;
-	margin-top: -4px;
-	margin-right: 15px;
-	line-height: 1;
-}
-
-#acl-search {
-	padding: 4px;
-	border: 1px solid #ccc;
-	width: 100%;
-}
-
 #acl-search::-webkit-input-placeholder {
 	/* non-fontawesome fonts set a fallback for text parts of the placeholder*/
 	font-family: FontAwesome, sans-serif, arial, freesans;
@@ -873,59 +821,17 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	font-family: FontAwesome, sans-serif, arial, freesans;
 }
 
-#aclModal .modal-body {
-	padding-top: 10px;
-}
-
-#acl-showlimited-description {
-	font-size: 90%;
-	color: #888;
-	margin-left: 10px;
-	margin-bottom: 4px;
-}
-
-#acl-list {
-	border: 1px solid #ccc;
-	-webkit-border-radius: $radiuspx ;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-}
-
-#acl-search-wrapper {
-	padding: 7px 10px;
-	background-color: $item_colour;
-	border-top-left-radius: $radiuspx;
-	border-top-right-radius: $radiuspx;
-	border-bottom: 1px solid #ccc;
-}
-
-#acl-list-content-wrapper {
-	display: block;
-	overflow: auto;
-	clear: both;
-	min-height: 62px;
-	padding: 10px 10px 0px 0px;
-
-}
-
-#jotnets-wrapper, #jotnets-collapse {
-	margin-bottom: 18px;
-}
-
-#jot-preview-content {
-	margin-top: 10px;
-}
 .acl-list-item {
-	width: 48%; /* fallback if browser does not support calc() */
-	width: calc(50% - 10px);
+	width: 100%;
+	padding: 0.5rem;
+	margin-bottom: 0.5rem;
 	border: 1px solid #ccc;
-	margin: 0px 0px 10px 10px;
-	padding: 5px;
 	float: left;
-	-webkit-border-radius: $radiuspx ;
-	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
-	background-color: white;
+}
+
+.acl-item-header {
+	width: 100%;
 }
 
 .acl-list-item.grouphide {
@@ -936,60 +842,14 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	border: 1px solid green;
 }
 
-.acl-list-item img {
-	width: 40px;
-	height: 40px;
-	float: left;
-	margin-right: 5px;
-	-webkit-border-radius: $radiuspx ;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-}
-
 .acl-list-item.taggable {
 	background-color: #ddddff;
-}
-
-.acl-list-item p {
-	font-size: $font_size;
-	margin: 0px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .acl-button-show,
 .acl-button-hide {
 	float: right;
 	margin-left: 5px;
-}
-
-#acl-showlimited-caption,
-#acl-showall-caption {
-	font-size: 115%;
-}
-
-#acl-radiowrapper-showall {
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
-#acl-radiowrapper-showlimited {
-	margin-bottom: 0;
-}
-
-#acl-showall + i {
-	font-size: 140%;
-}
-
-#acl-info-icon,
-#acl-info-icon:active {
-	font-size: 110%;
-	color: $link_colour;
-	text-decoration: none;
-}
-
-#acl-showall-caption {
-	margin-left: 0.35em;
 }
 
 .contact-block-content {
@@ -1208,7 +1068,7 @@ img.mail-conv-sender-photo {
 }
 
 .jot-icons {
-	color: $toolicon_colour;
+	//color: $toolicon_colour;
 }
 
 .jot-icons.jot-lock-warn {
@@ -1321,11 +1181,6 @@ img.mail-conv-sender-photo {
 	color: $toolicon_colour;
 }
 
-.comment-icon {
-	font-size: 0.833em;
-	color: $toolicon_colour;
-}
-
 .comment-edit-text-empty,
 .comment-edit-text-full {
 	border: 1px solid #ccc;
@@ -1334,11 +1189,6 @@ img.mail-conv-sender-photo {
 
 .comment-edit-text-empty {
 	color: gray;
-	font-size: 12px;
-}
-
-.comment-edit-text-full {
-	color: black;
 }
 
 .divgrow-showmore {
@@ -1447,9 +1297,9 @@ img.mail-conv-sender-photo {
 	height: 2.2rem;
 }
 
-.usermenu img {
-	width: 100%;
-	height: 100%;
+#avatar {
+	width: 2.2rem;
+	height: 2.2rem;
 	border-radius: $radiuspx;
 }
 
@@ -1607,22 +1457,6 @@ main.fullscreen .section-content-wrapper-np {
 }
 /* bootstrap overrides */
 
-.btn {
-	font-size: $body_font_size;
-}
-
-.panel {
-  background-color: transparent;
-  border: 0px solid transparent;
-  border-radius: 0px;
-  -webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, .0);
-          box-shadow: 0 0px 0px rgba(0, 0, 0, .0);
-}
-
-.panel-group .panel + .panel {
-	margin-top: 0px;
-}
-
 blockquote {
 	font-size: $font_size;
 	font-style: italic;
@@ -1695,27 +1529,6 @@ blockquote {
 	background-color: $nav_active_icon_colour;
 }
 */
-
-/*
-.nav-tabs.nav-justified {
-	background-color: rgba(254,254,254,.5);
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-.nav-tabs.nav-justified > .active > a,
-.nav-tabs.nav-justified > .active > a:hover,
-.nav-tabs.nav-justified > .active > a:focus {
-	border-bottom-color: transparent;
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-	background-color: transparent;
-}
-*/
-
 
 @media screen and (max-width: 767px) {
 

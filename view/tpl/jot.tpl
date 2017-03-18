@@ -31,7 +31,7 @@
 		</div>
 		{{/if}}
 		<div id="jot-title-wrap" class="jothidden">
-			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex=1 value="{{$title}}">
+			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex="1" value="{{$title}}">
 		</div>
 		{{if $catsenabled}}
 		<div id="jot-category-wrap" class="jothidden">
@@ -39,17 +39,17 @@
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
-			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex=2 placeholder="{{$share}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >{{$content}}</textarea>
+			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex="2" placeholder="{{$share}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >{{$content}}</textarea>
 		</div>
 		{{if $attachment}}
 		<div id="jot-attachment-wrap">
 			<input class="jot-attachment" name="attachment" id="jot-attachment" type="text" value="{{$attachment}}" readonly="readonly" onclick="this.select();">
 		</div>
 		{{/if}}
-		<div id="profile-jot-submit-wrapper" class="jothidden">
-			<div id="profile-jot-submit-left" class="btn-toolbar pull-left">
+		<div id="profile-jot-submit-wrapper" class="clearfix p-2 jothidden">
+			<div id="profile-jot-submit-left" class="btn-toolbar float-left">
 				{{if $bbcode}}
-				<div class="btn-group">
+				<div class="btn-group mr-2">
 					<button id="main-editor-bold" class="btn btn-outline-secondary btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'profile-jot-text'); return false;">
 						<i class="fa fa-bold jot-icons"></i>
 					</button>
@@ -68,7 +68,7 @@
 				</div>
 				{{/if}}
 				{{if $visitor}}
-				<div class="btn-group hidden-xs hidden-sm">
+				<div class="btn-group mr-2 hidden-md-down">
 					{{if $writefiles}}
 					<button id="wall-file-upload" class="btn btn-outline-secondary btn-sm" title="{{$attach}}" >
 						<i id="wall-file-upload-icon" class="fa fa-paperclip jot-icons"></i>
@@ -85,7 +85,7 @@
 					</button>
 					{{/if}}
 				</div>
-				<div class="btn-group hidden-xs hidden-sm">
+				<div class="btn-group mr-2 hidden-md-down">
 					{{if $setloc}}
 					<button id="profile-location-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
 						<i id="profile-location" class="fa fa-globe jot-icons"></i>
@@ -97,7 +97,7 @@
 					</button>
 					{{/if}}
 				{{else}}
-				<div class="btn-group hidden-xs hidden-sm">
+				<div class="btn-group hidden-md-down">
 				{{/if}}
 				{{if $feature_expire}}
 					<button id="profile-expire-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
@@ -126,48 +126,51 @@
 				{{/if}}
 				</div>
 				{{if $writefiles || $weblink || $setloc || $clearloc || $feature_expire || $feature_encrypt || $feature_voting}}
-				<div class="btn-group visible-xs visible-sm">
+				<div class="btn-group hidden-lg-up">
 					<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="fa fa-cog jot-icons"></i>
 					</button>
-					<ul class="dropdown-menu" role="menu">
+					<div class="dropdown-menu">
 						{{if $visitor}}
 						{{if $writefiles}}
-						<li><a id="wall-file-upload-sub" href="#" ><i class="fa fa-paperclip"></i>&nbsp;{{$attach}}</a></li>
+						<a class="dropdown-item" id="wall-file-upload-sub" href="#" ><i class="fa fa-paperclip"></i>&nbsp;{{$attach}}</a>
 						{{/if}}
 						{{if $weblink}}
-						<li><a href="#" onclick="jotGetLink(); return false;"><i class="fa fa-link"></i>&nbsp;{{$weblink}}</a></li>
+						<a class="dropdown-item" href="#" onclick="jotGetLink(); return false;"><i class="fa fa-link"></i>&nbsp;{{$weblink}}</a>
+						{{/if}}
+						{{if $embedPhotos}}
+						<a class="dropdown-item" href="#" onclick="initializeEmbedPhotoDialog(); return false;"><i class="fa fa-file-image-o jot-icons"></i>&nbsp;{{$embedPhotos}}</a>
 						{{/if}}
 						{{if $setloc}}
-						<li><a href="#" onclick="jotGetLocation(); return false;"><i class="fa fa-globe"></i>&nbsp;{{$setloc}}</a></li>
+						<a class="dropdown-item" href="#" onclick="jotGetLocation(); return false;"><i class="fa fa-globe"></i>&nbsp;{{$setloc}}</a>
 						{{/if}}
 						{{if $clearloc}}
-						<li><a href="#" onclick="jotClearLocation(); return false;"><i class="fa fa-circle-o"></i>&nbsp;{{$clearloc}}</a></li>
+						<a class="dropdown-item" href="#" onclick="jotClearLocation(); return false;"><i class="fa fa-circle-o"></i>&nbsp;{{$clearloc}}</a>
 						{{/if}}
 						{{/if}}
 						{{if $feature_expire}}
-						<li><a href="#" onclick="jotGetExpiry(); return false;"><i class="fa fa-eraser"></i>&nbsp;{{$expires}}</a></li>
+						<a class="dropdown-item" href="#" onclick="jotGetExpiry(); return false;"><i class="fa fa-eraser"></i>&nbsp;{{$expires}}</a>
 						{{/if}}
 						{{if $feature_future}}
-						<li><a href="#" onclick="jotGetPubDate();return false;"><i class="fa fa-clock-o"></i>&nbsp;{{$future_txt}}</a></li>
+						<a class="dropdown-item" href="#" onclick="jotGetPubDate();return false;"><i class="fa fa-clock-o"></i>&nbsp;{{$future_txt}}</a>
 						{{/if}}
 						{{if $feature_encrypt}}
-						<li><a href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a></li>
+						<a class="dropdown-item" href="#" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"><i class="fa fa-key"></i>&nbsp;{{$encrypt}}</a>
 						{{/if}}
 						{{if $feature_voting}}
-						<li><a href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="fa fa-square-o"></i>&nbsp;{{$voting}}</a></li>
+						<a class="dropdown-item" href="#" onclick="toggleVoting(); return false;"><i id="profile-voting-sub" class="fa fa-square-o"></i>&nbsp;{{$voting}}</a>
 						{{/if}}
 						{{if $feature_nocomment}}
-						<li><a href="#" onclick="toggleNoComment(); return false;"><i id="profile-nocomment-sub" class="fa fa-comments"></i>&nbsp;{{$nocommenttitlesub}}</a></li>
+						<a class="dropdown-item" href="#" onclick="toggleNoComment(); return false;"><i id="profile-nocomment-sub" class="fa fa-comments"></i>&nbsp;{{$nocommenttitlesub}}</a>
 						{{/if}}
-					</ul>
+					</div>
 				</div>
 				{{/if}}
 			</div>
-			<div id="profile-rotator-wrapper">
+			<div id="profile-rotator-wrapper" class="float-left">
 				<div id="profile-rotator"></div>
 			</div>
-			<div id="profile-jot-submit-right" class="btn-group pull-right">
+			<div id="profile-jot-submit-right" class="btn-group float-right">
 				{{if $preview}}
 				<button class="btn btn-outline-secondary btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="fa fa-eye jot-icons" ></i>
@@ -187,7 +190,7 @@
 			</div>
 			<div class="clear"></div>
 			{{if $jotplugins}}
-			<div id="profile-jot-plugin-wrapper">
+			<div id="profile-jot-plugin-wrapper" class="mt-2">
 				{{$jotplugins}}
 			</div>
 			{{/if}}
@@ -210,8 +213,6 @@
 			</div><!-- /.modal -->
 			{{/if}}
 		</div>
-		<div id="profile-jot-text-loading"></div>
-		<div id="profile-jot-end" class="clear"></div>
 	</div>
 </form>
 

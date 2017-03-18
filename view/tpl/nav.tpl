@@ -168,7 +168,7 @@
 		{{/if}}
 	</ul>
 
-	<div class="navbar-text text-white font-weight-bold hidden-sm-down">{{$banner}}</div>
+	<div id="banner" class="navbar-text text-white font-weight-bold hidden-sm-down">{{$banner}}</div>
 
 	<ul id="nav-right" class="navbar-nav hidden-sm-down ml-auto">
 		<li class="nav-item collapse clearfix" id="nav-search">
@@ -212,9 +212,9 @@
 {{if $nav.help.6}}
 <div id="contextual-help-content" class="contextual-help-content">
 	{{$nav.help.5}}
-	<div class="pull-right">
-		<a class="btn btn-primary btn-sm" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}"><i class="fa fa-fw fa-question"></i>&nbsp;{{$fulldocs}}</a>
-		<a class="contextual-help-tool" href="#" onclick="contextualHelp(); return false;"><i class="fa fa-fw fa-times"></i></a>
+	<div class="float-right">
+		<a class="btn btn-primary btn-sm" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}"><i class="fa fa-question"></i>&nbsp;{{$fulldocs}}</a>
+		<a class="contextual-help-tool" href="#" onclick="contextualHelp(); return false;"><i class="fa fa-times"></i></a>
 	</div>
 </div>
 {{/if}}

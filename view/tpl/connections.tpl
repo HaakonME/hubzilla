@@ -18,9 +18,9 @@
 	<div id="contacts-search-form" class="section-content-tools-wrapper">
 		<form action="{{$cmd}}" method="get" >
 			<div class="input-group form-group">
-				<input type="text" name="search" id="contacts-search" class="form-control input-sm" onfocus="this.select();" value="{{$search}}" placeholder="{{$desc}}" />
+				<input type="text" name="search" id="contacts-search" class="form-control" onfocus="this.select();" value="{{$search}}" placeholder="{{$desc}}" />
 				<div class="input-group-btn">
-					<button id="contacts-search-submit" class="btn btn-outline-secondary btn-sm" type="submit" name="submit" value="{{$submit}}"><i class="fa fa-fw fa-search"></i></button>
+					<button id="contacts-search-submit" class="btn btn-outline-secondary" type="submit" name="submit" value="{{$submit}}"><i class="fa fa-fw fa-search"></i></button>
 				</div>
 			</div>
 		</form>
@@ -29,6 +29,7 @@
 		{{foreach $contacts as $contact}}
 			{{include file="connection_template.tpl"}}
 		{{/foreach}}
+		<div id="page-end"></div>
 	</div>
 </div>
 <script>$(document).ready(function() { loadingPage = false;});</script>

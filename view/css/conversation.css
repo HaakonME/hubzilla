@@ -60,25 +60,11 @@
 }
 
 #profile-jot-text-loading {
-	float: left;
 	padding: 30px 0px 0px 12px;
 }
 
 #profile-jot-submit-wrapper {
 	border-top: 1px solid #ccc;
-	padding: 10px;
-}
-
-#profile-jot-perms-end {
-	height: 30px;
-}
-
-#profile-jot-plugin-wrapper {
-	margin-top: 10px;
-}
-
-#profile-rotator-wrapper {
-	float: left;
 }
 
 #profile-rotator {
@@ -121,6 +107,7 @@ a.wall-item-name-link {
 .wall-item-ago,
 .wall-item-ago i {
 	font-size: 0.75rem;
+	line-height: 1;
 }
 
 .wall-item-ago .fa-check {

@@ -3,11 +3,13 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h4 class="modal-title">
+					<i id="dialog-perms-icon" class="fa fa-fw"></i> {{$aclModalTitle}}
+					{{if $helpUrl}}
+					<a target="hubzilla-help" href="{{$helpUrl}}" class="contextual-help-tool" title="Help and documentation"><i class="fa fa-fw fa-question"></i></a>
+					{{/if}}
+				</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				{{if $helpUrl}}
-				<a type="button" target="hubzilla-help" href="{{$helpUrl}}" class="contextual-help-tool" title="Help and documentation"><i class="fa fa-question"></i></a>
-				{{/if}}
-				<h4 class="modal-title"><i id="dialog-perms-icon" class="fa fa-fw"></i> {{$aclModalTitle}}</h4>
 			</div>
 			<div class="section-content-wrapper">
 				{{if $aclModalDesc}}
@@ -29,22 +31,19 @@
 
 				<div id="acl-wrapper">
 					<div id="acl-list">
-						<div id="acl-search-wrapper">
-							<input type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
-						</div>
-						<div id="acl-list-content-wrapper">
-							<div id=acl-showlimited-description>{{$showlimitedDesc}}</div>
-							<div id="acl-list-content"></div>
-						</div>
+						<input class="form-control" type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
+						<div class="p-2 dropdown-sub-text">{{$showlimitedDesc}}</div>
+						<div id="acl-list-content"></div>
 					</div>
 				</div>
 
 				<div class="acl-list-item" rel="acl-template" style="display:none">
-					<img data-src="{0}"><p>{1}</p>
-					<button class="acl-button-hide btn btn-sm btn-outline-secondary"><i class="fa fa-times"></i> {{$hide}}</button>
-					<button class="acl-button-show btn btn-sm btn-outline-secondary"><i class="fa fa-check"></i> {{$show}}</button>
+					<div class="acl-item-header">
+						<img class="menu-img-1" data-src="{0}"> {1}
+					</div>
+					<button class="acl-button-hide btn btn-sm btn-outline-danger"><i class="fa fa-times"></i> {{$hide}}</button>
+					<button class="acl-button-show btn btn-sm btn-outline-success"><i class="fa fa-check"></i> {{$show}}</button>
 				</div>
-
 			</div>
 			<div class="modal-footer clear">
 				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$aclModalDismiss}}</button>

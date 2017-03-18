@@ -22,7 +22,7 @@
 				<div class="clear"></div>
 				<div id="comment-tools-{{$id}}" class="comment-tools">
 					<div id="comment-edit-bb-{{$id}}" class="btn-toolbar pull-left">
-						<div class='btn-group'>
+						<div class="btn-group mr-2">
 							<button class="btn btn-outline-secondary btn-sm" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">
 								<i class="fa fa-bold comment-icon"></i>
 							</button>
@@ -39,19 +39,13 @@
 								<i class="fa fa-terminal comment-icon"></i>
 							</button>
 						</div>
-						<div class='btn-group'>
-							<!--button class="btn btn-outline-secondary btn-sm" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
-								<i class="fa fa-camera comment-icon"></i>
-							</button-->
+						<div class="btn-group mr-2">
 							<button class="btn btn-outline-secondary btn-sm" title="{{$edurl}}" onclick="insertCommentURL('{{$comment}}',{{$id}}); return false;">
 								<i class="fa fa-link comment-icon"></i>
 							</button>
-							<!--button class="btn btn-outline-secondary btn-sm" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', {{$id}}); return false;">
-								<i class="fa fa-video-camera comment-icon"></i>
-							</button-->
 						</div>
 						{{if $feature_encrypt}}
-						<div class='btn-group'>
+						<div class="btn-group mr-2">
 							<button class="btn btn-outline-secondary btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
 								<i class="fa fa-key comment-icon"></i>
 							</button>
@@ -59,7 +53,7 @@
 						{{/if}}
 						{{$comment_buttons}}
 					</div>
-					<div class="btn-group pull-right" id="comment-edit-submit-wrapper-{{$id}}">
+					<div class="btn-group float-right" id="comment-edit-submit-wrapper-{{$id}}">
 						{{if $preview}}
 						<button id="comment-edit-presubmit-{{$id}}" class="btn btn-outline-secondary btn-sm" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
 							<i class="fa fa-eye comment-icon" ></i>

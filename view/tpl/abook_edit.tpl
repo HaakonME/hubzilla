@@ -82,7 +82,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="pending-tool-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="pending-tool">
+				<div id="pending-tool-collapse" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="pending-tool">
 					<div class="section-content-tools-wrapper">
 						{{include file="field_checkbox.tpl" field=$unapproved}}
 						<div class="settings-submit-wrapper" >
@@ -384,7 +384,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if $section == 'affinity'}} in{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
+				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if $section == 'affinity'}} show{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
 					<div class="section-content-tools-wrapper">
 						{{if $slide}}
 						<div class="form-group"><strong>{{$lbl_slider}}</strong></div>
@@ -415,7 +415,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if $section == 'filter' }} in{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
+				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if $section == 'filter' }} show{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
 					<div class="section-content-tools-wrapper">
 						{{include file="field_textarea.tpl" field=$incl}}
 						{{include file="field_textarea.tpl" field=$excl}}

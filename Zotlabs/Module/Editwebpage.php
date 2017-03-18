@@ -129,6 +129,10 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 		}
 	
 		$layout = $itm[0]['layout_mid'];
+
+		$content = $itm[0]['body'];
+		if($itm[0]['mimetype'] === 'text/markdown')
+			$content = \Zotlabs\Lib\MarkdownSoap::unescape($itm[0]['body']);
 	
 		$rp = 'webpages/' . $which;
 
@@ -145,7 +149,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			'hide_location' => true,
 			'hide_voting' => true,
 			'ptyp' => $itm[0]['type'],
-			'body' => undo_post_tagging($itm[0]['body']),
+			'body' => undo_post_tagging($content),
 			'post_id' => $post_id,
 			'visitor' => ($is_owner) ? true : false,
 			'acl' => populate_acl($itm[0],false,\Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')),

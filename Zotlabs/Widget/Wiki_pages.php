@@ -10,6 +10,12 @@ class Wiki_pages {
 		$channelname = ((array_key_exists('channel',$arr)) ? $arr['channel'] : '');
 		$c = channelx_by_nick($channelname);
 
+		if(! $c)
+			$c = \App::get_channel();
+
+		if(! $c)
+			return '';
+
 		$wikiname = '';
 		if(array_key_exists('refresh', $arr)) {
 			$not_refresh = (($arr['refresh']=== true) ? false : true);
@@ -35,6 +41,7 @@ class Wiki_pages {
 				}
 			}
 		}
+
 
 		$can_create = perm_is_allowed(\App::$profile['uid'],get_observer_hash(),'write_wiki');
 

@@ -107,7 +107,8 @@
 <script>
 	window.wiki_resource_id = '{{$resource_id}}';
 	window.wiki_page_name = '{{$page}}';
-	window.wiki_page_content = `{{$content}}`;
+//	window.wiki_page_content = "{{$content|escape:'javascript'}}";
+	window.wiki_page_content = {{$content}};
 	window.wiki_page_commit = '{{$commit}}';
 
 	$("#generic-modal-ok-{{$wikiModalID}}").removeClass('btn-primary');

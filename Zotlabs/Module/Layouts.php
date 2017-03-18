@@ -125,6 +125,7 @@ class Layouts extends \Zotlabs\Web\Controller {
 			'hide_weblink' => true,
 			'hide_attach' => true,
 			'hide_preview' => true,
+			'disable_comments' => true,
 			'ptlabel'     => t('Layout Name'),
 			'profile_uid' => intval($owner),
 			'expanded'    => true,

@@ -98,6 +98,11 @@ class Editblock extends \Zotlabs\Web\Controller {
 
 		$mimetype = $itm[0]['mimetype'];
 
+		$content = $itm[0]['body'];
+		if($itm[0]['mimetype'] === 'text/markdown')
+			$content = \Zotlabs\Lib\MarkdownSoap::unescape($itm[0]['body']);
+
+
 		$rp = 'blocks/' . $channel['channel_address'];
 
 		$x = array(
@@ -117,7 +122,7 @@ class Editblock extends \Zotlabs\Web\Controller {
 			'ptyp' => $itm[0]['type'],
 			'mimeselect' => true,
 			'mimetype' => $itm[0]['mimetype'],
-			'body' => undo_post_tagging($itm[0]['body']),
+			'body' => undo_post_tagging($content),
 			'post_id' => $post_id,
 			'visitor' => true,
 			'title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),

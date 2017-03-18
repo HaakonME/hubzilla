@@ -216,8 +216,8 @@
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 											<h4 class="modal-title">{{$response.title}}</h4>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 										</div>
 										<div class="modal-body response-list">
 											<ul class="nav nav-pills flex-column">{{foreach $response.list as $liker}}<li class="nav-item">{{$liker}}</li>{{/foreach}}</ul>

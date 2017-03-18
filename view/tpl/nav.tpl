@@ -1,10 +1,10 @@
 {{if $nav.login && !$userinfo}}
-<div>
-	<button type="button" class="navbar-toggler" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
+<div class="hidden-md-up">
+	<a class="btn btn-primary btn-sm text-white" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 		{{$nav.loginmenu.1.1}}
-	</button>
+	</a>
 	{{if $nav.register}}
-	<a href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}" class="navbar-toggler">
+	<a class="btn btn-warning btn-sm text-white" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}" >
 		{{$nav.register.1}}
 	</a>
 	{{/if}}
@@ -32,6 +32,7 @@
 <div class="dropdown usermenu">
 	<div class="fakelink" data-toggle="dropdown">
 		<img id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">
+		<i class="fa fa-caret-down text-white"></i>
 	</div>
 	{{if $localuser}}
 	<div class="dropdown-menu">

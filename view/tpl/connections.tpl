@@ -1,7 +1,7 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper clearfix">
 		<div class="dropdown pull-right">
-			<button type="button" class="btn btn-primary btn-sm" onclick="openClose('contacts-search-form');">
+			<button type="button" class="btn btn-primary btn-sm" onclick="openClose('contacts-search-form'); $('#contacts-search').focus()">
 				<i class="fa fa-search"></i>&nbsp;{{$label}}
 			</button>
 			<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{$sort}}">

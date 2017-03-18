@@ -26,7 +26,7 @@ $(document).ready(function() {
 		});
 	}
 
-	if(($(window).width() < 767) && ($('#left_aside_wrapper .widget').length > 0))
+	if(($(window).width() < 767) && ($('#left_aside_wrapper .widget, #left_aside_wrapper .vcard').length > 0))
 		$('#expand-aside').show();
 	else
 		$('#expand-aside').hide();

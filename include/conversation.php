@@ -1929,7 +1929,7 @@ function get_responses($conv_responses,$response_verbs,$ob,$item) {
 		$ret[$v]['list']  = ((x($conv_responses[$v],$item['mid'])) ? $conv_responses[$v][$item['mid'] . '-l'] : '');
 		if(count($ret[$v]['list']) > MAX_LIKERS) {
 			$ret[$v]['list_part'] = array_slice($ret[$v]['list'], 0, MAX_LIKERS);
-			array_push($ret[$v]['list_part'], '<a href="#" data-toggle="modal" data-target="#' . $v . 'Modal-' 
+			array_push($ret[$v]['list_part'], '<a class="dropdown-item" href="#" data-toggle="modal" data-target="#' . $v . 'Modal-' 
 				. (($ob) ? $ob->get_id() : $item['id']) . '"><b>' . t('View all') . '</b></a>');
 		} else {
 			$ret[$v]['list_part'] = '';

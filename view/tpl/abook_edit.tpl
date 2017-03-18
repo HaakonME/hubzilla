@@ -24,13 +24,15 @@
 			{{if $abook_prev || $abook_next}}
 			<div class="btn-group">
 				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_prev}} disabled{{/if}}" ><i class="fa fa-backward"></i></a>
-				<button class="btn btn-outline-secondary btn-sm{{if $is_pending}} disabled{{/if}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
-				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
-				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
-					{{foreach $sections as $s}}
-					<a class="dropdown-item" href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a>
-					{{/foreach}}
+				<div class="btn-group" >
+					<button class="btn btn-outline-secondary btn-sm{{if $is_pending}} disabled{{/if}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+						{{foreach $sections as $s}}
+						<a class="dropdown-item" href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a>
+						{{/foreach}}
+					</div>
 				</div>
+				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
 			</div>
 			{{/if}}
 		</div>

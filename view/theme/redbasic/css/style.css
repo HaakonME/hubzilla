@@ -795,6 +795,8 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 .contactname {
 	font-weight: bold;
 	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .dropdown-notification,

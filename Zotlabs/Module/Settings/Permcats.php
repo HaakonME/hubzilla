@@ -42,8 +42,6 @@ class Permcats {
 
 	function get() {
 
-logger('cmd: ' . \App::$cmd);
-
 		if(! local_channel())
 			return;
 
@@ -85,7 +83,7 @@ logger('cmd: ' . \App::$cmd);
 			if($existing[$k])
 				$thisperm = "1";
 
-			$perms[] = array('perms_' . $k, $v, ((array_key_exists($k,$their_perms)) ? intval($their_perms[$k]) : ''),$thisperm, 1, (($checkinherited & PERMS_SPECIFIC) ? '' : '1'), '', $checkinherited);
+			$perms[] = array('perms_' . $k, $v, '',$thisperm, 1, (($checkinherited & PERMS_SPECIFIC) ? '' : '1'), '', $checkinherited);
 		}
 
 

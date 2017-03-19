@@ -12,12 +12,9 @@
 
 		if($('#cover-photo').length && $(window).width() > 755) {
 			if($(window).scrollTop() < $('#cover-photo').height()) {
-				$('main').css('margin-top', - $('nav').outerHeight(true) + 'px');
-				$('aside').css('padding-top', aside_padding_top - $('nav').outerHeight() + 'px');
-				$('section').css('padding-top', section_padding_top  - $('nav').outerHeight() + 'px');
 				$('.navbar').removeClass('fixed-top');
+				$('main').css('margin-top', - $('nav').outerHeight(true) + 'px');
 				$('main').css('opacity', 0);
-				$('header').hide();
 			}
 		}
 		else {
@@ -28,12 +25,9 @@
 
 	$(window).scroll(function () {
 		if($('#cover-photo').length && $(window).width() > 755 && $(window).scrollTop() >= $('#cover-photo').height()) {
-			$('header').fadeIn();
-			$('main').css('opacity', 1);
-			$('aside').css('padding-top', aside_padding_top + 'px');
-			$('section').css('padding-top', section_padding_top + 'px');
 			$('.navbar').addClass('fixed-top');
 			$('main').css('margin-top', '');
+			$('main').css('opacity', 1);
 			coverSlid = true;
 		}
 		else if ($('#cover-photo').length && $(window).width() > 755 && $(window).scrollTop() < $('#cover-photo').height()){
@@ -43,13 +37,9 @@
 			}
 			else {
 				if($(window).scrollTop() < $('#cover-photo').height()) {
-					$('main').css('margin-top', - $('nav').outerHeight(true) + 'px');
-					$('aside').css('padding-top', aside_padding_top - $('nav').outerHeight() + 'px');
-					$('section').css('padding-top', section_padding_top  - $('nav').outerHeight() + 'px');
-
 					$('.navbar').removeClass('fixed-top');
+					$('main').css('margin-top', - $('nav').outerHeight(true) + 'px');
 					$('main').css('opacity', 0);
-					$('header').hide();
 				}
 			}
 		}
@@ -61,10 +51,8 @@
 	$(window).resize(function () {
 		if($('#cover-photo').length && $(window).width() < 755) {
 			$('#cover-photo').remove();
-			$('main').css('opacity', 1);
-			$('aside').css('padding-top', aside_padding_top + 'px');
-			$('section').css('padding-top', section_padding_top + 'px');
 			$('.navbar').addClass('fixed-top');
+			$('main').css('opacity', 1);
 			coverSlid = true;
 		}
 
@@ -75,7 +63,7 @@
 			return;
 		}
 		$('html, body').animate({scrollTop: Math.ceil($('#cover-photo').height()) + 'px' });
-		return;
+		return false;
 	}
 </script>
 

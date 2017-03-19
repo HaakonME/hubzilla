@@ -66,6 +66,10 @@ function contact_format(item) {
 		return "<div>" + item.text + "</div>";
 }
 
+function smiley_format(item) {
+	return "<div class='dropdown-item'>" + item.icon + ' ' + item.text + "</div>";
+}
+
 function editor_replace(item) {
 	if(typeof item.replace !== 'undefined') {
 		return '$1$2' + item.replace;
@@ -181,15 +185,16 @@ function string2bb(element) {
 			index: 3,
 			search: function(term, callback) { contact_search(term, callback, backend_url, 'c', extra_channels, spinelement=false); },
 			replace: editor_replace,
-			template: contact_format,
+			template: contact_format
 		};
 
 		smilies = {
 			match: /(^|\s)(:[a-z_:]{2,})$/,
 			index: 2,
 			search: function(term, callback) { $.getJSON('/smilies/json').done(function(data) { callback($.map(data, function(entry) { return entry.text.indexOf(term) === 0 ? entry : null; })); }); },
-			template: function(item) { return item.icon + item.text; },
+			//template: function(item) { return item.icon + item.text; },
 			replace: function(item) { return "$1" + item.text + ' '; },
+			template: smiley_format
 		};
 		this.attr('autocomplete','off');
 		this.textcomplete([contacts,smilies], {className:'acpopup', zIndex:1020});

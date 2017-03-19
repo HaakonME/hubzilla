@@ -19,8 +19,7 @@
 				{{/foreach}}
 					</select>
 				{{/if}}
-				<div class="clear"></div>
-				<div id="comment-tools-{{$id}}" class="comment-tools">
+				<div id="comment-tools-{{$id}}" class="pt-2 comment-tools">
 					<div id="comment-edit-bb-{{$id}}" class="btn-toolbar pull-left">
 						<div class="btn-group mr-2">
 							<button class="btn btn-outline-secondary btn-sm" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">

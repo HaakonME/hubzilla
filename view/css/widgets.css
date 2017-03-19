@@ -1,17 +1,10 @@
 .widget {
-	margin-bottom: 10px;
-	padding: 10px;
+	margin-bottom: 1rem;
+	padding: 0.5rem;
 }
 
 .widget h3 {
 	margin-top: 0px;
-}
-
-.widget-input {
-	width: 100%;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
-	border-right: 0px;
 }
 
 .tags {

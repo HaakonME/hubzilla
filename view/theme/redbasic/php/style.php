@@ -128,7 +128,7 @@ if (! $body_font_size)
 if (! $font_colour)
 	$font_colour = '#4d4d4d';
 if (! $radius)
-	$radius = '4';
+	$radius = '0.25rem';
 if (! $shadow)
 	$shadow = '0';
 if (! $converse_width)

@@ -293,9 +293,9 @@ footer {
 	padding: 0px 10px 10px 10px;
 	background-color: rgba(254,254,254,0.5);
 	border: 1px solid rgba(254,254,254,0.5);
-	-moz-border-radius: $radiuspx;
-	-webkit-border-radius: $radiuspx;
-	border-radius: $radiuspx;
+	-moz-border-radius: $radius;
+	-webkit-border-radius: $radius;
+	border-radius: $radius;
 	word-wrap: break-word;
 }
 
@@ -333,7 +333,7 @@ footer {
 	width: 251px;
 	height: 251px;
 	margin-bottom: 10px;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 #hide-friends-yes-label,
@@ -387,8 +387,8 @@ footer {
 
 .photo,
 .contact-block-img {
-	border-radius: $radiuspx;
-	-moz-border-radius: $radiuspx;
+	border-radius: $radius;
+	-moz-border-radius: $radius;
 	box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
@@ -402,8 +402,8 @@ footer {
 
 .profile-match-photo img,
 .directory-photo-img {
-	border-radius: $radiuspx;
-	-moz-border-radius: $radiuspx;
+	border-radius: $radius;
+	-moz-border-radius: $radius;
 	box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
@@ -549,7 +549,7 @@ nav .acpopup {
 #cboxContent {
 	padding: 3px;
 	border: 0px solid #fff;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 	background-color: #fff;
 	z-index: 1052;
 }
@@ -721,8 +721,8 @@ div.jGrowl div.jGrowl-notification {
 #id-name-ac .autocomplete,
 #contact-search-ac .autocomplete {
 	margin-top: 2px;
-	margin-left: $radiuspx;
-	margin-right: $radiuspx;
+	margin-left: $radius;
+	margin-right: $radius;
 	border: 1px solid #666;
 	border-top: none;
 
@@ -734,8 +734,8 @@ div.jGrowl div.jGrowl-notification {
 	text-align: left;
 	max-height: 350px;
 	overflow: auto;
-	border-bottom-left-radius: $radiuspx;
-	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radius;
+	border-bottom-right-radius: $radius;
 }
 
 .autocomplete .selected {
@@ -829,7 +829,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	margin-bottom: 0.5rem;
 	border: 1px solid #ccc;
 	float: left;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .acl-item-header {
@@ -867,7 +867,7 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 
 .reshared-content { margin-left: 20px; }
 .shared_header img {
-	border-radius: $radiuspx;
+	border-radius: $radius;
 	margin-right: 10px;
 }
 
@@ -1008,8 +1008,8 @@ th,td {
 /* mail */
 
 img.mail-conv-sender-photo {
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
+	-moz-border-radius: $radius;
+	border-radius: $radius;
 }
 
 /* jot */
@@ -1026,25 +1026,23 @@ img.mail-conv-sender-photo {
 	font-weight: bold;
 }
 
-
-
 #profile-jot-wrapper {
 	background-color: rgba(254,254,254,1);
 	border: 1px solid #ccc;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 
 }
 
 #profile-jot-text {
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 #profile-jot-text::-webkit-input-placeholder {
-	font-size: 16px;
+	font-size: 1.2rem;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size: 16px;
+	font-size: 1.2rem;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -1064,10 +1062,6 @@ img.mail-conv-sender-photo {
 	color: #777;
 }
 
-.jot-icons {
-	//color: $toolicon_colour;
-}
-
 .jot-icons.jot-lock-warn {
 	color: darkorange;
 }
@@ -1076,22 +1070,22 @@ img.mail-conv-sender-photo {
 /* conversation */
 
 .top-radius {
-	border-top-right-radius: $radiuspx;
-	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radius;
+	border-top-left-radius: $radius;
 }
 
 .wall-event-item {
 	padding: 10px;
 	color: #fff;
 	background-color: #3A87AD; /* should reflect calendar color */
-	border-top-left-radius: $radiuspx;
-	border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radius;
+	border-top-right-radius: $radius;
 }
 
 .wall-photo-item img {
 	max-width: 100% !important;
-	border-top-right-radius: $radiuspx;
-	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radius;
+	border-top-left-radius: $radius;
 }
 
 .wall-item-footer {
@@ -1101,8 +1095,8 @@ img.mail-conv-sender-photo {
 
 .wall-item-content-wrapper {
 	background-color: $item_colour;
-	border-top-right-radius: $radiuspx;
-	border-top-left-radius: $radiuspx;
+	border-top-right-radius: $radius;
+	border-top-left-radius: $radius;
 }
 
 .wall-item-content-wrapper.comment {
@@ -1129,8 +1123,8 @@ img.mail-conv-sender-photo {
 	padding: 7px 10px;
 	background-color: $item_colour;
 	border-radius: 0px;
-	border-bottom-right-radius: $radiuspx;
-	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radius;
+	border-bottom-left-radius: $radius;
 	border-top: 3px solid $comment_item_colour;
 }
 
@@ -1151,8 +1145,8 @@ img.mail-conv-sender-photo {
 }
 
 .wall-item-photo {
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
+    border-radius: $radius;
+    -moz-border-radius: $radius;
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
@@ -1181,7 +1175,7 @@ img.mail-conv-sender-photo {
 .comment-edit-text-empty,
 .comment-edit-text-full {
 	border: 1px solid #ccc;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .comment-edit-text-empty {
@@ -1207,9 +1201,9 @@ img.mail-conv-sender-photo {
 .widget {
 	background-color: rgba(254,254,254,.5);
 	border: 1px solid rgba(254,254,254,.5);
-	-moz-border-radius: $radiuspx;
-	-webkit-border-radius: $radiuspx;
-	border-radius: $radiuspx;
+	-moz-border-radius: $radius;
+	-webkit-border-radius: $radius;
+	border-radius: $radius;
 }
 
 .widget h3 {
@@ -1218,8 +1212,8 @@ img.mail-conv-sender-photo {
 
 #note-text {
 	border: 1px solid #ccc;
-	border-radius: $radiuspx;
-	-moz-border-radius: $radiuspx;
+	border-radius: $radius;
+	-moz-border-radius: $radius;
 }
 
 .fileas-ul {
@@ -1228,8 +1222,8 @@ img.mail-conv-sender-photo {
 
 #datebrowse-sidebar select {
 	border: 1px solid #ccc;
-	border-radius: $radiuspx;
-	-moz-border-radius: $radiuspx;
+	border-radius: $radius;
+	-moz-border-radius: $radius;
 }
 
 .thing-show img {
@@ -1251,24 +1245,24 @@ img.mail-conv-sender-photo {
 
 .chat-item-photo,
 .chat-item-photo-self {
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .chat-item-title,
 .chat-item-title-self {
-	border-radius: $radiuspx;
+	border-radius: $radius;
 	background-color: $item_colour;
 }
 
 #chatMembers img {
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .menu-img-3 {
 	width: 3.3em;
 	height: 3.3em;
 	margin-right: 5px;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 	float: left;
 }
 
@@ -1276,7 +1270,7 @@ img.mail-conv-sender-photo {
 	height: 2.2em;
 	width: 2.2em;
 	margin-right: 5px;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 	float: left;
 }
 
@@ -1284,7 +1278,7 @@ img.mail-conv-sender-photo {
 	height: 1.5em;
 	width: 1.5em;
 	margin-right: 5px;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .usermenu {
@@ -1294,7 +1288,7 @@ img.mail-conv-sender-photo {
 #avatar {
 	width: 2.2rem;
 	height: 2.2rem;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .page-title {
@@ -1304,20 +1298,20 @@ img.mail-conv-sender-photo {
 .generic-content-wrapper-styled {
 	background-color: $bgcolour;
 	padding: 10px;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .generic-content-wrapper {
 	border: 1px solid #ccc;
 	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.2);
-	border-radius:  $radiuspx;
+	border-radius:  $radius;
 }
 
 .section-title-wrapper {
 	padding: 7px 10px;
 	background-color: $item_colour;
-	border-top-left-radius: $radiuspx;
-	border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radius;
+	border-top-right-radius: $radius;
 	border-bottom: 3px solid $comment_item_colour;
 }
 
@@ -1378,22 +1372,22 @@ img.mail-conv-sender-photo {
 .section-content-wrapper .section-content-danger-wrapper {
 	margin-bottom: 10px;
 	border-bottom: none;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 
 .section-content-wrapper {
 	padding: 7px 10px;
 	background-color: $comment_item_colour;
-	border-bottom-left-radius: $radiuspx;
-	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radius;
+	border-bottom-right-radius: $radius;
 	word-wrap: break-word;
 }
 
 .section-content-wrapper-np {
 	background-color: $comment_item_colour;
-	border-bottom-left-radius: $radiuspx;
-	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radius;
+	border-bottom-right-radius: $radius;
 	word-wrap: break-word;
 }
 
@@ -1461,11 +1455,11 @@ blockquote {
 
 .dropdown-menu {
 	font-size: $body_font_size;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 .dropdown-menu img {
-	border-radius: $radiuspx;
+	border-radius: $radius;
 }
 
 /*
@@ -1606,7 +1600,7 @@ dl.bb-dl > dd > li {
 	margin-bottom: 0px;
 	box-shadow: none;
 	display: inline-block;
-	border-radius: $radiuspx;
+	border-radius: $radius;
 	cursor: text;
 	padding: 0px 10px;
 	width: 100%;
@@ -1716,8 +1710,8 @@ dl.bb-dl > dd > li {
 
 #ace-editor,
 #editor {
-	border-bottom-left-radius: $radiuspx;
-	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radius;
+	border-bottom-right-radius: $radius;
 }
 
 .sub-menu {

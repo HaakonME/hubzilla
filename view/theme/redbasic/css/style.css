@@ -768,28 +768,8 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	text-decoration: none;
 }
 
-.widget.rateme {
-	margin-top: 15px;
-	padding: 0;
-}
-
 .widget .conv-participants {
 	color: $font_colour;
-}
-
-.notif-item a {
-	color: #000;
-}
-
-.notif-item a:hover {
-	text-decoration: underline;
-	color: #000;
-}
-
-.notif-image {
-	width: 32px;
-	height: 32px;
-	padding: 7px 7px 0px 0px;
 }
 
 .contactname {

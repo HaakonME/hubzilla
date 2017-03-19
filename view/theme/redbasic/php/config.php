@@ -125,7 +125,7 @@ class RedbasicConfig {
 			'$comment_indent' => array('redbasic_comment_indent', t('Set the indent for comments'), $arr['comment_indent']),
 			'$toolicon_colour' => array('redbasic_toolicon_colour',t('Set the basic color for item icons'),$arr['toolicon_colour']),
 			'$toolicon_activecolour' => array('redbasic_toolicon_activecolour',t('Set the hover color for item icons'),$arr['toolicon_activecolour']),
-			'$font_size' => array('redbasic_font_size', t('Set font-size for the entire application'), $arr['font_size'], t('Example: 14px')),
+			'$font_size' => array('redbasic_font_size', t('Set font-size for the entire application'), $arr['font_size'], t('Examples: 87.5%, 14px')),
 			'$font_colour' => array('redbasic_font_colour', t('Set font-color for posts and comments'), $arr['font_colour']),
 			'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius'], t('Example: 4px')),
 			'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),

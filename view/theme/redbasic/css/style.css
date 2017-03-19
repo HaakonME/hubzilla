@@ -1261,7 +1261,7 @@ img.mail-conv-sender-photo {
 #avatar {
 	width: 2.2rem;
 	height: 2.2rem;
-	border-radius: 50%;
+	border-radius: $radius;
 }
 
 .page-title {

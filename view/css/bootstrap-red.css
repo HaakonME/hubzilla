@@ -46,7 +46,9 @@ nav.navbar {
 	overflow: auto;
 }
 
-
+.navbar-toggler-right {
+	top: 0.5rem;
+}
 /* nav overrides end */
 
 .wall-item-tools .dropdown-menu {

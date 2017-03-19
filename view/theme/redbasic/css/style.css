@@ -1435,6 +1435,10 @@ blockquote {
 	border-radius: $radius;
 }
 
+.btn-outline-secondary:hover {
+	color: $font_colour;
+}
+
 /*
 .navbar-inverse {
 	background-image: -webkit-linear-gradient(top, $nav_gradient_top 0%, $nav_gradient_bottom 100%);

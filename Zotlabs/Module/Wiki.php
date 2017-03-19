@@ -330,6 +330,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$html = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))),$wikiURL);
 			}
 			else {
+
 				$bb = Zlib\NativeWikiPage::bbcode($content);
 				$x = new ZLib\MarkdownSoap($bb);
 				$md = $x->clean();

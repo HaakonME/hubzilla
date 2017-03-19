@@ -13,9 +13,11 @@ nav .badge {
 		left: -0.25rem;
 	}
 }
+
 @media screen and (max-width: 767px) {
 	nav .badge {
-		right: 0px;
+		top: 0.5rem;
+		left: 1.5rem;
 	}
 }
 
@@ -35,6 +37,15 @@ nav .dropdown-menu {
 	max-height: 70vh;
 	overflow: auto;
 }
+
+nav.navbar {
+	max-height: 100vh;
+}
+
+#navbar-collapse-2 {
+	overflow: auto;
+}
+
 
 /* nav overrides end */
 

@@ -16,6 +16,10 @@
 	text-align: right;
 }
 
+#chatrooms-index td:nth-child(3){
+	white-space: nowrap;
+}
+
 #chatrooms-index th:nth-child(4),
 #chatrooms-index td:nth-child(4){
 	padding: 7px 10px 7px 7px;

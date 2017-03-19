@@ -46,7 +46,6 @@ class RedbasicConfig {
 		$arr['toolicon_colour'] = get_pconfig(local_channel(),'redbasic','toolicon_colour');
 		$arr['toolicon_activecolour'] = get_pconfig(local_channel(),'redbasic','toolicon_activecolour');
 		$arr['font_size'] = get_pconfig(local_channel(),'redbasic', 'font_size' );
-		$arr['body_font_size'] = get_pconfig(local_channel(),'redbasic', 'body_font_size' );
 		$arr['font_colour'] = get_pconfig(local_channel(),'redbasic', 'font_colour' );
 		$arr['radius'] = get_pconfig(local_channel(),'redbasic', 'radius' );
 		$arr['shadow'] = get_pconfig(local_channel(),'redbasic', 'photo_shadow' );
@@ -84,7 +83,6 @@ class RedbasicConfig {
 			set_pconfig(local_channel(), 'redbasic', 'toolicon_colour', $_POST['redbasic_toolicon_colour']);
 			set_pconfig(local_channel(), 'redbasic', 'toolicon_activecolour', $_POST['redbasic_toolicon_activecolour']);
 			set_pconfig(local_channel(), 'redbasic', 'font_size', $_POST['redbasic_font_size']);
-			set_pconfig(local_channel(), 'redbasic', 'body_font_size', $_POST['redbasic_body_font_size']);
 			set_pconfig(local_channel(), 'redbasic', 'font_colour', $_POST['redbasic_font_colour']);
 			set_pconfig(local_channel(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 			set_pconfig(local_channel(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
@@ -127,10 +125,9 @@ class RedbasicConfig {
 			'$comment_indent' => array('redbasic_comment_indent', t('Set the indent for comments'), $arr['comment_indent']),
 			'$toolicon_colour' => array('redbasic_toolicon_colour',t('Set the basic color for item icons'),$arr['toolicon_colour']),
 			'$toolicon_activecolour' => array('redbasic_toolicon_activecolour',t('Set the hover color for item icons'),$arr['toolicon_activecolour']),
-			'$body_font_size' => array('redbasic_body_font_size', t('Set font-size for the entire application'), $arr['body_font_size'], t('Example: 14px')),
-			'$font_size' => array('redbasic_font_size', t('Set font-size for posts and comments'), $arr['font_size']),
+			'$font_size' => array('redbasic_font_size', t('Set font-size for the entire application'), $arr['font_size'], t('Example: 14px')),
 			'$font_colour' => array('redbasic_font_colour', t('Set font-color for posts and comments'), $arr['font_colour']),
-			'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius']),
+			'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius'], t('Example: 4px')),
 			'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
 			'$converse_width' => array('redbasic_converse_width',t('Set maximum width of content region in pixel'),$arr['converse_width'], t('Leave empty for default width')),
 			'$align_left' => array('redbasic_align_left',t('Left align page content'),$arr['align_left'], '', array(t('No'),t('Yes'))),

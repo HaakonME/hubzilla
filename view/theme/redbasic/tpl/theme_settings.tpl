@@ -1,6 +1,7 @@
 {{include file="field_checkbox.tpl" field=$align_left}}
 {{include file="field_checkbox.tpl" field=$narrow_navbar}}
 {{include file="field_input.tpl" field=$converse_width}}
+{{include file="field_input.tpl" field=$font_size}}
 {{if $expert}}
 	{{include file="field_colorinput.tpl" field=$nav_bg}}
 	{{include file="field_colorinput.tpl" field=$nav_gradient_top}}
@@ -17,8 +18,6 @@
 	{{include file="field_colorinput.tpl" field=$comment_item_colour}}
 	{{*include file="field_colorinput.tpl" field=$comment_border_colour*}}
 	{{*include file="field_input.tpl" field=$comment_indent*}}
-	{{include file="field_input.tpl" field=$body_font_size}}
-	{{include file="field_input.tpl" field=$font_size}}
 	{{include file="field_colorinput.tpl" field=$font_colour}}
 	{{include file="field_colorinput.tpl" field=$link_colour}}
 	{{include file="field_colorinput.tpl" field=$banner_colour}}

@@ -30,7 +30,6 @@ if(! App::$install) {
 	$comment_item_colour = get_pconfig($uid, 'redbasic', 'comment_item_colour');
 	$comment_border_colour = get_pconfig($uid, 'redbasic', 'comment_border_colour');
 	$comment_indent = get_pconfig($uid, 'redbasic', 'comment_indent');
-	$body_font_size = get_pconfig($uid, 'redbasic', 'body_font_size');
 	$font_size = get_pconfig($uid, 'redbasic', 'font_size');
 	$font_colour = get_pconfig($uid, 'redbasic', 'font_colour');
 	$radius = get_pconfig($uid, 'redbasic', 'radius');
@@ -123,8 +122,6 @@ if (! $item_opacity)
 	$item_opacity = '1';
 if (! $font_size)
 	$font_size = '1rem';
-if (! $body_font_size)
-	$body_font_size = '0.9rem';
 if (! $font_colour)
 	$font_colour = '#4d4d4d';
 if (! $radius)
@@ -197,7 +194,6 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 		'$toolicon_activecolour' => $toolicon_activecolour,
 		'$font_size' => $font_size,
 		'$font_colour' => $font_colour,
-		'$body_font_size' => $body_font_size,
 		'$radius' => $radius,
 		'$shadow' => $shadow,
 		'$converse_width' => $converse_width,

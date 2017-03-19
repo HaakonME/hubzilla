@@ -42,7 +42,7 @@ nav.navbar {
 	max-height: 100vh;
 }
 
-#navbar-collapse-2 {
+#navbar-collapse-2.show {
 	overflow: auto;
 }
 

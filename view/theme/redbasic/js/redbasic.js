@@ -74,12 +74,12 @@ $(document).ready(function() {
 function makeFullScreen(full) {
 	if(typeof full=='undefined' || full == true) {
 		$('main').addClass('fullscreen');
-		$('header, nav, aside, #fullscreen-btn').css({'visibility': 'hidden'});
+		$('header, nav, aside, #fullscreen-btn').hide();
 		$('#inline-btn').show();
 	}
 	else {
 		$('main').removeClass('fullscreen');
-		$('header, nav, aside, #fullscreen-btn').css({'visibility': ''});
+		$('header, nav, aside, #fullscreen-btn').show();
 		$('#inline-btn').hide();
 		$(document.body).trigger("sticky_kit:recalc");
 	}

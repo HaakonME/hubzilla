@@ -1672,9 +1672,10 @@ dl.bb-dl > dd > li {
 }
 
 .sub-menu {
+	width: 100%;
 	margin-top: 10px;
 	padding-left: 15px;
-	border-left: 3px solid #eee;
+	border-left: 0.2rem solid #eee;
 }
 
 .app-icon {

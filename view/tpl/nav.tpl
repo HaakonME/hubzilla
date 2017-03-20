@@ -1,5 +1,5 @@
 {{if $nav.login && !$userinfo}}
-<div class="d-md-none">
+<div class="d-md-none p-1">
 	<a class="btn btn-primary btn-sm text-white" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 		{{$nav.loginmenu.1.1}}
 	</a>
@@ -200,7 +200,7 @@
 		</li>
 	</ul>
 </div>
-<div class="collapse" id="navbar-collapse-2">
+<div class="collapse d-md-none" id="navbar-collapse-2">
 	<div class="navbar-nav">
 		{{foreach $navapps as $navapp}}
 		{{$navapp|replace:'dropdown-item':'nav-link'}}

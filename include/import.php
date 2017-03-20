@@ -85,12 +85,6 @@ function import_channel($channel, $account_id, $seize) {
 		create_table_from_array('channel',$clean);
 	}
 
-	if(! $r) {
-		logger('mod_import: channel clone failed. ' . print_r($channel,true));
-		notice( t('Channel clone failed. Import failed.') . EOL);
-		return false;
-	}
-
 	$r = q("select * from channel where channel_account_id = %d and channel_guid = '%s' limit 1",
 		intval($account_id),
 		$channel['channel_guid']   // Already dbesc'd

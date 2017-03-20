@@ -27,9 +27,9 @@
 				</div>
 				<div id="chat-submit-wrapper">
 					<div id="chat-submit" class="dropup pull-right">
-						<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-caret-up"></i></button>
+						<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="chat-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
-						<div class="dropdown-menu">
+						<div class="dropdown-menu dropdown-menu-right">
 							<a class="dropdown-item" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online"><i class="fa fa-circle online"></i>&nbsp;{{$online}}</a>
 							<a class="dropdown-item" href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=away"><i class="fa fa-circle away"></i>&nbsp;{{$away}}</a>
 							<a class="dropdown-item" href="{{$baseurl}}/chat/{{$nickname}}/{{$room_id}}/leave"><i class="fa fa-circle leave"></i>&nbsp;{{$leave}}</a>
@@ -43,7 +43,7 @@
 						</div>
 					</div>
 					<div id="chat-tools" class="btn-toolbar pull-left">
-						<div class="btn-group">
+						<div class="btn-group mr-2">
 							<button id="main-editor-bold" class="btn btn-outline-secondary btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'chatText'); return false;">
 								<i class="fa fa-bold jot-icons"></i>
 							</button>
@@ -60,23 +60,23 @@
 								<i class="fa fa-terminal jot-icons"></i>
 							</button>
 						</div>
-						<div class="btn-group d-none d-md-table-cell">
+						<div class="btn-group mr-2 d-none d-md-flex">
 							<button id="chat-link-wrapper" class="btn btn-outline-secondary btn-sm" onclick="chatJotGetLink(); return false;" >
 								<i id="chat-link" class="fa fa-link jot-icons" title="{{$insert}}" ></i>
 							</button>
 						</div>
 						{{if $feature_encrypt}}
-						<div class="btn-group d-none d-md-table-cell">
+						<div class="btn-group mr-2 d-none d-md-flex">
 							<button id="chat-encrypt-wrapper" class="btn btn-outline-secondary btn-sm" onclick="red_encrypt('{{$cipher}}', '#chatText', $('#chatText').val()); return false;">
 								<i id="chat-encrypt" class="fa fa-key jot-icons" title="{{$encrypt}}" ></i>
 							</button>
 						</div>
 						{{/if}}
-						<div class="btn-group dropup visible-xs">
+						<div class="btn-group dropup d-md-none">
 							<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-								<i id="more-tools-icon" class="fa fa-caret-up jot-icons"></i>
+								<i id="more-tools-icon" class="fa fa-cog jot-icons"></i>
 							</button>
-							<div class="dropdown-menu dropdown-menu-right">
+							<div class="dropdown-menu">
 								<a class="dropdown-item" href="#" onclick="chatJotGetLink(); return false;" ><i class="fa fa-link"></i>&nbsp;{{$insert}}</a>
 								{{if $feature_encrypt}}
 								<div class="dropdown-divider"></div>
@@ -150,7 +150,7 @@ function update_inroom(inroom) {
 	$.each( inroom, function(index, item) {
 		var newNode = document.createElement('div');
 		newNode.setAttribute('class', 'member-item');
-		$(newNode).html('<img class="dropdown-menu-img-xs" src="' + item.img + '" alt="' + item.name + '" /> ' + '<span class="contactname">' + item.name + '</span><span class="' + item.status_class + '">' + item.status + '</span>');
+		$(newNode).html('<img class="menu-img-2" src="' + item.img + '" alt="' + item.name + '" /> ' + '<span class="contactname">' + item.name + '</span><span class="' + item.status_class + '">' + item.status + '</span>');
 		html.appendChild(newNode);
 	});
     memberChange = chatRoomMembersChange(inroom); // get list of arrivals and departures

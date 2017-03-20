@@ -74,7 +74,7 @@ $(document).ready(function() {
 function makeFullScreen(full) {
 	if(typeof full=='undefined' || full == true) {
 		$('main').addClass('fullscreen');
-		$('header, nav, aside, #fullscreen-btn').hide();
+		$('header, nav, aside, #fullscreen-btn').attr('style','display:none !important');;
 		$('#inline-btn').show();
 	}
 	else {

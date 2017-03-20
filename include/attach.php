@@ -2243,11 +2243,12 @@ function attach_folder_select_list($channel_id) {
 	if($r) {
 		foreach($r as $rv) {
 			$x = attach_folder_rpaths($r,$rv);
-			if($x)
+			if($x) {
 				$out[$x[0]] = $x[1];
+			}
 		}
 	}
-
+logger('results: ' . print_r($out,true));
 	return $out;
 }
 
@@ -2266,7 +2267,6 @@ function attach_folder_rpaths($all_folders,$that_folder) {
 					continue;
 				if($selected['hash'] == $parent_hash) {
 					$path         = '/' . $selected['filename'] . $path;
-					$current_hash = $selected['hash'];
 					$parent_hash  = $selected['folder'];
 					$found = true;
 					break;

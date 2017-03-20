@@ -142,7 +142,8 @@ class Webpages extends \Zotlabs\Web\Controller {
 	
 
 		$is_owner = ($uid && $uid == $owner);
-		$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+		//$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+		$o = '';
 	
 		$x = array(
 			'webpage' => ITEM_TYPE_WEBPAGE,

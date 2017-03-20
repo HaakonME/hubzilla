@@ -107,7 +107,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 		}
 
 		$is_owner = ((local_channel()) && (local_channel() == \App::$profile['profile_uid']) ? true : false);
-		$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+		//$o = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+		$o = '';
 
 		// Download a wiki
 /*

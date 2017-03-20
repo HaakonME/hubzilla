@@ -84,7 +84,8 @@ class Browser extends DAV\Browser\Plugin {
 		require_once('include/conversation.php');
 		require_once('include/text.php');
 		if ($this->auth->owner_nick) {
-			$html = profile_tabs(get_app(), (($is_owner) ? true : false), $this->auth->owner_nick);
+			//$html = profile_tabs(get_app(), (($is_owner) ? true : false), $this->auth->owner_nick);
+			$html = '';
 		}
 
 		$files = $this->server->getPropertiesForPath($path, array(

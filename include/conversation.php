@@ -1917,7 +1917,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
 	call_hooks('profile_tabs', $arr);
 	
-	$tpl = get_markup_template('common_tabs.tpl');
+	$tpl = get_markup_template('profile_tabs.tpl');
 
 	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 }

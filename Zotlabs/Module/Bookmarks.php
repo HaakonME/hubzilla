@@ -68,7 +68,8 @@ class Bookmarks extends \Zotlabs\Web\Controller {
 	
 		$channel = \App::get_channel();
 	
-		$o = profile_tabs($a,true,$channel['channel_address']);
+		//$o = profile_tabs($a,true,$channel['channel_address']);
+		$o = '';
 	
 		$o .= '<div class="generic-content-wrapper-styled">';
 	

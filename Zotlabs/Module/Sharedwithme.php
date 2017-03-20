@@ -92,7 +92,8 @@ class Sharedwithme extends \Zotlabs\Web\Controller {
 	
 		}
 	
-		$o = profile_tabs($a, $is_owner, $channel['channel_address']);
+		//$o = profile_tabs($a, $is_owner, $channel['channel_address']);
+		$o = '';
 	
 		$o .= replace_macros(get_markup_template('sharedwithme.tpl'), array(
 			'$header' => t('Files: shared with me'),

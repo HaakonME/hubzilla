@@ -86,7 +86,8 @@ class Cal extends \Zotlabs\Web\Controller {
 	
 		$o = '';
 	
-		$tabs = profile_tabs($a, True, $channel['channel_address']);
+		//$tabs = profile_tabs($a, True, $channel['channel_address']);
+		$tabs = '';
 	
 		$mode = 'view';
 		$y = 0;

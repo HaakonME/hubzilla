@@ -579,7 +579,7 @@ class Photos extends \Zotlabs\Web\Controller {
 		// tabs
 	
 		$_is_owner = (local_channel() && (local_channel() == $owner_uid));
-		$o .= profile_tabs($a,$_is_owner, \App::$data['channel']['channel_address']);	
+		//$o .= profile_tabs($a,$_is_owner, \App::$data['channel']['channel_address']);	
 	
 		/**
 		 * Display upload form

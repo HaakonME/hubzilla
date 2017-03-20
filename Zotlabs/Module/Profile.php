@@ -101,7 +101,7 @@ class Profile extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+		//$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 	
 		\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string) . '" title="oembed" />' . "\r\n";
 	

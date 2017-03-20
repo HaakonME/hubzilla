@@ -36,7 +36,10 @@ EOT;
 	}
 	elseif(remote_channel())
 		$observer = App::get_observer();
-	
+
+	require_once('include/conversation.php');
+	$is_owner = (((local_channel()) && (\App::$profile['profile_uid'] == local_channel())) ? true : false);
+	$navapps[] = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 
 	$myident = (($channel) ? $channel['xchan_addr'] : '');
 		

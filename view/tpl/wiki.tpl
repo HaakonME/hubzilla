@@ -56,7 +56,7 @@
 				<div>
 					<div id="id_{{$commitMsg.0}}_wrapper" class="field input">
 						<div class="input-group">
-							<input class="widget-input" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
+							<input class="form-control form-control-sm" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
 							<div class="input-group-btn">
 								<button id="save-page" type="button" class="btn btn-primary disabled">Save</button>
 							</div>

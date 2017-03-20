@@ -70,6 +70,10 @@ function smiley_format(item) {
 	return "<div class='dropdown-item'>" + item.icon + ' ' + item.text + "</div>";
 }
 
+function bbco_format(item) {
+	return "<div class='dropdown-item'>" + item + "</div>";
+}
+
 function editor_replace(item) {
 	if(typeof item.replace !== 'undefined') {
 		return '$1$2' + item.replace;
@@ -326,7 +330,8 @@ function string2bb(element) {
 				else {
 					return '\[' + element + '\] ';
 				}
-			}
+			},
+			template: bbco_format
 		};
 
 		this.attr('autocomplete','off');

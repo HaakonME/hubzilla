@@ -73,17 +73,14 @@ $(document).ready(function() {
 
 function makeFullScreen(full) {
 	if(typeof full=='undefined' || full == true) {
-		$('main').css({'transition': 'none'}).addClass('fullscreen');
-		$('header, nav, aside, #fullscreen-btn').hide();
-		$('#tabs-collapse-1').css({'visibility': 'hidden'});
+		$('main').addClass('fullscreen');
+		$('header, nav, aside, #fullscreen-btn').css({'visibility': 'hidden'});
 		$('#inline-btn').show();
 	}
 	else {
 		$('main').removeClass('fullscreen');
-		$('header, nav, aside, #fullscreen-btn').show();
-		$('#tabs-collapse-1').css({'visibility': ''});
+		$('header, nav, aside, #fullscreen-btn').css({'visibility': ''});
 		$('#inline-btn').hide();
-		$('main').css({'transition': ''});
 		$(document.body).trigger("sticky_kit:recalc");
 	}
 }

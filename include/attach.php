@@ -2212,10 +2212,23 @@ function attach_move($channel_id, $resource_id, $new_folder_hash) {
 		intval($r[0]['id'])
 	);
 
+
+	$x = attach_syspaths($channel_id,$resource_id);
+
+	$t1 = q("update attach set os_path = '%s', display_path = '%s' where id = %d",
+		dbesc($x['os_path']),
+		dbesc($x['path']),
+		intval($r[0]['id'])
+	);
+
+
 	if($r[0]['is_photo']) {
-		$t = q("update photo set album = '%s', filename = '%s' where resource_id = '%s' and uid = %d",
+		$t = q("update photo set album = '%s', filename = '%s', os_path = '%s', display_path = '%s' 
+			where resource_id = '%s' and uid = %d",
 			dbesc($newdirname),
 			dbesc($filename),
+			dbesc($x['os_path']),
+			dbesc($x['path']),
 			dbesc($resource_id),
 			intval($channel_id)
 		);
@@ -2248,7 +2261,7 @@ function attach_folder_select_list($channel_id) {
 			}
 		}
 	}
-logger('results: ' . print_r($out,true));
+
 	return $out;
 }
 
@@ -2280,3 +2293,30 @@ function attach_folder_rpaths($all_folders,$that_folder) {
 
 	return (($error) ? false : [ $current_hash , $path ]);
 }
+
+
+function attach_syspaths($channel_id,$attach_hash) {
+
+	$os_path = '';
+	$path = '';
+	do {
+
+		$r = q("select folder, filename, hash from attach where hash = '%s' and uid = %d",
+			dbesc($attach_hash),
+			intval($channel_id)
+		);
+		if(! $r)
+			break;
+
+		$os_path = $r[0]['hash'] . (($os_path) ? '/' . $os_path : '');
+		$path = $r[0]['filename'] . (($path) ? '/' . $path : '');
+		$attach_hash = $r[0]['folder'];
+	}
+	while($attach_hash);
+
+	return [ 'os_path' => $os_path, 'path' => $path ];
+
+
+}
+
+

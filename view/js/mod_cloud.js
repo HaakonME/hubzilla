@@ -91,7 +91,7 @@ function prepareHtml(f, i) {
 		'<td><i class="fa ' + getIconFromType(f.type) + '" title="' + f.type + '"></i></td>' +
 		'<td>' + f.name + '</td>' +
 		'<td id="upload-progress-' + i + '"></td><td></td><td></td><td></td><td></td>' +
-		'<td class="hidden-xs">' + formatSizeUnits(f.size) + '</td><td class="hidden-xs"></td>' +
+		'<td class="d-none d-md-table-cell">' + formatSizeUnits(f.size) + '</td><td class="d-none d-md-table-cell"></td>' +
 		'</tr>' +
 		'<tr id="new-upload-progress-bar-' + i + '" class="new-upload">' +
 		'<td id="upload-progress-bar-' + i + '" colspan="9" class="upload-progress-bar"></td>' +

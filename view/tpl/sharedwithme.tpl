@@ -9,16 +9,16 @@
 				<th width="1%"></th>
 				<th width="92%">{{$name}}</th>
 				<th width="1%"></th>
-				<th width="1%" class="hidden-xs">{{$size}}</th>
-				<th width="1%" class="hidden-xs">{{$lastmod}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$size}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$lastmod}}</th>
 			</tr>
 		{{foreach $items as $item}}
 			<tr id="cloud-index-{{$item.id}}">
 				<td><i class="fa {{$item.objfiletypeclass}}" title="{{$item.objfiletype}}"></i></td>
 				<td><a href="{{$item.objurl}}">{{$item.objfilename}}</a>{{if $item.unseen}}&nbsp;<span class="label label-success">{{$label_new}}</span>{{/if}}</td>
 				<td class="cloud-index-tool"><a href="#" title="{{$drop}}" onclick="dropItem('/sharedwithme/{{$item.id}}/drop', '#cloud-index-{{$item.id}}'); return false;"><i class="fa fa-trash-o drop-icons"></i></a></td>
-				<td class="hidden-xs">{{$item.objfilesize}}</td>
-				<td class="hidden-xs">{{$item.objedited}}</td>
+				<td class="d-none d-md-table-cell">{{$item.objfilesize}}</td>
+				<td class="d-none d-md-table-cell">{{$item.objedited}}</td>
 			</tr>
 		{{/foreach}}
 		</table>

@@ -60,13 +60,13 @@
 								<i class="fa fa-terminal jot-icons"></i>
 							</button>
 						</div>
-						<div class="btn-group hidden-xs">
+						<div class="btn-group d-none d-md-table-cell">
 							<button id="chat-link-wrapper" class="btn btn-outline-secondary btn-sm" onclick="chatJotGetLink(); return false;" >
 								<i id="chat-link" class="fa fa-link jot-icons" title="{{$insert}}" ></i>
 							</button>
 						</div>
 						{{if $feature_encrypt}}
-						<div class="btn-group hidden-xs">
+						<div class="btn-group d-none d-md-table-cell">
 							<button id="chat-encrypt-wrapper" class="btn btn-outline-secondary btn-sm" onclick="red_encrypt('{{$cipher}}', '#chatText', $('#chatText').val()); return false;">
 								<i id="chat-encrypt" class="fa fa-key jot-icons" title="{{$encrypt}}" ></i>
 							</button>

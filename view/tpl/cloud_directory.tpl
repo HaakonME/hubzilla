@@ -5,8 +5,8 @@
 			<th width="92%">{{$name}}</th>
 			<th width="1%"></th><th width="1%"></th><th width="1%"></th><th width="1%"></th>
 			<th width="1%">{{*{{$type}}*}}</th>
-			<th width="1%" class="hidden-xs">{{$size}}</th>
-			<th width="1%" class="hidden-xs">{{$lastmod}}</th>
+			<th width="1%" class="d-none d-md-table-cell">{{$size}}</th>
+			<th width="1%" class="d-none d-md-table-cell">{{$lastmod}}</th>
 		</tr>
 	{{if $parentpath}}
 		<tr>
@@ -14,8 +14,8 @@
 			<td><a href="{{$parentpath.path}}" title="{{$parent}}">..</a></td>
 			<td></td><td></td><td></td><td></td>
 			<td>{{*[{{$parent}}]*}}</td>
-			<td class="hidden-xs"></td>
-			<td class="hidden-xs"></td>
+			<td class="d-none d-md-table-cell"></td>
+			<td class="d-none d-md-table-cell"></td>
 		</tr>
 	{{/if}}
 		<tr id="new-upload-progress-bar--1"></tr> {{* this is needed to append the upload files in the right order *}}
@@ -33,8 +33,8 @@
 			<td></td><td></td><td></td><td></td>
 	{{/if}}
 			<td>{{*{{$item.type}}*}}</td>
-			<td class="hidden-xs">{{$item.sizeFormatted}}</td>
-			<td class="hidden-xs">{{$item.lastmodified}}</td>
+			<td class="d-none d-md-table-cell">{{$item.sizeFormatted}}</td>
+			<td class="d-none d-md-table-cell">{{$item.lastmodified}}</td>
 		</tr>
 		<tr id="cloud-tools-{{$item.attachId}}">
 			<td id="perms-panel-{{$item.attachId}}" colspan="9"></td>

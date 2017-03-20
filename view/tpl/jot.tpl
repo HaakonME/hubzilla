@@ -68,7 +68,7 @@
 				</div>
 				{{/if}}
 				{{if $visitor}}
-				<div class="btn-group mr-2 hidden-md-down">
+				<div class="btn-group mr-2 d-none d-lg-flex">
 					{{if $writefiles}}
 					<button id="wall-file-upload" class="btn btn-outline-secondary btn-sm" title="{{$attach}}" >
 						<i id="wall-file-upload-icon" class="fa fa-paperclip jot-icons"></i>
@@ -85,7 +85,7 @@
 					</button>
 					{{/if}}
 				</div>
-				<div class="btn-group mr-2 hidden-md-down">
+				<div class="btn-group mr-2 d-none d-lg-flex">
 					{{if $setloc}}
 					<button id="profile-location-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
 						<i id="profile-location" class="fa fa-globe jot-icons"></i>
@@ -97,7 +97,7 @@
 					</button>
 					{{/if}}
 				{{else}}
-				<div class="btn-group hidden-md-down">
+				<div class="btn-group d-none d-lg-flex">
 				{{/if}}
 				{{if $feature_expire}}
 					<button id="profile-expire-wrapper" class="btn btn-outline-secondary btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
@@ -126,7 +126,7 @@
 				{{/if}}
 				</div>
 				{{if $writefiles || $weblink || $setloc || $clearloc || $feature_expire || $feature_encrypt || $feature_voting}}
-				<div class="btn-group hidden-lg-up">
+				<div class="btn-group d-lg-none">
 					<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 						<i id="more-tools-icon" class="fa fa-cog jot-icons"></i>
 					</button>

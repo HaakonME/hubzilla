@@ -24,8 +24,8 @@
 				<th width="1%"></th>
 				<th width="1%"></th>
 				<th width="1%"></th>
-				<th width="1%" class="hidden-xs">{{$created}}</th>
-				<th width="1%" class="hidden-xs">{{$edited}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$created}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$edited}}</th>
 			</tr>
 			{{foreach $pages as $key => $items}}
 			{{foreach $items as $item}}
@@ -55,10 +55,10 @@
 					<a href="#" title="{{$delete}}" onclick="dropItem('item/drop/{{$item.url}}', '#layout-list-item-{{$item.url}}'); return false;"><i class="fa fa-trash-o drop-icons"></i></a>
 					{{/if}}
 				</td>
-				<td class="hidden-xs">
+				<td class="d-none d-md-table-cell">
 					{{$item.created}}
 				</td>
-				<td class="hidden-xs">
+				<td class="d-none d-md-table-cell">
 					{{$item.edited}}
 				</td>
 			</tr>

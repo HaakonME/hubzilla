@@ -1,5 +1,5 @@
 {{if $nav.login && !$userinfo}}
-<div class="hidden-md-up">
+<div class="d-md-none">
 	<a class="btn btn-primary btn-sm text-white" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 		{{$nav.loginmenu.1.1}}
 	</a>
@@ -158,20 +158,20 @@
 		</li>
 		{{/if}}
 		{{if $nav.register}}
-		<li class="nav-item {{$nav.register.2}} hidden-xs-down">
+		<li class="nav-item {{$nav.register.2}} d-none d-md-flex">
 			<a class="nav-link" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a>
 		</li>
 		{{/if}}
 		{{if $nav.alogout}}
-		<li class="nav-item {{$nav}}-alogout.2 hidden-xs-down">
+		<li class="nav-item {{$nav.alogout.2}} d-none d-md-flex">
 			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
 		</li>
 		{{/if}}
 	</ul>
 
-	<div id="banner" class="navbar-text text-white font-weight-bold hidden-sm-down">{{$banner}}</div>
+	<div id="banner" class="navbar-text text-white font-weight-bold d-none d-md-flex">{{$banner}}</div>
 
-	<ul id="nav-right" class="navbar-nav hidden-sm-down ml-auto">
+	<ul id="nav-right" class="navbar-nav ml-auto d-none d-md-flex">
 		<li class="nav-item collapse clearfix" id="nav-search">
 			<form class="form-inline" method="get" action="search" role="search">
 				<input class="form-control form-control-sm mt-1 mr-2" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur="closeMenu('nav-search'); openMenu('nav-search-btn');"/>
@@ -200,7 +200,7 @@
 		</li>
 	</ul>
 </div>
-<div class="collapse hidden-md-up" id="navbar-collapse-2">
+<div class="collapse" id="navbar-collapse-2">
 	<div class="navbar-nav">
 		{{foreach $navapps as $navapp}}
 		{{$navapp|replace:'dropdown-item':'nav-link'}}

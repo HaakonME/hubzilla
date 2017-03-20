@@ -53,7 +53,7 @@
 								<i class="fa fa-terminal jot-icons"></i>
 							</button>
 						</div>
-						<div class="btn-group hidden-md-down mr-2">
+						<div class="btn-group d-none d-lg-flex mr-2">
 							<button id="prvmail-attach-wrapper" class="btn btn-outline-secondary btn-sm" >
 								<i id="prvmail-attach" class="fa fa-paperclip jot-icons" title="{{$attach}}"></i>
 							</button>
@@ -62,7 +62,7 @@
 							</button>
 						</div>
 						{{if $feature_expire || $feature_encrypt}}
-						<div class="btn-group hidden-md-down mr-2">
+						<div class="btn-group d-none d-lg-flex mr-2">
 							{{if $feature_expire}}
 							<button id="prvmail-expire-wrapper" class="btn btn-outline-secondary btn-sm" onclick="prvmailGetExpiry();return false;" >
 								<i id="prvmail-expires" class="fa fa-eraser jot-icons" title="{{$expires}}" ></i>
@@ -75,7 +75,7 @@
 							{{/if}}
 						</div>
 						{{/if}}
-						<div class="btn-group hidden-lg-up">
+						<div class="btn-group d-lg-none">
 							<button type="button" id="more-tools" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 								<i id="more-tools-icon" class="fa fa-cog jot-icons"></i>
 							</button>

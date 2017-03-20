@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "46492fdee6fa6ef4ef6612a0f0006c2b",
-    "content-hash": "b0d4055ddb064eafb50cf58cf939e1e5",
+    "content-hash": "9842014a99ac4e654bc7bfd6061d6f60",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -61,7 +60,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2017-01-06 23:20:00"
+            "time": "2017-01-06T23:20:00+00:00"
         },
         {
             "name": "michelf/php-markdown",

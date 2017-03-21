@@ -1775,6 +1775,9 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if (App::$is_sys)
 		return;
 
+	if (get_pconfig($uid, 'system', 'noprofiletabs'))
+		return;
+
 	$channel = App::get_channel();
 
 	if (is_null($nickname))
@@ -1809,9 +1812,6 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 	$has_webpages = (($r) ? true : false);
 
-	if (get_pconfig($uid, 'system', 'noprofiletabs'))
-		return;
-
 	if (x($_GET, 'tab'))
 		$tab = notags(trim($_GET['tab']));
 
@@ -1825,6 +1825,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'channel') ? 'active' : ''),
 			'title' => t('Status Messages and Posts'),
 			'id'    => 'status-tab',
+			'icon'  => 'home'
 		),
 	);
 
@@ -1837,6 +1838,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'profile') ? 'active' : ''),
 			'title' => t('Profile Details'),
 			'id'    => 'profile-tab',
+			'icon'  => 'user'
 		);
 	}
 	if ($p['view_storage']) {
@@ -1846,6 +1848,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'photos') ? 'active' : ''),
 			'title' => t('Photo Albums'),
 			'id'    => 'photo-tab',
+			'icon'  => 'photo'
 		);
 		$tabs[] = array(
 			'label' => t('Files'),
@@ -1853,6 +1856,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'cloud' || argv(0) == 'sharedwithme') ? 'active' : ''),
 			'title' => t('Files and Storage'),
 			'id'    => 'files-tab',
+			'icon'  => 'folder-open'
 		);
 	}
 
@@ -1863,6 +1867,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'cal' || argv(0) == 'events') ? 'active' : ''),
 			'title' => t('Events'),
 			'id'    => 'event-tab',
+			'icon'  => 'calendar'
 		);
 	}
 
@@ -1876,6 +1881,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 				'sel'   => ((argv(0) == 'chat') ? 'active' : '' ),
 				'title' => t('Chatrooms'),
 				'id'    => 'chat-tab',
+				'icon'  => 'comments-o'
 			);
 		}
 	}
@@ -1889,6 +1895,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'bookmarks') ? 'active' : ''),
 			'title' => t('Saved Bookmarks'),
 			'id'    => 'bookmarks-tab',
+			'icon'  => 'bookmark'
 		);
 	}
 
@@ -1899,27 +1906,34 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'webpages') ? 'active' : ''),
 			'title' => t('View Webpages'),
 			'id'    => 'webpages-tab',
+			'icon'  => 'newspaper-o'
 		);
 	}
  
 
-	if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
-		$tabs[] = array(
-			'label' => t('Wikis'),
-			'url'   => z_root() . '/wiki/' . $nickname,
-			'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
-			'title' => t('Wiki'),
-			'id'    => 'wiki-tab',
-		);
+	if ($p['view_wiki']) {
+		if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
+			$tabs[] = array(
+				'label' => t('Wikis'),
+				'url'   => z_root() . '/wiki/' . $nickname,
+				'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
+				'title' => t('Wiki'),
+				'id'    => 'wiki-tab',
+				'icon'  => 'pencil-square-o'
+			);
+		}
 	}
-
 
 	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
 	call_hooks('profile_tabs', $arr);
 	
 	$tpl = get_markup_template('profile_tabs.tpl');
 
-	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
+	return replace_macros($tpl, array(
+		'$tabs' => $arr['tabs'],
+		'$name' => App::$profile['channel_name'],
+		'$thumb' => App::$profile['thumb']
+	));
 }
 
 

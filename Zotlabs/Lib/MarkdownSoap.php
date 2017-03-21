@@ -77,12 +77,12 @@ class MarkdownSoap {
 	}
 
 	function purify($s) {
-		$s = str_replace("\n",'<br>',$s);
-		$s = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$s);
-		$s = str_replace(' ','&nbsp;',$s);
+//		$s = str_replace("\n",'<br>',$s);
+//		$s = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$s);
+//		$s = str_replace(' ','&nbsp;',$s);
 		$s = purify_html($s);
-		$s = str_replace(['&nbsp;', mb_convert_encoding('&#x00a0;','UTF-8','HTML-ENTITIES')], [ ' ', ' ' ],$s);
-		$s = str_replace(['<br>','<br />', '&lt;', '&gt;' ],["\n","\n", '<', '>'],$s);
+//		$s = str_replace(['&nbsp;', mb_convert_encoding('&#x00a0;','UTF-8','HTML-ENTITIES')], [ ' ', ' ' ],$s);
+//		$s = str_replace(['<br>','<br />', '&lt;', '&gt;' ],["\n","\n", '<', '>'],$s);
 		return $s;
 	}
 

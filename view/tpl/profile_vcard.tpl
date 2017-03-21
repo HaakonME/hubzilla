@@ -49,9 +49,6 @@
 
 	{{if $homepage}}<dl class="homepage"><dt class="homepage-label">{{$homepage}}</dt><dd class="homepage-url u-url">{{$profile.homepage}}</dd></dl>{{/if}}
 
-	{{if $diaspora}}
-	{{include file="diaspora_vcard.tpl"}}
-	{{/if}}
 
 </div>
 <div id="clear"></div>

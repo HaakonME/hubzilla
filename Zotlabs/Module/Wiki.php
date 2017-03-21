@@ -256,6 +256,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 				goaway('/' . argv(0) . '/' . argv(1) . '/' . $wikiUrlName . '/' . $pageUrlName);
 		}
 		
+
 		$wikiModalID = random_string(3);
 
 		$wikiModal = replace_macros(get_markup_template('generic_modal.tpl'), array(

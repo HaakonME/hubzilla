@@ -156,7 +156,7 @@ class NativeWikiPage {
 			$content = $item['body'];
 
 			return [ 
-				'content' => json_encode($content), 
+				'content' => $content,
 				'mimeType' => $w['mimeType'], 
 				'message' => '', 
 				'success' => true

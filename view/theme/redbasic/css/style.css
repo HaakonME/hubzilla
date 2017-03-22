@@ -1678,11 +1678,20 @@ dl.bb-dl > dd > li {
 	border-bottom-right-radius: $radius;
 }
 
+.sub-menu-wrapper {
+	padding-left: 1rem;
+	display: none;
+}
+
 .sub-menu {
 	width: 100%;
-	margin-top: 10px;
-	padding-left: 15px;
+	margin-top: 0.5rem;
+	padding-left: 1rem;
 	border-left: 0.2rem solid #eee;
+}
+
+.w100 {
+	width: 100%;
 }
 
 .app-icon {
@@ -1701,8 +1710,7 @@ dl.bb-dl > dd > li {
 	margin-left: auto;
 	margin-right: auto;
 }
+
 #permcat-index {
 	margin: 10px;
 }
-
-.shiny { background-color: red; }

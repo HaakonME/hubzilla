@@ -456,23 +456,24 @@ function photos_albums_list($channel, $observer, $sort_key = 'display_path', $di
 	$sort_key = dbesc($sort_key);
 	$direction = dbesc($direction);
 
-	$r = q("select display_path, hash from attach where is_dir = 1 and uid = %d order by $sort_key $direction",
+	$r = q("select display_path, hash from attach where is_dir = 1 and uid = %d $sql_extra order by $sort_key $direction",
 		intval($channel_id)
 	);
+
 	array_unshift($r,[ 'display_path' => '/', 'hash' => '' ]);
 	$str = ids_to_querystr($r,'hash',true);
 
 	$albums = [];
 
 	if($str) {
-		$x = q("select count( distinct hash ) as total, folder from attach where is_photo = 1 and uid = %d and folder in ( $str ) group by folder ",
+		$x = q("select count( distinct hash ) as total, folder from attach where is_photo = 1 and uid = %d and folder in ( $str ) $sql_extra group by folder ",
 			intval($channel_id)
 		);
 		if($x) {
 			foreach($r as $rv) {
 				foreach($x as $xv) {
 					if($xv['folder'] === $rv['hash']) {
-						if($xv['total'] != 0) {
+						if($xv['total'] != 0 && attach_can_view_folder($channel_id,$observer_xchan,$xv['folder'])) {
 							$albums[] = [ 'album' => $rv['display_path'], 'folder' => $xv['folder'], 'total' => $xv['total'] ];
 						}
 						continue;

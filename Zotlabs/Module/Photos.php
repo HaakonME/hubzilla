@@ -773,7 +773,7 @@ class Photos extends \Zotlabs\Web\Controller {
 				$o .= replace_macros($tpl, array(
 					'$photos' => $photos,
 					'$album' => $album,
-					'$album_id' => $datum),
+					'$album_id' => $datum,
 					'$album_edit' => array(t('Edit Album'), $album_edit),
 					'$can_post' => $can_post,
 					'$upload' => array(t('Upload'), z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/upload/' . $datum),
@@ -840,17 +840,16 @@ class Photos extends \Zotlabs\Web\Controller {
 			else
 				$order = 'DESC';
 	
-				
 
 			$prvnxt = q("SELECT hash FROM attach WHERE folder = '%s' AND uid = %d AND is_photo = 1
 				$sql_attach ORDER BY created $order ",
 				dbesc($x[0]['folder']),
 				intval($owner_uid)
 			); 
-	
+
 			if(count($prvnxt)) {
 				for($z = 0; $z < count($prvnxt); $z++) {
-					if($prvnxt[$z]['hash'] == $ph[0]['hash']) {
+					if($prvnxt[$z]['hash'] == $ph[0]['resource_id']) {
 						$prv = $z - 1;
 						$nxt = $z + 1;
 						if($prv < 0)
@@ -861,8 +860,8 @@ class Photos extends \Zotlabs\Web\Controller {
 					}
 				}
 	
-				$prevlink = z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/image/' . $prvnxt[$prv]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
-				$nextlink = z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/image/' . $prvnxt[$nxt]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+				$prevlink = z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/image/' . $prvnxt[$prv]['hash'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+				$nextlink = z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/image/' . $prvnxt[$nxt]['hash'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
 	 		}
 	
 	

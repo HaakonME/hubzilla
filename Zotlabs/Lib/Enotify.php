@@ -67,7 +67,7 @@ class Enotify {
 		$sender_name = $product;
 		$hostname = \App::get_hostname();
 		if(strpos($hostname,':'))
-		$hostname = substr($hostname,0,strpos($hostname,':'));
+			$hostname = substr($hostname,0,strpos($hostname,':'));
 
 		// Do not translate 'noreply' as it must be a legal 7-bit email address
 
@@ -77,7 +77,7 @@ class Enotify {
 
 		$sender_email = get_config('system','from_email');
 		if(! $sender_email)
-			$sender_email = 'Administrator' . '@' . \App::get_hostname();
+			$sender_email = 'Administrator' . '@' . $hostname;
 	
 		$sender_name = get_config('system','from_email_name');
 		if(! $sender_name)

@@ -581,9 +581,9 @@ function photos_list_photos($channel, $observer, $album = '') {
  * @return boolean
  */
 
-function photos_album_exists($channel_id, $album) {
+function photos_album_exists($channel_id, $observer_hash, $album) {
 
-	$sql_extra = permissions_sql($channel_id);
+	$sql_extra = permissions_sql($channel_id,$observer_hash);
 
 	$r = q("SELECT folder, hash, is_dir, filename, os_path, display_path FROM attach WHERE hash = '%s' AND is_dir = 1 AND uid = %d $sql_extra limit 1",
 		dbesc($album),

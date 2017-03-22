@@ -95,7 +95,7 @@ class Photos extends \Zotlabs\Web\Controller {
 			$album = argv(3);
 
 
-			if(! photos_album_exists($page_owner_uid,$album)) {
+			if(! photos_album_exists($page_owner_uid, get_observer_hash(), $album)) {
 				notice( t('Album not found.') . EOL);
 				goaway(z_root() . '/' . $_SESSION['photo_return']);
 			}
@@ -681,7 +681,7 @@ class Photos extends \Zotlabs\Web\Controller {
 
 			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$cmd) . '" title="oembed" />' . "\r\n";
 
-			if($x = photos_album_exists($owner_uid,$datum)) {
+			if($x = photos_album_exists($owner_uid, get_observer_hash(), $datum)) {
 				\App::set_pager_itemspage(60);
 				$album = $x['display_path'];
 			} 

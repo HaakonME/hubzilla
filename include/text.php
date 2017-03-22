@@ -3130,3 +3130,14 @@ function array_escape_tags(&$v,$k) {
 	$v = escape_tags($v);
 }
 
+function ellipsify($s,$maxlen) {
+	if($maxlen & 1)
+		$maxlen --;
+	if($maxlen < 4)
+		$maxlen = 4;
+
+	if(mb_strlen($s) < $maxlen)
+		return $s;
+
+	return mb_substr($s,0,$maxlen / 2) . '...' . mb_substr($s,mb_strlen($s) - ($maxlen / 2));
+} 

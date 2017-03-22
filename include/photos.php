@@ -446,7 +446,7 @@ function photo_upload($channel, $observer, $args) {
  *   * \e boolean \b success
  *   * \e array \b albums
  */
-function photos_albums_list($channel, $observer, $sort_key = 'album', $direction = 'asc') {
+function photos_albums_list($channel, $observer, $sort_key = 'display_path', $direction = 'asc') {
 
 	$channel_id     = $channel['channel_id'];
 	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
@@ -459,16 +459,31 @@ function photos_albums_list($channel, $observer, $sort_key = 'album', $direction
 	$sort_key = dbesc($sort_key);
 	$direction = dbesc($direction);
 
-	//$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and photo_usage IN ( %d, %d ) $sql_extra group by album order by $sort_key $direction",
-	//	intval($channel_id),
-	//	intval(PHOTO_NORMAL),
-	//	intval(PHOTO_PROFILE)
-	//);
-
-	// this query provides the same results but might perform better
-	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and os_storage = 1 $sql_extra group by album order by $sort_key $direction",
+	$r = q("select display_path, hash from attach where is_dir = 1 and uid = %d order by $sort_key $direction",
 		intval($channel_id)
 	);
+	array_unshift($r,[ 'display_path' => '/', 'hash' => '' ]);
+	$str = ids_to_querystr($r,'hash',true);
+
+	$albums = [];
+
+	if($str) {
+		$x = q("select count( distinct hash ) as total, folder from attach where is_photo = 1 and uid = %d and folder in ( $str ) group by folder ",
+			intval($channel_id)
+		);
+		if($x) {
+			foreach($r as $rv) {
+				foreach($x as $xv) {
+					if($xv['folder'] === $rv['hash']) {
+						if($xv['total'] != 0) {
+							$albums[] = [ 'album' => $rv['display_path'], 'folder' => $xv['folder'], 'total' => $xv['total'] ];
+						}
+						continue;
+					}
+				}
+			}
+		}
+	}
 
 	// add various encodings to the array so we can just loop through and pick them out in a template
 
@@ -480,11 +495,12 @@ function photos_albums_list($channel, $observer, $sort_key = 'album', $direction
 		foreach($albums as $k => $album) {
 			$entry = array(
 				'text' => (($album['album']) ? $album['album'] : '/'),
+				'shorttext' => (($album['album']) ? ellipsify($album['album'],28) : '/'),
 				'jstext' => (($album['album']) ? addslashes($album['album']) : '/'),
 				'total' => $album['total'],
-				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']),
+				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . $album['folder'],
 				'urlencode' => urlencode($album['album']),
-				'bin2hex' => bin2hex($album['album'])
+				'bin2hex' => $album['folder']
 			);
 			$ret['albums'][] = $entry;
 		}
@@ -495,7 +511,7 @@ function photos_albums_list($channel, $observer, $sort_key = 'album', $direction
 	return $ret;
 }
 
-function photos_album_widget($channelx,$observer,$sortkey = 'album',$direction = 'asc') {
+function photos_album_widget($channelx,$observer,$sortkey = 'display_path',$direction = 'asc') {
 
 	$o = '';
 
@@ -508,6 +524,7 @@ function photos_album_widget($channelx,$observer,$sortkey = 'album',$direction =
 		$o = replace_macros(get_markup_template('photo_albums.tpl'),array(
 			'$nick'    => $channelx['channel_address'],
 			'$title'   => t('Photo Albums'),
+			'$recent'  => t('Recent Photos'),
 			'$albums'  => $albums['albums'],
 			'$baseurl' => z_root(),
 			'$upload'  => ((perm_is_allowed($channelx['channel_id'],(($observer) ? $observer['xchan_hash'] : ''),'write_storage'))
@@ -566,12 +583,15 @@ function photos_list_photos($channel, $observer, $album = '') {
  * @return boolean
  */
 function photos_album_exists($channel_id, $album) {
-	$r = q("SELECT id FROM photo WHERE album = '%s' AND uid = %d limit 1",
+
+	$sql_extra = permissions_sql($channel_id);
+
+	$r = q("SELECT folder, hash, is_dir, filename, os_path, display_path FROM attach WHERE hash = '%s' AND is_dir = 1 AND uid = %d $sql_extra limit 1",
 		dbesc($album),
 		intval($channel_id)
 	);
 
-	return (($r) ? true : false);
+	return (($r) ? $r[0] : false);
 }
 
 /**

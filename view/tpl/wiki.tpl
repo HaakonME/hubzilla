@@ -83,14 +83,14 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body" id="embedPhotoModalBody" >
-				<div id="embedPhotoModalBodyAlbumListDialog" class="hide">
+				<div id="embedPhotoModalBodyAlbumListDialog" class="d-none">
 					<div id="embedPhotoModalBodyAlbumList"></div>
 				</div>
-				<div id="embedPhotoModalBodyAlbumDialog" class="hide"></div>
+				<div id="embedPhotoModalBodyAlbumDialog" class="d-none"></div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
@@ -366,8 +366,8 @@
 				if (data['status']) {
 					$('#embedPhotoModalLabel').html("{{$modalchooseimages}}");
 					$('#embedPhotoModalBodyAlbumDialog').html('\
-							<div><ul class="nav">\n\
-								<li><a href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
+							<div><ul class="nav nav-pills flex-column">\n\
+								<li class="nav-item"><a class="nav-link" href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
 									<i class="fa fa-chevron-left"></i>&nbsp;\n\
 									{{$modaldiffalbum}}\n\
 									</a>\n\
@@ -382,8 +382,8 @@
 							$(imageparent).toggleClass('embed-photo-selected-photo');
 						}
 					});
-					$('#embedPhotoModalBodyAlbumListDialog').addClass('hide');
-					$('#embedPhotoModalBodyAlbumDialog').removeClass('hide');
+					$('#embedPhotoModalBodyAlbumListDialog').addClass('d-none');
+					$('#embedPhotoModalBodyAlbumDialog').removeClass('d-none');
 					$('#embed-photo-OKButton').click(function () {
 						$('.embed-photo-selected-photo').each(function (index) {
 							var href = $(this).attr('href');
@@ -422,17 +422,17 @@
 				if (data['status']) {
 					var albums = data['albumlist']; //JSON.parse(data['albumlist']);
 					$('#embedPhotoModalLabel').html("{{$modalchoosealbum}}");
-					$('#embedPhotoModalBodyAlbumList').html('<ul class="nav"></ul>');
+					$('#embedPhotoModalBodyAlbumList').html('<ul class="nav nav-pills flex-column"></ul>');
 					for(var i = 0; i < albums.length; i++) {
 						var albumName = albums[i].text;
 						var jsAlbumName = albums[i].jstext;
-						var albumLink = '<li>';
-						albumLink += '<a href="#" onclick="choosePhotoFromAlbum(\'' + jsAlbumName + '\'); return false;">' + albumName + '</a>';
+						var albumLink = '<li class="nav-item">';
+						albumLink += '<a class="nav-link" href="#" onclick="choosePhotoFromAlbum(\'' + jsAlbumName + '\'); return false;">' + albumName + '</a>';
 						albumLink += '</li>';
 						$('#embedPhotoModalBodyAlbumList').find('ul').append(albumLink);
 					}
-					$('#embedPhotoModalBodyAlbumDialog').addClass('hide');
-					$('#embedPhotoModalBodyAlbumListDialog').removeClass('hide');
+					$('#embedPhotoModalBodyAlbumDialog').addClass('d-none');
+					$('#embedPhotoModalBodyAlbumListDialog').removeClass('d-none');
 				} else {
 					window.console.log("{{$modalerrorlist}}" + ':' + data['errormsg']);
 				}

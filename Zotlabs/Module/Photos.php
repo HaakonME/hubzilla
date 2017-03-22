@@ -92,13 +92,9 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 		if((argc() > 3) && (argv(2) === 'album')) {
 	
-			$album = hex2bin(argv(3));
-	
-			if($album === t('Profile Photos')) {
-				// not allowed
-				goaway(z_root() . '/' . $_SESSION['photo_return']);
-			}
-	
+			$album = argv(3);
+
+
 			if(! photos_album_exists($page_owner_uid,$album)) {
 				notice( t('Album not found.') . EOL);
 				goaway(z_root() . '/' . $_SESSION['photo_return']);
@@ -680,29 +676,16 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 		if($datatype === 'album') {
 	
-			if(strlen($datum)) {
-				if((strlen($datum) & 1) || (! ctype_xdigit($datum))) {
-					notice( t('Album name could not be decoded') . EOL);
-					logger('mod_photos: illegal album encoding: ' . $datum);
-					$datum = '';
-					goaway(z_root() . '/photos/' . \App::$data['channel']['channel_address']);
-				}
-			}
 	
-			$album = (($datum) ? hex2bin($datum) : '');
+			$album = $datum;
 
 			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$cmd) . '" title="oembed" />' . "\r\n";
 
-			//check if the album exists and if we have perms
-			$r = q("SELECT album FROM photo WHERE uid = %d AND album = '%s' and is_nsfw = %d $sql_extra LIMIT 1",
-				intval($owner_uid),
-				dbesc($album),
-				intval($unsafe)
-			);
-
-			if($r) {
+			if($x = photos_album_exists($owner_uid,$datum)) {
 				\App::set_pager_itemspage(60);
-			} else {
+				$album = $x['display_path'];
+			} 
+			else {
 				goaway(z_root() . '/photos/' . \App::$data['channel']['channel_address']);
 			}
 
@@ -712,19 +695,19 @@ class Photos extends \Zotlabs\Web\Controller {
 				$order = 'DESC';
 
 			$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.imgscale, p.description, p.created FROM photo p INNER JOIN
-					(SELECT resource_id, max(imgscale) imgscale FROM photo WHERE uid = %d AND album = '%s' AND imgscale <= 4 AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id) ph 
+					(SELECT resource_id, max(imgscale) imgscale FROM photo left join attach on folder = '%s' and photo.resource_id = attach.hash WHERE attach.uid = %d AND imgscale <= 4 AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id) ph 
 					ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)
 				ORDER BY created $order LIMIT %d OFFSET %d",
+				dbesc($datum),
 				intval($owner_uid),
-				dbesc($album),
 				intval(PHOTO_NORMAL),
 				intval(PHOTO_PROFILE),
 				intval($unsafe),
 				intval(\App::$pager['itemspage']),
 				intval(\App::$pager['start'])
 			);
-			
-			//edit album name
+
+			// edit album name
 			$album_edit = null;
 			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
@@ -749,9 +732,9 @@ class Photos extends \Zotlabs\Web\Controller {
 			}
 	
 			if($_GET['order'] === 'posted')
-				$order =  array(t('Show Newest First'), z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/album/' . bin2hex($album));
+				$order =  array(t('Show Newest First'), z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/album/' . $datum);
 			else
-				$order = array(t('Show Oldest First'), z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/album/' . bin2hex($album) . '?f=&order=posted');
+				$order = array(t('Show Oldest First'), z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/album/' . $datum . '?f=&order=posted');
 	
 			$photos = array();
 			if(count($r)) {

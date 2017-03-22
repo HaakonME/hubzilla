@@ -612,8 +612,14 @@ class Photos extends \Zotlabs\Web\Controller {
 			if(! $aclselect) {
 				$aclselect = '<input id="group_allow" type="hidden" name="allow_gid[]" value="" /><input id="contact_allow" type="hidden" name="allow_cid[]" value="" /><input id="group_deny" type="hidden" name="deny_gid[]" value="" /><input id="contact_deny" type="hidden" name="deny_cid[]" value="" />';
 			}
-	
-			$selname = (($datum) ? hex2bin($datum) : '');
+
+			$selname = '';
+
+			if($datum) {
+				$h = attach_by_hash_nodata($datum,get_observer_hash());
+				$selname = $h['data']['display_path'];
+			}	
+
 	
 			$albums = ((array_key_exists('albums', \App::$data)) ? \App::$data['albums'] : photos_albums_list(\App::$data['channel'],\App::$data['observer']));
 	
@@ -694,12 +700,12 @@ class Photos extends \Zotlabs\Web\Controller {
 
 			// edit album name
 			$album_edit = null;
-			if(($album !== t('Profile Photos')) && ($album !== 'Profile Photos') && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
-				if($can_post) {
-					$album_e = $album;
-					$albums = ((array_key_exists('albums', \App::$data)) ? \App::$data['albums'] : photos_albums_list(\App::$data['channel'],\App::$data['observer']));
+
+			if($can_post) {
+				$album_e = $album;
+				$albums = ((array_key_exists('albums', \App::$data)) ? \App::$data['albums'] : photos_albums_list(\App::$data['channel'],\App::$data['observer']));
 	
-					// @fixme - syncronise actions with DAV
+				// @fixme - syncronise actions with DAV
 		
 	//				$edit_tpl = get_markup_template('album_edit.tpl');
 	//				$album_edit = replace_macros($edit_tpl,array(
@@ -713,7 +719,6 @@ class Photos extends \Zotlabs\Web\Controller {
 	//					'$dropsubmit' => t('Delete Album')
 	//				));
 	
-				}
 			}
 	
 			if($_GET['order'] === 'posted')
@@ -1244,9 +1249,9 @@ class Photos extends \Zotlabs\Web\Controller {
 
 		\App::set_pager_itemspage(60);
 		
-		$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.album, p.imgscale, p.created FROM photo p 
-			INNER JOIN ( SELECT resource_id, attach.folder as folder, max(imgscale) imgscale FROM photo left join attach on
-				photo.resource_id = attach.hash 
+		$r = q("SELECT p.resource_id, p.id, p.filename, p.mimetype, p.album, p.imgscale, p.created, p.display_path 
+			FROM photo p 
+			INNER JOIN ( SELECT resource_id, max(imgscale) imgscale FROM photo 
 				WHERE photo.uid = %d AND photo_usage IN ( %d, %d ) 
 				AND is_nsfw = %d $sql_extra group by resource_id ) ph 
 			ON (p.resource_id = ph.resource_id and p.imgscale = ph.imgscale) 
@@ -1265,23 +1270,18 @@ class Photos extends \Zotlabs\Web\Controller {
 		if($r) {
 			$twist = 'rotright';
 			foreach($r as $rr) {
+
+				if(! attach_can_view_folder(\App::$data['channel']['channel_id'],get_observer_hash(),$rr['resource_id']))
+					continue;
+
 				if($twist == 'rotright')
 					$twist = 'rotleft';
 				else
 					$twist = 'rotright';
 				$ext = $phototypes[$rr['mimetype']];
 				
-				if(\App::get_template_engine() === 'internal') {
-					$alt_e = template_escape($rr['filename']);
-					$name_e = template_escape($rr['album']);
-				}
-				else {
-					$alt_e = $rr['filename'];
-					$name_e = $rr['album'];
-				}
-
-					
-
+				$alt_e = $rr['filename'];
+				$name_e = dirname($rr['display_path']);
 
 				$photos[] = array(
 					'id'       => $rr['id'],
@@ -1291,9 +1291,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					'src'     	=> z_root() . '/photo/' . $rr['resource_id'] . '-' . ((($rr['imgscale']) == 6) ? 4 : $rr['imgscale']) . '.' . $ext,
 					'alt'     	=> $alt_e,
 					'album'	=> array(
-						'link'  => z_root() . '/photos/' . \App::$data['channel']['channel_address'] . '/album/' . bin2hex($rr['album']),
 						'name'  => $name_e,
-						'alt'   => t('View Album'),
 					),
 					
 				);

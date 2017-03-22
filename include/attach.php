@@ -209,7 +209,7 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 	// Retrieve all columns except 'data'
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, os_storage, is_dir, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra ORDER BY $orderby $limit",
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, os_path, display_path, os_storage, is_dir, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra ORDER BY $orderby $limit",
 		intval($channel_id)
 	);
 
@@ -284,6 +284,7 @@ function attach_by_hash($hash, $observer_hash, $rev = 0) {
 	return $ret;
 }
 
+
 function attach_can_view_folder($uid,$ob_hash,$folder_hash) {
 
 	$sql_extra = permissions_sql($uid,$ob_hash);
@@ -348,7 +349,7 @@ function attach_by_hash_nodata($hash, $observer_hash, $rev = 0) {
 
 	// Now we'll see if we can access the attachment
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_photo, is_dir, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_storage, is_photo, os_path, display_path, is_dir, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
 		intval($r[0]['uid']),
 		dbesc($hash)
 	);
@@ -531,7 +532,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 		if($options === 'update' &&  $arr && array_key_exists('revision',$arr))
 			$sql_options = " and revision = " . intval($arr['revision']) . " ";
 
-		$x = q("select id, aid, uid, filename, filetype, filesize, hash, revision, folder, os_storage, is_photo, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
+		$x = q("select id, aid, uid, filename, filetype, filesize, hash, revision, folder, os_storage, is_photo, os_path, display_path, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
 			dbesc($arr['hash']),
 			intval($channel_id)
 		);
@@ -929,7 +930,7 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 	else
 		$paths = array($pathname);
 
-	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, is_photo, is_dir, os_storage, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and is_dir != 0 " . permissions_sql($channel_id),
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, os_path, display_path, is_photo, is_dir, os_storage, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and is_dir != 0 " . permissions_sql($channel_id),
 		intval($channel_id),
 		dbesc($parent_hash),
 		dbesc($paths[0])
@@ -2343,3 +2344,4 @@ function attach_upgrade() {
 		}
 	}
 }
+

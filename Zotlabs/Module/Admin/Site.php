@@ -48,6 +48,10 @@ class Site {
 		$no_community_page    = !((x($_POST,'no_community_page'))	? True	:	False);
 		$default_expire_days  = ((array_key_exists('default_expire_days',$_POST)) ? intval($_POST['default_expire_days']) : 0);
 
+		$reply_address      = ((array_key_exists('reply_address',$_POST) && trim($_POST['reply_address'])) ? trim($_POST['reply_address']) : 'noreply@' . \App::get_hostname());
+		$from_email         = ((array_key_exists('from_email',$_POST) && trim($_POST['from_email'])) ? trim($_POST['from_email']) : 'Administrator@' . \App::get_hostname());
+		$from_email_name    = ((array_key_exists('from_email_name',$_POST) && trim($_POST['from_email_name'])) ? trim($_POST['from_email_name']) : \Zotlabs\Lib\System::get_site_name());
+
 		$verifyssl         = ((x($_POST,'verifyssl'))        ? True : False);
 		$proxyuser         = ((x($_POST,'proxyuser'))        ? notags(trim($_POST['proxyuser']))  : '');
 		$proxy             = ((x($_POST,'proxy'))            ? notags(trim($_POST['proxy']))      : '');
@@ -77,7 +81,14 @@ class Site {
 		set_config('system', 'enable_context_help', $enable_context_help);
 		set_config('system', 'verify_email', $verify_email);
 		set_config('system', 'default_expire_days', $default_expire_days);
+		set_config('system', 'reply_address', $reply_address);
+		set_config('system', 'from_email', $from_email);
+		set_config('system', 'from_email_name' , $from_email_name);
+
+
 		set_config('system', 'techlevel_lock', $techlevel_lock);
+
+
 
 		if(! is_null($techlevel))
 			set_config('system', 'techlevel', $techlevel);
@@ -303,6 +314,10 @@ class Site {
 			'$disable_discover_tab'	=> array('disable_discover_tab', t('Import Public Streams'), $discover_tab, t('Import and allow access to public content pulled from other sites. Warning: this content is unmoderated.')),
 			'$login_on_homepage'	=> array('login_on_homepage', t("Login on Homepage"),((intval($homelogin) || $homelogin === false) ? 1 : '') , t("Present a login box to visitors on the home page if no other content has been configured.")),
 			'$enable_context_help'	=> array('enable_context_help', t("Enable context help"),((intval($enable_context_help) === 1 || $enable_context_help === false) ? 1 : 0) , t("Display contextual help for the current page when the help button is pressed.")),
+
+			'$reply_address' => [ 'reply_address', t('Reply-to email address for system generated email.'), get_config('system','reply_address','noreply@' . \App::get_hostname()),'' ],
+			'$from_email' => [ 'from_email', t('Sender (From) email address for system generated email.'), get_config('system','from_email','Administrator@' . \App::get_hostname()),'' ],
+			'$from_email_name' => [ 'from_email_name', t('Name of email sender for system generated email.'), get_config('system','from_email_name',\Zotlabs\Lib\System::get_site_name()),'' ],
 
 			'$directory_server' => (($dir_choices) ? array('directory_server', t("Directory Server URL"), get_config('system','directory_server'), t("Default directory server"), $dir_choices) : null),
 

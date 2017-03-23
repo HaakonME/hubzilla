@@ -3,11 +3,11 @@
 		<div class="pull-right">
 			<div class="dropdown">
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i>&nbsp;{{$view_label}}</button>
-				<ul class="dropdown-menu">
-					<li><a href="#" onclick="changeView('changeView', 'month'); return false;">{{$month}}</a></li>
-					<li><a href="#" onclick="changeView('changeView', 'agendaWeek'); return false;">{{$week}}</a></li>
-					<li><a href="#" onclick="changeView('changeView', 'agendaDay'); return false;">{{$day}}</a></li>
-				</ul>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="#" onclick="changeView('changeView', 'month'); return false;">{{$month}}</a>
+					<a class="dropdown-item" href="#" onclick="changeView('changeView', 'agendaWeek'); return false;">{{$week}}</a>
+					<a class="dropdown-item" href="#" onclick="changeView('changeView', 'agendaDay'); return false;">{{$day}}</a>
+				</div>
 				<button class="btn btn-success btn-sm" onclick="openClose('form');">{{$new_event.1}}</button>
 				<div class="btn-group">
 					<button class="btn btn-outline-secondary btn-sm" onclick="changeView('prev', false);" title="{{$prev}}"><i class="fa fa-backward"></i></button>

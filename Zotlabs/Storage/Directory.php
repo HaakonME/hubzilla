@@ -49,7 +49,7 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @param BasicAuth &$auth_plugin
 	 */
 	public function __construct($ext_path, &$auth_plugin) {
-//		$ext_path = urldecode($ext_path);
+		//		$ext_path = urldecode($ext_path);
 		logger('directory ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
@@ -167,6 +167,14 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			intval($this->auth->owner_id)
 		);
 
+		$x = attach_syspaths($this->auth->owner_id,$this->folder_hash);
+
+		$y = q("update attach set display_path = '%s where hash = '%s' and uid = %d",
+			dbesc($x['path']),
+			dbesc($this->folder_hash),
+			intval($this->auth->owner_id)
+		);
+
 		$ch = channelx_by_n($this->auth->owner_id);
 		if ($ch) {
 			$sync = attach_export_data($ch, $this->folder_hash);
@@ -260,13 +268,17 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($f),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
-			'', //TODO: use os_path
-			'', //TODO: use display_path
+			'', 
+			'', 
 			dbesc($allow_cid),
 			dbesc($allow_gid),
 			dbesc($deny_cid),
 			dbesc($deny_gid)
 		);
+
+		// fetch the actual storage paths
+
+		$xpath = attach_syspaths($this->auth->owner_id, $hash);
 
 		// returns the number of bytes that were written to the file, or FALSE on failure
 		$size = file_put_contents($f, $data);
@@ -281,15 +293,17 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		$edited = datetime_convert();
 
 		$is_photo = 0;
-		$x = @getimagesize($f);
-		logger('getimagesize: ' . print_r($x,true), LOGGER_DATA);
-		if (($x) && ($x[2] === IMAGETYPE_GIF || $x[2] === IMAGETYPE_JPEG || $x[2] === IMAGETYPE_PNG)) {
+		$gis = @getimagesize($f);
+		logger('getimagesize: ' . print_r($gis,true), LOGGER_DATA);
+		if (($gis) && ($gis[2] === IMAGETYPE_GIF || $gis[2] === IMAGETYPE_JPEG || $gis[2] === IMAGETYPE_PNG)) {
 			$is_photo = 1;
 		}
 
 		// updates entry with filesize and timestamp
-		$d = q("UPDATE attach SET filesize = '%s', is_photo = %d, edited = '%s' WHERE hash = '%s' AND uid = %d",
+		$d = q("UPDATE attach SET filesize = '%s', os_path = '%s', display_path = '%s', is_photo = %d, edited = '%s' WHERE hash = '%s' AND uid = %d",
 			dbesc($size),
+			dbesc($xpath['os_path']),
+			dbesc($xpath['display_path']),
 			intval($is_photo),
 			dbesc($edited),
 			dbesc($hash),
@@ -312,29 +326,29 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		// check against service class quota
 		$limit = engr_units_to_bytes(service_class_fetch($c[0]['channel_id'], 'attach_upload_limit'));
 		if ($limit !== false) {
-			$x = q("SELECT SUM(filesize) AS total FROM attach WHERE aid = %d ",
+			$z = q("SELECT SUM(filesize) AS total FROM attach WHERE aid = %d ",
 				intval($c[0]['channel_account_id'])
 			);
-			if (($x) && ($x[0]['total'] + $size > $limit)) {
-				logger('service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $x[0]['total'] . ' limit is ' . userReadableSize($limit));
+			if (($z) && ($z[0]['total'] + $size > $limit)) {
+				logger('service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $z[0]['total'] . ' limit is ' . userReadableSize($limit));
 				attach_delete($c[0]['channel_id'], $hash);
 				return;
 			}
 		}
 
-		if ($is_photo) {
+		if($is_photo) {
 			$album = '';
 			if ($this->folder_hash) {
-				$f1 = q("select filename from attach WHERE hash = '%s' AND uid = %d",
+				$f1 = q("select filename, display_path from attach WHERE hash = '%s' AND uid = %d",
 					dbesc($this->folder_hash),
 					intval($c[0]['channel_id'])
 				);
 				if ($f1)
-					$album = $f1[0]['filename'];
+					$album = (($f1[0]['display_path']) ? $f1[0]['display_path'] : $f1[0]['filename']);
 			}
 
 			require_once('include/photos.php');
-			$args = array( 'resource_id' => $hash, 'album' => $album, 'os_path' => $f, 'filename' => $name, 'getimagesize' => $x, 'directory' => $direct);
+			$args = array( 'resource_id' => $hash, 'album' => $album, 'os_syspath' => $f, 'os_path' => $xpath['os_path'], 'display_path' => $xpath['path'], 'filename' => $name, 'getimagesize' => $gis, 'directory' => $direct);
 			$p = photo_upload($c[0], \App::get_observer(), $args);
 		}
 
@@ -646,20 +660,24 @@ class Directory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			logger("Path mismatch: $path !== /$file");
 			return NULL;
 		}
-		if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
-			$prefix = 'DISTINCT ON (filename)';
-			$suffix = 'ORDER BY filename';
-		}
-		else {
-			$prefix = '';
-			$suffix = 'GROUP BY filename';
-		}
+
+		$prefix = '';
+		$suffix = '';
+
 		$r = q("select $prefix id, uid, hash, filename, filetype, filesize, revision, folder, flags, is_dir, created, edited from attach where folder = '%s' and uid = %d $perms $suffix",
 			dbesc($folder),
 			intval($channel_id)
 		);
 
 		foreach ($r as $rr) {
+
+			// @FIXME I don't think we use revisions currently in attach structures.
+			// In case we see any in the wild provide a unique filename. This 
+			// name may or may not be accessible
+
+			if($rr['revision'])
+				$rr['filename'] .= '-' . $rr['revision'];
+
 			//logger('filename: ' . $rr['filename'], LOGGER_DEBUG);
 			if (intval($rr['is_dir'])) {
 				$ret[] = new Directory($path . '/' . $rr['filename'], $auth);

@@ -85,13 +85,23 @@ class File extends DAV\Node implements DAV\IFile {
 			intval($this->data['id'])
 		);
 
+		$x = attach_syspaths($this->auth->owner_id,$this->data['hash']);
+
+		$y = q("update attach set display_path = '%s where hash = '%s' and uid = %d",
+			dbesc($x['path']),
+			dbesc($this->data['hash']),
+			intval($this->auth->owner_id)
+		);
+
 		if($this->data->is_photo) {
-			$r = q("update photo set filename = '%s' where resource_id = '%s' and uid = %d",
+			$r = q("update photo set filename = '%s', display_path = '%s' where resource_id = '%s' and uid = %d",
 				dbesc($newName),
+				dbesc($x['path']),
 				dbesc($this->data['hash']),
 				intval($this->auth->owner_id)
 			);
 		}
+
 		$ch = channelx_by_n($this->auth->owner_id);
 		if($ch) {
 			$sync = attach_export_data($ch,$this->data['hash']);

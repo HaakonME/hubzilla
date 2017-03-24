@@ -79,11 +79,6 @@ class WebServer {
 		if(! x($_SESSION, 'sysmsg_info'))
 			$_SESSION['sysmsg_info'] = array();
 
-		/*
-		 * check_config() is responsible for running update scripts. These automatically
-		 * update the DB schema whenever we push a new one out. It also checks to see if
-		 * any plugins have been added or removed and reacts accordingly.
-		 */
 
 
 		if(\App::$install) {
@@ -91,8 +86,16 @@ class WebServer {
 			if(\App::$module != 'view')
 				\App::$module = 'setup';
 		}
-		else
-			check_config($a);
+		else {
+
+			/*
+			 * check_config() is responsible for running update scripts. These automatically
+			 * update the DB schema whenever we push a new one out. It also checks to see if
+			 * any plugins have been added or removed and reacts accordingly.
+			 */
+
+			check_config();
+		}
 
 		nav_set_selected('nothing');
 

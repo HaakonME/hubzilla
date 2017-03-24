@@ -2,10 +2,6 @@
 
 require_once('include/items.php');
 
-// Note: the code in 'item_extract_images' and 'item_redir_and_replace_images'
-// is identical to the code in mod/message.php for 'item_extract_images' and
-// 'item_redir_and_replace_images'
-
 
 function item_extract_images($body) {
 
@@ -375,13 +371,14 @@ function localize_item(&$item){
  *  * \e array \b children
  * @return number
  */
+
 function count_descendants($item) {
 
 	$total = count($item['children']);
 
-	if ($total > 0) {
-		foreach ($item['children'] as $child) {
-			if (! visible_activity($child))
+	if($total > 0) {
+		foreach($item['children'] as $child) {
+			if(! visible_activity($child))
 				$total --;
 
 			$total += count_descendants($child);
@@ -408,8 +405,8 @@ function visible_activity($item) {
 	if(intval($item['item_notshown']))
 		return false;
 
-	foreach ($hidden_activities as $act) {
-		if ((activity_match($item['verb'], $act)) && ($item['mid'] != $item['parent_mid'])) {
+	foreach($hidden_activities as $act) {
+		if((activity_match($item['verb'], $act)) && ($item['mid'] != $item['parent_mid'])) {
 			return false;
 		}
 	}
@@ -875,98 +872,6 @@ function best_link_url($item) {
 
 
 
-function item_photo_menu($item){
-
-	$contact = null;
-
-	$ssl_state = false;
-
-	$sub_link="";
-	$poke_link="";
-	$contact_url="";
-	$pm_url="";
-	$vsrc_link = "";
-	$follow_url = "";
-
-	$local_channel = local_channel();
-
-	if($local_channel) {
-		$ssl_state = true;
-		if(! count(App::$contacts))
-			load_contact_links($local_channel);
-		$channel = App::get_channel();
-		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
-	}
-
-	if(($local_channel) && $local_channel == $item['uid']) {
-		$vsrc_link = 'javascript:viewsrc(' . $item['id'] . '); return false;';
-		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
-			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
-		}
-		if($channel) {
-			$unsub_link = 'javascript:dounsubthread(' . $item['id'] . '); return false;';
-		}
-	}
-
-	$profile_link = chanlink_hash($item['author_xchan']);
-	if($item['uid'] > 0)
-		$pm_url = z_root() . '/mail/new/?f=&hash=' . $item['author_xchan'];
-
-	if(App::$contacts && array_key_exists($item['author_xchan'],App::$contacts))
-		$contact = App::$contacts[$item['author_xchan']];
-	else
-		if($local_channel && $item['author']['xchan_addr'])
-			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
-
-	if($contact) {
-		$poke_link = z_root() . '/poke/?f=&c=' . $contact['abook_id'];
-		if (! intval($contact['abook_self']))  
-			$contact_url = z_root() . '/connedit/' . $contact['abook_id'];
-		$posts_link = z_root() . '/network/?cid=' . $contact['abook_id'];
-
-		$clean_url = normalise_link($item['author-link']);
-	}
-
-	$rating_enabled = get_config('system','rating_enabled');
-
-	$ratings_url = (($rating_enabled) ? z_root() . '/ratings/' . urlencode($item['author_xchan']) : '');
-
-	$post_menu = Array(
-		t("View Source") => $vsrc_link,
-		t("Follow Thread") => $sub_link,
-		t("Unfollow Thread") => $unsub_link,
-	);
-
-	$author_menu = array(
-		t("View Profile") => $profile_link,
-		t("Activity/Posts") => $posts_link,
-		t("Connect") => $follow_url,
-		t("Edit Connection") => $contact_url,
-		t("Message") => $pm_url,
-		t('Ratings') => $ratings_url,
-		t("Poke") => $poke_link
-	);
-
-
-	$args = array('item' => $item, 'post_menu' => $post_menu, 'author_menu' => $author_menu);
-
-	call_hooks('item_photo_menu', $args);
-
-	$menu = array_merge($args['post_menu'],$args['author_menu']);
-
-	$o = "";
-	foreach($menu as $k=>$v){
-		if(strpos($v,'javascript:') === 0) {
-			$v = substr($v,11);
-			$o .= "<li><a href=\"#\" onclick=\"$v\">$k</a></li>\n";
-		}
-		elseif ($v!="") $o .= "<li><a href=\"$v\">$k</a></li>\n";
-	}
-
-	return $o;
-}
-
-
 function thread_action_menu($item,$mode = '') {
 
 	$menu = [];
@@ -1026,14 +931,15 @@ function thread_author_menu($item, $mode = '') {
 	}
 
 	$profile_link = chanlink_hash($item['author_xchan']);
+
 	if($item['uid'] > 0)
-		$pm_url = z_root() . '/mail/new/?f=&hash=' . $item['author_xchan'];
+		$pm_url = z_root() . '/mail/new/?f=&hash=' . urlencode($item['author_xchan']);
 
 	if(App::$contacts && array_key_exists($item['author_xchan'],App::$contacts))
 		$contact = App::$contacts[$item['author_xchan']];
 	else
 		if($local_channel && $item['author']['xchan_addr'])
-			$follow_url = z_root() . '/follow/?f=&url=' . $item['author']['xchan_addr'];
+			$follow_url = z_root() . '/follow/?f=&url=' . urlencode($item['author']['xchan_addr']);
 
 	if($contact) {
 		$poke_link = z_root() . '/poke/?f=&c=' . $contact['abook_id'];

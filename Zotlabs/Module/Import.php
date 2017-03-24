@@ -83,6 +83,7 @@ class Import extends \Zotlabs\Web\Controller {
 			$api_path .= 'channel/export/basic?f=&channel=' . $channelname;
 			if($import_posts)
 				$api_path .= '&posts=1';
+
 			$binary = false;
 			$redirects = 0;
 			$opts = array('http_auth' => $email . ':' . $password);
@@ -104,8 +105,8 @@ class Import extends \Zotlabs\Web\Controller {
 
 		$data = json_decode($data,true);
 
-	//	logger('import: data: ' . print_r($data,true));
-	//	print_r($data);
+		//logger('import: data: ' . print_r($data,true));
+		//print_r($data);
 
 		if(! array_key_exists('compatibility',$data)) {
 			call_hooks('import_foreign_channel_data',$data);
@@ -248,7 +249,7 @@ class Import extends \Zotlabs\Web\Controller {
 
 		logger('import step 6');
 
-
+		// import xchans
 		$xchans = $data['xchan'];
 		if($xchans) {
 			foreach($xchans as $xchan) {
@@ -292,12 +293,10 @@ class Import extends \Zotlabs\Web\Controller {
 					dbesc($photodate),
 					dbesc($xchan['xchan_hash'])
 				);
-
 			}
 
 			logger('import step 7');
 		}
-
 
 		$friends = 0;
 		$feeds = 0;
@@ -367,19 +366,20 @@ class Import extends \Zotlabs\Web\Controller {
 			logger('import step 8');
 		}
 
+		// import groups
 		$groups = $data['group'];
 		if($groups) {
 			$saved = array();
 			foreach($groups as $group) {
 				$saved[$group['hash']] = array('old' => $group['id']);
-				if(array_key_exists('name',$group)) {
+				if(array_key_exists('name', $group)) {
 					$group['gname'] = $group['name'];
 					unset($group['name']);
 				}
 				unset($group['id']);
 				$group['uid'] = $channel['channel_id'];
 
-				create_table_from_array('groups',$group);
+				create_table_from_array('groups', $group);
 			}
 			$r = q("select * from groups where uid = %d",
 				intval($channel['channel_id'])
@@ -391,7 +391,7 @@ class Import extends \Zotlabs\Web\Controller {
 			}
 		}
 
-
+		// import group members
 		$group_members = $data['group_member'];
 		if($group_members) {
 			foreach($group_members as $group_member) {
@@ -401,7 +401,7 @@ class Import extends \Zotlabs\Web\Controller {
 					if($x['old'] == $group_member['gid'])
 						$group_member['gid'] = $x['new'];
 				}
-				create_table_from_array('group_member',$group_member);
+				create_table_from_array('group_member', $group_member);
 			}
 		}
 
@@ -450,7 +450,6 @@ class Import extends \Zotlabs\Web\Controller {
 
 		notifications_on($channel['channel_id'],$saved_notification_flags);
 
-
 		if(array_key_exists('item_id',$data) && $data['item_id'])
 			import_item_ids($channel,$data['item_id']);
 
@@ -490,7 +489,7 @@ class Import extends \Zotlabs\Web\Controller {
 	function get() {
 
 		if(! get_account_id()) {
-			notice( t('You must be logged in to use this feature.'));
+			notice( t('You must be logged in to use this feature.') . EOL);
 			return '';
 		}
 

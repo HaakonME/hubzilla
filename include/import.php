@@ -1,8 +1,19 @@
 <?php
 
+use Zotlabs\Lib\IConfig;
+
 require_once('include/menu.php');
 require_once('include/perm_upgrade.php');
 
+
+/**
+ * @brief Import a channel.
+ *
+ * @param array $channel
+ * @param int $account_id
+ * @param int $seize
+ * @return boolean|array
+ */
 function import_channel($channel, $account_id, $seize) {
 
 	if(! array_key_exists('channel_system',$channel)) {
@@ -51,7 +62,7 @@ function import_channel($channel, $account_id, $seize) {
 				notice( t('Unable to create a unique channel address. Import failed.') . EOL);
 				return false;
 			}
-		}		
+		}
 	}
 
 	unset($channel['channel_id']);
@@ -66,12 +77,12 @@ function import_channel($channel, $account_id, $seize) {
 	// remove all the permissions related settings, we will import/upgrade them after the channel
 	// is created.
 
-	$disallowed = [ 
-		'channel_id',         'channel_r_stream',    'channel_r_profile', 'channel_r_abook', 
-		'channel_r_storage',  'channel_r_pages',     'channel_w_stream',  'channel_w_wall', 
-		'channel_w_comment',  'channel_w_mail',      'channel_w_like',    'channel_w_tagwall', 
-		'channel_w_chat',     'channel_w_storage',   'channel_w_pages',   'channel_a_republish', 
-		'channel_a_delegate', 'perm_limits' 
+	$disallowed = [
+		'channel_id',         'channel_r_stream',    'channel_r_profile', 'channel_r_abook',
+		'channel_r_storage',  'channel_r_pages',     'channel_w_stream',  'channel_w_wall',
+		'channel_w_comment',  'channel_w_mail',      'channel_w_like',    'channel_w_tagwall',
+		'channel_w_chat',     'channel_w_storage',   'channel_w_pages',   'channel_a_republish',
+		'channel_a_delegate', 'perm_limits'
 	];
 
 	$clean = array();
@@ -108,24 +119,37 @@ function import_channel($channel, $account_id, $seize) {
 	set_default_login_identity($account_id,$channel['channel_id'],false);
 	logger('import step 1');
 	$_SESSION['import_step'] = 1;
-	return $channel;	
 
+	return $channel;
 }
 
-function import_config($channel,$configs) {
+/**
+ * @brief Import pconfig for channel.
+ *
+ * @param array $channel
+ * @param array $configs
+ */
+function import_config($channel, $configs) {
 
 	if($channel && $configs) {
 		foreach($configs as $config) {
 			unset($config['id']);
 			$config['uid'] = $channel['channel_id'];
-			create_table_from_array('pconfig',$config);
+
+			create_table_from_array('pconfig', $config);
 		}
+
 		load_pconfig($channel['channel_id']);
-	}	
+	}
 }
 
-
-function import_profiles($channel,$profiles) {
+/**
+ * @brief Import profiles.
+ *
+ * @param array $channel
+ * @param array $profiles
+ */
+function import_profiles($channel, $profiles) {
 
 	if($channel && $profiles) {
 		foreach($profiles as $profile) {
@@ -137,19 +161,29 @@ function import_profiles($channel,$profiles) {
 			convert_oldfields($profile,'with','partner');
 			convert_oldfields($profile,'work','employment');
 
+			/**
+			 * @TODO we are going to reset all profile photos to the original
+			 * somebody will have to fix this later and put all the applicable
+			 * photos into the export.
+			 */
 
-			// we are going to reset all profile photos to the original
-			// somebody will have to fix this later and put all the applicable photos into the export
-	
 			$profile['photo'] = z_root() . '/photo/profile/l/' . $channel['channel_id'];
 			$profile['thumb'] = z_root() . '/photo/profile/m/' . $channel['channel_id'];
-			create_table_from_array('profile',$profile);
+
+			create_table_from_array('profile', $profile);
 		}
 	}
 }
 
-
-function import_hublocs($channel,$hublocs,$seize,$moving = false) {
+/**
+ * @brief Import hublocs.
+ *
+ * @param array $channel
+ * @param array $hublocs
+ * @param unknown $seize
+ * @param boolean $moving
+ */
+function import_hublocs($channel, $hublocs, $seize, $moving = false) {
 
 	if($channel && $hublocs) {
 		foreach($hublocs as $hubloc) {
@@ -181,25 +215,28 @@ function import_hublocs($channel,$hublocs,$seize,$moving = false) {
 			if(($hubloc['hubloc_hash'] === $channel['channel_hash']) && intval($hubloc['hubloc_primary']) && ($seize))
 				$hubloc['hubloc_primary'] = 0;
 
-			if(($x = zot_gethub($arr,false)) === false) {				
+			if(($x = zot_gethub($arr,false)) === false) {
 				unset($hubloc['hubloc_id']);
-				create_table_from_array('hubloc',$hubloc);
+				create_table_from_array('hubloc', $hubloc);
 			}
 			else {
 				q("UPDATE hubloc set hubloc_primary = %d, hubloc_deleted = %d where hubloc_id = %d",
 					intval($hubloc['hubloc_primary']),
 					intval($hubloc['hubloc_deleted']),
 					intval($x['hubloc_id'])
-				);				
-
+				);
 			}
 		}
 	}
 }
 
-
-
-function import_objs($channel,$objs) {
+/**
+ * @brief Import things.
+ *
+ * @param array $channel
+ * @param array $objs
+ */
+function import_objs($channel, $objs) {
 
 	if($channel && $objs) {
 		foreach($objs as $obj) {
@@ -214,21 +251,27 @@ function import_objs($channel,$objs) {
 
 			$obj['obj_channel'] = $channel['channel_id'];
 
-			if($baseurl && (strpos($obj['obj_url'],$baseurl . '/thing/') !== false)) {
-				$obj['obj_url'] = str_replace($baseurl,z_root(),$obj['obj_url']);
+			if($baseurl && (strpos($obj['obj_url'], $baseurl . '/thing/') !== false)) {
+				$obj['obj_url'] = str_replace($baseurl, z_root(), $obj['obj_url']);
 			}
 
 			if($obj['obj_imgurl']) {
-	            $x = import_xchan_photo($obj['obj_imgurl'],$channel['channel_hash'],true);
+				$x = import_xchan_photo($obj['obj_imgurl'], $channel['channel_hash'], true);
 				$obj['obj_imgurl'] = $x[0];
 			}
 
-			create_table_from_array('obj',$obj);
+			create_table_from_array('obj', $obj);
 		}
 	}
 }
 
-function sync_objs($channel,$objs) {
+/**
+ * @brief Import things.
+ *
+ * @param array $channel
+ * @param array $objs
+ */
+function sync_objs($channel, $objs) {
 
 	if($channel && $objs) {
 		foreach($objs as $obj) {
@@ -251,8 +294,8 @@ function sync_objs($channel,$objs) {
 
 			$obj['obj_channel'] = $channel['channel_id'];
 
-			if($baseurl && (strpos($obj['obj_url'],$baseurl . '/thing/') !== false)) {
-				$obj['obj_url'] = str_replace($baseurl,z_root(),$obj['obj_url']);
+			if($baseurl && (strpos($obj['obj_url'], $baseurl . '/thing/') !== false)) {
+				$obj['obj_url'] = str_replace($baseurl, z_root(), $obj['obj_url']);
 			}
 
 			$exists = false;
@@ -269,12 +312,12 @@ function sync_objs($channel,$objs) {
 			}
 
 			if($obj['obj_imgurl']) {
-	            $x = import_xchan_photo($obj['obj_imgurl'],$channel['channel_hash'],true);
+				$x = import_xchan_photo($obj['obj_imgurl'], $channel['channel_hash'], true);
 				$obj['obj_imgurl'] = $x[0];
 			}
 
 			$hash = $obj['obj_obj'];
-			
+
 			if($exists) {
 				unset($obj['obj_obj']);
 				foreach($obj as $k => $v) {
@@ -286,23 +329,25 @@ function sync_objs($channel,$objs) {
 					);
 				}
 			}
-			else {						
-				create_table_from_array('obj',$obj);
+			else {
+				create_table_from_array('obj', $obj);
 			}
 		}
 	}
 }
 
-
-
-
-
-function import_apps($channel,$apps) {
+/**
+ * @brief Import apps.
+ *
+ * @param array $channel
+ * @param array $apps
+ */
+function import_apps($channel, $apps) {
 
 	if($channel && $apps) {
 		foreach($apps as $app) {
 
-			$term = ((array_key_exists('term',$app) && is_array($app['term'])) ? $app['term'] : null); 
+			$term = ((array_key_exists('term',$app) && is_array($app['term'])) ? $app['term'] : null);
 
 			unset($app['id']);
 			unset($app['app_channel']);
@@ -311,13 +356,13 @@ function import_apps($channel,$apps) {
 			$app['app_channel'] = $channel['channel_id'];
 
 			if($app['app_photo']) {
-	            $x = import_xchan_photo($app['app_photo'],$channel['channel_hash'],true);
+				$x = import_xchan_photo($app['app_photo'], $channel['channel_hash'], true);
 				$app['app_photo'] = $x[0];
 			}
 
 			$hash = $app['app_id'];
 
-			create_table_from_array('app',$app);
+			create_table_from_array('app', $app);
 
 			if($term) {
 				$x = q("select * from app where app_id = '%s' and app_channel = %d limit 1",
@@ -328,20 +373,22 @@ function import_apps($channel,$apps) {
 					foreach($term as $t) {
 						if(array_key_exists('type',$t))
 							$t['ttype'] = $t['type'];
+
 						store_item_tag($channel['channel_id'],$x[0]['id'],TERM_OBJ_APP,$t['ttype'],escape_tags($t['term']),escape_tags($t['url']));
 					}
 				}
 			}
-
-
-
 		}
 	}
 }
 
-
-
-function sync_apps($channel,$apps) {
+/**
+ * @brief Sync apps.
+ *
+ * @param array $channel
+ * @param array $apps
+ */
+function sync_apps($channel, $apps) {
 
 	if($channel && $apps) {
 		foreach($apps as $app) {
@@ -356,20 +403,20 @@ function sync_apps($channel,$apps) {
 			if($x) {
 				$exists = $x[0];
 			}
-			
+
 			if(array_key_exists('app_deleted',$app) && $app['app_deleted'] && $app['app_id']) {
-                q("delete from app where app_id = '%s' and app_channel = %d",
-                    dbesc($app['app_id']),
-                    intval($channel['channel_id'])
-                );
+				q("delete from app where app_id = '%s' and app_channel = %d",
+						dbesc($app['app_id']),
+						intval($channel['channel_id'])
+				);
 				if($exists) {
 					q("delete from term where otype = %d and oid = %d",
 						intval(TERM_OBJ_APP),
 						intval($exists['id'])
-            		);
+					);
 				}
-                continue;
-            }
+				continue;
+			}
 
 			unset($app['id']);
 			unset($app['app_channel']);
@@ -379,7 +426,7 @@ function sync_apps($channel,$apps) {
 				q("delete from term where otype = %d and oid = %d",
 					intval(TERM_OBJ_APP),
 					intval($exists['id'])
-            	);
+				);
 			}
 
 			if((! $app['app_created']) || ($app['app_created'] <= NULL_DATE))
@@ -440,9 +487,13 @@ function sync_apps($channel,$apps) {
 	}
 }
 
-
-
-function import_chatrooms($channel,$chatrooms) {
+/**
+ * @brief Import chatrooms.
+ *
+ * @param array $channel
+ * @param array $chatrooms
+ */
+function import_chatrooms($channel, $chatrooms) {
 
 	if($channel && $chatrooms) {
 		foreach($chatrooms as $chatroom) {
@@ -457,14 +508,18 @@ function import_chatrooms($channel,$chatrooms) {
 			$chatroom['cr_aid'] = $channel['channel_account_id'];
 			$chatroom['cr_uid'] = $channel['channel_id'];
 
-			create_table_from_array('chatroom',$chatroom);
+			create_table_from_array('chatroom', $chatroom);
 		}
 	}
 }
 
-
-
-function sync_chatrooms($channel,$chatrooms) {
+/**
+ * @brief Sync chatrooms.
+ *
+ * @param array $channel
+ * @param array $chatrooms
+ */
+function sync_chatrooms($channel, $chatrooms) {
 
 	if($channel && $chatrooms) {
 		foreach($chatrooms as $chatroom) {
@@ -473,13 +528,12 @@ function sync_chatrooms($channel,$chatrooms) {
 				continue;
 
 			if(array_key_exists('cr_deleted',$chatroom) && $chatroom['cr_deleted']) {
-                q("delete from chatroom where cr_name = '%s' and cr_uid = %d",
-                    dbesc($chatroom['cr_name']),
-                    intval($channel['channel_id'])
-                );
-                continue;
-            }
-
+				q("delete from chatroom where cr_name = '%s' and cr_uid = %d",
+						dbesc($chatroom['cr_name']),
+						intval($channel['channel_id'])
+				);
+				continue;
+			}
 
 			unset($chatroom['cr_id']);
 			unset($chatroom['cr_aid']);
@@ -502,6 +556,7 @@ function sync_chatrooms($channel,$chatrooms) {
 			if($x) {
 				if($x[0]['cr_edited'] >= $chatroom['cr_edited'])
 					continue;
+
 				$exists = true;
 			}
 			$name = $chatroom['cr_name'];
@@ -517,21 +572,28 @@ function sync_chatrooms($channel,$chatrooms) {
 				}
 			}
 			else {
-				create_table_from_array('chatroom',$chatroom);
+				create_table_from_array('chatroom', $chatroom);
 			}
 		}
 	}
 }
 
 
-
-function import_items($channel,$items,$sync = false,$relocate = null) {
+/**
+ * @brief Import items to channel.
+ *
+ * @param array $channel where to import to
+ * @param array $items
+ * @param boolean $sync
+ * @param array $relocate default null
+ */
+function import_items($channel, $items, $sync = false, $relocate = null) {
 
 	if($channel && $items) {
-		
+
 		$allow_code = channel_codeallowed($channel['channel_id']);
 
-		$deliver = false;  // Don't deliver any messages or notifications when importing
+		$deliver = false; // Don't deliver any messages or notifications when importing
 
 		foreach($items as $i) {
 			$item_result = false;
@@ -549,14 +611,14 @@ function import_items($channel,$items,$sync = false,$relocate = null) {
 			);
 			if($r) {
 
-				// flags may have changed and we are probably relocating the post, 
+				// flags may have changed and we are probably relocating the post,
 				// so force an update even if we have the same timestamp
 
 				if($item['edited'] >= $r[0]['edited']) {
 					$item['id'] = $r[0]['id'];
 					$item['uid'] = $channel['channel_id'];
 					$item_result = item_store_update($item,$allow_code,$deliver);
-				}	
+				}
 			}
 			else {
 				$item['aid'] = $channel['channel_account_id'];
@@ -578,9 +640,17 @@ function import_items($channel,$items,$sync = false,$relocate = null) {
 	}
 }
 
-
-function sync_items($channel,$items,$relocate = null) {
-	import_items($channel,$items,true,$relocate);
+/**
+ * @brief Sync items to channel.
+ *
+ * @see import_items
+ *
+ * @param array $channel where to import to
+ * @param array $items
+ * @param array $relocate default null
+ */
+function sync_items($channel, $items, $relocate = null) {
+	import_items($channel, $items, true, $relocate);
 }
 
 
@@ -594,20 +664,26 @@ function import_item_ids($channel,$itemids) {
 			);
 			if(! $r)
 				continue;
-			$z = q("select * from iconfig where iconfig.cat = 'system' and iconfig.k = '%s' 
+			$z = q("select * from iconfig where iconfig.cat = 'system' and iconfig.k = '%s'
 				and iconfig.v = '%s' and iid = %d limit 1",
 				dbesc($i['service']),
 				dbesc($i['sid']),
 				intval($r[0]['id'])
 			);
 			if(! $z) {
-				\Zotlabs\Lib\IConfig::Set($r[0]['id'],'system',$i['service'],$i['sid'],true);
+				IConfig::Set($r[0]['id'],'system',$i['service'],$i['sid'],true);
 			}
 		}
 	}
 }
 
-function import_events($channel,$events) {
+/**
+ * @brief Import events.
+ *
+ * @param array $channel
+ * @param array $events
+ */
+function import_events($channel, $events) {
 
 	if($channel && $events) {
 		foreach($events as $event) {
@@ -619,13 +695,18 @@ function import_events($channel,$events) {
 			convert_oldfields($event,'type','etype');
 			convert_oldfields($event,'ignore','dismissed');
 
-			create_table_from_array('event',$event);
+			create_table_from_array('event', $event);
 		}
 	}
 }
 
-
-function sync_events($channel,$events) {
+/**
+ * @brief Sync events.
+ *
+ * @param array $channel
+ * @param array $events
+ */
+function sync_events($channel, $events) {
 
 	if($channel && $events) {
 		foreach($events as $event) {
@@ -637,7 +718,7 @@ function sync_events($channel,$events) {
 				$r = q("delete from event where event_hash = '%s' and uid = %d",
 					dbesc($event['event_hash']),
 					intval($channel['channel_id'])
-				);	
+				);
 				continue;
 			}
 
@@ -650,7 +731,6 @@ function sync_events($channel,$events) {
 			convert_oldfields($event,'type','etype');
 			convert_oldfields($event,'ignore','dismissed');
 
-
 			$exists = false;
 
 			$x = q("select * from event where event_hash = '%s' and uid = %d limit 1",
@@ -660,6 +740,7 @@ function sync_events($channel,$events) {
 			if($x) {
 				if($x[0]['edited'] >= $event['edited'])
 					continue;
+
 				$exists = true;
 			}
 
@@ -674,15 +755,19 @@ function sync_events($channel,$events) {
 				}
 			}
 			else {
-				create_table_from_array('event',$event);
+				create_table_from_array('event', $event);
 			}
 		}
 	}
 }
 
-
-function import_menus($channel,$menus) {
-
+/**
+ * @brief Import menus.
+ *
+ * @param array $channel
+ * @param array $menus
+ */
+function import_menus($channel, $menus) {
 
 	if($channel && $menus) {
 		foreach($menus as $menu) {
@@ -701,7 +786,6 @@ function import_menus($channel,$menus) {
 					$m['menu_flags'] |= MENU_BOOKMARK;
 				if(in_array('system',$menu['flags']))
 					$m['menu_flags'] |= MENU_SYSTEM;
-
 			}
 
 			$menu_id = menu_create($m);
@@ -729,16 +813,19 @@ function import_menus($channel,$menus) {
 						}
 						menu_add_item($menu_id,$channel['channel_id'],$mitem);
 					}
-				}	
+				}
 			}
 		}
 	}
-
-
 }
 
-
-function sync_menus($channel,$menus) {
+/**
+ * @brief Sync menus.
+ *
+ * @param array $channel
+ * @param array $menus
+ */
+function sync_menus($channel, $menus) {
 
 	if($channel && $menus) {
 		foreach($menus as $menu) {
@@ -795,7 +882,6 @@ function sync_menus($channel,$menus) {
 					foreach($menu['items'] as $it) {
 						$mitem = array();
 
-
 						$mitem['mitem_link'] = str_replace('[channelurl]',z_root() . '/channel/' . $channel['channel_address'],$it['link']);
 						$mitem['mitem_link'] = str_replace('[pageurl]',z_root() . '/page/' . $channel['channel_address'],$it['link']);
 						$mitem['mitem_link'] = str_replace('[cloudurl]',z_root() . '/cloud/' . $channel['channel_address'],$it['link']);
@@ -814,15 +900,19 @@ function sync_menus($channel,$menus) {
 						}
 						menu_add_item($menu_id,$channel['channel_id'],$mitem);
 					}
-				}	
+				}
 			}
 		}
 	}
 }
 
-
-
-function import_likes($channel,$likes) {
+/**
+ * @brief Import likes.
+ *
+ * @param array $channel
+ * @param array $likes
+ */
+function import_likes($channel, $likes) {
 	if($channel && $likes) {
 		foreach($likes as $like) {
 			if($like['deleted']) {
@@ -835,7 +925,7 @@ function import_likes($channel,$likes) {
 				);
 				continue;
 			}
-			
+
 			unset($like['id']);
 			unset($like['iid']);
 			$like['channel_id'] = $channel['channel_id'];
@@ -850,9 +940,9 @@ function import_likes($channel,$likes) {
 			if($r)
 				continue;
 
-			create_table_from_array('likes',$like);
+			create_table_from_array('likes', $like);
 		}
-	}	
+	}
 }
 
 function import_conv($channel,$convs) {
@@ -865,7 +955,7 @@ function import_conv($channel,$convs) {
 				);
 				continue;
 			}
-			
+
 			unset($conv['id']);
 
 			$conv['uid'] = $channel['channel_id'];
@@ -877,14 +967,19 @@ function import_conv($channel,$convs) {
 			);
 			if($r)
 				continue;
+
 			create_table_from_array('conv',$conv);
 		}
-	}	
+	}
 }
 
-
-
-function import_mail($channel,$mails,$sync = false) {
+/**
+ * @brief Import mails.
+ *
+ * @param array $channel
+ * @param array $mails
+ */
+function import_mail($channel, $mails, $sync = false) {
 	if($channel && $mails) {
 		foreach($mails as $mail) {
 			if(array_key_exists('flags',$mail) && in_array('deleted',$mail['flags'])) {
@@ -913,14 +1008,27 @@ function import_mail($channel,$mails,$sync = false) {
 				Zotlabs\Daemon\Master::Summon(array('Notifier','single_mail',$mail_id));
 			}
  		}
-	}	
+	}
 }
 
-function sync_mail($channel,$mails) {
-	import_mail($channel,$mails,true);
+/**
+ * @brief Synchronise mails.
+ *
+ * @see import_mail
+ * @param array $channel
+ * @param array $mails
+ */
+function sync_mail($channel, $mails) {
+	import_mail($channel, $mails, true);
 }
 
-function sync_files($channel,$files) {
+/**
+ * @brief Synchronise files.
+ *
+ * @param array $channel
+ * @param array $files
+ */
+function sync_files($channel, $files) {
 
 	require_once('include/attach.php');
 
@@ -934,7 +1042,7 @@ function sync_files($channel,$files) {
 			$original_channel = $f['original_channel'];
 
 			if(! ($fetch_url && $original_channel))
-				continue;		
+				continue;
 
 			if($f['attach']) {
 				$attachment_stored = false;
@@ -964,12 +1072,11 @@ function sync_files($channel,$files) {
 					$att['aid'] = $channel['channel_account_id'];
 					$att['uid'] = $channel['channel_id'];
 
-
-					// check for duplicate folder names with the same parent. 
+					// check for duplicate folder names with the same parent.
 					// If we have a duplicate that doesn't match this hash value
-					// change the name so that the contents won't be "covered over" 
-					// by the existing directory. Use the same logic we use for 
-					// duplicate files. 
+					// change the name so that the contents won't be "covered over"
+					// by the existing directory. Use the same logic we use for
+					// duplicate files.
 
 					if(strpos($att['filename'],'.') !== false) {
 						$basename = substr($att['filename'],0,strrpos($att['filename'],'.'));
@@ -1000,7 +1107,7 @@ function sync_files($channel,$files) {
 							}
 							if($found)
 								$x++;
-						}			
+						}
 						while($found);
 						$att['filename'] = $basename . '(' . $x . ')' . $ext;
 					}
@@ -1009,37 +1116,37 @@ function sync_files($channel,$files) {
 
 					// end duplicate detection
 
-// @fixme - update attachment structures if they are modified rather than created
+					/// @FIXME update attachment structures if they are modified rather than created
 
 					$att['content'] = $newfname;
 
 					// Note: we use $att['hash'] below after it has been escaped to
-					// fetch the file contents. 
+					// fetch the file contents.
 					// If the hash ever contains any escapable chars this could cause
-					// problems. Currently it does not. 
+					// problems. Currently it does not.
 
-					// @TODO implement os_path
+					/// @TODO implement os_path
 					if(!isset($att['os_path']))
 						$att['os_path'] = '';
-
 
 					if($attach_exists) {
 						logger('sync_files attach exists: ' . print_r($att,true), LOGGER_DEBUG);
 						if(! dbesc_array($att))
 							continue;
+
 						$str = '';
-    					foreach($att as $k => $v) {
-			        		if($str)
-           							$str .= ",";
-       						$str .= " " . TQUOT . $k . TQUOT . " = '" . $v . "' ";
-    					}
+						foreach($att as $k => $v) {
+							if($str)
+								$str .= ",";
+
+							$str .= " " . TQUOT . $k . TQUOT . " = '" . $v . "' ";
+						}
 						$r = dbq("update attach set " . $str . " where id = " . intval($attach_id) );
 					}
 					else {
 						logger('sync_files attach does not exists: ' . print_r($att,true), LOGGER_DEBUG);
 						create_table_from_array('attach',$att);
 					}
-
 
 					// is this a directory?
 
@@ -1049,17 +1156,16 @@ function sync_files($channel,$files) {
 						continue;
 					}
 					else {
-
 						// it's a file
 						// for the sync version of this algorithm (as opposed to 'offline import')
-						// we will fetch the actual file from the source server so it can be 
+						// we will fetch the actual file from the source server so it can be
 						// streamed directly to disk and avoid consuming PHP memory if it's a huge
-						// audio/video file or something. 
+						// audio/video file or something.
 
 						$time = datetime_convert();
 
-						$parr = array('hash' => $channel['channel_hash'], 
-							'time' => $time, 
+						$parr = array('hash' => $channel['channel_hash'],
+							'time' => $time,
 							'resource' => $att['hash'],
 							'revision' => 0,
 							'signature' => base64url_encode(rsa_sign($channel['channel_hash'] . '.' . $time, $channel['channel_prvkey']))
@@ -1084,7 +1190,7 @@ function sync_files($channel,$files) {
 				}
 			}
 			if(! $attachment_stored) {
-				// @TODO should we queue this and retry or delete everything or what? 
+				/// @TODO should we queue this and retry or delete everything or what?
 				logger('attachment store failed',LOGGER_NORMAL,LOG_ERR);
 			}
 			if($f['photo']) {
@@ -1128,7 +1234,6 @@ function sync_files($channel,$files) {
 					else
 						$p['content'] = base64_decode($p['content']);
 
-
 					if(!isset($p['display_path']))
 						$p['display_path'] = '';
 
@@ -1138,17 +1243,18 @@ function sync_files($channel,$files) {
 						intval($channel['channel_id'])
 					);
 
-
 					if($exists) {
 						if(! dbesc_array($p))
 							continue;
-					    $str = '';
-    					foreach($p as $k => $v) {
-				        	if($str)
-            					$str .= ",";
-        					$str .= " " . TQUOT . $k . TQUOT . " = '" . $v . "' ";
-    					}
-					    $r = dbq("update photo set " . $str . " where id = " . intval($exists[0]['id']) );
+
+						$str = '';
+						foreach($p as $k => $v) {
+							if($str)
+								$str .= ",";
+
+							$str .= " " . TQUOT . $k . TQUOT . " = '" . $v . "' ";
+						}
+						$r = dbq("update photo set " . $str . " where id = " . intval($exists[0]['id']) );
 					}
 					else {
 						create_attach_from_array('photo',$p);
@@ -1164,9 +1270,17 @@ function sync_files($channel,$files) {
 	}
 }
 
-
-function convert_oldfields(&$arr,$old,$new) {
-	if(array_key_exists($old,$arr)) {
+/**
+ * @brief Rename a key in an array.
+ *
+ * Replaces $old key with $new key in $arr.
+ *
+ * @param array[in,out] $arr The array where to work on
+ * @param string $old The old key in the array
+ * @param string $new The new key in the array
+ */
+function convert_oldfields(&$arr, $old, $new) {
+	if(array_key_exists($old, $arr)) {
 		$arr[$new] = $arr[$old];
 		unset($arr[$old]);
 	}
@@ -1240,14 +1354,15 @@ function scan_webpage_elements($path, $type, $cloud = false) {
 			}
 		}
 	}
+
 	return $elements;
 }
-	
+
 
 function import_webpage_element($element, $channel, $type) {
-		
+
 	$arr = array();		// construct information for the webpage element item table record
-		
+
 	switch($type) {
 		//
 		//	PAGES
@@ -1256,26 +1371,26 @@ function import_webpage_element($element, $channel, $type) {
 			$arr['item_type'] = ITEM_TYPE_WEBPAGE;
 			$namespace = 'WEBPAGE';
 			$name = $element['pagelink'];
-        	if($name) {
+			if($name) {
 				require_once('library/urlify/URLify.php');
 				$name = strtolower(\URLify::transliterate($name));
-        	}
+			}
 			$arr['title'] = $element['title'];
 			$arr['term'] = $element['term'];
 			$arr['layout_mid'] = ''; // by default there is no layout associated with the page
 			// If a layout was specified, find it in the database and get its info. If
-	        // it does not exist, leave layout_mid empty
-    	    if($element['layout'] !== '') {
-        	    $liid = q("select iid from iconfig where k = 'PDL' and v = '%s' and cat = 'system'",
+			// it does not exist, leave layout_mid empty
+			if($element['layout'] !== '') {
+				$liid = q("select iid from iconfig where k = 'PDL' and v = '%s' and cat = 'system'",
 					dbesc($element['layout'])
-            	);
+				);
 				if($liid) {
-                	$linfo = q("select mid from item where id = %d",
+					$linfo = q("select mid from item where id = %d",
 						intval($liid[0]['iid'])
-	                );
-    	            $arr['layout_mid'] = $linfo[0]['mid'];
-        	    }                 
-        	}
+					);
+					$arr['layout_mid'] = $linfo[0]['mid'];
+				}
+			}
 			break;
 		//
 		//	LAYOUTS
@@ -1295,15 +1410,15 @@ function import_webpage_element($element, $channel, $type) {
 			$namespace = 'BUILDBLOCK';
 			$name = $element['name'];
 			$arr['title'] = $element['title'];
-				
+
 			break;
 		default :
 			return null;	// return null if invalid element type
 	}
-		
+
 	$arr['uid'] = local_channel();
 	$arr['aid'] = $channel['channel_account_id'];
-		
+
 	// Check if an item already exists based on the name
 	$iid = q("select iid from iconfig where k = '" . $namespace . "' and v = '%s' and cat = 'system'",
 		dbesc($name)
@@ -1333,7 +1448,7 @@ function import_webpage_element($element, $channel, $type) {
 		'text/markdown',
 		'text/plain',
 		'application/x-pdl',
-		'application/x-php'	
+		'application/x-php'
 	];
 	// Blocks and pages can have any of the valid mimetypes, but layouts must be text/bbcode
 	if((in_array($element['mimetype'], $mimetypes))	&& ($type === 'page' || $type === 'block') ) {
@@ -1347,14 +1462,13 @@ function import_webpage_element($element, $channel, $type) {
 
 	$execflag = channel_codeallowed(local_channel());
 
-	$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1", 
-		dbesc($arr['mid']), 
+	$i = q("select id, edited, item_deleted from item where mid = '%s' and uid = %d limit 1",
+		dbesc($arr['mid']),
 		intval(local_channel())
 	);
-	
-	\Zotlabs\Lib\IConfig::Set($arr,'system',$namespace,(($name) ? $name : substr($arr['mid'],0,16)),true);
-	
-	
+
+	IConfig::Set($arr,'system',$namespace,(($name) ? $name : substr($arr['mid'],0,16)),true);
+
 	if($i) {
 		$arr['id'] = $i[0]['id'];
 		// don't update if it has the same timestamp as the original
@@ -1372,23 +1486,23 @@ function import_webpage_element($element, $channel, $type) {
 		else
 			$x = item_store($arr,$execflag);
 	}
-	
+
 	if($x && $x['success']) {
-		$item_id = $x['item_id'];
+		//$item_id = $x['item_id'];
 		//update_remote_id($channel, $item_id, $arr['item_type'], $name, $namespace, $remote_id, $arr['mid']);
 		$element['import_success'] = 1;
 	}
 	else {
 		$element['import_success'] = 0;
 	}
-		
-	return $element;    
+
+	return $element;
 }
 
 function get_webpage_elements($channel, $type = 'all') {
 	$elements = array();
-	if(!$channel['channel_id'])	{
-			return null;
+	if(!$channel['channel_id']) {
+		return null;
 	}
 	switch($type) {
 		case 'all':
@@ -1396,17 +1510,16 @@ function get_webpage_elements($channel, $type = 'all') {
 		case 'pages':
 			$elements['pages'] = null;
 			$owner = $channel['channel_id'];
-							
+
 			$sql_extra = item_permissions_sql($owner);
 
-
-			$r = q("select * from iconfig left join item on iconfig.iid = item.id 
-				where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d 
+			$r = q("select * from iconfig left join item on iconfig.iid = item.id
+				where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d
 				$sql_extra order by item.created desc",
 				intval($owner),
 				intval(ITEM_TYPE_WEBPAGE)
 			);
-						
+
 			$pages = null;
 
 			if($r) {
@@ -1439,7 +1552,6 @@ function get_webpage_elements($channel, $type = 'all') {
 					);
 					$elements['pages'][] = $element_arr;
 				}
-							
 			}
 			if($type !== 'all') {
 				break;
@@ -1448,91 +1560,91 @@ function get_webpage_elements($channel, $type = 'all') {
 		case 'layouts':
 			$elements['layouts'] = null;
 			$owner = $channel['channel_id'];
-							
+
 			$sql_extra = item_permissions_sql($owner);
 
-
-			$r = q("select * from iconfig left join item on iconfig.iid = item.id 
-				where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' and item_type = %d 
+			$r = q("select * from iconfig left join item on iconfig.iid = item.id
+				where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' and item_type = %d
 				$sql_extra order by item.created desc",
 				intval($owner),
 				intval(ITEM_TYPE_PDL)
 			);
-						
-			$layouts = null;
 
 			if($r) {
 				$elements['layouts'] = array();
-				$layouts = array();
+
 				foreach($r as $rr) {
 					unobscure($rr);
 
 					$elements['layouts'][] = array(
-						'type'		=> 'layout',
-						'description'		=> $rr['title'],		// description of the layout
-						'body'		=> $rr['body'],
-						'created'	=> $rr['created'],
-						'edited'	=> $rr['edited'],
-						'mimetype'	=> $rr['mimetype'],
-						'name'	=> $rr['v'],					// name of reference for the layout
-						'mid'		=> $rr['mid'],
+						'type'        => 'layout',
+						'description' => $rr['title'],		// description of the layout
+						'body'        => $rr['body'],
+						'created'     => $rr['created'],
+						'edited'      => $rr['edited'],
+						'mimetype'    => $rr['mimetype'],
+						'name'        => $rr['v'],			// name of reference for the layout
+						'mid'         => $rr['mid'],
 					);
 				}
 			}
-						
+
 			if($type !== 'all') {
 				break;
 			}
-						
+
 		case 'blocks':
 			$elements['blocks'] = null;
 			$owner = $channel['channel_id'];
-							
+
 			$sql_extra = item_permissions_sql($owner);
 
-
-			$r = q("select iconfig.iid, iconfig.k, iconfig.v, mid, title, body, mimetype, created, edited from iconfig 
+			$r = q("select iconfig.iid, iconfig.k, iconfig.v, mid, title, body, mimetype, created, edited from iconfig
 				left join item on iconfig.iid = item.id
-				where uid = %d and iconfig.cat = 'system' and iconfig.k = 'BUILDBLOCK' 
+				where uid = %d and iconfig.cat = 'system' and iconfig.k = 'BUILDBLOCK'
 				and item_type = %d order by item.created desc",
 				intval($owner),
 				intval(ITEM_TYPE_BLOCK)
 			);
-						
-			$blocks = null;
 
 			if($r) {
 				$elements['blocks'] = array();
-				$blocks = array();
+
 				foreach($r as $rr) {
 					unobscure($rr);
 
 					$elements['blocks'][] = array(
 						'type'      => 'block',
-						'title'	    => $rr['title'],
+						'title'     => $rr['title'],
 						'body'      => $rr['body'],
 						'created'   => $rr['created'],
 						'edited'    => $rr['edited'],
 						'mimetype'  => $rr['mimetype'],
-						'name'			=> $rr['v'],
+						'name'      => $rr['v'],
 						'mid'       => $rr['mid']
 					);
 				}
-							
 			}
-						
+
 			if($type !== 'all') {
 				break;
 			}
-						
+
 		default:
 			break;
 	}
+
 	return $elements;
 }
 
-/* creates a compressed zip file */
-
+/**
+ * @brief Create a compressed zip file.
+ *
+ * @param array $files List of files to put in zip file
+ * @param string $destination
+ * @param boolean $overwrite
+ * @return boolean Success status
+ */
 function create_zip_file($files = array(), $destination = '', $overwrite = false) {
 	// if the zip file already exists and overwrite is false, return false
 	if(file_exists($destination) && !$overwrite) {
@@ -1549,13 +1661,13 @@ function create_zip_file($files = array(), $destination = '', $overwrite = false
 				$valid_files[] = $file;
 			}
 		}
-	} 		
+	}
 
 	// if we have good files...
 	if(count($valid_files)) {
 		//create the archive
 		$zip = new ZipArchive();
-		if($zip->open($destination, $overwrite ? ZIPARCHIVE::OVERWRITE : ZIPARCHIVE::CREATE) !== true) {
+		if($zip->open($destination, $overwrite ? ZipArchive::OVERWRITE : ZipArchive::CREATE) !== true) {
 			return false;
 		}
 		// add the files
@@ -1569,7 +1681,7 @@ function create_zip_file($files = array(), $destination = '', $overwrite = false
 
 		// check to make sure the file exists
 		return file_exists($destination);
-	} 
+	}
 	else {
 		return false;
 	}

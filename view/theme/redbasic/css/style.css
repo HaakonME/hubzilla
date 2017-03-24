@@ -83,6 +83,11 @@ h6, .h6 {
 	text-overflow: ellipsis;
 }
 
+#banner img {
+	max-height: 1.5rem;
+	width: auto;
+}
+
 .jslider {
 	font-family: sans-serif, arial, freesans;
 }

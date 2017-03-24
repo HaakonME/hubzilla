@@ -5,7 +5,7 @@
 		{{if $albums}}
 		{{foreach $albums as $al}}
 		{{if $al.text}}
-		<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/photos/{{$nick}}/album/{{$al.bin2hex}}"><span class="badge pull-right">{{$al.total}}</span>{{$al.text}}</a></li>
+		<li class="nav-item"><a class="nav-link" href="{{$baseurl}}/photos/{{$nick}}/album/{{$al.bin2hex}}"><span class="badge badge-default float-right">{{$al.total}}</span>{{$al.text}}</a></li>
 		{{/if}}
 		{{/foreach}}
 		{{/if}}

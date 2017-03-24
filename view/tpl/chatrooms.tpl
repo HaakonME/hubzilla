@@ -21,13 +21,13 @@
 			<tr class="chatroom-index-row">
 				<td><a href="{{$baseurl}}/chat/{{$nickname}}/{{$room.cr_id}}">{{$room.cr_name}}</a></td>
 				<td>{{$room.cr_expire}}&nbsp;min</td>
-				<td class="chatrooms-index-tool{{if $room.allow_cid || $room.allow_gid || $room.deny_cid || $room.deny_gid}} dropdown pull-right{{/if}}">
+				<td class="chatrooms-index-tool{{if $room.allow_cid || $room.allow_gid || $room.deny_cid || $room.deny_gid}} dropdown float-right{{/if}}">
 					{{if $room.allow_cid || $room.allow_gid || $room.deny_cid || $room.deny_gid}}
 					<i class="fa fa-lock lockview dropdown-toggle" data-toggle="dropdown" onclick="lockview('chatroom',{{$room.cr_id}});"></i>
 					<ul id="panel-{{$room.cr_id}}" class="lockview-panel dropdown-menu"></ul>
 					{{/if}}
 				</td>
-				<td><span class="badge">{{$room.cr_inroom}}</span></td>
+				<td><span class="badge badge-default">{{$room.cr_inroom}}</span></td>
 			</tr>
 			{{/foreach}}
 		</table>

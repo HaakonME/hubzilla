@@ -766,8 +766,12 @@ a.rconnect:hover, a.rateme:hover, div.rateme:hover {
 	text-decoration: none;
 }
 
-.widget .conv-participants {
+.conv-participants {
 	color: $font_colour;
+}
+
+.active .conv-participants {
+	color: #fff;
 }
 
 .contactname {
@@ -1129,8 +1133,17 @@ img.mail-conv-sender-photo {
 }
 
 .wall-item-ago,
-.dropdown-sub-text {
+a:hover .wall-item-ago,
+.dropdown-sub-text,
+a:hover .dropdown-sub-text {
 	color: #777;
+}
+
+.active .wall-item-ago,
+a:active .wall-item-ago,
+.active .dropdown-sub-text,
+a:active .dropdown-sub-text {
+	color: #fff;
 }
 
 .wall-item-content,

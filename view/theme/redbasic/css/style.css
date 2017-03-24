@@ -262,8 +262,6 @@ footer {
 	margin: 15px 0px;
 }
 
-/*TODO: we should use one class for all this. */
-
 #cropimage-wrapper, #cropimage-preview-wrapper {
 	float: left;
 	padding: 30px;

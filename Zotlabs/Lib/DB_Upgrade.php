@@ -5,13 +5,25 @@ namespace Zotlabs\Lib;
 
 class DB_Upgrade {
 
+	public $config_name = '';
+	public $func_prefix = '';
 
 	function __construct($db_revision) {
 
+		$update_file = 'install/' . PLATFORM_NAME . '/update.php';
+		if(! file_exists($update_file)) {
+			$update_file = 'install/update.php';
+			$this->config_name = 'db_version';
+			$this->func_prefix = 'update_r';
+		}
+		else {
+			$this->config_name = PLATFORM_NAME . '_db_version';
+			$this->func_prefix = PLATFORM_NAME . '_update_';
+		}
 
-		$build = get_config('system', PLATFORM_NAME . '_db_version', 0);
+		$build = get_config('system', $this->config_name, 0);
 		if(! intval($build))
-			$build = set_config('system', PLATFORM_NAME . '_db_version', $db_revision);
+			$build = set_config('system', $this->config_name, $db_revision);
 
 		if($build == $db_revision) {
 			// Nothing to be done.
@@ -25,8 +37,6 @@ class DB_Upgrade {
 			}
 		
 			$current = intval($db_revision);
-
-			$update_file = 'install/' . PLATFORM_NAME . '/update.php';
 
 			if(($stored < $current) && file_exists($update_file)) {
 
@@ -43,7 +53,7 @@ class DB_Upgrade {
 
 				if($db_revision == UPDATE_VERSION) {
 					for($x = $stored; $x < $current; $x ++) {
-						$func = PLATFORM_NAME . '_update_' . $x;
+						$func = $this->func_prefix . $x;
 						if(function_exists($func)) {
 							// There could be a lot of processes running or about to run.
 							// We want exactly one process to run the update command.
@@ -101,7 +111,7 @@ class DB_Upgrade {
 							}
 						}
 					}
-					set_config('system', PLATFORM_NAME . '_db_version', $db_revision);
+					set_config('system', $this->config_name, $db_revision);
 				}
 			}
 		}

@@ -1,19 +1,19 @@
 {{if $not_refresh}}<div id="wiki_page_list_container" {{if $hide}} style="display: none;" {{/if}}>{{/if}}
 <div id="wiki_page_list" class="widget" >
 	<h3>{{$header}}</h3>
-	<ul class="nav nav-pills nav-stacked">
+	<ul class="nav nav-pills flex-column">
 		{{if $pages}}
 		{{foreach $pages as $page}}
-		<li id="{{$page.link_id}}">
+		<li class="nav-item nav-item-hack" id="{{$page.link_id}}">
 			{{if $page.resource_id && $candel}}
-			<i class="widget-nav-pills-icons fa fa-trash-o drop-icons" onclick="wiki_delete_page('{{$page.title}}', '{{$page.url}}', '{{$page.resource_id}}', '{{$page.link_id}}')"></i>
+			<i class="nav-link widget-nav-pills-icons fa fa-trash-o drop-icons" onclick="wiki_delete_page('{{$page.title}}', '{{$page.url}}', '{{$page.resource_id}}', '{{$page.link_id}}')"></i>
 			{{/if}}
-			<a href="/wiki/{{$channel}}/{{$wikiname}}/{{$page.url}}">{{$page.title}}</a>
+			<a class="nav-link" href="/wiki/{{$channel}}/{{$wikiname}}/{{$page.url}}">{{$page.title}}</a>
 		</li>
 		{{/foreach}}
 		{{/if}}
 		{{if $canadd}}
-		<li><a href="#" onclick="wiki_show_new_page_form(); return false;"><i class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>
+		<li class="nav-item"><a class="nav-link" href="#" onclick="wiki_show_new_page_form(); return false;"><i class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>
 		{{/if}}
 	</ul>
 	{{if $canadd}}

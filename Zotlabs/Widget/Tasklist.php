@@ -21,7 +21,7 @@ class Tasklist {
 			</script>';
 
 		$o .= '<div class="widget">' . '<h3>' . t('Tasks') . '</h3><div class="tasklist-tasks">';
-		$o .= '</div><form id="tasklist-new-form" action="" ><input id="tasklist-new-summary" type="text" name="summary" value="" /></form>';
+		$o .= '</div><form id="tasklist-new-form" action="" ><input class="form-control" id="tasklist-new-summary" type="text" name="summary" value="" /></form>';
 		$o .= '</div>';
 		return $o;
 

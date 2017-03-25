@@ -2,14 +2,14 @@
 	<div class="section-title-wrapper">
 		<div class="pull-right">
 			{{if $order}}
-			<a class="btn btn-default btn-xs" href="{{$order.1}}" title="{{$order.0}}"><i class="fa fa-sort"></i></a>
+			<a class="btn btn-outline-secondary btn-sm" href="{{$order.1}}" title="{{$order.0}}"><i class="fa fa-sort"></i></a>
 			{{/if}}
 			<div class="btn-group btn-group">
 				{{if $album_edit.1}}
-				<i class="fa fa-pencil btn btn-default btn-xs" title="{{$album_edit.0}}" onclick="openClose('photo-album-edit-wrapper'); closeMenu('photo-upload-form');"></i>
+				<i class="fa fa-pencil btn btn-outline-secondary btn-sm" title="{{$album_edit.0}}" onclick="openClose('photo-album-edit-wrapper'); closeMenu('photo-upload-form');"></i>
 				{{/if}}
 				{{if $can_post}}
-				<button class="btn btn-xs btn-success btn-xs" title="{{$usage}}" onclick="openClose('photo-upload-form'); closeMenu('photo-album-edit-wrapper');"><i class="fa fa-arrow-circle-o-up"></i>&nbsp;{{$upload.0}}</button>
+				<button class="btn btn-sm btn-success btn-sm" title="{{$usage}}" onclick="openClose('photo-upload-form'); closeMenu('photo-album-edit-wrapper');"><i class="fa fa-arrow-circle-o-up"></i>&nbsp;{{$upload.0}}</button>
 				{{/if}}
 			</div>
 		</div>

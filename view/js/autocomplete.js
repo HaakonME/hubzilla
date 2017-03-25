@@ -60,10 +60,18 @@ function contact_format(item) {
 		var desc = ((item.label) ? item.nick + ' ' + item.label : item.nick);
 		if(typeof desc === 'undefined') desc = '';
 		if(desc) desc = ' ('+desc+')';
-		return "<div class='{0}' title='{4}'><img class='dropdown-menu-img-sm' src='{1}'><span class='contactname'>{2}</span><span class='dropdown-sub-text'>{3}</span><div class='clear'></div></div>".format(item.taggable, item.photo, item.name, desc, item.link);
+		return "<div class='{0} dropdown-item dropdown-notification clearfix' title='{4}'><img class='menu-img-2' src='{1}'><span class='contactname'>{2}</span><span class='dropdown-sub-text'>{3}</span></div>".format(item.taggable, item.photo, item.name, desc, item.link);
 	}
 	else
 		return "<div>" + item.text + "</div>";
+}
+
+function smiley_format(item) {
+	return "<div class='dropdown-item'>" + item.icon + ' ' + item.text + "</div>";
+}
+
+function bbco_format(item) {
+	return "<div class='dropdown-item'>" + item + "</div>";
 }
 
 function editor_replace(item) {
@@ -181,15 +189,16 @@ function string2bb(element) {
 			index: 3,
 			search: function(term, callback) { contact_search(term, callback, backend_url, 'c', extra_channels, spinelement=false); },
 			replace: editor_replace,
-			template: contact_format,
+			template: contact_format
 		};
 
 		smilies = {
 			match: /(^|\s)(:[a-z_:]{2,})$/,
 			index: 2,
 			search: function(term, callback) { $.getJSON('/smilies/json').done(function(data) { callback($.map(data, function(entry) { return entry.text.indexOf(term) === 0 ? entry : null; })); }); },
-			template: function(item) { return item.icon + item.text; },
+			//template: function(item) { return item.icon + item.text; },
 			replace: function(item) { return "$1" + item.text + ' '; },
+			template: smiley_format
 		};
 		this.attr('autocomplete','off');
 		this.textcomplete([contacts,smilies], {className:'acpopup', zIndex:1020});
@@ -321,7 +330,8 @@ function string2bb(element) {
 				else {
 					return '\[' + element + '\] ';
 				}
-			}
+			},
+			template: bbco_format
 		};
 
 		this.attr('autocomplete','off');

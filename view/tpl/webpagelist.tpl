@@ -2,7 +2,7 @@
 	<div class="section-title-wrapper">
 		{{if $editor}}
 		<div class="pull-right">
-			<button id="webpage-create-btn" class="btn btn-xs btn-success acl-form-trigger" onclick="openClose('webpage-editor');" data-form_id="profile-jot-form"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$create}}</button>
+			<button id="webpage-create-btn" class="btn btn-sm btn-success acl-form-trigger" onclick="openClose('webpage-editor');" data-form_id="profile-jot-form"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$create}}</button>
 		</div>
 		{{/if}}
 		<h2>{{$listtitle}}</h2>
@@ -23,8 +23,8 @@
 				<th width="1%"></th>
 				<th width="1%"></th>
 				<th width="1%"></th>
-				<th width="1%" class="hidden-xs">{{$created_txt}}</th>
-				<th width="1%" class="hidden-xs">{{$edited_txt}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$created_txt}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$edited_txt}}</th>
 			</tr>
 			{{foreach $pages as $key => $items}}
 			{{foreach $items as $item}}
@@ -60,10 +60,10 @@
 					<a href="#" title="{{$delete}}" onclick="dropItem('item/drop/{{$item.url}}', '#webpage-list-item-{{$item.url}}'); return false;"><i class="fa fa-trash-o drop-icons"></i></a>
 					{{/if}}
 				</td>
-				<td class="hidden-xs">
+				<td class="d-none d-md-table-cell">
 					{{$item.created}}
 				</td>
-				<td class="hidden-xs">
+				<td class="d-none d-md-table-cell">
 					{{$item.edited}}
 				</td>
 			</tr>

@@ -2,7 +2,7 @@
 	<div class="section-title-wrapper">
 		<div class="pull-right">
 			{{if $can_post}}
-			<button class="btn btn-xs btn-success acl-form-trigger" title="{{$usage}}" onclick="openClose('photo-upload-form');" data-form_id="photos-upload-form"><i class="fa fa-arrow-circle-o-up"></i>&nbsp;{{$upload.0}}</button>
+			<button class="btn btn-sm btn-success acl-form-trigger" title="{{$usage}}" onclick="openClose('photo-upload-form');" data-form_id="photos-upload-form"><i class="fa fa-arrow-circle-o-up"></i>&nbsp;{{$upload.0}}</button>
 			{{/if}}
 		</div>
 		<h2>{{$title}}</h2>

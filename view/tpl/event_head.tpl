@@ -50,6 +50,7 @@
 		$('#events-calendar').fullCalendar({
 			events: '{{$baseurl}}{{$module_url}}/json',
 			header: false,
+			eventTextColor: 'white',
 			lang: '{{$lang}}',
 			firstDay: {{$first_day}},
 

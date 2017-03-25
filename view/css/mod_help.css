@@ -11,14 +11,6 @@
 	padding-bottom: 0.3em;
 }
 
-#doco-content h4 {
-	text-decoration: underline;
-}
-    
-#doco-content h5 {
-	text-decoration: underline;
-}
-
 #region_1 .widget ul ul {
 	list-style-type: none;
 }

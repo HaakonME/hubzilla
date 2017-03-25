@@ -1,17 +1,17 @@
 <div class="directory-item{{if $entry.safe}} safe{{/if}}" id="directory-item-{{$entry.hash}}" >
-	<div class="section-subtitle-wrapper">
+	<div class="section-subtitle-wrapper clearfix">
 		<div class="pull-right">
 			{{if $entry.viewrate}}
-				{{if $entry.total_ratings}}<a href="ratings/{{$entry.hash}}" id="dir-rating-{{$entry.hash}}" class="btn btn-default btn-xs">{{$entry.total_ratings}}</a>{{/if}}
+				{{if $entry.total_ratings}}<a href="ratings/{{$entry.hash}}" id="dir-rating-{{$entry.hash}}" class="btn btn-outline-secondary btn-sm">{{$entry.total_ratings}}</a>{{/if}}
 			{{/if}}
 			{{if $entry.ignlink}}
-			<a class="directory-ignore btn btn-warning btn-xs" href="{{$entry.ignlink}}"> {{$entry.ignore_label}}</a>
+			<a class="directory-ignore btn btn-warning btn-sm" href="{{$entry.ignlink}}"> {{$entry.ignore_label}}</a>
 			{{/if}}
 			{{if $entry.connect}}
-			<a class="btn btn-success btn-xs" href="{{$entry.connect}}"><i class="fa fa-plus connect-icon"></i> {{$entry.conn_label}}</a>
+			<a class="btn btn-success btn-sm" href="{{$entry.connect}}"><i class="fa fa-plus connect-icon"></i> {{$entry.conn_label}}</a>
 			{{/if}}
 			{{if $entry.viewrate}}
-				{{if $entry.canrate}}<button class="btn btn-default btn-xs" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="fa fa-pencil"></i><span id="edited-{{$entry.hash}}" class="required" id="edited-{{$entry.hash}}" style="display: none;" >&nbsp;*</span></button>{{/if}}
+				{{if $entry.canrate}}<button class="btn btn-outline-secondary btn-sm" onclick="doRatings('{{$entry.hash}}'); return false;" ><i class="fa fa-pencil"></i><span id="edited-{{$entry.hash}}" class="required" id="edited-{{$entry.hash}}" style="display: none;" >&nbsp;*</span></button>{{/if}}
 			{{/if}}
 		</div>
 		<h3>{{if $entry.public_forum}}<i class="fa fa-comments-o" title="{{$entry.forum_label}} @{{$entry.nickname}}+"></i>&nbsp;{{/if}}<a href='{{$entry.profile_link}}' >{{$entry.name}}</a>{{if $entry.online}}&nbsp;<i class="fa fa-asterisk online-now" title="{{$entry.online}}"></i>{{/if}}</h3>

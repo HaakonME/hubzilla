@@ -18,7 +18,7 @@ aside {
 	position: relative;
 	display: table-cell;
 	vertical-align: top;
-	padding: 71px 7px 0px 7px;
+	padding: 4.5rem 7px 0px 7px;
 }
 
 section {
@@ -26,5 +26,5 @@ section {
 	width: 100%;
 	display: table-cell;
 	vertical-align: top;
-	padding: 71px 7px 200px 7px;
+	padding: 4.5rem 7px 200px 7px;
 }

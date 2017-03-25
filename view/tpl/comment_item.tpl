@@ -19,53 +19,46 @@
 				{{/foreach}}
 					</select>
 				{{/if}}
-				<div class="clear"></div>
-				<div id="comment-tools-{{$id}}" class="comment-tools">
+				<div id="comment-tools-{{$id}}" class="pt-2 comment-tools">
 					<div id="comment-edit-bb-{{$id}}" class="btn-toolbar pull-left">
-						<div class='btn-group'>
-							<button class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">
+						<div class="btn-group mr-2">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">
 								<i class="fa fa-bold comment-icon"></i>
 							</button>
-							<button class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('{{$comment}}','i', {{$id}}); return false;">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$editalic}}" onclick="insertbbcomment('{{$comment}}','i', {{$id}}); return false;">
 								<i class="fa fa-italic comment-icon"></i>
 							</button>
-							<button class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('{{$comment}}','u', {{$id}}); return false;">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$eduline}}" onclick="insertbbcomment('{{$comment}}','u', {{$id}}); return false;">
 								<i class="fa fa-underline comment-icon"></i>
 							</button>
-							<button class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('{{$comment}}','quote', {{$id}}); return false;">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$edquote}}" onclick="insertbbcomment('{{$comment}}','quote', {{$id}}); return false;">
 								<i class="fa fa-quote-left comment-icon"></i>
 							</button>
-							<button class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', {{$id}}); return false;">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', {{$id}}); return false;">
 								<i class="fa fa-terminal comment-icon"></i>
 							</button>
 						</div>
-						<div class='btn-group'>
-							<!--button class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
-								<i class="fa fa-camera comment-icon"></i>
-							</button-->
-							<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertCommentURL('{{$comment}}',{{$id}}); return false;">
+						<div class="btn-group mr-2">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$edurl}}" onclick="insertCommentURL('{{$comment}}',{{$id}}); return false;">
 								<i class="fa fa-link comment-icon"></i>
 							</button>
-							<!--button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', {{$id}}); return false;">
-								<i class="fa fa-video-camera comment-icon"></i>
-							</button-->
 						</div>
 						{{if $feature_encrypt}}
-						<div class='btn-group'>
-							<button class="btn btn-default btn-xs" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
+						<div class="btn-group mr-2">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
 								<i class="fa fa-key comment-icon"></i>
 							</button>
 						</div>
 						{{/if}}
 						{{$comment_buttons}}
 					</div>
-					<div class="btn-group pull-right" id="comment-edit-submit-wrapper-{{$id}}">
+					<div class="btn-group float-right" id="comment-edit-submit-wrapper-{{$id}}">
 						{{if $preview}}
-						<button id="comment-edit-presubmit-{{$id}}" class="btn btn-default btn-xs" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
+						<button id="comment-edit-presubmit-{{$id}}" class="btn btn-outline-secondary btn-sm" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
 							<i class="fa fa-eye comment-icon" ></i>
 						</button>
 						{{/if}}
-						<button id="comment-edit-submit-{{$id}}" class="btn btn-primary btn-xs" type="submit" name="button-submit" onclick="post_comment({{$id}}); return false;">{{$submit}}</button>
+						<button id="comment-edit-submit-{{$id}}" class="btn btn-primary btn-sm" type="submit" name="button-submit" onclick="post_comment({{$id}}); return false;">{{$submit}}</button>
 					</div>
 				</div>
 				<div class="clear"></div>

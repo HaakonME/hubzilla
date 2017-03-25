@@ -1,17 +1,10 @@
 .widget {
-	margin-bottom: 10px;
-	padding: 10px;
+	margin-bottom: 1rem;
+	padding: 0.5rem;
 }
 
 .widget h3 {
 	margin-top: 0px;
-}
-
-.widget-input {
-	width: 100%;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
-	border-right: 0px;
 }
 
 .tags {
@@ -20,32 +13,13 @@
 
 .widget-nav-pills-icons {
 	opacity: 0;
-	padding: 6px 10px;
 	float: right;
-	position: relative;
-	z-index:1;
 }
-
 
 .widget-nav-pills-checkbox {
-	padding: 6px 10px;
+	padding: 0.6rem 1.4rem;
 	float: right;
-	position: relative;
-	z-index:1;
 	cursor: pointer;
-}
-
-i.widget-nav-pills-icons,
-i.widget-nav-pills-checkbox {
-	margin-top: 2px;
-}
-
-.widget-nav-pills-icons:hover + a {
-	background-color: #eee;
-}
-
-.widget-nav-pills-checkbox:hover + a {
-	background-color: #eee;
 }
 
 li:hover .widget-nav-pills-icons {
@@ -148,16 +122,6 @@ li:hover .group-edit-icon {
 
 #tasklist-new-summary {
 	width: 250px;
-}
-
-/* events tools */
-
-#event-upload-form {
-	margin-top: 10px;
-}
-
-#event-upload-choose {
-	width: 100%;
 }
 
 /* cover photo */

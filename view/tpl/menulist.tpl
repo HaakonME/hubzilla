@@ -1,7 +1,7 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
-			<button id="webpage-create-btn" class="btn btn-xs btn-success" onclick="openClose('menu-creator');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$hintnew}}</button>
+			<button id="webpage-create-btn" class="btn btn-sm btn-success" onclick="openClose('menu-creator');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$hintnew}}</button>
 		</div>
 		<h2>{{$title}}</h2>
 		<div class="clear"></div>
@@ -19,8 +19,8 @@
 				<th width="1%"></th>
 				<th width="1%"></th>
 				<th width="1%"></th>
-				<th width="1%" class="hidden-xs">{{$created}}</th>
-				<th width="1%" class="hidden-xs">{{$edited}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$created}}</th>
+				<th width="1%" class="d-none d-md-table-cell">{{$edited}}</th>
 			</tr>
 			{{foreach $menus as $m }}
 			<tr id="menu-list-item-{{$m.menu_id}}">
@@ -30,8 +30,8 @@
 				<td class="menu-list-tool"><a href="menu/{{$m.menu_id}}{{if $sys}}?f=&sys=1{{/if}}" title="{{$hintedit}}"><i class="fa fa-pencil"></i></a></td>
 				<td class="menu-list-tool"><a href="rpost?attachment={{$m.element}}" title="{{$share}}"><i class="fa fa-share-square-o"></i></a></td>
 				<td class="menu-list-tool"><a href="#" title="{{$hintdrop}}"  onclick="dropItem('menu/{{$m.menu_id}}/drop{{if $sys}}?f=&sys=1{{/if}}', '#menu-list-item-{{$m.menu_id}}'); return false;"><i class="fa fa-trash-o drop-icons"></i></a></td>
-				<td class="hidden-xs">{{$m.menu_created}}</td>
-				<td class="hidden-xs">{{$m.menu_edited}}</td>
+				<td class="d-none d-md-table-cell">{{$m.menu_created}}</td>
+				<td class="d-none d-md-table-cell">{{$m.menu_edited}}</td>
 			</tr>
 			{{/foreach}}
 		</table>

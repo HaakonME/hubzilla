@@ -2,7 +2,7 @@
 	<div class="section-title-wrapper">
 		{{if $allowManageRepos}}
 		<div class="pull-right">
-			<button class="btn btn-success btn-xs" onclick="openClose('form');">{{$managerepos}}</button>
+			<button class="btn btn-success btn-sm" onclick="openClose('form');">{{$managerepos}}</button>
 		</div>
 		{{/if}}
 		<h2 id="title">{{$title}} - {{$page}}</h2>
@@ -23,10 +23,10 @@
 				<span class="pull-left">{{$repo.name}}</span><span id="update-message-{{$repo.name}}" style="margin-left: 20px;"></span>
             </td>
             <td style="width: 15%;">
-              <button class="btn btn-xs btn-primary pull-right" style="margin-left: 10px; margin-right: 10px;" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
+              <button class="btn btn-sm btn-primary pull-right" style="margin-left: 10px; margin-right: 10px;" onclick="updateAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-download'></i>&nbsp;{{$repoUpdateButton}}</button>
             </td>
             <td style="width: 15%;">
-              <button class="btn btn-xs btn-danger pull-right" style="margin-left: 10px; margin-right: 0px;" onclick="removeAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-trash-o'></i>&nbsp;{{$repoRemoveButton}}</button>
+              <button class="btn btn-sm btn-danger pull-right" style="margin-left: 10px; margin-right: 0px;" onclick="removeAddonRepo('{{$repo.name}}'); return false;"><i class='fa fa-trash-o'></i>&nbsp;{{$repoRemoveButton}}</button>
             </td>
         <div class="clear"></div>
         </td></tr>

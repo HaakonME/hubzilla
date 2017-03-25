@@ -2,12 +2,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="generic-modal-title-{{$id}}">{{$title}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body" id="generic-modal-body-{{$id}}"></div>
       <div class="modal-footer">
-        <button id="generic-modal-cancel-{{$id}}" type="button" class="btn btn-default" data-dismiss="modal">{{$cancel}}</button>
+        <button id="generic-modal-cancel-{{$id}}" type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$cancel}}</button>
 	{{if $ok}}
         <button id="generic-modal-ok-{{$id}}" type="button" class="btn btn-primary">{{$ok}}</button>
 	{{/if}}

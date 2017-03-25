@@ -121,7 +121,7 @@ class Channel extends \Zotlabs\Web\Controller {
 
 			$static = channel_manual_conv_update(\App::$profile['profile_uid']);
 
-			$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+			//$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 
 			$o .= common_friends_visitor_widget(\App::$profile['profile_uid']);
 

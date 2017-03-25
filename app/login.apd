@@ -1,5 +1,0 @@
-version: 1
-url: $baseurl/login
-requires: nologin
-name: Login
-photo: icon:sign-in

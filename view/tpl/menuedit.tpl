@@ -3,7 +3,7 @@
 <div class="section-title-wrapper">
 	{{if $menu_edit_link}}
 	<div class="pull-right">
-		<a href="{{$menu_edit_link}}" title="{{$hintedit}}" class="btn btn-xs btn-success"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$editcontents}}</a>
+		<a href="{{$menu_edit_link}}" title="{{$hintedit}}" class="btn btn-sm btn-success"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$editcontents}}</a>
 	</div>
 	{{/if}}
 	<h2>{{$header}}</h2>

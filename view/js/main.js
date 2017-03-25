@@ -369,10 +369,10 @@ function NavUpdate() {
 			updateCountsOnly = false;
 
 			if(data.network || data.home || data.intros || data.mail || data.all_events || data.notify) {
-				$('#notifications-btn').css('color', 'white').prop('disabled', false);
+				$('#notifications-btn').removeClass('text-muted').addClass('text-white');
 			}
 			else {
-				$('#notifications-btn').css('color', 'grey').prop('disabled', true);
+				$('#notifications-btn').removeClass('text-white').addClass('text-muted');
 				$('#navbar-collapse-1').removeClass('in');
 			}
 
@@ -938,6 +938,8 @@ function notify_popup_loader(notifyType) {
 		if(data.invalid == 1) { 
 			window.location.href=window.location.href;
 		}
+
+		console.log(data);
 
 		if(data.notify.length == 0){
 			$("#nav-" + notifyType + "-menu").html(aStr[nothingnew]);

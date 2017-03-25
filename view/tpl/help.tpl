@@ -5,7 +5,7 @@
 	<div class="section-content-wrapper" id="doco-content">
 		<h3 id="doco-top-toc-heading">
 			<span class="fakelink" onclick="docoTocToggle(); return false;">
-				<i class="fakelink fa fa-caret-right" id="doco-toc-toggle"></i>
+				<i class="fa fa-fw fa-caret-right fakelink" id="doco-toc-toggle"></i>
 				{{$tocHeading}}
 			</span>
 		</h3>
@@ -22,7 +22,7 @@
 	
 	function docoTocToggle() {
 		if($('#doco-top-toc').is(':visible')) {
-			$('#doco-toc-toggle').removeClass('fa-caret-down').addClass('fa-caret-right');
+			$('#doco-toc-toggle').removeClass('fa-cog').addClass('fa-caret-right');
 		} else {
 			$('#doco-toc-toggle').removeClass('fa-caret-right').addClass('fa-caret-down');
 		}

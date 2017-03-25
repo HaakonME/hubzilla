@@ -26,7 +26,7 @@
 			<div class="pull-right btn-group">
 				<div class="btn-group">
 					{{if $lockstate}}
-					<button id="dbtn-acl" class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
+					<button id="dbtn-acl" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 						<i id="jot-perms-icon" class="fa fa-{{$lockstate}}"></i>
 					</button>
 					{{/if}}
@@ -45,7 +45,7 @@
 			</div>
 			<div id="photos-upload-perms" class="btn-group pull-right">
 				{{if $lockstate}}
-				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
+				<button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" onclick="return false;">
 					<i id="jot-perms-icon" class="fa fa-{{$lockstate}}"></i>
 				</button>
 				{{/if}}

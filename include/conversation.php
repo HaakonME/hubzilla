@@ -611,6 +611,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$owner_photo = '';
 				$owner_name  = '';
 				$sparkle     = '';
+				$is_new      = false;
 
 				if($mode === 'search' || $mode === 'community') {
 					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
@@ -679,6 +680,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 				$has_tags = (($body['tags'] || $body['categories'] || $body['mentions'] || $body['attachments'] || $body['folders']) ? true : false);
 
+				if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
+					$is_new = true;
+
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
@@ -735,6 +739,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'wait' => t('Please wait'),
 					'thread_level' => 1,
 					'has_tags' => $has_tags,
+					'is_new' => $is_new
 				);
 
 				$arr = array('item' => $item, 'output' => $tmp_item);
@@ -1082,8 +1087,8 @@ function builtin_activity_puller($item, &$conv_responses) {
 		if((activity_match($item['verb'], $verb)) && ($item['id'] != $item['parent'])) {
 			$name = (($item['author']['xchan_name']) ? $item['author']['xchan_name'] : t('Unknown'));
 			$url = (($item['author_xchan'] && $item['author']['xchan_photo_s']) 
-				? '<a href="' . chanlink_hash($item['author_xchan']) . '">' . '<img class="dropdown-menu-img-xs" src="' . zid($item['author']['xchan_photo_s'])  . '" alt="' . urlencode($name) . '" />' . $name . '</a>' 
-				: '<a href="#" class="disabled">' . $name . '</a>'
+				? '<a class="dropdown-item" href="' . chanlink_hash($item['author_xchan']) . '">' . '<img class="menu-img-1" src="' . zid($item['author']['xchan_photo_s'])  . '" alt="' . urlencode($name) . '" />' . $name . '</a>' 
+				: '<a class="dropdown-item" href="#" class="disabled">' . $name . '</a>'
 			);
 
 			if(! $item['thr_parent'])
@@ -1676,6 +1681,9 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 	if (App::$is_sys)
 		return;
 
+	if (get_pconfig($uid, 'system', 'noprofiletabs'))
+		return;
+
 	$channel = App::get_channel();
 
 	if (is_null($nickname))
@@ -1684,6 +1692,9 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 	$uid = ((App::$profile['profile_uid']) ? App::$profile['profile_uid'] : local_channel());
 	$account_id = ((App::$profile['profile_uid']) ? App::$profile['channel_account_id'] : App::$channel['channel_account_id']);
+
+	if ($uid == local_channel())
+		return;
 
 	if($uid == local_channel()) {
 		$cal_link = '';
@@ -1707,9 +1718,6 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 	$has_webpages = (($r) ? true : false);
 
-	if (get_pconfig($uid, 'system', 'noprofiletabs'))
-		return;
-
 	if (x($_GET, 'tab'))
 		$tab = notags(trim($_GET['tab']));
 
@@ -1723,6 +1731,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'channel') ? 'active' : ''),
 			'title' => t('Status Messages and Posts'),
 			'id'    => 'status-tab',
+			'icon'  => 'home'
 		),
 	);
 
@@ -1735,6 +1744,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'profile') ? 'active' : ''),
 			'title' => t('Profile Details'),
 			'id'    => 'profile-tab',
+			'icon'  => 'user'
 		);
 	}
 	if ($p['view_storage']) {
@@ -1744,6 +1754,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'photos') ? 'active' : ''),
 			'title' => t('Photo Albums'),
 			'id'    => 'photo-tab',
+			'icon'  => 'photo'
 		);
 		$tabs[] = array(
 			'label' => t('Files'),
@@ -1751,6 +1762,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'cloud' || argv(0) == 'sharedwithme') ? 'active' : ''),
 			'title' => t('Files and Storage'),
 			'id'    => 'files-tab',
+			'icon'  => 'folder-open'
 		);
 	}
 
@@ -1761,6 +1773,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'cal' || argv(0) == 'events') ? 'active' : ''),
 			'title' => t('Events'),
 			'id'    => 'event-tab',
+			'icon'  => 'calendar'
 		);
 	}
 
@@ -1774,6 +1787,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 				'sel'   => ((argv(0) == 'chat') ? 'active' : '' ),
 				'title' => t('Chatrooms'),
 				'id'    => 'chat-tab',
+				'icon'  => 'comments-o'
 			);
 		}
 	}
@@ -1787,6 +1801,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'bookmarks') ? 'active' : ''),
 			'title' => t('Saved Bookmarks'),
 			'id'    => 'bookmarks-tab',
+			'icon'  => 'bookmark'
 		);
 	}
 
@@ -1797,27 +1812,34 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'sel'   => ((argv(0) == 'webpages') ? 'active' : ''),
 			'title' => t('View Webpages'),
 			'id'    => 'webpages-tab',
+			'icon'  => 'newspaper-o'
 		);
 	}
  
 
-	if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
-		$tabs[] = array(
-			'label' => t('Wikis'),
-			'url'   => z_root() . '/wiki/' . $nickname,
-			'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
-			'title' => t('Wiki'),
-			'id'    => 'wiki-tab',
-		);
+	if ($p['view_wiki']) {
+		if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
+			$tabs[] = array(
+				'label' => t('Wikis'),
+				'url'   => z_root() . '/wiki/' . $nickname,
+				'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
+				'title' => t('Wiki'),
+				'id'    => 'wiki-tab',
+				'icon'  => 'pencil-square-o'
+			);
+		}
 	}
-
 
 	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
 	call_hooks('profile_tabs', $arr);
 	
-	$tpl = get_markup_template('common_tabs.tpl');
+	$tpl = get_markup_template('profile_tabs.tpl');
 
-	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
+	return replace_macros($tpl, array(
+		'$tabs' => $arr['tabs'],
+		'$name' => App::$profile['channel_name'],
+		'$thumb' => App::$profile['thumb']
+	));
 }
 
 
@@ -1828,15 +1850,11 @@ function get_responses($conv_responses,$response_verbs,$ob,$item) {
 		$ret[$v] = array();
 		$ret[$v]['count'] = ((x($conv_responses[$v],$item['mid'])) ? $conv_responses[$v][$item['mid']] : '');
 		$ret[$v]['list']  = ((x($conv_responses[$v],$item['mid'])) ? $conv_responses[$v][$item['mid'] . '-l'] : '');
-		if(count($ret[$v]['list']) > MAX_LIKERS) {
-			$ret[$v]['list_part'] = array_slice($ret[$v]['list'], 0, MAX_LIKERS);
-			array_push($ret[$v]['list_part'], '<a href="#" data-toggle="modal" data-target="#' . $v . 'Modal-' 
-				. (($ob) ? $ob->get_id() : $item['id']) . '"><b>' . t('View all') . '</b></a>');
-		} else {
-			$ret[$v]['list_part'] = '';
-		}
 		$ret[$v]['button'] = get_response_button_text($v,$ret[$v]['count']);
 		$ret[$v]['title'] = $conv_responses[$v]['title'];
+		if($ret[$v]['count'] > MAX_LIKERS) {
+			$ret[$v]['modal'] = true;
+		}
 	}
 
 	$count = 0;

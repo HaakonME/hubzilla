@@ -1,6 +1,6 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
-		{{if $server_role != 'basic'}}<a title="{{$removechannel}}" class="btn btn-danger btn-xs pull-right" href="removeme"><i class="fa fa-trash-o"></i>&nbsp;{{$removeme}}</a>{{/if}}
+		{{if $server_role != 'basic'}}<a title="{{$removechannel}}" class="btn btn-danger btn-sm pull-right" href="removeme"><i class="fa fa-trash-o"></i>&nbsp;{{$removeme}}</a>{{/if}}
 		<h2>{{$ptitle}}</h2>
 		<div class="clear"></div>
 	</div>
@@ -51,7 +51,7 @@
 
 							{{if $server_role != 'basic'}}
 							<div class="form-group">
-								<button type="button" class="btn btn-default" data-toggle="modal" data-target="#apsModal">{{$lbl_p2macro}}</button>
+								<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#apsModal">{{$lbl_p2macro}}</button>
 							</div>
 							<div class="modal" id="apsModal">
 								<div class="modal-dialog">
@@ -66,14 +66,14 @@
 										{{/foreach}}
 										</div>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+											<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
 										</div>
 									</div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
 							{{/if}}
 							<div id="settings-default-perms" class="form-group" >
-								<button type="button" class="btn btn-default" data-toggle="modal" data-target="#aclModal"><i id="jot-perms-icon" class="fa"></i>&nbsp;{{$permissions}}</button>
+								<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#aclModal"><i id="jot-perms-icon" class="fa"></i>&nbsp;{{$permissions}}</button>
 							</div>
 							{{$group_select}}
 							{{include file="field_checkbox.tpl" field=$hide_presence}}

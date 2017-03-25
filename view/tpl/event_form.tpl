@@ -32,35 +32,37 @@
 		{{/if}}
 
 		<div class="form-group">
-			<div id="event-desc-text"><b>{{$d_text}}</b></div>
-			<textarea id="comment-edit-text-desc" class="form-control" name="desc" >{{$d_orig}}</textarea>
+			<div class="form-group">
+				<div id="event-desc-text"><b>{{$d_text}}</b></div>
+				<textarea id="comment-edit-text-desc" class="form-control" name="desc" >{{$d_orig}}</textarea>
+			</div>
 			<div id="comment-tools-desc" class="comment-tools" style="display: block;" >
 				<div id="comment-edit-bb-desc" class="btn-toolbar">
-					<div class='btn-group'>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('none','b', 'desc');">
+					<div class='btn-group mr-2'>
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edbold}}" onclick="insertbbcomment('none','b', 'desc');">
 							<i class="fa fa-bold comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('none','i', 'desc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$editalic}}" onclick="insertbbcomment('none','i', 'desc');">
 							<i class="fa fa-italic comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('none','u', 'desc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$eduline}}" onclick="insertbbcomment('none','u', 'desc');">
 							<i class="fa fa-underline comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('none','quote','desc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edquote}}" onclick="insertbbcomment('none','quote','desc');">
 							<i class="fa fa-quote-left comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('none','code', 'desc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edcode}}" onclick="insertbbcomment('none','code', 'desc');">
 							<i class="fa fa-terminal comment-icon"></i>
 						</button>
 					</div>
 					<div class='btn-group'>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('none','img', 'desc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edimg}}" onclick="insertbbcomment('none','img', 'desc');">
 							<i class="fa fa-camera comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('none','url', 'desc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edurl}}" onclick="insertbbcomment('none','url', 'desc');">
 							<i class="fa fa-link comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('none','video', 'desc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edvideo}}" onclick="insertbbcomment('none','video', 'desc');">
 							<i class="fa fa-video-camera comment-icon"></i>
 						</button>
 					</div>
@@ -68,38 +70,40 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<div id="event-location-text"><b>{{$l_text}}</b></div>
-			<textarea id="comment-edit-text-loc" class="form-control" name="location">{{$l_orig}}</textarea>
+			<div class="form-group">
+				<div id="event-location-text"><b>{{$l_text}}</b></div>
+				<textarea id="comment-edit-text-loc" class="form-control" name="location">{{$l_orig}}</textarea>
+			</div>
 			<div id="comment-tools-loc" class="comment-tools" style="display: block;" >
 				<div id="comment-edit-bb-loc" class="btn-toolbar">
-					<div class='btn-group'>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('none','b', 'loc');">
+					<div class='btn-group mr-2'>
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edbold}}" onclick="insertbbcomment('none','b', 'loc');">
 							<i class="fa fa-bold comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('none','i', 'loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$editalic}}" onclick="insertbbcomment('none','i', 'loc');">
 							<i class="fa fa-italic comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('none','u', 'loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$eduline}}" onclick="insertbbcomment('none','u', 'loc');">
 							<i class="fa fa-underline comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('none','quote','loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edquote}}" onclick="insertbbcomment('none','quote','loc');">
 							<i class="fa fa-quote-left comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('none','code', 'loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edcode}}" onclick="insertbbcomment('none','code', 'loc');">
 							<i class="fa fa-terminal comment-icon"></i>
 						</button>
 					</div>
 					<div class='btn-group'>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edimg}}" onclick="insertbbcomment('none','img', 'loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edimg}}" onclick="insertbbcomment('none','img', 'loc');">
 							<i class="fa fa-camera comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('none','url', 'loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edurl}}" onclick="insertbbcomment('none','url', 'loc');">
 							<i class="fa fa-link comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('none','video', 'loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$edvideo}}" onclick="insertbbcomment('none','video', 'loc');">
 							<i class="fa fa-video-camera comment-icon"></i>
 						</button>
-						<button type="button" class="btn btn-default btn-xs" title="{{$mapper}}" onclick="insertbbcomment('none','map','loc');">
+						<button type="button" class="btn btn-outline-secondary btn-sm" title="{{$mapper}}" onclick="insertbbcomment('none','map','loc');">
 							<i class="fa fa-globe comment-icon"></i>
 						</button>
 					</div>
@@ -111,13 +115,13 @@
 
 	<div class="clear"></div>
 
-	<button type="button" class="btn btn-default" onclick="openClose('advanced');">{{$advanced}}</button>
-	<div class="btn-group pull-right">
-		<button id="event-edit-preview-btn" class="btn btn-default" type="button" title="{{$preview}}" onclick="doEventPreview();"><i class="fa fa-eye" ></i></button>
+	<button type="button" class="btn btn-outline-secondary btn-sm" onclick="openClose('advanced');">{{$advanced}}</button>
+	<div class="btn-group float-right">
+		<button id="event-edit-preview-btn" class="btn btn-outline-secondary btn-sm" type="button" title="{{$preview}}" onclick="doEventPreview();"><i class="fa fa-eye" ></i></button>
 		{{if ! $eid}}
-		<button id="dbtn-acl" class="btn btn-default" type="button" data-toggle="modal" data-target="#aclModal" title="{{$perms_label}}"><i id="jot-perms-icon" class="fa fa-{{$lockstate}}"></i></button>
+		<button id="dbtn-acl" class="btn btn-outline-secondary btn-sm" type="button" data-toggle="modal" data-target="#aclModal" title="{{$perms_label}}"><i id="jot-perms-icon" class="fa fa-{{$lockstate}}"></i></button>
 		{{/if}}
-		<button id="event-submit" class="btn btn-primary" type="submit" name="submit">{{$submit}}</button>
+		<button id="event-submit" class="btn btn-primary btn-sm" type="submit" name="submit">{{$submit}}</button>
 	</div>
 </form>
 

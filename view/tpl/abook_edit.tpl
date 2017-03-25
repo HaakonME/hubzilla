@@ -3,35 +3,36 @@
 		{{if $notself}}
 		<div class="pull-right">
 			<div class="btn-group">
-				<button id="connection-dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
+				<button id="connection-dropdown" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 				</button>
-				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
-					<li><a  href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a></li>
-					<li><a  href="{{$tools.recent.url}}" title="{{$tools.recent.title}}">{{$tools.recent.label}}</a></li>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+					<a class="dropdown-item" href="{{$tools.view.url}}" title="{{$tools.view.title}}">{{$tools.view.label}}</a>
+					<a class="dropdown-item" href="{{$tools.recent.url}}" title="{{$tools.recent.title}}">{{$tools.recent.label}}</a>
 					{{if $tools.fetchvc}}
-					<li><a  href="{{$tools.fetchvc.url}}" title="{{$tools.fetchvc.title}}">{{$tools.fetchvc.label}}</a></li>
+					<a class="dropdown-item" href="{{$tools.fetchvc.url}}" title="{{$tools.fetchvc.title}}">{{$tools.fetchvc.label}}</a>
 					{{/if}}
-					<li><a  href="#" title="{{$tools.refresh.title}}" onclick="window.location.href='{{$tools.refresh.url}}'; return false;">{{$tools.refresh.label}}</a></li>
-					<li><a  href="#" title="{{$tools.rephoto.title}}" onclick="window.location.href='{{$tools.rephoto.url}}'; return false;">{{$tools.rephoto.label}}</a></li>
-					<li class="divider"></li>
-					<li><a  href="#" title="{{$tools.block.title}}" onclick="window.location.href='{{$tools.block.url}}'; return false;">{{$tools.block.label}}</a></li>
-					<li><a  href="#" title="{{$tools.ignore.title}}" onclick="window.location.href='{{$tools.ignore.url}}'; return false;">{{$tools.ignore.label}}</a></li>
-					<li><a  href="#" title="{{$tools.archive.title}}" onclick="window.location.href='{{$tools.archive.url}}'; return false;">{{$tools.archive.label}}</a></li>
-					<li><a  href="#" title="{{$tools.hide.title}}" onclick="window.location.href='{{$tools.hide.url}}'; return false;">{{$tools.hide.label}}</a></li>
-					<li><a  href="#" title="{{$tools.delete.title}}" onclick="window.location.href='{{$tools.delete.url}}'; return false;">{{$tools.delete.label}}</a></li>
-				</ul>
+					<a class="dropdown-item" href="#" title="{{$tools.refresh.title}}" onclick="window.location.href='{{$tools.refresh.url}}'; return false;">{{$tools.refresh.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.rephoto.title}}" onclick="window.location.href='{{$tools.rephoto.url}}'; return false;">{{$tools.rephoto.label}}</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" title="{{$tools.block.title}}" onclick="window.location.href='{{$tools.block.url}}'; return false;">{{$tools.block.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.ignore.title}}" onclick="window.location.href='{{$tools.ignore.url}}'; return false;">{{$tools.ignore.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.archive.title}}" onclick="window.location.href='{{$tools.archive.url}}'; return false;">{{$tools.archive.label}}</a>					<a class="dropdown-item" href="#" title="{{$tools.hide.title}}" onclick="window.location.href='{{$tools.hide.url}}'; return false;">{{$tools.hide.label}}</a>
+					<a class="dropdown-item" href="#" title="{{$tools.delete.title}}" onclick="window.location.href='{{$tools.delete.url}}'; return false;">{{$tools.delete.label}}</a>
+				</div>
 			</div>
 			{{if $abook_prev || $abook_next}}
 			<div class="btn-group">
-				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs{{if ! $abook_prev}} disabled{{/if}}" ><i class="fa fa-backward"></i></a>
-				<button class="btn btn-default btn-xs{{if $is_pending}} disabled{{/if}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
-				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-default btn-xs{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
-				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
-					{{foreach $sections as $s}}
-					<li><a href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a></li>
-					{{/foreach}}
-				</ul>
+				<a href="connedit/{{$abook_prev}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_prev}} disabled{{/if}}" ><i class="fa fa-backward"></i></a>
+				<div class="btn-group" >
+					<button class="btn btn-outline-secondary btn-sm{{if $is_pending}} disabled{{/if}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+						{{foreach $sections as $s}}
+						<a class="dropdown-item" href="{{$s.url}}" title="{{$s.title}}">{{$s.label}}</a>
+						{{/foreach}}
+					</div>
+				</div>
+				<a href="connedit/{{$abook_next}}{{if $section}}?f=&section={{$section}}{{/if}}" class="btn btn-outline-secondary btn-sm{{if ! $abook_next}} disabled{{/if}}" ><i class="fa fa-forward"></i></a>
 			</div>
 			{{/if}}
 		</div>
@@ -83,7 +84,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="pending-tool-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="pending-tool">
+				<div id="pending-tool-collapse" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="pending-tool">
 					<div class="section-content-tools-wrapper">
 						{{include file="field_checkbox.tpl" field=$unapproved}}
 						<div class="settings-submit-wrapper" >
@@ -191,7 +192,7 @@
 			<div class="section-content-wrapper-np">
 				<div id="vcard-cancel-{{$vcard.id}}" class="vcard-cancel vcard-cancel-btn" data-id="{{$vcard.id}}" data-action="cancel"><i class="fa fa-close"></i></div>
 				<div id="vcard-add-field-{{$vcard.id}}" class="dropdown pull-right vcard-add-field">
-					<button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle"><i class="fa fa-plus"></i> {{$add_field}}</button>
+					<button data-toggle="dropdown" type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle"><i class="fa fa-plus"></i> {{$add_field}}</button>
 					<ul class="dropdown-menu">
 						<li class="add-vcard-org"{{if $vcard.org}} style="display: none"{{/if}}><a href="#" data-add="vcard-org" data-id="{{$vcard.id}}" class="add-field" onclick="return false;">{{$org_label}}</a></li>
 						<li class="add-vcard-title"{{if $vcard.title}} style="display: none"{{/if}}><a href="#" data-add="vcard-title" data-id="{{$vcard.id}}" class="add-field" onclick="return false;">{{$title_label}}</a></li>
@@ -207,8 +208,8 @@
 					<i class="vcard-fn-preview fa fa-address-card-o"></i>
 					<span id="vcard-preview-{{$vcard.id}}" class="vcard-preview">
 						{{if $vcard.fn}}<span class="vcard-fn-preview">{{$vcard.fn}}</span>{{/if}}
-						{{if $vcard.emails.0.address}}<span class="vcard-email-preview hidden-xs"><a href="mailto:{{$vcard.emails.0.address}}">{{$vcard.emails.0.address}}</a></span>{{/if}}
-						{{if $vcard.tels.0}}<span class="vcard-tel-preview hidden-xs">{{$vcard.tels.0.nr}}{{if $is_mobile}} <a class="btn btn-default btn-xs" href="tel:{{$vcard.tels.0.nr}}"><i class="fa fa-phone connphone"></i></a>{{/if}}</span>{{/if}}
+						{{if $vcard.emails.0.address}}<span class="vcard-email-preview d-none d-md-table-cell"><a href="mailto:{{$vcard.emails.0.address}}">{{$vcard.emails.0.address}}</a></span>{{/if}}
+						{{if $vcard.tels.0}}<span class="vcard-tel-preview d-none d-md-table-cell">{{$vcard.tels.0.nr}}{{if $is_mobile}} <a class="btn btn-outline-secondary btn-sm" href="tel:{{$vcard.tels.0.nr}}"><i class="fa fa-phone connphone"></i></a>{{/if}}</span>{{/if}}
 					</span>
 					<input id="vcard-fn-{{$vcard.id}}" class="vcard-fn" type="text" name="fn" value="{{$vcard.fn}}" size="{{$vcard.fn|count_characters:true}}" placeholder="{{$name_label}}">
 				</div>
@@ -385,7 +386,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if $section == 'affinity'}} in{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
+				<div id="affinity-tool-collapse" class="panel-collapse collapse{{if $section == 'affinity'}} show{{/if}}" role="tabpanel" aria-labelledby="affinity-tool">
 					<div class="section-content-tools-wrapper">
 						{{if $slide}}
 						<div class="form-group"><strong>{{$lbl_slider}}</strong></div>
@@ -416,7 +417,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if $section == 'filter' }} in{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
+				<div id="fitert-tool-collapse" class="panel-collapse collapse{{if $section == 'filter' }} show{{/if}}" role="tabpanel" aria-labelledby="fitert-tool">
 					<div class="section-content-tools-wrapper">
 						{{include file="field_textarea.tpl" field=$incl}}
 						{{include file="field_textarea.tpl" field=$excl}}
@@ -470,7 +471,7 @@
 					</h3>
 				</div>
 				{{/if}}
-				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self || $section === 'perms'}} in{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
+				<div id="perms-tool-collapse" class="panel-collapse collapse{{if $self || $section === 'perms'}} show{{/if}}" role="tabpanel" aria-labelledby="perms-tool">
 					<div class="section-content-tools-wrapper">
 						<div class="section-content-warning-wrapper">
 						{{if $notself}}{{$permnote}}{{/if}}

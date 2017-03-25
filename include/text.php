@@ -1456,11 +1456,10 @@ function format_hashtags(&$item) {
 				continue;
 			if(strpos($item['body'], $t['url']))
 				continue;
-
 			if($s)
-				$s .= '&nbsp';
+				$s .= ' ';
 
-			$s .= '#<a href="' . zid($t['url']) . '" >' . $term . '</a>';
+			$s .= '<span class="badge badge-pill badge-info"><i class="fa fa-hashtag"></i>&nbsp;<a class="text-white" href="' . zid($t['url']) . '" >' . $term . '</a></span>';
 		}
 	}
 
@@ -1480,11 +1479,9 @@ function format_mentions(&$item) {
 				continue;
 			if(strpos($item['body'], $t['url']))
 				continue;
-
 			if($s)
-				$s .= '&nbsp';
-
-			$s .= '@<a href="' . zid($t['url']) . '" >' . $term . '</a>';
+				$s .= ' ';
+			$s .= '<span class="badge badge-pill badge-success"><i class="fa fa-at"></i>&nbsp;<a class="text-white" href="' . zid($t['url']) . '" >' . $term . '</a></span>';
 		}
 	}
 

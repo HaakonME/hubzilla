@@ -3,23 +3,19 @@
 		<div class="pull-right">
 			{{if $showPageControls}}
 			<div id="page-tools" class="btn-group" style="display: none;">
-				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-					<i class="fa fa-caret-down"></i>&nbsp;{{$tools_label}}
+				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 				</button>
-				<ul class="dropdown-menu dropdown-menu-right">
+				<div class="dropdown-menu dropdown-menu-right">
 					{{if $renamePage}}
-					<li class="nav-item">
-						<a class="nav-link rename-page" href="#"><i class="fa fa-edit"></i>&nbsp;{{$renamePage}}</a>
-					</li>
+					<a class="dropdown-item rename-page" href="#"><i class="fa fa-fw fa-edit"></i>&nbsp;{{$renamePage}}</a>
 					{{/if}}
-					<li class="nav-item">
-						<a id="embed-image" class="nav-link" href="#"><i class="fa fa-picture-o"></i>&nbsp;Embed Image</a>
-					</li>
-				</ul>
+					<a id="embed-image" class="dropdown-item" href="#"><i class="fa fa-fw fa-picture-o"></i>&nbsp;Embed Image</a>
+				</div>
 			</div>	
 			{{/if}}
-			<button id="fullscreen-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(); adjustFullscreenEditorHeight();"><i class="fa fa-expand"></i></button>
-			<button id="inline-btn" type="button" class="btn btn-default btn-xs" onclick="makeFullScreen(false); adjustInlineEditorHeight()"><i class="fa fa-compress"></i></button>
+			<button id="fullscreen-btn" type="button" class="btn btn-outline-secondary btn-sm" onclick="makeFullScreen(); adjustFullscreenEditorHeight();"><i class="fa fa-expand"></i></button>
+			<button id="inline-btn" type="button" class="btn btn-outline-secondary btn-sm" onclick="makeFullScreen(false); adjustInlineEditorHeight()"><i class="fa fa-compress"></i></button>
 		</div>
 		<h2>
 			<span id="wiki-header-name">{{$wikiheaderName}}</span>:
@@ -35,7 +31,7 @@
 					<button id="rename-page-submit" class="btn btn-primary" type="submit" name="submit">Submit</button>
 				</div>
 				<div>
-					<button class="btn btn-default rename-page" type="button">Cancel</button>
+					<button class="btn btn-outline-secondary rename-page" type="button">Cancel</button>
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -43,12 +39,12 @@
 	</div>
 	<div id="wiki-content-container" class="section-content-wrapper">
 		<ul class="nav nav-tabs" id="wiki-nav-tabs">
-			<li id="edit-pane-tab"><a data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
-			<li class="active"><a data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
-			<li><a data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
+			<li class="nav-item" id="edit-pane-tab"><a class="nav-link" data-toggle="tab" href="#edit-pane">{{$editOrSourceLabel}}</a></li>
+			<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#preview-pane" id="wiki-get-preview">View</a></li>
+			<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page-history-pane" id="wiki-get-history">History</a></li>
 		</ul>
 		<div class="tab-content" id="wiki-page-tabs">
-			<div id="edit-pane" class="tab-pane fade">
+			<div id="edit-pane" class="tab-pane">
 				{{if !$mimeType || $mimeType == 'text/markdown'}}
 				<div id="ace-editor"></div>
 				{{else}}
@@ -60,21 +56,21 @@
 				<div>
 					<div id="id_{{$commitMsg.0}}_wrapper" class="field input">
 						<div class="input-group">
-							<input class="widget-input" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
+							<input class="form-control form-control-sm" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
 							<div class="input-group-btn">
-								<button id="save-page" type="button" class="btn btn-primary btn-sm disabled">Save</button>
+								<button id="save-page" type="button" class="btn btn-primary disabled">Save</button>
 							</div>
 						</div>
 					</div>
 				</div>
 				{{/if}}
 			</div>
-			<div id="preview-pane" class="tab-pane fade in active">
+			<div id="preview-pane" class="tab-pane active">
 				<div id="wiki-preview">
 					{{$renderedContent}}
 				</div>
 			</div>
-			<div id="page-history-pane" class="tab-pane fade">
+			<div id="page-history-pane" class="tab-pane">
 				<div id="page-history-list"></div>
 			</div>
 		</div>
@@ -87,17 +83,17 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title" id="embedPhotoModalLabel">{{$embedPhotosModalTitle}}</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body" id="embedPhotoModalBody" >
-				<div id="embedPhotoModalBodyAlbumListDialog" class="hide">
+				<div id="embedPhotoModalBodyAlbumListDialog" class="d-none">
 					<div id="embedPhotoModalBodyAlbumList"></div>
 				</div>
-				<div id="embedPhotoModalBodyAlbumDialog" class="hide"></div>
+				<div id="embedPhotoModalBodyAlbumDialog" class="d-none"></div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{$embedPhotosModalCancel}}</button>
 				<button id="embed-photo-OKButton" type="button" class="btn btn-primary">{{$embedPhotosModalOK}}</button>
 			</div>
 		</div><!-- /.modal-content -->
@@ -370,8 +366,8 @@
 				if (data['status']) {
 					$('#embedPhotoModalLabel').html("{{$modalchooseimages}}");
 					$('#embedPhotoModalBodyAlbumDialog').html('\
-							<div><ul class="nav">\n\
-								<li><a href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
+							<div><ul class="nav nav-pills flex-column">\n\
+								<li class="nav-item"><a class="nav-link" href="#" onclick="initializeEmbedPhotoDialog();return false;">\n\
 									<i class="fa fa-chevron-left"></i>&nbsp;\n\
 									{{$modaldiffalbum}}\n\
 									</a>\n\
@@ -386,8 +382,8 @@
 							$(imageparent).toggleClass('embed-photo-selected-photo');
 						}
 					});
-					$('#embedPhotoModalBodyAlbumListDialog').addClass('hide');
-					$('#embedPhotoModalBodyAlbumDialog').removeClass('hide');
+					$('#embedPhotoModalBodyAlbumListDialog').addClass('d-none');
+					$('#embedPhotoModalBodyAlbumDialog').removeClass('d-none');
 					$('#embed-photo-OKButton').click(function () {
 						$('.embed-photo-selected-photo').each(function (index) {
 							var href = $(this).attr('href');
@@ -426,17 +422,17 @@
 				if (data['status']) {
 					var albums = data['albumlist']; //JSON.parse(data['albumlist']);
 					$('#embedPhotoModalLabel').html("{{$modalchoosealbum}}");
-					$('#embedPhotoModalBodyAlbumList').html('<ul class="nav"></ul>');
+					$('#embedPhotoModalBodyAlbumList').html('<ul class="nav nav-pills flex-column"></ul>');
 					for(var i = 0; i < albums.length; i++) {
 						var albumName = albums[i].text;
 						var jsAlbumName = albums[i].jstext;
-						var albumLink = '<li>';
-						albumLink += '<a href="#" onclick="choosePhotoFromAlbum(\'' + jsAlbumName + '\'); return false;">' + albumName + '</a>';
+						var albumLink = '<li class="nav-item">';
+						albumLink += '<a class="nav-link" href="#" onclick="choosePhotoFromAlbum(\'' + jsAlbumName + '\'); return false;">' + albumName + '</a>';
 						albumLink += '</li>';
 						$('#embedPhotoModalBodyAlbumList').find('ul').append(albumLink);
 					}
-					$('#embedPhotoModalBodyAlbumDialog').addClass('hide');
-					$('#embedPhotoModalBodyAlbumListDialog').removeClass('hide');
+					$('#embedPhotoModalBodyAlbumDialog').addClass('d-none');
+					$('#embedPhotoModalBodyAlbumListDialog').removeClass('d-none');
 				} else {
 					window.console.log("{{$modalerrorlist}}" + ':' + data['errormsg']);
 				}

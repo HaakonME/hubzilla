@@ -1,7 +1,7 @@
 <div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
-			<button id="webpage-create-btn" class="btn btn-xs btn-success" onclick="openClose('menu-element-creator');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$hintnew}}</button>
+			<button id="webpage-create-btn" class="btn btn-sm btn-success" onclick="openClose('menu-element-creator');"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$hintnew}}</button>
 		</div>
 		<h2>{{$title}} {{if $menudesc}}{{$menudesc}}{{else}}{{$menuname}}{{/if}}</h2>
 		<div class="clear"></div>

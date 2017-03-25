@@ -12,7 +12,7 @@ class Helpindex {
 		if(! $level_0)
 			$level_0 = get_help_content('toc');
 
-		$level_0 = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$level_0);
+		$level_0 = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills flex-column">',$level_0);
 
 		$levels = array();
 
@@ -25,7 +25,7 @@ class Helpindex {
 				if(! $y)
 					$y = get_help_content($path . 'toc');
 				if($y)
-					$levels[] = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills nav-stacked">',$y);
+					$levels[] = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills flex-column">',$y);
 			}
 		}
 

@@ -8,9 +8,10 @@ class DB_Upgrade {
 
 	function __construct($db_revision) {
 
-		$build = get_config('system','db_version',0);
+
+		$build = get_config('system', PLATFORM_NAME . '_db_version', 0);
 		if(! intval($build))
-			$build = set_config('system','db_version',$db_revision);
+			$build = set_config('system', PLATFORM_NAME . '_db_version', $db_revision);
 
 		if($build == $db_revision) {
 			// Nothing to be done.
@@ -24,14 +25,17 @@ class DB_Upgrade {
 			}
 		
 			$current = intval($db_revision);
-			if(($stored < $current) && file_exists('install/update.php')) {
+
+			$update_file = 'install/' . PLATFORM_NAME . '/update.php';
+
+			if(($stored < $current) && file_exists($update_file)) {
 
 				Config::Load('database');
 
 				// We're reporting a different version than what is currently installed.
 				// Run any existing update scripts to bring the database up to current.
 				
-				require_once('install/update.php');
+				require_once($update_file);
 
 				// make sure that boot.php and update.php are the same release, we might be
 				// updating from git right this very second and the correct version of the update.php
@@ -39,7 +43,8 @@ class DB_Upgrade {
 
 				if($db_revision == UPDATE_VERSION) {
 					for($x = $stored; $x < $current; $x ++) {
-						if(function_exists('update_r' . $x)) {
+						$func = PLATFORM_NAME . '_update_' . $x;
+						if(function_exists($func)) {
 							// There could be a lot of processes running or about to run.
 							// We want exactly one process to run the update command.
 							// So store the fact that we're taking responsibility
@@ -48,12 +53,11 @@ class DB_Upgrade {
 							// If the update fails or times-out completely you may need to
 							// delete the config entry to try again.
 
-							if(get_config('database','update_r' . $x))
+							if(get_config('database', $func))
 								break;
-							set_config('database','update_r' . $x, '1');
+							set_config('database',$func, '1');
 							// call the specific update
 
-							$func = 'update_r' . $x;
 							$retval = $func();
 							if($retval) {
 
@@ -93,11 +97,11 @@ class DB_Upgrade {
 								pop_lang();
 							}
 							else {
-								set_config('database','update_r' . $x, 'success');
+								set_config('database',$func, 'success');
 							}
 						}
 					}
-					set_config('system','db_version', $db_revision);
+					set_config('system', PLATFORM_NAME . '_db_version', $db_revision);
 				}
 			}
 		}

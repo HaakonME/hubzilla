@@ -130,7 +130,7 @@ class Filestorage extends \Zotlabs\Web\Controller {
 			$f = $r[0];
 			$channel = \App::get_channel();
 
-			$cloudpath = get_cloudpath($f) . (intval($f['is_dir']) ? '?f=&davguest=1' : '');
+			$cloudpath = get_cloudpath($f);
 			$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
 
 			$aclselect_e = populate_acl($f, false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage'));

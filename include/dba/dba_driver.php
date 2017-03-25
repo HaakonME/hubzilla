@@ -15,7 +15,7 @@ class DBA {
 	static public $scheme = 'mysql';
 	static public $logging = false;
 
-	static public $install_script = 'install/schema_mysql.sql';
+	static public $install_script = 'schema_mysql.sql';
 	static public $null_date = '0001-01-01 00:00:00';
 	static public $utc_now = 'UTC_TIMESTAMP()';
 	static public $tquot = "`";
@@ -46,7 +46,7 @@ class DBA {
 			if(!($port))
 				$port = 5432;
 
-			self::$install_script = 'install/schema_postgres.sql';
+			self::$install_script = 'schema_postgres.sql';
 			self::$utc_now = "now() at time zone 'UTC'";
 			self::$tquot = '"';
 			self::$scheme = 'pgsql';
@@ -163,7 +163,9 @@ abstract class dba_driver {
 	}
 
 	function get_install_script() {
-		return \DBA::$install_script;
+		if(file_exists('install/' . PLATFORM_NAME . '/' . \DBA::$install_script))
+			 return 'install/' . PLATFORM_NAME . '/' . \DBA::$install_script;
+		return 'install/' . \DBA::$install_script;
 	}
 
 	function get_table_quote() {

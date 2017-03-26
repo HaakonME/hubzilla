@@ -20,7 +20,7 @@
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
 	{{if $localuser}}
-	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-muted" data-toggle="collapse" data-target="#navbar-collapse-1">
+	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white" data-toggle="collapse" data-target="#navbar-collapse-1">
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
 	{{/if}}
@@ -32,7 +32,7 @@
 <div class="dropdown usermenu">
 	<div class="fakelink" data-toggle="dropdown">
 		<img id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">
-		<i class="fa fa-caret-down text-white"></i>
+		<i class="fa fa-caret-down"></i>
 	</div>
 	{{if $localuser}}
 	<div class="dropdown-menu">
@@ -169,7 +169,7 @@
 		{{/if}}
 	</ul>
 
-	<div id="banner" class="navbar-text text-white font-weight-bold d-none d-md-flex">{{$banner}}</div>
+	<div id="banner" class="navbar-text d-none d-md-flex">{{$banner}}</div>
 
 	<ul id="nav-right" class="navbar-nav ml-auto d-none d-md-flex">
 		<li class="nav-item collapse clearfix" id="nav-search">

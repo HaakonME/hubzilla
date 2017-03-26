@@ -32,7 +32,7 @@
 <div class="dropdown usermenu">
 	<div class="fakelink" data-toggle="dropdown">
 		<img id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">
-		<i class="fa fa-caret-down text-white"></i>
+		<i class="fa fa-caret-down"></i>
 	</div>
 	{{if $localuser}}
 	<div class="dropdown-menu">

@@ -8,7 +8,7 @@
 		<div class="sub-menu">
 			<form action="events" enctype="multipart/form-data" method="post" name="event-upload-form" id="event-upload-form">
 				<div class="form-group">
-					<input id="event-upload-choose" class="form-control-file w100" type="file" name="userfile" />
+					<input id="event-upload-choose" class="form-control-file w-100" type="file" name="userfile" />
 				</div>
 				<button id="dbtn-submit" class="btn btn-primary btn-sm" type="submit" name="submit" >{{$submit}}</button>
 			</form>

@@ -15,7 +15,7 @@
 					<!-- Or upload a zipped file containing the website -->
 					<p class="descriptive-text">{{$file_upload_text}}</p>
 					<div class="form-group">
-						<input class="form-control-file w100" type="file" name="zip_file" />
+						<input class="form-control-file w-100" type="file" name="zip_file" />
 					</div>
 					<div class="form-group">
 						<button class="btn btn-primary btn-sm" type="submit" name="w_upload" value="w_upload">Submit</button>

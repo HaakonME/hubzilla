@@ -1609,11 +1609,8 @@ dl.bb-dl > dd > li {
 	border-left: 0.2rem solid #eee;
 }
 
-.w100 {
-	width: 100%;
-}
-
 .app-icon {
+	color: #777;
 	font-size: 80px;
 	text-shadow: 3px 3px 3px lightgrey;
 }

@@ -283,8 +283,6 @@ footer {
 	padding: 0px 10px 10px 10px;
 	background-color: rgba(254,254,254,0.5);
 	border: 1px solid rgba(254,254,254,0.5);
-	-moz-border-radius: $radius;
-	-webkit-border-radius: $radius;
 	border-radius: $radius;
 	word-wrap: break-word;
 }
@@ -378,7 +376,6 @@ footer {
 .photo,
 .contact-block-img {
 	border-radius: $radius;
-	-moz-border-radius: $radius;
 	box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
@@ -393,7 +390,6 @@ footer {
 .profile-match-photo img,
 .directory-photo-img {
 	border-radius: $radius;
-	-moz-border-radius: $radius;
 	box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
@@ -975,7 +971,6 @@ th,td {
 /* mail */
 
 img.mail-conv-sender-photo {
-	-moz-border-radius: $radius;
 	border-radius: $radius;
 }
 
@@ -1099,23 +1094,21 @@ img.mail-conv-sender-photo {
 	border-top: 0px solid $comment_item_colour;
 }
 
-.wall-item-photo {
-	border: none;
-	width: $top_photo !important;
-	height: $top_photo !important;
 
+.wall-item-photo {
+	width: $top_photo;
+	height: $top_photo;
+	border: none;
+	border-radius: $radius;
+	box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
 .comment .wall-item-photo {
-	width: $reply_photo !important;
-	height: $reply_photo !important;
+	width: $reply_photo;
+	height: $reply_photo;
 }
 
-.wall-item-photo {
-    border-radius: $radius;
-    -moz-border-radius: $radius;
-    box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
-}
+
 
 .wall-item-ago,
 a:hover .wall-item-ago,
@@ -1177,8 +1170,6 @@ a:active .dropdown-sub-text {
 .widget {
 	background-color: rgba(254,254,254,.5);
 	border: 1px solid rgba(254,254,254,.5);
-	-moz-border-radius: $radius;
-	-webkit-border-radius: $radius;
 	border-radius: $radius;
 }
 
@@ -1189,7 +1180,6 @@ a:active .dropdown-sub-text {
 #note-text {
 	border: 1px solid #ccc;
 	border-radius: $radius;
-	-moz-border-radius: $radius;
 }
 
 .fileas-ul {
@@ -1199,7 +1189,6 @@ a:active .dropdown-sub-text {
 #datebrowse-sidebar select {
 	border: 1px solid #ccc;
 	border-radius: $radius;
-	-moz-border-radius: $radius;
 }
 
 .thing-show img {

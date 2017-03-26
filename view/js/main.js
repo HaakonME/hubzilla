@@ -369,10 +369,10 @@ function NavUpdate() {
 			updateCountsOnly = false;
 
 			if(data.network || data.home || data.intros || data.mail || data.all_events || data.notify) {
-				$('#notifications-btn').removeClass('text-muted').addClass('text-white');
+				$('#notifications-btn').css('opacity', 1);
 			}
 			else {
-				$('#notifications-btn').removeClass('text-white').addClass('text-muted');
+				$('#notifications-btn').css('opacity', 0.5);
 				$('#navbar-collapse-1').removeClass('in');
 			}
 

@@ -11,32 +11,22 @@ if(! App::$install) {
 
 	// Load the owners pconfig
 	$nav_bg = get_pconfig($uid, 'redbasic', 'nav_bg');
-	$nav_gradient_top = get_pconfig($uid, 'redbasic', 'nav_gradient_top');
-	$nav_gradient_bottom = get_pconfig($uid, 'redbasic', 'nav_gradient_bottom');
-	$nav_active_gradient_top = get_pconfig($uid, 'redbasic', 'nav_active_gradient_top');
-	$nav_active_gradient_bottom = get_pconfig($uid, 'redbasic', 'nav_active_gradient_bottom');
-	$nav_bd = get_pconfig($uid, 'redbasic', 'nav_bd');
 	$nav_icon_colour = get_pconfig($uid, 'redbasic', 'nav_icon_colour');
 	$nav_active_icon_colour = get_pconfig($uid, 'redbasic', 'nav_active_icon_colour');
-	$narrow_navbar = get_pconfig($uid,'redbasic','narrow_navbar');
 	$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
+	$narrow_navbar = get_pconfig($uid,'redbasic','narrow_navbar');
 	$link_colour = get_pconfig($uid, 'redbasic', 'link_colour');
 	$schema = get_pconfig($uid,'redbasic','schema');
 	$bgcolour = get_pconfig($uid, 'redbasic', 'background_colour');
 	$background_image = get_pconfig($uid, 'redbasic', 'background_image');
-	$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
-	$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
 	$item_colour = get_pconfig($uid, 'redbasic', 'item_colour');
 	$comment_item_colour = get_pconfig($uid, 'redbasic', 'comment_item_colour');
-	$comment_border_colour = get_pconfig($uid, 'redbasic', 'comment_border_colour');
-	$comment_indent = get_pconfig($uid, 'redbasic', 'comment_indent');
 	$font_size = get_pconfig($uid, 'redbasic', 'font_size');
 	$font_colour = get_pconfig($uid, 'redbasic', 'font_colour');
 	$radius = get_pconfig($uid, 'redbasic', 'radius');
 	$shadow = get_pconfig($uid,'redbasic','photo_shadow');
 	$converse_width=get_pconfig($uid,'redbasic','converse_width');
 	$align_left=get_pconfig($uid,'redbasic','align_left');
-	$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 	$top_photo=get_pconfig($uid,'redbasic','top_photo');
 	$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
 }
@@ -86,20 +76,10 @@ if (! $schema) {
 //individually.  If we don't, we'll have problems if a user has set one, but not all options.
 if (! $nav_bg)
 	$nav_bg = '#222';
-if (! $nav_gradient_top)
-	$nav_gradient_top = '#3c3c3c';
-if (! $nav_gradient_bottom)
-	$nav_gradient_bottom = '#222';
-if (! $nav_active_gradient_top)
-	$nav_active_gradient_top = '#222';
-if (! $nav_active_gradient_bottom)
-	$nav_active_gradient_bottom = '#282828';
-if (! $nav_bd)
-	$nav_bd = '#222';
 if (! $nav_icon_colour)
-	$nav_icon_colour = '#999';
+	$nav_icon_colour = 'rgba(255, 255, 255, 0.5)';
 if (! $nav_active_icon_colour)
-	$nav_active_icon_colour = '#fff';
+	$nav_active_icon_colour = 'rgba(255, 255, 255, 0.75)';
 if (! $link_colour)
 	$link_colour = '#0275d8';
 if (! $banner_colour)
@@ -112,12 +92,6 @@ if (! $item_colour)
 	$item_colour = 'rgb(238,238,238)';
 if (! $comment_item_colour)
 	$comment_item_colour = 'rgb(255,255,255)';
-if (! $comment_border_colour)
-	$comment_border_colour = 'rgb(255,255,255)';
-if (! $toolicon_colour)
-	$toolicon_colour = '#777';
-if (! $toolicon_activecolour)
-	$toolicon_activecolour = '#000';
 if (! $item_opacity)
 	$item_opacity = '1';
 if (! $font_size)
@@ -132,18 +106,8 @@ if (! $converse_width)
 	$converse_width = '790';
 if(! $top_photo)
 	$top_photo = '2.3rem';
-if(! $comment_indent)
-	$comment_indent = '0px';
 if(! $reply_photo)
 	$reply_photo = '2.3rem';
-if($nav_min_opacity === false || $nav_min_opacity === '') {
-	$nav_float_min_opacity = 1.0;
-	$nav_percent_min_opacity = 100;
-}
-else {
-	$nav_float_min_opacity = (float) $nav_min_opacity;
-	$nav_percent_min_opacity = (int) 100 * $nav_min_opacity;
-}
 
 // Apply the settings
 if(file_exists('view/theme/redbasic/css/style.css')) {
@@ -176,11 +140,6 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 
 	$options = array (
 		'$nav_bg' => $nav_bg,
-		'$nav_gradient_top' => $nav_gradient_top,
-		'$nav_gradient_bottom' => $nav_gradient_bottom,
-		'$nav_active_gradient_top' => $nav_active_gradient_top,
-		'$nav_active_gradient_bottom' => $nav_active_gradient_bottom,
-		'$nav_bd' => $nav_bd,
 		'$nav_icon_colour' => $nav_icon_colour,
 		'$nav_active_icon_colour' => $nav_active_icon_colour,
 		'$link_colour' => $link_colour,
@@ -189,9 +148,6 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 		'$background_image' => $background_image,
 		'$item_colour' => $item_colour,
 		'$comment_item_colour' => $comment_item_colour,
-		'$comment_border_colour' => $comment_border_colour,
-		'$toolicon_colour' => $toolicon_colour,
-		'$toolicon_activecolour' => $toolicon_activecolour,
 		'$font_size' => $font_size,
 		'$font_colour' => $font_colour,
 		'$radius' => $radius,
@@ -203,7 +159,6 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 		'$reply_photo' => $reply_photo,
 		'$pmenu_top' => $pmenu_top,
 		'$pmenu_reply' => $pmenu_reply,
-		'$comment_indent' => $comment_indent,
 		'$main_width' => $main_width,
 		'$aside_width' => $aside_width
 	);

@@ -78,6 +78,8 @@ h6, .h6 {
 }
 
 #banner {
+	color: $banner_colour;
+	font-weight: bold;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -97,10 +99,6 @@ abbr {
 }
 
 /* icons */
-.tool-icons,
-.cat-icons {
-	color: $toolicon_colour;
-}
 
 a,
 .fakelink {
@@ -735,18 +733,6 @@ div.jGrowl div.jGrowl-notification {
 	text-align: center;
 }
 
-a.rconnect, a.rateme, div.rateme {
-  color: $nav_active_icon_colour;
-  text-decoration: none;
-  font-weight: normal;
-  outline: none;
-}
-
-a.rconnect:hover, a.rateme:hover, div.rateme:hover {
-	color: #0080FF;
-	text-decoration: none;
-}
-
 .conv-participants {
 	color: $font_colour;
 }
@@ -898,19 +884,14 @@ margin-right: 50px;
 
 .generic-icons {
 	font-size: 1rem;
-	color: $toolicon_colour;
 	margin-right: 0.5rem;
 }
 
 .generic-icons-right {
 	font-size: 1rem;
-	color: $toolicon_colour;
 	margin-left: 0.5rem;
 }
 
-.generic-icons:hover {
-	color: $toolicon_colour;
-}
 
 .generic-icons-nav {
 	font-size: 1.2em;
@@ -919,13 +900,11 @@ margin-right: 50px;
 
 .admin-icons {
 	font-size: 1.2em;
-	color: $toolicon_colour;
 	margin-right: 7px;
 }
 
 .drop-icons,
 a .drop-icons {
-	color: $toolicon_colour;
 	font-size: 1.2em;
 	text-decoration: none;
 	cursor: pointer;
@@ -1132,14 +1111,6 @@ a:active .dropdown-sub-text {
 	font-size: 1rem;
 }
 
-.item-tool {
-	font-size: 1.2em;
-	color: $toolicon_colour;
-}
-
-.like-rotator {
-	color: $toolicon_colour;
-}
 
 .comment-edit-text-empty,
 .comment-edit-text-full {
@@ -1171,10 +1142,6 @@ a:active .dropdown-sub-text {
 	background-color: rgba(254,254,254,.5);
 	border: 1px solid rgba(254,254,254,.5);
 	border-radius: $radius;
-}
-
-.widget h3 {
-	color: $toolicon_colour;
 }
 
 #note-text {
@@ -1428,61 +1395,18 @@ blockquote {
 	border-radius: $radius;
 }
 
-/*
-.navbar-inverse {
-	background-image: -webkit-linear-gradient(top, $nav_gradient_top 0%, $nav_gradient_bottom 100%);
-	background-image:         linear-gradient(to bottom, $nav_gradient_top 0%, $nav_gradient_bottom 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=$nav_gradient_top, endColorstr=$nav_gradient_bottom, GradientType=0);
-	background-color: $nav_bg;
-	border-color: $nav_bd;
+.bg-inverse {
+	background-color: $nav_bg !important;
 }
 
-
-.navbar-inverse .navbar-collapse {
-	border-color: $nav_bd;
+.navbar-inverse .navbar-nav .nav-link {
+  color: $nav_icon_colour;
 }
 
-.navbar-inverse .navbar-nav > .active > a {
-	background-image: -webkit-linear-gradient(top, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
-	background-image:         linear-gradient(to bottom, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=$nav_active_gradient_top, endColorstr=$nav_active_gradient_bottom, GradientType=0);
+.navbar-inverse .navbar-nav .nav-link:focus,
+.navbar-inverse .navbar-nav .nav-link:hover {
+  color: $nav_active_icon_colour;
 }
-
-
-.navbar-inverse .navbar-nav > li > a {
-	color: $nav_icon_colour;
-}
-
-.navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-nav > li > a:focus {
-	color: $nav_active_icon_colour;
-}
-
-.navbar-inverse .navbar-nav > .active > a,
-.navbar-inverse .navbar-nav > .active > a:hover,
-.navbar-inverse .navbar-nav > .active > a:focus {
-	color: $nav_active_icon_colour;
-}
-
-.navbar-inverse .navbar-nav > .open > a,
-.navbar-inverse .navbar-nav > .open > a:hover,
-.navbar-inverse .navbar-nav > .open > a:focus {
-	background-color: $nav_bd;
-	color: $nav_active_icon_colour;
-}
-
-.navbar-inverse .navbar-toggle {
-	border-color: $nav_bd;
-}
-.navbar-inverse .navbar-toggle:hover,
-.navbar-inverse .navbar-toggle:focus {
-	background-color: $nav_bg;
-}
-
-.navbar-inverse .navbar-toggle .icon-bar {
-	background-color: $nav_active_icon_colour;
-}
-*/
 
 @media screen and (max-width: 767px) {
 
@@ -1688,7 +1612,6 @@ dl.bb-dl > dd > li {
 
 .app-icon {
 	font-size: 80px;
-	color: $toolicon_colour;
 	text-shadow: 3px 3px 3px lightgrey;
 }
 

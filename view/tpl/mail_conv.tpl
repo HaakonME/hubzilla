@@ -1,11 +1,13 @@
-<div id="mail-{{$mail.id}}" class="clearfix mail-conv-outside-wrapper">
-	<div class="mail-conv-sender" >
-		<a href="{{$mail.from_url}}"><img class="mail-conv-sender-photo" src="{{$mail.from_photo}}" alt="{{$mail.from_name}}" /></a>
-	</div>
-	<div class="clearfix mail-conv-detail">
-		{{if $mail.is_recalled}}<strong>{{$mail.is_recalled}}</strong>{{/if}}
-		<div class="mail-conv-sender-name"><a href="{{$mail.from_url}}">{{$mail.from_name}}</a></div>
-		<div class="mail-conv-date autotime wall-item-ago" title="{{$mail.date}}">{{$mail.date}}</div>
+<div id="mail-{{$mail.id}}" class="mb-2 clearfix mail-conv-outside-wrapper">
+	<div class="mb-2 clearfix wall-item-head">
+		<div class="wall-item-info" >
+			<a href="{{$mail.from_url}}"><img class="wall-item-photo" src="{{$mail.from_photo}}" alt="{{$mail.from_name}}" /></a>
+		</div>
+		<div class="mail-conv-detail">
+			{{if $mail.is_recalled}}<strong>{{$mail.is_recalled}}</strong>{{/if}}
+			<div class="wall-item-name"><a class="wall-item-name-link" href="{{$mail.from_url}}">{{$mail.from_name}}</a></div>
+			<div class="autotime wall-item-ago" title="{{$mail.date}}">{{$mail.date}}</div>
+		</div>
 	</div>
 	<div class="clearfix mail-conv-content">
 		<div class="clearfix mail-conv-body">

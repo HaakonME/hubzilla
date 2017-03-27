@@ -28,7 +28,7 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/account_settings]account_settings[/zrl]
 	Called when generating the account settings form
 
-[zrl=[baseurl]/help/hook/settings_account]account_settings_post[/zrl]
+[zrl=[baseurl]/help/hook/account_settings_post]account_settings_post[/zrl]
 	Called when posting from the account settings form
 
 [zrl=[baseurl]/help/hook/activity_received]activity_received[/zrl]
@@ -63,6 +63,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 
 [zrl=[baseurl]/help/hook/authenticate]authenticate[/zrl]
 	Can provide alternate authentication mechanisms
+
+[zrl=[baseurl]/help/hook/author_is_pmable]author_is_pmable[/zrl]
+	Called from the thread action menu to determine if we can send private mail to the post author
 
 [zrl=[baseurl]/help/hook/bb2diaspora]bb2diaspora[/zrl]
 	called when converting bbcode to markdown

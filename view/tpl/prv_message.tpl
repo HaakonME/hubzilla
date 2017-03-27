@@ -28,7 +28,7 @@
 				{{/if}}
 				<div class="form-group">
 					<label for="prvmail-text">{{$yourmessage}}</label>
-					<textarea class="form-control" id="prvmail-text" name="body">{{$text}}</textarea>
+					<textarea class="form-control" id="prvmail-text" name="body"{{if $new}} style="height: 10em;"{{/if}}>{{$text}}</textarea>
 				</div>
 				<div id="prvmail-submit-wrapper" class="form-group">
 					<div id="prvmail-submit" class="float-right btn-group">

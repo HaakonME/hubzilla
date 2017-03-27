@@ -737,10 +737,6 @@ div.jGrowl div.jGrowl-notification {
 	color: $font_colour;
 }
 
-.active .conv-participants {
-	color: #fff;
-}
-
 .contactname {
 	font-weight: bold;
 	display: block;
@@ -1097,9 +1093,10 @@ a:hover .dropdown-sub-text {
 }
 
 .active .wall-item-ago,
-a:active .wall-item-ago,
+a.active:hover .wall-item-ago,
 .active .dropdown-sub-text,
-a:active .dropdown-sub-text {
+a:active .dropdown-sub-text,
+a.active:hover .dropdown-sub-text {
 	color: #fff;
 }
 

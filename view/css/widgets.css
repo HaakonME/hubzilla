@@ -155,3 +155,9 @@ li:hover .group-edit-icon {
 a.wikilist {
 	z-index: 1;
 }
+
+/* mail list */
+
+.active .conv-participants {
+	color: #fff;
+}

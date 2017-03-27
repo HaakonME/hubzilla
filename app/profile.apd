@@ -1,6 +1,0 @@
-version: 1
-url: $baseurl/profile/$nick
-requires: local_channel
-name: View Profile
-photo: icon:user
-categories: Personal

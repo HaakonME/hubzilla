@@ -1,8 +1,7 @@
 .app-container {
 	float: left;
-	width: 150px;
-	height: 180px;
-	padding: 20px;
+	width: 148px;
+	margin: 20px;
 }
 
 .app-name {

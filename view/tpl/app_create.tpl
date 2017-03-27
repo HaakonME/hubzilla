@@ -3,7 +3,7 @@
 		<h2>{{$banner}}</h2>
 	</div>
 
-	<div class="section-content-wrapper">
+	<div class="clearfix section-content-wrapper">
 		<form action="appman" method="post">
 		{{if $guid}}
 		<input type="hidden" name="guid" value="{{$guid}}" />
@@ -33,7 +33,7 @@
 		{{include file="field_textarea.tpl" field=$embed}}
 		{{/if}}
 
-		<input type="submit" name="submit" value="{{$submit}}" />
+		<button class="btn btn-primary float-right" type="submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 
 		</form>
 	</div>

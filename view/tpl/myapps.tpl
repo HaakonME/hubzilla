@@ -9,10 +9,9 @@
 		{{/if}}
 		<h2>{{$title}}{{if $cat}} - {{$cat}}{{/if}}</h2>
 	</div>
-	<div class="section-content-wrapper">
+	<div class="clearfix section-content-wrapper">
 		{{foreach $apps as $ap}}
 		{{$ap}}
 		{{/foreach}}
-		<div class="clear"></div>
 	</div>
 </div>

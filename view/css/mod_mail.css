@@ -32,3 +32,8 @@
 .mail-conv-outside-wrapper {
 	margin-bottom: 20px;
 }
+
+.active .conv-participants {
+	color: #fff;
+}
+

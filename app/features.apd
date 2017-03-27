@@ -1,6 +1,0 @@
-version: 1
-url: $baseurl/settings/features
-requires: local_channel
-name: Features
-photo: icon:cogs
-categories: System

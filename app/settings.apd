@@ -1,6 +1,0 @@
-version: 1
-url: $baseurl/settings
-requires: local_channel
-name: Settings
-photo: icon:cog
-categories: System

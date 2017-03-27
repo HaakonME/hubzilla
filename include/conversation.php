@@ -917,6 +917,24 @@ function thread_action_menu($item,$mode = '') {
 
 }
 
+function author_is_pmable($xchan) {
+
+	$x = [ 'xchan' => $xchan, 'result' => 'unset' ];
+	call_hooks('author_is_pmable',$x);
+	if($x['result'] !== 'unset')
+		return $x['result'];
+	
+	if($xchan['xchan_network'] === 'zot')
+		return true;
+	return false;
+
+}
+
+
+
+
+
+
 function thread_author_menu($item, $mode = '') {
 
 	$menu = [];
@@ -932,14 +950,18 @@ function thread_author_menu($item, $mode = '') {
 
 	$profile_link = chanlink_hash($item['author_xchan']);
 
-	if($item['uid'] > 0)
-		$pm_url = z_root() . '/mail/new/?f=&hash=' . urlencode($item['author_xchan']);
 
 	if(App::$contacts && array_key_exists($item['author_xchan'],App::$contacts))
 		$contact = App::$contacts[$item['author_xchan']];
 	else
 		if($local_channel && $item['author']['xchan_addr'])
 			$follow_url = z_root() . '/follow/?f=&url=' . urlencode($item['author']['xchan_addr']);
+
+	
+	if($item['uid'] > 0 && author_is_pmable($item['author']))
+		$pm_url = z_root() . '/mail/new/?f=&hash=' . urlencode($item['author_xchan']);
+
+
 
 	if($contact) {
 		$poke_link = z_root() . '/poke/?f=&c=' . $contact['abook_id'];

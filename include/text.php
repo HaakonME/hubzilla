@@ -122,13 +122,23 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 }
 
 
-
+/**
+ * @brief Use HTMLPurifier to get standards compliant HTML.
+ *
+ * Use the <a href="http://htmlpurifier.org/" target="_blank">HTMLPurifier</a>
+ * library to get filtered and standards compliant HTML.
+ *
+ * @see HTMLPurifier
+ *
+ * @param string $s raw HTML
+ * @param boolean $allow_position allow CSS position
+ * @return string standards compliant filtered HTML
+ */
 function purify_html($s, $allow_position = false) {
-	require_once('library/HTMLPurifier.auto.php');
-	require_once('include/html2bbcode.php');
 
 /**
  * @FIXME this function has html output, not bbcode - so safely purify these
+ * require_once('include/html2bbcode.php');
  * $s = html2bb_video($s);
  * $s = oembed_html2bbcode($s);
  */
@@ -136,6 +146,15 @@ function purify_html($s, $allow_position = false) {
 	$config = HTMLPurifier_Config::createDefault();
 	$config->set('Cache.DefinitionImpl', null);
 	$config->set('Attr.EnableID', true);
+
+	// If enabled, target=blank attributes are added to all links.
+	//$config->set('HTML.TargetBlank', true);
+	//$config->set('Attr.AllowedFrameTargets', ['_blank', '_self', '_parent', '_top']);
+	// restore old behavior of HTMLPurifier < 4.8, only used when targets allowed at all
+	// do not add rel="noreferrer" to all links with target attributes
+	//$config->set('HTML.TargetNoreferrer', false);
+	// do not add noopener rel attributes to links which have a target attribute associated with them
+	//$config->set('HTML.TargetNoopener', false);
 
 	//Allow some custom data- attributes used by built-in libs.
 	//In this way members which do not have allowcode set can still use the built-in js libs in webpages to some extent.
@@ -274,7 +293,6 @@ function purify_html($s, $allow_position = false) {
 			new HTMLPurifier_AttrDef_CSS_Length(),
 			new HTMLPurifier_AttrDef_CSS_Percentage()
 		));
-
 	}
 
 	$purifier = new HTMLPurifier($config);

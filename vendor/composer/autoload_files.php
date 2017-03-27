@@ -13,4 +13,5 @@ return array(
     '3569eecfeed3bcf0bad3c998a494ecb8' => $vendorDir . '/sabre/xml/lib/Deserializer/functions.php',
     '93aa591bc4ca510c520999e34229ee79' => $vendorDir . '/sabre/xml/lib/Serializer/functions.php',
     'ebdb698ed4152ae445614b69b5e4bb6a' => $vendorDir . '/sabre/http/lib/functions.php',
+    '2cffec82183ee1cea088009cef9a6fc3' => $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
 );

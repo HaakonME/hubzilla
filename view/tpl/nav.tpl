@@ -10,24 +10,6 @@
 	{{/if}}
 </div>
 {{/if}}
-<div class="navbar-toggler-right">
-	{{if $nav.help.6}}
-	<button id="context-help-btn" class="navbar-toggler border-0" type="button" onclick="contextualHelp(); return false;">
-		<i class="fa fa-question-circle"></i>
-	</button>
-	{{/if}}
-	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
-		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
-	</button>
-	{{if $localuser}}
-	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white" data-toggle="collapse" data-target="#navbar-collapse-1">
-		<i class="fa fa-exclamation-circle"></i>
-	</button>
-	{{/if}}
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">
-		<i class="fa fa-bars"></i>
-	</button>
-</div>
 {{if $userinfo}}
 <div class="dropdown usermenu">
 	<div class="fakelink" data-toggle="dropdown">
@@ -73,6 +55,24 @@
 	{{/if}}
 </div>
 {{/if}}
+<div class="navbar-toggler-right">
+	{{if $nav.help.6}}
+	<button id="context-help-btn" class="navbar-toggler border-0" type="button" onclick="contextualHelp(); return false;">
+		<i class="fa fa-question-circle"></i>
+	</button>
+	{{/if}}
+	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
+		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
+	</button>
+	{{if $localuser}}
+	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white" data-toggle="collapse" data-target="#navbar-collapse-1">
+		<i class="fa fa-exclamation-circle"></i>
+	</button>
+	{{/if}}
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">
+		<i class="fa fa-bars"></i>
+	</button>
+</div>
 <div class="collapse navbar-collapse" id="navbar-collapse-1">
 	<ul class="navbar-nav mr-auto">
 		{{if $nav.network}}
@@ -201,7 +201,7 @@
 	</ul>
 </div>
 <div class="collapse d-md-none" id="navbar-collapse-2">
-	<div class="navbar-nav">
+	<div class="navbar-nav mr-auto">
 		{{foreach $navapps as $navapp}}
 		{{$navapp|replace:'dropdown-item':'nav-link'}}
 		{{/foreach}}

@@ -29,6 +29,11 @@ nav .badge {
 	height: 2.3rem;
 }
 
+.navbar-toggler-right {
+	padding: 0.2rem 0;
+}
+
+
 #navbar-collapse-1 i {
 	font-size: 1rem;
 }
@@ -42,13 +47,14 @@ nav.navbar {
 	max-height: 100vh;
 }
 
+#navbar-collapse-2 {
+	flex-basis: 100%;
+}
+
 #navbar-collapse-2.show {
 	overflow: auto;
 }
 
-.navbar-toggler-right {
-	top: 0.5rem;
-}
 /* nav overrides end */
 
 .wall-item-tools .dropdown-menu {

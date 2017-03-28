@@ -202,7 +202,7 @@ class Router {
 			 * The member may have also created a customised PDL that's stored in the config
 			 */
 
-			load_pdl($a);
+			load_pdl();
 
 			/*
 		 	 * load current theme info

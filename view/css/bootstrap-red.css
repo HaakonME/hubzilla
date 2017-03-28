@@ -9,8 +9,8 @@ nav .badge {
 
 @media screen and (min-width: 767px) {
 	nav .badge {
-		top: -0.25rem;
-		left: -0.25rem;
+		top: 0px;
+		left: 0px;
 	}
 }
 

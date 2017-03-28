@@ -15,7 +15,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="theme-settings-content" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="theme-settings">
+				<div id="theme-settings-content" class="collapse show" role="tabpanel" aria-labelledby="theme-settings">
 					<div class="section-content-tools-wrapper">
 						{{if $theme}}
 							{{include file="field_themeselect.tpl" field=$theme}}
@@ -41,7 +41,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="custom-settings-content" class="panel-collapse collapse{{if !$theme && !$mobile_theme}} in{{/if}}" role="tabpanel" aria-labelledby="custom-settings">
+				<div id="custom-settings-content" class="collapse{{if !$theme && !$mobile_theme}} in{{/if}}" role="tabpanel" aria-labelledby="custom-settings">
 					<div class="section-content-tools-wrapper">
 						{{if $theme_config}}
 							{{$theme_config}}
@@ -57,7 +57,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="content-settings-content" class="panel-collapse collapse{{if !$theme && !$mobile_theme && !$theme_config}} in{{/if}}" role="tabpanel" aria-labelledby="content-settings">
+				<div id="content-settings-content" class="collapse{{if !$theme && !$mobile_theme && !$theme_config}} in{{/if}}" role="tabpanel" aria-labelledby="content-settings">
 					<div class="section-content-wrapper">
 						{{include file="field_input.tpl" field=$ajaxint}}
 						{{include file="field_input.tpl" field=$itemspage}}

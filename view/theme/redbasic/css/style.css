@@ -191,7 +191,7 @@ nav {
 .contextual-help-content-open {
 	display: block;
 	position: fixed;
-	top: 3.25rem;
+	top: 3.35rem;
 	left: 0px;
 	width: 100%;
 	max-height: 50%;
@@ -1211,12 +1211,12 @@ a.active:hover .dropdown-sub-text {
 }
 
 .usermenu {
-	width: 3.5rem;
+	width: 3.75rem;
 }
 
 #avatar {
-	width: 2.2rem;
-	height: 2.2rem;
+	width: 2.35rem;
+	height: 2.35rem;
 	border-radius: $radius;
 }
 

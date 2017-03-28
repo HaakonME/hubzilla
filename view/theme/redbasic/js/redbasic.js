@@ -3,7 +3,7 @@
  */
 $(document).ready(function() {
 
-	//this is a hotfix to make collapsible bs panels work again. this needs fixing in templates. 
+	//this is a hotfix to make collapsible bs panels work again. this needs fixing in bootstrap. 
 	$('a').on('click', function(e) {
 		if($(this).data('toggle') == 'collapse') {
 			e.preventDefault();

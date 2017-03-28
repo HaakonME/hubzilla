@@ -11,12 +11,12 @@
 			<div class="panel">
 				<div class="section-subtitle-wrapper" role="tab" id="basic-settings">
 					<h3>
-						<a data-toggle="collapse" data-parent="#settings" href="#basic-settings-collapse" aria-expanded="true" aria-controls="basic-settings-collapse">
+						<a data-toggle="collapse" data-parent="#settings" href="#basic-settings-collapse">
 							{{$h_basic}}
 						</a>
 					</h3>
 				</div>
-				<div id="basic-settings-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="basic-settings">
+				<div id="basic-settings-collapse" class="collapse show" role="tabpanel" aria-labelledby="basic-settings">
 					<div class="section-content-tools-wrapper">
 						{{include file="field_input.tpl" field=$username}}
 						{{include file="field_select_grouped.tpl" field=$timezone}}
@@ -37,12 +37,12 @@
 			<div class="panel">
 				<div class="section-subtitle-wrapper" role="tab" id="privacy-settings">
 					<h3>
-						<a data-toggle="collapse" data-parent="#settings" href="#privacy-settings-collapse" aria-expanded="true" aria-controls="privacy-settings-collapse">
+						<a data-toggle="collapse" data-parent="#settings" href="#privacy-settings-collapse">
 							{{$h_prv}}
 						</a>
 					</h3>
 				</div>
-				<div id="privacy-settings-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="privacy-settings">
+				<div id="privacy-settings-collapse" class="collapse" role="tabpanel" aria-labelledby="privacy-settings">
 					<div class="section-content-tools-wrapper">
 						{{if $server_role != 'basic'}}
 						{{include file="field_select_grouped.tpl" field=$role}}
@@ -100,12 +100,12 @@
 			<div class="panel">
 				<div class="section-subtitle-wrapper" role="tab" id="notification-settings">
 					<h3>
-						<a data-toggle="collapse" data-parent="#settings" href="#notification-settings-collapse" aria-expanded="true" aria-controls="notification-settings-collapse">
+						<a data-toggle="collapse" data-parent="#settings" href="#notification-settings-collapse">
 							{{$h_not}}
 						</a>
 					</h3>
 				</div>
-				<div id="notification-settings-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="notification-settings">
+				<div id="notification-settings-collapse" class="collapse" role="tabpanel" aria-labelledby="notification-settings">
 					<div class="section-content-tools-wrapper">
 						<div id="settings-notifications">
 							<h3>{{$activity_options}}</h3>
@@ -162,7 +162,7 @@
 						</a>
 					</h3>
 				</div>
-				<div id="miscellaneous-settings-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="miscellaneous-settings">
+				<div id="miscellaneous-settings-collapse" class="collapse" role="tabpanel" aria-labelledby="miscellaneous-settings">
 					<div class="section-content-tools-wrapper">
 						{{if $menus}}
 						<div class="form-group channel-menu">

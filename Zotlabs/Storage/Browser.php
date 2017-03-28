@@ -244,7 +244,7 @@ class Browser extends DAV\Browser\Plugin {
 		$a = false;
 
 		\App::$page['content'] = $html;
-		load_pdl($a);
+		load_pdl();
 
 		$current_theme = \Zotlabs\Render\Theme::current();
 

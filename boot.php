@@ -1996,7 +1996,7 @@ function get_custom_nav(&$a, $navname) {
  *
  * @param App &$a global application object
  */
-function load_pdl(&$a) {
+function load_pdl() {
 
 	App::$comanche = new Zotlabs\Render\Comanche();
 

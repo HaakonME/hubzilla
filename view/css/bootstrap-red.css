@@ -55,6 +55,9 @@ nav.navbar {
 	overflow: auto;
 }
 
+.navbar-inverse .navbar-toggler {
+	color: rgba(255,255,255,1);
+}
 /* nav overrides end */
 
 .wall-item-tools .dropdown-menu {

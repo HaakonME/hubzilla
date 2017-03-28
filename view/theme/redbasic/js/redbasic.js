@@ -3,6 +3,13 @@
  */
 $(document).ready(function() {
 
+	//this is a hotfix to make collapsible bs panels work again. this needs fixing in templates. 
+	$('a').on('click', function(e) {
+		if($(this).data('toggle') == 'collapse') {
+			e.preventDefault();
+		}
+	});
+
 	// CSS3 calc() fallback (for unsupported browsers)
 	$('body').append('<div id="css3-calc" style="width: 10px; width: calc(10px + 10px); display: none;"></div>');
 	if( $('#css3-calc').width() == 10) {

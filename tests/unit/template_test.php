@@ -25,12 +25,6 @@ function x($s,$k = NULL) {
 }
 }
 
-if(!function_exists('get_app')) {
-function get_app() {
-	return new TemplateMockApp();
-}
-}
-
 /**
  * TestCase for the template engine
  *

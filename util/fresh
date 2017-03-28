@@ -44,8 +44,6 @@ fresh_main($argc,$argv);
 
 function process_command($line) {
 
-	$a = get_app();
-
 	// split args
 
 	App::$cmd = $line;

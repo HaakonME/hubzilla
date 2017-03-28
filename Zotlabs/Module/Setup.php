@@ -624,7 +624,6 @@ class Setup extends \Zotlabs\Web\Controller {
 	 * @param[out] array &$checks
 	 */
 	function check_htaccess(&$checks) {
-		$a = get_app();
 		$status = true;
 		$help = '';
 		$ssl_error = false;
@@ -718,7 +717,6 @@ class Setup extends \Zotlabs\Web\Controller {
 	 * @return string with parsed HTML
 	 */
 	function what_next() {
-		$a = get_app();
 		// install the standard theme
 		set_config('system', 'allowed_themes', 'redbasic');
 

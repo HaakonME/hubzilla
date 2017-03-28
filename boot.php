@@ -1260,18 +1260,6 @@ class App {
 
 
 /**
- * @brief Retrieve the App structure.
- *
- * Useful in functions which require it but don't get it passed to them
- *
- * @return App
- */
-function get_app() {
-	return $a;
-}
-
-
-/**
  * @brief Multi-purpose function to check variable state.
  *
  * Usage: x($var) or $x($array, 'key')

@@ -13,9 +13,7 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 	$ret = array('success' => false);
 	$is_reply = false;
 
-	$a = get_app();
 	$observer_hash = get_observer_hash();
-
 
 	if($uid) {
 		$r = q("select * from channel where channel_id = %d limit 1",

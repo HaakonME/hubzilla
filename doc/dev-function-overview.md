@@ -15,10 +15,6 @@ Returns authenticated numeric channel_id if authenticated and connected to a cha
 
 Returns authenticated string hash of Red global identifier, if authenticated via remote auth, or an empty string.
 
-* get_app()
-
-Returns the global app structure ($a). No longer used as App is a static class
-
 * App::get_observer()
 
 returns an xchan structure representing the current viewer if authenticated (locally or remotely).

@@ -2323,19 +2323,19 @@ function z_check_cert() {
  */
 
 function cert_bad_email() {
-
-	$email_tpl = get_intltext_template("cert_bad_eml.tpl");
-	$email_msg = replace_macros($email_tpl, array(
-		'$sitename' => App::$config['system']['sitename'],
-		'$siteurl' =>  z_root(),
-		'$error' => t('Website SSL certificate is not valid. Please correct.')
-	));
-
-	$subject = email_header_encode(sprintf(t('[$Projectname] Website SSL error for %s'), App::get_hostname()));
-	mail(App::$config['system']['admin_email'], $subject, $email_msg,
-		'From: Administrator' . '@' . App::get_hostname() . "\n"
-		. 'Content-type: text/plain; charset=UTF-8' . "\n"
-		. 'Content-transfer-encoding: 8bit' );
+	return z_mail(
+		[
+			'toEmail'        => \App::$config['system']['admin_email'],
+			'messageSubject' => sprintf(t('[$Projectname] Website SSL error for %s'), App::get_hostname()),
+			'textVersion'    => replace_macros(get_intltext_template('cert_bad_eml.tpl'),
+				[
+					'$sitename' => App::$config['system']['sitename'],
+					'$siteurl'  =>  z_root(),
+					'$error'    => t('Website SSL certificate is not valid. Please correct.')
+				]
+			)
+		]
+	);
 }
 
 
@@ -2446,20 +2446,20 @@ function check_cron_broken() {
 		return;
 	}
 
-	$email_tpl = get_intltext_template("cron_bad_eml.tpl");
-	$email_msg = replace_macros($email_tpl, array(
-		'$sitename' => App::$config['system']['sitename'],
-		'$siteurl' =>  z_root(),
-		'$error' => t('Cron/Scheduled tasks not running.'),
-		'$lastdate' => (($d)? $d : t('never'))
-	));
-
-	$subject = email_header_encode(sprintf(t('[hubzilla] Cron tasks not running on %s'), App::get_hostname()));
-	mail(App::$config['system']['admin_email'], $subject, $email_msg,
-		'From: Administrator' . '@' . App::get_hostname() . "\n"
-		. 'Content-type: text/plain; charset=UTF-8' . "\n"
-		. 'Content-transfer-encoding: 8bit' );
-	return;
+	return z_mail(
+		[
+			'toEmail'        => \App::$config['system']['admin_email'],
+			'messageSubject' => sprintf(t('[$Projectname] Cron tasks not running on %s'), App::get_hostname()),
+			'textVersion'    => replace_macros(get_intltext_template('cron_bad_eml.tpl'),
+				[
+					'$sitename' => App::$config['system']['sitename'],
+					'$siteurl'  =>  z_root(),
+					'$error'    => t('Cron/Scheduled tasks not running.'),
+					'$lastdate' => (($d)? $d : t('never'))
+				]
+			)
+		]
+	);
 }
 
 

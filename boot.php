@@ -2018,7 +2018,7 @@ function curPageURL() {
  *
  * @return mixed
  */
-function get_custom_nav(&$a, $navname) {
+function get_custom_nav($navname) {
 	if (! $navname)
 		return App::$page['nav'];
 	// load custom nav menu by name here
@@ -2030,7 +2030,6 @@ function get_custom_nav(&$a, $navname) {
  * If there is no parsed Comanche template already load a module's pdl file
  * and parse it with Comanche.
  *
- * @param App &$a global application object
  */
 function load_pdl() {
 
@@ -2059,7 +2058,7 @@ function load_pdl() {
 }
 
 
-function exec_pdl(&$a) {
+function exec_pdl() {
 	if(App::$pdl) {
 		App::$comanche->parse(App::$pdl,1);
 	}
@@ -2071,11 +2070,10 @@ function exec_pdl(&$a) {
  *
  * Build the page - now that we have all the components
  *
- * @param App &$a global application object
  */
-function construct_page(&$a) {
+function construct_page() {
 
-	exec_pdl($a);
+	exec_pdl();
 
 	$comanche = ((count(App::$layout)) ? true : false);
 
@@ -2091,7 +2089,7 @@ function construct_page(&$a) {
 
 	if ($comanche) {
 		if (App::$layout['nav']) {
-			App::$page['nav'] = get_custom_nav($a, App::$layout['nav']);
+			App::$page['nav'] = get_custom_nav(App::$layout['nav']);
 		}
 	}
 

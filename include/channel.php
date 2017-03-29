@@ -258,6 +258,7 @@ function create_identity($arr) {
 			'channel_expire_days' => intval($expire),
 			'channel_timezone'    => App::$timezone
 		]
+	);
 
 	$r = q("select * from channel where channel_account_id = %d
 		and channel_guid = '%s' limit 1",

@@ -133,7 +133,7 @@ class WebServer {
 
 		call_hooks('page_end', \App::$page['content']);
 
-		construct_page($a);
+		construct_page();
 
 		killme();
 	}

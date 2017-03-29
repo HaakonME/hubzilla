@@ -48,6 +48,7 @@ require_once('include/xchan.php');
 require_once('include/hubloc.php');
 
 
+
 define ( 'PLATFORM_NAME',           'red' );
 define ( 'STD_VERSION',             '5.3' );
 
@@ -82,7 +83,7 @@ define ( 'DIRECTORY_REALM',            'RED_GLOBAL');
 define ( 'DIRECTORY_FALLBACK_MASTER',  'https://gravizot.de');
 
 $DIRECTORY_FALLBACK_SERVERS = array( 
-	'https://hubzilla.site',
+	//'https://hubzilla.site',
 	'https://hubzilla.zottel.net',
 	'https://my.federated.social',
 	'https://hubzilla.nl',
@@ -2300,6 +2301,7 @@ function cert_bad_email() {
 			)
 		]
 	);
+
 }
 
 

@@ -71,4 +71,6 @@ class Conversations {
 		}
 		return $o;
 	}
+
 }
+

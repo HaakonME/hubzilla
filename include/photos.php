@@ -582,6 +582,7 @@ function photos_list_photos($channel, $observer, $album = '') {
  * @return boolean
  */
 
+
 function photos_album_exists($channel_id, $observer_hash, $album) {
 
 	$sql_extra = permissions_sql($channel_id,$observer_hash);

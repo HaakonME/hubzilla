@@ -878,14 +878,22 @@ margin-right: 50px;
 	list-style-type: none;
 }
 
-.generic-icons {
+.generic-icons,
+a .generic-icons {
 	font-size: 1rem;
 	margin-right: 0.5rem;
+	color: $font_colour;
+}
+
+.generic-icons:hover,
+a .generic-icons:hover {
+	color: $font_colour;
 }
 
 .generic-icons-right {
 	font-size: 1rem;
 	margin-left: 0.5rem;
+	color: $font_colour;
 }
 
 
@@ -901,7 +909,8 @@ margin-right: 50px;
 
 .drop-icons,
 a .drop-icons {
-	font-size: 1.2em;
+	font-size: 1rem;
+	color: $font_colour;
 	text-decoration: none;
 	cursor: pointer;
 }

@@ -12,7 +12,6 @@
 	
 	App::init();
 
-//	$a = new App();
 
 	echo "Directory: include\n";
 	$files = glob('include/*.php');

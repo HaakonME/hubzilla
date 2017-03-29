@@ -15,6 +15,8 @@ class Import_items extends \Zotlabs\Web\Controller {
 		if(! local_channel())
 			return;
 
+		check_form_security_token_redirectOnErr('/import_items', 'import_items');
+
 		$data     = null;
 
 		$src      = $_FILES['filename']['tmp_name'];
@@ -123,6 +125,7 @@ class Import_items extends \Zotlabs\Web\Controller {
 			'$title' => t('Import Items'),
 			'$desc' => t('Use this form to import existing posts and content from an export file.'),
 			'$label_filename' => t('File to Upload'),
+			'$form_security_token' => get_form_security_token('import_items'),
 			'$submit' => t('Submit')
 		));
 

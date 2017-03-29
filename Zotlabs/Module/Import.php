@@ -478,6 +478,8 @@ class Import extends \Zotlabs\Web\Controller {
 		if(! $account_id)
 			return;
 
+		check_form_security_token_redirectOnErr('/import', 'channel_import');
+
 		$this->import_account($account_id);
 	}
 
@@ -508,6 +510,7 @@ class Import extends \Zotlabs\Web\Controller {
 			'$pleasewait' => t('This process may take several minutes to complete. Please submit the form only once and leave this page open until finished.'),
 			'$email' => '',
 			'$pass' => '',
+			'$form_security_token' => get_form_security_token('channel_import'),
 			'$submit' => t('Submit')
 		));
 

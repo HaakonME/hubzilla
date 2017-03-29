@@ -82,12 +82,12 @@ class Forums {
 
 		if($r1) {
 			$o .= '<div class="widget">';
-			$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills nav-stacked">';
+			$o .= '<h3>' . t('Forums') . '</h3><ul class="nav nav-pills flex-column">';
 
 			foreach($r1 as $rr) {
 				if($unseen && (! intval($rr['unseen'])))
 					continue;
-				$o .= '<li><a href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><span class="badge pull-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><img src="' . $rr['xchan_photo_s'] . '" style="width: 16px; height: 16px;" /> ' . $rr['xchan_name'] . '</a></li>';
+				$o .= '<li class="nav-item"><a class="nav-link" href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><span class="badge badge-default float-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><img class ="menu-img-1" src="' . $rr['xchan_photo_s'] . '" /> ' . $rr['xchan_name'] . '</a></li>';
 			}
 			$o .= '</ul></div>';
 		}

@@ -693,39 +693,6 @@ div.jGrowl div.jGrowl-notification {
     min-height: 60px;
 }
 
-#recip-ac .autocomplete,
-#poke-recip-ac .autocomplete,
-#id-name-ac .autocomplete,
-#contact-search-ac .autocomplete {
-	margin-top: 2px;
-	margin-left: $radius;
-	margin-right: $radius;
-	border: 1px solid #666;
-	border-top: none;
-
-}
-
-.autocomplete {
-	color: $font_colour;
-	cursor: pointer;
-	text-align: left;
-	max-height: 350px;
-	overflow: auto;
-	border-bottom-left-radius: $radius;
-	border-bottom-right-radius: $radius;
-}
-
-.autocomplete .selected {
-	background: #eee;
-}
-
-.autocomplete div {
-	padding: 2px 5px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
 .jslider .jslider-scale ins {
 	color: #333;
 	font-size: 0.9rem;
@@ -1095,18 +1062,8 @@ img.mail-conv-sender-photo {
 
 
 .wall-item-ago,
-a:hover .wall-item-ago,
-.dropdown-sub-text,
-a:hover .dropdown-sub-text {
+.dropdown-sub-text {
 	color: #777;
-}
-
-.active .wall-item-ago,
-a.active:hover .wall-item-ago,
-.active .dropdown-sub-text,
-a:active .dropdown-sub-text,
-a.active:hover .dropdown-sub-text {
-	color: #fff;
 }
 
 .wall-item-content,
@@ -1393,12 +1350,28 @@ blockquote {
 }
 
 .dropdown-menu {
+	color: $font_colour;
 	font-size: 0.9rem;
 	border-radius: $radius;
 }
 
 .dropdown-menu img {
 	border-radius: $radius;
+}
+
+.dropdown-item {
+	color: $font_colour;
+}
+
+.dropdown-item:active,
+.dropdown-item:focus,
+.dropdown-item:hover,
+.textcomplete-item:focus .dropdown-item,
+.textcomplete-item:hover .dropdown-item,
+.textcomplete-item.active .dropdown-item,
+.textcomplete-item:active .dropdown-item {
+	color: $font_colour;
+	background-color: $item_colour;
 }
 
 .bg-inverse {

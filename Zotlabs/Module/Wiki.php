@@ -236,11 +236,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 				$mimeType = $p['mimeType'];
 
-				$rawContent = htmlspecialchars_decode(json_decode($p['content']),ENT_COMPAT);
+				$sampleContent = (($mimeType == 'text/bbcode') ? '[h3]' . t('New page') . '[/h3]' : '### ' . t('New page'));
 
-				$rawContent = $p['content'];
+				$content = (($p['content'] == '') ? $sampleContent : $p['content']);
 
-				$content = ($p['content'] !== '' ? $rawContent : '"# New page\n"');
 				// Render the Markdown-formatted page content in HTML
 				if($mimeType == 'text/bbcode') {
 					$renderedContent = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))), argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
@@ -365,6 +364,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if($wiki['urlName'] === '') {				
 				notice( t('Error creating wiki. Invalid name.') . EOL);
 				goaway('/wiki');
+				return; //not reached
+			}
+
+			$exists = Zlib\NativeWiki::exists_by_name($owner['channel_id'], $wiki['urlName']);
+			if($exists['id']) {
+				notice( t('A wiki with this name already exists.') . EOL);
+				goaway('/wiki');
+				return; //not reached
 			}
 
 			// Get ACL for permissions

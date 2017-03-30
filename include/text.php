@@ -3048,7 +3048,15 @@ function array2XML($obj, $array) {
 	}
 }
 
-
+/**
+ * @brief Inserts an array into $table.
+ *
+ * @TODO Why is this function in include/text.php?
+ *
+ * @param string $table
+ * @param array $arr
+ * @return boolean|PDOStatement
+ */
 function create_table_from_array($table, $arr) {
 
 	if(! ($arr && $table))

@@ -7,6 +7,11 @@
 	margin-top: 0px;
 }
 
+.widget .active .wall-item-ago,
+.widget .active .dropdown-sub-text {
+	color: #fff;
+}
+
 .tags {
 	word-wrap: break-word;
 }

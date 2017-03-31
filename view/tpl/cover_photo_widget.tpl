@@ -70,11 +70,7 @@
 <div id="cover-photo" title="{{$hovertitle}}">
 	{{$photo_html}}
 	<div id="cover-photo-caption">
-		<div class="cover-photo-title">
-			{{$title}}
-		</div>
-		<div class="cover-photo-subtitle">
-			{{$subtitle}}
-		</div>
+		<h1>{{$title}}</h1>
+		<h3>{{$subtitle}}</h3>
 	</div>
 </div>

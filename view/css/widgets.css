@@ -143,18 +143,14 @@ li:hover .group-edit-icon {
 	bottom: 0px;
 	left: 0px;
 	width: 100%;
-	padding: 15px;
+	padding: 1rem;
+}
+
+#cover-photo-caption h1,
+#cover-photo-caption h3 {
 	color: #fff;
 	font-weight: bold;
-	text-shadow: 1px 1px 3px rgba(0,0,0,.7);
-}
-
-.cover-photo-title {
-	font-size: 30px;
-}
-
-.cover-photo-subtitle {
-	font-size: 20px;
+	text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
 a.wikilist {

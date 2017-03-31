@@ -196,7 +196,7 @@ nav {
 	width: 100%;
 	max-height: 50%;
 	background: $comment_item_colour;
-	padding: 20px;
+	padding: 1rem;
 	border-bottom: #ccc 1px solid;
 	overflow: auto;
 	-moz-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);

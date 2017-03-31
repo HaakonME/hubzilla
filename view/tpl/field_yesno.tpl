@@ -1,4 +1,4 @@
-	<div class='field yesno'>
+	<div class='clearfix form-group'>
 		<label class="mainlabel" for='id_{{$field.0}}'>{{$field.1}}</label>
 		<div class='onoff' id="id_{{$field.0}}_onoff">
 			<input  type="hidden" name='{{$field.0}}' id='id_{{$field.0}}' value="{{$field.2}}">
@@ -9,5 +9,5 @@
 				{{if $field.4}}{{$field.4.1}}{{else}}ON{{/if}}
 			</a>
 		</div>
-		<span class='field_help'>{{$field.3}}</span>
+		<small class='form-text text-muted'>{{$field.3}}</small>
 	</div>

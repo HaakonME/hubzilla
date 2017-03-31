@@ -74,5 +74,9 @@ code {
 
 .form-group label {
 	font-weight: bold;
-padding-left: 0px;
+}
+
+small,
+.small {
+	font-size: 0.75rem;
 }

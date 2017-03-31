@@ -1,7 +1,7 @@
 <h2>{{$title}}</h2>
 
 <form action="import" method="post" enctype="multipart/form-data" id="import-channel-form">
-
+	<input type="hidden" name="form_security_token" value="{{$form_security_token}}">
 	<div id="import-desc" class="descriptive-paragraph">{{$desc}}</div>
 
 	<label for="import-filename" id="label-import-filename" class="import-label" >{{$label_filename}}</label>
@@ -40,7 +40,4 @@
 	<div id="import-submit-end" class="import-field-end"></div>
 
 	<div id="import-common-desc" class="descriptive-paragraph">{{$pleasewait}}</div>
-
-
 </form>
-

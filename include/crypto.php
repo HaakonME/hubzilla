@@ -79,6 +79,19 @@ function STD_decrypt($data,$key,$iv) {
 	return openssl_decrypt($data,'aes-256-cbc',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
 }
 
+function AES256GCM_encrypt($data,$key,$iv) {
+	$key = substr($key,0,32);
+	$iv = substr($iv,0,16);
+	return openssl_encrypt($data,'aes-256-gcm',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+}
+
+function AES256GCM_decrypt($data,$key,$iv) {
+	$key = substr($key,0,32);
+	$iv = substr($iv,0,16);
+	return openssl_decrypt($data,'aes-256-gcm',str_pad($key,32,"\0"),OPENSSL_RAW_DATA,str_pad($iv,16,"\0"));
+}
+
+
 function CAST5CBC_encrypt($data,$key,$iv) {
 	$key = substr($key,0,16);
 	$iv = substr($iv,0,8);
@@ -152,7 +165,7 @@ function crypto_methods() {
 	// The actual methods are responsible for deriving the actual key/iv from the provided parameters;
 	// possibly by truncation or segmentation - though many other methods could be used.  
 
-	$r = [ 'std', 'aes256cbc', 'aes128cbc', 'cast5cbc' ];
+	$r = [ 'aes256gcm', 'std', 'aes256cbc', 'aes128cbc', 'cast5cbc' ];
 	call_hooks('crypto_methods',$r);
 	return $r;
 

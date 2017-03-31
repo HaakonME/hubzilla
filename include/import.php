@@ -98,7 +98,7 @@ function import_channel($channel, $account_id, $seize) {
 
 	$r = q("select * from channel where channel_account_id = %d and channel_guid = '%s' limit 1",
 		intval($account_id),
-		$channel['channel_guid']   // Already dbesc'd
+		dbesc($channel['channel_guid'])
 	);
 	if(! $r) {
 		logger('mod_import: channel not found. ' . print_r($channel,true));
@@ -195,23 +195,24 @@ function import_hublocs($channel, $hublocs, $seize, $moving = false) {
 			}
 
 			if(! array_key_exists('hubloc_primary',$hubloc)) {
-				$hubloc['hubloc_primary'] = (($hubloc['hubloc_flags'] & 0x0001) ? 1 : 0);
-				$hubloc['hubloc_orphancheck'] = (($hubloc['hubloc_flags'] & 0x0004) ? 1 : 0);
-				$hubloc['hubloc_error'] = (($hubloc['hubloc_status'] & 0x0003) ? 1 : 0);
-				$hubloc['hubloc_deleted'] = (($hubloc['hubloc_flags'] & 0x1000) ? 1 : 0);
+				$hubloc['hubloc_primary']     = (($hubloc['hubloc_flags']  & 0x0001) ? 1 : 0);
+				$hubloc['hubloc_orphancheck'] = (($hubloc['hubloc_flags']  & 0x0004) ? 1 : 0);
+				$hubloc['hubloc_error']       = (($hubloc['hubloc_status'] & 0x0003) ? 1 : 0);
+				$hubloc['hubloc_deleted']     = (($hubloc['hubloc_flags']  & 0x1000) ? 1 : 0);
 			}
 
 			if($moving && $hubloc['hubloc_hash'] === $channel['channel_hash'] && $hubloc['hubloc_url'] !== z_root()) {
 				$hubloc['hubloc_deleted'] = 1;
 			}
 
-			$arr = array(
-				'guid' => $hubloc['hubloc_guid'],
+			$arr = [
+				'guid'     => $hubloc['hubloc_guid'],
 				'guid_sig' => $hubloc['hubloc_guid_sig'],
-				'url' => $hubloc['hubloc_url'],
-				'url_sig' => $hubloc['hubloc_url_sig'],
-				'sitekey' => ((array_key_exists('hubloc_sitekey',$hubloc)) ? $hubloc['hubloc_sitekey'] : '')
-			);
+				'url'      => $hubloc['hubloc_url'],
+				'url_sig'  => $hubloc['hubloc_url_sig'],
+				'sitekey'  => ((array_key_exists('hubloc_sitekey',$hubloc)) ? $hubloc['hubloc_sitekey'] : '')
+			];
+
 			if(($hubloc['hubloc_hash'] === $channel['channel_hash']) && intval($hubloc['hubloc_primary']) && ($seize))
 				$hubloc['hubloc_primary'] = 0;
 
@@ -1443,7 +1444,8 @@ function import_webpage_element($element, $channel, $type) {
 	// The author is either the owner or whomever was specified
 	$arr['author_xchan'] = (($element['author_xchan']) ? $element['author_xchan'] : get_observer_hash());
 	// Import mimetype if it is a valid mimetype for the element
-	$mimetypes = [	'text/bbcode',
+	$mimetypes = [	
+		'text/bbcode',
 		'text/html',
 		'text/markdown',
 		'text/plain',

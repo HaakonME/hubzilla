@@ -48,6 +48,7 @@ nav.navbar {
 
 #navbar-collapse-2 {
 	flex-basis: 100%;
+	max-height: 70vh;
 }
 
 #navbar-collapse-2.show {
@@ -59,6 +60,10 @@ nav.navbar {
 }
 /* nav overrides end */
 
+.btn-outline-secondary {
+	color: #aaa;
+}
+
 .wall-item-tools .dropdown-menu {
 	min-width: auto;
 }
@@ -67,6 +72,11 @@ code {
 	white-space: normal;
 }
 
-/* Bootstrap assumes that checkboxes are on the left of labels, while it's usually the opposite in Red */
-.field.checkbox input[type="checkbox"] { margin-left: 0px; }
-.field.checkbox label { padding-left: 0px; font-weight: 700}
+.form-group label {
+	font-weight: bold;
+}
+
+small,
+.small {
+	font-size: 0.75rem;
+}

@@ -32,7 +32,7 @@
 				<div id="acl-wrapper">
 					<div id="acl-list">
 						<input class="form-control" type="text" id="acl-search" placeholder="&#xf002; {{$search}}">
-						<div class="p-2 dropdown-sub-text">{{$showlimitedDesc}}</div>
+						<small class="text-muted">{{$showlimitedDesc}}</small>
 						<div id="acl-list-content"></div>
 					</div>
 				</div>

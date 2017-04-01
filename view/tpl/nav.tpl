@@ -206,6 +206,7 @@
 		{{$navapp|replace:'dropdown-item':'nav-link'}}
 		{{/foreach}}
 		{{if $localuser}}
+		<div class="dropdown-divider"></div>
 		<a class="nav-link" href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>{{$addapps}}</a>
 		{{/if}}
 	</div>

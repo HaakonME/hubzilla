@@ -604,10 +604,6 @@ function sys_boot() {
 		define( 'DEFAULT_NOTIFY_ICON', '/images/rm-32.png' );
 	}
 
-	if(! defined('CRYPTO_ALGORITHM')) {
-		define( 'CRYPTO_ALGORITHM', 'aes256cbc' );
-	}
-
 	/*
 	 * Try to open the database;
 	 */
@@ -2300,10 +2296,7 @@ function cert_bad_email() {
 			)
 		]
 	);
-<<<<<<< HEAD
 
-=======
->>>>>>> 95f4f14dca1ea982f67cccb31d860f7b8ed9055c
 }
 
 

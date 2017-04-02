@@ -165,9 +165,6 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 
 function zot_best_algorithm($methods) {
 
-	if(\Zotlabs\Lib\System::get_server_role() !== 'pro')
-		return 'aes256cbc';
-
 	$x = [ 'methods' => $methods, 'result' => '' ];
 	call_hooks('zot_best_algorithm',$x);
 	if($x['result'])

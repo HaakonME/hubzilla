@@ -762,6 +762,8 @@ function import_author_xchan($x) {
 	if($arr['xchan_hash'])
 		return $arr['xchan_hash'];
 
+	$y = false;
+
 	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
 		$y = import_author_zot($x);
 	}
@@ -770,9 +772,7 @@ function import_author_xchan($x) {
 		$y = import_author_rss($x);
 	}
 
-	if($x['network'] === 'unknown') {
-		$y = import_author_unknown($x);
-	}
+	$y = import_author_unknown($x);
 
 	return(($y) ? $y : false);
 }

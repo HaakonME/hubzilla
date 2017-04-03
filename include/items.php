@@ -1826,9 +1826,12 @@ logger('revision: ' . $arr['revision']);
 		intval($arr['revision'])
 	);
 
-	if($r && count($r)) {
+	if($r) {
+		// This will gives us a fresh copy of what's now in the DB and undo the db escaping, 
+		// which really messes up the notifications
+
 		$current_post = $r[0]['id'];
-		$arr = $r[0];  // This will gives us a fresh copy of what's now in the DB and undo the db escaping, which really messes up the notifications
+		$arr = $r[0];
 		logger('item_store: created item ' . $current_post, LOGGER_DEBUG);
 	}
 	else {

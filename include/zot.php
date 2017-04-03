@@ -3578,21 +3578,30 @@ function get_rpost_path($observer) {
 
 function import_author_zot($x) {
 
+	// Check that we have both a hubloc and xchan record - as occasionally storage calls will fail and
+	// we may only end up with one; which results in posts with no author name or photo and are a bit
+	// of a hassle to repair. If either or both are missing, do a full discovery probe.
+
 	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_primary = 1 limit 1",
+	$r1 = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_primary = 1 limit 1",
 		dbesc($x['guid']),
 		dbesc($x['guid_sig'])
 	);
 
-	if ($r) {
-		logger('import_author_zot: in cache', LOGGER_DEBUG);
+	$r2 = q("select xchan_hash from xchan where xchan_guid = '%s' and xchan_guid_sig = '%s' limit 1",
+		dbesc($x['guid']),
+		dbesc($x['guid_sig'])
+	);
+
+	if($r1 && $r2) {
+		logger('in cache', LOGGER_DEBUG);
 		return $hash;
 	}
 
-	logger('import_author_zot: entry not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
+	logger('not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
 
 	$them = array('hubloc_url' => $x['url'], 'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
-	if (zot_refresh($them))
+	if(zot_refresh($them))
 		return $hash;
 
 	return false;

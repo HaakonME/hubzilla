@@ -314,11 +314,12 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 		'channel_id'    => $uid,
 		'observer_hash' => $observer_xchan,
 		'permission'    => $permission,
-		'result'        => false);
+		'result'        => 'unset');
 
 	call_hooks('perm_is_allowed', $arr);
-	if($arr['result'])
-		return true;
+	if($arr['result'] !== 'unset') {
+		return $arr['result'];
+	}
 
 	$global_perms = \Zotlabs\Access\Permissions::Perms();
 

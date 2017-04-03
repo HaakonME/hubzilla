@@ -219,7 +219,7 @@ class Apps {
 			'Suggest Channels' => t('Suggest Channels'),
 			'Login' => t('Login'),
 			'Channel Manager' => t('Channel Manager'), 
-			'Grid' => t('Grid'), 
+			'Grid' => t('Activity'), 
 			'Settings' => t('Settings'),
 			'Files' => t('Files'),
 			'Webpages' => t('Webpages'),
@@ -245,9 +245,19 @@ class Apps {
 			'Profile Photo' => t('Profile Photo')
 		);
 
-		if(array_key_exists($arr['name'],$apps)) {
-			$arr['name'] = $apps[$arr['name']];
+		if(array_key_exists('name',$arr)) {
+			if(array_key_exists($arr['name'],$apps)) {
+				$arr['name'] = $apps[$arr['name']];
+			}
 		}
+		else {
+			for($x = 0; $x < count($arr); $x++) {
+				if(array_key_exists($arr[$x]['name'],$apps)) {
+					$arr[$x]['name'] = $apps[$arr[$x]['name']];
+				}
+			}
+		}
+				
 	}
 
 

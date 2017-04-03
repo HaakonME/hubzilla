@@ -769,6 +769,8 @@ function import_author_xchan($x) {
 	if($arr['xchan_hash'])
 		return $arr['xchan_hash'];
 
+	$y = false;
+
 	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
 		$y = import_author_zot($x);
 	}
@@ -779,11 +781,11 @@ function import_author_xchan($x) {
 		$y = import_author_rss($x);
 	}
 
-	if($x['network'] === 'unknown') {
+	if(! $y) {
 		$y = import_author_unknown($x);
 	}
 
-	return(($y) ? $y : false);
+	return($y);
 }
 
 /**
@@ -1824,9 +1826,12 @@ logger('revision: ' . $arr['revision']);
 		intval($arr['revision'])
 	);
 
-	if($r && count($r)) {
+	if($r) {
+		// This will gives us a fresh copy of what's now in the DB and undo the db escaping, 
+		// which really messes up the notifications
+
 		$current_post = $r[0]['id'];
-		$arr = $r[0];  // This will gives us a fresh copy of what's now in the DB and undo the db escaping, which really messes up the notifications
+		$arr = $r[0];
 		logger('item_store: created item ' . $current_post, LOGGER_DEBUG);
 	}
 	else {

@@ -2897,22 +2897,24 @@ function import_site($arr, $pubkey) {
 	else {
 		$update = true;
 
-		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage, site_realm, site_type, site_project, site_version, site_crypto )
-			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s', '%s', %d, '%s', '%s', '%s' )",
-			dbesc($site_location),
-			dbesc($url),
-			intval($access_policy),
-			intval($site_directory),
-			dbesc(datetime_convert()),
-			dbesc($directory_url),
-			intval($register_policy),
-			dbesc($sellpage),
-			dbesc($site_realm),
-			intval(SITE_TYPE_ZOT),
-			dbesc($site_project),
-			dbesc($site_version),
-			dbesc($site_crypto)
+		$r = site_store_lowlevel( 
+			[
+				'site_location'  => $site_location,
+				'site_url'       => $url,
+				'site_access'    => intval($access_policy),
+				'site_flags'     => intval($site_directory),
+				'site_update'    => datetime_convert(),
+				'site_directory' => $directory_url,
+				'site_register'  => intval($register_policy),
+				'site_sellpage'  => $sellpage,
+				'site_realm'     => $site_realm,
+				'site_type'      => intval(SITE_TYPE_ZOT),
+				'site_project'   => $site_project,
+				'site_version'   => $site_version,
+				'site_crypto'    => $site_crypto
+			]
 		);
+
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));
 		}

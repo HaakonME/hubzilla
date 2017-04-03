@@ -619,9 +619,6 @@ function sys_boot() {
 		define( 'DEFAULT_NOTIFY_ICON', '/images/hz-white-32.png' );
 	}
 
-	if(! defined('CRYPTO_ALGORITHM')) {
-		define( 'CRYPTO_ALGORITHM', 'aes256cbc' );
-	}
 
 	/*
 	 * Try to open the database;

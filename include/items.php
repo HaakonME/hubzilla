@@ -772,9 +772,11 @@ function import_author_xchan($x) {
 		$y = import_author_rss($x);
 	}
 
-	$y = import_author_unknown($x);
+	if(! $y) {
+		$y = import_author_unknown($x);
+	}
 
-	return(($y) ? $y : false);
+	return($y);
 }
 
 /**

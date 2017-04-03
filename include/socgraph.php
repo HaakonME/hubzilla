@@ -122,7 +122,7 @@ function poco_load($xchan = '', $url = null) {
 					$profile_url = $url['value'];
 					continue;
 				}
-				if($url['type'] == 'zot' || $url['type'] == 'diaspora' || $url['type'] == 'friendica') {
+				if($url['type'] == 'zot') {
 					$network = $url['type'];
 					$address = str_replace('acct:' , '', $url['value']);
 					continue;
@@ -159,12 +159,6 @@ function poco_load($xchan = '', $url = null) {
 					$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
 						dbesc($hash)
 					);
-					if(! $x) {
-						continue;
-					}
-				}
-				else {
-					$x = import_author_diaspora(array('address' => $address));
 					if(! $x) {
 						continue;
 					}
@@ -564,8 +558,6 @@ function poco($a,$extended = false) {
 				if($fields_ret['urls']) {
 					$entry['urls'] = array(array('value' => $rr['xchan_url'], 'type' => 'profile'));
 					$network = $rr['xchan_network'];
-					if(strpos($network,'friendica') !== false)
-						$network = 'friendica';
 					if($rr['xchan_addr'])
 						$entry['urls'][] = array('value' => 'acct:' . $rr['xchan_addr'], 'type' => $network);  
 				}

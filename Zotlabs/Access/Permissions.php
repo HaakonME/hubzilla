@@ -147,6 +147,7 @@ class Permissions {
 		return true;
 	}
 
+
 	static public function connect_perms($channel_id) {
 
 		$my_perms = [];

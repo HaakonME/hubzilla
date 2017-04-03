@@ -388,30 +388,22 @@ class Connedit extends \Zotlabs\Web\Controller {
 	
 		$section = ((array_key_exists('section',$_REQUEST)) ? $_REQUEST['section'] : '');
 		$channel = \App::get_channel();
-		$my_perms = get_channel_default_perms(local_channel());
-		$role = get_pconfig(local_channel(),'system','permissions_role');
-		if($role) {
-			$x = \Zotlabs\Access\PermissionRoles::role_perms($role);
-			if($x['perms_connect'])
-				$my_perms = $x['perms_connect'];
-		}
 	
 		$yes_no = array(t('No'),t('Yes'));
 	
-		if($my_perms) {
-			$o .= "<script>function connectDefaultShare() {
-			\$('.abook-edit-me').each(function() {
-				if(! $(this).is(':disabled'))
-					$(this).prop('checked', false);
-			});\n\n";
-			$perms = get_perms();
-			foreach($perms as $p => $v) {
-				if($my_perms & $v[1]) {
-					$o .= "\$('#me_id_perms_" . $p . "').prop('checked', true); \n";
-				}
+		$connect_perms = \Zotlabs\Access\Permissions::connect_perms(local_channel());
+
+		$o .= "<script>function connectDefaultShare() {
+		\$('.abook-edit-me').each(function() {
+			if(! $(this).is(':disabled'))
+				$(this).prop('checked', false);
+		});\n\n";
+		foreach($connect_perms['perms'] as $p => $v) {
+			if($v) {
+				$o .= "\$('#me_id_perms_" . $p . "').prop('checked', true); \n";
 			}
-			$o .= " }\n</script>\n";
 		}
+		$o .= " }\n</script>\n";
 	
 		if(argc() == 3) {
 	

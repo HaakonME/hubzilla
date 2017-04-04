@@ -2000,23 +2000,40 @@ function legal_webbie($s) {
 	if(! strlen($s))
 		return '';
 
+
+	// Has to start with a lowercase alphabetic character - not a number.
+	// This is so we can differentiate between something like channel=123
+	// and channel=foo and lookup the first by numeric id and the second
+	// by nickname.
+
 	$x = $s;
 	do {
 		$s = $x;
 		$x = preg_replace('/^([^a-z])(.*?)/',"$2",$s);
 	} while($x != $s);
 
-	return preg_replace('/([^a-z0-9\-\_])/','',$x);
+	// Use the lowest common denominator rules (letters, numbers, and underscore)
+	// if the site configuration allows federation with other networks
+
+	if(Zlib\System::get_server_role() === 'pro') {
+		return preg_replace('/([^a-z0-9\-\_\.])/','',$x);
+	}
+	else {
+		return preg_replace('/([^a-z0-9\_])/','',$x);
+	}
 }
 
 
 function check_webbie($arr) {
 
+
+	// These names conflict with the CalDAV server
+	$taken = [ 'principals', 'addressbooks', 'calendars' ];
+
 	$reservechan = get_config('system','reserved_channels');
-	if(strlen($reservechan))
-		$taken = explode(',', $reservechan);
-	else
-		$taken = array('principals','addressbooks','calendars');
+	if(strlen($reservechan)) {
+		$taken = array_merge($taken,explode(',', $reservechan));
+	}
 
 	$str = '';
 	if(count($arr)) {
@@ -2267,13 +2284,13 @@ function design_tools() {
 	$who = $channel['channel_address'];
 
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
-		'$title' => t('Design Tools'),
-		'$who' => $who,
-		'$sys' => $sys,
+		'$title'  => t('Design Tools'),
+		'$who'    => $who,
+		'$sys'    => $sys,
 		'$blocks' => t('Blocks'),
-		'$menus' => t('Menus'),
+		'$menus'  => t('Menus'),
 		'$layout' => t('Layouts'),
-		'$pages' => t('Pages')
+		'$pages'  => t('Pages')
 	));
 }
 
@@ -2294,21 +2311,21 @@ function website_portation_tools() {
 	}
 
 	return replace_macros(get_markup_template('website_portation_tools.tpl'), array(
-		'$title' => t('Import'),
-		'$import_label' => t('Import website...'),
-		'$import_placeholder' => t('Select folder to import'),
-		'$file_upload_text' => t('Import from a zipped folder:'),
-		'$file_import_text' => t('Import from cloud files:'),
-		'$desc' => t('/cloud/channel/path/to/folder'),
-		'$hint' => t('Enter path to website files'),
-		'$select' => t('Select folder'),
-		'$export_label' => t('Export website...'),
-		'$file_download_text' => t('Export to a zip file'),
-		'$filename_desc' => t('website.zip'),
-		'$filename_hint' => t('Enter a name for the zip file.'),
-		'$cloud_export_text' => t('Export to cloud files'),
-		'$cloud_export_desc' => t('/path/to/export/folder'),
-		'$cloud_export_hint' => t('Enter a path to a cloud files destination.'),
+		'$title'               => t('Import'),
+		'$import_label'        => t('Import website...'),
+		'$import_placeholder'  => t('Select folder to import'),
+		'$file_upload_text'    => t('Import from a zipped folder:'),
+		'$file_import_text'    => t('Import from cloud files:'),
+		'$desc'                => t('/cloud/channel/path/to/folder'),
+		'$hint'                => t('Enter path to website files'),
+		'$select'              => t('Select folder'),
+		'$export_label'        => t('Export website...'),
+		'$file_download_text'  => t('Export to a zip file'),
+		'$filename_desc'       => t('website.zip'),
+		'$filename_hint'       => t('Enter a name for the zip file.'),
+		'$cloud_export_text'   => t('Export to cloud files'),
+		'$cloud_export_desc'   => t('/path/to/export/folder'),
+		'$cloud_export_hint'   => t('Enter a path to a cloud files destination.'),
 		'$cloud_export_select' => t('Specify folder'),
 	));
 }

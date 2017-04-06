@@ -96,7 +96,7 @@ class RedbasicConfig {
 			'$background_image' => array('redbasic_background_image', t('Set the background image'), $arr['background_image']),	
 			'$item_colour' => array('redbasic_item_colour', t('Set the background color of items'), $arr['item_colour']),
 			'$comment_item_colour' => array('redbasic_comment_item_colour', t('Set the background color of comments'), $arr['comment_item_colour']),
-			'$font_size' => array('redbasic_font_size', t('Set font-size for the entire application'), $arr['font_size'], t('Examples: 87.5%, 14px')),
+			'$font_size' => array('redbasic_font_size', t('Set font-size for the entire application'), $arr['font_size'], t('Examples: 1rem, 100%, 16px')),
 			'$font_colour' => array('redbasic_font_colour', t('Set font-color for posts and comments'), $arr['font_colour']),
 			'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius'], t('Example: 4px')),
 			'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),

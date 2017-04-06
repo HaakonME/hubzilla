@@ -185,26 +185,17 @@ function sync_directories($dirmode) {
 	/** @FIXME What to do if we're in a different realm? */
 
 	if ((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
-		$r = array();
-		$r[] = array(
-			'site_url' => DIRECTORY_FALLBACK_MASTER,
-			'site_flags' => DIRECTORY_MODE_PRIMARY,
-			'site_update' => NULL_DATE, 
-			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
-			'site_realm' => DIRECTORY_REALM,
-			'site_valid' => 1,
-			'site_crypto' => 'aes256cbc'
-			
-		);
-		$x = q("insert into site ( site_url, site_flags, site_update, site_directory, site_realm, site_valid, site_crypto )
-			values ( '%s', %d, '%s', '%s', '%s', %d, '%s' ) ",
-			dbesc($r[0]['site_url']),
-			intval($r[0]['site_flags']),
-			dbesc($r[0]['site_update']),
-			dbesc($r[0]['site_directory']),
-			dbesc($r[0]['site_realm']),
-			intval($r[0]['site_valid']),
-			dbesc($r[0]['site_crypto'])
+
+		$x = site_store_lowlevel(
+			[
+				'site_url'       => DIRECTORY_FALLBACK_MASTER,
+				'site_flags'     => DIRECTORY_MODE_PRIMARY,
+				'site_update'    => NULL_DATE, 
+				'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch',
+				'site_realm'     => DIRECTORY_REALM,
+				'site_valid'     => 1,
+				'site_crypto'    => 'aes256cbc'
+			]
 		);
 
 		$r = q("select * from site where site_flags in (%d, %d) and site_url != '%s' and site_type = %d ",

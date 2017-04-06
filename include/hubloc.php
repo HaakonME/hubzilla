@@ -39,6 +39,33 @@ function hubloc_store_lowlevel($arr) {
 	return create_table_from_array('hubloc', $store);
 }
 
+function site_store_lowlevel($arr) {
+
+	$store = [
+		'site_url'        => ((array_key_exists('site_url',$arr))        ? $arr['site_url']         : ''),
+		'site_access'     => ((array_key_exists('site_access',$arr))     ? $arr['site_access']      : 0),
+		'site_flags'      => ((array_key_exists('site_flags',$arr))      ? $arr['site_flags']       : 0),
+		'site_update'     => ((array_key_exists('site_update',$arr))     ? $arr['site_update']      : NULL_DATE),
+		'site_pull'       => ((array_key_exists('site_pull',$arr))       ? $arr['site_pull']        : NULL_DATE),
+		'site_sync'       => ((array_key_exists('site_sync',$arr))       ? $arr['site_sync']        : NULL_DATE),
+		'site_directory'  => ((array_key_exists('site_directory',$arr))  ? $arr['site_directory']   : ''),
+		'site_register'   => ((array_key_exists('site_register',$arr))   ? $arr['site_register']    : 0),
+		'site_sellpage'   => ((array_key_exists('site_sellpage',$arr))   ? $arr['site_sellpage']    : ''),
+		'site_location'   => ((array_key_exists('site_location',$arr))   ? $arr['site_location']    : ''),
+		'site_realm'      => ((array_key_exists('site_realm',$arr))      ? $arr['site_realm']       : ''),
+		'site_valid'      => ((array_key_exists('site_valid',$arr))      ? $arr['site_valid']       : 0),
+		'site_dead'       => ((array_key_exists('site_dead',$arr))       ? $arr['site_dead']        : 0),
+		'site_type'       => ((array_key_exists('site_type',$arr))       ? $arr['site_type']        : 0),
+		'site_project'    => ((array_key_exists('site_project',$arr))    ? $arr['site_project']     : ''),
+		'site_version'    => ((array_key_exists('site_version',$arr))    ? $arr['site_version']     : ''),
+		'site_crypto'     => ((array_key_exists('site_crypto',$arr))     ? $arr['site_crypto']      : '')
+	];
+
+	return create_table_from_array('site', $store);
+}
+
+
+
 
 
 function prune_hub_reinstalls() {

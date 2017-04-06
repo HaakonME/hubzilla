@@ -95,7 +95,7 @@ if (! $comment_item_colour)
 if (! $item_opacity)
 	$item_opacity = '1';
 if (! $font_size)
-	$font_size = '1rem';
+	$font_size = '0.875rem';
 if (! $font_colour)
 	$font_colour = '#4d4d4d';
 if (! $radius)

@@ -2000,28 +2000,32 @@ function legal_webbie($s) {
 	if(! strlen($s))
 		return '';
 
+	// WARNING: This regex will not work in a federated environment.
+	// You will probably want something like 
+	// preg_replace('/([^a-z0-9\_])/','',strtolower($s));
 
-	// Has to start with a lowercase alphabetic character - not a number.
-	// This is so we can differentiate between something like channel=123
-	// and channel=foo and lookup the first by numeric id and the second
-	// by nickname.
+	$r = preg_replace('/([^a-z0-9\-\_\.])/','',strtolower($s));
 
-	$x = $s;
-	do {
-		$s = $x;
-		$x = preg_replace('/^([^a-z])(.*?)/',"$2",$s);
-	} while($x != $s);
+	$x = [ 'input' => $s, 'output' => $r ];
+	call_hooks('legal_webbie',$x);
+	return $x['output'];
 
-	// Use the lowest common denominator rules (letters, numbers, and underscore)
-	// if the site configuration allows federation with other networks
-
-	if(Zlib\System::get_server_role() === 'pro') {
-		return preg_replace('/([^a-z0-9\-\_\.])/','',$x);
-	}
-	else {
-		return preg_replace('/([^a-z0-9\_])/','',$x);
-	}
 }
+
+function legal_webbie_text() {
+
+	// WARNING: This will not work in a federated environment.
+
+	$s = t('a-z, 0-9, -, _, and . only');
+
+	$x = [ 'text' => $s ];
+	call_hooks('legal_webbie_text',$x);
+	return $x['text'];
+
+}
+
+
+
 
 
 function check_webbie($arr) {

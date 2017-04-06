@@ -317,6 +317,12 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/jot_tool]jot_tool[/zrl]
 	Deprecated and possibly obsolete. Allows one to add action buttons to the post editor.
 
+[zrl=[baseurl]/help/hook/legal_webbie]legal_webbie[/zrl]
+	Called to validate a channel address
+
+[zrl=[baseurl]/help/hook/legal_webbie_text]legal_webbie_text[/zrl]
+	Provides an explanation of text/character restrictions for legal_webbie()
+
 [zrl=[baseurl]/help/hook/load_pdl]load_pdl[/zrl]
 	Called when we load a PDL file or description
 

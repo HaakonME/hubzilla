@@ -3595,7 +3595,7 @@ function import_author_zot($x) {
 		dbesc($x['guid_sig'])
 	);
 
-	if($r1 && $r2) {
+	if($r1 && $r2 && $r1[0]['hubloc_updated'] > datetime_convert('UTC','UTC','now - 1 week')) {
 		logger('in cache', LOGGER_DEBUG);
 		return $hash;
 	}

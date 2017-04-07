@@ -7,26 +7,18 @@
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
 					<i class="fa fa-cog"></i>&nbsp;{{$tools_label}}
 				</button>
-				<ul class="dropdown-menu dropdown-menu-right">
+				<div class="dropdown-menu dropdown-menu-right flex-column">
 					{{if $tools}}
-					<li class="nav-item">
-						<a class="nav-link" href="{{$tools.profile.0}}"><i class="fa fa-user"></i>&nbsp;{{$tools.profile.1}}</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{$tools.cover.0}}"><i class="fa fa-picture-o"></i>&nbsp;{{$tools.cover.1}}</a>
-					</li>
+					<a class="dropdown-item" href="{{$tools.profile.0}}"><i class="fa fa-user"></i>&nbsp;{{$tools.profile.1}}</a>
+					<a class="dropdown-item" href="{{$tools.cover.0}}"><i class="fa fa-picture-o"></i>&nbsp;{{$tools.cover.1}}</a>
 					{{/if}}
 					{{if $map}}
-					<li class="nav-item">
-						<a class="nav-link" href="#" onclick="var pos = $('#photo-map').css('position'); if(pos === 'absolute') { $('#photo-map').css( { position: 'relative', left: 'auto', top: 'auto' }); } else { $('#photo-map').css( { position: 'absolute', left: '-9999px', top: '-9999px' }); } return false; " ><i class="fa fa-globe"></i>&nbsp;{{$map_text}}</a>
-					</li>
+					<a class="dropdown-item" href="#" onclick="var pos = $('#photo-map').css('position'); if(pos === 'absolute') { $('#photo-map').css( { position: 'relative', left: 'auto', top: 'auto' }); } else { $('#photo-map').css( { position: 'absolute', left: '-9999px', top: '-9999px' }); } return false; " ><i class="fa fa-globe"></i>&nbsp;{{$map_text}}</a>
 					{{/if}}
 					{{if $edit}}
-					<li class="nav-item">
-						<a class="nav-link acl-form-trigger" href="#"  title="" onclick="openClose('photo-edit'); return false;" data-form_id="photo_edit_form"><i class="fa fa-pencil"></i>&nbsp;{{$edit.edit}}</a>
-					</li>
+					<a class="dropdown-item acl-form-trigger" href="#"  title="" onclick="openClose('photo-edit'); return false;" data-form_id="photo_edit_form"><i class="fa fa-pencil"></i>&nbsp;{{$edit.edit}}</a>
 					{{/if}}
-				</ul>
+				</div>
 			</div>
 			{{/if}}
 			{{if $lock}}

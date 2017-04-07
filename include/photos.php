@@ -529,8 +529,7 @@ function photos_album_widget($channelx,$observer,$sortkey = 'display_path',$dire
 			'$albums'  => $albums['albums'],
 			'$baseurl' => z_root(),
 			'$upload'  => ((perm_is_allowed($channelx['channel_id'],(($observer) ? $observer['xchan_hash'] : ''),'write_storage'))
-				? t('Upload New Photos') : ''),
-			'$recent_photos' => t('Recent Photos')
+				? t('Upload New Photos') : '')
 		));
 	}
 

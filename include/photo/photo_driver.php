@@ -330,6 +330,7 @@ abstract class photo_driver {
 		$p['photo_usage'] = intval($arr['photo_usage']);
 		$p['os_storage'] = intval($arr['os_storage']);			
 		$p['os_path'] = $arr['os_path'];
+		$p['os_syspath'] = ((array_key_exists('os_syspath',$arr)) ? $arr['os_syspath'] : '');
 		$p['display_path'] = (($arr['display_path']) ? $arr['display_path'] : '');
 
 		if(! intval($p['imgscale']))

@@ -310,8 +310,6 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 	$result = z_post_url($url . $rhs,$postvars);
 
-	logger('zot_refresh: zot-info: ' . print_r($result,true), LOGGER_DATA, LOG_DEBUG);
-
 	if ($result['success']) {
 
 		$j = json_decode($result['body'],true);
@@ -320,6 +318,8 @@ function zot_refresh($them, $channel = null, $force = false) {
 			logger('zot_refresh: result not decodable');
 			return false;
 		}
+
+		logger('zot-info: ' . print_r($result,true), LOGGER_DATA, LOG_DEBUG);
 
 		$signed_token = ((is_array($j) && array_key_exists('signed_token',$j)) ? $j['signed_token'] : null);
 		if($signed_token) {

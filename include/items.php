@@ -632,14 +632,17 @@ function get_item_elements($x,$allow_code = false) {
 		return array();
 
 	// save a potentially expensive lookup if author == owner
+
 	if($arr['author_xchan'] === make_xchan_hash($x['owner']['guid'],$x['owner']['guid_sig']))
 		$arr['owner_xchan'] = $arr['author_xchan'];
 	else {
 		$xchan_hash = import_author_xchan($x['owner']);
-		if($xchan_hash)
+		if($xchan_hash) {
 			$arr['owner_xchan'] = $xchan_hash;
-		else
+		}
+		else {
 			return array();
+		}
 	}
 
 	// Check signature on the body text received. 
@@ -656,10 +659,25 @@ function get_item_elements($x,$allow_code = false) {
 		$r = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 			dbesc($arr['author_xchan'])
 		);
-		if($r && rsa_verify($x['body'],base64url_decode($arr['sig']),$r[0]['xchan_pubkey']))
-			$arr['item_verified'] = 1;
-		else
-			logger('get_item_elements: message verification failed.');
+		if($r) {
+			if($r[0]['xchan_pubkey']) {
+				if(rsa_verify($x['body'],base64url_decode($arr['sig']),$r[0]['xchan_pubkey'])) {
+					$arr['item_verified'] = 1;
+				}
+				else {
+					logger('get_item_elements: message verification failed.');
+				}
+			}
+			else {
+
+				// If we don't have a public key, strip the signature so it won't show as invalid.
+				// This won't happen in normal use, but could happen if import_author_xchan()
+				// failed to load the zot-info packet due to a server failure and had 
+				// to create an alternate xchan with network 'unknown'
+
+				unset($arr['sig']);
+			}
+		}
 	}
 
 	// if the input is markdown, remove one level of html escaping.
@@ -1123,7 +1141,7 @@ function encode_item_xchan($xchan) {
 	$ret['address']  = $xchan['xchan_addr'];
 	$ret['url']      = $xchan['xchan_url'];
 	$ret['network']  = $xchan['xchan_network'];
-	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
+	$ret['photo']    = [ 'mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m'] ];
 	$ret['guid']     = $xchan['xchan_guid'];
 	$ret['guid_sig'] = $xchan['xchan_guid_sig'];
 

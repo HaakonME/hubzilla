@@ -22,7 +22,6 @@ function get_capath() {
  * @param int $redirects default 0
  *    internal use, recursion counter
  * @param array $opts (optional parameters) associative array with:
- *  * \b accept_content => supply Accept: header with 'accept_content' as the value
  *  * \b timeout => int seconds, default system config value or 60 seconds
  *  * \b headers => array of additional header fields
  *  * \b http_auth => username:password
@@ -202,7 +201,6 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
  * @param int $redirects = 0
  *    internal use, recursion counter
  * @param array $opts (optional parameters)
- *    'accept_content' => supply Accept: header with 'accept_content' as the value
  *    'timeout' => int seconds, default system config value or 60 seconds
  *    'http_auth' => username:password
  *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
@@ -1204,7 +1202,16 @@ function webfinger_rfc7033($webbie,$zot = false) {
 	}
 	logger('fetching url from resource: ' . $rhs . ':' . $webbie);
 
-	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=1' : ''));
+	// The default curl Accept: header is */*, which is incorrectly handled by Mastodon servers
+	// and results in a 406 (Not Acceptable) response, and will also incorrectly produce an XML
+	// document if you use 'application/jrd+json, */*'. We could set this to application/jrd+json,
+	// but some test webfinger servers may not explicitly set the content type and they would be
+	// blocked. The best compromise until Mastodon is fixed is to remove the Accept header which is 
+	// accomplished by setting it to nothing. 
+
+	$counter = 0;
+	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=1' : ''), 
+		false, $counter, [ 'headers' => [ 'Accept:' ] ]);
 
 	if($s['success']) {
 		$j = json_decode($s['body'],true);

@@ -495,13 +495,14 @@ class Enotify {
 		}
 	}
 
-	$r = q("insert into notify (hash,xname,url,photo,created,aid,uid,link,parent,seen,ntype,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,%d,'%s','%s')",
+	$r = q("insert into notify (hash,xname,url,photo,created,msg,aid,uid,link,parent,seen,ntype,verb,otype)
+		values('%s','%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['xname']),
 		dbesc($datarray['url']),
 		dbesc($datarray['photo']),
 		dbesc($datarray['created']),
+		dbesc(''),      // will fill this in below after the record is created
 		intval($datarray['aid']),
 		intval($datarray['uid']),
 		dbesc($datarray['link']),

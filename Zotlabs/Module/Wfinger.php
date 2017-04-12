@@ -38,6 +38,9 @@ class Wfinger extends \Zotlabs\Web\Controller {
 				$channel = str_replace('acct:','',$resource);
 				if(strpos($channel,'@') !== false) {
 					$host = substr($channel,strpos($channel,'@')+1);
+
+					// If the webfinger address points off site, redirect to the correct site
+
 					if(strcasecmp($host,\App::get_hostname())) {
 						goaway('https://' . $host . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=' . $zot : ''));
 					}
@@ -77,54 +80,54 @@ class Wfinger extends \Zotlabs\Web\Controller {
 				}
 			}
 	
-			$result['aliases'] = array();
+			$result['aliases'] = [];
 	
-			$result['properties'] = array(
-					'http://webfinger.net/ns/name' => $r[0]['channel_name'],
+			$result['properties'] = [
+					'http://webfinger.net/ns/name'   => $r[0]['channel_name'],
 					'http://xmlns.com/foaf/0.1/name' => $r[0]['channel_name']
-			);
+			];
 	
 			foreach($aliases as $alias) 
 				if($alias != $resource)
 					$result['aliases'][] = $alias;
 	
-			$result['links'] = array(
+			$result['links'] = [
 	
-				array(
+				[
 					'rel' => 'http://webfinger.net/rel/avatar',
 					'type' => $r[0]['xchan_photo_mimetype'],
 					'href' => $r[0]['xchan_photo_l']	
-				),
+				],
 	
-				array(
+				[
 					'rel' => 'http://webfinger.net/rel/profile-page',
 					'href' => z_root() . '/profile/' . $r[0]['channel_address'],
-				),
+				],
 	
-				array(
+				[
 					'rel' => 'http://webfinger.net/rel/blog',
 					'href' => z_root() . '/channel/' . $r[0]['channel_address'],
-				),
+				],
 	
-				array(
+				[
 					'rel' => 'http://ostatus.org/schema/1.0/subscribe',
 					'template' => z_root() . '/follow/url={uri}',
-				),
+				],
 	
-				array(
+				[
 					'rel' => 'http://purl.org/zot/protocol',
 					'href' => z_root() . '/.well-known/zot-info' . '?address=' . $r[0]['xchan_addr'],
-				),
+				],
 	
-				array(
+				[
 					'rel' => 'magic-public-key',
 					'href' => 'data:application/magic-public-key,' . salmon_key($r[0]['channel_pubkey']),
-				)
-			);
+				]
+			];
 	
 			if($zot) {
 				// get a zotinfo packet and return it with webfinger
-				$result['zot'] = zotinfo(array('address' => $r[0]['xchan_addr']));
+				$result['zot'] = zotinfo( [ 'address' => $r[0]['xchan_addr'] ]);
 			}
 		}
 		else {
@@ -132,7 +135,7 @@ class Wfinger extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
-		$arr = array('channel' => $r[0], 'request' => $_REQUEST, 'result' => $result);
+		$arr = [ 'channel' => $r[0], 'request' => $_REQUEST, 'result' => $result ];
 		call_hooks('webfinger',$arr);
 	
 		json_return_and_die($arr['result'],'application/jrd+json');

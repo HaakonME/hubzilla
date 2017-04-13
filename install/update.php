@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1188 );
+define( 'UPDATE_VERSION' , 1189 );
 
 /**
  *
@@ -2507,6 +2507,17 @@ function update_r1187() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 
+
+}
+
+function update_r1188() {
+
+	$r1 = q("alter table channel add channel_password varchar(255) not null ");
+	$r2 = q("alter table channel add channel_salt varchar(255) not null ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
 
 }
 

@@ -280,6 +280,8 @@ CREATE TABLE "channel" (
   "channel_removed" smallint NOT NULL DEFAULT '0',
   "channel_system" smallint NOT NULL DEFAULT '0',
   "channel_moved" text NOT NULL DEFAULT '',
+  "channel_password" varchar(255) NOT NULL,
+  "channel_salt" varchar(255) NOT NULL,
   PRIMARY KEY ("channel_id"),
   UNIQUE ("channel_address")
 );

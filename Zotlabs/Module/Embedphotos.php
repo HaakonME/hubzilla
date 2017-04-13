@@ -92,6 +92,7 @@ class Embedphotos extends \Zotlabs\Web\Controller {
 		 * It is a limitation of the photo table using a name for a photo album instead of a folder hash
 		 */
 		if($album) {
+			require_once('include/attach.php');
 			$x = q("select hash from attach where filename = '%s' and uid = %d limit 1",
 				dbesc($album),
 				intval($owner_uid)

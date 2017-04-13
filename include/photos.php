@@ -473,6 +473,7 @@ function photos_albums_list($channel, $observer, $sort_key = 'display_path', $di
 			intval($channel_id)
 		);
 		if($x) {
+			require_once('include/attach.php');
 			foreach($r as $rv) {
 				foreach($x as $xv) {
 					if($xv['folder'] === $rv['hash']) {

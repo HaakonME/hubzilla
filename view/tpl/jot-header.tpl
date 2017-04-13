@@ -420,7 +420,7 @@ function enableOnUser(){
         });
         getPhotoAlbumList();
         $('#embedPhotoModalBodyAlbumDialog').off('click');
-        $('#embedPhotoModal').modal();
+        $('#embedPhotoModal').modal('show');
     };
 
     var choosePhotoFromAlbum = function (album) {

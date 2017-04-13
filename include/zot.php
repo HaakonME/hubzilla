@@ -2956,6 +2956,8 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		return;
 
 	$channel = $r[0];
+	unset($channel['channel_password']);
+	unset($channel['channel_salt']);
 
 	translate_channel_perms_outbound($channel);
 	if($packet && array_key_exists('abook',$packet) && $packet['abook']) {

@@ -287,6 +287,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_removed` tinyint(1) NOT NULL DEFAULT '0',
   `channel_system` tinyint(1) NOT NULL DEFAULT '0',
   `channel_moved` char(255) NOT NULL DEFAULT '',
+  `channel_password` varchar(255) NOT NULL,
+  `channel_salt` varchar(255) NOT NULL,
   PRIMARY KEY (`channel_id`),
   UNIQUE KEY `channel_address_unique` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),

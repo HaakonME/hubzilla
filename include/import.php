@@ -82,7 +82,7 @@ function import_channel($channel, $account_id, $seize) {
 		'channel_r_storage',  'channel_r_pages',     'channel_w_stream',  'channel_w_wall',
 		'channel_w_comment',  'channel_w_mail',      'channel_w_like',    'channel_w_tagwall',
 		'channel_w_chat',     'channel_w_storage',   'channel_w_pages',   'channel_a_republish',
-		'channel_a_delegate', 'perm_limits'
+		'channel_a_delegate', 'perm_limits',         'channel_password',  'channel_salt'
 	];
 
 	$clean = array();

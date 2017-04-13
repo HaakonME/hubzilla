@@ -170,7 +170,7 @@ CREATE TABLE "attach" (
   "is_photo" smallint NOT NULL DEFAULT '0',
   "os_storage" smallint NOT NULL DEFAULT '0',
   "os_path" text NOT NULL,
-4  "display_path" text NOT NULL,
+  "display_path" text NOT NULL,
   "content" bytea NOT NULL,
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',

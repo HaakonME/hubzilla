@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `abconfig` (
   KEY `xchan` (`xchan`),
   KEY `cat` (`cat`),
   KEY `k` (`k`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `abook` (
   `abook_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_unconnected` (`abook_unconnected`),
   KEY `abook_self` (`abook_self`),
   KEY `abook_feed` (`abook_feed`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `account` (
   `account_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_external` (`account_external`),
   KEY `account_level` (`account_level`),
   KEY `account_password_changed` (`account_password_changed`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `addon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `addon` (
   KEY `hidden` (`hidden`),
   KEY `aname` (`aname`),
   KEY `installed` (`installed`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `app` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `app` (
   KEY `app_deleted` (`app_deleted`),
   KEY `app_system` (`app_system`),
   KEY `app_edited` (`app_edited`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE IF NOT EXISTS `atoken` (
@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `atoken` (
   KEY `atoken_name` (`atoken_name`),
   KEY `atoken_token` (`atoken_token`),
   KEY `atoken_expires` (`atoken_expires`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `attach` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `attach` (
   KEY `is_dir` (`is_dir`),
   KEY `is_photo` (`is_photo`),
   KEY `os_storage` (`os_storage`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `auth_codes` (
   `id` varchar(40) NOT NULL DEFAULT '',
@@ -204,14 +204,14 @@ CREATE TABLE IF NOT EXISTS `auth_codes` (
   `expires` int(11) NOT NULL DEFAULT '0',
   `auth_scope` varchar(512) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `cache` (
   `k` char(255) NOT NULL DEFAULT '',
   `v` text NOT NULL,
   `updated` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY (`k`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `cal` (
   `cal_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `cal` (
   KEY `cal_hash` (`cal_hash`),
   KEY `cal_name` (`cal_name`),
   KEY `cal_types` (`cal_types`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `channel` (
   `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -289,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_system` (`channel_system`),
   KEY `channel_lastpost` (`channel_lastpost`),
   KEY `channel_moved` (`channel_moved`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `chat` (
   `chat_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -301,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   KEY `chat_room` (`chat_room`),
   KEY `chat_xchan` (`chat_xchan`),
   KEY `created` (`created`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `chatpresence` (
   `cp_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -315,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `chatpresence` (
   KEY `cp_xchan` (`cp_xchan`),
   KEY `cp_last` (`cp_last`),
   KEY `cp_status` (`cp_status`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `chatroom` (
   `cr_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -336,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `chatroom` (
   KEY `cr_created` (`cr_created`),
   KEY `cr_edited` (`cr_edited`),
   KEY `cr_expire` (`cr_expire`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `clients` (
   `client_id` varchar(20) NOT NULL DEFAULT '',
@@ -346,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `icon` text,
   `uid` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`client_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -355,7 +355,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `v` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`cat`,`k`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `conv` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `conv` (
   PRIMARY KEY (`id`),
   KEY `created` (`created`),
   KEY `updated` (`updated`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `dreport` (
   `dreport_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -388,7 +388,7 @@ CREATE TABLE IF NOT EXISTS `dreport` (
   KEY `dreport_xchan` (`dreport_xchan`),
   KEY `dreport_queue` (`dreport_queue`),
   KEY `dreport_channel` (`dreport_channel`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -434,7 +434,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `event_status` (`event_status`),
   KEY `event_sequence` (`event_sequence`),
   KEY `event_priority` (`event_priority`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `groups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -449,7 +449,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   KEY `deleted` (`deleted`),
   KEY `hash` (`hash`),
   KEY `gname` (`gname`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `group_member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -460,7 +460,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `uid` (`uid`),
   KEY `gid` (`gid`),
   KEY `xchan` (`xchan`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -473,7 +473,7 @@ CREATE TABLE IF NOT EXISTS `hook` (
   KEY `hook` (`hook`),
   KEY `priority` (`priority`),
   KEY `hook_version` (`hook_version`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -511,7 +511,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_orphancheck` (`hubloc_orphancheck`),
   KEY `hubloc_deleted` (`hubloc_deleted`),
   KEY `hubloc_error` (`hubloc_error`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE IF NOT EXISTS `iconfig` (
@@ -526,7 +526,7 @@ CREATE TABLE IF NOT EXISTS `iconfig` (
   KEY `cat` (`cat`),
   KEY `k` (`k`),
   KEY `sharing` (`sharing`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `issue` (
   `issue_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -543,7 +543,7 @@ CREATE TABLE IF NOT EXISTS `issue` (
   KEY `issue_priority` (`issue_priority`),
   KEY `issue_status` (`issue_status`),
   KEY `issue_component` (`issue_component`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -676,7 +676,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   FULLTEXT KEY `allow_gid` (`allow_gid`),
   FULLTEXT KEY `deny_cid` (`deny_cid`),
   FULLTEXT KEY `deny_gid` (`deny_gid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `item_id` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -689,7 +689,7 @@ CREATE TABLE IF NOT EXISTS `item_id` (
   KEY `sid` (`sid`),
   KEY `service` (`service`),
   KEY `iid` (`iid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `likes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -711,7 +711,7 @@ CREATE TABLE IF NOT EXISTS `likes` (
   KEY `target_type` (`target_type`),
   KEY `channel_id` (`channel_id`),
   KEY `target_id` (`target_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -754,7 +754,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `mail_seen` (`mail_seen`),
   KEY `mail_recalled` (`mail_recalled`),
   KEY `mail_obscured` (`mail_obscured`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `menu` (
   `menu_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -770,7 +770,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
   KEY `menu_flags` (`menu_flags`),
   KEY `menu_created` (`menu_created`),
   KEY `menu_edited` (`menu_edited`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -788,7 +788,7 @@ CREATE TABLE IF NOT EXISTS `menu_item` (
   KEY `mitem_channel_id` (`mitem_channel_id`),
   KEY `mitem_menu_id` (`mitem_menu_id`),
   KEY `mitem_flags` (`mitem_flags`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `notify` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -816,7 +816,7 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `link` (`link`),
   KEY `otype` (`otype`),
   KEY `aid` (`aid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `obj` (
   `obj_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -847,7 +847,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   KEY `obj_edited` (`obj_edited`),
   KEY `obj_quantity` (`obj_quantity`),
   KEY `obj_obj` (`obj_obj`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
@@ -873,7 +873,7 @@ CREATE TABLE IF NOT EXISTS `outq` (
   KEY `outq_async` (`outq_async`),
   KEY `outq_delivered` (`outq_delivered`),
   KEY `outq_priority` (`outq_priority`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `pconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -883,7 +883,7 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
   `v` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`uid`,`cat`,`k`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE IF NOT EXISTS `photo` (
@@ -929,7 +929,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `is_nsfw` (`is_nsfw`),
   KEY `os_storage` (`os_storage`),
   KEY `photo_usage` (`photo_usage`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `poll` (
   `poll_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -941,7 +941,7 @@ CREATE TABLE IF NOT EXISTS `poll` (
   KEY `poll_channel` (`poll_channel`),
   KEY `poll_flags` (`poll_flags`),
   KEY `poll_votes` (`poll_votes`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `poll_elm` (
   `pelm_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -952,7 +952,7 @@ CREATE TABLE IF NOT EXISTS `poll_elm` (
   PRIMARY KEY (`pelm_id`),
   KEY `pelm_poll` (`pelm_poll`),
   KEY `pelm_result` (`pelm_result`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `profdef` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -963,7 +963,7 @@ CREATE TABLE IF NOT EXISTS `profdef` (
   `field_inputs` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `field_name` (`field_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `profext` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -975,7 +975,7 @@ CREATE TABLE IF NOT EXISTS `profext` (
   KEY `channel_id` (`channel_id`),
   KEY `hash` (`hash`),
   KEY `k` (`k`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1038,7 +1038,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   KEY `postal_code` (`postal_code`),
   KEY `country_name` (`country_name`),
   KEY `profile_guid` (`profile_guid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `profile_check` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1053,7 +1053,7 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   KEY `dfrn_id` (`dfrn_id`),
   KEY `sec` (`sec`),
   KEY `expire` (`expire`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `register` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1066,7 +1066,7 @@ CREATE TABLE IF NOT EXISTS `register` (
   KEY `hash` (`hash`),
   KEY `created` (`created`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -1076,7 +1076,7 @@ CREATE TABLE IF NOT EXISTS `session` (
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`),
   KEY `expire` (`expire`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `shares` (
   `share_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1087,7 +1087,7 @@ CREATE TABLE IF NOT EXISTS `shares` (
   KEY `share_type` (`share_type`),
   KEY `share_target` (`share_target`),
   KEY `share_xchan` (`share_xchan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `sign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1099,7 +1099,7 @@ CREATE TABLE IF NOT EXISTS `sign` (
   PRIMARY KEY (`id`),
   KEY `iid` (`iid`),
   KEY `retract_iid` (`retract_iid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `site` (
   `site_url` char(255) NOT NULL,
@@ -1132,7 +1132,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   KEY `site_dead` (`site_dead`),
   KEY `site_type` (`site_type`),
   KEY `site_project` (`site_project`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `source` (
   `src_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1145,7 +1145,7 @@ CREATE TABLE IF NOT EXISTS `source` (
   KEY `src_channel_id` (`src_channel_id`),
   KEY `src_channel_xchan` (`src_channel_xchan`),
   KEY `src_xchan` (`src_xchan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `sys_perms` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1154,7 +1154,7 @@ CREATE TABLE IF NOT EXISTS `sys_perms` (
   `v` mediumtext NOT NULL,
   `public_perm` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `term` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1178,7 +1178,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `imgurl` (`imgurl`),
   KEY `term_hash` (`term_hash`),
   KEY `parent_hash` (`parent_hash`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL DEFAULT '',
@@ -1191,7 +1191,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   KEY `client_id` (`client_id`),
   KEY `expires` (`expires`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `updates` (
   `ud_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1208,7 +1208,7 @@ CREATE TABLE IF NOT EXISTS `updates` (
   KEY `ud_flags` (`ud_flags`),
   KEY `ud_addr` (`ud_addr`),
   KEY `ud_last` (`ud_last`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `verify` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1223,7 +1223,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `vote` (
   `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1235,7 +1235,7 @@ CREATE TABLE IF NOT EXISTS `vote` (
   UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`),
   KEY `vote_poll` (`vote_poll`),
   KEY `vote_element` (`vote_element`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_hash` char(255) NOT NULL,
@@ -1281,7 +1281,7 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_system` (`xchan_system`),
   KEY `xchan_pubforum` (`xchan_pubforum`),
   KEY `xchan_deleted` (`xchan_deleted`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xchat` (
   `xchat_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1294,7 +1294,7 @@ CREATE TABLE IF NOT EXISTS `xchat` (
   KEY `xchat_desc` (`xchat_desc`),
   KEY `xchat_xchan` (`xchat_xchan`),
   KEY `xchat_edited` (`xchat_edited`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xconfig` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1306,7 +1306,7 @@ CREATE TABLE IF NOT EXISTS `xconfig` (
   KEY `xchan` (`xchan`),
   KEY `cat` (`cat`),
   KEY `k` (`k`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1315,7 +1315,7 @@ CREATE TABLE IF NOT EXISTS `xign` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `xchan` (`xchan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xlink` (
   `xlink_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1332,7 +1332,7 @@ CREATE TABLE IF NOT EXISTS `xlink` (
   KEY `xlink_updated` (`xlink_updated`),
   KEY `xlink_rating` (`xlink_rating`),
   KEY `xlink_static` (`xlink_static`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xperm` (
   `xp_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1343,7 +1343,7 @@ CREATE TABLE IF NOT EXISTS `xperm` (
   KEY `xp_client` (`xp_client`),
   KEY `xp_channel` (`xp_channel`),
   KEY `xp_perm` (`xp_perm`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_hash` char(255) NOT NULL,
@@ -1373,7 +1373,7 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   KEY `xprof_country` (`xprof_country`),
   KEY `xprof_age` (`xprof_age`),
   KEY `xprof_hometown` (`xprof_hometown`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `xtag` (
   `xtag_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1384,4 +1384,4 @@ CREATE TABLE IF NOT EXISTS `xtag` (
   KEY `xtag_term` (`xtag_term`),
   KEY `xtag_hash` (`xtag_hash`),
   KEY `xtag_flags` (`xtag_flags`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;

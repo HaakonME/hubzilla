@@ -12,7 +12,6 @@ html {
 }
 
 body {
-	font-family: sans-serif, arial, freesans;
 	font-size: 0.9rem;
 	background-color: $bgcolour;
 	background-image: url('$background_image');

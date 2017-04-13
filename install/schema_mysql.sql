@@ -669,13 +669,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `item_unpublished` (`item_unpublished`),
   KEY `item_delayed` (`item_delayed`),
   KEY `item_pending_remove` (`item_pending_remove`),
-  KEY `item_blocked` (`item_blocked`),
-  FULLTEXT KEY `title` (`title`),
-  FULLTEXT KEY `body` (`body`),
-  FULLTEXT KEY `allow_cid` (`allow_cid`),
-  FULLTEXT KEY `allow_gid` (`allow_gid`),
-  FULLTEXT KEY `deny_cid` (`deny_cid`),
-  FULLTEXT KEY `deny_gid` (`deny_gid`)
+  KEY `item_blocked` (`item_blocked`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `item_id` (

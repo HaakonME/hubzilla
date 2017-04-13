@@ -538,6 +538,8 @@ function identity_basic_export($channel_id, $sections = null) {
 		$ret['relocate'] = [ 'channel_address' => $r[0]['channel_address'], 'url' => z_root()];
 		if(in_array('channel',$sections)) {
 			$ret['channel'] = $r[0];
+			unset($ret['channel']['channel_password']);
+			unset($ret['channel']['channel_salt']);
 		}
 	}
 
@@ -1999,7 +2001,10 @@ function channel_store_lowlevel($arr) {
         'channel_deny_gid'        => ((array_key_exists('channel_deny_gid',$arr))        ? $arr['channel_deny_gid']        : ''),
         'channel_removed'         => ((array_key_exists('channel_removed',$arr))         ? $arr['channel_removed']         : '0'),
         'channel_system'          => ((array_key_exists('channel_system',$arr))          ? $arr['channel_system']          : '0'),
-        'channel_moved'           => ((array_key_exists('channel_moved',$arr))           ? $arr['channel_moved']           : '')
+
+		'channel_moved'           => ((array_key_exists('channel_moved',$arr))           ? $arr['channel_moved']           : ''),
+		'channel_password'        => ((array_key_exists('channel_password',$arr))        ? $arr['channel_password']        : ''),
+		'channel_salt'            => ((array_key_exists('channel_salt',$arr))            ? $arr['channel_salt']            : '')
 
 	];
 

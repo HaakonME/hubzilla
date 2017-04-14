@@ -75,7 +75,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(x($opts,'readfunc'))
 		@curl_setopt($ch, CURLOPT_READFUNCTION, $opts['readfunc']);
 
-	// When using the session option and fetching from our own site, 
+	// When using the session option and fetching from our own site,
 	// append the PHPSESSID cookie to any existing headers.
 	// Don't add to $opts['headers'] so that the cookie does not get
 	// sent to other sites via redirects
@@ -398,18 +398,22 @@ function json_return_and_die($x, $content_type = 'application/json') {
 }
 
 
-
-// Generic XML return
-// Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable
-// of $st and an optional text <message> of $message and terminates the current process.
-
-
+/**
+ * @brief Generic XML return.
+ *
+ * Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable
+ * of $st and an optional text <message> of $message and terminates the current
+ * process.
+ *
+ * @param string $st
+ * @param string $message
+ */
 function xml_status($st, $message = '') {
 
 	$xml_message = ((strlen($message)) ? "\t<message>" . xmlify($message) . "</message>\r\n" : '');
 
 	if($st)
-		logger('xml_status returning non_zero: ' . $st . " message=" . $message);
+		logger('Returning non_zero: ' . $st . " message=" . $message);
 
 	header( "Content-type: text/xml" );
 	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
@@ -418,15 +422,13 @@ function xml_status($st, $message = '') {
 }
 
 
-
 /**
- * @brief Send HTTP status header
+ * @brief Send HTTP status header.
  *
  * @param int $val
  *    integer HTTP status result value
  * @param string $msg
  *    optional message
- * @returns nil
  */
 function http_status($val, $msg = '') {
 	if ($val >= 400)
@@ -434,10 +436,9 @@ function http_status($val, $msg = '') {
 	if ($val >= 200 && $val < 300)
 		$msg = (($msg) ? $msg : 'OK');
 
-	logger('http_status_exit ' . $val . ' ' . $msg);
+	logger('' . $val . ' ' . $msg);
 	header($_SERVER['SERVER_PROTOCOL'] . ' ' . $val . ' ' . $msg);
 }
-
 
 
 /**
@@ -447,58 +448,57 @@ function http_status($val, $msg = '') {
  *    integer HTTP status result value
  * @param string $msg
  *    optional message
- * @returns (does not return, process is terminated)
+ * @return does not return, process is terminated
  */
 function http_status_exit($val, $msg = '') {
 	http_status($val, $msg);
 	killme();
 }
 
-
-
-// convert an XML document to a normalised, case-corrected array
-// used by webfinger
-
-
+/**
+ * @brief convert an XML document to a normalised, case-corrected array used by webfinger.
+ *
+ * @param string|array|SimpleXMLElement $xml_element
+ * @param int $recursion_depth[in,out]
+ * @return NULL|string|array
+ */
 function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 
-		// If we're getting too deep, bail out
-		if ($recursion_depth > 512) {
-				return(null);
+	// If we're getting too deep, bail out
+	if ($recursion_depth > 512) {
+		return(null);
+	}
+
+	if (!is_string($xml_element) &&
+			!is_array($xml_element) &&
+			(get_class($xml_element) == 'SimpleXMLElement')) {
+		$xml_element_copy = $xml_element;
+		$xml_element = get_object_vars($xml_element);
+	}
+
+	if (is_array($xml_element)) {
+		$result_array = array();
+		if (count($xml_element) <= 0) {
+			return (trim(strval($xml_element_copy)));
 		}
 
-		if (!is_string($xml_element) &&
-		!is_array($xml_element) &&
-		(get_class($xml_element) == 'SimpleXMLElement')) {
-				$xml_element_copy = $xml_element;
-				$xml_element = get_object_vars($xml_element);
-		}
-
-		if (is_array($xml_element)) {
-				$result_array = array();
-				if (count($xml_element) <= 0) {
-						return (trim(strval($xml_element_copy)));
-				}
-
-				foreach($xml_element as $key=>$value) {
-
-						$recursion_depth++;
-						$result_array[strtolower($key)] =
+		foreach($xml_element as $key=>$value) {
+			$recursion_depth++;
+			$result_array[strtolower($key)] =
 				convert_xml_element_to_array($value, $recursion_depth);
-						$recursion_depth--;
-				}
-				if ($recursion_depth == 0) {
-						$temp_array = $result_array;
-						$result_array = array(
-								strtolower($xml_element_copy->getName()) => $temp_array,
-						);
-				}
-
-				return ($result_array);
-
-		} else {
-				return (trim(strval($xml_element)));
+			$recursion_depth--;
 		}
+		if ($recursion_depth == 0) {
+			$temp_array = $result_array;
+			$result_array = array(
+				strtolower($xml_element_copy->getName()) => $temp_array,
+			);
+		}
+
+		return ($result_array);
+	} else {
+		return (trim(strval($xml_element)));
+	}
 }
 
 
@@ -512,7 +512,7 @@ function z_dns_check($h,$check_mx = 0) {
 
 	if(is_array(\App::$config) && array_key_exists('system',\App::$config)
 		&& is_array(\App::$config['system'])
-		&& array_key_exists('do_not_check_dns',\App::$config['system']) 
+		&& array_key_exists('do_not_check_dns',\App::$config['system'])
 		&& \App::$config['system']['do_not_check_dns'])
 		return true;
 
@@ -520,56 +520,71 @@ function z_dns_check($h,$check_mx = 0) {
 	//$opts = DNS_A + DNS_CNAME + DNS_PTR;
 	//if($check_mx)
 	//	$opts += DNS_MX;
-	// Specific record type flags are unreliable on FreeBSD and Mac, 
-	// so now we'll ignore these and just check for the existence of any DNS record. 
+	// Specific record type flags are unreliable on FreeBSD and Mac,
+	// so now we'll ignore these and just check for the existence of any DNS record.
 	return((@dns_get_record($h) || filter_var($h, FILTER_VALIDATE_IP)) ? true : false);
-
 }
 
-// Take a URL from the wild, prepend http:// if necessary
-// and check DNS to see if it's real (or check if is a valid IP address)
-// return true if it's OK, false if something is wrong with it
-
-
+/**
+ * @brief Validates a given URL
+ *
+ * Take a URL from the wild, prepend http:// if necessary and check DNS to see
+ * if it's real (or check if is a valid IP address).
+ *
+ * @see z_dns_check()
+ *
+ * @param string $url[in,out] URL to check
+ * @return boolean Return true if it's OK, false if something is wrong with it
+ */
 function validate_url(&$url) {
 
 	// no naked subdomains (allow localhost for tests)
-	if(strpos($url,'.') === false && strpos($url,'/localhost/') === false)
+	if(strpos($url, '.') === false && strpos($url, '/localhost/') === false)
 		return false;
-	if(substr($url,0,4) != 'http')
+
+	if(substr($url, 0, 4) != 'http')
 		$url = 'http://' . $url;
+
 	$h = @parse_url($url);
 
 	if(($h) && z_dns_check($h['host'])) {
 		return true;
 	}
+
 	return false;
 }
 
-// checks that email is an actual resolvable internet address
-
-
+/**
+ * @brief Checks that email is an actual resolvable internet address.
+ *
+ * @param string $addr
+ * @return boolean
+ */
 function validate_email($addr) {
 
-	if(get_config('system','disable_email_validation'))
+	if(get_config('system', 'disable_email_validation'))
 		return true;
 
-	if(! strpos($addr,'@'))
+	if(! strpos($addr, '@'))
 		return false;
-	$h = substr($addr,strpos($addr,'@') + 1);
 
-	if(($h) && z_dns_check($h,true)) {
+	$h = substr($addr, strpos($addr, '@') + 1);
+
+	if(($h) && z_dns_check($h, true)) {
 		return true;
 	}
+
 	return false;
 }
 
-// Check $url against our list of allowed sites,
-// wildcards allowed. If allowed_sites is unset return true;
-// If url is allowed, return true.
-// otherwise, return false
-
-
+/**
+ * @brief Check $url against our list of allowed sites.
+ *
+ * Wildcards allowed. If allowed_sites is unset return true.
+ *
+ * @param string $url
+ * @return boolean Return true if url is allowed, otherwise return false
+ */
 function allowed_url($url) {
 
 	$h = @parse_url($url);
@@ -578,7 +593,7 @@ function allowed_url($url) {
 		return false;
 	}
 
-	$str_allowed = get_config('system','allowed_sites');
+	$str_allowed = get_config('system', 'allowed_sites');
 	if(! $str_allowed)
 		return true;
 
@@ -606,21 +621,23 @@ function allowed_url($url) {
 	return $found;
 }
 
-// check if email address is allowed to register here.
-// Compare against our list (wildcards allowed).
-// Returns false if not allowed, true if allowed or if
-// allowed list is not configured.
-
-
+/**
+ * @brief Check if email address is allowed to register here.
+ *
+ * Compare against our list (wildcards allowed).
+ *
+ * @param string $email
+ * @return boolean Returns false if not allowed, true if allowed or if allowed list is
+ * not configured.
+ */
 function allowed_email($email) {
 
-
-	$domain = strtolower(substr($email,strpos($email,'@') + 1));
+	$domain = strtolower(substr($email, strpos($email, '@') + 1));
 	if(! $domain)
 		return false;
 
-	$str_allowed = get_config('system','allowed_email');
-	$str_not_allowed = get_config('system','not_allowed_email');
+	$str_allowed = get_config('system', 'allowed_email');
+	$str_not_allowed = get_config('system', 'not_allowed_email');
 
 	if(! $str_allowed && ! $str_not_allowed)
 		return true;
@@ -631,7 +648,7 @@ function allowed_email($email) {
 
 	$fnmatch = function_exists('fnmatch');
 
-	$allowed = explode(',',$str_allowed);
+	$allowed = explode(',', $str_allowed);
 
 	if(count($allowed)) {
 		foreach($allowed as $a) {
@@ -643,7 +660,7 @@ function allowed_email($email) {
 		}
 	}
 
-	$not_allowed = explode(',',$str_not_allowed);
+	$not_allowed = explode(',', $str_not_allowed);
 
 	if(count($not_allowed)) {
 		foreach($not_allowed as $na) {
@@ -660,6 +677,7 @@ function allowed_email($email) {
 	} elseif (!$str_allowed && !$found_not_allowed) {
 		$return = true;
 	}
+
 	return $return;
 }
 
@@ -669,10 +687,12 @@ function parse_xml_string($s,$strict = true) {
 	if($strict) {
 		if(! strstr($s,'<?xml'))
 			return false;
+
 		$s2 = substr($s,strpos($s,'<?xml'));
 	}
 	else
 		$s2 = $s;
+
 	libxml_use_internal_errors(true);
 
 	$x = @simplexml_load_string($s2);
@@ -680,8 +700,10 @@ function parse_xml_string($s,$strict = true) {
 		logger('libxml: parse: error: ' . $s2, LOGGER_DATA);
 		foreach(libxml_get_errors() as $err)
 			logger('libxml: parse: ' . $err->code." at ".$err->line.":".$err->column." : ".$err->message, LOGGER_DATA);
+
 		libxml_clear_errors();
 	}
+
 	return $x;
 }
 
@@ -697,7 +719,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 		require_once('include/photo/photo_driver.php');
 
 		foreach($matches as $mtch) {
-			logger('scale_external_image: ' . $mtch[2] . ' ' . $mtch[3]);
+			logger('data: ' . $mtch[2] . ' ' . $mtch[3]);
 
 			if(substr($mtch[1],0,1) == '=') {
 				$owidth = intval(substr($mtch[2],1));
@@ -748,12 +770,12 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 						$ph->scaleImage(1024);
 						$new_width = $ph->getWidth();
 						$new_height = $ph->getHeight();
-						logger('scale_external_images: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);
+						logger('data: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);
 						$s = str_replace($mtch[0],'[' . $tag . '=' . $new_width . 'x' . $new_height. ']' . $scaled . '[/' . $tag . ']'
 							. "\n" . (($include_link)
 								? '[zrl=' . $mtch[2] . ']' . t('view full size') . '[/zrl]' . "\n"
 								: ''),$s);
-						logger('scale_external_images: new string: ' . $s, LOGGER_DEBUG);
+						logger('new string: ' . $s, LOGGER_DEBUG);
 					}
 				}
 			}
@@ -768,26 +790,30 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 }
 
 /**
- * xml2array() will convert the given XML text to an array in the XML structure.
+ * @brief xml2array() will convert the given XML text to an array in the XML structure.
+ *
  * Link: http://www.bin-co.com/php/scripts/xml2array/
- * Portions significantly re-written by mike@macgirvin.com for Friendica (namespaces, lowercase tags, get_attribute default changed, more...)
- * Arguments : $contents - The XML text
- *                $namespaces - true or false include namespace information in the returned array as array elements.
- *                $get_attributes - 1 or 0. If this is 1 the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
- *                $priority - Can be 'tag' or 'attribute'. This will change the way the resulting array sturcture. For 'tag', the tags are given more importance.
- * Return: The parsed XML in an array form. Use print_r() to see the resulting array structure.
+ * Portions significantly re-written by mike@macgirvin.com for Friendica
+ * (namespaces, lowercase tags, get_attribute default changed, more...)
+ *
  * Examples: $array =  xml2array(file_get_contents('feed.xml'));
- *              $array =  xml2array(file_get_contents('feed.xml', true, 1, 'attribute'));
+ *           $array =  xml2array(file_get_contents('feed.xml', true, 1, 'attribute'));
+ *
+ * @param string $contents The XML text
+ * @param boolean $namespaces true or false include namespace information in the returned array as array elements
+ * @param int $get_attributes 1 or 0. If this is 1 the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
+ * @param string $priority Can be 'tag' or 'attribute'. This will change the way the resulting array sturcture. For 'tag', the tags are given more importance.
+ *
+ * @return array The parsed XML in an array form. Use print_r() to see the resulting array structure.
  */
-
 function xml2array($contents, $namespaces = true, $get_attributes=1, $priority = 'attribute') {
-	if(!$contents) return array();
+	if(!$contents)
+		return array();
 
 	if(!function_exists('xml_parser_create')) {
 		logger('xml2array: parser function missing');
 		return array();
 	}
-
 
 	libxml_use_internal_errors(true);
 	libxml_clear_errors();
@@ -814,6 +840,7 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
 		foreach(libxml_get_errors() as $err)
 			logger('libxml: parse: ' . $err->code . " at " . $err->line . ":" . $err->column . " : " . $err->message, LOGGER_DATA);
 		libxml_clear_errors();
+
 		return;
 	}
 
@@ -880,7 +907,6 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
 						$current[$tag]['0_attr'] = $current[$tag.'_attr'];
 						unset($current[$tag.'_attr']);
 					}
-
 				}
 				$last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
 				$current = &$current[$tag][$last_item_index];
@@ -891,7 +917,8 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
 			if(!isset($current[$tag])) { //New Key
 				$current[$tag] = $result;
 				$repeated_tag_index[$tag.'_'.$level] = 1;
-				if($priority == 'tag' and $attributes_data) $current[$tag. '_attr'] = $attributes_data;
+				if($priority == 'tag' and $attributes_data)
+					$current[$tag. '_attr'] = $attributes_data;
 
 			} else { // If taken, put all things inside a list(array)
 				if(isset($current[$tag][0]) and is_array($current[$tag])) { // If it is already an array...
@@ -903,13 +930,11 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
 						$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
 					}
 					$repeated_tag_index[$tag.'_'.$level]++;
-
 				} else { // If it is not an array...
 					$current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
 					$repeated_tag_index[$tag.'_'.$level] = 1;
 					if($priority == 'tag' and $get_attributes) {
 						if(isset($current[$tag.'_attr'])) { // The attribute of the last(0th) tag must be moved as well
-
 							$current[$tag]['0_attr'] = $current[$tag.'_attr'];
 							unset($current[$tag.'_attr']);
 						}
@@ -1015,15 +1040,22 @@ function email_send($addr, $subject, $headers, $item) {
 	mail($addr, $subject, $body, $headers);
 }
 
-
-
-function discover_by_url($url,$arr = null) {
+/**
+ * @brief Creates an xchan entry for URL.
+ *
+ * @param string $url URL to discover
+ * @param array $arr fallback values if scrape_feed() is empty
+ *
+ * @return boolean
+ */
+function discover_by_url($url, $arr = null) {
 	require_once('library/HTML5/Parser.php');
 
 	$x = scrape_feed($url);
 	if(! $x) {
 		if(! $arr)
 			return false;
+
 		$network = (($arr['network']) ? $arr['network'] : 'unknown');
 		$name = (($arr['name']) ? $arr['name'] : 'unknown');
 		$photo = (($arr['photo']) ? $arr['photo'] : '');
@@ -1049,21 +1081,21 @@ function discover_by_url($url,$arr = null) {
 	require_once('library/simplepie/simplepie.inc');
 	$feed = new SimplePie();
 	$level = 0;
-    $x = z_fetch_url($guid,false,$level,array('novalidate' => true));
+	$x = z_fetch_url($guid, false, $level, array('novalidate' => true));
 	if(! $x['success']) {
-		logger('probe_url: feed fetch failed for ' . $poll);
+		logger('Feed fetch failed for ' . $guid);
 		return false;
 	}
 	$xml = $x['body'];
-	logger('probe_url: fetch feed: ' . $guid . ' returns: ' . $xml, LOGGER_DATA);
-	logger('probe_url: scrape_feed: headers: ' . $x['header'], LOGGER_DATA);
+	logger('Fetch feed: ' . $guid . ' returns: ' . $xml, LOGGER_DATA);
+	logger('scrape_feed: headers: ' . $x['header'], LOGGER_DATA);
 
 	// Don't try and parse an empty string
 	$feed->set_raw_data(($xml) ? $xml : '<?xml version="1.0" encoding="utf-8" ?><xml></xml>');
 
 	$feed->init();
 	if($feed->error())
-		logger('probe_url: scrape_feed: Error parsing XML: ' . $feed->error());
+		logger('scrape_feed: Error parsing XML: ' . $feed->error());
 
 	$name = unxmlify(trim($feed->get_title()));
 	$photo = $feed->get_image_url();
@@ -1104,7 +1136,7 @@ function discover_by_url($url,$arr = null) {
 					$profile = trim(unxmlify($author->get_link()));
 			}
 			if(! $photo) {
-				$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/','thumbnail');
+				$rawmedia = $item->get_item_tags('http://search.yahoo.com/mrss/', 'thumbnail');
 				if($rawmedia && $rawmedia[0]['attribs']['']['url'])
 					$photo = unxmlify($rawmedia[0]['attribs']['']['url']);
 			}
@@ -1118,7 +1150,7 @@ function discover_by_url($url,$arr = null) {
 			}
 		}
 	}
-	if($poll === $profile)
+	if($guid === $profile)
 		$lnk = $feed->get_permalink();
 	if(isset($lnk) && strlen($lnk))
 		$profile = $lnk;
@@ -1129,9 +1161,6 @@ function discover_by_url($url,$arr = null) {
 
 	if(! $name)
 		$name = notags($feed->get_description());
-
-	if(! $guid)
-		return false;
 
 	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 		dbesc($guid)
@@ -1146,7 +1175,6 @@ function discover_by_url($url,$arr = null) {
 		[
 			'xchan_hash'         => $guid,
 			'xchan_guid'         => $guid,
-			'xchan_pubkey'       => $pubkey,
 			'xchan_addr'         => $addr,
 			'xchan_url'          => $profile,
 			'xchan_name'         => $name,
@@ -1164,10 +1192,9 @@ function discover_by_url($url,$arr = null) {
 		dbesc($photos[3]),
 		dbesc($guid)
 	);
+
 	return true;
-
 }
-
 
 function discover_by_webbie($webbie) {
 	require_once('library/HTML5/Parser.php');
@@ -1216,7 +1243,7 @@ function discover_by_webbie($webbie) {
 					 $dfrn = $link['href'];
 				}
 				if($link['rel'] == 'magic-public-key') {
-        			if(substr($link['href'],0,5) === 'data:') {
+					if(substr($link['href'],0,5) === 'data:') {
 						$salmon_key = convert_salmon_key($link['href']);
 					}
 				}
@@ -1266,7 +1293,6 @@ function discover_by_webbie($webbie) {
 	if(! $x)
 		$probe_old = true;
 
-
 	if((! $dfrn) && (! $has_salmon))
 		$probe_old = true;
 
@@ -1304,7 +1330,7 @@ function discover_by_webbie($webbie) {
 					$diaspora = true;
 				}
 				if($link['@attributes']['rel'] == 'magic-public-key') {
-        			if(substr($link['@attributes']['href'],0,5) === 'data:') {
+					if(substr($link['@attributes']['href'],0,5) === 'data:') {
 						$salmon_key = convert_salmon_key($link['@attributes']['href']);
 					}
 				}
@@ -1342,7 +1368,6 @@ function discover_by_webbie($webbie) {
 		$location = find_webfinger_location($v,$rhs);
 		if($address)
 			$nickname = substr($address,0,strpos($address,'@'));
-
 	}
 
 	if($salmon_key && $has_salmon && $atom_feed && (! $dfrn) && (! $diaspora)) {
@@ -1410,12 +1435,7 @@ function discover_by_webbie($webbie) {
 						$diaspora_guid = $vcard['uid'];
 					if(($vcard['url']) && (! $diaspora_base))
 						$diaspora_base = $vcard['url'];
-
-
-
-
 				}
-
 			}
 		}
 	}
@@ -1429,16 +1449,14 @@ function discover_by_webbie($webbie) {
 		$host = $m['host'];
 	}
 
-
 	if($diaspora && $diaspora_base && $diaspora_guid) {
 		if($dfrn)
 			$network = 'friendica-over-diaspora';
 		else
 			$network = 'diaspora';
 
-		$base = trim($diaspora_base,'/');
+		$base = trim($diaspora_base, '/');
 		$notify = $base . '/receive';
-
 	}
 	else {
 		if($gnusoc) {
@@ -1447,14 +1465,11 @@ function discover_by_webbie($webbie) {
 		}
 	}
 
-
 	logger('network: ' . $network);
 	logger('address: ' . $address);
 	logger('fullname: ' . $fullname);
 	logger('pubkey: ' . $pubkey);
 	logger('location: ' . $location);
-
-
 
 	// if we have everything we need, let's create the records
 
@@ -1522,7 +1537,6 @@ function discover_by_webbie($webbie) {
 
 function webfinger_rfc7033($webbie,$zot = false) {
 
-
 	if(strpos($webbie,'@')) {
 		$lhs = substr($webbie,0,strpos($webbie,'@'));
 		$rhs = substr($webbie,strpos($webbie,'@')+1);
@@ -1545,11 +1559,11 @@ function webfinger_rfc7033($webbie,$zot = false) {
 	// and results in a 406 (Not Acceptable) response, and will also incorrectly produce an XML
 	// document if you use 'application/jrd+json, */*'. We could set this to application/jrd+json,
 	// but some test webfinger servers may not explicitly set the content type and they would be
-	// blocked. The best compromise until Mastodon is fixed is to remove the Accept header which is 
-	// accomplished by setting it to nothing. 
+	// blocked. The best compromise until Mastodon is fixed is to remove the Accept header which is
+	// accomplished by setting it to nothing.
 
 	$counter = 0;
-	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=1' : ''), 
+	$s = z_fetch_url('https://' . $rhs . '/.well-known/webfinger?f=&resource=' . $resource . (($zot) ? '&zot=1' : ''),
 		false, $counter, [ 'headers' => [ 'Accept:' ] ]);
 
 	if($s['success']) {
@@ -1561,8 +1575,10 @@ function webfinger_rfc7033($webbie,$zot = false) {
 		// Otherwise we have to store every alias that we may ever encounter and
 		// validate every URL we ever find against every possible alias
 
-		// @fixme pump.io is going to be a real bugger since it doesn't return subject or aliases
-		// or provide lookup by url
+		/**
+		 * @FIXME pump.io is going to be a real bugger since it doesn't return
+		 * subject or aliases or provide lookup by url
+		 */
 
 		$j['address'] = find_webfinger_address($j,$rhs);
 		$j['location'] = find_webfinger_location($j,$rhs);
@@ -1634,8 +1650,6 @@ function match_webfinger_location($s,$h) {
 
 
 
-
-
 function old_webfinger($webbie) {
 
 	$host = '';
@@ -1682,14 +1696,14 @@ function fetch_lrdd_template($host) {
 	}
 	if(! strpos($tpl,'{uri}'))
 		$tpl = '';
-	return $tpl;
 
+	return $tpl;
 }
 
 
 function fetch_xrd_links($url) {
 
-	logger('fetch_xrd_links: ' . $url, LOGGER_DEBUG);
+	logger('url: ' . $url, LOGGER_DEBUG);
 
 	$redirects = 0;
 	$x = z_fetch_url($url,false,$redirects,array('timeout' => 20));
@@ -1698,7 +1712,7 @@ function fetch_xrd_links($url) {
 		return array();
 
 	$xml = $x['body'];
-	logger('fetch_xrd_links: ' . $xml, LOGGER_DATA);
+	logger('data: ' . $xml, LOGGER_DATA);
 
 	if ((! $xml) || (! stristr($xml,'<xrd')))
 		return array();
@@ -1739,7 +1753,7 @@ function fetch_xrd_links($url) {
 		$links[]['@attributes'] = array('rel' => 'subject' , 'href' => $arr['xrd']['subject']);
 	}
 
-	logger('fetch_xrd_links: ' . print_r($links,true), LOGGER_DATA);
+	logger('data: ' . print_r($links, true), LOGGER_DATA);
 
 	return $links;
 }
@@ -1749,7 +1763,7 @@ function scrape_vcard($url) {
 
 	$ret = array();
 
-	logger('scrape_vcard: url=' . $url);
+	logger('url=' . $url);
 
 	$x = z_fetch_url($url);
 	if(! $x['success'])
@@ -1773,7 +1787,7 @@ function scrape_vcard($url) {
 	try {
 		$dom = HTML5_Parser::parse($s);
 	} catch (DOMException $e) {
-		logger('scrape_vcard: parse error: ' . $e);
+		logger('Parse error: ' . $e);
 	}
 
 	if(! $dom)
@@ -1822,8 +1836,12 @@ function scrape_vcard($url) {
 	return $ret;
 }
 
-
-
+/**
+ * @brief
+ *
+ * @param string $url The URL to scrape
+ * @return array
+ */
 function scrape_feed($url) {
 
 	$ret = array();
@@ -1837,15 +1855,14 @@ function scrape_feed($url) {
 	$code = $x['return_code'];
 	$s = $x['body'];
 
-	logger('scrape_feed: returns: ' . $code . ' headers=' . $headers, LOGGER_DEBUG);
+	logger('returns: ' . $code . ' headers=' . $headers, LOGGER_DEBUG);
 
 	if(! $s) {
-		logger('scrape_feed: no data returned for ' . $url);
+		logger('No data returned for ' . $url);
 		return $ret;
 	}
 
-
-	$lines = explode("\n",$headers);
+	$lines = explode("\n", $headers);
 	if(count($lines)) {
 		foreach($lines as $line) {
 			if(stristr($line,'content-type:')) {
@@ -1869,14 +1886,13 @@ function scrape_feed($url) {
 	try {
 		$dom = HTML5_Parser::parse($s);
 	} catch (DOMException $e) {
-		logger('scrape_feed: parse error: ' . $e);
+		logger('Parse error: ' . $e);
 	}
 
 	if(! $dom) {
-		logger('scrape_feed: failed to parse.');
+		logger('Failed to parse.');
 		return $ret;
 	}
-
 
 	$head = $dom->getElementsByTagName('base');
 	if($head) {
@@ -1947,80 +1963,80 @@ function format_and_send_email($sender,$xchan,$item) {
 	$title = $item['title'];
 	$body = $item['body'];
 
-    $textversion = strip_tags(html_entity_decode(bbcode(str_replace(array("\\r", "\\n"), array( "", "\n"), $body)),ENT_QUOTES,'UTF-8'));
+	$textversion = strip_tags(html_entity_decode(bbcode(str_replace(array("\\r", "\\n"), array( "", "\n"), $body)),ENT_QUOTES,'UTF-8'));
 
 	$htmlversion = bbcode(str_replace(array("\\r","\\n"), array("","<br />\n"),$body));
 
-   $banner     = t('$Projectname Notification');
-    $product    = t('$projectname'); // PLATFORM_NAME;
-    $siteurl    = z_root();
-    $thanks     = t('Thank You,');
-    $sitename   = get_config('system','sitename');
-    $site_admin = sprintf( t('%s Administrator'), $sitename);
+	$banner     = t('$Projectname Notification');
+	$product    = t('$projectname'); // PLATFORM_NAME;
+	$siteurl    = z_root();
+	$thanks     = t('Thank You,');
+	$sitename   = get_config('system', 'sitename');
+	$site_admin = sprintf( t('%s Administrator'), $sitename);
 
-		// load the template for private message notifications
-		$tpl = get_markup_template('email_notify_html.tpl');
-		$email_html_body = replace_macros($tpl,array(
-			'$banner'	    => $banner,
-			'$notify_icon'  => Zotlabs\Lib\System::get_notify_icon(),
-			'$product'	    => $product,
-			'$preamble'	    => '',
-			'$sitename'	    => $sitename,
-			'$siteurl'	    => $siteurl,
-			'$source_name'  => $sender['xchan_name'],
-			'$source_link'  => $sender['xchan_url'],
-			'$source_photo' => $sender['xchan_photo_m'],
-			'$username'	    => $xchan['xchan_name'],
-			'$hsitelink'	=> $datarray['hsitelink'],
-			'$hitemlink'	=> $datarray['hitemlink'],
-			'$thanks'	    => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'		=> $title,
-			'$htmlversion'  => $htmlversion,
-		));
+	// load the template for private message notifications
+	$tpl = get_markup_template('email_notify_html.tpl');
+	$email_html_body = replace_macros($tpl, array(
+		'$banner'	    => $banner,
+		'$notify_icon'  => Zotlabs\Lib\System::get_notify_icon(),
+		'$product'	    => $product,
+		'$preamble'	    => '',
+		'$sitename'	    => $sitename,
+		'$siteurl'	    => $siteurl,
+		'$source_name'  => $sender['xchan_name'],
+		'$source_link'  => $sender['xchan_url'],
+		'$source_photo' => $sender['xchan_photo_m'],
+		'$username'     => $xchan['xchan_name'],
+		'$hsitelink'    => $datarray['hsitelink'], /// @FIXME $datarray is undefined
+		'$hitemlink'    => $datarray['hitemlink'], /// @FIXME $datarray is undefined
+		'$thanks'       => $thanks,
+		'$site_admin'   => $site_admin,
+		'$title'        => $title,
+		'$htmlversion'  => $htmlversion,
+	));
 
-		// load the template for private message notifications
-		$tpl = get_markup_template('email_notify_text.tpl');
-		$email_text_body = replace_macros($tpl, array(
-			'$banner'       => $banner,
-			'$product'      => $product,
-			'$preamble'     => '',
-			'$sitename'     => $sitename,
-			'$siteurl'      => $siteurl,
-			'$source_name'  => $sender['xchan_name'],
-			'$source_link'  => $sender['xchan_url'],
-			'$source_photo' => $sender['xchan_photo_m'],
-			'$username'     => $xchan['xchan_name'],
-			'$hsitelink'    => $datarray['hsitelink'],
-			'$hitemlink'    => $datarray['hitemlink'],
-			'$thanks'       => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'        => $title,
-			'$textversion'  => $textversion
-		));
+	// load the template for private message notifications
+	$tpl = get_markup_template('email_notify_text.tpl');
+	$email_text_body = replace_macros($tpl, array(
+		'$banner'       => $banner,
+		'$product'      => $product,
+		'$preamble'     => '',
+		'$sitename'     => $sitename,
+		'$siteurl'      => $siteurl,
+		'$source_name'  => $sender['xchan_name'],
+		'$source_link'  => $sender['xchan_url'],
+		'$source_photo' => $sender['xchan_photo_m'],
+		'$username'     => $xchan['xchan_name'],
+		'$hsitelink'    => $datarray['hsitelink'],
+		'$hitemlink'    => $datarray['hitemlink'],
+		'$thanks'       => $thanks,
+		'$site_admin'   => $site_admin,
+		'$title'        => $title,
+		'$textversion'  => $textversion
+	));
 
-		$sender_name = t('Administrator');
+	$sender_name = t('Administrator');
 
-  		$hostname = App::get_hostname();
-	    if(strpos($hostname,':'))
-    	    $hostname = substr($hostname,0,strpos($hostname,':'));
-		$sender_email = get_config('system','reply_address');
-		if(! $sender_email)
-			$sender_email = 'noreply' . '@' . $hostname;
+	$hostname = App::get_hostname();
+	if(strpos($hostname, ':'))
+		$hostname = substr($hostname,0,strpos($hostname,':'));
 
-		// use the EmailNotification library to send the message
+	$sender_email = get_config('system', 'reply_address');
+	if(! $sender_email)
+		$sender_email = 'noreply' . '@' . $hostname;
 
-		Zotlabs\Lib\Enotify::send(array(
-			'fromName'             => $product,
-			'fromEmail'            => $sender_email,
-			'replyTo'              => $sender_email,
-			'toEmail'              => str_replace('mailto:','',$xchan['xchan_addr']),
-			'messageSubject'       => (($title) ? $title : t('No Subject')),
-			'htmlVersion'          => $email_html_body,
-			'textVersion'          => $email_text_body,
-			'additionalMailHeader' => '',
-		));
+	// use the EmailNotification library to send the message
 
+	Zotlabs\Lib\Enotify::send(array(
+		'fromName'             => $product,
+		'fromEmail'            => $sender_email,
+		'replyTo'              => $sender_email,
+		'toEmail'              => str_replace('mailto:','',$xchan['xchan_addr']),
+		'messageSubject'       => (($title) ? $title : t('No Subject')),
+		'htmlVersion'          => $email_html_body,
+		'textVersion'          => $email_text_body,
+		'additionalMailHeader' => '',
+	));
 }
 
 
@@ -2058,8 +2074,6 @@ function do_delivery($deliveries) {
 
 	if($deliver)
 		Zotlabs\Daemon\Master::Summon(array('Deliver',$deliver));
-
-
 }
 
 
@@ -2116,7 +2130,7 @@ function get_site_info() {
 			$commit = '';
 	}
 	else {
-			$version = $commit = '';
+		$version = $commit = '';
 	}
 
 	//Statistics
@@ -2133,10 +2147,10 @@ function get_site_info() {
 		foreach(App::$config['feature_lock'] as $k => $v) {
 			if($k === 'config_loaded')
 				continue;
+
 			$locked_features[$k] = intval($v);
 		}
 	}
-
 
 
 	$data = Array(
@@ -2166,15 +2180,19 @@ function get_site_info() {
 		'local_posts' => $local_posts_stat,
 		'hide_in_statistics' => $hide_in_statistics
 	);
+
 	return $data;
 }
 
-
-
+/**
+ * @brief
+ *
+ * @param string $url
+ * @return boolean
+ */
 function check_siteallowed($url) {
 
 	$retvalue = true;
-
 
 	$arr = array('url' => $url);
 	call_hooks('check_siteallowed',$arr);
@@ -2201,9 +2219,16 @@ function check_siteallowed($url) {
 			}
 		}
 	}
+
 	return $retvalue;
 }
 
+/**
+ * @brief
+ *
+ * @param string $hash
+ * @return boolean
+ */
 function check_channelallowed($hash) {
 
 	$retvalue = true;
@@ -2233,6 +2258,7 @@ function check_channelallowed($hash) {
 			}
 		}
 	}
+
 	return $retvalue;
 }
 
@@ -2263,9 +2289,14 @@ function get_repository_version($branch = 'master') {
 			return $matches[3];
 	}
 	return '?.?';
-
 }
 
+/**
+ * @brief Get translated network name.
+ *
+ * @param string $s Network string, see boot.php
+ * @return string Translated name of the network
+ */
 function network_to_name($s) {
 
 	$nets = array(
@@ -2288,26 +2319,23 @@ function network_to_name($s) {
 	$search  = array_keys($nets);
 	$replace = array_values($nets);
 
-	return str_replace($search,$replace,$s);
-
+	return str_replace($search, $replace, $s);
 }
 
-
+/**
+ * @brief Send a text email message.
+ *
+ * @param array $params an assoziative array with:
+ *  * \e string \b fromName        name of the sender
+ *  * \e string \b fromEmail       email of the sender
+ *  * \e string \b replyTo         replyTo address to direct responses
+ *  * \e string \b toEmail         destination email address
+ *  * \e string \b messageSubject  subject of the message
+ *  * \e string \b htmlVersion     html version of the message
+ *  * \e string \b textVersion     text only version of the message
+ *  * \e string \b additionalMailHeader  additions to the smtp mail header
+ */
 function z_mail($params) {
-
-	/**
-	 * @brief Send a text email message
-	 *
-	 * @param array $params an assoziative array with:
-	 *  * \e string \b fromName        name of the sender
-	 *  * \e string \b fromEmail       email of the sender
-	 *  * \e string \b replyTo         replyTo address to direct responses
-	 *  * \e string \b toEmail         destination email address
-	 *  * \e string \b messageSubject  subject of the message
-	 *  * \e string \b htmlVersion     html version of the message
-	 *  * \e string \b textVersion     text only version of the message
-	 *  * \e string \b additionalMailHeader  additions to the smtp mail header
-	 */
 
 	if(! $params['fromEmail']) {
 		$params['fromEmail'] = get_config('system','from_email');
@@ -2354,8 +2382,13 @@ function z_mail($params) {
 	return $res;
 }
 
-// discover the best API path available for redmatrix/hubzilla servers
 
+/**
+ * @brief Discover the best API path available for redmatrix/hubzilla servers.
+ *
+ * @param string $host
+ * @return string
+ */
 function probe_api_path($host) {
 
 	$schemes = ['https', 'http' ];
@@ -2365,8 +2398,8 @@ function probe_api_path($host) {
 		foreach($paths as $path) {
 			$curpath = $scheme . '://' . $host . $path;
 			$x = z_fetch_url($curpath);
-			if($x['success'] && ! strlen($x['body'],'not implemented'))
-				return str_replace('version','',$curpath);
+			if($x['success'] && ! strlen($x['body'], 'not implemented'))
+				return str_replace('version', '', $curpath);
 		}
 	}
 

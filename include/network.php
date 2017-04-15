@@ -1049,7 +1049,6 @@ function email_send($addr, $subject, $headers, $item) {
  * @return boolean
  */
 function discover_by_url($url, $arr = null) {
-	require_once('library/HTML5/Parser.php');
 
 	$x = scrape_feed($url);
 	if(! $x) {
@@ -1078,7 +1077,6 @@ function discover_by_url($url, $arr = null) {
 
 	// try and discover stuff from the feeed
 
-	require_once('library/simplepie/simplepie.inc');
 	$feed = new SimplePie();
 	$level = 0;
 	$x = z_fetch_url($guid, false, $level, array('novalidate' => true));
@@ -1627,22 +1625,30 @@ function find_webfinger_location($j,$rhs) {
 	return '';
 }
 
-function match_webfinger_location($s,$h) {
+/**
+ * @brief Match the webfinger location for the different networks.
+ *
+ * @param string $s The string to search in
+ * @param string $h The host
+ * @return string
+ */
+function match_webfinger_location($s, $h) {
 
 	// GNU-social and the older StatusNet - the $host/user/123 form doesn't work
-	if(preg_match('|' . $h . '/index.php/user/([0-9]*?)$|',$s))
+	if(preg_match('|' . $h . '/index.php/user/([0-9]*?)$|', $s))
 		return $s;
 	// Redmatrix / hubzilla
-	if(preg_match('|' . $h . '/channel/|',$s))
+	if(preg_match('|' . $h . '/channel/|', $s))
 		return $s;
 	// Friendica
-	if(preg_match('|' . $h . '/profile/|',$s))
+	if(preg_match('|' . $h . '/profile/|', $s))
 		return $s;
 
 	$arr = array('test' => $s, 'host' => $h, 'success' => false);
-	call_hooks('match_webfinger_location',$arr);
+	call_hooks('match_webfinger_location', $arr);
 	if($arr['success'])
 		return $s;
+
 	return '';
 }
 
@@ -1843,6 +1849,7 @@ function scrape_vcard($url) {
  * @return array
  */
 function scrape_feed($url) {
+	require_once('library/HTML5/Parser.php');
 
 	$ret = array();
 	$level = 0;

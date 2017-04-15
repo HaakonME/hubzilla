@@ -1049,7 +1049,6 @@ function email_send($addr, $subject, $headers, $item) {
  * @return boolean
  */
 function discover_by_url($url, $arr = null) {
-	require_once('library/HTML5/Parser.php');
 
 	$x = scrape_feed($url);
 	if(! $x) {
@@ -1091,12 +1090,6 @@ function discover_by_url($url, $arr = null) {
 
 	// Don't try and parse an empty string
 	$feed->set_raw_data(($xml) ? $xml : '<?xml version="1.0" encoding="utf-8" ?><xml></xml>');
-
-	// We can preserve iframes because we will strip them in the purifier after
-	// checking for supported video sources.
-	$strip_htmltags = $feed->strip_htmltags;
-	array_splice($strip_htmltags, array_search('iframe', $strip_htmltags), 1);
-	$feed->strip_htmltags($strip_htmltags);
 
 	$feed->init();
 	if($feed->error())
@@ -1856,6 +1849,7 @@ function scrape_vcard($url) {
  * @return array
  */
 function scrape_feed($url) {
+	require_once('library/HTML5/Parser.php');
 
 	$ret = array();
 	$level = 0;

@@ -1,5 +1,5 @@
 <div id="contact-entry-wrapper-{{$contact.id}}">
-	<div class="section-subtitle-wrapper">
+	<div class="section-subtitle-wrapper clearfix">
 		<div class="pull-right">
 			{{if $contact.approve && $contact.ignore}}
 			<form action="connedit/{{$contact.id}}" method="post" >

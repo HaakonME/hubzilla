@@ -50,7 +50,6 @@ require_once('include/hubloc.php');
 
 define ( 'PLATFORM_NAME',           'red' );
 define ( 'STD_VERSION',             '5.3' );
-
 define ( 'ZOT_REVISION',            '1.2' );
 
 define ( 'DB_UPDATE_VERSION',       1189  );

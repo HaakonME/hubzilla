@@ -15,6 +15,10 @@ nav .badge {
 }
 
 @media screen and (max-width: 767px) {
+	.navbar {
+		padding: .5rem 7px;
+	}
+
 	nav .badge {
 		top: 0.5rem;
 		left: 1.5rem;
@@ -40,10 +44,6 @@ nav .badge {
 nav .dropdown-menu {
 	max-height: 70vh;
 	overflow: auto;
-}
-
-nav.navbar {
-	max-height: 100vh;
 }
 
 #navbar-collapse-2 {

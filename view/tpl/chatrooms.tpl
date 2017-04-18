@@ -23,7 +23,7 @@
 				<td>{{$room.cr_expire}}&nbsp;min</td>
 				<td class="chatrooms-index-tool{{if $room.allow_cid || $room.allow_gid || $room.deny_cid || $room.deny_gid}} dropdown float-right{{/if}}">
 					{{if $room.allow_cid || $room.allow_gid || $room.deny_cid || $room.deny_gid}}
-					<i class="fa fa-lock lockview dropdown-toggle" data-toggle="dropdown" onclick="lockview('chatroom',{{$room.cr_id}});"></i>
+					<i class="fa fa-lock lockview" data-toggle="dropdown" onclick="lockview('chatroom',{{$room.cr_id}});"></i>
 					<ul id="panel-{{$room.cr_id}}" class="lockview-panel dropdown-menu"></ul>
 					{{/if}}
 				</td>

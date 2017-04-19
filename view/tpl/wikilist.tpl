@@ -41,7 +41,7 @@
 				<td>{{$wiki.mimeType}}</td>
 				<td class="wiki-index-tool dropdown">
 					{{if $wiki.lock}}
-					<i class="fa fa-lock dropdown-toggle lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i></button>
+					<i class="fa fa-lock lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i></button>
 					<ul id="panel-{{$wiki.id}}" class="lockview-panel dropdown-menu dropdown-menu-right"></ul>
 					{{/if}}
 				</td>

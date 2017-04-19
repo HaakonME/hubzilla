@@ -28,7 +28,7 @@
 				</div>
 				{{if $item.lock}}
 				<div class="wall-item-lock dropdown">
-					<i class="fa fa-lock lockview dropdown-toggle" data-toggle="dropdown" title="{{$item.lock}}" onclick="lockview('item',{{$item.id}});" ></i><ul id="panel-{{$item.id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
+					<i class="fa fa-lock lockview" data-toggle="dropdown" title="{{$item.lock}}" onclick="lockview('item',{{$item.id}});" ></i><ul id="panel-{{$item.id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
 				</div>
 				{{/if}}
 				<div class="wall-item-author">

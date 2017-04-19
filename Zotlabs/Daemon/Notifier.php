@@ -5,6 +5,11 @@ namespace Zotlabs\Daemon;
 require_once('include/queue_fn.php');
 require_once('include/html2plain.php');
 require_once('include/conversation.php');
+require_once('include/zot.php');
+require_once('include/items.php');
+require_once('include/bbcode.php');
+
+
 
 /*
  * This file was at one time responsible for doing all deliveries, but this caused
@@ -68,13 +73,6 @@ require_once('include/conversation.php');
  */
 
 
-require_once('include/zot.php');
-require_once('include/queue_fn.php');
-require_once('include/datetime.php');
-require_once('include/items.php');
-require_once('include/bbcode.php');
-require_once('include/channel.php');
-
 
 class Notifier {
 
@@ -97,16 +95,6 @@ class Notifier {
 		$sys = get_sys_channel();
 
 		$deliveries = array();
-
-		$dead_hubs = array();
-
-		$dh = q("select site_url from site where site_dead = 1");
-		if($dh) {
-			foreach($dh as $dead) {
-				$dead_hubs[] = $dead['site_url'];
-			}
-		}
-
 
 		$request = false;
 		$mail = false;
@@ -489,10 +477,10 @@ class Notifier {
 	
 
 		// Now we have collected recipients (except for external mentions, FIXME)
-		// Let's reduce this to a set of hubs.
+		// Let's reduce this to a set of hubs; checking that the site is not dead.
 
 		$r = q("select hubloc.*, site.site_crypto from hubloc left join site on site_url = hubloc_url where hubloc_hash in (" . implode(',',$recipients) . ") 
-			and hubloc_error = 0 and hubloc_deleted = 0"
+			and hubloc_error = 0 and hubloc_deleted = 0 and site_dead = 0"
 		);		
  
 
@@ -506,23 +494,31 @@ class Notifier {
 
 
 		/**
-		 * Reduce the hubs to those that are unique. For zot hubs, we need to verify uniqueness by the sitekey, since it may have been 
-		 * a re-install which has not yet been detected and pruned.
+		 * Reduce the hubs to those that are unique. For zot hubs, we need to verify uniqueness by the sitekey, 
+		 * since it may have been a re-install which has not yet been detected and pruned.
 		 * For other networks which don't have or require sitekeys, we'll have to use the URL
 		 */
 
 
-		$hublist = array(); // this provides an easily printable list for the logs
-		$dhubs   = array(); // delivery hubs where we store our resulting unique array
-		$keys    = array(); // array of keys to check uniquness for zot hubs
-		$urls    = array(); // array of urls to check uniqueness of hubs from other networks
-
+		$hublist = []; // this provides an easily printable list for the logs
+		$dhubs   = []; // delivery hubs where we store our resulting unique array
+		$keys    = []; // array of keys to check uniquness for zot hubs
+		$urls    = []; // array of urls to check uniqueness of hubs from other networks
+		$hub_env = []; // per-hub envelope so we don't broadcast the entire envelope to all
 
 		foreach($hubs as $hub) {
-			if(in_array($hub['hubloc_url'],$dead_hubs)) {
-				logger('skipping dead hub: ' . $hub['hubloc_url'], LOGGER_DEBUG, LOG_INFO);
-				continue;
+
+			if($env_recips) {
+				foreach($env_recips as $er) {
+					if($hub['hubloc_hash'] === $er['hash']) {
+						if(! array_key_exists($hub['hubloc_host'] . $hub['hubloc_sitekey'], $hub_env)) {
+							$hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']] = [];
+						}
+						$hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']][] = $er;
+					}
+				}
 			}
+			
 
 			if($hub['hubloc_network'] == 'zot') {
 				if(! in_array($hub['hubloc_sitekey'],$keys)) {
@@ -603,7 +599,8 @@ class Notifier {
 				$packet = zot_build_packet($channel,$packet_type,(($packet_recips) ? $packet_recips : null));
 			}
 			elseif($packet_type === 'request') {
-				$packet = zot_build_packet($channel,$packet_type,$env_recips,$hub['hubloc_sitekey'],$hub['site_crypto'],
+				$env = (($hub_env && $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']]) ? $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']] : '');
+				$packet = zot_build_packet($channel,$packet_type,$env,$hub['hubloc_sitekey'],$hub['site_crypto'],
 					$hash, array('message_id' => $request_message_id)
 				);
 			}
@@ -618,7 +615,8 @@ class Notifier {
 				));
 			}
 			else {
-				$packet = zot_build_packet($channel,'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null), $hub['site_crypto'],$hash);	
+				$env = (($hub_env && $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']]) ? $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']] : '');
+				$packet = zot_build_packet($channel,'notify',$env,(($private) ? $hub['hubloc_sitekey'] : null), $hub['site_crypto'],$hash);	
 				queue_insert(array(
 					'hash'       => $hash,
 					'account_id' => $target_item['aid'],

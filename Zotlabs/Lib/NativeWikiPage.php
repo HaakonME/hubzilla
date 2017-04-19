@@ -21,7 +21,7 @@ class NativeWikiPage {
 		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
 
 		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and item_deleted = 0 
-			$sql_extra group by mid",
+			$sql_extra group by mid order by created asc",
 			dbesc($resource_id),
 			intval($channel_id)
 		);

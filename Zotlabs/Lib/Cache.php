@@ -9,10 +9,10 @@ namespace Zotlabs\Lib;
 class Cache {
 	public static function get($key) {
 
-		$key = substr($key,0,254);
+		$hash = hash('whirlpool',$key);
 
 		$r = q("SELECT v FROM cache WHERE k = '%s' limit 1",
-			dbesc($key)
+			dbesc($hash)
 		);
 			
 		if ($r)
@@ -22,20 +22,20 @@ class Cache {
 		
 	public static function set($key,$value) {
 
-		$key = substr($key,0,254);
+		$hash = hash('whirlpool',$key);
 
 		$r = q("SELECT * FROM cache WHERE k = '%s' limit 1",
-			dbesc($key)
+			dbesc($hash)
 		);
 		if($r) {
 			q("UPDATE cache SET v = '%s', updated = '%s' WHERE k = '%s'",
 				dbesc($value),
 				dbesc(datetime_convert()),
-				dbesc($key));
+				dbesc($hash));
 		}
 		else {
 			q("INSERT INTO cache ( k, v, updated) VALUES ('%s','%s','%s')",
-				dbesc($key),
+				dbesc($hash),
 				dbesc($value),
 				dbesc(datetime_convert()));
 		}

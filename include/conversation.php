@@ -353,14 +353,6 @@ function localize_item(&$item){
 	}
 */
 
-	// if item body was obscured and we changed it, re-obscure it
-	// FIXME - we need a better filter than just the string 'data'; try and
-	// match the fact that it's json encoded
-
-	if(intval($item['item_obscured'])
-		&& strlen($item['body']) && (! strpos($item['body'],'data'))) {
-		$item['body']  = z_obscure($item['body']);
-	}
 
 }
 

@@ -149,7 +149,14 @@ function oembed_fetch_url($embedurl){
 		if ($action !== 'block') {
 			// try oembed autodiscovery
 			$redirects = 0;
-			$result = z_fetch_url($furl, false, $redirects, array('timeout' => 30, 'accept_content' => "text/*", 'novalidate' => true ));
+			$result = z_fetch_url($furl, false, $redirects, 
+				[
+					'timeout'        => 30, 
+					'accept_content' => "text/*", 
+					'novalidate'     => true, 
+					'session'        => ((local_channel() && $zrl) ? true : false) 
+				]
+			);
 
 			if($result['success'])
 				$html_text = $result['body'];
@@ -200,7 +207,7 @@ function oembed_fetch_url($embedurl){
 
 		if ($txt[0]!="{") $txt='{"type":"error"}';
 	
-		//save in cache
+		// save in cache
 
 		if(! get_config('system','oembed_cache_disable'))
 			Zlib\Cache::set('[' . App::$videowidth . '] ' . $furl, $txt);

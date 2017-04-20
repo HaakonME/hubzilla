@@ -946,7 +946,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray['author_xchan'] = '';
 
 				if(activity_match($datarray['verb'],ACTIVITY_FOLLOW) && $datarray['obj_type'] === ACTIVITY_OBJ_PERSON) {
-					$cb = array('item' => $datarray,'channel' => $importer, 'xchan' => null, 'author' => $author, 'caught' => false);
+					$cb = array('item' => $datarray,'channel' => $importer, 'xchan' => [ 'placeholder' => '' ], 'author' => $author, 'caught' => false);
 					call_hooks('follow_from_feed',$cb);
 					if($cb['caught']) {
 						if($cb['return_code'])

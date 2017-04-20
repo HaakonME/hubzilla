@@ -49,7 +49,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	$arr = array('url' => $url, 'channel' => array());
 
-	call_hooks('follow', $arr);
+	call_hooks('follow_init', $arr);
 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];

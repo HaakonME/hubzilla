@@ -63,7 +63,7 @@ function get_public_feed($channel, $params) {
  */
 function get_feed_for($channel, $observer_hash, $params) {
 
-	if(! channel)
+	if(! $channel)
 		http_status_exit(401);
 
 	if($params['pages']) {

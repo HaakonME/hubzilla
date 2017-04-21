@@ -63,7 +63,7 @@ function get_public_feed($channel, $params) {
  */
 function get_feed_for($channel, $observer_hash, $params) {
 
-	if(! channel)
+	if(! $channel)
 		http_status_exit(401);
 
 	if($params['pages']) {
@@ -73,19 +73,6 @@ function get_feed_for($channel, $observer_hash, $params) {
 		if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_stream'))
 			http_status_exit(403);
 	}
-	$items = items_fetch(array(
-		'wall' => '1',
-		'datequery' => $params['end'],
-		'datequery2' => $params['begin'],
-		'start' => $params['start'],          // FIXME
-		'records' => $params['records'],      // FIXME
-		'direction' => $params['direction'],  // FIXME
-		'pages' => $params['pages'],
-		'order' => 'post',
-		'top'   => $params['top'],
-		'cat'   => $params['cat']
-		), $channel, $observer_hash, CLIENT_MODE_NORMAL, App::$module);
-
 
 	$feed_template = get_markup_template('atom_feed.tpl');
 
@@ -112,7 +99,26 @@ function get_feed_for($channel, $observer_hash, $params) {
 	));
 
 
+	$x = [ 'xml' => $atom, 'channel' => $channel, 'observer_hash' => $observer_hash, 'params' => $params ];
+	call_hooks('atom_feed_top',$x);
+
+	$atom = $x['xml'];
+
+	// a much simpler interface
 	call_hooks('atom_feed', $atom);
+
+	$items = items_fetch(array(
+		'wall' => '1',
+		'datequery' => $params['end'],
+		'datequery2' => $params['begin'],
+		'start' => $params['start'],          // FIXME
+		'records' => $params['records'],      // FIXME
+		'direction' => $params['direction'],  // FIXME
+		'pages' => $params['pages'],
+		'order' => 'post',
+		'top'   => $params['top'],
+		'cat'   => $params['cat']
+		), $channel, $observer_hash, CLIENT_MODE_NORMAL, App::$module);
 
 	if($items) {
 		$type = 'html';

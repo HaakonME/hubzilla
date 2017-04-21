@@ -46,107 +46,111 @@ class Manage extends \Zotlabs\Web\Controller {
 	
 		$channels = null;
 	
-		if(local_channel()) {
-			$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and channel_removed = 0 order by channel_name ",
-				intval(get_account_id())
-			);
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and channel_removed = 0 order by channel_name ",
+			intval(get_account_id())
+		);
 	
-			$account = \App::get_account();
+		$account = \App::get_account();
 	
-			if($r && count($r)) {
-				$channels = $r;
-				for($x = 0; $x < count($channels); $x ++) {
-					$channels[$x]['link'] = 'manage/' . intval($channels[$x]['channel_id']);
-					$channels[$x]['default'] = (($channels[$x]['channel_id'] == $account['account_default_channel']) ? "1" : ''); 
-					$channels[$x]['default_links'] = '1';
+		if($r && count($r)) {
+			$channels = $r;
+			for($x = 0; $x < count($channels); $x ++) {
+				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['channel_id']);
+				$channels[$x]['default'] = (($channels[$x]['channel_id'] == $account['account_default_channel']) ? "1" : ''); 
+				$channels[$x]['default_links'] = '1';
 	
 	
-					$c = q("SELECT id, item_wall FROM item
-						WHERE item_unseen = 1 and uid = %d " . item_normal(),
-						intval($channels[$x]['channel_id'])
-					);
+				$c = q("SELECT id, item_wall FROM item
+					WHERE item_unseen = 1 and uid = %d " . item_normal(),
+					intval($channels[$x]['channel_id'])
+				);
 	
-					if($c) {	
-						foreach ($c as $it) {
-							if(intval($it['item_wall']))
-								$channels[$x]['home'] ++;
-							else
-								$channels[$x]['network'] ++;
-						}
+				if($c) {	
+					foreach ($c as $it) {
+						if(intval($it['item_wall']))
+							$channels[$x]['home'] ++;
+						else
+							$channels[$x]['network'] ++;
 					}
+				}
 	
 	
-					$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and abook_pending = 1 and abook_self = 0 and abook_ignored = 0 and xchan_deleted = 0 and xchan_orphan = 0 ",
-						intval($channels[$x]['channel_id'])
-					);
+				$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and abook_pending = 1 and abook_self = 0 and abook_ignored = 0 and xchan_deleted = 0 and xchan_orphan = 0 ",
+					intval($channels[$x]['channel_id'])
+				);
 	
-					if($intr)
-						$channels[$x]['intros'] = intval($intr[0]['total']);
+				if($intr)
+					$channels[$x]['intros'] = intval($intr[0]['total']);
 	
 	
-					$mails = q("SELECT count(id) as total from mail WHERE channel_id = %d AND mail_seen = 0 and from_xchan != '%s' ",
-						intval($channels[$x]['channel_id']),
-						dbesc($channels[$x]['channel_hash'])
-					);
+				$mails = q("SELECT count(id) as total from mail WHERE channel_id = %d AND mail_seen = 0 and from_xchan != '%s' ",
+					intval($channels[$x]['channel_id']),
+					dbesc($channels[$x]['channel_hash'])
+				);
 	
-					if($mails)
-						$channels[$x]['mail'] = intval($mails[0]['total']);
+				if($mails)
+					$channels[$x]['mail'] = intval($mails[0]['total']);
 			
 	
-					$events = q("SELECT etype, dtstart, adjust FROM event
-						WHERE event.uid = %d AND dtstart < '%s' AND dtstart > '%s' and dismissed = 0
-						ORDER BY dtstart ASC ",
-						intval($channels[$x]['channel_id']),
-						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
-						dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
-					);
+				$events = q("SELECT etype, dtstart, adjust FROM event
+					WHERE event.uid = %d AND dtstart < '%s' AND dtstart > '%s' and dismissed = 0
+					ORDER BY dtstart ASC ",
+					intval($channels[$x]['channel_id']),
+					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
+					dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
+				);
 	
-					if($events) {
-						$channels[$x]['all_events'] = count($events);
-	
-						if($channels[$x]['all_events']) {
-							$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
-							foreach($events as $e) {
-								$bd = false;
-								if($e['etype'] === 'birthday') {
-									$channels[$x]['birthdays'] ++;
-									$bd = true;
-								}
-								else {
-									$channels[$x]['events'] ++;
-								}
-								if(datetime_convert('UTC', ((intval($e['adjust'])) ? date_default_timezone_get() : 'UTC'), $e['dtstart'], 'Y-m-d') === $str_now) {
-									$channels[$x]['all_events_today'] ++;
-									if($bd)
-										$channels[$x]['birthdays_today'] ++;
-									else
-										$channels[$x]['events_today'] ++;
-								}
+				if($events) {
+					$channels[$x]['all_events'] = count($events);
+
+					if($channels[$x]['all_events']) {
+						$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
+						foreach($events as $e) {
+							$bd = false;
+							if($e['etype'] === 'birthday') {
+								$channels[$x]['birthdays'] ++;
+								$bd = true;
+							}
+							else {
+								$channels[$x]['events'] ++;
+							}
+							if(datetime_convert('UTC', ((intval($e['adjust'])) ? date_default_timezone_get() : 'UTC'), $e['dtstart'], 'Y-m-d') === $str_now) {
+								$channels[$x]['all_events_today'] ++;
+								if($bd)
+									$channels[$x]['birthdays_today'] ++;
+								else
+									$channels[$x]['events_today'] ++;
 							}
 						}
 					}
 				}
 			}
-			
-		    $r = q("select count(channel_id) as total from channel where channel_account_id = %d and channel_removed = 0",
-				intval(get_account_id())
-			);
-			$limit = account_service_class_fetch(get_account_id(),'total_identities');
-			if($limit !== false) {
-				$channel_usage_message = sprintf( t("You have created %1$.0f of %2$.0f allowed channels."), $r[0]['total'], $limit);
-			}
-			else {
-				$channel_usage_message = '';
-	 		}
+
+		}			
+		
+		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and channel_removed = 0",
+			intval(get_account_id())
+		);
+		$limit = account_service_class_fetch(get_account_id(),'total_identities');
+		if($limit !== false) {
+			$channel_usage_message = sprintf( t("You have created %1$.0f of %2$.0f allowed channels."), $r[0]['total'], $limit);
 		}
+		else {
+			$channel_usage_message = '';
+	 	}
+	
 	
 		$create = array( 'new_channel', t('Create a new channel'), t('Create New'));
 	
-		$delegates = q("select * from abook left join xchan on abook_xchan = xchan_hash where 
-			abook_channel = %d and abook_xchan in ( select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'delegate' and v = '1' )",
-			intval(local_channel()),
-			intval(local_channel())
-		);
+		$delegates = null;
+
+		if(local_channel()) {
+			$delegates = q("select * from abook left join xchan on abook_xchan = xchan_hash where 
+				abook_channel = %d and abook_xchan in ( select xchan from abconfig where chan = %d and cat = 'their_perms' and k = 'delegate' and v = '1' )",
+				intval(local_channel()),
+				intval(local_channel())
+			);
+		}
 	
 		if($delegates) {
 			for($x = 0; $x < count($delegates); $x ++) {

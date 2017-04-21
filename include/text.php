@@ -1372,20 +1372,7 @@ function link_compare($a, $b) {
 
 
 function unobscure(&$item) {
-	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
-		$key = get_config('system','prvkey');
-		if($item['title'])
-			$item['title'] = crypto_unencapsulate(json_decode($item['title'],true),$key);
-		if($item['body'])
-			$item['body'] = crypto_unencapsulate(json_decode($item['body'],true),$key);
-		if(get_config('system','item_cache')) {
-			q("update item set title = '%s', body = '%s', item_obscured = 0 where id = %d",
-				dbesc($item['title']),
-				dbesc($item['body']),
-				intval($item['id'])
-			);
-		}
-	}
+	return;
 }
 
 function unobscure_mail(&$item) {

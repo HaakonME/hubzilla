@@ -31,7 +31,10 @@ class Editpost extends \Zotlabs\Web\Controller {
 			dbesc(get_observer_hash())
 		);
 
-		if(! count($itm)) {
+		// don't allow web editing of potentially binary content (item_obscured = 1)
+		// @FIXME how do we do it instead?
+
+		if((! $itm) || intval($itm[0]['item_obscured'])) {
 			notice( t('Item is not editable') . EOL);
 			return;
 		}
@@ -43,14 +46,6 @@ class Editpost extends \Zotlabs\Web\Controller {
 		$owner_uid = $itm[0]['uid'];
 
 		$channel = \App::get_channel();
-
-		if(intval($itm[0]['item_obscured'])) {
-			$key = get_config('system','prvkey');
-			if($itm[0]['title'])
-				$itm[0]['title'] = crypto_unencapsulate(json_decode($itm[0]['title'],true),$key);
-			if($itm[0]['body'])
-				$itm[0]['body'] = crypto_unencapsulate(json_decode($itm[0]['body'],true),$key);
-		}
 
 		$category = '';
 		$catsenabled = ((feature_enabled($owner_uid,'categories')) ? 'categories' : '');

@@ -612,6 +612,9 @@ function get_item_elements($x,$allow_code = false) {
 		if(in_array('notshown',$x['flags']))
 			$arr['item_notshown'] = 1;
 
+		if(in_array('obscured',$x['flags']))
+			$arr['item_obscured'] = 1;
+
 		// hidden item are no longer propagated - notshown may be a suitable alternative
 
 		if(in_array('hidden',$x['flags']))
@@ -714,7 +717,7 @@ function get_item_elements($x,$allow_code = false) {
 		// local only		$arr['item_relay'] = $x['item_relay'];
 		$arr['item_mentionsme'] = $x['item_mentionsme'];
 		$arr['item_nocomment'] = $x['item_nocomment'];
-		// local only $arr['item_obscured'] = $x['item_obscured'];
+		$arr['item_obscured'] = $x['item_obscured'];
 		// local only $arr['item_verified'] = $x['item_verified'];
 		$arr['item_retained'] = $x['item_retained'];
 		$arr['item_rss'] = $x['item_rss'];
@@ -960,13 +963,6 @@ function encode_item($item,$mirror = false) {
 	$c_scope = map_scope($comment_scope);
 
 	$key = get_config('system','prvkey');
-
-	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured'])) {
-		if($item['title'])
-			$item['title'] = crypto_unencapsulate(json_decode($item['title'],true),$key);
-		if($item['body'])
-			$item['body'] = crypto_unencapsulate(json_decode($item['body'],true),$key);
-	}
 
 	// If we're trying to backup an item so that it's recoverable or for export/imprt,
 	// add all the attributes we need to recover it
@@ -1325,7 +1321,9 @@ function encode_item_flags($item) {
 		$ret[] = 'nsfw';
 	if(intval($item['item_consensus']))
 		$ret[] = 'consensus';
-	if(intval($item['item_private']))
+	if(intval($item['item_obscured']))
+		$ret[] = 'obscured';
+	if(intval($item['item_privat']))
 		$ret[] = 'private';
 
 	return $ret;
@@ -2546,15 +2544,7 @@ function tag_deliver($uid, $item_id) {
 		// Now let's check if this mention was inside a reshare so we don't spam a forum
 		// If it's private we may have to unobscure it momentarily so that we can parse it.
 
-		$body = '';
-
-		if(intval($item['item_obscured'])) {
-			$key = get_config('system','prvkey');
-			if($item['body'])
-				$body = crypto_unencapsulate(json_decode($item['body'],true),$key);
-		}
-		else
-			$body = $item['body'];
+		$body = $item['body'];
 
 		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
@@ -2705,11 +2695,6 @@ function tgroup_check($uid,$item) {
 
 	$body = $item['body'];
 
-	if(array_key_exists('item_obscured',$item) && intval($item['item_obscured']) && $body) {
-		$key = get_config('system','prvkey');
-		$body = crypto_unencapsulate(json_decode($body,true),$key);
-	}
-
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
 //	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
@@ -2803,7 +2788,6 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$item_origin = 1;
 	$item_uplink = 0;
 	$item_nocomment = 0;
-	$item_obscured = 0;
 
 	$flag_bits = $item['item_flags'];
 
@@ -2826,11 +2810,10 @@ function start_delivery_chain($channel, $item, $item_id, $parent) {
 	$title = $item['title'];
 	$body  = $item['body'];
 
-	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_obscured = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s',
+	$r = q("update item set item_uplink = %d, item_nocomment = %d, item_flags = %d, owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s',
 		deny_cid = '%s', deny_gid = '%s', item_private = %d, public_policy = '%s', comment_policy = '%s', title = '%s', body = '%s', item_wall = %d, item_origin = %d  where id = %d",
 		intval($item_uplink),
 		intval($item_nocomment),
-		intval($item_obscured),
 		intval($flag_bits),
 		dbesc($channel['channel_hash']),
 		dbesc($channel['channel_allow_cid']),

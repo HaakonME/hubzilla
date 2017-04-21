@@ -100,17 +100,12 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			intval($owner)
 		);
 
-		if(! $itm) {
+		// don't allow web editing of potentially binary content (item_obscured = 1)
+		// @FIXME how do we do it instead?
+
+		if((! $itm) || intval($itm[0]['item_obscured'])) {
 			notice( t('Permission denied.') . EOL);
 			return;
-		}
-
-		if(intval($itm[0]['item_obscured'])) {
-			$key = get_config('system','prvkey');
-			if($itm[0]['title'])
-				$itm[0]['title'] = crypto_unencapsulate(json_decode($itm[0]['title'],true),$key);
-			if($itm[0]['body'])
-				$itm[0]['body'] = crypto_unencapsulate(json_decode($itm[0]['body'],true),$key);
 		}
 
 		$item_id = q("select * from iconfig where cat = 'system' and k = 'WEBPAGE' and iid = %d limit 1",

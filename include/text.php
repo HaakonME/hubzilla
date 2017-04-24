@@ -2930,7 +2930,7 @@ function pdl_selector($uid, $current='') {
 
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select iconfig.*, mid from item_id left join item on iconfig.iid = item.id
+	$r = q("select iconfig.*, mid from iconfig left join item on iconfig.iid = item.id
 		where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' $sql_extra order by v asc",
 		intval($uid)
 	);

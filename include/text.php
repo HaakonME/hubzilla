@@ -1166,7 +1166,7 @@ function get_mood_verbs() {
  *
  * @return Returns array with keys 'texts' and 'icons'
  */
-function list_smilies() {
+function list_smilies($default_only = false) {
 
 	$texts =  array(
 		'&lt;3',
@@ -1240,10 +1240,15 @@ function list_smilies() {
 	);
 
 	$params = array('texts' => $texts, 'icons' => $icons);
+
+	if($default_only)
+		return $params;
+
 	call_hooks('smilie', $params);
 
 	return $params;
 }
+
 /**
  * @brief Replaces text emoticons with graphical images.
  *

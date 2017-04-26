@@ -94,33 +94,39 @@ class Wfinger extends \Zotlabs\Web\Controller {
 			$result['links'] = [
 	
 				[
-					'rel' => 'http://webfinger.net/rel/avatar',
+					'rel'  => 'http://webfinger.net/rel/avatar',
 					'type' => $r[0]['xchan_photo_mimetype'],
 					'href' => $r[0]['xchan_photo_l']	
 				],
 	
 				[
-					'rel' => 'http://webfinger.net/rel/profile-page',
+					'rel'  => 'http://webfinger.net/rel/profile-page',
 					'href' => z_root() . '/profile/' . $r[0]['channel_address'],
 				],
 	
 				[
-					'rel' => 'http://webfinger.net/rel/blog',
+					'rel'  => 'http://schemas.google.com/g/2010#updates-from', 
+					'type' => 'application/atom+xml', 
+					'href' => z_root() . '/feed/'  . $r[0]['channel_address'] . '?f=&compat=1'
+				],
+
+				[
+					'rel'  => 'http://webfinger.net/rel/blog',
 					'href' => z_root() . '/channel/' . $r[0]['channel_address'],
 				],
 	
 				[
-					'rel' => 'http://ostatus.org/schema/1.0/subscribe',
+					'rel'      => 'http://ostatus.org/schema/1.0/subscribe',
 					'template' => z_root() . '/follow/url={uri}',
 				],
 	
 				[
-					'rel' => 'http://purl.org/zot/protocol',
+					'rel'  => 'http://purl.org/zot/protocol',
 					'href' => z_root() . '/.well-known/zot-info' . '?address=' . $r[0]['xchan_addr'],
 				],
 	
 				[
-					'rel' => 'magic-public-key',
+					'rel'  => 'magic-public-key',
 					'href' => 'data:application/magic-public-key,' . salmon_key($r[0]['channel_pubkey']),
 				]
 			];

@@ -751,6 +751,7 @@ CREATE TABLE "mail" (
   "to_xchan" text NOT NULL DEFAULT '',
   "account_id" bigint  NOT NULL DEFAULT '0',
   "channel_id" bigint  NOT NULL DEFAULT '0',
+  "mail_mimetype char(64) NOT NULL DEFAULT '0',
   "title" text NOT NULL,
   "body" text NOT NULL,
   "sig" text NOT NULL,
@@ -763,6 +764,7 @@ CREATE TABLE "mail" (
   "mail_seen" smallint NOT NULL DEFAULT '0',
   "mail_recalled" smallint NOT NULL DEFAULT '0',
   "mail_obscured" smallint NOT NULL DEFAULT '0',
+  "mail_raw" smallint NOT NULL DEFAULT '0',
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "expires" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("id")

@@ -188,9 +188,10 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 		$body  = str_rot47(base64url_encode($body));
 	
 	$sig = ''; // placeholder
+	$mimetype = ''; //placeholder
 
-	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, title, body, sig, attach, mid, parent_mid, created, expires, mail_isreply )
-		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, mail_mimetype, title, body, sig, attach, mid, parent_mid, created, expires, mail_isreply )
+		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
 		intval($channel['channel_account_id']),
 		dbesc($conv_guid),
 		intval(1),
@@ -198,6 +199,7 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 		dbesc($channel['channel_hash']),
 		dbesc($recipient),
 		dbesc($subject),
+		dbesc(($mimetype)? $mimetype : 'text/bbcode'),
 		dbesc($body),
 		dbesc($sig),
 		dbesc($jattach),

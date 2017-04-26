@@ -107,7 +107,7 @@ class Wfinger extends \Zotlabs\Web\Controller {
 				[
 					'rel'  => 'http://schemas.google.com/g/2010#updates-from', 
 					'type' => 'application/atom+xml', 
-					'href' => z_root() . '/feed/'  . $r[0]['channel_address'] . '?f=&compat=1'
+					'href' => z_root() . '/feed/'  . $r[0]['channel_address'] . '/?compat=1'
 				],
 
 				[

@@ -16,11 +16,8 @@
   <generator uri="http://hubzilla.org" version="{{$version}}">{{$red}}</generator>
   <link rel="license" href="http://creativecommons.org/licenses/by/3.0/" />
   <link rel="alternate" type="text/html" href="{{$profile_page}}" />
-{{if $hub}}
-  {{$hub}}
-{{/if}}
-{{if $salmon}}
-  {{$salmon}}
+{{if $author}}
+{{$author}}
 {{/if}}
 
   <updated>{{$feed_updated}}</updated>

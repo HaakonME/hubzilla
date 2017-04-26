@@ -22,23 +22,19 @@ function get_public_feed($channel, $params) {
 */
 
 	if(! $params)
-		$params = array();
+		$params = [];
 
-	$params['type']      = ((x($params,'type'))      ? $params['type']          : 'xml');
-	$params['begin']     = ((x($params,'begin'))     ? $params['begin']         : NULL_DATE);
-	$params['end']       = ((x($params,'end'))       ? $params['end']           : datetime_convert('UTC','UTC','now'));
-	$params['start']     = ((x($params,'start'))     ? $params['start']         : 0);
-	$params['records']   = ((x($params,'records'))   ? $params['records']       : 40);
-	$params['direction'] = ((x($params,'direction')) ? $params['direction']     : 'desc');
-	$params['pages']     = ((x($params,'pages'))     ? intval($params['pages']) : 0);
-	$params['top']       = ((x($params,'top'))       ? intval($params['top'])   : 0);
-	$params['cat']       = ((x($params,'cat'))       ? $params['cat']           : '');
+	$params['type']        = ((x($params,'type'))     ? $params['type']           : 'xml');
+	$params['begin']       = ((x($params,'begin'))    ? $params['begin']          : NULL_DATE);
+	$params['end']         = ((x($params,'end'))      ? $params['end']            : datetime_convert('UTC','UTC','now'));
+	$params['start']       = ((x($params,'start'))    ? $params['start']          : 0);
+	$params['records']     = ((x($params,'records'))  ? $params['records']        : 40);
+	$params['direction']   = ((x($params,'direction'))? $params['direction']      : 'desc');
+	$params['pages']       = ((x($params,'pages'))    ? intval($params['pages'])  : 0);
+	$params['top']         = ((x($params,'top'))      ? intval($params['top'])    : 0);
+	$params['cat']         = ((x($params,'cat'))      ? $params['cat']            : '');
+	$params['compat']      = ((x($params,'compat'))   ? intval($params['compat']) : 0);
 
-
-	// put a sane lower limit on feed requests if not specified
-
-//	if($params['begin'] <= NULL_DATE)
-//		$params['begin'] = datetime_convert('UTC','UTC','now - 1 month');
 
 	switch($params['type']) {
 		case 'json':
@@ -61,6 +57,7 @@ function get_public_feed($channel, $params) {
  * @param array $params
  * @return string with an atom feed
  */
+
 function get_feed_for($channel, $observer_hash, $params) {
 
 	if(! $channel)
@@ -74,9 +71,16 @@ function get_feed_for($channel, $observer_hash, $params) {
 			http_status_exit(403);
 	}
 
+	// logger('params: ' . print_r($params,true));
+
 	$feed_template = get_markup_template('atom_feed.tpl');
 
 	$atom = '';
+
+	$feed_author = '';
+	if(intval($params['compat']) === 1) {
+		$feed_author = atom_author('author',$channel['channel_address'],$channel['xchan_url'],300,300,$channel['xchan_photo_mimetype'],$channel['xchan_photo_l']);
+	}
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(Zotlabs\Lib\System::get_project_version()),
@@ -84,8 +88,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'$feed_id'      => xmlify($channel['xchan_url']),
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now', ATOM_TIME)),
-		'$hub'          => '', // feed_hublinks(),
-		'$salmon'       => '', // feed_salmonlinks($channel['channel_address']),
+		'$author'       => $feed_author,
 		'$name'         => xmlify($channel['channel_name']),
 		'$profile_page' => xmlify($channel['xchan_url']),
 		'$mimephoto'    => xmlify($channel['xchan_photo_mimetype']),
@@ -107,18 +110,21 @@ function get_feed_for($channel, $observer_hash, $params) {
 	// a much simpler interface
 	call_hooks('atom_feed', $atom);
 
-	$items = items_fetch(array(
-		'wall' => '1',
-		'datequery' => $params['end'],
-		'datequery2' => $params['begin'],
-		'start' => $params['start'],          // FIXME
-		'records' => $params['records'],      // FIXME
-		'direction' => $params['direction'],  // FIXME
-		'pages' => $params['pages'],
-		'order' => 'post',
-		'top'   => $params['top'],
-		'cat'   => $params['cat']
-		), $channel, $observer_hash, CLIENT_MODE_NORMAL, App::$module);
+	$items = items_fetch(
+		[
+			'wall' => '1',
+			'datequery'  => $params['end'],
+			'datequery2' => $params['begin'],
+			'start'      => intval($params['start']),
+			'records'    => intval($params['records']),
+			'direction'  => dbesc($params['direction']),
+			'pages'      => $params['pages'],
+			'order'      => dbesc('post'),
+			'top'        => $params['top'],
+			'cat'        => $params['cat'],
+			'compat'     => $params['compat']
+		], $channel, $observer_hash, CLIENT_MODE_NORMAL, App::$module
+	);
 
 	if($items) {
 		$type = 'html';
@@ -1247,10 +1253,11 @@ function atom_author($tag, $name, $uri, $h, $w, $type, $photo) {
 	$photo = xmlify($photo);
 
 	$o .= "<$tag>\r\n";
-	$o .= "<name>$name</name>\r\n";
-	$o .= "<uri>$uri</uri>\r\n";
-	$o .= '<link rel="photo"  type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
-	$o .= '<link rel="avatar" type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= "  <id>$uri</id>\r\n";
+	$o .= "  <name>$name</name>\r\n";
+	$o .= "  <uri>$uri</uri>\r\n";
+	$o .= '  <link rel="photo"  type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '  <link rel="avatar" type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
 
 	call_hooks('atom_author', $o);
 

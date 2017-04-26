@@ -3885,6 +3885,10 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		}
 	}
 
+	if(intval($arr['compat']) === 1) {
+		$sql_extra = " AND author_xchan = owner_xchan and item_wall = 1 and item_private = 0 ";
+	}
+
 	if ($arr['datequery']) {
 		$sql_extra3 .= protect_sprintf(sprintf(" AND item.created <= '%s' ", dbesc(datetime_convert('UTC','UTC',$arr['datequery']))));
 	}

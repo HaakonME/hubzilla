@@ -391,7 +391,6 @@ class Notifier {
 					return;
 				}
 			}
-
 		}
 
 		$walltowall = (($top_level_post && $channel['xchan_hash'] === $target_item['author_xchan']) ? true : false); 
@@ -408,7 +407,7 @@ class Notifier {
 		if(! $recipients)
 			return;
 
-//	logger('notifier: recipients: ' . print_r($recipients,true), LOGGER_NORMAL, LOG_DEBUG);
+		//	logger('notifier: recipients: ' . print_r($recipients,true), LOGGER_NORMAL, LOG_DEBUG);
 
 		$env_recips = (($private) ? array() : null);
 
@@ -421,8 +420,13 @@ class Notifier {
 			foreach($details as $d) {
 
 				$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
-				if($private)
-					$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig'],'hash' => $d['xchan_hash']);
+				if($private) {
+					$env_recips[] = [
+						'guid'     => $d['xchan_guid'],
+						'guid_sig' => $d['xchan_guid_sig'],
+						'hash'     => $d['xchan_hash']
+					];
+				}
 
 				if($d['xchan_network'] === 'mail' && $normal_mode) {
 					$delivery_options = get_xconfig($d['xchan_hash'],'system','delivery_mode');
@@ -433,28 +437,28 @@ class Notifier {
 		}
 
 
-		$narr = array(
-			'channel' => $channel,
-			'upstream' => $upstream,
-			'env_recips' => $env_recips,
-			'packet_recips' => $packet_recips,
-			'recipients' => $recipients,
-			'item' => $item,
-			'target_item' => $target_item,
+		$narr = [
+			'channel'        => $channel,
+			'upstream'       => $upstream,
+			'env_recips'     => $env_recips,
+			'packet_recips'  => $packet_recips,
+			'recipients'     => $recipients,
+			'item'           => $item,
+			'target_item'    => $target_item,
 			'top_level_post' => $top_level_post,
-			'private' => $private,
+			'private'        => $private,
 			'relay_to_owner' => $relay_to_owner,
-			'uplink' => $uplink,
-			'cmd' => $cmd,
-			'mail' => $mail,
-			'single' => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
-			'location' => $location,
-			'request' => $request,
-			'normal_mode' => $normal_mode,
-			'packet_type' => $packet_type,
-			'walltowall' => $walltowall,
-			'queued' => array()
-		);
+			'uplink'         => $uplink,
+			'cmd'            => $cmd,
+			'mail'           => $mail,
+			'single'         => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
+			'location'       => $location,
+			'request'        => $request,
+			'normal_mode'    => $normal_mode,
+			'packet_type'    => $packet_type,
+			'walltowall'     => $walltowall,
+			'queued'         => []
+		];
 
 		call_hooks('notifier_process', $narr);
 		if($narr['queued']) {
@@ -491,8 +495,6 @@ class Notifier {
 
 		$hubs = $r;
 
-
-
 		/**
 		 * Reduce the hubs to those that are unique. For zot hubs, we need to verify uniqueness by the sitekey, 
 		 * since it may have been a re-install which has not yet been detected and pruned.
@@ -523,49 +525,47 @@ class Notifier {
 			if($hub['hubloc_network'] == 'zot') {
 				if(! in_array($hub['hubloc_sitekey'],$keys)) {
 					$hublist[] = $hub['hubloc_host'];
-					$dhubs[] = $hub;
-					$keys[] = $hub['hubloc_sitekey'];
+					$dhubs[]   = $hub;
+					$keys[]    = $hub['hubloc_sitekey'];
 				}
 			}
 			else {
 				if(! in_array($hub['hubloc_url'],$urls)) {
 					$hublist[] = $hub['hubloc_host'];
-					$dhubs[] = $hub;
-					$urls[] = $hub['hubloc_url'];
+					$dhubs[]   = $hub;
+					$urls[]    = $hub['hubloc_url'];
 				}
 			}
 		}
 
 		logger('notifier: will notify/deliver to these hubs: ' . print_r($hublist,true), LOGGER_DEBUG, LOG_DEBUG);
 
-
 		foreach($dhubs as $hub) {
 
 			if($hub['hubloc_network'] !== 'zot') {
-
-				$narr = array(
-					'channel' => $channel,
-					'upstream' => $upstream,
-					'env_recips' => $env_recips,
-					'packet_recips' => $packet_recips,
-					'recipients' => $recipients,
-					'item' => $item,
-					'target_item' => $target_item,
-					'hub' => $hub,
+				$narr = [
+					'channel'        => $channel,
+					'upstream'       => $upstream,
+					'env_recips'     => $env_recips,
+					'packet_recips'  => $packet_recips,
+					'recipients'     => $recipients,
+					'item'           => $item,
+					'target_item'    => $target_item,
+					'hub'            => $hub,
 					'top_level_post' => $top_level_post,
-					'private' => $private,
+					'private'        => $private,
 					'relay_to_owner' => $relay_to_owner,
-					'uplink' => $uplink,
-					'cmd' => $cmd,
-					'mail' => $mail,
-					'single' => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
-					'location' => $location,
-					'request' => $request,
-					'normal_mode' => $normal_mode,
-					'packet_type' => $packet_type,
-					'walltowall' => $walltowall,
-					'queued' => array()
-				);
+					'uplink'         => $uplink,
+					'cmd'            => $cmd,
+					'mail'           => $mail,
+					'single'         => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
+					'location'       => $location,
+					'request'        => $request,
+					'normal_mode'    => $normal_mode,
+					'packet_type'    => $packet_type,
+					'walltowall'     => $walltowall,
+					'queued'         => []
+				];
 
 
 				call_hooks('notifier_hub',$narr);
@@ -617,14 +617,16 @@ class Notifier {
 			else {
 				$env = (($hub_env && $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']]) ? $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']] : '');
 				$packet = zot_build_packet($channel,'notify',$env,(($private) ? $hub['hubloc_sitekey'] : null), $hub['site_crypto'],$hash);	
-				queue_insert(array(
-					'hash'       => $hash,
-					'account_id' => $target_item['aid'],
-					'channel_id' => $target_item['uid'],
-					'posturl'    => $hub['hubloc_callback'],
-					'notify'     => $packet,
-					'msg'        => json_encode($encoded_item)
-				));
+				queue_insert(
+					[
+						'hash'       => $hash,
+						'account_id' => $target_item['aid'],
+						'channel_id' => $target_item['uid'],
+						'posturl'    => $hub['hubloc_callback'],
+						'notify'     => $packet,
+						'msg'        => json_encode($encoded_item)
+					]
+				);
 
 				// only create delivery reports for normal undeleted items
 				if(is_array($target_item) && array_key_exists('postopts',$target_item) && (! $target_item['item_deleted']) && (! get_config('system','disable_dreport'))) {
@@ -645,9 +647,9 @@ class Notifier {
 	
 		if($normal_mode) {
 			$x = q("select * from hook where hook = 'notifier_normal'");
-			if($x)
-				Master::Summon(array('Deliver_hooks',$target_item['id']));
-
+			if($x) {
+				Master::Summon( [ 'Deliver_hooks', $target_item['id'] ] );
+			}
 		}
 
 		if($deliveries)

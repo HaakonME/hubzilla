@@ -113,18 +113,18 @@ class Mail extends \Zotlabs\Web\Controller {
 
 		if($preview) {
 			$mail = [
-				'mailbox' => 'outbox',
-				'id' => 0,
-				'mid' => 'M0',
-				'from_name' => $channel['xchan_name'],
-				'from_url' =>  $channel['xchan_url'],
-				'from_photo' => $channel['xchan_photo_s'],
-				'subject' => zidify_links(smilies(bbcode($subject))),
-				'body' => zidify_links(smilies(bbcode($body))),
+				'mailbox'     => 'outbox',
+				'id'          => 0,
+				'mid'         => 'M0',
+				'from_name'   => $channel['xchan_name'],
+				'from_url'    => $channel['xchan_url'],
+				'from_photo'  => $channel['xchan_photo_s'],
+				'subject'     => zidify_links(smilies(bbcode($subject))),
+				'body'        => zidify_links(smilies(bbcode($body))),
 				'attachments' => '',
-				'can_recall' => false,
+				'can_recall'  => false,
 				'is_recalled' => '',
-				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'], 'c')
+				'date'        => datetime_convert('UTC',date_default_timezone_get(),$message['created'], 'c')
 			];
 			
 			echo replace_macros(get_markup_template('mail_conv.tpl'), [ '$mail' => $mail ] );

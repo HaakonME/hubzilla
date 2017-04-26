@@ -57,7 +57,7 @@ class Xrd extends \Zotlabs\Web\Controller {
 			'$aliases'     => $aliases,
 			'$profile_url' => z_root() . '/channel/'       . $r[0]['channel_address'],
 			'$hcard_url'   => z_root() . '/hcard/'         . $r[0]['channel_address'],
-			'$atom'        => z_root() . '/feed/'          . $r[0]['channel_address'] . '/?compat=1',
+			'$atom'        => z_root() . '/ofeed/'         . $r[0]['channel_address'],
 			'$zot_post'    => z_root() . '/post/'          . $r[0]['channel_address'],
 			'$poco_url'    => z_root() . '/poco/'          . $r[0]['channel_address'],
 			'$photo'       => z_root() . '/photo/profile/l/' . $r[0]['channel_id'],

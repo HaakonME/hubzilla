@@ -2512,8 +2512,8 @@ function update_r1187() {
 
 function update_r1188() {
 
-	$r1 = q("alter table channel add channel_password varchar(255) not null ");
-	$r2 = q("alter table channel add channel_salt varchar(255) not null ");
+	$r1 = q("alter table channel add channel_password varchar(255) not null default '' ");
+	$r2 = q("alter table channel add channel_salt varchar(255) not null default '' ");
 
 	if($r1 && $r2)
 		return UPDATE_SUCCESS;

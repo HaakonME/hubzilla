@@ -5,10 +5,20 @@
 require_once('include/crypto.php');
 require_once('include/attach.php');
 
+
+function mail_prepare_binary($item) {
+
+	return replace_macros(get_markup_template('item_binary.tpl'), [
+		'$download'  => t('Download binary/encrypted content'),
+		'$url'       => z_root() . '/mail/' . $item['id'] . '/download'
+	]);
+}
+
+
 // send a private message
 	
 
-function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $replyto = '', $expires = NULL_DATE) { 
+function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $replyto = '', $expires = NULL_DATE, $mimetype = 'text/bbcode', $raw = false) { 
 
 	$ret = array('success' => false);
 	$is_reply = false;
@@ -190,8 +200,8 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 	$sig = ''; // placeholder
 	$mimetype = ''; //placeholder
 
-	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, mail_mimetype, title, body, sig, attach, mid, parent_mid, created, expires, mail_isreply )
-		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+	$r = q("INSERT INTO mail ( account_id, conv_guid, mail_obscured, channel_id, from_xchan, to_xchan, mail_mimetype, title, body, sig, attach, mid, parent_mid, created, expires, mail_isreply, mail_raw )
+		VALUES ( %d, '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d )",
 		intval($channel['channel_account_id']),
 		dbesc($conv_guid),
 		intval(1),
@@ -207,7 +217,8 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 		dbesc($replyto),
 		dbesc(datetime_convert()),
 		dbescdate($expires),
-		intval($is_reply)
+		intval($is_reply),
+		intval($raw)
 	);
 
 	// verify the save

@@ -83,7 +83,7 @@ class DB_Upgrade {
 								file_put_contents($lockfile, $x);
 							
 								$r = q("select account_language from account where account_email = '%s' limit 1",
-									dbesc(App::$config['system']['admin_email'])
+									dbesc(\App::$config['system']['admin_email'])
 								);
 								push_lang(($r) ? $r[0]['account_language'] : 'en');
 

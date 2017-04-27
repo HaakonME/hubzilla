@@ -21,12 +21,23 @@ class NativeWikiPage {
 		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
 
 		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and item_deleted = 0 
-			$sql_extra group by mid order by created asc",
+			$sql_extra order by created asc",
 			dbesc($resource_id),
 			intval($channel_id)
 		);
 		if($r) {
-			$items = fetch_post_tags($r,true);
+			$x = [];
+			$y = [];
+
+			foreach($r as $rv) {
+				if(! in_array($rv['mid'],$x)) {
+					$y[] = $rv;
+					$x[] = $rv['mid'];
+				}
+			}
+
+			$items = fetch_post_tags($y,true);
+
 			foreach($items as $page_item) {
 				$title = get_iconfig($page_item['id'],'nwikipage','pagetitle',t('(No Title)'));
 				if(urldecode($title) !== 'Home') {

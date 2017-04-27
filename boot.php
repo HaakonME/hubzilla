@@ -53,7 +53,7 @@ define ( 'PLATFORM_NAME',           'red' );
 define ( 'STD_VERSION',             '5.3' );
 define ( 'ZOT_REVISION',            '1.2' );
 
-define ( 'DB_UPDATE_VERSION',       1189  );
+define ( 'DB_UPDATE_VERSION',       1190  );
 
 define ( 'PROJECT_BASE',   __DIR__ );
 

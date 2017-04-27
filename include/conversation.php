@@ -1533,6 +1533,15 @@ function prepare_page($item) {
 	// the template will get passed an unobscured title.
 
 	$body = prepare_body($item, true);
+	if(App::$page['template'] == 'none') {
+		$tpl = 'page_display_empty.tpl';
+
+		return replace_macros(get_markup_template($tpl), array(
+			'$body' => $body['html']
+		));
+		
+	}
+	
 	$tpl = get_pconfig($item['uid'], 'system', 'pagetemplate');
 	if (! $tpl)
 		$tpl = 'page_display.tpl';

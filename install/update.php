@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1189 );
+define( 'UPDATE_VERSION' , 1190 );
 
 /**
  *
@@ -2514,6 +2514,17 @@ function update_r1188() {
 
 	$r1 = q("alter table channel add channel_password varchar(255) not null default '' ");
 	$r2 = q("alter table channel add channel_salt varchar(255) not null default '' ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1189() {
+
+	$r1 = q("alter table mail add mail_mimetype char(64) not null default 'text/bbcode' ");
+	$r2 = q("alter table mail add mail_raw int(4) not null default '0' ");
 
 	if($r1 && $r2)
 		return UPDATE_SUCCESS;

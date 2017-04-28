@@ -2,6 +2,10 @@
 
 use \Zotlabs\Lib as Zlib;
 
+require_once('include/security.php');
+require_once('include/menu.php');
+
+
 function nav() {
 
 	/**
@@ -38,8 +42,8 @@ EOT;
 		$observer = App::get_observer();
 
 	require_once('include/conversation.php');
-	$is_owner = (((local_channel()) && (\App::$profile['profile_uid'] == local_channel())) ? true : false);
-	$navapps[] = profile_tabs($a, $is_owner, \App::$profile['channel_address']);
+	$is_owner = (((local_channel()) && (App::$profile['profile_uid'] == local_channel())) ? true : false);
+	$navapps[] = channel_apps($is_owner, App::$profile['channel_address']);
 
 	$myident = (($channel) ? $channel['xchan_addr'] : '');
 		
@@ -311,4 +315,169 @@ function nav_set_selected($item){
 		'register'      => null,
 	);
 	App::$nav_sel[$item] = 'active';
+}
+
+
+
+function channel_apps($is_owner = false, $nickname = null) {
+
+	// Don't provide any channel apps if we're running as the sys channel
+
+	if(App::$is_sys)
+		return '';
+
+	if(! get_pconfig($uid, 'system', 'channelapps','1'))
+		return '';
+
+	$channel = App::get_channel();
+
+	if($channel && is_null($nickname))
+		$nickname = $channel['channel_address'];
+
+	$uid = ((App::$profile['profile_uid']) ? App::$profile['profile_uid'] : local_channel());
+	$account_id = ((App::$profile['profile_uid']) ? App::$profile['channel_account_id'] : App::$channel['channel_account_id']);
+
+	if($uid == local_channel()) {
+		return;
+	}
+	else {
+		$cal_link = '/cal/' . $nickname;
+	}
+
+	$sql_options = item_permissions_sql($uid);
+
+	$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
+		where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s' 
+		and item.item_delayed = 0 and item.item_deleted = 0 
+		and ( iconfig.k = 'WEBPAGE' and item_type = %d ) 
+		$sql_options limit 1",
+		intval($uid),
+		dbesc('home'),
+		intval(ITEM_TYPE_WEBPAGE)
+	);
+
+	$has_webpages = (($r) ? true : false);
+
+	if(x($_GET, 'tab'))
+		$tab = notags(trim($_GET['tab']));
+
+	$url = z_root() . '/channel/' . $nickname;
+	$pr  = z_root() . '/profile/' . $nickname;
+
+	$tabs = [
+		[
+			'label' => t('Channel'),
+			'url'   => $url,
+			'sel'   => ((argv(0) == 'channel') ? 'active' : ''),
+			'title' => t('Status Messages and Posts'),
+			'id'    => 'status-tab',
+			'icon'  => 'home'
+		],
+	];
+
+	$p = get_all_perms($uid,get_observer_hash());
+
+	if ($p['view_profile']) {
+		$tabs[] = [
+			'label' => t('About'),
+			'url'   => $pr,
+			'sel'   => ((argv(0) == 'profile') ? 'active' : ''),
+			'title' => t('Profile Details'),
+			'id'    => 'profile-tab',
+			'icon'  => 'user'
+		];
+	}
+	if ($p['view_storage']) {
+		$tabs[] = [
+			'label' => t('Photos'),
+			'url'   => z_root() . '/photos/' . $nickname,
+			'sel'   => ((argv(0) == 'photos') ? 'active' : ''),
+			'title' => t('Photo Albums'),
+			'id'    => 'photo-tab',
+			'icon'  => 'photo'
+		];
+		$tabs[] = [
+			'label' => t('Files'),
+			'url'   => z_root() . '/cloud/' . $nickname,
+			'sel'   => ((argv(0) == 'cloud' || argv(0) == 'sharedwithme') ? 'active' : ''),
+			'title' => t('Files and Storage'),
+			'id'    => 'files-tab',
+			'icon'  => 'folder-open'
+		];
+	}
+
+	if($p['view_stream'] && $cal_link) {
+		$tabs[] = [
+			'label' => t('Events'),
+			'url'   => z_root() . $cal_link,
+			'sel'   => ((argv(0) == 'cal' || argv(0) == 'events') ? 'active' : ''),
+			'title' => t('Events'),
+			'id'    => 'event-tab',
+			'icon'  => 'calendar'
+		];
+	}
+
+
+	if ($p['chat'] && feature_enabled($uid,'ajaxchat')) {
+		$has_chats = ZLib\Chatroom::list_count($uid);
+		if ($has_chats) {
+			$tabs[] = [
+				'label' => t('Chatrooms'),
+				'url'   => z_root() . '/chat/' . $nickname,
+				'sel'   => ((argv(0) == 'chat') ? 'active' : '' ),
+				'title' => t('Chatrooms'),
+				'id'    => 'chat-tab',
+				'icon'  => 'comments-o'
+			];
+		}
+	}
+
+	$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
+	if ($is_owner && $has_bookmarks) {
+		$tabs[] = [
+			'label' => t('Bookmarks'),
+			'url'   => z_root() . '/bookmarks',
+			'sel'   => ((argv(0) == 'bookmarks') ? 'active' : ''),
+			'title' => t('Saved Bookmarks'),
+			'id'    => 'bookmarks-tab',
+			'icon'  => 'bookmark'
+		];
+	}
+
+	if($has_webpages && feature_enabled($uid,'webpages')) {
+		$tabs[] = [
+			'label' => t('Webpages'),
+			'url'   => z_root() . '/page/' . $nickname . '/home',
+			'sel'   => ((argv(0) == 'webpages') ? 'active' : ''),
+			'title' => t('View Webpages'),
+			'id'    => 'webpages-tab',
+			'icon'  => 'newspaper-o'
+		];
+	}
+ 
+
+	if ($p['view_wiki']) {
+		if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {
+			$tabs[] = [
+				'label' => t('Wikis'),
+				'url'   => z_root() . '/wiki/' . $nickname,
+				'sel'   => ((argv(0) == 'wiki') ? 'active' : ''),
+				'title' => t('Wiki'),
+				'id'    => 'wiki-tab',
+				'icon'  => 'pencil-square-o'
+			];
+		}
+	}
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	call_hooks('channel_apps', $arr);	
+
+	return replace_macros(get_markup_template('profile_tabs.tpl'), 
+		[
+			'$tabs'  => $arr['tabs'],
+			'$name'  => App::$profile['channel_name'],
+			'$thumb' => App::$profile['thumb']
+		]
+	);
 }

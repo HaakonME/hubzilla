@@ -160,6 +160,25 @@ class Mail extends \Zotlabs\Web\Controller {
 			'$header' => t('Messages'),
 		));
 	
+		if(argc() == 3 && intval(argv(1)) && argv(2) === 'download') {
+
+			$r = q("select * from mail where id = %d and channel_id = %d",
+				intval(argv(1)),
+				intval(local_channel())
+			);
+
+			if($r) {
+
+				header('Content-type: ' . $r[0]['mail_mimetype']);
+				header('Content-disposition: attachment; filename="' . t('message') . '-' . $r[0]['id'] . '"' );
+				$body = (($r[0]['mail_obscured']) ? base64url_decode(str_rot47($r[0]['body'])) : $r[0]['body']);				
+				echo $body;
+				killme();
+			}
+
+		}
+
+
 		if((argc() == 4) && (argv(2) === 'drop')) {
 			if(! intval(argv(3)))
 				return;
@@ -352,6 +371,11 @@ class Mail extends \Zotlabs\Web\Controller {
 		foreach($messages as $message) {
 	
 			$s = theme_attachments($message);
+
+			if($message['mail_raw'])
+				$message['body'] = mail_prepare_binary([ 'id' => $message['id'] ]);
+			else
+				$message['body'] = zidify_links(smilies(bbcode($message['body'])));
 	
 			$mails[] = array(
 				'mailbox' => $mailbox,
@@ -364,7 +388,7 @@ class Mail extends \Zotlabs\Web\Controller {
 				'to_url' =>  chanlink_hash($message['to_xchan']),
 				'to_photo' => $message['to']['xchan_photo_s'],
 				'subject' => $message['title'],
-				'body' => zidify_links(smilies(bbcode($message['body']))),
+				'body' => $message['body'],
 				'attachments' => $s,
 				'delete' => t('Delete message'),
 				'dreport' => t('Delivery report'),

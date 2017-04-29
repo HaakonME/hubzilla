@@ -366,9 +366,6 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 			if($r[$k]['body'])
 				$r[$k]['body'] = base64url_decode(str_rot47($r[$k]['body']));
 		}
-		if($r[$k]['mail_raw'])
-			$r[$k]['body'] = mail_prepare_binary([ 'id' => $r[$k]['id'] ]);
-
 	}
 
 	return $r;
@@ -407,8 +404,6 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 			if($messages[$k]['body'])
 				$messages[$k]['body'] = base64url_decode(str_rot47($messages[$k]['body']));
 		}
-		if($messages[$k]['mail_raw'])
-			$messages[$k]['body'] = mail_prepare_binary([ 'id' => $messages[$k]['id'] ]);
 	}
 
 

@@ -28,7 +28,7 @@ GET /api/z/1.0/files
 
 Options:
 
-	- hash
+	- filehash
 		return only entries matching hash (exactly)
 
 	- filename

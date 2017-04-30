@@ -38,15 +38,18 @@ class FeedutilsTest extends UnitTestCase {
 	}*/
 
 	public function test_atom_author() {
-		$this->assertEquals('', atom_author('', 'name', 'uri', 72, 72, 'png', 'photourl'));
+		$this->assertEquals('', atom_author('', 'nick', 'name', 'uri', 72, 72, 'png', 'photourl'));
 
 		$a = '<tag>
-  <name>name</name>
+  <id>uri</id>
+  <name>nick</name>
   <uri>uri</uri>
   <link rel="photo"  type="png" media:width="72" media:height="72" href="http://photourl" />
   <link rel="avatar" type="png" media:width="72" media:height="72" href="http://photourl" />
+  <poco:preferredUsername>nick</poco:preferredUsername>
+  <poco:displayName>name<poco:displayName>
 </tag>';
 
-		$this->assertXmlStringEqualsXmlString($a, atom_author('tag', 'name', 'uri', 72, 72, 'png', 'http://photourl'));
+		$this->assertXmlStringEqualsXmlString($a, atom_author('tag', 'nick', 'name', 'uri', 72, 72, 'png', 'http://photourl'));
 	}
 }

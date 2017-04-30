@@ -79,7 +79,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 
 	$feed_author = '';
 	if(intval($params['compat']) === 1) {
-		$feed_author = atom_author('author',$channel['channel_address'],$channel['xchan_url'],300,300,$channel['xchan_photo_mimetype'],$channel['xchan_photo_l']);
+		$feed_author = atom_author('author',$channel['channel_address'],$channel['channel_name'],$channel['xchan_url'],300,300,$channel['xchan_photo_mimetype'],$channel['xchan_photo_l']);
 	}
 
 	$atom .= replace_macros($feed_template, array(
@@ -1241,11 +1241,12 @@ function handle_feed($uid, $abook_id, $url) {
  * @param string $photo Fully qualified URL to a profile/avator photo
  * @return string
  */
-function atom_author($tag, $name, $uri, $h, $w, $type, $photo) {
+function atom_author($tag, $nick, $name, $uri, $h, $w, $type, $photo) {
 	$o = '';
 	if(! $tag)
 		return $o;
 
+	$nick = xmlify($nick);
 	$name = xmlify($name);
 	$uri = xmlify($uri);
 	$h = intval($h);
@@ -1254,10 +1255,12 @@ function atom_author($tag, $name, $uri, $h, $w, $type, $photo) {
 
 	$o .= "<$tag>\r\n";
 	$o .= "  <id>$uri</id>\r\n";
-	$o .= "  <name>$name</name>\r\n";
+	$o .= "  <name>$nick</name>\r\n";
 	$o .= "  <uri>$uri</uri>\r\n";
 	$o .= '  <link rel="photo"  type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
 	$o .= '  <link rel="avatar" type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '  <poco:preferredUsername>' . $nick . '</poco:preferredUsername>' . "\r\n";
+	$o .= '  <poco:displayName>' . $name . '</poco:displayName>' . "\r\n";
 
 	call_hooks('atom_author', $o);
 
@@ -1296,12 +1299,17 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0) {
 
 	$o = "\r\n\r\n<entry>\r\n";
 
-	if(is_array($author))
-		$o .= atom_author('author',$author['xchan_name'],$author['xchan_url'],80,80,$author['xchan_photo_mimetype'],$author['xchan_photo_m']);
-	else
-		$o .= atom_author('author',$item['author']['xchan_name'],$item['author']['xchan_url'],80,80,$item['author']['xchan_photo_mimetype'], $item['author']['xchan_photo_m']);
+	if(is_array($author)) {
+		$reddress = substr($author['xchan_addr'],0,strpos($author['xchan_addr'],'@'));
+		$o .= atom_author('author',$reddress,$author['xchan_name'],$author['xchan_url'],80,80,$author['xchan_photo_mimetype'],$author['xchan_photo_m']);
+	}
+	else {
+		$reddress = substr($item['author']['xchan_addr'],0,strpos($item['author']['xchan_addr'],'@'));
+		$o .= atom_author('author',$reddress,$item['author']['xchan_name'],$item['author']['xchan_url'],80,80,$item['author']['xchan_photo_mimetype'], $item['author']['xchan_photo_m']);
+	}
 
-	$o .= atom_author('zot:owner',$item['owner']['xchan_name'],$item['owner']['xchan_url'],80,80,$item['owner']['xchan_photo_mimetype'],$item['owner']['xchan_photo_m']);
+	$reddress = substr($item['owner']['xchan_addr'],0,strpos($item['owner']['xchan_addr'],'@'));
+	$o .= atom_author('zot:owner',$reddress,$item['owner']['xchan_name'],$item['owner']['xchan_url'],80,80,$item['owner']['xchan_photo_mimetype'],$item['owner']['xchan_photo_m']);
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);

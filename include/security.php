@@ -597,18 +597,24 @@ function stream_perms_api_uids($perms = NULL, $limit = 0, $rand = 0 ) {
 	$random_sql = (($rand) ? " ORDER BY " . db_getfunc('RAND') . " " : '');
 	if(local_channel())
 		$ret[] = local_channel();
-	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' and ( v & %d ) > 0 ",
-		intval($perms)
-	);
+	$x = q("select uid, v from pconfig where cat = 'perm_limits' and k = 'view_stream' ");
 	if($x) {
-		$ids = ids_to_querystr($x,'uid');
-		$r = q("select channel_id from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 $random_sql $limit_sql ",
-			intval(PAGE_ADULT|PAGE_CENSORED)
-		);
-		if($r) {
-			foreach($r as $rr)
-				if(! in_array($rr['channel_id'], $ret))
-					$ret[] = $rr['channel_id'];
+		$y = [];
+		foreach($x as $xv) {
+			if(intval($xv['v']) & $perms) {
+				$y[] = $xv;
+			}
+		}
+		if($y) {		
+			$ids = ids_to_querystr($y,'uid');
+			$r = q("select channel_id from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 $random_sql $limit_sql ",
+				intval(PAGE_ADULT|PAGE_CENSORED)
+			);
+			if($r) {
+				foreach($r as $rr)
+					if(! in_array($rr['channel_id'], $ret))
+						$ret[] = $rr['channel_id'];
+			}
 		}
 	}
 
@@ -635,19 +641,25 @@ function stream_perms_xchans($perms = NULL ) {
 	if(local_channel())
 		$ret[] = get_observer_hash();
 
-	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' and ( v & %d ) > 0 ",
-		intval($perms)
-	);
+	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' ");
 	if($x) {
-		$ids = ids_to_querystr($x,'uid');
-		$r = q("select channel_hash from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 ",
-			intval(PAGE_ADULT|PAGE_CENSORED)
-		);
+		$y = [];
+		foreach($x as $xv) {
+			if(intval($xv['v']) & $perms) {
+				$y[] = $xv;
+			}
+		}
+		if($y) {		
+			$ids = ids_to_querystr($y,'uid');
+			$r = q("select channel_hash from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 ",
+				intval(PAGE_ADULT|PAGE_CENSORED)
+			);
 
-		if($r) {
-			foreach($r as $rr)
-				if(! in_array($rr['channel_hash'], $ret))
-					$ret[] = $rr['channel_hash'];
+			if($r) {
+				foreach($r as $rr)
+					if(! in_array($rr['channel_hash'], $ret))
+						$ret[] = $rr['channel_hash'];
+			}
 		}
 	}
 	$str = '';

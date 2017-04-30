@@ -110,7 +110,7 @@ technical abilities.
     php.ini file - and with no hosting provider restrictions on the use of 
     exec() and proc_open().
 
-    - curl, gd (with at least jpeg and png support), mysqli, mbstring, xml,
+    - curl, gd (with at least jpeg and png support), mysqli, mbstring, xml, zip
     and openssl extensions. The imagick extension MAY be used instead of gd,
 	but is not required and MAY also be disabled via configuration option. 
 

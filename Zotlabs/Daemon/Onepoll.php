@@ -135,7 +135,7 @@ class Onepoll {
 					// remote fetch	
 
 					$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
-					$feedurl .= '?f=&mindate=' . urlencode($last_update) . '&zid=' . $importer['channel_address'] . '@' . z_root();
+					$feedurl .= '?f=&mindate=' . urlencode($last_update) . '&zid=' . $importer['channel_address'] . '@' . \App::get_hostname();
 					$recurse = 0;
 					$x = z_fetch_url($feedurl, false, $recurse, [ 'session' => true ]);
 				}

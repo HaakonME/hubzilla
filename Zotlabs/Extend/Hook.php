@@ -40,6 +40,15 @@ class Hook {
 		return $r;
 	}
 
+	static public function register_array($file,$arr) {
+		if($arr) {
+			foreach($arr as $k => $v) {
+				self::register($k,$file,$v);
+			}
+		}
+	}
+
+
 	static public function unregister($hook,$file,$function,$version = 1,$priority = 0) {
 		if(is_array($function)) {
 			$function = serialize($function);

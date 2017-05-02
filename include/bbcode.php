@@ -1174,7 +1174,7 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 
 		$Text = preg_replace("/\[event\-start\](.*?)\[\/event\-start\]/ism",$sub,$Text); 
 
-		$Text = preg_replace("/\event\](.*?)\[\/event\]/ism",'',$Text);
+		$Text = preg_replace("/\[event\](.*?)\[\/event\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-summary\](.*?)\[\/event\-summary\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-description\](.*?)\[\/event\-description\]/ism",'',$Text);
 		$Text = preg_replace("/\[event\-finish\](.*?)\[\/event\-finish\]/ism",'',$Text);

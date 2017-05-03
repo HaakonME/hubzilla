@@ -29,6 +29,8 @@ use Zotlabs\Lib\PermissionDescription;
 
 /**
  * @brief Unit Test case for PermissionDescription class.
+ *
+ * @covers Zotlabs\Lib\PermissionDescription
  */
 class PermissionDescriptionTest extends UnitTestCase {
 

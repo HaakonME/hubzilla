@@ -802,37 +802,6 @@ function import_author_xchan($x) {
 }
 
 /**
- * @brief Imports an author from Diaspora.
- *
- * @param array $x an associative array with
- *   * \e string \b address
- * @return boolean|string false on error, otherwise xchan_hash of the new entry
- */
-function import_author_diaspora($x) {
-	if(! $x['address'])
-		return false;
-
-	$r = q("select * from xchan where xchan_addr = '%s' limit 1",
-		dbesc($x['address'])
-	);
-	if($r) {
-		logger('in_cache: ' . $x['address'], LOGGER_DATA);
-		return $r[0]['xchan_hash'];
-	}
-
-	if(discover_by_webbie($x['address'])) {
-		$r = q("select xchan_hash from xchan where xchan_addr = '%s' limit 1",
-			dbesc($x['address'])
-		);
-		if($r)
-			return $r[0]['xchan_hash'];
-	}
-
-	return false;
-
-}
-
-/**
  * @brief Imports an author from a RSS feed.
  *
  * @param array $x an associative array with
@@ -888,6 +857,11 @@ function import_author_rss($x) {
 }
 
 function import_author_unknown($x) {
+
+	$arr = [ 'author' => $x, 'result' => false ];
+	call_hooks('import_author', $arr);
+	if($arr['result'])
+		return $arr['result'];
 
 	if(! $x['url'])
 		return false;

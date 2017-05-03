@@ -1900,3 +1900,83 @@ function probe_api_path($host) {
 
 	return '';
 }
+
+
+function scrape_vcard($url) {
+
+	require_once('library/HTML5/Parser.php');
+
+	$ret = array();
+
+	logger('url=' . $url);
+
+	$x = z_fetch_url($url);
+	if(! $x['success'])
+		return $ret;
+
+	$s = $x['body'];
+
+	if(! $s)
+		return $ret;
+
+	$headers = $x['header'];
+	$lines = explode("\n",$headers);
+	if(count($lines)) {
+		foreach($lines as $line) {
+			// don't try and run feeds through the html5 parser
+			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
+				return ret;
+		}
+	}
+
+	try {
+		$dom = HTML5_Parser::parse($s);
+	} catch (DOMException $e) {
+		logger('Parse error: ' . $e);
+	}
+
+	if(! $dom)
+		return $ret;
+
+	// Pull out hCard profile elements
+
+	$largest_photo = 0;
+
+	$items = $dom->getElementsByTagName('*');
+	foreach($items as $item) {
+		if(attribute_contains($item->getAttribute('class'), 'vcard')) {
+			$level2 = $item->getElementsByTagName('*');
+			foreach($level2 as $x) {
+				if(attribute_contains($x->getAttribute('id'),'pod_location'))
+					$ret['pod_location'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'fn'))
+					$ret['fn'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'uid'))
+					$ret['uid'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'nickname'))
+					$ret['nick'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'searchable'))
+					$ret['searchable'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'key'))
+					$ret['public_key'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'given_name'))
+					$ret['given_name'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'family_name'))
+					$ret['family_name'] = $x->textContent;
+				if(attribute_contains($x->getAttribute('class'),'url'))
+					$ret['url'] = $x->textContent;
+
+				if((attribute_contains($x->getAttribute('class'),'photo'))
+					|| (attribute_contains($x->getAttribute('class'),'avatar'))) {
+					$size = intval($x->getAttribute('width'));
+					if(($size > $largest_photo) || (! $largest_photo)) {
+						$ret['photo'] = $x->getAttribute('src');
+						$largest_photo = $size;
+					}
+				}
+			}
+		}
+	}
+
+	return $ret;
+}

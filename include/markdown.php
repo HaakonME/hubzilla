@@ -151,3 +151,55 @@ function markdown_to_bb($s, $use_zrl = false, $options = []) {
 }
 
 
+
+function bb_to_markdown($Text) {
+
+	/*
+	 * Transform #tags, strip off the [url] and replace spaces with underscore
+	 */
+
+	$Text = preg_replace_callback('/#\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/[(zu)]rl\]/i', 
+		create_function('$match', 'return \'#\'. str_replace(\' \', \'_\', $match[3]);'), $Text);
+
+	$Text = preg_replace('/#\^\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', '[$1rl=$2]$3[/$4rl]', $Text);
+
+	// Converting images with size parameters to simple images. Markdown doesn't know it.
+	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '[img]$3[/img]', $Text);
+
+
+	call_hooks('bb_to_markdown_bb',$Text);
+
+	// Convert it to HTML - don't try oembed
+	$Text = bbcode($Text, $preserve_nl, false);
+
+	// Markdownify does not preserve previously escaped html entities such as <> and &.
+
+	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
+
+	// Now convert HTML to Markdown
+	$md = new Converter(Converter::LINK_AFTER_CONTENT, false, false);
+	$Text = $md->parseString($Text);
+
+   // The converter adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
+
+	$Text = str_replace(array('&\\_lt\\_;','&\\_gt\\_;','&\\_amp\\_;'),array('&lt;','&gt;','&amp;'),$Text);
+
+	// If the text going into bbcode() has a plain URL in it, i.e.
+	// with no [url] tags around it, it will come out of parseString()
+	// looking like: <http://url.com>, which gets removed by strip_tags().
+	// So take off the angle brackets of any such URL
+	$Text = preg_replace("/<http(.*?)>/is", "http$1", $Text);
+
+	// Remove empty zrl links
+	$Text = preg_replace("/\[zrl\=\].*?\[\/zrl\]/is", "", $Text);
+
+	// escape all unconverted tags
+	$Text = escape_tags($Text);
+
+	$Text = trim($Text);
+
+	call_hooks('bb_to_markdown', $Text);
+
+	return $Text;
+
+}

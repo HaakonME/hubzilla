@@ -1196,7 +1196,8 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 	call_hooks('profile_sidebar', $arr);
 
-	return $o;
+	return $arr['entry'];
+
 }
 
 

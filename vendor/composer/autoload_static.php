@@ -977,6 +977,7 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         'Zotlabs\\Module\\Oembed' => __DIR__ . '/../..' . '/Zotlabs/Module/Oembed.php',
         'Zotlabs\\Module\\Oep' => __DIR__ . '/../..' . '/Zotlabs/Module/Oep.php',
         'Zotlabs\\Module\\Oexchange' => __DIR__ . '/../..' . '/Zotlabs/Module/Oexchange.php',
+        'Zotlabs\\Module\\Ofeed' => __DIR__ . '/../..' . '/Zotlabs/Module/Ofeed.php',
         'Zotlabs\\Module\\Online' => __DIR__ . '/../..' . '/Zotlabs/Module/Online.php',
         'Zotlabs\\Module\\Page' => __DIR__ . '/../..' . '/Zotlabs/Module/Page.php',
         'Zotlabs\\Module\\Pconfig' => __DIR__ . '/../..' . '/Zotlabs/Module/Pconfig.php',

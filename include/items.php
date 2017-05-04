@@ -3003,8 +3003,14 @@ function mail_store($arr) {
 			$arr['body'] = escape_tags($arr['body']);
 	}
 
-	if(array_key_exists('attach',$arr) && is_array($arr['attach']))
-		$arr['attach'] = json_encode($arr['attach']);
+	if(array_key_exists('attach',$arr)) {
+		if(is_array($arr['attach'])) {
+			$arr['attach'] = json_encode($arr['attach']);
+		}
+	}
+	else {
+		$arr['attach'] = '';
+	}
 
 	$arr['account_id']    = ((x($arr,'account_id'))           ? intval($arr['account_id'])                 : 0);
 	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))           : random_string());
@@ -3015,6 +3021,7 @@ function mail_store($arr) {
 	$arr['title']         = ((x($arr,'title'))         ? trim($arr['title'])         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+	$arr['sig']           = ((x($arr,'sig'))           ? trim($arr['sig'])                   : '');
 	$arr['conv_guid']     = ((x($arr,'conv_guid'))     ? trim($arr['conv_guid'])             : '');
 
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );

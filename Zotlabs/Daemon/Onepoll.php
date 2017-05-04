@@ -118,13 +118,29 @@ class Onepoll {
 
 			if($fetch_feed) {
 
-				$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
-				$feedurl .= '?f=&mindate=' . urlencode($last_update);
+				if(strpos($contact['xchan_connurl'],z_root()) === 0) {
+					// local channel - save a network fetch
+					$c = channelx_by_hash($contact['xchan_hash']);
+					if($c) {
+						$x = [ 
+							'success' => true, 
+							'body' => json_encode( [ 
+								'success' => true,
+								'messages' => zot_feed($c['channel_id'], $importer['xchan_hash'], [ 'mindate' => $last_update ])
+							])
+						];
+					}
+				}
+				else {
+					// remote fetch	
 
-				$x = z_fetch_url($feedurl);
+					$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
+					$feedurl .= '?f=&mindate=' . urlencode($last_update) . '&zid=' . $importer['channel_address'] . '@' . \App::get_hostname();
+					$recurse = 0;
+					$x = z_fetch_url($feedurl, false, $recurse, [ 'session' => true ]);
+				}
 
 				logger('feed_update: ' . print_r($x,true), LOGGER_DATA);
-
 			}
 
 			if(($x) && ($x['success'])) {

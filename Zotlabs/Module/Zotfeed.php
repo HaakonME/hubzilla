@@ -22,7 +22,8 @@ class Zotfeed extends \Zotlabs\Web\Controller {
 	
 		$observer = \App::get_observer();
 	
-	
+		logger('observer: ' . get_observer_hash(), LOGGER_DEBUG);
+		
 		$channel_address = ((argc() > 1) ? argv(1) : '');
 		if($channel_address) {
 			$r = q("select channel_id, channel_name from channel where channel_address = '%s' and channel_removed = 0 limit 1",

@@ -32,6 +32,7 @@ CREATE TABLE "abook" (
   "abook_unconnected" smallint NOT NULL DEFAULT '0',
   "abook_self" smallint NOT NULL DEFAULT '0',
   "abook_feed" smallint NOT NULL DEFAULT '0',
+  "abook_not_here" smallint NOT NULL DEFAULT '0',
   "abook_profile" char(64) NOT NULL DEFAULT '',
   "abook_incl" TEXT NOT NULL DEFAULT '',
   "abook_excl" TEXT NOT NULL DEFAULT '',
@@ -55,6 +56,7 @@ CREATE TABLE "abook" (
   create index  "abook_unconnected"  on abook ("abook_unconnected");
   create index  "abook_self"  on abook ("abook_self");
   create index  "abook_feed"  on abook ("abook_feed");
+  create index  "abook_not_here"  on abook ("abook_not_here");
   create index  "abook_profile" on abook  ("abook_profile");
   create index  "abook_dob" on abook  ("abook_dob");
   create index  "abook_connected" on abook  ("abook_connected");

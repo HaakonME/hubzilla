@@ -318,6 +318,7 @@ class Import extends \Zotlabs\Web\Controller {
 				unset($abook['abconfig']);
 				unset($abook['abook_their_perms']);
 				unset($abook['abook_my_perms']);
+				unset($abook['abook_not_here']);
 
 				$abook['abook_account'] = $account_id;
 				$abook['abook_channel'] = $channel['channel_id'];
@@ -347,7 +348,7 @@ class Import extends \Zotlabs\Web\Controller {
 						continue;
 				}
 
-				create_table_from_array('abook',$abook);
+				abook_store_lowlevel($abook);
 
 				$friends ++;
 				if(intval($abook['abook_feed']))

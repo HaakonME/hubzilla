@@ -298,11 +298,13 @@ function add_source_route($iid, $hash) {
  * or other processing is performed.
  *
  * @param array $arr
+ * @param boolean $allow_code (optional) default false
+ * @param boolean $deliver (optional) default true
  * @returns array
  *  * \e boolean \b success true or false
  *  * \e array \b activity the resulting activity if successful
  */
-function post_activity_item($arr,$allow_code = false,$deliver = true) {
+function post_activity_item($arr, $allow_code = false, $deliver = true) {
 
 	$ret = array('success' => false);
 
@@ -348,7 +350,7 @@ function post_activity_item($arr,$allow_code = false,$deliver = true) {
 	if(($is_comment) && ($arr['obj_type'] === ACTIVITY_OBJ_NOTE))
 		$arr['obj_type'] = ACTIVITY_OBJ_COMMENT;
 
-	if(! ( array_key_exists('allow_cid',$arr) || array_key_exists('allow_gid',$arr) 
+	if(! ( array_key_exists('allow_cid',$arr) || array_key_exists('allow_gid',$arr)
 		|| array_key_exists('deny_cid',$arr) || array_key_exists('deny_gid',$arr))) {
 		$arr['allow_cid']    = $channel['channel_allow_cid'];
 		$arr['allow_gid']    = $channel['channel_allow_gid'];
@@ -648,11 +650,11 @@ function get_item_elements($x,$allow_code = false) {
 		}
 	}
 
-	// Check signature on the body text received. 
+	// Check signature on the body text received.
 	// This presents an issue that we aren't verifying the text that is actually displayed
 	// on this site. We are however verifying the received text was exactly as received.
 	// We have every right to strip content that poses a security risk. You are welcome to
-	// create a plugin to verify the content after filtering if this offends you.  
+	// create a plugin to verify the content after filtering if this offends you.
 
 	if($arr['sig']) {
 
@@ -675,7 +677,7 @@ function get_item_elements($x,$allow_code = false) {
 
 				// If we don't have a public key, strip the signature so it won't show as invalid.
 				// This won't happen in normal use, but could happen if import_author_xchan()
-				// failed to load the zot-info packet due to a server failure and had 
+				// failed to load the zot-info packet due to a server failure and had
 				// to create an alternate xchan with network 'unknown'
 
 				unset($arr['sig']);
@@ -1518,7 +1520,7 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	if(array_key_exists('cancel',$arr) && $arr['cancel']) {
 		logger('cancelled by plugin');
 		return $ret;
-	}		
+	}
 
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
@@ -1843,7 +1845,7 @@ logger('revision: ' . $arr['revision']);
 	);
 
 	if($r) {
-		// This will gives us a fresh copy of what's now in the DB and undo the db escaping, 
+		// This will gives us a fresh copy of what's now in the DB and undo the db escaping,
 		// which really messes up the notifications
 
 		$current_post = $r[0]['id'];
@@ -1906,7 +1908,7 @@ logger('revision: ' . $arr['revision']);
 
 	// update the commented timestamp on the parent - unless this is potentially a clone of an older item
 	// which we don't wish to bring to the surface. As the queue only holds deliveries for 3 days, it's
-	// suspected of being an older cloned item if the creation time is older than that. 
+	// suspected of being an older cloned item if the creation time is older than that.
 
 	if($arr['created'] > datetime_convert('','','now - 4 days')) {
 		$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d and item_delayed = 0 ",
@@ -1952,7 +1954,7 @@ function item_store_update($arr,$allow_exec = false, $deliver = true) {
 	if(array_key_exists('cancel',$arr) && $arr['cancel']) {
 		logger('cancelled by plugin');
 		return $ret;
-	}		
+	}
 
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
@@ -4502,12 +4504,12 @@ function item_create_edit_activity($post) {
 	$new_item['id'] = 0;
 	$new_item['parent'] = 0;
 	$new_item['mid'] = item_message_id();
-	
+
 	$new_item['body'] = sprintf( t('[Edited %s]'), (($update_item['item_thread_top']) ? t('Post','edit_activity') : t('Comment','edit_activity')));
 
 	$new_item['body'] .= "\n\n";
 	$new_item['body'] .= $update_item['body'];
-	
+
 	$new_item['sig'] = '';
 
 	$new_item['verb'] = ACTIVITY_UPDATE;
@@ -4533,10 +4535,10 @@ function item_create_edit_activity($post) {
 				array('rel' => 'photo', 'type' => $item_author['xchan_photo_mimetype'], 'href' => $item_author['xchan_photo_m'])),
 			),
 	));
-	
 
 
-	$x = post_activity_item($new_item);	
+
+	$x = post_activity_item($new_item);
 
 	$post_id = $x['id'];
 	if($post_id) {
@@ -4551,5 +4553,5 @@ function item_create_edit_activity($post) {
 	}
 
 	\Zotlabs\Daemon\Master::Summon(array('Notifier', 'edit_activity', $post_id));
-	
+
 }

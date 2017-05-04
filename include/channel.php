@@ -57,8 +57,9 @@ function identity_check_service_class($account_id) {
  * Plugins can set additional policies such as full name requirements, character
  * sets, multi-byte length, etc.
  *
+ * @hooks validate_channelname
+ *   * \e array \b name
  * @param string $name
- *
  * @returns nil return if name is valid, or string describing the error state.
  */
 function validate_channelname($name) {
@@ -69,7 +70,7 @@ function validate_channelname($name) {
 	if (strlen($name) > 255)
 		return t('Name too long');
 
-	$arr = array('name' => $name);
+	$arr = ['name' => $name];
 	call_hooks('validate_channelname', $arr);
 
 	if (x($arr, 'message'))
@@ -463,7 +464,6 @@ function create_identity($arr) {
  *       if true, set this default unconditionally
  *       if $force is false only do this if there is no existing default
  */
-
 function set_default_login_identity($account_id, $channel_id, $force = true) {
 	$r = q("select account_default_channel from account where account_id = %d limit 1",
 		intval($account_id)
@@ -478,12 +478,29 @@ function set_default_login_identity($account_id, $channel_id, $force = true) {
 	}
 }
 
-
+/**
+ * @brief Return an array with default list of sections to export.
+ *
+ * @hooks get_default_export_sections
+ *   * \e array \b sections
+ * @return array with default section names to export
+ */
 function get_default_export_sections() {
-	$sections = [ 'channel', 'connections', 'config', 'apps', 'chatrooms', 'events', 'webpages', 'mail', 'wikis' ];
+	$sections = [
+			'channel',
+			'connections',
+			'config',
+			'apps',
+			'chatrooms',
+			'events',
+			'webpages',
+			'mail',
+			'wikis'
+	];
 
 	$cb = [ 'sections' => $sections ];
 	call_hooks('get_default_export_sections', $cb);
+
 	return $cb['sections'];
 }
 
@@ -493,15 +510,17 @@ function get_default_export_sections() {
  * which would be necessary to create a nomadic identity clone. This includes
  * most channel resources and connection information with the exception of content.
  *
+ * @hooks identity_basic_export
+ *   * \e int \b channel_id
+ *   * \e array \b sections
+ *   * \e array \b data
  * @param int $channel_id
  *     Channel_id to export
- * @param boolean $items
- *     Include channel posts (wall items), default false
- *
+ * @param array $sections (optional)
+ *     Which sections to include in the export, default see get_default_export_sections()
  * @returns array
  *     See function for details
  */
-
 function identity_basic_export($channel_id, $sections = null) {
 
 	/*
@@ -511,16 +530,16 @@ function identity_basic_export($channel_id, $sections = null) {
 	if(! $sections) {
 		$sections = get_default_export_sections();
 	}
-		
+
 	$ret = [];
 
 	// use constants here as otherwise we will have no idea if we can import from a site
 	// with a non-standard platform and version.
 
 	$ret['compatibility'] = [
-		'project' => PLATFORM_NAME, 
-		'version' => STD_VERSION, 
-		'database' => DB_UPDATE_VERSION, 
+		'project' => PLATFORM_NAME,
+		'version' => STD_VERSION,
+		'database' => DB_UPDATE_VERSION,
 		'server_role' => Zotlabs\Lib\System::get_server_role()
 	];
 
@@ -549,8 +568,7 @@ function identity_basic_export($channel_id, $sections = null) {
 		if($r)
 			$ret['profile'] = $r;
 
-
-		$r = q("select mimetype, content, os_storage from photo 
+		$r = q("select mimetype, content, os_storage from photo
 			where imgscale = 4 and photo_usage = %d and uid = %d limit 1",
 			intval(PHOTO_PROFILE),
 			intval($channel_id)
@@ -558,8 +576,8 @@ function identity_basic_export($channel_id, $sections = null) {
 
 		if($r) {
 			$ret['photo'] = [
-				'type' => $r[0]['mimetype'], 
-				'data' => (($r[0]['os_storage']) 
+				'type' => $r[0]['mimetype'],
+				'data' => (($r[0]['os_storage'])
 					? base64url_encode(file_get_contents($r[0]['content'])) : base64url_encode($r[0]['content']))
 			];
 		}
@@ -605,7 +623,6 @@ function identity_basic_export($channel_id, $sections = null) {
 		);
 		if($r)
 			$ret['group_member'] = $r;
-
 	}
 
 	if(in_array('config',$sections)) {
@@ -614,7 +631,7 @@ function identity_basic_export($channel_id, $sections = null) {
 		);
 		if($r)
 			$ret['config'] = $r;
-	
+
 		// All other term types will be included in items, if requested.
 
 		$r = q("select * from term where ttype in (%d,%d) and uid = %d",
@@ -641,7 +658,6 @@ function identity_basic_export($channel_id, $sections = null) {
 
 		if($r)
 			$ret['likes'] = $r;
-
 	}
 
 	if(in_array('apps',$sections)) {
@@ -666,7 +682,6 @@ function identity_basic_export($channel_id, $sections = null) {
 		if($r)
 			$ret['chatroom'] = $r;
 	}
-
 
 	if(in_array('events',$sections)) {
 		$r = q("select * from event where uid = %d",
@@ -697,7 +712,7 @@ function identity_basic_export($channel_id, $sections = null) {
 					$ret['menu'][] = menu_element($ret['channel'],$m);
 			}
 		}
-		$r = q("select * from item where item_type in ( " 
+		$r = q("select * from item where item_type in ( "
 			. ITEM_TYPE_BLOCK . "," . ITEM_TYPE_PDL . "," . ITEM_TYPE_WEBPAGE . " ) and uid = %d",
 			intval($channel_id)
 		);
@@ -707,7 +722,6 @@ function identity_basic_export($channel_id, $sections = null) {
 			$r = fetch_post_tags($r,true);
 			foreach($r as $rr)
 				$ret['webpages'][] = encode_item($rr,true);
-
 		}
 	}
 
@@ -758,7 +772,7 @@ function identity_basic_export($channel_id, $sections = null) {
 		 * Don't export linked resource items. we'll have to pull those out separately.
 		 */
 
-		$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d 
+		$r = q("select * from item where item_wall = 1 and item_deleted = 0 and uid = %d
 			and created > %s - INTERVAL %s and resource_type = '' order by created",
 			intval($channel_id),
 			db_utcnow(),
@@ -1394,15 +1408,15 @@ function get_my_address() {
 }
 
 /**
- * @brief
+ * @brief Add visitor's zid to our xchan and attempt authentication.
  *
- * If somebody arrives at our site using a zid, add their xchan to our DB if we don't have it already.
+ * If somebody arrives at our site using a zid, add their xchan to our DB if we
+ * don't have it already.
  * And if they aren't already authenticated here, attempt reverse magic auth.
  *
- *
- * @hooks 'zid_init'
- *      string 'zid' - their zid
- *      string 'url' - the destination url
+ * @hooks zid_init
+ *   * \e string \b zid - their zid
+ *   * \e string \b url - the destination url
  */
 function zid_init() {
 	$tmp_str = get_my_address();
@@ -1431,12 +1445,9 @@ function zid_init() {
 }
 
 /**
- * @brief
- *
- * If somebody arrives at our site using a zat, authenticate them
+ * @brief If somebody arrives at our site using a zat, authenticate them.
  *
  */
-
 function zat_init() {
 	if(local_channel() || remote_channel())
 		return;
@@ -1448,7 +1459,6 @@ function zat_init() {
 		$xchan = atoken_xchan($r[0]);
 		atoken_login($xchan);
 	}
-
 }
 
 
@@ -1481,7 +1491,7 @@ function get_theme_uid() {
 *
 * @param int $size
 *  one of (300, 80, 48)
-* @returns string
+* @returns string with path to profile photo
 */
 function get_default_profile_photo($size = 300) {
 	$scheme = get_config('system','default_profile_photo');
@@ -1974,7 +1984,6 @@ function channel_manual_conv_update($channel_id) {
 		$x = get_config('system','manual_conversation_update', 1);
 
 	return intval($x);
-
 }
 
 
@@ -2143,24 +2152,33 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 
 }
 
-function channel_remove($channel_id, $local = true, $unset_session=false) {
+/**
+ * @brief Removes a channel.
+ *
+ * @hooks channel_remove
+ *   * \e array \b entry from channel tabel for $channel_id
+ * @param int $channel_id
+ * @param boolean $local default true
+ * @param boolean $unset_session default false
+ */
+function channel_remove($channel_id, $local = true, $unset_session = false) {
 
 	if(! $channel_id)
 		return;
 
 	logger('Removing channel: ' . $channel_id);
-	logger('channel_remove: local only: ' . intval($local));
+	logger('local only: ' . intval($local));
 
 	$r = q("select * from channel where channel_id = %d limit 1", intval($channel_id));
 	if(! $r) {
-		logger('channel_remove: channel not found: ' . $channel_id);
+		logger('channel not found: ' . $channel_id);
 		return;
 	}
 
 	$channel = $r[0];
 
-	call_hooks('channel_remove',$r[0]);
-	
+	call_hooks('channel_remove', $r[0]);
+
 	if(! $local) {
 
 		$r = q("update channel set channel_deleted = '%s', channel_removed = 1 where channel_id = %d",
@@ -2173,11 +2191,10 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 		);
 
 		logger('deleting hublocs',LOGGER_DEBUG);
-	
+
 		$r = q("update hubloc set hubloc_deleted = 1 where hubloc_hash = '%s'",
 			dbesc($channel['channel_hash'])
 		);
-
 
 		$r = q("update xchan set xchan_deleted = 1 where xchan_hash = '%s'",
 			dbesc($channel['channel_hash'])
@@ -2211,8 +2228,7 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 	q("DELETE FROM profile WHERE uid = %d", intval($channel_id));
 	q("DELETE FROM pconfig WHERE uid = %d", intval($channel_id));
 
-	// @FIXME At this stage we need to remove the file resources located under /store/$nickname
-
+	/// @FIXME At this stage we need to remove the file resources located under /store/$nickname
 
 	q("delete from abook where abook_xchan = '%s' and abook_self = 1 ",
 		dbesc($channel['channel_hash'])
@@ -2263,16 +2279,16 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 			dbesc($channel['channel_hash'])
 		);
 	}
-	
+
 	//remove from file system
 	$r = q("select channel_address from channel where channel_id = %d limit 1",
 		intval($channel_id)
 	);
-		
+
 	if($r) {
 		$channel_address = $r[0]['channel_address'] ;
 	}
-	if($channel_address) {	
+	if($channel_address) {
 		$f = 'store/' . $channel_address.'/';
 		logger('delete '. $f);
 		if(is_dir($f)) {
@@ -2286,22 +2302,24 @@ function channel_remove($channel_id, $local = true, $unset_session=false) {
 		App::$session->nuke();
 		goaway(z_root());
 	}
-
 }
 
-/*
- * This checks if a channel is allowed to publish executable code.
- * It is up to the caller to determine if the observer or local_channel 
- * is in fact the resource owner whose channel_id is being checked
+/**
+ * @brief This checks if a channel is allowed to publish executable code.
+ *
+ * It is up to the caller to determine if the observer or local_channel
+ * is in fact the resource owner whose channel_id is being checked.
+ *
+ * @param int $channel_id
+ * @return boolean
  */
-
 function channel_codeallowed($channel_id) {
-
 	if(! intval($channel_id))
 		return false;
 
 	$x = channelx_by_n($channel_id);
 	if(($x) && ($x['channel_pageflags'] & PAGE_ALLOWCODE))
 		return true;
+
 	return false;
 }

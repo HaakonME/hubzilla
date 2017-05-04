@@ -840,6 +840,7 @@ return array(
     'Zotlabs\\Module\\Oembed' => $baseDir . '/Zotlabs/Module/Oembed.php',
     'Zotlabs\\Module\\Oep' => $baseDir . '/Zotlabs/Module/Oep.php',
     'Zotlabs\\Module\\Oexchange' => $baseDir . '/Zotlabs/Module/Oexchange.php',
+    'Zotlabs\\Module\\Ofeed' => $baseDir . '/Zotlabs/Module/Ofeed.php',
     'Zotlabs\\Module\\Online' => $baseDir . '/Zotlabs/Module/Online.php',
     'Zotlabs\\Module\\Page' => $baseDir . '/Zotlabs/Module/Page.php',
     'Zotlabs\\Module\\Pconfig' => $baseDir . '/Zotlabs/Module/Pconfig.php',

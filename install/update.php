@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1190 );
+define( 'UPDATE_VERSION' , 1191 );
 
 /**
  *
@@ -2532,3 +2532,12 @@ function update_r1189() {
 
 }
 
+function update_r1190() {
+	$r1 = q("alter table abook add abook_not_here int(11) not null default '0' ");
+
+	$r2 = q("create index abook_not_here on abook (abook_not_here)");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+    return UPDATE_FAILED;
+}

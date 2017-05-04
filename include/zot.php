@@ -3226,11 +3226,9 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			}
 
 
-			$disallowed = array('abook_id','abook_account','abook_channel','abook_rating','abook_rating_text');
+			$disallowed = array('abook_id','abook_account','abook_channel','abook_rating','abook_rating_text','abook_not_here');
 
 			foreach($arr['abook'] as $abook) {
-
-
 
 				$abconfig = null;
 

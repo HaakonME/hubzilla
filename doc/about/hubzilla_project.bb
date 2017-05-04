@@ -182,4 +182,5 @@ even if we have had our occasional disagreements.
 [li]Simó Albert i Beltran[/li]
 [li]Manuel Reva[/li]
 [li]Manuel Jiménez Friaza[/li]
+[li]Gustav Wall aka "neue medienordnung plus"[/li]
 [/list]

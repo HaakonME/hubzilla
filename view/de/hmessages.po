@@ -13751,3 +13751,19 @@ msgstr "Cron-Aufgaben laufen nicht."
 #, php-format
 msgid "[hubzilla] Cron tasks not running on %s"
 msgstr "[hubzilla] Cron-Aufgaben für %s laufen nicht"
+
+#: ../../addon/demohub/demohub.php:41
+msgid "Welcome to the Hubzilla demo hub!"
+msgstr "Willkommen auf dem Hubzilla demo Hub!"
+
+#: ../../addon/demohub/demohub.php:42
+msgid "This demo hub is designed to give you a chance to explore some of the features offered by the Hubzilla platform. The activities of the fictional characters illustrate only a few of the ways communities can use Hubzilla to collaborate and connect."
+msgstr "Dieser demo Hub (Hubzilla-Knoten) ist konzipiert, um Ihnen eine Chance zu geben, einige Features der Hubzilla-Platform kennenzulernen. Die fiktive Aktivitäten illustrieren nur einige von vielen Möglichkeiten, die den Communities für die Kommunikation und Zusammenarbeit im Hubzilla-Netzwerk zur Verfügung stehen."
+
+#: ../../addon/demohub/demohub.php:45
+msgid "To really grasp what Hubzilla is offering in terms of nomadic identity and decentralized access control, you have to try it for yourself. Run your own hub or register on an open hub. You can always clone your channels and migrate to another hub later. With Hubzilla, <i>you</i> not only own your <b>data</b>, but your <b>identity</b> as well!</p><p>The demo resets every ten minutes, which may interrupt your session. Simply reload the page as necessary. You can return to this dialog using the blue info button in the navbar."
+msgstr "Sie können selbst in der Praxis testen, welche Möglichkeiten Ihnen im Hubzilla-Netzwerk mit Nomadic Identity und mit dem dezentralen Zugang. Richten Sie einen eigenen Hubzilla-Knoten ein oder registrieren Sie sich auf einem offenen Hub. Sie können dann Ihren Kanal klonen oder mit diesem Kanal auf einen anderen Hub umziehen. Mit Hubzilla kontrollieren Sie Ihre Daten, aber auch Ihre Identität!</p><p>Die Demoinstanz wird im 10-Minuten-Takt zurückgesetzt, wobei Ihre Hubzilla-Sitzung evtl. unterbrochen wird. Laden Sie die Website #^https://demo.hubzilla.org/ einfach neu, um fortzufahren. Sie können dieses Dialog-Fenster mit einem Klick auf das blaue [i]-Symbol rechts oben in der Navigationsleiste."
+
+#: ../../addon/demohub/demohub.php:52
+msgid "Explore"
+msgstr "Erforschen"

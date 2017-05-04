@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "62261cde663585403a8dd8fda5b85a95",
+    "content-hash": "21511c39f481ecdc20210f885d840787",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -671,16 +671,16 @@
         },
         {
             "name": "simplepie/simplepie",
-            "version": "dev-master",
+            "version": "1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplepie/simplepie.git",
-                "reference": "59e7204610d3a8989822eba1c0cbf1d1680bd10d"
+                "reference": "5de5551953f95feef12cf355a7a26a70f94aa3ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/59e7204610d3a8989822eba1c0cbf1d1680bd10d",
-                "reference": "59e7204610d3a8989822eba1c0cbf1d1680bd10d",
+                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/5de5551953f95feef12cf355a7a26a70f94aa3ab",
+                "reference": "5de5551953f95feef12cf355a7a26a70f94aa3ab",
                 "shasum": ""
             },
             "require": {
@@ -727,10 +727,10 @@
                 "rss"
             ],
             "support": {
-                "source": "https://github.com/simplepie/simplepie/tree/master",
+                "source": "https://github.com/simplepie/simplepie/tree/1.5",
                 "issues": "https://github.com/simplepie/simplepie/issues"
             },
-            "time": "2017-04-06 03:36:48"
+            "time": "2017-04-17T07:29:31+00:00"
         }
     ],
     "packages-dev": [
@@ -3675,7 +3675,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "simplepie/simplepie": 20,
         "behat/behat": 0,
         "behat/mink-extension": 0,
         "behat/mink-goutte-driver": 0

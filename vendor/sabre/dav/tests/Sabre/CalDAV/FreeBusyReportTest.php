@@ -11,11 +11,11 @@ require_once 'Sabre/HTTP/ResponseMock.php';
 class FreeBusyReportTest extends \PHPUnit_Framework_TestCase {
 
     /**
-     * @var Sabre\CalDAV\Plugin
+     * @var Plugin
      */
     protected $plugin;
     /**
-     * @var Sabre\DAV\Server
+     * @var DAV\Server
      */
     protected $server;
 

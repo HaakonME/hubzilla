@@ -33,7 +33,7 @@
 		"pixel418/markdownify": "^2.2",
 		"bshaffer/oauth2-server-php": "^1.9",
 		"ezyang/htmlpurifier": "^4.9",
-		"simplepie/simplepie": ">=1.4.4 || dev-master"
+		"simplepie/simplepie": "~1.5"
 	},
 	"require-dev" : {
 		"php" : ">=7.0",

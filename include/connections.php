@@ -23,6 +23,7 @@ function abook_store_lowlevel($arr) {
 		'abook_unconnected' => ((array_key_exists('abook_unconnected',$arr)) ? $arr['abook_unconnected'] : 0),
 		'abook_self'        => ((array_key_exists('abook_self',$arr))        ? $arr['abook_self']        : 0),
 		'abook_feed'        => ((array_key_exists('abook_feed',$arr))        ? $arr['abook_feed']        : 0),
+		'abook_not_here'    => ((array_key_exists('abook_not_here',$arr))    ? $arr['abook_not_here']    : 0),
 		'abook_profile'     => ((array_key_exists('abook_profile',$arr))     ? $arr['abook_profile']     : ''),
 		'abook_incl'        => ((array_key_exists('abook_incl',$arr))        ? $arr['abook_incl']        : ''),
 		'abook_excl'        => ((array_key_exists('abook_excl',$arr))        ? $arr['abook_excl']        : ''),

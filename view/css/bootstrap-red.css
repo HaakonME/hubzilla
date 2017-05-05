@@ -55,6 +55,12 @@ nav .dropdown-menu {
 	overflow: auto;
 }
 
+
+#navbar-collapse-2.collapsing .dropdown-header,
+#navbar-collapse-2.show .dropdown-header {
+	padding: 0.5rem 0.1rem;
+}
+
 .navbar-inverse .navbar-toggler {
 	color: rgba(255,255,255,1);
 }

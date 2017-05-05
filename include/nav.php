@@ -43,7 +43,7 @@ EOT;
 
 	require_once('include/conversation.php');
 	$is_owner = (((local_channel()) && (App::$profile['profile_uid'] == local_channel())) ? true : false);
-	$navapps[] = channel_apps($is_owner, App::$profile['channel_address']);
+	$channel_apps[] = channel_apps($is_owner, App::$profile['channel_address']);
 
 	$myident = (($channel) ? $channel['xchan_addr'] : '');
 		
@@ -258,7 +258,7 @@ EOT;
 	usort($syslist,'Zotlabs\\Lib\\Apps::app_name_compare');
 
 	foreach($syslist as $app) {
-		$navapps[] = Zlib\Apps::app_render($app,'nav');
+		$nav_apps[] = Zlib\Apps::app_render($app,'nav');
 	}
 
 	$tpl = get_markup_template('nav.tpl');
@@ -276,8 +276,10 @@ EOT;
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...'),
-		'$navapps' => $navapps,
-		'$addapps' => t('Add Apps')
+		'$nav_apps' => $nav_apps,
+		'$channel_apps' => $channel_apps,
+		'$addapps' => t('Add Apps'),
+		'$sysapps_toggle' => t('Toggle System Apps')
 	));
 
 	if(x($_SESSION, 'reload_avatar') && $observer) {

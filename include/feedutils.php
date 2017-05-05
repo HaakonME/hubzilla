@@ -742,7 +742,7 @@ function encode_rel_links($links) {
  * @param $importer
  *   The contact_record (joined to user_record) of the local user who owns this
  *   relationship. It is this person's stuff that is going to be updated.
- * @param array $contact[in,out]
+ * @param[in,out] array $contact
  *   The person who is sending us stuff. If not set, we MAY be processing a "follow" activity
  *   from an external network and MAY create an appropriate contact record. Otherwise, we MUST
  *   have a contact record.
@@ -1232,8 +1232,11 @@ function handle_feed($uid, $abook_id, $url) {
 /**
  * @brief Return a XML tag with author information.
  *
+ * @hooks \b atom_author Possibility to add further tags to returned XML string
+ *   * \e string The created XML tag as a string without closing tag
  * @param string $tag The XML tag to create
- * @param string $name Name of the author
+ * @param string $nick preferred username
+ * @param string $name displayed name of the author
  * @param string $uri
  * @param int $h image height
  * @param int $w image width

@@ -188,10 +188,22 @@
 		{{/if}}
 		<li class="nav-item dropdown" id="app-menu">
 			<a class="nav-link" href="#" data-toggle="dropdown"><i class="fa fa-fw fa-bars"></i></a>
-			<div class="dropdown-menu dropdown-menu-right">
-				{{foreach $navapps as $navapp}}
-				{{$navapp}}
+			<div id="dropdown-menu" class="dropdown-menu dropdown-menu-right">
+				{{if $channel_apps.0}}
+				{{foreach $channel_apps as $channel_app}}
+				{{$channel_app}}
 				{{/foreach}}
+				<div class="dropdown-header sys-apps-toggle" onclick="$('#dropdown-menu').click(function(e) { e.stopPropagation(); }); openClose('sys_apps');">
+					{{$sysapps_toggle}}
+				</div>
+				<div id="sys_apps" style="display:none;">
+				{{/if}}
+				{{foreach $nav_apps as $nav_app}}
+				{{$nav_app}}
+				{{/foreach}}
+				{{if $channel_apps.0}}
+				</div>
+				{{/if}}
 				{{if $localuser}}
 				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>{{$addapps}}</a>
@@ -202,9 +214,21 @@
 </div>
 <div class="collapse d-md-none" id="navbar-collapse-2">
 	<div class="navbar-nav mr-auto">
-		{{foreach $navapps as $navapp}}
-		{{$navapp|replace:'dropdown-item':'nav-link'}}
+		{{if $channel_apps.0}}
+		{{foreach $channel_apps as $channel_app}}
+		{{$channel_app|replace:'dropdown-item':'nav-link'}}
 		{{/foreach}}
+		<div class="dropdown-header sys-apps-toggle" onclick="openClose('sys-apps-collapsed');">
+			{{$sysapps_toggle}}
+		</div>
+		<div id="sys-apps-collapsed" style="display:none;">
+		{{/if}}
+		{{foreach $nav_apps as $nav_app}}
+		{{$nav_app|replace:'dropdown-item':'nav-link'}}
+		{{/foreach}}
+		{{if $channel_apps.0}}
+		</div>
+		{{/if}}
 		{{if $localuser}}
 		<div class="dropdown-divider"></div>
 		<a class="nav-link" href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>{{$addapps}}</a>

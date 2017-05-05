@@ -774,9 +774,9 @@ function activity_match($haystack,$needle) {
 }
 
 /**
- * @brief Pull out all #hashtags and @person tags from $s.
+ * @brief Pull out all \#hashtags and \@person tags from $s.
  *
- * We also get @person@domain.com - which would make
+ * We also get \@person\@domain.com - which would make
  * the regex quite complicated as tags can also
  * end a sentence. So we'll run through our results
  * and strip the period from any tags which end with one.
@@ -2114,7 +2114,7 @@ function ids_to_querystr($arr,$idx = 'id',$quote = false) {
  * If $abook is true also include the abook info. This is needed in the API to
  * save extra per item lookups there.
  *
- * @param array[in,out] &$items
+ * @param[in,out] array &$items
  * @param boolean $abook If true also include the abook info
  * @param number $effective_uid
  */
@@ -2210,10 +2210,10 @@ function magic_link($s) {
 }
 
 /**
- * if $escape is true, dbesc() each element before adding quotes
+ * @brief If $escape is true, dbesc() each element before adding quotes.
  *
- * @param array[in,out] &$arr
- * @param boolean $escape default false
+ * @param[in,out] array &$arr
+ * @param boolean $escape (optional) default false
  */
 function stringify_array_elms(&$arr, $escape = false) {
 	for($x = 0; $x < count($arr); $x ++)
@@ -2224,7 +2224,6 @@ function stringify_array_elms(&$arr, $escape = false) {
  * @brief Indents a flat JSON string to make it more human-readable.
  *
  * @param string $json The original JSON string to process.
- *
  * @return string Indented version of the original JSON string.
  */
 function jindent($json) {
@@ -3175,4 +3174,4 @@ function ellipsify($s,$maxlen) {
 		return $s;
 
 	return mb_substr($s,0,$maxlen / 2) . '...' . mb_substr($s,mb_strlen($s) - ($maxlen / 2));
-} 
+}

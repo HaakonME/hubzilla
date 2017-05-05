@@ -181,7 +181,7 @@ function import_profiles($channel, $profiles) {
  * @param array $channel
  * @param array $hublocs
  * @param unknown $seize
- * @param boolean $moving
+ * @param boolean $moving (optional) default false
  */
 function import_hublocs($channel, $hublocs, $seize, $moving = false) {
 
@@ -585,7 +585,7 @@ function sync_chatrooms($channel, $chatrooms) {
  *
  * @param array $channel where to import to
  * @param array $items
- * @param boolean $sync
+ * @param boolean $sync default false
  * @param array $relocate default null
  */
 function import_items($channel, $items, $sync = false, $relocate = null) {
@@ -654,9 +654,13 @@ function sync_items($channel, $items, $relocate = null) {
 	import_items($channel, $items, true, $relocate);
 }
 
-
-
-function import_item_ids($channel,$itemids) {
+/**
+ * @brief
+ *
+ * @param array $channel A channel array.
+ * @param array $itemids
+ */
+function import_item_ids($channel, $itemids) {
 	if($channel && $itemids) {
 		foreach($itemids as $i) {
 			$r = q("select id from item where mid = '%s' and uid = %d limit 1",
@@ -979,6 +983,7 @@ function import_conv($channel,$convs) {
  *
  * @param array $channel
  * @param array $mails
+ * @param boolean $sync (optional) default false
  */
 function import_mail($channel, $mails, $sync = false) {
 	if($channel && $mails) {
@@ -1276,7 +1281,7 @@ function sync_files($channel, $files) {
  *
  * Replaces $old key with $new key in $arr.
  *
- * @param array[in,out] $arr The array where to work on
+ * @param[in,out] array &$arr The array where to work on
  * @param string $old The old key in the array
  * @param string $new The new key in the array
  */
@@ -1444,7 +1449,7 @@ function import_webpage_element($element, $channel, $type) {
 	// The author is either the owner or whomever was specified
 	$arr['author_xchan'] = (($element['author_xchan']) ? $element['author_xchan'] : get_observer_hash());
 	// Import mimetype if it is a valid mimetype for the element
-	$mimetypes = [	
+	$mimetypes = [
 		'text/bbcode',
 		'text/html',
 		'text/markdown',

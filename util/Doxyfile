@@ -32,3 +32,6 @@ DOT_IMAGE_FORMAT = svg
 INTERACTIVE_SVG = YES
 CLASS_GRAPH = YES
 COLLABORATION_GRAPH = NO
+# fix @var (https://bugzilla.gnome.org/show_bug.cgi?id=626105)
+#INPUT_FILTER = "sed -e 's/@var\s/@see /'"
+INPUT_FILTER = "php util/Doxygen_phpvarfilter.php"

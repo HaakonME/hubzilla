@@ -64,8 +64,6 @@ require_once('include/bbcode.php');
  *       purge_all              channel_id
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
- *       single_activity        item_id (deliver to a singleton network from the appropriate clone)
- *       single_mail            mail_id (deliver to a singleton network from the appropriate clone)
  *       location               channel_id
  *       request                channel_id            xchan_hash             message_id
  *       rating                 xlink_id
@@ -105,7 +103,7 @@ class Notifier {
 		$normal_mode = true;
 		$packet_type = 'undefined';
 
-		if($cmd === 'mail' || $cmd === 'single_mail') {
+		if($cmd === 'mail') {
 			$normal_mode = false;
 			$mail = true;
 			$private = true;
@@ -451,7 +449,7 @@ class Notifier {
 			'uplink'         => $uplink,
 			'cmd'            => $cmd,
 			'mail'           => $mail,
-			'single'         => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
+			'single'         => false,
 			'location'       => $location,
 			'request'        => $request,
 			'normal_mode'    => $normal_mode,
@@ -558,7 +556,7 @@ class Notifier {
 					'uplink'         => $uplink,
 					'cmd'            => $cmd,
 					'mail'           => $mail,
-					'single'         => (($cmd === 'single_mail' || $cmd === 'single_activity') ? true : false),
+					'single'         => false,
 					'location'       => $location,
 					'request'        => $request,
 					'normal_mode'    => $normal_mode,
@@ -576,21 +574,6 @@ class Notifier {
 				continue;
 
 			}
-
-			// singleton deliveries by definition 'not got zot'.
-			// Single deliveries are other federated networks (plugins) and we're essentially 
-			// delivering only to those that have this site url in their abook_instance
-			// and only from within a sync operation. This means if you post from a clone,
-			// and a connection is connected to one of your other clones; assuming that hub
-			// is running it will receive a sync packet. On receipt of this sync packet it
-			// will invoke a delivery to those connections which are connected to just that
-			// hub instance. 
-
-			if($cmd === 'single_mail' || $cmd === 'single_activity') {
-				continue;
-			}
-
-			// default: zot protocol
 
 			$hash = random_string();
 			$packet = null;

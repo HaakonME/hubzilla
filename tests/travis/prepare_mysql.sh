@@ -36,4 +36,13 @@ mysql -e "SHOW VARIABLES LIKE 'character_set%';"
 mysql -e "SELECT @@sql_mode;"
 
 # Create Hubzilla database
-mysql -e "CREATE DATABASE IF NOT EXISTS hubzilla;" -uroot;
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS hubzilla;";
+mysql -u root -e "CREATE USER 'hubzilla'@'localhost' IDENTIFIED BY 'hubzilla';"
+mysql -u root -e "GRANT ALL ON hubzilla.* TO 'hubzilla'@'localhost';"
+
+# Import table structure
+mysql -u root hubzilla < ./install/schema_mysql.sql
+
+# Show databases and tables
+mysql -u root -e "SHOW DATABASES;"
+mysql -u root -e "USE hubzilla; SHOW TABLES;"

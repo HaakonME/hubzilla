@@ -1980,3 +1980,26 @@ function scrape_vcard($url) {
 
 	return $ret;
 }
+
+function service_plink($contact, $guid) {
+
+	$plink = '';
+
+	$m = parse_url($contact['xchan_url']);
+	if($m) {
+		$url = $m['scheme'] . '://' . $m['host'] . (($m['port']) ? ':' . $m['port'] : '');
+	}
+	else {
+		$url = 'https://' . substr($contact['xchan_addr'],strpos($contact['xchan_addr'],'@')+1);
+	}
+
+	$handle = substr($contact['xchan_addr'], 0, strpos($contact['xchan_addr'],'@'));
+
+	$plink = $url . '/channel/' . $handle . '?f=&mid=' . $guid;
+
+	$x = [ 'xchan' => $contact, 'guid' => $guid, '$url' => $url, 'plink' => $plink ];
+	call_hooks('service_plink', $x);
+
+	return $x['plink'];
+}
+

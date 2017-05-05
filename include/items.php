@@ -1323,7 +1323,7 @@ function encode_item_flags($item) {
 		$ret[] = 'consensus';
 	if(intval($item['item_obscured']))
 		$ret[] = 'obscured';
-	if(intval($item['item_privat']))
+	if(intval($item['item_private']))
 		$ret[] = 'private';
 
 	return $ret;

@@ -77,13 +77,20 @@ class MarkdownSoap {
 	}
 
 	function purify($s) {
-//		$s = str_replace("\n",'<br>',$s);
-//		$s = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$s);
-//		$s = str_replace(' ','&nbsp;',$s);
+		$s = $this->protect_autolinks($s);
 		$s = purify_html($s);
-//		$s = str_replace(['&nbsp;', mb_convert_encoding('&#x00a0;','UTF-8','HTML-ENTITIES')], [ ' ', ' ' ],$s);
-//		$s = str_replace(['<br>','<br />', '&lt;', '&gt;' ],["\n","\n", '<', '>'],$s);
+		$s = $this->unprotect_autolinks($s);
 		return $s;
+	}
+
+	function protect_autolinks($s) {
+		$s = preg_replace('/\<(https?\:\/\/)(.*?)\>/','[$1$2]($1$2)',$s);
+		return $s;
+	}
+
+	function unprotect_autolinks($s) {
+		return $s;
+
 	}
 
 	function escape($s) {

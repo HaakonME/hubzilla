@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_unconnected` tinyint(4) NOT NULL DEFAULT '0',
   `abook_self` tinyint(4) NOT NULL DEFAULT '0',
   `abook_feed` tinyint(4) NOT NULL DEFAULT '0',
+  `abook_not_here` tinyint(4) NOT NULL DEFAULT '0',
   `abook_profile` char(64) NOT NULL DEFAULT '',
   `abook_incl` TEXT NOT NULL DEFAULT '',
   `abook_excl` TEXT NOT NULL DEFAULT '',
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_pending` (`abook_pending`),
   KEY `abook_unconnected` (`abook_unconnected`),
   KEY `abook_self` (`abook_self`),
+  KEY `abook_not_here` (`abook_not_here`),
   KEY `abook_feed` (`abook_feed`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

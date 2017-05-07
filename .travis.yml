@@ -103,7 +103,7 @@ before_install:
 
 # Install composer dev libs
 install:
-  - travis_retry composer install --optimize-autoloader
+  - travis_retry composer install --optimize-autoloader --no-progress
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:

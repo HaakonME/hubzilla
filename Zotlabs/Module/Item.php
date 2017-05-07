@@ -860,7 +860,17 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			$x = item_store_update($datarray,$execflag);
 			
-			item_create_edit_activity($x);			
+			// We only need edit activities for other federated protocols
+			// which do not support edits natively. While this does federate 
+			// edits, it presents a number of issues locally - such as #757 and #758.
+			// The SQL check for an edit activity would not perform that well so to fix these issues
+			// requires an additional item flag (perhaps 'item_edit_activity') that we can add to the 
+			// query for searches and notifications.
+
+			// For now we'll just forget about trying to make edits work on network protocols that 
+			// don't support them.   
+
+			// item_create_edit_activity($x);			
 
 			if(! $parent) {
 				$r = q("select * from item where id = %d",

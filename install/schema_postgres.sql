@@ -712,7 +712,7 @@ CREATE TABLE "mail" (
   "to_xchan" text NOT NULL DEFAULT '',
   "account_id" bigint  NOT NULL DEFAULT '0',
   "channel_id" bigint  NOT NULL DEFAULT '0',
-  "mail_mimetype char(64) NOT NULL DEFAULT '0',
+  "mail_mimetype" char(64) NOT NULL DEFAULT '0',
   "title" text NOT NULL,
   "body" text NOT NULL,
   "sig" text NOT NULL,

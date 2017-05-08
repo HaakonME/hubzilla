@@ -127,7 +127,6 @@ class Photo extends \Zotlabs\Web\Controller {
 				  }
 			}
 			
-
 			$r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND imgscale = %d LIMIT 1",
 				dbesc($photo),
 				intval($resolution)
@@ -150,12 +149,14 @@ class Photo extends \Zotlabs\Web\Controller {
 				$channel = channelx_by_n($r[0]['uid']);
 
 				// Now we'll see if we can access the photo
-	
 				$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND imgscale = %d $sql_extra LIMIT 1",
 					dbesc($photo),
 					intval($resolution)
 				);
-	
+
+				if($r && $r[0]['photo_usage'] == PHOTO_COVER)
+					$allowed = 1;
+ 
 				$d = [ 'imgscale' => $resolution, 'resource_id' => $photo, 'photo' => $r, 'allowed' => $allowed ];
 				call_hooks('get_photo',$d);
 

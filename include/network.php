@@ -343,7 +343,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 		if (isset($url_parsed)) {
 			curl_close($ch);
 			if($http_code == 303) {
-				return z_fetch_url($newurl,false,$redirects++,$opts);
+				return z_fetch_url($newurl,false,++$redirects,$opts);
 			} else {
 				return z_post_url($newurl,$params,++$redirects,$opts);
 			}
@@ -396,31 +396,6 @@ function json_return_and_die($x, $content_type = 'application/json') {
 	echo json_encode($x);
 	killme();
 }
-
-
-/**
- * @brief Generic XML return.
- *
- * Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable
- * of $st and an optional text <message> of $message and terminates the current
- * process.
- *
- * @param string $st
- * @param string $message
- */
-function xml_status($st, $message = '') {
-
-	$xml_message = ((strlen($message)) ? "\t<message>" . xmlify($message) . "</message>\r\n" : '');
-
-	if($st)
-		logger('Returning non_zero: ' . $st . " message=" . $message);
-
-	header( "Content-type: text/xml" );
-	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-	echo "<result>\r\n\t<status>$st</status>\r\n$xml_message</result>\r\n";
-	killme();
-}
-
 
 /**
  * @brief Send HTTP status header.
@@ -1451,88 +1426,6 @@ function scrape_feed($url) {
 	return $ret;
 }
 
-
-function format_and_send_email($sender,$xchan,$item) {
-
-	$title = $item['title'];
-	$body = $item['body'];
-
-	$textversion = strip_tags(html_entity_decode(bbcode(str_replace(array("\\r", "\\n"), array( "", "\n"), $body)),ENT_QUOTES,'UTF-8'));
-
-	$htmlversion = bbcode(str_replace(array("\\r","\\n"), array("","<br />\n"),$body));
-
-	$banner     = t('$Projectname Notification');
-
-    $product    = t('$projectname'); // PLATFORM_NAME;
-    $siteurl    = z_root();
-    $thanks     = t('Thank You,');
-    $sitename   = get_config('system','sitename');
-    $site_admin = sprintf( t('%s Administrator'), $sitename);
-
-		// load the template for private message notifications
-		$tpl = get_markup_template('email_notify_html.tpl');
-		$email_html_body = replace_macros($tpl,array(
-			'$banner'	    => $banner,
-			'$notify_icon'  => Zotlabs\Lib\System::get_notify_icon(),
-			'$product'	    => $product,
-			'$preamble'	    => '',
-			'$sitename'	    => $sitename,
-			'$siteurl'	    => $siteurl,
-			'$source_name'  => $sender['xchan_name'],
-			'$source_link'  => $sender['xchan_url'],
-			'$source_photo' => $sender['xchan_photo_m'],
-			'$username'	    => $xchan['xchan_name'],
-			'$hsitelink'	=> $datarray['hsitelink'],
-			'$hitemlink'	=> $datarray['hitemlink'],
-			'$thanks'	    => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'		=> $title,
-			'$htmlversion'  => $htmlversion,
-		));
-
-		// load the template for private message notifications
-		$tpl = get_markup_template('email_notify_text.tpl');
-		$email_text_body = replace_macros($tpl, array(
-			'$banner'       => $banner,
-			'$product'      => $product,
-			'$preamble'     => '',
-			'$sitename'     => $sitename,
-			'$siteurl'      => $siteurl,
-			'$source_name'  => $sender['xchan_name'],
-			'$source_link'  => $sender['xchan_url'],
-			'$source_photo' => $sender['xchan_photo_m'],
-			'$username'     => $xchan['xchan_name'],
-			'$hsitelink'    => $datarray['hsitelink'],
-			'$hitemlink'    => $datarray['hitemlink'],
-			'$thanks'       => $thanks,
-			'$site_admin'   => $site_admin,
-			'$title'        => $title,
-			'$textversion'  => $textversion
-		));
-
-		$sender_name = t('Administrator');
-
-  		$hostname = App::get_hostname();
-	    if(strpos($hostname,':'))
-    	    $hostname = substr($hostname,0,strpos($hostname,':'));
-		$sender_email = get_config('system','reply_address');
-		if(! $sender_email)
-			$sender_email = 'noreply' . '@' . $hostname;
-
-		// use the EmailNotification library to send the message
-
-		Zotlabs\Lib\Enotify::send(array(
-			'fromName'             => $product,
-			'fromEmail'            => $sender_email,
-			'replyTo'              => $sender_email,
-			'toEmail'              => str_replace('mailto:','',$xchan['xchan_addr']),
-			'messageSubject'       => (($title) ? $title : t('No Subject')),
-			'htmlVersion'          => $email_html_body,
-			'textVersion'          => $email_text_body,
-			'additionalMailHeader' => '',
-		));
-
-}
 
 
 function do_delivery($deliveries) {

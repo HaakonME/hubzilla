@@ -425,12 +425,6 @@ class Notifier {
 						'hash'     => $d['xchan_hash']
 					];
 				}
-
-				if($d['xchan_network'] === 'mail' && $normal_mode) {
-					$delivery_options = get_xconfig($d['xchan_hash'],'system','delivery_mode');
-					if(! $delivery_options)
-						format_and_send_email($channel,$d,$target_item);
-				}
 			}
 		}
 

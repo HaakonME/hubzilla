@@ -159,7 +159,7 @@ class Photo extends \Zotlabs\Web\Controller {
 				if($r && intval($r[0]['photo_usage']) === PHOTO_COVER && $resolution >= PHOTO_RES_COVER_1200)
 					$allowed = 1;
  
-				$d = [ 'imgscale' => $resolution, 'resource_id' => $photo, 'photo' => $r[0], 'allowed' => $allowed ];
+				$d = [ 'imgscale' => $resolution, 'resource_id' => $photo, 'photo' => $r, 'allowed' => $allowed ];
 				call_hooks('get_photo',$d);
 
 				$resolution = $d['imgscale'];

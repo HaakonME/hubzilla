@@ -199,10 +199,10 @@ function markdown_to_bb($s, $use_zrl = false) {
 	// Convert everything that looks like a link to a link
 	if($use_zrl) {
 		$s = str_replace(array('[img','/img]'),array('[zmg','/zmg]'),$s);
-		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,\(\)]+)/ism", '$1[zrl=$2$3]$2$3[/zrl]',$s);
+		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,\@\(\)]+)/ism", '$1[zrl=$2$3]$2$3[/zrl]',$s);
 	}
 	else {
-		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,\(\)]+)/ism", '$1[url=$2$3]$2$3[/url]',$s);
+		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,\@\(\)]+)/ism", '$1[url=$2$3]$2$3[/url]',$s);
 	}
 
 	// remove duplicate adjacent code tags

@@ -1,5 +1,5 @@
 <div class="generic-content-wrapper">
-	<div class="section-title-wrapper">
+	<div class="section-title-wrapper clearfix">
 		{{if $authed}}
 		{{if $create}}
 		<a href="appman" class="pull-right btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp;{{$create}}</a>

@@ -155,7 +155,7 @@ class Receiver {
  *   },
  *   "recipients": { optional recipient array },
  *   "callback":"\/post",
- *   "version":1.2,
+ *   "version":"1.2",
  *   "encryption":["aes256cbc"],
  *   "secret":"1eaa...",
  *   "secret_sig": "df89025470fac8..."

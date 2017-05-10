@@ -18,7 +18,49 @@ class Comanche {
 				$s = str_replace($mtch[0], '', $s);
 			}
 		}
-
+		
+		/*
+		 * This section supports the "switch" statement of the form given by the following 
+		 * example. The [default][/default] block must be the last in the arbitrary 
+		 * list of cases. The first case that matches the switch variable is used
+		 * and the rest are not evaluated.
+		 * 
+		 * [switch observer.language]
+		 * [case de]
+		 *   [block]german-content[/block]
+		 * [/case]
+		 * [case es]
+		 *   [block]spanish-content[/block]
+		 * [/case]
+		 * [default]
+		 *   [block]english-content[/block]
+		 * [/default]
+		 * [/switch]
+		 */
+		
+		$cnt = preg_match_all("/\[switch (.*?)\](.*?)\[default\](.*?)\[\/default\]\s*\[\/switch\]/ism", $s, $matches, PREG_SET_ORDER);
+		if($cnt) {
+			foreach($matches as $mtch) {
+				$switch_done = 0;
+				$switch_var = $this->get_condition_var($mtch[1]);
+				$default = $mtch[3];
+				$cases = array();
+				$cntt = preg_match_all("/\[case (.*?)\](.*?)\[\/case\]/ism", $mtch[2], $cases, PREG_SET_ORDER);
+				if($cntt) {
+					foreach($cases as $case) {
+						if($case[1] === $switch_var) {
+							$switch_done = 1;
+							$s = str_replace($mtch[0], $case[2], $s);
+							break;
+						}
+					}
+					if($switch_done === 0) {
+						$s = str_replace($mtch[0], $default, $s);
+					}
+				}
+			}
+		}
+		
 		$cnt = preg_match_all("/\[if (.*?)\](.*?)\[else\](.*?)\[\/if\]/ism", $s, $matches, PREG_SET_ORDER);
 		if($cnt) {
 			foreach($matches as $mtch) {

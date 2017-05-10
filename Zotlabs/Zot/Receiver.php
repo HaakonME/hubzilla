@@ -138,7 +138,6 @@ class Receiver {
  * This packet is optionally encrypted, which we will discover if the json has an 'iv' element.
  * $contents => array( 'alg' => 'aes256cbc', 'iv' => initialisation vector, 'key' => decryption key, 'data' => encrypted data);
  * $contents->iv and $contents->key are random strings encrypted with this site's RSA public key and then base64url encoded.
- * Currently only 'aes256cbc' is used, but this is extensible should that algorithm prove inadequate.
  *
  * Once decrypted, one will find the normal json_encoded zot message packet.
  * 
@@ -156,7 +155,8 @@ class Receiver {
  *   },
  *   "recipients": { optional recipient array },
  *   "callback":"\/post",
- *   "version":1,
+ *   "version":1.2,
+ *   "encryption":["aes256cbc"],
  *   "secret":"1eaa...",
  *   "secret_sig": "df89025470fac8..."
  * }

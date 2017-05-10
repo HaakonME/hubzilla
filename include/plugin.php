@@ -356,6 +356,7 @@ function get_plugin_info($plugin){
 		return $info;
 
 	$f = file_get_contents("addon/$plugin/$plugin.php");
+	$f = escape_tags($f);
 	$r = preg_match("|/\*.*\*/|msU", $f, $m);
 
 	if ($r){

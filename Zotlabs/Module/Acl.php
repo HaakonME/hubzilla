@@ -412,10 +412,12 @@ class Acl extends \Zotlabs\Web\Controller {
 			$directory = find_upstream_directory($dirmode);
 			$url = $directory['url'] . '/dirsearch';
 		}
+
+		$token = get_config('system','realm_token');
 	
 		$count = (x($_REQUEST,'count') ?  $_REQUEST['count'] : 100);
 		if($url) {
-			$query = $url . '?f=' ;
+			$query = $url . '?f=' . (($token) ? '&t=' . urlencode($token) : '');
 			$query .= '&name=' . urlencode($search) . "&limit=$count" . (($address) ? '&address=' . urlencode($search) : '');
 	
 			$x = z_fetch_url($query);

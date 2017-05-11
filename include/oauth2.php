@@ -1,8 +1,9 @@
 <?php
 
+/*
 	$storage = new OAuth2\Storage\Pdo(\DBA::$dba->db);
 	$config = [
-		'use_openid_connect'] => true,
+		'use_openid_connect' => true,
 		'issuer' => \Zotlabs\Lib\System::get_site_name()
 	];
 
@@ -19,3 +20,4 @@
 	]);
 
 	$oauth2_server->addStorage($keyStorage,'public_key');
+*/

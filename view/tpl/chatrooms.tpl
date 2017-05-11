@@ -1,5 +1,5 @@
 <div class="generic-content-wrapper">
-	<div class="section-title-wrapper">
+	<div class="section-title-wrapper clearfix">
 		{{if $is_owner}}
 		<button type="button" class="btn btn-success btn-sm pull-right acl-form-trigger" onclick="openClose('chatroom-new');" data-form_id="chatroom-new-form"><i class="fa fa-plus-circle"></i>&nbsp;{{$newroom}}</button>
 		{{/if}}

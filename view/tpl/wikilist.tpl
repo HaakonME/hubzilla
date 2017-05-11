@@ -1,5 +1,5 @@
 <div class="generic-content-wrapper">
-	<div class="section-title-wrapper">
+	<div class="section-title-wrapper clearfix">
 		{{if $owner}}
 		<button type="button" class="btn btn-success btn-sm pull-right acl-form-trigger" onclick="openClose('new-wiki-form-wrapper');" data-form_id="new-wiki-form"><i class="fa fa-plus-circle"></i>&nbsp;{{$create}}</button>
 		{{/if}}

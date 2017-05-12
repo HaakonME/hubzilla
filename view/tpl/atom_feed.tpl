@@ -22,9 +22,4 @@
 
   <updated>{{$feed_updated}}</updated>
 
-  <zot:owner>
-    <name>{{$name}}</name>
-    <uri>{{$profile_page}}</uri>
-    <link rel="photo"  type="{{$mimephoto}}" media:width="175" media:height="175" href="{{$photo}}" />
-    <link rel="avatar" type="{{$mimephoto}}" media:width="175" media:height="175" href="{{$photo}}" />
-  </zot:owner>
+{{$owner}}

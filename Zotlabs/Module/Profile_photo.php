@@ -190,7 +190,7 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 						build_sync_packet($channel['channel_id'],array('file' => array($sync)));
 
 
-					// Similarly, tell the nav bar to bypass the cache and update the avater image.
+					// Similarly, tell the nav bar to bypass the cache and update the avatar image.
 					$_SESSION['reload_avatar'] = true;
 	
 					info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);

@@ -383,7 +383,7 @@ function bb_definitionList($match) {
 	$eatLeadingSpaces = '(?:&nbsp;|[ \t])*'; // prevent spaces infront of [*= from adding another line to the previous element
 	$listElements = preg_replace('/^(\n|<br \/>)/', '', $match[2]); // ltrim the first newline
 	$listElements = preg_replace(
-		'/' . $eatLeadingSpaces . '\[\*=([[:print:]]*?)(?<!\\\)\]/ism', 
+		'/' . $eatLeadingSpaces . '\[\*=([\p{Any}]*?)(?<!\\\)\]/uism', 
 		$closeDescriptionTag . '<dt>$1</dt><dd>', 
 		$listElements
 	);

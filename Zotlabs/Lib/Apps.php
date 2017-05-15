@@ -34,7 +34,7 @@ class Apps {
 		if($files) {
 			foreach($files as $f) {
 				$path = explode('/',$f);
-				$plugin = $path[1];
+				$plugin = trim($path[1]);
 				if(plugin_is_installed($plugin)) {
 					$x = self::parse_app_description($f,$translate);
 					if($x) {
@@ -285,7 +285,7 @@ class Apps {
 
 		self::translate_system_apps($papp);
 
-		if(($papp['plugin']) && (! plugin_is_installed($papp['plugin'])))
+		if(trim($papp['plugin']) && (! plugin_is_installed(trim($papp['plugin']))))
 			return '';
 
 		$papp['papp'] = self::papp_encode($papp);
@@ -575,7 +575,7 @@ class Apps {
 		$darray['app_addr']     = ((x($arr,'addr'))     ? escape_tags($arr['addr']) : '');
 		$darray['app_price']    = ((x($arr,'price'))    ? escape_tags($arr['price']) : '');
 		$darray['app_page']     = ((x($arr,'page'))     ? escape_tags($arr['page']) : '');
-		$darray['app_plugin']   = ((x($arr,'plugin'))   ? escape_tags($arr['plugin']) : '');
+		$darray['app_plugin']   = ((x($arr,'plugin'))   ? escape_tags(trim($arr['plugin'])) : '');
 		$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 		$darray['app_system']   = ((x($arr,'system'))   ? intval($arr['system']) : 0);
 		$darray['app_deleted']  = ((x($arr,'deleted'))  ? intval($arr['deleted']) : 0);
@@ -653,7 +653,7 @@ class Apps {
 		$darray['app_addr']     = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
 		$darray['app_price']    = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
 		$darray['app_page']     = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
-		$darray['app_plugin']   = ((x($arr,'plugin')) ? escape_tags($arr['plugin']) : '');
+		$darray['app_plugin']   = ((x($arr,'plugin')) ? escape_tags(trim($arr['plugin'])) : '');
 		$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 		$darray['app_system']   = ((x($arr,'system'))   ? intval($arr['system']) : 0);
 		$darray['app_deleted']  = ((x($arr,'deleted'))  ? intval($arr['deleted']) : 0);
@@ -763,7 +763,7 @@ class Apps {
 			$ret['system'] = $app['app_system'];
 
 		if($app['app_plugin'])
-			$ret['plugin'] = $app['app_plugin'];
+			$ret['plugin'] = trim($app['app_plugin']);
 
 		if($app['app_deleted'])
 			$ret['deleted'] = $app['app_deleted'];

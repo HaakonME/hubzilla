@@ -33,7 +33,7 @@ CREATE TABLE "abook" (
   "abook_self" smallint NOT NULL DEFAULT 0 ,
   "abook_feed" smallint NOT NULL DEFAULT 0 ,
   "abook_not_here" smallint NOT NULL DEFAULT 0 ,
-  "abook_profile" char(64) NOT NULL DEFAULT '',
+  "abook_profile" varchar(64) NOT NULL DEFAULT '',
   "abook_incl" TEXT NOT NULL DEFAULT '',
   "abook_excl" TEXT NOT NULL DEFAULT '',
   "abook_instance" TEXT NOT NULL DEFAULT '',
@@ -66,7 +66,7 @@ CREATE TABLE "account" (
   "account_id" serial  NOT NULL,
   "account_parent" bigint  NOT NULL DEFAULT 0 ,
   "account_default_channel" bigint  NOT NULL DEFAULT 0 ,
-  "account_salt" char(32) NOT NULL DEFAULT '',
+  "account_salt" varchar(32) NOT NULL DEFAULT '',
   "account_password" text NOT NULL DEFAULT '',
   "account_email" text NOT NULL DEFAULT '',
   "account_external" text NOT NULL DEFAULT '',
@@ -342,7 +342,7 @@ CREATE TABLE "chatpresence" (
   "cp_xchan" text NOT NULL DEFAULT '',
   "cp_last" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "cp_status" text NOT NULL,
-  "cp_client" char(128) NOT NULL DEFAULT '',
+  "cp_client" varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY ("cp_id")
 );
 create index "cp_room" on chatpresence ("cp_room");
@@ -404,13 +404,13 @@ create index "conv_updated_idx" on conv ("updated");
 CREATE TABLE IF NOT EXISTS "dreport" (
   "dreport_id" serial NOT NULL,
   "dreport_channel" int NOT NULL DEFAULT 0 ,
-  "dreport_mid" char(255) NOT NULL DEFAULT '',
-  "dreport_site" char(255) NOT NULL DEFAULT '',
-  "dreport_recip" char(255) NOT NULL DEFAULT '',
-  "dreport_result" char(255) NOT NULL DEFAULT '',
+  "dreport_mid" varchar(255) NOT NULL DEFAULT '',
+  "dreport_site" varchar(255) NOT NULL DEFAULT '',
+  "dreport_recip" varchar(255) NOT NULL DEFAULT '',
+  "dreport_result" varchar(255) NOT NULL DEFAULT '',
   "dreport_time" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "dreport_xchan" char(255) NOT NULL DEFAULT '',
-  "dreport_queue" char(255) NOT NULL DEFAULT '',
+  "dreport_xchan" varchar(255) NOT NULL DEFAULT '',
+  "dreport_queue" varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY ("dreport_id")
 );
 
@@ -443,7 +443,7 @@ CREATE TABLE "event" (
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
   "deny_gid" text NOT NULL,
-  "event_status" char(255) NOT NULL DEFAULT '',
+  "event_status" varchar(255) NOT NULL DEFAULT '',
   "event_status_date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "event_percent" smallint NOT NULL DEFAULT 0 ,
   "event_repeat" text NOT NULL,
@@ -726,13 +726,13 @@ create index "itemid_iid" on item_id ("iid");
 CREATE TABLE "likes" (
   "id" serial  NOT NULL,
   "channel_id" bigint  NOT NULL DEFAULT 0 ,
-  "liker" char(128) NOT NULL DEFAULT '',
-  "likee" char(128) NOT NULL DEFAULT '',
+  "liker" varchar(128) NOT NULL DEFAULT '',
+  "likee" varchar(128) NOT NULL DEFAULT '',
   "iid" bigint  NOT NULL DEFAULT 0 ,
-  "i_mid" char(255) NOT NULL DEFAULT '',
+  "i_mid" varchar(255) NOT NULL DEFAULT '',
   "verb" text NOT NULL DEFAULT '',
   "target_type" text NOT NULL DEFAULT '',
-  "target_id" char(128) NOT NULL DEFAULT '',
+  "target_id" varchar(128) NOT NULL DEFAULT '',
   "target" text NOT NULL,
   PRIMARY KEY ("id")
 );
@@ -753,7 +753,7 @@ CREATE TABLE "mail" (
   "to_xchan" text NOT NULL DEFAULT '',
   "account_id" bigint  NOT NULL DEFAULT 0 ,
   "channel_id" bigint  NOT NULL DEFAULT 0 ,
-  "mail_mimetype" char(64) NOT NULL DEFAULT 'text/bbcode',
+  "mail_mimetype" varchar(64) NOT NULL DEFAULT 'text/bbcode',
   "title" text NOT NULL,
   "body" text NOT NULL,
   "sig" text NOT NULL,
@@ -823,7 +823,7 @@ create index "mitem_menu_id" on menu_item ("mitem_menu_id");
 create index "mitem_flags" on menu_item ("mitem_flags");
 CREATE TABLE "notify" (
   "id" serial NOT NULL,
-  "hash" char(64) NOT NULL,
+  "hash" varchar(64) NOT NULL,
   "xname" text NOT NULL,
   "url" text NOT NULL,
   "photo" text NOT NULL,
@@ -850,14 +850,14 @@ create index "notify_otype" on notify ("otype");
 create index "notify_aid" on notify ("aid");
 CREATE TABLE "obj" (
   "obj_id" serial  NOT NULL,
-  "obj_page" char(64) NOT NULL DEFAULT '',
+  "obj_page" varchar(64) NOT NULL DEFAULT '',
   "obj_verb" text NOT NULL DEFAULT '',
   "obj_type" bigint  NOT NULL DEFAULT 0,
   "obj_obj" text NOT NULL DEFAULT '',
   "obj_channel" bigint  NOT NULL DEFAULT 0,
-  "obj_term" char(255) NOT NULL DEFAULT '',
-  "obj_url" char(255) NOT NULL DEFAULT '',
-  "obj_imgurl" char(255) NOT NULL DEFAULT '',
+  "obj_term" varchar(255) NOT NULL DEFAULT '',
+  "obj_url" varchar(255) NOT NULL DEFAULT '',
+  "obj_imgurl" varchar(255) NOT NULL DEFAULT '',
   "obj_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "obj_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "obj_quantity" bigint NOT NULL DEFAULT 0,
@@ -1008,7 +1008,7 @@ create index "profext_k" on profext ("k");
 
 CREATE TABLE "profile" (
   "id" serial NOT NULL,
-  "profile_guid" char(64) NOT NULL DEFAULT '',
+  "profile_guid" varchar(64) NOT NULL DEFAULT '',
   "aid" bigint  NOT NULL DEFAULT 0 ,
   "uid" bigint NOT NULL,
   "profile_name" text NOT NULL,
@@ -1218,7 +1218,7 @@ create index "tokens_uid" on tokens ("uid");
 
 CREATE TABLE "updates" (
   "ud_id" serial  NOT NULL,
-  "ud_hash" char(128) NOT NULL,
+  "ud_hash" varchar(128) NOT NULL,
   "ud_guid" text NOT NULL DEFAULT '',
   "ud_date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "ud_last" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',

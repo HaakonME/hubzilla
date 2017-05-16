@@ -2475,7 +2475,7 @@ function update_r1184() {
 
 function update_r1185() {
 
-	$r1 = q("alter table app add app_plugin char(255) not null default '' ");
+	$r1 = q("alter table app add app_plugin text not null default '' ");
 
 	if($r1)
 		return UPDATE_SUCCESS;
@@ -2523,7 +2523,7 @@ function update_r1188() {
 
 function update_r1189() {
 
-	$r1 = q("alter table mail add mail_mimetype char(64) not null default 'text/bbcode' ");
+	$r1 = q("alter table mail add mail_mimetype varchar(64) not null default 'text/bbcode' ");
 	$r2 = q("alter table mail add mail_raw int(4) not null default '0' ");
 
 	if($r1 && $r2)

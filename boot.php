@@ -46,6 +46,7 @@ require_once('include/account.php');
 require_once('include/zid.php');
 require_once('include/xchan.php');
 require_once('include/hubloc.php');
+require_once('include/attach.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );

@@ -539,6 +539,50 @@ class Apps {
 		return($r);
 	}
 
+	static public function app_order($uid,$apps) {
+
+		if(! $apps)
+			return $apps;
+
+		$x = (($uid) ? get_pconfig($uid,'system','app_order') : get_config('system','app_order'));
+		if(($x) && (! is_array($x))) {
+			$y = explode(',',$x);
+			$y = array_map('trim',$y);
+			$x = $y;
+		}
+
+		if(! (is_array($x) && ($x)))
+			return $apps;
+
+		$ret = [];
+		foreach($x as $xx) {
+			$y = self::find_app_in_array($xx,$apps);
+			if($y) {
+				$ret[] = $y;
+			}
+		}
+		foreach($apps as $ap) {
+			if(! self::find_app_in_array($ap['name'],$ret)) {
+				$ret[] = $ap;
+			}
+		}
+		return $ret;
+
+	}
+
+	static function find_app_in_array($name,$arr) {
+		if(! $arr)
+			return false;
+		foreach($arr as $x) {
+			if($x['name'] === $name) {
+					return $x;
+			}
+		}
+		return false;
+	}
+
+
+
 
 	static public function app_decode($s) {
 		$x = base64_decode(str_replace(array('<br />',"\r","\n",' '),array('','','',''),$s));

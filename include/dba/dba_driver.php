@@ -452,7 +452,7 @@ function db_getfunc($f) {
 
 function db_logger($s,$level = LOGGER_NORMAL,$syslog = LOG_INFO) {
 
-	if(\DBA::$logging)
+	if(\DBA::$logging || ! \DBA::$dba)
 		return;
 
 	$saved = \DBA::$dba->debug;

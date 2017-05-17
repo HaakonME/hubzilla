@@ -79,8 +79,10 @@ function get_feed_for($channel, $observer_hash, $params) {
 
 	$feed_author = '';
 	if(intval($params['compat']) === 1) {
-		$feed_author = atom_author('author',$channel['channel_address'],$channel['channel_name'],$channel['xchan_url'],300,300,$channel['xchan_photo_mimetype'],$channel['xchan_photo_l']);
+		$feed_author = atom_render_author('author',$channel);
 	}
+
+	$owner = atom_render_author('zot:owner',$channel);
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(Zotlabs\Lib\System::get_project_version()),
@@ -89,6 +91,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now', ATOM_TIME)),
 		'$author'       => $feed_author,
+		'$owner'        => $owner,
 		'$name'         => xmlify($channel['channel_name']),
 		'$profile_page' => xmlify($channel['xchan_url']),
 		'$mimephoto'    => xmlify($channel['xchan_photo_mimetype']),
@@ -1272,6 +1275,37 @@ function atom_author($tag, $nick, $name, $uri, $h, $w, $type, $photo) {
 	return $o;
 }
 
+
+function atom_render_author($tag,$xchan) {
+
+	
+	$nick = xmlify(substr($xchan['xchan_addr'],0,strpos($xchan['xchan_addr'],'@')));
+	$id   = xmlify($xchan['xchan_url']);
+	$name = xmlify($xchan['xchan_name']);
+	$photo = xmlify($xchan['xchan_photo_l']);
+	$type = xmlify($xchan['xchan_photo_mimetype']);
+	$w = $h = 300;
+
+	$o .= "<$tag>\r\n";
+	$o .= "  <as:object-type>http://activitystrea.ms/schema/1.0/person</as:object-type>\r\n";
+	$o .= "  <id>$id</id>\r\n";
+	$o .= "  <name>$nick</name>\r\n";
+	$o .= "  <uri>$id</uri>\r\n";
+	$o .= '  <link rel="alternate" type="text/html" href="' . $id . '" />' . "\r\n";
+	$o .= '  <link rel="photo"  type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '  <link rel="avatar" type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '  <poco:preferredUsername>' . $nick . '</poco:preferredUsername>' . "\r\n";
+	$o .= '  <poco:displayName>' . $name . '</poco:displayName>' . "\r\n";
+
+	call_hooks('atom_render_author', $o);
+
+	$o .= "</$tag>\r\n";
+
+	return $o;
+
+
+}
+
 /**
  * @brief Create an item for the Atom feed.
  *
@@ -1303,16 +1337,13 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0) {
 	$o = "\r\n\r\n<entry>\r\n";
 
 	if(is_array($author)) {
-		$reddress = substr($author['xchan_addr'],0,strpos($author['xchan_addr'],'@'));
-		$o .= atom_author('author',$reddress,$author['xchan_name'],$author['xchan_url'],80,80,$author['xchan_photo_mimetype'],$author['xchan_photo_m']);
+		$o .= atom_render_author('author',$author);
 	}
 	else {
-		$reddress = substr($item['author']['xchan_addr'],0,strpos($item['author']['xchan_addr'],'@'));
-		$o .= atom_author('author',$reddress,$item['author']['xchan_name'],$item['author']['xchan_url'],80,80,$item['author']['xchan_photo_mimetype'], $item['author']['xchan_photo_m']);
+		$o .= atom_render_author('author',$item['author']);
 	}
 
-	$reddress = substr($item['owner']['xchan_addr'],0,strpos($item['owner']['xchan_addr'],'@'));
-	$o .= atom_author('zot:owner',$reddress,$item['owner']['xchan_name'],$item['owner']['xchan_url'],80,80,$item['owner']['xchan_photo_mimetype'],$item['owner']['xchan_photo_m']);
+	$o .= atom_render_author('zot:owner',$item['owner']);
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);

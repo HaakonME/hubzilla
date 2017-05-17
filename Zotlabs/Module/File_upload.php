@@ -28,11 +28,12 @@ class File_upload extends \Zotlabs\Web\Controller {
 			$_REQUEST['group_deny']    = expand_acl($channel['channel_deny_gid']);
 		}
 
+		$_REQUEST['allow_cid'] = perms2str($_REQUEST['contact_allow']);
+		$_REQUEST['allow_gid'] = perms2str($_REQUEST['group_allow']);
+		$_REQUEST['deny_cid'] = perms2str($_REQUEST['contact_deny']);
+		$_REQUEST['deny_gid'] = perms2str($_REQUEST['group_deny']);
+
 		if($_REQUEST['filename']) {
-			$_REQUEST['allow_cid'] = perms2str($_REQUEST['contact_allow']);
-			$_REQUEST['allow_gid'] = perms2str($_REQUEST['group_allow']);
-			$_REQUEST['deny_cid'] = perms2str($_REQUEST['contact_deny']);
-			$_REQUEST['deny_gid'] = perms2str($_REQUEST['group_deny']);
 			$r = attach_mkdir($channel,get_observer_hash(),$_REQUEST);
 		}
 		else {

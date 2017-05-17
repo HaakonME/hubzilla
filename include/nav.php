@@ -257,6 +257,8 @@ EOT;
 
 	usort($syslist,'Zotlabs\\Lib\\Apps::app_name_compare');
 
+	$syslist = Zlib\Apps::app_order(local_channel(),$syslist);
+
 	foreach($syslist as $app) {
 		$nav_apps[] = Zlib\Apps::app_render($app,'nav');
 	}

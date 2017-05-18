@@ -37,7 +37,7 @@
 	},
 	"require-dev" : {
 		"php" : ">=7.0",
-		"phpunit/phpunit" : "^6.0",
+		"phpunit/phpunit" : "^6.1",
 		"behat/behat" : "@stable",
 		"behat/mink-extension": "@stable",
 		"behat/mink-goutte-driver": "@stable",

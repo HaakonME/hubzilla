@@ -1171,7 +1171,6 @@ function list_smilies($default_only = false) {
 	$texts =  array(
 		'&lt;3',
 		'&lt;/3',
-		'&lt;\\3',
 		':-)',
 		';-)',
 		':-(',
@@ -1207,7 +1206,6 @@ function list_smilies($default_only = false) {
 	$icons = array(
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-heart.gif" alt="&lt;3" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-brokenheart.gif" alt="&lt;/3" />',
-		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-brokenheart.gif" alt="&lt;\\3" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-smile.gif" alt=":-)" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-wink.gif" alt=";-)" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-frown.gif" alt=":-(" />',

@@ -1,4 +1,4 @@
-{{if !$navapps}}
+{{if ! ($navapps || $order)}}
 <div class="app-container">
 	<div class="app-detail{{if $deleted}} app-deleted{{/if}}">
 		<a href="{{$app.url}}"{{if $app.target}} target="{{$app.target}}"{{/if}}{{if $app.desc}} title="{{$app.desc}}{{if $app.price}} ({{$app.price}}){{/if}}"{{else}}title="{{$app.name}}"{{/if}}>{{if $icon}}<i class="app-icon fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="80" height="80" />{{/if}}
@@ -24,12 +24,13 @@
 	{{/if}}
 	{{/if}}
 </div>
-{{else}}
+{{/if}}
+{{if $navapps}}
+<a class="dropdown-item" href="{{$app.url}}">{{if $icon}}<i class="generic-icons-nav fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" style="margin-right:9px;"/>{{/if}}{{$app.name}}</a>
+{{/if}}
 {{if $order}}
 <a href="{{$hosturl}}appman/{{$app.guid}}/moveup"><i class="generic-icons-nav fa fa-fw fa-arrow-up"></i></a>
 <a href="{{$hosturl}}appman/{{$app.guid}}/movedown"><i class="generic-icons-nav fa fa-fw fa-arrow-down"></i></a>
 {{if $icon}}<i class="generic-icons-nav fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" style="margin-right:9px;"/>{{/if}}{{$app.name}}<br>
-{{else}}
-<a class="dropdown-item" href="{{$app.url}}">{{if $icon}}<i class="generic-icons-nav fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" style="margin-right:9px;"/>{{/if}}{{$app.name}}</a>
 {{/if}}
-{{/if}}
+

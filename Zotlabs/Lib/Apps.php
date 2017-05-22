@@ -370,8 +370,8 @@ class Apps {
 			'$deleted' => $papp['deleted'],
 			'$feature' => (($papp['embed']) ? false : true),
 			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true),
-			'$navapps' => (($mode == 'nav' || $mode='nav-order') ? true : false),
-			'$order' => (($mode='nav-order') ? true : false),
+			'$navapps' => (($mode == 'nav') ? true : false),
+			'$order' => (($mode == 'nav-order') ? true : false),
 			'$add' => t('Add to app-tray'),
 			'$remove' => t('Remove from app-tray')
 		));

@@ -32,3 +32,9 @@
        margin-top: 18px;
        margin-left: 20px;
 }
+
+main {
+	max-width: 790px;
+	margin-left: auto;
+	margin-right: auto;
+}

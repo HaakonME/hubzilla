@@ -40,7 +40,7 @@ class Notifications extends \Zotlabs\Web\Controller {
 			
 		$o .= replace_macros(get_markup_template('notifications.tpl'),array(
 			'$notif_header' => t('System Notifications'),
-			'$notif_link_mark_seen' => t('Mark all system notifications seen'),
+			'$notif_link_mark_seen' => t('Mark all seen'),
 			'$notif_content' => $notif_content,
 			'$notifications_available' => $notifications_available,
 		));

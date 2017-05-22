@@ -2,9 +2,9 @@
 CREATE TABLE IF NOT EXISTS `abconfig` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `chan` int(10) unsigned NOT NULL DEFAULT 0 ,
-  `xchan` char(255) NOT NULL DEFAULT '',
-  `cat` char(255) NOT NULL DEFAULT '',
-  `k` char(255) NOT NULL DEFAULT '',
+  `xchan` char(191) NOT NULL DEFAULT '',
+  `cat` char(191) NOT NULL DEFAULT '',
+  `k` char(191) NOT NULL DEFAULT '',
   `v` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `chan` (`chan`),

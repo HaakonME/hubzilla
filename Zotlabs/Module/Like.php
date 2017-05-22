@@ -373,6 +373,10 @@ class Like extends \Zotlabs\Web\Controller {
 	
 			$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $item['plink']));
 			$objtype = (($item['resource_type'] === 'photo') ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
+
+			if($objtype === ACTIVITY_OBJ_NOTE && (! intval($item['item_thread_top'])))
+				$objtype = ACTIVITY_OBJ_COMMENT;
+
 	
 			$body = $item['body'];
 	

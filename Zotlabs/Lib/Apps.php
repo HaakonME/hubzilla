@@ -370,7 +370,8 @@ class Apps {
 			'$deleted' => $papp['deleted'],
 			'$feature' => (($papp['embed']) ? false : true),
 			'$featured' => ((strpos($papp['categories'], 'nav_featured_app') === false) ? false : true),
-			'$navapps' => (($mode == 'nav') ? true : false),
+			'$navapps' => (($mode == 'nav' || $mode='nav-order') ? true : false),
+			'$order' => (($mode='nav-order') ? true : false),
 			'$add' => t('Add to app-tray'),
 			'$remove' => t('Remove from app-tray')
 		));
@@ -580,6 +581,90 @@ class Apps {
 		}
 		return false;
 	}
+
+	static function moveup($uid,$guid) {
+		$syslist = array();
+		$list = self::app_list($uid, false, 'nav_featured_app');
+		if($list) {
+			foreach($list as $li) {
+				$syslist[] = self::app_encode($li);
+			}
+		}
+		self::translate_system_apps($syslist);
+
+		usort($syslist,'self::app_name_compare');
+
+		$syslist = self::app_order($uid,$syslist);
+
+		if(! $syslist)
+			return;
+
+		$newlist = [];
+
+		foreach($syslist as $k => $li) {
+			if($li['guid'] === $guid) {
+				$position = $k;
+				break;
+			}
+		}
+		if(! $position)
+			return;
+		$dest_position = $position - 1;
+		$saved = $syslist[$dest_position];
+		$syslist[$dest_position] = $syslist[$position];
+		$syslist[$position] = $saved;
+
+		$narr = [];
+		foreach($syslist as $x) {
+			$narr[] = $x['name'];
+		}
+
+		set_pconfig($uid,'system','app_order',implode(',',$narr));
+
+	}
+
+	static function movedown($uid,$guid) {
+		$syslist = array();
+		$list = self::app_list($uid, false, 'nav_featured_app');
+		if($list) {
+			foreach($list as $li) {
+				$syslist[] = self::app_encode($li);
+			}
+		}
+		self::translate_system_apps($syslist);
+
+		usort($syslist,'self::app_name_compare');
+
+		$syslist = self::app_order($uid,$syslist);
+
+		if(! $syslist)
+			return;
+
+		$newlist = [];
+
+		foreach($syslist as $k => $li) {
+			if($li['guid'] === $guid) {
+				$position = $k;
+				break;
+			}
+		}
+		if($position >= count($syslist) - 1)
+			return;
+		$dest_position = $position + 1;
+		$saved = $syslist[$dest_position];
+		$syslist[$dest_position] = $syslist[$position];
+		$syslist[$position] = $saved;
+
+		$narr = [];
+		foreach($syslist as $x) {
+			$narr[] = $x['name'];
+		}
+
+		set_pconfig($uid,'system','app_order',implode(',',$narr));
+
+	}
+
+
 
 
 

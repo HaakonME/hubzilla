@@ -209,6 +209,7 @@ class Apps {
 
 	static public function translate_system_apps(&$arr) {
 		$apps = array(
+			'Apps' => t('Apps'),
 			'Site Admin' => t('Site Admin'),
 			'Report Bug' => t('Report Bug'),
 			'View Bookmarks' => t('View Bookmarks'),

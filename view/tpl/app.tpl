@@ -29,8 +29,8 @@
 <a class="dropdown-item" href="{{$app.url}}">{{if $icon}}<i class="generic-icons-nav fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" style="margin-right:9px;"/>{{/if}}{{$app.name}}</a>
 {{/if}}
 {{if $order}}
-<a href="{{$hosturl}}appman/{{$app.guid}}/moveup"><i class="generic-icons-nav fa fa-fw fa-arrow-up"></i></a>
-<a href="{{$hosturl}}appman/{{$app.guid}}/movedown"><i class="generic-icons-nav fa fa-fw fa-arrow-down"></i></a>
+<a href="{{$hosturl}}appman/{{$app.guid}}/moveup" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 5px;"><i class="generic-icons-nav fa fa-fw fa-arrow-up"></i></a>
+<a href="{{$hosturl}}appman/{{$app.guid}}/movedown" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 5px;"><i class="generic-icons-nav fa fa-fw fa-arrow-down"></i></a>
 {{if $icon}}<i class="generic-icons-nav fa fa-fw fa-{{$icon}}"></i>{{else}}<img src="{{$app.photo}}" width="16" height="16" style="margin-right:9px;"/>{{/if}}{{$app.name}}<br>
 {{/if}}
 

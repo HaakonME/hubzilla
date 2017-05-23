@@ -281,6 +281,7 @@ EOT;
 		'$nav_apps' => $nav_apps,
 		'$channel_apps' => $channel_apps,
 		'$addapps' => t('Add Apps'),
+		'$orderapps' => t('Arrange Apps'),
 		'$sysapps_toggle' => t('Toggle System Apps')
 	));
 

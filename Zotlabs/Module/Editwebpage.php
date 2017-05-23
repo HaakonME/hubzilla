@@ -112,7 +112,7 @@ class Editwebpage extends \Zotlabs\Web\Controller {
 			intval($itm[0]['id'])
 		);
 		if($item_id)
-			$page_title = $item_id[0]['v'];
+			$page_title = str_replace('%2f','/',$item_id[0]['v']);
 
 		$mimetype = $itm[0]['mimetype'];
 

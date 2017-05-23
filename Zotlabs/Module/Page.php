@@ -43,11 +43,31 @@ class Page extends \Zotlabs\Web\Controller {
 	
 		$channel_address = argv(1);
 	
+		// Always look first for the page name prefixed by the observer language; for instance page/nickname/de/foo
+		// followed by page/nickname/foo if that is not found.
+		// If your browser language is de and you want to access the default in this case, 
+		// use page/nickname/-/foo to over-ride the language and access only the page with pagelink of 'foo'
+
+		$page_name = '';
+		$ignore_language = false;
+
+		for($x = 2; $x < argc(); $x ++) {
+			if($page_name === '' && argv($x) === '-') {
+				$ignore_language = true;
+				continue;
+			}
+			if($page_name)
+				$page_name .= '/';
+			$page_name .= argv($x);
+		}
+
+
 		// The page link title was stored in a urlencoded format
 		// php or the browser may/will have decoded it, so re-encode it for our search
 	
-		$page_id = urlencode(argv(2));
-	
+		$page_id = urlencode($page_name);
+		$lang_page_id = urlencode(\App::$language . '/' . $page_name);
+
 		$u = q("select channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($channel_address)
 		);
@@ -64,16 +84,31 @@ class Page extends \Zotlabs\Web\Controller {
 	
 		require_once('include/security.php');
 		$sql_options = item_permissions_sql($u[0]['channel_id']);
-	
-		$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
-			where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s' and item.item_delayed = 0 
-			and (( iconfig.k = 'WEBPAGE' and item_type = %d ) 
-			OR ( iconfig.k = 'PDL' AND item_type = %d )) $sql_options $revision limit 1",
-			intval($u[0]['channel_id']),
-			dbesc($page_id),
-			intval(ITEM_TYPE_WEBPAGE),
-			intval(ITEM_TYPE_PDL)
-		);
+
+		$r = null;	
+
+		if(! $ignore_language) {
+			$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
+				where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s' and item.item_delayed = 0 
+				and (( iconfig.k = 'WEBPAGE' and item_type = %d ) 
+				OR ( iconfig.k = 'PDL' AND item_type = %d )) $sql_options $revision limit 1",
+				intval($u[0]['channel_id']),
+				dbesc($lang_page_id),
+				intval(ITEM_TYPE_WEBPAGE),
+				intval(ITEM_TYPE_PDL)
+			);
+		}
+		if(! $r) {
+			$r = q("select item.* from item left join iconfig on item.id = iconfig.iid
+				where item.uid = %d and iconfig.cat = 'system' and iconfig.v = '%s' and item.item_delayed = 0 
+				and (( iconfig.k = 'WEBPAGE' and item_type = %d ) 
+				OR ( iconfig.k = 'PDL' AND item_type = %d )) $sql_options $revision limit 1",
+				intval($u[0]['channel_id']),
+				dbesc($page_id),
+				intval(ITEM_TYPE_WEBPAGE),
+				intval(ITEM_TYPE_PDL)
+			);
+		}
 		if(! $r) {
 	
 			// Check again with no permissions clause to see if it is a permissions issue

@@ -5,7 +5,7 @@
  */
 
 use Michelf\MarkdownExtra;
-use Markdownify\Converter;
+use League\HTMLToMarkdown\HtmlConverter;
 
 require_once("include/oembed.php");
 require_once("include/event.php");
@@ -177,10 +177,12 @@ function bb_to_markdown($Text) {
 	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
 
 	// Now convert HTML to Markdown
-	$md = new Converter(Converter::LINK_AFTER_CONTENT, false, false);
-	$Text = $md->parseString($Text);
 
-   // The converter adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
+	$md = new HtmlConverter();
+	$Text = $md->convert($Text);
+
+	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
+
 
 	$Text = str_replace(array('&\\_lt\\_;','&\\_gt\\_;','&\\_amp\\_;'),array('&lt;','&gt;','&amp;'),$Text);
 

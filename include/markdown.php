@@ -5,7 +5,7 @@
  */
 
 use Michelf\MarkdownExtra;
-use Markdownify\Converter;
+use League\HTMLToMarkdown\HtmlConverter;
 
 require_once("include/oembed.php");
 require_once("include/event.php");
@@ -495,9 +495,8 @@ function bb2diaspora($Text, $preserve_nl = false, $fordiaspora = true) {
 	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
 
 	// Now convert HTML to Markdown
-	$md = new Converter(Converter::LINK_AFTER_CONTENT, false, false);
-	$Text = $md->parseString($Text);
-
+	$md = new HtmlConverter();
+	$Text = $md->convert($Text);
 
 	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
 

@@ -218,13 +218,13 @@ class Webpages extends \Zotlabs\Web\Controller {
 					'created'	=> $rr['created'],
 					'edited'	=> $rr['edited'],
 					'mimetype'	=> $rr['mimetype'],
-					'pagetitle'	=> $rr['v'],
+					'pagetitle'	=> str_replace('%2f','/',$rr['v']),
 					'mid'		=> $rr['mid'],
 					'layout_mid'    => $rr['layout_mid']
 				);
 				$pages[$rr['iid']][] = array(
 					'url'		=> $rr['iid'],
-					'pagetitle'	=> $rr['v'],
+					'pagetitle'	=> str_replace('%2f','/',$rr['v']),
 					'title'		=> $rr['title'],
 					'created'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['created']),
 					'edited'	=> datetime_convert('UTC',date_default_timezone_get(),$rr['edited']),

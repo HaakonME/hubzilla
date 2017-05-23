@@ -44,7 +44,7 @@ class NativeWikiPage {
 					$pages[] = [
 						'resource_id' => $resource_id,
 						'title'       => escape_tags($title),
-						'url'         => urlencode(urlencode($title)),
+						'url'         => str_replace('%2F','/',urlencode(str_replace('%2F','/',urlencode($title)))),
 						'link_id'     => 'id_' . substr($resource_id, 0, 10) . '_' . $page_item['id']
 					];
 				}

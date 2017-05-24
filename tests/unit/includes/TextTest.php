@@ -11,6 +11,9 @@ use Zotlabs\Tests\Unit\UnitTestCase;
  */
 class TextTest extends UnitTestCase {
 
+	/**
+	 * @covers ::valid_email_regex
+	 */
 	public function testGoodEmail() {
 		$this->assertTrue(valid_email_regex('ken@spaz.org'));
 		$this->assertTrue(valid_email_regex('ken@restivo.org'));
@@ -18,11 +21,17 @@ class TextTest extends UnitTestCase {
 		$this->assertTrue(valid_email_regex('foo+nobody@hubzilla.org'));
 	}
 
+	/**
+	 * @covers ::valid_email_regex
+	 */
 	public function testBadEmail() {
 		$this->assertFalse(valid_email_regex('nobody!uses!these!any.more'));
 		$this->assertFalse(valid_email_regex('foo@bar@hubzilla.org'));
 	}
 
+	/**
+	 * @covers ::purify_html
+	 */
 	public function testPurifyHTML() {
 		// linebreaks
 		$htmlbr = 'first line<br />
@@ -46,6 +55,9 @@ empty line above';
 		$this->assertEquals('<ul><li>item1</li></ul>', purify_html('<ul data-accordion-menu-unknown><li>item1</li></ul>'));
 	}
 
+	/**
+	 * @covers ::purify_html
+	 */
 	public function testPurifyHTML_html() {
 		$this->assertEquals('<div id="id01"><p class="class01">ids und classes</p></div>', purify_html('<div id="id01"><p class="class01">ids und classes</p></div>'));
 		$this->assertEquals('<div><p>close missing tags</p></div>', purify_html('<div><p>close missing tags'));
@@ -59,6 +71,9 @@ empty line above';
 		$this->assertEquals('', purify_html('<iframe width="560" height="315" src="https://www.youtube.com/embed/kiNGx5oL7hk" frameborder="0" allowfullscreen></iframe>'));
 	}
 
+	/**
+	 * @covers ::purify_html
+	 */
 	public function testPurifyHTML_js() {
 		$this->assertEquals('<div></div>', purify_html('<div><img src="javascript:evil();" onload="evil();"></div>'));
 		$this->assertEquals('<a href="#">link</a>', purify_html('<a href="#" onclick="alert(\'xss\')">link</a>'));
@@ -66,6 +81,9 @@ empty line above';
 		$this->assertEquals('', purify_html('<script>alter("42")</script>'));
 	}
 
+	/**
+	 * @covers ::purify_html
+	 */
 	public function testPurifyHTML_css() {
 		$this->assertEquals('<p style="color:#FF0000;background-color:#fff;">red</p>', purify_html('<p style="color:red; background-color:#fff">red</p>'));
 		$this->assertEquals('<p>invalid color</p>', purify_html('<p style="color:invalid; background-color:#jjkkmm">invalid color</p>'));

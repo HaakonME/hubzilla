@@ -453,15 +453,24 @@ function bb2diaspora_itembody($item, $force_update = false, $have_channel = fals
 	return html_entity_decode($body);
 }
 
+/**
+ * @brief Prepare bbcode for Diaspora.
+ *
+ * @hooks bb2diaspora
+ *    * \e string The prepared text for diaspora.
+ *
+ * @param string $Text bbcode
+ * @param boolean $preserve_nl (default false) preserve new lines
+ * @param boolean $fordiaspora (default true, but unused)
+ * @return string
+ */
 function bb2diaspora($Text, $preserve_nl = false, $fordiaspora = true) {
 
 	// Re-enabling the converter again.
 	// The bbcode parser now handles youtube-links (and the other stuff) correctly.
 	// Additionally the html code is now fixed so that lists are now working.
 
-	/*
-	 * Transform #tags, strip off the [url] and replace spaces with underscore
-	 */
+	// Transform #tags, strip off the [url] and replace spaces with underscore
 	$Text = preg_replace_callback('/#\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/[(zu)]rl\]/i', create_function('$match',
 		'return \'#\'. str_replace(\' \', \'_\', $match[3]);'
 	), $Text);
@@ -473,7 +482,6 @@ function bb2diaspora($Text, $preserve_nl = false, $fordiaspora = true) {
 	// strip map tags, as the rendering is performed in bbcode() and the resulting output
 	// is not compatible with Diaspora (at least in the case of openstreetmap and probably
 	// due to the inclusion of an html iframe)
-
 	$Text = preg_replace("/\[map\=(.*?)\]/ism", '$1', $Text);
 	$Text = preg_replace("/\[map\](.*?)\[\/map\]/ism", '$1', $Text);
 
@@ -491,15 +499,12 @@ function bb2diaspora($Text, $preserve_nl = false, $fordiaspora = true) {
 	$Text = bbcode($Text, $preserve_nl, false);
 
 	// Markdownify does not preserve previously escaped html entities such as <> and &.
-
 	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
 
 	// Now convert HTML to Markdown
-	$md = new HtmlConverter();
-	$Text = $md->convert($Text);
+	$Text = html2markdown($Text);
 
 	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
-
 	$Text = str_replace(array('&\\_lt\\_;','&\\_gt\\_;','&\\_amp\\_;'),array('&lt;','&gt;','&amp;'),$Text);
 
 	// If the text going into bbcode() has a plain URL in it, i.e.
@@ -516,7 +521,6 @@ function bb2diaspora($Text, $preserve_nl = false, $fordiaspora = true) {
 
 	// Remove any leading or trailing whitespace, as this will mess up
 	// the Diaspora signature verification and cause the item to disappear
-
 	$Text = trim($Text);
 
 	call_hooks('bb2diaspora', $Text);
@@ -562,4 +566,32 @@ function format_event_diaspora($ev) {
 	$o .= "\n";
 
 	return $o;
+}
+
+/**
+ * @brief Convert a HTML text into Markdown.
+ *
+ * This function uses the library league/html-to-markdown for this task.
+ *
+ * If the HTML text can not get parsed it will return an empty string.
+ *
+ * @see HTMLToMarkdown
+ *
+ * @param string $html The HTML code to convert
+ * @return string Markdown representation of the given HTML text, empty on error
+ */
+function html2markdown(String $html) : String {
+	$markdown = '';
+	$converter = new HtmlConverter();
+
+	try {
+		$markdown = $converter->convert($html);
+	} catch (InvalidArgumentException $e) {
+		logger("Invalid HTML. HTMLToMarkdown library threw an exception.");
+	}
+
+	// The old html 2 markdown library "pixel418/markdownify": "^2.2",
+	//$md = new HtmlConverter();
+	//$markdown = $md->convert($Text);
+	return $markdown;
 }

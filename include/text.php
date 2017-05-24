@@ -648,12 +648,8 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 
 	$where = '';
 
-	// We require > 5.4 but leave the version check so that install issues (including version) can be logged
-
-	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
-	}
+	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+	$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 
 	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
@@ -687,16 +683,14 @@ function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 		@file_put_contents(BTLOGGER_DEBUG_FILE, $s, FILE_APPEND);
 	}
 
-	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		if($stack) {
-			for($x = 1; $x < count($stack); $x ++) {
-				$s = 'stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()';
-				logger($s,$level, $priority);
+	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+	if($stack) {
+		for($x = 1; $x < count($stack); $x ++) {
+			$s = 'stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()';
+			logger($s,$level, $priority);
 
-				if(file_exists(BTLOGGER_DEBUG_FILE) && is_writable(BTLOGGER_DEBUG_FILE)) {
-					@file_put_contents(BTLOGGER_DEBUG_FILE, $s . PHP_EOL, FILE_APPEND);
-				}
+			if(file_exists(BTLOGGER_DEBUG_FILE) && is_writable(BTLOGGER_DEBUG_FILE)) {
+				@file_put_contents(BTLOGGER_DEBUG_FILE, $s . PHP_EOL, FILE_APPEND);
 			}
 		}
 	}
@@ -751,10 +745,10 @@ function dlogger($msg, $level = 0) {
 		return;
 
 	$where = '';
-	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
-	}
+
+	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+	$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
+
 
 	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL, FILE_APPEND);
 }

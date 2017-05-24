@@ -344,11 +344,8 @@ function q($sql) {
 	if(\DBA::$dba && \DBA::$dba->connected) {
 		$stmt = vsprintf($sql, $args);
 		if($stmt === false) {
-			if(version_compare(PHP_VERSION, '5.4.0') >= 0)
-				db_logger('dba: vsprintf error: ' .
-					print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1), true),LOGGER_NORMAL,LOG_CRIT);
-			else
-				db_logger('dba: vsprintf error: ' . print_r(debug_backtrace(), true),LOGGER_NORMAL,LOG_CRIT);
+			db_logger('dba: vsprintf error: ' .
+				print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1), true),LOGGER_NORMAL,LOG_CRIT);
 		}
 		if(\DBA::$dba->debug)
 			db_logger('Sql: ' . $stmt, LOGGER_DEBUG, LOG_INFO);

@@ -120,12 +120,6 @@ class Admin extends \Zotlabs\Web\Controller {
 
 		// Could be extended to provide also other alerts to the admin
 		$alertmsg = '';
-		// annoy admin about upcoming unsupported PHP version
-		if (version_compare(PHP_VERSION, '5.4', '<')) {
-			$alertmsg = 'Your PHP version ' . PHP_VERSION . ' will not be supported with the next major release of $Projectname. You are strongly urged to upgrade to a current version.'
-				. '<br>PHP 5.3 has reached its <a href="http://php.net/eol.php" class="alert-link">End of Life (EOL)</a> in August 2014.'
-				. ' A list about current PHP versions can be found <a href="http://php.net/supported-versions.php" class="alert-link">here</a>.';
-		}
 
 		$vmaster = get_repository_version('master');
 		$vdev = get_repository_version('dev');

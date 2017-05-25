@@ -226,12 +226,12 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			if($abook_instance)
 				$abook_instance .= ',';
 			$abook_instance .= z_root();
-		}
 
-		$x = q("update abook set abook_instance = '%s' where abook_id = %d",
-			dbesc($abook_instance),
-			intval($r[0]['abook_id'])
-		);
+			$x = q("update abook set abook_instance = '%s', abook_not_here = 0 where abook_id = %d",
+				dbesc($abook_instance),
+				intval($r[0]['abook_id'])
+			);
+		}
 
 		if(intval($r[0]['abook_pending'])) {
 			$x = q("update abook set abook_pending = 0 where abook_id = %d",

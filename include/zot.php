@@ -3289,6 +3289,11 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 				if(! array_key_exists('abook_xchan',$clean))
 					continue;
 
+				if(array_key_exists('abook_instance',$clean) && $clean['abook_instance'] && strpos($clean['abook_instance'],z_root()) === false) {
+					$clean['abook_not_here'] = 1;
+				} 
+
+
 				$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 					dbesc($clean['abook_xchan']),
 					intval($channel['channel_id'])

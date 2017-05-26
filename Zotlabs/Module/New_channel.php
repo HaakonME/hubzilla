@@ -134,7 +134,7 @@ class New_channel extends \Zotlabs\Web\Controller {
 		$name = array('name', t('Name or caption'), ((x($_REQUEST,'name')) ? $_REQUEST['name'] : ''), t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group"'), "*");
 		$nickhub = '@' . \App::get_hostname();
 		$nickname = array('nickname', t('Choose a short nickname'), ((x($_REQUEST,'nickname')) ? $_REQUEST['nickname'] : ''), sprintf( t('Your nickname will be used to create an easy to remember channel address e.g. nickname%s'), $nickhub), "*");
-		$role = array('permissions_role' , t('Channel role and privacy'), ($privacy_role) ? $privacy_role : 'social', t('Select a channel role with your privacy requirements.') . ' <a href="help/roles" target="_blank">' . t('Read more about roles') . '</a>',$perm_roles);
+		$role = array('permissions_role' , t('Channel role and privacy'), ($privacy_role) ? $privacy_role : 'social', t('Select a channel role with your privacy requirements.') . ' <a href="help/member/member_guide#Account_Permission_Roles" target="_blank">' . t('Read more about roles') . '</a>',$perm_roles);
 	
 		$o = replace_macros(get_markup_template('new_channel.tpl'), array(
 			'$title'        => t('Create Channel'),

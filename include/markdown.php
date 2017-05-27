@@ -580,7 +580,7 @@ function format_event_diaspora($ev) {
  * @param string $html The HTML code to convert
  * @return string Markdown representation of the given HTML text, empty on error
  */
-function html2markdown(String $html) : String {
+function html2markdown($html) {
 	$markdown = '';
 	$converter = new HtmlConverter();
 

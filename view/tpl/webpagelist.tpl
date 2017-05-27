@@ -31,7 +31,7 @@
 			<tr id="webpage-list-item-{{$item.url}}">
 				<td>
 					{{if $view}}
-					<a href="page/{{$channel}}/{{$item.pagetitle}}" title="{{$view}}">{{$item.pagetitle}}</a>
+					<a href="page/{{$channel}}/{{$item.pageurl}}" title="{{$view}}">{{$item.pagetitle}}</a>
 					{{else}}
 					{{$item.pagetitle}}
 					{{/if}}

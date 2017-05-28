@@ -687,14 +687,8 @@ This places a block named &quot;contributors&quot; in this region. Additionally 
 The variable [var=wrap]none[/var] in a block removes the wrapping div element from the block.
 
 [h4]Widgets[/h4]
-Widgets are executable apps provided by the system which you can place on your page. Some widgets take arguments which allows you to tailor the widget to your purpose. (TODO: list available widgets and arguments). The base system provides
+Widgets are executable apps provided by the system which you can place on your page. Some widgets take arguments which allows you to tailor the widget to your purpose. System widgets are listed [url=help/Widgets]here[/url]. Widgets can also ve created by plugins, themes, or your site administrator to provide additional functionality.
 
-[code]
-	profile - widget which duplicates the profile sidebar of your channel page. This widget takes no arguments
-	tagcloud - provides a tag cloud of categories
-		count - maximum number of category tags to list	
-
-[/code]
 
 Widgets and arguments are specified with the 'widget' and 'var' tags.
 [code]

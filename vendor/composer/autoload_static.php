@@ -916,6 +916,7 @@ class ComposerStaticInit7b34d7e50a62201ec5d5e526a5b8b35d
         'Zotlabs\\Module\\Admin\\Themes' => __DIR__ . '/../..' . '/Zotlabs/Module/Admin/Themes.php',
         'Zotlabs\\Module\\Api' => __DIR__ . '/../..' . '/Zotlabs/Module/Api.php',
         'Zotlabs\\Module\\Appman' => __DIR__ . '/../..' . '/Zotlabs/Module/Appman.php',
+        'Zotlabs\\Module\\Apporder' => __DIR__ . '/../..' . '/Zotlabs/Module/Apporder.php',
         'Zotlabs\\Module\\Apps' => __DIR__ . '/../..' . '/Zotlabs/Module/Apps.php',
         'Zotlabs\\Module\\Attach' => __DIR__ . '/../..' . '/Zotlabs/Module/Attach.php',
         'Zotlabs\\Module\\Authtest' => __DIR__ . '/../..' . '/Zotlabs/Module/Authtest.php',

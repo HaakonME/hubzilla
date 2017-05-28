@@ -1,4 +1,81 @@
-Hubzilla 2.2 (2017-??-??)
+Hubzilla 2.4 (2017-??-??)
+	- Silence php warning during install
+	- Implemented switch statement logic in Comanche layout parser
+	- Don't allow html in plugin comment blocks
+	- Handle Mastodon urls in markdown/bbcode conversion
+	- Get rid of edit activities
+	- Collapse sysapps if viewing a remote channel
+	- Various Doxygen fixes
+	- Update SimplePie library to version 1.5
+	- Add check for PHP zip extension during install
+	- Add unit tests for AccessList class
+	- Authenticate onepoll so we can receive private posts/comments in zotfeed
+	- Various postgres fixes
+	- Some work on preparing clientside e2ee
+	- Allow to set a default channel for the rare case where a default channel is not selected but channels actually exist
+	- Support reverse magic-auth in oembed requests
+	- Improved handling of Mastodon feeds
+	- When template "none" is used in a webpage layout, then the contents of the page should be the sole output, with no other code before or after the page element content
+	- If there is no site record, site_dead won't be 0, in a left join it will in fact be null. As long as it isn't 1, we should attempt delivery
+	- Order wiki pages by creation date
+	- Backend infrastructure for channel protection password; which will be used to optionally encrypt export files and resolve channel/identity ownership/hijacking disputes
+	- Don't allow any null fields in notify creation
+	- Webfinger cleanup
+	- Envelope privacy
+	- We do not parse the body in discover_by_url(), so no need to preserve iframes in SimplePie
+	- Correct the mastodon "boost" (aka 'share') author attribution by checking for share activities and pulling the original author info from the activity:object
+	- Only log zot_refresh content if json decode was successful
+	- Revisit the import_author_zot algorithm yet again. There was one bug that we weren't returning necessary information in the first SQL query - and performance/loading problem if one tries to refresh a dead site
+	- Import_author_xchan - since we rarely refresh zot-info for non-connections, force a cache reload once a week to catch things like profile photo updates and location changes
+	- Create site_store_lowlevel() to initialise data structures for the site table
+	- Change hook for perm_is_allowed while retaining backwards compatibility
+	- import_author_zot() - check for both hubloc and xchan entries. This should catch and repair entries which were subject to transient storage failures
+	- Import authors from any unrecognised network as network 'unknown'
+	- Crypto update - default is now aes-256-ctr
+	- Get rid of get_app()
+	- Add 'author_is_pmable()' function with plugin hooks to control whether or not to display a 'send mail' link in the thread author menu
+	- Provide platform specific install script
+	- Allow for project specific DB updates
+	- Get rid of davguest
+	- Move db_upgrade to zlib
+	- Add CSRF protection for import and import_items
+	- Add some documentation for import functions
+	- Do not allow creating two wikis with the same name
+	- Update textcomplete library to version 1.8.0
+	- Create channel_store_lowlevel()
+	- Allow setting the system email name/address/reply
+	- Use the same host macro for sender address as for reply_to address
+	- Use the relevant attach directory/path for photo albums instead of an album basename which may not be unique. Created an 'ellipsify()' function to shorten long names and keep the beginning and end intact
+	- Simplify the message signing spaghetti
+	- Class MarkdownSoap to safely store markdown by purifying and preserving (escaped) what may be unsafe code in codeblocks. The stored item needs to be unescaped just prior to calling the markdown-to-html processor
+	- Remove the unimplemented upload limit site settings from UI
+	- Cleanup code_allowed
+	- Move widgets to standalone classes
+	- Upgrade redbasic to bootstrap 4
+	- Updated HTML Purifier from 4.6.0 to 4.9.2 with better PHP7 compatibility
+	- Remove redundant and non-functional/broken check for successfully cloned channel record which was left over from an earlier method of creating the table; which was deprecated a few months back
+	- Update bshaffer/oauth2-server-php library
+	- Add unit test for purify_html()
+
+	Bugfixes
+	- Fix files not synced correctly - issue #769
+	- Fix empty ACL should not result in no ACL when uploading a file
+	- Fix cover photo was unintentionally disabled when block_public in effect
+	- Fix markdown autolinks - issue 752
+	- Fix connectDefaultShare generated js function, though it isn't obvious if we still use it
+	- Fix a couple more instances where we were still calling mail() directly for site critical messages
+	- Fix when clicking a notification to view a private mail message, actually view that message instead of the most recent
+	- Fix group by item query
+
+	Plugins/Addon
+	- smileybutton: do not load emojis
+	- pubsubhubbub: fixes associated with recent compatibility feed mods
+	- gnusoc: mastodon follow_activity compatibility issues
+	- gnusoc: add profile photo to feed meta
+	- gnusoc: add salmon link information to the public feed when GNU-Social is enabled
+	- chess: fix bugs when deleting games
+
+Hubzilla 2.2 (2017-03-08)
 	- Provide version compatibility check for themes (minversion, maxversion)
 	- Use chanlink_hash() instead of chanlink_url() where appropriate
 	- Use head_add_link() for feed discovery

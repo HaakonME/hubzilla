@@ -424,7 +424,7 @@ function account_allow($hash) {
 
 	pop_lang();
 
-	if(get_config('system','auto_channel_create') || get_config('system','server_role') === 'basic')
+	if(get_config('system','auto_channel_create'))
 		auto_channel_create($register[0]['uid']);
 
 	if ($res) {
@@ -528,7 +528,7 @@ function account_approve($hash) {
 
 
 
-	if(get_config('system','auto_channel_create') || get_config('system','server_role') === 'basic')
+	if(get_config('system','auto_channel_create'))
 		auto_channel_create($register[0]['uid']);
 	else {
 		$_SESSION['login_return_url'] = 'new_channel';
@@ -771,12 +771,6 @@ function upgrade_bool_message($bbcode = false) {
 
 
 function get_account_techlevel($account_id = 0) {
-
-	$role = \Zotlabs\Lib\System::get_server_role();
-	if($role == 'basic')
-		return 0;
-	if($role == 'standard')
-		return 5;
 
 	if(! $account_id) {
 		$x = \App::get_account();

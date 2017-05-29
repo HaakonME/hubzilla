@@ -65,8 +65,6 @@ EOT;
 		//we could additionally use this to display important system notifications e.g. for updates
 	));
 
-	$server_role = get_config('system','server_role');
-	$basic = (($server_role === 'basic') ? true : false);
 	$techlevel = get_account_techlevel();
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
@@ -97,7 +95,7 @@ EOT;
 	if(local_channel()) {
 
 
-		if($chans && count($chans) > 1 && feature_enabled(local_channel(),'nav_channel_select') && (! $basic))
+		if($chans && count($chans) > 1 && feature_enabled(local_channel(),'nav_channel_select'))
 			$nav['channels'] = $chans;
 
 		$nav['logout'] = ['logout',t('Logout'), "", t('End this session'),'logout_nav_btn'];
@@ -105,7 +103,7 @@ EOT;
 		// user menu
 		$nav['usermenu'][] = ['profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'),'profile_nav_btn'];
 
-		if(feature_enabled(local_channel(),'multi_profiles') && (! $basic))
+		if(feature_enabled(local_channel(),'multi_profiles'))
 			$nav['usermenu'][]   = ['profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'),'profiles_nav_btn'];
 		else
 			$nav['usermenu'][]   = ['profiles/' . $prof[0]['id'], t('Edit Profile'),"", t('Edit your profile'),'profiles_nav_btn'];
@@ -201,8 +199,7 @@ EOT;
 		$nav['all_events']['all']=array('events', t('View events'), "", "");
 		$nav['all_events']['mark'] = array('', t('Mark all events seen'), '','');
 
-		if(! $basic)		
-			$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'),'manage_nav_btn');
+		$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'),'manage_nav_btn');
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'),'settings_nav_btn');
 

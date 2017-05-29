@@ -121,8 +121,7 @@ class Import extends \Zotlabs\Web\Controller {
 				$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 );
 				notice($t);
 			}
-			if(array_key_exists('server_role',$data['compatibility']) && $data['compatibility']['server_role'] == 'basic')
-				$moving = true;
+
 		}
 
 		if($moving)

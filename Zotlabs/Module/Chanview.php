@@ -117,12 +117,8 @@ class Chanview extends \Zotlabs\Web\Controller {
 		// the remote profile. 
 
 		// Zot channels will usually have a connect link.
-		// If it isn't zot, 'pro' members won't be able to use the connect
-		// button as it is a foreign network so just send them to the remote
-		// profile.  
-
 	
-		if($is_zot || \Zotlabs\Lib\System::get_server_role() === 'pro') {
+		if($is_zot) {
 			if($is_zot && $observer) {
 				$url = zid($url);
 			}

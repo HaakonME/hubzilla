@@ -73,9 +73,6 @@ class Setup extends \Zotlabs\Web\Controller {
 				$phpath = trim($_POST['phpath']);
 				$adminmail = trim($_POST['adminmail']);
 				$siteurl = trim($_POST['siteurl']);
-				$server_role = trim($_POST['server_role']);
-				if(! $server_role)
-					$server_role = 'standard';
 
 				// $siteurl should not have a trailing slash
 
@@ -103,9 +100,6 @@ class Setup extends \Zotlabs\Web\Controller {
 				$timezone = trim($_POST['timezone']);
 				$adminmail = trim($_POST['adminmail']);
 				$siteurl = trim($_POST['siteurl']);
-				$server_role = trim($_POST['server_role']);
-				if(! $server_role)
-					$server_role = 'standard';
 
 				if($siteurl != z_root()) {
 					$test = z_fetch_url($siteurl."/setup/testrewrite");
@@ -134,7 +128,7 @@ class Setup extends \Zotlabs\Web\Controller {
 					'$dbpass'      => $dbpass,
 					'$dbdata'      => $dbdata,
 					'$dbtype'      => $dbtype,
-					'$server_role' => $server_role,
+					'$server_role' => 'pro',
 					'$timezone'    => $timezone,
 					'$siteurl'     => $siteurl,
 					'$site_id'     => random_string(),

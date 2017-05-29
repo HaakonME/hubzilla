@@ -3049,7 +3049,8 @@ function array2XML($obj, $array) {
 		if(is_array($value)) {
 			$node = $obj->addChild($key);
 			array2XML($node, $value);
-		} else {
+		}
+		else {
 			$obj->addChild($key, htmlspecialchars($value));
 		}
 	}

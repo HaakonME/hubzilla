@@ -12,7 +12,7 @@
 			{{include file="field_password.tpl" field=$password1}}
 			{{include file="field_password.tpl" field=$password2}}
 
-			{{if $z_server_role == 'pro' && ! $techlock}}
+			{{if ! $techlock}}
 			{{include file="field_select.tpl" field=$techlevel}}
 			{{else}}
 			<input type="hidden" name="techlevel" value="{{$techlevel.2}}" />

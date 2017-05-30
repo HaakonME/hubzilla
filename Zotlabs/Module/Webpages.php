@@ -696,7 +696,8 @@ class Webpages extends \Zotlabs\Web\Controller {
 						}
 						
 						rrmdir($zip_folderpath); rrmdir($tmp_folderpath);		// delete temporary files
-						
+						killme();
+
 						break;
 				default :
 					break;

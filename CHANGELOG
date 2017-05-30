@@ -58,6 +58,7 @@ Hubzilla 2.4 (2017-??-??)
 	- Add unit test for purify_html()
 
 	Bugfixes
+	- Fix website export tool creating invalid zip file - issue #790
 	- Fix files not synced correctly - issue #769
 	- Fix empty ACL should not result in no ACL when uploading a file
 	- Fix cover photo was unintentionally disabled when block_public in effect

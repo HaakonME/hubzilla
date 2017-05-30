@@ -30,13 +30,7 @@ class Xrd extends \Zotlabs\Web\Controller {
 		);
 		if(! $r) 
 			killme();
-	
-		$dspr = replace_macros(get_markup_template('xrd_diaspora.tpl'),array(
-			'$baseurl' => z_root(),
-			'$dspr_guid' => $r[0]['channel_guid'] . str_replace('.','',\App::get_hostname()),
-			'$dspr_key' => base64_encode(pemtorsa($r[0]['channel_pubkey']))
-		));
-	
+		
 		$salmon_key = salmon_key($r[0]['channel_pubkey']);
 	
 		header('Access-Control-Allow-Origin: *');
@@ -49,8 +43,7 @@ class Xrd extends \Zotlabs\Web\Controller {
 			if($aliases[$x] === $resource)
 				unset($aliases[$x]);
 		}
-	
-	
+		
 		$o = replace_macros(get_markup_template('xrd_person.tpl'), array(
 			'$nick'        => $r[0]['channel_address'],
 			'$accturi'     => $resource,
@@ -61,12 +54,8 @@ class Xrd extends \Zotlabs\Web\Controller {
 			'$zot_post'    => z_root() . '/post/'          . $r[0]['channel_address'],
 			'$poco_url'    => z_root() . '/poco/'          . $r[0]['channel_address'],
 			'$photo'       => z_root() . '/photo/profile/l/' . $r[0]['channel_id'],
-			'$dspr'        => $dspr,
-	//		'$salmon'      => z_root() . '/salmon/'        . $r[0]['channel_address'],
-	//		'$salmen'      => z_root() . '/salmon/'        . $r[0]['channel_address'] . '/mention',
 			'$modexp'      => 'data:application/magic-public-key,'  . $salmon_key,
 			'$subscribe'   => z_root() . '/follow?url={uri}',
-			'$bigkey'      =>  salmon_key($r[0]['channel_pubkey'])
 		));
 	
 	

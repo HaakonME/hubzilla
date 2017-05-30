@@ -22,10 +22,7 @@
           href="{{$hcard_url}}" />
     <Link rel="http://ostatus.org/schema/1.0/subscribe"
           template="{{$subscribe}}" />
-
-   <Link rel="magic-public-key"
+    <Link rel="magic-public-key"
           href="{{$modexp}}" />
-
-	{{$dspr}}
 
 </XRD>
